@@ -35,6 +35,8 @@ AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
 AM_INIT_AUTOMAKE(regina, [3.0.1])
 AM_CONFIG_HEADER(config.h)
 
+AC_CANONICAL_HOST
+
 ###########################################################
 #
 # Check for C/C++ tools.
@@ -58,7 +60,7 @@ AC_LANG(C++)
 #
 ###########################################################
 
-REGINA_PROG_JAVA([JAVAUI DOCSJAVAUI], [the Java user interface])
+REGINA_PROG_JAVAC([JAVAUI DOCSJAVAUI], [the Java user interface])
 
 REGINA_PROG_OPTIONAL([fastjar jar], JAR,
   [Jar command for creating Java JAR archives], [JAVAUI DOCSJAVAUI],
@@ -112,10 +114,12 @@ REGINA_LIB_REQUIRED(z, zlibVersion, [the calculation engine])
 REGINA_HEADER_REQUIRED(gmp.h, [the calculation engine])
 REGINA_LIB_REQUIRED(gmp, __gmpz_init, [the calculation engine])
 
-# Library libpthread seems to need be linked in only on systems where it
-# exists separately from libc.
-REGINA_HEADER_REQUIRED(pthread.h, [the calculation engine])
-AC_CHECK_LIB(pthread, pthread_create)
+ACX_PTHREAD([
+  LIBS="$PTHREAD_LIBS $LIBS"
+  CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+], [
+  REGINA_ERR_MISSING([POSIX pthread support], [the calculation engine])
+])
 
 # The libxml2 check seems to need to be done under C, not C++.
 AC_LANG_PUSH(C)
@@ -138,6 +142,14 @@ AM_PATH_CPPUNIT([1.8.0], , [
   REGINA_WARN_MISSING([Library cppunit], [the test suite])
   REGINA_DO_NOT_COMPILE(TESTSUITE)
 ])
+
+REGINA_SHOULD_BUILD_INTERNAL(JAVAUI)
+if test "$should_build" = "yes"; then
+  REGINA_LIB_JAVA(btools, [org.gjt.btools.Version],
+    [JAVAUI DOCSJAVAUI], [the Java user interface])
+  REGINA_LIB_JAVA(jython, [org.python.util.jython],
+    [JAVAUI DOCSJAVAUI], [the Java user interface])
+fi
 
 REGINA_HEADER_JNI(ENGINEJNI, [the JNI calculation engine module])
 
@@ -164,6 +176,10 @@ AC_SUBST(ENGINE_INCLUDES)
 ENGINE_LIBS="$XML_LIBS"
 AC_SUBST(ENGINE_LIBS)
 
+# Additional includes requied by the JNI calculation engine module.
+JNI_INCLUDES="-I\$(top_srcdir)/engine/jni $JNI_INCLUDES"
+AC_SUBST(JNI_INCLUDES)
+
 # Additional libraries required by the test suite.
 TESTSUITE_LIBS="$CPPUNIT_LIBS"
 AC_SUBST(TESTSUITE_LIBS)
@@ -171,6 +187,10 @@ AC_SUBST(TESTSUITE_LIBS)
 # The actual calculation engine library with which to link.
 LIB_ENGINE="\$(top_srcdir)/engine/engine/libregina-engine.la"
 AC_SUBST(LIB_ENGINE)
+
+# Classpath required by the Java user interface.
+JAVAUI_CLASSPATH="\$(top_srcdir)/javaui:$CLASSPATH"
+AC_SUBST(JAVAUI_CLASSPATH)
 
 ###########################################################
 #
@@ -189,6 +209,7 @@ AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([strtol strtoul])
 
 # Other custom checks.
+REGINA_CXX_PARTIAL_SPECIALISATION
 REGINA_TYPE_HASH_SET
 REGINA_VAR_IOS_NOCREATE
 
@@ -255,6 +276,50 @@ AC_CONFIG_FILES([Makefile
                  engine/jni/registry/Makefile
                  examples/Makefile
                  icons/Makefile
+                 javaui/Makefile
+                 javaui/normal/Makefile
+                 javaui/normal/algorithm/Makefile
+                 javaui/normal/console/Makefile
+                 javaui/normal/engine/Makefile
+                 javaui/normal/engine/algebra/Makefile
+                 javaui/normal/engine/angle/Makefile
+                 javaui/normal/engine/file/Makefile
+                 javaui/normal/engine/implementation/Makefile
+                 javaui/normal/engine/implementation/jni/Makefile
+                 javaui/normal/engine/implementation/jni/algebra/Makefile
+                 javaui/normal/engine/implementation/jni/angle/Makefile
+                 javaui/normal/engine/implementation/jni/file/Makefile
+                 javaui/normal/engine/implementation/jni/maths/Makefile
+                 javaui/normal/engine/implementation/jni/packet/Makefile
+                 javaui/normal/engine/implementation/jni/progress/Makefile
+                 javaui/normal/engine/implementation/jni/split/Makefile
+                 javaui/normal/engine/implementation/jni/subcomplex/Makefile
+                 javaui/normal/engine/implementation/jni/surfaces/Makefile
+                 javaui/normal/engine/implementation/jni/triangulation/Makefile
+                 javaui/normal/engine/maths/Makefile
+                 javaui/normal/engine/packet/Makefile
+                 javaui/normal/engine/progress/Makefile
+                 javaui/normal/engine/split/Makefile
+                 javaui/normal/engine/subcomplex/Makefile
+                 javaui/normal/engine/surfaces/Makefile
+                 javaui/normal/engine/triangulation/Makefile
+                 javaui/normal/engine/utilities/Makefile
+                 javaui/normal/exports/Makefile
+                 javaui/normal/images/Makefile
+                 javaui/normal/images/buttons/Makefile
+                 javaui/normal/images/main/Makefile
+                 javaui/normal/images/packet/Makefile
+                 javaui/normal/imports/Makefile
+                 javaui/normal/mainui/Makefile
+                 javaui/normal/options/Makefile
+                 javaui/normal/packetfilter/Makefile
+                 javaui/normal/packetui/Makefile
+                 javaui/normal/packetui/angle/Makefile
+                 javaui/normal/packetui/census/Makefile
+                 javaui/normal/packetui/packet/Makefile
+                 javaui/normal/packetui/surfaces/Makefile
+                 javaui/normal/packetui/triangulation/Makefile
+                 javaui/normal/progress/Makefile
                  pylib/Makefile
                  scripts/Makefile
                  testsuite/Makefile
