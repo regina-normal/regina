@@ -188,15 +188,15 @@ static CORBA::Boolean bindObjectToName(CORBA::ORB_ptr orb,
     } catch (CORBA::COMM_FAILURE& ex) {
         cerr << "A communication failure occurred\n";
         cerr << "    whilst attempting to contact the naming service.\n";
-        return 0;
+        return false;
     } catch (omniORB::fatalException& ex) {
         throw;
     } catch (...) {
         cerr << "A system exception was caught\n";
         cerr << "    whilst using the naming service.\n";
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 int main(int argc, char* argv[]) {
@@ -207,63 +207,80 @@ int main(int argc, char* argv[]) {
         return 1;
     cerr << "Using host [" << args.host << "], port [" << args.port << "].\n";
 
-    cerr << "Initialising ORB... ";
-    CORBA::ORB_var orb = CORBA::ORB_init(args.argc, args.argv, "omniORB3");
-    if (CORBA::is_nil(orb)) {
-        cerr << "Could not initialise.\n";
-        return 1;
-    }
-    cerr << "Done.\n";
+	try {
+    	cerr << "Initialising ORB... ";
+    	CORBA::ORB_var orb = CORBA::ORB_init(args.argc, args.argv, "omniORB3");
+    	if (CORBA::is_nil(orb)) {
+        	cerr << "Could not initialise.\n";
+        	return 1;
+    	}
+    	cerr << "Done.\n";
 
-    cerr << "Initialising POA... ";
-	CORBA::Object_var poa_obj = orb->resolve_initial_references("RootPOA");
-    if (CORBA::is_nil(poa_obj)) {
-        cerr << "Could not initialise.\n";
-        orb->destroy();
-        return 1;
-    }
-	PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_obj);
-    if (CORBA::is_nil(poa)) {
-        cerr << "Could not narrow RootPOA to class PortableServer::POA.\n";
-        orb->destroy();
-        return 1;
-    }
-    cerr << "Done.\n";
+    	cerr << "Initialising POA... ";
+		CORBA::Object_var poa_obj = orb->resolve_initial_references("RootPOA");
+    	if (CORBA::is_nil(poa_obj)) {
+        	cerr << "Could not initialise.\n";
+        	orb->destroy();
+        	return 1;
+    	}
+		PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_obj);
+    	if (CORBA::is_nil(poa)) {
+        	cerr << "Could not narrow RootPOA to class PortableServer::POA.\n";
+        	orb->destroy();
+        	return 1;
+    	}
+    	cerr << "Done.\n";
 
-    cerr << "Creating engine... ";
-    Engine_i *engine = new Engine_i();
-	cerr << "Done.\n";
+    	cerr << "Creating engine... ";
+    	Engine_i *engine = new Engine_i();
+		cerr << "Done.\n";
 
-	cerr << "Activating engine... ";
-	PortableServer::ObjectId_var engine_id = poa->activate_object(engine);
-    cerr << "Done.\n";
+		cerr << "Activating engine... ";
+		PortableServer::ObjectId_var engine_id = poa->activate_object(engine);
+    	cerr << "Done.\n";
 
-    cerr << "Binding engine to name... ";
-    Regina::Engine_var ref = engine->_this();
-    if (! bindObjectToName(orb, ref)) {
-        orb->destroy();
-        return 1;
-    }
-	engine->_remove_ref();
-    cerr << "Done.\n";
+    	cerr << "Binding engine to name... ";
+    	Regina::Engine_var ref = engine->_this();
+    	if (! bindObjectToName(orb, ref)) {
+        	orb->destroy();
+        	return 1;
+    	}
+		engine->_remove_ref();
+    	cerr << "Done.\n";
 
-	cerr << "Activating POA manager... ";
-	PortableServer::POAManager_var pman = poa->the_POAManager();
-    pman->activate();
-	cerr << "Done.\n";
+		cerr << "Activating POA manager... ";
+		PortableServer::POAManager_var pman = poa->the_POAManager();
+    	pman->activate();
+		cerr << "Done.\n";
 
-    cerr << "Starting server.\n";
-	orb->run();
-        /* - blocks indefinitely; pass parameters 0, 1 to avoid blocking. */
+    	cerr << "Starting server.\n";
+		orb->run();
+        	/* - blocks indefinitely; pass parameters 0, 1 to avoid blocking. */
 
-    // We never make it to this point unless boa->impl_shutdown() is
-    // called from another thread.
+    	// We never make it to this point unless boa->impl_shutdown() is
+    	// called from another thread.
 
-    cerr << "Destroying ORB... ";
-    orb->destroy();
-    cerr << "Done.\n";
+    	cerr << "Destroying ORB... ";
+    	orb->destroy();
+    	cerr << "Done.\n";
 
-    cerr << "Server stopped.\n";
-    return 0;
+    	cerr << "Server stopped.\n";
+		return 0;
+	} catch(CORBA::SystemException&) {
+		cerr << "Caught CORBA::SystemException." << endl;
+		return 1;
+	} catch(CORBA::Exception&) {
+		cerr << "Caught CORBA::Exception." << endl;
+		return 1;
+	} catch(omniORB::fatalException& fe) {
+		cerr << "Caught omniORB::fatalException:" << endl;
+		cerr << "  File: " << fe.file() << endl;
+		cerr << "  Line: " << fe.line() << endl;
+		cerr << "  Message: " << fe.errmsg() << endl;
+		return 1;
+	} catch(...) {
+		cerr << "Caught unknown exception." << endl;
+		return 1;
+	}
 }
 
