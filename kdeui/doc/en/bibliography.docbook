@@ -46,6 +46,20 @@
   <artpagenums>pp. 321&ndash;332</artpagenums>
  </biblioentry>
 
+ <biblioentry id="bib-haken-homeomorphism">
+  <abbrev>Ha</abbrev>
+  <author>
+   <firstname>Wolfgang</firstname>
+   <surname>Haken</surname>
+  </author>
+  <title>&Uuml;ber das Hom&ouml;omorphieproblem der
+   3-Mannigfaltigkeiten. I</title>
+  <edition>Math. Z.</edition>
+  <volumenum>80</volumenum>
+  <date>1962</date>
+  <artpagenums>pp. 89&ndash;120</artpagenums>
+ </biblioentry>
+
  <biblioentry id="bib-0-efficiency">
   <abbrev>JR</abbrev>
   <authorgroup>

@@ -185,7 +185,8 @@
   <para>
    A related but significantly more complex procedure is the cutting open
    of a triangulation along a normal surface and the retriangulation of the
-   resulting 3-manifold(s), introduced by Haken \cite{haken-homeomorphism}
+   resulting 3-manifold(s), introduced by Haken
+   <xref linkend="bib-haken-homeomorphism"/>
    for solving the homeomorphism problem for
    3-manifolds containing incompressible surfaces and used in a variety of
    algorithms since.  Like crushing, this procedure
