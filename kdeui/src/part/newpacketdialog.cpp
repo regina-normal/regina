@@ -112,12 +112,9 @@ void NewPacketDialog::slotOk() {
 
     // Create the new packet.  Hide ourselves since this could take a
     // while.
-    hide();
     newPacket = creator->createPacket(parentPacket, this);
-    if (! newPacket) {
-        show();
+    if (! newPacket)
         return;
-    }
 
     // Fix the new packet.
     newPacket->setPacketLabel(useLabel);
