@@ -339,7 +339,7 @@ AC_DEFUN(REGINA_LIB_BOOST_PYTHON, [
             for pylib in "$pyver" python python2.3 python2.2; do
               AC_MSG_CHECKING([for lib$pylib with $incdir/Python.h])
               LDFLAGS="$__regina_py_save_ldflags -l$pylib"
-              AC_TRY_COMPILE([
+              AC_TRY_LINK([
                 #include <Python.h>
               ], [
                 Py_Initialize(); Py_Finalize();
