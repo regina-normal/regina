@@ -70,7 +70,7 @@ AC_CHECK_COMPILERS
 
 # Put back the exception handling that KDE takes out, since we need it
 # for boost.
-CXXFLAGS="`echo $CXXFLAGS | sed s/-fno-exceptions//`"
+CXXFLAGS="`echo "$CXXFLAGS" | sed s/-fno-exceptions//`"
 
 KDE_PROG_LIBTOOL
 LIBTOOL="$LIBTOOL --silent"
@@ -315,6 +315,16 @@ AM_CONDITIONAL(STATIC_FINAL, test "$__static_final" = "yes")
 # The actual calculation engine library with which to link; note that
 # this depends on whether --enable-static-final is being used.
 AC_SUBST(LIB_ENGINE)
+
+###########################################################
+#
+# Create alternate sets of compiler flags.
+#
+###########################################################
+
+# Make a set of compilation flags without debugging symbols.
+CXXFLAGS_NODEBUG="`echo "$CXXFLAGS" | sed s/-g//`"
+AC_SUBST(CXXFLAGS_NODEBUG)
 
 ###########################################################
 #
