@@ -27,16 +27,20 @@
 /* end stub */
 
 /*! \file engine.h
- *  \brief Contains documentation for the Engine class, which represents
- *  an external link to the calculation engine.
- *
- *  \todo \bugurgent Hunt for default copy constructors that are being called.
- *  \todo \featurelong Create a test suite for the calculation engine
- *  (<i>cppunit</i> is a promising candidate toolkit).
+ *  \brief Provides global routines and classes for interfacing with the
+ *  Regina calculation engine.
  */
+
+#ifndef __ENGINE_H
+#ifndef __DOXYGEN
+#define __ENGINE_H
+#endif
 
 /**
  * Contains the entire Regina calculation engine.
+ *
+ * \todo \bugurgent Hunt for default copy constructors that are being called.
+ * \todo \featurelong Enhance the test suite for the calculation engine.
  */
 namespace regina {
 
@@ -76,7 +80,45 @@ class NTriangulation;
  * @{
  */
 
+/**
+ * Returns the full version number of this calculation engine.
+ * For instance, version 2.3.1 would have full version <tt>"2.3.1"</tt>.
+ *
+ * @return the version of this calculation engine.
+ */
+const char* getVersionString();
+
+/**
+ * Returns the major version number of this calculation engine.
+ * For instance, version 2.3.1 would have major version 2.
+ *
+ * @return the major version number of this calculation engine.
+ */
+int getVersionMajor();
+
+/**
+ * Returns the minor version number of this calculation engine.
+ * For instance, version 2.3.1 would have minor version 3.
+ *
+ * @return the minor version number of this calculation engine.
+ */
+int getVersionMinor();
+
+/**
+ * Tests to see if an interface can successfully communicate with the
+ * underlying C++ calculation engine.
+ *
+ * This routine simply uses the engine to return the same value that is
+ * passed to it; it can be used to test whether communications between
+ * the interface and the C++ engine are working properly.
+ *
+ * @param value any integer; this same integer will be returned.
+ * @return the same integer that was passed as \a value.
+ */
+int testEngine(int value);
+
 #ifdef __DOXYGEN
+
 /**
  * Represents a link from an external interface to the calculation
  * engine.  Objects in the underlying engine can be created through an
@@ -253,48 +295,7 @@ class Engine {
          */
 };
 
-/**
- * Returns the major version number of the calculation engine currently
- * in use.
- *
- * \ifacescpp Not present.
- *
- * @return the major version number of the engine.
- */
-int getVersionMajor();
-/**
- * Returns the minor version number of the calculation engine currently
- * in use.
- *
- * \ifacescpp Not present.
- *
- * @return the minor version number of the engine.
- */
-int getVersionMinor();
-/**
- * Returns the entire version string of the calculation engine currently
- * in use.
- *
- * \ifacescpp Not present.
- *
- * @return the version of the engine.
- */
-std::string getVersionString();
-
-/**
- * Tests to see if the interface can successfully communicate with the
- * underlying C++ calculation engine.
- *
- * This routine simply uses the engine to return the same value that is
- * passed to it; it can be used to test whether communications between
- * the interface and the C++ engine are working properly.
- *
- * \ifacescpp Not present.
- *
- * @param value any integer; this same integer will be returned.
- * @return the same integer that was passed as \a value.
- */
-int testEngine(int value);
+#endif // doxygen-only declarations
 
 /*@}*/
 

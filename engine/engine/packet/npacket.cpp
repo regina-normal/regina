@@ -27,7 +27,7 @@
 /* end stub */
 
 #include <sstream>
-#include "regina.h"
+#include "engine.h"
 #include "packet/npacket.h"
 #include "utilities/hashset.h"
 #include "utilities/hashutils.h"
@@ -352,7 +352,7 @@ void NPacket::writeXMLFile(std::ostream& out) const {
     out << "<?xml version=\"1.0\"?>\n";
 
     // Write the regina data opening tag including engine version.
-    out << "<reginadata engine=\"" << ENGINE_VERSION << "\">\n";
+    out << "<reginadata engine=\"" << regina::getVersionString() << "\">\n";
 
     // Write the packet tree.
     writeXMLPacketTree(out);

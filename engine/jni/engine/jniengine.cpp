@@ -26,16 +26,13 @@
 
 /* end stub */
 
-#include "regina.h"
-
-#include "jnitools.h"
-#include "registry/makejnpacket.h"
-#include "triangulation/ntriangulation.h"
-#include "foreign/nsnappea.h"
+#include "engine.h"
+#include "census/ncensus.h"
 #include "file/nfile.h"
 #include "file/nfileinfo.h"
 #include "file/nxmlfile.h"
-#include "census/ncensus.h"
+#include "foreign/nsnappea.h"
+#include "maths/matrixops.h"
 #include "split/nsignature.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nknownmanifold.h"
@@ -48,7 +45,10 @@
 #include "subcomplex/nspiralsolidtorus.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "surfaces/nnormalsurfacelist.h"
-#include "maths/matrixops.h"
+#include "triangulation/ntriangulation.h"
+
+#include "jnitools.h"
+#include "registry/makejnpacket.h"
 
 using namespace regina;
 using namespace regina::jni;
@@ -106,19 +106,19 @@ REGJNIEXPORT jobject JNICALL
 REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_getVersionMajor
         (JNIEnv *env, jobject me) {
-    return ENGINE_VERSION_MAJOR;
+    return regina::getVersionMajor();
 }
 
 REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_getVersionMinor
         (JNIEnv *env, jobject me) {
-    return ENGINE_VERSION_MINOR;
+    return regina::getVersionMinor();
 }
 
 REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_getVersionString
         (JNIEnv *env, jobject me) {
-    return env->NewStringUTF(ENGINE_VERSION);
+    return env->NewStringUTF(regina::getVersionString());
 }
 
 REGJNIEXPORT jobject JNICALL
