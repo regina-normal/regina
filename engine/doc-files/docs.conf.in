@@ -63,11 +63,7 @@ WARN_IF_UNDOCUMENTED = YES
 # Input related options:
 
 INPUT = engine \
-        jni/javacast.h \
-        jni/jnisafe.h \
-        jni/jnitools.h \
-        jni/njnienumeration.h \
-        jni/registry
+        ../python/globalarray.h
 FILE_PATTERNS        = *.h
 RECURSIVE            = YES
 
