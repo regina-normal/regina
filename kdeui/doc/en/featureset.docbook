@@ -214,8 +214,8 @@
 
   <para>
    Angle structures, studied originally by Casson and then developed by
-   Lackenby <xref linkend="bib-lackenby-anglestruct"/>,
-   <xref linkend="bib-lackenby-taut"/> and
+   Lackenby <xref linkend="bib-lackenby-taut"/>,
+   <xref linkend="bib-lackenby-anglestruct"/> and
    Rivin <xref linkend="bib-rivin-structures"/>,
    <xref linkend="bib-rivin-combopt"/>, represent a purely
    algebraic generalisation of hyperbolic structures.  An angle structure

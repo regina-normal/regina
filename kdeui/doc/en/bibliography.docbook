@@ -105,8 +105,21 @@
   <date>July 2002</date>
  </biblioentry>
 
- <biblioentry id="bib-lackenby-anglestruct">
+ <biblioentry id="bib-lackenby-taut">
   <abbrev>La1</abbrev>
+  <author>
+   <firstname>Marc</firstname>
+   <surname>Lackenby</surname>
+  </author>
+  <title>Taut ideal triangulations of 3-manifolds</title>
+  <edition>Geom. Topol.</edition>
+  <volumenum>4</volumenum>
+  <date>2000</date>
+  <artpagenums>pp. 369&ndash;395 (electronic)</artpagenums>
+ </biblioentry>
+
+ <biblioentry id="bib-lackenby-anglestruct">
+  <abbrev>La2</abbrev>
   <author>
    <firstname>Marc</firstname>
    <surname>Lackenby</surname>
@@ -117,19 +130,6 @@
   <issuenum>2</issuenum>
   <date>2000</date>
   <artpagenums>pp. 243&ndash;282</artpagenums>
- </biblioentry>
-
- <biblioentry id="bib-lackenby-taut">
-  <abbrev>La2</abbrev>
-  <author>
-   <firstname>Marc</firstname>
-   <surname>Lackenby</surname>
-  </author>
-  <title>Taut ideal triangulations of 3-manifolds</title>
-  <edition>Geom. Topol.</edition>
-  <volumenum>4</volumenum>
-  <date>2000</date>
-  <artpagenums>pp. 369&ndash;395 (electronic)</artpagenums>
  </biblioentry>
 
  <biblioentry id="bib-rivin-structures">
