@@ -2,6 +2,8 @@
 # Wrapper startup script that sets environment variables and calls the
 # real startup script.
 
+set -e
+
 if [ -z "$REGINA_HOME" ]; then
   export REGINA_HOME=/usr/share/regina-normal
 fi
