@@ -56,6 +56,8 @@ struct ReginaPrefSet {
     unsigned treeJumpSize;
         /**< The number of steps corresponding to a jump up or down in
              the packet tree. */
+    int surfacesCreationCoords;
+        /**< The default coordinate system for normal surface creation. */
     TriEditMode triEditMode;
         /**< The default mode for editing triangulations. */
     TriTab triInitialTab;
@@ -74,18 +76,6 @@ struct ReginaPrefSet {
      */
     ReginaPrefSet();
 };
-
-inline ReginaPrefSet::ReginaPrefSet() :
-        autoDock(true),
-        autoFileExtension(true),
-        displayIcon(true),
-        displayTagsInTree(false),
-        treeJumpSize(10),
-        triEditMode(DirectEdit),
-        triInitialTab(Gluings),
-        triInitialAlgebraTab(Homology),
-        triSurfacePropsThreshold(6) {
-}
 
 #endif
 

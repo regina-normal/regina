@@ -12,6 +12,8 @@ AM_CXXFLAGS = '-DREGINA_DATADIR=$(pkgdatadir)'
 INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
+	reginaabout.h \
+	reginafilter.h \
 	reginaprefset.h
 
 lib_LTLIBRARIES = libregina-kdecommon.la
@@ -19,6 +21,7 @@ lib_LTLIBRARIES = libregina-kdecommon.la
 libregina_kdecommon_la_LDFLAGS = -release @PACKAGE_VERSION@ $(all_libraries)
 libregina_kdecommon_la_LIBADD = $(LIB_ENGINE)
 libregina_kdecommon_la_SOURCES = \
+	reginaabout.cpp \
 	reginaprefset.cpp
 
 METASOURCES = AUTO

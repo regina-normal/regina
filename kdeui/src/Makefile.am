@@ -12,11 +12,6 @@ SUBDIRS = common shell part pics toolbar toolbar-main
 
 INCLUDES = $(all_includes)
 
-noinst_HEADERS = \
-	reginaabout.h \
-	reginafilter.h \
-	reginaprefset.h
-
 METASOURCES = AUTO
 
 EXTRA_DIST = purgeconfig
