@@ -41,7 +41,8 @@ noinst_HEADERS = \
 	ntriskeleton.h \
 	ntrisnappea.h \
 	ntrisurfaces.h \
-	skeletonwindow.h
+	skeletonwindow.h \
+	snappeacomponents.h
 
 libpackettypes_la_SOURCES = \
 	eltmovedialog.cpp \
@@ -72,7 +73,8 @@ libpackettypes_la_SOURCES = \
 	ntriskeleton.cpp \
 	ntrisnappea.cpp \
 	ntrisurfaces.cpp \
-	skeletonwindow.cpp
+	skeletonwindow.cpp \
+	snappeacomponents.cpp
 
 METASOURCES = AUTO
 

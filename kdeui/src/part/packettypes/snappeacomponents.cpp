@@ -26,63 +26,46 @@
 
 /* end stub */
 
-/*! \file ntrisurfaces.h
- *  \brief Provides access to SnapPea calculations for triangulations.
- */
+// Regina core includes:
+#include "triangulation/ntriangulation.h"
 
-#ifndef __NTRISNAPPEA_H
-#define __NTRISNAPPEA_H
+// UI includes:
+#include "snappeacomponents.h"
 
-#include "../packettabui.h"
+#include <klocale.h>
 
-class NoSnapPea;
-class QLabel;
-class QWidgetStack;
+NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, QWidget* parent,
+        const char* name, bool delayedRefresh) : QLabel(parent, name),
+        tri(useTri) {
+    if (! delayedRefresh)
+        refresh();
+}
 
-namespace regina {
-    class NPacket;
-    class NSnapPeaTriangulation;
-    class NTriangulation;
-};
+void NoSnapPea::refresh() {
+    QString msg = i18n("<qt><p>SnapPea calculations are not available "
+        "for this triangulation.</p><p>");
 
-/**
- * A triangulation page for viewing normal surface properties.
- */
-class NTriSnapPeaUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
+    if (tri->getNumberOfTetrahedra() == 0)
+        msg += i18n("This is because the triangulation is empty.");
+    else if (! tri->isValid())
+        msg += i18n("This is because the triangulation is not valid.");
+    else if (tri->hasBoundaryFaces())
+        msg += i18n("This is because the triangulation has boundary faces.");
+    else if (! tri->isConnected())
+        msg += i18n("This is because the triangulation is disconnected.");
+    else if (! tri->isStandard())
+        msg += i18n("This is because the triangulation contains non-standard "
+            "vertices (vertices whose links are not spheres, tori or Klein "
+            "bottles).");
+    else if (tri->getNumberOfTetrahedra() >= INT_MAX)
+        msg += i18n("This is because the triangulation has too many "
+            "tetrahedra.");
+    else
+        msg += i18n("This is because SnapPea was unable to convert the "
+            "triangulation into SnapPea's native format.");
 
-    private:
-        /**
-         * Packet details
-         */
-        regina::NTriangulation* reginaTri;
-        regina::NSnapPeaTriangulation* snappeaTri;
+    msg += "</p></qt>";
+    setText(msg);
+}
 
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QWidgetStack* data;
-        QWidget* dataValid;
-        QWidget* dataNull;
-        QLabel* volume;
-        NoSnapPea* unavailable;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NTriSnapPeaUI(regina::NTriangulation* packet,
-            PacketTabbedUI* useParentUI);
-        ~NTriSnapPeaUI();
-
-        /**
-         * PacketViewerTab overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-        void editingElsewhere();
-};
-
-#endif
+#include "snappeacomponents.moc"

@@ -56,7 +56,8 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     layout->addStretch(3);
 
-    QLabel* label = new QLabel(i18n("Normal Surface Properties"), ui);
+    QLabel* label = new QLabel(i18n(
+        "<qt><b>Normal Surface Properties</b></qt>"), ui);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
 

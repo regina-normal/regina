@@ -26,63 +26,53 @@
 
 /* end stub */
 
-/*! \file ntrisurfaces.h
- *  \brief Provides access to SnapPea calculations for triangulations.
+/*! \file snappeacomponents.h
+ *  \brief Provides GUI components for use with SnapPea calculations.
  */
 
-#ifndef __NTRISNAPPEA_H
-#define __NTRISNAPPEA_H
+#ifndef __SNAPPEACOMPONENTS_H
+#define __SNAPPEACOMPONENTS_H
 
-#include "../packettabui.h"
-
-class NoSnapPea;
-class QLabel;
-class QWidgetStack;
+#include <qlabel.h>
 
 namespace regina {
-    class NPacket;
-    class NSnapPeaTriangulation;
     class NTriangulation;
 };
 
 /**
- * A triangulation page for viewing normal surface properties.
+ * Displays a piece of text explaining that SnapPea calculations are not
+ * available for a particular triangulation and suggesting why this might be
+ * the case.
+ *
+ * The explanation offered depends upon the properties of the individual
+ * triangulation.
  */
-class NTriSnapPeaUI : public QObject, public PacketViewerTab {
+class NoSnapPea : public QLabel {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::NTriangulation* reginaTri;
-        regina::NSnapPeaTriangulation* snappeaTri;
-
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QWidgetStack* data;
-        QWidget* dataValid;
-        QWidget* dataNull;
-        QLabel* volume;
-        NoSnapPea* unavailable;
+        regina::NTriangulation* tri;
 
     public:
         /**
          * Constructor and destructor.
+         *
+         * If \a delayedRefresh is passed as \c true to the constructor, the
+         * text contents will not be initialised until refresh() is called.
+         * This allows for a delayed analysis of the underlying
+         * triangulation (as may be desirable in a tabbed packet UI, for
+         * instance).
          */
-        NTriSnapPeaUI(regina::NTriangulation* packet,
-            PacketTabbedUI* useParentUI);
-        ~NTriSnapPeaUI();
+        NoSnapPea(regina::NTriangulation* useTri, QWidget* parent = 0,
+            const char* name = 0, bool delayedRefresh = false);
 
         /**
-         * PacketViewerTab overrides.
+         * Update the explanation in case the triangulation has changed.
          */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
         void refresh();
-        void editingElsewhere();
 };
 
 #endif

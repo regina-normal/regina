@@ -32,12 +32,16 @@
 
 // UI includes:
 #include "ntrisnappea.h"
+#include "snappeacomponents.h"
 
+#include <climits>
 #include <klocale.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qwhatsthis.h>
 #include <qwidgetstack.h>
+
+// TODO: Write 0 when abs(vol) < precision
 
 using regina::NPacket;
 using regina::NSnapPeaTriangulation;
@@ -51,7 +55,8 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
 
     layout->addStretch(3);
 
-    QLabel* label = new QLabel(i18n("SnapPea Calculations"), ui);
+    QLabel* label = new QLabel(i18n("<qt><b>SnapPea Calculations</b></qt>"),
+        ui);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
 
@@ -62,11 +67,12 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     // Data for a null SnapPea triangulation:
 
     dataNull = new QWidget(data);
-    QBoxLayout* nullLayout = new QVBoxLayout(dataNull);
+    QBoxLayout* nullLayout = new QVBoxLayout(dataNull, 5 /* margin */,
+        0 /* spacing */);
 
-    label = new QLabel(i18n("TODO"), dataNull);
-    label->setAlignment(Qt::AlignCenter);
-    nullLayout->addWidget(label);
+    unavailable = new NoSnapPea(reginaTri, dataNull, 0, true);
+    unavailable->setAlignment(Qt::AlignCenter);
+    nullLayout->addWidget(unavailable);
 
     // Data for a non-null SnapPea triangulation:
 
@@ -114,6 +120,7 @@ void NTriSnapPeaUI::refresh() {
 
     if (snappeaTri->isNull()) {
         data->raiseWidget(dataNull);
+        unavailable->refresh();
     } else {
         data->raiseWidget(dataValid);
 
