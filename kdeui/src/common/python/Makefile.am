@@ -13,12 +13,14 @@ INCLUDES = $(all_includes) @BOOST_PYTHON_INCLUDES@
 noinst_LTLIBRARIES = libregina-kdepython.la
 
 noinst_HEADERS = \
-	pythonconsole.h
+	pythonconsole.h \
+	pythoninterpreter.h
 
-libregina_kdepython_la_LIBADD = $(LIB_KHTML)
+libregina_kdepython_la_LIBADD = @PYTHON_LIBS@
 
 libregina_kdepython_la_SOURCES = \
-	pythonconsole.cpp
+	pythonconsole.cpp \
+	pythoninterpreter.cpp
 
 METASOURCES = AUTO
 

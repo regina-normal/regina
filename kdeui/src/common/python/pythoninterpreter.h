@@ -26,89 +26,57 @@
 
 /* end stub */
 
-/*! \file pythonconsole.h
- *  \brief Provides a console window containing an embedded python
- *  interpreter.
+/*! \file pythoninterpreter.h
+ *  \brief Provides an interface to the python interpreter and
+ *  subinterpreters.
  */
 
-#ifndef __PYTHONCONSOLE_H
-#define __PYTHONCONSOLE_H
+#ifndef __PYTHONINTERPRETER_H
+#define __PYTHONINTERPRETER_H
 
-#include <kmainwindow.h>
+#include <Python.h>
 
-class KLineEdit;
-class KTextEdit;
-class PythonInterpreter;
-class PythonManager;
-class QLabel;
+#include "utilities/nthread.h"
+
+namespace regina {
+    class NPacket;
+}
 
 /**
- * A top-level window containing an embedded python interpreter.
- * Python support must be built in for this class to be used.
+ * A single python subinterpreter.  Multiple subinterpreters are independent
+ * and may exist simultaneously.
  *
- * Generally objects of this class are not created directly; instead
- * PacketManager::launchPythonConsole() is used.
+ * Each new subinterpreter corresponds to a new call to
+ * Py_NewInterpreter().  The global routines Py_Initialize() and
+ * Py_Finalize() are called when the first interpreter is created and
+ * the last interpreter is destroyed respectively.
  */
-class PythonConsole : public KMainWindow {
-    Q_OBJECT
-
+class PythonInterpreter {
     private:
-        /**
-         * Possible types of prompt.
-         */
-        enum PromptMode { PRIMARY, SECONDARY, PROCESSING };
+        static long nInterpreters;
+            /**< The number of currently active interpreters. */
+        static bool createdGIL;
+            /**< Have we created the python global interpreter lock? */
+        static regina::NMutex globalMutex;
+            /**< A mutual exclusion device for the creation and
+                 destruction of subinterpreters. */
 
-        /**
-         * Internal components
-         */
-        KTextEdit* session;
-        QLabel* prompt;
-        KLineEdit* input;
-
-        /**
-         * Python components
-         */
-        PythonInterpreter* interpreter;
-        PythonManager* manager;
+        PyThreadState* state;
+            /**< The first thread state created in this particular
+                 subinterpreter. */
 
     public:
         /**
          * Constructor and destructor.
          */
-        PythonConsole(QWidget* parent = 0, PythonManager* useManager = 0,
-                regina::NPacket* tree = 0, regina::NPacket* selectedPacket = 0);
-        ~PythonConsole();
-
-    public slots:
-        /**
-         * Process the command currently on the input line.
-         */
-        void processCommand();
-
-    private:
-        /**
-         * Initialise the python interpreter and otherwise prepare the
-         * console for use.
-         */
-        void init();
+        PythonInterpreter();
+        ~PythonInterpreter();
 
         /**
-         * Change the visible prompt.
+         * Interaction with the subinterpreter.
          */
-        void setPromptMode(PromptMode mode = PRIMARY);
-
-        /**
-         * Write input or output to the session transcript.
-         */
-        void addInput(const QString& input);
-        void addOutput(const QString& output);
-
-        /**
-         * Encode special characters so that the given text can be
-         * appended to the session transcript without causing HTML
-         * confusion.
-         */
-        QString encode(const QString& plaintext);
+        bool executeLine(const char* line);
+        void setVar(const char* name, regina::NPacket* value);
 };
 
 #endif
