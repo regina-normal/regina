@@ -9,8 +9,7 @@ BINARY DISTRIBUTION:
 SOURCE DISTRIBUTION:
 
     - To configure, edit Makefile.options.
-    - To compile, type "make bin".
-    - To run, type "make run".
+    - To compile everything, type "make bin".
     - To make the documentation, type "make bindocs".  The documentation
           will be generated and placed in docs/normal/docs/.  A complete
           documentation jar will also be placed in bin/.
