@@ -1,6 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 # ---------- Options ----------
+
+# Classpath separator.
+# This should be ":" under linux/unix environments and ";" under windows.
+cps=":"
 
 # File in the options directory containing runtime options.
 options=runtime.opt
@@ -116,7 +120,7 @@ else
 	. "$options"
 
 	# Run the application.
-	command="$Java \"-Djava.library.path=$JNIDir\" \"-DREGINA_OPTIONS=$REGINA_OPTIONS\" -cp \"$JavaUI:$JavaJNI:$JavaCORBA:$DocJar:$BTools:$JPython:$JavaHelp:$ExtraClasses\" normal.Application $@"
+	command="$Java \"-Djava.library.path=$JNIDir\" \"-DREGINA_OPTIONS=$REGINA_OPTIONS\" -cp \"$JavaUI$cps$JavaJNI$cps$JavaCORBA$cps$DocJar$cps$BTools$cps$JPython$cps$JavaHelp$cps$ExtraClasses\" normal.Application $@"
 
 	if ! eval $command; then
 		echo
