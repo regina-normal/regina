@@ -50,6 +50,7 @@ ReginaPrefSet::ReginaPrefSet() :
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
         treeJumpSize(10),
         triEditMode(DirectEdit),
+        triGAPExec("gap"),
         triInitialTab(Gluings),
         triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6) {

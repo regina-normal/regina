@@ -476,6 +476,10 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.triSurfacePropsThreshold = config->readUnsignedNumEntry(
         "SurfacePropsThreshold", 6);
 
+    config->setGroup("Extensions");
+    globalPrefs.triGAPExec = config->readEntry("GAPExec", "gap").
+        stripWhiteSpace();
+
     globalPrefs.readPythonLibraries();
 
     emit preferencesChanged(globalPrefs);
@@ -549,6 +553,9 @@ void ReginaMain::saveOptions() {
 
     config->writeEntry("SurfacePropsThreshold",
         globalPrefs.triSurfacePropsThreshold);
+
+    config->setGroup("Extensions");
+    config->writeEntry("GAPExec", globalPrefs.triGAPExec);
 
     globalPrefs.writePythonLibraries();
 

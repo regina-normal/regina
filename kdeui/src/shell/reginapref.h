@@ -115,6 +115,7 @@ class ReginaPrefTri : public QVBox {
         QComboBox* comboInitialTab;
         QComboBox* comboInitialAlgebraTab;
         QLineEdit* editSurfacePropsThreshold;
+        QLineEdit* editGAPExec;
 
     public:
         ReginaPrefTri(QWidget* parent = 0);

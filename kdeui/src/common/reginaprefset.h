@@ -96,6 +96,9 @@ struct ReginaPrefSet {
              the packet tree. */
     TriEditMode triEditMode;
         /**< The default mode for editing triangulations. */
+    QString triGAPExec;
+        /**< The executable for starting GAP.  This need not include a
+             directory (in which case the search path will be used). */
     TriTab triInitialTab;
         /**< The initially visible top-level tab for a new triangulation
              viewer/editor. */

@@ -42,6 +42,7 @@
 #include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kstandarddirs.h>
 #include <ktip.h>
 #include <qcheckbox.h>
 #include <qheader.h>
@@ -189,6 +190,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     triPrefs->editSurfacePropsThreshold->setText(
         QString::number(prefSet.triSurfacePropsThreshold));
+    triPrefs->editGAPExec->setText(prefSet.triGAPExec);
 
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
@@ -225,6 +227,7 @@ void ReginaPreferences::slotApply() {
     // Propagate changes to the main window.
     bool ok;
     unsigned uintVal;
+    QString strVal;
 
     prefSet.autoDock = generalPrefs->cbAutoDock->isChecked();
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
@@ -278,6 +281,48 @@ void ReginaPreferences::slotApply() {
             "surface properties will be calculated automatically."));
         triPrefs->editSurfacePropsThreshold->setText(
             QString::number(prefSet.triSurfacePropsThreshold));
+    }
+
+    strVal = triPrefs->editGAPExec->text().stripWhiteSpace();
+    if (strVal.isEmpty()) {
+        // No no no.
+        triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+    } else if (strVal == "gap") {
+        // Don't run any checks, since this is the default.
+        // GAP might not be installed.
+        prefSet.triGAPExec = strVal;
+    } else if (strVal.find('/') >= 0) {
+        // We've specified our own executable with a full path.
+        // Let's be anal about it.
+        QFileInfo info(strVal);
+        if (! info.exists()) {
+            KMessageBox::error(this, i18n("The GAP executable %1 "
+                "does not exist.").arg(strVal));
+            triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+        } else if (! (info.isFile() && info.isExecutable())) {
+            KMessageBox::error(this, i18n("The GAP executable %1 "
+                "is not actually an executable file.").arg(strVal));
+            triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+        } else {
+            // Looking fine.  Make it absolute.
+            prefSet.triGAPExec = info.absFilePath();
+            triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+        }
+    } else {
+        // Search on the system path.
+        // Leave their setting alone, whatever it is, since they're
+        // being vague about it.  Maybe they don't have GAP installed.
+        if (KStandardDirs::findExe(strVal).isNull())
+            KMessageBox::informationList(this, i18n("The GAP executable %1 "
+                "could not be found on the default search path.  This means "
+                "that you will not be able to use GAP from within Regina.\n"
+                "This is not really a problem; it just means that Regina "
+                "will have to do its own (far less effective) group "
+                "simplifications.\n"
+                "The following directories are included in the default "
+                "search path:").arg(strVal), KStandardDirs::systemPaths(),
+                i18n("GAP Executable Not Found"));
+        prefSet.triGAPExec = strVal;
     }
 
     prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
@@ -418,6 +463,25 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
         "surface properties will be calculated automatically.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(editSurfacePropsThreshold, msg);
+
+    // Set up the GAP executable.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("GAP executable:"), box);
+    editGAPExec = new KLineEdit(box);
+    msg = i18n("<qt>The command used to run GAP (Groups, Algorithms and "
+        "Programming).  GAP can be used to help simplify presentations "
+        "of fundamental groups.<p>"
+        "This should be a single executable name (e.g., <i>gap</i>).  You "
+        "may specify the full path to the executable if you wish "
+        "(e.g., <i>/usr/bin/gap</i>); otherwise the default search path "
+        "will be used.<p>"
+        "There is no trouble if GAP is not installed; this just means that "
+        "Regina will have to do its own (much less effective) group "
+        "simplifications.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(editGAPExec, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);
