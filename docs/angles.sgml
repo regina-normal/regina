@@ -3,7 +3,7 @@
      See regina.sgml for further details. -->
 
 <chapter id="angles">
- <title>Working with Angle Structures</title>
+ <title>Angle Structures</title>
 
  <para>
   An <firstterm>angle structure</firstterm> on a triangulation is a

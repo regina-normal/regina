@@ -3,7 +3,7 @@
      See regina.sgml for further details. -->
 
 <chapter id="triangulations">
- <title>Working with Triangulations</title>
+ <title>Triangulations</title>
 
  <para>
   Most 3-manifolds in &regina; are represented by
