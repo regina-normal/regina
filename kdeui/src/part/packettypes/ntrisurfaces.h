@@ -35,6 +35,9 @@
 
 #include "../packettabui.h"
 
+class QButton;
+class QLabel;
+
 namespace regina {
     class NPacket;
     class NTriangulation;
@@ -56,6 +59,10 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QLabel* zeroEff;
+        QLabel* splitting;
+        QButton* btnZeroEff;
+        QButton* btnSplitting;
 
     public:
         /**
@@ -71,6 +78,13 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+    public slots:
+        /**
+         * Calculate properties.
+         */
+        void calculateZeroEff();
+        void calculateSplitting();
 };
 
 #endif
