@@ -88,6 +88,7 @@ class NTriCompositionUI : public PacketViewerTab {
          * Fill the list view with information.
          */
         void findAugTriSolidTori();
+        void findL31Pillows();
         void findLayeredChainPairs();
         void findLayeredLensSpaces();
         void findLayeredLoops();

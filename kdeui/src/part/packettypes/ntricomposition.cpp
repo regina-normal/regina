@@ -29,6 +29,7 @@
 // Regina core includes:
 #include "manifold/nmanifold.h"
 #include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nl31pillow.h"
 #include "subcomplex/nlayeredchain.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
@@ -96,6 +97,7 @@ void NTriCompositionUI::refresh() {
 
     // Look for complete closed triangulations.
     findAugTriSolidTori();
+    findL31Pillows();
     findLayeredChainPairs();
     findLayeredLensSpaces();
     findLayeredLoops();
@@ -189,6 +191,32 @@ void NTriCompositionUI::findAugTriSolidTori() {
                     i18n("Attached: 3 layered solid tori"));
 
             delete aug;
+        }
+    }
+}
+
+void NTriCompositionUI::findL31Pillows() {
+    unsigned long nComps = tri->getNumberOfComponents();
+
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    regina::NL31Pillow* pillow;
+    for (unsigned long i = 0; i < nComps; i++) {
+        pillow = regina::NL31Pillow::isL31Pillow(tri->getComponent(i));
+        if (pillow) {
+            id = addComponentSection(i18n("L(3,1) pillow ") +
+                pillow->getName().c_str());
+
+            details = new KListViewItem(id, i18n("Component %1").arg(i));
+
+            details = new KListViewItem(id, details,
+                i18n("Pillow interior vertex: %1").
+                arg(tri->getVertexIndex(
+                    pillow->getTetrahedron(0)->getVertex(
+                    pillow->getInteriorVertex(0)))));
+
+            delete pillow;
         }
     }
 }
