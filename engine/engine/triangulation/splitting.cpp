@@ -84,7 +84,7 @@ bool NTriangulation::insertSplittingSurface(const NString& sig) {
         /* Contains 0 or 1 in each place denoting whether we've seen
            that position's letter before. */
 
-    fill(letterPos, letterPos + nAlpha, nAlpha);
+    std::fill(letterPos, letterPos + nAlpha, nAlpha);
     unsigned whichPos = 0;
         /* Which letter position are we about to encounter? */
     unsigned cycleStart = 0;
@@ -130,7 +130,7 @@ bool NTriangulation::insertSplittingSurface(const NString& sig) {
     //   bottom right -> top left: 2 -> 3
     unsigned nTet = largestLetter + 1;
     NTetrahedron** tet = new (NTetrahedron*)[nTet];
-    generate(tet, tet + nTet, FuncNew<NTetrahedron>());
+    std::generate(tet, tet + nTet, FuncNew<NTetrahedron>());
 
     unsigned next;
     NPerm myFacePerm, yourFacePerm;

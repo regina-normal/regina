@@ -74,7 +74,7 @@ const NGroupExpressionTerm& NGroupExpression::getTerm(
 NGroupExpression* NGroupExpression::inverse() const {
     NGroupExpression* ans = new NGroupExpression();
     transform(terms.begin(), terms.end(), front_inserter(ans->terms),
-        mem_fun_ref(&NGroupExpressionTerm::inverse));
+        std::mem_fun_ref(&NGroupExpressionTerm::inverse));
     return ans;
 }
 
@@ -90,7 +90,7 @@ NGroupExpression* NGroupExpression::power(long exponent) const {
     else
         for (i = 0; i > exponent; i--)
             transform(terms.begin(), terms.end(), front_inserter(ans->terms),
-                mem_fun_ref(&NGroupExpressionTerm::inverse));
+                std::mem_fun_ref(&NGroupExpressionTerm::inverse));
     return ans;
 }
 
@@ -276,7 +276,8 @@ bool NGroupPresentation::intelligentSimplify() {
                     tit != rel->getTerms().end(); tit++) {
                 // Find this generator, or insert it with exponent 0 if
                 // it's not already present.
-                expIt = exponents.insert(make_pair((*tit).generator, 0)).first;
+                expIt = exponents.insert(
+                    std::make_pair((*tit).generator, 0)).first;
                 if ((*tit).exponent < 0)
                     (*expIt).second -= (*tit).exponent;
                 else
@@ -284,8 +285,8 @@ bool NGroupPresentation::intelligentSimplify() {
             }
             // Did any generator appear precisely once?
             expIt = find_if(exponents.begin(), exponents.end(), compose1(
-                bind2nd(equal_to<long>(), 1),
-                select2nd<pair<unsigned long, long> >()));
+                bind2nd(std::equal_to<long>(), 1),
+                std::select2nd<std::pair<unsigned long, long> >()));
             if (expIt == exponents.end()) {
                 // Can't use this relation.  Move on.
                 exponents.clear();
@@ -363,7 +364,7 @@ bool NGroupPresentation::intelligentSimplify() {
 }
 
 NString NGroupPresentation::recogniseGroup() {
-    ostringstream out;
+    std::ostringstream out;
     unsigned long nRels = relations.size();
     NGroupExpression* rel;
     long exp;
@@ -439,7 +440,7 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
         out << "g0, g1";
     else
         out << "g0 .. g" << (nGenerators - 1);
-    out << endl;
+    out << std::endl;
 
     out << "Relations:\n";
     if (relations.empty())
@@ -449,7 +450,7 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
                 it != relations.end(); it++) {
             out << "    ";
             (*it)->writeTextShort(out);
-            out << endl;
+            out << std::endl;
         }
 }
 

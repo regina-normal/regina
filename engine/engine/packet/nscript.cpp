@@ -78,7 +78,7 @@ void NScript::writePacket(NFile& out) const {
         out.writeString(*it);
 
     // Write the properties.
-    streampos bookmark(0);
+    std::streampos bookmark(0);
 
     // The variables will be written as properties to allow for changing
     // of their representation in future file formats.
@@ -111,6 +111,7 @@ void NScript::initialiseAllProperties() {
 
 void NScript::readIndividualProperty(NFile& infile, unsigned propType) {
     if (propType == PROP_VARIABLE)
-        variables.insert(make_pair(infile.readString(), infile.readString()));
+        variables.insert(std::make_pair(infile.readString(),
+            infile.readString()));
 }
 

@@ -361,7 +361,7 @@ void NNormalSurface::writeToFile(NFile& out) const {
     out.writeInt(-1);
     
     // Write properties.
-    streampos bookmark(0);
+    std::streampos bookmark(0);
 
     bookmark = writePropertyHeader(out, PROPID_SURFACENAME);
     out.writeString(name);

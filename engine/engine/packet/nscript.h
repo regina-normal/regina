@@ -244,7 +244,7 @@ inline unsigned long NScript::getNumberOfVariables() const {
     return variables.size();
 }
 inline bool NScript::addVariable(const NString& name, const NString& value) {
-    return variables.insert(make_pair(name, value)).second;
+    return variables.insert(std::make_pair(name, value)).second;
 }
 inline void NScript::removeVariable(const NString& name) {
     variables.erase(name);

@@ -32,24 +32,24 @@
 void NPropertyHolder::readProperties(NFile& infile) {
     unsigned propType = infile.readUInt();
     while (propType) {
-        streampos bookmark = infile.readPos();
+        std::streampos bookmark = infile.readPos();
         readIndividualProperty(infile, propType);
         infile.setPosition(bookmark);
         propType = infile.readUInt();
     }
 }
 
-streampos NPropertyHolder::writePropertyHeader(NFile& outfile,
+std::streampos NPropertyHolder::writePropertyHeader(NFile& outfile,
         unsigned propType) const {
     outfile.writeUInt(propType);
-    streampos bookmark = outfile.getPosition();
+    std::streampos bookmark = outfile.getPosition();
     outfile.writePos(0);
     return bookmark;
 }
 
-void NPropertyHolder::writePropertyFooter(NFile& outfile, streampos bookmark)
-        const {
-    streampos finalPos = outfile.getPosition();
+void NPropertyHolder::writePropertyFooter(NFile& outfile,
+        std::streampos bookmark) const {
+    std::streampos finalPos = outfile.getPosition();
     outfile.setPosition(bookmark);
     outfile.writePos(finalPos);
     outfile.setPosition(finalPos);

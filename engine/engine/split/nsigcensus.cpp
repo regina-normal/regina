@@ -41,7 +41,7 @@ void* NSigCensus::run(void* param) {
     sig.nCycles = 0;
     sig.nCycleGroups = 0;
     nextLabel = 0;
-    fill(used, used + sig.order, 0);
+    std::fill(used, used + sig.order, 0);
     totalFound = 0;
 
     // Try creating a first cycle.
@@ -103,7 +103,7 @@ bool NSigCensus::extendAutomorphisms() {
                 else if (result == 0)
                     automorph[sig.nCycleGroups].push_back(
                         new NSigPartialIsomorphism(*iso));
-            } while (next_permutation(iso->labelImage + firstLabel,
+            } while (std::next_permutation(iso->labelImage + firstLabel,
                     iso->labelImage + nextLabel));
             delete iso;
         }

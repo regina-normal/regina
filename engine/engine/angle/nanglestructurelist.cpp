@@ -142,7 +142,7 @@ void NAngleStructureList::writePacket(NFile& out) const {
     }
 
     // Write the properties.
-    streampos bookmark(0);
+    std::streampos bookmark(0);
 
     if (calculatedAllowStrict) {
         bookmark = writePropertyHeader(out, PROPID_ALLOWSTRICT);

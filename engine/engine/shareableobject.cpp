@@ -30,13 +30,13 @@
 #include "shareableobject.h"
 
 NString ShareableObject::toString() const {
-    ostringstream out;
+    std::ostringstream out;
     writeTextShort(out);
     return out.str();
 }
 
 NString ShareableObject::toStringLong() const {
-    ostringstream out;
+    std::ostringstream out;
     writeTextLong(out);
     return out.str();
 }

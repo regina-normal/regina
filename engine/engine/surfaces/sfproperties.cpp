@@ -92,7 +92,7 @@ void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
 }
 
 void NSurfaceFilterProperties::writeProperties(NFile& out) const {
-    streampos bookmark(0);
+    std::streampos bookmark(0);
 
     if (eulerCharacteristic.size() > 0) {
         bookmark = writePropertyHeader(out, PROPID_EULER);

@@ -291,7 +291,7 @@ NString NPacket::makeUniqueLabel(const NString& base) const {
     NString ans;
     unsigned long extraInt = 2;
     while(1) {
-        ostringstream out;
+        std::ostringstream out;
         out << ' ' << extraInt;
         ans = base + out.str();
         if (! topLevel->findPacketLabel(ans))
@@ -327,7 +327,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
                 extraInt = 1;
                 do {
                     extraInt++;
-                    ostringstream out;
+                    std::ostringstream out;
                     out << ' ' << extraInt;
                     newLabel = label + out.str();
                 } while (! labels.insert(newLabel).second);

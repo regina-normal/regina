@@ -83,7 +83,7 @@ void NAngleStructure::writeToFile(NFile& out) const {
     out.writeInt(-1);
     
     // Write properties.
-    streampos bookmark(0);
+    std::streampos bookmark(0);
 
     bookmark = writePropertyHeader(out, PROPID_FLAGS);
     out.writeULong(flags);

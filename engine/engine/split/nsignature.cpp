@@ -33,11 +33,11 @@ NSignature::NSignature(const NSignature& sig) : order(sig.order),
         nCycles(sig.nCycles), cycleStart(new unsigned[sig.nCycles + 1]),
         cycleLen(new unsigned[sig.nCycles]), nCycleGroups(sig.nCycleGroups),
         cycleGroupStart(new unsigned[sig.nCycleGroups + 1]) {
-    copy(sig.label, sig.label + 2 * sig.order, label);
-    copy(sig.labelInv, sig.labelInv + 2 * sig.order, labelInv);
-    copy(sig.cycleStart, sig.cycleStart + sig.nCycles + 1, cycleStart);
-    copy(sig.cycleLen, sig.cycleLen + sig.nCycles, cycleLen);
-    copy(sig.cycleGroupStart, sig.cycleGroupStart + sig.nCycleGroups + 1,
+    std::copy(sig.label, sig.label + 2 * sig.order, label);
+    std::copy(sig.labelInv, sig.labelInv + 2 * sig.order, labelInv);
+    std::copy(sig.cycleStart, sig.cycleStart + sig.nCycles + 1, cycleStart);
+    std::copy(sig.cycleLen, sig.cycleLen + sig.nCycles, cycleLen);
+    std::copy(sig.cycleGroupStart, sig.cycleGroupStart + sig.nCycleGroups + 1,
         cycleGroupStart);
 }
 

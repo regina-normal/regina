@@ -190,7 +190,7 @@ void NCensus::matchFacePairs() {
             if (isCanonical()) {
                 if (progress) {
                     // Update the current state of progress.
-                    ostringstream msg;
+                    std::ostringstream msg;
                     tmpFace.tet = 0;
                     tmpFace.face = 0;
                     for (; tmpFace.tet < (int)nTetrahedra; tmpFace++) {

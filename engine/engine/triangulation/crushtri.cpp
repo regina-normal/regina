@@ -291,7 +291,7 @@ bool NTriangulation::crushMaximalForest() {
     // Remove the squished tetrahedra.
     // For each tetrahedron, remove it and delete it.
     // TODO: Convert the following loop to a for_each() call.
-    for (hash_set<NTetrahedron*, HashPointer>::iterator tetIt =
+    for (std::hash_set<NTetrahedron*, HashPointer>::iterator tetIt =
             cTetrahedra.begin(); tetIt != cTetrahedra.end(); tetIt++)
         delete tetrahedra.remove(*tetIt);
 

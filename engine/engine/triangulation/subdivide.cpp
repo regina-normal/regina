@@ -224,7 +224,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // For each tetrahedron, remove it and delete it.
     for_each(tetList.begin(), tetList.end(),
         compose1(FuncDelete<NTetrahedron>(),
-        bind1st(mem_fun(&NTriangulation::removeTetrahedron), this)));
+        std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this)));
 
     gluingsHaveChanged();
     return true;

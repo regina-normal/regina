@@ -174,8 +174,9 @@ void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes) {
     while (current <= roof) {
         // Is current prime?
         if (find_if(primes.begin(), primes.end(), compose1(
-                bind2nd(equal_to<NLargeInteger>(), NLargeInteger::zero),
-                bind1st(modulus<NLargeInteger>(), current))) == primes.end())
+                bind2nd(std::equal_to<NLargeInteger>(), NLargeInteger::zero),
+                bind1st(std::modulus<NLargeInteger>(), current))) ==
+                primes.end())
             primes.push_back(current);
         current += 2;
     }

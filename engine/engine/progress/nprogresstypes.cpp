@@ -31,7 +31,7 @@
 #include <sstream>
 
 NString NProgressNumber::internalGetDescription() const {
-    ostringstream out;
+    std::ostringstream out;
 
     mutexLock();
     out << completed;

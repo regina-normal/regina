@@ -95,7 +95,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "  -----+-------------------------------------------------------\n";
     for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
         tet = tetrahedra[tetPos];
-        out << "  " << setw(3) << tetPos << "  |           ";
+        out << "  " << std::setw(3) << tetPos << "  |           ";
         for (face=3; face>=0; face--) {
             out << "  ";
             adjTet = tet->getAdjacentTetrahedron(face);
@@ -103,7 +103,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
                 out << " boundary";
             else {
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
-                out << setw(3) << tetrahedra.position(adjTet) << " (";
+                out << std::setw(3) << tetrahedra.position(adjTet) << " (";
                 for (vertex=0; vertex<4; vertex++) {
                     if (vertex == face) continue;
                     out << adjPerm[vertex];
@@ -120,9 +120,10 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "  -----+--------------------------\n";
     for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
         tet = tetrahedra[tetPos];
-        out << "  " << setw(3) << tetPos << "  |          ";
+        out << "  " << std::setw(3) << tetPos << "  |          ";
         for (vertex=0; vertex<4; vertex++)
-            out << ' ' << setw(3) << vertices.position(tet->getVertex(vertex));
+            out << ' ' << std::setw(3) <<
+                vertices.position(tet->getVertex(vertex));
         out << '\n';
     }
     out << '\n';
@@ -132,10 +133,10 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "  -----+--------------------------------\n";
     for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
         tet = tetrahedra[tetPos];
-        out << "  " << setw(3) << tetPos << "  |        ";
+        out << "  " << std::setw(3) << tetPos << "  |        ";
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
-                out << ' ' << setw(3)
+                out << ' ' << std::setw(3)
                     << edges.position(tet->getEdge(edgeNumber[start][end]));
         out << '\n';
     }
@@ -146,9 +147,9 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     out << "  -----+------------------------\n";
     for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
         tet = tetrahedra[tetPos];
-        out << "  " << setw(3) << tetPos << "  |        ";
+        out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
-            out << ' ' << setw(3) << faces.position(tet->getFace(face));
+            out << ' ' << std::setw(3) << faces.position(tet->getFace(face));
         out << '\n';
     }
     out << '\n';
@@ -195,7 +196,7 @@ void NTriangulation::writePacket(NFile& out) const {
     out.writeLong(-1);
 
     // Write the properties.
-    streampos bookmark(0);
+    std::streampos bookmark(0);
 
     if (calculatedFundamentalGroup) {
         bookmark = writePropertyHeader(out, PROPID_FUNDAMENTALGROUP);

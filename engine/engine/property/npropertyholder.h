@@ -70,7 +70,7 @@ class NFile;
  *         the information read during readIndividualProperty(),
  *         noting that the property type and bookmarking details should
  *         <b>not</b> be written;
- *       <li> Call writePropertyFooter(), passing the \c streampos
+ *       <li> Call writePropertyFooter(), passing the <tt>std::streampos</tt>
  *         that was returned from writePropertyHeader().
  *     </ul>
  *   <li> Call writeAllPropertiesFooter().
@@ -130,7 +130,8 @@ class NPropertyHolder {
          * @return bookmarking information that should later be passed
          * to writePropertyFooter().
          */
-        streampos writePropertyHeader(NFile& outfile, unsigned propType) const;
+        std::streampos writePropertyHeader(NFile& outfile,
+            unsigned propType) const;
 
         /**
          * Writes a footer to file for a property containing
@@ -139,10 +140,10 @@ class NPropertyHolder {
          * @param outfile the file to which the footer will be written.
          * This should be open for writing and at the position
          * immediately after the internal property details were written.
-         * @param bookmark the \c streampos returned from
+         * @param bookmark the <tt>std::streampos</tt> returned from
          * writePropertyHeader().
          */
-        void writePropertyFooter(NFile& outfile, streampos bookmark) const;
+        void writePropertyFooter(NFile& outfile, std::streampos bookmark) const;
 
         /**
          * Writes a footer to file to signify that all properties have

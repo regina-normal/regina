@@ -52,10 +52,11 @@ NSigPartialIsomorphism::NSigPartialIsomorphism(
         cyclePreImage(iso.nCycles ? new unsigned[iso.nCycles] : 0),
         cycleStart(iso.nCycles ? new unsigned[iso.nCycles] : 0), dir(iso.dir) {
     if (iso.nLabels)
-        copy(iso.labelImage, iso.labelImage + iso.nLabels, labelImage);
+        std::copy(iso.labelImage, iso.labelImage + iso.nLabels, labelImage);
     if (iso.nCycles) {
-        copy(iso.cyclePreImage, iso.cyclePreImage + iso.nCycles, cyclePreImage);
-        copy(iso.cycleStart, iso.cycleStart + iso.nCycles, cycleStart);
+        std::copy(iso.cyclePreImage, iso.cyclePreImage + iso.nCycles,
+            cyclePreImage);
+        std::copy(iso.cycleStart, iso.cycleStart + iso.nCycles, cycleStart);
     }
 }
 
@@ -67,11 +68,11 @@ NSigPartialIsomorphism::NSigPartialIsomorphism(
         cyclePreImage(newCycles ? new unsigned[newCycles] : 0),
         cycleStart(newCycles ? new unsigned[newCycles] : 0), dir(base.dir) {
     if (base.nLabels)
-        copy(base.labelImage, base.labelImage + base.nLabels, labelImage);
+        std::copy(base.labelImage, base.labelImage + base.nLabels, labelImage);
     if (base.nCycles) {
-        copy(base.cyclePreImage, base.cyclePreImage + base.nCycles,
+        std::copy(base.cyclePreImage, base.cyclePreImage + base.nCycles,
             cyclePreImage);
-        copy(base.cycleStart, base.cycleStart + base.nCycles, cycleStart);
+        std::copy(base.cycleStart, base.cycleStart + base.nCycles, cycleStart);
     }
 }
 
@@ -121,7 +122,7 @@ void NSigPartialIsomorphism::makeCanonical(const NSignature& sig,
         // should be presented.
         for (c = fromCycle; c < toCycle; c++)
             cyclePreImage[c] = c;
-        sort(cyclePreImage + fromCycle, cyclePreImage + toCycle,
+        std::sort(cyclePreImage + fromCycle, cyclePreImage + toCycle,
             ShorterCycle(sig, *this));
     }
 }

@@ -42,17 +42,17 @@ void (*NString::errorHandler)(strError) = defaultHandler;
 
 static void defaultHandler(NString::strError err) {
     // Default error handler.
-    cerr << "\aERROR in NString object: ";
+    std::cerr << "\aERROR in NString object: ";
 
     switch (err) {
         case NString::seAlloc :
-            cout << "Memory allocation failure.";
+            std::cout << "Memory allocation failure.";
             break;
         case NString::seTooLong :
-            cout << "Exceeded " << UINT_MAX << " character limit.";
+            std::cout << "Exceeded " << UINT_MAX << " character limit.";
             break;
     }
-    cerr << '\n';
+    std::cerr << '\n';
     exit(1);
 }
 
@@ -93,7 +93,7 @@ NString::NString(const char* cStr) : len(strlen(cStr)) {
     memcpy(txt, cStr, len);
 }
 
-NString::NString(const string& str) : len(str.length()) {
+NString::NString(const std::string& str) : len(str.length()) {
     siz = allocLen(len);
     txt = new char[siz];
 

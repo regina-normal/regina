@@ -62,14 +62,14 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
             // Find this degree, or insert it with frequency 0 if it's
             // not already present.
             mapIt = map1.insert(
-                make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
             (*mapIt).second++;
             it++;
         }
         it.init(other.edges);
         while (! it.done()) {
             mapIt = map2.insert(
-                make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
             (*mapIt).second++;
             it++;
         }
@@ -82,14 +82,14 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
         VertexIterator it(vertices);
         while (! it.done()) {
             mapIt = map1.insert(
-                make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
             (*mapIt).second++;
             it++;
         }
         it.init(other.vertices);
         while (! it.done()) {
             mapIt = map2.insert(
-                make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
             (*mapIt).second++;
             it++;
         }
@@ -102,14 +102,14 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
         ComponentIterator it(components);
         while (! it.done()) {
             mapIt = map1.insert(
-                make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
+                std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
             (*mapIt).second++;
             it++;
         }
         it.init(other.components);
         while (! it.done()) {
             mapIt = map2.insert(
-                make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
+                std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
             (*mapIt).second++;
             it++;
         }
@@ -122,14 +122,14 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
         BoundaryComponentIterator it(boundaryComponents);
         while (! it.done()) {
             mapIt = map1.insert(
-                make_pair((*it)->getNumberOfFaces(), 0)).first;
+                std::make_pair((*it)->getNumberOfFaces(), 0)).first;
             (*mapIt).second++;
             it++;
         }
         it.init(other.boundaryComponents);
         while (! it.done()) {
             mapIt = map2.insert(
-                make_pair((*it)->getNumberOfFaces(), 0)).first;
+                std::make_pair((*it)->getNumberOfFaces(), 0)).first;
             (*mapIt).second++;
             it++;
         }

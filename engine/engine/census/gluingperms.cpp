@@ -150,7 +150,7 @@ void NCensus::trySolution() {
     // Put it in the census!
     // Make sure it has a charming label.
     NPacket* item = new NTriangulation(working);
-    ostringstream out;
+    std::ostringstream out;
     out << "Item " << whichSoln;
     item->setPacketLabel(parent->makeUniqueLabel(out.str()));
 

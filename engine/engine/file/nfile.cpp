@@ -224,7 +224,7 @@ void NFile::writePacketTree(NPacket* packet) {
     // Write the packet.
     writeInt(packet->getPacketType());
     writeString(packet->getPacketLabel());
-    streampos bookmarkPos(getPosition());
+    std::streampos bookmarkPos(getPosition());
     writePos(0);
     packet->writePacket(*this);
     
@@ -244,14 +244,14 @@ void NFile::writePacketTree(NPacket* packet) {
     writeChar(TREE_NO_MORE_CHILDREN);
 
     // Write bookmarking information.
-    streampos finalPos(getPosition());
+    std::streampos finalPos(getPosition());
     setPosition(bookmarkPos);
     writePos(finalPos);
     setPosition(finalPos);
 }
 
 NPacket* NFile::readPacketTree(NPacket* parent) {
-    streampos bookmark(0);
+    std::streampos bookmark(0);
     NPacket* ans = readIndividualPacket(parent, bookmark);
     if (! ans) {
         setPosition(bookmark);
@@ -281,7 +281,8 @@ NPacket* NFile::readPacketTree(NPacket* parent) {
     return ans;
 }
 
-NPacket* NFile::readIndividualPacket(NPacket* parent, streampos& bookmark) {
+NPacket* NFile::readIndividualPacket(NPacket* parent,
+        std::streampos& bookmark) {
     int packetType = readInt();
     NString packetLabel = readString();
     bookmark = readPos();
@@ -306,22 +307,22 @@ NPacket* NFile::readIndividualPacket(NPacket* parent, streampos& bookmark) {
     return 0;
 }
 
-streampos NFile::readPos()
+std::streampos NFile::readPos()
 {
     int i;
     unsigned char b[SIZE_FILEPOS];
     for (i=0; i<SIZE_FILEPOS; i++)
         b[i] = resource->getChar();
-    streamoff ans(0);
+    std::streamoff ans(0);
     for (i=SIZE_FILEPOS-1; i>=0; i--) {
         ans <<= 8;
         ans += b[i];
     }
-    return streampos(ans);
+    return std::streampos(ans);
 }
 
-void NFile::writePos(streampos realVal) {
-    streamoff val(realVal);
+void NFile::writePos(std::streampos realVal) {
+    std::streamoff val(realVal);
     for (int i=0; i<SIZE_FILEPOS; i++) {
         resource->putChar((unsigned char)val);
         val >>= 8;
