@@ -52,6 +52,8 @@
  *  </ul>
  *  Thanks to:
  *  <ul>
+ *      <li>Marc Culler</li>
+ *      <li>Nathan Dunfield</li>
  *      <li>William Jaco</li>
  *      <li>Hyam Rubinstein</li>
  *      <li>Jeff Weeks</li>

@@ -93,6 +93,8 @@ public class Application extends Applet implements ActionListener {
         "Additional code contributed by:\n" +
         "    David Letscher\n" +
         "Thanks to:\n" +
+        "    Marc Culler\n" +
+        "    Nathan Dunfield\n" +
         "    William Jaco\n" +
         "    Hyam Rubinstein\n" +
         "    Jeff Weeks\n" +
