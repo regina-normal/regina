@@ -9,16 +9,26 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.1.2  [ under development ]
     OVERALL:
-        - Updated INSTALL.txt to reflect current --prefix guessing.
         - Added a suggested way of citing Regina.
         - Updated configure scripts so that the python interface builds
           out of the box on a larger number of platforms (specifically Red Hat
           and Fedora Core are now supported).  Many thanks to Craig Macintyre
           for his patience and assistance with this.
+        - More updates to the troubleshooting section; overhauled the
+          README.txt and website to hopefully make everything clearer
+          and the important information easier to find.
+        - Updated INSTALL.txt to reflect current --prefix guessing.
+    ENGINE:
+        Class NTriangulation:
+            - New routine simplifyFundamentalGroup() to all external
+              bodies (such as GAP) to simplify group presentations.
     USER INTERFACE:
-        Class NTextUI:
-            - Fixed compile error when building against an STL-enabled Qt
-              (thanks to Robert Myers for spotting this one).
+        - Allow users to simplify fundamental groups using GAP.
+        - Added "Education" to the categories for the desktop file, since
+          KDE seems adamant about having no separate maths/science menu.
+          Anything is better than showing up in Lost & Found. :)
+        - Fixed compile error when building against an STL-enabled Qt
+          (thanks to Robert Myers for spotting this one).
 
 Version 4.1.1  [ 24 April, 2004 ]
     USER INTERFACE:
