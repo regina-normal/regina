@@ -1402,8 +1402,11 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
          *
-         * \todo \bug The restrictions on allowing this move to take
-         * place are currently too strong and rule out some valid cases.
+         * \todo \bugurgent The restrictions on allowing this move to take
+         * place are currently wrong.  Many valid cases are ruled out
+         * (as acknowledged in the original commit of the code), but
+         * certain invalid cases are also allowed which will almost
+         * certainly crash the program.
          *
          * @param e the edge to collapse.
          * @param check \c true if we are to check whether the move is
