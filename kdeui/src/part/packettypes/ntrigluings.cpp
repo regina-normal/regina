@@ -28,6 +28,7 @@
 
 // Regina core includes:
 #include "file/nxmlfile.h"
+#include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -451,10 +452,23 @@ void NTriGluingsUI::splitIntoComponents() {
         KMessageBox::information(ui, i18n("This triangulation is connected "
             "and therefore has only one component."));
     else {
-        unsigned long nComps = tri->splitIntoComponents();
+        // If there are already children of this triangulation, insert
+        // the new triangulations at a deeper level.
+        NPacket* base;
+        if (tri->getFirstTreeChild()) {
+            base = new regina::NContainer();
+            tri->insertChildLast(base);
+            base->setPacketLabel(base->makeUniqueLabel(
+                tri->getPacketLabel() + " - Components"));
+        } else
+            base = tri;
+
+        // Make the split.
+        unsigned long nComps = tri->splitIntoComponents(base);
 
         // Make sure the new components are visible.
-        enclosingPane->getPart()->ensureVisibleInTree(tri->getLastTreeChild());
+        enclosingPane->getPart()->ensureVisibleInTree(
+            base->getFirstTreeChild());
 
         // Tell the user what happened.
         KMessageBox::information(ui, i18n("%1 components were extracted.").
@@ -472,18 +486,30 @@ void NTriGluingsUI::connectedSumDecomposition() {
             "currently only available for closed orientable connected "
             "3-manifold triangulations."));
     else {
-        unsigned long nSummands = tri->connectedSumDecomposition();
+        // If there are already children of this triangulation, insert
+        // the new triangulations at a deeper level.
+        NPacket* base;
+        if (tri->getFirstTreeChild()) {
+            base = new regina::NContainer();
+            tri->insertChildLast(base);
+            base->setPacketLabel(base->makeUniqueLabel(
+                tri->getPacketLabel() + " - Summands"));
+        } else
+            base = tri;
+
+        // Form the decomposition.
+        unsigned long nSummands = tri->connectedSumDecomposition(base);
+
+        // Let the user know what happened.
         if (nSummands == 0)
-            KMessageBox::information(ui, i18n("This is a 3-sphere "
-                "triangulation, with no prime summands at all."));
+            KMessageBox::information(ui, i18n("This triangulation represents "
+                "a 3-sphere, and has no prime summands at all."));
         else {
             // There is at least one new summand triangulation.
-
             // Make sure the new summands are visible.
             enclosingPane->getPart()->ensureVisibleInTree(
-                tri->getLastTreeChild());
+                base->getLastTreeChild());
 
-            // Tell the user what happened.
             if (nSummands == 1)
                 KMessageBox::information(ui, i18n("This is a prime 3-manifold "
                     "triangulation.  It cannot be decomposed any further."));
