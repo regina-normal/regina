@@ -88,8 +88,6 @@ extern const int edgeEnd[6];
 /**
  * Details how an edge in the skeleton forms part of an individual
  * tetrahedron.
- *
- * \ifacescorba Not present.
  */
 class NEdgeEmbedding {
     private:
@@ -165,8 +163,6 @@ class NEdgeEmbedding {
  * Represents an edge in the skeleton of a triangulation.
  * Edges are highly temporary; once a triangulation changes, all its
  * edge objects will be deleted and new ones will be created.
- *
- * \idlfile <tt>Triangulation/NTetrahedron.idl</tt>
  */
 class NEdge : public ShareableObject {
     private:

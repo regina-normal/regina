@@ -153,59 +153,6 @@
  *  character is the corresponding permutation code (see NPerm::getPermCode()).
  */
 
-/*! \page CorbaNotes CORBA Interface
- *  
- *  CORBA may be used to communicate between a user interface and
- *  the calculation engine (possibly running on a different machine).
- *  The CORBA interface details are identical to those explained on the
- *  \ref InterfaceNotes page unless otherwise specified.  The exception
- *  is that global variables and public data members of classes are not
- *  mirrored in CORBA.
- *
- *  The CORBA objects on the CORBA server are wrappers for the
- *  corresponding \a real engine objects.  Thus the CORBA server
- *  itself may contain multiple CORBA wrappers for the same underlying
- *  engine object, and ShareableObject::sameObject() should be used to
- *  determine if two different CORBA objects on the server wrap the same
- *  underlying engine object.
- *
- *  A single object of type Engine will accessible through the naming
- *  service as <tt>regina/Engine</tt>,
- *  with kind attributes <tt>context/object</tt>.
- *  A CORBA client should connect to this Engine object on the CORBA
- *  server, from which new objects in the engine can then be created.
- *
- *  If two routines have the same name but take different types of
- *  arguments, the corresponding CORBA routines will have the argument
- *  types appended to the routine names to ensure that routine names are
- *  unique.  For instance, if a class contains routines
- *  <tt>saute()</tt>, <tt>saute(long)</tt> and <tt>saute(NEdible&)</tt>,
- *  the corresponding CORBA routines will be named <tt>saute_</tt>,
- *  <tt>saute_long</tt> and <tt>saute_NEdible</tt> respectively.
- *
- *  Objects of C++ class NLargeInteger will be passed as strings
- *  containing the corresponding decimal representations or <tt>inf</tt>
- *  for infinity.  Objects of C++ type <tt>int</tt> will be passed as
- *  type <tt>long</tt>.
- *
- *  Objects of C++ class NVertexEmbedding, NEdgeEmbedding or
- *  NFaceEmbedding will be replaced with two parameters of types
- *  NTetrahedron and <tt>long</tt>, representing the two parameters
- *  passed to the corresponding <tt>NxxxEmbeding</tt> constructor.  If
- *  such an object is to returned from a function, the function will
- *  become void and the two new parameters will appear as <tt>out</tt>
- *  parameters at the beginning of the function parameter list.
- *
- *  See the \ref InterfaceNotes page for other situations in which
- *  names or parameters of routines are routinely altered.
- *
- *  \todo \bug Audit CORBA classes for use of \c _ptr instead of \c _var.
- *  \todo \feature Clarify error messages in CORBA server and client.
- *  \todo \opturgent Improve the speed of CORBA file I/O!
- *  \todo \bugurgent Ensure a failed file open/save does not crash the
- *  CORBA engine.
- */
-
 /*! \page JavaNotes Java User Interface
  *
  *  Java wrapper classes are available in the package
@@ -252,7 +199,4 @@
  *
  *  \todo \featurelong Have \a checkjni utility that checks consistency
  *  between <tt>.h</tt> and <tt>.cpp</tt> java wrapper files.
- *  \todo \feature Provide a cowardly/hamstrung mode for the CORBA server
- *  that refuses to do anything too complex.
- *  \todo \feature Provide logging for the CORBA server.
  */

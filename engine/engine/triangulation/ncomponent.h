@@ -48,8 +48,6 @@ class NBoundaryComponent;
  * Represents a component of a triangulation.
  * Components are highly temporary; once a triangulation changes, all
  * its component objects will be deleted and new ones will be created.
- *
- * \idlfile <tt>Triangulation/NTetrahedron.idl</tt>
  */
 class NComponent : public ShareableObject {
     private:

@@ -138,10 +138,6 @@
       A direct &jython; console interface with no GUI for immediate access
       to the calculation engine
      </para></listitem>
-     <listitem><para>
-      Allows the calculation engine to run as a &corba; server, possibly
-      on a different machine from the GUI
-     </para></listitem>
     </itemizedlist>
    </para></listitem>
    <listitem><para>Extensibility:

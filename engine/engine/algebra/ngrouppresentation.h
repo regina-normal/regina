@@ -330,8 +330,6 @@ class NGroupExpression : public ShareableObject {
          * simplifies to <tt>g1^2 g2 g1 g2</tt> if it is cyclic, but does not
          * simplify at all if it is not cyclic.
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param cyclic \c true if and only if the expression may be
          * assumed to be cyclic.
          * @return \c true if and only if this expression was changed.
@@ -342,8 +340,6 @@ class NGroupExpression : public ShareableObject {
          * given substite expression.  If the given generator was found,
          * the expression will be simplified once the substitution is
          * complete.
-         *
-         * \ifacescorba All parameters are compulsory.
          *
          * @param generator the generator to be replaced.
          * @param expansion the substitute expression that will replace
@@ -426,8 +422,6 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
          * Adds one or more generators to the group presentation.
          * If the new presentation has \a g generators, the new
          * generators will be numbered <i>g</i>-1, <i>g</i>-2 and so on.
-         *
-         * \ifacescorba All parameters are compulsory.
          *
          * @param numToAdd the number of generators to add.
          * @return the number of generators in the new presentation.

@@ -174,8 +174,6 @@ class NSFS : public ShareableObject {
          * Creates a new Seifert fibred space with the given orbit
          * manifold and no exceptional fibres.
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param newOrbitGenus the genus of the orbit manifold (the
          * number of tori or projective planes that it contains).
          * @param newOrbitOrientable \c true if and only if the orbit

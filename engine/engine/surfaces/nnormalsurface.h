@@ -709,9 +709,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * No newline will be written.
          * 
          * \ifaces The paramater \a out does not exist, and is
-         * taken to be standard output.  If the engine is being accessed
-         * through CORBA, this routine does nothing.
-         * \ifacescorba Not present.
+         * taken to be standard output.
          *
          * @param out the output stream to which to write.
          */

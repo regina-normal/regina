@@ -33,11 +33,8 @@
     </group>
     <group>
      <arg><option>--jni</option></arg>
-     <arg><option>--corba</option></arg>
     </group>
     <arg><option>--jnilibname=</option><replaceable>name</replaceable></arg>
-    <arg><option>-ORBInitialHost</option> <replaceable>host</replaceable></arg>
-    <arg><option>-ORBInitialPort</option> <replaceable>port</replaceable></arg>
     <arg rep=repeat><replaceable>file</replaceable></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
@@ -163,19 +160,6 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term><option>--corba</option></term>
-     <listitem>
-      <para>
-       Access the C++ calculation engine as a &corba; server
-       application, possibly running on a different machine.
-      </para>
-      <para>
-       This is equivalent to setting configuration option
-       <parameter>REGINA_ENGINE</parameter>=<literal>corba</literal>.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
      <term><option>--jnilibname=</option><replaceable>name</replaceable>
       (default = <literal>regina-engine-jni</literal>)</term>
      <listitem>
@@ -193,38 +177,6 @@
        This option is only relevant when using &jni; engine access
        (see option <option>--jni</option> for details) and is equivalent
        to setting configuration option <parameter>REGINA_JNIENGINE</parameter>.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><option>-ORBInitialHost</option> <replaceable>host</replaceable>
-      (default = <literal>localhost</literal>)</term>
-     <listitem>
-      <para>
-       Specifies that the &corba; naming service is running on
-       the machine <replaceable>host</replaceable>.
-      </para>
-      <para>
-       This option is only relevant when using &corba; engine access
-       (see option <option>--corba</option> for details) and is
-       equivalent to setting configuration option
-       <parameter>REGINA_CORBAHOST</parameter>.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><option>-ORBInitialPort</option> <replaceable>port</replaceable>
-      (default = <literal>8088</literal>)</term>
-     <listitem>
-      <para>
-       Specifies that the &corba; naming service is listening
-       on port <replaceable>port</replaceable> on the given host.
-      </para>
-      <para>
-       This option is only relevant when using &corba; engine access
-       (see option <option>--corba</option> for details) and is
-       equivalent to setting configuration option
-       <parameter>REGINA_CORBAPORT</parameter>.
       </para>
      </listitem>
     </varlistentry>
@@ -247,8 +199,7 @@
    <title>See Also</title>
    <para>
     <link linkend="man-regina.conf">regina.conf</link>,
-    <link linkend="man-applet">regina-applet</link>,
-    <link linkend="man-engine-corba">regina-engine-corba</link>.
+    <link linkend="man-applet">regina-applet</link>.
    </para>
   </refsect1>
 
@@ -517,7 +468,6 @@
        The directory containing the &regina; user interface jars.
        This directory should contain <filename>regina.jar</filename> as
        well as other optional jars such as
-       <filename>regina-corba.jar</filename> and
        <filename>regina-docs.jar</filename>.
       </para>
      </listitem>
@@ -549,13 +499,6 @@
          <term><literal>jni</literal></term>
          <listitem><para>
           The engine will be accessed as a shared library using &jni;.
-         </para></listitem>
-        </varlistentry>
-        <varlistentry>
-         <term><literal>corba</literal></term>
-         <listitem><para>
-          The engine will be accessed as a &corba; server application,
-          possibly running on a different machine.
          </para></listitem>
         </varlistentry>
        </variablelist>
@@ -609,32 +552,6 @@
       </para>
      </listitem>
     </varlistentry>
-    <varlistentry>
-     <term><parameter>REGINA_CORBAHOST</parameter>
-      (default = <literal>localhost</literal>)</term>
-     <listitem>
-      <para>
-       The machine on which the &corba; naming service is running.
-      </para>
-      <para>
-       This option is only relevant when using &corba; engine access
-       (see option <parameter>REGINA_ENGINE</parameter> for details).
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><parameter>REGINA_CORBAPORT</parameter>
-      (default = <literal>8088</literal>)</term>
-     <listitem>
-      <para>
-       The port on which the &corba; naming service is listening.
-      </para>
-      <para>
-       This option is only relevant when using &corba; engine access
-       (see option <parameter>REGINA_ENGINE</parameter> for details).
-      </para>
-     </listitem>
-    </varlistentry>
    </variablelist>
   </refsect1>
 
@@ -643,8 +560,7 @@
    <para>
     <link linkend="man-regina">regina</link>
      (<link linkend="man-regina">regina-normal</link> on some systems),
-    <link linkend="man-applet">regina-applet</link>,
-    <link linkend="man-engine-corba">regina-engine-corba</link>.
+    <link linkend="man-applet">regina-applet</link>.
    </para>
   </refsect1>
 
@@ -682,12 +598,10 @@
       No ability to save or load files.
      </para></listitem>
      <listitem><para>
-      No &jni; access to the calculation engine.  The user interface
-      will have to talk to the calculation engine using &corba;, which
-      means you will have to run the &corba; calculation engine as a
-      separate server program.  This server should be running on the same
-      machine that is hosting the applet web page.  The &corba; naming
-      service that is used should also be running on this same machine.
+      No &jni; access to the calculation engine.
+      <emphasis>Since this currently the only method of engine access,
+      for the time being &regina; cannot be run as an applet at
+      all.</emphasis>
      </para></listitem>
      <listitem><para>
       No reading of configuration files.  The only way to customise
@@ -698,8 +612,8 @@
     </para>
     <para>
      The applet itself will need access to the main user interface jar
-     (<filename>regina.jar</filename>), the jar for &corba; engine
-     access (<filename>regina-corba.jar</filename>) and the &btools; jar
+     (<filename>regina.jar</filename>), the jar for engine
+     access (<filename>regina-jni.jar</filename>) and the &btools; jar
      (generally <filename>btools.jar</filename>).
     </para>
   </refsect1>
@@ -722,20 +636,13 @@
     </varlistentry>
     <varlistentry>
      <term><parameter>Engine</parameter>
-      (default = <literal>corba</literal>)</term>
+      (default = <literal>none</literal>)</term>
      <listitem>
       <para>
        Specifies how the C++ calculation engine will be accessed.
-       Recognised values are:
-       <variablelist>
-        <varlistentry>
-         <term><literal>corba</literal></term>
-         <listitem><para>
-          The engine will be accessed as a &corba; server application,
-          possibly running on a different machine.
-         </para></listitem>
-        </varlistentry>
-       </variablelist>
+       <emphasis>Currently there are no recognised values for this option.
+       This means that for the time being &regina; cannot be run as an
+       applet at all.</emphasis>
       </para>
      </listitem>
     </varlistentry>
@@ -757,28 +664,6 @@
       </para>
      </listitem>
     </varlistentry>
-    <varlistentry>
-     <term><parameter>ORBInitialHost</parameter>
-      (default = <literal>localhost</literal>)</term>
-     <listitem>
-      <para>
-       The machine on which the &corba; naming service is running.
-       Parameter <parameter>org.omg.CORBA.ORBInitialHost</parameter>
-       will override this parameter if it is present.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><parameter>ORBInitialPort</parameter>
-      (default = <literal>8088</literal>)</term>
-     <listitem>
-      <para>
-       The port on which the &corba; naming service is listening.
-       Parameter <parameter>org.omg.CORBA.ORBInitialPort</parameter>
-       will override this parameter if it is present.
-      </para>
-     </listitem>
-    </varlistentry>
    </variablelist>
   </refsect1>
 
@@ -787,157 +672,7 @@
    <para>
     <link linkend="man-regina">regina</link>
      (<link linkend="man-regina">regina-normal</link> on some systems),
-    <link linkend="man-regina.conf">regina.conf</link>,
-    <link linkend="man-engine-corba">regina-engine-corba</link>.
-   </para>
-  </refsect1>
-
-  <refsect1>
-   <title>Author</title>
-   <para>
-    &regina; was written by &regauthorplain; with help from others;
-    see the documentation for full details.
-    You can contact me at &regemail;.
-   </para>
-  </refsect1>
- </refentry>
-
- <!-- CORBA engine -->
-
- <refentry id="man-engine-corba">
-  <refmeta>
-   <refentrytitle>regina-engine-corba</refentrytitle>
-   <manvolnum>1</manvolnum>
-  </refmeta>
-
-  <refnamediv>
-   <refname>regina-engine-corba</refname>
-   <refpurpose>&regina; &corba; calculation engine server</refpurpose>
-  </refnamediv>
-
-  <refsynopsisdiv>
-   <cmdsynopsis>
-    <command>regina-engine-corba</command>
-    <arg><option>-ORBInitialHost</option> <replaceable>host</replaceable></arg>
-    <arg><option>-ORBInitialPort</option> <replaceable>port</replaceable></arg>
-    <group>
-     <arg><option>-ORBpoa_iiop_name_port</option>
-      <replaceable>host</replaceable></arg>
-     <arg><option>-ORBpoa_iiop_name_port</option>
-      <replaceable>host</replaceable><option>:</option><replaceable>port</replaceable></arg>
-    </group>
-   </cmdsynopsis>
-  </refsynopsisdiv>
-
-  <refsect1>
-   <title>Description</title>
-   <para>
-    If the &regina; user interface uses &corba; to access the
-    calculation engine, the calculation engine will need to be running
-    as a separate server application.  This is that server application.
-   </para>
-   <para>
-    There is no way to configure this server other than
-    through the command-line options outlined above.
-   </para>
-   <warning>
-    <para>
-     Be warned that this server has <emphasis>not</emphasis> been
-     audited for security!  You should <emphasis>always</emphasis>
-     run this server as a guest user (such as <literal>nobody</literal>
-     on &linux; systems).
-    </para>
-   </warning>
-   <para>
-    Note that this server and the user interface may be running on
-    different machines.  You simply need to configure them both to refer
-    to the same &corba; naming service, although read the warning below.
-   </para>
-   <warning>
-    <para>
-     By default, this engine registers itself with the naming service as
-     running on machine <literal>localhost</literal>.  If the user
-     interface is running on a different machine, it will take this
-     information from the naming service and search for the engine on
-     its own <literal>localhost</literal> which will result in an error.
-    </para>
-    <para>
-     Thus, if you are running this server and the user interface on
-     different machines, you will almost certainly need to run the
-     server with parameter <option>-ORBpoa_iiop_name_port</option>
-     as described below.
-    </para>
-   </warning>
-  </refsect1>
-
-  <refsect1>
-   <title>Options</title>
-   <variablelist>
-    <varlistentry>
-     <term><option>-ORBInitialHost</option> <replaceable>host</replaceable>
-      (default = <literal>localhost</literal>)</term>
-     <listitem>
-      <para>
-       Specifies that the &corba; naming service is running on
-       the machine <replaceable>host</replaceable>.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><option>-ORBInitialPort</option> <replaceable>port</replaceable>
-      (default = <literal>8088</literal>)</term>
-     <listitem>
-      <para>
-       Specifies that the &corba; naming service is listening
-       on port <replaceable>port</replaceable> on the given host.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><option>-ORBpoa_iiop_name_port</option>
-      <replaceable>host</replaceable></term>
-     <term><option>-ORBpoa_iiop_name_port</option>
-      <replaceable>host</replaceable><option>:</option><replaceable>port</replaceable>
-      (default = <literal>localhost</literal>, automatically assigned
-      port)</term>
-     <listitem>
-      <para>
-       Specifies that this server is running on the machine
-       <replaceable>host</replaceable> (and, if specified, listening on port
-       <replaceable>port</replaceable> for connections).
-      </para>
-      <para>
-       Use the <replaceable>host</replaceable> parameter to tell the
-       naming service the full IP address of the machine on which this
-       server is running, so that this information can be correctly
-       given out to clients (such as the user interface).  If the
-       default value <literal>localhost</literal> is used, a client
-       running on a different machine will be unable to locate this
-       server.
-      </para>
-      <para>
-       Use the additional <replaceable>port</replaceable> option if you
-       wish to force this server to listen for connections on a particular
-       port.  By default the port will be automatically assigned by the
-       <acronym>ORB</acronym> and this value will be passed on to the
-       naming service.
-      </para>
-      <para>
-       You should only need to use this option if this server is running
-       on a different machine from the user interface.
-      </para>
-     </listitem>
-    </varlistentry>
-   </variablelist>
-  </refsect1>
-
-  <refsect1>
-   <title>See Also</title>
-   <para>
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems),
-    <link linkend="man-regina.conf">regina.conf</link>,
-    <link linkend="man-applet">regina-applet</link>.
+    <link linkend="man-regina.conf">regina.conf</link>.
    </para>
   </refsect1>
 

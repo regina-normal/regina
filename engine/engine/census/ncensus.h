@@ -73,8 +73,6 @@ class NProgressMessage;
  * will determine if a triangulation is interesting enough to include in
  * a custom census.
  *
- * \ifacescorba All parameters are compulsory.
- *
  * @param parent the packet beneath which members of the
  * census will be placed.
  * @param nTetrahedra the number of tetrahedra in each

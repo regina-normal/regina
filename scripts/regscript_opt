@@ -239,7 +239,7 @@ if [ -z "$REGINA_CACHEDIR" ]; then
 fi
 
 if [ ! -z "$REGINA_ENGINE" ]; then
-	if ! testvalue "$REGINA_ENGINE" REGINA_ENGINE jni corba; then
+	if ! testvalue "$REGINA_ENGINE" REGINA_ENGINE jni; then
 		export REGINA_ENGINE=""
 	fi
 fi
@@ -267,8 +267,6 @@ info "----- Startup options (excluding command-line options) -----"
 info "-- Computational engine (REGINA_ENGINE): $REGINA_ENGINE"
 info "-- User interface (REGINA_INTERFACE): $REGINA_INTERFACE"
 info "-- JNI engine name (REGINA_JNIENGINE): $REGINA_JNIENGINE"
-info "-- CORBA host (REGINA_CORBAHOST): $REGINA_CORBAHOST"
-info "-- CORBA port (REGINA_CORBAPORT): $REGINA_CORBAPORT"
 info ""
 
 # ---------- Export current options ----------
@@ -284,8 +282,6 @@ export REGINA_CACHEDIR
 export REGINA_ENGINE
 export REGINA_INTERFACE
 export REGINA_JNIENGINE
-export REGINA_CORBAHOST
-export REGINA_CORBAPORT
 
 # End guard
 fi

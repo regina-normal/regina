@@ -51,8 +51,6 @@
  * The internal code is a character.  The lowest two bits represent the
  * image of 0, the next lowest two bits represent the image of 1 and so
  * on.
- *
- * \ifacescorba Not present.
  */
 class NPerm {
     private:

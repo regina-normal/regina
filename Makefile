@@ -21,9 +21,6 @@ endif
 # Global variables:
 
 include Makefile.sources
-include idl/Makefile.sources
-
-export src_idl = $(wildcard $(dirs_idl:=/*.idl))
 
 export BIN_DIR = bin
 export BASE_DOC_DIR = docs
@@ -36,7 +33,7 @@ export LICENSE = LICENSE.txt
 
 # Local variables:
 
-empty_dirs = $(DIST_DIR) $(BIN_DIR) engine javaui idl
+empty_dirs = $(DIST_DIR) $(BIN_DIR) engine javaui
 DOC_LICENSE = $(BASE_DOC_DIR)/LICENSE.txt
 DOC_BUILD_DIR = doc-build-tmp
 APP_CLASS = normal.Application
@@ -76,32 +73,24 @@ helprun :
 		$(ECHO)
 
 .PHONY : help helpgeneral helpbin helpdocs helpprep helprun \
-	binengine binenginejni binenginecorba binenginelib \
-	binjava binjavaui binjavajni binjavacorba \
-	binjni bincorba bindocs bin \
+	binengine binenginejni binenginelib \
+	binjava binjavaui binjavajni binjni bindocs bin \
 	docsengine docsjava docshtml docsman docsrtf docstex docsdvi docspdf docs \
-	prepengine prepenginejni prepenginecorba prepjava prepjavacorba \
-		prepcorba prepjni prepcleancorba prepcleanjni prepclean prep \
-	run runconsole runtext runjni runcorba runcorbaengine \
-	debug debugjni debugcorba \
+	prepengine prepjni prepcleanjni prepclean prep \
+	run runconsole runtext debug \
 	clean purge
 
-binengine : binenginelib binenginejni binenginecorba
-binenginejni : prepenginejni
+binengine : binenginelib binenginejni
+binenginejni : prepjni
 	cd engine && $(MAKE) binjni
-binenginecorba : prepenginecorba
-	cd engine && $(MAKE) bincorba
 binenginelib :
 	cd engine && $(MAKE) binlib
-binjava : binjavaui binjavajni binjavacorba
+binjava : binjavaui binjavajni
 binjavaui :
 	cd javaui && $(MAKE) uijar
 binjavajni :
 	cd javaui && $(MAKE) jnijar
-binjavacorba :
-	cd javaui && $(MAKE) corbajar
 binjni : binenginejni binjavaui binjavajni
-bincorba : binenginecorba binjavaui binjavacorba
 bindocs : $(DOC_JAR)
 $(DOC_JAR) : docs
 	-rm -rf $(DOC_BUILD_DIR)
@@ -134,51 +123,31 @@ docs : docsengine docsjava docshtml docsman $(DOC_LICENSE)
 $(DOC_LICENSE) : $(LICENSE)
 	$(COPY) $(LICENSE) $(DOC_LICENSE)
 
-prepengine : prepenginejni prepenginecorba
-prepenginejni : binjavaui binjavajni
+prepengine : prepjni
+prepjni : binjavaui binjavajni
 	cd engine && $(MAKE) prepjni
-prepenginecorba :
-	cd engine && $(MAKE) prepcorba
-prepjava : prepjavacorba
-prepjavacorba :
-	cd javaui && $(MAKE) prepcorba
-prepcorba : prepenginecorba prepjavacorba
-prepjni : prepenginejni
-prepcleancorba :
-	cd engine && $(MAKE) prepcleancorba
-	cd javaui && $(MAKE) prepcleancorba
 prepcleanjni :
 	cd engine && $(MAKE) prepcleanjni
-prepclean : prepcleancorba prepcleanjni
-prep : prepjava prepengine
+prepclean : prepcleanjni
+prep : prepengine
 
-run : runjni
+run : binenginejni binjavaui binjavajni
+	./regina --gui --jni
 runconsole : binenginejni binjavaui binjavajni
 	./regina --console --jni
 runtext : binenginejni binjavaui binjavajni
 	./regina --text --jni
-runjni : binenginejni binjavaui binjavajni
-	./regina --gui --jni
-runcorba : binjavaui binjavacorba
-	./regina --gui --corba
-runcorbaengine : binenginecorba
-	$(ENGINE_CORBA) \
-		-ORBInitialHost $(ORBInitialHost) -ORBInitialPort $(ORBInitialPort)
-debug : debugjni
-debugjni : binenginejni binjavaui binjavajni
+debug : binenginejni binjavaui binjavajni
 	export REGINA_JAVA="$(JDB)" && ./regina --gui --jni
-debugcorba : binenginecorba binjavaui binjavacorba
-	export REGINA_JAVA="$(JDB)" && ./regina --gui --corba
 
 clean :
 	cd engine && $(MAKE) clean
 	cd javaui && $(MAKE) clean
 	cd docs && $(MAKE) clean
-	-rm -rf javaui/Regina
 
 purge : clean
-	-rm $(ENGINE_JNI) $(ENGINE_CORBA) $(ENGINE_LIB)
-	-rm $(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA)
+	-rm $(ENGINE_JNI) $(ENGINE_LIB)
+	-rm $(JAVA_UI) $(JAVA_JNI)
 	-rm $(DOC_JAR)
 
 Makefile.options :

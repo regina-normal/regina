@@ -1,19 +1,11 @@
 
 # These variables should be edited to reflect the current system.
 
-# Specify here the location of the CORBA naming service to use
-# when the calculation engine is accessed as a CORBA server application.
-
-export ORBInitialHost := localhost
-export ORBInitialPort := 8088
-
 # Specify here the desired locations of files to be built.
 # All directory paths should be relative to this directory.
 #
 # ENGINE_JNI: The complete C++ calculation engine, to be accessed as a
 #         shared library from the Java UI using JNI.
-# ENGINE_CORBA: The complete C++ calculation engine, to be accessed as a
-#         server application using CORBA.
 # ENGINE_LIB : A static library containing the core C++ calculation
 #         engine classes.
 #
@@ -21,20 +13,15 @@ export ORBInitialPort := 8088
 #         without any specific engine interaction components.
 # JAVA_JNI: The jar containing the Java UI component that interacts with
 #         the calculation engine as an external library using JNI.
-# JAVA_CORBA: The jar containing the Java UI component that interacts with
-#         the calculation engine as an external (and possibly remote)
-#         server application using CORBA.
 #
 # DOC_JAR: The complete documentation jar for use with the internal
 #         help browser.
  
 export ENGINE_JNI := bin/libregina-engine-jni.jnilib
-export ENGINE_CORBA := bin/regina-engine-corba
 export ENGINE_LIB := bin/libregina-engine.a
 
 export JAVA_UI := bin/regina.jar
 export JAVA_JNI := bin/regina-jni.jar
-export JAVA_CORBA := bin/regina-corba.jar
 
 export DOC_JAR := bin/regina-docs.jar
 
@@ -43,23 +30,14 @@ export DOC_JAR := bin/regina-docs.jar
 # All directory paths should be absolute.
 #
 # JNI_INCLUDES: Flag to include the C++ JNI include files such as jni.h.
-# CORBA_INCLUDES: Flag to include the C++ CORBA include files.
 # EXTRA_INCLUDES: Flag to include any other necessary files.
 #
-# CORBA_LIBRARIES: Flag to link in the C++ CORBA libraries.
-#                  Note that linking with -lomniGK_alone will cause the
-#                  engine to allow only connections from localhost,
-#                  whereas linking with -lomniGK_stub will cause the
-#                  engine to allow connections from any machine.
 # EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
 #                  for the calculation engine, such as gmp and pthread.
 
 export JNI_INCLUDES := -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/
-export CORBA_INCLUDES := -D__x86__
 export EXTRA_INCLUDES :=
 
-export CORBA_LIBRARIES := -lomniORB3 -lomniGK_stub
-#export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
 export EXTRA_LIBRARIES := -lgmp -lpthread
 
 # Specify here any compiler-dependent macros that need to be defined.
@@ -114,8 +92,6 @@ export EXTRA_CLASSES :=
 # JDB: Execute a Java class in the debugger.
 # JAVAH: Generate JNI include files from compiled Java code.
 # JAVADOC: Generate documentation from Java sources.
-# IDLTOCPP: Generate skeleton C++ CORBA sources from IDL files.
-# IDLTOJAVA: Generate skeleton Java CORBA sources from IDL files.
 # JADE: Use James' DSSSL Engine to convert from DocBook SGML to other formats.
 # DOCBOOK2MAN: Convert DocBook SGML to man pages.
 # ARCHIVE: Build an archive using $(ARCHIVE) <archive file> <files to include>.
@@ -139,8 +115,6 @@ export JAR := jar
 export JDB := jdb -Xmx64m -Djava.compiler=NONE
 export JAVAH := javah -jni
 export JAVADOC := javadoc -J-Xmx64m
-export IDLTOCPP := omniidl -bcxx -Wbh=IDL.h -Wbs=SK.cpp
-export IDLTOJAVA := idlj
 export JADE := jade
 export DOCBOOK2MAN := docbook2man
 export ARCHIVE := tar --ignore-failed-read -zcf

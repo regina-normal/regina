@@ -3,7 +3,6 @@ Documentation TODO List
 
 Getting started tutorial
 Split troubleshooting into sections
-CORBA troubleshooting, esp. with client/server on different machines
 Standard subcomplexes
 Normal surfaces and angle structures
 

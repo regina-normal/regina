@@ -60,8 +60,6 @@ class NEdge;
  * Boundary components are highly temporary; once a triangulation
  * changes, all its boundary component objects will be deleted and new
  * ones will be created.
- *
- * \idlfile <tt>Triangulation/NTetrahedron.idl</tt>
  */
 class NBoundaryComponent : public ShareableObject {
     private:

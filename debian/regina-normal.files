@@ -5,11 +5,8 @@ usr/share/java/regina-normal.jar
 usr/share/java/regina-normal-2.4.jar
 usr/share/java/regina-normal-jni.jar
 usr/share/java/regina-normal-jni-2.4.jar
-usr/share/java/regina-normal-corba.jar
-usr/share/java/regina-normal-corba-2.4.jar
 usr/share/regina-normal/jar/regina.jar
 usr/share/regina-normal/jar/regina-jni.jar
-usr/share/regina-normal/jar/regina-corba.jar
 usr/share/regina-normal/icons
 usr/share/regina-normal/pylib
 usr/share/regina-normal/scripts

@@ -209,9 +209,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \ifaces This routine is a member of class Engine.
          * It takes no parameters; \a in and \a out are always assumed
          * to be standard input and standard output respectively.
-         * If the engine is being accessed through CORBA, this routine
-         * returns <tt>null</tt>.
-         * \ifacescorba Not present.
          *
          * @param in the input stream from which text will be read.
          * @param out the output stream to which prompts will be
@@ -983,8 +980,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \warning The specific behaviour of this routine is
          * very likely to change between releases.
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * \todo \bugurgent This routine currently does not crush a
          * maximal forest!
          *
@@ -1019,8 +1014,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
@@ -1051,8 +1044,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-         *
-         * \ifacescorba All parameters are compulsory.
          *
          * @param f the face about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1089,8 +1080,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-         *
-         * \ifacescorba All parameters are compulsory.
          *
          * @param e the edge about which to perform the move.
          * @param newAxis Specifies which axis of the octahedron the new
@@ -1140,8 +1129,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
@@ -1178,8 +1165,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-         *
-         * \ifacescorba All parameters are compulsory.
          *
          * @param v the vertex about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1226,8 +1211,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param e the edge about which to perform the move.
          * @param edgeEnd the end of the edge \e opposite that at
          * which the second tetrahedron (to be merged) is joined.
@@ -1270,8 +1253,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param f the face about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
@@ -1308,8 +1289,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-         *
-         * \ifacescorba All parameters are compulsory.
          *
          * @param t the tetrahedron upon which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1350,8 +1329,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
-         *
-         * \ifacescorba All parameters are compulsory.
          *
          * @param forceDivision specifies what to do if the triangulation
          * has no ideal or non-standard vertices.

@@ -7,10 +7,6 @@
 # be made for the Java UI component that interacts with the calculation
 # engine as an external library using JNI.
 #
-# Sets $(packages_corba) to the list of all packages containing classes to
-# be made for the Java UI component that interacts with the calculation
-# engine as an external (and possibly remote) server application using CORBA.
-#
 # Sets $(java_aux_mask) to a file mask of all auxiliary files required by the
 # user interface, such as graphics and sounds.
 #
@@ -62,32 +58,9 @@ packages_jni = \
 	normal.engine.implementation.jni.triangulation \
 	normal.engine.implementation.jni
 
-packages_corba = \
-	normal.engine.implementation.corba.Regina.Algebra \
-	normal.engine.implementation.corba.Regina.Angle \
-	normal.engine.implementation.corba.Regina.File \
-	normal.engine.implementation.corba.Regina.Maths \
-	normal.engine.implementation.corba.Regina.Packet \
-	normal.engine.implementation.corba.Regina.Progress \
-	normal.engine.implementation.corba.Regina.Subcomplex \
-	normal.engine.implementation.corba.Regina.Surfaces \
-	normal.engine.implementation.corba.Regina.Triangulation \
-	normal.engine.implementation.corba.Regina \
-	normal.engine.implementation.corba.algebra \
-	normal.engine.implementation.corba.angle \
-	normal.engine.implementation.corba.file \
-	normal.engine.implementation.corba.maths \
-	normal.engine.implementation.corba.packet \
-	normal.engine.implementation.corba.progress \
-	normal.engine.implementation.corba.subcomplex \
-	normal.engine.implementation.corba.surfaces \
-	normal.engine.implementation.corba.triangulation \
-	normal.engine.implementation.corba
-
 java_aux_mask = normal/images/buttons/*.gif normal/images/packet/*.gif \
 	normal/images/main/*.jpg normal/images/main/*.gif
 
 java_misc_src_mask = Makefile* findtext *.txt \
-	normal/engine/implementation/jni/package.html \
-	normal/engine/implementation/corba/package.html
+	normal/engine/implementation/jni/package.html
 

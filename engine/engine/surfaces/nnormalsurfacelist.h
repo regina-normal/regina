@@ -123,8 +123,6 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
          * \todo \opt Investigate obvious compressions.
          * \todo \opt Investigate monte carlo methods.
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
          * @param newFlavour the flavour of coordinate system to be used;

@@ -9,9 +9,6 @@ engine documentation.
  	Include Java plug-in support
  	Get this working on more browsers.
 
-CORBA:
-	Local (client-side) imports and exports
-
 Everywhere:
 	Disable X-closing for all windows and dialogs except for main window
 		(necessary to ensure progress dialogs cannot be closed).

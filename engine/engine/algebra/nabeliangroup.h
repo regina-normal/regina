@@ -85,8 +85,6 @@ class NAbelianGroup : public ShareableObject {
          * Increments the rank of the group by the given non-negative
          * integer.
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param extraRank the extra rank to add; this defaults to 1.
          */
         void addRank(unsigned extraRank = 1);
@@ -103,8 +101,6 @@ class NAbelianGroup : public ShareableObject {
          *
          * \pre The given degree is at least 2 and the
          * given multiplicity is at least 1.
-         *
-         * \ifacescorba All parameters are compulsory.
          *
          * @param degree <i>d</i>, where we are adding copies of
          * <i>Z_d</i> to the torsion.
@@ -126,8 +122,6 @@ class NAbelianGroup : public ShareableObject {
          * \pre The given degree is at least 2 and the
          * given multiplicity is at least 1.
          *
-         * \ifacescorba All parameters are compulsory.
-         *
          * @param degree <i>d</i>, where we are adding copies of
          * <i>Z_d</i> to the torsion.
          * @param mult the multiplicity <i>m</i>, where we are adding
@@ -145,8 +139,6 @@ class NAbelianGroup : public ShareableObject {
          * <i>ki</i> are not required to divide each other.
          *
          * \pre Each integer in the given list is strictly greater than 1.
-         *
-         * \ifacescorba Not present.
          *
          * @param torsion a list containing the torsion elements to add,
          * as described above.

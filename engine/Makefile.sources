@@ -7,9 +7,6 @@
 # the component of the engine that allows external access from Java
 # using JNI.
 #
-# Sets $(dirs_engine_corba) to a list of all directories containing sources
-# for the component of the engine that allows external access using CORBA.
-#
 # Sets $(engine_misc_src_mask) to a file mask of all miscellaneous files to be
 # included in the source archive.  Files ending in .cpp or .h and residing
 # in any of the above directories will already be placed in the source
@@ -47,20 +44,6 @@ dirs_engine_jni = \
 	jni/engine/triangulation \
 	jni/engine \
 	jni
-
-dirs_engine_corba = \
-	corba/registry \
-	corba/Regina \
-	corba/Regina/Algebra \
-	corba/Regina/Angle \
-	corba/Regina/File \
-	corba/Regina/Maths \
-	corba/Regina/Packet \
-	corba/Regina/Progress \
-	corba/Regina/Subcomplex \
-	corba/Regina/Surfaces \
-	corba/Regina/Triangulation \
-	corba
 
 engine_misc_src_mask = Makefile* findtext doc-files/doc* *.txt \
 	engine/census/results.txt

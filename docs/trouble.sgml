@@ -15,8 +15,8 @@
     <para>
      &regina; is split into two components; the &java; user interface (which
      the user interacts with directly) and the C++ calculation engine
-     (which does all the actual mathematical work).  There are different
-     methods by which these two components can communicate.
+     (which does all the actual mathematical work).  There is currently
+     only one method by which these two components can communicate.
     </para>
     <glosslist>
      <glossentry>
@@ -31,28 +31,6 @@
        If you are using this method,
        <link linkend="man-regina.conf">check your configuration</link>
        to ensure that the &jni; engine directory option is set correctly.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm>&corba;</glossterm>
-      <glossdef><para>
-       The calculation engine is a separate server application,
-       possibly running on a different machine, with which the user
-       interface communicates across the network using &corba;.  This method
-       is the default when &regina; is run as an applet on a web page.
-       </para><para>
-       If you are using this method and are running &regina; as a standalone
-       application,
-       <link linkend="man-regina.conf">check your configuration</link>
-       to ensure that
-       the &corba; engine host and &corba; engine port options are set
-       corectly.  If you are using this method and are running &regina; as an
-       applet on a web page, contact the owner of the web page.
-       </para><para>
-       You should also ensure that the calculation engine server
-       application is running without problems, and is using the same host
-       and port settings as those mentioned above for the user interface.
-       Note that the server application needs to be started separately.
       </para></glossdef>
      </glossentry>
     </glosslist>
@@ -108,20 +86,17 @@
    </para></question>
    <answer>
     <para>
-     You are running &regina; as an applet or are accessing the calculation
-     engine using &corba;.  Neither of these modes currently allows access to
-     the local filesystem.
+     You are running &regina; as an applet.  This mode does not allow access
+     to the local filesystem.
     </para>
     <para>
-     Filesystem access using &corba; is in the todo list; it's tricky
-     because the calculation engine may not be running on the same machine
-     as the user interface.  Filesystem access for the applet will probably
+     Filesystem access for the applet will probably
      never be implemented since &java; applets are designed to run in a
      protected environment without any filesystem access at all.
     </para>
     <para>
      If you wish to be able to load and save files, try running &regina;
-     as a standalone application with the <option>--jni</option> option.
+     as a standalone application.
      See the <link linkend="man-regina">application command-line
      options</link> for details.
     </para>

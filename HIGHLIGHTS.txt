@@ -15,6 +15,7 @@ Version 2.5  [ (under development) ]
       more standards-compliant (i.e., compiles under gcc3).
     - Works with splitting surface signatures.
     - Optimisations for skeletal calculations in triangulations.
+    - Removed CORBA engine/interface (see CHANGES.txt for why).
 
 Version 2.4  [ 4 April, 2002 ]
 

@@ -35,7 +35,6 @@
   "Copyright (c) &copyrightyears, &copyrightholder;">
 
  <!ENTITY jni "<acronym>JNI</acronym>">
- <!ENTITY corba "<acronym>CORBA</acronym>">
  <!ENTITY gui "<acronym>GUI</acronym>">
  <!ENTITY html "<acronym>HTML</acronym>">
  <!ENTITY url "<acronym>URL</acronym>">

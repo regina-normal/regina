@@ -88,12 +88,10 @@ public class ApplicationShell extends Shell {
         String[] flagNames = {
             "-q", "--quiet", "-v", "--verbose",
             "--gui", "--console", "--text",
-            "--jni", "--corba"
+            "--jni"
         };
         String[] varNames = {
-            "--jnilibname",
-            "-ORBInitialHost", "-ORBInitialPort",
-            "-org.omg.CORBA.ORBInitialHost", "-org.omg.CORBA.ORBInitialPort"
+            "--jnilibname"
         };
 
         this.splitArgs = new CommandLineArguments(flagNames, varNames, args);
@@ -195,13 +193,6 @@ public class ApplicationShell extends Shell {
                     return invalid;
                 } else
                     engineType = engineJNI;
-            } else if (arg.equals("--corba")) {
-                if (engineType != unspecified && engineType != engineCORBA) {
-                    error("More than one style of engine access has been " +
-                        "requested.");
-                    return invalid;
-                } else
-                    engineType = engineCORBA;
             }
         }
 
@@ -211,8 +202,6 @@ public class ApplicationShell extends Shell {
             if (engine != null) {
                 if (engine.equalsIgnoreCase("jni"))
                     engineType = engineJNI;
-                else if (engine.equalsIgnoreCase("corba"))
-                    engineType = engineCORBA;
                 else {
                     error("An invalid style of engine access [" +
                         engine + "] has been requested.");

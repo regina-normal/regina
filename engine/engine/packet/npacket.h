@@ -572,7 +572,6 @@ class NPacket : public ShareableObject {
          * will be created and 0 will be returned.
          *
          * \ifaces This routine is named \a clonePacket.
-         * \ifacescorba All parameters are compulsory.
          *
          * @param cloneDescendants \c true if the descendants of this
          * packet should also be cloned and inserted as descendants of

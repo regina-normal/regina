@@ -23,7 +23,7 @@ SOURCE DISTRIBUTION:
     - Before compiling, copy one of the template Makefile.options.* files
       to Makefile.options and edit it to reflect your system.
 
-    - To compile so you have a basic working runtime, type "make binjni".
+    - To compile so you have a basic working runtime, type "make bin".
 
     - To build the documentation, type "make bindocs".  The documentation
       will be generated and placed in docs/.  A complete documentation

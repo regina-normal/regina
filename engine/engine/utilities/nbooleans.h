@@ -41,8 +41,6 @@
  * A set of booleans.  Note that there are only four possible such sets.
  * NBoolSet objects are small enough to pass about by value instead of
  * by reference.
- *
- * \ifacescorba Not present.
  */
 class NBoolSet {
     private:

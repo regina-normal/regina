@@ -49,14 +49,6 @@ public class EngineLoader {
      * <i>name</i>.dll on Win32 platforms.
      */
     public static final String defaultJNILibrary = "regina-engine-jni";
-    /**
-     * Default naming service host for the CORBA calculation engine.
-     */
-    public static final String defaultCORBAHost = "localhost";
-    /**
-     * Default naming service port for the CORBA calculation engine.
-     */
-    public static final String defaultCORBAPort = "8088";
 
     /**
      * The shell representing the entire program.
@@ -87,7 +79,6 @@ public class EngineLoader {
         // Initialise access to the engine.
         switch (engineType) {
             case Shell.engineJNI: return loadJNIEngine();
-            case Shell.engineCORBA: return loadCORBAEngine();
             default: return null;
         }
     }
@@ -143,83 +134,6 @@ public class EngineLoader {
             + ".so].  The current path that Java will search for libraries is ["
             + libSearchPath + "].");
         error(errMessage.toString());
-    }
-
-    /**
-     * Initialises access to a CORBA engine.
-     *
-     * @return the new working engine, or <tt>null</tt> if an error
-     * occurred.
-     */    
-    private Engine loadCORBAEngine() {
-        // Determine the host and port to use.
-        boolean gaveHostParameter = false;
-        boolean gavePortParameter = false;
-
-        String host = shell.getParameter("org.omg.CORBA.ORBInitialHost", 1);
-        if (host == null) {
-            host = shell.getParameter("ORBInitialHost", 1);
-            if (host == null)
-                host = NormalOptionSet.getSystemProperty(
-                    "REGINA_CORBAHOST", defaultCORBAHost);
-        }
-
-        String port = shell.getParameter("org.omg.CORBA.ORBInitialPort", 1);
-        if (port == null) {
-            port = shell.getParameter("ORBInitialPort", 1);
-            if (port == null)
-                port = NormalOptionSet.getSystemProperty(
-                    "REGINA_CORBAPORT", defaultCORBAPort);
-        }
-
-        // Attempt to connect to the engine.
-        String[] args = shell.getCommandLineParameters();
-        Applet applet = shell.getAppletParameters();
-
-        // Make sure we have either args or applet available to use.
-        if (args == null && applet == null) {
-            String[] newArgs = { };
-            args = newArgs;
-        }
-
-        // Insert the host and port into the argument list if necessary.
-        if (args != null) {
-            int newLen = args.length + 4;
-            String[] newArgs = new String[newLen];
-
-            int i;
-            for (i = 0; i < args.length; i++)
-                newArgs[i] = args[i];
-
-            newArgs[i] = "-ORBInitialHost";
-            newArgs[i + 1] = host;
-            newArgs[i + 2] = "-ORBInitialPort";
-            newArgs[i + 3] = port;
-
-            args = newArgs;
-        }
-
-        try {
-            if (args != null)
-                return new normal.engine.implementation.corba.CORBAEngine(
-                    args, host, port);
-            if (applet != null)
-                return new normal.engine.implementation.corba.CORBAEngine(
-                    applet, host, port);
-        } catch (NoClassDefFoundError err) {
-            error("The classes for the CORBA engine interface could not be " +
-                "found.  Ensure that [regina-corba.jar] is on your classpath.");
-        } catch (Exception e) {
-            if (e instanceof
-                    normal.engine.implementation.corba.CORBAException)
-                error("A CORBA connection to the engine could not be " +
-                    "initialised.  " + e.getMessage() +
-                    "\nThe requested naming service was at host [" + host +
-                    "], port [" + port + "].");
-            else
-                e.printStackTrace();
-        }
-        return null;
     }
 
     /**

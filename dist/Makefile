@@ -29,11 +29,11 @@ endif
 # What should be bundled into a binary release?
 
 ifeq ($(OSTYPE),cygwin)
-	PARENT_TARGET = binjni binjavacorba
+	PARENT_TARGET = bin
 	ENGINE_BIN = $(ENGINE_JNI)
 else
 	PARENT_TARGET = bin
-	ENGINE_BIN = $(ENGINE_JNI) $(ENGINE_CORBA)
+	ENGINE_BIN = $(ENGINE_JNI)
 endif
 
 # ------------------------------ Variables ------------------------------
@@ -43,7 +43,6 @@ include ../Makefile.options
 include ../Makefile.sources
 include ../engine/Makefile.sources
 include ../javaui/Makefile.sources
-include ../idl/Makefile.sources
 
 REGINA_DIR = regina-$(REGINA_VERSION)
 
@@ -61,13 +60,12 @@ debian_src_mask = changelog control copyright *.README.Debian *.doc-base \
 	*.overrides *.sh rules cvs.patch README.Packaging
 dist_mask = Makefile* *.txt *.cpp insertstubreplace replacetabs stub*
 
-engine_dirs = $(dirs_engine_engine) $(dirs_engine_jni) $(dirs_engine_corba)
+engine_dirs = $(dirs_engine_engine) $(dirs_engine_jni)
 engine_src = $(engine_dirs:=/*.cpp)
 engine_hdr = $(engine_dirs:=/*.h) $(engine_dirs:=/*.tcc)
 
 java_package_dirs_ui = $(subst .,/,$(packages_ui))
-java_package_dirs_all = $(subst .,/,$(packages_ui)) \
-	$(subst .,/,$(packages_jni)) $(subst .,/,$(packages_corba))
+java_package_dirs_all = $(subst .,/,$(packages_ui)) $(subst .,/,$(packages_jni))
 java_mask = $(java_package_dirs_all:=/*.java)
 java_doc_sources = $(java_package_dirs_ui:=/package.html) $(DOC_OVERVIEW)
 
@@ -91,7 +89,6 @@ $(SRC_ARCHIVE):
 		$(patsubst %,$(REGINA_DIR)/$(DOC_HTML_DIR)/%, $(misc_doc_mask)) \
 		$(patsubst %,$(REGINA_DIR)/%, \
 			$(scripts) $(misc_src_mask) \
-			$(dirs_idl:=/*.idl) $(idl_misc_src_mask) \
 			$(empty_src_dirs:=/.keepme) $(dist_mask:%=dist/%)) \
 		$(patsubst %,$(REGINA_DIR)/debian/%, $(debian_src_mask))
 	-rm $(REGINA_DIR)
@@ -102,7 +99,7 @@ $(BIN_ARCHIVE) :
 	-rm $(REGINA_DIR)
 	ln -s .. $(REGINA_DIR)
 	$(ARCHIVE) $(BIN_ARCHIVE) $(patsubst %,$(REGINA_DIR)/%, \
-		$(ENGINE_BIN) $(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA) \
+		$(ENGINE_BIN) $(JAVA_UI) $(JAVA_JNI) \
 		$(misc_bin_mask) $(scripts))
 	-rm $(REGINA_DIR)
 
@@ -127,13 +124,10 @@ stubs : insertstub
 		`find ../engine -name "*.h"`
 	./insertstubreplace "/* end stub */" stub.javaui \
 		`find ../javaui -name "*.java"`
-	./insertstubreplace "/* end stub */" stub.idl \
-		`find ../idl -name "*.idl"`
 tabs :
 	./replacetabs `find ../engine -name "*.cpp"`
 	./replacetabs `find ../engine -name "*.h"`
 	./replacetabs `find ../javaui -name "*.java"`
-	./replacetabs `find ../idl -name "*.idl"`
 	./replacetabs ../CHANGES.txt ../README.txt ../examples/README.txt
 	./replacetabs ../docs/*.sgml
 	./replacetabs *.txt *.cpp

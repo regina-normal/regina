@@ -85,11 +85,6 @@ public abstract class Shell {
      * Specifies an engine accessed as a shared library using JNI.
      */
     public static final int engineJNI = 21;
-    /**
-     * Specifies an engine accessed as an external server application
-     * using CORBA.
-     */
-    public static final int engineCORBA = 22;
 
     /**
      * The calculation engine currently in use.

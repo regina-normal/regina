@@ -45,8 +45,6 @@ class NBoundaryComponent;
 /**
  * Details how a vertex in the skeleton forms part of an individual
  * tetrahedron.
- *
- * \ifacescorba Not present.
  */
 class NVertexEmbedding {
     private:
@@ -110,8 +108,6 @@ class NVertexEmbedding {
  * Represents a vertex in the skeleton of a triangulation.
  * Vertices are highly temporary; once a triangulation changes, all its
  * vertex objects will be deleted and new ones will be created.
- *
- * \idlfile <tt>Triangulation/NTetrahedron.idl</tt>
  */
 class NVertex : public ShareableObject {
     public:

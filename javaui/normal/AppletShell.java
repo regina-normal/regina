@@ -105,13 +105,12 @@ public class AppletShell extends Shell {
 
         // Return the correct engine type.
         if (engine == null)
-            return engineCORBA;
-        else if (engine.equalsIgnoreCase("corba"))
-            return engineCORBA;
+            engine = "none";
 
         error("An invalid style of engine access [" + engine +
-            "] has been requested.  " +
-            "Only style [corba] is allowed for the web page applet.");
+            "] has been requested.  Currently engine access is not " +
+            "available for applets; try running Regina as a " +
+            "standalone application instead.");
         return invalid;
     }
     public boolean shouldShowSplashScreen() {

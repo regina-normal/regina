@@ -210,11 +210,9 @@ public class Application extends Applet implements ActionListener {
             { "Docs", "String",
                 "the directory containing the unpacked documentation" },
             { "Engine", "String",
-                "the method of engine access to use (currently only corba)" },
+                "the method of engine access to use (currently none available)" },
             { "Interface", "String",
-                "the style of interface to use (currently only gui)" },
-            { "ORBInitialHost", "String", "the CORBA naming service host" },
-            { "ORBInitialPort", "String", "the CORBA naming service port" }
+                "the style of interface to use (currently only gui)" }
         };
         return info;
     }

@@ -51,12 +51,6 @@ class NPacket;
  * routine will return null.  The behaviour regarding problematic
  * subpackets is identical to that of NFile::readPacketTree().
  *
- * \ifacescorba The file that is accessed will be a file at the CORBA
- * client end.  Its data will be passed to the calculation engine by way
- * of a CORBA NRandomAccessResource object.  Parameter \a fileName
- * should not be a path, but rather a stringified object reference to
- * this object.
- *
  * @param fileName the pathname of the file to read from.
  * @return the packet tree read from file, or null if problems
  * were encountered or the file could not be opened.
@@ -66,12 +60,6 @@ NPacket* readFromFile(const char* fileName);
 /**
  * Writes the given packet tree to the given file doing
  * everything in a single step.
- *
- * \ifacescorba The file that is accessed will be a file at the CORBA
- * client end.  Its data will be passed to the calculation engine by way
- * of a CORBA NRandomAccessResource object.  Parameter \a fileName
- * should not be a path, but rather a stringified object reference to
- * this object.
  *
  * @param fileName the pathname of the file to write to.
  * @param packet the packet tree to write to file.
