@@ -176,9 +176,11 @@ void NSurfaceFilterCombUI::notifyBoolTypeChanged() {
 void NSurfaceFilterCombUI::refreshChildList() {
     children->clear();
 
+    // Add the items in reverse order since the QListViewItem
+    // constructor puts new items at the front.
     KListViewItem* item;
-    for (regina::NPacket* p = filter->getFirstTreeChild(); p;
-            p = p->getNextTreeSibling())
+    for (regina::NPacket* p = filter->getLastTreeChild(); p;
+            p = p->getPrevTreeSibling())
         if (p->getPacketType() == regina::NSurfaceFilter::packetType) {
             item = new KListViewItem(children, p->getPacketLabel().c_str());
             item->setPixmap(0, PacketManager::iconSmall(p));

@@ -126,7 +126,9 @@ void NAngleStructureUI::refresh() {
     table->clear();
 
     // Update the table.
-    for (unsigned long i = 0; i < nStructs; i++)
+    // Add the items in reverse order since the QListViewItem
+    // constructor puts new items at the front.
+    for (long i = nStructs - 1; i >= 0; i--)
         new NAngleStructureItem(table, structures->getStructure(i));
 
     setDirty(false);

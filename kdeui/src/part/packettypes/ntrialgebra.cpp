@@ -189,8 +189,10 @@ void NTriAlgebraUI::refresh() {
         else
             fundRelCount->setText(i18n("%1 relations:").arg(nRels));
 
+        // Add the relations in reverse order since the QListViewItem
+        // constructor puts new items at the front.
         fundRels->clear();
-        for (unsigned long i = 0; i < nRels; i++)
+        for (long i = nRels - 1; i >= 0; i--)
             new KListViewItem(fundRels,
                 QString("1 = ") + pres.getRelation(i).toString().c_str());
     } else {
