@@ -182,11 +182,11 @@ void NSFS::reduce() {
 }
 
 NLensSpace* NSFS::isLensSpace() const {
-    if (orbitGenus == 0) {
+    if (orbitGenus == 0 && orbitOrientable && orbitPunctures == 0) {
         // Orbit manifold is the sphere.
         if (fibres.empty())
             return new NLensSpace(k >= 0 ? k : -k, 1);
-        unsigned long size = fibres.size(); // NOTE: size() takes linear time!
+        unsigned long size = fibres.size(); // TODO: size() takes linear time!
         if (size > 2)
             return 0;
         long p, q;
@@ -219,10 +219,26 @@ NLensSpace* NSFS::isLensSpace() const {
             // We should now have (a,b) == (1,0).
         }
         return new NLensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
-    } else {
-        // TODO: Recognise Lens space over RP2.
-        return 0;
+    } else if (orbitGenus == 1 && (! orbitOrientable) && orbitPunctures == 0) {
+        // Orbit manifold is the projective plane.
+        if (fibres.empty())
+            return 0;
+        FibreIteratorConst it = fibres.begin();
+        it++;
+        if (it != fibres.end())
+            return 0;
+
+        // We have precisely one exceptional fibre.
+        long a = fibres.front().alpha;
+        long n = k * a + fibres.front().beta;
+
+        if (n == 1 || n == -1)
+            return new NLensSpace(4 * a, 2 * a - 1);
+        else
+            return 0;
     }
+
+    return 0;
 }
 
 std::string NSFS::getCommonName() const {
@@ -235,11 +251,11 @@ std::string NSFS::getCommonName() const {
     }
 
     // Pull off the number of fibres we're capable of dealing with.
-    // At this moment this is three.
-    NExceptionalFibre fibre[3];
+    // At this moment this is four.
+    NExceptionalFibre fibre[4];
     unsigned nFibres = 0;
     FibreIteratorConst it = fibres.begin();
-    while (nFibres < 3) {
+    while (nFibres < 4) {
         if (it == fibres.end())
             break;
         fibre[nFibres++] = *it++;
@@ -247,88 +263,166 @@ std::string NSFS::getCommonName() const {
 
     // Are there too many fibres?
     if (it != fibres.end())
-        return 0;
+        return toString();
+
+    // Note that with three fibres our reduced form will always have
+    // k >= -1.
 
     // SFS over the 2-sphere:
     if (orbitGenus == 0 && orbitOrientable && orbitPunctures == 0) {
-        // [ S2 : (2,-1), (2,1), (n,b) ] for n,b coprime and positive.
         NExceptionalFibre two(2, 1);
         NExceptionalFibre three(3, 1);
-        if (nFibres == 3 && fibre[0] == two && fibre[1] == two &&
+        NExceptionalFibre threeB(3, 2);
+
+        if (nFibres == 4 && fibre[0] == two && fibre[1] == two &&
+                fibre[2] == two && fibre[3] == two && k == -2) {
+            // [ S2 : (2,1), (2,1), (2,-1), (2,-1) ]
+            return "KB x~ S1";
+        } else if (nFibres == 3 && fibre[0] == two &&
                 gcd(fibre[2].alpha, fibre[2].beta) == 1 && k >= -1) {
-            // We can name this.
-            // Note that n > 1 in this case.
-            long n = fibre[2].alpha;
-            long b = fibre[2].beta + n * (k + 1);
+            // [ S2 : (2,1), (...), (...) ]
 
-            if (b % 2 == 1) {
-                // S3/Q{4n} x Z{b} (see Matveev).
-                std::ostringstream ans;
-                ans << "S3/Q" << (n * 4);
-                if (b > 1)
-                    ans << "xZ" << b;
-                return ans.str();
-            } else {
-                // S3/D{2^{k+2}n} x Z{2m+1} where b=2^k(2m+1) (see Matveev).
-                long odd = b;
-                long twos = 1;
-                while (! (odd & 1)) {
-                    odd >>= 1;
-                    twos <<= 1;
+            if (fibre[1] == two) {
+                // [ S2 : (2,1), (2,1), (a,b) ].
+                // Orlik, p112, case (ii).
+
+                long a = fibre[2].alpha;
+                long m = fibre[2].beta + a * (k + 1);
+
+                // Note that a,m >= 0.
+
+                if (gcd(m, 2 * a) == 1) {
+                    // S3/Q{4a} x Z{m}.
+                    std::ostringstream ans;
+                    ans << "S3/Q" << (a * 4);
+                    if (m > 1)
+                        ans << "xZ" << m;
+                    return ans.str();
+                } else if (m % 2 == 0) {
+                    // S3/D{2^{k+2}a} x Z{2m''+1} where m=2^{k+1}(2m''+1).
+                    long odd = m;
+                    long twos = 1;
+                    while (! (odd & 1)) {
+                        odd >>= 1;
+                        twos <<= 1;
+                    }
+
+                    std::ostringstream ans;
+                    ans << "S3/D" << ((twos << 1) * a);
+                    if (odd > 1)
+                        ans << "xZ" << odd;
+                    return ans.str();
                 }
+            } else if (fibre[1] == three || fibre[1] == threeB) {
+                // [ S2 : (2,1), (3,1/2), (a,b) ]
+                long a = fibre[2].alpha;
 
-                std::ostringstream ans;
-                ans << "S3/D" << ((twos << 2) * n);
-                if (odd > 1)
-                    ans << "xZ" << odd;
-                return ans.str();
+                if (a == 3) {
+                    // [ S2 : (2,1), (3,x), (3,y) ]
+                    // Orlik, p112, case (iii).
+                    long m = 6 * k + 3 + 2 * (fibre[1].beta + fibre[2].beta);
+                    // Note that m >= 1.
+
+                    if (m % 2 != 0 && m % 3 != 0) {
+                        std::ostringstream ans;
+                        ans << "S3/P24";
+                        if (m > 1)
+                            ans << "xZ" << m;
+                        return ans.str();
+                    } else if (m % 2 != 0) {
+                        long threes = 1;
+                        while (m % 3 == 0) {
+                            m = m / 3;
+                            threes *= 3;
+                        }
+
+                        std::ostringstream ans;
+                        ans << "S3/P'" << (threes * 8);
+                        if (m > 1)
+                            ans << "xZ" << m;
+                        return ans.str();
+                    }
+                } else if (a == 4) {
+                    // [ S2 : (2,1), (3,x), (4,y) ]
+                    // Orlik, p112, case (iv).
+                    long m = 12 * k + 6 + 4 * fibre[1].beta +
+                        3 * fibre[2].beta;
+                    // Note that m >= 1.
+
+                    std::ostringstream ans;
+                    ans << "S3/P48";
+                    if (m > 1)
+                        ans << "xZ" << m;
+                    return ans.str();
+                } else if (a == 5) {
+                    // [ S2 : (2,1), (3,x), (5,y) ]
+                    // Orlik, p112, case (v).
+                    long m = 30 * k + 15 + 10 * fibre[1].beta +
+                        6 * fibre[2].beta;
+                    // Note that m >= 1.
+
+                    std::ostringstream ans;
+                    ans << "S3/P120";
+                    if (m > 1)
+                        ans << "xZ" << m;
+                    return ans.str();
+                }
             }
         }
+    }
 
-        else if (nFibres == 3 && fibre[0] == two && fibre[1] == three &&
-                gcd(fibre[2].alpha, fibre[2].beta) == 1 && k >= -1) {
-            // We might still be able to name this.
-            // Note that n > 2 and b > 0 in this case.
-            long n = fibre[2].alpha;
-            long b = fibre[2].beta + n * (k + 1);
-
-            if (n == 3) {
-                /**
-                 * The formula given by Matveev seems to be wrong in this
-                 * case.  We'll leave it until there's time to sit down
-                 * and work out what it should have been.
-                 */
-                /*
-                // S3/P'{8(3^{k+1})}xZ{2m+1} where (3^k)m=2b-1 (see Matveev)
-                if (b == 1)
-                    return "S3/P24";
-
-                long m = 2 * b - 1; // Known: m >= 1.
-                long threes = 1;
-                while (m % 3 == 0) {
-                    m = m / 3;
-                    threes *= 3;
-                }
-
-                std::ostringstream ans;
-                ans << "S3/P'" << (threes * 24) << "xZ" << (2 * m + 1);
-                return ans.str();
-                */
-            } else if (n == 4) {
-                // S3/P48xZ{3b-2} (see Matveev).
-                std::ostringstream ans;
-                ans << "S3/P48";
-                if (b > 1)
-                    ans << "xZ" << (b * 3 - 2);
-                return ans.str();
-            } else if (n == 5) {
-                // S3/P120xZ{6b-5} (see Matveev).
-                std::ostringstream ans;
-                ans << "S3/P120";
-                if (b > 1)
-                    ans << "xZ" << (b * 6 - 5);
-                return ans.str();
+    // SFS over the real projective plane:
+    if (orbitGenus == 1 && (! orbitOrientable) && orbitPunctures == 0) {
+        if (nFibres == 0) {
+            // No exceptional fibres.
+            if (k == 0) {
+                // [ RP2 ]
+                // Orlik, p113, remark.
+                return "RP3 # RP3";
+            } else {
+                // TODO: [ RP2 : (1,k) ]
+                // Is this Orlik, p112, case (vi)?  What is this?
+                // std::ostringstream ans;
+                // ans << "S3/Q" << (4 * (k > 0 ? k : -k));
+                // return ans.str();
             }
+        } else if (nFibres == 1 && fibre[0].alpha > 1) {
+            // Just one exceptional fibre.
+            long a = fibre[0].alpha;
+            long n = k * a + fibre[0].beta;
+            if (n < 0)
+                n = -n;
+
+            if (n > 1) {
+                // We have a prism manifold.
+                // Orlik, p112, case (vi).
+                if (a % 2 != 0) {
+                    std::ostringstream ans;
+                    ans << "S3/Q" << (4 * n) << "xZ" << a;
+                    return ans.str();
+                } else {
+                    long odd = a;
+                    long twos = 1;
+                    while (! (odd & 1)) {
+                        odd >>= 1;
+                        twos <<= 1;
+                    }
+
+                    std::ostringstream ans;
+                    ans << "S3/D" << ((twos << 2) * n);
+                    if (odd > 1)
+                        ans << "xZ" << odd;
+                    return ans.str();
+                }
+            }
+        }
+    }
+
+    // SFS over the Klein bottle:
+    if (orbitGenus == 2 && (! orbitOrientable) && orbitPunctures == 0) {
+        if (nFibres == 0 && k == 0) {
+            // This is also [ S2 : (2,1), (2,1), (2,-1), (2,-1) ].
+            return "KB x~ S1";
         }
     }
 

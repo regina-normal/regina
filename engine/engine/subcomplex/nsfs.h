@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file nsfs.h
- *  \brief Deals with general Seifert fibred spaces.
+ *  \brief Deals with general orientable Seifert fibred spaces.
  */
 
 #ifndef __NSFS_H
@@ -131,7 +131,7 @@ struct NExceptionalFibre {
 std::ostream& operator << (std::ostream& out, const NExceptionalFibre& f);
 
 /**
- * Represents a general Seifert fibred space.
+ * Represents a general orientable Seifert fibred space.
  *
  * This class will store fibres of (illegal) index 0, but in this case
  * there are no guarantees as to the structure of the corresponding
@@ -154,7 +154,8 @@ std::ostream& operator << (std::ostream& out, const NExceptionalFibre& f);
 class NSFS : public ShareableObject {
     private:
         unsigned long orbitGenus;
-            /**< The genus of the orbit manifold. */
+            /**< The genus of the orbit manifold.  For non-orientable
+                 orbit manifolds this is the non-orientable genus. */
         bool orbitOrientable;
             /**< Is the orbit manifold orientable? */
         unsigned long orbitPunctures;
@@ -175,12 +176,12 @@ class NSFS : public ShareableObject {
 
     public:
         /**
-         * Creates a new Seifert fibred space with orbit manifold the
-         * sphere and no exceptional fibres.
+         * Creates a new orientable Seifert fibred space with orbit
+         * manifold the sphere and no exceptional fibres.
          */
         NSFS();
         /**
-         * Creates a new Seifert fibred space with the given orbit
+         * Creates a new orientable Seifert fibred space with the given orbit
          * manifold and no exceptional fibres.
          *
          * @param newOrbitGenus the genus of the orbit manifold (the
@@ -193,8 +194,8 @@ class NSFS : public ShareableObject {
         NSFS(unsigned long newOrbitGenus, bool newOrbitOrientable,
             unsigned long newOrbitPunctures = 0);
         /**
-         * Creates a new Seifert fibred space that is a clone of the
-         * given space.
+         * Creates a new orientable Seifert fibred space that is a clone of
+         * the given space.
          *
          * @param cloneMe the Seifert fibred space to clone.
          */
@@ -341,8 +342,10 @@ class NSFS : public ShareableObject {
          * time, the parameters of this Seifert fibred space will simply
          * be returned in human-readable form.
          *
+         * Calling reduce() before invoking this routine increases the
+         * chances of a successful identification of a common name.
+         *
          * \todo \feature Add more common names to this routine.
-         * See Orlik, "Seifert Manifolds", p112.
          *
          * @return the common name of this Seifert fibred space.
          */

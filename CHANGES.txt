@@ -28,6 +28,8 @@ Version 3.2  [ (under development) ]
               situations in which no solutions are possible.
             - Uses a completely redesigned algorithm in the closed
               orientable prime minimal case.
+            - Added pruning during permutation generation to eliminate
+              edges identified with themselves in reverse.
         Class NNormalSurface:
             - Added routine knownCanCrush().
         Class NPerm:
@@ -35,6 +37,9 @@ Version 3.2  [ (under development) ]
         Class NPrismSpec:
             - New class for dealing with triangular prisms defined by
               slicing along normal quads in a tetrahedron.
+        Class NSFS:
+            - Better recognition of common names; now recognises all
+              spaces with finite fundamental group.
         Class NTetFace:
             - Added routine setFirst().
         Class NTriangulation:
