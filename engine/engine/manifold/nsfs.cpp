@@ -373,10 +373,12 @@ std::ostream& NSFS::writeCommonName(std::ostream& out, bool tex) const {
         NExceptionalFibre two(2, 1);
         NExceptionalFibre three(3, 1);
         NExceptionalFibre threeB(3, 2);
+        NExceptionalFibre four(4, 1);
 
         if (nFibres == 4 && fibre[0] == two && fibre[1] == two &&
                 fibre[2] == two && fibre[3] == two && k == -2) {
             // [ S2 : (2,1), (2,1), (2,-1), (2,-1) ]
+            // Orlik, p138, case M2.
             return (tex ? out << "$K^2 \\twisted S^1$" : out << "KB x~ S1");
         } else if (nFibres == 3 && fibre[0] == two &&
                 gcd(fibre[2].alpha, fibre[2].beta) == 1 && k >= -1) {
@@ -521,8 +523,34 @@ std::ostream& NSFS::writeCommonName(std::ostream& out, bool tex) const {
                     if (tex)
                         out << '$';
                     return out;
+                } else if (a == 6 && fibre[1].beta == 1 &&
+                        fibre[2].beta == 1 && k == -1) {
+                    // [ S2 : (2,1), (3,1), (6,-5) ].
+                    // Orlik, p138, case M5.
+                    if (tex)
+                        return out << "$T^2 \\times I / "
+                            "\\homtwo{1}{1}{-1}{0}$";
+                    else
+                        return out << "T x I / [ 1,1 | -1,0 ]";
                 }
+            } else if (fibre[1] == four && fibre[2] == four && k == -1) {
+                // [ S2 : (2,1), (4,1), (4,-3) ].
+                // Orlik, p138, case M4.
+                if (tex)
+                    return out << "$T^2 \\times I / "
+                        "\\homtwo{0}{-1}{1}{0}$";
+                else
+                    return out << "T x I / [ 0,-1 | 1,0 ]";
             }
+        } else if (nFibres == 3 && fibre[0] == three && fibre[1] == three
+                && fibre[2] == three && k == -1) {
+            // [ S2 : (3,1), (3,1), (3,-2) ]
+            // Orlik, p138, case M3.
+            if (tex)
+                return out << "$T^2 \\times I / "
+                    "\\homtwo{0}{-1}{1}{-1}$";
+            else
+                return out << "T x I / [ 0,-1 | 1,-1 ]";
         }
     }
 
@@ -580,6 +608,13 @@ std::ostream& NSFS::writeCommonName(std::ostream& out, bool tex) const {
                     return out;
                 }
             }
+        }
+    }
+
+    // SFS over the torus:
+    if (orbitGenus == 1 && orbitOrientable && orbitPunctures == 0) {
+        if (nFibres == 0 && k == 0) {
+            return (tex ? out << "$T^2 \\times S^1$" : out << "T x S1");
         }
     }
 

@@ -52,6 +52,7 @@ Current Development Version
             - Changed to fit into the new NManifold structure.
             - New overloaded routine insertFibre(long, long).
             - No longer allows illegal (0,k) fibres to be added.
+            - More common names recognised.
         Class NSnappedBall:
             - Changed to fit into the new NStandardTriangulation structure.
             - Renamed isSnappedBall() to formsSnappedBall().
