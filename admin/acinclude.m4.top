@@ -586,7 +586,7 @@ AC_DEFUN(REGINA_SHOULD_BUILD, [
 ])
 
 dnl
-dnl    REGINA_SHOULD_BUILD(ITEM)
+dnl    REGINA_SHOULD_BUILD_INTERNAL(ITEM)
 dnl
 dnl    Checks whether ITEM is listed in $DO_NOT_COMPILE.
 dnl    Variable $should_build will be set to "yes" or "no" as appropriate.
