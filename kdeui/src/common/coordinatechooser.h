@@ -37,6 +37,10 @@
 #include <kcombobox.h>
 #include <vector>
 
+namespace regina {
+    class NNormalSurfaceList;
+}
+
 /**
  * A widget through which a normal surface coordinate system can be
  * selected.  Coordinate systems are described by the integer constants
