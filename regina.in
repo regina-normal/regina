@@ -17,23 +17,23 @@ set -e
 # Send the given error message to stderr.
 # Usage: error <message>
 error () {
-	echo "$1" 1>&2
+  echo "$1" 1>&2
 }
 
 # Send the given warning message to stderr if $REGINA_VERBOSITY >= 1.
 # Usage: warn <message>
 warn () {
-	if [ 1 -le "$REGINA_VERBOSITY" ]; then
-		echo "$1" 1>&2
-	fi
+  if [ 1 -le "$REGINA_VERBOSITY" ]; then
+    echo "$1" 1>&2
+  fi
 }
 
 # Send the given information message to stderr if $REGINA_VERBOSITY >= 2.
 # Usage: info <message>
 info () {
-	if [ 2 -le "$REGINA_VERBOSITY" ]; then
-		echo "$1" 1>&2
-	fi
+  if [ 2 -le "$REGINA_VERBOSITY" ]; then
+    echo "$1" 1>&2
+  fi
 }
 
 # --- Base Regina directory and package name. ---
@@ -48,36 +48,36 @@ info () {
 
 # Are we running directly from the source tree?
 if [ -f "`dirname "$0"`/regina.in" -a -f "`dirname "$0"`/admin/ac_gen" ]; then
-	export REGINA_FROMSOURCE=1
-	export REGINA_PACKAGE="regina"
-	default_regina_home="`dirname "$0"`"
+  export REGINA_FROMSOURCE=1
+  export REGINA_PACKAGE="regina"
+  default_regina_home="`dirname "$0"`"
 else
-	export REGINA_FROMSOURCE=0
-	export REGINA_PACKAGE="@PACKAGE@"
-	default_regina_home="@prefix@/share/@PACKAGE@"
+  export REGINA_FROMSOURCE=0
+  export REGINA_PACKAGE="@PACKAGE@"
+  default_regina_home="@prefix@/share/@PACKAGE@"
 fi
 
 # Derive REGINA_HOME if nothing is specified.
 if [ -z "$REGINA_HOME" ]; then
-	export REGINA_HOME="$default_regina_home"
+  export REGINA_HOME="$default_regina_home"
 fi
 
 # Check REGINA_HOME is an appropriate value.
 if [ ! -f "$REGINA_HOME/scripts/regscript_misc" ]; then
-	error "Error: \$REGINA_HOME should be set to the base Regina directory."
-	error "       This is the directory containing the \"scripts\" subdirectory."
-	error "       It is currently set to $REGINA_HOME."
-	exit 1
+  error "Error: \$REGINA_HOME should be set to the base Regina directory."
+  error "       This is the directory containing the \"scripts\" subdirectory."
+  error "       It is currently set to $REGINA_HOME."
+  exit 1
 fi
 
 # --- Check command-line verbosity. ---
 
 for i; do
-	if [ "$i" = "--verbose" -o "$i" = "-v" ]; then
-		export REGINA_VERBOSITY=2
-	elif [ "$i" = "--quiet" -o "$i" = "-q" ]; then
-		export REGINA_VERBOSITY=0
-	fi
+  if [ "$i" = "--verbose" -o "$i" = "-v" ]; then
+    export REGINA_VERBOSITY=2
+  elif [ "$i" = "--quiet" -o "$i" = "-q" ]; then
+    export REGINA_VERBOSITY=0
+  fi
 done
 
 # --- Miscellaneous functions and variables (including default verbosity). ---
@@ -91,11 +91,11 @@ info "-- Regina home directory (REGINA_HOME): $REGINA_HOME"
 # --- Determine which platform we're running on. ---
 
 if [ -z "$OSTYPE" ]; then
-	if [ -e /usr/bin/cygpath.exe ]; then
-		export OSTYPE=cygwin
-	else
-		export OSTYPE=`uname -s`
-	fi
+  if [ -e /usr/bin/cygpath.exe ]; then
+    export OSTYPE=cygwin
+  else
+    export OSTYPE=`uname -s`
+  fi
 fi
 
 # --- Read runtime options. ---
@@ -105,30 +105,30 @@ fi
 # --- Convert filenames if necessary for cygwin.
 
 if [ "$OSTYPE" = "cygwin" ]; then
-	# We'll do this carefully because the windows paths will
-	# contain backslashes.
+  # We'll do this carefully because the windows paths will
+  # contain backslashes.
 
-	# Options that are single filenames:
-	for i in REGINA_OPTIONS_LOCAL REGINA_BTOOLS REGINA_JYTHON REGINA_JAVAHELP REGINA_JARDIR REGINA_CACHEDIR; do
-		if ( eval "[ ! -z \"\$$i\" ]" ); then
-			eval 'export '"$i"'="`cygpath -aw "$'"$i"'"`"'
-		fi
-	done
+  # Options that are single filenames:
+  for i in REGINA_OPTIONS_LOCAL REGINA_BTOOLS REGINA_JYTHON REGINA_JAVAHELP REGINA_JARDIR REGINA_CACHEDIR; do
+    if ( eval "[ ! -z \"\$$i\" ]" ); then
+      eval 'export '"$i"'="`cygpath -aw "$'"$i"'"`"'
+    fi
+  done
 
-	# Options that are colon-separated lists of filenames:
-	optioncmds="`awk -f "$REGINA_HOME/scripts/regscript_expandlist" <<-end
-		REGINA_JNIDIR=$REGINA_JNIDIR
-		REGINA_EXTRA_CLASSES=$REGINA_EXTRA_CLASSES
-	end
-	`"
-	eval $optioncmds;
+  # Options that are colon-separated lists of filenames:
+  optioncmds="`awk -f "$REGINA_HOME/scripts/regscript_expandlist" <<-end
+    REGINA_JNIDIR=$REGINA_JNIDIR
+    REGINA_EXTRA_CLASSES=$REGINA_EXTRA_CLASSES
+  end
+  `"
+  eval $optioncmds;
 fi
 
 # --- Set the classpath. ---
 
 reginaclasses=""
 for i in "$REGINA_JARDIR"/*.jar; do
-	reginaclasses="$reginaclasses$cps$i";
+  reginaclasses="$reginaclasses$cps$i";
 done
 
 export CLASSPATH="$reginaclasses$cps$REGINA_BTOOLS$cps$REGINA_JYTHON$cps$REGINA_JAVAHELP$cps$REGINA_EXTRA_CLASSES$cps$CLASSPATH"
@@ -136,20 +136,20 @@ export CLASSPATH="$reginaclasses$cps$REGINA_BTOOLS$cps$REGINA_JYTHON$cps$REGINA_
 # --- Set the Java defines. ---
 
 addjavadef () {
-	eval "javadefs=\"\$javadefs \\\"-D$1=\$$1\\\"\""
+  eval "javadefs=\"\$javadefs \\\"-D$1=\$$1\\\"\""
 }
 use_java_defs="REGINA_ENGINE REGINA_INTERFACE REGINA_JNIENGINE"
 
 javadefs="\"-Djava.library.path=$REGINA_JNIDIR\""
 if [ ! -z "$REGINA_CACHEDIR" ]; then
-	javadefs="$javadefs \"-Dpython.cachedir=$REGINA_CACHEDIR\""
+  javadefs="$javadefs \"-Dpython.cachedir=$REGINA_CACHEDIR\""
 fi
 addjavadef "REGINA_OPTIONS_LOCAL"
 
 for i in $use_java_defs; do
-	if ( eval "[ ! -z \"\$$i\" ]" ); then
-		addjavadef $i
-	fi
+  if ( eval "[ ! -z \"\$$i\" ]" ); then
+    addjavadef $i
+  fi
 done
 
 # --- Run the application. ---
@@ -160,26 +160,26 @@ info "Command: $command"
 info "Classpath: $CLASSPATH"
 
 if ! ( eval $command '"$@"' ); then
-	error
-	error "################################"
-	error "#                              #"
-	error "#            REGINA            #"
-	error "#                              #"
-	error "#  Could not run application!  #"
-	error "#                              #"
-	error "################################"
-	error
-	error "An error occurred whilst trying to run the application.  Use:"
-	error
-	error "    $0 --verbose"
-	error
-	error "to see more diagnostic output such as the runtime options"
-	error "that are being used.  You may wish to verify that these"
-	error "options are correct and edit the runtime options file(s)"
-	error "if appropriate."
-	error
-	error "If you still can't run the application, mail $support"
-	error "for assistance."
-	error
-	exit 1
+  error
+  error "################################"
+  error "#                              #"
+  error "#            REGINA            #"
+  error "#                              #"
+  error "#  Could not run application!  #"
+  error "#                              #"
+  error "################################"
+  error
+  error "An error occurred whilst trying to run the application.  Use:"
+  error
+  error "    $0 --verbose"
+  error
+  error "to see more diagnostic output such as the runtime options"
+  error "that are being used.  You may wish to verify that these"
+  error "options are correct and edit the runtime options file(s)"
+  error "if appropriate."
+  error
+  error "If you still can't run the application, mail $support"
+  error "for assistance."
+  error
+  exit 1
 fi
