@@ -36,7 +36,7 @@ using regina::NLargeInteger;
 class NLargeIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NLargeIntegerTest);
 
-    CPPUNIT_TEST(equality);
+    CPPUNIT_TEST(comparisons);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -130,161 +130,244 @@ class NLargeIntegerTest : public CppUnit::TestFixture {
             return ans.str();
         }
 
-        void equality() {
+        void shouldBeLess(const NLargeInteger& a, const NLargeInteger& b,
+                const std::string& aName, const std::string& bName) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + aName + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + bName + ".",
+                ! (a == b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + bName + ".",
+                a != b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + bName + ".",
+                a < b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + bName + ".",
+                a <= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + bName + ".",
+                ! (a > b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + bName + ".",
+                ! (a >= b));
+        }
+
+        void shouldBeEqual(const NLargeInteger& a, const NLargeInteger& b,
+                const std::string& aName, const std::string& bName) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + aName + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + bName + ".",
+                a == b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + bName + ".",
+                ! (a != b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + bName + ".",
+                ! (a < b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + bName + ".",
+                a <= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + bName + ".",
+                ! (a > b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + ".",
+                a >= b);
+        }
+
+        void shouldBeGreater(const NLargeInteger& a, const NLargeInteger& b,
+                const std::string& aName, const std::string& bName) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + aName + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + bName + ".",
+                ! (a == b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + bName + ".",
+                a != b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + bName + ".",
+                ! (a < b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + bName + ".",
+                ! (a <= b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + bName + ".",
+                a > b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + ".",
+                a >= b);
+        }
+
+        void shouldBeLess(const NLargeInteger& a, long b,
+                const std::string& aName, const std::string& bName) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + aName + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + bName + " (long).",
+                ! (a == b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + bName + " (long).",
+                a != b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + bName + " (long).",
+                a < b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + bName + " (long).",
+                a <= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + bName + " (long).",
+                ! (a > b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + bName + " (long).",
+                ! (a >= b));
+        }
+
+        void shouldBeEqual(const NLargeInteger& a, long b,
+                const std::string& aName, const std::string& bName) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + aName + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + bName + " (long).",
+                a == b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + bName + " (long).",
+                ! (a != b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + bName + " (long).",
+                ! (a < b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + bName + " (long).",
+                a <= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + bName + " (long).",
+                ! (a > b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + " (long).",
+                a >= b);
+        }
+
+        void shouldBeGreater(const NLargeInteger& a, long b,
+                const std::string& aName, const std::string& bName) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + aName + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + bName + " (long).",
+                ! (a == b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + bName + " (long).",
+                a != b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + bName + " (long).",
+                ! (a < b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + bName + " (long).",
+                ! (a <= b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + bName + " (long).",
+                a > b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + " (long).",
+                a >= b);
+        }
+
+        void comparisons() {
             unsigned a, b, i, j;
 
             const NLargeInteger& zero(NLargeInteger::zero);
             const NLargeInteger& one(NLargeInteger::one);
             const NLargeInteger& infinity(NLargeInteger::infinity);
 
-            CPPUNIT_ASSERT_MESSAGE("Constant zero does not == itself.",
-                zero == zero);
-            CPPUNIT_ASSERT_MESSAGE("Constant zero does not == 0.",
-                zero == 0L);
-            CPPUNIT_ASSERT_MESSAGE("Constant one does not == itself.",
-                one == one);
-            CPPUNIT_ASSERT_MESSAGE("Constant one does not == 1.",
-                one == 1L);
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity does not == itself.",
-                infinity == infinity);
-            CPPUNIT_ASSERT_MESSAGE("Constant zero != itself.",
-                ! (zero != zero));
-            CPPUNIT_ASSERT_MESSAGE("Constant zero != 0.",
-                ! (zero != 0L));
-            CPPUNIT_ASSERT_MESSAGE("Constant one != itself.",
-                ! (one != one));
-            CPPUNIT_ASSERT_MESSAGE("Constant one != 1.",
-                ! (one != 1L));
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity != itself.",
-                ! (infinity != infinity));
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity == zero.",
-                ! (infinity == zero || zero == infinity));
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity == 0.",
-                ! (infinity == 0L));
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity == one.",
-                ! (infinity == one || one == infinity));
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity == 1.",
-                ! (infinity == 1L));
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity does not != zero.",
-                infinity != zero && zero != infinity);
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity does not != 0.",
-                infinity != 0L);
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity does not != one.",
-                infinity != one && one != infinity);
-            CPPUNIT_ASSERT_MESSAGE("Constant infinity does not != 1.",
-                infinity != 1L);
+            shouldBeLess(zero, one, "zero", "one");
+            shouldBeLess(zero, 1L, "zero", "one");
+            shouldBeLess(one, infinity, "one", "infinity");
+            shouldBeLess(zero, infinity, "zero", "infinity");
+            shouldBeGreater(one, zero, "one", "zero");
+            shouldBeGreater(one, 0L, "one", "zero");
+            shouldBeGreater(infinity, one, "infinity", "one");
+            shouldBeGreater(infinity, 1L, "infinity", "one");
+            shouldBeGreater(infinity, zero, "infinity", "zero");
+            shouldBeGreater(infinity, 0L, "infinity", "zero");
+            shouldBeEqual(zero, zero, "zero", "zero");
+            shouldBeEqual(zero, 0L, "zero", "zero");
+            shouldBeEqual(one, one, "one", "one");
+            shouldBeEqual(one, 1L, "one", "one");
+            shouldBeEqual(infinity, infinity, "infinity", "infinity");
 
-            for (a = 0; a < nSeries; a++) {
+            // Compare the elements of the series with zero, one and
+            // infinity.
+            for (a = 0; a < nSeries; a++)
                 for (i = 0; i < seriesLen; i++) {
-                    if (! (series[a][i] == series[a][i])) {
-                        std::string msg = "Element ";
-                        msg += eltName(a, i);
-                        msg += " does not == itself.";
-                        CPPUNIT_FAIL(msg);
-                    }
-                    if (series[a][i] != series[a][i]) {
-                        std::string msg = "Element ";
-                        msg += eltName(a, i);
-                        msg += " != itself.";
-                        CPPUNIT_FAIL(msg);
-                    }
-
-                    if (series[a][i] == zero || zero == series[a][i]) {
-                        std::string msg = "Element ";
-                        msg += eltName(a, i);
-                        msg += " == zero.";
-                        CPPUNIT_FAIL(msg);
-                    }
-                    if (! (series[a][i] != zero && zero != series[a][i])) {
-                        std::string msg = "Element ";
-                        msg += eltName(a, i);
-                        msg += " does not != zero.";
-                        CPPUNIT_FAIL(msg);
-                    }
-
-                    if (series[a][i] == one || one == series[a][i]) {
-                        std::string msg = "Element ";
-                        msg += eltName(a, i);
-                        msg += " == one.";
-                        CPPUNIT_FAIL(msg);
-                    }
-                    if (! (series[a][i] != one && one != series[a][i])) {
-                        std::string msg = "Element ";
-                        msg += eltName(a, i);
-                        msg += " does not != one.";
-                        CPPUNIT_FAIL(msg);
-                    }
-
-                    if (series[a][i] == infinity || infinity == series[a][i]) {
-                        std::string msg = "Element ";
-                        msg += eltName(a, i);
-                        msg += " == infinity.";
-                        CPPUNIT_FAIL(msg);
-                    }
-                    if (! (series[a][i] != infinity &&
-                            infinity != series[a][i])) {
-                        std::string msg = "Element ";
-                        msg += eltName(a, i);
-                        msg += " does not != infinity.";
-                        CPPUNIT_FAIL(msg);
-                    }
-
-                    if (a < nSmallSeries) {
-                        if (! (series[a][i] == smallSeriesVal[a][i])) {
-                            std::string msg = "Element ";
-                            msg += eltName(a, i);
-                            msg += " does not == its declared long value.";
-                            CPPUNIT_FAIL(msg);
-                        }
-                        if (series[a][i] != smallSeriesVal[a][i]) {
-                            std::string msg = "Element ";
-                            msg += eltName(a, i);
-                            msg += " != its declared long value.";
-                            CPPUNIT_FAIL(msg);
-                        }
+                    shouldBeLess(series[a][i], infinity,
+                        eltName(a, i), "infinity");
+                    shouldBeGreater(infinity, series[a][i],
+                        "infinity", eltName(a, i));
+                    if (a == 0 || a == 2) {
+                        // Positive series.
+                        shouldBeGreater(series[a][i], zero,
+                            eltName(a, i), "zero");
+                        shouldBeGreater(series[a][i], 0L,
+                            eltName(a, i), "zero");
+                        shouldBeGreater(series[a][i], one,
+                            eltName(a, i), "one");
+                        shouldBeGreater(series[a][i], 1L,
+                            eltName(a, i), "one");
+                        shouldBeLess(zero, series[a][i],
+                            "zero", eltName(a, i));
+                        shouldBeLess(one, series[a][i],
+                            "one", eltName(a, i));
+                    } else {
+                        // Negative series.
+                        shouldBeLess(series[a][i], zero,
+                            eltName(a, i), "zero");
+                        shouldBeLess(series[a][i], 0L,
+                            eltName(a, i), "zero");
+                        shouldBeLess(series[a][i], one,
+                            eltName(a, i), "one");
+                        shouldBeLess(series[a][i], 1L,
+                            eltName(a, i), "one");
+                        shouldBeGreater(zero, series[a][i],
+                            "zero", eltName(a, i));
+                        shouldBeGreater(one, series[a][i],
+                            "one", eltName(a, i));
                     }
                 }
-            }
 
+            // Compare all elements of all series in pairs.
+            int expected;
             for (a = 0; a < nSeries; a++)
                 for (b = 0; b < nSeries; b++)
                     for (i = 0; i < seriesLen; i++)
                         for (j = 0; j < seriesLen; j++) {
+                            // What should the result of the comparison be?
                             if (a == b && i == j)
-                                continue;
-                            if (series[a][i] == series[b][j]) {
-                                std::string msg = "Elements ";
-                                msg += eltName(a, i);
-                                msg += " and ";
-                                msg += eltName(b, j);
-                                msg += " == each other.";
-                                CPPUNIT_FAIL(msg);
+                                expected = 0;
+                            else if (a % 2 == 0 && b % 2 == 1)
+                                expected = 1;
+                            else if (a % 2 == 1 && b % 2 == 0)
+                                expected = -1;
+                            else if (a % 2 == 0) {
+                                // a and b both positive series.
+                                if (a < b)
+                                    expected = -1;
+                                else if (a > b)
+                                    expected = 1;
+                                else if (i < j)
+                                    expected = -1;
+                                else
+                                    expected = 1;
+                            } else {
+                                // a and b both negative series.
+                                if (a < b)
+                                    expected = 1;
+                                else if (a > b)
+                                    expected = -1;
+                                else if (i < j)
+                                    expected = 1;
+                                else
+                                    expected = -1;
                             }
-                            if (! (series[a][i] != series[b][j])) {
-                                std::string msg = "Elements ";
-                                msg += eltName(a, i);
-                                msg += " and ";
-                                msg += eltName(b, j);
-                                msg += " do not != each other.";
-                                CPPUNIT_FAIL(msg);
+
+                            // Compare the elements of the series directly.
+                            if (expected < 0) {
+                                shouldBeLess(series[a][i], series[b][j],
+                                    eltName(a, i), eltName(b, j));
+                            } else if (expected > 0) {
+                                shouldBeGreater(series[a][i], series[b][j],
+                                    eltName(a, i), eltName(b, j));
+                            } else {
+                                shouldBeEqual(series[a][i], series[b][j],
+                                    eltName(a, i), eltName(b, j));
                             }
+
+                            // Compare with expected long values as
+                            // well, if we have them.
                             if (b < nSmallSeries) {
-                                if (series[a][i] == smallSeriesVal[b][j]) {
-                                    std::string msg = "Element ";
-                                    msg += eltName(a, i);
-                                    msg += " == the declared long value of ";
-                                    msg += eltName(b, j);
-                                    msg += ".";
-                                    CPPUNIT_FAIL(msg);
-                                }
-                                if (! (series[a][i] != smallSeriesVal[b][j])) {
-                                    std::string msg = "Element ";
-                                    msg += eltName(a, i);
-                                    msg += " does not != the declared "
-                                        "long value of ";
-                                    msg += eltName(b, j);
-                                    msg += ".";
-                                    CPPUNIT_FAIL(msg);
+                                if (expected < 0) {
+                                    shouldBeLess(series[a][i],
+                                        smallSeriesVal[b][j],
+                                        eltName(a, i), eltName(b, j));
+                                } else if (expected > 0) {
+                                    shouldBeGreater(series[a][i],
+                                        smallSeriesVal[b][j],
+                                        eltName(a, i), eltName(b, j));
+                                } else {
+                                    shouldBeEqual(series[a][i],
+                                        smallSeriesVal[b][j],
+                                        eltName(a, i), eltName(b, j));
                                 }
                             }
                         }
