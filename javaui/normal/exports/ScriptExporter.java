@@ -74,7 +74,7 @@ public class ScriptExporter extends Exporter {
             // Output the name of the script.
             writer.write("### Regina Script: ");
             writer.write(packet.getPacketLabel());
-            writer.write("\n\n");
+            writer.write("\n###\n");
 
             // Output the value of each variable.
             long n = script.getNumberOfVariables();
@@ -86,7 +86,7 @@ public class ScriptExporter extends Exporter {
                 writer.write(script.getVariableValue(i));
                 writer.write('\n');
             }
-            writer.write("\n### Begin Script\n\n");
+            writer.write("###\n### Begin Script\n");
 
             n = script.getNumberOfLines();
             for (i = 0; i < n; i++) {
