@@ -72,6 +72,7 @@ info () {
 #   REGINA_FROMSOURCE: 1 if we're running directly from the source tree,
 #                      0 if we're running from an installation.
 
+prefix=@prefix@
 datadir=@datadir@
 libdir=@libdir@
 

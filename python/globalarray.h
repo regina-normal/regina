@@ -72,7 +72,8 @@ class GlobalArray3D;
  *
  * \pre The output operator &lt;&lt; is defined for type \a T.
  */
-template <typename T, class ReturnValuePolicy = boost::python::return_by_value>
+template <typename T, class ReturnValuePolicy =
+    ::boost::python::return_by_value>
 class GlobalArray {
     private:
         const T* data;
@@ -126,7 +127,7 @@ class GlobalArray {
             if (index >= nElements) {
                 PyErr_SetString(PyExc_IndexError,
                     "global array index out of range");
-                boost::python::throw_error_already_set();
+                ::boost::python::throw_error_already_set();
             }
             return data[index];
         }
@@ -168,13 +169,13 @@ class GlobalArray {
          * class in Python.
          */
         static void wrapClass(const char* className) {
-            boost::python::class_<GlobalArray<T, ReturnValuePolicy> >
-                    (className, boost::python::no_init)
+            ::boost::python::class_<GlobalArray<T, ReturnValuePolicy> >
+                    (className, ::boost::python::no_init)
                 .def("__getitem__",
                     &GlobalArray<T, ReturnValuePolicy>::getItem,
-                    boost::python::return_value_policy<ReturnValuePolicy>())
+                    ::boost::python::return_value_policy<ReturnValuePolicy>())
                 .def("__len__", &GlobalArray<T, ReturnValuePolicy>::size)
-                .def(boost::python::self_ns::str(boost::python::self))
+                .def(::boost::python::self_ns::str(::boost::python::self))
             ;
         }
 
@@ -239,7 +240,8 @@ std::ostream& operator << (std::ostream& out,
  *
  * \pre The output operator &lt;&lt; is defined for type \a T.
  */
-template <typename T, class ReturnValuePolicy = boost::python::return_by_value>
+template <typename T, class ReturnValuePolicy =
+    ::boost::python::return_by_value>
 class GlobalArray2D {
     public:
         typedef GlobalArray<T, ReturnValuePolicy> Row;
@@ -352,7 +354,7 @@ class GlobalArray2D {
             if (index >= nRows) {
                 PyErr_SetString(PyExc_IndexError,
                     "global array index out of range");
-                boost::python::throw_error_already_set();
+                ::boost::python::throw_error_already_set();
             }
             return data[index];
         }
@@ -394,13 +396,13 @@ class GlobalArray2D {
          * class in Python.
          */
         static void wrapClass(const char* className) {
-            boost::python::class_<GlobalArray2D<T, ReturnValuePolicy> >
-                    (className, boost::python::no_init)
+            ::boost::python::class_<GlobalArray2D<T, ReturnValuePolicy> >
+                    (className, ::boost::python::no_init)
                 .def("__getitem__",
                     &GlobalArray2D<T, ReturnValuePolicy>::getItem,
-                    boost::python::return_internal_reference<>())
+                    ::boost::python::return_internal_reference<>())
                 .def("__len__", &GlobalArray2D<T, ReturnValuePolicy>::rows)
-                .def(boost::python::self_ns::str(boost::python::self))
+                .def(::boost::python::self_ns::str(::boost::python::self))
             ;
         }
 
@@ -488,7 +490,8 @@ std::ostream& operator << (std::ostream& out,
  *
  * \pre The output operator &lt;&lt; is defined for type \a T.
  */
-template <typename T, class ReturnValuePolicy = boost::python::return_by_value>
+template <typename T, class ReturnValuePolicy =
+    ::boost::python::return_by_value>
 class GlobalArray3D {
     public:
         typedef GlobalArray2D<T, ReturnValuePolicy> Subarray;
@@ -589,7 +592,7 @@ class GlobalArray3D {
             if (index >= nSubarrays) {
                 PyErr_SetString(PyExc_IndexError,
                     "global array index out of range");
-                boost::python::throw_error_already_set();
+                ::boost::python::throw_error_already_set();
             }
             return data[index];
         }
@@ -632,14 +635,14 @@ class GlobalArray3D {
          * class in Python.
          */
         static void wrapClass(const char* className) {
-            boost::python::class_<GlobalArray3D<T, ReturnValuePolicy> >
-                    (className, boost::python::no_init)
+            ::boost::python::class_<GlobalArray3D<T, ReturnValuePolicy> >
+                    (className, ::boost::python::no_init)
                 .def("__getitem__",
                     &GlobalArray3D<T, ReturnValuePolicy>::getItem,
-                    boost::python::return_internal_reference<>())
+                    ::boost::python::return_internal_reference<>())
                 .def("__len__",
                     &GlobalArray3D<T, ReturnValuePolicy>::dim1)
-                .def(boost::python::self_ns::str(boost::python::self))
+                .def(::boost::python::self_ns::str(::boost::python::self))
             ;
         }
 };
