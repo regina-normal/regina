@@ -60,9 +60,10 @@ class GAPRunner : public KDialogBase {
          * The running GAP process:
          */
         KProcIO* proc;
+        QString currOutput;
         QString partialLine;
-        QString nextInput;
         int stage;
+        int stageWhichReln;
         bool cancelled;
 
         /**
@@ -102,8 +103,8 @@ class GAPRunner : public KDialogBase {
         /**
          * Handle I/O to and from GAP.
          */
-        void processPrompt();
-        void processOutput(const QString& line);
+        bool appearsValid(const QString& output);
+        void processOutput(const QString& output);
 
         /**
          * Display an error to the user and cancel the operation.
