@@ -87,8 +87,8 @@
       (described <link linkend="features-splitting">below</link>);
      </para></listitem>
      <listitem><para>
-      A complete connected sum decomposition for closed orientable
-      triangulations.
+      3-sphere recognition, as well as a complete connected sum
+      decomposition for closed orientable triangulations.
      </para></listitem>
     </itemizedlist>
    </para>
@@ -129,6 +129,10 @@
       tetrahedra as far as possible, though there is no
       guarantee that the smallest possible number of tetrahedra will be
       achieved;
+     </para></listitem>
+     <listitem><para>
+      Conversion to a 0-efficient triangulation where possible
+      for closed orientable 3-manifolds <xref linkend="bib-0-efficiency"/>;
      </para></listitem>
      <listitem><para>
       Barycentric subdivision and the truncation of ideal vertices

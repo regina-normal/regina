@@ -925,6 +925,17 @@
        and no other normal (or almost normal) discs.
       </para></glossdef>
      </glossentry>
+     <glossentry>
+      <glossterm>3-Sphere</glossterm>
+      <glossdef><para>
+       Determines whether this is in fact a triangulation
+       of the 3-sphere.  The 0-efficiency algorithms of Jaco and
+       Rubinstein <xref linkend="bib-0-efficiency"/> are used, which in
+       turn include components of Rubinstein's original 3-sphere recognition
+       algorithm <xref linkend="bib-rubin-3sphere1"/>,
+       <xref linkend="bib-rubin-3sphere2"/>.
+      </para></glossdef>
+     </glossentry>
     </glosslist>
    </para>
   </sect2>
@@ -1180,6 +1191,53 @@
     as through 2-3 moves) to escape a local minimum well in which it
     might be stuck; this is on the &todo; list.
    </para>
+   <tip><para>
+    In cases where this faster simplification routine is ineffective,
+    the more powerful but slower <link linkend="tri-make0eff">0-efficiency
+    conversion</link> (described below) can be used.
+   </para></tip>
+  </sect2>
+
+  <sect2 id="tri-make0eff">
+   <title>0-Efficiency</title>
+
+   <para>
+    A triangulation is <firstterm>0-efficient</firstterm> if its only
+    normal spheres and discs are vertex linking, and if it has no 2-sphere
+    boundary components.  Jaco and Rubinstein
+    <xref linkend="bib-0-efficiency"/> prove that most minimal
+    triangulations of closed orientable irreducible 3-manifolds are
+    0-efficient, and in general it can be observed that 0-efficient
+    triangulations tend to use relatively small numbers of tetrahedra.
+   </para>
+   <para>
+    To convert a triangulation into a 0-efficient triangulation of the
+    same underlying 3-manifold, the
+    <menuchoice>
+     <guimenu>Docked Packet</guimenu>
+     <guimenuitem>Make 0-Efficient</guimenuitem>
+    </menuchoice>
+    menu item can be used.  Note that, like the
+    <link linkend="tri-simplification">global simplification</link>
+    routine described above, there is no guarantee that the minimum
+    possible number of tetrahedra will be achieved.
+   </para>
+   <para>
+    0-efficiency conversion is currently only available for closed
+    orientable triangulations.  Furthermore, if the triangulation
+    represents a composite 3-manifold then it is impossible to construct
+    a 0-efficient triangulation &ndash; in this case a full connected sum
+    decomposition will be inserted beneath this triangulation in the
+    packet tree.
+   </para>
+
+   <warning><para>
+    This procedure involves an analysis of normal surfaces and can be
+    very slow for large triangulations.  For a faster but perhaps less
+    effective simplification of triangulations, see the
+    <link linkend="tri-simplification">global simplification</link>
+    routine described above.
+   </para></warning>
   </sect2>
 
   <sect2 id="tri-cover">

@@ -94,13 +94,22 @@
    </glossentry>
    <glossentry>
     <glossterm>Surface calculation threshold</glossterm>
-    <glossdef><para>
-     This determines how many tetrahedra a triangulation must have
-     before properties relating to its normal
-     surfaces are not automatically calculated.  See the
-     <link linkend="tri-surfaceproperties">normal surface properties
-     documentation</link> for details.
-    </para></glossdef>
+    <glossdef>
+     <para>
+      This determines how many tetrahedra a triangulation must have
+      before properties relating to its normal
+      surfaces are not automatically calculated.  See the
+      <link linkend="tri-surfaceproperties">normal surface properties
+      documentation</link> for details.
+     </para>
+     <para>
+      Note that 3-sphere recognition (one of the properties
+      affected by this option) will use a slighly lower threshold than is
+      set here.  This is because it involves the
+      analysis of almost normal surfaces, which are significantly slower
+      than ordinary normal surfaces to work with.
+     </para>
+    </glossdef>
    </glossentry>
   </glosslist>
  </sect1>
