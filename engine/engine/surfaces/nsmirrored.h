@@ -88,7 +88,7 @@ class NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
         /**
          * Destroys this vector and its mirror if appropriate.
          */
-        ~NNormalSurfaceVectorMirrored();
+        virtual ~NNormalSurfaceVectorMirrored();
 
         /**
          * Creates a new mirror vector corresponding to this vector.
