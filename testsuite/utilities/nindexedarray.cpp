@@ -29,7 +29,7 @@
 #include <algorithm>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "testsuite/census/testcensus.h"
+#include "testsuite/utilities/testutilities.h"
 #include "utilities/hashutils.h"
 #include "utilities/nindexedarray.h"
 
@@ -42,6 +42,8 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(basicChecks);
     CPPUNIT_TEST(constructors);
     CPPUNIT_TEST(swap);
+    CPPUNIT_TEST(inserts);
+    CPPUNIT_TEST(erasures);
     CPPUNIT_TEST(resizes);
     CPPUNIT_TEST(queries);
     CPPUNIT_TEST(comparisons);
@@ -49,6 +51,9 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        int nExtra;
+            /**< Slightly larger than the number of unique elements we
+                 will be using in our large arrays. */
         int nLarge;
             /**< The number of unique elements we will be using in
                  our large arrays. */
@@ -56,7 +61,7 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
             /**< The number of unique elements we will be using in
                  our small arrays. */
         int* value;
-            /**< A list of nLarge integers, where value[i] == i.
+            /**< A list of nExtra integers, where value[i] == i.
                  Note that we will actually store the consecutive memory
                  addresses of these integers in the various arrays. */
 
@@ -85,11 +90,12 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
         void setUp() {
             int i;
 
+            nExtra = 1010;
             nLarge = 1000;
             nSmall = 3;
 
-            value = new int[nLarge];
-            for (i = 0; i < nLarge; i++)
+            value = new int[nExtra];
+            for (i = 0; i < nExtra; i++)
                 value[i] = i;
 
             for (i = 0; i < nLarge; i++)
@@ -158,6 +164,14 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
                 ok = false;
 
             CPPUNIT_ASSERT_MESSAGE(realMsg, ok);
+
+            realMsg = "Arrays ";
+            realMsg += name1;
+            realMsg += " and ";
+            realMsg += name2;
+            realMsg += " report different sizes.";
+
+            CPPUNIT_ASSERT_MESSAGE(realMsg, array1.size() == array2.size());
         }
 
         int* expectedElement(const Array& array,
@@ -306,12 +320,133 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
                 "swapped largeUniqueClone", "smallMultiArray");
         }
 
+        void inserts(const Array& multi, const Array& unique,
+                const char* multiName) const {
+            // Make a few tries at building multi from empty or unique.
+            // Note that push_back() was already tested when we
+            // initially constructed the member arrays.
+            Array::const_reverse_iterator rit;
+            unsigned i;
+
+            Array::size_type blockSize = unique.size();
+
+            Array try1;
+            // Copies at end, front and middle:
+            try1.insert(try1.end(), 3, unique.back());
+            validate(try1, "inserted duplicates at end");
+            try1.insert(try1.begin(), 3, unique.front());
+            validate(try1, "inserted duplicates at front");
+            for (rit = unique.rbegin() + 1; rit + 1 != unique.rend(); rit++) {
+                try1.insert(try1.begin() + 3, 3, *rit);
+                validate(try1, "inserted duplicates in middle");
+            }
+            // Block at front:
+            try1.insert(try1.begin(), unique.begin(), unique.end());
+            validate(try1, "inserted block at front");
+            // Block in middle:
+            try1.insert(try1.begin() + blockSize,
+                unique.rbegin(), unique.rend());
+            validate(try1, "inserted block in middle");
+
+            compare(try1, multi, "first cloning attempt by insertion",
+                multiName);
+
+            Array try2(unique.begin() + 1, unique.end());
+            // Element at front:
+            try2.insert(try2.begin(), unique.front());
+            validate(try2, "inserted element at front");
+            // Block at end:
+            try2.insert(try2.end(), unique.rbegin(), unique.rend());
+            validate(try2, "inserted block at end");
+            // Element at end and middle:
+            for (rit = unique.rbegin(); rit != unique.rend(); rit++)
+                for (i = 0; i < 3; i++) {
+                    try2.insert(try2.begin() + blockSize + blockSize, *rit);
+                    validate(try2, "inserted element at middle/end");
+                }
+
+            compare(try2, multi, "second cloning attempt by insertion",
+                multiName);
+        }
+
         void inserts() {
-            // TODO: push_back, insert elt, insert chunk, insert n copies
+            inserts(largeMultiArray, largeUniqueArray, "largeMultiArray");
+            inserts(smallMultiArray, smallUniqueArray, "smallMultiArray");
+        }
+
+        void erasures(const Array& multi, const Array& unique,
+                const char* multiName, const char* uniqueName) const {
+            // Make a few tries at building unique from multi.
+            unsigned i;
+
+            Array::size_type blockSize = unique.size();
+
+            Array try1(multi);
+            // Block from middle:
+            try1.erase(try1.begin() + (2 * blockSize),
+                try1.begin() + (3 * blockSize));
+            validate(try1, "erased block from middle");
+            arrayAssert(multiName,
+                "Erased block from middle reports incorrect size.",
+                try1.size() == 4 * blockSize);
+            // Block from end:
+            try1.erase(try1.begin() + (3 * blockSize), try1.end());
+            validate(try1, "erased block from end");
+            arrayAssert(multiName,
+                "Erased block from end reports incorrect size.",
+                try1.size() == 3 * blockSize);
+            // Element from beginning:
+            try1.erase(try1.begin());
+            validate(try1, "erased element from beginning");
+            arrayAssert(multiName,
+                "Erased element from beginning reports incorrect size.",
+                try1.size() == 3 * blockSize - 1);
+            // Block from beginning:
+            try1.erase(try1.begin(), try1.begin() + blockSize - 1);
+            validate(try1, "erased block from beginning");
+            arrayAssert(multiName,
+                "Erased block from beginning reports incorrect size.",
+                try1.size() == 2 * blockSize);
+            // Pop from end:
+            for (i = 0; i < 3; i++)
+                try1.pop_back();
+            validate(try1, "popped elements from end");
+            arrayAssert(multiName,
+                "Popped elements from end reports incorrect size.",
+                try1.size() == 2 * blockSize - 3);
+            // Element from middle and end:
+            for (i = 0; i + 3 < blockSize; i++) {
+                try1.erase(try1.begin() + blockSize);
+                validate(try1, "erased element from middle/end");
+                arrayAssert(multiName,
+                    "Erased element from middle/end reports incorrect size.",
+                    try1.size() == 2 * blockSize - 3 - i - 1);
+            }
+
+            compare(try1, Array(unique.rbegin(), unique.rend()),
+                "cloning attempt by erasure", uniqueName);
+        }
+
+        void eraseByValue(const Array& large, const Array& small,
+                const char* smallName) const {
+            // Test erasing all copies of a given element.
+            Array eraseTest(large);
+            for (unsigned i = nSmall; i < nExtra; i++)
+                eraseTest.erase(value + i);
+
+            validate(eraseTest, "erase-by-value test");
+            compare(eraseTest, small, "erase-by-value test", smallName);
         }
 
         void erasures() {
-            // TODO: pop_back, erase elt, erase chunk, erase all copies
+            erasures(largeMultiArray, largeUniqueArray,
+                "largeMultiArray", "largeUniqueArray");
+            erasures(smallMultiArray, smallUniqueArray,
+                "smallMultiArray", "smallUniqueArray");
+            eraseByValue(largeMultiArray, smallMultiArray,
+                "smallMultiArray");
+            eraseByValue(largeUniqueArray, smallUniqueArray,
+                "smallUniqueArray");
         }
 
         void grow(const Array& multi, const Array& unique,
