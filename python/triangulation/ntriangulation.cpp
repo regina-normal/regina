@@ -85,7 +85,7 @@ namespace {
         boost::python::list ans;
         for (NTriangulation::TetrahedronIterator it =
                 t.getTetrahedra().begin(); it != t.getTetrahedra().end(); it++)
-            ans.append(*it);
+            ans.append(boost::python::ptr(*it));
         return ans;
     }
 
@@ -93,7 +93,7 @@ namespace {
         boost::python::list ans;
         for (NTriangulation::ComponentIterator it =
                 t.getComponents().begin(); it != t.getComponents().end(); it++)
-            ans.append(*it);
+            ans.append(boost::python::ptr(*it));
         return ans;
     }
 
@@ -102,7 +102,7 @@ namespace {
         for (NTriangulation::BoundaryComponentIterator it =
                 t.getBoundaryComponents().begin();
                 it != t.getBoundaryComponents().end(); it++)
-            ans.append(*it);
+            ans.append(boost::python::ptr(*it));
         return ans;
     }
 
@@ -110,7 +110,7 @@ namespace {
         boost::python::list ans;
         for (NTriangulation::VertexIterator it =
                 t.getVertices().begin(); it != t.getVertices().end(); it++)
-            ans.append(*it);
+            ans.append(boost::python::ptr(*it));
         return ans;
     }
 
@@ -118,7 +118,7 @@ namespace {
         boost::python::list ans;
         for (NTriangulation::EdgeIterator it =
                 t.getEdges().begin(); it != t.getEdges().end(); it++)
-            ans.append(*it);
+            ans.append(boost::python::ptr(*it));
         return ans;
     }
 
@@ -126,7 +126,7 @@ namespace {
         boost::python::list ans;
         for (NTriangulation::FaceIterator it =
                 t.getFaces().begin(); it != t.getFaces().end(); it++)
-            ans.append(*it);
+            ans.append(boost::python::ptr(*it));
         return ans;
     }
 }
