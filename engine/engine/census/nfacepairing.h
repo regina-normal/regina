@@ -128,6 +128,8 @@ class NFacePairing : public NThread {
         /**
          * Returns the number of tetrahedra whose faces are (potentially)
          * paired in this particular matching.
+         *
+         * @return the number of tetrahedra under consideration.
          */
         unsigned getNumberOfTetrahedra() const;
 
