@@ -1,5 +1,6 @@
 *.jar
 *.dll
+*.jnilib
 *.exe
 regconvert
 regfiledump
