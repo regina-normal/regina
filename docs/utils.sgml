@@ -350,7 +350,30 @@
   <refsynopsisdiv>
    <cmdsynopsis>
     <command>tricensus</command>
+    <arg><option>-t, --tetrahedra=</option><replaceable>tetrahedra</replaceable></arg>
+    <group>
+     <arg><option>-b, --boundary</option></arg>
+     <arg><option>-i, --internal</option></arg>
+     <arg><option>-B, --bdryfaces=</option><replaceable>faces</replaceable></arg>
+    </group>
+    <group>
+     <arg><option>-o, --orientable</option></arg>
+     <arg><option>-n, --nonorientable</option></arg>
+    </group>
+    <group>
+     <arg><option>-f, --finite</option></arg>
+     <arg><option>-d, --ideal</option></arg>
+    </group>
+    <arg><option>-m, --minimal</option></arg>
+    <group>
+     <arg><option>-p, --genpairs</option></arg>
+     <arg><option>-P, --usepairs</option></arg>
+    </group>
     <arg choice=req><replaceable>output-file</replaceable></arg>
+   </cmdsynopsis>
+   <cmdsynopsis>
+    <command>tricensus</command>
+    <arg choice=req><option>--help</option></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -358,14 +381,12 @@
    <title>Description</title>
    <para>
     Forms a census of all 3-manifold triangulations satisfying a
-    particular set of conditions.  You will be required to give these
-    conditions on standard input (you will be prompted for them on
-    standard output).
+    particular set of conditions.
    </para>
    <para>
-    As the census progresses, the state of progress will be written (slowly)
-    to standard output.  Once the census is complete, the census itself will
-    be saved to the given file.
+    The only condition that must be provided is the number of tetrahedra
+    used to build the triangulations.  Additional constraints may be
+    specified on the command-line as described below.
    </para>
    <para>
     Each triangulation will be output precisely once up to combinatorial
@@ -373,13 +394,185 @@
     identified to themselves in reverse or boundary vertices whose links
     are not discs) will not be output at all.
    </para>
+   <para>
+    As the census progresses, the state of progress will be written (slowly)
+    to standard output.  Once the census is complete, the census itself will
+    be saved to the given file.
+   </para>
+   <para>
+    Note that options <option>--genpairs</option> and
+    <option>--usepairs</option> may be used to split a census into
+    smaller pieces to be run simultaneously on different machines.
+   </para>
    <warning><para>
     A census with even a relatively small number of tetrahedra can
     take an incredibly long time to run and chew up massive amounts of
     memory.  It is recommended that you try very small censuses to begin
-    with (such as 2, 3 or 4 tetrahedra) and work upwards to establish the
+    with (such as 3 or 4 tetrahedra) and work upwards to establish the
     limits relative to your machine.
    </para></warning>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-t,
+      --tetrahedra=</option><replaceable>tetrahedra</replaceable></term>
+     <listitem>
+      <para>
+       Specifies the number of tetrahedra used to build the triangulations.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-b, --boundary</option></term>
+     <listitem>
+      <para>
+       Only produce triangulations with at least one boundary face.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-i, --internal</option></term>
+     <listitem>
+      <para>
+       Only produce triangulations with all faces internal (i.e., with no
+       boundary faces).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-B,
+      --bdryfaces=</option><replaceable>faces</replaceable></term>
+     <listitem>
+      <para>
+       Only produce triangulations with the precise number of boundary
+       faces specified.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-o, --orientable</option></term>
+     <listitem>
+      <para>
+       Only produce orientable triangulations.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-n, --nonorientable</option></term>
+     <listitem>
+      <para>
+       Only produce non-orientable triangulations.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-f, --finite</option></term>
+     <listitem>
+      <para>
+       Only produce finite triangulations (triangulations with no
+       ideal vertices).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-d, --ideal</option></term>
+     <listitem>
+      <para>
+       Only produce triangulations with at least one ideal vertex.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-m, --minimal</option></term>
+     <listitem>
+      <para>
+       Do not include triangulations that are obviously non-minimal.
+      </para>
+      <para>
+       A series of short tests will be run on each triangulation produced;
+       if a triangulation is found to be non-minimal it will not be placed
+       in the census.
+      </para>
+      <para>
+       Note that these tests are not capable of deciding that a
+       triangulation <emphasis>is</emphasis> minimal; at best the results
+       will be inconclusive (in which case the triangulation will be placed
+       in the census anyway).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-p, --genpairs</option></term>
+     <listitem>
+      <para>
+       Only generate face pairings, not triangulations.
+      </para>
+      <para>
+       The outermost layer of the census code involves pairing off the
+       faces of the individual tetrahedra without actually determining
+       the corresponding gluing permutations.  For each face pairing
+       produced, all possible sets of gluing permutations are then generated
+       and corresponding triangulations created.
+      </para>
+      <para>
+       Face pairing generation consumes a very small fraction of the
+       total census runtime, and effectively divides the census into
+       multiple pieces.  By using this option, one can quickly generate
+       a complete list of possible face pairings and then feed subsets of
+       this list to different machines to work on simultaneously in order
+       to produce an overall census of triangulations.
+      </para>
+      <para>
+       The list of all face pairings will be written to the given output
+       file in text format (although in the special case of face pairing
+       generation you may omit the output file from the command-line, in
+       which case the pairings will be written to standard output).
+       This program can then be run with option <option>--usepairs</option>
+       to generate the actual triangulations corresponding to different
+       subsets of these face pairings.
+      </para>
+      <para>
+       Note that orientability, finiteness or minimality options may not be
+       supplied with this option; they should instead be supplied when option
+       <option>--usepairs</option> is used to process each subset of face
+       pairings.
+      </para>
+      <para>
+       Note also that when this option is used no progress reporting will
+       take place (although the face pairings should be generated
+       sufficiently quickly that the output file itself can be used to
+       track the state of progress).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-P, --usepairs</option></term>
+     <listitem>
+      <para>
+       Use only the given subset of face pairings to build the triangulations.
+      </para>
+      <para>
+       Face pairings should be supplied on standard input, one per line.
+       They should be listed in the format produced by option
+       <option>--genpairs</option>.
+      </para>
+      <para>
+       This option is used to run only a subset of a particular census.  See
+       option <option>--genpairs</option> for further details on how to split
+       a census into subsets to run simultaneously on different machines.
+      </para>
+      <para>
+       Note that tetrahedron or boundary options may not be supplied with
+       this option; they should instead be supplied when option
+       <option>--genpairs</option> is used to split the full census into
+       pieces.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
   </refsect1>
 
   <refsect1>
