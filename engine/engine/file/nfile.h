@@ -54,6 +54,22 @@ class NPacket;
  * @{
  */
 
+#define NFILE_PROGRAM_NAME "Regina"
+    /**< String name of the program, to be placed at the beginning of
+     *   data files. */
+#define NFILE_SIZE_INT 4
+    /**< The number of bytes written to files to represent an integer;
+     *   any higher order bytes will be ignored.  This ensures
+     *   constancy of file format across platforms. */
+#define NFILE_SIZE_LONG 8
+    /**< The number of bytes written to files to represent a long integer;
+     *   any higher order bytes will be ignored.  This ensures
+     *   constancy of file format across platforms. */
+#define NFILE_SIZE_FILEPOS 8
+    /**< The number of bytes written to files to represent a file position;
+     *   any higher order bytes will be ignored.  This ensures
+     *   constancy of file format across platforms. */
+
 /**
  * Reads a packet tree from the given old-style binary file doing everything
  * in a single step.

@@ -27,8 +27,8 @@
 /* end stub */
 
 #include <cstring>
-#include "regina.h"
 
+#include "engine.h"
 #include "file/nfile.h"
 #include "packet/packetregistry.h"
 
@@ -70,7 +70,7 @@ bool NFile::open(NRandomAccessResource* newResource,
     if (newOpenMode == NRandomAccessResource::READ) {
         resource = newResource;
         if (resource->openRead()) {
-            int len = strlen(PROGRAM_NAME);
+            int len = strlen(NFILE_PROGRAM_NAME);
             char* sentry = new char[len+1];
             for (int i=0; i<len+1; i++)
                 sentry[i] = resource->getChar();
@@ -78,7 +78,7 @@ bool NFile::open(NRandomAccessResource* newResource,
                 close();
                 return false;
             }
-            if (strcmp(sentry, PROGRAM_NAME)) {
+            if (strcmp(sentry, NFILE_PROGRAM_NAME)) {
                 // We might have a pre-2.1 file format.
                 if (strcmp(sentry, "Normal")) {
                     close();
@@ -97,15 +97,15 @@ bool NFile::open(NRandomAccessResource* newResource,
     if (newOpenMode == NRandomAccessResource::WRITE) {
         resource = newResource;
         if (resource->openWrite()) {
-            majorVersion = ENGINE_VERSION_MAJOR;
-            minorVersion = ENGINE_VERSION_MINOR;
-            char* sentry = PROGRAM_NAME;
+            majorVersion = regina::getVersionMajor();
+            minorVersion = regina::getVersionMinor();
+            char* sentry = NFILE_PROGRAM_NAME;
 
             for (char* c = sentry; *c != 0; c++)
                 resource->putChar(*c);
             resource->putChar(0);
-            writeInt(ENGINE_VERSION_MAJOR);
-            writeInt(ENGINE_VERSION_MINOR);
+            writeInt(majorVersion);
+            writeInt(minorVersion);
             return true;
         }
         else {
@@ -137,14 +137,14 @@ void NFile::writeLong(long val) {
 }
 
 void NFile::writeUInt(unsigned val) {
-    for (int i=0; i<SIZE_INT; i++) {
+    for (int i=0; i<NFILE_SIZE_INT; i++) {
         resource->putChar((unsigned char)val);
         val >>= 8;
     }
 }
 
 void NFile::writeULong(unsigned long val) {
-    int size = SIZE_LONG;
+    int size = NFILE_SIZE_LONG;
     for (int i=0; i<size; i++) {
         resource->putChar((unsigned char)val);
         val >>= 8;
@@ -167,11 +167,11 @@ long NFile::readLong() {
 
 unsigned int NFile::readUInt() {
     int i;
-    unsigned char b[SIZE_INT];
-    for (i=0; i<SIZE_INT; i++)
+    unsigned char b[NFILE_SIZE_INT];
+    for (i=0; i<NFILE_SIZE_INT; i++)
         b[i] = resource->getChar();
     unsigned long ans = 0;
-    for (i=SIZE_INT-1; i>=0; i--) {
+    for (i=NFILE_SIZE_INT-1; i>=0; i--) {
         ans <<= 8;
         ans += b[i];
     }
@@ -179,7 +179,7 @@ unsigned int NFile::readUInt() {
 }
 
 unsigned long NFile::readULong() {
-    int size = SIZE_LONG;
+    int size = NFILE_SIZE_LONG;
     int i;
     unsigned char* b = new (unsigned char)[size];
     for (i=0; i<size; i++)
@@ -299,11 +299,11 @@ NPacket* NFile::readIndividualPacket(NPacket* parent,
 std::streampos NFile::readPos()
 {
     int i;
-    unsigned char b[SIZE_FILEPOS];
-    for (i=0; i<SIZE_FILEPOS; i++)
+    unsigned char b[NFILE_SIZE_FILEPOS];
+    for (i=0; i<NFILE_SIZE_FILEPOS; i++)
         b[i] = resource->getChar();
     std::streamoff ans(0);
-    for (i=SIZE_FILEPOS-1; i>=0; i--) {
+    for (i=NFILE_SIZE_FILEPOS-1; i>=0; i--) {
         ans <<= 8;
         ans += b[i];
     }
@@ -312,7 +312,7 @@ std::streampos NFile::readPos()
 
 void NFile::writePos(std::streampos realVal) {
     std::streamoff val(realVal);
-    for (int i=0; i<SIZE_FILEPOS; i++) {
+    for (int i=0; i<NFILE_SIZE_FILEPOS; i++) {
         resource->putChar((unsigned char)val);
         val >>= 8;
     }
