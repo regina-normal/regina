@@ -820,10 +820,8 @@
    </para>
    <warning>
     <para>
-     Be warned that this server is <emphasis>not</emphasis> secure!
-     In particular, a remote user can exploit it to gain access to
-     the filesystem on which it
-     is running.  You should <emphasis>always</emphasis>
+     Be warned that this server has <emphasis>not</emphasis> been
+     audited for security!  You should <emphasis>always</emphasis>
      run this server as a guest user (such as <literal>nobody</literal>
      on &linux; systems).
     </para>

@@ -30,8 +30,10 @@
 #include "NPacketI.h"
 
 CORBA::Boolean NFile_i::open(const char* fileName, CORBA::Long openMode) {
-    return GET_ENGINE_OBJECT(NFile, this)->open(fileName,
-        (::NFile::mode)openMode);
+    // Don't allow remote clients to access the server's filesystem!
+    return false;
+    /* return GET_ENGINE_OBJECT(NFile, this)->open(fileName,
+        (::NFile::mode)openMode); */
 }
 void NFile_i::close() {
     GET_ENGINE_OBJECT(NFile, this)->close();
