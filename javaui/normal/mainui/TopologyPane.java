@@ -42,6 +42,7 @@ import org.gjt.btools.image.*;
 import normal.*;
 import normal.console.JPythonConsoleFrame;
 import normal.engine.*;
+import normal.engine.file.*;
 import normal.engine.packet.*;
 import normal.imports.*;
 import normal.options.NormalOptionSet;
@@ -250,7 +251,8 @@ public class TopologyPane extends FilePane {
         NPacket root = shell.getEngine().newNContainer();
         root.setPacketLabel("Container");
         
-        return new TopologyPane(shell, root, topologyFileTypeBase + " (new)");
+        return new TopologyPane(shell, root, topologyFileTypeBase +
+            "\nNew file");
     }
 
     /**
@@ -262,16 +264,42 @@ public class TopologyPane extends FilePane {
      * @return the new pane, or <tt>null</tt> if an error occurred.
      */
     public static TopologyPane newPane(Shell shell, File file) {
-        NPacket root = shell.getEngine().readFileMagic(file.getAbsolutePath());
+        // Don't use readFileMagic() since we want to get the file's
+        // engine version while we're at it.
+        String pathname = file.getAbsolutePath();
 
-        if (root == null) {
-            shell.error("The requested file [" + file.getName() +
-                "] could not be opened.  It may contain invalid data.");
+        // Determine the file type.
+        NFileInfo info = shell.getEngine().identifyFileInfo(pathname);
+
+        if (info == null) {
+            shell.error("The format of file [" + file.getName() +
+                "] could not be determined.  " +
+                "The file might contain invalid data.");
             return null;
         }
 
-        return new TopologyPane(shell, root, topologyFileTypeBase +
-            " (engine X.Y)");
+        // Read the packet tree.
+        NPacket root;
+        if (info.getType() == NFileInfo.TYPE_XML) {
+            root = shell.getEngine().readXMLFile(pathname);
+        } else if (info.getType() == NFileInfo.TYPE_BINARY) {
+            root = shell.getEngine().readFromFile(pathname);
+        } else
+            root = null;
+
+        if (root == null) {
+            shell.error("The data stored in file [" + file.getName() +
+                "] could not be interpreted.  " +
+                "The file might contain invalid data.");
+            info.destroy();
+            return null;
+        }
+
+        // Collect the engine version and file format and clean up.
+        String desc = info.getTypeDescription() + ", engine " +
+            info.getEngine();
+        info.destroy();
+        return new TopologyPane(shell, root, topologyFileTypeBase + "\n" + desc);
     }
 
     /**
@@ -308,9 +336,8 @@ public class TopologyPane extends FilePane {
                 "The requested file could not be opened for writing.");
             return false;
         }
-        setFileType(topologyFileTypeBase + " (engine " +
-            String.valueOf(engine.getVersionMajor()) + '.' +
-            String.valueOf(engine.getVersionMinor()) + ".x)");
+        setFileType(topologyFileTypeBase +
+            "\nXML Regina data file, engine " + engine.getVersionString());
         return true;
     }
 
