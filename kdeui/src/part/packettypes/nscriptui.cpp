@@ -174,7 +174,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         this, SLOT(execute()), scriptActions,
         "script_run");
     actRun->setToolTip(i18n("Execute the Python script"));
-    actCompile->setWhatsThis(i18n("Execute this Python script.  The "
+    actRun->setWhatsThis(i18n("Execute this Python script.  The "
         "script will be run in a separate Python console."));
     actRun->plug(actionBar);
     scriptActionList.append(actRun);

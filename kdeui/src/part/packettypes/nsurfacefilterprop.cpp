@@ -125,7 +125,7 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
     optBdry = new KComboBox(ui);
     optBdry->insertItem(i18n("With real boundary only"));
     optBdry->insertItem(i18n("Without real boundary only"));
-    QWhatsThis::add(optOrient, i18n("<qt>Choose whether the filter should "
+    QWhatsThis::add(optBdry, i18n("<qt>Choose whether the filter should "
         "only display surfaces with real boundary or whether it should "
         "only display surfaces without real boundary.<p>"
         "A real boundary occurs when a normal surface meets the boundary "
@@ -149,10 +149,10 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
     ecBox->addWidget(eulerExpln2);
     ecBox->addSpacing(5);
 
-    QString msg = i18n("Fill this box with a list of the possible Euler "
-        "characteristics that this filter should accept, separated by "
-        "spaces or commas.  Only surfaces whose Euler characteristic is "
-        "equal to one of these values will be displayed by this filter.");
+    QString msg = i18n("Fill this box with a list of the allowable Euler "
+        "characteristics, separated by "
+        "spaces or commas.  This filter will only display a surface "
+        "if its Euler characteristic is equal to one of these values.");
     QWhatsThis::add(eulerExpln1, msg);
     QWhatsThis::add(eulerList, msg);
     QWhatsThis::add(eulerExpln2, msg);

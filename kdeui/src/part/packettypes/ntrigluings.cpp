@@ -146,12 +146,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "Simplify the triangulation as far as possible"));
     actSimplify->setEnabled(readWrite);
     actSimplify->setWhatsThis(i18n("Simplify this triangulation to use fewer "
-        "tetrahedra without changing the underlying 3-manifold.  Note that "
-        "there is no guarantee that the smallest possible number of "
+        "tetrahedra without changing the underlying 3-manifold.  This "
+        "triangulation will be modified directly.<p>"
+        "Note that there is no guarantee that the smallest possible number of "
         "tetrahedra will be achieved.<p>"
         "This procedure uses only elementary moves, which makes it fast but "
-        "sometimes only a small reduction can be obtained.  See the "
-        "<i>Make 0-efficient</i> routine for a slower but more powerful "
+        "means that sometimes only a small reduction can be obtained.  See "
+        "the <i>Make 0-Efficient</i> routine for a slower but more powerful "
         "reduction."));
     enableWhenWritable.append(actSimplify);
     triActionList.append(actSimplify);
@@ -181,7 +182,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actBarycentricSubdivide->setToolTip(i18n(
         "Perform a barycentric subdivision"));
     actBarycentricSubdivide->setEnabled(readWrite);
-    actBarycentricSubdivide->setWhatsThis(i18n("Performs a barycentric "
+    actBarycentricSubdivide->setWhatsThis(i18n("Perform a barycentric "
         "subdivision on this triangulation.  The triangulation will be "
         "changed directly.<p>"
         "This operation involves subdividing each tetrahedron into "
@@ -195,7 +196,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actIdealToFinite->setToolTip(i18n(
         "Truncate any ideal vertices"));
     actIdealToFinite->setEnabled(readWrite);
-    actIdealToFinite->setWhatsThis(i18n("Converts this from an ideal "
+    actIdealToFinite->setWhatsThis(i18n("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 2-spheres nor discs "
         "will be truncated and converted into boundary faces.<p>"
@@ -211,7 +212,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actDoubleCover->setToolTip(i18n(
         "Convert the triangulation to its orientable double cover"));
     actDoubleCover->setEnabled(readWrite);
-    actDoubleCover->setWhatsThis(i18n("Converts a non-orientable "
+    actDoubleCover->setWhatsThis(i18n("Convert a non-orientable "
         "triangulation into an orientable double cover.  This triangulation "
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
@@ -227,10 +228,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "tri_split_into_components");
     actSplitIntoComponents->setToolTip(i18n(
         "Form a new triangulation for each disconnected component"));
-    actSplitIntoComponents->setWhatsThis(i18n("<qt>Splits a disconnected "
-        "triangulation into individual connected components.  Each "
+    actSplitIntoComponents->setWhatsThis(i18n("<qt>Split a disconnected "
+        "triangulation into its individual connected components.  This "
+        "triangulation will not be changed &ndash; each "
         "connected component will be added as a new triangulation beneath "
-        "this in the packet tree.<p>"
+        "it in the packet tree.<p>"
         "If this triangulation is already connected, this operation will "
         "do nothing.</qt>"));
     triActionList.append(actSplitIntoComponents);
@@ -241,10 +243,10 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "tri_connected_sum_decomposition");
     actConnectedSumDecomposition->setToolTip(i18n(
         "Split into a connected sum of prime 3-manifolds"));
-    actConnectedSumDecomposition->setWhatsThis(i18n("Breaks this "
-        "triangulation into a connected sum decomposition.  This "
+    actConnectedSumDecomposition->setWhatsThis(i18n("Break this "
+        "triangulation down into a connected sum decomposition.  This "
         "triangulation will not be modified &ndash; the individual prime "
-        "summands will be added as new triangulations beneath this in "
+        "summands will be added as new triangulations beneath it in "
         "the packet tree."));
     triActionList.append(actConnectedSumDecomposition);
 
@@ -255,7 +257,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actZeroEff->setToolTip(i18n(
         "Convert this into a 0-efficient triangulation if possible"));
     actZeroEff->setEnabled(readWrite);
-    actZeroEff->setWhatsThis(i18n("<qt>Converts this into a 0-efficient "
+    actZeroEff->setWhatsThis(i18n("<qt>Convert this into a 0-efficient "
         "triangulation of the same underlying 3-manifold, if possible.  "
         "This triangulation will be modified directly.<p>"
         "Note that this operation is currently available only for "
@@ -273,10 +275,10 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "tri_census_lookup");
     actCensusLookup->setToolTip(i18n(
         "Search for this triangulation in the configured list of censuses"));
-    actCensusLookup->setWhatsThis(i18n("Attempts to locate this "
+    actCensusLookup->setWhatsThis(i18n("Attempt to locate this "
         "triangulation within the prepackaged censuses of 3-manifold "
-        "triangulations.<p>"
-        "The list of censuses that are searched can be configured through "
+        "triangulations that are shipped with Regina.<p>"
+        "The list of censuses that are searched can be customised through "
         "Regina's settings."));
     triActionList.append(actCensusLookup);
 
