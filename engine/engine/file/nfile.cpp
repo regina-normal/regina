@@ -193,12 +193,6 @@ unsigned long NFile::readULong() {
     return ans;
 }
 
-void NFile::writeLarge(const NLargeInteger& i) {
-    char* str = i.stringValue();
-    writeString(str);
-    delete[] str;
-}
-
 void NFile::writeString(const std::string& s) {
     unsigned len = s.length();
     writeUInt(len);

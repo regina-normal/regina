@@ -85,11 +85,8 @@ jobject jBigIntegerFromLarge(JNIEnv* jni_env,
     if (! constructor)
         return 0;
 
-    char* decimal = value.stringValue();
-    jobject ans = jni_env->NewObject(newClass, constructor,
-        jni_env->NewStringUTF(decimal));
-    delete[] decimal;
-    return ans;
+    return jni_env->NewObject(newClass, constructor,
+        jni_env->NewStringUTF(value.stringValue().c_str()));
 }
 
 } } // namespace regina::jni

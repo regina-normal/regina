@@ -576,6 +576,10 @@ inline bool NFile::versionEarlierThan(int major, int minor) {
     else return (minorVersion < minor);
 }
 
+inline void NFile::writeLarge(const NLargeInteger& i) {
+    writeString(i.stringValue());
+}
+
 inline NLargeInteger NFile::readLarge() {
     return readString().c_str();
 }

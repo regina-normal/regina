@@ -128,6 +128,8 @@ NSignature* NSignature::parse(const std::string& str) {
         }
     }
 
+    delete[] freq;
+
     if (cycleStart[nCycles] < whichPos) {
         nCycles++;
         cycleStart[nCycles] = whichPos;

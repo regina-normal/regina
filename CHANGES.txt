@@ -8,6 +8,13 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Current Development Version
+    ENGINE:
+        Overall structure:
+            - Fixed minor memory leaks.
+        Class NLargeInteger:
+            - Routine stringValue() now returns a std::string, not a char*.
+
 Version 3.2  [ 22 June, 2003 ] - The post-thesis release!
     OVERALL:
         - Added file format documentation to reference manual.

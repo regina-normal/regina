@@ -34,13 +34,15 @@ const NLargeInteger NLargeInteger::zero;
 const NLargeInteger NLargeInteger::one(1);
 const NLargeInteger NLargeInteger::infinity(true, true);
 
-char* NLargeInteger::stringValue(int base) const {
-    if (infinite) {
-        char* ans = new char[4];
-        ans[0] = 'i'; ans[1] = 'n'; ans[2] = 'f'; ans[3] = 0;
+std::string NLargeInteger::stringValue(int base) const {
+    if (infinite)
+        return "inf";
+    else {
+        char* str = mpz_get_str(0, base, data);
+        std::string ans(str);
+        delete[] str;
         return ans;
-    } else
-        return mpz_get_str(0, base, data);
+    }
 }
 
 NLargeInteger NLargeInteger::gcdWithCoeffs(const NLargeInteger& other,

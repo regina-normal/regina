@@ -37,6 +37,7 @@
 
 #include <gmp.h>
 #include <iostream>
+#include <string>
 
 /**
  * \hideinitializer
@@ -172,14 +173,7 @@ class NLargeInteger {
         long longValue() const;
         /**
          * Returns the value of this integer as a string in the given
-         * base.
-         * The string will be newly allocated and it is the caller's
-         * responsibility to deallocate it once finished with it.
-         * Note that deallocation must be done using
-         * <tt>delete[] str</tt> as opposed to simply
-         * <tt>delete str</tt>.
-         *
-         * If not specified, the base will default to 10.
+         * base.  If not specified, the base defaults to 10.
          *
          * If this integer is infinity, the string returned will be
          * \c inf.
@@ -189,7 +183,7 @@ class NLargeInteger {
          * @return the value of this integer as a newly allocated
          * string.
          */
-        char* stringValue(int base = 10) const;
+        std::string stringValue(int base = 10) const;
 
         /**
          * Sets this integer to the given value.
@@ -227,7 +221,7 @@ class NLargeInteger {
          * this.
          */
         void swap(NLargeInteger& other);
-        
+
         /**
          * Determines if this is equal to the given integer.
          *
@@ -364,7 +358,7 @@ class NLargeInteger {
          * The result will be truncated to an integer, i.e. rounded
          * towards zero.
          * This integer is not changed.
-         * 
+         *
          * If \a other is known to divide this integer exactly,
          * divExact() should be used instead.
          *
@@ -475,7 +469,7 @@ class NLargeInteger {
          * The result will be truncated to an integer, i.e. rounded
          * towards zero.
          * This integer is changed to reflect the result.
-         * 
+         *
          * If \a other is known to divide this integer exactly,
          * divByExact() should be used instead.
          *
@@ -548,7 +542,7 @@ class NLargeInteger {
         /**
          * Determines the greatest common divisor of this and the given
          * integer.  This integer is not changed.
-         * 
+         *
          * Note that the result might possibly be negative.
          *
          * \pre Neither this integer nor \a other is infinite.
@@ -578,7 +572,7 @@ class NLargeInteger {
          * Determines the greatest common divisor of this and the given
          * integer and finds the smallest coefficients with which these
          * integers combine to give their gcd.
-         * 
+         *
          * Note that the given integers need not be non-negative.
          * However, the gcd returned is guaranteed to be non-negative.
          *
@@ -603,7 +597,7 @@ class NLargeInteger {
          */
         NLargeInteger gcdWithCoeffs(const NLargeInteger& other,
             NLargeInteger& u, NLargeInteger& v) const;
-    
+
     private:
         /**
          * Initialises this integer to infinity.

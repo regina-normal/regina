@@ -99,6 +99,7 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
     for_each(faces.begin(), faces.end(),
         FuncDelete<NVector<NLargeInteger> >());
     delete eqns;
+    delete constraints;
 }
 
 NTriangulation* NNormalSurfaceList::getTriangulation() const {
