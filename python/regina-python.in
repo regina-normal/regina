@@ -13,6 +13,21 @@
 # by configure and any changes will be overwritten.  Try editing
 # regina-python.in instead.
 #
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+# MA 02111-1307, USA.
+#
 set -e
 
 # --- Constants. ---
@@ -88,19 +103,24 @@ fi
 
 # --- Check command-line options. ---
 
-for i; do
-  case "$i" in
+while [ "$#" != 0 ]; do
+  case "$1" in
     --verbose | -v )
       export REGINA_VERBOSITY=2
       ;;
     --quiet | -q )
       export REGINA_VERBOSITY=0
       ;;
-    * )
-      error "Error: Unknown option $i."
+    -* )
+      error "Error: Unknown option $1."
       exit 1
       ;;
+    * )
+      # We've found a script to run.
+      break
+      ;;
   esac
+  shift
 done
 
 # --- Decide upon a verbosity level. ---
@@ -132,33 +152,46 @@ info "-- Regina home directory (REGINA_HOME): $REGINA_HOME"
 
 # --- Set the python path and run the application. ---
 
-command="$REGINA_PYTHON -i -c 'import regina ; print regina.welcome()'"
 export PYTHONPATH="$REGINA_PYLIBDIR:$PYTHONPATH"
-
-info "Command: $command"
+info "Python interpreter: $REGINA_PYTHON"
 info "Python path: $PYTHONPATH"
 
-if ! ( eval $command '"$@"' ); then
-  error
-  error "################################"
-  error "#                              #"
-  error "#            REGINA            #"
-  error "#                              #"
-  error "#  Could not run application!  #"
-  error "#                              #"
-  error "################################"
-  error
-  error "An error occurred whilst trying to run the application.  Use:"
-  error
-  error "    $0 --verbose"
-  error
-  error "to see more diagnostic output such as the runtime options"
-  error "that are being used.  You may wish to verify that these"
-  error "options are correct and edit the runtime options file(s)"
-  error "if appropriate."
-  error
-  error "If you still can't run the application, please mail $regina_support"
-  error "for assistance."
-  error
-  exit 1
+if [ -n "$1" ]; then
+    # Run the given script.
+    if [ ! -e "$1" ]; then
+        error "Error: The script $1 does not exist."
+        exit 1
+    fi
+    if "$REGINA_PYTHON" "$REGINA_HOME/scripts/runscript.py" -- "$1"; then
+        exit 0
+    fi
+else
+    # Start an interactive interpreter.
+    if "$REGINA_PYTHON" -i "$REGINA_HOME/scripts/runscript.py"; then
+        exit 0
+    fi
 fi
+
+error
+error "################################"
+error "#                              #"
+error "#            REGINA            #"
+error "#                              #"
+error "#  Could not run application!  #"
+error "#                              #"
+error "################################"
+error
+error "An error occurred whilst trying to run the application.  Use:"
+error
+error "    $0 --verbose"
+error
+error "to see more diagnostic output such as the runtime options"
+error "that are being used.  You may wish to verify that these"
+error "options are correct and edit the runtime options file(s)"
+error "if appropriate."
+error
+error "If you still can't run the application, please mail"
+error "$regina_support for assistance."
+error
+exit 1
+
