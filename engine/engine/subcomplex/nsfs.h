@@ -342,6 +342,7 @@ class NSFS : public ShareableObject {
          * be returned in human-readable form.
          *
          * \todo \feature Add more common names to this routine.
+         * See Orlik, "Seifert Manifolds", p112.
          *
          * @return the common name of this Seifert fibred space.
          */
