@@ -20,6 +20,8 @@ Version 3.1  [ (under development) ]
               NGluingPerms.
             - Added support for arbitrary criterion functions.
             - Added support for splitting a census into pieces.
+        Class NCompConstraint, NCompConstraintSet:
+            - Added.
         Class NConeRay:
             - Removed in favour of new class NRay.
         Class NFacePairing, NGluingPerms:
