@@ -40,6 +40,7 @@
 #include "file/nfilepropertyreader.h"
 #include "maths/nray.h"
 #include "triangulation/nperm.h"
+#include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
 
 namespace regina {
@@ -549,7 +550,6 @@ class NNormalSurfaceVector : public NRay {
  * for non-compact surfaces.
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
- * \todo \tidy Use a new tristate class for true/false/unknown properties.
  */
 class NNormalSurface : public ShareableObject, public NFilePropertyReader {
     protected:
@@ -564,13 +564,11 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
 
         mutable NProperty<NLargeInteger> eulerChar;
             /**< The Euler characteristic of this surface. */
-        mutable NProperty<int> orientable;
-            /**< Is this surface orientable?
-                 1 is true, -1 is false and 0 is undetermined. */
-        mutable NProperty<int> twoSided;
-            /**< Is this surface two-sided?
-                 1 is true, -1 is false and 0 is undetermined. */
-        mutable NProperty<int> connected;
+        mutable NProperty<NTriBool> orientable;
+            /**< Is this surface orientable? */
+        mutable NProperty<NTriBool> twoSided;
+            /**< Is this surface two-sided? */
+        mutable NProperty<NTriBool> connected;
             /**< Is this surface connected? */
         mutable NProperty<bool> realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
@@ -824,34 +822,44 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         NLargeInteger getEulerCharacteristic() const;
         /**
          * Returns whether or not this surface is orientable.
+         * 
+         * This routine returns an NTriBool since it is possible that
+         * the result cannot be determined (for instance, if there
+         * are too many normal discs).
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * @return 1 if this surface is orientable, -1 if this surface
-         * is non-orientable and 0 if orientability cannot be determined
-         * (for instance, if there are too many normal discs).
+         * @return true if this surface is orientable, false if this surface
+         * is non-orientable and unknown if orientability cannot be
+         * determined.
          */
-        int isOrientable() const;
+        NTriBool isOrientable() const;
         /**
          * Returns whether or not this surface is two-sided.
          *
+         * This routine returns an NTriBool since it is possible that
+         * the result cannot be determined (for instance, if there
+         * are too many normal discs).
+         *
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * @return 1 if this surface is two-sided, -1 if this surface
-         * is one-sided and 0 if two-sidedness cannot be determined
-         * (for instance, if there are too many normal discs).
+         * @return true if this surface is two-sided, false if this surface
+         * is one-sided and unknown if two-sidedness cannot be determined.
          */
-        int isTwoSided() const;
+        NTriBool isTwoSided() const;
         /**
          * Returns whether or not this surface is connected.
          *
+         * This routine returns an NTriBool since it is possible that
+         * the result cannot be determined (for instance, if there
+         * are too many normal discs).
+         *
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * @return 1 if this surface is connected, -1 if this surface
-         * is not connected and 0 if connectedness cannot be determined
-         * (for instance, if there are too many normal discs).
+         * @return true if this surface is connected, false if this surface
+         * is not connected and unknown if connectedness cannot be determined.
          */
-        int isConnected() const;
+        NTriBool isConnected() const;
         /**
          * Determines if this surface has any real boundary, that is,
          * whether it meets any boundary faces of the triangulation.
@@ -1149,19 +1157,19 @@ inline NLargeInteger NNormalSurface::getEulerCharacteristic() const {
     return eulerChar.value();
 }
 
-inline int NNormalSurface::isOrientable() const {
+inline NTriBool NNormalSurface::isOrientable() const {
     if (! orientable.known())
         calculateOrientable();
     return orientable.value();
 }
 
-inline int NNormalSurface::isTwoSided() const {
+inline NTriBool NNormalSurface::isTwoSided() const {
     if (! twoSided.known())
         calculateOrientable();
     return twoSided.value();
 }
 
-inline int NNormalSurface::isConnected() const {
+inline NTriBool NNormalSurface::isConnected() const {
     if (! connected.known())
         calculateOrientable();
     return connected.value();

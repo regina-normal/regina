@@ -95,15 +95,15 @@ NXMLElementReader* NXMLNormalSurfaceReader::startSubElement(
         if (valueOf(props.lookup("value"), val))
             surface->eulerChar = val;
     } else if (subTagName == "orbl") {
-        int val;
+        NTriBool val;
         if (valueOf(props.lookup("value"), val))
             surface->orientable = val;
     } else if (subTagName == "twosided") {
-        int val;
+        NTriBool val;
         if (valueOf(props.lookup("value"), val))
             surface->twoSided = val;
     } else if (subTagName == "connected") {
-        int val;
+        NTriBool val;
         if (valueOf(props.lookup("value"), val))
             surface->connected = val;
     } else if (subTagName == "realbdry") {

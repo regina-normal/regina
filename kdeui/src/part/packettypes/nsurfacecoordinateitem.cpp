@@ -106,7 +106,7 @@ void NSurfaceCoordinateItem::setText(int column, const QString& str) {
 }
 
 QString NSurfaceCoordinateItem::text(int column) const {
-    int triBool;
+    NTriBool triBool;
     if (surfaces->isEmbeddedOnly()) {
         switch (column) {
             case 0:
@@ -121,9 +121,9 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     return QString::null;
 
                 triBool = surface->isOrientable();
-                if (triBool == 1)
+                if (triBool.isTrue())
                     return i18n("Orbl");
-                else if (triBool == -1)
+                else if (triBool.isFalse())
                     return i18n("Non-orbl");
                 else
                     return i18n("Unknown");
@@ -132,9 +132,9 @@ QString NSurfaceCoordinateItem::text(int column) const {
                     return QString::null;
 
                 triBool = surface->isTwoSided();
-                if (triBool == 1)
+                if (triBool.isTrue())
                     return "2";
-                else if (triBool == -1)
+                else if (triBool.isFalse())
                     return "1";
                 else
                     return i18n("Unknown");

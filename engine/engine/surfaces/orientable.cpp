@@ -62,9 +62,9 @@ void NNormalSurface::calculateOrientable() const {
     // First check that the precondition (compactness) holds, since if
     // it doesn't we'll have a rather nasty crash (thanks Nathan).
     if (! isCompact()) {
-        orientable = 0;
-        twoSided = 0;
-        connected = 0;
+        orientable = NTriBool::Unknown;
+        twoSided = NTriBool::Unknown;
+        connected = NTriBool::Unknown;
         orientable.clear();
         twoSided.clear();
         connected.clear();
@@ -113,7 +113,7 @@ void NNormalSurface::calculateOrientable() const {
                 if (noComponents)
                     noComponents = false;
                 else
-                    connected = -1;
+                    connected = false;
             }
             it++;
         }
@@ -186,22 +186,22 @@ void NNormalSurface::calculateOrientable() const {
                     if (sameOrient) {
                         if (orients.data(*adjDisc).orient !=
                                 orients.data(use).orient)
-                            orientable = -1;
+                            orientable = false;
                     } else {
                         if (orients.data(*adjDisc).orient ==
                                 orients.data(use).orient)
-                            orientable = -1;
+                            orientable = false;
                     }
                 }
                 if (! twoSided.known()) {
                     if (sameSides) {
                         if (orients.data(*adjDisc).sides !=
                                 orients.data(use).sides)
-                            twoSided = -1;
+                            twoSided = false;
                     } else {
                         if (orients.data(*adjDisc).sides ==
                                 orients.data(use).sides)
-                            twoSided = -1;
+                            twoSided = false;
                     }
                 }
             }
@@ -217,11 +217,11 @@ void NNormalSurface::calculateOrientable() const {
     // must be true.
 
     if (! orientable.known())
-        orientable = 1;
+        orientable = true;
     if (! twoSided.known())
-        twoSided = 1;
+        twoSided = true;
     if (! connected.known())
-        connected = 1;
+        connected = true;
 }
 
 } // namespace regina

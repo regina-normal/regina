@@ -52,9 +52,9 @@ bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
 
     // Some properties may only be calculated for compact surfaces.
     if (surface.isCompact()) {
-        int orientable = surface.isOrientable();
-        if (orientable != 0)
-            if (! orientability.contains(orientable == 1))
+        NTriBool orientable = surface.isOrientable();
+        if (orientable.isKnown())
+            if (! orientability.contains(orientable.isTrue()))
                 return false;
 
         if (eulerCharacteristic.size() > 0)
