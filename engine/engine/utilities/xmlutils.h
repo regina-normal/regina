@@ -81,7 +81,7 @@ class XMLPropertyDict : public stdhash::hash_map<std::string,
          * \a default if the key does not exist in the hashed map.
          */
         const std::string& lookup(const std::string& key,
-            const std::string& defaultVal) const;
+            const std::string& defaultVal = std::string()) const;
 };
 
 /**
