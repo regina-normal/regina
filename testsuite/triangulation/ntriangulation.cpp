@@ -56,6 +56,12 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        // Trivial:
+        NTriangulation empty;
+            /**< An empty triangulation. */
+        NTriangulation singleTet;
+            /**< A single tetrahedron with no face gluings. */
+
         // Closed orientable:
         NTriangulation s3;
             /**< A one-vertex 3-sphere. */
@@ -118,6 +124,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void setUp() {
+            // Begin with trivial cases.
+            // The empty triangulation needs no initialisation whatsoever.
+            singleTet.addTetrahedron(new NTetrahedron());
+
             // Some of our triangulations can be constructed automatically.
             s3.insertLayeredLensSpace(1, 0);
             s2xs1.insertLayeredLensSpace(0, 1);
@@ -195,6 +205,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void validity() {
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not valid.",
+                empty.isValid());
+            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is not valid.",
+                singleTet.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not valid.",
                 s3.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not valid.",
@@ -231,6 +245,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void orientability() {
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not orientable.",
+                empty.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is not orientable.",
+                singleTet.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not orientable.",
                 s3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not orientable.",
@@ -267,6 +285,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void boundaryComponents() {
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation has boundary "
+                "components.", empty.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron has no boundary "
+                "components.", singleTet.getNumberOfBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("S^3 has boundary components.",
                 s3.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 has boundary components.",
@@ -375,6 +397,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void homologyH1() {
+            verifyGroup(empty.getHomologyH1(),
+                "H1(empty triangulation)", 0);
+            verifyGroup(singleTet.getHomologyH1(),
+                "H1(single tetrahedron)", 0);
             verifyGroup(s3.getHomologyH1(),
                 "H1(S^3)", 0);
             verifyGroup(s2xs1.getHomologyH1(),
@@ -410,6 +436,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void homologyH1Bdry() {
+            verifyGroup(empty.getHomologyH1Bdry(),
+                "Boundary H1(empty triangulation)", 0);
+            verifyGroup(singleTet.getHomologyH1Bdry(),
+                "Boundary H1(single tetrahedron)", 0);
             verifyGroup(s3.getHomologyH1Bdry(),
                 "Boundary H1(S^3)", 0);
             verifyGroup(s2xs1.getHomologyH1Bdry(),
@@ -445,6 +475,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void zeroEfficiency() {
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not "
+                "0-efficient.", empty.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is 0-efficient.",
+                ! singleTet.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not 0-efficient.",
                 s3.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is 0-efficient.",
