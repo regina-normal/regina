@@ -35,23 +35,32 @@
 #endif
 
 bool NTriangulation::intelligentSimplify() {
-    return simplifyToLocalMinimum();
+	// Not particularly intelligent.
+    return simplifyToLocalMinimum(true);
 }
 
-bool NTriangulation::simplifyToLocalMinimum() {
+bool NTriangulation::simplifyToLocalMinimum(bool perform) {
+    EdgeIterator eit;
+	BoundaryComponentIterator bit;
+    NEdge* edge;
+	NBoundaryComponent* bc;
+	unsigned long nEdges;
+	unsigned long nFaces;
+	unsigned long iEdge;
+	unsigned long iFace;
+	NDynamicArrayIterator<NEdgeEmbedding> embit;
+
     bool changed = false;
     bool changedNow = true;
-    EdgeIterator eit;
-    FaceIterator fit;
-    TetrahedronIterator tit;
-    NEdge* edge;
-    NFace* face;
-    NTetrahedron* tet;
     while (changedNow) {
         changedNow = false;
         if (! calculatedSkeleton) {
             calculateSkeleton();
         }
+
+		// Crush a maximal skeleton.
+		/* Don't crush a maximal skeleton until we know what the
+		 * routine does!
         if (vertices.size() > components.size()) {
             if (crushMaximalForest()) {
                 if (! calculatedSkeleton)
@@ -61,51 +70,84 @@ bool NTriangulation::simplifyToLocalMinimum() {
                 changed = true;
             }
         }
+		*/
+
+		// Look for boundary simplifications.
         if (hasBoundaryFaces()) {
-            for (tit.init(tetrahedra); !(tit.done()); tit++) {
-                tet = *tit;
-                if (shellBoundary(tet)) {
-                    changedNow = true;
-                    changed = true;
-                    break;
-                }
-            }
-            if (changedNow)
-                continue;
-            for (fit.init(faces); ! (fit.done()); fit++) {
-                face = *fit;
-                if (openBook(face)) {
-                    changedNow = true;
-                    changed = true;
-                    break;
-                }
-            }
-        }
-        if (changedNow)
-            continue;
+			for (bit.init(boundaryComponents); !(bit.done()); bit++) {
+				bc = *bit;
+
+				// Run through faces of this boundary component looking
+				// for shell boundary moves.
+				nFaces = (*bit)->getNumberOfFaces();
+				for (iFace = 0; iFace < nFaces; iFace++) {
+					if (shellBoundary((*bit)->getFace(iFace)->
+							getEmbedding(0).getTetrahedron(), true, perform)) {
+						changedNow = true;
+						changed = true;
+						break;
+					}
+				}
+				if (changedNow)
+					break;
+
+				// Run through edges of this boundary component looking
+				// for open book moves.
+				nEdges = (*bit)->getNumberOfEdges();
+				for (iEdge = 0; iEdge < nEdges; iEdge++) {
+					for (embit.init((*bit)->getEdge(iEdge)->getEmbeddings());
+							!(embit.done()); embit++) {
+						if (openBook((*embit).getTetrahedron()->getFace(
+								((*embit).getVertices())[2]), true, perform)) {
+							changedNow = true;
+							changed = true;
+							break;
+						}
+					}
+					if (changedNow)
+						break;
+				}
+				if (changedNow)
+					break;
+			}
+		}
+        if (changedNow) {
+			if (perform)
+            	continue;
+			else
+				return true;
+		}
+
+		// Look for internal simplifications.
         for (eit.init(edges); ! (eit.done()); eit++) {
             edge = *eit;
-            if (threeTwoMove(edge)) {
+            if (threeTwoMove(edge, true, perform)) {
                 changedNow = true;
                 changed = true;
                 break;
             }
-            if (twoZeroMove(edge)) {
+            if (twoZeroMove(edge, true, perform)) {
                 changedNow = true;
                 changed = true;
                 break;
             }
-            if (twoOneMove(edge, 0)) {
+            if (twoOneMove(edge, 0, true, perform)) {
                 changedNow = true;
                 changed = true;
                 break;
             }
-            if (twoOneMove(edge, 1)) {
+            if (twoOneMove(edge, 1, true, perform)) {
                 changedNow = true;
                 changed = true;
                 break;
             }
         }
+        if (changedNow) {
+			if (perform)
+            	continue;
+			else
+				return true;
+		}
     }
     return changed;
 }

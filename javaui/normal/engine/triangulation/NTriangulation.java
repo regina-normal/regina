@@ -78,6 +78,8 @@ public interface NTriangulation extends NPacket {
      
     public boolean crushMaximalForest();
     public boolean intelligentSimplify();
+    public boolean simplifyToLocalMinimum();
+    public boolean simplifyToLocalMinimum(boolean perform);
 
     public boolean threeTwoMove(NEdge e);
     public boolean threeTwoMove(NEdge e, boolean check);

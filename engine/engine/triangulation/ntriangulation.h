@@ -865,25 +865,50 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Attempts to simplify the triangulation as intelligently as
          * possible without further input.
          *
-         * The simplification involves crushing maximal forests in the
-         * triangulation 1-skeleton, as well as performing 3-2, 2-0,
-         * 2-1, boundary shelling and book opening moves as far as
-         * possible to reduce the number of tetrahedra.
-         * Currently once a local minimum is reached it will stay there.
-         *
+         * Currently this routine does nothing but call
+		 * simplifyToLocalMinimum(); once a local minimum is reached
+		 * it will stay there.
+		 *
          * \todo \opturgent Make this faster and more effective.
          * Include random 4-4 moves and random 2-3 moves to get out of
          * wells.  Unglue faces with three boundary edges and record the
          * corresponding change in topology.  Minimise the amount of
          * skeletal/homological calculation.
-         * \todo \opturgent Search through boundary components for tetrahedra
-         * and faces with which to do shellBoundary() and openBook().
-         *
-         * \todo \bugurgent Insert the correct preconditions!
          *
          * @return \c true if and only if the triangulation was changed.
          */
         bool intelligentSimplify();
+        /**
+         * Uses all known simplification moves to reduce the triangulation
+         * monotonically to some local minimum number of tetrahedra.
+		 * Note that this will probably not give a globally minimal
+		 * triangulation; see intelligentSimplify() for further
+		 * assistance in achieving this goal.
+         *
+         * The moves used include crushing maximal forests in the
+         * triangulation 1-skeleton and using 3-2, 2-0,
+         * 2-1, boundary shelling and book opening moves as far as
+         * possible.
+		 *
+		 * Note that if a book opening move is possible, the
+		 * triangulation will \b not be considered a local minimum, even
+		 * though the book opening move alone will not reduce the number of
+		 * tetrahedra.
+		 *
+         * \ifacescorba All parameters are compulsory.
+         *
+		 * \todo \bugurgent This routine currently does not crush a
+		 * maximal forest!
+		 *
+         * @param perform \c true if we are to perform the
+		 * simplifications, or \c false if we are only to investigate
+		 * whether simplifications are possible (defaults to \c true).
+		 * @return if \a perform is \c true, this routine returns
+		 * \c true if and only if the triangulation was changed; if
+		 * \a perform is \c false, this routine returns \c true if and
+		 * only if any simplifications are possible.
+         */
+        bool simplifyToLocalMinimum(bool perform = true);
         
         /**
          * Checks the eligibility of and/or performs a 3-2 move
@@ -913,9 +938,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \c check is \c true, the function returns \c true
+         * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \c check
+         * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool threeTwoMove(NEdge* e, bool check = true, bool perform = true);
@@ -946,9 +971,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \c check is \c true, the function returns \c true
+         * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \c check
+         * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoThreeMove(NFace* f, bool check = true, bool perform = true);
@@ -987,9 +1012,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \c check is \c true, the function returns \c true
+         * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \c check
+         * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(NEdge* e, bool check = true, bool perform = true);
@@ -1039,9 +1064,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \c check is \c true, the function returns \c true
+         * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \c check
+         * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool twoOneMove(NEdge* e, int edgeEnd,
@@ -1078,9 +1103,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \c check is \c true, the function returns \c true
+         * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \c check
+         * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool openBook(NFace* f, bool check = true, bool perform = true);
@@ -1115,9 +1140,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @return If \c check is \c true, the function returns \c true
+         * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \c check
+         * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
         bool shellBoundary(NTetrahedron* t,
@@ -1332,14 +1357,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         void calculateVertexLinks();
 
-        /**
-         * Internal to intelligentSimplify().
-         * Uses all known simplification moves to reduce the triangulation
-         * monotonically to some local minimum.
-         *
-         * @return \c true if and only if the triangulation was changed.
-         */
-        bool simplifyToLocalMinimum();
         void stretchBoundaryForestFromVertex(NVertex*,
                 NPointerSet<NEdge>&, NPointerSet<NVertex>&);
             /**< Internal to maximalForestInBoundary(). */

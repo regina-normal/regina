@@ -175,6 +175,12 @@ public class NCORBATriangulation extends NCORBAPacket
     public boolean intelligentSimplify() {
         return data.intelligentSimplify();
     }
+	public boolean simplifyToLocalMinimum() {
+		return simplifyToLocalMinimum(true);
+	}
+	public boolean simplifyToLocalMinimum(boolean perform) {
+		return data.simplifyToLocalMinimum(perform);
+	}
 
     public boolean threeTwoMove(normal.engine.triangulation.NEdge e) {
         return threeTwoMove(e, true, true);

@@ -385,6 +385,13 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT jboolean JNICALL
+		Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_simplifyToLocalMinimum
+		(JNIEnv *env, jobject me, jboolean perform) {
+	return GET_ENGINE_OBJECT(env, NTriangulation, me)->
+		simplifyToLocalMinimum(perform);
+}
+
+JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_threeTwoMove
         (JNIEnv *env, jobject me, jobject e, jboolean check,
         jboolean perform) {

@@ -101,6 +101,7 @@ class NTriangulation_i :
         virtual CORBA::Boolean hasBoundaryFaces();
         virtual CORBA::Boolean crushMaximalForest();
         virtual CORBA::Boolean intelligentSimplify();
+        virtual CORBA::Boolean simplifyToLocalMinimum(CORBA::Boolean perform);
         virtual CORBA::Boolean threeTwoMove(
             Regina::Triangulation::NEdge_ptr e,
             CORBA::Boolean check, CORBA::Boolean perform);

@@ -183,6 +183,11 @@ CORBA::Boolean NTriangulation_i::crushMaximalForest() {
 CORBA::Boolean NTriangulation_i::intelligentSimplify() {
     return GET_ENGINE_OBJECT(NTriangulation, this)->intelligentSimplify();
 }
+CORBA::Boolean NTriangulation_i::simplifyToLocalMinimum(
+		CORBA::Boolean perform) {
+	return GET_ENGINE_OBJECT(NTriangulation, this)->
+		simplifyToLocalMinimum(perform);
+}
 CORBA::Boolean NTriangulation_i::threeTwoMove(
         Regina::Triangulation::NEdge_ptr e,
         CORBA::Boolean check, CORBA::Boolean perform) {
