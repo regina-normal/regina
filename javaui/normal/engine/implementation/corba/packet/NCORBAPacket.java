@@ -29,8 +29,10 @@
 package normal.engine.implementation.corba.packet;
 
 import normal.engine.implementation.corba.Regina.Packet.*;
+import normal.engine.implementation.corba.Regina.Angle.*;
 import normal.engine.implementation.corba.Regina.Surfaces.*;
 import normal.engine.implementation.corba.Regina.Triangulation.*;
+import normal.engine.implementation.corba.angle.*;
 import normal.engine.implementation.corba.surfaces.*;
 import normal.engine.implementation.corba.triangulation.*;
 import normal.engine.implementation.corba.*;
@@ -67,6 +69,9 @@ public class NCORBAPacket extends CORBAShareableObject
             case normal.engine.surfaces.NSurfaceFilter.packetType:
                 return NCORBASurfaceFilter.newWrapper(
                     NSurfaceFilterHelper.narrow(source));
+            case normal.engine.angle.NAngleStructureList.packetType:
+                return NCORBAAngleStructureList.newWrapper(
+                    NAngleStructureListHelper.narrow(source));
         }
         return new NCORBAPacket(source);
     }

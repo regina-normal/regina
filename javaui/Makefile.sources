@@ -24,6 +24,7 @@
 
 packages_ui = \
 	normal.engine.algebra \
+	normal.engine.angle \
 	normal.engine.file \
 	normal.engine.maths \
 	normal.engine.packet \
@@ -50,6 +51,7 @@ packages_ui = \
 
 packages_jni = \
 	normal.engine.implementation.jni.algebra \
+	normal.engine.implementation.jni.angle \
 	normal.engine.implementation.jni.file \
 	normal.engine.implementation.jni.maths \
 	normal.engine.implementation.jni.packet \
@@ -61,6 +63,7 @@ packages_jni = \
 
 packages_corba = \
 	normal.engine.implementation.corba.Regina.Algebra \
+	normal.engine.implementation.corba.Regina.Angle \
 	normal.engine.implementation.corba.Regina.File \
 	normal.engine.implementation.corba.Regina.Maths \
 	normal.engine.implementation.corba.Regina.Packet \
@@ -70,6 +73,7 @@ packages_corba = \
 	normal.engine.implementation.corba.Regina.Triangulation \
 	normal.engine.implementation.corba.Regina \
 	normal.engine.implementation.corba.algebra \
+	normal.engine.implementation.corba.angle \
 	normal.engine.implementation.corba.file \
 	normal.engine.implementation.corba.maths \
 	normal.engine.implementation.corba.packet \

@@ -29,6 +29,7 @@
 package normal.engine;
 
 import normal.engine.algebra.*;
+import normal.engine.angle.*;
 import normal.engine.file.*;
 import normal.engine.maths.*;
 import normal.engine.packet.*;
@@ -66,6 +67,7 @@ public interface Engine {
 
     public NAbelianGroup newNAbelianGroup();
     public NAbelianGroup newNAbelianGroup(NAbelianGroup cloneMe);
+    public NAngleStructureList newNAngleStructureList(NTriangulation owner);
     public NContainer newNContainer();
     public NFile newNFile();
     public NGroupExpression newNGroupExpression();

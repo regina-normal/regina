@@ -31,6 +31,7 @@ package normal.engine.implementation.jni;
 import normal.Shell;
 import normal.engine.*;
 import normal.engine.algebra.*;
+import normal.engine.angle.*;
 import normal.engine.file.*;
 import normal.engine.maths.*;
 import normal.engine.packet.*;
@@ -40,6 +41,7 @@ import normal.engine.surfaces.*;
 import normal.engine.triangulation.*;
 import normal.engine.utilities.*;
 import normal.engine.implementation.jni.algebra.*;
+import normal.engine.implementation.jni.angle.*;
 import normal.engine.implementation.jni.file.*;
 import normal.engine.implementation.jni.maths.*;
 import normal.engine.implementation.jni.packet.*;
@@ -106,6 +108,9 @@ public class JNIEngine implements Engine {
     }
     public NAbelianGroup newNAbelianGroup(NAbelianGroup cloneMe) {
         return new NJNIAbelianGroup(cloneMe);
+    }
+    public NAngleStructureList newNAngleStructureList(NTriangulation owner) {
+        return new NJNIAngleStructureList(owner);
     }
     public NContainer newNContainer() {
         return new NJNIContainer();

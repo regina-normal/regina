@@ -33,6 +33,7 @@ import java.util.Properties;
 import normal.Shell;
 import normal.engine.*;
 import normal.engine.algebra.*;
+import normal.engine.angle.*;
 import normal.engine.file.*;
 import normal.engine.maths.*;
 import normal.engine.packet.*;
@@ -42,6 +43,7 @@ import normal.engine.surfaces.*;
 import normal.engine.triangulation.*;
 import normal.engine.utilities.*;
 import normal.engine.implementation.corba.algebra.*;
+import normal.engine.implementation.corba.angle.*;
 import normal.engine.implementation.corba.file.*;
 import normal.engine.implementation.corba.maths.*;
 import normal.engine.implementation.corba.packet.*;
@@ -302,6 +304,10 @@ public class CORBAEngine implements Engine {
         return NCORBAAbelianGroup.newWrapper(
             data.newNAbelianGroup_NAbelianGroup(
             ((NCORBAAbelianGroup)cloneMe).data));
+    }
+    public NAngleStructureList newNAngleStructureList(NTriangulation owner) {
+        return NCORBAAngleStructureList.newWrapper(
+            data.newNAngleStructureList(((NCORBATriangulation)owner).data));
     }
     public NContainer newNContainer() {
         return NCORBAContainer.newWrapper(data.newNContainer());
