@@ -84,5 +84,11 @@ public class Images {
      */
     public static final StandardImage mainSmallIcon =
         new StandardImage("normal/images/main/tinyicon.gif", Images.class);
+
+    /**
+     * The SnapPea icon.
+     */
+    public static final StandardImage snapPeaIcon =
+        new StandardImage("normal/images/main/snappea.gif", Images.class);
 }
 

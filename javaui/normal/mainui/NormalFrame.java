@@ -360,7 +360,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             menuFileImport.setMnemonic(KeyEvent.VK_I);
 
             JMenuItem menuFileImportSnapPea =
-                new JMenuItem("SnapPea Triangulation");
+                new JMenuItem("SnapPea Triangulation",
+                Images.snapPeaIcon.image());
             menuFileImportSnapPea.setMnemonic(KeyEvent.VK_S);
             menuFileImportSnapPea.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -377,7 +378,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             menuFileImport.add(menuFileImportSnapPea);
 
             JMenuItem menuFileImportRegina =
-                new JMenuItem("Regina Data File");
+                new JMenuItem("Regina Data File",
+                Images.mainSmallIcon.image());
             menuFileImportRegina.setMnemonic(KeyEvent.VK_R);
             menuFileImportRegina.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
