@@ -39,7 +39,6 @@ void addNProgress() {
         .def("hasChanged", &NProgress::hasChanged)
         .def("isFinished", &NProgress::isFinished)
         .def("setFinished", &NProgress::setFinished)
-        .def("isCancellable", &NProgress::isCancellable)
         .def("cancel", &NProgress::cancel)
         .def("isCancelled", &NProgress::isCancelled)
         .def("getDescription", &NProgress::getDescription)
