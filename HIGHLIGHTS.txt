@@ -8,7 +8,7 @@ Regina - A Normal Surface Theory Calculator
     for both the calculation engine and the Java user interface, see
     CHANGES.txt in the same directory as this file.
 
-Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
+Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
 
     - Moved from old impenetrable binary data files to new compressed
       XML data files.
@@ -23,6 +23,7 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
     - Introduced various command-line utility programs.
     - Reference manual expanded for normal surfaces and angle structures.
     - Removed CORBA engine/interface (see CHANGES.txt for why).
+    - Happy birthday to me!
 
 Version 2.4  [ 4 April, 2002 ]
 
