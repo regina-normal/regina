@@ -1025,16 +1025,15 @@ class NPacket : public ShareableObject {
         static NPacket* readPacket(NFile& in, NPacket* parent);
         #endif
 
-    protected:
         /**
          * An object that temporarily blocks listeners from being
          * notified of packet change events.  As long as this object
-         * is in existence, any calls to fireChangedEvent() for the
-         * corresponding packet will do nothing whatsoever.
+         * is in existence, listeners will not be notified of any
+         * changes to this packet.
          *
          * It can sometimes be useful to temporarily block change events
-         * during large modifications that are likely to call
-         * fireChangedEvents() at inopportune times during processing.
+         * during large modifications that are likely to generate
+         * change events at inopportune times during processing.
          *
          * Note that change event blocks are cumulative, i.e., if
          * several blocks are created then all of these blocks must be
@@ -1078,6 +1077,7 @@ class NPacket : public ShareableObject {
                 ~ChangeEventBlock();
         };
 
+    protected:
         /**
          * Makes a newly allocated copy of this packet.
          * This routine should <b>not</b> insert the new packet into the
