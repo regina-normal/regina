@@ -60,6 +60,12 @@ class TetNameItem : public QTableItem {
         const QString& getName() const;
 
         /**
+         * Notify the table that this tetrahedron's number is about to
+         * change.  The table cell will be updated accordingly.
+         */
+        void tetNumToChange(long newTetNum);
+
+        /**
          * QTableItem overrides.
          */
         int alignment() const;
@@ -109,11 +115,26 @@ class FaceGluingItem : public QTableItem {
         FaceGluingItem* getPartner();
 
         /**
-         * Adjust the adjacent tetrahedron number.  This will need to be used
-         * when tetrahedron indexes change as a result of other tetrahedra
-         * being added or removed.
+         * Break any existing face pairing involving this tetrahedron
+         * face.
+         *
+         * Note that the table cell for the partner will repainted, but
+         * this table cell will not (under the assumption that this
+         * table cell is still being worked upon).
          */
-        void setAdjacentTetrahedron(long newTetNum);
+        void unjoin();
+
+        /**
+         * Called when one or more tetrahedron numbers are about to
+         * change.  This can happen for instance when tetrahedra are
+         * removed from the table.
+         *
+         * A map for converting old tetrahedron numbers to new
+         * is passed.  The adjacent tetrahedron number registered for
+         * this face will be modified if necessary and the table cell
+         * updated accordingly.
+         */
+        void tetNumsToChange(const long newTetNums[]);
 
         /**
          * QTableItem overrides.
@@ -128,12 +149,6 @@ class FaceGluingItem : public QTableItem {
          */
         static QString destString(int srcFace, int destTet,
                 const regina::NPerm& gluing);
-
-        /**
-         * Break any existing face pairing.  The table cell for the
-         * partner is repainted, but this table cell is not.
-         */
-        void unjoin();
 
         /**
          * Display the given error to the user if no error is already
@@ -165,10 +180,6 @@ inline int FaceGluingItem::getAdjacentFace() const {
 inline const regina::NPerm& FaceGluingItem::getAdjacentTetrahedronGluing()
         const {
     return adjPerm;
-}
-
-inline void FaceGluingItem::setAdjacentTetrahedron(long newTetNum) {
-    adjTet = newTetNum;
 }
 
 #endif

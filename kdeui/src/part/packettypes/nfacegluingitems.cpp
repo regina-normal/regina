@@ -58,6 +58,15 @@ TetNameItem::TetNameItem(QTable* table, unsigned long tetNum,
         setText(QString::number(tetNum) + " (" + tetName + ')');
 }
 
+void TetNameItem::tetNumToChange(long newTetNum) {
+    if (name.isEmpty())
+        setText(QString::number(newTetNum));
+    else
+        setText(QString::number(newTetNum) + " (" + name + ')');
+
+    table()->updateCell(row(), col());
+}
+
 int TetNameItem::alignment() const {
     return AlignLeft;
 }
@@ -100,7 +109,7 @@ QWidget* FaceGluingItem::createEditor() const {
         editor->setFrame(false);
         editor->setValidator(new QRegExpValidator(reFaceGluing, editor));
         if (adjTet >= 0)
-            editor->setText(destString(4 - col(), adjTet, adjPerm));
+            editor->setText(destString(getMyFace(), adjTet, adjPerm));
         editor->selectAll();
 
         return editor;
@@ -116,6 +125,26 @@ FaceGluingItem* FaceGluingItem::getPartner() {
     else
         return dynamic_cast<FaceGluingItem*>(table()->item(
             adjTet, 4 - adjPerm[getMyFace()]));
+}
+
+void FaceGluingItem::unjoin() {
+    if (adjTet >= 0) {
+        FaceGluingItem* partner = getPartner();
+        partner->adjTet = -1;
+        partner->setText(QString::null);
+        table()->updateCell(partner->row(), partner->col());
+
+        adjTet = -1;
+        setText(QString::null);
+    }
+}
+
+void FaceGluingItem::tetNumsToChange(const long newTetNums[]) {
+    if (adjTet >= 0) {
+        adjTet = newTetNums[adjTet];
+        setText(destString(getMyFace(), adjTet, adjPerm));
+        table()->updateCell(row(), col());
+    }
 }
 
 void FaceGluingItem::setContentFromEditor(QWidget* editor) {
@@ -242,18 +271,6 @@ QString FaceGluingItem::destString(int srcFace, int destTet,
 
     ans.append(')');
     return ans;
-}
-
-void FaceGluingItem::unjoin() {
-    if (adjTet >= 0) {
-        FaceGluingItem* partner = getPartner();
-        partner->adjTet = -1;
-        partner->setText(QString::null);
-        table()->updateCell(partner->row(), partner->col());
-
-        adjTet = -1;
-        setText(QString::null);
-    }
 }
 
 void FaceGluingItem::showError(const QString& message) {

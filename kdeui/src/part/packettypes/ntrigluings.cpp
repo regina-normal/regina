@@ -40,6 +40,7 @@
 #include <kmessagebox.h>
 #include <qlabel.h>
 #include <qtable.h>
+#include <set>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -277,7 +278,80 @@ void NTriGluingsUI::addTet() {
 }
 
 void NTriGluingsUI::removeSelectedTets() {
-    // TODO
+    // Gather together all the tetrahedra to be deleted.
+    std::set<int> rows;
+
+    int nSel = faceTable->numSelections();
+    QTableSelection sel;
+    int i, j;
+    for (i = 0; i < nSel; i++) {
+        sel = faceTable->selection(i);
+        if (sel.isActive())
+            for (j = sel.topRow(); j <= sel.bottomRow(); j++)
+                rows.insert(j);
+    }
+
+    // Has anything been selected at all?
+    if (rows.empty()) {
+        KMessageBox::error(ui, i18n(
+            "No tetrahedra are currently selected for removal."));
+        return;
+    }
+
+    // Notify the user that tetrahedra will be removed.
+    QString message;
+    if (rows.size() == 1)
+        message = i18n("Tetrahedron %1 will be removed.  Are you sure?").
+            arg(*rows.begin());
+    else if (rows.size() == 2)
+        message = i18n("Tetrahedra %1 and %2 will be removed.  Are you sure?").
+            arg(*rows.begin()).arg(*rows.rbegin());
+    else
+        message = i18n("%1 tetrahedra from %2 to %3 will be removed.  "
+            "Are you sure?").arg(rows.size()).arg(*rows.begin()).
+            arg(*rows.rbegin());
+
+    if (KMessageBox::warningContinueCancel(ui, message) == KMessageBox::Cancel)
+        return;
+
+    // Off we go!
+    // Start by breaking any existing gluings with the doomed tetrahedra.
+    std::set<int>::const_iterator it;
+    for (it = rows.begin(); it != rows.end(); it++)
+        for (i = 1; i < 5; i++)
+            dynamic_cast<FaceGluingItem*>(faceTable->item(*it, i))->unjoin();
+
+    // Adjust other tetrahedron numbers.
+    int nRows = faceTable->numRows();
+    long* newTetNums = new long[nRows];
+
+    it = rows.begin();
+    int oldRow = 0;
+    int newRow = 0;
+    while (oldRow < nRows) {
+        if (it != rows.end() && oldRow == *it) {
+            newTetNums[oldRow++] = -1;
+            it++;
+        } else
+            newTetNums[oldRow++] = newRow++;
+    }
+
+    for (oldRow = 0; oldRow < nRows; oldRow++)
+        for (i = 1; i < 5; i++)
+            dynamic_cast<FaceGluingItem*>(faceTable->item(oldRow, i))->
+                tetNumsToChange(newTetNums);
+
+    delete[] newTetNums;
+
+    // And finally remove the tetrahedra.
+    QMemArray<int> arr(rows.size());
+    i = 0;
+    for (it = rows.begin(); it != rows.end(); it++)
+        arr[i++] = *it;
+
+    faceTable->removeRows(arr);
+
+    // Done!
     setDirty(true);
 }
 
