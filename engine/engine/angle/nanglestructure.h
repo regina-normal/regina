@@ -49,7 +49,7 @@ class NTriangulation;
  * This vector will contain one member per angle plus a final scaling
  * member; to obtain the actual angle in the angle structure one should
  * divide the corresonding angle member by the scaling member and then
- * multiply by <i>pi</pi>.
+ * multiply by <i>pi</i>.
  *
  * The reason for using this obfuscated representation is so we can
  * be lazy and use the NConeRay vertex solution routines to
