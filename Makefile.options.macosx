@@ -29,15 +29,19 @@ export DOC_JAR := bin/regina-docs.jar
 # headers, libraries or other files.
 # All directory paths should be absolute.
 #
-# JNI_INCLUDES: Flag to include the C++ JNI include files such as jni.h.
-# EXTRA_INCLUDES: Flag to include any other necessary files.
+# JNI_INCLUDES: Flag to include the JNI headers such as jni.h.
+# CPPUNIT_INCLUDES: Flag to include the CppUnit headers for the test suite.
+# EXTRA_INCLUDES: Flag to include any other necessary headers.
 #
-# EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
+# CPPUNIT_LIBRARIES: Flag to link with CppUnit for the test suite.
+# EXTRA_LIBRARIES: Flag to link with any other libraries that are necessary
 #                  for the calculation engine, such as gmp and pthread.
 
 export JNI_INCLUDES := -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/
+export CPPUNIT_INCLUDES :=
 export EXTRA_INCLUDES := -I/usr/include/libxml2
 
+export CPPUNIT_LIBRARIES := -lcppunit
 export EXTRA_LIBRARIES := -lgmp -lpthread -lz -lxml2 -lpopt
 
 # Specify here any compiler-dependent macros that need to be defined.

@@ -79,7 +79,7 @@ helprun :
 
 .PHONY : help helpgeneral helpbin helpdocs helpprep helprun \
 	binengine binenginejni binenginelib \
-	binjava binjavaui binjavajni binjni binutils bindocs bin \
+	binjava binjavaui binjavajni binjni binutils bintestsuite bindocs bin \
 	docsengine docsjava docshtml docsman docsrtf docstex docsdvi docspdf docs \
 	prep prepclean prepjni prepcleanjni \
 	run runconsole runtext debug \
@@ -98,6 +98,8 @@ binjavajni :
 binjni : binenginejni binjavaui binjavajni
 binutils : binenginelib
 	cd utils && $(MAKE) all
+bintestsuite : binenginelib
+	cd testsuite && $(MAKE) all
 bindocs : $(DOC_JAR)
 $(DOC_JAR) : docs
 	-rm -rf $(DOC_BUILD_DIR)
@@ -150,12 +152,14 @@ clean :
 	cd engine && $(MAKE) clean
 	cd javaui && $(MAKE) clean
 	cd utils && $(MAKE) clean
+	cd testsuite && $(MAKE) clean
 	cd docs && $(MAKE) clean
 
 purge : clean
 	-rm $(ENGINE_JNI) $(ENGINE_LIB)
 	-rm $(JAVA_UI) $(JAVA_JNI)
 	cd utils && $(MAKE) purge
+	cd testsuite && $(MAKE) purge
 	-rm $(DOC_JAR)
 
 Makefile.options :
