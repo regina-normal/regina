@@ -60,8 +60,13 @@ public class ConsoleUtils {
         System.out.println();
 
         // Start the interpreter.
-        org.python.util.InteractiveConsole console =
-            new org.python.util.InteractiveConsole();
+        // Enable readline/editline support if at all possible.
+        org.python.util.InteractiveConsole console;
+        try {
+            console = new org.python.util.ReadlineConsole();
+        } catch (Throwable th) {
+            console = new org.python.util.InteractiveConsole();
+        }
         JPythonUtils.setupInterpreter(console, shell, System.out);
         System.out.println();
         console.interact();
