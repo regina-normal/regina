@@ -40,6 +40,7 @@
 #include <klibloader.h>
 #include <klocale.h>
 #include <ktexteditor/document.h>
+#include <ktexteditor/editorchooser.h>
 #include <kuserprofile.h>
 
 using namespace regina;
@@ -101,11 +102,10 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             enclosingPane);
     if (packet->getPacketType() == NText::packetType) {
         KTextEditor::Document* doc = createDocument();
-        if (doc) {
-            doc->setReadWrite(allowReadWrite);
+        if (doc)
             return new NTextUI(dynamic_cast<NText*>(packet), enclosingPane,
                 doc, allowReadWrite);
-        } else
+        else
             return new ErrorPacketUI(packet, enclosingPane,
                 i18n("An appropriate text editor component could not "
                 "be found."));
@@ -114,21 +114,6 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
 }
 
 KTextEditor::Document* PacketManager::createDocument() {
-    KTextEditor::Document* ans = 0;
-
-    // TODO: There must be some way of doing this query so that system
-    // settings are honoured.
-    KService::Ptr service = KServiceTypeProfile::preferredService(
-        "KTextEditor/Document", QString::null);
-    if (service) {
-        KLibFactory* libFactory = KLibLoader::self()->
-            factory(service->library());
-        if (libFactory)
-            ans = dynamic_cast<KTextEditor::Document*>(libFactory->
-                create(0 /* parent */, service->name(),
-                "KTextEditor::Document"));
-    }
-
-    return ans;
+    return KTextEditor::EditorChooser::createDocument();
 }
 

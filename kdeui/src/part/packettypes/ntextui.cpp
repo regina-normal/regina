@@ -32,7 +32,7 @@
 // UI includes:
 #include "ntextui.h"
 
-#include <qtextedit.h>
+#include <cstring>
 #include <ktexteditor/document.h>
 #include <ktexteditor/editinterface.h>
 #include <ktexteditor/undointerface.h>
@@ -45,13 +45,21 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc, bool readWrite) :
         PacketUI(enclosingPane), text(packet), document(doc),
         isCommitting(false) {
+    // Create a view before we do anything else.
+    // Otherwise the Vim component crashes.
+    view = document->createView(0);
+
     document->setReadWrite(readWrite);
 
     editInterface = KTextEditor::editInterface(document);
     editInterface->setText(packet->getText().c_str());
-    KTextEditor::undoInterface(document)->clearUndo();
 
-    view = doc->createView(0);
+    // TODO: Can we work around this in a nicer way (Vim component problem)?
+    if (strcmp(document->className(), "Vim::Document") == 0)
+        std::cerr << "Not flushing the undo list since this has strange "
+            "side-effects with the Vim component." << std::endl;
+    else
+        KTextEditor::undoInterface(document)->clearUndo();
 
     connect(document, SIGNAL(textChanged()),
         this, SLOT(notifyTextChanged()));
