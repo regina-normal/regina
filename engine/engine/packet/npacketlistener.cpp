@@ -32,9 +32,24 @@
 namespace regina {
 
 NPacketListener::~NPacketListener() {
-    for (std::set<NPacket*>::iterator it = packets.begin();
-            it != packets.end(); it++)
+    std::set<NPacket*>::iterator it, next;
+
+    it = packets.begin();
+    next = it;
+    while (it != packets.end()) {
+        // INV: next == it.
+
+        // Step forwards before we actually deregister (*it), since
+        // the deregistration will remove (*it) from the set and
+        // invalidate the iterator.
+        next++;
+
+        // This deregistration removes (*it) from the set, but other
+        // iterators (i.e., next) are not invalidated.
         (*it)->unlisten(this);
+
+        it = next;
+    }
 }
 
 } // namespace regina
