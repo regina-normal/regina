@@ -35,8 +35,8 @@
 #define __NEDGE_H
 #endif
 
+#include <deque>
 #include "shareableobject.h"
-#include "utilities/ndynamicarray.h"
 #include "triangulation/nperm.h"
 #include "triangulation/ntetrahedron.h"
 
@@ -170,7 +170,7 @@ class NEdgeEmbedding {
  */
 class NEdge : public ShareableObject {
     private:
-        NDynamicArray<NEdgeEmbedding> embeddings;
+        std::deque<NEdgeEmbedding> embeddings;
             /**< A list of descriptors of how this edge forms a part of
                  each individual tetrahedron it belongs to. */
         NComponent* component;
@@ -217,7 +217,7 @@ class NEdge : public ShareableObject {
          * @return the list of embedding descriptors.
          * @see NEdgeEmbedding
          */
-        const NDynamicArray<NEdgeEmbedding>& getEmbeddings() const;
+        const std::deque<NEdgeEmbedding>& getEmbeddings() const;
 
         /**
          * Returns the number of descriptors in the list returned by
@@ -306,8 +306,8 @@ inline NBoundaryComponent* NEdge::getBoundaryComponent() const {
 }
 
 inline NVertex* NEdge::getVertex(int vertex) const {
-    return embeddings[0].getTetrahedron()->getVertex(
-        embeddings[0].getVertices()[vertex]);
+    return embeddings.front().getTetrahedron()->getVertex(
+        embeddings.front().getVertices()[vertex]);
 }
 
 inline bool NEdge::isBoundary() const {
@@ -318,7 +318,7 @@ inline bool NEdge::isValid() const {
     return valid;
 }
 
-inline const NDynamicArray<NEdgeEmbedding> & NEdge::getEmbeddings() const {
+inline const std::deque<NEdgeEmbedding> & NEdge::getEmbeddings() const {
     return embeddings;
 }
 

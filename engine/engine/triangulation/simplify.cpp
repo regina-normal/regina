@@ -49,7 +49,7 @@ const NPerm twoThreeVertices[2] = {
 };
 
 bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
-    const NDynamicArray<NEdgeEmbedding>& embs = e->getEmbeddings();
+    const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
     if (check) {
         if (e->isBoundary())
             return false;
@@ -62,7 +62,8 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     NPerm oldVertexPerm[3];
     std::hash_set<NTetrahedron*, HashPointer> oldTets;
     int oldPos = 0;
-    for (NDynamicArrayIterator<NEdgeEmbedding> it(embs); ! it.done(); it++) {
+    for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
+            it != embs.end(); it++) {
         oldTet[oldPos] =(*it).getTetrahedron();
         if (check)
             if (! oldTets.insert(oldTet[oldPos]).second)
@@ -268,7 +269,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
 
 bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
         bool perform) {
-    const NDynamicArray<NEdgeEmbedding>& embs = e->getEmbeddings();
+    const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
     if (check) {
         if (e->isBoundary())
             return false;
@@ -280,7 +281,8 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     NTetrahedron* oldTet[4];
     std::hash_set<NTetrahedron*, HashPointer> oldTets;
     int oldPos = 0;
-    for (NDynamicArrayIterator<NEdgeEmbedding> it(embs); ! it.done(); it++) {
+    for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
+            it != embs.end(); it++) {
         oldTet[oldPos] =(*it).getTetrahedron();
         if (check)
             if (! oldTets.insert(oldTet[oldPos]).second)
@@ -321,12 +323,11 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     NTetrahedron* tet[2];
     NPerm perm[2];
 
-    NDynamicArrayIterator<NEdgeEmbedding> it(e->getEmbeddings());
     int i = 0;
-    while (! it.done()) {
+    for (std::deque<NEdgeEmbedding>::const_iterator it =
+            e->getEmbeddings().begin(); it != e->getEmbeddings().end(); it++) {
         tet[i] = (*it).getTetrahedron();
         perm[i] = (*it).getVertices();
-        it++;
         i++;
     }
 
@@ -409,12 +410,12 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     NTetrahedron* tet[2];
     int vertex[2];
 
-    NDynamicArrayIterator<NVertexEmbedding> it(v->getEmbeddings());
+    std::vector<NVertexEmbedding>::const_iterator it;
     int i = 0;
-    while (! it.done()) {
+    for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end();
+            it++) {
         tet[i] = (*it).getTetrahedron();
         vertex[i] = (*it).getVertex();
-        it++;
         i++;
     }
 
@@ -484,7 +485,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
             return false;
     }
             
-    const NEdgeEmbedding& emb = e->getEmbedding(0);
+    const NEdgeEmbedding& emb = e->getEmbeddings().front();
     NTetrahedron* oldTet = emb.getTetrahedron();
     NPerm oldVertices = emb.getVertices();
 

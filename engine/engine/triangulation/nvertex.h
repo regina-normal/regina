@@ -35,8 +35,8 @@
 #define __NVERTEX_H
 #endif
 
+#include <list>
 #include "shareableobject.h"
-#include "utilities/ndynamicarray.h"
 
 class NTetrahedron;
 class NComponent;
@@ -130,7 +130,7 @@ class NVertex : public ShareableObject {
             /**< Specifies a vertex link that has boundary and is not a
                  disc. */
     private:
-        NDynamicArray<NVertexEmbedding> embeddings;
+        std::vector<NVertexEmbedding> embeddings;
             /**< A list of descriptors of how this vertex forms a part of
                  each individual tetrahedron it belongs to. */
         NComponent* component;
@@ -175,7 +175,7 @@ class NVertex : public ShareableObject {
          * @return the list of embedding descriptors.
          * @see NVertexEmbedding
          */
-        const NDynamicArray<NVertexEmbedding>& getEmbeddings() const;
+        const std::vector<NVertexEmbedding>& getEmbeddings() const;
 
         /**
          * Returns the number of descriptors in the list returned by
@@ -332,7 +332,7 @@ inline long NVertex::getLinkEulerCharacteristic() const {
     return linkEulerCharacteristic;
 }
 
-inline const NDynamicArray<NVertexEmbedding>& NVertex::getEmbeddings() const {
+inline const std::vector<NVertexEmbedding>& NVertex::getEmbeddings() const {
     return embeddings;
 }
 

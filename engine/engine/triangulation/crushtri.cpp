@@ -52,12 +52,13 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
         std::hash_set<NVertex*, HashPointer>& vertexSet) {
     vertexSet.insert(from);
 
-    NDynamicArrayIterator<NVertexEmbedding> it(from->getEmbeddings());
+    std::vector<NVertexEmbedding>::const_iterator it =
+        from->getEmbeddings().begin();
     NTetrahedron* tet;
     NVertex* otherVertex;
     NEdge* edge;
     int vertex, yourVertex;
-    while (! it.done()) {
+    while (it != from->getEmbeddings().end()) {
         const NVertexEmbedding& emb = *it;
         tet = emb.getTetrahedron();
         vertex = emb.getVertex();
@@ -115,12 +116,13 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
     vertexSet.insert(from);
     thisStretch.insert(from);
 
-    NDynamicArrayIterator<NVertexEmbedding> it(from->getEmbeddings());
+    std::vector<NVertexEmbedding>::const_iterator it =
+        from->getEmbeddings().begin();
     NTetrahedron* tet;
     NVertex* otherVertex;
     int vertex, yourVertex;
     bool madeLink = false;
-    while (! it.done()) {
+    while (it != from->getEmbeddings().end()) {
         const NVertexEmbedding& emb = *it;
         tet = emb.getTetrahedron();
         vertex = emb.getVertex();

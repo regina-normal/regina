@@ -81,7 +81,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
 
     // Run through each edge and put the relations in the matrix.
     EdgeIterator eit(edges);
-    NDynamicArrayIterator<NEdgeEmbedding> embit;
+    std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
     NFace* face;
     int currTetFace;
@@ -90,8 +90,8 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
     while (! eit.done()) {
         if (! (*eit)->isBoundary()) {
             // Put in the relation corresponding to this edge.
-            embit.init((*eit)->getEmbeddings());
-            while (! embit.done()) {
+            for (embit = (*eit)->getEmbeddings().begin();
+                    embit != (*eit)->getEmbeddings().end(); embit++) {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
                 face = currTet->getFace(currTetFace);
@@ -103,7 +103,6 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
                     else
                         pres.entry(i, faceGenIndex) -= 1;
                 }
-                embit++;
             }
             i++;
         }

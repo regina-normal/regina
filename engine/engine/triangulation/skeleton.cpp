@@ -86,7 +86,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
     std::queue<NTetrahedron*> tetQueue;
     
     firstTet->component = component;
-    component->tetrahedra.addLast(firstTet);
+    component->tetrahedra.push_back(firstTet);
     firstTet->orientation = firstOrientation;
     tetQueue.push(firstTet);
     
@@ -110,7 +110,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
                     }
                 } else {
                     adjTet->component = component;
-                    component->tetrahedra.addLast(adjTet);
+                    component->tetrahedra.push_back(adjTet);
                     adjTet->orientation = yourOrientation;
                     tetQueue.push(adjTet);
                 }
@@ -137,7 +137,7 @@ void NTriangulation::calculateVertices() {
         for (vertex=0; vertex<4; vertex++)
             if (! tet->getVertex(vertex)) {
                 label = new NVertex(tet->component);
-                tet->component->vertices.addLast(label);
+                tet->component->vertices.push_back(label);
                 labelVertex(tet, vertex, label, 1);
                 vertices.addLast(label);
             }
@@ -159,7 +159,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     
     firstTet->vertices[firstVertex] = label;
     firstTet->tmpOrientation[firstVertex] = firstOrientation;
-    label->embeddings.addLast(NVertexEmbedding(firstTet, firstVertex));
+    label->embeddings.push_back(NVertexEmbedding(firstTet, firstVertex));
     vtxQueue.push(new VertexState(firstTet, firstVertex));
 
     VertexState* current;
@@ -205,7 +205,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
                 } else {
                     altTet->vertices[yourVertex] = label;
                     altTet->tmpOrientation[yourVertex] = yourOrientation;
-                    label->embeddings.addLast(NVertexEmbedding(altTet,
+                    label->embeddings.push_back(NVertexEmbedding(altTet,
                         yourVertex));
                     vtxQueue.push(new VertexState(altTet, yourVertex));
                 }
@@ -232,7 +232,7 @@ void NTriangulation::calculateEdges() {
         for (edge=0; edge<6; edge++)
             if (! tet->getEdge(edge)) {
                 label = new NEdge(tet->component);
-                tet->component->edges.addLast(label);
+                tet->component->edges.push_back(label);
                 labelEdge(tet, edge, label, edgeOrdering(edge));
                 edges.addLast(label);
             }
@@ -255,7 +255,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
     
     firstTet->edges[firstEdge] = label;
     firstTet->edgeMapping[firstEdge] = firstTetVertices;
-    label->embeddings.addLast(NEdgeEmbedding(firstTet, firstEdge));
+    label->embeddings.push_back(NEdgeEmbedding(firstTet, firstEdge));
     edgeQueue.push(new EdgeState(firstTet, firstEdge, 0));
 
     EdgeState* current;
@@ -304,10 +304,10 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
                         altTet->edgeMapping[yourEdge] =
                             perm * tetVertices * NPerm(2,3);
                         if (whichEndOfList >= 0)
-                            label->embeddings.addLast(
+                            label->embeddings.push_back(
                                 NEdgeEmbedding(altTet, yourEdge));
                         else
-                            label->embeddings.addFirst(
+                            label->embeddings.push_front(
                                 NEdgeEmbedding(altTet, yourEdge));
                         edgeQueue.push(new EdgeState(altTet, yourEdge,
                             whichEndOfList));
@@ -351,7 +351,7 @@ void NTriangulation::calculateFaces() {
         for (face=3; face>=0; face--)
             if (! tet->getFace(face)) {
                 label = new NFace(tet->component);
-                tet->component->faces.addLast(label);
+                tet->component->faces.push_back(label);
                 tet->faces[face] = label;
                 tet->faceMapping[face] = faceOrdering(face);
                 label->embeddings[0] = new NFaceEmbedding(tet, face);
@@ -389,7 +389,7 @@ void NTriangulation::calculateBoundary() {
                 label->orientable = true;
                 labelBoundaryFace(face, label, 1);
                 boundaryComponents.addLast(label);
-                face->component->boundaryComponents.addLast(label);
+                face->component->boundaryComponents.push_back(label);
             }
         it++;
     }
@@ -402,7 +402,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
     
     emb = firstFace->embeddings[0];
     firstFace->boundaryComponent = label;
-    label->faces.addLast(firstFace);
+    label->faces.push_back(firstFace);
     emb->getTetrahedron()->tmpOrientation[emb->getFace()] = firstOrientation;
     faceQueue.push(firstFace);
 
@@ -437,7 +437,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
             vertex = tet->getVertex(tetVertices[i]);
             if (vertex->boundaryComponent != label) {
                 vertex->boundaryComponent = label;
-                label->vertices.addLast(vertex);
+                label->vertices.push_back(vertex);
             }
         }
         
@@ -447,7 +447,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
                 edge = tet->getEdge(edgeNumber[tetVertices[i]][tetVertices[j]]);
                 if (! (edge->boundaryComponent)) {
                     edge->boundaryComponent = label;
-                    label->edges.addLast(edge);
+                    label->edges.push_back(edge);
                 }
     
                 // Label the adjacent boundary face with the same label.
@@ -477,7 +477,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
                 } else {
                     // Add this adjacent face to the queue.
                     nextFace->boundaryComponent = label;
-                    label->faces.addLast(nextFace);
+                    label->faces.push_back(nextFace);
                     nextTet->tmpOrientation[nextFaceNumber] = yourOrientation;
                     faceQueue.push(nextFace);
                 }
@@ -489,7 +489,7 @@ void NTriangulation::calculateVertexLinks() {
     // Runs through each vertex and sets link accordingly.
     VertexIterator it(vertices);
     NVertex* vertex;
-    NDynamicArrayIterator<NVertexEmbedding> embit;
+    std::vector<NVertexEmbedding>::const_iterator embit;
     NTetrahedron* tet;
     int tetVertex, secondVertex;
 
@@ -503,8 +503,8 @@ void NTriangulation::calculateVertexLinks() {
         twiceE = 3 * f;
         v = 0;
         
-        embit.init(vertex->getEmbeddings());
-        while (! embit.done()) {
+        embit = vertex->getEmbeddings().begin();
+        while (embit != vertex->getEmbeddings().end()) {
             const NVertexEmbedding& emb = (*embit);
             tet = emb.getTetrahedron();
             tetVertex = emb.getVertex();
@@ -554,7 +554,7 @@ void NTriangulation::calculateVertexLinks() {
                 bc->orientable = vertex->isLinkOrientable();
                 vertex->boundaryComponent = bc;
                 boundaryComponents.addLast(bc);
-                vertex->component->boundaryComponents.addLast(bc);
+                vertex->component->boundaryComponents.push_back(bc);
             }
         }
 

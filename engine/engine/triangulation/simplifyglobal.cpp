@@ -43,7 +43,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     unsigned long nFaces;
     unsigned long iEdge;
     unsigned long iFace;
-    NDynamicArrayIterator<NEdgeEmbedding> embit;
+    std::deque<NEdgeEmbedding>::const_iterator embit, embbeginit, embendit;
 
     bool changed = false;
     bool changedNow = true;
@@ -90,15 +90,16 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 // for open book moves.
                 nEdges = (*bit)->getNumberOfEdges();
                 for (iEdge = 0; iEdge < nEdges; iEdge++) {
-                    for (embit.init((*bit)->getEdge(iEdge)->getEmbeddings());
-                            !(embit.done()); embit++) {
+                    embbeginit = (*bit)->getEdge(iEdge)->
+                        getEmbeddings().begin();
+                    embendit = (*bit)->getEdge(iEdge)->getEmbeddings().end();
+                    for (embit = embbeginit; embit != embendit; embit++)
                         if (openBook((*embit).getTetrahedron()->getFace(
                                 ((*embit).getVertices())[2]), true, perform)) {
                             changedNow = true;
                             changed = true;
                             break;
                         }
-                    }
                     if (changedNow)
                         break;
                 }

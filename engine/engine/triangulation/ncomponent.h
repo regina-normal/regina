@@ -35,8 +35,8 @@
  *  \brief Deals with components of a triangulation.
  */
 
+#include <vector>
 #include "shareableobject.h"
-#include "utilities/ndynamicarray.h"
 
 class NTetrahedron;
 class NFace;
@@ -53,15 +53,15 @@ class NBoundaryComponent;
  */
 class NComponent : public ShareableObject {
     private:
-        NDynamicArray<NTetrahedron*> tetrahedra;
+        std::vector<NTetrahedron*> tetrahedra;
             /**< List of tetrahedra in the component. */
-        NDynamicArray<NFace*> faces;
+        std::vector<NFace*> faces;
             /**< List of faces in the component. */
-        NDynamicArray<NEdge*> edges;
+        std::vector<NEdge*> edges;
             /**< List of edges in the component. */
-        NDynamicArray<NVertex*> vertices;
+        std::vector<NVertex*> vertices;
             /**< List of vertices in the component. */
-        NDynamicArray<NBoundaryComponent*> boundaryComponents;
+        std::vector<NBoundaryComponent*> boundaryComponents;
             /**< List of boundary components in the component. */
         
         bool ideal;
@@ -271,7 +271,7 @@ inline bool NComponent::isOrientable() const {
 }
 
 inline bool NComponent::isClosed() const {
-    return (boundaryComponents.size() == 0);
+    return (boundaryComponents.empty());
 }
 
 inline void NComponent::writeTextShort(std::ostream& out) const {
