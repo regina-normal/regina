@@ -452,12 +452,13 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
     QSplitter* splitter = new QSplitter(parentWidget, widgetName);
 
     // Set up the packet tree viewer.
-    QVBox* treeBox = new QVBox(splitter);
+    QWidget* treeBox = new QWidget(splitter);
+    QBoxLayout* treeLayout = new QVBoxLayout(treeBox);
     treeBox->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
         QSizePolicy::MinimumExpanding, 1, 1));
 
     treeView = new PacketTreeView(this, treeBox);
-    treeBox->setStretchFactor(treeView, 1);
+    treeLayout->addWidget(treeView, 1);
     connect(treeView, SIGNAL(selectionChanged()), this,
         SLOT(updateTreePacketActions()));
 
@@ -466,7 +467,12 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
     reginaIcon->setPaletteBackgroundPixmap(UserIcon("stars", instance()));
     reginaIcon->setAlignment(AlignCenter);
     reginaIcon->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    treeLayout->addWidget(reginaIcon);
     reginaIcon->hide();
+
+    // Make sure the tree area doesn't shrink too far, even when the
+    // icon isn't there to prop it out.
+    treeLayout->addStrut(reginaIcon->pixmap()->width());
 
     // Set up the docking area.
     dockArea = new QVBox(splitter);
