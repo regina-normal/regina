@@ -33,6 +33,7 @@
 // UI includes:
 #include "packetmanager.h"
 #include "reginapart.h"
+#include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nscriptui.h"
 #include "packettypes/ntextui.h"
@@ -98,6 +99,9 @@ QPixmap PacketManager::iconBar(NPacket* packet) {
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
         PacketPane* enclosingPane, bool allowReadWrite) {
+    if (packet->getPacketType() == NAngleStructureList::packetType)
+        return new NAngleStructureUI(dynamic_cast<NAngleStructureList*>(packet),
+            enclosingPane);
     if (packet->getPacketType() == NContainer::packetType)
         return new NContainerUI(dynamic_cast<NContainer*>(packet),
             enclosingPane);
