@@ -173,7 +173,7 @@ bool NCensus::mightBeMinimal(NTriangulation* tri, void*) {
         }
 
         // Check for obvious simplifications.
-        if (tri->intelligentSimplify())
+        if (tri->simplifyToLocalMinimum(false))
             return false;
     }
     return true;

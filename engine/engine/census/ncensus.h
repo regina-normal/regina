@@ -286,7 +286,7 @@ class NCensus {
          * A variety of tests will be performed; these tests are subject
          * to change between Regina releases.  Currently this routine
          * counts vertices and also tries to simplify the triangulation using
-         * NTriangulation::intelligentSimplify().
+         * NTriangulation::simplifyToLocalMinimum().
          *
          * Currently this routine is only useful for triangulations whose
          * faces are all internal; if the given triangulation has
