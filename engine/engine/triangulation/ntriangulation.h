@@ -884,7 +884,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * least 3.
          * @param whichRoot determines q0 to be the root of unity
          * e^(2i * Pi * whichRoot / 2r); this argument must be strictly
-         * between 0 and r and must have no common factors with r.
+         * between 0 and 2r and must have no common factors with r.
          * @return the requested Turaev-Viro invariant.
          */
         std::complex<double> turaevViro(unsigned long r,
