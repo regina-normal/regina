@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Script to run Regina directly from the source tree, without requiring
+# a "make install".
+#
+set -e
+
+export REGINA_HOME="`dirname "$0"`"
+export REGINA_JNIDIR="$REGINA_HOME/engine/jni/.libs:/usr/lib"
+export REGINA_JARDIR="$REGINA_HOME/javaui"
+
+"$REGINA_HOME/regina" "$@"
+
