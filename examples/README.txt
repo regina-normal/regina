@@ -27,5 +27,5 @@ Files within this directory are of the following types.
 *.py:
     These are the same sample python sessions as above but only the user
     input has been included.  These scripts may be fed directly into Regina
-    using a command of the form "regina-python < foo.py"
+    using a command of the form "regina-python foo.py"
 
