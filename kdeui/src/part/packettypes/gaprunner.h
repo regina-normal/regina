@@ -110,6 +110,7 @@ class GAPRunner : public KDialogBase {
         void processOutput(const QString& output);
         QString origGroupRelns();
         QString origGroupReln(const regina::NGroupExpression& reln);
+        regina::NGroupExpression* parseRelation(const QString& reln);
 
         /**
          * Display an error to the user and cancel the operation.

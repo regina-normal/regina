@@ -39,6 +39,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qregexp.h>
+#include <qstringlist.h>
 #include <qwhatsthis.h>
 #include <signal.h>
 
@@ -87,9 +88,12 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     QFrame* page = plainPage();
     QBoxLayout* layout = new QHBoxLayout(page, 5, 0);
 
-    QWhatsThis::add(page, i18n("When GAP is used to simplify a group, "
-        "a separate GAP process is started on your system.  This dialog "
-        "shows you the current status of this GAP process."));
+    QWhatsThis::add(page, i18n("<qt>When GAP (Groups, Algorithms and "
+        "Programming) is used to simplify a group, GAP is started as a "
+        "separate process on your system.  Regina talks to GAP just as "
+        "any other user would at the GAP command prompt.<p>"
+        "This dialog shows you the current state of the conversation "
+        "between Regina and GAP.</qt>"));
 
     QLabel* icon = new QLabel(page);
     icon->setPixmap(DesktopIcon("run", 32, KIcon::DefaultState,
@@ -175,6 +179,7 @@ void GAPRunner::processOutput(const QString& output) {
 
     unsigned long count;
     bool ok;
+    regina::NGroupExpression* reln;
     switch (stage) {
         case GAP_init:
             // Ignore any output.
@@ -234,7 +239,22 @@ void GAPRunner::processOutput(const QString& output) {
                     escape(use)));
             return;
         case GAP_newrelseach:
-            // TODO
+            if ((reln = parseRelation(use))) {
+                newGroup->addRelation(reln);
+                stageWhichReln++;
+                if (stageWhichReln == newRelnCount) {
+                    // All finished!
+                    sendInput("quit;");
+                    stage = GAP_done;
+                    status->setText(i18n("Simplification complete."));
+                } else {
+                    // Move on to the next relation.
+                    sendInput(QString("RelatorsOfFpGroup(Range(hom))[%1];").
+                        arg(stageWhichReln + 1));
+                }
+            }
+            // If the parsing failed, parseRelation() already fired the
+            // error.
             return;
         case GAP_done:
             // Should be no more output at this stage.
@@ -273,6 +293,51 @@ QString GAPRunner::origGroupReln(const regina::NGroupExpression& reln) {
         ans += QString("f.%1^%2").arg(it->generator + 1).arg(it->exponent);
     }
     return ans;
+}
+
+regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
+    QStringList terms = QStringList::split(QChar('*'), reln, true);
+    if (terms.isEmpty()) {
+        error(i18n("GAP produced empty output where a group relator "
+            "was expected."));
+        return 0;
+    }
+
+    unsigned long nGens = newGroup->getNumberOfGenerators();
+    std::auto_ptr<regina::NGroupExpression> ans(new regina::NGroupExpression);
+
+    // Make the regex local to this function since we're capturing text.
+    QRegExp reGAPTerm("f([0-9]+)(\\^(-?[0-9]+))?");
+
+    QString term;
+    unsigned long gen;
+    long exp;
+    for (QStringList::iterator it = terms.begin(); it != terms.end(); it++) {
+        term = (*it).stripWhiteSpace();
+        if (! reGAPTerm.exactMatch(term)) {
+            error(i18n("GAP produced the following group relator, which could "
+                "not be understood:<p><tt>%1</tt>").arg(escape(reln)));
+            return 0;
+        }
+
+        gen = reGAPTerm.cap(1).toULong() - 1;
+        if (reGAPTerm.cap(2).isEmpty())
+            exp = 1;
+        else
+            exp = reGAPTerm.cap(3).toLong();
+
+        if (gen >= nGens) {
+            error(i18n("GAP produced the following group relator, which "
+                "includes the out-of-range generator <i>f%1</i>:<p>"
+                "<tt>%2</tt>").arg(gen).arg(escape(reln)));
+            return 0;
+        }
+
+        ans->addTermLast(gen, exp);
+    }
+
+    // All good.
+    return ans.release();
 }
 
 void GAPRunner::error(const QString& msg) {
