@@ -544,11 +544,9 @@ class NPacket : public ShareableObject {
          * the new packet.  If this is passed as \c false (the default),
          * only this packet will be cloned.
          * @param end \c true if the new packet should be inserted at
-         * the end of the parent's list of children (the default).
-         * This insertion is
-         * more time consuming than inserting the new packet at the
-         * beginning of the parent's child list.  If time is of the
-         * essense, \c end should be set to \c false.
+         * the end of the parent's list of children (the default), or
+		 * \c false if the new packet should be inserted as the sibling
+		 * immediately after this packet.
          * @return the newly inserted packet, or 0 if this packet has no
          * parent.
          */

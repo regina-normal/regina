@@ -261,7 +261,7 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     if (end)
         treeParent->insertChildLast(ans);
     else
-        treeParent->insertChildFirst(ans);
+        treeParent->insertChildAfter(ans, (NPacket*)this);
     if (cloneDescendants)
         internalCloneDescendants(ans);
     return ans;
