@@ -63,9 +63,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
         }
 
         void rawCounts() {
-            unsigned nPairs[] = {
-                1, 2, 4, 10, 28, 97, 359
-            };
+            unsigned nPairs[] = { 1, 1, 2, 4, 10, 28, 97, 359 };
 
             unsigned nTets;
             for (nTets = 1; nTets <= 7; nTets++) {
@@ -75,10 +73,10 @@ class NFacePairingTest : public CppUnit::TestFixture {
                 
                 std::ostringstream msg;
                 msg << "Face pairing count for " << nTets
-                    << " tetrahedra should be " << nPairs[nTets - 1]
+                    << " tetrahedra should be " << nPairs[nTets]
                     << ", not " << count << '.';
 
-                CPPUNIT_ASSERT_MESSAGE(msg.str(), count == nPairs[nTets - 1]);
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), count == nPairs[nTets]);
             }
         }
 };
