@@ -92,10 +92,6 @@ typedef void (*UseFacePairing)(const NFacePairing*, const NFacePairingIsoList*,
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
  *
- * \todo \optlong When generating face pairings, do some checking to eliminate
- * cases in which tetrahedron (<i>k</i> > 0) can be swapped with tetrahedron 0
- * to produce a smaller representation of the same pairing.
- *
  * \ifaces Not present.
  */
 class NFacePairing : public NThread {
@@ -295,6 +291,12 @@ class NFacePairing : public NThread {
          *
          * The face pairing generation may be run in the current thread
          * or as a separate thread.
+         *
+         * \todo \optlong When generating face pairings, do some checking to
+         * eliminate cases in which tetrahedron (<i>k</i> > 0) can be swapped
+         * with tetrahedron 0 to produce a smaller representation of the same
+         * pairing.
+         * \todo \feature Allow cancellation of face pairing generation.
          *
          * @param nTetrahedra the number of tetrahedra whose faces should
          * be (potentially) matched.

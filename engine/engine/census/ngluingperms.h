@@ -198,6 +198,8 @@ class NGluingPerms {
          * the first has some face paired with a face in an earlier
          * tetrahedron.
          *
+         * \todo \feature Allow cancellation of permutation set generation.
+         *
          * @param newPairing the specific pairing of tetrahedron faces
          * that the generated permutation sets will complement.
          * @param autos the collection of automorphisms defining equivalence
