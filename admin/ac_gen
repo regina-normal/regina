@@ -71,6 +71,8 @@ for i in `find . -name Makefile.am | sort | sed -e 's#^./##;s#\.am$##'`; do
     ;;
     kdeui/* )
     ;;
+    test/* )
+    ;;
     * )
       echo "AC_CONFIG_FILES([$i])" >> "$output"
     ;;
