@@ -4,6 +4,8 @@ Regina - A Normal Surface Theory Calculator
     OVERALL:
         - Makefile.options variables IDLTOJAVACLIENT and IDLTOCPPSERVER
           became IDLTOJAVA and IDLTOCPP with slightly more generic meanings.
+    JAVA USER INTERFACE:
+        - Loading/saving local files is now possible even through CORBA!
 
 Version 2.2  [ 7 October, 2001 ]
     OVERALL:

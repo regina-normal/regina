@@ -38,6 +38,7 @@
 #include "NContainerI.h"
 #include "NScriptI.h"
 #include "NTextI.h"
+#include "NCORBARandomAccessResource.h"
 
 Regina::Packet::NContainer_ptr Engine_i::newNContainer() {
     return NContainer_i::newWrapper(new ::NContainer());
@@ -52,11 +53,71 @@ Regina::Packet::NText_ptr Engine_i::newNText_string(const char* text) {
     return NText_i::newWrapper(new ::NText(text));
 }
 
-Regina::Packet::NPacket_ptr Engine_i::readFromFile(const char* fileName) {
-    return NPacket_i::newWrapper(::readFromFile(fileName));
+Regina::Packet::NPacket_ptr Engine_i::readFromFile(const char* ref) {
+    try {
+        CORBA::Object_var res = orb->string_to_object(ref);
+        if (CORBA::is_nil(res)) {
+            cerr << "Could not destringify the CORBA random access resource.\n";
+            return Regina::Packet::NPacket::_nil();
+        }
+        Regina::File::NRandomAccessResource_var data =
+            Regina::File::NRandomAccessResource::_narrow(res);
+        if (CORBA::is_nil(data)) {
+            cerr << "Could not narrow the random access resource to "
+                << "the correct class.\n";
+            return Regina::Packet::NPacket::_nil();
+        }
+        NCORBARandomAccessResource* corbaRes =
+            new NCORBARandomAccessResource(data);
+
+        // Actually read from file.
+        ::NFile f;
+        if (f.open(corbaRes, NRandomAccessResource::READ)) {
+            ::NPacket* ans = f.readPacketTree();
+            f.close();
+            return NPacket_i::newWrapper(ans);
+        }
+    } catch (CORBA::COMM_FAILURE&) {
+        cerr << "Caught CORBA communication failure in readFromFile().\n";
+    } catch (CORBA::Exception&) {
+        cerr << "Caught CORBA exception in readFromFile().\n";
+    } catch (...) {
+        cerr << "Caught unknown exception in readFromFile().\n";
+    }
+    return Regina::Packet::NPacket::_nil();
 }
-CORBA::Boolean Engine_i::writeToFile(const char* fileName,
+CORBA::Boolean Engine_i::writeToFile(const char* ref,
         Regina::Packet::NPacket_ptr packet) {
-    return ::writeToFile(fileName, GET_ENGINE_OBJECT(NPacket, packet));
+    try {
+        CORBA::Object_var res = orb->string_to_object(ref);
+        if (CORBA::is_nil(res)) {
+            cerr << "Could not destringify the CORBA random access resource.\n";
+            return Regina::Packet::NPacket::_nil();
+        }
+        Regina::File::NRandomAccessResource_var data =
+            Regina::File::NRandomAccessResource::_narrow(res);
+        if (CORBA::is_nil(data)) {
+            cerr << "Could not narrow the random access resource to "
+                << "the correct class.\n";
+            return Regina::Packet::NPacket::_nil();
+        }
+        NCORBARandomAccessResource* corbaRes =
+            new NCORBARandomAccessResource(data);
+
+        // Actually write to file.
+        ::NFile f;
+        if (f.open(corbaRes, NRandomAccessResource::WRITE)) {
+            f.writePacketTree(GET_ENGINE_OBJECT(NPacket, packet));
+            f.close();
+            return true;
+        }
+    } catch (CORBA::COMM_FAILURE&) {
+        cerr << "Caught CORBA communication failure in writeToFile().\n";
+    } catch (CORBA::Exception&) {
+        cerr << "Caught CORBA exception in writeToFile().\n";
+    } catch (...) {
+        cerr << "Caught unknown exception in writeToFile().\n";
+    }
+    return false;
 }
 

@@ -63,11 +63,16 @@ bool writeToFile(const char* fileName, NPacket* tree) {
 
 bool NFile::open(const char* fileName,
         NRandomAccessResource::mode newOpenMode) {
+    return open(new NLocalFileResource(fileName), newOpenMode);
+}
+
+bool NFile::open(NRandomAccessResource* newResource,
+        NRandomAccessResource::mode newOpenMode) {
     if (resource)
         close();
     // Resource is set to 0 and the file is closed.
     if (newOpenMode == NRandomAccessResource::READ) {
-        resource = new NLocalFileResource(fileName);
+        resource = newResource;
         if (resource->openRead()) {
             int len = strlen(PROGRAM_NAME);
             char* sentry = new char[len+1];
@@ -94,7 +99,7 @@ bool NFile::open(const char* fileName,
         }
     }
     if (newOpenMode == NRandomAccessResource::WRITE) {
-        resource = new NLocalFileResource(fileName);
+        resource = newResource;
         if (resource->openWrite()) {
             majorVersion = ENGINE_VERSION_MAJOR;
             minorVersion = ENGINE_VERSION_MINOR;

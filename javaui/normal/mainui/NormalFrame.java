@@ -44,7 +44,6 @@ import normal.algorithm.*;
 import normal.console.*;
 import normal.engine.*;
 import normal.engine.packet.*;
-import normal.engine.file.NFile;
 import normal.imports.*;
 import normal.options.*;
 import normal.packetui.*;

@@ -33,8 +33,17 @@
 
 class Engine_i : public virtual POA_Regina::Engine,
         public PortableServer::RefCountServantBase {
+    private:
+        CORBA::ORB_var orb;
+            /**< The ORB used by this engine. */
+
     public:
-        Engine_i() {
+        /**
+         * Create a new CORBA calculation engine.
+         *
+         * @param newORB the ORB that this engine should use.
+         */
+        Engine_i(CORBA::ORB_var newORB) : orb(newORB) {
         }
         virtual ~Engine_i() {
         }

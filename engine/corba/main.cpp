@@ -232,7 +232,7 @@ int main(int argc, char* argv[]) {
         cerr << "Done.\n";
 
         cerr << "Creating engine... ";
-        Engine_i *engine = new Engine_i();
+        Engine_i *engine = new Engine_i(orb);
         cerr << "Done.\n";
 
         cerr << "Activating engine... ";

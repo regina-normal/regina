@@ -72,6 +72,10 @@ JNIEXPORT void JNICALL
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFile_open
         (JNIEnv *env, jobject me, jstring fileName, jint fileMode) {
+    // Always fail.
+    return JNI_FALSE;
+
+    /* 
     char* fileNameChars = jstringToNString(env, fileName).dupe();
     bool ans = GET_ENGINE_OBJECT(env, NFile, me)->
         open(fileNameChars, (NRandomAccessResource::mode)fileMode);
@@ -81,6 +85,7 @@ JNIEXPORT jboolean JNICALL
         return JNI_TRUE;
     else
         return JNI_FALSE;
+    */
 }
 
 JNIEXPORT jobject JNICALL

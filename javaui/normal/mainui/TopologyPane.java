@@ -43,7 +43,6 @@ import normal.*;
 import normal.console.JPythonConsoleFrame;
 import normal.engine.*;
 import normal.engine.packet.*;
-import normal.engine.file.NFile;
 import normal.imports.*;
 import normal.options.NormalOptionSet;
 import normal.packetui.*;
@@ -258,21 +257,11 @@ public class TopologyPane extends FilePane {
      * @return the new pane, or <tt>null</tt> if an error occurred.
      */
     public static TopologyPane newPane(Shell shell, File file) {
-        NFile f = shell.getEngine().newNFile();
-        if (! f.open(file.getAbsolutePath(), f.READ)) {
-            shell.error("The requested file does not exist or is " +
-                "in an unknown format.");
-            f.destroy();
-            return null;
-        }
-
-        NPacket root = f.readPacketTree();
-        f.close();
-        f.destroy();
+        NPacket root = shell.getEngine().readFromFile(file.getAbsolutePath());
 
         if (root == null) {
-            shell.error("The requested file contains invalid data " +
-                "and thus could not be opened.");
+            shell.error("The requested file could not be opened.  It may " +
+                "contain invalid data.");
             return null;
         }
 
@@ -304,16 +293,11 @@ public class TopologyPane extends FilePane {
     }
 
     public boolean saveFile(File file) {
-        NFile f = getEngine().newNFile();
-        if (! f.open(file.getAbsolutePath(), f.WRITE)) {
+        if (! getEngine().writeToFile(file.getAbsolutePath(), rootPacket)) {
             getShell().error(
                 "The requested file could not be opened for writing.");
-            f.destroy();
             return false;
         }
-        f.writePacketTree(rootPacket);
-        f.close();
-        f.destroy();
         return true;
     }
 

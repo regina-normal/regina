@@ -60,6 +60,12 @@ class NPacket;
  * routine will return null.  The behaviour regarding problematic
  * subpackets is identical to that of NFile::readPacketTree().
  *
+ * \ifacescorba The file that is accessed will be a file at the CORBA
+ * client end.  Its data will be passed to the calculation engine by way
+ * of a CORBA NRandomAccessResource object.  Parameter \a fileName
+ * should not be a path, but rather a stringified object reference to
+ * this object.
+ *
  * @param fileName the pathname of the file to read from.
  * @return the packet tree read from file, or null if problems
  * were encountered or the file could not be opened.
@@ -69,6 +75,12 @@ NPacket* readFromFile(const char* fileName);
 /**
  * Writes the given packet tree to the given file doing
  * everything in a single step.
+ *
+ * \ifacescorba The file that is accessed will be a file at the CORBA
+ * client end.  Its data will be passed to the calculation engine by way
+ * of a CORBA NRandomAccessResource object.  Parameter \a fileName
+ * should not be a path, but rather a stringified object reference to
+ * this object.
  *
  * @param fileName the pathname of the file to write to.
  * @param packet the packet tree to write to file.
@@ -108,6 +120,29 @@ class NFile : public ShareableObject {
         virtual ~NFile();
 
         /**
+         * Opens the requested resource in the requested mode.
+         * If the resource is to be opened for reading, it will fail if the
+         * resource does not exist.
+         * If the resource is to be opened for writing, it will delete any
+         * existing resource contents.
+         *
+         * This \a NFile will be responsible for destroying the given
+         * resource \a newResource, whether or not the open succeeds.
+         * It should not be destroyed elsewhere.
+         *
+         * \pre This file is currently closed.
+         *
+         * \ifaces Not present.
+         *
+         * @param newResource the resource to open.
+         * @param newOpenMode specifies in which mode the resource is to be
+         * opened.  This should be either \c READ or \c WRITE.
+         * @return \c true on success, \c false on failure.
+         */
+        bool open(NRandomAccessResource* newResource,
+            NRandomAccessResource::mode newOpenMode);
+
+        /**
          * Opens the requested file in the requested mode.
          * If the file is to be opened for reading, it will fail if the
          * file does not exist.
@@ -115,6 +150,9 @@ class NFile : public ShareableObject {
          * existing file contents.
          *
          * \pre This file is currently closed.
+         *
+         * \ifaces This method will do nothing and always fail.  Use the
+         * wrapper routines ::readFromFile() and ::writeToFile() instead.
          *
          * @param fileName the pathname of the file to open.
          * @param newOpenMode specifies in which mode the file is to be

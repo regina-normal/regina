@@ -61,6 +61,10 @@ import org.omg.CORBA.*;
  */
 public class CORBAEngine implements Engine {
     /**
+     * The object request broker in use.
+     */
+    private ORB orb;
+    /**
      * The underlying CORBA object.
      */
     private normal.engine.implementation.corba.Regina.Engine data;
@@ -96,18 +100,18 @@ public class CORBAEngine implements Engine {
      */
     public CORBAEngine(String[] args, String host, String port)
             throws CORBAException {
+        this.orb = null;
         this.host = host;
         this.port = port;
         data = null;
         try {
-            ORB orb;
             try {
                 orb = ORB.init(args, null);
             } catch (Throwable th) {
                 throw new normal.engine.implementation.corba.CORBAException(
                     "The ORB could not be initialised.");
             }
-            initEngine(orb);
+            initEngine();
         } catch (Throwable th) {
             if (th instanceof
                     normal.engine.implementation.corba.CORBAException)
@@ -140,11 +144,11 @@ public class CORBAEngine implements Engine {
      */
     public CORBAEngine(Applet applet, String host, String port)
             throws CORBAException {
+        this.orb = null;
         this.host = host;
         this.port = port;
         data = null;
         try {
-            ORB orb;
             try {
                 Properties prop = new Properties();
                 prop.setProperty("org.omg.CORBA.ORBInitialHost", host);
@@ -154,7 +158,7 @@ public class CORBAEngine implements Engine {
                 throw new normal.engine.implementation.corba.CORBAException(
                     "The ORB could not be initialised.");
             }
-            initEngine(orb);
+            initEngine();
         } catch (Throwable th) {
             if (th instanceof
                     normal.engine.implementation.corba.CORBAException)
@@ -169,13 +173,12 @@ public class CORBAEngine implements Engine {
 
     /**
      * Initialises the link to the CORBA calculation engine.
+     * It is assumed that the ORB has already been initialised.
      *
-     * @param orb the ORB to use; it is assumed that this has already been
-     * initialised.
      * @throws CORBAException thrown when the CORBA connection could not
      * be initialised.
      */
-    private void initEngine(ORB orb) throws CORBAException {
+    private void initEngine() throws CORBAException {
         org.omg.CORBA.Object objRef;
         try {
             objRef = orb.resolve_initial_references("NameService");
@@ -468,7 +471,17 @@ public class CORBAEngine implements Engine {
             ((NCORBATriangulation)triangulation).data, flavour));
     }
     public NPacket readFromFile(String fileName) {
-        return NCORBAPacket.newWrapper(data.readFromFile(fileName));
+        try {
+            NCORBAFileResource res = new NCORBAFileResource(fileName);
+            orb.connect(res);
+            NPacket ans = NCORBAPacket.newWrapper(data.readFromFile(
+                orb.object_to_string(res)));
+            orb.disconnect(res);
+            return ans;
+        } catch (Throwable th) {
+            th.printStackTrace();
+            return null;
+        }
     }
     public NTriangulation readSnapPea(String file) {
         return NCORBATriangulation.newWrapper(data.readSnapPea(file));
@@ -480,6 +493,16 @@ public class CORBAEngine implements Engine {
         return data.testEngine(value);
     }
     public boolean writeToFile(String fileName, NPacket packet) {
-        return data.writeToFile(fileName, ((NCORBAPacket)packet).data);
+        try {
+            NCORBAFileResource res = new NCORBAFileResource(fileName);
+            orb.connect(res);
+            boolean ans = data.writeToFile(orb.object_to_string(res),
+                ((NCORBAPacket)packet).data);
+            orb.disconnect(res);
+            return ans;
+        } catch (Throwable th) {
+            th.printStackTrace();
+            return false;
+        }
     }
 }

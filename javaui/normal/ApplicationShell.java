@@ -259,7 +259,7 @@ public class ApplicationShell extends Shell {
         return true;
     }
     public boolean mayEngineAccessFiles() {
-        return (getEngine().style() == engineJNI);
+        return true;
     }
     public boolean mayUseJython() {
         return true;
