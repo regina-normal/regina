@@ -48,6 +48,7 @@ namespace regina {
 
 class NTriangulation;
 class NMatrixInt;
+class NXMLPacketReader;
 
 /**
  * A packet representing a collection of normal surfaces in a 3-manifold.
@@ -154,6 +155,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         virtual std::string getPacketName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
+        static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual void writePacket(NFile& out) const;
         static NNormalSurfaceList* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;

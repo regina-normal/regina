@@ -63,7 +63,7 @@ Version 3.0  [ (under development) ]
         Class NTriangulation:
             - Added insertSplittingSurface().
             - Uses NIndexedArrays for skeletal elements for fast index lookup.
-        Class NXMLCallback, NXMLElementReader:
+        Class NXMLCallback, NXMLElementReader, NXMLPacketReader:
             - Added.
         Class reference_wrapper, remove_pointer:
             - Added for use with Standard Template Library.
@@ -73,6 +73,8 @@ Version 3.0  [ (under development) ]
             - Added.
         Class ZBuffer, CompressionBuffer, DecompressionBuffer,
                 CompressionStream, DecompressionStream:
+            - Added.
+        Routine basicTokenise(), duplicate():
             - Added.
         Routine readFileMagic(), readXMLFile(), writeXMLFile():
             - Added.

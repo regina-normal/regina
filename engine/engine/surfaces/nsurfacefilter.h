@@ -42,6 +42,7 @@ namespace regina {
 
 class NNormalSurface;
 class NNormalSurfaceList;
+class NXMLPacketReader;
 
 /**
  * A packet that accepts or rejects normal surfaces.
@@ -172,6 +173,7 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
         virtual int getPacketType() const;
         virtual std::string getPacketName() const;
         virtual void writeTextShort(std::ostream& out) const;
+        static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual void writePacket(NFile& out) const;
         static NSurfaceFilter* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;

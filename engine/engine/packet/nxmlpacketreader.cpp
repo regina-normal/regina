@@ -26,73 +26,72 @@
 
 /* end stub */
 
-/*! \file ncontainer.h
- *  \brief Contains a packet whose entire life purpose is to contain
- *  other packets.
- */
-
-#ifndef __NCONTAINER_H
-#ifndef __DOXYGEN
-#define __NCONTAINER_H
-#endif
-
+#include <cstdlib>
 #include "packet/npacket.h"
+#include "packet/nxmlpacketreader.h"
+#include "packet/packetregistry.h"
 
 namespace regina {
 
-class NXMLPacketReader;
+#define __PACKET_REGISTRY_BODY
 
-/**
- * A packet that simply contains other packets.  Such
- * a packet contains no real data.
- */
-class NContainer : public NPacket {
-    public:
-        static const int packetType;
+#define REGISTER_PACKET(class, type, name) \
+    if (typeID == class::packetType) \
+        return class::getXMLReader(me);
 
-        /**
-         * Default constructor.
-         */
-        NContainer();
+NXMLElementReader* NXMLPacketReader::startSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& subTagProps) {
+    if (subTagName == "packet") {
+        NPacket* me = getPacket();
+        if (! me)
+            return new NXMLPacketReader();
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketName() const;
+        regina::xml::XMLPropertyDict::const_iterator it =
+            subTagProps.find("label");
+        if (it == subTagProps.end())
+            childLabel.clear();
+        else
+            childLabel = (*it).second;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent);
-        virtual void writePacket(NFile& out) const;
-        static NContainer* readPacket(NFile& in, NPacket* parent);
-        virtual bool dependsOnParent() const;
-    
-    protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
-};
+        it = subTagProps.find("typeid");
+        if (it == subTagProps.end())
+            return new NXMLPacketReader();
 
-// Inline functions for NContainer
+        int typeID = atoi((*it).second.c_str());
+        if (typeID <= 0)
+            return new NXMLPacketReader();
 
-inline NContainer::NContainer() {
+        // Pull in cases from the packet registry.
+        #include "packet/packetregistry.h"
+        return new NXMLPacketReader();
+    } else
+        return startContentSubElement(subTagName, subTagProps);
 }
 
-inline void NContainer::writeTextShort(std::ostream& o) const {
-    o << "Container";
+void NXMLPacketReader::endSubElement(const std::string& subTagName,
+        NXMLElementReader* subReader) {
+    if (subTagName == "packet") {
+        NPacket* child = ((NXMLPacketReader*)subReader)->getPacket();
+        if (child) {
+            NPacket* me = getPacket();
+            if (me) {
+                child->setPacketLabel(childLabel);
+                if (! child->getTreeParent())
+                    me->insertChildLast(child);
+            } else
+                delete child;
+        }
+    } else
+        endContentSubElement(subTagName, subReader);
 }
 
-inline void NContainer::writePacket(NFile&) const {
-}
-
-inline bool NContainer::dependsOnParent() const {
-    return false;
-}
-
-inline NPacket* NContainer::internalClonePacket(NPacket*) const {
-    return new NContainer();
-}
-
-inline void NContainer::writeXMLPacketData(std::ostream& out) const {
+void NXMLPacketReader::abort(NXMLElementReader *subReader) {
+    NPacket* me = getPacket();
+    if (me)
+        if (! me->getTreeParent())
+            delete me;
 }
 
 } // namespace regina
-
-#endif
 

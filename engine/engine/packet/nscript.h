@@ -43,6 +43,8 @@
 
 namespace regina {
 
+class NXMLPacketReader;
+
 /**
  * A packet representing a script that can be run.
  * Accessor methods for a script work a line at a time.
@@ -196,6 +198,7 @@ class NScript : public NPacket, public NPropertyHolder {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
+        static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual void writePacket(NFile& out) const;
         static NScript* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;

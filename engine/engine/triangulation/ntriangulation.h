@@ -51,6 +51,7 @@
 namespace regina {
 
 class NGroupPresentation;
+class NXMLPacketReader;
 
 /**
  * Stores the triangulation of a 3-manifold along with its
@@ -197,6 +198,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
         virtual int getPacketType() const;
         virtual std::string getPacketName() const;
         
+        static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual void writePacket(NFile& out) const;
         static NTriangulation* readPacket(NFile& in, NPacket* parent);
         virtual void writeTextShort(std::ostream& out) const;

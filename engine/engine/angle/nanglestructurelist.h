@@ -44,6 +44,8 @@
 
 namespace regina {
 
+class NXMLPacketReader;
+
 /**
  * A packet representing a collection of angle structures on a triangulation.
  * Such a packet must always be a child packet of the triangulation on
@@ -134,6 +136,7 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
         virtual std::string getPacketName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
+        static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual void writePacket(NFile& out) const;
         static NAngleStructureList* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;

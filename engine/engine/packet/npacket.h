@@ -43,6 +43,7 @@
 namespace regina {
 
 class NFile;
+class NXMLPacketReader;
 
 /**
  * Represents a packet of information that may be individually edited or
@@ -61,11 +62,16 @@ class NFile;
  *     The registry utilities will take care of assigning it a value.</li>
  *   <li>All abstract functions should be implemented.</li>
  *   <li>A public function
+ *     <tt>static NXMLPacketReader* getXMLReader(NPacket* parent)</tt>
+ *     should be declared and implemented.  See the notes for getXMLReader()
+ *     for further details.</li>
+ *   <li>A public function
  *     <tt>static ChildClass* readPacket(NFile&, NPacket* parent)</tt>
  *     should be declared and implemented, where \c ChildClass is the name
  *     of the derived class.  An example for NTriangulation is
  *     <tt>static NTriangulation* readPacket(NFile&, NPacket* parent)</tt>.
- *     See the notes for readPacket() for further details.</li>
+ *     New packet types should simply return 0 from this routine since it
+ *     reads from the now obsolete old-style binary file format.</li>
  * </ul>
  *
  * \todo \feature Provide automatic name selection/specification upon
@@ -607,6 +613,38 @@ class NPacket : public ShareableObject {
          * @param out the output stream to which the XML should be written.
          */
         void writeXMLFile(std::ostream& out) const;
+        /**
+         * Returns a newly created XML element reader that will read the
+         * contents of a single XML packet element.  You may assume that
+         * the packet to be read is of the same type as the class in which
+         * you are implementing this routine.
+         * 
+         * The XML element reader should read exactly what
+         * writeXMLPacketData() writes, and vice versa.
+         *
+         * \a parent represents the packet which will become the new
+         * packet's parent in the tree structure, and may be assumed to
+         * have already been read from the file.  This information is
+         * for reference only, and does not need to be used.  The XML
+         * element reader can either insert or not insert the new packet
+         * beneath \a parent in the tree structure as it pleases.  Note
+         * however that \a parent will be 0 if the new packet is to
+         * become a tree matriarch.
+         *
+         * This routine is not actually provided for NPacket itself, but
+         * must be declared and implemented for every packet subclass that
+         * will be instantiated.
+         *
+         * \ifaces Not present.
+         *
+         * @param parent the packet which will become the new packet's
+         * parent in the tree structure, or 0 if the new packet is to be
+         * tree matriarch.
+         * @return the newly created XML element reader.
+         */
+        #ifdef __DOXYGEN
+        static NXMLPacketReader* getXMLReader(NPacket* parent);
+        #endif
 
         /**
          * Writes the packet details to the given old-style binary file.
@@ -665,6 +703,13 @@ class NPacket : public ShareableObject {
          * must be declared to return a pointer to an object of that
          * subclass.  For instance, NTriangulation::readPacket() must
          * be declared to return an NTriangulation*, not simply an NPacket*.
+         *
+         * New packet types should make this routine simply return 0
+         * since this file format is now obsolete, and older calculation
+         * engines will not understand newer packet types anyway.
+         *
+         * \deprecated For the preferred way to read packets from file, see
+         * getXMLReader() and class NXMLPacketReader instead.
          *
          * \pre The given file is open for reading and
          * all above conditions have been satisfied.

@@ -29,14 +29,54 @@
 #include <fstream>
 #include "file/nfile.h"
 #include "file/nfileinfo.h"
+#include "file/nxmlcallback.h"
 #include "file/nxmlfile.h"
-#include "packet/npacket.h"
+#include "packet/ncontainer.h"
+#include "packet/nxmlpacketreader.h"
 #include "utilities/zstream.h"
 
-// TODO: remove ntext.h
-#include "packet/ntext.h"
-
 namespace regina {
+
+namespace {
+    /**
+     * Reads the outermost \<reginadata ...\> XML element.
+     */
+    class ReginaDataReader : public regina::NXMLPacketReader {
+        private:
+            NContainer container;
+                /**< Sits above the entire packet tree read from file. */
+            bool isReginaData;
+                /**< Are we actually reading a \<reginadata ...\> element? */
+
+        public:
+            /**
+             * Create a new top-level reader.
+             */
+            ReginaDataReader() : isReginaData(false) {
+            }
+
+            virtual NPacket* getPacket() {
+                if (isReginaData)
+                    return &container;
+                else
+                    return 0;
+            }
+
+            virtual void startElement(const std::string& n,
+                    const regina::xml::XMLPropertyDict&, NXMLElementReader*) {
+                if (n == "reginadata")
+                    isReginaData = true;
+            }
+
+            virtual void abort(NXMLElementReader*) {
+                // Delete all children of the top-level container.
+                while (NPacket* child = container.getFirstTreeChild()) {
+                    child->makeOrphan();
+                    delete child;
+                }
+            }
+    };
+}
 
 bool writeXMLFile(const char* fileName, NPacket* subtree, bool compressed) {
     if (compressed) {
@@ -53,11 +93,25 @@ bool writeXMLFile(const char* fileName, NPacket* subtree, bool compressed) {
     return true;
 }
 
-NPacket* readXMLFile(const char*) {
-    // TODO: implement XML file read!
-    NText* oops = new NText("XML reading is not yet implemented.");
-    oops->setPacketLabel("XML Data");
-    return oops;
+NPacket* readXMLFile(const char* fileName) {
+    DecompressionStream in(fileName);
+    if (! in)
+        return 0;
+
+    ReginaDataReader reader;
+    regina::NXMLCallback callback(reader, std::cerr);
+    regina::xml::XMLParser::parse_stream(callback, in);
+
+    // See if we read anything.
+    // If so, break it away from the top-level container and return it.
+    NPacket* p = reader.getPacket();
+    if (p) {
+        p = p->getFirstTreeChild();
+        if (p)
+            p->makeOrphan();
+        return p;
+    } else
+        return 0;
 }
 
 NPacket* readFileMagic(const std::string& fileName) {
