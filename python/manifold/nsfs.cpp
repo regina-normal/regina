@@ -52,8 +52,7 @@ void addNSFS() {
         .def(self_ns::str(self))
     ;
 
-    class_<NSFS, bases<regina::NManifold>,
-            std::auto_ptr<NSFS>, boost::noncopyable>("NSFS")
+    class_<NSFS, bases<regina::NManifold>, std::auto_ptr<NSFS> >("NSFS")
         .def(init<unsigned long, bool, optional<unsigned long> >())
         .def(init<const NSFS&>())
         .def("getOrbitGenus", &NSFS::getOrbitGenus)

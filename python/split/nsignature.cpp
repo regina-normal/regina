@@ -42,7 +42,7 @@ namespace {
 
 void addNSignature() {
     class_<NSignature, bases<regina::ShareableObject>,
-            std::auto_ptr<NSignature> >("NSignature",
+            std::auto_ptr<NSignature>, boost::noncopyable>("NSignature",
             init<const NSignature&>())
         .def("getOrder", &NSignature::getOrder)
         .def("parse", &NSignature::parse,

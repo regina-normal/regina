@@ -81,7 +81,7 @@ void addNGroupPresentation() {
     ;
 
     class_<NGroupExpression, bases<regina::ShareableObject>,
-            std::auto_ptr<NGroupExpression> >
+            std::auto_ptr<NGroupExpression>, boost::noncopyable>
             ("NGroupExpression")
         .def(init<const NGroupExpression&>())
         .def("getTerms", getTerms_list)
@@ -102,7 +102,7 @@ void addNGroupPresentation() {
     ;
 
     class_<NGroupPresentation, bases<regina::ShareableObject>,
-            std::auto_ptr<NGroupPresentation> >
+            std::auto_ptr<NGroupPresentation>, boost::noncopyable>
             ("NGroupPresentation")
         .def(init<const NGroupPresentation&>())
         .def("addGenerator", &NGroupPresentation::addGenerator,

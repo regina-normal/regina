@@ -88,7 +88,7 @@ namespace {
 
 void addNAbelianGroup() {
     class_<NAbelianGroup, bases<regina::ShareableObject>,
-            std::auto_ptr<NAbelianGroup> >("NAbelianGroup")
+            std::auto_ptr<NAbelianGroup>, boost::noncopyable>("NAbelianGroup")
         .def(init<const NAbelianGroup&>())
         .def("addRank", &NAbelianGroup::addRank, OL_addRank())
         .def("addTorsionElement", addTorsionElement_large,

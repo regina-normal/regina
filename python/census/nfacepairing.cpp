@@ -55,8 +55,8 @@ namespace {
 }
 
 void addNFacePairing() {
-    class_<NFacePairing, std::auto_ptr<NFacePairing> >("NFacePairing",
-            init<const NFacePairing&>())
+    class_<NFacePairing, std::auto_ptr<NFacePairing>, boost::noncopyable>
+            ("NFacePairing", init<const NFacePairing&>())
         .def("getNumberOfTetrahedra", &NFacePairing::getNumberOfTetrahedra)
         .def("dest", dest_face,
             return_value_policy<reference_existing_object>())

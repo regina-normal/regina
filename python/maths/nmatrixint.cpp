@@ -48,7 +48,7 @@ namespace {
 
 void addNMatrixInt() {
     scope s = class_<NMatrixInt, bases<regina::ShareableObject>,
-            std::auto_ptr<NMatrixInt> >("NMatrixInt",
+            std::auto_ptr<NMatrixInt>, boost::noncopyable>("NMatrixInt",
             init<unsigned long, unsigned long>())
         .def(init<const NMatrixInt&>())
         .def("initialise", &NMatrixInt::initialise)

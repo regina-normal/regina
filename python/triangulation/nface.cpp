@@ -39,7 +39,7 @@ using regina::NFace;
 using regina::NFaceEmbedding;
 
 void addNFace() {
-    class_<NFaceEmbedding>("NFaceEmbedding",
+    class_<NFaceEmbedding, boost::noncopyable>("NFaceEmbedding",
             init<regina::NTetrahedron*, int>())
         .def(init<const NFaceEmbedding&>())
         .def("getTetrahedron", &NFaceEmbedding::getTetrahedron,
