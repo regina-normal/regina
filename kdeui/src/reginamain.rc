@@ -1,0 +1,8 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="reginamain" version="1">
+<MenuBar>
+  <Menu name="tools"><text>&amp;Tools</text>
+    <Action name="python_standalone" />
+  </Menu>
+</MenuBar>
+</kpartgui>
