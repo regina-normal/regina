@@ -38,7 +38,7 @@ long reducedMod(long k, long modBase) {
     if (ans < 0) {
         if ((ans + modBase) <= (-ans))
             return (ans + modBase);
-    } else if (-(ans - modBase) <= ans)
+    } else if (-(ans - modBase) < ans)
         return (ans - modBase);
     return ans;
 }

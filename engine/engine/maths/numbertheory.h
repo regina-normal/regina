@@ -48,8 +48,8 @@ namespace regina {
 
 /**
  * Reduces \a k modulo \a modBase to give the smallest possible
- * absolute value.  For instance, <tt>reducedMod(10,4) = 4</tt> but
- * <tt>reducedMod(10,6) = -4</tt>.  In the case of a tie, the positive
+ * absolute value.  For instance, <tt>reducedMod(4,10) = 4</tt> but
+ * <tt>reducedMod(6,10) = -4</tt>.  In the case of a tie, the positive
  * solution is taken.
  *
  * \pre \a modBase is strictly positive.
