@@ -349,11 +349,13 @@ void NNormalSurface::calculateRealBoundary() {
 }
 
 void NNormalSurface::writeXMLData(std::ostream& out) const {
+    using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
     // Write the opening tag including vector length.
     unsigned vecLen = vector->size();
-    out << "  <surface len=\"" << vecLen << "\" name=\"" << name << "\">";
+    out << "  <surface len=\"" << vecLen << "\" name=\""
+        << xmlEncodeSpecialChars(name) << "\">";
 
     // Write all non-zero entries.
     NLargeInteger entry;
