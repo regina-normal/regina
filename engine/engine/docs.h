@@ -200,6 +200,7 @@
  *  names or parameters of routines are routinely altered.
  *
  *  \todo \bug Audit CORBA classes for use of \c _ptr instead of \c _var.
+ *  \todo \feature Clarify error messages in CORBA server and client.
  */
 
 /*! \page JavaNotes Java User Interface
