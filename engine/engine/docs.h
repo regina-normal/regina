@@ -204,7 +204,6 @@
  *  \todo \opturgent Improve the speed of CORBA file I/O!
  *  \todo \bugurgent Ensure a failed file open/save does not crash the
  *  CORBA engine.
- *  \todo \bugurgent Disable snappea imports in the CORBA engine!
  */
 
 /*! \page JavaNotes Java User Interface
