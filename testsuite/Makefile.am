@@ -13,6 +13,7 @@ INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 SUBDIRS = \
   census \
   maths \
+  surfaces \
   triangulation \
   utilities
 
@@ -24,6 +25,7 @@ regtestsuite_SOURCES = runalltests.cpp
 regtestsuite_LDADD = \
   census/libcensus.a \
   maths/libmaths.a \
+  surfaces/libsurfaces.a \
   triangulation/libtriangulation.a \
   utilities/libutilities.a \
   @LIB_ENGINE@ \

@@ -33,6 +33,7 @@
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/census/testcensus.h"
 #include "testsuite/maths/testmaths.h"
+#include "testsuite/surfaces/testsurfaces.h"
 #include "testsuite/triangulation/testtriangulation.h"
 #include "testsuite/utilities/testutilities.h"
 
@@ -112,6 +113,9 @@ bool runAllTests() {
 
     // Maths:
     addNumberTheory(runner);
+
+    // Surfaces:
+    addNNormalSurfaceList(runner);
 
     // Triangulation:
     addNTriangulation(runner);

@@ -67,6 +67,8 @@ class NXMLNormalSurfaceListReader;
  * Normal surface lists should be created using the routine enumerate(),
  * which is new as of Regina 4.0.
  *
+ * \testpart
+ *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow generating only closed surfaces.
  * \todo \feature Generate facets of the solution space representing

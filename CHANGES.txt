@@ -66,6 +66,8 @@ Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
             - Many new configuration options.  In addition to those
               mentioned above, census data files and Python options can
               also be configured.
+    TEST SUITE:
+        - Added tests for normal surface enumeration and analysis.
 
 Version 3.96  [ 31 October, 2003 ] - Second prerelease for version 4.0.
     OVERALL:
