@@ -42,6 +42,8 @@ Scripts:
         through renaming or deletion
     (4.0) Packet choosers with very large files seem to cause real problems
         (e.g., variable table for snappea census)
+    Fix crash on "import regina" when running scripts from within
+        a konqueror embedded preview
 
 Toolbars:
     Disable "configure toolbars" until delayed icon loading is fixed in
