@@ -29,6 +29,7 @@
 package normal.packetui.angle;
 
 import java.awt.*;
+import java.beans.*;
 import java.math.BigInteger;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -42,7 +43,8 @@ import org.gjt.btools.gui.component.*;
  * An interface through which the user can view the individual
  * angles in an angle structure list.
  */
-public class AngleViewer extends DefaultPacketViewer {
+public class AngleViewer extends DefaultPacketViewer
+        implements PropertyChangeListener {
     /**
      * The angle structure list we are examining.
      */
@@ -59,6 +61,12 @@ public class AngleViewer extends DefaultPacketViewer {
     private AngleTableModel model;
 
     /**
+     * Are we currently in the process of automatically resizing table
+     * columns?
+     */
+    private boolean autoResizing;
+
+    /**
      * Create a new interface to display the individual angles for the
      * given angle structure list.
      *
@@ -67,6 +75,7 @@ public class AngleViewer extends DefaultPacketViewer {
     public AngleViewer(NAngleStructureList angles) {
         super();
         this.angles = angles;
+        this.autoResizing = false;
 
         init();
     }
@@ -92,6 +101,8 @@ public class AngleViewer extends DefaultPacketViewer {
         table.setModel(model);
         model.fireTableStructureChanged();
 
+        int propertyColumns = model.getPropertyColumnCount();
+
         TableColumn col;
         TableCellRenderer renderer = new FancyColumnHeaderRenderer(table);
         for (int i=0; i<model.getColumnCount(); i++) {
@@ -100,6 +111,37 @@ public class AngleViewer extends DefaultPacketViewer {
             col.setHeaderRenderer(renderer);
             col.setHeaderValue(new FancyData(model.getColumnName(i),
                 model.getColumnToolTip(i)));
+
+            // Watch for resizing on angle columns.
+            if (i >= propertyColumns)
+                col.addPropertyChangeListener(this);
+        }
+    }
+
+    /**
+     * For internal use only.
+     * Called when one of the table-related properties (such as column
+     * width) is changed.
+     */
+    public void propertyChange(PropertyChangeEvent e) {
+        if ((! autoResizing) && e.getSource() instanceof TableColumn &&
+                e.getPropertyName().equals("preferredWidth")) {
+            // We're manually resizing a column.
+            // Resize all angle columns.
+            autoResizing = true;
+
+            // Be wary just in case our coordinate model is not currently
+            // hooked up to the table.
+            if (table.getModel() == model &&
+                    e.getNewValue() instanceof Integer) {
+                int newWidth = ((Integer)e.getNewValue()).intValue();
+
+                int totCols = model.getColumnCount();
+                for (int i = model.getPropertyColumnCount(); i < totCols; i++)
+                    table.getColumnModel().getColumn(i).setPreferredWidth(
+                        newWidth);
+            }
+            autoResizing = false;
         }
     }
 
@@ -128,6 +170,24 @@ public class AngleViewer extends DefaultPacketViewer {
         public int getColumnCount() {
             return (int)(angles.getTriangulation().getNumberOfTetrahedra()
                 * 3 + 1);
+        }
+
+        /**
+         * Returns the number of final angle columns (as opposed to
+         * initial property-related columns) in the table.
+         * @return the number of angle columns.
+         */
+        public int getAngleColumnCount() {
+            return (int)(angles.getTriangulation().getNumberOfTetrahedra() * 3);
+        }
+
+        /**
+         * Returns the number of initial property-related columns (as
+         * opposed to final angle columns) in the table.
+         * @return the number of property-related columns.
+         */
+        public int getPropertyColumnCount() {
+            return 1;
         }
 
         /**

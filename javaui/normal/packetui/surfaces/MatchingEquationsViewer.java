@@ -29,6 +29,7 @@
 package normal.packetui.surfaces;
 
 import java.awt.*;
+import java.beans.*;
 import java.math.BigInteger;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -44,7 +45,7 @@ import org.gjt.btools.gui.component.*;
  * used to create a normal surface list.
  */
 public class MatchingEquationsViewer extends DefaultPacketViewer
-        implements PacketInfoUI {
+        implements PacketInfoUI, PropertyChangeListener {
     /**
      * The normal surface list we are examining.
      */
@@ -71,6 +72,11 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
     private JLabel flavour;
 
     /**
+     * Are we currently in the process of automatically resizing table columns?
+     */
+    private boolean autoResizing;
+
+    /**
      * Create a new interface to display the matching equations for the
      * given normal surface list.
      */
@@ -78,6 +84,8 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
         super();
         this.list = (NNormalSurfaceList)list;
         this.matchingEquations = null;
+        this.autoResizing = false;
+
         init();
     }
 
@@ -119,6 +127,9 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
             col.setHeaderRenderer(renderer);
             col.setHeaderValue(new FancyData(model.getColumnName(i),
                 Coordinates.getCoordinateDesc(list.getFlavour(), triang, i)));
+
+            // Watch for resizing on table columns.
+            col.addPropertyChangeListener(this);
         }
     }
 
@@ -135,6 +146,31 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
     public void cleanUp() {
         if (matchingEquations != null)
             matchingEquations.destroy();
+    }
+
+    /**
+     * For internal use only.
+     * Called when one of the table-related properties (such as column
+     * width) is changed.
+     */
+    public void propertyChange(PropertyChangeEvent e) {
+        if ((! autoResizing) && e.getSource() instanceof TableColumn &&
+                e.getPropertyName().equals("preferredWidth") &&
+                e.getNewValue() instanceof Integer) {
+            // We're manually resizing a column.
+            // Resize all columns.
+            autoResizing = true;
+
+            int newWidth = ((Integer)e.getNewValue()).intValue();
+
+            // Be wary just in case our coordinate model is not currently
+            // hooked up to the table.
+            int totCols = table.getModel().getColumnCount();
+            for (int i = 0; i < totCols; i++)
+                table.getColumnModel().getColumn(i).setPreferredWidth(newWidth);
+
+            autoResizing = false;
+        }
     }
 
     /**

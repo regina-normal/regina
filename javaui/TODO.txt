@@ -26,8 +26,6 @@ Menus:
     Provide NTriangulation::isIsomorphicTo().
 
 Normal Surfaces:
-    For matching equations and normal surface coordinates, resizing one
-        column should imply resizing all coordinate columns.
     Right-align coordinates but have padding between numbers and column edge.
     Allow modification of SurfaceViewer.maxAutoCalcTetrahedra.
 

@@ -30,6 +30,7 @@ package normal.packetui.surfaces;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import java.math.BigInteger;
 import java.util.*;
 import javax.swing.*;
@@ -51,7 +52,7 @@ import org.gjt.btools.gui.component.*;
  * @see #updateSet
  */
 public class CoordinateViewer extends DefaultPacketViewer
-        implements PacketInfoUI, ItemListener {
+        implements PacketInfoUI, ItemListener, PropertyChangeListener {
     /**
      * The normal surface set we are examining.
      */
@@ -121,6 +122,12 @@ public class CoordinateViewer extends DefaultPacketViewer
     private boolean updatingFlavours;
 
     /**
+     * Are we currently in the process of automatically resizing table
+     * columns?
+     */
+    private boolean autoResizing;
+
+    /**
      * Create a new interface to display the normal surface coordinates for the
      * given normal surface set.
      *
@@ -139,6 +146,7 @@ public class CoordinateViewer extends DefaultPacketViewer
         this.topPane = topPane;
         this.isEditingElsewhere = false;
         this.updatingFlavours = false;
+        this.autoResizing = false;
         init();
 
         // Set the initial states of the action buttons.
@@ -285,6 +293,8 @@ public class CoordinateViewer extends DefaultPacketViewer
             table.getColumnModel().getColumn(4).setCellRenderer(renderer);
         }
 
+        int propertyColumns = model.getPropertyColumnCount();
+
         TableColumn col;
         renderer = new FancyColumnHeaderRenderer(table);
         for (int i=0; i<model.getColumnCount(); i++) {
@@ -293,12 +303,16 @@ public class CoordinateViewer extends DefaultPacketViewer
             col.setHeaderRenderer(renderer);
             col.setHeaderValue(new FancyData(model.getColumnName(i),
                 model.getColumnToolTip(i)));
+
+            // Watch for resizing on coordinate columns.
+            if (i >= propertyColumns)
+                col.addPropertyChangeListener(this);
         }
 
         // Some columns might need to be a little wider than default.
         // Subcomplex link:
         table.getColumnModel().getColumn(
-            (set.isEmbeddedOnly() ? 5 : 3)).setPreferredWidth(120);
+            propertyColumns - 2).setPreferredWidth(120);
     }
 
     /**
@@ -359,6 +373,33 @@ public class CoordinateViewer extends DefaultPacketViewer
     }
 
     /**
+     * For internal use only.
+     * Called when one of the table-related properties (such as column
+     * width) is changed.
+     */
+    public void propertyChange(PropertyChangeEvent e) {
+        if ((! autoResizing) && e.getSource() instanceof TableColumn &&
+                e.getPropertyName().equals("preferredWidth")) {
+            // We're manually resizing a column.
+            // Resize all coordinate columns.
+            autoResizing = true;
+
+            // Be wary just in case our coordinate model is not currently
+            // hooked up to the table.
+            if (table.getModel() == model &&
+                    e.getNewValue() instanceof Integer) {
+                int newWidth = ((Integer)e.getNewValue()).intValue();
+
+                int totCols = model.getColumnCount();
+                for (int i = model.getPropertyColumnCount(); i < totCols; i++)
+                    table.getColumnModel().getColumn(i).setPreferredWidth(
+                        newWidth);
+            }
+            autoResizing = false;
+        }
+    }
+
+    /**
      * Provides a table model for viewing the normal surface coordinates.
      */
     private class CoordTableModel extends AbstractTableModel {
@@ -396,6 +437,25 @@ public class CoordinateViewer extends DefaultPacketViewer
             else
                 return Coordinates.getNumberOfCoordinates(flavour,
                     set.getTriangulation()) + 5;
+        }
+
+        /**
+         * Returns the number of final coordinate columns (as opposed to
+         * initial property-related columns) in the table.
+         * @return the number of coordinate columns.
+         */
+        public int getCoordColumnCount() {
+            return Coordinates.getNumberOfCoordinates(flavour,
+                set.getTriangulation());
+        }
+
+        /**
+         * Returns the number of initial property-related columns (as
+         * opposed to final coordinate columns) in the table.
+         * @return the number of property-related columns.
+         */
+        public int getPropertyColumnCount() {
+            return (set.isEmbeddedOnly() ? 7 : 5);
         }
 
         /**

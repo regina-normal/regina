@@ -127,6 +127,9 @@ Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
             - Renamed getUI() to getPacketUI() to avoid clashing with j2sdk1.4.
         normal.options.NormalOptionSet:
             - Default "Display Icon" option changed from true to false.
+        normal.packetui:
+            - Resizing one coordinate column in various coordinate
+              viewers now resizes all coordinate columns.
     UTILITIES:
         regconvert, regfiledump, regfiletype, sigcensus, tricensus:
             - Added.
