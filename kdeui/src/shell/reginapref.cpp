@@ -61,6 +61,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
     generalPrefs->cbAutoFileExtension->setChecked(prefSet.autoFileExtension);
     generalPrefs->cbDisplayIcon->setChecked(prefSet.displayIcon);
+    generalPrefs->editTreeJumpSize->setText(
+        QString::number(prefSet.treeJumpSize));
 
     triPrefs->comboEditMode->setCurrentItem(
         prefSet.triEditMode == ReginaPrefSet::DirectEdit ? 0 : 1);
@@ -78,20 +80,32 @@ int ReginaPreferences::exec() {
 
 void ReginaPreferences::slotApply() {
     // Propagate changes to the main window.
+    bool ok;
+    unsigned uintVal;
+
     prefSet.autoDock = generalPrefs->cbAutoDock->isChecked();
     prefSet.displayIcon = generalPrefs->cbDisplayIcon->isChecked();
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
 
+    uintVal = generalPrefs->editTreeJumpSize->text().toUInt(&ok);
+    if (ok && uintVal > 0)
+        prefSet.treeJumpSize = uintVal;
+    else {
+        KMessageBox::error(this, i18n("The packet tree jump size "
+            "must be a positive integer.  This is the number of steps "
+            "that a packet moves when Jump Up or Jump Down is selected."));
+        generalPrefs->editTreeJumpSize->setText(
+            QString::number(prefSet.treeJumpSize));
+    }
+
     prefSet.triEditMode = (triPrefs->comboEditMode->currentItem() == 0 ?
         ReginaPrefSet::DirectEdit : ReginaPrefSet::Dialog);
 
-    bool ok;
-    unsigned uintVal =
-        triPrefs->editSurfacePropsThreshold->text().toUInt(&ok);
+    uintVal = triPrefs->editSurfacePropsThreshold->text().toUInt(&ok);
     if (ok)
         prefSet.triSurfacePropsThreshold = uintVal;
     else {
-        KMessageBox::error(triPrefs, i18n("The surface calculation "
+        KMessageBox::error(this, i18n("The surface calculation "
             "threshold must be a non-negative integer.  "
             "This is the maximum number of tetrahedra for which normal "
             "surface properties will be calculated automatically."));
@@ -116,6 +130,22 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QVBox(parent) {
     cbDisplayIcon = new QCheckBox(i18n("Display icon"), this);
     QWhatsThis::add(cbDisplayIcon, i18n("Display the large Regina icon "
         "beneath the packet tree."));
+
+    // Set up the tree jump size.
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+
+    QLabel* label = new QLabel(i18n("Packet tree jump size:"), box);
+    editTreeJumpSize = new KLineEdit(box);
+    editTreeJumpSize->setMaxLength(
+         10 /* ridiculously high number of digits */);
+    QIntValidator* val = new QIntValidator(box);
+    val->setBottom(1);
+    editTreeJumpSize->setValidator(val);
+    QString msg = i18n("The number of steps that a packet moves when Jump Up "
+        "or Jump Down is selected.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(editTreeJumpSize, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);

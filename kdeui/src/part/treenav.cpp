@@ -36,9 +36,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-// TODO: Allow the page size to be configured.
-#define TREE_PAGE_SIZE 10
-
 void ReginaPart::moveShallow() {
     if (! checkReadWrite())
         return;
@@ -179,7 +176,7 @@ void ReginaPart::movePageUp() {
         return;
     }
 
-    packet->moveUp(TREE_PAGE_SIZE);
+    packet->moveUp(prefs.treeJumpSize);
 }
 
 void ReginaPart::movePageDown() {
@@ -201,7 +198,7 @@ void ReginaPart::movePageDown() {
         return;
     }
 
-    packet->moveDown(TREE_PAGE_SIZE);
+    packet->moveDown(prefs.treeJumpSize);
 }
 
 void ReginaPart::moveTop() {

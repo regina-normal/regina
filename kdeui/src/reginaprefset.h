@@ -47,6 +47,9 @@ struct ReginaPrefSet {
         /**< Should filenames be given an automatic extension? */
     bool displayIcon;
         /**< Should we display the pretty Regina icon? */
+    unsigned treeJumpSize;
+        /**< The number of steps corresponding to a jump up or down in
+             the packet tree. */
     TriEditMode triEditMode;
         /**< The default mode for editing triangulations. */
     unsigned triSurfacePropsThreshold;
@@ -64,6 +67,7 @@ inline ReginaPrefSet::ReginaPrefSet() :
         autoDock(true),
         autoFileExtension(true),
         displayIcon(true),
+        treeJumpSize(10),
         triEditMode(Dialog),
         triSurfacePropsThreshold(6) {
 }
