@@ -94,12 +94,12 @@ module Regina {
         long getVersionMinor();
         string getVersionString();
         Maths::NMatrixInt makeMatchingEquations(
-            in Triangulation::NTriangulation triangulation, in long flavour);
+            in Triangulation::NTriangulation triang, in long flavour);
         Packet::NPacket readFromFile(in string fileName);
         Triangulation::NTriangulation readSnapPea(in string fileName);
         void smithNormalForm(in Maths::NMatrixInt matrix);
         long testEngine(in long value);
-        boolean writeToFile(in string fileName, in Packet::NPacket packet);
+        boolean writeToFile(in string fileName, in Packet::NPacket basePacket);
     };
 };
 
