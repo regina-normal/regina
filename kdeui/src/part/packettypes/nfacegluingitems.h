@@ -35,6 +35,8 @@
 
 #include "triangulation/nperm.h"
 
+#include "../../reginaprefset.h"
+
 #include <qtable.h>
 
 /**
@@ -75,6 +77,9 @@ class FaceGluingItem : public QTableItem {
         regina::NPerm adjPerm;
             /**< The adjacent tetrahedron gluing. */
 
+        const ReginaPrefSet::TriEditMode& editMode;
+            /**< Determines the style of cell editor that is created. */
+
         bool error;
             /**< Are we currently displaying an error message? */
     public:
@@ -82,9 +87,11 @@ class FaceGluingItem : public QTableItem {
          * Constructors.  The first constructor is for a boundary face,
          * the second for a face that is glued elsewhere.
          */
-        FaceGluingItem(QTable* table);
-        FaceGluingItem(QTable* table, int myFace, unsigned long destTet,
-            const regina::NPerm& gluingPerm);
+        FaceGluingItem(QTable* table,
+            const ReginaPrefSet::TriEditMode& useEditMode);
+        FaceGluingItem(QTable* table,
+            const ReginaPrefSet::TriEditMode& useEditMode, int myFace,
+            unsigned long destTet, const regina::NPerm& gluingPerm);
 
         /**
          * Query properties.
@@ -94,6 +101,12 @@ class FaceGluingItem : public QTableItem {
         int getMyFace() const;
         int getAdjacentFace() const;
         const regina::NPerm& getAdjacentTetrahedronGluing() const;
+
+        /**
+         * Find the table entry corresponding to the partner of this
+         * face, if any.
+         */
+        FaceGluingItem* getPartner();
 
         /**
          * Adjust the adjacent tetrahedron number.  This will need to be used
@@ -115,6 +128,12 @@ class FaceGluingItem : public QTableItem {
          */
         static QString destString(int srcFace, int destTet,
                 const regina::NPerm& gluing);
+
+        /**
+         * Break any existing face pairing.  The table cell for the
+         * partner is repainted, but this table cell is not.
+         */
+        void unjoin();
 
         /**
          * Display the given error to the user if no error is already

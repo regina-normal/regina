@@ -34,6 +34,7 @@
 #define __NTRIGLUINGS_H
 
 #include "../packettabui.h"
+#include "../../reginaprefset.h"
 
 class KAction;
 class KActionCollection;
@@ -73,12 +74,18 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         QPtrList<KAction> triActionList;
         QPtrList<KAction> enableWhenWritable;
 
+        /**
+         * Preferences
+         */
+        ReginaPrefSet::TriEditMode editMode;
+
     public:
         /**
          * Constructor and destructor.
          */
         NTriGluingsUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI, bool readWrite);
+                PacketTabbedUI* useParentUI,
+                ReginaPrefSet::TriEditMode newMode, bool readWrite);
         ~NTriGluingsUI();
 
         /**
@@ -89,6 +96,12 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * available actions.
          */
         void fillToolBar(KToolBar* bar);
+
+        /**
+         * Query and modify the edit mode.
+         */
+        ReginaPrefSet::TriEditMode getEditMode() const;
+        void setEditMode(ReginaPrefSet::TriEditMode mode);
 
         /**
          * PacketEditorTab overrides.
@@ -126,5 +139,13 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          */
         void notifyGluingsChanged();
 };
+
+inline ReginaPrefSet::TriEditMode NTriGluingsUI::getEditMode() const {
+    return editMode;
+}
+
+inline void NTriGluingsUI::setEditMode(ReginaPrefSet::TriEditMode mode) {
+    editMode = mode;
+}
 
 #endif

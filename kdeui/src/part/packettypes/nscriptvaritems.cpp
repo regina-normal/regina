@@ -34,9 +34,9 @@
 #include "../packetchooser.h"
 #include "../packetmanager.h"
 
+#include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <qlineedit.h>
 #include <qregexp.h>
 #include <qtable.h>
 #include <qvalidator.h>
@@ -56,7 +56,7 @@ ScriptVarNameItem::ScriptVarNameItem(QTable* table, const QString& name) :
 }
 
 QWidget* ScriptVarNameItem::createEditor() const {
-    QLineEdit* editor = new QLineEdit(text(), table()->viewport());
+    KLineEdit* editor = new KLineEdit(text(), table()->viewport());
     editor->setFrame(false);
     editor->setValidator(new QRegExpValidator(rePythonIdentifier, editor));
     editor->selectAll();

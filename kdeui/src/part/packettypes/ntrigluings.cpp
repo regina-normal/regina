@@ -45,8 +45,9 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
-        PacketEditorTab(useParentUI), tri(packet) {
+        PacketTabbedUI* useParentUI,
+        ReginaPrefSet::TriEditMode newMode, bool readWrite) :
+        PacketEditorTab(useParentUI), tri(packet), editMode(newMode) {
     // Set up the table of face gluings.
 
     faceTable = new QTable(0, 5, 0);
@@ -242,11 +243,11 @@ void NTriGluingsUI::refresh() {
             adj = tet->getAdjacentTetrahedron(face);
             if (adj)
                 faceTable->setItem(tetNum, 4 - face, new FaceGluingItem(
-                    faceTable, face, tri->getTetrahedronIndex(adj),
+                    faceTable, editMode, face, tri->getTetrahedronIndex(adj),
                     tet->getAdjacentTetrahedronGluing(face)));
             else
                 faceTable->setItem(tetNum, 4 - face,
-                    new FaceGluingItem(faceTable));
+                    new FaceGluingItem(faceTable, editMode));
         }
     }
 
@@ -269,7 +270,8 @@ void NTriGluingsUI::addTet() {
     faceTable->setNumRows(newRow + 1);
     faceTable->setItem(newRow, 0, new TetNameItem(faceTable, newRow, ""));
     for (int face = 0; face < 4; face++)
-        faceTable->setItem(newRow, 4 - face, new FaceGluingItem(faceTable));
+        faceTable->setItem(newRow, 4 - face, new FaceGluingItem(
+            faceTable, editMode));
 
     setDirty(true);
 }
