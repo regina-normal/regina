@@ -78,12 +78,12 @@ jar_corba = ../$(JAVA_CORBA)
 $(LICENSE) : ../$(LICENSE)
 	$(COPY) ../$(LICENSE) $(LICENSE)
 
-uibin : $(made_class_files_ui)
+uibin : prepcorba $(made_class_files_ui)
 jnibin : $(made_class_files_jni)
-corbabin : $(made_class_files_corba)
+corbabin : prepcorba $(made_class_files_corba)
 
 uijar : $(jar_ui)
-$(jar_ui) : $(made_class_files_ui) $(java_aux_files) $(LICENSE)
+$(jar_ui) : prepcorba $(made_class_files_ui) $(java_aux_files) $(LICENSE)
 	$(JAR) -cf $(jar_ui) $(class_mask_ui) $(java_aux_mask) $(LICENSE)
 
 jnijar : $(jar_jni)
@@ -91,7 +91,7 @@ $(jar_jni) : $(made_class_files_jni) $(LICENSE)
 	$(JAR) -cf $(jar_jni) $(class_mask_jni) $(LICENSE)
 
 corbajar : $(jar_corba)
-$(jar_corba) : $(made_class_files_corba) $(LICENSE)
+$(jar_corba) : prepcorba $(made_class_files_corba) $(LICENSE)
 	$(JAR) -cf $(jar_corba) $(class_mask_corba) $(LICENSE)
 
 prepcorba : $(java_files_corba_idl)
