@@ -8,6 +8,10 @@ Regina - A Normal Surface Theory Calculator
     for both the calculation engine and the Java user interface, see
     CHANGES.txt in the same directory as this file.
 
+Version 3.1  [ (under development) ]
+
+    - Massive optimisation of census code.
+
 Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
 
     - Moved from old impenetrable binary data files to new compressed
