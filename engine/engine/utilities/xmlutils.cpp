@@ -159,4 +159,12 @@ void XMLParser::parse_stream(XMLParserCallback& callback, std::istream& file,
     delete[] buf;
 }
 
+std::string xmlEncodeSpecialChars(const std::string& original) {
+    xmlChar* ans = ::xmlEncodeSpecialChars(0,
+        (const xmlChar*)(original.c_str()));
+    std::string ansStr((const char*)ans);
+    delete[] ans;
+    return ansStr;
+}
+
 } } // namespace regina::xml

@@ -27,8 +27,9 @@
 /* end stub */
 
 /*! \file xmlutils.h
- *  \brief Various classes and routines for XML manipulation taken or
- *  modified from the libxml++ library.
+ *  \brief Various classes and routines for XML manipulation, mostly taken
+ *  or modified from the libxml++ library.  The libxml2 library is used
+ *  to do most of the underlying work.
  *
  *  The libxml++ library is copyright (C) 2000 by Ari Johnson, and is
  *  covered by the GNU Lesser General Public License.
@@ -47,8 +48,9 @@
 namespace regina {
 
 /**
- * Various classes and routines for XML manipulation taken or modified from
- * the libxml++ library.
+ * Various classes and routines for XML manipulation, mostly taken or
+ * modified from the libxml++ library.  The libxml2 library is used
+ * to do most of the underlying work.
  *
  * See the xmlutils.h file documentation for libxml++ license details.
  */
@@ -236,6 +238,20 @@ class XMLParser {
          */
         static void _fatal_error(void *_parser, const char *fmt, ...);
 };
+
+/**
+ * Returns the given string with special characters converted to XML
+ * entities.  For instance, the string <tt>"a \< b"</tt> would be
+ * converted to <tt>"a \&lt; b"</tt>.
+ *
+ * @param original the string to convert; this string will not be
+ * changed.
+ * @return the converted string with special characters replaced by
+ * XML entities.
+ *
+ * @author Ben Burton
+ */
+std::string xmlEncodeSpecialChars(const std::string& original);
 
 // Inline functions for XMLParserCallback
 
