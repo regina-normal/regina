@@ -36,6 +36,7 @@
 #endif
 
 #include "utilities/ndoublelist.h"
+#include "utilities/nstring.h"
 
 /**
  * Recasts a void pointer as an unsigned integer, even if the compiler does
@@ -44,24 +45,50 @@
  */
 #define PVOID_TO_UNSIGNED(p) (*((unsigned*)((void*)&(p))))
 
+/**
+ * Computes a hash value for the given pointer.
+ *
+ * @param obj the object whose hash value should be computed.
+ * @return the corresponding hash value.
+ */
 template <class T>
-class NPointerSetIterator;
+unsigned hashMap(const T* obj) {
+    return PVOID_TO_UNSIGNED(obj);
+}
 
 /**
- * A set of pointers to objects of type \c T designed for speed.
+ * Computes a hash value for the given string.
+ *
+ * @param str the string whose hash value should be computed.
+ * @return the corresponding hash value.
+ */
+unsigned hashMap(const NString& str);
+
+template <class T>
+class NHashSetIterator;
+
+/**
+ * A set of objects of type \c T designed for speed.
  * The set is implemented using a hash table, so insertion, removal and
  * lookup are all fast.
+ *
+ * \pre Calling <tt>hashMap(t)</tt> will return a hash value for an
+ * object <tt>t</tt> of type <tt>T</tt>.
+ * \pre Type \c T has a default constructor and overloads the assignment
+ * (<tt>=</tt>) operator.
+ * \pre Type \c T supports the test <tt>a==b</tt>, where \c a and \c b
+ * are of type <tt>T</tt>.
  *
  * \ifaces Not present.
  */
 template <class T>
-class NPointerSet {
+class NHashSet {
     public:
-        typedef NPointerSetIterator<T> Iterator;
+        typedef NHashSetIterator<T> Iterator;
             /**< Iterator type used for running through all set elements. */
 
     protected:
-        NDoubleList<T*>* hashTable;
+        NDoubleList<T>* hashTable;
             /**< Hash table containing a list for each hash value. */
         unsigned hashTableSize;
             /**< Number of distinct hash values. */
@@ -76,16 +103,16 @@ class NPointerSet {
          * allow.  This will default to a reasonable value.  A prime
          * number is advisable.
          */
-        NPointerSet(unsigned newHashTableSize = 53) :
-                hashTable(new NDoubleList<T*>[newHashTableSize]),
+        NHashSet(unsigned newHashTableSize = 53) :
+                hashTable(new NDoubleList<T>[newHashTableSize]),
                 hashTableSize(newHashTableSize), nElements(0) {
         }
 
         /**
-         * Destroys the set.  The objects to which individual set
-         * elements point will not be deallocated.
+         * Destroys the set.  If individual elements are pointers,
+         * the objects to which they point will not be deallocated.
          */
-        virtual ~NPointerSet() {
+        virtual ~NHashSet() {
             delete[] hashTable;
         }
 
@@ -99,52 +126,56 @@ class NPointerSet {
         }
 
         /**
-         * Determines if the given pointer is contained in the set.
+         * Determines if the given object is contained in the set.
          * The hash table implementation ensures that this operation is
          * reasonably fast.
          *
-         * @param ptr the pointer to search for.
-         * @return \c true if and only if the given pointer was found.
+         * @param obj the object to search for.
+         * @return \c true if and only if the given object was found.
          */
-        bool contains(T* ptr) const {
-            unsigned hashValue = PVOID_TO_UNSIGNED(ptr) % hashTableSize;
-            return (hashTable[hashValue].position(ptr) >= 0);
+        bool contains(const T& obj) const {
+            unsigned hashValue = hashMap(obj) % hashTableSize;
+            return (hashTable[hashValue].position(obj) >= 0);
         }
 
         /**
-         * Adds the given pointer to the set.
-         * If the given pointer is already present in the set, this
+         * Adds the given object to the set.
+         * If the given object is already present in the set, this
          * routine does nothing.
          *
-         * @param ptr the pointer to add to the set.
+         * @param obj the object to add to the set.
+         * @return \c true if the given object was added to the set, or
+         * \c false if the given object was already present in the set.
          */
-        void add(T* ptr) {
-            unsigned hashValue = PVOID_TO_UNSIGNED(ptr) % hashTableSize;
-            if (hashTable[hashValue].position(ptr) < 0) {
-                hashTable[hashValue].addLast(ptr);
+        bool add(const T& obj) {
+            unsigned hashValue = hashMap(obj) % hashTableSize;
+            if (hashTable[hashValue].position(obj) < 0) {
+                hashTable[hashValue].addLast(obj);
                 nElements++;
-            }
+                return true;
+            } else
+                return false;
         }
 
         /**
-         * Removes the given pointer from the set.
-         * Note that the object pointed to is not deallocated.
+         * Removes the given object from the set.
+         * If the given object is a pointer, the object to which it
+         * points will not be deallocated.
          *
-         * \pre The given pointer is already present in the set.
+         * \pre The given object is already present in the set.
          *
-         * @param ptr the pointer to remove from the set.
-         * @return the pointer that was removed.
+         * @param obj the object to remove from the set.
+         * @return the object that was removed.
          */
-        T* remove(T* ptr) {
+        T remove(const T& obj) {
             nElements--;
-            unsigned hashValue = PVOID_TO_UNSIGNED(ptr) % hashTableSize;
-            return hashTable[hashValue].remove(ptr);
+            unsigned hashValue = hashMap(obj) % hashTableSize;
+            return hashTable[hashValue].remove(obj);
         }
 
         /**
-         * Removes all elements from the set.
-         * Note that the objects pointed to by the removed pointers
-         * are not deallocated.
+         * Removes all elements from the set.  If individual elements are
+         * pointers, the objects to which they point will not be deallocated.
          */
         void flush() {
             for (unsigned i=0; i<hashTableSize; i++)
@@ -157,21 +188,21 @@ class NPointerSet {
 };
 
 /**
- * An iterator used for running through elements of an NPointerSet.
+ * An iterator used for running through elements of an NHashSet.
  *
  * \ifaces Not present.
  */
 template <class T>
-class NPointerSetIterator {
+class NHashSetIterator {
     public:
-        typedef NPointerSet<T> Set;
+        typedef NHashSet<T> Set;
             /**< The set class whose elements we can iterate through. */
 
     protected:
-        typedef NDoubleList<T*> List;
-            /**< List used by the set class to store pointers for an
+        typedef NDoubleList<T> List;
+            /**< List used by the set class to store objects for an
                  individual hash value. */
-        typedef NDoubleListIterator<T*> ListIterator;
+        typedef NDoubleListIterator<T> ListIterator;
             /**< Iterator for running through elements of a List. */
 
     protected:
@@ -187,7 +218,7 @@ class NPointerSetIterator {
         /**
          * Creates a new past-the-end iterator.
          */
-        NPointerSetIterator() : whichSet(0) {
+        NHashSetIterator() : whichSet(0) {
         }
 
         /**
@@ -196,7 +227,7 @@ class NPointerSetIterator {
          *
          * @param basis the set whose elements we will iterate through.
          */
-        NPointerSetIterator(const Set& basis) {
+        NHashSetIterator(const Set& basis) {
             init(basis);
         }
 
@@ -249,7 +280,7 @@ class NPointerSetIterator {
          *
          * @return the element currently pointed to.
          */
-        T* operator *() {
+        T& operator *() const {
             return *it;
         }
 
@@ -259,7 +290,7 @@ class NPointerSetIterator {
          * @return \c false if this iterator points to a valid element
          * of the collection, or \c true if this iterator is past-the-end.
          */
-        bool done() {
+        bool done() const {
             if (whichSet == 0)
                 return true;
             return (whichList >= whichSet->hashTableSize);
@@ -268,6 +299,64 @@ class NPointerSetIterator {
     friend class List;
         /**< Allow access to private members. */
 };
+
+/**
+ * A set of pointers to objects of type \c T implemented using a hash table.
+ *
+ * \ifaces Not present.
+ */
+template <class T>
+class NPointerSet : public NHashSet<T*> {
+    public:
+        /**
+         * Creates a new empty set.
+         *
+         * @param newHashTableSize the number of distinct hash values to
+         * allow.  This will default to a reasonable value.  A prime
+         * number is advisable.
+         */
+        NPointerSet(unsigned newHashTableSize = 53) :
+                NHashSet<T*>(newHashTableSize) {
+        }
+};
+
+/**
+ * An iterator used for running through elements of an NPointerSet.
+ *
+ * \ifaces Not present.
+ */
+template <class T>
+class NPointerSetIterator : public NHashSetIterator<T*> {
+    public:
+        /**
+         * Creates a new past-the-end iterator.
+         */
+        NPointerSetIterator() : NHashSetIterator<T*>() {
+        }
+
+        /**
+         * Creates a new iterator pointing at the first element of
+         * the given set.
+         *
+         * @param basis the set whose elements we will iterate through.
+         */
+        NPointerSetIterator(const Set& basis) : NHashSetIterator<T*>(basis) {
+        }
+};
+
+/**
+ * A set of strings implemented using a hash table.
+ *
+ * \ifaces Not present.
+ */
+typedef NHashSet<NString> NStringSet;
+
+/**
+ * An iterator used for running through elements of an NStringSet.
+ *
+ * \ifaces Not present.
+ */
+typedef NHashSetIterator<NString> NStringSetIterator;
 
 #endif
 
