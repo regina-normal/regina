@@ -1,4 +1,17 @@
-# Create a new (3,4,7) layered solid torus.
+##########
+#
+#  Sample Python Script
+#
+#  Illustrates various queries and actions that can be performed upon a
+#  3-manifold triangulation and its normal surfaces.
+#
+#  See the file "triangulation.session" for the results of running this
+#  script.
+#
+##########
+
+# Create a new (3,4,7) layered solid torus.  This is a 3-tetrahedron
+# triangulation of a solid torus.
 t = regina.NTriangulation()
 t.insertLayeredSolidTorus(3,4)
 print t
@@ -6,14 +19,26 @@ print t
 # Dump skeletal information for the triangulation.
 print t.toStringLong()
 
-# Calculate various properties of the triangulation.
+# Calculate some algebraic properties of the triangulation.
 print t.getHomologyH1()
 print t.getHomologyH1Bdry()
+
+# Test for 0-efficiency, which involves searching for particular types
+# of normal surface.
 print t.isZeroEfficient()
 
 # Get a list of normal surfaces in standard tri-quad coordinates.
 from regina import NNormalSurfaceList
 surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
+
+# Verify that the normal surface list has been made a child packet of the
+# triangulation.  This happens automatically whenever the normal
+# surfaces (or angle structures) of a triangulation are enumerated.
+if surfaces.getTreeParent() == t:
+    print "OK: Parent-child relationship is correct."
+else:
+    print "ERROR: Parent-child relationship is incorrect."
+
 
 # Dump the entire list of vertex normal surfaces.
 print surfaces.toStringLong()
