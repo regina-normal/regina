@@ -75,12 +75,29 @@ typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
  * as a member of class Engine.
  */
 class NCensus {
+    public:
+        static const int PURGE_NON_MINIMAL;
+            /**< Indicates that non-minimal triangulations may be ignored. */
+        static const int PURGE_NON_PRIME;
+            /**< Indicates that any triangulation that is not prime (i.e.,
+                 can be written as a non-trivial connected sum) and any
+                 bounded triangulation that is reducible over a disc may be
+                 ignored. */
+        static const int PURGE_NON_MINIMAL_PRIME;
+            /**< Indicates that any triangulation that is not prime (i.e.,
+                 can be written as a non-trivial connected sum), any
+                 bounded triangulation that is reducible over a disc and
+                 any other non-minimal triangulations may be ignored. */
+
     private:
         NPacket* parent;
             /**< The argument passed to formCensus(). */
         NBoolSet finiteness;
             /**< The argument passed to formCensus(). */
         NBoolSet orientability;
+            /**< The argument passed to formCensus(). */
+
+        int whichPurge;
             /**< The argument passed to formCensus(). */
 
         AcceptTriangulation sieve;
@@ -125,6 +142,14 @@ class NCensus {
          * incorporated directly into the census algorithm to give a vast
          * performance increase.
          *
+         * Parameter \a whichPurge may be used to further avoid constructing
+         * triangulations satisfying particular constraints (such as
+         * non-minimality).  This can significantly speed up the census.
+         * In this case however not all such triangulations will be
+         * avoided, but it is guaranteed that every triangulation that
+         * does \e not satisfy the constraints defined by \a whichPurge
+         * will be produced.
+         *
          * Only valid triangulations will be produced; see
          * NTriangulation::isValid() for further details.
          *
@@ -138,8 +163,8 @@ class NCensus {
          * routine will only return once the census is complete.
          *
          * \ifaces This routine is a member of class Engine.
-         * Parameters \a sieve and \a sieveArgs are not present
-         * (and will be treated as \c null).
+         * Parameters \a whichPurge, \a sieve and \a sieveArgs are not present
+         * (and will be treated as 0).
          *
          * @param parent the packet beneath which members of the census will
          * be placed.
@@ -168,6 +193,15 @@ class NCensus {
          * or 0 if no progress reporting is required.  If non-zero,
          * \a manager must point to a progress manager for which
          * NProgressManager::isStarted() is still \c false.
+         * @param whichPurge specifies which triangulations we may further 
+         * avoid constructing (see the function notes above for details).
+         * This should be a bitwise OR of purge constants defined in this
+         * class, or 0 if no additional pruning should take place.
+         * If a variety of purge constants are bitwise ORed together, a
+         * triangulation satisfying \e any of these constraints may be
+         * avoided.  Note that not all such triangulations will be
+         * avoided, but enough are avoided that the performance increase
+         * is noticeable.
          * @param sieve an additional constraint function that may be
          * used to exclude certain triangulations from the census.  If
          * this parameter is non-zero, each triangulation produced (after
@@ -189,7 +223,7 @@ class NCensus {
          */
         static unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
-            int nBdryFaces = -1, AcceptTriangulation sieve = 0,
+            int nBdryFaces, int whichPurge, AcceptTriangulation sieve = 0,
             void* sieveArgs = 0, NProgressManager* manager = 0);
 
         /**
@@ -218,6 +252,14 @@ class NCensus {
          * tested earlier, and some (such as orientability) can be
          * incorporated directly into the census algorithm to give a vast
          * performance increase.
+         *
+         * Parameter \a whichPurge may be used to further avoid constructing
+         * triangulations satisfying particular constraints (such as
+         * non-minimality).  This can significantly speed up the census.
+         * In this case however not all such triangulations will be
+         * avoided, but it is guaranteed that every triangulation that
+         * does \e not satisfy the constraints defined by \a whichPurge
+         * will be produced.
          *
          * Only valid triangulations will be produced; see
          * NTriangulation::isValid() for further details.
@@ -255,6 +297,15 @@ class NCensus {
          * and/or non-orientable triangulations.  The set should contain \c true
          * if orientable triangulations are to be included, and should contain
          * \c false if non-orientable triangulations are to be included.
+         * @param whichPurge specifies which triangulations we may further 
+         * avoid constructing (see the function notes above for details).
+         * This should be a bitwise OR of purge constants defined in this
+         * class, or 0 if no additional pruning should take place.
+         * If a variety of purge constants are bitwise ORed together, a
+         * triangulation satisfying \e any of these constraints may be
+         * avoided.  Note that not all such triangulations will be
+         * avoided, but enough are avoided that the performance increase
+         * is noticeable.
          * @param sieve an additional constraint function that may be
          * used to exclude certain triangulations from the census.  If
          * this parameter is non-zero, each triangulation produced (after
@@ -275,7 +326,7 @@ class NCensus {
          */
         static unsigned long formPartialCensus(const NFacePairing* pairing,
             NPacket* parent, NBoolSet finiteness, NBoolSet orientability,
-            AcceptTriangulation sieve = 0, void* sieveArgs = 0);
+            int whichPurge, AcceptTriangulation sieve = 0, void* sieveArgs = 0);
 
         /**
          * Determines whether the given triangulation even has a chance
@@ -313,8 +364,9 @@ class NCensus {
          * required.
          */
         NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
-            const NBoolSet& newOrientability, AcceptTriangulation newSieve,
-            void* newSieveArgs, NProgressMessage* newProgress);
+            const NBoolSet& newOrientability, int newWhichPurge,
+            AcceptTriangulation newSieve, void* newSieveArgs,
+            NProgressMessage* newProgress);
 
         /**
          * Called when a particular tetrahedron face pairing has been

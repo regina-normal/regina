@@ -364,7 +364,10 @@
      <arg><option>-f, --finite</option></arg>
      <arg><option>-d, --ideal</option></arg>
     </group>
-    <arg><option>-m, --minimal</option></arg>
+    <group>
+     <arg><option>-m, --minimal</option></arg>
+     <arg><option>-M, --minprime</option></arg>
+    </group>
     <group>
      <arg><option>-p, --genpairs</option></arg>
      <arg><option>-P, --usepairs</option></arg>
@@ -501,6 +504,26 @@
        triangulation <emphasis>is</emphasis> minimal; at best the results
        will be inconclusive (in which case the triangulation will be placed
        in the census anyway).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-M, --minprime</option></term>
+     <listitem>
+      <para>
+       Do not include triangulations that are obviously non-minimal,
+       non-prime and/or disc-reducible.
+      </para>
+      <para>
+       This option can significantly speed up the census and vastly
+       reduce the final number of triangulations produced.
+      </para>
+      <para>
+       A triangulation satisfying any of the above conditions might be
+       left out of the census, although not all such triangulations will
+       be ignored.  What <emphasis>is</emphasis> guaranteed is that any
+       triangulation that is minimal, prime and disc-irreducible will
+       certainly be included in the census.
       </para>
      </listitem>
     </varlistentry>

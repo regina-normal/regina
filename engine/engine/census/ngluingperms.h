@@ -83,15 +83,6 @@ typedef void (*UseGluingPerms)(const NGluingPerms*, void*);
  */
 class NGluingPerms {
     private:
-        static const int PURGE_NON_MINIMAL;
-            /**< Indicates that non-minimal triangulations may be ignored. */
-        static const int PURGE_NON_PRIME;
-            /**< Indicates that non-prime triangulations may be ignored. */
-        static const int PURGE_NON_MINIMAL_PRIME;
-            /**< Indicates that triangulations that are not both minimal
-                 and prime may be ignored. */
-
-    private:
         const NFacePairing* pairing;
             /**< The face pairing complemented by this permutation set. */
         int* orientation;
@@ -195,6 +186,15 @@ class NGluingPerms {
          * \a use will be called once more, this time with \c null as its
          * first (permutation set) argument.
          *
+         * Parameter \a whichPurge may be used to avoid constructing
+         * permutation sets that correspond to triangulations satisfying
+         * the given constraints (such as non-minimality).  This can
+         * significantly speed up the permutation set generation.
+         * Note that not all such permutation sets will be avoided,
+         * but it is guaranteed that every permutation set whose
+         * corresonding triangulation does \e not satisfy the given
+         * constraints will be generated.
+         *
          * \pre The given face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
@@ -218,6 +218,15 @@ class NGluingPerms {
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
+         * @param whichPurge specifies which permutation sets we may
+         * avoid constructing (see the function notes above for details).
+         * This should be a bitwise OR of purge constants from class NCensus,
+         * or 0 if we should simply generate every possible permutation set.
+         * If a variety of purge constants are bitwise ORed together, a
+         * permutation set whose triangulation satisfies \e any of these
+         * constraints may be avoided.  Note that not all such
+         * permutation sets will be avoided, but enough are avoided that
+         * the performance increase is noticeable.
          * @param use the function to call upon each permutation set that
          * is found.  The first parameter passed to this function will be
          * a gluing permutation set.  The second parameter will be
@@ -228,7 +237,7 @@ class NGluingPerms {
          */
         static void findAllPerms(const NFacePairing* newPairing,
             const NFacePairingIsoList* autos, bool orientableOnly,
-            UseGluingPerms use, void* useArgs = 0);
+            int whichPurge, UseGluingPerms use, void* useArgs = 0);
 
     private:
         /**
@@ -335,7 +344,7 @@ class NGluingPerms {
          */
         void findAllPermsInternal(const NFacePairing* newPairing,
             const NFacePairingIsoList* autos, bool orientableOnly,
-            UseGluingPerms use, void* useArgs = 0);
+            int whichPurge, UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Determines whether the permutations under construction are
@@ -363,7 +372,7 @@ class NGluingPerms {
          * will be based.
          * @param whichPurge specifies the conditions under which a
          * triangulation may be purged from the census; this should be a
-         * bitwise OR of purge constants defined in this class, or 0 if
+         * bitwise OR of purge constants from class NCensus, or 0 if
          * no triangulations may be purged.
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations are being

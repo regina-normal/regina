@@ -48,6 +48,7 @@ regina::NBoolSet
     orientability(true, true),
     boundary(true, true);
 int minimal = 0;
+int minimalPrime = 0;
 int usePairs = 0;
 
 // Variables used for a dump of face pairings.
@@ -104,7 +105,10 @@ regina::NText* parameterPacket() {
     else
         descStream << "Orientable and non-orientable\n";
 
-    if (minimal)
+    if (minimalPrime)
+        descStream << "Ignored obviously non-minimal, non-prime and/or "
+            << "disc-reducible triangulations\n";
+    else if (minimal)
         descStream << "Ignored obviously non-minimal triangulations\n";
 
     desc->setText(descStream.str());
@@ -139,6 +143,8 @@ int main(int argc, const char* argv[]) {
             "Must have at least one ideal vertex.", 0 },
         { "minimal", 'm', POPT_ARG_NONE, &minimal, 0,
             "Ignore obviously non-minimal triangulations.", 0 },
+        { "minprime", 'M', POPT_ARG_NONE, &minimalPrime, 0,
+            "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
             "Only generate face pairings, not triangulations.", 0 },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
@@ -184,7 +190,7 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && (argFinite || argIdeal)) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && minimal) {
+    } else if (genPairs && (minimal || minimalPrime)) {
         std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (usePairs && nTet) {
@@ -302,6 +308,14 @@ int main(int argc, const char* argv[]) {
     parent.insertChildLast(census);
 
     // Start the census running.
+    int whichPurge;
+    if (minimalPrime)
+        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
+    else if (minimal)
+        whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
+    else
+        whichPurge = 0;
+
     if (usePairs) {
         // Only use the face pairings read from standard input.
         std::cout << "Trying face pairings..." << std::endl;
@@ -323,8 +337,9 @@ int main(int argc, const char* argv[]) {
                 } else {
                     std::cout << pairing->toString() << std::endl;
                     regina::NCensus::formPartialCensus(pairing, census,
-                        finiteness, orientability,
-                        (minimal ? regina::NCensus::mightBeMinimal : 0), 0);
+                        finiteness, orientability, whichPurge,
+                        ((minimal || minimalPrime) ?
+                        regina::NCensus::mightBeMinimal : 0), 0);
 
                     pairingList += pairing->toString();
                     pairingList += '\n';
@@ -347,8 +362,8 @@ int main(int argc, const char* argv[]) {
 
         regina::NProgressManager manager;
         regina::NCensus::formCensus(census, nTet, finiteness, orientability,
-            boundary, nBdryFaces,
-            (minimal ? regina::NCensus::mightBeMinimal : 0), 0, &manager);
+            boundary, nBdryFaces, whichPurge, ((minimal || minimalPrime) ?
+            regina::NCensus::mightBeMinimal : 0), 0, &manager);
 
         // Output progress and wait for the census to finish.
         while (! manager.isStarted())

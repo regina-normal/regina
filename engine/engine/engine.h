@@ -188,7 +188,7 @@ class Engine {
             /**< Calls NTriangulation::enterTextTriangulation(). */
         long formCensus(NPacket* parent, int nTetrahedra,
                 NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
-                int nBdryFaces = -1, NProgressManager* manager = 0);
+                int nBdryFaces, NProgressManager* manager = 0);
             /**< Calls ::formCensus(). */
         NSnappedTwoSphere* formsSnappedTwoSphere(NSnappedBall* ball1,
                 NSnappedBall* ball2);
@@ -206,6 +206,8 @@ class Engine {
             /**< Calls NFileInfo::identify(). */
         NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
             /**< Calls NAugTriSolidTorus::isAugTriSolidTorus(). */
+        NSFS* isKnownSFS(NTriangulation* tri);
+            /**< Calls ::isKnownSFS(). */
         NLayeredChainPair* isLayeredChainPair(const NComponent* comp);
             /**< Calls NLayeredChainPair::isLayeredChainPair(). */
         NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);

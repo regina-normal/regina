@@ -27,16 +27,12 @@
 /* end stub */
 
 #include <sstream>
+#include "census/ncensus.h"
 #include "census/ngluingperms.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
 namespace regina {
-
-const int NGluingPerms::PURGE_NON_MINIMAL = 1;
-const int NGluingPerms::PURGE_NON_PRIME = 2;
-const int NGluingPerms::PURGE_NON_MINIMAL_PRIME = 3;
-    /**< PURGE_NON_MINIMAL_PRIME = PURGE_NON_MINIMAL | PURGE_NON_PRIME */
 
 NGluingPerms::NGluingPerms(const NGluingPerms& cloneMe) :
         pairing(cloneMe.pairing) {
@@ -95,14 +91,15 @@ int NGluingPerms::cmpPermsWithPreImage(const NFacePairing* pairing,
 
 void NGluingPerms::findAllPerms(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, bool orientableOnly,
-        UseGluingPerms use, void* useArgs) {
+        int whichPurge, UseGluingPerms use, void* useArgs) {
     NGluingPerms perms(pairing);
-    perms.findAllPermsInternal(pairing, autos, orientableOnly, use, useArgs);
+    perms.findAllPermsInternal(pairing, autos, orientableOnly, whichPurge,
+        use, useArgs);
 }
 
 void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, bool orientableOnly,
-        UseGluingPerms use, void* useArgs) {
+        int whichPurge, UseGluingPerms use, void* useArgs) {
     unsigned nTetrahedra = getNumberOfTetrahedra();
 
     // Initialise the internal arrays.
@@ -147,7 +144,7 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
         // We are sitting on a new permutation to try.
 
         // Is this going to lead to an unwanted triangulation?
-        if (mayPurge(face, 0 /* TODO: whichPurge */, orientableOnly))
+        if (mayPurge(face, whichPurge, orientableOnly))
             continue;
 
         // Fix the orientation if appropriate.
@@ -222,12 +219,12 @@ bool NGluingPerms::mayPurge(const NTetFace& face, int whichPurge,
         return false;
 
     // Are we allowed to purge on edges of degree 1/2?
-    bool mayPurgeDeg12 = (whichPurge & PURGE_NON_MINIMAL) &&
-        (whichPurge & PURGE_NON_PRIME) && orientableOnly &&
+    bool mayPurgeDeg12 = (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
+        (whichPurge & NCensus::PURGE_NON_PRIME) && orientableOnly &&
         (getNumberOfTetrahedra() > 2);
 
     // Are we allowed to purge on edges of degree 3?
-    bool mayPurgeDeg3 = (whichPurge & PURGE_NON_MINIMAL);
+    bool mayPurgeDeg3 = (whichPurge & NCensus::PURGE_NON_MINIMAL);
 
     // Currently look for edges of degree 1, 2 or 3.
     // Edges of degree 3 either lead to simplification or imply an

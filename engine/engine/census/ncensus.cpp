@@ -37,10 +37,15 @@
 
 namespace regina {
 
+const int NCensus::PURGE_NON_MINIMAL = 1;
+const int NCensus::PURGE_NON_PRIME = 2;
+const int NCensus::PURGE_NON_MINIMAL_PRIME = 3;
+    /**< PURGE_NON_MINIMAL_PRIME = PURGE_NON_MINIMAL | PURGE_NON_PRIME */
+    
 unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
-        int nBdryFaces, AcceptTriangulation sieve, void* sieveArgs,
-        NProgressManager* manager) {
+        int nBdryFaces, int whichPurge, AcceptTriangulation sieve,
+        void* sieveArgs, NProgressManager* manager) {
     // If obviously nothing is going to happen but we won't realise
     // it until we've actually generated the face pairings, change
     // nTetrahedra to 0 so we'll realise it immediately once the new
@@ -57,8 +62,8 @@ unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
     } else
         progress = 0;
 
-    NCensus* census = new NCensus(parent, finiteness, orientability, sieve,
-        sieveArgs, progress);
+    NCensus* census = new NCensus(parent, finiteness, orientability,
+        whichPurge, sieve, sieveArgs, progress);
     
     if (manager) {
         NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
@@ -75,7 +80,7 @@ unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
 
 unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
         NPacket* parent, NBoolSet finiteness, NBoolSet orientability,
-        AcceptTriangulation sieve, void* sieveArgs) {
+        int whichPurge, AcceptTriangulation sieve, void* sieveArgs) {
     // Is it obvious that nothing will happen?
     if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone)
         return 0;
@@ -85,9 +90,11 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
     pairing->findAutomorphisms(autos);
 
     // Select the individual gluing permutations.
-    NCensus census(parent, finiteness, orientability, sieve, sieveArgs, 0);
+    NCensus census(parent, finiteness, orientability, whichPurge,
+        sieve, sieveArgs, 0);
     NGluingPerms::findAllPerms(pairing, &autos,
-        ! census.orientability.hasFalse(), NCensus::foundGluingPerms, &census);
+        ! census.orientability.hasFalse(), census.whichPurge,
+        NCensus::foundGluingPerms, &census);
 
     // Clean up.
     std::for_each(autos.begin(), autos.end(), FuncDelete<NIsomorphismDirect>());
@@ -95,11 +102,12 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
 }
 
 NCensus::NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
-        const NBoolSet& newOrientability, AcceptTriangulation newSieve,
-        void* newSieveArgs, NProgressMessage* newProgress) : parent(newParent),
+        const NBoolSet& newOrientability, int newWhichPurge,
+        AcceptTriangulation newSieve, void* newSieveArgs,
+        NProgressMessage* newProgress) : parent(newParent),
         finiteness(newFiniteness), orientability(newOrientability),
-        sieve(newSieve), sieveArgs(newSieveArgs), progress(newProgress),
-        whichSoln(1) {
+        whichPurge(newWhichPurge), sieve(newSieve), sieveArgs(newSieveArgs),
+        progress(newProgress), whichSoln(1) {
 }
 
 void NCensus::foundFacePairing(const NFacePairing* pairing,
@@ -112,8 +120,8 @@ void NCensus::foundFacePairing(const NFacePairing* pairing,
 
         // Select the individual gluing permutations.
         NGluingPerms::findAllPerms(pairing, autos,
-            ! realCensus->orientability.hasFalse(), NCensus::foundGluingPerms,
-            census);
+            ! realCensus->orientability.hasFalse(), realCensus->whichPurge,
+            NCensus::foundGluingPerms, census);
     } else {
         // Census generation has finished.
         if (realCensus->progress) {
