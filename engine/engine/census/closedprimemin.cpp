@@ -31,11 +31,12 @@
 #include "census/ngluingperms.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 
 namespace regina {
 
-void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
+void NGluingPerms::findAllPermsClosedPrimeMin(
         const NFacePairingIsoList* autos, bool orientableOnly,
         UseGluingPerms use, void* useArgs) {
     // Preconditions:
@@ -56,9 +57,16 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
     // ---------- Selecting an ordering of faces ----------
 
     // We fill permutations in the order:
-    //     1. One-ended chains (== layered solid tori)
-    //     2. Double edges (== restricted possibilities)
-    //     3. Everything else
+    //     1. One-ended chains (== layered solid tori) from loop to
+    //        boundary, though chains may be interlaced in the
+    //        processing order;
+    //     2. Everything else ordered by tetrahedron faces.
+    //
+    // Both permutations for each double edge will be processed
+    // consecutively, the permutation for the smallest face involved
+    // in the double edge being processed first.
+    //
+    // Note from the tests above that there are no triple edges.
 
     unsigned nTets = getNumberOfTetrahedra();
 
@@ -68,6 +76,10 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
      * this array corresponds to a single edge of the underlying face
      * pairing graph, which in turn represents a tetrahedron face and
      * its image under the given face pairing.
+     *
+     * The specific tetrahedron face stored in this array for each edge
+     * of the underlying face pairing graph will be the smaller of the
+     * two identified tetrahedron faces.
      */
     NTetFace* order = new NTetFace[nTets * 2];
 
@@ -99,19 +111,22 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
 
     /**
      * The second edge of a double edge within a one-ended chain.
-     * See EDGE_CHAIN_INTERNAL_FIRST for further details.
+     * The corresponding element of order[] stores the face closest to
+     * the loop at the end of this chain.
      */
     static const unsigned EDGE_CHAIN_INTERNAL_SECOND = 3;
 
     /**
      * The first edge of a miscellaneous double edge.
+     * The corresponding element of order[] stores the face belonging to
+     * the lower numbered tetrahedron.
      */
     static const unsigned EDGE_DOUBLE_FIRST = 4;
 
     /**
      * The second edge of a miscellaneous double edge.
-     * Note that the same tetrahedron is stored in the order[] array
-     * for both the first and second edge of this double edge.
+     * The corresponding element of order[] stores the face belonging to
+     * the lower numbered tetrahedron.
      */
     static const unsigned EDGE_DOUBLE_SECOND = 5;
 
@@ -150,8 +165,8 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
     // identified in the previous loop.
 
     unsigned nChains = orderDone;
-    unsigned i, j;
-    unsigned tet;
+    unsigned i;
+    int tet;
     NTetFace dest1, dest2;
     NFacePair faces;
     for (i = 0; i < nChains; i++) {
@@ -163,62 +178,53 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
 
         // Currently tet and faces refer to the two faces of the base
         // tetrahedron that are pointing outwards.
-        while (dest1.tet == dest2.tet && dest1.tet != static_cast<int>(tet) &&
+        while (dest1.tet == dest2.tet && dest1.tet != tet &&
                 (! orderAssigned[tet * 4 + faces.lower()]) &&
                 (! orderAssigned[tet * 4 + faces.upper()])) {
             // Insert this pair of edges into the ordering and follow
             // the chain.
-            order[orderDone] = NTetFace(tet, faces.lower());
-            order[orderDone + 1] = NTetFace(tet, faces.upper());
             orderType[orderDone] = EDGE_CHAIN_INTERNAL_FIRST;
             orderType[orderDone + 1] = EDGE_CHAIN_INTERNAL_SECOND;
-            orderAssigned[tet * 4 + faces.lower()] = true;
-            orderAssigned[tet * 4 + faces.upper()] = true;
-            orderDone += 2;
 
-            tet = dest1.tet;
-            faces = NFacePair(dest1.face, dest2.face);
-            orderAssigned[tet * 4 + faces.lower()] = true;
-            orderAssigned[tet * 4 + faces.upper()] = true;
-            faces = faces.complement();
-        }
-    }
-
-    // Search now for miscellaneous double edges.
-    for (tet = 0; tet < nTets; tet++) {
-        for (i = 0; i < 4; i++) {
-            if (orderAssigned[tet * 4 + i])
-                continue;
-            dest1 = pairing->dest(tet, i);
-
-            for (j = i + 1; j < 4; j++) {
-                if (orderAssigned[tet * 4 + j])
-                    continue;
-                dest2 = pairing->dest(tet, j);
-
-                if (dest1.tet == dest2.tet &&
-                        dest1.tet != static_cast<int>(tet)) {
-                    // Insert this double edge.
-                    order[orderDone] = NTetFace(tet, i);
-                    order[orderDone + 1] = NTetFace(tet, j);
-                    orderType[orderDone] = EDGE_DOUBLE_FIRST;
-                    orderType[orderDone + 1] = EDGE_DOUBLE_SECOND;
-                    orderDone += 2;
-
-                    orderAssigned[tet * 4 + i] = true;
-                    orderAssigned[tet * 4 + j] = true;
-                    orderAssigned[dest1.tet * 4 + dest1.face] = true;
-                    orderAssigned[dest2.tet * 4 + dest2.face] = true;
-                }
+            if (tet < dest1.tet) {
+                order[orderDone] = NTetFace(tet, faces.lower());
+                order[orderDone + 1] = NTetFace(tet, faces.upper());
             }
+
+            orderAssigned[tet * 4 + faces.lower()] = true;
+            orderAssigned[tet * 4 + faces.upper()] = true;
+            orderAssigned[dest1.tet * 4 + dest1.face] = true;
+            orderAssigned[dest2.tet * 4 + dest2.face] = true;
+
+            faces = NFacePair(dest1.face, dest2.face);
+
+            if (dest1.tet < tet) {
+                order[orderDone] = NTetFace(dest1.tet, faces.lower());
+                order[orderDone + 1] = NTetFace(dest1.tet, faces.upper());
+            }
+
+            faces = faces.complement();
+            tet = dest1.tet;
+
+            dest1 = pairing->dest(tet, faces.lower());
+            dest2 = pairing->dest(tet, faces.upper());
+
+            orderDone += 2;
         }
     }
 
-    // Finally run through the remaining faces.
+    // Run now through the remaining faces.
     for (face.setFirst(); ! face.isPastEnd(nTets, true); face++)
         if (! orderAssigned[face.tet * 4 + face.face]) {
             order[orderDone] = face;
-            orderType[orderDone] = EDGE_MISC;
+            if (face.face < 3 && pairing->dest(boost::next(face)).tet ==
+                    pairing->dest(face).tet)
+                orderType[orderDone] = EDGE_DOUBLE_FIRST;
+            else if (face.face > 0 && pairing->dest(boost::prior(face)).tet ==
+                    pairing->dest(face).tet)
+                orderType[orderDone] = EDGE_DOUBLE_SECOND;
+            else
+                orderType[orderDone] = EDGE_MISC;
             orderDone++;
 
             adj = (*pairing)[face];
@@ -291,7 +297,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
             for (it = autos->begin(); it != autos->end(); it++) {
                 // TODO: Check for cancellation.
 
-                if (cmpPermsWithPreImage(pairing, **it) > 0) {
+                if (cmpPermsWithPreImage(**it) > 0) {
                     canonical = false;
                     break;
                 }
