@@ -50,16 +50,21 @@ public class RegConf extends JDialog implements ActionListener {
      * The directory containing the runtime options file.
      */
     private static File optionsDir;
+	/**
+	 * The system property that tells us in which directory
+	 * options files are placed.
+	 */
+	private static final String optionsDirProperty = "REGINA_OPTIONS";
+	/**
+	 * The directory to use for options files if system property
+	 * <i>optionsDirProperty</i> does not exist or is inaccessible.
+	 */
+	private static final String optionsDirDefault = ".";
     /**
      * The name of the runtime options file, without directory
      * information.
      */
     private static final String optionsFileName = "runtime.opt";
-    /**
-     * A string known to be at the beginning of the base Regina
-     * directory.
-     */
-    private static final String optionsDirPrefix = "regina";
 
     /**
      * The name of the general Java UI field.
@@ -223,63 +228,61 @@ public class RegConf extends JDialog implements ActionListener {
         JOptionPane.showMessageDialog(null,
             "An error occurred whilst querying the file system.",
             "Error", JOptionPane.ERROR_MESSAGE);
-        System.exit(0);
+        System.exit(1);
     }
 
     /**
      * Runs the entire configuration application.
      */
     public static void main(String[] args) {
-        // Find the full pathname of the options file.
+        // Find the full pathname of the options directory.
+		String optionsDirName = null;
+		try {
+			optionsDirName = System.getProperty(optionsDirProperty);
+		} catch (Throwable th) {
+		}
+		if (optionsDirName == null || optionsDirName.length() == 0)
+			optionsDirName = optionsDirDefault;
+
         try {
-            optionsDir = new File(".").getCanonicalFile();
+            optionsDir = new File(optionsDirName).getCanonicalFile();
         } catch (IOException exc) {
             fileSystemError();
         }
 
-        // This had better be the base Regina directory.
-        String dirName;
-        while (true) {
-            dirName = optionsDir.getName();
-            if (dirName.length() < 6 || (! dirName.substring(0, 6).
-                    equalsIgnoreCase(optionsDirPrefix))) {
-                // We are not in the base Regina directory.
-                Object[] messages = {
-                    "You are in directory [" + optionsDir.toString() + "].",
-                    "Options should be stored in the base regina-x.y.z " +
-                        "directory.",
-                    "Do you wish to change to the correct directory?"
-                };
-                if (JOptionPane.showConfirmDialog(null, messages,
-                        "Warning", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE)
-                        == JOptionPane.YES_OPTION) {
-                    JFileChooser chooser = new JFileChooser();
-                    chooser.setSelectedFile(optionsDir);
-                    chooser.setDialogTitle("Select directory...");
-                    chooser.setFileSelectionMode(
-                        JFileChooser.DIRECTORIES_ONLY);
-                    if (chooser.showOpenDialog(null) ==
-                            chooser.APPROVE_OPTION) {
-                        File chosen = null;
-                        try {
-                            chosen =
-                                chooser.getSelectedFile().getCanonicalFile();
-                        } catch (IOException exc) {
-                            fileSystemError();
-                        }
-                        if (chosen.isDirectory())
-                            optionsDir = chosen;
-                        else
-                            JOptionPane.showMessageDialog(null,
-                                "[" + chosen.toString() +
-                                    "] is not a directory.",
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                    continue;
-                }
-            }
-            break;
+        // Check that this is a directory.  Try to create it if it doesn't
+		// exist.
+		String optionsDirError = null;
+		try {
+			if (! optionsDir.exists()) {
+				try {
+					if (! optionsDir.mkdir()) {
+						optionsDirError =
+							"This directory could not be created.";
+					}
+				} catch (SecurityException sex) {
+					optionsDirError =
+						"You do not have permissions to create this directory.";
+				}
+			} else if (! optionsDir.isDirectory()) {
+				optionsDirError = "This is a file, not a directory.";
+			}
+		} catch (SecurityException sex) {
+			optionsDirError =
+				"You do not have permissions to query this directory.";
+		}
+
+        if (optionsDirError != null) {
+            Object[] messages = {
+                "Options are being stored in directory ["
+					+ optionsDir.toString() + "].",
+				optionsDirError,
+				"You can set the options directory manually by storing it",
+				"in the environment variable REGINA_OPTIONS."
+            };
+            JOptionPane.showMessageDialog(null, messages,
+                "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
         }
 
         // Read the current options from file if available.
@@ -295,7 +298,7 @@ public class RegConf extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(null,
                     "File [" + optionsFile.toString() + "] could not be read.",
                     "Error", JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
+                System.exit(1);
             }
         } else {
             Object[] messages = {
