@@ -45,11 +45,11 @@
    (list "eps"))                         ;; graphical formats for printing and
                                          ;; putting online
 (define acceptable-mediaobject-extensions
-   '())
+   (list "png"))
 (define preferred-mediaobject-notations
    (list "EPS"))
 (define acceptable-mediaobject-notations
-   (list "linespecific"))
+   (list "PNG" "linespecific"))
 (define %graphic-default-extension% "jpg")
 
 ; === Rendering ===

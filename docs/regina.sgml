@@ -99,7 +99,14 @@
   <title>&regina; - A Normal Surface Theory Calculator</title>
   <informaltable frame="none">
    <tgroup align="center" cols="1"><tbody>
-    <row><entry><graphic fileref="title" align="center"></entry></row>
+    <row><entry><mediaobject>
+     <imageobject>
+      <imagedata fileref="title.jpg" align="center">
+     </imageobject>
+     <imageobject>
+      <imagedata fileref="title.png" align="center" scale=50>
+     </imageobject>
+    </mediaobject></entry></row>
     <row><entry></entry></row>
     <row><entry><emphasis>&regina;</emphasis></entry></row>
     <row><entry>
@@ -131,7 +138,14 @@
   <sect1 id="genealogy">
    <title>Genealogy</title>
 
-   <graphic fileref="normalicon.gif" align="right">
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="normalicon.gif" align="right">
+    </imageobject>
+    <imageobject>
+     <imagedata fileref="normalicon.png" align="right" scale=50>
+    </imageobject>
+   </mediaobject>
 
    <para>
     In 1997 in Melbourne, David Letscher, Richard Rannard and Ben Burton
@@ -172,7 +186,14 @@
     people, and she likes running around rainforests in the dark.
    </para>
 
-   <graphic fileref="basman">
+   <mediaobject>
+    <imageobject>
+     <imagedata fileref="basman.jpg">
+    </imageobject>
+    <imageobject>
+     <imagedata fileref="basman.png" scale=70>
+    </imageobject>
+   </mediaobject>
   </sect1>
  </chapter>
 
