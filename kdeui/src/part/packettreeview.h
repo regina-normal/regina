@@ -33,6 +33,8 @@
 #ifndef __PACKETTREEVIEW_H
 #define __PACKETTREEVIEW_H
 
+#include "packet/npacketlistener.h"
+
 #include <klistview.h>
 
 class ReginaPart;
@@ -44,7 +46,7 @@ namespace regina {
 /**
  * A single item in a Regina packet tree.
  */
-class PacketTreeItem : public KListViewItem {
+class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
     private:
         /**
          * The underlying packet, or 0 if the underlying packet has
@@ -91,6 +93,15 @@ class PacketTreeItem : public KListViewItem {
          * label.
          */
         void refreshLabel();
+
+        /**
+         * NPacketListener overrides.
+         */
+        void packetWasRenamed(regina::NPacket* packet);
+        void packetToBeDestroyed(regina::NPacket* packet);
+        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child);
+        void childrenWereReordered(regina::NPacket* packet);
 
     private:
         /**

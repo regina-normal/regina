@@ -191,6 +191,21 @@ class ReginaPart : public KParts::ReadWritePart {
         void packetView(regina::NPacket*);
 
         /**
+         * Rename the currently selected packet.
+         */
+        void packetRename();
+
+        /**
+         * Delete the currently selected packet.
+         */
+        void packetDelete();
+
+        /**
+         * Refresh the subtree beneath the currently selected packet.
+         */
+        void subtreeRefresh();
+
+        /**
          * Float the currently docked pane.
          */
         void floatDockedPane();

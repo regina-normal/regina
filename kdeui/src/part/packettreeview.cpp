@@ -64,6 +64,7 @@ PacketTreeItem::PacketTreeItem(QListViewItem* parent,
 }
 
 void PacketTreeItem::init() {
+    packet->listen(this);
     refreshLabel();
     setPixmap(0, PacketManager::iconSmall(packet));
 }
@@ -102,6 +103,11 @@ void PacketTreeItem::refreshSubtree() {
     QListViewItem* prev = 0;
     QListViewItem* other;
     while (p) {
+        if (item)
+            std::cerr << "Match: " << p->getPacketLabel() << " vs "
+                << item->getPacket()->getPacketLabel() << '\n';
+        else
+            std::cerr << "Match: " << p->getPacketLabel() << " vs None\n";
         if (! item) {
             // We've already run out of child nodes.  Add a new one.
             if (prev)
@@ -129,7 +135,14 @@ void PacketTreeItem::refreshSubtree() {
                 if (((PacketTreeItem*)other)->getPacket() == p) {
                     // We've found a node for this packet.
                     // Move it to the correct place.
-                    other->moveItem(prev);
+                    if (prev)
+                        other->moveItem(prev);
+                    else {
+                        // Hmm, it doesn't seem easy to move a list item
+                        // to the beginning of its parent's child list.
+                        other->moveItem(firstChild());
+                        firstChild()->moveItem(other);
+                    }
                     ((PacketTreeItem*)other)->refreshSubtree();
 
                     // Increment our variables.
@@ -157,6 +170,8 @@ void PacketTreeItem::refreshSubtree() {
 
     // Were there any child nodes left over?
     while (item) {
+        std::cerr << "Match: None vs "
+            << item->getPacket()->getPacketLabel() << '\n';
         other = item;
         item = (PacketTreeItem*)(item->nextSibling());
         delete other;
@@ -172,6 +187,31 @@ void PacketTreeItem::refreshLabel() {
             setText(0, newLabel.c_str());
     } else
         setText(0, i18n("<Deleted>"));
+}
+
+void PacketTreeItem::packetWasRenamed(regina::NPacket*) {
+    refreshLabel();
+}
+
+void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
+    packet = 0;
+    refreshLabel();
+
+    // I'm a bit worried about this line, but I understand it will
+    // behave correctly. :/
+    delete this;
+}
+
+void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
+    refreshSubtree();
+}
+
+void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*) {
+    refreshSubtree();
+}
+
+void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
+    refreshSubtree();
 }
 
 PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent,

@@ -47,6 +47,7 @@
 #include <kfiledialog.h>
 #include <kiconloader.h>
 #include <kinstance.h>
+#include <klineeditdlg.h>
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kparts/genericfactory.h>
@@ -234,6 +235,85 @@ void ReginaPart::packetView() {
 
 void ReginaPart::packetView(regina::NPacket* packet) {
     view(new PacketPane(this, packet));
+}
+
+void ReginaPart::packetRename() {
+    if (! isReadWrite()) {
+        KMessageBox::error(widget(), i18n(
+            "This topology data file is currently in read-only mode."));
+        return;
+    }
+
+    regina::NPacket* packet = treeView->selectedPacket();
+    if (! packet) {
+        KMessageBox::error(widget(), i18n(
+            "No packet is currently selected within the tree."));
+        return;
+    }
+
+    bool ok;
+    QString suggest = packet->getPacketLabel().c_str();
+    while (true) {
+        QString newLabel = KLineEditDlg::getText(i18n("Rename Packet"),
+            i18n("New label:"), suggest, &ok).stripWhiteSpace();
+        if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
+            return;
+
+        // Has this label already been used?
+        if (packetTree->findPacketLabel(newLabel.ascii())) {
+            KMessageBox::error(widget(), i18n(
+                "Another packet is already using this label."));
+            suggest = packetTree->makeUniqueLabel(newLabel.ascii()).c_str();
+        } else {
+            // It's a unique label; we can rename it!
+            packet->setPacketLabel(newLabel.ascii());
+            setModified(true);
+            return;
+        }
+    }
+}
+
+void ReginaPart::packetDelete() {
+    if (! isReadWrite()) {
+        KMessageBox::error(widget(), i18n(
+            "This topology data file is currently in read-only mode."));
+        return;
+    }
+
+    regina::NPacket* packet = treeView->selectedPacket();
+    if (! packet) {
+        KMessageBox::error(widget(), i18n(
+            "No packet is currently selected within the tree."));
+        return;
+    }
+
+    if (KMessageBox::warningContinueCancel(widget(), i18n(
+            "You are about to delete the packet %1 and all its children.  "
+            "Are you sure?").arg(packet->getPacketLabel().c_str()),
+            i18n("Delete Packet")) == KMessageBox::Cancel)
+        return;
+
+    delete packet;
+    setModified(true);
+}
+
+void ReginaPart::subtreeRefresh() {
+    // Refresh the tree itself.
+    QListViewItem* rawItem = treeView->selectedItem();
+    if (! rawItem) {
+        KMessageBox::error(widget(), i18n(
+            "No packet subtree is currently selected to refresh."));
+        return;
+    }
+
+    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(item);
+    item->refreshSubtree();
+
+    // Refresh any relevant packet panes.
+    regina::NPacket* subtree = item->getPacket();
+    for (PacketPane* pane = allPanes.first(); pane; pane = allPanes.next())
+        if (subtree->isGrandparentOf(pane->getPacket()))
+            pane->refresh();
 }
 
 void ReginaPart::floatDockedPane() {

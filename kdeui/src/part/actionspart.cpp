@@ -58,17 +58,17 @@ void ReginaPart::setupActions() {
     treePacketViewActions.append(act);
 
     act = new KAction(i18n("&Rename"), "editclear", CTRL+Key_R,
-        this, SLOT(unimplemented()), actionCollection(), "tree_rename");
+        this, SLOT(packetRename()), actionCollection(), "tree_rename");
     act->setToolTip(i18n("Rename the selected packet"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("&Delete"), "editdelete", Key_Delete,
-        this, SLOT(unimplemented()), actionCollection(), "tree_delete");
+        this, SLOT(packetDelete()), actionCollection(), "tree_delete");
     act->setToolTip(i18n("Delete the selected packet"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Refres&h Subtree"), "reload", Key_F5,
-        this, SLOT(unimplemented()), actionCollection(), "tree_refresh");
+        this, SLOT(subtreeRefresh()), actionCollection(), "tree_refresh");
     act->setToolTip(i18n("Refresh the subtree beneath the selected packet"));
     treePacketViewActions.append(act);
 

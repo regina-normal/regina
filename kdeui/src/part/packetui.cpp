@@ -163,6 +163,10 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     }
 }
 
+PacketPane::~PacketPane() {
+    delete mainUI;
+}
+
 void PacketPane::setDirty(bool newDirty) {
     if (dirty == newDirty)
         return;
