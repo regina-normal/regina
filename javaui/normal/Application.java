@@ -68,7 +68,7 @@ public class Application extends Applet implements ActionListener {
     /**
      * Miscellaneous comments.
      */
-    public static final String comments = "A normal surface theory calculator";
+    public static final String comments = "A Normal Surface Theory Calculator";
 
     /**
      * Author information.
@@ -117,9 +117,10 @@ public class Application extends Applet implements ActionListener {
     public static final String licenseNotes =
         "Regina has been released under the GNU General Public License, " +
         "as described below.\n" +
-        "It is hereby explicitly allowed that this program may be used " +
-        "with any Java implementation without the GPL applying to that " +
-        "Java implementation.";
+        "It is hereby explicitly allowed that this software may be run" +
+        "with any implementation of the core Java classes (the classes that" +
+        "implement the official Java API) without the GPL applying to that" +
+        "implementation of the core Java classes.";
     /**
      * Location of the file containing the full license details.
      */

@@ -44,7 +44,7 @@
  *  technical advice for this project.
  *  </center>
  *
- *  <h3>Regina 2.1 - A normal surface theory calculator</h3>
+ *  <h3>Regina 2.1 - A Normal Surface Theory Calculator</h3>
  *
  *  Additional code contributed by:
  *  <ul>
@@ -70,9 +70,10 @@
  *  Regina has been released under the GNU General Public License, as
  *  described below.
  *
- *  It is hereby explicitly allowed that this program may be used
- *  with any Java implementation without the GPL applying to that
- *  Java implementation.
+ *  It is hereby explicitly allowed that this software may be run
+ *  with any implementation of the core Java classes (the classes that
+ *  implement the official Java API) without the GPL applying to that
+ *  implementation of the core Java classes.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
