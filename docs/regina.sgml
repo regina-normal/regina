@@ -54,6 +54,7 @@
  <!ENTITY snappea "<application>SnapPea</application>">
  <!ENTITY gnu "<acronym>GNU</acronym>">
  <!ENTITY bsd "<acronym>BSD</acronym>">
+ <!ENTITY gcc "<application>gcc</application>">
  <!ENTITY readline "<application>&gnu; readline</application>">
  <!ENTITY editline "<application>&bsd; editline</application>">
  <!ENTITY todo "TODO">

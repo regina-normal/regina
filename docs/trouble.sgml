@@ -45,6 +45,37 @@
 
    <qandaentry>
     <question><para>
+     I can start the program but it crashes frequently.
+    </para></question>
+    <answer>
+     <para>
+      You can run into problems when mixing different versions of the
+      &gnu; C compiler.  Specifically, if you have built &regina;
+      with a pre-3.0 version of &gcc; then you must use a &java; virtual
+      machine that has also been built with a pre-3.0 version of &gcc;.
+      Similarly, if you have built &regina;
+      with a post-3.2 version of &gcc; then you must use a &java; virtual
+      machine that has also been built with a post-3.2 version of &gcc;.
+     </para>
+     <para>
+      For &linux; systems, a &java; virtual machine built with the correct
+      compiler can be downloaded directly from
+      <ulink url="http://www.blackdown.org/"></ulink>.
+     </para>
+     <para>
+      To use a locally installed &java; virtual machine with &regina;,
+      simply set the <envar>REGINA_JAVA</envar> environment variable to
+      the appropriate &java; runtime.  For instance:
+     </para>
+     <para>
+      <prompt>example$</prompt>
+      <userinput>export REGINA_JAVA=/usr/local/j2re1.4.1/bin/java</userinput>
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
      I ask for help but I am told that &javahelp; and/or the documentation
      jar cannot be found.
     </para></question>
