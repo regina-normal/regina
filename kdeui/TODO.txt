@@ -20,6 +20,7 @@ Containers:
 Icons:
     Softer tree for filter_comb.png
     Icons for separate New actions
+    Separate mimetype icon set
 
 Import/Export:
     Refuse to export invalid triangulations
