@@ -28,7 +28,8 @@
     <glossterm>Automatic Window Docking</glossterm>
     <glossdef><para>
      This option can be toggled on or off.  When off, any new packet
-     panes (created when you view or edit a packet) will be opened in
+     panes (created when you <link linkend="packet-view">view or edit
+     a packet</link>) will be opened in
      separate floating windows.  When on, new packet panes will be
      docked into the main &regina; window if possible.
     </para></glossdef>

@@ -157,9 +157,8 @@
       must remain constant or else the coordinates will become invalid.
      </para>
      <para>
-      In such a situation you can try cloning the packet without cloning its
-      descendants
-      (<menuchoice>
+      In such a situation you can try <link linkend="packet-clone">cloning
+      the packet</link> without cloning its descendants (<menuchoice>
        <guimenu>Packet</guimenu>
        <guisubmenu>Clone</guisubmenu>
        <guimenuitem>Exclude Descendants</guimenuitem>

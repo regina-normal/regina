@@ -77,9 +77,10 @@
    <title>Cooperating with the &gui;</title>
    <para>
     Whenever packets belonging to an open file are changed through a
-    script or console, you should always refresh the corresponding packet
-    subtree(s) in the main window (a button is provided below the tree for
-    this purpose).  This will automatically update any open packet viewers
+    script or console, you should always
+    <link linkend="packet-refresh">refresh the corresponding packet
+    subtree(s)</link> in the main window (a button is provided below the tree
+    for this purpose).  This will automatically update any open packet viewers
     or editors, so there is no need to update each of these separately.
     This will also make the user interface find any new packets that have
     been inserted into the subtree(s) and detect any renaming that has taken
@@ -88,9 +89,9 @@
    <para>
     You should <emphasis>never</emphasis> use a script or console to
     delete a packet belonging to a file that is still open!
-    This can only lead to tears.  Instead delete packets
-    using the <guimenuitem>Delete</guimenuitem> button/menu item
-    provided in the main window. 
+    This can only lead to tears.  Instead delete packets using the
+    <link linkend="packet-delete"><guimenuitem>Delete</guimenuitem></link>
+    button/menu item provided in the main window. 
    </para>
    <para>
     If you cannot edit a packet through the GUI, there is a reason for
@@ -98,8 +99,8 @@
     triangulation remaining constant and so any triangulation with child
     surface lists will be uneditable).  Thus you should not use &jython; as a
     way to get around that barrier; instead you should respect that
-    barrier.  Perhaps you can clone the packet in question without cloning
-    its descendants (<menuchoice>
+    barrier.  Perhaps you can <link linkend="packet-clone">clone the
+    packet</link> in question without cloning its descendants (<menuchoice>
      <guimenu>Packet</guimenu>
      <guisubmenu>Clone</guisubmenu>
      <guimenuitem>Exclude Descendants</guimenuitem>
