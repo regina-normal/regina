@@ -34,6 +34,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.Properties;
 import javax.swing.*;
+import normal.console.*;
 import normal.engine.Engine;
 import normal.mainui.NormalFrame;
 import normal.options.NormalOptionSet;
@@ -592,13 +593,14 @@ public abstract class Shell {
                 } else {
                     // Console window UI:
                     if (foundJython) {
-						Frame frame = normal.console.ConsoleUtils.
-							createGraphicalConsole(this, true);
+						JPythonConsoleFrame frame =
+							ConsoleUtils.createGraphicalConsole(this, true);
                         if (splash != null)
                             splash.dispose();
                         Positioner.centerOnScreen(frame);
                         frame.show();
                         primaryFrame = frame;
+						frame.startConsole();
                     } else {
                         error("Jython could not be found.  Please ensure " +
                             "[jython.jar] is on your classpath.");

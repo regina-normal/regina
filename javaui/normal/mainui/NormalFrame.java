@@ -1251,9 +1251,11 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      * Open and start a new Jython console frame.
      */
     private void startJythonConsole() {
-		Frame console = ConsoleUtils.createGraphicalConsole(shell, false);
+		JPythonConsoleFrame console =
+			ConsoleUtils.createGraphicalConsole(shell, false);
         Positioner.centerOnScreen(console);
         console.show();
+		console.startConsole();
     }
 
     /**
