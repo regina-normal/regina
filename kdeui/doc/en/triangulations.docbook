@@ -948,7 +948,7 @@
     triangulations.
     The
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Census Lookup</guimenuitem>
     </menuchoice>
     menu item will search for the current triangulation within all of the
@@ -983,7 +983,7 @@
   <para>
    Once a triangulation has been created, a variety of options are
    available for modifying it.  Many of these modifications are found in
-   the <guimenu>Docked Packet</guimenu> menu &ndash; note that these
+   the <guimenu>Triangulation</guimenu> menu &ndash; note that these
    menu items will only appear when a triangulation is currently
    being viewed, and will be performed upon this triangulation (and not
    whatever is selected in the visual packet tree).
@@ -1047,7 +1047,7 @@
    <para>
     The
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Elementary Move</guimenuitem>
     </menuchoice>
     menu item will present a list of elementary moves that can be
@@ -1141,7 +1141,7 @@
    <para>
     The
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Barycentric Subdivision</guimenuitem>
     </menuchoice>
     menu item will perform a barycentric subdivision on the
@@ -1155,8 +1155,8 @@
    <para>
     The
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
-     <guimenuitem>Convert from Ideal to Finite</guimenuitem>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Ideal to Finite</guimenuitem>
     </menuchoice>
     menu item will convert the triangulation currently being viewed to
     a finite triangulation (one with no ideal vertices).  This is done by
@@ -1176,7 +1176,7 @@
     simplifying a triangulation as far as possible without manual
     intervention.  Selecting the
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Simplify</guimenuitem>
     </menuchoice>
     menu item will use <link linkend="tri-elementarymove">elementary
@@ -1214,7 +1214,7 @@
     To convert a triangulation into a 0-efficient triangulation of the
     same underlying 3-manifold, the
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Make 0-Efficient</guimenuitem>
     </menuchoice>
     menu item can be used.  Note that, like the
@@ -1246,7 +1246,7 @@
    <para>
     The
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Double Cover</guimenuitem>
     </menuchoice>
     menu item will convert a triangulation to its double cover.  Each
@@ -1272,8 +1272,8 @@
     Open a list of normal surfaces,
     select the surface to crush and invoke the
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
-     <guimenuitem>Crush</guimenuitem>
+     <guimenu>Normal Surfaces</guimenu>
+     <guimenuitem>Crush Surface</guimenuitem>
     </menuchoice>
     menu item (note that this menu item only appears when viewing a
     normal surface list).
@@ -1313,7 +1313,7 @@
     large disconnected triangulation into smaller separate triangulations
     for its individual components.  For this operation the
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Extract Components</guimenuitem>
     </menuchoice>
     menu item can be used.
@@ -1346,7 +1346,7 @@
    <para>
     This decomposition can be performed using the
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Connected Sum Decomposition</guimenuitem>
     </menuchoice>
     menu item.  As before, a smaller prime triangulation for each

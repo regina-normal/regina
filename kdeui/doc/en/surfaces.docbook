@@ -510,8 +510,8 @@
     triangulation by selecting the surface within the table
     and invoking the
     <menuchoice>
-     <guimenu>Docked Packet</guimenu>
-     <guimenuitem>Crush</guimenuitem>
+     <guimenu>Normal Surfaces</guimenu>
+     <guimenuitem>Crush Surface</guimenuitem>
     </menuchoice>
     menu item.
    </para>
