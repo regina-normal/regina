@@ -336,7 +336,7 @@
    </para>
    <para>
     <glosslist>
-     <glossentry>
+     <glossentry id="surfaces-propname">
       <glossterm>Name</glossterm>
       <glossdef>
        <para>
@@ -350,32 +350,32 @@
        </para>
       </glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-propeuler">
       <glossterm>Euler</glossterm>
       <glossdef><para>
        This column shows the Euler characteristic of each surface.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-proporient">
       <glossterm>Orient</glossterm>
       <glossdef><para>
        This column shows whether or not each surface is orientable.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-propsides">
       <glossterm>Sides</glossterm>
       <glossdef><para>
        This column shows whether each surface is one-sided or two-sided.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-boundary">
       <glossterm>Bdry</glossterm>
       <glossdef><para>
        This column shows whether or not each surface meets the boundary of the
        enclosing triangulation.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-proplink">
       <glossterm>Link</glossterm>
       <glossdef><para>
        If a normal surface or a rational multiple of that surface
@@ -440,7 +440,7 @@
        At most one such role will be displayed for any particular surface.
        The following roles are currently recognised.
        <glosslist>
-        <glossentry>
+        <glossentry id="surfaces-propsplitting">
          <glossterm>Splitting</glossterm>
          <glossdef><para>
           Indicates that the surface is a splitting surface (contains
@@ -448,7 +448,7 @@
           or almost normal discs).
          </para></glossdef>
         </glossentry>
-        <glossentry>
+        <glossentry id="surfaces-propcentral">
          <glossterm>Central</glossterm>
          <glossdef><para>
           Indicates that although it is not a splitting surface,

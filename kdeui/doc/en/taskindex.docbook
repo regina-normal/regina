@@ -32,7 +32,14 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-subdivision">barycentric subdivision</link></primaryie>
+  <primaryie><link linkend="tri-subdivision">barycentric
+   subdivision</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>boundary</primaryie>
+  <secondaryie><link linkend="surfaces-boundary">of a normal
+   surface</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -62,8 +69,18 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="surfaces-propcentral">central surfaces,
+   recognising</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-regconcat">combining data
    files</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-filtercomb">combining surface
+   filters</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -109,6 +126,16 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="surfaces-crush">crushing a normal
+   surface</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-cut">cutting along a normal
+   surface</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>data files</primaryie>
   <seeie>(see files)</seeie>
  </indexentry>
@@ -122,6 +149,11 @@
  <indexentry>
   <primaryie><link linkend="man-regfiledump">dumping contents of a
    file</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-proplink">edge linking surfaces,
+   recognising</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -146,6 +178,12 @@
 
  <indexentry>
   <primaryie><link linkend="troubleshooting">errors, fixing</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>Euler characteristic</primaryie>
+  <secondaryie><link linkend="surfaces-propeuler">of a normal
+   surface</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -181,8 +219,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-filtering">filtering normal surface
-   lists</link></primaryie>
+  <primaryie>filtering normal surface lists</primaryie>
+  <seeie>(see surface filters</seeie>
  </indexentry>
 
  <indexentry>
@@ -224,7 +262,17 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>naming</primaryie>
+  <secondaryie><link linkend="tri-editgluings">tetrahedra in a
+   triangulation</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propname">surfaces in a
+   surface list</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>normal surfaces</primaryie>
+  <secondaryie><link linkend="surfaces-viewsurfaceprops">basic
+   properties</link></secondaryie>
   <secondaryie><link linkend="options-surfaces">configuration of
    default coordinate system</link></secondaryie>
   <secondaryie><link linkend="surfaces-crush">crushing a
@@ -240,13 +288,32 @@
    lists</link></secondaryie>
   <secondaryie><link linkend="surfaces-viewmatching">matching
    equations</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propname">naming
+   surfaces in a list</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propcentral">recognising
+   central surfaces</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propcentral">recognising
+   edge/vertex links</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propsplitting">recognising
+   splitting surfaces</link></secondaryie>
   <secondaryie><link linkend="surfaces-viewsurfacecoords">viewing in a
    different coordinate system</link></secondaryie>
  </indexentry>
 
  <indexentry>
+  <primaryie>one-sidedness</primaryie>
+  <seeie>(see sidedness)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>options</primaryie>
   <seeie>(see configuration)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>orientability</primaryie>
+  <secondaryie><link linkend="surfaces-proporient">of a normal
+   surface</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -277,6 +344,11 @@
  <indexentry>
   <primaryie><link linkend="troubleshooting">questions, frequently
    asked</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>real boundary</primaryie>
+  <seeie>(see boundary)</seeie>
  </indexentry>
 
  <indexentry>
@@ -312,6 +384,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="surfaces-propsides">sidedness of a
+   normal surface</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>signatures, splitting surface</primaryie>
   <seeie>(see splitting surfaces)</seeie>
  </indexentry>
@@ -325,6 +402,8 @@
   <primaryie>splitting surfaces</primaryie>
   <secondaryie><link linkend="man-sigcensus">census of splitting
    surface signatures</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propsplitting">recognising in a
+   surface list</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -338,12 +417,26 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>surface filters</primaryie>
+  <secondaryie><link linkend="surfaces-filtercomb">combining
+   filters</link></secondaryie>
+  <secondaryie><link linkend="surfaces-filterprop">filtering by surface
+   properties</link></secondaryie>
+  <secondaryie><link linkend="surfaces-filtering">overview</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>surfaces, normal</primaryie>
   <seeie>(see normal surfaces)</seeie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="options-python">tab size</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="angles-viewstructureprops">taut angle
+   structures</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -355,8 +448,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="angles-viewstructureprops">taut angle
-   structures</link></primaryie>
+  <primaryie>two-sidedness</primaryie>
+  <seeie>(see sidedness)</seeie>
  </indexentry>
 
  <indexentry id="idx-user-interface">
@@ -372,6 +465,11 @@
  <indexentry>
   <primaryie>vertex angle structures</primaryie>
   <seeie>(see angle structures)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-proplink">vertex linking surfaces,
+   recognising</link></primaryie>
  </indexentry>
 
  <indexentry>
