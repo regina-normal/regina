@@ -231,7 +231,7 @@ class PacketViewerTab : public PacketReadOnlyUI {
  * implementations of commit() and refresh().
  */
 class PacketEditorTab : public PacketUI {
-    private:
+    protected:
         /**
          * External components
          */
