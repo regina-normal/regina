@@ -17,9 +17,6 @@ Everywhere:
 		(necessary to ensure progress dialogs cannot be closed).
 	Allow customisation of types in drop-down boxes
 
-Help:
-	Write manual! - include context sensitive help, searching and index.
-
 Jython:
 	Allow breaking processing in console
 	Check to see whether user libraries are text files
