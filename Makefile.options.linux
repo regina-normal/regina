@@ -117,7 +117,7 @@ export JAR := jar
 #export JAR := fastjar
 export JDB := jdb -Xmx64m -Djava.compiler=NONE
 export JAVAH := javah -jni
-#export JAVAH := /usr/lib/kaffe/bin/kaffeh -jni
+#export JAVAH := gcjh -jni
 export JAVADOC := javadoc -J-Xmx64m
 export JADE := jade
 export DOCBOOK2MAN := docbook2man
