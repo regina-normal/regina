@@ -90,7 +90,7 @@ typedef void (*UseSignature)(const NSignature&, const NSigIsoList&, void *);
  *
  * \todo \feature Add support for symbols of differing case.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param order the order of signatures to generate.
  * @param use the function to call upon each signature that is found.
@@ -110,7 +110,7 @@ unsigned long formSigCensus(unsigned order, UseSignature use,
  * refer to this class directly.  It is used to store temporary
  * information when forming the census.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NSigCensus {
     private:

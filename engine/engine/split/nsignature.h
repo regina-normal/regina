@@ -144,9 +144,6 @@ class NSignature : public ShareableObject {
          *
          * \pre The given string contains at least one letter.
          *
-         * \ifaces This routine is a member of class Engine and is called
-         * Engine::parseSignature().
-         * 
          * @param sig a string representation of a splitting surface
          * signature.
          * @return a corresponding newly created signature, or 0 if the
@@ -170,7 +167,7 @@ class NSignature : public ShareableObject {
          *
          * \pre The two specified cycles have the same length.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param sig1 the signature containing the first cycle to examine.
          * @param cycle1 specifies which cycle to examine in signature
@@ -221,8 +218,8 @@ class NSignature : public ShareableObject {
          * Writes a string representation of this signature to the given
          * output stream.
          *
-         * \ifaces Not present, but routine ShareableObject()::toString()
-         * will return such a string representation.
+         * \ifacespython The parameter \a out does not exist; standard
+         * output will be used.
          *
          * @param out the output stream to which to write.
          * @param cycleOpen the text to write at the beginning of a cycle

@@ -68,7 +68,7 @@ class regina::NSigCensus;
  * source isomorphism (for some <i>g</i>).  If only a subset of symbols
  * are mapped, that subset must be symbols 0,1,...,<i>k</i> for some <i>k</i>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NSigPartialIsomorphism {
     private:
