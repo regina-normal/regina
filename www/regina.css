@@ -51,6 +51,12 @@ h2 {
   margin: 2em 0px 1em 0px;
 }
 
+h3 {
+  font-size: 11pt;
+  font-weight: 600;
+  color: #3D3F53;
+}
+
 table.contentswrapper {
   border: 0;
   background-color: #FFFFFF;
