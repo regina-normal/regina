@@ -123,7 +123,7 @@ info "-- Regina home directory (REGINA_HOME): $REGINA_HOME"
 
 # --- Set the python path and run the application. ---
 
-command="$REGINA_PYTHON -i -c 'import regina'"
+command="$REGINA_PYTHON -i -c 'import regina ; print regina.welcome()'"
 export PYTHONPATH="$REGINA_PYLIBDIR:$PYTHONPATH"
 
 info "Command: $command"

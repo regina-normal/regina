@@ -30,6 +30,7 @@
 
 #include "engine.h"
 #include "shareableobject.h"
+#include "regina-config.h"
 
 void addAlgebra();
 void addFile();
@@ -41,6 +42,12 @@ void addUtilities();
 using regina::ShareableObject;
 
 namespace {
+    std::string welcome() {
+        return std::string(PACKAGE_STRING) +
+            "\nA Normal Surface Theory Calculator" +
+            "\nCopyright (c) 1999-2003, Ben Burton";
+    }
+
     void shareableWriteTextShort(const ShareableObject& obj) {
         obj.writeTextShort(std::cout);
     }
@@ -51,6 +58,10 @@ namespace {
 }
 
 BOOST_PYTHON_MODULE(regina) {
+    // Welcome string:
+
+    boost::python::def("welcome", welcome);
+
     // Core engine routines:
 
     boost::python::def("getVersionString", regina::getVersionString);
