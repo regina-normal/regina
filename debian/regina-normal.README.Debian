@@ -1,6 +1,9 @@
 Regina for Debian
 -----------------
 
+Regina is provided as the binary /usr/bin/regina-normal.  The name was
+changed so as not to conflict with the Regina REXX interpreter.
+
 To browse the online documentation from within Regina, you will need the
 package regina-normal-doc.  You then have two choices:
 

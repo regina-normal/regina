@@ -45,6 +45,12 @@
    <title>Description</title>
    &regabstract;
    <para>
+    On some systems &regina; is installed as
+    <filename>/usr/bin/regina-normal</filename> so as not to conflict
+    with the <application>Regina</application> <acronym>REXX</acronym>
+    interpreter.
+   </para>
+   <para>
     &linux; users should start &regina; by running the
     <filename>regina</filename> startup script in the main
     &regina; directory.  &windows; users may either start a
@@ -293,6 +299,12 @@
     configuration file).
    </para>
    <para>
+    On some systems the global configuration file is installed as
+    <filename>/etc/regina-normal/regina.conf</filename> so as not to
+    conflict with the <application>Regina</application>
+    <acronym>REXX</acronym> interpreter.
+   </para>
+   <para>
     The local and global configuration files should each contain
     lines of the form:
     <screen>
@@ -371,6 +383,12 @@
       </para>
       <para>
        Clearly this option cannot be set in the configuration files!
+      </para>
+      <para>
+       On some systems this defaults to
+       <filename>/etc/regina-normal</filename> so as not to
+       conflict with the <application>Regina</application>
+       <acronym>REXX</acronym> interpreter.
       </para>
      </listitem>
     </varlistentry>
@@ -601,7 +619,8 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina">regina</link>,
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems),
     <link linkend="man-applet">regina-applet</link>,
     <link linkend="man-engine-corba">regina-engine-corba</link>.
    </para>
@@ -736,7 +755,8 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina">regina</link>,
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems),
     <link linkend="man-regina.conf">regina.conf</link>,
     <link linkend="man-engine-corba">regina-engine-corba</link>.
    </para>
@@ -820,7 +840,8 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina">regina</link>,
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems),
     <link linkend="man-regina.conf">regina.conf</link>,
     <link linkend="man-applet">regina-applet</link>.
    </para>
