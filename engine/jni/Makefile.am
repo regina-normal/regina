@@ -13,7 +13,8 @@ SUBDIRS = engine registry
 pkglib_LTLIBRARIES = libregina-engine-jni.la
 
 libregina_engine_jni_la_SOURCES = javacast.cpp jnitools.cpp
-libregina_engine_jni_la_LDFLAGS = -module -avoid-version -no-undefined
+libregina_engine_jni_la_LDFLAGS = -module -avoid-version -no-undefined \
+  @ADD_STDCALL_ALIAS@
 libregina_engine_jni_la_LIBADD = @LIB_ENGINE@ \
   engine/libengine.la \
   registry/libregistry.la

@@ -310,6 +310,39 @@ AC_DEFUN(REGINA_HEADER_REQUIRED, [
 ])
 
 dnl
+dnl    REGINA_LD_ADD_STDCALL_ALIAS
+dnl
+dnl    Checks whether the linker supports --add-stdcall-alias.  This
+dnl    flag may be needed for building JNI modules.
+dnl
+dnl    AC_SUBST()s the following variables:
+dnl
+dnl        ADD_STDCALL_ALIAS: The flag to include in LDFLAGS if
+dnl                           --add-stdcall-alias is supported, or
+dnl                           the empty string otherwise.
+dnl
+AC_DEFUN(REGINA_LD_ADD_STDCALL_ALIAS, [
+  AC_MSG_CHECKING([whether the linker supports --add-stdcall-alias])
+
+  __stdcall_save_ldflags="$LDFLAGS"
+  LDFLAGS="$LDFLAGS -Wl,--add-stdcall-alias"
+  AC_TRY_LINK([
+    #include <cstdlib>
+  ], [
+    exit(0);
+  ], [
+    ADD_STDCALL_ALIAS="-Wl,--add-stdcall-alias"
+    AC_MSG_RESULT([yes])
+  ], [
+    ADD_STDCALL_ALIAS=
+    AC_MSG_RESULT([no])
+  ])
+  LDFLAGS="$__stdcall_save_ldflags"
+
+  AC_SUBST(ADD_STDCALL_ALIAS)
+])
+
+dnl
 dnl    REGINA_LIB_JAVA(LIBNAME, CLASS-IN-LIB, TARGET-LIST, REQUIRED-BY)
 dnl
 dnl    Checks for the given optional Java library.

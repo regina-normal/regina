@@ -281,6 +281,7 @@ AC_CHECK_FUNCS([strtol strtoul])
 REGINA_CXX_PARTIAL_SPECIALISATION
 REGINA_TYPE_HASH_SET
 REGINA_VAR_IOS_NOCREATE
+REGINA_LD_ADD_STDCALL_ALIAS
 
 ###########################################################
 #
