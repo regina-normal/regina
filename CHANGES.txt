@@ -44,6 +44,11 @@ Version 4.0  [ currently under development ]
             - Displays progress and allows cancellation.
         Class ProgressDialogNumeric:
             - Added for displaying progress from regina::NProgressNumber.
+        Class ReginaMain:
+            - Added Python reference to Help menu.
+        Class PythonManager:
+            - New static routine openPythonReference() for displaying
+              calculation engine documentation.
     TEST SUITE:
         - Added tests for angle structure enumeration and analysis.
         - Expanded normal surface tests to include trivial triangulations.

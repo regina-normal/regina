@@ -155,6 +155,12 @@ class PythonManager {
          * that this manager is currently responsible for.
          */
         void updatePreferences(const ReginaPrefSet& newPrefs);
+
+        /**
+         * Opens a new browser displaying the calculation engine
+         * documentation.
+         */
+        static void openPythonReference();
 };
 
 inline PythonVariable::PythonVariable() : value(0) {

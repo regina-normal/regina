@@ -46,6 +46,11 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
     consoles.erase(console);
 }
 
+void PythonManager::openPythonReference() {
+    KApplication::kApplication()->invokeBrowser(
+        QString("file:%1/engine-docs/index.html").arg(REGINA_DATADIR));
+}
+
 #ifdef HAVE_BOOST_PYTHON
 
 #include "python/pythonconsole.h"

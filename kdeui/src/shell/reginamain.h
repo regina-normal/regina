@@ -178,6 +178,11 @@ class ReginaMain : public KParts::MainWindow,
         void pythonConsole();
 
         /**
+         * Present the calculation engine documentation in a new browser.
+         */
+        void pythonReference();
+
+        /**
          * Closes this window.
          */
         void close();

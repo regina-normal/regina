@@ -27,7 +27,9 @@
     <Action name="python_console" />
   </Menu>
   <Menu name="settings"/>
-  <Menu name="help"/>
+  <Menu name="help">
+    <Action name="help_engine"/>
+  </Menu>
 </MenuBar>
 
 <ToolBar name="mainToolBar" noMerge="1">

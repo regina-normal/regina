@@ -239,6 +239,10 @@ void ReginaMain::pythonConsole() {
     consoles.launchPythonConsole(this, &globalPrefs);
 }
 
+void ReginaMain::pythonReference() {
+    PythonManager::openPythonReference();
+}
+
 void ReginaMain::close() {
     KParts::MainWindow::close();
 }
@@ -343,6 +347,10 @@ void ReginaMain::setupActions() {
     actPython = new KAction(i18n("&Python Console"), "python_console",
         ALT+Key_Y, this, SLOT(pythonConsole()), actionCollection(),
         "python_console");
+
+    // Help:
+    new KAction(i18n("&Python Reference"), "python_console", 0, this,
+        SLOT(pythonReference()), actionCollection(), "help_engine");
 
     // All done!  Build the GUI.
     createGUI(0);
