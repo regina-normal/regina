@@ -35,20 +35,16 @@
 #define PROPID_COMPACT 1003
 #define PROPID_REALBDRY 1004
 
-NSurfaceFilterProperties::NSurfaceFilterProperties(
-        const NSurfaceFilterProperties& cloneMe) :
-        orientability(cloneMe.orientability),
-        compactness(cloneMe.compactness),
-        realBoundary(cloneMe.realBoundary) {
-    for (NDynamicArrayIterator<NLargeInteger> it(cloneMe.eulerCharacteristic);
-            ! it.done(); it++)
-        eulerCharacteristic.addLast(*it);
+NLargeInteger NSurfaceFilterProperties::getEC(unsigned long index) const {
+    std::set<NLargeInteger>::const_iterator it = eulerCharacteristic.begin();
+    advance(it, index);
+    return *it;
 }
 
 void NSurfaceFilterProperties::initialiseAllProperties() {
     NSurfaceFilter::initialiseAllProperties();
 
-    eulerCharacteristic.flush();
+    eulerCharacteristic.clear();
     orientability.fill();
     compactness.fill();
     realBoundary.fill();
@@ -68,8 +64,7 @@ bool NSurfaceFilterProperties::accept(NNormalSurface& surface) const {
                 return false;
 
         if (eulerCharacteristic.size() > 0)
-            if (eulerCharacteristic.position(
-                    surface.getEulerCharacteristic()) < 0)
+            if (! eulerCharacteristic.count(surface.getEulerCharacteristic()))
                 return false;
     }
 
@@ -82,8 +77,9 @@ void NSurfaceFilterProperties::writeTextLong(ostream& o) const {
 
     if (eulerCharacteristic.size() > 0) {
         o << "    Euler characteristic:";
-        NDynamicArrayIterator<NLargeInteger> it;
-        for (it.initEnd(eulerCharacteristic); ! it.done(); it--)
+        std::set<NLargeInteger>::const_reverse_iterator it;
+        for (it = eulerCharacteristic.rbegin();
+                it != eulerCharacteristic.rend(); it++)
             o << ' ' << *it;
         o << '\n';
     }
@@ -101,8 +97,9 @@ void NSurfaceFilterProperties::writeProperties(NFile& out) const {
     if (eulerCharacteristic.size() > 0) {
         bookmark = writePropertyHeader(out, PROPID_EULER);
         out.writeULong(eulerCharacteristic.size());
-        for (NDynamicArrayIterator<NLargeInteger> it(eulerCharacteristic);
-                ! it.done(); it++)
+        for (std::set<NLargeInteger>::const_iterator it =
+                eulerCharacteristic.begin(); it != eulerCharacteristic.end();
+                it++)
             out.writeLarge(*it);
         writePropertyFooter(out, bookmark);
     }
@@ -136,9 +133,9 @@ void NSurfaceFilterProperties::readIndividualProperty(NFile& in,
 
     switch (propType) {
         case PROPID_EULER:
-            eulerCharacteristic.flush();
+            eulerCharacteristic.clear();
             for (unsigned long size = in.readULong(); size != 0; size--)
-                eulerCharacteristic.addLast(in.readLarge());
+                eulerCharacteristic.insert(in.readLarge());
             break;
         case PROPID_ORIENT:
             orientability = in.readBoolSet(); break;

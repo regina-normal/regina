@@ -36,10 +36,10 @@
 #define __SFPROPERTIES_H
 #endif
 
+#include <set>
 #include "surfaces/nsurfacefilter.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmpi.h"
-#include "utilities/ndynamicarray.h"
 
 /**
  * A normal surface filter that filters by basic properties of the normal
@@ -57,11 +57,9 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
         static const int filterID;
 
     private:
-        NDynamicArray<NLargeInteger> eulerCharacteristic;
+        std::set<NLargeInteger> eulerCharacteristic;
             /**< The set of allowable Euler characteristics.  An empty
-                 set signifies that any Euler characteristic is allowed.
-                 This array will be kept in ascending order and all elements
-                 will be unique. */
+                 set signifies that any Euler characteristic is allowed. */
         NBoolSet orientability;
             /**< The set of allowable orientability properties. */
         NBoolSet compactness;
@@ -95,7 +93,7 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the set of allowable Euler characteristics.
          */
-        const NDynamicArray<NLargeInteger>& getECs() const;
+        const std::set<NLargeInteger>& getECs() const;
         /**
          * Returns the number of allowable Euler characteristics.
          * See getECs() for further details.
@@ -216,17 +214,20 @@ inline NSurfaceFilterProperties::NSurfaceFilterProperties() :
         compactness(NBoolSet::sBoth),
         realBoundary(NBoolSet::sBoth) {
 }
+inline NSurfaceFilterProperties::NSurfaceFilterProperties(
+        const NSurfaceFilterProperties& cloneMe) :
+        eulerCharacteristic(cloneMe.eulerCharacteristic),
+        orientability(cloneMe.orientability),
+        compactness(cloneMe.compactness),
+        realBoundary(cloneMe.realBoundary) {
+}
 
-inline const NDynamicArray<NLargeInteger>& NSurfaceFilterProperties::getECs()
+inline const std::set<NLargeInteger>& NSurfaceFilterProperties::getECs()
         const {
     return eulerCharacteristic;
 }
 inline unsigned long NSurfaceFilterProperties::getNumberOfECs() const {
     return eulerCharacteristic.size();
-}
-inline NLargeInteger NSurfaceFilterProperties::getEC(unsigned long index)
-        const {
-    return eulerCharacteristic[index];
 }
 inline NBoolSet NSurfaceFilterProperties::getOrientability() const {
     return orientability;
@@ -239,13 +240,13 @@ inline NBoolSet NSurfaceFilterProperties::getRealBoundary() const {
 }
 
 inline void NSurfaceFilterProperties::addEC(const NLargeInteger& ec) {
-    eulerCharacteristic.addSort(ec);
+    eulerCharacteristic.insert(ec);
 }
 inline void NSurfaceFilterProperties::removeEC(const NLargeInteger& ec) {
-    eulerCharacteristic.remove(ec);
+    eulerCharacteristic.erase(ec);
 }
 inline void NSurfaceFilterProperties::removeAllECs() {
-    eulerCharacteristic.flush();
+    eulerCharacteristic.clear();
 }
 inline void NSurfaceFilterProperties::setOrientability(const NBoolSet& value) {
     orientability = value;
