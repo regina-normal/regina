@@ -29,6 +29,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/numbertheory.h"
+#include "testsuite/maths/testmaths.h"
 
 class NumberTheoryTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NumberTheoryTest);
@@ -292,5 +293,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
         }
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(NumberTheoryTest);
+void addNumberTheory(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(NumberTheoryTest::suite());
+}
 

@@ -30,8 +30,7 @@
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/ui/text/TestRunner.h>
+#include "testsuite/maths/testmaths.h"
 
 /**
  * Removes "FIXTURE." from "FIXTURE.TEST" since the fixture name
@@ -85,7 +84,10 @@ bool runAllTests() {
     CppUnit::TextUi::TestRunner runner;
     ReginaProgress progress;
 
-    runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
+    // Add individual groups of tests.
+    // Maths:
+    addNumberTheory(runner);
+
     runner.eventManager().addListener(&progress);
     return runner.run("", false, true, false);
 }
@@ -95,7 +97,7 @@ bool runAllTests() {
  */
 #ifndef __NO_TESTSUITE_MAIN
 int main(int argc, char* argv[]) {
-    return runAllTests();
+    return (runAllTests() ? 0 : 1);
 }
 #endif
 
