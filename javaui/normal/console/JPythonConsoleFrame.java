@@ -33,6 +33,7 @@ import normal.mainui.NormalFrame;
 import normal.options.NormalOptionSet;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import javax.swing.*;
 import javax.swing.text.Keymap;
 import btools.gui.component.EditMenu;
@@ -117,11 +118,17 @@ public class JPythonConsoleFrame extends JFrame {
 		// Set up the menus.
 		JMenu menuConsole = new JMenu("Console");
 		menuConsole.setMnemonic(KeyEvent.VK_C);
+		JMenuItem menuConsoleSave = new JMenuItem("Save Contents",
+			Standard16.save.image());
+		menuConsoleSave.setMnemonic(KeyEvent.VK_S);
+		menuConsoleSave.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_S, ActionEvent.ALT_MASK));
 		JMenuItem menuConsoleClose = new JMenuItem("Close",
 			Standard16.close.image());
 		menuConsoleClose.setMnemonic(KeyEvent.VK_C);
 		menuConsoleClose.setAccelerator(KeyStroke.getKeyStroke(
 			KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+		menuConsole.add(menuConsoleSave);
 		menuConsole.add(menuConsoleClose);
 
 		JMenu menuHelp = new JMenu("Help");
@@ -138,6 +145,11 @@ public class JPythonConsoleFrame extends JFrame {
 		setJMenuBar(bar);
 
 		// Add menu event listeners.
+		menuConsoleSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveContents();
+			}
+		});
 		menuConsoleClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeConsole();
@@ -149,35 +161,10 @@ public class JPythonConsoleFrame extends JFrame {
 			}
 		});
 
-		/*
-        // Set up the buttons.
-        JButton help = new JButton("Help");
-        JButton close = new JButton("Close");
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-        buttonPanel.add(close);
-        buttonPanel.add(help);
-		*/
-
         // Put everything together.
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(new JScrollPane(console),
             BorderLayout.CENTER);
-        //getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-
-		/*
-        // Add button event listeners.
-        help.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                shell.viewHelp("jython");
-            }
-        });
-        close.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                closeConsole();
-            }
-        });
-		*/
 
         // Add a key mapping for Ctrl-D so it closes the window instead
 		// of doing its usual function.
@@ -243,5 +230,35 @@ public class JPythonConsoleFrame extends JFrame {
         if (standalone)
             shell.exit(0);
     }
+
+	/**
+	 * Saves the contents of this console to a file.
+	 */
+	public void saveContents() {
+		NormalOptionSet options = shell.getOptions();
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File(
+			options.getStringOption("LastDir", ".")));
+		chooser.setDialogTitle("Save console contents...");
+		if (chooser.showSaveDialog(this) != chooser.APPROVE_OPTION)
+			return;
+
+		// Attempt to save the console contents.
+		File dest = chooser.getSelectedFile();
+		try {
+			console.writeContentsToFile(dest);
+		} catch (IOException exc) {
+			shell.error("An error occurred whilst attempting to write to [" +
+				dest.getAbsolutePath() + "].");
+			return;
+		}
+
+		// Update the system properties.
+		String fileDir = dest.getParent();
+		if (fileDir == null)
+			fileDir = ".";
+		options.setStringOption("LastDir", fileDir);
+		options.writeToFile();
+	}
 }
 

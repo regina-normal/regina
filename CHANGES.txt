@@ -28,6 +28,8 @@ Regina - A Normal Surface Theory Calculator
         normal.console:
             - Major rearrangements; new class JPythonUtils now does most of
               the Jython work.
+        normal.console.JPythonConsoleFrame:
+            - Allows saving the contents of the console to a file.
         normal.mainui.SystemPane:
             - Fixed the bug where double clicking on a tree item opens
               it three times.
