@@ -58,12 +58,12 @@ done
 
 # --- Run the application. ---
 
-command="$REGINA_JAVA $javadefs normal.Application \"\$@\""
+command="$REGINA_JAVA $javadefs normal.Application"
 
 info "Command: $command"
 info "Classpath: $CLASSPATH"
 
-if ! ( eval $command ); then
+if ! ( eval $command '"$@"' ); then
 	error
 	error "################################"
 	error "#                              #"
