@@ -77,7 +77,7 @@ class ReginaMain : public KParts::MainWindow,
             /**< The menu of recently opened files. */
         KToggleAction* showToolbar;
             /**< Action to show/hide the toolbar. */
-        KToggleAction* showStatusbar;
+        // KToggleAction* showStatusbar;
             /**< Action to show/hide the status bar. */
 
         /**
@@ -208,12 +208,12 @@ class ReginaMain : public KParts::MainWindow,
          */
         void fileOpen();
         void optionsShowToolbar();
-        void optionsShowStatusbar();
+        // void optionsShowStatusbar();
         void optionsConfigureKeys();
         void optionsConfigureToolbars();
         void optionsPreferences();
 
-        void changeStatusbar(const QString& text);
+        // void changeStatusbar(const QString& text);
         void changeCaption(const QString& text);
         void newToolbarConfig();
 

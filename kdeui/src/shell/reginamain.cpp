@@ -49,7 +49,7 @@
 #include <kmenubar.h>
 #include <kmessagebox.h>
 #include <kparts/event.h>
-#include <kstatusbar.h>
+// #include <kstatusbar.h>
 #include <kstdaccel.h>
 #include <kstdaction.h>
 #include <ktexteditor/document.h>
@@ -78,7 +78,7 @@ ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#" ),
     // Set up our actions and status bar.
     setXMLFile("reginamain.rc");
     setupActions();
-    statusBar()->show();
+    // statusBar()->show();
 
     // Read the configuration.
     readOptions(KGlobal::config());
@@ -276,12 +276,14 @@ void ReginaMain::optionsShowToolbar() {
             (*bar)->hide();
 }
 
+/*
 void ReginaMain::optionsShowStatusbar() {
     if (showStatusbar->isChecked())
         statusBar()->show();
     else
         statusBar()->hide();
 }
+*/
 
 void ReginaMain::optionsConfigureKeys() {
     KKeyDialog::configure(actionCollection());
@@ -301,9 +303,11 @@ void ReginaMain::optionsPreferences() {
     dlg.exec();
 }
 
+/*
 void ReginaMain::changeStatusbar(const QString& text) {
     statusBar()->message(text);
 }
+*/
 
 void ReginaMain::changeCaption(const QString& text) {
     setCaption(text);
@@ -334,8 +338,10 @@ void ReginaMain::setupActions() {
     // Toolbar and status bar:
     showToolbar = KStdAction::showToolbar(this,
         SLOT(optionsShowToolbar()), actionCollection());
+    /*
     showStatusbar = KStdAction::showStatusbar(this,
         SLOT(optionsShowStatusbar()), actionCollection());
+    */
 
     // Preferences:
     KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
