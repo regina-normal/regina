@@ -27,6 +27,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "regina-config.h"
 #include "packet/npacket.h"
 
 // UI includes:
@@ -82,7 +83,12 @@ void PacketHeader::refresh() {
 ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
         PacketPane* newEnclosingPane, const QString& errorMessage) :
         PacketReadOnlyUI(newEnclosingPane), packet(newPacket) {
-    label = new QLabel(errorMessage, 0);
+    QString msg = errorMessage;
+    msg += "\n\nPlease mail\n";
+    msg += PACKAGE_BUGREPORT;
+    msg += "\nfor assistance.";
+
+    label = new QLabel(msg, 0);
     label->setAlignment(Qt::AlignCenter);
 }
 
