@@ -203,7 +203,14 @@ class NumberTheoryTest : public CppUnit::TestFixture {
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
                     1 <= uSigned && uSigned <= bMult);
             } else {
-                // TODO: One of the initial arguments was zero.
+                if (a == 0 && b != 0)
+                    CPPUNIT_ASSERT_MESSAGE(msg.str(), u == 0 &&
+                        (b < 0 && v == -1 || b > 0 && v == 1));
+                else if (a != 0 && b == 0)
+                    CPPUNIT_ASSERT_MESSAGE(msg.str(), v == 0 &&
+                        (a < 0 && u == -1 || a > 0 && u == 1));
+                else
+                    CPPUNIT_ASSERT_MESSAGE(msg.str(), u == 0 && v == 0);
             }
         }
 
