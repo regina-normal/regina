@@ -19,6 +19,8 @@ Version 4.2  [ under development ]
             - New routine hasWedgedDoubleEndedChain.
         Class NSnapPeaTriangulation:
             - Added to give Regina triangulations access to the SnapPea kernel.
+    TEST SUITE:
+        - Added tests for SnapPea calculations.
 
 Version 4.1.3  [ 25 July, 2004 ]
 

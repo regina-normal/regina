@@ -34,6 +34,7 @@
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/maths/testmaths.h"
+#include "testsuite/snappea/testsnappea.h"
 #include "testsuite/surfaces/testsurfaces.h"
 #include "testsuite/triangulation/testtriangulation.h"
 #include "testsuite/utilities/testutilities.h"
@@ -128,6 +129,9 @@ bool runAllTests() {
     // Census:
     addNCensus(runner);
     addNFacePairing(runner);
+
+    // SnapPea:
+    addNSnapPeaTriangulation(runner);
 
     /**
      * END REGINA TEST SUITES

@@ -14,6 +14,7 @@ SUBDIRS = \
   angle \
   census \
   maths \
+  snappea \
   surfaces \
   triangulation \
   utilities
@@ -27,6 +28,7 @@ regtestsuite_LDADD = \
   angle/libangle.a \
   census/libcensus.a \
   maths/libmaths.a \
+  snappea/libsnappea.a \
   surfaces/libsurfaces.a \
   triangulation/libtriangulation.a \
   utilities/libutilities.a \
