@@ -43,6 +43,10 @@ namespace regina {
  * A table item for script variable names.
  */
 class ScriptVarNameItem : public QTableItem {
+    private:
+        bool error;
+            /**< Are we currently displaying an error message? */
+
     public:
         /**
          * Constructor.
@@ -54,6 +58,19 @@ class ScriptVarNameItem : public QTableItem {
          */
         virtual QWidget* createEditor() const;
         virtual void setContentFromEditor(QWidget* editor);
+
+    private:
+        /**
+         * Display the given error to the user if no error is already
+         * being displayed.
+         */
+        void showError(const QString& message);
+
+        /**
+         * Is the given variable name already being used elsewhere in the
+         * table?
+         */
+        bool nameUsedElsewhere(const QString& name);
 };
 
 /**

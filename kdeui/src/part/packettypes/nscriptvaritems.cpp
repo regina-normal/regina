@@ -37,29 +37,78 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qlineedit.h>
+#include <qregexp.h>
 #include <qtable.h>
 
 using regina::NPacket;
 
+namespace {
+    QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
+}
+
 ScriptVarNameItem::ScriptVarNameItem(QTable* table, const QString& name) :
-        QTableItem(table, OnTyping, name) {
+        QTableItem(table, OnTyping, name), error(false) {
     setReplaceable(false);
 }
 
 QWidget* ScriptVarNameItem::createEditor() const {
     QLineEdit* editor = new QLineEdit(text(), table()->viewport());
     editor->setFrame(false);
+    editor->selectAll();
     return editor;
 }
 
 void ScriptVarNameItem::setContentFromEditor(QWidget* editor) {
     QString name = dynamic_cast<QLineEdit*>(editor)->text().stripWhiteSpace();
+
     if (name.isEmpty()) {
-        KMessageBox::error(editor, i18n(
-            "Variable names cannot be empty."));
-    } else
-            setText(name);
-    // TODO: Check for validity and uniqueness.
+        showError(i18n("Variable names cannot be empty."));
+        return;
+    }
+
+    if (! rePythonIdentifier.exactMatch(name)) {
+        showError(i18n("%1 is not a valid python variable name.").arg(name));
+
+        // Construct a better variable name.
+        name.replace(QRegExp("[^A-Za-z0-9_]"), "");
+        if (name.isEmpty())
+            return;
+        if (! rePythonIdentifier.exactMatch(name))
+            name.prepend('_');
+    }
+
+    if (nameUsedElsewhere(name)) {
+        showError(i18n("Another variable is already using the name %1.").
+            arg(name));
+
+        // Construct a unique variable name.
+        int which;
+        for (which = 0; nameUsedElsewhere(name + QString::number(which));
+                which++)
+            ;
+        name.append(QString::number(which));
+    }
+
+    setText(name);
+}
+
+void ScriptVarNameItem::showError(const QString& message) {
+    if (! error) {
+        error = true;
+        KMessageBox::error(table(), message);
+        error = false;
+    }
+}
+
+bool ScriptVarNameItem::nameUsedElsewhere(const QString& name) {
+    int rows = table()->numRows();
+    for (int i = 0; i < rows; i++) {
+        if (i == row())
+            continue;
+        if (table()->text(i, 0) == name)
+            return true;
+    }
+    return false;
 }
 
 ScriptVarValueItem::ScriptVarValueItem(QTable* table, NPacket* treeMatriarch,
