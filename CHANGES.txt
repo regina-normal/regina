@@ -34,7 +34,7 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
             - Uses new NFacePairing routines to identify certain
               situations in which no solutions are possible.
             - Uses a completely redesigned algorithm in the closed
-              orientable prime minimal case.
+              prime minimal P2-irreducible case.
             - Added pruning during permutation generation to eliminate
               edges identified with themselves in reverse.
             - Added pruning using low-degree edges in the non-orientable
