@@ -218,8 +218,8 @@ void FaceGluingItem::setContentFromEditor(QWidget* editor) {
                 "form: <i>tet (face)</i>.  An example is <i>5 (032)</i>, "
                 "which represents face 032 of tetrahedron 5.<p>"
                 "For a method of entering face gluings that is slower but "
-                "easier to understand, you can select the pop-up dialog "
-                "edit mode in the triangulation preferences.</qt>"));
+                "easier to understand, you can change to pop-up dialog "
+                "mode in the triangulation preferences.</qt>"));
             return;
         } else {
             // Real face.
