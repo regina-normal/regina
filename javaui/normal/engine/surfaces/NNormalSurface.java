@@ -33,43 +33,43 @@ import normal.engine.triangulation.*;
 import java.math.BigInteger;
 
 public interface NNormalSurface extends ShareableObject {
-    public static final int vertexSplit[][] = {
+    int vertexSplit[][] = {
         { -1, 0, 1, 2 },
         {  0,-1, 2, 1 },
         {  1, 2,-1, 0 },
         {  2, 1, 0,-1 }
     };
-    public static final int vertexSplitMeeting[][][] = {
+    int vertexSplitMeeting[][][] = {
         { {-1,-1}, { 1, 2}, { 0, 2}, { 0, 1} },
         { { 1, 2}, {-1,-1}, { 0, 1}, { 0, 2} },
         { { 0, 2}, { 0, 1}, {-1,-1}, { 1, 2} },
         { { 0, 1}, { 0, 2}, { 1, 2}, {-1,-1} }
     };
-    public static final int vertexSplitDefn[][] = {
+    int vertexSplitDefn[][] = {
         { 0, 1, 2, 3 },
         { 0, 2, 1, 3 },
         { 0, 3, 1, 2 }
     };
-    public static final int vertexSplitPartner[][] = {
+    int vertexSplitPartner[][] = {
         { 1, 0, 3, 2 },
         { 2, 3, 0, 1 },
         { 3, 2, 1, 0 }
     };
-    public static final String vertexSplitString[] = {
+    String vertexSplitString[] = {
         "01/23", "02/13", "03/12"
     };
-    public static final NPerm triDiscArcs[][] = {
+    NPerm triDiscArcs[][] = {
         { new NPerm(0,1,2,3), new NPerm(0,2,3,1), new NPerm(0,3,1,2) },
         { new NPerm(1,0,3,2), new NPerm(1,3,2,0), new NPerm(1,2,0,3) },
         { new NPerm(2,3,0,1), new NPerm(2,0,1,3), new NPerm(2,1,3,0) },
         { new NPerm(3,2,1,0), new NPerm(3,1,0,2), new NPerm(3,0,2,1) }
     };
-    public static final NPerm quadDiscArcs[][] = {
+    NPerm quadDiscArcs[][] = {
         { new NPerm(0,2,3,1), new NPerm(3,0,1,2), new NPerm(1,3,2,0), new NPerm(2,1,0,3) },
         { new NPerm(0,3,1,2), new NPerm(1,0,2,3), new NPerm(2,1,3,0), new NPerm(3,2,0,1) },
         { new NPerm(0,1,2,3), new NPerm(2,0,3,1), new NPerm(3,2,1,0), new NPerm(1,3,0,2) }
     };
-    public static final NPerm octDiscArcs[][] = {
+    NPerm octDiscArcs[][] = {
         { new NPerm(0,3,1,2), new NPerm(0,1,2,3), new NPerm(2,0,3,1), new NPerm(2,3,1,0),
           new NPerm(1,2,0,3), new NPerm(1,0,3,2), new NPerm(3,1,2,0), new NPerm(3,2,0,1) },
         { new NPerm(0,1,2,3), new NPerm(0,2,3,1), new NPerm(3,0,1,2), new NPerm(3,1,2,0),
@@ -78,29 +78,29 @@ public interface NNormalSurface extends ShareableObject {
           new NPerm(3,1,0,2), new NPerm(3,0,2,1), new NPerm(2,3,1,0), new NPerm(2,1,0,3) }
     };
 
-    public BigInteger getTriangleCoord(long tetIndex, int vertex);
-    public BigInteger getQuadCoord(long tetIndex, int quadType);
-    public BigInteger getOctCoord(long tetIndex, int octType);
-    public BigInteger getEdgeWeight(long edgeIndex);
-    public BigInteger getFaceArcs(long faceIndex, int faceVertex);
+    BigInteger getTriangleCoord(long tetIndex, int vertex);
+    BigInteger getQuadCoord(long tetIndex, int quadType);
+    BigInteger getOctCoord(long tetIndex, int octType);
+    BigInteger getEdgeWeight(long edgeIndex);
+    BigInteger getFaceArcs(long faceIndex, int faceVertex);
 
-    public int getNumberOfCoords();
-    public NTriangulation getTriangulation();
-    public String getName();
-    public void setName(String newName);
+    int getNumberOfCoords();
+    NTriangulation getTriangulation();
+    String getName();
+    void setName(String newName);
 
-    public void writeRawVector();
+    void writeRawVector();
 
-    public boolean isCompact();
-    public BigInteger getEulerCharacteristic();
-    public int isOrientable();
-    public int isTwoSided();
-    public int isConnected();
-    public boolean hasRealBoundary();
-    public boolean isVertexLinking();
-    public boolean isSplitting();
+    boolean isCompact();
+    BigInteger getEulerCharacteristic();
+    int isOrientable();
+    int isTwoSided();
+    int isConnected();
+    boolean hasRealBoundary();
+    boolean isVertexLinking();
+    boolean isSplitting();
 
-    public NTriangulation cutAlong();
-    public NTriangulation crush();
+    NTriangulation cutAlong();
+    NTriangulation crush();
 }
 

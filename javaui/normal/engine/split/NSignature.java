@@ -32,6 +32,6 @@ import normal.engine.ShareableObject;
 import normal.engine.triangulation.NTriangulation;
 
 public interface NSignature extends ShareableObject {
-    public long getOrder();
-    public NTriangulation triangulate();
+    long getOrder();
+    NTriangulation triangulate();
 }

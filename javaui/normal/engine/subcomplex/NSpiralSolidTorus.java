@@ -32,10 +32,10 @@ import normal.engine.*;
 import normal.engine.triangulation.*;
 
 public interface NSpiralSolidTorus extends ShareableObject {
-    public NSpiralSolidTorus cloneMe();
-    public long getNumberOfTetrahedra();
-    public NTetrahedron getTetrahedron(long index);
-    public NPerm getVertexRoles(long index);
+    NSpiralSolidTorus cloneMe();
+    long getNumberOfTetrahedra();
+    NTetrahedron getTetrahedron(long index);
+    NPerm getVertexRoles(long index);
     void reverse();
     void cycle(long k);
     boolean makeCanonical(NTriangulation tri);

@@ -672,7 +672,7 @@ public class NScriptEditor extends DefaultPacketEditor {
         /**
          * A variable representing the Python value <tt>None</tt>.
          */
-        public static Variable none = new NoneVariable();
+        Variable none = new NoneVariable();
 
         /**
          * Returns the value of this variable as an object that can be
@@ -680,7 +680,7 @@ public class NScriptEditor extends DefaultPacketEditor {
          *
          * @return the value of this variable.
          */
-        public Object getValue();
+        Object getValue();
     }
 
     /**

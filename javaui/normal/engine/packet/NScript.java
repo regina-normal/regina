@@ -29,24 +29,24 @@
 package normal.engine.packet;
 
 public interface NScript extends NPacket {
-    public static final int packetType = 7;
+    int packetType = 7;
 
-    public long getNumberOfLines();
-    public String getLine(long index);
+    long getNumberOfLines();
+    String getLine(long index);
 
-    public void addFirst(String line);
-    public void addLast(String line);
-    public void insertAtPosition(String line, long index);
-    public void replaceAtPosition(String line, long index);
-    public void removeLineAt(long index);
-    public void removeAllLines();
+    void addFirst(String line);
+    void addLast(String line);
+    void insertAtPosition(String line, long index);
+    void replaceAtPosition(String line, long index);
+    void removeLineAt(long index);
+    void removeAllLines();
 
-    public long getNumberOfVariables();
-    public String getVariableName(long index);
-    public String getVariableValue(long index);
-    public String getVariableValue(String name);
+    long getNumberOfVariables();
+    String getVariableName(long index);
+    String getVariableValue(long index);
+    String getVariableValue(String name);
 
-    public boolean addVariable(String name, String value);
-    public void removeVariable(String name);
-    public void removeAllVariables();
+    boolean addVariable(String name, String value);
+    void removeVariable(String name);
+    void removeAllVariables();
 }

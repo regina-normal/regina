@@ -39,12 +39,12 @@ package normal.engine;
  * @see normal.engine
  */
 public interface ShareableObject {
-    public boolean sameObject(ShareableObject object);
-    public void destroy();
-    public ShareableObject castAs(Class cls);
+    boolean sameObject(ShareableObject object);
+    void destroy();
+    ShareableObject castAs(Class cls);
 
-    public void writeTextShort();
-    public void writeTextLong();
-    public String toString();
-    public String toStringLong();
+    void writeTextShort();
+    void writeTextLong();
+    String toString();
+    String toStringLong();
 }

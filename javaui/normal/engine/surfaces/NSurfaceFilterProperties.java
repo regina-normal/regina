@@ -32,19 +32,19 @@ import normal.engine.utilities.NBoolSet;
 import java.math.BigInteger;
 
 public interface NSurfaceFilterProperties extends NSurfaceFilter {
-    public static final int filterID = 1;
+    int filterID = 1;
 
-    public long getNumberOfECs();
-    public BigInteger getEC(long index);
-    public NBoolSet getOrientability();
-    public NBoolSet getCompactness();
-    public NBoolSet getRealBoundary();
+    long getNumberOfECs();
+    BigInteger getEC(long index);
+    NBoolSet getOrientability();
+    NBoolSet getCompactness();
+    NBoolSet getRealBoundary();
 
-    public void addEC(BigInteger ec);
-    public void removeEC(BigInteger ec);
-    public void removeAllECs();
-    public void setOrientability(NBoolSet value);
-    public void setCompactness(NBoolSet value);
-    public void setRealBoundary(NBoolSet value);
+    void addEC(BigInteger ec);
+    void removeEC(BigInteger ec);
+    void removeAllECs();
+    void setOrientability(NBoolSet value);
+    void setCompactness(NBoolSet value);
+    void setRealBoundary(NBoolSet value);
 }
 

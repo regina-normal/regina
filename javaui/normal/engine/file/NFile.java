@@ -32,19 +32,19 @@ import normal.engine.*;
 import normal.engine.packet.*;
 
 public interface NFile extends ShareableObject {
-    public static final int CLOSED = 0;
-    public static final int READ = 1;
-    public static final int WRITE = 2;
+    int CLOSED = 0;
+    int READ = 1;
+    int WRITE = 2;
 
-    public boolean open(String fileName, int openMode);
-    public void close();
+    boolean open(String fileName, int openMode);
+    void close();
     
-    public int getOpenMode();
-    public int getMajorVersion();
-    public int getMinorVersion();
-    public boolean versionEarlierThan(int major, int minor);
+    int getOpenMode();
+    int getMajorVersion();
+    int getMinorVersion();
+    boolean versionEarlierThan(int major, int minor);
     
-    public void writePacketTree(NPacket packet);
-    public NPacket readPacketTree();
-    public NPacket readPacketTree(NPacket parent);
+    void writePacketTree(NPacket packet);
+    NPacket readPacketTree();
+    NPacket readPacketTree(NPacket parent);
 }

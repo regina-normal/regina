@@ -62,6 +62,6 @@ public interface PacketInfoUI extends PacketUI {
      * packet is being edited elsewhere within the same overall
      * <tt>PacketUI</tt> interface.
      */
-    public void editingElsewhere();
+    void editingElsewhere();
 }
 

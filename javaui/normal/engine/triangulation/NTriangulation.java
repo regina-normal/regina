@@ -32,98 +32,95 @@ import normal.engine.packet.*;
 import normal.engine.algebra.*;
 
 public interface NTriangulation extends NPacket {
-    public static final int packetType = 3;
+    int packetType = 3;
 
-    public long getNumberOfTetrahedra();
-    public NTetrahedron getTetrahedron(long index);
-    public long getTetrahedronIndex(NTetrahedron tetrahedron);
+    long getNumberOfTetrahedra();
+    NTetrahedron getTetrahedron(long index);
+    long getTetrahedronIndex(NTetrahedron tetrahedron);
     
-    public void addTetrahedron(NTetrahedron newTet);
-    public void removeTetrahedronAt(long index);
-    public void removeTetrahedron(NTetrahedron tet);
-    public void removeAllTetrahedra();
+    void addTetrahedron(NTetrahedron newTet);
+    void removeTetrahedronAt(long index);
+    void removeTetrahedron(NTetrahedron tet);
+    void removeAllTetrahedra();
 
-    public void gluingsHaveChanged();
+    void gluingsHaveChanged();
 
-    public long getNumberOfComponents();
-    public NComponent getComponent(long index);
-    public long getComponentIndex(NComponent component);
-    public long getNumberOfBoundaryComponents();
-    public NBoundaryComponent getBoundaryComponent(long index);
-    public long getBoundaryComponentIndex(NBoundaryComponent bc);
-    public long getNumberOfVertices();
-    public NVertex getVertex(long index);
-    public long getVertexIndex(NVertex vertex);
-    public long getNumberOfEdges();
-    public NEdge getEdge(long index);
-    public long getEdgeIndex(NEdge edge);
-    public long getNumberOfFaces();
-    public NFace getFace(long index);
-    public long getFaceIndex(NFace face);
+    long getNumberOfComponents();
+    NComponent getComponent(long index);
+    long getComponentIndex(NComponent component);
+    long getNumberOfBoundaryComponents();
+    NBoundaryComponent getBoundaryComponent(long index);
+    long getBoundaryComponentIndex(NBoundaryComponent bc);
+    long getNumberOfVertices();
+    NVertex getVertex(long index);
+    long getVertexIndex(NVertex vertex);
+    long getNumberOfEdges();
+    NEdge getEdge(long index);
+    long getEdgeIndex(NEdge edge);
+    long getNumberOfFaces();
+    NFace getFace(long index);
+    long getFaceIndex(NFace face);
 
-    public long getEulerCharacteristic();
-    public NGroupPresentation getFundamentalGroup();
-    public NAbelianGroup getHomologyH1();
-    public NAbelianGroup getHomologyH1Rel();
-    public NAbelianGroup getHomologyH1Bdry();
-    public NAbelianGroup getHomologyH2();
-    public long getHomologyH2Z2();
+    long getEulerCharacteristic();
+    NGroupPresentation getFundamentalGroup();
+    NAbelianGroup getHomologyH1();
+    NAbelianGroup getHomologyH1Rel();
+    NAbelianGroup getHomologyH1Bdry();
+    NAbelianGroup getHomologyH2();
+    long getHomologyH2Z2();
 
-    public boolean isIdeal();
-    public boolean isValid();
-    public boolean isStandard();
-    public boolean isClosed();
-    public boolean isOrientable();
-    public boolean isConnected();
-    public boolean hasBoundaryFaces();
+    boolean isIdeal();
+    boolean isValid();
+    boolean isStandard();
+    boolean isClosed();
+    boolean isOrientable();
+    boolean isConnected();
+    boolean hasBoundaryFaces();
 
-    public boolean isZeroEfficient();
-    public boolean knowsZeroEfficient();
-    public boolean hasSplittingSurface();
-    public boolean knowsSplittingSurface();
+    boolean isZeroEfficient();
+    boolean knowsZeroEfficient();
+    boolean hasSplittingSurface();
+    boolean knowsSplittingSurface();
      
-    public boolean crushMaximalForest();
-    public boolean intelligentSimplify();
-    public boolean simplifyToLocalMinimum();
-    public boolean simplifyToLocalMinimum(boolean perform);
+    boolean crushMaximalForest();
+    boolean intelligentSimplify();
+    boolean simplifyToLocalMinimum();
+    boolean simplifyToLocalMinimum(boolean perform);
 
-    public boolean threeTwoMove(NEdge e);
-    public boolean threeTwoMove(NEdge e, boolean check);
-    public boolean threeTwoMove(NEdge e, boolean check, boolean perform);
-    public boolean twoThreeMove(NFace f);
-    public boolean twoThreeMove(NFace f, boolean check);
-    public boolean twoThreeMove(NFace f, boolean check, boolean perform);
-    public boolean fourFourMove(NEdge e, int newAxis);
-    public boolean fourFourMove(NEdge e, int newAxis, boolean check);
-    public boolean fourFourMove(NEdge e, int newAxis, boolean check,
-        boolean perform);
-    public boolean twoZeroMove(NEdge e);
-    public boolean twoZeroMove(NEdge e, boolean check);
-    public boolean twoZeroMove(NEdge e, boolean check, boolean perform);
-    public boolean twoZeroMove(NVertex v);
-    public boolean twoZeroMove(NVertex v, boolean check);
-    public boolean twoZeroMove(NVertex v, boolean check, boolean perform);
-    public boolean twoOneMove(NEdge e, int edgeEnd);
-    public boolean twoOneMove(NEdge e, int edgeEnd, boolean check);
-    public boolean twoOneMove(NEdge e, int edgeEnd, boolean check,
-        boolean perform);
-    public boolean openBook(NFace f);
-    public boolean openBook(NFace f, boolean check);
-    public boolean openBook(NFace f, boolean check, boolean perform);
-    public boolean shellBoundary(NTetrahedron t);
-    public boolean shellBoundary(NTetrahedron t, boolean check);
-    public boolean shellBoundary(NTetrahedron t, boolean check,
-        boolean perform);
+    boolean threeTwoMove(NEdge e);
+    boolean threeTwoMove(NEdge e, boolean check);
+    boolean threeTwoMove(NEdge e, boolean check, boolean perform);
+    boolean twoThreeMove(NFace f);
+    boolean twoThreeMove(NFace f, boolean check);
+    boolean twoThreeMove(NFace f, boolean check, boolean perform);
+    boolean fourFourMove(NEdge e, int newAxis);
+    boolean fourFourMove(NEdge e, int newAxis, boolean check);
+    boolean fourFourMove(NEdge e, int newAxis, boolean check, boolean perform);
+    boolean twoZeroMove(NEdge e);
+    boolean twoZeroMove(NEdge e, boolean check);
+    boolean twoZeroMove(NEdge e, boolean check, boolean perform);
+    boolean twoZeroMove(NVertex v);
+    boolean twoZeroMove(NVertex v, boolean check);
+    boolean twoZeroMove(NVertex v, boolean check, boolean perform);
+    boolean twoOneMove(NEdge e, int edgeEnd);
+    boolean twoOneMove(NEdge e, int edgeEnd, boolean check);
+    boolean twoOneMove(NEdge e, int edgeEnd, boolean check, boolean perform);
+    boolean openBook(NFace f);
+    boolean openBook(NFace f, boolean check);
+    boolean openBook(NFace f, boolean check, boolean perform);
+    boolean shellBoundary(NTetrahedron t);
+    boolean shellBoundary(NTetrahedron t, boolean check);
+    boolean shellBoundary(NTetrahedron t, boolean check, boolean perform);
 
-    public void makeDoubleCover();
-    public boolean idealToFinite();
-    public boolean idealToFinite(boolean forceDivision);
-    public void barycentricSubdivision();
+    void makeDoubleCover();
+    boolean idealToFinite();
+    boolean idealToFinite(boolean forceDivision);
+    void barycentricSubdivision();
 
-    public NTetrahedron insertLayeredSolidTorus(long cuts0, long cuts1);
-    public void insertLensSpace(long p, long q);
-    public void insertTriangulation(NTriangulation source);
-    public boolean insertRehydration(String dehydration);
+    NTetrahedron insertLayeredSolidTorus(long cuts0, long cuts1);
+    void insertLensSpace(long p, long q);
+    void insertTriangulation(NTriangulation source);
+    boolean insertRehydration(String dehydration);
     
-    public boolean isIsomorphicTo(NTriangulation other);
+    boolean isIsomorphicTo(NTriangulation other);
 }

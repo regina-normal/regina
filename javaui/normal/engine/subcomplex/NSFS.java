@@ -31,13 +31,13 @@ package normal.engine.subcomplex;
 import normal.engine.*;
 
 public interface NSFS extends ShareableObject {
-    public long getOrbitGenus();
-    public boolean isOrbitOrientable();
-    public long getOrbitPunctures();
-    public long getAlpha(long which);
-    public long getBeta(long which);
-    public void insertFibre(long alpha, long beta);
-    public void reduce();
-    public NLensSpace isLensSpace();
+    long getOrbitGenus();
+    boolean isOrbitOrientable();
+    long getOrbitPunctures();
+    long getAlpha(long which);
+    long getBeta(long which);
+    void insertFibre(long alpha, long beta);
+    void reduce();
+    NLensSpace isLensSpace();
 }
 

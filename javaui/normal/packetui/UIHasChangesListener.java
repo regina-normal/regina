@@ -41,6 +41,6 @@ public interface UIHasChangesListener {
      * @param event the event reflecting the change in status.
      * @see normal.packetui.PacketUI#hasChanges
      */
-    public void UIStatusChanged(UIHasChangesEvent event);
+    void UIStatusChanged(UIHasChangesEvent event);
 }
 

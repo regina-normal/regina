@@ -57,98 +57,92 @@ public interface Engine {
      *
      * @return the style of engine.
      */
-    public int style();
+    int style();
     /**
      * Returns a short description of the style of engine represented by
      * this engine object.
      *
      * @return a description of the style of engine.
      */
-    public String styleDescription();
+    String styleDescription();
 
-    public NAbelianGroup newNAbelianGroup();
-    public NAbelianGroup newNAbelianGroup(NAbelianGroup cloneMe);
-    public NAngleStructureList newNAngleStructureList(NTriangulation owner);
-    public NContainer newNContainer();
-    public NFile newNFile();
-    public NGroupExpression newNGroupExpression();
-    public NGroupExpression newNGroupExpression(NGroupExpression cloneMe);
-    public NGroupPresentation newNGroupPresentation();
-    public NGroupPresentation newNGroupPresentation(
-        NGroupPresentation cloneMe);
-    public NLayeredChain newNLayeredChain(NTetrahedron tet, NPerm vertexRoles);
-    public NLayeredChain newNLayeredChain(NLayeredChain cloneMe);
-    public NLensSpace newNLensSpace(long p, long q);
-    public NLensSpace newNLensSpace(NLensSpace cloneMe);
-    public NMatrixInt newNMatrixInt(int rows, int columns);
-    public NMatrixInt newNMatrixInt(NMatrixInt cloneMe);
-    public NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner,
-        int flavour, boolean isEmbeddedOnly);
-    public NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner,
-        int flavour);
-    public NProgressManager newNProgressManager();
-    public NSFS newNSFS();
-    public NSFS newNSFS(long orbitGenus, boolean orbitOrientable);
-    public NSFS newNSFS(long orbitGenus, boolean orbitOrientable,
-        long orbitPunctures);
-    public NSFS newNSFS(NSFS cloneMe);
-    public NScript newNScript();
-    public NSignature newNSignature(NSignature cloneMe);
-    public NSurfaceFilter newNSurfaceFilter();
-    public NSurfaceFilter newNSurfaceFilter(NSurfaceFilter cloneMe);
-    public NSurfaceFilterCombination newNSurfaceFilterCombination();
-    public NSurfaceFilterCombination newNSurfaceFilterCombination(
+    NAbelianGroup newNAbelianGroup();
+    NAbelianGroup newNAbelianGroup(NAbelianGroup cloneMe);
+    NAngleStructureList newNAngleStructureList(NTriangulation owner);
+    NContainer newNContainer();
+    NFile newNFile();
+    NGroupExpression newNGroupExpression();
+    NGroupExpression newNGroupExpression(NGroupExpression cloneMe);
+    NGroupPresentation newNGroupPresentation();
+    NGroupPresentation newNGroupPresentation(NGroupPresentation cloneMe);
+    NLayeredChain newNLayeredChain(NTetrahedron tet, NPerm vertexRoles);
+    NLayeredChain newNLayeredChain(NLayeredChain cloneMe);
+    NLensSpace newNLensSpace(long p, long q);
+    NLensSpace newNLensSpace(NLensSpace cloneMe);
+    NMatrixInt newNMatrixInt(int rows, int columns);
+    NMatrixInt newNMatrixInt(NMatrixInt cloneMe);
+    NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner, int flavour,
+        boolean isEmbeddedOnly);
+    NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner, int flavour);
+    NProgressManager newNProgressManager();
+    NSFS newNSFS();
+    NSFS newNSFS(long orbitGenus, boolean orbitOrientable);
+    NSFS newNSFS(long orbitGenus, boolean orbitOrientable, long orbitPunctures);
+    NSFS newNSFS(NSFS cloneMe);
+    NScript newNScript();
+    NSignature newNSignature(NSignature cloneMe);
+    NSurfaceFilter newNSurfaceFilter();
+    NSurfaceFilter newNSurfaceFilter(NSurfaceFilter cloneMe);
+    NSurfaceFilterCombination newNSurfaceFilterCombination();
+    NSurfaceFilterCombination newNSurfaceFilterCombination(
         NSurfaceFilterCombination cloneMe);
-    public NSurfaceFilterProperties newNSurfaceFilterProperties();
-    public NSurfaceFilterProperties newNSurfaceFilterProperties(
+    NSurfaceFilterProperties newNSurfaceFilterProperties();
+    NSurfaceFilterProperties newNSurfaceFilterProperties(
         NSurfaceFilterProperties cloneMe);
-    public NSurfaceSubset newNSurfaceSubset(NSurfaceSet set,
-        NSurfaceFilter filter);
-    public NTetrahedron newNTetrahedron();
-    public NTetrahedron newNTetrahedron(String desc);
-    public NText newNText();
-    public NText newNText(String text);
-    public NTriangulation newNTriangulation();
-    public NTriangulation newNTriangulation(NTriangulation cloneMe);
+    NSurfaceSubset newNSurfaceSubset(NSurfaceSet set, NSurfaceFilter filter);
+    NTetrahedron newNTetrahedron();
+    NTetrahedron newNTetrahedron(String desc);
+    NText newNText();
+    NText newNText(String text);
+    NTriangulation newNTriangulation();
+    NTriangulation newNTriangulation(NTriangulation cloneMe);
 
-    public NTriangulation enterTextTriangulation();
-    public long formCensus(NPacket parent, int nTetrahedra,
+    NTriangulation enterTextTriangulation();
+    long formCensus(NPacket parent, int nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary);
-    public long formCensus(NPacket parent, int nTetrahedra,
+    long formCensus(NPacket parent, int nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces);
-    public long formCensus(NPacket parent, int nTetrahedra,
+    long formCensus(NPacket parent, int nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, NProgressManager manager);
-    public NPillowTwoSphere formsPillowTwoSphere(NFace face1, NFace face2);
-    public NSnappedTwoSphere formsSnappedTwoSphere(NSnappedBall ball1,
+    NPillowTwoSphere formsPillowTwoSphere(NFace face1, NFace face2);
+    NSnappedTwoSphere formsSnappedTwoSphere(NSnappedBall ball1,
         NSnappedBall ball2);
-    public NSnappedTwoSphere formsSnappedTwoSphere(NTetrahedron tet1,
+    NSnappedTwoSphere formsSnappedTwoSphere(NTetrahedron tet1,
         NTetrahedron tet2);
-    public int getVersionMajor();
-    public int getVersionMinor();
-    public String getVersionString();
-    public NFileInfo identifyFileInfo(String idPathname);
-    public NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
-    public NLayeredLensSpace isLayeredLensSpace(NComponent comp);
-    public NLayeredLoop isLayeredLoop(NComponent comp);
-    public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
-    public NSnappedBall isSnappedBall(NTetrahedron tet);
-    public NSpiralSolidTorus isSpiralSolidTorus(NTetrahedron tet, NPerm roles);
-    public NTriSolidTorus isTriSolidTorus(NTetrahedron tet, NPerm vertexRoles);
-    public NMatrixInt makeMatchingEquations(NTriangulation
-        triangulation, int flavour);
-    public NSignature parseSignature(String sig);
-    public NPacket readFileMagic(String fileName);
-    public NPacket readFromFile(String fileName);
-    public NPacket readXMLFile(String fileName);
-    public NTriangulation readSnapPea(String file);
-    public void smithNormalForm(NMatrixInt matrix);
-    public int testEngine(int value);
-    public boolean writeSnapPea(String fileName, NTriangulation tri);
-    public boolean writeToFile(String fileName, NPacket packet);
-    public boolean writeXMLFile(String fileName, NPacket subtree);
-    public boolean writeXMLFile(String fileName, NPacket subtree,
-        boolean compressed);
+    int getVersionMajor();
+    int getVersionMinor();
+    String getVersionString();
+    NFileInfo identifyFileInfo(String idPathname);
+    NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
+    NLayeredLensSpace isLayeredLensSpace(NComponent comp);
+    NLayeredLoop isLayeredLoop(NComponent comp);
+    NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
+    NSnappedBall isSnappedBall(NTetrahedron tet);
+    NSpiralSolidTorus isSpiralSolidTorus(NTetrahedron tet, NPerm roles);
+    NTriSolidTorus isTriSolidTorus(NTetrahedron tet, NPerm vertexRoles);
+    NMatrixInt makeMatchingEquations(NTriangulation triangulation, int flavour);
+    NSignature parseSignature(String sig);
+    NPacket readFileMagic(String fileName);
+    NPacket readFromFile(String fileName);
+    NPacket readXMLFile(String fileName);
+    NTriangulation readSnapPea(String file);
+    void smithNormalForm(NMatrixInt matrix);
+    int testEngine(int value);
+    boolean writeSnapPea(String fileName, NTriangulation tri);
+    boolean writeToFile(String fileName, NPacket packet);
+    boolean writeXMLFile(String fileName, NPacket subtree);
+    boolean writeXMLFile(String fileName, NPacket subtree, boolean compressed);
 }
 

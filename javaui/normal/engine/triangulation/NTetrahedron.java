@@ -32,25 +32,25 @@ import normal.engine.*;
 import java.util.*;
 
 public interface NTetrahedron extends ShareableObject {
-    public NTetrahedron getAdjacentTetrahedron(int face);
-    public NPerm getAdjacentTetrahedronGluing(int face);
-    public int getAdjacentFace(int face);
-    public boolean hasBoundary();
+    NTetrahedron getAdjacentTetrahedron(int face);
+    NPerm getAdjacentTetrahedronGluing(int face);
+    int getAdjacentFace(int face);
+    boolean hasBoundary();
 
-    public void joinTo(int myFace, NTetrahedron you, NPerm gluing);
-    public NTetrahedron unjoin(int myFace);
-    public void isolate();
+    void joinTo(int myFace, NTetrahedron you, NPerm gluing);
+    NTetrahedron unjoin(int myFace);
+    void isolate();
     
-    public String getDescription();
-    public void setDescription(String description);
+    String getDescription();
+    void setDescription(String description);
 
-    public NComponent getComponent();
+    NComponent getComponent();
 
-    public NVertex getVertex(int vertex);
-    public NEdge getEdge(int edge);
-    public NFace getFace(int face);
+    NVertex getVertex(int vertex);
+    NEdge getEdge(int edge);
+    NFace getFace(int face);
 
-    public NPerm getEdgeMapping(int edge);
-    public NPerm getFaceMapping(int face);
+    NPerm getEdgeMapping(int edge);
+    NPerm getFaceMapping(int face);
 }
 

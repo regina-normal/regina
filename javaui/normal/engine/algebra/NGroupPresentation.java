@@ -31,12 +31,12 @@ package normal.engine.algebra;
 import normal.engine.ShareableObject;
 
 public interface NGroupPresentation extends ShareableObject {
-    public long addGenerator();
-    public long addGenerator(long numToAdd);
-    public void addRelation(NGroupExpression rel);
-    public long getNumberOfGenerators();
-    public long getNumberOfRelations();
-    public NGroupExpression getRelation(long index);
-    public boolean intelligentSimplify();
-    public String recogniseGroup();
+    long addGenerator();
+    long addGenerator(long numToAdd);
+    void addRelation(NGroupExpression rel);
+    long getNumberOfGenerators();
+    long getNumberOfRelations();
+    NGroupExpression getRelation(long index);
+    boolean intelligentSimplify();
+    String recogniseGroup();
 }

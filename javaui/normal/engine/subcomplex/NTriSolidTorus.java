@@ -32,8 +32,8 @@ import normal.engine.*;
 import normal.engine.triangulation.*;
 
 public interface NTriSolidTorus extends ShareableObject {
-    public NTriSolidTorus cloneMe();
-    public NTetrahedron getTetrahedron(int index);
-    public NPerm getVertexRoles(int index);
+    NTriSolidTorus cloneMe();
+    NTetrahedron getTetrahedron(int index);
+    NPerm getVertexRoles(int index);
 }
 

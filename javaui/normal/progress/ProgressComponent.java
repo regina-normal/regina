@@ -46,7 +46,7 @@ public interface ProgressComponent {
      *
      * @return the component used to display the state of progress.
      */
-    public Component getComponent();
+    Component getComponent();
 
     /**
      * Updates this component to reflect the given state of progress.
@@ -54,6 +54,6 @@ public interface ProgressComponent {
      * @param progress the state of progress that this component should
      * report.
      */
-    public void update(NProgress progress);
+    void update(NProgress progress);
 }
 

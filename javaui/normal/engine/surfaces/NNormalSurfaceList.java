@@ -32,16 +32,16 @@ import normal.engine.packet.NPacket;
 import normal.engine.maths.NMatrixInt;
 
 public interface NNormalSurfaceList extends NPacket, NSurfaceSet {
-    public static final int packetType = 6;
+    int packetType = 6;
 
-    public static final int STANDARD = 0;
-    public static final int AN_STANDARD = 100;
+    int STANDARD = 0;
+    int AN_STANDARD = 100;
 
-    public static final int QUAD = 1;
+    int QUAD = 1;
 
-    public static final int EDGE_WEIGHT = 200;
-    public static final int FACE_ARCS = 201;
+    int EDGE_WEIGHT = 200;
+    int FACE_ARCS = 201;
 
-    public NMatrixInt recreateMatchingEquations();
+    NMatrixInt recreateMatchingEquations();
 }
 

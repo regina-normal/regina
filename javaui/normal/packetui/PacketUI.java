@@ -79,7 +79,7 @@ public interface PacketUI {
      *
      * @param l the listener to add.
      */
-    public void addUIHasChangesListener(UIHasChangesListener l);
+    void addUIHasChangesListener(UIHasChangesListener l);
 
     /**
      * Removes the given listener from the list of listeners that will
@@ -90,14 +90,14 @@ public interface PacketUI {
      *
      * @param l the listener to add.
      */
-    public void removeUIHasChangesListener(UIHasChangesListener l);
+    void removeUIHasChangesListener(UIHasChangesListener l);
 
     /**
      * Returns the individual packet for which we are providing an interface.
      *
      * @return the packet associated with this interface.
      */
-    public NPacket getPacket();
+    NPacket getPacket();
     
     /**
      * Returns the component that forms the interface through which the user
@@ -105,7 +105,7 @@ public interface PacketUI {
      *
      * @return the component providing the actual interface.
      */
-    public Component getInterface();
+    Component getInterface();
 
     /**
      * Returns the primary text component in this interface.
@@ -114,14 +114,14 @@ public interface PacketUI {
      * @return the primary text component, or <tt>null</tt> if there is
      * no such component.
      */
-    public JTextComponent getPrimaryTextComponent();
+    JTextComponent getPrimaryTextComponent();
     
     /**
      * Update the component to reflect the underlying packet in the engine
      * in its current state.  This can be used for instance when the
      * underlying packet has been changed elsewhere.
      */
-    public void reflectPacket();
+    void reflectPacket();
 
     /**
      * Is this interface capable of editing the packet?
@@ -129,7 +129,7 @@ public interface PacketUI {
      * @return <tt>true</tt> if this interface is capable of editing the
      * packet, or <tt>false</tt> if it can only view the packet.
      */
-    public boolean isEditor();
+    boolean isEditor();
 
     /**
      * Have changes been made in the interface that have yet to be
@@ -137,7 +137,7 @@ public interface PacketUI {
      *
      * @return <tt>true</tt> if and only if there are unapplied changes.
      */
-    public boolean hasChanges();
+    boolean hasChanges();
 
     /**
      * Take any changes made in the interface and apply them to the
@@ -146,7 +146,7 @@ public interface PacketUI {
      * @param engine the calculation engine through which any new engine
      * objects should be created.
      */
-    public void applyChanges(Engine engine);
+    void applyChanges(Engine engine);
 
     /**
      * This will be called whenever any packet's contents have changed.
@@ -159,7 +159,7 @@ public interface PacketUI {
      * @param owner the frame that owns this interface; this can be used for
      * message boxes and the like.
      */
-    public void packetWasChanged(NPacket packet, PacketUI ui, Frame owner);
+    void packetWasChanged(NPacket packet, PacketUI ui, Frame owner);
 
     /**
      * This will be called whenever any packet has been renamed.
@@ -174,7 +174,7 @@ public interface PacketUI {
      * @param owner the frame that owns this interface; this can be used for
      * message boxes and the like.
      */
-    public void packetWasRenamed(NPacket packet, PacketUI ui, Frame owner);
+    void packetWasRenamed(NPacket packet, PacketUI ui, Frame owner);
 
     /**
      * This will be called whenever a packet subtree is about to
@@ -203,7 +203,7 @@ public interface PacketUI {
      *
      * @see #subtreeWasDeleted
      */
-    public void subtreeToBeDeleted(NPacket subtree, PacketUI ui, Frame owner);
+    void subtreeToBeDeleted(NPacket subtree, PacketUI ui, Frame owner);
 
     /**
      * This will be called after a packet subtree has been deleted.
@@ -231,7 +231,7 @@ public interface PacketUI {
      *
      * @see #subtreeToBeDeleted
      */
-    public void subtreeWasDeleted(NPacket parent, PacketUI ui, Frame owner);
+    void subtreeWasDeleted(NPacket parent, PacketUI ui, Frame owner);
 
     /**
      * This will be called whenever a packet subtree has been inserted
@@ -250,7 +250,7 @@ public interface PacketUI {
      * @param owner the frame that owns this interface; this can be used for
      * message boxes and the like.
      */
-    public void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner);
+    void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner);
 
     /**
      * This will be called whenever packets have been inserted and/or
@@ -270,10 +270,10 @@ public interface PacketUI {
      * @param owner the frame that owns this interface; this can be used for
      * message boxes and the like.
      */
-    public void subtreeHasChanged(NPacket subtree, PacketUI ui, Frame owner);
+    void subtreeHasChanged(NPacket subtree, PacketUI ui, Frame owner);
 
     /**
      * This will be called when the interface is about to be destroyed.
      */
-    public void cleanUp();
+    void cleanUp();
 }

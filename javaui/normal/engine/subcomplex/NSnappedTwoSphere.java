@@ -32,9 +32,9 @@ import normal.engine.*;
 import normal.engine.triangulation.*;
 
 public interface NSnappedTwoSphere extends ShareableObject {
-    public NSnappedTwoSphere cloneMe();
-    public NSnappedBall getSnappedBall(int index);
-    public void reduceTriangulation();
-    public NTriangulation getReducedTriangulation(NTriangulation original);
+    NSnappedTwoSphere cloneMe();
+    NSnappedBall getSnappedBall(int index);
+    void reduceTriangulation();
+    NTriangulation getReducedTriangulation(NTriangulation original);
 }
 

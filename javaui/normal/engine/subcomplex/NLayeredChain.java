@@ -32,15 +32,15 @@ import normal.engine.*;
 import normal.engine.triangulation.*;
 
 public interface NLayeredChain extends ShareableObject {
-    public NTetrahedron getBottom();
-    public NTetrahedron getTop();
-    public long getIndex();
-    public NPerm getBottomVertexRoles();
-    public NPerm getTopVertexRoles();
-    public boolean extendAbove();
-    public boolean extendBelow();
-    public boolean extendMaximal();
-    public void reverse();
-    public void invert();
+    NTetrahedron getBottom();
+    NTetrahedron getTop();
+    long getIndex();
+    NPerm getBottomVertexRoles();
+    NPerm getTopVertexRoles();
+    boolean extendAbove();
+    boolean extendBelow();
+    boolean extendMaximal();
+    void reverse();
+    void invert();
 }
 

@@ -31,13 +31,13 @@ package normal.engine.file;
 import normal.engine.*;
 
 public interface NFileInfo extends ShareableObject {
-    public static final int TYPE_BINARY = 1;
-    public static final int TYPE_XML = 2;
+    int TYPE_BINARY = 1;
+    int TYPE_XML = 2;
 
-    public String getPathname();
-    public int getType();
-    public String getTypeDescription();
-    public String getEngine();
-    public boolean isCompressed();
-    public boolean isInvalid();
+    String getPathname();
+    int getType();
+    String getTypeDescription();
+    String getEngine();
+    boolean isCompressed();
+    boolean isInvalid();
 }

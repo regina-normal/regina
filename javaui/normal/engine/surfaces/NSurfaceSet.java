@@ -32,13 +32,13 @@ import normal.engine.ShareableObject;
 import normal.engine.triangulation.NTriangulation;
 
 public interface NSurfaceSet {
-    public int getFlavour();
-    public boolean allowsAlmostNormal();
-    public boolean isEmbeddedOnly();
-    public NTriangulation getTriangulation();
-    public long getNumberOfSurfaces();
-    public NNormalSurface getSurface(long index);
+    int getFlavour();
+    boolean allowsAlmostNormal();
+    boolean isEmbeddedOnly();
+    NTriangulation getTriangulation();
+    long getNumberOfSurfaces();
+    NNormalSurface getSurface(long index);
 
-    public ShareableObject getShareableObject();
+    ShareableObject getShareableObject();
 }
 

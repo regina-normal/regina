@@ -32,14 +32,14 @@ import normal.engine.*;
 import java.math.BigInteger;
 
 public interface NMatrixInt extends ShareableObject {
-    public void initialise(BigInteger value);
-    public void makeIdentity();
+    void initialise(BigInteger value);
+    void makeIdentity();
 
-    public int rows();
-    public int columns();
+    int rows();
+    int columns();
 
-    public BigInteger getEntry(int row, int column);
-    public void setEntry(int row, int column, BigInteger value);
+    BigInteger getEntry(int row, int column);
+    void setEntry(int row, int column, BigInteger value);
 
     void swapRows(int first, int second);
     void swapColumns(int first, int second);

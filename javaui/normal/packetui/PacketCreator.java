@@ -78,7 +78,7 @@ public interface PacketCreator {
      * @return the component providing the actual interface.
      * @see normal.packetui.PacketCreator
      */
-    public Component getCreator();
+    Component getCreator();
     
     /**
      * Returns the title to be given to the <tt>NewPacketDialog</tt> that
@@ -87,7 +87,7 @@ public interface PacketCreator {
      * @return a title for the packet creation dialog.
      * @see normal.packetui.NewPacketDialog
      */
-    public String getDialogTitle();
+    String getDialogTitle();
     
     /**
      * Returns a <tt>PacketFilter</tt> specifying which packets may be used
@@ -99,7 +99,7 @@ public interface PacketCreator {
      * new packet.
      * @see normal.packetfilter.PacketFilter
      */
-    public PacketFilter getPacketFilter();
+    PacketFilter getPacketFilter();
     
     /**
      * Returns a suggested label for the new packet in the event that
@@ -107,7 +107,7 @@ public interface PacketCreator {
      *
      * @return a suggested packet label.
      */
-    public String getSuggestedPacketLabel();
+    String getSuggestedPacketLabel();
 
     /**
      * Create the new packet.
@@ -134,6 +134,5 @@ public interface PacketCreator {
      * @return the newly created packet, or <tt>null</tt> if an error
      * occurred.
      */
-    public NPacket makeNewPacket(Shell shell, NPacket parent,
-        Dialog parentDialog);
+    NPacket makeNewPacket(Shell shell, NPacket parent, Dialog parentDialog);
 }

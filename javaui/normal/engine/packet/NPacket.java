@@ -32,51 +32,51 @@ import normal.engine.*;
 import java.util.*;
 
 public interface NPacket extends ShareableObject {
-    public int getPacketType();
-    public String getPacketTypeName();
-    public String getPacketLabel();
-    public void setPacketLabel(String newLabel);
-    public String getFullName();
+    int getPacketType();
+    String getPacketTypeName();
+    String getPacketLabel();
+    void setPacketLabel(String newLabel);
+    String getFullName();
 
-    public boolean hasTag(String tag);
-    public boolean hasTags();
-    public boolean addTag(String tag);
-    public boolean removeTag(String tag);
-    public void removeAllTags();
-    public Enumeration getTags();
+    boolean hasTag(String tag);
+    boolean hasTags();
+    boolean addTag(String tag);
+    boolean removeTag(String tag);
+    void removeAllTags();
+    Enumeration getTags();
 
-    public NPacket getFirstTreeChild();
-    public NPacket getLastTreeChild();
-    public NPacket getPrevTreeSibling();
-    public NPacket getNextTreeSibling();
-    public NPacket getTreeParent();
-    public NPacket getTreeMatriarch();
-    public void insertChildFirst(NPacket child);
-    public void insertChildLast(NPacket child);
-    public void insertChildAfter(NPacket newChild, NPacket prevChild);
-    public void makeOrphan();
-    public void swapWithNextSibling();
+    NPacket getFirstTreeChild();
+    NPacket getLastTreeChild();
+    NPacket getPrevTreeSibling();
+    NPacket getNextTreeSibling();
+    NPacket getTreeParent();
+    NPacket getTreeMatriarch();
+    void insertChildFirst(NPacket child);
+    void insertChildLast(NPacket child);
+    void insertChildAfter(NPacket newChild, NPacket prevChild);
+    void makeOrphan();
+    void swapWithNextSibling();
 
-    public NPacket nextTreePacket();
-    public NPacket firstTreePacket(String type);
-    public NPacket nextTreePacket(String type);
-    public NPacket findPacketLabel(String label);
-    public String makeUniqueLabel(String base);
-    public boolean makeUniqueLabels(NPacket reference);
+    NPacket nextTreePacket();
+    NPacket firstTreePacket(String type);
+    NPacket nextTreePacket(String type);
+    NPacket findPacketLabel(String label);
+    String makeUniqueLabel(String base);
+    boolean makeUniqueLabels(NPacket reference);
 
-    public int levelsDownTo(NPacket descendant);
-    public int levelsUpTo(NPacket ancestor);
-    public boolean isGrandparentOf(NPacket descendant);
-    public long getNumberOfChildren();
-    public long getNumberOfDescendants();
-    public long getTotalTreeSize();
+    int levelsDownTo(NPacket descendant);
+    int levelsUpTo(NPacket ancestor);
+    boolean isGrandparentOf(NPacket descendant);
+    long getNumberOfChildren();
+    long getNumberOfDescendants();
+    long getTotalTreeSize();
 
     Map makeTreeDict();
     List makeChildList();
 
-    public boolean dependsOnParent();
-    public boolean isPacketEditable();
-    public NPacket clonePacket();
-    public NPacket clonePacket(boolean cloneDescendants);
-    public NPacket clonePacket(boolean cloneDescendants, boolean end);
+    boolean dependsOnParent();
+    boolean isPacketEditable();
+    NPacket clonePacket();
+    NPacket clonePacket(boolean cloneDescendants);
+    NPacket clonePacket(boolean cloneDescendants, boolean end);
 }

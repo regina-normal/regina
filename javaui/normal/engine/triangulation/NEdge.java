@@ -32,22 +32,22 @@ import normal.engine.*;
 import java.util.*;
 
 public interface NEdge extends ShareableObject {
-    public static final int edgeStart[] = { 0, 0, 0, 1, 1, 2 };
-    public static final int edgeEnd[] = { 1, 2, 3, 2, 3, 3 };
-    public static final int edgeNumber[][] = {
+    int edgeStart[] = { 0, 0, 0, 1, 1, 2 };
+    int edgeEnd[] = { 1, 2, 3, 2, 3, 3 };
+    int edgeNumber[][] = {
         { -1, 0, 1, 2 },
         {  0,-1, 3, 4 },
         {  1, 3,-1, 5 },
         {  2, 4, 5,-1 }};
 
-    public NComponent getComponent();
-    public NBoundaryComponent getBoundaryComponent();
-    public NVertex getVertex(int vertex);
+    NComponent getComponent();
+    NBoundaryComponent getBoundaryComponent();
+    NVertex getVertex(int vertex);
 
-    public boolean isBoundary();
-    public boolean isValid();
+    boolean isBoundary();
+    boolean isValid();
 
-    public long getNumberOfEmbeddings();
-    public NEdgeEmbedding getEmbedding(long index);
+    long getNumberOfEmbeddings();
+    NEdgeEmbedding getEmbedding(long index);
 }
 

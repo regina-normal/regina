@@ -32,16 +32,16 @@ import normal.engine.*;
 import java.util.*;
 
 public interface NBoundaryComponent extends ShareableObject {
-    public long getNumberOfFaces();
-    public long getNumberOfEdges();
-    public long getNumberOfVertices();
+    long getNumberOfFaces();
+    long getNumberOfEdges();
+    long getNumberOfVertices();
 
-    public NFace getFace(long index);
-    public NEdge getEdge(long index);
-    public NVertex getVertex(long index);
+    NFace getFace(long index);
+    NEdge getEdge(long index);
+    NVertex getVertex(long index);
 
-    public long getEulerCharacteristic();
-    public boolean isIdeal();
-    public boolean isOrientable();
+    long getEulerCharacteristic();
+    boolean isIdeal();
+    boolean isOrientable();
 }
 

@@ -32,13 +32,13 @@ import normal.engine.packet.NPacket;
 import normal.engine.triangulation.NTriangulation;
 
 public interface NAngleStructureList extends NPacket {
-    public static final int packetType = 9;
+    int packetType = 9;
 
-    public NTriangulation getTriangulation();
-    public long getNumberOfStructures();
-    public NAngleStructure getStructure(long index);
+    NTriangulation getTriangulation();
+    long getNumberOfStructures();
+    NAngleStructure getStructure(long index);
 
-    public boolean allowsStrict();
-    public boolean allowsTaut();
+    boolean allowsStrict();
+    boolean allowsTaut();
 }
 

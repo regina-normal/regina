@@ -31,12 +31,12 @@ package normal.engine.surfaces;
 import normal.engine.packet.*;
 
 public interface NSurfaceFilter extends NPacket {
-    public static final int packetType = 8;
-    public static final int filterID = 0;
+    int packetType = 8;
+    int filterID = 0;
 
-    public boolean accept(NNormalSurface surface);
+    boolean accept(NNormalSurface surface);
 
-    public int getFilterID();
-    public String getFilterName();
+    int getFilterID();
+    String getFilterName();
 }
 

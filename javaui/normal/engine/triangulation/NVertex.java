@@ -32,25 +32,25 @@ import normal.engine.*;
 import java.util.*;
 
 public interface NVertex extends ShareableObject {
-    public static final int SPHERE = 1;
-    public static final int DISC = 2;
-    public static final int TORUS = 3;
-    public static final int KLEIN_BOTTLE = 4;
-    public static final int NON_STANDARD_CUSP = 5;
-    public static final int NON_STANDARD_BDRY = 6;
+    int SPHERE = 1;
+    int DISC = 2;
+    int TORUS = 3;
+    int KLEIN_BOTTLE = 4;
+    int NON_STANDARD_CUSP = 5;
+    int NON_STANDARD_BDRY = 6;
 
-    public NComponent getComponent();
-    public NBoundaryComponent getBoundaryComponent();
+    NComponent getComponent();
+    NBoundaryComponent getBoundaryComponent();
 
-    public int getLink();
-    public boolean isLinkClosed();
-    public boolean isIdeal();
-    public boolean isBoundary();
-    public boolean isStandard();
-    public boolean isLinkOrientable();
-    public long getLinkEulerCharacteristic();
+    int getLink();
+    boolean isLinkClosed();
+    boolean isIdeal();
+    boolean isBoundary();
+    boolean isStandard();
+    boolean isLinkOrientable();
+    long getLinkEulerCharacteristic();
 
-    public long getNumberOfEmbeddings();
-    public NVertexEmbedding getEmbedding(long index);
+    long getNumberOfEmbeddings();
+    NVertexEmbedding getEmbedding(long index);
 }
 

@@ -32,28 +32,28 @@ import normal.engine.*;
 import java.util.*;
 
 public interface NFace extends ShareableObject {
-    public static final int TRIANGLE = 1;
-    public static final int SCARF = 2;
-    public static final int PARACHUTE = 3;
-    public static final int CONE = 4;
-    public static final int MOBIUS = 5;
-    public static final int HORN = 6;
-    public static final int DUNCEHAT = 7;
-    public static final int L31 = 8;
+    int TRIANGLE = 1;
+    int SCARF = 2;
+    int PARACHUTE = 3;
+    int CONE = 4;
+    int MOBIUS = 5;
+    int HORN = 6;
+    int DUNCEHAT = 7;
+    int L31 = 8;
 
-    public NComponent getComponent();
-    public NBoundaryComponent getBoundaryComponent();
-    public NVertex getVertex(int vertex);
-    public NEdge getEdge(int edge);
-    public NPerm getEdgeMapping(int edge);
+    NComponent getComponent();
+    NBoundaryComponent getBoundaryComponent();
+    NVertex getVertex(int vertex);
+    NEdge getEdge(int edge);
+    NPerm getEdgeMapping(int edge);
 
-    public boolean isBoundary();
-    public int getType();
-    public int getSubtype();
-    public boolean isMobiusBand();
-    public boolean isCone();
+    boolean isBoundary();
+    int getType();
+    int getSubtype();
+    boolean isMobiusBand();
+    boolean isCone();
     
-    public int getNumberOfEmbeddings();
-    public NFaceEmbedding getEmbedding(int index);
+    int getNumberOfEmbeddings();
+    NFaceEmbedding getEmbedding(int index);
 }
 

@@ -34,19 +34,19 @@ import normal.engine.ShareableObject;
 import normal.engine.maths.NMatrixInt;
 
 public interface NAbelianGroup extends ShareableObject {
-    public void addRank();
-    public void addRank(int extraRank);
-    public void addTorsionElement(BigInteger degree);
-    public void addTorsionElement(BigInteger degree, int mult);
-    public void addTorsionElement(long degree);
-    public void addTorsionElement(long degree, int mult);
-    public void addTorsionElements(Enumeration torsion);
-    public void addGroup(NMatrixInt presentation);
-    public void addGroup(NAbelianGroup group);
+    void addRank();
+    void addRank(int extraRank);
+    void addTorsionElement(BigInteger degree);
+    void addTorsionElement(BigInteger degree, int mult);
+    void addTorsionElement(long degree);
+    void addTorsionElement(long degree, int mult);
+    void addTorsionElements(Enumeration torsion);
+    void addGroup(NMatrixInt presentation);
+    void addGroup(NAbelianGroup group);
 
-    public int getRank();
-    public int getTorsionRank(BigInteger degree);
-    public int getTorsionRank(long degree);
-    public long getNumberOfInvariantFactors();
-    public BigInteger getInvariantFactor(long index);
+    int getRank();
+    int getTorsionRank(BigInteger degree);
+    int getTorsionRank(long degree);
+    long getNumberOfInvariantFactors();
+    BigInteger getInvariantFactor(long index);
 }

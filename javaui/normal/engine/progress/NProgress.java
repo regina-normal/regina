@@ -31,15 +31,15 @@ package normal.engine.progress;
 import normal.engine.ShareableObject;
 
 public interface NProgress extends ShareableObject {
-    public boolean hasChanged();
-    public boolean isFinished();
+    boolean hasChanged();
+    boolean isFinished();
 
-    public boolean isCancellable();
-    public void cancel();
-    public boolean isCancelled();
+    boolean isCancellable();
+    void cancel();
+    boolean isCancelled();
 
-    public String getDescription();
-    public boolean isPercent();
-    public double getPercent();
+    String getDescription();
+    boolean isPercent();
+    double getPercent();
 }
 

@@ -32,11 +32,11 @@ import normal.engine.*;
 import normal.engine.triangulation.*;
 
 public interface NSnappedBall extends ShareableObject {
-    public NSnappedBall cloneMe();
-    public NTetrahedron getTetrahedron();
-    public int getBoundaryFace(int index);
-    public int getInternalFace(int index);
-    public int getEquatorEdge();
-    public int getInternalEdge();
+    NSnappedBall cloneMe();
+    NTetrahedron getTetrahedron();
+    int getBoundaryFace(int index);
+    int getInternalFace(int index);
+    int getEquatorEdge();
+    int getInternalEdge();
 }
 

@@ -31,8 +31,8 @@ package normal.engine.subcomplex;
 import normal.engine.*;
 
 public interface NLensSpace extends ShareableObject {
-    public long getP();
-    public long getQ();
-    public boolean isEquivalentTo(NLensSpace compare);
+    long getP();
+    long getQ();
+    boolean isEquivalentTo(NLensSpace compare);
 }
 

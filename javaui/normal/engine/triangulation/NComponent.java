@@ -32,20 +32,20 @@ import normal.engine.*;
 import java.util.*;
 
 public interface NComponent extends ShareableObject {
-    public long getNumberOfTetrahedra();
-    public long getNumberOfFaces();
-    public long getNumberOfEdges();
-    public long getNumberOfVertices();
-    public long getNumberOfBoundaryComponents();
+    long getNumberOfTetrahedra();
+    long getNumberOfFaces();
+    long getNumberOfEdges();
+    long getNumberOfVertices();
+    long getNumberOfBoundaryComponents();
 
-    public NTetrahedron getTetrahedron(long index);
-    public NFace getFace(long index);
-    public NEdge getEdge(long index);
-    public NVertex getVertex(long index);
-    public NBoundaryComponent getBoundaryComponent(long index);
+    NTetrahedron getTetrahedron(long index);
+    NFace getFace(long index);
+    NEdge getEdge(long index);
+    NVertex getVertex(long index);
+    NBoundaryComponent getBoundaryComponent(long index);
 
-    public boolean isIdeal();
-    public boolean isOrientable();
-    public boolean isClosed();
+    boolean isIdeal();
+    boolean isOrientable();
+    boolean isClosed();
 }
 

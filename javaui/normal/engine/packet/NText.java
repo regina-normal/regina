@@ -29,8 +29,8 @@
 package normal.engine.packet;
 
 public interface NText extends NPacket {
-    public static final int packetType = 2;
+    int packetType = 2;
 
-    public String getText();
-    public void setText(String newText);
+    String getText();
+    void setText(String newText);
 }

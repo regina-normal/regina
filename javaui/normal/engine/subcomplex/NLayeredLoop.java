@@ -32,9 +32,9 @@ import normal.engine.*;
 import normal.engine.triangulation.*;
 
 public interface NLayeredLoop extends ShareableObject {
-    public NLayeredLoop cloneMe();
-    public long getIndex();
-    public boolean isTwisted();
-    public NEdge getHinge(int which);
+    NLayeredLoop cloneMe();
+    long getIndex();
+    boolean isTwisted();
+    NEdge getHinge(int which);
 }
 
