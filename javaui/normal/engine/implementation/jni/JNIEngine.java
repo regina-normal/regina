@@ -36,6 +36,7 @@ import normal.engine.file.*;
 import normal.engine.maths.*;
 import normal.engine.packet.*;
 import normal.engine.progress.*;
+import normal.engine.split.*;
 import normal.engine.subcomplex.*;
 import normal.engine.surfaces.*;
 import normal.engine.triangulation.*;
@@ -46,6 +47,7 @@ import normal.engine.implementation.jni.file.*;
 import normal.engine.implementation.jni.maths.*;
 import normal.engine.implementation.jni.packet.*;
 import normal.engine.implementation.jni.progress.*;
+import normal.engine.implementation.jni.split.*;
 import normal.engine.implementation.jni.subcomplex.*;
 import normal.engine.implementation.jni.surfaces.*;
 import normal.engine.implementation.jni.triangulation.*;
@@ -176,6 +178,9 @@ public class JNIEngine implements Engine {
     public NScript newNScript() {
         return new NJNIScript();
     }
+    public NSignature newNSignature(NSignature cloneMe) {
+        return new NJNISignature(cloneMe);
+    }
     public NSurfaceFilter newNSurfaceFilter() {
         return new NJNISurfaceFilter();
     }
@@ -271,6 +276,7 @@ public class JNIEngine implements Engine {
             char vertexRoles);
     public native NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour);
+    public native NSignature parseSignature(String sig);
     public native NPacket readFileMagic(String fileName);
     public native NPacket readFromFile(String fileName);
     public native NPacket readXMLFile(String fileName);

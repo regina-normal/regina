@@ -39,6 +39,7 @@ dirs_engine_jni = \
 	jni/engine/maths \
 	jni/engine/packet \
 	jni/engine/progress \
+	jni/engine/split \
 	jni/engine/subcomplex \
 	jni/engine/surfaces \
 	jni/engine/triangulation \

@@ -37,6 +37,7 @@
 #include "file/nfileinfo.h"
 #include "file/nxmlfile.h"
 #include "census/ncensus.h"
+#include "split/nsignature.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
@@ -195,6 +196,14 @@ JNIEXPORT jobject JNICALL
     return CREATE_WRAPPER_OBJECT(env, makeMatchingEquations(
         GET_ENGINE_OBJECT(env, NTriangulation, source), flavour),
         "normal/engine/implementation/jni/triangulation/NJNIMatrixInt");
+}
+
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_parseSignature
+        (JNIEnv *env, jobject me, jstring sig) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NSignature::parse(jstringToCString(env, sig)),
+        "normal/engine/implementation/jni/split/NJNISignature");
 }
 
 JNIEXPORT jobject JNICALL

@@ -128,6 +128,8 @@ class Engine {
             /**< Calls the corresponding constructor. */
         NScript* newNScript();
             /**< Calls the corresponding constructor. */
+        NSignature* newNSignature(const NSignature& cloneMe);
+            /**< Calls the corresponding constructor. */
         NSurfaceFilter* newNSurfaceFilter();
             /**< Calls the corresponding constructor. */
         NSurfaceFilter* newNSurfaceFilter(const NSurfaceFilter& cloneMe);

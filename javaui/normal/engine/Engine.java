@@ -34,6 +34,7 @@ import normal.engine.file.*;
 import normal.engine.maths.*;
 import normal.engine.packet.*;
 import normal.engine.progress.*;
+import normal.engine.split.*;
 import normal.engine.subcomplex.*;
 import normal.engine.surfaces.*;
 import normal.engine.triangulation.*;
@@ -92,6 +93,7 @@ public interface Engine {
         long orbitPunctures);
     public NSFS newNSFS(NSFS cloneMe);
     public NScript newNScript();
+    public NSignature newNSignature(NSignature cloneMe);
     public NSurfaceFilter newNSurfaceFilter();
     public NSurfaceFilter newNSurfaceFilter(NSurfaceFilter cloneMe);
     public NSurfaceFilterCombination newNSurfaceFilterCombination();
@@ -136,6 +138,7 @@ public interface Engine {
     public NTriSolidTorus isTriSolidTorus(NTetrahedron tet, NPerm vertexRoles);
     public NMatrixInt makeMatchingEquations(NTriangulation
         triangulation, int flavour);
+    public NSignature parseSignature(String sig);
     public NPacket readFileMagic(String fileName);
     public NPacket readFromFile(String fileName);
     public NPacket readXMLFile(String fileName);

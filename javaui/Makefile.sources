@@ -25,6 +25,7 @@ packages_ui = \
 	normal.engine.maths \
 	normal.engine.packet \
 	normal.engine.progress \
+	normal.engine.split \
 	normal.engine.subcomplex \
 	normal.engine.surfaces \
 	normal.engine.triangulation \
@@ -53,6 +54,7 @@ packages_jni = \
 	normal.engine.implementation.jni.maths \
 	normal.engine.implementation.jni.packet \
 	normal.engine.implementation.jni.progress \
+	normal.engine.implementation.jni.split \
 	normal.engine.implementation.jni.subcomplex \
 	normal.engine.implementation.jni.surfaces \
 	normal.engine.implementation.jni.triangulation \
