@@ -26,36 +26,9 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
+void addNAbelianGroup();
 
-#include "engine.h"
-#include "shareableobject.h"
-
-void addAlgebra();
-void addUtilities();
-
-using regina::ShareableObject;
-
-BOOST_PYTHON_MODULE(regina) {
-    // Core engine routines:
-
-    boost::python::def("getVersionString", regina::getVersionString);
-    boost::python::def("getVersionMajor", regina::getVersionMajor);
-    boost::python::def("getVersionMinor", regina::getVersionMinor);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("toString", &ShareableObject::toString)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
-    ;
-
-    // Components from subdirectories:
-
-    addAlgebra();
-    addUtilities();
+void addAlgebra() {
+    addNAbelianGroup();
 }
 

@@ -26,36 +26,38 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
 #include <boost/python.hpp>
 
-#include "engine.h"
-#include "shareableobject.h"
+using namespace boost::python;
+using regina::NAbelianGroup;
+using regina::NLargeInteger;
 
-void addAlgebra();
-void addUtilities();
+void (NAbelianGroup::*addTorsionElement_large)(const NLargeInteger&,
+    unsigned) = &NAbelianGroup::addTorsionElement;
+void (NAbelianGroup::*addTorsionElement_long)(unsigned long,
+    unsigned) = &NAbelianGroup::addTorsionElement;
 
-using regina::ShareableObject;
+namespace {
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRank,
+        NAbelianGroup::addRank, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addTorsionElement,
+        NAbelianGroup::addTorsionElement, 1, 2);
+}
 
-BOOST_PYTHON_MODULE(regina) {
-    // Core engine routines:
-
-    boost::python::def("getVersionString", regina::getVersionString);
-    boost::python::def("getVersionMajor", regina::getVersionMajor);
-    boost::python::def("getVersionMinor", regina::getVersionMinor);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("toString", &ShareableObject::toString)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
+void addNAbelianGroup() {
+    class_<NAbelianGroup, bases<regina::ShareableObject> >("NAbelianGroup")
+        .def(init<const NAbelianGroup&>())
+        .def("addRank", &NAbelianGroup::addRank, OL_addRank())
+        .def("getRank", &NAbelianGroup::getRank)
+        .def("addTorsionElement", addTorsionElement_large,
+            OL_addTorsionElement())
+        .def("addTorsionElement", addTorsionElement_long,
+            OL_addTorsionElement())
+        .def("getNumberOfInvariantFactors",
+            &NAbelianGroup::getNumberOfInvariantFactors)
+        .def("getInvariantFactor", &NAbelianGroup::getInvariantFactor,
+            return_value_policy<return_by_value>())
     ;
-
-    // Components from subdirectories:
-
-    addAlgebra();
-    addUtilities();
 }
 
