@@ -62,6 +62,8 @@ class NTriangulation;
  * \warning This class is incomplete and at the present time should not
  * be used!
  *
+ * \ifacespython Will not be present until this class is functional.
+ *
  * @author David Letscher
  */
 class NKnot {

@@ -49,7 +49,7 @@ namespace regina {
  * Implements a modified double descriptor method for polytope vertex
  * enumeration.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NDoubleDescriptor : public NVertexEnumerator {
     public:

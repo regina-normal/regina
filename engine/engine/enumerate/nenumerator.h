@@ -56,7 +56,7 @@ class NCompConstraintSet;
  * See the enumerateVertices() notes for a full descrpition of the vertex
  * enumeration problem.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NVertexEnumerator {
     public:
@@ -107,8 +107,6 @@ class NVertexEnumerator {
          * constraints.
          *
          * \todo \opt Intersect the hyperplanes in a good order.
-         *
-         * \ifaces Not present.
          *
          * @param results the output iterator to which the resulting extremal
          * rays will be written; this must accept objects of type <tt>NRay*</tt>

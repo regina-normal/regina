@@ -101,7 +101,7 @@ class NFile;
  * unlocking in groups (such as skeletal properties, topological
  * properties, etc).
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NPropertyHolder {
     public:

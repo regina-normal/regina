@@ -68,7 +68,7 @@ namespace regina {
  * coordinate positions in the given set for which at least one of the two
  * vectors has a non-zero entry must be at most the non-zero coordinate cap.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NCompConstraint {
     private:
@@ -168,7 +168,7 @@ class NCompConstraint {
  * sufficient conditions for two valid vectors to be compatible.  See
  * class NCompConstraint for details on the concept of compatibility.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NCompConstraintSet : public std::deque<NCompConstraint*> {
     public:
