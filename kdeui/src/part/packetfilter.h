@@ -41,6 +41,7 @@
  * different subclasses of PacketFilter.
  */
 class PacketFilter {
+    public:
         /**
          * Destructor.
          */
@@ -50,7 +51,7 @@ class PacketFilter {
          * Should the given packet be accepted according to this
          * particular acceptance algorithm?
          */
-        bool accept(regina::NPacket* packet) = 0;
+        virtual bool accept(regina::NPacket* packet) = 0;
 };
 
 /**
@@ -61,7 +62,7 @@ class AllPacketsFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        bool accept(regina::NPacket* packet);
+        virtual bool accept(regina::NPacket* packet);
 };
 
 /**
@@ -73,7 +74,7 @@ class StandaloneFilter {
         /**
          * PacketFilter overrides.
          */
-        bool accept(regina::NPacket* packet);
+        virtual bool accept(regina::NPacket* packet);
 };
 
 /**
@@ -89,7 +90,7 @@ class SingleTypeFilter {
         /**
          * PacketFilter overrides.
          */
-        bool accept(regina::NPacket* packet) {
+        virtual bool accept(regina::NPacket* packet) {
             return (getPacketType() == T::packetType);
         }
 };
@@ -107,8 +108,8 @@ class TwoTypeFilter {
         /**
          * PacketFilter overrides.
          */
-        bool accept(regina::NPacket* packet) {
-            int type = packet->getPacketType()
+        virtual bool accept(regina::NPacket* packet) {
+            int type = packet->getPacketType();
             return (type == S::packetType || type == T::packetType);
         }
 };
@@ -116,7 +117,7 @@ class TwoTypeFilter {
 inline PacketFilter::~PacketFilter() {
 }
 
-inline bool AllPacketsFilter::accept(regina::NPacket* packet) {
+inline bool AllPacketsFilter::accept(regina::NPacket*) {
     return true;
 }
 
