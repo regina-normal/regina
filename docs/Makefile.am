@@ -6,22 +6,12 @@
 ##  to produce Makefile.in.
 ##
 
-SUBDIRS = engine javaui images
+SUBDIRS = @REGINA_BUILD_DOCSENGINE@ @REGINA_BUILD_DOCSJAVAUI@ images
 
 ## ----------------------- Variables ---------------------------------
 
-USE_CLASSPATH = @JAVAUI_CLASSPATH@
-
 sgml_index = regina.sgml
 sgml_dsl = regina.dsl
-
-engine_index = engine/index.html
-engine_conf = ../engine/doc-files/docs.conf
-
-javaui_index = javaui/index.html
-javaui_overview  = overview.html
-javaui_title = 'Regina - Java User Interface'
-javaui_bottom =  'Copyright &copy; 1999-2002, Ben Burton<br>This software is released under the GNU Public License.<br>For further information, or to submit a bug or other problem, please contact Ben Burton (<a href="mailto:benb@acm.org">benb@acm.org</a>).'
 
 sample_html = index.html
 sample_man = regina.1
@@ -49,21 +39,10 @@ sgml_sources = regina.dsl \
 
 ## ----------------------- Custom targets ----------------------------
 
-.PHONY : engine javaui html man tex pdf rtf \
+.PHONY : html man tex pdf rtf \
   all-local clean-local
 
-all-local : @REGINA_BUILD_DOCSENGINE@ @REGINA_BUILD_DOCSJAVAUI@ @REGINA_BUILD_DOCSHTML@ @REGINA_BUILD_DOCSMAN@
-
-engine : $(engine_index)
-$(engine_index) : $(engine_conf)
-	cd ../engine && @DOXYGEN@ $(engine_conf)
-
-javaui : $(javaui_index)
-$(javaui_index) :
-	cd ../javaui && CLASSPATH="$(USE_CLASSPATH)" @JAVADOC@ -d ../docs/javaui \
-		-overview $(javaui_overview) -windowtitle $(javaui_title) \
-		-doctitle $(javaui_title) -bottom $(javaui_bottom) -package -use \
-		`find normal -name package.html | sed -e 's#/package.html$$##'`
+all-local : @REGINA_BUILD_DOCSHTML@ @REGINA_BUILD_DOCSMAN@
 
 html : $(sample_html)
 $(sample_html) : $(sgml_sources)
@@ -92,9 +71,6 @@ clean-local :
 	rm -f *.[1-8] manpage.*
 	rm -f *.tex *.aux *.dvi *.out *.log
 	rm -f *.pdf *.rtf
-	rm -f engine/*.html engine/*.png engine/*.gif engine/*.css engine/*.dot
-	rm -f javaui/*.html javaui/*.css javaui/package-list
-	rm -rf javaui/normal
 
 ## ----------------------- Normal Makefile.am stuff ------------------
 
