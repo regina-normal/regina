@@ -139,7 +139,7 @@ int main(int argc, const char* argv[]) {
             "Must have at least one ideal vertex.", 0 },
         { "minimal", 'm', POPT_ARG_NONE, &minimal, 0,
             "Ignore obviously non-minimal triangulations.", 0 },
-        { "pairs", 'p', POPT_ARG_NONE, &genPairs, 0,
+        { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
             "Only generate face pairings, not triangulations.", 0 },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
             "Only use face pairings read from standard input.", 0 },
@@ -148,7 +148,7 @@ int main(int argc, const char* argv[]) {
     };
 
     poptContext optCon = poptGetContext(0, argc, argv, opts, 0);
-    poptSetOtherOptionHelp(optCon, "[ <output-file> ]");
+    poptSetOtherOptionHelp(optCon, "<output-file>");
 
     // Parse the command-line arguments.
     int rc = poptGetNextOpt(optCon);
@@ -178,13 +178,14 @@ int main(int argc, const char* argv[]) {
         std::cerr << "An output file must be specified.\n";
         broken = true;
     } else if (genPairs && (argOr || argNor)) {
-        std::cerr << "Orientability options cannot be used with -p/--pairs.\n";
+        std::cerr << "Orientability options cannot be used with "
+            << "-p/--genpairs.\n";
         broken = true;
     } else if (genPairs && (argFinite || argIdeal)) {
-        std::cerr << "Finiteness options cannot be used with -p/--pairs.\n";
+        std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (genPairs && minimal) {
-        std::cerr << "Minimality options cannot be used with -p/--pairs.\n";
+        std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (usePairs && nTet) {
         std::cerr << "Tetrahedron options cannot be used with -P/--usepairs.\n";
@@ -213,7 +214,7 @@ int main(int argc, const char* argv[]) {
             << "cannot be used together.\n";
         broken = true;
     } else if (genPairs && usePairs) {
-        std::cerr << "Options -p/--pairs and -P/--usepairs "
+        std::cerr << "Options -p/--genpairs and -P/--usepairs "
             << "cannot be used together.\n";
         broken = true;
     }
