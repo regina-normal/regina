@@ -49,7 +49,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
     // triangulation.
 
     if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain() ||
-            (orientableOnly && pairing->hasOneEndedChainWithDoubleHandle())) {
+            pairing->hasOneEndedChainWithDoubleHandle()) {
         use(0, useArgs);
         return;
     }

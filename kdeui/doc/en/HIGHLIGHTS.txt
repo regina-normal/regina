@@ -16,6 +16,9 @@ Version 3.97  [ 21 November, 2003 ] - Third prerelease for version 4.0.
         - Can flatten a layered solid torus to a Mobius band (currently
           available only through the Python interface).
         - Allows the initially visible triangulation tab to be configured.
+    Optimisations:
+        - More optimisations for non-orientable census creation using
+          new face pairing graph results (see math.GT/0307382 v2).
     Bug Fixes:
         - Fixed problems with word wrapping and line endings in the
           embedded text editor.
