@@ -623,13 +623,53 @@ class NPacket : public ShareableObject {
 
         /**
          * Swaps this packet with its next sibling in the sequence of
-         * children beneath their common parent packet.
+         * children beneath their common parent packet.  Calling this
+         * routine is equivalent to calling moveDown().
          *
          * This routine takes small constant time.
          *
-         * \pre This packet has a next sibling in the packet tree.
+         * If this packet has no next sibling then this routine does
+         * nothing.
          */
         void swapWithNextSibling();
+
+        /**
+         * Moves this packet the given number of steps towards the
+         * beginning of its sibling list.  If the number of steps is
+         * larger than the greatest possible movement, the packet will
+         * be moved to the very beginning of its sibling list.
+         *
+         * This routine takes time proportional to the number of steps.
+         *
+         * \pre The given number of steps is strictly positive.
+         */
+        void moveUp(unsigned steps = 1);
+
+        /**
+         * Moves this packet the given number of steps towards the
+         * end of its sibling list.  If the number of steps is
+         * larger than the greatest possible movement, the packet will
+         * be moved to the very end of its sibling list.
+         *
+         * This routine takes time proportional to the number of steps.
+         *
+         * \pre The given number of steps is strictly positive.
+         */
+        void moveDown(unsigned steps = 1);
+
+        /**
+         * Moves this packet to be the first in its sibling list.
+         *
+         * This routine takes small constant time.
+         */
+        void moveToFirst();
+
+        /**
+         * Moves this packet to be the last in its sibling list.
+         *
+         * This routine takes small constant time.
+         */
+        void moveToLast();
 
         /*@}*/
         /**

@@ -12,7 +12,7 @@ Current Development Version
     ENGINE:
         Overall structure:
             - Fixed minor memory leaks.
-            - Beginning to incorporate std::auto_ptr<T>.
+            - Beginning to incorporate std::auto_ptr.
         Class Engine:
             - Removed since this is no longer necessary with the new
               python bindings.
@@ -65,6 +65,8 @@ Current Development Version
             - Added event listening for packets, including new class
               NPacketListener and new routines NPacket::listen(),
               NPacket::isListening() and NPacket::unlisten().
+            - New NPacket routines moveUp(), moveDown(), moveToFirst()
+              and moveToLast().
             - Reclassified member variables from protected to private.
         Class NPerm:
             - Routines edgeDescription() and faceDescription()

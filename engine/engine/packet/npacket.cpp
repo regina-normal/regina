@@ -180,7 +180,146 @@ void NPacket::makeOrphan() {
     }
 }
 
+void NPacket::moveUp(unsigned steps) {
+    if (steps == 0 || ! prevTreeSibling)
+        return;
+
+    // This packet is not the first packet in the child list.
+
+    NPacket* prev = prevTreeSibling;
+    while (prev && steps) {
+        prev = prev->prevTreeSibling;
+        steps--;
+    }
+
+    // Pull us out of the tree.
+    if (nextTreeSibling)
+        nextTreeSibling->prevTreeSibling = prevTreeSibling;
+    else
+        treeParent->lastTreeChild = prevTreeSibling;
+
+    prevTreeSibling->nextTreeSibling = nextTreeSibling;
+
+    // Reinsert ourselves into the tree.
+    prevTreeSibling = prev;
+    nextTreeSibling =
+        (prev ? prev->nextTreeSibling : treeParent->firstTreeChild);
+    nextTreeSibling->prevTreeSibling = this;
+    if (prev)
+        prev->nextTreeSibling = this;
+    else
+        treeParent->firstTreeChild = this;
+
+    // Fire a packet event.
+    if (treeParent->listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                treeParent->listeners->begin();
+                it != treeParent->listeners->end(); it++)
+            (*it)->childrenWereReordered(treeParent);
+    }
+}
+
+void NPacket::moveDown(unsigned steps) {
+    if (steps == 0 || ! nextTreeSibling)
+        return;
+
+    // This packet is not the last packet in the child list.
+
+    NPacket* next = nextTreeSibling;
+    while (next && steps) {
+        next = next->nextTreeSibling;
+        steps--;
+    }
+
+    // Pull us out of the tree.
+    if (prevTreeSibling)
+        prevTreeSibling->nextTreeSibling = nextTreeSibling;
+    else
+        treeParent->firstTreeChild = nextTreeSibling;
+
+    nextTreeSibling->prevTreeSibling = prevTreeSibling;
+
+    // Reinsert ourselves into the tree.
+    nextTreeSibling = next;
+    prevTreeSibling =
+        (next ? next->prevTreeSibling : treeParent->lastTreeChild);
+    prevTreeSibling->nextTreeSibling = this;
+    if (next)
+        next->prevTreeSibling = this;
+    else
+        treeParent->lastTreeChild = this;
+
+    // Fire a packet event.
+    if (treeParent->listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                treeParent->listeners->begin();
+                it != treeParent->listeners->end(); it++)
+            (*it)->childrenWereReordered(treeParent);
+    }
+}
+
+void NPacket::moveToFirst() {
+    if (! prevTreeSibling)
+        return;
+
+    // This packet is not the first packet in the child list.
+
+    // Pull us out of the tree.
+    if (nextTreeSibling)
+        nextTreeSibling->prevTreeSibling = prevTreeSibling;
+    else
+        treeParent->lastTreeChild = prevTreeSibling;
+
+    prevTreeSibling->nextTreeSibling = nextTreeSibling;
+
+    // Reinsert ourselves into the tree.
+    treeParent->firstTreeChild->prevTreeSibling = this;
+    nextTreeSibling = treeParent->firstTreeChild;
+    prevTreeSibling = 0;
+    treeParent->firstTreeChild = this;
+
+    // Fire a packet event.
+    if (treeParent->listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                treeParent->listeners->begin();
+                it != treeParent->listeners->end(); it++)
+            (*it)->childrenWereReordered(treeParent);
+    }
+}
+
+void NPacket::moveToLast() {
+    if (! nextTreeSibling)
+        return;
+
+    // This packet is not the last packet in the child list.
+
+    // Pull us out of the tree.
+    if (prevTreeSibling)
+        prevTreeSibling->nextTreeSibling = nextTreeSibling;
+    else
+        treeParent->firstTreeChild = nextTreeSibling;
+
+    nextTreeSibling->prevTreeSibling = prevTreeSibling;
+
+    // Reinsert ourselves into the tree.
+    treeParent->lastTreeChild->nextTreeSibling = this;
+    prevTreeSibling = treeParent->lastTreeChild;
+    nextTreeSibling = 0;
+    treeParent->lastTreeChild = this;
+
+    // Fire a packet event.
+    if (treeParent->listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                treeParent->listeners->begin();
+                it != treeParent->listeners->end(); it++)
+            (*it)->childrenWereReordered(treeParent);
+    }
+}
+
 void NPacket::swapWithNextSibling() {
+    if (! nextTreeSibling)
+        return;
+
     if (prevTreeSibling)
         prevTreeSibling->nextTreeSibling = nextTreeSibling;
     else
