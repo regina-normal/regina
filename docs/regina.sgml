@@ -61,6 +61,8 @@
     <guimenu>Help</guimenu>
     <guimenuitem>About</guimenuitem>
    </menuchoice>">
+ <!ENTITY pi "<literal>Pi</literal>">
+ <!ENTITY twopi "<literal>2*Pi</literal>">
 
  <!ENTITY reginalicense SYSTEM "license.sgml">
  <!ENTITY reginafeatureset SYSTEM "featureset.sgml">

@@ -736,7 +736,7 @@
     An elementary move will never change the topology of the
     3-manifold.  The individual moves and their restrictions are
     described in full detail in the
-    <ulink url="engine/classNTriangulation.html"><classname>NTriangulation</classname>
+    <ulink url="engine/classregina_1_1NTriangulation.html"><classname>NTriangulation</classname>
     class reference</ulink> in the calculation engine documentation, but a
     brief summary is provided below.
    </para>
@@ -891,9 +891,10 @@
    <para>
     A triangulation can be modified by finding a normal surface within
     it and crushing that surface to a point.  Note that this action
-    might change the topology of the 3-manifold, and in some cases might
+    might change the topology of the 3-manifold (beyond the simple act
+    of sliding along the surface), and in some cases might
     introduce ideal vertices or even invalid edges.  For details see
-    <ulink url="engine/classNNormalSurface.html"><function><classname>NNormalSurface</classname>::crush()</function></ulink>
+    <ulink url="engine/classregina_1_1NNormalSurface.html"><function><classname>NNormalSurface</classname>::crush()</function></ulink>
     in the calculation engine documentation.
    </para>
    <para>
