@@ -36,6 +36,7 @@ EXTRA_DIST = dataformat.sgml dataformat.ent \
   packet-script.sgml \
   packet-surfacefilter.sgml \
   packet-text.sgml \
+  packet-triangulation.sgml \
   packet.sgml \
   params.sgml \
   realbdry-filter.sgml \
