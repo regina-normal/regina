@@ -119,7 +119,7 @@ REGINA_LIB_REQUIRED(z, zlibVersion, [the calculation engine])
 REGINA_HEADER_REQUIRED(gmp.h, [the calculation engine])
 REGINA_LIB_REQUIRED(gmp, __gmpz_init, [the calculation engine])
 
-REGEXT_ACX_PTHREAD([
+ACX_PTHREAD([
   LIBS="$PTHREAD_LIBS $LIBS"
   CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 ], [
@@ -143,7 +143,7 @@ REGINA_HEADER_OPTIONAL(popt.h, UTILS, [command-line utilities])
 REGINA_LIB_OPTIONAL(popt, poptGetContext, UTILS_LIBS, UTILS,
   [command-line utilities])
 
-REGEXT_AM_PATH_CPPUNIT([1.8.0], , [
+AM_PATH_CPPUNIT([1.8.0], , [
   REGINA_WARN_MISSING([Library cppunit], [the test suite])
   REGINA_DO_NOT_COMPILE(TESTSUITE)
 ])
