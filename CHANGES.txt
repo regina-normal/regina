@@ -44,6 +44,8 @@ Version 4.0  [ currently under development ]
             - Displays progress and allows cancellation.
         Class ProgressDialogNumeric:
             - Added for displaying progress from regina::NProgressNumber.
+        Class PythonConsole:
+            - Added Help menu for assistance with Python scripting.
         Class ReginaMain:
             - Added Python reference to Help menu.
         Class PythonManager:

@@ -13,6 +13,8 @@ Version 4.0  [ currently under development ]
     Features:
         - Normal surface and angle structure enumeration now display
           progress dialogs and can be cancelled partway through.
+        - A Python reference (i.e., the documentation for the underlying
+          calculation engine) is available through the Help menu.
         - More clean-ups in the underlying mathematical code.
 
 Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.

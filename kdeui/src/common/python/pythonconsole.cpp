@@ -41,6 +41,7 @@
 #include <kapplication.h>
 #include <kfiledialog.h>
 #include <kglobalsettings.h>
+#include <khelpmenu.h>
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kmessagebox.h>
@@ -92,6 +93,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     // the part.
     KPopupMenu* menuConsole = new KPopupMenu(this);
     KPopupMenu* menuEdit = new KPopupMenu(this);
+    KPopupMenu* menuHelp = new KPopupMenu(this);
 
     (new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S, this,
         SLOT(saveLog()), actionCollection(), "console_save"))->
@@ -109,8 +111,16 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     KStdAction::selectAll(session, SLOT(selectAll()), actionCollection())->
         plug(menuEdit);
 
+    (new KAction(i18n("&Scripting Overview"), "contents", Key_F1, this,
+        SLOT(scriptingOverview()), actionCollection(), "help_scripting"))->
+        plug(menuHelp);
+    (new KAction(i18n("&Python Reference"), "python_console", 0, this,
+        SLOT(pythonReference()), actionCollection(), "help_engine"))->
+        plug(menuHelp);
+
     menuBar()->insertItem(i18n("&Console"), menuConsole);
     menuBar()->insertItem(i18n("&Edit"), menuEdit);
+    menuBar()->insertItem(i18n("&Help"), menuHelp);
 
     // Prepare the console for use.
     if (manager)
@@ -301,6 +311,14 @@ void PythonConsole::saveLog() {
             session->selectAll(false);
         }
     }
+}
+
+void PythonConsole::scriptingOverview() {
+    KApplication::kApplication()->invokeHelp("python", "regina");
+}
+
+void PythonConsole::pythonReference() {
+    PythonManager::openPythonReference();
 }
 
 void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {

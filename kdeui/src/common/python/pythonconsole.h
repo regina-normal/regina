@@ -142,6 +142,16 @@ class PythonConsole : public KMainWindow {
         void saveLog();
 
         /**
+         * Open the reference manual at the scripting overview.
+         */
+        void scriptingOverview();
+
+        /**
+         * Open the calculation engine documentation.
+         */
+        void pythonReference();
+
+        /**
          * Update the global preferences.
          */
         void updatePreferences(const ReginaPrefSet& newPrefs);

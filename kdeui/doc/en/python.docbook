@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <chapter id="python">
  <title>&python; Scripting</title>
 
@@ -80,17 +79,6 @@
     read by calling <literal>regina.readFileMagic(filename)</literal>.
    </para>
    <para>
-    &regina; includes a complete reference for the calculation engine,
-    which describes in detail the objects, classes and methods made available
-    to &python; scripts.  This documentation is generally
-    installed in <filename>/usr/local/share/regina/engine-docs/</filename>
-    or <filename>/usr/share/regina/engine-docs/</filename>, although this
-    may differ with your distribution or installation.  Like all
-    installation paths, the documentation installation path can be changed
-    by passing special options to <userinput>./configure</userinput> when
-    building &regina; from sources.
-   </para>
-   <para>
     Wherever &regina; gives you access to &python;, you may assume that the
     <parameter>regina</parameter> module has been imported (thus giving you
     access to everything contained within it).
@@ -100,6 +88,27 @@
     by hand to the file &regina-libs; (which is described in detail in the
     <link linkend="man-regina-python"><command>regina-python</command></link>
     reference).
+   </para>
+  </sect2>
+
+  <sect2 id="python-docs">
+   <title>Documentation</title>
+   <para>
+    &regina; includes a complete reference for its calculation engine,
+    which describes in detail the objects, classes and methods made available
+    to &python; scripts.  This documentation is available through the
+    <menuchoice>
+     <guimenu>Help</guimenu>
+     <guimenuitem>Python Reference</guimenuitem>
+    </menuchoice>
+    menu item.
+   </para>
+   <para>
+    For those wishing to read this documentation from outside the
+    program, it is generally installed in
+    <filename>/usr/local/share/regina/engine-docs/</filename>
+    or <filename>/usr/share/regina/engine-docs/</filename>, although this
+    may differ with your distribution or installation.
    </para>
   </sect2>
  </sect1>
