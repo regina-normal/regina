@@ -106,7 +106,7 @@ public class NormalOptionSet extends OptionSet {
     /**
      * A particular cached option.
      */
-    private Vector jythonLibraries;
+    private Vector jythonLibraries = new Vector();
 
     /**
      * Creates a new option set not associated with any file.
