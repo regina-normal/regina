@@ -75,9 +75,6 @@ jar_corba = ../$(JAVA_CORBA)
 	prepcorba prepcleancorba \
 	docs clean
 
-$(LICENSE) : ../$(LICENSE)
-	$(COPY) ../$(LICENSE) $(LICENSE)
-
 uibin : prepcorba $(made_class_files_ui)
 jnibin : $(made_class_files_jni)
 corbabin : prepcorba $(made_class_files_corba)

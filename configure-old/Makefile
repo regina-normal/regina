@@ -19,9 +19,6 @@ runtime_jar = ../$(REG_CONF)
 
 .PHONY : jar clean
 
-$(LICENSE) : ../$(LICENSE)
-	$(COPY) ../$(LICENSE) $(LICENSE)
-
 jar : $(runtime_jar)
 $(runtime_jar) : $(made_classes) $(LICENSE)
 	$(JAR) -cmf $(manifest) $(runtime_jar) *.class $(LICENSE)
