@@ -29,6 +29,7 @@
 // Regina core includes:
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/nsurfacefilter.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "coordinatechooser.h"
@@ -48,13 +49,20 @@
 #include <qlayout.h>
 #include <qstyle.h>
 
+#define DEFAULT_COORDINATE_COLUMN_WIDTH 40
+
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
 NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
-        isReadWrite(readWrite), currentlyResizing(false) {
+        newName(0), isReadWrite(readWrite), currentlyResizing(false) {
+    // Prepare the array of modified surface names.
+
+    if (surfaces->getNumberOfSurfaces() > 0)
+        newName = new QString[surfaces->getNumberOfSurfaces()];
+
     // Set up the UI.
 
     ui = new QWidget();
@@ -69,7 +77,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     coords = new CoordinateChooser(ui);
     coords->insertAllViewers(surfaces);
     coords->setCurrentSystem(surfaces->getFlavour());
-    connect(coords, SIGNAL(activated(int)), this, SLOT(refresh()));
+    connect(coords, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
     hdrLayout->addWidget(coords);
 
     hdrLayout->addStretch(1);
@@ -79,7 +87,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     filter = new PacketChooser(surfaces->getTreeMatriarch(),
         new SingleTypeFilter<regina::NSurfaceFilter>(), true, 0, ui);
     filter->setAutoUpdate(true);
-    connect(filter, SIGNAL(activated(int)), this, SLOT(refresh()));
+    connect(filter, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
     hdrLayout->addWidget(filter);
 
     uiLayout->addSpacing(5);
@@ -96,7 +104,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         0 /* shortcut */, this, SLOT(crush()), surfaceActions,
         "surface_crush");
     actCrush->setToolTip(i18n("Crush the selected surface to a point"));
-    actCrush->setEnabled(readWrite);
+    actCrush->setEnabled(false);
     surfaceActionList.append(actCrush);
 
     // Tidy up.
@@ -104,6 +112,9 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
 }
 
 NSurfaceCoordinateUI::~NSurfaceCoordinateUI() {
+    if (newName)
+        delete[] newName;
+
     // Make sure the actions, including separators, are all deleted.
     surfaceActionList.clear();
     delete surfaceActions;
@@ -122,11 +133,14 @@ QWidget* NSurfaceCoordinateUI::getInterface() {
 }
 
 void NSurfaceCoordinateUI::commit() {
-    // TODO: Commit changes
+    for (unsigned long i = 0; i < surfaces->getNumberOfSurfaces(); i++)
+        const_cast<regina::NNormalSurface*>(surfaces->getSurface(i))->
+            setName(newName[i].ascii());
+
     setDirty(false);
 }
 
-void NSurfaceCoordinateUI::refresh() {
+void NSurfaceCoordinateUI::refreshLocal() {
     // Update the current filter.
     filter->refreshContents();
 
@@ -154,25 +168,53 @@ void NSurfaceCoordinateUI::refresh() {
     regina::NTriangulation* tri = surfaces->getTriangulation();
 
     bool embeddedOnly = surfaces->isEmbeddedOnly();
-    unsigned propCols = NSurfaceCoordinateItem::propertyColCount(embeddedOnly);
-    unsigned long coordCols = Coordinates::numColumns(coordSystem, tri);
+    int propCols = NSurfaceCoordinateItem::propertyColCount(embeddedOnly);
+    long coordCols = Coordinates::numColumns(coordSystem, tri);
 
-    unsigned long i;
+    long i;
     for (i = 0; i < propCols; i++)
         table->addColumn(NSurfaceCoordinateItem::propertyColName(i,
-            embeddedOnly));
+            embeddedOnly), DEFAULT_COORDINATE_COLUMN_WIDTH);
     for (i = 0; i < coordCols; i++)
-        table->addColumn(Coordinates::columnName(coordSystem, i, tri));
+        table->addColumn(Coordinates::columnName(coordSystem, i, tri),
+            DEFAULT_COORDINATE_COLUMN_WIDTH);
+    for (i = 0; i < table->columns(); i++)
+        table->adjustColumn(i);
 
     headerTips.reset(new SurfaceHeaderToolTip(surfaces, coordSystem,
         table->header()));
     connect(table->header(), SIGNAL(sizeChange(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 
-    // TODO: Insert surfaces into the table.
-    // Don't forget to check whether they satisfy the selected filter.
+    // Insert surfaces into the table.
+    const regina::NNormalSurface* s;
+    for (i = surfaces->getNumberOfSurfaces() - 1; i >= 0; i--) {
+        s = surfaces->getSurface(i);
+        if (appliedFilter && ! appliedFilter->accept(*s))
+            continue;
+        (new NSurfaceCoordinateItem(table.get(), s, newName[i], i,
+            embeddedOnly))->setRenameEnabled(0, isReadWrite);
+    }
 
+    // Hook up the crush action to the new table.
+    actCrush->setEnabled(false);
+    connect(table.get(), SIGNAL(selectionChanged()),
+        this, SLOT(updateCrushState()));
+
+    // Final tidying up.
+    connect(table.get(), SIGNAL(itemRenamed(QListViewItem*, int,
+        const QString&)), this, SLOT(notifySurfaceRenamed()));
     table->show();
+}
+
+void NSurfaceCoordinateUI::refresh() {
+    // Refresh the surface names from the underlying packet.
+    for (unsigned long i = 0; i < surfaces->getNumberOfSurfaces(); i++)
+        newName[i] = surfaces->getSurface(i)->getName().c_str();
+
+    // Refresh the table of surfaces.
+    refreshLocal();
+
     setDirty(false);
 }
 
@@ -191,23 +233,42 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
 void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
     // Our currently applied filter is about to be destroyed.
     filter->setCurrentItem(0); // (i.e., None)
-    refresh();
+    refreshLocal();
 }
 
 void NSurfaceCoordinateUI::crush() {
-    // TODO: Crush normal surface
+    QListViewItem* item = table->selectedItem();
+    if (! item) {
+        KMessageBox::error(ui,
+            i18n("No normal surface is currently selected to crush."));
+        return;
+    }
+
+    const regina::NNormalSurface* toCrush =
+        dynamic_cast<NSurfaceCoordinateItem*>(item)->getSurface();
+    if (! toCrush->isCompact()) {
+        KMessageBox::error(ui, i18n("The selected surface is non-compact "
+            "and so cannot be crushed."));
+        return;
+    }
+
+    // Go ahead and crush it.
+    regina::NTriangulation* ans = toCrush->crush();
+    ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Crushed %1").arg(
+        surfaces->getTriangulation()->getPacketLabel().c_str()).ascii()));
+    surfaces->insertChildLast(ans);
+
+    // TODO: View the new crushed triangulation.
 }
 
 void NSurfaceCoordinateUI::updateCrushState() {
-    actCrush->setEnabled(isReadWrite && table->selectedItem() != 0);
-}
-
-void NSurfaceCoordinateUI::notifySurfaceRenamed() {
-    setDirty(true);
+    actCrush->setEnabled(isReadWrite && table.get() &&
+        table->selectedItem() != 0);
 }
 
 void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
-    int nNonCoordSections = (surfaces->isEmbeddedOnly() ? 8 : 5);
+    int nNonCoordSections = NSurfaceCoordinateItem::propertyColCount(
+        surfaces->isEmbeddedOnly());
     if (currentlyResizing || section < nNonCoordSections)
         return;
 
@@ -217,6 +278,10 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
     for (long i = nNonCoordSections; i < table->columns(); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
+}
+
+void NSurfaceCoordinateUI::notifySurfaceRenamed() {
+    setDirty(true);
 }
 
 SurfaceHeaderToolTip::SurfaceHeaderToolTip(

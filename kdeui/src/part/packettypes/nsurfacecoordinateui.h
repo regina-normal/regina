@@ -47,6 +47,7 @@ class PacketChooser;
 class QBoxLayout;
 class QHeader;
 class QListView;
+class QListViewItem;
 class SurfaceHeaderToolTip;
 
 namespace regina {
@@ -68,6 +69,11 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          */
         regina::NNormalSurfaceList* surfaces;
         regina::NSurfaceFilter* appliedFilter;
+
+        /**
+         * Local modifications
+         */
+        QString* newName;
 
         /**
          * Internal components
@@ -107,6 +113,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         QWidget* getInterface();
         const QPtrList<KAction>& getPacketTypeActions();
         void commit();
+        void refresh();
         void setReadWrite(bool readWrite);
 
         /**
@@ -116,9 +123,10 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
 
     public slots:
         /**
-         * Packet refresh (reimplemented from PacketUI) is now a slot.
+         * Refill the table of surfaces whilst preserving local
+         * modifications.
          */
-        void refresh();
+        void refreshLocal();
 
         /**
          * Surface list actions.
@@ -131,14 +139,14 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         void updateCrushState();
 
         /**
-         * Notify us of the fact that an edit has been made.
-         */
-        void notifySurfaceRenamed();
-
-        /**
          * Provides auto-resizing of columns.
          */
         void columnResized(int section, int oldSize, int newSize);
+
+        /**
+         * Notify us that a surface has been renamed.
+         */
+        void notifySurfaceRenamed();
 };
 
 /**

@@ -97,8 +97,39 @@ QString NSurfaceCoordinateItem::propertyColDesc(int whichCol,
     return i18n("Unknown");
 }
 
+void NSurfaceCoordinateItem::setText(int column, const QString& str) {
+    if (column == 0)
+        name = str;
+    KListViewItem::setText(column, str);
+}
+
 QString NSurfaceCoordinateItem::text(int column) const {
+    int triBool;
+    if (embeddedOnly) {
+        switch (column) {
+            case 0:
+                return name;
+            case 1:
+                if (! surface->isCompact())
+                    return QString::null;
+
+                return surface->getEulerCharacteristic().stringValue().c_str();
+            case 2:
+                if (! surface->isCompact())
+                    return QString::null;
+
+                triBool = surface->isOrientable();
+                if (triBool == 1)
+                    return i18n("Orbl");
+                else if (triBool == -1)
+                    return i18n("Non-orbl");
+                else
+                    return i18n("Unknown");
+        }
+    } else {
+    }
     // TODO
+    return "bruce";
 }
 
 void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,

@@ -46,8 +46,12 @@ class NSurfaceCoordinateItem : public KListViewItem {
     private:
         /**
          * The underlying normal surface.
+         * Note that the surface name is a direct reference to the table
+         * of local modifications in NSurfaceCoordinateUI.
          */
         const regina::NNormalSurface* surface;
+        QString& name;
+        unsigned long surfaceIndex;
         bool embeddedOnly;
 
     public:
@@ -55,7 +59,14 @@ class NSurfaceCoordinateItem : public KListViewItem {
          * Constructor.
          */
         NSurfaceCoordinateItem(QListView* parent,
-            const regina::NNormalSurface* newSurface, bool fromEmbeddedOnly);
+            const regina::NNormalSurface* newSurface, QString& newName,
+            unsigned long newSurfaceIndex, bool fromEmbeddedOnly);
+
+        /**
+         * Query this list view item.
+         */
+        const regina::NNormalSurface* getSurface();
+        unsigned long getSurfaceIndex();
 
         /**
          * Query the property columns of the coordinate viewer.
@@ -68,14 +79,24 @@ class NSurfaceCoordinateItem : public KListViewItem {
          * QListItem overrides.
          */
         QString text(int column) const;
+        void setText(int column, const QString& str);
         void paintCell(QPainter* p, const QColorGroup& cg, int column,
             int width, int align);
 };
 
 inline NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
-        const regina::NNormalSurface* newSurface, bool fromEmbeddedOnly) :
-        KListViewItem(parent), surface(newSurface),
-        embeddedOnly(fromEmbeddedOnly) {
+        const regina::NNormalSurface* newSurface, QString& newName,
+        unsigned long newSurfaceIndex, bool fromEmbeddedOnly) :
+        KListViewItem(parent), surface(newSurface), name(newName),
+        surfaceIndex(newSurfaceIndex), embeddedOnly(fromEmbeddedOnly) {
+}
+
+inline const regina::NNormalSurface* NSurfaceCoordinateItem::getSurface() {
+    return surface;
+}
+
+inline unsigned long NSurfaceCoordinateItem::getSurfaceIndex() {
+    return surfaceIndex;
 }
 
 #endif
