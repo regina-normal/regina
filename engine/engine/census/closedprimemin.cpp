@@ -361,7 +361,8 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
     std::fill(permIndices, permIndices + nTets * 4, -1);
 
     int orderElt = 0;
-    orientation[order[nChainEdges].tet] = 1;
+    if (nChainEdges < nTets * 2)
+        orientation[order[nChainEdges].tet] = 1;
     bool canonical, generic;
     std::list<NIsomorphismDirect*>::const_iterator it;
     while (orderElt >= 0) {
@@ -409,6 +410,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         if (permIndex(face) >= 6) {
             // Head back down to the previous face.
             permIndex(face) = -1;
+            permIndex(adj) = -1;
             orderElt--;
             continue;
         }
@@ -425,7 +427,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
                 continue;
 
         // Fix the orientation if appropriate.
-        if (generic && adj.face == 0) {
+        if (generic && adj.face == 0 && orientableOnly) {
             // It's the first time we've hit this tetrahedron.
             if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
                     (adj.face == 3 ? 0 : 1)) % 2 == 0)
