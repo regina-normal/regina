@@ -1,3 +1,4 @@
+etc/regina-normal/regina-normal-server.conf
 usr/bin/regina-engine-corba
 usr/lib/regina-normal/bin/regina-engine-corba
 usr/share/man/man1/regina-engine-corba.1

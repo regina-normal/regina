@@ -5,17 +5,27 @@ DAEMON=/usr/lib/regina-normal/bin/regina-engine-corba
 NAME="regina-normal-server"
 DESC="Regina calculation engine"
 HOST="`/bin/hostname --fqdn`"
+CONFFILE="/etc/regina-normal/regina-normal-server.conf"
 
 test -f $DAEMON || exit 0
 
 set -e
 
+start_server=1
+if [ -f "$CONFFILE" ]; then
+  if egrep -q "^[[:space:]]*no-start-server" $CONFFILE; then
+    start_server=0
+  fi
+fi
+
 case "$1" in
   start)
-	echo -n "Starting $DESC: "
-	start-stop-daemon --start --quiet --chuid nobody --background \
-		--exec $DAEMON --user nobody -- -ORBpoa_iiop_name_port "$HOST"
-	echo "$NAME."
+	if [ "$start_server" = "1" ]; then
+	  echo -n "Starting $DESC: "
+	  start-stop-daemon --start --quiet --chuid nobody --background \
+	    --exec $DAEMON --user nobody -- -ORBpoa_iiop_name_port "$HOST"
+	  echo "$NAME."
+	fi
 	;;
   stop)
 	echo -n "Stopping $DESC: "
@@ -26,8 +36,10 @@ case "$1" in
 	echo -n "Restarting $DESC: "
 	start-stop-daemon --stop --quiet --exec $DAEMON --user nobody --oknodo
 	sleep 1
-	start-stop-daemon --start --quiet --chuid nobody --background \
-		--exec $DAEMON --user nobody -- -ORBpoa_iiop_name_port "$HOST"
+	if [ "$start_server" = "1" ]; then
+	  start-stop-daemon --start --quiet --chuid nobody --background \
+	    --exec $DAEMON --user nobody -- -ORBpoa_iiop_name_port "$HOST"
+	fi
 	echo "$NAME."
 	;;
   *)

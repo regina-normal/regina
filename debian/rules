@@ -136,9 +136,9 @@ install: build
 	# Rename man pages where appropriate.
 	mv $(mandir)/man1/regina.1 $(mandir)/man1/regina-normal.1
 
-	# Install the global configuration file.
+	# Install the configuration files.
 	$(INSTALL_DIR) $(confdir)
-	$(INSTALL_FILE) debian/regina.conf $(confdir)
+	$(INSTALL_FILE) debian/*.conf $(confdir)
 
 	# Install overrides.
 	$(INSTALL_DIR) $(overrides)
