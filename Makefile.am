@@ -10,7 +10,6 @@ AUTOMAKE_OPTIONS = foreign dist-zip 1.4
 SUBDIRS = \
   @REGINA_BUILD_ENGINE@ \
   @REGINA_BUILD_UTILS@ \
-  @REGINA_BUILD_JAVAUI@ \
   @REGINA_BUILD_KDEUI@ \
   @REGINA_BUILD_PYTHON@ \
   @REGINA_BUILD_TESTSUITE@ \
@@ -18,7 +17,6 @@ SUBDIRS = \
   docs \
   examples \
   icons \
-  jar \
   pylib \
   scripts
 
@@ -29,41 +27,26 @@ EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
 
 ## ----------------------- Custom targets ----------------------------
 
-.PHONY : engine jni java utils bin \
-  enginedocs javadocs html man docjar docs \
-  jnihdr jnihdr-clean \
-  valgrind \
-  help
+.PHONY : engine utils bin \
+  enginedocs html man docs \
+  valgrind help
 
 mostlyclean-local :
 	rm -f hs_err_pid*.log
 
 engine :
 	cd engine/engine && $(MAKE)
-jni : engine
-	cd engine/jni && $(MAKE)
-java :
-	cd javaui && $(MAKE)
 utils : engine
 	cd utils && $(MAKE)
-bin : engine jni java utils
+bin : engine utils
 
 enginedocs :
 	cd docs/engine && $(MAKE)
-javadocs : java
-	cd docs/javaui && $(MAKE)
 html :
 	cd docs && $(MAKE) html
 man :
 	cd docs && $(MAKE) man
-docjar :
-	cd docs && $(MAKE) jar
-docs : enginedocs javadocs html man docjar
-
-jnihdr :
-	cd javaui && $(MAKE) jni
-jnihdr-clean :
-	cd javaui && $(MAKE) jni-clean
+docs : enginedocs html man
 
 valgrind:
 	## Run the test suite so that libtool regenerates lt-regtestsuite.

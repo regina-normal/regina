@@ -52,7 +52,7 @@ my @dirsAndFiles;
 if ($nArgs) {
     @dirsAndFiles = @ARGV;
 } else {
-    @dirsAndFiles = ( 'engine', 'javaui', 'testsuite' );
+    @dirsAndFiles = ( 'engine', 'python', 'testsuite' );
 }
 
 # --- Update each file or directory tree. ---

@@ -124,12 +124,6 @@ AC_CHECK_KDEMAXPATHLEN
 #
 ###########################################################
 
-AC_ARG_ENABLE(javaui, AC_HELP_STRING([--enable-javaui],
-    [build the Java user interface [[default=yes]]]), [
-  if test "$enableval" = "no"; then
-    REGINA_DO_NOT_COMPILE([JAVAUI DOCSJAVAUI DOCSJAR ENGINEJNI JNIHDR])
-  fi
-])
 AC_ARG_ENABLE(kdeui, AC_HELP_STRING([--enable-kdeui],
     [build the KDE user interface [[default=yes]]]), [
   if test "$enableval" = "no"; then
@@ -145,25 +139,9 @@ AC_ARG_ENABLE(python, AC_HELP_STRING([--enable-python],
 AC_ARG_ENABLE(docs, AC_HELP_STRING([--enable-docs],
     [build the Regina documentation [[default=yes]]]), [
   if test "$enableval" = "no"; then
-    REGINA_DO_NOT_COMPILE([DOCSENGINE DOCSJAVAUI DOCSHTML DOCSMAN DOCSJAR])
+    REGINA_DO_NOT_COMPILE([DOCSENGINE DOCSHTML DOCSMAN])
   fi
 ])
-
-###########################################################
-#
-# Check for Java tools.
-#
-###########################################################
-
-REGINA_PROG_JAVAC([JAVAUI DOCSJAVAUI DOCSJAR], [the Java user interface])
-
-REGINA_PROG_OPTIONAL([fastjar jar], JAR,
-  [Jar command for creating Java JAR archives], [JAVAUI DOCSJAVAUI DOCSJAR],
-  [the Java user interface])
-
-REGINA_PROG_OPTIONAL([gcjh gcjh-3.1 kaffeh javah], JAVAH,
-  [Javah command for creating JNI headers], [JNIHDR],
-  [the (unnecessary) JNI headers])
 
 ###########################################################
 #
@@ -172,7 +150,7 @@ REGINA_PROG_OPTIONAL([gcjh gcjh-3.1 kaffeh javah], JAVAH,
 ###########################################################
 
 REGINA_PROG_OPTIONAL(doxygen, DOXYGEN,
-  [Doxygen command for C++ source documentation], [DOCSENGINE DOCSJAR],
+  [Doxygen command for C++ source documentation], [DOCSENGINE],
   [calculation engine documentation])
 
 AC_ARG_VAR(DOT, [Dot command for drawing directed graphs])
@@ -190,15 +168,11 @@ REGINA_PROG_OPTIONAL(docbook2man, DOCBOOK2MAN,
 
 REGINA_PROG_OPTIONAL(jade, JADE,
   [Jade command for converting SGML to HTML],
-  [DOCSHTML DOCSPDF DOCSRTF DOCSJAR], [the reference manual])
+  [DOCSHTML DOCSPDF DOCSRTF], [the reference manual])
 
 REGINA_PROG_OPTIONAL(pdfjadetex, PDFJADETEX,
   [JadeTeX command for converting TeX to PDF], DOCSPDF,
   [the PDF reference manual])
-
-REGINA_PROG_OPTIONAL(javadoc, JAVADOC,
-  [JavaDoc command for Java source documentation], [DOCSJAVAUI DOCSJAR],
-  [Java UI class documentation])
 
 ###########################################################
 #
@@ -254,16 +228,6 @@ if test "$should_build" = "yes"; then
   AC_PATH_KDE
 fi
 
-REGINA_SHOULD_BUILD_INTERNAL(JAVAUI)
-if test "$should_build" = "yes"; then
-  REGINA_LIB_JAVA(btools, [org.gjt.btools.Version],
-    [JAVAUI DOCSJAVAUI DOCSJAR], [the Java user interface])
-  REGINA_LIB_JAVA(jython, [org.python.util.jython],
-    [JAVAUI DOCSJAVAUI DOCSJAR], [the Java user interface])
-fi
-
-REGINA_HEADER_JNI(ENGINEJNI, [the JNI calculation engine module])
-
 ###########################################################
 #
 # Miscellaneous other headers.
@@ -287,18 +251,9 @@ AC_SUBST(ENGINE_INCLUDES)
 ENGINE_LIBS="$XML_LIBS"
 AC_SUBST(ENGINE_LIBS)
 
-# Additional includes requied by the JNI calculation engine module.
-JNI_INCLUDES="-I\$(top_srcdir)/engine/jni $JNI_INCLUDES"
-AC_SUBST(JNI_INCLUDES)
-
 # Additional libraries required by the test suite.
 TESTSUITE_LIBS="$CPPUNIT_LIBS"
 AC_SUBST(TESTSUITE_LIBS)
-
-# Classpath required by the Java user interface.
-JAVAUI_CLASSPATH="\$(top_srcdir)/javaui:$CLASSPATH"
-REGINA_CLASSPATH_CONVERT(JAVAUI_CLASSPATH)
-AC_SUBST(JAVAUI_CLASSPATH)
 
 # Do we wish to statically link the calculation engine into final targets?
 __static_final=no
@@ -333,17 +288,13 @@ AC_SUBST(CXXFLAGS_NODEBUG)
 ###########################################################
 
 REGINA_SHOULD_BUILD(ENGINE, engine, [the calculation engine library])
-REGINA_SHOULD_BUILD(ENGINEJNI, jni, [the JNI calculation engine module])
 REGINA_SHOULD_BUILD(KDEUI, kdeui, [the KDE user interface])
-REGINA_SHOULD_BUILD(JAVAUI, javaui, [the Java user interface])
 REGINA_SHOULD_BUILD(PYTHON, python, [the Python interface])
 REGINA_SHOULD_BUILD(UTILS, utils, [command-line utilities])
 REGINA_SHOULD_BUILD(TESTSUITE, testsuite, [the test suite])
 REGINA_SHOULD_BUILD(DOCSENGINE, engine, [calculation engine docs])
-REGINA_SHOULD_BUILD(DOCSJAVAUI, javaui, [Java user interface docs])
 REGINA_SHOULD_BUILD(DOCSHTML, html, [the reference manual])
 REGINA_SHOULD_BUILD(DOCSMAN, man, [man pages])
-REGINA_SHOULD_BUILD(DOCSJAR, jar, [the documentation jar])
 
 ###########################################################
 #

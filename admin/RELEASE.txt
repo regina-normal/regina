@@ -7,22 +7,17 @@ Program version:
     admin/configure.ac.top (AC_INIT, AM_INIT_AUTOMAKE)
     debian/changelog (version, date)
     docs/regina.sgml (entities &regversion;, &regdate;)
-    javaui/normal/Application.java (Application.version, Application.date)
     www/index.html (last updated, current version)
     kdeui/src/reginaabout.h (regReleased)
 
 License details:
-    LICENSE.txt (./, docs/, javaui/)
+    LICENSE.txt (./, docs/)
     docs/license.sgml
     engine/engine/docs.h
-    javaui/overview.html
-    javaui/normal/Application.java
     kdeui/src/reginaabout.h (ReginaAbout constructor)
 
 Acknowledgements:
     docs/regina.sgml
     engine/engine/docs.h (General Notes page)
-    javaui/overview.html
-    javaui/normal/Application.java (Application.thanks)
     kdeui/src/reginaabout.h (ReginaAbout constructor)
 

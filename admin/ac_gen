@@ -69,6 +69,8 @@ for i in `find . -name Makefile.am | sort | sed -e 's#^./##;s#\.am$##'`; do
     ./Makefile )
       echo "AC_CONFIG_FILES([Makefile])" >> "$output"
     ;;
+    javaui/* )
+    ;;
     test/* )
     ;;
     * )

@@ -133,14 +133,10 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^docs/.*\.jar$' | \
     grep -v '^docs/engine/doxygen' | \
     grep -v '^docs/engine/graph_legend' | \
-    grep -v '^docs/javaui/normal' | \
-    grep -v '^docs/javaui/.*\.css$' | \
-    grep -v '^docs/javaui/package-list$' | \
     grep -v '^docs/man/manpage\.' | \
     grep -v '^engine/doc-files/docs\.conf$' | \
     grep -v '^engine/engine/regina-config\.h$' | \
     grep -v '^engine/engine/stamp-h' | \
-    grep -v '^javaui/.*\.jar$' | \
     grep -v '^kdeui' | \
     grep -v '^libtool$' | \
     grep -v '^metrics' | \
