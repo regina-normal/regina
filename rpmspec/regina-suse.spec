@@ -120,7 +120,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Jul 25 2004 Ben Burton <bab@debian.org> 4.1.3
 - New upstream release.
-- Built against an updated popt from SuSE online updates.  The earlier
+- Built against an updated popt from YaST online updates.  The earlier
   popt packages from SuSE used an incorrect soname (libpopt.so.1).  The
   updated popt packages fix this (they now use libpopt.so.0).  Because
   this bugfix from SuSE changes the soname, regina-normal will require
