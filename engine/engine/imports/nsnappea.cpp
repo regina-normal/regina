@@ -32,18 +32,18 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nsnappea.h"
-    #include "nfile.h"
+    #include "nresources.h"
     #include "ntriangulation.h"
 #else
     #include "engine/imports/nsnappea.h"
-    #include "engine/file/nfile.h"
+    #include "engine/file/nresources.h"
     #include "engine/triangulation/ntriangulation.h"
 #endif
 
 
 NTriangulation* readSnapPea(const char* filename) {
     // Open the file.
-    ifstream in(filename, NFile::READ);
+    ifstream in(filename, NLocalFileResource::MODE_READ);
     if (!in)
         return 0;
     

@@ -43,7 +43,7 @@
 
 NPacket* readFromFile(const char* fileName) {
     NFile f;
-    if (f.open(fileName, f.READ)) {
+    if (f.open(fileName, NRandomAccessResource::READ)) {
         NPacket* ans = f.readPacketTree();
         f.close();
         return ans;
@@ -53,7 +53,7 @@ NPacket* readFromFile(const char* fileName) {
 
 bool writeToFile(const char* fileName, NPacket* tree) {
     NFile f;
-    if (f.open(fileName, f.WRITE)) {
+    if (f.open(fileName, NRandomAccessResource::WRITE)) {
         f.writePacketTree(tree);
         f.close();
         return true;
@@ -61,85 +61,83 @@ bool writeToFile(const char* fileName, NPacket* tree) {
     return false;
 }
 
-bool NFile::open(const char* fileName, mode newOpenMode) {
-    if (openMode)
+bool NFile::open(const char* fileName,
+        NRandomAccessResource::mode newOpenMode) {
+    if (resource)
         close();
-    // openMode is now set to 0 (CLOSED) and the file is closed.
-    if (newOpenMode == READ) {
-        #ifdef __BINARY_IO
-            infile.open(fileName, MODE_READ | ios::binary);
-        #else
-            infile.open(fileName, MODE_READ);
-        #endif
-        if (infile.is_open()) {
+    // Resource is set to 0 and the file is closed.
+    if (newOpenMode == NRandomAccessResource::READ) {
+        resource = new NLocalFileResource(fileName);
+        if (resource->openRead()) {
             int len = strlen(PROGRAM_NAME);
             char* sentry = new char[len+1];
             for (int i=0; i<len+1; i++)
-                sentry[i] = char(infile.get());
+                sentry[i] = resource->getChar();
             if (sentry[len]) {
-                infile.close();
+                close();
                 return false;
             }
             if (strcmp(sentry, PROGRAM_NAME)) {
                 // We might have a pre-2.1 file format.
                 if (strcmp(sentry, "Normal")) {
-                    infile.close();
+                    close();
                     return false;
                 }
             }
             delete[] sentry;
             majorVersion = readInt();
             minorVersion = readInt();
-            openMode = READ;
             return true;
-        } else
+        } else {
+            close();
             return false;
+        }
     }
-    if (newOpenMode == WRITE) {
-        #ifdef __BINARY_IO
-            outfile.open(fileName, MODE_WRITE | ios::binary);
-        #else
-            outfile.open(fileName, MODE_WRITE);
-        #endif
-        if (outfile.is_open()) {
-            openMode = WRITE;
+    if (newOpenMode == NRandomAccessResource::WRITE) {
+        resource = new NLocalFileResource(fileName);
+        if (resource->openWrite()) {
             majorVersion = ENGINE_VERSION_MAJOR;
             minorVersion = ENGINE_VERSION_MINOR;
-            outfile << PROGRAM_NAME;
-            outfile.put(0);
+            char* sentry = PROGRAM_NAME;
+
+            for (char* c = sentry; *c != 0; c++)
+                resource->putChar(*c);
+            resource->putChar(0);
             writeInt(ENGINE_VERSION_MAJOR);
             writeInt(ENGINE_VERSION_MINOR);
             return true;
         }
-        else
+        else {
+            close();
             return false;
+        }
     }
     return false;
 }
 
 void NFile::writeInt(int val) {
     if (val >= 0) {
-        outfile.put(0);
+        resource->putChar(0);
         writeUInt(val);
     } else {
-        outfile.put(-1);
+        resource->putChar(-1);
         writeUInt(-val);
     }
 }
 
 void NFile::writeLong(long val) {
     if (val >= 0) {
-        outfile.put(0);
+        resource->putChar(0);
         writeULong(val);
     } else {
-        outfile.put(-1);
+        resource->putChar(-1);
         writeULong(-val);
     }
 }
 
 void NFile::writeUInt(unsigned val) {
     for (int i=0; i<SIZE_INT; i++) {
-        outfile.put((unsigned char)val);
+        resource->putChar((unsigned char)val);
         val >>= 8;
     }
 }
@@ -147,20 +145,20 @@ void NFile::writeUInt(unsigned val) {
 void NFile::writeULong(unsigned long val) {
     int size = SIZE_LONG;
     for (int i=0; i<size; i++) {
-        outfile.put((unsigned char)val);
+        resource->putChar((unsigned char)val);
         val >>= 8;
     }
 }
 
 int NFile::readInt() {
-    if (infile.get() == 0)
+    if (resource->getChar() == 0)
         return (int)readUInt();
     else
         return -((int)readUInt());
 }
 
 long NFile::readLong() {
-    if (infile.get() == 0)
+    if (resource->getChar() == 0)
         return (long)readULong();
     else
         return -((long)readULong());
@@ -170,7 +168,7 @@ unsigned int NFile::readUInt() {
     int i;
     unsigned char b[SIZE_INT];
     for (i=0; i<SIZE_INT; i++)
-        b[i] = char(infile.get());
+        b[i] = resource->getChar();
     unsigned long ans = 0;
     for (i=SIZE_INT-1; i>=0; i--) {
         ans <<= 8;
@@ -184,7 +182,7 @@ unsigned long NFile::readULong() {
     int i;
     unsigned char* b = new (unsigned char)[size];
     for (i=0; i<size; i++)
-        b[i] = char(infile.get());
+        b[i] = resource->getChar();
     unsigned long ans = 0;
     for (i=size-1; i>=0; i--) {
         ans <<= 8;
@@ -211,14 +209,14 @@ void NFile::writeString(const NString& s) {
     unsigned len = s.length();
     writeUInt(len);
     for (unsigned i=0; i<len; i++)
-        outfile.put(s[i]);
+        resource->putChar(s[i]);
 }
 
 NString NFile::readString() {
     unsigned len = readUInt();
     char* buf = new char[len+1];
     for (unsigned i=0; i<len; i++)
-        buf[i] = char(infile.get());
+        buf[i] = resource->getChar();
     buf[len] = 0;
     return NString(buf);
 }
@@ -313,26 +311,12 @@ NPacket* NFile::readIndividualPacket(NPacket* parent, streampos& bookmark) {
     return 0;
 }
 
-streampos NFile::getPosition() {
-    if (openMode == READ)
-        return infile.tellg();
-    else
-        return outfile.tellp();
-}
-
-void NFile::setPosition(streampos pos) {
-    if (openMode == READ)
-        infile.seekg(pos);
-    else
-        outfile.seekp(pos);
-}
-
 streampos NFile::readPos()
 {
     int i;
     unsigned char b[SIZE_FILEPOS];
     for (i=0; i<SIZE_FILEPOS; i++)
-        b[i] = char(infile.get());
+        b[i] = resource->getChar();
     streamoff ans(0);
     for (i=SIZE_FILEPOS-1; i>=0; i--) {
         ans <<= 8;
@@ -344,18 +328,19 @@ streampos NFile::readPos()
 void NFile::writePos(streampos realVal) {
     streamoff val(realVal);
     for (int i=0; i<SIZE_FILEPOS; i++) {
-        outfile.put((unsigned char)val);
+        resource->putChar((unsigned char)val);
         val >>= 8;
     }
 }
 
 void NFile::writeTextShort(ostream& out) const {
+    NRandomAccessResource::mode openMode = getOpenMode();
     if (! openMode)
         out << "Closed file";
     else {
         out << "File version " << majorVersion << '.'
             << minorVersion << " open for ";
-        if (openMode == READ)
+        if (openMode == NRandomAccessResource::READ)
             out << "reading";
         else
             out << "writing";

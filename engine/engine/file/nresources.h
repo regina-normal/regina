@@ -46,7 +46,9 @@
 class NRandomAccessResource {
     public:
         /**
-         * Specifies the current state of the resource.
+         * Specifies the current state of a resource.
+         *
+         * \ifaces This enumeration is a public member of class NFile.
          */
         enum mode {
             CLOSED = 0,
@@ -58,6 +60,10 @@ class NRandomAccessResource {
         };
 
     public:
+        /**
+         * Destroys this resource.
+         */
+        virtual ~NRandomAccessResource();
         /**
          * Open the resource in read mode.
          * This routine should fail if the resource does not exist.
@@ -91,7 +97,7 @@ class NRandomAccessResource {
          *
          * @return the current state of the resource.
          */
-        virtual mode getMode() = 0;
+        virtual mode getOpenMode() const = 0;
         /**
          * Reads a character from the current position in the resource
          * and moves on to the next position.
@@ -177,77 +183,39 @@ class NLocalFileResource : public NRandomAccessResource {
         virtual bool openRead();
         virtual bool openWrite();
         virtual void close();
-        virtual mode getMode();
+        virtual mode getOpenMode() const;
         virtual char getChar();
         virtual void putChar(char c);
         virtual streampos getPosition();
         virtual void setPosition(streampos pos);
 };
 
+// Inline functions for NRandomAccessResource
+
+inline NRandomAccessResource::~NRandomAccessResource() {
+}
+
 // Inline functions for NLocalFileResource
 
-NLocalFileResource::NLocalFileResource(const char* newFileName) :
+inline NLocalFileResource::NLocalFileResource(const char* newFileName) :
         openMode(CLOSED), fileName(new char[strlen(newFileName) + 1]) {
     strcpy(fileName, newFileName);
 }
 
-NLocalFileResource::~NLocalFileResource() {
+inline NLocalFileResource::~NLocalFileResource() {
     close();
     delete[] fileName;
 }
 
-bool NLocalFileResource::openRead() {
-    #ifdef __BINARY_IO
-        infile.open(fileName, MODE_READ | ios::binary);
-    #else
-        infile.open(fileName, MODE_READ);
-    #endif
-    if (infile.is_open()) {
-        openMode = READ;
-        return true;
-    } else
-        return false;
-}
-bool NLocalFileResource::openWrite() {
-    #ifdef __BINARY_IO
-        outfile.open(fileName, MODE_WRITE | ios::binary);
-    #else
-        outfile.open(fileName, MODE_WRITE);
-    #endif
-    if (outfile.is_open()) {
-        openMode = WRITE;
-        return true;
-    } else
-        return false;
-}
-void NLocalFileResource::close() {
-    if (openMode == READ)
-        infile.close();
-    else if (openMode == WRITE)
-        outfile.close();
-    openMode = CLOSED;
-}
-mode NLocalFileResource::getMode() {
-    return mode;
+inline NRandomAccessResource::mode NLocalFileResource::getOpenMode() const {
+    return openMode;
 }
 
-char NLocalFileResource::getChar() {
+inline char NLocalFileResource::getChar() {
     return infile.get();
 }
-void NLocalFileResource::putChar(char c) {
+inline void NLocalFileResource::putChar(char c) {
     outfile.put(c);
-}
-streampos NLocalFileResource::getPosition() {
-    if (openMode == READ)
-        return infile.tellg();
-    else
-        return outfile.tellp();
-}
-void NLocalFileResource::setPosition(streampos pos) {
-    if (openMode == READ)
-        infile.seekg(pos);
-    else
-        outfile.seekp(pos);
 }
 
 #endif

@@ -35,15 +35,16 @@
 #define __NFILE_H
 #endif
 
-#include <fstream.h>
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
     #include "shareableobject.h"
+    #include "nresources.h"
     #include "nmpi.h"
     #include "nbooleans.h"
 #else
     #include "engine/shareableobject.h"
+    #include "engine/file/nresources.h"
     #include "engine/utilities/nmpi.h"
     #include "engine/utilities/nbooleans.h"
 #endif
@@ -79,48 +80,20 @@ bool writeToFile(const char* fileName, NPacket* packet);
 /**
  * Represents a file containing a packet tree.
  * Provides routines for opening, closing, reading and writing.
+ *
+ * \ifaces The enumeration NRandomAccessResource::mode is a public
+ * member of class \i NFile.
  */
 class NFile : public ShareableObject {
-    public:
-        /**
-         * Specifies the current state of the file.
-         */
-        enum mode {
-            CLOSED = 0,
-                /**< The file is closed. */
-            READ = 1,
-                /**< The file is open for reading. */
-            WRITE = 2
-                /**< The file is open for writing. */
-        };
-    
-    private:
-        /**
-         * Provides mode flags to pass to the system file opening
-         * routines.
-         */
-        enum systemMode {
-            #ifdef __NO_IOS_NOCREATE
-               MODE_READ = ios::in,
-            #else
-            MODE_READ = ios::in | ios::nocreate,
-            #endif
-                /**< Open the file for reading. */
-            MODE_WRITE = ios::out | ios::trunc
-                /**< Open the file for writing. */
-        };
-
     protected:
-        ifstream infile;
-            /**< The file that is being read from. */
-        ofstream outfile;
-            /**< The file that is being written to. */
-        mode openMode;
-            /**< Represents the current state of the file. */
         int majorVersion;
             /**< Major version number of the engine that wrote this file. */
         int minorVersion;
             /**< Minor version number of the engine that wrote this file. */
+
+    private:
+        NRandomAccessResource* resource;
+            /**< The underlying resource containing this file's contents. */
         
     public:
         /**
@@ -148,7 +121,8 @@ class NFile : public ShareableObject {
          * opened.  This should be either \c READ or \c WRITE.
          * @return \c true on success, \c false on failure.
          */
-        bool open(const char* fileName, mode newOpenMode);
+        bool open(const char* fileName,
+            NRandomAccessResource::mode newOpenMode);
 
         /**
          * Closes the file.
@@ -164,7 +138,7 @@ class NFile : public ShareableObject {
          *
          * @return the current state of the file.
          */
-        mode getOpenMode();
+        NRandomAccessResource::mode getOpenMode() const;
         
         /**
          * Returns the major version number of the engine responsible
@@ -509,7 +483,7 @@ class NFile : public ShareableObject {
 
 // Inline functions for NFile
 
-inline NFile::NFile() : openMode(NFile::CLOSED) {
+inline NFile::NFile() : resource(0) {
 }
 
 inline NFile::~NFile() {
@@ -517,15 +491,16 @@ inline NFile::~NFile() {
 }
 
 inline void NFile::close() {
-    if (openMode == READ)
-        infile.close();
-    else if (openMode == WRITE)
-        outfile.close();
-    openMode = CLOSED;
+    if (resource) {
+        resource->close();
+        delete resource;
+    }
+    resource = 0;
 }
 
-inline NFile::mode NFile::getOpenMode() {
-    return openMode;
+inline NRandomAccessResource::mode NFile::getOpenMode() const {
+    return (resource == 0 ?
+        NRandomAccessResource::CLOSED : resource->getOpenMode());
 }
 
 inline int NFile::getMajorVersion() {
@@ -543,11 +518,11 @@ inline bool NFile::versionEarlierThan(int major, int minor) {
 }
 
 inline void NFile::writeChar(char c) {
-    outfile.put(c);
+    resource->putChar(c);
 }
 
 inline char NFile::readChar() {
-    return char(infile.get());
+    return resource->getChar();
 }
 
 inline void NFile::writeBool(bool b) {
@@ -567,6 +542,14 @@ inline void NFile::writeBoolSet(const NBoolSet& b) {
 
 inline NBoolSet NFile::readBoolSet() {
     return NBoolSet(readBool(), readBool());
+}
+
+inline streampos NFile::getPosition() {
+    return resource->getPosition();
+}
+
+inline void NFile::setPosition(streampos pos) {
+    resource->setPosition(pos);
 }
 
 #endif

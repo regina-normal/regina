@@ -74,7 +74,7 @@ JNIEXPORT jboolean JNICALL
         (JNIEnv *env, jobject me, jstring fileName, jint fileMode) {
     char* fileNameChars = jstringToNString(env, fileName).dupe();
     bool ans = GET_ENGINE_OBJECT(env, NFile, me)->
-        open(fileNameChars, (NFile::mode)fileMode);
+        open(fileNameChars, (NRandomAccessResource::mode)fileMode);
     delete[] fileNameChars;
 
     if (ans)
