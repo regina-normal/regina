@@ -70,6 +70,8 @@ install: build
 		$(javadir)/regina-normal-$(jarversion).jar
 	$(INSTALL_FILE) bin/regina-jni.jar \
 		$(javadir)/regina-normal-jni-$(jarversion).jar
+	$(INSTALL_FILE) bin/regina-corba.jar \
+		$(javadir)/regina-normal-corba-$(jarversion).jar
 	$(INSTALL_FILE) bin/regina-docs.jar \
 		$(javadir)/regina-normal-docs-$(jarversion).jar
 
@@ -80,6 +82,8 @@ install: build
 		$(regdir)/jar/regina.jar
 	ln -s ../../java/regina-normal-jni-$(jarversion).jar \
 		$(regdir)/jar/regina-jni.jar
+	ln -s ../../java/regina-normal-corba-$(jarversion).jar \
+		$(regdir)/jar/regina-corba.jar
 	ln -s ../../java/regina-normal-docs-$(jarversion).jar \
 		$(regdir)/jar/regina-docs.jar
 	
