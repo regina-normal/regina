@@ -144,8 +144,6 @@ public class CoordinateViewer extends DefaultPacketViewer
         flavourBox.setMaximumSize(flavourBox.getPreferredSize());
         flavourLabel = new JLabel(flavourLabelText);
 
-        JButton crush = new JButton("Crush");
-
         model = new CoordTableModel();
         table = new JTable();
         table.setAutoResizeMode(table.AUTO_RESIZE_OFF);
@@ -156,35 +154,23 @@ public class CoordinateViewer extends DefaultPacketViewer
         flavourPanel.add(Box.createRigidArea(new Dimension(6,0)));
         flavourPanel.add(flavourBox);
         flavourPanel.add(Box.createHorizontalGlue());
-        flavourPanel.add(crush);
+
+        // Add action buttons for normal surfaces.
+        if (set.isEmbeddedOnly() && (! set.allowsAlmostNormal())) {
+            JButton crush = new JButton("Crush");
+            crush.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    crush();
+                }
+            });
+            flavourPanel.add(crush);
+        }
 
         setLayout(new BorderLayout());
         add(new PaddedPane(flavourPanel, 3, 12, 3, 3), BorderLayout.NORTH);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         flavourBox.addItemListener(this);
-        crush.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int nSel = table.getSelectedRowCount();
-                if (nSel == 0) {
-                    shell.error("No normal surface is selected to crush.");
-                } else if (nSel > 1) {
-                    shell.error(
-                        "More than one normal surface is selected to crush.");
-                } else {
-                    // Add the new crushed triangulation.
-                    NPacket crushed =
-                        set.getSurface(table.getSelectedRow()).crush();
-                    crushed.setPacketLabel(packet.makeUniqueLabel(
-                        "Crushed " + set.getTriangulation().getPacketLabel()));
-                    packet.insertChildLast(crushed);
-
-                    // Add the corresponding node to the tree structure.
-                    topPane.fireSubtreeWasInserted(crushed,
-                        CoordinateViewer.this, true);
-                }
-            }
-        });
     }
 
     public NPacket getPacket() {
@@ -295,6 +281,38 @@ public class CoordinateViewer extends DefaultPacketViewer
             col.setHeaderRenderer(renderer);
             col.setHeaderValue(new FancyData(model.getColumnName(i),
                 model.getColumnToolTip(i)));
+        }
+    }
+
+    /**
+     * Crushes the selected normal surface to a point.
+     */
+    private void crush() {
+        int nSel = table.getSelectedRowCount();
+        if (nSel == 0) {
+            shell.error("No normal surface is selected to crush.");
+        } else if (nSel > 1) {
+            shell.error(
+                "More than one normal surface is selected to crush.");
+        } else {
+            // Grab the normal surface to be crushed.
+            NNormalSurface surface = set.getSurface(table.getSelectedRow());
+
+            // Check that we are actually allowed to crush it.
+            if (! surface.isCompact()) {
+                shell.error("You may not crush a non-compact surface.");
+                return;
+            }
+
+            // Add the new crushed triangulation.
+            NPacket crushed = surface.crush();
+            crushed.setPacketLabel(packet.makeUniqueLabel(
+                "Crushed " + set.getTriangulation().getPacketLabel()));
+            packet.insertChildLast(crushed);
+
+            // Add the corresponding node to the tree structure.
+            topPane.fireSubtreeWasInserted(crushed,
+                CoordinateViewer.this, true);
         }
     }
 
