@@ -121,7 +121,7 @@ const QString ReginaAbout<T>::regName(I18N_NOOP("Regina"));
 
 template <class T>
 const QString ReginaAbout<T>::regReleased(
-    I18N_NOOP("Released ") + QDate(2002, 10, 18).toString(Qt::TextDate));
+    I18N_NOOP("Released ") + QDate(2003, 6, 22).toString(Qt::TextDate));
 
 template <class T>
 const QString ReginaAbout<T>::regVersion(PACKAGE_VERSION);
