@@ -159,7 +159,7 @@ install: build
 	$(INSTALL_FILE) bin/libregina-engine.a $(libdir)
 
 	# Install the include files.
-	cd engine/engine && for i in `find . -name "*.h"`; do \
+	cd engine/engine && for i in `find . -name "*.h" -o -name "*.tcc"`; do \
 	  $(INSTALL_DIR) ../../$(incdir)/`dirname $$i`; \
 	  $(INSTALL_FILE) $$i ../../$(incdir)/`dirname $$i`; \
 	done
