@@ -98,7 +98,7 @@
     <itemizedlist>
      <listitem><para>
       Ability to write and run complex scripts in
-      <ulink url="http://www.jython.org">&jython;</ulink> that offer full
+      <ulink url="http://www.jython.org/">&jython;</ulink> that offer full
       access to the program's capabilities
      </para></listitem>
      <listitem><para>
