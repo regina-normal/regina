@@ -39,6 +39,7 @@
 
 class PythonConsole;
 class QWidget;
+class ReginaPrefSet;
 
 namespace regina {
     class NPacket;
@@ -96,6 +97,12 @@ class PythonManager {
          * given console.
          */
         void deregisterConsole(PythonConsole* console);
+
+        /**
+         * Update the global preferences for all python consoles
+         * that this manager is currently responsible for.
+         */
+        void updatePreferences(const ReginaPrefSet& newPrefs);
 };
 
 #endif

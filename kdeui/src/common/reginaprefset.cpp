@@ -44,6 +44,8 @@ ReginaPrefSet::ReginaPrefSet() :
         censusFiles(defaultCensusFiles()),
         displayIcon(true),
         displayTagsInTree(false),
+        pythonAutoIndent(true),
+        pythonSpacesPerTab(4),
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
         treeJumpSize(10),
         triEditMode(DirectEdit),

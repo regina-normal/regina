@@ -77,6 +77,12 @@ void PythonManager::closeAllConsoles() {
     }
 }
 
+void PythonManager::updatePreferences(const ReginaPrefSet& newPrefs) {
+    for (std::set<PythonConsole*>::iterator it = consoles.begin();
+            it != consoles.end(); it++)
+        (*it)->updatePreferences(newPrefs);
+}
+
 #else
 
 namespace {
@@ -98,6 +104,9 @@ void PythonManager::launchPythonConsole(QWidget* parent, regina::NPacket*,
 }
 
 void PythonManager::closeAllConsoles() {
+}
+
+void PythonManager::updatePreferences(const ReginaPrefSet&) {
 }
 
 #endif

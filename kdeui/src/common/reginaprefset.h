@@ -80,8 +80,13 @@ struct ReginaPrefSet {
         /**< Should we display the pretty Regina icon? */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
+    bool pythonAutoIndent;
+        /**< Should auto-indent be enabled in python consoles? */
     ReginaFilePrefList pythonLibraries;
         /**< The python libraries to load upon each session startup. */
+    unsigned pythonSpacesPerTab;
+        /**< The number of spaces to insert when <TAB> is pressed in a
+             python console. */
     int surfacesCreationCoords;
         /**< The default coordinate system for normal surface creation. */
     unsigned treeJumpSize;

@@ -449,6 +449,7 @@ void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
         reginaIcon->hide();
 
     emit preferencesChanged(prefs);
+    consoles.updatePreferences(prefs);
 }
 
 void ReginaPart::updateTreePacketActions() {

@@ -44,9 +44,9 @@
 #include <qlabel.h>
 #include <qvbox.h>
 
-// TODO: tab, history, autoindent, processing
+// TODO: tab, history, autoindent
 // TODO: save log ; cut, copy, paste, select all
-// TODO: long processing
+// TODO: long processing notification and visual updates
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         regina::NPacket* tree, regina::NPacket* selectedPacket) :
@@ -132,7 +132,7 @@ void PythonConsole::processCommand() {
     setPromptMode(done ? PRIMARY : SECONDARY);
 }
 
-void saveLog() {
+void PythonConsole::saveLog() {
     // TODO
 }
 

@@ -184,6 +184,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         new ReginaFilePrefItem(censusPrefs->listFiles, *it);
     censusPrefs->updateActiveCount();
 
+    pythonPrefs->cbAutoIndent->setChecked(prefSet.pythonAutoIndent);
+    pythonPrefs->editSpacesPerTab->setText(
+        QString::number(prefSet.pythonSpacesPerTab));
+
     for (ReginaFilePrefList::const_iterator it =
             prefSet.pythonLibraries.begin();
             it != prefSet.pythonLibraries.end(); it++)
@@ -268,6 +272,17 @@ void ReginaPreferences::slotApply() {
             item; item = item->nextSibling())
         prefSet.censusFiles.push_back(
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
+
+    prefSet.pythonAutoIndent = pythonPrefs->cbAutoIndent->isChecked();
+    uintVal = pythonPrefs->editSpacesPerTab->text().toUInt(&ok);
+    if (ok && uintVal > 0)
+        prefSet.pythonSpacesPerTab = uintVal;
+    else {
+        KMessageBox::error(this, i18n("The number of spaces per tab "
+            "must be a positive integer."));
+        pythonPrefs->editSpacesPerTab->setText(
+            QString::number(prefSet.pythonSpacesPerTab));
+    }
 
     prefSet.pythonLibraries.clear();
     for (QListViewItem* item = pythonPrefs->listFiles->firstChild();
@@ -594,11 +609,38 @@ void ReginaPrefCensus::restoreDefaults() {
 }
 
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
+    // Set up the auto-indent option.
+    cbAutoIndent = new QCheckBox(i18n("Auto-indent"), this);
+    QWhatsThis::add(cbAutoIndent, i18n("Should command lines in a Python "
+        "console be automatically indented?"));
+
+    // Add some space.
+    (new QWidget(this))->setMinimumHeight(5);
+
+    // Set up the number of spaces per tab.
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+
+    QLabel* label = new QLabel(i18n("Spaces per tab:"), box);
+    editSpacesPerTab = new KLineEdit(box);
+    editSpacesPerTab->setMaxLength(
+         10 /* ridiculously high number of digits */);
+    QIntValidator* val = new QIntValidator(box);
+    val->setBottom(1);
+    editSpacesPerTab->setValidator(val);
+    QString msg = i18n("The number of spaces to insert into the "
+        "command line when TAB is pressed.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(editSpacesPerTab, msg);
+
+    // Add some more space.
+    (new QWidget(this))->setMinimumHeight(5);
+
     // Set up the active file count.
     activeCount = new QLabel(this);
 
     // Prepare the main area.
-    QHBox* box = new QHBox(this);
+    box = new QHBox(this);
     box->setSpacing(5);
     setStretchFactor(box, 1);
 

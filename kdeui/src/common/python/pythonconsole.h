@@ -35,6 +35,7 @@
 #define __PYTHONCONSOLE_H
 
 #include "pythonoutputstream.h"
+#include "../reginaprefset.h"
 
 #include <kmainwindow.h>
 
@@ -73,6 +74,11 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
         PythonInterpreter* interpreter;
         PythonManager* manager;
 
+        /**
+         * Configuration
+         */
+        ReginaPrefSet prefs;
+
     public:
         /**
          * Constructor and destructor.
@@ -91,6 +97,11 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
          * Save a log of the current session.
          */
         void saveLog();
+
+        /**
+         * Update the global preferences.
+         */
+        void updatePreferences(const ReginaPrefSet& newPrefs);
 
     protected:
         /**
@@ -123,5 +134,9 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
          */
         QString encode(const QString& plaintext);
 };
+
+inline void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
+    prefs = newPrefs;
+}
 
 #endif

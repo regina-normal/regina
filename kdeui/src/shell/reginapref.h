@@ -172,6 +172,9 @@ class ReginaPrefPython : public QVBox {
     Q_OBJECT
 
     private:
+        QCheckBox* cbAutoIndent;
+        QLineEdit* editSpacesPerTab;
+
         QLabel* activeCount;
         KListView* listFiles;
         QPushButton* btnRemove;

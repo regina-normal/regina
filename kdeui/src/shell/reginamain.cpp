@@ -89,6 +89,7 @@ ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#" ),
 void ReginaMain::setPreferences(const ReginaPrefSet& prefs) {
     globalPrefs = prefs;
     emit preferencesChanged(globalPrefs);
+    consoles.updatePreferences(globalPrefs);
 }
 
 void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
@@ -398,6 +399,11 @@ void ReginaMain::readOptions(KConfig* config) {
         "AutomaticExtension", true);
     fileOpenRecent->loadEntries(config);
 
+    config->setGroup("Python");
+    globalPrefs.pythonAutoIndent = config->readBoolEntry("AutoIndent", true);
+    globalPrefs.pythonSpacesPerTab = config->readUnsignedNumEntry(
+        "SpacesPerTab", 4);
+
     config->setGroup("Surfaces");
     globalPrefs.surfacesCreationCoords = config->readNumEntry(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
@@ -436,6 +442,7 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.readPythonLibraries();
 
     emit preferencesChanged(globalPrefs);
+    consoles.updatePreferences(globalPrefs);
 }
 
 void ReginaMain::saveOptions() {
@@ -463,6 +470,10 @@ void ReginaMain::saveOptions() {
     config->setGroup("File");
     config->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
     fileOpenRecent->saveEntries(config);
+
+    config->setGroup("Python");
+    config->writeEntry("AutoIndent", globalPrefs.pythonAutoIndent);
+    config->writeEntry("SpacesPerTab", globalPrefs.pythonSpacesPerTab);
 
     config->setGroup("Surfaces");
     config->writeEntry("CreationCoordinates",
