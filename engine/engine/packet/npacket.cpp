@@ -65,6 +65,22 @@ void NPacket::setPacketLabel(const std::string& newLabel) {
     }
 }
 
+bool NPacket::listen(NPacketListener* listener) {
+    if (! listeners.get())
+        listeners.reset(new std::set<NPacketListener*>());
+
+    listener->packets.insert(this);
+    return listeners->insert(listener).second;
+}
+
+bool NPacket::unlisten(NPacketListener* listener) {
+    if (! listeners.get())
+        return false;
+
+    listener->packets.erase(this);
+    return listeners->erase(listener);
+}
+
 NPacket* NPacket::getTreeMatriarch() const {
     NPacket* p = const_cast<NPacket*>(this);
     while (p->treeParent)

@@ -1104,22 +1104,10 @@ inline const std::set<std::string>& NPacket::getTags() const {
     return *tags;
 }
 
-inline bool NPacket::listen(NPacketListener* listener) {
-    if (! listeners.get())
-        listeners.reset(new std::set<NPacketListener*>());
-    return listeners->insert(listener).second;
-}
-
 inline bool NPacket::isListening(NPacketListener* listener) {
     if (! listeners.get())
         return false;
     return listeners->count(listener);
-}
-
-inline bool NPacket::unlisten(NPacketListener* listener) {
-    if (! listeners.get())
-        return false;
-    return listeners->erase(listener);
 }
 
 inline NPacket* NPacket::getTreeParent() const {
