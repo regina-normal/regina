@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+SUBDIRS = sigs
+
 examplesdir = $(pkgdatadir)/examples
 
 examples_DATA = README.txt \
