@@ -131,11 +131,8 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
 
 		CheckBoxRenderer cr = new CheckBoxRenderer();
 		compile = new ButtonRenderer("(press)");
-		compile.getRendererButton().setBorder(
-			BorderFactory.createEtchedBorder());
-		compile.getEditorButton().setBorder(
-			BorderFactory.createEtchedBorder());
-		compile.getEditorButton().addActionListener(this);
+		compile.setBorder(BorderFactory.createEtchedBorder());
+		compile.addActionListener(this);
 		libTable.getColumnModel().getColumn(0).setCellRenderer(cr);
 		libTable.getColumnModel().getColumn(0).setCellEditor(cr);
 		libTable.getColumnModel().getColumn(1).setCellRenderer(
@@ -226,7 +223,7 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
             options.setJythonLibraries(libraries);
             options.writeToFile();
             dispose();
-		} else if (e.getSource() == compile.getEditorButton()) {
+		} else if (e.getSource() == compile) {
 			StringBuffer error = new StringBuffer();
 			if (JPythonUtils.compileFile(new File(
 					(String)libPaths.elementAt(compile.getCellEditorRow())),
