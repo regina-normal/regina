@@ -9,8 +9,8 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.0.1  [ 26 January, 2004 ]
     OVERALL:
-        - The ./configure script now insists upon Qt >= 3.2 and takes a
-          reasonable guess at the correct --prefix.
+        - The ./configure script now insists upon Qt >= 3.2, takes a
+          guess at the correct --prefix and runs sanity tests upon it.
         - The troubleshooting section of the reference manual now
           includes compile-time problems as well as runtime problems.
     USER INTERFACE:
