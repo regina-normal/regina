@@ -27,7 +27,12 @@
 /* end stub */
 
 /*! \file nfile.h
- *  \brief Deals with reading and writing packet trees to and from file.
+ *  \brief Deals with reading and writing packet trees to and from
+ *  old-style binary files.
+ *  \deprecated The preferred way of representing data is using XML
+ *  which is accessed using text I/O streams.  See file nxmlfile.h for
+ *  XML routines corresponding to the old-style binary file routines
+ *  declared in this header.
  */
 
 #ifndef __NFILE_H
@@ -45,23 +50,31 @@ namespace regina {
 class NPacket;
 
 /**
- * Reads a packet tree from the given file doing everything in
- * a single step.
+ * Reads a packet tree from the given old-style binary file doing everything
+ * in a single step.
  *
  * This routine reads the complete packet tree from the given file.
  * If the highest level packet could not be read, this
  * routine will return null.  The behaviour regarding problematic
  * subpackets is identical to that of NFile::readPacketTree().
  *
+ * \deprecated The preferred way of representing data is using XML which
+ * is accessed using text I/O streams.  See routines readXMLFile() and
+ * readFileMagic() for corresponding XML all-at-once read routines.
+ *
  * @param fileName the pathname of the file to read from.
- * @return the packet tree read from file, or null if problems
+ * @return the packet tree read from file, or \c null if problems
  * were encountered or the file could not be opened.
  */
 NPacket* readFromFile(const char* fileName);
 
 /**
- * Writes the given packet tree to the given file doing
+ * Writes the given packet tree to the given old-style binary file doing
  * everything in a single step.
+ *
+ * \deprecated The preferred way of representing data is using XML which
+ * is accessed using text I/O streams.  See routine writeXMLFile() for a
+ * corresponding XML all-at-once write routine.
  *
  * @param fileName the pathname of the file to write to.
  * @param packet the packet tree to write to file.
@@ -71,10 +84,11 @@ NPacket* readFromFile(const char* fileName);
 bool writeToFile(const char* fileName, NPacket* packet);
 
 /**
- * Represents a file containing a packet tree.
+ * Represents an old-style binary file containing a packet tree.
  * Provides routines for opening, closing, reading and writing.
  *
- * \todo \opt Replace this binary file format with a new compressed XML format.
+ * \deprecated The preferred way of representing data is using XML which
+ * is accessed using text I/O streams.
  *
  * \ifaces The enumeration NRandomAccessResource::mode is a public
  * member of this class.

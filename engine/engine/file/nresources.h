@@ -27,7 +27,9 @@
 /* end stub */
 
 /*! \file nresources.h
- *  \brief Provides methods for accessing file-like resources.
+ *  \brief Provides methods for accessing old-style binary file-like resources.
+ *  \deprecated The preferred way of representing data is using XML
+ *  which is accessed using text I/O streams.
  */
 
 #ifndef __NRESOURCES_H
@@ -40,7 +42,11 @@
 namespace regina {
 
 /**
- * Provides a standard random access interface for file-like resources.
+ * Provides a standard random access interface for old-style binary
+ * file-like resources.
+ *
+ * \deprecated The preferred way of representing data is using XML
+ * which is accessed using text I/O streams.
  *
  * \ifaces Not present.
  */
@@ -137,6 +143,9 @@ class NRandomAccessResource {
 
 /**
  * A random access resource that is simply a local file.
+ *
+ * \deprecated The preferred way of representing data is using XML
+ * which is accessed using text I/O streams.
  */
 class NLocalFileResource : public NRandomAccessResource {
     private:
