@@ -94,6 +94,7 @@
   <!ENTITY taskindex SYSTEM "taskindex.docbook">
   <!ENTITY sessiontriangulation SYSTEM "triangulation.session">
   <!ENTITY sessiontree SYSTEM "tree.session">
+  <!ENTITY sessionprogress SYSTEM "progress.session">
 
   <!ENTITY % dataformat-entities SYSTEM "dataformat.ent">
   %dataformat-entities;

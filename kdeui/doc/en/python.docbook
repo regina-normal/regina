@@ -254,5 +254,10 @@ Triangulation with 0 tetrahedra.
    <title>Working with a packet tree</title>
    <programlisting>&sessiontree;</programlisting>
   </sect2>
+
+  <sect2 id="sessionprogress">
+   <title>Reporting progress of long operations</title>
+   <programlisting>&sessionprogress;</programlisting>
+  </sect2>
  </sect1>
 </chapter>

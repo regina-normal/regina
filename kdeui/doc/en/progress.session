@@ -1,0 +1,64 @@
+example$ regina-python
+Regina 4.1.3
+A Normal Surface Theory Calculator
+Copyright (c) 1999-2004, Ben Burton
+&gt;&gt;&gt; ################################
+... #
+... #  Sample Python Script
+... #
+... #  Illustrates progress reporting during long operations.
+... #
+... #  See the file "progress.session" for the results of running this script.
+... #
+... ################################
+...
+&gt;&gt;&gt; import time
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Create a new triangulation of the lens space L(49,12).
+... tri = regina.NTriangulation()
+&gt;&gt;&gt; tri.insertLayeredLensSpace(49,12)
+&gt;&gt;&gt; print tri.getNumberOfTetrahedra(), 'tetrahedra'
+13 tetrahedra
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Create a progress manager to use during the lengthy surface enumeration.
+... # This will be responsible for reporting the state of progress while the
+... # enumeration runs in the background.
+... manager = regina.NProgressManager()
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Start the normal surface enumeration.
+... # Because we are passing a progress manager to enumerate(), the
+... # enumeration will be started in the background and control will be
+... # returned immediately to the python console.
+... surfaces = regina.NNormalSurfaceList.enumerate(tri,
+...     regina.NNormalSurfaceList.STANDARD, 1, manager)
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Wait for the surface enumeration to fully start up.
+... while not manager.isStarted():
+...     time.sleep(1)
+...
+&gt;&gt;&gt;
+&gt;&gt;&gt; # At this point the surface enumeration is now running.
+... # Output a progress report every second until it's finished.
+... prog = manager.getProgress()
+&gt;&gt;&gt; while not manager.isFinished():
+...     print 'Progress:', prog.getDescription()
+...     time.sleep(1)
+...
+Progress: 4/81
+Progress: 60/81
+Progress: 68/81
+Progress: 73/81
+Progress: 74/81
+Progress: 74/81
+Progress: 77/81
+&gt;&gt;&gt;
+&gt;&gt;&gt; # The surface enumeration is now complete.
+... print surfaces.getNumberOfSurfaces(), 'normal surfaces'
+432 normal surfaces
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Output the total time spent during the surface enumeration.
+... print 'Total real time:', prog.getRealTime(), 'seconds'
+Total real time: 6 seconds
+&gt;&gt;&gt; print 'Total cpu time:', prog.totalCPUTime(), 'seconds'
+Total cpu time: 6 seconds
+&gt;&gt;&gt;
