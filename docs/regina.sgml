@@ -1,6 +1,8 @@
-<!doctype book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
- <!ENTITY % admon-graphics-path "./images">
+<!-- Documentation for Regina.
+     Copyright details included below.
+     Written by Ben Burton (benb@acm.org). -->
 
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
  <!ENTITY regina "<application>Regina</application>">
  <!ENTITY regauthor
   "<author>
