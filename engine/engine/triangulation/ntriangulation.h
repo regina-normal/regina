@@ -1350,8 +1350,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
         bool idealToFinite(bool forceDivision = false);
         /**
          * Does a barycentric subdivision of the triangulation.
-         * Each tetrahedron is divided into four tetrahedra by placing
-         * an extra vertex at its centre.
+         * Each tetrahedron is divided into 24 tetrahedra by placing
+         * an extra vertex at the centroid of each tetrahedron, the
+         * centroid of each face and the midpoint of each edge.
          *
          * @author David Letscher
          */
