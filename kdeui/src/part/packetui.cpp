@@ -377,6 +377,7 @@ void PacketPane::commit() {
 
     mainUI->commit();
     setDirty(false); // Just in case somebody forgot.
+    part->setModified(true);
 
     isCommitting = false;
 }
