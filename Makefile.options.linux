@@ -75,7 +75,7 @@ export CLASSPATH_SEP := :
 #       the place to tell them.
 
 export BTOOLS := /home/bab/source/java/lib/btools.jar
-export JYTHON := /usr/local/jython-2.1a1/jython.jar
+export JYTHON := /usr/share/java/jython.jar
 export JAVAHELP := /usr/local/javahelp/javahelp/lib/jh.jar
 #export EXTRA_CLASSES :=
 export EXTRA_CLASSES := /usr/lib/j2re1.3/lib/rt.jar
