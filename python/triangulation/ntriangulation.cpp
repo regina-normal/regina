@@ -243,6 +243,8 @@ void addNTriangulation() {
         .def("insertLayeredLensSpace",
             &NTriangulation::insertLayeredLensSpace)
         .def("insertLayeredLoop", &NTriangulation::insertLayeredLoop)
+        .def("insertAugTriSolidTorus", &NTriangulation::insertAugTriSolidTorus)
+        .def("insertSFSOverSphere", &NTriangulation::insertSFSOverSphere)
         .def("insertTriangulation", &NTriangulation::insertTriangulation)
         .def("insertRehydration", &NTriangulation::insertRehydration)
         .def("enterTextTriangulation", enterTextTriangulation_stdio,

@@ -152,5 +152,112 @@ void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
     gluingsHaveChanged();
 }
 
+void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
+        long a2, long b2, long a3, long b3) {
+    ChangeEventBlock block(this);
+
+    int i;
+
+    // Construct the core triangular solid torus.
+    NTetrahedron* core[3];
+    for (i = 0; i < 3; i++) {
+        core[i] = new NTetrahedron();
+        addTetrahedron(core[i]);
+    }
+    for (i = 0; i < 3; i++)
+        core[i]->joinTo(0, core[(i + 1) % 3], NPerm(3, 0, 1, 2));
+
+    // Attach the external layered solid tori.
+    long axis, major, minor;
+    unsigned long absAxis, absMajor, absMinor;
+    NTetrahedron* lstTop;
+    for (i = 0; i < 3; i++) {
+        if (i == 0) axis = a1; else if (i == 1) axis = a2; else axis = a3;
+        if (i == 0) major = b1; else if (i == 1) major = b2; else major = b3;
+        minor = -(a1 + a2);
+
+        absAxis = (axis < 0 ? -axis : axis);
+        absMajor = (major < 0 ? -major : major);
+        absMinor = (minor < 0 ? -minor : minor);
+
+        // Are we simply attaching a mobius band?
+        if (absAxis <= 2 && absMajor <= 2 && absMinor <= 2) {
+            // We have either (2,1,1) or (1,1,0).
+            if (absAxis == 2) {
+                core[i]->joinTo(2, core[(i + 1) % 3], NPerm(0, 2, 1, 3));
+                continue;
+            } else if (absMajor == 2) {
+                core[i]->joinTo(2, core[(i + 1) % 3], NPerm(2, 3, 1, 0));
+                continue;
+            } else if (absMinor == 2) {
+                core[i]->joinTo(2, core[(i + 1) % 3], NPerm(3, 0, 1, 2));
+                continue;
+            }
+
+            // It's (1,1,0).
+            lstTop = insertLayeredSolidTorus(0, 1);
+            if (absAxis == 0) {
+                core[i]->joinTo(2, lstTop, NPerm(0, 2, 3, 1));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(0, 2, 3, 1));
+            } else if (absMajor == 0) {
+                core[i]->joinTo(2, lstTop, NPerm(1, 0, 3, 2));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(3, 2, 1, 0));
+            } else {
+                core[i]->joinTo(2, lstTop, NPerm(3, 0, 2, 1));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(0, 3, 1, 2));
+            }
+        }
+
+        if (absAxis >= absMajor && absAxis >= absMinor) {
+            // Most cuts on the axis edges.
+            if (absMinor <= absMajor) {
+                // (minor, major, axis)
+                lstTop = insertLayeredSolidTorus(absMinor, absMajor);
+                core[i]->joinTo(2, lstTop, NPerm(0, 2, 3, 1));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(0, 2, 3, 1));
+            } else {
+                // (major, minor, axis)
+                lstTop = insertLayeredSolidTorus(absMajor, absMinor);
+                core[i]->joinTo(2, lstTop, NPerm(1, 2, 3, 0));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(1, 2, 3, 0));
+            }
+        } else if (absMajor >= absMinor) {
+            // Most cuts on the major edges.
+            if (absMinor <= absAxis) {
+                // (minor, axis, major)
+                lstTop = insertLayeredSolidTorus(absMinor, absAxis);
+                core[i]->joinTo(2, lstTop, NPerm(0, 1, 3, 2));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(3, 2, 0, 1));
+            } else {
+                // (axis, minor, major)
+                lstTop = insertLayeredSolidTorus(absAxis, absMinor);
+                core[i]->joinTo(2, lstTop, NPerm(1, 0, 3, 2));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(3, 2, 1, 0));
+            }
+        } else {
+            // Most cuts on the minor edges.
+            if (absAxis <= absMajor) {
+                // (axis, major, minor)
+                lstTop = insertLayeredSolidTorus(absAxis, absMajor);
+                core[i]->joinTo(2, lstTop, NPerm(3, 1, 2, 0));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(1, 3, 0, 2));
+            } else {
+                // (major, axis, minor)
+                lstTop = insertLayeredSolidTorus(absMajor, absAxis);
+                core[i]->joinTo(2, lstTop, NPerm(3, 0, 2, 1));
+                core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(0, 3, 1, 2));
+            }
+        }
+    }
+
+    gluingsHaveChanged();
+}
+
+void NTriangulation::insertSFSOverSphere(long a1, long b1, long a2, long b2,
+        long a3, long b3) {
+    // TODO: Make this somewhat more refined.
+    insertAugTriSolidTorus(a1, b1, a2, b2, a3, b3 - a3);
+}
+
 } // namespace regina
 

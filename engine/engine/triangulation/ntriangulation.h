@@ -1758,6 +1758,88 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void insertLayeredLoop(unsigned long length, bool twisted);
         /**
+         * Inserts an augmented triangular solid torus with the given
+         * parameters into this triangulation.  Augmented triangular
+         * solid tori represent Seifert fibred spaces with at most three
+         * exceptional fibres, and are described in more detail in the
+         * NAugTriSolidTorus class notes.
+         *
+         * The resulting Seifert fibred space will be
+         * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)
+         * (<i>a3</i>,<i>b3</i>) (1,1)), where the parameters
+         * <i>a1</i>, ..., <i>b3</i> are passed as arguments to this
+         * routine.  The three layered solid tori that are attached to
+         * the central triangular solid torus will be
+         * LST(|<i>a1</i>|, |<i>b1</i>|, |-<i>a1</i>-<i>b1</i>|), ...,
+         * LST(|<i>a3</i>|, |<i>b3</i>|, |-<i>a3</i>-<i>b3</i>|).
+         *
+         * The new tetrahedra will be inserted at the end of the list of
+         * tetrahedra in the triangulation.
+         *
+         * \pre None of \a a1, \a a2 or \a a3 are 0.
+         * \pre gcd(\a a1, \a b1) = 1.
+         * \pre gcd(\a a2, \a b2) = 1.
+         * \pre gcd(\a a3, \a b3) = 1.
+         *
+         * @param a1 a parameter describing the first layered solid
+         * torus in the augmented triangular solid torus; this may be
+         * either positive or negative.
+         * @param b1 a parameter describing the first layered solid
+         * torus in the augmented triangular solid torus; this may be
+         * either positive or negative.
+         * @param a2 a parameter describing the second layered solid
+         * torus in the augmented triangular solid torus; this may be
+         * either positive or negative.
+         * @param b2 a parameter describing the second layered solid
+         * torus in the augmented triangular solid torus; this may be
+         * either positive or negative.
+         * @param a3 a parameter describing the third layered solid
+         * torus in the augmented triangular solid torus; this may be
+         * either positive or negative.
+         * @param b3 a parameter describing the third layered solid
+         * torus in the augmented triangular solid torus; this may be
+         * either positive or negative.
+         */
+        void insertAugTriSolidTorus(long a1, long b1, long a2, long b2,
+            long a3, long b3);
+        /**
+         * Inserts an orientable Seifert fibred space with at most three
+         * exceptional fibres over the 2-sphere into this triangulation.
+         *
+         * The inserted Seifert fibred space will be
+         * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)
+         * (<i>a3</i>,<i>b3</i>) (1,1)), where the parameters
+         * <i>a1</i>, ..., <i>b3</i> are passed as arguments to this
+         * routine.
+         *
+         * The three pairs of parameters (<i>a</i>,<i>b</i>) do not need
+         * to be normalised, i.e., the parameters can be positive or
+         * negative and <i>b</i> may lie outside the range [0..<i>a</i>).
+         * Additional twists should be incorporated into the existing
+         * parameters, i.e., an extra <i>k</i> twists may be added by
+         * changing an (<i>a</i>,<i>b</i>) pair to an
+         * (<i>a</i>,<i>b</i>+<i>ka</i>) pair.  For Seifert fibred
+         * spaces with less than three exceptional fibres, some or all
+         * of the parameter pairs may be (1,<i>k</i>) or even (1,0).
+         *
+         * The new tetrahedra will be inserted at the end of the list of
+         * tetrahedra in the triangulation.
+         *
+         * \pre None of \a a1, \a a2 or \a a3 are 0.
+         * \pre gcd(\a a1, \a b1) = 1.
+         * \pre gcd(\a a2, \a b2) = 1.
+         * \pre gcd(\a a3, \a b3) = 1.
+         *
+         * @param a1 a parameter describing the first exceptional fibre.
+         * @param b1 a parameter describing the first exceptional fibre.
+         * @param a2 a parameter describing the second exceptional fibre.
+         * @param b2 a parameter describing the second exceptional fibre.
+         * @param a3 a parameter describing the third exceptional fibre.
+         * @param b3 a parameter describing the third exceptional fibre.
+         */
+        void insertSFSOverSphere(long a1 = 1, long b1 = 0,
+            long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
+        /**
          * Inserts a copy of the given triangulation into this
          * triangulation.
          *
