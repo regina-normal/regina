@@ -57,6 +57,8 @@ Regina::Triangulation::NTriangulation_ptr
 
 Regina::Triangulation::NTriangulation_ptr Engine_i::readSnapPea(
         const char* fileName) {
-    return NTriangulation_i::newWrapper(::readSnapPea(fileName));
+    // Don't allow local filesystem access.
+    return Regina::Triangulation::NTriangulation::_nil();
+    // return NTriangulation_i::newWrapper(::readSnapPea(fileName));
 }
 
