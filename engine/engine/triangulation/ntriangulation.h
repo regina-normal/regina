@@ -35,6 +35,7 @@
 #define __NTRIANGULATION_H
 #endif
 
+#include <complex>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
 #include "utilities/hashset.h"
@@ -864,6 +865,30 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * with coefficients in Z_2.
          */
         unsigned long getHomologyH2Z2();
+        /**
+         * Computes the Turaev-Viro state sum invariant of this
+         * 3-manifold based upon the given initial data.
+         *
+         * The initial data is as described in the paper of Turaev and
+         * Viro, "State sum invariants of 3-manifolds and quantum
+         * 6j-symbols", Topology, vol. 31, no. 4, 1992, pp 865-902.
+         *
+         * In particular, Section 7 describes the initial data as
+         * determined by an integer r >=3 and a root of unity q0 of
+         * degree 2r for which q0^2 is a primitive root of unity of
+         * degree r.
+         *
+         * \pre This triangulation is valid and closed.
+         *
+         * @param r the integer r as described above; this must be at
+         * least 3.
+         * @param whichRoot determines q0 to be the root of unity
+         * e^(2i * Pi * whichRoot / 2r); this argument must be strictly
+         * between 0 and r and must have no common factors with r.
+         * @return the requested Turaev-Viro invariant.
+         */
+        std::complex<double> turaevViro(unsigned long r,
+            unsigned long whichRoot);
 
         /*@}*/
         /**
