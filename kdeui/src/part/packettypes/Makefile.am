@@ -11,6 +11,7 @@ INCLUDES = $(all_includes)
 noinst_LTLIBRARIES = libpackettypes.la
 
 noinst_HEADERS = \
+	coordinates.h \
 	nanglestructurecreator.h \
 	nanglestructureitem.h \
 	nanglestructureui.h \
@@ -18,11 +19,14 @@ noinst_HEADERS = \
 	nfacegluingdialog.h \
 	nfacegluingitems.h \
 	nnormalsurfacecreator.h \
+	nnormalsurfaceui.h \
 	nscriptui.h \
 	nscriptvaritems.h \
+	nsurfacecoordinateui.h \
 	nsurfacefiltercomb.h \
 	nsurfacefiltercreator.h \
 	nsurfacefilterprop.h \
+	nsurfacematchingui.h \
 	ntextui.h \
 	ntrialgebra.h \
 	ntriangulationcreator.h \
@@ -34,6 +38,7 @@ noinst_HEADERS = \
 	skeletonwindow.h
 
 libpackettypes_la_SOURCES = \
+	coordinates.cpp \
 	nanglestructurecreator.cpp \
 	nanglestructureitem.cpp \
 	nanglestructureui.cpp \
@@ -41,11 +46,14 @@ libpackettypes_la_SOURCES = \
 	nfacegluingdialog.cpp \
 	nfacegluingitems.cpp \
 	nnormalsurfacecreator.cpp \
+	nnormalsurfaceui.cpp \
 	nscriptui.cpp \
 	nscriptvaritems.cpp \
+	nsurfacecoordinateui.cpp \
 	nsurfacefiltercomb.cpp \
 	nsurfacefiltercreator.cpp \
 	nsurfacefilterprop.cpp \
+	nsurfacematchingui.cpp \
 	ntextui.cpp \
 	ntrialgebra.cpp \
 	ntriangulationcreator.cpp \

@@ -35,6 +35,7 @@
 #include "reginapart.h"
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
+#include "packettypes/nnormalsurfaceui.h"
 #include "packettypes/nscriptui.h"
 #include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/nsurfacefilterprop.h"
@@ -110,6 +111,9 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NContainer::packetType)
         return new NContainerUI(dynamic_cast<NContainer*>(packet),
             enclosingPane);
+    if (packet->getPacketType() == NNormalSurfaceList::packetType)
+        return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
+            enclosingPane, readWrite);
     if (packet->getPacketType() == NScript::packetType) {
         KTextEditor::Document* doc = createDocument();
         if (doc)

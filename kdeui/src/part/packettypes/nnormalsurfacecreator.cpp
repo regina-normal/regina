@@ -31,6 +31,7 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "coordinates.h"
 #include "nnormalsurfacecreator.h"
 
 #include <kcombobox.h>
@@ -80,9 +81,9 @@ NNormalSurfaceCreator::NNormalSurfaceCreator() {
     // Note that the order in which these options are added to the combo
     // box must correspond precisely to the coordinate system IDs defined
     // at the head of this file.
-    coords->insertItem(i18n("Standard normal (tri-quad)"));
-    coords->insertItem(i18n("Standard almost normal (tri-quad-oct)"));
-    coords->insertItem(i18n("Quad normal"));
+    coords->insertItem(Coordinates::name(NNormalSurfaceList::STANDARD));
+    coords->insertItem(Coordinates::name(NNormalSurfaceList::AN_STANDARD));
+    coords->insertItem(Coordinates::name(NNormalSurfaceList::QUAD));
     coords->setCurrentItem(0);
 }
 
