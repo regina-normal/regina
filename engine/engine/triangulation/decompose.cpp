@@ -26,9 +26,11 @@
 
 /* end stub */
 
+#include <list>
 #include <sstream>
 
 #include "packet/ncontainer.h"
+#include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -80,7 +82,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
 
         if (setLabels) {
             std::ostringstream label;
-            label << getPacketLabel() << " - #" << (whichComp + 1);
+            label << getPacketLabel() << " - Cmpt #" << (whichComp + 1);
             newTris[whichComp]->setPacketLabel(makeUniqueLabel(label.str()));
         }
 
@@ -109,8 +111,116 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     if (! (isValid() && isClosed() && isOrientable() && isConnected()))
         return 0;
 
-    // TODO
-    return 0;
+    if (! primeParent)
+        primeParent = this;
+
+    // Make a working copy, simplify and record the initial homology.
+    NTriangulation* working = new NTriangulation(*this);
+    working->intelligentSimplify();
+
+    unsigned long initZ, initZ2, initZ3;
+    {
+        const NAbelianGroup& homology = working->getHomologyH1();
+        initZ = homology.getRank();
+        initZ2 = homology.getTorsionRank(2);
+        initZ3 = homology.getTorsionRank(3);
+    }
+
+    // Start crushing normal surfaces.
+    NContainer toProcess;
+    toProcess.insertChildLast(working);
+
+    std::list<NTriangulation*> primeComponents;
+    unsigned long whichComp = 0;
+
+    NTriangulation* processing;
+    NTriangulation* crushed;
+    NNormalSurface* sphere;
+    while ((processing = static_cast<NTriangulation*>(
+            toProcess.getFirstTreeChild()))) {
+        // INV: Our triangulation is the connected sum of all the
+        // children of toProcess, all the elements of primeComponents
+        // and possibly some copies of S2xS1, RP3 and/or L(3,1).
+
+        // Work with the last child.
+        processing->makeOrphan();
+
+        // Find a normal 2-sphere to crush.
+        sphere = NNormalSurface::findNonTrivialSphere(processing);
+        if (sphere) {
+            crushed = sphere->crush();
+            delete sphere;
+            delete processing;
+
+            crushed->intelligentSimplify();
+
+            // Insert each component of the crushed triangulation back
+            // into the list to process.
+            if (crushed->getNumberOfComponents() == 0)
+                delete crushed;
+            else if (crushed->getNumberOfComponents() == 1)
+                toProcess.insertChildLast(crushed);
+            else {
+                crushed->splitIntoComponents(&toProcess, false);
+                delete crushed;
+            }
+        } else {
+            // We have no non-trivial normal 2-spheres!  It's prime
+            // at least.  Is it a 3-sphere?
+            sphere = NNormalSurface::findAlmostNormalSphere(processing);
+            if (sphere) {
+                // It's a 3-sphere.  Toss this component away.
+                delete sphere;
+                delete processing;
+            } else {
+                // It's a real prime component.
+                primeComponents.push_back(processing);
+            }
+        }
+    }
+
+    // Run a final homology check and put back our missing S2xS1, RP3
+    // and L(3,1) terms.
+    unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
+    for (std::list<NTriangulation*>::iterator it = primeComponents.begin();
+            it != primeComponents.end(); it++) {
+        const NAbelianGroup& homology = (*it)->getHomologyH1();
+        finalZ += homology.getRank();
+        finalZ2 += homology.getTorsionRank(2);
+        finalZ3 += homology.getTorsionRank(3);
+    }
+
+    while (finalZ++ < initZ) {
+        working = new NTriangulation();
+        working->insertLayeredLensSpace(0, 1);
+        primeComponents.push_back(working);
+    }
+    while (finalZ2++ < initZ2) {
+        working = new NTriangulation();
+        working->insertLayeredLensSpace(2, 1);
+        primeComponents.push_back(working);
+    }
+    while (finalZ3++ < initZ3) {
+        working = new NTriangulation();
+        working->insertLayeredLensSpace(3, 1);
+        primeComponents.push_back(working);
+    }
+
+    // All done!
+    for (std::list<NTriangulation*>::iterator it = primeComponents.begin();
+            it != primeComponents.end(); it++) {
+        primeParent->insertChildLast(*it);
+
+        if (setLabels) {
+            std::ostringstream label;
+            label << getPacketLabel() << " - Summand #" << (whichComp + 1);
+            (*it)->setPacketLabel(makeUniqueLabel(label.str()));
+        }
+
+        whichComp++;
+    }
+
+    return whichComp;
 }
 
 bool NTriangulation::isThreeSphere() const {
@@ -124,33 +234,73 @@ bool NTriangulation::isThreeSphere() const {
     }
 
     // Check homology.
-    // Better simply first, which means we need a clone.
-    NTriangulation working(*this);
-    working.intelligentSimplify();
+    // Better simplify first, which means we need a clone.
+    NTriangulation* working = new NTriangulation(*this);
+    working->intelligentSimplify();
 
-    if (! working.getHomologyH1().isTrivial()) {
+    if (! working->getHomologyH1().isTrivial()) {
         threeSphere = false;
+        delete working;
         return false;
     }
 
     // Time for some more heavy machinery.  On to normal surfaces.
-    threeSphere = (working.connectedSumDecomposition() == 0);
-    return threeSphere.value();
-}
+    NContainer toProcess;
+    toProcess.insertChildLast(working);
 
-/*
-void NTriangulation::crushAllNormalSpheres() {
-    NContainer working;
-    splitIntoComponents(&working, false);
+    NTriangulation* processing;
+    NTriangulation* crushed;
+    NNormalSurface* sphere;
+    while ((processing = static_cast<NTriangulation*>(
+            toProcess.getLastTreeChild()))) {
+        // INV: Our triangulation is the connected sum of all the
+        // children of toProcess.  Each of these children has trivial
+        // homology (and therefore we have no S2xS1 / RP3 / L(3,1)
+        // summands to worry about).
 
-    NTriangulation* child;
-    while ((child = static_cast<NTriangulation*>(working.getFirstTreeChild()))) {
-        // INV: All children of working are connected.
+        // Work with the last child.
+        processing->makeOrphan();
 
-        // Find a 2-sphere, crush, split into components and destroy.
+        // Find a normal 2-sphere to crush.
+        sphere = NNormalSurface::findNonTrivialSphere(processing);
+        if (sphere) {
+            crushed = sphere->crush();
+            delete sphere;
+            delete processing;
+
+            crushed->intelligentSimplify();
+
+            // Insert each component of the crushed triangulation in the
+            // list to process.
+            if (crushed->getNumberOfComponents() == 0)
+                delete crushed;
+            else if (crushed->getNumberOfComponents() == 1)
+                toProcess.insertChildLast(crushed);
+            else {
+                crushed->splitIntoComponents(&toProcess, false);
+                delete crushed;
+            }
+        } else {
+            // We have no non-trivial normal 2-spheres!  We can now test
+            // directly whether we have a 3-sphere.
+            sphere = NNormalSurface::findAlmostNormalSphere(processing);
+            if (sphere) {
+                // It's a 3-sphere.  Toss this component away.
+                delete sphere;
+                delete processing;
+            } else {
+                // It's not a 3-sphere.  We're done!
+                threeSphere = false;
+                delete processing;
+                return false;
+            }
+        }
     }
+
+    // Our triangulation is the connected sum of 0 components!
+    threeSphere = true;
+    return true;
 }
-*/
 
 } // namespace regina
 

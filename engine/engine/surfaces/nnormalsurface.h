@@ -194,6 +194,10 @@ class NCompConstraintSet;
  * corresponding coordinate lookup routines should return
  * NLargeInteger::infinity where appropriate.
  *
+ * All subclasses of NNormalSurfaceVector <b>must</b> have the property
+ * that multiplying a normal surface by \a k corresponds to multiplying
+ * the underlying vector by \a k for any non-negative integer \a k.
+ *
  * <b>When deriving classes from NNormalSurfaceVector:</b>
  * <ul>
  *   <li>A unique constant (static const int) must be added to the class
@@ -611,6 +615,14 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * @return a clone of this normal surface.
          */
         NNormalSurface* clone() const;
+
+        /**
+         * Creates a newly allocated surface that is the double of this
+         * surface.
+         *
+         * @return the double of this normal surface.
+         */
+        NNormalSurface* doubleSurface() const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -1054,6 +1066,47 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * this routine cannot produce a definite answer.
          */
         bool knownCanCrush() const;
+
+        /**
+         * Searches for a non-vertex-linking normal 2-sphere within the
+         * given triangulation.
+         *
+         * Note that the surface returned (if any) depends upon the
+         * given triangulation, and so this surface must be destroyed
+         * before the triangulation itself.
+         *
+         * \warning Currently this routine is quite slow since it
+         * performs a complete enumeration of vertex normal surfaces.
+         *
+         * \todo \opturgent Use maximisation of Euler characteristic to
+         * make this routine much faster than a plain vertex enumeration.
+         *
+         * @param tri the triangulation in which to search.
+         * @return a newly allocated surface representing a
+         * non-vertex-linking normal sphere in the given triangulation,
+         * or 0 if no such sphere exists.
+         */
+        static NNormalSurface* findNonTrivialSphere(NTriangulation* tri);
+
+        /**
+         * Searches for an almost normal 2-sphere within the given
+         * triangulation.
+         *
+         * Note that the surface returned (if any) depends upon the
+         * given triangulation, and so this surface must be destroyed
+         * before the triangulation itself.
+         *
+         * \warning Currently this routine is quite slow since it
+         * performs a complete enumeration of vertex almost normal surfaces.
+         *
+         * \todo \opturgent Use maximisation of Euler characteristic to
+         * make this routine much faster than a plain vertex enumeration.
+         *
+         * @param tri the triangulation in which to search.
+         * @return a newly allocated almost normal sphere within the
+         * given triangulation, or 0 if no such sphere exists.
+         */
+        static NNormalSurface* findAlmostNormalSphere(NTriangulation* tri);
 
     protected:
         virtual void readIndividualProperty(NFile& infile,

@@ -11,8 +11,15 @@ Version 4.1
     OVERALL:
         - Further enhancements to the reference manual.
     ENGINE:
+        Class NNormalSurface:
+            - New routine doubleSurface().
+            - Routines findNonTrivialSphere() and findAlmostNormalSphere()
+              added to support 0-efficiency algorithms.
         Class NProgress:
             - Added timing utilities getRealTime() and totalCPUTime().
+        Class NTriangulation:
+            - New decomposition routines splitIntoComponents(),
+              connectedSumDecomposition() and isThreeSphere().
     USER INTERFACE:
         - Updated the .desktop file and mimetype tests to work correctly
           with KDE 3.2.

@@ -1623,10 +1623,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * surface theory and so can be very slow for larger
          * triangulations (although faster tests are used where possible).
          *
-         * \todo \opt In the cases where we resort to the 0-efficiency
-         * decomposition algorithm, stop as soon as the first non-3-sphere
-         * is found.
-         *
          * @return \c true if and only if this is a 3-sphere triangulation.
          */
         bool isThreeSphere() const;

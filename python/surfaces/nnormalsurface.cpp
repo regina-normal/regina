@@ -73,6 +73,8 @@ void addNNormalSurface() {
             ("NNormalSurface", no_init)
         .def("clone", &NNormalSurface::clone,
             return_value_policy<manage_new_object>())
+        .def("doubleSurface", &NNormalSurface::doubleSurface,
+            return_value_policy<manage_new_object>())
         .def("getTriangleCoord", &NNormalSurface::getTriangleCoord)
         .def("getQuadCoord", &NNormalSurface::getQuadCoord)
         .def("getOctCoord", &NNormalSurface::getOctCoord)
@@ -103,6 +105,12 @@ void addNNormalSurface() {
         .def("crush", &NNormalSurface::crush,
             return_value_policy<manage_new_object>())
         .def("knownCanCrush", &NNormalSurface::knownCanCrush)
+        .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
+            return_value_policy<manage_new_object>())
+        .def("findAlmostNormalSphere", &NNormalSurface::findAlmostNormalSphere,
+            return_value_policy<manage_new_object>())
+        .staticmethod("findNonTrivialSphere")
+        .staticmethod("findAlmostNormalSphere")
     ;
 
     // Global arrays:

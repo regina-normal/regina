@@ -60,6 +60,10 @@ namespace {
         NTriangulation::shellBoundary, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
         NTriangulation::collapseEdge, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
+        NTriangulation::splitIntoComponents, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_connectedSumDecomposition,
+        NTriangulation::connectedSumDecomposition, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_idealToFinite,
         NTriangulation::idealToFinite, 0, 1);
 
@@ -223,6 +227,12 @@ void addNTriangulation() {
         .def("shellBoundary", &NTriangulation::shellBoundary,
             OL_shellBoundary())
         .def("collapseEdge", &NTriangulation::collapseEdge, OL_collapseEdge())
+        .def("splitIntoComponents", &NTriangulation::splitIntoComponents,
+            OL_splitIntoComponents())
+        .def("connectedSumDecomposition",
+            &NTriangulation::connectedSumDecomposition,
+            OL_connectedSumDecomposition())
+        .def("isThreeSphere", &NTriangulation::isThreeSphere)
         .def("makeDoubleCover", &NTriangulation::makeDoubleCover)
         .def("idealToFinite", &NTriangulation::idealToFinite,
             OL_idealToFinite())

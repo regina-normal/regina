@@ -115,6 +115,29 @@ NNormalSurface* NNormalSurface::clone() const {
     return ans;
 }
 
+NNormalSurface* NNormalSurface::doubleSurface() const {
+    NNormalSurface* ans = new NNormalSurface(triangulation,
+        dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
+
+    (*(ans->vector)) *= 2;
+
+    // Some properties can be copied straight across.
+    ans->realBoundary = realBoundary;
+    ans->compact = compact;
+    if (eulerChar.known())
+        ans->eulerChar = eulerChar.value() * 2;
+
+    // The following three properties can be used together to deduce how
+    // they change in the clone.  However, until we sit down and check
+    // through all possible cases we'll just leave them marked unknown.
+
+    // TODO: ans->orientable, ans->twoSided, ans->connected
+
+    // And some other properties are best left recalculated.
+
+    return ans;
+}
+
 void NNormalSurface::readIndividualProperty(NFile& infile,
         unsigned propType) {
     if (propType == PROPID_EULERCHARACTERISTIC)
