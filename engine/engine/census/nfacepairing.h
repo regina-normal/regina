@@ -143,35 +143,6 @@ class NFacePairing : public NThread {
          * @param source the face under investigation.
          * @return the other face to which the given face is paired.
          */
-        NTetFace& dest(const NTetFace& source);
-
-        /**
-         * Returns the other face to which the given tetrahedron face is
-         * paired.  If the given face is left deliberately unmatched, the value
-         * returned will be boundary (as returned by
-         * NTetFace::isBoundary()).
-         *
-         * @param tet the tetrahedron under investigation (this must be
-         * strictly less than the total number of tetrahedra under
-         * consideration).
-         * @param face the face of the given tetrahedron under
-         * investigation (between 0 and 3 inclusive).
-         * @return the other face to which the given face is paired.
-         */
-        NTetFace& dest(unsigned tet, unsigned face);
-
-        /**
-         * Returns the other face to which the given tetrahedron face is
-         * paired.  If the given face is left deliberately unmatched, the value
-         * returned will be boundary (as returned by
-         * NTetFace::isBoundary()).
-         *
-         * \pre The given face is a real tetrahedron face (not boundary,
-         * before-the-start or past-the-end).
-         *
-         * @param source the face under investigation.
-         * @return the other face to which the given face is paired.
-         */
         const NTetFace& dest(const NTetFace& source) const;
 
         /**
@@ -311,6 +282,35 @@ class NFacePairing : public NThread {
          * consideration in this new face pairing.
          */
         NFacePairing(unsigned newNTetrahedra);
+
+        /**
+         * Returns the other face to which the given tetrahedron face is
+         * paired.  If the given face is left deliberately unmatched, the value
+         * returned will be boundary (as returned by
+         * NTetFace::isBoundary()).
+         *
+         * \pre The given face is a real tetrahedron face (not boundary,
+         * before-the-start or past-the-end).
+         *
+         * @param source the face under investigation.
+         * @return the other face to which the given face is paired.
+         */
+        NTetFace& dest(const NTetFace& source);
+
+        /**
+         * Returns the other face to which the given tetrahedron face is
+         * paired.  If the given face is left deliberately unmatched, the value
+         * returned will be boundary (as returned by
+         * NTetFace::isBoundary()).
+         *
+         * @param tet the tetrahedron under investigation (this must be
+         * strictly less than the total number of tetrahedra under
+         * consideration).
+         * @param face the face of the given tetrahedron under
+         * investigation (between 0 and 3 inclusive).
+         * @return the other face to which the given face is paired.
+         */
+        NTetFace& dest(unsigned tet, unsigned face);
 
         /**
          * Determines whether the matching for the given tetrahedron face
