@@ -12,8 +12,9 @@
 # relative to directory docs/.
 #
 # Sets $(gen_doc_mask) to a file mask of all documentation files that
-# are built from the program sources.  This file mask must be relative
-# to directory docs/.
+# are built from the program sources and should be included in the
+# documentation archives.  This file mask must be relative to directory
+# docs/.
 #
 # All locations must be relative to this directory unless otherwise
 # specified.
