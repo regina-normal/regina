@@ -16,7 +16,8 @@ snappeaincludedir = $(pkgincludedir)/snappea
 
 noinst_LTLIBRARIES = libsnappea.la
 
-libsnappea_la_SOURCES =
+libsnappea_la_SOURCES = nsnappeatriangulation.cpp uimessages.cpp
+libsnappea_la_LIBADD = kernel/libsnappeakernel.la
 
-snappeainclude_HEADERS =
+snappeainclude_HEADERS = nsnappeatriangulation.h
 
