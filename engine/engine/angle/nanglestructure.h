@@ -106,7 +106,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          * \ifaces Not present.
          *
          * @param triang the triangulation on which this angle structure lies.
-         * @newVector a vector containing the individual angles in the
+         * @param newVector a vector containing the individual angles in the
          * angle structure.
          */
         NAngleStructure(NTriangulation* triang,
@@ -130,6 +130,12 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          * Returns the requested angle in this angle structure.
          * The angle returned will be scaled down; the actual angle is
          * the returned value multiplied by <i>pi</i>.
+         *
+         * \ifaces This routine is replaced by routines \a getAngleNum()
+         * and \a getAngleDen() which return the numerator and
+         * denominator respectively of the rational that would
+         * otherwise have been returned.  Both routines have return
+         * type NLargeInteger.
          *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested angle lives; this should

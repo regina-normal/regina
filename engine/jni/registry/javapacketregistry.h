@@ -65,6 +65,7 @@
     #include "triangulation/ntriangulation.h"
     #include "surfaces/nnormalsurfacelist.h"
     #include "surfaces/nsurfacefilter.h"
+    #include "angle/nanglestructurelist.h"
 #else
     REGISTER_JAVA_PACKET(NContainer,
         "normal/engine/implementation/jni/packet/NJNIContainer")
@@ -78,6 +79,8 @@
         "normal/engine/implementation/jni/packet/NJNIScript")
     REGISTER_JAVA_PACKET(NSurfaceFilter,
         "normal/engine/implementation/jni/surfaces/NJNISurfaceFilter")
+    REGISTER_JAVA_PACKET(NAngleStructureList,
+        "normal/engine/implementation/jni/angle/NJNIAngleStructureList")
 #endif
 
 /*! \file javapacketregistry.h

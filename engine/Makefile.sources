@@ -36,6 +36,7 @@ dirs_engine_engine = \
 dirs_engine_jni = \
 	jni/registry \
 	jni/engine/algebra \
+	jni/engine/angle \
 	jni/engine/file \
 	jni/engine/maths \
 	jni/engine/packet \
@@ -50,6 +51,7 @@ dirs_engine_corba = \
 	corba/registry \
 	corba/Regina \
 	corba/Regina/Algebra \
+	corba/Regina/Angle \
 	corba/Regina/File \
 	corba/Regina/Maths \
 	corba/Regina/Packet \

@@ -32,6 +32,7 @@
  */
 
 class NAbelianGroup;
+class NAngleStructureList;
 class NAugTriSolidTorus;
 class NContainer;
 class NFile;
@@ -75,6 +76,8 @@ class Engine {
         NAbelianGroup* newNAbelianGroup();
             /**< Calls the corresponding constructor. */
         NAbelianGroup* newNAbelianGroup(const NAbelianGroup& cloneMe);
+            /**< Calls the corresponding constructor. */
+        NAngleStructureList* newNAngleStructureList(NTriangulation* owner);
             /**< Calls the corresponding constructor. */
         NContainer* newNContainer();
             /**< Calls the corresponding constructor. */
