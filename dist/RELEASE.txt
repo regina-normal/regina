@@ -11,7 +11,6 @@ Program version:
 
 Copyright years:
     ./LICENSE.txt (top of file)
-    configure/LICENSE.txt (top of file)
     docs/normal/docs/LICENSE.txt (top of file)
     docs/normal/docs/acknowledgements.html (page heading)
     docs/normal/docs/welcome.html (page heading)

@@ -61,7 +61,7 @@ $(SRC_ARCHIVE):
 			$(java_misc_src_mask)) \
 		$(patsubst %,$(REGINA_DIR)/$(DOC_HTML_DIR)/%, $(misc_doc_mask)) \
 		$(patsubst %,$(REGINA_DIR)/%, \
-			$(scripts) $(conf_src_mask) $(misc_src_mask) idl \
+			$(scripts) $(misc_src_mask) idl \
 			$(empty_src_dirs:=/.keepme) $(dist_mask:%=dist/%))
 	-rm $(REGINA_DIR)
 
@@ -72,7 +72,7 @@ $(BIN_ARCHIVE) :
 	ln -s .. $(REGINA_DIR)
 	$(ARCHIVE) $(BIN_ARCHIVE) $(patsubst %,$(REGINA_DIR)/%, \
 		$(ENGINE_JNI) $(ENGINE_CORBA) \
-		$(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA) $(REG_CONF) \
+		$(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA) \
 		$(misc_bin_mask) $(scripts))
 	-rm $(REGINA_DIR)
 
@@ -98,14 +98,11 @@ stubs : insertstub
 		`find ../javaui -name "*.java"`
 	./insertstubreplace "/* end stub */" stub.idl \
 		`find ../idl -name "*.idl"`
-	./insertstubreplace "/* end stub */" stub.regconf \
-		`find ../configure -name "*.java"`
 tabs :
 	./replacetabs `find ../engine -name "*.cpp"`
 	./replacetabs `find ../engine -name "*.h"`
 	./replacetabs `find ../javaui -name "*.java"`
 	./replacetabs `find ../idl -name "*.idl"`
-	./replacetabs `find ../configure -name "*.java"`
 	./replacetabs ../CHANGES.txt ../README.txt
 	./replacetabs *.txt *.cpp
 
