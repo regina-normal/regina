@@ -1,0 +1,2 @@
+#!/bin/sh
+find . -name "*.h" -o -name "*.tcc" -o -name "*.cpp" -exec grep "$1" {} \; -print
