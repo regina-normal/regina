@@ -4,10 +4,11 @@
 # Only the original software author(s) should need to use this Makefile.
 
 docs: clean
-	cd .. && $(MAKE) docs
-	cp -r ../docs .
+	cd docs && meinproc \
+		--stylesheet /usr/share/apps/ksgmltools2/customization/kde-web.xsl \
+		index.docbook
 
 clean:
-	-rm -rf docs
+	-rm -f docs/*.html
 
 .PHONY: docs clean

@@ -17,5 +17,6 @@
 <item url="sysreq.html" />
 <templates>templates/</templates>
 <toolbars>toolbars/</toolbars>
+<item url="data.html" />
 </project>
 </webproject>

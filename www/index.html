@@ -25,7 +25,7 @@
 <tbody><tr valign="top">
 <td><ul>
     <li><a href="#whatis">What is Regina?</a></li>
-    <li><a href="docs/about.html">What does Regina do?</a>
+    <li><a href="docs/featureset.html">What does Regina do?</a>
         <i>(from docs)</i></li>
     <li><a href="docs/history.html#HISTORY-HIGHLIGHTS">What's new?</a>
         <i>(from docs)</i></li>
@@ -37,7 +37,7 @@
             <li><a href="sysreq.html#windoze">Windows</a></li>
             <li><a href="sysreq.html#docs">Generating documentation</a></li>
         </ul></li>
-    <li><a href="docs/acknowledgements.html">License</a>
+    <li><a href="docs/credits.html">License</a>
         <i>(from docs)</i></li>
     <li><a href="#download">Download</a></li>
 </ul></td>
@@ -49,8 +49,6 @@
             <li><a href="data.html#thesis">PhD thesis</a></li>
         </ul></li>
     <li><a href="#docs">Documentation</a></li>
-    <li><a href="docs/man-regina.html">Command line arguments</a>
-        <i>(from docs)</i></li>
     <li><a href="docs/troubleshooting.html">Troubleshooting</a>
         <i>(from docs)</i></li>
     <li><a href="docs/genealogy.html">Genealogy</a> <i>(from docs)</i></li>
@@ -63,11 +61,23 @@
 </tr></tbody>
 </table>
 
+<h3>News</h3>
+
+As of version 3.95, the user interface has been completely rewritten
+in C++ (using the <a href="http://www.kde.org/">KDE</a> libraries).
+Furthermore, scripting in Regina now uses standard
+<a href="http://www.python.org/">Python</a>, not Jython.
+<p>
+As a result, Regina should be somewhat easier to build, install
+and support than it has been in the past.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
 <h3><a name="whatis">What is Regina?</a></h3>
 
 Regina is essentially a topological calculator with a bent towards
-normal surface theory.  It allows 3-manifolds to be created, manipulated
-and their properties of interest determined.
+normal surface theory.  It allows 3-manifolds to be created and manipulated
+and their properties of interest to be determined.
 <p>
 Its primary uses (in the author's opinion) include:
 <ul>
@@ -76,14 +86,14 @@ Its primary uses (in the author's opinion) include:
     <li>the ability to combine the census feature with inbuilt scripting to run
     tests on all 3-manifolds of a given type.</li>
 </ul>
-See the reference manual for a <a href="docs/about.html">full list
+See the reference manual for a <a href="docs/featureset.html">full list
 of features</a>.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
 <h3><a name="screenshots">Screenshots</a></h3>
 
-A few screenshots are available, all from release 3.1.
+A few screenshots are available, all from release 3.95.
 Click on an image to see a full scale version.
 <p>
 <a href="shots/misc.jpg"><img src="shots/misc-mini.jpg"
@@ -96,133 +106,61 @@ Click on an image to see a full scale version.
     alt="Screenshot thumbnail"></a> Skeletal information and other
     triangulation properties
 <p>
-<a href="shots/scripting.jpg"><img src="shots/scripting-mini.jpg"
+<!--a href="shots/scripting.jpg"><img src="shots/scripting-mini.jpg"
     vspace=5 align=middle border=0
-    alt="Screenshot thumbnail"></a> In-built Jython scripting
-<p>
+    alt="Screenshot thumbnail"></a> In-built Python scripting (from version 3.1)
+<p-->
 <i><a href="#contents">(Back to contents...)</a></i>
 
 <h3><a name="download">Download</a></h3>
 
-If you are running a GNU/Linux system with the correct libraries
-installed, you can download a prebuilt binary distribution for Regina.
-Alternatively you can download the entire source tree and compile Regina
-for yourself.  All downloads are available from the
-<a href="http://sourceforge.net/project/showfiles.php?group_id=19698">SourceForge
-project site</a>.
-
-Be aware of the <a href="docs/acknowledgements.html">GNU General Public
-License</a>, which is also contained in the downloadable archives.
+Regina is now offered as a source distribution only.
+Prebuilt binaries are no longer available since they
+depend so heavily upon precisely which external libraries are installed
+and where.  However, as of version 3.95 Regina is somewhat easier to
+build than it has been in the past (in particular, it is built and
+installed in the same way as any other KDE application).
 <p>
 Before you download, be sure to visit the <a href="sysreq.html">system
 requirements page</a>.  Regina needs several other pieces of software
 installed before it will run.
 <p>
-Note that the Windows port of Regina is no longer supported.
-See the <a href="sysreq.html#windoze">system requirements page</a>
-for details.
-<ul>
-    <li><b>Binaries:</b>
-    <ul>
-        <li>Download the binary archive
-        <tt><b>regina-<i>version</i>_bin_<i>machine</i>.tgz</b></tt>
-        corresponding to your machine type.  GNU/Linux users will want
-        <tt><b>regina-<i>version</i>_bin_i686-linux.tgz</b></tt>.
-        Note that these binaries are built against <tt>libc.so.6</tt>,
-        <tt>libstdc++.so.5</tt>, <tt>libgmp.so.3</tt>,
-        <tt>libpopt.so.0</tt>, <tt>libxml.so.2</tt> and
-        <tt>libz.so.1</tt>.
-
-        <li>Unpack this archive in your root directory:
-        <ul>
-            <li><tt>cd /</tt></li>
-            <li><tt>tar -zxf path/to/regina-<i>version</i>_bin_<i>machine</i>.tgz</tt></li>
-        </ul>
-        where <tt>path/to</tt> is changed to reflect where you saved the
-        archive and <tt><i>version</i></tt> and <tt><i>machine</i></tt>
-        are changed to reflect the name of the archive.
-        The individual files will be installed beneath
-        <tt><b>/usr/local/</b></tt>.
-
-        <li>Instructions for running Regina can be found in
-        <tt><b>/usr/local/share/regina/README.txt</b></tt>.
-    </ul>
-    <li><b>Sources:</b>
-    <ul>
-        <li>Download the source archive
-        <tt><b>regina-<i>version</i>_src.tgz</b></tt>.
-
-        <li>Unpack the archive.  The sources will be extracted into directory
-        <tt><b>regina-<i>version</i>/</b></tt>.
-
-        <li>Instructions for compiling the
-        application are included in <tt><b>regina-<i>version</i>/README.txt</b></tt>.
-    </ul>
-</ul>
+The source archive <tt><b>regina-<i>version</i>_src.tgz</b></tt>
+can be downloaded from the
+<a href="http://sourceforge.net/project/showfiles.php?group_id=19698">SourceForge
+project site</a>.  This unpacks into the directory
+<tt><b>regina-<i>version</i>/</b></tt>, which contains a file
+<tt><b>README.txt</b></tt> containing instructions for compiling the
+application.
 <p>
-To extract archive <tt><b>stuff.tgz</b></tt>, type
-<tt><b>tar -zxf stuff.tgz</b></tt>.
+Be aware of the <a href="docs/license.html">GNU General Public
+License</a>, which is also contained in the downloadable archives.
+<p>
+Note that some GNU/Linux distributions may offer
+packages for Regina (certainly
+<a href="http://www.debian.org/">Debian</a> does).
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
 <h3><a name="docs">Documentation</a></h3>
 
-The Regina Reference Manual can be <a href="docs/index.html">viewed
-here online</a>.
+The Regina Reference Manual is installed with Regina and is available through
+the <i>Help</i> menu.  Note that it requires the KDE Help Centre to be
+present, although this is provided with most KDE installations.
 <p>
-There are several ways of obtaining the reference manual on your machine.
-The first of these methods is recommended.  All downloads are available from
-the <a href="http://sourceforge.net/project/showfiles.php?group_id=19698">SourceForge
-project site</a>.
-
-<ul>
-    <li>You can download the documentation to view using your favourite
-    web browser.
-    <ul>
-        <li>Download the archive <tt><b>regina-<i>version</i>_doc.tgz</b></tt>
-        or <tt><b>regina-<i>version</i>_doc.zip</b></tt>.
-        <li>Unpack this archive, which will extract the documentation into
-        directory <tt><b>regina-doc-<i>version</i>/</b></tt>.
-        <li>If you wish to use your favourite web browser to view help
-        from within Regina (which is recommended, since the internal JavaHelp
-        system has problems with some of the HTML), run Regina and use
-        the <i>Options-Help Browser</i> menu item to specify the command
-        used to start your web browser and the location where the documentation
-        is unpacked (such as
-        <tt><b>/path/to/regina-doc-<i>version</i></b></tt>).
-    </ul>
-    <li>You can download the documentation to view using Regina's embedded
-    JavaHelp browsing system.
-    <ul>
-        <li>Download the jar archive
-        <tt><b>regina-<i>version</i>_doc-internal.jar</b></tt>.
-
-        <li>The embedded help browser can use this jar as is; there is no need
-        to unpack it.  Simply place it in the same directory as the user
-        interface jar (<tt><b>regina.jar</b></tt>); this directory is
-        <tt><b>/usr/local/share/regina/jar/</b></tt> for the prebuilt
-        binary distributions, but may differ if you have built Regina
-        yourself with a different installation directory prefix.
-    </ul>
-    <li>You can generate the documentation from the sources.
-    <ul>
-        <li>Check the
-        <a href="sysreq.html#docs">system requirements page</a> to ensure that
-        you have installed all the tools you will need.
-
-        <li>Move to the main <tt><b>regina-<i>version</i>/</b></tt> directory
-        (where you have unpacked the sources) and type
-        <tt><b>make docs</b></tt>.
-
-        <li>The documentation will be generated in the subdirectory
-        <tt><b>docs/</b></tt>.  The title page for the reference manual
-        will be <tt><b>docs/index.html</b></tt>.  A jar that the embedded
-        JavaHelp browser can use will be created as
-        <tt><b>docs/regina-docs.jar</b></tt>.  Unix man pages will be
-        generated in the subdirectory <tt><b>docs/man/</b></tt>
-        (<tt><b>regina.1</b></tt>, <tt><b>regina.conf.5</b></tt> and so on).
-    </ul>
-</ul>
+Alternatively, the reference manual can be <a href="docs/index.html">viewed
+here online</a> with any web browser.
+<p>
+There is also extensive API documentation available for the calculation
+engine.  This is useful for Python scripting or for building the Regina
+calculation engine into your own projects (the calculation engine is
+provided as a shared library).
+<p>
+The API documentation will be built and installed with Regina, as long
+as you have Doxygen installed (see the <a href="sysreq.html">system
+requirements</a> for details).  Alternatively, it can be
+<a href="engine-docs/modules.html">viewed here online</a> with any
+web browser.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
@@ -260,7 +198,7 @@ who's using it and how it's being used.
 The best way to contact me is by email at
 <a href="mailto:bab@debian.org">bab@debian.org</a>.
 But even better, you could use the SourceForge services which include a
-<a href="docs/sourceforge.html">bug tracking system and mailing lists</a>;
+<a href="docs/services.html">bug tracking system and mailing lists</a>;
 this way you can ensure your problems and/or discussions are publicly
 archived to help others with similar issues.
 <p>
