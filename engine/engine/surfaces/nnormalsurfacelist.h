@@ -232,14 +232,14 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
              *
              * @param cloneMe the output iterator to clone.
              */
-            SurfaceInserter(SurfaceInserter& cloneMe);
+            SurfaceInserter(const SurfaceInserter& cloneMe);
 
             /**
              * Sets this iterator to be a clone of the given output iterator.
              *
              * @param cloneMe the output iterator to clone.
              */
-            SurfaceInserter& operator =(SurfaceInserter& cloneMe);
+            SurfaceInserter& operator =(const SurfaceInserter& cloneMe);
 
             /**
              * Appends a normal surface to the end of the appropriate
@@ -391,13 +391,14 @@ inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter(
 }
 
 inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter(
-        SurfaceInserter& cloneMe) : list(cloneMe.list), owner(cloneMe.owner) {
+        const SurfaceInserter& cloneMe) : list(cloneMe.list),
+        owner(cloneMe.owner) {
 }
 
 
 inline NNormalSurfaceList::SurfaceInserter&
         NNormalSurfaceList::SurfaceInserter::operator =(
-        SurfaceInserter& cloneMe) {
+        const SurfaceInserter& cloneMe) {
     list = cloneMe.list;
     owner = cloneMe.owner;
     return *this;
