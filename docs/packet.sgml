@@ -4,74 +4,172 @@
  <sect1 id="packet-tree">
   <title>The Packet Tree</title>
 
-  <para>stuff</para>
+  <para>
+   Most objects that can be manipulated in &regina; are
+   <firstterm>packets</firstterm>.  Packets are pieces of data arranged in
+   a tree structure; each packet (aside from the top-level packet) has a
+   single parent packet and zero or more child packets.  A &regina; data
+   file is nothing more than a packet tree.
+  </para>
+  <para>
+   For each data file that is open, the left hand side of the
+   main &regina; window will contain a visual representation of the
+   corresponding packet tree, as illustrated below.
+  </para>
+  <para>
+   <graphic fileref="images/shots/packettree.jpg">
+  </para>
  </sect1>
 
  <sect1 id="packet-types">
-  <title>Different Packet Types</title>
+  <title>Available Packet Types</title>
 
   <sect2 id="packet-container">
    <title>Container</title>
 
-   <graphic fileref="images/packet/container.gif"
-    align="left">
-   <para>stuff</para>
+   <para>
+    <inlinegraphic fileref="images/packet/container.gif">
+   </para>
+   <para>
+    A <firstterm>container packet</firstterm> does more or less nothing.
+    Its only purpose is to have child packets and thus
+    assist with the organisation of the packet tree.
+   </para>
+   <para>
+    As an example, a file containing a census might have a top-level
+    container packet for the entire census.  This top-level packet might
+    have a child container for 1 tetrahedron triangulations, a child container
+    for 2 tetrahedron triangulations and so on.  Each of these child containers
+    might then have their own child triangulation packets representing
+    all the triangulations in their particular section of the census.
+   </para>
+   <para>
+    <graphic fileref="images/shots/container.jpg">
+   </para>
   </sect2>
 
   <sect2 id="packet-text">
    <title>Text</title>
 
-   <graphic fileref="images/packet/text.gif"
-    align="left">
-   <para>stuff</para>
+   <para>
+    <inlinegraphic fileref="images/packet/text.gif">
+   </para>
+   <para>
+    A <firstterm>text packet</firstterm> contains an arbitrary amount of
+    text.  It can be used to insert descriptions, observations and/or
+    other miscellaneous comments into various places in the packet tree.
+   </para>
+   <para>
+    <graphic fileref="images/shots/text.jpg">
+   </para>
   </sect2>
 
   <sect2 id="packet-triangulation">
    <title>Triangulation</title>
 
-   <graphic fileref="images/packet/triangulation.gif"
-    align="left">
-   <para>stuff</para>
+   <para>
+    <inlinegraphic fileref="images/packet/triangulation.gif">
+   </para>
+   <para>
+    A <firstterm>triangulation packet</firstterm> represents a single
+    triangulation of a 3-manifold.  A triangulation is described by a
+    number of tetrahedra with some faces glued together in pairs.
+   </para>
+   <para>
+    <graphic fileref="images/shots/triangulation.jpg">
+   </para>
   </sect2>
 
   <sect2 id="packet-surfacelist">
    <title>Normal Surface List</title>
 
-   <graphic fileref="images/packet/surface.gif"
-    align="left">
-   <para>stuff</para>
+   <para>
+    <inlinegraphic fileref="images/packet/surface.gif">
+   </para>
+   <para>
+    A <firstterm>normal surface list packet</firstterm> represents a set
+    of normal surfaces in a triangulation.  Typically this will be the
+    set of all vertex normal surfaces under some particular set of matching
+    equations.
+   </para>
+   <para>
+    Normal surfaces can be created using different sets of matching
+    equations and can then be viewed in a variety of solution spaces.
+    The parent packet of a normal surface list will always be the
+    triangulation in which the normal surfaces lie.
+   </para>
+   <para>
+    <graphic fileref="images/shots/surfacelist.jpg">
+   </para>
   </sect2>
 
   <sect2 id="packet-filter">
    <title>Surface Filter</title>
 
-   <graphic fileref="images/packet/filter.gif"
-    align="left">
-   <para>stuff</para>
+   <para>
+    <inlinegraphic fileref="images/packet/filter.gif">
+   </para>
+   <para>
+    A <firstterm>surface filter packet</firstterm> represents a filter
+    that, given a large set of normal surfaces, will extract a subset of
+    surfaces in which the user is interested.  The various types of
+    filter include:
+   </para>
 
    <sect3 id="packet-filterprop">
     <title>Property Filter</title>
 
-    <graphic fileref="images/packet/filterprop.gif"
-     align="left">
-    <para>stuff</para>
+    <para>
+     <inlinegraphic fileref="images/packet/filterprop.gif">
+    </para>
+    <para>
+     A <firstterm>property filter</firstterm> extracts all normal
+     surfaces with the requested orientability, compactness, boundary
+     and/or Euler characteristic.
+    </para>
+    <para>
+     <graphic fileref="images/shots/filterprop.jpg">
+    </para>
    </sect3>
 
    <sect3 id="packet-filtercomb">
     <title>Combination Filter</title>
 
-    <graphic fileref="images/packet/filtercomb.gif"
-     align="left">
-    <para>stuff</para>
+    <para>
+    <inlinegraphic fileref="images/packet/filtercomb.gif">
+    </para>
+    <para>
+     A <firstterm>combination filter</firstterm> uses boolean
+     <function>AND</function> or <function>OR</function>
+     to combine a number of other surface filters.  The filters to be
+     combined must be immediate child packets of the combination filter.
+    </para>
+    <para>
+     <graphic fileref="images/shots/filtercomb.jpg">
+    </para>
    </sect3>
   </sect2>
 
   <sect2 id="packet-script">
    <title>Script</title>
 
-   <graphic fileref="images/packet/script.gif"
-    align="left">
-   <para>stuff</para>
+   <para>
+    <inlinegraphic fileref="images/packet/script.gif">
+   </para>
+   <para>
+    A <firstterm>script packet</firstterm> contains a &jython; script
+    with direct access to the calculation engine.  This script can
+    have variables representing other
+    packets in the packet tree, thus giving you direct access to all of
+    the data in the current file.
+   </para>
+   <para>
+    See the <link linkend="jython">&jython; scripting reference</link>
+    for further details.
+   </para>
+   <para>
+    <graphic fileref="images/shots/script.jpg">
+   </para>
   </sect2>
  </sect1>
 </chapter>
