@@ -170,6 +170,18 @@ class NPerm {
         static bool isPermCode(char newCode);
 
         /**
+         * Sets this permutation to the transposition of 
+         * \a a and \a b.
+         * Note that \a a and \a b need not be distinct.
+         *
+         * \pre \a a and \a b are in {0,1,2,3}.
+         *
+         * @param a the element to switch with \a b.
+         * @param b the element to switch with \a a.
+         */
+        void setPerm(int a, int b);
+
+        /**
          * Sets this permutation to that mapping (0,1,2,3) to
          * (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>) respectively.
          *
@@ -183,18 +195,6 @@ class NPerm {
          * @param d the desired image of 3.
          */
         void setPerm(int a, int b, int c, int d);
-
-        /**
-         * Sets this permutation to the transposition of 
-         * \a a and \a b.
-         * Note that \a a and \a b need not be distinct.
-         *
-         * \pre \a a and \a b are in {0,1,2,3}.
-         *
-         * @param a the element to switch with \a b.
-         * @param b the element to switch with \a a.
-         */
-        void setPerm(int a, int b);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -556,14 +556,14 @@ inline NPerm::NPerm(int a0, int a1, int b0, int b1,
 inline NPerm::NPerm(const NPerm& cloneMe) : code(cloneMe.code) {
 }
 
-inline void NPerm::setPerm(int a, int b, int c, int d) {
-    code = (char) ( (d << 6) + (c << 4) + (b << 2) + a);
-}
-
 inline void NPerm::setPerm(int a, int b) {
     code = 228;
     code += (short) ( (a << (2*b)) - (b << (2*b)) );
     code += (short) ( (b << (2*a)) - (a << (2*a)) );
+}
+
+inline void NPerm::setPerm(int a, int b, int c, int d) {
+    code = (char) ( (d << 6) + (c << 4) + (b << 2) + a);
 }
 
 inline void NPerm::setPermCode(char newCode) {
