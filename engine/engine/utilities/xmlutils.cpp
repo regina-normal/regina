@@ -67,6 +67,9 @@ XMLParser::XMLParser(XMLParserCallback& callback) : _parser_callback(callback) {
     };
 
     _context = xmlCreatePushParserCtxt(&sax_handler, this, 0, 0, 0);
+
+    // Ensure that entities in attributes are replaced.
+    _context->replaceEntities = 1;
 }
 
 xmlEntityPtr XMLParser::_get_entity(void*, const xmlChar* n) {
