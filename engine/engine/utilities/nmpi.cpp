@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <cstdlib>
 #include "utilities/nmpi.h"
 
 namespace regina {
@@ -40,7 +41,7 @@ std::string NLargeInteger::stringValue(int base) const {
     else {
         char* str = mpz_get_str(0, base, data);
         std::string ans(str);
-        delete[] str;
+        free(str);
         return ans;
     }
 }
