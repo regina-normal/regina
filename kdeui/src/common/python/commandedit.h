@@ -47,6 +47,11 @@ class CommandEdit : public KLineEdit {
     private:
         QStringList history;
             /**< The command-line history. */
+        QStringList::const_iterator historyPos;
+            /**< The current browsing position in command-line history. */
+        QString newLine;
+            /**< Remembers the new partially-typed command whilst
+                 browsing through history. */
         QString tabReplacement;
             /**< The set of spaces to insert for each TAB keypress. */
 

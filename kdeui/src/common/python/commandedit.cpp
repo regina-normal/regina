@@ -29,22 +29,47 @@
 #include "commandedit.h"
 
 #include <iostream>
+#include <kapplication.h>
 
 #define COMMAND_EDIT_DEFAULT_SPACES_PER_TAB 4
 
 CommandEdit::CommandEdit(QWidget* parent, const char* name) :
         KLineEdit(parent, name) {
     setSpacesPerTab(COMMAND_EDIT_DEFAULT_SPACES_PER_TAB);
+    historyPos = history.end();
 }
 
 void CommandEdit::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Tab)
         insert(tabReplacement);
-    else if (event->key() == Qt::Key_Up)
-        std::cerr << "Up pressed\n"; // TODO
-    else if (event->key() == Qt::Key_Down)
-        std::cerr << "Down pressed\n"; // TODO
-    else
+    else if (event->key() == Qt::Key_Up) {
+        // Browse backwards through history.
+        if (historyPos == history.end())
+            newLine = text();
+        if (historyPos == history.begin())
+            QApplication::beep();
+        else {
+            historyPos--;
+            setText(*historyPos);
+            end(false);
+        }
+    } else if (event->key() == Qt::Key_Down) {
+        // Browse forwards through history.
+        if (historyPos == history.end())
+            QApplication::beep();
+        else {
+            historyPos++;
+            if (historyPos == history.end())
+                setText(newLine);
+            else
+                setText(*historyPos);
+        }
+    } else if (event->key() == Qt::Key_Return) {
+        // Save the current line in history before we process it.
+        history.push_back(text());
+        historyPos = history.end();
+        KLineEdit::keyPressEvent(event);
+    } else
         KLineEdit::keyPressEvent(event);
 }
 
