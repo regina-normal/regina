@@ -123,13 +123,15 @@ namespace {
 }
 
 NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI, ReginaPrefSet::TriAlgebraTab initialTab) :
+        PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs) :
         PacketTabbedViewerTab(useParentUI) {
+    fundGroup = new NTriFundGroupUI(packet, this, prefs.triGAPExec);
+
     addTab(new NTriHomologyUI(packet, this), i18n("&Homology"));
-    addTab(new NTriFundGroupUI(packet, this), i18n("&Fund. Group"));
+    addTab(fundGroup, i18n("&Fund. Group"));
     addTab(new NTriTuraevViroUI(packet, this), i18n("&Turaev-Viro"));
 
-    switch (initialTab) {
+    switch (prefs.triInitialAlgebraTab) {
         case ReginaPrefSet::Homology:
             /* already visible */ break;
         case ReginaPrefSet::FundGroup:
@@ -137,6 +139,10 @@ NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
         case ReginaPrefSet::TuraevViro:
             setCurrentTab(2); break;
     }
+}
+
+void NTriAlgebraUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+    fundGroup->setGAPExec(newPrefs.triGAPExec);
 }
 
 NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
@@ -238,8 +244,8 @@ void NTriHomologyUI::editingElsewhere() {
 }
 
 NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
-        PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
-        tri(packet) {
+        PacketTabbedViewerTab* useParentUI, const QString& useGAPExec) :
+        PacketViewerTab(useParentUI), tri(packet), GAPExec(useGAPExec) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui, 5, 0);
 
@@ -359,7 +365,8 @@ void NTriFundGroupUI::editingElsewhere() {
 }
 
 void NTriFundGroupUI::simplifyGAP() {
-    KMessageBox::sorry(ui, i18n("GAP simplification is not yet implemented."));
+    KMessageBox::sorry(ui, i18n("GAP simplification via %1 is not "
+        "yet implemented.").arg(GAPExec));
 }
 
 NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,

@@ -36,6 +36,7 @@
 #include "reginaprefset.h"
 #include "../packettabui.h"
 
+class NTriFundGroupUI;
 class QLabel;
 class QLineEdit;
 class QListView;
@@ -50,13 +51,23 @@ namespace regina {
  * A triangulation page for viewing algebraic properties.
  */
 class NTriAlgebraUI : public PacketTabbedViewerTab {
+    private:
+        /**
+         * Internal components
+         */
+        NTriFundGroupUI* fundGroup;
+
     public:
         /**
          * Constructor.
          */
         NTriAlgebraUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI,
-                ReginaPrefSet::TriAlgebraTab initialTab);
+                PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs);
+
+        /**
+         * Propagate any preference changes to our children.
+         */
+        void updatePreferences(const ReginaPrefSet& newPrefs);
 };
 
 /**
@@ -116,12 +127,22 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
         QLabel* fundRelCount;
         QListView* fundRels;
 
+        /**
+         * The GAP executable.
+         */
+        QString GAPExec;
+
     public:
         /**
          * Constructor.
          */
         NTriFundGroupUI(regina::NTriangulation* packet,
-                PacketTabbedViewerTab* useParentUI);
+                PacketTabbedViewerTab* useParentUI, const QString& useGAPExec);
+
+        /**
+         * Update preferences.
+         */
+        void setGAPExec(const QString& newGAPExec);
 
         /**
          * PacketViewerTab overrides.
@@ -180,5 +201,9 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
          */
         void calculateInvariant();
 };
+
+inline void NTriFundGroupUI::setGAPExec(const QString& newGAPExec) {
+    GAPExec = newGAPExec;
+}
 
 #endif

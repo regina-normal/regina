@@ -36,6 +36,7 @@
 #include "../packettabui.h"
 
 class KToolBar;
+class NTriAlgebraUI;
 class NTriGluingsUI;
 class NTriSurfacesUI;
 class QLabel;
@@ -56,6 +57,7 @@ class NTriangulationUI : public PacketTabbedUI {
          * Internal components
          */
         NTriGluingsUI* gluings;
+        NTriAlgebraUI* algebra;
         NTriSurfacesUI* surfaces;
 
     public:

@@ -55,6 +55,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
     gluings = new NTriGluingsUI(packet, this,
         part->getPreferences(), readWrite);
+    algebra = new NTriAlgebraUI(packet, this, part->getPreferences());
     surfaces = new NTriSurfacesUI(packet, this,
         part->getPreferences().triSurfacePropsThreshold);
 
@@ -65,8 +66,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     addHeader(header);
     addTab(gluings, i18n("&Gluings"));
     addTab(new NTriSkeletonUI(packet, this), i18n("&Skeleton"));
-    addTab(new NTriAlgebraUI(packet, this,
-        part->getPreferences().triInitialAlgebraTab), i18n("&Algebra"));
+    addTab(algebra, i18n("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), i18n("&Composition"));
     addTab(surfaces, i18n("Sur&faces"));
 
@@ -98,6 +98,7 @@ QString NTriangulationUI::getPacketMenuText() const {
 
 void NTriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
     gluings->updatePreferences(newPrefs);
+    algebra->updatePreferences(newPrefs);
     surfaces->setAutoCalcThreshold(newPrefs.triSurfacePropsThreshold);
 }
 
