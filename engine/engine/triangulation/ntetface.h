@@ -120,6 +120,10 @@ struct NTetFace {
     bool isPastEnd(unsigned nTetrahedra, bool boundaryAlso) const;
 
     /**
+     * Sets this specifier to the first face of the first tetrahedron.
+     */
+    void setFirst();
+    /**
      * Sets this specifier to the overall boundary.
      *
      * @param nTetrahedra the number of tetrahedra under consideration.
@@ -215,6 +219,9 @@ inline bool NTetFace::isPastEnd(unsigned nTetrahedra, bool boundaryAlso)
     return (tet == (int)nTetrahedra && (boundaryAlso || face > 0));
 }
 
+inline void NTetFace::setFirst() {
+    tet = face = 0;
+}
 inline void NTetFace::setBoundary(unsigned nTetrahedra) {
     tet = nTetrahedra;
     face = 0;
