@@ -17,13 +17,13 @@ REGINA_VERSION = 2.3
 ifeq ($(OSTYPE),)
 	ifeq ($(wildcard /usr/bin/cygpath.exe),/usr/bin/cygpath.exe)
 		export OSTYPE = cygwin
+	else
+		export OSTYPE = $(shell uname -s)
 	endif
 endif
 
 ifeq ($(HOSTTYPE),)
-	ifeq ($(wildcard /usr/bin/cygpath.exe),/usr/bin/cygpath.exe)
-		export HOSTTYPE = i686
-	endif
+	export HOSTTYPE = $(shell uname -m)
 endif
 
 # What should be bundled into a binary release?
@@ -134,7 +134,7 @@ tabs :
 	./replacetabs `find ../engine -name "*.h"`
 	./replacetabs `find ../javaui -name "*.java"`
 	./replacetabs `find ../idl -name "*.idl"`
-	./replacetabs ../CHANGES.txt ../README.txt
+	./replacetabs ../CHANGES.txt ../README.txt ../examples/README.txt
 	./replacetabs ../docs/*.sgml
 	./replacetabs *.txt *.cpp
 

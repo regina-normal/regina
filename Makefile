@@ -13,6 +13,8 @@
 ifeq ($(OSTYPE),)
 	ifeq ($(wildcard /usr/bin/cygpath.exe),/usr/bin/cygpath.exe)
 		export OSTYPE = cygwin
+	else
+		export OSTYPE = $(shell uname -s)
 	endif
 endif
 

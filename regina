@@ -17,6 +17,8 @@ done
 if [ -z "$OSTYPE" ]; then
 	if [ -e /usr/bin/cygpath.exe ]; then
 		export OSTYPE=cygwin
+	else
+		export OSTYPE=`uname -s`
 	fi
 fi
 
