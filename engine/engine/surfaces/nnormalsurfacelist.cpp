@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include <list>
+#include "enumerate/ndoubledescriptor.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
 #include "triangulation/ntriangulation.h"
@@ -57,9 +59,13 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, a, test) \
+#define REGISTER_FLAVOUR(id_name, cls, n, a, test) \
     case NNormalSurfaceList::id_name: \
-        if (! (test)) return; break;
+        if (! (test)) \
+            return; \
+        if (embeddedOnly) \
+            constraints = cls::makeEmbeddedConstraints(triang); \
+        break;
 
 NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
         int newFlavour, bool embeddedOnly) : flavour(newFlavour),
@@ -67,7 +73,9 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
     NNormalSurfaceList::initialiseAllProperties();
     triang->insertChildLast(this);
 
-    // Perform any pre-enumeration tests.
+    // Perform any pre-enumeration tests and fetch any necessary
+    // compatibility constraints.
+    NCompConstraintSet* constraints = 0;
     switch(flavour) {
         // Import cases from the flavour registry.
         #include "surfaces/flavourregistry.h"
@@ -82,8 +90,9 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
         back_inserter(faces));
 
     // Find the normal surfaces.
-    intersectCone(SurfaceInserter(*this, triang), originalCone.begin(),
-        originalCone.end(), faces.begin(), faces.end(), *eqns, embeddedOnly);
+    NDoubleDescriptor().enumerateVertices(SurfaceInserter(*this, triang),
+        originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
+        *eqns, constraints);
 
     for_each(originalCone.begin(), originalCone.end(),
         FuncDelete<NNormalSurfaceVector>());

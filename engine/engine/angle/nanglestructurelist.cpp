@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "angle/nanglestructurelist.h"
+#include "enumerate/ndoubledescriptor.h"
 #include "triangulation/ntriangulation.h"
 #include "maths/nmatrixint.h"
 #include "maths/nvectorunit.h"
@@ -109,8 +110,9 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     faces.push_back(finalFace);
 
     // Find the angle structures.
-    intersectCone(StructureInserter(*this, owner), originalCone.begin(),
-        originalCone.end(), faces.begin(), faces.end(), eqns, false);
+    NDoubleDescriptor().enumerateVertices(StructureInserter(*this, owner),
+        originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
+        eqns, 0);
 
     // Tidy up.
     for_each(originalCone.begin(), originalCone.end(),

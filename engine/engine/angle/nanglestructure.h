@@ -38,7 +38,7 @@
 #include "shareableobject.h"
 #include "property/npropertyholder.h"
 #include "utilities/nrational.h"
-#include "surfaces/nconeray.h"
+#include "maths/nray.h"
 
 namespace regina {
 
@@ -61,7 +61,7 @@ class NXMLAngleStructureReader;
  * multiply by <i>pi</i>.
  *
  * The reason for using this obfuscated representation is so we can
- * be lazy and use the NConeRay vertex solution routines to
+ * be lazy and use the NVertexEnumerator vertex solution routines to
  * calculate vertex angle structures.
  *
  * If there are \a t tetrahedra in the underlying triangulation, there
@@ -75,7 +75,7 @@ class NXMLAngleStructureReader;
  *
  * \ifaces Not present.
  */
-class NAngleStructureVector : public NConeRay {
+class NAngleStructureVector : public NRay {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -264,11 +264,11 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
 // Inline functions for NAngleStructureVector
 
 inline NAngleStructureVector::NAngleStructureVector(unsigned length) :
-        NConeRay(length) {
+        NRay(length) {
 }
 
 inline NAngleStructureVector::NAngleStructureVector(
-        const NVector<NLargeInteger>& cloneMe) : NConeRay(cloneMe) {
+        const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
 }
 
 inline NVector<NLargeInteger>* NAngleStructureVector::clone() const {

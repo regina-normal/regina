@@ -36,7 +36,7 @@
 #endif
 
 #include "shareableobject.h"
-#include "surfaces/nconeray.h"
+#include "maths/nray.h"
 #include "property/npropertyholder.h"
 #include "triangulation/nperm.h"
 
@@ -182,6 +182,7 @@ class NTriangulation;
 class NEdge;
 class NVertex;
 class NXMLNormalSurfaceReader;
+class NCompConstraintSet;
 
 /**
  * Stores the vector of a single normal surface in a 3-manifold.
@@ -231,7 +232,7 @@ class NXMLNormalSurfaceReader;
  *
  * \ifaces Not present.
  */
-class NNormalSurfaceVector : public NConeRay {
+class NNormalSurfaceVector : public NRay {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -259,25 +260,6 @@ class NNormalSurfaceVector : public NConeRay {
          */
         virtual bool allowsAlmostNormal() const = 0;
 
-        /**
-         * Determines if this and the given embedded normal surface can
-         * be summed to give another embedded normal surface.
-         *
-         * Thus for normal surfaces, the definition of "valid" according
-         * to NConeRay::isCompatibleWith() is "embedded".
-         *
-         * \pre Both this and the given vector
-         * represent \e embedded normal surfaces.
-         * \pre Both this and the given vector use the
-         * same underlying coordinate system, that is, are of the same
-         * subclass of NNormalSurfaceVector.
-         * 
-         * @param other the vector whose compatibility with this is being
-         * examined.
-         * @return \c true if and only if this and the given vector can
-         * be added to give an embedded normal surface.
-         */
-        virtual bool isCompatibleWith(const NConeRay& other) const = 0;
         /**
          * Determines if this normal surface has more than one
          * octahedral disc.  It may be assumed that at most one
@@ -498,7 +480,7 @@ class NNormalSurfaceVector : public NConeRay {
          * @param rays the output iterator to which the newly allocated
          * extremal rays will be written; these rays must all be of this
          * particular subclass of NNormalSurfaceVector.  This iterator
-         * must accept objects of type <tt>NConeRay*</tt>.
+         * must accept objects of type <tt>NRay*</tt>.
          * @param faces the output iterator to which the newly allocated face
          * perpendiculars will be written; these vectors may be of any
          * subclass of NVector<NLargeInteger>.  This iterator must
@@ -523,8 +505,25 @@ class NNormalSurfaceVector : public NConeRay {
          * matching equations will be based.
          * @return a newly allocated set of matching equations.
          */
-         #ifdef __DOXYGEN
+        #ifdef __DOXYGEN
             static NMatrixInt* makeMatchingEquations(
+                NTriangulation* triangulation);
+        #endif
+        /**
+         * Creates a new set of compatibility constraints representing
+         * the condition that normal surfaces be embedded.  The
+         * compatibility constraints will be expressed relative to the
+         * flavour of coordinate system corresponding to this particular
+         * subclass of NNormalSurfaceVector.
+         *
+         * \ifaces Not present.
+         *
+         * @param triangulation the triangulation upon which these
+         * compatibility constraints will be based.
+         * @return a newly allocated set of constraints.
+         */
+        #ifdef __DOXYGEN
+            static NCompConstraintSet* makeEmbeddedConstraints(
                 NTriangulation* triangulation);
         #endif
 };
@@ -1031,10 +1030,10 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
 // Inline functions for NNormalSurfaceVector
 
 inline NNormalSurfaceVector::NNormalSurfaceVector(unsigned length) :
-        NConeRay(length) {
+        NRay(length) {
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
-        const NVector<NLargeInteger>& cloneMe) : NConeRay(cloneMe) {
+        const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
 }
 
 // Inline functions for NNormalSurface

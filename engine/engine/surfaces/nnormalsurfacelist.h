@@ -332,7 +332,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
  * this must be one of the predefined coordinate system
  * constants in NNormalSurfaceList.
  * @param rays the output iterator to which the newly allocated extremal rays
- * will be written; this must accept objects of type <tt>NConeRay*</tt>.
+ * will be written; this must accept objects of type <tt>NRay*</tt>.
  * @param faces the output iterator to which the newly allocated face
  * perpendiculars will be written; this must accept objects of type
  * <tt>NVector\<NLargeInteger\>*</tt>.
