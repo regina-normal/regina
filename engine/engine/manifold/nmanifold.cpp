@@ -26,43 +26,27 @@
 
 /* end stub */
 
-#include "subcomplex/nlensspace.h"
-#include "maths/numbertheory.h"
+#include <sstream>
+#include "manifold/nmanifold.h"
 
 namespace regina {
 
-void NLensSpace::reduce() {
-    if (p == 0) {
-        q = 1;
-        return;
-    } else if (p == 1) {
-        q = 0;
-        return;
-    }
-
-    // p > 1 and gcd(p,q) = 1.
-    
-    // Reduce q to +/-q.
-    q = q % p;
-    if (2 * q > p)
-        q = p - q;
-
-    unsigned long inv = modularInverse(p, q);
-    if (2 * inv > p)
-        inv = p - inv;
-    if (inv < q)
-        q = inv;
+std::string NManifold::getName() const {
+    std::ostringstream ans;
+    writeName(ans);
+    return ans.str();
 }
 
-std::string NLensSpace::getCommonName() const {
-    if (p == 0)
-        return "S2xS1";
-    else if (p == 1)
-        return "S3";
-    else if (p == 2 && q == 1)
-        return "RP3";
-    else
-        return toString();
+std::string NManifold::getTeXName() const {
+    std::ostringstream ans;
+    writeTeXName(ans);
+    return ans.str();
+}
+
+std::string NManifold::getStructure() const {
+    std::ostringstream ans;
+    writeStructure(ans);
+    return ans.str();
 }
 
 } // namespace regina

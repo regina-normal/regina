@@ -35,19 +35,21 @@
 #define __NLENSSPACE_H
 #endif
 
-#include "shareableobject.h"
+#include "nmanifold.h"
 
 namespace regina {
 
 /**
- * \weakgroup subcomplex
+ * \weakgroup manifold
  * @{
  */
 
 /**
  * Represents a general Lens space.
+ *
+ * All optional NManifold routines are implemented for this class.
  */
-class NLensSpace : public ShareableObject {
+class NLensSpace : public NManifold {
     private:
         unsigned long p;
             /**< The first parameter of the Lens space. */
@@ -102,16 +104,10 @@ class NLensSpace : public ShareableObject {
          */
         bool operator == (const NLensSpace& compare) const;
 
-        /**
-         * Returns the common name of this Lens space.  For instance,
-         * L(7,3) will be written as \"L(7,3)\", but L(2,1) will be
-         * written as \"RP3\".
-         *
-         * @return the common name of this Lens space.
-         */
-        std::string getCommonName() const;
-
-        void writeTextShort(std::ostream& out) const;
+        NTriangulation* construct() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
 
     private:
         /**
@@ -129,7 +125,7 @@ inline NLensSpace::NLensSpace(unsigned long newP, unsigned long newQ) :
     reduce();
 }
 inline NLensSpace::NLensSpace(const NLensSpace& cloneMe) :
-        ShareableObject(), p(cloneMe.p), q(cloneMe.q) {
+        NManifold(), p(cloneMe.p), q(cloneMe.q) {
 }
 inline NLensSpace::~NLensSpace() {
 }
@@ -141,9 +137,6 @@ inline unsigned long NLensSpace::getQ() const {
 }
 inline bool NLensSpace::operator == (const NLensSpace& compare) const {
     return (p == compare.p && q == compare.q);
-}
-inline void NLensSpace::writeTextShort(std::ostream& out) const {
-    out << "L(" << p << ',' << q << ')';
 }
 
 } // namespace regina

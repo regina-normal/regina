@@ -16,6 +16,7 @@ SUBDIRS = \
   file \
   foreign \
   knot \
+  manifold \
   maths \
   packet \
   progress \
@@ -46,6 +47,7 @@ libregina_engine_la_LIBADD = \
   file/libfile.la \
   foreign/libforeign.la \
   knot/libknot.la \
+  manifold/libmanifold.la \
   maths/libmaths.la \
   packet/libpacket.la \
   progress/libprogress.la \
