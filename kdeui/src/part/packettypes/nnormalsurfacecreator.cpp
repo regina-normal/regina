@@ -43,7 +43,7 @@
 
 using regina::NNormalSurfaceList;
 
-NNormalSurfaceCreator::NNormalSurfaceCreator() {
+NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -56,6 +56,7 @@ NNormalSurfaceCreator::NNormalSurfaceCreator() {
     coordArea->addWidget(label);
     coords = new CoordinateChooser(ui);
     coords->insertAllCreators();
+    coords->setCurrentSystem(defaultCoordSystem);
     QWhatsThis::add(coords, expln);
     coordArea->addWidget(coords, 1);
 

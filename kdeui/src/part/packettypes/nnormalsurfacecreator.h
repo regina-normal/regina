@@ -54,7 +54,7 @@ class NNormalSurfaceCreator : public PacketCreator {
         /**
          * Constructor.
          */
-        NNormalSurfaceCreator();
+        NNormalSurfaceCreator(int defaultCoordSystem);
 
         /**
          * PacketCreator overrides.
