@@ -1,5 +1,56 @@
-Regina Source Distribution
---------------------------
+--------
+Contents
+--------
+
+1. Regina Binary Distribution
+2. Regina Source Distribution
+
+-----------------------------
+1. Regina Binary Distribution
+-----------------------------
+
+To start Regina, run the script /usr/local/bin/regina.
+
+Regina requires various external libraries to be present at runtime.
+A full list of requirements can be found on the Regina website
+(http://regina.sourceforge.net/).
+
+As Regina provides more and more components, it has become fussier
+about where it is installed.  The installation directories are specified
+at compile time (as options to ./configure; see below for details).
+
+This means that if you simply download the binary distribution and
+then move the files out of /usr/local/ and into some other directory,
+Regina will probably not work correctly.  If you wish to use some other
+installation directory, you should rebuild Regina from source.
+
+Notes for Windows users:
+
+  - You will need to run this script from within a cygwin bash shell,
+    though you may use the batch file /usr/local/bin/regina.bat instead
+    to run Regina directly from the Windows desktop.  This batch file
+    must be hand-edited before it can be used (the external Windows
+    environment cannot guess where you have installed cygwin); the batch
+    file itself contains instructions for how to do this.
+
+  - Unlike some previous versions of Regina, this release requires libgmp
+    to be installed as a shared library.  If you experience gmp-related
+    errors when starting Regina, try downloading the latest gmp-cygwin
+    libraries from the Regina download page.
+
+Currently no uninstall utility is provided with the binary
+distributions, since this is generally taken care of by your particular
+operating system's package management system.  Bug your distribution to
+make a package for Regina like Debian does. :) 
+
+Meanwhile, you can look at the contents of the downloaded binary archive
+to see which files were installed.  After removing directories
+/usr/local/include/regina, /usr/local/lib/regina and
+/usr/local/share/regina, there will be very few files left.
+
+-----------------------------
+2. Regina Source Distribution
+-----------------------------
 
 Regina has been reorganised to use the standard "./configure", "make"
 build procedure.  See INSTALL.txt for details.

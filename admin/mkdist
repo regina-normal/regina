@@ -59,7 +59,7 @@ bindist () {
   fi
   mkdir "$tmpinst"
   make install DESTDIR="$tmpinst"
-  install -p -m 644 CHANGES.txt HIGHLIGHTS.txt LICENSE.txt \
+  install -p -m 644 CHANGES.txt HIGHLIGHTS.txt LICENSE.txt README.txt \
     "$tmpinst$pkgdatadir"
 
   # Strip.
