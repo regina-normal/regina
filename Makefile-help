@@ -1,39 +1,29 @@
-binengine - make all C++ calculation engine binaries
-binenginejni - make the engine binary that offers JNI access
-binenginelib - make a static library containing the core engine classes.
-binjava - make all Java user interface binary jars
-binjavaui - make the jar containing the general Java UI but no engine access
-binjavajni - make the jar for the Java UI providing JNI engine access only
-binjni - make all binaries required to run Regina using JNI engine access
-binutils - make all miscellaneous utility programs
-bintestsuite - make the test suite program
-bindocs - make a complete documentation jar for the Java UI help system
-bin - make all binaries, EXCLUDING the test suite and documentation jar
-... (all above targets are made in bin/)
 
-docsengine - build the calculation engine documentation
-docsjava - build the Java user interface documentation
-docshtml - build the HTML reference manual
-docsman - build the man pages
-docs - build all auto-generated documentation
-... (all above targets are made beneath docs/)
+General Targets
+---------------
 
-prep - build all required auto-generated source files
-prepclean - remove all required auto-generated source files
-prepjni - build (unnecessary) auto-generated JNI header files
-prepcleanjni - remove auto-generated JNI header files
+all - build absolutely everything
+clean - remove all built files
+install - install absolutely everything
+uninstall - uninstall absolutely everything
+help - read this help page
 
-run - run the Java user interface using the full GUI with a JNI engine
-runconsole - run the Java UI using only a console window with a JNI engine
-runtext - run the Java UI using only a text console with a JNI engine
-debug - run the full Java GUI in the Java debugger with a JNI engine
+Specific Targets
+----------------
 
-clean - remove all generated files except for final binaries and archives
-purge - remove all generated files including final binaries and archives
+engine - build the C++ calculation engine library
+jni - build the engine library that communicates with the Java user interface
+java - build the Java user interface
+utils - build all miscellaneous utility programs
+bin - all of the above binary targets
 
-help - display help for all targets
-helpgeneral - display help for all general targets
-helpbin - display help for all binary targets
-helpdocs - display help for all documentation targets
-helpprep - display help for all preparation targets
-helprun - display help for all run targets
+enginedocs - build the C++ calculation engine documentation
+javadocs - build the Java user interface documentation
+html - build the HTML reference manual
+man - build the man pages
+docjar - build a complete documentation jar for the Java UI help system
+docs - all of the above documentation targets
+
+jnihdr - build (unnecessary) auto-generated JNI header files
+jnihdr-clean - remove auto-generated JNI header files
+

@@ -1,9 +1,0 @@
-bin - make all binaries, EXCLUDING the test suite and documentation jar
-docs - build all auto-generated documentation
-prep - build all required auto-generated source files
-run - run the Java user interface using the full GUI
-
-clean - remove all generated files except for final binaries and archives
-purge - remove all generated files including final binaries and archives
-
-help - display help for all targets (not just those shown above)
