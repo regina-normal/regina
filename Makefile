@@ -123,7 +123,7 @@ prepcleancorba :
 prepcleanjni :
 	cd engine && $(MAKE) prepcleanjni
 prepclean : prepcleancorba prepcleanjni
-prep : prepengine prepjava
+prep : prepjava prepengine
 
 run : runjni
 runconsole : binenginejni binjavaui binjavajni
