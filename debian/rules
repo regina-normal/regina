@@ -124,7 +124,8 @@ install: build
 
 	# Install the icons.
 	$(INSTALL_DIR) $(regdir)/icons
-	$(INSTALL_FILE) icons/*.xpm icons/*.png icons/README.txt $(regdir)/icons
+	$(INSTALL_FILE) icons/*.xpm icons/*.png icons/*.jpg icons/README.txt \
+		$(regdir)/icons
 
 	# Install the Jython libraries.
 	$(INSTALL_DIR) $(regdir)/pylib
