@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "foreign/nsnappea.h"
+#include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
 
 #include "snappeahandler.h"
