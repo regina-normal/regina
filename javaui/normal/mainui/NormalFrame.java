@@ -36,6 +36,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import btools.ext.*;
 import btools.gui.*;
+import btools.gui.component.EditMenu;
 import btools.gui.dialog.*;
 import btools.gui.lookandfeel.*;
 import btools.image.*;
@@ -213,21 +214,31 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             }
         };
         JMenu menuFile = new JMenu("File");
+		menuFile.setMnemonic(KeyEvent.VK_F);
         JMenuItem menuFileNew = new JMenuItem("New",
             Images.btnFileNew.image());
+		menuFileNew.setMnemonic(KeyEvent.VK_N);
         JMenuItem menuFileOpen = new JMenuItem("Open",
             Standard16.open.image());
+		menuFileOpen.setMnemonic(KeyEvent.VK_O);
         JMenuItem menuFileSave = new JMenuItem("Save",
             Standard16.save.image());
+		menuFileSave.setMnemonic(KeyEvent.VK_S);
         JMenuItem menuFileSaveAs = new JMenuItem("Save As");
+		menuFileSaveAs.setMnemonic(KeyEvent.VK_A);
         JMenuItem menuFileClose = new JMenuItem("Close",
             Standard16.close.image());
+		menuFileClose.setMnemonic(KeyEvent.VK_C);
         menuFileRecent = new JMenu("Recent");
+		menuFileRecent.setMnemonic(KeyEvent.VK_R);
         updateRecentFilesMenu();
         JMenu menuFileImport = new JMenu("Import");
+		menuFileImport.setMnemonic(KeyEvent.VK_I);
         JMenuItem menuFileImportSnapPea =
             new JMenuItem("SnapPea Triangulation");
+		menuFileImportSnapPea.setMnemonic(KeyEvent.VK_S);
         JMenuItem menuFileExit = new JMenuItem("Exit");
+		menuFileExit.setMnemonic(KeyEvent.VK_X);
         menuFile.add(menuFileNew);
         menuFile.add(menuFileOpen);
         menuFile.add(menuFileSave);
@@ -243,35 +254,54 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         needFile.addElement(menuFileSave);
         needFile.addElement(menuFileSaveAs);
         needFile.addElement(menuFileClose);
+
+		// Edit menu
+		JMenu menuEdit = new EditMenu();
         
         // Packet menu
         JMenu menuPacket = new JMenu("Packet");
+		menuPacket.setMnemonic(KeyEvent.VK_P);
         packetMenuHeader = new JMenuItem("(no packet)");
         menuPacket.add(packetMenuHeader);
         menuPacket.addSeparator();
         JMenu menuPacketNew = new JMenu("New");
+		menuPacketNew.setMnemonic(KeyEvent.VK_N);
         JMenuItem menuPacketNewContainer = new JMenuItem("Container",
             PacketUIManager.containerIcon);
+		menuPacketNewContainer.setMnemonic(KeyEvent.VK_C);
         JMenuItem menuPacketNewText = new JMenuItem("Text",
             PacketUIManager.textIcon);
+		menuPacketNewText.setMnemonic(KeyEvent.VK_X);
         JMenuItem menuPacketNewTriangulation = new JMenuItem("Triangulation",
             PacketUIManager.triangulationIcon);
+		menuPacketNewTriangulation.setMnemonic(KeyEvent.VK_T);
         JMenuItem menuPacketNewNormalSurfaceList =
             new JMenuItem("Normal Surface List",
             PacketUIManager.surfaceListIcon);
+		menuPacketNewNormalSurfaceList.setMnemonic(KeyEvent.VK_N);
         JMenuItem menuPacketNewSurfaceFilter =
             new JMenuItem("Surface Filter",
             PacketUIManager.filterIcon);
+		menuPacketNewSurfaceFilter.setMnemonic(KeyEvent.VK_F);
         JMenuItem menuPacketNewScript = new JMenuItem("Script",
             PacketUIManager.scriptIcon);
+		menuPacketNewScript.setMnemonic(KeyEvent.VK_S);
         JMenuItem menuPacketNewCensus = new JMenuItem("Census");
+		menuPacketNewCensus.setMnemonic(KeyEvent.VK_E);
         JMenuItem menuPacketView = new JMenuItem("View");
+		menuPacketView.setMnemonic(KeyEvent.VK_V);
         JMenu menuPacketClone = new JMenu("Clone");
+		menuPacketClone.setMnemonic(KeyEvent.VK_L);
         JMenuItem menuPacketCloneDesc = new JMenuItem("Include Descendants");
+		menuPacketCloneDesc.setMnemonic(KeyEvent.VK_I);
         JMenuItem menuPacketCloneNoDesc = new JMenuItem("Exclude Descendants");
+		menuPacketCloneNoDesc.setMnemonic(KeyEvent.VK_X);
         JMenuItem menuPacketRename = new JMenuItem("Rename");
+		menuPacketRename.setMnemonic(KeyEvent.VK_R);
         JMenuItem menuPacketDelete = new JMenuItem("Delete");
+		menuPacketDelete.setMnemonic(KeyEvent.VK_D);
         JMenuItem menuPacketRefresh = new JMenuItem("Refresh Subtree");
+		menuPacketRefresh.setMnemonic(KeyEvent.VK_F);
         menuPacketNew.add(menuPacketNewContainer);
         menuPacketNew.add(menuPacketNewText);
         menuPacketNew.add(menuPacketNewTriangulation);
@@ -298,6 +328,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
         // Modify menu
         JMenu menuModify = new JMenu("Modify");
+		menuModify.setMnemonic(KeyEvent.VK_M);
         modifyMenuHeader = new JMenuItem("(no packet)");
         menuModify.add(modifyMenuHeader);
         menuModify.addSeparator();
@@ -306,27 +337,37 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         
         // Tools menu
         JMenu menuTools = new JMenu("Tools");
+		menuTools.setMnemonic(KeyEvent.VK_T);
         JMenuItem menuToolsJPythonConsole = new JMenuItem("JPython Console",
             Images.btnConsole.image());
+		menuToolsJPythonConsole.setMnemonic(KeyEvent.VK_J);
         menuToolsJPythonConsole.setEnabled(shell.hasFoundJPython());
         menuTools.add(menuToolsJPythonConsole);
 
         // Options menu
         JMenu menuOptions = new JMenu("Options");
+		menuOptions.setMnemonic(KeyEvent.VK_O);
         JCheckBoxMenuItem menuOptionsAutoDock =
             new JCheckBoxMenuItem("Automatic Window Docking",
             options.getAutoDock());
+		menuOptionsAutoDock.setMnemonic(KeyEvent.VK_W);
         JCheckBoxMenuItem menuOptionsDisplayIcon =
             new JCheckBoxMenuItem("Display Icon", options.getDisplayIcon());
+		menuOptionsDisplayIcon.setMnemonic(KeyEvent.VK_D);
         JMenu menuOptionsDisplay = new JMenu("Display");
+		menuOptionsDisplay.setMnemonic(KeyEvent.VK_D);
         JCheckBoxMenuItem menuOptionsAutoExtension =
             new JCheckBoxMenuItem("Automatic Extension (" +
                 Application.fileExtension + ")",
                 options.getBooleanOption("AutoFileExtension", true));
+		menuOptionsAutoExtension.setMnemonic(KeyEvent.VK_E);
         JMenu menuOptionsFile = new JMenu("File");
+		menuOptionsFile.setMnemonic(KeyEvent.VK_F);
         JMenuItem menuOptionsHelpBrowser = new JMenuItem("Help Browser...");
+		menuOptionsHelpBrowser.setMnemonic(KeyEvent.VK_H);
         JMenuItem menuOptionsJPythonLibs =
-			new JMenuItem("JPython Libraries...");
+			new JMenuItem("Jython Libraries...");
+		menuOptionsJPythonLibs.setMnemonic(KeyEvent.VK_J);
         menuOptionsJPythonLibs.setEnabled(shell.hasFoundJPython());
         menuOptionsDisplay.add(menuOptionsAutoDock);
         menuOptionsDisplay.add(menuOptionsDisplayIcon);
@@ -339,9 +380,12 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
                 
         // Help menu
         JMenu menuHelp = new JMenu("Help");
+		menuHelp.setMnemonic(KeyEvent.VK_H);
         JMenuItem menuHelpContents = new JMenuItem("Contents",
             Standard16.help.image());
+		menuHelpContents.setMnemonic(KeyEvent.VK_C);
         JMenuItem menuHelpAbout = new JMenuItem("About");
+		menuHelpAbout.setMnemonic(KeyEvent.VK_A);
         menuHelp.add(menuHelpContents);
         menuHelp.addSeparator();
         menuHelp.add(menuHelpAbout);
@@ -349,6 +393,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         // Entire menu bar
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(menuFile);
+		menuBar.add(menuEdit);
         menuBar.add(menuPacket);
         menuBar.add(menuModify);
         menuBar.add(menuTools);
