@@ -28,6 +28,7 @@ export LICENSE = LICENSE.txt
 
 empty_dirs = $(DIST_DIR) $(BIN_DIR) engine javaui idl
 DOC_LICENSE = $(BASE_DOC_DIR)/LICENSE.txt
+DOC_BUILD_DIR = doc-build-tmp
 APP_CLASS = normal.Application
 
 # ------------------------- Targets ----------------------------------
@@ -80,13 +81,13 @@ binjni : binenginejni binjavaui binjavajni
 bincorba : binenginecorba binjavaui binjavacorba
 bindocs : $(DOC_JAR)
 $(DOC_JAR) : docs
-	-rm -rf doctmp
-	mkdir doctmp
-	mkdir doctmp/normal
-	mkdir doctmp/normal/docs
-	cp -r docs/* doctmp/normal/docs
-	cd doctmp && $(JAR) -cf ../$(DOC_JAR) *
-	rm -rf doctmp
+	-rm -rf $(DOC_BUILD_DIR)
+	$(MKDIR) $(DOC_BUILD_DIR)
+	$(MKDIR) $(DOC_BUILD_DIR)/normal
+	$(MKDIR) $(DOC_BUILD_DIR)/normal/docs
+	$(COPY) -r docs/* $(DOC_BUILD_DIR)/normal/docs
+	$(JAR) -cf $(DOC_JAR) -C $(DOC_BUILD_DIR) normal
+	rm -rf $(DOC_BUILD_DIR)
 bin : binengine binjava
 
 docsengine :
