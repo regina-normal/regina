@@ -54,10 +54,10 @@ import btools.image.*;
  */
 public class PacketPane extends JPanel implements UIHasChangesListener {
     /**
-     * The <tt>SystemPane</tt> that spawned this pane.
+     * The <tt>TopologyPane</tt> that spawned this pane.
      * @serial
      */
-    private SystemPane systemPane;
+    private TopologyPane topologyPane;
 
     /**
      * The personal frame in which this pane lives.
@@ -96,12 +96,12 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
     /**
      * Create a new pane.
      *
-     * @param systemPane the <tt>SystemPane</tt> that spawned this pane.
+     * @param topologyPane the <tt>TopologyPane</tt> that spawned this pane.
      * @param ui the interface the user will use.
      */
-    public PacketPane(SystemPane systemPane, PacketUI ui) {
+    public PacketPane(TopologyPane topologyPane, PacketUI ui) {
         this.ui = ui;
-        this.systemPane = systemPane;
+        this.topologyPane = topologyPane;
         init();
     }
 
@@ -192,9 +192,9 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
                             "instead.");
                     return;
                 }
-                ui.applyChanges(systemPane.getEngine());
-                systemPane.setDirty(true);
-                systemPane.firePacketWasChanged(ui.getPacket(), ui);
+                ui.applyChanges(topologyPane.getEngine());
+                topologyPane.setDirty(true);
+                topologyPane.firePacketWasChanged(ui.getPacket(), ui);
             }
         });
     }
@@ -203,7 +203,7 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
      * Set the picture on the dock/undock button as appropriate.
      */
     protected void refreshDockButton() {
-        if (systemPane.isFloating(this)) {
+        if (topologyPane.isFloating(this)) {
             dockButton.setIcon(Images.btnDockUndocked.image());
             dockButton.setPressedIcon(Images.btnDockDocked.image());
             dockButton.setToolTipText("Dock");
@@ -237,8 +237,8 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
      *
      * @return the system pane that spawned this packet pane.
      */
-    public SystemPane getSystemPane() {
-        return systemPane;
+    public TopologyPane getTopologyPane() {
+        return topologyPane;
     }
 
     /**
@@ -246,17 +246,17 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
      * from the user.
      */
     protected void close() {
-        systemPane.removePacketPane(this, false);
+        topologyPane.removePacketPane(this, false);
     }
     
     /**
      * Dock or undock this packet pane as appropriate.
      */
     private void dockUndock() {
-        if (systemPane.isDocked(this))
-            systemPane.floatPacketPane(this);
+        if (topologyPane.isDocked(this))
+            topologyPane.floatPacketPane(this);
         else
-            systemPane.dockPacketPane(this, SystemPane.PANE_ASK_FLOAT);
+            topologyPane.dockPacketPane(this, TopologyPane.PANE_ASK_FLOAT);
         refreshDockButton();
     }
 
@@ -276,7 +276,7 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
      */
     public Frame getParentFrame() {
         if (surroundingFrame == null)
-            return systemPane.getNormalFrame();
+            return topologyPane.getNormalFrame();
         else
             return surroundingFrame;
     }

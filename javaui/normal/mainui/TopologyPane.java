@@ -34,6 +34,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
+import btools.ext.*;
 import btools.gui.component.*;
 import btools.gui.dialog.*;
 import btools.image.*;
@@ -55,19 +56,18 @@ import normal.packetfilter.*;
  * The member <tt>AllPacketPanes</tt> contains a list of all packet
  * interfaces currently open.
  * <p>
- * When a <tt>SystemPane</tt> has been removed from the user interface
- * and is about to be destroyed, its <tt>cleanUp()</tt> method should
- * be called.  Otherwise the underlying packets will not be cleaned up
- * properly.
- * <p>
  * Note the various <tt>fire...()</tt> routines that <b>must</b> be called
  * whenever certain modifications occur with a packet or the packet
  * tree.
  *
  * @see PacketPane
- * @see #cleanUp
  */
-public class SystemPane extends JPanel {
+public class TopologyPane extends FilePane {
+
+	// ---------------
+	//    CONSTANTS
+	// ---------------
+
     /**
      * Used with <tt>dockPacketPane()</tt>.
      * @see #dockPacketPane
@@ -110,166 +110,125 @@ public class SystemPane extends JPanel {
     public static final PacketTreeCellRenderer cellRenderer =
         new PacketTreeCellRenderer();
 
-    /**
-     * The shell representing the entire program.
-     * @serial
-     */
-    private Shell shell;
+	/**
+	 * Filter for data files.
+	 */
+	public static final ExtensionFilenameFilter filenameFilter =
+		new ExtensionFilenameFilter(normal.Application.fileExtension,
+		"Topology Data Files (*" + normal.Application.fileExtension + ")");
+	
+	// ------------------
+	//    DATA MEMBERS
+	// ------------------
 
     /**
      * The packet at the root of the packet tree.
-     * @serial
      */
     private NPacket rootPacket;
     
     /**
      * The tree node corresponding to the root of the packet tree.
-     * @serial
      */
     private PacketTreeNode rootNode;
     
     /**
      * The structure of the entire visual tree that mirrors the packet tree.
-     * @serial
      */
     private DefaultTreeModel treeModel;
     
     /**
      * The visual tree that mirrors the packet tree.
-     * @serial
      */
     private JTree packetTree;
     
     /**
-     * Has any information changed since the working data was last saved?
-     * @serial
-     */
-    private boolean isFileDirty = false;
-    
-    /**
-     * Directory in which the working data was last saved to or read from.
-     * This will end with a trailing '/' (or whatever is appropriate for
-     * the current platform).
-     * @serial
-     */
-    private String fileDir = null;
-    
-    /**
-     * File in which the working data was last saved to or read from.
-     * This does not include directory information.
-     * @serial
-     */
-    private String fileName = null;
-
-    /**
      * The split pane separating the visual tree
      * from the working area.
-     * @serial
      */
     private JSplitPane splitPane;
 
     /**
      * The current working area.
-     * @serial
      */
     private JPanel workingArea = new JPanel();
     
     /**
      * Packet pane in the current working area.
-     * @serial
      */
     private PacketPane workingPane = null;
 
     /**
      * List of all packet panes belonging to this system.
-     * @serial
      */
     private Vector allPacketPanes = new Vector();
 
     /**
      * The panel containing the icon and packet tree.
-     * @serial
      */
     private JPanel navigationPanel = new JPanel();
 
     /**
      * The program icon displayed in the navigation panel.
-     * @serial
      */
     private JComponent icon;
 
     /**
-     * View button for the main system pane interface.
-     * @serial
+     * View button for the main topology pane interface.
      */
     private JButton viewBtn;
 
     /**
-     * Rename button for the main system pane interface.
-     * @serial
+     * Rename button for the main topology pane interface.
      */
     private JButton renameBtn;
 
     /**
-     * Delete button for the main system pane interface.
-     * @serial
+     * Delete button for the main topology pane interface.
      */
     private JButton deleteBtn;
 
     /**
-     * Refresh button for the main system pane interface.
-     * @serial
+     * Refresh button for the main topology pane interface.
      */
     private JButton refreshBtn;
 
     /**
      * Tree reorganisation up button.
-     * @serial
      */
     private JButton treeUp;
     /**
      * Tree reorganisation page up button.
-     * @serial
      */
     private JButton treePageUp;
     /**
      * Tree reorganisation up to top button.
-     * @serial
      */
     private JButton treeUpTop;
     /**
      * Tree reorganisation down button.
-     * @serial
      */
     private JButton treeDown;
     /**
      * Tree reorganisation page down button.
-     * @serial
      */
     private JButton treePageDown;
     /**
      * Tree reorganisation down to bottom button.
-     * @serial
      */
     private JButton treeDownBottom;
     /**
      * Tree reorganisation left button.
-     * @serial
      */
     private JButton treeLeft;
     /**
      * Tree reorganisation right button.
-     * @serial
      */
     private JButton treeRight;
 
-    /**
-     * Whether or not the program icon is to be displayed in the
-     * navigation panel.
-     * @serial
-     */
-    private boolean displayIcon;
-    
+	// --------------------
+	//    INITIALISATION
+	// --------------------
+
     /**
      * Create a new pane.
      *
@@ -277,11 +236,9 @@ public class SystemPane extends JPanel {
      * @param rootPacket the matriarch of the packet tree that will form
      * the working data for this pane.
      */
-    public SystemPane(Shell shell, NPacket rootPacket) {
-        super();
-        this.shell = shell;
+    public TopologyPane(Shell shell, NPacket rootPacket) {
+        super(shell);
         this.rootPacket = rootPacket;
-        this.displayIcon = shell.getOptions().getDisplayIcon();
         
         createTree();
         init();
@@ -359,7 +316,7 @@ public class SystemPane extends JPanel {
         icon = new PaddedPane(iconLabel, 3, false);
         navigationPanel.setLayout(new BorderLayout());
         navigationPanel.add(packetPanel, BorderLayout.CENTER);
-        if (displayIcon)
+        if (getOptions().getDisplayIcon())
             navigationPanel.add(icon, BorderLayout.SOUTH);
         
         // Build and insert the split panel.
@@ -501,6 +458,10 @@ public class SystemPane extends JPanel {
         }
     }
 
+	// --------------------
+	//    QUERY ROUTINES
+	// --------------------
+
     /**
      * Returns the visual packet tree.
      *
@@ -539,6 +500,30 @@ public class SystemPane extends JPanel {
         else
             return node.getPacket();
     }
+
+    /**
+     * Return the packet at the root of the working packet tree.
+     *
+     * @return the root packet.
+     */
+    public NPacket getRootPacket() {
+        return rootPacket;
+    }
+
+    /**
+     * Return a list of all packet panes spawned from this topology pane.
+     *
+     * @return a list of all packet panes.  Each element of the list
+     * will be of type <tt>PacketPane</tt>.
+     * @see normal.mainui.PacketPane
+     */
+    public Enumeration getAllPacketPanes() {
+        return allPacketPanes.elements();
+    }
+
+	// ---------------------
+	//    UPDATE ROUTINES
+	// ---------------------
 
     /**
      * Refreshes the enabled state of the main buttons in the mainfold pane.
@@ -581,141 +566,37 @@ public class SystemPane extends JPanel {
         }
     }
 
-    /**
-     * Return the directory of the working file.
-     * This will end with a trailing '/' (or whatever is appropriate for
-     * the current platform).
-     *
-     * @return the directory of the working file, or <tt>null</tt> if this
-     * has not been set.
-     */
-    public String getFileDir() {
-        return fileDir;
-    }
-    
-    /**
-     * Return the name of the working file.
-     * This will not include directory information.
-     *
-     * @return the name of the working file, or <tt>null</tt> if this has
-     * not been set.
-     */
-    public String getFileName() {
-        return fileName;
+	// ------------------------
+	//    FILEPANE OVERRIDES
+	// ------------------------
+
+    public void updateLookAndFeel() {
+		super.updateLookAndFeel();
+
+        Frame frame;
+        Enumeration e = allPacketPanes.elements();
+        while (e.hasMoreElements()) {
+            frame = ((PacketPane)e.nextElement()).getSurroundingFrame();
+            if (frame != null)
+                SwingUtilities.updateComponentTreeUI(frame);
+        }
     }
 
-    /**
-     * Set the directory of the working file.
-     * This should end with a trailing '/' (or whatever is appropriate for
-     * the current platform).
-     *
-     * @param fileDir the directory of the working file.
-     */
-    public void setFileDir(String fileDir) {
-        this.fileDir = fileDir;
+    public void setDisplayIcon(boolean displayIcon) {
+		icon.setVisible(displayIcon);
     }
 
-    /**
-     * Set the name of the working file.
-     * This should not include directory information.
-     *
-     * @param fileName the name of the working file.
-     */
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    /**
-     * Returns the shell representing the entire program.
-     *
-     * @return the shell representing the entire program.
-     */
-    public Shell getShell() {
-        return shell;
-    }
-
-    /**
-     * Returns the <tt>NormalFrame</tt> containing this system pane.
-     *
-     * @param the enclosing <tt>NormalFrame</tt>, or <tt>null</tt> if
-     * there is no such frame.
-     */
-    public NormalFrame getNormalFrame() {
-        return shell.getNormalFrame();
-    }
-
-    /**
-     * Returns the calculation engine currently in use.
-     *
-     * @return the engine currently in use.
-     */
-    public Engine getEngine() {
-        return shell.getEngine();
-    }
-
-    /**
-     * Returns the current user options for the program.
-     *
-     * @return the current user options.
-     */
-    public NormalOptionSet getOptions() {
-        return shell.getOptions();
-    }
-
-    /**
-     * Return the packet at the root of the working packet tree.
-     *
-     * @return the root packet.
-     */
-    public NPacket getRootPacket() {
-        return rootPacket;
-    }
-
-    /**
-     * Have any changes been made to the working data since the last save?
-     *
-     * @return <tt>true</tt> if and only if there are unsaved changes.
-     */
-    public boolean getDirty() {
-        return isFileDirty;
-    }
-
-    /**
-     * Set whether or not unsaved changes have been made to the working data.
-     *
-     * @param isDirty <tt>true</tt> if and only if there are unsaved changes.
-     */
-    public void setDirty(boolean isDirty) {
-        isFileDirty = isDirty;
-        getNormalFrame().updateDirtyMarker(this);
-    }
-
-    /**
-     * Find out whether or not we are allowed to close this system pane.
-     *
-     * @return <tt>true</tt> if and only if we may close this system
-     * pane.
-     */
     public boolean canClose() {
-        // Check with the user if changes will be lost.
-        if (isFileDirty)
-            if (! shell.confirm("Are you sure you wish to abandon " +
-                    "any changes to this file?"))
-                return false;
+		if (! super.canClose())
+			return false;
         if (unconfirmedEditPanes())
-            if (! shell.confirm("Some edit panes currently in use " +
+            if (! getShell().confirm("Some edit panes currently in use " +
                     "contain changes that have not yet been applied.  Are " +
                     "you sure you wish to abandon these changes?"))
                 return false;
         return true;
     }
 
-    /**
-     * Have our last words before being destroyed.
-     * Deallocate all underlying packet structures and saves visual settings.
-     * This should only be called when the entire system pane has been
-     * removed from the user interface and is about to be destroyed.
-     */
     void cleanUp() {
         // Save visual settings.
         getOptions().setIntOption("DividerLocation",
@@ -729,16 +610,9 @@ public class SystemPane extends JPanel {
         rootPacket.destroy();
     }
 
-    /**
-     * Return a list of all packet panes spawned from this system pane.
-     *
-     * @return a list of all packet panes.  Each element of the list
-     * will be of type <tt>PacketPane</tt>.
-     * @see normal.mainui.PacketPane
-     */
-    public Enumeration getAllPacketPanes() {
-        return allPacketPanes.elements();
-    }
+	// --------------------------
+	//    PACKET PANE HANDLING
+	// --------------------------
 
     /**
      * Insert the given packet pane into the interface.
@@ -797,7 +671,7 @@ public class SystemPane extends JPanel {
     }
 
     /**
-     * Dock the given packet pane into this system pane.
+     * Dock the given packet pane into this topology pane.
      * <p>
      * <b>Preconditions:</b> The given pane has already been inserted
      * into the interface through <tt>insertPacketPane</tt>.
@@ -849,7 +723,7 @@ public class SystemPane extends JPanel {
     }
     
     /**
-     * Dock the given packet pane into this system pane.
+     * Dock the given packet pane into this topology pane.
      * <p>
      * <b>Preconditions:</b> The given pane has already been inserted
      * into the interface through <tt>insertPacketPane</tt>.
@@ -895,19 +769,21 @@ public class SystemPane extends JPanel {
         workingArea.add(pane, BorderLayout.CENTER);
         workingArea.validate();
         workingPane = pane;
+		setWorkingTextComponent(pane.getUI().getPrimaryTextComponent());
         return true;
     }
     
     /**
-     * Undock the given packet pane from this system pane.
+     * Undock the given packet pane from this topology pane.
      * <p>
      * <b>Preconditions:</b> The given pane has already been inserted
      * into the interface through <tt>insertPacketPane</tt>.
-     * Also, it is currently docked in this system pane.
+     * Also, it is currently docked in this topology pane.
      *
      * @param pane the packet pane with which to work.
      */
     private void internalUndockPacketPane(PacketPane pane) {
+		setWorkingTextComponent(null);
         workingArea.remove(pane);
         workingArea.repaint();
         workingPane = null;
@@ -945,7 +821,7 @@ public class SystemPane extends JPanel {
     }
 
     /**
-     * Is the given packet pane docked into this system pane?
+     * Is the given packet pane docked into this topology pane?
      *
      * @param pane the packet pane to examine.
      * @return <tt>true</tt> if and only if the given pane is currently
@@ -967,41 +843,45 @@ public class SystemPane extends JPanel {
     }
 
     /**
-     * Update the look and feel of each window spawned by this system
-     * pane in order to reflect the current swing look and feel.
-     * Note that the system pane itself will not be updated; this is the
-     * responsibility of the container in which the system pane is placed.
+     * Ensure the given packet is in a viewing pane somewhere.
+     * If the given packet is
+     * not being viewed, a new viewing pane will be opened; otherwise
+     * nothing will be done.
+     *
+     * @param packet the packet to ensure is viewed.
      */
-    public void updateLookAndFeel() {
-        Frame frame;
+    public void ensureViewingPacket(NPacket packet) {
         Enumeration e = allPacketPanes.elements();
-        while (e.hasMoreElements()) {
-            frame = ((PacketPane)e.nextElement()).getSurroundingFrame();
-            if (frame != null)
-                SwingUtilities.updateComponentTreeUI(frame);
-        }
+        while (e.hasMoreElements())
+            if (((PacketPane)e.nextElement()).getPacket().sameObject(packet))
+                return;
+
+        insertPacketPane(new PacketPane(this,
+            PacketUIManager.newPacketUI(packet, getShell(),
+            packet.isPacketEditable())), true);
     }
 
     /**
-     * Set whether or not the program icon is to be displayed in the
-     * navigation panel.
+     * Does this system have any edit panes currently open
+     * containing changes that have not been applied to the engine?
      *
-     * @param displayIcon <tt>true</tt> if and only if the program icon is
-     * to be displayed.
+     * @return <tt>true</tt> if and only if there are unconfirmed edit
+     * panes.
      */
-    public void setDisplayIcon(boolean displayIcon) {
-        if (this.displayIcon != displayIcon) {
-            this.displayIcon = displayIcon;
-            if (displayIcon) {
-                navigationPanel.add(icon, BorderLayout.SOUTH);
-            }
-            else {
-                navigationPanel.remove(icon);
-            }
-            navigationPanel.revalidate();
-            navigationPanel.repaint();
+    public boolean unconfirmedEditPanes() {
+        PacketPane pane;
+        Enumeration e = allPacketPanes.elements();
+        while (e.hasMoreElements()) {
+            pane = (PacketPane)e.nextElement();
+            if (pane.getUI().hasChanges())
+                return true;
         }
+        return false;
     }
+
+	// ------------------------
+	//    PACKET TREE EVENTS
+	// ------------------------
 
     /**
      * This should be called whenever a packet's contents change,
@@ -1252,6 +1132,10 @@ public class SystemPane extends JPanel {
             showNodePackets(newNodes);
     }
 
+	// -------------------
+	//    TREE HANDLING
+	// -------------------
+
     /**
      * Returns the node in the visual packet tree corresponding to the given
      * packet.
@@ -1314,29 +1198,14 @@ public class SystemPane extends JPanel {
         while (e.hasMoreElements()) {
             node = (PacketTreeNode)e.nextElement();
             insertPacketPane(new PacketPane(this,
-                PacketUIManager.newPacketUI(node.getPacket(),
-                shell, node.getPacket().isPacketEditable())), justOneNode);
+                PacketUIManager.newPacketUI(node.getPacket(), getShell(),
+				node.getPacket().isPacketEditable())), justOneNode);
         }
     }
 
-    /**
-     * Ensure the given packet is in a viewing pane somewhere.
-     * If the given packet is
-     * not being viewed, a new viewing pane will be opened; otherwise
-     * nothing will be done.
-     *
-     * @param packet the packet to ensure is viewed.
-     */
-    public void ensureViewingPacket(NPacket packet) {
-        Enumeration e = allPacketPanes.elements();
-        while (e.hasMoreElements())
-            if (((PacketPane)e.nextElement()).getPacket().sameObject(packet))
-                return;
-
-        insertPacketPane(new PacketPane(this,
-            PacketUIManager.newPacketUI(packet, shell,
-            packet.isPacketEditable())), true);
-    }
+	// -------------
+	//    ACTIONS
+	// -------------
 
     /**
      * Allow the user to import a packet from a file in a foreign format.
@@ -1350,7 +1219,7 @@ public class SystemPane extends JPanel {
      */
     void importData(PacketCreator importer) {
         // Collect user input and create the new packet.
-        NPacket packet = NewPacketDialog.newPacket(shell,
+        NPacket packet = NewPacketDialog.newPacket(getShell(),
             rootNode, getSelectedNode(), importer);
         if (packet != null) {
             fireSubtreeWasInserted(packet, null, true);
@@ -1373,7 +1242,7 @@ public class SystemPane extends JPanel {
         PacketCreator ui = PacketUIManager.newPacketCreator(command);
         if (ui != null) {
             // Collect user input and create the new packet.
-            NPacket packet = NewPacketDialog.newPacket(shell,
+            NPacket packet = NewPacketDialog.newPacket(getShell(),
                 rootNode, getSelectedNode(), ui);
             if (packet != null) {
                 fireSubtreeWasInserted(packet, null, true);
@@ -1399,7 +1268,7 @@ public class SystemPane extends JPanel {
      */
     void packetView(NPacket packet) {
         insertPacketPane(new PacketPane(this,
-            PacketUIManager.newPacketUI(packet, shell,
+            PacketUIManager.newPacketUI(packet, getShell(),
             packet.isPacketEditable())), getOptions().getAutoDock());
     }
 
@@ -1419,7 +1288,7 @@ public class SystemPane extends JPanel {
         NPacket clone = chosen.getPacket().clonePacket(includeDescendants,
 			false);
         if (clone == null) {
-            shell.error("This packet may not be cloned.");
+            getShell().error("This packet may not be cloned.");
             return;
         }
 
@@ -1440,7 +1309,7 @@ public class SystemPane extends JPanel {
         // Open a dialog to obtain a new name for the packet.
 		String newName = packet.getPacketLabel();
 		while (true) {
-        	newName = InputBox.getInput(shell.getPrimaryFrame(),
+        	newName = InputBox.getInput(getNormalFrame(),
             	"Rename packet", newName);
         	if (newName == null)
             	return;
@@ -1450,7 +1319,7 @@ public class SystemPane extends JPanel {
 
 			// Can we use this name?
         	if (rootPacket.findPacketLabel(newName) != null) {
-            	shell.error("A packet with this label already exists.");
+            	getShell().error("A packet with this label already exists.");
             	newName = rootPacket.makeUniqueLabel(newName);
 				continue;
         	}
@@ -1478,7 +1347,7 @@ public class SystemPane extends JPanel {
         NPacket packet = chosen.getPacket();
 
         // Check that the user really wants this!        
-        if (! shell.confirm("Are you sure you wish to delete packet "
+        if (! getShell().confirm("Are you sure you wish to delete packet "
                 + packet.getPacketLabel() + " and all of its children?"))
             return;
         
@@ -1647,23 +1516,9 @@ public class SystemPane extends JPanel {
         setDirty(true);
     }
 
-    /**
-     * Does this system have any edit panes currently open
-     * containing changes that have not been applied to the engine?
-     *
-     * @return <tt>true</tt> if and only if there are unconfirmed edit
-     * panes.
-     */
-    public boolean unconfirmedEditPanes() {
-        PacketPane pane;
-        Enumeration e = allPacketPanes.elements();
-        while (e.hasMoreElements()) {
-            pane = (PacketPane)e.nextElement();
-            if (pane.getUI().hasChanges())
-                return true;
-        }
-        return false;
-    }
+	// -------------
+	//    CLASSES
+	// -------------
 
     /**
      * Frame class used to contain packet panes.
