@@ -36,13 +36,13 @@
 #define __NCENSUS_H
 #endif
 
-#include <list>
 #include "census/nfacepairing.h"
 #include "utilities/nbooleans.h"
-#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
+class NGluingPerms;
+class NPacket;
 class NProgressManager;
 class NProgressMessage;
 
@@ -142,17 +142,6 @@ class NCensus {
 
         unsigned long whichSoln;
             /**< The number of the solution we are up to. */
-        NTriangulation working;
-            /**< A working triangulation. */
-        NTetrahedron** tet;
-            /**< The tetrahedra in the working triangulation. */
-        int* orientation;
-            /**< The orientation of each tetrahedron.  Orientation is
-             *   +/-1, or 0 if unknown. */
-        int* joinPermIndices;
-            /**< The index into array \a allPermsS3 representing the
-             *   permutation with which each tetrahedron face is
-             *   joined to its partner. */
 
     private:
         /**
@@ -172,81 +161,29 @@ class NCensus {
             NProgressMessage* newProgress = 0);
 
         /**
-         * Returns a reference to the index into array \a allPermsS3
-         * representing the permutation with which the given face
-         * is joined to its partner.
+         * Called when a particular tetrahedron face pairing has been
+         * found.  This routine hooks up the face pairing generation with
+         * the gluing permutation generation.
          *
-         * \pre The given face is a real tetrahedron
-         * face (not boundary, before-the-start or past-the-end).
-         *
-         * @param source the face under investigation.
-         * @return a reference to the corresponding array index.
+         * @param pairing the face pairing that has been found.
+         * @param autos the set of all automorphisms of the given face
+         * pairing.
+         * @param census the census currently being generated;
+         * this must really be of class NCensus.
          */
-        int& joinPermIndex(const NTetFace& source);
-
-        /**
-         * Calls selectGluingPermsInternal() upon the given census
-         * object.
-         *
-         * @param pairing the face pairing parameter to pass to
-         * selectGluingPermsInternal().
-         * @param autos the automorphism list to pass to
-         * selectGluingPermsInternal().
-         * @param census the census upon which
-         * selectGluingPermsInternal() should be called; this must
-         * really be of class NCensus.
-         */
-        static void selectGluingPerms(const NFacePairing* pairing,
+        static void foundFacePairing(const NFacePairing* pairing,
             const NFacePairingIsoList* autos, void* census);
 
         /**
-         * Runs through all permutations that can be used to actually
-         * glue together the faces that have already been paired off.
-         * Solutions that are equivalent under automorphisms in the
-         * given list will not be counted more than once.
-         * This is the innermost layer of the census routine.
+         * Called when a particular set of gluing permutations has been
+         * found.  This routine generates the corresponding triangulation
+         * and decides whether it really belongs in the census.
          *
-         * @param pairing the way in which the tetrahedron faces are to
-         * be paired off.
-         * @param autos the set of all automorphisms of the given face pairing.
+         * @param perms the gluing permutation set that has been found.
+         * @param census the census currently being generated;
+         * this must really be of class NCensus.
          */
-        void selectGluingPermsInternal(const NFacePairing* pairing,
-            const NFacePairingIsoList* autos);
-        /**
-         * Called when a triangulation has been found.
-         * Builds the triangulation from the blueprint, checks any
-         * required properties and places it in the final census if
-         * appropriate.
-         *
-         * @param pairing the pairing of faces corresponding to the
-         * triangulation that has been found.
-         * @param autos the set of all automorphisms of the given face
-         * pairing.
-         */
-        void trySolution(const NFacePairing* pairing,
-            const NFacePairingIsoList* autos);
-
-        /**
-         * Compares the current set of gluing permutations with its
-         * preimage under the given automorphism of face pairings, in order
-         * to see which is closer to canonical form.
-         *
-         * @param pairing the pairing of faces to which the given
-         * automorphism should be applied.
-         * @param automorph the given automorphism.
-         * @return -1 if this set is closer to canonical form, 0 if this set
-         * equals its preimage and 1 if its preimage is closer to canonical
-         * form.
-         */
-        int cmpPermsWithPreImage(const NFacePairing* pairing,
-            const NIsomorphism& automorph);
-    
-    public:
-        /**
-         * Deallocates any memory used specifically by this
-         * structure.
-         */
-        virtual ~NCensus();
+        static void foundGluingPerms(const NGluingPerms* perms, void* census);
 
     friend unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
@@ -254,12 +191,6 @@ class NCensus {
 };
 
 /*@}*/
-
-// Inline functions for NCensus
-
-inline int& NCensus::joinPermIndex(const NTetFace& source) {
-    return joinPermIndices[4 * source.tet + source.face];
-}
 
 } // namespace regina
 

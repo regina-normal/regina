@@ -26,9 +26,12 @@
 
 /* end stub */
 
+#include <sstream>
 #include "census/ncensus.h"
+#include "census/ngluingperms.h"
 #include "progress/nprogressmanager.h"
 #include "progress/nprogresstypes.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
@@ -57,11 +60,11 @@ unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
     
     if (manager) {
         NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
-            NCensus::selectGluingPerms, census, true);
+            NCensus::foundFacePairing, census, true);
         return 0;
     } else {
         NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
-            NCensus::selectGluingPerms, census, false);
+            NCensus::foundFacePairing, census, false);
         unsigned long ans = census->whichSoln - 1;
         delete census;
         return ans;
@@ -73,26 +76,61 @@ NCensus::NCensus(NPacket* newParent, unsigned nTetrahedra,
         NProgressMessage* newProgress) : parent(newParent),
         finiteness(newFiniteness), orientability(newOrientability),
         progress(newProgress), whichSoln(1) {
-    // Initialise the triangulation and dynamic arrays.
-    tet = new (NTetrahedron*)[nTetrahedra];
-    orientation = new int[nTetrahedra];
-
-    unsigned i;
-    for (i=0; i<nTetrahedra; i++) {
-        tet[i] = new NTetrahedron();
-        working.addTetrahedron(tet[i]);
-        orientation[i] = 0;
-    }
-
-    joinPermIndices = new int[4 * nTetrahedra];
-    std::fill(joinPermIndices, joinPermIndices + nTetrahedra * 4, -1);
 }
 
-NCensus::~NCensus() {
-    working.removeAllTetrahedra();
-    delete[] tet;
-    delete[] orientation;
-    delete[] joinPermIndices;
+void NCensus::foundFacePairing(const NFacePairing* pairing,
+        const NFacePairingIsoList* autos, void* census) {
+    NCensus* realCensus = (NCensus*)census;
+    if (pairing) {
+        // We've found another face pairing.
+        if (realCensus->progress)
+            realCensus->progress->setMessage(pairing->toString());
+
+        // Select the individual gluing permutations.
+        NGluingPerms::findAllPerms(pairing, autos,
+            ! realCensus->orientability.hasFalse(), NCensus::foundGluingPerms,
+            census);
+    } else {
+        // Census generation has finished.
+        if (realCensus->progress) {
+            realCensus->progress->setMessage("Finished.");
+            realCensus->progress->setFinished();
+            delete realCensus;
+        }
+    }
+}
+
+void NCensus::foundGluingPerms(const NGluingPerms* perms, void* census) {
+    if (perms) {
+        // We've found another permutation set.
+        // Triangulate and see what we've got.
+        NTriangulation* tri = perms->triangulate();
+        NCensus* realCensus = (NCensus*)census;
+
+        bool ok = true;
+        if (! tri->isValid())
+            ok = false;
+        else if ((! realCensus->finiteness.hasFalse()) && tri->isIdeal())
+            ok = false;
+        else if ((! realCensus->finiteness.hasTrue()) && (! tri->isIdeal()))
+            ok = false;
+        else if ((! realCensus->orientability.hasTrue()) && tri->isOrientable())
+            ok = false;
+
+        if (ok) {
+            // Put it in the census!
+            // Make sure it has a charming label.
+            std::ostringstream out;
+            out << "Item " << realCensus->whichSoln;
+            tri->setPacketLabel(realCensus->parent->makeUniqueLabel(
+                out.str()));
+            realCensus->parent->insertChildLast(tri);
+            realCensus->whichSoln++;
+        } else {
+            // Bad triangulation.
+            delete tri;
+        }
+    }
 }
 
 } // namespace regina
