@@ -38,9 +38,9 @@ namespace regina {
 std::auto_ptr<NIsomorphism> NTriangulation::isIsomorphicTo(
         const NTriangulation& other) const {
     if (! calculatedSkeleton)
-        const_cast<NTriangulation*>(this)->calculateSkeleton();
+        calculateSkeleton();
     if (! other.calculatedSkeleton)
-        const_cast<NTriangulation&>(other).calculateSkeleton();
+        other.calculateSkeleton();
 
     if (tetrahedra.size() != other.tetrahedra.size())
         return NO_ISOMORPHISM;
@@ -275,9 +275,9 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
     // Basic property checks.  Unfortunately, since the isomorphism need
     // not be boundary complete we can't test that many properties.
     if (! calculatedSkeleton)
-        const_cast<NTriangulation*>(this)->calculateSkeleton();
+        calculateSkeleton();
     if (! other.calculatedSkeleton)
-        const_cast<NTriangulation&>(other).calculateSkeleton();
+        other.calculateSkeleton();
 
     if (tetrahedra.size() > other.tetrahedra.size())
         return NO_ISOMORPHISM;

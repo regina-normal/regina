@@ -32,7 +32,7 @@ namespace regina {
 
 void NTriangulation::maximalForestInBoundary(
         stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-        stdhash::hash_set<NVertex*, HashPointer>& vertexSet) {
+        stdhash::hash_set<NVertex*, HashPointer>& vertexSet) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
@@ -46,7 +46,7 @@ void NTriangulation::maximalForestInBoundary(
 
 void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
         stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-        stdhash::hash_set<NVertex*, HashPointer>& vertexSet) {
+        stdhash::hash_set<NVertex*, HashPointer>& vertexSet) const {
     vertexSet.insert(from);
 
     std::vector<NVertexEmbedding>::const_iterator it =
@@ -78,7 +78,7 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
 
 void NTriangulation::maximalForestInSkeleton(
         stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-        bool canJoinBoundaries) {
+        bool canJoinBoundaries) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
@@ -100,7 +100,7 @@ void NTriangulation::maximalForestInSkeleton(
 bool NTriangulation::stretchForestFromVertex(NVertex* from,
         stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
         stdhash::hash_set<NVertex*, HashPointer>& vertexSet,
-        stdhash::hash_set<NVertex*, HashPointer>& thisStretch) {
+        stdhash::hash_set<NVertex*, HashPointer>& thisStretch) const {
     // Moves out from the vertex until we hit a vertex that has already
     //     been visited; then stops.
     // Returns true if we make such a link.
@@ -303,7 +303,7 @@ bool NTriangulation::crushMaximalForest() {
 }
 
 void NTriangulation::maximalForestInDualSkeleton(
-        stdhash::hash_set<NFace*, HashPointer>& faceSet) {
+        stdhash::hash_set<NFace*, HashPointer>& faceSet) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
@@ -317,7 +317,7 @@ void NTriangulation::maximalForestInDualSkeleton(
 
 void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
         stdhash::hash_set<NFace*, HashPointer>& faceSet,
-        stdhash::hash_set<NTetrahedron*, HashPointer>& visited) {
+        stdhash::hash_set<NTetrahedron*, HashPointer>& visited) const {
     visited.insert(tet);
 
     NTetrahedron* adjTet;

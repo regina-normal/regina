@@ -124,70 +124,71 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
             /**< Used to iterate through boundary components. */
 
     private:
-        bool calculatedSkeleton;
+        mutable bool calculatedSkeleton;
             /**< Has the skeleton been calculated? */
 
         NIndexedArray<NTetrahedron*, HashPointer> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
-        NIndexedArray<NFace*, HashPointer> faces;
+        mutable NIndexedArray<NFace*, HashPointer> faces;
             /**< The faces in the triangulation skeleton. */
-        NIndexedArray<NEdge*, HashPointer> edges;
+        mutable NIndexedArray<NEdge*, HashPointer> edges;
             /**< The edges in the triangulation skeleton. */
-        NIndexedArray<NVertex*, HashPointer> vertices;
+        mutable NIndexedArray<NVertex*, HashPointer> vertices;
             /**< The vertices in the triangulation skeleton. */
-        NIndexedArray<NComponent*, HashPointer> components;
+        mutable NIndexedArray<NComponent*, HashPointer> components;
             /**< The components that form the triangulation. */
-        NIndexedArray<NBoundaryComponent*, HashPointer> boundaryComponents;
+        mutable NIndexedArray<NBoundaryComponent*, HashPointer>
+            boundaryComponents;
             /**< The components that form the boundary of the
                  triangulation. */
 
-        bool valid;
+        mutable bool valid;
             /**< Is the triangulation valid? */
-        bool ideal;
+        mutable bool ideal;
             /**< Is the triangulation ideal? */
-        bool standard;
+        mutable bool standard;
             /**< Is the triangulation standard? */
-        bool orientable;
+        mutable bool orientable;
             /**< Is the triangulation orientable? */
 
-        NGroupPresentation* fundamentalGroup;
+        mutable NGroupPresentation* fundamentalGroup;
             /**< Fundamental group of the triangulation. */
-        bool calculatedFundamentalGroup;
+        mutable bool calculatedFundamentalGroup;
             /**< Has \a fundamentalGroup been calculated? */
-        NAbelianGroup* H1;
+        mutable NAbelianGroup* H1;
             /**< First homology group of the triangulation. */
-        bool calculatedH1;
+        mutable bool calculatedH1;
             /**< Has \a H1 been calculated? */
-        NAbelianGroup* H1Rel;
+        mutable NAbelianGroup* H1Rel;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
-        bool calculatedH1Rel;
+        mutable bool calculatedH1Rel;
             /**< Has \a H1Rel been calculated? */
-        NAbelianGroup* H1Bdry;
+        mutable NAbelianGroup* H1Bdry;
             /**< First homology group of the boundary. */
-        bool calculatedH1Bdry;
+        mutable bool calculatedH1Bdry;
             /**< Has \a H1Bdry been calculated? */
-        NAbelianGroup* H2;
+        mutable NAbelianGroup* H2;
             /**< Second homology group of the triangulation. */
-        bool calculatedH2;
+        mutable bool calculatedH2;
             /**< Has \a H2 been calculated? */
 
-        bool twoSphereBoundaryComponents;
+        mutable bool twoSphereBoundaryComponents;
             /**< Does the triangulation contain any 2-sphere boundary
                  components? */
-        bool negativeIdealBoundaryComponents;
+        mutable bool negativeIdealBoundaryComponents;
             /**< Does the triangulation contain any boundary components
                  that are ideal and have negative Euler characteristic? */
-        bool calculatedBoundaryProperties;
+        mutable bool calculatedBoundaryProperties;
             /**< Have the boundary component properties been calculated? */
 
-        bool zeroEfficient;
+        mutable bool zeroEfficient;
             /**< Is the triangulation zero-efficient? */
-        bool calculatedZeroEfficient;
+        mutable bool calculatedZeroEfficient;
             /**< Has zero-efficiency been calculated? */
-        bool splittingSurface;
+        mutable bool splittingSurface;
             /**< Does the triangulation have a normal splitting surface? */
-        bool calculatedSplittingSurface;
+        mutable bool calculatedSplittingSurface;
             /**< Has the existence of a splitting surface been calculated? */
 
     public:
@@ -282,6 +283,22 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * triangulation.
          */
         NTetrahedron* getTetrahedron(unsigned long index);
+        /**
+         * Returns the tetrahedron with the given index number in the
+         * triangulation.
+         * Note that tetrahedron indexing may change when a tetrahedron
+         * is added or removed from the triangulation.
+         *
+         * This routine will ensure the skeleton is calculated, since
+         * other skeleton objects can be accessed from NTetrahedron.
+         *
+         * @param index specifies which tetrahedron to return; this
+         * value should be between 0 and getNumberOfTetrahedra()-1
+         * inclusive.
+         * @return the <tt>index</tt>th tetrahedron in the
+         * triangulation.
+         */
+        const NTetrahedron* getTetrahedron(unsigned long index) const;
         /**
          * Returns the index of the given tetrahedron in the
          * triangulation.
@@ -382,31 +399,31 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the number of boundary components.
          */
-        unsigned long getNumberOfBoundaryComponents();
+        unsigned long getNumberOfBoundaryComponents() const;
         /**
          * Returns the number of components in this triangulation.
          *
          * @return the number of components.
          */
-        unsigned long getNumberOfComponents();
+        unsigned long getNumberOfComponents() const;
         /**
          * Returns the number of vertices in this triangulation.
          *
          * @return the number of vertices.
          */
-        unsigned long getNumberOfVertices();
+        unsigned long getNumberOfVertices() const;
         /**
          * Returns the number of edges in this triangulation.
          *
          * @return the number of edges.
          */
-        unsigned long getNumberOfEdges();
+        unsigned long getNumberOfEdges() const;
         /**
          * Returns the number of faces in this triangulation.
          *
          * @return the number of faces.
          */
-        unsigned long getNumberOfFaces();
+        unsigned long getNumberOfFaces() const;
 
         /**
          * Returns all components of this triangulation.
@@ -423,7 +440,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all components.
          */
-        const NIndexedArray<NComponent*, HashPointer>& getComponents();
+        const NIndexedArray<NComponent*, HashPointer>& getComponents() const;
         /**
          * Returns all boundary components of this triangulation.
          * Note that each ideal vertex forms its own boundary component.
@@ -441,7 +458,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the list of all boundary components.
          */
         const NIndexedArray<NBoundaryComponent*, HashPointer>&
-            getBoundaryComponents();
+            getBoundaryComponents() const;
         /**
          * Returns all vertices of this triangulation.
          *
@@ -457,7 +474,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all vertices.
          */
-        const NIndexedArray<NVertex*, HashPointer>& getVertices();
+        const NIndexedArray<NVertex*, HashPointer>& getVertices() const;
         /**
          * Returns all edges of this triangulation.
          *
@@ -473,7 +490,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all edges.
          */
-        const NIndexedArray<NEdge*, HashPointer>& getEdges();
+        const NIndexedArray<NEdge*, HashPointer>& getEdges() const;
         /**
          * Returns all faces of this triangulation.
          *
@@ -489,7 +506,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the list of all faces.
          */
-        const NIndexedArray<NFace*, HashPointer>& getFaces();
+        const NIndexedArray<NFace*, HashPointer>& getFaces() const;
         /**
          * Returns the requested triangulation component.
          *
@@ -501,7 +518,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * to getNumberOfComponents()-1 inclusive.
          * @return the requested component.
          */
-        NComponent* getComponent(unsigned long index);
+        NComponent* getComponent(unsigned long index) const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -514,7 +531,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * to getNumberOfBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
-        NBoundaryComponent* getBoundaryComponent(unsigned long index);
+        NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
         /**
          * Returns the requested triangulation vertex.
          *
@@ -526,7 +543,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * to getNumberOfVertices()-1 inclusive.
          * @return the requested vertex.
          */
-        NVertex* getVertex(unsigned long index);
+        NVertex* getVertex(unsigned long index) const;
         /**
          * Returns the requested triangulation edge.
          *
@@ -538,7 +555,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * to getNumberOfEdges()-1 inclusive.
          * @return the requested edge.
          */
-        NEdge* getEdge(unsigned long index);
+        NEdge* getEdge(unsigned long index) const;
         /**
          * Returns the requested triangulation face.
          *
@@ -550,7 +567,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * to getNumberOfFaces()-1 inclusive.
          * @return the requested face.
          */
-        NFace* getFace(unsigned long index);
+        NFace* getFace(unsigned long index) const;
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -561,7 +578,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the index of the specified component, where 0 is the first
          * component, 1 is the second and so on.
          */
-        unsigned long getComponentIndex(const NComponent* component);
+        unsigned long getComponentIndex(const NComponent* component) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -574,7 +591,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * where 0 is the first boundary component,
          * 1 is the second and so on.
          */
-        unsigned long getBoundaryComponentIndex(const NBoundaryComponent* bc);
+        unsigned long getBoundaryComponentIndex(
+            const NBoundaryComponent* bc) const;
         /**
          * Returns the index of the given vertex in the triangulation.
          *
@@ -585,7 +603,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
-        unsigned long getVertexIndex(const NVertex* vertex);
+        unsigned long getVertexIndex(const NVertex* vertex) const;
         /**
          * Returns the index of the given edge in the triangulation.
          *
@@ -596,7 +614,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
-        unsigned long getEdgeIndex(const NEdge* edge);
+        unsigned long getEdgeIndex(const NEdge* edge) const;
         /**
          * Returns the index of the given face in the triangulation.
          *
@@ -607,7 +625,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the index of the specified face, where 0 is the first
          * face, 1 is the second and so on.
          */
-        unsigned long getFaceIndex(const NFace* face);
+        unsigned long getFaceIndex(const NFace* face) const;
 
         /**
          * Determines if this triangulation is combinatorially
@@ -683,7 +701,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return \c true if and only if there is at least one
          * two-sphere boundary component.
          */
-        bool hasTwoSphereBoundaryComponents();
+        bool hasTwoSphereBoundaryComponents() const;
         /**
          * Determines if this triangulation contains any ideal boundary
          * components with negative Euler characteristic.
@@ -691,7 +709,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return \c true if and only if there is at least one such
          * boundary component.
          */
-        bool hasNegativeIdealBoundaryComponents();
+        bool hasNegativeIdealBoundaryComponents() const;
 
         /*@}*/
         /**
@@ -714,7 +732,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the Euler characteristic.
          */
-        long getEulerCharacteristic();
+        long getEulerCharacteristic() const;
 
         /**
          * Determines if this triangulation is valid.
@@ -726,7 +744,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return \c true if and only if this triangulation is valid.
          */
-        bool isValid();
+        bool isValid() const;
         /**
          * Determines if this triangulation is ideal.
          * This is the case if and only if one of the vertex links
@@ -735,7 +753,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return \c true if and only if this triangulation is ideal.
          */
-        bool isIdeal();
+        bool isIdeal() const;
         /**
          * Determines if this triangulation is standard.
          * This is the case if and only if every vertex is standard.
@@ -744,13 +762,13 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return \c true if and only if this triangulation is
          * standard.
          */
-        bool isStandard();
+        bool isStandard() const;
         /**
          * Determines if this triangulation has any boundary faces.
          *
          * @return \c true if and only if there are boundary faces.
          */
-        bool hasBoundaryFaces();
+        bool hasBoundaryFaces() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary.
@@ -758,21 +776,21 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return \c true if and only if this triangulation is closed.
          */
-        bool isClosed();
+        bool isClosed() const;
         /**
          * Determines if this triangulation is orientable.
          *
          * @return \c true if and only if this triangulation is
          * orientable.
          */
-        bool isOrientable();
+        bool isOrientable() const;
         /**
          * Determines if this triangulation is connected.
          *
          * @return \c true if and only if this triangulation is
          * connected.
          */
-        bool isConnected();
+        bool isConnected() const;
 
         /*@}*/
         /**
@@ -810,7 +828,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the fundamental group.
          */
-        const NGroupPresentation& getFundamentalGroup();
+        const NGroupPresentation& getFundamentalGroup() const;
         /**
          * Returns the first homology group for this triangulation.
          * If this triangulation contains any ideal or non-standard
@@ -835,7 +853,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& getHomologyH1();
+        const NAbelianGroup& getHomologyH1() const;
         /**
          * Returns the relative first homology group with
          * respect to the boundary for this triangulation.
@@ -853,7 +871,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the relative first homology group with respect to the
          * boundary.
          */
-        const NAbelianGroup& getHomologyH1Rel();
+        const NAbelianGroup& getHomologyH1Rel() const;
         /**
          * Returns the first homology group of the
          * boundary for this triangulation.
@@ -874,7 +892,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the first homology group of the boundary.
          */
-        const NAbelianGroup& getHomologyH1Bdry();
+        const NAbelianGroup& getHomologyH1Bdry() const;
         /**
          * Returns the second homology group for this triangulation.
          * If this triangulation contains any ideal vertices,
@@ -895,7 +913,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * @return the second homology group.
          */
-        const NAbelianGroup& getHomologyH2();
+        const NAbelianGroup& getHomologyH2() const;
         /**
          * Returns the second homology group with coefficients in Z_2
          * for this triangulation.
@@ -914,7 +932,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the number of Z_2 terms in the second homology group
          * with coefficients in Z_2.
          */
-        unsigned long getHomologyH2Z2();
+        unsigned long getHomologyH2Z2() const;
         /**
          * Computes the Turaev-Viro state sum invariant of this
          * 3-manifold based upon the given initial data.
@@ -943,7 +961,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * between 0 and 2r and must have no common factors with r.
          * @return the requested Turaev-Viro invariant.
          */
-        double turaevViro(unsigned long r, unsigned long whichRoot);
+        double turaevViro(unsigned long r, unsigned long whichRoot) const;
 
         /*@}*/
         /**
@@ -1033,7 +1051,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void maximalForestInBoundary(
                 stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-                stdhash::hash_set<NVertex*, HashPointer>& vertexSet);
+                stdhash::hash_set<NVertex*, HashPointer>& vertexSet) const;
         /**
          * Produces a maximal forest in the triangulation's 1-skeleton.
          * The given set will be emptied and will have the edges of the
@@ -1060,7 +1078,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void maximalForestInSkeleton(
                 stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-                bool canJoinBoundaries = true);
+                bool canJoinBoundaries = true) const;
         /**
          * Produces a maximal forest in the triangulation's dual
          * 1-skeleton.  The given set will be emptied and will have the
@@ -1076,7 +1094,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * representing the maximal forest will be placed.
          */
         void maximalForestInDualSkeleton(
-                stdhash::hash_set<NFace*, HashPointer>& faceSet);
+                stdhash::hash_set<NFace*, HashPointer>& faceSet) const;
         /**
          * Attempts to reduce the number of vertices by crushing a
          * maximal forest in the 1-skeleton.
@@ -1727,7 +1745,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * \pre All skeletal lists are empty.
          */
-        void calculateSkeleton();
+        void calculateSkeleton() const;
         /**
          * Calculates the triangulation components and associated
          * properties.
@@ -1735,8 +1753,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateComponents();
-        void labelComponent(NTetrahedron*, NComponent*, int);
+        void calculateComponents() const;
+        void labelComponent(NTetrahedron*, NComponent*, int) const;
             /**< Internal to calculateComponents(). */
         /**
          * Calculates the triangulation vertices and associated
@@ -1745,7 +1763,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateVertices();
+        void calculateVertices() const;
         static void labelVertex(NTetrahedron*, int, NVertex*, int);
             /**< Internal to calculateVertices(). */
         /**
@@ -1755,8 +1773,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateEdges();
-        void labelEdge(NTetrahedron*, int, NEdge*, const NPerm&);
+        void calculateEdges() const;
+        void labelEdge(NTetrahedron*, int, NEdge*, const NPerm&) const;
             /**< Internal to calculateEdges(). */
         /**
          * Calculates the triangulation faces and associated
@@ -1765,7 +1783,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateFaces();
+        void calculateFaces() const;
         /**
          * Calculates the triangulation boundary components and
          * properties of these boundary components.
@@ -1773,8 +1791,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateBoundary();
-        void labelBoundaryFace(NFace*, NBoundaryComponent*, int);
+        void calculateBoundary() const;
+        void labelBoundaryFace(NFace*, NBoundaryComponent*, int) const;
             /**< Internal to calculateBoundary(). */
         /**
          * Calculates the triangulation vertex links and associated
@@ -1783,13 +1801,13 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateVertexLinks();
+        void calculateVertexLinks() const;
 
         /**
          * Calculates all properties of the triangulation relating to
          * its boundary components.
          */
-        void calculateBoundaryProperties();
+        void calculateBoundaryProperties() const;
 
         /**
          * Calculates all properties that can be deduced from an
@@ -1804,16 +1822,16 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
 
         void stretchBoundaryForestFromVertex(NVertex*,
                 stdhash::hash_set<NEdge*, HashPointer>&,
-                stdhash::hash_set<NVertex*, HashPointer>&);
+                stdhash::hash_set<NVertex*, HashPointer>&) const;
             /**< Internal to maximalForestInBoundary(). */
         bool stretchForestFromVertex(NVertex*,
                 stdhash::hash_set<NEdge*, HashPointer>&,
                 stdhash::hash_set<NVertex*, HashPointer>&,
-                stdhash::hash_set<NVertex*, HashPointer>&);
+                stdhash::hash_set<NVertex*, HashPointer>&) const;
             /**< Internal to maximalForestInSkeleton(). */
         void stretchDualForestFromTet(NTetrahedron*,
                 stdhash::hash_set<NFace*, HashPointer>&,
-                stdhash::hash_set<NTetrahedron*, HashPointer>&);
+                stdhash::hash_set<NTetrahedron*, HashPointer>&) const;
             /**< Internal to maximalForestInDualSkeleton(). */
 
     friend class regina::NXMLTriangulationReader;
@@ -1856,6 +1874,13 @@ inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
     return tetrahedra[index];
 }
 
+inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
+        const {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return tetrahedra[index];
+}
+
 inline unsigned long NTriangulation::getTetrahedronIndex(
         const NTetrahedron* tet) const {
     return tetrahedra.index(const_cast<NTetrahedron*>(tet));
@@ -1892,37 +1917,37 @@ inline void NTriangulation::gluingsHaveChanged() {
     fireChangedEvent();
 }
 
-inline unsigned long NTriangulation::getNumberOfBoundaryComponents() {
+inline unsigned long NTriangulation::getNumberOfBoundaryComponents() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return boundaryComponents.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfComponents() {
+inline unsigned long NTriangulation::getNumberOfComponents() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return components.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfVertices() {
+inline unsigned long NTriangulation::getNumberOfVertices() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return vertices.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfEdges() {
+inline unsigned long NTriangulation::getNumberOfEdges() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return edges.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfFaces() {
+inline unsigned long NTriangulation::getNumberOfFaces() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces.size();
 }
 
-inline long NTriangulation::getEulerCharacteristic() {
+inline long NTriangulation::getEulerCharacteristic() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return long(vertices.size()) - long(edges.size())
@@ -1935,151 +1960,154 @@ inline const NIndexedArray<NTetrahedron*, HashPointer>&
 }
 
 inline const NIndexedArray<NBoundaryComponent*, HashPointer>&
-        NTriangulation::getBoundaryComponents() {
+        NTriangulation::getBoundaryComponents() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return boundaryComponents;
 }
 
 inline const NIndexedArray<NComponent*, HashPointer>&
-        NTriangulation::getComponents() {
+        NTriangulation::getComponents() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return components;
 }
 
 inline const NIndexedArray<NVertex*, HashPointer>&
-        NTriangulation::getVertices() {
+        NTriangulation::getVertices() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return vertices;
 }
 
-inline const NIndexedArray<NEdge*, HashPointer>& NTriangulation::getEdges() {
+inline const NIndexedArray<NEdge*, HashPointer>& NTriangulation::getEdges()
+        const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return edges;
 }
 
-inline const NIndexedArray<NFace*, HashPointer>& NTriangulation::getFaces() {
+inline const NIndexedArray<NFace*, HashPointer>& NTriangulation::getFaces()
+        const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces;
 }
 
-inline NComponent* NTriangulation::getComponent(unsigned long index) {
+inline NComponent* NTriangulation::getComponent(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return components[index];
 }
 
 inline NBoundaryComponent* NTriangulation::getBoundaryComponent(
-        unsigned long index) {
+        unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return boundaryComponents[index];
 }
 
-inline NVertex* NTriangulation::getVertex(unsigned long index) {
+inline NVertex* NTriangulation::getVertex(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return vertices[index];
 }
 
-inline NEdge* NTriangulation::getEdge(unsigned long index) {
+inline NEdge* NTriangulation::getEdge(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return edges[index];
 }
 
-inline NFace* NTriangulation::getFace(unsigned long index) {
+inline NFace* NTriangulation::getFace(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces[index];
 }
 
 inline unsigned long NTriangulation::getComponentIndex(
-        const NComponent* component) {
+        const NComponent* component) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return components.index(const_cast<NComponent*>(component));
 }
 
 inline unsigned long NTriangulation::getBoundaryComponentIndex(
-        const NBoundaryComponent* boundaryComponent) {
+        const NBoundaryComponent* boundaryComponent) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return boundaryComponents.index(
         const_cast<NBoundaryComponent*>(boundaryComponent));
 }
 
-inline unsigned long NTriangulation::getVertexIndex(const NVertex* vertex) {
+inline unsigned long NTriangulation::getVertexIndex(const NVertex* vertex)
+        const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return vertices.index(const_cast<NVertex*>(vertex));
 }
 
-inline unsigned long NTriangulation::getEdgeIndex(const NEdge* edge) {
+inline unsigned long NTriangulation::getEdgeIndex(const NEdge* edge) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return edges.index(const_cast<NEdge*>(edge));
 }
 
-inline unsigned long NTriangulation::getFaceIndex(const NFace* face) {
+inline unsigned long NTriangulation::getFaceIndex(const NFace* face) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces.index(const_cast<NFace*>(face));
 }
 
-inline bool NTriangulation::hasTwoSphereBoundaryComponents() {
+inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
     if (! calculatedBoundaryProperties)
         calculateBoundaryProperties();
     return twoSphereBoundaryComponents;
 }
 
-inline bool NTriangulation::hasNegativeIdealBoundaryComponents() {
+inline bool NTriangulation::hasNegativeIdealBoundaryComponents() const {
     if (! calculatedBoundaryProperties)
         calculateBoundaryProperties();
     return negativeIdealBoundaryComponents;
 }
 
-inline bool NTriangulation::isValid() {
+inline bool NTriangulation::isValid() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return valid;
 }
 
-inline bool NTriangulation::isIdeal() {
+inline bool NTriangulation::isIdeal() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return ideal;
 }
 
-inline bool NTriangulation::isStandard() {
+inline bool NTriangulation::isStandard() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return standard;
 }
 
-inline bool NTriangulation::hasBoundaryFaces() {
+inline bool NTriangulation::hasBoundaryFaces() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return (faces.size() > 2 * tetrahedra.size());
 }
 
-inline bool NTriangulation::isClosed() {
+inline bool NTriangulation::isClosed() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return boundaryComponents.empty();
 }
 
-inline bool NTriangulation::isOrientable() {
+inline bool NTriangulation::isOrientable() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return orientable;
 }
 
-inline bool NTriangulation::isConnected() {
+inline bool NTriangulation::isConnected() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return (components.size() <= 1);
@@ -2093,7 +2121,7 @@ inline bool NTriangulation::knowsSplittingSurface() const {
     return calculatedSplittingSurface;
 }
 
-inline unsigned long NTriangulation::getHomologyH2Z2() {
+inline unsigned long NTriangulation::getHomologyH2Z2() const {
     return getHomologyH1Rel().getRank() + getHomologyH1Rel().getTorsionRank(2);
 }
 

@@ -39,6 +39,8 @@
 #include <iostream>
 #include <string>
 
+#include "utilities/boostutils.h"
+
 namespace regina {
 
 /**
@@ -60,7 +62,7 @@ namespace regina {
  * See the various interface notes pages for more details regarding
  * using classes derived from ShareableObject.
  */
-class ShareableObject {
+class ShareableObject : public regina::boost::noncopyable {
     public:
         /**
          * Default constructor that does nothing.

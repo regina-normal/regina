@@ -79,7 +79,7 @@ void NTriangulation::initialiseAllProperties() {
 
 void NTriangulation::writeTextLong(std::ostream& out) const {
     if (! calculatedSkeleton)
-        const_cast<NTriangulation*>(this)->calculateSkeleton();
+        calculateSkeleton();
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << tetrahedra.size() << '\n';

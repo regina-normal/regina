@@ -32,12 +32,12 @@
 
 namespace regina {
 
-void NTriangulation::calculateSkeleton() {
+void NTriangulation::calculateSkeleton() const {
     ideal = false;
     valid = true;
     orientable = true;
     standard = true;
-    
+
     calculateComponents();
         // Sets components, orientable, NComponent.orientable,
         //     NTetrahedron.component
@@ -55,11 +55,11 @@ void NTriangulation::calculateSkeleton() {
         // Sets valid, ideal, NVertex.link, NVertex.linkOrientable,
         //     NVertex.linkEulerCharacteristic, NComponent.ideal,
         //     boundaryComponents, NVertex.boundaryComponent
-    
+
     calculatedSkeleton = true;
 }
 
-void NTriangulation::calculateComponents() {
+void NTriangulation::calculateComponents() const {
     TetrahedronIterator it;
     NComponent* label;
     NTetrahedron* tet;
@@ -77,17 +77,17 @@ void NTriangulation::calculateComponents() {
 }
 
 void NTriangulation::labelComponent(NTetrahedron* firstTet,
-        NComponent* component, int firstOrientation) {
+        NComponent* component, int firstOrientation) const {
     // Now non-recursive; uses a queue instead.
     // The queue contains tetrahedra from which we need to propagate
     //     component labelling.
     std::queue<NTetrahedron*> tetQueue;
-    
+
     firstTet->component = component;
     component->tetrahedra.push_back(firstTet);
     firstTet->orientation = firstOrientation;
     tetQueue.push(firstTet);
-    
+
     NTetrahedron* tet;
     NTetrahedron* adjTet;
     int face;
@@ -95,7 +95,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
     while (! tetQueue.empty()) {
         tet = tetQueue.front();
         tetQueue.pop();
-        
+
         for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
@@ -117,7 +117,7 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
     }
 }
 
-void NTriangulation::calculateVertices() {
+void NTriangulation::calculateVertices() const {
     TetrahedronIterator it;
     int vertex;
     NTetrahedron* tet;
@@ -144,7 +144,7 @@ namespace {
     struct VertexState {
         NTetrahedron* tet;
         int vertex;
-    
+
         VertexState(NTetrahedron* newTet, int newVertex) :
                 tet(newTet), vertex(newVertex) {}
     };
@@ -153,7 +153,7 @@ namespace {
 void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
         NVertex* label, int firstOrientation) {
     std::queue<VertexState*> vtxQueue;
-    
+
     firstTet->vertices[firstVertex] = label;
     firstTet->tmpOrientation[firstVertex] = firstOrientation;
     label->embeddings.push_back(NVertexEmbedding(firstTet, firstVertex));
@@ -177,7 +177,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
         tet = current->tet;
         vertex = current->vertex;
         delete current;
-        
+
         for (face=0; face<4; face++) {
             if (face == vertex) continue;
             altTet = tet->getAdjacentTetrahedron(face);
@@ -211,7 +211,7 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
     }
 }
 
-void NTriangulation::calculateEdges() {
+void NTriangulation::calculateEdges() const {
     TetrahedronIterator it;
     int edge;
     NTetrahedron* tet;
@@ -239,16 +239,16 @@ namespace {
         NTetrahedron* tet;
         int edge;
         int whichEndOfList;
-    
+
         EdgeState(NTetrahedron* newTet, int newEdge, int newEnd) :
                 tet(newTet), edge(newEdge), whichEndOfList(newEnd) {}
     };
 }
 
 void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
-        NEdge* label, const NPerm& firstTetVertices) {
+        NEdge* label, const NPerm& firstTetVertices) const {
     std::queue<EdgeState*> edgeQueue;
-    
+
     firstTet->edges[firstEdge] = label;
     firstTet->edgeMapping[firstEdge] = firstTetVertices;
     label->embeddings.push_back(NEdgeEmbedding(firstTet, firstEdge));
@@ -271,7 +271,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
         whichEndOfList = current->whichEndOfList;
         tetVertices = tet->edgeMapping[edge];
         delete current;
-        
+
         for (face=0; face<4; face++) {
             if (face != edgeStart[edge] && face != edgeEnd[edge]) {
                 altTet = tet->getAdjacentTetrahedron(face);
@@ -326,7 +326,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
     }
 }
 
-void NTriangulation::calculateFaces() {
+void NTriangulation::calculateFaces() const {
     TetrahedronIterator it;
     int face;
     NTetrahedron* tet;
@@ -366,7 +366,7 @@ void NTriangulation::calculateFaces() {
     }
 }
 
-void NTriangulation::calculateBoundary() {
+void NTriangulation::calculateBoundary() const {
     // Sets boundaryComponents, NFace.boundaryComponent,
     //     NEdge.boundaryComponent, NVertex.boundaryComponent,
     //     NComponent.boundaryComponents
@@ -388,10 +388,10 @@ void NTriangulation::calculateBoundary() {
 }
 
 void NTriangulation::labelBoundaryFace(NFace* firstFace,
-        NBoundaryComponent* label, int firstOrientation) {
+        NBoundaryComponent* label, int firstOrientation) const {
     std::queue<NFace*> faceQueue;
     NFaceEmbedding* emb;
-    
+
     emb = firstFace->embeddings[0];
     firstFace->boundaryComponent = label;
     label->faces.push_back(firstFace);
@@ -417,13 +417,13 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
     while (! faceQueue.empty()) {
         face = faceQueue.front();
         faceQueue.pop();
-        
+
         // Run through the edges and vertices on this face.
         emb = face->embeddings[0];
         tet = emb->getTetrahedron();
         tetVertices = emb->getVertices();
         tetFace = emb->getFace();
-    
+
         // Run through the vertices.
         for (i=0; i<3; i++) {
             vertex = tet->getVertex(tetVertices[i]);
@@ -432,7 +432,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
                 label->vertices.push_back(vertex);
             }
         }
-        
+
         // Run through the edges.
         for (i=0; i<3; i++)
             for (j=i+1; j<3; j++) {
@@ -441,7 +441,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
                     edge->boundaryComponent = label;
                     label->edges.push_back(edge);
                 }
-    
+
                 // Label the adjacent boundary face with the same label.
                 followFromFace = 6 - tetVertices[i] - tetVertices[j] - tetFace;
                 switchPerm = NPerm(followFromFace, tetFace);
@@ -477,7 +477,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
     }
 }
 
-void NTriangulation::calculateVertexLinks() {
+void NTriangulation::calculateVertexLinks() const {
     // Runs through each vertex and sets link accordingly.
     VertexIterator it;
     NVertex* vertex;
@@ -494,13 +494,13 @@ void NTriangulation::calculateVertexLinks() {
         f = vertex->getEmbeddings().size();
         twiceE = 3 * f;
         v = 0;
-        
+
         embit = vertex->getEmbeddings().begin();
         while (embit != vertex->getEmbeddings().end()) {
             const NVertexEmbedding& emb = (*embit);
             tet = emb.getTetrahedron();
             tetVertex = emb.getVertex();
-    
+
             for (secondVertex = 0; secondVertex < 4; secondVertex++) {
                 if (secondVertex == tetVertex)
                     continue;
@@ -509,7 +509,7 @@ void NTriangulation::calculateVertexLinks() {
                 if (tet->getFace(secondVertex)->isBoundary())
                     twiceE++;
             }
-            
+
             embit++;
         }
 
@@ -552,7 +552,7 @@ void NTriangulation::calculateVertexLinks() {
     }
 }
 
-void NTriangulation::calculateBoundaryProperties() {
+void NTriangulation::calculateBoundaryProperties() const {
     // Make sure the skeleton has been calculated!
     if (! calculatedSkeleton)
         calculateSkeleton();

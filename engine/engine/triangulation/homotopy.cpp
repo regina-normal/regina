@@ -31,10 +31,10 @@
 
 namespace regina {
 
-const NGroupPresentation& NTriangulation::getFundamentalGroup() {
+const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     if (calculatedFundamentalGroup)
         return *fundamentalGroup;
-    
+
     fundamentalGroup = new NGroupPresentation();
 
     if (getNumberOfTetrahedra() == 0) {

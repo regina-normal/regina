@@ -35,6 +35,8 @@ using namespace boost::python;
 using regina::NTriangulation;
 
 namespace {
+    regina::NTetrahedron* (NTriangulation::*getTetrahedron_non_const)(
+        unsigned long) = &NTriangulation::getTetrahedron;
     bool (NTriangulation::*twoZeroMove_vertex)(regina::NVertex*, bool, bool) =
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
@@ -138,7 +140,7 @@ void addNTriangulation() {
         .def(init<const NTriangulation&>())
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
         .def("getTetrahedra", getTetrahedra_list)
-        .def("getTetrahedron", &NTriangulation::getTetrahedron,
+        .def("getTetrahedron", getTetrahedron_non_const,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedronIndex", &NTriangulation::getTetrahedronIndex)
         .def("addTetrahedron", addTetrahedron_own)

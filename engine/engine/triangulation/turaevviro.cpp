@@ -220,7 +220,8 @@ namespace {
     };
 }
 
-double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot) {
+double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
+        const {
     // Do some basic parameter checks.
     if (r < 3)
         return 0;

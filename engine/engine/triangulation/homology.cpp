@@ -34,7 +34,7 @@
 
 namespace regina {
 
-const NAbelianGroup& NTriangulation::getHomologyH1() {
+const NAbelianGroup& NTriangulation::getHomologyH1() const {
     if (calculatedH1)
         return *H1;
 
@@ -49,7 +49,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
     // Note that this will ensure the skeleton has been calculated.
     stdhash::hash_set<NFace*, HashPointer> forest;
     maximalForestInDualSkeleton(forest);
-    
+
     // Build a presentation matrix.
     // Each non-boundary not-in-forest face is a generator.
     // Each non-boundary edge is a relation.
@@ -115,7 +115,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
     return *H1;
 }
 
-const NAbelianGroup& NTriangulation::getHomologyH1Rel() {
+const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     if (calculatedH1Rel)
         return *H1Rel;
 
@@ -208,7 +208,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() {
     return *H1Rel;
 }
 
-const NAbelianGroup& NTriangulation::getHomologyH1Bdry() {
+const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
     if (calculatedH1Bdry)
         return *H1Bdry;
 
@@ -239,7 +239,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Bdry() {
     return *H1Bdry;
 }
 
-const NAbelianGroup& NTriangulation::getHomologyH2() {
+const NAbelianGroup& NTriangulation::getHomologyH2() const {
     if (calculatedH2)
         return *H2;
 
@@ -273,7 +273,7 @@ const NAbelianGroup& NTriangulation::getHomologyH2() {
             getHomologyH1().getTorsionRank(2) -
             z2rank;
     }
-    
+
     // Build the new group and tidy up.
     H2 = new NAbelianGroup();
     H2->addRank(rank);
