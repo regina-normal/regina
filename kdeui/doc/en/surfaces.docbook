@@ -8,7 +8,7 @@
     <imagedata fileref="largeicon.png" align="right"/>
    </imageobject>
   </inlinemediaobject>
-  The primary motivation for ever writing &regina; was to create a
+  The primary motivation for originally writing &regina; was to create a
   tool for calculating vertex normal surfaces within a triangulation.
  </para>
  <para>

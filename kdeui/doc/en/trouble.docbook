@@ -3,53 +3,77 @@
  <title>Troubleshooting</title>
 
  <qandaset>
-  <qandadiv><title>Working With Packets</title>
+  <!--qandadiv><title>Working With Packets</title-->
    <qandaentry>
     <question><para>
-     I cannot edit such-and-such-a packet.  I can view it but I can't change
-     anything and there's no <guibutton>Apply</guibutton> button.
-     Or there is an <guibutton>Apply</guibutton> button but it complains
-     if I try to press it.
+     I cannot edit a particular packet.  I can view it but I can't change
+     anything.
     </para></question>
     <answer>
      <para>
-      If a packet has children that need that packet to remain constant, it will
+      If a packet has children that need their parent
+      to remain constant, it will
       become uneditable.  An example is a triangulation that has a normal
-      surface list child packet.  The normal surface list stores coordinates
+      surface list as a child.  The normal surface list stores coordinates
       based upon the triangulation that created it, so the triangulation
       must remain constant or else the coordinates will become invalid.
      </para>
      <para>
       In such a situation you can try <link linkend="packet-clone">cloning
-      the packet</link> without cloning its descendants (<menuchoice>
-       <guimenu>Packet</guimenu>
-       <guisubmenu>Clone</guisubmenu>
-       <guimenuitem>Exclude Descendants</guimenuitem>
+      the packet</link> without its subtree (<menuchoice>
+       <guimenu>Packet Tree</guimenu>
+       <guimenuitem>Clone Packet</guimenuitem>
       </menuchoice>).  The clone will have no children to worry about
       and so should be editable.  Alternatively you could delete the child
       packet that is refusing to allow its parent to change.
      </para>
     </answer>
    </qandaentry>
-  </qandadiv>
+  <!--/qandadiv-->
 
-  <qandadiv><title>&python; Scripting</title>
+  <!--qandadiv><title>&python; Scripting</title-->
    <qandaentry>
     <question><para>
-     The <guimenuitem>Jython Console</guimenuitem>
-     buttons/menu items are disabled.  So are the
+     The <guimenuitem>Python Console</guimenuitem>
+     buttons and menu items are disabled.  So are the
      <guibutton>Run</guibutton> and <guibutton>Compile</guibutton>
      buttons in the script editor.
     </para></question>
     <answer>
      <para>
-      This implies that &regina; was not built with &python; support.
+      This means that &regina; was not built with &python; support.
+      You will need to rebuild &regina; from sources &ndash;
+      instructions for doing this are provided in the file
+      <filename>README.txt</filename> in the &regina; source
+      distribution.
      </para>
+     <para>
+      When running <userinput>./configure</userinput> (the first step of
+      building &regina;), watch the output carefully.  It will tell you
+      whether it plans to build the &python; interface, and if not it
+      should give you a clear reason why.
+     </para>
+     <para>
+      If this does not help, please mail &reguserlist; for assistance,
+      preferably including your <filename>config.log</filename> to help
+      diagnose the problem.
+     </para>
+     <!-- TODO: Remove once embedded scripting is reimplemented. -->
+     <note>
+      <para>
+       &regina; version 3.95 does not offer embedded &python;
+       scripting at all &ndash; it still needs to be reimplemented in the new
+       &kde; user interface.  This is a temporary issue and should be
+       resolved before version 4.0.  Scripting is however still
+       available through the command-line interface <link
+       linkend="man-regina-python"><command>regina-python</command></link>.
+      </para>
+     </note>
     </answer>
    </qandaentry>
-  </qandadiv>
+  <!--/qandadiv-->
 
-  <qandadiv><title>Miscellaneous</title>
+  <!--qandadiv><title>Miscellaneous</title-->
    <qandaentry>
     <question><para>
      Something else beyond this rather wanting list of suggestions has gone
@@ -65,13 +89,13 @@
      </para>
      <para>
       This program is permanently in development.  There is a very
-      long todo list, and chances are your problem is on it.  And
+      long &todo; list, and chances are your problem is on it.  And
       then again chances are it's not.  So please let me know so I
       am sure to know what needs to be fixed/improved.
      </para>
     </answer>
    </qandaentry>
-  </qandadiv>
+  <!--/qandadiv-->
  </qandaset>
 </appendix>
 

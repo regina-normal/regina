@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <chapter id="python">
- <title>&python; and Scripting</title>
+ <title>&python; Scripting</title>
 
  <sect1 id="python-overview">
   <title>Scripting Overview</title>
@@ -33,19 +33,24 @@
    <para>
     All scripts are run in &python;.
     When using &python;, &regina; objects, classes and methods can be directly
-    accessed as if they were &python; objects, classes and methods.  The
-    <link linkend="autodocs">engine documentation</link> describes in
-    detail the classes that form the packets and other objects
-    that can be manipulated in the program.
+    accessed as if they were &python; objects, classes and methods.
+   </para>
+   <para>
+    Documentation has been generated from the fairly extensive
+    comments within the &regina; sources.  This includes a complete
+    reference for the &regina; calculation engine, which forms a useful
+    reference when writing &python; scripts.
    </para>
    <para>
     Wherever &regina; gives you access to &python;, you may assume that the
-    <parameter>java</parameter> and <parameter>normal</parameter>
-    modules have been imported (thus giving you access to
-    everything beneath them).
+    <parameter>regina</parameter>
+    module has been imported (thus giving you access to
+    everything contained within it).
+    <!-- TODO
     You may also assume that all requested libraries have been loaded (see the
     <link linkend="options-libraries">&python; library options</link> for
     details).
+    -->
    </para>
    <para>
     Upon starting a &python; session certain variables might already be
@@ -58,7 +63,7 @@
     a &python; console and do something untoward.  &python; and scripting offer
     very low-level control over the engine, but also provide the
     associated dangers.  The general idea is that &python; gives you
-    direct access to the C++ calculation engine and the user interface has
+    direct access to the &cpp; calculation engine and the user interface has
     no way of knowing what you are tinkering with.  Thus you should tread
     gently. 
    </para></warning>
@@ -73,24 +78,12 @@
     surface lists will be uneditable).  Thus you should not use &python; as a
     way to get around that barrier; instead you should respect that
     barrier.  Perhaps you can <link linkend="packet-clone">clone the
-    packet</link> in question without cloning its descendants (<menuchoice>
-     <guimenu>Packet</guimenu>
-     <guisubmenu>Clone</guisubmenu>
-     <guimenuitem>Exclude Descendants</guimenuitem>
+    packet</link> in question without cloning its subtree (<menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Clone Packet</guimenuitem>
     </menuchoice>); the clone then should be editable.
    </para>
   </sect2>
- </sect1>
-
- <sect1 id="autodocs">
-  <title>Engine Documentation</title>
-  <para>
-   Documentation has been generated from the fairly extensive
-   comments within the &regina; sources.  This includes a complete
-   reference for the &regina; calculation engine, which forms a useful
-   reference when writing
-   <link linkend="python-overview">&python; scripts</link>.
-  </para>
  </sect1>
 
  <sect1 id="sessions">
@@ -98,22 +91,18 @@
   <para>
    Reproduced below are a number of sample &python; sessions.
    Each session was started by running
-   <userinput>regina --console</userinput>
+   <userinput>regina-python</userinput>
    from the command line.
   </para>
 
   <sect2 id="sessiontriangulation">
    <title>Working with a triangulation</title>
-   <programlisting>
-    &sessiontriangulation;
-   </programlisting>
+   <programlisting>&sessiontriangulation;</programlisting>
   </sect2>
 
   <sect2 id="sessiontree">
    <title>Working with a packet tree</title>
-   <programlisting>
-    &sessiontree;
-   </programlisting>
+   <programlisting>&sessiontree;</programlisting>
   </sect2>
  </sect1>
 </chapter>

@@ -1,14 +1,12 @@
 <reference id="utils">
- <title>Command-Line Utilities</title>
+ <title>Specialised Utilities</title>
 
  <partintro>
   <para>
-   The usual &regina; startup script is documented in the earlier
-   reference chapter on <link linkend="man-regina">startup options
-   and configuration</link>.
-  </para>
-  <para>
-   This reference chapter documents the other various command-line
+   The main applications <command>regina-kde</command> and
+   <command>regina-python</command> are documented in the
+   <link linkend="man-regina">previous reference chapter</link>.
+   This reference chapter documents the other specialised command-line
    utilities that are provided with &regina;.
   </para>
  </partintro>

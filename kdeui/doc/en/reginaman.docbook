@@ -1,15 +1,17 @@
 <reference id="manpages">
- <title>Startup Options and Configuration</title>
+ <title>Main Applications</title>
 
  <partintro>
   <para>
-   This reference chapter documents the usual &regina; startup script, as
-   well as various methods of configurating your &regina; installation.
+   This reference chapter documents the command-line options for
+   the two main applications provided with &regina;,
+   <command>regina-kde</command> and <command>regina-python</command>.
   </para>
   <para>
-   For documentation on the other various command-line utilities that
-   are provided with &regina;, see the later reference chapter on
-   <link linkend="utils">command-line utilities</link>.
+   Several other specialised command-line utilities are provided
+   with &regina;.  For documentation on these,
+   see the later reference chapter on <link linkend="utils">specialised
+   utilities</link>.
   </para>
  </partintro>
 
@@ -51,9 +53,7 @@
     properly installed; this is done by running the <command>regina</command>
     startup script in the top-level source directory.  Default locations
     for various &regina; components will be transparently modified to
-    look inside the source tree; see the
-    <link linkend="man-regina.conf">configuration reference</link>
-    for details.
+    look inside the source tree.
    </para>
    <para>
     Any files specified on the command-line will be opened on startup.
@@ -108,7 +108,7 @@
    <title>Environment Variables</title>
    <para>
     All of the options described in the
-    <link linkend="man-regina.conf">configuration reference</link> can
+    configuration reference can
     be set as environment variables.  Of particular interest are
     <envar>REGINA_OPTIONS_GLOBAL</envar> and
     <envar>REGINA_OPTIONS_LOCAL</envar> which specify the directories
@@ -119,8 +119,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina.conf">regina.conf</link>.
-    <!-- (applet removed) <link linkend="man-applet">regina-applet</link>. -->
+    <link linkend="man-regina-python">regina-python</link>.
    </para>
   </refsect1>
 
@@ -134,9 +133,9 @@
   </refsect1>
  </refentry>
 
- <!-- Configuration -->
+ <!-- Python Command-Line Interface -->
 
- <refentry id="man-regina.conf">
+ <refentry id="man-regina-python">
   <refmeta>
    <refentrytitle>regina.conf</refentrytitle>
    <manvolnum>5</manvolnum>

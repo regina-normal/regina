@@ -2,25 +2,34 @@
 <chapter id="options">
  <title>Internal Configuration</title>
  <para>
-  This section details configuration options available through the
-  <guimenu>Options</guimenu> menu.
+  &regina; can be configured through the
+   <menuchoice>
+    <guimenu>Settings</guimenu>
+    <guisubmenu>Configure Regina</guisubmenu>
+   </menuchoice>
+  menu item.  Several configuration pages are available, each of which
+  is descrobed below.
  </para>
 
  <sect1 id="options-display">
   <title>Display Options</title>
 
   <para>
-   The following options are available through the
-   <menuchoice>
-    <guimenu>Options</guimenu>
-    <guisubmenu>Display</guisubmenu>
-   </menuchoice>
-   menu.
+   The following options are available on the display page.
   </para>
 
   <glosslist>
    <glossentry>
-    <glossterm>Automatic Window Docking</glossterm>
+    <glossterm>Automatic File Extension</glossterm>
+    <glossdef><para>
+     This option can be toggled on or off; it represents whether a
+     filename is modified before a &regina; data file is saved.
+     When on, if the user does not specify a filename extension, the
+     default extension of <filename>.rga</filename> will be appended.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>Automatic Packet Docking</glossterm>
     <glossdef><para>
      This option can be toggled on or off.  When off, any new packet
      panes (created when you <link linkend="packet-view">view or edit
@@ -41,36 +50,11 @@
   </glosslist>
  </sect1>
 
- <sect1 id="options-file">
-  <title>File Options</title>
-
-  <para>
-   The following options are available through the
-   <menuchoice>
-    <guimenu>Options</guimenu>
-    <guisubmenu>File</guisubmenu>
-   </menuchoice>
-   menu.
-  </para>
-
-  <glosslist>
-   <glossentry>
-    <glossterm>Automatic File Extension</glossterm>
-    <glossdef><para>
-     This option can be toggled on or off; it represents whether a
-     filename is modified before a &regina; data file is saved.
-     When on, if the user does not specify a filename extension, the
-     default extension of <filename>.rga</filename> will be appended.
-    </para></glossdef>
-   </glossentry>
-  </glosslist>
- </sect1>
-
  <sect1 id="options-triangulation">
   <title>Triangulation Options</title>
 
   <para>
-   Better fill this in.
+   The following options are available on the triangulation page.
   </para>
 
   <glosslist>
@@ -86,6 +70,7 @@
   </glosslist>
  </sect1>
 
+ <!-- TODO
  <sect1 id="options-libraries">
   <title>&python; Library Options</title>
 
@@ -127,4 +112,5 @@
    <filename><replaceable>REGINA_HOME</replaceable>/pylib</filename>.
   </para></tip>
  </sect1>
+ -->
 </chapter>
