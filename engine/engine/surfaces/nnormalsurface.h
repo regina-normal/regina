@@ -344,6 +344,10 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          * through and checks the count for each disc type.
          * Subclasses of NNormalSurfaceVector should override this if
          * they can provide a faster implementation.
+         *
+         * \pre The given triangulation is connected.  If the
+         * triangulation is not connected, this routine will still
+         * return a result but that result will be unreliable.
          * 
          * @param triang the triangulation in which this normal surface lives.
          * @return \c true if and only if the normal surface represented
@@ -504,7 +508,6 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
  * \todo \feature Collapse a normal surface.
  * \todo \feature Calculation of Euler characteristic and orientability
  * for non-compact surfaces.
- * \todo \feature Implement isConnected().
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  * \todo \featurelong Allow individual surfaces to be named.
@@ -801,6 +804,8 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
+         * \todo \opt Cache results.
+         *
          * @return \c true if and only if this surface is vertex linking.
          */
         bool isVertexLinking() const;
@@ -814,6 +819,12 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
+         * \pre The underlying triangulation is connected.  If the
+         * triangulation is not connected, this routine will still
+         * return a result but that result will be unreliable.
+         *
+         * \todo \opt Cache results.
+         * 
          * @return \c true if and only if this surface is vertical.
          */
         bool isVertical() const;
