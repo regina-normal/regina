@@ -12,6 +12,7 @@ INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
 	flatbutton.h \
+	packetfilter.h \
 	packetmanager.h \
 	packettreeview.h \
 	packetui.h \
