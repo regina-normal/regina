@@ -53,10 +53,6 @@ install: build
 	# Main install.
 	$(MAKE) install DESTDIR=`pwd`/$(tmp)
 
-	# Install the pixmap.
-	$(INSTALL_DIR) $(tmp)/usr/share/pixmaps
-	$(INSTALL_FILE) icons/regina.xpm $(tmp)/usr/share/pixmaps/regina-normal.xpm
-
 	# Split into separate binary packages.
 	dh_install --sourcedir=debian/tmp --list-missing
 
@@ -91,7 +87,7 @@ binary-indep: build install
 	dh_installchangelogs -i CHANGES.txt
 	dh_link -i
 	dh_strip -i
-	dh_compress -i -X.rga
+	dh_compress -i -X.rga -X.docbook -X.bz2 -X.png -X.css
 	dh_fixperms -i
 	# dh_makeshlibs -i
 	dh_installdeb -i
@@ -113,7 +109,7 @@ binary-arch: build install
 	dh_installchangelogs -a CHANGES.txt
 	dh_link -a
 	dh_strip -a
-	dh_compress -a -X.rga
+	dh_compress -a -X.rga -X.docbook -X.bz2 -X.png -X.css
 	dh_fixperms -a
 	dh_makeshlibs -a
 	dh_installdeb -a
