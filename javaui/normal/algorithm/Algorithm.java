@@ -160,7 +160,7 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
         PacketTreeNode node = system.getSelectedNode();
         PacketTreeNode rootNode = (PacketTreeNode)system.getPacketTree().
             getModel().getRoot();
-        
+
         AlgorithmDialog dlg = new AlgorithmDialog(node, rootNode, shell);
         Positioner.centerOnScreen(dlg);
         dlg.show();
@@ -284,7 +284,7 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
             packetPanel.add(packetBox);
             JPanel packetPadding = new PaddedPane(packetPanel, 5);
             packetPadding.setBorder(BorderFactory.createRaisedBevelBorder());
-            
+
             JPanel choicePanel = new JPanel();
             choicePanel.setLayout(new GridLayout(0,1));
             choicePanel.add(performOnMe);
@@ -294,7 +294,7 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
             buttonPanel.setLayout(new FlowLayout());
             buttonPanel.add(ok);
             buttonPanel.add(cancel);
-            
+
             getContentPane().setLayout(new GridBagLayout());
             GridBagConstraints outer = new GridBagConstraints();
             GridBagConstraints middle = new GridBagConstraints();
@@ -362,14 +362,14 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
                     return;
                 }
                 NPacket packet = n.getPacket();
-                if (! packet.isPacketEditable())
+                if (mightEdit && (! packet.isPacketEditable()))
                     if (performOnMe.isSelected()) {
                         shell.error("At least one of its " +
                             "children forbids this packet from being edited.  "
                             + "Try selecting the cloning option instead.");
                         return;
                     }
-                
+
                 // Actually perform the algorithm.
                 boolean changed;
                 boolean cloned = false;

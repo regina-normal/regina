@@ -8,7 +8,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 3.1  [ 16 October, 2002 ]
+Version 3.1  [ 18 October, 2002 ]
     OVERALL:
         - Added calculation engine test suite.
         - Environment variables now take precedence over configuration
@@ -76,6 +76,9 @@ Version 3.1  [ 16 October, 2002 ]
         File regina.h:
             - Removed along with the constants it defined.
     JAVA USER INTERFACE:
+        normal.algorithm.Algorithm:
+            - Fixed bug in which isPacketEditable() was enforced even for
+              non-modifying algorithms.
         normal.console.JPythonPacketConsole:
             - Optionally creates an additional Jython variable for direct
               access to some preselected packet within the tree.
