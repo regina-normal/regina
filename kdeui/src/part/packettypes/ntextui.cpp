@@ -33,10 +33,12 @@
 #include "ntextui.h"
 
 #include <cstring>
+#include <sstream>
 #include <ktexteditor/document.h>
 #include <ktexteditor/editinterface.h>
 #include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
+#include <ktexteditor/wordwrapinterface.h>
 
 using regina::NPacket;
 using regina::NText;
@@ -49,9 +51,10 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
     view = document->createView(0);
 
     document->setReadWrite(readWrite);
+    KTextEditor::wordWrapInterface(document)->setWordWrap(true);
 
     editInterface = KTextEditor::editInterface(document);
-    editInterface->setText(packet->getText().c_str());
+    refresh();
 
     if (strcmp(document->className(), "Vim::Document") == 0)
         std::cerr << "Not flushing the undo list since this has strange "
@@ -85,7 +88,30 @@ void NTextUI::commit() {
 }
 
 void NTextUI::refresh() {
-    editInterface->setText(text->getText().c_str());
+    editInterface->clear();
+
+    // Add a line at a time; we seem to have problems with line endings
+    // when we add it all at once.
+    unsigned long whichLine = 0;
+    std::string line;
+    std::istringstream lines(text->getText());
+
+    do {
+        line.clear();
+        std::getline(lines, line);
+        if ((! line.empty()) || (! lines.eof())) {
+            // Add this line.
+            // Handle the first line separately to avoid an additional
+            // blank line from being appended.
+            if (whichLine == 0)
+                editInterface->setText(line.c_str());
+            else
+                editInterface->insertLine(editInterface->numLines(),
+                    line.c_str());
+            whichLine++;
+        }
+    } while (! lines.eof());
+
     setDirty(false);
 }
 

@@ -44,6 +44,7 @@
 #include <ktexteditor/highlightinginterface.h>
 #include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
+#include <ktexteditor/wordwrapinterface.h>
 #include <ktoolbar.h>
 #include <qhbox.h>
 #include <qsplitter.h>
@@ -101,6 +102,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // Prepare the components.
     document->setReadWrite(readWrite);
+    KTextEditor::wordWrapInterface(document)->setWordWrap(false);
     setPythonMode();
 
     view->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
