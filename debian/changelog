@@ -1,8 +1,10 @@
 regina-normal (4.0-1) unstable; urgency=low
 
   * New upstream release.
+  * Suggests konqueror for viewing the Python reference.
+  * Season's greetings from Melbourne!
 
- -- Ben Burton <bab@debian.org>  Fri, 19 Dec 2003 00:30:54 +1100
+ -- Ben Burton <bab@debian.org>  Sat, 20 Dec 2003 18:38:32 +1100
 
 regina-normal (3.97-1) unstable; urgency=low
 
