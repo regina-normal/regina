@@ -130,15 +130,9 @@ class NCensus {
     private:
         NPacket* parent;
             /**< The argument passed to formCensus(). */
-        unsigned nTetrahedra;
-            /**< The argument passed to formCensus(). */
         NBoolSet finiteness;
             /**< The argument passed to formCensus(). */
         NBoolSet orientability;
-            /**< The argument passed to formCensus(). */
-        NBoolSet boundary;
-            /**< The argument passed to formCensus(). */
-        int nBdryFaces;
             /**< The argument passed to formCensus(). */
 
         NProgressMessage* progress;
@@ -166,16 +160,15 @@ class NCensus {
          * All parameters not explained are taken directly from
          * formCensus().
          *
-         * \pre \a newNTetrahedra is at least 1.
+         * \pre \a nTetrahedra is at least 1.
          *
          * @param newProgress the object with which to report progress
          * for the census generation, or 0 if progress reporting is not
          * required.
          */
-        NCensus(NPacket* newParent, unsigned newNTetrahedra,
+        NCensus(NPacket* newParent, unsigned nTetrahedra,
             const NBoolSet& newFiniteness,
             const NBoolSet& newOrientability,
-            const NBoolSet& newBoundary, int newNBdryFaces,
             NProgressMessage* newProgress = 0);
 
         /**

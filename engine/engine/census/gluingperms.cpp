@@ -54,6 +54,8 @@ void NCensus::selectGluingPerms(const NFacePairing* pairing,
 
 void NCensus::selectGluingPermsInternal(const NFacePairing* pairing,
         const NFacePairingIsoList* autos) {
+    unsigned nTetrahedra = pairing->getNumberOfTetrahedra();
+
     NTetFace face(0, 0);
     if (pairing->dest(face).isBoundary(nTetrahedra)) {
         // There are no permutations to choose!
@@ -192,10 +194,11 @@ int NCensus::cmpPermsWithPreImage(const NFacePairing* pairing,
     NTetFace faceDest, faceImage;
     NPerm myPerm, yourPerm;
     int order;
-    for (NTetFace face(0, 0); face.tet < (int)nTetrahedra; face++) {
+    for (NTetFace face(0, 0); face.tet < (int)pairing->getNumberOfTetrahedra();
+            face++) {
         faceDest = pairing->dest(face);
         faceImage = automorph[face];
-        if (faceDest.isBoundary(nTetrahedra) || faceDest < face)
+        if (pairing->isUnmatched(face) || faceDest < face)
             continue;
         myPerm = tet[face.tet]->getAdjacentTetrahedronGluing(face.face);
         yourPerm = automorph.facePerm(faceDest.tet).inverse()

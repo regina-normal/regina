@@ -53,7 +53,7 @@ unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
         progress = 0;
 
     NCensus* census = new NCensus(parent, nTetrahedra, finiteness,
-        orientability, boundary, nBdryFaces, progress);
+        orientability, progress);
     
     if (manager) {
         NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
@@ -68,13 +68,11 @@ unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
     }
 }
 
-NCensus::NCensus(NPacket* newParent, unsigned newNTetrahedra,
+NCensus::NCensus(NPacket* newParent, unsigned nTetrahedra,
         const NBoolSet& newFiniteness, const NBoolSet& newOrientability,
-        const NBoolSet& newBoundary, int newNBdryFaces,
         NProgressMessage* newProgress) : parent(newParent),
-        nTetrahedra(newNTetrahedra), finiteness(newFiniteness),
-        orientability(newOrientability), boundary(newBoundary),
-        nBdryFaces(newNBdryFaces), progress(newProgress), whichSoln(1) {
+        finiteness(newFiniteness), orientability(newOrientability),
+        progress(newProgress), whichSoln(1) {
     // Initialise the triangulation and dynamic arrays.
     tet = new (NTetrahedron*)[nTetrahedra];
     orientation = new int[nTetrahedra];
