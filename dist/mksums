@@ -59,9 +59,9 @@ corrupted nor tampered with by running:
 
 and comparing the output with the md5sums listed above.
 
-These md5sums have been GnuPG-signed using my public key which is
+These md5sums have been signed with my private GnuPG key; the matching
 END
-echo "available by $signergetkey." >> "$plaintext"
+echo "public key is available by $signergetkey." >> "$plaintext"
 echo >> "$plaintext"
 echo " -- $signerid, `822-date`" >> "$plaintext"
 echo >> "$plaintext"
