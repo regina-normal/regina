@@ -26,11 +26,9 @@
 
 /* end stub */
 
-// Regina UI includes:
 #include "reginaabout.h"
 #include "reginamain.h"
 
-// KDE/Qt includes:
 #include <dcopclient.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -99,10 +97,6 @@ int main(int argc, char **argv) {
         }
         args->clear();
     }
-
-    // We'll use a separate main window for each data file; exit the app
-    // when the last window is closed.
-    app.connect(&app, SIGNAL(lastWindowClosed()), SLOT(quit()));
 
     // Run the application.
     return app.exec();
