@@ -245,6 +245,24 @@ QString NSurfaceCoordinateItem::text(int column) const {
     return i18n("Unknown");
 }
 
+void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
+        int column, int width, int align) {
+     // Paint the cell in the correct colour.
+     ItemColour colour = getColour(column);
+     if (colour == Plain)
+         GridListViewItem::paintCell(p, cg, column, width, align);
+     else {
+         QColorGroup altCg(cg);
+         if (colour == Green)
+             altCg.setColor(QColorGroup::Text, darkGreen);
+         else if (colour == Yellow)
+             altCg.setColor(QColorGroup::Text, darkYellow);
+         else
+             altCg.setColor(QColorGroup::Text, darkRed);
+         GridListViewItem::paintCell(p, altCg, column, width, align);
+     }
+}
+
 NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
         int column) {
     if (surfaces->isEmbeddedOnly()) {

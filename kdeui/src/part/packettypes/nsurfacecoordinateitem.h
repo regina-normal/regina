@@ -91,6 +91,8 @@ class NSurfaceCoordinateItem : public GridListViewItem {
          */
         QString text(int column) const;
         void setText(int column, const QString& str);
+        void paintCell(QPainter* p, const QColorGroup& cg, int column,
+            int width, int align);
 };
 
 inline NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
