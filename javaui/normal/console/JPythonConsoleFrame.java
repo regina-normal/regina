@@ -34,6 +34,9 @@ import normal.options.NormalOptionSet;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.text.Keymap;
+import btools.gui.component.EditMenu;
+import btools.image.*;
 import org.python.util.PythonInterpreter;
 
 /**
@@ -111,6 +114,42 @@ public class JPythonConsoleFrame extends JFrame {
         // Set up the console.
         console.setBorder(BorderFactory.createLoweredBevelBorder());
 
+		// Set up the menus.
+		JMenu menuConsole = new JMenu("Console");
+		menuConsole.setMnemonic(KeyEvent.VK_C);
+		JMenuItem menuConsoleClose = new JMenuItem("Close",
+			Standard16.close.image());
+		menuConsoleClose.setMnemonic(KeyEvent.VK_C);
+		menuConsoleClose.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+		menuConsole.add(menuConsoleClose);
+
+		JMenu menuHelp = new JMenu("Help");
+		menuHelp.setMnemonic(KeyEvent.VK_H);
+		JMenuItem menuHelpJython = new JMenuItem("Jython Help",
+			Standard16.help.image());
+		menuHelpJython.setMnemonic(KeyEvent.VK_J);
+		menuHelp.add(menuHelpJython);
+
+		JMenuBar bar = new JMenuBar();
+		bar.add(menuConsole);
+		bar.add(new EditMenu(console));
+		bar.add(menuHelp);
+		setJMenuBar(bar);
+
+		// Add menu event listeners.
+		menuConsoleClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeConsole();
+			}
+		});
+		menuHelpJython.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				shell.viewHelp("jpython");
+			}
+		});
+
+		/*
         // Set up the buttons.
         JButton help = new JButton("Help");
         JButton close = new JButton("Close");
@@ -118,14 +157,16 @@ public class JPythonConsoleFrame extends JFrame {
         buttonPanel.setLayout(new FlowLayout());
         buttonPanel.add(close);
         buttonPanel.add(help);
+		*/
 
         // Put everything together.
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(new JScrollPane(console),
             BorderLayout.CENTER);
-        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+        //getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add appropriate event listeners.
+		/*
+        // Add button event listeners.
         help.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 shell.viewHelp("jpython");
@@ -136,18 +177,20 @@ public class JPythonConsoleFrame extends JFrame {
                 closeConsole();
             }
         });
-        // Remove the default key mapping for Ctrl-D so we can
-        // make it close the window instead.
-        console.getKeymap().removeKeyStrokeBinding(
-            KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK));
-        addKeyListener(new KeyAdapter() {
-            // Close on Ctrl-D, just as in a plain text console.
-            public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == e.VK_D &&
-                        e.getModifiers() == e.CTRL_MASK)
+		*/
+
+        // Add a key mapping for Ctrl-D so it closes the window instead
+		// of doing its usual function.
+		Keymap keymap = console.addKeymap("Jython Console",
+			console.getKeymap());
+		keymap.addActionForKeyStroke(KeyStroke.getKeyStroke(
+			KeyEvent.VK_D, KeyEvent.CTRL_MASK), new AbstractAction() {
+				public void actionPerformed(ActionEvent e) {
                     closeConsole();
-            }
-        });
+				}
+			});
+		console.setKeymap(keymap);
+
         addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 console.requestFocus();
