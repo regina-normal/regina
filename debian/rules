@@ -53,11 +53,15 @@ install: build
 	# Main install.
 	$(MAKE) install DESTDIR=`pwd`/$(tmp)
 
+	# Install the pixmap.
+	$(INSTALL_DIR) $(tmp)/usr/share/pixmaps
+	$(INSTALL_FILE) icons/regina.xpm $(tmp)/usr/share/pixmaps/regina-normal.xpm
+
 	# Split into separate binary packages.
 	dh_install --sourcedir=debian/tmp --list-missing
 
 	# Ensure sample data files are stored as compressed XML.
-	for i in $(tmp)/usr/share/doc/regina-normal/examples/*.rga; do \
+	for i in debian/regina-normal/usr/share/doc/regina-normal/examples/*.rga; do \
 	  utils/regconvert -x $$i $$i; \
 	done
 

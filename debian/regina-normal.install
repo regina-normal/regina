@@ -2,8 +2,9 @@ usr/bin
 usr/lib/libregina-engine-3.95.so
 usr/lib/kde3
 usr/lib/regina-normal
+usr/share/applnk
 usr/share/apps/regina
-usr/share/doc/regina-normal
+usr/share/doc/kde/HTML
 usr/share/icons
 usr/share/man
 usr/share/mimelnk
