@@ -43,6 +43,7 @@ namespace regina {
 class NNormalSurface;
 class NNormalSurfaceList;
 class NXMLPacketReader;
+class NXMLFilterReader;
 
 /**
  * A packet that accepts or rejects normal surfaces.
@@ -59,8 +60,12 @@ class NXMLPacketReader;
  *   writing.</li>
  *   <li>Virtual functions accept(), writeTextLong() and
  *   writeXMLFilterData() should be overridden.</li>
- *   <li>Static function readFilter() should be implemented as described
- *   in the documentation below.</li>
+ *   <li>Static function getXMLFilterReader() should be declared and
+ *   implemented as described in the documentation below.</li>
+ *   <li>Static function readFilter() should be declared and implemented as
+ *   described in the documentation below.  New filter types should
+ *   simply return 0 from this routine since it reads from the now
+ *   obsolete old-style binary file format.</li>
  *   <li>Virtual functions getFilterID() and getFilterName()
  *   should be redeclared but not reimplemented.
  *   The registry utilities will take care of their implementation.</li>
@@ -136,6 +141,29 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          */
         virtual std::string getFilterName() const;
 
+        /**
+         * Returns a newly created XML filter reader that will read the
+         * details of a particular type of surface filter.  You may
+         * assume that the filter to be read is of the same type as the
+         * class in which you are implementing this routine.
+         *
+         * The XML filter reader should read exactly what
+         * writeXMLFilterData() writes, and vice versa.
+         *
+         * \a parent represents the packet which will become the new
+         * filter's parent in the tree structure.  This information is
+         * for reference only, and need not be used.
+         * See the description of parameter \a parent in
+         * NPacket::getXMLReader() for further details.
+         *
+         * \ifaces Not present.
+         *
+         * @param parent the packet which will become the new filter's
+         * parent in the tree structure, or 0 if the new filter is to be
+         * tree matriarch.
+         * @return the newly created XML filter reader.
+         */
+        static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
         /**
          * Reads the details of a normal surface filter from the
          * specified file and returns a newly created filter containing

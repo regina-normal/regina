@@ -52,6 +52,7 @@ namespace regina {
 
 class NGroupPresentation;
 class NXMLPacketReader;
+class NXMLTriangulationReader;
 
 /**
  * Stores the triangulation of a 3-manifold along with its
@@ -1587,6 +1588,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
                 stdhash::hash_set<NFace*, HashPointer>&,
                 stdhash::hash_set<NTetrahedron*, HashPointer>&);
             /**< Internal to maximalForestInDualSkeleton(). */
+
+    friend class regina::NXMLTriangulationReader;
 };
 
 // Inline functions for NTriangulation

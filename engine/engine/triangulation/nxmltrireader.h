@@ -26,50 +26,55 @@
 
 /* end stub */
 
-#include "surfaces/sfcombination.h"
-#include "file/nfile.h"
+/*! \file nxmltrireader.h
+ *  \brief Deals with parsing XML data for triangulation packets.
+ */
 
-#define TYPE_AND 1
-#define TYPE_OR 2
+#ifndef __NXMLTRIREADER_H
+#ifndef __DOXYGEN
+#define __NXMLTRIREADER_H
+#endif
+
+#include "packet/nxmlpacketreader.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
-    if (usesAnd) {
-        // Combine all child filters using AND.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (! ((NSurfaceFilter*)child)->accept(surface))
-                    return false;
-        return true;
-    } else {
-        // Combine all child filters using OR.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (((NSurfaceFilter*)child)->accept(surface))
-                    return true;
-        return false;
-    }
+/**
+ * An XML packet reader that reads a single triangulation.
+ *
+ * \ifaces Not present.
+ */
+class NXMLTriangulationReader : public NXMLPacketReader {
+    private:
+        NTriangulation* tri;
+            /**< The triangulation currently being read. */
+
+    public:
+        /**
+         * Creates a new triangulation reader.
+         */
+        NXMLTriangulationReader();
+
+        virtual NPacket* getPacket();
+        virtual NXMLElementReader* startContentSubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps);
+        virtual void endContentSubElement(const std::string& subTagName,
+            NXMLElementReader* subReader);
+};
+
+// Inline functions for NXMLTriangulationReader
+
+inline NXMLTriangulationReader::NXMLTriangulationReader() :
+        tri(new NTriangulation()) {
 }
 
-void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
-    out << "    <op type=\"" << (usesAnd ? "and" : "or") << "\"/>\n";
-}
-
-void NSurfaceFilterCombination::writeFilter(NFile& out) const {
-    if (usesAnd)
-        out.writeInt(TYPE_AND);
-    else
-        out.writeInt(TYPE_OR);
-}
-
-NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
-    NSurfaceFilterCombination* ans = new NSurfaceFilterCombination();
-    ans->usesAnd = (in.readInt() == TYPE_AND);
-    return ans;
+inline NPacket* NXMLTriangulationReader::getPacket() {
+    return tri;
 }
 
 } // namespace regina
+
+#endif
 

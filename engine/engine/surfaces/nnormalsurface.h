@@ -173,6 +173,7 @@ extern const NPerm __octDiscArcs[24];
 #endif
 
 class NTriangulation;
+class NXMLNormalSurfaceReader;
 
 /**
  * Stores the vector of a single normal surface in a 3-manifold.
@@ -932,6 +933,8 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * stores the result as a property.
          */
         void calculateRealBoundary();
+
+    friend class regina::NXMLNormalSurfaceReader;
 };
 
 // Inline functions for NNormalSurfaceVector

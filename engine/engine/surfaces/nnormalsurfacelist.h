@@ -49,6 +49,7 @@ namespace regina {
 class NTriangulation;
 class NMatrixInt;
 class NXMLPacketReader;
+class NXMLNormalSurfaceListReader;
 
 /**
  * A packet representing a collection of normal surfaces in a 3-manifold.
@@ -294,6 +295,8 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
              */
             SurfaceInserter& operator ++(int);
         };
+
+    friend class regina::NXMLNormalSurfaceListReader;
 };
 
 /**

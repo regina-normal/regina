@@ -26,49 +26,43 @@
 
 /* end stub */
 
-#include "surfaces/sfcombination.h"
-#include "file/nfile.h"
+#include "surfaces/nxmlfilterreader.h"
+#include "surfaces/filterregistry.h"
+#include "utilities/stringutils.h"
 
-#define TYPE_AND 1
-#define TYPE_OR 2
+#define __FILTER_REGISTRY_BODY
 
 namespace regina {
 
-bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
-    if (usesAnd) {
-        // Combine all child filters using AND.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (! ((NSurfaceFilter*)child)->accept(surface))
-                    return false;
-        return true;
-    } else {
-        // Combine all child filters using OR.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (((NSurfaceFilter*)child)->accept(surface))
-                    return true;
-        return false;
-    }
+#define REGISTER_FILTER(id, class, n) \
+    if (type == id) \
+        return class::getXMLFilterReader(parent); \
+
+NXMLElementReader* NXMLFilterPacketReader::startContentSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& props) {
+    if (! filter)
+        if (subTagName == "filter") {
+            int type;
+            if (valueOf(props.lookup("typeid"), type)) {
+                // Import cases from the filter registry.
+                #include "surfaces/filterregistry.h"
+                return new NXMLFilterReader();
+            }
+        }
+    return new NXMLElementReader();
 }
 
-void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
-    out << "    <op type=\"" << (usesAnd ? "and" : "or") << "\"/>\n";
+void NXMLFilterPacketReader::endContentSubElement(
+        const std::string& subTagName,
+        NXMLElementReader* subReader) {
+    if (! filter)
+        if (subTagName == "filter")
+            filter = ((NXMLFilterReader*)subReader)->getFilter();
 }
 
-void NSurfaceFilterCombination::writeFilter(NFile& out) const {
-    if (usesAnd)
-        out.writeInt(TYPE_AND);
-    else
-        out.writeInt(TYPE_OR);
-}
-
-NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
-    NSurfaceFilterCombination* ans = new NSurfaceFilterCombination();
-    ans->usesAnd = (in.readInt() == TYPE_AND);
-    return ans;
+NXMLPacketReader* NSurfaceFilter::getXMLReader(NPacket* parent) {
+    return new NXMLFilterPacketReader(parent);
 }
 
 } // namespace regina

@@ -26,10 +26,9 @@
 
 /* end stub */
 
-#include <cstdlib>
 #include <vector>
-#include "packet/nxmlpacketreader.h"
-#include "triangulation/ntriangulation.h"
+#include "algebra/nxmlalgebrareader.h"
+#include "triangulation/nxmltrireader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -54,9 +53,7 @@ namespace {
             virtual void startElement(const std::string&,
                     const regina::xml::XMLPropertyDict& props,
                     NXMLElementReader*) {
-                const std::string& name = props.lookup("desc", "");
-                if (! name.empty())
-                    tet->setDescription(name);
+                tet->setDescription(props.lookup("desc"));
             }
 
             virtual void initialChars(const std::string& chars) {
@@ -64,22 +61,23 @@ namespace {
                 if (basicTokenise(back_inserter(tokens), chars) != 8)
                     return;
 
-                int tetIndex;
-                char permCode;
+                long tetIndex, permCode;
                 NPerm perm;
                 NTetrahedron* adjTet;
                 int adjFace;
                 for (int k = 0; k < 4; k ++) {
-                    tetIndex = atoi(tokens[2 * k].c_str());
-                    permCode = (char)atoi(tokens[2 * k + 1].c_str());
+                    if (! valueOf(tokens[2 * k], tetIndex))
+                        continue;
+                    if (! valueOf(tokens[2 * k + 1], permCode))
+                        continue;
 
                     if (tetIndex < 0 ||
                             tetIndex >= (int)tri->getNumberOfTetrahedra())
                         continue;
-                    if (! NPerm::isPermCode(permCode))
+                    if (! NPerm::isPermCode((char)permCode))
                         continue;
 
-                    perm.setPermCode(permCode);
+                    perm.setPermCode((char)permCode);
                     adjTet = tri->getTetrahedra()[tetIndex];
                     adjFace = perm[k];
                     if (adjTet == tet && adjFace == k)
@@ -110,9 +108,10 @@ namespace {
             virtual void startElement(const std::string& tagName,
                     const regina::xml::XMLPropertyDict& props,
                     NXMLElementReader*) {
-                for (int nTets = atoi(props.lookup("ntet", "").c_str());
-                        nTets > 0; nTets--)
-                    tri->addTetrahedron(new NTetrahedron());
+                long nTets;
+                if (valueOf(props.lookup("ntet"), nTets))
+                    for ( ; nTets > 0; nTets--)
+                        tri->addTetrahedron(new NTetrahedron());
             }
 
             virtual NXMLElementReader* startSubElement(
@@ -129,34 +128,107 @@ namespace {
     };
 
     /**
-     * Reads an entire triangulation.
+     * Reads an abelian group property.
      */
-    class NTriangulationReader : public NXMLPacketReader {
+    class NAbelianGroupPropertyReader : public NXMLElementReader {
         private:
-            NTriangulation* tri;
+            NAbelianGroup** groupProp;
+            bool* calculatedProp;
 
         public:
-            NTriangulationReader() : tri(new NTriangulation()) {
+            NAbelianGroupPropertyReader(NAbelianGroup** newProp,
+                    bool* newCalc) : groupProp(newProp),
+                    calculatedProp(newCalc) {
             }
 
-            virtual NXMLElementReader* startContentSubElement(
+            virtual NXMLElementReader* startSubElement(
                     const std::string& subTagName,
                     const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "tetrahedra")
-                    return new NTetrahedraReader(tri);
-                else
-                    return new NXMLElementReader();
-                // TODO: read triangulation properties.
+                if (subTagName == "abeliangroup")
+                    if (! (*calculatedProp))
+                        return new NXMLAbelianGroupReader();
+                return new NXMLElementReader();
             }
 
-            virtual NPacket* getPacket() {
-                return tri;
+            virtual void endSubElement(const std::string& subTagName,
+                    NXMLElementReader* subReader) {
+                if (subTagName == "abeliangroup") {
+                    *groupProp = ((NXMLAbelianGroupReader*)subReader)->
+                        getGroup();
+                    if (*groupProp)
+                        *calculatedProp = true;
+                }
+            }
+    };
+
+    /**
+     * Reads a group presentation property.
+     */
+    class NGroupPresentationPropertyReader : public NXMLElementReader {
+        private:
+            NGroupPresentation** groupProp;
+            bool* calculatedProp;
+
+        public:
+            NGroupPresentationPropertyReader(NGroupPresentation** newProp,
+                    bool* newCalc) : groupProp(newProp),
+                    calculatedProp(newCalc) {
+            }
+
+            virtual NXMLElementReader* startSubElement(
+                    const std::string& subTagName,
+                    const regina::xml::XMLPropertyDict&) {
+                if (subTagName == "group")
+                    if (! (*calculatedProp))
+                        return new NXMLGroupPresentationReader();
+                return new NXMLElementReader();
+            }
+
+            virtual void endSubElement(const std::string& subTagName,
+                    NXMLElementReader* subReader) {
+                if (subTagName == "group") {
+                    *groupProp = ((NXMLGroupPresentationReader*)subReader)->
+                        getGroup();
+                    if (*groupProp)
+                        *calculatedProp = true;
+                }
             }
     };
 }
 
+NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& props) {
+    if (subTagName == "tetrahedra")
+        return new NTetrahedraReader(tri);
+    else if (subTagName == "zeroeff") {
+        if (valueOf(props.lookup("value"), tri->zeroEfficient))
+            tri->calculatedZeroEfficient = true;
+    } else if (subTagName == "splitsfce") {
+        if (valueOf(props.lookup("value"), tri->splittingSurface))
+            tri->calculatedSplittingSurface = true;
+    } else if (subTagName == "H1")
+        return new NAbelianGroupPropertyReader(&tri->H1, &tri->calculatedH1);
+    else if (subTagName == "H1Rel")
+        return new NAbelianGroupPropertyReader(&tri->H1Rel,
+            &tri->calculatedH1Rel);
+    else if (subTagName == "H1Bdry")
+        return new NAbelianGroupPropertyReader(&tri->H1Bdry,
+            &tri->calculatedH1Bdry);
+    else if (subTagName == "H2")
+        return new NAbelianGroupPropertyReader(&tri->H2, &tri->calculatedH2);
+    else if (subTagName == "fundgroup")
+        return new NGroupPresentationPropertyReader(&tri->fundamentalGroup,
+            &tri->calculatedFundamentalGroup);
+    return new NXMLElementReader();
+}
+
+void NXMLTriangulationReader::endContentSubElement(const std::string&,
+        NXMLElementReader*) {
+}
+
 NXMLPacketReader* NTriangulation::getXMLReader(NPacket*) {
-    return new NTriangulationReader();
+    return new NXMLTriangulationReader();
 }
 
 } // namespace regina

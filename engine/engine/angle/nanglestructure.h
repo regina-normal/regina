@@ -43,6 +43,7 @@
 namespace regina {
 
 class NTriangulation;
+class NXMLAngleStructureReader;
 
 /**
  * A vector of integers used to indirectly store the individual angles
@@ -245,6 +246,8 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          * as a property.
          */
         void calculateType();
+
+    friend class regina::NXMLAngleStructureReader;
 };
 
 // Inline functions for NAngleStructureVector

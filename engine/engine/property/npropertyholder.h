@@ -43,12 +43,12 @@ class NFile;
 
 /**
  * Represents an object that can have properties, and whose properties
- * can be written to and read from file.
+ * can be written to and read from old-style binary files.
  *
  * Each property for such an object should have a unique integer
  * identifier which should be positive; this will be referred to as the
- * <i>property type</i>.  When reading properties from
- * file, if a property of unknown type is reached, it will be
+ * <i>property type</i>.  When reading properties from an old-style binary
+ * file, if a property of unknown type is reached it will be
  * skipped.
  *
  * Properties should only be calculated when necessary.  Properties thus
@@ -62,8 +62,9 @@ class NFile;
  * The function initialiseAllProperties() should never be called but its
  * functionality should be mirrored by the property holder's constructor.
  *
- * To read properties from file, simply call readProperties().
- * To write properties to file, do the following:
+ * To read properties from an old-style binary file, simply call
+ * readProperties().
+ * To write properties to an old-style binary file, do the following:
  * <ul>
  *   <li> For each property:
  *     <ul>
@@ -82,12 +83,17 @@ class NFile;
  * ever overridden, the subclass implementations must <b>always</b> begin with
  * a call to the superclass implementations.
  *
+ * \deprecated With the new-style XML data files, this class is no longer
+ * necessary since storing only selected data and skipping data that is
+ * not understood are inbuilt features of XML.  New-style data files
+ * should simply bundle object properties in with the standard
+ * XML read/write routines for the corresponding classes.
+ *
  * \todo \featurelong Complete property overhaul.  Be able to lock
  * properties (specify that they won't change during this operation even
  * though clearAllProperties() has been called).  Allow locking and
  * unlocking in groups (such as skeletal properties, topological
  * properties, etc).
- * \todo \tidy Document what to do when adding a new property.
  *
  * \ifaces Not present.
  */
@@ -104,7 +110,7 @@ class NPropertyHolder {
         virtual ~NPropertyHolder();
 
         /**
-         * Reads in all properties from file.
+         * Reads in all properties from an old-style binary file.
          * Properties of unknown type will simply be skipped.
          * If a individual property read routine leaves the file read
          * pointer at the wrong location, this will be rectified and
@@ -116,8 +122,8 @@ class NPropertyHolder {
         void readProperties(NFile& infile);
 
         /**
-         * Writes a header to file for a property, containing the
-         * property type and some bookmarking details.
+         * Writes a header to an old-style binary file for a property,
+         * containing the property type and some bookmarking details.
          * The bookmark returned should later be passed to
          * writePropertyFooter() for housekeeping.
          *
@@ -136,8 +142,8 @@ class NPropertyHolder {
             unsigned propType) const;
 
         /**
-         * Writes a footer to file for a property containing
-         * bookmarking details.
+         * Writes a footer to an old-style binary file for a property
+         * containing bookmarking details.
          *
          * @param outfile the file to which the footer will be written.
          * This should be open for writing and at the position
@@ -148,8 +154,8 @@ class NPropertyHolder {
         void writePropertyFooter(NFile& outfile, std::streampos bookmark) const;
 
         /**
-         * Writes a footer to file to signify that all properties have
-         * now been written.
+         * Writes a footer to an old-style binary file to signify that all
+         * properties have now been written.
          *
          * @param outfile the file to which the footer will be written.
          * This should be open for writing and at the position
@@ -159,7 +165,7 @@ class NPropertyHolder {
 
     protected:
         /**
-         * Reads an individual property from file.
+         * Reads an individual property from an old-style binary file.
          * The property type and bookmarking details should <b>not</b>
          * read; merely the internal property details that are written
          * to file between writePropertyHeader() and

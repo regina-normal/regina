@@ -160,7 +160,7 @@ void NNormalSurfaceList::writePacket(NFile& out) const {
 
 void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
-    out << "  <params embedded=\"" << (embedded ? 1 : 0)
+    out << "  <params embedded=\"" << (embedded ? 'T' : 'F')
         << "\" flavourid=\"" << flavour << "\"\n";
     out << "\tflavour=\"";
     switch(flavour) {

@@ -45,6 +45,7 @@
 namespace regina {
 
 class NXMLPacketReader;
+class NXMLAngleStructureListReader;
 
 /**
  * A packet representing a collection of angle structures on a triangulation.
@@ -259,6 +260,8 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
              */
             StructureInserter& operator ++(int);
         };
+
+    friend class regina::NXMLAngleStructureListReader;
 };
 
 // Inline functions for NAngleStructureList

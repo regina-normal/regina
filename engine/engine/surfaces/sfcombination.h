@@ -91,6 +91,7 @@ class NSurfaceFilterCombination : public NSurfaceFilter {
         
         virtual bool accept(NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
+        static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getFilterID() const;

@@ -26,63 +26,17 @@
 
 /* end stub */
 
-#include "packet/nxmlpacketreader.h"
-#include "packet/ncontainer.h"
-#include "packet/nscript.h"
-#include "packet/ntext.h"
-
-// TODO: remove once individual routines are all implemented.
-#include "surfaces/nnormalsurfacelist.h"
-#include "surfaces/nsurfacefilter.h"
-#include "angle/nanglestructurelist.h"
+#include "packet/nxmlpacketreaders.h"
 
 namespace regina {
 
 /**
- * A unique namespace containing a variety of packet readers.
+ * A unique namespace containing various task-specific packet readers.
  */
 namespace {
-    class NContainerReader : public NXMLPacketReader {
-        private:
-            NContainer* container;
-
-        public:
-            NContainerReader() : container(new NContainer()) {
-            }
-
-            virtual NPacket* getPacket() {
-                return container;
-            }
-    };
-
-    class NTextReader : public NXMLPacketReader {
-        private:
-            NText* text;
-
-        public:
-            NTextReader() : text(new NText()) {
-            }
-
-            virtual NXMLElementReader* startContentSubElement(
-                    const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "text")
-                    return new NXMLTextReader();
-                else
-                    return new NXMLElementReader();
-            }
-
-            virtual void endContentSubElement(const std::string& subTagName,
-                    NXMLElementReader* subReader) {
-                if (subTagName == "text")
-                    text->setText(((NXMLTextReader*)subReader)->getText());
-            }
-
-            virtual NPacket* getPacket() {
-                return text;
-            }
-    };
-
+    /**
+     * Reads a single script variable and its value.
+     */
     class NScriptVarReader : public NXMLElementReader {
         private:
             std::string name, value;
@@ -91,8 +45,8 @@ namespace {
             virtual void startElement(const std::string& tagName,
                     const regina::xml::XMLPropertyDict& props,
                     NXMLElementReader*) {
-                name = props.lookup("name", "");
-                value = props.lookup("value", "");
+                name = props.lookup("name");
+                value = props.lookup("value");
             }
 
             const std::string& getName() {
@@ -103,68 +57,40 @@ namespace {
                 return value;
             }
     };
+}
 
-    class NScriptReader : public NXMLPacketReader {
-        private:
-            NScript* script;
+NXMLElementReader* NXMLScriptReader::startContentSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict&) {
+    if (subTagName == "line")
+        return new NXMLCharsReader();
+    else if (subTagName == "var")
+        return new NScriptVarReader();
+    else
+        return new NXMLElementReader();
+}
 
-        public:
-            NScriptReader() : script(new NScript()) {
-            }
-
-            virtual NXMLElementReader* startContentSubElement(
-                    const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "line")
-                    return new NXMLTextReader();
-                else if (subTagName == "var")
-                    return new NScriptVarReader();
-                else
-                    return new NXMLElementReader();
-            }
-
-            virtual void endContentSubElement(const std::string& subTagName,
-                    NXMLElementReader* subReader) {
-                if (subTagName == "line")
-                    script->addLast(((NXMLTextReader*)subReader)->getText());
-                else if (subTagName == "var") {
-                    NScriptVarReader* var = (NScriptVarReader*)subReader;
-                    if (! var->getName().empty())
-                        script->addVariable(var->getName(), var->getValue());
-                }
-            }
-            
-            virtual NPacket* getPacket() {
-                return script;
-            }
-    };
+void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
+        NXMLElementReader* subReader) {
+    if (subTagName == "line")
+        script->addLast(((NXMLCharsReader*)subReader)->getChars());
+    else if (subTagName == "var") {
+        NScriptVarReader* var = (NScriptVarReader*)subReader;
+        if (! var->getName().empty())
+            script->addVariable(var->getName(), var->getValue());
+    }
 }
 
 NXMLPacketReader* NContainer::getXMLReader(NPacket*) {
-    return new NContainerReader();
-}
-
-NXMLPacketReader* NText::getXMLReader(NPacket*) {
-    return new NTextReader();
+    return new NXMLContainerReader();
 }
 
 NXMLPacketReader* NScript::getXMLReader(NPacket*) {
-    return new NScriptReader();
+    return new NXMLScriptReader();
 }
 
-NXMLPacketReader* NNormalSurfaceList::getXMLReader(NPacket*) {
-    // TODO: implement real packet reader
-    return new NXMLPacketReader();
-}
-
-NXMLPacketReader* NSurfaceFilter::getXMLReader(NPacket*) {
-    // TODO: implement real packet reader
-    return new NXMLPacketReader();
-}
-
-NXMLPacketReader* NAngleStructureList::getXMLReader(NPacket*) {
-    // TODO: implement real packet reader
-    return new NXMLPacketReader();
+NXMLPacketReader* NText::getXMLReader(NPacket*) {
+    return new NXMLTextReader();
 }
 
 } // namespace regina

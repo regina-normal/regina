@@ -173,16 +173,16 @@ class NXMLElementReader {
  * Any XML subelements will be ignored (as will any characters occurring
  * after any subelements).
  */
-class NXMLTextReader : public NXMLElementReader {
+class NXMLCharsReader : public NXMLElementReader {
     private:
-        std::string text;
+        std::string readChars;
             /**< The characters stored in this XML element. */
 
     public:
         /**
          * Creates a new XML element reader.
          */
-        NXMLTextReader();
+        NXMLCharsReader();
 
         /**
          * Returns the characters stored in the XML element that has
@@ -190,7 +190,7 @@ class NXMLTextReader : public NXMLElementReader {
          *
          * @return the characters stored in the XML element.
          */
-        const std::string& getText();
+        const std::string& getChars();
 
         virtual void initialChars(const std::string& chars);
 };
@@ -225,17 +225,17 @@ inline void NXMLElementReader::endElement() {
 inline void NXMLElementReader::abort(NXMLElementReader*) {
 }
 
-// Inline functions for NXMLTextReader
+// Inline functions for NXMLCharsReader
 
-inline NXMLTextReader::NXMLTextReader() {
+inline NXMLCharsReader::NXMLCharsReader() {
 }
 
-inline const std::string& NXMLTextReader::getText() {
-    return text;
+inline const std::string& NXMLCharsReader::getChars() {
+    return readChars;
 }
 
-inline void NXMLTextReader::initialChars(const std::string& chars) {
-    text = chars;
+inline void NXMLCharsReader::initialChars(const std::string& chars) {
+    readChars = chars;
 }
 
 } // namespace regina
