@@ -1,50 +1,63 @@
+Regina Source Distribution
+--------------------------
 
-Regina - A normal surface theory calculator
+Regina has been reorganised to use the standard "./configure", "make"
+build procedure.  See INSTALL.txt for details.
 
-BINARY DISTRIBUTION:
+For the impatient, the short summary is as follows.  INSTALL.txt contains
+details for customising this process.
 
-    - As Regina has become more complex and provides more components, it
-      has become fussier about where it is installed.
+    prompt$ ./configure    (determines features of your system)
+    prompt$ make           (builds Regina)
+    prompt$ make install   (installs Regina)
 
-      The binary distribution is designed to be installed immediately
-      beneath /usr/local/.  If you wish to install Regina elsewhere (such
-      as beneath your home directory), you will probably need to rebuild
-      it from source.  It's not very hard; it just takes a while. :)
-      See below for details.
+Note that Regina can be run directly out of the source tree (once
+it has been built); there is no need to actually install it if you
+don't want to.  Simply run "./regina" from the top-level source
+directory (the directory containing this file).
 
-    - The binary archive should be unpacked in the root directory.  Each
-      file in the archive already has /usr/local prepended to its path.
+Regina requires various external libraries to be present during compilation.
+A full list of requirements can be found on the Regina website
+(http://regina.sourceforge.net/).
 
-    - Make sure your BTools jar (and your Jython and JavaHelp jars if you
-      have them) are in directory /usr/local/share/regina/jar/.  Otherwise
-      you will need to specify their locations using environment variables
-      or a configuration file (see the reference manual for details).
+The initial "./configure" phase will check which of these libraries are
+currently installed on your system, and will decide which Regina components
+can be built.  This list will be output immediately before the individual
+Makefiles are created, as illustrated below.  You should check this list
+to ensure everything you want will be built.  If a component cannot be
+built, a reason will be given earlier in the "./configure" output.
 
-    - To start Regina, run /usr/local/bin/regina.
-
-    - Windows users:
-        - If you wish to run /usr/local/bin/regina, you will need to do it
-          from within a Cygwin bash shell.
-        - Alternatively you can run "regina.bat" from your usual windows
-          environment.  You will need to edit this batch file before you
-          first run it; the batch file itself contains instructions for
-          how to do this.
-
-SOURCE DISTRIBUTION:
-
-    - Regina has been reorganised to use the standard "./configure",
-      "make" build procedure.  See INSTALL.txt for details.
-
-    - For the impatient, the short summary for building Regina is as
-      follows.  INSTALL.txt contains details for customising this process.
-        prompt$ ./configure    (determines features of your system)
-        prompt$ make           (builds Regina)
-        prompt$ make install   (installs Regina)
-
-    - Note that Regina can be run directly out of the source tree (once
-      it has been built); there is no need to actually install it if you
-      don't want to.  Simply run "./regina" from the top-level source
-      directory (the directory containing this file).
+    prompt$ ./configure
+    ...
+    ... (lots of tests)
+    ...
+    configure: WARNING: No suitable Java compiler could be found; the Java
+    user interface will not be built.
+    ...
+    ... (more tests)
+    ...
+    configure: WARNING: The JNI headers are unavailable; the JNI calculation
+    engine module will not be built.
+    ...
+    ... (more tests)
+    ...
+    checking whether to build the calculation engine library... yes
+    checking whether to build the JNI calculation engine module... no
+    checking whether to build the Java user interface... no
+    checking whether to build command-line utilities... yes
+    checking whether to build the test suite... yes
+    checking whether to build calculation engine docs... yes
+    checking whether to build Java user interface docs... no
+    checking whether to build the reference manual... yes
+    checking whether to build man pages... yes
+    checking whether to build the documentation jar... no
+    configure: creating ./config.status
+    config.status: creating Makefile
+    config.status: creating admin/Makefile
+    ...
+    ... (lots more Makefiles)
+    ...
+    prompt$
 
 Ben Burton <benb@acm.org>
 http://regina.sourceforge.net/
