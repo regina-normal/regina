@@ -92,6 +92,8 @@ typedef void (*UseFacePairing)(const NFacePairing*, const NFacePairingIsoList*,
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
  *
+ * \testpart
+ *
  * \ifaces Not present.
  */
 class NFacePairing : public NThread {

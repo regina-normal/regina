@@ -38,5 +38,6 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
+void addNCensus(CppUnit::TextUi::TestRunner& runner);
 void addNFacePairing(CppUnit::TextUi::TestRunner& runner);
 

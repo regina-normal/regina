@@ -1,9 +1,0 @@
-
-Census counts for 1,2,3 tetrahedra (connected, either finite or ideal,
-no boundary faces)
-
-All connected triangulations:
-5 61 1581
-
-All orientable triangulations:
-4 35 454 13776

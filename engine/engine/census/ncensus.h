@@ -71,6 +71,8 @@ typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
  * A utility class used to form a complete census of 3-manifold
  * triangulations satisfying certain constraints.
  *
+ * \testpart
+ *
  * \ifaces Not present, although static routine formCensus() is available
  * as a member of class Engine.
  */

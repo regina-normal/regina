@@ -10,7 +10,7 @@ INCLUDES = @ENGINE_INCLUDES@
 
 check_LIBRARIES = libcensus.a
 
-libcensus_a_SOURCES = nfacepairing.cpp
+libcensus_a_SOURCES = ncensus.cpp nfacepairing.cpp
 
 noinst_HEADERS = testcensus.h
 
