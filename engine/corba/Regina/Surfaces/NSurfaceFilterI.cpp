@@ -41,7 +41,7 @@
 Regina::Surfaces::NSurfaceFilter_ptr NSurfaceFilter_i::newWrapper(
         ::NSurfaceFilter* newCppPtr) {
     if (! newCppPtr)
-        return NSurfaceFilter_i::_nil();
+        return Regina::Surfaces::NSurfaceFilter::_nil();
     
     int type = newCppPtr->getFilterID();
 

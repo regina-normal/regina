@@ -33,24 +33,24 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nsurfacesubset.h"
-    #include "corbatools.h"
 #else
     #include "engine/surfaces/nsurfacesubset.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceSubsetIDL.h"
 #include "ShareableObjectI.h"
 
-class NSurfaceSubset_i : public virtual Regina::Surfaces::_sk_NSurfaceSubset,
+class NSurfaceSubset_i : public virtual POA_Regina::Surfaces::NSurfaceSubset,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NSurfaceSubset_i, NSurfaceSubset,
+			Regina::Surfaces::NSurfaceSubset)
+
     protected:
         NSurfaceSubset_i(::NSurfaceSubset* newCppPtr) :
                 ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NSurfaceSubset, NSurfaceSubset_i,
-            Regina::Surfaces::NSurfaceSubset_ptr)
+        STANDARD_NEW_WRAPPER
         
         virtual CORBA::Long getFlavour();
         virtual CORBA::Boolean allowsAlmostNormal();

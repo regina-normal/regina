@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "EngineI.h"
+#include "corba/Regina/EngineI.h"
 
 #include <iostream.h>
 #include <string.h>
@@ -208,53 +208,62 @@ int main(int argc, char* argv[]) {
     cerr << "Using host [" << args.host << "], port [" << args.port << "].\n";
 
     cerr << "Initialising ORB... ";
-    CORBA::ORB_ptr orb = CORBA::ORB_init(args.argc, args.argv, "omniORB2");
+    CORBA::ORB_var orb = CORBA::ORB_init(args.argc, args.argv, "omniORB3");
     if (CORBA::is_nil(orb)) {
         cerr << "Could not initialise.\n";
         return 1;
     }
     cerr << "Done.\n";
 
-    cerr << "Initialising BOA... ";
-    CORBA::BOA_ptr boa = orb->BOA_init(args.argc, args.argv, "omniORB2_BOA");
-    if (CORBA::is_nil(orb)) {
+    cerr << "Initialising POA... ";
+	CORBA::Object_var poa_obj = orb->resolve_initial_references("RootPOA");
+    if (CORBA::is_nil(poa_obj)) {
         cerr << "Could not initialise.\n";
-        orb->NP_destroy();
+        orb->destroy();
+        return 1;
+    }
+	PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_obj);
+    if (CORBA::is_nil(poa)) {
+        cerr << "Could not narrow RootPOA to class PortableServer::POA.\n";
+        orb->destroy();
         return 1;
     }
     cerr << "Done.\n";
 
     cerr << "Creating engine... ";
     Engine_i *engine = new Engine_i();
-    engine->_obj_is_ready(boa);
+	cerr << "Done.\n";
+
+	cerr << "Activating engine... ";
+	PortableServer::ObjectId_var engine_id = poa->activate_object(engine);
     cerr << "Done.\n";
 
     cerr << "Binding engine to name... ";
     Regina::Engine_var ref = engine->_this();
     if (! bindObjectToName(orb, ref)) {
-        boa->destroy();
-        orb->NP_destroy();
+        orb->destroy();
         return 1;
     }
+	engine->_remove_ref();
     cerr << "Done.\n";
 
+	cerr << "Activating POA manager... ";
+	PortableServer::POAManager_var pman = poa->the_POAManager();
+    pman->activate();
+	cerr << "Done.\n";
+
     cerr << "Starting server.\n";
-    boa->impl_is_ready();
+	orb->run();
         /* - blocks indefinitely; pass parameters 0, 1 to avoid blocking. */
 
     // We never make it to this point unless boa->impl_shutdown() is
     // called from another thread.
 
-    cerr << "Destroying BOA... ";
-    boa->destroy();
-    cerr << "Done.\n";
-
     cerr << "Destroying ORB... ";
-    orb->NP_destroy();
+    orb->destroy();
     cerr << "Done.\n";
 
     cerr << "Server stopped.\n";
-
     return 0;
 }
 

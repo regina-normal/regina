@@ -33,23 +33,23 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nvertex.h"
-    #include "corbatools.h"
 #else
     #include "engine/triangulation/nvertex.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"
 
-class NVertex_i : public virtual Regina::Triangulation::_sk_NVertex,
+class NVertex_i : public virtual POA_Regina::Triangulation::NVertex,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NVertex_i, NVertex,
+			Regina::Triangulation::NVertex)
+
     protected:
         NVertex_i(::NVertex* newCppPtr) : ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NVertex, NVertex_i,
-            Regina::Triangulation::NVertex_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual Regina::Triangulation::NComponent_ptr getComponent();
         virtual Regina::Triangulation::NBoundaryComponent_ptr
@@ -62,7 +62,7 @@ class NVertex_i : public virtual Regina::Triangulation::_sk_NVertex,
         virtual CORBA::Boolean isLinkOrientable();
         virtual CORBA::Long getLinkEulerCharacteristic();
         virtual CORBA::Long getNumberOfEmbeddings();
-        virtual void getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
+        virtual void getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
             CORBA::Long& vertex, CORBA::Long index);
 };
 

@@ -49,7 +49,7 @@ CORBA::Boolean NEdge_i::isValid() {
 CORBA::Long NEdge_i::getNumberOfEmbeddings() {
     return GET_ENGINE_OBJECT(NEdge, this)->getNumberOfEmbeddings();
 }
-void NEdge_i::getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
+void NEdge_i::getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
         CORBA::Long& edge, CORBA::Long index) {
     const NEdgeEmbedding& emb =
         GET_ENGINE_OBJECT(NEdge, this)->getEmbedding(index);

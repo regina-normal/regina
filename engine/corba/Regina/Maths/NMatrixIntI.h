@@ -33,23 +33,23 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nmatrixint.h"
-    #include "corbatools.h"
 #else
     #include "engine/maths/nmatrixint.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NMatrixIntIDL.h"
 #include "ShareableObjectI.h"
 
-class NMatrixInt_i : public virtual Regina::Maths::_sk_NMatrixInt,
+class NMatrixInt_i : public virtual POA_Regina::Maths::NMatrixInt,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NMatrixInt_i, NMatrixInt,
+			Regina::Maths::NMatrixInt)
+
     protected:
         NMatrixInt_i(::NMatrixInt* newCppPtr) : ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NMatrixInt, NMatrixInt_i,
-            Regina::Maths::NMatrixInt_ptr)
+		STANDARD_NEW_WRAPPER
 
         virtual void initialise(const char* value);
         virtual void makeIdentity();

@@ -40,14 +40,17 @@
 #include "NContainerIDL.h"
 #include "NPacketI.h"
 
-class NContainer_i : public virtual Regina::Packet::_sk_NContainer,
+class NContainer_i : public virtual POA_Regina::Packet::NContainer,
         public NPacket_i {
+	STANDARD_ENGINE_TYPEDEFS(NContainer_i, NContainer,
+			Regina::Packet::NContainer)
+
     protected:
         NContainer_i(::NContainer* newCppPtr) : NPacket_i(newCppPtr) {
         }
-    public:
-        STANDARD_NEW_WRAPPER(NContainer, NContainer_i,
-            Regina::Packet::NContainer_ptr)
+	
+	public:
+		STANDARD_NEW_WRAPPER
 };
 
 #endif

@@ -33,24 +33,24 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nabeliangroup.h"
-    #include "corbatools.h"
 #else
     #include "engine/algebra/nabeliangroup.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NAbelianGroupIDL.h"
 #include "ShareableObjectI.h"
 
-class NAbelianGroup_i : public virtual Regina::Algebra::_sk_NAbelianGroup,
+class NAbelianGroup_i : public virtual POA_Regina::Algebra::NAbelianGroup,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NAbelianGroup_i, NAbelianGroup,
+			Regina::Algebra::NAbelianGroup)
+
     protected:
         NAbelianGroup_i(::NAbelianGroup* newCppPtr) :
                 ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NAbelianGroup, NAbelianGroup_i,
-            Regina::Algebra::NAbelianGroup_ptr)
+		STANDARD_NEW_WRAPPER
 
         virtual void addRank(CORBA::Long extraRank);
         virtual void addTorsionElement_bigInt(const char* degree,

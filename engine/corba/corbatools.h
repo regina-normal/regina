@@ -64,6 +64,15 @@
 
 /**
  * \hideinitializer
+ */
+#define STANDARD_ENGINE_TYPEDEFS(servant_class, engine_class, interface_class) \
+	public: \
+		typedef servant_class ServantClass; \
+		typedef ::engine_class EngineClass; \
+		typedef ::interface_class InterfaceClass;
+
+/**
+ * \hideinitializer
  *
  * Declares and implements public static routine <tt>newWrapper()</tt> as
  * required by every CORBA server wrapper class (see the HOWTO for
@@ -87,12 +96,12 @@
  * @param ptr_class the corresponding CORBA wrapper pointer type (for
  * instance, <tt>Regina::File::NFile_ptr</tt>).
  */
-#define STANDARD_NEW_WRAPPER(engine_class, wrapper_class, ptr_class) \
-    static ptr_class newWrapper(::engine_class* newCppPtr) { \
+#define STANDARD_NEW_WRAPPER \
+    static InterfaceClass::_ptr_type newWrapper(EngineClass* newCppPtr) { \
         if (newCppPtr) \
-            return (new wrapper_class(newCppPtr))->_this(); \
+            return (new ServantClass(newCppPtr))->_this(); \
         else \
-            return _nil(); \
+            return InterfaceClass::_nil(); \
     }
         
 /**

@@ -33,25 +33,25 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nnormalsurfacelist.h"
-    #include "corbatools.h"
 #else
     #include "engine/surfaces/nnormalsurfacelist.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NNormalSurfaceListIDL.h"
 #include "NPacketI.h"
 
 class NNormalSurfaceList_i :
-        public virtual Regina::Surfaces::_sk_NNormalSurfaceList,
+        public virtual POA_Regina::Surfaces::NNormalSurfaceList,
         public NPacket_i {
+	STANDARD_ENGINE_TYPEDEFS(NNormalSurfaceList_i, NNormalSurfaceList,
+			Regina::Surfaces::NNormalSurfaceList)
+
     protected:
         NNormalSurfaceList_i(::NNormalSurfaceList* newCppPtr) :
                 NPacket_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NNormalSurfaceList, NNormalSurfaceList_i,
-            Regina::Surfaces::NNormalSurfaceList_ptr)
+        STANDARD_NEW_WRAPPER
         
         virtual CORBA::Long getFlavour();
         virtual CORBA::Boolean allowsAlmostNormal();

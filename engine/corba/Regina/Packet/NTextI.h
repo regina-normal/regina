@@ -33,22 +33,22 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "ntext.h"
-    #include "corbatools.h"
 #else
     #include "engine/packet/ntext.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NTextIDL.h"
 #include "NPacketI.h"
 
-class NText_i : public virtual Regina::Packet::_sk_NText,
+class NText_i : public virtual POA_Regina::Packet::NText,
         public NPacket_i {
+	STANDARD_ENGINE_TYPEDEFS(NText_i, NText, Regina::Packet::NText)
+
     protected:
         NText_i(::NText* newCppPtr) : NPacket_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NText, NText_i, Regina::Packet::NText_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual char* getText();
         virtual void setText(const char* newText);

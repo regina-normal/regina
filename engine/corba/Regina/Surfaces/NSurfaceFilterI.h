@@ -33,17 +33,18 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nsurfacefilter.h"
-    #include "corbatools.h"
 #else
     #include "engine/surfaces/nsurfacefilter.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceFilterIDL.h"
 #include "NPacketI.h"
 
-class NSurfaceFilter_i : public virtual Regina::Surfaces::_sk_NSurfaceFilter,
+class NSurfaceFilter_i : public virtual POA_Regina::Surfaces::NSurfaceFilter,
         public NPacket_i {
+	STANDARD_ENGINE_TYPEDEFS(NSurfaceFilter_i, NSurfaceFilter,
+			Regina::Surfaces::NSurfaceFilter)
+
     protected:
         NSurfaceFilter_i(::NSurfaceFilter* newCppPtr) : NPacket_i(newCppPtr) {
         }

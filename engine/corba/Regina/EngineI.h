@@ -31,7 +31,8 @@
 
 #include "EngineIDL.h"
 
-class Engine_i : public virtual Regina::_sk_Engine {
+class Engine_i : public virtual POA_Regina::Engine,
+		public PortableServer::RefCountServantBase {
     public:
         Engine_i() {
         }

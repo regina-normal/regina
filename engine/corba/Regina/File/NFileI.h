@@ -33,22 +33,22 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nfile.h"
-    #include "corbatools.h"
 #else
     #include "engine/file/nfile.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NFileIDL.h"
 #include "ShareableObjectI.h"
 
-class NFile_i : public virtual Regina::File::_sk_NFile,
+class NFile_i : public virtual POA_Regina::File::NFile,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NFile_i, NFile, Regina::File::NFile)
+
     protected:
         NFile_i(::NFile* newCppPtr) : ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NFile, NFile_i, Regina::File::NFile_ptr)
+		STANDARD_NEW_WRAPPER
 
         virtual CORBA::Boolean open(const char* fileName,
             CORBA::Long openMode);

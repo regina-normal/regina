@@ -33,24 +33,24 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "ntetrahedron.h"
-    #include "corbatools.h"
 #else
     #include "engine/triangulation/ntetrahedron.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"
 
-class NTetrahedron_i : public virtual Regina::Triangulation::_sk_NTetrahedron,
+class NTetrahedron_i : public virtual POA_Regina::Triangulation::NTetrahedron,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NTetrahedron_i, NTetrahedron,
+			Regina::Triangulation::NTetrahedron)
+
     protected:
         NTetrahedron_i(::NTetrahedron* newCppPtr) :
                 ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NTetrahedron, NTetrahedron_i,
-            Regina::Triangulation::NTetrahedron_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual Regina::Triangulation::NTetrahedron_ptr
             getAdjacentTetrahedron(CORBA::Long face);

@@ -33,22 +33,22 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nscript.h"
-    #include "corbatools.h"
 #else
     #include "engine/packet/nscript.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NScriptIDL.h"
 #include "NPacketI.h"
 
-class NScript_i : public virtual Regina::Packet::_sk_NScript,
+class NScript_i : public virtual POA_Regina::Packet::NScript,
         public NPacket_i {
+	STANDARD_ENGINE_TYPEDEFS(NScript_i, NScript, Regina::Packet::NScript)
+
     protected:
         NScript_i(::NScript* newCppPtr) : NPacket_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NScript, NScript_i, Regina::Packet::NScript_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual CORBA::Long getNumberOfLines();
         virtual char* getLine(CORBA::Long index);

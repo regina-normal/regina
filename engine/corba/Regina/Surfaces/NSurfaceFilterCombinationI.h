@@ -33,26 +33,26 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "sfcombination.h"
-    #include "corbatools.h"
 #else
     #include "engine/surfaces/sfcombination.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceFilterCombinationIDL.h"
 #include "NSurfaceFilterI.h"
 
 class NSurfaceFilterCombination_i :
-        public virtual Regina::Surfaces::_sk_NSurfaceFilterCombination,
+        public virtual POA_Regina::Surfaces::NSurfaceFilterCombination,
         public NSurfaceFilter_i {
+    STANDARD_ENGINE_TYPEDEFS(NSurfaceFilterCombination_i,
+            NSurfaceFilterCombination,
+            Regina::Surfaces::NSurfaceFilterCombination)
+
     protected:
         NSurfaceFilterCombination_i(::NSurfaceFilterCombination* newCppPtr) :
                 NSurfaceFilter_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NSurfaceFilterCombination,
-            NSurfaceFilterCombination_i,
-            Regina::Surfaces::NSurfaceFilterCombination_ptr)
+		STANDARD_NEW_WRAPPER
         
         virtual CORBA::Boolean getUsesAnd();
         virtual void setUsesAnd(CORBA::Boolean value);

@@ -112,7 +112,7 @@ Regina::Surfaces::NSurfaceSubset_ptr Engine_i::newNSurfaceSubset(
     #endif
 
     if (realSet == 0)
-        return NSurfaceSubset_i::_nil();
+        return Regina::Surfaces::NSurfaceSubset::_nil();
     else
         return NSurfaceSubset_i::newWrapper(new ::NSurfaceSubset(
             *realSet, *GET_ENGINE_OBJECT(NSurfaceFilter, filter)));

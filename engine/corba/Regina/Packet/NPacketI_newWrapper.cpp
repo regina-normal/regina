@@ -38,7 +38,7 @@
 
 Regina::Packet::NPacket_ptr NPacket_i::newWrapper(::NPacket* newCppPtr) {
     if (! newCppPtr)
-        return NPacket_i::_nil();
+        return Regina::Packet::NPacket::_nil();
 
     int type = newCppPtr->getPacketType();
 

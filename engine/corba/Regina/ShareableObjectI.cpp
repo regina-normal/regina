@@ -28,6 +28,12 @@
 
 #include "ShareableObjectI.h"
 
+ShareableObject_i::ShareableObject_i(::ShareableObject* newCppPtr) :
+		cppPtr(newCppPtr) {
+	PortableServer::POA_var poa = _default_POA();
+	PortableServer::ObjectId_var id = poa->activate_object(this);
+}
+
 CORBA::Long ShareableObject_i::getCppPtr() {
     return CORBAPtrToLong(cppPtr);
 }

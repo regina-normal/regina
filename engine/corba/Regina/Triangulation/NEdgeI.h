@@ -33,22 +33,22 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nedge.h"
-    #include "corbatools.h"
 #else
     #include "engine/triangulation/nedge.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"
 
-class NEdge_i : public virtual Regina::Triangulation::_sk_NEdge,
+class NEdge_i : public virtual POA_Regina::Triangulation::NEdge,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NEdge_i, NEdge, Regina::Triangulation::NEdge)
+
     protected:
         NEdge_i(::NEdge* newCppPtr) : ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NEdge, NEdge_i, Regina::Triangulation::NEdge_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual Regina::Triangulation::NComponent_ptr getComponent();
         virtual Regina::Triangulation::NBoundaryComponent_ptr
@@ -56,7 +56,7 @@ class NEdge_i : public virtual Regina::Triangulation::_sk_NEdge,
         virtual CORBA::Boolean isBoundary();
         virtual CORBA::Boolean isValid();
         virtual CORBA::Long getNumberOfEmbeddings();
-        virtual void getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
+        virtual void getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
             CORBA::Long& edge, CORBA::Long index);
 };
 

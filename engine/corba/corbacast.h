@@ -35,7 +35,7 @@
  *  \brief Facilitates conversion between C++ pointers and CORBA longs.
  */
 
-#include <omniORB2/CORBA.h>
+#include <omniORB3/CORBA.h>
 
 #include "config.h"
 

@@ -33,27 +33,27 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "sfproperties.h"
-    #include "corbatools.h"
 #else
     #include "engine/surfaces/sfproperties.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceFilterPropertiesIDL.h"
 #include "NSurfaceFilterI.h"
 
 class NSurfaceFilterProperties_i :
-        public virtual Regina::Surfaces::_sk_NSurfaceFilterProperties,
+        public virtual POA_Regina::Surfaces::NSurfaceFilterProperties,
         public NSurfaceFilter_i {
+    STANDARD_ENGINE_TYPEDEFS(NSurfaceFilterProperties_i,
+            NSurfaceFilterProperties,
+            Regina::Surfaces::NSurfaceFilterProperties)
+        
     protected:
         NSurfaceFilterProperties_i(::NSurfaceFilterProperties* newCppPtr) :
                 NSurfaceFilter_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NSurfaceFilterProperties,
-            NSurfaceFilterProperties_i,
-            Regina::Surfaces::NSurfaceFilterProperties_ptr)
-        
+		STANDARD_NEW_WRAPPER
+
         virtual CORBA::Long getNumberOfECs();
         virtual char* getEC(CORBA::Long index);
         virtual CORBA::Char getOrientability();

@@ -46,7 +46,7 @@ CORBA::Boolean NFace_i::isBoundary() {
 CORBA::Long NFace_i::getNumberOfEmbeddings() {
     return GET_ENGINE_OBJECT(NFace, this)->getNumberOfEmbeddings();
 }
-void NFace_i::getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
+void NFace_i::getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
         CORBA::Long& face, CORBA::Long index) {
     const NFaceEmbedding& emb =
         GET_ENGINE_OBJECT(NFace, this)->getEmbedding(index);

@@ -33,25 +33,25 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nboundarycomponent.h"
-    #include "corbatools.h"
 #else
     #include "engine/triangulation/nboundarycomponent.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"
 
 class NBoundaryComponent_i :
-        public virtual Regina::Triangulation::_sk_NBoundaryComponent,
+        public virtual POA_Regina::Triangulation::NBoundaryComponent,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NBoundaryComponent_i, NBoundaryComponent,
+			Regina::Triangulation::NBoundaryComponent)
+
     protected:
         NBoundaryComponent_i(::NBoundaryComponent* newCppPtr) :
                 ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NBoundaryComponent, NBoundaryComponent_i,
-            Regina::Triangulation::NBoundaryComponent_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual CORBA::Long getEulerCharacteristic();
         virtual CORBA::Boolean isIdeal();

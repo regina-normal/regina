@@ -33,24 +33,24 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "ntriangulation.h"
-    #include "corbatools.h"
 #else
     #include "engine/triangulation/ntriangulation.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NTriangulationIDL.h"
 #include "NPacketI.h"
 
 class NTriangulation_i :
-        public virtual Regina::Triangulation::_sk_NTriangulation,
+        public virtual POA_Regina::Triangulation::NTriangulation,
         public NPacket_i {
+	STANDARD_ENGINE_TYPEDEFS(NTriangulation_i, NTriangulation,
+			Regina::Triangulation::NTriangulation)
+
     protected:
         NTriangulation_i(::NTriangulation* newCppPtr) : NPacket_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NTriangulation, NTriangulation_i,
-            Regina::Triangulation::NTriangulation_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual CORBA::Long getNumberOfTetrahedra();
         virtual Regina::Triangulation::NTetrahedron_ptr getTetrahedron(

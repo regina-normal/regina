@@ -33,23 +33,23 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nprogress.h"
-    #include "corbatools.h"
 #else
     #include "engine/progress/nprogress.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NProgressIDL.h"
 #include "ShareableObjectI.h"
 
-class NProgress_i : public virtual Regina::Progress::_sk_NProgress,
+class NProgress_i : public virtual POA_Regina::Progress::NProgress,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NProgress_i, NProgress,
+			Regina::Progress::NProgress)
+
     protected:
         NProgress_i(::NProgress* newCppPtr) : ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NProgress, NProgress_i,
-            Regina::Progress::NProgress_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual CORBA::Boolean hasChanged();
         virtual CORBA::Boolean isFinished();

@@ -34,21 +34,25 @@
 #ifdef __NO_INCLUDE_PATHS
     #include "shareableobject.h"
     #include "corbacast.h"
+    #include "corbatools.h"
 #else
     #include "engine/shareableobject.h"
     #include "corba/corbacast.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "ShareableObjectIDL.h"
 
-class ShareableObject_i : public virtual Regina::_sk_ShareableObject {
+class ShareableObject_i : public virtual POA_Regina::ShareableObject,
+		public PortableServer::RefCountServantBase {
+	STANDARD_ENGINE_TYPEDEFS(ShareableObject_i, ShareableObject,
+			Regina::ShareableObject)
+
     private:
         ::ShareableObject* cppPtr;
 
     public:
-        ShareableObject_i(::ShareableObject* newCppPtr) : cppPtr(newCppPtr) {
-            _obj_is_ready(_boa());
-        }
+        ShareableObject_i(::ShareableObject* newCppPtr);
         virtual ~ShareableObject_i() {
         }
 

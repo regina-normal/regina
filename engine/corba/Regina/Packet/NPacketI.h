@@ -33,17 +33,17 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "npacket.h"
-    #include "corbatools.h"
 #else
     #include "engine/packet/npacket.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NPacketIDL.h"
 #include "ShareableObjectI.h"
 
-class NPacket_i : public virtual Regina::Packet::_sk_NPacket,
+class NPacket_i : public virtual POA_Regina::Packet::NPacket,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NPacket_i, NPacket, Regina::Packet::NPacket)
+
     protected:
         NPacket_i(::NPacket* newCppPtr) : ShareableObject_i(newCppPtr) {
         }

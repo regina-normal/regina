@@ -33,23 +33,23 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "ncomponent.h"
-    #include "corbatools.h"
 #else
     #include "engine/triangulation/ncomponent.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"
 
-class NComponent_i : public virtual Regina::Triangulation::_sk_NComponent,
+class NComponent_i : public virtual POA_Regina::Triangulation::NComponent,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NComponent_i, NComponent,
+			Regina::Triangulation::NComponent)
+
     protected:
         NComponent_i(::NComponent* newCppPtr) : ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NComponent, NComponent_i,
-            Regina::Triangulation::NComponent_ptr)
+        STANDARD_NEW_WRAPPER
 
         virtual CORBA::Boolean isIdeal();
         virtual CORBA::Boolean isOrientable();

@@ -33,24 +33,24 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "nnormalsurface.h"
-    #include "corbatools.h"
 #else
     #include "engine/surfaces/nnormalsurface.h"
-    #include "corba/corbatools.h"
 #endif
 
 #include "NNormalSurfaceIDL.h"
 #include "ShareableObjectI.h"
 
-class NNormalSurface_i : public virtual Regina::Surfaces::_sk_NNormalSurface,
+class NNormalSurface_i : public virtual POA_Regina::Surfaces::NNormalSurface,
         public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NNormalSurface_i, NNormalSurface,
+			Regina::Surfaces::NNormalSurface)
+
     protected:
         NNormalSurface_i(::NNormalSurface* newCppPtr) :
                 ShareableObject_i(newCppPtr) {
         }
     public:
-        STANDARD_NEW_WRAPPER(NNormalSurface, NNormalSurface_i,
-            Regina::Surfaces::NNormalSurface_ptr)
+        STANDARD_NEW_WRAPPER
         
         virtual char* getTriangleCoord(CORBA::Long tetIndex,
             CORBA::Long vertex);

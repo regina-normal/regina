@@ -64,7 +64,7 @@ CORBA::Long NVertex_i::getLinkEulerCharacteristic() {
 CORBA::Long NVertex_i::getNumberOfEmbeddings() {
     return GET_ENGINE_OBJECT(NVertex, this)->getNumberOfEmbeddings();
 }
-void NVertex_i::getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
+void NVertex_i::getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
         CORBA::Long& vertex, CORBA::Long index) {
     const NVertexEmbedding& emb =
         GET_ENGINE_OBJECT(NVertex, this)->getEmbedding(index);
