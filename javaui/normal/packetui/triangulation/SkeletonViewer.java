@@ -34,6 +34,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
+import normal.Shell;
 import normal.engine.packet.NPacket;
 import normal.engine.triangulation.NTriangulation;
 import normal.packetui.*;
@@ -145,13 +146,20 @@ public class SkeletonViewer extends DefaultPacketViewer
      */
     private Vector skeletonFrames = new Vector();
 
+	/**
+	 * The shell representing the entire program.
+	 */
+	private Shell shell;
+
     /**
      * Create a new interface to display the given triangulation skeleton.
      *
      * @param triangulation the triangulation whose skeleton we will display.
+	 * @param shell the shell representing the entire program.
      */
-    public SkeletonViewer(NTriangulation triangulation) {
+    public SkeletonViewer(NTriangulation triangulation, Shell shell) {
         this.triangulation = triangulation;
+		this.shell = shell;
         init();
     }
 
@@ -333,7 +341,8 @@ public class SkeletonViewer extends DefaultPacketViewer
 	 * @see normal.packetui.triangulation.SkeletonTableFrame
 	 */
     private void showSkeletonDetails(int style) {
-		SkeletonTableFrame f = new SkeletonTableFrame(triangulation, style);
+		SkeletonTableFrame f = new SkeletonTableFrame(shell.getPrimaryFrame(),
+			triangulation, style);
 		skeletonFrames.addElement(f);
 		f.addWindowListener(new WindowAdapter() {
 			public void windowClosed(WindowEvent e) {

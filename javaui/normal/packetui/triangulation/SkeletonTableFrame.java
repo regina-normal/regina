@@ -37,10 +37,10 @@ import org.gjt.btools.gui.*;
 import org.gjt.btools.gui.component.*;
 
 /**
- * A frame which can be used to view specific details of a triangulation
- * skeleton.
+ * A non-modal dialog which can be used to view specific details of a
+ * triangulation skeleton.
  */
-public class SkeletonTableFrame extends JFrame {
+public class SkeletonTableFrame extends JDialog {
     /**
      * Denotes triangulation vertices.
      */
@@ -79,26 +79,40 @@ public class SkeletonTableFrame extends JFrame {
     private int style;
     
     /**
-     * Create a new frame.
+     * Create a new dialog.
      *
+	 * @param owner the frame from which the new dialog will be displayed.
      * @param triangulation the triangulation whose skeleton we are
 	 * viewing.
      * @param style specifies whether to view details for
      * vertices, edges, faces or so on.  This must be one of the
 	 * style constants defined in this class.
      */
-    public SkeletonTableFrame(NTriangulation triangulation, int style) {
-        super();
+    public SkeletonTableFrame(Frame owner, NTriangulation triangulation,
+			int style) {
+        super(owner);
 		this.triangulation = triangulation;
         this.style = style;
-        switch(style) {
-            case VERTICES: setTitle("Vertices"); break;
-            case EDGES: setTitle("Edges"); break;
-            case FACES: setTitle("Faces"); break;
-            case COMPONENTS: setTitle("Components"); break;
-            case BOUNDARY_COMPONENTS: setTitle("Boundary Components");
-                break;
-        }
+        init();
+        this.setSize(550, 300);
+        Positioner.centerOnScreen(this);
+    }
+    
+    /**
+     * Create a new dialog.
+     *
+	 * @param owner the dialog from which the new dialog will be displayed.
+     * @param triangulation the triangulation whose skeleton we are
+	 * viewing.
+     * @param style specifies whether to view details for
+     * vertices, edges, faces or so on.  This must be one of the
+	 * style constants defined in this class.
+     */
+    public SkeletonTableFrame(Dialog owner, NTriangulation triangulation,
+			int style) {
+        super(owner);
+		this.triangulation = triangulation;
+        this.style = style;
         init();
         this.setSize(550, 300);
         Positioner.centerOnScreen(this);
@@ -108,6 +122,16 @@ public class SkeletonTableFrame extends JFrame {
      * Initialise the interface components.
      */
     private void init() {
+		// Set the title.
+        switch(style) {
+            case VERTICES: setTitle("Vertices"); break;
+            case EDGES: setTitle("Edges"); break;
+            case FACES: setTitle("Faces"); break;
+            case COMPONENTS: setTitle("Components"); break;
+            case BOUNDARY_COMPONENTS: setTitle("Boundary Components");
+                break;
+        }
+
         // Set up the button panel.
         JButton close = new JButton("Close");
         JPanel buttonPane = new JPanel();
