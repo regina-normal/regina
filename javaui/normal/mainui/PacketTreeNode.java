@@ -137,45 +137,95 @@ public class PacketTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * Examines all descendants of this packet in the internal engine
-     * and inserts new <tt>PacketTreeNode</tt> wrappers into
+     * Determines if one of this node's children is a <tt>PacketTreeNode</tt>
+     * wrapper for the given packet in the internal engine.
+     *
+     * @param child the packet we are searching for.
+     * @return the index in this node's child list of the wrapper for the
+	 * given packet, or -1 if no wrapper was found.
+     */
+    public int findChildNodeIndex(NPacket child) {
+        Enumeration e = children();
+		int index = 0;
+        while (e.hasMoreElements()) {
+            if (((PacketTreeNode)e.nextElement()).getPacket().
+					sameObject(child))
+                return index;
+			index++;
+        }
+        return -1;
+    }
+
+    /**
+     * Examines all descendants of this packet in the internal engine,
+     * inserts new <tt>PacketTreeNode</tt> wrappers into
      * the given tree for all descendant packets that are not already
-     * wrapped as such.
-     * <p>
-     * As of Regina 2.1.1, this routine has been improved from quadratic
-     * time to linear time.
+     * wrapped and removes nodes for packets that have been moved to
+	 * a different parent.
+	 * Note that the packet nodes are also reordered to match the
+	 * ordering in the underlying engine packet tree.
      * <p>
      * <b>Precondition:</b> This tree node already belongs to the given
      * tree.
      *
-     * @param model the tree model into which the new nodes will be inserted.
+     * @param model the tree model in which the nodes will be modified.
      * @param newNodes a vector into which each new
      * <tt>PacketTreeNode</tt> wrapper that was inserted into the tree
      * will be placed.  If you do not wish for such an archive to be
      * made, you can simply pass <tt>null</tt> for this parameter.
      */
-    public void insertUnwrappedDescendants(DefaultTreeModel model,
-            Vector newNodes) {
-        // Make a list of all packets needing to be wrapped.
-        Vector mustWrap = new Vector();
-        NPacket child = packet.getFirstTreeChild();
-        while (child != null) {
-            if (findChildNode(child) == null)
-                mustWrap.addElement(child);
-            child = child.getNextTreeSibling();
-        }
-        
-        // Wrap these packets.
-        PacketTreeNode childNode;
-        Enumeration e = mustWrap.elements();
-        while (e.hasMoreElements()) {
-            childNode = new PacketTreeNode((NPacket)e.nextElement());
-            model.insertNodeInto(childNode, this, getChildCount());
-            if (newNodes != null)
-                newNodes.addElement(childNode);
-            childNode.insertUnwrappedDescendants(model, newNodes);
-        }
-    }
+	public void verifyDescendants(DefaultTreeModel model, Vector newNodes) {
+		NPacket child = packet.getFirstTreeChild();
+		PacketTreeNode node = null;
+
+		int index = 0;
+		int count = getChildCount();
+		while (child != null) {
+			// child is the first packet that might not be properly
+			// mirrored in the tree.
+			// index is the index at which the node for child should be
+			// placed.
+			// count is the number of child nodes currently in the tree.
+			if (index == count) {
+				// There is no mirror node.
+				node = new PacketTreeNode(child);
+            	if (newNodes != null)
+                	newNodes.addElement(node);
+				count++;
+				model.insertNodeInto(node, this, index);
+			} else if (child.sameObject(
+					(node = (PacketTreeNode)getChildAt(index)).getPacket())) {
+				// The mirror node is already present.
+			} else {
+				// Hunt for a mirror node.
+				node = findChildNode(child);
+				if (node == null) {
+					// There is no mirror node.
+					node = new PacketTreeNode(child);
+            		if (newNodes != null)
+                		newNodes.addElement(node);
+					count++;
+				} else {
+					// The mirror node is in the wrong place.
+					model.removeNodeFromParent(node);
+				}
+				model.insertNodeInto(node, this, index);
+			}
+
+			// At this point, node mirrors child.
+			node.verifyDescendants(model, newNodes);
+
+			// Advance to the next packet.
+			child = child.getNextTreeSibling();
+			index++;
+		}
+
+		// Remove extraneous nodes.
+		while (count > index) {
+			model.removeNodeFromParent((PacketTreeNode)getChildAt(count - 1));
+			count--;
+		}
+	}
 
     /**
      * Deletes any existing descendant nodes of this tree node and inserts a

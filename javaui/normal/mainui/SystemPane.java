@@ -1136,11 +1136,16 @@ public class SystemPane extends JPanel {
         Vector newNodes = new Vector();
         PacketTreeNode parentNode = findTreeNode(subtree.getTreeParent());
         PacketTreeNode subtreeNode = new PacketTreeNode(subtree);
-        treeModel.insertNodeInto(subtreeNode, parentNode,
-            parentNode.getChildCount());
+		NPacket sibling = subtree.getPrevTreeSibling();
+		int index;
+		if (sibling == null)
+			index = 0;
+		else if ((index = parentNode.findChildNodeIndex(sibling) + 1) <= 0)
+			index = parentNode.getChildCount();
+        treeModel.insertNodeInto(subtreeNode, parentNode, index);
         newNodes.addElement(subtreeNode);
 
-        subtreeNode.insertUnwrappedDescendants(treeModel, newNodes);
+        subtreeNode.verifyDescendants(treeModel, newNodes);
 
         scrollToNodes(newNodes);
         if (showNewPackets)
@@ -1161,10 +1166,6 @@ public class SystemPane extends JPanel {
      * updated.
      * <p>
      * Note that this routine does not cater for packet deletions.
-     * <p>
-     * <b>Precondition:</b> If packets have been moved within the given
-     * subtree, the corresponding packet tree nodes have already been
-     * rearranged before this routine is called.
      *
      * @param subtree the root of the packet subtree in which the
      * operations have taken place.
@@ -1205,7 +1206,7 @@ public class SystemPane extends JPanel {
         }
         
         Vector newNodes = new Vector();
-        subtreeNode.insertUnwrappedDescendants(treeModel, newNodes);
+        subtreeNode.verifyDescendants(treeModel, newNodes);
         scrollToNodes(newNodes);
         packetTree.repaint();
 
@@ -1377,7 +1378,8 @@ public class SystemPane extends JPanel {
         if (chosen == null)
             return;
 
-        NPacket clone = chosen.getPacket().clonePacket(includeDescendants);
+        NPacket clone = chosen.getPacket().clonePacket(includeDescendants,
+			false);
         if (clone == null) {
             shell.error("This packet may not be cloned.");
             return;

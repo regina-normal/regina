@@ -342,7 +342,7 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
                 boolean cloned = false;
                 if (performOnClone.isSelected()) {
                     String label = packet.getPacketLabel();
-                    packet = packet.clonePacket(false);
+                    packet = packet.clonePacket(false, false);
                     if (packet == null) {
                         shell.error("The matriarch of the packet " +
                             "tree cannot be cloned.");

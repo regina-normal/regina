@@ -50,8 +50,3 @@ Normal Surfaces:
 Packet Tree:
 	Ensure horizontal sizes of tree nodes are correct after renaming or
 		inserting new nodes.
-	Have clones appear next to originals in UI tree, both with cloning
-		and running algorithms on clones.
-	Ensure insertUnwrappedDescendants puts the nodes in the right
-		positions in child lists.
-*	Ensure refreshing notices which packets have moved out of a subtree.

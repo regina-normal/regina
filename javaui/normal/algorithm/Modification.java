@@ -28,6 +28,7 @@
 
 package normal.algorithm;
 
+import java.awt.event.KeyEvent;
 import java.util.*;
 import javax.swing.*;
 import normal.Shell;
@@ -82,6 +83,7 @@ public abstract class Modification extends Algorithm {
      */
     public static void makeMenu(Shell shell, JMenu menu, Vector vector) {
         JMenu triangulation = new JMenu("Triangulation");
+		triangulation.setMnemonic(KeyEvent.VK_T);
         (new Modification(shell, "Intelligent Simplify", "simplified",
             normal.engine.triangulation.NTriangulation.class) {
                 public boolean perform(NPacket packet) {
