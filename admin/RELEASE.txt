@@ -29,5 +29,6 @@ Don't forget:
     rebuild manpages
     website
     debian packages
+    fedora packages
     tag CVS
     mail regina-announce
