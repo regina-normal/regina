@@ -103,8 +103,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
         void setUp() {
             // Some of our triangulations can be constructed automatically.
-            lens8_3.insertLensSpace(8, 3);
-            lens100_1.insertLensSpace(100, 1);
+            lens8_3.insertLayeredLensSpace(8, 3);
+            lens100_1.insertLayeredLensSpace(100, 1);
             lst3_4_7.insertLayeredSolidTorus(3, 4);
 
             // Some of our triangulations can be generated from
