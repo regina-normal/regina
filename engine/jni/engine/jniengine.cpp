@@ -181,7 +181,7 @@ JNIEXPORT jobject JNICALL
     return CREATE_WRAPPER_OBJECT(env,
         NTriSolidTorus::isTriSolidTorus(GET_ENGINE_OBJECT(
         env, NTetrahedron, tet), NPerm(perm)),
-        "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
+        "normal/engine/implementation/jni/subcomplex/NJNITriSolidTorus");
 }
 
 

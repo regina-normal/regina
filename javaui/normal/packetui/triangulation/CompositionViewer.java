@@ -116,7 +116,7 @@ public class CompositionViewer extends DefaultPacketViewer
 
         DefaultMutableTreeNode category;
         DefaultMutableTreeNode instance;
-        long n, i, j;
+        long n, i, j, k;
 
         // Look for lens spaces.
         category = null;
@@ -237,12 +237,97 @@ public class CompositionViewer extends DefaultPacketViewer
                 instance.add(new DefaultMutableTreeNode("Base: tet " +
                     String.valueOf(triangulation.getTetrahedronIndex(
                     torus.getBase()))));
+                long topIndex = triangulation.getTetrahedronIndex(
+                    torus.getTopLevel());
                 instance.add(new DefaultMutableTreeNode("Top level: tet " +
-                    String.valueOf(triangulation.getTetrahedronIndex(
-                    torus.getTopLevel()))));
+                    String.valueOf(topIndex)));
+                String edgeCopy = edgeString(topIndex, torus.getTopEdge(0, 1));
+                instance.add(new DefaultMutableTreeNode("Weight " +
+                    String.valueOf(torus.getMeridinalCuts(0)) + " edge: " +
+                    edgeString(topIndex, torus.getTopEdge(0, 0)) +
+                    (edgeCopy == null ? "" : " = " + edgeCopy)));
+                edgeCopy = edgeString(topIndex, torus.getTopEdge(1, 1));
+                instance.add(new DefaultMutableTreeNode("Weight " +
+                    String.valueOf(torus.getMeridinalCuts(1)) + " edge: " +
+                    edgeString(topIndex, torus.getTopEdge(1, 0)) +
+                    (edgeCopy == null ? "" : " = " + edgeCopy)));
+                edgeCopy = edgeString(topIndex, torus.getTopEdge(2, 1));
+                instance.add(new DefaultMutableTreeNode("Weight " +
+                    String.valueOf(torus.getMeridinalCuts(2)) + " edge: " +
+                    edgeString(topIndex, torus.getTopEdge(2, 0)) +
+                    (edgeCopy == null ? "" : " = " + edgeCopy)));
                 torus.destroy();
             }
         }
+
+        // Look for triangular solid tori.
+        // Make sure we find each triangular solid torus only once.
+        category = null;
+        n = triangulation.getNumberOfTetrahedra();
+        long tetIndex[] = new long[3];
+        NPerm p;
+        NPerm roles[] = new NPerm[3];
+        for (i = 0; i < (n - 2); i++)
+            for (j = 0; j < 24; j++) {
+                p = NPerm.allPermsS4[(int)j];
+                if (p.imageOf(0) > p.imageOf(1))
+                    continue;
+                tri = engine.isTriSolidTorus(
+                    triangulation.getTetrahedron(i), p);
+                if (tri != null) {
+                    for (k = 0; k < 3; k++) {
+                        tetIndex[(int)k] = triangulation.getTetrahedronIndex(
+                            tri.getTetrahedron((int)k));
+                        roles[(int)k] = tri.getVertexRoles((int)k);
+                    }
+                    if (tetIndex[1] < tetIndex[0] ||
+                            tetIndex[2] < tetIndex[0]) {
+                        tri.destroy();
+                        continue;
+                    }
+
+                    // We have the triangular solid torus in a unique
+                    // canonical form.
+                    if (category == null) {
+                        category = new DefaultMutableTreeNode(
+                            "Triangular Solid Tori");
+                        rootNode.add(category);
+                    }
+                    instance = new DefaultMutableTreeNode("Tets " +
+                        String.valueOf(tetIndex[0]) + ", " +
+                        String.valueOf(tetIndex[1]) + ", " +
+                        String.valueOf(tetIndex[2]));
+                    category.add(instance);
+
+                    instance.add(new DefaultMutableTreeNode("Axis edges: " +
+                        edgeString(tetIndex[0], roles[0], 0, 1) + ", " +
+                        edgeString(tetIndex[1], roles[1], 0, 1) + ", " +
+                        edgeString(tetIndex[2], roles[2], 0, 1)));
+                    instance.add(new DefaultMutableTreeNode("Major edge: " +
+                        edgeString(tetIndex[0], roles[0], 2, 3) + " = " +
+                        edgeString(tetIndex[1], roles[1], 0, 2) + " = " +
+                        edgeString(tetIndex[2], roles[2], 3, 1)));
+                    instance.add(new DefaultMutableTreeNode("Major edge: " +
+                        edgeString(tetIndex[1], roles[1], 2, 3) + " = " +
+                        edgeString(tetIndex[2], roles[2], 0, 2) + " = " +
+                        edgeString(tetIndex[0], roles[0], 3, 1)));
+                    instance.add(new DefaultMutableTreeNode("Major edge: " +
+                        edgeString(tetIndex[2], roles[2], 2, 3) + " = " +
+                        edgeString(tetIndex[0], roles[0], 0, 2) + " = " +
+                        edgeString(tetIndex[1], roles[1], 3, 1)));
+                    instance.add(new DefaultMutableTreeNode("Minor edge: " +
+                        edgeString(tetIndex[1], roles[1], 1, 2) + " = " +
+                        edgeString(tetIndex[2], roles[2], 3, 0)));
+                    instance.add(new DefaultMutableTreeNode("Minor edge: " +
+                        edgeString(tetIndex[2], roles[2], 1, 2) + " = " +
+                        edgeString(tetIndex[0], roles[0], 3, 0)));
+                    instance.add(new DefaultMutableTreeNode("Minor edge: " +
+                        edgeString(tetIndex[0], roles[0], 1, 2) + " = " +
+                        edgeString(tetIndex[1], roles[1], 3, 0)));
+
+                    tri.destroy();
+                }
+            }
 
         // Look for snapped 3-balls.
         category = null;
@@ -351,5 +436,44 @@ public class CompositionViewer extends DefaultPacketViewer
 
         rootNode.removeAllChildren();
         model.nodeStructureChanged(rootNode);
+    }
+
+    /**
+     * Returns a string representation of the given edge.
+     * If the given edge number is -1, <tt>null</tt> will be returned.
+     *
+     * @param tetIndex the index in the triangulation of a tetrahedron
+     * containing the edge.
+     * @param edgeNumber the number of the edge in the tetrahedron; this
+     * should be between -1 and 5 inclusive.
+     * @return a string representation of the given edge, or
+     * <tt>null</tt> if <i>edgeNumber</i> was -1.
+     */
+    private static String edgeString(long tetIndex, int edgeNumber) {
+        if (edgeNumber < 0)
+            return null;
+        return String.valueOf(tetIndex) + " (" +
+            String.valueOf(NEdge.edgeStart[edgeNumber]) +
+            String.valueOf(NEdge.edgeEnd[edgeNumber]) + ')';
+    }
+
+    /**
+     * Returns a string representation of the given edge.
+     *
+     * @param tetIndex the index in the triangulation of a tetrahedron
+     * containing the edge.
+     * @param roles a permutation mapping 0, 1, 2 and 3 to the four
+     * vertices of the tetrahedron.
+     * @param start the preimage in <i>roles</i> of the starting vertex
+     * of the edge.
+     * @param start the preimage in <i>roles</i> of the end vertex
+     * of the edge.
+     * @return a string representation of the given edge.
+     */
+    private static String edgeString(long tetIndex, NPerm roles,
+            int start, int end) {
+        return String.valueOf(tetIndex) + " (" +
+            String.valueOf(roles.imageOf(start)) +
+            String.valueOf(roles.imageOf(end)) + ')';
     }
 }

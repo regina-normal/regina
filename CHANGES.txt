@@ -19,6 +19,8 @@ Regina - A Normal Surface Theory Calculator
         Overall structure:
             - Loading/saving local files is now possible even through CORBA!
             - Incorporated engine enhancements listed above.
+        normal.packetui.triangulation.CompositionViewer:
+            - Displays more detailed information.
 
 Version 2.2  [ 7 October, 2001 ]
     OVERALL:
