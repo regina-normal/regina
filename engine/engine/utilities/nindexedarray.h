@@ -88,6 +88,8 @@ namespace regina {
  * a hash function (with argument type <tt>Data</tt>) according to the
  * Standard Template Library.
  *
+ * \testfull
+ *
  * \ifaces Not present.
  */
 template <class Data, class HashFcn = stdhash::hash<Data>,
@@ -650,7 +652,7 @@ inline bool operator == (const NIndexedArray<Data, HashFcn, EqualTo>& array1,
 template <class Data, class HashFcn, class EqualTo>
 inline bool operator < (const NIndexedArray<Data, HashFcn, EqualTo>& array1,
         const NIndexedArray<Data, HashFcn, EqualTo>& array2) {
-    return lexicograhical_compare(array1.begin(), array1,end(),
+    return lexicographical_compare(array1.begin(), array1.end(),
         array2.begin(), array2.end());
 }
 
