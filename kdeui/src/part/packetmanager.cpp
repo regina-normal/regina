@@ -113,7 +113,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             enclosingPane);
     if (packet->getPacketType() == NNormalSurfaceList::packetType)
         return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
-            enclosingPane, readWrite);
+            enclosingPane, part, readWrite);
     if (packet->getPacketType() == NScript::packetType) {
         KTextEditor::Document* doc = createDocument();
         if (doc)

@@ -37,6 +37,7 @@
 
 class NSurfaceCoordinateUI;
 class QLabel;
+class ReginaPart;
 
 namespace regina {
     class NNormalSurfaceList;
@@ -59,7 +60,7 @@ class NNormalSurfaceUI : public PacketTabbedUI {
          * Constructor.
          */
         NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
-            PacketPane* newEnclosingPane, bool readWrite);
+            PacketPane* newEnclosingPane, ReginaPart* part, bool readWrite);
 
         /**
          * PacketUI overrides.

@@ -89,12 +89,8 @@ void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
         treeView->selectedPacket(), parentFilter, dialogTitle, suggestedLabel);
     if (dlg.exec() == QDialog::Accepted) {
         regina::NPacket* newPacket = dlg.createdPacket();
-        if (newPacket) {
-            QListViewItem* item = treeView->find(newPacket);
-            if (item)
-                treeView->ensureItemVisible(item);
-            packetView(newPacket);
-        }
+        if (newPacket)
+            packetView(newPacket, true);
     }
 }
 

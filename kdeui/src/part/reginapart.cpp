@@ -239,14 +239,20 @@ bool ReginaPart::saveFile() {
     }
 }
 
-void ReginaPart::packetView(regina::NPacket* packet) {
+void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree) {
     view(new PacketPane(this, packet));
+
+    if (makeVisibleInTree) {
+        QListViewItem* item = treeView->find(packet);
+        if (item)
+            treeView->ensureItemVisible(item);
+    }
 }
 
 void ReginaPart::packetView() {
     regina::NPacket* packet = checkPacketSelected();
     if (packet)
-        packetView(packet);
+        packetView(packet, false);
 }
 
 void ReginaPart::packetRename() {
@@ -326,7 +332,7 @@ void ReginaPart::clonePacket() {
         treeView->setSelected(item, true);
         treeView->ensureItemVisible(item);
     }
-    packetView(ans);
+    packetView(ans, false);
 }
 
 void ReginaPart::cloneSubtree() {
@@ -344,7 +350,7 @@ void ReginaPart::cloneSubtree() {
         treeView->setSelected(item, true);
         treeView->ensureItemVisible(item);
     }
-    packetView(ans);
+    packetView(ans, false);
 }
 
 void ReginaPart::newCensus() {

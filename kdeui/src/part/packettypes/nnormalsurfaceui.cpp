@@ -43,12 +43,12 @@ using regina::NPacket;
 using regina::NNormalSurface;
 
 NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
-        PacketPane* newEnclosingPane, bool readWrite) :
+        PacketPane* newEnclosingPane, ReginaPart* part, bool readWrite) :
         PacketTabbedUI(newEnclosingPane) {
     NSurfaceHeaderUI* header = new NSurfaceHeaderUI(packet, this);
     addHeader(header);
 
-    coords = new NSurfaceCoordinateUI(packet, this, readWrite);
+    coords = new NSurfaceCoordinateUI(packet, this, part, readWrite);
     addTab(coords, i18n("&Surface Coordinates"));
 
     addTab(new NSurfaceMatchingUI(packet, this), i18n("&Matching Equations"));

@@ -122,6 +122,11 @@ class ReginaPart : public KParts::ReadWritePart {
         static KInstance* factoryInstance();
 
         /**
+         * View the given packet.
+         */
+        void packetView(regina::NPacket*, bool makeVisibleInTree = true);
+
+        /**
          * Display a newly created packet pane in a sensible manner.
          * Whether it is docked or in a free-floating window will be
          * decided according to the current arrangement of panes and any
@@ -199,11 +204,6 @@ class ReginaPart : public KParts::ReadWritePart {
         void preferencesChanged(const ReginaPrefSet&);
 
     public slots:
-        /**
-         * View the given packet.
-         */
-        void packetView(regina::NPacket*);
-
         /**
          * View, rename or delete the currently selected packet.
          */

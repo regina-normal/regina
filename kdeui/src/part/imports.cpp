@@ -73,12 +73,9 @@ void ReginaPart::importFile(const PacketImporter& importer,
         if (newTree) {
             ImportDialog dlg(widget(), newTree, packetTree,
                 treeView->selectedPacket(), parentFilter, dialogTitle);
-            if (dlg.exec() == QDialog::Accepted) {
-                QListViewItem* item = treeView->find(newTree);
-                if (item)
-                    treeView->ensureItemVisible(item);
-                packetView(newTree);
-            } else
+            if (dlg.exec() == QDialog::Accepted)
+                packetView(newTree, true);
+            else
                 delete newTree;
         }
     }
