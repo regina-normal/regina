@@ -111,6 +111,19 @@ class NMutex {
                  */
                 MutexLock(const NMutex* mutex);
                 /**
+                 * Creates a lock for the given mutex.
+                 *
+                 * If some other thread has already locked the given
+                 * mutex, this thread will be suspended until the mutex
+                 * is unlocked by the other thread.
+                 * This thread will then lock the mutex itself.
+                 *
+                 * @param mutex the mutex to be locked by this object.
+                 * This is \c const to simplify using mutex locks with
+                 * data retrieval routines for subclasses of NMutex.
+                 */
+                MutexLock(const NMutex& mutex);
+                /**
                  * Unlocks the mutex handled by this object.
                  */
                 ~MutexLock();
@@ -230,6 +243,10 @@ inline void NMutex::mutexUnlock() const {
 // Inline functions for NMutex::MutexLock
 
 inline NMutex::MutexLock::MutexLock(const NMutex* mutex) : mutex_(mutex) {
+    mutex_->mutexLock();
+}
+
+inline NMutex::MutexLock::MutexLock(const NMutex& mutex) : mutex_(&mutex) {
     mutex_->mutexLock();
 }
 
