@@ -28,7 +28,7 @@ export ORBInitialPort := 8088
 # DOC_JAR: The complete documentation jar for use with the internal
 #         help browser.
  
-export ENGINE_JNI := bin/libregina-engine-jni.so
+export ENGINE_JNI := bin/libregina-engine-jni.jnilib
 export ENGINE_CORBA := bin/regina-engine-corba
 export ENGINE_LIB := bin/libregina-engine.a
 
@@ -54,8 +54,7 @@ export DOC_JAR := bin/regina-docs.jar
 # EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
 #                  for the calculation engine, such as gmp and pthread.
 
-export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
-	-I/usr/lib/j2sdk1.3/include/linux
+export JNI_INCLUDES := -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/
 export CORBA_INCLUDES := -D__x86__
 export EXTRA_INCLUDES :=
 
@@ -135,7 +134,7 @@ export EXTRA_CLASSES :=
 export MAKEDEP := c++ -MM
 export COMPILE := c++ -O2 -c -Wall # -DDEBUG
 export LINKEXEC := c++ -O2
-export LINKLIB := c++ -O2 -shared
+export LINKLIB := c++ -O2 -bundle
 export LINKSTATIC := ar cru
 export DOXYGEN := doxygen
 export JAVAC := javac -target 1.1
