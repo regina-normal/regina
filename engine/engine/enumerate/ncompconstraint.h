@@ -35,6 +35,7 @@
 #define __NCOMPCONSTRAINT_H
 #endif
 
+#include <algorithm>
 #include <deque>
 #include <set>
 #include "maths/nvector.h"

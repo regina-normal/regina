@@ -35,6 +35,7 @@
 #define __NNORMALSURFACE_H
 #endif
 
+#include <utility>
 #include "shareableobject.h"
 #include "maths/nray.h"
 #include "property/npropertyholder.h"
