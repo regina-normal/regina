@@ -188,22 +188,135 @@
   </sect2>
  </sect1>
 
- <!--sect1 id="tri-analysis">
+ <sect1 id="tri-analysis">
   <title>Analysis</title>
+
+  <para>
+   A variety of triangulation properties are available for calculation;
+   most of these can be viewed by clicking on the different tabs
+   available in the triangulation viewer.
+  </para>
+
+  <sect2 id="tri-basicprops">
+   <title>Basic Properties</title>
+
+   <para>
+    Above all of the tabs in the triangulation viewer are displayed some
+    basic properties of the triangulation as listed below.
+   </para>
+   <para>
+    <glosslist>
+     <glossentry>
+      <glossterm>Empty</glossterm>
+      <glossdef><para>
+       Signifies that the triangulation contains no tetrahedra at all.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Invalid</glossterm>
+      <glossdef><para>
+       Signifies that the triangulation contains an invalid vertex
+       (a vertex whose link has boundary but is not a disc) or an
+       invalid edge (an edge glued to itself in reverse).
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Closed</glossterm>
+      <glossdef><para>
+       Signifies that the triangulation has no boundary faces and no
+       ideal vertices.  All vertex links must be 2-spheres.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Ideal</glossterm>
+      <glossdef><para>
+       Signifies that the triangulation contains an ideal vertex (a
+       vertex whose link is closed but not a 2-sphere).
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Real Bdry</glossterm>
+      <glossdef><para>
+       Signifies that the triangulation contains a boundary face.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Orientable / Non-orientable</glossterm>
+      <glossdef><para>
+       Shows whether the triangulation is orientable.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Connected / Disconnected</glossterm>
+      <glossdef><para>
+       Shows whether the triangulation forms a single connected piece.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+  </sect2>
 
   <sect2 id="tri-viewgluings">
    <title>Face Gluings</title>
-   <para>TODO: This section still to be written.</para>
+
+   <para>
+    The <guilabel>Gluings</guilabel> tab in the triangulation
+    viewer shows how individual faces of individual
+    tetrahedra are glued to each other.  See the reference for
+    <link linkend="tri-editgluings">editing face gluings</link> for
+    details on how this information is presented.
+   </para>
   </sect2>
 
   <sect2 id="tri-skeleton">
    <title>Skeletal Information</title>
+
+   <para>
+    The <guilabel>Skeleton</guilabel> tab in the triangulation viewer
+    offers details of the individual vertices, edges, faces, components
+    and boundary components that make up the triangulation.
+   </para>
    <para>TODO: This section still to be written.</para>
   </sect2>
 
   <sect2 id="tri-algebra">
    <title>Algebraic Properties</title>
-   <para>TODO: This section still to be written.</para>
+
+   <para>
+    The <guilabel>Algebra</guilabel> tab in the triangulation viewer
+    presents a variety of algebraic invariants of the triangulation.
+   </para>
+   <para>
+    Note that if the triangulation contains ideal vertices, the
+    algebraic properties will be calculated as if these vertices had
+    been truncated.  These truncated ideal vertices will also be
+    considered part of the boundary.
+   </para>
+   <warning><para>
+    There is no guarantee that invalid edges (edges
+    glued to themselves in reverse) will be dealt with correctly.
+    In particular, the projective plane cusps they produce will be
+    ignored.
+   </para></warning>
+   <para>
+    On the left hand side of the algebra panel, different homology
+    groups will be presented.  These include
+    H1(M) (the first homology group),
+    H1(M, Bdry M)
+    (the relative first homology group with respect to the boundary),
+    H1(Bdry M) (the first homology group of the boundary),
+    H2(M) (the second homology group) and
+    H2(M ; Z<subscript>2</subscript>)
+    (the second homology group with coefficients in
+    Z<subscript>2</subscript>).
+   </para>
+   <para>
+    On the right hand side of the algebra panel, the fundamental group
+    will be presented as a set of generators and
+    relations.  The generators and relations will be passed through a
+    fairly weak recognition routine, and if the group is recognised then
+    its common name will be given as well.
+   </para>
   </sect2>
 
   <sect2 id="tri-composition">
@@ -213,9 +326,46 @@
 
   <sect2 id="tri-surfaceproperties">
    <title>Properties of Normal Surfaces</title>
-   <para>TODO: This section still to be written.</para>
+
+   <para>
+    Certain properties of a triangulation are defined by the types of
+    normal surfaces it contains.  These properties can be found under
+    the <guilabel>Surfaces</guilabel> tab in the triangulation viewer.
+   </para>
+   <para>
+    For sufficiently large triangulations, some of these properties will
+    not be calculated by default since the calculations could be quite
+    slow.  If a property is listed as <literal>Unknown</literal>, press
+    the corresponding <guibutton>Calculate</guibutton> button
+    (and be prepared to wait).
+   </para>
+   <para>
+    The available properties pertaining to normal surfaces are as follows.
+   </para>
+   <para>
+    <glosslist>
+     <glossentry>
+      <glossterm>Zero-Efficient</glossterm>
+      <glossdef><para>
+       Determines whether the triangulation is 0-efficient.  A
+       triangulation is <firstterm>0-efficient</firstterm> if its only
+       normal spheres and discs are vertex linking, and if it has no 2-sphere
+       boundary components.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Splitting Surface</glossterm>
+      <glossdef><para>
+       Determines whether the triangulation has a splitting
+       surface.  A <firstterm>splitting surface</firstterm> is a compact
+       normal surface consisting of precisely one quad per tetrahedron
+       and no other normal (or almost normal) discs.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
   </sect2>
- </sect1-->
+ </sect1>
 
  <sect1 id="tri-modification">
   <title>Modification</title>
