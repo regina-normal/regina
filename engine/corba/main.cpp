@@ -54,10 +54,10 @@ struct ArgSet {
         /**< The array of argument strings. */
 
     char* host;
-        /**< The CORBA name service host to use; this information will
+        /**< The CORBA naming service host to use; this information will
          *   also appear in array \a argv. */
     char* port;
-        /**< The CORBA name service port to use; this information will
+        /**< The CORBA naming service port to use; this information will
          *   also appear in array \a argv. */
 
     /**
@@ -90,14 +90,14 @@ ArgSet::ArgSet(int initArgC, char* initArgV[]) {
     for (i = 0; i < initArgC; i++)
         if (strcmp(initArgV[i], HOST_FLAG) == 0 && i < initArgC - 1) {
             if (host) {
-                cerr << "More than one CORBA name service host was\n";
+                cerr << "More than one CORBA naming service host was\n";
                 cerr << "specified on the command line.\n";
                 return;
             }
             stringCopy(&host, initArgV[i + 1]);
         } else if (strcmp(initArgV[i], PORT_FLAG) == 0 && i < initArgC - 1) {
             if (port) {
-                cerr << "More than one CORBA name service port was\n";
+                cerr << "More than one CORBA naming service port was\n";
                 cerr << "specified on the command line.\n";
                 return;
             }
