@@ -1988,6 +1988,80 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \c false if the given string could not be rehydrated.
          */
         bool insertRehydration(const std::string& dehydration);
+        /**
+         * Inserts into this triangulation a set of tetrahedra and their
+         * gluings as described by the given integer arrays.
+         *
+         * This routine is provided to make it easy to hard-code a
+         * medium-sized triangulation in a C++ source file.  All of the
+         * pertinent data can be hard-coded into a pair of integer arrays at
+         * the beginning of the source file, avoiding an otherwise tedious
+         * sequence of many joinTo() calls.
+         *
+         * An additional \a nTetrahedra tetrahedra will be inserted into
+         * this triangulation.  The relationships between these tetrahedra
+         * should be stored in the two arrays as follows.  Note that the
+         * new tetrahedra are numbered from 0 to (\a nTetrahedra - 1), and
+         * individual tetrahedron faces are numbered from 0 to 3.
+         *
+         * The \a adjacencies array describes which tetrahedron faces are
+         * joined to which others.  Specifically, <tt>adjacencies[t][f]</tt>
+         * should contain the number of the tetrahedron joined to face \a f
+         * of tetrahedron \a t.  If this face is to be left as a
+         * boundary face, <tt>adjacencies[t][f]</tt> should be -1.
+         *
+         * The \a gluings array describes the particular gluing permutations
+         * used when joining these tetrahedron faces together.  Specifically,
+         * <tt>gluings[t][f][0..3]</tt> should describe the permutation
+         * used to join face \a f of tetrahedron \a t to its adjacent
+         * tetrahedron.  These four integers should be 0, 1, 2 and 3 in some
+         * order, so that <tt>gluings[t][f][i]</tt> contains the image of
+         * \a i under this permutation.  If face \a f of tetrahedron \a t
+         * is to be left as a boundary faces, <tt>gluings[t][f][0..3]</tt>
+         * may contain anything (and will be duly ignored).
+         *
+         * It is the responsibility of the caller of this routine to
+         * ensure that the given arrays are correct and consistent.
+         * No error checking will be performed by this routine.
+         *
+         * Note that, for an existing triangulation, dumpConstruction()
+         * will output a pair of C++ arrays that can be copied into a
+         * source file and used to reconstruct the triangulation via
+         * this routine.
+         *
+         * \ifacespython Not present.
+         *
+         * @param nTetrahedra the number of additional tetrahedra to insert.
+         * @param adjacencies describes which of the new tetrahedron
+         * faces are to be identified.  This array must have initial
+         * dimension at least \a nTetrahedra.
+         * @param gluings describes the specific gluing permutations by
+         * which these new tetrahedron faces should be identified.  This
+         * array must also have initial dimension at least \a nTetrahedra.
+         */
+        void insertConstruction(unsigned long nTetrahedra,
+            const int adjacencies[][4], const int gluings[][4][4]);
+        /**
+         * Returns C++ code that can be used with insertConstruction()
+         * to reconstruct this triangulation.
+         *
+         * The code produced will consist of the following:
+         *
+         * - the declaration and initialisation of two integer arrays,
+         *   describing the tetrahedron gluings in this trianguation;
+         * - two additional lines that declare a new NTriangulation and
+         *   call insertConstruction() to rebuild this triangulation.
+         *
+         * The main purpose of this routine is to generate the two integer
+         * arrays, which can be tedious and error-prone to code up by hand.
+         *
+         * Note that the number of lines of code produced grows linearly
+         * with the number of tetrahedra.  If this triangulation is very
+         * large, the returned string will be very large as well.
+         *
+         * @return the C++ code that was generated.
+         */
+        std::string dumpConstruction() const;
 
         /*@}*/
         /**

@@ -39,7 +39,7 @@ using regina::NTetrahedron;
 using regina::NTriangulation;
 
 // Some of the larger triangulations we will hard-code here.
-unsigned closedHypOrAdjTet[9][4] = {
+static const int closedHypOrAdjTet[9][4] = {
     {6, 8, 2, 8},
     {6, 8, 3, 7},
     {7, 0, 3, 4},
@@ -51,7 +51,7 @@ unsigned closedHypOrAdjTet[9][4] = {
     {1, 0, 5, 0}
 };
 
-unsigned closedHypOrAdjPerm[9][4][4] = {
+static const int closedHypOrAdjPerm[9][4][4] = {
     { {0,1,3,2}, {3,1,2,0}, {0,2,1,3}, {0,2,1,3} },
     { {3,1,2,0}, {1,0,2,3}, {3,2,0,1}, {2,3,1,0} },
     { {2,0,3,1}, {0,2,1,3}, {0,1,3,2}, {3,1,2,0} },
@@ -63,7 +63,7 @@ unsigned closedHypOrAdjPerm[9][4][4] = {
     { {1,0,2,3}, {3,1,2,0}, {0,2,1,3}, {0,2,1,3} }
 };
 
-unsigned closedHypNorAdjTet[11][4] = {
+static const int closedHypNorAdjTet[11][4] = {
     {8, 2, 8, 2},
     {5, 3, 2, 9},
     {1, 4, 0, 0},
@@ -77,7 +77,7 @@ unsigned closedHypNorAdjTet[11][4] = {
     {9, 4, 4, 9}
 };
 
-unsigned closedHypNorAdjPerm[11][4][4] = {
+static const int closedHypNorAdjPerm[11][4][4] = {
     { {1,3,2,0}, {0,3,2,1}, {2,1,0,3}, {3,1,0,2} },
     { {3,0,1,2}, {3,1,0,2}, {2,1,0,3}, {1,0,3,2} },
     { {2,1,0,3}, {3,1,2,0}, {2,1,3,0}, {0,3,2,1} },
@@ -158,30 +158,6 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                  vertices all have 2-sphere links. */
 
     public:
-        void buildTriangulation(NTriangulation& tri, unsigned nTet,
-                unsigned adjTet[][4], unsigned adjPerm[][4][4]) {
-            // Build a triangulation from a hard-coded array of adjacent
-            // tetrahedra and tetrahedron gluings.
-            NTetrahedron** tet = new NTetrahedron*[nTet];
-
-            unsigned i, j;
-            NPerm p;
-
-            for (i = 0; i < nTet; i++)
-                tet[i] = new NTetrahedron();
-            for (i = 0; i < nTet; i++)
-                for (j = 0; j < 4; j++)
-                    if (! tet[i]->getAdjacentTetrahedron(j)) {
-                        p = NPerm(adjPerm[i][j][0], adjPerm[i][j][1],
-                             adjPerm[i][j][2], adjPerm[i][j][3]);
-                        tet[i]->joinTo(j, tet[adjTet[i][j]], p);
-                    }
-            for (i = 0; i < nTet; i++)
-                tri.addTetrahedron(tet[i]);
-
-            delete[] tet;
-        }
-
         void setUp() {
             // Keep the kernel quiet.  It interferes with the test
             // suite's running progress messages.
@@ -204,9 +180,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             n4_9_2.insertRehydration("ebdbcdddcemre");
             n4_1_2_1.insertRehydration("eahbcdddjxxxj");
 
-            buildTriangulation(closedHypOr, 9, closedHypOrAdjTet,
+            closedHypOr.insertConstruction(9, closedHypOrAdjTet,
                 closedHypOrAdjPerm);
-            buildTriangulation(closedHypNor, 11, closedHypNorAdjTet,
+            closedHypNor.insertConstruction(11, closedHypNorAdjTet,
                 closedHypNorAdjPerm);
 
             t = new NTetrahedron();
