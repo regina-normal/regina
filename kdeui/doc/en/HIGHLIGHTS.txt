@@ -8,9 +8,15 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.1
+Version 4.1  [ 29 February, 2004 ]
 
-    Under development.
+    Features:
+        - 3-sphere recognition.
+        - Full connected sum decomposition for closed orientable
+          triangulations.
+    Bug Fixes:
+        - Fixed bug in "tricensus --genpairs" that caused empty output files.
+        - Updates for compatibility with KDE 3.2.
 
 Version 4.0.1  [ 26 January, 2004 ]
 
