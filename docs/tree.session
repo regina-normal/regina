@@ -1,0 +1,70 @@
+
+Regina 2.3
+A Normal Surface Theory Calculator
+Copyright (c) 1999-2001, Ben Burton
+
+Jython 2.1b1 on java1.3.1 (JIT: null)
+
+Running startup commands...
+The calculation engine (type normal.engine.Engine) is in the variable [engine].
+
+>>> # Create a new census of finite orientable closed 3-manifolds with
+>>> # two tetrahedra.
+>>> from normal.engine.utilities import NBoolSet
+>>> census = engine.newNContainer()
+>>> engine.formCensus(census, 2, NBoolSet.sTrue, NBoolSet.sTrue, NBoolSet.sFalse)
+16L
+>>> 
+>>> # Calculate the homology of each triangulation in the census.
+>>> # Note that the triangulations are the child packets of the census container.
+>>> tri = census.getFirstTreeChild()
+>>> while tri != None:
+...     print tri.getPacketLabel() + ": " + str(tri.getHomologyH1())
+...     tri = tri.getNextTreeSibling()
+... 
+Item 1: Z_7
+Item 2: Z_5
+Item 3: Z
+Item 4: Z_3
+Item 5: Z_8
+Item 6: 0
+Item 7: 0
+Item 8: 0
+Item 9: Z_2
+Item 10: 0
+Item 11: 0
+Item 12: Z_3
+Item 13: 0
+Item 14: Z_3
+Item 15: 2 Z_2
+Item 16: Z_2
+>>> 
+>>> # Delete each triangulation with trivial homology.
+>>> tri = census.getFirstTreeChild()
+>>> while tri != None:
+...     next = tri.getNextTreeSibling()
+...     hom = tri.getHomologyH1()
+...     if hom.getRank() == 0 and hom.getNumberOfInvariantFactors() == 0:
+...         # Remove the triangulation from the tree and destroy it.
+...         tri.makeOrphan()
+...         tri.destroy()
+...     tri = next
+... 
+>>> 
+>>> # Print the homology of each remaining triangulation.
+>>> tri = census.getFirstTreeChild()
+>>> while tri != None:
+...     print tri.getPacketLabel() + ": " + str(tri.getHomologyH1())
+...     tri = tri.getNextTreeSibling()
+... 
+Item 1: Z_7
+Item 2: Z_5
+Item 3: Z
+Item 4: Z_3
+Item 5: Z_8
+Item 9: Z_2
+Item 12: Z_3
+Item 14: Z_3
+Item 15: 2 Z_2
+Item 16: Z_2
+>>> 

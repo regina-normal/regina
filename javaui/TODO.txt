@@ -10,18 +10,17 @@ engine documentation.
  	Get this working on more browsers.
 
 CORBA:
--	Local (client-side) imports and exports
+	Local (client-side) imports and exports
 
 Everywhere:
 	Disable X-closing for all windows and dialogs except for main window
 		(necessary to ensure progress dialogs cannot be closed).
--	Allow customisation of types in drop-down boxes
--	Possibly distribute btools.jar?
+	Allow customisation of types in drop-down boxes
+	Possibly distribute btools.jar?
 
 Help:
 	Write manual! - include context sensitive help, searching and index.
--	Distribute sample data file.
--	Distribute sample (commented) jython session.
+	Distribute sample data file.
 
 Jython:
 	Allow breaking processing in console
@@ -37,7 +36,7 @@ Main Window:
 	Use actions in NormalFrame and SystemPane.
 
 Menus:
--	Provide NTriangulation::isIsomorphicTo().
+	Provide NTriangulation::isIsomorphicTo().
 
 Normal Surfaces:
  	For matching equations and normal surface coordinates, resizing one

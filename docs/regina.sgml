@@ -53,6 +53,9 @@
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
  <!ENTITY reginalicense SYSTEM "license.sgml">
  <!ENTITY reginachangelog SYSTEM "../CHANGES.txt">
+
+ <!ENTITY sessiontriangulation SYSTEM "triangulation.session">
+ <!ENTITY sessiontree SYSTEM "tree.session">
 ]>
 
 <book>
@@ -284,6 +287,30 @@
      </glossentry>
     </glosslist>
    </para>
+  </sect1>
+
+  <sect1 id="sessions">
+   <title>Sample &jython; Sessions</title>
+   <para>
+    Reproduced below are a number of sample &jython; sessions.
+    Each session was started by running
+    <userinput>regina --console</userinput>
+    from the command line.
+   </para>
+
+   <sect2 id="sessiontriangulation">
+    <title>Working with a triangulation</title>
+    <programlisting>
+     &sessiontriangulation;
+    </programlisting>
+   </sect2>
+
+   <sect2 id="sessiontree">
+    <title>Working with a packet tree</title>
+    <programlisting>
+     &sessiontree;
+    </programlisting>
+   </sect2>
   </sect1>
  </chapter>
 
