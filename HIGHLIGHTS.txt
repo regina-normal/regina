@@ -16,7 +16,7 @@ Version 2.3.1  [ (in progress) ]
     - Filenames may be specified on the command-line.
     - Text consoles have readline/editline support.
     - More keyboard accelerators.
-    - Added SnapPea census to examples.
+    - Added SnapPea census and knot/link census to examples.
     - Option REGINA_OPTIONS_GLOBAL is guessed more intelligently.
     - Much enhanced documentation.
     
