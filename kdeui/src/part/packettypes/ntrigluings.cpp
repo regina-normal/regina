@@ -39,9 +39,11 @@
 #include "../reginapart.h"
 
 #include <kaction.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include <ktoolbar.h>
 #include <kmessagebox.h>
+#include <kprogress.h>
 #include <qfileinfo.h>
 #include <qlabel.h>
 #include <qtable.h>
@@ -426,14 +428,37 @@ void NTriGluingsUI::censusLookup() {
     enclosingPane->commit();
 
     // Run through each census file.
+    KProgressDialog* progress =
+        new KProgressDialog(ui, 0, i18n("Census Lookup"),
+        i18n("Initialising"));
+    progress->progressBar()->setTotalSteps(censusFiles.size() + 1);
+    progress->show();
+    KApplication::kApplication()->processEvents();
+
     QValueVector<CensusHit> results;
     QString searched = i18n("The following censuses were searched:");
     NPacket* census;
     NPacket* p;
     for (ReginaFilePrefList::const_iterator it = censusFiles.begin();
             it != censusFiles.end(); it++) {
+        progress->progressBar()->advance(1);
+        KApplication::kApplication()->processEvents();
+
+        // Check for cancellation.
+        if (progress->wasCancelled()) {
+            delete progress;
+            KMessageBox::information(ui,
+                i18n("The census lookup was cancelled."));
+            return;
+        }
+
         if (! ((*it).active))
             continue;
+
+        // Process this census file.
+        progress->setLabel(i18n("Searching %1...").arg((*it).filename));
+        KApplication::kApplication()->processEvents();
+
         census = regina::readFileMagic((*it).filename.ascii());
         if (! census) {
             KMessageBox::error(ui, i18n("The census data file %1 "
@@ -453,6 +478,10 @@ void NTriGluingsUI::censusLookup() {
         delete census;
         searched = searched + '\n' + (*it).filename;
     }
+
+    progress->progressBar()->advance(1);
+    delete progress;
+    KApplication::kApplication()->processEvents();
 
     // Were there any hits?
     if (results.empty())
