@@ -83,10 +83,10 @@
  * (for instance, <tt>Regina::File::NFile</tt>).
  */
 #define STANDARD_ENGINE_TYPEDEFS(servant_class, engine_class, interface_class) \
-	public: \
-		typedef ::servant_class ServantClass; \
-		typedef ::engine_class EngineClass; \
-		typedef ::interface_class InterfaceClass;
+    public: \
+        typedef ::servant_class ServantClass; \
+        typedef ::engine_class EngineClass; \
+        typedef ::interface_class InterfaceClass;
 
 /**
  * \hideinitializer
@@ -108,10 +108,10 @@
 #define STANDARD_NEW_WRAPPER \
     static InterfaceClass::_ptr_type newWrapper(EngineClass* newCppPtr) { \
         if (newCppPtr) { \
-			ServantClass* s = new ServantClass(newCppPtr); \
-			s->activateObject(); \
-			return s->_this(); \
-		} else \
+            ServantClass* s = new ServantClass(newCppPtr); \
+            s->activateObject(); \
+            return s->_this(); \
+        } else \
             return InterfaceClass::_nil(); \
     }
         

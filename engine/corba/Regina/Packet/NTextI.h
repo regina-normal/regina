@@ -42,7 +42,7 @@
 
 class NText_i : public virtual POA_Regina::Packet::NText,
         public NPacket_i {
-	STANDARD_ENGINE_TYPEDEFS(NText_i, NText, Regina::Packet::NText)
+    STANDARD_ENGINE_TYPEDEFS(NText_i, NText, Regina::Packet::NText)
 
     protected:
         NText_i(::NText* newCppPtr) : NPacket_i(newCppPtr) {

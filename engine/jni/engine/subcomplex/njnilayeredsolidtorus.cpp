@@ -48,72 +48,72 @@ JNIEXPORT jobject JNICALL
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBase
-		(JNIEnv *env, jobject me) {
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBase
+        (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->getBase(),
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseEdge
-		(JNIEnv *env, jobject me, jint group, jint index) {
-	return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
-		getBaseEdge(group, index);
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseEdge
+        (JNIEnv *env, jobject me, jint group, jint index) {
+    return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
+        getBaseEdge(group, index);
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseEdgeGroup
-		(JNIEnv *env, jobject me, jint i) {
-	return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
-		getBaseEdgeGroup(i);
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseEdgeGroup
+        (JNIEnv *env, jobject me, jint i) {
+    return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
+        getBaseEdgeGroup(i);
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseFace
-		(JNIEnv *env, jobject me, jint index) {
-	return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->getBaseFace(index);
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseFace
+        (JNIEnv *env, jobject me, jint index) {
+    return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->getBaseFace(index);
 }
 
 JNIEXPORT jlong JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getMeridinalCuts
-		(JNIEnv *env, jobject me, jint i) {
-	return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
-		getMeridinalCuts(i);
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getMeridinalCuts
+        (JNIEnv *env, jobject me, jint i) {
+    return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
+        getMeridinalCuts(i);
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopEdge
-		(JNIEnv *env, jobject me, jint group, jint index) {
-	return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
-		getTopEdge(group, index);
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopEdge
+        (JNIEnv *env, jobject me, jint group, jint index) {
+    return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
+        getTopEdge(group, index);
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopEdgeGroup
-		(JNIEnv *env, jobject me, jint i) {
-	return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
-		getTopEdgeGroup(i);
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopEdgeGroup
+        (JNIEnv *env, jobject me, jint i) {
+    return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
+        getTopEdgeGroup(i);
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopFace
-		(JNIEnv *env, jobject me, jint index) {
-	return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->getTopFace(index);
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopFace
+        (JNIEnv *env, jobject me, jint index) {
+    return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->getTopFace(index);
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopLevel
-		(JNIEnv *env, jobject me) {
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopLevel
+        (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->getTopLevel(),
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
 JNIEXPORT jlong JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getNumberOfTetrahedra
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
-		getNumberOfTetrahedra();
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getNumberOfTetrahedra
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
+        getNumberOfTetrahedra();
 }
 

@@ -37,28 +37,28 @@
 #endif
 
 NSnappedBall* NSnappedBall::clone() const {
-	NSnappedBall* ans = new NSnappedBall();
-	ans->tet = tet;
-	ans->equator = equator;
-	return ans;
+    NSnappedBall* ans = new NSnappedBall();
+    ans->tet = tet;
+    ans->equator = equator;
+    return ans;
 }
 
 NSnappedBall* NSnappedBall::isSnappedBall(NTetrahedron* tet) {
-	int inFace1, inFace2;
-	NPerm perm;
-	for (inFace1 = 0; inFace1 < 3; inFace1++)
-		if (tet->getAdjacentTetrahedron(inFace1) == tet) {
-			perm = tet->getAdjacentTetrahedronGluing(inFace1);
-			inFace2 = perm[inFace1];
-			if (perm == NPerm(inFace1, inFace2)) {
-				// This is it!
-				NSnappedBall* ans = new NSnappedBall();
-				ans->tet = tet;
-				ans->equator = edgeNumber[inFace1][inFace2];
-				return ans;
-			}
-		}
+    int inFace1, inFace2;
+    NPerm perm;
+    for (inFace1 = 0; inFace1 < 3; inFace1++)
+        if (tet->getAdjacentTetrahedron(inFace1) == tet) {
+            perm = tet->getAdjacentTetrahedronGluing(inFace1);
+            inFace2 = perm[inFace1];
+            if (perm == NPerm(inFace1, inFace2)) {
+                // This is it!
+                NSnappedBall* ans = new NSnappedBall();
+                ans->tet = tet;
+                ans->equator = edgeNumber[inFace1][inFace2];
+                return ans;
+            }
+        }
 
-	return 0;
+    return 0;
 }
 

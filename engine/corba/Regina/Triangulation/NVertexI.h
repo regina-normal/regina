@@ -42,8 +42,8 @@
 
 class NVertex_i : public virtual POA_Regina::Triangulation::NVertex,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NVertex_i, NVertex,
-			Regina::Triangulation::NVertex)
+    STANDARD_ENGINE_TYPEDEFS(NVertex_i, NVertex,
+            Regina::Triangulation::NVertex)
 
     protected:
         NVertex_i(::NVertex* newCppPtr) : ShareableObject_i(newCppPtr) {

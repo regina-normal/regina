@@ -42,15 +42,15 @@
 
 class NContainer_i : public virtual POA_Regina::Packet::NContainer,
         public NPacket_i {
-	STANDARD_ENGINE_TYPEDEFS(NContainer_i, NContainer,
-			Regina::Packet::NContainer)
+    STANDARD_ENGINE_TYPEDEFS(NContainer_i, NContainer,
+            Regina::Packet::NContainer)
 
     protected:
         NContainer_i(::NContainer* newCppPtr) : NPacket_i(newCppPtr) {
         }
-	
-	public:
-		STANDARD_NEW_WRAPPER
+    
+    public:
+        STANDARD_NEW_WRAPPER
 };
 
 #endif

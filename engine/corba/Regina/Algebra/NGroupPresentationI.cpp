@@ -30,29 +30,29 @@
 #include "NGroupExpressionI.h"
 
 CORBA::Long NGroupPresentation_i::addGenerator(CORBA::Long num) {
-	return GET_ENGINE_OBJECT(NGroupPresentation, this)->addGenerator(num);
+    return GET_ENGINE_OBJECT(NGroupPresentation, this)->addGenerator(num);
 }
 void NGroupPresentation_i::addRelation(
-		Regina::Algebra::NGroupExpression_ptr rel) {
-	GET_ENGINE_OBJECT(NGroupPresentation, this)->addRelation(
-		GET_ENGINE_OBJECT(NGroupExpression, rel));
+        Regina::Algebra::NGroupExpression_ptr rel) {
+    GET_ENGINE_OBJECT(NGroupPresentation, this)->addRelation(
+        GET_ENGINE_OBJECT(NGroupExpression, rel));
 }
 CORBA::Long NGroupPresentation_i::getNumberOfGenerators() {
-	return GET_ENGINE_OBJECT(NGroupPresentation, this)->getNumberOfGenerators();
+    return GET_ENGINE_OBJECT(NGroupPresentation, this)->getNumberOfGenerators();
 }
 CORBA::Long NGroupPresentation_i::getNumberOfRelations() {
-	return GET_ENGINE_OBJECT(NGroupPresentation, this)->getNumberOfRelations();
+    return GET_ENGINE_OBJECT(NGroupPresentation, this)->getNumberOfRelations();
 }
 Regina::Algebra::NGroupExpression_ptr NGroupPresentation_i::getRelation(
-		CORBA::Long index) {
-	return NGroupExpression_i::newWrapper((::NGroupExpression*)
-		&GET_ENGINE_OBJECT(NGroupPresentation, this)->getRelation(index));
+        CORBA::Long index) {
+    return NGroupExpression_i::newWrapper((::NGroupExpression*)
+        &GET_ENGINE_OBJECT(NGroupPresentation, this)->getRelation(index));
 }
 CORBA::Boolean NGroupPresentation_i::intelligentSimplify() {
-	return GET_ENGINE_OBJECT(NGroupPresentation, this)->intelligentSimplify();
+    return GET_ENGINE_OBJECT(NGroupPresentation, this)->intelligentSimplify();
 }
 char* NGroupPresentation_i::recogniseGroup() {
-	return GET_ENGINE_OBJECT(NGroupPresentation, this)->
-		recogniseGroup().dupe();
+    return GET_ENGINE_OBJECT(NGroupPresentation, this)->
+        recogniseGroup().dupe();
 }
 

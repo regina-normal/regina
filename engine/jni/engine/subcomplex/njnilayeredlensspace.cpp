@@ -38,49 +38,49 @@
 #endif
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_cloneMe
-		(JNIEnv *env, jobject me) {
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_cloneMe
+        (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
-		GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->clone(),
+        GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->clone(),
         "normal/engine/implementation/jni/subcomplex/NJNILayeredLensSpace");
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getMobiusBoundaryGroup
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->
-		getMobiusBoundaryGroup();
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getMobiusBoundaryGroup
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->
+        getMobiusBoundaryGroup();
 }
 
 JNIEXPORT jlong JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getP
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->getP();
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getP
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->getP();
 }
 
 JNIEXPORT jlong JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getQ
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->getQ();
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getQ
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->getQ();
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getTorus
-		(JNIEnv *env, jobject me) {
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getTorus
+        (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, (NLayeredSolidTorus*)
-		&GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->getTorus(),
+        &GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->getTorus(),
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
 }
 
 JNIEXPORT jboolean JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_isSnapped
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->isSnapped();
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_isSnapped
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->isSnapped();
 }
 
 JNIEXPORT jboolean JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_isTwisted
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->isTwisted();
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_isTwisted
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->isTwisted();
 }
 

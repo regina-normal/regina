@@ -62,9 +62,9 @@ import normal.packetui.*;
  */
 public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
-	// ------------------
-	//    DATA MEMBERS
-	// ------------------
+    // ------------------
+    //    DATA MEMBERS
+    // ------------------
 
     /**
      * The number of recent files to remember.
@@ -96,15 +96,15 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      */
     private JMenu menuFileRecent;
 
-	/**
-	 * Edit menu to be shared amongst text components.
-	 */
-	private EditMenu menuEdit;
+    /**
+     * Edit menu to be shared amongst text components.
+     */
+    private EditMenu menuEdit;
 
-	/**
-	 * Menu items reflecting the name of the currently selected packet.
-	 */
-	private Vector packetNameMenuItems = new Vector();
+    /**
+     * Menu items reflecting the name of the currently selected packet.
+     */
+    private Vector packetNameMenuItems = new Vector();
 
     /**
      * List of components that should be enabled if and only if a file is
@@ -129,9 +129,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      */
     private ActionListener helpViewer = null;
 
-	// -----------------
-	//    CONSTRUCTOR
-	// -----------------
+    // -----------------
+    //    CONSTRUCTOR
+    // -----------------
 
     /**
      * Create a new frame in which to work.
@@ -147,9 +147,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         reflectCurrentFile();
     }
 
-	// --------------------
-	//    QUERY ROUTINES
-	// --------------------
+    // --------------------
+    //    QUERY ROUTINES
+    // --------------------
 
     /**
      * Returns the shell representing the entire program.
@@ -178,35 +178,35 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         return options;
     }
 
-	/**
-	 * Returns the file pane currently being worked upon.
-	 *
-	 * @return the current file pane, or <tt>null</tt> if no file pane is
-	 * open.
-	 */
-	public FilePane getCurrentFilePane() {
-		return (FilePane)fileTabs.getSelectedComponent();
-	}
+    /**
+     * Returns the file pane currently being worked upon.
+     *
+     * @return the current file pane, or <tt>null</tt> if no file pane is
+     * open.
+     */
+    public FilePane getCurrentFilePane() {
+        return (FilePane)fileTabs.getSelectedComponent();
+    }
 
     /**
      * Return the topology pane currently being worked upon.
-	 * If a file pane is being worked upon that is not a topology pane,
-	 * this routine will return <tt>null</tt>.
+     * If a file pane is being worked upon that is not a topology pane,
+     * this routine will return <tt>null</tt>.
      *
      * @return the current topology pane, or <tt>null</tt> if no topology
-	 * pane is currently being worked upon.
+     * pane is currently being worked upon.
      */
     public TopologyPane getCurrentTopologyPane() {
-		FilePane ans = (FilePane)fileTabs.getSelectedComponent();
-		if (ans instanceof TopologyPane)
-			return (TopologyPane)ans;
-		else
-			return null;
+        FilePane ans = (FilePane)fileTabs.getSelectedComponent();
+        if (ans instanceof TopologyPane)
+            return (TopologyPane)ans;
+        else
+            return null;
     }
 
-	// ------------------------------
-	//    COMPONENT INITIALISATION
-	// ------------------------------
+    // ------------------------------
+    //    COMPONENT INITIALISATION
+    // ------------------------------
 
     /**
      * Initialise the interface components.
@@ -253,141 +253,141 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      * @return the completely filled menu bar.
      */
     private JMenuBar makeMenus() {
-		boolean fileIO = shell.mayAccessFiles();
+        boolean fileIO = shell.mayAccessFiles();
 
         JMenuBar menuBar = new JMenuBar();
 
         // --- File menu ---
 
         JMenu menuFile = new JMenu("File");
-		menuFile.setMnemonic(KeyEvent.VK_F);
+        menuFile.setMnemonic(KeyEvent.VK_F);
 
-		JMenu menuFileNew = new JMenu("New");
-		menuFileNew.setIcon(Standard16.document.image());
-		menuFileNew.setMnemonic(KeyEvent.VK_N);
+        JMenu menuFileNew = new JMenu("New");
+        menuFileNew.setIcon(Standard16.document.image());
+        menuFileNew.setMnemonic(KeyEvent.VK_N);
 
         JMenuItem menuFileNewTopology = new JMenuItem("Topology Data",
             Images.btnFileNewTopology.image());
-		menuFileNewTopology.setMnemonic(KeyEvent.VK_T);
-		menuFileNewTopology.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_N, ActionEvent.ALT_MASK));
+        menuFileNewTopology.setMnemonic(KeyEvent.VK_T);
+        menuFileNewTopology.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_N, ActionEvent.ALT_MASK));
         menuFileNewTopology.addActionListener(
-			new java.awt.event.ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	fileNewTopology();
-            	}
-        	});
-		menuFileNew.add(menuFileNewTopology);
+            new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fileNewTopology();
+                }
+            });
+        menuFileNew.add(menuFileNewTopology);
 
         JMenuItem menuFileNewLibrary = new JMenuItem("Jython Library",
-			Images.btnFileNewLibrary.image());
-		menuFileNewLibrary.setMnemonic(KeyEvent.VK_J);
+            Images.btnFileNewLibrary.image());
+        menuFileNewLibrary.setMnemonic(KeyEvent.VK_J);
         menuFileNewLibrary.setEnabled(shell.hasFoundJython());
         menuFileNewLibrary.addActionListener(
-			new java.awt.event.ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	fileNewLibrary();
-            	}
-        	});
-		menuFileNew.add(menuFileNewLibrary);
+            new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fileNewLibrary();
+                }
+            });
+        menuFileNew.add(menuFileNewLibrary);
 
         menuFile.add(menuFileNew);
 
-		if (fileIO) {
-        	JMenuItem menuFileOpen = new JMenuItem("Open",
-            	Standard16.open.image());
-			menuFileOpen.setMnemonic(KeyEvent.VK_O);
-			menuFileOpen.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_O, ActionEvent.ALT_MASK));
-        	menuFileOpen.addActionListener(new java.awt.event.ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	fileOpen();
-            	}
-        	});
-        	menuFile.add(menuFileOpen);
+        if (fileIO) {
+            JMenuItem menuFileOpen = new JMenuItem("Open",
+                Standard16.open.image());
+            menuFileOpen.setMnemonic(KeyEvent.VK_O);
+            menuFileOpen.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_O, ActionEvent.ALT_MASK));
+            menuFileOpen.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fileOpen();
+                }
+            });
+            menuFile.add(menuFileOpen);
 
-        	JMenuItem menuFileSave = new JMenuItem("Save",
-            	Standard16.save.image());
-			menuFileSave.setMnemonic(KeyEvent.VK_S);
-			menuFileSave.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_S, ActionEvent.ALT_MASK));
-        	menuFileSave.addActionListener(new ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	fileSave();
-            	}
-        	});
-        	menuFile.add(menuFileSave);
-			needFile.addElement(menuFileSave);
+            JMenuItem menuFileSave = new JMenuItem("Save",
+                Standard16.save.image());
+            menuFileSave.setMnemonic(KeyEvent.VK_S);
+            menuFileSave.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_S, ActionEvent.ALT_MASK));
+            menuFileSave.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fileSave();
+                }
+            });
+            menuFile.add(menuFileSave);
+            needFile.addElement(menuFileSave);
 
-        	JMenuItem menuFileSaveAs = new JMenuItem("Save As");
-			menuFileSaveAs.setMnemonic(KeyEvent.VK_A);
-        	menuFileSaveAs.addActionListener(new ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	fileSaveAs();
-            	}
-        	});
-        	menuFile.add(menuFileSaveAs);
-			needFile.addElement(menuFileSaveAs);
-		}
+            JMenuItem menuFileSaveAs = new JMenuItem("Save As");
+            menuFileSaveAs.setMnemonic(KeyEvent.VK_A);
+            menuFileSaveAs.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fileSaveAs();
+                }
+            });
+            menuFile.add(menuFileSaveAs);
+            needFile.addElement(menuFileSaveAs);
+        }
 
         JMenuItem menuFileClose = new JMenuItem("Close",
             Standard16.close.image());
-		menuFileClose.setMnemonic(KeyEvent.VK_C);
-		menuFileClose.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_C, ActionEvent.ALT_MASK));
+        menuFileClose.setMnemonic(KeyEvent.VK_C);
+        menuFileClose.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_C, ActionEvent.ALT_MASK));
         menuFileClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 fileClose();
             }
         });
         menuFile.add(menuFileClose);
-		needFile.addElement(menuFileClose);
+        needFile.addElement(menuFileClose);
 
-       	recentFileActionListener = new ActionListener() {
-           	public void actionPerformed(ActionEvent e) {
-               	fileOpen(new File(e.getActionCommand()));
-           	}
-       	};
+           recentFileActionListener = new ActionListener() {
+               public void actionPerformed(ActionEvent e) {
+                   fileOpen(new File(e.getActionCommand()));
+               }
+           };
 
-		if (fileIO) {
-        	menuFile.addSeparator();
+        if (fileIO) {
+            menuFile.addSeparator();
 
-        	menuFileRecent = new JMenu("Recent");
-			menuFileRecent.setMnemonic(KeyEvent.VK_R);
-        	updateRecentFilesMenu();
-        	menuFile.add(menuFileRecent);
+            menuFileRecent = new JMenu("Recent");
+            menuFileRecent.setMnemonic(KeyEvent.VK_R);
+            updateRecentFilesMenu();
+            menuFile.add(menuFileRecent);
 
-        	menuFile.addSeparator();
+            menuFile.addSeparator();
 
-        	JMenu menuFileImport = new JMenu("Import");
-			menuFileImport.setMnemonic(KeyEvent.VK_I);
+            JMenu menuFileImport = new JMenu("Import");
+            menuFileImport.setMnemonic(KeyEvent.VK_I);
 
-        	JMenuItem menuFileImportSnapPea =
-            	new JMenuItem("SnapPea Triangulation");
-			menuFileImportSnapPea.setMnemonic(KeyEvent.VK_S);
-        	menuFileImportSnapPea.addActionListener(new ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	TopologyPane m = getCurrentTopologyPane();
-                	if (m == null) {
-                    	fileNewTopology();
-                    	m = getCurrentTopologyPane();
-                    	if (m == null)
-                        	return;
-                	}
-                	m.importData(new SnapPeaImporter(shell));
-            	}
-        	});
-        	menuFileImport.add(menuFileImportSnapPea);
+            JMenuItem menuFileImportSnapPea =
+                new JMenuItem("SnapPea Triangulation");
+            menuFileImportSnapPea.setMnemonic(KeyEvent.VK_S);
+            menuFileImportSnapPea.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    TopologyPane m = getCurrentTopologyPane();
+                    if (m == null) {
+                        fileNewTopology();
+                        m = getCurrentTopologyPane();
+                        if (m == null)
+                            return;
+                    }
+                    m.importData(new SnapPeaImporter(shell));
+                }
+            });
+            menuFileImport.add(menuFileImportSnapPea);
 
-        	menuFile.add(menuFileImport);
-		}
+            menuFile.add(menuFileImport);
+        }
 
         menuFile.addSeparator();
 
         JMenuItem menuFileExit = new JMenuItem("Exit");
-		menuFileExit.setMnemonic(KeyEvent.VK_X);
-		menuFileExit.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_X, ActionEvent.ALT_MASK));
+        menuFileExit.setMnemonic(KeyEvent.VK_X);
+        menuFileExit.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_X, ActionEvent.ALT_MASK));
         menuFileExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 fileExit();
@@ -397,24 +397,24 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
         menuBar.add(menuFile);
 
-		// --- Edit menu ---
+        // --- Edit menu ---
 
-		menuEdit = new EditMenu();
+        menuEdit = new EditMenu();
 
-		menuBar.add(menuEdit);
+        menuBar.add(menuEdit);
         
         // --- Packet menu ---
         JMenu menuPacket = new JMenu("Packet");
-		menuPacket.setMnemonic(KeyEvent.VK_P);
+        menuPacket.setMnemonic(KeyEvent.VK_P);
 
         JMenuItem packetMenuHeader = new JMenuItem("(no packet)");
         menuPacket.add(packetMenuHeader);
-		packetNameMenuItems.add(packetMenuHeader);
+        packetNameMenuItems.add(packetMenuHeader);
 
         menuPacket.addSeparator();
 
         JMenu menuPacketNew = new JMenu("New");
-		menuPacketNew.setMnemonic(KeyEvent.VK_N);
+        menuPacketNew.setMnemonic(KeyEvent.VK_N);
         ActionListener newListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TopologyPane m = getCurrentTopologyPane();
@@ -425,56 +425,56 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
         JMenuItem menuPacketNewContainer = new JMenuItem("Container",
             PacketUIManager.containerIcon);
-		menuPacketNewContainer.setMnemonic(KeyEvent.VK_C);
+        menuPacketNewContainer.setMnemonic(KeyEvent.VK_C);
         menuPacketNewContainer.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewContainer);
 
         JMenuItem menuPacketNewText = new JMenuItem("Text",
             PacketUIManager.textIcon);
-		menuPacketNewText.setMnemonic(KeyEvent.VK_X);
+        menuPacketNewText.setMnemonic(KeyEvent.VK_X);
         menuPacketNewText.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewText);
 
         JMenuItem menuPacketNewTriangulation = new JMenuItem("Triangulation",
             PacketUIManager.triangulationIcon);
-		menuPacketNewTriangulation.setMnemonic(KeyEvent.VK_T);
+        menuPacketNewTriangulation.setMnemonic(KeyEvent.VK_T);
         menuPacketNewTriangulation.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewTriangulation);
 
         JMenuItem menuPacketNewNormalSurfaceList =
             new JMenuItem("Normal Surface List",
             PacketUIManager.surfaceListIcon);
-		menuPacketNewNormalSurfaceList.setMnemonic(KeyEvent.VK_N);
+        menuPacketNewNormalSurfaceList.setMnemonic(KeyEvent.VK_N);
         menuPacketNewNormalSurfaceList.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewNormalSurfaceList);
 
         JMenuItem menuPacketNewSurfaceFilter =
             new JMenuItem("Surface Filter",
             PacketUIManager.filterIcon);
-		menuPacketNewSurfaceFilter.setMnemonic(KeyEvent.VK_F);
+        menuPacketNewSurfaceFilter.setMnemonic(KeyEvent.VK_F);
         menuPacketNewSurfaceFilter.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewSurfaceFilter);
 
         JMenuItem menuPacketNewScript = new JMenuItem("Script",
             PacketUIManager.scriptIcon);
-		menuPacketNewScript.setMnemonic(KeyEvent.VK_S);
+        menuPacketNewScript.setMnemonic(KeyEvent.VK_S);
         menuPacketNewScript.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewScript);
 
         menuPacketNew.addSeparator();
 
         JMenuItem menuPacketNewCensus = new JMenuItem("Census");
-		menuPacketNewCensus.setMnemonic(KeyEvent.VK_E);
+        menuPacketNewCensus.setMnemonic(KeyEvent.VK_E);
         menuPacketNewCensus.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewCensus);
 
         menuPacket.add(menuPacketNew);
 
         JMenu menuPacketClone = new JMenu("Clone");
-		menuPacketClone.setMnemonic(KeyEvent.VK_L);
+        menuPacketClone.setMnemonic(KeyEvent.VK_L);
 
         JMenuItem menuPacketCloneDesc = new JMenuItem("Include Descendants");
-		menuPacketCloneDesc.setMnemonic(KeyEvent.VK_I);
+        menuPacketCloneDesc.setMnemonic(KeyEvent.VK_I);
         menuPacketCloneDesc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TopologyPane m = getCurrentTopologyPane();
@@ -485,7 +485,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         menuPacketClone.add(menuPacketCloneDesc);
 
         JMenuItem menuPacketCloneNoDesc = new JMenuItem("Exclude Descendants");
-		menuPacketCloneNoDesc.setMnemonic(KeyEvent.VK_X);
+        menuPacketCloneNoDesc.setMnemonic(KeyEvent.VK_X);
         menuPacketCloneNoDesc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TopologyPane m = getCurrentTopologyPane();
@@ -501,9 +501,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         menuPacket.addSeparator();
 
         JMenuItem menuPacketView = new JMenuItem("View");
-		menuPacketView.setMnemonic(KeyEvent.VK_V);
-		menuPacketView.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_V, ActionEvent.ALT_MASK));
+        menuPacketView.setMnemonic(KeyEvent.VK_V);
+        menuPacketView.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_V, ActionEvent.ALT_MASK));
         menuPacketView.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TopologyPane m = getCurrentTopologyPane();
@@ -515,9 +515,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         needPacket.addElement(menuPacketView);
 
         JMenuItem menuPacketRename = new JMenuItem("Rename");
-		menuPacketRename.setMnemonic(KeyEvent.VK_R);
-		menuPacketRename.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_R, ActionEvent.ALT_MASK));
+        menuPacketRename.setMnemonic(KeyEvent.VK_R);
+        menuPacketRename.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_R, ActionEvent.ALT_MASK));
         menuPacketRename.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TopologyPane m = getCurrentTopologyPane();
@@ -529,9 +529,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         needPacket.addElement(menuPacketRename);
 
         JMenuItem menuPacketDelete = new JMenuItem("Delete");
-		menuPacketDelete.setMnemonic(KeyEvent.VK_D);
-		menuPacketDelete.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_DELETE, 0));
+        menuPacketDelete.setMnemonic(KeyEvent.VK_D);
+        menuPacketDelete.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_DELETE, 0));
         menuPacketDelete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TopologyPane m = getCurrentTopologyPane();
@@ -543,9 +543,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         needPacket.addElement(menuPacketDelete);
 
         JMenuItem menuPacketRefresh = new JMenuItem("Refresh Subtree");
-		menuPacketRefresh.setMnemonic(KeyEvent.VK_F);
-		menuPacketRefresh.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_F, ActionEvent.ALT_MASK));
+        menuPacketRefresh.setMnemonic(KeyEvent.VK_F);
+        menuPacketRefresh.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_F, ActionEvent.ALT_MASK));
         menuPacketRefresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TopologyPane m = getCurrentTopologyPane();
@@ -562,11 +562,11 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         // --- Modify menu ---
 
         JMenu menuModify = new JMenu("Modify");
-		menuModify.setMnemonic(KeyEvent.VK_M);
+        menuModify.setMnemonic(KeyEvent.VK_M);
 
         JMenuItem modifyMenuHeader = new JMenuItem("(no packet)");
         menuModify.add(modifyMenuHeader);
-		packetNameMenuItems.addElement(modifyMenuHeader);
+        packetNameMenuItems.addElement(modifyMenuHeader);
 
         menuModify.addSeparator();
 
@@ -577,13 +577,13 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         
         // --- Tools menu ---
         JMenu menuTools = new JMenu("Tools");
-		menuTools.setMnemonic(KeyEvent.VK_T);
+        menuTools.setMnemonic(KeyEvent.VK_T);
 
         JMenuItem menuToolsJythonConsole = new JMenuItem("Jython Console",
             Images.btnConsole.image());
-		menuToolsJythonConsole.setMnemonic(KeyEvent.VK_J);
-		menuToolsJythonConsole.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_J, ActionEvent.ALT_MASK));
+        menuToolsJythonConsole.setMnemonic(KeyEvent.VK_J);
+        menuToolsJythonConsole.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_J, ActionEvent.ALT_MASK));
         menuToolsJythonConsole.setEnabled(shell.hasFoundJython());
         menuToolsJythonConsole.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -597,15 +597,15 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         // --- Options menu ---
 
         JMenu menuOptions = new JMenu("Options");
-		menuOptions.setMnemonic(KeyEvent.VK_O);
+        menuOptions.setMnemonic(KeyEvent.VK_O);
 
         JMenu menuOptionsDisplay = new JMenu("Display");
-		menuOptionsDisplay.setMnemonic(KeyEvent.VK_D);
+        menuOptionsDisplay.setMnemonic(KeyEvent.VK_D);
 
         JCheckBoxMenuItem menuOptionsAutoDock =
             new JCheckBoxMenuItem("Automatic Window Docking",
             options.getAutoDock());
-		menuOptionsAutoDock.setMnemonic(KeyEvent.VK_W);
+        menuOptionsAutoDock.setMnemonic(KeyEvent.VK_W);
         menuOptionsAutoDock.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 options.setAutoDock(e.getStateChange() == e.SELECTED);
@@ -616,7 +616,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
         JCheckBoxMenuItem menuOptionsDisplayIcon =
             new JCheckBoxMenuItem("Display Icon", options.getDisplayIcon());
-		menuOptionsDisplayIcon.setMnemonic(KeyEvent.VK_D);
+        menuOptionsDisplayIcon.setMnemonic(KeyEvent.VK_D);
         menuOptionsDisplayIcon.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 optionsDisplayIcon(e.getStateChange() == e.SELECTED);
@@ -626,28 +626,28 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
         menuOptions.add(menuOptionsDisplay);
 
-		if (fileIO) {
-        	JMenu menuOptionsFile = new JMenu("File");
-			menuOptionsFile.setMnemonic(KeyEvent.VK_F);
+        if (fileIO) {
+            JMenu menuOptionsFile = new JMenu("File");
+            menuOptionsFile.setMnemonic(KeyEvent.VK_F);
 
-        	JCheckBoxMenuItem menuOptionsAutoExtension =
-            	new JCheckBoxMenuItem("Automatic File Extension",
-                	options.getBooleanOption("AutoFileExtension", true));
-			menuOptionsAutoExtension.setMnemonic(KeyEvent.VK_E);
-        	menuOptionsAutoExtension.addItemListener(new ItemListener() {
-            	public void itemStateChanged(ItemEvent e) {
-                	options.setBooleanOption("AutoFileExtension",
-                    	e.getStateChange() == e.SELECTED);
-                	options.writeToFile();
-            	}
-        	});
-        	menuOptionsFile.add(menuOptionsAutoExtension);
+            JCheckBoxMenuItem menuOptionsAutoExtension =
+                new JCheckBoxMenuItem("Automatic File Extension",
+                    options.getBooleanOption("AutoFileExtension", true));
+            menuOptionsAutoExtension.setMnemonic(KeyEvent.VK_E);
+            menuOptionsAutoExtension.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    options.setBooleanOption("AutoFileExtension",
+                        e.getStateChange() == e.SELECTED);
+                    options.writeToFile();
+                }
+            });
+            menuOptionsFile.add(menuOptionsAutoExtension);
 
-        	menuOptions.add(menuOptionsFile);
-		}
+            menuOptions.add(menuOptionsFile);
+        }
 
         JMenuItem menuOptionsHelpBrowser = new JMenuItem("Help Browser...");
-		menuOptionsHelpBrowser.setMnemonic(KeyEvent.VK_H);
+        menuOptionsHelpBrowser.setMnemonic(KeyEvent.VK_H);
         menuOptionsHelpBrowser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new SelectHelpBrowser(shell).show();
@@ -655,18 +655,18 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         });
         menuOptions.add(menuOptionsHelpBrowser);
 
-		if (fileIO) {
-        	JMenuItem menuOptionsJythonLibs =
-				new JMenuItem("Jython Libraries...");
-			menuOptionsJythonLibs.setMnemonic(KeyEvent.VK_J);
-        	menuOptionsJythonLibs.setEnabled(shell.hasFoundJython());
-        	menuOptionsJythonLibs.addActionListener(new ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	new ManageJPythonLibraries(shell).show();
-            	}
-        	});
-			menuOptions.add(menuOptionsJythonLibs);
-		}
+        if (fileIO) {
+            JMenuItem menuOptionsJythonLibs =
+                new JMenuItem("Jython Libraries...");
+            menuOptionsJythonLibs.setMnemonic(KeyEvent.VK_J);
+            menuOptionsJythonLibs.setEnabled(shell.hasFoundJython());
+            menuOptionsJythonLibs.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new ManageJPythonLibraries(shell).show();
+                }
+            });
+            menuOptions.add(menuOptionsJythonLibs);
+        }
 
         menuOptions.add(new LookAndFeelMenu(this));
 
@@ -675,11 +675,11 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         // --- Help menu ---
 
         JMenu menuHelp = new JMenu("Help");
-		menuHelp.setMnemonic(KeyEvent.VK_H);
+        menuHelp.setMnemonic(KeyEvent.VK_H);
 
         JMenuItem menuHelpContents = new JMenuItem("Contents",
             Standard16.help.image());
-		menuHelpContents.setMnemonic(KeyEvent.VK_C);
+        menuHelpContents.setMnemonic(KeyEvent.VK_C);
         menuHelpContents.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 shell.viewHelp(null);
@@ -690,7 +690,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         menuHelp.addSeparator();
 
         JMenuItem menuHelpAbout = new JMenuItem("About");
-		menuHelpAbout.setMnemonic(KeyEvent.VK_A);
+        menuHelpAbout.setMnemonic(KeyEvent.VK_A);
         menuHelpAbout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 helpAbout();
@@ -709,9 +709,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      * @return the completely filled tool bar.
      */
     private JToolBar makeToolBar() {
-		boolean fileIO = shell.mayAccessFiles();
+        boolean fileIO = shell.mayAccessFiles();
 
-		JToolBar toolBar = new JToolBar();
+        JToolBar toolBar = new JToolBar();
 
         JButton newFile = new JButton(Images.btnFileNewTopology.image());
         newFile.setToolTipText("New Topology Data");
@@ -722,26 +722,26 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         });
         toolBar.add(newFile);
 
-		if (fileIO) {
-        	JButton openFile = new JButton(Standard16.open.image());
-        	openFile.setToolTipText("Open File");
-        	openFile.addActionListener(new java.awt.event.ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	fileOpen();
-            	}
-        	});
-        	toolBar.add(openFile);
+        if (fileIO) {
+            JButton openFile = new JButton(Standard16.open.image());
+            openFile.setToolTipText("Open File");
+            openFile.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fileOpen();
+                }
+            });
+            toolBar.add(openFile);
 
-        	JButton saveFile = new JButton(Standard16.save.image());
-        	saveFile.setToolTipText("Save File");
-        	saveFile.addActionListener(new java.awt.event.ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-                	fileSave();
-            	}
-        	});
-        	toolBar.add(saveFile);
-        	needFile.addElement(saveFile);
-		}
+            JButton saveFile = new JButton(Standard16.save.image());
+            saveFile.setToolTipText("Save File");
+            saveFile.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fileSave();
+                }
+            });
+            toolBar.add(saveFile);
+            needFile.addElement(saveFile);
+        }
 
         JButton closeFile = new JButton(Standard16.close.image());
         closeFile.setToolTipText("Close File");
@@ -779,81 +779,81 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         return toolBar;
     }
 
-	// ---------------------
-	//    UPDATE ROUTINES
-	// ---------------------
-
-	/**
-	 * Updates menus and other global interface components to reflect the
-	 * current open file.  All components will be updated.
-	 */
-	public void reflectCurrentFile() {
-		FilePane file = getCurrentFilePane();
-		boolean hasFile = (file != null);
-
-		// Update needFile.
-		Enumeration e = needFile.elements();
-		while (e.hasMoreElements())
-			((JComponent)e.nextElement()).setEnabled(hasFile);
-
-		// Update needPacket and packetNameMenuItems.
-		if (file == null || ! (file instanceof TopologyPane))
-			reflectPacket(null);
-		else
-			reflectPacket(((TopologyPane)file).getSelectedPacket());
-
-		// Update menuEdit.
-		menuEdit.setTarget(file == null ? null : file.getWorkingTextComponent());
-	}
-
-	/**
-	 * Updates menus and other global interface components to reflect the
-	 * current working text component.  Only text component-dependent
-	 * components will be updated.
-	 */
-	public void reflectCurrentTextComponent() {
-		FilePane file = getCurrentFilePane();
-		menuEdit.setTarget(file == null ? null : file.getWorkingTextComponent());
-	}
+    // ---------------------
+    //    UPDATE ROUTINES
+    // ---------------------
 
     /**
      * Updates menus and other global interface components to reflect the
-	 * current packet selected in the current topology pane.  Only
-	 * packet-dependent components will be updated.
+     * current open file.  All components will be updated.
+     */
+    public void reflectCurrentFile() {
+        FilePane file = getCurrentFilePane();
+        boolean hasFile = (file != null);
+
+        // Update needFile.
+        Enumeration e = needFile.elements();
+        while (e.hasMoreElements())
+            ((JComponent)e.nextElement()).setEnabled(hasFile);
+
+        // Update needPacket and packetNameMenuItems.
+        if (file == null || ! (file instanceof TopologyPane))
+            reflectPacket(null);
+        else
+            reflectPacket(((TopologyPane)file).getSelectedPacket());
+
+        // Update menuEdit.
+        menuEdit.setTarget(file == null ? null : file.getWorkingTextComponent());
+    }
+
+    /**
+     * Updates menus and other global interface components to reflect the
+     * current working text component.  Only text component-dependent
+     * components will be updated.
+     */
+    public void reflectCurrentTextComponent() {
+        FilePane file = getCurrentFilePane();
+        menuEdit.setTarget(file == null ? null : file.getWorkingTextComponent());
+    }
+
+    /**
+     * Updates menus and other global interface components to reflect the
+     * current packet selected in the current topology pane.  Only
+     * packet-dependent components will be updated.
      */
     public void reflectCurrentPacket() {
-		TopologyPane sys = getCurrentTopologyPane();
-		reflectPacket(sys == null ? null : sys.getSelectedPacket());
-	}
+        TopologyPane sys = getCurrentTopologyPane();
+        reflectPacket(sys == null ? null : sys.getSelectedPacket());
+    }
 
-	/**
-	 * Updates menus and other global interface components to reflect the
-	 * given packet.  Only packet-dependent components will be updated.
-	 *
-	 * @param packet the packet to reflect, or <tt>null</tt> if no packet
-	 * should be reflected.
-	 */
-	private void reflectPacket(NPacket packet) {
-		// Update needPacket.
+    /**
+     * Updates menus and other global interface components to reflect the
+     * given packet.  Only packet-dependent components will be updated.
+     *
+     * @param packet the packet to reflect, or <tt>null</tt> if no packet
+     * should be reflected.
+     */
+    private void reflectPacket(NPacket packet) {
+        // Update needPacket.
         Enumeration e = needPacket.elements();
         while (e.hasMoreElements())
             ((JComponent)e.nextElement()).setEnabled(packet != null);
 
-		// Update packetNameMenuItems.
-		e = packetNameMenuItems.elements();
-		if (packet == null)
-			while (e.hasMoreElements())
-				((JMenuItem)e.nextElement()).setText("(no packet)");
-		else {
+        // Update packetNameMenuItems.
+        e = packetNameMenuItems.elements();
+        if (packet == null)
+            while (e.hasMoreElements())
+                ((JMenuItem)e.nextElement()).setText("(no packet)");
+        else {
             String label = "USING: " + packet.getPacketLabel();
-			while (e.hasMoreElements())
-				((JMenuItem)e.nextElement()).setText(label);
-		}
+            while (e.hasMoreElements())
+                ((JMenuItem)e.nextElement()).setText(label);
+        }
     }
 
-	// ----------------------
-	//    RECENT FILE MENU
-	// ----------------------
+    // ----------------------
+    //    RECENT FILE MENU
+    // ----------------------
 
     /**
      * Updates the items in the File-Recent menu.
@@ -919,9 +919,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         updateRecentFilesMenu();
     }
 
-	// --------------------------
-	//    GENERAL MODIFICATION
-	// --------------------------
+    // --------------------------
+    //    GENERAL MODIFICATION
+    // --------------------------
     
     /**
      * Ensures the visual file-is-dirty marker is displayed
@@ -964,9 +964,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         return true;
     }
 
-	// -------------
-	//    ACTIONS
-	// -------------
+    // -------------
+    //    ACTIONS
+    // -------------
 
     /**
      * Create a new topology file.
@@ -977,14 +977,14 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         fileTabs.setSelectedComponent(m);
     }
 
-	/**
-	 * Create a new Jython library.
-	 */
-	private void fileNewLibrary() {
-		FilePane m = LibraryPane.newPane(shell);
-		insertFilePane(m, "New Library");
-		fileTabs.setSelectedComponent(m);
-	}
+    /**
+     * Create a new Jython library.
+     */
+    private void fileNewLibrary() {
+        FilePane m = LibraryPane.newPane(shell);
+        insertFilePane(m, "New Library");
+        fileTabs.setSelectedComponent(m);
+    }
 
     /**
      * Open the specified file.
@@ -993,22 +993,22 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      */
     private void fileOpen(File file) {
         // Make a new file pane.
-		FilePane m;
-		if (TopologyPane.filenameFilter.accept(file))
-        	m = TopologyPane.newPane(shell, file);
-		else if (LibraryPane.filenameFilter.accept(file))
-			m = LibraryPane.newPane(shell, file);
-		else {
-			shell.error("I don't know what type of file this is.  Make " +
-				"sure the filename has the proper extension (such as .rga " +
-				"for topology data files).");
-			return;
-		}
+        FilePane m;
+        if (TopologyPane.filenameFilter.accept(file))
+            m = TopologyPane.newPane(shell, file);
+        else if (LibraryPane.filenameFilter.accept(file))
+            m = LibraryPane.newPane(shell, file);
+        else {
+            shell.error("I don't know what type of file this is.  Make " +
+                "sure the filename has the proper extension (such as .rga " +
+                "for topology data files).");
+            return;
+        }
 
-		if (m == null)
-			return;
+        if (m == null)
+            return;
 
-		// Update the file details for the new pane.
+        // Update the file details for the new pane.
         File fileDir = file.getParentFile();
         if (fileDir == null)
             fileDir = new File(".");
@@ -1033,16 +1033,16 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         JFileChooser chooser = new JFileChooser();
         chooser.addChoosableFileFilter(TopologyPane.filenameFilter);
         chooser.addChoosableFileFilter(LibraryPane.filenameFilter);
-		chooser.setFileFilter(TopologyPane.filenameFilter);
+        chooser.setFileFilter(TopologyPane.filenameFilter);
         chooser.setCurrentDirectory(
             new File(options.getStringOption("LastDir", ".")));
         chooser.setDialogTitle("Open file...");
         if (chooser.showOpenDialog(this) == chooser.APPROVE_OPTION)
-			try {
-            	fileOpen(chooser.getSelectedFile().getCanonicalFile());
-			} catch (IOException e) {
-				fileOpen(chooser.getSelectedFile());
-			}
+            try {
+                fileOpen(chooser.getSelectedFile().getCanonicalFile());
+            } catch (IOException e) {
+                fileOpen(chooser.getSelectedFile());
+            }
     }
 
     /**
@@ -1059,12 +1059,12 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             return;
         }
 
-		if (! m.canSave())
-			return;
+        if (! m.canSave())
+            return;
         
         // Attempt to save to the default file.
         if (m.saveFile(new File(m.getFileDir(), m.getFileName())))
-        	m.setDirty(false);
+            m.setDirty(false);
     }
 
     /**
@@ -1074,8 +1074,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         FilePane m = getCurrentFilePane();
         if (m == null)
             return;
-		if (! m.canSave())
-			return;
+        if (! m.canSave())
+            return;
 
         // Open a file dialog.
         JFileChooser chooser = new JFileChooser();
@@ -1096,21 +1096,21 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         if (chooser.showSaveDialog(this) != chooser.APPROVE_OPTION)
             return;
 
-		// Determine the requested file.
-		File dest;
-		try {
-           	dest = chooser.getSelectedFile().getCanonicalFile();
-		} catch (IOException e) {
-			dest = chooser.getSelectedFile();
-		}
+        // Determine the requested file.
+        File dest;
+        try {
+               dest = chooser.getSelectedFile().getCanonicalFile();
+        } catch (IOException e) {
+            dest = chooser.getSelectedFile();
+        }
 
-		// Add a file extension if appropriate.
+        // Add a file extension if appropriate.
         if ((! m.getFileFilter().accept(dest)) &&
-				options.getBooleanOption("AutoFileExtension", true))
+                options.getBooleanOption("AutoFileExtension", true))
             dest = new File(dest.getAbsolutePath() + m.getFileExtension());
 
         // Attempt to save to the requested file.
-		m.saveFile(dest);
+        m.saveFile(dest);
         
         // Update the file properties.
         m.setDirty(false);
@@ -1151,16 +1151,16 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         }
 
         // Close each open Jython console.
-		JPythonConsoleFrame console;
+        JPythonConsoleFrame console;
         while (shell.hasOpenConsoles()) {
-			console = shell.getConsole();
-			if (console.getConsole().isProcessing()) {
-				shell.error(
-					"One of the Jython consoles is still processsing input.");
-				return;
-			} else
-				console.closeConsole();
-		}
+            console = shell.getConsole();
+            if (console.getConsole().isProcessing()) {
+                shell.error(
+                    "One of the Jython consoles is still processsing input.");
+                return;
+            } else
+                console.closeConsole();
+        }
         
         // Save preferred screen positions to file.
         // The writeToFile will also write the divider location, which is set
@@ -1220,11 +1220,11 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      * Open and start a new Jython console frame.
      */
     private void startJythonConsole() {
-		JPythonConsoleFrame console =
-			ConsoleUtils.createGraphicalConsole(shell, false);
+        JPythonConsoleFrame console =
+            ConsoleUtils.createGraphicalConsole(shell, false);
         Positioner.centerOnScreen(console);
         console.show();
-		console.startConsole();
+        console.startConsole();
     }
 
     /**

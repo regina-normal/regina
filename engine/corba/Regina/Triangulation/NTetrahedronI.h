@@ -42,8 +42,8 @@
 
 class NTetrahedron_i : public virtual POA_Regina::Triangulation::NTetrahedron,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NTetrahedron_i, NTetrahedron,
-			Regina::Triangulation::NTetrahedron)
+    STANDARD_ENGINE_TYPEDEFS(NTetrahedron_i, NTetrahedron,
+            Regina::Triangulation::NTetrahedron)
 
     protected:
         NTetrahedron_i(::NTetrahedron* newCppPtr) :

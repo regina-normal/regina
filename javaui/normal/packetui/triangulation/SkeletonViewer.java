@@ -146,20 +146,20 @@ public class SkeletonViewer extends DefaultPacketViewer
      */
     private Vector skeletonFrames = new Vector();
 
-	/**
-	 * The shell representing the entire program.
-	 */
-	private Shell shell;
+    /**
+     * The shell representing the entire program.
+     */
+    private Shell shell;
 
     /**
      * Create a new interface to display the given triangulation skeleton.
      *
      * @param triangulation the triangulation whose skeleton we will display.
-	 * @param shell the shell representing the entire program.
+     * @param shell the shell representing the entire program.
      */
     public SkeletonViewer(NTriangulation triangulation, Shell shell) {
         this.triangulation = triangulation;
-		this.shell = shell;
+        this.shell = shell;
         init();
     }
 
@@ -246,30 +246,30 @@ public class SkeletonViewer extends DefaultPacketViewer
         viewBoundaryComponents.addActionListener(this);
     }
 
-	/**
-	 * Called when a button has been pressed.
-	 *
-	 * @param e the corresponding event.
-	 */
-	public void actionPerformed(ActionEvent e) {
-		int style;
+    /**
+     * Called when a button has been pressed.
+     *
+     * @param e the corresponding event.
+     */
+    public void actionPerformed(ActionEvent e) {
+        int style;
 
-		Object src = e.getSource();
-		if (src == viewVertices)
-			style = SkeletonTableFrame.VERTICES;
-		else if (src == viewEdges)
-			style = SkeletonTableFrame.EDGES;
-		else if (src == viewFaces)
-			style = SkeletonTableFrame.FACES;
-		else if (src == viewComponents)
-			style = SkeletonTableFrame.COMPONENTS;
-		else if (src == viewBoundaryComponents)
-			style = SkeletonTableFrame.BOUNDARY_COMPONENTS;
-		else
-			return;
+        Object src = e.getSource();
+        if (src == viewVertices)
+            style = SkeletonTableFrame.VERTICES;
+        else if (src == viewEdges)
+            style = SkeletonTableFrame.EDGES;
+        else if (src == viewFaces)
+            style = SkeletonTableFrame.FACES;
+        else if (src == viewComponents)
+            style = SkeletonTableFrame.COMPONENTS;
+        else if (src == viewBoundaryComponents)
+            style = SkeletonTableFrame.BOUNDARY_COMPONENTS;
+        else
+            return;
 
-		showSkeletonDetails(style);
-	}
+        showSkeletonDetails(style);
+    }
 
     public void reflectPacket() {
         closeAllFrames();
@@ -331,24 +331,24 @@ public class SkeletonViewer extends DefaultPacketViewer
         }
     }
 
-	/**
-	 * Bring up a frame showing particular details of the skeleton.
-	 *
-	 * @param style specifies whether to view details for vertices,
-	 * edges, faces or so on.  This must be one of the style constants
-	 * defined in class <tt>SkeletonTableFrame</tt>.
-	 *
-	 * @see normal.packetui.triangulation.SkeletonTableFrame
-	 */
+    /**
+     * Bring up a frame showing particular details of the skeleton.
+     *
+     * @param style specifies whether to view details for vertices,
+     * edges, faces or so on.  This must be one of the style constants
+     * defined in class <tt>SkeletonTableFrame</tt>.
+     *
+     * @see normal.packetui.triangulation.SkeletonTableFrame
+     */
     private void showSkeletonDetails(int style) {
-		SkeletonTableFrame f = new SkeletonTableFrame(shell.getPrimaryFrame(),
-			triangulation, style);
-		skeletonFrames.addElement(f);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosed(WindowEvent e) {
-				skeletonFrames.removeElement(e.getSource());
-			}
-		});
-		f.show();
+        SkeletonTableFrame f = new SkeletonTableFrame(shell.getPrimaryFrame(),
+            triangulation, style);
+        skeletonFrames.addElement(f);
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) {
+                skeletonFrames.removeElement(e.getSource());
+            }
+        });
+        f.show();
     }
 }

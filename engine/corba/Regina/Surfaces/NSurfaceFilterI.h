@@ -42,8 +42,8 @@
 
 class NSurfaceFilter_i : public virtual POA_Regina::Surfaces::NSurfaceFilter,
         public NPacket_i {
-	STANDARD_ENGINE_TYPEDEFS(NSurfaceFilter_i, NSurfaceFilter,
-			Regina::Surfaces::NSurfaceFilter)
+    STANDARD_ENGINE_TYPEDEFS(NSurfaceFilter_i, NSurfaceFilter,
+            Regina::Surfaces::NSurfaceFilter)
 
     protected:
         NSurfaceFilter_i(::NSurfaceFilter* newCppPtr) : NPacket_i(newCppPtr) {

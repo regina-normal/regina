@@ -43,8 +43,8 @@
 class NBoundaryComponent_i :
         public virtual POA_Regina::Triangulation::NBoundaryComponent,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NBoundaryComponent_i, NBoundaryComponent,
-			Regina::Triangulation::NBoundaryComponent)
+    STANDARD_ENGINE_TYPEDEFS(NBoundaryComponent_i, NBoundaryComponent,
+            Regina::Triangulation::NBoundaryComponent)
 
     protected:
         NBoundaryComponent_i(::NBoundaryComponent* newCppPtr) :

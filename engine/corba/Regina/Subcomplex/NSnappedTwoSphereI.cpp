@@ -31,21 +31,21 @@
 #include "NTriangulationI.h"
 
 Regina::Subcomplex::NSnappedTwoSphere_ptr NSnappedTwoSphere_i::cloneMe() {
-	return NSnappedTwoSphere_i::newWrapper(
-		GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->clone());
+    return NSnappedTwoSphere_i::newWrapper(
+        GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->clone());
 }
 Regina::Subcomplex::NSnappedBall_ptr NSnappedTwoSphere_i::getSnappedBall(
-		CORBA::Long index) {
-	return NSnappedBall_i::newWrapper(
-		GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->getSnappedBall(index));
+        CORBA::Long index) {
+    return NSnappedBall_i::newWrapper(
+        GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->getSnappedBall(index));
 }
 void NSnappedTwoSphere_i::reduceTriangulation() {
-	GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->reduceTriangulation();
+    GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->reduceTriangulation();
 }
 Regina::Triangulation::NTriangulation_ptr
-		NSnappedTwoSphere_i::getReducedTriangulation(
-		Regina::Triangulation::NTriangulation_ptr original) {
-	return NTriangulation_i::newWrapper(
-		GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->getReducedTriangulation(
-		GET_ENGINE_OBJECT(NTriangulation, original)));
+        NSnappedTwoSphere_i::getReducedTriangulation(
+        Regina::Triangulation::NTriangulation_ptr original) {
+    return NTriangulation_i::newWrapper(
+        GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->getReducedTriangulation(
+        GET_ENGINE_OBJECT(NTriangulation, original)));
 }

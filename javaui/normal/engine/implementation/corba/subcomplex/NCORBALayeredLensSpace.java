@@ -46,25 +46,25 @@ public class NCORBALayeredLensSpace extends CORBAShareableObject
         return (source == null ? null : new NCORBALayeredLensSpace(source));
     }
 
-	public normal.engine.subcomplex.NLayeredLensSpace cloneMe() {
-		return NCORBALayeredLensSpace.newWrapper(data.cloneMe());
-	}
-	public long getP() {
-		return data.getP();
-	}
-	public long getQ() {
-		return data.getQ();
-	}
-	public normal.engine.subcomplex.NLayeredSolidTorus getTorus() {
-		return NCORBALayeredSolidTorus.newWrapper(data.getTorus());
-	}
-	public int getMobiusBoundaryGroup() {
-		return data.getMobiusBoundaryGroup();
-	}
-	public boolean isSnapped() {
-		return data.isSnapped();
-	}
-	public boolean isTwisted() {
-		return data.isTwisted();
-	}
+    public normal.engine.subcomplex.NLayeredLensSpace cloneMe() {
+        return NCORBALayeredLensSpace.newWrapper(data.cloneMe());
+    }
+    public long getP() {
+        return data.getP();
+    }
+    public long getQ() {
+        return data.getQ();
+    }
+    public normal.engine.subcomplex.NLayeredSolidTorus getTorus() {
+        return NCORBALayeredSolidTorus.newWrapper(data.getTorus());
+    }
+    public int getMobiusBoundaryGroup() {
+        return data.getMobiusBoundaryGroup();
+    }
+    public boolean isSnapped() {
+        return data.isSnapped();
+    }
+    public boolean isTwisted() {
+        return data.isTwisted();
+    }
 }

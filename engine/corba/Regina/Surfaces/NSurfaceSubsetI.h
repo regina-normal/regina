@@ -42,8 +42,8 @@
 
 class NSurfaceSubset_i : public virtual POA_Regina::Surfaces::NSurfaceSubset,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NSurfaceSubset_i, NSurfaceSubset,
-			Regina::Surfaces::NSurfaceSubset)
+    STANDARD_ENGINE_TYPEDEFS(NSurfaceSubset_i, NSurfaceSubset,
+            Regina::Surfaces::NSurfaceSubset)
 
     protected:
         NSurfaceSubset_i(::NSurfaceSubset* newCppPtr) :

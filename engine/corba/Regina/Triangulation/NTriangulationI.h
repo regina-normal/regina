@@ -43,8 +43,8 @@
 class NTriangulation_i :
         public virtual POA_Regina::Triangulation::NTriangulation,
         public NPacket_i {
-	STANDARD_ENGINE_TYPEDEFS(NTriangulation_i, NTriangulation,
-			Regina::Triangulation::NTriangulation)
+    STANDARD_ENGINE_TYPEDEFS(NTriangulation_i, NTriangulation,
+            Regina::Triangulation::NTriangulation)
 
     protected:
         NTriangulation_i(::NTriangulation* newCppPtr) : NPacket_i(newCppPtr) {

@@ -68,11 +68,11 @@ public interface Engine {
     public NAbelianGroup newNAbelianGroup(NAbelianGroup cloneMe);
     public NContainer newNContainer();
     public NFile newNFile();
-	public NGroupExpression newNGroupExpression();
-	public NGroupExpression newNGroupExpression(NGroupExpression cloneMe);
-	public NGroupPresentation newNGroupPresentation();
-	public NGroupPresentation newNGroupPresentation(
-		NGroupPresentation cloneMe);
+    public NGroupExpression newNGroupExpression();
+    public NGroupExpression newNGroupExpression(NGroupExpression cloneMe);
+    public NGroupPresentation newNGroupPresentation();
+    public NGroupPresentation newNGroupPresentation(
+        NGroupPresentation cloneMe);
     public NMatrixInt newNMatrixInt(int rows, int columns);
     public NMatrixInt newNMatrixInt(NMatrixInt cloneMe);
     public NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner,
@@ -107,17 +107,17 @@ public interface Engine {
     public long formCensus(NPacket parent, int nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, NProgressManager manager);
-	public NPillowTwoSphere formsPillowTwoSphere(NFace face1, NFace face2);
-	public NSnappedTwoSphere formsSnappedTwoSphere(NSnappedBall ball1,
-		NSnappedBall ball2);
-	public NSnappedTwoSphere formsSnappedTwoSphere(NTetrahedron tet1,
-		NTetrahedron tet2);
+    public NPillowTwoSphere formsPillowTwoSphere(NFace face1, NFace face2);
+    public NSnappedTwoSphere formsSnappedTwoSphere(NSnappedBall ball1,
+        NSnappedBall ball2);
+    public NSnappedTwoSphere formsSnappedTwoSphere(NTetrahedron tet1,
+        NTetrahedron tet2);
     public int getVersionMajor();
     public int getVersionMinor();
     public String getVersionString();
-	public NLayeredLensSpace isLayeredLensSpace(NComponent comp);
-	public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
-	public NSnappedBall isSnappedBall(NTetrahedron tet);
+    public NLayeredLensSpace isLayeredLensSpace(NComponent comp);
+    public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
+    public NSnappedBall isSnappedBall(NTetrahedron tet);
     public NMatrixInt makeMatchingEquations(NTriangulation
         triangulation, int flavour);
     public NPacket readFromFile(String fileName);

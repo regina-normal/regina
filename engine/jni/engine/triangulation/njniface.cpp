@@ -62,18 +62,18 @@ JNIEXPORT jobject JNICALL
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_triangulation_NJNIFace_getEdge
-		(JNIEnv *env, jobject me, jint index) {
+        Java_normal_engine_implementation_jni_triangulation_NJNIFace_getEdge
+        (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NFace, me)->getEdge(index),
         "normal/engine/implementation/jni/triangulation/NJNIEdge");
 }
 
 JNIEXPORT jchar JNICALL
-		Java_normal_engine_implementation_jni_triangulation_NJNIFace__1getEdgeMapping
-		(JNIEnv *env, jobject me, jint index) {
-	return GET_ENGINE_OBJECT(env, NFace, me)->getEdgeMapping(index).
-		getPermCode();
+        Java_normal_engine_implementation_jni_triangulation_NJNIFace__1getEdgeMapping
+        (JNIEnv *env, jobject me, jint index) {
+    return GET_ENGINE_OBJECT(env, NFace, me)->getEdgeMapping(index).
+        getPermCode();
 }
 
 JNIEXPORT jobject JNICALL
@@ -102,8 +102,8 @@ JNIEXPORT jint JNICALL
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_triangulation_NJNIFace_getVertex
-		(JNIEnv *env, jobject me, jint index) {
+        Java_normal_engine_implementation_jni_triangulation_NJNIFace_getVertex
+        (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NFace, me)->getVertex(index),
         "normal/engine/implementation/jni/triangulation/NJNIVertex");

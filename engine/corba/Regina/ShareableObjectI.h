@@ -44,9 +44,9 @@
 #include "ShareableObjectIDL.h"
 
 class ShareableObject_i : public virtual POA_Regina::ShareableObject,
-		public PortableServer::RefCountServantBase {
-	STANDARD_ENGINE_TYPEDEFS(ShareableObject_i, ShareableObject,
-			Regina::ShareableObject)
+        public PortableServer::RefCountServantBase {
+    STANDARD_ENGINE_TYPEDEFS(ShareableObject_i, ShareableObject,
+            Regina::ShareableObject)
 
     private:
         ::ShareableObject* cppPtr;
@@ -56,10 +56,10 @@ class ShareableObject_i : public virtual POA_Regina::ShareableObject,
         virtual ~ShareableObject_i() {
         }
 
-		/**
-		 * Activates this object in the default CORBA POA.
-		 */
-		void activateObject();
+        /**
+         * Activates this object in the default CORBA POA.
+         */
+        void activateObject();
 
         virtual CORBA::Long getCppPtr();
         virtual CORBA::Boolean sameObject(Regina::ShareableObject_ptr other);

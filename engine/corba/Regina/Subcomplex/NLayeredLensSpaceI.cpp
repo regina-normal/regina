@@ -30,27 +30,27 @@
 #include "NLayeredSolidTorusI.h"
 
 Regina::Subcomplex::NLayeredLensSpace_ptr NLayeredLensSpace_i::cloneMe() {
-	return NLayeredLensSpace_i::newWrapper(
-		GET_ENGINE_OBJECT(NLayeredLensSpace, this)->clone());
+    return NLayeredLensSpace_i::newWrapper(
+        GET_ENGINE_OBJECT(NLayeredLensSpace, this)->clone());
 }
 CORBA::Long NLayeredLensSpace_i::getP() {
-	return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->getP();
+    return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->getP();
 }
 CORBA::Long NLayeredLensSpace_i::getQ() {
-	return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->getQ();
+    return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->getQ();
 }
 Regina::Subcomplex::NLayeredSolidTorus_ptr NLayeredLensSpace_i::getTorus() {
-	return NLayeredSolidTorus_i::newWrapper((NLayeredSolidTorus*)
-		&GET_ENGINE_OBJECT(NLayeredLensSpace, this)->getTorus());
+    return NLayeredSolidTorus_i::newWrapper((NLayeredSolidTorus*)
+        &GET_ENGINE_OBJECT(NLayeredLensSpace, this)->getTorus());
 }
 CORBA::Long NLayeredLensSpace_i::getMobiusBoundaryGroup() {
-	return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->
-		getMobiusBoundaryGroup();
+    return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->
+        getMobiusBoundaryGroup();
 }
 CORBA::Boolean NLayeredLensSpace_i::isSnapped() {
-	return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->isSnapped();
+    return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->isSnapped();
 }
 CORBA::Boolean NLayeredLensSpace_i::isTwisted() {
-	return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->isTwisted();
+    return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->isTwisted();
 }
 

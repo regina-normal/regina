@@ -196,51 +196,51 @@ class NFace : public ShareableObject {
          */
         NBoundaryComponent* getBoundaryComponent() const;
 
-		/**
-		 * Returns the vertex in the triangulation skeleton corresponding
-		 * to the given vertex of this face.
-		 *
-		 * Note that face vertex \a i is opposite face edge \a i.
-		 *
-		 * @param vertex the vertex of this face to examine.  This should
-		 * be 0, 1 or 2.
-		 * @return the vertex of the skeleton corresponding to the
-		 * requested face vertex.
-		 */
-		NVertex* getVertex(int vertex) const;
-		/**
-		 * Returns the edge of the triangulation skeleton corresponding
-		 * to the given edge of this face.
-		 *
-		 * Note that face vertex \a i is opposite face edge \a i.
-		 *
-		 * @param edge the edge of this face to examine.  This should be
-		 * 0, 1 or 2.
-		 * @return the edge of the skeleton corresponding to the
-		 * requested face edge.
-		 */
-		NEdge* getEdge(int edge) const;
-		/**
-		 * The edge in the skeleton corresponding to the requested edge
-		 * of this face is examined, and a permutation mapping vertices
-		 * (0,1) of the skeleton edge to the corresponding vertices of
-		 * this face is returned.
-		 *
-		 * Thus for each <tt>i=0,1</tt> and each face (or tetrahedron)
-		 * containing this
-		 * skeleton edge, <tt>getEdgeMapping(...)[i]</tt> will refer to
-		 * vertices that are all identified to each other along the
-		 * skeleton edge concerned.
-		 *
-		 * The permutation returned will map 2 to the remaining face
-		 * vertex (which will be parameter \a edge) and will map 3 to 3.
-		 *
-		 * @param edge the edge of this face to examine.  This should be
-		 * 0, 1 or 2.
-		 * @return a mapping from vertices (0,1) of the requested edge to
-		 * the vertices of this face.
-		 */
-		NPerm getEdgeMapping(int edge) const;
+        /**
+         * Returns the vertex in the triangulation skeleton corresponding
+         * to the given vertex of this face.
+         *
+         * Note that face vertex \a i is opposite face edge \a i.
+         *
+         * @param vertex the vertex of this face to examine.  This should
+         * be 0, 1 or 2.
+         * @return the vertex of the skeleton corresponding to the
+         * requested face vertex.
+         */
+        NVertex* getVertex(int vertex) const;
+        /**
+         * Returns the edge of the triangulation skeleton corresponding
+         * to the given edge of this face.
+         *
+         * Note that face vertex \a i is opposite face edge \a i.
+         *
+         * @param edge the edge of this face to examine.  This should be
+         * 0, 1 or 2.
+         * @return the edge of the skeleton corresponding to the
+         * requested face edge.
+         */
+        NEdge* getEdge(int edge) const;
+        /**
+         * The edge in the skeleton corresponding to the requested edge
+         * of this face is examined, and a permutation mapping vertices
+         * (0,1) of the skeleton edge to the corresponding vertices of
+         * this face is returned.
+         *
+         * Thus for each <tt>i=0,1</tt> and each face (or tetrahedron)
+         * containing this
+         * skeleton edge, <tt>getEdgeMapping(...)[i]</tt> will refer to
+         * vertices that are all identified to each other along the
+         * skeleton edge concerned.
+         *
+         * The permutation returned will map 2 to the remaining face
+         * vertex (which will be parameter \a edge) and will map 3 to 3.
+         *
+         * @param edge the edge of this face to examine.  This should be
+         * 0, 1 or 2.
+         * @return a mapping from vertices (0,1) of the requested edge to
+         * the vertices of this face.
+         */
+        NPerm getEdgeMapping(int edge) const;
 
         void writeTextShort(ostream& out) const;
 
@@ -269,8 +269,8 @@ inline NBoundaryComponent* NFace::getBoundaryComponent() const {
 }
 
 inline NVertex* NFace::getVertex(int vertex) const {
-	return embeddings[0]->getTetrahedron()->getVertex(
-		embeddings[0]->getVertices()[vertex]);
+    return embeddings[0]->getTetrahedron()->getVertex(
+        embeddings[0]->getVertices()[vertex]);
 }
 
 inline bool NFace::isBoundary() const {

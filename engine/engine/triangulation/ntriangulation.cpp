@@ -37,7 +37,7 @@
     #include "nfile.h"
 #else
     #include "engine/triangulation/ntriangulation.h"
-	#include "engine/algebra/ngrouppresentation.h"
+    #include "engine/algebra/ngrouppresentation.h"
     #include "engine/file/nfile.h"
 #endif
 
@@ -52,8 +52,8 @@
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton)
         deleteSkeleton();
-	if (calculatedFundamentalGroup)
-		delete fundamentalGroup;
+    if (calculatedFundamentalGroup)
+        delete fundamentalGroup;
     if (calculatedH1)
         delete H1;
     if (calculatedH1Rel)
@@ -68,7 +68,7 @@ void NTriangulation::clearAllProperties() {
 
 void NTriangulation::initialiseAllProperties() {
     calculatedSkeleton = false;
-	calculatedFundamentalGroup = false;
+    calculatedFundamentalGroup = false;
     calculatedH1 = false;
     calculatedH1Rel = false;
     calculatedH1Bdry = false;
@@ -199,11 +199,11 @@ void NTriangulation::writePacket(NFile& out) const {
     // Write the properties.
     streampos bookmark(0);
 
-	if (calculatedFundamentalGroup) {
-		bookmark = writePropertyHeader(out, PROPID_FUNDAMENTALGROUP);
-		fundamentalGroup->writeToFile(out);
-		writePropertyFooter(out, bookmark);
-	}
+    if (calculatedFundamentalGroup) {
+        bookmark = writePropertyHeader(out, PROPID_FUNDAMENTALGROUP);
+        fundamentalGroup->writeToFile(out);
+        writePropertyFooter(out, bookmark);
+    }
     if (calculatedH1) {
         bookmark = writePropertyHeader(out, PROPID_H1);
         H1->writeToFile(out);
@@ -263,10 +263,10 @@ NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* parent) {
 }
 
 void NTriangulation::readIndividualProperty(NFile& infile, unsigned propType) {
-	if (propType == PROPID_FUNDAMENTALGROUP) {
-		fundamentalGroup = NGroupPresentation::readFromFile(infile);
-		calculatedFundamentalGroup = true;
-	}
+    if (propType == PROPID_FUNDAMENTALGROUP) {
+        fundamentalGroup = NGroupPresentation::readFromFile(infile);
+        calculatedFundamentalGroup = true;
+    }
     if (propType == PROPID_H1) {
         H1 = NAbelianGroup::readFromFile(infile);
         calculatedH1 = true;
@@ -484,10 +484,10 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     gluingsHaveChanged();
 
     // Properties:
-	if (X.calculatedFundamentalGroup) {
-		fundamentalGroup= new NGroupPresentation(*(X.fundamentalGroup));
-		calculatedFundamentalGroup = true;
-	}
+    if (X.calculatedFundamentalGroup) {
+        fundamentalGroup= new NGroupPresentation(*(X.fundamentalGroup));
+        calculatedFundamentalGroup = true;
+    }
     if (X.calculatedH1) {
         H1 = new NAbelianGroup(*(X.H1));
         calculatedH1 = true;

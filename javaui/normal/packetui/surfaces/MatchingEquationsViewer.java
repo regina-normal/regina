@@ -112,13 +112,13 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
 
         TableColumn col;
         TableCellRenderer renderer = new FancyColumnHeaderRenderer(table);
-		NTriangulation triang = list.getTriangulation();
+        NTriangulation triang = list.getTriangulation();
         for (int i=0; i<matchingEquations.columns(); i++) {
             col = table.getColumnModel().getColumn(i);
             col.setPreferredWidth(70);
-			col.setHeaderRenderer(renderer);
-			col.setHeaderValue(new FancyData(model.getColumnName(i),
-				Coordinates.getCoordinateDesc(list.getFlavour(), triang, i)));
+            col.setHeaderRenderer(renderer);
+            col.setHeaderValue(new FancyData(model.getColumnName(i),
+                Coordinates.getCoordinateDesc(list.getFlavour(), triang, i)));
         }
     }
 
@@ -178,7 +178,7 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
          */
         public String getColumnName(int column) {
             return Coordinates.getCoordinateAbbr(list.getFlavour(),
-				list.getTriangulation(), column);
+                list.getTriangulation(), column);
         }
     }
 }

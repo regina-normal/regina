@@ -52,7 +52,7 @@ class NSurfaceFilterCombination_i :
                 NSurfaceFilter_i(newCppPtr) {
         }
     public:
-		STANDARD_NEW_WRAPPER
+        STANDARD_NEW_WRAPPER
         
         virtual CORBA::Boolean getUsesAnd();
         virtual void setUsesAnd(CORBA::Boolean value);

@@ -40,10 +40,10 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "shareableobject.h"
-	#include "nperm.h"
+    #include "nperm.h"
 #else
     #include "engine/shareableobject.h"
-	#include "engine/triangulation/nperm.h"
+    #include "engine/triangulation/nperm.h"
 #endif
 
 class NFace;
@@ -66,95 +66,95 @@ class NTriangulation;
  */
 class NPillowTwoSphere : public ShareableObject {
     private:
-		NFace* face[2];
-			/**< The two faces whose edges are joined. */
-		NPerm faceMapping;
-			/**< A mapping from vertices (0,1,2) of the first face to
-			     vertices (0,1,2) of the second face describing how the
-				 face boundaries are joined. */
+        NFace* face[2];
+            /**< The two faces whose edges are joined. */
+        NPerm faceMapping;
+            /**< A mapping from vertices (0,1,2) of the first face to
+                 vertices (0,1,2) of the second face describing how the
+                 face boundaries are joined. */
     
     public:
-		/**
-		 * Returns a newly created clone of this structure.
-		 *
-		 * \ifaces This routine is named \a cloneMe.
-		 *
-		 * @return a newly created clone.
-		 */
-		NPillowTwoSphere* clone() const;
+        /**
+         * Returns a newly created clone of this structure.
+         *
+         * \ifaces This routine is named \a cloneMe.
+         *
+         * @return a newly created clone.
+         */
+        NPillowTwoSphere* clone() const;
 
-		/**
-		 * Returns one of the two faces whose boundaries are joined.
-		 *
-		 * @param index specifies which of the two faces to return;
-		 * this must be either 0 or 1.
-		 * @return the corresponding face.
-		 */
-		NFace* getFace(int index) const;
-		/**
-		 * Returns a permutation describing how the boundaries of the two
-		 * faces are joined.
-		 *
-		 * The permutation will map vertices (0,1,2) of
-		 * <tt>getFace(0)</tt> to vertices (0,1,2) of
-		 * <tt>getFace(1)</tt>.  The map will represent how the vertices
-		 * of the faces are identified by the three edge gluings.
-		 *
-		 * @return a permutation describing how the face boundaries are
-		 * joined.
-		 */
-		NPerm getFaceMapping() const;
+        /**
+         * Returns one of the two faces whose boundaries are joined.
+         *
+         * @param index specifies which of the two faces to return;
+         * this must be either 0 or 1.
+         * @return the corresponding face.
+         */
+        NFace* getFace(int index) const;
+        /**
+         * Returns a permutation describing how the boundaries of the two
+         * faces are joined.
+         *
+         * The permutation will map vertices (0,1,2) of
+         * <tt>getFace(0)</tt> to vertices (0,1,2) of
+         * <tt>getFace(1)</tt>.  The map will represent how the vertices
+         * of the faces are identified by the three edge gluings.
+         *
+         * @return a permutation describing how the face boundaries are
+         * joined.
+         */
+        NPerm getFaceMapping() const;
 
-		/**
-		 * Cuts along the 2-sphere and fills the two new boundary components
-		 * with 3-balls.  The number of tetrahedra in the triangulation
-		 * will not change.
-		 *
-		 * Note that if this 2-sphere is separating, this routine will
-		 * effectively split the corresponding connected sum into its
-		 * two original terms.
-		 *
-		 * \todo \bugurgent This routine currently does nothing!
-		 */
-		void reduceTriangulation() const;
-		/**
-		 * Makes a clone of this triangulation and reduces the clone as
-		 * described by reduceTriangulation().  The original
-		 * triangulation containing this 2-sphere will not be modified.
-		 * The clone will have no parent packet.
-		 *
-		 * \todo \bugurgent This routine currently does nothing!
-		 *
-		 * @param original the triangulation in which this 2-sphere occurs.
-		 * @return the newly created reduced triangulation.
-		 */
-		NTriangulation* getReducedTriangulation(const NTriangulation* original)
-			const;
+        /**
+         * Cuts along the 2-sphere and fills the two new boundary components
+         * with 3-balls.  The number of tetrahedra in the triangulation
+         * will not change.
+         *
+         * Note that if this 2-sphere is separating, this routine will
+         * effectively split the corresponding connected sum into its
+         * two original terms.
+         *
+         * \todo \bugurgent This routine currently does nothing!
+         */
+        void reduceTriangulation() const;
+        /**
+         * Makes a clone of this triangulation and reduces the clone as
+         * described by reduceTriangulation().  The original
+         * triangulation containing this 2-sphere will not be modified.
+         * The clone will have no parent packet.
+         *
+         * \todo \bugurgent This routine currently does nothing!
+         *
+         * @param original the triangulation in which this 2-sphere occurs.
+         * @return the newly created reduced triangulation.
+         */
+        NTriangulation* getReducedTriangulation(const NTriangulation* original)
+            const;
 
-		/**
-		 * Determines if the two given faces together form a pillow
-		 * 2-sphere.
-		 *
-		 * \pre The two given faces are distinct.
-		 *
-		 * \ifaces This routine is a member of class Engine.
-		 *
-		 * @param face1 the first face to examine.
-		 * @param face2 the second face to examine.
-		 * @return a newly created structure containing details of the
-		 * pillow 2-sphere, or \c null if the given faces do not
-		 * form a pillow 2-sphere.
-		 */
-		static NPillowTwoSphere* formsPillowTwoSphere(NFace* face1,
-			NFace* face2);
+        /**
+         * Determines if the two given faces together form a pillow
+         * 2-sphere.
+         *
+         * \pre The two given faces are distinct.
+         *
+         * \ifaces This routine is a member of class Engine.
+         *
+         * @param face1 the first face to examine.
+         * @param face2 the second face to examine.
+         * @return a newly created structure containing details of the
+         * pillow 2-sphere, or \c null if the given faces do not
+         * form a pillow 2-sphere.
+         */
+        static NPillowTwoSphere* formsPillowTwoSphere(NFace* face1,
+            NFace* face2);
 
-		void writeTextShort(ostream& out) const;
+        void writeTextShort(ostream& out) const;
 
-	private:
-		/**
-		 * Creates a new uninitialised structure.
-		 */
-		NPillowTwoSphere();
+    private:
+        /**
+         * Creates a new uninitialised structure.
+         */
+        NPillowTwoSphere();
 };
 
 // Inline functions for NPillowTwoSphere
@@ -162,13 +162,13 @@ class NPillowTwoSphere : public ShareableObject {
 inline NPillowTwoSphere::NPillowTwoSphere() {
 }
 inline NFace* NPillowTwoSphere::getFace(int index) const {
-	return face[index];
+    return face[index];
 }
 inline NPerm NPillowTwoSphere::getFaceMapping() const {
-	return faceMapping;
+    return faceMapping;
 }
 inline void NPillowTwoSphere::writeTextShort(ostream& out) const {
-	out << "Pillow 2-sphere";
+    out << "Pillow 2-sphere";
 }
 
 #endif

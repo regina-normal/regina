@@ -32,16 +32,16 @@ import normal.engine.*;
 import normal.engine.triangulation.*;
 
 public interface NLayeredSolidTorus extends ShareableObject {
-	public NLayeredSolidTorus cloneMe();
-	public long getNumberOfTetrahedra();
-	public NTetrahedron getBase();
-	public int getBaseEdge(int group, int index);
-	public int getBaseEdgeGroup(int edge);
-	public int getBaseFace(int index);
-	public NTetrahedron getTopLevel();
-	public long getMeridinalCuts(int group);
-	public int getTopEdge(int group, int index);
-	public int getTopEdgeGroup(int edge);
-	public int getTopFace(int index);
+    public NLayeredSolidTorus cloneMe();
+    public long getNumberOfTetrahedra();
+    public NTetrahedron getBase();
+    public int getBaseEdge(int group, int index);
+    public int getBaseEdgeGroup(int edge);
+    public int getBaseFace(int index);
+    public NTetrahedron getTopLevel();
+    public long getMeridinalCuts(int group);
+    public int getTopEdge(int group, int index);
+    public int getTopEdgeGroup(int edge);
+    public int getTopFace(int index);
 }
 

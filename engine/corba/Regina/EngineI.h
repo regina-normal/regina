@@ -32,7 +32,7 @@
 #include "EngineIDL.h"
 
 class Engine_i : public virtual POA_Regina::Engine,
-		public PortableServer::RefCountServantBase {
+        public PortableServer::RefCountServantBase {
     public:
         Engine_i() {
         }
@@ -48,7 +48,7 @@ class Engine_i : public virtual POA_Regina::Engine,
             newNGroupExpression_NGroupExpression(
             Regina::Algebra::NGroupExpression_ptr cloneMe);
         virtual Regina::Algebra::NGroupPresentation_ptr
-			newNGroupPresentation_();
+            newNGroupPresentation_();
         virtual Regina::Algebra::NGroupPresentation_ptr
             newNGroupPresentation_NGroupPresentation(
             Regina::Algebra::NGroupPresentation_ptr cloneMe);
@@ -101,26 +101,26 @@ class Engine_i : public virtual POA_Regina::Engine,
             CORBA::Char orientability, CORBA::Char boundary,
             CORBA::Long nBdryFaces,
             Regina::Progress::NProgressManager_ptr manager);
-		virtual Regina::Subcomplex::NPillowTwoSphere_ptr
-			formsPillowTwoSphere(Regina::Triangulation::NFace_ptr face1,
-			Regina::Triangulation::NFace_ptr face2);
-		virtual Regina::Subcomplex::NSnappedTwoSphere_ptr
-			formsSnappedTwoSphere_NSnappedBall(
-			Regina::Subcomplex::NSnappedBall_ptr p1,
-			Regina::Subcomplex::NSnappedBall_ptr p2);
-		virtual Regina::Subcomplex::NSnappedTwoSphere_ptr
-			formsSnappedTwoSphere_NTetrahedron(
-			Regina::Triangulation::NTetrahedron_ptr p1,
-			Regina::Triangulation::NTetrahedron_ptr p2);
+        virtual Regina::Subcomplex::NPillowTwoSphere_ptr
+            formsPillowTwoSphere(Regina::Triangulation::NFace_ptr face1,
+            Regina::Triangulation::NFace_ptr face2);
+        virtual Regina::Subcomplex::NSnappedTwoSphere_ptr
+            formsSnappedTwoSphere_NSnappedBall(
+            Regina::Subcomplex::NSnappedBall_ptr p1,
+            Regina::Subcomplex::NSnappedBall_ptr p2);
+        virtual Regina::Subcomplex::NSnappedTwoSphere_ptr
+            formsSnappedTwoSphere_NTetrahedron(
+            Regina::Triangulation::NTetrahedron_ptr p1,
+            Regina::Triangulation::NTetrahedron_ptr p2);
         virtual CORBA::Long getVersionMajor();
         virtual CORBA::Long getVersionMinor();
         virtual char* getVersionString();
-		virtual Regina::Subcomplex::NLayeredLensSpace_ptr
-			isLayeredLensSpace(Regina::Triangulation::NComponent_ptr comp);
-		virtual Regina::Subcomplex::NLayeredSolidTorus_ptr
-			isLayeredSolidTorusBase(Regina::Triangulation::NTetrahedron_ptr tet);
-		virtual Regina::Subcomplex::NSnappedBall_ptr
-			isSnappedBall(Regina::Triangulation::NTetrahedron_ptr tet);
+        virtual Regina::Subcomplex::NLayeredLensSpace_ptr
+            isLayeredLensSpace(Regina::Triangulation::NComponent_ptr comp);
+        virtual Regina::Subcomplex::NLayeredSolidTorus_ptr
+            isLayeredSolidTorusBase(Regina::Triangulation::NTetrahedron_ptr tet);
+        virtual Regina::Subcomplex::NSnappedBall_ptr
+            isSnappedBall(Regina::Triangulation::NTetrahedron_ptr tet);
         virtual Regina::Maths::NMatrixInt_ptr makeMatchingEquations(
             Regina::Triangulation::NTriangulation_ptr triangulation,
             CORBA::Long flavour);

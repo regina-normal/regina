@@ -43,28 +43,28 @@
 class ::NGroupExpression;
 
 class NGroupExpression_i :
-		public virtual POA_Regina::Algebra::NGroupExpression,
+        public virtual POA_Regina::Algebra::NGroupExpression,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NGroupExpression_i, NGroupExpression,
-			Regina::Algebra::NGroupExpression)
+    STANDARD_ENGINE_TYPEDEFS(NGroupExpression_i, NGroupExpression,
+            Regina::Algebra::NGroupExpression)
 
     protected:
         NGroupExpression_i(::NGroupExpression* newCppPtr) :
                 ShareableObject_i(newCppPtr) {
         }
     public:
-		STANDARD_NEW_WRAPPER
+        STANDARD_NEW_WRAPPER
 
-		virtual CORBA::Long getNumberOfTerms();
-		virtual CORBA::Long getGenerator(CORBA::Long index);
-		virtual CORBA::Long getExponent(CORBA::Long index);
-		virtual void addTermFirst(CORBA::Long generator, CORBA::Long exponent);
-		virtual void addTermLast(CORBA::Long generator, CORBA::Long exponent);
-		virtual Regina::Algebra::NGroupExpression_ptr inverse();
-		virtual Regina::Algebra::NGroupExpression_ptr power(CORBA::Long exp);
-		virtual CORBA::Boolean simplify(CORBA::Boolean cyclic);
-		virtual CORBA::Boolean substitute(CORBA::Long generator,
-			Regina::Algebra::NGroupExpression_ptr exp, CORBA::Boolean cyclic);
+        virtual CORBA::Long getNumberOfTerms();
+        virtual CORBA::Long getGenerator(CORBA::Long index);
+        virtual CORBA::Long getExponent(CORBA::Long index);
+        virtual void addTermFirst(CORBA::Long generator, CORBA::Long exponent);
+        virtual void addTermLast(CORBA::Long generator, CORBA::Long exponent);
+        virtual Regina::Algebra::NGroupExpression_ptr inverse();
+        virtual Regina::Algebra::NGroupExpression_ptr power(CORBA::Long exp);
+        virtual CORBA::Boolean simplify(CORBA::Boolean cyclic);
+        virtual CORBA::Boolean substitute(CORBA::Long generator,
+            Regina::Algebra::NGroupExpression_ptr exp, CORBA::Boolean cyclic);
 };
 
 #endif

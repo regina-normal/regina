@@ -42,7 +42,7 @@
 
 class NPacket_i : public virtual POA_Regina::Packet::NPacket,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NPacket_i, NPacket, Regina::Packet::NPacket)
+    STANDARD_ENGINE_TYPEDEFS(NPacket_i, NPacket, Regina::Packet::NPacket)
 
     protected:
         NPacket_i(::NPacket* newCppPtr) : ShareableObject_i(newCppPtr) {

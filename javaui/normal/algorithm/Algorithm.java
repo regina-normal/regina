@@ -122,8 +122,8 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
      * @param shell the shell representing the entire program.
      * @param menuLabel the text to display in the menu item
      * corresponding to this algorithm.
-	 * @param mnemonic the keyboard mnemonic to associate with the
-	 * corresponding menu item.
+     * @param mnemonic the keyboard mnemonic to associate with the
+     * corresponding menu item.
      * @param packetPostLabel the text to add to the end of a packet
      * label if the packet is cloned to perform this algorithm; this
      * text should not begin with any spaces.
@@ -142,7 +142,7 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
         this.mightEdit = mightEdit;
         this.name = menuLabel;
         this.packetPostLabel = packetPostLabel;
-		setMnemonic(mnemonic);
+        setMnemonic(mnemonic);
         addActionListener(this);
     }
 

@@ -128,8 +128,8 @@ JNIEXPORT jlong JNICALL
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFundamentalGroup
-		(JNIEnv *env, jobject me) {
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFundamentalGroup
+        (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
         (NGroupPresentation*)&GET_ENGINE_OBJECT(env, NTriangulation, me)->
         getFundamentalGroup(),
@@ -396,10 +396,10 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT jboolean JNICALL
-		Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_simplifyToLocalMinimum
-		(JNIEnv *env, jobject me, jboolean perform) {
-	return GET_ENGINE_OBJECT(env, NTriangulation, me)->
-		simplifyToLocalMinimum(perform);
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_simplifyToLocalMinimum
+        (JNIEnv *env, jobject me, jboolean perform) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->
+        simplifyToLocalMinimum(perform);
 }
 
 JNIEXPORT jboolean JNICALL

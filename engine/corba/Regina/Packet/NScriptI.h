@@ -42,7 +42,7 @@
 
 class NScript_i : public virtual POA_Regina::Packet::NScript,
         public NPacket_i {
-	STANDARD_ENGINE_TYPEDEFS(NScript_i, NScript, Regina::Packet::NScript)
+    STANDARD_ENGINE_TYPEDEFS(NScript_i, NScript, Regina::Packet::NScript)
 
     protected:
         NScript_i(::NScript* newCppPtr) : NPacket_i(newCppPtr) {

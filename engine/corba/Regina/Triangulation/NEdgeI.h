@@ -42,7 +42,7 @@
 
 class NEdge_i : public virtual POA_Regina::Triangulation::NEdge,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NEdge_i, NEdge, Regina::Triangulation::NEdge)
+    STANDARD_ENGINE_TYPEDEFS(NEdge_i, NEdge, Regina::Triangulation::NEdge)
 
     protected:
         NEdge_i(::NEdge* newCppPtr) : ShareableObject_i(newCppPtr) {
@@ -53,7 +53,7 @@ class NEdge_i : public virtual POA_Regina::Triangulation::NEdge,
         virtual Regina::Triangulation::NComponent_ptr getComponent();
         virtual Regina::Triangulation::NBoundaryComponent_ptr
             getBoundaryComponent();
-		virtual Regina::Triangulation::NVertex_ptr getVertex(CORBA::Long index);
+        virtual Regina::Triangulation::NVertex_ptr getVertex(CORBA::Long index);
         virtual CORBA::Boolean isBoundary();
         virtual CORBA::Boolean isValid();
         virtual CORBA::Long getNumberOfEmbeddings();

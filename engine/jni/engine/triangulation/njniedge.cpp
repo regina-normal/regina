@@ -88,8 +88,8 @@ JNIEXPORT jlong JNICALL
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getVertex
-		(JNIEnv *env, jobject me, jint index) {
+        Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getVertex
+        (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NEdge, me)->getVertex(index),
         "normal/engine/implementation/jni/triangulation/NJNIVertex");

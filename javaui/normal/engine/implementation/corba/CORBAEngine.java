@@ -194,82 +194,82 @@ public class CORBAEngine implements Engine {
         }
 
         try {
-			NameComponent path[] = { new NameComponent("regina", "context") };
+            NameComponent path[] = { new NameComponent("regina", "context") };
             if ((objRef = ncRef.resolve(path)) == null)
                 throw new Exception();
-			if ((ncRef = NamingContextHelper.narrow(objRef)) == null)
-				throw new Exception();
+            if ((ncRef = NamingContextHelper.narrow(objRef)) == null)
+                throw new Exception();
         } catch (Throwable th) {
-			dumpBindings(ncRef, 100);
+            dumpBindings(ncRef, 100);
             throw new normal.engine.implementation.corba.CORBAException(
                 "The Regina naming context could not be located " +
                 "by the name service.");
         }
 
-		String msg = null;
+        String msg = null;
         try {
-        	NameComponent path[] = { new NameComponent("Engine", "object") };
+            NameComponent path[] = { new NameComponent("Engine", "object") };
             if ((objRef = ncRef.resolve(path)) == null) {
-				msg = "The engine does not exist within the Regina naming " +
-					"context.";
+                msg = "The engine does not exist within the Regina naming " +
+                    "context.";
                 throw new Exception();
-			}
-			if (objRef._non_existent()) {
-				msg = "The engine exists in the Regina naming context but " +
-					"not on the server.";
-				throw new Exception();
-			}
+            }
+            if (objRef._non_existent()) {
+                msg = "The engine exists in the Regina naming context but " +
+                    "not on the server.";
+                throw new Exception();
+            }
             if ((data = normal.engine.implementation.corba.Regina.EngineHelper.
-                	narrow(objRef)) == null) {
-				msg = "The engine was located on the server but could not " +
-					"be narrowed to the correct class.";
+                    narrow(objRef)) == null) {
+                msg = "The engine was located on the server but could not " +
+                    "be narrowed to the correct class.";
                 throw new Exception();
-			}
+            }
         } catch (Throwable th) {
-			if (msg == null) {
-				dumpBindings(ncRef, 100);
-				System.out.println(th.toString());
-            	throw new normal.engine.implementation.corba.CORBAException(
-                	"An unknown problem occurred whilst retrieving the " +
-					"engine via the name service; details have been " +
-					"written to standard output.");
-			} else
-            	throw new normal.engine.implementation.corba.CORBAException(
-					msg);
+            if (msg == null) {
+                dumpBindings(ncRef, 100);
+                System.out.println(th.toString());
+                throw new normal.engine.implementation.corba.CORBAException(
+                    "An unknown problem occurred whilst retrieving the " +
+                    "engine via the name service; details have been " +
+                    "written to standard output.");
+            } else
+                throw new normal.engine.implementation.corba.CORBAException(
+                    msg);
         }
     }
 
-	/**
-	 * Dumps the bindings in the given naming context to standard output.
-	 *
-	 * @param ncRef the naming context to examine.
-	 * @param max the maximum number of bindings to dump.
-	 */
-	private void dumpBindings(NamingContext ncRef, int max) {
-		BindingListHolder bl = new BindingListHolder();
-		BindingIteratorHolder bi = new BindingIteratorHolder();
+    /**
+     * Dumps the bindings in the given naming context to standard output.
+     *
+     * @param ncRef the naming context to examine.
+     * @param max the maximum number of bindings to dump.
+     */
+    private void dumpBindings(NamingContext ncRef, int max) {
+        BindingListHolder bl = new BindingListHolder();
+        BindingIteratorHolder bi = new BindingIteratorHolder();
 
-		System.out.println("NamingContext bindings:");
+        System.out.println("NamingContext bindings:");
 
-		ncRef.list(max, bl, bi);
+        ncRef.list(max, bl, bi);
 
-		int i, j;
-		Binding binding;
-		NameComponent nc;
-		for (i = 0; i < bl.value.length; i++) {
-			binding = bl.value[i];
-			for (j = 0; j < binding.binding_name.length; j++) {
-				nc = binding.binding_name[j];
-				if (j > 0)
-					System.out.print(" / ");
-				System.out.print(nc.id + " : " + nc.kind);
-			}
-			System.out.println();
-		}
+        int i, j;
+        Binding binding;
+        NameComponent nc;
+        for (i = 0; i < bl.value.length; i++) {
+            binding = bl.value[i];
+            for (j = 0; j < binding.binding_name.length; j++) {
+                nc = binding.binding_name[j];
+                if (j > 0)
+                    System.out.print(" / ");
+                System.out.print(nc.id + " : " + nc.kind);
+            }
+            System.out.println();
+        }
 
-		System.out.println("-- displayed " + String.valueOf(bl.value.length)
-			+ " binding(s).");
-	}
+        System.out.println("-- displayed " + String.valueOf(bl.value.length)
+            + " binding(s).");
+    }
 
     /**
      * Provides a polite string representation for this object.
@@ -302,24 +302,24 @@ public class CORBAEngine implements Engine {
     public NFile newNFile() {
         return NCORBAFile.newWrapper(data.newNFile());
     }
-	public NGroupExpression newNGroupExpression() {
-		return NCORBAGroupExpression.newWrapper(data.newNGroupExpression_());
-	}
-	public NGroupExpression newNGroupExpression(NGroupExpression cloneMe) {
-		return NCORBAGroupExpression.newWrapper(
-			data.newNGroupExpression_NGroupExpression(
-			((NCORBAGroupExpression)cloneMe).data));
-	}
-	public NGroupPresentation newNGroupPresentation() {
-		return NCORBAGroupPresentation.newWrapper(
-			data.newNGroupPresentation_());
-	}
-	public NGroupPresentation newNGroupPresentation(
-			NGroupPresentation cloneMe) {
-		return NCORBAGroupPresentation.newWrapper(
-			data.newNGroupPresentation_NGroupPresentation(
-			((NCORBAGroupPresentation)cloneMe).data));
-	}
+    public NGroupExpression newNGroupExpression() {
+        return NCORBAGroupExpression.newWrapper(data.newNGroupExpression_());
+    }
+    public NGroupExpression newNGroupExpression(NGroupExpression cloneMe) {
+        return NCORBAGroupExpression.newWrapper(
+            data.newNGroupExpression_NGroupExpression(
+            ((NCORBAGroupExpression)cloneMe).data));
+    }
+    public NGroupPresentation newNGroupPresentation() {
+        return NCORBAGroupPresentation.newWrapper(
+            data.newNGroupPresentation_());
+    }
+    public NGroupPresentation newNGroupPresentation(
+            NGroupPresentation cloneMe) {
+        return NCORBAGroupPresentation.newWrapper(
+            data.newNGroupPresentation_NGroupPresentation(
+            ((NCORBAGroupPresentation)cloneMe).data));
+    }
     public NMatrixInt newNMatrixInt(int rows, int columns) {
         return NCORBAMatrixInt.newWrapper(data.newNMatrixInt_long_long(
             rows, columns));
@@ -420,23 +420,23 @@ public class CORBAEngine implements Engine {
             boundary.getByteCode(), nBdryFaces,
             ((NCORBAProgressManager)manager).data);
     }
-	public NPillowTwoSphere formsPillowTwoSphere(
-			NFace face1, NFace face2) {
-		return NCORBAPillowTwoSphere.newWrapper(data.formsPillowTwoSphere(
-			((NCORBAFace)face1).data, ((NCORBAFace)face2).data));
-	}
-	public NSnappedTwoSphere formsSnappedTwoSphere(
-			NSnappedBall ball1, NSnappedBall ball2) {
-		return NCORBASnappedTwoSphere.newWrapper(
-			data.formsSnappedTwoSphere_NSnappedBall(
-			((NCORBASnappedBall)ball1).data, ((NCORBASnappedBall)ball2).data));
-	}
-	public NSnappedTwoSphere formsSnappedTwoSphere(
-			NTetrahedron tet1, NTetrahedron tet2) {
-		return NCORBASnappedTwoSphere.newWrapper(
-			data.formsSnappedTwoSphere_NTetrahedron(
-			((NCORBATetrahedron)tet1).data, ((NCORBATetrahedron)tet2).data));
-	}
+    public NPillowTwoSphere formsPillowTwoSphere(
+            NFace face1, NFace face2) {
+        return NCORBAPillowTwoSphere.newWrapper(data.formsPillowTwoSphere(
+            ((NCORBAFace)face1).data, ((NCORBAFace)face2).data));
+    }
+    public NSnappedTwoSphere formsSnappedTwoSphere(
+            NSnappedBall ball1, NSnappedBall ball2) {
+        return NCORBASnappedTwoSphere.newWrapper(
+            data.formsSnappedTwoSphere_NSnappedBall(
+            ((NCORBASnappedBall)ball1).data, ((NCORBASnappedBall)ball2).data));
+    }
+    public NSnappedTwoSphere formsSnappedTwoSphere(
+            NTetrahedron tet1, NTetrahedron tet2) {
+        return NCORBASnappedTwoSphere.newWrapper(
+            data.formsSnappedTwoSphere_NTetrahedron(
+            ((NCORBATetrahedron)tet1).data, ((NCORBATetrahedron)tet2).data));
+    }
     public int getVersionMajor() {
         return data.getVersionMajor();
     }
@@ -446,18 +446,18 @@ public class CORBAEngine implements Engine {
     public String getVersionString() {
         return data.getVersionString();
     }
-	public NLayeredLensSpace isLayeredLensSpace(NComponent comp) {
-		return NCORBALayeredLensSpace.newWrapper(
-			data.isLayeredLensSpace(((NCORBAComponent)comp).data));
-	}
-	public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet) {
-		return NCORBALayeredSolidTorus.newWrapper(
-			data.isLayeredSolidTorusBase(((NCORBATetrahedron)tet).data));
-	}
-	public NSnappedBall isSnappedBall(NTetrahedron tet) {
-		return NCORBASnappedBall.newWrapper(
-			data.isSnappedBall(((NCORBATetrahedron)tet).data));
-	}
+    public NLayeredLensSpace isLayeredLensSpace(NComponent comp) {
+        return NCORBALayeredLensSpace.newWrapper(
+            data.isLayeredLensSpace(((NCORBAComponent)comp).data));
+    }
+    public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet) {
+        return NCORBALayeredSolidTorus.newWrapper(
+            data.isLayeredSolidTorusBase(((NCORBATetrahedron)tet).data));
+    }
+    public NSnappedBall isSnappedBall(NTetrahedron tet) {
+        return NCORBASnappedBall.newWrapper(
+            data.isSnappedBall(((NCORBATetrahedron)tet).data));
+    }
     public NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour) {
         return NCORBAMatrixInt.newWrapper(data.makeMatchingEquations(

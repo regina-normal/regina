@@ -128,7 +128,7 @@ public class Coordinates {
      * @see normal.engine.surfaces.NNormalSurfaceList
      */
     public static String getCoordinateAbbr(int flavour,
-			NTriangulation triang, int coord) {
+            NTriangulation triang, int coord) {
         String ans;
         int tmp;
         switch(flavour) {
@@ -154,10 +154,10 @@ public class Coordinates {
                 return String.valueOf(coord / 3) + ": " +
                     NNormalSurface.vertexSplitString[coord % 3];
             case NNormalSurfaceList.EDGE_WEIGHT:
-				if (triang.getEdge(coord).isBoundary())
-                	return String.valueOf(coord) + " [B]";
-				else
-                	return String.valueOf(coord);
+                if (triang.getEdge(coord).isBoundary())
+                    return String.valueOf(coord) + " [B]";
+                else
+                    return String.valueOf(coord);
             case NNormalSurfaceList.FACE_ARCS:
                 return String.valueOf(coord / 3) + ": " +
                     String.valueOf(coord % 3);
@@ -180,7 +180,7 @@ public class Coordinates {
      * @see normal.engine.surfaces.NNormalSurfaceList
      */
     public static String getCoordinateDesc(int flavour,
-			NTriangulation triang, int coord) {
+            NTriangulation triang, int coord) {
         String ans;
         int tmp;
         switch(flavour) {
@@ -208,10 +208,10 @@ public class Coordinates {
                     ", quad splitting vertices " +
                     NNormalSurface.vertexSplitString[coord % 3];
             case NNormalSurfaceList.EDGE_WEIGHT:
-				if (triang.getEdge(coord).isBoundary())
-                	return "Weight of (boundary) edge " + String.valueOf(coord);
-				else
-                	return "Weight of (internal) edge " + String.valueOf(coord);
+                if (triang.getEdge(coord).isBoundary())
+                    return "Weight of (boundary) edge " + String.valueOf(coord);
+                else
+                    return "Weight of (internal) edge " + String.valueOf(coord);
             case NNormalSurfaceList.FACE_ARCS:
                 return "Arcs on face " + String.valueOf(coord / 3) +
                     " crossing face vertex " + String.valueOf(coord % 3);

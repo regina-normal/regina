@@ -41,25 +41,25 @@
 #include "ShareableObjectI.h"
 
 class NLayeredLensSpace_i :
-		public virtual POA_Regina::Subcomplex::NLayeredLensSpace,
+        public virtual POA_Regina::Subcomplex::NLayeredLensSpace,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NLayeredLensSpace_i, NLayeredLensSpace,
-		Regina::Subcomplex::NLayeredLensSpace)
+    STANDARD_ENGINE_TYPEDEFS(NLayeredLensSpace_i, NLayeredLensSpace,
+        Regina::Subcomplex::NLayeredLensSpace)
 
     protected:
         NLayeredLensSpace_i(::NLayeredLensSpace* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
+                ShareableObject_i(newCppPtr) {
         }
     public:
         STANDARD_NEW_WRAPPER
 
-		virtual Regina::Subcomplex::NLayeredLensSpace_ptr cloneMe();
-		virtual CORBA::Long getP();
-		virtual CORBA::Long getQ();
-		virtual Regina::Subcomplex::NLayeredSolidTorus_ptr getTorus();
-		virtual CORBA::Long getMobiusBoundaryGroup();
-		virtual CORBA::Boolean isSnapped();
-		virtual CORBA::Boolean isTwisted();
+        virtual Regina::Subcomplex::NLayeredLensSpace_ptr cloneMe();
+        virtual CORBA::Long getP();
+        virtual CORBA::Long getQ();
+        virtual Regina::Subcomplex::NLayeredSolidTorus_ptr getTorus();
+        virtual CORBA::Long getMobiusBoundaryGroup();
+        virtual CORBA::Boolean isSnapped();
+        virtual CORBA::Boolean isTwisted();
 };
 
 #endif

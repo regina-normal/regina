@@ -46,7 +46,7 @@ import org.python.util.PythonInterpreter;
  * Provides a frame containing a Jython console and associated tools.
  */
 public class JPythonConsoleFrame extends JFrame
-		implements PropertyChangeListener {
+        implements PropertyChangeListener {
     /**
      * Is this window the entire program?
      */
@@ -62,71 +62,71 @@ public class JPythonConsoleFrame extends JFrame
      */
     private JPythonConsole console;
 
-	/**
-	 * The root of the packet tree upon which this console is operating.
-	 */
-	private NPacket rootPacket;
+    /**
+     * The root of the packet tree upon which this console is operating.
+     */
+    private NPacket rootPacket;
 
-	/**
-	 * The break processing menu item.
-	 */
-	private JMenuItem menuConsoleBreak;
+    /**
+     * The break processing menu item.
+     */
+    private JMenuItem menuConsoleBreak;
 
-	/**
-	 * The close console menu item.
-	 */
-	private JMenuItem menuConsoleClose;
+    /**
+     * The close console menu item.
+     */
+    private JMenuItem menuConsoleClose;
 
     /**
      * Creates a new Jython console frame.  Note that the console must
      * still be started before it is offered to the user for
      * interaction; this can be done through the routine
      * <tt>startConsole()</tt>.
-	 * <p>
-	 * A new default Jython console will be created and placed inside
-	 * this frame.
+     * <p>
+     * A new default Jython console will be created and placed inside
+     * this frame.
      *
      * @param shell the shell representing the entire program.
-	 * @param rootPacket the root of the packet tree upon which this
-	 * console is operating, or <tt>null</tt> if there is no such
-	 * particular packet tree.
+     * @param rootPacket the root of the packet tree upon which this
+     * console is operating, or <tt>null</tt> if there is no such
+     * particular packet tree.
      * @param standalone <tt>true</tt> if and only if this frame will
      * in fact be the entire program, with no other GUI present.
      * @see #startConsole
      */
     public JPythonConsoleFrame(Shell shell, NPacket rootPacket,
-			boolean standalone) {
-		this(shell, rootPacket, standalone, null);
-	}
+            boolean standalone) {
+        this(shell, rootPacket, standalone, null);
+    }
 
     /**
      * Creates a new Jython console frame containing the given Jython
-	 * console.  Note that the console must
+     * console.  Note that the console must
      * still be started before it is offered to the user for
      * interaction; this can be done through the routine
      * <tt>startConsole()</tt>.
      *
      * @param shell the shell representing the entire program.
-	 * @param rootPacket the root of the packet tree upon which this
-	 * console is operating, or <tt>null</tt> if there is no such
-	 * particular packet tree.
+     * @param rootPacket the root of the packet tree upon which this
+     * console is operating, or <tt>null</tt> if there is no such
+     * particular packet tree.
      * @param standalone <tt>true</tt> if and only if this frame will
      * in fact be the entire program, with no other GUI present.
-	 * @param console the Jython console to place inside this frame.  If
-	 * this is <tt>null</tt>, a new default Jython console will be used.
+     * @param console the Jython console to place inside this frame.  If
+     * this is <tt>null</tt>, a new default Jython console will be used.
      * @see #startConsole
      */
     public JPythonConsoleFrame(Shell shell, NPacket rootPacket,
-			boolean standalone, JPythonConsole console) {
+            boolean standalone, JPythonConsole console) {
         super(Application.program + " Jython Console");
         this.shell = shell;
-		this.rootPacket = rootPacket;
+        this.rootPacket = rootPacket;
         this.standalone = standalone;
     
-		if (console == null)
-			this.console = new JPythonConsole(shell);
-		else
-			this.console = console;
+        if (console == null)
+            this.console = new JPythonConsole(shell);
+        else
+            this.console = console;
 
         init();
 
@@ -142,8 +142,8 @@ public class JPythonConsoleFrame extends JFrame
         setSize(new Dimension(width, height));
         setIconImage(Images.btnConsole.image().getImage());
 
-		// Add this console to the list of all open consoles.
-		shell.registerConsole(this);
+        // Add this console to the list of all open consoles.
+        shell.registerConsole(this);
     }
 
     /**
@@ -157,9 +157,9 @@ public class JPythonConsoleFrame extends JFrame
      * Starts the console contained in this frame with the given
      * greeting.  If the given greeting is <tt>null</tt>, no greeting
      * will be offered to the user.  Otherwise the greeting will be
-	 * displayed <i>after</i> console preprocessing is done.  If you
-	 * want a greeting displayed before preprocessing, simply use
-	 * <tt>getConsole().outputMessage()</tt> before calling this routine.
+     * displayed <i>after</i> console preprocessing is done.  If you
+     * want a greeting displayed before preprocessing, simply use
+     * <tt>getConsole().outputMessage()</tt> before calling this routine.
      *
      * @param greeting the greeting to offer the user when the console
      * is started, or <tt>null</tt> if no greeting is to be offered.
@@ -175,68 +175,68 @@ public class JPythonConsoleFrame extends JFrame
         // Set up the console.
         console.setBorder(BorderFactory.createLoweredBevelBorder());
 
-		// Set up the menus.
-		JMenu menuConsole = new JMenu("Console");
-		menuConsole.setMnemonic(KeyEvent.VK_C);
-		menuConsoleBreak = new JMenuItem("Break Processing",
-			Standard16.cross.image());
-		menuConsoleBreak.setMnemonic(KeyEvent.VK_B);
-		menuConsoleBreak.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_C, ActionEvent.CTRL_MASK));
-		menuConsoleBreak.setEnabled(false);
-		JMenuItem menuConsoleSave = new JMenuItem("Save Contents",
-			Standard16.save.image());
-		menuConsoleSave.setMnemonic(KeyEvent.VK_S);
-		menuConsoleSave.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_S, ActionEvent.ALT_MASK));
-		menuConsoleClose = new JMenuItem("Close",
-			Standard16.close.image());
-		menuConsoleClose.setMnemonic(KeyEvent.VK_C);
-		menuConsoleClose.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-		menuConsole.add(menuConsoleBreak);
-		menuConsole.addSeparator();
-		menuConsole.add(menuConsoleSave);
-		menuConsole.add(menuConsoleClose);
+        // Set up the menus.
+        JMenu menuConsole = new JMenu("Console");
+        menuConsole.setMnemonic(KeyEvent.VK_C);
+        menuConsoleBreak = new JMenuItem("Break Processing",
+            Standard16.cross.image());
+        menuConsoleBreak.setMnemonic(KeyEvent.VK_B);
+        menuConsoleBreak.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        menuConsoleBreak.setEnabled(false);
+        JMenuItem menuConsoleSave = new JMenuItem("Save Contents",
+            Standard16.save.image());
+        menuConsoleSave.setMnemonic(KeyEvent.VK_S);
+        menuConsoleSave.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_S, ActionEvent.ALT_MASK));
+        menuConsoleClose = new JMenuItem("Close",
+            Standard16.close.image());
+        menuConsoleClose.setMnemonic(KeyEvent.VK_C);
+        menuConsoleClose.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+        menuConsole.add(menuConsoleBreak);
+        menuConsole.addSeparator();
+        menuConsole.add(menuConsoleSave);
+        menuConsole.add(menuConsoleClose);
 
-		JMenu menuHelp = new JMenu("Help");
-		menuHelp.setMnemonic(KeyEvent.VK_H);
-		JMenuItem menuHelpJython = new JMenuItem("Jython Help",
-			Standard16.help.image());
-		menuHelpJython.setMnemonic(KeyEvent.VK_J);
-		menuHelp.add(menuHelpJython);
+        JMenu menuHelp = new JMenu("Help");
+        menuHelp.setMnemonic(KeyEvent.VK_H);
+        JMenuItem menuHelpJython = new JMenuItem("Jython Help",
+            Standard16.help.image());
+        menuHelpJython.setMnemonic(KeyEvent.VK_J);
+        menuHelp.add(menuHelpJython);
 
-		JMenuBar bar = new JMenuBar();
-		bar.add(menuConsole);
-		bar.add(new EditMenu(console));
-		bar.add(menuHelp);
-		setJMenuBar(bar);
+        JMenuBar bar = new JMenuBar();
+        bar.add(menuConsole);
+        bar.add(new EditMenu(console));
+        bar.add(menuHelp);
+        setJMenuBar(bar);
 
-		// Set up some standard actions.
-		Action actionBreak = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
+        // Set up some standard actions.
+        Action actionBreak = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
                    console.cancelProcessing();
-			}
-		};
-		Action actionClose = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
+            }
+        };
+        Action actionClose = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
                    closeConsole();
-			}
-		};
+            }
+        };
 
-		// Add menu event listeners.
-		menuConsoleBreak.addActionListener(actionBreak);
-		menuConsoleSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveContents();
-			}
-		});
-		menuConsoleClose.addActionListener(actionClose);
-		menuHelpJython.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				shell.viewHelp("jython");
-			}
-		});
+        // Add menu event listeners.
+        menuConsoleBreak.addActionListener(actionBreak);
+        menuConsoleSave.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveContents();
+            }
+        });
+        menuConsoleClose.addActionListener(actionClose);
+        menuHelpJython.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                shell.viewHelp("jython");
+            }
+        });
 
         // Put everything together.
         getContentPane().setLayout(new BorderLayout());
@@ -244,15 +244,15 @@ public class JPythonConsoleFrame extends JFrame
             BorderLayout.CENTER);
 
         // Add key mappings.
-		Keymap keymap = console.addKeymap("Jython Console",
-			console.getKeymap());
-		keymap.addActionForKeyStroke(KeyStroke.getKeyStroke(
-			KeyEvent.VK_C, KeyEvent.CTRL_MASK), actionBreak);
-		keymap.addActionForKeyStroke(KeyStroke.getKeyStroke(
-			KeyEvent.VK_D, KeyEvent.CTRL_MASK), actionClose);
-		console.setKeymap(keymap);
+        Keymap keymap = console.addKeymap("Jython Console",
+            console.getKeymap());
+        keymap.addActionForKeyStroke(KeyStroke.getKeyStroke(
+            KeyEvent.VK_C, KeyEvent.CTRL_MASK), actionBreak);
+        keymap.addActionForKeyStroke(KeyStroke.getKeyStroke(
+            KeyEvent.VK_D, KeyEvent.CTRL_MASK), actionClose);
+        console.setKeymap(keymap);
 
-		console.addPropertyChangeListener("processing", this);
+        console.addPropertyChangeListener("processing", this);
         addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 console.requestFocus();
@@ -266,17 +266,17 @@ public class JPythonConsoleFrame extends JFrame
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     }
 
-	/**
-	 * For internal use.
-	 * Called when the console starts or stops processing.
-	 *
-	 * @param e the corresponding event.
-	 */
-	public void propertyChange(PropertyChangeEvent e) {
-		boolean proc = console.isProcessing();
-		menuConsoleBreak.setEnabled(proc);
-		menuConsoleClose.setEnabled(! proc);
-	}
+    /**
+     * For internal use.
+     * Called when the console starts or stops processing.
+     *
+     * @param e the corresponding event.
+     */
+    public void propertyChange(PropertyChangeEvent e) {
+        boolean proc = console.isProcessing();
+        menuConsoleBreak.setEnabled(proc);
+        menuConsoleClose.setEnabled(! proc);
+    }
 
     /**
      * Returns the actual Jython console used by this frame.
@@ -297,29 +297,29 @@ public class JPythonConsoleFrame extends JFrame
         return console.getPythonInterpreter();
     }
 
-	/**
-	 * Returns the root of the packet tree upon which this console is
-	 * operating.
-	 *
-	 * @return the root of the packet tree upon which this console is
-	 * operating, or <tt>null</tt> if there is no such particular
-	 * packet tree.
-	 */
-	public NPacket getRootPacket() {
-		return rootPacket;
-	}
+    /**
+     * Returns the root of the packet tree upon which this console is
+     * operating.
+     *
+     * @return the root of the packet tree upon which this console is
+     * operating, or <tt>null</tt> if there is no such particular
+     * packet tree.
+     */
+    public NPacket getRootPacket() {
+        return rootPacket;
+    }
 
     /**
      * Closes the console window and exits the application if
      * appropriate.
      */
     public void closeConsole() {
-		if (console.isProcessing()) {
-			console.oops();
-			return;
-		}
+        if (console.isProcessing()) {
+            console.oops();
+            return;
+        }
 
-		shell.unregisterConsole(this);
+        shell.unregisterConsole(this);
 
         // Save the preferred console window size.
         Dimension size = getSize();
@@ -333,34 +333,34 @@ public class JPythonConsoleFrame extends JFrame
             shell.exit(0);
     }
 
-	/**
-	 * Saves the contents of this console to a file.
-	 */
-	public void saveContents() {
-		NormalOptionSet options = shell.getOptions();
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new File(
-			options.getStringOption("LastDir", ".")));
-		chooser.setDialogTitle("Save console contents...");
-		if (chooser.showSaveDialog(this) != chooser.APPROVE_OPTION)
-			return;
+    /**
+     * Saves the contents of this console to a file.
+     */
+    public void saveContents() {
+        NormalOptionSet options = shell.getOptions();
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File(
+            options.getStringOption("LastDir", ".")));
+        chooser.setDialogTitle("Save console contents...");
+        if (chooser.showSaveDialog(this) != chooser.APPROVE_OPTION)
+            return;
 
-		// Attempt to save the console contents.
-		File dest = chooser.getSelectedFile();
-		try {
-			console.writeContentsToFile(dest);
-		} catch (IOException exc) {
-			shell.error("An error occurred whilst attempting to write to [" +
-				dest.getAbsolutePath() + "].");
-			return;
-		}
+        // Attempt to save the console contents.
+        File dest = chooser.getSelectedFile();
+        try {
+            console.writeContentsToFile(dest);
+        } catch (IOException exc) {
+            shell.error("An error occurred whilst attempting to write to [" +
+                dest.getAbsolutePath() + "].");
+            return;
+        }
 
-		// Update the system properties.
-		String fileDir = dest.getParentFile().getAbsolutePath();
-		if (fileDir == null)
-			fileDir = ".";
-		options.setStringOption("LastDir", fileDir);
-		options.writeToFile();
-	}
+        // Update the system properties.
+        String fileDir = dest.getParentFile().getAbsolutePath();
+        if (fileDir == null)
+            fileDir = ".";
+        options.setStringOption("LastDir", fileDir);
+        options.writeToFile();
+    }
 }
 

@@ -33,27 +33,27 @@
 
 module Regina {
     module Algebra {
-		interface NGroupExpression : ShareableObject {
-			long getNumberOfTerms();
-			long getGenerator(in long index);
-			long getExponent(in long index);
-			void addTermFirst(in long generator, in long exponent);
-			void addTermLast(in long generator, in long exponent);
-			NGroupExpression inverse();
-			NGroupExpression power(in long exponent);
-			boolean simplify(in boolean cyclic);
-			boolean substitute(in long generator,
-				in NGroupExpression expansion, in boolean cyclic);
-		};
+        interface NGroupExpression : ShareableObject {
+            long getNumberOfTerms();
+            long getGenerator(in long index);
+            long getExponent(in long index);
+            void addTermFirst(in long generator, in long exponent);
+            void addTermLast(in long generator, in long exponent);
+            NGroupExpression inverse();
+            NGroupExpression power(in long exponent);
+            boolean simplify(in boolean cyclic);
+            boolean substitute(in long generator,
+                in NGroupExpression expansion, in boolean cyclic);
+        };
 
         interface NGroupPresentation : ShareableObject {
-			long addGenerator(in long numToAdd);
-			void addRelation(in NGroupExpression rel);
-			long getNumberOfGenerators();
-			long getNumberOfRelations();
-			NGroupExpression getRelation(in long index);
-			boolean intelligentSimplify();
-			string recogniseGroup();
+            long addGenerator(in long numToAdd);
+            void addRelation(in NGroupExpression rel);
+            long getNumberOfGenerators();
+            long getNumberOfRelations();
+            NGroupExpression getRelation(in long index);
+            boolean intelligentSimplify();
+            string recogniseGroup();
         };
     };
 };

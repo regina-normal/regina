@@ -35,21 +35,21 @@
 #endif
 
 bool NTriangulation::intelligentSimplify() {
-	// Not particularly intelligent.
+    // Not particularly intelligent.
     return simplifyToLocalMinimum(true);
 }
 
 bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     EdgeIterator eit;
-	VertexIterator vit;
-	BoundaryComponentIterator bit;
+    VertexIterator vit;
+    BoundaryComponentIterator bit;
     NEdge* edge;
-	NBoundaryComponent* bc;
-	unsigned long nEdges;
-	unsigned long nFaces;
-	unsigned long iEdge;
-	unsigned long iFace;
-	NDynamicArrayIterator<NEdgeEmbedding> embit;
+    NBoundaryComponent* bc;
+    unsigned long nEdges;
+    unsigned long nFaces;
+    unsigned long iEdge;
+    unsigned long iFace;
+    NDynamicArrayIterator<NEdgeEmbedding> embit;
 
     bool changed = false;
     bool changedNow = true;
@@ -59,9 +59,9 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             calculateSkeleton();
         }
 
-		// Crush a maximal skeleton.
-		/* Don't crush a maximal skeleton until we know what the
-		 * routine does!
+        // Crush a maximal skeleton.
+        /* Don't crush a maximal skeleton until we know what the
+         * routine does!
         if (vertices.size() > components.size()) {
             if (crushMaximalForest()) {
                 if (! calculatedSkeleton)
@@ -71,55 +71,55 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 changed = true;
             }
         }
-		*/
+        */
 
-		// Look for boundary simplifications.
+        // Look for boundary simplifications.
         if (hasBoundaryFaces()) {
-			for (bit.init(boundaryComponents); !(bit.done()); bit++) {
-				bc = *bit;
+            for (bit.init(boundaryComponents); !(bit.done()); bit++) {
+                bc = *bit;
 
-				// Run through faces of this boundary component looking
-				// for shell boundary moves.
-				nFaces = (*bit)->getNumberOfFaces();
-				for (iFace = 0; iFace < nFaces; iFace++) {
-					if (shellBoundary((*bit)->getFace(iFace)->
-							getEmbedding(0).getTetrahedron(), true, perform)) {
-						changedNow = true;
-						changed = true;
-						break;
-					}
-				}
-				if (changedNow)
-					break;
+                // Run through faces of this boundary component looking
+                // for shell boundary moves.
+                nFaces = (*bit)->getNumberOfFaces();
+                for (iFace = 0; iFace < nFaces; iFace++) {
+                    if (shellBoundary((*bit)->getFace(iFace)->
+                            getEmbedding(0).getTetrahedron(), true, perform)) {
+                        changedNow = true;
+                        changed = true;
+                        break;
+                    }
+                }
+                if (changedNow)
+                    break;
 
-				// Run through edges of this boundary component looking
-				// for open book moves.
-				nEdges = (*bit)->getNumberOfEdges();
-				for (iEdge = 0; iEdge < nEdges; iEdge++) {
-					for (embit.init((*bit)->getEdge(iEdge)->getEmbeddings());
-							!(embit.done()); embit++) {
-						if (openBook((*embit).getTetrahedron()->getFace(
-								((*embit).getVertices())[2]), true, perform)) {
-							changedNow = true;
-							changed = true;
-							break;
-						}
-					}
-					if (changedNow)
-						break;
-				}
-				if (changedNow)
-					break;
-			}
-		}
+                // Run through edges of this boundary component looking
+                // for open book moves.
+                nEdges = (*bit)->getNumberOfEdges();
+                for (iEdge = 0; iEdge < nEdges; iEdge++) {
+                    for (embit.init((*bit)->getEdge(iEdge)->getEmbeddings());
+                            !(embit.done()); embit++) {
+                        if (openBook((*embit).getTetrahedron()->getFace(
+                                ((*embit).getVertices())[2]), true, perform)) {
+                            changedNow = true;
+                            changed = true;
+                            break;
+                        }
+                    }
+                    if (changedNow)
+                        break;
+                }
+                if (changedNow)
+                    break;
+            }
+        }
         if (changedNow) {
-			if (perform)
-            	continue;
-			else
-				return true;
-		}
+            if (perform)
+                continue;
+            else
+                return true;
+        }
 
-		// Look for internal simplifications.
+        // Look for internal simplifications.
         for (eit.init(edges); ! (eit.done()); eit++) {
             edge = *eit;
             if (threeTwoMove(edge, true, perform)) {
@@ -144,24 +144,24 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             }
         }
         if (changedNow) {
-			if (perform)
-            	continue;
-			else
-				return true;
-		}
-		for (vit.init(vertices); ! (vit.done()); vit++) {
-			if (twoZeroMove(*vit, true, perform)) {
-				changedNow = true;
-				changed = true;
-				break;
-			}
-		}
+            if (perform)
+                continue;
+            else
+                return true;
+        }
+        for (vit.init(vertices); ! (vit.done()); vit++) {
+            if (twoZeroMove(*vit, true, perform)) {
+                changedNow = true;
+                changed = true;
+                break;
+            }
+        }
         if (changedNow) {
-			if (perform)
-            	continue;
-			else
-				return true;
-		}
+            if (perform)
+                continue;
+            else
+                return true;
+        }
     }
     return changed;
 }

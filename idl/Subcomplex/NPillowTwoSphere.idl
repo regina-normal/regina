@@ -34,12 +34,12 @@
 module Regina {
     module Subcomplex {
         interface NPillowTwoSphere : ShareableObject {
-			NPillowTwoSphere cloneMe();
-			Regina::Triangulation::NFace getFace(in long index);
-			char getFaceMapping();
-			void reduceTriangulation();
-			Regina::Triangulation::NTriangulation getReducedTriangulation(
-				in Regina::Triangulation::NTriangulation original);
+            NPillowTwoSphere cloneMe();
+            Regina::Triangulation::NFace getFace(in long index);
+            char getFaceMapping();
+            void reduceTriangulation();
+            Regina::Triangulation::NTriangulation getReducedTriangulation(
+                in Regina::Triangulation::NTriangulation original);
         };
     };
 };

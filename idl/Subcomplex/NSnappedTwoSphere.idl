@@ -35,11 +35,11 @@
 module Regina {
     module Subcomplex {
         interface NSnappedTwoSphere : ShareableObject {
-			NSnappedTwoSphere cloneMe();
-			NSnappedBall getSnappedBall(in long index);
-			void reduceTriangulation();
-			Regina::Triangulation::NTriangulation getReducedTriangulation(
-				in Regina::Triangulation::NTriangulation original);
+            NSnappedTwoSphere cloneMe();
+            NSnappedBall getSnappedBall(in long index);
+            void reduceTriangulation();
+            Regina::Triangulation::NTriangulation getReducedTriangulation(
+                in Regina::Triangulation::NTriangulation original);
         };
     };
 };

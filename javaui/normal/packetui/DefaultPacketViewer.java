@@ -63,9 +63,9 @@ public abstract class DefaultPacketViewer extends JPanel
         return this;
     }
 
-	public JTextComponent getPrimaryTextComponent() {
-		return null;
-	}
+    public JTextComponent getPrimaryTextComponent() {
+        return null;
+    }
 
     public abstract void reflectPacket();
 

@@ -53,12 +53,12 @@ module Regina {
         Algebra::NAbelianGroup newNAbelianGroup_();
         Algebra::NAbelianGroup newNAbelianGroup_NAbelianGroup(
             in Algebra::NAbelianGroup cloneMe);
-		Algebra::NGroupExpression newNGroupExpression_();
-		Algebra::NGroupExpression newNGroupExpression_NGroupExpression(
-			in Algebra::NGroupExpression cloneMe);
-		Algebra::NGroupPresentation newNGroupPresentation_();
-		Algebra::NGroupPresentation newNGroupPresentation_NGroupPresentation(
-			in Algebra::NGroupPresentation cloneMe);
+        Algebra::NGroupExpression newNGroupExpression_();
+        Algebra::NGroupExpression newNGroupExpression_NGroupExpression(
+            in Algebra::NGroupExpression cloneMe);
+        Algebra::NGroupPresentation newNGroupPresentation_();
+        Algebra::NGroupPresentation newNGroupPresentation_NGroupPresentation(
+            in Algebra::NGroupPresentation cloneMe);
 
         File::NFile newNFile();
 
@@ -100,23 +100,23 @@ module Regina {
         long formCensus(in Packet::NPacket parent, in long nTetrahedra,
             in char finiteness, in char orientability, in char boundary,
             in long nBdryFaces, in Progress::NProgressManager manager);
-		Subcomplex::NPillowTwoSphere formsPillowTwoSphere(
-			in Triangulation::NFace face1, in Triangulation::NFace face2);
-		Subcomplex::NSnappedTwoSphere formsSnappedTwoSphere_NSnappedBall(
-			in Subcomplex::NSnappedBall ball1,
-			in Subcomplex::NSnappedBall ball2);
-		Subcomplex::NSnappedTwoSphere formsSnappedTwoSphere_NTetrahedron(
-			in Triangulation::NTetrahedron tet1,
-			in Triangulation::NTetrahedron tet2);
+        Subcomplex::NPillowTwoSphere formsPillowTwoSphere(
+            in Triangulation::NFace face1, in Triangulation::NFace face2);
+        Subcomplex::NSnappedTwoSphere formsSnappedTwoSphere_NSnappedBall(
+            in Subcomplex::NSnappedBall ball1,
+            in Subcomplex::NSnappedBall ball2);
+        Subcomplex::NSnappedTwoSphere formsSnappedTwoSphere_NTetrahedron(
+            in Triangulation::NTetrahedron tet1,
+            in Triangulation::NTetrahedron tet2);
         long getVersionMajor();
         long getVersionMinor();
         string getVersionString();
-		Subcomplex::NLayeredLensSpace isLayeredLensSpace(
-			in Triangulation::NComponent comp);
-		Subcomplex::NLayeredSolidTorus isLayeredSolidTorusBase(
-			in Triangulation::NTetrahedron tet);
-		Subcomplex::NSnappedBall isSnappedBall(
-			in Triangulation::NTetrahedron tet);
+        Subcomplex::NLayeredLensSpace isLayeredLensSpace(
+            in Triangulation::NComponent comp);
+        Subcomplex::NLayeredSolidTorus isLayeredSolidTorusBase(
+            in Triangulation::NTetrahedron tet);
+        Subcomplex::NSnappedBall isSnappedBall(
+            in Triangulation::NTetrahedron tet);
         Maths::NMatrixInt makeMatchingEquations(
             in Triangulation::NTriangulation triang, in long flavour);
         Packet::NPacket readFromFile(in string fileName);

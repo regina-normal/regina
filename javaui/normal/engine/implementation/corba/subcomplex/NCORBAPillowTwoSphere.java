@@ -48,21 +48,21 @@ public class NCORBAPillowTwoSphere extends CORBAShareableObject
         return (source == null ? null : new NCORBAPillowTwoSphere(source));
     }
 
-	public normal.engine.subcomplex.NPillowTwoSphere cloneMe() {
-		return NCORBAPillowTwoSphere.newWrapper(data.cloneMe());
-	}
-	public normal.engine.triangulation.NFace getFace(int index) {
-		return NCORBAFace.newWrapper(data.getFace(index));
-	}
-	public NPerm getFaceMapping() {
-		return new NPerm(data.getFaceMapping());
-	}
-	public void reduceTriangulation() {
-		data.reduceTriangulation();
-	}
-	public normal.engine.triangulation.NTriangulation getReducedTriangulation(
-			normal.engine.triangulation.NTriangulation original) {
-		return NCORBATriangulation.newWrapper(data.getReducedTriangulation(
-			((NCORBATriangulation)original).data));
-	}
+    public normal.engine.subcomplex.NPillowTwoSphere cloneMe() {
+        return NCORBAPillowTwoSphere.newWrapper(data.cloneMe());
+    }
+    public normal.engine.triangulation.NFace getFace(int index) {
+        return NCORBAFace.newWrapper(data.getFace(index));
+    }
+    public NPerm getFaceMapping() {
+        return new NPerm(data.getFaceMapping());
+    }
+    public void reduceTriangulation() {
+        data.reduceTriangulation();
+    }
+    public normal.engine.triangulation.NTriangulation getReducedTriangulation(
+            normal.engine.triangulation.NTriangulation original) {
+        return NCORBATriangulation.newWrapper(data.getReducedTriangulation(
+            ((NCORBATriangulation)original).data));
+    }
 }

@@ -103,8 +103,8 @@ public class EngineLoader {
         String libName = shell.getParameter("jnilibname", 2, true, false,
             "JNI library name");
         if (libName == null) {
-			libName = NormalOptionSet.getSystemProperty("REGINA_JNIENGINE",
-				defaultJNILibrary);
+            libName = NormalOptionSet.getSystemProperty("REGINA_JNIENGINE",
+                defaultJNILibrary);
         }
 
         // Attempt to load the engine.
@@ -164,8 +164,8 @@ public class EngineLoader {
             host = shell.getParameter("ORBInitialHost", 1, false,
                 true, "CORBA name service host");
             if (host == null) {
-				host = NormalOptionSet.getSystemProperty(
-					"REGINA_CORBAHOST", defaultCORBAHost);
+                host = NormalOptionSet.getSystemProperty(
+                    "REGINA_CORBAHOST", defaultCORBAHost);
             } else
                 gaveHostParameter = true;
         }
@@ -177,8 +177,8 @@ public class EngineLoader {
             port = shell.getParameter("ORBInitialPort", 1, false,
                 true, "CORBA name service port");
             if (port == null) {
-				port = NormalOptionSet.getSystemProperty(
-					"REGINA_CORBAPORT", defaultCORBAPort);
+                port = NormalOptionSet.getSystemProperty(
+                    "REGINA_CORBAPORT", defaultCORBAPort);
             } else
                 gavePortParameter = true;
         }

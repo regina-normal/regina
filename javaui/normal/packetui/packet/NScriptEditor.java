@@ -125,9 +125,9 @@ public class NScriptEditor extends DefaultPacketEditor {
         return packet;
     }
 
-	public JTextComponent getPrimaryTextComponent() {
-		return text;
-	}
+    public JTextComponent getPrimaryTextComponent() {
+        return text;
+    }
 
     /**
      * Create the interface's interface elements.
@@ -426,12 +426,12 @@ public class NScriptEditor extends DefaultPacketEditor {
      * compile or if Jython expected more code.
      */
     private PyObject compileScript(ConsolePane console) {
-		StringBuffer error = new StringBuffer();
-		PyObject code = JPythonUtils.compileCode(entireScript(), error);
-		if (code == null)
-			console.outputMessage(error.toString());
-		return code;
-	}
+        StringBuffer error = new StringBuffer();
+        PyObject code = JPythonUtils.compileCode(entireScript(), error);
+        if (code == null)
+            console.outputMessage(error.toString());
+        return code;
+    }
 
     /**
      * Attempts to compile this script.  If it fails to compile, a
@@ -441,26 +441,26 @@ public class NScriptEditor extends DefaultPacketEditor {
      * successful.
      */
     private boolean compileScript() {
-		// Create a new console that does no preprocessing whatsoever.
-		JPythonConsole realConsole = new JPythonConsole(shell) {
-			protected void preProcess() {
-			}
-		};
+        // Create a new console that does no preprocessing whatsoever.
+        JPythonConsole realConsole = new JPythonConsole(shell) {
+            protected void preProcess() {
+            }
+        };
 
         JPythonConsoleFrame console = new JPythonConsoleFrame(
-			shell, packet.getTreeMatriarch(), false, realConsole);
+            shell, packet.getTreeMatriarch(), false, realConsole);
 
-		// Set up the interpreter before anything is done.
-		setupInterpreter(realConsole.getPythonInterpreter(),
-			realConsole.getOutputStream());
-		realConsole.outputLine();
+        // Set up the interpreter before anything is done.
+        setupInterpreter(realConsole.getPythonInterpreter(),
+            realConsole.getOutputStream());
+        realConsole.outputLine();
 
-		// Try compiling.
+        // Try compiling.
         if (compileScript(realConsole) != null)
             return true;
 
-		// If there was an error, start the console and present it to
-		// the user.
+        // If there was an error, start the console and present it to
+        // the user.
         realConsole.startConsole("\nThe script did not compile.\n\n");
         Positioner.centerOnScreen(console);
         console.show();
@@ -468,40 +468,40 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     /**
-	 * Runs this script in a new Jython console.  The console will show
-	 * the results and allow further interaction.
+     * Runs this script in a new Jython console.  The console will show
+     * the results and allow further interaction.
      */
     private void runScript() {
-		// Create a new console that runs the script as part of its
-		// preprocessing.
-		JPythonConsole realConsole = new JPythonConsole(shell) {
-			protected void preProcess() {
-				setupInterpreter(getPythonInterpreter(), getOutputStream());
-				outputLine();
+        // Create a new console that runs the script as part of its
+        // preprocessing.
+        JPythonConsole realConsole = new JPythonConsole(shell) {
+            protected void preProcess() {
+                setupInterpreter(getPythonInterpreter(), getOutputStream());
+                outputLine();
 
-				// Compile the script.
-        		PyObject code = compileScript(this);
-        		if (code == null)
-					outputMessage("\nThe script did not compile.\n\n");
-        		else {
-            		// Try actually running the code.
-            		outputMessage("Running script [" +
-                		packet.getPacketLabel() + "]:\n\n");
-		
-					StringBuffer error = new StringBuffer();
-					if (! JPythonUtils.runCode(
-							code, getPythonInterpreter(), error)) {
-                		outputMessage(error.toString());
-                		outputMessage(
-							"\nA runtime error occurred in the script.\n");
-					}
-        		}
-			}
-		};
+                // Compile the script.
+                PyObject code = compileScript(this);
+                if (code == null)
+                    outputMessage("\nThe script did not compile.\n\n");
+                else {
+                    // Try actually running the code.
+                    outputMessage("Running script [" +
+                        packet.getPacketLabel() + "]:\n\n");
+        
+                    StringBuffer error = new StringBuffer();
+                    if (! JPythonUtils.runCode(
+                            code, getPythonInterpreter(), error)) {
+                        outputMessage(error.toString());
+                        outputMessage(
+                            "\nA runtime error occurred in the script.\n");
+                    }
+                }
+            }
+        };
 
-		// Bring up this console and start it.
+        // Bring up this console and start it.
         JPythonConsoleFrame console = new JPythonConsoleFrame(
-			shell, packet.getTreeMatriarch(), false, realConsole);
+            shell, packet.getTreeMatriarch(), false, realConsole);
         Positioner.centerOnScreen(console);
         console.show();
         console.startConsole();
@@ -509,29 +509,29 @@ public class NScriptEditor extends DefaultPacketEditor {
 
     /**
      * Runs the standard startup commands and sets the variables to be
-	 * used with this script in the given Jython interpreter.
+     * used with this script in the given Jython interpreter.
      *
      * @param interpreter the Jython interpreter in which to set the
      * variables.
-	 * @param out the output stream to which messages should be sent.
-	 * These messages will inform the user of the initialisation that
-	 * has been done; there may be multiple lines of output, and a final
-	 * newline is guaranteed.
+     * @param out the output stream to which messages should be sent.
+     * These messages will inform the user of the initialisation that
+     * has been done; there may be multiple lines of output, and a final
+     * newline is guaranteed.
      */
     private void setupInterpreter(PythonInterpreter interpreter,
-			OutputStream out) {
-		// Writer to which messages are sent.
-		PrintWriter writer = new PrintWriter(out, true);
+            OutputStream out) {
+        // Writer to which messages are sent.
+        PrintWriter writer = new PrintWriter(out, true);
 
-		// Basic interpreter initialisation.
-		JPythonUtils.setupInterpreter(interpreter, shell, out);
+        // Basic interpreter initialisation.
+        JPythonUtils.setupInterpreter(interpreter, shell, out);
 
-		// Set script variables.
+        // Set script variables.
         int tot = variableNames.size();
         for (int i=0; i<tot; i++)
             interpreter.set((String)variableNames.elementAt(i),
                 ((Variable)variableValues.elementAt(i)).getValue());
-		writer.println("Assigning values to script variables.");
+        writer.println("Assigning values to script variables.");
     }
 
     /**
@@ -586,7 +586,7 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     public void packetWasRenamed(NPacket packet, PacketUI ui, Frame owner) {
-		super.packetWasRenamed(packet, ui, owner);
+        super.packetWasRenamed(packet, ui, owner);
 
         finishVariableEditing();
 
@@ -598,7 +598,7 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     public void subtreeToBeDeleted(NPacket subtree, PacketUI ui, Frame owner) {
-		super.subtreeToBeDeleted(subtree, ui, owner);
+        super.subtreeToBeDeleted(subtree, ui, owner);
 
         finishVariableEditing();
 
@@ -631,7 +631,7 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     public void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner) {
-		super.subtreeWasInserted(subtree, ui, owner);
+        super.subtreeWasInserted(subtree, ui, owner);
 
         finishVariableEditing();
 
@@ -640,7 +640,7 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     public void subtreeHasChanged(NPacket subtree, PacketUI ui, Frame owner) {
-		super.subtreeHasChanged(subtree, ui, owner);
+        super.subtreeHasChanged(subtree, ui, owner);
 
         finishVariableEditing();
 

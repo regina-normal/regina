@@ -41,29 +41,29 @@
 #include "ShareableObjectI.h"
 
 class NLayeredSolidTorus_i :
-		public virtual POA_Regina::Subcomplex::NLayeredSolidTorus,
+        public virtual POA_Regina::Subcomplex::NLayeredSolidTorus,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NLayeredSolidTorus_i, NLayeredSolidTorus,
-		Regina::Subcomplex::NLayeredSolidTorus)
+    STANDARD_ENGINE_TYPEDEFS(NLayeredSolidTorus_i, NLayeredSolidTorus,
+        Regina::Subcomplex::NLayeredSolidTorus)
 
     protected:
         NLayeredSolidTorus_i(::NLayeredSolidTorus* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
+                ShareableObject_i(newCppPtr) {
         }
     public:
         STANDARD_NEW_WRAPPER
 
-		virtual Regina::Subcomplex::NLayeredSolidTorus_ptr cloneMe();
-		virtual CORBA::Long getNumberOfTetrahedra();
-		virtual Regina::Triangulation::NTetrahedron_ptr getBase();
-		virtual CORBA::Long getBaseEdge(CORBA::Long group, CORBA::Long index);
-		virtual CORBA::Long getBaseEdgeGroup(CORBA::Long edge);
-		virtual CORBA::Long getBaseFace(CORBA::Long index);
-		virtual Regina::Triangulation::NTetrahedron_ptr getTopLevel();
-		virtual CORBA::Long getMeridinalCuts(CORBA::Long group);
-		virtual CORBA::Long getTopEdge(CORBA::Long group, CORBA::Long index);
-		virtual CORBA::Long getTopEdgeGroup(CORBA::Long edge);
-		virtual CORBA::Long getTopFace(CORBA::Long index);
+        virtual Regina::Subcomplex::NLayeredSolidTorus_ptr cloneMe();
+        virtual CORBA::Long getNumberOfTetrahedra();
+        virtual Regina::Triangulation::NTetrahedron_ptr getBase();
+        virtual CORBA::Long getBaseEdge(CORBA::Long group, CORBA::Long index);
+        virtual CORBA::Long getBaseEdgeGroup(CORBA::Long edge);
+        virtual CORBA::Long getBaseFace(CORBA::Long index);
+        virtual Regina::Triangulation::NTetrahedron_ptr getTopLevel();
+        virtual CORBA::Long getMeridinalCuts(CORBA::Long group);
+        virtual CORBA::Long getTopEdge(CORBA::Long group, CORBA::Long index);
+        virtual CORBA::Long getTopEdgeGroup(CORBA::Long edge);
+        virtual CORBA::Long getTopFace(CORBA::Long index);
 };
 
 #endif

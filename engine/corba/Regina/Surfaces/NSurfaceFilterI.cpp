@@ -53,10 +53,10 @@ Regina::Surfaces::NSurfaceFilter_ptr NSurfaceFilter_i::newWrapper(
     // Check for NSurfaceFilter first so we don't recursively call
     // NSurfaceFilter_i::newWrapper().
     if (type == ::NSurfaceFilter::filterID) {
-		NSurfaceFilter_i* f = new NSurfaceFilter_i(newCppPtr);
-		f->activateObject();
-		return f->_this();
-	}
+        NSurfaceFilter_i* f = new NSurfaceFilter_i(newCppPtr);
+        f->activateObject();
+        return f->_this();
+    }
     
     // Define something for REGISTER_CORBA_FILTER to do.
     #define REGISTER_CORBA_FILTER(cppClass, CORBAClass) \
@@ -72,10 +72,10 @@ Regina::Surfaces::NSurfaceFilter_ptr NSurfaceFilter_i::newWrapper(
     #endif
 
     else {
-		NSurfaceFilter_i* f = new NSurfaceFilter_i(newCppPtr);
-		f->activateObject();
-		return f->_this();
-	}
+        NSurfaceFilter_i* f = new NSurfaceFilter_i(newCppPtr);
+        f->activateObject();
+        return f->_this();
+    }
     
     #ifdef __MUTE_WARNINGS
         #pragma warn .ccc

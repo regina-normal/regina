@@ -34,17 +34,17 @@
 module Regina {
     module Subcomplex {
         interface NLayeredSolidTorus : ShareableObject {
-			NLayeredSolidTorus cloneMe();
-			long getNumberOfTetrahedra();
-			Regina::Triangulation::NTetrahedron getBase();
-			long getBaseEdge(in long group, in long index);
-			long getBaseEdgeGroup(in long edge);
-			long getBaseFace(in long index);
-			Regina::Triangulation::NTetrahedron getTopLevel();
-			long getMeridinalCuts(in long group);
-			long getTopEdge(in long group, in long index);
-			long getTopEdgeGroup(in long edge);
-			long getTopFace(in long index);
+            NLayeredSolidTorus cloneMe();
+            long getNumberOfTetrahedra();
+            Regina::Triangulation::NTetrahedron getBase();
+            long getBaseEdge(in long group, in long index);
+            long getBaseEdgeGroup(in long edge);
+            long getBaseFace(in long index);
+            Regina::Triangulation::NTetrahedron getTopLevel();
+            long getMeridinalCuts(in long group);
+            long getTopEdge(in long group, in long index);
+            long getTopEdgeGroup(in long edge);
+            long getTopFace(in long index);
         };
     };
 };

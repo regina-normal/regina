@@ -48,32 +48,32 @@ JNIEXPORT jobject JNICALL
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getBoundaryFace
-		(JNIEnv *env, jobject me, jint index) {
-	return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getBoundaryFace(index);
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getBoundaryFace
+        (JNIEnv *env, jobject me, jint index) {
+    return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getBoundaryFace(index);
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getEquatorEdge
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getEquatorEdge();
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getEquatorEdge
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getEquatorEdge();
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getInternalEdge
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getInternalEdge();
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getInternalEdge
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getInternalEdge();
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getInternalFace
-		(JNIEnv *env, jobject me, jint index) {
-	return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getInternalFace(index);
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getInternalFace
+        (JNIEnv *env, jobject me, jint index) {
+    return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getInternalFace(index);
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getTetrahedron
-		(JNIEnv *env, jobject me) {
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getTetrahedron
+        (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NSnappedBall, me)->getTetrahedron(),
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");

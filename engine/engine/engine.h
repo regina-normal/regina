@@ -75,14 +75,14 @@ class Engine {
             /**< Calls the corresponding constructor. */
         NFile* newNFile();
             /**< Calls the corresponding constructor. */
-		NGroupExpression* newNGroupExpression();
+        NGroupExpression* newNGroupExpression();
             /**< Calls the corresponding constructor. */
-		NGroupExpression* newNGroupExpression(const NGroupExpression& cloneMe);
+        NGroupExpression* newNGroupExpression(const NGroupExpression& cloneMe);
             /**< Calls the corresponding constructor. */
-		NGroupPresentation* newNGroupPresentation();
+        NGroupPresentation* newNGroupPresentation();
             /**< Calls the corresponding constructor. */
-		NGroupPresentation* newNGroupPresentation(
-				const NGroupPresentation& cloneMe);
+        NGroupPresentation* newNGroupPresentation(
+                const NGroupPresentation& cloneMe);
             /**< Calls the corresponding constructor. */
         NMatrixInt* newNMatrixInt(int rows, int columns);
             /**< Calls the corresponding constructor. */
@@ -131,24 +131,24 @@ class Engine {
                 NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
                 int nBdryFaces = -1, NProgressManager* manager = 0);
             /**< Calls ::formCensus(). */
-		NSnappedTwoSphere* formsSnappedTwoSphere(NSnappedBall* ball1,
-				NSnappedBall* ball2);
-			/**< Calls NSnappedTwoSphere::formsSnappedTwoSphere(). */
-		NSnappedTwoSphere* formsSnappedTwoSphere(NTetrahedron* tet1,
-				NTetrahedron* tet2);
-			/**< Calls NSnappedTwoSphere::formsSnappedTwoSphere(). */
+        NSnappedTwoSphere* formsSnappedTwoSphere(NSnappedBall* ball1,
+                NSnappedBall* ball2);
+            /**< Calls NSnappedTwoSphere::formsSnappedTwoSphere(). */
+        NSnappedTwoSphere* formsSnappedTwoSphere(NTetrahedron* tet1,
+                NTetrahedron* tet2);
+            /**< Calls NSnappedTwoSphere::formsSnappedTwoSphere(). */
         int getVersionMajor();
             /**< Calls ::getVersionMajor(). */
         int getVersionMinor();
             /**< Calls ::getVersionMinor(). */
         NString getVersionString();
             /**< Calls ::getVersionString(). */
-		NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
-			/**< Calls NLayeredLensSpace::isLayeredLensSpace(). */
-		NLayeredSolidTorus* isLayeredSolidTorusBase(NTetrahedron* tet);
-			/**< Calls NLayeredSolidTorus::isLayeredSolidTorusBase(). */
-		NSnappedBall* isSnappedBall(NTetrahedron* tet);
-			/**< Calls NSnappedBall::isSnappedBall(). */
+        NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
+            /**< Calls NLayeredLensSpace::isLayeredLensSpace(). */
+        NLayeredSolidTorus* isLayeredSolidTorusBase(NTetrahedron* tet);
+            /**< Calls NLayeredSolidTorus::isLayeredSolidTorusBase(). */
+        NSnappedBall* isSnappedBall(NTetrahedron* tet);
+            /**< Calls NSnappedBall::isSnappedBall(). */
         NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
                 int flavour);
             /**< Calls ::makeMatchingEquations(). */

@@ -94,10 +94,10 @@ public class NJNITriangulation extends NJNIPacket
 
     public native boolean crushMaximalForest();
     public native boolean intelligentSimplify();
-	public boolean simplifyToLocalMinimum() {
-		return simplifyToLocalMinimum(true);
-	}
-	public native boolean simplifyToLocalMinimum(boolean perform);
+    public boolean simplifyToLocalMinimum() {
+        return simplifyToLocalMinimum(true);
+    }
+    public native boolean simplifyToLocalMinimum(boolean perform);
 
     public boolean threeTwoMove(NEdge e) {
         return threeTwoMove(e, true, true);

@@ -41,24 +41,24 @@
 #include "ShareableObjectI.h"
 
 class NSnappedBall_i:
-		public virtual POA_Regina::Subcomplex::NSnappedBall,
+        public virtual POA_Regina::Subcomplex::NSnappedBall,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NSnappedBall_i, NSnappedBall,
-		Regina::Subcomplex::NSnappedBall)
+    STANDARD_ENGINE_TYPEDEFS(NSnappedBall_i, NSnappedBall,
+        Regina::Subcomplex::NSnappedBall)
 
     protected:
         NSnappedBall_i(::NSnappedBall* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
+                ShareableObject_i(newCppPtr) {
         }
     public:
         STANDARD_NEW_WRAPPER
 
-		virtual Regina::Subcomplex::NSnappedBall_ptr cloneMe();
-		virtual Regina::Triangulation::NTetrahedron_ptr getTetrahedron();
-		virtual CORBA::Long getBoundaryFace(CORBA::Long index);
-		virtual CORBA::Long getInternalFace(CORBA::Long index);
-		virtual CORBA::Long getEquatorEdge();
-		virtual CORBA::Long getInternalEdge();
+        virtual Regina::Subcomplex::NSnappedBall_ptr cloneMe();
+        virtual Regina::Triangulation::NTetrahedron_ptr getTetrahedron();
+        virtual CORBA::Long getBoundaryFace(CORBA::Long index);
+        virtual CORBA::Long getInternalFace(CORBA::Long index);
+        virtual CORBA::Long getEquatorEdge();
+        virtual CORBA::Long getInternalEdge();
 };
 
 #endif

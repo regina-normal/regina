@@ -42,8 +42,8 @@
 
 class NNormalSurface_i : public virtual POA_Regina::Surfaces::NNormalSurface,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NNormalSurface_i, NNormalSurface,
-			Regina::Surfaces::NNormalSurface)
+    STANDARD_ENGINE_TYPEDEFS(NNormalSurface_i, NNormalSurface,
+            Regina::Surfaces::NNormalSurface)
 
     protected:
         NNormalSurface_i(::NNormalSurface* newCppPtr) :

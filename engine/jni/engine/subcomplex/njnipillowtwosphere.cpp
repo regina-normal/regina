@@ -42,40 +42,40 @@
 #endif
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_cloneMe
-		(JNIEnv *env, jobject me) {
+        Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_cloneMe
+        (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->clone(),
         "normal/engine/implementation/jni/subcomplex/NJNIPillowTwoSphere");
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_getFace
-		(JNIEnv *env, jobject me, jint index) {
+        Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_getFace
+        (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
-		GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->getFace(index),
-		"normal/engine/implementation/jni/triangulation/NJNIFace");
+        GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->getFace(index),
+        "normal/engine/implementation/jni/triangulation/NJNIFace");
 }
 
 JNIEXPORT jchar JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere__1getFaceMapping
-		(JNIEnv *env, jobject me) {
-	return GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->
-		getFaceMapping().getPermCode();
+        Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere__1getFaceMapping
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->
+        getFaceMapping().getPermCode();
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_getReducedTriangulation
-		(JNIEnv *env, jobject me, jobject you) {
-	return CREATE_WRAPPER_OBJECT(env,
+        Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_getReducedTriangulation
+        (JNIEnv *env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->getReducedTriangulation(
-		GET_ENGINE_OBJECT(env, NTriangulation, you)),
+        GET_ENGINE_OBJECT(env, NTriangulation, you)),
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
 JNIEXPORT void JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_reduceTriangulation
-		(JNIEnv *env, jobject me) {
-	GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->reduceTriangulation();
+        Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_reduceTriangulation
+        (JNIEnv *env, jobject me) {
+    GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->reduceTriangulation();
 }
 

@@ -64,10 +64,10 @@ Regina::Packet::NPacket_ptr NPacket_i::newWrapper(::NPacket* newCppPtr) {
     #endif
 
     else {
-		NPacket_i* p = new NPacket_i(newCppPtr);
-		p->activateObject();
-		return p->_this();
-	}
+        NPacket_i* p = new NPacket_i(newCppPtr);
+        p->activateObject();
+        return p->_this();
+    }
 
     #ifdef __MUTE_WARNINGS
         #pragma warn .ccc

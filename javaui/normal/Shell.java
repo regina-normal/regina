@@ -98,20 +98,20 @@ public abstract class Shell {
      * The current user options for the program.
      */
     private NormalOptionSet options;
-	/**
-	 * The directory in which options files are stored.
-	 */
-	private File optionsDir = null;
+    /**
+     * The directory in which options files are stored.
+     */
+    private File optionsDir = null;
 
     /**
      * The primary frame of the user interface.
      */
     private Frame primaryFrame = null;
 
-	/**
-	 * A list of open Jython consoles.
-	 */
-	private Vector openConsoles = new Vector();
+    /**
+     * A list of open Jython consoles.
+     */
+    private Vector openConsoles = new Vector();
 
     /**
      * Have we successfully located the Jython classes?
@@ -146,88 +146,88 @@ public abstract class Shell {
     public NormalOptionSet getOptions() {
         return options;
     }
-	/**
-	 * Returns the directory in which options files are placed.
-	 *
-	 * @return the options files directory.
-	 */
-	public File getOptionsDir() {
-		if (optionsDir != null)
-			return optionsDir;
+    /**
+     * Returns the directory in which options files are placed.
+     *
+     * @return the options files directory.
+     */
+    public File getOptionsDir() {
+        if (optionsDir != null)
+            return optionsDir;
 
-		// Try to read the corresponding system property.
+        // Try to read the corresponding system property.
         String optionsDirName = NormalOptionSet.getSystemProperty(
-			Application.optionsDirProperty);
+            Application.optionsDirProperty);
         if (optionsDirName == null || optionsDirName.length() == 0)
             optionsDirName = Application.optionsDirDefault;
  
-		// Create the actual file object.
-		optionsDir = new File(optionsDirName);
+        // Create the actual file object.
+        optionsDir = new File(optionsDirName);
         try {
-			optionsDir = optionsDir.getCanonicalFile();
+            optionsDir = optionsDir.getCanonicalFile();
         } catch (IOException exc) {
         }
 
-		return optionsDir;
-	}
+        return optionsDir;
+    }
 
-	/**
-	 * Adds the given console to the list of all open Jython consoles.
-	 * This should only be called from within the
-	 * <tt>JPythonConsoleFrame</tt> constructor.
-	 *
-	 * @param console the console to add; this should not currently be
-	 * in the list.
-	 *
-	 * @see #unregisterConsole
-	 */
-	public void registerConsole(JPythonConsoleFrame console) {
-		openConsoles.addElement(console);
-	}
+    /**
+     * Adds the given console to the list of all open Jython consoles.
+     * This should only be called from within the
+     * <tt>JPythonConsoleFrame</tt> constructor.
+     *
+     * @param console the console to add; this should not currently be
+     * in the list.
+     *
+     * @see #unregisterConsole
+     */
+    public void registerConsole(JPythonConsoleFrame console) {
+        openConsoles.addElement(console);
+    }
 
-	/**
-	 * Removes the given console from the list of all open Jython consoles.
-	 * This should only be called from within
-	 * <tt>JPythonConsoleFrame.closeConsole()</tt>.
-	 *
-	 * @param console the console to remove; this should currently
-	 * belong to the list.
-	 *
-	 * @see #registerConsole
-	 */
-	public void unregisterConsole(JPythonConsoleFrame console) {
-		openConsoles.removeElement(console);
-	}
+    /**
+     * Removes the given console from the list of all open Jython consoles.
+     * This should only be called from within
+     * <tt>JPythonConsoleFrame.closeConsole()</tt>.
+     *
+     * @param console the console to remove; this should currently
+     * belong to the list.
+     *
+     * @see #registerConsole
+     */
+    public void unregisterConsole(JPythonConsoleFrame console) {
+        openConsoles.removeElement(console);
+    }
 
-	/**
-	 * Are there currently any open Jython consoles?
-	 *
-	 * @return <tt>true</tt> if and only if there is at least one open
-	 * console.
-	 */
-	public boolean hasOpenConsoles() {
-		return ! openConsoles.isEmpty();
-	}
+    /**
+     * Are there currently any open Jython consoles?
+     *
+     * @return <tt>true</tt> if and only if there is at least one open
+     * console.
+     */
+    public boolean hasOpenConsoles() {
+        return ! openConsoles.isEmpty();
+    }
 
-	/**
-	 * Returns the list of all open Jython consoles.
-	 *
-	 * @return the list of all open consoles.
-	 */
-	public Enumeration getConsoles() {
-		return openConsoles.elements();
-	}
+    /**
+     * Returns the list of all open Jython consoles.
+     *
+     * @return the list of all open consoles.
+     */
+    public Enumeration getConsoles() {
+        return openConsoles.elements();
+    }
 
-	/**
-	 * Returns one of the currently open Jython consoles.
-	 *
-	 * @return an open Jython console, or <tt>null</tt> if there are no
-	 * open consoles.
-	 */
-	public JPythonConsoleFrame getConsole() {
-		return (openConsoles.isEmpty() ? null :
-			(JPythonConsoleFrame)openConsoles.elementAt(0));
-	}
+    /**
+     * Returns one of the currently open Jython consoles.
+     *
+     * @return an open Jython console, or <tt>null</tt> if there are no
+     * open consoles.
+     */
+    public JPythonConsoleFrame getConsole() {
+        return (openConsoles.isEmpty() ? null :
+            (JPythonConsoleFrame)openConsoles.elementAt(0));
+    }
 
     /**
      * Have we successfully located the Jython classes?
@@ -378,12 +378,12 @@ public abstract class Shell {
      * screen.
      */
     public abstract boolean shouldShowSplashScreen();
-	/**
-	 * Do we have access to the local filesystem?
-	 *
-	 * @return <tt>true</tt> if and only if we have local file access.
-	 */
-	public abstract boolean mayAccessFiles();
+    /**
+     * Do we have access to the local filesystem?
+     *
+     * @return <tt>true</tt> if and only if we have local file access.
+     */
+    public abstract boolean mayAccessFiles();
     /**
      * Are we even allowed to try to locate the Jython classes?
      *
@@ -508,7 +508,7 @@ public abstract class Shell {
             try {
                 org.python.core.Options.showJavaExceptions = false;
                 //org.python.core.Options.classBasedExceptions = false;
-				org.python.core.PySystemState.initialize();
+                org.python.core.PySystemState.initialize();
                 foundJython = true;
             } catch (Throwable th) {}
         }
@@ -637,14 +637,14 @@ public abstract class Shell {
                 } else {
                     // Console window UI:
                     if (foundJython) {
-						JPythonConsoleFrame frame =
-							ConsoleUtils.createGraphicalConsole(this, true);
+                        JPythonConsoleFrame frame =
+                            ConsoleUtils.createGraphicalConsole(this, true);
                         if (splash != null)
                             splash.dispose();
                         Positioner.centerOnScreen(frame);
                         frame.show();
                         primaryFrame = frame;
-						frame.startConsole();
+                        frame.startConsole();
                     } else {
                         error("Jython could not be found.  Please ensure " +
                             "[jython.jar] is on your classpath.");

@@ -42,15 +42,15 @@
 
 class NAbelianGroup_i : public virtual POA_Regina::Algebra::NAbelianGroup,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NAbelianGroup_i, NAbelianGroup,
-			Regina::Algebra::NAbelianGroup)
+    STANDARD_ENGINE_TYPEDEFS(NAbelianGroup_i, NAbelianGroup,
+            Regina::Algebra::NAbelianGroup)
 
     protected:
         NAbelianGroup_i(::NAbelianGroup* newCppPtr) :
                 ShareableObject_i(newCppPtr) {
         }
     public:
-		STANDARD_NEW_WRAPPER
+        STANDARD_NEW_WRAPPER
 
         virtual void addRank(CORBA::Long extraRank);
         virtual void addTorsionElement_bigInt(const char* degree,

@@ -31,25 +31,25 @@
 #include "NTriangulationI.h"
 
 Regina::Subcomplex::NPillowTwoSphere_ptr NPillowTwoSphere_i::cloneMe() {
-	return NPillowTwoSphere_i::newWrapper(
-		GET_ENGINE_OBJECT(NPillowTwoSphere, this)->clone());
+    return NPillowTwoSphere_i::newWrapper(
+        GET_ENGINE_OBJECT(NPillowTwoSphere, this)->clone());
 }
 Regina::Triangulation::NFace_ptr NPillowTwoSphere_i::getFace(
-		CORBA::Long index) {
-	return NFace_i::newWrapper(
-		GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getFace(index));
+        CORBA::Long index) {
+    return NFace_i::newWrapper(
+        GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getFace(index));
 }
 CORBA::Char NPillowTwoSphere_i::getFaceMapping() {
-	return GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getFaceMapping().
-		getPermCode();
+    return GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getFaceMapping().
+        getPermCode();
 }
 void NPillowTwoSphere_i::reduceTriangulation() {
-	GET_ENGINE_OBJECT(NPillowTwoSphere, this)->reduceTriangulation();
+    GET_ENGINE_OBJECT(NPillowTwoSphere, this)->reduceTriangulation();
 }
 Regina::Triangulation::NTriangulation_ptr
-		NPillowTwoSphere_i::getReducedTriangulation(
-		Regina::Triangulation::NTriangulation_ptr original) {
-	return NTriangulation_i::newWrapper(
-		GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getReducedTriangulation(
-		GET_ENGINE_OBJECT(NTriangulation, original)));
+        NPillowTwoSphere_i::getReducedTriangulation(
+        Regina::Triangulation::NTriangulation_ptr original) {
+    return NTriangulation_i::newWrapper(
+        GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getReducedTriangulation(
+        GET_ENGINE_OBJECT(NTriangulation, original)));
 }

@@ -43,8 +43,8 @@
 class NNormalSurfaceList_i :
         public virtual POA_Regina::Surfaces::NNormalSurfaceList,
         public NPacket_i {
-	STANDARD_ENGINE_TYPEDEFS(NNormalSurfaceList_i, NNormalSurfaceList,
-			Regina::Surfaces::NNormalSurfaceList)
+    STANDARD_ENGINE_TYPEDEFS(NNormalSurfaceList_i, NNormalSurfaceList,
+            Regina::Surfaces::NNormalSurfaceList)
 
     protected:
         NNormalSurfaceList_i(::NNormalSurfaceList* newCppPtr) :

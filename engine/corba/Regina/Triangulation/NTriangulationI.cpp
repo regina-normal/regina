@@ -139,7 +139,7 @@ CORBA::Long NTriangulation_i::getEulerCharacteristic() {
     return GET_ENGINE_OBJECT(NTriangulation, this)->getEulerCharacteristic();
 }
 Regina::Algebra::NGroupPresentation_ptr
-		NTriangulation_i::getFundamentalGroup() {
+        NTriangulation_i::getFundamentalGroup() {
     return NGroupPresentation_i::newWrapper(&(::NGroupPresentation&)
         (GET_ENGINE_OBJECT(NTriangulation, this)->getFundamentalGroup()));
 }
@@ -190,9 +190,9 @@ CORBA::Boolean NTriangulation_i::intelligentSimplify() {
     return GET_ENGINE_OBJECT(NTriangulation, this)->intelligentSimplify();
 }
 CORBA::Boolean NTriangulation_i::simplifyToLocalMinimum(
-		CORBA::Boolean perform) {
-	return GET_ENGINE_OBJECT(NTriangulation, this)->
-		simplifyToLocalMinimum(perform);
+        CORBA::Boolean perform) {
+    return GET_ENGINE_OBJECT(NTriangulation, this)->
+        simplifyToLocalMinimum(perform);
 }
 CORBA::Boolean NTriangulation_i::threeTwoMove(
         Regina::Triangulation::NEdge_ptr e,

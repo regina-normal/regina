@@ -49,28 +49,28 @@ public class CompositionViewer extends DefaultPacketViewer
      * The triangulation under examination.
      */
     private NTriangulation triangulation;
-	/**
-	 * The underlying calculation engine.
-	 */
-	private Engine engine;
+    /**
+     * The underlying calculation engine.
+     */
+    private Engine engine;
 
-	/**
-	 * Displays composition details.
-	 */
-	private JTree composition;
-	/**
-	 * Root node of the composition tree.
-	 */
-	private DefaultMutableTreeNode rootNode;
-	/**
-	 * Model for the composition tree.
-	 */
-	private DefaultTreeModel model;
+    /**
+     * Displays composition details.
+     */
+    private JTree composition;
+    /**
+     * Root node of the composition tree.
+     */
+    private DefaultMutableTreeNode rootNode;
+    /**
+     * Model for the composition tree.
+     */
+    private DefaultTreeModel model;
 
-	/**
-	 * Components to disable when the packet is being edited.
-	 */
-	private Vector componentsToDisable = new Vector();
+    /**
+     * Components to disable when the packet is being edited.
+     */
+    private Vector componentsToDisable = new Vector();
 
     /**
      * Create a new interface to display the given algebraic information.
@@ -81,7 +81,7 @@ public class CompositionViewer extends DefaultPacketViewer
     public CompositionViewer(NTriangulation triangulation, Engine engine) {
         super();
         this.triangulation = triangulation;
-		this.engine = engine;
+        this.engine = engine;
         init();
     }
 
@@ -89,18 +89,18 @@ public class CompositionViewer extends DefaultPacketViewer
      * Create the interface elements.
      */
     private void init() {
-		// Set up the tree.
-		rootNode = new DefaultMutableTreeNode("Composition");
-		model = new DefaultTreeModel(rootNode);
-		composition = new JTree(model);
-		composition.setShowsRootHandles(true);
-		composition.setRootVisible(false);
-		componentsToDisable.add(composition);
+        // Set up the tree.
+        rootNode = new DefaultMutableTreeNode("Composition");
+        model = new DefaultTreeModel(rootNode);
+        composition = new JTree(model);
+        composition.setShowsRootHandles(true);
+        composition.setRootVisible(false);
+        componentsToDisable.add(composition);
 
-		// Put everything together.
-		setLayout(new BorderLayout());
-		add(new PaddedPane(new JScrollPane(composition), 5),
-			BorderLayout.CENTER);
+        // Put everything together.
+        setLayout(new BorderLayout());
+        add(new PaddedPane(new JScrollPane(composition), 5),
+            BorderLayout.CENTER);
     }
 
     public NPacket getPacket() {
@@ -108,177 +108,177 @@ public class CompositionViewer extends DefaultPacketViewer
     }
 
     public void reflectPacket() {
-		Enumeration e = componentsToDisable.elements();
-		while (e.hasMoreElements())
-			((Component)e.nextElement()).setEnabled(true);
+        Enumeration e = componentsToDisable.elements();
+        while (e.hasMoreElements())
+            ((Component)e.nextElement()).setEnabled(true);
 
-		rootNode.removeAllChildren();
+        rootNode.removeAllChildren();
 
-		DefaultMutableTreeNode category;
-		DefaultMutableTreeNode instance;
-		long n, i, j;
+        DefaultMutableTreeNode category;
+        DefaultMutableTreeNode instance;
+        long n, i, j;
 
-		// Look for lens spaces.
-		category = null;
-		NLayeredLensSpace lens;
-		NLayeredSolidTorus torus;
-		n = triangulation.getNumberOfComponents();
-		for (i = 0; i < n; i++) {
-			lens = engine.isLayeredLensSpace(triangulation.getComponent(i));
-			if (lens != null) {
-				if (category == null) {
-					category = new DefaultMutableTreeNode("Lens Spaces");
-					rootNode.add(category);
-				}
-				instance = new DefaultMutableTreeNode("L(" +
-					String.valueOf(lens.getP()) + "," +
-					String.valueOf(lens.getQ()) + ")");
-				category.add(instance);
-				instance.add(new DefaultMutableTreeNode("Component " +
-					String.valueOf(i)));
-				torus = lens.getTorus();
-				instance.add(new DefaultMutableTreeNode("Layered " +
-					String.valueOf(torus.getMeridinalCuts(0)) + "-" +
-					String.valueOf(torus.getMeridinalCuts(1)) + "-" +
-					String.valueOf(torus.getMeridinalCuts(2)) +
-					" solid torus " + (lens.isSnapped() ? "snapped shut" :
-					"twisted shut")));
-				lens.destroy();
-			}
-		}
+        // Look for lens spaces.
+        category = null;
+        NLayeredLensSpace lens;
+        NLayeredSolidTorus torus;
+        n = triangulation.getNumberOfComponents();
+        for (i = 0; i < n; i++) {
+            lens = engine.isLayeredLensSpace(triangulation.getComponent(i));
+            if (lens != null) {
+                if (category == null) {
+                    category = new DefaultMutableTreeNode("Lens Spaces");
+                    rootNode.add(category);
+                }
+                instance = new DefaultMutableTreeNode("L(" +
+                    String.valueOf(lens.getP()) + "," +
+                    String.valueOf(lens.getQ()) + ")");
+                category.add(instance);
+                instance.add(new DefaultMutableTreeNode("Component " +
+                    String.valueOf(i)));
+                torus = lens.getTorus();
+                instance.add(new DefaultMutableTreeNode("Layered " +
+                    String.valueOf(torus.getMeridinalCuts(0)) + "-" +
+                    String.valueOf(torus.getMeridinalCuts(1)) + "-" +
+                    String.valueOf(torus.getMeridinalCuts(2)) +
+                    " solid torus " + (lens.isSnapped() ? "snapped shut" :
+                    "twisted shut")));
+                lens.destroy();
+            }
+        }
 
-		// Look for layered solid tori.
-		category = null;
-		n = triangulation.getNumberOfTetrahedra();
-		for (i = 0; i < n; i++) {
-			torus = engine.isLayeredSolidTorusBase(
-				triangulation.getTetrahedron(i));
-			if (torus != null) {
-				if (category == null) {
-					category = new DefaultMutableTreeNode("Layered Solid Tori");
-					rootNode.add(category);
-				}
-				instance = new DefaultMutableTreeNode(
-					String.valueOf(torus.getMeridinalCuts(0)) + "-" +
-					String.valueOf(torus.getMeridinalCuts(1)) + "-" +
-					String.valueOf(torus.getMeridinalCuts(2)));
-				category.add(instance);
-				instance.add(new DefaultMutableTreeNode("Base: tet " +
-					String.valueOf(triangulation.getTetrahedronIndex(
-					torus.getBase()))));
-				instance.add(new DefaultMutableTreeNode("Top level: tet " +
-					String.valueOf(triangulation.getTetrahedronIndex(
-					torus.getTopLevel()))));
-				torus.destroy();
-			}
-		}
+        // Look for layered solid tori.
+        category = null;
+        n = triangulation.getNumberOfTetrahedra();
+        for (i = 0; i < n; i++) {
+            torus = engine.isLayeredSolidTorusBase(
+                triangulation.getTetrahedron(i));
+            if (torus != null) {
+                if (category == null) {
+                    category = new DefaultMutableTreeNode("Layered Solid Tori");
+                    rootNode.add(category);
+                }
+                instance = new DefaultMutableTreeNode(
+                    String.valueOf(torus.getMeridinalCuts(0)) + "-" +
+                    String.valueOf(torus.getMeridinalCuts(1)) + "-" +
+                    String.valueOf(torus.getMeridinalCuts(2)));
+                category.add(instance);
+                instance.add(new DefaultMutableTreeNode("Base: tet " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    torus.getBase()))));
+                instance.add(new DefaultMutableTreeNode("Top level: tet " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    torus.getTopLevel()))));
+                torus.destroy();
+            }
+        }
 
-		// Look for snapped 3-balls.
-		category = null;
-		NSnappedBall ball;
-		Vector balls = new Vector();
-		n = triangulation.getNumberOfTetrahedra();
-		for (i = 0; i < n; i++) {
-			ball = engine.isSnappedBall(triangulation.getTetrahedron(i));
-			if (ball != null) {
-				balls.addElement(ball);
-				if (category == null) {
-					category = new DefaultMutableTreeNode("Snapped 3-Balls");
-					rootNode.add(category);
-				}
-				instance = new DefaultMutableTreeNode(
-					"Tetrahedron " +
-					String.valueOf(triangulation.getTetrahedronIndex(
-					ball.getTetrahedron())));
-				category.add(instance);
-				instance.add(new DefaultMutableTreeNode("Equator: edge " +
-					String.valueOf(ball.getInternalFace(0)) +
-					String.valueOf(ball.getInternalFace(1))));
-			}
-		}
+        // Look for snapped 3-balls.
+        category = null;
+        NSnappedBall ball;
+        Vector balls = new Vector();
+        n = triangulation.getNumberOfTetrahedra();
+        for (i = 0; i < n; i++) {
+            ball = engine.isSnappedBall(triangulation.getTetrahedron(i));
+            if (ball != null) {
+                balls.addElement(ball);
+                if (category == null) {
+                    category = new DefaultMutableTreeNode("Snapped 3-Balls");
+                    rootNode.add(category);
+                }
+                instance = new DefaultMutableTreeNode(
+                    "Tetrahedron " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    ball.getTetrahedron())));
+                category.add(instance);
+                instance.add(new DefaultMutableTreeNode("Equator: edge " +
+                    String.valueOf(ball.getInternalFace(0)) +
+                    String.valueOf(ball.getInternalFace(1))));
+            }
+        }
 
-		// Look for snapped 2-spheres.
-		category = null;
-		NSnappedTwoSphere sphere;
-		NSnappedBall ball2;
-		n = balls.size();
-		for (i = 0; i < n; i++) {
-			ball = (NSnappedBall)balls.elementAt((int)i);
-			for (j = i + 1; j < n; j++) {
-				ball2 = (NSnappedBall)balls.elementAt((int)j);
-				sphere = engine.formsSnappedTwoSphere(ball, ball2);
-				if (sphere != null) {
-					if (category == null) {
-						category = new DefaultMutableTreeNode(
-							"Snapped 2-Spheres");
-						rootNode.add(category);
-					}
-					instance = new DefaultMutableTreeNode(
-						"Tetrahedra " +
-						String.valueOf(triangulation.getTetrahedronIndex(
-						ball.getTetrahedron())) + ", " +
-						String.valueOf(triangulation.getTetrahedronIndex(
-						ball2.getTetrahedron())));
-					category.add(instance);
-					instance.add(new DefaultMutableTreeNode("Equator: edge # " +
-						String.valueOf(triangulation.getEdgeIndex(
-						ball.getTetrahedron().getEdge(
-						ball.getEquatorEdge())))));
-					sphere.destroy();
-				}
-			}
-		}
+        // Look for snapped 2-spheres.
+        category = null;
+        NSnappedTwoSphere sphere;
+        NSnappedBall ball2;
+        n = balls.size();
+        for (i = 0; i < n; i++) {
+            ball = (NSnappedBall)balls.elementAt((int)i);
+            for (j = i + 1; j < n; j++) {
+                ball2 = (NSnappedBall)balls.elementAt((int)j);
+                sphere = engine.formsSnappedTwoSphere(ball, ball2);
+                if (sphere != null) {
+                    if (category == null) {
+                        category = new DefaultMutableTreeNode(
+                            "Snapped 2-Spheres");
+                        rootNode.add(category);
+                    }
+                    instance = new DefaultMutableTreeNode(
+                        "Tetrahedra " +
+                        String.valueOf(triangulation.getTetrahedronIndex(
+                        ball.getTetrahedron())) + ", " +
+                        String.valueOf(triangulation.getTetrahedronIndex(
+                        ball2.getTetrahedron())));
+                    category.add(instance);
+                    instance.add(new DefaultMutableTreeNode("Equator: edge # " +
+                        String.valueOf(triangulation.getEdgeIndex(
+                        ball.getTetrahedron().getEdge(
+                        ball.getEquatorEdge())))));
+                    sphere.destroy();
+                }
+            }
+        }
 
-		// Look for pillow 2-spheres.
-		category = null;
-		NPillowTwoSphere pillowSphere;
-		NFace f1, f2;
-		n = triangulation.getNumberOfFaces();
-		for (i = 0; i < n; i++) {
-			f1 = triangulation.getFace(i);
-			for (j = i + 1; j < n; j++) {
-				f2 = triangulation.getFace(j);
-				pillowSphere = engine.formsPillowTwoSphere(f1, f2);
-				if (pillowSphere != null) {
-					if (category == null) {
-						category = new DefaultMutableTreeNode(
-							"Pillow 2-Spheres");
-						rootNode.add(category);
-					}
-					instance = new DefaultMutableTreeNode(
-						"Face #s " +
-						String.valueOf(triangulation.getFaceIndex(f1) + ", " +
-						String.valueOf(triangulation.getFaceIndex(f2))));
-					category.add(instance);
-					instance.add(new DefaultMutableTreeNode("Equator: edge #s " +
-						String.valueOf(triangulation.getEdgeIndex(
-						f1.getEdge(0))) + ", " +
-						String.valueOf(triangulation.getEdgeIndex(
-						f1.getEdge(1))) + ", " +
-						String.valueOf(triangulation.getEdgeIndex(
-						f1.getEdge(2)))));
-					pillowSphere.destroy();
-				}
-			}
-		}
+        // Look for pillow 2-spheres.
+        category = null;
+        NPillowTwoSphere pillowSphere;
+        NFace f1, f2;
+        n = triangulation.getNumberOfFaces();
+        for (i = 0; i < n; i++) {
+            f1 = triangulation.getFace(i);
+            for (j = i + 1; j < n; j++) {
+                f2 = triangulation.getFace(j);
+                pillowSphere = engine.formsPillowTwoSphere(f1, f2);
+                if (pillowSphere != null) {
+                    if (category == null) {
+                        category = new DefaultMutableTreeNode(
+                            "Pillow 2-Spheres");
+                        rootNode.add(category);
+                    }
+                    instance = new DefaultMutableTreeNode(
+                        "Face #s " +
+                        String.valueOf(triangulation.getFaceIndex(f1) + ", " +
+                        String.valueOf(triangulation.getFaceIndex(f2))));
+                    category.add(instance);
+                    instance.add(new DefaultMutableTreeNode("Equator: edge #s " +
+                        String.valueOf(triangulation.getEdgeIndex(
+                        f1.getEdge(0))) + ", " +
+                        String.valueOf(triangulation.getEdgeIndex(
+                        f1.getEdge(1))) + ", " +
+                        String.valueOf(triangulation.getEdgeIndex(
+                        f1.getEdge(2)))));
+                    pillowSphere.destroy();
+                }
+            }
+        }
 
-		// Destroy the cached 3-balls.
-		Enumeration e1 = balls.elements();
-		while (e1.hasMoreElements())
-			((NSnappedBall)e1.nextElement()).destroy();
+        // Destroy the cached 3-balls.
+        Enumeration e1 = balls.elements();
+        while (e1.hasMoreElements())
+            ((NSnappedBall)e1.nextElement()).destroy();
 
-		if (rootNode.isLeaf())
-			rootNode.add(new DefaultMutableTreeNode(
-				"(nothing recognised)"));
-		model.nodeStructureChanged(rootNode);
+        if (rootNode.isLeaf())
+            rootNode.add(new DefaultMutableTreeNode(
+                "(nothing recognised)"));
+        model.nodeStructureChanged(rootNode);
     }
 
     public void editingElsewhere() {
-		Enumeration e = componentsToDisable.elements();
-		while (e.hasMoreElements())
-			((Component)e.nextElement()).setEnabled(false);
+        Enumeration e = componentsToDisable.elements();
+        while (e.hasMoreElements())
+            ((Component)e.nextElement()).setEnabled(false);
 
-		rootNode.removeAllChildren();
-		model.nodeStructureChanged(rootNode);
+        rootNode.removeAllChildren();
+        model.nodeStructureChanged(rootNode);
     }
 }

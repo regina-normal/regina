@@ -115,16 +115,16 @@ public class AppletShell extends Shell {
     public boolean shouldShowSplashScreen() {
         return false;
     }
-	public boolean mayAccessFiles() {
-		return false;
-	}
+    public boolean mayAccessFiles() {
+        return false;
+    }
     public boolean mayUseJython() {
         return false;
     }
     public NormalOptionSet loadOptionSet() {
         try {
             return new NormalOptionSet(new File(getOptionsDir(),
-				Application.optionsFile));
+                Application.optionsFile));
         } catch (Throwable th) {
             return null;
         }

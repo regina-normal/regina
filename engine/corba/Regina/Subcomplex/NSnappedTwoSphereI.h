@@ -41,25 +41,25 @@
 #include "ShareableObjectI.h"
 
 class NSnappedTwoSphere_i:
-		public virtual POA_Regina::Subcomplex::NSnappedTwoSphere,
+        public virtual POA_Regina::Subcomplex::NSnappedTwoSphere,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NSnappedTwoSphere_i, NSnappedTwoSphere,
-		Regina::Subcomplex::NSnappedTwoSphere)
+    STANDARD_ENGINE_TYPEDEFS(NSnappedTwoSphere_i, NSnappedTwoSphere,
+        Regina::Subcomplex::NSnappedTwoSphere)
 
     protected:
         NSnappedTwoSphere_i(::NSnappedTwoSphere* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
+                ShareableObject_i(newCppPtr) {
         }
     public:
         STANDARD_NEW_WRAPPER
 
-		virtual Regina::Subcomplex::NSnappedTwoSphere_ptr cloneMe();
-		virtual Regina::Subcomplex::NSnappedBall_ptr getSnappedBall(
-			CORBA::Long index);
-		virtual void reduceTriangulation();
-		virtual Regina::Triangulation::NTriangulation_ptr
-			getReducedTriangulation(
-			Regina::Triangulation::NTriangulation_ptr original);
+        virtual Regina::Subcomplex::NSnappedTwoSphere_ptr cloneMe();
+        virtual Regina::Subcomplex::NSnappedBall_ptr getSnappedBall(
+            CORBA::Long index);
+        virtual void reduceTriangulation();
+        virtual Regina::Triangulation::NTriangulation_ptr
+            getReducedTriangulation(
+            Regina::Triangulation::NTriangulation_ptr original);
 };
 
 #endif

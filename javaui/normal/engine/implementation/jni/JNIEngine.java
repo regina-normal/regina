@@ -109,19 +109,19 @@ public class JNIEngine implements Engine {
     public NContainer newNContainer() {
         return new NJNIContainer();
     }
-	public NGroupExpression newNGroupExpression() {
-		return new NJNIGroupExpression();
-	}
-	public NGroupExpression newNGroupExpression(NGroupExpression cloneMe) {
-		return new NJNIGroupExpression(cloneMe);
-	}
-	public NGroupPresentation newNGroupPresentation() {
-		return new NJNIGroupPresentation();
-	}
-	public NGroupPresentation newNGroupPresentation(
-			NGroupPresentation cloneMe) {
-		return new NJNIGroupPresentation(cloneMe);
-	}
+    public NGroupExpression newNGroupExpression() {
+        return new NJNIGroupExpression();
+    }
+    public NGroupExpression newNGroupExpression(NGroupExpression cloneMe) {
+        return new NJNIGroupExpression(cloneMe);
+    }
+    public NGroupPresentation newNGroupPresentation() {
+        return new NJNIGroupPresentation();
+    }
+    public NGroupPresentation newNGroupPresentation(
+            NGroupPresentation cloneMe) {
+        return new NJNIGroupPresentation(cloneMe);
+    }
     public NFile newNFile() {
         return new NJNIFile();
     }
@@ -211,18 +211,18 @@ public class JNIEngine implements Engine {
     public native long _formCensus(NPacket parent, int nTetrahedra, 
             char finiteness, char orientability, char boundary,
             int nBdryFaces, NProgressManager manager);
-	public native NPillowTwoSphere formsPillowTwoSphere(
-		NFace face1, NFace face2);
-	public native NSnappedTwoSphere formsSnappedTwoSphere(
-		NSnappedBall ball1, NSnappedBall ball2);
-	public native NSnappedTwoSphere formsSnappedTwoSphere(
-		NTetrahedron tet1, NTetrahedron tet2);
+    public native NPillowTwoSphere formsPillowTwoSphere(
+        NFace face1, NFace face2);
+    public native NSnappedTwoSphere formsSnappedTwoSphere(
+        NSnappedBall ball1, NSnappedBall ball2);
+    public native NSnappedTwoSphere formsSnappedTwoSphere(
+        NTetrahedron tet1, NTetrahedron tet2);
     public native int getVersionMajor();
     public native int getVersionMinor();
     public native String getVersionString();
-	public native NLayeredLensSpace isLayeredLensSpace(NComponent comp);
-	public native NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
-	public native NSnappedBall isSnappedBall(NTetrahedron tet);
+    public native NLayeredLensSpace isLayeredLensSpace(NComponent comp);
+    public native NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
+    public native NSnappedBall isSnappedBall(NTetrahedron tet);
     public native NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour);
     public native NPacket readFromFile(String fileName);

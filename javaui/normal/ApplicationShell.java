@@ -249,16 +249,16 @@ public class ApplicationShell extends Shell {
     public boolean shouldShowSplashScreen() {
         return (! textOnly);
     }
-	public boolean mayAccessFiles() {
-		return (getEngine().style() == engineJNI);
-	}
+    public boolean mayAccessFiles() {
+        return (getEngine().style() == engineJNI);
+    }
     public boolean mayUseJython() {
         return true;
     }
     public NormalOptionSet loadOptionSet() {
         try {
             return new NormalOptionSet(new File(getOptionsDir(),
-				Application.optionsFile));
+                Application.optionsFile));
         } catch (Throwable th) {
             return null;
         }

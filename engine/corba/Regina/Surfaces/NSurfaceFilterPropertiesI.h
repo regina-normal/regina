@@ -52,7 +52,7 @@ class NSurfaceFilterProperties_i :
                 NSurfaceFilter_i(newCppPtr) {
         }
     public:
-		STANDARD_NEW_WRAPPER
+        STANDARD_NEW_WRAPPER
 
         virtual CORBA::Long getNumberOfECs();
         virtual char* getEC(CORBA::Long index);

@@ -43,8 +43,8 @@
 class NProgressManager_i :
         public virtual POA_Regina::Progress::NProgressManager,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NProgressManager_i, NProgressManager,
-			Regina::Progress::NProgressManager)
+    STANDARD_ENGINE_TYPEDEFS(NProgressManager_i, NProgressManager,
+            Regina::Progress::NProgressManager)
 
     protected:
         NProgressManager_i(::NProgressManager* newCppPtr) :

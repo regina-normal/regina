@@ -107,14 +107,14 @@ public interface PacketUI {
      */
     public Component getInterface();
 
-	/**
-	 * Returns the primary text component in this interface.
-	 * This component will be hooked up to edit menus and the like.
-	 *
-	 * @return the primary text component, or <tt>null</tt> if there is
-	 * no such component.
-	 */
-	public JTextComponent getPrimaryTextComponent();
+    /**
+     * Returns the primary text component in this interface.
+     * This component will be hooked up to edit menus and the like.
+     *
+     * @return the primary text component, or <tt>null</tt> if there is
+     * no such component.
+     */
+    public JTextComponent getPrimaryTextComponent();
     
     /**
      * Update the component to reflect the underlying packet in the engine
@@ -186,10 +186,10 @@ public interface PacketUI {
      * to the subtree to be deleted, in which case this routine will not
      * be called at all and this interface will instead be forcibly
      * closed through other means.
-	 * <p>
-	 * This routine is called <i>before</i> the subtree is deleted;
-	 * note that <tt>subtreeWasDeleted()</tt> will also be called
-	 * <i>after</i> the subtree has been deleted.
+     * <p>
+     * This routine is called <i>before</i> the subtree is deleted;
+     * note that <tt>subtreeWasDeleted()</tt> will also be called
+     * <i>after</i> the subtree has been deleted.
      * <p>
      * <b>Precondition:</b> The packet in this interface does not belong
      * to the subtree about to be deleted.
@@ -200,8 +200,8 @@ public interface PacketUI {
      * <tt>null</tt>.
      * @param owner the frame that owns this interface; this can be used for
      * message boxes and the like.
-	 *
-	 * @see #subtreeWasDeleted
+     *
+     * @see #subtreeWasDeleted
      */
     public void subtreeToBeDeleted(NPacket subtree, PacketUI ui, Frame owner);
 
@@ -211,25 +211,25 @@ public interface PacketUI {
      * will only be called for the root packet of that subtree and
      * will not be called again for its descendants.
      * <p>
-	 * Since the subtree has now been destroyed, it cannot be
-	 * accessed.  To access the members of the deleted subtree before
-	 * they are deleted, use <tt>subtreeToBeDeleted()</tt> instead.
-	 * <p>
-	 * This routine is called <i>after</i> the subtree has been deleted;
-	 * note that <tt>subtreeToBeDeleted()</tt> will also be called
-	 * <i>before</i> the subtree is deleted.
+     * Since the subtree has now been destroyed, it cannot be
+     * accessed.  To access the members of the deleted subtree before
+     * they are deleted, use <tt>subtreeToBeDeleted()</tt> instead.
+     * <p>
+     * This routine is called <i>after</i> the subtree has been deleted;
+     * note that <tt>subtreeToBeDeleted()</tt> will also be called
+     * <i>before</i> the subtree is deleted.
      * <p>
      * <b>Precondition:</b> The packet in this interface does not belong
      * to the subtree that was deleted.
      *
      * @param parent the parent packet immediately above the subtree that
-	 * was deleted; note that this parent packet still exists.
+     * was deleted; note that this parent packet still exists.
      * @param ui the interface that caused the deletion; this may be
      * <tt>null</tt>.
      * @param owner the frame that owns this interface; this can be used for
      * message boxes and the like.
-	 *
-	 * @see #subtreeToBeDeleted
+     *
+     * @see #subtreeToBeDeleted
      */
     public void subtreeWasDeleted(NPacket parent, PacketUI ui, Frame owner);
 

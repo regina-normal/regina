@@ -74,24 +74,24 @@ public class SkeletonTableFrame extends JDialog {
     /**
      * Denotes whether to view details for vertices, edges,
      * faces or so on.  This will be one of the
-	 * style constants defined in this class.
+     * style constants defined in this class.
      */
     private int style;
     
     /**
      * Create a new dialog.
      *
-	 * @param owner the frame from which the new dialog will be displayed.
+     * @param owner the frame from which the new dialog will be displayed.
      * @param triangulation the triangulation whose skeleton we are
-	 * viewing.
+     * viewing.
      * @param style specifies whether to view details for
      * vertices, edges, faces or so on.  This must be one of the
-	 * style constants defined in this class.
+     * style constants defined in this class.
      */
     public SkeletonTableFrame(Frame owner, NTriangulation triangulation,
-			int style) {
+            int style) {
         super(owner);
-		this.triangulation = triangulation;
+        this.triangulation = triangulation;
         this.style = style;
         init();
         this.setSize(550, 300);
@@ -101,17 +101,17 @@ public class SkeletonTableFrame extends JDialog {
     /**
      * Create a new dialog.
      *
-	 * @param owner the dialog from which the new dialog will be displayed.
+     * @param owner the dialog from which the new dialog will be displayed.
      * @param triangulation the triangulation whose skeleton we are
-	 * viewing.
+     * viewing.
      * @param style specifies whether to view details for
      * vertices, edges, faces or so on.  This must be one of the
-	 * style constants defined in this class.
+     * style constants defined in this class.
      */
     public SkeletonTableFrame(Dialog owner, NTriangulation triangulation,
-			int style) {
+            int style) {
         super(owner);
-		this.triangulation = triangulation;
+        this.triangulation = triangulation;
         this.style = style;
         init();
         this.setSize(550, 300);
@@ -122,7 +122,7 @@ public class SkeletonTableFrame extends JDialog {
      * Initialise the interface components.
      */
     private void init() {
-		// Set the title.
+        // Set the title.
         switch(style) {
             case VERTICES: setTitle("Vertices"); break;
             case EDGES: setTitle("Edges"); break;

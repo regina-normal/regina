@@ -34,12 +34,12 @@
 module Regina {
     module Subcomplex {
         interface NSnappedBall : ShareableObject {
-			NSnappedBall cloneMe();
-			Regina::Triangulation::NTetrahedron getTetrahedron();
-			long getBoundaryFace(in long index);
-			long getInternalFace(in long index);
-			long getEquatorEdge();
-			long getInternalEdge();
+            NSnappedBall cloneMe();
+            Regina::Triangulation::NTetrahedron getTetrahedron();
+            long getBoundaryFace(in long index);
+            long getInternalFace(in long index);
+            long getEquatorEdge();
+            long getInternalEdge();
         };
     };
 };

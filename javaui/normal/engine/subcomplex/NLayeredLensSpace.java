@@ -31,12 +31,12 @@ package normal.engine.subcomplex;
 import normal.engine.*;
 
 public interface NLayeredLensSpace extends ShareableObject {
-	public NLayeredLensSpace cloneMe();
-	public long getP();
-	public long getQ();
-	public NLayeredSolidTorus getTorus();
-	public int getMobiusBoundaryGroup();
-	public boolean isSnapped();
-	public boolean isTwisted();
+    public NLayeredLensSpace cloneMe();
+    public long getP();
+    public long getQ();
+    public NLayeredSolidTorus getTorus();
+    public int getMobiusBoundaryGroup();
+    public boolean isSnapped();
+    public boolean isTwisted();
 }
 

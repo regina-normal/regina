@@ -47,20 +47,20 @@ public class NJNIGroupExpression extends JNIShareableObject
     public final native void newNGroupExpression();
     public final native void newNGroupExpression(NGroupExpression cloneMe);
 
-	public native long getNumberOfTerms();
-	public native long getGenerator(long index);
-	public native long getExponent(long index);
-	public native void addTermFirst(long generator, long exponent);
-	public native void addTermLast(long generator, long exponent);
-	public native NGroupExpression inverse();
-	public native NGroupExpression power(long exponent);
-	public boolean simplify() {
-		return simplify(false);
-	}
-	public native boolean simplify(boolean cyclic);
-	public boolean substitute(long generator, NGroupExpression expansion) {
-		return substitute(generator, expansion, false);
-	}
-	public native boolean substitute(long generator,
-			NGroupExpression expansion, boolean cyclic);
+    public native long getNumberOfTerms();
+    public native long getGenerator(long index);
+    public native long getExponent(long index);
+    public native void addTermFirst(long generator, long exponent);
+    public native void addTermLast(long generator, long exponent);
+    public native NGroupExpression inverse();
+    public native NGroupExpression power(long exponent);
+    public boolean simplify() {
+        return simplify(false);
+    }
+    public native boolean simplify(boolean cyclic);
+    public boolean substitute(long generator, NGroupExpression expansion) {
+        return substitute(generator, expansion, false);
+    }
+    public native boolean substitute(long generator,
+            NGroupExpression expansion, boolean cyclic);
 }

@@ -46,41 +46,41 @@ public class NCORBAGroupExpression extends CORBAShareableObject
         return (source == null ? null : new NCORBAGroupExpression(source));
     }
 
-	public long getNumberOfTerms() {
-		return data.getNumberOfTerms();
-	}
-	public long getGenerator(long index) {
-		return data.getGenerator((int)index);
-	}
-	public long getExponent(long index) {
-		return data.getExponent((int)index);
-	}
-	public void addTermFirst(long generator, long exponent) {
-		data.addTermFirst((int)generator, (int)exponent);
-	}
-	public void addTermLast(long generator, long exponent) {
-		data.addTermLast((int)generator, (int)exponent);
-	}
-	public normal.engine.algebra.NGroupExpression inverse() {
-		return NCORBAGroupExpression.newWrapper(data.inverse());
-	}
-	public normal.engine.algebra.NGroupExpression power(long exponent) {
-		return NCORBAGroupExpression.newWrapper(data.power((int)exponent));
-	}
-	public boolean simplify() {
-		return simplify(false);
-	}
-	public boolean simplify(boolean cyclic) {
-		return data.simplify(cyclic);
-	}
-	public boolean substitute(long generator,
-			normal.engine.algebra.NGroupExpression expansion) {
-		return substitute(generator, expansion, false);
-	}
-	public boolean substitute(long generator,
-			normal.engine.algebra.NGroupExpression expansion,
-			boolean cyclic) {
-		return data.substitute((int)generator,
-			((NCORBAGroupExpression)expansion).data, cyclic);
-	}
+    public long getNumberOfTerms() {
+        return data.getNumberOfTerms();
+    }
+    public long getGenerator(long index) {
+        return data.getGenerator((int)index);
+    }
+    public long getExponent(long index) {
+        return data.getExponent((int)index);
+    }
+    public void addTermFirst(long generator, long exponent) {
+        data.addTermFirst((int)generator, (int)exponent);
+    }
+    public void addTermLast(long generator, long exponent) {
+        data.addTermLast((int)generator, (int)exponent);
+    }
+    public normal.engine.algebra.NGroupExpression inverse() {
+        return NCORBAGroupExpression.newWrapper(data.inverse());
+    }
+    public normal.engine.algebra.NGroupExpression power(long exponent) {
+        return NCORBAGroupExpression.newWrapper(data.power((int)exponent));
+    }
+    public boolean simplify() {
+        return simplify(false);
+    }
+    public boolean simplify(boolean cyclic) {
+        return data.simplify(cyclic);
+    }
+    public boolean substitute(long generator,
+            normal.engine.algebra.NGroupExpression expansion) {
+        return substitute(generator, expansion, false);
+    }
+    public boolean substitute(long generator,
+            normal.engine.algebra.NGroupExpression expansion,
+            boolean cyclic) {
+        return data.substitute((int)generator,
+            ((NCORBAGroupExpression)expansion).data, cyclic);
+    }
 }

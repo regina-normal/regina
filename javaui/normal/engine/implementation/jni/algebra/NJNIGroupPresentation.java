@@ -47,14 +47,14 @@ public class NJNIGroupPresentation extends JNIShareableObject
     public final native void newNGroupPresentation();
     public final native void newNGroupPresentation(NGroupPresentation cloneMe);
 
-	public long addGenerator() {
-		return addGenerator(1);
-	}
-	public native long addGenerator(long numToAdd);
-	public native void addRelation(NGroupExpression rel);
-	public native long getNumberOfGenerators();
-	public native long getNumberOfRelations();
-	public native NGroupExpression getRelation(long index);
-	public native boolean intelligentSimplify();
-	public native String recogniseGroup();
+    public long addGenerator() {
+        return addGenerator(1);
+    }
+    public native long addGenerator(long numToAdd);
+    public native void addRelation(NGroupExpression rel);
+    public native long getNumberOfGenerators();
+    public native long getNumberOfRelations();
+    public native NGroupExpression getRelation(long index);
+    public native boolean intelligentSimplify();
+    public native String recogniseGroup();
 }

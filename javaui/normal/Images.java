@@ -39,13 +39,13 @@ public class Images {
      */
     public static final StandardImage btnFileNewTopology =
         new StandardImage("normal/images/buttons/fileNewTopology.gif",
-		Images.class);
+        Images.class);
     /**
      * A button used to create a new Jython library.
      */
     public static final StandardImage btnFileNewLibrary =
         new StandardImage("normal/images/buttons/fileNewLibrary.gif",
-		Images.class);
+        Images.class);
     /**
      * A button representing a Jython console.
      */

@@ -69,31 +69,31 @@ public class AlgebraViewer extends DefaultPacketViewer
      */
     private JLabel H2Z2;
 
-	/**
-	 * The short name of the fundamental group.
-	 */
-	private JLabel fgpName;
-	/**
-	 * The generators of the fundamental group.
-	 */
-	private JLabel fgpGenerators;
-	/**
-	 * The relations in the fundamental group.
-	 */
-	private JList fgpRelations;
-	/**
-	 * The label for the fundamental group relations list.
-	 */
-	private JLabel labelFgpRelations;
-	/**
-	 * The list model for the fundamental group relations.
-	 */
-	private DefaultListModel fgpRelModel;
-	
-	/**
-	 * Components to disable when the packet is being edited.
-	 */
-	private Vector componentsToDisable = new Vector();
+    /**
+     * The short name of the fundamental group.
+     */
+    private JLabel fgpName;
+    /**
+     * The generators of the fundamental group.
+     */
+    private JLabel fgpGenerators;
+    /**
+     * The relations in the fundamental group.
+     */
+    private JList fgpRelations;
+    /**
+     * The label for the fundamental group relations list.
+     */
+    private JLabel labelFgpRelations;
+    /**
+     * The list model for the fundamental group relations.
+     */
+    private DefaultListModel fgpRelModel;
+    
+    /**
+     * Components to disable when the packet is being edited.
+     */
+    private Vector componentsToDisable = new Vector();
 
     /**
      * Create a new interface to display the given algebraic information.
@@ -112,7 +112,7 @@ public class AlgebraViewer extends DefaultPacketViewer
      */
     private void init() {
         // Set up the homology pane.
-		JPanel homologyPane = new JPanel();
+        JPanel homologyPane = new JPanel();
         homologyPane.setLayout(new GridBagLayout());
 
         H1 = new JLabel();
@@ -120,33 +120,33 @@ public class AlgebraViewer extends DefaultPacketViewer
         H1Bdry = new JLabel();
         H2 = new JLabel();
         H2Z2 = new JLabel();
-		componentsToDisable.addElement(H1);
-		componentsToDisable.addElement(H1Rel);
-		componentsToDisable.addElement(H1Bdry);
-		componentsToDisable.addElement(H2);
-		componentsToDisable.addElement(H2Z2);
+        componentsToDisable.addElement(H1);
+        componentsToDisable.addElement(H1Rel);
+        componentsToDisable.addElement(H1Bdry);
+        componentsToDisable.addElement(H2);
+        componentsToDisable.addElement(H2Z2);
 
-		JLabel labelHom = new JLabel("Homology");
+        JLabel labelHom = new JLabel("Homology");
         JLabel labelH1 = new JLabel("H1(M)");
         JLabel labelH1Rel = new JLabel("H1(M, Bdry M)");
         JLabel labelH1Bdry = new JLabel("H1(Bdry M)");
         JLabel labelH2 = new JLabel("H2(M)");
         JLabel labelH2Z2 = new JLabel("H2(M ; Z_2)");
-		componentsToDisable.addElement(labelHom);
-		componentsToDisable.addElement(labelH1);
-		componentsToDisable.addElement(labelH1Rel);
-		componentsToDisable.addElement(labelH1Bdry);
-		componentsToDisable.addElement(labelH2);
-		componentsToDisable.addElement(labelH2Z2);
+        componentsToDisable.addElement(labelHom);
+        componentsToDisable.addElement(labelH1);
+        componentsToDisable.addElement(labelH1Rel);
+        componentsToDisable.addElement(labelH1Bdry);
+        componentsToDisable.addElement(labelH2);
+        componentsToDisable.addElement(labelH2Z2);
 
-		GridBagConstraints cTitle = new GridBagConstraints();
+        GridBagConstraints cTitle = new GridBagConstraints();
         GridBagConstraints cLabel = new GridBagConstraints();
         GridBagConstraints cTotal = new GridBagConstraints();
-		cTitle.anchor = cTitle.CENTER;
-		cTitle.fill = cTitle.NONE;
-		cTitle.gridx = 0;
-		cTitle.gridwidth = cTitle.REMAINDER;
-		cTitle.insets = new Insets(0, 0, 5, 0);
+        cTitle.anchor = cTitle.CENTER;
+        cTitle.fill = cTitle.NONE;
+        cTitle.gridx = 0;
+        cTitle.gridwidth = cTitle.REMAINDER;
+        cTitle.insets = new Insets(0, 0, 5, 0);
         cLabel.anchor = cLabel.WEST;
         cLabel.fill = cLabel.NONE;
         cLabel.gridx = 0;
@@ -155,7 +155,7 @@ public class AlgebraViewer extends DefaultPacketViewer
         cTotal.gridx = 1;
         cTotal.insets = new Insets(0, 10, 0, 5);
 
-		homologyPane.add(labelHom, cTitle);
+        homologyPane.add(labelHom, cTitle);
         homologyPane.add(labelH1, cLabel);
         homologyPane.add(H1, cTotal);
         homologyPane.add(labelH1Rel, cLabel);
@@ -167,28 +167,28 @@ public class AlgebraViewer extends DefaultPacketViewer
         homologyPane.add(labelH2Z2, cLabel);
         homologyPane.add(H2Z2, cTotal);
 
-		// Set up the fundamental group pane.
-		JPanel fgpPane = new JPanel();
-		fgpPane.setLayout(new GridBagLayout());
+        // Set up the fundamental group pane.
+        JPanel fgpPane = new JPanel();
+        fgpPane.setLayout(new GridBagLayout());
 
-		fgpName = new JLabel();
-		fgpGenerators = new JLabel();
-		fgpRelModel = new DefaultListModel();
-		fgpRelations = new JList(fgpRelModel);
-		fgpRelations.setVisibleRowCount(6);
-		fgpRelations.setBorder(BorderFactory.createLoweredBevelBorder());
-		componentsToDisable.addElement(fgpName);
-		componentsToDisable.addElement(fgpGenerators);
-		componentsToDisable.addElement(fgpRelations);
+        fgpName = new JLabel();
+        fgpGenerators = new JLabel();
+        fgpRelModel = new DefaultListModel();
+        fgpRelations = new JList(fgpRelModel);
+        fgpRelations.setVisibleRowCount(6);
+        fgpRelations.setBorder(BorderFactory.createLoweredBevelBorder());
+        componentsToDisable.addElement(fgpName);
+        componentsToDisable.addElement(fgpGenerators);
+        componentsToDisable.addElement(fgpRelations);
 
-		JLabel labelFgpName = new JLabel("Fundamental Group");
-		labelFgpRelations = new JLabel("Relations:");
-		componentsToDisable.add(labelFgpName);
-		componentsToDisable.add(labelFgpRelations);
+        JLabel labelFgpName = new JLabel("Fundamental Group");
+        labelFgpRelations = new JLabel("Relations:");
+        componentsToDisable.add(labelFgpName);
+        componentsToDisable.add(labelFgpRelations);
 
         GridBagConstraints cLabel2 = new GridBagConstraints();
         GridBagConstraints cTotal2 = new GridBagConstraints();
-		GridBagConstraints cList = new GridBagConstraints();
+        GridBagConstraints cList = new GridBagConstraints();
         cLabel2.anchor = cLabel.CENTER;
         cLabel2.fill = cLabel.NONE;
         cLabel2.gridx = 0;
@@ -196,24 +196,24 @@ public class AlgebraViewer extends DefaultPacketViewer
         cTotal2.fill = cTotal.NONE;
         cTotal2.gridx = 0;
         cTotal2.insets = new Insets(0, 0, 5, 0);
-		cList.anchor = cList.CENTER;
-		cList.fill = cList.BOTH;
-		cList.gridx = 0;
-		cList.weightx = 1;
-		cList.weighty = 1;
+        cList.anchor = cList.CENTER;
+        cList.fill = cList.BOTH;
+        cList.gridx = 0;
+        cList.weightx = 1;
+        cList.weighty = 1;
 
-		fgpPane.add(labelFgpName, cTitle);
-		fgpPane.add(fgpName, cTotal2);
-		fgpPane.add(fgpGenerators, cLabel2);
-		fgpPane.add(labelFgpRelations, cLabel2);
-		fgpPane.add(fgpRelations, cList);
+        fgpPane.add(labelFgpName, cTitle);
+        fgpPane.add(fgpName, cTotal2);
+        fgpPane.add(fgpGenerators, cLabel2);
+        fgpPane.add(labelFgpRelations, cLabel2);
+        fgpPane.add(fgpRelations, cList);
 
-		// Put everything together.
-		JSplitPane all = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-			homologyPane, new PaddedPane(fgpPane, 5));
-		all.setResizeWeight(0.5);
-		setLayout(new BorderLayout());
-		add(all, BorderLayout.CENTER);
+        // Put everything together.
+        JSplitPane all = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+            homologyPane, new PaddedPane(fgpPane, 5));
+        all.setResizeWeight(0.5);
+        setLayout(new BorderLayout());
+        add(all, BorderLayout.CENTER);
     }
 
     public NPacket getPacket() {
@@ -221,9 +221,9 @@ public class AlgebraViewer extends DefaultPacketViewer
     }
 
     public void reflectPacket() {
-		Enumeration e = componentsToDisable.elements();
-		while (e.hasMoreElements())
-			((Component)e.nextElement()).setEnabled(true);
+        Enumeration e = componentsToDisable.elements();
+        while (e.hasMoreElements())
+            ((Component)e.nextElement()).setEnabled(true);
 
         H1.setText(triangulation.getHomologyH1().toString());
 
@@ -245,41 +245,41 @@ public class AlgebraViewer extends DefaultPacketViewer
             H2Z2.setText("Invalid Triangulation");
         }
 
-		if (triangulation.getNumberOfComponents() <= 1) {
-			NGroupPresentation fgp = triangulation.getFundamentalGroup();
-			String name = fgp.recogniseGroup();
-			if (name.length() == 0)
-				fgpName.setText("Not recognised");
-			else
-				fgpName.setText(name);
+        if (triangulation.getNumberOfComponents() <= 1) {
+            NGroupPresentation fgp = triangulation.getFundamentalGroup();
+            String name = fgp.recogniseGroup();
+            if (name.length() == 0)
+                fgpName.setText("Not recognised");
+            else
+                fgpName.setText(name);
 
-			long n = fgp.getNumberOfGenerators();
-			if (n == 0)
-				fgpGenerators.setText("Generators: (none)");
-			else if (n == 1)
-				fgpGenerators.setText("Generator: g0");
-			else if (n == 2)
-				fgpGenerators.setText("Generators: g0, g1");
-			else
-				fgpGenerators.setText("Generators: g0 .. g" +
-					String.valueOf(n - 1));
+            long n = fgp.getNumberOfGenerators();
+            if (n == 0)
+                fgpGenerators.setText("Generators: (none)");
+            else if (n == 1)
+                fgpGenerators.setText("Generator: g0");
+            else if (n == 2)
+                fgpGenerators.setText("Generators: g0, g1");
+            else
+                fgpGenerators.setText("Generators: g0 .. g" +
+                    String.valueOf(n - 1));
 
-			n = fgp.getNumberOfRelations();
-			for (long i =0; i < n; i++)
-				fgpRelModel.addElement("1 = " + fgp.getRelation(i).toString());
-		} else {
-			fgpName.setText("Cannot calculate");
-			fgpGenerators.setText("(disconnected manifold)");
-			fgpRelModel.removeAllElements();
-			labelFgpRelations.setEnabled(false);
-			fgpRelations.setEnabled(false);
-		}
+            n = fgp.getNumberOfRelations();
+            for (long i =0; i < n; i++)
+                fgpRelModel.addElement("1 = " + fgp.getRelation(i).toString());
+        } else {
+            fgpName.setText("Cannot calculate");
+            fgpGenerators.setText("(disconnected manifold)");
+            fgpRelModel.removeAllElements();
+            labelFgpRelations.setEnabled(false);
+            fgpRelations.setEnabled(false);
+        }
     }
 
     public void editingElsewhere() {
-		Enumeration e = componentsToDisable.elements();
-		while (e.hasMoreElements())
-			((Component)e.nextElement()).setEnabled(false);
+        Enumeration e = componentsToDisable.elements();
+        while (e.hasMoreElements())
+            ((Component)e.nextElement()).setEnabled(false);
 
         H1.setText("");
         H1Rel.setText("");
@@ -287,8 +287,8 @@ public class AlgebraViewer extends DefaultPacketViewer
         H2.setText("");
         H2Z2.setText("");
 
-		fgpName.setText("");
-		fgpGenerators.setText("Generators:");
-		fgpRelModel.removeAllElements();
+        fgpName.setText("");
+        fgpGenerators.setText("Generators:");
+        fgpRelModel.removeAllElements();
     }
 }

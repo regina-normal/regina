@@ -47,14 +47,14 @@ public class NContainerViewer extends DefaultPacketViewer {
      */
     private NContainer packet;
 
-	/**
-	 * The child count.
-	 */
-	private JLabel nChildren;
-	/**
-	 * The descendant count.
-	 */
-	private JLabel nDescendants;
+    /**
+     * The child count.
+     */
+    private JLabel nChildren;
+    /**
+     * The descendant count.
+     */
+    private JLabel nDescendants;
     
     /**
      * Create a new interface to work with a given packet.
@@ -66,24 +66,24 @@ public class NContainerViewer extends DefaultPacketViewer {
         this.packet = (NContainer)packet;
         setLayout(new BorderLayout());
 
-		JPanel infoPane = new JPanel();
-		nChildren = new JLabel();
-		nDescendants = new JLabel();
-		refreshTreeInfo();
-		infoPane.setLayout(new GridBagLayout());
-		GridBagConstraints cLeft = new GridBagConstraints();
-		GridBagConstraints cRight = new GridBagConstraints();
-		cLeft.anchor = cLeft.EAST;
-		cLeft.fill = cLeft.NONE;
-		cLeft.gridx = 0;
-		cRight.anchor = cRight.EAST;
-		cRight.fill = cRight.NONE;
-		cRight.gridx = 1;
-		cRight.insets = new Insets(0, 5, 0, 5);
-		infoPane.add(new JLabel("Immediate children:"), cLeft);
-		infoPane.add(nChildren, cRight);
-		infoPane.add(new JLabel("Total descendants:"), cLeft);
-		infoPane.add(nDescendants, cRight);
+        JPanel infoPane = new JPanel();
+        nChildren = new JLabel();
+        nDescendants = new JLabel();
+        refreshTreeInfo();
+        infoPane.setLayout(new GridBagLayout());
+        GridBagConstraints cLeft = new GridBagConstraints();
+        GridBagConstraints cRight = new GridBagConstraints();
+        cLeft.anchor = cLeft.EAST;
+        cLeft.fill = cLeft.NONE;
+        cLeft.gridx = 0;
+        cRight.anchor = cRight.EAST;
+        cRight.fill = cRight.NONE;
+        cRight.gridx = 1;
+        cRight.insets = new Insets(0, 5, 0, 5);
+        infoPane.add(new JLabel("Immediate children:"), cLeft);
+        infoPane.add(nChildren, cRight);
+        infoPane.add(new JLabel("Total descendants:"), cLeft);
+        infoPane.add(nDescendants, cRight);
         add(new PaddedPane(infoPane, 5), BorderLayout.NORTH);
 
         JLabel icon = new JLabel(Images.mainLargeIcon.image());
@@ -99,29 +99,29 @@ public class NContainerViewer extends DefaultPacketViewer {
     public void reflectPacket() {
     }
 
-	/**
-	 * Refresh the tree statistics displayed in this viewer.
-	 */
-	private void refreshTreeInfo() {
-		nChildren.setText(String.valueOf(packet.getNumberOfChildren()));
-		nDescendants.setText(String.valueOf(packet.getNumberOfDescendants()));
-	}
+    /**
+     * Refresh the tree statistics displayed in this viewer.
+     */
+    private void refreshTreeInfo() {
+        nChildren.setText(String.valueOf(packet.getNumberOfChildren()));
+        nDescendants.setText(String.valueOf(packet.getNumberOfDescendants()));
+    }
 
-	public void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner) {
-		super.subtreeWasInserted(subtree, ui, owner);
-		if (packet.isGrandparentOf(subtree))
-			refreshTreeInfo();
-	}
+    public void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner) {
+        super.subtreeWasInserted(subtree, ui, owner);
+        if (packet.isGrandparentOf(subtree))
+            refreshTreeInfo();
+    }
 
-	public void subtreeWasDeleted(NPacket parent, PacketUI ui, Frame owner) {
-		super.subtreeWasDeleted(parent, ui, owner);
-		if (packet.isGrandparentOf(parent))
-			refreshTreeInfo();
-	}
+    public void subtreeWasDeleted(NPacket parent, PacketUI ui, Frame owner) {
+        super.subtreeWasDeleted(parent, ui, owner);
+        if (packet.isGrandparentOf(parent))
+            refreshTreeInfo();
+    }
 
-	public void subtreeHasChanged(NPacket subtree, PacketUI ui, Frame owner) {
-		super.subtreeHasChanged(subtree, ui, owner);
-		if (packet.isGrandparentOf(subtree) || subtree.isGrandparentOf(packet))
-			refreshTreeInfo();
-	}
+    public void subtreeHasChanged(NPacket subtree, PacketUI ui, Frame owner) {
+        super.subtreeHasChanged(subtree, ui, owner);
+        if (packet.isGrandparentOf(subtree) || subtree.isGrandparentOf(packet))
+            refreshTreeInfo();
+    }
 }

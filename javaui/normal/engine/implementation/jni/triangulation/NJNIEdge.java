@@ -38,7 +38,7 @@ public class NJNIEdge extends JNIShareableObject implements NEdge {
     
     public native NComponent getComponent();
     public native NBoundaryComponent getBoundaryComponent();
-	public native NVertex getVertex(int vertex);
+    public native NVertex getVertex(int vertex);
 
     public native boolean isBoundary();
     public native boolean isValid();

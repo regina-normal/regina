@@ -33,15 +33,15 @@ import normal.engine.triangulation.*;
 import normal.engine.subcomplex.*;
 
 public class NJNISnappedBall extends JNIShareableObject
-		implements NSnappedBall {
+        implements NSnappedBall {
     public NJNISnappedBall(Sentry s) {
         super(s);
     }
     
-	public native NSnappedBall cloneMe();
-	public native NTetrahedron getTetrahedron();
-	public native int getBoundaryFace(int index);
-	public native int getInternalFace(int index);
-	public native int getEquatorEdge();
-	public native int getInternalEdge();
+    public native NSnappedBall cloneMe();
+    public native NTetrahedron getTetrahedron();
+    public native int getBoundaryFace(int index);
+    public native int getInternalFace(int index);
+    public native int getEquatorEdge();
+    public native int getInternalEdge();
 }

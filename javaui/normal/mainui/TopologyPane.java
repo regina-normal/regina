@@ -66,9 +66,9 @@ import normal.packetfilter.*;
  */
 public class TopologyPane extends FilePane {
 
-	// ---------------
-	//    CONSTANTS
-	// ---------------
+    // ---------------
+    //    CONSTANTS
+    // ---------------
 
     /**
      * Used with <tt>dockPacketPane()</tt>.
@@ -112,21 +112,21 @@ public class TopologyPane extends FilePane {
     public static final PacketTreeCellRenderer cellRenderer =
         new PacketTreeCellRenderer();
 
-	/**
-	 * The default file extension used for topology data files.
-	 */
-	public static final String defaultFileExtension = ".rga";
+    /**
+     * The default file extension used for topology data files.
+     */
+    public static final String defaultFileExtension = ".rga";
 
-	/**
-	 * Filter for data files.
-	 */
-	public static final ExtensionFilenameFilter filenameFilter =
-		new ExtensionFilenameFilter(defaultFileExtension,
-		"Topology Data Files (*" + defaultFileExtension + ')');
-	
-	// ------------------
-	//    DATA MEMBERS
-	// ------------------
+    /**
+     * Filter for data files.
+     */
+    public static final ExtensionFilenameFilter filenameFilter =
+        new ExtensionFilenameFilter(defaultFileExtension,
+        "Topology Data Files (*" + defaultFileExtension + ')');
+    
+    // ------------------
+    //    DATA MEMBERS
+    // ------------------
 
     /**
      * The packet at the root of the packet tree.
@@ -232,52 +232,52 @@ public class TopologyPane extends FilePane {
      */
     private JButton treeRight;
 
-	// --------------------
-	//    INITIALISATION
-	// --------------------
+    // --------------------
+    //    INITIALISATION
+    // --------------------
 
-	/**
-	 * Create a new pane with a new default set of working data.
-	 *
-	 * @param shell the shell representing the entire program.
-	 * @return the new pane.
-	 */
-	public static TopologyPane newPane(Shell shell) {
-		NPacket root = shell.getEngine().newNContainer();
-		root.setPacketLabel("Container");
-		
-		return new TopologyPane(shell, root);
-	}
+    /**
+     * Create a new pane with a new default set of working data.
+     *
+     * @param shell the shell representing the entire program.
+     * @return the new pane.
+     */
+    public static TopologyPane newPane(Shell shell) {
+        NPacket root = shell.getEngine().newNContainer();
+        root.setPacketLabel("Container");
+        
+        return new TopologyPane(shell, root);
+    }
 
-	/**
-	 * Create a new pane with the working data read from the given file.
-	 * Any I/O or related errors will be reported to the user.
-	 *
-	 * @param shell the shell representing the entire program.
-	 * @param file the file from which to read.
-	 * @return the new pane, or <tt>null</tt> if an error occurred.
-	 */
-	public static TopologyPane newPane(Shell shell, File file) {
-		NFile f = shell.getEngine().newNFile();
-		if (! f.open(file.getAbsolutePath(), f.READ)) {
-			shell.error("The requested file does not exist or is " +
-				"in an unknown format.");
-			f.destroy();
-			return null;
-		}
+    /**
+     * Create a new pane with the working data read from the given file.
+     * Any I/O or related errors will be reported to the user.
+     *
+     * @param shell the shell representing the entire program.
+     * @param file the file from which to read.
+     * @return the new pane, or <tt>null</tt> if an error occurred.
+     */
+    public static TopologyPane newPane(Shell shell, File file) {
+        NFile f = shell.getEngine().newNFile();
+        if (! f.open(file.getAbsolutePath(), f.READ)) {
+            shell.error("The requested file does not exist or is " +
+                "in an unknown format.");
+            f.destroy();
+            return null;
+        }
 
-		NPacket root = f.readPacketTree();
-		f.close();
-		f.destroy();
+        NPacket root = f.readPacketTree();
+        f.close();
+        f.destroy();
 
-		if (root == null) {
-			shell.error("The requested file contains invalid data " +
-				"and thus could not be opened.");
-			return null;
-		}
+        if (root == null) {
+            shell.error("The requested file contains invalid data " +
+                "and thus could not be opened.");
+            return null;
+        }
 
-		return new TopologyPane(shell, root);
-	}
+        return new TopologyPane(shell, root);
+    }
 
     /**
      * Create a new pane containing the given working data.
@@ -293,44 +293,44 @@ public class TopologyPane extends FilePane {
         init();
     }
 
-	public boolean canSave() {
-		if (unconfirmedEditPanes())
-			if (! getShell().confirm(
-					"Some edit panes currently in use contain " +
-					"changes that have not yet been applied.  Do you wish " +
-					"to continue?"))
-				return false;
-		return true;
-	}
+    public boolean canSave() {
+        if (unconfirmedEditPanes())
+            if (! getShell().confirm(
+                    "Some edit panes currently in use contain " +
+                    "changes that have not yet been applied.  Do you wish " +
+                    "to continue?"))
+                return false;
+        return true;
+    }
 
-	public boolean saveFile(File file) {
-		NFile f = getEngine().newNFile();
-		if (! f.open(file.getAbsolutePath(), f.WRITE)) {
-			getShell().error(
-				"The requested file could not be opened for writing.");
-			f.destroy();
-			return false;
-		}
-		f.writePacketTree(rootPacket);
-		f.close();
-		f.destroy();
-		return true;
-	}
+    public boolean saveFile(File file) {
+        NFile f = getEngine().newNFile();
+        if (! f.open(file.getAbsolutePath(), f.WRITE)) {
+            getShell().error(
+                "The requested file could not be opened for writing.");
+            f.destroy();
+            return false;
+        }
+        f.writePacketTree(rootPacket);
+        f.close();
+        f.destroy();
+        return true;
+    }
 
-	public javax.swing.filechooser.FileFilter getFileFilter() {
-		return filenameFilter;
-	}
+    public javax.swing.filechooser.FileFilter getFileFilter() {
+        return filenameFilter;
+    }
 
-	public String getFileExtension() {
-		return defaultFileExtension;
-	}
+    public String getFileExtension() {
+        return defaultFileExtension;
+    }
 
     /**
      * Initialise interface components.
      */
     private void init() {
-		// Create the visual tree.
-		createTree();
+        // Create the visual tree.
+        createTree();
 
         // Set the layout manager.
         this.setLayout(new BorderLayout());
@@ -542,9 +542,9 @@ public class TopologyPane extends FilePane {
         }
     }
 
-	// --------------------
-	//    QUERY ROUTINES
-	// --------------------
+    // --------------------
+    //    QUERY ROUTINES
+    // --------------------
 
     /**
      * Returns the visual packet tree.
@@ -605,9 +605,9 @@ public class TopologyPane extends FilePane {
         return allPacketPanes.elements();
     }
 
-	// ---------------------
-	//    UPDATE ROUTINES
-	// ---------------------
+    // ---------------------
+    //    UPDATE ROUTINES
+    // ---------------------
 
     /**
      * Refreshes the enabled state of the main buttons in the mainfold pane.
@@ -650,12 +650,12 @@ public class TopologyPane extends FilePane {
         }
     }
 
-	// ------------------------
-	//    FILEPANE OVERRIDES
-	// ------------------------
+    // ------------------------
+    //    FILEPANE OVERRIDES
+    // ------------------------
 
     public void updateLookAndFeel() {
-		super.updateLookAndFeel();
+        super.updateLookAndFeel();
 
         Frame frame;
         Enumeration e = allPacketPanes.elements();
@@ -667,42 +667,42 @@ public class TopologyPane extends FilePane {
     }
 
     public void setDisplayIcon(boolean displayIcon) {
-		icon.setVisible(displayIcon);
+        icon.setVisible(displayIcon);
     }
 
     public boolean canClose() {
-		if (! super.canClose())
-			return false;
+        if (! super.canClose())
+            return false;
 
-		// Check for unconfirmed edit panes.
+        // Check for unconfirmed edit panes.
         if (unconfirmedEditPanes())
             if (! getShell().confirm("Some edit panes currently in use " +
                     "contain changes that have not yet been applied.  Are " +
                     "you sure you wish to abandon these changes?"))
                 return false;
 
-		// Close all Jython consoles spawned from this system.
-		Vector myConsoles = new Vector();
-		JPythonConsoleFrame console;
-		Enumeration e = getShell().getConsoles();
-		while (e.hasMoreElements()) {
-			console = (JPythonConsoleFrame)e.nextElement();
-			if (rootPacket.sameObject(console.getRootPacket()))
-				myConsoles.addElement(console);
-		}
+        // Close all Jython consoles spawned from this system.
+        Vector myConsoles = new Vector();
+        JPythonConsoleFrame console;
+        Enumeration e = getShell().getConsoles();
+        while (e.hasMoreElements()) {
+            console = (JPythonConsoleFrame)e.nextElement();
+            if (rootPacket.sameObject(console.getRootPacket()))
+                myConsoles.addElement(console);
+        }
 
-		e = myConsoles.elements();
-		while (e.hasMoreElements()) {
-			console = (JPythonConsoleFrame)e.nextElement();
-			if (console.getConsole().isProcessing()) {
-				getShell().error("One of the Jython consoles linked " +
-					"to this file is still processing input.");
-				return false;
-			}
-			console.closeConsole();
-		}
+        e = myConsoles.elements();
+        while (e.hasMoreElements()) {
+            console = (JPythonConsoleFrame)e.nextElement();
+            if (console.getConsole().isProcessing()) {
+                getShell().error("One of the Jython consoles linked " +
+                    "to this file is still processing input.");
+                return false;
+            }
+            console.closeConsole();
+        }
 
-		// We can close!
+        // We can close!
         return true;
     }
 
@@ -719,9 +719,9 @@ public class TopologyPane extends FilePane {
         rootPacket.destroy();
     }
 
-	// --------------------------
-	//    PACKET PANE HANDLING
-	// --------------------------
+    // --------------------------
+    //    PACKET PANE HANDLING
+    // --------------------------
 
     /**
      * Insert the given packet pane into the interface.
@@ -878,7 +878,7 @@ public class TopologyPane extends FilePane {
         workingArea.add(pane, BorderLayout.CENTER);
         workingArea.validate();
         workingPane = pane;
-		setWorkingTextComponent(pane.getUI().getPrimaryTextComponent());
+        setWorkingTextComponent(pane.getUI().getPrimaryTextComponent());
         return true;
     }
     
@@ -892,7 +892,7 @@ public class TopologyPane extends FilePane {
      * @param pane the packet pane with which to work.
      */
     private void internalUndockPacketPane(PacketPane pane) {
-		setWorkingTextComponent(null);
+        setWorkingTextComponent(null);
         workingArea.remove(pane);
         workingArea.repaint();
         workingPane = null;
@@ -988,9 +988,9 @@ public class TopologyPane extends FilePane {
         return false;
     }
 
-	// ------------------------
-	//    PACKET TREE EVENTS
-	// ------------------------
+    // ------------------------
+    //    PACKET TREE EVENTS
+    // ------------------------
 
     /**
      * This should be called whenever a packet's contents change,
@@ -1041,9 +1041,9 @@ public class TopologyPane extends FilePane {
         }
 
         // Update the visual tree.
-		PacketTreeNode node = findTreeNode(packet);
-		node.setUserObject(packet.getPacketLabel());
-		treeModel.nodeChanged(node);
+        PacketTreeNode node = findTreeNode(packet);
+        node.setUserObject(packet.getPacketLabel());
+        treeModel.nodeChanged(node);
     }
 
     /**
@@ -1058,15 +1058,15 @@ public class TopologyPane extends FilePane {
      * Any pane containing a packet that belongs to the marked
      * subtree will be forcibly closed by this routine.
      * <p>
-	 * This routine should be called <i>before</i> the subtree is
-	 * deleted; note that <tt>fireSubtreeWasDeleted()</tt> should also
-	 * be called <i>after</i> the subtree has been deleted.
+     * This routine should be called <i>before</i> the subtree is
+     * deleted; note that <tt>fireSubtreeWasDeleted()</tt> should also
+     * be called <i>after</i> the subtree has been deleted.
      *
      * @param subtree the packet subtree about to be deleted.
      * @param ui the interface that caused the deletion; this may be
      * <tt>null</tt>.
-	 *
-	 * @see #fireSubtreeWasDeleted
+     *
+     * @see #fireSubtreeWasDeleted
      */
     public void fireSubtreeToBeDeleted(NPacket subtree, PacketUI ui) {
         // Update the interfaces.
@@ -1106,16 +1106,16 @@ public class TopologyPane extends FilePane {
      * Note that the matriarch of the packet tree should never be
      * deleted.
      * <p>
-	 * This routine should be called <i>after</i> the subtree has been
-	 * deleted; note that <tt>fireSubtreeToBeDeleted()</tt> should also
-	 * be called <i>before</i> the subtree is deleted.
+     * This routine should be called <i>after</i> the subtree has been
+     * deleted; note that <tt>fireSubtreeToBeDeleted()</tt> should also
+     * be called <i>before</i> the subtree is deleted.
      *
      * @param parent the parent packet immediately above the subtree
-	 * that was deleted.
+     * that was deleted.
      * @param ui the interface that caused the deletion; this may be
      * <tt>null</tt>.
-	 *
-	 * @see #fireSubtreeToBeDeleted
+     *
+     * @see #fireSubtreeToBeDeleted
      */
     public void fireSubtreeWasDeleted(NPacket parent, PacketUI ui) {
         // Update the interfaces.
@@ -1163,12 +1163,12 @@ public class TopologyPane extends FilePane {
         Vector newNodes = new Vector();
         PacketTreeNode parentNode = findTreeNode(subtree.getTreeParent());
         PacketTreeNode subtreeNode = new PacketTreeNode(subtree);
-		NPacket sibling = subtree.getPrevTreeSibling();
-		int index;
-		if (sibling == null)
-			index = 0;
-		else if ((index = parentNode.findChildNodeIndex(sibling) + 1) <= 0)
-			index = parentNode.getChildCount();
+        NPacket sibling = subtree.getPrevTreeSibling();
+        int index;
+        if (sibling == null)
+            index = 0;
+        else if ((index = parentNode.findChildNodeIndex(sibling) + 1) <= 0)
+            index = parentNode.getChildCount();
         treeModel.insertNodeInto(subtreeNode, parentNode, index);
         newNodes.addElement(subtreeNode);
 
@@ -1241,9 +1241,9 @@ public class TopologyPane extends FilePane {
             showNodePackets(newNodes);
     }
 
-	// -------------------
-	//    TREE HANDLING
-	// -------------------
+    // -------------------
+    //    TREE HANDLING
+    // -------------------
 
     /**
      * Returns the node in the visual packet tree corresponding to the given
@@ -1308,13 +1308,13 @@ public class TopologyPane extends FilePane {
             node = (PacketTreeNode)e.nextElement();
             insertPacketPane(new PacketPane(this,
                 PacketUIManager.newPacketUI(node.getPacket(), getShell(),
-				node.getPacket().isPacketEditable())), justOneNode);
+                node.getPacket().isPacketEditable())), justOneNode);
         }
     }
 
-	// -------------
-	//    ACTIONS
-	// -------------
+    // -------------
+    //    ACTIONS
+    // -------------
 
     /**
      * Allow the user to import a packet from a file in a foreign format.
@@ -1395,7 +1395,7 @@ public class TopologyPane extends FilePane {
             return;
 
         NPacket clone = chosen.getPacket().clonePacket(includeDescendants,
-			false);
+            false);
         if (clone == null) {
             getShell().error("This packet may not be cloned.");
             return;
@@ -1416,26 +1416,26 @@ public class TopologyPane extends FilePane {
         NPacket packet = chosen.getPacket();
 
         // Open a dialog to obtain a new name for the packet.
-		String newName = packet.getPacketLabel();
-		while (true) {
-        	newName = InputBox.getInput(getNormalFrame(),
-            	"Rename packet", newName);
-        	if (newName == null)
-            	return;
-        	newName = newName.trim();
-        	if (newName.length() == 0)
-            	return;
+        String newName = packet.getPacketLabel();
+        while (true) {
+            newName = InputBox.getInput(getNormalFrame(),
+                "Rename packet", newName);
+            if (newName == null)
+                return;
+            newName = newName.trim();
+            if (newName.length() == 0)
+                return;
 
-			// Can we use this name?
-        	if (rootPacket.findPacketLabel(newName) != null) {
-            	getShell().error("A packet with this label already exists.");
-            	newName = rootPacket.makeUniqueLabel(newName);
-				continue;
-        	}
-			break;
-		}
+            // Can we use this name?
+            if (rootPacket.findPacketLabel(newName) != null) {
+                getShell().error("A packet with this label already exists.");
+                newName = rootPacket.makeUniqueLabel(newName);
+                continue;
+            }
+            break;
+        }
 
-		// We have a name we can use.
+        // We have a name we can use.
         packet.setPacketLabel(newName);
         setDirty(true);
 
@@ -1460,7 +1460,7 @@ public class TopologyPane extends FilePane {
                 + packet.getPacketLabel() + " and all of its children?"))
             return;
         
-		NPacket parent = packet.getTreeParent();
+        NPacket parent = packet.getTreeParent();
 
         // Notify interfaces and the visual tree that the packet is about to
         // be deleted.
@@ -1472,8 +1472,8 @@ public class TopologyPane extends FilePane {
         // Destroy the underlying native packet structure.
         packet.destroy();
 
-		// Notify interfaces that the packet has now been deleted.
-		fireSubtreeWasDeleted(parent, null);
+        // Notify interfaces that the packet has now been deleted.
+        fireSubtreeWasDeleted(parent, null);
 
         // Tidy up.
         setDirty(true);
@@ -1625,9 +1625,9 @@ public class TopologyPane extends FilePane {
         setDirty(true);
     }
 
-	// -------------
-	//    CLASSES
-	// -------------
+    // -------------
+    //    CLASSES
+    // -------------
 
     /**
      * Frame class used to contain packet panes.

@@ -37,9 +37,9 @@
     #include "nsnappea.h"
     #include "nfile.h"
     #include "ncensus.h"
-	#include "nlayeredlensspace.h"
-	#include "npillowtwosphere.h"
-	#include "nsnappedtwosphere.h"
+    #include "nlayeredlensspace.h"
+    #include "npillowtwosphere.h"
+    #include "nsnappedtwosphere.h"
     #include "nnormalsurfacelist.h"
     #include "matrixops.h"
 #else
@@ -78,76 +78,76 @@ JNIEXPORT jlong JNICALL
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_formsPillowTwoSphere
-		(JNIEnv *env, jobject me, jobject f1, jobject f2) {
-	return CREATE_WRAPPER_OBJECT(env,
-		NPillowTwoSphere::formsPillowTwoSphere(
-			GET_ENGINE_OBJECT(env, NFace, f1),
-			GET_ENGINE_OBJECT(env, NFace, f2)),
-		"normal/engine/implementation/jni/subcomplex/NJNIPillowTwoSphere");
+        Java_normal_engine_implementation_jni_JNIEngine_formsPillowTwoSphere
+        (JNIEnv *env, jobject me, jobject f1, jobject f2) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NPillowTwoSphere::formsPillowTwoSphere(
+            GET_ENGINE_OBJECT(env, NFace, f1),
+            GET_ENGINE_OBJECT(env, NFace, f2)),
+        "normal/engine/implementation/jni/subcomplex/NJNIPillowTwoSphere");
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_formsSnappedTwoSphere__Lnormal_engine_subcomplex_NSnappedBall_2Lnormal_engine_subcomplex_NSnappedBall_2
-		(JNIEnv *env, jobject me, jobject p1, jobject p2) {
-	return CREATE_WRAPPER_OBJECT(env,
-		NSnappedTwoSphere::formsSnappedTwoSphere(
-			GET_ENGINE_OBJECT(env, NSnappedBall, p1),
-			GET_ENGINE_OBJECT(env, NSnappedBall, p2)),
-		"normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
+        Java_normal_engine_implementation_jni_JNIEngine_formsSnappedTwoSphere__Lnormal_engine_subcomplex_NSnappedBall_2Lnormal_engine_subcomplex_NSnappedBall_2
+        (JNIEnv *env, jobject me, jobject p1, jobject p2) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NSnappedTwoSphere::formsSnappedTwoSphere(
+            GET_ENGINE_OBJECT(env, NSnappedBall, p1),
+            GET_ENGINE_OBJECT(env, NSnappedBall, p2)),
+        "normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_formsSnappedTwoSphere__Lnormal_engine_triangulation_NTetrahedron_2Lnormal_engine_triangulation_NTetrahedron_2
-		(JNIEnv *env, jobject me, jobject p1, jobject p2) {
-	return CREATE_WRAPPER_OBJECT(env,
-		NSnappedTwoSphere::formsSnappedTwoSphere(
-			GET_ENGINE_OBJECT(env, NTetrahedron, p1),
-			GET_ENGINE_OBJECT(env, NTetrahedron, p2)),
-		"normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
+        Java_normal_engine_implementation_jni_JNIEngine_formsSnappedTwoSphere__Lnormal_engine_triangulation_NTetrahedron_2Lnormal_engine_triangulation_NTetrahedron_2
+        (JNIEnv *env, jobject me, jobject p1, jobject p2) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NSnappedTwoSphere::formsSnappedTwoSphere(
+            GET_ENGINE_OBJECT(env, NTetrahedron, p1),
+            GET_ENGINE_OBJECT(env, NTetrahedron, p2)),
+        "normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_getVersionMajor
+        Java_normal_engine_implementation_jni_JNIEngine_getVersionMajor
         (JNIEnv *env, jobject me) {
     return ENGINE_VERSION_MAJOR;
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_getVersionMinor
+        Java_normal_engine_implementation_jni_JNIEngine_getVersionMinor
         (JNIEnv *env, jobject me) {
     return ENGINE_VERSION_MINOR;
 }
 
 JNIEXPORT jstring JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_getVersionString
+        Java_normal_engine_implementation_jni_JNIEngine_getVersionString
         (JNIEnv *env, jobject me) {
     return env->NewStringUTF(ENGINE_VERSION);
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_isLayeredLensSpace
-		(JNIEnv *env, jobject me, jobject you) {
+        Java_normal_engine_implementation_jni_JNIEngine_isLayeredLensSpace
+        (JNIEnv *env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
-		NLayeredLensSpace::isLayeredLensSpace(
+        NLayeredLensSpace::isLayeredLensSpace(
         GET_ENGINE_OBJECT(env, NComponent, you)),
         "normal/engine/implementation/jni/subcomplex/NJNILayeredLensSpace");
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_isLayeredSolidTorusBase
-		(JNIEnv* env, jobject me, jobject you) {
+        Java_normal_engine_implementation_jni_JNIEngine_isLayeredSolidTorusBase
+        (JNIEnv* env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
-		NLayeredSolidTorus::isLayeredSolidTorusBase(
+        NLayeredSolidTorus::isLayeredSolidTorusBase(
         GET_ENGINE_OBJECT(env, NTetrahedron, you)),
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_isSnappedBall
-		(JNIEnv* env, jobject me, jobject you) {
+        Java_normal_engine_implementation_jni_JNIEngine_isSnappedBall
+        (JNIEnv* env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
-		NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(env, NTetrahedron, you)),
+        NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(env, NTetrahedron, you)),
         "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
 }
 

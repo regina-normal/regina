@@ -39,72 +39,72 @@
 const NGroupPresentation& NTriangulation::getFundamentalGroup() {
     if (calculatedFundamentalGroup)
         return *fundamentalGroup;
-	
-	fundamentalGroup = new NGroupPresentation();
+    
+    fundamentalGroup = new NGroupPresentation();
 
-	if (getNumberOfTetrahedra() == 0) {
-		calculatedFundamentalGroup = true;
-		return *fundamentalGroup;
-	}
+    if (getNumberOfTetrahedra() == 0) {
+        calculatedFundamentalGroup = true;
+        return *fundamentalGroup;
+    }
 
-	// Find a maximal forest in the dual 1-skeleton.
-	// Note that this will ensure the skeleton has been calculated.
-	NPointerSet<NFace> forest;
-	maximalForestInDualSkeleton(forest);
+    // Find a maximal forest in the dual 1-skeleton.
+    // Note that this will ensure the skeleton has been calculated.
+    NPointerSet<NFace> forest;
+    maximalForestInDualSkeleton(forest);
 
-	// Each non-boundary not-in-forest face is a generator.
-	// Each non-boundary edge is a relation.
-	unsigned long nBdryFaces = 0;
-	for (BoundaryComponentIterator bit(boundaryComponents);
-			! bit.done(); bit++)
-		nBdryFaces += (*bit)->getNumberOfFaces();
-	long nGens = getNumberOfFaces() - nBdryFaces - forest.size();
+    // Each non-boundary not-in-forest face is a generator.
+    // Each non-boundary edge is a relation.
+    unsigned long nBdryFaces = 0;
+    for (BoundaryComponentIterator bit(boundaryComponents);
+            ! bit.done(); bit++)
+        nBdryFaces += (*bit)->getNumberOfFaces();
+    long nGens = getNumberOfFaces() - nBdryFaces - forest.size();
 
-	// Insert the generators.
-	fundamentalGroup->addGenerator(nGens);
+    // Insert the generators.
+    fundamentalGroup->addGenerator(nGens);
 
-	// Find out which face corresponds to which generator.
-	long *genIndex = new long[getNumberOfFaces()];
-	long i = 0;
-	for (FaceIterator fit(faces); ! fit.done(); fit++)
-		if ((*fit)->isBoundary() || forest.contains(*fit))
-			genIndex[fit.getArrayIndex()] = -1;
-		else
-			genIndex[fit.getArrayIndex()] = i++;
-	
-	// Run through each edge and put the relations in the matrix.
-	NDynamicArrayIterator<NEdgeEmbedding> embit;
-	NTetrahedron* currTet;
-	NFace* face;
-	int currTetFace;
-	long faceGenIndex;
-	NGroupExpression* rel;
-	for (EdgeIterator eit(edges); ! eit.done(); eit++)
-		if (! (*eit)->isBoundary()) {
-			// Put in the relation corresponding to this edge.
-			rel = new NGroupExpression();
-			for (embit.init((*eit)->getEmbeddings());
-					! embit.done(); embit++) {
-				currTet = (*embit).getTetrahedron();
-				currTetFace = (*embit).getVertices()[2];
-				face = currTet->getFace(currTetFace);
-				faceGenIndex = genIndex[faces.position(face)];
-				if (faceGenIndex >= 0) {
-					if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
-							(face->getEmbedding(0).getFace() == currTetFace))
-						rel->addTermLast(faceGenIndex, 1);
-					else
-						rel->addTermLast(faceGenIndex, -1);
-				}
-			}
-			fundamentalGroup->addRelation(rel);
-		}
+    // Find out which face corresponds to which generator.
+    long *genIndex = new long[getNumberOfFaces()];
+    long i = 0;
+    for (FaceIterator fit(faces); ! fit.done(); fit++)
+        if ((*fit)->isBoundary() || forest.contains(*fit))
+            genIndex[fit.getArrayIndex()] = -1;
+        else
+            genIndex[fit.getArrayIndex()] = i++;
+    
+    // Run through each edge and put the relations in the matrix.
+    NDynamicArrayIterator<NEdgeEmbedding> embit;
+    NTetrahedron* currTet;
+    NFace* face;
+    int currTetFace;
+    long faceGenIndex;
+    NGroupExpression* rel;
+    for (EdgeIterator eit(edges); ! eit.done(); eit++)
+        if (! (*eit)->isBoundary()) {
+            // Put in the relation corresponding to this edge.
+            rel = new NGroupExpression();
+            for (embit.init((*eit)->getEmbeddings());
+                    ! embit.done(); embit++) {
+                currTet = (*embit).getTetrahedron();
+                currTetFace = (*embit).getVertices()[2];
+                face = currTet->getFace(currTetFace);
+                faceGenIndex = genIndex[faces.position(face)];
+                if (faceGenIndex >= 0) {
+                    if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
+                            (face->getEmbedding(0).getFace() == currTetFace))
+                        rel->addTermLast(faceGenIndex, 1);
+                    else
+                        rel->addTermLast(faceGenIndex, -1);
+                }
+            }
+            fundamentalGroup->addRelation(rel);
+        }
 
-	// Tidy up.
-	delete[] genIndex;
-	fundamentalGroup->intelligentSimplify();
+    // Tidy up.
+    delete[] genIndex;
+    fundamentalGroup->intelligentSimplify();
 
-	calculatedFundamentalGroup = true;
-	return *fundamentalGroup;
+    calculatedFundamentalGroup = true;
+    return *fundamentalGroup;
 }
 

@@ -68,9 +68,9 @@ public class NTextEditor extends DefaultPacketEditor {
         init(editor);
     }
 
-	public JTextComponent getPrimaryTextComponent() {
-		return text;
-	}
+    public JTextComponent getPrimaryTextComponent() {
+        return text;
+    }
 
     public NPacket getPacket() {
         return packet;

@@ -38,8 +38,8 @@ public class ConsoleUtils {
     /**
      * Returns the greeting to offer the user when the program is run as
      * a standalone Jython console.
-	 * The greeting may span multiple lines, but no final newline
-	 * should be included.
+     * The greeting may span multiple lines, but no final newline
+     * should be included.
      *
      * @return the program console greeting.
      */
@@ -52,7 +52,7 @@ public class ConsoleUtils {
      * Runs a standalone text Jython console with no GUI.
      * Standard input and standard output will be used.
      *
-	 * @param shell the shell representing the entire program.
+     * @param shell the shell representing the entire program.
      */
     public static void runTextConsole(Shell shell) {
         System.out.println();
@@ -62,32 +62,32 @@ public class ConsoleUtils {
         // Start the interpreter.
         org.python.util.InteractiveConsole console =
             new org.python.util.InteractiveConsole();
-		JPythonUtils.setupInterpreter(console, shell, System.out);
+        JPythonUtils.setupInterpreter(console, shell, System.out);
         System.out.println();
         console.interact();
     }
 
-	/**
-	 * Creates a new standalone graphical Jython console.
-	 * The console will be displaying appropriate welcome messages.
-	 * The frame will still need to be shown and the console
-	 * will still need to be started (through
-	 * <tt>JPythonConsoleFrame.startConsole()</tt>).
-	 *
-	 * @param shell the shell representing the entire program.
-	 * @param standalone <tt>true</tt> if and only if this frame will in
-	 * fact be the entire program, with no other GUI present.
-	 * @return the created Jython console frame.
-	 *
-	 * @see normal.console.JPythonConsoleFrame#startConsole()
-	 * @see normal.console.JPythonConsoleFrame#startConsole(java.lang.String)
-	 */
-	public static JPythonConsoleFrame createGraphicalConsole(Shell shell,
-			boolean standalone) {
-		JPythonConsoleFrame frame = new JPythonConsoleFrame(shell, null,
-			standalone);
-		frame.getConsole().outputMessage(standaloneGreeting() + "\n\n" +
-			org.python.util.InteractiveConsole.getDefaultBanner() + "\n\n");
-		return frame;
-	}
+    /**
+     * Creates a new standalone graphical Jython console.
+     * The console will be displaying appropriate welcome messages.
+     * The frame will still need to be shown and the console
+     * will still need to be started (through
+     * <tt>JPythonConsoleFrame.startConsole()</tt>).
+     *
+     * @param shell the shell representing the entire program.
+     * @param standalone <tt>true</tt> if and only if this frame will in
+     * fact be the entire program, with no other GUI present.
+     * @return the created Jython console frame.
+     *
+     * @see normal.console.JPythonConsoleFrame#startConsole()
+     * @see normal.console.JPythonConsoleFrame#startConsole(java.lang.String)
+     */
+    public static JPythonConsoleFrame createGraphicalConsole(Shell shell,
+            boolean standalone) {
+        JPythonConsoleFrame frame = new JPythonConsoleFrame(shell, null,
+            standalone);
+        frame.getConsole().outputMessage(standaloneGreeting() + "\n\n" +
+            org.python.util.InteractiveConsole.getDefaultBanner() + "\n\n");
+        return frame;
+    }
 }

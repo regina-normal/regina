@@ -44,26 +44,26 @@ class ::NGroupExpression;
 class ::NGroupPresentation;
 
 class NGroupPresentation_i :
-		public virtual POA_Regina::Algebra::NGroupPresentation,
+        public virtual POA_Regina::Algebra::NGroupPresentation,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NGroupPresentation_i, NGroupPresentation,
-			Regina::Algebra::NGroupPresentation)
+    STANDARD_ENGINE_TYPEDEFS(NGroupPresentation_i, NGroupPresentation,
+            Regina::Algebra::NGroupPresentation)
 
     protected:
         NGroupPresentation_i(::NGroupPresentation* newCppPtr) :
                 ShareableObject_i(newCppPtr) {
         }
     public:
-		STANDARD_NEW_WRAPPER
+        STANDARD_NEW_WRAPPER
 
-		virtual CORBA::Long addGenerator(CORBA::Long numToAdd);
-		virtual void addRelation(Regina::Algebra::NGroupExpression_ptr rel);
-		virtual CORBA::Long getNumberOfGenerators();
-		virtual CORBA::Long getNumberOfRelations();
-		virtual Regina::Algebra::NGroupExpression_ptr getRelation(
-			CORBA::Long index);
-		virtual CORBA::Boolean intelligentSimplify();
-		virtual char* recogniseGroup();
+        virtual CORBA::Long addGenerator(CORBA::Long numToAdd);
+        virtual void addRelation(Regina::Algebra::NGroupExpression_ptr rel);
+        virtual CORBA::Long getNumberOfGenerators();
+        virtual CORBA::Long getNumberOfRelations();
+        virtual Regina::Algebra::NGroupExpression_ptr getRelation(
+            CORBA::Long index);
+        virtual CORBA::Boolean intelligentSimplify();
+        virtual char* recogniseGroup();
 };
 
 #endif

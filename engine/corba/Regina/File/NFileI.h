@@ -42,13 +42,13 @@
 
 class NFile_i : public virtual POA_Regina::File::NFile,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NFile_i, NFile, Regina::File::NFile)
+    STANDARD_ENGINE_TYPEDEFS(NFile_i, NFile, Regina::File::NFile)
 
     protected:
         NFile_i(::NFile* newCppPtr) : ShareableObject_i(newCppPtr) {
         }
     public:
-		STANDARD_NEW_WRAPPER
+        STANDARD_NEW_WRAPPER
 
         virtual CORBA::Boolean open(const char* fileName,
             CORBA::Long openMode);

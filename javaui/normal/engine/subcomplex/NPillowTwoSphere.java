@@ -32,10 +32,10 @@ import normal.engine.*;
 import normal.engine.triangulation.*;
 
 public interface NPillowTwoSphere extends ShareableObject {
-	public NPillowTwoSphere cloneMe();
-	public NFace getFace(int index);
-	public NPerm getFaceMapping();
-	public void reduceTriangulation();
-	public NTriangulation getReducedTriangulation(NTriangulation original);
+    public NPillowTwoSphere cloneMe();
+    public NFace getFace(int index);
+    public NPerm getFaceMapping();
+    public void reduceTriangulation();
+    public NTriangulation getReducedTriangulation(NTriangulation original);
 }
 

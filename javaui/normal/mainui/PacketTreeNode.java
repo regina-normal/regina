@@ -142,16 +142,16 @@ public class PacketTreeNode extends DefaultMutableTreeNode {
      *
      * @param child the packet we are searching for.
      * @return the index in this node's child list of the wrapper for the
-	 * given packet, or -1 if no wrapper was found.
+     * given packet, or -1 if no wrapper was found.
      */
     public int findChildNodeIndex(NPacket child) {
         Enumeration e = children();
-		int index = 0;
+        int index = 0;
         while (e.hasMoreElements()) {
             if (((PacketTreeNode)e.nextElement()).getPacket().
-					sameObject(child))
+                    sameObject(child))
                 return index;
-			index++;
+            index++;
         }
         return -1;
     }
@@ -161,9 +161,9 @@ public class PacketTreeNode extends DefaultMutableTreeNode {
      * inserts new <tt>PacketTreeNode</tt> wrappers into
      * the given tree for all descendant packets that are not already
      * wrapped and removes nodes for packets that have been moved to
-	 * a different parent.
-	 * Note that the packet nodes are also reordered to match the
-	 * ordering in the underlying engine packet tree.
+     * a different parent.
+     * Note that the packet nodes are also reordered to match the
+     * ordering in the underlying engine packet tree.
      * <p>
      * <b>Precondition:</b> This tree node already belongs to the given
      * tree.
@@ -174,58 +174,58 @@ public class PacketTreeNode extends DefaultMutableTreeNode {
      * will be placed.  If you do not wish for such an archive to be
      * made, you can simply pass <tt>null</tt> for this parameter.
      */
-	public void verifyDescendants(DefaultTreeModel model, Vector newNodes) {
-		NPacket child = packet.getFirstTreeChild();
-		PacketTreeNode node = null;
+    public void verifyDescendants(DefaultTreeModel model, Vector newNodes) {
+        NPacket child = packet.getFirstTreeChild();
+        PacketTreeNode node = null;
 
-		int index = 0;
-		int count = getChildCount();
-		while (child != null) {
-			// child is the first packet that might not be properly
-			// mirrored in the tree.
-			// index is the index at which the node for child should be
-			// placed.
-			// count is the number of child nodes currently in the tree.
-			if (index == count) {
-				// There is no mirror node.
-				node = new PacketTreeNode(child);
-            	if (newNodes != null)
-                	newNodes.addElement(node);
-				count++;
-				model.insertNodeInto(node, this, index);
-			} else if (child.sameObject(
-					(node = (PacketTreeNode)getChildAt(index)).getPacket())) {
-				// The mirror node is already present.
-			} else {
-				// Hunt for a mirror node.
-				node = findChildNode(child);
-				if (node == null) {
-					// There is no mirror node.
-					node = new PacketTreeNode(child);
-            		if (newNodes != null)
-                		newNodes.addElement(node);
-					count++;
-				} else {
-					// The mirror node is in the wrong place.
-					model.removeNodeFromParent(node);
-				}
-				model.insertNodeInto(node, this, index);
-			}
+        int index = 0;
+        int count = getChildCount();
+        while (child != null) {
+            // child is the first packet that might not be properly
+            // mirrored in the tree.
+            // index is the index at which the node for child should be
+            // placed.
+            // count is the number of child nodes currently in the tree.
+            if (index == count) {
+                // There is no mirror node.
+                node = new PacketTreeNode(child);
+                if (newNodes != null)
+                    newNodes.addElement(node);
+                count++;
+                model.insertNodeInto(node, this, index);
+            } else if (child.sameObject(
+                    (node = (PacketTreeNode)getChildAt(index)).getPacket())) {
+                // The mirror node is already present.
+            } else {
+                // Hunt for a mirror node.
+                node = findChildNode(child);
+                if (node == null) {
+                    // There is no mirror node.
+                    node = new PacketTreeNode(child);
+                    if (newNodes != null)
+                        newNodes.addElement(node);
+                    count++;
+                } else {
+                    // The mirror node is in the wrong place.
+                    model.removeNodeFromParent(node);
+                }
+                model.insertNodeInto(node, this, index);
+            }
 
-			// At this point, node mirrors child.
-			node.verifyDescendants(model, newNodes);
+            // At this point, node mirrors child.
+            node.verifyDescendants(model, newNodes);
 
-			// Advance to the next packet.
-			child = child.getNextTreeSibling();
-			index++;
-		}
+            // Advance to the next packet.
+            child = child.getNextTreeSibling();
+            index++;
+        }
 
-		// Remove extraneous nodes.
-		while (count > index) {
-			model.removeNodeFromParent((PacketTreeNode)getChildAt(count - 1));
-			count--;
-		}
-	}
+        // Remove extraneous nodes.
+        while (count > index) {
+            model.removeNodeFromParent((PacketTreeNode)getChildAt(count - 1));
+            count--;
+        }
+    }
 
     /**
      * Deletes any existing descendant nodes of this tree node and inserts a

@@ -60,7 +60,7 @@ module Regina {
         interface NEdge : ShareableObject {
             NComponent getComponent();
             NBoundaryComponent getBoundaryComponent();
-			NVertex getVertex(in long vertex);
+            NVertex getVertex(in long vertex);
 
             boolean isBoundary();
             boolean isValid();
@@ -73,9 +73,9 @@ module Regina {
         interface NFace : ShareableObject {
             NComponent getComponent();
             NBoundaryComponent getBoundaryComponent();
-			NVertex getVertex(in long vertex);
-			NEdge getEdge(in long edge);
-			char getEdgeMapping(in long edge);
+            NVertex getVertex(in long vertex);
+            NEdge getEdge(in long edge);
+            char getEdgeMapping(in long edge);
 
             boolean isBoundary();
 

@@ -33,14 +33,14 @@ import normal.engine.triangulation.*;
 import normal.engine.subcomplex.*;
 
 public class NJNISnappedTwoSphere extends JNIShareableObject
-		implements NSnappedTwoSphere {
+        implements NSnappedTwoSphere {
     public NJNISnappedTwoSphere(Sentry s) {
         super(s);
     }
     
-	public native NSnappedTwoSphere cloneMe();
-	public native NSnappedBall getSnappedBall(int index);
-	public native void reduceTriangulation();
-	public native NTriangulation getReducedTriangulation(
-		NTriangulation original);
+    public native NSnappedTwoSphere cloneMe();
+    public native NSnappedBall getSnappedBall(int index);
+    public native void reduceTriangulation();
+    public native NTriangulation getReducedTriangulation(
+        NTriangulation original);
 }

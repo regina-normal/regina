@@ -149,10 +149,10 @@ class NTriangulation : public NPacket, NPropertyHolder {
         bool orientable;
             /**< Is the triangulation orientable? */
 
-		NGroupPresentation* fundamentalGroup;
-			/**< Fundamental group of the triangulation. */
-		bool calculatedFundamentalGroup;
-			/**< Has \a fundamentalGroup been calculated? */
+        NGroupPresentation* fundamentalGroup;
+            /**< Fundamental group of the triangulation. */
+        bool calculatedFundamentalGroup;
+            /**< Has \a fundamentalGroup been calculated? */
         NAbelianGroup* H1;
             /**< First homology group of the triangulation. */
         bool calculatedH1;
@@ -258,12 +258,12 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * Note that this triangulation is not required to be valid
          * (see isValid()).
-		 *
-		 * \pre This triangulation has at most one component.
+         *
+         * \pre This triangulation has at most one component.
          *
          * @return the fundamental group.
          */
-		const NGroupPresentation& getFundamentalGroup();
+        const NGroupPresentation& getFundamentalGroup();
         /**
          * Returns the first homology group for this triangulation.
          * If this triangulation contains any ideal or non-standard
@@ -899,9 +899,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * possible without further input.
          *
          * Currently this routine does nothing but call
-		 * simplifyToLocalMinimum(); once a local minimum is reached
-		 * it will stay there.
-		 *
+         * simplifyToLocalMinimum(); once a local minimum is reached
+         * it will stay there.
+         *
          * \todo \opturgent Make this faster and more effective.
          * Include random 4-4 moves and random 2-3 moves to get out of
          * wells.  Unglue faces with three boundary edges and record the
@@ -914,32 +914,32 @@ class NTriangulation : public NPacket, NPropertyHolder {
         /**
          * Uses all known simplification moves to reduce the triangulation
          * monotonically to some local minimum number of tetrahedra.
-		 * Note that this will probably not give a globally minimal
-		 * triangulation; see intelligentSimplify() for further
-		 * assistance in achieving this goal.
+         * Note that this will probably not give a globally minimal
+         * triangulation; see intelligentSimplify() for further
+         * assistance in achieving this goal.
          *
          * The moves used include crushing maximal forests in the
          * triangulation 1-skeleton and using 3-2, 2-0 (edge and vertex),
          * 2-1, boundary shelling and book opening moves as far as
          * possible.
-		 *
-		 * Note that if a book opening move is possible, the
-		 * triangulation will \b not be considered a local minimum, even
-		 * though the book opening move alone will not reduce the number of
-		 * tetrahedra.
-		 *
+         *
+         * Note that if a book opening move is possible, the
+         * triangulation will \b not be considered a local minimum, even
+         * though the book opening move alone will not reduce the number of
+         * tetrahedra.
+         *
          * \ifacescorba All parameters are compulsory.
          *
-		 * \todo \bugurgent This routine currently does not crush a
-		 * maximal forest!
-		 *
+         * \todo \bugurgent This routine currently does not crush a
+         * maximal forest!
+         *
          * @param perform \c true if we are to perform the
-		 * simplifications, or \c false if we are only to investigate
-		 * whether simplifications are possible (defaults to \c true).
-		 * @return if \a perform is \c true, this routine returns
-		 * \c true if and only if the triangulation was changed; if
-		 * \a perform is \c false, this routine returns \c true if and
-		 * only if any simplifications are possible.
+         * simplifications, or \c false if we are only to investigate
+         * whether simplifications are possible (defaults to \c true).
+         * @return if \a perform is \c true, this routine returns
+         * \c true if and only if the triangulation was changed; if
+         * \a perform is \c false, this routine returns \c true if and
+         * only if any simplifications are possible.
          */
         bool simplifyToLocalMinimum(bool perform = true);
         
@@ -1057,12 +1057,12 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * This involves taking the two tetrahedra joined at that vertex
          * and squashing them flat.
          * This can be done only if the vertex is non-boundary, the two
-		 * tetrahedra are distinct, the
-		 * faces opposite \c v in each tetrahedron are distinct and not
-		 * both boundary, and the two tetrahedra meet each other
-		 * on all three faces touching the vertex (as opposed to meeting
-		 * each other on one face and being glued to themselves along the
-		 * other two).
+         * tetrahedra are distinct, the
+         * faces opposite \c v in each tetrahedron are distinct and not
+         * both boundary, and the two tetrahedra meet each other
+         * on all three faces touching the vertex (as opposed to meeting
+         * each other on one face and being glued to themselves along the
+         * other two).
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -1323,10 +1323,10 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation (this is the same as
          * simplicially homeomorphic).
-		 *
-		 * \todo \opt Improve the complexity by choosing a tetrahedron
-		 * mapping from each component and following gluings to
-		 * determine the others.
+         *
+         * \todo \opt Improve the complexity by choosing a tetrahedron
+         * mapping from each component and following gluings to
+         * determine the others.
          *
          * @param other the triangulation to compare with this one.
          * @return \c true if and only if this and the given

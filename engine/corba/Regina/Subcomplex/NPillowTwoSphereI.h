@@ -41,25 +41,25 @@
 #include "ShareableObjectI.h"
 
 class NPillowTwoSphere_i:
-		public virtual POA_Regina::Subcomplex::NPillowTwoSphere,
+        public virtual POA_Regina::Subcomplex::NPillowTwoSphere,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NPillowTwoSphere_i, NPillowTwoSphere,
-		Regina::Subcomplex::NPillowTwoSphere)
+    STANDARD_ENGINE_TYPEDEFS(NPillowTwoSphere_i, NPillowTwoSphere,
+        Regina::Subcomplex::NPillowTwoSphere)
 
     protected:
         NPillowTwoSphere_i(::NPillowTwoSphere* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
+                ShareableObject_i(newCppPtr) {
         }
     public:
         STANDARD_NEW_WRAPPER
 
-		virtual Regina::Subcomplex::NPillowTwoSphere_ptr cloneMe();
-		virtual Regina::Triangulation::NFace_ptr getFace(CORBA::Long index);
-		virtual CORBA::Char getFaceMapping();
-		virtual void reduceTriangulation();
-		virtual Regina::Triangulation::NTriangulation_ptr
-			getReducedTriangulation(
-			Regina::Triangulation::NTriangulation_ptr original);
+        virtual Regina::Subcomplex::NPillowTwoSphere_ptr cloneMe();
+        virtual Regina::Triangulation::NFace_ptr getFace(CORBA::Long index);
+        virtual CORBA::Char getFaceMapping();
+        virtual void reduceTriangulation();
+        virtual Regina::Triangulation::NTriangulation_ptr
+            getReducedTriangulation(
+            Regina::Triangulation::NTriangulation_ptr original);
 };
 
 #endif

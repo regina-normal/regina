@@ -42,8 +42,8 @@
 
 class NComponent_i : public virtual POA_Regina::Triangulation::NComponent,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NComponent_i, NComponent,
-			Regina::Triangulation::NComponent)
+    STANDARD_ENGINE_TYPEDEFS(NComponent_i, NComponent,
+            Regina::Triangulation::NComponent)
 
     protected:
         NComponent_i(::NComponent* newCppPtr) : ShareableObject_i(newCppPtr) {

@@ -106,9 +106,9 @@ public abstract class DefaultPacketEditor extends JPanel implements PacketUI {
         return this;
     }
 
-	public JTextComponent getPrimaryTextComponent() {
-		return null;
-	}
+    public JTextComponent getPrimaryTextComponent() {
+        return null;
+    }
 
     public abstract void reflectPacket();
 

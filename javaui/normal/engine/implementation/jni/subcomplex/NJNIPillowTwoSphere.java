@@ -33,18 +33,18 @@ import normal.engine.triangulation.*;
 import normal.engine.subcomplex.*;
 
 public class NJNIPillowTwoSphere extends JNIShareableObject
-		implements NPillowTwoSphere {
+        implements NPillowTwoSphere {
     public NJNIPillowTwoSphere(Sentry s) {
         super(s);
     }
     
-	public native NPillowTwoSphere cloneMe();
-	public native NFace getFace(int index);
-	public NPerm getFaceMapping() {
-		return new NPerm(_getFaceMapping());
-	}
-	public native char _getFaceMapping();
-	public native void reduceTriangulation();
-	public native NTriangulation getReducedTriangulation(
-		NTriangulation original);
+    public native NPillowTwoSphere cloneMe();
+    public native NFace getFace(int index);
+    public NPerm getFaceMapping() {
+        return new NPerm(_getFaceMapping());
+    }
+    public native char _getFaceMapping();
+    public native void reduceTriangulation();
+    public native NTriangulation getReducedTriangulation(
+        NTriangulation original);
 }

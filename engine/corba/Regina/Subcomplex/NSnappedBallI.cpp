@@ -30,22 +30,22 @@
 #include "NTetrahedronI.h"
 
 Regina::Subcomplex::NSnappedBall_ptr NSnappedBall_i::cloneMe() {
-	return NSnappedBall_i::newWrapper(
-		GET_ENGINE_OBJECT(NSnappedBall, this)->clone());
+    return NSnappedBall_i::newWrapper(
+        GET_ENGINE_OBJECT(NSnappedBall, this)->clone());
 }
 Regina::Triangulation::NTetrahedron_ptr NSnappedBall_i::getTetrahedron() {
-	return NTetrahedron_i::newWrapper(
-		GET_ENGINE_OBJECT(NSnappedBall, this)->getTetrahedron());
+    return NTetrahedron_i::newWrapper(
+        GET_ENGINE_OBJECT(NSnappedBall, this)->getTetrahedron());
 }
 CORBA::Long NSnappedBall_i::getBoundaryFace(CORBA::Long index) {
-	return GET_ENGINE_OBJECT(NSnappedBall, this)->getBoundaryFace(index);
+    return GET_ENGINE_OBJECT(NSnappedBall, this)->getBoundaryFace(index);
 }
 CORBA::Long NSnappedBall_i::getInternalFace(CORBA::Long index) {
-	return GET_ENGINE_OBJECT(NSnappedBall, this)->getInternalFace(index);
+    return GET_ENGINE_OBJECT(NSnappedBall, this)->getInternalFace(index);
 }
 CORBA::Long NSnappedBall_i::getEquatorEdge() {
-	return GET_ENGINE_OBJECT(NSnappedBall, this)->getEquatorEdge();
+    return GET_ENGINE_OBJECT(NSnappedBall, this)->getEquatorEdge();
 }
 CORBA::Long NSnappedBall_i::getInternalEdge() {
-	return GET_ENGINE_OBJECT(NSnappedBall, this)->getInternalEdge();
+    return GET_ENGINE_OBJECT(NSnappedBall, this)->getInternalEdge();
 }

@@ -234,9 +234,9 @@ public class PacketInfoTabbedPane extends JTabbedPane
         return this;
     }
 
-	public JTextComponent getPrimaryTextComponent() {
-		return null;
-	}
+    public JTextComponent getPrimaryTextComponent() {
+        return null;
+    }
 
     public void reflectPacket() {
         update(false, null);

@@ -43,32 +43,32 @@ public class NCORBAGroupPresentation extends CORBAShareableObject
     }
 
     public static NCORBAGroupPresentation newWrapper(
-			NGroupPresentation source) {
+            NGroupPresentation source) {
         return (source == null ? null : new NCORBAGroupPresentation(source));
     }
 
-	public long addGenerator() {
-		return addGenerator(1);
-	}
-	public long addGenerator(long numToAdd) {
-		return data.addGenerator((int)numToAdd);
-	}
-	public void addRelation(normal.engine.algebra.NGroupExpression rel) {
-		data.addRelation(((NCORBAGroupExpression)rel).data);
-	}
-	public long getNumberOfGenerators() {
-		return data.getNumberOfGenerators();
-	}
-	public long getNumberOfRelations() {
-		return data.getNumberOfRelations();
-	}
-	public normal.engine.algebra.NGroupExpression getRelation(long index) {
-		return NCORBAGroupExpression.newWrapper(data.getRelation((int)index));
-	}
-	public boolean intelligentSimplify() {
-		return data.intelligentSimplify();
-	}
-	public String recogniseGroup() {
-		return data.recogniseGroup();
-	}
+    public long addGenerator() {
+        return addGenerator(1);
+    }
+    public long addGenerator(long numToAdd) {
+        return data.addGenerator((int)numToAdd);
+    }
+    public void addRelation(normal.engine.algebra.NGroupExpression rel) {
+        data.addRelation(((NCORBAGroupExpression)rel).data);
+    }
+    public long getNumberOfGenerators() {
+        return data.getNumberOfGenerators();
+    }
+    public long getNumberOfRelations() {
+        return data.getNumberOfRelations();
+    }
+    public normal.engine.algebra.NGroupExpression getRelation(long index) {
+        return NCORBAGroupExpression.newWrapper(data.getRelation((int)index));
+    }
+    public boolean intelligentSimplify() {
+        return data.intelligentSimplify();
+    }
+    public String recogniseGroup() {
+        return data.recogniseGroup();
+    }
 }

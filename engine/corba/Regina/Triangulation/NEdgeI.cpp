@@ -43,7 +43,7 @@ Regina::Triangulation::NBoundaryComponent_ptr
 }
 Regina::Triangulation::NVertex_ptr NEdge_i::getVertex(CORBA::Long index) {
     return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NEdge, this)->
-		getVertex((int)index));
+        getVertex((int)index));
 }
 CORBA::Boolean NEdge_i::isBoundary() {
     return GET_ENGINE_OBJECT(NEdge, this)->isBoundary();

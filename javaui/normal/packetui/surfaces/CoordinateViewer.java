@@ -246,13 +246,13 @@ public class CoordinateViewer extends DefaultPacketViewer
             table.getColumnModel().getColumn(2).setCellRenderer(renderer);
 
         TableColumn col;
-		renderer = new FancyColumnHeaderRenderer(table);
+        renderer = new FancyColumnHeaderRenderer(table);
         for (int i=0; i<model.getColumnCount(); i++) {
             col = table.getColumnModel().getColumn(i);
             col.setPreferredWidth(70);
             col.setHeaderRenderer(renderer);
-			col.setHeaderValue(new FancyData(model.getColumnName(i),
-				model.getColumnToolTip(i)));
+            col.setHeaderValue(new FancyData(model.getColumnName(i),
+                model.getColumnToolTip(i)));
         }
     }
 

@@ -37,47 +37,47 @@
 #include "NSnappedTwoSphereI.h"
 
 Regina::Subcomplex::NPillowTwoSphere_ptr
-		Engine_i::formsPillowTwoSphere(Regina::Triangulation::NFace_ptr face1,
-		Regina::Triangulation::NFace_ptr face2) {
-	return NPillowTwoSphere_i::newWrapper(
-		::NPillowTwoSphere::formsPillowTwoSphere(
-		GET_ENGINE_OBJECT(NFace, face1),
-		GET_ENGINE_OBJECT(NFace, face2)));
+        Engine_i::formsPillowTwoSphere(Regina::Triangulation::NFace_ptr face1,
+        Regina::Triangulation::NFace_ptr face2) {
+    return NPillowTwoSphere_i::newWrapper(
+        ::NPillowTwoSphere::formsPillowTwoSphere(
+        GET_ENGINE_OBJECT(NFace, face1),
+        GET_ENGINE_OBJECT(NFace, face2)));
 }
 
 Regina::Subcomplex::NSnappedTwoSphere_ptr
-		Engine_i::formsSnappedTwoSphere_NSnappedBall(
-		Regina::Subcomplex::NSnappedBall_ptr p1,
-		Regina::Subcomplex::NSnappedBall_ptr p2) {
-	return NSnappedTwoSphere_i::newWrapper(
-		::NSnappedTwoSphere::formsSnappedTwoSphere(
-		GET_ENGINE_OBJECT(NSnappedBall, p1),
-		GET_ENGINE_OBJECT(NSnappedBall, p2)));
+        Engine_i::formsSnappedTwoSphere_NSnappedBall(
+        Regina::Subcomplex::NSnappedBall_ptr p1,
+        Regina::Subcomplex::NSnappedBall_ptr p2) {
+    return NSnappedTwoSphere_i::newWrapper(
+        ::NSnappedTwoSphere::formsSnappedTwoSphere(
+        GET_ENGINE_OBJECT(NSnappedBall, p1),
+        GET_ENGINE_OBJECT(NSnappedBall, p2)));
 }
 Regina::Subcomplex::NSnappedTwoSphere_ptr
-		Engine_i::formsSnappedTwoSphere_NTetrahedron(
-		Regina::Triangulation::NTetrahedron_ptr p1,
-		Regina::Triangulation::NTetrahedron_ptr p2) {
-	return NSnappedTwoSphere_i::newWrapper(
-		::NSnappedTwoSphere::formsSnappedTwoSphere(
-		GET_ENGINE_OBJECT(NTetrahedron, p1),
-		GET_ENGINE_OBJECT(NTetrahedron, p2)));
+        Engine_i::formsSnappedTwoSphere_NTetrahedron(
+        Regina::Triangulation::NTetrahedron_ptr p1,
+        Regina::Triangulation::NTetrahedron_ptr p2) {
+    return NSnappedTwoSphere_i::newWrapper(
+        ::NSnappedTwoSphere::formsSnappedTwoSphere(
+        GET_ENGINE_OBJECT(NTetrahedron, p1),
+        GET_ENGINE_OBJECT(NTetrahedron, p2)));
 }
 Regina::Subcomplex::NLayeredLensSpace_ptr Engine_i::isLayeredLensSpace(
-		Regina::Triangulation::NComponent_ptr comp) {
-	return NLayeredLensSpace_i::newWrapper(
-		::NLayeredLensSpace::isLayeredLensSpace(
-		GET_ENGINE_OBJECT(NComponent, comp)));
+        Regina::Triangulation::NComponent_ptr comp) {
+    return NLayeredLensSpace_i::newWrapper(
+        ::NLayeredLensSpace::isLayeredLensSpace(
+        GET_ENGINE_OBJECT(NComponent, comp)));
 }
 Regina::Subcomplex::NLayeredSolidTorus_ptr Engine_i::isLayeredSolidTorusBase(
-		Regina::Triangulation::NTetrahedron_ptr tet) {
-	return NLayeredSolidTorus_i::newWrapper(
-		::NLayeredSolidTorus::isLayeredSolidTorusBase(
-		GET_ENGINE_OBJECT(NTetrahedron, tet)));
+        Regina::Triangulation::NTetrahedron_ptr tet) {
+    return NLayeredSolidTorus_i::newWrapper(
+        ::NLayeredSolidTorus::isLayeredSolidTorusBase(
+        GET_ENGINE_OBJECT(NTetrahedron, tet)));
 }
 Regina::Subcomplex::NSnappedBall_ptr Engine_i::isSnappedBall(
-		Regina::Triangulation::NTetrahedron_ptr tet) {
-	return NSnappedBall_i::newWrapper(
-		::NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(NTetrahedron, tet)));
+        Regina::Triangulation::NTetrahedron_ptr tet) {
+    return NSnappedBall_i::newWrapper(
+        ::NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(NTetrahedron, tet)));
 }
 

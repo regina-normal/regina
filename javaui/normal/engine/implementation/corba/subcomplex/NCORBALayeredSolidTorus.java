@@ -47,37 +47,37 @@ public class NCORBALayeredSolidTorus extends CORBAShareableObject
         return (source == null ? null : new NCORBALayeredSolidTorus(source));
     }
 
-	public normal.engine.subcomplex.NLayeredSolidTorus cloneMe() {
-		return NCORBALayeredSolidTorus.newWrapper(data.cloneMe());
-	}
-	public long getNumberOfTetrahedra() {
-		return data.getNumberOfTetrahedra();
-	}
-	public normal.engine.triangulation.NTetrahedron getBase() {
-		return NCORBATetrahedron.newWrapper(data.getBase());
-	}
-	public int getBaseEdge(int group, int index) {
-		return data.getBaseEdge(group, index);
-	}
-	public int getBaseEdgeGroup(int edge) {
-		return data.getBaseEdgeGroup(edge);
-	}
-	public int getBaseFace(int index) {
-		return data.getBaseFace(index);
-	}
-	public normal.engine.triangulation.NTetrahedron getTopLevel() {
-		return NCORBATetrahedron.newWrapper(data.getTopLevel());
-	}
-	public long getMeridinalCuts(int group) {
-		return data.getMeridinalCuts(group);
-	}
-	public int getTopEdge(int group, int index) {
-		return data.getTopEdge(group, index);
-	}
-	public int getTopEdgeGroup(int edge) {
-		return data.getTopEdgeGroup(edge);
-	}
-	public int getTopFace(int index) {
-		return data.getTopFace(index);
-	}
+    public normal.engine.subcomplex.NLayeredSolidTorus cloneMe() {
+        return NCORBALayeredSolidTorus.newWrapper(data.cloneMe());
+    }
+    public long getNumberOfTetrahedra() {
+        return data.getNumberOfTetrahedra();
+    }
+    public normal.engine.triangulation.NTetrahedron getBase() {
+        return NCORBATetrahedron.newWrapper(data.getBase());
+    }
+    public int getBaseEdge(int group, int index) {
+        return data.getBaseEdge(group, index);
+    }
+    public int getBaseEdgeGroup(int edge) {
+        return data.getBaseEdgeGroup(edge);
+    }
+    public int getBaseFace(int index) {
+        return data.getBaseFace(index);
+    }
+    public normal.engine.triangulation.NTetrahedron getTopLevel() {
+        return NCORBATetrahedron.newWrapper(data.getTopLevel());
+    }
+    public long getMeridinalCuts(int group) {
+        return data.getMeridinalCuts(group);
+    }
+    public int getTopEdge(int group, int index) {
+        return data.getTopEdge(group, index);
+    }
+    public int getTopEdgeGroup(int edge) {
+        return data.getTopEdgeGroup(edge);
+    }
+    public int getTopFace(int index) {
+        return data.getTopFace(index);
+    }
 }

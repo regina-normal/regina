@@ -94,7 +94,7 @@ public class ImportFilePane extends JPanel implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         JFileChooser chooser = new JFileChooser();
-		NormalOptionSet options = shell.getOptions();
+        NormalOptionSet options = shell.getOptions();
         chooser.setCurrentDirectory(new File(
             options.getStringOption("LastDir", ".")));
         if (filter != null)
@@ -103,17 +103,17 @@ public class ImportFilePane extends JPanel implements ActionListener {
         chooser.setSelectedFile(new File(fileName.getText()));
         if (chooser.showOpenDialog(shell.getPrimaryFrame()) !=
                 chooser.APPROVE_OPTION)
-			return;
+            return;
 
-		File chosen = chooser.getSelectedFile();
+        File chosen = chooser.getSelectedFile();
         fileName.setText(chosen.getAbsolutePath());
 
-		// Update the system properties.
-		String fileDir = chosen.getParentFile().getAbsolutePath();
-		if (fileDir == null)
-			fileDir = ".";
-		options.setStringOption("LastDir", fileDir);
-		options.writeToFile();
+        // Update the system properties.
+        String fileDir = chosen.getParentFile().getAbsolutePath();
+        if (fileDir == null)
+            fileDir = ".";
+        options.setStringOption("LastDir", fileDir);
+        options.writeToFile();
     }
 }
 

@@ -34,13 +34,13 @@
 module Regina {
     module Subcomplex {
         interface NLayeredLensSpace : ShareableObject {
-			NLayeredLensSpace cloneMe();
-			long getP();
-			long getQ();
-			NLayeredSolidTorus getTorus();
-			long getMobiusBoundaryGroup();
-			boolean isSnapped();
-			boolean isTwisted();
+            NLayeredLensSpace cloneMe();
+            long getP();
+            long getQ();
+            NLayeredSolidTorus getTorus();
+            long getMobiusBoundaryGroup();
+            boolean isSnapped();
+            boolean isTwisted();
         };
     };
 };

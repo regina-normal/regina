@@ -50,25 +50,25 @@ JNIEXPORT jobject JNICALL
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_getReducedTriangulation
-		(JNIEnv *env, jobject me, jobject you) {
-	return CREATE_WRAPPER_OBJECT(env,
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_getReducedTriangulation
+        (JNIEnv *env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->getReducedTriangulation(
-		GET_ENGINE_OBJECT(env, NTriangulation, you)),
+        GET_ENGINE_OBJECT(env, NTriangulation, you)),
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
 JNIEXPORT jobject JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_getSnappedBall
-		(JNIEnv *env, jobject me, jint index) {
-	return CREATE_WRAPPER_OBJECT(env,
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_getSnappedBall
+        (JNIEnv *env, jobject me, jint index) {
+    return CREATE_WRAPPER_OBJECT(env,
         GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->getSnappedBall(index),
         "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
 }
 
 JNIEXPORT void JNICALL
-		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_reduceTriangulation
-		(JNIEnv *env, jobject me) {
-	GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->reduceTriangulation();
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_reduceTriangulation
+        (JNIEnv *env, jobject me) {
+    GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->reduceTriangulation();
 }
 

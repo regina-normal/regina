@@ -42,14 +42,14 @@
 
 class NMatrixInt_i : public virtual POA_Regina::Maths::NMatrixInt,
         public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NMatrixInt_i, NMatrixInt,
-			Regina::Maths::NMatrixInt)
+    STANDARD_ENGINE_TYPEDEFS(NMatrixInt_i, NMatrixInt,
+            Regina::Maths::NMatrixInt)
 
     protected:
         NMatrixInt_i(::NMatrixInt* newCppPtr) : ShareableObject_i(newCppPtr) {
         }
     public:
-		STANDARD_NEW_WRAPPER
+        STANDARD_NEW_WRAPPER
 
         virtual void initialise(const char* value);
         virtual void makeIdentity();

@@ -64,103 +64,103 @@ class NSnappedBall;
  */
 class NSnappedTwoSphere : public ShareableObject {
     private:
-		NSnappedBall* ball[2];
-			/**< The two snapped 3-balls whose equators are joined. */
+        NSnappedBall* ball[2];
+            /**< The two snapped 3-balls whose equators are joined. */
     
     public:
-		/**
-		 * Destroys this snapped 2-sphere; note that the corresponding
-		 * snapped 3-balls will also be destroyed.
-		 */
-		virtual ~NSnappedTwoSphere();
-		/**
-		 * Returns a newly created clone of this structure.
-		 *
-		 * \ifaces This routine is named \a cloneMe.
-		 *
-		 * @return a newly created clone.
-		 */
-		NSnappedTwoSphere* clone() const;
+        /**
+         * Destroys this snapped 2-sphere; note that the corresponding
+         * snapped 3-balls will also be destroyed.
+         */
+        virtual ~NSnappedTwoSphere();
+        /**
+         * Returns a newly created clone of this structure.
+         *
+         * \ifaces This routine is named \a cloneMe.
+         *
+         * @return a newly created clone.
+         */
+        NSnappedTwoSphere* clone() const;
 
-		/**
-		 * Returns one of the two snapped 3-balls whose equators are
-		 * joined.
-		 *
-		 * @param index specifies which of the two 3-balls to return;
-		 * this must be either 0 or 1.
-		 * @return the corresponding snapped 3-ball.
-		 */
-		NSnappedBall* getSnappedBall(int index) const;
-		/**
-		 * Cuts along the 2-sphere and fills the two new boundary components
-		 * with 3-balls.  The number of tetrahedra in the triangulation
-		 * will not change.
-		 *
-		 * Note that if this 2-sphere is separating, this routine will
-		 * effectively split the corresponding connected sum into its
-		 * two original terms.
-		 *
-		 * \todo \bugurgent This routine currently does nothing!
-		 */
-		void reduceTriangulation() const;
-		/**
-		 * Makes a clone of this triangulation and reduces the clone as
-		 * described by reduceTriangulation().  The original
-		 * triangulation containing this 2-sphere will not be modified.
-		 * The clone will have no parent packet.
-		 *
-		 * \todo \bugurgent This routine currently does nothing!
-		 *
-		 * @param original the triangulation in which this 2-sphere occurs.
-		 * @return the newly created reduced triangulation.
-		 */
-		NTriangulation* getReducedTriangulation(const NTriangulation* original)
-			const;
+        /**
+         * Returns one of the two snapped 3-balls whose equators are
+         * joined.
+         *
+         * @param index specifies which of the two 3-balls to return;
+         * this must be either 0 or 1.
+         * @return the corresponding snapped 3-ball.
+         */
+        NSnappedBall* getSnappedBall(int index) const;
+        /**
+         * Cuts along the 2-sphere and fills the two new boundary components
+         * with 3-balls.  The number of tetrahedra in the triangulation
+         * will not change.
+         *
+         * Note that if this 2-sphere is separating, this routine will
+         * effectively split the corresponding connected sum into its
+         * two original terms.
+         *
+         * \todo \bugurgent This routine currently does nothing!
+         */
+        void reduceTriangulation() const;
+        /**
+         * Makes a clone of this triangulation and reduces the clone as
+         * described by reduceTriangulation().  The original
+         * triangulation containing this 2-sphere will not be modified.
+         * The clone will have no parent packet.
+         *
+         * \todo \bugurgent This routine currently does nothing!
+         *
+         * @param original the triangulation in which this 2-sphere occurs.
+         * @return the newly created reduced triangulation.
+         */
+        NTriangulation* getReducedTriangulation(const NTriangulation* original)
+            const;
 
-		/**
-		 * Determines if the two given tetrahedra together form a snapped
-		 * 2-sphere.
-		 *
-		 * \pre The two given tetrahedra are distinct.
-		 *
-		 * \ifaces This routine is a member of class Engine.
-		 *
-		 * @param tet1 the first tetrahedron to examine.
-		 * @param tet2 the second tetrahedron to examine.
-		 * @return a newly created structure containing details of the
-		 * snapped 2-sphere, or \c null if the given tetrahedra do not
-		 * form a snapped 2-sphere.
-		 */
-		static NSnappedTwoSphere* formsSnappedTwoSphere(NTetrahedron* tet1,
-			NTetrahedron* tet2);
-		/**
-		 * Determines if the two given snapped 3-balls together form a snapped
-		 * 2-sphere.
-		 *
-		 * If this is the case, the snapped 3-balls stored in
-		 * the structure returned will be clones of the
-		 * original 3-balls, not the original 3-balls themselves.
-		 *
-		 * \pre The two given snapped 3-balls use distinct tetrahedra.
-		 *
-		 * \ifaces This routine is a member of class Engine.
-		 *
-		 * @param tet1 the first snapped 3-ball to examine.
-		 * @param tet2 the second snapped 3-ball to examine.
-		 * @return a newly created structure containing details of the
-		 * snapped 2-sphere, or \c null if the given snapped 3-balls do not
-		 * form a snapped 2-sphere.
-		 */
-		static NSnappedTwoSphere* formsSnappedTwoSphere(NSnappedBall* ball1,
-			NSnappedBall* ball2);
+        /**
+         * Determines if the two given tetrahedra together form a snapped
+         * 2-sphere.
+         *
+         * \pre The two given tetrahedra are distinct.
+         *
+         * \ifaces This routine is a member of class Engine.
+         *
+         * @param tet1 the first tetrahedron to examine.
+         * @param tet2 the second tetrahedron to examine.
+         * @return a newly created structure containing details of the
+         * snapped 2-sphere, or \c null if the given tetrahedra do not
+         * form a snapped 2-sphere.
+         */
+        static NSnappedTwoSphere* formsSnappedTwoSphere(NTetrahedron* tet1,
+            NTetrahedron* tet2);
+        /**
+         * Determines if the two given snapped 3-balls together form a snapped
+         * 2-sphere.
+         *
+         * If this is the case, the snapped 3-balls stored in
+         * the structure returned will be clones of the
+         * original 3-balls, not the original 3-balls themselves.
+         *
+         * \pre The two given snapped 3-balls use distinct tetrahedra.
+         *
+         * \ifaces This routine is a member of class Engine.
+         *
+         * @param tet1 the first snapped 3-ball to examine.
+         * @param tet2 the second snapped 3-ball to examine.
+         * @return a newly created structure containing details of the
+         * snapped 2-sphere, or \c null if the given snapped 3-balls do not
+         * form a snapped 2-sphere.
+         */
+        static NSnappedTwoSphere* formsSnappedTwoSphere(NSnappedBall* ball1,
+            NSnappedBall* ball2);
 
-		void writeTextShort(ostream& out) const;
+        void writeTextShort(ostream& out) const;
 
-	private:
-		/**
-		 * Creates a new uninitialised structure.
-		 */
-		NSnappedTwoSphere();
+    private:
+        /**
+         * Creates a new uninitialised structure.
+         */
+        NSnappedTwoSphere();
 };
 
 // Inline functions for NSnappedTwoSphere
@@ -168,13 +168,13 @@ class NSnappedTwoSphere : public ShareableObject {
 inline NSnappedTwoSphere::NSnappedTwoSphere() {
 }
 inline NSnappedTwoSphere::~NSnappedTwoSphere() {
-	delete ball[0]; delete ball[1];
+    delete ball[0]; delete ball[1];
 }
 inline NSnappedBall* NSnappedTwoSphere::getSnappedBall(int index) const {
-	return ball[index];
+    return ball[index];
 }
 inline void NSnappedTwoSphere::writeTextShort(ostream& out) const {
-	out << "Snapped 2-sphere";
+    out << "Snapped 2-sphere";
 }
 
 #endif

@@ -33,20 +33,20 @@ import normal.engine.triangulation.*;
 import normal.engine.subcomplex.*;
 
 public class NJNILayeredSolidTorus extends JNIShareableObject
-		implements NLayeredSolidTorus {
+        implements NLayeredSolidTorus {
     public NJNILayeredSolidTorus(Sentry s) {
         super(s);
     }
     
-	public native NLayeredSolidTorus cloneMe();
-	public native long getNumberOfTetrahedra();
-	public native NTetrahedron getBase();
-	public native int getBaseEdge(int group, int index);
-	public native int getBaseEdgeGroup(int edge);
-	public native int getBaseFace(int index);
-	public native NTetrahedron getTopLevel();
-	public native long getMeridinalCuts(int group);
-	public native int getTopEdge(int group, int index);
-	public native int getTopEdgeGroup(int edge);
-	public native int getTopFace(int index);
+    public native NLayeredSolidTorus cloneMe();
+    public native long getNumberOfTetrahedra();
+    public native NTetrahedron getBase();
+    public native int getBaseEdge(int group, int index);
+    public native int getBaseEdgeGroup(int edge);
+    public native int getBaseFace(int index);
+    public native NTetrahedron getTopLevel();
+    public native long getMeridinalCuts(int group);
+    public native int getTopEdge(int group, int index);
+    public native int getTopEdgeGroup(int edge);
+    public native int getTopFace(int index);
 }
