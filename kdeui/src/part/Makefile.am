@@ -12,6 +12,7 @@ INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
 	flatbutton.h \
+	packetchooser.h \
 	packetfilter.h \
 	packetmanager.h \
 	packettreeview.h \
@@ -27,6 +28,7 @@ libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) \
 libreginapart_la_SOURCES = \
 	actionspart.cpp \
 	flatbutton.cpp \
+	packetchooser.cpp \
 	packetmanager.cpp \
 	packettreeview.cpp \
 	packetui.cpp \
