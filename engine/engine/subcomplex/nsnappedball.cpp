@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntetrahedron.h"
-    #include "nsnappedball.h"
-#else
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/subcomplex/nsnappedball.h"
-#endif
+#include "triangulation/ntetrahedron.h"
+#include "subcomplex/nsnappedball.h"
 
 NSnappedBall* NSnappedBall::clone() const {
     NSnappedBall* ans = new NSnappedBall();

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-#endif
+#include "triangulation/ntriangulation.h"
 
 bool NTriangulation::intelligentSimplify() {
     // Not particularly intelligent.

@@ -29,13 +29,7 @@
 #ifndef __NTEXTI_H
 #define __NTEXTI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntext.h"
-#else
-    #include "engine/packet/ntext.h"
-#endif
+#include "packet/ntext.h"
 
 #include "NTextIDL.h"
 #include "NPacketI.h"

@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "numbertheory.h"
-    #include "matrixops.h"
-#else
-    #include "engine/maths/matrixops.h"
-    #include "engine/maths/numbertheory.h"
-#endif
+#include "maths/matrixops.h"
+#include "maths/numbertheory.h"
 
 void smithNormalForm(NMatrixInt& matrix) {
     unsigned long currStage = 0;

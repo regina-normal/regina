@@ -36,13 +36,7 @@
 #define __NCONTAINER_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npacket.h"
-#else
-    #include "engine/packet/npacket.h"
-#endif
+#include "packet/npacket.h"
 
 /**
  * A packet that simply contains other packets.  Such

@@ -29,13 +29,7 @@
 #ifndef __NPACKETI_H
 #define __NPACKETI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npacket.h"
-#else
-    #include "engine/packet/npacket.h"
-#endif
+#include "packet/npacket.h"
 
 #include "NPacketIDL.h"
 #include "ShareableObjectI.h"

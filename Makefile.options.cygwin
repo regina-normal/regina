@@ -52,7 +52,7 @@ export DOC_JAR := bin/regina-docs.jar
 #                  whereas linking with -lomniGK_stub will cause the
 #                  engine to allow connections from any machine.
 # EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
-#         for the calculation engine, such as gmp and pthread.
+#                  for the calculation engine, such as gmp and pthread.
 
 export JNI_INCLUDES := -I/cygdrive/c/jdk1.3.1/include \
 	-I/cygdrive/c/jdk1.3.1/include/win32
@@ -62,6 +62,26 @@ export EXTRA_INCLUDES :=
 export CORBA_LIBRARIES := -lomniORB3 -lomniGK_stub
 # export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
 export EXTRA_LIBRARIES := -lgmp -lstdc++
+
+# Specify here any platform-dependent macros that need to be defined.
+# Understood macros include:
+#
+# __MUTE_WARNINGS: Use this to mute a small set of known non-dangerous
+#                  warnings over small portions of known correct code.
+#                  This macro will insert "#pragma warn -xxx"
+#                  and "#pragma warn .xxx" directives to bypass these
+#                  specific warnings over these specific regions of code.
+# __NO_IOS_NOCREATE: Use this if ios::nocreate is not a valid file
+#                    opening flag.
+# __NO_RAW_CASTING: Use this if your compiler will not cast (void*) to
+#                   long and vice versa.
+
+# Recommended for gcc/g++:
+export PD_MACROS :=
+# Recommended for CodeWarrior:
+# export PD_MACROS := __NO_IOS_NOCREATE __NO_RAW_CASTING
+# Recommended for Borland C++ Builder:
+# export PD_MACROS := __MUTE_WARNINGS __NO_IOS_NOCREATE
 
 # Specify here the character that separates components on the classpath.
 # This will for instance be : under linux/unix and ; under windows.

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nboolvector.h"
-#else
-    #include "engine/utilities/nboolvector.h"
-#endif
+#include "utilities/nboolvector.h"
 
 #include <iostream.h>
 

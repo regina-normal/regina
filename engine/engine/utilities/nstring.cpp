@@ -29,12 +29,7 @@
 // A string class based upon a public domain string class written by
 // Scott Robert Ladd; see the header file for further details.
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nstring.h"
-#else
-    #include "engine/utilities/nstring.h"
-#endif
+#include "utilities/nstring.h"
 
 #include <string.h>
 #include <ctype.h>

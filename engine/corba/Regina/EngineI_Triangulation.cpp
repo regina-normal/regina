@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsnappea.h"
-#else
-    #include "engine/imports/nsnappea.h"
-#endif
+#include "imports/nsnappea.h"
 
 #include "EngineI.h"
 #include "NTetrahedronI.h"

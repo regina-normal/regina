@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfacefilter.h"
-    #include "jnitools.h"
-    #include "NJNISurfaceFilter.h"
-#else
-    #include "engine/surfaces/nsurfacefilter.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/surfaces/NJNISurfaceFilter.h"
-#endif
+#include "surfaces/nsurfacefilter.h"
+#include "jnitools.h"
+#include "engine/surfaces/NJNISurfaceFilter.h"
 
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilter_accept

@@ -70,15 +70,9 @@
  */
 
 #ifndef __FLAVOUR_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "nsstandard.h"
-        #include "nsanstandard.h"
-        #include "nsquad.h"
-    #else
-        #include "engine/surfaces/nsstandard.h"
-        #include "engine/surfaces/nsanstandard.h"
-        #include "engine/surfaces/nsquad.h"
-    #endif
+    #include "surfaces/nsstandard.h"
+    #include "surfaces/nsanstandard.h"
+    #include "surfaces/nsquad.h"
 #else
     REGISTER_FLAVOUR(STANDARD, NNormalSurfaceVectorStandard,
         "Standard normal (tri-quad)", false, true)

@@ -36,13 +36,7 @@
 #define __NSMIRRORED_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nnormalsurface.h"
-#else
-    #include "engine/surfaces/nnormalsurface.h"
-#endif
+#include "surfaces/nnormalsurface.h"
 
 /**
  * A normal surface vector that is mirrored in another coordinate system

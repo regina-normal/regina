@@ -36,19 +36,10 @@
 #define __SFPROPERTIES_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfacefilter.h"
-    #include "nbooleans.h"
-    #include "nmpi.h"
-    #include "ndynamicarray.h"
-#else
-    #include "engine/surfaces/nsurfacefilter.h"
-    #include "engine/utilities/nbooleans.h"
-    #include "engine/utilities/nmpi.h"
-    #include "engine/utilities/ndynamicarray.h"
-#endif
+#include "surfaces/nsurfacefilter.h"
+#include "utilities/nbooleans.h"
+#include "utilities/nmpi.h"
+#include "utilities/ndynamicarray.h"
 
 /**
  * A normal surface filter that filters by basic properties of the normal

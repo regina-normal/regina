@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "filterregistry.h"
-#else
-    #include "engine/surfaces/filterregistry.h"
-#endif
+#include "surfaces/filterregistry.h"
 
 #define __FILTER_REGISTRY_BODY
 
@@ -47,9 +41,5 @@
         return name; \
     }
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "filterregistry.h"
-#else
-    #include "engine/surfaces/filterregistry.h"
-#endif
+#include "surfaces/filterregistry.h"
 

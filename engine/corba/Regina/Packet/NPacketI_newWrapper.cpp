@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "corbapacketregistry.h"
-#else
-    #include "corba/registry/corbapacketregistry.h"
-#endif
+#include "registry/corbapacketregistry.h"
 
 #include "NPacketI.h"
 
@@ -57,11 +51,7 @@ Regina::Packet::NPacket_ptr NPacket_i::newWrapper(::NPacket* newCppPtr) {
 
     // Import the REGISTER_CORBA_PACKET lines.
     #define __CORBA_PACKET_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "corbapacketregistry.h"
-    #else
-        #include "corba/registry/corbapacketregistry.h"
-    #endif
+    #include "registry/corbapacketregistry.h"
 
     else {
         NPacket_i* p = new NPacket_i(newCppPtr);

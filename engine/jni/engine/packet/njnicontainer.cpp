@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "ncontainer.h"
-    #include "jnitools.h"
-    #include "NJNIContainer.h"
-#else
-    #include "engine/packet/ncontainer.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/packet/NJNIContainer.h"
-#endif
+#include "packet/ncontainer.h"
+#include "jnitools.h"
+#include "engine/packet/NJNIContainer.h"
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIContainer_newNContainer

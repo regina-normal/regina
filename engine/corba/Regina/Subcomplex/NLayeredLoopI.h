@@ -29,13 +29,7 @@
 #ifndef __NLAYEREDLOOPI_H
 #define __NLAYEREDLOOPI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredloop.h"
-#else
-    #include "engine/subcomplex/nlayeredloop.h"
-#endif
+#include "subcomplex/nlayeredloop.h"
 
 #include "NLayeredLoopIDL.h"
 #include "ShareableObjectI.h"

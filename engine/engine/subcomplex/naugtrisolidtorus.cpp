@@ -26,21 +26,11 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ncomponent.h"
-    #include "nedge.h"
-    #include "ntetrahedron.h"
-    #include "naugtrisolidtorus.h"
-    #include "nlayeredchain.h"
-#else
-    #include "engine/triangulation/ncomponent.h"
-    #include "engine/triangulation/nedge.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/subcomplex/naugtrisolidtorus.h"
-    #include "engine/subcomplex/nlayeredchain.h"
-#endif
+#include "triangulation/ncomponent.h"
+#include "triangulation/nedge.h"
+#include "triangulation/ntetrahedron.h"
+#include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nlayeredchain.h"
 
 NAugTriSolidTorus::~NAugTriSolidTorus() {
     if (core)

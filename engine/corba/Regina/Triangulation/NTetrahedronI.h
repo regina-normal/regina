@@ -29,13 +29,7 @@
 #ifndef __NTETRAHEDRONI_H
 #define __NTETRAHEDRONI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntetrahedron.h"
-#else
-    #include "engine/triangulation/ntetrahedron.h"
-#endif
+#include "triangulation/ntetrahedron.h"
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"

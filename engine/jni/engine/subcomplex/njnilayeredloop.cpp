@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredloop.h"
-    #include "nedge.h"
-    #include "jnitools.h"
-    #include "NJNILayeredLoop.h"
-#else
-    #include "engine/subcomplex/nlayeredloop.h"
-    #include "engine/triangulation/nedge.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNILayeredLoop.h"
-#endif
+#include "subcomplex/nlayeredloop.h"
+#include "triangulation/nedge.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNILayeredLoop.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_cloneMe

@@ -35,15 +35,8 @@
 #define __NSURFACEFILTER_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npacket.h"
-    #include "npropertyholder.h"
-#else
-    #include "engine/packet/npacket.h"
-    #include "engine/property/npropertyholder.h"
-#endif
+#include "packet/npacket.h"
+#include "property/npropertyholder.h"
 
 class NNormalSurface;
 class NNormalSurfaceList;

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nmpi.h"
-#else
-    #include "engine/utilities/nmpi.h"
-#endif
+#include "utilities/nmpi.h"
 
 const NLargeInteger NLargeInteger::zero;
 const NLargeInteger NLargeInteger::one(1);

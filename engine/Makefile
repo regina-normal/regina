@@ -4,7 +4,7 @@
 
 # ------------------------ Variables ---------------------------------
 
-INCLUDES = -I. $(EXTRA_INCLUDES)
+INCLUDES = -Iengine $(EXTRA_INCLUDES)
 
 JNI_DIR = jni/engine
 JNI_PACKAGE = normal.engine.implementation.jni
@@ -18,25 +18,27 @@ DOC_DIR = ../$(BASE_DOC_DIR)/engine
 DOC_SAMPLE = $(DOC_DIR)/index.html
 DOC_CONF = doc-files/docs.conf
 
+PD_DEFS = $(PD_MACROS:%=-D%)
+
 # ------------------------ Rules -------------------------------------
 
 # Begin with rules requiring extra include directories.
 
 jni/%.o : jni/%.cpp
-	$(COMPILE) $(INCLUDES) $(JNI_INCLUDES) -o $@ $<
+	$(COMPILE) $(PD_DEFS) -Ijni $(INCLUDES) $(JNI_INCLUDES) -o $@ $<
 
 jni/%.d : jni/%.cpp
-	$(SHELL) -ec '$(MAKEDEP) $(INCLUDES) $(JNI_INCLUDES) $< \
+	$(SHELL) -ec '$(MAKEDEP) -Ijni $(INCLUDES) $(JNI_INCLUDES) $< \
 		| $(SED) '\''s/\($(notdir $*)\)\.o[ :]*/$(subst /,\/,jni/$*).o \
 		$(subst /,\/,$@) : /g'\'' > $@; \
 		[ -s $@ ] || rm -f $@'
 
 corba/%.o : corba/%.cpp
-	$(COMPILE) $(INCLUDES) $(CORBA_INCLUDES) \
+	$(COMPILE) $(PD_DEFS) -Icorba $(INCLUDES) $(CORBA_INCLUDES) \
 		$(patsubst idl%,-I$(CORBA_DIR)%,$(dirs_idl)) -o $@ $<
 
 corba/%.d : corba/%.cpp
-	$(SHELL) -ec '$(MAKEDEP) $(INCLUDES) $(CORBA_INCLUDES) \
+	$(SHELL) -ec '$(MAKEDEP) -Icorba $(INCLUDES) $(CORBA_INCLUDES) \
 		$(patsubst idl%,-I$(CORBA_DIR)%,$(dirs_idl)) $< \
 		| $(SED) '\''s/\($(notdir $*)\)\.o[ :]*/$(subst /,\/,corba/$*).o \
 		$(subst /,\/,$@) : /g'\'' > $@; \
@@ -45,7 +47,7 @@ corba/%.d : corba/%.cpp
 # Follow with generic rules.
 
 %.o : %.cpp
-	$(COMPILE) $(INCLUDES) -o $@ $<
+	$(COMPILE) $(PD_DEFS) $(INCLUDES) -o $@ $<
 
 %.d : %.cpp
 	$(SHELL) -ec '$(MAKEDEP) $(INCLUDES) $< \

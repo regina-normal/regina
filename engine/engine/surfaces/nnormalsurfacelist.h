@@ -36,23 +36,12 @@
 #define __NNORMALSURFACELIST_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npacket.h"
-    #include "npropertyholder.h"
-    #include "ndynamicarray.h"
-    #include "ndoublelist.h"
-    #include "nnormalsurface.h"
-    #include "nsurfaceset.h"
-#else
-    #include "engine/packet/npacket.h"
-    #include "engine/property/npropertyholder.h"
-    #include "engine/utilities/ndynamicarray.h"
-    #include "engine/utilities/ndoublelist.h"
-    #include "engine/surfaces/nnormalsurface.h"
-    #include "engine/surfaces/nsurfaceset.h"
-#endif
+#include "packet/npacket.h"
+#include "property/npropertyholder.h"
+#include "utilities/ndynamicarray.h"
+#include "utilities/ndoublelist.h"
+#include "surfaces/nnormalsurface.h"
+#include "surfaces/nsurfaceset.h"
 
 class NTriangulation;
 class NMatrixInt;

@@ -35,13 +35,7 @@
 #define __NVECTORDENSE_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nvector.h"
-#else
-    #include "engine/maths/nvector.h"
-#endif
+#include "maths/nvector.h"
 
 /**
  * A dense vector of objects of type T.

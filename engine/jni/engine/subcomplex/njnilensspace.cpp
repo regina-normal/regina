@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlensspace.h"
-    #include "jnitools.h"
-    #include "NJNILensSpace.h"
-#else
-    #include "engine/subcomplex/nlensspace.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNILensSpace.h"
-#endif
+#include "subcomplex/nlensspace.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNILensSpace.h"
 
 JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_getP

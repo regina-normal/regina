@@ -26,13 +26,8 @@
 
 /* end stub */
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-    #include "ninfinitearray.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/utilities/ninfinitearray.h"
-#endif
+#include "triangulation/ntriangulation.h"
+#include "utilities/ninfinitearray.h"
 
 bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
     if (! calculatedSkeleton)

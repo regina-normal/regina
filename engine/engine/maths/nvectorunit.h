@@ -35,15 +35,8 @@
 #define __NVECTORUNIT_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nvector.h"
-    #include "nvectordense.h"
-#else
-    #include "engine/maths/nvector.h"
-    #include "engine/maths/nvectordense.h"
-#endif
+#include "maths/nvector.h"
+#include "maths/nvectordense.h"
 
 /**
  * A unit vector of type T.  A unit vector has every coordinate

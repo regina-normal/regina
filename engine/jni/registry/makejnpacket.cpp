@@ -26,21 +26,11 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npacket.h"
-    #include "jnitools.h"
-    #include "makejnpacket.h"
-    #include "javapacketregistry.h"
-    #include "javafilterregistry.h"
-#else
-    #include "engine/packet/npacket.h"
-    #include "jni/jnitools.h"
-    #include "jni/registry/makejnpacket.h"
-    #include "jni/registry/javapacketregistry.h"
-    #include "jni/registry/javafilterregistry.h"
-#endif
+#include "packet/npacket.h"
+#include "jnitools.h"
+#include "registry/makejnpacket.h"
+#include "registry/javapacketregistry.h"
+#include "registry/javafilterregistry.h"
 
 jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
     if (! packet)
@@ -68,11 +58,7 @@ jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
 
         // Import the REGISTER_JAVA_FILTER lines.
         #define __JAVA_FILTER_REGISTRY_BODY
-        #ifdef __NO_INCLUDE_PATHS
-            #include "javafilterregistry.h"
-        #else
-            #include "jni/registry/javafilterregistry.h"
-        #endif
+        #include "registry/javafilterregistry.h"
 
         else
             classPath = DEFAULT_PACKET_CLASS;
@@ -85,11 +71,7 @@ jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
 
     // Import the REGISTER_JAVA_PACKET lines.
     #define __JAVA_PACKET_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "javapacketregistry.h"
-    #else
-        #include "jni/registry/javapacketregistry.h"
-    #endif
+    #include "registry/javapacketregistry.h"
 
     else
         classPath = DEFAULT_PACKET_CLASS;

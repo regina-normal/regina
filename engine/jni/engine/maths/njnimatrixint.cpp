@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nmatrixint.h"
-    #include "jnitools.h"
-    #include "NJNIMatrixInt.h"
-#else
-    #include "engine/maths/nmatrixint.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/maths/NJNIMatrixInt.h"
-#endif
+#include "maths/nmatrixint.h"
+#include "jnitools.h"
+#include "engine/maths/NJNIMatrixInt.h"
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_maths_NJNIMatrixInt_addCol__II

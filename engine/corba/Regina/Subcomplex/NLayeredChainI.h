@@ -29,13 +29,7 @@
 #ifndef __NLAYEREDCHAINI_H
 #define __NLAYEREDCHAINI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredchain.h"
-#else
-    #include "engine/subcomplex/nlayeredchain.h"
-#endif
+#include "subcomplex/nlayeredchain.h"
 
 #include "NLayeredChainIDL.h"
 #include "ShareableObjectI.h"

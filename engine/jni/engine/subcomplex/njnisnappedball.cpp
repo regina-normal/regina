@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsnappedball.h"
-    #include "ntetrahedron.h"
-    #include "jnitools.h"
-    #include "NJNISnappedBall.h"
-#else
-    #include "engine/subcomplex/nsnappedball.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNISnappedBall.h"
-#endif
+#include "subcomplex/nsnappedball.h"
+#include "triangulation/ntetrahedron.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNISnappedBall.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_cloneMe

@@ -35,17 +35,9 @@
  *  \brief Deals with matrices of arbitrary precision integers.
  */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "nmpi.h"
-    #include "nmatrix.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/utilities/nmpi.h"
-    #include "engine/maths/nmatrix.h"
-#endif
+#include "shareableobject.h"
+#include "utilities/nmpi.h"
+#include "maths/nmatrix.h"
 
 /**
  * Represents a matrix of arbitrary precision integers.

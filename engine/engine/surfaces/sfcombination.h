@@ -36,13 +36,7 @@
 #define __SFCOMBINATION_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfacefilter.h"
-#else
-    #include "engine/surfaces/nsurfacefilter.h"
-#endif
+#include "surfaces/nsurfacefilter.h"
 
 /**
  * A normal surface filter that simply combines other filters.

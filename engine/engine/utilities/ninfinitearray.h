@@ -35,15 +35,8 @@
 #define __NINFINITEARRAY_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ndoublelist.h"
-    #include "nintmap.h"
-#else
-    #include "engine/utilities/ndoublelist.h"
-    #include "engine/utilities/nintmap.h"
-#endif
+#include "utilities/ndoublelist.h"
+#include "utilities/nintmap.h"
 
 template <class T>
 class NInfiniteArrayIterator;

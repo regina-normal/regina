@@ -35,13 +35,7 @@
 #define __NSNAPPEDBALL_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nedge.h"
-#else
-    #include "engine/triangulation/nedge.h"
-#endif
+#include "triangulation/nedge.h"
 
 class NTetrahedron;
 

@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nabeliangroup.h"
-    #include "jnitools.h"
-    #include "NJNIAbelianGroup.h"
-#else
-    #include "engine/algebra/nabeliangroup.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/algebra/NJNIAbelianGroup.h"
-#endif
+#include "algebra/nabeliangroup.h"
+#include "jnitools.h"
+#include "engine/algebra/NJNIAbelianGroup.h"
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addGroup__Lnormal_engine_algebra_NAbelianGroup_2

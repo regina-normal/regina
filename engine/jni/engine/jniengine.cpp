@@ -26,42 +26,23 @@
 
 /* end stub */
 
-#include "config.h"
 #include "regina.h"
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "JNIEngine.h"
-    #include "jnitools.h"
-    #include "makejnpacket.h"
-    #include "ntriangulation.h"
-    #include "nsnappea.h"
-    #include "nfile.h"
-    #include "ncensus.h"
-    #include "naugtrisolidtorus.h"
-    #include "nlayeredlensspace.h"
-    #include "nlayeredloop.h"
-    #include "npillowtwosphere.h"
-    #include "nsnappedtwosphere.h"
-    #include "ntrisolidtorus.h"
-    #include "nnormalsurfacelist.h"
-    #include "matrixops.h"
-#else
-    #include "jni/engine/JNIEngine.h"
-    #include "jni/jnitools.h"
-    #include "jni/registry/makejnpacket.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/imports/nsnappea.h"
-    #include "engine/file/nfile.h"
-    #include "engine/census/ncensus.h"
-    #include "engine/subcomplex/naugtrisolidtorus.h"
-    #include "engine/subcomplex/nlayeredlensspace.h"
-    #include "engine/subcomplex/nlayeredloop.h"
-    #include "engine/subcomplex/npillowtwosphere.h"
-    #include "engine/subcomplex/nsnappedtwosphere.h"
-    #include "engine/subcomplex/ntrisolidtorus.h"
-    #include "engine/surfaces/nnormalsurfacelist.h"
-    #include "engine/maths/matrixops.h"
-#endif
+#include "engine/JNIEngine.h"
+#include "jnitools.h"
+#include "registry/makejnpacket.h"
+#include "triangulation/ntriangulation.h"
+#include "imports/nsnappea.h"
+#include "file/nfile.h"
+#include "census/ncensus.h"
+#include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nlayeredlensspace.h"
+#include "subcomplex/nlayeredloop.h"
+#include "subcomplex/npillowtwosphere.h"
+#include "subcomplex/nsnappedtwosphere.h"
+#include "subcomplex/ntrisolidtorus.h"
+#include "surfaces/nnormalsurfacelist.h"
+#include "maths/matrixops.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_enterTextTriangulation

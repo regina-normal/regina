@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nscript.h"
-    #include "jnitools.h"
-    #include "NJNIScript.h"
-#else
-    #include "engine/packet/nscript.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/packet/NJNIScript.h"
-#endif
+#include "packet/nscript.h"
+#include "jnitools.h"
+#include "engine/packet/NJNIScript.h"
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_addFirst

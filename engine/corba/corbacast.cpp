@@ -26,12 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "corbacast.h"
-#else
-    #include "corba/corbacast.h"
-#endif
+#include "corbacast.h"
 
 #ifdef __NO_RAW_CASTING
     ::ShareableObject* CORBALongToPtr(CORBA::Long i) {

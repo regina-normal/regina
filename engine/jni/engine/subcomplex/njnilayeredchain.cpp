@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredchain.h"
-    #include "ntetrahedron.h"
-    #include "jnitools.h"
-    #include "NJNILayeredChain.h"
-#else
-    #include "engine/subcomplex/nlayeredchain.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNILayeredChain.h"
-#endif
+#include "subcomplex/nlayeredchain.h"
+#include "triangulation/ntetrahedron.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNILayeredChain.h"
 
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_extendAbove

@@ -35,13 +35,7 @@
 #define __NSET_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ndoublelist.h"
-#else
-    #include "engine/utilities/ndoublelist.h"
-#endif
+#include "utilities/ndoublelist.h"
 
 /**
  * Recasts a void pointer as an unsigned integer, even if the compiler does

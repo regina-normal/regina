@@ -36,15 +36,8 @@
 #define __NCONERAY_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ndoublelist.h"
-    #include "nnormalsurface.h"
-#else
-    #include "engine/utilities/ndoublelist.h"
-    #include "engine/surfaces/nnormalsurface.h"
-#endif
+#include "utilities/ndoublelist.h"
+#include "surfaces/nnormalsurface.h"
 
 class NMatrixInt;
 

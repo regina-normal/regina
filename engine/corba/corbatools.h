@@ -36,14 +36,8 @@
  *  and native engine objects.
  */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "corbacast.h"
-    #include "shareableobject.h"
-#else
-    #include "corba/corbacast.h"
-    #include "engine/shareableobject.h"
-#endif
+#include "corbacast.h"
+#include "shareableobject.h"
 
 /**
  * \hideinitializer

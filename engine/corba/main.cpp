@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "corba/Regina/EngineI.h"
+#include "Regina/EngineI.h"
 
 #include <iostream.h>
 #include <string.h>

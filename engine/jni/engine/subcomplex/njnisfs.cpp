@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsfs.h"
-    #include "nlensspace.h"
-    #include "jnitools.h"
-    #include "NJNISFS.h"
-#else
-    #include "engine/subcomplex/nsfs.h"
-    #include "engine/subcomplex/nlensspace.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNISFS.h"
-#endif
+#include "subcomplex/nsfs.h"
+#include "subcomplex/nlensspace.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNISFS.h"
 
 JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISFS_getAlpha

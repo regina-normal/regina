@@ -29,13 +29,7 @@
 #ifndef __NNORMALSURFACELISTI_H
 #define __NNORMALSURFACELISTI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nnormalsurfacelist.h"
-#else
-    #include "engine/surfaces/nnormalsurfacelist.h"
-#endif
+#include "surfaces/nnormalsurfacelist.h"
 
 #include "NNormalSurfaceListIDL.h"
 #include "NPacketI.h"

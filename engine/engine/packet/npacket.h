@@ -37,13 +37,8 @@
 #endif
 
 #include <iostream.h>
-#include "config.h"
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-#else
-    #include "engine/shareableobject.h"
-#endif
+#include "shareableobject.h"
 
 class NFile;
 

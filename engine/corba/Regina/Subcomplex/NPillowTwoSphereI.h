@@ -29,13 +29,7 @@
 #ifndef __NPILLOWTWOSPHEREI_H
 #define __NPILLOWTWOSPHEREI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npillowtwosphere.h"
-#else
-    #include "engine/subcomplex/npillowtwosphere.h"
-#endif
+#include "subcomplex/npillowtwosphere.h"
 
 #include "NPillowTwoSphereIDL.h"
 #include "ShareableObjectI.h"

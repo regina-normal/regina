@@ -35,15 +35,8 @@
 #define __NSQUAD_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsmirrored.h"
-    #include "ndoublelist.h"
-#else
-    #include "engine/surfaces/nsmirrored.h"
-    #include "engine/utilities/ndoublelist.h"
-#endif
+#include "surfaces/nsmirrored.h"
+#include "utilities/ndoublelist.h"
 
 class NMatrixInt;
 

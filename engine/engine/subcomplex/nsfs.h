@@ -35,17 +35,9 @@
 #define __NSFS_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "ndynamicarray.h"
-    #include "nmiscutils.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/utilities/ndynamicarray.h"
-    #include "engine/utilities/nmiscutils.h"
-#endif
+#include "shareableobject.h"
+#include "utilities/ndynamicarray.h"
+#include "utilities/nmiscutils.h"
 
 class NLensSpace;
 

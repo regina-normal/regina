@@ -36,21 +36,11 @@
 #define __NCENSUS_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nbooleans.h"
-    #include "ndoublelist.h"
-    #include "ntriangulation.h"
-    #include "nisomorphism.h"
-    #include "nthread.h"
-#else
-    #include "engine/utilities/nbooleans.h"
-    #include "engine/utilities/ndoublelist.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/triangulation/nisomorphism.h"
-    #include "engine/utilities/nthread.h"
-#endif
+#include "utilities/nbooleans.h"
+#include "utilities/ndoublelist.h"
+#include "utilities/nthread.h"
+#include "triangulation/ntriangulation.h"
+#include "triangulation/nisomorphism.h"
 
 class NProgressManager;
 class NProgressMessage;

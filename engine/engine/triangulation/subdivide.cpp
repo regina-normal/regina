@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-#endif
+#include "triangulation/ntriangulation.h"
 
 // The indices of the new tetrahedra
 static int index[4][4][4] = {

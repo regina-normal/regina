@@ -26,17 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntetrahedron.h"
-    #include "ntrisolidtorus.h"
-    #include "nlayeredchain.h"
-#else
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/subcomplex/ntrisolidtorus.h"
-    #include "engine/subcomplex/nlayeredchain.h"
-#endif
+#include "triangulation/ntetrahedron.h"
+#include "subcomplex/ntrisolidtorus.h"
+#include "subcomplex/nlayeredchain.h"
 
 NTriSolidTorus* NTriSolidTorus::clone() const {
     NTriSolidTorus* ans = new NTriSolidTorus();

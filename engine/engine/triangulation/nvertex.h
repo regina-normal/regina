@@ -35,15 +35,8 @@
 #define __NVERTEX_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "ndynamicarray.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/utilities/ndynamicarray.h"
-#endif
+#include "shareableobject.h"
+#include "utilities/ndynamicarray.h"
 
 class NTetrahedron;
 class NComponent;

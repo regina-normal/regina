@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ndisc.h"
-    #include "nqueue.h"
-#else
-    #include "engine/surfaces/ndisc.h"
-    #include "engine/utilities/nqueue.h"
-#endif
+#include "surfaces/ndisc.h"
+#include "utilities/nqueue.h"
 
 /**
  * Stores orientation and sides A/B for a normal disc.

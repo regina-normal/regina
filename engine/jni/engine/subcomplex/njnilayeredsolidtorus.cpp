@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredsolidtorus.h"
-    #include "ntetrahedron.h"
-    #include "jnitools.h"
-    #include "NJNILayeredSolidTorus.h"
-#else
-    #include "engine/subcomplex/nlayeredsolidtorus.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNILayeredSolidTorus.h"
-#endif
+#include "subcomplex/nlayeredsolidtorus.h"
+#include "triangulation/ntetrahedron.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNILayeredSolidTorus.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_cloneMe

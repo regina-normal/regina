@@ -29,13 +29,7 @@
 #ifndef __NVERTEXI_H
 #define __NVERTEXI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nvertex.h"
-#else
-    #include "engine/triangulation/nvertex.h"
-#endif
+#include "triangulation/nvertex.h"
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"

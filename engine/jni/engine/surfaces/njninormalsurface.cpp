@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nnormalsurface.h"
-    #include "ntriangulation.h"
-    #include "jnitools.h"
-    #include "NJNINormalSurface.h"
-#else
-    #include "engine/surfaces/nnormalsurface.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/surfaces/NJNINormalSurface.h"
-#endif
+#include "surfaces/nnormalsurface.h"
+#include "triangulation/ntriangulation.h"
+#include "jnitools.h"
+#include "engine/surfaces/NJNINormalSurface.h"
 
 JNIEXPORT jobject JNICALL
 Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_getEdgeWeight

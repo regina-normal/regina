@@ -37,13 +37,7 @@
  *  matrix; use this to show the rank of the matching equations.
  */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nmatrixint.h"
-#else
-    #include "engine/maths/nmatrixint.h"
-#endif
+#include "maths/nmatrixint.h"
 
 /**
  * Transforms the given integer matrix into Smith normal form.

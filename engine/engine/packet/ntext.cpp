@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntext.h"
-    #include "nfile.h"
-#else
-    #include "engine/packet/ntext.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "packet/ntext.h"
+#include "file/nfile.h"
 
 void NText::writePacket(NFile& out) const {
     out.writeString(text);

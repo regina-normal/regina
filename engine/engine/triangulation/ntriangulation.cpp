@@ -26,20 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
 #include <iostream.h>
 #include <iomanip.h>
 
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-    #include "ngrouppresentation.h"
-    #include "nfile.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/algebra/ngrouppresentation.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "triangulation/ntriangulation.h"
+#include "algebra/ngrouppresentation.h"
+#include "file/nfile.h"
 
 // Property IDs:
 // #define PROPID_EXTRA_TOPOLOGY 1 -- Do not use!

@@ -38,16 +38,9 @@
 
 #include <jni.h>
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "javacast.h"
-    #include "shareableobject.h"
-    #include "nmpi.h"
-#else
-    #include "jni/javacast.h"
-    #include "engine/shareableobject.h"
-    #include "engine/utilities/nmpi.h"
-#endif
+#include "javacast.h"
+#include "shareableobject.h"
+#include "utilities/nmpi.h"
 
 /**
  * Specifies the field of a Java wrapper object that will contain the

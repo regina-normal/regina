@@ -35,21 +35,11 @@
 #define __NGROUPPRESENTATION_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ndoublelist.h"
-    #include "ndynamicarray.h"
-    #include "nmiscutils.h"
-    #include "npropertyholder.h"
-    #include "shareableoject.h"
-#else
-    #include "engine/utilities/ndoublelist.h"
-    #include "engine/utilities/ndynamicarray.h"
-    #include "engine/utilities/nmiscutils.h"
-    #include "engine/property/npropertyholder.h"
-    #include "engine/shareableobject.h"
-#endif
+#include "utilities/ndoublelist.h"
+#include "utilities/ndynamicarray.h"
+#include "utilities/nmiscutils.h"
+#include "property/npropertyholder.h"
+#include "shareableobject.h"
 
 class NFile;
 

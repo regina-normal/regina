@@ -37,8 +37,6 @@
 
 #include <jni.h>
 
-#include "config.h"
-
 class ShareableObject;
 
 #ifdef __NO_RAW_CASTING

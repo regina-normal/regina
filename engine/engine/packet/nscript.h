@@ -35,19 +35,10 @@
 #define __NSCRIPT_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npacket.h"
-    #include "npropertyholder.h"
-    #include "ndynamicarray.h"
-    #include "nmiscutils.h"
-#else
-    #include "engine/packet/npacket.h"
-    #include "engine/property/npropertyholder.h"
-    #include "engine/utilities/ndynamicarray.h"
-    #include "engine/utilities/nmiscutils.h"
-#endif
+#include "packet/npacket.h"
+#include "property/npropertyholder.h"
+#include "utilities/ndynamicarray.h"
+#include "utilities/nmiscutils.h"
 
 /**
  * An ordered pair of strings.

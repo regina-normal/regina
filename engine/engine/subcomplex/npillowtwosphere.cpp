@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nface.h"
-    #include "npillowtwosphere.h"
-#else
-    #include "engine/triangulation/nface.h"
-    #include "engine/subcomplex/npillowtwosphere.h"
-#endif
+#include "triangulation/nface.h"
+#include "subcomplex/npillowtwosphere.h"
 
 NPillowTwoSphere* NPillowTwoSphere::clone() const {
     NPillowTwoSphere* ans = new NPillowTwoSphere();

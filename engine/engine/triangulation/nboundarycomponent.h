@@ -35,17 +35,9 @@
  *  \brief Deals with components of the boundary of a triangulation.
  */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "ndynamicarray.h"
-    #include "nvertex.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/utilities/ndynamicarray.h"
-    #include "engine/triangulation/nvertex.h"
-#endif
+#include "shareableobject.h"
+#include "utilities/ndynamicarray.h"
+#include "triangulation/nvertex.h"
 
 class NTetrahedron;
 class NFace;

@@ -27,21 +27,12 @@
 /* end stub */
 
 #include <string.h>
-#include "config.h"
 #include "regina.h"
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "nresources.h"
-#else
-    #include "engine/file/nresources.h"
-#endif
+#include "file/nresources.h"
 
 bool NLocalFileResource::openRead() {
-    #ifdef __BINARY_IO
-        infile.open(fileName, MODE_READ | ios::binary);
-    #else
-        infile.open(fileName, MODE_READ);
-    #endif
+    infile.open(fileName, MODE_READ);
     if (infile.is_open()) {
         openMode = READ;
         return true;
@@ -50,11 +41,7 @@ bool NLocalFileResource::openRead() {
 }
 
 bool NLocalFileResource::openWrite() {
-    #ifdef __BINARY_IO
-        outfile.open(fileName, MODE_WRITE | ios::binary);
-    #else
-        outfile.open(fileName, MODE_WRITE);
-    #endif
+    outfile.open(fileName, MODE_WRITE);
     if (outfile.is_open()) {
         openMode = WRITE;
         return true;

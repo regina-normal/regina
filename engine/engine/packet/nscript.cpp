@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nscript.h"
-    #include "nfile.h"
-#else
-    #include "engine/packet/nscript.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "packet/nscript.h"
+#include "file/nfile.h"
 
 #define PROP_VARIABLE 1
 

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ncontainer.h"
-#else
-    #include "engine/packet/ncontainer.h"
-#endif
+#include "packet/ncontainer.h"
 
 NContainer* NContainer::readPacket(NFile&, NPacket*) {
     return new NContainer;

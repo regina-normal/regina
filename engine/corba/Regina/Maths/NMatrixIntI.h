@@ -29,13 +29,7 @@
 #ifndef __NMATRIXINTI_H
 #define __NMATRIXINTI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nmatrixint.h"
-#else
-    #include "engine/maths/nmatrixint.h"
-#endif
+#include "maths/nmatrixint.h"
 
 #include "NMatrixIntIDL.h"
 #include "ShareableObjectI.h"

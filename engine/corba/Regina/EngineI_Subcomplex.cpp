@@ -26,7 +26,6 @@
 
 /* end stub */
 
-#include "config.h"
 #include "regina.h"
 
 #include "EngineI.h"

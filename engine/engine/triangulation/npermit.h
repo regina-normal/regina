@@ -35,13 +35,7 @@
 #define __NPERMIT_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nperm.h"
-#else
-    #include "engine/triangulation/nperm.h"
-#endif
+#include "triangulation/nperm.h"
 
 /**
  * An iterator class that runs through all 24 permutations of four

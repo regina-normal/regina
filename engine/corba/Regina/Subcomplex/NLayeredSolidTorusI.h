@@ -29,13 +29,7 @@
 #ifndef __NLAYEREDSOLIDTORUSI_H
 #define __NLAYEREDSOLIDTORUSI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredsolidtorus.h"
-#else
-    #include "engine/subcomplex/nlayeredsolidtorus.h"
-#endif
+#include "subcomplex/nlayeredsolidtorus.h"
 
 #include "NLayeredSolidTorusIDL.h"
 #include "ShareableObjectI.h"

@@ -26,27 +26,14 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsquad.h"
-    #include "nsstandard.h"
-    #include "nrational.h"
-    #include "nset.h"
-    #include "nqueue.h"
-    #include "nmatrixint.h"
-    #include "nmatrixfield.h"
-    #include "ntriangulation.h"
-#else
-    #include "engine/surfaces/nsquad.h"
-    #include "engine/surfaces/nsstandard.h"
-    #include "engine/utilities/nrational.h"
-    #include "engine/utilities/nset.h"
-    #include "engine/utilities/nqueue.h"
-    #include "engine/maths/nmatrixint.h"
-    #include "engine/maths/nmatrixfield.h"
-    #include "engine/triangulation/ntriangulation.h"
-#endif
+#include "surfaces/nsquad.h"
+#include "surfaces/nsstandard.h"
+#include "utilities/nrational.h"
+#include "utilities/nset.h"
+#include "utilities/nqueue.h"
+#include "maths/nmatrixint.h"
+#include "maths/nmatrixfield.h"
+#include "triangulation/ntriangulation.h"
 
 bool NNormalSurfaceVectorQuad::isCompatibleWith(
         const NNormalSurfaceVector& other) const {

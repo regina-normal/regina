@@ -36,15 +36,8 @@
 #define __NISOMORPHISM_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nperm.h"
-    #include "ntetface.h"
-#else
-    #include "engine/triangulation/nperm.h"
-    #include "engine/triangulation/ntetface.h"
-#endif
+#include "triangulation/nperm.h"
+#include "triangulation/ntetface.h"
 
 /**
  * Represents a combinatorial isomorphism of a triangulation.

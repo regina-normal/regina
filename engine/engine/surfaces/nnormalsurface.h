@@ -35,21 +35,11 @@
 #define __NNORMALSURFACE_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "nmpi.h"
-    #include "nvectordense.h"
-    #include "npropertyholder.h"
-    #include "nperm.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/utilities/nmpi.h"
-    #include "engine/maths/nvectordense.h"
-    #include "engine/property/npropertyholder.h"
-    #include "engine/triangulation/nperm.h"
-#endif
+#include "shareableobject.h"
+#include "utilities/nmpi.h"
+#include "maths/nvectordense.h"
+#include "property/npropertyholder.h"
+#include "triangulation/nperm.h"
 
 /**
  * Lists which vertex splits split which pairs of vertices.

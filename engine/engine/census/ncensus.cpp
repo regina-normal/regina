@@ -26,17 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ncensus.h"
-    #include "nprogressmanager.h"
-    #include "nprogresstypes.h"
-#else
-    #include "engine/census/ncensus.h"
-    #include "engine/progress/nprogressmanager.h"
-    #include "engine/progress/nprogresstypes.h"
-#endif
+#include "census/ncensus.h"
+#include "progress/nprogressmanager.h"
+#include "progress/nprogresstypes.h"
 
 unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,

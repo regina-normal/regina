@@ -26,11 +26,7 @@
 
 /* end stub */
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-#endif
+#include "triangulation/ntriangulation.h"
 
 NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {

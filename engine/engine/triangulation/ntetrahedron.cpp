@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntetrahedron.h"
-#else
-    #include "engine/triangulation/ntetrahedron.h"
-#endif
+#include "triangulation/ntetrahedron.h"
 
 NTetrahedron::NTetrahedron() {
     int i;

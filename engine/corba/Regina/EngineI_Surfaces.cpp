@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "corbasurfacesetregistry.h"
-#else
-    #include "corba/registry/corbasurfacesetregistry.h"
-#endif
+#include "registry/corbasurfacesetregistry.h"
 
 #include "EngineI.h"
 #include "NNormalSurfaceListI.h"
@@ -100,11 +94,7 @@ Regina::Surfaces::NSurfaceSubset_ptr Engine_i::newNSurfaceSubset(
 
     // Import the REGISTER_CORBA_SURFACE_SET lines.
     #define __CORBA_SURFACE_SET_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "corbasurfacesetregistry.h"
-    #else
-        #include "corba/registry/corbasurfacesetregistry.h"
-    #endif
+    #include "registry/corbasurfacesetregistry.h"
 
     #ifdef __MUTE_WARNINGS
         #pragma warn .ccc

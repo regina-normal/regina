@@ -35,13 +35,7 @@
 #define __NLAYEREDLENSSPACE_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredsolidtorus.h"
-#else
-    #include "engine/subcomplex/nlayeredsolidtorus.h"
-#endif
+#include "subcomplex/nlayeredsolidtorus.h"
 
 class NComponent;
 

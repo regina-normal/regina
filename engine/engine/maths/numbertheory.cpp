@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "numbertheory.h"
-#else
-    #include "engine/maths/numbertheory.h"
-#endif
+#include "maths/numbertheory.h"
 
 long reducedMod(long k, long modBase) {
     long ans = k % modBase;

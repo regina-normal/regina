@@ -35,19 +35,10 @@
 #define __NFILE_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "nresources.h"
-    #include "nmpi.h"
-    #include "nbooleans.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/file/nresources.h"
-    #include "engine/utilities/nmpi.h"
-    #include "engine/utilities/nbooleans.h"
-#endif
+#include "shareableobject.h"
+#include "file/nresources.h"
+#include "utilities/nmpi.h"
+#include "utilities/nbooleans.h"
 
 class NPacket;
 

@@ -26,17 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "sfproperties.h"
-    #include "nnormalsurface.h"
-    #include "nfile.h"
-#else
-    #include "engine/surfaces/sfproperties.h"
-    #include "engine/surfaces/nnormalsurface.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "surfaces/sfproperties.h"
+#include "surfaces/nnormalsurface.h"
+#include "file/nfile.h"
 
 #define PROPID_EULER 1001
 #define PROPID_ORIENT 1002

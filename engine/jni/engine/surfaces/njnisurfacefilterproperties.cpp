@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "sfproperties.h"
-    #include "jnitools.h"
-    #include "NJNISurfaceFilterProperties.h"
-#else
-    #include "engine/surfaces/sfproperties.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/surfaces/NJNISurfaceFilterProperties.h"
-#endif
+#include "surfaces/sfproperties.h"
+#include "jnitools.h"
+#include "engine/surfaces/NJNISurfaceFilterProperties.h"
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilterProperties_addEC

@@ -26,20 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
 #include <strstream.h>
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "ngrouppresentation.h"
-    #include "nfile.h"
-    #include "numbertheory.h"
-    #include "ninfinitearray.h"
-#else
-    #include "engine/algebra/ngrouppresentation.h"
-    #include "engine/file/nfile.h"
-    #include "engine/maths/numbertheory.h"
-    #include "engine/utilities/ninfinitearray.h"
-#endif
+#include "algebra/ngrouppresentation.h"
+#include "file/nfile.h"
+#include "maths/numbertheory.h"
+#include "utilities/ninfinitearray.h"
 
 typedef NDoubleListIterator<NGroupExpressionTerm> TermIterator;
 typedef NDynamicArrayIterator<NGroupExpression*> RelIterator;

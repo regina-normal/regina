@@ -26,22 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfacesubset.h"
-    #include "nnormalsurface.h"
-    #include "ntriangulation.h"
-    #include "jnitools.h"
-    #include "javasurfacesetregistry.h"
-    #include "NJNISurfaceSubset.h"
-#else
-    #include "engine/surfaces/nsurfacesubset.h"
-    #include "engine/surfaces/nnormalsurface.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "jni/jnitools.h"
-    #include "jni/registry/javasurfacesetregistry.h"
-    #include "jni/engine/surfaces/NJNISurfaceSubset.h"
-#endif
+#include "surfaces/nsurfacesubset.h"
+#include "surfaces/nnormalsurface.h"
+#include "triangulation/ntriangulation.h"
+#include "jnitools.h"
+#include "registry/javasurfacesetregistry.h"
+#include "engine/surfaces/NJNISurfaceSubset.h"
 
 #define __JAVA_SURFACE_SET_REGISTRY_BODY
 
@@ -96,11 +86,7 @@ JNIEXPORT void JNICALL
     NSurfaceSet* realSet = 0;
     if (0)
         realSet = 0;
-    #ifdef __NO_INCLUDE_PATHS
-        #include "javasurfacesetregistry.h"
-    #else
-        #include "jni/registry/javasurfacesetregistry.h"
-    #endif
+    #include "registry/javasurfacesetregistry.h"
 
     ASSIGN_ENGINE_OBJECT(env, new NSurfaceSubset(*realSet,
         *GET_ENGINE_OBJECT(env, NSurfaceFilter, filter)), me);

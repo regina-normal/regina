@@ -26,23 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nfile.h"
-    #include "nnormalsurface.h"
-    #include "nnormalsurfacelist.h"
-    #include "flavourregistry.h"
-    #include "ntriangulation.h"
-    #include "nvectordense.h"
-#else
-    #include "engine/file/nfile.h"
-    #include "engine/surfaces/nnormalsurface.h"
-    #include "engine/surfaces/nnormalsurfacelist.h"
-    #include "engine/surfaces/flavourregistry.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/maths/nvectordense.h"
-#endif
+#include "file/nfile.h"
+#include "surfaces/nnormalsurface.h"
+#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/flavourregistry.h"
+#include "triangulation/ntriangulation.h"
+#include "maths/nvectordense.h"
 
 #define __FLAVOUR_REGISTRY_BODY
 
@@ -435,11 +424,7 @@ NNormalSurface* NNormalSurface::readFromFile(NFile& in, int flavour,
     NNormalSurfaceVector* vector;
     switch(flavour) {
         // Bring in cases from the flavour registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "flavourregistry.h"
-        #else
-            #include "engine/surfaces/flavourregistry.h"
-        #endif
+        #include "surfaces/flavourregistry.h"
         default: return 0;
     }
 

@@ -26,22 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nboundarycomponent.h"
-    #include "nface.h"
-    #include "nedge.h"
-    #include "nvertex.h"
-    #include "jnitools.h"
-    #include "NJNIBoundaryComponent.h"
-#else
-    #include "engine/triangulation/nboundarycomponent.h"
-    #include "engine/triangulation/nface.h"
-    #include "engine/triangulation/nedge.h"
-    #include "engine/triangulation/nvertex.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/triangulation/NJNIBoundaryComponent.h"
-#endif
+#include "triangulation/nboundarycomponent.h"
+#include "triangulation/nface.h"
+#include "triangulation/nedge.h"
+#include "triangulation/nvertex.h"
+#include "jnitools.h"
+#include "engine/triangulation/NJNIBoundaryComponent.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_getEdge

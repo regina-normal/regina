@@ -35,17 +35,9 @@
 #define __NABELIANGROUP_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ndoublelist.h"
-    #include "nmpi.h"
-    #include "shareableoject.h"
-#else
-    #include "engine/utilities/ndoublelist.h"
-    #include "engine/utilities/nmpi.h"
-    #include "engine/shareableobject.h"
-#endif
+#include "utilities/ndoublelist.h"
+#include "utilities/nmpi.h"
+#include "shareableobject.h"
 
 class NFile;
 class NMatrixInt;

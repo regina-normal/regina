@@ -26,18 +26,11 @@
 
 /* end stub */
 
-#include "config.h"
 #include <strstream.h>
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "nabeliangroup.h"
-    #include "matrixops.h"
-    #include "nfile.h"
-#else
-    #include "engine/algebra/nabeliangroup.h"
-    #include "engine/maths/matrixops.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "algebra/nabeliangroup.h"
+#include "maths/matrixops.h"
+#include "file/nfile.h"
 
 NAbelianGroup::NAbelianGroup(const NAbelianGroup& g) : rank(g.rank) {
     NDoubleListIterator<NLargeInteger> it(g.invariantFactors);

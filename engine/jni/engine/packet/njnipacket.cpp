@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "npacket.h"
-    #include "jnitools.h"
-    #include "makejnpacket.h"
-    #include "NJNIPacket.h"
-#else
-    #include "engine/packet/npacket.h"
-    #include "jni/jnitools.h"
-    #include "jni/registry/makejnpacket.h"
-    #include "jni/engine/packet/NJNIPacket.h"
-#endif
+#include "packet/npacket.h"
+#include "jnitools.h"
+#include "registry/makejnpacket.h"
+#include "engine/packet/NJNIPacket.h"
 
 #include <strstream.h>
 

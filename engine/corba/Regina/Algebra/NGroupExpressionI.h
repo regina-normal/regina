@@ -29,13 +29,7 @@
 #ifndef __NGROUPEXPRESSIONI_H
 #define __NGROUPEXPRESSIONI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ngrouppresentation.h"
-#else
-    #include "engine/algebra/ngrouppresentation.h"
-#endif
+#include "algebra/ngrouppresentation.h"
 
 #include "NGroupPresentationIDL.h"
 #include "ShareableObjectI.h"

@@ -29,13 +29,7 @@
 #ifndef __NSCRIPTI_H
 #define __NSCRIPTI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nscript.h"
-#else
-    #include "engine/packet/nscript.h"
-#endif
+#include "packet/nscript.h"
 
 #include "NScriptIDL.h"
 #include "NPacketI.h"

@@ -26,13 +26,8 @@
 
 /* end stub */
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-    #include "nnormalsurface.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/surfaces/nnormalsurface.h"
-#endif
+#include "triangulation/ntriangulation.h"
+#include "surfaces/nnormalsurface.h"
 
 NTriangulation* NNormalSurface::cutAlong() {
     return new NTriangulation();

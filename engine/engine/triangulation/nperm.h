@@ -35,8 +35,6 @@
 #define __NPERM_H
 #endif
 
-#include "config.h"
-
 /**
  * Represents a permutation of {0,1,2,3}.
  * Such permutations are used in specifying how simplices are glued together.

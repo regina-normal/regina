@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntetrahedron.h"
-    #include "ntriangulation.h"
-    #include "jnitools.h"
-    #include "NJNITetrahedron.h"
-#else
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/triangulation/NJNITetrahedron.h"
-#endif
+#include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
+#include "jnitools.h"
+#include "engine/triangulation/NJNITetrahedron.h"
 
 JNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getAdjacentFace

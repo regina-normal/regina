@@ -29,13 +29,7 @@
 #ifndef __NTRISOLIDTORUSI_H
 #define __NTRISOLIDTORUSI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntrisolidtorus.h"
-#else
-    #include "engine/subcomplex/ntrisolidtorus.h"
-#endif
+#include "subcomplex/ntrisolidtorus.h"
 
 #include "NTriSolidTorusIDL.h"
 #include "ShareableObjectI.h"

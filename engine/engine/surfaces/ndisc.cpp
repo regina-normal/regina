@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nnormalsurface.h"
-    #include "ndisc.h"
-#else
-    #include "engine/surfaces/nnormalsurface.h"
-    #include "engine/surfaces/ndisc.h"
-#endif
+#include "surfaces/nnormalsurface.h"
+#include "surfaces/ndisc.h"
 
 ostream& operator << (ostream& out, const NDiscSpec& spec) {
     out << '(' << spec.tetIndex << ", " << spec.type << ", "

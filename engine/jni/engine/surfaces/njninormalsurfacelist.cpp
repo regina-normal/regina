@@ -26,20 +26,11 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nnormalsurfacelist.h"
-    #include "ntriangulation.h"
-    #include "nmatrixint.h"
-    #include "jnitools.h"
-    #include "NJNINormalSurfaceList.h"
-#else
-    #include "engine/surfaces/nnormalsurfacelist.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/maths/nmatrixint.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/surfaces/NJNINormalSurfaceList.h"
-#endif
+#include "surfaces/nnormalsurfacelist.h"
+#include "triangulation/ntriangulation.h"
+#include "maths/nmatrixint.h"
+#include "jnitools.h"
+#include "engine/surfaces/NJNINormalSurfaceList.h"
 
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_allowsAlmostNormal

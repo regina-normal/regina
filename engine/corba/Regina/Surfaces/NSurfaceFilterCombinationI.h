@@ -29,13 +29,7 @@
 #ifndef __NSURFACEFILTERCOMBINATIONI_H
 #define __NSURFACEFILTERCOMBINATIONI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "sfcombination.h"
-#else
-    #include "engine/surfaces/sfcombination.h"
-#endif
+#include "surfaces/sfcombination.h"
 
 #include "NSurfaceFilterCombinationIDL.h"
 #include "NSurfaceFilterI.h"

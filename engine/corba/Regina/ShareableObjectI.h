@@ -29,17 +29,9 @@
 #ifndef __SHAREABLEOBJECTI_H
 #define __SHAREABLEOBJECTI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "corbacast.h"
-    #include "corbatools.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "corba/corbacast.h"
-    #include "corba/corbatools.h"
-#endif
+#include "shareableobject.h"
+#include "corbacast.h"
+#include "corbatools.h"
 
 #include "ShareableObjectIDL.h"
 

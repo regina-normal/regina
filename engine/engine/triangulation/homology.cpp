@@ -29,16 +29,8 @@
 // ntriangulationhomology.cpp
 //        Implements homology as a property of a triangulation.
 
-
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-    #include "nmatrixint.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/maths/nmatrixint.h"
-#endif
+#include "triangulation/ntriangulation.h"
+#include "maths/nmatrixint.h"
 
 const NAbelianGroup& NTriangulation::getHomologyH1() {
     if (calculatedH1)

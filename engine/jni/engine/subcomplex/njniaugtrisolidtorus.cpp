@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "naugtrisolidtorus.h"
-    #include "jnitools.h"
-    #include "NJNIAugTriSolidTorus.h"
-#else
-    #include "engine/subcomplex/naugtrisolidtorus.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNIAugTriSolidTorus.h"
-#endif
+#include "subcomplex/naugtrisolidtorus.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNIAugTriSolidTorus.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_cloneMe

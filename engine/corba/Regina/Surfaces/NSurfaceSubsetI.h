@@ -29,13 +29,7 @@
 #ifndef __NSURFACESUBSETI_H
 #define __NSURFACESUBSETI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfacesubset.h"
-#else
-    #include "engine/surfaces/nsurfacesubset.h"
-#endif
+#include "surfaces/nsurfacesubset.h"
 
 #include "NSurfaceSubsetIDL.h"
 #include "ShareableObjectI.h"

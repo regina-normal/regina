@@ -26,22 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nvertex.h"
-    #include "ncomponent.h"
-    #include "nboundarycomponent.h"
-    #include "ntetrahedron.h"
-    #include "jnitools.h"
-    #include "NJNIVertex.h"
-#else
-    #include "engine/triangulation/nvertex.h"
-    #include "engine/triangulation/ncomponent.h"
-    #include "engine/triangulation/nboundarycomponent.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/triangulation/NJNIVertex.h"
-#endif
+#include "triangulation/nvertex.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/nboundarycomponent.h"
+#include "triangulation/ntetrahedron.h"
+#include "jnitools.h"
+#include "engine/triangulation/NJNIVertex.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_getBoundaryComponent

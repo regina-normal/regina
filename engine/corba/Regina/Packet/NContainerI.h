@@ -29,13 +29,7 @@
 #ifndef __NCONTAINERI_H
 #define __NCONTAINERI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ncontainer.h"
-#else
-    #include "engine/packet/ncontainer.h"
-#endif
+#include "packet/ncontainer.h"
 
 #include "NContainerIDL.h"
 #include "NPacketI.h"

@@ -29,13 +29,7 @@
 #ifndef __NCORBARANDOMACCESSRESOURCE_H
 #define __NCORBARANDOMACCESSRESOURCE_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nresources.h"
-#else
-    #include "engine/file/nresources.h"
-#endif
+#include "file/nresources.h"
 
 #include "NRandomAccessResourceIDL.h"
 

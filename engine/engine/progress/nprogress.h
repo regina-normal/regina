@@ -36,15 +36,8 @@
 #define __NPROGRESS_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "nthread.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/utilities/nthread.h"
-#endif
+#include "shareableobject.h"
+#include "utilities/nthread.h"
 
 /**
  * An object through which external interfaces can obtain progress

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nprogresstypes.h"
-#else
-    #include "engine/progress/nprogresstypes.h"
-#endif
+#include "progress/nprogresstypes.h"
 
 #include <strstream.h>
 

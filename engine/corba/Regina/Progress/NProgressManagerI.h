@@ -29,13 +29,7 @@
 #ifndef __NPROGRESSMANAGERI_H
 #define __NPROGRESSMANAGERI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nprogressmanager.h"
-#else
-    #include "engine/progress/nprogressmanager.h"
-#endif
+#include "progress/nprogressmanager.h"
 
 #include "NProgressManagerIDL.h"
 #include "ShareableObjectI.h"

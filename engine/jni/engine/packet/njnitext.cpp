@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntext.h"
-    #include "jnitools.h"
-    #include "NJNIText.h"
-#else
-    #include "engine/packet/ntext.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/packet/NJNIText.h"
-#endif
+#include "packet/ntext.h"
+#include "jnitools.h"
+#include "engine/packet/NJNIText.h"
 
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_getText

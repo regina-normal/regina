@@ -26,19 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfacefilter.h"
-    #include "nnormalsurfacelist.h"
-    #include "filterregistry.h"
-    #include "nfile.h"
-#else
-    #include "engine/surfaces/nsurfacefilter.h"
-    #include "engine/surfaces/nnormalsurfacelist.h"
-    #include "engine/surfaces/filterregistry.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "surfaces/nsurfacefilter.h"
+#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/filterregistry.h"
+#include "file/nfile.h"
 
 #define __FILTER_REGISTRY_BODY
 
@@ -67,11 +58,7 @@ NSurfaceFilter* NSurfaceFilter::readPacket(NFile& in, NPacket* parent) {
     int id = in.readInt();
     switch (id) {
         // Import cases from the filter registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "filterregistry.h"
-        #else
-            #include "engine/surfaces/filterregistry.h"
-        #endif
+        #include "surfaces/filterregistry.h"
         default: ans = new NSurfaceFilter();
     }
 
@@ -86,11 +73,7 @@ NSurfaceFilter* NSurfaceFilter::readPacket(NFile& in, NPacket* parent) {
 NPacket* NSurfaceFilter::internalClonePacket(NPacket* parent) const {
     switch (getFilterID()) {
         // Import cases from the filter registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "filterregistry.h"
-        #else
-            #include "engine/surfaces/filterregistry.h"
-        #endif
+        #include "surfaces/filterregistry.h"
         default: return new NSurfaceFilter();
     }
 }

@@ -35,13 +35,7 @@
 #define __NLAYEREDSOLIDTORUS_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-#else
-    #include "engine/shareableobject.h"
-#endif
+#include "shareableobject.h"
 
 class NTetrahedron;
 

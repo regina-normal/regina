@@ -29,13 +29,7 @@
 #ifndef __NSURFACEFILTERI_H
 #define __NSURFACEFILTERI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfacefilter.h"
-#else
-    #include "engine/surfaces/nsurfacefilter.h"
-#endif
+#include "surfaces/nsurfacefilter.h"
 
 #include "NSurfaceFilterIDL.h"
 #include "NPacketI.h"

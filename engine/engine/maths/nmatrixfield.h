@@ -35,13 +35,7 @@
 #define __NMATRIXFIELD_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nmatrix.h"
-#else
-    #include "engine/maths/nmatrix.h"
-#endif
+#include "maths/nmatrix.h"
 
 /**
  * Represents a matrix of elements from a given field T.

@@ -26,16 +26,7 @@
 
 /* end stub */
 
-// Written by Ben Burton
-// Created 12 June 1999
-// Modified 12 June 1999
-
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "jnitools.h"
-#else
-    #include "jni/jnitools.h"
-#endif
+#include "jnitools.h"
 
 jobject CREATE_WRAPPER_OBJECT(JNIEnv* jni_env, ShareableObject* cpp_object,
         const char* java_class) {

@@ -29,13 +29,7 @@
 #ifndef __NLAYEREDLENSSPACEI_H
 #define __NLAYEREDLENSSPACEI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredlensspace.h"
-#else
-    #include "engine/subcomplex/nlayeredlensspace.h"
-#endif
+#include "subcomplex/nlayeredlensspace.h"
 
 #include "NLayeredLensSpaceIDL.h"
 #include "ShareableObjectI.h"

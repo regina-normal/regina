@@ -35,17 +35,9 @@
 #define __NVECTORMATRIX_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nvector.h"
-    #include "nvectordense.h"
-    #include "nmatrix.h"
-#else
-    #include "engine/maths/nvector.h"
-    #include "engine/maths/nvectordense.h"
-    #include "engine/maths/nmatrix.h"
-#endif
+#include "maths/nvector.h"
+#include "maths/nvectordense.h"
+#include "maths/nmatrix.h"
 
 /**
  * A vector that corresponds to a row or column of a matrix.

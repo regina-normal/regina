@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nprogressmanager.h"
-    #include "jnitools.h"
-    #include "NJNIProgressManager.h"
-#else
-    #include "engine/progress/nprogressmanager.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/progress/NJNIProgressManager.h"
-#endif
+#include "progress/nprogressmanager.h"
+#include "jnitools.h"
+#include "engine/progress/NJNIProgressManager.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgressManager_getProgress

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "flavourregistry.h"
-#else
-    #include "engine/surfaces/flavourregistry.h"
-#endif
+#include "surfaces/flavourregistry.h"
 
 #define __FLAVOUR_REGISTRY_BODY
 
@@ -46,9 +40,5 @@
         return almost_normal; \
     }
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "flavourregistry.h"
-#else
-    #include "engine/surfaces/flavourregistry.h"
-#endif
+#include "surfaces/flavourregistry.h"
 

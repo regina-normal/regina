@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "corbafilterregistry.h"
-    #include "corbatools.h"
-#else
-    #include "corba/registry/corbafilterregistry.h"
-    #include "corba/corbatools.h"
-#endif
+#include "registry/corbafilterregistry.h"
+#include "corbatools.h"
 
 #include "NSurfaceFilterI.h"
 
@@ -65,11 +58,7 @@ Regina::Surfaces::NSurfaceFilter_ptr NSurfaceFilter_i::newWrapper(
     
     // Import the REGISTER_CORBA_FILTER lines.
     #define __CORBA_FILTER_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "corbafilterregistry.h"
-    #else
-        #include "corba/registry/corbafilterregistry.h"
-    #endif
+    #include "registry/corbafilterregistry.h"
 
     else {
         NSurfaceFilter_i* f = new NSurfaceFilter_i(newCppPtr);

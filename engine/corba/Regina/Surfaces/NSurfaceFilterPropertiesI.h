@@ -29,13 +29,7 @@
 #ifndef __NSURFACEFILTERPROPERTIESI_H
 #define __NSURFACEFILTERPROPERTIESI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "sfproperties.h"
-#else
-    #include "engine/surfaces/sfproperties.h"
-#endif
+#include "surfaces/sfproperties.h"
 
 #include "NSurfaceFilterPropertiesIDL.h"
 #include "NSurfaceFilterI.h"

@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-    #include "ngrouppresentation.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/algebra/ngrouppresentation.h"
-#endif
+#include "triangulation/ntriangulation.h"
+#include "algebra/ngrouppresentation.h"
 
 const NGroupPresentation& NTriangulation::getFundamentalGroup() {
     if (calculatedFundamentalGroup)

@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredlensspace.h"
-    #include "jnitools.h"
-    #include "NJNILayeredLensSpace.h"
-#else
-    #include "engine/subcomplex/nlayeredlensspace.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNILayeredLensSpace.h"
-#endif
+#include "subcomplex/nlayeredlensspace.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNILayeredLensSpace.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_cloneMe

@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nedge.h"
-    #include "nface.h"
-#else
-    #include "engine/triangulation/nedge.h"
-    #include "engine/triangulation/nface.h"
-#endif
+#include "triangulation/nedge.h"
+#include "triangulation/nface.h"
 
 int NFace::getType() {
     if (type)

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nedge.h"
-#else
-    #include "engine/triangulation/nedge.h"
-#endif
+#include "triangulation/nedge.h"
 
 const int edgeNumber[4][4] = {
     { -1, 0, 1, 2 },

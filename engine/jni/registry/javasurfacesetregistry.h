@@ -63,13 +63,8 @@
  */
 
 #ifndef __JAVA_SURFACE_SET_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "nnormalsurfacelist.h"
-        #include "nsurfacesubset.h"
-    #else
-        #include "engine/surfaces/nnormalsurfacelist.h"
-        #include "engine/surfaces/nsurfacesubset.h"
-    #endif
+    #include "surfaces/nnormalsurfacelist.h"
+    #include "surfaces/nsurfacesubset.h"
 #else
     REGISTER_JAVA_SURFACE_SET(NNormalSurfaceList,
         "normal/engine/surfaces/NNormalSurfaceList",

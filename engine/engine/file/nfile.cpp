@@ -27,16 +27,10 @@
 /* end stub */
 
 #include <string.h>
-#include "config.h"
 #include "regina.h"
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "nfile.h"
-    #include "packetregistry.h"
-#else
-    #include "engine/file/nfile.h"
-    #include "engine/packet/packetregistry.h"
-#endif
+#include "file/nfile.h"
+#include "packet/packetregistry.h"
 
 #define TREE_CHILD 'c'
 #define TREE_NO_MORE_CHILDREN 'n'
@@ -306,11 +300,7 @@ NPacket* NFile::readIndividualPacket(NPacket* parent, streampos& bookmark) {
 
     // Import all the REGISTER_PACKET lines.
     #define __PACKET_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "packetregistry.h"
-    #else
-        #include "engine/packet/packetregistry.h"
-    #endif
+    #include "packet/packetregistry.h"
 
     // The packet is of an unknown type.
     return 0;

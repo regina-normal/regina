@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nprogress.h"
-    #include "jnitools.h"
-    #include "NJNIProgress.h"
-#else
-    #include "engine/progress/nprogress.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/progress/NJNIProgress.h"
-#endif
+#include "progress/nprogress.h"
+#include "jnitools.h"
+#include "engine/progress/NJNIProgress.h"
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_cancel

@@ -26,19 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nconeray.h"
-    #include "nvectorunit.h"
-    #include "nvectormatrix.h"
-    #include "nmatrixint.h"
-#else
-    #include "engine/surfaces/nconeray.h"
-    #include "engine/maths/nvectorunit.h"
-    #include "engine/maths/nvectormatrix.h"
-    #include "engine/maths/nmatrixint.h"
-#endif
+#include "surfaces/nconeray.h"
+#include "maths/nvectorunit.h"
+#include "maths/nvectormatrix.h"
+#include "maths/nmatrixint.h"
 
 NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
         const NConeRay& hyperplane) {

@@ -29,13 +29,7 @@
 #ifndef __NSNAPPEDBALLI_H
 #define __NSNAPPEDBALLI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsnappedball.h"
-#else
-    #include "engine/subcomplex/nsnappedball.h"
-#endif
+#include "subcomplex/nsnappedball.h"
 
 #include "NSnappedBallIDL.h"
 #include "ShareableObjectI.h"

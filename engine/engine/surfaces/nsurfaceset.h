@@ -35,8 +35,6 @@
 #define __NSURFACESET_H
 #endif
 
-#include "config.h"
-
 class NNormalSurface;
 class NTriangulation;
 class ShareableObject;

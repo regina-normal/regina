@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "ngrouppresentation.h"
-    #include "jnitools.h"
-    #include "NJNIGroupPresentation.h"
-#else
-    #include "engine/algebra/ngrouppresentation.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/algebra/NJNIGroupPresentation.h"
-#endif
+#include "algebra/ngrouppresentation.h"
+#include "jnitools.h"
+#include "engine/algebra/NJNIGroupPresentation.h"
 
 JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_addGenerator

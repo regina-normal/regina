@@ -26,12 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "javacast.h"
-#else
-    #include "jni/javacast.h"
-#endif
+#include "javacast.h"
 
 #ifdef __NO_RAW_CASTING
     ShareableObject* javaLongToPtr(jlong i) {

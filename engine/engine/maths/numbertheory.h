@@ -35,15 +35,8 @@
  *  \brief Provides miscellaneous number theory routines.
  */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ndoublelist.h"
-    #include "nmpi.h"
-#else
-    #include "engine/utilities/ndoublelist.h"
-    #include "engine/utilities/nmpi.h"
-#endif
+#include "utilities/ndoublelist.h"
+#include "utilities/nmpi.h"
 
 /**
  * Reduces \a k modulo \a modBase to give the smallest possible

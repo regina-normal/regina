@@ -26,20 +26,11 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsnappedtwosphere.h"
-    #include "ntetrahedron.h"
-    #include "ntriangulation.h"
-    #include "jnitools.h"
-    #include "NJNISnappedTwoSphere.h"
-#else
-    #include "engine/subcomplex/nsnappedtwosphere.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNISnappedTwoSphere.h"
-#endif
+#include "subcomplex/nsnappedtwosphere.h"
+#include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNISnappedTwoSphere.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_cloneMe

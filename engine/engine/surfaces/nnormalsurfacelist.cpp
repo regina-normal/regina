@@ -26,23 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nnormalsurfacelist.h"
-    #include "flavourregistry.h"
-    #include "nconeray.h"
-    #include "ntriangulation.h"
-    #include "nmatrixint.h"
-    #include "nfile.h"
-#else
-    #include "engine/surfaces/nnormalsurfacelist.h"
-    #include "engine/surfaces/flavourregistry.h"
-    #include "engine/surfaces/nconeray.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/maths/nmatrixint.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/flavourregistry.h"
+#include "surfaces/nconeray.h"
+#include "triangulation/ntriangulation.h"
+#include "maths/nmatrixint.h"
+#include "file/nfile.h"
 
 #define __FLAVOUR_REGISTRY_BODY
 
@@ -54,11 +43,7 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
         int flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "flavourregistry.h"
-        #else
-            #include "engine/surfaces/flavourregistry.h"
-        #endif
+        #include "surfaces/flavourregistry.h"
     }
     return 0;
 }
@@ -72,11 +57,7 @@ NDoubleList<NNormalSurfaceVector*>* createNonNegativeCone(
         NTriangulation* triangulation, int flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "flavourregistry.h"
-        #else
-            #include "engine/surfaces/flavourregistry.h"
-        #endif
+        #include "surfaces/flavourregistry.h"
     }
     return 0;
 }
@@ -95,11 +76,7 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
     // Perform any pre-enumeration tests.
     switch(flavour) {
         // Import cases from the flavour registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "flavourregistry.h"
-        #else
-            #include "engine/surfaces/flavourregistry.h"
-        #endif
+        #include "surfaces/flavourregistry.h"
     }
 
     // Form the matching equations and starting cone.
@@ -138,11 +115,7 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
 bool NNormalSurfaceList::allowsAlmostNormal() const {
     switch(flavour) {
         // Import cases from the flavour registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "flavourregistry.h"
-        #else
-            #include "engine/surfaces/flavourregistry.h"
-        #endif
+        #include "surfaces/flavourregistry.h"
     }
     return false;
 }
@@ -158,11 +131,7 @@ void NNormalSurfaceList::writeTextShort(ostream& o) const {
     o << " (";
     switch(flavour) {
         // Import cases from the flavour registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "flavourregistry.h"
-        #else
-            #include "engine/surfaces/flavourregistry.h"
-        #endif
+        #include "surfaces/flavourregistry.h"
         default: o << "Unknown"; break;
     }
     o << ')';
@@ -181,11 +150,7 @@ void NNormalSurfaceList::writeTextLong(ostream& o) const {
     o << "Coordinates: ";
     switch(flavour) {
         // Import cases from the flavour registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "flavourregistry.h"
-        #else
-            #include "engine/surfaces/flavourregistry.h"
-        #endif
+        #include "surfaces/flavourregistry.h"
         default: o << "Unknown\n"; break;
     }
     writeAllSurfaces(o);
@@ -218,11 +183,7 @@ NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
     int flavour = in.readInt();
     switch(flavour) {
         // Import cases from the flavour registry.
-        #ifdef __NO_INCLUDE_PATHS
-            #include "flavourregistry.h"
-        #else
-            #include "engine/surfaces/flavourregistry.h"
-        #endif
+        #include "surfaces/flavourregistry.h"
         default: return 0;
     }
 

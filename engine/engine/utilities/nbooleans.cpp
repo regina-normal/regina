@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nbooleans.h"
-#else
-    #include "engine/utilities/nbooleans.h"
-#endif
+#include "utilities/nbooleans.h"
 
 #include <iostream.h>
 

@@ -36,15 +36,8 @@
 #define __NSANSTANDARD_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nnormalsurface.h"
-    #include "ndoublelist.h"
-#else
-    #include "engine/surfaces/nnormalsurface.h"
-    #include "engine/utilities/ndoublelist.h"
-#endif
+#include "surfaces/nnormalsurface.h"
+#include "utilities/ndoublelist.h"
 
 class NMatrixInt;
 

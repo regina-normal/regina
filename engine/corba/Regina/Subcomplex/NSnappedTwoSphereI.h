@@ -29,13 +29,7 @@
 #ifndef __NSNAPPEDTWOSPHEREI_H
 #define __NSNAPPEDTWOSPHEREI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsnappedtwosphere.h"
-#else
-    #include "engine/subcomplex/nsnappedtwosphere.h"
-#endif
+#include "subcomplex/nsnappedtwosphere.h"
 
 #include "NSnappedTwoSphereIDL.h"
 #include "ShareableObjectI.h"

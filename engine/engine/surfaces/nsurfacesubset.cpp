@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfacesubset.h"
-    #include "nsurfacefilter.h"
-#else
-    #include "engine/surfaces/nsurfacesubset.h"
-    #include "engine/surfaces/nsurfacefilter.h"
-#endif
+#include "surfaces/nsurfacesubset.h"
+#include "surfaces/nsurfacefilter.h"
 
 NSurfaceSubset::NSurfaceSubset(const NSurfaceSet& set,
         const NSurfaceFilter& filter) : source(set) {

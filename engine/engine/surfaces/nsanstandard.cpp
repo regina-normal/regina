@@ -26,19 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsanstandard.h"
-    #include "nrational.h"
-    #include "nmatrixint.h"
-    #include "ntriangulation.h"
-#else
-    #include "engine/surfaces/nsanstandard.h"
-    #include "engine/utilities/nrational.h"
-    #include "engine/maths/nmatrixint.h"
-    #include "engine/triangulation/ntriangulation.h"
-#endif
+#include "surfaces/nsanstandard.h"
+#include "utilities/nrational.h"
+#include "maths/nmatrixint.h"
+#include "triangulation/ntriangulation.h"
 
 bool NNormalSurfaceVectorANStandard::isCompatibleWith(
         const NNormalSurfaceVector& other) const {

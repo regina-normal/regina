@@ -26,20 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
 #include <fstream.h>
 #include <iomanip.h>
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsnappea.h"
-    #include "nresources.h"
-    #include "ntriangulation.h"
-#else
-    #include "engine/imports/nsnappea.h"
-    #include "engine/file/nresources.h"
-    #include "engine/triangulation/ntriangulation.h"
-#endif
-
+#include "imports/nsnappea.h"
+#include "file/nresources.h"
+#include "triangulation/ntriangulation.h"
 
 NTriangulation* readSnapPea(const char* filename) {
     // Open the file.

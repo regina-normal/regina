@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nisomorphism.h"
-#else
-    #include "engine/triangulation/nisomorphism.h"
-#endif
+#include "triangulation/nisomorphism.h"
 
 NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :
         NIsomorphism(cloneMe.getNumberOfTetrahedra()),

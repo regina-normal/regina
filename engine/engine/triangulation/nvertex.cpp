@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nvertex.h"
-#else
-    #include "engine/triangulation/nvertex.h"
-#endif
+#include "triangulation/nvertex.h"
 
 void NVertex::writeTextShort(ostream& out) const {
     switch(link) {

@@ -6,6 +6,10 @@ Regina - A Normal Surface Theory Calculator
           became IDLTOJAVA and IDLTOCPP with slightly more generic meanings.
     ENGINE:
         Overall structure:
+            - Modified #includes to treat engine/engine, engine/jni
+              and engine/corba as top-level include directories.
+            - Removed config.h in favour of PD_MACROS in Makefile.options.
+            - Removed configuration macros __NO_INCLUDE_PATHS and __BINARY_IO.
             - Introduced macro MY_ENGINE_OBJECT for CORBA wrapper classes.
             - Macros GET_ENGINE_OBJECT no longer crash when null is passed.
         Class NAugTriSolidTorus, NLayeredChain, NLayeredLoop, NLensSpace, NSFS,

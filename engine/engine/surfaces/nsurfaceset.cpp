@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsurfaceset.h"
-    #include "nnormalsurface.h"
-#else
-    #include "engine/surfaces/nsurfaceset.h"
-    #include "engine/surfaces/nnormalsurface.h"
-#endif
+#include "surfaces/nsurfaceset.h"
+#include "surfaces/nnormalsurface.h"
 
 void NSurfaceSet::writeAllSurfaces(ostream& out) const {
     unsigned long n = getNumberOfSurfaces();

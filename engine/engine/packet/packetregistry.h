@@ -65,21 +65,12 @@
  */
 
 #ifndef __PACKET_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "ncontainer.h"
-        #include "ntext.h"
-        #include "ntriangulation.h"
-        #include "nnormalsurfacelist.h"
-        #include "nscript.h"
-        #include "nsurfacefilter.h"
-    #else
-        #include "engine/packet/ncontainer.h"
-        #include "engine/packet/ntext.h"
-        #include "engine/triangulation/ntriangulation.h"
-        #include "engine/surfaces/nnormalsurfacelist.h"
-        #include "engine/packet/nscript.h"
-        #include "engine/surfaces/nsurfacefilter.h"
-    #endif
+    #include "packet/ncontainer.h"
+    #include "packet/ntext.h"
+    #include "triangulation/ntriangulation.h"
+    #include "surfaces/nnormalsurfacelist.h"
+    #include "packet/nscript.h"
+    #include "surfaces/nsurfacefilter.h"
 #else
     REGISTER_PACKET(NContainer, 1, "Container")
     REGISTER_PACKET(NText, 2, "Text")

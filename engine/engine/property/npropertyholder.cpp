@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npropertyholder.h"
-    #include "nfile.h"
-#else
-    #include "engine/property/npropertyholder.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "property/npropertyholder.h"
+#include "file/nfile.h"
 
 void NPropertyHolder::readProperties(NFile& infile) {
     unsigned propType = infile.readUInt();

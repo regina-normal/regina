@@ -36,11 +36,7 @@
 #define __SHAREABLEOBJECT_H
 #endif
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "nstring.h"
-#else
-    #include "engine/utilities/nstring.h"
-#endif
+#include "utilities/nstring.h"
 
 /**
  * Facilitates mirroring objects in the underlying C++ calculation

@@ -36,13 +36,7 @@
 #define __NPROGRESSMANAGER_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nprogress.h"
-#else
-    #include "engine/progress/nprogress.h"
-#endif
+#include "progress/nprogress.h"
 
 /**
  * Manages the sharing of an NProgress object between reading and

@@ -29,13 +29,7 @@
 #ifndef __NSFSI_H
 #define __NSFSI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsfs.h"
-#else
-    #include "engine/subcomplex/nsfs.h"
-#endif
+#include "subcomplex/nsfs.h"
 
 #include "NSFSIDL.h"
 #include "ShareableObjectI.h"

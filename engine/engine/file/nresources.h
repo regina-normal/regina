@@ -36,7 +36,6 @@
 #endif
 
 #include <fstream.h>
-#include "config.h"
 
 /**
  * Provides a standard random access interface for file-like resources.
@@ -145,12 +144,12 @@ class NLocalFileResource : public NRandomAccessResource {
          */
         enum systemMode {
             #ifdef __NO_IOS_NOCREATE
-            MODE_READ = ios::in,
+            MODE_READ = ios::in | ios::binary,
             #else
-            MODE_READ = ios::in | ios::nocreate,
+            MODE_READ = ios::in | ios::binary | ios::nocreate,
             #endif
                 /**< Open the file for reading. */
-            MODE_WRITE = ios::out | ios::trunc
+            MODE_WRITE = ios::out | ios::trunc | ios::binary
                 /**< Open the file for writing. */
         };
     private:

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-#else
-    #include "engine/shareableobject.h"
-#endif
+#include "shareableobject.h"
 
 #include <strstream.h>
 

@@ -26,20 +26,11 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "npillowtwosphere.h"
-    #include "nface.h"
-    #include "ntriangulation.h"
-    #include "jnitools.h"
-    #include "NJNIPillowTwoSphere.h"
-#else
-    #include "engine/subcomplex/npillowtwosphere.h"
-    #include "engine/triangulation/nface.h"
-    #include "engine/triangulation/ntriangulation.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/subcomplex/NJNIPillowTwoSphere.h"
-#endif
+#include "subcomplex/npillowtwosphere.h"
+#include "triangulation/nface.h"
+#include "triangulation/ntriangulation.h"
+#include "jnitools.h"
+#include "engine/subcomplex/NJNIPillowTwoSphere.h"
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_cloneMe

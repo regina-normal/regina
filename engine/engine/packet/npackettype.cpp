@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "packetregistry.h"
-#else
-    #include "engine/packet/packetregistry.h"
-#endif
+#include "packet/packetregistry.h"
 
 // Define a task for each REGISTER_PACKET to perform.
 #define REGISTER_PACKET(class, type, name) \
@@ -46,8 +40,4 @@
 
 // Import all the REGISTER_PACKET lines.
 #define __PACKET_REGISTRY_BODY
-#ifdef __NO_INCLUDE_PATHS
-    #include "packetregistry.h"
-#else
-    #include "engine/packet/packetregistry.h"
-#endif
+#include "packet/packetregistry.h"

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nperm.h"
-#else
-    #include "engine/triangulation/nperm.h"
-#endif
+#include "triangulation/nperm.h"
 
 const NPerm allPermsS4[24] = {
     NPerm(0,1,2,3), NPerm(0,1,3,2), NPerm(0,2,3,1), NPerm(0,2,1,3),

@@ -26,17 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-    #include "nqueue.h"
-    #include "nrational.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/utilities/nqueue.h"
-    #include "engine/utilities/nrational.h"
-#endif
+#include "triangulation/ntriangulation.h"
+#include "utilities/nqueue.h"
+#include "utilities/nrational.h"
 
 void NTriangulation::calculateSkeleton() {
     ideal = false;

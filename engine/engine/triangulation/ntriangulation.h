@@ -35,33 +35,17 @@
 #define __NTRIANGULATION_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "npacket.h"
-    #include "npropertyholder.h"
-    #include "ndynamicarray.h"
-    #include "nset.h"
-    #include "ntetrahedron.h"
-    #include "nface.h"
-    #include "nedge.h"
-    #include "nvertex.h"
-    #include "ncomponent.h"
-    #include "nboundarycomponent.h"
-    #include "nabeliangroup.h"
-#else
-    #include "engine/packet/npacket.h"
-    #include "engine/property/npropertyholder.h"
-    #include "engine/utilities/ndynamicarray.h"
-    #include "engine/utilities/nset.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/triangulation/nface.h"
-    #include "engine/triangulation/nedge.h"
-    #include "engine/triangulation/nvertex.h"
-    #include "engine/triangulation/ncomponent.h"
-    #include "engine/triangulation/nboundarycomponent.h"
-    #include "engine/algebra/nabeliangroup.h"
-#endif
+#include "packet/npacket.h"
+#include "property/npropertyholder.h"
+#include "utilities/ndynamicarray.h"
+#include "utilities/nset.h"
+#include "triangulation/ntetrahedron.h"
+#include "triangulation/nface.h"
+#include "triangulation/nedge.h"
+#include "triangulation/nvertex.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/nboundarycomponent.h"
+#include "algebra/nabeliangroup.h"
 
 class NGroupPresentation;
 

@@ -36,15 +36,8 @@
 #define __NPILLOWTWOSPHERE_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "nperm.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/triangulation/nperm.h"
-#endif
+#include "shareableobject.h"
+#include "triangulation/nperm.h"
 
 class NFace;
 class NTriangulation;

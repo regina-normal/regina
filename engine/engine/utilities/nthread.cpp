@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nthread.h"
-#else
-    #include "engine/utilities/nthread.h"
-#endif
+#include "utilities/nthread.h"
 
 struct NThreadRuntimeArgs {
     NThread* thread;

@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "ngrouppresentation.h"
-    #include "jnitools.h"
-    #include "NJNIGroupExpression.h"
-#else
-    #include "engine/algebra/ngrouppresentation.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/algebra/NJNIGroupExpression.h"
-#endif
+#include "algebra/ngrouppresentation.h"
+#include "jnitools.h"
+#include "engine/algebra/NJNIGroupExpression.h"
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_addTermFirst

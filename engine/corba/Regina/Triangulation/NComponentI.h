@@ -29,13 +29,7 @@
 #ifndef __NCOMPONENTI_H
 #define __NCOMPONENTI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ncomponent.h"
-#else
-    #include "engine/triangulation/ncomponent.h"
-#endif
+#include "triangulation/ncomponent.h"
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"

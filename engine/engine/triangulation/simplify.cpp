@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-    #include "nset.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/utilities/nset.h"
-#endif
+#include "triangulation/ntriangulation.h"
+#include "utilities/nset.h"
 
 // Mapping from vertices (0,1,2) of each external face of a new tetrahedron
 //     to the vertices of this new tetrahedron in a 3-2 move.

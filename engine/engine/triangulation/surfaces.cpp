@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntriangulation.h"
-    #include "nnormalsurfacelist.h"
-#else
-    #include "engine/triangulation/ntriangulation.h"
-    #include "engine/surfaces/nnormalsurfacelist.h"
-#endif
+#include "triangulation/ntriangulation.h"
+#include "surfaces/nnormalsurfacelist.h"
 
 void NTriangulation::calculateSurfaceProperties() {
     // Check for 2-sphere boundary components.

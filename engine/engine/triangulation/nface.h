@@ -35,17 +35,9 @@
 #define __NFACE_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "nperm.h"
-    #include "ntetrahedron.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "engine/triangulation/nperm.h"
-    #include "engine/triangulation/ntetrahedron.h"
-#endif
+#include "shareableobject.h"
+#include "triangulation/nperm.h"
+#include "triangulation/ntetrahedron.h"
 
 class NComponent;
 class NBoundaryComponent;

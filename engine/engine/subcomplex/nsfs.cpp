@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nsfs.h"
-    #include "nlensspace.h"
-#else
-    #include "engine/subcomplex/nsfs.h"
-    #include "engine/subcomplex/nlensspace.h"
-#endif
+#include "subcomplex/nsfs.h"
+#include "subcomplex/nlensspace.h"
 
 ostream& operator << (ostream& out, const NExceptionalFibre& f) {
     return (out << '(' << f.alpha << ", " << f.beta << ')');

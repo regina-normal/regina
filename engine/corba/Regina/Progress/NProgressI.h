@@ -29,13 +29,7 @@
 #ifndef __NPROGRESSI_H
 #define __NPROGRESSI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nprogress.h"
-#else
-    #include "engine/progress/nprogress.h"
-#endif
+#include "progress/nprogress.h"
 
 #include "NProgressIDL.h"
 #include "ShareableObjectI.h"

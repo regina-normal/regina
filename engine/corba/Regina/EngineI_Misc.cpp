@@ -26,20 +26,12 @@
 
 /* end stub */
 
-#include "config.h"
 #include "regina.h"
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "ngrouppresentation.h"
-    #include "ncensus.h"
-    #include "matrixops.h"
-    #include "nnormalsurfacelist.h"
-#else
-    #include "engine/algebra/ngrouppresentation.h"
-    #include "engine/census/ncensus.h"
-    #include "engine/maths/matrixops.h"
-    #include "engine/surfaces/nnormalsurfacelist.h"
-#endif
+#include "algebra/ngrouppresentation.h"
+#include "census/ncensus.h"
+#include "maths/matrixops.h"
+#include "surfaces/nnormalsurfacelist.h"
 
 #include "EngineI.h"
 #include "NAbelianGroupI.h"

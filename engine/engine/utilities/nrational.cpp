@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nrational.h"
-#else
-    #include "engine/utilities/nrational.h"
-#endif
+#include "utilities/nrational.h"
 
 const NRational NRational::zero;
 const NRational NRational::one(1);

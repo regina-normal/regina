@@ -29,13 +29,7 @@
 #ifndef __NABELIANGROUPI_H
 #define __NABELIANGROUPI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nabeliangroup.h"
-#else
-    #include "engine/algebra/nabeliangroup.h"
-#endif
+#include "algebra/nabeliangroup.h"
 
 #include "NAbelianGroupIDL.h"
 #include "ShareableObjectI.h"

@@ -26,18 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "nfile.h"
-    #include "jnitools.h"
-    #include "makejnpacket.h"
-    #include "NJNIFile.h"
-#else
-    #include "engine/file/nfile.h"
-    #include "jni/jnitools.h"
-    #include "jni/registry/makejnpacket.h"
-    #include "jni/engine/file/NJNIFile.h"
-#endif
+#include "file/nfile.h"
+#include "jnitools.h"
+#include "registry/makejnpacket.h"
+#include "engine/file/NJNIFile.h"
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFile_close

@@ -26,21 +26,11 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nedge.h"
-    #include "ncomponent.h"
-    #include "ntetrahedron.h"
-    #include "nlayeredlensspace.h"
-    #include "numbertheory.h"
-#else
-    #include "engine/triangulation/nedge.h"
-    #include "engine/triangulation/ncomponent.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/subcomplex/nlayeredlensspace.h"
-    #include "engine/maths/numbertheory.h"
-#endif
+#include "triangulation/nedge.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/ntetrahedron.h"
+#include "subcomplex/nlayeredlensspace.h"
+#include "maths/numbertheory.h"
 
 NLayeredLensSpace* NLayeredLensSpace::clone() const {
     NLayeredLensSpace* ans = new NLayeredLensSpace();

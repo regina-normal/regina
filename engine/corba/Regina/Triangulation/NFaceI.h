@@ -29,13 +29,7 @@
 #ifndef __NFACEI_H
 #define __NFACEI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nface.h"
-#else
-    #include "engine/triangulation/nface.h"
-#endif
+#include "triangulation/nface.h"
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"

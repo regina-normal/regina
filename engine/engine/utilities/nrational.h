@@ -35,13 +35,7 @@
  *  \brief Deals with artibrary precision rational numbers.
  */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nmpi.h"
-#else
-    #include "engine/utilities/nmpi.h"
-#endif
+#include "utilities/nmpi.h"
 
 /**
  * Represents an arbitrary precision rational number.

@@ -35,11 +35,7 @@
 #define __NPROGRESSTYPES_H
 #endif
 
-#ifdef __NO_INCLUDE_PATHS
-    #include "nprogress.h"
-#else
-    #include "engine/progress/nprogress.h"
-#endif
+#include "progress/nprogress.h"
 
 /**
  * A progress report in which the current state of progress is stored as a

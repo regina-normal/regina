@@ -36,17 +36,9 @@
 #define __NAUGTRISOLIDTORUS_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ntrisolidtorus.h"
-    #include "nlayeredsolidtorus.h"
-    #include "nsfs.h"
-#else
-    #include "engine/subcomplex/ntrisolidtorus.h"
-    #include "engine/subcomplex/nlayeredsolidtorus.h"
-    #include "engine/subcomplex/nsfs.h"
-#endif
+#include "subcomplex/ntrisolidtorus.h"
+#include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/nsfs.h"
 
 class NComponent;
 

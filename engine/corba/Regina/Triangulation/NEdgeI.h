@@ -29,13 +29,7 @@
 #ifndef __NEDGEI_H
 #define __NEDGEI_H
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nedge.h"
-#else
-    #include "engine/triangulation/nedge.h"
-#endif
+#include "triangulation/nedge.h"
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"

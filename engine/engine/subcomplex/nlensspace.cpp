@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nlensspace.h"
-    #include "numbertheory.h"
-#else
-    #include "engine/subcomplex/nlensspace.h"
-    #include "engine/maths/numbertheory.h"
-#endif
+#include "subcomplex/nlensspace.h"
+#include "maths/numbertheory.h"
 
 void NLensSpace::reduce() {
     if (p == 0) {

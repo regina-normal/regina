@@ -26,16 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-#ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
-    #include "jnitools.h"
-    #include "JNIShareableObject.h"
-#else
-    #include "engine/shareableobject.h"
-    #include "jni/jnitools.h"
-    #include "jni/engine/JNIShareableObject.h"
-#endif
+#include "shareableobject.h"
+#include "jnitools.h"
+#include "engine/JNIShareableObject.h"
 
 JNIEXPORT void JNICALL Java_normal_engine_implementation_jni_JNIShareableObject_destroy
         (JNIEnv *env, jobject me) {

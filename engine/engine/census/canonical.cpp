@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "ncensus.h"
-    #include "nprogresstypes.h"
-#else
-    #include "engine/census/ncensus.h"
-    #include "engine/progress/nprogresstypes.h"
-#endif
+#include "census/ncensus.h"
+#include "progress/nprogresstypes.h"
 
 bool NCensus::isCanonicalInternal(int whichTet, const NTetFace& equalUpTo) {
     if (whichTet == (int)nTetrahedra) {

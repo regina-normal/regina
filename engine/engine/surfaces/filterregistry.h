@@ -70,15 +70,9 @@
  */
 
 #ifndef __FILTER_REGISTRY_BODY
-    #ifdef __NO_INCLUDE_PATHS
-        #include "nsurfacefilter.h"
-        #include "sfproperties.h"
-        #include "sfcombination.h"
-    #else
-        #include "engine/surfaces/nsurfacefilter.h"
-        #include "engine/surfaces/sfproperties.h"
-        #include "engine/surfaces/sfcombination.h"
-    #endif
+    #include "surfaces/nsurfacefilter.h"
+    #include "surfaces/sfproperties.h"
+    #include "surfaces/sfcombination.h"
 #else
     REGISTER_FILTER(0, NSurfaceFilter, "Default filter")
     REGISTER_FILTER(1, NSurfaceFilterProperties,

@@ -26,13 +26,7 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nfile.h"
-#else
-    #include "engine/file/nfile.h"
-#endif
+#include "file/nfile.h"
 
 #include "EngineI.h"
 #include "NContainerI.h"

@@ -36,15 +36,8 @@
 #define __NDISC_H
 #endif
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nnormalsurface.h"
-    #include "ntriangulation.h"
-#else
-    #include "engine/surfaces/nnormalsurface.h"
-    #include "engine/triangulation/ntriangulation.h"
-#endif
+#include "surfaces/nnormalsurface.h"
+#include "triangulation/ntriangulation.h"
 
 /**
  * Specifies a single normal disc in a normal surface.

@@ -26,19 +26,10 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nedge.h"
-    #include "ncomponent.h"
-    #include "ntetrahedron.h"
-    #include "nlayeredloop.h"
-#else
-    #include "engine/triangulation/nedge.h"
-    #include "engine/triangulation/ncomponent.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/subcomplex/nlayeredloop.h"
-#endif
+#include "triangulation/nedge.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/ntetrahedron.h"
+#include "subcomplex/nlayeredloop.h"
 
 NLayeredLoop* NLayeredLoop::clone() const {
     NLayeredLoop* ans = new NLayeredLoop();

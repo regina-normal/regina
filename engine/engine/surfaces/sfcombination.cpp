@@ -26,15 +26,8 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "sfcombination.h"
-    #include "nfile.h"
-#else
-    #include "engine/surfaces/sfcombination.h"
-    #include "engine/file/nfile.h"
-#endif
+#include "surfaces/sfcombination.h"
+#include "file/nfile.h"
 
 #define TYPE_AND 1
 #define TYPE_OR 2

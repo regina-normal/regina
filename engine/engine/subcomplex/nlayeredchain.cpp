@@ -26,17 +26,9 @@
 
 /* end stub */
 
-#include "config.h"
-
-#ifdef __NO_INCLUDE_PATHS
-    #include "nedge.h"
-    #include "ntetrahedron.h"
-    #include "nlayeredchain.h"
-#else
-    #include "engine/triangulation/nedge.h"
-    #include "engine/triangulation/ntetrahedron.h"
-    #include "engine/subcomplex/nlayeredchain.h"
-#endif
+#include "triangulation/nedge.h"
+#include "triangulation/ntetrahedron.h"
+#include "subcomplex/nlayeredchain.h"
 
 bool NLayeredChain::extendAbove() {
     NTetrahedron* adj = top->getAdjacentTetrahedron(topVertexRoles[0]);
