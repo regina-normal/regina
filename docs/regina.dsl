@@ -50,6 +50,7 @@
    (list "EPS"))
 (define acceptable-mediaobject-notations
    (list "linespecific"))
+(define %graphic-default-extension% "jpg")
 
 ; === Rendering ===
 (define %head-after-factor% 0.2)        ;; not much whitespace after
@@ -99,7 +100,9 @@
 (define preferred-mediaobject-notations
   (list "PNG" "JPG" "JPEG"))
 (define acceptable-mediaobject-notations
-  (list "EPS" "BMP" "GIF" "linespecific"))                                                                                                    
+  (list "EPS" "BMP" "GIF" "linespecific"))
+(define %graphic-default-extension% "jpg")
+
 ; === Rendering ===
 (define %admon-graphics% #t)                   ;; use symbols for Caution|
 (define %admon-graphics-path% "images/admon/") ;; Important|Note|Tip|Warning

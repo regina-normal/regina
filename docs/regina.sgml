@@ -83,7 +83,7 @@
 
 <book>
  <bookinfo>
-  <graphic fileref="largeicon.jpg" align="right">
+  <graphic fileref="largeicon" align="right">
   <title>&regina; Reference Manual</title>
   &regauthor;
   <address>&regemail;</address>
@@ -99,7 +99,7 @@
   <title>&regina; - A Normal Surface Theory Calculator</title>
   <informaltable frame="none">
    <tgroup align="center" cols="1"><tbody>
-    <row><entry><graphic fileref="title.jpg" align="center"></entry></row>
+    <row><entry><graphic fileref="title" align="center"></entry></row>
     <row><entry></entry></row>
     <row><entry><emphasis>&regina;</emphasis></entry></row>
     <row><entry>
@@ -172,7 +172,7 @@
     people, and she likes running around rainforests in the dark.
    </para>
 
-   <graphic fileref="basman.jpg">
+   <graphic fileref="basman">
   </sect1>
  </chapter>
 

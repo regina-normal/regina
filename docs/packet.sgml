@@ -21,7 +21,7 @@
    corresponding packet tree, as illustrated below.
   </para>
   <para>
-   <graphic fileref="images/shots/packettree.jpg">
+   <graphic fileref="images/shots/packettree">
   </para>
  </sect1>
 
@@ -48,7 +48,7 @@
     all the triangulations in their particular section of the census.
    </para>
    <para>
-    <graphic fileref="images/shots/container.jpg">
+    <graphic fileref="images/shots/container">
    </para>
   </sect2>
 
@@ -64,7 +64,7 @@
     other miscellaneous comments into various places in the packet tree.
    </para>
    <para>
-    <graphic fileref="images/shots/text.jpg">
+    <graphic fileref="images/shots/text">
    </para>
   </sect2>
 
@@ -80,7 +80,7 @@
     number of tetrahedra with some faces glued together in pairs.
    </para>
    <para>
-    <graphic fileref="images/shots/triangulation.jpg">
+    <graphic fileref="images/shots/triangulation">
    </para>
   </sect2>
 
@@ -103,7 +103,7 @@
     triangulation in which the normal surfaces lie.
    </para>
    <para>
-    <graphic fileref="images/shots/surfacelist.jpg">
+    <graphic fileref="images/shots/surfacelist">
    </para>
   </sect2>
 
@@ -132,7 +132,7 @@
      and/or Euler characteristic.
     </para>
     <para>
-     <graphic fileref="images/shots/filterprop.jpg">
+     <graphic fileref="images/shots/filterprop">
     </para>
    </sect3>
 
@@ -149,7 +149,7 @@
      combined must be immediate child packets of the combination filter.
     </para>
     <para>
-     <graphic fileref="images/shots/filtercomb.jpg">
+     <graphic fileref="images/shots/filtercomb">
     </para>
    </sect3>
   </sect2>
@@ -170,7 +170,7 @@
     triangulation on which the structures lie.
    </para>
    <para>
-    <graphic fileref="images/shots/angles.jpg">
+    <graphic fileref="images/shots/angles">
    </para>
   </sect2>
 
@@ -192,7 +192,7 @@
     for further details.
    </para>
    <para>
-    <graphic fileref="images/shots/script.jpg">
+    <graphic fileref="images/shots/script">
    </para>
   </sect2>
  </sect1>
