@@ -64,11 +64,6 @@ class NTextUI : public QObject, public PacketUI {
         KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
 
-        /**
-         * Properties
-         */
-        bool isCommitting;
-
     public:
         /**
          * Constructor and destructor.

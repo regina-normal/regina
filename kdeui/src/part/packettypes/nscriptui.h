@@ -78,11 +78,6 @@ class NScriptUI : public QObject, public PacketUI {
         KActionCollection* scriptActions;
         QPtrList<KAction> scriptActionList;
 
-        /**
-         * Properties
-         */
-        bool isCommitting;
-
     public:
         /**
          * Constructor and destructor.

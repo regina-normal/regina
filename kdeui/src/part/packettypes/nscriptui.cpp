@@ -60,8 +60,7 @@ using regina::NScript;
 
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc, bool readWrite) :
-        PacketUI(enclosingPane), script(packet), document(doc),
-        isCommitting(false) {
+        PacketUI(enclosingPane), script(packet), document(doc) {
     ui = new QVBox();
 
     // --- Action Toolbar ---
@@ -206,8 +205,6 @@ const QPtrList<KAction>& NScriptUI::getPacketTypeActions() {
 }
 
 void NScriptUI::commit() {
-    isCommitting = true;
-
     // Update the lines.
     script->removeAllLines();
     unsigned nLines = editInterface->numLines();
@@ -227,7 +224,6 @@ void NScriptUI::commit() {
             value ? value->getPacketLabel() : std::string());
     }
 
-    isCommitting = false;
     setDirty(false);
 }
 
@@ -354,8 +350,7 @@ void NScriptUI::unimplemented() {
 }
 
 void NScriptUI::notifyScriptChanged() {
-    if (! isCommitting)
-        setDirty(true);
+    setDirty(true);
 }
 
 void NScriptUI::setPythonMode() {

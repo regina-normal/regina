@@ -43,8 +43,7 @@ using regina::NText;
 
 NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc, bool readWrite) :
-        PacketUI(enclosingPane), text(packet), document(doc),
-        isCommitting(false) {
+        PacketUI(enclosingPane), text(packet), document(doc) {
     // Create a view before we do anything else.
     // Otherwise the Vim component crashes.
     view = document->createView(0);
@@ -82,10 +81,7 @@ KTextEditor::Document* NTextUI::getTextComponent() {
 }
 
 void NTextUI::commit() {
-    isCommitting = true;
     text->setText(editInterface->text());
-    isCommitting = false;
-
     setDirty(false);
 }
 
@@ -99,8 +95,7 @@ void NTextUI::setReadWrite(bool readWrite) {
 }
 
 void NTextUI::notifyTextChanged() {
-    if (! isCommitting)
-        setDirty(true);
+    setDirty(true);
 }
 
 #include "ntextui.moc"
