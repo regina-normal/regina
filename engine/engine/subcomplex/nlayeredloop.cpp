@@ -35,7 +35,7 @@ namespace regina {
 
 NLayeredLoop* NLayeredLoop::clone() const {
     NLayeredLoop* ans = new NLayeredLoop();
-    ans->index = index;
+    ans->length = length;
     ans->hinge[0] = hinge[0];
     ans->hinge[1] = hinge[1];
     return ans;
@@ -44,12 +44,12 @@ NLayeredLoop* NLayeredLoop::clone() const {
 void NLayeredLoop::findExceptionalFibres() {
     if (hinge[1]) {
         // Not twisted.
-        seifertStructure.insertFibre(NExceptionalFibre(1, index));
+        seifertStructure.insertFibre(NExceptionalFibre(1, length));
     } else {
         // Twisted.
         seifertStructure.insertFibre(NExceptionalFibre(2, -1));
         seifertStructure.insertFibre(NExceptionalFibre(2, 1));
-        seifertStructure.insertFibre(NExceptionalFibre(index, 1));
+        seifertStructure.insertFibre(NExceptionalFibre(length, 1));
     }
     
     seifertStructure.reduce();
@@ -182,7 +182,7 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
 
                 // We have a solution!
                 NLayeredLoop* ans = new NLayeredLoop();
-                ans->index = nTet;
+                ans->length = nTet;
                 ans->hinge[0] = base->getEdge(hinge0);
                 ans->hinge[1] = (twisted ? 0 : base->getEdge(hinge1));
                 ans->findExceptionalFibres();

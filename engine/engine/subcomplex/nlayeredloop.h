@@ -70,13 +70,13 @@ class NEdge;
  * two hinge edges remain distinct (and disjoint) and the entire
  * component has two vertices.
  *
- * The \a index of the layered loop is the number of tetrahedra it
+ * The \a length of the layered loop is the number of tetrahedra it
  * contains.  A layered loop must contain at least one tetrahedron.
  */
 class NLayeredLoop : public ShareableObject {
     private:
-        unsigned long index;
-            /**< The index of this layered loop. */
+        unsigned long length;
+            /**< The length of this layered loop. */
         NEdge* hinge[2];
             /**< The hinge edge(s) of this layered loop.  If the loop is
                  twisted, the second element in this array will be \c null. */
@@ -98,10 +98,20 @@ class NLayeredLoop : public ShareableObject {
         NLayeredLoop* clone() const;
 
         /**
-         * Returns the index of this layered loop.
+         * Returns the length of this layered loop.
          * See the general class notes for further details.
          *
-         * @return the index of this layered loop.
+         * @return the length of this layered loop.
+         */
+        unsigned long getLength() const;
+        /**
+         * Returns the length of this layered loop.
+         * See the general class notes for further details.
+         *
+         * \deprecated The preferred way of accessing the length of a
+         * layered loop is through getLength().
+         *
+         * @return the length of this layered loop.
          */
         unsigned long getIndex() const;
         /**
@@ -167,8 +177,11 @@ inline NLayeredLoop::NLayeredLoop() {
 inline NLayeredLoop::~NLayeredLoop() {
 }
 
+inline unsigned long NLayeredLoop::getLength() const {
+    return length;
+}
 inline unsigned long NLayeredLoop::getIndex() const {
-    return index;
+    return length;
 }
 inline bool NLayeredLoop::isTwisted() const {
     return (hinge[1] == 0);
@@ -181,7 +194,7 @@ inline const NSFS& NLayeredLoop::getSeifertStructure() const {
 }
 inline void NLayeredLoop::writeTextShort(std::ostream& out) const {
     out << "Layered loop (" << (hinge[1] ? "not twisted" : "twisted") <<
-        ") of index " << index;
+        ") of length " << length;
 }
 
 } // namespace regina
