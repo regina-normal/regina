@@ -48,7 +48,7 @@ namespace regina {
 /**
  * An XML element reader that reads a single normal surface.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLNormalSurfaceReader : public NXMLElementReader {
     private:
@@ -96,7 +96,7 @@ class NXMLNormalSurfaceReader : public NXMLElementReader {
  * \pre The parent XML element reader is in fact an
  * NXMLTriangulationReader.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLNormalSurfaceListReader : public NXMLPacketReader {
     private:

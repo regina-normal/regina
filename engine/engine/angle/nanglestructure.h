@@ -73,7 +73,7 @@ class NXMLAngleStructureReader;
  * The final element of the vector is the scaling member as described
  * above.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NAngleStructureVector : public NRay {
     public:
@@ -123,7 +123,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          * Creates a new angle structure on the given triangulation with
          * the given coordinate vector.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param triang the triangulation on which this angle structure lies.
          * @param newVector a vector containing the individual angles in the
@@ -140,8 +140,6 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
         /**
          * Creates a newly allocated clone of this angle structure.
          *
-         * \ifaces Not present.
-         *
          * @return a clone of this angle structure.
          */
         NAngleStructure* clone() const;
@@ -150,12 +148,6 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          * Returns the requested angle in this angle structure.
          * The angle returned will be scaled down; the actual angle is
          * the returned value multiplied by <i>pi</i>.
-         *
-         * \ifaces This routine is replaced by routines \a getAngleNum()
-         * and \a getAngleDen() which return the numerator and
-         * denominator respectively of the rational that would
-         * otherwise have been returned.  Both routines have return
-         * type NLargeInteger.
          *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested angle lives; this should
@@ -201,7 +193,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          * of its properties.  This routine will be called from within
          * NAngleStructureList::writeXMLPacketData().
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -218,7 +210,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          *
          * \pre The given file is currently opened for writing.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the file to which to write.
          */
@@ -235,7 +227,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          *
          * \pre The given file is currently opened for reading.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param in the file from which to read.
          * @param triangulation the triangulation on which this angle

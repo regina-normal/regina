@@ -48,7 +48,7 @@ namespace regina {
 /**
  * An XML element reader that reads a single angle structure.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLAngleStructureReader : public NXMLElementReader {
     private:
@@ -90,7 +90,7 @@ class NXMLAngleStructureReader : public NXMLElementReader {
  * \pre The parent XML element reader is in fact an
  * NXMLTriangulationReader.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLAngleStructureListReader : public NXMLPacketReader {
     private:

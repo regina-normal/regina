@@ -59,7 +59,7 @@ namespace regina {
  * its documentation for further notes on how the filter should be
  * constructed.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLFilterReader : public NXMLElementReader {
     public:
@@ -93,7 +93,7 @@ class NXMLFilterReader : public NXMLElementReader {
  *
  * \pre The parent XML element reader is in fact an NXMLPacketReader.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLFilterPacketReader : public NXMLPacketReader {
     private:
