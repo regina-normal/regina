@@ -49,6 +49,7 @@ void addSurfaces();
 void addTriangulation();
 void addUtilities();
 
+using boost::python::self;
 using regina::ShareableObject;
 
 namespace {
@@ -64,6 +65,16 @@ namespace {
 
     void shareableWriteTextLong(const ShareableObject& obj) {
         obj.writeTextLong(std::cout);
+    }
+}
+
+/**
+ * Make == work like pointer equality for ShareableObject.
+ */
+namespace regina {
+    static inline bool operator == (const ShareableObject& a,
+            const ShareableObject& b) {
+        return &a == &b;
     }
 }
 
@@ -92,6 +103,7 @@ BOOST_PYTHON_MODULE(regina) {
         .def("toString", &ShareableObject::toString)
         .def("toStringLong", &ShareableObject::toStringLong)
         .def("__str__", &ShareableObject::toString)
+        .def(self == self)
     ;
 
     // Components from subdirectories (in approximate dependency order):
