@@ -1,0 +1,904 @@
+<?xml version="1.0"?>
+<reginadata engine="4.1.2">
+<packet label="GAP simplification tests"
+	type="Container" typeid="1"
+	parent="">
+<packet label="S3 : abcde.abcfg.d.e.f.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 1 225 4 225 1 180 6 30 </tet>
+    <tet desc=""> 2 225 0 225 2 180 0 180 </tet>
+    <tet desc=""> 3 225 1 225 5 30 1 180 </tet>
+    <tet desc=""> 4 225 2 225 3 180 3 180 </tet>
+    <tet desc=""> 0 225 3 225 4 180 4 180 </tet>
+    <tet desc=""> 6 225 2 75 5 180 5 180 </tet>
+    <tet desc=""> 0 75 5 225 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="0">
+</group>
+  </fundgroup>
+</packet> <!-- S3 : abcde.abcfg.d.e.f.g (Triangulation) -->
+<packet label="RP3 : abacdecf.bfeg.d.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 1 225 5 225 2 30 1 30 </tet>
+    <tet desc=""> 0 75 0 225 5 180 6 30 </tet>
+    <tet desc=""> 3 225 0 75 5 30 4 30 </tet>
+    <tet desc=""> 4 225 2 225 3 180 3 180 </tet>
+    <tet desc=""> 2 75 3 225 6 30 5 180 </tet>
+    <tet desc=""> 0 225 2 75 4 180 1 180 </tet>
+    <tet desc=""> 1 75 4 75 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^-2 1^-1 0^-1 1^-1 0^-2 1^-1 0^-1 1^-1 </reln>
+  <reln> 0^2 1^1 0^1 1^1 0^2 1^1 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- RP3 : abacdecf.bfeg.d.g (Triangulation) -->
+<packet label="L(10,3) : abacd.cedf.fgg.be (expanded)"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="168">
+    <tet desc=""> 30 225 6 225 1 180 5 108 </tet>
+    <tet desc=""> 31 225 7 225 3 216 0 180 </tet>
+    <tet desc=""> 32 225 3 108 12 198 4 180 </tet>
+    <tet desc=""> 33 225 1 216 13 198 2 108 </tet>
+    <tet desc=""> 34 225 5 216 2 180 18 39 </tet>
+    <tet desc=""> 35 225 0 108 4 216 19 39 </tet>
+    <tet desc=""> 0 225 72 225 7 180 11 39 </tet>
+    <tet desc=""> 1 225 73 225 9 198 6 180 </tet>
+    <tet desc=""> 9 39 74 225 14 216 10 180 </tet>
+    <tet desc=""> 7 198 75 225 15 216 8 39 </tet>
+    <tet desc=""> 11 198 76 225 8 180 20 108 </tet>
+    <tet desc=""> 6 39 77 225 10 198 21 108 </tet>
+    <tet desc=""> 2 198 13 108 57 30 17 39 </tet>
+    <tet desc=""> 3 198 15 225 56 30 12 108 </tet>
+    <tet desc=""> 15 39 8 216 59 30 16 108 </tet>
+    <tet desc=""> 13 225 9 216 58 30 14 39 </tet>
+    <tet desc=""> 17 225 14 108 54 30 22 180 </tet>
+    <tet desc=""> 12 39 16 225 55 30 23 180 </tet>
+    <tet desc=""> 4 39 19 216 23 198 27 30 </tet>
+    <tet desc=""> 5 39 21 225 18 216 26 30 </tet>
+    <tet desc=""> 21 198 10 108 22 216 29 30 </tet>
+    <tet desc=""> 19 225 11 108 20 198 28 30 </tet>
+    <tet desc=""> 23 225 20 216 16 180 24 30 </tet>
+    <tet desc=""> 18 198 22 225 17 180 25 30 </tet>
+    <tet desc=""> 22 75 30 225 25 180 29 108 </tet>
+    <tet desc=""> 23 75 31 225 27 216 24 180 </tet>
+    <tet desc=""> 19 75 27 108 36 198 28 180 </tet>
+    <tet desc=""> 18 75 25 216 37 198 26 108 </tet>
+    <tet desc=""> 21 75 29 216 26 180 42 39 </tet>
+    <tet desc=""> 20 75 24 108 28 216 43 39 </tet>
+    <tet desc=""> 24 225 0 225 31 180 35 39 </tet>
+    <tet desc=""> 25 225 1 225 33 198 30 180 </tet>
+    <tet desc=""> 33 39 2 225 38 216 34 180 </tet>
+    <tet desc=""> 31 198 3 225 39 216 32 39 </tet>
+    <tet desc=""> 35 198 4 225 32 180 44 108 </tet>
+    <tet desc=""> 30 39 5 225 34 198 45 108 </tet>
+    <tet desc=""> 26 198 37 108 114 180 41 39 </tet>
+    <tet desc=""> 27 198 39 225 115 180 36 108 </tet>
+    <tet desc=""> 39 39 32 216 116 180 40 108 </tet>
+    <tet desc=""> 37 225 33 216 117 180 38 39 </tet>
+    <tet desc=""> 41 225 38 108 118 180 46 180 </tet>
+    <tet desc=""> 36 39 40 225 119 180 47 180 </tet>
+    <tet desc=""> 28 39 43 216 47 198 108 180 </tet>
+    <tet desc=""> 29 39 45 225 42 216 109 180 </tet>
+    <tet desc=""> 45 198 34 108 46 216 110 180 </tet>
+    <tet desc=""> 43 225 35 108 44 198 111 180 </tet>
+    <tet desc=""> 47 225 44 216 40 180 112 180 </tet>
+    <tet desc=""> 42 198 46 225 41 180 113 180 </tet>
+    <tet desc=""> 78 225 54 225 49 180 53 108 </tet>
+    <tet desc=""> 79 225 55 225 51 216 48 180 </tet>
+    <tet desc=""> 80 225 51 108 60 198 52 180 </tet>
+    <tet desc=""> 81 225 49 216 61 198 50 108 </tet>
+    <tet desc=""> 82 225 53 216 50 180 66 39 </tet>
+    <tet desc=""> 83 225 48 108 52 216 67 39 </tet>
+    <tet desc=""> 48 225 16 75 55 180 59 39 </tet>
+    <tet desc=""> 49 225 17 75 57 198 54 180 </tet>
+    <tet desc=""> 57 39 13 75 62 216 58 180 </tet>
+    <tet desc=""> 55 198 12 75 63 216 56 39 </tet>
+    <tet desc=""> 59 198 15 75 56 180 68 108 </tet>
+    <tet desc=""> 54 39 14 75 58 198 69 108 </tet>
+    <tet desc=""> 50 198 61 108 105 30 65 39 </tet>
+    <tet desc=""> 51 198 63 225 104 30 60 108 </tet>
+    <tet desc=""> 63 39 56 216 107 30 64 108 </tet>
+    <tet desc=""> 61 225 57 216 106 30 62 39 </tet>
+    <tet desc=""> 65 225 62 108 102 30 70 180 </tet>
+    <tet desc=""> 60 39 64 225 103 30 71 180 </tet>
+    <tet desc=""> 52 39 67 216 71 198 123 30 </tet>
+    <tet desc=""> 53 39 69 225 66 216 122 30 </tet>
+    <tet desc=""> 69 198 58 108 70 216 125 30 </tet>
+    <tet desc=""> 67 225 59 108 68 198 124 30 </tet>
+    <tet desc=""> 71 225 68 216 64 180 120 30 </tet>
+    <tet desc=""> 66 198 70 225 65 180 121 30 </tet>
+    <tet desc=""> 6 225 78 225 73 180 77 108 </tet>
+    <tet desc=""> 7 225 79 225 75 216 72 180 </tet>
+    <tet desc=""> 8 225 75 108 84 198 76 180 </tet>
+    <tet desc=""> 9 225 73 216 85 198 74 108 </tet>
+    <tet desc=""> 10 225 77 216 74 180 90 39 </tet>
+    <tet desc=""> 11 225 72 108 76 216 91 39 </tet>
+    <tet desc=""> 72 225 48 225 79 180 83 39 </tet>
+    <tet desc=""> 73 225 49 225 81 198 78 180 </tet>
+    <tet desc=""> 81 39 50 225 86 216 82 180 </tet>
+    <tet desc=""> 79 198 51 225 87 216 80 39 </tet>
+    <tet desc=""> 83 198 52 225 80 180 92 108 </tet>
+    <tet desc=""> 78 39 53 225 82 198 93 108 </tet>
+    <tet desc=""> 74 198 85 108 129 30 89 39 </tet>
+    <tet desc=""> 75 198 87 225 128 30 84 108 </tet>
+    <tet desc=""> 87 39 80 216 131 30 88 108 </tet>
+    <tet desc=""> 85 225 81 216 130 30 86 39 </tet>
+    <tet desc=""> 89 225 86 108 126 30 94 180 </tet>
+    <tet desc=""> 84 39 88 225 127 30 95 180 </tet>
+    <tet desc=""> 76 39 91 216 95 198 99 30 </tet>
+    <tet desc=""> 77 39 93 225 90 216 98 30 </tet>
+    <tet desc=""> 93 198 82 108 94 216 101 30 </tet>
+    <tet desc=""> 91 225 83 108 92 198 100 30 </tet>
+    <tet desc=""> 95 225 92 216 88 180 96 30 </tet>
+    <tet desc=""> 90 198 94 225 89 180 97 30 </tet>
+    <tet desc=""> 94 75 102 225 97 180 101 108 </tet>
+    <tet desc=""> 95 75 103 225 99 216 96 180 </tet>
+    <tet desc=""> 91 75 99 108 108 198 100 180 </tet>
+    <tet desc=""> 90 75 97 216 109 198 98 108 </tet>
+    <tet desc=""> 93 75 101 216 98 180 114 39 </tet>
+    <tet desc=""> 92 75 96 108 100 216 115 39 </tet>
+    <tet desc=""> 96 225 64 75 103 180 107 39 </tet>
+    <tet desc=""> 97 225 65 75 105 198 102 180 </tet>
+    <tet desc=""> 105 39 61 75 110 216 106 180 </tet>
+    <tet desc=""> 103 198 60 75 111 216 104 39 </tet>
+    <tet desc=""> 107 198 63 75 104 180 116 108 </tet>
+    <tet desc=""> 102 39 62 75 106 198 117 108 </tet>
+    <tet desc=""> 98 198 109 108 42 180 113 39 </tet>
+    <tet desc=""> 99 198 111 225 43 180 108 108 </tet>
+    <tet desc=""> 111 39 104 216 44 180 112 108 </tet>
+    <tet desc=""> 109 225 105 216 45 180 110 39 </tet>
+    <tet desc=""> 113 225 110 108 46 180 118 180 </tet>
+    <tet desc=""> 108 39 112 225 47 180 119 180 </tet>
+    <tet desc=""> 100 39 115 216 119 198 36 180 </tet>
+    <tet desc=""> 101 39 117 225 114 216 37 180 </tet>
+    <tet desc=""> 117 198 106 108 118 216 38 180 </tet>
+    <tet desc=""> 115 225 107 108 116 198 39 180 </tet>
+    <tet desc=""> 119 225 116 216 112 180 40 180 </tet>
+    <tet desc=""> 114 198 118 225 113 180 41 180 </tet>
+    <tet desc=""> 70 75 126 225 121 180 125 108 </tet>
+    <tet desc=""> 71 75 127 225 123 216 120 180 </tet>
+    <tet desc=""> 67 75 123 108 132 198 124 180 </tet>
+    <tet desc=""> 66 75 121 216 133 198 122 108 </tet>
+    <tet desc=""> 69 75 125 216 122 180 138 39 </tet>
+    <tet desc=""> 68 75 120 108 124 216 139 39 </tet>
+    <tet desc=""> 120 225 88 75 127 180 131 39 </tet>
+    <tet desc=""> 121 225 89 75 129 198 126 180 </tet>
+    <tet desc=""> 129 39 85 75 134 216 130 180 </tet>
+    <tet desc=""> 127 198 84 75 135 216 128 39 </tet>
+    <tet desc=""> 131 198 87 75 128 180 140 108 </tet>
+    <tet desc=""> 126 39 86 75 130 198 141 108 </tet>
+    <tet desc=""> 122 198 133 108 153 30 137 39 </tet>
+    <tet desc=""> 123 198 135 225 152 30 132 108 </tet>
+    <tet desc=""> 135 39 128 216 155 30 136 108 </tet>
+    <tet desc=""> 133 225 129 216 154 30 134 39 </tet>
+    <tet desc=""> 137 225 134 108 150 30 142 180 </tet>
+    <tet desc=""> 132 39 136 225 151 30 143 180 </tet>
+    <tet desc=""> 124 39 139 216 143 198 156 180 </tet>
+    <tet desc=""> 125 39 141 225 138 216 157 180 </tet>
+    <tet desc=""> 141 198 130 108 142 216 158 180 </tet>
+    <tet desc=""> 139 225 131 108 140 198 159 180 </tet>
+    <tet desc=""> 143 225 140 216 136 180 160 180 </tet>
+    <tet desc=""> 138 198 142 225 137 180 161 180 </tet>
+    <tet desc=""> 166 75 150 225 145 180 149 108 </tet>
+    <tet desc=""> 167 75 151 225 147 216 144 180 </tet>
+    <tet desc=""> 163 75 147 108 156 198 148 180 </tet>
+    <tet desc=""> 162 75 145 216 157 198 146 108 </tet>
+    <tet desc=""> 165 75 149 216 146 180 162 39 </tet>
+    <tet desc=""> 164 75 144 108 148 216 163 39 </tet>
+    <tet desc=""> 144 225 136 75 151 180 155 39 </tet>
+    <tet desc=""> 145 225 137 75 153 198 150 180 </tet>
+    <tet desc=""> 153 39 133 75 158 216 154 180 </tet>
+    <tet desc=""> 151 198 132 75 159 216 152 39 </tet>
+    <tet desc=""> 155 198 135 75 152 180 164 108 </tet>
+    <tet desc=""> 150 39 134 75 154 198 165 108 </tet>
+    <tet desc=""> 146 198 157 108 138 180 161 39 </tet>
+    <tet desc=""> 147 198 159 225 139 180 156 108 </tet>
+    <tet desc=""> 159 39 152 216 140 180 160 108 </tet>
+    <tet desc=""> 157 225 153 216 141 180 158 39 </tet>
+    <tet desc=""> 161 225 158 108 142 180 166 180 </tet>
+    <tet desc=""> 156 39 160 225 143 180 167 180 </tet>
+    <tet desc=""> 148 39 163 216 167 198 147 30 </tet>
+    <tet desc=""> 149 39 165 225 162 216 146 30 </tet>
+    <tet desc=""> 165 198 154 108 166 216 149 30 </tet>
+    <tet desc=""> 163 225 155 108 164 198 148 30 </tet>
+    <tet desc=""> 167 225 164 216 160 180 144 30 </tet>
+    <tet desc=""> 162 198 166 225 161 180 145 30 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^-2 1^-1 0^-1 1^-1 </reln>
+  <reln> 1^2 0^1 1^1 0^1 1^1 0^1 1^1 0^1 1^1 0^1 1^1 0^1 1^1 0^1 </reln>
+  <reln> 0^2 1^1 0^1 1^1 </reln>
+  <reln> 1^-2 0^-1 1^-1 0^-1 1^-1 0^-1 1^-1 0^-1 1^-1 0^-1 1^-1 0^-1 1^-1 0^-1 </reln>
+  <reln> 0^-2 1^-1 0^-1 1^-1 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(10,3) : abacd.cedf.fgg.be (expanded) (Triangulation) -->
+<packet label="L(12,5) : aabccdbe.df.eg.f.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 0 75 4 225 1 30 0 30 </tet>
+    <tet desc=""> 2 225 0 75 4 30 3 30 </tet>
+    <tet desc=""> 2 75 1 225 3 30 2 30 </tet>
+    <tet desc=""> 1 75 2 75 5 30 5 30 </tet>
+    <tet desc=""> 0 225 1 75 6 30 6 30 </tet>
+    <tet desc=""> 3 75 3 75 5 180 5 180 </tet>
+    <tet desc=""> 4 75 4 75 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="3">
+  <reln> 0^-1 1^1 2^1 0^-1 1^1 2^3 </reln>
+  <reln> 1^-1 2^-1 1^-1 0^1 2^-1 1^-1 0^1 </reln>
+  <reln> 0^2 2^-1 1^-1 0^1 2^-1 1^-1 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(12,5) : aabccdbe.df.eg.f.g (Triangulation) -->
+<packet label="L(12,5) : aabccbde.df.eg.f.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 0 75 4 225 1 30 0 30 </tet>
+    <tet desc=""> 2 225 0 75 3 30 2 180 </tet>
+    <tet desc=""> 2 75 1 225 1 180 2 30 </tet>
+    <tet desc=""> 4 225 1 75 5 30 5 30 </tet>
+    <tet desc=""> 0 225 3 225 6 30 6 30 </tet>
+    <tet desc=""> 3 75 3 75 5 180 5 180 </tet>
+    <tet desc=""> 4 75 4 75 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 1^-5 0^1 1^-3 0^1 </reln>
+  <reln> 0^2 1^-3 0^1 1^-3 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(12,5) : aabccbde.df.eg.f.g (Triangulation) -->
+<packet label="L(14,3) : aabcdbe.cff.dge.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 0 75 4 225 1 30 0 30 </tet>
+    <tet desc=""> 2 225 0 75 4 30 3 30 </tet>
+    <tet desc=""> 3 225 1 225 5 30 5 180 </tet>
+    <tet desc=""> 1 75 2 225 6 30 4 180 </tet>
+    <tet desc=""> 0 225 1 75 3 180 6 30 </tet>
+    <tet desc=""> 5 75 2 75 2 180 5 30 </tet>
+    <tet desc=""> 4 75 3 75 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^-1 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-2 1^1 0^-1 1^2 0^-1 1^1 0^-2 1^1 0^-1 1^1 </reln>
+  <reln> 1^1 0^-1 1^1 0^-2 1^1 0^-2 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(14,3) : aabcdbe.cff.dge.g (Triangulation) -->
+<packet label="L(14,3) : abacdce.bef.dgg.f (expanded)"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="168">
+    <tet desc=""> 30 225 6 225 1 180 5 108 </tet>
+    <tet desc=""> 31 225 7 225 3 216 0 180 </tet>
+    <tet desc=""> 32 225 3 108 12 198 4 180 </tet>
+    <tet desc=""> 33 225 1 216 13 198 2 108 </tet>
+    <tet desc=""> 34 225 5 216 2 180 18 39 </tet>
+    <tet desc=""> 35 225 0 108 4 216 19 39 </tet>
+    <tet desc=""> 0 225 96 225 7 180 11 39 </tet>
+    <tet desc=""> 1 225 97 225 9 198 6 180 </tet>
+    <tet desc=""> 9 39 98 225 14 216 10 180 </tet>
+    <tet desc=""> 7 198 99 225 15 216 8 39 </tet>
+    <tet desc=""> 11 198 100 225 8 180 20 108 </tet>
+    <tet desc=""> 6 39 101 225 10 198 21 108 </tet>
+    <tet desc=""> 2 198 13 108 57 30 17 39 </tet>
+    <tet desc=""> 3 198 15 225 56 30 12 108 </tet>
+    <tet desc=""> 15 39 8 216 59 30 16 108 </tet>
+    <tet desc=""> 13 225 9 216 58 30 14 39 </tet>
+    <tet desc=""> 17 225 14 108 54 30 22 180 </tet>
+    <tet desc=""> 12 39 16 225 55 30 23 180 </tet>
+    <tet desc=""> 4 39 19 216 23 198 27 30 </tet>
+    <tet desc=""> 5 39 21 225 18 216 26 30 </tet>
+    <tet desc=""> 21 198 10 108 22 216 29 30 </tet>
+    <tet desc=""> 19 225 11 108 20 198 28 30 </tet>
+    <tet desc=""> 23 225 20 216 16 180 24 30 </tet>
+    <tet desc=""> 18 198 22 225 17 180 25 30 </tet>
+    <tet desc=""> 22 75 30 225 25 180 29 108 </tet>
+    <tet desc=""> 23 75 31 225 27 216 24 180 </tet>
+    <tet desc=""> 19 75 27 108 36 198 28 180 </tet>
+    <tet desc=""> 18 75 25 216 37 198 26 108 </tet>
+    <tet desc=""> 21 75 29 216 26 180 42 39 </tet>
+    <tet desc=""> 20 75 24 108 28 216 43 39 </tet>
+    <tet desc=""> 24 225 0 225 31 180 35 39 </tet>
+    <tet desc=""> 25 225 1 225 33 198 30 180 </tet>
+    <tet desc=""> 33 39 2 225 38 216 34 180 </tet>
+    <tet desc=""> 31 198 3 225 39 216 32 39 </tet>
+    <tet desc=""> 35 198 4 225 32 180 44 108 </tet>
+    <tet desc=""> 30 39 5 225 34 198 45 108 </tet>
+    <tet desc=""> 26 198 37 108 114 180 41 39 </tet>
+    <tet desc=""> 27 198 39 225 115 180 36 108 </tet>
+    <tet desc=""> 39 39 32 216 116 180 40 108 </tet>
+    <tet desc=""> 37 225 33 216 117 180 38 39 </tet>
+    <tet desc=""> 41 225 38 108 118 180 46 180 </tet>
+    <tet desc=""> 36 39 40 225 119 180 47 180 </tet>
+    <tet desc=""> 28 39 43 216 47 198 123 30 </tet>
+    <tet desc=""> 29 39 45 225 42 216 122 30 </tet>
+    <tet desc=""> 45 198 34 108 46 216 125 30 </tet>
+    <tet desc=""> 43 225 35 108 44 198 124 30 </tet>
+    <tet desc=""> 47 225 44 216 40 180 120 30 </tet>
+    <tet desc=""> 42 198 46 225 41 180 121 30 </tet>
+    <tet desc=""> 78 225 54 225 49 180 53 108 </tet>
+    <tet desc=""> 79 225 55 225 51 216 48 180 </tet>
+    <tet desc=""> 80 225 51 108 60 198 52 180 </tet>
+    <tet desc=""> 81 225 49 216 61 198 50 108 </tet>
+    <tet desc=""> 82 225 53 216 50 180 66 39 </tet>
+    <tet desc=""> 83 225 48 108 52 216 67 39 </tet>
+    <tet desc=""> 48 225 16 75 55 180 59 39 </tet>
+    <tet desc=""> 49 225 17 75 57 198 54 180 </tet>
+    <tet desc=""> 57 39 13 75 62 216 58 180 </tet>
+    <tet desc=""> 55 198 12 75 63 216 56 39 </tet>
+    <tet desc=""> 59 198 15 75 56 180 68 108 </tet>
+    <tet desc=""> 54 39 14 75 58 198 69 108 </tet>
+    <tet desc=""> 50 198 61 108 105 30 65 39 </tet>
+    <tet desc=""> 51 198 63 225 104 30 60 108 </tet>
+    <tet desc=""> 63 39 56 216 107 30 64 108 </tet>
+    <tet desc=""> 61 225 57 216 106 30 62 39 </tet>
+    <tet desc=""> 65 225 62 108 102 30 70 180 </tet>
+    <tet desc=""> 60 39 64 225 103 30 71 180 </tet>
+    <tet desc=""> 52 39 67 216 71 198 75 30 </tet>
+    <tet desc=""> 53 39 69 225 66 216 74 30 </tet>
+    <tet desc=""> 69 198 58 108 70 216 77 30 </tet>
+    <tet desc=""> 67 225 59 108 68 198 76 30 </tet>
+    <tet desc=""> 71 225 68 216 64 180 72 30 </tet>
+    <tet desc=""> 66 198 70 225 65 180 73 30 </tet>
+    <tet desc=""> 70 75 78 225 73 180 77 108 </tet>
+    <tet desc=""> 71 75 79 225 75 216 72 180 </tet>
+    <tet desc=""> 67 75 75 108 84 198 76 180 </tet>
+    <tet desc=""> 66 75 73 216 85 198 74 108 </tet>
+    <tet desc=""> 69 75 77 216 74 180 90 39 </tet>
+    <tet desc=""> 68 75 72 108 76 216 91 39 </tet>
+    <tet desc=""> 72 225 48 225 79 180 83 39 </tet>
+    <tet desc=""> 73 225 49 225 81 198 78 180 </tet>
+    <tet desc=""> 81 39 50 225 86 216 82 180 </tet>
+    <tet desc=""> 79 198 51 225 87 216 80 39 </tet>
+    <tet desc=""> 83 198 52 225 80 180 92 108 </tet>
+    <tet desc=""> 78 39 53 225 82 198 93 108 </tet>
+    <tet desc=""> 74 198 85 108 153 30 89 39 </tet>
+    <tet desc=""> 75 198 87 225 152 30 84 108 </tet>
+    <tet desc=""> 87 39 80 216 155 30 88 108 </tet>
+    <tet desc=""> 85 225 81 216 154 30 86 39 </tet>
+    <tet desc=""> 89 225 86 108 150 30 94 180 </tet>
+    <tet desc=""> 84 39 88 225 151 30 95 180 </tet>
+    <tet desc=""> 76 39 91 216 95 198 156 180 </tet>
+    <tet desc=""> 77 39 93 225 90 216 157 180 </tet>
+    <tet desc=""> 93 198 82 108 94 216 158 180 </tet>
+    <tet desc=""> 91 225 83 108 92 198 159 180 </tet>
+    <tet desc=""> 95 225 92 216 88 180 160 180 </tet>
+    <tet desc=""> 90 198 94 225 89 180 161 180 </tet>
+    <tet desc=""> 6 225 102 225 97 180 101 108 </tet>
+    <tet desc=""> 7 225 103 225 99 216 96 180 </tet>
+    <tet desc=""> 8 225 99 108 108 198 100 180 </tet>
+    <tet desc=""> 9 225 97 216 109 198 98 108 </tet>
+    <tet desc=""> 10 225 101 216 98 180 114 39 </tet>
+    <tet desc=""> 11 225 96 108 100 216 115 39 </tet>
+    <tet desc=""> 96 225 64 75 103 180 107 39 </tet>
+    <tet desc=""> 97 225 65 75 105 198 102 180 </tet>
+    <tet desc=""> 105 39 61 75 110 216 106 180 </tet>
+    <tet desc=""> 103 198 60 75 111 216 104 39 </tet>
+    <tet desc=""> 107 198 63 75 104 180 116 108 </tet>
+    <tet desc=""> 102 39 62 75 106 198 117 108 </tet>
+    <tet desc=""> 98 198 109 108 129 30 113 39 </tet>
+    <tet desc=""> 99 198 111 225 128 30 108 108 </tet>
+    <tet desc=""> 111 39 104 216 131 30 112 108 </tet>
+    <tet desc=""> 109 225 105 216 130 30 110 39 </tet>
+    <tet desc=""> 113 225 110 108 126 30 118 180 </tet>
+    <tet desc=""> 108 39 112 225 127 30 119 180 </tet>
+    <tet desc=""> 100 39 115 216 119 198 36 180 </tet>
+    <tet desc=""> 101 39 117 225 114 216 37 180 </tet>
+    <tet desc=""> 117 198 106 108 118 216 38 180 </tet>
+    <tet desc=""> 115 225 107 108 116 198 39 180 </tet>
+    <tet desc=""> 119 225 116 216 112 180 40 180 </tet>
+    <tet desc=""> 114 198 118 225 113 180 41 180 </tet>
+    <tet desc=""> 46 75 126 225 121 180 125 108 </tet>
+    <tet desc=""> 47 75 127 225 123 216 120 180 </tet>
+    <tet desc=""> 43 75 123 108 132 198 124 180 </tet>
+    <tet desc=""> 42 75 121 216 133 198 122 108 </tet>
+    <tet desc=""> 45 75 125 216 122 180 138 39 </tet>
+    <tet desc=""> 44 75 120 108 124 216 139 39 </tet>
+    <tet desc=""> 120 225 112 75 127 180 131 39 </tet>
+    <tet desc=""> 121 225 113 75 129 198 126 180 </tet>
+    <tet desc=""> 129 39 109 75 134 216 130 180 </tet>
+    <tet desc=""> 127 198 108 75 135 216 128 39 </tet>
+    <tet desc=""> 131 198 111 75 128 180 140 108 </tet>
+    <tet desc=""> 126 39 110 75 130 198 141 108 </tet>
+    <tet desc=""> 122 198 133 108 138 180 137 39 </tet>
+    <tet desc=""> 123 198 135 225 139 180 132 108 </tet>
+    <tet desc=""> 135 39 128 216 140 180 136 108 </tet>
+    <tet desc=""> 133 225 129 216 141 180 134 39 </tet>
+    <tet desc=""> 137 225 134 108 142 180 142 180 </tet>
+    <tet desc=""> 132 39 136 225 143 180 143 180 </tet>
+    <tet desc=""> 124 39 139 216 143 198 132 180 </tet>
+    <tet desc=""> 125 39 141 225 138 216 133 180 </tet>
+    <tet desc=""> 141 198 130 108 142 216 134 180 </tet>
+    <tet desc=""> 139 225 131 108 140 198 135 180 </tet>
+    <tet desc=""> 143 225 140 216 136 180 136 180 </tet>
+    <tet desc=""> 138 198 142 225 137 180 137 180 </tet>
+    <tet desc=""> 166 75 150 225 145 180 149 108 </tet>
+    <tet desc=""> 167 75 151 225 147 216 144 180 </tet>
+    <tet desc=""> 163 75 147 108 156 198 148 180 </tet>
+    <tet desc=""> 162 75 145 216 157 198 146 108 </tet>
+    <tet desc=""> 165 75 149 216 146 180 162 39 </tet>
+    <tet desc=""> 164 75 144 108 148 216 163 39 </tet>
+    <tet desc=""> 144 225 88 75 151 180 155 39 </tet>
+    <tet desc=""> 145 225 89 75 153 198 150 180 </tet>
+    <tet desc=""> 153 39 85 75 158 216 154 180 </tet>
+    <tet desc=""> 151 198 84 75 159 216 152 39 </tet>
+    <tet desc=""> 155 198 87 75 152 180 164 108 </tet>
+    <tet desc=""> 150 39 86 75 154 198 165 108 </tet>
+    <tet desc=""> 146 198 157 108 90 180 161 39 </tet>
+    <tet desc=""> 147 198 159 225 91 180 156 108 </tet>
+    <tet desc=""> 159 39 152 216 92 180 160 108 </tet>
+    <tet desc=""> 157 225 153 216 93 180 158 39 </tet>
+    <tet desc=""> 161 225 158 108 94 180 166 180 </tet>
+    <tet desc=""> 156 39 160 225 95 180 167 180 </tet>
+    <tet desc=""> 148 39 163 216 167 198 147 30 </tet>
+    <tet desc=""> 149 39 165 225 162 216 146 30 </tet>
+    <tet desc=""> 165 198 154 108 166 216 149 30 </tet>
+    <tet desc=""> 163 225 155 108 164 198 148 30 </tet>
+    <tet desc=""> 167 225 164 216 160 180 144 30 </tet>
+    <tet desc=""> 162 198 166 225 161 180 145 30 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 1^1 0^1 1^1 0^1 1^2 0^1 </reln>
+  <reln> 1^1 0^1 1^2 0^1 1^1 0^1 </reln>
+  <reln> 1^5 0^1 1^2 0^1 1^1 0^1 1^2 0^1 </reln>
+  <reln> 1^-1 0^1 1^2 0^1 1^1 0^1 1^2 0^1 1^1 0^-1 1^-2 0^-1 1^-1 0^-1 1^-2 0^-1 </reln>
+  <reln> 1^-5 0^-1 1^-2 0^-1 1^-1 0^-1 1^-2 0^-1 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(14,3) : abacdce.bef.dgg.f (expanded) (Triangulation) -->
+<packet label="L(16,7) : aabcddcbe.efg.f.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 0 75 4 225 1 30 0 30 </tet>
+    <tet desc=""> 2 225 0 75 4 30 2 180 </tet>
+    <tet desc=""> 3 225 1 225 1 180 3 180 </tet>
+    <tet desc=""> 3 75 2 225 2 180 3 30 </tet>
+    <tet desc=""> 0 225 1 75 5 30 6 30 </tet>
+    <tet desc=""> 6 225 4 75 5 180 5 180 </tet>
+    <tet desc=""> 4 75 5 225 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="1">
+  <reln> 0^16 </reln>
+  <reln> 0^-16 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(16,7) : aabcddcbe.efg.f.g (Triangulation) -->
+<packet label="L(16,7) : aabcddcebf.egf.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 0 75 5 225 1 30 0 30 </tet>
+    <tet desc=""> 2 225 0 75 5 30 4 30 </tet>
+    <tet desc=""> 3 225 1 225 4 30 3 180 </tet>
+    <tet desc=""> 3 75 2 225 2 180 3 30 </tet>
+    <tet desc=""> 1 75 2 75 6 30 5 180 </tet>
+    <tet desc=""> 0 225 1 75 4 180 6 30 </tet>
+    <tet desc=""> 5 75 4 75 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^2 1^3 0^2 1^5 </reln>
+  <reln> 0^-3 1^-3 0^-2 1^-3 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(16,7) : aabcddcebf.egf.g (Triangulation) -->
+<packet label="L(20,9) : aabcdeedcbf.fg.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 0 75 5 225 1 30 0 30 </tet>
+    <tet desc=""> 2 225 0 75 5 30 2 180 </tet>
+    <tet desc=""> 3 225 1 225 1 180 3 180 </tet>
+    <tet desc=""> 4 225 2 225 2 180 4 180 </tet>
+    <tet desc=""> 4 75 3 225 3 180 4 30 </tet>
+    <tet desc=""> 0 225 1 75 6 30 6 30 </tet>
+    <tet desc=""> 5 75 5 75 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 1^-9 0^1 1^-7 0^1 </reln>
+  <reln> 0^2 1^-7 0^1 1^-7 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(20,9) : aabcdeedcbf.fg.g (Triangulation) -->
+<packet label="L(38,9) : aabcdefedcb.fgg (expanded)"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="168">
+    <tet desc=""> 22 75 6 225 1 180 5 108 </tet>
+    <tet desc=""> 23 75 7 225 3 216 0 180 </tet>
+    <tet desc=""> 19 75 3 108 12 198 4 180 </tet>
+    <tet desc=""> 18 75 1 216 13 198 2 108 </tet>
+    <tet desc=""> 21 75 5 216 2 180 18 39 </tet>
+    <tet desc=""> 20 75 0 108 4 216 19 39 </tet>
+    <tet desc=""> 0 225 40 75 7 180 11 39 </tet>
+    <tet desc=""> 1 225 41 75 9 198 6 180 </tet>
+    <tet desc=""> 9 39 37 75 14 216 10 180 </tet>
+    <tet desc=""> 7 198 36 75 15 216 8 39 </tet>
+    <tet desc=""> 11 198 39 75 8 180 20 108 </tet>
+    <tet desc=""> 6 39 38 75 10 198 21 108 </tet>
+    <tet desc=""> 2 198 13 108 33 30 17 39 </tet>
+    <tet desc=""> 3 198 15 225 32 30 12 108 </tet>
+    <tet desc=""> 15 39 8 216 35 30 16 108 </tet>
+    <tet desc=""> 13 225 9 216 34 30 14 39 </tet>
+    <tet desc=""> 17 225 14 108 30 30 22 180 </tet>
+    <tet desc=""> 12 39 16 225 31 30 23 180 </tet>
+    <tet desc=""> 4 39 19 216 23 198 3 30 </tet>
+    <tet desc=""> 5 39 21 225 18 216 2 30 </tet>
+    <tet desc=""> 21 198 10 108 22 216 5 30 </tet>
+    <tet desc=""> 19 225 11 108 20 198 4 30 </tet>
+    <tet desc=""> 23 225 20 216 16 180 0 30 </tet>
+    <tet desc=""> 18 198 22 225 17 180 1 30 </tet>
+    <tet desc=""> 54 225 30 225 25 180 29 108 </tet>
+    <tet desc=""> 55 225 31 225 27 216 24 180 </tet>
+    <tet desc=""> 56 225 27 108 36 198 28 180 </tet>
+    <tet desc=""> 57 225 25 216 37 198 26 108 </tet>
+    <tet desc=""> 58 225 29 216 26 180 42 39 </tet>
+    <tet desc=""> 59 225 24 108 28 216 43 39 </tet>
+    <tet desc=""> 24 225 16 75 31 180 35 39 </tet>
+    <tet desc=""> 25 225 17 75 33 198 30 180 </tet>
+    <tet desc=""> 33 39 13 75 38 216 34 180 </tet>
+    <tet desc=""> 31 198 12 75 39 216 32 39 </tet>
+    <tet desc=""> 35 198 15 75 32 180 44 108 </tet>
+    <tet desc=""> 30 39 14 75 34 198 45 108 </tet>
+    <tet desc=""> 26 198 37 108 9 30 41 39 </tet>
+    <tet desc=""> 27 198 39 225 8 30 36 108 </tet>
+    <tet desc=""> 39 39 32 216 11 30 40 108 </tet>
+    <tet desc=""> 37 225 33 216 10 30 38 39 </tet>
+    <tet desc=""> 41 225 38 108 6 30 46 180 </tet>
+    <tet desc=""> 36 39 40 225 7 30 47 180 </tet>
+    <tet desc=""> 28 39 43 216 47 198 60 180 </tet>
+    <tet desc=""> 29 39 45 225 42 216 61 180 </tet>
+    <tet desc=""> 45 198 34 108 46 216 62 180 </tet>
+    <tet desc=""> 43 225 35 108 44 198 63 180 </tet>
+    <tet desc=""> 47 225 44 216 40 180 64 180 </tet>
+    <tet desc=""> 42 198 46 225 41 180 65 180 </tet>
+    <tet desc=""> 78 225 54 225 49 180 53 108 </tet>
+    <tet desc=""> 79 225 55 225 51 216 48 180 </tet>
+    <tet desc=""> 80 225 51 108 60 198 52 180 </tet>
+    <tet desc=""> 81 225 49 216 61 198 50 108 </tet>
+    <tet desc=""> 82 225 53 216 50 180 66 39 </tet>
+    <tet desc=""> 83 225 48 108 52 216 67 39 </tet>
+    <tet desc=""> 48 225 24 225 55 180 59 39 </tet>
+    <tet desc=""> 49 225 25 225 57 198 54 180 </tet>
+    <tet desc=""> 57 39 26 225 62 216 58 180 </tet>
+    <tet desc=""> 55 198 27 225 63 216 56 39 </tet>
+    <tet desc=""> 59 198 28 225 56 180 68 108 </tet>
+    <tet desc=""> 54 39 29 225 58 198 69 108 </tet>
+    <tet desc=""> 50 198 61 108 42 180 65 39 </tet>
+    <tet desc=""> 51 198 63 225 43 180 60 108 </tet>
+    <tet desc=""> 63 39 56 216 44 180 64 108 </tet>
+    <tet desc=""> 61 225 57 216 45 180 62 39 </tet>
+    <tet desc=""> 65 225 62 108 46 180 70 180 </tet>
+    <tet desc=""> 60 39 64 225 47 180 71 180 </tet>
+    <tet desc=""> 52 39 67 216 71 198 84 180 </tet>
+    <tet desc=""> 53 39 69 225 66 216 85 180 </tet>
+    <tet desc=""> 69 198 58 108 70 216 86 180 </tet>
+    <tet desc=""> 67 225 59 108 68 198 87 180 </tet>
+    <tet desc=""> 71 225 68 216 64 180 88 180 </tet>
+    <tet desc=""> 66 198 70 225 65 180 89 180 </tet>
+    <tet desc=""> 102 225 78 225 73 180 77 108 </tet>
+    <tet desc=""> 103 225 79 225 75 216 72 180 </tet>
+    <tet desc=""> 104 225 75 108 84 198 76 180 </tet>
+    <tet desc=""> 105 225 73 216 85 198 74 108 </tet>
+    <tet desc=""> 106 225 77 216 74 180 90 39 </tet>
+    <tet desc=""> 107 225 72 108 76 216 91 39 </tet>
+    <tet desc=""> 72 225 48 225 79 180 83 39 </tet>
+    <tet desc=""> 73 225 49 225 81 198 78 180 </tet>
+    <tet desc=""> 81 39 50 225 86 216 82 180 </tet>
+    <tet desc=""> 79 198 51 225 87 216 80 39 </tet>
+    <tet desc=""> 83 198 52 225 80 180 92 108 </tet>
+    <tet desc=""> 78 39 53 225 82 198 93 108 </tet>
+    <tet desc=""> 74 198 85 108 66 180 89 39 </tet>
+    <tet desc=""> 75 198 87 225 67 180 84 108 </tet>
+    <tet desc=""> 87 39 80 216 68 180 88 108 </tet>
+    <tet desc=""> 85 225 81 216 69 180 86 39 </tet>
+    <tet desc=""> 89 225 86 108 70 180 94 180 </tet>
+    <tet desc=""> 84 39 88 225 71 180 95 180 </tet>
+    <tet desc=""> 76 39 91 216 95 198 108 180 </tet>
+    <tet desc=""> 77 39 93 225 90 216 109 180 </tet>
+    <tet desc=""> 93 198 82 108 94 216 110 180 </tet>
+    <tet desc=""> 91 225 83 108 92 198 111 180 </tet>
+    <tet desc=""> 95 225 92 216 88 180 112 180 </tet>
+    <tet desc=""> 90 198 94 225 89 180 113 180 </tet>
+    <tet desc=""> 126 225 102 225 97 180 101 108 </tet>
+    <tet desc=""> 127 225 103 225 99 216 96 180 </tet>
+    <tet desc=""> 128 225 99 108 108 198 100 180 </tet>
+    <tet desc=""> 129 225 97 216 109 198 98 108 </tet>
+    <tet desc=""> 130 225 101 216 98 180 114 39 </tet>
+    <tet desc=""> 131 225 96 108 100 216 115 39 </tet>
+    <tet desc=""> 96 225 72 225 103 180 107 39 </tet>
+    <tet desc=""> 97 225 73 225 105 198 102 180 </tet>
+    <tet desc=""> 105 39 74 225 110 216 106 180 </tet>
+    <tet desc=""> 103 198 75 225 111 216 104 39 </tet>
+    <tet desc=""> 107 198 76 225 104 180 116 108 </tet>
+    <tet desc=""> 102 39 77 225 106 198 117 108 </tet>
+    <tet desc=""> 98 198 109 108 90 180 113 39 </tet>
+    <tet desc=""> 99 198 111 225 91 180 108 108 </tet>
+    <tet desc=""> 111 39 104 216 92 180 112 108 </tet>
+    <tet desc=""> 109 225 105 216 93 180 110 39 </tet>
+    <tet desc=""> 113 225 110 108 94 180 118 180 </tet>
+    <tet desc=""> 108 39 112 225 95 180 119 180 </tet>
+    <tet desc=""> 100 39 115 216 119 198 123 30 </tet>
+    <tet desc=""> 101 39 117 225 114 216 122 30 </tet>
+    <tet desc=""> 117 198 106 108 118 216 125 30 </tet>
+    <tet desc=""> 115 225 107 108 116 198 124 30 </tet>
+    <tet desc=""> 119 225 116 216 112 180 120 30 </tet>
+    <tet desc=""> 114 198 118 225 113 180 121 30 </tet>
+    <tet desc=""> 118 75 126 225 121 180 125 108 </tet>
+    <tet desc=""> 119 75 127 225 123 216 120 180 </tet>
+    <tet desc=""> 115 75 123 108 132 198 124 180 </tet>
+    <tet desc=""> 114 75 121 216 133 198 122 108 </tet>
+    <tet desc=""> 117 75 125 216 122 180 138 39 </tet>
+    <tet desc=""> 116 75 120 108 124 216 139 39 </tet>
+    <tet desc=""> 120 225 96 225 127 180 131 39 </tet>
+    <tet desc=""> 121 225 97 225 129 198 126 180 </tet>
+    <tet desc=""> 129 39 98 225 134 216 130 180 </tet>
+    <tet desc=""> 127 198 99 225 135 216 128 39 </tet>
+    <tet desc=""> 131 198 100 225 128 180 140 108 </tet>
+    <tet desc=""> 126 39 101 225 130 198 141 108 </tet>
+    <tet desc=""> 122 198 133 108 153 30 137 39 </tet>
+    <tet desc=""> 123 198 135 225 152 30 132 108 </tet>
+    <tet desc=""> 135 39 128 216 155 30 136 108 </tet>
+    <tet desc=""> 133 225 129 216 154 30 134 39 </tet>
+    <tet desc=""> 137 225 134 108 150 30 142 180 </tet>
+    <tet desc=""> 132 39 136 225 151 30 143 180 </tet>
+    <tet desc=""> 124 39 139 216 143 198 156 180 </tet>
+    <tet desc=""> 125 39 141 225 138 216 157 180 </tet>
+    <tet desc=""> 141 198 130 108 142 216 158 180 </tet>
+    <tet desc=""> 139 225 131 108 140 198 159 180 </tet>
+    <tet desc=""> 143 225 140 216 136 180 160 180 </tet>
+    <tet desc=""> 138 198 142 225 137 180 161 180 </tet>
+    <tet desc=""> 166 75 150 225 145 180 149 108 </tet>
+    <tet desc=""> 167 75 151 225 147 216 144 180 </tet>
+    <tet desc=""> 163 75 147 108 156 198 148 180 </tet>
+    <tet desc=""> 162 75 145 216 157 198 146 108 </tet>
+    <tet desc=""> 165 75 149 216 146 180 162 39 </tet>
+    <tet desc=""> 164 75 144 108 148 216 163 39 </tet>
+    <tet desc=""> 144 225 136 75 151 180 155 39 </tet>
+    <tet desc=""> 145 225 137 75 153 198 150 180 </tet>
+    <tet desc=""> 153 39 133 75 158 216 154 180 </tet>
+    <tet desc=""> 151 198 132 75 159 216 152 39 </tet>
+    <tet desc=""> 155 198 135 75 152 180 164 108 </tet>
+    <tet desc=""> 150 39 134 75 154 198 165 108 </tet>
+    <tet desc=""> 146 198 157 108 138 180 161 39 </tet>
+    <tet desc=""> 147 198 159 225 139 180 156 108 </tet>
+    <tet desc=""> 159 39 152 216 140 180 160 108 </tet>
+    <tet desc=""> 157 225 153 216 141 180 158 39 </tet>
+    <tet desc=""> 161 225 158 108 142 180 166 180 </tet>
+    <tet desc=""> 156 39 160 225 143 180 167 180 </tet>
+    <tet desc=""> 148 39 163 216 167 198 147 30 </tet>
+    <tet desc=""> 149 39 165 225 162 216 146 30 </tet>
+    <tet desc=""> 165 198 154 108 166 216 149 30 </tet>
+    <tet desc=""> 163 225 155 108 164 198 148 30 </tet>
+    <tet desc=""> 167 225 164 216 160 180 144 30 </tet>
+    <tet desc=""> 162 198 166 225 161 180 145 30 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 </reln>
+  <reln> 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 </reln>
+  <reln> 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 </reln>
+  <reln> 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 </reln>
+  <reln> 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 </reln>
+  <reln> 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 </reln>
+  <reln> 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 </reln>
+  <reln> 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 </reln>
+  <reln> 0^6 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 0^2 1^-1 0^1 1^-1 0^1 1^-1 0^1 1^-1 </reln>
+  <reln> 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 </reln>
+  <reln> 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-5 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-2 1^1 0^-1 1^1 0^-1 1^1 0^-1 1^1 0^-2 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- L(38,9) : aabcdefedcb.fgg (expanded) (Triangulation) -->
+<packet label="S2 x S1 : abcdabce.df.fg.e.g"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="7">
+    <tet desc=""> 1 225 4 225 1 180 3 30 </tet>
+    <tet desc=""> 2 225 0 225 2 180 0 180 </tet>
+    <tet desc=""> 3 225 1 225 4 30 1 180 </tet>
+    <tet desc=""> 0 75 2 225 5 30 5 30 </tet>
+    <tet desc=""> 0 225 2 75 4 180 4 180 </tet>
+    <tet desc=""> 3 75 3 75 6 30 6 30 </tet>
+    <tet desc=""> 5 75 5 75 6 180 6 180 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="1">
+</group>
+  </fundgroup>
+</packet> <!-- S2 x S1 : abcdabce.df.fg.e.g (Triangulation) -->
+<packet label="RP2 x S1"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="3">
+    <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
+    <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
+    <tet desc=""> 0 114 0 156 1 39 1 201 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^1 1^-1 0^1 1^1 </reln>
+  <reln> 0^1 1^-1 0^-1 1^1 </reln>
+</group>
+  </fundgroup>
+  <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
+  <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
+  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
+  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
+</packet> <!-- RP2 x S1 (Triangulation) -->
+<packet label="Poincare Homology Sphere"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="5">
+    <tet desc=""> 1 120 2 147 3 78 4 39 </tet>
+    <tet desc=""> 0 156 2 54 3 147 4 78 </tet>
+    <tet desc=""> 0 57 1 135 3 45 4 147 </tet>
+    <tet desc=""> 0 78 1 57 2 99 4 201 </tet>
+    <tet desc=""> 0 39 1 78 2 57 3 210 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^-1 1^1 0^1 1^1 0^-1 1^-1 </reln>
+  <reln> 0^-1 1^1 0^1 1^-2 0^1 1^1 </reln>
+</group>
+  </fundgroup>
+  <H1><abeliangroup rank="0"> </abeliangroup></H1>
+  <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
+  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
+  <H2><abeliangroup rank="0"> </abeliangroup></H2>
+  <zeroeff value="T"/>
+  <splitsfce value="F"/>
+</packet> <!-- Poincare Homology Sphere (Triangulation) -->
+<packet label="Solid Torus (layered)"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="4">
+    <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
+    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
+    <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
+    <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="1">
+</group>
+  </fundgroup>
+  <H1><abeliangroup rank="1"> </abeliangroup></H1>
+</packet> <!-- Solid Torus (layered) (Triangulation) -->
+<packet label="Solid Torus (expanded)"
+	type="Triangulation" typeid="3"
+	parent="GAP simplification tests">
+  <tetrahedra ntet="96">
+    <tet desc=""> 39 54 6 225 1 180 5 108 </tet>
+    <tet desc=""> 38 54 7 225 3 216 0 180 </tet>
+    <tet desc=""> 41 54 3 108 12 198 4 180 </tet>
+    <tet desc=""> 40 54 1 216 13 198 2 108 </tet>
+    <tet desc=""> 36 54 5 216 2 180 18 39 </tet>
+    <tet desc=""> 37 54 0 108 4 216 19 39 </tet>
+    <tet desc=""> 0 225 42 156 7 180 11 39 </tet>
+    <tet desc=""> 1 225 43 156 9 198 6 180 </tet>
+    <tet desc=""> 9 39 44 156 14 216 10 180 </tet>
+    <tet desc=""> 7 198 45 156 15 216 8 39 </tet>
+    <tet desc=""> 11 198 46 156 8 180 20 108 </tet>
+    <tet desc=""> 6 39 47 156 10 198 21 108 </tet>
+    <tet desc=""> 2 198 13 108 -1 -1 17 39 </tet>
+    <tet desc=""> 3 198 15 225 -1 -1 12 108 </tet>
+    <tet desc=""> 15 39 8 216 -1 -1 16 108 </tet>
+    <tet desc=""> 13 225 9 216 -1 -1 14 39 </tet>
+    <tet desc=""> 17 225 14 108 -1 -1 22 180 </tet>
+    <tet desc=""> 12 39 16 225 -1 -1 23 180 </tet>
+    <tet desc=""> 4 39 19 216 23 198 -1 -1 </tet>
+    <tet desc=""> 5 39 21 225 18 216 -1 -1 </tet>
+    <tet desc=""> 21 198 10 108 22 216 -1 -1 </tet>
+    <tet desc=""> 19 225 11 108 20 198 -1 -1 </tet>
+    <tet desc=""> 23 225 20 216 16 180 -1 -1 </tet>
+    <tet desc=""> 18 198 22 225 17 180 -1 -1 </tet>
+    <tet desc=""> 63 54 30 225 25 180 29 108 </tet>
+    <tet desc=""> 62 54 31 225 27 216 24 180 </tet>
+    <tet desc=""> 65 54 27 108 36 198 28 180 </tet>
+    <tet desc=""> 64 54 25 216 37 198 26 108 </tet>
+    <tet desc=""> 60 54 29 216 26 180 42 39 </tet>
+    <tet desc=""> 61 54 24 108 28 216 43 39 </tet>
+    <tet desc=""> 24 225 66 156 31 180 35 39 </tet>
+    <tet desc=""> 25 225 67 156 33 198 30 180 </tet>
+    <tet desc=""> 33 39 68 156 38 216 34 180 </tet>
+    <tet desc=""> 31 198 69 156 39 216 32 39 </tet>
+    <tet desc=""> 35 198 70 156 32 180 44 108 </tet>
+    <tet desc=""> 30 39 71 156 34 198 45 108 </tet>
+    <tet desc=""> 26 198 37 108 4 135 41 39 </tet>
+    <tet desc=""> 27 198 39 225 5 135 36 108 </tet>
+    <tet desc=""> 39 39 32 216 1 135 40 108 </tet>
+    <tet desc=""> 37 225 33 216 0 135 38 39 </tet>
+    <tet desc=""> 41 225 38 108 3 135 46 180 </tet>
+    <tet desc=""> 36 39 40 225 2 135 47 180 </tet>
+    <tet desc=""> 28 39 43 216 47 198 6 120 </tet>
+    <tet desc=""> 29 39 45 225 42 216 7 120 </tet>
+    <tet desc=""> 45 198 34 108 46 216 8 120 </tet>
+    <tet desc=""> 43 225 35 108 44 198 9 120 </tet>
+    <tet desc=""> 47 225 44 216 40 180 10 120 </tet>
+    <tet desc=""> 42 198 46 225 41 180 11 120 </tet>
+    <tet desc=""> 93 39 54 225 49 180 53 108 </tet>
+    <tet desc=""> 92 39 55 225 51 216 48 180 </tet>
+    <tet desc=""> 95 39 51 108 60 198 52 180 </tet>
+    <tet desc=""> 94 39 49 216 61 198 50 108 </tet>
+    <tet desc=""> 90 39 53 216 50 180 66 39 </tet>
+    <tet desc=""> 91 39 48 108 52 216 67 39 </tet>
+    <tet desc=""> 48 225 84 216 55 180 59 39 </tet>
+    <tet desc=""> 49 225 85 216 57 198 54 180 </tet>
+    <tet desc=""> 57 39 86 216 62 216 58 180 </tet>
+    <tet desc=""> 55 198 87 216 63 216 56 39 </tet>
+    <tet desc=""> 59 198 88 216 56 180 68 108 </tet>
+    <tet desc=""> 54 39 89 216 58 198 69 108 </tet>
+    <tet desc=""> 50 198 61 108 28 135 65 39 </tet>
+    <tet desc=""> 51 198 63 225 29 135 60 108 </tet>
+    <tet desc=""> 63 39 56 216 25 135 64 108 </tet>
+    <tet desc=""> 61 225 57 216 24 135 62 39 </tet>
+    <tet desc=""> 65 225 62 108 27 135 70 180 </tet>
+    <tet desc=""> 60 39 64 225 26 135 71 180 </tet>
+    <tet desc=""> 52 39 67 216 71 198 30 120 </tet>
+    <tet desc=""> 53 39 69 225 66 216 31 120 </tet>
+    <tet desc=""> 69 198 58 108 70 216 32 120 </tet>
+    <tet desc=""> 67 225 59 108 68 198 33 120 </tet>
+    <tet desc=""> 71 225 68 216 64 180 34 120 </tet>
+    <tet desc=""> 66 198 70 225 65 180 35 120 </tet>
+    <tet desc=""> 81 57 78 225 73 180 77 108 </tet>
+    <tet desc=""> 80 57 79 225 75 216 72 180 </tet>
+    <tet desc=""> 83 57 75 108 84 198 76 180 </tet>
+    <tet desc=""> 82 57 73 216 85 198 74 108 </tet>
+    <tet desc=""> 78 57 77 216 74 180 90 39 </tet>
+    <tet desc=""> 79 57 72 108 76 216 91 39 </tet>
+    <tet desc=""> 72 225 76 147 79 180 83 39 </tet>
+    <tet desc=""> 73 225 77 147 81 198 78 180 </tet>
+    <tet desc=""> 81 39 73 147 86 216 82 180 </tet>
+    <tet desc=""> 79 198 72 147 87 216 80 39 </tet>
+    <tet desc=""> 83 198 75 147 80 180 92 108 </tet>
+    <tet desc=""> 78 39 74 147 82 198 93 108 </tet>
+    <tet desc=""> 74 198 85 108 54 216 89 39 </tet>
+    <tet desc=""> 75 198 87 225 55 216 84 108 </tet>
+    <tet desc=""> 87 39 80 216 56 216 88 108 </tet>
+    <tet desc=""> 85 225 81 216 57 216 86 39 </tet>
+    <tet desc=""> 89 225 86 108 58 216 94 180 </tet>
+    <tet desc=""> 84 39 88 225 59 216 95 180 </tet>
+    <tet desc=""> 76 39 91 216 95 198 52 39 </tet>
+    <tet desc=""> 77 39 93 225 90 216 53 39 </tet>
+    <tet desc=""> 93 198 82 108 94 216 49 39 </tet>
+    <tet desc=""> 91 225 83 108 92 198 48 39 </tet>
+    <tet desc=""> 95 225 92 216 88 180 51 39 </tet>
+    <tet desc=""> 90 198 94 225 89 180 50 39 </tet>
+  </tetrahedra>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^-1 1^1 0^-2 1^1 0^-1 1^1 </reln>
+  <reln> 0^-1 1^1 0^-2 1^1 0^-1 1^1 </reln>
+  <reln> 0^-1 1^1 0^1 1^-1 </reln>
+  <reln> 0^-1 1^1 0^-1 1^1 0^-2 1^1 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- Solid Torus (expanded) (Triangulation) -->
+<packet label="Description"
+	type="Text" typeid="2"
+	parent="GAP simplification tests">
+  <text>This file contains a number of examples suitable for testing the
+simplification of fundamental groups using GAP (Groups, Algorithms
+and Programming).</text>
+</packet> <!-- Description (Text) -->
+</packet> <!-- GAP simplification tests (Container) -->
+</reginadata>

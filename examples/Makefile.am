@@ -19,5 +19,5 @@ examples_DATA = README.txt \
   tree.py tree.session \
   triangulation.py triangulation.session
 
-EXTRA_DIST = $(examples_DATA)
+EXTRA_DIST = $(examples_DATA) gaptests.rga
 
