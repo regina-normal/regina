@@ -26,15 +26,15 @@
 
 /* end stub */
 
+/*! \file approx.h
+ *  \brief Provides facilities for working around rounding errors when
+ *  dealing with real numbers.
+ */
+
 #ifndef __APPROX_H
 #ifndef __DOXYGEN
 #define __APPROX_H
 #endif
-
-/*! \file approx.h
- *  \brief Provides routines for calculating properties of real and
- *  complex numbers whilst allowing for rounding errors.
- */
 
 namespace regina {
 
@@ -45,7 +45,9 @@ namespace regina {
 
 /**
  * A very small positive real designed to accommodate for rounding error.
- * Any two numbers within \a epsilon of each other are considred to be equal.
+ * Any two numbers within \a epsilon of each other are considered to be
+ * equal by the generic zero-testing and sign-testing routines defined in
+ * this file (isZero(), isPositive(), isNonNegative() and so on).
  */
 extern const double epsilon;
 
