@@ -41,18 +41,33 @@ if (! @ARGV) {
 }
 
 my $prefix = pop @ARGV;
-my @tricensusArgs = @ARGV;
-
 if ($prefix =~ /^-/) {
     print STDERR "Invalid pairs file prefix: $prefix\n";
     usage;
 }
 
-foreach my $arg (@tricensusArgs) {
+my @tricensusArgs = ();
+foreach my $arg (@ARGV) {
     if ((($arg !~ /^-/) and ($arg !~ /^\d+$/)) or ($arg =~ /\'/)) {
         print STDERR "Invalid tricensus argument: $arg\n";
         usage;
     }
+
+    # Check for --genpairs.
+    if (($arg =~ /^--genpairs$/i) or ($arg =~ /^-([^-].*)?p/)) {
+        print STDERR "Face pairings should already have been generated.\n";
+        print STDERR "Tricensus argument --genpairs should not be used " .
+            "with this utility.\n";
+        usage;
+    }
+
+    # Silently strip out --usepairs.
+    next if (($arg =~ /^--usepairs$/i) or ($arg =~ /^-P+$/));
+    if ($arg =~ /^-[^-]/) {
+        $arg =~ s/P//g;
+    }
+
+    push @tricensusArgs, $arg;
 }
 
 # --- Find the full list of pairs files to work on. ---
