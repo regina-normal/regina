@@ -6,14 +6,14 @@
 # This is the debhelper compatability version to use.
 export DH_COMPAT=3
 
-jarversion = 2.4
+jarversion = 3.0
 
 tmp = debian/tmp
 javadir = $(tmp)/usr/share/java
 regdir = $(tmp)/usr/share/regina-normal
 jnidir = $(tmp)/usr/lib/regina-normal/lib
-bindir = $(tmp)/usr/lib/regina-normal/bin
 pixmaps = $(tmp)/usr/share/pixmaps
+bindir = $(tmp)/usr/bin
 mandir = $(tmp)/usr/share/man
 docpkgdir = $(tmp)/usr/share/doc/regina-normal-doc
 htmldir = $(docpkgdir)/html
@@ -21,6 +21,9 @@ confdir = $(tmp)/etc/regina-normal
 incdir = $(tmp)/usr/include/regina-normal
 libdir = $(tmp)/usr/lib
 overrides = $(tmp)/usr/share/lintian/overrides
+
+utils = bin/regconvert bin/regfiledump bin/regfiletype \
+	bin/sigcensus bin/tricensus
 
 INSTALL_DIR = install -p -d -o root -g root -m 755
 INSTALL_FILE = install -p -o root -g root -m 644
@@ -103,12 +106,15 @@ install: build
 	$(INSTALL_DIR) $(jnidir)
 	$(INSTALL_FILE) bin/*.so $(jnidir)
 
+	# Install the command-line utilities.
+	$(INSTALL_DIR) $(bindir)
+	$(INSTALL_BIN) $(utils) $(bindir)
+
 	# Install the scripts.
 	$(INSTALL_DIR) $(regdir)/scripts
-	$(INSTALL_DIR) $(tmp)/usr/bin
 	$(INSTALL_FILE) scripts/reg* $(regdir)/scripts
 	$(INSTALL_SCRIPT) regina $(regdir)
-	$(INSTALL_SCRIPT) debian/regina-normal.sh $(tmp)/usr/bin/regina-normal
+	$(INSTALL_SCRIPT) debian/regina-normal.sh $(bindir)/regina-normal
 
 	# Install the icons.
 	$(INSTALL_DIR) $(regdir)/icons
@@ -140,7 +146,6 @@ install: build
 	$(INSTALL_DIR) $(mandir)/man7
 	mv $(htmldir)/*.1 $(mandir)/man1
 	mv $(htmldir)/*.5 $(mandir)/man5
-	mv $(htmldir)/*.7 $(mandir)/man7
 
 	# Rename man pages where appropriate.
 	mv $(mandir)/man1/regina.1 $(mandir)/man1/regina-normal.1
@@ -196,7 +201,6 @@ binary-arch: build install
 	dh_installinit -a
 	dh_installman -a
 	dh_installchangelogs -pregina-normal CHANGES.txt
-	dh_installchangelogs -pregina-normal-server CHANGES.txt
 	dh_installchangelogs -pregina-normal-dev CHANGES.txt
 	dh_link -a
 	dh_strip -a
