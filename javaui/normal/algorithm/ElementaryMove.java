@@ -30,6 +30,7 @@ package normal.algorithm;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import normal.Shell;
@@ -203,6 +204,12 @@ public class ElementaryMove extends Modification {
 		private NTriangulation tri;
 
 		/**
+		 * A list of all frames for viewing skeleton details that are
+		 * currently open.
+		 */
+		private Vector skeletonFrames = new Vector();
+
+		/**
 		 * Create a new dialog.
 		 */
 		public ElementaryMoveDialog(NTriangulation tri) {
@@ -301,12 +308,18 @@ public class ElementaryMove extends Modification {
 			allButtons.add(skelPanel);
 			getContentPane().add(allButtons, BorderLayout.SOUTH);
 
-			// Add action listeners.
+			// Add event listeners.
 			ok.addActionListener(this);
 			cancel.addActionListener(this);
 			vertices.addActionListener(this);
 			edges.addActionListener(this);
 			faces.addActionListener(this);
+
+			addWindowListener(new WindowAdapter() {
+				public void windowClosed(WindowEvent evt) {
+					closeAllFrames();
+				}
+			});
 
 			// Tidy up.
 			this.getRootPane().setDefaultButton(ok);
@@ -404,6 +417,17 @@ public class ElementaryMove extends Modification {
 		}
 
 		/**
+		 * Close all frames opened for viewing specific skeleton details.
+		 */
+		public void closeAllFrames() {
+			while (skeletonFrames.size() > 0) {
+				Object e = skeletonFrames.elementAt(0);
+				skeletonFrames.removeElement(e);
+				((SkeletonTableFrame)e).dispose();
+			}
+		}
+
+		/**
 		 * For internal use only.
 		 * Called when a dialog button has been pressed.
 		 */
@@ -456,7 +480,14 @@ public class ElementaryMove extends Modification {
 				else
 					return;
 
-				SkeletonTableFrame f = new SkeletonTableFrame(tri, style);
+				SkeletonTableFrame f = new SkeletonTableFrame(this,
+					tri, style);
+				skeletonFrames.addElement(f);
+				f.addWindowListener(new WindowAdapter() {
+					public void windowClosed(WindowEvent evt) {
+						skeletonFrames.removeElement(evt.getSource());
+					}
+				});
 				f.show();
 			}
 		}
