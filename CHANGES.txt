@@ -15,6 +15,8 @@ Version 3.1  [ (under development) ]
           files when running the startup script.
         - Build process now uses standard autoconf/automake structure.
     ENGINE:
+        Overall structure:
+            - Added support for multiple vertex enumeration engines.
         Class NCensus:
             - Redesigned to do its work through classes NFacePairing and
               NGluingPerms.
@@ -31,6 +33,8 @@ Version 3.1  [ (under development) ]
             - Added routine validate().
         Class NLensSpace, NSFS:
             - Added getCommonName().
+        Class NNormalSurfaceVector:
+            - Replaced isCompatibleWith() with makeEmbeddedConstraints().
         Class NPerm:
             - Routine isIdentity() now implemented in C++ engine.
             - New routine setPerm(int, int).
@@ -46,6 +50,8 @@ Version 3.1  [ (under development) ]
             - Added to replace old class NConeRay.
         Class NVector:
             - Added negate().
+        Class NVertexEnumerator, NDoubleDescriptor:
+            - Added.
         Routine reducedMod():
             - Fixed bug in the midpoint case.
         File nhashmap.h, nhashset.h:
