@@ -1,4 +1,3 @@
 usr/share/doc/regina-normal-doc
-usr/share/java/regina-normal-docs.jar
-usr/share/java/regina-normal-docs-3.0.jar
-usr/share/regina-normal/jar/regina-docs.jar
+usr/share/java/regina-normal-doc*
+usr/share/regina-normal/jar/regina-normal-doc*

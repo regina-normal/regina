@@ -6,74 +6,39 @@
 # This is the debhelper compatability version to use.
 export DH_COMPAT=3
 
-jarversion = 3.0
-
 tmp = debian/tmp
 javadir = $(tmp)/usr/share/java
 regdir = $(tmp)/usr/share/regina-normal
-jnidir = $(tmp)/usr/lib/regina-normal/lib
-pixmaps = $(tmp)/usr/share/pixmaps
-bindir = $(tmp)/usr/bin
-mandir = $(tmp)/usr/share/man
 docpkgdir = $(tmp)/usr/share/doc/regina-normal-doc
 htmldir = $(docpkgdir)/html
 confdir = $(tmp)/etc/regina-normal
-incdir = $(tmp)/usr/include/regina-normal
-libdir = $(tmp)/usr/lib
 overrides = $(tmp)/usr/share/lintian/overrides
-
-utils = bin/regconvert bin/regfiledump bin/regfiletype \
-	bin/sigcensus bin/tricensus
 
 INSTALL_DIR = install -p -d -o root -g root -m 755
 INSTALL_FILE = install -p -o root -g root -m 644
 INSTALL_BIN = install -p -o root -g root -m 755
 INSTALL_SCRIPT = install -p -o root -g root -m 755
 
-# Set java options according to which flavour of j2sdk1.3 is present.
-
-ifeq ($(shell /bin/sh debian/whichsdk.sh),old)
-  JAR="/usr/lib/j2sdk1.3/bin/jar"
-  JAVADEFS = \
-    JAR=$(JAR) \
-    JAVAC="/usr/lib/j2sdk1.3/bin/javac -target 1.1" \
-    JAVAH="/usr/lib/j2sdk1.3/bin/javah -jni" \
-    JAVADOC="/usr/lib/j2sdk1.3/bin/javadoc -J-Xmx64m" \
-    JNI_INCLUDES="-I/usr/lib/j2sdk1.3/include -I/usr/lib/j2sdk1.3/include/linux"
-else
-  JAR="/usr/lib/j2se/1.3/bin/jar"
-  JAVADEFS = \
-    JAR=$(JAR) \
-    JAVAC="/usr/lib/j2se/1.3/bin/javac -target 1.1" \
-    JAVAH="/usr/lib/j2se/1.3/bin/javah -jni" \
-    JAVADOC="/usr/lib/j2se/1.3/bin/javadoc -J-Xmx64m" \
-    JNI_INCLUDES="-I/usr/lib/j2se/1.3/include -I/usr/lib/j2se/1.3/include/linux"
-endif
-
-JAVALIBS = \
-  BTOOLS="/usr/share/java/libbtools-java.jar" \
-  JYTHON="/usr/share/java/jython.jar" \
-  EXTRA_CLASSES=""
-
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-	cp -f Makefile.options.linux Makefile.options
+	./configure --prefix=/usr --mandir=/usr/share/man \
+	  PKGNAME=regina-normal \
+	  CC=gcc-3.2 CXX=g++-3.2 \
+	  JAVAC=/usr/lib/j2se/1.3/bin/javac
 	touch configure-stamp
 
 build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
-	$(MAKE) bin $(JAVADEFS) $(JAVALIBS)
-	$(MAKE) bindocs $(JAVADEFS) $(JAVALIBS)
+	$(MAKE)
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
-	-$(MAKE) purge
+	-$(MAKE) distclean
 	rm -f build-stamp configure-stamp
-	rm -f Makefile.options
 	dh_clean
 
 install: build
@@ -82,87 +47,35 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	# Install the UI jars.
+	# Main install.
+	$(MAKE) install DESTDIR=`pwd`/$(tmp)
+
+	# Move the jars into the standard debian location.
 	$(INSTALL_DIR) $(javadir)
-	$(INSTALL_DIR) $(regdir)/jar
-	$(INSTALL_FILE) bin/regina.jar \
-		$(javadir)/regina-normal-$(jarversion).jar
-	$(INSTALL_FILE) bin/regina-jni.jar \
-		$(javadir)/regina-normal-jni-$(jarversion).jar
-	$(INSTALL_FILE) bin/regina-docs.jar \
-		$(javadir)/regina-normal-docs-$(jarversion).jar
+	cd $(regdir)/jar && for i in *.jar; do \
+	  mv $$i ../../java; \
+	  ln -s ../../java/$$i $$i; \
+	done
 
-	# Create symlinks for jars.
-	for i in normal normal-jni normal-docs; do \
-		ln -s regina-$$i-$(jarversion).jar $(javadir)/regina-$$i.jar; done
-	ln -s ../../java/regina-normal-$(jarversion).jar \
-		$(regdir)/jar/regina.jar
-	ln -s ../../java/regina-normal-jni-$(jarversion).jar \
-		$(regdir)/jar/regina-jni.jar
-	ln -s ../../java/regina-normal-docs-$(jarversion).jar \
-		$(regdir)/jar/regina-docs.jar
-	
-	# Install the JNI library.
-	$(INSTALL_DIR) $(jnidir)
-	$(INSTALL_FILE) bin/*.so $(jnidir)
+	# Move the docs and examples into the standard debian location.
+	$(INSTALL_DIR) $(htmldir)
+	mv $(regdir)/doc/* $(htmldir)
+	mv $(regdir)/examples $(docpkgdir)
+	for i in $(docpkgdir)/examples/*.rga; do \
+	  utils/regconvert -x $$i $$i; \
+	done
 
-	# Install the command-line utilities.
-	$(INSTALL_DIR) $(bindir)
-	$(INSTALL_BIN) $(utils) $(bindir)
-
-	# Install the scripts.
-	$(INSTALL_DIR) $(regdir)/scripts
-	$(INSTALL_FILE) scripts/reg* $(regdir)/scripts
-	$(INSTALL_SCRIPT) regina $(regdir)
-	$(INSTALL_SCRIPT) debian/regina-normal.sh $(bindir)/regina-normal
-
-	# Install the icons.
-	$(INSTALL_DIR) $(regdir)/icons
-	$(INSTALL_FILE) icons/*.xpm icons/*.png icons/*.jpg icons/README.txt \
-		$(regdir)/icons
-
-	# Install the Jython libraries.
-	$(INSTALL_DIR) $(regdir)/pylib
-	$(INSTALL_FILE) pylib/*.txt pylib/*.py $(regdir)/pylib
-
-	# Install the HTML docs.
-	$(INSTALL_DIR) $(docpkgdir)
-	mkdir html-tmp
-	cd html-tmp && $(JAR) -xf ../bin/regina-docs.jar
-	mv html-tmp/normal/docs $(htmldir)
-	rm -rf html-tmp
+	# Ensure sample data files are stored as compressed XML.
 
 	# Clean up the documentation directory.
-	rm -f $(htmldir)/*.sgml
-	rm -f $(htmldir)/*.dsl
 	rm -f $(htmldir)/*.txt
 	rm -f $(htmldir)/*.hs
 	rm -f $(htmldir)/*.jhm
 	rm -f $(htmldir)/images/admon/COPYING.txt
 
-	# Install the man pages.
-	$(INSTALL_DIR) $(mandir)/man1
-	$(INSTALL_DIR) $(mandir)/man5
-	$(INSTALL_DIR) $(mandir)/man7
-	mv $(htmldir)/*.1 $(mandir)/man1
-	mv $(htmldir)/*.5 $(mandir)/man5
-
-	# Rename man pages where appropriate.
-	mv $(mandir)/man1/regina.1 $(mandir)/man1/regina-normal.1
-
 	# Install the configuration files.
 	$(INSTALL_DIR) $(confdir)
 	$(INSTALL_FILE) debian/*.conf $(confdir)
-
-	# Install the static library.
-	$(INSTALL_DIR) $(libdir)
-	$(INSTALL_FILE) bin/libregina-engine.a $(libdir)
-
-	# Install the include files.
-	cd engine/engine && for i in `find . -name "*.h" -o -name "*.tcc"`; do \
-	  $(INSTALL_DIR) ../../$(incdir)/`dirname $$i`; \
-	  $(INSTALL_FILE) $$i ../../$(incdir)/`dirname $$i`; \
-	done
 
 	# Install overrides.
 	$(INSTALL_DIR) $(overrides)
@@ -176,14 +89,14 @@ binary-indep: build install
 	dh_installdocs -i
 	dh_installexamples -i
 	dh_installmenu -i
-	dh_installchangelogs -pregina-normal-doc CHANGES.txt
+	dh_installchangelogs -i CHANGES.txt
 	dh_link -i
 	dh_strip -i
-	dh_compress -i
+	dh_compress -i -X.rga
 	dh_fixperms -i
 	# dh_makeshlibs -i
 	dh_installdeb -i
-	# dh_perl -i
+	dh_perl -i
 	dh_shlibdeps -i
 	dh_gencontrol -i
 	dh_md5sums -i
@@ -200,15 +113,14 @@ binary-arch: build install
 	dh_installmime -a
 	dh_installinit -a
 	dh_installman -a
-	dh_installchangelogs -pregina-normal CHANGES.txt
-	dh_installchangelogs -pregina-normal-dev CHANGES.txt
+	dh_installchangelogs -a CHANGES.txt
 	dh_link -a
 	dh_strip -a
-	dh_compress -a
+	dh_compress -a -X.rga
 	dh_fixperms -a
 	dh_makeshlibs -a
 	dh_installdeb -a
-	# dh_perl -a
+	dh_perl -a
 	dh_shlibdeps -a
 	dh_gencontrol -a
 	dh_md5sums -a

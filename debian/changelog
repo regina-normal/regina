@@ -1,8 +1,10 @@
 regina-normal (3.1-1) unstable; urgency=low
 
+  * New upstream release.
+  * Completely new build structure.
   * Removed mime entry.
 
- -- Ben Burton <benb@acm.org>  Mon, 15 Jul 2002 17:06:58 +1000
+ -- Ben Burton <benb@acm.org>  Wed, 16 Oct 2002 12:34:23 +1000
 
 regina-normal (3.0-1) unstable; urgency=low
 

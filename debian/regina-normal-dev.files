@@ -1,2 +1,4 @@
 usr/include
 usr/lib/libregina-engine.a
+usr/lib/libregina-engine.la
+usr/lib/libregina-engine.so
