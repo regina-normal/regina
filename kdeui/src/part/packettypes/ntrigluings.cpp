@@ -512,7 +512,9 @@ void NTriGluingsUI::connectedSumDecomposition() {
 
             if (nSummands == 1)
                 KMessageBox::information(ui, i18n("This is a prime 3-manifold "
-                    "triangulation.  It cannot be decomposed any further."));
+                    "triangulation.  It cannot be decomposed any further.\n"
+                    "A new 0-efficient triangulation of this prime 3-manifold "
+                    "has been constructed."));
             else
                 KMessageBox::information(ui, i18n("The triangulation was "
                     "broken down into %1 prime summands.").arg(nSummands));
