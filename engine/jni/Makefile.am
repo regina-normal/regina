@@ -18,5 +18,5 @@ libregina_engine_jni_la_LIBADD = @LIB_ENGINE@ \
   engine/libengine.la \
   registry/libregistry.la
 
-noinst_HEADERS = javacast.h jnitools.h njnienumeration.h
+noinst_HEADERS = javacast.h jnisafe.h jnitools.h njnienumeration.h
 

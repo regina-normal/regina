@@ -26,60 +26,27 @@
 
 /* end stub */
 
-#ifndef __MAKEJNPACKET_H
+/*! \file jnisafe.h
+ *  \brief Includes the Java JNI headers.
+ *
+ *  This header is provided to take care of the macros that need to be
+ *  defined \e before the Java JNI headers can be read.  This header
+ *  makes the appropriate definitions and then includes the system
+ *  <tt>jni.h</tt>.
+ */
+
+#ifndef __JNISAFE_H
 #ifndef __DOXYGEN
-#define __MAKEJNPACKET_H
+#define __JNISAFE_H
 #endif
 
-/*! \file makejnpacket.h
- *  \brief Provides a routine to wrap a C++ NPacket with a Java wrapper
- *  of the correct type.
- */
+#include <config.h>
 
-#include "jnisafe.h"
+#ifndef HAVE___INT64
+    #define __int64 (long long)
+#endif
 
-/**
- * The Java packet wrapper class to be used if no other suitable wrapper
- * class can be determined.
- */
-#define DEFAULT_PACKET_CLASS \
-    "normal/engine/implementation/jni/packet/NJNIPacket"
-
-namespace regina {
-
-class NPacket;
-
-namespace jni {
-
-/**
- * \weakgroup jni
- * @{
- */
-
-/**
- * Takes a C++ packet and creates a new Java object of the correct class
- * that wraps this packet.
- * If the given C++ packet is of a particular subclass of NPacket, the
- * new Java wrapper will be of the corresponding subclass of NJNIPacket.
- *
- * The list of all known correspondences between C++ and Java classes is
- * stored in javapacketregistry.h.  If the given C++ packet type is not
- * listed in this registry, the new wrapper object will simply be of type
- * NJNIPacket.
- *
- * If the given C++ pointer is 0, 0 will be returned.
- *
- * \ifaces Not present.
- *
- * @param env the current working JNI environment.
- * @param packet the C++ packet to wrap in a java object.
- * @return a newly created Java wrapper object, or 0 if \a packet was 0.
- */
-jobject makeJNPacket(JNIEnv *env, regina::NPacket* packet);
-
-/*@}*/
-
-} } // namespace regina::jni
+#include <jni.h>
 
 #endif
 

@@ -36,8 +36,6 @@
  *  code.
  */
 
-#include <jni.h>
-
 #include "javacast.h"
 #include "shareableobject.h"
 #include "utilities/nmpi.h"

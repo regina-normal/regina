@@ -35,7 +35,7 @@
  *  \brief Facilitates conversion between C++ pointers and Java longs.
  */
 
-#include <jni.h>
+#include "jnisafe.h"
 
 namespace regina {
 

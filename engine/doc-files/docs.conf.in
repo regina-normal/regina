@@ -34,24 +34,24 @@ VERBATIM_HEADERS     = NO
 
 # Aliases:
 ALIASES = \
-	"ifaces=\par Interfaces:\n" \
-	"ifacescpp=\par C++:\n" \
-	"ifacesjava=\par Java:\n" \
-	"ifacesjython=\par Jython:\n" \
-	"bugurgent=<i><b>Bug (urgent):</b></i>" \
-	"bug=<i>Bug:</i>" \
-	"buglong=<i>Bug (long-term):</i>" \
-	"featureurgent=<i><b>Feature (urgent):</b></i>" \
-	"feature=<i>Feature:</i>" \
-	"featurelong=<i>Feature (long-term):</i>" \
-	"opturgent=<i><b>Optimise (urgent):</b></i>" \
-	"opt=<i>Optimise:</i>" \
-	"optlong=<i>Optimise (long-term):</i>" \
-	"tidyurgent=<i><b>Tidy (urgent):</b></i>" \
-	"tidy=<i>Tidy:</i>" \
-	"tidylong=<i>Tidy (long-term):</i>" \
-	"testfull=\test Test suite contains thorough tests." \
-	"testpart=\test Test suite contains partial tests."
+    "ifaces=\par Interfaces:\n" \
+    "ifacescpp=\par C++:\n" \
+    "ifacesjava=\par Java:\n" \
+    "ifacesjython=\par Jython:\n" \
+    "bugurgent=<i><b>Bug (urgent):</b></i>" \
+    "bug=<i>Bug:</i>" \
+    "buglong=<i>Bug (long-term):</i>" \
+    "featureurgent=<i><b>Feature (urgent):</b></i>" \
+    "feature=<i>Feature:</i>" \
+    "featurelong=<i>Feature (long-term):</i>" \
+    "opturgent=<i><b>Optimise (urgent):</b></i>" \
+    "opt=<i>Optimise:</i>" \
+    "optlong=<i>Optimise (long-term):</i>" \
+    "tidyurgent=<i><b>Tidy (urgent):</b></i>" \
+    "tidy=<i>Tidy:</i>" \
+    "tidylong=<i>Tidy (long-term):</i>" \
+    "testfull=\test Test suite contains thorough tests." \
+    "testpart=\test Test suite contains partial tests."
 
 # Warning and progress related options:
 
@@ -63,6 +63,7 @@ WARN_IF_UNDOCUMENTED = YES
 
 INPUT = engine \
         jni/javacast.h \
+        jni/jnisafe.h \
         jni/jnitools.h \
         jni/njnienumeration.h \
         jni/registry
