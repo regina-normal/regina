@@ -8,6 +8,20 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
+Version 4.1.3  [ 25 July, 2004 ]
+
+    Features:
+        - New "Open Example" menu item for easy access to sample files
+          and census data.
+        - Allows the choice of text editor component to be configured.
+
+    Bug Fixes:
+        - Fixed broken scripting in the GUI under Python 2.3, where indented
+          blocks were treated as complete after just one line.
+        - Several fixes and workarounds to make Regina work properly
+          with the Vim editor component.
+        - Tighter handling of read-only mode for packet viewers.
+
 Version 4.1.2  [ 14 June, 2004 ]
 
     Features:

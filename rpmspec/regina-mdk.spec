@@ -3,7 +3,7 @@
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
-Version: 4.1.2
+Version: 4.1.3
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
@@ -128,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/%{name}.png
 
 %changelog
+* Sun Jul 25 2004 Ben Burton <bab@debian.org> 4.1.3
+- New upstream release.
+
 * Fri Jun 25 2004 Ben Burton <bab@debian.org> 4.1.2
 - Initial packaging using Mandrake 10.0 Official.
 - Python scripting is initially disabled because of bugs in Mandrake 10.0's
