@@ -47,12 +47,11 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
     // Begin by testing for face pairings that can never lead to such a
     // triangulation.
 
-    if (orientableOnly)
-        if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain()
-                || pairing->hasOneEndedChainWithDoubleHandle()) {
-            use(0, useArgs);
-            return;
-        }
+    if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain() ||
+            (orientableOnly && pairing->hasOneEndedChainWithDoubleHandle())) {
+        use(0, useArgs);
+        return;
+    }
 
     // ---------- Selecting an ordering of faces ----------
 
