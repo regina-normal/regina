@@ -35,7 +35,6 @@ set -e
 
 # Details for person doing the GnuPG signing.
 signerid="Ben Burton <bab@debian.org>"
-signergetkey="typing \"finger bab@db.debian.org\""
 
 # Command-line sanity check.
 if [ -z "$1" -o -z "$2" ]; then
@@ -81,8 +80,9 @@ corrupted nor tampered with by running:
 and comparing the output with the md5sums listed above.
 
 These md5sums have been signed with my private GnuPG key; the matching
+public key is available from any of the pgp.net public keyservers
+(e.g., wwwkeys.au.pgp.net).
 END
-echo "public key is available by $signergetkey." >> "$plaintext"
 echo >> "$plaintext"
 echo " -- $signerid, `822-date`" >> "$plaintext"
 echo >> "$plaintext"
