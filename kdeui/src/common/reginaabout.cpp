@@ -67,8 +67,12 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         I18N_NOOP("Supervision and many long discussions"));
     addCredit("Marc Culler",
         I18N_NOOP("Helpful discussions"));
+    addCredit("Dominique Devriese",
+        I18N_NOOP("Red Hat / Fedora porting assistance"));
     addCredit("Nathan Dunfield",
         I18N_NOOP("Helpful discussions"));
+    addCredit("Craig Macintyre",
+        I18N_NOOP("Red Hat / Fedora porting assistance"));
     addCredit("Jeff Weeks",
         I18N_NOOP("Helpful discussions"));
     addCredit("The American Institute of Mathematics",
