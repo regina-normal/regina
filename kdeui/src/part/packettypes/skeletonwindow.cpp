@@ -58,6 +58,7 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     table->addColumn(columnLabel(objectType, 2));
     table->addColumn(columnLabel(objectType, 3));
     table->setSelectionMode(QListView::NoSelection);
+    table->setSorting(-1);
     layout->addWidget(table);
 
     refresh();
@@ -66,25 +67,29 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
 void SkeletonWindow::refresh() {
     table->clear();
 
+    /**
+     * Add the items in reverse order so they come out correctly in the
+     * list view.  *sigh*
+     */
     switch (objectType) {
         case Vertices:
-            for (unsigned i = 0; i < tri->getNumberOfVertices(); i++)
+            for (long i = tri->getNumberOfVertices() - 1; i >= 0; i--)
                 new VertexItem(table, tri, i);
             break;
         case Edges:
-            for (unsigned i = 0; i < tri->getNumberOfEdges(); i++)
+            for (long i = tri->getNumberOfEdges() - 1; i >= 0; i--)
                 new EdgeItem(table, tri, i);
             break;
         case Faces:
-            for (unsigned i = 0; i < tri->getNumberOfFaces(); i++)
+            for (long i = tri->getNumberOfFaces() - 1; i >= 0; i--)
                 new FaceItem(table, tri, i);
             break;
         case Components:
-            for (unsigned i = 0; i < tri->getNumberOfComponents(); i++)
+            for (long i = tri->getNumberOfComponents() - 1; i >= 0; i--)
                 new ComponentItem(table, tri, i);
             break;
         case BoundaryComponents:
-            for (unsigned i = 0; i < tri->getNumberOfBoundaryComponents(); i++)
+            for (long i = tri->getNumberOfBoundaryComponents() - 1; i >= 0; i--)
                 new BoundaryComponentItem(table, tri, i);
             break;
     }
