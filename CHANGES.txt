@@ -14,6 +14,8 @@ Version 3.2  [ (under development) ]
     ENGINE:
         Class NBoolSet:
             - Using unsigned chars for byte codes.
+        Class NFacePair:
+            - New class for working with pairs of face numbers.
         Class NNormalSurface:
             - Added knownCanCrush().
         Class NPerm:
