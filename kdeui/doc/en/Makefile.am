@@ -6,5 +6,7 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 KDE_DOCS = regina
 KDE_LANG = en
