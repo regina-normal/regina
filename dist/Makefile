@@ -106,6 +106,7 @@ tabs :
 	./replacetabs `find ../javaui -name "*.java"`
 	./replacetabs `find ../idl -name "*.idl"`
 	./replacetabs ../CHANGES.txt ../README.txt
+	./replacetabs ../docs/*.sgml
 	./replacetabs *.txt *.cpp
 
 clean :
