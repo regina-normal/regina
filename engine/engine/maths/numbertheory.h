@@ -89,6 +89,11 @@ unsigned long gcd(unsigned long a, unsigned long b);
  * <tt>-abs(a)/d < v*sign(b) <= 0</tt> and
  * <tt>1 <= u*sign(a) <= abs(b)/d</tt>.
  *
+ * In the special case where one of the given integers is zero, the
+ * corresponding coefficient will also be zero and the other coefficient
+ * will be 1 or -1 so that <tt>u*a + v*b = d</tt> still holds.  If both
+ * given integers are zero, both of the coefficients will be set to zero.
+ *
  * \ifaces Not present.
  *
  * @param a one of the integers to work with.
