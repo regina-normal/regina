@@ -20,14 +20,14 @@ support="Ben Burton <benb@acm.org>"
 # Send the given error message to stderr.
 # Usage: error <message>
 error () {
-	echo "$1" > /dev/stderr
+	echo "$1" 1>&2
 }
 
 # Send the given warning message to stderr if $REGINA_VERBOSITY >= 1.
 # Usage: warn <message>
 warn () {
 	if [ 1 -le "$REGINA_VERBOSITY" ]; then
-		echo "$1" > /dev/stderr
+		echo "$1" 1>&2
 	fi
 }
 
@@ -35,7 +35,7 @@ warn () {
 # Usage: info <message>
 info () {
 	if [ 2 -le "$REGINA_VERBOSITY" ]; then
-		echo "$1" > /dev/stderr
+		echo "$1" 1>&2
 	fi
 }
 
