@@ -73,6 +73,8 @@ class NFile;
  *
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
+ * \todo \feature Allow packets to have any number of attached string
+ * tags.
  */
 class NPacket : public ShareableObject {
     public:
