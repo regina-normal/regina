@@ -75,7 +75,6 @@
 
 <book lang="&language;">
  <bookinfo>
-  <!-- TODO: largeicon to the right? -->
   <title>&regina; Reference Manual</title>
 
   <authorgroup>
