@@ -11,7 +11,7 @@ INCLUDES = $(all_includes) -I$(top_srcdir)/../engine/engine
 regina_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 
 # the libraries to link against.
-regina_LDADD   = $(top_srcdir)/../engine/engine/libregina-engine.la $(LIB_KFILE)
+regina_LDADD   = $(top_srcdir)/../engine/engine/libregina-engine.la $(LIB_KFILE) $(LIB_KPARTS)
 
 # which sources should be compiled for regina
 regina_SOURCES = \

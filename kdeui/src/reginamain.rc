@@ -1,8 +1,35 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="reginamain" version="1">
+<kpartgui name="reginamain" version="3.1">
 <MenuBar>
-  <Menu name="tools"><text>&amp;Tools</text>
+  <Menu name="file">
+    <DefineGroup name="new_merge"/>
+    <DefineGroup name="open_merge"/>
+    <DefineGroup name="save_merge"/>
+    <DefineGroup name="revert_merge"/>
+    <Separator/>
+    <DefineGroup name="print_merge"/>
+    <Merge/>
+    <DefineGroup name="close_merge"/>
+  </Menu>
+  <Menu name="edit"><text>&amp;Edit</text>
+    <DefineGroup name="edit_undo_merge"/>
+    <Separator/>
+    <DefineGroup name="edit_paste_merge"/>
+    <Separator/>
+    <DefineGroup name="edit_select_merge"/>
+    <Separator/>
+    <DefineGroup name="edit_find_merge"/>
+    <Merge/>
+  </Menu>
+  <Merge/>
+  <Menu name="tools">
+    <Merge/>
+    <Separator/>
     <Action name="python_standalone" />
+  </Menu>
+  <Menu name="settings">
+  </Menu>
+  <Menu name="help">
   </Menu>
 </MenuBar>
 </kpartgui>

@@ -30,11 +30,12 @@
 #include "reginapref.h"
 
 #include <qdragobject.h>
+#include <qlabel.h>
 #include <qlineedit.h>
 #include <qprintdialog.h>
-#include <qprinter.h>
 #include <qpaintdevicemetrics.h>
 #include <qpainter.h>
+#include <qvbox.h>
 #include <kaccel.h>
 #include <kaction.h>
 #include <kconfig.h>
@@ -43,22 +44,30 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kio/netaccess.h>
+#include <klibloader.h>
 #include <kkeydialog.h>
 #include <klocale.h>
 #include <kmenubar.h>
+#include <kparts/event.h>
 #include <kstatusbar.h>
 #include <kstdaccel.h>
 #include <kstdaction.h>
+#include <ktexteditor/document.h>
+#include <ktexteditor/view.h>
+#include <ktrader.h>
 #include <kurl.h>
 #include <kurlrequesterdlg.h>
 
-ReginaMain::ReginaMain() : KMainWindow( 0, "Regina" ),
-      m_view(new ReginaView(this)), m_printer(0) {
+ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina" ),
+        currentPart(0), currentGUI(0) {
+
+    if (! initialGeometrySet())
+        resize(640, 400);
+
     // accept dnd
     setAcceptDrops(true);
 
-    // tell the KMainWindow that this is indeed the main widget
-    setCentralWidget(m_view);
+    setXMLFile("reginamain.rc");
 
     // then, setup our actions
     setupActions();
@@ -67,10 +76,12 @@ ReginaMain::ReginaMain() : KMainWindow( 0, "Regina" ),
     statusBar()->show();
 
     // allow the view to change the statusbar and caption
+    /*
     connect(m_view, SIGNAL(signalChangeStatusbar(const QString&)),
             this,   SLOT(changeStatusbar(const QString&)));
     connect(m_view, SIGNAL(signalChangeCaption(const QString&)),
             this,   SLOT(changeCaption(const QString&)));
+            */
 
     readOptions(kapp->config());
 }
@@ -79,7 +90,40 @@ ReginaMain::~ReginaMain() {
 }
 
 void ReginaMain::load(const KURL& url) {
-    QString target;
+    // Are we looking at a Regina data file?
+
+    // Otherwise we'll use KParts to find an appropriate central widget.
+    
+    // Are we looking at a Python file (text/x-python)?
+    // If so, fire up our preferred text editor.
+
+    KTrader::OfferList offers = KTrader::self()->query("KTextEditor/Document");
+    ASSERT( offers.count() >= 1 );
+
+    KService::Ptr service = *offers.begin();
+    KLibFactory *libFactory = KLibLoader::self()->factory(service->library());
+    ASSERT( libFactory );
+    KTextEditor::Document* editor =
+        (KTextEditor::Document*)(libFactory->create(this, service->name(),
+        "KTextEditor::Document"));
+    ASSERT(editor);
+
+    KTextEditor::View* view = editor->createView(this, 0);
+    setCentralWidget(view);
+    guiFactory()->addClient(view);
+
+    connect(editor, SIGNAL(setStatusBarText(const QString&)),
+        this, SLOT(changeStatusbar(const QString&)));
+    connect(editor, SIGNAL(setWindowCaption(const QString&)),
+        this, SLOT(changeCaption(const QString&)));
+
+    editor->openURL(url);
+    view->show();
+
+    currentPart = editor;
+    currentGUI = view;
+
+    //QString target;
     // the below code is what you should normally do.  in this
     // example case, we want the url to our own.  you probably
     // want to use this code instead for your app
@@ -99,22 +143,20 @@ void ReginaMain::load(const KURL& url) {
     }
     #endif
 
-    setCaption(url.url());
-    m_view->openURL(url);
+    //setCaption(url.url());
+    //load(url);
 }
 
 void ReginaMain::setupActions() {
     KStdAction::openNew(this, SLOT(fileNew()), actionCollection());
     KStdAction::open(this, SLOT(fileOpen()), actionCollection());
-    fileOpenRecent = KStdAction::openRecent(m_view,
-        SLOT(openURL()), actionCollection());
-    KStdAction::save(this, SLOT(fileSave()), actionCollection());
-    KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
-    KStdAction::print(this, SLOT(filePrint()), actionCollection());
+    fileOpenRecent = KStdAction::openRecent(this,
+        SLOT(load(const KURL&)), actionCollection());
+    KStdAction::close(this, SLOT(close()), actionCollection());
     KStdAction::quit(kapp, SLOT(quit()), actionCollection());
 
-    m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
-    m_statusbarAction = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
+    showToolbar = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
+    showStatusbar = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
 
     KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
     KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
@@ -125,7 +167,7 @@ void ReginaMain::setupActions() {
     new KAction(i18n("Python Console (&Standalone)"), "source_py",
         0 /* shortcut */, this, SLOT(optionsPreferences()),
         actionCollection(), "python_standalone");
-    createGUI("reginamain.rc");
+    createGUI(0);
 }
 
 void ReginaMain::saveProperties(KConfig *config) {
@@ -133,8 +175,11 @@ void ReginaMain::saveProperties(KConfig *config) {
     // config file.  anything you write here will be available
     // later when this app is restored
     
-    if (m_view->currentURL() != QString::null)
-        config->writeEntry("lastURL", m_view->currentURL()); 
+    if (currentPart) {
+        QString url = currentPart->url().url();
+        if (url != QString::null)
+            config->writeEntry("lastURL", url);
+    }
 }
 
 void ReginaMain::readProperties(KConfig *config) {
@@ -146,7 +191,7 @@ void ReginaMain::readProperties(KConfig *config) {
     QString url = config->readEntry("lastURL"); 
 
     if (url != QString::null)
-        m_view->openURL(KURL(url));
+        load(KURL(url));
 }
 
 void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
@@ -172,6 +217,13 @@ void ReginaMain::dropEvent(QDropEvent *event) {
     }
 }
 
+bool ReginaMain::queryClose() {
+    if (currentPart)
+        return currentPart->closeURL();
+    else
+        return true;
+}
+
 void ReginaMain::fileNew() {
     // this slot is called whenever the File->New menu is selected,
     // the New shortcut is pressed (usually CTRL+N) or the New toolbar
@@ -187,7 +239,7 @@ void ReginaMain::fileOpen() {
     // button is clicked
     KURL url = KURLRequesterDlg::getURL(QString::null, this, i18n("Open Location") );
     if (!url.isEmpty())
-        m_view->openURL(url);
+        load(url);
 }
 
 void ReginaMain::fileSave()
@@ -208,32 +260,10 @@ void ReginaMain::fileSaveAs() {
     }
 }
 
-void ReginaMain::filePrint() {
-    // this slot is called whenever the File->Print menu is selected,
-    // the Print shortcut is pressed (usually CTRL+P) or the Print toolbar
-    // button is clicked
-    if (!m_printer) m_printer = new QPrinter;
-    if (QPrintDialog::getPrinterSetup(m_printer))
-    {
-        // setup the printer.  with Qt, you always "print" to a
-        // QPainter.. whether the output medium is a pixmap, a screen,
-        // or paper
-        QPainter p;
-        p.begin(m_printer);
-
-        // we let our view do the actual printing
-        QPaintDeviceMetrics metrics(m_printer);
-        m_view->print(&p, metrics.height(), metrics.width());
-
-        // and send the result to the printer
-        p.end();
-    }
-}
-
 void ReginaMain::optionsShowToolbar() {
     // this is all very cut and paste code for showing/hiding the
     // toolbar
-    if (m_toolbarAction->isChecked())
+    if (showToolbar->isChecked())
         toolBar()->show();
     else
         toolBar()->hide();
@@ -242,22 +272,25 @@ void ReginaMain::optionsShowToolbar() {
 void ReginaMain::optionsShowStatusbar() {
     // this is all very cut and paste code for showing/hiding the
     // statusbar
-    if (m_statusbarAction->isChecked())
+    if (showStatusbar->isChecked())
         statusBar()->show();
     else
         statusBar()->hide();
 }
 
 void ReginaMain::optionsConfigureKeys() {
-    KKeyDialog::configureKeys(actionCollection(), "reginamain.rc");
+    KKeyDialog::configure(actionCollection());
 }
 
 void ReginaMain::optionsConfigureToolbars() {
     // use the standard toolbar editor
-    KEditToolbar dlg(actionCollection());
+    KEditToolbar dlg(guiFactory());
     if (dlg.exec()) {
         // recreate our GUI
-        createGUI();
+        //createGUI("reginamain.rc", false);
+        //createGUI(currentGUI);
+        createGUI(0);
+        // TODO: wtf?
     } 
 }
 

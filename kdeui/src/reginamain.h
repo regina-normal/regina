@@ -36,9 +36,8 @@
 #include "reginaview.h"
 
 #include <kapp.h>
-#include <kmainwindow.h>
+#include <kparts/mainwindow.h>
 
-class QPrinter;
 class KRecentFilesAction;
 class KToggleAction;
 class KURL;
@@ -47,24 +46,31 @@ class KURL;
  * The main window for Regina.  This class handles the menus, toolbars
  * and status bars.
  *
- * Note that each Regina data file has its own main window.
+ * Note that each data file is opened in its own main window.
  */
-class ReginaMain : public KMainWindow
-{
+class ReginaMain : public KParts::MainWindow {
     Q_OBJECT
 
     private:
-        ReginaView *m_view;
-
-        QPrinter   *m_printer;
-        KToggleAction *m_toolbarAction;
-        KToggleAction *m_statusbarAction;
+        /**
+         * Components
+         */
+        KParts::ReadWritePart* currentPart;
+            /**< The part for the currently opened document, or 0 if
+                 no document has yet been opened. */
+        KXMLGUIClient* currentGUI;
+            /**< The GUI for the currently opened document, or 0 if
+                 no document has yet been opened. */
 
         /**
          * Actions
          */
         KRecentFilesAction* fileOpenRecent;
             /**< The menu of recently opened files. */
+        KToggleAction* showToolbar;
+            /**< Action to show/hide the toolbar. */
+        KToggleAction* showStatusbar;
+            /**< Action to show/hide the status bar. */
 
         /**
          * Preferences
@@ -88,10 +94,6 @@ class ReginaMain : public KMainWindow
          */
         virtual ~ReginaMain();
 
-        /**
-         * Use this method to load whatever file/URL you have
-         */
-        void load(const KURL& url);
 
         bool getAutoDock();
         bool getDisplayIcon();
@@ -134,13 +136,19 @@ class ReginaMain : public KMainWindow
          */
         void readProperties(KConfig *);
 
+        virtual bool queryClose();
+
+    public slots:
+        /**
+         * Use this method to load whatever file/URL you have
+         */
+        void load(const KURL& url);
 
     private slots:
         void fileNew();
         void fileOpen();
         void fileSave();
         void fileSaveAs();
-        void filePrint();
         void optionsShowToolbar();
         void optionsShowStatusbar();
         void optionsConfigureKeys();
