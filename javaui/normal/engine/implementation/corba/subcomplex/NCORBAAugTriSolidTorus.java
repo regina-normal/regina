@@ -50,15 +50,6 @@ public class NCORBAAugTriSolidTorus extends CORBAShareableObject
     public normal.engine.subcomplex.NAugTriSolidTorus cloneMe() {
         return NCORBAAugTriSolidTorus.newWrapper(data.cloneMe());
     }
-    public long getAlpha(int index) {
-        return data.getAlpha(index);
-    }
-    public long getBeta(int index) {
-        return data.getBeta(index);
-    }
-    public long getExceptionalFibres() {
-        return data.getExceptionalFibres();
-    }
     public normal.engine.subcomplex.NTriSolidTorus getCore() {
         return NCORBATriSolidTorus.newWrapper(data.getCore());
     }
@@ -68,5 +59,8 @@ public class NCORBAAugTriSolidTorus extends CORBAShareableObject
     }
     public NPerm getEdgeGroupRoles(int annulus) {
         return new NPerm(data.getEdgeGroupRoles(annulus));
+    }
+    public normal.engine.subcomplex.NSFS getSeifertStructure() {
+        return NCORBASFS.newWrapper(data.getSeifertStructure());
     }
 }

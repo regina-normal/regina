@@ -31,17 +31,16 @@
 
 #include "Subcomplex/NLayeredSolidTorus.idl"
 #include "Subcomplex/NTriSolidTorus.idl"
+#include "Subcomplex/NSFS.idl"
 
 module Regina {
     module Subcomplex {
         interface NAugTriSolidTorus : ShareableObject {
             NAugTriSolidTorus cloneMe();
-            long getAlpha(in long index);
-            long getBeta(in long index);
-            long getExceptionalFibres();
             NTriSolidTorus getCore();
             NLayeredSolidTorus getAugTorus(in long annulus);
             char getEdgeGroupRoles(in long annulus);
+            NSFS getSeifertStructure();
         };
     };
 };

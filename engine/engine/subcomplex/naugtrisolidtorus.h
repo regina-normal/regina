@@ -41,9 +41,11 @@
 #ifdef __NO_INCLUDE_PATHS
     #include "ntrisolidtorus.h"
     #include "nlayeredsolidtorus.h"
+    #include "nsfs.h"
 #else
     #include "engine/subcomplex/ntrisolidtorus.h"
     #include "engine/subcomplex/nlayeredsolidtorus.h"
+    #include "engine/subcomplex/nsfs.h"
 #endif
 
 class NComponent;
@@ -66,24 +68,7 @@ class NComponent;
  *
  * Note that (unless a (1,1,0) layered solid torus is used with the 0
  * edge glued to an axis edge) the resulting space will be a Seifert
- * fibred space with at most three exceptional fibres.  This will be
- * written using Matveev's notation as (S2, (a1,b1) (a2,b2) (a3,b3)).
- * Exceptional fibres will be listed with their indices (a1, a2, a3) in
- * non-decreasing order.  If there are fewer than three exceptional fibres,
- * additional (1,0) pairs will be added to the end of this list.
- * If several exceptional fibres have the same index, they will be
- * listed in non-decreasing order of the <i>b'</i> parameters, where
- * each <i>b'</i> is the corresponding <i>b</i> reduced modulo <i>a</i>
- * so it lies between 0 and <i>a</i>-1 inclusive.
- *
- * All of the pairs will be in standard form (\a a non-negative,
- * \a b between 0 and <i>a</i>-1 inclusive) except for the pair
- * corresponding to the final exceptional fibre.  For this final pair,
- * it is guaranteed that \a b is at least -<i>a</i>.
- *
- * In the exceptional case above with the (1,1,0) layered solid torus,
- * the first pair will have <i>a</i>=0 and there are no guarantees as to
- * what space this is.
+ * fibred space with at most three exceptional fibres.
  */
 class NAugTriSolidTorus : public ShareableObject {
     private:
@@ -102,12 +87,8 @@ class NAugTriSolidTorus : public ShareableObject {
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
                  is glued to an axis edge, group <tt>p[1]</tt> is glued to a
                  major edge and group <tt>p[2]</tt> is glued to a minor edge. */
-        long alpha[3];
-            /**< The index \a a for each of the three (a,b) fibre pairs.
-                 This is remaining unsigned so we don't have to cast
-                 everywhere when doing modular arithmetic. */
-        long beta[3];
-            /**< The parameter \a b for each of the three (a,b) fibre pairs. */
+        NSFS seifertStructure;
+            /**< The structure of the corresponding Seifert fibred space. */
     
     public:
         /**
@@ -123,35 +104,6 @@ class NAugTriSolidTorus : public ShareableObject {
          * @return a newly created clone.
          */
         NAugTriSolidTorus* clone() const;
-
-        /**
-         * Returns the first parameter \a a of the requested exceptional
-         * fibre (a,b).  See the general class notes for further details.
-         *
-         * @param index specifies which exceptional fibre to examine;
-         * this must be 0, 1 or 2.
-         * @return the requested first parameter.
-         */
-        unsigned long getAlpha(int index) const;
-        /**
-         * Returns the second parameter \a b of the requested exceptional
-         * fibre (a,b).  See the general class notes for further details.
-         *
-         * @param index specifies which exceptional fibre to examine;
-         * this must be 0, 1 or 2.
-         * @return the requested second parameter.
-         */
-        long getBeta(int index) const;
-        /**
-         * Returns the number of exceptional fibres.  See the general
-         * class notes for further details.
-         *
-         * In the undefined case described in the general class notes with
-         * the (1,1,0) layered solid torus, this routine will return -1.
-         *
-         * @return the number of exceptional fibres.
-         */
-        long getExceptionalFibres() const;
 
         /**
          * Returns the triangular solid torus at the core of this
@@ -198,6 +150,14 @@ class NAugTriSolidTorus : public ShareableObject {
         NPerm getEdgeGroupRoles(int annulus) const;
 
         /**
+         * Returns the structure of the Seifert fibred space formed by
+         * this augmented triangular solid torus.
+         *
+         * @return the structure of the corresponding Seifert fibred space.
+         */
+        const NSFS& getSeifertStructure() const;
+
+        /**
          * Determines if the given triangulation component is an
          * augmented triangular solid torus.
          *
@@ -220,7 +180,7 @@ class NAugTriSolidTorus : public ShareableObject {
         NAugTriSolidTorus();
 
         /**
-         * Fill in the \a alpha and \a beta arrays according to the
+         * Calculate the Seifert structure according to the
          * other information already stored in this structure.
          */
         void findExceptionalFibres();
@@ -232,12 +192,6 @@ inline NAugTriSolidTorus::NAugTriSolidTorus() : core(0) {
     augTorus[0] = augTorus[1] = augTorus[2] = 0;
 }
 
-inline unsigned long NAugTriSolidTorus::getAlpha(int index) const {
-    return alpha[index];
-}
-inline long NAugTriSolidTorus::getBeta(int index) const {
-    return beta[index];
-}
 inline const NTriSolidTorus& NAugTriSolidTorus::getCore() const {
     return *core;
 }
@@ -247,6 +201,9 @@ inline const NLayeredSolidTorus* NAugTriSolidTorus::getAugTorus(
 }
 inline NPerm NAugTriSolidTorus::getEdgeGroupRoles(int annulus) const {
     return edgeGroupRoles[annulus];
+}
+inline const NSFS& NAugTriSolidTorus::getSeifertStructure() const {
+    return seifertStructure;
 }
 
 #endif

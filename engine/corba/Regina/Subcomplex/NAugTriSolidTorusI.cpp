@@ -29,18 +29,10 @@
 #include "NAugTriSolidTorusI.h"
 #include "NLayeredSolidTorusI.h"
 #include "NTriSolidTorusI.h"
+#include "NSFSI.h"
 
 Regina::Subcomplex::NAugTriSolidTorus_ptr NAugTriSolidTorus_i::cloneMe() {
     return NAugTriSolidTorus_i::newWrapper(MY_ENGINE_OBJECT->clone());
-}
-CORBA::Long NAugTriSolidTorus_i::getAlpha(CORBA::Long index) {
-    return MY_ENGINE_OBJECT->getAlpha(index);
-}
-CORBA::Long NAugTriSolidTorus_i::getBeta(CORBA::Long index) {
-    return MY_ENGINE_OBJECT->getBeta(index);
-}
-CORBA::Long NAugTriSolidTorus_i::getExceptionalFibres() {
-    return MY_ENGINE_OBJECT->getExceptionalFibres();
 }
 Regina::Subcomplex::NTriSolidTorus_ptr NAugTriSolidTorus_i::getCore() {
     return NTriSolidTorus_i::newWrapper((NTriSolidTorus*)
@@ -53,5 +45,8 @@ Regina::Subcomplex::NLayeredSolidTorus_ptr NAugTriSolidTorus_i::getAugTorus(
 }
 CORBA::Char NAugTriSolidTorus_i::getEdgeGroupRoles(CORBA::Long annulus) {
     return MY_ENGINE_OBJECT->getEdgeGroupRoles(annulus).getPermCode();
+}
+Regina::Subcomplex::NSFS_ptr NAugTriSolidTorus_i::getSeifertStructure() {
+    return NSFS_i::newWrapper((NSFS*)&MY_ENGINE_OBJECT->getSeifertStructure());
 }
 

@@ -55,146 +55,41 @@ NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
         if (augTorus[i])
             ans->augTorus[i] = augTorus[i]->clone();
         ans->edgeGroupRoles[i] = edgeGroupRoles[i];
-        ans->alpha[i] = alpha[i];
-        ans->beta[i] = beta[i];
     }
     return ans;
 }
 
-long NAugTriSolidTorus::getExceptionalFibres() const {
-    if (alpha[0] == 0)
-        return -1;
-    else if (alpha[2] > 1)
-        return 3;
-    else if (alpha[1] > 1)
-        return 2;
-    else if (alpha[0] > 1)
-        return 1;
-    else
-        return 0;
-}
-
 void NAugTriSolidTorus::writeTextShort(ostream& out) const {
     out << "Augmented triangular solid torus: ";
-    switch (getExceptionalFibres()) {
-        case -1:
-            out << "(undefined)";
-            return;
-        case 0:
-            if (beta[0] == 0) {
-                out << "(S2 x S1)";
-                return;
-            }
-            // Otherwise we have a single (1,k) fibre; fall through to
-            // the next case.
-        case 1:
-            out << "(S2, (" << alpha[0] << ',' << beta[0] << "))";
-            return;
-        case 2:
-            out << "(S2, ("
-                << alpha[0] << ',' << beta[0] << ") ("
-                << alpha[1] << ',' << beta[1] << "))";
-            return;
-        case 3:
-            out << "(S2, ("
-                << alpha[0] << ',' << beta[0] << ") ("
-                << alpha[1] << ',' << beta[1] << ") ("
-                << alpha[2] << ',' << beta[2] << "))";
-            return;
-        default:
-            out << "(internal error; please report this!)";
-            return;
-    }
+    seifertStructure.writeTextShort(out);
 }
 
 void NAugTriSolidTorus::findExceptionalFibres() {
-    // We will always assume the existance of an extra (1, k) fibre.
-    long k = 1;
+    seifertStructure.insertFibre(NExceptionalFibre(1,1));
 
-    int i;
-    for (i = 0; i < 3; i++) {
+    long alpha, beta;
+    for (int i = 0; i < 3; i++) {
         if (edgeGroupRoles[i][2] == 2) {
             if (augTorus[i]) {
-                alpha[i] = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][0]);
-                beta[i] = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][1]);
+                alpha = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][0]);
+                beta = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][1]);
             } else {
-                alpha[i] = 1;
-                beta[i] = 1;
+                alpha = 1;
+                beta = 1;
             }
         } else {
             if (augTorus[i]) {
-                alpha[i] = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][0]);
-                beta[i] = -augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][1]);
+                alpha = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][0]);
+                beta = -augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][1]);
             } else {
-                alpha[i] = (edgeGroupRoles[i][0] == 2 ? 2 : 1);
-                beta[i] = -(edgeGroupRoles[i][1] == 2 ? 2 : 1);
+                alpha = (edgeGroupRoles[i][0] == 2 ? 2 : 1);
+                beta = -(edgeGroupRoles[i][1] == 2 ? 2 : 1);
             }
         }
-        // Merge (1,b) fibres in with the (1,k) immediately.
-        if (alpha[i] == 1) {
-            k += beta[i];
-            beta[i] = 0;
-        }
+        seifertStructure.insertFibre(NExceptionalFibre(alpha, beta));
     }
 
-    // We now have a correct set of parameters in rather non-standard form.
-    int nZeroBetas = 0;
-    for (i = 0; i < 3; i++) {
-        if (alpha[i] == 0) {
-            // Currently beta[i] is already +/-1, and as far as the
-            // layered solid torus goes the two are indistinguishable.
-            // Thus we'll go ahead and make it 1.
-            beta[i] = 1;
-        } else if (beta[i] >= alpha[i]) {
-            k += (beta[i] / alpha[i]);
-            beta[i] = beta[i] % alpha[i];
-        } else if (beta[i] < 0) {
-            k += (beta[i] / alpha[i]);
-            beta[i] = beta[i] % alpha[i];
-            if (beta[i] < 0) {
-                k--;
-                beta[i] += alpha[i];
-            }
-        }
-
-        if (beta[i] == 0)
-            nZeroBetas++;
-    }
-
-    // Now all beta parameters are between 0 and alpha - 1.
-    if (k < (-k - 3 + nZeroBetas)) {
-        k = -k;
-        for (i = 0; i < 3; i++)
-            if (alpha[i] == 0)
-                beta[i] = 1;
-            else {
-                beta[i] = -beta[i];
-                if (beta[i] < 0) {
-                    k--;
-                    beta[i] += alpha[i];
-                }
-            }
-    }
-
-    // All that's left now is to sort and then merge (1,k) with the final
-    // exceptional fibre.
-    // Run the following for loop with (i,j) = (0,1), (0,2), (1,2).
-    int j;
-    long tmp;
-    for (i = 0; i < 2; i++)
-        for (j = i+1; j < 3; j++)
-            if (alpha[i] == 1 || (alpha[i] > alpha[j] && alpha[j] != 1) ||
-                    (alpha[i] == alpha[j] && beta[i] > beta[j])) {
-                tmp = alpha[i]; alpha[i] = alpha[j]; alpha[j] = tmp;
-                tmp = beta[i]; beta[i] = beta[j]; beta[j] = tmp;
-            }
-
-    if (alpha[2] != 1)
-        beta[2] += (alpha[2] * k);
-    else if (alpha[1] != 1)
-        beta[1] += (alpha[1] * k);
-    else
-        beta[0] += (alpha[0] * k);
+    seifertStructure.reduce();
 }
 
 NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(

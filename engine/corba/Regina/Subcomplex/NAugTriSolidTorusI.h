@@ -54,13 +54,11 @@ class NAugTriSolidTorus_i :
         STANDARD_NEW_WRAPPER
 
         virtual Regina::Subcomplex::NAugTriSolidTorus_ptr cloneMe();
-        virtual CORBA::Long getAlpha(CORBA::Long index);
-        virtual CORBA::Long getBeta(CORBA::Long index);
-        virtual CORBA::Long getExceptionalFibres();
         virtual Regina::Subcomplex::NTriSolidTorus_ptr getCore();
         virtual Regina::Subcomplex::NLayeredSolidTorus_ptr getAugTorus(
                 CORBA::Long annulus);
         virtual CORBA::Char getEdgeGroupRoles(CORBA::Long annulus);
+        virtual Regina::Subcomplex::NSFS_ptr getSeifertStructure();
 };
 
 #endif

@@ -33,11 +33,9 @@ import normal.engine.triangulation.NPerm;
 
 public interface NAugTriSolidTorus extends ShareableObject {
     public NAugTriSolidTorus cloneMe();
-    public long getAlpha(int index);
-    public long getBeta(int index);
-    public long getExceptionalFibres();
     public NTriSolidTorus getCore();
     public NLayeredSolidTorus getAugTorus(int annulus);
     public NPerm getEdgeGroupRoles(int annulus);
+    public NSFS getSeifertStructure();
 }
 

@@ -39,13 +39,11 @@ public class NJNIAugTriSolidTorus extends JNIShareableObject
     }
 
     public native NAugTriSolidTorus cloneMe();
-    public native long getAlpha(int index);
-    public native long getBeta(int index);
-    public native long getExceptionalFibres();
     public native NTriSolidTorus getCore();
     public native NLayeredSolidTorus getAugTorus(int annulus);
     public NPerm getEdgeGroupRoles(int annulus) {
         return new NPerm(_getEdgeGroupRoles(annulus));
     }
     public native char _getEdgeGroupRoles(int annulus);
+    public native NSFS getSeifertStructure();
 }

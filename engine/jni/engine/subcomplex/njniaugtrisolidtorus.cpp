@@ -45,24 +45,12 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNIAugTriSolidTorus");
 }
 
-JNIEXPORT jlong JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getAlpha
-        (JNIEnv *env, jobject me, jint i) {
-    return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getAlpha(i);
-}
-
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getAugTorus
         (JNIEnv *env, jobject me, jint i) {
     return CREATE_WRAPPER_OBJECT(env, (NLayeredSolidTorus*)
         GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getAugTorus(i),
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
-}
-
-JNIEXPORT jlong JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getBeta
-        (JNIEnv *env, jobject me, jint i) {
-    return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getBeta(i);
 }
 
 JNIEXPORT jobject JNICALL
@@ -80,10 +68,11 @@ JNIEXPORT jchar JNICALL
         getEdgeGroupRoles(i).getPermCode();
 }
 
-JNIEXPORT jlong JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getExceptionalFibres
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getSeifertStructure
         (JNIEnv *env, jobject me) {
-    return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->
-        getExceptionalFibres();
+    return CREATE_WRAPPER_OBJECT(env, (NSFS*)
+        &GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getSeifertStructure(),
+        "normal/engine/implementation/jni/subcomplex/NJNISFS");
 }
 
