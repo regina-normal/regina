@@ -26,58 +26,44 @@
 
 /* end stub */
 
-#include "packet/npacket.h"
+/*! \file sourcehandler.h
+ *  \brief Allows exporting triangulations to C++ source files.
+ */
 
-#include "packettreeview.h"
-#include "reginapart.h"
-#include "foreign/exportdialog.h"
-#include "foreign/pythonhandler.h"
-#include "foreign/reginahandler.h"
-#include "foreign/snappeahandler.h"
-#include "foreign/sourcehandler.h"
-#include "reginafilter.h"
+#ifndef __SOURCEHANDLER_H
+#define __SOURCEHANDLER_H
 
-#include <kfiledialog.h>
-#include <klocale.h>
-#include <kmessagebox.h>
+#include "packetexporter.h"
 
-void ReginaPart::exportPython() {
-    exportFile(PythonHandler::instance, i18n(FILTER_PYTHON_SCRIPTS),
-        i18n("Export Python Script"));
+/**
+ * An object responsible for exporting triangulations to C++ source files.
+ *
+ * Rather than creating new objects of this class, the globally
+ * available object SourceHandler::instance should always be used.
+ */
+class SourceHandler : public PacketExporter {
+    public:
+        /**
+         * A globally available instance of this class.
+         */
+        static const SourceHandler instance;
+
+    public:
+        /**
+         * PacketExporter overrides:
+         */
+        virtual PacketFilter* canExport() const;
+        virtual bool exportData(regina::NPacket* data,
+            const QString& fileName, QWidget* parentWidget) const;
+
+    private:
+        /**
+         * Don't allow people to construct their own Source handlers.
+         */
+        SourceHandler();
+};
+
+inline SourceHandler::SourceHandler() {
 }
 
-void ReginaPart::exportRegina() {
-    exportFile(ReginaHandler(true), i18n(FILTER_REGINA),
-        i18n("Export Regina Data File"));
-}
-
-void ReginaPart::exportReginaUncompressed() {
-    exportFile(ReginaHandler(false), i18n(FILTER_REGINA),
-        i18n("Export Regina Data File"));
-}
-
-void ReginaPart::exportSnapPea() {
-    exportFile(SnapPeaHandler::instance, i18n(FILTER_SNAPPEA),
-        i18n("Export SnapPea Triangulation"));
-}
-
-void ReginaPart::exportSource() {
-    exportFile(SourceHandler::instance, i18n(FILTER_CPP_SOURCE),
-        i18n("Export C++ Source"));
-}
-
-void ReginaPart::exportFile(const PacketExporter& exporter,
-        const QString& fileFilter, const QString& dialogTitle) {
-    ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
-        exporter.canExport(), dialogTitle);
-    if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* data = dlg.selectedPacket();
-        if (data) {
-            QString file = KFileDialog::getSaveFileName(QString::null,
-                fileFilter, widget(), dialogTitle);
-            if (! file.isEmpty())
-                exporter.exportData(data, file, widget());
-        }
-    }
-}
-
+#endif

@@ -15,6 +15,9 @@ Version 4.2  [ under development ]
         Overall structure:
             - Included portions of the SnapPea kernel (thanks again to
               Jeff Weeks).
+        Class NExampleTriangulation:
+            - Added to facilitate construction of several different
+              sample triangulations.
         Class NFacePairing:
             - New routine hasWedgedDoubleEndedChain.
         Class NSnapPeaTriangulation:
@@ -25,6 +28,8 @@ Version 4.2  [ under development ]
               make it easier to hard-code triangulations in source code.
             - Fixed vertex link calculations, which were previously
               incorrect if a triangulation contained invalid edges.
+    USER INTERFACE:
+        - Allow exporting a triangulation to C++ source.
     TEST SUITE:
         - Added tests for SnapPea calculations.
         - Further additions to the triangulation tests, in particular

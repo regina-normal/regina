@@ -34,10 +34,12 @@
 #include "maths/approx.h"
 #include "maths/numbertheory.h"
 #include "split/nsignature.h"
+#include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NAbelianGroup;
+using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NPerm;
 using regina::NSignature;
@@ -127,6 +129,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
             /**< A solid genus two torus with a cusped boundary. */
 
     public:
+        void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+            dest.insertTriangulation(*source);
+            delete source;
+        }
+
         void generateFromSig(NTriangulation& tri, const std::string& sigStr) {
             NSignature* sig = NSignature::parse(sigStr);
             if (sig == 0)
@@ -162,11 +169,19 @@ class NTriangulationTest : public CppUnit::TestFixture {
             generateFromSig(rp3rp3, "aabccd.b.d");
             generateFromSig(q32xz3, "aabcdb.cedfef");
 
+            // Some are hard-coded in the calculation engine as sample
+            // triangulations.
+            copyAndDelete(figure8,
+                NExampleTriangulation::figureEightKnotComplement());
+            copyAndDelete(solidKB, NExampleTriangulation::solidKleinBottle());
+            copyAndDelete(rp2xs1, NExampleTriangulation::rp2xs1());
+            copyAndDelete(gieseking, NExampleTriangulation::gieseking());
+            copyAndDelete(cuspedGenusTwoTorus,
+                NExampleTriangulation::cuspedGenusTwoTorus());
+
             // The rest alas must be done manually.
             NTetrahedron* r;
             NTetrahedron* s;
-            NTetrahedron* t;
-            NTetrahedron* u;
 
             // A two-tetrahedron two-vertex L(3,1) is straightforward to
             // construct using a vertex of degree two.
@@ -179,46 +194,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
             lens3_1.addTetrahedron(r);
             lens3_1.addTetrahedron(s);
 
-            // The two-tetrahedron figure eight knot complement is
-            // described at the beginning of chapter 8 of Richard
-            // Rannard's PhD thesis.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            r->joinTo(0, s, NPerm(1, 3, 0, 2));
-            r->joinTo(1, s, NPerm(2, 0, 3, 1));
-            r->joinTo(2, s, NPerm(0, 3, 2, 1));
-            r->joinTo(3, s, NPerm(2, 1, 0, 3));
-            figure8.addTetrahedron(r);
-            figure8.addTetrahedron(s);
-
-            // A three-tetrahedron Klein bottle and a three-tetrahedron
-            // RP^2 x S^1 formed by identifying its boundary faces are
-            // described in section 3.5.1 of Ben Burton's PhD thesis.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            t = new NTetrahedron();
-            s->joinTo(0, r, NPerm(0, 1, 2, 3));
-            s->joinTo(3, r, NPerm(3, 0, 1, 2));
-            s->joinTo(1, t, NPerm(3, 0, 1, 2));
-            s->joinTo(2, t, NPerm(0, 1, 2, 3));
-            solidKB.addTetrahedron(r);
-            solidKB.addTetrahedron(s);
-            solidKB.addTetrahedron(t);
-
-            rp2xs1.insertTriangulation(solidKB);
-            r = rp2xs1.getTetrahedron(0);
-            t = rp2xs1.getTetrahedron(2);
-            r->joinTo(1, t, NPerm(2, 3, 0, 1));
-            r->joinTo(3, t, NPerm(2, 3, 0, 1));
-            rp2xs1.gluingsHaveChanged();
-
-            // The Gieseking manifold is simple enough; it has only one
-            // tetrahedron.
-            r = new NTetrahedron();
-            r->joinTo(0, r, NPerm(1, 2, 0, 3));
-            r->joinTo(2, r, NPerm(0, 2, 3, 1));
-            gieseking.addTetrahedron(r);
-
             // For a triangulation with invalid edges, we simply fold
             // the faces of a tetrahedron together in pairs (as in a
             // 3-sphere triangulation) but apply a reflection to each fold.
@@ -229,24 +204,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
             twoProjPlaneCusps.barycentricSubdivision();
-
-            // We create the cusped solid genus two torus by
-            // constructing an ordinary solid genus two torus and then
-            // converting the real boundary to an ideal vertex.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            t = new NTetrahedron();
-            u = new NTetrahedron();
-            r->joinTo(0, s, NPerm());
-            r->joinTo(1, t, NPerm(1, 2, 3, 0));
-            r->joinTo(2, u, NPerm(1, 0, 3, 2));
-            s->joinTo(3, t, NPerm());
-            t->joinTo(1, u, NPerm());
-            cuspedGenusTwoTorus.addTetrahedron(r);
-            cuspedGenusTwoTorus.addTetrahedron(s);
-            cuspedGenusTwoTorus.addTetrahedron(t);
-            cuspedGenusTwoTorus.addTetrahedron(u);
-            cuspedGenusTwoTorus.cuspBoundary();
         }
 
         void tearDown() {

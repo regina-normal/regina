@@ -20,7 +20,8 @@ noinst_HEADERS = \
 	packetimporter.h \
 	pythonhandler.h \
 	reginahandler.h \
-	snappeahandler.h
+	snappeahandler.h \
+	sourcehandler.h
 
 libforeign_la_SOURCES = \
 	dehydrationhandler.cpp \
@@ -28,7 +29,8 @@ libforeign_la_SOURCES = \
 	importdialog.cpp \
 	pythonhandler.cpp \
 	reginahandler.cpp \
-	snappeahandler.cpp
+	snappeahandler.cpp \
+	sourcehandler.cpp
 
 METASOURCES = AUTO
 

@@ -87,16 +87,14 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
 
     QString msg;
 
-    label = new QLabel(i18n("Solution type:"), dataValid);
-    validGrid->addWidget(label, 0, 1);
+    solutionTypeLabel = new QLabel(i18n("Solution type:"), dataValid);
+    validGrid->addWidget(solutionTypeLabel, 0, 1);
     solutionType = new QLabel(dataValid);
     validGrid->addWidget(solutionType, 0, 3);
-    msg = i18n("The type of solution that was found when solving for a "
-        "complete hyperbolic structure.  "
-        "For an explanation of what each solution "
-        "type means, see the Regina reference manual.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(solutionType, msg);
+    solutionTypeExplnBase = i18n("The type of solution that was found "
+        "when solving for a complete hyperbolic structure.");
+    QWhatsThis::add(solutionTypeLabel, solutionTypeExplnBase);
+    QWhatsThis::add(solutionType, solutionTypeExplnBase);
 
     label = new QLabel(i18n("Volume:"), dataValid);
     validGrid->addWidget(label, 1, 1);
@@ -141,6 +139,11 @@ void NTriSnapPeaUI::refresh() {
         solutionType->setText(solutionTypeString(snappeaTri->solutionType()));
         solutionType->setEnabled(true);
 
+        QString expln = i18n("%1  %2").arg(solutionTypeExplnBase)
+            .arg(solutionTypeExplanation(snappeaTri->solutionType()));
+        QWhatsThis::add(solutionTypeLabel, expln);
+        QWhatsThis::add(solutionType, expln);
+
         int places;
         double ans = snappeaTri->volume(places);
 
@@ -179,10 +182,14 @@ void NTriSnapPeaUI::editingElsewhere() {
     data->raiseWidget(dataValid);
 
     QString msg(i18n("Editing..."));
-    volume->setText(msg);
-    volume->setEnabled(false);
+
     solutionType->setText(msg);
     solutionType->setEnabled(false);
+    QWhatsThis::add(solutionTypeLabel, solutionTypeExplnBase);
+    QWhatsThis::add(solutionType, solutionTypeExplnBase);
+
+    volume->setText(msg);
+    volume->setEnabled(false);
 }
 
 QString NTriSnapPeaUI::solutionTypeString(int solnType) {
@@ -203,6 +210,40 @@ QString NTriSnapPeaUI::solutionTypeString(int solnType) {
             return i18n("No solution found");
         default:
             return i18n("ERROR (invalid solution type)");
+    }
+}
+
+QString NTriSnapPeaUI::solutionTypeExplanation(int solnType) {
+    switch (solnType) {
+        case NSnapPeaTriangulation::not_attempted:
+            return i18n("This particular solution type means that "
+                "a solution has not been attempted.");
+        case NSnapPeaTriangulation::geometric_solution:
+            return i18n("This particular solution type means that "
+                "all tetrahedra are either positively oriented or flat, "
+                "though the entire solution is not flat and no "
+                "tetrahedra are degenerate.");
+        case NSnapPeaTriangulation::nongeometric_solution:
+            return i18n("This particular solution type means that "
+                "the volume is positive, but some tetrahedra are "
+                "negatively oriented.");
+        case NSnapPeaTriangulation::flat_solution:
+            return i18n("This particular solution type means that "
+                "all tetrahedra are flat, but none have shape "
+                "0, 1 or infinity.");
+        case NSnapPeaTriangulation::degenerate_solution:
+            return i18n("This particular solution type means that "
+                "at least one tetrahedron has shape 0, 1 or infinity.");
+        case NSnapPeaTriangulation::other_solution:
+            return i18n("This particular solution type means that "
+                "the volume is zero or negative, but the solution is "
+                "neither flat nor degenerate.");
+        case NSnapPeaTriangulation::no_solution:
+            return i18n("This particular solution type means that "
+                "the gluing equations could not be solved.");
+        default:
+            return i18n("This particular solution type is unknown and "
+                "should never occur.  Please report this as a bug.");
     }
 }
 

@@ -28,11 +28,13 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include "angle/nanglestructurelist.h"
+#include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/angle/testangle.h"
 
 using regina::NAngleStructure;
 using regina::NAngleStructureList;
+using regina::NExampleTriangulation;
 using regina::NPerm;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -58,28 +60,16 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             /**< An untwisted layered loop of length 2. */
 
     public:
+        void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+            dest.insertTriangulation(*source);
+            delete source;
+        }
+
         void setUp() {
-            NTetrahedron* r;
-            NTetrahedron* s;
-
-            // The two-tetrahedron figure eight knot complement is
-            // described at the beginning of chapter 8 of Richard
-            // Rannard's PhD thesis.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            r->joinTo(0, s, NPerm(1, 3, 0, 2));
-            r->joinTo(1, s, NPerm(2, 0, 3, 1));
-            r->joinTo(2, s, NPerm(0, 3, 2, 1));
-            r->joinTo(3, s, NPerm(2, 1, 0, 3));
-            triFigure8.addTetrahedron(r);
-            triFigure8.addTetrahedron(s);
-
-            // The Gieseking manifold is simple enough; it has only one
-            // tetrahedron.
-            r = new NTetrahedron();
-            r->joinTo(0, r, NPerm(1, 2, 0, 3));
-            r->joinTo(2, r, NPerm(0, 2, 3, 1));
-            triGieseking.addTetrahedron(r);
+            // Use pre-coded triangulations where we can.
+            copyAndDelete(triFigure8,
+                NExampleTriangulation::figureEightKnotComplement());
+            copyAndDelete(triGieseking, NExampleTriangulation::gieseking());
 
             // Layered loops can be constructed automatically.
             triLoopC2.insertLayeredLoop(2, false);

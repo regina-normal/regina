@@ -64,6 +64,12 @@
     "*|SnapPea Files\n*|All Files"
 
 /**
+ * Filename filter for C++ source files.
+ */
+#define FILTER_CPP_SOURCE \
+    "*.cpp *.cc *.C|C++ Source Files\n*|All Files"
+
+/**
  * Filename filter for all files.
  */
 #define FILTER_ALL \

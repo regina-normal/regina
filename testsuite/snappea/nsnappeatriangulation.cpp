@@ -30,66 +30,15 @@
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
 #include "snappea/nsnappeatriangulation.h"
+#include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/snappea/testsnappea.h"
 
+using regina::NExampleTriangulation;
 using regina::NPerm;
 using regina::NSnapPeaTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
-
-// Some of the larger triangulations we will hard-code here.
-static const int closedHypOrAdjTet[9][4] = {
-    {6, 8, 2, 8},
-    {6, 8, 3, 7},
-    {7, 0, 3, 4},
-    {1, 5, 5, 2},
-    {2, 6, 5, 7},
-    {3, 8, 3, 4},
-    {0, 4, 7, 1},
-    {1, 4, 2, 6},
-    {1, 0, 5, 0}
-};
-
-static const int closedHypOrAdjPerm[9][4][4] = {
-    { {0,1,3,2}, {3,1,2,0}, {0,2,1,3}, {0,2,1,3} },
-    { {3,1,2,0}, {1,0,2,3}, {3,2,0,1}, {2,3,1,0} },
-    { {2,0,3,1}, {0,2,1,3}, {0,1,3,2}, {3,1,2,0} },
-    { {2,3,1,0}, {3,2,0,1}, {2,1,0,3}, {0,1,3,2} },
-    { {3,1,2,0}, {0,1,3,2}, {0,1,3,2}, {3,2,0,1} },
-    { {2,1,0,3}, {0,2,1,3}, {2,3,1,0}, {0,1,3,2} },
-    { {0,1,3,2}, {0,1,3,2}, {0,1,3,2}, {3,1,2,0} },
-    { {3,2,0,1}, {2,3,1,0}, {1,3,0,2}, {0,1,3,2} },
-    { {1,0,2,3}, {3,1,2,0}, {0,2,1,3}, {0,2,1,3} }
-};
-
-static const int closedHypNorAdjTet[11][4] = {
-    {8, 2, 8, 2},
-    {5, 3, 2, 9},
-    {1, 4, 0, 0},
-    {6, 1, 4, 6},
-    {10, 2, 10, 3},
-    {7, 7, 6, 1},
-    {8, 3, 3, 5},
-    {5, 9, 8, 5},
-    {0, 0, 6, 7},
-    {10, 10, 1, 7},
-    {9, 4, 4, 9}
-};
-
-static const int closedHypNorAdjPerm[11][4][4] = {
-    { {1,3,2,0}, {0,3,2,1}, {2,1,0,3}, {3,1,0,2} },
-    { {3,0,1,2}, {3,1,0,2}, {2,1,0,3}, {1,0,3,2} },
-    { {2,1,0,3}, {3,1,2,0}, {2,1,3,0}, {0,3,2,1} },
-    { {2,1,3,0}, {2,1,3,0}, {2,0,3,1}, {0,3,2,1} },
-    { {2,1,0,3}, {3,1,2,0}, {3,2,1,0}, {1,3,0,2} },
-    { {3,1,2,0}, {1,0,3,2}, {0,1,3,2}, {1,2,3,0} },
-    { {2,1,0,3}, {0,3,2,1}, {3,1,0,2}, {0,1,3,2} },
-    { {1,0,3,2}, {0,3,2,1}, {0,1,3,2}, {3,1,2,0} },
-    { {2,1,0,3}, {3,0,2,1}, {2,1,0,3}, {0,1,3,2} },
-    { {3,1,2,0}, {2,0,1,3}, {1,0,3,2}, {0,3,2,1} },
-    { {1,2,0,3}, {3,2,1,0}, {2,1,0,3}, {3,1,2,0} }
-};
 
 class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NSnapPeaTriangulationTest);
@@ -158,6 +107,11 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                  vertices all have 2-sphere links. */
 
     public:
+        void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+            dest.insertTriangulation(*source);
+            delete source;
+        }
+
         void setUp() {
             // Keep the kernel quiet.  It interferes with the test
             // suite's running progress messages.
@@ -180,10 +134,10 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             n4_9_2.insertRehydration("ebdbcdddcemre");
             n4_1_2_1.insertRehydration("eahbcdddjxxxj");
 
-            closedHypOr.insertConstruction(9, closedHypOrAdjTet,
-                closedHypOrAdjPerm);
-            closedHypNor.insertConstruction(11, closedHypNorAdjTet,
-                closedHypNorAdjPerm);
+            copyAndDelete(closedHypOr,
+                NExampleTriangulation::smallClosedOrblHyperbolic());
+            copyAndDelete(closedHypNor,
+                NExampleTriangulation::smallClosedNonOrblHyperbolic());
 
             t = new NTetrahedron();
             s = new NTetrahedron();

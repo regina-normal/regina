@@ -13,5 +13,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libtriangulation.la
 
-libtriangulation_la_SOURCES = nboundarycomponent.cpp ncomponent.cpp nedge.cpp nface.cpp nfacepair.cpp nisomorphism.cpp nperm.cpp ntetface.cpp ntetrahedron.cpp ntriangulation.cpp nvertex.cpp pytriangulation.cpp
+libtriangulation_la_SOURCES = nboundarycomponent.cpp ncomponent.cpp nedge.cpp nexampletriangulation.cpp nface.cpp nfacepair.cpp nisomorphism.cpp nperm.cpp ntetface.cpp ntetrahedron.cpp ntriangulation.cpp nvertex.cpp pytriangulation.cpp
 

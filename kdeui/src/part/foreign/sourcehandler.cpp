@@ -26,58 +26,33 @@
 
 /* end stub */
 
-#include "packet/npacket.h"
+#include "triangulation/ntriangulation.h"
 
-#include "packettreeview.h"
-#include "reginapart.h"
-#include "foreign/exportdialog.h"
-#include "foreign/pythonhandler.h"
-#include "foreign/reginahandler.h"
-#include "foreign/snappeahandler.h"
-#include "foreign/sourcehandler.h"
-#include "reginafilter.h"
+#include "sourcehandler.h"
+#include "../packetfilter.h"
 
-#include <kfiledialog.h>
+#include <fstream>
 #include <klocale.h>
 #include <kmessagebox.h>
 
-void ReginaPart::exportPython() {
-    exportFile(PythonHandler::instance, i18n(FILTER_PYTHON_SCRIPTS),
-        i18n("Export Python Script"));
+const SourceHandler SourceHandler::instance;
+
+PacketFilter* SourceHandler::canExport() const {
+    return new SingleTypeFilter<regina::NTriangulation>();
 }
 
-void ReginaPart::exportRegina() {
-    exportFile(ReginaHandler(true), i18n(FILTER_REGINA),
-        i18n("Export Regina Data File"));
-}
+bool SourceHandler::exportData(regina::NPacket* data,
+        const QString& fileName, QWidget* parentWidget) const {
+    regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
 
-void ReginaPart::exportReginaUncompressed() {
-    exportFile(ReginaHandler(false), i18n(FILTER_REGINA),
-        i18n("Export Regina Data File"));
-}
-
-void ReginaPart::exportSnapPea() {
-    exportFile(SnapPeaHandler::instance, i18n(FILTER_SNAPPEA),
-        i18n("Export SnapPea Triangulation"));
-}
-
-void ReginaPart::exportSource() {
-    exportFile(SourceHandler::instance, i18n(FILTER_CPP_SOURCE),
-        i18n("Export C++ Source"));
-}
-
-void ReginaPart::exportFile(const PacketExporter& exporter,
-        const QString& fileFilter, const QString& dialogTitle) {
-    ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
-        exporter.canExport(), dialogTitle);
-    if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* data = dlg.selectedPacket();
-        if (data) {
-            QString file = KFileDialog::getSaveFileName(QString::null,
-                fileFilter, widget(), dialogTitle);
-            if (! file.isEmpty())
-                exporter.exportData(data, file, widget());
-        }
+    std::ofstream out(fileName.ascii());
+    if (! out) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation could not be exported.  The target "
+            "file %1 could not be opened for writing.").arg(fileName));
+        return false;
     }
+    out << tri->dumpConstruction();
+    return true;
 }
 

@@ -285,6 +285,12 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(i18n("Export a triangulation from this packet tree "
         "to a separate SnapPea file."));
 
+    act = new KAction(i18n("&C++ Source"), "source_cpp", 0,
+        this, SLOT(exportSource()), actionCollection(), "export_source");
+    act->setToolTip(i18n("Export a triangulation as C++ source"));
+    act->setWhatsThis(i18n("Export a triangulation from this packet tree "
+        "to a C++ source file containing code to reconstruct it."));
+
     act = new KAction(i18n("&Python Script"), "packet_script", 0,
         this, SLOT(exportPython()), actionCollection(), "export_python");
     act->setToolTip(i18n("Export a Python script"));

@@ -28,9 +28,11 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include "surfaces/nnormalsurfacelist.h"
+#include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/surfaces/testsurfaces.h"
 
+using regina::NExampleTriangulation;
 using regina::NNormalSurface;
 using regina::NNormalSurfaceList;
 using regina::NPerm;
@@ -87,6 +89,11 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                  Klein bottle. */
 
     public:
+        void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+            dest.insertTriangulation(*source);
+            delete source;
+        }
+
         void setUp() {
             NTetrahedron* r;
             NTetrahedron* s;
@@ -95,24 +102,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             // The one-tetrahedron ball has no face identifications at all.
             oneTet.addTetrahedron(new NTetrahedron());
 
-            // The two-tetrahedron figure eight knot complement is
-            // described at the beginning of chapter 8 of Richard
-            // Rannard's PhD thesis.
-            r = new NTetrahedron();
-            s = new NTetrahedron();
-            r->joinTo(0, s, NPerm(1, 3, 0, 2));
-            r->joinTo(1, s, NPerm(2, 0, 3, 1));
-            r->joinTo(2, s, NPerm(0, 3, 2, 1));
-            r->joinTo(3, s, NPerm(2, 1, 0, 3));
-            figure8.addTetrahedron(r);
-            figure8.addTetrahedron(s);
-
-            // The Gieseking manifold is simple enough; it has only one
-            // tetrahedron.
-            r = new NTetrahedron();
-            r->joinTo(0, r, NPerm(1, 2, 0, 3));
-            r->joinTo(2, r, NPerm(0, 2, 3, 1));
-            gieseking.addTetrahedron(r);
+            // Use pre-coded triangulations where we can.
+            copyAndDelete(figure8,
+                NExampleTriangulation::figureEightKnotComplement());
+            copyAndDelete(gieseking, NExampleTriangulation::gieseking());
 
             // Layered loops can be constructed automatically.
             S3.insertLayeredLoop(1, false);

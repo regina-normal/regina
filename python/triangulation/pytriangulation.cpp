@@ -29,6 +29,7 @@
 void addNBoundaryComponent();
 void addNComponent();
 void addNEdge();
+void addNExampleTriangulation();
 void addNFace();
 void addNFacePair();
 void addNIsomorphism();
@@ -42,6 +43,7 @@ void addTriangulation() {
     addNBoundaryComponent();
     addNComponent();
     addNEdge();
+    addNExampleTriangulation();
     addNFace();
     addNFacePair();
     addNIsomorphism();
