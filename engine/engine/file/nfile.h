@@ -84,6 +84,8 @@ bool writeToFile(const char* fileName, NPacket* packet);
  * Represents a file containing a packet tree.
  * Provides routines for opening, closing, reading and writing.
  *
+ * \todo \opt Replace this binary file format with a new compressed XML format.
+ *
  * \ifaces The enumeration NRandomAccessResource::mode is a public
  * member of this class.
  */

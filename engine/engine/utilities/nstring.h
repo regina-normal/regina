@@ -52,7 +52,7 @@
  * introduced many new bugs, documented it thoroughly and rearranged it
  * to fit my general coding style.
  *
- * \todo \opt Check out tjstring.zip for a copy-on-write class.
+ * \todo \opt Replace this class with <tt>std::string</tt>.
  *
  * \ifaces Not present.
  * @author Scott Robert Ladd, with modifications by Ben Burton.
