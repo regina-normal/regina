@@ -15,6 +15,7 @@
 
   <refnamediv>
    <refname>regina</refname>
+   <refname>regina.bat</refname>
    <refpurpose>&regina; startup script</refpurpose>
   </refnamediv>
 
@@ -51,6 +52,19 @@
     startup script, or may run <filename>regina.bat</filename>
     from their usual &windows; environment.
    </para>
+   <warning><para>
+    When passing command-line arguments, avoid using characters that have
+    a special meaning to <filename>bash</filename>
+    (such as quotes, brackets, backslashes and
+    the like).  You should <emphasis>only</emphasis> use the arguments
+    described below.  Using special characters in command-line arguments
+    can have unpredictable results, and may in the worst case result in
+    data loss (although I've tried to make the scripts foolproof enough
+    to prevent this).  This warning applies to &windows;
+    users too, since <filename>regina.bat</filename> passes its
+    command-line arguments straight through to the
+    <filename>bash</filename> startup script.
+   </para></warning>
   </refsect1>
 
   <refsect1>
