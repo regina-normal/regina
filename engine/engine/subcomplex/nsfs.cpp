@@ -68,6 +68,19 @@ NSFS::NSFS(const NSFS& cloneMe) : orbitGenus(cloneMe.orbitGenus),
         fibres.addLast(*it);
 }
 
+void NSFS::operator = (const NSFS& cloneMe) {
+    orbitGenus = cloneMe.orbitGenus;
+    orbitOrientable = cloneMe.orbitOrientable;
+    orbitPunctures = cloneMe.orbitPunctures;
+
+    fibres.flush();
+    for (FibreIterator it(cloneMe.fibres); ! it.done(); it++)
+        fibres.addLast(*it);
+
+    k = cloneMe.k;
+    nNonZeroFibres = cloneMe.nNonZeroFibres;
+}
+
 unsigned long NSFS::getFibreCount() const {
     unsigned long size = fibres.size();
     if (size == 0)

@@ -209,6 +209,16 @@ class NSFS : public ShareableObject {
         virtual ~NSFS();
 
         /**
+         * Modifies this Seifert fibred space to be a clone of the given
+         * space.
+         *
+         * \ifaces Not present.
+         *
+         * @param cloneMe the Seifert fibred space to clone.
+         */
+        void operator = (const NSFS& cloneMe);
+
+        /**
          * Returns the genus of the orbit manifold.  This is the number
          * of tori or projective planes that it contains (once all its
          * boundary components are filled in with discs).
