@@ -43,7 +43,7 @@
 #include <config.h>
 
 #ifndef HAVE___INT64
-    #define __int64 (long long)
+    #define __int64 long long
 #endif
 
 #include <jni.h>
