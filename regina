@@ -23,7 +23,7 @@ if [ "$OSTYPE" = "cygwin" ]; then
 	# contain backslashes.
 	for i in REGINA_OPTIONS_LOCAL REGINA_BTOOLS REGINA_JYTHON REGINA_JAVAHELP REGINA_JNIDIR REGINA_JARDIR REGINA_CACHEDIR; do
 	if ( eval "[ ! -z \"\$$i\" ]" ); then
-		eval 'export '"$i"'=`cygpath -aw "$'"$i"'"`'
+		eval 'export '"$i"'="`cygpath -aw "$'"$i"'"`"'
 	fi
 	done
 fi
