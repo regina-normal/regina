@@ -8,6 +8,17 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
+Version 3.96  [ 31 October, 2003 ] - Second prerelease for version 4.0.
+
+    Features:
+        - Incorporated Turaev-Viro invariants and isomorphism testing
+          into the user interface (previously these were available only
+          through python scripting).
+        - Various clean-ups in the underlying mathematical code.
+    Bug Fixes:
+        - Fixed a crash when refreshing the triangulation composition tab.
+        - Fixed the annoying splitter auto-resize in the main window.
+
 Version 3.95  [ 12 October, 2003 ] - Prerelease for version 4.0.
 
     User Interface Rewrites:

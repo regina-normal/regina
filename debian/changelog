@@ -1,3 +1,9 @@
+regina-normal (3.96-1) unstable; urgency=low
+
+  * New upstream release (second prerelease for 4.0).
+
+ -- Ben Burton <bab@debian.org>  Fri, 31 Oct 2003 19:04:48 +1100
+
 regina-normal (3.95-1) unstable; urgency=low
 
   * New upstream release (prerelease for 4.0).
