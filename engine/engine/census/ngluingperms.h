@@ -187,10 +187,10 @@ class NGluingPerms {
          * first (permutation set) argument.
          *
          * \pre The given face pairing is connected, i.e., it is possible
-         * to reach any tetrahedron from any other tetrahedra via a
+         * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
-         * \pre Within any single tetrahedron in the given face pairing,
-         * the face partners appear in increasing order for faces 0, 1, 2 and 3.
+         * \pre Within any single tetrahedron in the given face pairing, the
+         * face partners appear in increasing order for faces 0, 1, 2 and 3.
          * Partners are ordered first by tetrahedron number and then by
          * face number within that tetrahedron.  An unmatched face must
          * appear after all matched faces within any particular tetrahedron.
