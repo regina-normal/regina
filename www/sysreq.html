@@ -5,7 +5,7 @@
 <body bgcolor="#C0C0C0" text="#000000"
 	link="#0000EE" vlink="#551A8B" alink="#FF0000">
 
-<a name="contents"><h2>Regina - System Requirements</h2></a>
+<h2><a name="contents">Regina - System Requirements</a></h2>
 
 <ul>
 	<li><a href="#linux">Linux</a></li>
@@ -23,7 +23,7 @@ below.  If downloading a prebuilt binary distribution, you need everything from
 the <i>Binaries</i> column.  If downloading a source distribution, you
 need everything from both <i>Binaries</i> and <i>Source</i> columns.
 
-<h4><a name="linux">Linux:</a></h4>
+<h3><a name="linux">Linux:</a></h3>
 
 Many of the tools in the list below may come with your linux
 distribution; it may be worth searching there before visiting each
@@ -34,11 +34,10 @@ offers all of the tools in this list except for JavaHelp.
 <p align=center>
 Legend:
 <table border=1 align=center><tr>
-		<td bgcolor=#FF7979>Required</td>
-		<td bgcolor=#50FF50>Recommended</td>
+		<td bgcolor="#FF7979">Required</td>
+		<td bgcolor="#50FF50">Recommended</td>
 		<td>Optional</td>
 </tr></table>
-</center>
 
 <p>
 <table border=1>
@@ -48,36 +47,36 @@ Legend:
 	<td align=center><b><i>Source</i></b></td></tr>
 <tr><td>General tools</td><td></td>
 	<td>Search your linux distribution</td>
-	<td bgcolor=#FF7979><tt>bash</tt> (or another <tt>sh</tt>-compatible
+	<td bgcolor="#FF7979"><tt>bash</tt> (or another <tt>sh</tt>-compatible
 	shell) and <tt>awk</tt></td>
 	<!-->leaving out cd, echo, mkdir, which<-->
-	<td bgcolor=#FF7979>(same as for binaries)</td></tr>
+	<td bgcolor="#FF7979">(same as for binaries)</td></tr>
 <tr><td>GNU multiprecision arithmetic library</td><td>&gt;= 2</td>
 	<td><a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a></td>
-	<td bgcolor=#FF7979>Shared library <i>libgmp.so</i></td>
-	<td bgcolor=#FF7979>Linkable library <i>libgmp.a</i> plus the corresponding header
+	<td bgcolor="#FF7979">Shared library <i>libgmp.so</i></td>
+	<td bgcolor="#FF7979">Linkable library <i>libgmp.a</i> plus the corresponding header
 		files</td></tr>
 <tr><td>Java</td><td>&gt;= 1.3</td>
 	<td><a href="http://www.blackdown.org/">http://www.blackdown.org/</a></td>
-	<td bgcolor=#FF7979>Runtime environment (<i>jre</i> or <i>j2re</i>)</td>
-	<td bgcolor=#FF7979>Development kit (<i>jdk</i> or <i>j2sdk</i>); this should
+	<td bgcolor="#FF7979">Runtime environment (<i>jre</i> or <i>j2re</i>)</td>
+	<td bgcolor="#FF7979">Development kit (<i>jdk</i> or <i>j2sdk</i>); this should
 		automatically include the runtime environment</td></tr>
 <tr><td>BTools</td><td>&gt;= 1.1</td>
 	<td><a href="http://sourceforge.net/projects/btools/">
 		http://sourceforge.net/projects/btools/</a></td>
-	<td bgcolor=#FF7979>Regina only needs access to the single file <i>btools.jar</i>.</td>
-	<td bgcolor=#FF7979>(same as for binaries)</td></tr>
+	<td bgcolor="#FF7979">Regina only needs access to the single file <i>btools.jar</i>.</td>
+	<td bgcolor="#FF7979">(same as for binaries)</td></tr>
 <tr><td>Jython (<b>optional</b> - used to run scripts or otherwise
-		obtain low-level access to the computation engine)</td><td>&gt;= 2.1-alpha1</td>
+		obtain low-level access to the calculation engine)</td><td>&gt;= 2.1-alpha1</td>
 	<td><a href="http://www.jython.org/">http://www.jython.org/</a></td>
-	<td bgcolor=#50FF50>Regina only needs access to the single file <i>jython.jar</i>.</td>
-	<td bgcolor=#FF7979>(same as for binaries)</td></tr>
+	<td bgcolor="#50FF50">Regina only needs access to the single file <i>jython.jar</i>.</td>
+	<td bgcolor="#FF7979">(same as for binaries)</td></tr>
 <tr><td>JavaHelp (<b>optional</b> - used to view documentation through
 		the embedded help system)</td><td>&gt;= 1.1</td>
 	<td><a href="http://www.javasoft.com/products/javahelp/">
 		http://www.javasoft.com/products/javahelp/</a></td>
 	<td>Regina only needs access to the single file <i>jh.jar</i>.</td>
-	<td bgcolor=#FF7979>(same as for binaries)</td></tr>
+	<td bgcolor="#FF7979">(same as for binaries)</td></tr>
 <tr><td>omniORB (<b>optional</b> - used to run the calculation engine as a
 		CORBA server)</td><td>&gt;= 3</td>
 	<td><a href="http://www.uk.research.att.com/omniORB/omniORB.html">
@@ -88,50 +87,49 @@ Legend:
 	header files</td></tr>
 <tr><td>Development tools</td><td></td>
 	<td>Search your linux distribution</td><td></td>
-	<td bgcolor=#FF7979><tt>g++</tt>, a GNU-compatible <tt>make</tt>,
+	<td bgcolor="#FF7979"><tt>g++</tt>, a GNU-compatible <tt>make</tt>,
 		<tt>grep</tt>, <tt>sed</tt>, <tt>tar</tt>
 		and almost certainly other bits and pieces; please
 		<a href="mailto:benb@acm.org">mail me</a> if you discover
 		anything that needs to be added to this list.</td>
 		<!-->leaving out cat, cp, pwd, rm, touch<--></tr>
 <tr><td>Doxygen (<b>optional</b> - used to make HTML documentation for
-		the computation engine)</td><td>&gt;= 1.2.2</td>
+		the calculation engine)</td><td>&gt;= 1.2.2</td>
 	<td><a href="http://www.stack.nl/~dimitri/doxygen/">
 		http://www.stack.nl/~dimitri/doxygen/</a></td>
-	<td></td><td bgcolor=#50FF50>A binary doxygen package plus graphviz (see below)</td></tr>
+	<td></td><td bgcolor="#50FF50">A binary doxygen package plus graphviz (see below)</td></tr>
 <tr><td>Graphviz (<b>optional</b> - required if doxygen is used;
 		see above)</td><td>&gt;= 1.5</td>
 	<td><a href="http://www.research.att.com/sw/tools/graphviz/">
 		http://www.research.att.com/sw/tools/graphviz/</a></td>
-	<td></td><td bgcolor=#50FF50>A binary graphviz package</td></tr>
+	<td></td><td bgcolor="#50FF50">A binary graphviz package</td></tr>
 </table>
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
-<h4><a name="windoze">Windows (at least Win95):</a></h4>
+<h3><a name="windoze">Windows (at least Win95):</a></h3>
 
 Although Regina is primarily written and tested under linux, it has been
 made portable enough to build and run under windows.  The current status of
 windows support is as follows:
 <ul>
 	<li>Calculation engine (JNI):
-		<i><font color="darkGreen">builds</font>, <font color="darkGreen">runs</font></i></li>
+		<i><font color="#006000">builds</font>, <font color="#006600">runs</font></i></li>
 	<li>Calculation engine (CORBA):
-		<i><font color="darkRed">build not tested</font></i></li>
+		<i><font color="#600000">build not tested</font></i></li>
 	<li>Java user interface (JNI):
-		<i><font color="darkGreen">builds</font>, <font color="darkGreen">runs</font></i></li>
+		<i><font color="#006600">builds</font>, <font color="#006600">runs</font></i></li>
 	<li>Java user interface (CORBA):
-		<i><font color="darkGreen">builds</font>, <font color="darkRed">run not tested</font></i></li>
+		<i><font color="#006600">builds</font>, <font color="#600000">run not tested</font></i></li>
 </ul>
 
 <p align=center>
 Legend:
 <table border=1 align=center><tr>
-		<td bgcolor=#FF7979>Required</td>
-		<td bgcolor=#50FF50>Recommended</td>
+		<td bgcolor="#FF7979">Required</td>
+		<td bgcolor="#50FF50">Recommended</td>
 		<td>Optional</td>
 </tr></table>
-</center>
 
 <p>
 <table border=1>
@@ -141,47 +139,47 @@ Legend:
 	<td align=center><b><i>Source</i></b></td></tr>
 <tr><td>Cygwin UNIX environment</td><td>&gt;= 1.3</td>
 	<td><a href="http://www.cygwin.com/">http://www.cygwin.com/</a></td>
-	<td bgcolor=#FF7979 colspan=2>See the
+	<td bgcolor="#FF7979" colspan=2>See the
 		<a href="cygwin.html#cygwin">Cygwin support page</a>
 		for details on which Cygwin packages you will need.</td></tr>
 <tr><td>Java</td><td>&gt;= 1.3</td>
 	<td><a href="http://www.javasoft.com/j2se/">
 		http://www.javasoft.com/j2se/</a></td>
-	<td bgcolor=#FF7979>Runtime environment (<i>jre</i> or <i>j2re</i>)</td>
-	<td bgcolor=#FF7979>Development kit (<i>jdk</i> or <i>j2sdk</i>); this will
+	<td bgcolor="#FF7979">Runtime environment (<i>jre</i> or <i>j2re</i>)</td>
+	<td bgcolor="#FF7979">Development kit (<i>jdk</i> or <i>j2sdk</i>); this will
 		automatically include the runtime environment</td></tr>
 <tr><td>BTools</td><td>&gt;= 1.1</td>
 	<td><a href="http://sourceforge.net/projects/btools/">
 		http://sourceforge.net/projects/btools/</a></td>
-	<td bgcolor=#FF7979>Regina only needs access to the single file <i>btools.jar</i>.</td>
-	<td bgcolor=#FF7979>(same as for binaries)</td></tr>
+	<td bgcolor="#FF7979">Regina only needs access to the single file <i>btools.jar</i>.</td>
+	<td bgcolor="#FF7979">(same as for binaries)</td></tr>
 <tr><td>Jython (<b>optional</b> - used to run scripts or otherwise
-	obtain low-level access to the computation engine)</td><td>&gt;= 2.1-alpha1</td>
+	obtain low-level access to the calculation engine)</td><td>&gt;= 2.1-alpha1</td>
 	<td><a href="http://www.jython.org/">http://www.jython.org/</a></td>
-	<td bgcolor=#50FF50>Regina only needs access to the single file <i>jython.jar</i>.</td>
-	<td bgcolor=#FF7979>(same as for binaries)</td></tr>
+	<td bgcolor="#50FF50">Regina only needs access to the single file <i>jython.jar</i>.</td>
+	<td bgcolor="#FF7979">(same as for binaries)</td></tr>
 <tr><td>JavaHelp (<b>optional</b> - used to view documentation through
 	the embedded help system)</td><td>&gt;= 1.1</td>
 	<td><a href="http://www.javasoft.com/products/javahelp/">
 		http://www.javasoft.com/products/javahelp/</a></td>
 	<td>Regina only needs access to the single file <i>jh.jar</i>.</td>
-	<td bgcolor=#FF7979>(same as for binaries)</td></tr>
+	<td bgcolor="#FF7979">(same as for binaries)</td></tr>
 <tr><td>GNU multiprecision arithmetic library</td><td>&gt;= 2</td>
 	<td><a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a>
 		(<i>libgmp</i> sources) or the <a href="cygwin.html#gmp">Cygwin support page</a>
 		(prebuilt <i>libgmp</i> libraries)</td>
-	<td></td><td bgcolor=#FF7979>Linkable library
+	<td></td><td bgcolor="#FF7979">Linkable library
 	<i>libgmp.a</i> plus the corresponding header files</td></tr>
 <tr><td>Doxygen (<b>optional</b> - used to make HTML documentation for
-	the computation engine)</td><td>&gt;= 1.2.2</td>
+	the calculation engine)</td><td>&gt;= 1.2.2</td>
 	<td><a href="http://www.stack.nl/~dimitri/doxygen/">
 		http://www.stack.nl/~dimitri/doxygen/</a></td>
-	<td></td><td bgcolor=#50FF50>A binary doxygen package plus graphviz (see below)</td></tr>
+	<td></td><td bgcolor="#50FF50">A binary doxygen package plus graphviz (see below)</td></tr>
 <tr><td>Graphviz (<b>optional</b> - required if doxygen is used;
 	see above)</td><td>&gt;= 1.5</td>
 	<td><a href="http://www.research.att.com/sw/tools/graphviz/">
 		http://www.research.att.com/sw/tools/graphviz/</a></td>
-	<td></td><td bgcolor=#50FF50>A binary graphviz package</td></tr>
+	<td></td><td bgcolor="#50FF50">A binary graphviz package</td></tr>
 </table>
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
