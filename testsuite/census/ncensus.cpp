@@ -60,7 +60,7 @@ class NCensusTest : public CppUnit::TestFixture {
                 NBoolSet::sBoth, NBoolSet::sTrue, NBoolSet::sFalse, 0);
         }
 
-        void rawCountsCompare(unsigned minTets, unsigned maxTets,
+        static void rawCountsCompare(unsigned minTets, unsigned maxTets,
                 const unsigned* realAns, const char* censusType,
                 NBoolSet finiteness, NBoolSet orientability,
                 NBoolSet boundary, int nBdryFaces) {

@@ -90,7 +90,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void reducedModSpec(long k, long modBase) {
+        static void reducedModSpec(long k, long modBase) {
             long ans = regina::reducedMod(k, modBase);
 
             std::ostringstream msg;
@@ -169,7 +169,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
                 ulEvenMed * (ulEvenMed - 2)));
         }
 
-        void gcdWithCoeffsSpec(long a, long b) {
+        static void gcdWithCoeffsSpec(long a, long b) {
             long u, v;
             long d = regina::gcdWithCoeffs(a, b, u, v);
 
@@ -215,7 +215,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
             }
         }
 
-        void gcdWithCoeffsSpecAllCombs(long a, long b) {
+        static void gcdWithCoeffsSpecAllCombs(long a, long b) {
             gcdWithCoeffsSpec(a, b);
             gcdWithCoeffsSpec(a, -b);
             gcdWithCoeffsSpec(-a, b);
@@ -252,7 +252,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
             gcdWithCoeffsSpecAllCombs(96, 324);
         }
 
-        void modularInverseSpec(unsigned long n, unsigned long k) {
+        static void modularInverseSpec(unsigned long n, unsigned long k) {
             unsigned long ans = regina::modularInverse(n, k);
 
             std::ostringstream msg;
