@@ -1849,6 +1849,7 @@ inline unsigned long NTriangulation::getTetrahedronIndex(
 inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
     clearAllProperties();
     tetrahedra.push_back(t);
+    fireChangedEvent();
 }
 
 inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
@@ -1857,6 +1858,7 @@ inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
     NTetrahedron* ans = tetrahedra[index];
     ans->isolate();
     tetrahedra.erase(tetrahedra.begin() + index);
+    fireChangedEvent();
     return ans;
 }
 
@@ -1866,16 +1868,19 @@ inline NTetrahedron* NTriangulation::removeTetrahedron(
 
     tet->isolate();
     tetrahedra.erase(tet);
+    fireChangedEvent();
     return tet;
 }
 
 inline void NTriangulation::removeAllTetrahedra() {
     clearAllProperties();
     deleteTetrahedra();
+    fireChangedEvent();
 }
 
 inline void NTriangulation::gluingsHaveChanged() {
     clearAllProperties();
+    fireChangedEvent();
 }
 
 inline unsigned long NTriangulation::getNumberOfBoundaryComponents() {

@@ -234,23 +234,29 @@ inline const std::string& NScript::getLine(unsigned long index) const {
 
 inline void NScript::addFirst(const std::string& line) {
     lines.insert(lines.begin(), line);
+    fireChangedEvent();
 }
 inline void NScript::addLast(const std::string& line) {
     lines.push_back(line);
+    fireChangedEvent();
 }
 inline void NScript::insertAtPosition(const std::string& line,
         unsigned long index) {
     lines.insert(lines.begin() + index, line);
+    fireChangedEvent();
 }
 inline void NScript::replaceAtPosition(const std::string& line,
         unsigned long index) {
     lines[index] = line;
+    fireChangedEvent();
 }
 inline void NScript::removeLineAt(unsigned long index) {
     lines.erase(lines.begin() + index);
+    fireChangedEvent();
 }
 inline void NScript::removeAllLines() {
     lines.clear();
+    fireChangedEvent();
 }
 
 inline unsigned long NScript::getNumberOfVariables() const {
@@ -258,13 +264,17 @@ inline unsigned long NScript::getNumberOfVariables() const {
 }
 inline bool NScript::addVariable(const std::string& name,
         const std::string& value) {
-    return variables.insert(std::make_pair(name, value)).second;
+    bool ans = variables.insert(std::make_pair(name, value)).second;
+    fireChangedEvent();
+    return ans;
 }
 inline void NScript::removeVariable(const std::string& name) {
     variables.erase(name);
+    fireChangedEvent();
 }
 inline void NScript::removeAllVariables() {
     variables.clear();
+    fireChangedEvent();
 }
 
 inline void NScript::writeTextShort(std::ostream& o) const {

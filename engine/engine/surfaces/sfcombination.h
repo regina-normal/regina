@@ -123,6 +123,7 @@ inline bool NSurfaceFilterCombination::getUsesAnd() const {
 }
 inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
     usesAnd = value;
+    fireChangedEvent();
 }
 
 inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {

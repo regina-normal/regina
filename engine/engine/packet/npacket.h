@@ -37,6 +37,7 @@
 #endif
 
 #include <iostream>
+#include <memory>
 #include <set>
 
 #include "shareableobject.h"
@@ -44,6 +45,7 @@
 namespace regina {
 
 class NFile;
+class NPacketListener;
 class NXMLPacketReader;
 
 /**
@@ -79,7 +81,14 @@ class NXMLPacketReader;
  *     <tt>static NTriangulation* readPacket(NFile&, NPacket* parent)</tt>.
  *     New packet types should simply return 0 from this routine since it
  *     reads from the now obsolete old-style binary file format.</li>
+ *   <li>Whenever the contents of the packet are changed, the protected
+ *     routine fireChangedEvent() must be called to notify listeners of
+ *     the change.</li>
  * </ul>
+ *
+ * Note that external objects can listen for events on packets, such as
+ * when packets are changed or about to be destroyed.  See the
+ * NPacketListener class notes for details.
  *
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
@@ -100,7 +109,7 @@ class NPacket : public ShareableObject {
         #ifdef __DOXYGEN
         static const int packetType;
         #endif
-    protected:
+    private:
         std::string packetLabel;
             /**< The unique label for this individual packet of information. */
 
@@ -115,8 +124,11 @@ class NPacket : public ShareableObject {
         NPacket* nextTreeSibling;
             /**< Next sibling packet in the tree structure (0 if none). */
 
-        std::set<std::string>* tags;
+        std::auto_ptr<std::set<std::string> > tags;
             /**< The set of all tags associated with this packet. */
+
+        std::auto_ptr<std::set<NPacketListener*> > listeners;
+            /**< All objects listening for events on this packet. */
 
     public:
         /**
@@ -155,7 +167,7 @@ class NPacket : public ShareableObject {
          * \name Packet Identification
          */
         /*@{*/
-                    
+
         /**
          * Returns the integer ID representing this type of packet.
          * This is the same for all packets of this class.
@@ -296,8 +308,8 @@ class NPacket : public ShareableObject {
          * \pre The given tag is not the empty string.
          *
          * @param tag the tag to add.
-         * @return \c true if the given tag was added, or \c false if the
-         * given tag was already present.
+         * @return \c true if the given tag was successfully added,
+         * or \c false if the given tag was already present beforehand.
          */
         bool addTag(const std::string& tag);
 
@@ -354,6 +366,55 @@ class NPacket : public ShareableObject {
         /*@}*/
         /**
          * (end: Tags)
+         */
+
+        /**
+         * \name Event Handling
+         */
+        /*@{*/
+
+        /**
+         * Registers the given packet listener to listen for events on
+         * this packet.  See the NPacketListener class notes for
+         * details.
+         *
+         * \ifacespython Not present.
+         *
+         * @param listener the listener to register.
+         * @return \c true if the given listener was successfully registered,
+         * or \c false if the given listener was already registered
+         * beforehand.
+         */
+        bool listen(NPacketListener* listener);
+        /**
+         * Determines whether the given packet listener is currently
+         * listening for events on this packet.  See the NPacketListener
+         * class notes for details.
+         *
+         * \ifacespython Not present.
+         *
+         * @param listener the listener to search for.
+         * @return \c true if the given listener is currently registered
+         * with this packet, or \c false otherwise.
+         */
+        bool isListening(NPacketListener* listener);
+        /**
+         * Unregisters the given packet listener so that it no longer
+         * listens for events on this packet.  See the NPacketListener
+         * class notes for details.
+         *
+         * \ifacespython Not present.
+         *
+         * @param listener the listener to unregister.
+         * @return \c true if the given listener was successfully unregistered,
+         * or \c false if the given listener was not registered in the
+         * first place.
+         */
+        bool unlisten(NPacketListener* listener);
+
+        /*@}*/
+        /**
+         * (end: Event Handling)
          */
 
         /**
@@ -919,7 +980,7 @@ class NPacket : public ShareableObject {
         #ifdef __DOXYGEN
         static NPacket* readPacket(NFile& in, NPacket* parent);
         #endif
-    
+
     protected:
         /**
          * Makes a newly allocated copy of this packet.
@@ -937,7 +998,15 @@ class NPacket : public ShareableObject {
          * @return the newly allocated packet.
          */
         virtual NPacket* internalClonePacket(NPacket* parent) const = 0;
-    
+
+        /**
+         * Notifies all registered packet listeners that this packet has
+         * changed.  That is, the routine
+         * NPacketListener::packetWasChanged() will be called upon all
+         * registered listeners.
+         */
+        void fireChangedEvent();
+
         /**
          * Writes a chunk of XML containing the subtree with this packet
          * as matriarch.  This is the preferred way of writing a packet
@@ -985,7 +1054,7 @@ class NPacket : public ShareableObject {
 // Inline functions for NPacket
 
 inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
-        prevTreeSibling(0), nextTreeSibling(0), tags(0) {
+        prevTreeSibling(0), nextTreeSibling(0) {
     if (parent)
         parent->insertChildLast(this);
     else
@@ -996,47 +1065,61 @@ inline const std::string& NPacket::getPacketLabel() const {
     return packetLabel;
 }
 
-inline void NPacket::setPacketLabel(const std::string& newLabel) {
-    packetLabel = newLabel;
-}
-
 inline std::string NPacket::getFullName() const {
     return packetLabel + " (" + getPacketTypeName() + ")";
 }
 
 inline bool NPacket::hasTag(const std::string& tag) const {
-    if (! tags)
+    if (! tags.get())
         return false;
     return tags->count(tag);
 }
 
 inline bool NPacket::hasTags() const {
-    if (! tags)
+    if (! tags.get())
         return false;
     return (! tags->empty());
 }
 
 inline bool NPacket::addTag(const std::string& tag) {
-    if (! tags)
-        tags = new std::set<std::string>();
+    if (! tags.get())
+        tags.reset(new std::set<std::string>());
     return tags->insert(tag).second;
 }
 
 inline bool NPacket::removeTag(const std::string& tag) {
-    if (! tags)
+    if (! tags.get())
         return false;
     return tags->erase(tag);
 }
 
 inline void NPacket::removeAllTags() {
-    if (tags)
+    if (tags.get())
         tags->clear();
 }
 
 inline const std::set<std::string>& NPacket::getTags() const {
-    if (! tags)
-        const_cast<NPacket*>(this)->tags = new std::set<std::string>();
+    if (! tags.get())
+        const_cast<NPacket*>(this)->tags.reset(new std::set<std::string>());
     return *tags;
+}
+
+inline bool NPacket::listen(NPacketListener* listener) {
+    if (! listeners.get())
+        listeners.reset(new std::set<NPacketListener*>());
+    return listeners->insert(listener).second;
+}
+
+inline bool NPacket::isListening(NPacketListener* listener) {
+    if (! listeners.get())
+        return false;
+    return listeners->count(listener);
+}
+
+inline bool NPacket::unlisten(NPacketListener* listener) {
+    if (! listeners.get())
+        return false;
+    return listeners->erase(listener);
 }
 
 inline NPacket* NPacket::getTreeParent() const {

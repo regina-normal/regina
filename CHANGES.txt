@@ -12,6 +12,7 @@ Current Development Version
     ENGINE:
         Overall structure:
             - Fixed minor memory leaks.
+            - Beginning to incorporate std::auto_ptr<T>.
         Class Engine:
             - Removed since this is no longer necessary with the new
               python bindings.
@@ -58,6 +59,11 @@ Current Development Version
         Class NNormalSurfaceList:
             - Made the enumerating constructor private and added the
               public replacement enumerate().
+        Class NPacket, NPacketListener:
+            - Added event listening for packets, including new class
+              NPacketListener and new routines NPacket::listen(),
+              NPacket::isListening() and NPacket::unlisten().
+            - Reclassified member variables from protected to private.
         Class NPerm:
             - Routines edgeDescription() and faceDescription()
               implemented in the calculation engine.

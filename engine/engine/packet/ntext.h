@@ -105,7 +105,7 @@ class NText : public NPacket {
         virtual void writePacket(NFile& out) const;
         static NText* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
-    
+
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
@@ -130,10 +130,12 @@ inline const std::string& NText::getText() const {
 
 inline void NText::setText(const std::string& newText) {
     text = newText;
+    fireChangedEvent();
 }
 
 inline void NText::setText(const char* newText) {
     text = newText;
+    fireChangedEvent();
 }
 
 inline void NText::writeTextShort(std::ostream& o) const {

@@ -29,6 +29,7 @@
 #include <sstream>
 #include "engine.h"
 #include "packet/npacket.h"
+#include "packet/npacketlistener.h"
 #include "utilities/hashset.h"
 #include "utilities/hashutils.h"
 #include "utilities/xmlutils.h"
@@ -43,8 +44,25 @@ NPacket::~NPacket() {
         delete tmp;
     }
 
-    if (tags)
-        delete tags;
+    // Fire a packet event and unregister all listeners.
+    if (listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                listeners->begin(); it != listeners->end(); it++) {
+            (*it)->packetToBeDestroyed(this);
+            (*it)->packets.erase(this);
+        }
+    }
+}
+
+void NPacket::setPacketLabel(const std::string& newLabel) {
+    packetLabel = newLabel;
+
+    // Fire a packet event.
+    if (listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                listeners->begin(); it != listeners->end(); it++)
+            (*it)->packetWasRenamed(this);
+    }
 }
 
 NPacket* NPacket::getTreeMatriarch() const {
@@ -66,6 +84,13 @@ void NPacket::insertChildFirst(NPacket* child) {
         firstTreeChild = child;
         lastTreeChild = child;
     }
+
+    // Fire a packet event.
+    if (listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                listeners->begin(); it != listeners->end(); it++)
+            (*it)->childWasAdded(this, child);
+    }
 }
 
 void NPacket::insertChildLast(NPacket* child) {
@@ -79,6 +104,13 @@ void NPacket::insertChildLast(NPacket* child) {
     } else {
         firstTreeChild = child;
         lastTreeChild = child;
+    }
+
+    // Fire a packet event.
+    if (listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                listeners->begin(); it != listeners->end(); it++)
+            (*it)->childWasAdded(this, child);
     }
 }
 
@@ -95,6 +127,13 @@ void NPacket::insertChildAfter(NPacket* newChild, NPacket* prevChild) {
         else
             lastTreeChild = newChild;
     }
+
+    // Fire a packet event.
+    if (listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                listeners->begin(); it != listeners->end(); it++)
+            (*it)->childWasAdded(this, newChild);
+    }
 }
 
 void NPacket::makeOrphan() {
@@ -108,7 +147,16 @@ void NPacket::makeOrphan() {
     else
         nextTreeSibling->prevTreeSibling = prevTreeSibling;
 
+    NPacket* oldParent = treeParent;
     treeParent = 0;
+
+    // Fire a packet event.
+    if (oldParent->listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                oldParent->listeners->begin();
+                it != oldParent->listeners->end(); it++)
+            (*it)->childWasRemoved(oldParent, this);
+    }
 }
 
 void NPacket::swapWithNextSibling() {
@@ -128,6 +176,14 @@ void NPacket::swapWithNextSibling() {
     other->prevTreeSibling = prevTreeSibling;
     prevTreeSibling = other;
     other->nextTreeSibling = this;
+
+    // Fire a packet event.
+    if (treeParent->listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                treeParent->listeners->begin();
+                it != treeParent->listeners->end(); it++)
+            (*it)->childrenWereReordered(treeParent);
+    }
 }
 
 NPacket* NPacket::nextTreePacket() {
@@ -361,6 +417,14 @@ void NPacket::writeXMLFile(std::ostream& out) const {
     out << "</reginadata>\n";
 }
 
+void NPacket::fireChangedEvent() {
+    if (listeners.get()) {
+        for (std::set<NPacketListener*>::const_iterator it =
+                listeners->begin(); it != listeners->end(); it++)
+            (*it)->packetWasChanged(this);
+    }
+}
+
 void NPacket::writeXMLPacketTree(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlEncodeComment;
@@ -378,7 +442,7 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
     writeXMLPacketData(out);
 
     // Write any packet tags.
-    if (tags)
+    if (tags.get())
         for (std::set<std::string>::const_iterator it = tags->begin();
                 it != tags->end(); it++)
             out << "  <tag name=\"" << xmlEncodeSpecialChars(*it) << "\"/>\n";
