@@ -38,12 +38,14 @@
 #include <qvbox.h>
 #include <kdialogbase.h>
 
+class CoordinateChooser;
 class QCheckBox;
 class QComboBox;
 class QLineEdit;
 class ReginaMain;
 class ReginaPrefGeneral;
 class ReginaPrefPython;
+class ReginaPrefSurfaces;
 class ReginaPrefTri;
 
 /**
@@ -59,6 +61,7 @@ class ReginaPreferences : public KDialogBase {
 
         ReginaPrefGeneral* generalPrefs;
         ReginaPrefTri* triPrefs;
+        ReginaPrefSurfaces* surfacePrefs;
         ReginaPrefPython* pythonPrefs;
 
     public:
@@ -110,6 +113,22 @@ class ReginaPrefTri : public QVBox {
 
     public:
         ReginaPrefTri(QWidget* parent = 0);
+
+    friend class ReginaPreferences;
+};
+
+/**
+ * The page of the Regina configuration dialog for normal surface
+ * preferences.
+ */
+class ReginaPrefSurfaces : public QVBox {
+    Q_OBJECT
+
+    private:
+        CoordinateChooser* chooserCreationCoords;
+
+    public:
+        ReginaPrefSurfaces(QWidget* parent = 0);
 
     friend class ReginaPreferences;
 };

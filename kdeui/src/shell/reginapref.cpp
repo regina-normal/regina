@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "coordinatechooser.h"
 #include "reginamain.h"
 #include "reginapref.h"
 
@@ -52,6 +53,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     frame = addVBoxPage(i18n("Triangulation"), i18n("Triangulation Options"),
         BarIcon("packet_triangulation", KIcon::SizeMedium));
     triPrefs = new ReginaPrefTri(frame);
+
+    frame = addVBoxPage(i18n("Surfaces"), i18n("Normal Surface Options"),
+        BarIcon("packet_surfaces", KIcon::SizeMedium));
+    surfacePrefs = new ReginaPrefSurfaces(frame);
 
     frame = addVBoxPage(i18n("Python"), i18n("Python Options"),
         BarIcon("openterm", KIcon::SizeMedium));
@@ -92,6 +97,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     triPrefs->editSurfacePropsThreshold->setText(
         QString::number(prefSet.triSurfacePropsThreshold));
+
+    surfacePrefs->chooserCreationCoords->setCurrentSystem(
+        prefSet.surfacesCreationCoords);
 }
 
 int ReginaPreferences::exec() {
@@ -159,6 +167,9 @@ void ReginaPreferences::slotApply() {
         triPrefs->editSurfacePropsThreshold->setText(
             QString::number(prefSet.triSurfacePropsThreshold));
     }
+
+    prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
+        getCurrentSystem();
 
     // Save these preferences to the global configuration.
     mainWindow->setPreferences(prefSet);
@@ -266,6 +277,23 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
         "surface properties will be calculated automatically.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(editSurfacePropsThreshold, msg);
+
+    // Add some space at the end.
+    setStretchFactor(new QWidget(this), 1);
+}
+
+ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
+    // Set up the default creation coordinate system.
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+
+    QLabel* label = new QLabel(i18n("Default coordinate system:"), box);
+    chooserCreationCoords = new CoordinateChooser(box);
+    chooserCreationCoords->insertAllCreators();
+    QString msg = i18n("The default coordinate system for creating new normal "
+        "surface lists.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(chooserCreationCoords, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);
