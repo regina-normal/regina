@@ -41,3 +41,6 @@ Normal Surfaces:
 
 Scripts:
 	Expand file args using cygpath (and alter docs accordingly).
+
+Triangulations:
+	Support searching through a census for a triangulation.
