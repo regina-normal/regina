@@ -116,7 +116,15 @@ and it will skip over this test.
 If the module directory $__expanded_kde_moduledir is incorrect (i.e.,
 it does not contain KDE modules and/or libkatepart.so is installed
 elsewhere), you must rerun this configure script with a correct --prefix
-option.  Please feel free to write to regina-user@lists.sourceforge.net
+option.  If you run "kde-config --prefix" from the command-line, it will
+hopefully tell you what this correct prefix should be.
+
+    example:~/source/regina> kde-config --prefix
+    /usr
+    example:~/source/regina> ./configure --prefix=/usr
+    ...
+
+Please feel free to write to regina-user@lists.sourceforge.net
 for assistance.
 
 END
