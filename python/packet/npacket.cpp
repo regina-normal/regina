@@ -36,9 +36,9 @@ namespace {
     NPacket* (NPacket::*firstTreePacket_non_const)(const std::string&) =
         &NPacket::firstTreePacket;
     NPacket* (NPacket::*nextTreePacket_non_const)(const std::string&) =
-        &NPacket::firstTreePacket;
+        &NPacket::nextTreePacket;
     NPacket* (NPacket::*findPacketLabel_non_const)(const std::string&) =
-        &NPacket::firstTreePacket;
+        &NPacket::findPacketLabel;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nextTreePacket,
         NPacket::nextTreePacket, 0, 1);
