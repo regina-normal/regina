@@ -42,6 +42,7 @@
 #define PROPID_ORIENTABILITY 7
 #define PROPID_TWOSIDEDNESS 8
 #define PROPID_CONNECTEDNESS 9
+#define PROPID_SURFACENAME 100
 
 const int vertexSplit[4][4] = {
     { -1, 0, 1, 2 },
@@ -170,6 +171,8 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
         compact = infile.readBool();
         calculatedCompact = true;
     }
+    else if (propType == PROPID_SURFACENAME)
+        name = infile.readString();
 }
 
 void NNormalSurface::initialiseAllProperties() {
@@ -379,6 +382,10 @@ void NNormalSurface::writeToFile(NFile& out) const {
     
     // Write properties.
     streampos bookmark(0);
+
+    bookmark = writePropertyHeader(out, PROPID_SURFACENAME);
+    out.writeString(name);
+    writePropertyFooter(out, bookmark);
 
     if (calculatedEulerChar) {
         bookmark = writePropertyHeader(out, PROPID_EULERCHARACTERISTIC);

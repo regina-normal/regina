@@ -55,6 +55,8 @@ class NNormalSurface_i : public virtual POA_Regina::Surfaces::NNormalSurface,
             CORBA::Long faceVertex);
         virtual CORBA::Long getNumberOfCoords();
         virtual Regina::Triangulation::NTriangulation_ptr getTriangulation();
+        virtual char* getName();
+        virtual void setName(const char* newName);
         virtual CORBA::Boolean isCompact();
         virtual char* getEulerCharacteristic();
         virtual CORBA::Long isOrientable();

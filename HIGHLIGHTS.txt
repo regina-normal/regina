@@ -11,6 +11,7 @@ Regina - A Normal Surface Theory Calculator
 Version 2.3.1  [ (in progress) ]
 
     - Exports SnapPea files.
+    - Individual normal surfaces may be named.
     - Filenames may be specified on the command-line.
     - Text consoles have readline/editline support.
     - More keyboard accelerators.

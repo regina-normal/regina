@@ -47,6 +47,8 @@ public class NJNINormalSurface extends JNIShareableObject
 
     public native int getNumberOfCoords();
     public native NTriangulation getTriangulation();
+    public native String getName();
+    public native void setName(String newName);
 
     public native void writeRawVector();
 

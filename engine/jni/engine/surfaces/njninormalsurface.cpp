@@ -151,3 +151,17 @@ JNIEXPORT void JNICALL
     GET_ENGINE_OBJECT(env, NNormalSurface, me)->writeRawVector(cout);
 }
 
+JNIEXPORT jstring JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_getName
+        (JNIEnv *env, jobject me) {
+    return jstringFromNString(env,
+        GET_ENGINE_OBJECT(env, NNormalSurface, me)->getName());
+}
+
+JNIEXPORT void JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_setName
+        (JNIEnv *env, jobject me, jstring name) {
+    GET_ENGINE_OBJECT(env, NNormalSurface, me)->setName(
+        jstringToNString(env, name));
+}
+

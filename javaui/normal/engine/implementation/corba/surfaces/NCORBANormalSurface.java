@@ -70,6 +70,12 @@ public class NCORBANormalSurface extends CORBAShareableObject
     public normal.engine.triangulation.NTriangulation getTriangulation() {
         return NCORBATriangulation.newWrapper(data.getTriangulation());
     }
+    public String getName() {
+        return data.getName();
+    }
+    public void setName(String newName) {
+        data.setName(newName);
+    }
 
     public void writeRawVector() {
     }

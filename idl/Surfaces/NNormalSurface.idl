@@ -43,6 +43,8 @@ module Regina {
 
             long getNumberOfCoords();
             Regina::Triangulation::NTriangulation getTriangulation();
+            string getName();
+            void setName(in string newName);
 
             boolean isCompact();
             string getEulerCharacteristic();

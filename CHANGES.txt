@@ -15,6 +15,8 @@ Version 2.3.1  [ (in progress) ]
     ENGINE:
         Overall structure:
             - Moved engine/imports to engine/foreign.
+        Class NNormalSurface:
+            - Added getName() and setName().
         Class NPerm:
             - Added toString().
         Routine writeSnapPea():
@@ -40,6 +42,8 @@ Version 2.3.1  [ (in progress) ]
         normal.mainui.NormalFrame:
             - Made various routines public so outsiders can manipulate
               the primary frame.
+        normal.packetui.surfaces.CoordinateViewer:
+            - Inserted editable surface name as first column.
 
 Version 2.3  [ 12 December, 2001 ] - The "Farewell Stillwater" release.
     OVERALL:

@@ -278,10 +278,10 @@ public class CoordinateViewer extends DefaultPacketViewer
         model.fireTableStructureChanged();
 
         TableCellRenderer renderer = new FancyCellRenderer();
-        table.getColumnModel().getColumn(1).setCellRenderer(renderer);
+        table.getColumnModel().getColumn(2).setCellRenderer(renderer);
         if (set.isEmbeddedOnly()) {
-            table.getColumnModel().getColumn(2).setCellRenderer(renderer);
             table.getColumnModel().getColumn(3).setCellRenderer(renderer);
+            table.getColumnModel().getColumn(4).setCellRenderer(renderer);
         }
 
         TableColumn col;
@@ -380,10 +380,20 @@ public class CoordinateViewer extends DefaultPacketViewer
         public int getColumnCount() {
             if (set.isEmbeddedOnly())
                 return Coordinates.getNumberOfCoordinates(flavour,
-                    set.getTriangulation()) + 5;
+                    set.getTriangulation()) + 6;
             else
                 return Coordinates.getNumberOfCoordinates(flavour,
-                    set.getTriangulation()) + 3;
+                    set.getTriangulation()) + 4;
+        }
+
+        /**
+         * Determines whether the given cell may be edited.
+         * @param row the row of the given cell.
+         * @param col the column of the given cell.
+         * @return whether or not the given cell may be edited.
+         */
+        public boolean isCellEditable(int row, int col) {
+            return (col == 0);
         }
 
         /**
@@ -397,11 +407,13 @@ public class CoordinateViewer extends DefaultPacketViewer
             if (set.isEmbeddedOnly())
                 switch(column) {
                     case 0:
+                        return surface.getName();
+                    case 1:
                         if (surface.isCompact())
                             return surface.getEulerCharacteristic();
                         else
                             return "";
-                    case 1:
+                    case 2:
                         if (! surface.isCompact())
                             return "";
                         int intAns = surface.isOrientable();
@@ -411,7 +423,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return new FancyData("Non-orbl", red);
                         else
                             return "Unknown";
-                    case 2:
+                    case 3:
                         if (! surface.isCompact())
                             return "";
                         intAns = surface.isTwoSided();
@@ -421,14 +433,14 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return new FancyData("1", red);
                         else
                             return "Unknown";
-                    case 3:
+                    case 4:
                         if (! surface.isCompact())
                             return "Infinite";
                         else if (surface.hasRealBoundary())
                             return new FancyData("Real Bdry", red);
                         else
                             return new FancyData("Closed", green);
-                    case 4:
+                    case 5:
                         if (surface.isVertexLinking())
                             return "Vtx Link";
                         else if (surface.isSplitting())
@@ -437,7 +449,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return "";
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
-                            surface, column - 5);
+                            surface, column - 6);
                         if (bigAns == null)
                             return "Inf";
                         else if (bigAns.signum() == 0)
@@ -448,18 +460,20 @@ public class CoordinateViewer extends DefaultPacketViewer
             else
                 switch(column) {
                     case 0:
+                        return surface.getName();
+                    case 1:
                         if (surface.isCompact())
                             return surface.getEulerCharacteristic();
                         else
                             return "";
-                    case 1:
+                    case 2:
                         if (! surface.isCompact())
                             return "Infinite";
                         else if (surface.hasRealBoundary())
                             return new FancyData("Real Bdry", red);
                         else
                             return new FancyData("Closed", green);
-                    case 2:
+                    case 3:
                         if (surface.isVertexLinking())
                             return "Vtx Link";
                         else if (surface.isSplitting())
@@ -468,7 +482,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return "";
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
-                            surface, column - 3);
+                            surface, column - 4);
                         if (bigAns == null)
                             return "Inf";
                         else if (bigAns.signum() == 0)
@@ -476,6 +490,19 @@ public class CoordinateViewer extends DefaultPacketViewer
                         else
                             return bigAns;
                 }
+        }
+
+        /**
+         * Sets the value of the given cell in the table.
+         * @param value the new value for the given cell.
+         * @param row the row of the given cell.
+         * @param col the column of the given cell.
+         */
+        public void setValueAt(Object value, int row, int col) {
+            if (col == 0) {
+                set.getSurface(row).setName(value.toString());
+                fireTableCellUpdated(row, col);
+            }
         }
 
         /**
@@ -487,30 +514,34 @@ public class CoordinateViewer extends DefaultPacketViewer
             if (set.isEmbeddedOnly())
                 switch(column) {
                     case 0:
-                        return "Euler";
+                        return "Name";
                     case 1:
-                        return "Orient";
+                        return "Euler";
                     case 2:
-                        return "Sides";
+                        return "Orient";
                     case 3:
-                        return "Bdry";
+                        return "Sides";
                     case 4:
+                        return "Bdry";
+                    case 5:
                         return "Type";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            set.getTriangulation(), column - 5);
+                            set.getTriangulation(), column - 6);
                 }
             else
                 switch(column) {
                     case 0:
-                        return "Euler";
+                        return "Name";
                     case 1:
-                        return "Bdry";
+                        return "Euler";
                     case 2:
+                        return "Bdry";
+                    case 3:
                         return "Type";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            set.getTriangulation(), column - 3);
+                            set.getTriangulation(), column - 4);
                 }
         }
 
@@ -523,30 +554,34 @@ public class CoordinateViewer extends DefaultPacketViewer
             if (set.isEmbeddedOnly())
                 switch(column) {
                     case 0:
-                        return "Euler characteristic";
+                        return "Name (optional)";
                     case 1:
-                        return "Orientability";
+                        return "Euler characteristic";
                     case 2:
-                        return "Number of sides";
+                        return "Orientability";
                     case 3:
-                        return "Boundary";
+                        return "Number of sides";
                     case 4:
+                        return "Boundary";
+                    case 5:
                         return "Other interesting properties";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            set.getTriangulation(), column - 5);
+                            set.getTriangulation(), column - 6);
                 }
             else
                 switch(column) {
                     case 0:
-                        return "Euler characteristic";
+                        return "Name (optional)";
                     case 1:
-                        return "Boundary";
+                        return "Euler characteristic";
                     case 2:
+                        return "Boundary";
+                    case 3:
                         return "Other interesting properties";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            set.getTriangulation(), column - 3);
+                            set.getTriangulation(), column - 4);
                 }
         }
     }

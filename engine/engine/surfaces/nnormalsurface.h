@@ -499,7 +499,6 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
  * for non-compact surfaces.
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
- * \todo \featurelong Allow individual surfaces to be named.
  */
 class NNormalSurface : public ShareableObject, public NPropertyHolder {
     protected:
@@ -508,6 +507,9 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
              *   space is appropriate. */
         NTriangulation* triangulation;
             /**< The triangulation in which this normal surface resides. */
+
+        NString name;
+            /**< An optional name associated with this surface. */
 
         NLargeInteger eulerChar;
             /**< The Euler characteristic of this surface. */
@@ -673,6 +675,23 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * resides.
          */
         NTriangulation* getTriangulation() const;
+
+        /**
+         * Returns the name associated with this normal surface.
+         * Names are optional and need not be unique.
+         * The default name for a surface is the empty string.
+         *
+         * @return the name of associated with this surface.
+         */
+        const NString& getName() const;
+        /**
+         * Sets the name associated with this normal surface.
+         * Names are optional and need not be unique.
+         * The default name for a surface is the empty string.
+         *
+         * @param newName the new name to associate with this surface.
+         */
+        void setName(const NString& newName);
 
         /**
          * The text representation will be in standard triangle-quad-oct
@@ -946,6 +965,13 @@ inline unsigned NNormalSurface::getNumberOfCoords() const {
 }
 inline NTriangulation* NNormalSurface::getTriangulation() const {
     return triangulation;
+}
+
+inline const NString& NNormalSurface::getName() const {
+    return name;
+}
+inline void NNormalSurface::setName(const NString& newName) {
+    name = newName;
 }
 
 inline void NNormalSurface::writeRawVector(ostream& out) const {

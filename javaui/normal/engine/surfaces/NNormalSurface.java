@@ -86,6 +86,8 @@ public interface NNormalSurface extends ShareableObject {
 
     public int getNumberOfCoords();
     public NTriangulation getTriangulation();
+    public String getName();
+    public void setName(String newName);
 
     public void writeRawVector();
 
