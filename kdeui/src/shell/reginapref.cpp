@@ -54,7 +54,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     triPrefs = new ReginaPrefTri(frame);
 
     frame = addVBoxPage(i18n("Python"), i18n("Python Options"),
-        BarIcon("source_py", KIcon::SizeMedium));
+        BarIcon("openterm", KIcon::SizeMedium));
     pythonPrefs = new ReginaPrefPython(frame);
 
     // Read the current preferences from the main window.
