@@ -265,11 +265,15 @@ class NCensus {
          *
          * Parameter \a whichPurge may be used to further avoid constructing
          * triangulations satisfying particular constraints (such as
-         * non-minimality).  This can significantly speed up the census.
-         * In this case however not all such triangulations will be
-         * avoided, but it is guaranteed that every triangulation that
-         * does \e not satisfy the constraints defined by \a whichPurge
-         * will be produced.
+         * non-minimality).  The use of this parameter, combined with
+         * parameters \a finiteness and \a orientability, can significantly
+         * speed up the census.  For some combinations of these
+         * parameters entirely different algorithms are used.
+         *
+         * Note however that not all triangulations described by
+         * parameter \a whichPurge will be avoided.  It is guaranteed
+         * however that every triangulation that does \e not satisfy the
+         * constraints defined by \a whichPurge will be produced.
          *
          * Only valid triangulations will be produced; see
          * NTriangulation::isValid() for further details.
@@ -284,14 +288,9 @@ class NCensus {
          * \pre The given face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
-         * \pre Within any single tetrahedron in the given face pairing, the
-         * face partners appear in increasing order for faces 0, 1, 2 and 3.
-         * Partners are ordered first by tetrahedron number and then by
-         * face number within that tetrahedron.  An unmatched face must
-         * appear after all matched faces within any particular tetrahedron.
-         * \pre In the given face pairing, each tetrahedron aside from
-         * the first has some face paired with a face in an earlier
-         * tetrahedron.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
          *
          * \ifaces Not present.
          *

@@ -205,12 +205,33 @@ class NFacePairing : public NThread {
         bool isUnmatched(unsigned tet, unsigned face) const;
 
         /**
+         * Determines whether this face pairing is in canonical form,
+         * i.e., is a minimal representative of its isomorphism class.
+         *
+         * Isomorphisms of face pairings correspond to relabellings of
+         * tetrahedra and relabellings of the four faces within each
+         * tetrahedron.
+         *
+         * Face pairings are ordered by lexicographical comparison of
+         * <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
+         * <tt>dest(n-1,3)</tt>, where <tt>n</tt> is the value of
+         * <tt>getNumberOfTetrahedra()</tt>.
+         *
+         * @return \c true if and only if this face pairing is in
+         * canonical form.
+         */
+        bool isCanonical() const;
+
+        /**
          * Fills the given list with the set of all combinatorial
          * automorphisms of this face pairing.
          *
          * An automorphism is a relabelling of the tetrahedra and/or a
          * renumbering of the four faces of each tetrahedron resulting
          * in precisely the same face pairing.
+         *
+         * This routine uses optimisations that can cause unpredictable
+         * breakages if this face pairing is not in canonical form.
          *
          * The automorphisms placed in the given list will be newly
          * created; it is the responsibility of the caller of this
@@ -220,13 +241,8 @@ class NFacePairing : public NThread {
          * \pre This face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
-         * \pre Within any single tetrahedron in this face pairing, the
-         * face partners appear in increasing order for faces 0, 1, 2 and 3.
-         * Partners are ordered first by tetrahedron number and then by
-         * face number within that tetrahedron.  An unmatched face must
-         * appear after all matched faces within any particular tetrahedron.
-         * \pre In this face pairing, each tetrahedron aside from the first
-         * has some face paired with a face in an earlier tetrahedron.
+         * \pre This face pairing is in canonical form as described by
+         * isCanonical().
          *
          * @param list the list into which the newly created automorphisms
          * will be placed.
@@ -415,9 +431,12 @@ class NFacePairing : public NThread {
          * individual matched faces) will be produced.
          *
          * Each face pairing will be produced precisely once up to
-         * equivalence.  Face pairings are considered equivalent if they
+         * isomorphism.  Face pairings are considered isomorphic if they
          * are related by a relabelling of the tetrahedra and/or a
-         * renumbering of the four faces of each tetrahedron.
+         * renumbering of the four faces of each tetrahedron.  Each face
+         * pairing that is generated will be a minimal representative of
+         * its isomorphism class, i.e., will be in canonical form as
+         * described by isCanonical().
          *
          * For each face pairing that is generated, routine \a use (as
          * passed to this function) will be called with that pairing and
@@ -565,23 +584,29 @@ class NFacePairing : public NThread {
 
         /**
          * Determines whether this face pairing is in canonical
-         * (smallest lexicographical) form.
-         * If so, the given list will be filled with the set of all
-         * combinatorial automorphisms of this face pairing.
-         * If not, the given list will be left empty.
+         * (smallest lexicographical) form, given a small set of
+         * assumptions.
          *
-         * \warning This routine should \e only be called from within
-         * findAllPairings() since it relies on some of the structural
-         * constraints that findAllPairings() enforces.
+         * If this face pairing is in canonical form, the given list
+         * will be filled with the set of all combinatorial automorphisms
+         * of this face pairing.  If not, the given list will be left empty.
          *
          * \pre The given list is empty.
+         * \pre For each tetrahedron \a t, it is true that
+         * the sequence <tt>dest(t,0)</tt>, <tt>dest(t,1)</tt>,
+         * <tt>dest(t,2)</tt>, <tt>dest(t,3)</tt> is non-decreasing.
+         * \pre For each tetrahedron \a t > 0, it is true that
+         * <tt>dest(t,0).tet < t</tt>.
+         * \pre The sequence <tt>dest(1,0)</tt>, <tt>dest(2,0)</tt>,
+         * ..., <tt>dest(n-1,0)</tt> is strictly increasing, where
+         * \a n is the total number of tetrahedra under investigation.
          *
          * @param list the list into which automorphisms will be placed
          * if appropriate.
          * @return \c true if and only if this face pairing is in
          * canonical form.
          */
-        bool isCanonical(NFacePairingIsoList& list) const;
+        bool isCanonicalInternal(NFacePairingIsoList& list) const;
 
         /**
          * Internal to hasBrokenDoubleEndedChain().  This routine assumes
@@ -677,7 +702,7 @@ inline bool NFacePairing::noDest(unsigned tet, unsigned face) const {
 }
 
 inline void NFacePairing::findAutomorphisms(NFacePairingIsoList& list) const {
-    isCanonical(list);
+    isCanonicalInternal(list);
 }
 
 } // namespace regina

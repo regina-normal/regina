@@ -84,7 +84,9 @@ typedef void (*UseGluingPerms)(const NGluingPerms*, void*);
 class NGluingPerms {
     private:
         const NFacePairing* pairing;
-            /**< The face pairing complemented by this permutation set. */
+            /**< The face pairing complemented by this permutation set.
+                 This is guaranteed to be the minimal representative of
+                 its face pairing isomorphism class. */
         int* orientation;
             /**< The orientation of each tetrahedron.  Orientation is
                  positive/negative, or 0 if unknown.
@@ -181,7 +183,7 @@ class NGluingPerms {
          *
          * Each set of gluing permutations will be produced precisely
          * once up to equivalence, where equivalence is defined by a set
-         * of automorphisms upon the given face pairing.
+         * of automorphisms of the given face pairing.
          *
          * For each permutation set that is generated, routine \a use (as
          * passed to this function) will be called with that permutation
@@ -208,23 +210,20 @@ class NGluingPerms {
          * \pre The given face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
-         * \pre Within any single tetrahedron in the given face pairing, the
-         * face partners appear in increasing order for faces 0, 1, 2 and 3.
-         * Partners are ordered first by tetrahedron number and then by
-         * face number within that tetrahedron.  An unmatched face must
-         * appear after all matched faces within any particular tetrahedron.
-         * \pre In the given face pairing, each tetrahedron aside from
-         * the first has some face paired with a face in an earlier
-         * tetrahedron.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
          *
          * \todo \feature Allow cancellation of permutation set generation.
          *
          * @param newPairing the specific pairing of tetrahedron faces
          * that the generated permutation sets will complement.
-         * @param autos the collection of automorphisms defining equivalence
-         * of permutation sets.  These must all be automorphisms upon the
-         * given face pairing, and will generally be the set of all such
-         * automorphisms.
+         * @param autos the collection of isomorphisms that define equivalence
+         * of permutation sets.  These isomorphisms must all be automorphisms
+         * of the given face pairing, and will generally be the set of all
+         * such automorphisms.  This parameter may be 0, in which case the
+         * set of all automorphisms of the given face pairing will be
+         * generated and used.
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
@@ -257,6 +256,13 @@ class NGluingPerms {
         /**
          * Creates a new permutation set.  All internal arrays will be
          * allocated but not initialised.
+         *
+         * \pre The given face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
          *
          * @param newPairing the specific pairing of tetrahedron faces
          * that this permutation set will complement.
@@ -447,15 +453,13 @@ class NGluingPerms {
          * preimage under the given automorphism of face pairings, in order
          * to see which is closer to canonical form.
          *
-         * @param pairing the pairing of faces to which the given
-         * automorphism should be applied.
-         * @param automorph the given automorphism.
+         * @param automorph the given automorphism; this must be an
+         * automorphism of the underlying face pairing.
          * @return -1 if this set is closer to canonical form, 0 if this set
          * equals its preimage and 1 if its preimage is closer to canonical
          * form.
          */
-        int cmpPermsWithPreImage(const NFacePairing* pairing,
-            const NIsomorphism& automorph);
+        int cmpPermsWithPreImage(const NIsomorphism& automorph);
 
         /**
          * Internal to findAllPerms().
@@ -470,10 +474,9 @@ class NGluingPerms {
          *
          * \pre As described for findAllPerms().
          */
-        void findAllPermsInternal(const NFacePairing* newPairing,
-            const NFacePairingIsoList* autos, bool orientableOnly,
-            bool finiteOnly, int whichPurge, UseGluingPerms use,
-            void* useArgs = 0);
+        void findAllPermsInternal(const NFacePairingIsoList* autos,
+            bool orientableOnly, bool finiteOnly, int whichPurge,
+            UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Internal to findAllPerms().
@@ -491,9 +494,8 @@ class NGluingPerms {
          *
          * \pre As described for findAllPerms().
          */
-        void findAllPermsClosedPrimeMin(const NFacePairing* newPairing,
-            const NFacePairingIsoList* autos, bool orientableOnly,
-            UseGluingPerms use, void* useArgs = 0);
+        void findAllPermsClosedPrimeMin(const NFacePairingIsoList* autos,
+            bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Determines whether the permutations already constructed model

@@ -520,7 +520,7 @@ void* NFacePairing::run(void* param) {
         // Have we got a solution?
         if (trying.tet == static_cast<int>(nTetrahedra)) {
             // Deal with the solution!
-            if (isCanonical(allAutomorphisms)) {
+            if (isCanonicalInternal(allAutomorphisms)) {
                 args->use(this, &allAutomorphisms, args->useArgs);
                 for_each(allAutomorphisms.begin(), allAutomorphisms.end(),
                     FuncDelete<NIsomorphismDirect>());
@@ -555,7 +555,7 @@ void* NFacePairing::run(void* param) {
                         // this tetrahedron.
                         if (dest(trying) < dest(tmpFace)) {
                             dest(trying) = dest(tmpFace);
-                            
+
                             // Remember that dest(trying) will be
                             // incremented before it is used.  This
                             // should not happen if we're already on the
@@ -584,17 +584,31 @@ void* NFacePairing::run(void* param) {
     return 0;
 }
 
-bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
+bool NFacePairing::isCanonical() const {
+    // Check the preconditions for isCanonicalInternal().
+    unsigned tet, face;
+    for (tet = 0; tet < nTetrahedra; tet++) {
+        for (face = 0; face < 3; face++)
+            if (dest(tet, face + 1) < dest(tet, face))
+                if (! (dest(tet, face + 1) == NTetFace(tet, face)))
+                    return false;
+        if (tet > 0) {
+            if (dest(tet, 0).tet >= static_cast<int>(tet))
+                return false;
+            if (dest(tet, 0) <= dest(tet - 1, 0))
+                return false;
+        }
+    }
+
+    // We've met all the preconditions, so we can now run
+    // isCanonicalInternal().
+    NFacePairingIsoList list;
+    return isCanonicalInternal(list);
+}
+
+bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
     // Create the automorphisms one tetrahedron at a time, selecting the
     // preimage of 0 first, then the preimage of 1 and so on.
-
-    // ASSUMPTIONS:
-    //
-    // Throughout this routine we will rely on the fact that
-    // findAllPairings() generates face pairings for which the images of
-    // faces in an individual tetrahedron are strictly increasing.
-    // We will also rely on the fact that the first appearances of a
-    // forward link to each tetrahedron are in increasing order.
 
     // We want to cycle through all possible first face gluings, so we'll
     // special-case the situation in which there are no face gluings at all.

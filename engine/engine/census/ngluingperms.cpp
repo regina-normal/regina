@@ -82,8 +82,7 @@ int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
     return (std::find(allPermsS3, allPermsS3 + 6, permS3) - allPermsS3);
 }
 
-int NGluingPerms::cmpPermsWithPreImage(const NFacePairing* pairing,
-        const NIsomorphism& automorph) {
+int NGluingPerms::cmpPermsWithPreImage(const NIsomorphism& automorph) {
     NTetFace faceDest, faceImage;
     int order;
     for (NTetFace face(0, 0); face.tet <
@@ -109,6 +108,14 @@ void NGluingPerms::findAllPerms(const NFacePairing* pairing,
         bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
     NGluingPerms perms(pairing);
 
+    // Generate the list of face pairing automorphisms if necessary.
+    NFacePairingIsoList* newAutos =
+        (autos == 0 ? new NFacePairingIsoList() : 0);
+    if (newAutos) {
+        pairing->findAutomorphisms(*newAutos);
+        autos = newAutos;
+    }
+
     // Call an optimised internal generation routine if possible.
     if (pairing->getNumberOfTetrahedra() >= 3) {
         if (finiteOnly && pairing->isClosed() &&
@@ -118,19 +125,25 @@ void NGluingPerms::findAllPerms(const NFacePairing* pairing,
                     (whichPurge & NCensus::PURGE_P2_REDUCIBLE))) {
             // Closed prime minimal P2-irreducible triangulations with >= 3
             // tetrahedra.
-            perms.findAllPermsClosedPrimeMin(pairing, autos, orientableOnly,
-                use, useArgs);
+            perms.findAllPermsClosedPrimeMin(autos, orientableOnly, use,
+                useArgs);
+
+            if (newAutos)
+                delete newAutos;
             return;
         }
     }
 
-    perms.findAllPermsInternal(pairing, autos, orientableOnly, finiteOnly,
-        whichPurge, use, useArgs);
+    perms.findAllPermsInternal(autos, orientableOnly, finiteOnly, whichPurge,
+        use, useArgs);
+
+    if (newAutos)
+        delete newAutos;
 }
 
-void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
-        const NFacePairingIsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
+void NGluingPerms::findAllPermsInternal(const NFacePairingIsoList* autos,
+        bool orientableOnly, bool finiteOnly, int whichPurge,
+        UseGluingPerms use, void* useArgs) {
     unsigned nTetrahedra = getNumberOfTetrahedra();
 
     // Initialise the internal arrays.
@@ -212,7 +225,7 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
             for (it = autos->begin(); it != autos->end(); it++) {
                 // TODO: Check for cancellation.
 
-                if (cmpPermsWithPreImage(pairing, **it) > 0) {
+                if (cmpPermsWithPreImage(**it) > 0) {
                     canonical = false;
                     break;
                 }
