@@ -122,9 +122,14 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
     KAction* actClose = new KAction(i18n("&Close"), "fileclose", 0,
         this, SLOT(close()), (KActionCollection*)0, "packet_editor_close");
+
     trackingActions.append(actCommit);
     trackingActions.append(actRefresh);
-    trackingActions.setAutoDelete(true);
+    trackingActions.setAutoDelete(false);
+
+    trackingActionsWithSep = trackingActions;
+    trackingActionsWithSep.append(new KActionSeparator());
+    trackingActionsWithSep.setAutoDelete(true);
 
     KToolBar* footer = new KToolBar(this, "packetEditorBar", false, false);
     footer->setFullSize(true);

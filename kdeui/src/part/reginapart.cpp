@@ -144,7 +144,14 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     newPane->reparent(dockArea, QPoint(0, 0));
     dockedPane = newPane;
-    plugActionList("packet_tracking_actions", newPane->getTrackingActions());
+    plugActionList("packet_tracking_actions",
+        newPane->getTrackingActions(true));
+    /*
+    KAction* sep = new KActionSeparator();
+    QPtrList<KAction> sepList;
+    sepList.append(sep);
+    plugActionList("packet_tracking_actions", sepList);
+    */
     newPane->show();
 
     dockChanged();
