@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Environment Initialisation
 #
-# Copyright (c) 2003-2004, Ben Burton
+# Copyright (c) 2003-2005, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: runscript.py [ <library> ... ] [ -- <script> [ <script-arg> ... ]]

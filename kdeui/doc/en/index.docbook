@@ -6,7 +6,7 @@
   <!ENTITY regversion "4.2">
   <!ENTITY regdate "4 December 2004">
   <!ENTITY regauthorplain "Ben Burton">
-  <!ENTITY copyrightyears "1999&ndash;2004">
+  <!ENTITY copyrightyears "1999&ndash;2005">
   <!ENTITY copyrightholder "&regauthorplain;">
   <!ENTITY copyrightnotice
    "Copyright &copy; &copyrightyears;, &copyrightholder;">
