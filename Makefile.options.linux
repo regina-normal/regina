@@ -114,8 +114,8 @@ export JAVAC := jikes
 export JAR := fastjar
 export JAVA := java -Xmx64m
 export JDB := jdb -Xmx64m -Djava.compiler=NONE
-export JAVAH := javah
-#export JAVAH := /usr/lib/kaffe/bin/kaffeh
+export JAVAH := javah -jni
+#export JAVAH := /usr/lib/kaffe/bin/kaffeh -jni
 export JAVADOC := javadoc -J-Xmx64m
 export IDLTOCPPSERVER := omniidl -bcxx -Wbh=IDL.h -Wbs=SK.cpp
 export IDLTOJAVACLIENT := idlj
