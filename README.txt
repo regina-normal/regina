@@ -27,7 +27,7 @@ KDE User Interface (optional):
 
 Python Bindings (optional):
     python (the scripting language), version >= 2.2
-    libboost_python (the Boost.Python libraries), verison >= 1.30.0
+    libboost_python (the Boost.Python libraries), verison >= 1.30.1
 
 Documentation (optional, only required at compile-time):
     doxygen (a C++ documentation system), version >= 1.2.2
