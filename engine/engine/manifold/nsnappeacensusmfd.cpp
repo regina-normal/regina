@@ -40,18 +40,47 @@ const char NSnapPeaCensusManifold::SEC_7_OR = 'v';
 const char NSnapPeaCensusManifold::SEC_7_NOR = 'y';
 
 NTriangulation* NSnapPeaCensusManifold::construct() const {
-    // TODO
     NTriangulation* ans = 0;
 
     if (section == SEC_5) {
-        if (index == 0)
+        if (index == 0) {
             ans = NExampleTriangulation::gieseking();
-        else if (index == 4)
+            ans->setPacketLabel("");
+        } else if (index == 1) {
+            NTetrahedron* r = new NTetrahedron();
+            NTetrahedron* s = new NTetrahedron();
+            r->joinTo(0, s, NPerm(0, 1, 3, 2));
+            r->joinTo(1, s, NPerm(2, 3, 1, 0));
+            r->joinTo(2, s, NPerm(3, 2, 1, 0));
+            r->joinTo(3, s, NPerm(1, 0, 3, 2));
+            ans = new NTriangulation();
+            ans->addTetrahedron(r);
+            ans->addTetrahedron(s);
+        } else if (index == 2) {
+            NTetrahedron* r = new NTetrahedron();
+            NTetrahedron* s = new NTetrahedron();
+            r->joinTo(0, s, NPerm(0, 1, 3, 2));
+            r->joinTo(1, s, NPerm(3, 1, 2, 0));
+            r->joinTo(2, s, NPerm(2, 1, 3, 0));
+            r->joinTo(3, s, NPerm(3, 1, 0, 2));
+            ans = new NTriangulation();
+            ans->addTetrahedron(r);
+            ans->addTetrahedron(s);
+        } else if (index == 3) {
+            NTetrahedron* r = new NTetrahedron();
+            NTetrahedron* s = new NTetrahedron();
+            r->joinTo(0, s, NPerm(0, 1, 3, 2));
+            r->joinTo(1, s, NPerm(2, 1, 0, 3));
+            r->joinTo(2, s, NPerm(0, 3, 2, 1));
+            r->joinTo(3, s, NPerm(1, 0, 2, 3));
+            ans = new NTriangulation();
+            ans->addTetrahedron(r);
+            ans->addTetrahedron(s);
+        } else if (index == 4) {
             ans = NExampleTriangulation::figureEightKnotComplement();
+            ans->setPacketLabel("");
+        }
     }
-
-    if (ans)
-        ans->setPacketLabel("");
 
     return ans;
 }
