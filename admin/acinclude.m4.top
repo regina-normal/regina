@@ -121,6 +121,8 @@ dnl
 dnl    Modified from _ACJNI_FOLLOW_SYMLINKS which is
 dnl    copyright (c) Don Anderson and licensed under the GPL.
 dnl
+dnl    TODO: This macro does *not* deal with relative symlinks correctly.
+dnl
 dnl    Follows a chain of symlinks beginning with <PATH>, finally setting
 dnl    variable _SYMLINKS_FOLLOWED to the real file or directory at the
 dnl    end of this chain.
@@ -180,17 +182,8 @@ AC_DEFUN(REGINA_HEADER_JNI, [
 
     AC_MSG_CHECKING([for JNI headers])
     REGINA_FOLLOW_SYMLINKS([$_real_progname])
-    _JTOPDIR=`echo "$_SYMLINKS_FOLLOWED" | sed -e 's://*:/:g;s:/[[^/]]*$::'`
-    _JTOPDIR2=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
-    case "$host_os" in
-      darwin* )
-        _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
-        _JINC="$_JTOPDIR/Headers"
-        ;;
-      * )
-        _JINC="$_JTOPDIR/include"
-        ;;
-    esac
+    _JTOPDIR=`AS_DIRNAME(["$_SYMLINKS_FOLLOWED"])`
+    _JTOPDIR2=`AS_DIRNAME(["$_JTOPDIR"])`
 
     _JINC=none
     for i in "$_JTOPDIR/include" "$_JTOPDIR/Headers" \
@@ -286,7 +279,7 @@ AC_DEFUN(REGINA_LIB_JAVA, [
     AC_MSG_RESULT([no])
     AC_MSG_CHECKING([for $1 jar])
     found_jar=no
-    for _libdir in ./lib /usr/share/java /usr/share/java/jar /usr/local/java /usr/local/java/jar /usr/local/share/java /usr/local/share/java/jar; do
+    for _libdir in "`pwd`/lib" /usr/share/java /usr/share/java/jar /usr/local/java /usr/local/java/jar /usr/local/share/java /usr/local/share/java/jar; do
       for jar in "$_libdir/$1.jar" "$_libdir/lib$1.jar" "$_libdir/lib$1-java.jar"; do
         if test -e "$jar"; then
           REGINA_CLASSPATH_SAVE
