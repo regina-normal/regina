@@ -64,6 +64,8 @@ namespace regina {
  *
  * \pre See the preconditions for NVector<T>.
  *
+ * \todo \feature Throw an exception if modification routines are called.
+ *
  * \ifaces Not present.
  */
 template <class T>

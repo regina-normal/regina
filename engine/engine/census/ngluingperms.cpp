@@ -50,7 +50,7 @@ NTriangulation* NGluingPerms::triangulate() const {
     unsigned nTet = getNumberOfTetrahedra();
 
     NTriangulation* ans = new NTriangulation;
-    NTetrahedron** tet = new (NTetrahedron*)[nTet];
+    NTetrahedron** tet = new NTetrahedron*[nTet];
     std::generate(tet, tet + nTet, FuncNew<NTetrahedron>());
 
     unsigned t, face;

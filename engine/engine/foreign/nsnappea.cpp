@@ -81,7 +81,7 @@ NTriangulation* readSnapPea(const char* filename) {
     // Create the new tetrahedra.
     unsigned numTet;
     in >> numTet;
-    NTetrahedron **tet = new (NTetrahedron*)[numTet];
+    NTetrahedron **tet = new NTetrahedron*[numTet];
     for (i=0; i<numTet; i++)
         tet[i] = new NTetrahedron();
         

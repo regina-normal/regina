@@ -99,9 +99,9 @@ bool NFile::open(NRandomAccessResource* newResource,
         if (resource->openWrite()) {
             majorVersion = regina::getVersionMajor();
             minorVersion = regina::getVersionMinor();
-            char* sentry = NFILE_PROGRAM_NAME;
+            const char* sentry = NFILE_PROGRAM_NAME;
 
-            for (char* c = sentry; *c != 0; c++)
+            for (const char* c = sentry; *c != 0; c++)
                 resource->putChar(*c);
             resource->putChar(0);
             writeInt(majorVersion);
@@ -181,7 +181,7 @@ unsigned int NFile::readUInt() {
 unsigned long NFile::readULong() {
     int size = NFILE_SIZE_LONG;
     int i;
-    unsigned char* b = new (unsigned char)[size];
+    unsigned char* b = new unsigned char[size];
     for (i=0; i<size; i++)
         b[i] = resource->getChar();
     unsigned long ans = 0;

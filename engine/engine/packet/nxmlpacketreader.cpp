@@ -98,7 +98,7 @@ void NXMLPacketReader::endSubElement(const std::string& subTagName,
         endContentSubElement(subTagName, subReader);
 }
 
-void NXMLPacketReader::abort(NXMLElementReader *subReader) {
+void NXMLPacketReader::abort(NXMLElementReader* /* subReader */) {
     NPacket* me = getPacket();
     if (me)
         if (! me->getTreeParent())

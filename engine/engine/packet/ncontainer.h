@@ -96,7 +96,7 @@ inline NPacket* NContainer::internalClonePacket(NPacket*) const {
     return new NContainer();
 }
 
-inline void NContainer::writeXMLPacketData(std::ostream& out) const {
+inline void NContainer::writeXMLPacketData(std::ostream&) const {
 }
 
 } // namespace regina

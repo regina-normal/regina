@@ -302,7 +302,7 @@ inline bool NSurfaceFilter::accept(NNormalSurface&) const {
     return true;
 }
 
-inline void NSurfaceFilter::writeXMLFilterData(std::ostream& out) const {
+inline void NSurfaceFilter::writeXMLFilterData(std::ostream&) const {
 }
 
 inline void NSurfaceFilter::writeFilter(NFile&) const {

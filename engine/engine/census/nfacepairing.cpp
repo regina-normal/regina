@@ -49,7 +49,7 @@ namespace {
     };
 }
 
-NFacePairing::NFacePairing(const NFacePairing& cloneMe) :
+NFacePairing::NFacePairing(const NFacePairing& cloneMe) : NThread(),
         nTetrahedra(cloneMe.nTetrahedra),
         pairs(new NTetFace[cloneMe.nTetrahedra]) {
     std::copy(cloneMe.pairs, cloneMe.pairs + (nTetrahedra * 4), pairs);
