@@ -270,7 +270,9 @@ public class CORBAEngine implements Engine {
 
             System.out.println("-- displayed " +
                 String.valueOf(bl.value.length) + " binding(s).");
-        } catch (Throwable th) {}
+        } catch (Throwable th) {
+            th.printStackTrace();
+        }
     }
 
     /**
