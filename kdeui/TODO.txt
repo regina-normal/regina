@@ -10,6 +10,7 @@ engine documentation.
 - means would be pleasant to have some time.
 
 General:
+    * The "open example" submenu should have human-readable entries.
     - Make "configure shortcuts" work with the part as well as with the shell
     - Enhance the DCOP interface
     * Observing some serious problems with vimpart, as well as with
@@ -72,6 +73,3 @@ Toolbars:
 Triangulations:
     - Make the skeleton viewer windows appear in a pleasant size
     + Only fill the isomorphism combo box when absolutely necessary
-
-Website:
-    * More detailed citations for census data on the website
