@@ -79,10 +79,32 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
 }
 
 void NTriangulation::insertLensSpace(unsigned long p, unsigned long q) {
-    NTetrahedron* chain = insertLayeredSolidTorus(q, p);
-    NTetrahedron* cap = insertLayeredSolidTorus(0, 1);
-    chain->joinTo(2, cap, NPerm(2,0,3,1));
-    chain->joinTo(3, cap, NPerm(1,3,0,2));
+    NTetrahedron* chain;
+    if (p == 0) {
+        chain = insertLayeredSolidTorus(1, 1);
+        chain->joinTo(3, chain, NPerm(3, 0, 1, 2));
+    } else if (p == 1) {
+        chain = insertLayeredSolidTorus(1, 2);
+        chain->joinTo(3, chain, NPerm(0, 1, 3, 2));
+    } else if (p == 2) {
+        chain = insertLayeredSolidTorus(1, 3);
+        chain->joinTo(3, chain, NPerm(0, 1, 3, 2));
+    } else if (p == 3) {
+        chain = insertLayeredSolidTorus(1, 1);
+        // Either of the following gluings will work.
+        chain->joinTo(3, chain, NPerm(1, 3, 0, 2));
+        // chain->joinTo(3, chain, NPerm(0, 1, 3, 2));
+    } else {
+        if (2 * q > p)
+            q = p - q;
+        if (3 * q > p) {
+            chain = insertLayeredSolidTorus(p - 2 * q, q);
+            chain->joinTo(3, chain, NPerm(1, 3, 0, 2));
+        } else {
+            chain = insertLayeredSolidTorus(q, p - 2 * q);
+            chain->joinTo(3, chain, NPerm(3, 0, 1, 2));
+        }
+    }
     gluingsHaveChanged();
 }
 

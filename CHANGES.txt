@@ -31,6 +31,7 @@ Version 2.3.1  [ (in progress) ]
         Class NPerm:
             - Added toString().
         Class NTriangulation:
+            - Uses fewest possible tetrahedra in insertLensSpace().
             - Added insertRehydration(), makeDoubleCover().
         File nperm.h:
             - Added constant arrays orderedPermsS4, orderedPermsS3.

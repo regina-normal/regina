@@ -73,8 +73,9 @@
     <para>
      This will create a layered lens space with parameters
      (<replaceable>p</replaceable>, <replaceable>q</replaceable>)
-     where both parameters are positive, coprime and
-     <replaceable>p</replaceable>&gt;<replaceable>q</replaceable>.
+     where both parameters are non-negative, coprime and
+     <replaceable>p</replaceable>&gt;<replaceable>q</replaceable>
+     (with exceptional case (0, 1) also allowed).
      These two parameters must be provided before the triangulation
      can be created.
     </para>

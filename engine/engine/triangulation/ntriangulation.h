@@ -1404,10 +1404,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
          *
-         * \pre \a p \> \a q \>= 0;
+         * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1);
          * \pre gcd(\a p, \a q) = 1.
-         *
-         * \todo \bug Do this using the fewest possible tetrahedra.
          *
          * @param p a parameter of the desired lens space.
          * @param q a parameter of the desired lens space.

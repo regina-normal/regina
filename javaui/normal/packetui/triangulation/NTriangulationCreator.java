@@ -291,16 +291,18 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
                 getLongValue();
             long q = ((NonNegativeIntegerDocument)lensQ.getDocument()).
                 getLongValue();
-            if (p <= 0 || q <= 0) {
+            if (p < 0 || q < 0) {
                 MessageBox.fgNote(parentDialog,
-                    "Both p and q must be positive integers.");
+                    "Both p and q must be non-negative integers.");
                 return null;
             }
-            if (q >= p) {
-                MessageBox.fgNote(parentDialog, "You must have p > q.");
-                return null;
-            }
-            if (gcd(p,q) > 1) {
+            if (q >= p)
+                if (! (p == 0 && q == 1)) {
+                    MessageBox.fgNote(parentDialog,
+                        "Unless this is L(0,1), you must have p > q.");
+                    return null;
+                }
+            if (gcd(p,q) != 1) {
                 MessageBox.fgNote(parentDialog, "gcd(p,q) must be 1.");
                 return null;
             }
@@ -351,7 +353,8 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
      *
      * @param a one of the integers to examine.
      * @param the other integer to examine.
-     * @return the greatest common divisor of the two given integers.
+     * @return the non-negative greatest common divisor of the two
+     * given integers.
      */
     private static long gcd(long a, long b) {
         long tmp;
