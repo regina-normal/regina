@@ -24,6 +24,7 @@ regtestsuite_LDADD = \
   utilities/libutilities.a \
   @LIB_ENGINE@ \
   @TESTSUITE_LIBS@
+regtestsuite_LDFLAGS = @FINAL_LDFLAGS@
 
 EXTRA_DIST = README.txt findtext
 

@@ -86,6 +86,25 @@ AC_PROG_LN_S
 
 ###########################################################
 #
+# Determine which components the user is disabling.
+#
+###########################################################
+
+AC_ARG_ENABLE(javaui, AC_HELP_STRING([--enable-javaui],
+    [build the Java user interface [[default=yes]]]), [
+  if test "$enableval" = "no"; then
+    REGINA_DO_NOT_COMPILE([JAVAUI DOCSJAVAUI DOCSJAR ENGINEJNI JNIHDR])
+  fi
+])
+AC_ARG_ENABLE(docs, AC_HELP_STRING([--enable-docs],
+    [build the Regina documentation [[default=yes]]]), [
+  if test "$enableval" = "no"; then
+    REGINA_DO_NOT_COMPILE([DOCSENGINE DOCSJAVAUI DOCSHTML DOCSMAN DOCSJAR])
+  fi
+])
+
+###########################################################
+#
 # Check for Java tools.
 #
 ###########################################################
@@ -228,6 +247,15 @@ AC_SUBST(LIB_ENGINE)
 JAVAUI_CLASSPATH="\$(top_srcdir)/javaui:$CLASSPATH"
 REGINA_CLASSPATH_CONVERT(JAVAUI_CLASSPATH)
 AC_SUBST(JAVAUI_CLASSPATH)
+
+# Do we wish to make final targets statically linked?
+AC_ARG_ENABLE(static-final, AC_HELP_STRING([--enable-static-final],
+    [statically link final executables and modules [[default=no]]]), [
+  if test "$enableval" != "no"; then
+    FINAL_LDFLAGS="$FINAL_LDFLAGS -static -Wl,--allow-multiple-definition"
+  fi
+])
+AC_SUBST(FINAL_LDFLAGS)
 
 ###########################################################
 #
