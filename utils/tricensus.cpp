@@ -165,18 +165,18 @@ int main(int argc, char* argv[]) {
     else if (orientability == NBoolSet::sFalse)
         descStream << "Non-orientable only\n";
     else
-        descStream << "Orientable and non-orientable.\n";
+        descStream << "Orientable and non-orientable\n";
     if (boundary == NBoolSet::sTrue)
         descStream << "Boundary faces only\n";
     else if (boundary == NBoolSet::sFalse)
         descStream << "No boundary faces only\n";
     else
-        descStream << "With and without boundary faces.\n";
+        descStream << "With and without boundary faces\n";
     if (nBdryFaces >= 0)
         descStream << "Requires precisely " << nBdryFaces <<
-            " boundary faces.\n";
+            " boundary faces\n";
     if (purgeNonMinimal)
-        descStream << "Ignored obviously nom-minimal triangulations.\n";
+        descStream << "Ignored obviously nom-minimal triangulations\n";
     desc->setText(descStream.str());
 
     regina::NContainer* census = new regina::NContainer();
