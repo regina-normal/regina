@@ -26,56 +26,49 @@
 
 /* end stub */
 
-/*! \file coordinates.h
- *  \brief Assists working in different normal surface coordinate systems.
+/*! \file nsurfacematchingitem.h
+ *  \brief Provides a list view item describing a single normal surface
+ *  matching equation.
  */
 
-#ifndef __COORDINATES_H
-#define __COORDINATES_H
+#ifndef __NSURFACEMATCHINGITEM_H
+#define __NSURFACEMATCHINGITEM_H
 
-#include "utilities/nmpi.h"
-
-#include <qstring.h>
+#include <klistview.h>
 
 namespace regina {
-    class NNormalSurface;
-    class NTriangulation;
-}
-
-namespace Coordinates {
-    /**
-     * Return a human-readable name for the given coordinate system.
-     */
-    QString name(int coordSystem, bool capitalise = true);
-
-    /**
-     * Return a column header for the given coordinate of the given
-     * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
-     */
-    QString columnName(int coordSystem, unsigned long whichCoord,
-        regina::NTriangulation* tri = 0);
-
-    /**
-     * Return a column description for the given coordinate of the given
-     * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
-     */
-    QString columnDesc(int coordSystem, unsigned long whichCoord,
-        regina::NTriangulation* tri = 0);
-
-    /**
-     * Return a particular coordinate of a normal surface in the given
-     * coordinate system.
-     */
-    regina::NLargeInteger getCoordinate(int coordSystem,
-        const regina::NNormalSurface& surface, unsigned long whichCoord);
+    class NMatrixInt;
 };
+
+/**
+ * A list view item describing a single normal surface matching equation.
+ */
+class NSurfaceMatchingItem : public KListViewItem {
+    private:
+        /**
+         * The underlying matching equation.
+         */
+        const regina::NMatrixInt* eqns;
+        unsigned long whichEqn;
+
+    public:
+        /**
+         * Constructor.
+         */
+        NSurfaceMatchingItem(QListView* parent,
+            const regina::NMatrixInt* newEqns, unsigned long newWhichEqn);
+
+        /**
+         * QListItem overrides.
+         */
+        QString text(int column) const;
+        void paintCell(QPainter* p, const QColorGroup& cg, int column,
+            int width, int align);
+};
+
+inline NSurfaceMatchingItem::NSurfaceMatchingItem(QListView* parent,
+        const regina::NMatrixInt* newEqns, unsigned long newWhichEqn) :
+        KListViewItem(parent), eqns(newEqns), whichEqn(newWhichEqn) {
+}
 
 #endif

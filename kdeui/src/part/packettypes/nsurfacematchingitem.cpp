@@ -26,56 +26,33 @@
 
 /* end stub */
 
-/*! \file coordinates.h
- *  \brief Assists working in different normal surface coordinate systems.
- */
+// Regina core includes:
+#include "maths/nmatrixint.h"
 
-#ifndef __COORDINATES_H
-#define __COORDINATES_H
+// UI includes:
+#include "coordinates.h"
+#include "nsurfacematchingitem.h"
 
-#include "utilities/nmpi.h"
+#include <qpainter.h>
+#include <qstyle.h>
 
-#include <qstring.h>
-
-namespace regina {
-    class NNormalSurface;
-    class NTriangulation;
+QString NSurfaceMatchingItem::text(int column) const {
+    regina::NLargeInteger ans = eqns->entry(whichEqn, column);
+    if (ans == 0)
+        return QString::null;
+    else
+        return ans.stringValue().c_str();
 }
 
-namespace Coordinates {
-    /**
-     * Return a human-readable name for the given coordinate system.
-     */
-    QString name(int coordSystem, bool capitalise = true);
+void NSurfaceMatchingItem::paintCell(QPainter* p, const QColorGroup& cg,
+        int column, int width, int align) {
+    // Do the standard painting.
+    KListViewItem::paintCell(p, cg, column, width, align);
 
-    /**
-     * Return a column header for the given coordinate of the given
-     * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
-     */
-    QString columnName(int coordSystem, unsigned long whichCoord,
-        regina::NTriangulation* tri = 0);
+    // Draw a box around the cell.
+    p->setPen((QRgb)listView()->style().styleHint(
+        QStyle::SH_Table_GridLineColor, listView()));
+    p->drawLine(0, height() - 1, width - 1, height() - 1);
+    p->lineTo(width - 1, 0);
+}
 
-    /**
-     * Return a column description for the given coordinate of the given
-     * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
-     */
-    QString columnDesc(int coordSystem, unsigned long whichCoord,
-        regina::NTriangulation* tri = 0);
-
-    /**
-     * Return a particular coordinate of a normal surface in the given
-     * coordinate system.
-     */
-    regina::NLargeInteger getCoordinate(int coordSystem,
-        const regina::NNormalSurface& surface, unsigned long whichCoord);
-};
-
-#endif

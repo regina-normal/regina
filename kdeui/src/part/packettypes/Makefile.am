@@ -26,6 +26,7 @@ noinst_HEADERS = \
 	nsurfacefiltercomb.h \
 	nsurfacefiltercreator.h \
 	nsurfacefilterprop.h \
+	nsurfacematchingitem.h \
 	nsurfacematchingui.h \
 	ntextui.h \
 	ntrialgebra.h \
@@ -53,6 +54,7 @@ libpackettypes_la_SOURCES = \
 	nsurfacefiltercomb.cpp \
 	nsurfacefiltercreator.cpp \
 	nsurfacefilterprop.cpp \
+	nsurfacematchingitem.cpp \
 	nsurfacematchingui.cpp \
 	ntextui.cpp \
 	ntrialgebra.cpp \

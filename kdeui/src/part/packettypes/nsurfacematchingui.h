@@ -35,9 +35,15 @@
 
 #include "../packettabui.h"
 
+#include <memory>
+#include <qtooltip.h>
+
+class QHeader;
 class QListView;
+class MatchingHeaderToolTip;
 
 namespace regina {
+    class NMatrixInt;
     class NNormalSurfaceList;
     class NPacket;
 };
@@ -45,25 +51,35 @@ namespace regina {
 /**
  * A surface list page for viewing matching equations.
  */
-class NSurfaceMatchingUI : public PacketViewerTab {
+class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
          */
         regina::NNormalSurfaceList* surfaces;
+        std::auto_ptr<regina::NMatrixInt> eqns;
 
         /**
          * Internal components
          */
         QWidget* ui;
         QListView* table;
+        MatchingHeaderToolTip* headerTips;
+
+        /**
+         * Status of any ongoing actions.
+         */
+        bool currentlyAutoResizing;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
         NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
                 PacketTabbedUI* useParentUI);
+        ~NSurfaceMatchingUI();
 
         /**
          * PacketViewerTab overrides.
@@ -71,6 +87,37 @@ class NSurfaceMatchingUI : public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+
+    public slots:
+        /**
+         * Provides auto-resizing of columns.
+         */
+        void columnResized(int section, int oldSize, int newSize);
+};
+
+/**
+ * A utility clsas for displaying tooltips for table headers.
+ */
+class MatchingHeaderToolTip : public QToolTip {
+    private:
+        /**
+         * Matching equation information
+         */
+        regina::NTriangulation* tri;
+        int coordSystem;
+
+    public:
+        /**
+         * Constructor.
+         */
+        MatchingHeaderToolTip(regina::NTriangulation* useTri,
+            int useCoordSystem, QHeader* header, QToolTipGroup* group = 0);
+
+    protected:
+        /**
+         * QToolTip overrides.
+         */
+        void maybeTip(const QPoint& p);
 };
 
 #endif
