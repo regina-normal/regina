@@ -580,7 +580,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                         // This annulus was glued neither to itself nor
                         // to a layered solid torus.
                         if (needChain)
-                            whichLayered[i] = -1;
+                            whichLayered[j] = -1;
                         else {
                             delete core;
                             core = 0;
