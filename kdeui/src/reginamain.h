@@ -26,92 +26,159 @@
 
 /* end stub */
 
-#ifndef _REGINAMAIN_H_
-#define _REGINAMAIN_H_
+/*! \file reginamain.h
+ *  \brief Provides a main window for Regina.
+ */
+
+#ifndef __REGINAMAIN_H_
+#define __REGINAMAIN_H_
+
+#include "reginaview.h"
 
 #include <kapp.h>
 #include <kmainwindow.h>
- 
-#include "reginaview.h"
 
 class QPrinter;
+class KRecentFilesAction;
 class KToggleAction;
 class KURL;
 
 /**
- * This class serves as the main window for Regina.  It handles the
- * menus, toolbars, and status bars.
+ * The main window for Regina.  This class handles the menus, toolbars
+ * and status bars.
  *
- * @short Main window class
- * @author $AUTHOR <$EMAIL>
- * @version $APP_VERSION
+ * Note that each Regina data file has its own main window.
  */
 class ReginaMain : public KMainWindow
 {
     Q_OBJECT
-public:
-    /**
-     * Default Constructor
-     */
-    ReginaMain();
 
-    /**
-     * Default Destructor
-     */
-    virtual ~ReginaMain();
+    private:
+        ReginaView *m_view;
 
-    /**
-     * Use this method to load whatever file/URL you have
-     */
-    void load(const KURL& url);
+        QPrinter   *m_printer;
+        KToggleAction *m_toolbarAction;
+        KToggleAction *m_statusbarAction;
 
-protected:
-    /**
-     * Overridden virtuals for Qt drag 'n drop (XDND)
-     */
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-    virtual void dropEvent(QDropEvent *event);
+        /**
+         * Actions
+         */
+        KRecentFilesAction* fileOpenRecent;
+            /**< The menu of recently opened files. */
 
-protected:
-    /**
-     * This function is called when it is time for the app to save its
-     * properties for session management purposes.
-     */
-    void saveProperties(KConfig *);
+        /**
+         * Preferences
+         */
+        bool autoDock;
+            /**< Do we automatically dock new packet viewers into the
+                 parent window? */
+        bool displayIcon;
+            /**< Should we display the pretty Regina icon? */
+        bool autoFileExtension;
+            /**< Should filenames be given an automatic extension? */
 
-    /**
-     * This function is called when this app is restored.  The KConfig
-     * object points to the session management config file that was saved
-     * with @ref saveProperties
-     */
-    void readProperties(KConfig *);
+    public:
+        /**
+         * Default Constructor
+         */
+        ReginaMain();
+
+        /**
+         * Default Destructor
+         */
+        virtual ~ReginaMain();
+
+        /**
+         * Use this method to load whatever file/URL you have
+         */
+        void load(const KURL& url);
+
+        bool getAutoDock();
+        bool getDisplayIcon();
+        bool getAutoFileExtension();
+
+        void setAutoDock(bool);
+        void setDisplayIcon(bool);
+        void setAutoFileExtension(bool);
+
+        /**
+         * Forces this main window to reread the global configuration.
+         */
+        void readOptions();
+
+        /**
+         * Saves the current preferences to the global configuration.
+         * All other main windows will then be forced to reread this
+         * configuration.
+         */
+        void saveOptions();
+
+    protected:
+        /**
+         * Overridden virtuals for Qt drag 'n drop (XDND)
+         */
+        virtual void dragEnterEvent(QDragEnterEvent *event);
+        virtual void dropEvent(QDropEvent *event);
+
+    protected:
+        /**
+         * This function is called when it is time for the app to save its
+         * properties for session management purposes.
+         */
+        void saveProperties(KConfig *);
+
+        /**
+         * This function is called when this app is restored.  The KConfig
+         * object points to the session management config file that was saved
+         * with @ref saveProperties
+         */
+        void readProperties(KConfig *);
 
 
-private slots:
-    void fileNew();
-    void fileOpen();
-    void fileSave();
-    void fileSaveAs();
-    void filePrint();
-    void optionsShowToolbar();
-    void optionsShowStatusbar();
-    void optionsConfigureKeys();
-    void optionsConfigureToolbars();
-    void optionsPreferences();
+    private slots:
+        void fileNew();
+        void fileOpen();
+        void fileSave();
+        void fileSaveAs();
+        void filePrint();
+        void optionsShowToolbar();
+        void optionsShowStatusbar();
+        void optionsConfigureKeys();
+        void optionsConfigureToolbars();
+        void optionsPreferences();
 
-    void changeStatusbar(const QString& text);
-    void changeCaption(const QString& text);
+        void changeStatusbar(const QString& text);
+        void changeCaption(const QString& text);
 
-private:
-	void setupAccel();
-	void setupActions();
+    private:
+        void setupAccel();
+        void setupActions();
 
-private:
-    ReginaView *m_view;
-
-    QPrinter   *m_printer;
-    KToggleAction *m_toolbarAction;
-    KToggleAction *m_statusbarAction;
+        void readOptions(KConfig* config);
 };
 
-#endif // _REGINAMAIN_H_
+inline bool ReginaMain::getAutoDock() {
+    return autoDock;
+}
+
+inline bool ReginaMain::getAutoFileExtension() {
+    return autoFileExtension;
+}
+
+inline bool ReginaMain::getDisplayIcon() {
+    return displayIcon;
+}
+
+inline void ReginaMain::setAutoDock(bool value) {
+    autoDock = value;
+}
+
+inline void ReginaMain::setAutoFileExtension(bool value) {
+    autoFileExtension = value;
+}
+
+inline void ReginaMain::readOptions() {
+    readOptions(kapp->config());
+}
+
+#endif

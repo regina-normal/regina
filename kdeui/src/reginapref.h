@@ -26,43 +26,91 @@
 
 /* end stub */
 
-#include "pref.h"
+/*! \file reginapref.h
+ *  \brief Handles configuration of the user interface.
+ */
 
-#include <klocale.h>
+#ifndef __REGINAPREF_H
+#define __REGINAPREF_H
 
-#include <qlayout.h>
-#include <qlabel.h>
+#include <qvbox.h>
+#include <kdialogbase.h>
 
-ReginaPreferences::ReginaPreferences()
-    : KDialogBase(TreeList, "Regina Preferences",
-                  Help|Default|Ok|Apply|Cancel, Ok)
-{
-    // this is the base class for your preferences dialog.  it is now
-    // a Treelist dialog.. but there are a number of other
-    // possibilities (including Tab, Swallow, and just Plain)
-    QFrame *frame;
-    frame = addPage(i18n("First Page"), i18n("Page One Options"));
-    m_pageOne = new ReginaPrefPageOne(frame);
+class QCheckBox;
+class ReginaMain;
+class ReginaPrefDisplay;
+class ReginaPrefFile;
+class ReginaPrefPython;
 
-    frame = addPage(i18n("Second Page"), i18n("Page Two Options"));
-    m_pageTwo = new ReginaPrefPageTwo(frame);
-}
+/**
+ * The Regina configuration dialog.
+ */
+class ReginaPreferences : public KDialogBase {
+    Q_OBJECT
 
-ReginaPrefPageOne::ReginaPrefPageOne(QWidget *parent)
-    : QFrame(parent)
-{
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setAutoAdd(true);
+    private:
+        ReginaMain* mainWindow;
 
-    new QLabel("Add something here", this);
-}
+        ReginaPrefDisplay* displayPrefs;
+        ReginaPrefFile* filePrefs;
+        ReginaPrefPython* pythonPrefs;
 
-ReginaPrefPageTwo::ReginaPrefPageTwo(QWidget *parent)
-    : QFrame(parent)
-{
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setAutoAdd(true);
+    public:
+        ReginaPreferences(ReginaMain* parent);
 
-    new QLabel("Add something here", this);
-}
-#include "pref.moc"
+        /**
+         * Overridden to call slotApply() when OK is pressed.
+         */
+        virtual int exec();
+
+    public slots:
+        /**
+         * Propagate changes back to the main UI.
+         */
+        virtual void slotApply();
+};
+
+/**
+ * The page of the Regina configuration dialog for display preferences.
+ */
+class ReginaPrefDisplay : public QVBox {
+    Q_OBJECT
+
+    private:
+        QCheckBox* cbAutoDock;
+        QCheckBox* cbDisplayIcon;
+
+    public:
+        ReginaPrefDisplay(QWidget* parent = 0);
+
+    friend class ReginaPreferences;
+};
+
+/**
+ * The page of the Regina configuration dialog for file preferences.
+ */
+class ReginaPrefFile : public QVBox {
+    Q_OBJECT
+
+    private:
+        QCheckBox* cbAutoFileExtension;
+
+    public:
+        ReginaPrefFile(QWidget* parent = 0);
+
+    friend class ReginaPreferences;
+};
+
+/**
+ * The page of the Regina configuration dialog for Python preferences.
+ */
+class ReginaPrefPython : public QVBox {
+    Q_OBJECT
+
+    public:
+        ReginaPrefPython(QWidget* parent = 0);
+
+    friend class ReginaPreferences;
+};
+
+#endif

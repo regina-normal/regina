@@ -18,16 +18,16 @@ regina_SOURCES = \
 	reginaabout.cpp \
 	main.cpp \
 	reginamain.cpp \
+	reginapref.cpp \
 	reginaview.cpp \
-	pref.cpp \
 	reginaiface.skel
 
 # these are the headers for your project
 noinst_HEADERS = \
 	reginaabout.h \
 	reginamain.h \
-	reginaview.h \
-	pref.h
+	reginapref.h \
+	reginaview.h
 
 # client stuff
 regina_client_LDFLAGS = $(KDE_RPATH) $(all_libraries)
@@ -48,4 +48,4 @@ kdelnk_DATA = regina.desktop
 
 # this is where the XML-GUI resource file goes
 rcdir = $(kde_datadir)/regina
-rc_DATA = reginaui.rc
+rc_DATA = reginamain.rc

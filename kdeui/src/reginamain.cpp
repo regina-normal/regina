@@ -27,39 +27,33 @@
 /* end stub */
 
 #include "reginamain.h"
-#include "pref.h"
+#include "reginapref.h"
 
 #include <qdragobject.h>
 #include <qlineedit.h>
-#include <qprinter.h>
 #include <qprintdialog.h>
-#include <qpainter.h>
+#include <qprinter.h>
 #include <qpaintdevicemetrics.h>
-
+#include <qpainter.h>
+#include <kaccel.h>
+#include <kaction.h>
+#include <kconfig.h>
+#include <kedittoolbar.h>
+#include <kfiledialog.h>
 #include <kglobal.h>
-#include <klocale.h>
 #include <kiconloader.h>
+#include <kio/netaccess.h>
+#include <kkeydialog.h>
+#include <klocale.h>
 #include <kmenubar.h>
 #include <kstatusbar.h>
-#include <kkeydialog.h>
-#include <kaccel.h>
-#include <kio/netaccess.h>
-#include <kfiledialog.h>
-#include <kconfig.h>
+#include <kstdaccel.h>
+#include <kstdaction.h>
 #include <kurl.h>
 #include <kurlrequesterdlg.h>
 
-#include <kedittoolbar.h>
-
-#include <kstdaccel.h>
-#include <kaction.h>
-#include <kstdaction.h>
-
-ReginaMain::ReginaMain()
-    : KMainWindow( 0, "Regina" ),
-      m_view(new ReginaView(this)),
-      m_printer(0)
-{
+ReginaMain::ReginaMain() : KMainWindow( 0, "Regina" ),
+      m_view(new ReginaView(this)), m_printer(0) {
     // accept dnd
     setAcceptDrops(true);
 
@@ -78,14 +72,13 @@ ReginaMain::ReginaMain()
     connect(m_view, SIGNAL(signalChangeCaption(const QString&)),
             this,   SLOT(changeCaption(const QString&)));
 
+    readOptions(kapp->config());
 }
 
-ReginaMain::~ReginaMain()
-{
+ReginaMain::~ReginaMain() {
 }
 
-void ReginaMain::load(const KURL& url)
-{
+void ReginaMain::load(const KURL& url) {
     QString target;
     // the below code is what you should normally do.  in this
     // example case, we want the url to our own.  you probably
@@ -110,10 +103,11 @@ void ReginaMain::load(const KURL& url)
     m_view->openURL(url);
 }
 
-void ReginaMain::setupActions()
-{
+void ReginaMain::setupActions() {
     KStdAction::openNew(this, SLOT(fileNew()), actionCollection());
     KStdAction::open(this, SLOT(fileOpen()), actionCollection());
+    fileOpenRecent = KStdAction::openRecent(m_view,
+        SLOT(openURL()), actionCollection());
     KStdAction::save(this, SLOT(fileSave()), actionCollection());
     KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
     KStdAction::print(this, SLOT(filePrint()), actionCollection());
@@ -128,14 +122,13 @@ void ReginaMain::setupActions()
 
     // this doesn't do anything useful.  it's just here to illustrate
     // how to insert a custom menu and menu item
-    KAction *custom = new KAction(i18n("Cus&tom Menuitem"), 0,
-                                  this, SLOT(optionsPreferences()),
-                                  actionCollection(), "custom_action");
-    createGUI();
+    new KAction(i18n("Python Console (&Standalone)"), "source_py",
+        0 /* shortcut */, this, SLOT(optionsPreferences()),
+        actionCollection(), "python_standalone");
+    createGUI("reginamain.rc");
 }
 
-void ReginaMain::saveProperties(KConfig *config)
-{
+void ReginaMain::saveProperties(KConfig *config) {
     // the 'config' object points to the session managed
     // config file.  anything you write here will be available
     // later when this app is restored
@@ -144,8 +137,7 @@ void ReginaMain::saveProperties(KConfig *config)
         config->writeEntry("lastURL", m_view->currentURL()); 
 }
 
-void ReginaMain::readProperties(KConfig *config)
-{
+void ReginaMain::readProperties(KConfig *config) {
     // the 'config' object points to the session managed
     // config file.  this function is automatically called whenever
     // the app is being restored.  read in here whatever you wrote
@@ -157,14 +149,12 @@ void ReginaMain::readProperties(KConfig *config)
         m_view->openURL(KURL(url));
 }
 
-void ReginaMain::dragEnterEvent(QDragEnterEvent *event)
-{
+void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
     // accept uri drops only
     event->accept(QUriDrag::canDecode(event));
 }
 
-void ReginaMain::dropEvent(QDropEvent *event)
-{
+void ReginaMain::dropEvent(QDropEvent *event) {
     // this is a very simplistic implementation of a drop event.  we
     // will only accept a dropped URL.  the Qt dnd code can do *much*
     // much more, so please read the docs there
@@ -182,8 +172,7 @@ void ReginaMain::dropEvent(QDropEvent *event)
     }
 }
 
-void ReginaMain::fileNew()
-{
+void ReginaMain::fileNew() {
     // this slot is called whenever the File->New menu is selected,
     // the New shortcut is pressed (usually CTRL+N) or the New toolbar
     // button is clicked
@@ -192,8 +181,7 @@ void ReginaMain::fileNew()
     (new ReginaMain)->show();
 }
 
-void ReginaMain::fileOpen()
-{
+void ReginaMain::fileOpen() {
     // this slot is called whenever the File->Open menu is selected,
     // the Open shortcut is pressed (usually CTRL+O) or the Open toolbar
     // button is clicked
@@ -211,8 +199,7 @@ void ReginaMain::fileSave()
     // save the current file
 }
 
-void ReginaMain::fileSaveAs()
-{
+void ReginaMain::fileSaveAs() {
     // this slot is called whenever the File->Save As menu is selected,
     KURL file_url = KFileDialog::getSaveURL();
     if (!file_url.isEmpty() && !file_url.isMalformed())
@@ -221,8 +208,7 @@ void ReginaMain::fileSaveAs()
     }
 }
 
-void ReginaMain::filePrint()
-{
+void ReginaMain::filePrint() {
     // this slot is called whenever the File->Print menu is selected,
     // the Print shortcut is pressed (usually CTRL+P) or the Print toolbar
     // button is clicked
@@ -244,8 +230,7 @@ void ReginaMain::filePrint()
     }
 }
 
-void ReginaMain::optionsShowToolbar()
-{
+void ReginaMain::optionsShowToolbar() {
     // this is all very cut and paste code for showing/hiding the
     // toolbar
     if (m_toolbarAction->isChecked())
@@ -254,8 +239,7 @@ void ReginaMain::optionsShowToolbar()
         toolBar()->hide();
 }
 
-void ReginaMain::optionsShowStatusbar()
-{
+void ReginaMain::optionsShowStatusbar() {
     // this is all very cut and paste code for showing/hiding the
     // statusbar
     if (m_statusbarAction->isChecked())
@@ -264,41 +248,73 @@ void ReginaMain::optionsShowStatusbar()
         statusBar()->hide();
 }
 
-void ReginaMain::optionsConfigureKeys()
-{
-    KKeyDialog::configureKeys(actionCollection(), "reginaui.rc");
+void ReginaMain::optionsConfigureKeys() {
+    KKeyDialog::configureKeys(actionCollection(), "reginamain.rc");
 }
 
-void ReginaMain::optionsConfigureToolbars()
-{
+void ReginaMain::optionsConfigureToolbars() {
     // use the standard toolbar editor
     KEditToolbar dlg(actionCollection());
-    if (dlg.exec())
-    {
+    if (dlg.exec()) {
         // recreate our GUI
         createGUI();
     } 
 }
 
-void ReginaMain::optionsPreferences()
-{
+void ReginaMain::optionsPreferences() {
     // popup some sort of preference dialog, here
-    ReginaPreferences dlg;
-    if (dlg.exec())
-    {
+    ReginaPreferences dlg(this);
+    if (dlg.exec()) {
         // redo your settings
+        saveOptions();
     }
 }
 
-void ReginaMain::changeStatusbar(const QString& text)
-{
+void ReginaMain::changeStatusbar(const QString& text) {
     // display the text on the statusbar
     statusBar()->message(text);
 }
 
-void ReginaMain::changeCaption(const QString& text)
-{
+void ReginaMain::changeCaption(const QString& text) {
     // display the text on the caption
     setCaption(text);
 }
+
+void ReginaMain::readOptions(KConfig* config) {
+    config->setGroup("Display");
+    setAutoDock(config->readBoolEntry("Packet docking", true));
+    setDisplayIcon(config->readBoolEntry("Display icon", true));
+
+    config->setGroup("File");
+    setAutoFileExtension(config->readBoolEntry("Automatic extension", true));
+
+    fileOpenRecent->loadEntries(config);
+}
+
+void ReginaMain::saveOptions() {
+    KConfig* config = kapp->config();
+
+    // Save the current set of options.
+    config->setGroup("Display");
+    config->writeEntry("Packet docking", autoDock);
+    config->writeEntry("Display icon", displayIcon);
+
+    config->setGroup("File");
+    config->writeEntry("Automatic extension", autoFileExtension);
+
+    fileOpenRecent->saveEntries(config);
+
+    config->sync();
+
+    // Make sure other main windows read in the new options.
+    for (ReginaMain* otherMain = (ReginaMain*)(memberList->first()); otherMain;
+            otherMain = (ReginaMain*)(memberList->next()))
+        if (otherMain != this)
+            otherMain->readOptions(config);
+}
+
+void ReginaMain::setDisplayIcon(bool value) {
+    displayIcon = value;
+}
+
 #include "reginamain.moc"
