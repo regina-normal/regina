@@ -22,6 +22,8 @@ Version 2.5  [ (under development) ]
         Class FuncDelete, FuncNew, FuncNewClonePtr, FuncNewCopyPtr,
                 FuncNewCopyRef, HashPointer:
             - Added for use with Standard Template Library.
+        Class NAngleStructureList:
+            - New nested class NAngleStructureList::StructureInserter.
         Class NGroupExpressionTerm:
             - Changed from simple ordered pair to its own full class.
         Class NIndexedArray:
@@ -29,6 +31,8 @@ Version 2.5  [ (under development) ]
         Class NLocalFileResource:
             - Replaced static members MODE_READ, MODE_WRITE with static
               routines sysModeRead(), sysModeWrite().
+        Class NNormalSurfaceList:
+            - New nested class NNormalSurfaceList::SurfaceInserter.
         Class NScript:
             - Changed list of variables to a proper map and removed routines
               getVariableIndex() and removeVariableAt().
