@@ -4,8 +4,13 @@
 
 <!ENTITY data-allowstrict SYSTEM "allowstrict.sgml">
 <!ENTITY data-allowtaut SYSTEM "allowtaut.sgml">
+<!ENTITY data-cancrush SYSTEM "cancrush.sgml">
+<!ENTITY data-compact SYSTEM "compact.sgml">
+<!ENTITY data-connected SYSTEM "connected.sgml">
+<!ENTITY data-euler-surface SYSTEM "euler-surface.sgml">
 <!ENTITY data-flags SYSTEM "flags.sgml">
 <!ENTITY data-line SYSTEM "line.sgml">
+<!ENTITY data-orbl SYSTEM "orbl.sgml">
 <!ENTITY data-packet SYSTEM "packet.sgml">
 <!ENTITY data-packet-anglestructurelist SYSTEM "packet-anglestructurelist.sgml">
 <!ENTITY data-packet-container SYSTEM "packet-container.sgml">
@@ -13,53 +18,65 @@
 <!ENTITY data-packet-script SYSTEM "packet-script.sgml">
 <!ENTITY data-packet-text SYSTEM "packet-text.sgml">
 <!ENTITY data-params SYSTEM "params.sgml">
+<!ENTITY data-realbdry SYSTEM "realbdry.sgml">
 <!ENTITY data-reginadata SYSTEM "reginadata.sgml">
 <!ENTITY data-struct SYSTEM "struct.sgml">
+<!ENTITY data-surface SYSTEM "surface.sgml">
 <!ENTITY data-tag SYSTEM "tag.sgml">
 <!ENTITY data-text SYSTEM "text.sgml">
+<!ENTITY data-twosided SYSTEM "twosided.sgml">
 <!ENTITY data-var SYSTEM "var.sgml">
 
 <!ENTITY xml-allowstrict
  '<link linkend="data-allowstrict"><sgmltag>allowstrict</sgmltag></link>'>
 <!ENTITY xml-allowtaut
  '<link linkend="data-allowtaut"><sgmltag>allowtaut</sgmltag></link>'>
+<!ENTITY xml-cancrush
+ '<link linkend="data-cancrush"><sgmltag>cancrush</sgmltag></link>'>
+<!ENTITY xml-compact
+ '<link linkend="data-compact"><sgmltag>compact</sgmltag></link>'>
+<!ENTITY xml-connected
+ '<link linkend="data-connected"><sgmltag>connected</sgmltag></link>'>
+<!ENTITY xml-euler-surface
+ '<link linkend="data-euler-surface"><sgmltag>euler</sgmltag> (surface)</link>'>
 <!ENTITY xml-flags
  '<link linkend="data-flags"><sgmltag>flags</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
+<!ENTITY xml-orbl
+ '<link linkend="data-orbl"><sgmltag>orbl</sgmltag></link>'>
 <!ENTITY xml-packet
  '<link linkend="data-packet"><sgmltag>packet</sgmltag></link>'>
 <!ENTITY xml-packet-anglestructurelist
- '<link linkend="data-packet-anglestructurelist"><sgmltag>packet</sgmltag>
-  (angle structure list)</link>'>
+ '<link linkend="data-packet-anglestructurelist"><sgmltag>packet</sgmltag> (angle structure list)</link>'>
 <!ENTITY xml-packet-container
- '<link linkend="data-packet-container"><sgmltag>packet</sgmltag>
-  (container)</link>'>
+ '<link linkend="data-packet-container"><sgmltag>packet</sgmltag> (container)</link>'>
 <!ENTITY xml-packet-normalsurfacelist
- '<link linkend="data-packet-normalsurfacelist"><sgmltag>packet</sgmltag>
-  (normal surface list)</link>'>
+ '<link linkend="data-packet-normalsurfacelist"><sgmltag>packet</sgmltag> (normal surface list)</link>'>
 <!ENTITY xml-packet-script
- '<link linkend="data-packet-script"><sgmltag>packet</sgmltag>
-  (script)</link>'>
+ '<link linkend="data-packet-script"><sgmltag>packet</sgmltag> (script)</link>'>
 <!ENTITY xml-packet-surfacefilter
- '<link linkend="data-packet"><sgmltag>packet</sgmltag>
-  (surface filter)</link>'>
+ '<link linkend="data-packet"><sgmltag>packet</sgmltag> (surface filter)</link>'>
 <!ENTITY xml-packet-text
- '<link linkend="data-packet-text"><sgmltag>packet</sgmltag>
-  (text)</link>'>
+ '<link linkend="data-packet-text"><sgmltag>packet</sgmltag> (text)</link>'>
 <!ENTITY xml-packet-triangulation
- '<link linkend="data-packet"><sgmltag>packet</sgmltag>
-  (triangulation)</link>'>
+ '<link linkend="data-packet"><sgmltag>packet</sgmltag> (triangulation)</link>'>
 <!ENTITY xml-params
  '<link linkend="data-params"><sgmltag>params</sgmltag></link>'>
+<!ENTITY xml-realbdry
+ '<link linkend="data-realbdry"><sgmltag>realbdry</sgmltag></link>'>
 <!ENTITY xml-reginadata
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-struct
  '<link linkend="data-struct"><sgmltag>struct</sgmltag></link>'>
+<!ENTITY xml-surface
+ '<link linkend="data-surface"><sgmltag>surface</sgmltag></link>'>
 <!ENTITY xml-tag
  '<link linkend="data-tag"><sgmltag>tag</sgmltag></link>'>
 <!ENTITY xml-text
  '<link linkend="data-text"><sgmltag>text</sgmltag></link>'>
+<!ENTITY xml-twosided
+ '<link linkend="data-twosided"><sgmltag>twosided</sgmltag></link>'>
 <!ENTITY xml-var
  '<link linkend="data-var"><sgmltag>var</sgmltag></link>'>
 

@@ -20,8 +20,13 @@
 
  &data-allowstrict;
  &data-allowtaut;
+ &data-cancrush;
+ &data-compact;
+ &data-connected;
+ &data-euler-surface;
  &data-flags;
  &data-line;
+ &data-orbl;
  &data-packet;
  &data-packet-anglestructurelist;
  &data-packet-container;
@@ -29,10 +34,13 @@
  &data-packet-script;
  &data-packet-text;
  &data-params;
+ &data-realbdry;
  &data-reginadata;
  &data-struct;
+ &data-surface;
  &data-tag;
  &data-text;
+ &data-twosided;
  &data-var;
 
 </reference>
