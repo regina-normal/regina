@@ -35,6 +35,10 @@
 
 #include <qtable.h>
 
+namespace regina {
+    class NPacket;
+}
+
 /**
  * A table item for script variable names.
  */
@@ -54,8 +58,54 @@ class ScriptVarNameItem : public QTableItem {
 
 /**
  * A table item for script variable values.
-class ScriptVarValueItem : public QTableItem {
-};
  */
+class ScriptVarValueItem : public QTableItem {
+    private:
+        /**
+         * The selected packet, if any.
+         */
+        regina::NPacket* packet;
+
+        /**
+         * The packet tree matriarch.
+         */
+        regina::NPacket* matriarch;
+
+    public:
+        /**
+         * Constructor.
+         */
+        ScriptVarValueItem(QTable* table, regina::NPacket* treeMatriarch,
+            regina::NPacket* selectedPacket);
+        ScriptVarValueItem(QTable* table, regina::NPacket* treeMatriarch,
+            const QString& packetLabel);
+
+        /**
+         * Access the currently selected packet.
+         */
+        regina::NPacket* getPacket();
+        void setPacket(regina::NPacket* newPacket);
+
+        /**
+         * QTableItem overrides.
+         */
+        virtual QWidget* createEditor() const;
+        virtual void setContentFromEditor(QWidget* editor);
+
+    private:
+        /**
+         * Update the text and pixmap according to the currently
+         * selected packet.
+         */
+        void updateData();
+};
+
+inline regina::NPacket* ScriptVarValueItem::getPacket() {
+    return packet;
+}
+
+inline void ScriptVarValueItem::setPacket(regina::NPacket* newPacket) {
+    packet = newPacket;
+}
 
 #endif

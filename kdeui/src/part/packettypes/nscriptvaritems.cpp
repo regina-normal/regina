@@ -31,6 +31,8 @@
 
 // UI includes:
 #include "nscriptvaritems.h"
+#include "../packetchooser.h"
+#include "../packetmanager.h"
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -45,21 +47,55 @@ ScriptVarNameItem::ScriptVarNameItem(QTable* table, const QString& name) :
 
 QWidget* ScriptVarNameItem::createEditor() const {
     QLineEdit* editor = new QLineEdit(text(), table()->viewport());
+    editor->setFrame(false);
     return editor;
 }
 
 void ScriptVarNameItem::setContentFromEditor(QWidget* editor) {
-    if (editor->inherits("QLineEdit")) {
-        QString curr = dynamic_cast<QLineEdit*>(editor)->
-            text().stripWhiteSpace();
-        if (curr.isEmpty()) {
-            KMessageBox::error(editor, i18n(
-                "Variable names cannot be empty."));
-        } else
-            setText(curr);
-    } else if (0) {
-        // Hunt for a matching variable name.
+    QString name = dynamic_cast<QLineEdit*>(editor)->text().stripWhiteSpace();
+    if (name.isEmpty()) {
+        KMessageBox::error(editor, i18n(
+            "Variable names cannot be empty."));
     } else
-        QTableItem::setContentFromEditor(editor);
+            setText(name);
+    // TODO: Check for validity and uniqueness.
+}
+
+ScriptVarValueItem::ScriptVarValueItem(QTable* table, NPacket* treeMatriarch,
+        NPacket* selectedPacket) : QTableItem(table, WhenCurrent),
+        packet(selectedPacket), matriarch(treeMatriarch) {
+    updateData();
+    setReplaceable(false);
+}
+
+ScriptVarValueItem::ScriptVarValueItem(QTable* table, NPacket* treeMatriarch,
+        const QString& packetLabel) : QTableItem(table, WhenCurrent),
+        matriarch(treeMatriarch) {
+    packet = treeMatriarch->findPacketLabel(packetLabel.ascii());
+    updateData();
+    setReplaceable(false);
+}
+
+QWidget* ScriptVarValueItem::createEditor() const {
+    PacketChooser* editor = new PacketChooser(matriarch, 0, true, packet,
+        table()->viewport());
+    QObject::connect(editor, SIGNAL(activated(int)), table(),
+        SLOT(doValueChanged()));
+    return editor;
+}
+
+void ScriptVarValueItem::setContentFromEditor(QWidget* editor) {
+    packet = dynamic_cast<PacketChooser*>(editor)->selectedPacket();
+    updateData();
+}
+
+void ScriptVarValueItem::updateData() {
+    if (packet && ! packet->getPacketLabel().empty()) {
+        setText(packet->getPacketLabel().c_str());
+        setPixmap(QPixmap(PacketManager::iconSmall(packet)));
+    } else {
+        setText("<None>");
+        setPixmap(QPixmap());
+    }
 }
 

@@ -149,11 +149,21 @@ void NScriptUI::commit() {
     // Update the lines.
     script->removeAllLines();
     unsigned nLines = editInterface->numLines();
-    for (unsigned i = 0; i < nLines; i++)
-        script->addLast(editInterface->textLine(i).ascii());
+    for (unsigned i = 0; i < nLines; i++) {
+        QString s = editInterface->textLine(i);
+        script->addLast(s.isNull() ? "" : s.ascii());
+    }
 
     // Update the variables.
-    // TODO
+    script->removeAllVariables();
+    unsigned nVars = varTable->numRows();
+    regina::NPacket* value;
+    for (unsigned i = 0; i < nVars; i++) {
+        value = dynamic_cast<ScriptVarValueItem*>(varTable->item(i, 1))->
+            getPacket();
+        script->addVariable(varTable->text(i, 0).ascii(),
+            value ? value->getPacketLabel() : std::string());
+    }
 
     isCommitting = false;
     setDirty(false);
@@ -161,21 +171,26 @@ void NScriptUI::commit() {
 
 void NScriptUI::refresh() {
     // Refresh the variables.
-    // TODO
     unsigned long nVars = script->getNumberOfVariables();
     varTable->setNumRows(nVars);
     for (unsigned long i = 0; i < nVars; i++) {
         varTable->setItem(i, 0, new ScriptVarNameItem(varTable,
             script->getVariableName(i).c_str()));
-        varTable->setText(i, 1, script->getVariableValue(i).c_str());
+        varTable->setItem(i, 1, new ScriptVarValueItem(varTable,
+            script->getTreeMatriarch(), script->getVariableValue(i).c_str()));
     }
 
     // Refresh the lines.
-    editInterface->clear();
+    // The first line is handled separately to avoid an additional blank
+    // line from being appended.
     unsigned long nLines = script->getNumberOfLines();
-    for (unsigned long i = 0; i < nLines; i++)
-        editInterface->insertLine(editInterface->numLines(),
-            script->getLine(i).c_str());
+    if (nLines == 0)
+        editInterface->clear();
+    else {
+        editInterface->setText(script->getLine(0).c_str());
+        for (unsigned long i = 1; i < nLines; i++)
+            editInterface->insertLine(i, script->getLine(i).c_str());
+    }
 
     setDirty(false);
 }
