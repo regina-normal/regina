@@ -43,6 +43,7 @@ clean:
 	dh_testroot
 	-$(MAKE) distclean
 	rm -f build-stamp configure-stamp
+	rm -f debian/debiandirs
 	dh_clean
 
 install: build
