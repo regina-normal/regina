@@ -234,7 +234,6 @@ bool ReginaMain::openURL(const QString& url) {
 }
 
 void ReginaMain::pythonConsole() {
-    // TODO: Implement python scripting. :)
     KMessageBox::sorry(this, i18n("Python scripting is not yet implemented."),
         i18n("Patience, Iago!"));
 }
