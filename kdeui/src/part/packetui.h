@@ -162,6 +162,11 @@ class PacketUI {
          * Store any changes currently made in this interface in the
          * underlying packet.
          *
+         * Note that if a packet interface wishes to force a commit, it
+         * should call enclosingPane->commit() and not this routine.
+         * This will ensure that the enclosing pane can keep up to date
+         * with what is taking place.
+         *
          * This routine should call setDirty(false) once changes have
          * been made.
          */
@@ -170,6 +175,11 @@ class PacketUI {
         /**
          * Update this interface to reflect the current contents of the
          * underlying packet.
+         *
+         * Note that if a packet interface wishes to force a refresh, it
+         * should call enclosingPane->refresh() and not this routine.
+         * This will ensure that the enclosing pane can keep up to date
+         * with what is taking place.
          *
          * This routine should call setDirty(false) once the interface
          * has been updated.
