@@ -3,7 +3,7 @@
 rem ----------------------------------------------
 rem |                                            |
 rem |         Regina startup batch file          |
-rem |       Copyright (c) Ben Burton, 2001       |
+rem |    Copyright (c) Ben Burton, 1999-2002     |
 rem |                                            |
 rem |  Requires cygwin (http://www.cygwin.com/)  |
 rem |                                            |

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Java User Interface                                                   *
  *                                                                        *
- *  Copyright (c) 1999-2001, Ben Burton                                   *
+ *  Copyright (c) 1999-2002, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -57,13 +57,13 @@ public class Application extends Applet implements ActionListener {
     /**
      * Program date.
      */
-    public static final String date = "12 December 2001";
+    public static final String date = "28 January 2002";
 
     /**
      * Copyright information.
      */
     public static final String copyright =
-        "Copyright (c) 1999-2001, Ben Burton";
+        "Copyright (c) 1999-2002, Ben Burton";
 
     /**
      * Miscellaneous comments.

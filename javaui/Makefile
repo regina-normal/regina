@@ -17,7 +17,7 @@ DOC_SAMPLE = $(DOC_DIR)/index.html
 DOC_OVERVIEW = overview.html
 
 DOC_TITLE = 'Regina - Java User Interface'
-DOC_BOTTOM = 'Copyright &copy; 1999-2001, Ben Burton<br>This software is released under the GNU Public License.<br>For further information, or to submit a bug or other problem, please contact Ben Burton (<a href="mailto:benb@acm.org">benb@acm.org</a>).'
+DOC_BOTTOM = 'Copyright &copy; 1999-2002, Ben Burton<br>This software is released under the GNU Public License.<br>For further information, or to submit a bug or other problem, please contact Ben Burton (<a href="mailto:benb@acm.org">benb@acm.org</a>).'
 
 # --------------------------- Rules ---------------------------------------
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2001, Ben Burton                                   *
+ *  Copyright (c) 1999-2002, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,7 +35,7 @@
  *  <center><b>
  *  Regina<br>
  *  The Application Formerly Known As Normal<br>
- *  Copyright &copy; 1999-2001, Ben Burton
+ *  Copyright &copy; 1999-2002, Ben Burton
  *  </b>
  *  <p>
  *  Written by Ben Burton
