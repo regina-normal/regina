@@ -3,7 +3,7 @@ Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
 Build-Depends: debhelper (>> 4.0.0), docbook-utils, doxygen, kdelibs4-dev, libboost-python-dev (>= 1.30.0-3), libgmp3-dev, libpopt-dev, libxml2-dev, zlib1g-dev
-Build-Conflicts: regina-normal-dev (<< 3.96-0), regina-normal-dev (>= 3.97-0)
+Build-Conflicts: regina-normal-dev (<< 3.97-0), regina-normal-dev (>= 3.98-0)
 Standards-Version: 3.6.1
 
 Package: regina-normal
@@ -12,9 +12,9 @@ Section: math
 Depends: ${shlibs:Depends}, ${perl:Depends}, python2.2
 Suggests: khelpcenter, regina-normal-doc, regina-normal-dev, snappea
 Description: Regina, the 3-manifold normal surface theory calculator
- Regina is a topological calculator with a bent towards normal surface
- theory. It allows 3-manifolds to be created and manipulated and their
- properties of interest to be determined.
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ It focuses upon the study of 3-manifold triangulations and includes
+ support for normal surfaces and angle structures.
  .
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface enumeration.  It offers embedded
@@ -31,10 +31,10 @@ Section: libdevel
 Depends: regina-normal (= ${Source-Version}), libgmp3-dev, libxml2-dev, zlib1g-dev
 Suggests: regina-normal-doc
 Description: Development files for Regina normal surface theory calculator
- Regina is a normal surface theory calculator for 3-manifold
- topologists.  This package provides development files for compiling
- the Regina calculation engine into other projects.  For complete API
- documentation, see the package regina-normal-doc.
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ This package provides development files for compiling the Regina
+ calculation engine into other projects.  For complete API documentation,
+ see the package regina-normal-doc.
  .
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface enumeration.
@@ -45,11 +45,10 @@ Section: doc
 Recommends: www-browser
 Suggests: regina-normal, regina-normal-dev
 Description: Library docs for Regina normal surface theory calculator
- Regina is a normal surface theory calculator for 3-manifold
- topologists.  This package provides complete API documentation for
- the Regina calculation engine.  This documentation can be used with
- Python scripting in Regina and when compiling the Regina calculation
- engine into other projects.
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ This package provides complete API documentation for the Regina calculation
+ engine.  This documentation can be used with Python scripting in Regina and
+ when compiling the Regina calculation engine into other projects.
  .
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface enumeration.  It offers embedded

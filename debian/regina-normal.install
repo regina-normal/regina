@@ -1,5 +1,7 @@
 usr/bin
-usr/lib/libregina-engine-3.96.so
+usr/lib/libregina-engine-3.97.so
+usr/lib/libregina-kdecommon-3.97.so
+usr/lib/libregina-kdecommon.la
 usr/lib/kde3
 usr/lib/regina-normal
 usr/share/applnk
