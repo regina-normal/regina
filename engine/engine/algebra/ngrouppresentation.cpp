@@ -139,7 +139,10 @@ bool NGroupExpression::simplify(bool cyclic) {
     // Now trying merging front and back terms.
     // We shall do this by popping terms off the back and merging them
     // with the front term.
-    while (terms.size() > 1) {
+    while (terms.begin() != terms.end() &&
+            ++terms.begin() != terms.end()) {
+        // Thus terms.size() > 1.  The unusual test above is used to
+        // avoid calling terms.size() which takes linear time.
         if (terms.front() += terms.back()) {
             // Merged!
             terms.pop_back();

@@ -70,22 +70,30 @@ void NSFS::operator = (const NSFS& cloneMe) {
 }
 
 unsigned long NSFS::getFibreCount() const {
-    unsigned long size = fibres.size();
-    if (size == 0)
+    if (fibres.empty())
         return (k == 0 ? 0 : 1);
     else
-        return size;
+        return fibres.size();
 }
 
 NExceptionalFibre NSFS::getFibre(unsigned long which) const {
-    unsigned long size = fibres.size();
-    if (size == 0)
-        return NExceptionalFibre(1, k);
-    if (which == size - 1)
-        return getModifiedFinalFibre();
+    // Avoid calling fibres.size() which takes linear time.
 
+    // Do we have no fibres?
+    if (fibres.empty())
+        return NExceptionalFibre(1, k);
+
+    // Locate the fibre in question.
     FibreIteratorConst pos = fibres.begin();
     advance(pos, which);
+
+    // Is this the final fibre?
+    FibreIteratorConst next = pos;
+    next++;
+    if (next == fibres.end())
+        return getModifiedFinalFibre();
+
+    // Return the fibre we found.
     return *pos;
 }
 
@@ -174,11 +182,12 @@ NLensSpace* NSFS::isLensSpace() const {
         // Orbit manifold is the sphere.
         if (fibres.empty())
             return new NLensSpace(k >= 0 ? k : -k, 1);
-        if (fibres.size() > 2)
+        unsigned long size = fibres.size(); // NOTE: size() takes linear time!
+        if (size > 2)
             return 0;
         long p, q;
         // We will write this space as SFS(S2, (q,p)).
-        if (fibres.size() == 1) {
+        if (size == 1) {
             q = fibres.front().alpha;
             p = fibres.front().beta + (k * q);
         } else {

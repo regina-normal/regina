@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include <list>
+#include <vector>
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntriangulation.h"
 
@@ -136,8 +136,8 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
     NTetrahedron* base = tet;
     NPerm baseRoles(useVertexRoles);
 
-    std::list<NTetrahedron*> tets;
-    std::list<NPerm> roles;
+    std::vector<NTetrahedron*> tets;
+    std::vector<NPerm> roles;
     stdhash::hash_set<NTetrahedron*, HashPointer> usedTets;
 
     tets.push_back(tet);
