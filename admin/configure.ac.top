@@ -223,6 +223,7 @@ fi
 
 REGINA_SHOULD_BUILD_INTERNAL(KDEUI)
 if test "$should_build" = "yes"; then
+  KDE_USE_QT(3.2, [>= Qt 3.2], [QT_VERSION >= 0x030200])
   AC_PATH_KDE
 else
   # There are some tests from AC_PATH_KDE that need to be run regardless.

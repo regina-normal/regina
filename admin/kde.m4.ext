@@ -1138,7 +1138,7 @@ if test -z "$2"; then
     kde_qt_minversion=">= 1.42 and < 2.0"
   fi
 else
-   kde_qt_minversion=$2
+   kde_qt_minversion="$2"
 fi
 
 if test -z "$3"; then
@@ -1160,7 +1160,7 @@ if test -z "$3"; then
     kde_qt_verstring="QT_VERSION >= 142 && QT_VERSION < 200"
    fi
 else
-   kde_qt_verstring=$3
+   kde_qt_verstring="$3"
 fi
 
 if test $kde_qtver = 3; then
