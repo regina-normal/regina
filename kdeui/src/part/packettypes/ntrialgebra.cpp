@@ -57,7 +57,7 @@ namespace {
      * How large does r have to be before we start warning the user about
      * Turaev-Viro computation time?
      */
-    const unsigned long TV_WARN_LARGE_R = 10;
+    const unsigned long TV_WARN_LARGE_R = 15;
 
     /**
      * A regular expression for Turaev-Viro parameters.
@@ -340,7 +340,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
         "integers with 0&nbsp;&lt;&nbsp;<i>root</i>&nbsp;&lt;&nbsp;2<i>r</i>, "
         "where <i>root</i> describes a 2<i>r</i>-th root of unity.  "
         "Example parameters are <i>5,3</i>.<p>"
-        "Note that only very small (e.g., one-digit) values of <i>r</i> "
+        "Note that only small values of <i>r</i> "
         "should be used, since the time required to calculate the invariant "
         "grows exponentially with <i>r</i>.</qt>");
     paramsLabel = new QLabel(i18n("Parameters (r, root):"), ui);
@@ -435,7 +435,7 @@ void NTriTuraevViroUI::calculateInvariant() {
             "0&nbsp;&lt;&nbsp;<i>root</i>&nbsp;&lt;&nbsp;2<i>r</i>, "
             "where <i>root</i> describes a 2<i>r</i>-th root of unity.  "
             "Example parameters are <i>5,3</i>.<p>"
-            "Note that only very small (e.g., one-digit) values of <i>r</i> "
+            "Note that only small values of <i>r</i> "
             "should be used, since the time required to calculate the "
             "invariant grows exponentially with <i>r</i>.</qt>"));
         return;
