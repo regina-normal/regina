@@ -1,0 +1,14 @@
+
+Targets:
+
+distsrc - build a source distribution
+distbin - build a binary distribution
+distdocs - build a documentation distribution (traditional archive and jar)
+dist - all of the above targets
+
+stubs - refresh the header comments in all sources
+tabs - replace all the tabs with four spaces in all sources
+
+clean - remove all generated files except for the final archives
+help - display this help message
+
