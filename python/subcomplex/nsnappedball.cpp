@@ -34,7 +34,7 @@ using namespace boost::python;
 using regina::NSnappedBall;
 
 void addNSnappedBall() {
-    class_<NSnappedBall, bases<regina::ShareableObject>,
+    class_<NSnappedBall, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NSnappedBall>, boost::noncopyable>
             ("NSnappedBall", no_init)
         .def("clone", &NSnappedBall::clone,
@@ -45,9 +45,12 @@ void addNSnappedBall() {
         .def("getInternalFace", &NSnappedBall::getInternalFace)
         .def("getEquatorEdge", &NSnappedBall::getEquatorEdge)
         .def("getInternalEdge", &NSnappedBall::getInternalEdge)
-        .def("isSnappedBall", &NSnappedBall::isSnappedBall,
+        .def("formsSnappedBall", &NSnappedBall::formsSnappedBall,
             return_value_policy<manage_new_object>())
-        .staticmethod("isSnappedBall")
+        .staticmethod("formsSnappedBall")
     ;
+
+    implicitly_convertible<std::auto_ptr<NSnappedBall>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

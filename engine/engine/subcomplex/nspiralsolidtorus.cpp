@@ -27,6 +27,8 @@
 /* end stub */
 
 #include <vector>
+#include "algebra/nabeliangroup.h"
+#include "manifold/nhandlebody.h"
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntriangulation.h"
 
@@ -129,7 +131,7 @@ bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
     return true;
 }
 
-NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
+NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
         NPerm useVertexRoles) {
     NPerm invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
 
@@ -183,6 +185,16 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(tets.size());
     copy(tets.begin(), tets.end(), ans->tet);
     copy(roles.begin(), roles.end(), ans->vertexRoles);
+    return ans;
+}
+
+NManifold* NSpiralSolidTorus::getManifold() const {
+    return new NHandlebody(1, true);
+}
+
+NAbelianGroup* NSpiralSolidTorus::getHomologyH1() const {
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addRank();
     return ans;
 }
 

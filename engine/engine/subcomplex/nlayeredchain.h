@@ -35,7 +35,7 @@
 #define __NLAYEREDCHAIN_H
 #endif
 
-#include "shareableobject.h"
+#include "subcomplex/nstandardtri.h"
 #include "triangulation/nperm.h"
 
 namespace regina {
@@ -75,8 +75,12 @@ class NTetrahedron;
  *
  * The \a index of the layered chain is the number of tetrahedra it
  * contains.  A layered chain must contain at least one tetrahedron.
+ *
+ * Note that for the purposes of getManifold() and getHomologyH1(), a
+ * layered chain containing only one tetrahedron will be considered as a
+ * standalone tetrahedron that forms a 3-ball (and not a solid torus).
  */
-class NLayeredChain : public ShareableObject {
+class NLayeredChain : public NStandardTriangulation {
     private:
         NTetrahedron* bottom;
             /**< The bottom tetrahedron of this layered chain. */
@@ -235,7 +239,11 @@ class NLayeredChain : public ShareableObject {
          */
         void invert();
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 };
 
 /*@}*/
@@ -247,7 +255,7 @@ inline NLayeredChain::NLayeredChain(NTetrahedron* tet, NPerm vertexRoles) :
         topVertexRoles(vertexRoles) {
 }
 inline NLayeredChain::NLayeredChain(const NLayeredChain& cloneMe) :
-        ShareableObject(), bottom(cloneMe.bottom), top(cloneMe.top),
+        NStandardTriangulation(), bottom(cloneMe.bottom), top(cloneMe.top),
         index(cloneMe.index), bottomVertexRoles(cloneMe.bottomVertexRoles),
         topVertexRoles(cloneMe.topVertexRoles) {
 }
@@ -271,7 +279,13 @@ inline NPerm NLayeredChain::getTopVertexRoles() const {
     return topVertexRoles;
 }
 
-inline void NLayeredChain::writeTextShort(std::ostream& out) const {
+inline std::ostream& NLayeredChain::writeName(std::ostream& out) const {
+    return out << "Chain(" << index << ')';
+}
+inline std::ostream& NLayeredChain::writeTeXName(std::ostream& out) const {
+    return out << "$\\mathit{Chain}(" << index << ")$";
+}
+inline void NLayeredChain::writeTextLong(std::ostream& out) const {
     out << "Layered chain of index " << index;
 }
 

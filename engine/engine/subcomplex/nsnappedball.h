@@ -35,6 +35,7 @@
 #define __NSNAPPEDBALL_H
 #endif
 
+#include "subcomplex/nstandardtri.h"
 #include "triangulation/nedge.h"
 
 namespace regina {
@@ -51,13 +52,13 @@ class NTetrahedron;
  * A snapped 3-ball is a single tetrahedron with two faces glued to each
  * other to form a 3-ball with a two triangle boundary.
  */
-class NSnappedBall : public ShareableObject {
+class NSnappedBall : public NStandardTriangulation {
     private:
         NTetrahedron* tet;
             /**< The tetrahedron that forms the snapped ball. */
         int equator;
             /**< The edge that forms the equator on the ball boundary. */
-    
+
     public:
         /**
          * Returns a newly created clone of this structure.
@@ -116,14 +117,23 @@ class NSnappedBall : public ShareableObject {
          * triangulation; the boundary faces may be glued to something
          * else (or to each other).
          *
+         * Note that the two boundary faces of the snapped 3-ball
+         * need not be boundary faces within the overall
+         * triangulation, i.e., they may be identified with each other
+         * or with faces of other tetrahedra.
+         *
          * @param tet the tetrahedron to examine as a potential 3-ball.
          * @return a newly created structure containing details of the
          * snapped 3-ball, or \c null if the given tetrahedron is
          * not a snapped 3-ball.
          */
-        static NSnappedBall* isSnappedBall(NTetrahedron* tet);
+        static NSnappedBall* formsSnappedBall(NTetrahedron* tet);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -153,7 +163,13 @@ inline int NSnappedBall::getEquatorEdge() const {
 inline int NSnappedBall::getInternalEdge() const {
     return 5 - equator;
 }
-inline void NSnappedBall::writeTextShort(std::ostream& out) const {
+inline std::ostream& NSnappedBall::writeName(std::ostream& out) const {
+    return out << "Snap";
+}
+inline std::ostream& NSnappedBall::writeTeXName(std::ostream& out) const {
+    return out << "$\\mathit{Snap}$";
+}
+inline void NSnappedBall::writeTextLong(std::ostream& out) const {
     out << "Snapped 3-ball";
 }
 

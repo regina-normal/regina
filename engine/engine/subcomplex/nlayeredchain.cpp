@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
+#include "manifold/nhandlebody.h"
 #include "triangulation/nedge.h"
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayeredchain.h"
@@ -96,6 +98,17 @@ void NLayeredChain::reverse() {
 void NLayeredChain::invert() {
     topVertexRoles = topVertexRoles * NPerm(3, 2, 1, 0);
     bottomVertexRoles = bottomVertexRoles * NPerm(3, 2, 1, 0);
+}
+
+NManifold* NLayeredChain::getManifold() const {
+    return new NHandlebody(index <= 1 ? 0 : 1, true);
+}
+
+NAbelianGroup* NLayeredChain::getHomologyH1() const {
+    NAbelianGroup* ans = new NAbelianGroup();
+    if (index > 1)
+        ans->addRank();
+    return ans;
 }
 
 } // namespace regina

@@ -36,7 +36,6 @@
 #endif
 
 #include "manifold/nsfs.h"
-#include "shareableobject.h"
 #include "subcomplex/nlayeredchain.h"
 
 namespace regina {

@@ -26,9 +26,11 @@
 
 /* end stub */
 
-#include "triangulation/ntetrahedron.h"
+#include "algebra/nabeliangroup.h"
+#include "manifold/nhandlebody.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
+#include "triangulation/ntetrahedron.h"
 
 namespace regina {
 
@@ -130,7 +132,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     return chain.getIndex();
 }
 
-NTriSolidTorus* NTriSolidTorus::isTriSolidTorus(NTetrahedron* tet,
+NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(NTetrahedron* tet,
         NPerm useVertexRoles) {
     NTriSolidTorus* ans = new NTriSolidTorus();
     ans->tet[0] = tet;
@@ -169,6 +171,16 @@ NTriSolidTorus* NTriSolidTorus::isTriSolidTorus(NTetrahedron* tet,
 
     // We have the desired structure!
     return ans;
+}
+
+NAbelianGroup* NTriSolidTorus::getHomologyH1() const {
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addRank();
+    return ans;
+}
+
+NManifold* NTriSolidTorus::getManifold() const {
+    return new NHandlebody(1, true);
 }
 
 } // namespace regina

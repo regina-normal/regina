@@ -34,7 +34,7 @@ using namespace boost::python;
 using regina::NLayeredChain;
 
 void addNLayeredChain() {
-    class_<NLayeredChain, bases<regina::ShareableObject>,
+    class_<NLayeredChain, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NLayeredChain>, boost::noncopyable>
             ("NLayeredChain", init<regina::NTetrahedron*, regina::NPerm>())
         .def(init<const NLayeredChain&>())
@@ -51,5 +51,8 @@ void addNLayeredChain() {
         .def("reverse", &NLayeredChain::reverse)
         .def("invert", &NLayeredChain::invert)
     ;
+
+    implicitly_convertible<std::auto_ptr<NLayeredChain>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

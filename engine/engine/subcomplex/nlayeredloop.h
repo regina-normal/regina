@@ -35,7 +35,6 @@
 #define __NLAYEREDLOOP_H
 #endif
 
-#include "shareableobject.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {

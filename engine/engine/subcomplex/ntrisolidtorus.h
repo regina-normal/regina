@@ -35,7 +35,7 @@
 #define __NTRISOLIDTORUS_H
 #endif
 
-#include "shareableobject.h"
+#include "subcomplex/nstandardtri.h"
 #include "triangulation/nperm.h"
 
 namespace regina {
@@ -78,7 +78,7 @@ class NTetrahedron;
  * Note that all three tetrahedra in the triangular solid torus must be
  * distinct.
  */
-class NTriSolidTorus : public ShareableObject {
+class NTriSolidTorus : public NStandardTriangulation {
     private:
         NTetrahedron* tet[3];
             /**< The tetrahedra that make up this solid torus. */
@@ -239,6 +239,11 @@ class NTriSolidTorus : public ShareableObject {
          * three-tetrahedron triangular solid torus with its vertices
          * playing the given roles in the solid torus.
          *
+         * Note that the six boundary faces of the triangular solid
+         * torus need not be boundary faces within the overall
+         * triangulation, i.e., they may be identified with each other
+         * or with faces of other tetrahedra.
+         *
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
@@ -249,10 +254,14 @@ class NTriSolidTorus : public ShareableObject {
          * \c null if the given tetrahedron is not part of a triangular
          * solid torus with the given vertex roles.
          */
-        static NTriSolidTorus* isTriSolidTorus(NTetrahedron* tet,
+        static NTriSolidTorus* formsTriSolidTorus(NTetrahedron* tet,
                 NPerm useVertexRoles);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -277,7 +286,13 @@ inline NPerm NTriSolidTorus::getVertexRoles(int index) const {
     return vertexRoles[index];
 }
 
-inline void NTriSolidTorus::writeTextShort(std::ostream& out) const {
+inline std::ostream& NTriSolidTorus::writeName(std::ostream& out) const {
+    return out << "TST";
+}
+inline std::ostream& NTriSolidTorus::writeTeXName(std::ostream& out) const {
+    return out << "$\\mathop{\\rm TST}$";
+}
+inline void NTriSolidTorus::writeTextLong(std::ostream& out) const {
     out << "3-tetrahedron triangular solid torus";
 }
 

@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
+#include "manifold/nhandlebody.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nedge.h"
 #include "subcomplex/nlayeredsolidtorus.h"
@@ -55,7 +57,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
     return ans;
 }
 
-NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorusBase(
+NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
         NTetrahedron* tet) {
     int baseFace1;
     int baseFace2 = -1;
@@ -247,6 +249,16 @@ void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
             [adjPerm[edgeStart[topEdge[sourceGroup][pos]]]]
             [adjPerm[edgeEnd[topEdge[sourceGroup][pos]]]];
     }
+}
+
+NManifold* NLayeredSolidTorus::getManifold() const {
+    return new NHandlebody(1, true);
+}
+
+NAbelianGroup* NLayeredSolidTorus::getHomologyH1() const {
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addRank();
+    return ans;
 }
 
 } // namespace regina

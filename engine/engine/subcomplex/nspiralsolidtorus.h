@@ -35,7 +35,7 @@
 #define __NSPIRALSOLIDTORUS_H
 #endif
 
-#include "shareableobject.h"
+#include "subcomplex/nstandardtri.h"
 #include "triangulation/nperm.h"
 
 namespace regina {
@@ -83,7 +83,7 @@ class NTriangulation;
  * torus with precisely three tetrahedra.  A spiralled solid torus with
  * only one tetrahedron is in fact a (1,2,3) layered solid torus.
  */
-class NSpiralSolidTorus : public ShareableObject {
+class NSpiralSolidTorus : public NStandardTriangulation {
     private:
         unsigned long nTet;
             /**< The number of tetrahedra in this spiralled solid torus. */
@@ -210,6 +210,11 @@ class NSpiralSolidTorus : public ShareableObject {
          * spiralled solid torus with its vertices
          * playing the given roles in the solid torus.
          *
+         * Note that the boundary faces of the spiralled solid
+         * torus need not be boundary faces within the overall
+         * triangulation, i.e., they may be identified with each other
+         * or with faces of other tetrahedra.
+         *
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
@@ -220,10 +225,14 @@ class NSpiralSolidTorus : public ShareableObject {
          * \c null if the given tetrahedron is not part of a spiralled
          * solid torus with the given vertex roles.
          */
-        static NSpiralSolidTorus* isSpiralSolidTorus(NTetrahedron* tet,
+        static NSpiralSolidTorus* formsSpiralSolidTorus(NTetrahedron* tet,
                 NPerm useVertexRoles);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -263,7 +272,13 @@ inline NPerm NSpiralSolidTorus::getVertexRoles(unsigned long index) const {
     return vertexRoles[index];
 }
 
-inline void NSpiralSolidTorus::writeTextShort(std::ostream& out) const {
+inline std::ostream& NSpiralSolidTorus::writeName(std::ostream& out) const {
+    return out << "Spiral(" << nTet << ')';
+}
+inline std::ostream& NSpiralSolidTorus::writeTeXName(std::ostream& out) const {
+    return out << "$\\mathit{Spiral}(" << nTet << ")$";
+}
+inline void NSpiralSolidTorus::writeTextLong(std::ostream& out) const {
     out << nTet << "-tetrahedron spiralled solid torus";
 }
 

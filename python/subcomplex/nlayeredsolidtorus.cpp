@@ -34,7 +34,7 @@ using namespace boost::python;
 using regina::NLayeredSolidTorus;
 
 void addNLayeredSolidTorus() {
-    class_<NLayeredSolidTorus, bases<regina::ShareableObject>,
+    class_<NLayeredSolidTorus, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NLayeredSolidTorus>, boost::noncopyable>
             ("NLayeredSolidTorus", no_init)
         .def("clone", &NLayeredSolidTorus::clone,
@@ -52,10 +52,13 @@ void addNLayeredSolidTorus() {
         .def("getTopEdge", &NLayeredSolidTorus::getTopEdge)
         .def("getTopEdgeGroup", &NLayeredSolidTorus::getTopEdgeGroup)
         .def("getTopFace", &NLayeredSolidTorus::getTopFace)
-        .def("isLayeredSolidTorusBase",
-            &NLayeredSolidTorus::isLayeredSolidTorusBase,
+        .def("formsLayeredSolidTorusBase",
+            &NLayeredSolidTorus::formsLayeredSolidTorusBase,
             return_value_policy<manage_new_object>())
-        .staticmethod("isLayeredSolidTorusBase")
+        .staticmethod("formsLayeredSolidTorusBase")
     ;
+
+    implicitly_convertible<std::auto_ptr<NLayeredSolidTorus>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

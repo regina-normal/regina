@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
+#include "manifold/nhandlebody.h"
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nsnappedball.h"
 
@@ -38,7 +40,7 @@ NSnappedBall* NSnappedBall::clone() const {
     return ans;
 }
 
-NSnappedBall* NSnappedBall::isSnappedBall(NTetrahedron* tet) {
+NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
     int inFace1, inFace2;
     NPerm perm;
     for (inFace1 = 0; inFace1 < 3; inFace1++)
@@ -55,6 +57,14 @@ NSnappedBall* NSnappedBall::isSnappedBall(NTetrahedron* tet) {
         }
 
     return 0;
+}
+
+NManifold* NSnappedBall::getManifold() const {
+    return new NHandlebody(0, true);
+}
+
+NAbelianGroup* NSnappedBall::getHomologyH1() const {
+    return new NAbelianGroup();
 }
 
 } // namespace regina

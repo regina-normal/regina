@@ -35,7 +35,7 @@
 #define __NLAYEREDSOLIDTORUS_H
 #endif
 
-#include "shareableobject.h"
+#include "subcomplex/nstandardtri.h"
 
 namespace regina {
 
@@ -56,7 +56,7 @@ class NTetrahedron;
  * boundary (including the minimal (1,1,0) triangulation) are not
  * described by this class.
  */
-class NLayeredSolidTorus : public ShareableObject {
+class NLayeredSolidTorus : public NStandardTriangulation {
     private:
         unsigned long nTetrahedra;
             /**< The number of tetrahedra in this torus. */
@@ -93,7 +93,7 @@ class NLayeredSolidTorus : public ShareableObject {
         int topFace[2];
             /**< The two faces of the boundary tetrahedron that form the
                  torus boundary. */
-    
+
     public:
         /**
          * Returns a newly created clone of this structure.
@@ -258,9 +258,14 @@ class NLayeredSolidTorus : public ShareableObject {
          * layered solid torus, or \c null if the given tetrahedron is
          * not the base of a layered solid torus.
          */
-        static NLayeredSolidTorus* isLayeredSolidTorusBase(NTetrahedron* tet);
+        static NLayeredSolidTorus* formsLayeredSolidTorusBase(
+            NTetrahedron* tet);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -333,7 +338,15 @@ inline int NLayeredSolidTorus::getTopFace(int index) const {
     return topFace[index];
 }
 
-inline void NLayeredSolidTorus::writeTextShort(std::ostream& out) const {
+inline std::ostream& NLayeredSolidTorus::writeName(std::ostream& out) const {
+    return out << "LST(" << meridinalCuts[0] << ',' << meridinalCuts[1] << ','
+        << meridinalCuts[2] << ')';
+}
+inline std::ostream& NLayeredSolidTorus::writeTeXName(std::ostream& out) const {
+    return out << "$\\mathop{\\rm LST}(" << meridinalCuts[0] << ','
+        << meridinalCuts[1] << ',' << meridinalCuts[2] << ")$";
+}
+inline void NLayeredSolidTorus::writeTextLong(std::ostream& out) const {
     out << "( " << meridinalCuts[0] << ", " << meridinalCuts[1] << ", "
         << meridinalCuts[2] << " ) layered solid torus";
 }

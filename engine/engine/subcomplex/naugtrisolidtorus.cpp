@@ -193,7 +193,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             if (allPermsS4[i][0] > allPermsS4[i][3])
                 continue;
 
-            core = NTriSolidTorus::isTriSolidTorus(base, allPermsS4[i]);
+            core = NTriSolidTorus::formsTriSolidTorus(base, allPermsS4[i]);
             if (core) {
                 // Check that the annuli are being glued to themselves.
                 // Since the component is orientable, that's all we need
@@ -250,7 +250,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     NLayeredSolidTorus* layered[4];
     unsigned long usedTets = 0;
     for (unsigned long t = 0; t < nTet; t++) {
-        layered[nLayered] = NLayeredSolidTorus::isLayeredSolidTorusBase(
+        layered[nLayered] = NLayeredSolidTorus::formsLayeredSolidTorusBase(
             comp->getTetrahedron(t));
         if (layered[nLayered]) {
             usedTets += layered[nLayered]->getNumberOfTetrahedra();
@@ -282,7 +282,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             p = allPermsS4[i];
             if (p[0] > p[3])
                 continue;
-            core = NTriSolidTorus::isTriSolidTorus(tet, p);
+            core = NTriSolidTorus::formsTriSolidTorus(tet, p);
             if (! core)
                 continue;
 
@@ -354,7 +354,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             // Test the chain at both ends (bottom / top).
             for (j = 0; j < 2; j++) {
                 if (chainType == CHAIN_MAJOR) {
-                    core = NTriSolidTorus::isTriSolidTorus(chain.getBottom(),
+                    core = NTriSolidTorus::formsTriSolidTorus(chain.getBottom(),
                         chain.getBottomVertexRoles() * NPerm(2, 3, 0, 1));
                     if (core) {
                         // Test that everything is put together properly.
@@ -405,7 +405,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                         bottomRoles[2]);
 
                     if (startCore)
-                        core = NTriSolidTorus::isTriSolidTorus(startCore,
+                        core = NTriSolidTorus::formsTriSolidTorus(startCore,
                             bottom->getAdjacentTetrahedronGluing(
                                 bottomRoles[2]) *
                             bottomRoles * NPerm(0, 3, 2, 1));
@@ -515,7 +515,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     int torusAnnulus;
     NPerm q;
     for (int p = 0; p < 6; p++) {
-        core = NTriSolidTorus::isTriSolidTorus(coreTet,
+        core = NTriSolidTorus::formsTriSolidTorus(coreTet,
             swap3Top * allPermsS3[p] * swap23);
         if (core) {
             // We have a potential core.

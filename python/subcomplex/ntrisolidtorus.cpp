@@ -34,7 +34,7 @@ using namespace boost::python;
 using regina::NTriSolidTorus;
 
 void addNTriSolidTorus() {
-    class_<NTriSolidTorus, bases<regina::ShareableObject>,
+    class_<NTriSolidTorus, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NTriSolidTorus>, boost::noncopyable>
             ("NTriSolidTorus", no_init)
         .def("clone", &NTriSolidTorus::clone,
@@ -46,9 +46,12 @@ void addNTriSolidTorus() {
             &NTriSolidTorus::isAnnulusSelfIdentified)
         .def("areAnnuliLinkedMajor", &NTriSolidTorus::areAnnuliLinkedMajor)
         .def("areAnnuliLinkedAxis", &NTriSolidTorus::areAnnuliLinkedAxis)
-        .def("isTriSolidTorus", &NTriSolidTorus::isTriSolidTorus,
+        .def("formsTriSolidTorus", &NTriSolidTorus::formsTriSolidTorus,
             return_value_policy<manage_new_object>())
-        .staticmethod("isTriSolidTorus")
+        .staticmethod("formsTriSolidTorus")
     ;
+
+    implicitly_convertible<std::auto_ptr<NTriSolidTorus>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 
