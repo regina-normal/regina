@@ -406,6 +406,11 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             menuFileExportRegina.setIcon(Images.mainSmallIcon.image());
             menuFileExport.add(menuFileExportRegina);
 
+            ScriptExporter menuFileExportScript =
+                new ScriptExporter(shell, "Jython Script", KeyEvent.VK_J);
+            menuFileExportScript.setIcon(Images.btnConsole.image());
+            menuFileExport.add(menuFileExportScript);
+
             menuFile.add(menuFileExport);
             needFile.addElement(menuFileExport);
         }

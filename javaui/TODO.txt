@@ -17,7 +17,7 @@ Jython:
 	Allow breaking processing in console
 	Check to see whether user libraries are text files
 	Syntax highlighting for script editor
--	Import/export scripts as text files
+-	Import scripts as text files
 	Autoindent in script editor
 	Compile and run open libraries.
 	Add readline support for text consoles.
