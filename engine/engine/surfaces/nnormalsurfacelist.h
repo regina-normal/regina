@@ -39,7 +39,6 @@
 #include <vector>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
-#include "utilities/ndoublelist.h"
 #include "utilities/nmiscutils.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfaceset.h"
@@ -187,23 +186,117 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         virtual void readIndividualProperty(NFile& infile,
             unsigned propType);
         virtual void initialiseAllProperties();
+
+        /**
+         * An output iterator used to insert surfaces into an
+         * NNormalSurfaceList.
+         *
+         * Objects of type <tt>NNormalSurface*</tt> and
+         * <tt>NNormalSurfaceVector*</tt> can be assigned to this
+         * iterator.  In the latter case, a surrounding NNormalSurface
+         * will be automatically created.
+         *
+         * Some basic checks may be performed before insertion; see the
+         * documentation for operator=(NNormalSurface*) and
+         * operator=(NNormalSurfaceVector*) for details.
+         */
+        friend struct SurfaceInserter {
+            NNormalSurfaceList* list;
+                /**< The list into which surfaces will be inserted. */
+            NTriangulation* owner;
+                /**< The triangulation in which the surfaces to be
+                 *   inserted are contained. */
+
+            /**
+             * Creates a new uninitialised output iterator.
+             *
+             * \warning This iterator must not be used until its
+             * surface list and triangulation have been initialised.
+             */
+            SurfaceInserter();
+            /**
+             * Creates a new output iterator.  The member variables of
+             * this iterator will be initialised according to the
+             * parameters passed to this constructor.
+             *
+             * @param newList the list into which surfaces will be
+             * inserted.
+             * @param newOwner the triangulation in which the surfaces
+             * to be inserted are contained.
+             */
+            SurfaceInserter(NNormalSurfaceList& newList,
+                NTriangulation* newOwner);
+            /**
+             * Creates a new output iterator that is a clone of the
+             * given iterator.
+             *
+             * @param cloneMe the output iterator to clone.
+             */
+            SurfaceInserter(SurfaceInserter& cloneMe);
+
+            /**
+             * Sets this iterator to be a clone of the given output iterator.
+             *
+             * @param cloneMe the output iterator to clone.
+             */
+            SurfaceInserter& operator =(SurfaceInserter& cloneMe);
+
+            /**
+             * Appends a normal surface to the end of the appropriate
+             * surface list.
+             *
+             * @param surface the normal surface to insert.
+             */
+            SurfaceInserter& operator =(NNormalSurface* surface);
+            /**
+             * Appends the normal surface corresponding to the given
+             * vector to the end of the appropriate surface list.
+             *
+             * If the surface list allows almost normal surfaces, the
+             * vector will be checked for multiple octagonal discs.  If
+             * multiple octagonal discs are found, the vector will be
+             * deleted instead and no surface will be inserted.
+             *
+             * @param vector the vector of the normal surface to insert.
+             */
+            SurfaceInserter& operator =(NNormalSurfaceVector* vector);
+
+            /**
+             * Returns a reference to this output iterator.
+             *
+             * @return this output iterator.
+             */
+            SurfaceInserter& operator *();
+            /**
+             * Returns a reference to this output iterator.
+             *
+             * @return this output iterator.
+             */
+            SurfaceInserter& operator ++();
+            /**
+             * Returns a reference to this output iterator.
+             *
+             * @return this output iterator.
+             */
+            SurfaceInserter& operator ++(int);
+        };
 };
 
 /**
- * Fills the given lists with newly allocated rays and faces representing
- * the cone in the given flavour of coordinate system obtained by
+ * Writes to the given output iterators newly allocated rays and faces
+ * representing the cone in the given flavour of coordinate system obtained by
  * setting all coordinates non-negative.
  *
- * The \a rays list will be filled with the extremal rays of this cone,
- * each being a unit vector along a coordinate axis.  They will be placed
- * in the list in order from the unit vector along the 0th coordinate axis
+ * To \a rays will be written the extremal rays of this cone,
+ * each being a unit vector along a coordinate axis.  They will be written
+ * in order from the unit vector along the 0th coordinate axis
  * to the last, and will all be of the subclass of NNormalSurfaceVector
  * corresponding to the given flavour of coordinate system.
  *
- * The \a faces list will be filled with vectors perpendicular to the
+ * To \a faces will be written the vectors perpendicular to the
  * hyperplanes that make up the faces of this cone.  Each of these
  * vectors will also be a unit vector along a coordinate axis.  These
- * vectors will be placed in the list in the same order as the rays, and
+ * vectors will be written in the same order as the rays, and
  * will all be of class NVectorUnit.
  *
  * The resulting lists of extremal rays and faces are guaranteed not to
@@ -216,15 +309,15 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
  * @param flavour the flavour of coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NNormalSurfaceList.
- * @param rays the list to fill with the newly allocated extremal rays;
- * note that this list will not be emptied at the beginning of this
- * routine.
- * @param faces the list to fill with the newly allocated face perpendiculars;
- * note that this list will not be emptied at the beginning of this
- * routine.
+ * @param rays the output iterator to which the newly allocated extremal rays
+ * will be written; this must accept objects of type <tt>NConeRay*</tt>.
+ * @param faces the output iterator to which the newly allocated face
+ * perpendiculars will be written; this must accept objects of type
+ * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
  */
+template <class RayOutputIterator, class FaceOutputIterator>
 void createNonNegativeCone(NTriangulation* triangulation, int flavour,
-    NDoubleList<NConeRay*>& rays, NDoubleList<NVector<NLargeInteger>*>& faces);
+    RayOutputIterator rays, FaceOutputIterator faces);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given flavour of coordinate system.
@@ -287,6 +380,65 @@ inline bool NNormalSurfaceList::dependsOnParent() const {
 inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
     return makeMatchingEquations(getTriangulation(), flavour);
 }
+
+inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter() : list(0),
+        owner(0) {
+}
+
+inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter(
+        NNormalSurfaceList& newList, NTriangulation* newOwner) :
+        list(&newList), owner(newOwner) {
+}
+
+inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter(
+        SurfaceInserter& cloneMe) : list(cloneMe.list), owner(cloneMe.owner) {
+}
+
+
+inline NNormalSurfaceList::SurfaceInserter&
+        NNormalSurfaceList::SurfaceInserter::operator =(
+        SurfaceInserter& cloneMe) {
+    list = cloneMe.list;
+    owner = cloneMe.owner;
+    return *this;
+}
+
+inline NNormalSurfaceList::SurfaceInserter&
+        NNormalSurfaceList::SurfaceInserter::operator =(
+        NNormalSurface* surface) {
+    list->surfaces.push_back(surface);
+    return *this;
+}
+
+inline NNormalSurfaceList::SurfaceInserter&
+        NNormalSurfaceList::SurfaceInserter::operator =(
+        NNormalSurfaceVector* vector) {
+    if ((! list->allowsAlmostNormal()) ||
+            (! vector->hasMultipleOctDiscs(owner)))
+        list->surfaces.push_back(new NNormalSurface(owner, vector));
+    else
+        delete vector;
+    return *this;
+}
+
+inline NNormalSurfaceList::SurfaceInserter&
+        NNormalSurfaceList::SurfaceInserter::operator *() {
+    return *this;
+}
+
+inline NNormalSurfaceList::SurfaceInserter&
+        NNormalSurfaceList::SurfaceInserter::operator ++() {
+    return *this;
+}
+
+inline NNormalSurfaceList::SurfaceInserter&
+        NNormalSurfaceList::SurfaceInserter::operator ++(int) {
+    return *this;
+}
+
+// Template definitions
+
+#include "surfaces/nnormalsurfacelist.tcc"
 
 #endif
 
