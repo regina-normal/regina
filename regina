@@ -35,7 +35,7 @@ use_java_defs="REGINA_ENGINE REGINA_INTERFACE REGINA_JNIENGINE REGINA_CORBAHOST 
 javadefs="\"-Djava.library.path=$REGINA_JNIDIR\""
 addjavadef "REGINA_OPTIONS_LOCAL"
 for i in $use_java_defs; do
-	if eval "[ ! -z \"\$$i\" ]"; then
+	if ( eval "[ ! -z \"\$$i\" ]" ); then
 		addjavadef $i
 	fi
 done
@@ -47,7 +47,7 @@ command="$REGINA_JAVA $javadefs normal.Application $@"
 info "Command: $command"
 info "Classpath: $CLASSPATH"
 
-if ! eval $command; then
+if ! ( eval $command ); then
 	error
 	error "################################"
 	error "#                              #"
