@@ -26,74 +26,26 @@
 
 /* end stub */
 
-#include "packet/ncontainer.h"
-#include "packet/nscript.h"
-#include "packet/ntext.h"
+// Regina core includes:
+#include "angle/nanglestructurelist.h"
 #include "triangulation/ntriangulation.h"
 
-#include "newpacketdialog.h"
-#include "packetcreator.h"
-#include "packetfilter.h"
-#include "packettreeview.h"
-#include "reginapart.h"
-#include "packettypes/nanglestructurecreator.h"
+// UI includes:
+#include "nanglestructurecreator.h"
 
 #include <klocale.h>
+#include <kmessagebox.h>
 
-void ReginaPart::newAngleStructures() {
-    newPacket(new NAngleStructureCreator(),
-        new SingleTypeFilter<regina::NTriangulation>(),
-        i18n("New Angle Structure List"), i18n("Angle Structures"));
-}
-
-void ReginaPart::newCensus() {
-    unimplemented();
-}
-
-void ReginaPart::newContainer() {
-    newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
-        i18n("New Container"), i18n("Container"));
-}
-
-void ReginaPart::newFilter() {
-    unimplemented();
-}
-
-void ReginaPart::newNormalSurfaces() {
-    unimplemented();
-}
-
-void ReginaPart::newScript() {
-    newPacket(new BasicPacketCreator<regina::NScript>(), 0,
-        i18n("New Script"), i18n("Script"));
-}
-
-void ReginaPart::newText() {
-    newPacket(new BasicPacketCreator<regina::NText>(), 0,
-        i18n("New Text Packet"), i18n("Text"));
-}
-
-void ReginaPart::newTriangulation() {
-    unimplemented();
-}
-
-void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
-        const QString& dialogTitle, const QString& suggestedLabel) {
-    if (! checkReadWrite())
-        return;
-
-    NewPacketDialog dlg(widget(), creator, packetTree,
-        treeView->selectedPacket(), parentFilter, dialogTitle, suggestedLabel);
-    if (dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* newPacket = dlg.createdPacket();
-        if (newPacket) {
-            QListViewItem* item = treeView->find(newPacket);
-            if (item)
-                treeView->ensureItemVisible(item);
-            packetView(newPacket);
-
-            setModified(true);
-        }
+regina::NPacket* NAngleStructureCreator::createPacket(
+        regina::NPacket* parentPacket, QWidget* parentWidget) {
+    if (parentPacket->getPacketType() == regina::NTriangulation::packetType)
+        return regina::NAngleStructureList::enumerate(
+            dynamic_cast<regina::NTriangulation*>(parentPacket));
+    else {
+        KMessageBox::error(parentWidget, i18n(
+            "Angle structure lists can only be created directly beneath "
+            "triangulations."));
+        return 0;
     }
 }
 
