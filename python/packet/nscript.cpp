@@ -41,7 +41,7 @@ namespace {
 
 void addNScript() {
     scope s = class_<NScript, bases<regina::NPacket>,
-            std::auto_ptr<NScript> >("NScript")
+            std::auto_ptr<NScript>, boost::noncopyable>("NScript")
         .def("getNumberOfLines", &NScript::getNumberOfLines)
         .def("getLine", &NScript::getLine,
             return_value_policy<return_by_value>())

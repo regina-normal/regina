@@ -34,7 +34,7 @@ using regina::NContainer;
 
 void addNContainer() {
     scope s = class_<NContainer, bases<regina::NPacket>,
-            std::auto_ptr<NContainer> >("NContainer")
+            std::auto_ptr<NContainer>, boost::noncopyable>("NContainer")
     ;
 
     s.attr("packetType") = NContainer::packetType;

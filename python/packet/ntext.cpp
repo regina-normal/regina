@@ -39,7 +39,7 @@ namespace {
 
 void addNText() {
     scope s = class_<NText, bases<regina::NPacket>,
-            std::auto_ptr<NText> >("NText")
+            std::auto_ptr<NText>, boost::noncopyable>("NText")
         .def(init<const std::string&>())
         .def(init<const char*>())
         .def("getText", &NText::getText,

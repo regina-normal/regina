@@ -133,7 +133,8 @@ namespace {
 
 void addNTriangulation() {
     scope s = class_<NTriangulation, bases<regina::NPacket>,
-            std::auto_ptr<NTriangulation> >("NTriangulation")
+            std::auto_ptr<NTriangulation>,
+            boost::noncopyable>("NTriangulation")
         .def(init<const NTriangulation&>())
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
         .def("getTetrahedra", getTetrahedra_list)
