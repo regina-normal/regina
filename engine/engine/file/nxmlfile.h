@@ -36,6 +36,8 @@
 #define __NXMLFILE_H
 #endif
 
+#include <string>
+
 namespace regina {
 
 class NPacket;
