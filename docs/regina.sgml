@@ -54,8 +54,8 @@
  <!ENTITY reginalicense SYSTEM "license.sgml">
  <!ENTITY reginachangelog SYSTEM "../CHANGES.txt">
 
- <!ENTITY sessiontriangulation SYSTEM "triangulation.session">
- <!ENTITY sessiontree SYSTEM "tree.session">
+ <!ENTITY sessiontriangulation SYSTEM "../examples/triangulation.session">
+ <!ENTITY sessiontree SYSTEM "../examples/tree.session">
 ]>
 
 <book>
