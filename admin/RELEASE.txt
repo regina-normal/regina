@@ -15,6 +15,7 @@ Program version:
 License details:
     LICENSE.txt
     engine/engine/docs.h
+    engine/engine/regina-engine-config.1
     kdeui/doc/en/credits.docbook
     kdeui/src/reginaabout.h (ReginaAbout constructor)
     www/index.html
