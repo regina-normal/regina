@@ -79,7 +79,7 @@ void NSigPartialIsomorphism::makeCanonical(const NSignature& sig,
             continue;
 
         // Determine where each cycle should start.
-        cycleLen = sig.cycleLen[fromCycle];
+        cycleLen = sig.cycleStart[fromCycle + 1] - sig.cycleStart[fromCycle];
         for (c = fromCycle; c < toCycle; c++) {
             start1 = start2 = cycleLen;
             for (i = 0; i < cycleLen; i++)

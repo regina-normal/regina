@@ -79,8 +79,6 @@ class NTriangulation;
  *
  * For further details on splitting surface signatures, consult
  * Ben Burton's PhD thesis.
- *
- * \todo Remove redundant private data members.
  */
 class NSignature : public ShareableObject {
     private:
@@ -101,8 +99,6 @@ class NSignature : public ShareableObject {
             /**< The starting position of each cycle; an additional
                  element is appended to the end of this array storing
                  the length of the entire signature. */
-        unsigned* cycleLen;
-            /**< The length of each cycle. */
         unsigned nCycleGroups;
             /**< The number of cycle groups in this signature. */
         unsigned* cycleGroupStart;
@@ -137,7 +133,8 @@ class NSignature : public ShareableObject {
          * as separating cycles.  All whitespace will be ignored.
          * 
          * Examples of valid signatures are <tt>"(ab)(bC)(Ca)"</tt> and
-         * <tt>"AAb-bc-C"</tt>.
+         * <tt>"AAb-bc-C"</tt>.  See the class notes for further details
+         * on what constitutes a valid signature.
          *
          * \pre The given string contains at least one letter.
          *
@@ -235,6 +232,13 @@ class NSignature : public ShareableObject {
 
     private:
         /**
+         * Creates a new completely uninitialised signature.
+         *
+         * \warning The internal arrays \e must be created before this
+         * signature is destroyed!
+         */
+        NSignature();
+        /**
          * Creates a new signature of the given order.  All internal
          * arrays will be created but not initialised.
          *
@@ -255,11 +259,13 @@ class NSignature : public ShareableObject {
 
 // Inline functions for NSignature
 
+inline NSignature::NSignature() {
+}
+
 inline NSignature::NSignature(unsigned newOrder) : order(newOrder),
         label(new unsigned[2 * newOrder]), labelInv(new bool[2 * newOrder]),
         nCycles(0), cycleStart(new unsigned[2 * newOrder + 1]),
-        cycleLen(new unsigned[2 * newOrder]), nCycleGroups(0),
-        cycleGroupStart(new unsigned[2 * newOrder + 1]) {
+        nCycleGroups(0), cycleGroupStart(new unsigned[2 * newOrder + 1]) {
     // Insert sentinels.
     cycleStart[0] = cycleGroupStart[0] = 0;
 }
@@ -268,7 +274,6 @@ inline NSignature::~NSignature() {
     delete[] label;
     delete[] labelInv;
     delete[] cycleStart;
-    delete[] cycleLen;
     delete[] cycleGroupStart;
 }
 

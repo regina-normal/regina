@@ -123,7 +123,6 @@ void NSigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
     }
 
     // Prepare the signature for the forthcoming cycle.
-    sig.cycleLen[sig.nCycles] = cycleLen;
     sig.nCycles++;
     if (newCycleGroup)
         sig.nCycleGroups++;
