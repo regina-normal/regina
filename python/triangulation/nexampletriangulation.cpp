@@ -62,6 +62,9 @@ void addNExampleTriangulation() {
         .def("figureEightKnotComplement",
             &NExampleTriangulation::figureEightKnotComplement,
             return_value_policy<manage_new_object>())
+        .def("whiteheadLinkComplement",
+            &NExampleTriangulation::whiteheadLinkComplement,
+            return_value_policy<manage_new_object>())
         .def("gieseking", &NExampleTriangulation::gieseking,
             return_value_policy<manage_new_object>())
         .def("cuspedGenusTwoTorus",
@@ -78,6 +81,7 @@ void addNExampleTriangulation() {
         .staticmethod("lst3_4_7")
         .staticmethod("solidKleinBottle")
         .staticmethod("figureEightKnotComplement")
+        .staticmethod("whiteheadLinkComplement")
         .staticmethod("gieseking")
         .staticmethod("cuspedGenusTwoTorus")
     ;

@@ -82,6 +82,7 @@ namespace {
         EXAMPLE_RP2xS1,
         EXAMPLE_S2xS1,
         EXAMPLE_SOLIDKLEIN,
+        EXAMPLE_WHITEHEAD
     };
 
     /**
@@ -270,6 +271,7 @@ NTriangulationCreator::NTriangulationCreator() {
     exampleWhich->insertItem(i18n("Product RP2 x S1"));
     exampleWhich->insertItem(i18n("Product S2 x S1"));
     exampleWhich->insertItem(i18n("Solid Klein bottle"));
+    exampleWhich->insertItem(i18n("Whitehead link complement"));
     exampleWhich->setCurrentItem(0);
     QWhatsThis::add(exampleWhich, expln);
     hArea->setStretchFactor(exampleWhich, 1);
@@ -580,6 +582,8 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 return NExampleTriangulation::s2xs1();
             case EXAMPLE_SOLIDKLEIN:
                 return NExampleTriangulation::solidKleinBottle();
+            case EXAMPLE_WHITEHEAD:
+                return NExampleTriangulation::whiteheadLinkComplement();
         }
 
         KMessageBox::error(parentWidget, i18n("No example triangulation has "

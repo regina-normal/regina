@@ -98,6 +98,20 @@ namespace {
         { { 3, 1, 2, 0 }, { 2, 0, 1, 3 }, { 1, 0, 3, 2 }, { 0, 3, 2, 1 } },
         { { 1, 2, 0, 3 }, { 3, 2, 1, 0 }, { 2, 1, 0, 3 }, { 3, 1, 2, 0 } }
     };
+
+    static const int whiteheadAdj[4][4] = {
+        { 3, 2, 1, 3},
+        { 3, 2, 2, 0},
+        { 1, 3, 0, 1},
+        { 2, 0, 0, 1}
+    };
+
+    static const int whiteheadGluings[4][4][4] = {
+        { { 2, 3, 1, 0 }, { 3, 2, 0, 1 }, { 0, 1, 3, 2 }, { 3, 2, 0, 1 } },
+        { { 3, 2, 0, 1 }, { 2, 3, 1, 0 }, { 3, 2, 0, 1 }, { 0, 1, 3, 2 } },
+        { { 2, 3, 1, 0 }, { 1, 0, 2, 3 }, { 2, 3, 1, 0 }, { 3, 2, 0, 1 } },
+        { { 1, 0, 2, 3 }, { 2, 3, 1, 0 }, { 3, 2, 0, 1 }, { 2, 3, 1, 0 } }
+    };
 }
 
 namespace regina {
@@ -226,6 +240,15 @@ NTriangulation* NExampleTriangulation::figureEightKnotComplement() {
     r->joinTo(3, s, NPerm(2, 1, 0, 3));
     ans->addTetrahedron(r);
     ans->addTetrahedron(s);
+
+    return ans;
+}
+
+NTriangulation* NExampleTriangulation::whiteheadLinkComplement() {
+    NTriangulation* ans = new NTriangulation();
+    ans->setPacketLabel("Whitehead link complement");
+
+    ans->insertConstruction(4, whiteheadAdj, whiteheadGluings);
 
     return ans;
 }

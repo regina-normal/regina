@@ -45,7 +45,7 @@ const char NSnapPeaCensusTri::SEC_7_NOR = 'y';
 NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
         const NComponent* comp) {
     // Currently this routine can recognise SnapPea triangulations
-    // m000 -- m004.
+    // m000 -- m004 as well as m129.
 
     // Since the triangulations are so small we can use census results
     // (from a census of all small valid ideal triangulations) to recognise
@@ -54,7 +54,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     // Before we do any further checks, make sure the number of
     // tetrahedra is within the supported range.
 
-    if (comp->getNumberOfTetrahedra() > 2)
+    if (comp->getNumberOfTetrahedra() > 4)
         return 0;
 
     // Start with property checks to see if it has a chance of being
@@ -136,6 +136,31 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             }
         }
+    } else if (comp->getNumberOfTetrahedra() == 4) {
+        if (comp->isOrientable()) {
+            // Search for the Whitehead link complement.
+            // Note that this could be done with a smaller set of tests
+            // since some can be deduced from others, but these tests
+            // aren't terribly expensive anyway.
+            if (comp->getNumberOfVertices() != 2)
+                return 0;
+            if (comp->getNumberOfEdges() != 4)
+                return 0;
+            if (comp->getVertex(0)->getLink() != NVertex::TORUS)
+                return 0;
+            if (comp->getVertex(1)->getLink() != NVertex::TORUS)
+                return 0;
+            if (comp->getVertex(0)->getNumberOfEmbeddings() != 8)
+                return 0;
+            if (comp->getVertex(1)->getNumberOfEmbeddings() != 8)
+                return 0;
+            // Census says it's the Whitehead link if some edge has
+            // degree 8.
+            for (int i = 0; i < 4; i++)
+                if (comp->getEdge(i)->getNumberOfEmbeddings() == 8)
+                    return new NSnapPeaCensusTri(SEC_5, 129);
+            return 0;
+        }
     }
 
     // Not recognised after all.
@@ -164,6 +189,12 @@ NAbelianGroup* NSnapPeaCensusTri::getHomologyH1() const {
             NAbelianGroup* ans = new NAbelianGroup();
             ans->addRank();
             ans->addTorsionElement(5);
+            return ans;
+        }
+        if (index == 129) {
+            // Whitehead link complement.
+            NAbelianGroup* ans = new NAbelianGroup();
+            ans->addRank(2);
             return ans;
         }
     }

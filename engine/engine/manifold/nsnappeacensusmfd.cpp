@@ -79,6 +79,9 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
         } else if (index == 4) {
             ans = NExampleTriangulation::figureEightKnotComplement();
             ans->setPacketLabel("");
+        } else if (index == 129) {
+            ans = NExampleTriangulation::whiteheadLinkComplement();
+            ans->setPacketLabel("");
         }
     }
 

@@ -183,6 +183,15 @@ class NExampleTriangulation {
         static NTriangulation* figureEightKnotComplement();
 
         /**
+         * Returns a four-tetrahedron ideal triangulation of the
+         * Whitehead link complement.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* whiteheadLinkComplement();
+
+        /**
          * Returns the one-tetrahedron ideal triangulation of the
          * non-orientable Gieseking manifold.
          *

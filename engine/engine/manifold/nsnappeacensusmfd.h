@@ -45,9 +45,9 @@ namespace regina {
  */
 
 /**
- * Represents a 3-manifold from the SnapPea census.
+ * Represents a 3-manifold from the SnapPea cusped census.
  *
- * The SnapPea census is the census of cusped hyperbolic 3-manifolds
+ * The SnapPea cusped census is the census of cusped hyperbolic 3-manifolds
  * formed from up to seven tetrahedra.  This census was tabulated by
  * Callahan, Hildebrand and Weeks, and is shipped with SnapPea 3.0d3
  * (and also with Regina).
