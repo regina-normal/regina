@@ -60,6 +60,11 @@ public class LibraryPane extends FilePane {
     public static final ExtensionFilenameFilter filenameFilter =
         new ExtensionFilenameFilter(defaultFileExtension,
         "Jython Libraries (*" + defaultFileExtension + ')');
+
+    /**
+     * The file type description for Jython libraries.
+     */
+    public static final String libraryFileType = "Jython library";
     
     // ------------------
     //    DATA MEMBERS
@@ -102,8 +107,8 @@ public class LibraryPane extends FilePane {
         try {
             fin = new FileInputStream(file);
         } catch (Throwable th) {
-            shell.error("The requested file does not exist or " +
-                "cannot be accessed.");
+            shell.error("The requested file [" + file.getName() +
+                "] does not exist or cannot be accessed.");
             return null;
         }
         BufferedReader buf = new BufferedReader(new InputStreamReader(fin));
@@ -120,8 +125,8 @@ public class LibraryPane extends FilePane {
             try {
                 buf.close();
             } catch (Throwable th) {}
-            shell.error("An I/O error occurred whilst reading the " +
-                "requested file.");
+            shell.error("An I/O error occurred whilst reading the file [" +
+                file.getName() + "].");
             return null;
         } catch (BadLocationException e) {
             // We should never see this!
@@ -142,6 +147,7 @@ public class LibraryPane extends FilePane {
     private LibraryPane(Shell shell, Document doc) {
         super(shell);
         this.doc = doc;
+        setFileType(libraryFileType);
 
         init();
     }

@@ -1040,7 +1040,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Create a new topology file.
      */
-    private void fileNewTopology() {
+    public void fileNewTopology() {
         FilePane m = TopologyPane.newPane(shell);
         insertFilePane(m, "New Data");
         fileTabs.setSelectedComponent(m);
@@ -1049,7 +1049,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Create a new Jython library.
      */
-    private void fileNewLibrary() {
+    public void fileNewLibrary() {
         FilePane m = LibraryPane.newPane(shell);
         insertFilePane(m, "New Library");
         fileTabs.setSelectedComponent(m);
@@ -1060,7 +1060,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      *
      * @param file the file to open, containing both file and path information.
      */
-    private void fileOpen(File file) {
+    public void fileOpen(File file) {
         // Make a new file pane.
         FilePane m;
         if (TopologyPane.filenameFilter.accept(file))
@@ -1068,9 +1068,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         else if (LibraryPane.filenameFilter.accept(file))
             m = LibraryPane.newPane(shell, file);
         else {
-            shell.error("I don't know what type of file this is.  Make " +
-                "sure the filename has the proper extension (such as .rga " +
-                "for topology data files).");
+            shell.error("I don't know what type of file [" + file.getName() +
+                "] is.  Make sure the filename has the proper extension " +
+                "(such as .rga for topology data files).");
             return;
         }
 
@@ -1097,7 +1097,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Open a new file.
      */
-    private void fileOpen() {
+    public void fileOpen() {
         // Open a file dialog.
         JFileChooser chooser = new JFileChooser();
         chooser.addChoosableFileFilter(TopologyPane.filenameFilter);
@@ -1117,7 +1117,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Save the active file.
      */
-    private void fileSave() {
+    public void fileSave() {
         FilePane m = getCurrentFilePane();
         if (m == null)
             return;
@@ -1139,7 +1139,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Save the active file.
      */
-    private void fileSaveAs() {
+    public void fileSaveAs() {
         FilePane m = getCurrentFilePane();
         if (m == null)
             return;
@@ -1199,7 +1199,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Close the active file.
      */
-    private void fileClose() {
+    public void fileClose() {
         FilePane m = getCurrentFilePane();
         if (m == null)
             return;
@@ -1211,7 +1211,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Exit the program.
      */
-    private void fileExit() {
+    public void fileExit() {
         // Check to see that each open file is prepared to die, and
         // clean up properly after it.
         while (fileTabs.getTabCount() > 0) {
@@ -1288,7 +1288,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Open and start a new Jython console frame.
      */
-    private void startJythonConsole() {
+    public void startJythonConsole() {
         JPythonConsoleFrame console =
             ConsoleUtils.createGraphicalConsole(shell, false);
         Positioner.centerOnScreen(console);
@@ -1299,7 +1299,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     /**
      * Display an About box.
      */
-    private void helpAbout() {
+    public void helpAbout() {
         AboutBox about = new AboutBox(shell);
         Positioner.centerOnScreen(about);
         about.show();

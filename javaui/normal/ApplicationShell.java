@@ -33,7 +33,7 @@ import java.awt.Frame;
 import java.awt.event.*;
 import java.io.*;
 import java.lang.reflect.*;
-import java.util.Properties;
+import java.util.*;
 import normal.engine.Engine;
 import normal.options.NormalOptionSet;
 import org.gjt.btools.gui.dialog.MessageBox;
@@ -48,6 +48,12 @@ public class ApplicationShell extends Shell {
      * The command-line arguments to the application.
      */
     private String[] args;
+
+    /**
+     * The command-line arguments to the application, split into
+     * flags, variables and extra arguments.
+     */
+    private CommandLineArguments splitArgs;
 
     /**
      * Are we running a command-line text-only interface?
@@ -78,6 +84,19 @@ public class ApplicationShell extends Shell {
      */
     public ApplicationShell(String[] args) {
         this.args = args;
+
+        String[] flagNames = {
+            "-q", "--quiet", "-v", "--verbose",
+            "--gui", "--console", "--text",
+            "--jni", "--corba"
+        };
+        String[] varNames = {
+            "--jnilibname",
+            "-ORBInitialHost", "-ORBInitialPort",
+            "-org.omg.CORBA.ORBInitialHost", "-org.omg.CORBA.ORBInitialPort"
+        };
+
+        this.splitArgs = new CommandLineArguments(flagNames, varNames, args);
     }
 
     public int getShellStyle() {
@@ -89,89 +108,42 @@ public class ApplicationShell extends Shell {
     public Applet getAppletParameters() {
         return null;
     }
-    public String getParameter(String paramName, int nMinus,
-            boolean useEquals, boolean caseSensitive,
-            String paramDescription) {
+    public String getParameter(String paramName, int nMinus) {
         // Build the prefix for which we are hunting.
         StringBuffer prefix = new StringBuffer();
-        int i;
-        for (i = 0; i < nMinus; i++)
+        for (int i = 0; i < nMinus; i++)
             prefix.append('-');
         prefix.append(paramName);
 
         // Hunt for the prefix.
-        String value = null;
-        boolean thisIsIt;
-        if (useEquals) {
-            // Hunt for "prefix=value".
-            prefix.append('=');
-            String prefixString = prefix.toString();
-            int prefixLen = prefixString.length();
+        return (String)splitArgs.getVariables().get(prefix.toString());
+    }
 
-            for (i = 0; i < args.length; i++)
-                if (args[i].length() >= prefixLen) {
-                    if (caseSensitive)
-                        thisIsIt = args[i].substring(0, prefixLen).
-                            equals(prefixString);
-                    else
-                        thisIsIt = args[i].substring(0, prefixLen).
-                            equalsIgnoreCase(prefixString);
-                    if (thisIsIt) {
-                        if (value == null)
-                            value = args[i].substring(prefixLen);
-                        else
-                            error("Warning:  More than one " +
-                                paramDescription +
-                                " was specified on the command line.  " +
-                                "The value [" + value + "] will be used.");
-                    }
-                }
-        } else {
-            // Hunt for "prefix value".
-            String prefixString = prefix.toString();
-            for (i = 0; i < args.length; i++) {
-                if (caseSensitive)
-                    thisIsIt = args[i].equals(prefixString);
-                else
-                    thisIsIt = args[i].equalsIgnoreCase(prefixString);
-                if (thisIsIt) {
-                    if (i < args.length - 1) {
-                        if (value == null)
-                            value = args[i + 1];
-                        else
-                            error("Warning:  More than one " +
-                                paramDescription +
-                                " was specified on the command line.  " +
-                                "The value [" + value + "] will be used.");
-                        i++;
-                    } else
-                        error("No value was specified for parameter [" +
-                            prefixString + "].  No value will be assigned " +
-                            "to the " + paramDescription + ".");
-                }
-            }
-        }
-        return value;
+    public Vector getFileParameters() {
+        return new Vector(splitArgs.getExtraArgs());
     }
 
     public int getUIType() {
         int uiType = unspecified;
 
         // Look up the command-line parameters.
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equalsIgnoreCase("--gui")) {
+        Enumeration e = splitArgs.getFlags().elements();
+        String arg;
+        while (e.hasMoreElements()) {
+            arg = (String)e.nextElement();
+            if (arg.equals("--gui")) {
                 if (uiType != unspecified && uiType != UIFullGUI) {
                     error("More than one UI type has been requested.");
                     return invalid;
                 } else
                     uiType = UIFullGUI;
-            } else if (args[i].equalsIgnoreCase("--console")) {
+            } else if (arg.equals("--console")) {
                 if (uiType != unspecified && uiType != UIConsoleWindow) {
                     error("More than one UI type has been requested.");
                     return invalid;
                 } else
                     uiType = UIConsoleWindow;
-            } else if (args[i].equalsIgnoreCase("--text")) {
+            } else if (arg.equals("--text")) {
                 if (uiType != unspecified && uiType != UITextConsole) {
                     error("More than one UI type has been requested.");
                     return invalid;
@@ -212,15 +184,18 @@ public class ApplicationShell extends Shell {
         int engineType = unspecified;
 
         // Look up the command-line parameters.
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equalsIgnoreCase("--jni")) {
+        Enumeration e = splitArgs.getFlags().elements();
+        String arg;
+        while (e.hasMoreElements()) {
+            arg = (String)e.nextElement();
+            if (arg.equals("--jni")) {
                 if (engineType != unspecified && engineType != engineJNI) {
                     error("More than one style of engine access has been " +
                         "requested.");
                     return invalid;
                 } else
                     engineType = engineJNI;
-            } else if (args[i].equalsIgnoreCase("--corba")) {
+            } else if (arg.equals("--corba")) {
                 if (engineType != unspecified && engineType != engineCORBA) {
                     error("More than one style of engine access has been " +
                         "requested.");
@@ -418,6 +393,238 @@ public class ApplicationShell extends Shell {
     }
     public void exit(int status) {
         System.exit(status);
+    }
+
+    /**
+     * A class that splits a set of command-line arguments into flags,
+     * variables and extra arguments.
+     */
+    public class CommandLineArguments {
+        /**
+         * The flags found on the command-line.
+         */
+        private Vector flags = new Vector();
+        /**
+         * The variables found on the command-line with their
+         * corresponding values.
+         */
+        private HashMap variables = new HashMap();
+        /**
+         * The extra arguments found on the command-line.
+         */
+        private Vector extraArgs = new Vector();
+
+        /**
+         * The flags found on the command-line in the form in which
+         * they were given.
+         */
+        private Vector foundFlags = new Vector();
+        /**
+         * The variables found on the command-line in the form in which
+         * they were given.
+         */
+        private Vector foundVariables = new Vector();
+
+        /**
+         * Parses the given set of command-line arguments and creates a
+         * new structure.
+         * <p>
+         * Sets of flag names and variable names are passed.
+         * If <tt>foo</tt> is specified as a flag name, any argument
+         * matching <tt>foo</tt> will be stored as a flag.
+         * If <tt>foo</tt> is specified as a variable name, any argument
+         * matching <tt>foo=value</tt> or any pair of arguments matching
+         * <tt>foo value</tt> will be stored as a variable.  Any
+         * remaining arguments will be stored verbatim as extra arguments.
+         * <p>
+         * Comparisons are <b>not</b> case sensitive.  Note that any
+         * dashes expected at the beginning of a flag or variable
+         * assignment must be included in the corresponding flag and
+         * variable name lists.
+         *
+         * @param flagNames the complete set of flag names to search for.
+         * Any dashes that form part of a flag should be included here.
+         * @param varNames the complete set of variable names to search for.
+         * Any dashes that form part of a variable assignment should be
+         * included here.
+         * @param args the complete set of command-line arguments to parse.
+         */
+        public CommandLineArguments(String[] flagNames, String[] varNames,
+                String[] args) {
+            int n = args.length;
+            int i, j, len;
+            boolean done;
+            String argVarName, value;
+            for (i = 0; i < n; i++) {
+                done = false;
+
+                // Is it a flag?
+                if (flagNames != null) {
+                    for (j = 0; j < flagNames.length; j++)
+                        if (args[i].equalsIgnoreCase(flagNames[j])) {
+                            if (! flags.contains(flagNames[j])) {
+                                flags.add(flagNames[j]);
+                                foundFlags.add(args[i]);
+                            }
+                            done = true;
+                            break;
+                        }
+                    if (done)
+                        continue;
+                }
+
+                // Is it a variable?
+                if (varNames != null) {
+                    for (j = 0; j < varNames.length; j++) {
+                        if (args[i].equalsIgnoreCase(varNames[j])) {
+                            if (i == n - 1)
+                                error("No value was specified for parameter ["
+                                    + varNames[j] + "].");
+                            else {
+                                foundVariables.add(args[i]);
+                                i++;
+                                if (variables.containsKey(varNames[j]))
+                                    error("Warning:  More than one " +
+                                        "value for parameter [" +
+                                        varNames[j] +
+                                        "] was specified on " +
+                                        "the command line.  The value [" +
+                                        args[i] + "] will be used.");
+                                variables.put(varNames[j], args[i]);
+                            }
+                            done = true;
+                            break;
+                        }
+
+                        len = varNames[j].length();
+                        if (args[i].length() > len) {
+                            argVarName = args[i].substring(0, len + 1);
+                            if (argVarName.equalsIgnoreCase(
+                                    varNames[j] + '=')) {
+                                if (args[i].length() == len + 1)
+                                    error("No value was specified for " +
+                                        "parameter [" + varNames[j] + "].");
+                                else {
+                                    value = args[i].substring(len + 1);
+                                    if (variables.containsKey(varNames[j]))
+                                        error("Warning:  More than one " +
+                                            "value for parameter [" +
+                                            varNames[j] +
+                                            "] was specified on " +
+                                            "the command line.  The value [" +
+                                            value + "] will be used.");
+                                    variables.put(varNames[j], value);
+                                    foundVariables.add(argVarName);
+                                }
+                                done = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (done)
+                        continue;
+                }
+
+                // Store it as an extra argument.
+                extraArgs.add(args[i]);
+            }
+        }
+
+        /**
+         * Returns a list of all flags specified by the user on the
+         * command-line.
+         * <p>
+         * Only flags whose names were passed in the <i>flagNames</i>
+         * argument to the constructor and that were specified on the
+         * command-line will be returned.
+         * <p>
+         * The flags returned will have the same capitalisation as those
+         * passed in <i>flagNames</i> to the constructor, and will
+         * include any dashes that form part of a flag.
+         *
+         * @return a list of all flags specified by the user.
+         *
+         * @see #getFlagsGiven()
+         */
+        public Vector getFlags() {
+            return flags;
+        }
+        /**
+         * Returns a map describing all variables specified by the user
+         * on the command-line.
+         * <p>
+         * Only variables whose names were passed in the <i>varNames</i>
+         * argument to the constructor and that were specified on the
+         * command-line will be returned.
+         * <p>
+         * The variable names returned will have the same capitalisation as
+         * those passed in <i>varNames</i> to the constructor, and will
+         * include any dashes that form part of a variable assignment.
+         *
+         * @return a map describing all variables specified by the user,
+         * with the variable names as keys and the variable values as the
+         * corresponding values in the map.
+         *
+         * @see #getVariablesGiven()
+         */
+        public HashMap getVariables() {
+            return variables;
+        }
+        /**
+         * Returns a list of all extra arguments specified by the user
+         * on the command-line.
+         * <p>
+         * Any argument that does not match a flag passed in the
+         * <i>flagNames</i> parameter to the constructor or is not
+         * involved in assigning a value to a variable passed in the
+         * <i>varNames</i> parameter to the constructor is considered an
+         * extra argument.
+         *
+         * @return a list of all extra arguments specified by the user.
+         */
+        public Vector getExtraArgs() {
+            return extraArgs;
+        }
+
+        /**
+         * Returns a list of all flags specified by the user on the
+         * command-line, in the form in which the user gave them.
+         * <p>
+         * This routine behaves like <tt>getFlags()</tt>, except that
+         * the flags returned will have the capitalisation specified by
+         * the user.
+         *
+         * @return a list of all flags specified by the user, in the
+         * form in which the user gave them.
+         * 
+         * @see #getFlags()
+         */
+        public Vector getFlagsGiven() {
+            return foundFlags;
+        }
+        /**
+         * Returns the names of all variables specified by the user on the
+         * command-line, in the form in which the user gave them.
+         * <p>
+         * The list returned will contain the name of each variable
+         * specified by the user on the command-line.  The names
+         * returned will have the capitalisation specified by the user, and
+         * will include any dashes that form part of a variable assignment.
+         * <p>
+         * If a variable was specified using the syntax
+         * <tt>var=value</tt>, the corresponding variable name will have
+         * an equal sign (<tt>=</tt>) appended to its name.  If the
+         * variable was specified using the syntax <tt>var value</tt>,
+         * the corresonding variable name will be left untouched.
+         *
+         * @return the names of all variables specified by the user, in the
+         * form in which the user gave them.
+         * 
+         * @see #getVariables()
+         */
+        public Vector getVariablesGiven() {
+            return foundVariables;
+        }
     }
 }
 

@@ -13,10 +13,21 @@ Regina - A Normal Surface Theory Calculator
         Overall structure:
             - Added readline/editline support using Bablok's wrapper classes.
             - Converted option REGINA_JNIDIR to a list of directories.
+        normal.ApplicationShell.CommandLineArguments:
+            - Added.
+        normal.Shell:
+            - Allow filenames to be specified on the command-line.
+            - Removed some arguments from getParameter().
+            - Added getFileParameters().
         normal.exports:
             - Added class SnapPeaExporter.
         normal.mainui:
             - Added more keyboard accelerators.
+        normal.mainui.FilePane:
+            - Added getFileType() and setFileType().
+        normal.mainui.NormalFrame:
+            - Made various routines public so outsiders can manipulate
+              the primary frame.
 
 Version 2.3  [ 12 December, 2001 ] - The "Farewell Stillwater" release.
     OVERALL:

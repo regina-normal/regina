@@ -260,8 +260,8 @@ public class TopologyPane extends FilePane {
         NPacket root = shell.getEngine().readFromFile(file.getAbsolutePath());
 
         if (root == null) {
-            shell.error("The requested file could not be opened.  It may " +
-                "contain invalid data.");
+            shell.error("The requested file [" + file.getName() +
+                "] could not be opened.  It may contain invalid data.");
             return null;
         }
 

@@ -100,8 +100,7 @@ public class EngineLoader {
      */    
     private Engine loadJNIEngine() {
         // Determine the library name to use.
-        String libName = shell.getParameter("jnilibname", 2, true, false,
-            "JNI library name");
+        String libName = shell.getParameter("jnilibname", 2);
         if (libName == null) {
             libName = NormalOptionSet.getSystemProperty("REGINA_JNIENGINE",
                 defaultJNILibrary);
@@ -157,30 +156,20 @@ public class EngineLoader {
         boolean gaveHostParameter = false;
         boolean gavePortParameter = false;
 
-        String host = shell.getParameter(
-            "org.omg.CORBA.ORBInitialHost", 1, false, true,
-            "CORBA naming service host");
+        String host = shell.getParameter("org.omg.CORBA.ORBInitialHost", 1);
         if (host == null) {
-            host = shell.getParameter("ORBInitialHost", 1, false,
-                true, "CORBA naming service host");
-            if (host == null) {
+            host = shell.getParameter("ORBInitialHost", 1);
+            if (host == null)
                 host = NormalOptionSet.getSystemProperty(
                     "REGINA_CORBAHOST", defaultCORBAHost);
-            } else
-                gaveHostParameter = true;
         }
 
-        String port = shell.getParameter(
-            "org.omg.CORBA.ORBInitialPort", 1, false, true,
-            "CORBA naming service port");
+        String port = shell.getParameter("org.omg.CORBA.ORBInitialPort", 1);
         if (port == null) {
-            port = shell.getParameter("ORBInitialPort", 1, false,
-                true, "CORBA naming service port");
-            if (port == null) {
+            port = shell.getParameter("ORBInitialPort", 1);
+            if (port == null)
                 port = NormalOptionSet.getSystemProperty(
                     "REGINA_CORBAPORT", defaultCORBAPort);
-            } else
-                gavePortParameter = true;
         }
 
         // Attempt to connect to the engine.
@@ -194,27 +183,18 @@ public class EngineLoader {
         }
 
         // Insert the host and port into the argument list if necessary.
-        if (args != null &&
-                ((! gaveHostParameter) || (! gavePortParameter))) {
-            int newLen = args.length + (gaveHostParameter ? 0 : 2) +
-                (gavePortParameter ? 0 : 2);
+        if (args != null) {
+            int newLen = args.length + 4;
             String[] newArgs = new String[newLen];
 
             int i;
             for (i = 0; i < args.length; i++)
                 newArgs[i] = args[i];
 
-            i = args.length;
-            if (! gaveHostParameter) {
-                newArgs[i] = "-ORBInitialHost";
-                newArgs[i + 1] = host;
-                i += 2;
-            }
-            if (! gavePortParameter) {
-                newArgs[i] = "-ORBInitialPort";
-                newArgs[i + 1] = port;
-                i += 2;
-            }
+            newArgs[i] = "-ORBInitialHost";
+            newArgs[i + 1] = host;
+            newArgs[i + 2] = "-ORBInitialPort";
+            newArgs[i + 3] = port;
 
             args = newArgs;
         }

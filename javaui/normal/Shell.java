@@ -323,13 +323,12 @@ public abstract class Shell {
      * For example, if the value of parameter <tt>foo</tt> is specified
      * on the command line using the syntax <tt><u>--foo=value</u></tt>, the
      * string <tt>value</tt> can be extracted by calling
-     * <tt>getParameter("foo", 2, true, true, "my favourite string")</tt>.
+     * <tt>getParameter("foo", 2)</tt>.
      * <p>
      * If the value of parameter <tt>foo</tt> is specified for an applet
      * by the applet parameter <tt>foo</tt>, the same function call will
-     * retrieve the parameter value, since arguments <i>nMinus</i>,
-     * <i>useEquals</i> and <i>caseSensitive</i> are irrelevant to
-     * applet parameter specifications.
+     * retrieve the parameter value, since argument <i>nMinus</i>,
+     * is irrelevant to applet parameter specifications.
      *
      * @param paramName the parameter name.
      * @param nMinus the number of minus signs preceding the parameter
@@ -337,24 +336,19 @@ public abstract class Shell {
      * This argument may be ignored by the implementation of this
      * routine if it is not relevant to the style of parameter
      * specification used by this type of shell.
-     * @param useEquals <tt>true</tt> if the parameter is specified using
-     * the form <tt><u>name=value</u></tt>, or <tt>false</tt> if the parameter
-     * is specified using the form <tt><u>name value</u></tt>.
-     * This argument may be ignored by the implementation of this
-     * routine if it is not relevant to the style of parameter
-     * specification used by this type of shell.
-     * @param caseSensitive <tt>true</tt> if and only if the parameter
-     * name is case sensitive.
-     * This argument may be ignored by the implementation of this
-     * routine if it is not relevant to the style of parameter
-     * specification used by this type of shell.
-     * @param paramDescription a description of what this parameter
-     * represents.
      * @return the requested parameter, or <tt>null</tt> if this
      * parameter was not specified as an explicit program parameter.
      */
-    public abstract String getParameter(String paramName, int nMinus,
-        boolean useEquals, boolean caseSensitive, String paramDescription);
+    public abstract String getParameter(String paramName, int nMinus);
+    /**
+     * Returns all filenames that were passed as program parameters.
+     * These are the files that the user has requested be opened on
+     * startup.  They are generally specified by command-line parameters
+     * or applet parameters.
+     *
+     * @return a vector of strings representing all filename parameters.
+     */
+    public abstract Vector getFileParameters();
 
     /**
      * Returns the style of user interface that should be used.
@@ -661,12 +655,26 @@ public abstract class Shell {
 
                 // Create the frame in which to work.
                 if (uiType == UIFullGUI) {
+                    // Create the primary frame.
                     NormalFrame frame = new NormalFrame(this);
                     Positioner.centerOnScreen(frame);
+
+                    // Present the primary frame to the user.
                     if (splash != null)
                         splash.dispose();
                     frame.show();
                     primaryFrame = frame;
+
+                    // Open all files passed as program parameters.
+                    if (mayEngineAccessFiles()) {
+                        Enumeration e = getFileParameters().elements();
+                        while (e.hasMoreElements())
+                            frame.fileOpen(new File((String)e.nextElement()));
+                    } else if (getFileParameters().size() > 0)
+                        error("This particular interface/engine " +
+                            "combination does not allow files to be " +
+                            "opened.  Try starting Regina with different " +
+                            "options.");
                 } else {
                     // Console window UI:
                     if (foundJython) {

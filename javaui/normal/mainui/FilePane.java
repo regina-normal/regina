@@ -71,6 +71,12 @@ public abstract class FilePane extends JPanel {
     private String fileName = null;
 
     /**
+     * A human-readable string describing the type of file open in this
+     * pane.
+     */
+    private String fileType = "Unknown";
+
+    /**
      * The primary text component with which this pane is working.
      */
     private JTextComponent primaryTextComponent = null;
@@ -200,6 +206,15 @@ public abstract class FilePane extends JPanel {
         return fileName;
     }
     /**
+     * Returns the file type description for this pane.
+     * This will be a human-readable string.
+     *
+     * @return the file type description.
+     */
+    public String getFileType() {
+        return fileType;
+    }
+    /**
      * Sets the directory of the working file.
      *
      * @param fileDir the directory of the working file.
@@ -215,6 +230,16 @@ public abstract class FilePane extends JPanel {
      */
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+    /**
+     * Sets the file type description for this pane.
+     * This should be a human-readable string.
+     *
+     * @param fileType the new file type description; this must not be
+     * <tt>null</tt>.
+     */
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 
     /**

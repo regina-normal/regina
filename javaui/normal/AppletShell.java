@@ -31,7 +31,7 @@ package normal;
 import java.applet.Applet;
 import java.io.File;
 import java.net.*;
-import java.util.Properties;
+import java.util.*;
 import normal.engine.Engine;
 import normal.options.NormalOptionSet;
 import org.gjt.btools.gui.dialog.MessageBox;
@@ -64,10 +64,12 @@ public class AppletShell extends Shell {
     public Applet getAppletParameters() {
         return applet;
     }
-    public String getParameter(String paramName, int nMinus,
-            boolean useEquals, boolean caseSensitive,
-            String description) {
+    public String getParameter(String paramName, int nMinus) {
         return applet.getParameter(paramName);
+    }
+    public Vector getFileParameters() {
+        // An applet shouldn't allow the user to open files.
+        return new Vector();
     }
 
     public int getUIType() {

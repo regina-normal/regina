@@ -28,7 +28,6 @@ Main Window:
 	View file version.
 	Implement undo.
 	Use actions in NormalFrame and SystemPane.
-	Allow filenames to be passed to the GUI from the command line.
 	Have the GUI refuse to export invalid triangulations.
 
 Menus:
@@ -41,4 +40,4 @@ Normal Surfaces:
 	Allow modification of SurfaceViewer.maxAutoCalcTetrahedra.
 
 Scripts:
-	Expand $REGINA_JNIDIR and $REGINA_EXTRA_CLASSES using cygpath.
+	Expand $REGINA_JNIDIR, $REGINA_EXTRA_CLASSES and file args using cygpath.

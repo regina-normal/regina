@@ -38,6 +38,7 @@
     <arg><option>--jnilibname=</option><replaceable>name</replaceable></arg>
     <arg><option>-ORBInitialHost</option> <replaceable>host</replaceable></arg>
     <arg><option>-ORBInitialPort</option> <replaceable>port</replaceable></arg>
+    <arg rep=repeat><replaceable>file</replaceable></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -57,6 +58,9 @@
     &cygwin; <filename>bash</filename> shell and run this same
     startup script, or may run <filename>regina.bat</filename>
     from their usual &windows; environment.
+   </para>
+   <para>
+    Any files specified on the command-line will be opened on startup.
    </para>
    <warning><para>
     When passing command-line arguments, avoid using characters that have
