@@ -383,7 +383,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                         return "Bdry";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            column - 3);
+                            set.getTriangulation(), column - 3);
                 }
             else
                 switch(column) {
@@ -393,7 +393,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                         return "Bdry";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            column - 2);
+                            set.getTriangulation(), column - 2);
                 }
         }
 
@@ -413,7 +413,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                         return "Boundary";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            column - 3);
+                            set.getTriangulation(), column - 3);
                 }
             else
                 switch(column) {
@@ -423,7 +423,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                         return "Boundary";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            column - 2);
+                            set.getTriangulation(), column - 2);
                 }
         }
     }

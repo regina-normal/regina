@@ -34,6 +34,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 import normal.engine.packet.*;
 import normal.engine.surfaces.*;
+import normal.engine.triangulation.NTriangulation;
 import normal.engine.maths.*;
 import normal.packetui.*;
 import btools.gui.component.*;
@@ -111,12 +112,13 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
 
         TableColumn col;
         TableCellRenderer renderer = new FancyColumnHeaderRenderer(table);
+		NTriangulation triang = list.getTriangulation();
         for (int i=0; i<matchingEquations.columns(); i++) {
             col = table.getColumnModel().getColumn(i);
             col.setPreferredWidth(70);
 			col.setHeaderRenderer(renderer);
 			col.setHeaderValue(new FancyData(model.getColumnName(i),
-				Coordinates.getCoordinateDesc(list.getFlavour(), i)));
+				Coordinates.getCoordinateDesc(list.getFlavour(), triang, i)));
         }
     }
 
@@ -175,7 +177,8 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
          * @return the string name of the requested column.
          */
         public String getColumnName(int column) {
-            return Coordinates.getCoordinateAbbr(list.getFlavour(), column);
+            return Coordinates.getCoordinateAbbr(list.getFlavour(),
+				list.getTriangulation(), column);
         }
     }
 }
