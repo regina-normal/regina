@@ -55,10 +55,11 @@ class NPacket;
  *
  * Routines startSubElement() and endSubElement() should \e not be
  * overridden by derived classes.  They determine whether the subelement
- * is a packet element; if so then they work with an NXMLPacketReader of the
- * correct type, and if not then they call startContentSubElement() and
- * endContentSubElement() which \e should be overridden for processing
- * of non-packet XML subelements.
+ * is another packet element or a packet tag; if so then they deal with
+ * the subelement themselves (packet elements will be read using a new
+ * NXMLPacketReader of the correct type), and if not then they call
+ * startContentSubElement() and endContentSubElement() which \e should
+ * be overridden for processing of non-packet XML subelements.
  *
  * If routine abort() is overridden, it \e must at some point call
  * NXMLPacketReader::abort() which will destroy whatever new packets
@@ -89,8 +90,9 @@ class NXMLPacketReader : public NXMLElementReader {
          *
          * If this routine is ever to give a non-zero return value, it
          * \e must be giving that non-zero return value by the time the
-         * first child packet is encountered; otherwise child packets
-         * will not be inserted into the packet tree.
+         * first child packet or packet tag is encountered; otherwise
+         * child packets will not be inserted into the packet tree and/or
+         * packet tags will not be added.
          *
          * The newly allocated packet should not be given a packet
          * label.  This will be done by NXMLPacketReader::endSubElement().
@@ -98,6 +100,10 @@ class NXMLPacketReader : public NXMLElementReader {
          * The newly allocated packet may or may not be inserted in the
          * packet tree structure; this does not matter (although if it
          * is inserted it must be inserted in the correct place).
+         *
+         * The newly allocated packet should not be given any associated
+         * packet tags.  This will be done by
+         * NXMLPacketReader::startSubElement().
          *
          * The default implementation returns 0.
          *
@@ -109,7 +115,7 @@ class NXMLPacketReader : public NXMLElementReader {
 
         /**
          * Used instead of startSubElement() for XML subelements that
-         * are not child packets.
+         * are not child packets or packet tags.
          *
          * The default implementation returns a new NXMLElementReader
          * which can be used to ignore the subelement completely.
@@ -126,7 +132,7 @@ class NXMLPacketReader : public NXMLElementReader {
             const regina::xml::XMLPropertyDict& subTagProps);
         /**
          * Used instead of endSubElement() for XML subelements that are
-         * not child packets.
+         * not child packets or packet tags.
          *
          * The default implementation does nothing.
          *

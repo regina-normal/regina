@@ -67,6 +67,13 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
         // Pull in cases from the packet registry.
         #include "packet/packetregistry.h"
         return new NXMLPacketReader();
+    } else if (subTagName == "tag") {
+        if (NPacket* me = getPacket()) {
+            std::string packetTag = subTagProps.lookup("name");
+            if (! packetTag.empty())
+                me->addTag(packetTag);
+        }
+        return new NXMLElementReader();
     } else
         return startContentSubElement(subTagName, subTagProps);
 }
@@ -84,7 +91,9 @@ void NXMLPacketReader::endSubElement(const std::string& subTagName,
             } else
                 delete child;
         }
-    } else
+    } else if (subTagName == "tag")
+        return;
+    else
         endContentSubElement(subTagName, subReader);
 }
 

@@ -33,6 +33,13 @@
 
 using namespace regina;
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_packet_NJNIPacket_addTag
+        (JNIEnv *env, jobject me, jstring tag) {
+    return GET_ENGINE_OBJECT(env, NPacket, me)->addTag(
+        jstringToCString(env, tag));
+}
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_clonePacket
         (JNIEnv *env, jobject me, jboolean cloneDescendants, jboolean end) {
@@ -147,6 +154,20 @@ JNIEXPORT jobject JNICALL
         GET_ENGINE_OBJECT(env, NPacket, me)->getTreeParent());
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_packet_NJNIPacket_hasTag
+        (JNIEnv *env, jobject me, jstring tag) {
+    return GET_ENGINE_OBJECT(env, NPacket, me)->hasTag(
+        jstringToCString(env, tag));
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_packet_NJNIPacket_hasTags
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NPacket, me)->hasTags();
+}
+
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_insertChildAfter
         (JNIEnv *env, jobject me, jobject newChild, jobject prevChild) {
@@ -228,6 +249,19 @@ JNIEXPORT jobject JNICALL
         (JNIEnv *env, jobject me, jstring newLabel) {
     return makeJNPacket(env, GET_ENGINE_OBJECT(env, NPacket, me)->
         nextTreePacket(jstringToCString(env, newLabel)));
+}
+
+JNIEXPORT void JNICALL
+        Java_normal_engine_implementation_jni_packet_NJNIPacket_removeAllTags
+        (JNIEnv *env, jobject me) {
+    GET_ENGINE_OBJECT(env, NPacket, me)->removeAllTags();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_packet_NJNIPacket_removeTag
+        (JNIEnv *env, jobject me, jstring tag) {
+    return GET_ENGINE_OBJECT(env, NPacket, me)->removeTag(
+        jstringToCString(env, tag));
 }
 
 JNIEXPORT void JNICALL

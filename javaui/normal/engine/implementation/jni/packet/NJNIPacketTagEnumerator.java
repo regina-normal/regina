@@ -26,57 +26,31 @@
 
 /* end stub */
 
-package normal.engine.packet;
+package normal.engine.implementation.jni.packet;
 
-import normal.engine.*;
+import normal.engine.implementation.jni.*;
+import normal.engine.packet.*;
 import java.util.*;
 
-public interface NPacket extends ShareableObject {
-    public int getPacketType();
-    public String getPacketTypeName();
-    public String getPacketLabel();
-    public void setPacketLabel(String newLabel);
-    public String getFullName();
+public class NJNIPacketTagEnumerator extends JNIShareableObject
+        implements Enumeration {
+    protected NJNIPacketTagEnumerator(Sentry s) {
+        super(s);
+    }
+    public NJNIPacketTagEnumerator(NPacket packet) {
+        super(Sentry.instance);
+        newPacketTagEnumerator(packet);
+    }
+    private final native void newPacketTagEnumerator(NPacket packet);
 
-    public boolean hasTag(String tag);
-    public boolean hasTags();
-    public boolean addTag(String tag);
-    public boolean removeTag(String tag);
-    public void removeAllTags();
-    public Enumeration getTags();
+    protected void finalize() {
+        // Destroy the underlying engine enumerator.
+        destroy();
+    }
 
-    public NPacket getFirstTreeChild();
-    public NPacket getLastTreeChild();
-    public NPacket getPrevTreeSibling();
-    public NPacket getNextTreeSibling();
-    public NPacket getTreeParent();
-    public NPacket getTreeMatriarch();
-    public void insertChildFirst(NPacket child);
-    public void insertChildLast(NPacket child);
-    public void insertChildAfter(NPacket newChild, NPacket prevChild);
-    public void makeOrphan();
-    public void swapWithNextSibling();
-
-    public NPacket nextTreePacket();
-    public NPacket firstTreePacket(String type);
-    public NPacket nextTreePacket(String type);
-    public NPacket findPacketLabel(String label);
-    public String makeUniqueLabel(String base);
-    public boolean makeUniqueLabels(NPacket reference);
-
-    public int levelsDownTo(NPacket descendant);
-    public int levelsUpTo(NPacket ancestor);
-    public boolean isGrandparentOf(NPacket descendant);
-    public long getNumberOfChildren();
-    public long getNumberOfDescendants();
-    public long getTotalTreeSize();
-
-    Map makeTreeDict();
-    List makeChildList();
-
-    public boolean dependsOnParent();
-    public boolean isPacketEditable();
-    public NPacket clonePacket();
-    public NPacket clonePacket(boolean cloneDescendants);
-    public NPacket clonePacket(boolean cloneDescendants, boolean end);
+    public native boolean hasMoreElements();
+    public Object nextElement() {
+        return nextString();
+    }
+    private native String nextString();
 }

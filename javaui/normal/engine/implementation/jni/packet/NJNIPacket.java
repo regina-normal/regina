@@ -43,6 +43,15 @@ public class NJNIPacket extends JNIShareableObject implements NPacket {
     public native void setPacketLabel(String newLabel);
     public native String getFullName();
 
+    public native boolean hasTag(String tag);
+    public native boolean hasTags();
+    public native boolean addTag(String tag);
+    public native boolean removeTag(String tag);
+    public native void removeAllTags();
+    public Enumeration getTags() {
+        return new NJNIPacketTagEnumerator(this);
+    }
+
     public native NPacket getFirstTreeChild();
     public native NPacket getLastTreeChild();
     public native NPacket getPrevTreeSibling();

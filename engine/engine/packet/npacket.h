@@ -37,6 +37,7 @@
 #endif
 
 #include <iostream>
+#include <set>
 
 #include "shareableobject.h"
 
@@ -76,8 +77,6 @@ class NXMLPacketReader;
  *
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
- * \todo \feature Allow packets to have any number of attached string
- * tags.
  */
 class NPacket : public ShareableObject {
     public:
@@ -109,6 +108,9 @@ class NPacket : public ShareableObject {
             /**< Previous sibling packet in the tree structure (0 if none). */
         NPacket* nextTreeSibling;
             /**< Next sibling packet in the tree structure (0 if none). */
+
+        std::set<std::string>* tags;
+            /**< The set of all tags associated with this packet. */
 
     public:
         /**
@@ -177,6 +179,111 @@ class NPacket : public ShareableObject {
          * @return the descriptive text string.
          */
         std::string getFullName() const;
+
+        /**
+         * Determines whether this packet has the given associated tag.
+         *
+         * Each packet can have an arbitrary set of string tags associated
+         * with it.  The tags are not used by this calculation engine; the
+         * feature is provided for whatever use a developer or user chooses
+         * to make of it.
+         *
+         * Tags are case-sensitive.  Tags associated with a single packet
+         * must be distinct, i.e., a particular tag cannot be associated
+         * more than once with the same packet.
+         *
+         * @param tag the tag to search for.
+         * @return \c true if the given tag is found, \c false otherwise.
+         */
+        bool hasTag(const std::string& tag) const;
+
+        /**
+         * Determines whether this packet has any associated tags at all.
+         *
+         * Each packet can have an arbitrary set of string tags associated
+         * with it.  The tags are not used by this calculation engine; the
+         * feature is provided for whatever use a developer or user chooses
+         * to make of it.
+         *
+         * Tags are case-sensitive.  Tags associated with a single packet
+         * must be distinct, i.e., a particular tag cannot be associated
+         * more than once with the same packet.
+         *
+         * @return \c true if this packet has any tags, \c false otherwise.
+         */
+        bool hasTags() const;
+
+        /**
+         * Associates the given tag with this packet.
+         *
+         * Each packet can have an arbitrary set of string tags associated
+         * with it.  The tags are not used by this calculation engine; the
+         * feature is provided for whatever use a developer or user chooses
+         * to make of it.
+         *
+         * Tags are case-sensitive.  Tags associated with a single packet
+         * must be distinct, i.e., a particular tag cannot be associated
+         * more than once with the same packet.
+         *
+         * \pre The given tag is not the empty string.
+         *
+         * @param tag the tag to add.
+         * @return \c true if the given tag was added, or \c false if the
+         * given tag was already present.
+         */
+        bool addTag(const std::string& tag);
+
+        /**
+         * Removes the association of the given tag with this packet.
+         *
+         * Each packet can have an arbitrary set of string tags associated
+         * with it.  The tags are not used by this calculation engine; the
+         * feature is provided for whatever use a developer or user chooses
+         * to make of it.
+         *
+         * Tags are case-sensitive.  Tags associated with a single packet
+         * must be distinct, i.e., a particular tag cannot be associated
+         * more than once with the same packet.
+         *
+         * @param tag the tag to remove.
+         * @return \c true if the given tag was removed, or \c false if the
+         * given tag was not actually associated with this packet.
+         */
+        bool removeTag(const std::string& tag);
+
+        /**
+         * Removes all associated tags from this packet.
+         *
+         * Each packet can have an arbitrary set of string tags associated
+         * with it.  The tags are not used by this calculation engine; the
+         * feature is provided for whatever use a developer or user chooses
+         * to make of it.
+         *
+         * Tags are case-sensitive.  Tags associated with a single packet
+         * must be distinct, i.e., a particular tag cannot be associated
+         * more than once with the same packet.
+         */
+        void removeAllTags();
+
+        /**
+         * Returns the set of all tags associated with this packet.
+         *
+         * Each packet can have an arbitrary set of string tags associated
+         * with it.  The tags are not used by this calculation engine; the
+         * feature is provided for whatever use a developer or user chooses
+         * to make of it.
+         *
+         * Tags are case-sensitive.  Tags associated with a single packet
+         * must be distinct, i.e., a particular tag cannot be associated
+         * more than once with the same packet.
+         *
+         * \ifacesjava This routine returns a <tt>java.util.Enumeration</tt>.
+         * The packet tags <i>must not</i> be changed while this
+         * enumeration is still in use.
+         *
+         * @return the set of all tags associated with this packet.
+         */
+        const std::set<std::string>& getTags() const;
 
         /**
          * Determines the parent packet in the tree structure.
@@ -576,6 +683,9 @@ class NPacket : public ShareableObject {
          * a suitable unused label and
          * inserts the clone into the tree as a sibling of this packet.
          * 
+         * Note that any string tags associated with this packet will
+         * \e not be cloned.
+         *
          * If this packet has no parent in the tree structure, no clone
          * will be created and 0 will be returned.
          *
@@ -730,8 +840,9 @@ class NPacket : public ShareableObject {
         /**
          * Makes a newly allocated copy of this packet.
          * This routine should <b>not</b> insert the new packet into the
-         * tree structure or give it a label.  It should also not clone
-         * any descendants of this packet.
+         * tree structure, clone the packet's associated tags or give the
+         * packet a label.  It should also not clone any descendants of
+         * this packet.
          * 
          * You may assume that the new packet will eventually be
          * inserted into the tree beneath either the same parent as this
@@ -788,7 +899,7 @@ class NPacket : public ShareableObject {
 // Inline functions for NPacket
 
 inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
-        prevTreeSibling(0), nextTreeSibling(0) {
+        prevTreeSibling(0), nextTreeSibling(0), tags(0) {
     if (parent)
         parent->insertChildLast(this);
     else
@@ -805,6 +916,41 @@ inline void NPacket::setPacketLabel(const std::string& newLabel) {
 
 inline std::string NPacket::getFullName() const {
     return packetLabel + " (" + getPacketTypeName() + ")";
+}
+
+inline bool NPacket::hasTag(const std::string& tag) const {
+    if (! tags)
+        return false;
+    return tags->count(tag);
+}
+
+inline bool NPacket::hasTags() const {
+    if (! tags)
+        return false;
+    return (! tags->empty());
+}
+
+inline bool NPacket::addTag(const std::string& tag) {
+    if (! tags)
+        tags = new std::set<std::string>();
+    return tags->insert(tag).second;
+}
+
+inline bool NPacket::removeTag(const std::string& tag) {
+    if (! tags)
+        return false;
+    return tags->erase(tag);
+}
+
+inline void NPacket::removeAllTags() {
+    if (tags)
+        tags->clear();
+}
+
+inline const std::set<std::string>& NPacket::getTags() const {
+    if (! tags)
+        ((NPacket*)this)->tags = new std::set<std::string>();
+    return *tags;
 }
 
 inline NPacket* NPacket::getTreeParent() const {

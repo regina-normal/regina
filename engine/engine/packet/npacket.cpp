@@ -42,6 +42,9 @@ NPacket::~NPacket() {
         firstTreeChild = firstTreeChild->nextTreeSibling;
         delete tmp;
     }
+
+    if (tags)
+        delete tags;
 }
 
 NPacket* NPacket::getTreeMatriarch() const {
@@ -372,6 +375,12 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
 
     // Write the internal packet data.
     writeXMLPacketData(out);
+
+    // Write any packet tags.
+    if (tags)
+        for (std::set<std::string>::const_iterator it = tags->begin();
+                it != tags->end(); it++)
+            out << "  <tag name=\"" << xmlEncodeSpecialChars(*it) << "\">\n";
 
     // Write the child packets.
     for (NPacket* p = firstTreeChild; p; p = p->nextTreeSibling)
