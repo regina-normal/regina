@@ -291,6 +291,7 @@ public class CoordinateViewer extends DefaultPacketViewer
         if (set.isEmbeddedOnly()) {
             table.getColumnModel().getColumn(3).setCellRenderer(renderer);
             table.getColumnModel().getColumn(4).setCellRenderer(renderer);
+            table.getColumnModel().getColumn(6).setCellRenderer(renderer);
         }
 
         int propertyColumns = model.getPropertyColumnCount();
@@ -312,7 +313,7 @@ public class CoordinateViewer extends DefaultPacketViewer
         // Some columns might need to be a little wider than default.
         // Subcomplex link:
         table.getColumnModel().getColumn(
-            propertyColumns - 2).setPreferredWidth(120);
+            propertyColumns - 3).setPreferredWidth(120);
     }
 
     /**
@@ -408,9 +409,17 @@ public class CoordinateViewer extends DefaultPacketViewer
          */
         private Color green = Color.green.darker().darker().darker();
         /**
+         * The colour to use for yellow text.
+         */
+        private Color yellow = Color.yellow.darker().darker().darker();
+        /**
          * The colour to use for red text.
          */
         private Color red = Color.red.darker().darker();
+        /**
+         * The colour to use for black text.
+         */
+        private Color black = Color.black;
 
         /**
          * Creates a new table model.
@@ -433,7 +442,7 @@ public class CoordinateViewer extends DefaultPacketViewer
         public int getColumnCount() {
             if (set.isEmbeddedOnly())
                 return Coordinates.getNumberOfCoordinates(flavour,
-                    set.getTriangulation()) + 7;
+                    set.getTriangulation()) + 8;
             else
                 return Coordinates.getNumberOfCoordinates(flavour,
                     set.getTriangulation()) + 5;
@@ -455,7 +464,7 @@ public class CoordinateViewer extends DefaultPacketViewer
          * @return the number of property-related columns.
          */
         public int getPropertyColumnCount() {
-            return (set.isEmbeddedOnly() ? 7 : 5);
+            return (set.isEmbeddedOnly() ? 8 : 5);
         }
 
         /**
@@ -496,7 +505,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                         else if (intAns == -1)
                             return new FancyData("Non-orbl", red);
                         else
-                            return "Unknown";
+                            return new FancyData("Unknown", yellow);
                     case 3:
                         if (! surface.isCompact())
                             return "";
@@ -506,10 +515,10 @@ public class CoordinateViewer extends DefaultPacketViewer
                         else if (intAns == -1)
                             return new FancyData("1", red);
                         else
-                            return "Unknown";
+                            return new FancyData("Unknown", yellow);
                     case 4:
                         if (! surface.isCompact())
-                            return "Infinite";
+                            return new FancyData("Infinite", yellow);
                         else if (surface.hasRealBoundary())
                             return new FancyData("Real Bdry", red);
                         else
@@ -533,13 +542,20 @@ public class CoordinateViewer extends DefaultPacketViewer
                         } else
                             return "";
                     case 6:
+                        if (set.allowsAlmostNormal() || ! surface.isCompact())
+                            return new FancyData("N/A", yellow);
+                        else if (surface.knownCanCrush())
+                            return new FancyData("Yes", green);
+                        else
+                            return new FancyData("Unknown", yellow);
+                    case 7:
                         if (surface.isSplitting())
                             return "Splitting";
                         else
                             return "";
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
-                            surface, column - 7);
+                            surface, column - 8);
                         if (bigAns == null)
                             return "Inf";
                         else if (bigAns.signum() == 0)
@@ -558,7 +574,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return "";
                     case 2:
                         if (! surface.isCompact())
-                            return "Infinite";
+                            return new FancyData("Infinite", yellow);
                         else if (surface.hasRealBoundary())
                             return new FancyData("Real Bdry", red);
                         else
@@ -632,10 +648,12 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 5:
                         return "Link";
                     case 6:
+                        return "Crush";
+                    case 7:
                         return "Type";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            set.getTriangulation(), column - 7);
+                            set.getTriangulation(), column - 8);
                 }
             else
                 switch(column) {
@@ -676,10 +694,12 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 5:
                         return "Identified as link of subcomplex?";
                     case 6:
+                        return "Safe to crush?";
+                    case 7:
                         return "Other interesting properties";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            set.getTriangulation(), column - 7);
+                            set.getTriangulation(), column - 8);
                 }
             else
                 switch(column) {

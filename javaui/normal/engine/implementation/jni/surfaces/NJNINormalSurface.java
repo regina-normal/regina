@@ -65,4 +65,5 @@ public class NJNINormalSurface extends JNIShareableObject
 
     public native NTriangulation cutAlong();
     public native NTriangulation crush();
+    public native boolean knownCanCrush();
 }

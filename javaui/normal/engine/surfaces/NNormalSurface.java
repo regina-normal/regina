@@ -104,5 +104,6 @@ public interface NNormalSurface extends ShareableObject {
 
     NTriangulation cutAlong();
     NTriangulation crush();
+    boolean knownCanCrush();
 }
 

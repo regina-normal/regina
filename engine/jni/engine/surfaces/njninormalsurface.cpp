@@ -186,6 +186,12 @@ REGJNIEXPORT jboolean JNICALL
     return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isSplitting();
 }
 
+REGJNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_knownCanCrush
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->knownCanCrush();
+}
+
 REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_setName
         (JNIEnv *env, jobject me, jstring name) {
