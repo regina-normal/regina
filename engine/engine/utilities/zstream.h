@@ -122,6 +122,17 @@ class ZBuffer : public std::streambuf {
          */
         virtual std::streamsize xsgetn(char* s, std::streamsize n);
         /**
+         * Pushes the given character back into the underlying input stream.
+         *
+         * \warning This routine will only succeed if the next character
+         * in the underlying input stream has not already been read.
+         *
+         * @param c the character to push back.
+         * @return the character that was pushed back, or zEOF if an
+         * error occurred.
+         */
+        virtual int pbackfail(int c);
+        /**
          * Flushes all input/output buffers.
          *
          * @return 0 on success, or zEOF on error.
@@ -347,6 +358,12 @@ inline int ZBuffer::uflow() {
 
 inline std::streamsize ZBuffer::xsputn(const char* s, std::streamsize n) {
     return gzwrite(file, (const voidp)s, n);
+}
+
+inline int ZBuffer::pbackfail(int c) {
+    if (c == zEOF)
+        return zEOF;
+    return (next == -1 ? next = c : zEOF);
 }
 
 inline int ZBuffer::sync() {
