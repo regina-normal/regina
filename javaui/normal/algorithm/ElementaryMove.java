@@ -417,7 +417,7 @@ public class ElementaryMove extends Modification {
                         " (end 1)"));
                 if (tri.collapseEdge(e, true, false))
                     collapseEdgeComp.addItem(new ExtendedObject(
-                        new Long(-(i + 1)), "Edge " + String.valueOf(i)));
+                        new Long(i), "Edge " + String.valueOf(i)));
             }
 
             NFace f;
