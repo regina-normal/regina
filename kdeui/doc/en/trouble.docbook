@@ -3,32 +3,46 @@
 
  <qandaset>
   <qandadiv id="trouble-compile"><title>Compiling &regina;</title>
-   <qandaentry>
+   <qandaentry id="trouble-devpkgs">
     <question><para>
-     The <userinput>./configure</userinput> script tells me that it
-     can't find a library that it needs (such as
-     <filename>libgmp</filename> or <filename>libxml2</filename>).
+     The <userinput>./configure</userinput> script complains that it
+     cannot find <literal>libgmp</literal>, <literal>libxml2</literal>,
+     <literal>libjpeg</literal> or some other library.
     </para></question>
     <answer>
      <para>
-      First you should make sure that the library is installed.
-      The &sysreq; on the &regina; website lists all of the
-      required libraries and where you can obtain them.
+      An error such as this means that you are probably missing the
+      development files for a library that you need.  If the warning
+      is regarding <literal>libfoo</literal>, look
+      for a package such as <literal>foo-devel</literal>,
+      <literal>libfoo-devel</literal>, <literal>foo-dev</literal> or
+      some similar variation that you can install.  These development
+      packages contain headers and other files that the compiler needs
+      in order to link against the corresponding library.
      </para>
      <para>
-      If the library has been installed in a non-standard location, you
-      might need to pass its location to the
-      <userinput>./configure</userinput> script.  For instance, if the
+      For the three examples above, &debian; users would need to install
+      the packages <literal>libgmp3-dev</literal>,
+      <literal>libxml2-dev</literal> and <literal>libjpeg62-dev</literal>.
+      &rhfedora; users would need to install the packages
+      <literal>gmp-devel</literal>, <literal>libxml2-devel</literal>
+      and <literal>libjpeg-devel</literal>.
+     </para>
+     <para>
+      If you know you have the appropriate library development files
+      installed and you are still seeing this error, it might be that
+      the <userinput>./configure</userinput> script simply cannot find them.
+      In particular, if the library has been installed in a non-standard
+      location, you might need to explicitly pass its location to the
+      <userinput>./configure</userinput> script.  As an example, if a
       library is installed beneath <filename>/usr/local</filename>
       with headers in <filename>/usr/local/include</filename> and
       the library itself in <filename>/usr/local/lib</filename>, you
       can pass the following options:
      </para>
-     <para>
-      <prompt>example$</prompt>
-      <userinput>./configure --with-extra-includes=/usr/local/include
-      --with-extra-libs=/usr/local/lib</userinput>
-     </para>
+<screen>
+<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure --with-extra-includes=/usr/local/include --with-extra-libs=/usr/local/lib</userinput>
+</screen>
      <para>
       Note that some libraries come with their own custom
       <userinput>./configure</userinput> options.  For instance, the
@@ -44,7 +58,86 @@
 
    <qandaentry>
     <question><para>
-     The compile breaks somewhere beneath
+     The <userinput>./configure</userinput> script complains that it
+     cannot find the X includes.
+    </para></question>
+    <answer>
+     <para>
+      You will need to install the X development files on your system,
+      which are almost certainly available as a package in your
+      &linux; distribution.  As an example, &debian; users should install
+      the package <literal>xlibs-dev</literal>, &rhel;&nbsp;3 users
+      should install <literal>XFree86-devel</literal> and &fedora;&nbsp;2
+      users should install <literal>xorg-x11-devel</literal>.
+     </para>
+     <para>
+      Be aware that you will also need the &qt; and &kde; development
+      files.  For &debian; users these are in the packages
+      <literal>libqt3-mt-dev</literal> and
+      <literal>kdelibs4-dev</literal>, and for &rhfedora; users
+      these are in the packages <literal>qt-devel</literal> and
+      <literal>kdelibs-devel</literal>.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     The <userinput>./configure</userinput> script complains that it
+     cannot find the important program <literal>mcopidl</literal>.
+    </para></question>
+    <answer>
+     <para>
+      You are missing the <productname>aRts</productname> development
+      files.  Hopefully your distribution will insist on these being
+      installed alongside the &kde; development files, but some
+      distributions seem to have unhappily weak package dependencies.
+     </para>
+     <para>
+      To install the missing <productname>aRts</productname>
+      development files, look for a package such as
+      <literal>arts-devel</literal>, <literal>libarts-devel</literal>,
+      <literal>libarts-dev</literal> or some similar name.
+      For instance, &debian; users should install
+      <literal>libarts1-dev</literal>, and &rhfedora; users should
+      install <literal>arts-devel</literal>.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     The compiler complains that it cannot find
+     <literal>-lart_lgpl_2</literal>, <literal>-lselinux</literal> or
+     <literal>-l...</literal> for some other library.
+    </para></question>
+    <answer>
+     <para>
+      This is similar to the
+      <link linkend="trouble-devpkgs"><userinput>./configure</userinput>
+      problem described earlier</link> regarding missing libraries,
+      except that the problem wasn't noticed at
+      configuration time.  Again you are probably missing the
+      development files for a library that you need.  If the error
+      is that the compiler cannot find <literal>-lfoo</literal>, look
+      for a package such as <literal>foo-devel</literal>,
+      <literal>libfoo-devel</literal>, <literal>foo-dev</literal> or
+      some similar variation that you can install.
+     </para>
+     <para>
+      As an example, some &fedora; systems will give the compile error
+      "<literal>/usr/bin/ld: cannot find -lselinux</literal>", which is
+      fixed by installing the package <literal>libselinux-devel</literal>.
+      Similarly, a failure to find <literal>-lart_lgpl_2</literal> on
+      a &rhel; system can be fixed by installing the package
+      <literal>libart_lgpl-devel</literal>.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     The compiler breaks somewhere beneath
      <filename>regina-<replaceable>version</replaceable>/kdeui/src</filename>
      with complaints of an undeclared identifier.
     </para></question>
@@ -66,18 +159,9 @@ make[4]: Leaving directory `/home/bab/source/regina-4.0/kdeui/src/part...
       If the undeclared identifier is
       <varname>adjustColumn</varname> or
       <varname>SH_Table_GridLineColor</varname>,
-      you almost certainly have a &qt; version problem.  &regina;
+      you almost certainly have a &qt; version that is too old.  &regina;
       requires &qt; version 3.2 or higher; trying to compile &regina;
       against &qt; 3.1 will result in errors such as these.
-     </para>
-     <para>
-      Compatibility for &qt; 3.1 is being worked upon and will hopefully
-      appear in future releases.
-     </para>
-     <para>
-      As of &regina; 4.0.1, if your &qt; version is too old then
-      the <userinput>./configure</userinput> script should complain
-      before compilation begins.
      </para>
     </answer>
    </qandaentry>
@@ -95,15 +179,22 @@ make[4]: Leaving directory `/home/bab/source/regina-4.0/kdeui/src/part...
       all other &kde; applications on your system.  For instance, if
       &kde; is installed beneath <filename>/opt/kde3</filename> then
       &regina; must be installed there also.
-      Errors such as these occur when &regina; has been installed elsewhere,
-      and &kde; cannot find one or more of its components.
+      Errors such as this occur when &regina; has not been installed
+      in the same location as &kde;, and thus &kde; cannot find one or
+      more of its components.
      </para>
      <para>
-      The installation in which &regina; is installed is controlled at
-      compile-time, by passing a <option>--prefix</option> option to the
-      <userinput>./configure</userinput> script.  Choosing the correct
+      The location in which &regina; is installed is controlled at
+      compile-time by passing a <option>--prefix</option> option to the
+      <userinput>./configure</userinput> script.  The
+      <userinput>./configure</userinput> script will generally guess the
+      correct location itself, so in most cases you
+      should not be passing your own <option>--prefix</option> at all.
+     </para>
+     <para>
+      However, if you are seeing this problem, working out the correct
       <option>--prefix</option> and then rebuilding and reinstalling
-      &regina; will almost certainly fix this problem.
+      &regina; will almost certainly fix it.
      </para>
      <para>
       To find which prefix you <emphasis>should</emphasis> be using,
@@ -127,11 +218,6 @@ checking build system type... i686-pc-linux-gnu
 checking host system type... i686-pc-linux-gnu
 ...
 </screen>
-     <para>
-      As of &regina; 4.0.1, the <userinput>./configure</userinput>
-      script makes an intelligent guess at the correct prefix if you
-      don't provide one yourself.
-     </para>
     </answer>
    </qandaentry>
 
@@ -194,22 +280,52 @@ checking host system type... i686-pc-linux-gnu
       whether it plans to build the &python; interface, and if not it
       should give you a clear reason why.
      </para>
+<screen>
+<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure</userinput>
+...
+... (lots of tests)
+...
+configure: WARNING: A working boost.python installation is
+unavailable; the Python interface will not be built.
+...
+... (more tests)
+...
+checking whether to build the calculation engine library... yes
+checking whether to build the KDE user interface... yes
+checking whether to build the Python interface... no
+checking whether to build command-line utilities... yes
+checking whether to build the test suite... yes
+checking whether to build calculation engine docs... yes
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating admin/Makefile
+...
+... (lots more Makefiles)
+...
+<prompt>example:~/source/regina&gt;</prompt>
+</screen>
      <para>
       The most common cause for &python; support being disabled
       is that no usable &boost-python; installation could be found at
-      compile time.  Make sure you have &boost-python; installed from
-      <ulink url="http://www.boost.org/"/>.  If it is installed in a
+      compile time (as illustrated above).  Make sure you have
+      &boost-python; installed as described on the &sysreq;.
+      If your &boost-python; is installed in a
       non-standard location you may need to pass this location to the
       <userinput>./configure</userinput> script using options
       <option>--with-extra-includes</option> and
       <option>--with-extra-libs</option>.
-      Note that &boost-python; requires the standard &python; headers to
-      be installed as well.
+     </para>
+<screen>
+<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure --with-extra-includes=/usr/local/include --with-extra-libs=/usr/local/lib</userinput>
+</screen>
+     <para>
+      Note that &boost-python; also requires the standard &python; headers to
+      be installed; again see the &sysreq; for details.
      </para>
      <para>
-      If this does not help, please mail &reguserlist; for assistance,
-      preferably including your <filename>config.log</filename> to help
-      diagnose the problem.
+      If none of these suggestions help, please mail &reguserlist; for
+      assistance, including your <filename>config.log</filename>
+      if possible to help diagnose the problem.
      </para>
     </answer>
    </qandaentry>
@@ -315,7 +431,7 @@ make[1]: Leaving directory `/home/bab/source/regina'
 
    <qandaentry>
     <question><para>
-     Something else beyond this rather wanting list of suggestions has gone
+     Something else not described in this list has gone
      wrong.  Perhaps something crashed.  Maybe the program gave the wrong
      answer.  Or it could be just a little too slow.
     </para></question>
