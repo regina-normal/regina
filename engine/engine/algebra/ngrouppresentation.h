@@ -53,8 +53,6 @@ class NFile;
 
 /**
  * Represents a power of a generator in a group presentation.
- *
- * \ifaces Not present.
  */
 struct NGroupExpressionTerm {
     unsigned long generator;
@@ -129,7 +127,7 @@ struct NGroupExpressionTerm {
      *
      * \pre The given file is currently opened for writing.
      *
-     * \ifaces Not present.
+     * \ifacespython Not present.
      *
      * @param out the file to which to write.
      */
@@ -143,7 +141,7 @@ struct NGroupExpressionTerm {
      *
      * \pre The given file is currently opened for reading.
      *
-     * \ifaces Not present.
+     * \ifacespython Not present.
      *
      * @param in the file from which to read.
      * @return the term read from the given file.
@@ -192,14 +190,15 @@ class NGroupExpression : public ShareableObject {
          * @param cloneMe the expression to clone.
          */
         NGroupExpression(const NGroupExpression& cloneMe);
-        
+
         /**
          * Returns the list of terms in this expression.
          * These are the actual terms stored internally; any
          * modifications made to this list will show up in the
          * expression itself.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present; only the const version of this
+         * routine is available.
          *
          * @return the list of terms.
          */
@@ -208,7 +207,10 @@ class NGroupExpression : public ShareableObject {
          * Returns a constant reference to the list of terms in this
          * expression.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list of copied
+         * NGroupExpressionTerm objects.  In particular, modifying this
+         * list or the terms within it will not modify the group
+         * expression from which they came.
          *
          * @return the list of terms.
          */
@@ -227,8 +229,6 @@ class NGroupExpression : public ShareableObject {
          * \warning This routine is <i>O(n)</i> where \a n is the number
          * of terms in this expression.
          *
-         * \ifaces Not present.
-         *
          * @param index the index of the term to return; this must be
          * between 0 and getNumberOfTerms()-1 inclusive.
          * @return the requested term.
@@ -243,7 +243,8 @@ class NGroupExpression : public ShareableObject {
          * \warning This routine is <i>O(n)</i> where \a n is the number
          * of terms in this expression.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present; only the non-const version of this
+         * routine is available.
          *
          * @param index the index of the term to return; this must be
          * between 0 and getNumberOfTerms()-1 inclusive.
@@ -282,8 +283,6 @@ class NGroupExpression : public ShareableObject {
         /**
          * Adds the given term to the beginning of this expression.
          *
-         * \ifaces Not present.
-         *
          * @param term the term to add.
          */
         void addTermFirst(const NGroupExpressionTerm& term);
@@ -298,8 +297,6 @@ class NGroupExpression : public ShareableObject {
         void addTermFirst(unsigned long generator, long exponent);
         /**
          * Adds the given term to the end of this expression.
-         *
-         * \ifaces Not present.
          *
          * @param term the term to add.
          */
@@ -326,7 +323,7 @@ class NGroupExpression : public ShareableObject {
          * Returns a newly created expression that is
          * this expression raised to the given power.
          * Note that the given exponent may be positive, zero or negative.
-         * 
+         *
          * @param exponent the power to which this expression should be raised.
          * @return this expression raised to the given power.
          */
@@ -364,11 +361,11 @@ class NGroupExpression : public ShareableObject {
          */
         bool substitute(unsigned long generator,
             const NGroupExpression& expansion, bool cyclic = false);
-    
+
         /**
          * Writes a chunk of XML containing this expression.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -381,7 +378,7 @@ class NGroupExpression : public ShareableObject {
          *
          * \pre The given file is currently opened for writing.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the file to which to write.
          */
@@ -397,7 +394,7 @@ class NGroupExpression : public ShareableObject {
          *
          * \pre The given file is currently opened for reading.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param in the file from which to read.
          * @return a newly allocated expression read from the given file, or
@@ -428,7 +425,7 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
             /**< The number of generators. */
         std::vector<NGroupExpression*> relations;
             /**< The relations between the generators. */
-    
+
     public:
         /**
          * Creates a new presentation with no generators and no
@@ -463,6 +460,11 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
          * This presentation will take ownership of the given
          * expression, may change it and will be responsible for its
          * deallocation.
+         *
+         * \ifacespython Since this group presentation takes ownership
+         * of the given expression, the python object containing the
+         * given expression becomes a null object and should no longer
+         * be used.
          *
          * @param rel the expression that the relation sets to 1; for
          * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this
@@ -529,7 +531,7 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
         /**
          * Writes a chunk of XML containing this group presentation.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -542,7 +544,7 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
          *
          * \pre The given file is currently opened for writing.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the file to which to write.
          */
@@ -558,7 +560,7 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
          *
          * \pre The given file is currently opened for reading.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param in the file from which to read.
          * @return a newly allocated presentation read from the given file, or
