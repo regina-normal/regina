@@ -644,10 +644,17 @@ inline unsigned NFacePairing::getNumberOfTetrahedra() const {
 inline NTetFace& NFacePairing::dest(const NTetFace& source) {
     return pairs[4 * source.tet + source.face];
 }
+inline NTetFace& NFacePairing::operator [](const NTetFace& source) {
+    return pairs[4 * source.tet + source.face];
+}
 inline NTetFace& NFacePairing::dest(unsigned tet, unsigned face) {
     return pairs[4 * tet + face];
 }
 inline const NTetFace& NFacePairing::dest(const NTetFace& source) const {
+    return pairs[4 * source.tet + source.face];
+}
+inline const NTetFace& NFacePairing::operator [](const NTetFace& source)
+        const {
     return pairs[4 * source.tet + source.face];
 }
 inline const NTetFace& NFacePairing::dest(unsigned tet, unsigned face) const {
