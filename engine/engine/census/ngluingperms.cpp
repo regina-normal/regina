@@ -33,6 +33,11 @@
 
 namespace regina {
 
+const int NGluingPerms::PURGE_NON_MINIMAL = 1;
+const int NGluingPerms::PURGE_NON_PRIME = 2;
+const int NGluingPerms::PURGE_NON_MINIMAL_PRIME = 3;
+    /**< PURGE_NON_MINIMAL_PRIME = PURGE_NON_MINIMAL | PURGE_NON_PRIME */
+
 NGluingPerms::NGluingPerms(const NGluingPerms& cloneMe) :
         pairing(cloneMe.pairing) {
     unsigned nTet = cloneMe.getNumberOfTetrahedra();
@@ -141,9 +146,8 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
 
         // We are sitting on a new permutation to try.
 
-        // Is this going to lead to an obviously non-minimal triangulation?
-        // TODO: Only run this test if we've asked for it!
-        if (isObviouslyNonMinimal(face))
+        // Is this going to lead to an unwanted triangulation?
+        if (mayPurge(face, 0 /* TODO: whichPurge */, orientableOnly))
             continue;
 
         // Fix the orientation if appropriate.
@@ -212,45 +216,94 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
     use(0, useArgs);
 }
 
-bool NGluingPerms::isObviouslyNonMinimal(const NTetFace& face) {
-    // Look for edges of degree 3 touching three different tetrahedra.
-    // If we make such an edge we can find out once we glue the larger
-    // face of the middle tetrahedron to the larger face of the largest
-    // tetrahedron.
+bool NGluingPerms::mayPurge(const NTetFace& face, int whichPurge,
+        bool orientableOnly) {
+    if (! whichPurge)
+        return false;
+
+    // Are we allowed to purge on edges of degree 1/2?
+    bool mayPurgeDeg12 = (whichPurge & PURGE_NON_MINIMAL) &&
+        (whichPurge & PURGE_NON_PRIME) && orientableOnly &&
+        (getNumberOfTetrahedra() > 2);
+
+    // Are we allowed to purge on edges of degree 3?
+    bool mayPurgeDeg3 = (whichPurge & PURGE_NON_MINIMAL);
+
+    // Currently look for edges of degree 1, 2 or 3.
+    // Edges of degree 3 either lead to simplification or imply an
+    // invalid triangulation.
+    // Edges of degrees 2 and 1 in the orientable case lead to simplification,
+    // S2 reduction, disc reduction (for bounded triangulations),
+    // loss of # L(3,1) or loss of an entire 2 tetrahedron space.
+    // Edges of degrees 2 and 1 lead to all sorts of nasties in the
+    // non-orientable case and will not be avoided.
+
+    // For edges of degree 2 or 3 we find out once the larger face of the
+    // second largest tetrahedron is glued to the larger face of the
+    // largest tetrahedron.
+    // For edges of degree 1 we find out once the smaller face is glued
+    // to the larger.
 
     // We know face has a partner since we just chose its permutation.
     NTetFace destFace = pairing->dest(face);
-    if (destFace.tet > face.tet) {
+    if (destFace.tet == face.tet) {
+        // Check for an edge of degree 1.
+        // This corresponds to a gluing permutation of order 2
+        // (this includes both the orientable and non-orientable gluings).
+        if (mayPurgeDeg12) {
+            NPerm map(gluingPerm(face));
+            if ((map * map).isIdentity())
+                return true;
+        }
+    } else if (destFace.tet > face.tet) {
+        // Check for an edge of degree 2 or 3.
         NTetFace destOther;
         NPerm faceMap, otherMap;
         for (NTetFace other(face.tet, 0); other < face; other++) {
             // Examine the edge between faces [other] and [face].
-            if ((destOther = pairing->dest(other)).tet >= face.tet)
-                continue;
+            destOther = pairing->dest(other);
+            if (destOther.tet == destFace.tet) {
+                // Could be an edge of degree 2.
+                if (mayPurgeDeg12) {
+                    // The tetrahedra are correct; check the permutation.
+                    // We only care about the edge having degree 2; we'll
+                    // catch both the valid and invalid gluings.
+                    faceMap = gluingPerm(face) *
+                        NPerm(face.face, other.face);
+                    otherMap = gluingPerm(other) *
+                        NPerm(face.face, other.face);
+                    if (faceMap[face.face] == otherMap[face.face] &&
+                            faceMap[other.face] == otherMap[other.face])
+                        return true;
+                }
+            } else if (destOther.tet < face.tet) {
+                // Could be an edge of degree 3.
+                if (mayPurgeDeg3) {
+                    // We now know that [other] has a partner as well and that
+                    // we're looking at three different tetrahedra.
 
-            // We now know that [other] has a partner as well and that
-            // we're looking at three different tetrahedra.
+                    // We also know that [other] heads to an earlier
+                    // tetrahedron and [face] heads to a later tetrahedron.
 
-            // We also know that [other] heads to an earlier tetrahedron
-            // and [face] heads to a later tetrahedron.
+                    // Establish how these destination tetrahedra are glued up
+                    // at the back.
+                    faceMap = gluingPerm(face) * NPerm(face.face, other.face);
+                    otherMap = gluingPerm(other) * NPerm(face.face, other.face);
 
-            // Establish how these destination tetrahedra are glued up at
-            // the back.
-            faceMap = gluingPerm(face) * NPerm(face.face, other.face);
-            otherMap = gluingPerm(other) * NPerm(face.face, other.face);
+                    if (! (pairing->dest(destOther.tet, otherMap[other.face])
+                            == NTetFace(destFace.tet, faceMap[face.face])))
+                        continue;
 
-            if (! (pairing->dest(destOther.tet, otherMap[other.face]) ==
-                    NTetFace(destFace.tet, faceMap[face.face])))
-                continue;
-
-            // The two faces are glued together.
-            // Check whether the corresponding edge has degree three; if
-            // so then the triangulation will either be non-minimal or
-            // invalid.
-            if (gluingPerm(destOther.tet,
-                    otherMap[other.face])[otherMap[face.face]] ==
-                    faceMap[other.face])
-                return true;
+                    // The two faces are glued together.
+                    // Check whether the corresponding edge has degree three;
+                    // if so then the triangulation will either be non-minimal
+                    // or invalid.
+                    if (gluingPerm(destOther.tet,
+                            otherMap[other.face])[otherMap[face.face]] ==
+                            faceMap[other.face])
+                        return true;
+                }
+            }
         }
     }
 

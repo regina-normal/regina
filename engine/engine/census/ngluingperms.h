@@ -83,6 +83,15 @@ typedef void (*UseGluingPerms)(const NGluingPerms*, void*);
  */
 class NGluingPerms {
     private:
+        static const int PURGE_NON_MINIMAL;
+            /**< Indicates that non-minimal triangulations may be ignored. */
+        static const int PURGE_NON_PRIME;
+            /**< Indicates that non-prime triangulations may be ignored. */
+        static const int PURGE_NON_MINIMAL_PRIME;
+            /**< Indicates that triangulations that are not both minimal
+                 and prime may be ignored. */
+
+    private:
         const NFacePairing* pairing;
             /**< The face pairing complemented by this permutation set. */
         int* orientation;
@@ -330,7 +339,15 @@ class NGluingPerms {
 
         /**
          * Determines whether the permutations under construction are
-         * doomed to model a triangulation that is obviously non-minimal.
+         * doomed to model a triangulation that can be purged from the
+         * census.  The conditions under which a triangulation may be
+         * purged are specified by parameter \a whichPurge.
+         *
+         * Note that this routine will not identify all triangulations
+         * that satisfy the given conditions; however, whenever this
+         * routine \e does return \c true it is guaranteed that the
+         * permutations under construction will only lead to
+         * triangulations that do meet the given conditions.
          *
          * This routine must \e only be called from within
          * findAllPermsInternal() since it relies on specific details of
@@ -344,11 +361,19 @@ class NGluingPerms {
          *
          * @param face the specific tetrahedron face upon which tests
          * will be based.
-         * @return \c true if the permutations under construction must lead
-         * to a non-minimal triangulation, or \c false if the results are
-         * inconclusive.
+         * @param whichPurge specifies the conditions under which a
+         * triangulation may be purged from the census; this should be a
+         * bitwise OR of purge constants defined in this class, or 0 if
+         * no triangulations may be purged.
+         * @param orientableOnly \c true if only gluing permutations
+         * corresponding to orientable triangulations are being
+         * constructed, or \c false otherwise.
+         * @return \c true if the permutations under construction will only
+         * lead to triangulations that may be purged, or \c false if the
+         * results are inconclusive.
          */
-        bool isObviouslyNonMinimal(const NTetFace& face);
+        bool mayPurge(const NTetFace& face, int whichPurge,
+                bool orientableOnly);
 };
 
 /*@}*/
