@@ -28,7 +28,8 @@ noinst_HEADERS = \
 	ntricomposition.h \
 	ntrigluings.h \
 	ntriskeleton.h \
-	ntrisurfaces.h
+	ntrisurfaces.h \
+	skeletonwindow.h
 
 libpackettypes_la_SOURCES = \
 	nanglestructurecreator.cpp \
@@ -48,7 +49,8 @@ libpackettypes_la_SOURCES = \
 	ntricomposition.cpp \
 	ntrigluings.cpp \
 	ntriskeleton.cpp \
-	ntrisurfaces.cpp
+	ntrisurfaces.cpp \
+	skeletonwindow.cpp
 
 METASOURCES = AUTO
 

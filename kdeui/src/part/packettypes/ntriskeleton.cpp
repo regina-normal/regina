@@ -31,6 +31,7 @@
 
 // UI includes:
 #include "ntriskeleton.h"
+#include "skeletonwindow.h"
 
 #include <kiconloader.h>
 #include <klocale.h>
@@ -106,10 +107,8 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     grid->addWidget(btn, 1, 11);
 
     layout->addStretch(1);
-}
 
-NTriSkeletonUI::~NTriSkeletonUI() {
-    closeAllSkeletonWindows();
+    viewers.setAutoDelete(true);
 }
 
 regina::NPacket* NTriSkeletonUI::getPacket() {
@@ -128,7 +127,8 @@ void NTriSkeletonUI::refresh() {
     nComps->setText(QString::number(tri->getNumberOfComponents()));
     nBdryComps->setText(QString::number(tri->getNumberOfBoundaryComponents()));
 
-    // TODO: Refresh skeleton windows.
+    for (SkeletonWindow* win = viewers.first(); win; win = viewers.next())
+        win->refresh();
 }
 
 void NTriSkeletonUI::editingElsewhere() {
@@ -139,31 +139,39 @@ void NTriSkeletonUI::editingElsewhere() {
     nComps->setText(i18n("Editing..."));
     nBdryComps->setText(i18n("Editing..."));
 
-    closeAllSkeletonWindows();
+    for (SkeletonWindow* win = viewers.first(); win; win = viewers.next())
+        win->editingElsewhere();
 }
 
 void NTriSkeletonUI::viewVertices() {
-    // TODO: vertices
+    SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Vertices);
+    win->show();
+    viewers.append(win);
 }
 
 void NTriSkeletonUI::viewEdges() {
-    // TODO: edges
+    SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Edges);
+    win->show();
+    viewers.append(win);
 }
 
 void NTriSkeletonUI::viewFaces() {
-    // TODO: faces
+    SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Faces);
+    win->show();
+    viewers.append(win);
 }
 
 void NTriSkeletonUI::viewComponents() {
-    // TODO: comps
+    SkeletonWindow* win = new SkeletonWindow(this, SkeletonWindow::Components);
+    win->show();
+    viewers.append(win);
 }
 
 void NTriSkeletonUI::viewBoundaryComponents() {
-    // TODO: bdry
-}
-
-void NTriSkeletonUI::closeAllSkeletonWindows() {
-    // TODO: closeAll
+    SkeletonWindow* win = new SkeletonWindow(this,
+        SkeletonWindow::BoundaryComponents);
+    win->show();
+    viewers.append(win);
 }
 
 #include "ntriskeleton.moc"

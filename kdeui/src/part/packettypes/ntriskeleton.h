@@ -35,6 +35,10 @@
 
 #include "../packettabui.h"
 
+#include <qptrlist.h>
+
+class SkeletonWindow;
+
 namespace regina {
     class NPacket;
     class NTriangulation;
@@ -63,13 +67,17 @@ class NTriSkeletonUI : public QObject, public PacketViewerTab {
         QLabel* nComps;
         QLabel* nBdryComps;
 
+        /**
+         * Skeleton viewers
+         */
+        QPtrList<SkeletonWindow> viewers;
+
     public:
         /**
          * Constructor and destructor.
          */
         NTriSkeletonUI(regina::NTriangulation* packet,
                 PacketTabbedUI* useParentUI);
-        ~NTriSkeletonUI();
 
         /**
          * PacketViewerTab overrides.
@@ -88,11 +96,6 @@ class NTriSkeletonUI : public QObject, public PacketViewerTab {
         void viewFaces();
         void viewComponents();
         void viewBoundaryComponents();
-
-        /**
-         * Close all skeleton windows.
-         */
-        void closeAllSkeletonWindows();
 };
 
 #endif
