@@ -91,11 +91,12 @@ export EXTRA_CLASSES :=
 # JAVADOC: Generate documentation from Java sources.
 # IDLTOCPPSERVER: Generate skeleton C++ CORBA server sources from IDL files.
 # IDLTOJAVACLIENT: Generate skeleton Java CORBA client sources from IDL files.
-# ARCHIVE: Build an archive using $(ARCHIVE) <archive file> <files to include>
-# CAT: Write the contents of a file to standard output
+# ARCHIVE: Build an archive using $(ARCHIVE) <archive file> <files to include>.
+# CAT: Write the contents of a file to standard output.
 # COPY: Copy one file to another.
-# ECHO: Write the command line arguments to standard output
-# GREP: Search for a pattern in a file
+# ECHO: Write the command line arguments to standard output.
+# GREP: Search for a pattern in a file.
+# MKDIR: Create a directory.
 # SED: Run sed, the stream editor.
 # TOUCH: Create a new empty file with the given name.
 
@@ -117,6 +118,7 @@ export CAT := cat
 export COPY := cp
 export ECHO := echo
 export GREP := grep
+export MKDIR := mkdir
 export SED := sed
 export TOUCH := touch
 
