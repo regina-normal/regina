@@ -35,6 +35,7 @@
 #define __NINDEXEDARRAY_H
 #endif
 
+#include <iostream>
 #include <vector>
 #include "utilities/hashmap.h"
 #include "utilities/hashutils.h"
@@ -460,7 +461,7 @@ class NIndexedArray {
          * @return \c true if no problems were found, or \c false if
          * any inconsistencies were discovered.
          */
-        bool validate(bool silent = false) {
+        bool validate(bool silent = false) const {
             bool ok = true;
             typename ObjectArray::difference_type index;
 
@@ -504,8 +505,8 @@ class NIndexedArray {
             // Check that each element of the vector appears in the
             // hashed dictionary.
             typename ObjectArray::const_iterator arrIt;
-            std::pair<typename IndexMap::iterator, typename IndexMap::iterator>
-                range;
+            std::pair<typename IndexMap::const_iterator,
+                typename IndexMap::const_iterator> range;
             unsigned foundCount;
 
             index = 0;
