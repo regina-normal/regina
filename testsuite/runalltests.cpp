@@ -26,16 +26,73 @@
 
 /* end stub */
 
+#include <iostream>
+#include <cppunit/Test.h>
+#include <cppunit/TestResult.h>
+#include <cppunit/TextTestProgressListener.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
 
-bool runAllTests() {
-    CppUnit::TextUi::TestRunner runner;
+/**
+ * Removes "FIXTURE." from "FIXTURE.TEST" since the fixture name
+ * seems to always be "ATestFixtureType" unless RTTI is used.
+ */
+std::string truncateFixture(const std::string& testName) {
+    std::string::size_type pos = testName.find('.');
 
-    runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
-    return runner.run();
+    // Don't truncate if the first period is right at the end.
+    if (pos + 1 < testName.length())
+        return testName.substr(pos + 1, testName.length() - pos - 1);
+    else
+        return testName;
 }
 
+/**
+ * Used for outputting progress.
+ */
+class ReginaProgress : public CppUnit::TextTestProgressListener {
+    private:
+        bool failed;
+
+    public:
+        ReginaProgress() : TextTestProgressListener(), failed(false) {
+        }
+
+        virtual void startTest(CppUnit::Test* test) {
+            std::cout << truncateFixture(test->getName()) << "... ";
+            failed = false;
+        }
+
+        virtual void addFailure(const CppUnit::TestFailure&) {
+            if (! failed) {
+                std::cout << "FAILED." << std::endl;
+                failed = true;
+            }
+        }
+
+        virtual void endTest(CppUnit::Test*) {
+            if (! failed)
+                std::cout << "ok." << std::endl;
+        }
+};
+
+/**
+ * Runs the entire test suite, outputting progress and results.
+ */
+bool runAllTests() {
+    std::cout << "Regina calculation engine test suite\n\n" << std::flush;
+
+    CppUnit::TextUi::TestRunner runner;
+    ReginaProgress progress;
+
+    runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
+    runner.eventManager().addListener(&progress);
+    return runner.run("", false, true, false);
+}
+
+/**
+ * The main function, if we're building a standalone program.
+ */
 #ifndef __NO_TESTSUITE_MAIN
 int main(int argc, char* argv[]) {
     return runAllTests();
