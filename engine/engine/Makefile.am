@@ -36,7 +36,7 @@ if STATIC_FINAL
 noinst_LTLIBRARIES = libregina-engine-noinst.la
 endif
 
-pkginclude_HEADERS = docs.h engine.h howto.h shareableobject.h
+pkginclude_HEADERS = docs.h engine.h shareableobject.h
 
 libregina_engine_la_SOURCES = engine.cpp shareableobject.cpp
 libregina_engine_la_LDFLAGS = -release @PACKAGE_VERSION@

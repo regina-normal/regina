@@ -39,7 +39,7 @@
 /**
  * Contains the entire Regina calculation engine.
  *
- * \todo \bugurgent Hunt for default copy constructors that are being called.
+ * \todo \proburgent Hunt for default copy constructors that are being called.
  * \todo \featurelong Enhance the test suite for the calculation engine.
  */
 namespace regina {

@@ -217,7 +217,6 @@ class NCompConstraintSet;
  * </ul>
  *
  * \todo \feature Implement quad-oct space.
- * \todo \feature Implement viewing by boundary face arcs.
  * \todo \optlong Investigate using sparse vectors for storage.
  *
  * \ifacespython Not present.

@@ -182,7 +182,7 @@ bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
  * in a particular tetrahedron can be represented by a long integer.
  * \pre This class should only be used with \a embedded normal surfaces.
  *
- * \todo \buglong Have some error flag so we can barf politely if the number
+ * \todo \problong Have some error flag so we can barf politely if the number
  * of normal discs of a given type does not fit into an <tt>unsigned
  * long</tt>.  See how this affects NDiscSetTetData also.
  */

@@ -67,7 +67,7 @@ namespace regina {
  * Subclasses must however implement the routine makeMirror() which creates
  * the alternate mirror vector from this vector.
  *
- * \todo \bug Allow modification of the vector by overwriting
+ * \todo \prob Allow modification of the vector by overwriting
  * setValue(); this will require documentation changes in both this
  * class and in NNormalSurfaceVector.
  *

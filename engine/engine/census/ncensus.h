@@ -401,7 +401,7 @@ class NCensus {
          * the calculation will run in the current thread and this
          * routine will only return once the census is complete.
          *
-         * \todo \bugurgent This routine currently does nothing!
+         * \todo \proburgent This routine currently does nothing!
          *
          * \ifacespython Parameters \a sieve, \a sieveArgs and \a manager
          * are not present (and will be treated as 0).

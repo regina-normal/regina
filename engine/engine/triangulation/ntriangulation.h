@@ -1081,7 +1081,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Attempts to reduce the number of vertices by crushing a
          * maximal forest in the 1-skeleton.
          *
-         * \todo \bugurgent This algorithm needs to be changed from the
+         * \todo \proburgent This algorithm needs to be changed from the
          * current incorrect algorithm to Dave's algorithm that avoids
          * crisis by using 2-3 moves.
          *
@@ -1125,7 +1125,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \warning The specific behaviour of this routine is
          * very likely to change between releases.
          *
-         * \todo \bugurgent This routine currently does not crush a
+         * \todo \proburgent This routine currently does not crush a
          * maximal forest!
          *
          * @param perform \c true if we are to perform the
@@ -1470,7 +1470,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \warning This routine should not be used until the
          * eligibility checks are corrected; see the bug details below.
          *
-         * \todo \bugurgent The restrictions on allowing this move to take
+         * \todo \proburgent The restrictions on allowing this move to take
          * place are currently wrong.  Many valid cases are ruled out
          * (as acknowledged in the original commit of the code), but
          * certain invalid cases are also allowed which will almost
