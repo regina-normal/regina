@@ -407,6 +407,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             menuFileExport.add(menuFileExportRegina);
 
             menuFile.add(menuFileExport);
+            needFile.addElement(menuFileExport);
         }
 
         menuFile.addSeparator();

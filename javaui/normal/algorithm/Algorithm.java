@@ -304,7 +304,8 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
             outer.fill = outer.HORIZONTAL; middle.fill = middle.NONE;
             middle.insets = new Insets(5,5,5,5);
             getContentPane().add(packetPadding, outer);
-            getContentPane().add(choicePanel, middle);
+            if (mightEdit)
+                getContentPane().add(choicePanel, middle);
             getContentPane().add(buttonPanel, outer);
 
             ok.addActionListener(this);
