@@ -51,10 +51,10 @@ shift
 for i; do
   if [ ! -e "$i" ]; then
     echo "File $i does not exist."
-	exit 1
+    exit 1
   elif [ ! -f "$i" ]; then
     echo "File $i is not a regular file."
-	exit 1
+    exit 1
   fi
 done
 
