@@ -93,3 +93,51 @@ table.contents td {
   border-right: 0px;
 }
 
+table.data th {
+  font-weight: bold;
+  color: #3D3F53;
+  background-color: #E0E2F8;
+  padding: 2px 1ex 2px 1ex;
+  border-top: 2px;
+  border-bottom: 2px;
+  border-left: 0px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid;
+}
+
+table.data th.first {
+  font-weight: bold;
+  color: #3D3F53;
+  background-color: #E0E2F8;
+  padding: 2px 1ex 2px 1ex;
+  border-top: 2px;
+  border-bottom: 2px;
+  border-left: 2px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid;
+}
+
+table.data td {
+  background-color: #FFFFFF;
+  padding: 2px 2px 2px 2px;
+  border-top: 0px;
+  border-bottom: 2px;
+  border-left: 0px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid
+}
+
+table.data td.first {
+  background-color: #FFFFFF;
+  padding: 2px 2px 2px 2px;
+  border-top: 0px;
+  border-bottom: 2px;
+  border-left: 2px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid
+}
+
