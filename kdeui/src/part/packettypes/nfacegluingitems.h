@@ -76,7 +76,9 @@ class TetNameItem : public QTableItem {
 /**
  * A table item for an individual face gluing.
  */
-class FaceGluingItem : public QTableItem {
+class FaceGluingItem : public QObject, public QTableItem {
+    Q_OBJECT
+
     private:
         long adjTet;
             /**< The adjacent tetrahedron, or -1 if this is a boundary face. */
@@ -107,6 +109,23 @@ class FaceGluingItem : public QTableItem {
         int getMyFace() const;
         int getAdjacentFace() const;
         const regina::NPerm& getAdjacentTetrahedronGluing() const;
+
+        /**
+         * Change the destination for this face gluing.  Related face
+         * gluings will also be updated if necessary.
+         *
+         * It is assumed that the given destination is valid.
+         *
+         * Related table cells will always be repainted.  This table
+         * cell will be repainted by default, but this can be suppressed
+         * by passing \c false as the final boolean parameter.
+         *
+         * This routine can handle both boundary faces and real face
+         * gluings.
+         */
+        void setDestination(long newDestTet,
+            const regina::NPerm& newGluingPerm,
+            bool shouldRepaintThisTableCell = true);
 
         /**
          * Find the table entry corresponding to the partner of this
@@ -142,13 +161,48 @@ class FaceGluingItem : public QTableItem {
         virtual QWidget* createEditor() const;
         virtual void setContentFromEditor(QWidget* editor);
 
+        /**
+         * Determine whether the given destination tetrahedron and face
+         * string are valid.  If so, a null string is returned; if not,
+         * an appropriate error message is returned.
+         *
+         * If the given permutation pointer is not null, the resulting
+         * gluing permutation will be returned in this variable.
+         */
+        static QString isFaceStringValid(unsigned long nTets,
+            unsigned long srcTet, int srcFace,
+            unsigned long destTet, const QString& destFace,
+            regina::NPerm* gluing);
+
+    signals:
+        /**
+         * Emitted when a table item is explicitly changed by the user
+         * through either a call to setDestination() or through direct
+         * interaction.
+         *
+         * Note that generally one change will imply others (e.g., if
+         * face A is glued to face B then face B will as a result be glued
+         * to face A).  In such cases, this signal will be emitted only
+         * for the face that was explicitly changed by the user.
+         */
+        void destinationChanged();
+
     private:
         /**
          * Return a short string describing the destination of a
-         * (non-boundary) face gluing.
+         * face gluing.  This routine handles both boundary and
+         * non-boundary faces.
          */
         static QString destString(int srcFace, int destTet,
-                const regina::NPerm& gluing);
+            const regina::NPerm& gluing);
+
+        /**
+         * Convert a face string (e.g., "130") to a face permutation.
+         *
+         * The given face string must be valid; otherwise the results
+         * could be unpredictable (and indeed a crash could result).
+         */
+        static regina::NPerm faceStringToPerm(int srcFace, const QString& str);
 
         /**
          * Display the given error to the user if no error is already

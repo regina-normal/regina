@@ -27,6 +27,7 @@
 /* end stub */
 
 // UI includes:
+#include "nfacegluingdialog.h"
 #include "nfacegluingitems.h"
 
 #include <klineedit.h>
@@ -47,6 +48,11 @@ namespace {
         "(?:\\s*\\(\\s*|\\s+)"
         "([0-3][0-3][0-3])"
         "\\s*\\)?\\s*$");
+
+    /**
+     * Represents a single tetrahedron face.
+     */
+    QRegExp reFace("^[0-3][0-3][0-3]$");
 }
 
 TetNameItem::TetNameItem(QTable* table, unsigned long tetNum,
@@ -93,6 +99,7 @@ FaceGluingItem::FaceGluingItem(QTable* table,
         QTableItem(table, OnTyping), adjTet(-1), editMode(useEditMode),
         error(false) {
     setReplaceable(false);
+    connect(this, SIGNAL(destinationChanged()), table, SLOT(doValueChanged()));
 }
 
 FaceGluingItem::FaceGluingItem(QTable* table,
@@ -102,6 +109,7 @@ FaceGluingItem::FaceGluingItem(QTable* table,
         editMode(useEditMode), error(false) {
     setReplaceable(false);
     setText(destString(myFace, destTet, gluingPerm));
+    connect(this, SIGNAL(destinationChanged()), table, SLOT(doValueChanged()));
 }
 
 QWidget* FaceGluingItem::createEditor() const {
@@ -109,17 +117,59 @@ QWidget* FaceGluingItem::createEditor() const {
         KLineEdit* editor = new KLineEdit(table()->viewport());
         editor->setFrame(false);
         editor->setValidator(new QRegExpValidator(reFaceGluing, editor));
-        if (adjTet >= 0)
-            editor->setText(destString(getMyFace(), adjTet, adjPerm));
+        editor->setText(destString(getMyFace(), adjTet, adjPerm));
         editor->selectAll();
 
         return editor;
     } else {
-        QPushButton* button = new QPushButton("123", table()->viewport());
-        button->setFlat(true);
-        // TODO
-        return button;
+        return new NFaceGluingButton(table()->numRows(),
+            row(), getMyFace(), adjTet, regina::faceDescription(
+            adjPerm * regina::faceOrdering(getMyFace())).c_str(),
+            const_cast<FaceGluingItem*>(this));
     }
+}
+
+void FaceGluingItem::setDestination(long newAdjTet,
+        const regina::NPerm& newAdjPerm, bool shouldRepaintThisTableCell) {
+    // Have we even made a change?
+    if (adjTet < 0 && newAdjTet < 0)
+        return;
+    if (adjTet == newAdjTet && adjPerm == newAdjPerm)
+        return;
+
+    // Find out where we expect to join this face to.
+    FaceGluingItem* newPartner;
+    if (newAdjTet < 0)
+        newPartner = 0;
+    else
+        newPartner = dynamic_cast<FaceGluingItem*>(table()->item(
+            newAdjTet, 4 - newAdjPerm[getMyFace()]));
+
+    // Does this new adjacent face already have a partner?
+    if (newPartner)
+        newPartner->unjoin();
+
+    // And we're off!
+    // Break any current identification.
+    unjoin();
+
+    // Create the new identification and update the table accordingly.
+    if (newAdjTet >= 0) {
+        adjTet = newAdjTet;
+        adjPerm = newAdjPerm;
+        setText(destString(getMyFace(), adjTet, adjPerm));
+
+        newPartner->adjTet = row();
+        newPartner->adjPerm = adjPerm.inverse();
+        newPartner->setText(destString(newPartner->getMyFace(),
+            newPartner->adjTet, newPartner->adjPerm));
+        table()->updateCell(newPartner->row(), newPartner->col());
+    }
+
+    if (shouldRepaintThisTableCell)
+        table()->updateCell(row(), col());
+
+    emit destinationChanged();
 }
 
 FaceGluingItem* FaceGluingItem::getPartner() {
@@ -173,107 +223,85 @@ void FaceGluingItem::setContentFromEditor(QWidget* editor) {
             return;
         } else {
             // Real face.
-            long tetNum = reFaceGluing.cap(1).toLong();
+            newAdjTet = reFaceGluing.cap(1).toLong();
             QString tetFace = reFaceGluing.cap(2);
 
-            if (tetNum < 0 || tetNum >= table()->numRows()) {
+            // Check explicitly for a negative tetrahedron number
+            // since isFaceStringValid() takes an unsigned integer.
+            if (newAdjTet < 0 || newAdjTet >= table()->numRows()) {
                 showError(i18n("There is no tetrahedron number %1.").
-                    arg(tetNum));
-                return;
-            }
-            if (tetFace[0] == tetFace[1] || tetFace[1] == tetFace[2] ||
-                    tetFace[2] == tetFace[0]) {
-                showError(i18n("%1 is not a valid tetrahedron face.  "
-                    "The three vertices forming the face must be distinct.").
-                    arg(tetFace));
+                    arg(newAdjTet));
                 return;
             }
 
-            // Work out the precise gluing permutation.
-            int srcFace = getMyFace();
-            int destFace = 6; // This will be adjusted in a moment.
-
-            int srcVertex[3];
-            int destVertex[3];
-
-            int i;
-            for (i = 0; i < 3; i++) {
-                destVertex[i] = tetFace[i].latin1() - '0';
-                destFace -= destVertex[i];
-            }
-
-            int curr = 0;
-            for (i = 0; i < 4; i++) {
-                if (i == srcFace)
-                    continue;
-                srcVertex[curr++] = i;
-            }
-
-            if (tetNum == row() && destFace == srcFace) {
-                showError(i18n("This face cannot be glued to itself."));
+            // Do we have a valid gluing?
+            QString err = isFaceStringValid(table()->numRows(),
+                row(), getMyFace(), newAdjTet, tetFace, &newAdjPerm);
+            if (! err.isNull()) {
+                showError(err);
                 return;
             }
-
-            // We have a valid gluing.
-            newAdjTet = tetNum;
-            newAdjPerm = regina::NPerm(srcFace, destFace,
-                srcVertex[0], destVertex[0], srcVertex[1], destVertex[1],
-                srcVertex[2], destVertex[2]);
         }
     } else {
-        // TODO
-        newAdjTet = adjTet;
-        newAdjPerm = adjPerm;
+        // We're using the dialog interface.
+        // Don't update anything; this is done direct from the dialog.
+        return;
     }
 
-    // Have we even made a change?
-    if (adjTet < 0 && newAdjTet < 0)
-        return;
-    if (adjTet == newAdjTet && adjPerm == newAdjPerm)
-        return;
+    // Make the change.
+    setDestination(newAdjTet, newAdjPerm, false);
+}
 
-    // Find out where we expect to join this face to.
-    FaceGluingItem* newPartner;
-    if (newAdjTet < 0)
-        newPartner = 0;
-    else
-        newPartner = dynamic_cast<FaceGluingItem*>(table()->item(
-            newAdjTet, 4 - newAdjPerm[getMyFace()]));
+QString FaceGluingItem::isFaceStringValid(unsigned long nTets,
+        unsigned long srcTet, int srcFace,
+        unsigned long destTet, const QString& destFace,
+        regina::NPerm* gluing) {
+    if (destTet >= nTets)
+        return i18n("There is no tetrahedron number %1.").arg(destTet);
 
-    // Does this new adjacent face already have a partner?
-    if (newPartner)
-        newPartner->unjoin();
+    if (! reFace.exactMatch(destFace))
+        return i18n("<qt>%1 is not a valid tetrahedron face.  A tetrahedron "
+            "face must be described by a sequence of three vertices, each "
+            "between 0 and 3 inclusive.  An example is <i>032</i>.</qt>").
+            arg(destFace);
 
-    // And we're off!
-    // Break any current identification.
-    unjoin();
+    if (destFace[0] == destFace[1] || destFace[1] == destFace[2] ||
+            destFace[2] == destFace[0])
+        return i18n("%1 is not a valid tetrahedron face.  The three vertices "
+            "forming the face must be distinct.").arg(destFace);
 
-    // Create the new identification and update the table accordingly.
-    if (newAdjTet >= 0) {
-        adjTet = newAdjTet;
-        adjPerm = newAdjPerm;
-        setText(destString(getMyFace(), adjTet, adjPerm));
+    regina::NPerm foundGluing = faceStringToPerm(srcFace, destFace);
+    if (srcTet == destTet && foundGluing[srcFace] == srcFace)
+        return i18n("A face cannot be glued to itself.");
 
-        newPartner->adjTet = row();
-        newPartner->adjPerm = adjPerm.inverse();
-        newPartner->setText(destString(newPartner->getMyFace(),
-            newPartner->adjTet, newPartner->adjPerm));
-        table()->updateCell(newPartner->row(), newPartner->col());
-    }
+    // It's valid!
+    if (gluing)
+        *gluing = foundGluing;
+
+    return QString::null;
 }
 
 QString FaceGluingItem::destString(int srcFace, int destTet,
         const regina::NPerm& gluing) {
-    QString ans = QString::number(destTet) + " (";
+    if (destTet < 0)
+        return "";
+    else
+        return QString::number(destTet) + " (" + regina::faceDescription(
+            gluing * regina::faceOrdering(srcFace)).c_str() + ')';
+}
 
-    for (int i = 0; i < 4; i++) {
-        if (i == srcFace)
-            continue;
-        ans.append((char)('0' + gluing[i]));
+regina::NPerm FaceGluingItem::faceStringToPerm(int srcFace,
+        const QString& str) {
+    int destVertex[4];
+
+    destVertex[3] = 6; // This will be adjusted in a moment.
+    for (int i = 0; i < 3; i++) {
+        destVertex[i] = str[i].latin1() - '0';
+        destVertex[3] -= destVertex[i];
     }
 
-    ans.append(')');
-    return ans;
+    return regina::NPerm(destVertex[0], destVertex[1], destVertex[2],
+        destVertex[3]) * regina::faceOrdering(srcFace).inverse();
 }
 
 void FaceGluingItem::showError(const QString& message) {
@@ -284,3 +312,4 @@ void FaceGluingItem::showError(const QString& message) {
     }
 }
 
+#include "nfacegluingitems.moc"

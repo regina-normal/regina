@@ -15,6 +15,7 @@ noinst_HEADERS = \
 	nanglestructureitem.h \
 	nanglestructureui.h \
 	ncontainerui.h \
+	nfacegluingdialog.h \
 	nfacegluingitems.h \
 	nscriptui.h \
 	nscriptvaritems.h \
@@ -34,6 +35,7 @@ libpackettypes_la_SOURCES = \
 	nanglestructureitem.cpp \
 	nanglestructureui.cpp \
 	ncontainerui.cpp \
+	nfacegluingdialog.cpp \
 	nfacegluingitems.cpp \
 	nscriptui.cpp \
 	nscriptvaritems.cpp \
