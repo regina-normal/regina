@@ -20,7 +20,7 @@ for srcfile
             fi
         else
             rm $tmpfile
-            echo "$srcfile: Unchanged"
+            # echo "$srcfile: Unchanged"
         fi
     else
         rm $tmpfile
