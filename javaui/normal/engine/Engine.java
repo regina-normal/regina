@@ -73,6 +73,8 @@ public interface Engine {
     public NGroupPresentation newNGroupPresentation();
     public NGroupPresentation newNGroupPresentation(
         NGroupPresentation cloneMe);
+    public NLayeredChain newNLayeredChain(NTetrahedron tet, NPerm vertexRoles);
+    public NLayeredChain newNLayeredChain(NLayeredChain cloneMe);
     public NLensSpace newNLensSpace(long p, long q);
     public NLensSpace newNLensSpace(NLensSpace cloneMe);
     public NMatrixInt newNMatrixInt(int rows, int columns);

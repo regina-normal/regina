@@ -76,6 +76,12 @@ class Engine_i : public virtual POA_Regina::Engine,
 
         virtual Regina::Progress::NProgressManager_ptr newNProgressManager();
 
+        virtual Regina::Subcomplex::NLayeredChain_ptr
+            newNLayeredChain_NTetrahedron_NPerm(
+            Regina::Triangulation::NTetrahedron_ptr tet, CORBA::Char roles);
+        virtual Regina::Subcomplex::NLayeredChain_ptr
+            newNLayeredChain_NLayeredChain(
+            Regina::Subcomplex::NLayeredChain_ptr cloneMe);
         virtual Regina::Subcomplex::NLensSpace_ptr newNLensSpace_long_long(
             CORBA::Long p, CORBA::Long q);
         virtual Regina::Subcomplex::NLensSpace_ptr newNLensSpace_NLensSpace(

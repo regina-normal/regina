@@ -31,6 +31,7 @@
 
 #include "EngineI.h"
 #include "NAugTriSolidTorusI.h"
+#include "NLayeredChainI.h"
 #include "NLayeredLensSpaceI.h"
 #include "NLayeredLoopI.h"
 #include "NLayeredSolidTorusI.h"
@@ -40,6 +41,20 @@
 #include "NSnappedBallI.h"
 #include "NSnappedTwoSphereI.h"
 #include "NTriSolidTorusI.h"
+
+Regina::Subcomplex::NLayeredChain_ptr
+        Engine_i::newNLayeredChain_NTetrahedron_NPerm(
+        Regina::Triangulation::NTetrahedron_ptr tet, CORBA::Char roles) {
+    return NLayeredChain_i::newWrapper(new ::NLayeredChain(
+        GET_ENGINE_OBJECT(NTetrahedron, tet), NPerm(roles)));
+}
+
+Regina::Subcomplex::NLayeredChain_ptr
+        Engine_i::newNLayeredChain_NLayeredChain(
+        Regina::Subcomplex::NLayeredChain_ptr cloneMe) {
+    return NLayeredChain_i::newWrapper(new ::NLayeredChain(
+        *GET_ENGINE_OBJECT(NLayeredChain, cloneMe)));
+}
 
 Regina::Subcomplex::NLensSpace_ptr Engine_i::newNLensSpace_long_long(
         CORBA::Long p, CORBA::Long q) {

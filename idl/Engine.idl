@@ -38,6 +38,7 @@
 #include "Packet/NText.idl"
 #include "Progress/NProgressManager.idl"
 #include "Subcomplex/NAugTriSolidTorus.idl"
+#include "Subcomplex/NLayeredChain.idl"
 #include "Subcomplex/NLayeredLensSpace.idl"
 #include "Subcomplex/NLayeredLoop.idl"
 #include "Subcomplex/NLensSpace.idl"
@@ -79,6 +80,10 @@ module Regina {
 
         Progress::NProgressManager newNProgressManager();
 
+        Subcomplex::NLayeredChain newNLayeredChain_NTetrahedron_NPerm(
+            in Triangulation::NTetrahedron tet, in char vertexRoles);
+        Subcomplex::NLayeredChain newNLayeredChain_NLayeredChain(
+            in Subcomplex::NLayeredChain cloneMe);
         Subcomplex::NLensSpace newNLensSpace_long_long(in long p, in long q);
         Subcomplex::NLensSpace newNLensSpace_NLensSpace(
             in Subcomplex::NLensSpace cloneMe);

@@ -37,6 +37,7 @@ class NContainer;
 class NFile;
 class NGroupExpression;
 class NGroupPresentation;
+class NLayeredChain;
 class NLayeredLensSpace;
 class NLayeredLoop;
 class NLayeredSolidTorus;
@@ -86,6 +87,11 @@ class Engine {
             /**< Calls the corresponding constructor. */
         NGroupPresentation* newNGroupPresentation(
                 const NGroupPresentation& cloneMe);
+            /**< Calls the corresponding constructor. */
+        NLayeredChain* newNLayeredChain(NTetrahedron* tet,
+                NPerm vertexRoles);
+            /**< Calls the corresponding constructor. */
+        NLayeredChain* newNLayeredChain(NLayeredChain* cloneMe);
             /**< Calls the corresponding constructor. */
         NLensSpace* newNLensSpace(unsigned long p, unsigned long q);
             /**< Calls the corresponding constructor. */

@@ -126,6 +126,12 @@ public class JNIEngine implements Engine {
     public NFile newNFile() {
         return new NJNIFile();
     }
+    public NLayeredChain newNLayeredChain(NTetrahedron tet, NPerm vertexRoles) {
+        return new NJNILayeredChain(tet, vertexRoles);
+    }
+    public NLayeredChain newNLayeredChain(NLayeredChain cloneMe) {
+        return new NJNILayeredChain(cloneMe);
+    }
     public NLensSpace newNLensSpace(long p, long q) {
         return new NJNILensSpace(p, q);
     }

@@ -327,6 +327,17 @@ public class CORBAEngine implements Engine {
             data.newNGroupPresentation_NGroupPresentation(
             ((NCORBAGroupPresentation)cloneMe).data));
     }
+    public NLayeredChain newNLayeredChain(NTetrahedron tet,
+            NPerm vertexRoles) {
+        return NCORBALayeredChain.newWrapper(
+            data.newNLayeredChain_NTetrahedron_NPerm(
+            ((NCORBATetrahedron)tet).data, vertexRoles.getPermCode()));
+    }
+    public NLayeredChain newNLayeredChain(NLayeredChain cloneMe) {
+        return NCORBALayeredChain.newWrapper(
+            data.newNLayeredChain_NLayeredChain(
+            ((NCORBALayeredChain)cloneMe).data));
+    }
     public NLensSpace newNLensSpace(long p, long q) {
         return NCORBALensSpace.newWrapper(data.newNLensSpace_long_long(
             (int)p, (int)q));

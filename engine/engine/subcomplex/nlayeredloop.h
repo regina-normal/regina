@@ -49,25 +49,13 @@ class NEdge;
 /**
  * Represents a layered loop component of a triangulation.
  *
- * A layered loop is a set of \a n tetrahedra glued to each other by
- * layerings.  For each tetrahedron, select two top faces, two bottom
- * faces and two hinge edges, so that the top faces are adjacent, the
- * bottom faces are adjacent, the hinge edges are opposite and each
- * hinge meets both a top and a bottom face.  The tetrahedron can thus
- * be thought of as a fattened square with the top and bottom faces
- * above and below the square respectively, and the hinges as the top
- * and bottom edges of the square.  The left and right edges of the
- * square are identified to form an annulus.
+ * A layered loop is a layered chain of \a n tetrahedra whose bottom
+ * tetrahedron is layered onto its top tetrahedron to form a complete
+ * loop.  See the NLayeredChain class notes for a description of a
+ * layered chain.
  *
- * For each \a i (working modulo \a n), the top faces of tetrahedron \a
- * i are glued to the bottom faces of tetrahedron <i>i</i>+1.  This is
- * done by layering the upper tetrahedron upon the annulus formed by the
- * top faces of the lower tetrahedron.  The layering should be done over
- * the left or right edge of the lower square (note that these two edges
- * are actually identified).  The top hinges of each tetrahedron should
- * be identified, as should the bottom hinges.
- *
- * For the final step, the bottom faces of the first tetrahedron will be
+ * To make a layered chain into a layered
+ * loop, the bottom faces of the first tetrahedron will be
  * layered upon the top faces of the last tetrahedron, completing the loop.
  * At this stage there is a choice.  The layering can be done in the usual
  * fashion, or there may be a \a twist in which the upper square (the
@@ -81,11 +69,9 @@ class NEdge;
  * component has two vertices.
  *
  * The \a index of the layered loop is the number of tetrahedra it
- * contains.
- * 
- * A layered loop must contain at least one tetrahedron.
+ * contains.  A layered loop must contain at least one tetrahedron.
  */
-class NLayeredLoop: public ShareableObject {
+class NLayeredLoop : public ShareableObject {
     private:
         unsigned long index;
             /**< The index of this layered loop. */
