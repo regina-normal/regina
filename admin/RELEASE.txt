@@ -9,6 +9,7 @@ Program version:
     docs/regina.sgml (entities &regversion;, &regdate;)
     www/index.html (last updated, current version)
     kdeui/src/reginaabout.h (regReleased)
+    kdeui/src/{shell,part}/*.rc (kpartgui version)
 
 License details:
     LICENSE.txt (./, docs/)
