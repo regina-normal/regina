@@ -121,7 +121,7 @@
     would do normal surface theory and everything else besides.  Much
     groundwork planning was done, epsilon code was written and then
     things kind of faded away.  David Letscher revived the project on his
-    own and in 1999 presented <application>Normal&nbsp;1.0</application>.
+    own and in 1999 presented <application>Normal 1.0</application>.
     This program performed
     triangulation simplification and found vertex normal surfaces, was
     written in &java; and was a proof-of-concept program that normal
@@ -140,7 +140,7 @@
     David however leads a busy life and pulled out of the project, but
     remains to offer fabulous technical advice.  In late 2000 a
     prerelease of the new program was ready (under an appropriate
-    definition of &quot;ready&quot;) and voila, here we are today.
+    definition of "ready") and voila, here we are today.
    </para>
   </sect1>
 
