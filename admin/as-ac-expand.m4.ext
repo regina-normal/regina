@@ -1,0 +1,55 @@
+dnl
+dnl Taken from the GStreamer project at http://www.gstreamer.net/ and
+dnl then modified from the original.
+dnl
+dnl The original AS_AC_EXPAND was written by thomas@apestaart.org and
+dnl licensed under the TODO License.
+dnl
+dnl Modifications were made by Ben Burton <bab@debian.org> and also
+dnl licensed under the TODO License.
+dnl
+
+dnl
+dnl The following notes are from the original AS_AC_EXPAND:
+dnl
+dnl as-ac-expand.m4 0.1.0
+dnl autostars m4 macro for expanding directories using configure's prefix
+dnl thomas@apestaart.org
+dnl
+dnl AS_AC_EXPAND(VAR, CONFIGURE_VAR)
+dnl example
+dnl AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
+dnl will set SYSCONFDIR to /usr/local/etc if prefix=/usr/local
+dnl
+
+AC_DEFUN(AS_AC_EXPAND,
+[
+  # first expand prefix and exec_prefix if necessary
+  prefix_save="$prefix"
+  exec_prefix_save="$exec_prefix"
+
+  # if no prefix given, then use the default prefix
+  if test "x$prefix" = "xNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  # if no exec_prefix given, then use prefix
+  if test "x$exec_prefix" = "xNONE"; then
+    exec_prefix="$prefix"
+  fi
+
+  full_var="$2"
+  # loop until it doesn't change anymore
+  while true; do
+    new_full_var="`eval echo "$full_var"`"
+    if test "x$new_full_var" = "x$full_var"; then break; fi
+    full_var="$new_full_var"
+  done
+
+  # clean up
+  full_var="$new_full_var"
+  AC_SUBST([$1], "$full_var")
+
+  # restore prefix and exec_prefix
+  prefix="$prefix_save"
+  exec_prefix="$exec_prefix_save"
+])
