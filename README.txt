@@ -4,7 +4,7 @@ Regina - A normal surface theory calculator
 BINARY DISTRIBUTION:
 
     - Make sure your BTools jar (and your Jython and JavaHelp jars if
-      you have them) are in the lib/ directory.  Otherwise you will need
+      you have them) are in the jar/ directory.  Otherwise you will need
       to specify their locations using environment variables or a
       configuration file (see the reference manual for details).
 
