@@ -50,7 +50,7 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
         regina::xml::XMLPropertyDict::const_iterator it =
             subTagProps.find("label");
         if (it == subTagProps.end())
-            childLabel.clear();
+            childLabel = "";
         else
             childLabel = (*it).second;
 

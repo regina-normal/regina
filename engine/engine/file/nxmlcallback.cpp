@@ -59,7 +59,7 @@ void NXMLCallback::start_element(const std::string& n,
         abort();
     } else if (state == WAITING) {
         currentReader()->startElement(n, p, 0);
-        currChars.clear();
+        currChars = "";
         charsAreInitial = true;
         state = WORKING;
     } else if (state == WORKING) {
@@ -70,7 +70,7 @@ void NXMLCallback::start_element(const std::string& n,
         NXMLElementReader* child = current->startSubElement(n, p);
         readers.push(child);
         child->startElement(n, p, current);
-        currChars.clear();
+        currChars = "";
         charsAreInitial = true;
     }
 }
