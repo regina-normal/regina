@@ -26,42 +26,16 @@
 
 /* end stub */
 
-#include "newpacketdialog.h"
-#include "reginapart.h"
-#include "packettypes/ncontainercreator.h"
-#include "packettypes/ntextcreator.h"
+// Regina core includes:
+#include "packet/ncontainer.h"
 
-#include <klocale.h>
+// UI includes:
+#include "ncontainercreator.h"
 
-void ReginaPart::newAngleStructures() {
-    unimplemented();
-}
+using regina::NContainer;
+using regina::NPacket;
 
-void ReginaPart::newContainer() {
-    NewPacketDialog dlg(widget(), new NContainerCreator(), packetTree, 0,
-        i18n("New Container"), i18n("Container"));
-    dlg.exec();
-}
-
-void ReginaPart::newFilter() {
-    unimplemented();
-}
-
-void ReginaPart::newNormalSurfaces() {
-    unimplemented();
-}
-
-void ReginaPart::newScript() {
-    unimplemented();
-}
-
-void ReginaPart::newText() {
-    NewPacketDialog dlg(widget(), new NTextCreator(), packetTree, 0,
-        i18n("New Text Packet"), i18n("Text"));
-    dlg.exec();
-}
-
-void ReginaPart::newTriangulation() {
-    unimplemented();
+NPacket* NContainerCreator::createPacket(NPacket*, QWidget*) {
+    return new NContainer();
 }
 

@@ -63,7 +63,8 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     labelStrip->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(labelStrip);
     new QLabel(i18n("Label:"), labelStrip);
-    label = new QLineEdit(suggestedLabel, labelStrip);
+    label = new QLineEdit(
+        tree->makeUniqueLabel(suggestedLabel.ascii()).c_str(), labelStrip);
     labelStrip->setStretchFactor(label, 1);
 
     QWidget* mainUI = creator->getInterface();
