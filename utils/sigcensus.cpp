@@ -26,13 +26,11 @@
 
 /* end stub */
 
-#include "split/nsigcensus.h"
 #include <cstdlib>
+#include "split/nsigcensus.h"
+#include "utilities/stringutils.h"
 
 #define MAXORDER 20
-
-using regina::NSignature;
-using regina::NSigIsoList;
 
 void usage(const char* progName) {
     std::cerr << "Usage:\n";
@@ -40,7 +38,8 @@ void usage(const char* progName) {
     exit(1);
 }
 
-void printSignature(const NSignature& sig, const NSigIsoList&, void*) {
+void printSignature(const regina::NSignature& sig,
+        const regina::NSigIsoList&, void*) {
     sig.writeCycles(std::cout, "", "", ".");
     std::cout << '\n';
 }
@@ -49,8 +48,9 @@ int main(int argc, char* argv[]) {
     if (argc != 2)
         usage(argv[0]);
 
-    int order = atoi(argv[1]);
-    if (order < 1 || order > MAXORDER) {
+    int order;
+    bool valid = regina::valueOf(argv[1], order);
+    if ((! valid) || order < 1 || order > MAXORDER) {
         std::cerr << "Only numerical orders between 1 and " << MAXORDER
             << " inclusive are accepted.\n";
         usage(argv[0]);

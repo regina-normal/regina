@@ -26,15 +26,16 @@
 
 /* end stub */
 
+#include <cctype>
+#include <cstdlib>
+#include <sstream>
+#include <unistd.h>
 #include "census/ncensus.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "progress/nprogressmanager.h"
-#include <cctype>
-#include <cstdlib>
-#include <sstream>
-#include <unistd.h>
+#include "utilities/stringutils.h"
 
 #define MAXTET 10
 #define SLEEP_SECONDS 1
@@ -56,6 +57,7 @@ void usage(const char* progName) {
 int getInt(const char* prompt, int min, int max) {
     std::string token;
     int ans;
+    bool valid;
     while (true) {
         cout << prompt;
         cin >> token;
@@ -65,8 +67,8 @@ int getInt(const char* prompt, int min, int max) {
             exit(1);
         }
 
-        ans = atoi(token.c_str());
-        if (ans < min || ans > max)
+        valid = regina::valueOf(token, ans);
+        if ((! valid) || ans < min || ans > max)
             cout << "Only numerical values between " << min
                 << " and " << max << " are accepted.\n";
         else
