@@ -106,7 +106,7 @@ void NSurfaceCoordinateItem::setText(int column, const QString& str) {
 }
 
 QString NSurfaceCoordinateItem::text(int column) const {
-    NTriBool triBool;
+    regina::NTriBool triBool;
     if (surfaces->isEmbeddedOnly()) {
         switch (column) {
             case 0:
@@ -248,16 +248,16 @@ QString NSurfaceCoordinateItem::text(int column) const {
 NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
         int column) {
     if (surfaces->isEmbeddedOnly()) {
-        int triBool;
+        regina::NTriBool triBool;
         switch (column) {
             case 2:
                 if (! surface->isCompact())
                     return Plain;
 
                 triBool = surface->isOrientable();
-                if (triBool == 1)
+                if (triBool.isTrue())
                     return Green;
-                else if (triBool == -1)
+                else if (triBool.isFalse())
                     return Red;
                 else
                     return Yellow;
@@ -266,9 +266,9 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
                     return Plain;
 
                 triBool = surface->isTwoSided();
-                if (triBool == 1)
+                if (triBool.isTrue())
                     return Green;
-                else if (triBool == -1)
+                else if (triBool.isFalse())
                     return Red;
                 else
                     return Yellow;

@@ -127,7 +127,7 @@ void NTriangulation::calculateQuadSurfaceProperties() {
                     // Hunt for spheres.
                     if (chi == 2)
                         zeroEfficient = false;
-                    else if (chi == 1 && s->isTwoSided() == -1)
+                    else if (chi == 1 && s->isTwoSided().isFalse())
                         zeroEfficient = false;
                 }
             }
@@ -178,7 +178,7 @@ void NTriangulation::calculateStandardSurfaceProperties() {
                     // Hunt for spheres.
                     if (chi == 2)
                         zeroEfficient = false;
-                    else if (chi == 1 && s->isTwoSided() == -1)
+                    else if (chi == 1 && s->isTwoSided().isFalse())
                         zeroEfficient = false;
                 }
             }
