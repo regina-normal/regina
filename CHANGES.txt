@@ -10,11 +10,15 @@ Regina - A Normal Surface Theory Calculator
 Version 4.1.2  [ under development ]
     OVERALL:
         - Updated INSTALL.txt to reflect current --prefix guessing.
-        - Fixed bug in configure scripts that causes python linking
-          problems on some systems (thanks to Craig Macintyre).
+        - Added a suggested way of citing Regina.
+        - Updated configure scripts so that the python interface builds
+          out of the box on a larger number of platforms (specifically RedHat
+          and Fedora Core are now supported).  Many thanks to Craig Macintyre
+          for his patience and assistance with this.
     USER INTERFACE:
-        - Fixed compile errors when built against an STL-enabled Qt
-          (thanks to Bob Myers).
+        Class NTextUI:
+            - Fixed compile error when building against an STL-enabled Qt
+              (thanks to Robert Myers for spotting this one).
 
 Version 4.1.1  [ 24 April, 2004 ]
     USER INTERFACE:
