@@ -255,6 +255,9 @@ class NLayeredSolidTorus : public ShareableObject {
          * tetrahedron furthest from the boundary of the torus, i.e. the
          * tetrahedron glued to itself with a twist.
          *
+         * \todo \bugurgent The layering test generates false positives
+         * in ideal triangulations.
+         *
          * \ifaces This routine is a member of class Engine.
          *
          * @param tet the tetrahedron to examine as a potential base.
