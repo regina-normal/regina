@@ -1,11 +1,6 @@
 
 # These variables should be edited to reflect the current system.
 
-# Specify here the name (without path) of the directory in which
-# these Makefiles are found.
-
-export BASE_DIR := regina-2.1.1
-
 # Specify here the location of the CORBA naming service to use
 # when the calculation engine is accessed as a CORBA server application.
 

@@ -1,6 +1,11 @@
 
 Regina - A Normal Surface Theory Calculator
 
+Version 2.1.1a
+	OVERALL:
+		- Set up system for creating distributions.
+		- Final tidying up for proper release.
+
 Version 2.1.1
     OVERALL:
         - Added a CORBA interface to the engine.

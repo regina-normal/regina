@@ -24,5 +24,5 @@ SOURCE DISTRIBUTION:
     application is run.
 
 Ben Burton (benb@acm.org)
-http://baasil.humbug.org.au/software/regina/
+http://sourceforge.net/projects/regina/
 
