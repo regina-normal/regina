@@ -30,11 +30,13 @@ void addNHandlebody();
 void addNManifold();
 void addNLensSpace();
 void addNSFS();
+void addNSimpleSurfaceBundle();
 
 void addManifold() {
     addNManifold();
     addNHandlebody();
     addNLensSpace();
     addNSFS();
+    addNSimpleSurfaceBundle();
 }
 

@@ -13,5 +13,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libmanifold.la
 
-libmanifold_la_SOURCES = nhandlebody.cpp nlensspace.cpp nmanifold.cpp nsfs.cpp pymanifold.cpp
+libmanifold_la_SOURCES = nhandlebody.cpp nlensspace.cpp nmanifold.cpp nsfs.cpp pymanifold.cpp nsimplesurfacebundle.cpp
 

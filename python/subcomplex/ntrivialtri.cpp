@@ -26,37 +26,30 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNPillowTwoSphere();
-void addNPlugTriSolidTorus();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTriSolidTorus();
-void addNTrivialTri();
+#include "subcomplex/ntrivialtri.h"
+#include "triangulation/ncomponent.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNPillowTwoSphere();
-    addNPlugTriSolidTorus();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTriSolidTorus();
-    addNTrivialTri();
+using namespace boost::python;
+using regina::NTrivialTri;
+
+void addNTrivialTri() {
+    scope s = class_<NTrivialTri, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<NTrivialTri>, boost::noncopyable>
+            ("NTrivialTri", no_init)
+        .def("clone", &NTrivialTri::clone,
+            return_value_policy<manage_new_object>())
+        .def("getType", &NTrivialTri::getType)
+        .def("isTrivialTriangulation", &NTrivialTri::isTrivialTriangulation,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isTrivialTriangulation")
+    ;
+
+    s.attr("N2") = NTrivialTri::N2;
+    s.attr("N3_1") = NTrivialTri::N3_1;
+    s.attr("N3_2") = NTrivialTri::N3_2;
+
+    implicitly_convertible<std::auto_ptr<NTrivialTri>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

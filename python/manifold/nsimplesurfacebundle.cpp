@@ -26,37 +26,26 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNPillowTwoSphere();
-void addNPlugTriSolidTorus();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTriSolidTorus();
-void addNTrivialTri();
+#include "manifold/nsimplesurfacebundle.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNPillowTwoSphere();
-    addNPlugTriSolidTorus();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTriSolidTorus();
-    addNTrivialTri();
+using namespace boost::python;
+using regina::NSimpleSurfaceBundle;
+
+void addNSimpleSurfaceBundle() {
+    scope s = class_<NSimpleSurfaceBundle, bases<regina::NManifold>,
+            std::auto_ptr<NSimpleSurfaceBundle>, boost::noncopyable>
+            ("NSimpleSurfaceBundle", init<int>())
+        .def(init<const NSimpleSurfaceBundle&>())
+        .def("getType", &NSimpleSurfaceBundle::getType)
+        .def(self == self)
+    ;
+
+    s.attr("S2xS1") = NSimpleSurfaceBundle::S2xS1;
+    s.attr("S2xS1_TWISTED") = NSimpleSurfaceBundle::S2xS1_TWISTED;
+    s.attr("RP2xS1") = NSimpleSurfaceBundle::RP2xS1;
+
+    implicitly_convertible<std::auto_ptr<NSimpleSurfaceBundle>,
+        std::auto_ptr<regina::NManifold> >();
 }
 

@@ -33,6 +33,7 @@
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/nplugtrisolidtorus.h"
+#include "subcomplex/ntrivialtri.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -52,6 +53,8 @@ std::string NStandardTriangulation::getTeXName() const {
 NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         NComponent* comp) {
     NStandardTriangulation* ans;
+    if ((ans = NTrivialTri::isTrivialTriangulation(comp)))
+        return ans;
     if ((ans = NL31Pillow::isL31Pillow(comp)))
         return ans;
     if ((ans = NLayeredLensSpace::isLayeredLensSpace(comp)))
