@@ -8,6 +8,12 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
+Version 4.1.2  [ 13 June, 2004 ]
+
+    Bug Fixes:
+        - Better support out of the box for more platforms, specifically
+          including Red Hat and Fedora Core.
+
 Version 4.1.1  [ 24 April, 2004 ]
 
     Usability:

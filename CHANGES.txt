@@ -12,7 +12,7 @@ Version 4.1.2  [ under development ]
         - Updated INSTALL.txt to reflect current --prefix guessing.
         - Added a suggested way of citing Regina.
         - Updated configure scripts so that the python interface builds
-          out of the box on a larger number of platforms (specifically RedHat
+          out of the box on a larger number of platforms (specifically Red Hat
           and Fedora Core are now supported).  Many thanks to Craig Macintyre
           for his patience and assistance with this.
     USER INTERFACE:
