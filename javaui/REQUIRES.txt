@@ -2,7 +2,6 @@
 Required libraries for running the Java UI:
 
     regina.jar : main GUI
-    regina-jni.jar : link to calculation engine using JNI
     btools.jar : miscellaneous utility classes
 
 Optional libraries for running the Java UI:
