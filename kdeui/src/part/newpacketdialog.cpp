@@ -38,6 +38,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
+#include <qwhatsthis.h>
 
 #define HORIZONTAL_SPACING 10
 
@@ -53,17 +54,22 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     QHBox* parentStrip = new QHBox(page);
     parentStrip->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(parentStrip);
-    new QLabel(i18n("Create beneath:"), parentStrip);
+    QString expln = i18n("Specifies where in the packet tree the new "
+        "packet will be placed.");
+    QWhatsThis::add(new QLabel(i18n("Create beneath:"), parentStrip), expln);
     chooser = new PacketChooser(tree, useFilter, false, defaultParent,
         parentStrip);
+    QWhatsThis::add(chooser, expln);
     parentStrip->setStretchFactor(chooser, 1);
 
     QHBox* labelStrip = new QHBox(page);
     labelStrip->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(labelStrip);
-    new QLabel(i18n("Label:"), labelStrip);
+    expln = i18n("The label that will be assigned to the new packet.");
+    QWhatsThis::add(new QLabel(i18n("Label:"), labelStrip), expln);
     label = new QLineEdit(
         tree->makeUniqueLabel(suggestedLabel.ascii()).c_str(), labelStrip);
+    QWhatsThis::add(label, expln);
     labelStrip->setStretchFactor(label, 1);
 
     QWidget* mainUI = creator->getInterface();
