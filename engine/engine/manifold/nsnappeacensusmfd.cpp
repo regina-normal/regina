@@ -97,6 +97,8 @@ std::ostream& NSnapPeaCensusManifold::writeName(std::ostream& out) const {
             return out << "Gieseking manifold";
         if (index == 4)
             return out << "Figure eight knot complement";
+        if (index == 129)
+            return out << "Whitehead link complement";
     }
 
     // No special names, just the usual SnapPea notation.
@@ -110,8 +112,7 @@ std::ostream& NSnapPeaCensusManifold::writeTeXName(std::ostream& out) const {
 std::ostream& NSnapPeaCensusManifold::writeStructure(std::ostream& out) const {
     // If we didn't give the usual SnapPea name in writeName(), give it here.
     if (section == SEC_5) {
-        // Gieseking manifold and figure eight knot complement:
-        if (index == 0 || index == 4)
+        if (index == 0 || index == 4 || index == 129)
             return NSnapPeaCensusTri(section, index).writeName(out);
     }
 
