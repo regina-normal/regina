@@ -495,7 +495,6 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
  * corresponding coordinate lookup routines will return
  * NLargeInteger::infinity where appropriate.
  *
- * \todo \feature Collapse a normal surface.
  * \todo \feature Calculation of Euler characteristic and orientability
  * for non-compact surfaces.
  * \todo \featurelong Determine which faces in the solution space a
