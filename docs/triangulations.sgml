@@ -1,15 +1,219 @@
+
+<!-- Regina triangulation documentation.
+     See regina.sgml for further details. -->
+
 <chapter id="triangulations">
  <title>Working with Triangulations</title>
 
- <sect1>
+ <para>
+  Most 3-manifolds in &regina; are represented by
+  <firstterm>triangulations</firstterm>.  A triangulation is a
+  particular representation of particular 3-manifold, consisting of a
+  set of tetrahedra and instructions on how (some of) the faces of these
+  tetrahedra are to be glued together in pairs.
+ </para>
+
+ <sect1 id="tri-creation">
   <title>Creation</title>
+
+  <sect2 id="tri-new">
+   <title>New Triangulations</title>
+   <para>
+    The simplest way to create a triangulation is through the
+    <menuchoice>
+     <guimenu>Packet</guimenu>
+     <guisubmenu>New</guisubmenu>
+     <guimenuitem>Triangulation</guimenuitem>
+    </menuchoice>
+    menu item, which will create a new triangulation from scratch.  At
+    this point, several choices are offered as described below.
+   </para>
+
+   <sect3 id="tri-new-empty">
+    <title>Empty</title>
+
+    <para>
+     This will create a new triangulation with no tetrahedra at all.
+     This option is best if you have a triangulation you wish to enter
+     in by hand, in which case you can create a new empty triangulation
+     and then manually <link linkend="tri-editgluings">add tetrahedra
+     and edit face gluings</link>.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-new-layered">
+    <title>Layered Solid Torus</title>
+
+    <para>
+     This will create a new layered solid torus with parameters
+     (<replaceable>a</replaceable>, <replaceable>b</replaceable>,
+     <replaceable>c</replaceable>) where all three parameters are
+     non-negative, coprime and
+     <replaceable>a</replaceable>+<replaceable>b</replaceable>=<replaceable>c</replaceable>.
+     These three parameters must be provided before the triangulation
+     can be created.
+    </para>
+    <para>
+     A <firstterm>layered solid torus</firstterm> is a solid torus built
+     by taking a one-tetrahedron solid torus and repeatedly adding
+     layers.  A new layer is added by taking a new tetrahedron and
+     gluing two of its faces as a square onto the existing torus
+     boundary; the remaining two faces of the new tetrahedron then form
+     the new torus boundary.  Note that each new layer can be added in
+     three different ways (corresponding to the three different two-face
+     squares that can be chosen on the torus boundary).  The
+     parameters of the layered solid torus represent the ways in which
+     the different layers have been added.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-new-lens">
+    <title>Lens Space</title>
+
+    <para>
+     This will create a layered lens space with parameters
+     (<replaceable>p</replaceable>, <replaceable>q</replaceable>)
+     where both parameters are positive, coprime and
+     <replaceable>p</replaceable>&gt;<replaceable>q</replaceable>.
+     These two parameters must be provided before the triangulation
+     can be created.
+    </para>
+    <para>
+     A <firstterm>layered lens space</firstterm> is a lens space built
+     by taking two layered solid tori with appropriate parameters and
+     gluing them together along their torus boundaries.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-new-dehydration">
+    <title>Dehydration</title>
+
+    <para>
+     This will create the triangulation obtained by rehydrating the
+     given dehydration string.
+    </para>
+    <para>
+     A <firstterm>dehydration string</firstterm> is a set of letters such as
+     <literal>dadbcccaqhx</literal> containing enough information to
+     recreate the triangulation.  Dehydration strings appear in
+     census papers such as the
+     <link linkend="bib-cuspedcensus">hyperbolic cusped census</link>,
+     in which the dehydration format is explicitly described.
+    </para>
+   </sect3>
+  </sect2>
+
+  <sect2 id="tri-imported">
+   <title>Imported Triangulations</title>
+
+   <para>
+    Triangulations can also be imported into &regina; from a variety of
+    foreign file formats.  Importing is done through the
+    <menuchoice>
+     <guimenu>File</guimenu>
+     <guisubmenu>Import</guisubmenu>
+    </menuchoice>
+    menu; the individual file formats are described below.
+   </para>
+
+   <sect3 id="tri-import-regina">
+    <title>&regina; Data File</title>
+
+    <para>
+     The contents of a native &regina; data file can be imported.  In
+     this case, the packet tree from the imported file will be
+     inserted into the packet tree of the current working file.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-import-snappea">
+    <title>&snappea; Triangulation</title>
+
+    <para>
+     A triangulation obtained from &snappea; can be imported.
+     The file should be a text file in &snappea;'s triangulation format;
+     an example is shown below.
+    </para>
+    <programlisting>
+    % Triangulation
+    m002
+    geometric_solution  2.02988321
+    nonorientable_manifold
+    CS_unknown
+
+    0 2
+        Klein   0.000000000000   0.000000000000
+        Klein   0.000000000000   0.000000000000
+
+    2
+       1    1    1    1
+     0132 3120 2130 3102
+       0    1    0    0
+      0  0  0  0  0  0  1 -1  0  0  0  0  1 -1  0  0
+      0  1 -1  0  0  0  0  0 -1  0  0  1  0  0  0  0
+      0  0  1 -1 -1  0  1  0  1  0  0 -1 -1  1  0  0
+      0  0  1 -1 -1  0  1  0  1  0  0 -1 -1  1  0  0
+      0.500000000000   0.866025403784
+
+       0    0    0    0
+     0132 3120 2130 3102
+       0    1    0    0
+      0  1 -1  0  0  0  0  0 -1  0  0  1  0  0  0  0
+      0  0  0  0  0  0  1 -1  0  0  0  0  1 -1  0  0
+      0 -1  1  0  1  0  0 -1  1  0  0 -1 -1  0  1  0
+      0 -1  1  0  1  0  0 -1  1  0  0 -1 -1  0  1  0
+      0.500000000000   0.866025403784
+    </programlisting>
+   </sect3>
+
+   <sect3 id="tri-import-dehydrationlist">
+    <title>Dehydrated Triangulation List</title>
+
+    <para>
+     A list of <link linkend="tri-new-dehydration">dehydrated
+     triangulation strings</link> can be imported.
+     The list should be stored in a text file with one triangulation per
+     line.  Each line may contain an arbitrary amount of data, but the
+     first word of each line should be the dehydrated triangulation
+     string.  A sample file is shown below.
+    </para>
+    <programlisting>
+    dafbcccaadl   N3,1   Z/3 + Z
+    dadcbccdjkd   N3,2   Z
+    dadbcccbbcv   N3,3   Z
+    dadbcccccdm   N3,4   Z
+    dadbcccaqhx   N3,5   Z/2 + Z/2 + Z
+    </programlisting>
+   </sect3>
+  </sect2>
  </sect1>
 
- <sect1>
+ <sect1 id="tri-analysis">
   <title>Analysis</title>
+  <para>TODO: This section still to be written.</para>
  </sect1>
 
- <sect1>
+ <sect1 id="tri-modification">
   <title>Modification</title>
+
+  <sect2 id="tri-editgluings">
+   <title>Editing Face Gluings</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
+
+  <sect2 id="tri-elementarymove">
+   <title>Elementary Moves</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
+
+  <sect2 id="tri-subdivision">
+   <title>Global Subdivision</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
+
+  <sect2 id="tri-simplification">
+   <title>Global Simplification</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
  </sect1>
 </chapter>
