@@ -10,12 +10,12 @@
   <link linkend="acknowledgements">acknowledgements page</link> instead.
  </para>
 
- <biblioentry id="bib-bensthesis">
+ <biblioentry id="bib-burton-phd">
   <author>
    <firstname>Benjamin</firstname>
    <surname>Burton</surname>
   </author>
-  <title>Minimal Triangulations and Normal Surfaces</title>
+  <title>Minimal triangulations and normal surfaces</title>
   <edition>PhD Thesis</edition>
   <date>May 2003</date>
  </biblioentry>
@@ -38,11 +38,42 @@
     <surname>Weeks</surname>
    </author>
   </authorgroup>
-  <title>A Census of Cusped Hyperbolic 3-Manifolds</title>
-  <edition>Mathematics of Computation</edition>
-  <volumenum>Volume 68</volumenum>
-  <issuenum>Number 225</issuenum>
-  <date>January 1999</date>
-  <artpagenums>Pages 321-332</artpagenums>
+  <title>A census of cusped hyperbolic 3-manifolds</title>
+  <edition>Math. Comp.</edition>
+  <volumenum>vol. 68</volumenum>
+  <issuenum>no. 225</issuenum>
+  <date>1999</date>
+  <artpagenums>pp. 321-332</artpagenums>
+ </biblioentry>
+
+ <biblioentry id="bib-0-efficiency">
+  <authorgroup>
+   <author>
+    <firstname>William</firstname>
+    <surname>Jaco</surname>
+   </author>
+   <author>
+    <firstname>J.</firstname>
+    <othername>Hyam</othername>
+    <surname>Rubinstein</surname>
+   </author>
+  </authorgroup>
+  <title>0-efficient triangulations of 3-manifolds</title>
+  <edition>Preprint</edition>
+  <date>July 2002</date>
+ </biblioentry>
+
+ <biblioentry id="bib-quadspace">
+  <author>
+   <firstname>Jeffrey</firstname>
+   <othername>L.</othername>
+   <surname>Tollefson</surname>
+  </author>
+  <title>Normal surface <replaceable>Q</replaceable>-theory</title>
+  <edition>Pacific J. Math.</edition>
+  <volumenum>vol. 183</volumenum>
+  <issuenum>no. 2</issuenum>
+  <date>1998</date>
+  <artpagenums>pp. 359-374</artpagenums>
  </biblioentry>
 </bibliography>
