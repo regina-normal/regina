@@ -32,12 +32,26 @@
 
 namespace regina {
 
+const NTriBool NTriBool::True(codeTrue);
+const NTriBool NTriBool::False(codeFalse);
+const NTriBool NTriBool::Unknown(codeUnknown);
+
 const unsigned char NBoolSet::eltTrue = 1;
 const unsigned char NBoolSet::eltFalse = 2;
 const NBoolSet NBoolSet::sNone;
 const NBoolSet NBoolSet::sTrue(true);
 const NBoolSet NBoolSet::sFalse(false);
 const NBoolSet NBoolSet::sBoth(true, true);
+
+std::ostream& operator << (std::ostream& out, const NTriBool& tri) {
+    if (tri == NTriBool::True)
+        out << "true";
+    else if (tri == NTriBool::False)
+        out << "false";
+    else
+        out << "unknown";
+    return out;
+}
 
 std::ostream& operator << (std::ostream& out, const NBoolSet& set) {
     if (set == NBoolSet::sNone)

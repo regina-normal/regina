@@ -45,6 +45,210 @@ namespace regina {
  */
 
 /**
+ * A three-way extension of the boolean type.
+ * Three-way booleans can be true, false or unknown.
+ */
+class NTriBool {
+    private:
+        enum Code { codeTrue = 1, codeFalse = -1, codeUnknown = 0 };
+            /**< Internal codes for the three possible values. */
+
+        Code code;
+            /**< The internal code for this particular three-way boolean. */
+
+    public:
+        static const NTriBool True;
+            /**< A global instance of the true value. */
+        static const NTriBool False;
+            /**< A global instance of the false value. */
+        static const NTriBool Unknown;
+            /**< A global instance of the unknown value. */
+
+    public:
+        /**
+         * Creates a new three-way boolean initialised to the unknown value.
+         */
+        NTriBool();
+        /**
+         * Creates a copy of the given three-way boolean.
+         *
+         * @param cloneMe the three-way boolean to clone.
+         */
+        NTriBool(const NTriBool& cloneMe);
+        /**
+         * Creates a new three-way boolean whose initial value is the
+         * given standard boolean.
+         *
+         * @param value the value (true or false) to assign to the new
+         * three-way boolean.
+         */
+        NTriBool(bool value);
+
+        /**
+         * Determines whether this and the given three-way boolean are equal.
+         * This routine makes a straightforward comparison of states.
+         * That is, true is equal to true, false is equal to false and
+         * unknown is equal to unknown.
+         *
+         * @param other the three-way boolean to compare with this.
+         * @return \c true if and only if this and the given value are
+         * equal.
+         */
+        bool operator == (const NTriBool& other) const;
+        /**
+         * Determines whether this and the given standard boolean are equal.
+         * This routine makes a straightforward comparison of states.
+         * That is, true is equal to true and false is equal to false.
+         * Unknown is equal to neither true nor false.
+         *
+         * @param other the standard boolean to compare with this.
+         * @return \c true if and only if this and the given value are
+         * equal.
+         */
+        bool operator == (bool other) const;
+        /**
+         * Determines whether this and the given three-way boolean are
+         * different.
+         * This routine makes a straightforward comparison of states.
+         * That is, true is equal to true, false is equal to false and
+         * unknown is equal to unknown.
+         *
+         * @param other the three-way boolean to compare with this.
+         * @return \c true if and only if this and the given value are
+         * different.
+         */
+        bool operator != (const NTriBool& other) const;
+        /**
+         * Determines whether this and the given standard boolean are
+         * different.
+         * This routine makes a straightforward comparison of states.
+         * That is, true is equal to true and false is equal to false.
+         * Unknown is equal to neither true nor false.
+         *
+         * @param other the standard boolean to compare with this.
+         * @return \c true if and only if this and the given value are
+         * different.
+         */
+        bool operator != (bool other) const;
+        /**
+         * Sets this three-way boolean to be identical to the given
+         * three-way boolean.
+         *
+         * @param cloneMe the value to assign to this object.
+         * @return a reference to this object.
+         */
+        NTriBool& operator = (const NTriBool& cloneMe);
+        /**
+         * Sets this three-way boolean to be identical to the given
+         * standard boolean.
+         *
+         * @param cloneMe the value to assign to this object.
+         * @return a reference to this object.
+         */
+        NTriBool& operator = (bool cloneMe);
+        /**
+         * Sets this to be the disjunction of this and the given value.
+         * Unknown is handled in the intuitive way.  For instance,
+         * (unknown or true) is true, and (unknown or false) is unknown.
+         *
+         * @param other the value to combine with this value.
+         * @return a reference to this object.
+         */
+        NTriBool& operator |= (const NTriBool& other);
+        /**
+         * Sets this to be the disjunction of this and the given value.
+         * Unknown is handled in the intuitive way.  For instance,
+         * (unknown or true) is true, and (unknown or false) is unknown.
+         *
+         * @param other the value to combine with this value.
+         * @return a reference to this object.
+         */
+        NTriBool& operator |= (bool other);
+        /**
+         * Sets this to be the conjunction of this and the given value.
+         * Unknown is handled in the intuitive way.  For instance,
+         * (unknown and true) is unknown, and (unknown and false) is false.
+         *
+         * @param other the value to combine with this value.
+         * @return a reference to this object.
+         */
+        NTriBool& operator &= (const NTriBool& other);
+        /**
+         * Sets this to be the conjunction of this and the given value.
+         * Unknown is handled in the intuitive way.  For instance,
+         * (unknown and true) is unknown, and (unknown and false) is false.
+         *
+         * @param other the value to combine with this value.
+         * @return a reference to this object.
+         */
+        NTriBool& operator &= (bool other);
+        /**
+         * Returns the disjunction of this and the given value.
+         * Unknown is handled in the intuitive way.  For instance,
+         * (unknown or true) is true, and (unknown or false) is unknown.
+         *
+         * @param other the value to combine with this value.
+         * @return the disjunction of this and the given value.
+         */
+        NTriBool operator | (const NTriBool& other) const;
+        /**
+         * Returns the disjunction of this and the given value.
+         * Unknown is handled in the intuitive way.  For instance,
+         * (unknown or true) is true, and (unknown or false) is unknown.
+         *
+         * @param other the value to combine with this value.
+         * @return the disjunction of this and the given value.
+         */
+        NTriBool operator | (bool other) const;
+        /**
+         * Returns the conjunction of this and the given value.
+         * Unknown is handled in the intuitive way.  For instance,
+         * (unknown and true) is unknown, and (unknown and false) is false.
+         *
+         * @param other the value to combine with this value.
+         * @return the conjunction of this and the given value.
+         */
+        NTriBool operator & (const NTriBool& other) const;
+        /**
+         * Returns the conjunction of this and the given value.
+         * Unknown is handled in the intuitive way.  For instance,
+         * (unknown and true) is unknown, and (unknown and false) is false.
+         *
+         * @param other the value to combine with this value.
+         * @return the conjunction of this and the given value.
+         */
+        NTriBool operator & (bool other) const;
+        /**
+         * Returns the negation of this value.
+         * The negation of unknown is unknown.
+         *
+         * @return the negation of this value.
+         */
+        NTriBool operator ~ () const;
+
+    private:
+        /**
+         * Creates a new three-way boolean corresponding to the given internal
+         * code.
+         *
+         * @param newCode the internal code representing the new three-way
+         * boolean.
+         */
+        explicit NTriBool(Code newCode);
+};
+
+/**
+ * Writes the given three-way boolean to the given output stream.
+ * The value will be written in the form
+ * <tt>true</tt>, <tt>false</tt> or <tt>unknown</tt>.
+ *
+ * @param out the output stream to which to write.
+ * @param set the three-way boolean to write.
+ * @return a reference to \a out.
+ */
+std::ostream& operator << (std::ostream& out, const NTriBool& set);
+
+/**
  * A set of booleans.  Note that there are only four possible such sets.
  * NBoolSet objects are small enough to pass about by value instead of
  * by reference.
@@ -339,6 +543,108 @@ class NBoolSet {
 std::ostream& operator << (std::ostream& out, const NBoolSet& set);
 
 /*@}*/
+
+// Inline functions for NTriBool
+
+inline NTriBool::NTriBool() : code(codeUnknown) {
+}
+
+inline NTriBool::NTriBool(const NTriBool& cloneMe) : code(cloneMe.code) {
+}
+
+inline NTriBool::NTriBool(bool value) : code(value ? codeTrue : codeFalse) {
+}
+
+inline bool NTriBool::operator == (const NTriBool& other) const {
+    return (code == other.code);
+}
+
+inline bool NTriBool::operator == (bool other) const {
+    return (other && (code == codeTrue)) || ((! other) && (code == codeFalse));
+}
+
+inline bool NTriBool::operator != (const NTriBool& other) const {
+    return (code != other.code);
+}
+
+inline bool NTriBool::operator != (bool other) const {
+    return (other && (code != codeTrue)) || ((! other) && (code != codeFalse));
+}
+
+inline NTriBool& NTriBool::operator = (const NTriBool& other) {
+    code = other.code;
+    return *this;
+}
+
+inline NTriBool& NTriBool::operator = (bool other) {
+    code = (other ? codeTrue : codeFalse);
+    return *this;
+}
+
+inline NTriBool& NTriBool::operator |= (const NTriBool& other) {
+    if (other.code == codeTrue)
+        code = codeTrue;
+    if (other.code == codeUnknown && code == codeFalse)
+        code = codeUnknown;
+    return *this;
+}
+
+inline NTriBool& NTriBool::operator |= (bool other) {
+    if (other)
+        code = codeTrue;
+    return *this;
+}
+
+inline NTriBool& NTriBool::operator &= (const NTriBool& other) {
+    if (other.code == codeFalse)
+        code = codeFalse;
+    if (other.code == codeUnknown && code == codeTrue)
+        code = codeUnknown;
+    return *this;
+}
+
+inline NTriBool& NTriBool::operator &= (bool other) {
+    if (! other)
+        code = codeFalse;
+    return *this;
+}
+
+inline NTriBool NTriBool::operator | (const NTriBool& other) const {
+    if (code == codeTrue || other.code == codeTrue)
+        return True;
+    if (code == codeFalse && other.code == codeFalse)
+        return False;
+    return Unknown;
+}
+
+inline NTriBool NTriBool::operator | (bool other) const {
+    return (other ? True : *this);
+}
+
+inline NTriBool NTriBool::operator & (const NTriBool& other) const {
+    if (code == codeTrue && other.code == codeTrue)
+        return True;
+    if (code == codeFalse || other.code == codeFalse)
+        return False;
+    return Unknown;
+}
+
+inline NTriBool NTriBool::operator & (bool other) const {
+    return (other ? *this : False);
+}
+
+inline NTriBool NTriBool::operator ~ () const {
+    switch (code) {
+        case codeTrue : return False;
+        case codeFalse : return True;
+        default : return Unknown;
+    }
+}
+
+inline NTriBool::NTriBool(Code newCode) :
+        code((newCode == codeTrue || newCode == codeFalse) ? newCode :
+            codeUnknown) {
+}
 
 // Inline functions for NBoolSet
 
