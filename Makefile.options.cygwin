@@ -39,7 +39,7 @@ export JNI_INCLUDES := -I/cygdrive/c/j2sdk1.4.0_01/include \
 	-I/cygdrive/c/j2sdk1.4.0_01/include/win32
 export EXTRA_INCLUDES := -I/usr/include/libxml2
 
-export EXTRA_LIBRARIES := -lgmp -lstdc++ -lz -lxml2
+export EXTRA_LIBRARIES := -lgmp -lstdc++ -lz -lxml2 -lpopt
 
 # Specify here any compiler-dependent macros that need to be defined.
 # Understood macros include:

@@ -27,157 +27,260 @@
 /* end stub */
 
 #include <cctype>
-#include <cstdlib>
+#include <fstream>
 #include <sstream>
+#include <popt.h>
 #include <unistd.h>
 #include "census/ncensus.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "progress/nprogressmanager.h"
-#include "utilities/stringutils.h"
 
-#define MAXTET 10
-#define SLEEP_SECONDS 1
+// Constants.
+const long MAXTET = 10;
+const unsigned SLEEP_SECONDS = 1;
 
-using regina::NBoolSet;
-using std::cin;
-using std::cout;
-using std::cerr;
-using std::endl;
+// Census parameters.
+long nTet = 0, nBdryFaces = -1;
+regina::NBoolSet
+    finiteness(true, true),
+    orientability(true, true),
+    boundary(true, true);
+int minimal = 0;
+int usePairs = 0;
 
-void usage(const char* progName) {
-    cerr << "Usage:\n";
-    cerr << "    " << progName << " <output-file>\n\n";
-    cerr <<
-        "You will be required to give census parameters on standard input.\n";
-    exit(1);
-}
+// Variables used for a dump of face pairings.
+std::ostream* dumpStream = 0;
+unsigned long totPairings = 0;
 
-int getInt(const char* prompt, int min, int max) {
-    std::string token;
-    int ans;
-    bool valid;
-    while (true) {
-        cout << prompt;
-        cin >> token;
-
-        if (token.empty()) {
-            cerr << "Unexpected end of standard input.\n";
-            exit(1);
-        }
-
-        valid = regina::valueOf(token, ans);
-        if ((! valid) || ans < min || ans > max)
-            cout << "Only numerical values between " << min
-                << " and " << max << " are accepted.\n";
-        else
-            return ans;
+/**
+ * Dump the given face pairing to dumpStream.
+ */
+void dumpPairing(const regina::NFacePairing* pair,
+        const regina::NFacePairingIsoList*, void*) {
+    if (pair && dumpStream) {
+        (*dumpStream) << (*pair).toTextRep() << std::endl;
+        totPairings++;
     }
 }
 
-bool getBool(const char* prompt, char trueChar, char falseChar) {
-    trueChar = tolower(trueChar);
-    falseChar = tolower(falseChar);
-
-    std::string token;
-    while (true) {
-        cout << prompt;
-        cin >> token;
-
-        if (token.empty()) {
-            cerr << "Unexpected end of standard input.\n";
-            exit(1);
-        }
-
-        if (tolower(token[0]) == trueChar)
-            return true;
-        else if (tolower(token[0]) == falseChar)
-            return false;
-        else
-            cout << "Your response should be '" << trueChar << "' or '"
-                << falseChar << "'.\n";
-    }
-}
-
-NBoolSet getBoolSet(const char* prompt, const char* keyDescs,
-        const char keys[3]) {
-    std::string token;
-    while (true) {
-        cout << prompt << '\n' << keyDescs << ": ";
-        cin >> token;
-
-        if (token.empty()) {
-            cerr << "Unexpected end of standard input.\n";
-            exit(1);
-        }
-
-        if (tolower(token[0]) == tolower(keys[0]))
-            return NBoolSet::sTrue;
-        if (tolower(token[0]) == tolower(keys[1]))
-            return NBoolSet::sFalse;
-        if (tolower(token[0]) == tolower(keys[2]))
-            return NBoolSet::sBoth;
-
-        cout << token << " is not an accepted response.\n";
-    }
-}
-
-int main(int argc, char* argv[]) {
-    if (argc != 2)
-        usage(argv[0]);
-
-    // Get the census parameters.
-    int nTetrahedra = getInt("Number of tetrahedra: ", 1, MAXTET);
-    NBoolSet finiteness = getBoolSet(
-        "Finite and/or ideal triangulations?",
-        "(f)inite, (i)deal, (a)ll", "fia");
-    NBoolSet orientability = getBoolSet(
-        "Orientable and/or non-orientable triangulations?",
-        "(o)rientable, (n)on-orientable, (a)ll", "ona");
-    NBoolSet boundary = getBoolSet(
-        "With and/or without boundary faces?",
-        "(b)oundary, (n)o-boundary, (a)ll", "bna");
-    int nBdryFaces = -1;
-    if (boundary.hasTrue())
-        nBdryFaces = getInt("Number of boundary faces (-1 for any): ",
-            -1, 2 * nTetrahedra + 2);
-    bool purgeNonMinimal = getBool(
-        "Throw away obviously non-minimal triangulations (y/n)? ", 'y', 'n');
-
-    // Build the packet tree.
-    regina::NContainer parent;
-    parent.setPacketLabel("Command-line census");
-
+/**
+ * Return a new text packet storing the census parameters.
+ */
+regina::NText* parameterPacket() {
     regina::NText* desc = new regina::NText();
     desc->setPacketLabel("Parameters");
     std::ostringstream descStream;
-    descStream << nTetrahedra <<
-        (nTetrahedra == 1 ? " tetrahedron\n" : " tetrahedra\n");
-    if (finiteness == NBoolSet::sTrue)
+
+    if (usePairs)
+        descStream << "Only used a subset of all available face pairings.\n";
+
+    descStream << nTet << (nTet == 1 ? " tetrahedron\n" : " tetrahedra\n");
+
+    if (finiteness == regina::NBoolSet::sTrue)
         descStream << "Finite only\n";
-    else if (finiteness == NBoolSet::sFalse)
+    else if (finiteness == regina::NBoolSet::sFalse)
         descStream << "Ideal only\n";
     else
         descStream << "Finite and ideal\n";
-    if (orientability == NBoolSet::sTrue)
+
+    if (orientability == regina::NBoolSet::sTrue)
         descStream << "Orientable only\n";
-    else if (orientability == NBoolSet::sFalse)
+    else if (orientability == regina::NBoolSet::sFalse)
         descStream << "Non-orientable only\n";
     else
         descStream << "Orientable and non-orientable\n";
-    if (boundary == NBoolSet::sTrue)
+
+    if (boundary == regina::NBoolSet::sTrue)
         descStream << "Boundary faces only\n";
-    else if (boundary == NBoolSet::sFalse)
+    else if (boundary == regina::NBoolSet::sFalse)
         descStream << "No boundary faces only\n";
     else
         descStream << "With and without boundary faces\n";
+
     if (nBdryFaces >= 0)
         descStream << "Requires precisely " << nBdryFaces <<
             " boundary faces\n";
-    if (purgeNonMinimal)
+
+    if (minimal)
         descStream << "Ignored obviously non-minimal triangulations\n";
+
     desc->setText(descStream.str());
+    return desc;
+}
+
+int main(int argc, const char* argv[]) {
+    // Set up the command-line arguments.
+    int argBdry = 0;
+    int argNoBdry = 0;
+    int argOr = 0;
+    int argNor = 0;
+    int argFinite = 0;
+    int argIdeal = 0;
+    int genPairs = 0;
+    poptOption opts[] = {
+        { "tetrahedra", 't', POPT_ARG_LONG, &nTet, 0,
+            "Number of tetrahedra.", "<tetrahedra>" },
+        { "boundary", 'b', POPT_ARG_NONE, &argBdry, 0,
+            "Must have at least one boundary face.", 0 },
+        { "internal", 'i', POPT_ARG_NONE, &argNoBdry, 0,
+            "Must have all faces internal (no boundary faces).", 0 },
+        { "bdryfaces", 'B', POPT_ARG_LONG, &nBdryFaces, 0,
+            "Must have fixed number (>= 1) of boundary faces.", "<faces>" },
+        { "orientable", 'o', POPT_ARG_NONE, &argOr, 0,
+            "Must be orientable.", 0 },
+        { "nonorientable", 'n', POPT_ARG_NONE, &argNor, 0,
+            "Must be non-orientable.", 0 },
+        { "finite", 'f', POPT_ARG_NONE, &argFinite, 0,
+            "Must be finite (no ideal vertices).", 0 },
+        { "ideal", 'd', POPT_ARG_NONE, &argIdeal, 0,
+            "Must have at least one ideal vertex.", 0 },
+        { "minimal", 'm', POPT_ARG_NONE, &minimal, 0,
+            "Ignore obviously non-minimal triangulations.", 0 },
+        { "pairs", 'p', POPT_ARG_NONE, &genPairs, 0,
+            "Only generate face pairings, not triangulations.", 0 },
+        { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
+            "Only use face pairings read from standard input.", 0 },
+        POPT_AUTOHELP
+        { 0, 0, 0, 0, 0, 0, 0 }
+    };
+
+    poptContext optCon = poptGetContext(0, argc, argv, opts, 0);
+    poptSetOtherOptionHelp(optCon, "[ <output-file> ]");
+
+    // Parse the command-line arguments.
+    int rc = poptGetNextOpt(optCon);
+    if (rc != -1) {
+        std::cerr << poptBadOption(optCon, POPT_BADOPTION_NOALIAS)
+            << ": " << poptStrerror(rc) << "\n\n";
+        poptPrintHelp(optCon, stderr, 0);
+        poptFreeContext(optCon);
+        return 1;
+    }
+
+    std::string outFile;
+    const char** otherOpts = poptGetArgs(optCon);
+    if (otherOpts && otherOpts[0]) {
+        outFile = otherOpts[0];
+        if (otherOpts[1]) {
+            std::cerr << "Too many arguments.\n\n";
+            poptPrintHelp(optCon, stderr, 0);
+            poptFreeContext(optCon);
+            return 1;
+        }
+    }
+
+    // Run a sanity check on the command-line arguments.
+    bool broken = false;
+    if ((! genPairs) && outFile.empty()) {
+        std::cerr << "An output file must be specified.\n";
+        broken = true;
+    } else if ((! usePairs) && nTet == 0) {
+        std::cerr << "The number of tetrahedra must be specified using "
+            << "option -t/--tetrahedra.\n";
+        broken = true;
+    } else if ((! usePairs) && (nTet < 1 || nTet > MAXTET)) {
+        std::cerr << "The number of tetrahedra must be between 1 and "
+            << MAXTET << " inclusive.\n";
+        broken = true;
+    } else if (usePairs && nTet) {
+        std::cerr << "Options -P/--usepairs and -t/--tetrahedra "
+            << "cannot be used together.\n";
+        broken = true;
+    } else if (argBdry && argNoBdry) {
+        std::cerr << "Options -b/--boundary and -i/--internal "
+            << "cannot be used together.\n";
+        broken = true;
+    } else if (argOr && argNor) {
+        std::cerr << "Options -o/--orientable and -n/--nonorientable "
+            << "cannot be used together.\n";
+        broken = true;
+    } else if (argBdry && argNoBdry) {
+        std::cerr << "Options -f/--finite and -d/--ideal "
+            << "cannot be used together.\n";
+        broken = true;
+    } else if (genPairs && usePairs) {
+        std::cerr << "Options -p/--pairs and -P/--usepairs "
+            << "cannot be used together.\n";
+        broken = true;
+    }
+
+    if ((! broken) && (nBdryFaces != -1)) {
+        if (nBdryFaces < 0) {
+            std::cerr << "Number of boundary faces cannot be negative.\n";
+            broken = true;
+        } else if (nBdryFaces == 0) {
+            // Asking for no boundary faces.
+            if (argBdry) {
+                std::cerr << "Option -b/--boundary cannot be used with "
+                    << "-B/--bdryfaces=0.\n";
+                broken = true;
+            } else
+                argNoBdry = 1;
+        } else if (nBdryFaces % 2 != 0) {
+            std::cerr << "Number of boundary faces must be even.\n";
+            broken = true;
+        } else if (nBdryFaces > 2 * nTet + 2) {
+            std::cerr << "Number of boundary faces for " << nTet
+                << (nTet == 1 ? " tetrahedron" : " tetrahedra")
+                << " can be at most " << (2 * nTet + 2) << ".\n";
+            broken = true;
+        } else {
+            // Asking for a valid positive number of boundary faces.
+            if (argNoBdry) {
+                std::cerr << "Option -i/--internal cannot be used with "
+                    << "-B/--bdryfaces=<non-zero>.\n";
+                broken = true;
+            } else
+                argBdry = 1;
+        }
+    }
+
+    if (broken) {
+        std::cerr << '\n';
+        poptPrintHelp(optCon, stderr, 0);
+        poptFreeContext(optCon);
+        return 1;
+    }
+
+    // Done parsing the command line.
+    poptFreeContext(optCon);
+
+    // Finalise the census parameters.
+    finiteness = regina::NBoolSet(! argIdeal, ! argFinite);
+    orientability = regina::NBoolSet(! argNor, ! argOr);
+    boundary = regina::NBoolSet(! argNoBdry, ! argBdry);
+
+    // Are we only dumping face pairings?
+    if (genPairs) {
+        if (outFile.empty())
+            dumpStream = &std::cout;
+        else {
+            std::ofstream out(outFile.c_str());
+            if (! out) {
+                std::cerr << "Could not write to file " << outFile << ".\n";
+                return 1;
+            }
+            dumpStream = &out;
+        }
+
+        regina::NFacePairing::findAllPairings(nTet, boundary, nBdryFaces,
+            dumpPairing, 0, false);
+        std::cerr << "Total face pairings: " << totPairings << std::endl;
+        return 0;
+    }
+
+    // We're actually generating triangulations.
+
+    // Build the packet tree.
+    regina::NContainer parent;
+    if (usePairs)
+        parent.setPacketLabel("Partial command-line census");
+    else
+        parent.setPacketLabel("Command-line census");
+
+    regina::NText* desc = parameterPacket();
 
     regina::NContainer* census = new regina::NContainer();
     census->setPacketLabel("Triangulations");
@@ -186,31 +289,75 @@ int main(int argc, char* argv[]) {
     parent.insertChildLast(census);
 
     // Start the census running.
-    regina::NProgressManager manager;
-    regina::NCensus::formCensus(census, nTetrahedra, finiteness, orientability,
-        boundary, nBdryFaces,
-        (purgeNonMinimal ? regina::NCensus::mightBeMinimal : 0), 0, &manager);
+    if (usePairs) {
+        // Only use the face pairings read from standard input.
+        std::cout << "Trying face pairings..." << std::endl;
+        std::string pairingList("Face pairings:\n\n");
 
-    // Output progress and wait for the census to finish.
-    while (! manager.isStarted())
-        sleep(SLEEP_SECONDS);
+        std::string pairingRep;
+        regina::NFacePairing* pairing;
+        while (true) {
+            std::getline(std::cin, pairingRep);
 
-    const regina::NProgress* progress = manager.getProgress();
-    cout << endl;
-    while (! manager.isFinished()) {
-        if (progress->hasChanged())
-            cout << progress->getDescription() << endl;
-        sleep(SLEEP_SECONDS);
+            if (pairingRep.length() > 0) {
+                pairing = regina::NFacePairing::fromTextRep(pairingRep);
+                if (! pairing) {
+                    std::cerr << "Invalid face pairing: " << pairingRep
+                        << std::endl;
+                    pairingList += "INVALID: ";
+                    pairingList += pairingRep;
+                    pairingList += '\n';
+                } else {
+                    std::cout << pairing->toString() << std::endl;
+                    regina::NCensus::formPartialCensus(pairing, census,
+                        finiteness, orientability,
+                        (minimal ? regina::NCensus::mightBeMinimal : 0), 0);
+
+                    pairingList += pairing->toString();
+                    pairingList += '\n';
+                }
+            }
+
+            if (std::cin.eof())
+                break;
+        }
+
+        // Store the face pairings used with the census.
+        regina::NText* pairingPacket = new regina::NText(pairingList);
+        pairingPacket->setPacketLabel("Face Pairings");
+        parent.insertChildAfter(pairingPacket, desc);
+    } else {
+        // An ordinary all-face-pairings census.
+        std::cout << "Progress reports are periodic." << std::endl;
+        std::cout << "Not all face pairings used will be reported."
+            << std::endl;
+
+        regina::NProgressManager manager;
+        regina::NCensus::formCensus(census, nTet, finiteness, orientability,
+            boundary, nBdryFaces,
+            (minimal ? regina::NCensus::mightBeMinimal : 0), 0, &manager);
+
+        // Output progress and wait for the census to finish.
+        while (! manager.isStarted())
+            sleep(SLEEP_SECONDS);
+
+        const regina::NProgress* progress = manager.getProgress();
+        while (! manager.isFinished()) {
+            if (progress->hasChanged())
+                std::cout << progress->getDescription() << std::endl;
+            sleep(SLEEP_SECONDS);
+        }
+        std::cout << progress->getDescription() << std::endl;
     }
-    cout << progress->getDescription() << endl;
 
     // Write the completed census to file.
-    if (! regina::writeXMLFile(argv[1], &parent)) {
-        cerr << "Output file " << argv[1] << " could not be written.\n";
+    if (! regina::writeXMLFile(outFile.c_str(), &parent)) {
+        std::cerr << "Output file " << outFile << " could not be written.\n";
         return 1;
     }
 
-    cout << "Total triangulations: " << census->getNumberOfChildren() << endl;
+    std::cout << "Total triangulations: " << census->getNumberOfChildren()
+        << std::endl;
     return 0;
 }
 

@@ -40,7 +40,7 @@ export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
 export EXTRA_INCLUDES := -I/usr/include/libxml2 \
 	-idirafter /usr/include/g++-v3/ext
 
-export EXTRA_LIBRARIES := -lgmp -lpthread -lz -lxml2
+export EXTRA_LIBRARIES := -lgmp -lpthread -lz -lxml2 -lpopt
 
 # Specify here any compiler-dependent macros that need to be defined.
 # Understood macros include:
