@@ -107,6 +107,7 @@ public abstract class Modification extends Algorithm {
     public static void makeMenu(Shell shell, JMenu menu, Vector vector) {
         JMenu triangulation = new JMenu("Triangulation");
 		triangulation.setMnemonic(KeyEvent.VK_T);
+		(new ElementaryMove(shell)).insert(triangulation, vector);
         (new Modification(shell, "Intelligent Simplify", KeyEvent.VK_S,
 			"simplified",
             normal.engine.triangulation.NTriangulation.class) {
@@ -116,6 +117,7 @@ public abstract class Modification extends Algorithm {
                         intelligentSimplify();
                 }
             }).insert(triangulation, vector);
+		triangulation.addSeparator();
         (new Modification(shell, "Convert from Ideal to Finite", KeyEvent.VK_I,
 			"made finite",
             normal.engine.triangulation.NTriangulation.class) {
