@@ -11,6 +11,9 @@
 sgml_index = regina.sgml
 sgml_dsl = regina.dsl
 
+engine_index = engine/index.html
+engine_conf = ../engine/doc-files/docs.conf
+
 sample_html = index.html
 sample_man = regina.1
 sample_rtf = regina.rtf
@@ -42,9 +45,12 @@ sgml_sources = regina.dsl \
 
 all-local : @REGINA_BUILD_DOCSENGINE@ @REGINA_BUILD_DOCSJAVAUI@ @REGINA_BUILD_DOCSHTML@ @REGINA_BUILD_DOCSMAN@
 
-engine :
+engine : $(engine_index)
+$(engine_index) : $(engine_conf)
+	cd ../engine && @DOXYGEN@ $(engine_conf)
 
 javaui :
+	false
 
 html : $(sample_html)
 $(sample_html) : $(sgml_sources)
@@ -73,6 +79,9 @@ clean-local :
 	rm -f *.[1-8] manpage.*
 	rm -f *.tex *.aux *.dvi *.out *.log
 	rm -f *.pdf *.rtf
+	rm -f engine/*.html engine/*.png engine/*.gif engine/*.css engine/*.dot
+	rm -f javaui/*.html javaui/*.css javaui/package-list
+	rm -rf javaui/normal
 
 ## ----------------------- Normal Makefile.am stuff ------------------
 

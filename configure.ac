@@ -207,6 +207,8 @@ REGINA_SHOULD_BUILD(DOCSMAN, man, [man pages])
 # Makefiles:
 AC_CONFIG_FILES([Makefile
                  docs/Makefile
+                 docs/engine/Makefile
+                 docs/javaui/Makefile
                  engine/Makefile
                  engine/doc-files/Makefile
                  engine/engine/Makefile

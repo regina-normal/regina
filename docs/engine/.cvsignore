@@ -3,3 +3,5 @@
 *.html
 *.css
 *.dot
+Makefile
+Makefile.in
