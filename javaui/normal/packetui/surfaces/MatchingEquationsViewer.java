@@ -108,16 +108,15 @@ public class MatchingEquationsViewer extends DefaultPacketViewer
         matchingEquations = list.recreateMatchingEquations();
         table.setModel(model);
         model.fireTableStructureChanged();
+
         TableColumn col;
-        TableCellRenderer renderer;
+        TableCellRenderer renderer = new FancyColumnHeaderRenderer(table);
         for (int i=0; i<matchingEquations.columns(); i++) {
             col = table.getColumnModel().getColumn(i);
             col.setPreferredWidth(70);
-            renderer = col.getHeaderRenderer();
-            if (renderer instanceof DefaultTableCellRenderer)
-                ((DefaultTableCellRenderer)renderer).
-                    setToolTipText(Coordinates.getCoordinateDesc(
-                    list.getFlavour(), i));
+			col.setHeaderRenderer(renderer);
+			col.setHeaderValue(new FancyData(model.getColumnName(i),
+				Coordinates.getCoordinateDesc(list.getFlavour(), i)));
         }
     }
 

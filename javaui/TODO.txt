@@ -46,7 +46,6 @@ Normal Surfaces:
 	For matching equations and normal surface coordinates, resizing one
 		column should imply resizing all coordinate columns.
 	Right-align coordinates but have padding between numbers and column edge.
-*	Check that tooltips are appearing over table columns.
 
 Packet Tree:
 	Ensure horizontal sizes of tree nodes are correct after renaming or
@@ -55,5 +54,4 @@ Packet Tree:
 		and running algorithms on clones.
 	Ensure insertUnwrappedDescendants puts the nodes in the right
 		positions in child lists.
-*	Double-clicking on a packet sometimes seems to open it three times.
 *	Ensure refreshing notices which packets have moved out of a subtree.

@@ -240,41 +240,19 @@ public class CoordinateViewer extends DefaultPacketViewer
         table.setModel(model);
         model.fireTableStructureChanged();
 
-        TableCellRenderer renderer = new ColorCellRenderer();
+        TableCellRenderer renderer = new FancyCellRenderer();
         table.getColumnModel().getColumn(1).setCellRenderer(renderer);
         if (set.isEmbeddedOnly())
             table.getColumnModel().getColumn(2).setCellRenderer(renderer);
 
         TableColumn col;
+		renderer = new FancyColumnHeaderRenderer(table);
         for (int i=0; i<model.getColumnCount(); i++) {
             col = table.getColumnModel().getColumn(i);
             col.setPreferredWidth(70);
-            renderer = col.getHeaderRenderer();
-            if (renderer == null) {
-                DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
-                    public Component getTableCellRendererComponent(
-                            JTable table, Object value, boolean isSelected,
-                            boolean hasFocus, int row, int col) {
-                        Component ans = super.getTableCellRendererComponent(
-                            table, value, isSelected, hasFocus, row, col);
-                        if (ans instanceof JComponent) {
-                            ((JComponent)ans).setBorder(UIManager.getBorder(
-                                "TableHeader.cellBorder"));
-                        }
-                        return ans;
-                    }
-                };
-                JTableHeader header = table.getTableHeader();
-                r.setHorizontalAlignment(SwingConstants.CENTER);
-                r.setForeground(header.getForeground());
-                r.setBackground(header.getBackground());
-                r.setFont(header.getFont());
-                col.setHeaderRenderer(r);
-                renderer = r;
-            }
-            if (renderer instanceof DefaultTableCellRenderer)
-                ((DefaultTableCellRenderer)renderer).
-                    setToolTipText(model.getColumnToolTip(i));
+            col.setHeaderRenderer(renderer);
+			col.setHeaderValue(new FancyData(model.getColumnName(i),
+				model.getColumnToolTip(i)));
         }
     }
 
@@ -341,18 +319,18 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return "";
                         int intAns = surface.isOrientable();
                         if (intAns == 1)
-                            return new ColorCell("Orbl", green);
+                            return new FancyData("Orbl", green);
                         else if (intAns == -1)
-                            return new ColorCell("Non-orbl", red);
+                            return new FancyData("Non-orbl", red);
                         else
                             return "Unknown";
                     case 2:
                         if (! surface.isCompact())
                             return "Infinite";
                         else if (surface.hasRealBoundary())
-                            return new ColorCell("Real Bdry", red);
+                            return new FancyData("Real Bdry", red);
                         else
-                            return new ColorCell("Closed", green);
+                            return new FancyData("Closed", green);
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
                             surface, column - 3);
@@ -374,9 +352,9 @@ public class CoordinateViewer extends DefaultPacketViewer
                         if (! surface.isCompact())
                             return "Infinite";
                         else if (surface.hasRealBoundary())
-                            return new ColorCell("Real Bdry", red);
+                            return new FancyData("Real Bdry", red);
                         else
-                            return new ColorCell("Closed", green);
+                            return new FancyData("Closed", green);
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
                             surface, column - 2);
