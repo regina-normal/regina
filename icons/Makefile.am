@@ -17,7 +17,8 @@ icons_DATA = README.txt \
   regina.gif regina.png regina.xpm \
   reginalarge.jpg \
   reginatiny-lo.xpm \
-  reginatiny.gif reginatiny.png reginatiny.xpm
+  reginatiny.gif reginatiny.png reginatiny.xpm \
+  reginatrans.png
 
 EXTRA_DIST = $(icons_DATA)
 
