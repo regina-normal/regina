@@ -126,10 +126,10 @@ void ReginaPart::setupActions() {
     treePacketEditActions.append(act);
 
     // New packets:
-    act = new KAction(i18n("New &Angle Structure List"), "packet_angles",
+    act = new KAction(i18n("New &Angle Structure Solutions"), "packet_angles",
         ALT+Key_A, this, SLOT(newAngleStructures()), actionCollection(),
         "tree_angles");
-    act->setToolTip(i18n("New angle structure list"));
+    act->setToolTip(i18n("New angle structure solutions"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New &Container"), "packet_container", ALT+Key_C,

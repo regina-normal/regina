@@ -44,7 +44,7 @@
 void ReginaPart::newAngleStructures() {
     newPacket(new NAngleStructureCreator(),
         new SingleTypeFilter<regina::NTriangulation>(),
-        i18n("New Angle Structure List"), i18n("Angle Structures"));
+        i18n("New Angle Structure Solutions"), i18n("Angle Structures"));
 }
 
 void ReginaPart::newCensus() {
