@@ -5,3 +5,6 @@
 .libs
 Makefile
 Makefile.in
+regina-config.h.in
+regina-config.h
+stamp-h1

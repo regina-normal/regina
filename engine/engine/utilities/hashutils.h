@@ -36,9 +36,10 @@
 #define __HASHUTILS_H
 #endif
 
-#include <config.h>
+#include <regina-config.h>
 
 #include <string>
+
 #include "utilities/hashset.h"
 
 /*! \namespace stdhash

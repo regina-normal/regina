@@ -114,7 +114,8 @@ sub updateFile {
     my @java_classes;
 
     foreach my $entry (glob($amDir.'/*')) {
-        if ($entry =~ /^\Q${amDir}\E\/(.*\.h)$/) {
+        if ($entry eq "$amDir/regina-config.h") {
+        } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.h)$/) {
             push(@HEADERS, $1);
         } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.tcc)$/) {
             push(@HEADERS, $1);

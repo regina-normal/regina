@@ -28,10 +28,10 @@ SUBDIRS = \
 
 lib_LTLIBRARIES = libregina-engine.la
 
-libregina_engine_la_SOURCES = shareableobject.cpp
+libregina_engine_la_SOURCES = engine.cpp shareableobject.cpp
 libregina_engine_la_LDFLAGS = -release @PACKAGE_VERSION@
 
-pkginclude_HEADERS = docs.h engine.h howto.h regina.h shareableobject.h
+pkginclude_HEADERS = docs.h engine.h howto.h shareableobject.h
 
 libregina_engine_la_LIBADD = \
   algebra/libalgebra.la \
@@ -50,4 +50,15 @@ libregina_engine_la_LIBADD = \
   triangulation/libtriangulation.la \
   utilities/libutilities.la \
   @ENGINE_LIBS@
+
+## ----------------------- Custom targets ----------------------------
+
+.PHONY : install-data-local uninstall-local
+
+install-data-local :
+	$(mkinstalldirs) $(DESTDIR)$(pkgincludedir)
+	$(INSTALL_DATA) regina-config.h $(DESTDIR)$(pkgincludedir)
+
+uninstall-local :
+	rm -f $(DESTDIR)$(pkgincludedir)/regina-config.h
 

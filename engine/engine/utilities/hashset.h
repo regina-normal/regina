@@ -39,7 +39,7 @@
 #define __HASHSET_H
 #endif
 
-#include <config.h>
+#include <regina-config.h>
 
 #ifdef HAVE_EXT_HASH_SET
     #include <ext/hash_set>

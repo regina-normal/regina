@@ -37,7 +37,7 @@
 #define __NRESOURCES_H
 #endif
 
-#include <config.h>
+#include <regina-config.h>
 
 #include <fstream>
 

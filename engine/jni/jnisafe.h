@@ -40,7 +40,7 @@
 #define __JNISAFE_H
 #endif
 
-#include <config.h>
+#include <regina-config.h>
 
 #ifndef HAVE___INT64
     #define __int64 long long
