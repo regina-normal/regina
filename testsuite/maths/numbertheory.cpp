@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/numbertheory.h"
 
@@ -33,6 +34,9 @@ class NumberTheoryTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NumberTheoryTest);
 
     CPPUNIT_TEST(reducedMod);
+    CPPUNIT_TEST(gcd);
+    CPPUNIT_TEST(gcdWithCoeffs);
+    CPPUNIT_TEST(modularInverse);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -45,69 +49,239 @@ class NumberTheoryTest : public CppUnit::TestFixture {
             /**< Medium even number; this squared fits in a signed long. */
         long lOddMed;
             /**< Medium odd number; this squared fits in a signed long. */
+        long lEvenSmall;
+            /**< Small even number; this cubed fits in a signed long. */
+        long lOddSmall;
+            /**< Small odd number; this cubed fits in a signed long. */
+        long lEvenTiny;
+            /**< Tiny even number; this to the fourth fits in a signed long. */
+        long lOddTiny;
+            /**< Tiny odd number; this to the fourth fits in a signed long. */
+        unsigned long ulEvenLarge;
+            /**< Large even number; twice this fits in a signed long. */
+        unsigned long ulOddLarge;
+            /**< Large odd number; twice this fits in a signed long. */
+        unsigned long ulEvenMed;
+            /**< Medium even number; this squared fits in a signed long. */
+        unsigned long ulOddMed;
+            /**< Medium odd number; this squared fits in a signed long. */
+        unsigned long ulEvenSmall;
+            /**< Small even number; this cubed fits in a signed long. */
+        unsigned long ulOddSmall;
+            /**< Small odd number; this cubed fits in a signed long. */
+        unsigned long ulEvenTiny;
+            /**< Tiny even number; this to the fourth fits in a signed long. */
+        unsigned long ulOddTiny;
+            /**< Tiny odd number; this to the fourth fits in a signed long. */
 
     public:
         void setUp() {
-            lEvenLarge = 1000000000;
-            lOddLarge = 1000000001;
-            lEvenMed = 40000;
-            lOddMed = 40001;
+            ulEvenLarge = lEvenLarge = 1000000000;
+            ulOddLarge = lOddLarge = 1000000001;
+            ulEvenMed = lEvenMed = 40000;
+            ulOddMed = lOddMed = 40001;
+            ulEvenSmall = lEvenSmall = 1000;
+            ulOddSmall = lOddSmall = 1001;
+            ulEvenTiny = lEvenTiny = 200;
+            ulOddTiny = lOddTiny = 201;
         }
 
         void tearDown() {
         }
 
+        void reducedModSpec(long k, long modBase) {
+            long ans = regina::reducedMod(k, modBase);
+
+            std::ostringstream msg;
+            msg << "reducedMod(" << k << ", " << modBase
+                << ") should not be " << ans << '.';
+
+            CPPUNIT_ASSERT_MESSAGE(msg.str(), 2 * ans <= modBase);
+            CPPUNIT_ASSERT_MESSAGE(msg.str(), 2 * ans > -modBase);
+            CPPUNIT_ASSERT_MESSAGE(msg.str(), (k - ans) % modBase == 0);
+        }
+
         void reducedMod() {
             // 0 mod n:
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::reducedMod(0, 1));
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::reducedMod(0, lEvenLarge));
+            reducedModSpec(0, 1);
+            reducedModSpec(0, lEvenLarge);
 
             // n mod 1:
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::reducedMod(1, 1));
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::reducedMod(-1, 1));
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::reducedMod(lEvenLarge, 1));
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::reducedMod(-lEvenLarge, 1));
+            reducedModSpec(1, 1);
+            reducedModSpec(-1, 1);
+            reducedModSpec(lEvenLarge, 1);
+            reducedModSpec(-lEvenLarge, 1);
 
             // Halfway tests:
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::reducedMod(16, 2));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::reducedMod(17, 2));
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::reducedMod(-16, 2));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::reducedMod(-17, 2));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::reducedMod(16, 3));
-            CPPUNIT_ASSERT_EQUAL((long)(-1), regina::reducedMod(17, 3));
-            CPPUNIT_ASSERT_EQUAL((long)(-1), regina::reducedMod(-16, 3));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::reducedMod(-17, 3));
+            reducedModSpec(16, 2);
+            reducedModSpec(17, 2);
+            reducedModSpec(-16, 2);
+            reducedModSpec(-17, 2);
+            reducedModSpec(16, 3);
+            reducedModSpec(17, 3);
+            reducedModSpec(-16, 3);
+            reducedModSpec(-17, 3);
 
             long lEvenMod = lEvenMed * 2;
             long lEvenHalf = (lEvenMed * lEvenMed) - lEvenMed;
-            long lEvenAnsHalf = lEvenMed;
             long lOddMod = lOddMed;
             long lOddBelowHalf = (lOddMed * lOddMed) - ((lOddMed + 1) / 2);
-            long lOddAnsBelowHalf = lOddMed / 2;
-            CPPUNIT_ASSERT_EQUAL(lEvenAnsHalf - 1,
-                regina::reducedMod(lEvenHalf - 1, lEvenMod));
-            CPPUNIT_ASSERT_EQUAL(lEvenAnsHalf,
-                regina::reducedMod(lEvenHalf, lEvenMod));
-            CPPUNIT_ASSERT_EQUAL(-(lEvenAnsHalf - 1),
-                regina::reducedMod(lEvenHalf + 1, lEvenMod));
-            CPPUNIT_ASSERT_EQUAL(-(lEvenAnsHalf - 1),
-                regina::reducedMod(-(lEvenHalf - 1), lEvenMod));
-            CPPUNIT_ASSERT_EQUAL(lEvenAnsHalf,
-                regina::reducedMod(-lEvenHalf, lEvenMod));
-            CPPUNIT_ASSERT_EQUAL(lEvenAnsHalf - 1,
-                regina::reducedMod(-(lEvenHalf + 1), lEvenMod));
-            CPPUNIT_ASSERT_EQUAL(lOddAnsBelowHalf,
-                regina::reducedMod(lOddBelowHalf, lOddMod));
-            CPPUNIT_ASSERT_EQUAL(-lOddAnsBelowHalf,
-                regina::reducedMod(lOddBelowHalf + 1, lOddMod));
-            CPPUNIT_ASSERT_EQUAL(-lOddAnsBelowHalf,
-                regina::reducedMod(-lOddBelowHalf, lOddMod));
-            CPPUNIT_ASSERT_EQUAL(lOddAnsBelowHalf,
-                regina::reducedMod(-(lOddBelowHalf + 1), lOddMod));
+            reducedModSpec(lEvenHalf - 1, lEvenMod);
+            reducedModSpec(lEvenHalf, lEvenMod);
+            reducedModSpec(lEvenHalf + 1, lEvenMod);
+            reducedModSpec(-(lEvenHalf - 1), lEvenMod);
+            reducedModSpec(-lEvenHalf, lEvenMod);
+            reducedModSpec(-(lEvenHalf + 1), lEvenMod);
+            reducedModSpec(lOddBelowHalf, lOddMod);
+            reducedModSpec(lOddBelowHalf + 1, lOddMod);
+            reducedModSpec(-lOddBelowHalf, lOddMod);
+            reducedModSpec(-(lOddBelowHalf + 1), lOddMod);
 
             // Examples from documentation:
-            CPPUNIT_ASSERT_EQUAL((long)4, regina::reducedMod(4, 10));
-            CPPUNIT_ASSERT_EQUAL((long)(-4), regina::reducedMod(6, 10));
+            reducedModSpec(4, 10);
+            reducedModSpec(6, 10);
+        }
+
+        void gcd() {
+            // Boundary cases
+            CPPUNIT_ASSERT_EQUAL((unsigned long)0, regina::gcd(0, 0));
+            CPPUNIT_ASSERT_EQUAL(ulOddLarge, regina::gcd(0, ulOddLarge));
+            CPPUNIT_ASSERT_EQUAL(ulOddLarge, regina::gcd(ulOddLarge, 0));
+            CPPUNIT_ASSERT_EQUAL((unsigned long)1, regina::gcd(1, ulOddLarge));
+            CPPUNIT_ASSERT_EQUAL((unsigned long)1, regina::gcd(ulOddLarge, 1));
+
+            // Equality / multiple of
+            CPPUNIT_ASSERT_EQUAL(ulEvenMed, regina::gcd(ulEvenMed, ulEvenMed));
+            CPPUNIT_ASSERT_EQUAL(ulEvenMed,
+                regina::gcd(ulEvenMed, ulEvenMed * ulEvenMed));
+            CPPUNIT_ASSERT_EQUAL(ulEvenMed,
+                regina::gcd(ulEvenMed * ulEvenMed, ulEvenMed));
+
+            // Miscellaneous cases.
+            CPPUNIT_ASSERT_EQUAL((unsigned long)12, regina::gcd(96, 324));
+            CPPUNIT_ASSERT_EQUAL((unsigned long)12, regina::gcd(324, 96));
+            CPPUNIT_ASSERT_EQUAL(ulEvenMed, regina::gcd(
+                ulEvenMed * (ulEvenMed - 3),
+                ulEvenMed * (ulEvenMed - 1)));
+            CPPUNIT_ASSERT_EQUAL(ulEvenMed * 2, regina::gcd(
+                ulEvenMed * (ulEvenMed - 4),
+                ulEvenMed * (ulEvenMed - 2)));
+        }
+
+        void gcdWithCoeffsSpec(long a, long b) {
+            long u, v;
+            long d = regina::gcdWithCoeffs(a, b, u, v);
+
+            std::ostringstream msg;
+            msg << "gcdWithCoeffs(" << a << ", " << b
+                << ") should not give (d, u, v) = (" << d << ", "
+                << u << ", " << v << ").";
+
+            // Common divisor.
+            if (d) {
+                // Returned gcd is non-zero.
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), a % d == 0);
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), b % d == 0);
+            } else {
+                // Returned gcd is zero.
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), a == 0 && b == 0);
+            }
+
+            // Linear combination condition.
+            CPPUNIT_ASSERT_MESSAGE(msg.str(), u * a + v * b == d);
+
+            // Range conditions.
+            CPPUNIT_ASSERT_MESSAGE(msg.str(), d >= 0);
+
+            if (a && b) {
+                long aMult = (a >= 0 ? a / d : (-a) / d);
+                long bMult = (b >= 0 ? b / d : (-b) / d);
+                long uSigned = (a >= 0 ? u : -u);
+                long vSigned = (b >= 0 ? v : -v);
+                CPPUNIT_ASSERT_MESSAGE(msg.str(),
+                    -aMult < vSigned && vSigned <= 0);
+                CPPUNIT_ASSERT_MESSAGE(msg.str(),
+                    1 <= uSigned && uSigned <= bMult);
+            } else {
+                // TODO: One of the initial arguments was zero.
+            }
+        }
+
+        void gcdWithCoeffsSpecAllCombs(long a, long b) {
+            gcdWithCoeffsSpec(a, b);
+            gcdWithCoeffsSpec(a, -b);
+            gcdWithCoeffsSpec(-a, b);
+            gcdWithCoeffsSpec(-a, -b);
+
+            gcdWithCoeffsSpec(b, a);
+            gcdWithCoeffsSpec(b, -a);
+            gcdWithCoeffsSpec(-b, a);
+            gcdWithCoeffsSpec(-b, -a);
+        }
+
+        void gcdWithCoeffs() {
+            // Small cases.
+            gcdWithCoeffsSpecAllCombs(0, 0);
+            gcdWithCoeffsSpecAllCombs(0, 1);
+            gcdWithCoeffsSpecAllCombs(0, lEvenMed);
+            gcdWithCoeffsSpecAllCombs(1, lEvenMed);
+
+            // Equal / multiple of.
+            gcdWithCoeffsSpecAllCombs(lEvenMed, lEvenMed);
+            gcdWithCoeffsSpecAllCombs(lEvenSmall, lEvenSmall * lEvenSmall);
+            gcdWithCoeffsSpecAllCombs(lEvenSmall, lEvenSmall * (lEvenSmall - 1));
+
+            // Large cases.
+            gcdWithCoeffsSpecAllCombs(lEvenSmall * 3, lEvenSmall * lEvenSmall);
+            gcdWithCoeffsSpecAllCombs(lEvenSmall * 3,
+                lEvenSmall * (lEvenSmall - 1));
+            gcdWithCoeffsSpecAllCombs(ulEvenTiny * (ulEvenTiny - 3),
+                ulEvenTiny * (ulEvenTiny - 1));
+            gcdWithCoeffsSpecAllCombs(ulEvenTiny * (ulEvenTiny - 4),
+                ulEvenTiny * (ulEvenTiny - 2));
+
+            // Miscellaneous cases.
+            gcdWithCoeffsSpecAllCombs(96, 324);
+        }
+
+        void modularInverseSpec(unsigned long n, unsigned long k) {
+            unsigned long ans = regina::modularInverse(n, k);
+
+            std::ostringstream msg;
+            msg << "modularInverse(" << n << ", " << k
+                << ") should not be " << ans << '.';
+
+            CPPUNIT_ASSERT_MESSAGE(msg.str(), ans >= 0);
+            CPPUNIT_ASSERT_MESSAGE(msg.str(), ans < n);
+            CPPUNIT_ASSERT_MESSAGE(msg.str(), (ans * (k % n) - 1) % n == 0);
+        }
+
+        void modularInverse() {
+            // Small cases
+            modularInverseSpec(1, 1);
+            modularInverseSpec(1, ulEvenMed);
+            modularInverseSpec(2, 1);
+            modularInverseSpec(2, ulOddMed);
+
+            // Boundary cases
+            modularInverseSpec(ulOddMed, 1);
+            modularInverseSpec(ulEvenMed, 1);
+            modularInverseSpec(ulOddMed, ulOddMed - 1);
+            modularInverseSpec(ulEvenMed, ulEvenMed - 1);
+            modularInverseSpec(ulOddMed, ulOddMed + 1);
+            modularInverseSpec(ulEvenMed, ulEvenMed + 1);
+
+            // All cases for a particular modular base.
+            for (unsigned long k = 1; k < ulOddMed; k++) {
+                if (regina::gcd(k, ulOddMed) != 1)
+                    continue;
+
+                // Element to invert within standard range.
+                modularInverseSpec(ulOddMed, k);
+
+                // Element to invert not within standard range.
+                modularInverseSpec(ulOddMed, (ulOddMed * (ulOddMed - 1)) + k);
+            }
         }
 };
 
