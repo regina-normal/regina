@@ -28,8 +28,10 @@
 
 #include "algebra/nabeliangroup.h"
 #include "manifold/nhandlebody.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/nedge.h"
+#include "triangulation/nfacepair.h"
+#include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 
 namespace regina {
@@ -258,6 +260,75 @@ NManifold* NLayeredSolidTorus::getManifold() const {
 NAbelianGroup* NLayeredSolidTorus::getHomologyH1() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank();
+    return ans;
+}
+
+NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
+        int mobiusBandBdry) const {
+    // Create a new triangulation and identify the top-level and
+    // base tetrahedra.
+    NTriangulation* ans = new NTriangulation(*original);
+
+    NTetrahedron* newTop = ans->getTetrahedron(
+        original->getTetrahedronIndex(topLevel));
+    NTetrahedron* newBase = ans->getTetrahedron(
+        original->getTetrahedronIndex(base));
+
+    NPacket::ChangeEventBlock block(ans);
+
+    // Reglue the top faces before deleting the layered solid torus.
+    NTetrahedron* adj0 = newTop->getAdjacentTetrahedron(topFace[0]);
+    NTetrahedron* adj1 = newTop->getAdjacentTetrahedron(topFace[1]);
+
+    if (adj0 && adj1 && (adj0 != newTop)) {
+        // A permutation for each adjacent tetrahedron.
+        // These permutations map:
+        //   1,2 -> vertices corresponding to top edge group 0
+        //   0,2 -> vertices corresponding to top edge group 1
+        //   0,1 -> vertices corresponding to top edge group 2
+
+        // Start by representing vertices of this tetrahedron instead.
+        NPerm groups0 = NPerm(
+            6 - edgeStart[topEdge[0][0]] - edgeEnd[topEdge[0][0]] - topFace[0],
+            6 - edgeStart[topEdge[1][0]] - edgeEnd[topEdge[1][0]] - topFace[0],
+            6 - edgeStart[topEdge[2][0]] - edgeEnd[topEdge[2][0]] - topFace[0],
+            topFace[0]);
+
+        NFacePair underFaces = NFacePair(topFace[0], topFace[1]).complement();
+        NPerm groups1 = NPerm(topFace[0], topFace[1]) *
+            NPerm(underFaces.lower(), underFaces.upper()) * groups0;
+
+        // Move these to vertices of the adjacent tetrahedra.
+        groups0 = newTop->getAdjacentTetrahedronGluing(topFace[0]) * groups0;
+        groups1 = newTop->getAdjacentTetrahedronGluing(topFace[1]) * groups1;
+
+        // And do the regluing.
+        adj0->unjoin(groups0[3]);
+        adj1->unjoin(groups1[3]);
+
+        adj0->joinTo(groups0[3], adj1, groups1 *
+            NPerm((mobiusBandBdry + 1) % 3, (mobiusBandBdry + 2) % 3) *
+            groups0.inverse());
+    }
+
+    // Delete the layered solid torus tetrahedra.
+    NTetrahedron* curr;
+    NTetrahedron* next;
+    NFacePair currBdryFaces;
+    NPerm adjPerm;
+
+    curr = newBase;
+    currBdryFaces = NFacePair(baseFace[0], baseFace[1]).complement();
+    while (curr) {
+        next = curr->getAdjacentTetrahedron(currBdryFaces.lower());
+
+        currBdryFaces = NFacePair(curr->getAdjacentFace(currBdryFaces.lower()),
+            curr->getAdjacentFace(currBdryFaces.upper())).complement();
+        delete ans->removeTetrahedron(curr);
+        curr = next;
+    }
+
+    // And we're done.
     return ans;
 }
 

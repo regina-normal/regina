@@ -28,6 +28,7 @@
 
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
@@ -52,6 +53,8 @@ void addNLayeredSolidTorus() {
         .def("getTopEdge", &NLayeredSolidTorus::getTopEdge)
         .def("getTopEdgeGroup", &NLayeredSolidTorus::getTopEdgeGroup)
         .def("getTopFace", &NLayeredSolidTorus::getTopFace)
+        .def("flatten", &NLayeredSolidTorus::flatten,
+            return_value_policy<manage_new_object>())
         .def("formsLayeredSolidTorusBase",
             &NLayeredSolidTorus::formsLayeredSolidTorusBase,
             return_value_policy<manage_new_object>())

@@ -97,6 +97,7 @@ void addNNormalSurface() {
             return_value_policy<reference_existing_object>())
         .def("isThinEdgeLink", isThinEdgeLink_tuple)
         .def("isSplitting", &NNormalSurface::isSplitting)
+        .def("isCentral", &NNormalSurface::isCentral)
         .def("cutAlong", &NNormalSurface::cutAlong,
             return_value_policy<manage_new_object>())
         .def("crush", &NNormalSurface::crush,

@@ -444,6 +444,17 @@
           or almost normal discs).
          </para></glossdef>
         </glossentry>
+        <glossentry>
+         <glossterm>Central</glossterm>
+         <glossdef><para>
+          Indicates that although it is not a splitting surface,
+          the surface is still a central surface (contains at most one
+          normal or almost normal disc per tetrahedron).  A number will
+          be displayed indicating the number of tetrahedra
+          that this surface meets (i.e., the number of normal or almost
+          normal discs in the surface).
+         </para></glossdef>
+        </glossentry>
        </glosslist>
       </para></glossdef>
      </glossentry>

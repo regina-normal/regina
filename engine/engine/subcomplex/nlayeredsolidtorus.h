@@ -247,6 +247,29 @@ class NLayeredSolidTorus : public NStandardTriangulation {
         int getTopFace(int index) const;
 
         /**
+         * Flattens this layered solid torus to a Mobius band.
+         * A newly created modified triangulation is returned; the
+         * original triangulation is unchanged.
+         *
+         * Note that there are three different ways in which this layered
+         * solid torus can be flattened, corresponding to the three
+         * different edges of the boundary torus that could become the
+         * boundary edge of the new Mobius band.
+         *
+         * @param original the triangulation containing this layered
+         * solid torus; this triangulation will not be changed.
+         * @param mobiusBandBdry the edge group on the boundary of this
+         * layered solid torus that will become the boundary of the new
+         * Mobius band (the remaining edge groups will become internal
+         * edges of the new Mobius band).  This must be 0, 1 or 2.
+         * See getTopEdge() for further details about edge groups.
+         * @return a newly created triangulation in which this layered
+         * solid torus has been flattened to a Mobius band.
+         */
+        NTriangulation* flatten(const NTriangulation* original,
+                int mobiusBandBdry) const;
+
+        /**
          * Determines if the given tetrahedron forms the base of a
          * layered solid torus within a triangulation.  The torus need
          * not be the entire triangulation; the top level tetrahedron of

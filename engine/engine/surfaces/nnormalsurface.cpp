@@ -263,6 +263,26 @@ bool NNormalSurfaceVector::isSplitting(NTriangulation* triang) const {
     return true;
 }
 
+NLargeInteger NNormalSurfaceVector::isCentral(NTriangulation* triang) const {
+    unsigned long nTets = triang->getNumberOfTetrahedra();
+    unsigned long tet;
+    int type;
+    NLargeInteger tot, tetTot;
+    for (tet = 0; tet < nTets; tet++) {
+        tetTot = 0L;
+        for (type = 0; type < 4; type++)
+            tetTot += getTriangleCoord(tet, type, triang);
+        for (type = 0; type < 3; type++)
+            tetTot += getQuadCoord(tet, type, triang);
+        for (type = 0; type < 3; type++)
+            tetTot += getOctCoord(tet, type, triang);
+        if (tetTot > 1)
+            return NLargeInteger::zero;
+        tot += tetTot;
+    }
+    return tot;
+}
+
 void NNormalSurface::calculateEulerCharacteristic() const {
     unsigned long index, tot;
     int type;

@@ -174,10 +174,15 @@ QString NSurfaceCoordinateItem::text(int column) const {
                 else
                     return i18n("Unknown");
             case 7:
-                if (surface->isSplitting())
-                    return i18n("Splitting");
-                else
-                    return QString::null;
+                {
+                    regina::NLargeInteger tot;
+                    if (surface->isSplitting())
+                        return i18n("Splitting");
+                    else if ((tot = surface->isCentral()) != 0)
+                        return i18n("Central (%1)").arg(tot.longValue());
+                    else
+                        return QString::null;
+                }
             default:
                 regina::NLargeInteger ans = Coordinates::getCoordinate(
                     coordSystem, *surface, column - 8);

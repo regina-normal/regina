@@ -357,15 +357,29 @@ class NNormalSurfaceVector : public NRay {
          * Subclasses of NNormalSurfaceVector should override this if
          * they can provide a faster implementation.
          *
-         * \pre The given triangulation is connected.  If the
-         * triangulation is not connected, this routine will still
-         * return a result but that result will be unreliable.
-         *
          * @param triang the triangulation in which this normal surface lives.
          * @return \c true if and only if the normal surface represented
-         * is compact.
+         * is a splitting surface.
          */
         virtual bool isSplitting(NTriangulation* triang) const;
+        /**
+         * Determines if the normal surface represented is a central
+         * surface in the given triangulation.  A \a central surface
+         * is a compact surface containing at most one normal or almost
+         * normal disc per tetrahedron.  If the surface is central, the
+         * number of tetrahedra it meets (i.e., the number of discs in
+         * the surface) will be returned.
+         *
+         * The default implementation for this routine simply runs
+         * through and checks the count for each disc type.
+         * Subclasses of NNormalSurfaceVector should override this if
+         * they can provide a faster implementation.
+         *
+         * @param triang the triangulation in which this normal surface lives.
+         * @return the number of tetrahedra that the surface meets if it
+         * is a central surface, or 0 if it is not a central surface.
+         */
+        virtual NLargeInteger isCentral(NTriangulation* triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -921,15 +935,28 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * \pre The underlying triangulation is connected.  If the
-         * triangulation is not connected, this routine will still
-         * return a result but that result will be unreliable.
-         *
          * \todo \opt Cache results.
          *
          * @return \c true if and only if this is a splitting surface.
          */
         bool isSplitting() const;
+        /**
+         * Determines whether or not this surface is a central surface.
+         * A \a central surface is a compact surface containing
+         * at most one normal or almost normal disc per tetrahedron.
+         * If this surface is central, the number of tetrahedra that it meets
+         * (i.e., the number of discs in the surface) will be returned.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \todo \opt Cache results.
+         *
+         * @return the number of tetrahedra that this surface meets if it
+         * is a central surface, or 0 if it is not a central surface.
+         */
+        NLargeInteger isCentral() const;
 
         /**
          * Cuts the associated triangulation along this surface and
@@ -1176,6 +1203,10 @@ inline std::pair<const NEdge*, const NEdge*> NNormalSurface::isThinEdgeLink()
 
 inline bool NNormalSurface::isSplitting() const {
     return vector->isSplitting(triangulation);
+}
+
+inline NLargeInteger NNormalSurface::isCentral() const {
+    return vector->isCentral(triangulation);
 }
 
 inline bool NNormalSurface::knownCanCrush() const {
