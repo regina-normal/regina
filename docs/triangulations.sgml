@@ -569,6 +569,22 @@
    </para>
   </sect2>
 
+  <sect2 id="tri-cover">
+   <title>Double Cover</title>
+
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Modify</guimenu>
+     <guisubmenu>Triangulation</guisubmenu>
+     <guimenuitem>Double Cover</guimenuitem>
+    </menuchoice>
+    menu item will convert a triangulation to its double cover.  Each
+    orientable component will be duplicated, and each non-orientable
+    component will be converted to its orientable double cover.
+   </para>
+  </sect2>
+
   <sect2 id="tri-crush">
    <title>Crushing Normal Surfaces</title>
 

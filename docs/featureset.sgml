@@ -28,7 +28,7 @@
      <listitem><para>Properties:
       <itemizedlist>
        <listitem><para>
-        Detailed skeletal information
+        Detailed combinatorial and skeletal information
        </para></listitem>
        <listitem><para>
         Algebraic properties including various homology groups
@@ -51,6 +51,9 @@
        </para></listitem>
        <listitem><para>
         Elementary moves (such as Pachner moves)
+       </para></listitem>
+       <listitem><para>
+        Double cover
        </para></listitem>
       </itemizedlist>
      </para></listitem>
