@@ -68,7 +68,7 @@
    </sect3>
 
    <sect3 id="tri-new-lens">
-    <title>Lens Space</title>
+    <title>Layered Lens Space</title>
 
     <para>
      This will create a layered lens space with parameters
