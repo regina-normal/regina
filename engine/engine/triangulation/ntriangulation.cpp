@@ -43,7 +43,7 @@
 
 // Property IDs for properties relating to normal surfaces:
 #define PROPID_ZEROEFFICIENT 201
-#define PROPID_CENTRALSURFACE 202
+#define PROPID_SPLITTINGSURFACE 202
 
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton)
@@ -70,7 +70,7 @@ void NTriangulation::initialiseAllProperties() {
     calculatedH1Bdry = false;
     calculatedH2 = false;
     calculatedZeroEfficient = false;
-    calculatedCentralSurface = false;
+    calculatedSplittingSurface = false;
 }
 
 void NTriangulation::writeTextLong(ostream& out) const {
@@ -227,9 +227,9 @@ void NTriangulation::writePacket(NFile& out) const {
         out.writeBool(zeroEfficient);
         writePropertyFooter(out, bookmark);
     }
-    if (calculatedCentralSurface) {
-        bookmark = writePropertyHeader(out, PROPID_CENTRALSURFACE);
-        out.writeBool(centralSurface);
+    if (calculatedSplittingSurface) {
+        bookmark = writePropertyHeader(out, PROPID_SPLITTINGSURFACE);
+        out.writeBool(splittingSurface);
         writePropertyFooter(out, bookmark);
     }
 
@@ -295,9 +295,9 @@ void NTriangulation::readIndividualProperty(NFile& infile, unsigned propType) {
         zeroEfficient = infile.readBool();
         calculatedZeroEfficient = true;
     }
-    if (propType == PROPID_CENTRALSURFACE) {
-        centralSurface = infile.readBool();
-        calculatedCentralSurface = true;
+    if (propType == PROPID_SPLITTINGSURFACE) {
+        splittingSurface = infile.readBool();
+        calculatedSplittingSurface = true;
     }
 }
 
@@ -524,9 +524,9 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
         zeroEfficient = X.zeroEfficient;
         calculatedZeroEfficient = true;
     }
-    if (X.calculatedCentralSurface) {
-        centralSurface = X.centralSurface;
-        calculatedCentralSurface = true;
+    if (X.calculatedSplittingSurface) {
+        splittingSurface = X.splittingSurface;
+        calculatedSplittingSurface = true;
     }
 }
 

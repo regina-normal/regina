@@ -324,8 +324,8 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          */
         virtual bool isVertexLinking(NTriangulation* triang) const;
         /**
-         * Determines if the normal surface represented is central in
-         * the given triangulation.  A \a central surface
+         * Determines if the normal surface represented is a splitting
+         * surface in the given triangulation.  A \a splitting surface
          * is a compact surface containing precisely
          * one quad per tetrahedron and no other normal (or almost
          * normal) discs.
@@ -343,7 +343,7 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          * @return \c true if and only if the normal surface represented
          * is compact.
          */
-        virtual bool isCentral(NTriangulation* triang) const;
+        virtual bool isSplitting(NTriangulation* triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -800,8 +800,8 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          */
         bool isVertexLinking() const;
         /**
-         * Determines whether or not this surface is a central surface.
-         * A \a central surface is a compact surface containing
+         * Determines whether or not this surface is a splitting surface.
+         * A \a splitting surface is a compact surface containing
          * precisely one quad per tetrahedron and no other normal (or
          * almost normal) discs.
          *
@@ -815,9 +815,9 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * \todo \opt Cache results.
          * 
-         * @return \c true if and only if this surface is central.
+         * @return \c true if and only if this is a splitting surface.
          */
-        bool isCentral() const;
+        bool isSplitting() const;
 
         /**
          * Cuts the associated triangulation along this surface and
@@ -965,8 +965,8 @@ inline bool NNormalSurface::isVertexLinking() const {
     return vector->isVertexLinking(triangulation);
 }
 
-inline bool NNormalSurface::isCentral() const {
-    return vector->isCentral(triangulation);
+inline bool NNormalSurface::isSplitting() const {
+    return vector->isSplitting(triangulation);
 }
         
 #endif

@@ -160,10 +160,10 @@ class NTriangulation : public NPacket, NPropertyHolder {
             /**< Is the triangulation zero-efficient? */
         bool calculatedZeroEfficient;
             /**< Has zero-efficiency been calculated? */
-        bool centralSurface;
-            /**< Does the triangulation have a central normal surface? */
-        bool calculatedCentralSurface;
-            /**< Has the existence of a central surface been calculated? */
+        bool splittingSurface;
+            /**< Does the triangulation have a normal splitting surface? */
+        bool calculatedSplittingSurface;
+            /**< Has the existence of a splitting surface been calculated? */
 
     public:
         /**
@@ -826,18 +826,18 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         bool isZeroEfficient();
         /**
-         * Determines whether this triangulation has a central normal
-         * surface.  See NNormalSurface::isCentral() for details
-         * regarding central normal surfaces.
+         * Determines whether this triangulation has a normal splitting
+         * surface.  See NNormalSurface::isSplitting() for details
+         * regarding normal splitting surfaces.
          *
          * \pre This triangulation is connected.  If the triangulation
          * is not connected, this routine will still return a result but
          * that result will be unreliable.
          *
          * @return \c true if and only if this triangulation has a
-         * central normal surface.
+         * normal splitting surface.
          */
-        bool hasCentralSurface();
+        bool hasSplittingSurface();
         
         /**
          * Produces a maximal forest in the 1-skeleton of the
@@ -1713,10 +1713,10 @@ inline bool NTriangulation::isZeroEfficient() {
     return zeroEfficient;
 }
 
-inline bool NTriangulation::hasCentralSurface() {
-    if (! calculatedCentralSurface)
+inline bool NTriangulation::hasSplittingSurface() {
+    if (! calculatedSplittingSurface)
         calculateSurfaceProperties();
-    return centralSurface;
+    return splittingSurface;
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() {

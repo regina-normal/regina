@@ -78,7 +78,7 @@ CORBA::Boolean NNormalSurface_i::hasRealBoundary() {
 CORBA::Boolean NNormalSurface_i::isVertexLinking() {
     return MY_ENGINE_OBJECT->isVertexLinking();
 }
-CORBA::Boolean NNormalSurface_i::isCentral() {
-    return MY_ENGINE_OBJECT->isCentral();
+CORBA::Boolean NNormalSurface_i::isSplitting() {
+    return MY_ENGINE_OBJECT->isSplitting();
 }
 

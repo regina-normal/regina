@@ -62,7 +62,7 @@ class NNormalSurface_i : public virtual POA_Regina::Surfaces::NNormalSurface,
         virtual CORBA::Long isConnected();
         virtual CORBA::Boolean hasRealBoundary();
         virtual CORBA::Boolean isVertexLinking();
-        virtual CORBA::Boolean isCentral();
+        virtual CORBA::Boolean isSplitting();
 };
 
 #endif

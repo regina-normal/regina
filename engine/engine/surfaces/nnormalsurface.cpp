@@ -257,7 +257,7 @@ bool NNormalSurfaceVector::isVertexLinking(NTriangulation* triang) const {
     return true;
 }
 
-bool NNormalSurfaceVector::isCentral(NTriangulation* triang) const {
+bool NNormalSurfaceVector::isSplitting(NTriangulation* triang) const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
     int type;

@@ -40,7 +40,7 @@ void NTriangulation::calculateSurfaceProperties() {
                 break;
             }
 
-    if (calculatedZeroEfficient && calculatedCentralSurface)
+    if (calculatedZeroEfficient && calculatedSplittingSurface)
         return;
 
     // Create a normal surface list.
@@ -48,8 +48,8 @@ void NTriangulation::calculateSurfaceProperties() {
 
     if (! calculatedZeroEfficient)
         zeroEfficient = true;
-    if (! calculatedCentralSurface)
-        centralSurface = false;
+    if (! calculatedSplittingSurface)
+        splittingSurface = false;
 
     unsigned long nSurfaces = surfaces.getNumberOfSurfaces();
     NNormalSurface* s;
@@ -57,10 +57,10 @@ void NTriangulation::calculateSurfaceProperties() {
     for (unsigned long i = 0; i < nSurfaces; i++) {
         s = (NNormalSurface*)surfaces.getSurface(i);
 
-        if (! calculatedCentralSurface)
-            if (s->isCentral()) {
-                centralSurface = true;
-                calculatedCentralSurface = true;
+        if (! calculatedSplittingSurface)
+            if (s->isSplitting()) {
+                splittingSurface = true;
+                calculatedSplittingSurface = true;
             }
 
         if (! calculatedZeroEfficient)
@@ -89,13 +89,13 @@ void NTriangulation::calculateSurfaceProperties() {
             }
 
         // See if there is no use running through the rest of the list.
-        if (calculatedZeroEfficient && calculatedCentralSurface)
+        if (calculatedZeroEfficient && calculatedSplittingSurface)
             break;
     }
 
     // Done!
     calculatedZeroEfficient = true;
-    calculatedCentralSurface = true;
+    calculatedSplittingSurface = true;
 
     // Clean up.
     surfaces.makeOrphan();

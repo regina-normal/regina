@@ -62,9 +62,9 @@ public class SurfaceViewer extends DefaultPacketViewer
      */
     private JLabel zeroEfficient;
     /**
-     * Displays existance of a central surface.
+     * Displays existance of a splitting surface.
      */
-    private JLabel centralSurface;
+    private JLabel splittingSurface;
 
     /**
      * Components to disable when the packet is being edited.
@@ -92,16 +92,16 @@ public class SurfaceViewer extends DefaultPacketViewer
         propPane.setLayout(new GridBagLayout());
 
         zeroEfficient = new JLabel();
-        centralSurface = new JLabel();
+        splittingSurface = new JLabel();
         componentsToDisable.addElement(zeroEfficient);
-        componentsToDisable.addElement(centralSurface);
+        componentsToDisable.addElement(splittingSurface);
 
         JLabel labelSurfaces = new JLabel("Normal Surface Properties");
         JLabel labelZero = new JLabel("Zero-efficient?");
-        JLabel labelCentral = new JLabel("Central surface?");
+        JLabel labelSplitting = new JLabel("Splitting surface?");
         componentsToDisable.addElement(labelSurfaces);
         componentsToDisable.addElement(labelZero);
-        componentsToDisable.addElement(labelCentral);
+        componentsToDisable.addElement(labelSplitting);
 
         GridBagConstraints cTitle = new GridBagConstraints();
         GridBagConstraints cLabel = new GridBagConstraints();
@@ -122,8 +122,8 @@ public class SurfaceViewer extends DefaultPacketViewer
         propPane.add(labelSurfaces, cTitle);
         propPane.add(labelZero, cLabel);
         propPane.add(zeroEfficient, cTotal);
-        propPane.add(labelCentral, cLabel);
-        propPane.add(centralSurface, cTotal);
+        propPane.add(labelSplitting, cLabel);
+        propPane.add(splittingSurface, cTotal);
 
         // Put everything together.
         setLayout(new BorderLayout());
@@ -147,12 +147,12 @@ public class SurfaceViewer extends DefaultPacketViewer
             zeroEfficient.setForeground(red);
         }
 
-        if (triangulation.hasCentralSurface()) {
-            centralSurface.setText("True");
-            centralSurface.setForeground(green);
+        if (triangulation.hasSplittingSurface()) {
+            splittingSurface.setText("True");
+            splittingSurface.setForeground(green);
         } else {
-            centralSurface.setText("False");
-            centralSurface.setForeground(red);
+            splittingSurface.setText("False");
+            splittingSurface.setForeground(red);
         }
     }
 
@@ -162,6 +162,6 @@ public class SurfaceViewer extends DefaultPacketViewer
             ((Component)e.nextElement()).setEnabled(false);
 
         zeroEfficient.setText("");
-        centralSurface.setText("");
+        splittingSurface.setText("");
     }
 }

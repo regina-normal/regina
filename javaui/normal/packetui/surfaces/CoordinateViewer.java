@@ -346,8 +346,8 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 4:
                         if (surface.isVertexLinking())
                             return "Vtx Link";
-                        else if (surface.isCentral())
-                            return "Central";
+                        else if (surface.isSplitting())
+                            return "Splitting";
                         else
                             return "";
                     default:
@@ -377,8 +377,8 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 2:
                         if (surface.isVertexLinking())
                             return "Vtx Link";
-                        else if (surface.isCentral())
-                            return "Central";
+                        else if (surface.isSplitting())
+                            return "Splitting";
                         else
                             return "";
                     default:

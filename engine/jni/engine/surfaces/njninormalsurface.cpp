@@ -124,9 +124,9 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT jboolean JNICALL
-        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isCentral
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isSplitting
         (JNIEnv *env, jobject me) {
-    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isCentral();
+    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isSplitting();
 }
 
 JNIEXPORT void JNICALL

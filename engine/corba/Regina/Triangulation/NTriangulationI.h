@@ -95,7 +95,7 @@ class NTriangulation_i :
         virtual CORBA::Boolean isConnected();
         virtual CORBA::Boolean hasBoundaryFaces();
         virtual CORBA::Boolean isZeroEfficient();
-        virtual CORBA::Boolean hasCentralSurface();
+        virtual CORBA::Boolean hasSplittingSurface();
         virtual CORBA::Boolean crushMaximalForest();
         virtual CORBA::Boolean intelligentSimplify();
         virtual CORBA::Boolean simplifyToLocalMinimum(CORBA::Boolean perform);

@@ -175,8 +175,8 @@ public class NCORBATriangulation extends NCORBAPacket
     public boolean isZeroEfficient() {
         return data.isZeroEfficient();
     }
-    public boolean hasCentralSurface() {
-        return data.hasCentralSurface();
+    public boolean hasSplittingSurface() {
+        return data.hasSplittingSurface();
     }
 
     public boolean crushMaximalForest() {

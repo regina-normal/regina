@@ -95,7 +95,7 @@ public class NCORBANormalSurface extends CORBAShareableObject
     public boolean isVertexLinking() {
         return data.isVertexLinking();
     }
-    public boolean isCentral() {
-        return data.isCentral();
+    public boolean isSplitting() {
+        return data.isSplitting();
     }
 }

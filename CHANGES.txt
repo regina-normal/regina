@@ -20,12 +20,12 @@ Regina - A Normal Surface Theory Calculator
         Class NFace:
             - Added getType(), getSubtype(), isMobiusBand(), isCone().
         Class NNormalSurface:
-            - Added isConnected(), isVertexLink(), isCentral().
+            - Added isConnected(), isVertexLink(), isSplitting().
             - Fixed isOrientable() and added isTwoSided().
         Class NPerm:
             - Added operators = and != and constructor NPerm(const NPerm&).
         Class NTriangulation:
-            - Added isZeroEfficient(), hasCentralSurface().
+            - Added isZeroEfficient(), hasSplittingSurface().
             - Added extra condition to shellBoundary() covering two
               boundary faces plus two identified faces.
             - Added extra condition to twoZeroMove(NEdge*, ...) covering

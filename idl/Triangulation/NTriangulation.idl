@@ -88,7 +88,7 @@ module Regina {
             boolean hasBoundaryFaces();
 
             boolean isZeroEfficient();
-            boolean hasCentralSurface();
+            boolean hasSplittingSurface();
 
             boolean crushMaximalForest();
             boolean intelligentSimplify();
