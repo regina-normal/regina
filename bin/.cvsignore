@@ -1,2 +1,6 @@
 *.jar
 *.dll
+*.exe
+regfiledump
+sigcensus
+tricensus

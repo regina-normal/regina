@@ -5,8 +5,9 @@ binjava - make all Java user interface binary jars
 binjavaui - make the jar containing the general Java UI but no engine access
 binjavajni - make the jar for the Java UI providing JNI engine access only
 binjni - make all binaries required to run Regina using JNI engine access
+binutils - make all miscellaneous utility programs
 bindocs - make a complete documentation jar for the Java UI help system
-bin - make all engine and Java UI binaries, EXCLUDING the documentation jar
+bin - make all binaries, EXCLUDING the documentation jar
 ... (all above targets are made in bin/)
 
 docsengine - build the calculation engine documentation

@@ -8,8 +8,11 @@
 
 # ------------------------ Variables -------------------------------------
 
+utils = regfiledump sigcensus tricensus
+
 INCLUDES = -I../engine/engine $(EXTRA_INCLUDES)
 PD_DEFS = $(PD_MACROS:%=-D%)
+BIN_DIR = ../bin
 
 ifeq ($(OSTYPE),cygwin)
   EXE = .exe
@@ -21,25 +24,32 @@ endif
 
 %.o : %.cpp
 	$(COMPILE) $(PD_DEFS) $(INCLUDES) -o $@ $<
-%$(EXE) : %.o
+$(BIN_DIR)/%$(EXE) : %.o ../$(ENGINE_LIB)
 	$(LINKEXEC) -o $@ $< ../$(ENGINE_LIB) $(EXTRA_LIBRARIES)
+
+# ------------------------ Sources -------------------------------------
+
+allobjs = $(utils:=.o)
+allexes = $(utils:%=$(BIN_DIR)/%$(EXE))
+
+# We shouldn't have *all* executables depend on *all* sources, but this
+# avoids the alternative nasty of having to specify each exe-from-obj
+# dependency by hand. 
+
+$(allexes) : $(allobjs)
 
 # ------------------------ Targets -------------------------------------
 
-.PHONY : all clean
+.PHONY : all clean purge
 
 # All utilities:
 
-all : regfiledump$(EXE) sigcensus$(EXE)
-
-# Individual utilities:
-
-regfiledump$(EXE) : regfiledump.o
-sigcensus$(EXE) : sigcensus.o
+all : $(allexes)
 
 # Other targets:
 
 clean :
 	-rm *.o *.d
-	-rm regfiledump$(EXE) sigcensus$(EXE)
+purge :
+	-rm $(allexes)
 
