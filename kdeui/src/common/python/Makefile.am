@@ -14,13 +14,15 @@ noinst_LTLIBRARIES = libregina-kdepython.la
 
 noinst_HEADERS = \
 	pythonconsole.h \
-	pythoninterpreter.h
+	pythoninterpreter.h \
+	pythonoutputstream.h
 
-libregina_kdepython_la_LIBADD = @PYTHON_LIBS@
+libregina_kdepython_la_LIBADD = @BOOST_PYTHON_LIBS@ @PYTHON_LIBS@
 
 libregina_kdepython_la_SOURCES = \
 	pythonconsole.cpp \
-	pythoninterpreter.cpp
+	pythoninterpreter.cpp \
+	pythonoutputstream.cpp
 
 METASOURCES = AUTO
 

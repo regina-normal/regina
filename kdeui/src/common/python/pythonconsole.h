@@ -34,6 +34,8 @@
 #ifndef __PYTHONCONSOLE_H
 #define __PYTHONCONSOLE_H
 
+#include "pythonoutputstream.h"
+
 #include <kmainwindow.h>
 
 class KLineEdit;
@@ -49,7 +51,7 @@ class QLabel;
  * Generally objects of this class are not created directly; instead
  * PacketManager::launchPythonConsole() is used.
  */
-class PythonConsole : public KMainWindow {
+class PythonConsole : public KMainWindow, public PythonOutputStream {
     Q_OBJECT
 
     private:
@@ -84,6 +86,12 @@ class PythonConsole : public KMainWindow {
          * Process the command currently on the input line.
          */
         void processCommand();
+
+    protected:
+        /**
+         * PythonOutputStream overrides.
+         */
+        void processOutput(const std::string& data);
 
     private:
         /**

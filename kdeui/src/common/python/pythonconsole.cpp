@@ -42,7 +42,6 @@
 
 // TODO: ctrl-d, tab, keypresses upstairs, history
 // TODO: copy all, save log
-// TODO: python integration!!!
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         regina::NPacket* tree, regina::NPacket* selectedPacket) :
@@ -76,7 +75,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     // Prepare the console for use.
     if (manager)
         manager->registerConsole(this);
-    interpreter = new PythonInterpreter();
+    interpreter = new PythonInterpreter(this, this);
     init();
 }
 
@@ -96,13 +95,19 @@ void PythonConsole::processCommand() {
     setPromptMode(PROCESSING);
 
     // Do the actual processing.
-    // TODO: Processing
-    interpreter->executeLine(cmd.ascii());
-    QString result = "Result from [" + cmd + "].";
+    bool done = interpreter->executeLine(cmd.ascii());
 
     // Log the output.
-    addOutput(result);
-    setPromptMode(PRIMARY);
+    PythonOutputStream::flush();
+    setPromptMode(done ? PRIMARY : SECONDARY);
+}
+
+void PythonConsole::processOutput(const std::string& data) {
+    // Strip the final newline (if any) before we process the string.
+    if ((! data.empty()) && *(data.rbegin()) == '\n')
+        addOutput(data.substr(0, data.length() - 1).c_str());
+    else
+        addOutput(data.c_str());
 }
 
 void PythonConsole::init() {

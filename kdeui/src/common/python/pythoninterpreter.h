@@ -35,8 +35,11 @@
 #define __PYTHONINTERPRETER_H
 
 #include <Python.h>
+#include <string>
 
 #include "utilities/nthread.h"
+
+class PythonOutputStream;
 
 namespace regina {
     class NPacket;
@@ -65,18 +68,53 @@ class PythonInterpreter {
             /**< The first thread state created in this particular
                  subinterpreter. */
 
+        PyObject* mainModule;
+            /**< The __main__ module. */
+        PyObject* mainNamespace;
+            /**< The global namespace. */
+
+        std::string currentCode;
+            /**< Any previous statements (such as loop openings) that are
+                 waiting to be completed. */
+
     public:
         /**
          * Constructor and destructor.
          */
-        PythonInterpreter();
+        PythonInterpreter(PythonOutputStream* pyStdOut = 0,
+                PythonOutputStream* pyStdErr = 0);
         ~PythonInterpreter();
 
         /**
-         * Interaction with the subinterpreter.
+         * Execute the given line in the subinterpreter.
+         * Returns \c true if no further input is required, or
+         * \c false if the interpreter is waiting on further lines of code.
          */
-        bool executeLine(const char* line);
+        bool executeLine(const std::string& command);
+
+        /**
+         * Configuration of the subinterpreter.
+         */
+        void importRegina();
         void setVar(const char* name, regina::NPacket* value);
+
+    private:
+        /**
+         * Is the given command comment or only whitespace?
+         */
+        static bool isEmptyCommand(const std::string& command);
+
+        /**
+         * Write the given error message to std::cerr along with a
+         * request to report the problem.
+         */
+        static void pleaseReport(const char* msg);
+
+        /**
+         * Extract the current error message.  A new python reference is
+         * returned.
+         */
+        static PyObject* extractErrMsg();
 };
 
 #endif
