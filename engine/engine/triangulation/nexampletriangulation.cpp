@@ -284,7 +284,7 @@ NTriangulation* NExampleTriangulation::cuspedGenusTwoTorus() {
     ans->addTetrahedron(s);
     ans->addTetrahedron(t);
     ans->addTetrahedron(u);
-    ans->cuspBoundary();
+    ans->finiteToIdeal();
 
     return ans;
 }

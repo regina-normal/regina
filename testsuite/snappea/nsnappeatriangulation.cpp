@@ -207,7 +207,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             genusFourNonOrCusp.addTetrahedron(s);
 
             cuspedTorus.insertLayeredSolidTorus(1, 2);
-            cuspedTorus.cuspBoundary();
+            cuspedTorus.finiteToIdeal();
 
             t = new NTetrahedron();
             t->joinTo(0, t, NPerm(1,0,3,2));

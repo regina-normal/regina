@@ -42,6 +42,7 @@ Version 4.2  [ under development ]
         - Include several example triangulations in the triangulation
           creation dialog.
         - Allow exporting a triangulation to C++ source.
+        - Renamed "Ideal to Finite" as "Truncate Ideal Vertices" in the menu.
     TEST SUITE:
         - Added tests for SnapPea calculations.
         - Further additions to the triangulation tests, in particular

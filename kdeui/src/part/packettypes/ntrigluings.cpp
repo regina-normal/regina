@@ -197,8 +197,8 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actBarycentricSubdivide);
     triActionList.append(actBarycentricSubdivide);
 
-    KAction* actIdealToFinite = new KAction(i18n("&Ideal to Finite"), "finite",
-        0 /* shortcut */, this, SLOT(idealToFinite()), triActions,
+    KAction* actIdealToFinite = new KAction(i18n("&Truncate Ideal Vertices"),
+        "finite", 0 /* shortcut */, this, SLOT(idealToFinite()), triActions,
         "tri_ideal_to_finite");
     actIdealToFinite->setToolTip(i18n(
         "Truncate any ideal vertices"));
@@ -209,9 +209,27 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "will be truncated and converted into boundary faces.<p>"
         "This triangulation will be modified directly.  If there are no "
         "vertices of this type to truncate, this operation will have no "
-        "effect."));
+        "effect.<p>"
+        "This action was previously called <i>Ideal to Finite</i>."));
     enableWhenWritable.append(actIdealToFinite);
     triActionList.append(actIdealToFinite);
+
+    KAction* actFiniteToIdeal = new KAction(i18n("Make &Ideal"), "cone",
+        0 /* shortcut */, this, SLOT(finiteToIdeal()), triActions,
+        "tri_finite_to_ideal");
+    actFiniteToIdeal->setToolTip(i18n(
+        "Convert real boundary components into ideal vertices"));
+    actFiniteToIdeal->setEnabled(readWrite);
+    actFiniteToIdeal->setWhatsThis(i18n("Convert this from a finite "
+        "triangulation to an ideal triangulation.  Each real boundary "
+        "component (formed from two or more boundary faces) will be "
+        "converted into a single ideal vertex.<p>"
+        "A side-effect of this operation is that any spherical boundary "
+        "components will be filled in with balls.<p>"
+        "This triangulation will be modified directly.  If there are no "
+        "real boundary components, this operation will have no effect."));
+    enableWhenWritable.append(actFiniteToIdeal);
+    triActionList.append(actFiniteToIdeal);
 
     KAction* actDoubleCover = new KAction(i18n( "&Double Cover"), "doublecover",
         0 /* shortcut */, this, SLOT(doubleCover()), triActions,
@@ -521,6 +539,18 @@ void NTriGluingsUI::idealToFinite() {
             "This triangulation has no ideal vertices to truncate."));
     else
         tri->idealToFinite();
+}
+
+void NTriGluingsUI::finiteToIdeal() {
+    if (! enclosingPane->commitToModify())
+        return;
+
+    if (! tri->hasBoundaryFaces())
+        KMessageBox::error(ui, i18n(
+            "This triangulation has no real boundary components to "
+            "convert into cusps."));
+    else
+        tri->finiteToIdeal();
 }
 
 void NTriGluingsUI::elementaryMove() {

@@ -126,6 +126,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void simplify();
         void barycentricSubdivide();
         void idealToFinite();
+        void finiteToIdeal();
         void elementaryMove();
         void doubleCover();
         void splitIntoComponents();

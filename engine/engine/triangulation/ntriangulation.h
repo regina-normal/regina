@@ -1741,7 +1741,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * converted into real boundary components made from unglued
          * faces of tetrahedra.
          *
-         * Note that this operation is a loose converse of cuspBoundary().
+         * Note that this operation is a loose converse of finiteToIdeal().
          *
          * \warning Currently, this routine subdivides all tetrahedra as
          * if <i>all</i> vertices (not just some) were ideal.
@@ -1773,6 +1773,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * tetrahedron faces will be affected; ideal boundary components
          * are already cusps and so will not be changed.
          *
+         * One side-effect of this operation is that all spherical
+         * boundary components will be filled in with balls.
+         *
          * This operation is performed by attaching a new tetrahedron to
          * each boundary face and then gluing these new tetrahedra
          * together in a way that mirrors the adjacencies of the
@@ -1788,7 +1791,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @return \c true if changes were made, or \c false if the
          * original triangulation contained no real boundary components.
          */
-        bool cuspBoundary();
+        bool finiteToIdeal();
 
         /**
          * Does a barycentric subdivision of the triangulation.

@@ -238,7 +238,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     return true;
 }
 
-bool NTriangulation::cuspBoundary() {
+bool NTriangulation::finiteToIdeal() {
     if (! hasBoundaryFaces())
         return false;
 
