@@ -2,12 +2,12 @@ Source: regina-normal
 Section: contrib/math
 Priority: extra
 Maintainer: Ben Burton <benb@acm.org>
-Build-Depends: debhelper (>> 3.0.0), docbook-utils, doxygen, graphviz, j2sdk1.3, jade, jython, libbtools-java, libgmp3-dev
+Build-Depends: debhelper (>> 3.0.0), docbook-utils, doxygen, graphviz, j2sdk1.3, jade, jython, libbtools-java (>= 1.1-0), libgmp3-dev
 Standards-Version: 3.5.6
 
 Package: regina-normal
 Architecture: any
-Depends: java2-runtime, libbtools-java, ${shlibs:Depends}
+Depends: java2-runtime, libbtools-java (>= 1.1-0), ${shlibs:Depends}
 Recommends: jython
 Suggests: regina-normal-doc, snappea
 Description: Regina, the 3-manifold normal surface theory calculator
