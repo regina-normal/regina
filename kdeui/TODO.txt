@@ -18,6 +18,7 @@ General:
 Census:
     - Implement GUI census creation
     * Include closed hyperbolic census
+    * More explicit references for the Regina-generated censuses
 
 Containers:
     - Update container viewers whenever their subtrees change, not just when
@@ -67,3 +68,6 @@ Toolbars:
 Triangulations:
     - Make the skeleton viewer windows appear in a pleasant size
     + Only fill the isomorphism combo box when absolutely necessary
+
+Website:
+    * More detailed citations for census data on the website
