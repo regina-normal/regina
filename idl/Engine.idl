@@ -31,6 +31,7 @@
 
 #include "Algebra/NAbelianGroup.idl"
 #include "Algebra/NGroupPresentation.idl"
+#include "Angle/NAngleStructureList.idl"
 #include "Maths/NMatrixInt.idl"
 #include "File/NFile.idl"
 #include "Packet/NContainer.idl"
@@ -66,6 +67,9 @@ module Regina {
         Algebra::NGroupPresentation newNGroupPresentation_();
         Algebra::NGroupPresentation newNGroupPresentation_NGroupPresentation(
             in Algebra::NGroupPresentation cloneMe);
+
+        Angle::NAngleStructureList newNAngleStructureList(
+            in Triangulation::NTriangulation owner);
 
         File::NFile newNFile();
 
