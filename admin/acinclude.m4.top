@@ -294,6 +294,8 @@ dnl                               including flags for building against
 dnl                               python itself.
 dnl        BOOST_PYTHON_LIBS: The linker flags required for building
 dnl                           against boost.python.
+dnl        PYTHON_LIBS: The linker flags required for building against
+dnl                     python itself.
 dnl
 dnl    AC_DEFINE()s the following variables:
 dnl
@@ -312,8 +314,8 @@ AC_DEFUN(REGINA_LIB_BOOST_PYTHON, [
       for incdir in "/usr/include/$pyver" "/usr/local/include/$pyver" \
           "/usr/$pyver/include" "/usr/local/$pyver/include" \
           "$prefix/include/$pyver" "$prefix/$pyver/include"; do
-        CXXFLAGS="$CXXFLAGS -I$incdir"
-        LDFLAGS="$LDFLAGS -shared"
+        CXXFLAGS="$__regina_py_save_cxxflags -I$incdir"
+        LDFLAGS="$__regina_py_save_ldflags -shared"
 
         # Check for python includes.
         AC_TRY_COMPILE([
@@ -331,20 +333,39 @@ AC_DEFUN(REGINA_LIB_BOOST_PYTHON, [
             /* No main body. */
           ], [
             AC_MSG_RESULT([yes])
-            BOOST_PYTHON_INCLUDES="-I$incdir"
-            BOOST_PYTHON_LIBS="-lboost_python"
-            __regina_py_ok=1
+
+            # Check for -lpython.
+            for pylib in "$pyver" python python2.3 python2.2; do
+              AC_MSG_CHECKING([for lib$pylib with $incdir/Python.h])
+              LDFLAGS="$__regina_py_save_ldflags -l$pylib"
+              AC_TRY_COMPILE([
+                #include <Python.h>
+              ], [
+                Py_Initialize(); Py_Finalize();
+              ], [
+                AC_MSG_RESULT([yes])
+
+                # And we're done!
+                BOOST_PYTHON_INCLUDES="-I$incdir"
+                BOOST_PYTHON_LIBS="-lboost_python"
+                PYTHON_LIBS="-l$pylib"
+                __regina_py_ok=1
+              ], [
+                AC_MSG_RESULT([no])
+              ])
+              if test "$__regina_py_ok" = "1"; then break; fi
+            done
           ], [
             AC_MSG_RESULT([no])
           ])
         ])
-
-        CXXFLAGS="$__regina_py_save_cxxflags"
-        LDFLAGS="$__regina_py_save_ldflags"
         if test "$__regina_py_ok" = "1"; then break; fi
       done
       if test "$__regina_py_ok" = "1"; then break; fi
     done
+
+    CXXFLAGS="$__regina_py_save_cxxflags"
+    LDFLAGS="$__regina_py_save_ldflags"
 
     if test "$__regina_py_ok" = "1"; then
       AC_DEFINE(HAVE_BOOST_PYTHON, 1,
