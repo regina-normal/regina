@@ -20,7 +20,6 @@
 # CVS tree or the top-level source directory within the CVS tree.
 #
 # Requires: diff, find, grep, mktemp, sed, sort, tar
-# Example: mksums "Regina distribution files" *.tgz
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
