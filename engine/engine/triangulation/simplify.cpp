@@ -703,7 +703,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
     return true;
 }
 
-bool NTriangulation::collapseEdge(NEdge* e, bool check = true, bool perform = true) {
+bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 
     // Find the tetrahedra to remove.
     const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
