@@ -1,0 +1,371 @@
+<html>
+<head>
+	<title>Regina - A Normal Surface Theory Calculator</title>
+</head>
+<body background="back.jpg" bgcolor="#C0C0C0" text="#000000"
+	link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<center>
+	<img src="title.jpg" vspace=10
+		alt="Regina - A Normal Surface Theory Calculator">
+	<p>
+	<h3>Regina<br>
+	The Application Formerly Known As Normal<br>
+	Copyright &copy; 1999-2001, Ben Burton</h3>
+</center>
+<p>
+<a name="contents"><i>Website last updated 10 June 2001</i></a>
+<a href="http://sourceforge.net/projects/btools/"><img
+	src="http://sourceforge.net/sflogo.php?group_id=19698&type=1"
+	alt="SourceForge" align="right" hspace=5 border=0></a>
+<ul>
+	<li><a href="#whatis">What is Regina?</a></li>
+	<li><a href="#whatdoes">What does Regina do?</a></li>
+	<li><a href="#screenshots">Screenshots</a></li>
+	<li><a href="sysreq.html">System Requirements</a>
+		<i>(separate page)</i>
+		<ul>
+			<li><a href="sysreq.html#linux">Linux</a></li>
+			<li><a href="sysreq.html#windoze">Windows</a></li>
+		</ul></li>
+	<li><a href="#license">License</a></li>
+	<li><a href="#download">Download</a></li>
+	<li><a href="#docs">Documentation</a></li>
+	<li><a href="docs/options.html">Command Line Arguments</a>
+		<i>(from docs)</i></li>
+	<li><a href="docs/troubleshooting.html">Troubleshooting</a>
+		<i>(from docs)</i></li>
+	<li><a href="#genealogy">Genealogy</a></li>
+	<li><a href="#contact">Contact / Comments / Suggestions</a></li>
+	<li><a href="#acknowledgements">Acknowledgements</a></li>
+	<li><a href="#who">Who is Regina?</a></li>
+</ul>
+
+<h3><a name="whatis">What is Regina?</a></h3>
+
+Regina is essentially a topological calculator with a bent towards
+normal surface theory.  It allows 3-manifolds to be created, manipulated
+and their properties of interest determined.
+<p>
+Its primary uses (in my opinion) include:
+<ul>
+	<li>the ability to examine 3-manifolds too complex to study by hand;</li>
+	<li>the ability to use the census feature to run tests on
+		all 3-manifolds of a given type;</li>
+	<li>the ability to bring my PhD thesis closer to completion.</li>
+</ul>
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="whatdoes">What does Regina do?</a></h3>
+
+Amongst other things, features of Regina include:
+<ul>
+	<li>Triangulations:
+		<ul>
+			<li>Creation:
+				<ul>
+					<li>Automated creation of standard triangulations</li>
+					<li>Importing
+						<a href="http://thames.northnet.org/weeks/index/SnapPea.html">SnapPea</a>
+						triangulations</li>
+					<li>Hand editing of individual face gluings</li>
+				</ul></li>
+			<li>Properties:
+				<ul>
+					<li>Detailed skeletal information</li>
+					<li>Algebraic properties including various
+						homology groups</li>
+				</ul></li>
+			<li>Modification:
+				<ul>
+					<!--><li>Triangulation simplification</li><-->
+					<li>Common subdivisions</li>
+				</ul></li>
+		</ul></li>
+	<li>Census:
+		<ul>
+			<li>Creation of a census of all triangulations of a given
+				type</li>
+		</ul></li>
+	<li>Normal surface theory:
+		<ul>
+			<li>Calculation of all vertex normal surfaces under standard
+				sets of matching equations</li>
+			<li>Ability to calculate and/or view normal surfaces in
+				different coordinate systems</li>
+			<li>Calculation of basic properties of normal surfaces</li>
+			<li>Support for spun and other non-compact normal surfaces</li>
+			<li>Support for immersed and singular normal surfaces</li>
+			<li>Filtering of normal surfaces by various properties</li>
+		</ul></li>
+	<li>Scripting:
+		<ul>
+			<li>Ability to write and run complex scripts in
+				<a href="http://www.jython.org">Jython</a> that offer
+				full access to the program's capabilities</li>
+			<li>Support for custom libraries of Jython routines to
+				share between files</li>
+		</ul></li>
+	<li>File structure:
+		<ul>
+			<li>A well-organised hierarchial file structure</li>
+			<li>Support for storing miscellaneous data such as notes and
+				scripts along with topological structures in a single
+				file</li>
+		</ul></li>
+	<li>Interfaces:
+		<ul>
+			<li>A full graphical user interface that is hopefully not overly
+				difficult to use</li>
+			<li>A direct Jython console interface with no GUI for
+				immediate access to the calculation engine</li>
+			<li>Allows the calculation engine to run as a CORBA server,
+				possibly on a different machine from the GUI</li>
+		</ul></li>
+	<li>Extensibility:
+		<ul>
+			<li>Strong modularisation within the engine to allow users
+				to add their own extensions
+				without excessive trauma
+				(and please! - <a href="mailto:benb@acm.org">mail me</a>
+				your additions and I will
+				be able to include them in future releases)</li>
+			<li>Extensive documentation of both the calculation engine
+				and the graphical interface to aid the creation of new
+				routines and the understanding of existing routines</li>
+		</ul></li>
+	<li>User Manual:
+		<ul>
+			<li>Aha! - fooled you.  Right now I absolutely don't have
+			time; <a href="mailto:benb@acm.org">anyone interested?</a></li>
+		</ul></li>
+</ul>
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="screenshots">Screenshots</a></h3>
+
+A few screenshots are available.  Click on an image to see a full scale
+version.
+<p>
+<a href="shots/all.jpg"><img src="shots/all-mini.jpg"
+	vspace=5 align=middle border=0
+	alt="Screenshot thumbnail"></a> Illustrates a variety of features
+	including built-in scripting
+<p>
+<a href="shots/tri.jpg"><img src="shots/tri-mini.jpg"
+	vspace=5 align=middle border=0
+	alt="Screenshot thumbnail"></a> Obtaining normal surfaces and
+	other information from a triangulation
+<p>
+<a href="shots/census.jpg"><img src="shots/census-mini.jpg"
+	vspace=5 align=middle border=0
+	alt="Screenshot thumbnail"></a> Forming a census
+<p>
+Thanks to Murray Keir for the gorgeous sunset in the background.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="license">License</a></h3>
+
+Regina - A normal surface theory calculator<br>
+Copyright &copy; 1999-2001, Ben Burton
+<p>
+Regina has been released under the
+<a href="http://www.fsf.org/copyleft/gpl.html">GNU General Public License</a>.
+<p>
+It is hereby explicitly allowed that this program may be used
+with any Java implementation without the GPL applying to that
+Java implementation.
+<p>
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+<p>
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+<p>
+You should receive a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
+USA.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="download">Download</a></h3>
+
+Both binary and source downloads are available from the
+<a href="http://sourceforge.net/projects/regina/">SourceForge
+project site</a>.  Be aware of the
+<a href="#license">GPL License</a> as described above, which is also
+contained in the downloadable archives.
+<ul>
+	<li><b>Linux binaries:</b>
+		Archive <tt><b>regina-<i>version</i>_bin.tgz</b></tt> contains a
+		complete binary distribution for linux.
+		The application will be extracted into directory
+		<tt><b>regina-<i>version</i>/</b></tt>.  Instructions for running the
+		application are included in
+		<tt><b>regina-<i>version</i>/README.txt</b></tt>.
+	<li><b>Windows binaries:</b>
+		Currently only linux downloads are available.  I'm still
+		working on windows support; I'll post windows binaries
+		when they're ready.
+	<li><b>Sources:</b>
+		Archive <tt><b>regina-<i>version</i>_src.tgz</b></tt> contains a complete
+		source distribution.  The sources will be extracted into directory
+		<tt><b>regina-<i>version</i>/</b></tt>.  Instructions for compiling the
+		application are included in
+		<tt><b>regina-<i>version</i>/README.txt</b></tt>.
+</ul>
+<p>
+To extract archive <tt><b>stuff.tgz</b></tt>, type
+<tt><b>tar -zxf stuff.tgz</b></tt>.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="docs">Documentation</a></h3>
+
+The documentation for Regina can be <a href="docs/">viewed
+here online</a>.
+<p>
+There are several ways of obtaining the documentation on your machine.
+It is recommended that you use a custom help browser (this can be set up
+through the <i>Options-Help Browser</i> menu item), since the internal
+JavaHelp system has problems with some of the HTML.
+<ul>
+	<li>If you wish to use a custom help browser from inside Regina or
+	if you wish to browse the documentation from outside Regina,
+	download archive <tt><b>regina-<i>version</i>_doc.tgz</b></tt>.
+	This will extract the documentation into directory
+	<tt><b>regina-<i>version</i>/docs/normal/docs/</b></tt>.
+
+	<li>If you wish to use Regina's internal help browsing system, you
+	can download the jar archive
+	<tt><b>regina-docs-<i>version</i>.jar</b></tt>.
+	Rename this to <tt><b>regina-docs.jar</b></tt>
+	and the help browser will use this jar
+	as is; there is no need to unpack it.  You will need to run
+	<tt><b>regconf</b></tt> to tell the internal help browser where to
+	find this jar.
+
+	<li>You can generate the documentation from the sources.
+	Move to the main
+	<tt><b>regina-<i>version</i>/</b></tt> directory and type <tt><b>make
+	bindocs</b></tt>.  The documentation will be generated in the
+	subdirectory <tt><b>docs/normal/docs/</b></tt>
+	and a complete documentation jar <tt><b>regina-docs.jar</b></tt> will
+	be created in the subdirectory <tt><b>bin/</b></tt>.
+</ul>
+<p>
+To extract archive <tt><b>stuff.tgz</b></tt>, type
+<tt><b>tar -zxf stuff.tgz</b></tt>.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="genealogy">Genealogy</a></h3>
+
+<img src="normalicon.gif" alt="Icon for Normal 1.0" hspace=10 vspace=5
+	align="right">
+In 1997 in Melbourne, David Letscher, Richard Rannard and myself under
+the guidance of Hyam Rubinstein planned out a program that would do
+normal surface theory and everything else besides.  Much groundwork
+planning was done, epsilon code was written and then things kind of
+faded away.  David Letscher revived the project on his own and in 1999
+presented Normal 1.0.  This program performed triangulation
+simplification and found vertex normal surfaces, was written in Java and
+was a proof-of-concept program that normal surface theory was
+computationally feasible.
+<p>
+In March 1999, David Letscher and I sat down to write a new version of
+the program from scratch.  The new version would have a calculation
+engine written in C++ for speed and would have a Java GUI for
+portability and for (imho) the cool things that Java provides for
+writing interfaces (and I know there are people who will disagree with
+me on this, but hey).  It would be carefully designed and written with
+rigour and extensibility in mind, allowing for the possibility of
+add-ons written by other people.
+<p>
+David however leads a busy life and pulled out of the project, but
+remains to offer fabulous technical advice.  In late 2000 a prerelease of the
+new program was ready (under an appropriate definition of `ready') and
+voila, here we are today.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="contact">Contact / Comments / Suggestions</a></h3>
+
+If you have any suggestions, problems, bugs, wish lists, frustrations or
+otherwise miscellaneous comments, I would <i>really</i> love to hear
+them.  This program is permanently under development and I would like to
+hear what people want out of it.
+<p>
+Alternatively, if you have written additions yourself and think they
+could be useful in the general release, I would love to hear about them.
+The more the merrier!  It's probably worth mailing me first though in
+case I or someone else have already written said addition and it's
+currently being debugged and two days away from release.
+<p>
+Incidentally, even if you have no comments to make, I'd like to hear
+from anyone using the program - even if it's just to say hi -
+mainly because I'm interested to see
+who's using it and how it's being used.
+<p>
+The best way to contact me is by email at
+<a href="mailto:benb@acm.org">benb@acm.org</a>.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="acknowledgements">Acknowledgements</a></h3>
+
+<center><b>
+	Regina<br>
+	The Application Formerly Known As Normal<br>
+	Copyright &copy; 1999-2001, Ben Burton
+	</b>
+	<p>
+	Written by Ben Burton
+	<p>
+	Normal 1.0 was written by David Letscher, who also provided invaluable
+	technical advice for this project.
+</center>
+<p>
+Additional code contributed by:
+<ul>
+	<li>David Letscher</li>
+</ul>
+Thanks to:
+<ul>
+	<li>William Jaco</li>
+	<li>Hyam Rubinstein</li>
+	<li>Jeff Weeks</li>
+	<li>The American Institute of Mathematics</li>
+	<li>Oklahoma State University</li>
+	<li>The University of Melbourne, Australia</li>
+</ul>
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h3><a name="who">Who is Regina?</a></h3>
+
+This normal surface theory calculator has been named after 
+<a href="http://www.maths.uq.edu.au/~rb/">Regina Basman</a>
+who once told me she was the most normal person I knew.  She's doing a
+mathematics PhD, reads cool books and sometimes draws people, and she likes
+running around rainforests in the dark.
+<p>
+<center><img src="regina.jpg" alt="Regina" vspace=10></center>
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<p>
+<a href="http://baasil.humbug.org.au/bab/"><img src="ben.jpg"
+	alt="Ben's Home Page" border=0 vspace=10></a></p>
+
+</body>
+</html>
+

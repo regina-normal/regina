@@ -1,0 +1,67 @@
+<html>
+<head>
+	<title>Regina Applet Page</title>
+</head>
+<body background="back.jpg" bgcolor="#C0C0C0" text="#000000"
+	link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<center>
+	<img src="title.jpg" vspace=10
+		alt="Regina - A Normal Surface Theory Calculator">
+	<p>
+	<h3>Regina Applet Page<br>
+	The Application Formerly Known As Normal<br>
+	Copyright &copy; 1999-2000, Ben Burton</h3>
+</center>
+<p>
+<i>Latest version is Regina 2.1.0 (18 December 2000)</i>
+<p>
+The Regina applet below should present a button with which you can run
+Regina.  Please <a href="mailto:benb@acm.org">mail me</a> if you
+encounter any problems.
+<p>
+You can read the online documentation for Regina
+<a href="docs/normal/docs/">here</a>.
+<p>
+Note that Java version at least 1.2 is required.  At the bottom of this
+page is an applet that will tell you the Java version you are currently
+running.
+Some browsers do not provide a recent enough Java version.
+Try upgrading your web browser, or
+visit <a href="http://www.javasoft.com/">JavaSoft</a> and download the
+Java plug-in for your browser.
+
+<h3>Regina Applet:</h3>
+
+<center>
+<applet code=normal/Application.class alt="Regina Applet"
+		archive="jar/regina.jar, jar/regina-corba.jar, jar/btools.jar"
+		width=200 height=50 vspace=10>
+	<param name="Interface" value="gui">
+	<param name="ORBInitialHost" value="localhost">
+	<param name="ORBInitialPort" value=8088>
+	Your web browser will not run Java applets.  Ensure that Java is
+	enabled in the browser preferences.  If this does not help, try
+	downloading the latest version of your web browser.  If all else
+	fails, you can <a href="mailto:benb@acm.org">mail me</a> for
+	assistance.
+</applet>
+</center>
+
+<h3>Java Version:</h3>
+
+<center>
+<applet code=btools/Version.class alt="Java Version Information"
+		archive="jar/btools.jar" width=200 height=30 vspace=10>
+	Again, your web browser will not run Java applets.
+</applet>
+</center>
+
+<p>
+<a href="./"><img src="return.gif" align="middle"
+	alt="Back to Regina website..." border=0 vspace=10></a>
+<i><a href="./">Back to Regina website...</a></i>
+
+</body>
+</html>
+

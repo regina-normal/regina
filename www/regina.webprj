@@ -1,0 +1,21 @@
+<!DOCTYPE webproject ><webproject>
+ <project preview="" type="Local" name="Regina" >
+  <upload/>
+  <author>Ben Burton</author>
+  <email>benb@acm.org</email>
+  <item url="shots/all-mini.jpg" />
+  <item url="shots/all.jpg" />
+  <item url="shots/census-mini.jpg" />
+  <item url="shots/census.jpg" />
+  <item url="shots/tri-mini.jpg" />
+  <item url="shots/tri.jpg" />
+  <item url="applet.html" />
+  <item url="back.jpg" />
+  <item url="ben.jpg" />
+  <item url="index.html" />
+  <item url="normalicon.gif" />
+  <item url="regina.jpg" />
+  <item url="return.gif" />
+  <item url="title.jpg" />
+ </project>
+</webproject>

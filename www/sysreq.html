@@ -1,0 +1,162 @@
+<html>
+<head>
+	<title>Regina - System Requirements</title>
+</head>
+<body background="back.jpg" bgcolor="#C0C0C0" text="#000000"
+	link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<a name="contents"><h2>Regina - System Requirements</h2></a>
+
+<ul>
+	<li><a href="#linux">Linux</a></li>
+	<li><a href="#windoze">Windows</a></li>
+	<li><a href="./">Back to main page ...</li>
+</ul>
+
+You can either download prebuilt binaries or you can download the entire
+source tree to compile for yourself.  System requirements are described
+below.  If downloading a binary distribution, you need everything from
+the <i>Binaries</i> column.  If downloading a source distribution, you
+need everything from both <i>Binaries</i> and <i>Source</i> columns.
+
+<h4><a name="linux">Linux:</a></h4>
+
+<table border=1>
+<tr><td align=center><b>Component</b></td><td align=center><b>Version</b></td>
+	<td align=center><b>Download From</b></td>
+	<td align=center><b><i>Binaries</i></b></td>
+	<td align=center><b><i>Source</i></b></td></tr>
+<tr><td>GNU multiprecision arithmetic library</td><td>&gt;= 2</td>
+	<td><a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a> or
+		search your linux distribution</td>
+	<td>Shared library <i>libgmp.so</i></td>
+	<td>Linkable library <i>libgmp.a</i> plus the corresponding header
+		files</td></tr>
+<tr><td>Java</td><td>&gt;= 1.3 is recommended but
+		&gt;= 1.2.2 will do</td>
+	<td><a href="http://www.blackdown.org/">http://www.blackdown.org/</a></td>
+	<td>Runtime environment (<i>jre</i> or <i>j2re</i>)</td>
+	<td>Development kit (<i>jdk</i> or <i>j2sdk</i>); this will
+		automatically include the runtime environment</td></tr>
+<tr><td>BTools</td><td>&gt;= 1.1 or current CVS snapshot</td>
+	<td><a href="http://sourceforge.net/projects/btools/">
+		http://sourceforge.net/projects/btools/</a></td>
+	<td>Regina only needs access to the single file <i>btools.jar</i>.</td>
+	<td></td></tr>
+<tr><td>Jython (<b>optional</b> - used to run scripts or otherwise
+		obtain low-level access to the computation engine)</td><td>&gt;= 2.1-alpha1</td>
+	<td><a href="http://www.jython.org/">http://www.jython.org/</a></td>
+	<td>Regina only needs access to the single file <i>jython.jar</i>.</td>
+	<td></td></tr>
+<tr><td>JavaHelp (<b>optional</b> - used to view documentation through
+		the embedded help system)</td><td>&gt;= 1.1</td>
+	<td><a href="http://www.javasoft.com/products/javahelp/">
+		http://www.javasoft.com/products/javahelp/</a></td>
+	<td>Regina only needs access to the single file <i>jh.jar</i>.</td>
+	<td></td></tr>
+<tr><td>omniORB (<b>optional</b> - used to run the calculation engine as a
+		CORBA server)</td><td>&gt;= 3</td>
+	<td><a href="http://www.uk.research.att.com/omniORB/omniORB.html">
+		http://www.uk.research.att.com/omniORB/omniORB.html</a></td>
+	<td>Shared libraries <i>libomniORB*.so</i> et al plus a name server if
+	necessary</td>
+	<td>Linkable libraries <i>libomniORB*.a</i> et al plus the corresponding
+	header files</td></tr>
+<tr><td>Development tools</td><td></td>
+	<td>Search your linux distribution</td><td></td>
+	<td><tt>g++</tt>, a GNU-compatible <tt>make</tt>,
+		<tt>bash</tt>, <tt>cat</tt>, <tt>cp</tt>, <tt>echo</tt>, <tt>grep</tt>,
+		<tt>pwd</tt>, <tt>rm</tt>, <tt>sed</tt>, <tt>tar</tt>, <tt>touch</tt>
+		and almost certainly other bits and pieces; please
+		<a href="mailto:benb@acm.org">mail me</a> if you discover any
+		version requirements or other utilities that need to be added to
+		this list.</td></tr>
+<tr><td>Doxygen (<b>optional</b> - used to make HTML documentation for
+		the computation engine)</td><td>&gt;= 1.2.2</td>
+	<td><a href="http://www.stack.nl/~dimitri/doxygen/">
+		http://www.stack.nl/~dimitri/doxygen/</a> or search your linux
+		distribution</td>
+	<td></td><td>A binary doxygen package plus graphviz (see below)</td></tr>
+<tr><td>Graphviz (<b>optional</b> - required if doxygen is used;
+		see above)</td><td>&gt;= 1.5</td>
+	<td><a href="http://www.research.att.com/sw/tools/graphviz/">
+		http://www.research.att.com/sw/tools/graphviz/</a> or search
+		your linux distribution</td>
+	<td></td><td>A binary graphviz package</td></tr>
+</table>
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h4><a name="windoze">Windows (at least Win95):</a></h4>
+
+I still haven't actually tried building under windows.  In
+theory the sources <i>should</i> compile fine on windows assuming tools similar
+to those listed above are available on the system (the
+<a href="http://www.cygwin.com/">Cygwin development tools</a> are a great
+place to start).
+<p>
+<table border=1>
+<tr><td align=center><b>Component</b></td><td align=center><b>Version</b></td>
+	<td align=center><b>Download From</b></td>
+	<td align=center><b><i>Binaries</i></b></td>
+	<td align=center><b><i>Source</i></b></td></tr>
+<tr><td>GNU multiprecision arithmetic library</td><td>&gt;= 2</td>
+	<td>Not quite sure yet.</td>
+	<td>Shared library <i>libgmp.so</i></td><td>Linkable library
+	<i>libgmp.a</i> plus the corresponding header files</td></tr>
+<tr><td>Java</td><td>&gt;= 1.3 is recommended but
+		&gt;= 1.2.2 will do</td>
+	<td><a href="http://www.javasoft.com/j2se/">
+		http://www.javasoft.com/j2se/</a></td>
+	<td>Runtime environment (<i>jre</i> or <i>j2re</i>)</td>
+	<td>Development kit (<i>jdk</i> or <i>j2sdk</i>); this will
+		automatically include the runtime environment</td></tr>
+<tr><td>BTools</td><td>&gt;= 1.1 or current CVS snapshot</td>
+	<td><a href="http://sourceforge.net/projects/btools/">
+		http://sourceforge.net/projects/btools/</a></td>
+	<td>Regina only needs access to the single file <i>btools.jar</i>.</td>
+	<td></td></tr>
+<tr><td>Jython (<b>optional</b> - used to run scripts or otherwise
+	obtain low-level access to the computation engine)</td><td>&gt;= 2.1-alpha1</td>
+	<td><a href="http://www.jython.org/">http://www.jython.org/</a></td>
+	<td>Regina only needs access to the single file <i>jython.jar</i>.</td>
+	<td></td></tr>
+<tr><td>JavaHelp (<b>optional</b> - used to view documentation through
+	the embedded help system)</td><td>&gt;= 1.1</td>
+	<td><a href="http://www.javasoft.com/products/javahelp/">
+		http://www.javasoft.com/products/javahelp/</a></td>
+	<td>Regina only needs access to the single file <i>jh.jar</i>.</td>
+	<td></td></tr>
+<tr><td>Cygwin development tools</td><td>&gt;= 1.1.4</td>
+	<td><a href="http://www.cygwin.com/">http://www.cygwin.com/</a></td>
+	<td></td><td>You absolutely need packages <i>bash</i>, <i>binutils</i>,
+		<i>cygwin</i>, <i>fileutils</i>, <i>gcc</i>, <i>gzip</i>,
+		<i>make</i>, <i>sed</i>, <i>shellutils</i>, <i>tar</i> and
+		<i>textutils</i>, but the other packages are quite useful;
+		I'd just get everything.
+		Please <a href="mailto:benb@acm.org">mail me</a> if you discover any
+		other packages that need to be added to this list.</td></tr>
+<tr><td>Doxygen (<b>optional</b> - used to make HTML documentation for
+	the computation engine)</td><td>&gt;= 1.2.2</td>
+	<td><a href="http://www.stack.nl/~dimitri/doxygen/">
+		http://www.stack.nl/~dimitri/doxygen/</a></td>
+	<td></td><td>A binary doxygen package plus graphviz (see below)</td></tr>
+<tr><td>Graphviz (<b>optional</b> - required if doxygen is used;
+	see above)</td><td>&gt;= 1.5</td>
+	<td><a href="http://www.research.att.com/sw/tools/graphviz/">
+		http://www.research.att.com/sw/tools/graphviz/</a></td>
+	<td></td><td>A binary graphviz package</td></tr>
+</table>
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<p>
+<a href="./"><img src="return.gif"
+	alt="Back to main page ..."
+	border="0" vspace="10"  width="32" height="32"
+	align="middle"></a>
+<a href="./">Back to main page ...</a></p>
+
+</body>
+</html>
+
