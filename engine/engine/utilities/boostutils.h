@@ -51,6 +51,16 @@
  *  is granted provided this copyright notice appears in all copies.
  *  This software is provided "as is" without express or implied
  *  warranty, and with no claim as to its suitability for any purpose.
+ *
+ *  <b>Next and Prior:</b>
+ *
+ *  Contributed by Dave Abrahams
+ *
+ *  (C) Copyright Boost.org 1999-2003.
+ *  Permission to copy, use, modify, sell and distribute this software
+ *  is granted provided this copyright notice appears in all copies.
+ *  This software is provided "as is" without express or implied
+ *  warranty, and with no claim as to its suitability for any purpose.
  */
 
 #ifndef __BOOSTUTILS_H
@@ -213,6 +223,40 @@ inline reference_wrapper<T> const ref(T& t) {
 template <class T>
 inline reference_wrapper<T const> const cref(T const& t) {
     return reference_wrapper<T const>(t);
+}
+
+/**
+ * Returns the iterator prior to the given iterator.
+ * This function avoids having to explicitly create a temporary to
+ * decrement.
+ *
+ * Only the decrement operator <tt>--it</tt> needs to be defined.
+ *
+ * \ifaces Not present.
+ *
+ * @param it the iterator to examine.
+ * @return the iterator prior to the given iterator.
+ */
+template <class T>
+inline T prior(T it) {
+    return --it;
+}
+
+/**
+ * Returns the iterator following the given iterator.
+ * This function avoids having to explicitly create a temporary to
+ * increment.
+ *
+ * Only the increment operator <tt>++it</tt> needs to be defined.
+ *
+ * \ifaces Not present.
+ *
+ * @param it the iterator to examine.
+ * @return the iterator following the given iterator.
+ */
+template <class T>
+inline T next(T it) {
+    return ++it;
 }
 
 /*@}*/

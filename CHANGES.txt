@@ -63,6 +63,9 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
               answers if the skeleton had not already been calculated.
             - Renamed insertLensSpace() to insertLayeredLensSpace().
             - New routine insertLayeredLoop().
+        Routine prior(), next():
+            - Copied from the Boost C++ libraries for easy access to
+              prior and following iterators.
     JAVA USER INTERFACE:
         Overall structure:
             - Incorporated engine enhancements listed above.
