@@ -349,8 +349,11 @@ void NScriptUI::updateRemoveState() {
 }
 
 void NScriptUI::unimplemented() {
-    KMessageBox::sorry(ui,
-        i18n("Python compilation and execution are not yet implemented."));
+    KMessageBox::sorry(ui, i18n("<qt>Python compilation and execution "
+        "have not yet been reimplemented for the KDE user interface.  "
+        "This should be completed for version 4.0.<p>"
+        "In the meantime, you can still use Python scripting with Regina "
+        "though the command-line <b>regina-python</b> application.</qt>"));
 }
 
 void NScriptUI::notifyScriptChanged() {

@@ -234,8 +234,11 @@ bool ReginaMain::openURL(const QString& url) {
 }
 
 void ReginaMain::pythonConsole() {
-    KMessageBox::sorry(this, i18n("Python scripting is not yet implemented."),
-        i18n("Patience, Iago!"));
+    KMessageBox::sorry(this, i18n("<qt>Python scripting has not yet "
+        "been reimplemented for the KDE user interface.  This should "
+        "be completed for version 4.0.<p>"
+        "In the meantime, you can still use Python scripting with Regina "
+        "though the command-line <b>regina-python</b> application.</qt>"));
 }
 
 void ReginaMain::close() {
