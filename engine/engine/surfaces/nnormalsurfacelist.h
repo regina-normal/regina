@@ -345,6 +345,8 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
                     /**< The triangulation upon which this normal
                          surface list will be based. */
                 NProgressManager* manager;
+                    /**< The progress manager through which progress is
+                         reported, or 0 if no progress manager is in use. */
 
             public:
                 /**
