@@ -2,6 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
+ *  Dump packets from the given file to standard output                   *
  *                                                                        *
  *  Copyright (c) 1999-2002, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
