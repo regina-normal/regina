@@ -322,6 +322,167 @@ void ReginaPart::cloneSubtree() {
     setModified(true);
 }
 
+void ReginaPart::moveShallow() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    unimplemented();
+
+    setModified(true);
+}
+
+void ReginaPart::moveDeep() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    unimplemented();
+
+    setModified(true);
+}
+
+void ReginaPart::moveUp() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    if (! packet->getPrevTreeSibling()) {
+        if (! packet->getNextTreeSibling())
+            KMessageBox::error(widget(), i18n(
+                "This packet has no siblings and so cannot be moved up."));
+        else
+            KMessageBox::error(widget(), i18n(
+                "This packet is already at the top of its list of siblings."));
+        return;
+    }
+
+    packet->getPrevTreeSibling()->swapWithNextSibling();
+    setModified(true);
+}
+
+void ReginaPart::moveDown() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    if (! packet->getNextTreeSibling()) {
+        if (! packet->getPrevTreeSibling())
+            KMessageBox::error(widget(), i18n(
+                "This packet has no siblings and so cannot be moved down."));
+        else
+            KMessageBox::error(widget(), i18n(
+                "This packet is already at the bottom of its "
+                "list of siblings."));
+        return;
+    }
+
+    packet->swapWithNextSibling();
+    setModified(true);
+}
+
+void ReginaPart::movePageUp() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    if (! packet->getPrevTreeSibling()) {
+        if (! packet->getNextTreeSibling())
+            KMessageBox::error(widget(), i18n(
+                "This packet has no siblings and so cannot be moved up."));
+        else
+            KMessageBox::error(widget(), i18n(
+                "This packet is already at the top of its list of siblings."));
+        return;
+    }
+
+    packet->moveUp(2);
+    setModified(true);
+}
+
+void ReginaPart::movePageDown() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    if (! packet->getNextTreeSibling()) {
+        if (! packet->getPrevTreeSibling())
+            KMessageBox::error(widget(), i18n(
+                "This packet has no siblings and so cannot be moved down."));
+        else
+            KMessageBox::error(widget(), i18n(
+                "This packet is already at the bottom of its "
+                "list of siblings."));
+        return;
+    }
+
+    packet->moveDown(2);
+    setModified(true);
+}
+
+void ReginaPart::moveTop() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    if (! packet->getPrevTreeSibling()) {
+        if (! packet->getNextTreeSibling())
+            KMessageBox::error(widget(), i18n(
+                "This packet has no siblings and so cannot be moved up."));
+        else
+            KMessageBox::error(widget(), i18n(
+                "This packet is already at the top of its list of siblings."));
+        return;
+    }
+
+    packet->moveToFirst();
+    setModified(true);
+}
+
+void ReginaPart::moveBottom() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    if (! packet->getNextTreeSibling()) {
+        if (! packet->getPrevTreeSibling())
+            KMessageBox::error(widget(), i18n(
+                "This packet has no siblings and so cannot be moved down."));
+        else
+            KMessageBox::error(widget(), i18n(
+                "This packet is already at the bottom of its "
+                "list of siblings."));
+        return;
+    }
+
+    packet->moveToLast();
+    setModified(true);
+}
+
 void ReginaPart::floatDockedPane() {
     // Delegate the entire procedure to PacketPane::floatPane().
     // Processing will return to this class when PacketPane calls

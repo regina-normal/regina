@@ -205,6 +205,18 @@ class ReginaPart : public KParts::ReadWritePart {
         void cloneSubtree();
 
         /**
+         * Tree reorganisation routines.
+         */
+        void moveShallow();
+        void moveDeep();
+        void moveUp();
+        void moveDown();
+        void movePageUp();
+        void movePageDown();
+        void moveTop();
+        void moveBottom();
+
+        /**
          * Float the currently docked pane.
          */
         void floatDockedPane();

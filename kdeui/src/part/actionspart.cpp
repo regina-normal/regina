@@ -85,42 +85,42 @@ void ReginaPart::setupActions() {
 
     // Tree reorganisation:
     act = new KAction(i18n("Higher Level"), "1leftarrow", CTRL+Key_Left,
-        this, SLOT(unimplemented()), actionCollection(), "nav_shallow");
+        this, SLOT(moveShallow()), actionCollection(), "nav_shallow");
     act->setToolTip(i18n("Move packet to a higher level in the tree"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Deeper Level"), "1rightarrow", CTRL+Key_Right,
-        this, SLOT(unimplemented()), actionCollection(), "nav_deep");
+        this, SLOT(moveDeep()), actionCollection(), "nav_deep");
     act->setToolTip(i18n("Move packet to a deeper level in the tree"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Move Up"), "1uparrow", CTRL+Key_Up,
-        this, SLOT(unimplemented()), actionCollection(), "nav_up");
+        this, SLOT(moveUp()), actionCollection(), "nav_up");
     act->setToolTip(i18n("Move packet up through its siblings"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Move Down"), "1downarrow", CTRL+Key_Down,
-        this, SLOT(unimplemented()), actionCollection(), "nav_down");
+        this, SLOT(moveDown()), actionCollection(), "nav_down");
     act->setToolTip(i18n("Move packet down through its siblings"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Jump Up"), "2uparrow", CTRL+Key_PageUp,
-        this, SLOT(unimplemented()), actionCollection(), "nav_pageup");
+        this, SLOT(movePageUp()), actionCollection(), "nav_pageup");
     act->setToolTip(i18n("Jump packet up through its siblings"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Jump Down"), "2downarrow", CTRL+Key_PageDown,
-        this, SLOT(unimplemented()), actionCollection(), "nav_pagedown");
+        this, SLOT(movePageDown()), actionCollection(), "nav_pagedown");
     act->setToolTip(i18n("Jump packet down through its siblings"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Top"), "top", CTRL+Key_Home,
-        this, SLOT(unimplemented()), actionCollection(), "nav_top");
+        this, SLOT(moveTop()), actionCollection(), "nav_top");
     act->setToolTip(i18n("Move packet above all its siblings"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Bottom"), "bottom", CTRL+Key_End,
-        this, SLOT(unimplemented()), actionCollection(), "nav_bottom");
+        this, SLOT(moveBottom()), actionCollection(), "nav_bottom");
     act->setToolTip(i18n("Move packet below all its siblings"));
     treePacketEditActions.append(act);
 
