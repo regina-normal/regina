@@ -45,7 +45,11 @@ addjavadef () {
 use_java_defs="REGINA_ENGINE REGINA_INTERFACE REGINA_JNIENGINE REGINA_CORBAHOST REGINA_CORBAPORT"
 
 javadefs="\"-Djava.library.path=$REGINA_JNIDIR\""
+if [ ! -z "$REGINA_CACHEDIR" ]; then
+	javadefs="$javadefs \"-Dpython.cachedir=$REGINA_CACHEDIR\""
+fi
 addjavadef "REGINA_OPTIONS_LOCAL"
+
 for i in $use_java_defs; do
 	if ( eval "[ ! -z \"\$$i\" ]" ); then
 		addjavadef $i

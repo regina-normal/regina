@@ -174,6 +174,31 @@ if [ ! -e "$REGINA_JARDIR/regina.jar" ]; then
 	exit 1
 fi
 
+if [ -z "$REGINA_CACHEDIR" ]; then
+	if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
+		export REGINA_CACHEDIR="$REGINA_OPTIONS_LOCAL/cache"
+	fi
+fi
+if [ ! -z "$REGINA_CACHEDIR" ]; then
+	if [ ! -e "$REGINA_CACHEDIR" ]; then
+		if ! mkdir "$REGINA_CACHEDIR"; then
+			warn "Warning: $REGINA_CACHEDIR could not be created."
+			export REGINA_CACHEDIR=
+		fi
+	elif [ ! -d "$REGINA_CACHEDIR" ]; then
+		warn "Warning: $REGINA_CACHEDIR is not a directory."
+		export REGINA_CACHEDIR=
+	fi
+fi
+if [ -z "$REGINA_CACHEDIR" ]; then
+	warn "Warning: You have no Jython cache directory."
+	warn "         You may not be able to use Jython scripting, or you may"
+	warn "         find a \"package\" directory inadvertently created in the"
+	warn "         current directory (which is safe to delete)."
+	warn "         To fix this problem, set \$REGINA_CACHEDIR to a cache"
+	warn "         directory to which you have write access and try again."
+fi
+
 if [ ! -z "$REGINA_ENGINE" ]; then
 	if ! testvalue "$REGINA_ENGINE" REGINA_ENGINE jni corba; then
 		export REGINA_ENGINE=""
@@ -197,6 +222,7 @@ info "-- Extra classes (REGINA_EXTRA_CLASSES): $REGINA_EXTRA_CLASSES"
 info "-- Java runtime (REGINA_JAVA): $REGINA_JAVA"
 info "-- JNI library directory (REGINA_JNIDIR): $REGINA_JNIDIR"
 info "-- Regina jar directory (REGINA_JARDIR): $REGINA_JARDIR"
+info "-- Jython cache directory (REGINA_CACHEDIR): $REGINA_CACHEDIR"
 info ""
 info "----- Startup options -----"
 info "-- Computational engine (REGINA_ENGINE): $REGINA_ENGINE"
@@ -215,6 +241,7 @@ export REGINA_EXTRA_CLASSES
 export REGINA_JAVA
 export REGINA_JNIDIR
 export REGINA_JARDIR
+export REGINA_CACHEDIR
 export REGINA_ENGINE
 export REGINA_INTERFACE
 export REGINA_JNIENGINE

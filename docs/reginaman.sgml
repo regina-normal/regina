@@ -469,6 +469,21 @@
      </listitem>
     </varlistentry>
     <varlistentry>
+     <term><parameter>REGINA_CACHEDIR</parameter> (default =
+      <filename><replaceable>REGINA_OPTIONS_LOCAL</replaceable>/cache</filename>)</term>
+     <listitem>
+      <para>
+       The &jython; cache directory, to be used by &jython; to store
+       temporary package cache files.  This should be a directory to
+       which you have write access.
+      </para>
+      <para>
+       A value for <parameter>python.cachedir</parameter> in the
+       general &jython; registry file(s) will override this option.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
      <term><parameter>REGINA_ENGINE</parameter>
       (default = <literal>jni</literal>)</term>
      <listitem>
