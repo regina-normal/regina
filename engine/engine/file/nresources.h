@@ -121,17 +121,17 @@ class NRandomAccessResource {
          *
          * \pre The resource is currently open.
          *
-         * @return the current positon.
+         * @return the current positon, as counted in bytes.
          */
-        virtual streampos getPosition() = 0;
+        virtual long getPosition() = 0;
         /**
          * Moves to the given position in the resource.
          *
          * \pre The resource is currently open.
          *
-         * @param pos the position to which to move.
+         * @param pos the position to which to move, as counted in bytes.
          */
-        virtual void setPosition(streampos pos) = 0;
+        virtual void setPosition(long pos) = 0;
 };
 
 /**
@@ -186,8 +186,8 @@ class NLocalFileResource : public NRandomAccessResource {
         virtual mode getOpenMode() const;
         virtual char getChar();
         virtual void putChar(char c);
-        virtual streampos getPosition();
-        virtual void setPosition(streampos pos);
+        virtual long getPosition();
+        virtual void setPosition(long pos);
 };
 
 // Inline functions for NRandomAccessResource

@@ -70,14 +70,14 @@ void NLocalFileResource::close() {
     openMode = CLOSED;
 }
 
-streampos NLocalFileResource::getPosition() {
+long NLocalFileResource::getPosition() {
     if (openMode == READ)
         return infile.tellg();
     else
         return outfile.tellp();
 }
 
-void NLocalFileResource::setPosition(streampos pos) {
+void NLocalFileResource::setPosition(long pos) {
     if (openMode == READ)
         infile.seekg(pos);
     else

@@ -82,7 +82,7 @@ bool writeToFile(const char* fileName, NPacket* packet);
  * Provides routines for opening, closing, reading and writing.
  *
  * \ifaces The enumeration NRandomAccessResource::mode is a public
- * member of class \i NFile.
+ * member of this class.
  */
 class NFile : public ShareableObject {
     protected:
@@ -545,11 +545,11 @@ inline NBoolSet NFile::readBoolSet() {
 }
 
 inline streampos NFile::getPosition() {
-    return resource->getPosition();
+    return (streampos)resource->getPosition();
 }
 
 inline void NFile::setPosition(streampos pos) {
-    resource->setPosition(pos);
+    resource->setPosition((long)pos);
 }
 
 #endif
