@@ -33,11 +33,11 @@ Packets (General):
     Find out how to centre column headers in list views
     When creating new packets, display a polite error if no parents are
         available (this goes for imports also)
-    Make the tree/dock splitter remember its place when packet panes are
-        changed
+    (4.0) Make the tree/dock splitter remember its place when packet panes
+        are changed
 
 Python:
-    Implement embedded python scripting
+    (4.0) Implement embedded python scripting
     Allow breaking processing in python consoles
     Check to see whether user libraries are in fact text files
     Allow compilation and running of open libraries
@@ -52,8 +52,8 @@ Toolbars:
     Work out how to get decent action names in the configure toolbar dialog
 
 Triangulations:
-    Include Turaev-Viro
+    (4.0) Include Turaev-Viro
     Allow viewing isomorphism details
     Make the skeleton viewer windows appear in a pleasant size
-    Make the algebra viewer look a little neater
+    (4.0) Make the algebra viewer look a little neater
 
