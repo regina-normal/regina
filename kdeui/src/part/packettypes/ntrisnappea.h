@@ -66,6 +66,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         QWidget* dataValid;
         QWidget* dataNull;
         QLabel* volume;
+        QLabel* solutionType;
         NoSnapPea* unavailable;
 
     public:
@@ -83,6 +84,14 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+    private:
+        /**
+         * This routine converts an NSnapPeaTriangulation::SolutionType
+         * into a human-readable string.  It is declared to take an int
+         * so that the calculation engine headers need not be included.
+         */
+        static QString solutionTypeString(int solnType);
 };
 
 #endif

@@ -44,6 +44,7 @@
 
 // TODO: Look over preconditions
 // TODO: Look over display
+// TODO: Look over solution type strings
 
 using regina::NPacket;
 using regina::NSnapPeaTriangulation;
@@ -79,17 +80,28 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     // Data for a non-null SnapPea triangulation:
 
     dataValid = new QWidget(data);
-    QGridLayout* validGrid = new QGridLayout(dataValid, 1 /* rows */, 5, 5);
+    QGridLayout* validGrid = new QGridLayout(dataValid, 2 /* rows */, 5, 5);
     validGrid->setColStretch(0, 1);
     validGrid->setColSpacing(2, 5); // Horizontal gap
     validGrid->setColStretch(4, 1);
 
     QString msg;
 
-    label = new QLabel(i18n("Volume:"), dataValid);
+    label = new QLabel(i18n("Solution type:"), dataValid);
     validGrid->addWidget(label, 0, 1);
+    solutionType = new QLabel(dataValid);
+    validGrid->addWidget(solutionType, 0, 3);
+    msg = i18n("The type of solution that was found when solving for a "
+        "complete hyperbolic structure.  "
+        "For an explanation of what each solution "
+        "type means, see the Regina reference manual.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(solutionType, msg);
+
+    label = new QLabel(i18n("Volume:"), dataValid);
+    validGrid->addWidget(label, 1, 1);
     volume = new QLabel(dataValid);
-    validGrid->addWidget(volume, 0, 3);
+    validGrid->addWidget(volume, 1, 3);
     msg = i18n("The volume of the underlying 3-manifold.  The estimated "
         "number of decimal places of accuracy is also shown.");
     QWhatsThis::add(label, msg);
@@ -125,6 +137,9 @@ void NTriSnapPeaUI::refresh() {
         unavailable->refresh();
     } else {
         data->raiseWidget(dataValid);
+
+        solutionType->setText(solutionTypeString(snappeaTri->solutionType()));
+        solutionType->setEnabled(true);
 
         int places;
         double ans = snappeaTri->volume(places);
@@ -166,6 +181,29 @@ void NTriSnapPeaUI::editingElsewhere() {
     QString msg(i18n("Editing..."));
     volume->setText(msg);
     volume->setEnabled(false);
+    solutionType->setText(msg);
+    solutionType->setEnabled(false);
+}
+
+QString NTriSnapPeaUI::solutionTypeString(int solnType) {
+    switch (solnType) {
+        case NSnapPeaTriangulation::not_attempted:
+            return i18n("Not attempted");
+        case NSnapPeaTriangulation::geometric_solution:
+            return i18n("Tetrahedra positively oriented");
+        case NSnapPeaTriangulation::nongeometric_solution:
+            return i18n("Contains negatively oriented tetrahedra");
+        case NSnapPeaTriangulation::flat_solution:
+            return i18n("All tetrahedra flat");
+        case NSnapPeaTriangulation::degenerate_solution:
+            return i18n("Contains degenerate tetrahedra");
+        case NSnapPeaTriangulation::other_solution:
+            return i18n("Unrecognised solution type");
+        case NSnapPeaTriangulation::no_solution:
+            return i18n("No solution found");
+        default:
+            return i18n("ERROR (invalid solution type)");
+    }
 }
 
 #include "ntrisnappea.moc"
