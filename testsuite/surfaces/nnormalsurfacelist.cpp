@@ -40,28 +40,38 @@ using regina::NTriangulation;
 class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NNormalSurfaceListTest);
 
+    CPPUNIT_TEST(standardEmpty);
+    CPPUNIT_TEST(standardOneTet);
     CPPUNIT_TEST(standardGieseking);
-    CPPUNIT_TEST(quadGieseking);
-    CPPUNIT_TEST(almostNormalGieseking);
     CPPUNIT_TEST(standardFigure8);
-    CPPUNIT_TEST(quadFigure8);
-    CPPUNIT_TEST(almostNormalFigure8);
     CPPUNIT_TEST(standardS3);
-    CPPUNIT_TEST(quadS3);
-    CPPUNIT_TEST(almostNormalS3);
     CPPUNIT_TEST(standardLoopC2);
-    CPPUNIT_TEST(quadLoopC2);
-    CPPUNIT_TEST(almostNormalLoopC2);
     CPPUNIT_TEST(standardLoopCtw3);
-    CPPUNIT_TEST(quadLoopCtw3);
-    CPPUNIT_TEST(almostNormalLoopCtw3);
     CPPUNIT_TEST(standardTwistedKxI);
+    CPPUNIT_TEST(quadEmpty);
+    CPPUNIT_TEST(quadOneTet);
+    CPPUNIT_TEST(quadGieseking);
+    CPPUNIT_TEST(quadFigure8);
+    CPPUNIT_TEST(quadS3);
+    CPPUNIT_TEST(quadLoopC2);
+    CPPUNIT_TEST(quadLoopCtw3);
     CPPUNIT_TEST(quadTwistedKxI);
+    CPPUNIT_TEST(almostNormalEmpty);
+    CPPUNIT_TEST(almostNormalOneTet);
+    CPPUNIT_TEST(almostNormalGieseking);
+    CPPUNIT_TEST(almostNormalFigure8);
+    CPPUNIT_TEST(almostNormalS3);
+    CPPUNIT_TEST(almostNormalLoopC2);
+    CPPUNIT_TEST(almostNormalLoopCtw3);
     CPPUNIT_TEST(almostNormalTwistedKxI);
 
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        NTriangulation empty;
+            /**< An empty triangulation. */
+        NTriangulation oneTet;
+            /**< A one-tetrahedron ball. */
         NTriangulation figure8;
             /**< The figure eight knot complement. */
         NTriangulation gieseking;
@@ -81,6 +91,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NTetrahedron* r;
             NTetrahedron* s;
             NTetrahedron* t;
+
+            // The one-tetrahedron ball has no face identifications at all.
+            oneTet.addTetrahedron(new NTetrahedron());
 
             // The two-tetrahedron figure eight knot complement is
             // described at the beginning of chapter 8 of Richard
@@ -307,6 +320,108 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     << " should be " << expectedCount << ", not "
                     << tot << '.';
             CPPUNIT_ASSERT_MESSAGE(msg.str(), expectedCount == tot);
+        }
+
+        void standardEmpty() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &empty, NNormalSurfaceList::STANDARD);
+
+            testSize(list, "the empty triangulation",
+                "standard normal surfaces", 0);
+
+            delete list;
+        }
+
+        void quadEmpty() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &empty, NNormalSurfaceList::QUAD);
+
+            testSize(list, "the empty triangulation",
+                "quad normal surfaces", 0);
+
+            delete list;
+        }
+
+        void almostNormalEmpty() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &empty, NNormalSurfaceList::AN_STANDARD);
+
+            testSize(list, "the empty triangulation",
+                "standard almost normal surfaces", 0);
+
+            delete list;
+        }
+
+        void standardOneTet() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &oneTet, NNormalSurfaceList::STANDARD);
+
+            testSize(list, "a single tetrahedron",
+                "standard normal surfaces", 7);
+            countCompactSurfaces(list, "a single tetrahedron",
+                "triangular discs", 4,
+                1 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                true /* realBdry */,
+                true /* vertex link */, 0 /* edge link */,
+                1 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a single tetrahedron",
+                "quadrilateral discs", 3,
+                1 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                true /* realBdry */,
+                false /* vertex link */, 2 /* edge link */,
+                1 /* central */, true /* splitting */);
+
+            delete list;
+        }
+
+        void quadOneTet() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &oneTet, NNormalSurfaceList::QUAD);
+
+            testSize(list, "a single tetrahedron",
+                "quad normal surfaces", 3);
+            countCompactSurfaces(list, "a single tetrahedron",
+                "quadrilateral discs", 3,
+                1 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                true /* realBdry */,
+                false /* vertex link */, 2 /* edge link */,
+                1 /* central */, true /* splitting */);
+
+            delete list;
+        }
+
+        void almostNormalOneTet() {
+            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+                &oneTet, NNormalSurfaceList::AN_STANDARD);
+
+            testSize(list, "a single tetrahedron",
+                "standard almost normal surfaces", 10);
+            countCompactSurfaces(list, "a single tetrahedron",
+                "triangular discs", 4,
+                1 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                true /* realBdry */,
+                true /* vertex link */, 0 /* edge link */,
+                1 /* central */, false /* splitting */);
+            countCompactSurfaces(list, "a single tetrahedron",
+                "quadrilateral discs", 3,
+                1 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                true /* realBdry */,
+                false /* vertex link */, 2 /* edge link */,
+                1 /* central */, true /* splitting */);
+            countCompactSurfaces(list, "a single tetrahedron",
+                "octahedral discs", 3,
+                1 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
+                true /* realBdry */,
+                false /* vertex link */, 0 /* edge link */,
+                1 /* central */, false /* splitting */);
+
+            delete list;
         }
 
         void standardGieseking() {

@@ -42,6 +42,9 @@ Version 4.0  [ currently under development ]
             - Displays progress and allows cancellation.
         Class ProgressDialogNumeric:
             - Added for displaying progress from regina::NProgressNumber.
+    TEST SUITE:
+        - Added tests for angle structure enumeration and analysis.
+        - Expanded normal surface tests to include trivial triangulations.
 
 Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
     OVERALL:

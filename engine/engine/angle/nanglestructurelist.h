@@ -63,6 +63,8 @@ class NXMLAngleStructureListReader;
  *
  * Angle structure lists should be created using the routine enumerate(),
  * which is new as of Regina 3.95.
+ *
+ * \testpart
  */
 class NAngleStructureList : public NPacket, public NFilePropertyReader {
     public:

@@ -31,6 +31,7 @@
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
+#include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/surfaces/testsurfaces.h"
@@ -119,6 +120,9 @@ bool runAllTests() {
 
     // Surfaces:
     addNNormalSurfaceList(runner);
+
+    // Angle structures:
+    addNAngleStructureList(runner);
 
     // Census:
     addNCensus(runner);
