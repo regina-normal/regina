@@ -173,5 +173,9 @@ void ReginaPart::setupActions() {
         this, SLOT(floatDockedPane()), actionCollection(), "docked_undock");
     actCurrClose = new KAction(i18n("&Close"), "fileclose", 0,
         this, SLOT(closeDockedPane()), actionCollection(), "docked_close");
+
+    // A single separator:
+    separatorList.append(new KActionSeparator());
+    separatorList.setAutoDelete(true);
 }
 

@@ -148,7 +148,6 @@ class PacketPane : public QVBox {
         KAction* actRefresh;
 
         QPtrList<KAction> trackingActions;
-        QPtrList<KAction> trackingActionsWithSep;
 
     public:
         /**
@@ -176,7 +175,7 @@ class PacketPane : public QVBox {
          */
         bool queryClose();
 
-        const QPtrList<KAction>& getTrackingActions(bool withSep = false);
+        const QPtrList<KAction>& getTrackingActions();
 
     public slots:
         /**
@@ -248,8 +247,8 @@ inline bool PacketPane::isDirty() {
     return dirty;
 }
 
-inline const QPtrList<KAction>& PacketPane::getTrackingActions(bool withSep) {
-    return (withSep ? trackingActionsWithSep : trackingActions);
+inline const QPtrList<KAction>& PacketPane::getTrackingActions() {
+    return trackingActions;
 }
 
 #endif

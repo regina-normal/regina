@@ -36,7 +36,7 @@
   </Menu>
   <Menu name="current" noMerge="1"><text>&amp;Docked Packet</text>
     <ActionList name="packet_tracking_actions"/>
-    <Separator/>
+    <ActionList name="packet_tracking_separator"/>
     <Action name="docked_undock"/>
     <Action name="docked_close"/>
   </Menu>

@@ -144,14 +144,8 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     newPane->reparent(dockArea, QPoint(0, 0));
     dockedPane = newPane;
-    plugActionList("packet_tracking_actions",
-        newPane->getTrackingActions(true));
-    /*
-    KAction* sep = new KActionSeparator();
-    QPtrList<KAction> sepList;
-    sepList.append(sep);
-    plugActionList("packet_tracking_actions", sepList);
-    */
+    plugActionList("packet_tracking_actions", newPane->getTrackingActions());
+    plugActionList("packet_tracking_separator", separatorList);
     newPane->show();
 
     dockChanged();
@@ -164,6 +158,7 @@ void ReginaPart::isClosing(PacketPane* closingPane) {
 void ReginaPart::hasUndocked(PacketPane* undockedPane) {
     if (dockedPane == undockedPane) {
         unplugActionList("packet_tracking_actions");
+        unplugActionList("packet_tracking_separator");
         dockedPane = 0;
     }
 
@@ -237,6 +232,7 @@ bool ReginaPart::closeDockedPane() {
     // Close it.  Note that queryClose() has already done the
     // deregistration for us.
     unplugActionList("packet_tracking_actions");
+    unplugActionList("packet_tracking_separator");
     delete dockedPane;
     dockedPane = 0;
 

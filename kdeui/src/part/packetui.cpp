@@ -125,11 +125,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
     trackingActions.append(actCommit);
     trackingActions.append(actRefresh);
-    trackingActions.setAutoDelete(false);
-
-    trackingActionsWithSep = trackingActions;
-    trackingActionsWithSep.append(new KActionSeparator());
-    trackingActionsWithSep.setAutoDelete(true);
+    trackingActions.setAutoDelete(true);
 
     KToolBar* footer = new KToolBar(this, "packetEditorBar", false, false);
     footer->setFullSize(true);

@@ -88,6 +88,8 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actCurrUndock;
         KAction* actCurrClose;
 
+        QPtrList<KAction> separatorList;
+
     public:
         /**
          * Constructors and destructors.
