@@ -35,26 +35,6 @@ dnl
 dnl    -----------------------------------------------------------------
 
 dnl
-dnl    REGINA_ABS_DIR(DIR)
-dnl
-dnl    Sets _ABS_DIR to the given directory expressed as an absolute path.
-dnl
-AC_DEFUN(REGINA_ABS_DIR, [
-  _ABS_DIR="`cd "$1" && pwd`"
-])
-
-dnl
-dnl    REGINA_ABS_DIRNAME(PATH)
-dnl
-dnl    Sets _ABS_DIRNAME to the directory portion of the given pathname,
-dnl    expressed as an absolute path.
-dnl
-AC_DEFUN(REGINA_ABS_DIRNAME, [
-  _ABS_DIRNAME="`AS_DIRNAME([$1])`"
-  _ABS_DIRNAME="`cd "$_ABS_DIRNAME" && pwd`"
-])
-
-dnl
 dnl    REGINA_CHECK_COMPILER_FLAG(FLAG, [ACTION-IF-OK], [ACTION-IF-NOT-OK])
 dnl
 dnl    Modified from KDE_CHECK_COMPILER_FLAG which is
@@ -79,49 +59,6 @@ AC_DEFUN(REGINA_CHECK_COMPILER_FLAG, [
     CXXFLAGS="$__check_flag_save_cxxflags"
     ifelse([$3], , :, [$3])
   ])
-])
-
-dnl
-dnl    REGINA_CLASSPATH_CONVERT(VARIABLE)
-dnl
-dnl    Converts classpath variable <VARIABLE> to Windows format
-dnl    (semicolon-separated, uses Windows filenames) if we're running under
-dnl    cygwin.  The given variable should currently be in *nix-format
-dnl    (colon-separated, uses *nix filenames).
-dnl
-dnl    The new variable will be exported to the environment.
-dnl
-dnl    Example: REGINA_CLASSPATH_CONVERT(CLASSPATH)
-dnl
-AC_DEFUN(REGINA_CLASSPATH_CONVERT, [
-  case "$host_os" in
-    *cygwin* )
-      cmd="export $1=\"\`cygpath -awp \"\$$1\"\`\""
-      eval "$cmd"
-      ;;
-    * )
-      ;;
-  esac
-])
-
-dnl
-dnl    REGINA_CLASSPATH_RESTORE
-dnl
-dnl    Restores $CLASSPATH to its value when REGINA_CLASSPATH_SAVE was
-dnl    last called.  This restored $CLASSPATH is exported to the environment.
-dnl
-AC_DEFUN(REGINA_CLASSPATH_RESTORE, [
-  export CLASSPATH="$regina_old_classpath"
-])
-
-dnl
-dnl    REGINA_CLASSPATH_SAVE
-dnl
-dnl    Saves the current value of $CLASSPATH so it can be later restored
-dnl    using REGINA_CLASSPATH_RESTORE.
-dnl
-AC_DEFUN(REGINA_CLASSPATH_SAVE, [
-  regina_old_classpath="$CLASSPATH"
 ])
 
 dnl
