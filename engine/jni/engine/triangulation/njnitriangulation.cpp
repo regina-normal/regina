@@ -434,6 +434,14 @@ REGJNIEXPORT jboolean JNICALL
 }
 
 REGJNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_collapseEdge
+        (JNIEnv *env, jobject me, jobject e, jboolean check,
+        jboolean perform) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->collapseEdge(
+        GET_ENGINE_OBJECT(env, NEdge, e), check, perform);
+}
+
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_simplifyToLocalMinimum
         (JNIEnv *env, jobject me, jboolean perform) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->
