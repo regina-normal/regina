@@ -20,7 +20,7 @@
   <para>
    <mediaobject>
     <imageobject>
-     <imagedata fileref="images/shots/packettree.png"/>
+     <imagedata fileref="packettree.png"/>
     </imageobject>
    </mediaobject>
   </para>
@@ -35,7 +35,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="images/packet/container.png"/>
+      <imagedata fileref="container.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -55,7 +55,7 @@
    <para>
     <mediaobject>
      <imageobject>
-      <imagedata fileref="images/shots/container.png"/>
+      <imagedata fileref="container.png"/>
      </imageobject>
     </mediaobject>
    </para>
@@ -67,7 +67,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="images/packet/text.png"/>
+      <imagedata fileref="text.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -79,7 +79,7 @@
    <para>
     <mediaobject>
      <imageobject>
-      <imagedata fileref="images/shots/text.png"/>
+      <imagedata fileref="text.png"/>
      </imageobject>
     </mediaobject>
    </para>
@@ -91,7 +91,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="images/packet/triangulation.png"/>
+      <imagedata fileref="triangulation.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -103,7 +103,7 @@
    <para>
     <mediaobject>
      <imageobject>
-      <imagedata fileref="images/shots/triangulation.png"/>
+      <imagedata fileref="triangulation.png"/>
      </imageobject>
     </mediaobject>
    </para>
@@ -115,7 +115,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="images/packet/surface.png"/>
+      <imagedata fileref="surface.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -134,7 +134,7 @@
    <para>
     <mediaobject>
      <imageobject>
-      <imagedata fileref="images/shots/surfacelist.png"/>
+      <imagedata fileref="surfacelist.png"/>
      </imageobject>
     </mediaobject>
    </para>
@@ -146,7 +146,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="images/packet/filter.png"/>
+      <imagedata fileref="filter.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -163,7 +163,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="images/packet/filterprop.png"/>
+       <imagedata fileref="filterprop.png"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -175,7 +175,7 @@
     <para>
      <mediaobject>
       <imageobject>
-       <imagedata fileref="images/shots/filterprop.png"/>
+       <imagedata fileref="filterprop.png"/>
       </imageobject>
      </mediaobject>
     </para>
@@ -187,7 +187,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="images/packet/filtercomb.png"/>
+       <imagedata fileref="filtercomb.png"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -200,7 +200,7 @@
     <para>
      <mediaobject>
       <imageobject>
-       <imagedata fileref="images/shots/filtercomb.png"/>
+       <imagedata fileref="filtercomb.png"/>
       </imageobject>
      </mediaobject>
     </para>
@@ -213,7 +213,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="images/packet/angle.png"/>
+      <imagedata fileref="angle.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -229,7 +229,7 @@
    <para>
     <mediaobject>
      <imageobject>
-      <imagedata fileref="images/shots/angles.png"/>
+      <imagedata fileref="angles.png"/>
      </imageobject>
     </mediaobject>
    </para>
@@ -241,7 +241,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="images/packet/script.png"/>
+      <imagedata fileref="script.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -259,7 +259,7 @@
    <para>
     <mediaobject>
      <imageobject>
-      <imagedata fileref="images/shots/script.png"/>
+      <imagedata fileref="script.png"/>
      </imageobject>
     </mediaobject>
    </para>

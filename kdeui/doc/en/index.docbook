@@ -27,6 +27,7 @@
      properties of interest to be determined.
     </para>">
 
+  <!ENTITY cpp "<application>C++</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY java "<application>Java</application>">
   <!ENTITY pi "<literal>Pi</literal>">
@@ -34,6 +35,7 @@
   <!ENTITY snappea "<application>SnapPea</application>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">
   <!ENTITY sss "S<superscript>3</superscript>">
+  <!ENTITY theta "<replaceable>t</replaceable>">
   <!ENTITY todo "TODO">
   <!ENTITY twopi "<literal>2*Pi</literal>">
   <!ENTITY xml "<acronym>XML</acronym>">

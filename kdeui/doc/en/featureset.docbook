@@ -3,174 +3,318 @@
  <title>What does Regina do?</title>
 
  <para>
-  Amongst other things, features of &regina; include:
-  <itemizedlist>
-   <listitem><para>Triangulations:
-    <itemizedlist>
-     <listitem><para>Creation:
-      <itemizedlist>
-       <listitem><para>
-        Automated creation of standard triangulations
-       </para></listitem>
-       <listitem><para>
-        Reading
-        <ulink url="http://www.geometrygames.org/SnapPea/">&snappea;</ulink>
-        triangulations and dehydration strings
-       </para></listitem>
-       <listitem><para>
-        Hand editing of individual face gluings
-       </para></listitem>
-      </itemizedlist>
-     </para></listitem>
-     <listitem><para>Properties:
-      <itemizedlist>
-       <listitem><para>
-        Detailed combinatorial and skeletal information
-       </para></listitem>
-       <listitem><para>
-        Algebraic properties including various homology groups
-       </para></listitem>
-       <listitem><para>
-        Attributes related to normal surfaces such as 0-efficiency
-       </para></listitem>
-       <listitem><para>
-        Finding subcomplexes with standard structures
-       </para></listitem>
-      </itemizedlist>
-     </para></listitem>
-     <listitem><para>Modification:
-      <itemizedlist>
-       <listitem><para>
-        Triangulation simplification
-       </para></listitem>
-       <listitem><para>
-        Common subdivisions
-       </para></listitem>
-       <listitem><para>
-        Elementary moves (such as Pachner moves)
-       </para></listitem>
-       <listitem><para>
-        Double cover
-       </para></listitem>
-      </itemizedlist>
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>Census:
-    <itemizedlist>
-     <listitem><para>
-      Creation of a census of all triangulations of a given type
-     </para></listitem>
-     <listitem><para>
-      Prepackaged censuses include cusped hyperbolic
-      manifolds and knot/link complements
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>Normal Surface Theory:
-    <itemizedlist>
-     <listitem><para>
-      Calculation of all vertex normal surfaces under standard sets of
-      matching equations
-     </para></listitem>
-     <listitem><para>
-      Ability to calculate and/or view normal surfaces in different
-      coordinate systems
-     </para></listitem>
-     <listitem><para>
-      Calculation of various properties of normal surfaces
-     </para></listitem>
-     <listitem><para>
-      Support for spun and other non-compact normal surfaces
-     </para></listitem>
-     <listitem><para>
-      Support for immersed and singular normal surfaces
-     </para></listitem>
-     <listitem><para>
-      Filtering of normal surfaces by various properties
-     </para></listitem>
-     <listitem><para>
-      Crushing normal surfaces in a triangulation
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>Angle Structures:
-    <itemizedlist>
-     <listitem><para>
-      Calculation of all vertex angle structures on a triangulation
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>Splitting Surfaces:
-    <itemizedlist>
-     <listitem><para>
-      Reconstructing triangulations from splitting surface signatures
-     </para></listitem>
-     <listitem><para>
-      Creation of a census of all splitting surface signatures of a given type
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>Scripting:
-    <itemizedlist>
-     <listitem><para>
-      Ability to write and run complex scripts in
-      <ulink url="http://www.python.org/">&python;</ulink> that offer full
-      access to the program's capabilities
-     </para></listitem>
-     <listitem><para>
-      Support for custom libraries of &python; routines to share between
-      files
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>File Structure:
-    <itemizedlist>
-     <listitem><para>
-      A well-organised hierarchial file structure
-     </para></listitem>
-     <listitem><para>
-      Support for storing miscellaneous data such as notes and scripts
-      along with topological structures in a single file
-     </para></listitem>
-     <listitem><para>
-      Data saved as compressed &xml; (since &regina;&nbsp;3.0)
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>Interfaces:
-    <itemizedlist>
-     <listitem><para>
-      A full graphical user interface that is hopefully not overly
-      difficult to use
-     </para></listitem>
-     <listitem><para>
-      A direct &python; console interface with no GUI for immediate access
-      to the calculation engine
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>Extensibility:
-    <itemizedlist>
-     <listitem><para>
-      Strong modularisation within the engine to allow users to add
-      their own extensions without excessive trauma (and please! - mail
-      me your additions and I will be able to include them in future
-      releases)
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-   <listitem><para>Documentation:
-    <itemizedlist>
-     <listitem><para>
-      Full reference manual for end users
-     </para></listitem>
-     <listitem><para>
-      Complete documentation for programmers covering both the
-      calculation engine and the graphical user interface
-     </para></listitem>
-    </itemizedlist>
-   </para></listitem>
-  </itemizedlist>
+  At the time of submission of the author's PhD thesis (May 2003), &regina;
+  contained approximately 41,000 physical source lines of code (&ie;,
+  lines of code that are neither blank nor comment) and approximately
+  38,000 additional lines of comment within this source code (still
+  excluding this reference manual).<footnote><para>Estimates
+  were obtained using the software metrics tools
+  <ulink url="http://www.dwheeler.com/sloccount/"><application>SLOCCount</application></ulink>
+  by David A.&nbsp;Wheeler and
+  <ulink url="http://cccc.sourceforge.net/"><application>CCCC</application></ulink>
+  by Tim Littlefair.</para></footnote>
+  A list of the more noteworthy features of &regina; is presented below.
  </para>
+
+ <sect2 id="features-tri">
+  <title>Triangulations</title>
+
+  <para>
+   The fundamental objects with which a user works when running
+   &regina; are 3-manifold triangulations.  The program supports the
+   following methods of creating triangulations.
+   <itemizedlist>
+    <listitem><para>
+     Automated generation of standard triangulations such as
+     layered solid tori and layered lens spaces;
+    </para></listitem>
+
+    <listitem><para>
+     Importing triangulations saved from
+     <ulink url="http://www.geometrygames.org/SnapPea/">&snappea;</ulink>
+     (the hyperbolic 3-manifold software written by Jeffrey Weeks)
+     and parsing dehydration strings (text-based representations of
+     triangulations defined and used by Callahan, Hildebrand and
+     Weeks <xref linkend="bib-cuspedcensus"/>);
+    </para></listitem>
+
+    <listitem><para>
+     Manually building triangulations by entering the
+     individual identifications between tetrahedron faces by hand.
+    </para></listitem>
+   </itemizedlist>
+  </para>
+
+  <para>
+   Once a triangulation has been created or imported, a user will generally
+   wish to analyse it and perhaps modify it.  For the analysis of a
+   triangulation, the properties that can be computed by the software
+   include the following.
+   <itemizedlist>
+    <listitem><para>
+     Detailed combinatorial information about the triangulation,
+     its skeleton and its boundary components, including vertex links
+     and the shapes formed by the various triangulation faces;
+    </para></listitem>
+    <listitem><para>
+     A variety of algebraic invariants including homology and homotopy
+     groups and Turaev-Viro invariants;
+    </para></listitem>
+    <listitem><para>
+     Attributes related to the normal surfaces within a
+     triangulation such as 0-efficiency and the existence of
+     splitting surfaces.
+    </para></listitem>
+   </itemizedlist>
+  </para>
+
+  <para>
+   In addition the software contains a variety of recognition routines for
+   detecting particular structures within a triangulation.  These routines
+   recognise common building blocks such as layered solid tori and
+   spiralled solid tori.  This means that
+   &regina; can frequently recognise the underlying 3-manifolds for
+   well-structured triangulations that it has not previously encountered,
+   simply from their combinatorial structures.
+  </para>
+  <para>
+   For the modification of a triangulation, the following procedures are
+   available.
+   <itemizedlist>
+    <listitem><para>
+     Elementary moves including Pachner moves, boundary shelling and
+     other moves that are local to a small number of tetrahedra;
+    </para></listitem>
+    <listitem><para>
+     Automated simplification in which the program attempts to use
+     a combination of these elementary moves to reduce the number of
+     tetrahedra in a triangulation as far as possible, though there is no
+     guarantee that the smallest possible number of tetrahedra will be
+     achieved;
+    </para></listitem>
+    <listitem><para>
+     Barycentric subdivision and the truncation of ideal vertices
+     (vertices whose links are neither 2-spheres nor discs);
+    </para></listitem>
+    <listitem><para>
+     Conversion of a non-orientable triangulation to an orientable
+     double cover.
+    </para></listitem>
+   </itemizedlist>
+  </para>
+ </sect2>
+
+ <sect2 id="features-census">
+  <title>Censuses</title>
+
+  <para>
+   &regina; can be used to form a census of all 3-manifold triangulations
+   satisfying a particular set of census constraints.  The command-line
+   tool <link linkend="man-tricensus"><command>tricensus</command></link>
+   is particularly well suited for this task.
+  </para>
+  <para>
+   Additionally, &regina; ships with several prepackaged censuses, including
+   censuses of cusped hyperbolic 3-manifolds and knot and link complements.
+  </para>
+ </sect2>
+
+ <sect2 id="features-surfaces">
+  <title>Normal Surfaces</title>
+
+  <para>
+   The study of normal surfaces was in fact the original motivation for
+   writing this software.
+   The program is therefore capable of enumerating all vertex normal
+   surfaces or almost normal surfaces of a triangulation, an operation
+   required by most high-level topological algorithms that rely upon
+   normal surface theory.
+  </para>
+
+  <para>
+   This vertex enumeration can be performed in a variety of coordinate
+   systems.  For an <replaceable>n</replaceable>-tetrahedron
+   triangulation this includes
+   the 7<replaceable>n</replaceable> standard triangle and
+   quadrilateral coordinates as well as
+   the smaller set of 3<replaceable>n</replaceable>
+   quadrilateral-only coordinates introduced by
+   Tollefson <xref linkend="bib-quadspace"/>
+   for algorithmic efficiency.  The enumeration can be restricted to
+   embedded normal surfaces or can be expanded to include immersed and
+   singular surfaces.  Furthermore elementary support is present for
+   spun normal surfaces, discussed in detail by Tillmann
+   <xref linkend="bib-tillus-spun"/>, which are non-compact surfaces
+   with infinitely many discs found in ideal triangulations (triangulations
+   whose vertex links have non-trivial genus).
+  </para>
+
+  <para>
+   For the analysis of normal surfaces, &regina; offers the following tools.
+   <itemizedlist>
+    <listitem><para>
+       Viewing normal surfaces in a variety of coordinate systems,
+       including the standard and quadrilateral-only coordinates
+       discussed above as well as edge weight coordinates;
+    </para></listitem>
+    <listitem><para>
+       Calculating basic properties of normal surfaces such as
+       Euler characteristic, orientability and one-sidedness;
+    </para></listitem>
+    <listitem><para>
+       Recognising standard surfaces within a triangulation such
+       as splitting surfaces (described
+       <link linkend="features-splitting">below</link>) and
+       vertex and edge links;
+    </para></listitem>
+    <listitem><para>
+       Filtering large lists of normal surfaces by various properties
+       such as Euler characteristic and orientability.
+    </para></listitem>
+   </itemizedlist>
+  </para>
+
+  <para>
+   In addition the program can crush a normal surface to a point within
+   a triangulation.  Crushing is a powerful tool for the analysis of the
+   role played by a surface within a 3-manifold, and is used
+   within Jaco and Rubinstein's 0-efficiency
+   algorithm <xref linkend="bib-0-efficiency"/>.
+  </para>
+
+  <para>
+   A related but significantly more complex procedure is the cutting open
+   of a triangulation along a normal surface and the retriangulation of the
+   resulting 3-manifold(s), introduced by Haken \cite{haken-homeomorphism}
+   for solving the homeomorphism problem for
+   3-manifolds containing incompressible surfaces and used in a variety of
+   algorithms since.  Like crushing, this procedure
+   is a powerful tool and furthermore avoids the difficulties suffered by
+   the crushing process in which topological information can be lost or
+   (in the non-orientable case) invalid 3-manifold
+   triangulations can be created.
+  </para>
+
+  <para>
+   Cutting along a surface however is more difficult than crushing since
+   the individual tetrahedra containing the normal discs can become heavily
+   subdivided.  The many potential combinations of discs lead to many
+   different ways in which this subdivision might take place, all of which
+   must remain compatible with adjacent tetrahedra.
+   The implementation of such a routine thereby becomes lengthy and
+   exceptionally error-prone.
+   For this reason cutting along a surface is planned but
+   not implemented in &regina; at the present time.
+  </para>
+ </sect2>
+
+ <sect2 id="features-angles">
+  <title>Angle Structures</title>
+
+  <para>
+   Angle structures, studied originally by Casson and then developed by
+   Lackenby <xref linkend="bib-lackenby-anglestruct"/>,
+   <xref linkend="bib-lackenby-taut"/> and
+   Rivin <xref linkend="bib-rivin-structures"/>,
+   <xref linkend="bib-rivin-combopt"/>, represent a purely
+   algebraic generalisation of hyperbolic structures.  An angle structure
+   on an ideal triangulation is formed by assigning an interior
+   dihedral angle to every edge of every tetrahedron in such a way that
+   a variety of linear equations and inequalities are satisfied.
+  </para>
+  <para>
+   The formation of angle structures is remarkably similar to the formation
+   of normal surfaces, in which a series of triangle and quadrilateral
+   coordinates are assigned to every tetrahedron with a set
+   of linear equations and inequalities similarly imposed upon them.  Thus
+   it has been relatively straightforward to extend the code used by &regina;
+   to enumerate vertex normal surfaces in such a way that the program can
+   also enumerate vertex angle structures.
+  </para>
+  <para>
+   The inequalities imposed upon an angle structure are that each dihedral
+   angle &theta; satisfies 0&nbsp;&lt;=&nbsp;&theta;&nbsp;&lt;=&nbsp;&pi;.
+   In addition to the enumeration of vertex angle structures,
+   &regina; can also identify whether a triangulation supports any strict
+   angle structures (structures for which each dihedral angle &theta;
+   satisfies 0&nbsp;&lt;&nbsp;&theta;&nbsp;&lt;&nbsp;&pi;)
+   or any taut angle structures (structures
+   discussed in <xref linkend="bib-lackenby-taut"/> for which each dihedral
+   angle is precisely 0 or &pi;).
+  </para>
+ </sect2>
+
+ <sect2 id="features-splitting">
+  <title>Splitting Surfaces</title>
+
+  <para>
+   Splitting surfaces (described in <xref linkend="bib-burton-phd"/>) are
+   particular types of normal surfaces which when present
+   can offer insight into the 3-manifolds containing them.
+   As well as detecting splitting surfaces as described above,
+   &regina; can reconstruct a 3-manifold from a splitting surface
+   signature and is capable of forming a census of all splitting surface
+   signatures of a given size.
+  </para>
+ </sect2>
+
+ <sect2 id="features-scripting">
+  <title>Scripting</title>
+
+  <para>
+   &regina; offers the ability to write and run arbitrary scripts
+   in the
+   <ulink url="http://www.python.org/">&python; scripting language</ulink>.
+   These scripts are essentially high-level programs with immediate access
+   to the mathematical core of &regina;, and are ideal for
+   performing repetitive tasks over large sets of data.  Such tasks might
+   include performing a sequence of tests upon all triangulations in a
+   census, or generating tables of normal surfaces.
+   Scripts can be embedded in &regina; data files and custom libraries of
+   routines can be written to share code between files.
+  </para>
+ </sect2>
+
+ <sect2 id="features-interfaces">
+  <title>Interfaces</title>
+
+  <para>
+   The usual method of running &regina; provides a full graphical
+   interface that a user can easily understand and use.
+   Alternatively, for those requiring immediate access to the
+   mathematical core of the program, an interactive command-line interface
+   is offered from which users can control the program using the
+   &python; scripting language described above.
+   A variety of specialised command-line utilities are also available.
+  </para>
+ </sect2>
+
+ <sect2 id="features-docs">
+  <title>Documentation</title>
+
+  <para>
+   Significant effort has been spent on documentation for the program.  A
+   full reference manual is available for end users to assist them in
+   working with &regina;.  For programmers seeking
+   to modify or extend the program or for
+   users writing scripts that interact directly with the mathematical
+   core of &regina;, the routines offered by the underlying
+   mathematical engine are fully documented.
+  </para>
+ </sect2>
+
+ <sect2 id="features-datafiles">
+  <title>Data Files</title>
+
+  <para>
+   The data files in which a user can save triangulations and other information
+   use a well-organised hierarchical structure.  This structure not only
+   allows many triangulations, normal surface lists and other topological
+   structures to be stored together in an organised fashion but also supports
+   the storing of miscellaneous data such as text notes and scripts.
+   The file format is well documented in the reference manual
+   and the files themselves are saved as compressed &xml;, allowing simple
+   transfer of native &regina; data to and from other programs.
+  </para>
+ </sect2>
 </sect1>

@@ -8,16 +8,19 @@
  </para>
 
  <biblioentry id="bib-burton-phd">
+  <abbrev>Bu</abbrev>
   <author>
    <firstname>Benjamin</firstname>
    <surname>Burton</surname>
   </author>
   <title>Minimal triangulations and normal surfaces</title>
   <edition>PhD Thesis</edition>
+  <publishername>University of Melbourne</publishername>
   <date>May 2003</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
+  <abbrev>CHW</abbrev>
   <authorgroup>
    <author>
     <firstname>Patrick</firstname>
@@ -40,10 +43,11 @@
   <volumenum>vol. 68</volumenum>
   <issuenum>no. 225</issuenum>
   <date>1999</date>
-  <artpagenums>pp. 321-332</artpagenums>
+  <artpagenums>pp. 321&ndash;332</artpagenums>
  </biblioentry>
 
  <biblioentry id="bib-0-efficiency">
+  <abbrev>JR</abbrev>
   <authorgroup>
    <author>
     <firstname>William</firstname>
@@ -60,7 +64,75 @@
   <date>July 2002</date>
  </biblioentry>
 
+ <biblioentry id="bib-lackenby-anglestruct">
+  <abbrev>La1</abbrev>
+  <author>
+   <firstname>Marc</firstname>
+   <surname>Lackenby</surname>
+  </author>
+  <title>Word hyperbolic Dehn surgery</title>
+  <edition>Invent. Math.</edition>
+  <volumenum>140</volumenum>
+  <issuenum>2</issuenum>
+  <date>2000</date>
+  <artpagenums>pp. 243&ndash;282</artpagenums>
+ </biblioentry>
+
+ <biblioentry id="bib-lackenby-taut">
+  <abbrev>La2</abbrev>
+  <author>
+   <firstname>Marc</firstname>
+   <surname>Lackenby</surname>
+  </author>
+  <title>Taut ideal triangulations of 3-manifolds</title>
+  <edition>Geom. Topol.</edition>
+  <volumenum>4</volumenum>
+  <date>2000</date>
+  <artpagenums>pp. 369&ndash;395 (electronic)</artpagenums>
+ </biblioentry>
+
+ <biblioentry id="bib-rivin-structures">
+  <abbrev>Ri1</abbrev>
+  <author>
+   <firstname>Igor</firstname>
+   <surname>Rivin</surname>
+  </author>
+  <title>Euclidean structures on simplicial surfaces and hyperbolic
+   volume</title>
+  <edition>Ann. of Math. (2)</edition>
+  <volumenum>139</volumenum>
+  <issuenum>no. 3</issuenum>
+  <date>1994</date>
+  <artpagenums>pp. 553&ndash;580</artpagenums>
+ </biblioentry>
+
+ <biblioentry id="bib-rivin-combopt">
+  <abbrev>Ri2</abbrev>
+  <author>
+   <firstname>Igor</firstname>
+   <surname>Rivin</surname>
+  </author>
+  <title>Combinatorial optimization in geometry</title>
+  <edition>Preprint</edition>
+  <date>July 1999</date>
+ </biblioentry>
+
+
+ <biblioentry id="bib-tillus-spun">
+  <abbrev>Ti</abbrev>
+  <author>
+   <firstname>Stephan</firstname>
+   <surname>Tillmann</surname>
+  </author>
+  <title>On character varieties : surfaces associated to mutation &amp;
+   deformation of hyperbolic 3-manifolds</title>
+  <edition>PhD Thesis</edition>
+  <publishername>University of Melbourne</publishername>
+  <date>2002</date>
+ </biblioentry>
+
  <biblioentry id="bib-quadspace">
+  <abbrev>To</abbrev>
   <author>
    <firstname>Jeffrey</firstname>
    <othername>L.</othername>
@@ -71,6 +143,6 @@
   <volumenum>vol. 183</volumenum>
   <issuenum>no. 2</issuenum>
   <date>1998</date>
-  <artpagenums>pp. 359-374</artpagenums>
+  <artpagenums>pp. 359&ndash;374</artpagenums>
  </biblioentry>
 </bibliography>
