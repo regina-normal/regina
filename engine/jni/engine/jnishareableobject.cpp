@@ -30,9 +30,16 @@
 #include "jnitools.h"
 #include "engine/JNIShareableObject.h"
 
-JNIEXPORT void JNICALL Java_normal_engine_implementation_jni_JNIShareableObject_destroy
+JNIEXPORT void JNICALL
+        Java_normal_engine_implementation_jni_JNIShareableObject_destroy
         (JNIEnv *env, jobject me) {
     delete GET_ENGINE_OBJECT(env, ShareableObject, me);
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_JNIShareableObject_sameCppPtr
+        (JNIEnv *, jclass, jlong ptr1, jlong ptr2) {
+    return (javaLongToPtr(ptr1) == javaLongToPtr(ptr2));
 }
 
 JNIEXPORT jstring JNICALL

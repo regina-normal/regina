@@ -72,9 +72,29 @@ public abstract class JNIShareableObject implements ShareableObject {
     protected JNIShareableObject(Sentry s) {
     }
 
+    /**
+     * Determines whether the two given longs represent pointers to the
+     * same underlying object in the C++ calculate engine.
+     *
+     * <b>Warning:</b> Note that under some C++ compilers this
+     * question <b>cannot</b> be answered by directly comparing the
+     * two given longs.  This is why this routine exists and why it
+     * is implemented in the C++ calculation engine.
+     *
+     * <b>Precondition:</b> The two given longs, when cast as C++
+     * pointers, are pointers to <tt>ShareableObject</tt> instances in
+     * the calculation engine.
+     *
+     * @param ptr1 the first C++ pointer to examine.
+     * @param ptr2 the second C++ pointer to examine.
+     * @return <tt>true</tt> if and only if the two given longs, when
+     * cast as C++ pointers, point to the same underlying object.
+     */
+    protected native static boolean sameCppPtr(long ptr1, long ptr2);
+
     public boolean sameObject(ShareableObject object) {
-        return (object != null &&
-            cppPtr == ((JNIShareableObject)object).cppPtr);
+        return (object != null && sameCppPtr(cppPtr,
+            ((JNIShareableObject)object).cppPtr));
     }
     public boolean equals(Object obj) {
         if (obj instanceof JNIShareableObject)

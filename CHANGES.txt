@@ -12,7 +12,7 @@ Version 2.5  [ (under development) ]
     ENGINE:
         Overall structure:
             - Replaced hand-rolled container classes with Standard
-              Template Library classes (transition only partially complete).
+              Template Library classes (transition mostly complete).
             - Replaced strstreams with stringstreams.
             - Modified to also build under gcc3.
         Classes NBoolVector, NHashSet, NInfiniteArray, NIntMap,
@@ -41,6 +41,9 @@ Version 2.5  [ (under development) ]
     JAVA USER INTERFACE:
         Overall structure:
             - Incorporated engine enhancements listed above.
+        Class JNIShareableObject:
+            - Added static method sameCppPtr() which is necessary when
+              using gcc3.
 
 Version 2.4  [ 4 April, 2002 ]
     OVERALL:
