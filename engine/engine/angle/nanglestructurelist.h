@@ -157,6 +157,101 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
          * taut structure.
          */
         void calculateAllowTaut();
+
+        /**
+         * An output iterator used to insert angle structures into an
+         * NAngleStructureList.
+         *
+         * Objects of type <tt>NAngleStructure*</tt> and
+         * <tt>NAngleStructureVector*</tt> can be assigned to this
+         * iterator.  In the latter case, a surrounding NAngleStructure
+         * will be automatically created.
+         */
+        friend struct StructureInserter {
+            NAngleStructureList* list;
+                /**< The list into which angle structures will be inserted. */
+            NTriangulation* owner;
+                /**< The triangulation on which the angle structures to
+                 *   be inserted lie. */
+
+            /**
+             * Creates a new uninitialised output iterator.
+             *
+             * \warning This iterator must not be used until its
+             * structure list and triangulation have been initialised.
+             */
+            StructureInserter();
+            /**
+             * Creates a new output iterator.  The member variables of
+             * this iterator will be initialised according to the
+             * parameters passed to this constructor.
+             *
+             * @param newList the list into which angle structures will
+             * be inserted.
+             * @param newOwner the triangulation on which the structures
+             * to be inserted lie.
+             */
+            StructureInserter(NAngleStructureList& newList,
+                NTriangulation* newOwner);
+            /**
+             * Creates a new output iterator that is a clone of the
+             * given iterator.
+             *
+             * @param cloneMe the output iterator to clone.
+             */
+            StructureInserter(const StructureInserter& cloneMe);
+
+            /**
+             * Sets this iterator to be a clone of the given output iterator.
+             *
+             * @param cloneMe the output iterator to clone.
+             * @return this output iterator.
+             */
+            StructureInserter& operator =(const StructureInserter& cloneMe);
+
+            /**
+             * Appends an angle structure to the end of the appropriate
+             * structure list.
+             *
+             * The given angle structure will be deallocated with the
+             * other angle structures in this list.
+             *
+             * @param structure the angle structure to insert.
+             * @return this output iterator.
+             */
+            StructureInserter& operator =(NAngleStructure* structure);
+            /**
+             * Appends the angle structure corresponding to the given
+             * vector to the end of the appropriate structure list.
+             *
+             * The given vector will be owned by the newly created
+             * angle structure and will be deallocated with the
+             * other angle structures in this list.
+             *
+             * @param vector the vector of the angle structure to insert.
+             * @return this output iterator.
+             */
+            StructureInserter& operator =(NAngleStructureVector* vector);
+
+            /**
+             * Returns a reference to this output iterator.
+             *
+             * @return this output iterator.
+             */
+            StructureInserter& operator *();
+            /**
+             * Returns a reference to this output iterator.
+             *
+             * @return this output iterator.
+             */
+            StructureInserter& operator ++();
+            /**
+             * Returns a reference to this output iterator.
+             *
+             * @return this output iterator.
+             */
+            StructureInserter& operator ++(int);
+        };
 };
 
 // Inline functions for NAngleStructureList
@@ -197,6 +292,57 @@ inline bool NAngleStructureList::allowsTaut() {
 
 inline bool NAngleStructureList::dependsOnParent() const {
     return true;
+}
+
+inline NAngleStructureList::StructureInserter::StructureInserter() : list(0),
+        owner(0) {
+}
+
+inline NAngleStructureList::StructureInserter::StructureInserter(
+        NAngleStructureList& newList, NTriangulation* newOwner) :
+        list(&newList), owner(newOwner) {
+}
+
+inline NAngleStructureList::StructureInserter::StructureInserter(
+        const StructureInserter& cloneMe) : list(cloneMe.list),
+        owner(cloneMe.owner) {
+}
+
+inline NAngleStructureList::StructureInserter&
+        NAngleStructureList::StructureInserter::operator =(
+        const StructureInserter& cloneMe) {
+    list = cloneMe.list;
+    owner = cloneMe.owner;
+    return *this;
+}
+
+inline NAngleStructureList::StructureInserter&
+        NAngleStructureList::StructureInserter::operator =(
+        NAngleStructure* structure) {
+    list->structures.push_back(structure);
+    return *this;
+}
+
+inline NAngleStructureList::StructureInserter&
+        NAngleStructureList::StructureInserter::operator =(
+        NAngleStructureVector* vector) {
+    list->structures.push_back(new NAngleStructure(owner, vector));
+    return *this;
+}
+
+inline NAngleStructureList::StructureInserter&
+        NAngleStructureList::StructureInserter::operator *() {
+    return *this;
+}
+
+inline NAngleStructureList::StructureInserter&
+        NAngleStructureList::StructureInserter::operator ++() {
+    return *this;
+}
+
+inline NAngleStructureList::StructureInserter&
+        NAngleStructureList::StructureInserter::operator ++(int) {
+    return *this;
 }
 
 #endif
