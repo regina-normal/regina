@@ -34,6 +34,7 @@
 #include "enumerate/ncompconstraint.h"
 #include "maths/nvectormatrix.h"
 #include "maths/nmatrixint.h"
+#include "progress/nprogresstypes.h"
 #include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 
@@ -43,8 +44,8 @@ template <class OutputIterator, class RayIterator, class FaceIterator>
 void NDoubleDescriptor::enumerateVertices(OutputIterator results,
         RayIterator oldRaysFirst, RayIterator oldRaysLast,
         FaceIterator facesFirst, FaceIterator facesLast,
-        const NMatrixInt& subspace, const NCompConstraintSet* constraints)
-        const {
+        const NMatrixInt& subspace, const NCompConstraintSet* constraints,
+        NProgressNumber* progress) const {
     typedef typename std::iterator_traits<RayIterator>::value_type RayClassPtr;
     typedef typename regina::boost::remove_pointer<RayClassPtr>::type RayClass;
 
@@ -52,11 +53,20 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
     if (nEqns == 0) {
         // There are no hyperplanes in the subspace!
         // We will have to clone the list of extremal rays.
+        if (progress)
+            progress->setOutOf(progress->getOutOf() + 1);
+
         transform(oldRaysFirst, oldRaysLast, results,
             FuncNewClonePtr<RayClass>());
+
+        if (progress)
+            progress->incCompleted();
         return;
     }
-    
+
+    if (progress)
+        progress->setOutOf(progress->getOutOf() + nEqns);
+
     // Create the two vector lists with which we will work.
     // Fill the first list with the intersection with the first
     // hyperplane.
@@ -69,7 +79,15 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
     enumerateVertices(inserter[0], oldRaysFirst, oldRaysLast,
         facesFirst, facesLast, NVectorMatrixRow<NLargeInteger>(subspace, 0),
         constraints);
-    
+
+    if (progress) {
+        progress->incCompleted();
+        if (progress->isCancelled()) {
+            copy(list[workingList].begin(), list[workingList].end(), results);
+            return;
+        }
+    }
+
     // Now run around intersecting each extra hyperplane as it comes.
     FuncDelete<RayClass> funcDelete;
     for (unsigned i=1; i<nEqns; i++) {
@@ -80,8 +98,17 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
             funcDelete);
         list[workingList].clear();
         workingList = 1 - workingList;
+
+        if (progress) {
+            progress->incCompleted();
+            if (progress->isCancelled()) {
+                copy(list[workingList].begin(), list[workingList].end(),
+                    results);
+                return;
+            }
+        }
     }
-    
+
     // We're done!
     copy(list[workingList].begin(), list[workingList].end(), results);
 }

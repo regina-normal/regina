@@ -39,8 +39,9 @@
 
 namespace regina {
 
-class NMatrixInt;
 class NCompConstraintSet;
+class NMatrixInt;
+class NProgressNumber;
 
 /**
  * \addtogroup enumerate Vertex Enumeration
@@ -96,6 +97,9 @@ class NVertexEnumerator {
          * more than one such cone.  In such cases, the ray should \b not be
          * duplicated.
          *
+         * A numeric progress watcher may be passed for progress reporting.
+         * If so, this routine will poll for cancellation requests accordingly.
+         *
          * \pre The cone described by <tt>[oldRaysFirst, oldRaysLast)</tt> and
          * <tt>[facesFirst, facesLast)</tt> is convex and
          * satisfies the structural requirements given above.
@@ -133,18 +137,25 @@ class NVertexEnumerator {
          * of hyperplanes that determine the faces of the given cone.
          * This must be a forward iterator over objects of type
          * <tt>NVector\<NLargeInteger\>*</tt>.
-         * @param subspace a matrix whose rows are hyperplanes whose intersection
-         * defines the subspace to intersect with the given cone.
+         * @param subspace a matrix whose rows are hyperplanes whose
+         * intersection defines the subspace to intersect with the given cone.
          * @param constraints a set of compatibility constraints that define
          * validity if we are only to find "valid" extremal rays, or 0 if
          * no additional constraints should be imposed.
+         * @param progress a numeric progress watcher through which progress
+         * will be reported, or 0 if no progress reporting is required.  If
+         * a progress watcher is passed, its expected total will be
+         * increased immediately by some number of steps and the completed
+         * total will be increased gradually by this same number.  Note that
+         * NProgress::setFinished() will \e not be called, since
+         * whoever called this routine may need to do further processing.
          */
         template <class OutputIterator, class RayIterator, class FaceIterator>
         void enumerateVertices(OutputIterator results,
             RayIterator oldRaysFirst, RayIterator oldRaysLast,
             FaceIterator facesFirst, FaceIterator facesLast,
-            const NMatrixInt& subspace, const NCompConstraintSet* constraints)
-            const = 0;
+            const NMatrixInt& subspace, const NCompConstraintSet* constraints,
+            NProgressNumber* progress = 0) const = 0;
 };
 
 /*@}*/

@@ -62,8 +62,8 @@ class NDoubleDescriptor : public NVertexEnumerator {
         void enumerateVertices(OutputIterator results,
             RayIterator oldRaysFirst, RayIterator oldRaysLast,
             FaceIterator facesFirst, FaceIterator facesLast,
-            const NMatrixInt& subspace, const NCompConstraintSet* constraints)
-            const;
+            const NMatrixInt& subspace, const NCompConstraintSet* constraints,
+            NProgressNumber* progress = 0) const;
 
     private:
         /**
