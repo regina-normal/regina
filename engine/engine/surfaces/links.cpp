@@ -50,7 +50,8 @@ bool NNormalSurfaceVector::isVertexLinking(NTriangulation* triang) const {
     return true;
 }
 
-NVertex* NNormalSurfaceVector::isVertexLink(NTriangulation* triang) const {
+const NVertex* NNormalSurfaceVector::isVertexLink(NTriangulation* triang)
+        const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
     int type;
@@ -123,7 +124,7 @@ NVertex* NNormalSurfaceVector::isVertexLink(NTriangulation* triang) const {
     return ans;
 }
 
-std::pair<NEdge*, NEdge*> NNormalSurfaceVector::isThinEdgeLink(
+std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
         NTriangulation* triang) const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;
@@ -141,7 +142,7 @@ std::pair<NEdge*, NEdge*> NNormalSurfaceVector::isThinEdgeLink(
     stdhash::hash_set<NEdge*, HashPointer> notAns;
         /**< We will ignore notAns once ans != 0. */
     bool foundQuads = false;
-    NEdge* ans[2];
+    const NEdge* ans[2];
     NLargeInteger ansMultDouble;
 
     NTetrahedron* t;

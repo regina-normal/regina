@@ -349,7 +349,7 @@ class NNormalSurfaceVector : public NConeRay {
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        virtual NVertex* isVertexLink(NTriangulation* triang) const;
+        virtual const NVertex* isVertexLink(NTriangulation* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the link of a single thin edge.
@@ -372,7 +372,7 @@ class NNormalSurfaceVector : public NConeRay {
          * @return a pair containing the thin edge(s) linked by this surface,
          * as described above.
          */
-        virtual std::pair<NEdge*, NEdge*> isThinEdgeLink(
+        virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink(
             NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is a splitting
@@ -896,7 +896,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        virtual NVertex* isVertexLink() const;
+        virtual const NVertex* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this surface
          * is the link of a single thin edge.
@@ -922,7 +922,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * @return a pair containing the thin edge(s) linked by this surface,
          * as described above.
          */
-        virtual std::pair<NEdge*, NEdge*> isThinEdgeLink() const;
+        virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink() const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing
@@ -1129,11 +1129,12 @@ inline bool NNormalSurface::isVertexLinking() const {
     return vector->isVertexLinking(triangulation);
 }
 
-inline NVertex* NNormalSurface::isVertexLink() const {
+inline const NVertex* NNormalSurface::isVertexLink() const {
     return vector->isVertexLink(triangulation);
 }
 
-inline std::pair<NEdge*, NEdge*> NNormalSurface::isThinEdgeLink() const {
+inline std::pair<const NEdge*, const NEdge*> NNormalSurface::isThinEdgeLink()
+        const {
     return vector->isThinEdgeLink(triangulation);
 }
 
