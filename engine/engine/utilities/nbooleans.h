@@ -102,6 +102,16 @@ class NTriBool {
          * @return whether or not this object has the value of unknown.
          */
         bool isUnknown() const;
+        /**
+         * Does this three-way boolean take one of the explicit values
+         * true or false?
+         *
+         * Note that this routine is the negation of isUnknown().
+         *
+         * @return whether or not this object has an explicit true or
+         * false value.
+         */
+        bool isKnown() const;
 
         /**
          * Sets this three-way boolean to true.
@@ -268,19 +278,53 @@ class NTriBool {
          */
         explicit NTriBool(Code newCode);
         /**
-         * A private integer constructor that should never be
-         * called.  This private routine exists so that illegal integer
-         * constructions don't automatically convert to boolean
-         * constructions.
+         * A private routine that should never be used.
+         * This routine is defined so that illegal integer operations
+         * don't automatically convert to boolean operations.
          */
         NTriBool(int);
         /**
-         * A private integer assignment operator that should never be
-         * called.  This private routine exists so that illegal integer
-         * assignments don't automatically convert to boolean
-         * assignments.
+         * A private routine that should never be used.
+         * This routine is defined so that illegal integer operations
+         * don't automatically convert to boolean operations.
+         */
+        bool operator == (int) const;
+        /**
+         * A private routine that should never be used.
+         * This routine is defined so that illegal integer operations
+         * don't automatically convert to boolean operations.
+         */
+        bool operator != (int) const;
+        /**
+         * A private routine that should never be used.
+         * This routine is defined so that illegal integer operations
+         * don't automatically convert to boolean operations.
          */
         NTriBool& operator = (int);
+        /**
+         * A private routine that should never be used.
+         * This routine is defined so that illegal integer operations
+         * don't automatically convert to boolean operations.
+         */
+        NTriBool& operator |= (int);
+        /**
+         * A private routine that should never be used.
+         * This routine is defined so that illegal integer operations
+         * don't automatically convert to boolean operations.
+         */
+        NTriBool& operator &= (int);
+        /**
+         * A private routine that should never be used.
+         * This routine is defined so that illegal integer operations
+         * don't automatically convert to boolean operations.
+         */
+        NTriBool operator | (int) const;
+        /**
+         * A private routine that should never be used.
+         * This routine is defined so that illegal integer operations
+         * don't automatically convert to boolean operations.
+         */
+        NTriBool operator & (int) const;
 };
 
 /**
@@ -295,17 +339,10 @@ class NTriBool {
 std::ostream& operator << (std::ostream& out, const NTriBool& set);
 
 /**
- * An exception thrown when the illegal integer constructor for NTriBool
- * is called.
+ * An exception thrown when an illegal integer conversion is attempted
+ * with NTriBool.
  */
-class NTriBool_Illegal_Integer_Constructor {
-};
-
-/**
- * An exception thrown when the illegal integer assignment operator for
- * NTriBool is called.
- */
-class NTriBool_Illegal_Integer_Assignment {
+class NTriBool_Illegal_Integer_Conversion {
 };
 
 /**
@@ -627,6 +664,10 @@ inline bool NTriBool::isUnknown() const {
     return (code == codeUnknown);
 }
 
+inline bool NTriBool::isKnown() const {
+    return (code != codeUnknown);
+}
+
 inline void NTriBool::setTrue() {
     code = codeTrue;
 }
@@ -731,11 +772,35 @@ inline NTriBool::NTriBool(Code newCode) :
 }
 
 inline NTriBool::NTriBool(int) {
-    throw NTriBool_Illegal_Integer_Constructor();
+    throw NTriBool_Illegal_Integer_Conversion();
+}
+
+inline bool NTriBool::operator == (int) const {
+    throw NTriBool_Illegal_Integer_Conversion();
+}
+
+inline bool NTriBool::operator != (int) const {
+    throw NTriBool_Illegal_Integer_Conversion();
 }
 
 inline NTriBool& NTriBool::operator = (int) {
-    throw NTriBool_Illegal_Integer_Assignment();
+    throw NTriBool_Illegal_Integer_Conversion();
+}
+
+inline NTriBool& NTriBool::operator |= (int) {
+    throw NTriBool_Illegal_Integer_Conversion();
+}
+
+inline NTriBool& NTriBool::operator &= (int) {
+    throw NTriBool_Illegal_Integer_Conversion();
+}
+
+inline NTriBool NTriBool::operator | (int) const {
+    throw NTriBool_Illegal_Integer_Conversion();
+}
+
+inline NTriBool NTriBool::operator & (int) const {
+    throw NTriBool_Illegal_Integer_Conversion();
 }
 
 // Inline functions for NBoolSet
