@@ -149,11 +149,6 @@ ostream& operator << (ostream& out, const NExceptionalFibre& f);
  * NExceptionalFibre::operator<.  All fibres except for the last will
  * have NExceptionalFibre::beta between 0 and NExceptionalFibre::alpha-1
  * inclusive.
- *
- * If the final fibre has negative NExceptionalFibre::beta, consider
- * the integer division <tt>(-beta)/alpha</tt>.  If this quotient can
- * be reduced by negating every fibre in the entire space, this will be
- * done.
  */
 class NSFS : public ShareableObject {
     private:
@@ -189,6 +184,8 @@ class NSFS : public ShareableObject {
         /**
          * Creates a new Seifert fibred space with the given orbit
          * manifold and no exceptional fibres.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param newOrbitGenus the genus of the orbit manifold (the
          * number of tori or projective planes that it contains).
@@ -238,6 +235,11 @@ class NSFS : public ShareableObject {
         /**
          * Returns the number of exceptional fibres.
          *
+         * Note that if there are no exceptional fibres but there is a
+         * single (1,k) fibre with \a k non-zero, this count will be 1
+         * to include this (1,k) fibre.  See the general class notes for
+         * further details.
+         *
          * @return the number of exceptional fibres.
          */
         unsigned long getFibreCount() const;
@@ -282,6 +284,23 @@ class NSFS : public ShareableObject {
          * parameters of the new fibre.
          */
         void insertFibre(const NExceptionalFibre& fibre);
+
+        /**
+         * Reduces the parameters of this Seifert fibred space to a
+         * simpler form if possible, without changing the orbit manifold
+         * or the fibres.
+         *
+         * Currently only one operation is performed.  If the final fibre
+         * has negative NExceptionalFibre::beta, consider the integer
+         * division <tt>(-beta)/alpha</tt>.  If this quotient can be
+         * reduced by negating every fibre in the entire space, this will
+         * be done.
+         *
+         * Note that this operation essentially reflects the 3-manifold,
+         * so inserting additional fibres after performing this
+         * operation may give unexpected results.
+         */
+        void reduce();
 
         /**
          * Determines if this Seifert fibred space is a Lens space.

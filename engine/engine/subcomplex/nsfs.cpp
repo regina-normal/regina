@@ -113,8 +113,11 @@ void NSFS::insertFibre(const NExceptionalFibre& fibre) {
         nNonZeroFibres++;
     fibres.addSort(NExceptionalFibre(a, b));
 
-    // Everything's stored and sorted.  The only question now is whether
-    // _all_ the fibres should be negated.
+    // We're done!
+}
+
+void NSFS::reduce() {
+    // Decide whether all the fibres should be negated.
     if (k < (-k - nNonZeroFibres)) {
         // Negate all the fibres.
         k = -k;
@@ -153,6 +156,9 @@ void NSFS::insertFibre(const NExceptionalFibre& fibre) {
                 it++;
                 it2--;
             }
+
+            // Move on to the next block.
+            it = next;
         }
     }
 }
@@ -201,7 +207,7 @@ NLensSpace* NSFS::isLensSpace() const {
 }
 
 void NSFS::writeTextShort(ostream& out) const {
-    out << "SFS[";
+    out << "SFS [";
     if (orbitOrientable) {
         if (orbitGenus == 0)
             out << "S2";
