@@ -6,9 +6,9 @@ Each piece of information stored in a topology data file is called a
 triangulations, normal surface lists, text items and more.
 <p>
 Packets are arranged in a tree (displayed on the left hand side of the
-main window), so each packet may &quot;contain&quot; several other
-packets.  This allows you to store large amounts of data in an organised
-fashion.
+main window), so each packet may store several other &quot;child packets&quot;
+beneath it.  This allows you to keep large amounts of data together in a
+single file in an organised fashion.
 </html>
 </tip>
 <tip category="Regina">
@@ -22,7 +22,7 @@ the packet editor.  If you close the packet editor or press the
 <i>Discard</i> button, any changes since the last commit will be
 discarded (you will be warned before this happens).
 <p>
-Note that some actions automatically your changes for you (examples
+Note that some actions automatically commit your changes for you (examples
 include several triangulation actions such as simplification, subdivision
 and connected sum decomposition).
 </html>
@@ -40,23 +40,25 @@ Konqueror.
 <html>
 <p>
 Regina ships with a number of sample files that give you an overview
-of what Regina can do.  These are generally installed in
-<tt>/usr/local/share/regina/examples</tt>,
-<tt>/usr/share/regina/examples</tt>, or a similar path (this depends on
-your distribution and how Regina was compiled).
+of what Regina can do.  The file <tt>sample-misc.rga</tt> is an
+excellent starting point.
 <p>
-The file <tt>sample-misc.rga</tt> is an excellent starting point.
+These sample files are generally installed in
+<tt>/usr/share/regina/examples</tt>,
+<tt>/usr/local/share/regina/examples</tt>
+or a similar path, depending on your distribution and how Regina was compiled.
+<p>
 </html>
 </tip>
 <tip category="Regina">
 <html>
 <p>
-If you want to remember which tetrahedron plays what role within a
-triangulation, you can name them.
+If you wish to remember what role a tetrahedron plays within a
+triangulation, you can name it.
 <p>
 In the <i>Gluings</i> tab of the triangulation editor, double click
 in the <i>Tetrahedron</i> column and start typing to give a tetrahedron
-a name.  Regina will still assign it a tetrahedron number as usual.
+a name.  Regina will also assign it a tetrahedron number as usual.
 </html>
 </tip>
 <tip category="Regina">
@@ -66,7 +68,7 @@ If you find it difficult searching through lists of normal surfaces,
 you can create a <i>surface filter</i>.  A surface filter lets you
 restrict a list of surfaces so you only see surfaces with particular
 properties (for instance, all closed orientable surfaces with Euler
-characteristic 0).
+characteristic zero).
 <p>
 To create a new surface filter, select <i>New Filter</i> from the
 <i>Packet Tree</i> menu.  In the dialog that appears, select <i>Filter
@@ -89,23 +91,29 @@ it and may be edited freely.
 <tip category="Regina">
 <html>
 <p>
-If you want to mark a particular normal surface in a list so that
-you can find it later, you can give it a name.
+If you wish to mark a particular normal surface within a list so that
+you can find it again later, you can give it a name.
 <p>
-Simply double click in the empty <i>Name</i> field in the table and
-start typing.  Don't forget to commit your changes!
+Simply double click in the empty <i>Name</i> field in the table of
+surfaces and start typing.  Don't forget to commit your changes!
 </html>
 </tip>
 <tip category="Regina">
 <html>
 <p>
-You can combine several surface filters using AND or OR.
+You can combine several surface filters using boolean AND or OR.
 This is done using <i>combination filters</i>.
 <p>
 Select <i>New Filter</i> from the <i>Packet Tree</i> menu, and in
-the dialog that appears select <i>Combination (and/or) filter</i>.
-This filter will then effectively combine all of the filters immediately
+the dialog that appears select <i>Combination filter</i>.
+This filter will then combine all of the filters immediately
 beneath it in the packet tree.
+<p>
+So, for instance, to create a filter that captures 2-spheres and
+tori, create a new combination filter that uses boolean OR.  Beneath
+this combination filter, create two property filters: one that captures
+closed orientable surfaces with Euler characteristic two, and one that
+captures closed orientable surfaces with Euler characteristic zero.
 </html>
 </tip>
 <tip category="Regina">
