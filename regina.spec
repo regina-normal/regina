@@ -1,13 +1,32 @@
 Name: regina
-Summary: Regina -- 3-manifold topology software with normal surface support
+Summary: 3-manifold topology software with normal surface support
 Version: 4.1.2
-Release: %{_vendor}_1
+Release: 1.%{_vendor}
 License: GPL
-Group: X11/KDE/Utilities
-Source: ftp://ftp.kde.org/pub/kde/unstable/apps/utils/%{name}-%{version}.tar.gz
+Group: Applications/Utilities
+Source: http://prdownloads.sourceforge.net/regina/%{name}-%{version}.tar.gz
+URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
-BuildRoot: /tmp/%{name}-%{version}
-Prefix: /usr
+BuildRoot: %{_tmppath}/%{name}-buildroot
+
+BuildRequires: boost-devel
+# BuildRequires: cppunit
+BuildRequires: doxygen
+BuildRequires: gcc
+BuildRequires: gcc-c++
+BuildRequires: glibc-devel
+BuildRequires: gmp-devel
+BuildRequires: junk
+BuildRequires: kdelibs-devel
+BuildRequires: libselinux-devel
+BuildRequires: libstdc++-devel
+BuildRequires: libxml2-devel
+BuildRequires: popt
+BuildRequires: python-devel
+BuildRequires: qt-devel >= 3.2
+BuildRequires: zlib-devel
+
+Prereq: /sbin/ldconfig
 
 %description
 Regina is a suite of mathematical software for 3-manifold topologists.
@@ -18,15 +37,10 @@ Highlights of Regina include triangulation analysis and simplification,
 census creation and normal surface enumeration.  It offers embedded
 Python scripting giving full access to the calculation engine.
 
-This package includes the KDE user interface and the command-line
-Python interface, as well as the users' reference manual.  For the
-Python reference (i.e., the API documentation for the Regina
-calculation engine), see the package regina-normal-doc.
-
 %prep
 rm -rf $RPM_BUILD_ROOT
 %setup -n %{name}-%{version}
-CFLAGS="" CXXFLAGS="" ./configure --disable-debug --prefix=%{prefix}
+CFLAGS="" CXXFLAGS="" ./configure --disable-debug
 
 %build
 make
