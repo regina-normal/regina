@@ -37,9 +37,7 @@
 #include <kurl.h>
 
 ReginaView::ReginaView(QWidget *parent)
-    : QWidget(parent),
-      DCOPObject("ReginaIface")
-{
+    : QWidget(parent) {
     // setup our layout manager to automatically add our widgets
     QHBoxLayout *top_layout = new QHBoxLayout(this);
     top_layout->setAutoAdd(true);

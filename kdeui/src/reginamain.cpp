@@ -53,8 +53,15 @@
 #include <ktrader.h>
 #include <kurl.h>
 
+unsigned ReginaMain::objectNumber = 1;
+
 ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina" ),
         currentPart(0), displayIcon(true) {
+    // Select a unique DCOP interface name.
+    QCString objNumStr;
+    objNumStr.setNum(objectNumber++);
+    setObjId("ReginaMainInterface#" + objNumStr);
+
     // Resize ourselves nicely.
     if (! initialGeometrySet())
         resize(640, 400);
@@ -133,6 +140,36 @@ bool ReginaMain::queryExit() {
     return true;
 }
 
+void ReginaMain::newTopology() {
+    if (currentPart) {
+        ReginaMain* top = new ReginaMain;
+        top->show();
+        top->newTopology();
+        return;
+    }
+
+    currentPart = newTopologyPart();
+    if (currentPart) {
+        setCentralWidget(currentPart->widget());
+        createGUI(currentPart);
+    }
+}
+
+void ReginaMain::newPython() {
+    if (currentPart) {
+        ReginaMain* top = new ReginaMain;
+        top->show();
+        top->newPython();
+        return;
+    }
+
+    currentPart = newTextEditorPart();
+    if (currentPart) {
+        setCentralWidget(currentPart->widget());
+        createGUI(currentPart);
+    }
+}
+
 void ReginaMain::openURL(const KURL& url) {
     // Do we already have a document open?
     if (currentPart) {
@@ -151,26 +188,11 @@ void ReginaMain::openURL(const KURL& url) {
 
     if (true) {
         // Python file (text/x-python):
-        partDesc = i18n("text editor");
-
-        KTrader::OfferList offers =
-            KTrader::self()->query("KTextEditor/Editor");
-        if (offers.count() >= 1) {
-            KService::Ptr service = *offers.begin();
-            KLibFactory *libFactory =
-                KLibLoader::self()->factory(service->library());
-            if (libFactory)
-                currentPart = (KTextEditor::Editor*)(libFactory->create(
-                    this, service->name(), "KTextEditor::Editor"));
-        }
+        currentPart = newTextEditorPart();
     }
 
-    if (! currentPart) {
-        KMessageBox::error(this,
-            QString(i18n("An appropriate %1 component could not be found.")).
-            arg(partDesc));
+    if (! currentPart)
         return;
-    }
 
     // We now have a part with which to edit the given data file.
 
@@ -202,14 +224,22 @@ void ReginaMain::openURL(const KURL& url) {
     #endif
 }
 
+void ReginaMain::openURL(const QString& url) {
+    openURL(KURL(url));
+}
+
 void ReginaMain::pythonConsole() {
     // TODO: Implement python scripting. :)
     KMessageBox::sorry(this, i18n("Python scripting is not yet implemented."),
         i18n("Patience, Iago!"));
 }
 
-void ReginaMain::fileNew() {
-    (new ReginaMain)->show();
+void ReginaMain::close() {
+    KParts::MainWindow::close();
+}
+
+void ReginaMain::quit() {
+    kapp->closeAllWindows();
 }
 
 void ReginaMain::fileOpen() {
@@ -274,7 +304,10 @@ void ReginaMain::newToolbarConfig() {
 
 void ReginaMain::setupActions() {
     // File actions:
-    KStdAction::openNew(this, SLOT(fileNew()), actionCollection());
+    new KAction(i18n("&New Topology Data"), "filenew", CTRL+Key_N, this,
+        SLOT(newTopology()), actionCollection(), "new_topology");
+    new KAction(i18n("New &Python Library"), "filenew", 0, this,
+        SLOT(newPython()), actionCollection(), "new_python");
     KStdAction::open(this, SLOT(fileOpen()), actionCollection());
     fileOpenRecent = KStdAction::openRecent(this, SLOT(openURL(const KURL&)),
         actionCollection());
@@ -341,6 +374,38 @@ void ReginaMain::saveOptions() {
             otherMain = (ReginaMain*)(memberList->next()))
         if (otherMain != this)
             otherMain->readOptions(config);
+}
+
+KParts::ReadWritePart* ReginaMain::newTopologyPart() {
+    KParts::ReadWritePart* ans = 0;
+
+    // TODO: Implement a topology data part!
+
+    if (! ans)
+        KMessageBox::error(this, QString(i18n(
+            "An appropriate topology data component could not be found.")));
+
+    return ans;
+}
+
+KParts::ReadWritePart* ReginaMain::newTextEditorPart() {
+    KParts::ReadWritePart* ans = 0;
+
+    KTrader::OfferList offers = KTrader::self()->query("KTextEditor/Editor");
+    if (offers.count() >= 1) {
+        KService::Ptr service = *offers.begin();
+        KLibFactory *libFactory =
+            KLibLoader::self()->factory(service->library());
+        if (libFactory)
+            ans = (KTextEditor::Editor*)(libFactory->create(
+                this, service->name(), "KTextEditor::Editor"));
+    }
+
+    if (! ans)
+        KMessageBox::error(this, QString(i18n(
+            "An appropriate text editor component could not be found.")));
+
+    return ans;
 }
 
 #include "reginamain.moc"

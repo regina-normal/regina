@@ -1,15 +1,24 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="reginamain" version="3.1">
 <MenuBar>
-  <Menu name="file">
+  <Menu name="file" noMerge="1"><text>&amp;File</text>
+    <Action name="new_topology"/>
+    <Action name="new_python"/>
     <DefineGroup name="new_merge"/>
+    <Action name="file_open"/>
+    <Action name="file_open_recent"/>
     <DefineGroup name="open_merge"/>
+    <Separator/>
     <DefineGroup name="save_merge"/>
     <DefineGroup name="revert_merge"/>
     <Separator/>
     <DefineGroup name="print_merge"/>
     <Merge/>
+    <Separator/>
+    <Action name="file_close"/>
     <DefineGroup name="close_merge"/>
+    <Separator/>
+    <Action name="file_quit"/>
   </Menu>
   <Menu name="edit"><text>&amp;Edit</text>
     <DefineGroup name="edit_undo_merge"/>
@@ -33,7 +42,7 @@
 
 <ToolBar name="mainToolBar" noMerge="1">
   <text>Main Toolbar</text>
-  <Action name="file_new"/>
+  <Action name="new_topology"/>
   <Action name="file_open"/>
   <Merge/>
   <Separator/>

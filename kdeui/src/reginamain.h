@@ -33,7 +33,7 @@
 #ifndef __REGINAMAIN_H_
 #define __REGINAMAIN_H_
 
-#include "reginaview.h"
+#include "reginaiface.h"
 
 #include <kapplication.h>
 #include <kparts/mainwindow.h>
@@ -50,7 +50,8 @@ class KURL;
  *
  * This class also stores global preferences for Regina.
  */
-class ReginaMain : public KParts::MainWindow {
+class ReginaMain : public KParts::MainWindow,
+        virtual public ReginaMainInterface {
     Q_OBJECT
 
     private:
@@ -64,6 +65,10 @@ class ReginaMain : public KParts::MainWindow {
             /**< The URL that was last contained in this window.
                  This data member is only set when the URL is finally
                  closed in the underlying part. */
+        static unsigned objectNumber;
+            /**< The unique positive integer to be assigned to the next
+                 object of this class that is created.  Used with DCOP
+                 to distinguish between different instances. */
 
         /**
          * Actions
@@ -150,10 +155,30 @@ class ReginaMain : public KParts::MainWindow {
 
     public slots:
         /**
+         * Opens a new topology data file in this window, or in a new
+         * top-level window if this window already contains an open
+         * document.
+         */
+        void newTopology();
+
+        /**
+         * Opens a new python library in this window, or in a new
+         * top-level window if this window already contains an open
+         * document.
+         */
+        void newPython();
+
+        /**
          * Open the given URL in this window, or in a new top-level
          * window if this window already contains an open document.
          */
         void openURL(const KURL& url);
+
+        /**
+         * Open the given URL in this window, or in a new top-level
+         * window if this window already contains an open document.
+         */
+        void openURL(const QString& url);
 
         /**
          * Open a new Python console.  The console will be linked
@@ -161,11 +186,20 @@ class ReginaMain : public KParts::MainWindow {
          */
         void pythonConsole();
 
+        /**
+         * Closes this window.
+         */
+        void close();
+
+        /**
+         * Quits the entire application, closing all windows.
+         */
+        void quit();
+
     private slots:
         /**
          * Implementation of actions.
          */
-        void fileNew();
         void fileOpen();
         void optionsShowToolbar();
         void optionsShowStatusbar();
@@ -194,6 +228,18 @@ class ReginaMain : public KParts::MainWindow {
          * and update itself (and its child windows) accordingly.
          */
         void readOptions(KConfig* config);
+
+        /**
+         * Creates a new topology data part.  If no appropriate part can
+         * be created, an error is displayed and 0 is returned.
+         */
+        KParts::ReadWritePart* newTopologyPart();
+
+        /**
+         * Creates a new text editor part.  If no appropriate part can
+         * be created, an error is displayed and 0 is returned.
+         */
+        KParts::ReadWritePart* newTextEditorPart();
 };
 
 inline ReginaMain::~ReginaMain() {

@@ -47,8 +47,7 @@ class KURL;
  * @author Ben Burton <bab@debian.org>
  * @version 4.0
  */
-class ReginaView : public QWidget, virtual public ReginaIface
-{
+class ReginaView : public QWidget {
     Q_OBJECT
 public:
 	/**

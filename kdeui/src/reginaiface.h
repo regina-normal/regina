@@ -26,18 +26,28 @@
 
 /* end stub */
 
-#ifndef _REGINAIFACE_H_
-#define _REGINAIFACE_H_
+/*! \file reginaiface.h
+ *  \brief Provides DCOP interfaces for general Regina classes.
+ */
+
+#ifndef __REGINAIFACE_H
+#define __REGINAIFACE_H
 
 #include <dcopobject.h>
 
-class ReginaIface : virtual public DCOPObject
-{
-  K_DCOP
-public:
+/**
+ * A DCOP interface for a top-level Regina window.
+ */
+class ReginaMainInterface : virtual public DCOPObject {
+    K_DCOP
 
-k_dcop:
-  virtual void openURL(QString url) = 0;
+    k_dcop:
+        virtual void newTopology() = 0;
+        virtual void newPython() = 0;
+        virtual void openURL(const QString& url) = 0;
+        virtual void pythonConsole() = 0;
+        virtual void close() = 0;
+        virtual void quit() = 0;
 };
 
-#endif // _REGINAIFACE_H_
+#endif
