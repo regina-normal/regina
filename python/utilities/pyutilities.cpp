@@ -29,10 +29,12 @@
 void addNBoolSet();
 void addNLargeInteger();
 void addNRational();
+void addNTriBool();
 
 void addUtilities() {
     addNBoolSet();
     addNLargeInteger();
     addNRational();
+    addNTriBool();
 }
 
