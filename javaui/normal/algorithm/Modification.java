@@ -108,13 +108,13 @@ public abstract class Modification extends Algorithm {
         JMenu triangulation = new JMenu("Triangulation");
         triangulation.setMnemonic(KeyEvent.VK_T);
         (new ElementaryMove(shell)).insert(triangulation, vector);
-        (new Modification(shell, "Basic Simplify", KeyEvent.VK_S,
+        (new Modification(shell, "Intelligent Simplify", KeyEvent.VK_S,
             "simplified",
             normal.engine.triangulation.NTriangulation.class) {
                 public boolean perform(NPacket packet) {
                     return
                         ((normal.engine.triangulation.NTriangulation)packet).
-                        simplifyToLocalMinimum();
+                        intelligentSimplify();
                 }
             }).insert(triangulation, vector);
         triangulation.addSeparator();
