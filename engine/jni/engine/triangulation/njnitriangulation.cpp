@@ -357,6 +357,18 @@ JNIEXPORT jboolean JNICALL
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isZeroEfficient();
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_knowsSplittingSurface
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->knowsSplittingSurface();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_knowsZeroEfficient
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->knowsZeroEfficient();
+}
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_newNTriangulation__
         (JNIEnv *env, jobject me) {

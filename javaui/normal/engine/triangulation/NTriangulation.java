@@ -78,7 +78,9 @@ public interface NTriangulation extends NPacket {
     public boolean hasBoundaryFaces();
 
     public boolean isZeroEfficient();
+    public boolean knowsZeroEfficient();
     public boolean hasSplittingSurface();
+    public boolean knowsSplittingSurface();
      
     public boolean crushMaximalForest();
     public boolean intelligentSimplify();

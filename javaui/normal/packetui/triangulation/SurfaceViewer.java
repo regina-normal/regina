@@ -29,6 +29,7 @@
 package normal.packetui.triangulation;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import normal.engine.packet.NPacket;
@@ -53,6 +54,12 @@ public class SurfaceViewer extends DefaultPacketViewer
     public static final Color red = Color.red.darker().darker();
 
     /**
+     * We will only calculate normal surface properties automatically
+     * for triangulations with at most this many tetrahedra.
+     */
+    public static long maxAutoCalcTetrahedra = 6;
+
+    /**
      * The triangulation under examination.
      */
     private NTriangulation triangulation;
@@ -65,6 +72,14 @@ public class SurfaceViewer extends DefaultPacketViewer
      * Displays existance of a splitting surface.
      */
     private JLabel splittingSurface;
+    /**
+     * Button to calculate 0-efficiency.
+     */
+    private JButton btnZeroEfficient;
+    /**
+     * Button to calculate existance of a splitting surface.
+     */
+    private JButton btnSplittingSurface;
 
     /**
      * Components to disable when the packet is being edited.
@@ -96,6 +111,9 @@ public class SurfaceViewer extends DefaultPacketViewer
         componentsToDisable.addElement(zeroEfficient);
         componentsToDisable.addElement(splittingSurface);
 
+        btnZeroEfficient = new JButton("Calculate...");
+        btnSplittingSurface = new JButton("Calculate...");
+
         JLabel labelSurfaces = new JLabel("Normal Surface Properties");
         JLabel labelZero = new JLabel("Zero-efficient?");
         JLabel labelSplitting = new JLabel("Splitting surface?");
@@ -106,28 +124,49 @@ public class SurfaceViewer extends DefaultPacketViewer
         GridBagConstraints cTitle = new GridBagConstraints();
         GridBagConstraints cLabel = new GridBagConstraints();
         GridBagConstraints cTotal = new GridBagConstraints();
+        GridBagConstraints cButton = new GridBagConstraints();
         cTitle.anchor = cTitle.CENTER;
         cTitle.fill = cTitle.NONE;
         cTitle.gridx = 0;
         cTitle.gridwidth = cTitle.REMAINDER;
-        cTitle.insets = new Insets(0, 0, 5, 0);
+        cTitle.insets = new Insets(0, 0, 10, 0);
         cLabel.anchor = cLabel.WEST;
         cLabel.fill = cLabel.NONE;
         cLabel.gridx = 0;
         cTotal.anchor = cTotal.CENTER;
         cTotal.fill = cTotal.NONE;
         cTotal.gridx = 1;
-        cTotal.insets = new Insets(0, 10, 0, 5);
+        cTotal.insets = new Insets(0, 10, 0, 10);
+        cButton.anchor = cButton.CENTER;
+        cButton.fill = cButton.NONE;
+        cButton.gridx = 2;
+        cButton.insets = new Insets(2, 0, 2, 0);
 
         propPane.add(labelSurfaces, cTitle);
         propPane.add(labelZero, cLabel);
         propPane.add(zeroEfficient, cTotal);
+        propPane.add(btnZeroEfficient, cButton);
         propPane.add(labelSplitting, cLabel);
         propPane.add(splittingSurface, cTotal);
+        propPane.add(btnSplittingSurface, cButton);
 
         // Put everything together.
         setLayout(new BorderLayout());
         add(propPane, BorderLayout.CENTER);
+
+        // Add action listeners.
+        btnZeroEfficient.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                triangulation.isZeroEfficient();
+                reflectPacket();
+            }
+        });
+        btnSplittingSurface.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                triangulation.hasSplittingSurface();
+                reflectPacket();
+            }
+        });
     }
 
     public NPacket getPacket() {
@@ -139,20 +178,36 @@ public class SurfaceViewer extends DefaultPacketViewer
         while (e.hasMoreElements())
             ((Component)e.nextElement()).setEnabled(true);
 
-        if (triangulation.isZeroEfficient()) {
+        long nTet = triangulation.getNumberOfTetrahedra();
+
+        if ((! triangulation.knowsZeroEfficient()) &&
+                nTet > maxAutoCalcTetrahedra) {
+            zeroEfficient.setText("Unknown");
+            zeroEfficient.setForeground(Color.black);
+            btnZeroEfficient.setEnabled(true);
+        } else if (triangulation.isZeroEfficient()) {
             zeroEfficient.setText("True");
             zeroEfficient.setForeground(green);
+            btnZeroEfficient.setEnabled(false);
         } else {
             zeroEfficient.setText("False");
             zeroEfficient.setForeground(red);
+            btnZeroEfficient.setEnabled(false);
         }
 
-        if (triangulation.hasSplittingSurface()) {
+        if ((! triangulation.knowsZeroEfficient()) &&
+                nTet > maxAutoCalcTetrahedra) {
+            splittingSurface.setText("Unknown");
+            splittingSurface.setForeground(Color.black);
+            btnSplittingSurface.setEnabled(true);
+        } else if (triangulation.hasSplittingSurface()) {
             splittingSurface.setText("True");
             splittingSurface.setForeground(green);
+            btnSplittingSurface.setEnabled(false);
         } else {
             splittingSurface.setText("False");
             splittingSurface.setForeground(red);
+            btnSplittingSurface.setEnabled(false);
         }
     }
 
@@ -163,5 +218,8 @@ public class SurfaceViewer extends DefaultPacketViewer
 
         zeroEfficient.setText("");
         splittingSurface.setText("");
+
+        btnZeroEfficient.setEnabled(false);
+        btnSplittingSurface.setEnabled(false);
     }
 }

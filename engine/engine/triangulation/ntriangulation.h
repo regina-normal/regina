@@ -826,6 +826,18 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         bool isZeroEfficient();
         /**
+         * Is it already known whether or not this triangulation is
+         * 0-efficient?
+         * See isZeroEfficient() for further details.
+         *
+         * If this property is already known, future calls to
+         * isZeroEfficient() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * @return \c true if and only if this property is already known.
+         */
+        bool knowsZeroEfficient() const;
+        /**
          * Determines whether this triangulation has a normal splitting
          * surface.  See NNormalSurface::isSplitting() for details
          * regarding normal splitting surfaces.
@@ -838,6 +850,18 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * normal splitting surface.
          */
         bool hasSplittingSurface();
+        /**
+         * Is it already known whether or not this triangulation has a
+         * splitting surface?
+         * See hasSplittingSurface() for further details.
+         *
+         * If this property is already known, future calls to
+         * hasSplittingSurface() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * @return \c true if and only if this property is already known.
+         */
+        bool knowsSplittingSurface() const;
         
         /**
          * Produces a maximal forest in the 1-skeleton of the
@@ -1713,10 +1737,18 @@ inline bool NTriangulation::isZeroEfficient() {
     return zeroEfficient;
 }
 
+inline bool NTriangulation::knowsZeroEfficient() const {
+    return calculatedZeroEfficient;
+}
+
 inline bool NTriangulation::hasSplittingSurface() {
     if (! calculatedSplittingSurface)
         calculateSurfaceProperties();
     return splittingSurface;
+}
+
+inline bool NTriangulation::knowsSplittingSurface() const {
+    return calculatedSplittingSurface;
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() {
