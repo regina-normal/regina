@@ -126,6 +126,39 @@ struct FuncNewCopyRef {
 };
 
 /**
+ * An adaptable unary function used to create objects using the
+ * <tt>clone()</tt> method.
+ * This class is for use with the Standard Template Library.
+ *
+ * Note that the template argument need not be a pointer class.  If the
+ * template argument is <tt>T</tt>, this unary function will accept
+ * a \e pointer to <tt>T</tt> and call <tt>clone()</tt> upon the
+ * corresponding object, returning a pointer to the newly created clone
+ * of type <tt>T</tt>.
+ *
+ * \pre Type <tt>T</tt> has method <tt>T* clone() const</tt>.
+ *
+ * \ifaces Not present.
+ */
+template <class T>
+struct FuncNewClonePtr {
+    typedef const T* argument_type;
+        /**< The argument type for this unary function. */
+    typedef T* result_type;
+        /**< The return type for this unary function. */
+
+    /**
+     * Creates a new object using the <tt>clone()</tt> method.
+     *
+     * @param ptr the pointer whose corresponding object should be cloned.
+     * @return the newly created clone.
+     */
+    T* operator() (const T* ptr) const {
+        return ptr->clone();
+    }
+};
+
+/**
  * An adaptable unary function used to deallocate objects.
  * This class is for use with the Standard Template Library.
  *
