@@ -14,6 +14,9 @@ Version 4.1  [ 29 February, 2004 ]
         - 3-sphere recognition.
         - Full connected sum decomposition for closed orientable
           triangulations.
+        - Automated construction of orientable Seifert fibred spaces over
+          the sphere with at most three exceptional fibres.
+        - Recognition of some more trivial multiple-vertex triangulations.
     Bug Fixes:
         - Fixed bug in "tricensus --genpairs" that caused empty output files.
         - Updates for compatibility with KDE 3.2.
