@@ -45,6 +45,8 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
             - Changed from simple ordered pair to its own full class.
         Class NIndexedArray:
             - Added.
+        Class NJNIEnumeration:
+            - Added.
         Class NLargeInteger:
             - Added third error-detection parameter to constructor
               NLargeInteger(const char*, int).
