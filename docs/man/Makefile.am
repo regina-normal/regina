@@ -13,6 +13,7 @@ man_MANS = \
   @PACKAGE@.1 \
   sigcensus.1 \
   tricensus.1 \
+  tricensus-manager.1 \
   regina.conf.5
 
 SUFFIXES = .1 .2 .3 .4 .5 .6 .7 .8
