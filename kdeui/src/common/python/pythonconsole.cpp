@@ -52,8 +52,7 @@
 #include <qvbox.h>
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
-        const ReginaPrefSet* initialPrefs, regina::NPacket* tree,
-        regina::NPacket* selectedPacket) :
+        const ReginaPrefSet* initialPrefs) :
         KMainWindow(parent, "PythonConsole#"), manager(useManager) {
     // Initialise preferences.
     if (initialPrefs)
@@ -121,7 +120,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     error = new PythonConsole::ErrorStream(this);
     interpreter = new PythonInterpreter(output, error);
 
-    init(tree, selectedPacket);
+    blockInput();
 }
 
 PythonConsole::~PythonConsole() {
@@ -132,34 +131,128 @@ PythonConsole::~PythonConsole() {
         manager->deregisterConsole(this);
 }
 
-void PythonConsole::processCommand() {
-    input->setEnabled(false);
-
-    QString cmd = input->text();
-    lastIndent = initialIndent(cmd);
-
-    // Log the input line.
-    // Include the prompt but ignore the initial space.
-    addInput(prompt->text().mid(1) + cmd);
-    input->setText(i18n("Processing..."));
-    setPromptMode(PROCESSING);
-
-    // Do the actual processing (which could take some time).
+void PythonConsole::addInput(const QString& input) {
+    session->append("<b>" + encode(input) + "</b>");
+    session->scrollToBottom();
     KApplication::kApplication()->processEvents();
-    bool done = interpreter->executeLine(cmd.ascii());
+}
 
-    // Finish the output.
-    output->flush();
-    error->flush();
+void PythonConsole::addOutput(const QString& output) {
+    // Since empty output has no tags we need to be explicitly sure that
+    // blank lines are still written.
+    if (output.isEmpty())
+        session->append("<br>");
+    else
+        session->append(encode(output));
+    session->scrollToBottom();
+    KApplication::kApplication()->processEvents();
+}
 
-    // Prepare for a new command.
-    setPromptMode(done ? PRIMARY : SECONDARY);
-    if (prefs.pythonAutoIndent) {
-        input->setText(lastIndent);
+void PythonConsole::addError(const QString& output) {
+    session->append("<font color=\"dark red\">" + encode(output) + "</font>");
+    session->scrollToBottom();
+    KApplication::kApplication()->processEvents();
+}
+
+void PythonConsole::blockInput(const QString& msg) {
+    input->setEnabled(false);
+    prompt->setText("     ");
+    if (msg.isEmpty())
+        input->clear();
+    else
+        input->setText(msg);
+}
+
+void PythonConsole::allowInput(bool primaryPrompt,
+        const QString& suggestedInput) {
+    prompt->setText(primaryPrompt ? " >>> " : " ... ");
+    if (suggestedInput.isEmpty())
+        input->clear();
+    else {
+        input->setText(suggestedInput);
         input->end(false);
     }
     input->setEnabled(true);
     input->setFocus();
+}
+
+bool PythonConsole::importRegina() {
+    if (interpreter->importRegina())
+        return true;
+    else {
+        KMessageBox::error(this, i18n("<qt>The Python module <i>regina</i> "
+            "could not be loaded.  None of Regina's functions will "
+            "be available during this Python session.<p>"
+            "The module should be installed as the file "
+            "<tt>%1/regina.so</tt>.  Please write to %2 if you require "
+            "further assistance.</qt>")
+            .arg(REGINA_PYLIBDIR).arg(PACKAGE_BUGREPORT));
+        addError(i18n("Unable to load module \"regina\"."));
+        return false;
+    }
+}
+
+void PythonConsole::setRootPacket(regina::NPacket* packet) {
+    if (interpreter->setVar("root", packet))
+        addOutput(i18n("The root of the packet tree is in the "
+            "variable [root]."));
+    else {
+        KMessageBox::error(this, i18n("<qt>An error occurred "
+            "whilst attempting to place the root of the packet "
+            "tree in the variable <i>root</i>.</qt>"));
+        addError(i18n("The variable \"root\" has not been set."));
+    }
+}
+
+void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
+    // Extract the packet name.
+    QString pktName;
+    if (packet)
+        pktName = packet->getPacketLabel().c_str();
+    else
+        pktName = i18n("None");
+
+    // Set the variable.
+    if (interpreter->setVar("selected", packet))
+        addOutput(i18n("The selected packet (%1) is in the "
+            "variable [selected].").arg(pktName));
+    else {
+        KMessageBox::error(this, i18n("<qt>An error occurred "
+            "whilst attempting to place the selected packet (%1) "
+            "in the variable <i>selected</i>.</qt>").arg(pktName));
+        addError(i18n("The variable \"selected\" has not been set."));
+    }
+}
+
+void PythonConsole::loadAllLibraries() {
+    for (ReginaFilePrefList::const_iterator it = prefs.pythonLibraries.begin();
+            it != prefs.pythonLibraries.end(); it++) {
+        if (! (*it).active)
+            continue;
+
+        QString shortName = QFileInfo((*it).filename).fileName();
+        addOutput(i18n("Loading %1...").arg(shortName));
+        if (! interpreter->runScript((*it).filename, shortName)) {
+            if (! QFileInfo((*it).filename).exists())
+                addError(i18n("The library %1 does not exist.").
+                    arg((*it).filename));
+            else
+                addError(i18n("The library %1 could not be loaded.").
+                    arg(shortName));
+        }
+    }
+}
+
+void PythonConsole::executeLine(const QString& line) {
+    interpreter->executeLine(line.ascii());
+}
+
+void PythonConsole::executeLine(const std::string& line) {
+    interpreter->executeLine(line);
+}
+
+void PythonConsole::executeLine(const char* line) {
+    interpreter->executeLine(line);
 }
 
 void PythonConsole::saveLog() {
@@ -194,120 +287,6 @@ void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
     input->setSpacesPerTab(prefs.pythonSpacesPerTab);
 }
 
-void PythonConsole::init(regina::NPacket* tree,
-        regina::NPacket* selectedPacket) {
-    // Show the user what's going on.
-    setPromptMode(PROCESSING);
-    input->setEnabled(false);
-    input->setText(i18n("Initialising..."));
-
-    show();
-    KApplication::kApplication()->processEvents();
-
-    // Import the regina module.
-    if (! interpreter->importRegina()) {
-        KMessageBox::error(this, i18n("<qt>The Python module <i>regina</i> "
-            "could not be loaded.  None of Regina's functions will "
-            "be available during this Python session.<p>"
-            "The module should be installed as the file "
-            "<tt>%1/regina.so</tt>.  Please write to %2 if you require "
-            "further assistance.</qt>")
-            .arg(REGINA_PYLIBDIR).arg(PACKAGE_BUGREPORT));
-        addError(i18n("Unable to load module \"regina\"."));
-    } else {
-        interpreter->executeLine("print regina.welcome() + '\\n'");
-
-        // Set base variables.
-        if (tree) {
-            if (interpreter->setVar("root", tree))
-                addOutput(i18n("The root of the packet tree is in the "
-                    "variable [root]."));
-            else {
-                KMessageBox::error(this, i18n("<qt>An error occurred "
-                    "whilst attempting to place the root of the packet "
-                    "tree in the variable <i>root</i>.</qt>"));
-                addError(i18n("The variable \"root\" has not been set."));
-            }
-        }
-        if (selectedPacket) {
-            if (interpreter->setVar("selected", tree))
-                addOutput(i18n("The selected packet (%1) is in the "
-                    "variable [selected].")
-                    .arg(selectedPacket->getPacketLabel().c_str()));
-            else {
-                KMessageBox::error(this, i18n("<qt>An error occurred "
-                    "whilst attempting to place the selected packet (%1) "
-                    "in the variable <i>selected</i>.</qt>")
-                    .arg(selectedPacket->getPacketLabel().c_str()));
-                addError(i18n("The variable \"selected\" has not been set."));
-            }
-        }
-    }
-
-    // Run library scripts.
-    for (ReginaFilePrefList::const_iterator it = prefs.pythonLibraries.begin();
-            it != prefs.pythonLibraries.end(); it++) {
-        if (! (*it).active)
-            continue;
-
-        QString shortName = QFileInfo((*it).filename).fileName();
-        addOutput(i18n("Loading %1...").arg(shortName));
-        if (! interpreter->runScript((*it).filename, shortName)) {
-            if (! QFileInfo((*it).filename).exists())
-                addError(i18n("The library %1 does not exist.").
-                    arg((*it).filename));
-            else
-                addError(i18n("The library %1 could not be loaded.").
-                    arg(shortName));
-        }
-    }
-
-    // Ready!
-    addOutput("Ready.");
-
-    setPromptMode(PRIMARY);
-    input->clear();
-    input->setEnabled(true);
-    input->setFocus();
-}
-
-void PythonConsole::setPromptMode(PromptMode mode) {
-    switch (mode) {
-        case PRIMARY:
-            prompt->setText(" >>> ");
-            break;
-        case SECONDARY:
-            prompt->setText(" ... ");
-            break;
-        case PROCESSING:
-            prompt->setText("     ");
-            break;
-    }
-}
-
-void PythonConsole::addInput(const QString& input) {
-    session->append("<b>" + encode(input) + "</b>");
-    session->scrollToBottom();
-    KApplication::kApplication()->processEvents();
-}
-
-void PythonConsole::addOutput(const QString& output) {
-    // Since empty output has no tags we need to be explicitly sure that
-    // blank lines are still written.
-    if (output.isEmpty())
-        session->append("<br>");
-    else
-        session->append(encode(output));
-    session->scrollToBottom();
-    KApplication::kApplication()->processEvents();
-}
-
-void PythonConsole::addError(const QString& output) {
-    session->append("<font color=\"dark red\">" + encode(output) + "</font>");
-    session->scrollToBottom();
-    KApplication::kApplication()->processEvents();
-}
-
 QString PythonConsole::encode(const QString& plaintext) {
     QString ans(plaintext);
     return ans.replace('&', "&amp;").
@@ -326,6 +305,31 @@ QString PythonConsole::initialIndent(const QString& line) {
         return "";
     else
         return line.left(pos - start);
+}
+
+void PythonConsole::processCommand() {
+    // Fetch what we need and block input ASAP.
+    QString cmd = input->text();
+    QString cmdPrompt = prompt->text();
+    blockInput(i18n("Processing..."));
+
+    // Log the input line.
+    // Include the prompt but ignore the initial space.
+    addInput(cmdPrompt.mid(1) + cmd);
+
+    // Do the actual processing (which could take some time).
+    KApplication::kApplication()->processEvents();
+    bool done = interpreter->executeLine(cmd.ascii());
+
+    // Finish the output.
+    output->flush();
+    error->flush();
+
+    // Prepare for a new command.
+    if (prefs.pythonAutoIndent)
+        allowInput(done, initialIndent(cmd));
+    else
+        allowInput(done);
 }
 
 void PythonConsole::OutputStream::processOutput(const std::string& data) {

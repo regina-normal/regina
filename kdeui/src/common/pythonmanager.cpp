@@ -30,6 +30,7 @@
 
 #include "pythonmanager.h"
 
+#include <kapplication.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -52,7 +53,29 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         const ReginaPrefSet* initialPrefs, regina::NPacket* tree,
         regina::NPacket* selectedPacket) {
-    return new PythonConsole(parent, this, initialPrefs, tree, selectedPacket);
+    PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
+
+    ans->blockInput(i18n("Initialising..."));
+
+    // Show us what's going on.
+    ans->show();
+    KApplication::kApplication()->processEvents();
+
+    // Initialise the python interpreter.
+    if (ans->importRegina()) {
+        ans->executeLine("print regina.welcome() + '\\n'");
+
+        if (tree)
+            ans->setRootPacket(tree);
+        if (selectedPacket)
+            ans->setSelectedPacket(selectedPacket);
+    }
+    ans->loadAllLibraries();
+
+    // All ready!
+    ans->addOutput(i18n("Ready."));
+    ans->allowInput();
+    return ans;
 }
 
 void PythonManager::closeAllConsoles() {
@@ -97,9 +120,9 @@ namespace {
     }
 }
 
-void PythonManager::launchPythonConsole(QWidget* parent, regina::NPacket*,
-        regina::NPacket*) {
-    scriptingDisabled(parent);
+PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
+        regina::NPacket*, regina::NPacket*) {
+    return scriptingDisabled(parent);
 }
 
 void PythonManager::closeAllConsoles() {

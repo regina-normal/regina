@@ -49,8 +49,8 @@ class QLabel;
  * A top-level window containing an embedded python interpreter.
  * Python support must be built in for this class to be used.
  *
- * Generally objects of this class are not created directly; instead
- * PacketManager::launchPythonConsole() is used.
+ * Objects of this class are generally not created directly; instead
+ * PacketManager::launchPythonConsole() should be used.
  */
 class PythonConsole : public KMainWindow {
     Q_OBJECT
@@ -85,18 +85,49 @@ class PythonConsole : public KMainWindow {
     public:
         /**
          * Constructor and destructor.
+         *
+         * The constructor will leave the console with input disabled.
+         * Input can be re-enabled by calling allowInput().
+         *
+         * Generally python consoles are created through
+         * PythonManager::launchPythonConsole(), not by calling this
+         * constructor directly.
          */
         PythonConsole(QWidget* parent = 0, PythonManager* useManager = 0,
-                const ReginaPrefSet* initialPrefs = 0,
-                regina::NPacket* tree = 0, regina::NPacket* selectedPacket = 0);
+                const ReginaPrefSet* initialPrefs = 0);
+
         ~PythonConsole();
 
-    public slots:
         /**
-         * Process the command currently on the input line.
+         * Write input, output or error to the session transcript.
          */
-        void processCommand();
+        void addInput(const QString& input);
+        void addOutput(const QString& output);
+        void addError(const QString& error);
 
+        /**
+         * Disallow input, specifying an optional message.
+         */
+        void blockInput(const QString& msg = QString::null);
+
+        /**
+         * Allow input, using either the primary or secondary prompt.
+         */
+        void allowInput(bool primaryPrompt = true,
+            const QString& suggestedInput = QString::null);
+
+        /**
+         * Configure the python interpreter.
+         */
+        bool importRegina();
+        void setRootPacket(regina::NPacket* packet);
+        void setSelectedPacket(regina::NPacket* packet);
+        void loadAllLibraries();
+        void executeLine(const QString& line);
+        void executeLine(const std::string& line);
+        void executeLine(const char* line);
+
+    public slots:
         /**
          * Save a log of the current session.
          */
@@ -109,24 +140,6 @@ class PythonConsole : public KMainWindow {
 
     private:
         /**
-         * Initialise the python interpreter and otherwise prepare the
-         * console for use.
-         */
-        void init(regina::NPacket* tree, regina::NPacket* selectedPacket);
-
-        /**
-         * Change the visible prompt.
-         */
-        void setPromptMode(PromptMode mode = PRIMARY);
-
-        /**
-         * Write input, output or error to the session transcript.
-         */
-        void addInput(const QString& input);
-        void addOutput(const QString& output);
-        void addError(const QString& error);
-
-        /**
          * Encode special characters so that the given text can be
          * appended to the session transcript without causing HTML
          * confusion.
@@ -138,6 +151,13 @@ class PythonConsole : public KMainWindow {
          */
         static QString initialIndent(const QString& line);
 
+    private slots:
+        /**
+         * Process the command currently on the input line.
+         */
+        void processCommand();
+
+    private:
         /**
          * An output stream that writes data using addOutput().
          */
