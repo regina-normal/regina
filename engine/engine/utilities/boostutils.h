@@ -52,7 +52,7 @@
  *  This software is provided "as is" without express or implied
  *  warranty, and with no claim as to its suitability for any purpose.
  *
- *  <b>Next and Prior:</b>
+ *  <b>Next, Prior and Non-Copyable:</b>
  *
  *  Contributed by Dave Abrahams
  *
@@ -264,6 +264,38 @@ template <class T>
 inline T next(T it) {
     return ++it;
 }
+
+/**
+ * A base class that guarantees that derived classes cannot be copied.
+ * This is done by defining a private copy constructor and a private
+ * copy assignment operator.
+ *
+ * \ifacespython Not present.
+ *
+ * @author This class was taken and modified from the Boost C++ libraries
+ * (<tt>http://www.boost.org/</tt>).
+ */
+class noncopyable {
+    protected:
+        /**
+         * A constructor which does nothing.
+         */
+        noncopyable() {}
+        /**
+         * A destructor which does nothing.
+         */
+        ~noncopyable() {}
+
+    private:
+        /**
+         * An inaccessable copy constructor.
+         */
+        noncopyable(const noncopyable&) {}
+        /**
+         * An inaccessible copy assignment operator.
+         */
+        const noncopyable& operator = (const noncopyable&) {}
+};
 
 /*@}*/
 

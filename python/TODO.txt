@@ -12,12 +12,12 @@ NLargeInteger:
     Investigate automatic conversion from long.
 
 Wrappers:
+    progress
+    packet
+    triangulation
     angle
     census
     foreign
-    packet
-    progress
     split
     subcomplex
     surfaces
-    triangulation

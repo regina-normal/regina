@@ -391,6 +391,9 @@ class NMatrixRing : public NMatrix<T> {
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
          *
+         * \ifacespython Not present, even if a subclass of NMatrix
+         * is mirrored and its inherited routines are mirrored also.
+         *
          * @param other the matrix by which to multiply this matrix.
          * @return a newly allocated matrix representing
          * <tt>this * other</tt>.
