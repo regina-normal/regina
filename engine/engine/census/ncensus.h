@@ -178,7 +178,7 @@ class NCensus {
          * argument will be a triangulation under consideration for
          * inclusion in the census.  The second argument will be
          * parameter \a sieveArgs as passed to formCensus().
-         * This parameter may be passed as \c null (in which case no
+         * Parameter \a sieve may be passed as \c null (in which case no
          * additional constraint function will be used).
          * @param sieveArgs the pointer to pass as the final parameter
          * for the function \a sieve which will be called upon each
@@ -191,6 +191,91 @@ class NCensus {
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
             int nBdryFaces = -1, AcceptTriangulation sieve = 0,
             void* sieveArgs = 0, NProgressManager* manager = 0);
+
+        /**
+         * Fills the given packet with all triangulations in a partial census
+         * of 3-manifold triangulations satisfying the given constraints.
+         * Each triangulation in the partial census will appear as a child of
+         * the given packet.
+         *
+         * This routine will conduct a census of all valid triangulations
+         * that are modelled by the given tetrahedron face pairing.
+         * All such triangulations are included in the census up to
+         * combinatorial isomorphism; given any isomorphism class, exactly
+         * one representative will appear in the census.
+         *
+         * The census can be optionally restricted to only include
+         * triangulations satisfying further constraints (such as
+         * orientability and finiteness); see the individual parameter
+         * descriptions for further details.  In particular, parameter
+         * \a sieve can be used to impose arbitrary restrictions that are
+         * not hard-coded into this class.
+         *
+         * Note that if constraints may be imposed using the hard-coded
+         * parameters (such as orientability and finiteness), it is
+         * generally better to do this than to use the arbitrary
+         * constraint parameter \a sieve.  Hard-coded parameters will be
+         * tested earlier, and some (such as orientability) can be
+         * incorporated directly into the census algorithm to give a vast
+         * performance increase.
+         *
+         * Only valid triangulations will be produced; see
+         * NTriangulation::isValid() for further details.
+         *
+         * Note that this routine should only be used if the partial census
+         * contains a small enough total number of triangulations to
+         * avoid any memory disasters.
+         *
+         * The partial census will run in the current thread.  This
+         * routine will only return once the partial census is complete.
+         *
+         * \pre The given face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre Within any single tetrahedron in the given face pairing, the
+         * face partners appear in increasing order for faces 0, 1, 2 and 3.
+         * Partners are ordered first by tetrahedron number and then by
+         * face number within that tetrahedron.  An unmatched face must
+         * appear after all matched faces within any particular tetrahedron.
+         * \pre In the given face pairing, each tetrahedron aside from
+         * the first has some face paired with a face in an earlier
+         * tetrahedron.
+         *
+         * \ifaces Not present.
+         *
+         * @param pairing the tetrahedron face pairing that
+         * triangulations in this partial census must be modelled by.
+         * @param parent the packet beneath which members of the partial
+         * census will be placed.
+         * @param finiteness determines whether to include finite and/or ideal
+         * triangulations.  The set should contain \c true if finite (non-ideal)
+         * triangulations are to be included, and should contain \c false if
+         * ideal triangulations are to be included.
+         * @param orientability determines whether to include orientable
+         * and/or non-orientable triangulations.  The set should contain \c true
+         * if orientable triangulations are to be included, and should contain
+         * \c false if non-orientable triangulations are to be included.
+         * @param sieve an additional constraint function that may be
+         * used to exclude certain triangulations from the census.  If
+         * this parameter is non-zero, each triangulation produced (after
+         * passing all other criteria) will be passed through this
+         * function.  If this function returns \c true then the triangulation
+         * will be included in the census; otherwise it will not.
+         * When this function is called, the first (triangulation)
+         * argument will be a triangulation under consideration for
+         * inclusion in the census.  The second argument will be
+         * parameter \a sieveArgs as passed to formPartialCensus().
+         * Parameter \a sieve may be passed as \c null (in which case no
+         * additional constraint function will be used).
+         * @param sieveArgs the pointer to pass as the final parameter
+         * for the function \a sieve which will be called upon each
+         * triangulation found.  If \a sieve is \c null then \a sieveArgs
+         * will be ignored.
+         * @return the number of triangulations produced in the partial census.
+         */
+        static unsigned long formPartialCensus(const NFacePairing* pairing,
+            NPacket* parent, NBoolSet finiteness, NBoolSet orientability,
+            AcceptTriangulation sieve = 0, void* sieveArgs = 0);
 
         /**
          * Determines whether the given triangulation even has a chance
@@ -227,10 +312,9 @@ class NCensus {
          * for the census generation, or 0 if progress reporting is not
          * required.
          */
-        NCensus(NPacket* newParent, unsigned nTetrahedra,
-            const NBoolSet& newFiniteness, const NBoolSet& newOrientability,
-            AcceptTriangulation newSieve, void* newSieveArgs,
-            NProgressMessage* newProgress = 0);
+        NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
+            const NBoolSet& newOrientability, AcceptTriangulation newSieve,
+            void* newSieveArgs, NProgressMessage* newProgress);
 
         /**
          * Called when a particular tetrahedron face pairing has been

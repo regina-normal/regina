@@ -26,12 +26,14 @@
 
 /* end stub */
 
+#include <algorithm>
 #include <sstream>
 #include "census/ncensus.h"
 #include "census/ngluingperms.h"
 #include "progress/nprogressmanager.h"
 #include "progress/nprogresstypes.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -55,8 +57,8 @@ unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
     } else
         progress = 0;
 
-    NCensus* census = new NCensus(parent, nTetrahedra, finiteness,
-        orientability, sieve, sieveArgs, progress);
+    NCensus* census = new NCensus(parent, finiteness, orientability, sieve,
+        sieveArgs, progress);
     
     if (manager) {
         NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
@@ -71,10 +73,30 @@ unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
     }
 }
 
-NCensus::NCensus(NPacket* newParent, unsigned nTetrahedra,
-        const NBoolSet& newFiniteness, const NBoolSet& newOrientability,
-        AcceptTriangulation newSieve, void* newSieveArgs,
-        NProgressMessage* newProgress) : parent(newParent),
+unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
+        NPacket* parent, NBoolSet finiteness, NBoolSet orientability,
+        AcceptTriangulation sieve, void* sieveArgs) {
+    // Is it obvious that nothing will happen?
+    if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone)
+        return 0;
+
+    // Make a list of automorphisms.
+    NFacePairingIsoList autos;
+    pairing->findAutomorphisms(autos);
+
+    // Select the individual gluing permutations.
+    NCensus census(parent, finiteness, orientability, sieve, sieveArgs, 0);
+    NGluingPerms::findAllPerms(pairing, &autos,
+        ! census.orientability.hasFalse(), NCensus::foundGluingPerms, &census);
+
+    // Clean up.
+    std::for_each(autos.begin(), autos.end(), FuncDelete<NIsomorphismDirect>());
+    return census.whichSoln - 1;
+}
+
+NCensus::NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
+        const NBoolSet& newOrientability, AcceptTriangulation newSieve,
+        void* newSieveArgs, NProgressMessage* newProgress) : parent(newParent),
         finiteness(newFiniteness), orientability(newOrientability),
         sieve(newSieve), sieveArgs(newSieveArgs), progress(newProgress),
         whichSoln(1) {
