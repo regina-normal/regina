@@ -26,43 +26,75 @@
 
 /* end stub */
 
-#include "subcomplex/nlensspace.h"
-#include "maths/numbertheory.h"
+#include "triangulation/ntriangulation.h"
+#include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nlayeredchainpair.h"
+#include "subcomplex/nlayeredlensspace.h"
+#include "subcomplex/nlayeredloop.h"
+#include "subcomplex/nplugtrisolidtorus.h"
 
 namespace regina {
 
-void NLensSpace::reduce() {
-    if (p == 0) {
-        q = 1;
-        return;
-    } else if (p == 1) {
-        q = 0;
-        return;
+NSFS* isKnownSFS(NTriangulation* tri) {
+    if (tri->getNumberOfComponents() != 1)
+        return 0;
+
+    // We have just one component.
+    NComponent* comp = tri->getComponents().front();
+
+    // Layered lens space?
+    {
+        NLayeredLensSpace* lens = NLayeredLensSpace::isLayeredLensSpace(comp);
+        if (lens) {
+            NSFS* ans = new NSFS();
+            ans->insertFibre(NExceptionalFibre(lens->getQ(), lens->getP()));
+            delete lens;
+            return ans;
+        }
     }
 
-    // p > 1 and gcd(p,q) = 1.
-    
-    // Reduce q to +/-q.
-    q = q % p;
-    if (2 * q > p)
-        q = p - q;
+    // Layered loop?
+    {
+        NLayeredLoop* loop = NLayeredLoop::isLayeredLoop(comp);
+        if (loop) {
+            NSFS* ans = new NSFS(loop->getSeifertStructure());
+            delete loop;
+            return ans;
+        }
+    }
 
-    unsigned long inv = modularInverse(p, q);
-    if (2 * inv > p)
-        inv = p - inv;
-    if (inv < q)
-        q = inv;
-}
+    // Layered chain pair?
+    {
+        NLayeredChainPair* pair = NLayeredChainPair::isLayeredChainPair(comp);
+        if (pair) {
+            NSFS* ans = new NSFS(pair->getSeifertStructure());
+            delete pair;
+            return ans;
+        }
+    }
 
-std::string NLensSpace::getCommonName() const {
-    if (p == 0)
-        return "S2xS1";
-    else if (p == 1)
-        return "S3";
-    else if (p == 2 && q == 1)
-        return "RP3";
-    else
-        return toString();
+    // Augmented triangular solid torus?
+    {
+        NAugTriSolidTorus* aug = NAugTriSolidTorus::isAugTriSolidTorus(comp);
+        if (aug) {
+            NSFS* ans = new NSFS(aug->getSeifertStructure());
+            delete aug;
+            return ans;
+        }
+    }
+
+    // Plugged triangular solid torus?
+    {
+        NPlugTriSolidTorus* plug = NPlugTriSolidTorus::isPlugTriSolidTorus(tri);
+        if (plug) {
+            NSFS* ans = new NSFS(plug->getSeifertStructure());
+            delete plug;
+            return ans;
+        }
+    }
+
+    // Nothing recognised.
+    return 0;
 }
 
 } // namespace regina

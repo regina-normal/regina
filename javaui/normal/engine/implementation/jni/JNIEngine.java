@@ -226,11 +226,6 @@ public class JNIEngine implements Engine {
 
     public native NTriangulation enterTextTriangulation();
     public long formCensus(NPacket parent, int nTetrahedra,
-            NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary) {
-        return _formCensus(parent, nTetrahedra, finiteness.getByteCode(),
-            orientability.getByteCode(), boundary.getByteCode(), -1, null);
-    }
-    public long formCensus(NPacket parent, int nTetrahedra,
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
             int nBdryFaces) {
         return _formCensus(parent, nTetrahedra, finiteness.getByteCode(),
@@ -241,8 +236,8 @@ public class JNIEngine implements Engine {
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
             int nBdryFaces, NProgressManager manager) {
         return _formCensus(parent, nTetrahedra, finiteness.getByteCode(),
-            orientability.getByteCode(), boundary.getByteCode(),
-            nBdryFaces, manager);
+            orientability.getByteCode(), boundary.getByteCode(), nBdryFaces,
+            manager);
     }
     public native long _formCensus(NPacket parent, int nTetrahedra, 
             char finiteness, char orientability, char boundary,
@@ -258,6 +253,7 @@ public class JNIEngine implements Engine {
     public native String getVersionString();
     public native NFileInfo identifyFileInfo(String idPathname);
     public native NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
+    public native NSFS isKnownSFS(NTriangulation tri);
     public native NLayeredChainPair isLayeredChainPair(NComponent comp);
     public native NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     public native NLayeredLoop isLayeredLoop(NComponent comp);

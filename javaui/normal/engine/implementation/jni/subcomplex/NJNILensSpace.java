@@ -50,4 +50,5 @@ public class NJNILensSpace extends JNIShareableObject
     public native long getP();
     public native long getQ();
     public native boolean isEquivalentTo(NLensSpace compare);
+    public native String getCommonName();
 }

@@ -28,8 +28,10 @@
 
 #include <algorithm>
 #include <iterator>
+#include <sstream>
 #include "algebra/nabeliangroup.h"
 #include "maths/nmatrixint.h"
+#include "maths/numbertheory.h"
 #include "subcomplex/nsfs.h"
 #include "subcomplex/nlensspace.h"
 
@@ -221,6 +223,116 @@ NLensSpace* NSFS::isLensSpace() const {
         // TODO: Recognise Lens space over RP2.
         return 0;
     }
+}
+
+std::string NSFS::getCommonName() const {
+    // Lens spaces.
+    NLensSpace* lens = isLensSpace();
+    if (lens) {
+        std::string ans = lens->getCommonName();
+        delete lens;
+        return ans;
+    }
+
+    // Pull off the number of fibres we're capable of dealing with.
+    // At this moment this is three.
+    NExceptionalFibre fibre[3];
+    unsigned nFibres = 0;
+    FibreIteratorConst it = fibres.begin();
+    while (nFibres < 3) {
+        if (it == fibres.end())
+            break;
+        fibre[nFibres++] = *it++;
+    }
+
+    // Are there too many fibres?
+    if (it != fibres.end())
+        return 0;
+
+    // SFS over the 2-sphere:
+    if (orbitGenus == 0 && orbitOrientable && orbitPunctures == 0) {
+        // [ S2 : (2,-1), (2,1), (n,b) ] for n,b coprime and positive.
+        NExceptionalFibre two(2, 1);
+        NExceptionalFibre three(3, 1);
+        if (nFibres == 3 && fibre[0] == two && fibre[1] == two &&
+                gcd(fibre[2].alpha, fibre[2].beta) == 1 && k >= -1) {
+            // We can name this.
+            // Note that n > 1 in this case.
+            long n = fibre[2].alpha;
+            long b = fibre[2].beta + n * (k + 1);
+
+            if (b % 2 == 1) {
+                // S3/Q{4n} x Z{b} (see Matveev).
+                std::ostringstream ans;
+                ans << "S3/Q" << (n * 4);
+                if (b > 1)
+                    ans << "xZ" << b;
+                return ans.str();
+            } else {
+                // S3/D{2^{k+2}n} x Z{2m+1} where b=2^k(2m+1) (see Matveev).
+                long odd = b;
+                long twos = 1;
+                while (! (odd & 1)) {
+                    odd >>= 1;
+                    twos <<= 1;
+                }
+
+                std::ostringstream ans;
+                ans << "S3/D" << ((twos << 2) * n);
+                if (odd > 1)
+                    ans << "xZ" << odd;
+                return ans.str();
+            }
+        }
+
+        else if (nFibres == 3 && fibre[0] == two && fibre[1] == three &&
+                gcd(fibre[2].alpha, fibre[2].beta) == 1 && k >= -1) {
+            // We might still be able to name this.
+            // Note that n > 2 and b > 0 in this case.
+            long n = fibre[2].alpha;
+            long b = fibre[2].beta + n * (k + 1);
+
+            if (n == 3) {
+                /**
+                 * The formula given by Matveev seems to be wrong in this
+                 * case.  We'll leave it until there's time to sit down
+                 * and work out what it should have been.
+                 */
+                /*
+                // S3/P'{8(3^{k+1})}xZ{2m+1} where (3^k)m=2b-1 (see Matveev)
+                if (b == 1)
+                    return "S3/P24";
+
+                long m = 2 * b - 1; // Known: m >= 1.
+                long threes = 1;
+                while (m % 3 == 0) {
+                    m = m / 3;
+                    threes *= 3;
+                }
+
+                std::ostringstream ans;
+                ans << "S3/P'" << (threes * 24) << "xZ" << (2 * m + 1);
+                return ans.str();
+                */
+            } else if (n == 4) {
+                // S3/P48xZ{3b-2} (see Matveev).
+                std::ostringstream ans;
+                ans << "S3/P48";
+                if (b > 1)
+                    ans << "xZ" << (b * 3 - 2);
+                return ans.str();
+            } else if (n == 5) {
+                // S3/P120xZ{6b-5} (see Matveev).
+                std::ostringstream ans;
+                ans << "S3/P120";
+                if (b > 1)
+                    ans << "xZ" << (b * 6 - 5);
+                return ans.str();
+            }
+        }
+    }
+
+    return toString();
 }
 
 void NSFS::writeTextShort(std::ostream& out) const {

@@ -41,5 +41,6 @@ public interface NSFS extends ShareableObject {
     void reduce();
     NLensSpace isLensSpace();
     NAbelianGroup getHomologyH1();
+    String getCommonName();
 }
 

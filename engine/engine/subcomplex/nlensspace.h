@@ -104,6 +104,15 @@ class NLensSpace : public ShareableObject {
          */
         bool operator == (const NLensSpace& compare) const;
 
+        /**
+         * Returns the common name of this Lens space.  For instance,
+         * L(7,3) will be written as \"L(7,3)\", but L(2,1) will be
+         * written as \"RP3\".
+         *
+         * @return the common name of this Lens space.
+         */
+        std::string getCommonName() const;
+
         void writeTextShort(std::ostream& out) const;
 
     private:

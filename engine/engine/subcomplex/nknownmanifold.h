@@ -26,48 +26,49 @@
 
 /* end stub */
 
-#include "subcomplex/nlensspace.h"
-#include "jnitools.h"
+/*! \file nknownmanifold.h
+ *  \brief Provides global 3-manifold recognition routines.
+ */
 
-using namespace regina;
-using namespace regina::jni;
+#ifndef __NKNOWNMANIFOLD_H
+#ifndef __DOXYGEN
+#define __NKNOWNMANIFOLD_H
+#endif
 
-REGJNIEXPORT jstring JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_getCommonName
-        (JNIEnv *env, jobject me) {
-    return jstringFromCString(env,
-        GET_ENGINE_OBJECT(env, NLensSpace, me)->getCommonName());
-}
+namespace regina {
 
-REGJNIEXPORT jlong JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_getP
-        (JNIEnv *env, jobject me) {
-    return GET_ENGINE_OBJECT(env, NLensSpace, me)->getP();
-}
+class NSFS;
+class NTriangulation;
 
-REGJNIEXPORT jlong JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_getQ
-        (JNIEnv *env, jobject me) {
-    return GET_ENGINE_OBJECT(env, NLensSpace, me)->getQ();
-}
+/**
+ * \weakgroup subcomplex
+ * @{
+ */
 
-REGJNIEXPORT jboolean JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_isEquivalentTo
-        (JNIEnv *env, jobject me, jobject you) {
-    return (*GET_ENGINE_OBJECT(env, NLensSpace, me) ==
-        *GET_ENGINE_OBJECT(env, NLensSpace, you));
-}
+/**
+ * Determines whether the given triangulation is recognised as a Seifert
+ * fibred space.  Either a Seifert fibred space will be recognised or the
+ * results will be inconclusive.
+ *
+ * This routine operates by simply searching for standard triangulations
+ * of Seifert fibred spaces.  Thus most triangulations of Seifert fibred
+ * spaces will \e not be recognised.
+ *
+ * However, this routine is more likely to succeed if the given triangulation
+ * is minimal.  In particular, it will successfully identify every minimal
+ * one-vertex triangulation of a Seifert fibred space with less than
+ * six tetrahedra.
+ *
+ * @param tri the triangulation to identify
+ * @return a newly created Seifert structure if the given triangulation
+ * was recognised, or \c null if the results were inconclusive (i.e.,
+ * it might or might not be a Seifert fibred space).
+ */
+NSFS* isKnownSFS(NTriangulation* tri);
 
-REGJNIEXPORT void JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_newNJNILensSpace__JJ
-        (JNIEnv *env, jobject me, jlong p, jlong q) {
-    ASSIGN_ENGINE_OBJECT(env, new NLensSpace(p, q), me);
-}
+/*@}*/
 
-REGJNIEXPORT void JNICALL
-        Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_newNJNILensSpace__Lnormal_engine_subcomplex_NLensSpace_2
-        (JNIEnv *env, jobject me, jobject you) {
-    ASSIGN_ENGINE_OBJECT(env, new NLensSpace(
-        *GET_ENGINE_OBJECT(env, NLensSpace, you)), me);
-}
+} // namespace regina
+
+#endif
 

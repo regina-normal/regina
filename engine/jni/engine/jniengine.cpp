@@ -38,6 +38,7 @@
 #include "census/ncensus.h"
 #include "split/nsignature.h"
 #include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nknownmanifold.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
@@ -69,7 +70,7 @@ REGJNIEXPORT jlong JNICALL
         NBoolSet::fromByteCode(flag1),
         NBoolSet::fromByteCode(flag2),
         NBoolSet::fromByteCode(flag3),
-        nBdryFaces, 0, 0, GET_ENGINE_OBJECT(env, NProgressManager, manager));
+        nBdryFaces, 0, 0, 0, GET_ENGINE_OBJECT(env, NProgressManager, manager));
 }
 
 REGJNIEXPORT jobject JNICALL
@@ -135,6 +136,14 @@ REGJNIEXPORT jobject JNICALL
         NAugTriSolidTorus::isAugTriSolidTorus(
         GET_ENGINE_OBJECT(env, NComponent, you)),
         "normal/engine/implementation/jni/subcomplex/NJNIAugTriSolidTorus");
+}
+
+REGJNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_isKnownSFS
+        (JNIEnv *env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
+        isKnownSFS(GET_ENGINE_OBJECT(env, NTriangulation, you)),
+        "normal/engine/implementation/jni/subcomplex/NJNISFS");
 }
 
 REGJNIEXPORT jobject JNICALL

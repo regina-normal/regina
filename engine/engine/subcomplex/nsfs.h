@@ -334,6 +334,19 @@ class NSFS : public ShareableObject {
          */
         NAbelianGroup* getHomologyH1() const;
 
+        /**
+         * Returns the common name of this Seifert fibred space.
+         * The list of common names for spaces will presumably grow
+         * between Regina releases.  If no common name is known at this
+         * time, the parameters of this Seifert fibred space will simply
+         * be returned in human-readable form.
+         *
+         * \todo \feature Add more common names to this routine.
+         *
+         * @return the common name of this Seifert fibred space.
+         */
+        std::string getCommonName() const;
+
         void writeTextShort(std::ostream& out) const;
 
     private:

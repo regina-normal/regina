@@ -65,4 +65,5 @@ public class NJNISFS extends JNIShareableObject
     public native void reduce();
     public native NLensSpace isLensSpace();
     public native NAbelianGroup getHomologyH1();
+    public native String getCommonName();
 }

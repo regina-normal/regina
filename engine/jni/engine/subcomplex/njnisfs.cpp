@@ -46,6 +46,13 @@ REGJNIEXPORT jlong JNICALL
     return GET_ENGINE_OBJECT(env, NSFS, me)->getFibre(which).beta;
 }
 
+REGJNIEXPORT jstring JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNISFS_getCommonName
+        (JNIEnv *env, jobject me) {
+    return jstringFromCString(env,
+        GET_ENGINE_OBJECT(env, NSFS, me)->getCommonName());
+}
+
 REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISFS_getFibreCount
         (JNIEnv *env, jobject me) {

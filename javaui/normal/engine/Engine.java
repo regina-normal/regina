@@ -109,8 +109,6 @@ public interface Engine {
 
     NTriangulation enterTextTriangulation();
     long formCensus(NPacket parent, int nTetrahedra,
-        NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary);
-    long formCensus(NPacket parent, int nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces);
     long formCensus(NPacket parent, int nTetrahedra,
@@ -126,6 +124,7 @@ public interface Engine {
     String getVersionString();
     NFileInfo identifyFileInfo(String idPathname);
     NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
+    NSFS isKnownSFS(NTriangulation tri);
     NLayeredChainPair isLayeredChainPair(NComponent comp);
     NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     NLayeredLoop isLayeredLoop(NComponent comp);

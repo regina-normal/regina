@@ -34,5 +34,6 @@ public interface NLensSpace extends ShareableObject {
     long getP();
     long getQ();
     boolean isEquivalentTo(NLensSpace compare);
+    String getCommonName();
 }
 
