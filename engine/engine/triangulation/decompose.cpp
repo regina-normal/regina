@@ -188,7 +188,8 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
                 // Furthermore, from Casson's proof (directly following
                 // Proposition 5.12), we see that we can restrict this
                 // search further to vertex octagonal almost normal surfaces.
-                sphere = findVtxOctAlmostNormalSphere(processing);
+                sphere = NNormalSurface::findVtxOctAlmostNormalSphere(
+                    processing);
                 if (sphere) {
                     // It's a 3-sphere.  Toss this component away.
                     delete sphere;
@@ -326,7 +327,8 @@ bool NTriangulation::isThreeSphere() const {
                 // Furthermore, from Casson's proof (directly following
                 // Proposition 5.12), we see that we can restrict this
                 // search further to vertex octagonal almost normal surfaces.
-                sphere = findVtxOctAlmostNormalSphere(processing);
+                sphere = NNormalSurface::findVtxOctAlmostNormalSphere(
+                    processing);
                 if (sphere) {
                     // It's a 3-sphere.  Toss this component away.
                     delete sphere;
