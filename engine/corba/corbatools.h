@@ -84,7 +84,7 @@
  */
 #define STANDARD_ENGINE_TYPEDEFS(servant_class, engine_class, interface_class) \
 	public: \
-		typedef servant_class ServantClass; \
+		typedef ::servant_class ServantClass; \
 		typedef ::engine_class EngineClass; \
 		typedef ::interface_class InterfaceClass;
 
