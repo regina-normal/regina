@@ -42,7 +42,7 @@
 
 void ReginaPart::importDehydration() {
     importFile(DehydrationHandler::instance, 0, i18n(FILTER_ALL),
-        i18n("Import dehydrated triangulation list"));
+        i18n("Import Dehydrated Triangulation List"));
 }
 
 void ReginaPart::importPython() {
