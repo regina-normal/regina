@@ -37,6 +37,7 @@ JPython:
 	Check to see whether user libraries are text files
 	Syntax highlighting for script editor
 	Import/export scripts as text files
+	Port from jpython to jython.
 
 Main Window:
 	View file version.
