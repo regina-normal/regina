@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.1  [ 29 February, 2004 ]
+Version 4.1  [ 7 March, 2004 ]
     OVERALL:
         - Further enhancements to the reference manual, including more
           detailed explanations in the main body as well as a new index.
