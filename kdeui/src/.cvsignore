@@ -7,5 +7,5 @@
 Makefile
 Makefile.in
 libreginapart.*
-regina
+regina-kde
 regina_client

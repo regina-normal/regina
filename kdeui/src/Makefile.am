@@ -16,11 +16,11 @@ noinst_HEADERS = \
 	reginapref.h
 
 # Main program(s):
-bin_PROGRAMS = regina
+bin_PROGRAMS = regina-kde
 
-regina_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-regina_LDADD   = $(LIB_ENGINE) $(LIB_KPARTS)
-regina_SOURCES = \
+regina_kde_LDFLAGS = $(KDE_RPATH) $(all_libraries)
+regina_kde_LDADD   = $(LIB_ENGINE) $(LIB_KPARTS)
+regina_kde_SOURCES = \
 	main.cpp \
 	reginamain.cpp \
 	reginapref.cpp \
