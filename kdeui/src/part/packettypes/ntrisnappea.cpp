@@ -42,7 +42,6 @@
 #include <qwhatsthis.h>
 #include <qwidgetstack.h>
 
-// TODO: Add snappea calculations to the test suite
 // TODO: Look over preconditions
 // TODO: Look over display
 

@@ -85,6 +85,8 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
         return 0;
     if (! tri.isStandard())
         return 0;
+    if (! tri.isIdeal())
+        return 0;
     if (tri.getNumberOfTetrahedra() >= INT_MAX)
         return 0;
 
