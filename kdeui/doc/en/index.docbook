@@ -32,6 +32,7 @@
    "<link linkend='python-python'>calculation engine documentation</link>">
   <!ENTITY regina-libs "<filename>~/.regina-libs</filename>">
 
+  <!ENTITY boost-python "<application>boost.python</application>">
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY java "<application>Java</application>">
@@ -55,9 +56,9 @@
   <!ENTITY reginaangles SYSTEM "angles.docbook">
   <!ENTITY reginapython SYSTEM "python.docbook">
   <!ENTITY reginaoptions SYSTEM "options.docbook">
+  <!ENTITY reginatrouble SYSTEM "trouble.docbook">
   <!ENTITY reginaservices SYSTEM "services.docbook">
   <!ENTITY reginacredits SYSTEM "credits.docbook">
-  <!ENTITY reginatrouble SYSTEM "trouble.docbook">
   <!ENTITY dataformat SYSTEM "dataformat.docbook">
   <!ENTITY reginahighlights SYSTEM "HIGHLIGHTS.txt">
   <!ENTITY reginaman SYSTEM "reginaman.docbook">
@@ -115,6 +116,7 @@
  &reginaangles;
  &reginapython;
  &reginaoptions;
+ &reginatrouble;
  &reginaservices;
  &reginacredits;
 
@@ -124,7 +126,6 @@
  &dataformat;
 
  <!-- Appendices -->
- &reginatrouble;
  <appendix id="history">
   <title>Version History</title>
   <programlisting>&reginahighlights;</programlisting>

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<appendix id="troubleshooting">
+<chapter id="troubleshooting">
  <title>Troubleshooting</title>
 
  <qandaset>
@@ -34,15 +34,12 @@
   <!--qandadiv><title>&python; Scripting</title-->
    <qandaentry>
     <question><para>
-     The <guimenuitem>Python Console</guimenuitem>
-     buttons and menu items are disabled.  So are the
-     <guibutton>Run</guibutton> and <guibutton>Compile</guibutton>
-     buttons in the script editor.
+     The program complains that &python; scripting has been disabled.
     </para></question>
     <answer>
      <para>
-      This means that &regina; was not built with &python; support.
-      You will need to rebuild &regina; from sources &ndash;
+      This means that &regina; was not built with &python; support
+      enabled.  You will need to rebuild &regina; from sources &ndash;
       instructions for doing this are provided in the file
       <filename>README.txt</filename> in the &regina; source
       distribution.
@@ -54,21 +51,22 @@
       should give you a clear reason why.
      </para>
      <para>
+      The most common cause for &python; support being disabled
+      is that no usable &boost-python; installation could be found at
+      compile time.  Make sure you have &boost-python; installed from
+      <ulink url="http://www.boost.org/"/>.  If it is installed in a
+      non-standard location you may need to pass this location to the
+      <userinput>./configure</userinput> script using options
+      <option>--with-extra-includes</option> and
+      <option>--with-extra-libs</option>.
+      Note that &boost-python; requires the standard &python; headers to
+      be installed as well.
+     </para>
+     <para>
       If this does not help, please mail &reguserlist; for assistance,
       preferably including your <filename>config.log</filename> to help
       diagnose the problem.
      </para>
-     <!-- TODO: Remove once embedded scripting is reimplemented. -->
-     <note>
-      <para>
-       &regina; version 3.97 does not offer embedded &python;
-       scripting at all &ndash; it still needs to be reimplemented in the new
-       &kde; user interface.  This is a temporary issue and should be
-       resolved before version 4.0.  Scripting is however still
-       available through the command-line interface <link
-       linkend="man-regina-python"><command>regina-python</command></link>.
-      </para>
-     </note>
     </answer>
    </qandaentry>
   <!--/qandadiv-->
@@ -97,5 +95,5 @@
    </qandaentry>
   <!--/qandadiv-->
  </qandaset>
-</appendix>
+</chapter>
 
