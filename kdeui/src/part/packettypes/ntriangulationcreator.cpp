@@ -56,10 +56,12 @@ namespace {
      */
     const int TRI_EMPTY = 0;
     const int TRI_LAYERED_LENS_SPACE = 1;
-    const int TRI_LAYERED_LOOP = 2;
+    const int TRI_SFS_3 = 2;
     const int TRI_LAYERED_SOLID_TORUS = 3;
-    const int TRI_DEHYDRATION = 4;
-    const int TRI_SPLITTING_SURFACE = 5;
+    const int TRI_LAYERED_LOOP = 4;
+    const int TRI_AUG_TRI_SOLID_TORUS = 5;
+    const int TRI_DEHYDRATION = 6;
+    const int TRI_SPLITTING_SURFACE = 7;
 
     /**
      * Regular expressions describing different sets of parameters.
@@ -67,6 +69,10 @@ namespace {
     QRegExp reLensParams("^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
     QRegExp reLSTParams(
         "^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
+    QRegExp reSFS3Params(
+        "^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)"
+        "[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+)"
+        "[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+)[^0-9\\-]*$");
     QRegExp reDehydration("^([A-Za-z]+)$");
     QRegExp reSignature("^([\\(\\)\\.,;:\\|\\-A-Za-z]+)$");
 }
@@ -112,6 +118,49 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea->setStretchFactor(lensParams, 1);
     details->addWidget(hArea, TRI_LAYERED_LENS_SPACE);
 
+    type->insertItem(i18n("Seifert fibred space over 3-sphere"));
+    hArea = new QHBox();
+    hArea->setSpacing(5);
+    expln = i18n("<qt>The parameters "
+        "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
+        "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
+        "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
+        "describing the exceptional fibres of the new Seifert fibred space.  "
+        "Each pair of integers must be relatively prime, and none of "
+        "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> "
+        "or <i>a<sub>3</sub></i> can be zero.<p>"
+        "Each pair of parameters (<i>a</i>,<i>b</i>) does not need to be "
+        "normalised, i.e., the parameters may be positive or negative and "
+        "<i>b</i> may lie outside the range [0,<i>a</i>).  There is no "
+        "separate twisting parameter; each additional twist can be "
+        "incorporated into the existing parameters by replacing some pair "
+        "(<i>a</i>,<i>b</i>) with (<i>a</i>,<i>a</i>+<i>b</i>).  "
+        "Parameters of the form (1,<i>k</i>) and even (1,0) are acceptable "
+        "(in which case a lens space will result).<p>"
+        "Example parameters are <i>(2,-1) (3,4) (5,-4)</i>, which "
+        "represent the Poincare homology sphere.</qt>");
+    QWhatsThis::add(new QLabel(i18n("Parameters (a1,b1) (a2,b2) (a3,b3):"),
+        hArea), expln);
+    sfsParams = new KLineEdit(hArea);
+    sfsParams->setValidator(new QRegExpValidator(reSFS3Params, hArea));
+    QWhatsThis::add(sfsParams, expln);
+    hArea->setStretchFactor(sfsParams, 1);
+    details->addWidget(hArea, TRI_SFS_3);
+
+    type->insertItem(i18n("Layered solid torus"));
+    hArea = new QHBox();
+    hArea->setSpacing(5);
+    expln = i18n("<qt>The three parameters of the new "
+        "layered solid torus.  These must be relatively prime non-negative "
+        "integers, and two of them must add to give the third.  Example "
+        "parameters are <i>3,4,7</i>.</qt>");
+    QWhatsThis::add(new QLabel(i18n("Parameters (a,b,c):"), hArea), expln);
+    lstParams = new KLineEdit(hArea);
+    lstParams->setValidator(new QRegExpValidator(reLSTParams, hArea));
+    QWhatsThis::add(lstParams, expln);
+    hArea->setStretchFactor(lstParams, 1);
+    details->addWidget(hArea, TRI_LAYERED_SOLID_TORUS);
+
     type->insertItem(i18n("Layered loop"));
     hArea = new QHBox();
     hArea->setSpacing(5);
@@ -129,19 +178,27 @@ NTriangulationCreator::NTriangulationCreator() {
         "new layered loop is twisted."));
     details->addWidget(hArea, TRI_LAYERED_LOOP);
 
-    type->insertItem(i18n("Layered solid torus"));
+    type->insertItem(i18n("Augmented triangular solid torus"));
     hArea = new QHBox();
     hArea->setSpacing(5);
-    expln = i18n("<qt>The three parameters of the new "
-        "layered solid torus.  These must be relatively prime non-negative "
-        "integers, and two of them must add to give the third.  Example "
-        "parameters are <i>3,4,7</i>.</qt>");
-    QWhatsThis::add(new QLabel(i18n("Parameters (a,b,c):"), hArea), expln);
-    lstParams = new KLineEdit(hArea);
-    lstParams->setValidator(new QRegExpValidator(reLSTParams, hArea));
-    QWhatsThis::add(lstParams, expln);
-    hArea->setStretchFactor(lstParams, 1);
-    details->addWidget(hArea, TRI_LAYERED_SOLID_TORUS);
+    expln = i18n("<qt>The six parameters "
+        "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
+        "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
+        "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
+        "of the new augmented triangular solid torus.  Each pair of integers "
+        "must be relatively prime, and none of "
+        "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> "
+        "or <i>a<sub>3</sub></i> can be zero.  Both "
+        "positive and negative integers are allowed.<p>"
+        "Example parameters are <i>(2,1) (3,-2) (5,-4)</i>.</qt>");
+    QWhatsThis::add(new QLabel(i18n("Parameters (a1,b1) (a2,b2) (a3,b3):"),
+        hArea), expln);
+    augParams = new KLineEdit(hArea);
+    augParams->setValidator(new QRegExpValidator(reSFS3Params, hArea));
+    QWhatsThis::add(augParams, expln);
+    hArea->setStretchFactor(augParams, 1);
+    details->addWidget(hArea, TRI_AUG_TRI_SOLID_TORUS);
+
 
     type->insertItem(i18n("From dehydration"));
     hArea = new QHBox();
@@ -288,6 +345,128 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 "whereas the parameters <i>3,4,5</i> are not.</qt>"));
             return 0;
         }
+    } else if (typeId == TRI_SFS_3) {
+        if (! reSFS3Params.exactMatch(sfsParams->text())) {
+            KMessageBox::error(parentWidget, i18n("<qt>The Seifert fibred "
+                "space parameters "
+                "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
+                "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
+                "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
+                "must appear as three pairs of integers - Seifert fibred "
+                "spaces with four or more exceptional "
+                "fibres cannot be constructed at the present time.<p>"
+                "These three pairs of integers describe the three exceptional "
+                "fibres of the new Seifert fibred space.  "
+                "The two integers in each pair must be relatively prime, and "
+                "none of <i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> "
+                "or <i>a<sub>3</sub></i> can be zero.<p>"
+                "Each pair of parameters (<i>a</i>,<i>b</i>) does not need "
+                "to be normalised, i.e., the parameters may be positive or "
+                "negative and <i>b</i> may lie outside the range "
+                "[0,<i>a</i>).  There is no "
+                "separate twisting parameter; each additional twist can be "
+                "incorporated into the existing parameters by replacing some "
+                "pair (<i>a</i>,<i>b</i>) with (<i>a</i>,<i>a</i>+<i>b</i>).  "
+                "Parameters of the form (1,<i>k</i>) and even (1,0) are "
+                "acceptable (in which case a lens space will result).<p>"
+                "Example parameters are <i>(2,-1) (3,4) (5,-4)</i>, which "
+                "represent the Poincare homology sphere.</qt>"));
+            return 0;
+        }
+
+        long a1 = reSFS3Params.cap(1).toLong();
+        long b1 = reSFS3Params.cap(2).toLong();
+        long a2 = reSFS3Params.cap(3).toLong();
+        long b2 = reSFS3Params.cap(4).toLong();
+        long a3 = reSFS3Params.cap(5).toLong();
+        long b3 = reSFS3Params.cap(6).toLong();
+
+        if (a1 == 0 || a2 == 0 || a3 == 0) {
+            KMessageBox::error(parentWidget, i18n("<qt>None of the parameters "
+                "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> or "
+                "<i>a<sub>3</sub></i> may be zero.</qt>"));
+            return 0;
+        }
+        long  d = regina::gcd(a1, b1);
+        if (d != 1 && d != -1) {
+            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
+                "<i>a<sub>1</sub></i> and <i>b<sub>1</sub></i> must be "
+                "relatively prime.</qt>"));
+            return 0;
+        }
+        d = regina::gcd(a2, b2);
+        if (d != 1 && d != -1) {
+            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
+                "<i>a<sub>2</sub></i> and <i>b<sub>2</sub></i> must be "
+                "relatively prime.</qt>"));
+            return 0;
+        }
+        d = regina::gcd(a3, b3);
+        if (d != 1 && d != -1) {
+            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
+                "<i>a<sub>3</sub></i> and <i>b<sub>3</sub></i> must be "
+                "relatively prime.</qt>"));
+            return 0;
+        }
+
+        // All okay.
+        NTriangulation* ans = new NTriangulation();
+        ans->insertSFSOverSphere(a1, b1, a2, b2, a3, b3);
+        return ans;
+    } else if (typeId == TRI_AUG_TRI_SOLID_TORUS) {
+        if (! reSFS3Params.exactMatch(augParams->text())) {
+            KMessageBox::error(parentWidget, i18n("<qt>The six parameters "
+                "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
+                "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
+                "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
+                "must appear as three pairs of integers.  The two integers "
+                "in each pair must be relatively prime, and none of "
+                "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> "
+                "or <i>a<sub>3</sub></i> can be zero.  Both "
+                "positive and negative integers are allowed.<p>"
+                "Example parameters are <i>(2,1) (3,-2) (5,-4)</i>.</qt>"));
+            return 0;
+        }
+
+        long a1 = reSFS3Params.cap(1).toLong();
+        long b1 = reSFS3Params.cap(2).toLong();
+        long a2 = reSFS3Params.cap(3).toLong();
+        long b2 = reSFS3Params.cap(4).toLong();
+        long a3 = reSFS3Params.cap(5).toLong();
+        long b3 = reSFS3Params.cap(6).toLong();
+
+        if (a1 == 0 || a2 == 0 || a3 == 0) {
+            KMessageBox::error(parentWidget, i18n("<qt>None of the parameters "
+                "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> or "
+                "<i>a<sub>3</sub></i> may be zero.</qt>"));
+            return 0;
+        }
+        long  d = regina::gcd(a1, b1);
+        if (d != 1 && d != -1) {
+            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
+                "<i>a<sub>1</sub></i> and <i>b<sub>1</sub></i> must be "
+                "relatively prime.</qt>"));
+            return 0;
+        }
+        d = regina::gcd(a2, b2);
+        if (d != 1 && d != -1) {
+            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
+                "<i>a<sub>2</sub></i> and <i>b<sub>2</sub></i> must be "
+                "relatively prime.</qt>"));
+            return 0;
+        }
+        d = regina::gcd(a3, b3);
+        if (d != 1 && d != -1) {
+            KMessageBox::error(parentWidget, i18n("<qt>The two parameters "
+                "<i>a<sub>3</sub></i> and <i>b<sub>3</sub></i> must be "
+                "relatively prime.</qt>"));
+            return 0;
+        }
+
+        // All okay.
+        NTriangulation* ans = new NTriangulation();
+        ans->insertAugTriSolidTorus(a1, b1, a2, b2, a3, b3);
+        return ans;
     } else if (typeId == TRI_DEHYDRATION) {
         if (! reDehydration.exactMatch(dehydrationString->text())) {
             KMessageBox::error(parentWidget, i18n("<qt>The dehydration "

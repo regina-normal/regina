@@ -59,6 +59,8 @@ class NTriangulationCreator : public PacketCreator {
         QLineEdit* lensParams;
         QLineEdit* loopLen;
         QCheckBox* loopTwisted;
+        QLineEdit* augParams;
+        QLineEdit* sfsParams;
         QLineEdit* dehydrationString;
         QLineEdit* splittingSignature;
 
