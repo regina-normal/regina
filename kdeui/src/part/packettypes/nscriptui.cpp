@@ -27,6 +27,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "regina-config.h"
 #include "packet/nscript.h"
 
 // UI includes:
@@ -140,14 +141,14 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     scriptActionList.append(new KActionSeparator());
 
     KAction* actCompile = new KAction(i18n("&Compile"), "compfile",
-        0 /* shortcut */, this, SLOT(unimplemented()), scriptActions,
+        0 /* shortcut */, this, SLOT(compile()), scriptActions,
         "script_compile");
     actCompile->setToolTip(i18n("Compile the python script"));
     actCompile->plug(actionBar);
     scriptActionList.append(actCompile);
 
     KAction* actRun = new KAction(i18n("&Run"), "run", 0 /* shortcut */,
-        this, SLOT(unimplemented()), scriptActions,
+        this, SLOT(execute()), scriptActions,
         "script_run");
     actRun->setToolTip(i18n("Execute the python script"));
     actRun->plug(actionBar);
@@ -351,12 +352,35 @@ void NScriptUI::updateRemoveState() {
         actRemove->setEnabled(false);
 }
 
-void NScriptUI::unimplemented() {
-    KMessageBox::sorry(ui, i18n("<qt>Python compilation and execution "
-        "have not yet been reimplemented for the KDE user interface.  "
-        "This should be completed for version 4.0.<p>"
-        "In the meantime, you can still use Python scripting with Regina "
-        "though the command-line <b>regina-python</b> application.</qt>"));
+void NScriptUI::compile() {
+    ReginaPart* part = enclosingPane->getPart();
+    if (part->getPythonManager().compileScript(ui, &part->getPreferences(),
+            editInterface->text() + "\n\n") == 0) {
+        #ifdef HAVE_BOOST_PYTHON
+        KMessageBox::information(ui,
+            i18n("The script compiles successfully."), i18n("Success"));
+        #endif
+    } else
+        KMessageBox::error(ui, i18n("The script does not compile.\n"
+            "See the python console for details.  You may interact with "
+            "this console to further investigate the problem."),
+            i18n("Compile Failure"));
+}
+
+void NScriptUI::execute() {
+    // Set up the variable list.
+    PythonVariableList vars;
+
+    unsigned nVars = varTable->numRows();
+    for (unsigned i = 0; i < nVars; i++)
+        vars.push_back(PythonVariable(varTable->text(i, 0),
+            dynamic_cast<ScriptVarValueItem*>(varTable->item(i, 1))->
+                getPacket()));
+
+    // Run the script.
+    ReginaPart* part = enclosingPane->getPart();
+    part->getPythonManager().launchPythonConsole(ui, &part->getPreferences(),
+            editInterface->text() + "\n\n", vars);
 }
 
 void NScriptUI::notifyScriptChanged() {

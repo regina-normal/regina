@@ -224,6 +224,19 @@ void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
     }
 }
 
+void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
+    if (! interpreter->setVar(name.ascii(), value)) {
+        QString pktName;
+        if (value)
+            pktName = value->getPacketLabel().c_str();
+        else
+            pktName = i18n("None");
+
+        addError(i18n("Could not set variable %1 to %2.").arg(name)
+            .arg(pktName));
+    }
+}
+
 void PythonConsole::loadAllLibraries() {
     for (ReginaFilePrefList::const_iterator it = prefs.pythonLibraries.begin();
             it != prefs.pythonLibraries.end(); it++) {
@@ -253,6 +266,17 @@ void PythonConsole::executeLine(const std::string& line) {
 
 void PythonConsole::executeLine(const char* line) {
     interpreter->executeLine(line);
+}
+
+bool PythonConsole::compileScript(const QString& script) {
+    return interpreter->compileScript(script.ascii());
+}
+
+void PythonConsole::executeScript(const QString& script,
+        const QString& scriptName) {
+    addOutput(scriptName.isEmpty() ? i18n("Running %1...").arg(scriptName) :
+            i18n("Running script..."));
+    interpreter->runScript(script.ascii());
 }
 
 void PythonConsole::saveLog() {

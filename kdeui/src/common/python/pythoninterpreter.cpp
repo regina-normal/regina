@@ -293,6 +293,40 @@ bool PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
     return (pyValue != 0);
 }
 
+bool PythonInterpreter::compileScript(const char* code) {
+    PyEval_RestoreThread(state);
+
+    PyObject* ans = Py_CompileString(const_cast<char*>(code), "<script>",
+        Py_file_input);
+    if (ans) {
+        Py_DECREF(ans);
+        state = PyEval_SaveThread();
+        return true;
+    } else {
+        PyErr_Print();
+        PyErr_Clear();
+        state = PyEval_SaveThread();
+        return false;
+    }
+}
+
+bool PythonInterpreter::runScript(const char* code) {
+    PyEval_RestoreThread(state);
+
+    PyObject* ans = PyRun_String(const_cast<char*>(code), Py_file_input,
+        mainNamespace, mainNamespace);
+    if (ans) {
+        Py_DECREF(ans);
+        state = PyEval_SaveThread();
+        return true;
+    } else {
+        PyErr_Print();
+        PyErr_Clear();
+        state = PyEval_SaveThread();
+        return false;
+    }
+}
+
 bool PythonInterpreter::runScript(const char* filename, const char* shortName) {
     PyEval_RestoreThread(state);
 
@@ -311,22 +345,6 @@ bool PythonInterpreter::runScript(const char* filename, const char* shortName) {
             return false;
         }
     } else {
-        state = PyEval_SaveThread();
-        return false;
-    }
-}
-
-bool PythonInterpreter::runScript(const char* code) {
-    PyEval_RestoreThread(state);
-
-    PyObject* ans = PyRun_String(const_cast<char*>(code), Py_file_input,
-        mainNamespace, mainNamespace);
-    if (ans) {
-        Py_DECREF(ans);
-        state = PyEval_SaveThread();
-        return true;
-    } else {
-        PyErr_Print();
         state = PyEval_SaveThread();
         return false;
     }

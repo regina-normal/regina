@@ -78,6 +78,51 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     return ans;
 }
 
+PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
+        const ReginaPrefSet* initialPrefs, const QString& script,
+        const PythonVariableList& initialVars) {
+    PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
+
+    ans->blockInput(i18n("Initialising..."));
+
+    // Show us what's going on.
+    ans->show();
+    KApplication::kApplication()->processEvents();
+
+    // Initialise the python interpreter.
+    if (ans->importRegina())
+        ans->executeLine("print regina.welcome() + '\\n'");
+    ans->loadAllLibraries();
+    for (PythonVariableList::const_iterator it = initialVars.begin();
+            it != initialVars.end(); it++)
+        ans->setVar((*it).name, (*it).value);
+    ans->executeScript(script, i18n("user script"));
+
+    // All ready!
+    ans->addOutput(i18n("Ready."));
+    ans->allowInput();
+    return ans;
+}
+
+PythonConsole* PythonManager::compileScript(QWidget* parent,
+        const ReginaPrefSet* initialPrefs, const QString& script) {
+    PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
+
+    ans->blockInput(i18n("Initialising..."));
+
+    // Try to compile the script.
+    if (ans->compileScript(script)) {
+        delete ans;
+        return 0;
+    } else {
+        // The compile failed; show the details to the user.
+        ans->show();
+        ans->addOutput(i18n("Compile failed."));
+        ans->allowInput();
+        return ans;
+    }
+}
+
 void PythonManager::closeAllConsoles() {
     std::set<PythonConsole*>::iterator it, next;
 
@@ -121,7 +166,17 @@ namespace {
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        regina::NPacket*, regina::NPacket*) {
+        const ReginaPrefSet*, regina::NPacket*, regina::NPacket*) {
+    return scriptingDisabled(parent);
+}
+
+PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
+        const ReginaPrefSet*, const QString&, const PythonVariableList&) {
+    return scriptingDisabled(parent);
+}
+
+PythonConsole* PythonManager::compileScript(QWidget* parent,
+        const ReginaPrefSet*, const QString&) {
     return scriptingDisabled(parent);
 }
 

@@ -48,7 +48,6 @@ class QBoxLayout;
 class QHeader;
 class QListView;
 class QListViewItem;
-class ReginaPart;
 class SurfaceHeaderToolTip;
 
 namespace regina {
@@ -87,11 +86,6 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         std::auto_ptr<SurfaceHeaderToolTip> headerTips;
 
         /**
-         * External components
-         */
-        ReginaPart* part;
-
-        /**
          * Surface list actions
          */
         KAction* actCrush;
@@ -109,7 +103,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          * Constructor and destructor.
          */
         NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
-            PacketTabbedUI* useParentUI, ReginaPart* usePart, bool readWrite);
+            PacketTabbedUI* useParentUI, bool readWrite);
         ~NSurfaceCoordinateUI();
 
         /**

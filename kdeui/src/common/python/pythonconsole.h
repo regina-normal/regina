@@ -122,10 +122,18 @@ class PythonConsole : public KMainWindow {
         bool importRegina();
         void setRootPacket(regina::NPacket* packet);
         void setSelectedPacket(regina::NPacket* packet);
+        void setVar(const QString& name, regina::NPacket* value);
         void loadAllLibraries();
         void executeLine(const QString& line);
         void executeLine(const std::string& line);
         void executeLine(const char* line);
+
+        /**
+         * Compile or run user scripts.
+         */
+        bool compileScript(const QString& script);
+        void executeScript(const QString& script,
+            const QString& scriptName = QString::null);
 
     public slots:
         /**

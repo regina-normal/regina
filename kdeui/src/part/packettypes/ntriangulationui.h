@@ -63,7 +63,7 @@ class NTriangulationUI : public PacketTabbedUI {
          * Constructor.
          */
         NTriangulationUI(regina::NTriangulation* packet,
-            PacketPane* newEnclosingPane, ReginaPart* part, bool readWrite);
+            PacketPane* newEnclosingPane, bool readWrite);
 
         /**
          * PacketUI overrides.

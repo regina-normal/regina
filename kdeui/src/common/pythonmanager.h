@@ -35,15 +35,37 @@
 #ifndef __PYTHONMANAGER_H
 #define __PYTHONMANAGER_H
 
+#include <qstring.h>
+#include <qvaluelist.h>
 #include <set>
 
 class PythonConsole;
+class QString;
 class QWidget;
 class ReginaPrefSet;
 
 namespace regina {
     class NPacket;
 }
+
+/**
+ * Represents a single python variable.
+ */
+struct PythonVariable {
+    QString name;
+        /**< The name of the variable. */
+    regina::NPacket* value;
+        /**< The value of the variable.  This may be 0, in which case
+             the corresponding Python value will be None. */
+
+    /**
+     * Basic constructors.
+     */
+    PythonVariable();
+    PythonVariable(const QString& newName, regina::NPacket* newValue);
+};
+
+typedef QValueList<PythonVariable> PythonVariableList;
 
 /**
  * Provides simple management for python consoles.  Consoles launched
@@ -75,10 +97,39 @@ class PythonManager {
          * If python scripting is not built in, a notice is displayed
          * to the user and 0 is returned.
          */
-        PythonConsole* launchPythonConsole(QWidget* parent = 0,
-                const ReginaPrefSet* initialPrefs = 0,
+        PythonConsole* launchPythonConsole(QWidget* parent,
+                const ReginaPrefSet* initialPrefs,
                 regina::NPacket* tree = 0,
                 regina::NPacket* selectedPacket = 0);
+
+        /**
+         * Launches a new python console to run the given script.
+         * The new console is automatically registered with this python
+         * manager.
+         *
+         * If python scripting is not built in, a notice is displayed
+         * to the user and 0 is returned.
+         */
+        PythonConsole* launchPythonConsole(QWidget* parent,
+                const ReginaPrefSet* initialPrefs,
+                const QString& script,
+                const PythonVariableList& initialVariables);
+
+        /**
+         * Attempts to compile the given python script.  If the compile
+         * succeeds, 0 is returned.  If the compile fails, a new python
+         * console is opened displaying the appropriate error and this new
+         * console is returned.
+         *
+         * If a new console is opened, it is automatically registered with
+         * this python manager.
+         *
+         * If python scripting is not built in, a notice is displayed
+         * to the user and 0 is returned.
+         */
+        PythonConsole* compileScript(QWidget* parent,
+                const ReginaPrefSet* initialPrefs,
+                const QString& script);
 
         /**
          * Destroys any consoles still in existence that were either
@@ -105,6 +156,13 @@ class PythonManager {
          */
         void updatePreferences(const ReginaPrefSet& newPrefs);
 };
+
+inline PythonVariable::PythonVariable() : value(0) {
+}
+
+inline PythonVariable::PythonVariable(const QString& newName,
+        regina::NPacket* newValue) : name(newName), value(newValue) {
+}
 
 #endif
 

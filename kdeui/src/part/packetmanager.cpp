@@ -102,7 +102,8 @@ QPixmap PacketManager::iconBar(NPacket* packet) {
 }
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
-        PacketPane* enclosingPane, ReginaPart* part) {
+        PacketPane* enclosingPane) {
+    ReginaPart* part = enclosingPane->getPart();
     bool readWrite = part->isReadWrite() && packet->isPacketEditable();
 
     if (packet->getPacketType() == NAngleStructureList::packetType)
@@ -113,7 +114,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             enclosingPane);
     if (packet->getPacketType() == NNormalSurfaceList::packetType)
         return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
-            enclosingPane, part, readWrite);
+            enclosingPane, readWrite);
     if (packet->getPacketType() == NScript::packetType) {
         KTextEditor::Document* doc = createDocument();
         if (doc)
@@ -149,7 +150,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     }
     if (packet->getPacketType() == NTriangulation::packetType)
         return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
-            enclosingPane, part, readWrite);
+            enclosingPane, readWrite);
     return new DefaultPacketUI(packet, enclosingPane);
 }
 

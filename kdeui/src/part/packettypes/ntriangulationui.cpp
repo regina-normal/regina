@@ -47,8 +47,10 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
-        PacketPane* newEnclosingPane, ReginaPart* part, bool readWrite) :
+        PacketPane* newEnclosingPane, bool readWrite) :
         PacketTabbedUI(newEnclosingPane) {
+    ReginaPart* part = newEnclosingPane->getPart();
+
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
     gluings = new NTriGluingsUI(packet, this,
         part->getPreferences(), readWrite);

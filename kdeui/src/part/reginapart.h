@@ -190,6 +190,11 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         const ReginaPrefSet& getPreferences() const;
 
+        /**
+         * Allow access to the python manager.
+         */
+        PythonManager& getPythonManager();
+
     protected:
         /**
          * KPart overrides.
@@ -345,6 +350,10 @@ class ReginaPart : public KParts::ReadWritePart {
 
 inline const ReginaPrefSet& ReginaPart::getPreferences() const {
     return prefs;
+}
+
+inline PythonManager& ReginaPart::getPythonManager() {
+    return consoles;
 }
 
 #endif

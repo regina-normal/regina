@@ -361,7 +361,7 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         bool hasTextComponent();
         const QPtrList<KAction>& getTrackingActions();
         const QPtrList<KAction>& getPacketTypeActions();
-
+        ReginaPart* getPart();
 
         /**
          * Does this packet pane contain any changes that have not yet
@@ -569,6 +569,10 @@ inline void PacketReadOnlyUI::setReadWrite(bool) {
 
 inline regina::NPacket* PacketPane::getPacket() {
     return mainUI->getPacket();
+}
+
+inline ReginaPart* PacketPane::getPart() {
+    return part;
 }
 
 inline bool PacketPane::hasTextComponent() {

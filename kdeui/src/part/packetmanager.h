@@ -38,7 +38,6 @@
 
 class PacketPane;
 class PacketUI;
-class ReginaPart;
 
 namespace KTextEditor {
     class Document;
@@ -78,7 +77,7 @@ class PacketManager {
          * See PacketUI::setReadWrite() for details.
          */
         static PacketUI* createUI(regina::NPacket* packet,
-            PacketPane* enclosingPane, ReginaPart* part);
+            PacketPane* enclosingPane);
 
     private:
         /**

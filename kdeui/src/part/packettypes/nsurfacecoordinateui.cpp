@@ -55,10 +55,9 @@ using regina::NNormalSurfaceList;
 using regina::NPacket;
 
 NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
-        PacketTabbedUI* useParentUI, ReginaPart* usePart, bool readWrite) :
+        PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
-        newName(0), part(usePart), isReadWrite(readWrite),
-        currentlyResizing(false) {
+        newName(0), isReadWrite(readWrite), currentlyResizing(false) {
     // Prepare the array of modified surface names.
 
     if (surfaces->getNumberOfSurfaces() > 0)
@@ -261,7 +260,7 @@ void NSurfaceCoordinateUI::crush() {
         surfaces->getTriangulation()->getPacketLabel().c_str()).ascii()));
     surfaces->insertChildLast(ans);
 
-    part->packetView(ans, true);
+    enclosingPane->getPart()->packetView(ans, true);
 }
 
 void NSurfaceCoordinateUI::updateCrushState() {

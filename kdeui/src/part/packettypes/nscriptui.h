@@ -114,7 +114,8 @@ class NScriptUI : public QObject, public PacketUI {
         /**
          * Handle python compilation and execution.
          */
-        void unimplemented();
+        void compile();
+        void execute();
 
         /**
          * Called whenever the script or its variables within the interface
