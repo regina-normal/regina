@@ -33,7 +33,7 @@
 #ifndef __REGINAPREF_H
 #define __REGINAPREF_H
 
-#include "../reginaprefset.h"
+#include "reginaprefset.h"
 
 #include <qvbox.h>
 #include <kdialogbase.h>

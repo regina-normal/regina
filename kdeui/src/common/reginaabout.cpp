@@ -82,4 +82,3 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         "http://www.debian.org/");
 }
 
-#include "reginaabout.moc"

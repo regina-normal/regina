@@ -35,7 +35,7 @@
 
 #include "triangulation/nperm.h"
 
-#include "../../reginaprefset.h"
+#include "reginaprefset.h"
 
 #include <qtable.h>
 

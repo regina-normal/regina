@@ -33,7 +33,7 @@
 #ifndef __NTRIALGEBRA_H
 #define __NTRIALGEBRA_H
 
-#include "../../reginaprefset.h"
+#include "reginaprefset.h"
 #include "../packettabui.h"
 
 class QLabel;

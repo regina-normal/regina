@@ -34,7 +34,7 @@
 #include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
-#include "../reginafilter.h"
+#include "reginafilter.h"
 
 #include <kfiledialog.h>
 #include <klocale.h>

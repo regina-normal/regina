@@ -35,7 +35,7 @@ ReginaPrefSet::ReginaPrefSet() :
         autoFileExtension(true),
         displayIcon(true),
         displayTagsInTree(false),
-        surfaceCreationCoords(regina::NNormalSurfaceList::STANDARD),
+        surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
         treeJumpSize(10),
         triEditMode(DirectEdit),
         triInitialTab(Gluings),

@@ -34,7 +34,7 @@
 #define __REGINAMAIN_H_
 
 #include "reginaiface.h"
-#include "../reginaprefset.h"
+#include "reginaprefset.h"
 
 #include <kapplication.h>
 #include <kparts/mainwindow.h>

@@ -11,7 +11,7 @@ KDE_OPTIONS=noautodist
 SUBDIRS = foreign packettypes
 
 AM_CXXFLAGS = '-DREGINA_DATADIR=$(pkgdatadir)'
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I../common
 
 noinst_HEADERS = \
 	exttabctl.h \
@@ -31,6 +31,7 @@ kde_module_LTLIBRARIES = libreginapart.la
 
 libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) -lktexteditor \
+	../common/libregina-kdecommon.la \
 	foreign/libforeign.la \
 	packettypes/libpackettypes.la
 libreginapart_la_SOURCES = \

@@ -9,7 +9,7 @@
 KDE_OPTIONS=noautodist
 
 AM_CXXFLAGS = '-DREGINA_DATADIR=$(pkgdatadir)'
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I../common
 
 noinst_HEADERS = \
 	reginaiface.h \
@@ -19,7 +19,8 @@ noinst_HEADERS = \
 bin_PROGRAMS = regina-kde
 
 regina_kde_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-regina_kde_LDADD   = $(LIB_ENGINE) $(LIB_KPARTS) -lktexteditor
+regina_kde_LDADD   = ../common/libregina-kdecommon.la \
+	$(LIB_ENGINE) $(LIB_KPARTS) -lktexteditor
 regina_kde_SOURCES = \
 	main.cpp \
 	reginamain.cpp \

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "../reginaabout.h"
+#include "reginaabout.h"
 #include "reginamain.h"
 
 #include <dcopclient.h>
@@ -40,7 +40,7 @@ static KCmdLineOptions options[] = {
 };
 
 int main(int argc, char **argv) {
-    ReginaAbout<ReginaMain> about("regina");
+    ReginaAbout about("regina");
 
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions(options);

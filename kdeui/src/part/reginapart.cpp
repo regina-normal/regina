@@ -31,8 +31,8 @@
 #include "packet/ncontainer.h"
 
 // UI includes:
-#include "../reginaabout.h"
-#include "../reginafilter.h"
+#include "reginaabout.h"
+#include "reginafilter.h"
 #include "packettreeview.h"
 #include "packetui.h"
 #include "reginapart.h"
@@ -120,7 +120,7 @@ bool ReginaPart::closeURL() {
 }
 
 KAboutData* ReginaPart::createAboutData() {
-    return new ReginaAbout<ReginaPart>("reginapart");
+    return new ReginaAbout("reginapart");
 }
 
 KInstance* ReginaPart::factoryInstance() {

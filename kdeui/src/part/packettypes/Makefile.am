@@ -8,7 +8,7 @@
 
 KDE_OPTIONS=noautodist
 
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I../../common
 
 noinst_LTLIBRARIES = libpackettypes.la
 

@@ -53,11 +53,11 @@ struct ReginaPrefSet {
         /**< Should we display the pretty Regina icon? */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
+    int surfacesCreationCoords;
+        /**< The default coordinate system for normal surface creation. */
     unsigned treeJumpSize;
         /**< The number of steps corresponding to a jump up or down in
              the packet tree. */
-    int surfacesCreationCoords;
-        /**< The default coordinate system for normal surface creation. */
     TriEditMode triEditMode;
         /**< The default mode for editing triangulations. */
     TriTab triInitialTab;

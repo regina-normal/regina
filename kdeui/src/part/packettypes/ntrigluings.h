@@ -34,7 +34,7 @@
 #define __NTRIGLUINGS_H
 
 #include "../packettabui.h"
-#include "../../reginaprefset.h"
+#include "reginaprefset.h"
 
 class KAction;
 class KActionCollection;

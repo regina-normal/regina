@@ -26,8 +26,10 @@
 
 /* end stub */
 
-#include "../reginaabout.h"
-#include "../reginafilter.h"
+#include "surfaces/nnormalsurfacelist.h"
+
+#include "reginaabout.h"
+#include "reginafilter.h"
 #include "reginamain.h"
 #include "reginapref.h"
 #include "../part/reginapart.h"
@@ -55,8 +57,6 @@
 #include <ktexteditor/editorchooser.h>
 #include <ktexteditor/view.h>
 #include <kurl.h>
-
-typedef ReginaAbout<ReginaMain> About;
 
 unsigned ReginaMain::objectNumber = 1;
 
@@ -197,8 +197,8 @@ bool ReginaMain::openURL(const KURL& url) {
     // Variable name will initially contain the mimetype name, but if
     // the mimetype is not suitable it will be changed to the mimetype
     // comment so we can display it to the user.
-    if (url.fileName().right(About::regDataExt.length()).lower() ==
-            About::regDataExt)
+    if (url.fileName().right(ReginaAbout::regDataExt.length()).lower() ==
+            ReginaAbout::regDataExt)
         type = 'r';
     else {
         // Try to guess it from the mimetype.
@@ -372,6 +372,13 @@ void ReginaMain::readOptions(KConfig* config) {
         "AutomaticExtension", true);
     fileOpenRecent->loadEntries(config);
 
+    config->setGroup("Surfaces");
+    globalPrefs.surfacesCreationCoords = config->readNumEntry(
+        "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
+
+    config->setGroup("Tree");
+    globalPrefs.treeJumpSize = config->readUnsignedNumEntry("JumpSize", 10);
+
     config->setGroup("Triangulation");
     globalPrefs.triEditMode = (
         config->readEntry("EditMode") == "Dialog" ?
@@ -415,6 +422,13 @@ void ReginaMain::saveOptions() {
     config->setGroup("File");
     config->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
     fileOpenRecent->saveEntries(config);
+
+    config->setGroup("Surfaces");
+    config->writeEntry("CreationCoordinates",
+        globalPrefs.surfacesCreationCoords);
+
+    config->setGroup("Tree");
+    config->writeEntry("JumpSize", globalPrefs.treeJumpSize);
 
     config->setGroup("Triangulation");
     config->writeEntry("EditMode",

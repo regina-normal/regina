@@ -33,7 +33,7 @@
 #ifndef __REGINAPART_H
 #define __REGINAPART_H
 
-#include "../reginaprefset.h"
+#include "reginaprefset.h"
 
 #include <kparts/part.h>
 #include <qptrlist.h>
