@@ -15,6 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdebase-progs
 # Requires: python
+Conflicts: regina
 
 BuildRequires: doxygen
 BuildRequires: gcc
@@ -56,7 +57,7 @@ unset QTDIR || : ; . /etc/profile.d/qtdir3.sh
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
-./configure PKGNAME=regina-normal --disable-debug --mandir=%{_mandir} --disable-python
+./configure --disable-debug --mandir=%{_mandir} --disable-python
 make
 make check
 
@@ -65,7 +66,7 @@ rm -rf $RPM_BUILD_ROOT
 make install-strip DESTDIR=$RPM_BUILD_ROOT
 
 # Delete some huge and unnecessary static libraries.
-# rm -f $RPM_BUILD_ROOT%{_libdir}/regina-normal/python/regina.a
+# rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/libreginapart.a
 
 # Create the Mandrake menu file.
@@ -101,15 +102,15 @@ rm -rf $RPM_BUILD_ROOT
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
 %docdir %{_docdir}/HTML/en/regina
-%docdir %{_datadir}/regina-normal/engine-docs
+%docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*
-%{_includedir}/regina-normal
+%{_includedir}/regina
 %{_libdir}/libregina*
 # Make sure we don't ship unwanted static libs by accident.
 %{_libdir}/kde3/libreginapart.la
 %{_libdir}/kde3/libreginapart.so
-# %{_libdir}/regina-normal/python/regina.la
-# %{_libdir}/regina-normal/python/regina.so
+# %{_libdir}/regina/python/regina.la
+# %{_libdir}/regina/python/regina.so
 %{_docdir}/HTML/en/regina
 # %{_datadir}/applications/*
 %{_datadir}/applnk/*/*
@@ -118,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/*/*/*/*
 %{_datadir}/man/*/*
 %{_datadir}/mimelnk/*/*
-%{_datadir}/regina-normal
+%{_datadir}/regina
 %{_datadir}/services/*
 
 # Mandrake-specific files:
