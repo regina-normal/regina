@@ -62,6 +62,10 @@ class Engine_i : public virtual POA_Regina::Engine,
             newNGroupPresentation_NGroupPresentation(
             Regina::Algebra::NGroupPresentation_ptr cloneMe);
 
+        virtual Regina::Angle::NAngleStructureList_ptr
+            newNAngleStructureList(
+            Regina::Triangulation::NTriangulation_ptr owner);
+
         virtual Regina::File::NFile_ptr newNFile();
 
         virtual Regina::Maths::NMatrixInt_ptr newNMatrixInt_long_long(

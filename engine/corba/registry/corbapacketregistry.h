@@ -63,6 +63,7 @@
     #include "NTriangulationI.h"
     #include "NNormalSurfaceListI.h"
     #include "NSurfaceFilterI.h"
+    #include "NAngleStructureListI.h"
 #else
     REGISTER_CORBA_PACKET(NContainer, NContainer_i)
     REGISTER_CORBA_PACKET(NScript, NScript_i)
@@ -70,6 +71,7 @@
     REGISTER_CORBA_PACKET(NTriangulation, NTriangulation_i)
     REGISTER_CORBA_PACKET(NNormalSurfaceList, NNormalSurfaceList_i)
     REGISTER_CORBA_PACKET(NSurfaceFilter, NSurfaceFilter_i)
+    REGISTER_CORBA_PACKET(NAngleStructureList, NAngleStructureList_i)
 #endif
 
 /*! \file corbapacketregistry.h
