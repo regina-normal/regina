@@ -47,6 +47,8 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
 	// Basic property check.
 	if ((! comp->isClosed()) || (! comp->isOrientable()))
 		return 0;
+	if (comp->getNumberOfVertices() > 1)
+		return 0;
 
 	unsigned long nTet = comp->getNumberOfTetrahedra();
 	NLayeredSolidTorus* torus;
