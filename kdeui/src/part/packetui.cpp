@@ -56,8 +56,6 @@
 
 using regina::NPacket;
 
-// TODO: Get the close button right-aligned.
-
 namespace {
     int RIGHT_ALIGN_SEPARATOR_ID = 137;
         /**< Random integer that shouldn't clash with any other toolbar

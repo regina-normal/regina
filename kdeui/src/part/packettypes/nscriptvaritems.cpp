@@ -43,9 +43,6 @@
 
 using regina::NPacket;
 
-// TODO: Make a script dirty when its variables are changed externally
-// through renaming or deletion.
-
 namespace {
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
 }

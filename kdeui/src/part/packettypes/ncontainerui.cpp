@@ -40,9 +40,6 @@
 using regina::NPacket;
 using regina::NContainer;
 
-// TODO: Find some way of updating ourselves on any subtree change, not
-// just a child change.
-
 NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), container(packet) {
     interface = new QVBox();

@@ -14,7 +14,16 @@ Toolbars / Menus:
     Disable "configure toolbars" until delayed icon loading is fixed in
         kdelibs
     Work out how to get decent action names in the configure toolbar dialog
-    Work out how to right align the close button in the packet viewer
+
+Packet Viewers:
+    Work out how to right-align the packet pane close button
+    Work around bugs with the Vim component in script/text viewers.
+    Update container viewers whenever their subtree changes, not just when
+        their immediate children change
+    Find out how to centre column headers in angle structure and normal
+        surface viewers
+    Make a script dirty when its variables are changed externally
+        through renaming or deletion
 
 General:
     Make "configure shortcuts" work with the part as well

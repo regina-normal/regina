@@ -53,7 +53,6 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
     editInterface = KTextEditor::editInterface(document);
     editInterface->setText(packet->getText().c_str());
 
-    // TODO: Can we work around this in a nicer way (Vim component problem)?
     if (strcmp(document->className(), "Vim::Document") == 0)
         std::cerr << "Not flushing the undo list since this has strange "
             "side-effects with the Vim component." << std::endl;

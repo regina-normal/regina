@@ -44,8 +44,6 @@
 #define DEFAULT_ANGLE_COLUMN_WIDTH 40
 #define ANGLE_STATS_PADDING 5
 
-// TODO: Work out how to centre column headers.
-
 using regina::NAngleStructureList;
 using regina::NPacket;
 
