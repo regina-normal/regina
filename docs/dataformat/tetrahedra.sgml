@@ -91,4 +91,18 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
    </varlistentry>
   </variablelist>
  </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents a triangulation of a
+   two-tetrahedron (1, 1, 2) layered solid torus.
+  </para>
+  <programlisting>
+&lt;tetrahedra ntet=&quot;2&quot;&gt;
+  &lt;tet&gt; 1 78 1 78 -1 -1 -1 -1 &lt;/tet&gt;
+  &lt;tet&gt; 1 57 1 147 0 78 0 78 &lt;/tet&gt;
+&lt;/tetrahedra&gt;
+  </programlisting>
+ </refsect1>
 </refentry>

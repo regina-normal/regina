@@ -58,6 +58,7 @@
  &data-struct;
  &data-surface;
  &data-tag;
+ &data-tet;
  &data-tetrahedra;
  &data-text;
  &data-twosided;
