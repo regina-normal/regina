@@ -10,11 +10,13 @@
         alt="Regina - A Normal Surface Theory Calculator">
     <p>
     <h3>Regina<br>
-    The Application Formerly Known As Normal<br>
+    A Normal Surface Theory Calculator<br>
     Copyright &copy; 1999-2003, Ben Burton</h3>
 </center>
 <p>
-<a name="contents"><i>Website last updated 18 October 2002</i></a>
+<a name="contents">
+<i>Last updated: 25 June 2003</i><br>
+<i>Current version: 3.2</i></a>
 <a href="http://sourceforge.net/projects/regina/"><img
     src="http://sourceforge.net/sflogo.php?group_id=19698&type=1"
     alt="SourceForge" align="right" hspace=5 border=0></a>
@@ -22,32 +24,28 @@
     <li><a href="#whatis">What is Regina?</a></li>
     <li><a href="docs/about.html">What does Regina do?</a>
         <i>(from docs)</i></li>
+    <li><a href="docs/history.html#HISTORY-HIGHLIGHTS">What's new?</a>
+        <i>(from docs)</i></li>
     <li><a href="#screenshots">Screenshots</a></li>
-    <li><a href="sysreq.html">System Requirements</a>
+    <li><a href="sysreq.html">System requirements</a>
         <i>(separate pages)</i>
         <ul>
             <li><a href="sysreq.html#linux">GNU/Linux</a></li>
-            <li><a href="sysreq.html#windoze">Windows</a>
-            <ul>
-                <li><a href="cygwin.html">Cygwin Support</a></li>
-            </ul></li>
-            <li><a href="sysreq.html#docs">Generating Documentation</a>
-            <ul>
-                <li><a href="docbook.html">Windows DocBook Support</a></li>
-            </ul></li>
+            <li><a href="sysreq.html#windoze">Windows</a></li>
+            <li><a href="sysreq.html#docs">Generating documentation</a></li>
         </ul></li>
     <li><a href="docs/acknowledgements.html">License</a>
         <i>(from docs)</i></li>
     <li><a href="#download">Download</a></li>
     <li><a href="#docs">Documentation</a></li>
-    <li><a href="docs/man-regina.html">Command Line Arguments</a>
+    <li><a href="docs/man-regina.html">Command line arguments</a>
         <i>(from docs)</i></li>
     <li><a href="docs/troubleshooting.html">Troubleshooting</a>
         <i>(from docs)</i></li>
     <li><a href="docs/genealogy.html">Genealogy</a> <i>(from docs)</i></li>
     <li><a href="docs/acknowledgements.html">Acknowledgements</a>
         <i>(from docs)</i></li>
-    <li><a href="#announce">Announcement Mailing List</a></li>
+    <li><a href="#announce">Announcement mailing list</a></li>
     <li><a href="#contact">Contact / Comments / Suggestions</a></li>
     <li><a href="docs/who.html">Who is Regina?</a> <i>(from docs)</i></li>
 </ul>
@@ -58,12 +56,12 @@ Regina is essentially a topological calculator with a bent towards
 normal surface theory.  It allows 3-manifolds to be created, manipulated
 and their properties of interest determined.
 <p>
-Its primary uses (in my opinion) include:
+Its primary uses (in the author's opinion) include:
 <ul>
-    <li>the ability to examine 3-manifolds too complex to study by hand;</li>
+    <li>the ability to examine in detail 3-manifold triangulations
+    too complex to study by hand;</li>
     <li>the ability to combine the census feature with inbuilt scripting to run
-    tests on all 3-manifolds of a given type;</li>
-    <li>the ability to bring my PhD thesis closer to completion.</li>
+    tests on all 3-manifolds of a given type.</li>
 </ul>
 See the reference manual for a <a href="docs/about.html">full list
 of features</a>.
@@ -93,9 +91,10 @@ Click on an image to see a full scale version.
 
 <h3><a name="download">Download</a></h3>
 
-You can download prebuilt binary distributions for GNU/Linux or Windows systems,
-or you can download the entire source tree to compile Regina for yourself.
-All downloads are available from the
+If you are running a GNU/Linux system with the correct libraries
+installed, you can download a prebuilt binary distribution for Regina.
+Alternatively you can download the entire source tree and compile Regina
+for yourself.  All downloads are available from the
 <a href="http://sourceforge.net/project/showfiles.php?group_id=19698">SourceForge
 project site</a>.
 
@@ -106,29 +105,20 @@ Before you download, be sure to visit the <a href="sysreq.html">system
 requirements page</a>.  Regina needs several other pieces of software
 installed before it will run.
 <p>
-<b>The new build system for Regina 3.1 is causing problems with the
-Windows port.  Regina will build under Windows, but I have not been
-able to make it run.  Thus Windows support has been (hopefully temporarily)
-dropped with the 3.1 release.</b>
-<p>
-<b>Please for the time being build and/or run Regina under GNU/Linux or
-some other Unix-like platform.</b>
+Note that the Windows port of Regina is no longer supported.
+See the <a href="sysreq.html#windoze">system requirements page</a>
+for details.
 <ul>
     <li><b>Binaries:</b>
     <ul>
         <li>Download the binary archive
         <tt><b>regina-<i>version</i>_bin_<i>machine</i>.tgz</b></tt>
-        corresponding to your machine type.
-        <ul>
-            <li>GNU/Linux users will want
-            <tt><b>regina-<i>version</i>_bin_i686-linux.tgz</b></tt>.
-            Note that these binaries are built against <tt>libc6</tt>,
-            <tt>libstdc++2.10</tt>, <tt>libgmp3</tt>, <tt>libpopt0</tt>,
-            <tt>libxml2</tt> and <tt>zlib1g</tt>.
-
-            <li>Windows users will want
-            <tt><b>regina-<i>version</i>_bin_i686-cygwin.tgz</b></tt>.
-        </ul>
+        corresponding to your machine type.  GNU/Linux users will want
+        <tt><b>regina-<i>version</i>_bin_i686-linux.tgz</b></tt>.
+        Note that these binaries are built against <tt>libc.so.6</tt>,
+        <tt>libstdc++.so.5</tt>, <tt>libgmp.so.3</tt>,
+        <tt>libpopt.so.0</tt>, <tt>libxml.so.2</tt> and
+        <tt>libz.so.1</tt>.
 
         <li>Unpack this archive in your root directory:
         <ul>
@@ -262,10 +252,6 @@ this way you can ensure your problems and/or discussions are publicly
 archived to help others with similar issues.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
-
-<p>
-<a href="http://baasil.humbug.org.au/bab/"><img src="ben.jpg"
-    alt="Ben's Home Page" border=0 vspace=10></a></p>
 
 </body>
 </html>
