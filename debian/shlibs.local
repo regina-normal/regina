@@ -1,0 +1,8 @@
+libCOS3 0 omniorb (>= 1:3.0.1-0)
+libCOSBOA3 0 omniorb (>= 1:3.0.1-0)
+libCOSDynamic3 0 omniorb (>= 1:3.0.1-0)
+libomniDynamic3 0 omniorb (>= 1:3.0.1-0)
+libomniORB3 0 omniorb (>= 1:3.0.1-0)
+libomnithread 2 omniorb (>= 1:3.0.1-0)
+libtcpwrapGK 2 omniorb (>= 1:3.0.1-0)
+_omniidlmodule 0 omniorb (>= 1:3.0.1-0)
