@@ -45,5 +45,9 @@ namespace regina {
 
 #include "surfaces/filterregistry.h"
 
+// Tidy up.
+#undef REGISTER_FILTER
+#undef __FILTER_REGISTRY_BODY
+
 } // namespace regina
 

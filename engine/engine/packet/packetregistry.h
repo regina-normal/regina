@@ -54,6 +54,11 @@
  *        REGISTER_PACKET before including this file, you can have these
  *        lines do whatever you wish.
  *
+ *    If you do #include this file, be sure to #undef both
+ *        REGISTER_PACKET and __PACKET_REGISTRY_BODY when you are
+ *        finished, so that if --enable-final is being used then these
+ *        macros are left undefined for the following files.
+ *
  *    Packet Types:
  *    ------------
  *    When selecting an integer ID for your new packet type, the following

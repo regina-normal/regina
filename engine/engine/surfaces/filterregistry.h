@@ -59,6 +59,11 @@
  *        By suitably defining the macro REGISTER_FILTER before including
  *        this file, you can have these lines do whatever you wish.
  *
+ *    If you do #include this file, be sure to #undef both
+ *        REGISTER_FILTER and __FILTER_REGISTRY_BODY when you are
+ *        finished, so that if --enable-final is being used then these
+ *        macros are left undefined for the following files.
+ *
  *    Filter IDs:
  *    ----------
  *    When selecting an integer ID for your new filtering class, the

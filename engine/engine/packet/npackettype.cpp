@@ -44,4 +44,8 @@ namespace regina {
 #define __PACKET_REGISTRY_BODY
 #include "packet/packetregistry.h"
 
+// Tidy up.
+#undef REGISTER_PACKET
+#undef __PACKET_REGISTRY_BODY
+
 } // namespace regina

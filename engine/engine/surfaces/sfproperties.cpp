@@ -31,10 +31,10 @@
 #include "file/nfile.h"
 #include "utilities/xmlutils.h"
 
-#define PROPID_EULER 1001
-#define PROPID_ORIENT 1002
-#define PROPID_COMPACT 1003
-#define PROPID_REALBDRY 1004
+#define PROPSF_EULER 1001
+#define PROPSF_ORIENT 1002
+#define PROPSF_COMPACT 1003
+#define PROPSF_REALBDRY 1004
 
 namespace regina {
 
@@ -118,7 +118,7 @@ void NSurfaceFilterProperties::writeProperties(NFile& out) const {
     std::streampos bookmark(0);
 
     if (eulerCharacteristic.size() > 0) {
-        bookmark = writePropertyHeader(out, PROPID_EULER);
+        bookmark = writePropertyHeader(out, PROPSF_EULER);
         out.writeULong(eulerCharacteristic.size());
         for (std::set<NLargeInteger>::const_iterator it =
                 eulerCharacteristic.begin(); it != eulerCharacteristic.end();
@@ -128,19 +128,19 @@ void NSurfaceFilterProperties::writeProperties(NFile& out) const {
     }
 
     if (orientability != NBoolSet::sBoth) {
-        bookmark = writePropertyHeader(out, PROPID_ORIENT);
+        bookmark = writePropertyHeader(out, PROPSF_ORIENT);
         out.writeBoolSet(orientability);
         writePropertyFooter(out, bookmark);
     }
 
     if (compactness != NBoolSet::sBoth) {
-        bookmark = writePropertyHeader(out, PROPID_COMPACT);
+        bookmark = writePropertyHeader(out, PROPSF_COMPACT);
         out.writeBoolSet(compactness);
         writePropertyFooter(out, bookmark);
     }
 
     if (realBoundary != NBoolSet::sBoth) {
-        bookmark = writePropertyHeader(out, PROPID_REALBDRY);
+        bookmark = writePropertyHeader(out, PROPSF_REALBDRY);
         out.writeBoolSet(realBoundary);
         writePropertyFooter(out, bookmark);
     }
@@ -155,16 +155,16 @@ void NSurfaceFilterProperties::readIndividualProperty(NFile& in,
     NSurfaceFilter::readIndividualProperty(in, propType);
 
     switch (propType) {
-        case PROPID_EULER:
+        case PROPSF_EULER:
             eulerCharacteristic.clear();
             for (unsigned long size = in.readULong(); size != 0; size--)
                 eulerCharacteristic.insert(in.readLarge());
             break;
-        case PROPID_ORIENT:
+        case PROPSF_ORIENT:
             orientability = in.readBoolSet(); break;
-        case PROPID_COMPACT:
+        case PROPSF_COMPACT:
             compactness = in.readBoolSet(); break;
-        case PROPID_REALBDRY:
+        case PROPSF_REALBDRY:
             realBoundary = in.readBoolSet(); break;
     }
 }

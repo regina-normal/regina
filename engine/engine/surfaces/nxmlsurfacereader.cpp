@@ -155,5 +155,9 @@ NXMLPacketReader* NNormalSurfaceList::getXMLReader(NPacket* parent) {
         dynamic_cast<NTriangulation*>(parent));
 }
 
+// Tidy up.
+#undef REGISTER_FLAVOUR
+#undef __FLAVOUR_REGISTRY_BODY
+
 } // namespace regina
 

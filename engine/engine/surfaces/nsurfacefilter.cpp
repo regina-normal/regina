@@ -101,5 +101,9 @@ NPacket* NSurfaceFilter::internalClonePacket(NPacket* /* parent */) const {
     }
 }
 
+// Tidy up.
+#undef REGISTER_FILTER
+#undef __FILTER_REGISTRY_BODY
+
 } // namespace regina
 

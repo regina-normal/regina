@@ -67,6 +67,11 @@
  *        and the REGISTER_FLAVOUR lines will be brought in instead.
  *        By suitably defining the macro REGISTER_FLAVOUR before including
  *        this file, you can have these lines do whatever you wish.
+ *
+ *    If you do #include this file, be sure to #undef both
+ *        REGISTER_FLAVOUR and __FLAVOUR_REGISTRY_BODY when you are
+ *        finished, so that if --enable-final is being used then these
+ *        macros are left undefined for the following files.
  */
 
 #ifndef __FLAVOUR_REGISTRY_BODY

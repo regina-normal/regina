@@ -235,5 +235,9 @@ void NNormalSurfaceList::initialiseAllProperties() {
 void NNormalSurfaceList::readIndividualProperty(NFile&, unsigned) {
 }
 
+// Tidy up.
+#undef REGISTER_FLAVOUR
+#undef __FLAVOUR_REGISTRY_BODY
+
 } // namespace regina
 

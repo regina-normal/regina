@@ -105,5 +105,9 @@ void NXMLPacketReader::abort(NXMLElementReader* /* subReader */) {
             delete me;
 }
 
+// Tidy up.
+#undef REGISTER_PACKET
+#undef __PACKET_REGISTRY_BODY
+
 } // namespace regina
 

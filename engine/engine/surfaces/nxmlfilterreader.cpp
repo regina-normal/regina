@@ -65,5 +65,9 @@ NXMLPacketReader* NSurfaceFilter::getXMLReader(NPacket* parent) {
     return new NXMLFilterPacketReader(parent);
 }
 
+// Tidy up.
+#undef REGISTER_FILTER
+#undef __FILTER_REGISTRY_BODY
+
 } // namespace regina
 
