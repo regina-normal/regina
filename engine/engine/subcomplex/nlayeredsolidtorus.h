@@ -48,6 +48,12 @@ class NTetrahedron;
 /**
  * Represents a layered solid torus in a triangulation.
  * A layered solid torus must contain at least one tetrahedron.
+ *
+ * Note that this class \b only represents layered solid tori with a
+ * (3,2,1) at their base.  Thus triangulations that begin with a
+ * degenerate (2,1,1) mobius strip and layer over the mobius strip
+ * boundary (including the minimal (1,1,0) triangulation) are not
+ * described by this class.
  */
 class NLayeredSolidTorus : public ShareableObject {
     private:
