@@ -34,6 +34,9 @@
         Algebraic properties including various homology groups
        </para></listitem>
        <listitem><para>
+        Attributes related to normal surfaces such as 0-efficiency
+       </para></listitem>
+       <listitem><para>
         Finding subcomplexes with standard structures
        </para></listitem>
       </itemizedlist>
@@ -71,7 +74,7 @@
       coordinate systems
      </para></listitem>
      <listitem><para>
-      Calculation of basic properties of normal surfaces
+      Calculation of various properties of normal surfaces
      </para></listitem>
      <listitem><para>
       Support for spun and other non-compact normal surfaces
@@ -81,6 +84,9 @@
      </para></listitem>
      <listitem><para>
       Filtering of normal surfaces by various properties
+     </para></listitem>
+     <listitem><para>
+      Crushing normal surfaces in a triangulation
      </para></listitem>
     </itemizedlist>
    </para></listitem>
