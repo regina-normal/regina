@@ -12,14 +12,14 @@
    <emphasis>&copyrightnotice;</emphasis>
   </para>
 
-  &GPLNotice;
-
   <para>
    If you find &regina; useful in your research, please consider
    citing it as you would any other paper that you use.  See the
    section on <link linkend="citing">citing &regina;</link> for a
    suggested form of reference.
   </para>
+
+  &GPLNotice;
  </sect1>
 
  <sect1 id="acknowledgements">
