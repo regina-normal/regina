@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 SUBDIRS = foreign packettypes
 
 INCLUDES = $(all_includes)
@@ -52,6 +54,8 @@ partrcdir = $(kde_datadir)/reginapart
 partrc_DATA = packetwindow.rc reginapart.rc
 
 METASOURCES = AUTO
+
+EXTRA_DIST = reginapart.desktop reginapart.rc packetwindow.rc
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/regina.pot

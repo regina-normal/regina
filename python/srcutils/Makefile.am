@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 EXTRA_DIST = README.txt \
   props
 

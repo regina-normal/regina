@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 SUBDIRS = engine doc-files
 
 EXTRA_DIST = README.txt findtext checkdocs

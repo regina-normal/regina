@@ -6,13 +6,17 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 SUBDIRS = stubs
 
 EXTRA_DIST = \
   README.txt RELEASE.txt \
-  acinclude.m4.top cppunit.m4.ext libtool.m4.ext pthread.m4.ext \
+  acinclude.m4.top cppunit.m4.ext kde.m4.ext libtool.m4.ext pthread.m4.ext \
   configure.ac.bot configure.ac.top \
-  config.guess config.sub install-sh ltmain.sh missing mkinstalldirs \
+  Doxyfile.am Doxyfile.global Makefile.common am_edit conf.change.pl \
+  config.guess config.pl config.sub cvs-clean.pl cvs.sh debianrules \
+  detect-autoconf.sh install-sh ltmain.sh missing mkinstalldirs \
   ac_gen am_update distcheck insertstub mkdist mkdist-config.in mksums \
   replacetabs
 

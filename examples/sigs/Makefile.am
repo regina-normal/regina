@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 sigsdir = $(pkgdatadir)/examples/sigs
 
 sigs_DATA = README.txt \

@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 INCLUDES = $(all_includes)
 
 noinst_LTLIBRARIES = libforeign.la

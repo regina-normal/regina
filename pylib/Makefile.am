@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 pylibdir = $(pkgdatadir)/pylib
 
 pylib_DATA = README.txt \

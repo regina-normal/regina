@@ -6,9 +6,12 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 EXTRA_DIST = \
   engine \
   general \
   kdeui \
+  python \
   testsuite
 

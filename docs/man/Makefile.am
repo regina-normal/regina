@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 man_MANS = \
   regconcat.1 \
   regconvert.1 \

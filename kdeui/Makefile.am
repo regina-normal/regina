@@ -6,7 +6,9 @@
 ##  to produce Makefile.in.
 ##
 
-SUBDIRS = src
+KDE_OPTIONS=noautodist
+
+SUBDIRS = doc src
 
 EXTRA_DIST = README.txt TODO.txt findtext
 

@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 ## ----------------------- Variables ---------------------------------
 
 engine_index = index.html

@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 SUBDIRS = @REGINA_BUILD_DOCSENGINE@ @REGINA_BUILD_DOCSMAN@
 
 EXTRA_DIST = README.txt

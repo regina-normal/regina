@@ -6,5 +6,7 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 EXTRA_DIST = doc-footer.html docs.conf
 

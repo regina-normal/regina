@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 # Note that $(SUBDIRS) is filled automatically by am_edit. If files are
 # in this directory then they are installed into the english dir.
 

@@ -5,6 +5,8 @@
 ##  Process this file with automake to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 AUTOMAKE_OPTIONS = foreign dist-zip 1.4
 
 SUBDIRS = \

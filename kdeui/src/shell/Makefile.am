@@ -6,9 +6,12 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
+	reginaiface.h \
 	reginamain.h \
 	reginapref.h
 
@@ -32,6 +35,8 @@ mimedir = $(kde_mimedir)/application
 mime_DATA = x-regina.desktop
 
 METASOURCES = AUTO
+
+EXTRA_DIST = reginamain.rc regina.desktop x-regina.desktop
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/regina.pot

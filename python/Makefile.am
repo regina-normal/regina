@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 CXXFLAGS = @CXXFLAGS_NODEBUG@
 
@@ -47,7 +49,9 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
   triangulation/libtriangulation.la \
   utilities/libutilities.la
 
-EXTRA_DIST = regina-python.in
+noinst_HEADERS = globalarray.h
+
+EXTRA_DIST = README.txt TODO.txt regina-python.in
 
 install-exec-local :
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

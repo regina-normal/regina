@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 EXTRA_DIST = README.txt \
-  regina.pov reginasmall.pov reginatiny.pov
+  regina.pov reginasmall.pov reginatiny.pov reginawhite.pov
 

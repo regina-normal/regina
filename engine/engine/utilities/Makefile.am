@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+KDE_OPTIONS=noautodist
+
 INCLUDES = @ENGINE_INCLUDES@
 
 utilitiesincludedir = $(pkgincludedir)/utilities
