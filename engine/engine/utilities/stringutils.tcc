@@ -26,50 +26,42 @@
 
 /* end stub */
 
-/*! \file stringutils.h
- *  \brief Provides various routines for use with C++ strings.
- */
+/* To be included from stringutils.h. */
 
-#ifndef __STRINGUTILS_H
-#ifndef __DOXYGEN
-#define __STRINGUTILS_H
-#endif
-
-#include <string>
+#include <cctype>
 
 namespace regina {
 
-/**
- * Creates a new C string that is a duplicate of the given C++ string.
- *
- * The deallocation of the new C string is the responsibility of
- * the caller of this routine.
- *
- * \ifaces Not present.
- *
- * @param str the C++ string to duplicate.
- * @return the new duplicate C string.
- */
-char* duplicate(const std::string& str);
-
-/**
- * Decomposes the given string into tokens.
- * This is an extremely simple tokeniser; tokens are defined to be
- * separated by whitespace.
- *
- * @param results the output iterator to which the resulting tokens will
- * be written; this must accept objects of type <tt>const std::string&</tt>.
- * @param str the string to decompose.
- * @return the number of tokens found.
- */
 template <class OutputIterator>
-unsigned basicTokenise(OutputIterator results, const std::string& str);
+unsigned basicTokenise(OutputIterator results, const std::string& str) {
+    std::string::size_type len = str.length();
+    std::string::size_type pos = 0;
 
+    // Skip initial whitespace.
+    while (pos < len && isspace(str[pos]))
+        pos++;
+
+    if (pos == len)
+        return 0;
+
+    // Extract each token.
+    std::string::size_type total = 0;
+    std::string::size_type tokStart;
+    while (pos < len) {
+        // Find the characters making up this token.
+        tokStart = pos;
+        while (pos < len && ! isspace(str[pos]))
+            pos++;
+        *results++ = str.substr(tokStart, pos - tokStart);
+        total++;
+
+        // Skip the subsequent whitespace.
+        while (pos < len && isspace(str[pos]))
+            pos++;
+    }
+
+    return total;
+}
+    
 } // namespace regina
-
-// Template definitions
-
-#include "utilities/stringutils.tcc"
-
-#endif
 
