@@ -167,11 +167,22 @@ void PythonConsole::saveLog() {
         i18n(FILTER_ALL), this, i18n("Save Session Transcript"));
     if (! file.isEmpty()) {
         std::ofstream out(file.ascii());
-        if (out)
-            out << session->text(); // TODO: This doesn't work (tags).
-        else
+        if (! out)
             KMessageBox::error(this, i18n("An error occurred whilst "
                 "attempting to write to the file %1.").arg(file));
+        else {
+            // Write the contents to file.
+            // We can't just dump text() since this includes HTML tags.
+            // We also can't just remove tags since tags and text that
+            // looks like tags are indistinguishable (i.e., plaintext is
+            // not encoded but is still surrounded by tags - ugh).
+
+            // For the moment we'll do it through selections.  I'm sure
+            // there's a better way.
+            session->selectAll(true);
+            out << session->selectedText() << std::endl;
+            session->selectAll(false);
+        }
     }
 }
 
