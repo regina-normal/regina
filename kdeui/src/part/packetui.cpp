@@ -155,21 +155,25 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0 /* shortcut */,
         this, SLOT(commit()), (KActionCollection*)0, "packet_editor_commit");
     actCommit->setEnabled(false);
-    actCommit->setWhatsThis("Commit any changes you have made inside this "
-        "packet viewer.  Changes you make will have no effect elsewhere "
-        "until they are committed.");
+    actCommit->setToolTip(i18n("Commit changes to this packet"));
+    actCommit->setWhatsThis(i18n("Commit any changes you have made inside "
+        "this packet viewer.  Changes you make will have no effect elsewhere "
+        "until they are committed."));
     actRefresh = new KAction(i18n("&Refresh"), "reload", 0 /* shortcut */,
         this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
+    actRefresh->setToolTip(i18n("Discard any changes and refresh this viewer"));
     actRefresh->setWhatsThis(i18n("Refresh this viewer to show the most "
         "recent state of the packet.  Any changes you mave made inside this "
         "viewer that have not been committed will be discarded."));
     actDockUndock = new KAction(i18n("Un&dock"), "attach", 0,
         this, SLOT(floatPane()), (KActionCollection*)0, "packet_editor_dock");
+    actDockUndock->setToolTip(i18n("Dock / undock this packet viewer"));
     actDockUndock->setWhatsThis(i18n("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
     actClose = new KAction(i18n("&Close"), "fileclose", 0,
         this, SLOT(close()), (KActionCollection*)0, "packet_editor_close");
+    actClose->setToolTip(i18n("Close this packet viewer"));
     actClose->setWhatsThis(i18n("Close this packet viewer.  Any changes "
         "that have not been committed will be discarded."));
 

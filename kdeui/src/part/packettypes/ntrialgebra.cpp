@@ -46,6 +46,7 @@
 #include <qpushbutton.h>
 #include <qregexp.h>
 #include <qstyle.h>
+#include <qtooltip.h>
 #include <qwhatsthis.h>
 #include <qvalidator.h>
 
@@ -375,6 +376,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
 
     calculate = new QPushButton(SmallIconSet("exec"), i18n("Calculate"), ui);
     // calculate->setFlat(true);
+    QToolTip::add(calculate, i18n("Calculate this Turaev-Viro invariant"));
     QWhatsThis::add(calculate, i18n("<qt>Calculate the Turaev-Viro invariant "
         "corresponding to the (r, root) parameters in the nearby text "
         "box.  The result will be added to the list below.<p>"

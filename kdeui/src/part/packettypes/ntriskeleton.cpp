@@ -38,6 +38,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qtooltip.h>
 #include <qwhatsthis.h>
 
 using regina::NPacket;
@@ -122,12 +123,14 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
     // btn->setFlat(true);
+    QToolTip::add(btn, i18n("View details of individual vertices"));
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
         "individual vertices in a separate window."));
     connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
     grid->addWidget(btn, 0, 5);
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    QToolTip::add(btn, i18n("View details of individual edges"));
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
         "individual edges in a separate window."));
     // btn->setFlat(true);
@@ -135,6 +138,7 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     grid->addWidget(btn, 1, 5);
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    QToolTip::add(btn, i18n("View details of individual faces"));
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
         "individual faces in a separate window."));
     // btn->setFlat(true);
@@ -142,6 +146,7 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     grid->addWidget(btn, 2, 5);
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    QToolTip::add(btn, i18n("View details of individual components"));
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
         "individual connected components in a separate window."));
     // btn->setFlat(true);
@@ -149,6 +154,7 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     grid->addWidget(btn, 0, 11);
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    QToolTip::add(btn, i18n("View details of individual boundary components"));
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
         "individual boundary components in a separate window.  Note that "
         "boundary components can either be ideal vertices of collections "
