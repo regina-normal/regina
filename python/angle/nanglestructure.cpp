@@ -26,11 +26,24 @@
 
 /* end stub */
 
-void addNAngleStructure();
-void addNAngleStructureList();
+#include "angle/nanglestructure.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addAngle() {
-    addNAngleStructure();
-    addNAngleStructureList();
+using namespace boost::python;
+using regina::NAngleStructure;
+
+void addNAngleStructure() {
+    class_<NAngleStructure, bases<regina::ShareableObject>,
+            std::auto_ptr<NAngleStructure>, boost::noncopyable>
+            ("NAngleStructure", no_init)
+        .def("clone", &NAngleStructure::clone,
+            return_value_policy<manage_new_object>())
+        .def("getAngle", &NAngleStructure::getAngle)
+        .def("getTriangulation", &NAngleStructure::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("isStrict", &NAngleStructure::isStrict)
+        .def("isTaut", &NAngleStructure::isTaut)
+    ;
 }
 

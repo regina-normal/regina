@@ -11,4 +11,3 @@ Runtime:
 
 Wrappers:
     surfaces
-    angle

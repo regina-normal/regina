@@ -26,11 +26,33 @@
 
 /* end stub */
 
-void addNAngleStructure();
-void addNAngleStructureList();
+#include "angle/nanglestructurelist.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addAngle() {
-    addNAngleStructure();
-    addNAngleStructureList();
+using namespace boost::python;
+using regina::NAngleStructureList;
+
+void addNAngleStructureList() {
+    scope s = class_<NAngleStructureList, bases<regina::NPacket>,
+            std::auto_ptr<NAngleStructureList>, boost::noncopyable>
+            ("NAngleStructureList", no_init)
+        .def("getTriangulation", &NAngleStructureList::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("getNumberOfStructures",
+            &NAngleStructureList::getNumberOfStructures)
+        .def("getStructure", &NAngleStructureList::getStructure,
+            return_internal_reference<>())
+        .def("allowsStrict", &NAngleStructureList::allowsStrict)
+        .def("allowsTaut", &NAngleStructureList::allowsTaut)
+        .def("enumerate", &NAngleStructureList::enumerate,
+            return_value_policy<reference_existing_object>())
+        .staticmethod("enumerate")
+    ;
+
+    s.attr("packetType") = NAngleStructureList::packetType;
+
+    implicitly_convertible<std::auto_ptr<NAngleStructureList>,
+        std::auto_ptr<regina::NPacket> >();
 }
 

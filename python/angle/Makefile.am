@@ -11,5 +11,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libangle.la
 
-libangle_la_SOURCES = pyangle.cpp
+libangle_la_SOURCES = nanglestructure.cpp nanglestructurelist.cpp pyangle.cpp
 
