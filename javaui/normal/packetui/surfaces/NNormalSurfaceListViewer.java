@@ -31,6 +31,7 @@ package normal.packetui.surfaces;
 import normal.Shell;
 import normal.engine.packet.*;
 import normal.engine.surfaces.*;
+import normal.mainui.TopologyPane;
 import normal.packetui.*;
 
 /**
@@ -45,9 +46,11 @@ public class NNormalSurfaceListViewer extends PacketTabbedEditor {
      *
      * @param packet the packet to be associated with this interface.
      * @param shell the shell representing the entire program.
+     * @param topPane the topology pane responsible for this interface.
      */
-    public NNormalSurfaceListViewer(NPacket packet, Shell shell) {
-        super(packet, shell, false);
+    public NNormalSurfaceListViewer(NPacket packet, Shell shell,
+            TopologyPane topPane) {
+        super(packet, shell, topPane, false);
     }
 
     public String getHeader() {
@@ -66,7 +69,8 @@ public class NNormalSurfaceListViewer extends PacketTabbedEditor {
 
     public void fillWithInterfaces() {
         NNormalSurfaceList list = (NNormalSurfaceList)getPacket();
-        addUI(new CoordinateViewer(list, list), "Surface Coordinates");
+        addUI(new CoordinateViewer(list, list, getShell(), getTopologyPane()),
+            "Surface Coordinates");
         addUI(new MatchingEquationsViewer(list), "Matching Equations");
     }
 }

@@ -33,6 +33,7 @@ import javax.swing.*;
 import normal.Shell;
 import normal.engine.packet.*;
 import normal.engine.triangulation.*;
+import normal.mainui.TopologyPane;
 import normal.packetui.*;
 
 /**
@@ -52,11 +53,13 @@ public class NTriangulationEditor extends PacketTabbedEditor {
      *
      * @param packet the packet to be associated with this interface.
      * @param shell the shell representing the entire program.
+     * @param topPane the topology pane responsible for this interface.
      * @param editor <tt>true</tt> if this interface is to be an
      * editor, or <tt>false</tt> if it is to be a viewer.
      */
-    public NTriangulationEditor(NPacket packet, Shell shell, boolean editor) {
-        super(packet, shell, editor);
+    public NTriangulationEditor(NPacket packet, Shell shell,
+            TopologyPane topPane, boolean editor) {
+        super(packet, shell, topPane, editor);
     }
 
     public String getHeader() {

@@ -951,7 +951,7 @@ public class TopologyPane extends FilePane {
                 return;
 
         insertPacketPane(new PacketPane(this,
-            PacketUIManager.newPacketUI(packet, getShell(),
+            PacketUIManager.newPacketUI(packet, getShell(), this,
             packet.isPacketEditable())), true);
     }
 
@@ -1293,7 +1293,7 @@ public class TopologyPane extends FilePane {
             node = (PacketTreeNode)e.nextElement();
             insertPacketPane(new PacketPane(this,
                 PacketUIManager.newPacketUI(node.getPacket(), getShell(),
-                node.getPacket().isPacketEditable())), justOneNode);
+                this, node.getPacket().isPacketEditable())), justOneNode);
         }
     }
 
@@ -1365,7 +1365,7 @@ public class TopologyPane extends FilePane {
      */
     void packetView(NPacket packet) {
         insertPacketPane(new PacketPane(this,
-            PacketUIManager.newPacketUI(packet, getShell(),
+            PacketUIManager.newPacketUI(packet, getShell(), this,
             packet.isPacketEditable())), getOptions().getAutoDock());
     }
 

@@ -62,6 +62,9 @@ Regina - A Normal Surface Theory Calculator
             - Added classes ReginaImporter, ScriptImporter.
         normal.mainui.TopologyPane:
             - Fixed bug where icon was sometimes not displayed.
+        normal.packetui:
+            - Added a new TopologyPane argument to some routines to
+              allow interfaces to manipulate the visual packet tree.
         normal.packetui.triangulation.CompositionViewer:
             - Displays more detailed information.
         normal.packetui.triangulation.SkeletonTableFrame:

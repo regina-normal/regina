@@ -35,6 +35,7 @@ import javax.swing.event.*;
 import javax.swing.text.JTextComponent;
 import normal.engine.Engine;
 import normal.engine.packet.NPacket;
+import normal.mainui.TopologyPane;
 import org.gjt.btools.gui.dialog.MessageBox;
 
 /**
@@ -63,6 +64,11 @@ public class PacketInfoTabbedPane extends JTabbedPane
     private NPacket packet;
 
     /**
+     * The topology pane responsible for this interface.
+     */
+    private TopologyPane topPane;
+
+    /**
      * Is this interface allowed to edit packets?
      */
     private boolean editor;
@@ -89,12 +95,15 @@ public class PacketInfoTabbedPane extends JTabbedPane
      * Creates a new tabbed pane with the tabs at the top.
      *
      * @param packet the packet associated with this interface.
+     * @param topPane the topology pane responsible for this interface.
      * @param editor <tt>true</tt> if this interface is to be used for
      * editing, or <tt>false</tt> if it is for viewing only.
      */
-    public PacketInfoTabbedPane(NPacket packet, boolean editor) {
+    public PacketInfoTabbedPane(NPacket packet, TopologyPane topPane,
+            boolean editor) {
         super(TOP);
         this.packet = packet;
+        this.topPane = topPane;
         this.editor = editor;
         this.currentEditor = null;
         addChangeListener(this);
@@ -224,6 +233,15 @@ public class PacketInfoTabbedPane extends JTabbedPane
                 fireUIHasChangesEvent();
             }
         }
+    }
+
+    /**
+     * Returns the topology pane responsible for this interface.
+     *
+     * @return the corresponding topology pane.
+     */
+    public TopologyPane getTopologyPane() {
+        return topPane;
     }
 
     public NPacket getPacket() {

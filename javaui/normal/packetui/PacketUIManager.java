@@ -31,6 +31,7 @@ package normal.packetui;
 import javax.swing.*;
 import normal.Shell;
 import normal.engine.packet.NPacket;
+import normal.mainui.TopologyPane;
 import org.gjt.btools.image.StandardImage;
 
 /**
@@ -145,6 +146,8 @@ public class PacketUIManager {
      * be created.
      * @param shell the shell representing the entire program,
      * in case the new interface needs information from it.
+     * @param topPane the topology pane responsible for the new interface,
+     * in case the new interface needs to interact with it.
      * @param mayEdit <tt>true</tt> if the interface returned is allowed
      * to edit the packet, or <tt>false</tt> if the interface should
      * only allow the packet to be viewed.
@@ -155,7 +158,7 @@ public class PacketUIManager {
      * @see normal.packetui.UnknownPacketViewer
      */
     public static PacketUI newPacketUI(NPacket packet, Shell shell,
-            boolean mayEdit) {
+            TopologyPane topPane, boolean mayEdit) {
         // Available interfaces:
         if (packet instanceof normal.engine.packet.NContainer)
             return new normal.packetui.packet.NContainerViewer(packet);
@@ -166,13 +169,13 @@ public class PacketUIManager {
                 mayEdit);
         if (packet instanceof normal.engine.triangulation.NTriangulation)
             return new normal.packetui.triangulation.NTriangulationEditor(
-                packet, shell, mayEdit);
+                packet, shell, topPane, mayEdit);
         if (packet instanceof normal.engine.surfaces.NNormalSurfaceList)
             return new normal.packetui.surfaces.NNormalSurfaceListViewer(
-                packet, shell);
+                packet, shell, topPane);
         if (packet instanceof normal.engine.surfaces.NSurfaceFilter)
             return new normal.packetui.surfaces.NSurfaceFilterEditor(
-                packet, shell, mayEdit);
+                packet, shell, topPane, mayEdit);
         
         // No suitable viewer was found.
         return new UnknownPacketViewer(packet);

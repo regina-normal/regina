@@ -32,6 +32,7 @@ import java.awt.*;
 import javax.swing.*;
 import normal.Shell;
 import normal.engine.packet.*;
+import normal.mainui.TopologyPane;
 import normal.packetui.*;
 import org.gjt.btools.gui.component.*;
 
@@ -78,11 +79,13 @@ public abstract class PacketTabbedEditor extends PacketInfoTabbedPane {
      *
      * @param packet the packet to be associated with this interface.
      * @param shell the shell representing the entire program.
+     * @param topPane the topology pane responsible for this interface.
      * @param editor <tt>true</tt> if this interface is to be used for
      * editing, or <tt>false</tt> if it is for viewing only.
      */
-    public PacketTabbedEditor(NPacket packet, Shell shell, boolean editor) {
-        super(packet, editor);
+    public PacketTabbedEditor(NPacket packet, Shell shell,
+            TopologyPane topPane, boolean editor) {
+        super(packet, topPane, editor);
         this.shell = shell;
         init();
     }

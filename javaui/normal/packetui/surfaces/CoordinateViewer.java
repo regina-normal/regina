@@ -35,8 +35,10 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
+import normal.Shell;
 import normal.engine.packet.*;
 import normal.engine.surfaces.*;
+import normal.mainui.TopologyPane;
 import normal.packetui.*;
 import org.gjt.btools.gui.component.*;
 
@@ -58,6 +60,16 @@ public class CoordinateViewer extends DefaultPacketViewer
      * The packet we are viewing or editing.
      */
     private NPacket packet;
+
+    /**
+     * The shell representing the entire program.
+     */
+    private Shell shell;
+
+    /**
+     * The topology pane responsible for this interface.
+     */
+    private TopologyPane topPane;
 
     /**
      * The table containing the normal surface coordinates.
@@ -109,11 +121,16 @@ public class CoordinateViewer extends DefaultPacketViewer
      * @param set the set to display, or <tt>null</tt> if no set should
      * be initially displayed.
      * @param packet the packet we are actually viewing or editing.
+     * @param shell the shell representing the entire program.
+     * @param topPane the topology pane responsible for this interface.
      */
-    public CoordinateViewer(NSurfaceSet set, NPacket packet) {
+    public CoordinateViewer(NSurfaceSet set, NPacket packet,
+            Shell shell, TopologyPane topPane) {
         super();
         this.set = set;
         this.packet = packet;
+        this.shell = shell;
+        this.topPane = topPane;
         this.isEditingElsewhere = false;
         this.updatingFlavours = false;
         init();
@@ -124,27 +141,50 @@ public class CoordinateViewer extends DefaultPacketViewer
      */
     private void init() {
         flavourBox = new JComboBox(new DefaultComboBoxModel());
+        flavourBox.setMaximumSize(flavourBox.getPreferredSize());
         flavourLabel = new JLabel(flavourLabelText);
+
+        JButton crush = new JButton("Crush");
 
         model = new CoordTableModel();
         table = new JTable();
         table.setAutoResizeMode(table.AUTO_RESIZE_OFF);
             // This ensures we get a horizontal scrollbar!
 
-        JPanel flavourPanel = new JPanel();
-        flavourPanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(6,3,6,3);
-        c.fill = c.NONE;
-        c.anchor = c.CENTER;
-        flavourPanel.add(flavourLabel, c);
-        flavourPanel.add(flavourBox, c);
+        Box flavourPanel = Box.createHorizontalBox();
+        flavourPanel.add(flavourLabel);
+        flavourPanel.add(Box.createRigidArea(new Dimension(6,0)));
+        flavourPanel.add(flavourBox);
+        flavourPanel.add(Box.createHorizontalGlue());
+        flavourPanel.add(crush);
 
         setLayout(new BorderLayout());
-        add(flavourPanel, BorderLayout.NORTH);
+        add(new PaddedPane(flavourPanel, 3, 12, 3, 3), BorderLayout.NORTH);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         flavourBox.addItemListener(this);
+        crush.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int nSel = table.getSelectedRowCount();
+                if (nSel == 0) {
+                    shell.error("No normal surface is selected to crush.");
+                } else if (nSel > 1) {
+                    shell.error(
+                        "More than one normal surface is selected to crush.");
+                } else {
+                    // Add the new crushed triangulation.
+                    NPacket crushed =
+                        set.getSurface(table.getSelectedRow()).crush();
+                    crushed.setPacketLabel(packet.makeUniqueLabel(
+                        "Crushed " + set.getTriangulation().getPacketLabel()));
+                    packet.insertChildLast(crushed);
+
+                    // Add the corresponding node to the tree structure.
+                    topPane.fireSubtreeWasInserted(crushed,
+                        CoordinateViewer.this, true);
+                }
+            }
+        });
     }
 
     public NPacket getPacket() {
