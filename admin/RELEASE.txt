@@ -4,8 +4,10 @@ All locations are relative to the primary source directory.
 
 Program version:
     admin/configure.ac.top (AC_INIT, AM_INIT_AUTOMAKE)
-    javaui/normal/Application.java (Application.version, Application.date)
+    debian/changelog (version, date)
     docs/regina.sgml (entities &regversion;, &regdate;)
+    javaui/normal/Application.java (Application.version, Application.date)
+    www/index.html (last updated)
 
 License details:
     LICENSE.txt (./, docs/, javaui/)
