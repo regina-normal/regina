@@ -50,7 +50,7 @@ std::string truncateFixture(const std::string& testName) {
             return testName.substr(genericFixtureLen, len - genericFixtureLen);
 
     // Otherwise prune any leading digits from the fixture name.
-    int pos = 0;
+    unsigned pos = 0;
     while (pos < len && isdigit(testName[pos]))
         pos++;
     if (pos > 0 && pos < len)
