@@ -36,6 +36,7 @@
 #include <qbuttongroup.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
+#include <qwhatsthis.h>
 
 namespace {
     const int ID_32 = 0;
@@ -56,37 +57,127 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         spacingHint());
 
     use32 = new QRadioButton(i18n("&3-2"), ui);
+    QWhatsThis::add(use32, i18n("<qt>Perform a 3-2 move on this "
+        "triangulation.<p>"
+        "A <i>3-2 move</i> involves replacing three tetrahedra joined along "
+        "an edge of degree three with two tetrahedra joined along a "
+        "single face.</qt>"));
     layout->addWidget(use32, 0, 0);
     use23 = new QRadioButton(i18n("&2-3"), ui);
+    QWhatsThis::add(use23, i18n("<qt>Perform a 2-3 move on this "
+        "triangulation.<p>"
+        "A <i>2-3 move</i> involves replacing two tetrahedra joined along "
+        "a single face with three tetrahedra joined along an edge of "
+        "degree three.</qt>"));
     layout->addWidget(use23, 1, 0);
     use44 = new QRadioButton(i18n("&4-4"), ui);
+    QWhatsThis::add(use44, i18n("<qt>Perform a 4-4 move on this "
+        "triangulation.<p>"
+        "A <i>4-4 move</i> involves replacing four tetrahedra joined along "
+        "an edge of degree four with four new tetrahedra joined along a "
+        "different edge in a different position.</qt>"));
     layout->addWidget(use44, 2, 0);
     use20e = new QRadioButton(i18n("2-0 (&edge)"), ui);
+    QWhatsThis::add(use20e, i18n("<qt>Perform a 2-0 edge move on this "
+        "triangulation.<p>"
+        "A <i>2-0 edge move</i> involves taking two tetrahedra joined along "
+        "an edge of degree two and squashing them flat.</qt>"));
     layout->addWidget(use20e, 3, 0);
     use20v = new QRadioButton(i18n("2-0 (&vertex)"), ui);
+    QWhatsThis::add(use20v, i18n("<qt>Perform a 2-0 vertex move on this "
+        "triangulation.<p>"
+        "A <i>2-0 vertex move</i> involves taking two tetrahedra meeting at "
+        "a vertex of degree two and squashing them flat.</qt>"));
     layout->addWidget(use20v, 4, 0);
     use21 = new QRadioButton(i18n("2-&1"), ui);
+    QWhatsThis::add(use21, i18n("<qt>Perform a 2-1 move on this "
+        "triangulation.<p>"
+        "A <i>2-1 move</i> involves taking a tetrahedron joined to itself "
+        "about an edge of degree one and merging it with an adjacent "
+        "tetrahedron.</qt>"));
     layout->addWidget(use21, 5, 0);
     useOpenBook = new QRadioButton(i18n("&Open book"), ui);
+    QWhatsThis::add(useOpenBook, i18n("<qt>Perform a book opening "
+        "move on this triangulation.<p>"
+        "A <i>book opening move</i> involves taking an internal face that "
+        "touches the boundary of the triangulation along at least one edge "
+        "and ungluing the tetrahedra along that face, thereby exposing two "
+        "more faces to the boundary.</qt>"));
     layout->addWidget(useOpenBook, 6, 0);
     useShellBdry = new QRadioButton(i18n("&Shell boundary"), ui);
+    QWhatsThis::add(useShellBdry, i18n("<qt>Perform a boundary shelling "
+        "move on this triangulation.<p>"
+        "A <i>boundary shelling move</i> simply involves removing a "
+        "tetrahedron that meets the triangulation boundary along one or "
+        "more faces.</qt>"));
     layout->addWidget(useShellBdry, 7, 0);
 
     box32 = new KComboBox(ui);
+    QWhatsThis::add(box32, i18n("<qt>Select the degree three edge about which "
+        "the 3-2 move will be performed.  The edge numbers in this list "
+        "correspond to the edge numbers seen when viewing the "
+        "triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
     layout->addWidget(box32, 0, 1);
     box23 = new KComboBox(ui);
+    QWhatsThis::add(box23, i18n("<qt>Select the face about which "
+        "the 2-3 move will be performed.  The face numbers in this list "
+        "correspond to the face numbers seen when viewing the "
+        "triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
     layout->addWidget(box23, 1, 1);
     box44 = new KComboBox(ui);
+    QWhatsThis::add(box44, i18n("<qt>Select the degree four edge about which "
+        "the 4-4 move will be performed.  You must also select the axis "
+        "along which the four new tetrahedra will be inserted (there are "
+        "two different ways in which this can be done).<p>"
+        "The edge numbers in this list correspond to the edge numbers seen "
+        "when viewing the triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
     layout->addWidget(box44, 2, 1);
     box20e = new KComboBox(ui);
+    QWhatsThis::add(box20e, i18n("<qt>Select the degree two edge about which "
+        "the 2-0 edge move will be performed.  The edge numbers in this list "
+        "correspond to the edge numbers seen when viewing the "
+        "triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
     layout->addWidget(box20e, 3, 1);
     box20v = new KComboBox(ui);
+    QWhatsThis::add(box20v, i18n("<qt>Select the degree two vertex about "
+        "which the 2-0 vertex move will be performed.  The vertex numbers "
+        "in this list correspond to the vertex numbers seen when viewing the "
+        "triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
     layout->addWidget(box20v, 4, 1);
     box21 = new KComboBox(ui);
+    QWhatsThis::add(box21, i18n("<qt>Select the degree one edge about which "
+        "the 2-1 move will be performed.  You must also select at which "
+        "end of the edge the surrounding tetrahedron will be merged with "
+        "its neighbour.<p>"
+        "The edge numbers in this list correspond to the edge numbers seen "
+        "when viewing the triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
     layout->addWidget(box21, 5, 1);
     boxOpenBook = new KComboBox(ui);
+    QWhatsThis::add(boxOpenBook, i18n("<qt>Select the internal face "
+        "that should be opened out.  The face numbers in this list "
+        "correspond to the face numbers seen when viewing the "
+        "triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
     layout->addWidget(boxOpenBook, 6, 1);
     boxShellBdry = new KComboBox(ui);
+    QWhatsThis::add(boxOpenBook, i18n("<qt>Select the boundary tetrahedron "
+        "that should be removed.  The tetrahedron numbers in this list "
+        "are the usual tetrahedron numbers seen in the gluings editor.<p>"
+        "Only moves that do not change the underlying 3-manifold are "
+        "offered.</qt>"));
     layout->addWidget(boxShellBdry, 7, 1);
 
     fillWithMoves();

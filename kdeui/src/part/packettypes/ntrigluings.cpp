@@ -81,13 +81,18 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     faceTable = new QTable(0, 5, 0);
     faceTable->setReadOnly(! readWrite);
-//  QWhatsThis::add(faceTable, i18n("<qt>A table specifying which tetrahedron "
-//      "faces are identified with which others.<p>"
-//      "Tetrahedra are numbered upwards from 0, and the four vertices of "
-//      "each tetrahedron are numbered 0, 1, 2 and 3.  Each row of the table "
-//      "represents a tetrahedron, and each column represents a face of that "
-//      "tetrahedron.
-//      "table shows stuff.</qt>"));
+    QWhatsThis::add(faceTable, i18n("<qt>A table specifying which tetrahedron "
+        "faces are identified with which others.<p>"
+        "Tetrahedra are numbered upwards from 0, and the four vertices of "
+        "each tetrahedron are numbered 0, 1, 2 and 3.  Each row of the table "
+        "represents a single tetrahedron, and shows the identifications "
+        "for each of its four faces.<p>"
+        "As an example, a gluing of <i>5 (031)</i> for face 012 of "
+        "tetrahedron 7 shows that this face is identified with face 031 of "
+        "tetrahedron 5, in such a way that vertices 0, 1 and 2 of tetrahedron "
+        "5 are mapped to vertices 0, 3 and 1 respectively of tetrahedron 7.<p>"
+        "To change these identifications, simply type your own gluings into "
+        "the table.</qt>"));
 
     QHeader* hdr = faceTable->verticalHeader();
     hdr->hide();

@@ -84,6 +84,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         PacketChooser* filter;
         std::auto_ptr<QListView> table;
         std::auto_ptr<SurfaceHeaderToolTip> headerTips;
+        QString tableWhatsThis;
 
         /**
          * Surface list actions

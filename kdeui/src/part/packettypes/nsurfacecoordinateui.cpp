@@ -108,6 +108,15 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
 
     // And leave space for the table.
     // We won't actually set up the table until we refresh.
+    tableWhatsThis = i18n("Displays details of the individual normal "
+        "surfaces in this list.<p>"
+        "Each row represents a single normal (or almost normal) surface.  "
+        "As well as various properties of the surface, each row contains "
+        "a detailed representation the surface in the currently selected "
+        "coordinate system.<p>"
+        "For details on what each property means or what each coordinate "
+        "represents, hover the mouse over the column header (or refer "
+        "to the reference manual).</qt>");
 
     // Set up the surface list actions.
     surfaceActions = new KActionCollection(0, 0, 0,
@@ -185,6 +194,7 @@ void NSurfaceCoordinateUI::refreshLocal() {
     table->setSorting(-1);
     table->setSelectionMode(QListView::Single);
     table->setDefaultRenameAction(QListView::Accept);
+    QWhatsThis::add(table, tableWhatsThis);
     uiLayout->addWidget(table.get(), 1);
 
     // Add table columns.
