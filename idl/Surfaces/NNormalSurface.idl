@@ -48,7 +48,10 @@ module Regina {
             string getEulerCharacteristic();
             long isOrientable();
             long isTwoSided();
+            long isConnected();
             boolean hasRealBoundary();
+            boolean isVertexLinking();
+            boolean isVertical();
         };
     };
 };

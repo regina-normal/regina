@@ -16,6 +16,7 @@ Regina - A Normal Surface Theory Calculator
         Class NFace:
             - Added getType(), getSubtype(), isMobiusBand(), isCone().
         Class NNormalSurface:
+            - Added isConnected(), isVertexLink(), isVertical().
             - Fixed isOrientable() and added isTwoSided().
         Class NPerm:
             - Added operators = and != and constructor NPerm(const NPerm&).

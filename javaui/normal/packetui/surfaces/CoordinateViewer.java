@@ -295,10 +295,10 @@ public class CoordinateViewer extends DefaultPacketViewer
         public int getColumnCount() {
             if (set.isEmbeddedOnly())
                 return Coordinates.getNumberOfCoordinates(flavour,
-                    set.getTriangulation()) + 4;
+                    set.getTriangulation()) + 5;
             else
                 return Coordinates.getNumberOfCoordinates(flavour,
-                    set.getTriangulation()) + 2;
+                    set.getTriangulation()) + 3;
         }
 
         /**
@@ -343,9 +343,16 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return new FancyData("Real Bdry", red);
                         else
                             return new FancyData("Closed", green);
+                    case 4:
+                        if (surface.isVertexLinking())
+                            return "Vtx Link";
+                        else if (surface.isVertical())
+                            return "Vertical";
+                        else
+                            return "";
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
-                            surface, column - 4);
+                            surface, column - 5);
                         if (bigAns == null)
                             return "Inf";
                         else if (bigAns.signum() == 0)
@@ -367,9 +374,16 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return new FancyData("Real Bdry", red);
                         else
                             return new FancyData("Closed", green);
+                    case 2:
+                        if (surface.isVertexLinking())
+                            return "Vtx Link";
+                        else if (surface.isVertical())
+                            return "Vertical";
+                        else
+                            return "";
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
-                            surface, column - 2);
+                            surface, column - 3);
                         if (bigAns == null)
                             return "Inf";
                         else if (bigAns.signum() == 0)
@@ -395,9 +409,11 @@ public class CoordinateViewer extends DefaultPacketViewer
                         return "Sides";
                     case 3:
                         return "Bdry";
+                    case 4:
+                        return "Type";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            set.getTriangulation(), column - 4);
+                            set.getTriangulation(), column - 5);
                 }
             else
                 switch(column) {
@@ -405,9 +421,11 @@ public class CoordinateViewer extends DefaultPacketViewer
                         return "Euler";
                     case 1:
                         return "Bdry";
+                    case 2:
+                        return "Type";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            set.getTriangulation(), column - 2);
+                            set.getTriangulation(), column - 3);
                 }
         }
 
@@ -420,26 +438,30 @@ public class CoordinateViewer extends DefaultPacketViewer
             if (set.isEmbeddedOnly())
                 switch(column) {
                     case 0:
-                        return "Euler Characteristic";
+                        return "Euler characteristic";
                     case 1:
                         return "Orientability";
                     case 2:
-                        return "Number of Sides";
+                        return "Number of sides";
                     case 3:
                         return "Boundary";
+                    case 4:
+                        return "Other interesting properties";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            set.getTriangulation(), column - 4);
+                            set.getTriangulation(), column - 5);
                 }
             else
                 switch(column) {
                     case 0:
-                        return "Euler Characteristic";
+                        return "Euler characteristic";
                     case 1:
                         return "Boundary";
+                    case 2:
+                        return "Other interesting properties";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            set.getTriangulation(), column - 2);
+                            set.getTriangulation(), column - 3);
                 }
         }
     }

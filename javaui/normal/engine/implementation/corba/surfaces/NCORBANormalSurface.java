@@ -86,7 +86,16 @@ public class NCORBANormalSurface extends CORBAShareableObject
     public int isTwoSided() {
         return data.isTwoSided();
     }
+    public int isConnected() {
+        return data.isConnected();
+    }
     public boolean hasRealBoundary() {
         return data.hasRealBoundary();
+    }
+    public boolean isVertexLinking() {
+        return data.isVertexLinking();
+    }
+    public boolean isVertical() {
+        return data.isVertical();
     }
 }

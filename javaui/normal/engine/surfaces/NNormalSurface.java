@@ -93,6 +93,9 @@ public interface NNormalSurface extends ShareableObject {
     public BigInteger getEulerCharacteristic();
     public int isOrientable();
     public int isTwoSided();
+    public int isConnected();
     public boolean hasRealBoundary();
+    public boolean isVertexLinking();
+    public boolean isVertical();
 }
 

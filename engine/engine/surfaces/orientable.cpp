@@ -67,6 +67,7 @@ void NNormalSurface::calculateOrientable() {
     // All right.  Off we go.
     calculatedOrientable = false;
     calculatedTwoSided = false;
+    calculatedConnected = false;
     
     NDiscSetSurfaceData<OrientData> orients(*this);
         // Stores the orientation of each disc.
@@ -90,6 +91,8 @@ void NNormalSurface::calculateOrientable() {
     bool mySides, yourSides, sameSides;
     int i;
 
+    bool noComponents = true;
+
     while (true) {
         // If there's no discs to propagate from, choose the next
         // unoriented one.
@@ -98,6 +101,12 @@ void NNormalSurface::calculateOrientable() {
                 orients.data(*it).orient = 1;
                 orients.data(*it).sides = 1;
                 queue.insert(*it);
+                if (noComponents)
+                    noComponents = false;
+                else {
+                    connected = -1;
+                    calculatedConnected = true;
+                }
             }
             it++;
         }
@@ -199,7 +208,8 @@ void NNormalSurface::calculateOrientable() {
 
             // Tidy up.
             delete adjDisc;
-            if (calculatedOrientable && calculatedTwoSided)
+            if (calculatedOrientable && calculatedTwoSided &&
+                    calculatedConnected)
                 return;
         }
     }
@@ -214,6 +224,10 @@ void NNormalSurface::calculateOrientable() {
     if (! calculatedTwoSided) {
         twoSided = 1;
         calculatedTwoSided = true;
+    }
+    if (! calculatedConnected) {
+        connected = 1;
+        calculatedConnected = true;
     }
 }
 

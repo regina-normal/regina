@@ -52,6 +52,7 @@
 #define PROPID_COMPACT 6
 #define PROPID_ORIENTABILITY 7
 #define PROPID_TWOSIDEDNESS 8
+#define PROPID_CONNECTEDNESS 9
 
 const int vertexSplit[4][4] = {
     { -1, 0, 1, 2 },
@@ -139,6 +140,10 @@ NNormalSurface* NNormalSurface::clone() const {
         ans->twoSided = twoSided;
         ans->calculatedTwoSided = true;
     }
+    if (calculatedConnected) {
+        ans->connected = connected;
+        ans->calculatedConnected = true;
+    }
     if (calculatedRealBoundary) {
         ans->realBoundary = realBoundary;
         ans->calculatedRealBoundary = true;
@@ -164,6 +169,10 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
         twoSided = infile.readInt();
         calculatedTwoSided = true;
     }
+    else if (propType == PROPID_CONNECTEDNESS) {
+        connected = infile.readInt();
+        calculatedConnected = true;
+    }
     else if (propType == PROPID_REALBOUNDARY) {
         realBoundary = infile.readBool();
         calculatedRealBoundary = true;
@@ -178,6 +187,7 @@ void NNormalSurface::initialiseAllProperties() {
     calculatedEulerChar = false;
     calculatedOrientable = false;
     calculatedTwoSided = false;
+    calculatedConnected = false;
     calculatedRealBoundary = false;
     calculatedCompact = false;
 }
@@ -237,6 +247,46 @@ bool NNormalSurfaceVector::isCompact(NTriangulation* triang) const {
         for (tet = 0; tet < nTets; tet++)
             for (type = 0; type < 3; type++)
                 if (getOctCoord(tet, type, triang).isInfinite())
+                    return false;
+    return true;
+}
+
+bool NNormalSurfaceVector::isVertexLinking(NTriangulation* triang) const {
+    unsigned long nTets = triang->getNumberOfTetrahedra();
+    unsigned long tet;
+    int type;
+    for (tet = 0; tet < nTets; tet++) {
+        for (type = 0; type < 3; type++)
+            if (getQuadCoord(tet, type, triang) != 0)
+                return false;
+    }
+    if (allowsAlmostNormal())
+        for (tet = 0; tet < nTets; tet++)
+            for (type = 0; type < 3; type++)
+                if (getOctCoord(tet, type, triang) != 0)
+                    return false;
+    return true;
+}
+
+bool NNormalSurfaceVector::isVertical(NTriangulation* triang) const {
+    unsigned long nTets = triang->getNumberOfTetrahedra();
+    unsigned long tet;
+    int type;
+    NLargeInteger tot;
+    for (tet = 0; tet < nTets; tet++) {
+        for (type = 0; type < 4; type++)
+            if (getTriangleCoord(tet, type, triang) != 0)
+                return false;
+        tot = (long)0;
+        for (type = 0; type < 3; type++)
+            tot += getQuadCoord(tet, type, triang);
+        if (tot != 1)
+            return false;
+    }
+    if (allowsAlmostNormal())
+        for (tet = 0; tet < nTets; tet++)
+            for (type = 0; type < 3; type++)
+                if (getOctCoord(tet, type, triang) != 0)
                     return false;
     return true;
 }
@@ -354,6 +404,11 @@ void NNormalSurface::writeToFile(NFile& out) const {
     if (calculatedTwoSided) {
         bookmark = writePropertyHeader(out, PROPID_TWOSIDEDNESS);
         out.writeInt(twoSided);
+        writePropertyFooter(out, bookmark);
+    }
+    if (calculatedConnected) {
+        bookmark = writePropertyHeader(out, PROPID_CONNECTEDNESS);
+        out.writeInt(connected);
         writePropertyFooter(out, bookmark);
     }
     if (calculatedRealBoundary) {

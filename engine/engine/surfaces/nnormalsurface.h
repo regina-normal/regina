@@ -312,10 +312,44 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          * Subclasses of NNormalSurfaceVector should override this if
          * they can provide a faster implementation.
          * 
+         * @param triang the triangulation in which this normal surface lives.
          * @return \c true if and only if the normal surface represented
          * is compact.
          */
         virtual bool isCompact(NTriangulation* triang) const;
+        /**
+         * Determines if the normal surface represented is vertex
+         * linking.  A <i>vertex linking</i> surface contains only
+         * triangles.
+         *
+         * The default implementation for this routine simply runs
+         * through every non-triangular disc type ensuring that each
+         * has no corresponding discs.
+         * Subclasses of NNormalSurfaceVector should override this if
+         * they can provide a faster implementation.
+         * 
+         * @param triang the triangulation in which this normal surface lives.
+         * @return \c true if and only if the normal surface represented
+         * is vertex linking.
+         */
+        virtual bool isVertexLinking(NTriangulation* triang) const;
+        /**
+         * Determines if the normal surface represented is vertical in
+         * the given triangulation.  A \a vertical surface
+         * is a compact surface containing precisely
+         * one quad per tetrahedron and no other normal (or almost
+         * normal) discs.
+         *
+         * The default implementation for this routine simply runs
+         * through and checks the count for each disc type.
+         * Subclasses of NNormalSurfaceVector should override this if
+         * they can provide a faster implementation.
+         * 
+         * @param triang the triangulation in which this normal surface lives.
+         * @return \c true if and only if the normal surface represented
+         * is compact.
+         */
+        virtual bool isVertical(NTriangulation* triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -498,6 +532,11 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
                  1 is true, -1 is false and 0 is undetermined. */
         bool calculatedTwoSided;
             /**< Have we calculated the two-sidedness of this surface
+                 (or the indeterminibility thereof)? */
+        int connected;
+            /**< Is this surface connected? */
+        bool calculatedConnected;
+            /**< Have we calculated the connectedness of this surface
                  (or the indeterminibility thereof)? */
         bool realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
@@ -737,12 +776,47 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          */
         int isTwoSided();
         /**
+         * Returns whether or not this surface is connected.
+         *
+         * \pre This normal surface is compact (has finitely many discs).
+         *
+         * @return 1 if this surface is connected, -1 if this surface
+         * is not connected and 0 if connectedness cannot be determined
+         * (for instance, if there are too many normal discs).
+         */
+        int isConnected();
+        /**
          * Determines if this surface has any real boundary, that is,
          * whether it meets any boundary faces of the triangulation.
          *
          * @return \c true if and only if this surface has real boundary.
          */
         bool hasRealBoundary();
+
+        /**
+         * Determines whether or not this surface is vertex linking.
+         * A <i>vertex linking</i> surface contains only triangles.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * @return \c true if and only if this surface is vertex linking.
+         */
+        bool isVertexLinking() const;
+        /**
+         * Determines whether or not this surface is a vertical surface.
+         * A \a vertical surface is a compact surface containing
+         * precisely one quad per tetrahedron and no other normal (or
+         * almost normal) discs.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * @return \c true if and only if this surface is vertical.
+         */
+        bool isVertical() const;
 
         /**
          * Cuts the associated triangulation along this surface and
@@ -874,10 +948,24 @@ inline int NNormalSurface::isTwoSided() {
     return twoSided;
 }
 
+inline int NNormalSurface::isConnected() {
+    if (! calculatedConnected)
+        calculateOrientable();
+    return connected;
+}
+
 inline bool NNormalSurface::hasRealBoundary() {
     if (! calculatedRealBoundary)
         calculateRealBoundary();
     return realBoundary;
+}
+
+inline bool NNormalSurface::isVertexLinking() const {
+    return vector->isVertexLinking(triangulation);
+}
+
+inline bool NNormalSurface::isVertical() const {
+    return vector->isVertical(triangulation);
 }
         
 #endif

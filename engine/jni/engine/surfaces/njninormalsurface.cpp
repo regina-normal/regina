@@ -108,6 +108,12 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT jint JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isConnected
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isConnected();
+}
+
+JNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isOrientable
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isOrientable();
@@ -117,6 +123,18 @@ JNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isTwoSided
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isTwoSided();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isVertexLinking
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isVertexLinking();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isVertical
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isVertical();
 }
 
 JNIEXPORT void JNICALL
