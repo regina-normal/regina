@@ -176,6 +176,8 @@ class NPerm {
          *
          * \pre \a a and \a b are in {0,1,2,3}.
          *
+         * \ifaces Not present.
+         *
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
