@@ -30,6 +30,13 @@ EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
   jnihdr jnihdr-clean \
   help
 
+install-exec-local :
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_SCRIPT) regina $(DESTDIR)$(bindir)/@PACKAGE@
+
+uninstall-local :
+	rm -f $(DESTDIR)$(bindir)/@PACKAGE@
+
 engine :
 	cd engine/engine && $(MAKE)
 jni : engine
