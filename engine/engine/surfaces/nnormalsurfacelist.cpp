@@ -54,20 +54,6 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, a, t) \
-    case NNormalSurfaceList::id_name: \
-        class::createNonNegativeCone(triangulation, rays, faces); break;
-
-void createNonNegativeCone(NTriangulation* triangulation, int flavour,
-        NDoubleList<NConeRay*>& rays,
-        NDoubleList<NVector<NLargeInteger>*>& faces) {
-    switch(flavour) {
-        // Import cases from the flavour registry.
-        #include "surfaces/flavourregistry.h"
-    }
-}
-
-#undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, c, n, a, test) \
     case NNormalSurfaceList::id_name: \
         if (! (test)) return; break;
@@ -87,34 +73,36 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
     // Form the matching equations and starting cone.
     NMatrixInt* eqns = makeMatchingEquations(triang, newFlavour);
 
-    NDoubleList<NConeRay*> originalCone;
-    NDoubleList<NVector<NLargeInteger>*> faces;
-    createNonNegativeCone(triang, newFlavour, originalCone, faces);
+    std::list<NConeRay*> originalCone;
+    std::list<NVector<NLargeInteger>*> faces;
+    createNonNegativeCone(triang, newFlavour, back_inserter(originalCone),
+        back_inserter(faces));
 
     // Find the normal surfaces.
-    NDoubleList<NConeRay*>* ans =
-        intersectCone(originalCone, faces, *eqns, embeddedOnly);
-    NDoubleListIterator<NConeRay*> it(*ans);
-    NNormalSurfaceVector* s;
+    // TODO: Change this so the output iterator directly creates the new
+    // normal surface.
+    std::list<NConeRay*> ans;
+    intersectCone(back_inserter(ans), originalCone.begin(), originalCone.end(),
+        faces.begin(), faces.end(), *eqns, embeddedOnly);
+    std::list<NConeRay*>::iterator it;
     if (allowsAlmostNormal()) {
         // Prune the surfaces with more than one oct disc.
-        while (! it.done()) {
+        NNormalSurfaceVector* s;
+        for (it = ans.begin(); it != ans.end(); it++) {
             s = (NNormalSurfaceVector*)(*it);
             if (! (s->hasMultipleOctDiscs(triang)))
                 surfaces.push_back(new NNormalSurface(triang, s));
-            it++;
         }
     } else {
         // Just add in all the surfaces.
-        while (! it.done()) {
-            s = (NNormalSurfaceVector*)(*it);
-            surfaces.push_back(new NNormalSurface(triang, s));
-            it++;
-        }
+        for (it = ans.begin(); it != ans.end(); it++)
+            surfaces.push_back(new NNormalSurface(triang,
+                (NNormalSurfaceVector*)*it));
     }
-    originalCone.flushAndDelete();
-    faces.flushAndDelete();
-    delete ans;
+    for_each(originalCone.begin(), originalCone.end(),
+        FuncDelete<NConeRay>());
+    for_each(faces.begin(), faces.end(),
+        FuncDelete<NVector<NLargeInteger> >());
     delete eqns;
 }
 

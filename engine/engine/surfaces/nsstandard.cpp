@@ -92,22 +92,6 @@ NLargeInteger NNormalSurfaceVectorStandard::getFaceArcs(
     return ans;
 }
 
-void NNormalSurfaceVectorStandard::createNonNegativeCone(
-        NTriangulation* triangulation,
-        NDoubleList<NConeRay*>& rays,
-        NDoubleList<NVector<NLargeInteger>*>& faces) {
-    unsigned long nCoords = 7 * triangulation->getNumberOfTetrahedra();
-
-    NNormalSurfaceVector* vector;
-    for (unsigned long i=0; i<nCoords; i++) {
-        vector = new NNormalSurfaceVectorStandard(nCoords);
-        vector->setElement(i, NLargeInteger::one);
-        rays.addLast(vector);
-
-        faces.addLast(new NVectorUnit<NLargeInteger>(nCoords, i));
-    }
-}
-
 NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
         NTriangulation* triangulation) {
     unsigned long nCoords = 7 * triangulation->getNumberOfTetrahedra();

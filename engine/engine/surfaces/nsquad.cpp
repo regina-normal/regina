@@ -56,23 +56,6 @@ bool NNormalSurfaceVectorQuad::isCompatibleWith(const NConeRay& other) const {
     return true;
 }
 
-void NNormalSurfaceVectorQuad::createNonNegativeCone(
-        NTriangulation* triangulation,
-        NDoubleList<NConeRay*>& rays,
-        NDoubleList<NVector<NLargeInteger>*>& faces) {
-    unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();
-
-    // Fill the lists with unit vectors.
-    NNormalSurfaceVector* vector;
-    for (unsigned long i=0; i<nCoords; i++) {
-        vector = new NNormalSurfaceVectorQuad(nCoords);
-        vector->setElement(i, NLargeInteger::one);
-        rays.addLast(vector);
-
-        faces.addLast(new NVectorUnit<NLargeInteger>(nCoords, i));
-    }
-}
-
 NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
         NTriangulation* triangulation) {
     unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();

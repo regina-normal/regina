@@ -63,7 +63,7 @@ dist_mask = Makefile* *.txt *.cpp insertstubreplace replacetabs stub*
 
 engine_dirs = $(dirs_engine_engine) $(dirs_engine_jni) $(dirs_engine_corba)
 engine_src = $(engine_dirs:=/*.cpp)
-engine_hdr = $(engine_dirs:=/*.h)
+engine_hdr = $(engine_dirs:=/*.h) $(engine_dirs:=/*.tcc)
 
 java_package_dirs_ui = $(subst .,/,$(packages_ui))
 java_package_dirs_all = $(subst .,/,$(packages_ui)) \

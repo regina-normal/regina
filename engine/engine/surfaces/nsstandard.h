@@ -37,7 +37,6 @@
 #endif
 
 #include "surfaces/nnormalsurface.h"
-#include "utilities/ndoublelist.h"
 
 class NMatrixInt;
 
@@ -87,9 +86,9 @@ class NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
 
         virtual NVector<NLargeInteger>* clone() const;
 
+        template <class RayOutputIterator, class FaceOutputIterator>
         static void createNonNegativeCone(NTriangulation* triangulation,
-            NDoubleList<NConeRay*>& rays,
-            NDoubleList<NVector<NLargeInteger>*>& faces);
+            RayOutputIterator rays, FaceOutputIterator faces);
         static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
 };
 
@@ -115,6 +114,10 @@ inline NLargeInteger NNormalSurfaceVectorStandard::getOctCoord(
         unsigned long, int, NTriangulation*) const {
     return zero;
 }
+
+// Template definitions
+
+#include "surfaces/nsstandard.tcc"
 
 #endif
 

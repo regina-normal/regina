@@ -26,38 +26,24 @@
 
 /* end stub */
 
-#include "surfaces/nconeray.h"
-#include "maths/nvectorunit.h"
-#include "maths/nvectormatrix.h"
-#include "maths/nmatrixint.h"
+/* To be included from nnormalsurfacelist.h. */
 
-void NConeRay::scaleDown() {
-    NLargeInteger gcd; // Initialised to 0.
-    unsigned i;
-    for (i = 0; i < vectorSize; i++) {
-        if (elements[i].isInfinite() || elements[i] == zero)
-            continue;
-        gcd = gcd.gcd(elements[i]);
-        if (gcd < 0)
-            gcd.negate();
-        if (gcd == one)
-            return;
+#include "surfaces/flavourregistry.h"
+
+#define __FLAVOUR_REGISTRY_BODY
+#define REGISTER_FLAVOUR(id_name, class, n, a, t) \
+    case NNormalSurfaceList::id_name: \
+        class::createNonNegativeCone(triangulation, rays, faces); break;
+
+template <class RayOutputIterator, class FaceOutputIterator>
+void createNonNegativeCone(NTriangulation* triangulation, int flavour,
+        RayOutputIterator rays, FaceOutputIterator faces) {
+    switch(flavour) {
+        // Import cases from the flavour registry.
+        #include "surfaces/flavourregistry.h"
     }
-    if (gcd == zero)
-        return;
-    for (i = 0; i < vectorSize; i++)
-        if ((! elements[i].isInfinite()) && elements[i] != zero)
-            elements[i].divByExact(gcd);
 }
 
-NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
-        const NConeRay& hyperplane) {
-    NConeRay* ans = (NConeRay*)neg.clone();
-
-    (*ans) *= (hyperplane * pos);
-    (*ans).subtractCopies(pos, hyperplane * neg);
-    (*ans).scaleDown();
-
-    return ans;
-}
+#undef REGISTER_FLAVOUR
+#undef __FLAVOUR_REGISTRY_BODY
 

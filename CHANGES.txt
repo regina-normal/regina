@@ -15,7 +15,7 @@ Version 2.5  [ (under development) ]
               Template Library classes (transition mostly complete).
             - Replaced strstreams with stringstreams.
             - Modified to also build under gcc3.
-        Classes NBoolVector, NHashSet, NInfiniteArray, NIntMap,
+        Classes NBoolVector, NDoubleList, NHashSet, NInfiniteArray, NIntMap,
                 NOrderedPair, NPointerSet, NQueue, NSet, NStack,
                 NStringPair and associates:
             - All removed in favour of Standard Template Library classes.

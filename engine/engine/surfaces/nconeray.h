@@ -36,7 +36,6 @@
 #define __NCONERAY_H
 #endif
 
-#include "utilities/ndoublelist.h"
 #include "utilities/nmpi.h"
 #include "maths/nvectordense.h"
 
@@ -142,8 +141,8 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
 /**
  * Determines the extremal rays of the intersection of the given cone
  * with the given hyperplane.  The resulting rays will be newly
- * allocated and placed in \a results.  Their deallocation is the
- * responsibility of whoever called this routine.
+ * allocated and written to the given output iterator.  Their deallocation is
+ * the responsibility of whoever called this routine.
  *
  * The given cone is represented by a list of its extremal rays and a
  * list of hyperplanes that determine its faces.  Specifically the list
@@ -155,7 +154,7 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
  *
  * Conditions upon the structure of the cone and the ray and face lists
  * are identical to those for
- * intersectCone(const NDoubleList<NConeRay*>&, const NMatrixInt&, bool).
+ * ::intersectCone(OutputIterator, RayIterator, RayIterator, FaceIterator, FaceIterator, const NMatrixInt&, bool).
  *
  * The hyperplane whose intersection we will take with the cone must pass
  * through the origin, and is represented by the vector of a ray
@@ -167,40 +166,51 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
  * If \a testCompatibility is set to \c true, only "valid" extremal rays
  * as defined by NConeRay::isCompatibleWith() will be found.
  *
- * \pre The cone described by \a oldRays and \a faces is convex and
+ * \pre The cone described by <tt>[oldRaysFirst, oldRaysLast)</tt>
+ * and <tt>[facesFirst, facesLast)</tt> is convex and
  * satisfies the structural requirements given above.
- * \pre The list \a oldRays of extremal rays does not
- * contain any duplicates or redundancies.
- * \pre The list \a results is empty.
- * \pre If \a testCompatibility is passed as \c true, then
- * the given list \a oldRays must contain only "valid" rays.
+ * \pre The list <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
+ * does not contain any duplicates or redundancies.
+ * \pre If \a testCompatibility is passed as \c true, then the list
+ * </tt>[oldRaysFirst, oldRaysLast)</tt> must contain only "valid" rays.
  *
  * \ifaces Not present.
  *
- * @param results the list into which the resulting extremal rays will
- * be placed.
- * @param oldRays the extremal rays defining the cone to intersect with
- * the given hyperplane.
- * @param faces a list of hyperplanes that determine the faces of the
- * given cone, as described above; each hyperplane is represented by
- * the vector of a ray perpendicular to it.  Note that this list is
- * allowed to contain duplicates or redundancies.
+ * @param results the output iterator to which the resulting extremal
+ * rays will be written; this must accept objects of type <tt>NConeRay*</tt>.
+ * @param oldRaysFirst the beginning of the list
+ * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
+ * defining the cone to intersect with the given hyperplane; this must
+ * be a forward iterator over objects of type <tt>const NConeRay*</tt>.
+ * @param oldRaysLast the end of the list
+ * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
+ * defining the cone to intersect with the given hyperplane; this must
+ * be a forward iterator over objects of type <tt>const NConeRay*</tt>.
+ * @param facesFirst the beginning of the list <tt>[facesFirst, facesLast)</tt>
+ * of hyperplanes that determine the faces of the given cone, as described
+ * above; each hyperplane is represented by the vector of a ray perpendicular
+ * to it.  Note that this list is allowed to contain duplicates or
+ * redundancies.  This must be a forward iterator over objects of type
+ * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
+ * @param facesLast the end of the list <tt>[facesFirst, facesLast)</tt>
+ * of hyperplanes that determine the faces of the given cone.
+ * This must be a forward iterator over objects of type
+ * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
  * @param hyperplane the hyperplane to intersect with the given cone.
  * @param testCompatibility \c true if we are to only find "valid" extremal
  * rays as defined by NConeRay::isCompatibleWith().
  */
-void intersectCone(NDoubleList<NConeRay*>& results,
-    const NDoubleList<NConeRay*>& oldRays,
-    const NDoubleList<NVector<NLargeInteger>*>& faces,
-    const NConeRay& hyperplane,
-    bool testCompatibility);
+template <class OutputIterator, class RayIterator, class FaceIterator>
+void intersectCone(OutputIterator results,
+    RayIterator oldRaysFirst, RayIterator oldRaysLast,
+    FaceIterator facesFirst, FaceIterator facesLast,
+    const NConeRay& hyperplane, bool testCompatibility);
 
 /**
  * Determines the extremal rays of the intersection of the given cone
  * with the given linear subspace.  The resulting rays will be newly
- * allocated and placed in a newly allocated list which will be
- * returned.  The deallocation of both the rays and the list is the
- * responsibility of whoever called this routine.
+ * allocated and written to the given output iterator.  Their
+ * deallocation is the responsibility of whoever called this routine.
  *
  * The given cone is represented by a list of its extremal rays and a
  * list of hyperplanes that determine its faces.  Specifically the list
@@ -230,36 +240,48 @@ void intersectCone(NDoubleList<NConeRay*>& results,
  *
  * The algorithm used is a modified double descriptor method.
  *
- * \pre The cone described by \a oldRays and \a faces is convex and
+ * \pre The cone described by <tt>[oldRaysFirst, oldRaysLast)</tt> and
+ * <tt>[facesFirst, facesLast)</tt> is convex and
  * satisfies the structural requirements given above.
- * \pre The list \a oldRays of extremal rays does not
+ * \pre The list <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays does not
  * contain any duplicates or redundancies.
- * \pre If \a testCompatibility is passed as \c true, then
- * the given list \a oldRays must contain only "valid" rays.
+ * \pre If \a testCompatibility is passed as \c true, then the given list
+ * <tt>[oldRaysFirst, oldRaysLast)</tt> must contain only "valid" rays.
  *
  * \todo \opt Intersect the hyperplanes in a good order.
  *
  * \ifaces Not present.
  *
- * @param oldRays the extremal rays defining the cone to intersect with
- * the given subspace.
- * @param faces a list of hyperplanes that determine the faces of the
- * given cone, as described above; each hyperplane is represented by
- * the vector of a ray perpendicular to it.  Note that this list is
- * allowed to contain duplicates or redundancies.
+ * @param results the output iterator to which the resulting extremal
+ * rays will be written; this must accept objects of type <tt>NConeRay*</tt>.
+ * @param oldRaysFirst the beginning of the list
+ * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
+ * defining the cone to intersect with the given subspace; this must
+ * be a forward iterator over objects of type <tt>const NConeRay*</tt>.
+ * @param oldRaysLast the end of the list
+ * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
+ * defining the cone to intersect with the given subspace; this must
+ * be a forward iterator over objects of type <tt>const NConeRay*</tt>.
+ * @param facesFirst the beginning of the list <tt>[facesFirst, facesLast)</tt>
+ * of hyperplanes that determine the faces of the given cone, as described
+ * above; each hyperplane is represented by the vector of a ray perpendicular
+ * to it.  Note that this list is allowed to contain duplicates or
+ * redundancies.  This must be a forward iterator over objects of type
+ * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
+ * @param facesLast the end of the list <tt>[facesFirst, facesLast)</tt>
+ * of hyperplanes that determine the faces of the given cone.
+ * This must be a forward iterator over objects of type
+ * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
  * @param subspace a matrix whose rows are hyperplanes whose intersection
  * defines the subspace to intersect with the given cone.
  * @param testCompatibility \c true if we are to only find "valid" extremal
  * rays as defined by NConeRay::isCompatibleWith().
- * @return a newly allocated list of newly allocated rays representing
- * the extremal rays of the intersection of the given cone and the given
- * subspace.
  */
-NDoubleList<NConeRay*>* intersectCone(
-    const NDoubleList<NConeRay*>& oldRays,
-    const NDoubleList<NVector<NLargeInteger>*>& faces,
-    const NMatrixInt& subspace,
-    bool testCompatibility);
+template <class OutputIterator, class RayIterator, class FaceIterator>
+void intersectCone(OutputIterator results,
+    RayIterator oldRaysFirst, RayIterator oldRaysLast,
+    FaceIterator facesFirst, FaceIterator facesLast,
+    const NMatrixInt& subspace, bool testCompatibility);
 
 // Inline functions for NConeRay
 
@@ -278,6 +300,10 @@ inline NVector<NLargeInteger>* NConeRay::clone() const {
 inline bool NConeRay::isCompatibleWith(const NConeRay&) const {
     return true;
 }
+
+// Template definitions
+
+#include "surfaces/nconeray.tcc"
 
 #endif
 

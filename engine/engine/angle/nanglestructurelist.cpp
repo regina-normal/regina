@@ -82,40 +82,43 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     }
 
     // Form the starting cone.
-    NDoubleList<NConeRay*> originalCone;
+    std::list<NConeRay*> originalCone;
     NAngleStructureVector* vector;
     NLargeInteger startValue(nCoords - 1);
     for (index = 0; index < nCoords - 1; index++) {
         vector = new NAngleStructureVector(nCoords);
         vector->setElement(index, startValue);
         vector->setElement(nCoords - 1, NLargeInteger::one);
-        originalCone.addLast(vector);
+        originalCone.push_back(vector);
     }
     vector = new NAngleStructureVector(nCoords);
     vector->setElement(nCoords - 1, NLargeInteger::one);
-    originalCone.addLast(vector);
+    originalCone.push_back(vector);
 
     // Form the face list.
-    NDoubleList<NVector<NLargeInteger>*> faces;
+    std::list<NVector<NLargeInteger>*> faces;
     for (index = 0; index < nCoords - 1; index++)
-        faces.addLast(new NVectorUnit<NLargeInteger>(nCoords, index));
+        faces.push_back(new NVectorUnit<NLargeInteger>(nCoords, index));
     NVectorDense<NLargeInteger>* finalFace =
         new NVectorDense<NLargeInteger>(nCoords, NLargeInteger::one);
     finalFace->setElement(nCoords - 1, -startValue);
-    faces.addLast(finalFace);
+    faces.push_back(finalFace);
 
     // Find the angle structures.
-    NDoubleList<NConeRay*>* ans = intersectCone(originalCone, faces,
-        eqns, false);
-    for (NDoubleListIterator<NConeRay*> it(*ans); ! it.done(); it++) {
-        vector = (NAngleStructureVector*)(*it);
-        structures.push_back(new NAngleStructure(owner, vector));
-    }
+    // TODO: Change this so the output iterator directly creates the new
+    // angle structure.
+    std::list<NConeRay*> ans;
+    intersectCone(back_inserter(ans), originalCone.begin(), originalCone.end(),
+        faces.begin(), faces.end(), eqns, false);
+    for (std::list<NConeRay*>::iterator it = ans.begin(); it != ans.end(); it++)
+        structures.push_back(new NAngleStructure(owner,
+            (NAngleStructureVector*)*it));
 
     // Tidy up.
-    originalCone.flushAndDelete();
-    faces.flushAndDelete();
-    delete ans;
+    for_each(originalCone.begin(), originalCone.end(),
+        FuncDelete<NConeRay>());
+    for_each(faces.begin(), faces.end(),
+        FuncDelete<NVector<NLargeInteger> >());
 }
 
 void NAngleStructureList::writeTextShort(std::ostream& o) const {

@@ -26,38 +26,23 @@
 
 /* end stub */
 
-#include "surfaces/nconeray.h"
+/* To be included from nsanstandard.h. */
+
 #include "maths/nvectorunit.h"
-#include "maths/nvectormatrix.h"
-#include "maths/nmatrixint.h"
 
-void NConeRay::scaleDown() {
-    NLargeInteger gcd; // Initialised to 0.
-    unsigned i;
-    for (i = 0; i < vectorSize; i++) {
-        if (elements[i].isInfinite() || elements[i] == zero)
-            continue;
-        gcd = gcd.gcd(elements[i]);
-        if (gcd < 0)
-            gcd.negate();
-        if (gcd == one)
-            return;
+template <class RayOutputIterator, class FaceOutputIterator>
+void NNormalSurfaceVectorANStandard::createNonNegativeCone(
+        NTriangulation* triangulation,
+        RayOutputIterator rays, FaceOutputIterator faces) {
+    unsigned long nCoords = 10 * triangulation->getNumberOfTetrahedra();
+
+    NNormalSurfaceVector* vector;
+    for (unsigned long i=0; i<nCoords; i++) {
+        vector = new NNormalSurfaceVectorANStandard(nCoords);
+        vector->setElement(i, NLargeInteger::one);
+        *rays++ = vector;
+
+        *faces++ = new NVectorUnit<NLargeInteger>(nCoords, i);
     }
-    if (gcd == zero)
-        return;
-    for (i = 0; i < vectorSize; i++)
-        if ((! elements[i].isInfinite()) && elements[i] != zero)
-            elements[i].divByExact(gcd);
-}
-
-NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
-        const NConeRay& hyperplane) {
-    NConeRay* ans = (NConeRay*)neg.clone();
-
-    (*ans) *= (hyperplane * pos);
-    (*ans).subtractCopies(pos, hyperplane * neg);
-    (*ans).scaleDown();
-
-    return ans;
 }
 

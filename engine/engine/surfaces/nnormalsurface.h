@@ -207,8 +207,8 @@ class NTriangulation;
  *   implementations.</li>
  *   <li>All abstract functions must be implemented.</li>
  *   <li>Static public functions <tt>void
- *   createNonNegativeCone(NTriangulation*, int,
- *   NDoubleList<NConeRay*>&, NDoubleList<NVector<NLargeInteger>*>&)</tt> and
+ *   createNonNegativeCone(NTriangulation*, int, RayOutputIterator,
+ *   FaceOutputIterator)</tt> and
  *   <tt>NMatrixInt* makeMatchingEquations(NTriangulation*)</tt> must be
  *   declared and implemented.  See ::createNonNegativeCone() and
  *   ::makeMatchingEquations() for further details.</li>
@@ -431,13 +431,13 @@ class NNormalSurfaceVector : public NConeRay {
             int faceVertex, NTriangulation* triang) const = 0;
 
         /**
-         * Fills the given lists with newly allocated rays and faces
-         * representing the cone obtained by setting all coordinates
+         * Writes to the given output iterators newly allocated rays and
+         * faces representing the cone obtained by setting all coordinates
          * non-negative in the flavour of coordinate system
          * corresponding to this particular subclass of
          * NNormalSurfaceVector.
          *
-         * The elements placed into the \a rays list \b must be of this
+         * The elements written to \a rays \b must be of this
          * particular subclass of NNormalSurfaceVector.
          *
          * See ::createNonNegativeCone() for further details.
@@ -446,19 +446,19 @@ class NNormalSurfaceVector : public NConeRay {
          *
          * @param triangulation the triangulation upon which the
          * underlying coordinate system is based.
-         * @param rays the list to fill with the newly allocated
-         * extremal rays; note that this list will not be emptied at the
-         * beginning of this routine.  These rays must all be of this
-         * particular subclass of NNormalSurfaceVector.
-         * @param faces the list to fill with the newly allocated face
-         * perpendiculars; note that this list will not be emptied at the
-         * beginning of this routine.  These vectors may be of any
-         * subclass of NVector<NLargeInteger>.
+         * @param rays the output iterator to which the newly allocated
+         * extremal rays will be written; these rays must all be of this
+         * particular subclass of NNormalSurfaceVector.  This iterator
+         * must accept objects of type <tt>NConeRay*</tt>.
+         * @param faces the output iterator to which the newly allocated face
+         * perpendiculars will be written; these vectors may be of any
+         * subclass of NVector<NLargeInteger>.  This iterator must
+         * accept objects of type <tt>NVector&lt;NLargeInteger&gt;*</tt>.
          */
         #ifdef __DOXYGEN
+            template <class RayOutputIterator, class FaceOutputIterator>
             static void createNonNegativeCone(NTriangulation* triangulation,
-                NDoubleList<NConeRay*>& rays,
-                NDoubleList<NVector<NLargeInteger>*>& faces);
+                RayOutputIterator rays, FaceOutputIterator faces);
         #endif
         /**
          * Creates a new set of normal surface matching equations for
