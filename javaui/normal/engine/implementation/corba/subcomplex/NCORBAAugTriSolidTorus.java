@@ -60,6 +60,15 @@ public class NCORBAAugTriSolidTorus extends CORBAShareableObject
     public NPerm getEdgeGroupRoles(int annulus) {
         return new NPerm(data.getEdgeGroupRoles(annulus));
     }
+    public long getChainLength() {
+        return data.getChainLength();
+    }
+    public int getTorusAnnulus() {
+        return data.getTorusAnnulus();
+    }
+    public boolean hasLayeredChain() {
+        return data.hasLayeredChain();
+    }
     public normal.engine.subcomplex.NSFS getSeifertStructure() {
         return NCORBASFS.newWrapper(data.getSeifertStructure());
     }

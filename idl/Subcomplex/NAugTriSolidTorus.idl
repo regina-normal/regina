@@ -40,6 +40,9 @@ module Regina {
             NTriSolidTorus getCore();
             NLayeredSolidTorus getAugTorus(in long annulus);
             char getEdgeGroupRoles(in long annulus);
+            long getChainLength();
+            long getTorusAnnulus();
+            boolean hasLayeredChain();
             NSFS getSeifertStructure();
         };
     };

@@ -76,3 +76,21 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISFS");
 }
 
+JNIEXPORT jlong JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getChainLength
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getChainLength();
+}
+
+JNIEXPORT jint JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getTorusAnnulus
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getTorusAnnulus();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_hasLayeredChain
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->hasLayeredChain();
+}
+

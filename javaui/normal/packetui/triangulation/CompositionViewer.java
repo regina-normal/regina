@@ -214,6 +214,12 @@ public class CompositionViewer extends DefaultPacketViewer
                     tri.getTetrahedron(1))) + ", " +
                     String.valueOf(triangulation.getTetrahedronIndex(
                     tri.getTetrahedron(2)))));
+                if (aug.hasLayeredChain())
+                    instance.add(new DefaultMutableTreeNode(
+                        "Attached: layered chain + layered solid torus"));
+                else
+                    instance.add(new DefaultMutableTreeNode(
+                        "Attached: 3 layered solid tori"));
                 aug.destroy();
             }
         }

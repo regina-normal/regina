@@ -45,5 +45,8 @@ public class NJNIAugTriSolidTorus extends JNIShareableObject
         return new NPerm(_getEdgeGroupRoles(annulus));
     }
     public native char _getEdgeGroupRoles(int annulus);
+    public native long getChainLength();
+    public native int getTorusAnnulus();
+    public native boolean hasLayeredChain();
     public native NSFS getSeifertStructure();
 }

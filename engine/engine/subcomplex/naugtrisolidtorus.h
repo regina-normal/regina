@@ -55,10 +55,16 @@ class NComponent;
  * triangulation.  Such a component is obtained as follows.  Begin with
  * a three-tetrahedron triangular solid torus (as described by
  * NTriSolidTorus).  Observe that the three axis edges divide the
- * boundary into three annuli.  To each of these annuli, glue a layered
- * solid torus.  Note that the degenerate (2,1,1) layered solid torus
- * (i.e., a one-triangle mobius strip) is allowed and corresponds to
- * simply gluing the two faces of the annulus together.
+ * boundary into three annuli.  Then take one of the following actions.
+ *
+ *   - To each of these annuli, glue a layered solid torus.
+ *     Note that the degenerate (2,1,1) layered solid torus
+ *     (i.e., a one-triangle mobius strip) is allowed and corresponds to
+ *     simply gluing the two faces of the annulus together.
+ *
+ *   - To one of these annuli, glue a layered solid torus as described
+ *     above.  Join the other two annuli with a layered chain
+ *     in the manner described by NTriSolidTorus::areAnnuliLinkedMajor().
  *
  * It will be assumed that all layered solid tori other than the
  * degenerate (2,1,1) will have (3,2,1) layered solid tori at their
@@ -87,6 +93,13 @@ class NAugTriSolidTorus : public ShareableObject {
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
                  is glued to an axis edge, group <tt>p[1]</tt> is glued to a
                  major edge and group <tt>p[2]</tt> is glued to a minor edge. */
+        unsigned long chainIndex;
+            /**< The number of tetrahedra in the layered chain if
+                 present, or 0 if there is no layered chain. */
+        int torusAnnulus;
+            /**< The annulus to which the single layered solid torus is
+                 attached (if there is a layered chain), or -1 if there is
+                 no layered chain. */
         NSFS seifertStructure;
             /**< The structure of the corresponding Seifert fibred space. */
     
@@ -150,6 +163,43 @@ class NAugTriSolidTorus : public ShareableObject {
         NPerm getEdgeGroupRoles(int annulus) const;
 
         /**
+         * Returns the number of tetrahedra in the layered chain linking
+         * two of the boundary annuli of the core triangular solid torus.
+         * Note that this count does not include any of the tetrahedra
+         * actually belonging to the triangular solid torus.
+         *
+         * @return the number of tetrahedra in the layered chain, or 0
+         * if there is no layered chain linking two boundary annuli.
+         */
+        unsigned long getChainLength() const;
+
+        /**
+         * Returns the single boundary annulus of the core triangular
+         * solid torus to which a layered solid torus is attached.  This
+         * routine is only meaningful if the other two annuli are linked
+         * by a layered chain.
+         *
+         * The integer returned will be 0, 1 or 2; see the
+         * NTriSolidTorus class notes for how the boundary annuli are
+         * numbered.
+         *
+         * @return the single annulus to which the layered solid torus
+         * is attached, or -1 if there is no layered chain (and thus all
+         * three annuli have layered solid tori attached).
+         */
+        int getTorusAnnulus() const;
+
+        /**
+         * Determines whether the core triangular solid torus has two of
+         * its boundary annuli linked by a layered chain as described in
+         * the general class notes.
+         *
+         * @return \c true if and only if the layered chain described in
+         * the class notes is present.
+         */
+        bool hasLayeredChain() const;
+
+        /**
          * Returns the structure of the Seifert fibred space formed by
          * this augmented triangular solid torus.
          *
@@ -201,6 +251,15 @@ inline const NLayeredSolidTorus* NAugTriSolidTorus::getAugTorus(
 }
 inline NPerm NAugTriSolidTorus::getEdgeGroupRoles(int annulus) const {
     return edgeGroupRoles[annulus];
+}
+inline unsigned long NAugTriSolidTorus::getChainLength() const {
+    return chainIndex;
+}
+inline int NAugTriSolidTorus::getTorusAnnulus() const {
+    return torusAnnulus;
+}
+inline bool NAugTriSolidTorus::hasLayeredChain() const {
+    return (chainIndex != 0);
 }
 inline const NSFS& NAugTriSolidTorus::getSeifertStructure() const {
     return seifertStructure;

@@ -36,6 +36,9 @@ public interface NAugTriSolidTorus extends ShareableObject {
     public NTriSolidTorus getCore();
     public NLayeredSolidTorus getAugTorus(int annulus);
     public NPerm getEdgeGroupRoles(int annulus);
+    public long getChainLength();
+    public int getTorusAnnulus();
+    public boolean hasLayeredChain();
     public NSFS getSeifertStructure();
 }
 
