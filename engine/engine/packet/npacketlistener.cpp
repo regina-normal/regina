@@ -32,6 +32,10 @@
 namespace regina {
 
 NPacketListener::~NPacketListener() {
+    unregisterFromAllPackets();
+}
+
+void NPacketListener::unregisterFromAllPackets() {
     std::set<NPacket*>::iterator it, next;
 
     it = packets.begin();

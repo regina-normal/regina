@@ -84,6 +84,12 @@ class NPacketListener {
         virtual ~NPacketListener();
 
         /**
+         * Unregisters this listener from any packets to which it is
+         * currently listening.
+         */
+        void unregisterFromAllPackets();
+
+        /**
          * Called when the contents of the packet have been changed.
          *
          * The default implementation of this routine is to do nothing.
