@@ -277,9 +277,9 @@ void NScriptUI::refresh() {
 
     // A kate part needs to be in read-write mode before we can alter its
     // contents.
-    bool wasReadWrite = editInterface->isReadWrite();
+    bool wasReadWrite = document->isReadWrite();
     if (! wasReadWrite)
-        editInterface->setReadWrite(true);
+        document->setReadWrite(true);
 
     // Refresh the lines.
     // The first line is handled separately to avoid an additional blank
@@ -303,7 +303,7 @@ void NScriptUI::refresh() {
     }
 
     if (! wasReadWrite)
-        editInterface->setReadWrite(false);
+        document->setReadWrite(false);
 
     setDirty(false);
 }
