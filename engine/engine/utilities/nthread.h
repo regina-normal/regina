@@ -54,6 +54,9 @@ namespace regina {
  * it will be suspended until the mutex is unlocked by the original
  * locking thread.
  *
+ * A mutex is locked by declaring a local variable of type NMutex::MutexLock.
+ * See the NMutex::MutexLock class notes for details.
+ *
  * Classes can inherit from NMutex to provide mutex protection for
  * their internal data; it is recommended that such inheritance be
  * \c protected and that the member functions alone take full
@@ -81,6 +84,39 @@ class NMutex {
          */
         ~NMutex();
 
+        /**
+         * A utility class for locking and unlocking a mutex.
+         *
+         * A mutex is locked by simply declaring a local variable
+         * of type NMutex::MutexLock.  The mutex will be unlocked when
+         * this variable goes out of scope.
+         */
+        class MutexLock {
+            private:
+                const NMutex* mutex_;
+                    /**< The mutex locked by this object. */
+
+            public:
+                /**
+                 * Creates a lock for the given mutex.
+                 *
+                 * If some other thread has already locked the given
+                 * mutex, this thread will be suspended until the mutex
+                 * is unlocked by the other thread.
+                 * This thread will then lock the mutex itself.
+                 *
+                 * @param mutex the mutex to be locked by this object.
+                 * This is \c const to simplify using mutex locks with
+                 * data retrieval routines for subclasses of NMutex.
+                 */
+                MutexLock(const NMutex* mutex);
+                /**
+                 * Unlocks the mutex handled by this object.
+                 */
+                ~MutexLock();
+        };
+
+    private:
         /**
          * Locks this mutex.
          * If any thread has already locked this mutex, this thread will
@@ -189,6 +225,16 @@ inline void NMutex::mutexLock() const {
 }
 inline void NMutex::mutexUnlock() const {
     pthread_mutex_unlock(& const_cast<NMutex*>(this)->mutex);
+}
+
+// Inline functions for NMutex::MutexLock
+
+inline NMutex::MutexLock::MutexLock(const NMutex* mutex) : mutex_(mutex) {
+    mutex_->mutexLock();
+}
+
+inline NMutex::MutexLock::~MutexLock() {
+    mutex_->mutexUnlock();
 }
 
 // Inline functions for NThread

@@ -76,7 +76,7 @@ namespace regina {
  * Subclasses of NProgress represent the various ways in which progress
  * can be internally stored.  Note that subclass member functions
  * <b>must</b> lock the mutex whenever internal data is being
- * accessed or modified (see mutexLock() and mutexUnlock())
+ * accessed or modified (see NMutex::MutexLock for how this is done)
  * and <b>must</b> call setChanged() if they alter the state of progress.
  *
  * \todo \feature Add timer support; measure the time elapsed between
@@ -296,15 +296,12 @@ inline bool NProgress::hasChanged() const {
     return changed;
 }
 inline bool NProgress::isFinished() const {
-    mutexLock();
-    bool ans = finished;
-    mutexUnlock();
-    return ans;
+    MutexLock(this);
+    return finished;
 }
 inline void NProgress::setFinished() {
-    mutexLock();
+    MutexLock(this);
     finished = true;
-    mutexUnlock();
 }
 
 inline bool NProgress::isCancellable() const {

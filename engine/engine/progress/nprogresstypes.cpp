@@ -35,12 +35,11 @@ namespace regina {
 std::string NProgressNumber::internalGetDescription() const {
     std::ostringstream out;
 
-    mutexLock();
+    MutexLock(this);
+
     out << completed;
     if (outOf >= 0)
         out << '/' << outOf;
-    mutexUnlock();
-
     return out.str();
 }
 

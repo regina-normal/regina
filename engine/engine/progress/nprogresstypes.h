@@ -201,29 +201,23 @@ inline NProgressMessage::NProgressMessage(const char* newMessage,
 }
 
 inline std::string NProgressMessage::getMessage() const {
-    mutexLock();
-    std::string ans = message;
-    mutexUnlock();
-    return ans;
+    MutexLock(this);
+    return message;
 }
 inline void NProgressMessage::setMessage(const std::string& newMessage) {
-    mutexLock();
+    MutexLock(this);
     message = newMessage;
     setChanged();
-    mutexUnlock();
 }
 inline void NProgressMessage::setMessage(const char* newMessage) {
-    mutexLock();
+    MutexLock(this);
     message = newMessage;
     setChanged();
-    mutexUnlock();
 }
 
 inline std::string NProgressMessage::internalGetDescription() const {
-    mutexLock();
-    std::string ans = message;
-    mutexUnlock();
-    return ans;
+    MutexLock(this);
+    return message;
 }
 
 // Inline functions for NProgress
@@ -234,42 +228,32 @@ inline NProgressNumber::NProgressNumber(long newCompleted, long newOutOf,
 }
 
 inline long NProgressNumber::getCompleted() const {
-    mutexLock();
-    long ans = completed;
-    mutexUnlock();
-    return ans;
+    MutexLock(this);
+    return completed;
 }
 inline long NProgressNumber::getOutOf() const {
-    mutexLock();
-    long ans = outOf;
-    mutexUnlock();
-    return ans;
+    MutexLock(this);
+    return outOf;
 }
 inline void NProgressNumber::setCompleted(long newCompleted) {
-    mutexLock();
+    MutexLock(this);
     completed = newCompleted;
     setChanged();
-    mutexUnlock();
 }
 inline void NProgressNumber::setOutOf(long newOutOf) {
-    mutexLock();
+    MutexLock(this);
     outOf = newOutOf;
     setChanged();
-    mutexUnlock();
 }
 
 inline bool NProgressNumber::isPercent() const {
-    mutexLock();
-    bool ans = (outOf >= 0);
-    mutexUnlock();
-    return ans;
+    MutexLock(this);
+    return (outOf >= 0);
 }
 
 inline double NProgressNumber::internalGetPercent() const {
-    mutexLock();
-    double ans = double(completed) * 100 / double(outOf);
-    mutexUnlock();
-    return ans;
+    MutexLock(this);
+    return double(completed) * 100 / double(outOf);
 }
 
 } // namespace regina

@@ -13,6 +13,8 @@ Current Development Version:
             - Even more routines made const.
         Class NAbelianGroup:
             - Added global comparisons isTrivial() and operator ==.
+        Class NMutex:
+            - Now uses inner class MutexLock for locking and unlocking.
         Class NPropertyHolder:
             - Moved most of its functionality directly into NFile and
               replaced what was left with the new class NFilePropertyReader.
