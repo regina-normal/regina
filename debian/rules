@@ -50,6 +50,8 @@ build-stamp:
 		JAVAH="/usr/lib/j2se/1.3/bin/javah -jni" \
 		IDLTOJAVACLIENT="/usr/lib/j2se/1.3/bin/idlj"
 	$(MAKE) bindocs \
+		BTOOLS="/usr/share/java/libbtools-java.jar" \
+		JYTHON="/usr/share/java/jython.jar" \
 		EXTRA_CLASSES="" \
 		JAVADOC="/usr/lib/j2se/1.3/bin/javadoc -J-Xmx64m" \
 		JAR="$(JAR)"
