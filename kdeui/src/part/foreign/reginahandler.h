@@ -26,61 +26,52 @@
 
 /* end stub */
 
-#include "packet/npacket.h"
+/*! \file regina.h
+ *  \brief Allows interaction with other Regina data files.
+ */
 
-#include "packettreeview.h"
-#include "reginapart.h"
-#include "foreign/importdialog.h"
-#include "foreign/reginahandler.h"
-#include "foreign/snappea.h"
-#include "../reginafilter.h"
+#ifndef __REGINA_H
+#define __REGINA_H
 
-#include <kfiledialog.h>
-#include <klocale.h>
+#include "packetexporter.h"
+#include "packetimporter.h"
 
-// TODO: Check that there are actually potential parents.
+/**
+ * An object responsible for importing and export data to and from
+ * other Regina data files.
+ *
+ * Rather than creating new objects of this class, the globally
+ * available object ReginaHandler::instance should always be used.
+ */
+class ReginaHandler : public PacketImporter, public PacketExporter {
+    public:
+        /**
+         * A globally available instance of this class.
+         */
+        static const ReginaHandler instance;
 
-void ReginaPart::importDehydration() {
-    unimplemented();
+    public:
+        /**
+         * PacketImporter overrides:
+         */
+        virtual regina::NPacket* import(const QString& fileName,
+            QWidget* parentWidget) const;
+
+        /**
+         * PacketExporter overrides:
+         */
+        virtual PacketFilter* canExport() const;
+        virtual bool exportData(regina::NPacket* data,
+            const QString& fileName, QWidget* parentWidget) const;
+
+    private:
+        /**
+         * Don't allow people to construct their own Regina handlers.
+         */
+        ReginaHandler();
+};
+
+inline ReginaHandler::ReginaHandler() {
 }
 
-void ReginaPart::importPython() {
-    unimplemented();
-}
-
-void ReginaPart::importRegina() {
-    importFile(ReginaHandler::instance, 0, i18n(FILTER_REGINA),
-        i18n("Import Regina Data File"));
-}
-
-void ReginaPart::importSnapPea() {
-    importFile(SnapPeaHandler::instance, 0, i18n(FILTER_SNAPPEA),
-        i18n("Import SnapPea Triangulation"));
-}
-
-void ReginaPart::importFile(const PacketImporter& importer,
-        PacketFilter* parentFilter, const QString& fileFilter,
-        const QString& dialogTitle) {
-    if (! checkReadWrite())
-        return;
-
-    QString file = KFileDialog::getOpenFileName(QString::null,
-        fileFilter, widget(), dialogTitle);
-    if (! file.isEmpty()) {
-        regina::NPacket* newTree = importer.import(file, widget());
-        if (newTree) {
-            ImportDialog dlg(widget(), newTree, packetTree,
-                treeView->selectedPacket(), parentFilter, dialogTitle);
-            if (dlg.exec() == QDialog::Accepted) {
-                QListViewItem* item = treeView->find(newTree);
-                if (item)
-                    treeView->ensureItemVisible(item);
-                packetView(newTree);
-
-                setModified(true);
-            } else
-                delete newTree;
-        }
-    }
-}
-
+#endif

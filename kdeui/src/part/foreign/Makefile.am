@@ -15,11 +15,13 @@ noinst_HEADERS = \
 	importdialog.h \
 	packetexporter.h \
 	packetimporter.h \
+	reginahandler.h \
 	snappea.h
 
 libforeign_la_SOURCES = \
 	exportdialog.cpp \
 	importdialog.cpp \
+	reginahandler.cpp \
 	snappea.cpp
 
 METASOURCES = AUTO

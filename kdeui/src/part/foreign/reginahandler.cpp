@@ -26,61 +26,43 @@
 
 /* end stub */
 
-#include "packet/npacket.h"
+#include "file/nxmlfile.h"
 
-#include "packettreeview.h"
-#include "reginapart.h"
-#include "foreign/importdialog.h"
-#include "foreign/reginahandler.h"
-#include "foreign/snappea.h"
-#include "../reginafilter.h"
+#include "reginahandler.h"
+#include "../packetfilter.h"
 
-#include <kfiledialog.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
-// TODO: Check that there are actually potential parents.
+const ReginaHandler ReginaHandler::instance;
 
-void ReginaPart::importDehydration() {
-    unimplemented();
+regina::NPacket* ReginaHandler::import(const QString& fileName,
+        QWidget* parentWidget) const {
+    regina::NPacket* ans = regina::readFileMagic(fileName.ascii());
+    if (! ans)
+        KMessageBox::error(parentWidget, i18n(
+            "The file %1 could not be imported.  Perhaps it is not "
+            "a Regina data file?").arg(fileName));
+    return ans;
 }
 
-void ReginaPart::importPython() {
-    unimplemented();
+PacketFilter* ReginaHandler::canExport() const {
+    return new StandaloneFilter();
 }
 
-void ReginaPart::importRegina() {
-    importFile(ReginaHandler::instance, 0, i18n(FILTER_REGINA),
-        i18n("Import Regina Data File"));
-}
-
-void ReginaPart::importSnapPea() {
-    importFile(SnapPeaHandler::instance, 0, i18n(FILTER_SNAPPEA),
-        i18n("Import SnapPea Triangulation"));
-}
-
-void ReginaPart::importFile(const PacketImporter& importer,
-        PacketFilter* parentFilter, const QString& fileFilter,
-        const QString& dialogTitle) {
-    if (! checkReadWrite())
-        return;
-
-    QString file = KFileDialog::getOpenFileName(QString::null,
-        fileFilter, widget(), dialogTitle);
-    if (! file.isEmpty()) {
-        regina::NPacket* newTree = importer.import(file, widget());
-        if (newTree) {
-            ImportDialog dlg(widget(), newTree, packetTree,
-                treeView->selectedPacket(), parentFilter, dialogTitle);
-            if (dlg.exec() == QDialog::Accepted) {
-                QListViewItem* item = treeView->find(newTree);
-                if (item)
-                    treeView->ensureItemVisible(item);
-                packetView(newTree);
-
-                setModified(true);
-            } else
-                delete newTree;
-        }
+bool ReginaHandler::exportData(regina::NPacket* data,
+        const QString& fileName, QWidget* parentWidget) const {
+    if (data->dependsOnParent()) {
+        KMessageBox::error(parentWidget, i18n(
+            "This packet cannot be separated from its parent."));
+        return false;
     }
+    if (! regina::writeXMLFile(fileName.ascii(), data, true)) {
+        KMessageBox::error(parentWidget, i18n(
+            "This packet subtree could not be exported.  An unknown error, "
+            "probably related to file I/O, occurred during the export."));
+        return false;
+    }
+    return true;
 }
 

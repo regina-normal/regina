@@ -31,6 +31,7 @@
 #include "packettreeview.h"
 #include "reginapart.h"
 #include "foreign/exportdialog.h"
+#include "foreign/reginahandler.h"
 #include "foreign/snappea.h"
 #include "../reginafilter.h"
 
@@ -43,7 +44,8 @@ void ReginaPart::exportPython() {
 }
 
 void ReginaPart::exportRegina() {
-    unimplemented();
+    exportFile(ReginaHandler::instance, i18n(FILTER_REGINA),
+        i18n("Export Regina Data File"));
 }
 
 void ReginaPart::exportSnapPea() {
