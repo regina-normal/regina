@@ -168,6 +168,16 @@ typedef pthread_t NThreadID;
  * required of each new thread.  Then start() may be called whenever a
  * new thread is required.
  *
+ * \warning Qt and KDE have only limited support for multithreading.  When
+ * working with an existing packet tree in a new thread, the \e only
+ * modification that you may make is to insert new packets.
+ * Modifications of any other type (such as changing, renaming, deleting
+ * or reordering existing packets) may lead to a crash within Qt or Xlib
+ * when running the GUI.
+ * Of course, a new thread may create, modify and delete its own temporary
+ * packet trees as it chooses (and it may in fact insert them into a
+ * pre-existing packet tree once all modifications are completed).
+ *
  * \ifacespython Not present.
  */
 class NThread {

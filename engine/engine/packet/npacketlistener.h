@@ -68,6 +68,17 @@ class NPacket;
  * from any packets to which it is currently listening.  Similarly, when
  * a packet is destroyed all listeners are automatically unregistered.
  *
+ * When using multiple threads, there are restrictions upon what any thread
+ * other than the main thread may do.  If these restrictions are properly
+ * adhered to, packet listeners may assume that no routines other than
+ * childWasAdded() will be called from a non-main thread.  Of course it is
+ * up to the multithreading code to ensure that these restrictions are in
+ * fact met; see the NThread class notes for further information.
+ *
+ * \warning If the multithreading restrictions noted above are \e not
+ * adhered to, this can result in the GUI crashing within either Qt or
+ * Xlib.  Again, see the NThread class notes for further information.
+ *
  * \ifacespython Not present.
  */
 class NPacketListener {
