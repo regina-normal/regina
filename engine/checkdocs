@@ -1,0 +1,20 @@
+#!/bin/sh
+for i in `find . -name "*.h"`; do
+  if ! grep -r "@{\$" $i > /dev/null; then
+    case "$i" in
+      */JNI*.h )
+      ;;
+      */NJNI*.h )
+      ;;
+      */Sentry.h )
+      ;;
+      *registry.h )
+      ;;
+      * )
+        echo "$i : No group opening tag."
+      ;;
+    esac
+  elif ! grep -r "@}\*/\$" $i > /dev/null; then
+    echo "$i : No group closing tag."
+  fi
+done | grep -v JNI
