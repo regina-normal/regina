@@ -36,13 +36,20 @@
 #include "packetwindow.h"
 #include "reginapart.h"
 
+#include <kaction.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <ktoolbar.h>
 #include <qlabel.h>
-#include <qpushbutton.h>
 
 using regina::NPacket;
+
+namespace {
+    int RIGHT_ALIGN_SEPARATOR_ID = 137;
+        /**< Random integer that shouldn't clash with any other toolbar
+             item ID. */
+}
 
 PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
         const char* name) : QHBox(parent, name), packet(pkt) {
@@ -108,17 +115,25 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     setStretchFactor(mainUIWidget, 1);
 
     // Set up the footer buttons.
-    QHBox* footer = new QHBox(this);
-    commitBtn = new QPushButton(BarIconSet("button_ok"), i18n("Co&mmit"),
-        footer);
-    commitBtn->setEnabled(false);
-    connect(commitBtn, SIGNAL(clicked()), this, SLOT(commit()));
-    refreshBtn = new QPushButton(BarIconSet("reload"), i18n("&Refresh"),
-        footer);
-    connect(refreshBtn, SIGNAL(clicked()), this, SLOT(refresh()));
-    footer->setStretchFactor(new QWidget(footer), 1);
-    connect(new QPushButton(BarIconSet("fileclose"), i18n("&Close"), footer),
-        SIGNAL(clicked()), this, SLOT(close()));
+    actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0 /* shortcut */,
+        this, SLOT(commit()), (KActionCollection*)0, "packet_editor_commit");
+    actCommit->setEnabled(false);
+    actRefresh = new KAction(i18n("&Refresh"), "reload", 0 /* shortcut */,
+        this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
+    KAction* actClose = new KAction(i18n("&Close"), "fileclose", 0,
+        this, SLOT(close()), (KActionCollection*)0, "packet_editor_close");
+    trackingActions.append(actCommit);
+    trackingActions.append(actRefresh);
+    trackingActions.setAutoDelete(true);
+
+    KToolBar* footer = new KToolBar(this, "packetEditorBar", false, false);
+    footer->setFullSize(true);
+    footer->setIconText(KToolBar::IconTextRight);
+    actCommit->plug(footer);
+    actRefresh->plug(footer);
+    actClose->plug(footer);
+    // footer->insertSeparator(2, RIGHT_ALIGN_SEPARATOR_ID);
+    // footer->alignItemRight(RIGHT_ALIGN_SEPARATOR_ID);
 }
 
 void PacketPane::setDirty(bool newDirty) {
@@ -127,12 +142,9 @@ void PacketPane::setDirty(bool newDirty) {
 
     dirty = newDirty;
 
-    commitBtn->setEnabled(dirty);
-    refreshBtn->setText(dirty ? i18n("&Discard") : i18n("&Refresh"));
-    refreshBtn->setIconSet(dirty ? BarIconSet("button_cancel") :
-        BarIconSet("reload"));
-
-    emit dirtinessChanged(newDirty);
+    actCommit->setEnabled(dirty);
+    actRefresh->setText(dirty ? i18n("&Discard") : i18n("&Refresh"));
+    actRefresh->setIcon(dirty ? "button_cancel" : "reload");
 }
 
 bool PacketPane::queryClose() {

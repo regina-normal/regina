@@ -6,8 +6,7 @@
     <Action name="viewer_close"/>
   </Menu>
   <Menu name="packet" noMerge="1"><text>&amp;Packet</text>
-    <Action name="packet_commit"/>
-    <Action name="packet_refresh"/>
+    <ActionList name="packet_tracking_actions"/>
   </Menu>
 </MenuBar>
 </kpartgui>

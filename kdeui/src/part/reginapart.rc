@@ -35,8 +35,7 @@
     <Action name="tree_refresh"/>
   </Menu>
   <Menu name="current" noMerge="1"><text>&amp;Docked Packet</text>
-    <Action name="docked_commit"/>
-    <Action name="docked_refresh"/>
+    <ActionList name="packet_tracking_actions"/>
     <Separator/>
     <Action name="docked_undock"/>
     <Action name="docked_close"/>

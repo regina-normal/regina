@@ -85,8 +85,6 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actCut;
         KAction* actCopy;
         KAction* actPaste;
-        KAction* actCurrCommit;
-        KAction* actCurrRefresh;
         KAction* actCurrUndock;
         KAction* actCurrClose;
 
@@ -182,12 +180,6 @@ class ReginaPart : public KParts::ReadWritePart {
          * Update settings from the main window.
          */
         void setAutoDock(bool);
-
-        /**
-         * Reflect the fact that the dirtiness of the docked packet has
-         * changed.
-         */
-        void dockDirtinessChanged();
 
     private slots:
         /**

@@ -33,12 +33,13 @@
 #ifndef __PACKETUI_H
 #define __PACKETUI_H
 
+#include <qptrlist.h>
 #include <qvbox.h>
 
+class KAction;
 class KMainWindow;
 class PacketPane;
 class QLabel;
-class QPushButton;
 class QTextEdit;
 class QToolButton;
 class ReginaPart;
@@ -143,8 +144,10 @@ class PacketPane : public QVBox {
          * Action components
          */
         QToolButton* dockUndockBtn;
-        QPushButton* commitBtn;
-        QPushButton* refreshBtn;
+        KAction* actCommit;
+        KAction* actRefresh;
+
+        QPtrList<KAction> trackingActions;
 
     public:
         /**
@@ -172,8 +175,7 @@ class PacketPane : public QVBox {
          */
         bool queryClose();
 
-    signals:
-        void dirtinessChanged(bool);
+        const QPtrList<KAction>& getTrackingActions();
 
     public slots:
         /**
@@ -243,6 +245,10 @@ inline PacketUI* PacketPane::getMainUI() {
 
 inline bool PacketPane::isDirty() {
     return dirty;
+}
+
+inline const QPtrList<KAction>& PacketPane::getTrackingActions() {
+    return trackingActions;
 }
 
 #endif

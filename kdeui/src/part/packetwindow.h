@@ -51,15 +51,6 @@ class PacketWindow : public KMainWindow {
         PacketPane* heldPane;
             /**< The packet pane held within this frame. */
 
-        /**
-         * Actions
-         */
-        KAction* actCommit;
-        KAction* actRefresh;
-
-    public slots:
-        void paneDirtinessChanged();
-
     private:
         /**
          * Constructor.

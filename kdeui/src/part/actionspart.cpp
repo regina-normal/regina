@@ -169,10 +169,6 @@ void ReginaPart::setupActions() {
     act->setToolTip(i18n("Export a Python script"));
 
     // Current packet actions:
-    actCurrCommit = new KAction(i18n("Co&mmit"), "button_ok", 0,
-        this, SLOT(unimplemented()), actionCollection(), "docked_commit");
-    actCurrRefresh = new KAction(i18n("&Refresh"), "reload", 0,
-        this, SLOT(unimplemented()), actionCollection(), "docked_refresh");
     actCurrUndock = new KAction(i18n("Un&dock"), "attach", 0,
         this, SLOT(floatDockedPane()), actionCollection(), "docked_undock");
     actCurrClose = new KAction(i18n("&Close"), "fileclose", 0,

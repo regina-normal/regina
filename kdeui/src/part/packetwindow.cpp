@@ -37,18 +37,6 @@
 #include <kstdaction.h>
 #include <qtextedit.h>
 
-void PacketWindow::paneDirtinessChanged() {
-    if (heldPane->isDirty()) {
-        actCommit->setEnabled(true);
-        actRefresh->setText(i18n("&Discard"));
-        actRefresh->setIcon("button_cancel");
-    } else {
-        actCommit->setEnabled(false);
-        actRefresh->setText(i18n("&Refresh"));
-        actRefresh->setIcon("reload");
-    }
-}
-
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         KMainWindow(parent, "Packet#"), heldPane(newPane) {
     // Resize ourselves nicely.
@@ -61,13 +49,6 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         actionCollection(), "viewer_dock");
     new KAction(i18n("&Close"), "fileclose", 0, newPane, SLOT(close()),
         actionCollection(), "viewer_close");
-    actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0, newPane,
-        SLOT(commit()), actionCollection(), "packet_commit");
-    actRefresh = new KAction(i18n("&Refresh"), "reload", 0, newPane,
-        SLOT(refresh()), actionCollection(), "packet_refresh");
-    createGUI("packetwindow.rc", false);
-
-    paneDirtinessChanged();
 
     QTextEdit* edit = newPane->getMainUI()->getTextComponent();
     if (edit) {
@@ -76,11 +57,12 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         KStdAction::paste(edit, SLOT(paste()), actionCollection());
     }
 
+    createGUI("packetwindow.rc", false);
+    plugActionList("packet_tracking_actions", newPane->getTrackingActions());
+
     // Set up the widgets.
     newPane->reparent(this, QPoint(0, 0));
     setCentralWidget(newPane);
-    connect(newPane, SIGNAL(dirtinessChanged(bool)),
-        this, SLOT(paneDirtinessChanged()));
     newPane->show();
 }
 

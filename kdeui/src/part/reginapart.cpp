@@ -144,8 +144,7 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     newPane->reparent(dockArea, QPoint(0, 0));
     dockedPane = newPane;
-    connect(dockedPane, SIGNAL(dirtinessChanged(bool)),
-        this, SLOT(dockDirtinessChanged()));
+    plugActionList("packet_tracking_actions", newPane->getTrackingActions());
     newPane->show();
 
     dockChanged();
@@ -157,7 +156,7 @@ void ReginaPart::isClosing(PacketPane* closingPane) {
 
 void ReginaPart::hasUndocked(PacketPane* undockedPane) {
     if (dockedPane == undockedPane) {
-        disconnect(dockedPane, SIGNAL(dirtinessChanged(bool)), this, 0);
+        unplugActionList("packet_tracking_actions");
         dockedPane = 0;
     }
 
@@ -230,6 +229,7 @@ bool ReginaPart::closeDockedPane() {
 
     // Close it.  Note that queryClose() has already done the
     // deregistration for us.
+    unplugActionList("packet_tracking_actions");
     delete dockedPane;
     dockedPane = 0;
 
@@ -261,21 +261,6 @@ void ReginaPart::displayIcon(bool shouldDisplay) {
 
 void ReginaPart::setAutoDock(bool value) {
     autoDock = value;
-}
-
-void ReginaPart::dockDirtinessChanged() {
-    if (! dockedPane)
-        return;
-
-    if (dockedPane->isDirty()) {
-        actCurrCommit->setEnabled(true);
-        actCurrRefresh->setText(i18n("&Discard"));
-        actCurrRefresh->setIcon("button_cancel");
-    } else {
-        actCurrCommit->setEnabled(false);
-        actCurrRefresh->setText(i18n("&Refresh"));
-        actCurrRefresh->setIcon("reload");
-    }
 }
 
 void ReginaPart::fileSaveAs() {
@@ -332,9 +317,6 @@ void ReginaPart::initPacketTree() {
 
 void ReginaPart::dockChanged() {
     if (! dockedPane) {
-        actCurrCommit->setEnabled(false);
-        actCurrRefresh->setEnabled(false);
-        actCurrRefresh->setText(i18n("&Refresh"));
         actCurrUndock->setEnabled(false);
         actCurrClose->setEnabled(false);
 
@@ -342,11 +324,8 @@ void ReginaPart::dockChanged() {
         actCopy->setEnabled(false);
         actPaste->setEnabled(false);
     } else {
-        actCurrRefresh->setEnabled(true);
         actCurrUndock->setEnabled(true);
         actCurrClose->setEnabled(true);
-
-        dockDirtinessChanged();
 
         QTextEdit* edit = dockedPane->getMainUI()->getTextComponent();
         if (edit) {

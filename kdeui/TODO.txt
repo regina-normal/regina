@@ -10,11 +10,12 @@ Icons:
     Softer tree for filter_comb.png
     Icons for separate New actions
 
-Toolbars:
+Toolbars / Menus:
     Disable "configure toolbars" until delayed icon loading is fixed in
         kdelibs
-    Work out how on earth to get file_close on the toolbar
     Work out how to get decent action names in the configure toolbar dialog
+    Work out how to get the separator in the Docked Packet menu
+    Work out how to right align the close button in the packet viewer
 
 General:
     Make "configure shortcuts" work with the part as well
