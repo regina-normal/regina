@@ -50,11 +50,18 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     new KAction(i18n("&Close"), "fileclose", 0, newPane, SLOT(close()),
         actionCollection(), "viewer_close");
 
-    QTextEdit* edit = newPane->getMainUI()->getTextComponent();
-    if (edit) {
-        KStdAction::cut(edit, SLOT(cut()), actionCollection());
-        KStdAction::copy(edit, SLOT(copy()), actionCollection());
-        KStdAction::paste(edit, SLOT(paste()), actionCollection());
+    if (newPane->hasTextComponent()) {
+        KAction* cut = KStdAction::cut(0, 0, actionCollection());
+        KAction* copy = KStdAction::copy(0, 0, actionCollection());
+        KAction* paste = KStdAction::paste(0, 0, actionCollection());
+        KAction* undo = KStdAction::undo(0, 0, actionCollection());
+        KAction* redo = KStdAction::redo(0, 0, actionCollection());
+
+        newPane->registerEditOperation(cut, PacketPane::editCut);
+        newPane->registerEditOperation(copy, PacketPane::editCopy);
+        newPane->registerEditOperation(paste, PacketPane::editPaste);
+        newPane->registerEditOperation(undo, PacketPane::editUndo);
+        newPane->registerEditOperation(redo, PacketPane::editRedo);
     }
 
     createGUI("packetwindow.rc", false);

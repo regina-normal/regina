@@ -41,8 +41,15 @@ void ReginaPart::setupActions() {
 
     // Edit actions:
     actCut = KStdAction::cut(0, 0, actionCollection());
+    actCut->setEnabled(false);
     actCopy = KStdAction::copy(0, 0, actionCollection());
+    actCopy->setEnabled(false);
     actPaste = KStdAction::paste(0, 0, actionCollection());
+    actPaste->setEnabled(false);
+    actUndo = KStdAction::undo(0, 0, actionCollection());
+    actUndo->setEnabled(false);
+    actRedo = KStdAction::redo(0, 0, actionCollection());
+    actRedo->setEnabled(false);
 
     // Basic packet actions:
     act = new KAction(i18n("&View/Edit"), "viewmag", CTRL+Key_V,

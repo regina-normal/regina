@@ -165,6 +165,9 @@ class PacketUI {
          * Modify this interface to be read-write or read-only according
          * to the given argument.
          *
+         * This routine should never be called directly; instead
+         * PacketPane::setReadWrite() should be used.
+         *
          * If this interface is incapable of editing packets (e.g.,
          * interfaces for packet types that are inherently read-only
          * such as containers), this routine need not do anything.
@@ -245,6 +248,14 @@ class DefaultPacketUI : public PacketReadOnlyUI {
 class PacketPane : public QVBox, public regina::NPacketListener {
     Q_OBJECT
 
+    public:
+        /**
+         * The list of edit operations for which actions can be
+         * registered and deregistered.
+         */
+        enum EditOperation { editCut, editCopy, editPaste,
+            editUndo, editRedo };
+
     private:
         /**
          * External components
@@ -263,16 +274,26 @@ class PacketPane : public QVBox, public regina::NPacketListener {
          * Properties
          */
         bool dirty;
+        bool readWrite;
         bool emergencyClosure;
         bool emergencyRefresh;
         bool isCommitting;
 
         /**
-         * Actions
+         * Internal actions
          */
         KAction* actCommit;
         KAction* actRefresh;
         QPtrList<KAction> trackingActions;
+
+        /**
+         * Externally registered actions
+         */
+        KAction* extCut;
+        KAction* extCopy;
+        KAction* extPaste;
+        KAction* extUndo;
+        KAction* extRedo;
 
     public:
         /**
@@ -288,7 +309,7 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         /**
          * Query components and actions.
          */
-        PacketUI* getMainUI();
+        bool hasTextComponent();
         const QPtrList<KAction>& getTrackingActions();
 
         /**
@@ -305,6 +326,25 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         void setDirty(bool newDirty);
 
         /**
+         * Is this packet pane currently in read-write (as opposed to
+         * read-only) mode?
+         */
+        bool isReadWrite();
+
+        /**
+         * Attempts to put this pane into read-write or read-only mode
+         * as signalled by the \a allowReadWrite parameter.
+         *
+         * If \a allowReadWrite is \c true but nevertheless the pane
+         * cannot be put into read-write mode, i.e., if
+         * NPacket::isPacketEditable() returns \c false or the
+         * underlying KPart is in read-only mode, then this routine will
+         * do nothing and return \c false.  Otherwise this routine will
+         * set the read-write status as requested and return \c true.
+         */
+        bool setReadWrite(bool allowReadWrite);
+
+        /**
          * Are we allowed to close this packet pane?
          *
          * If this routine returns \c true, the caller of this routine
@@ -314,11 +354,59 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         bool queryClose();
 
         /**
+         * Registers or deregisters standard editor actions with the
+         * primary text component of this interface.  If this interface
+         * has no primary text component then these routines do nothing.
+         *
+         * Registered actions will be connected to appropriate edit
+         * operations in the text component, and will be enabled and disabled
+         * over time according to the current status of the packet pane
+         * and its primary text component.
+         *
+         * When an action is deregistered, these relationships will be
+         * broken and the action will be left in a disabled state.
+         *
+         * Only one action for each operation may be registered at a
+         * time.  Each registered action for an operation should be
+         * deregistered before a new action is registered in its place.
+         *
+         * The only exception to this rule is if a currently registered
+         * action is to be destroyed; in this case a new action (which
+         * may be a null pointer) may simply be registered over top of
+         * it, though this must be done before the action is destroyed
+         * or else a crash will occur.
+         *
+         * When a packet pane is destroyed, it is not a requirement that
+         * currently registered actions be deregistered beforehand,
+         * though the final enabled/disabled status of any remaining
+         * actions that are not deregistered is not guaranteed.
+         *
+         * Passing a null pointer to a registration routine will not
+         * register any new actions.  The only situation in which doing
+         * this might be useful is when an action is to be destroyed but is
+         * not being deregistered (see the earlier paragraph that
+         * describes this case).
+         *
+         * Passing a null pointer to a deregistration routine will have
+         * no effect whatsoever.
+         */
+        void registerEditOperation(KAction* act, EditOperation op);
+        void deregisterEditOperation(KAction* act, EditOperation op);
+
+        /**
          * NPacketListener overrides.
          */
         void packetWasChanged(regina::NPacket* packet);
         void packetWasRenamed(regina::NPacket* packet);
         void packetToBeDestroyed(regina::NPacket* packet);
+
+    signals:
+        /**
+         * Emitted when the packet pane changes between read-write and
+         * read-only mode.  The boolean argument contains the new
+         * read-write status.
+         */
+        void readWriteStatusChanged(bool);
 
     public slots:
         /**
@@ -389,6 +477,12 @@ class PacketPane : public QVBox, public regina::NPacketListener {
          * this routine.
          */
         void floatPane();
+
+        /**
+         * Updates the enabled status of any registered cut or paste
+         * actions.  This slot is for internal use.
+         */
+        void updateCutPasteActions();
 };
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
@@ -417,12 +511,16 @@ inline void PacketReadOnlyUI::commit() {
 inline void PacketReadOnlyUI::setReadWrite(bool) {
 }
 
-inline PacketUI* PacketPane::getMainUI() {
-    return mainUI;
+inline bool PacketPane::hasTextComponent() {
+    return mainUI->getTextComponent();
 }
 
 inline bool PacketPane::isDirty() {
     return dirty;
+}
+
+inline bool PacketPane::isReadWrite() {
+    return readWrite;
 }
 
 inline const QPtrList<KAction>& PacketPane::getTrackingActions() {

@@ -87,7 +87,12 @@ ReginaPart::~ReginaPart() {
 }
 
 void ReginaPart::setReadWrite(bool rw) {
-    // TODO: Internal changes.
+    // Update each packet pane.
+    QPtrList<PacketPane> panes = allPanes;
+    for (PacketPane* p = panes.first(); p; p = panes.next())
+        p->setReadWrite(rw);
+
+    // TODO: Update r/w status for the tree and file-level actions.
 
     // Finally call the parent implementation.
     ReadWritePart::setReadWrite(rw);
@@ -148,6 +153,14 @@ void ReginaPart::dock(PacketPane* newPane) {
     plugActionList("packet_tracking_separator", separatorList);
     newPane->show();
 
+    if (newPane->hasTextComponent()) {
+        newPane->registerEditOperation(actCut, PacketPane::editCut);
+        newPane->registerEditOperation(actCopy, PacketPane::editCopy);
+        newPane->registerEditOperation(actPaste, PacketPane::editPaste);
+        newPane->registerEditOperation(actUndo, PacketPane::editUndo);
+        newPane->registerEditOperation(actRedo, PacketPane::editRedo);
+    }
+
     dockChanged();
 }
 
@@ -156,6 +169,14 @@ void ReginaPart::isClosing(PacketPane* closingPane) {
 }
 
 void ReginaPart::hasUndocked(PacketPane* undockedPane) {
+    if (undockedPane->hasTextComponent()) {
+        undockedPane->deregisterEditOperation(actCut, PacketPane::editCut);
+        undockedPane->deregisterEditOperation(actCopy, PacketPane::editCopy);
+        undockedPane->deregisterEditOperation(actPaste, PacketPane::editPaste);
+        undockedPane->deregisterEditOperation(actUndo, PacketPane::editUndo);
+        undockedPane->deregisterEditOperation(actRedo, PacketPane::editRedo);
+    }
+
     if (dockedPane == undockedPane) {
         unplugActionList("packet_tracking_actions");
         unplugActionList("packet_tracking_separator");
@@ -320,32 +341,9 @@ void ReginaPart::dockChanged() {
     if (! dockedPane) {
         actCurrUndock->setEnabled(false);
         actCurrClose->setEnabled(false);
-
-        actCut->setEnabled(false);
-        actCopy->setEnabled(false);
-        actPaste->setEnabled(false);
     } else {
         actCurrUndock->setEnabled(true);
         actCurrClose->setEnabled(true);
-
-        QTextEdit* edit = dockedPane->getMainUI()->getTextComponent();
-        if (edit) {
-            actCut->setEnabled(true);
-            actCopy->setEnabled(true);
-            actPaste->setEnabled(true);
-
-            connect(actCut, SIGNAL(activated()), edit, SLOT(cut()));
-            connect(actCopy, SIGNAL(activated()), edit, SLOT(copy()));
-            connect(actPaste, SIGNAL(activated()), edit, SLOT(paste()));
-        } else {
-            actCut->setEnabled(false);
-            actCopy->setEnabled(false);
-            actPaste->setEnabled(false);
-
-            disconnect(actCut, SIGNAL(activated()));
-            disconnect(actCopy, SIGNAL(activated()));
-            disconnect(actPaste, SIGNAL(activated()));
-        }
     }
 }
 

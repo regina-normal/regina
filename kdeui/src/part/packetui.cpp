@@ -37,11 +37,18 @@
 #include "reginapart.h"
 
 #include <kaction.h>
+#include <kapplication.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktoolbar.h>
+#include <qclipboard.h>
 #include <qlabel.h>
+#include <qtextedit.h>
+
+#define CLIPBOARD_HAS_TEXT \
+    (! (KApplication::kApplication()->clipboard()-> \
+        text(QClipboard::Clipboard).isNull()) )
 
 using regina::NPacket;
 
@@ -91,8 +98,9 @@ void DefaultPacketUI::refresh() {
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
-        part(newPart), frame(0), dirty(false), emergencyClosure(false),
-        emergencyRefresh(false), isCommitting(false) {
+        part(newPart), frame(0), dirty(false), readWrite(false),
+        emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
+        extCut(0), extCopy(0), extPaste(0), extUndo(0), extRedo(0) {
     // Set up the header and dock/undock button.
     QHBox* headerBox = new QHBox(this);
 
@@ -138,8 +146,21 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     // footer->insertSeparator(2, RIGHT_ALIGN_SEPARATOR_ID);
     // footer->alignItemRight(RIGHT_ALIGN_SEPARATOR_ID);
 
-    // Register this pane as a packet listener.
+    // Register ourselves to listen for various events.
     newPacket->listen(this);
+
+    QTextEdit* edit = mainUI->getTextComponent();
+    if (edit) {
+        // Listening on copyAvailable() will tell us when selections are
+        // made and unmade.
+        connect(edit, SIGNAL(copyAvailable(bool)),
+            this, SLOT(updateCutPasteActions()));
+        // Also watch when the clipboard becomes available.
+        connect(KApplication::kApplication()->clipboard(),
+            SIGNAL(dataChanged()), this, SLOT(updateCutPasteActions()));
+        // Finally we call updateCutPasteActions() ourselves when the
+        // part's read-write status changes.
+    }
 }
 
 void PacketPane::setDirty(bool newDirty) {
@@ -151,6 +172,24 @@ void PacketPane::setDirty(bool newDirty) {
     actCommit->setEnabled(dirty);
     actRefresh->setText(dirty ? i18n("&Discard") : i18n("&Refresh"));
     actRefresh->setIcon(dirty ? "button_cancel" : "reload");
+}
+
+bool PacketPane::setReadWrite(bool allowReadWrite) {
+    if (allowReadWrite)
+        if (! (mainUI->getPacket()->isPacketEditable() && part->isReadWrite()))
+            return false;
+
+    if (readWrite == allowReadWrite)
+        return true;
+
+    // We are changing the status and we are allowed to.
+    readWrite = allowReadWrite;
+
+    mainUI->setReadWrite(allowReadWrite);
+    updateCutPasteActions();
+    emit readWriteStatusChanged(readWrite);
+
+    return true;
 }
 
 bool PacketPane::queryClose() {
@@ -167,6 +206,98 @@ bool PacketPane::queryClose() {
     // We are definitely going to close the pane.  Do some cleaning up.
     part->isClosing(this);
     return true;
+}
+
+void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
+    QTextEdit* edit = mainUI->getTextComponent();
+    if (! edit) {
+        if (act)
+            act->setEnabled(false);
+        return;
+    }
+
+    switch (op) {
+        case editCut : extCut = act; break;
+        case editCopy : extCopy = act; break;
+        case editPaste : extPaste = act; break;
+        case editUndo : extUndo = act; break;
+        case editRedo : extRedo = act; break;
+    }
+
+    if (act) {
+        switch (op) {
+            case editCut :
+                act->setEnabled(edit->hasSelectedText() &&
+                    ! edit->isReadOnly());
+                connect(act, SIGNAL(activated()), edit, SLOT(cut()));
+                break;
+            case editCopy :
+                act->setEnabled(edit->hasSelectedText());
+                connect(edit, SIGNAL(copyAvailable(bool)),
+                    act, SLOT(setEnabled(bool)));
+                connect(act, SIGNAL(activated()), edit, SLOT(copy()));
+                break;
+            case editPaste :
+                act->setEnabled(CLIPBOARD_HAS_TEXT && ! edit->isReadOnly());
+                connect(act, SIGNAL(activated()), edit, SLOT(paste()));
+                break;
+            case editUndo :
+                act->setEnabled(edit->isUndoAvailable());
+                connect(edit, SIGNAL(undoAvailable(bool)),
+                    act, SLOT(setEnabled(bool)));
+                connect(act, SIGNAL(activated()), edit, SLOT(undo()));
+                break;
+            case editRedo :
+                act->setEnabled(edit->isRedoAvailable());
+                connect(edit, SIGNAL(redoAvailable(bool)),
+                    act, SLOT(setEnabled(bool)));
+                connect(act, SIGNAL(activated()), edit, SLOT(redo()));
+                break;
+        }
+    }
+}
+
+void PacketPane::deregisterEditOperation(KAction* act, EditOperation op) {
+    if (! act)
+        return;
+
+    act->setEnabled(false);
+
+    QTextEdit* edit = mainUI->getTextComponent();
+    if (! edit)
+        return;
+
+    switch (op) {
+        case editCut : if (extCut == act) extCut = 0; break;
+        case editCopy : if (extCopy == act) extCopy = 0; break;
+        case editPaste : if (extPaste == act) extPaste = 0; break;
+        case editUndo : if (extUndo == act) extUndo = 0; break;
+        case editRedo : if (extRedo == act) extRedo = 0; break;
+    }
+
+    switch (op) {
+        case editCut :
+            disconnect(act, SIGNAL(activated()), edit, SLOT(cut()));
+            break;
+        case editCopy :
+            disconnect(edit, SIGNAL(copyAvailable(bool)),
+                act, SLOT(setEnabled(bool)));
+            disconnect(act, SIGNAL(activated()), edit, SLOT(copy()));
+            break;
+        case editPaste :
+            disconnect(act, SIGNAL(activated()), edit, SLOT(paste()));
+            break;
+        case editUndo :
+            disconnect(edit, SIGNAL(undoAvailable(bool)),
+                act, SLOT(setEnabled(bool)));
+            disconnect(act, SIGNAL(activated()), edit, SLOT(undo()));
+            break;
+        case editRedo :
+            disconnect(edit, SIGNAL(redoAvailable(bool)),
+                act, SLOT(setEnabled(bool)));
+            disconnect(act, SIGNAL(activated()), edit, SLOT(redo()));
+            break;
+    }
 }
 
 void PacketPane::packetWasChanged(regina::NPacket*) {
@@ -271,6 +402,16 @@ void PacketPane::floatPane() {
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
 
     frame->show();
+}
+
+void PacketPane::updateCutPasteActions() {
+    QTextEdit* edit = mainUI->getTextComponent();
+    if (edit) {
+        if (extCut)
+            extCut->setEnabled(edit->hasSelectedText() && ! edit->isReadOnly());
+        if (extPaste)
+            extPaste->setEnabled(CLIPBOARD_HAS_TEXT && ! edit->isReadOnly());
+    }
 }
 
 #include "packetui.moc"
