@@ -110,7 +110,8 @@ public class EngineLoader {
         String libName = shell.getParameter("jnilibname", 2, true, false,
             "JNI library name");
         if (libName == null) {
-            libName = runtimeOptions.getProperty("JNIEngine");
+			if (runtimeOptions != null)
+            	libName = runtimeOptions.getProperty("JNIEngine");
             if (libName == null)
                 libName = defaultJNILibrary;
         }
@@ -172,7 +173,8 @@ public class EngineLoader {
             host = shell.getParameter("ORBInitialHost", 1, false,
                 true, "CORBA name service host");
             if (host == null) {
-                host = runtimeOptions.getProperty("CORBAHost");
+				if (runtimeOptions != null)
+                	host = runtimeOptions.getProperty("CORBAHost");
                 if (host == null)
                     host = defaultCORBAHost;
             } else
@@ -186,7 +188,8 @@ public class EngineLoader {
             port = shell.getParameter("ORBInitialPort", 1, false,
                 true, "CORBA name service port");
             if (port == null) {
-                port = runtimeOptions.getProperty("CORBAPort");
+				if (runtimeOptions != null)
+                	port = runtimeOptions.getProperty("CORBAPort");
                 if (port == null)
                     port = defaultCORBAPort;
             } else

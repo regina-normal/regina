@@ -36,6 +36,7 @@ Regina - A Normal Surface Theory Calculator
         normal.Application:
             - Moved fileExtension member into normal.mainui.FilePane subclasses.
         normal.Shell:
+            - Cleanly handles missing runtime options file.
             - Added a registry of all open Jython consoles.
         normal.algorithm:
             - Added class ElementaryMove.

@@ -10,7 +10,6 @@ Everywhere:
 		(necessary to ensure progress dialogs cannot be closed).
 -	Allow customisation of types in drop-down boxes
 *	New launcher program/script for windows
-*	Handle missing runtime.opt
 
 File I/O:
 	Import brings up file dialog first.
