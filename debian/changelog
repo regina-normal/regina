@@ -1,3 +1,10 @@
+regina-normal (2.3-1.1) unstable; urgency=low
+
+  * Don't build regina-normal-dev since the ftp admins have kept it on
+    hold for half a month and I really want regina-normal-2.3 available.
+
+ -- Ben Burton <benb@acm.org>  Sun, 30 Dec 2001 11:14:38 +1000
+
 regina-normal (2.3-1) unstable; urgency=low
 
   * New upstream release.
