@@ -5,6 +5,3 @@ Note that this TODO list pertains only to the Python interface; there is
 also a calculation engine TODO list found under "Related Pages" in the
 engine documentation.
 
-Runtime:
-    Automatically load libraries from a configuration file.
-

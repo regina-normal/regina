@@ -177,6 +177,29 @@ if (! $python_lib_dir) {
         "$libdir/$package/python");
 }
 
+# --- Read the list of libraries to load. ---
+
+if (open(LIBS, $libs_conf)) {
+    my @lines = <LIBS>;
+    chomp @lines;
+    close(LIBS);
+
+    foreach my $line (@lines) {
+        if ($line =~ /^\s*#/) {
+            next;
+        }
+        if ($line =~ /^\s*(\S(.*\S)?)\s*$/) {
+            # Treat this as a library file.
+            if (-e $1) {
+                &info("I: Adding library $1.\n");
+                push @python_libs, $1;
+            } else {
+                &err("E: Python library $1 does not exist (found in $libs_conf).\n");
+            }
+        }
+    }
+}
+
 # --- Go ahead and run the application. ---
 
 if ($ENV{PYTHONPATH}) {
