@@ -57,10 +57,6 @@ ostream& operator << (ostream& out, const NGroupExpressionTerm& term) {
     return out;
 }
 
-NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) {
-    terms.insert(terms.end(), cloneMe.terms.begin(), cloneMe.terms.end());
-}
-
 NGroupExpressionTerm& NGroupExpression::getTerm(unsigned long index) {
     TermIterator pos = terms.begin();
     advance(pos, index);

@@ -577,6 +577,10 @@ inline bool NGroupExpressionTerm::operator += (
 inline NGroupExpression::NGroupExpression() {
 }
 
+inline NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) :
+        terms(cloneMe.terms) {
+}
+
 inline std::list<NGroupExpressionTerm>& NGroupExpression::getTerms() {
     return terms;
 }
