@@ -1,0 +1,16 @@
+##
+##  Regina - A Normal Surface Theory Calculator
+##  Makefile Template
+##
+##  Process this file with automake in the top-level directory
+##  to produce Makefile.in.
+##
+
+INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
+
+check_LIBRARIES = libtriangulation.a
+
+libtriangulation_a_SOURCES = ntriangulation.cpp
+
+noinst_HEADERS = testtriangulation.h
+
