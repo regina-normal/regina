@@ -56,6 +56,11 @@ AM_PROG_LIBTOOL
 AC_LIBTOOL_CXX
 LIBTOOL="$LIBTOOL --silent"
 
+AC_CHECK_PROGS(_UTIL_FIND, [find], none)
+if test "$_UTIL_FIND" = "none"; then
+  REGINA_ERR_MISSING([The find utility], [the build system])
+fi
+
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_PROG_LN_S
@@ -66,10 +71,10 @@ AC_PROG_LN_S
 #
 ###########################################################
 
-REGINA_PROG_JAVAC([JAVAUI DOCSJAVAUI], [the Java user interface])
+REGINA_PROG_JAVAC([JAVAUI DOCSJAVAUI DOCSJAR], [the Java user interface])
 
 REGINA_PROG_OPTIONAL([fastjar jar], JAR,
-  [Jar command for creating Java JAR archives], [JAVAUI DOCSJAVAUI],
+  [Jar command for creating Java JAR archives], [JAVAUI DOCSJAVAUI DOCSJAR],
   [the Java user interface])
 
 REGINA_PROG_OPTIONAL([gcjh gcjh-3.1 kaffeh javah], JAVAH,
@@ -82,7 +87,7 @@ REGINA_PROG_OPTIONAL([gcjh gcjh-3.1 kaffeh javah], JAVAH,
 ###########################################################
 
 REGINA_PROG_OPTIONAL(doxygen, DOXYGEN,
-  [Doxygen command for C++ source documentation], DOCSENGINE,
+  [Doxygen command for C++ source documentation], [DOCSENGINE DOCSJAR],
   [calculation engine documentation])
 
 AC_ARG_VAR(DOT, [Dot command for drawing directed graphs])
@@ -96,19 +101,18 @@ else
 fi
 
 REGINA_PROG_OPTIONAL(docbook2man, DOCBOOK2MAN,
-  [Command for converting SGML to man pages], DOCSMAN,
-  [the man pages])
+  [Command for converting SGML to man pages], [DOCSMAN], [the man pages])
 
 REGINA_PROG_OPTIONAL(jade, JADE,
-  [Jade command for converting SGML to HTML], [DOCSHTML DOCSPDF DOCSRTF],
-  [the reference manual])
+  [Jade command for converting SGML to HTML],
+  [DOCSHTML DOCSPDF DOCSRTF DOCSJAR], [the reference manual])
 
 REGINA_PROG_OPTIONAL(pdfjadetex, PDFJADETEX,
   [JadeTeX command for converting TeX to PDF], DOCSPDF,
   [the PDF reference manual])
 
 REGINA_PROG_OPTIONAL(javadoc, JAVADOC,
-  [JavaDoc command for Java source documentation], DOCSJAVAUI,
+  [JavaDoc command for Java source documentation], [DOCSJAVAUI DOCSJAR],
   [Java UI class documentation])
 
 ###########################################################
@@ -155,9 +159,9 @@ AM_PATH_CPPUNIT([1.8.0], , [
 REGINA_SHOULD_BUILD_INTERNAL(JAVAUI)
 if test "$should_build" = "yes"; then
   REGINA_LIB_JAVA(btools, [org.gjt.btools.Version],
-    [JAVAUI DOCSJAVAUI], [the Java user interface])
+    [JAVAUI DOCSJAVAUI DOCSJAR], [the Java user interface])
   REGINA_LIB_JAVA(jython, [org.python.util.jython],
-    [JAVAUI DOCSJAVAUI], [the Java user interface])
+    [JAVAUI DOCSJAVAUI DOCSJAR], [the Java user interface])
 fi
 
 REGINA_HEADER_JNI(ENGINEJNI, [the JNI calculation engine module])
@@ -237,6 +241,7 @@ REGINA_SHOULD_BUILD(DOCSENGINE, engine, [calculation engine docs])
 REGINA_SHOULD_BUILD(DOCSJAVAUI, javaui, [Java user interface docs])
 REGINA_SHOULD_BUILD(DOCSHTML, html, [the reference manual])
 REGINA_SHOULD_BUILD(DOCSMAN, man, [man pages])
+REGINA_SHOULD_BUILD(DOCSJAR, jar, [the documentation jar])
 
 ###########################################################
 #
