@@ -9,8 +9,10 @@
 <!ENTITY data-packet SYSTEM "packet.sgml">
 <!ENTITY data-packet-anglestructurelist SYSTEM "packet-anglestructurelist.sgml">
 <!ENTITY data-packet-container SYSTEM "packet-container.sgml">
+<!ENTITY data-packet-normalsurfacelist SYSTEM "packet-normalsurfacelist.sgml">
 <!ENTITY data-packet-script SYSTEM "packet-script.sgml">
 <!ENTITY data-packet-text SYSTEM "packet-text.sgml">
+<!ENTITY data-params SYSTEM "params.sgml">
 <!ENTITY data-reginadata SYSTEM "reginadata.sgml">
 <!ENTITY data-struct SYSTEM "struct.sgml">
 <!ENTITY data-tag SYSTEM "tag.sgml">
@@ -34,7 +36,7 @@
  '<link linkend="data-packet-container"><sgmltag>packet</sgmltag>
   (container)</link>'>
 <!ENTITY xml-packet-normalsurfacelist
- '<link linkend="data-packet"><sgmltag>packet</sgmltag>
+ '<link linkend="data-packet-normalsurfacelist"><sgmltag>packet</sgmltag>
   (normal surface list)</link>'>
 <!ENTITY xml-packet-script
  '<link linkend="data-packet-script"><sgmltag>packet</sgmltag>
@@ -48,6 +50,8 @@
 <!ENTITY xml-packet-triangulation
  '<link linkend="data-packet"><sgmltag>packet</sgmltag>
   (triangulation)</link>'>
+<!ENTITY xml-params
+ '<link linkend="data-params"><sgmltag>params</sgmltag></link>'>
 <!ENTITY xml-reginadata
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-struct
