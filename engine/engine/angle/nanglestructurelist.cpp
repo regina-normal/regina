@@ -37,6 +37,8 @@
 #define PROPID_ALLOWSTRICT 1
 #define PROPID_ALLOWTAUT 2
 
+typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
+
 NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     NAngleStructureList::initialiseAllProperties();
     owner->insertChildLast(this);
@@ -55,14 +57,15 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     NMatrixInt eqns(nEquations, nCoords);
     unsigned long row = 0;
 
-    NDynamicArrayIterator<NEdgeEmbedding> embit;
+    std::deque<NEdgeEmbedding>::const_iterator embit;
     NPerm perm;
     unsigned long index;
     for (NTriangulation::EdgeIterator eit(owner->getEdges()); ! eit.done();
             eit++) {
         if ((*eit)->isBoundary())
             continue;
-        for (embit.init((*eit)->getEmbeddings()); ! embit.done(); embit++) {
+        for (embit = (*eit)->getEmbeddings().begin();
+                embit != (*eit)->getEmbeddings().end(); embit++) {
             index = owner->getTetrahedronIndex((*embit).getTetrahedron());
             perm = (*embit).getVertices();
             eqns.entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
@@ -106,7 +109,7 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
         eqns, false);
     for (NDoubleListIterator<NConeRay*> it(*ans); ! it.done(); it++) {
         vector = (NAngleStructureVector*)(*it);
-        structures.addLast(new NAngleStructure(owner, vector));
+        structures.push_back(new NAngleStructure(owner, vector));
     }
 
     // Tidy up.
@@ -125,21 +128,18 @@ void NAngleStructureList::writeTextLong(std::ostream& o) const {
     writeTextShort(o);
     o << ":\n";
 
-    NDynamicArrayIterator<NAngleStructure*> it(structures);
-    while (! it.done()) {
+    for (StructureIteratorConst it = structures.begin();
+            it != structures.end(); it++) {
         (*it)->writeTextShort(o);
         o << '\n';
-        it++;
     }
 }
 
 void NAngleStructureList::writePacket(NFile& out) const {
     out.writeULong(structures.size());
-    NDynamicArrayIterator<NAngleStructure*> it(structures);
-    while (! it.done()) {
+    for (StructureIteratorConst it = structures.begin();
+            it != structures.end(); it++)
         (*it)->writeToFile(out);
-        it++;
-    }
 
     // Write the properties.
     std::streampos bookmark(0);
@@ -164,7 +164,7 @@ NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
 
     unsigned long nStructures = in.readULong();
     for (unsigned long i=0; i<nStructures; i++)
-        ans->structures.addLast(NAngleStructure::readFromFile(in,
+        ans->structures.push_back(NAngleStructure::readFromFile(in,
             (NTriangulation*)parent));
 
     // Read the properties.
@@ -175,11 +175,8 @@ NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
 
 NPacket* NAngleStructureList::internalClonePacket(NPacket* parent) const {
     NAngleStructureList* ans = new NAngleStructureList();
-    NDynamicArrayIterator<NAngleStructure*> it(structures);
-    while (! it.done()) {
-        ans->structures.addLast((*it)->clone());
-        it++;
-    }
+    transform(structures.begin(), structures.end(),
+        back_inserter(ans->structures), FuncNewClonePtr<NAngleStructure>());
 
     if (calculatedAllowStrict) {
         ans->doesAllowStrict = doesAllowStrict;
@@ -212,7 +209,7 @@ void NAngleStructureList::readIndividualProperty(NFile& infile,
 void NAngleStructureList::calculateAllowStrict() {
     calculatedAllowStrict = true;
 
-    if (structures.size() == 0) {
+    if (structures.empty()) {
         doesAllowStrict = false;
         return;
     }
@@ -228,8 +225,8 @@ void NAngleStructureList::calculateAllowStrict() {
     unsigned long nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.
-    StructureIterator it(structures);
-    NAngleStructure* s = *it;
+    StructureIteratorConst it = structures.begin();
+    const NAngleStructure* s = *it;
 
     NRational angle;
     unsigned long tet;
@@ -252,7 +249,7 @@ void NAngleStructureList::calculateAllowStrict() {
 
     // Run through the rest of the structures to see if these bad angles
     // do ever change.
-    for (it++; ! it.done(); it++) {
+    for (it++; it != structures.end(); it++) {
         s = *it;
         for (tet = 0; tet < nTets; tet++)
             for (edges = 0; edges < 3; edges++) {
@@ -278,12 +275,7 @@ void NAngleStructureList::calculateAllowStrict() {
 
 void NAngleStructureList::calculateAllowTaut() {
     calculatedAllowTaut = true;
-
-    for (StructureIterator it(structures); ! it.done(); it++)
-        if ((*it)->isTaut()) {
-            doesAllowTaut = true;
-            return;
-        }
-    doesAllowTaut = false;
+    doesAllowTaut = (find_if(structures.begin(), structures.end(),
+        std::mem_fun(&NAngleStructure::isTaut)) != structures.end());
 }
 

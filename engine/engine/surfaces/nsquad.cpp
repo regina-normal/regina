@@ -88,13 +88,13 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
     // Run through each internal edge and add the corresponding
     // equation.
     NTriangulation::EdgeIterator eit(triangulation->getEdges());
-    NDynamicArrayIterator<NEdgeEmbedding> embit;
+    std::deque<NEdgeEmbedding>::const_iterator embit;
     NPerm perm;
     unsigned long tetIndex;
     while (! eit.done()) {
         if (! (*eit)->isBoundary()) {
-            embit.init((*eit)->getEmbeddings());
-            while (! embit.done()) {
+            for (embit = (*eit)->getEmbeddings().begin();
+                    embit != (*eit)->getEmbeddings().end(); embit++) {
                 tetIndex = triangulation->getTetrahedronIndex(
                     (*embit).getTetrahedron());
                 perm = (*embit).getVertices();
@@ -102,7 +102,6 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
                     += 1;
                 ans->entry(row, 3 * tetIndex + vertexSplit[perm[0]][perm[3]])
                     -= 1;
-                embit++;
             }
             row++;
         }
@@ -162,9 +161,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     int end;
     NEdge* edge;
     EdgeEnd current;
-    NDynamicArrayIterator<NVertexEmbedding> vembit;
-    NDynamicArrayIterator<NEdgeEmbedding> eembit;
-    NDynamicArrayIterator<NEdgeEmbedding> backupit;
+    std::vector<NVertexEmbedding>::const_iterator vembit;
+    std::deque<NEdgeEmbedding>::const_iterator eembit, backupit,
+        endit, beginit;
     NTetrahedron* tet;
     NTetrahedron* adj;
     NPerm tetPerm, adjPerm;
@@ -207,8 +206,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
             // Run around this edge end.
             // We know there is a pre-chosen coordinate somewhere; run
             // forwards and find this.
-            for (eembit.init(current.edge->getEmbeddings());
-                    ! eembit.done(); eembit++)
+            beginit = current.edge->getEmbeddings().begin();
+            endit = current.edge->getEmbeddings().end();
+            for (eembit = beginit; eembit != endit; eembit++)
                 if (! (*ans)[7 * triang->getTetrahedronIndex(
                         (*eembit).getTetrahedron()) +
                         (*eembit).getVertices()[current.end]].isInfinite())
@@ -221,7 +221,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
             adj = (*eembit).getTetrahedron();
             adjPerm = (*eembit).getVertices();
             adjIndex = triang->getTetrahedronIndex(adj);
-            for (eembit--; ! eembit.done(); eembit--) {
+            while (eembit != beginit) {
+                eembit--;
+
                 // Work out the coordinate for the disc type at eembit.
                 tet = (*eembit).getTetrahedron();
                 tetPerm = (*eembit).getVertices();
@@ -259,7 +261,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
             adj = (*eembit).getTetrahedron();
             adjPerm = (*eembit).getVertices();
             adjIndex = triang->getTetrahedronIndex(adj);
-            for (eembit++; ! eembit.done(); eembit++) {
+            for (eembit++; eembit != endit; eembit++) {
                 // Work out the coordinate for the disc type at eembit.
                 tet = (*eembit).getTetrahedron();
                 tetPerm = (*eembit).getVertices();
@@ -303,8 +305,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         // If the matching equations were broken, set every coordinate
         // to infinity.  Otherwise subtract min from every coordinate to
         // make the values as small as possible.
-        for (vembit.init((*vit)->getEmbeddings());
-                ! vembit.done(); vembit++) {
+        for (vembit = (*vit)->getEmbeddings().begin();
+                vembit != (*vit)->getEmbeddings().end(); vembit++) {
             row = 7 * triang->getTetrahedronIndex((*vembit).getTetrahedron())
                 + (*vembit).getVertex();
             if (broken)

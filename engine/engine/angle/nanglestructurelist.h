@@ -36,9 +36,10 @@
 #define __NANGLESTRUCTURELIST_H
 #endif
 
-#include "packet/npacket.h"
+#include <vector>
 #include "angle/nanglestructure.h"
-#include "utilities/ndynamicarray.h"
+#include "packet/npacket.h"
+#include "utilities/nmiscutils.h"
 
 /**
  * A packet representing a collection of angle structures on a triangulation.
@@ -51,7 +52,7 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
         static const int packetType;
 
     private:
-        NDynamicArray<NAngleStructure*> structures;
+        std::vector<NAngleStructure*> structures;
             /**< Contains the angle structures stored in this packet. */
 
         bool doesAllowStrict;
@@ -63,10 +64,6 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
             /**< Does the convex span of this list include a taut structure? */
         bool calculatedAllowTaut;
             /**< Have we calculated \a doesAllowTaut? */
-
-        typedef NDynamicArrayIterator<NAngleStructure*> StructureIterator;
-            /**< An iterator class used to run through the individual
-             *   angle structures in this list. */
 
     public:
         /**
@@ -169,7 +166,8 @@ inline NAngleStructureList::NAngleStructureList() {
 }
 
 inline NAngleStructureList::~NAngleStructureList() {
-    structures.flushAndDelete();
+    for_each(structures.begin(), structures.end(),
+        FuncDelete<NAngleStructure>());
 }
 
 inline NTriangulation* NAngleStructureList::getTriangulation() const {

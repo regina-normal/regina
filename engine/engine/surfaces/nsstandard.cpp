@@ -58,7 +58,7 @@ NLargeInteger NNormalSurfaceVectorStandard::getEdgeWeight(
         unsigned long edgeIndex, NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->getEdges()[edgeIndex]->
-        getEmbeddings()[0];
+        getEmbeddings().front();
     long tetIndex = triang->getTetrahedronIndex(
         emb.getTetrahedron());
     int start = emb.getVertices()[0];
