@@ -62,6 +62,70 @@ AC_DEFUN(REGINA_CHECK_COMPILER_FLAG, [
 ])
 
 dnl
+dnl    REGINA_CHECK_KDE_MODULEDIR
+dnl
+dnl    Runs a sanity check on the current $kde_moduledir.  In addition
+dnl    the current $prefix and $kde_moduledir are expanded to full paths
+dnl    and displayed to the user.
+dnl
+dnl    If the $kde_moduledir does not look like it indeed contains
+dnl    KDE modules, this routine generates an error with a detailed
+dnl    explanation.
+dnl
+dnl    Passing the option --disable-moduledir-test will downgrade this
+dnl    error to a warning so that the configure script can continue on
+dnl    regardless.
+dnl
+dnl    Example: REGINA_CHECK_KDE_MODULEDIR
+dnl
+AC_DEFUN(REGINA_CHECK_KDE_MODULEDIR, [
+  AC_ARG_ENABLE(moduledir-test, AC_HELP_STRING([--disable-moduledir-test],
+      [skip the sanity check on $kde_moduledir]), [
+    if test "$enableval" = "no"; then
+      __skip_moduledir_test=yes
+    fi
+  ])
+
+  # Run a sanity check on the prefix.
+  AS_AC_EXPAND(__expanded_prefix, [\$prefix])
+  AS_AC_EXPAND(__expanded_kde_moduledir, [\$kde_moduledir])
+  AC_MSG_NOTICE([using prefix $__expanded_prefix])
+  AC_MSG_NOTICE([using kde_moduledir $__expanded_kde_moduledir])
+
+  AC_MSG_CHECKING([for a sensible \$kde_moduledir])
+  if test -e "$__expanded_kde_moduledir/libkatepart.so"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    if test "$__skip_moduledir_test" = "yes"; then
+      AC_MSG_WARN([The KDE module directory does not appear to contain libkatepart.so.])
+    else
+      cat <<END
+
+The KDE module directory does not appear to contain libkatepart.so.
+This is probably because the wrong installation prefix is being used.
+It is essential to build Regina with the correct prefix; otherwise it
+will not be able to run properly.
+
+If the module directory $__expanded_kde_moduledir is correct and you
+simply don't have the kate part installed (i.e., other KDE modules are
+properly installed in $__expanded_kde_moduledir on your system), you
+can rerun this configure script with the option --disable-moduledir-test
+and it will skip over this test.
+
+If the module directory $__expanded_kde_moduledir is incorrect (i.e.,
+it does not contain KDE modules and/or libkatepart.so is installed
+elsewhere), you must rerun this configure script with a correct --prefix
+option.  Please feel free to write to regina-user@lists.sourceforge.net
+for assistance.
+
+END
+      AC_MSG_ERROR([Stopping so that the installation prefix can be resolved.])
+    fi
+  fi
+])
+
+dnl
 dnl    REGINA_CXX_PARTIAL_SPECIALISATION
 dnl
 dnl    Ensures that the C++ compiler supports partial specialisation.
