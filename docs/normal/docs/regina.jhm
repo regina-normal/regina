@@ -7,7 +7,7 @@
 	<mapID target="opt_applet" url="options.html#applet"/>
 	<mapID target="opt_enginecorba" url="options.html#enginecorba"/>
 
-	<mapID target="jpython" url="jpython.html"/>
+	<mapID target="jython" url="jpython.html"/>
 
 	<mapID target="engine" url="engine/index.html"/>
 	<mapID target="e_hierarchy" url="engine/hierarchy.html"/>

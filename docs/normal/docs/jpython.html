@@ -1,23 +1,23 @@
 <html>
 <head>
 	<title>
-		JPython and Scripting
+		Jython and Scripting
 	</title>
 </head>
 
 <body>
 	<center>
-		<h2>JPython and Scripting</h2>
+		<h2>Jython and Scripting</h2>
 	</center>
 	<p>
-	All scripts are run in JPython.  JPython is almost identical to
+	All scripts are run in Jython.  Jython is almost identical to
 	standard (C) python with a few exceptions that are probably
 	insignificant in this arena.  See
-	<a href="http://www.jpython.org/">www.jpython.org</a> for more
+	<a href="http://www.jython.org/">www.jython.org</a> for more
 	details.
 	<p>
-	When using JPython, Java objects, classes and methods can be
-	directly accessed as if they were JPython objects, classes and
+	When using Jython, Java objects, classes and methods can be
+	directly accessed as if they were Jython objects, classes and
 	methods.  The classes that form the engine, packets and other
 	objects that can be manipulated in the program are described in
 	detail in the
@@ -27,7 +27,7 @@
 	the <a href="engine/javanotes.html">Java notes page</a>
 	that accompany it.
 	<p>
-	Wherever Regina gives you access to JPython, you may
+	Wherever Regina gives you access to Jython, you may
 	assume that the <tt>java</tt> and <tt>normal</tt> modules have
 	been imported (thus giving you access to everything beneath them).
 	If you need access to data in a currently open file, your best
@@ -35,10 +35,10 @@
 	equal to other packets in the file before the script is run.
 	<p>
 	<b>Warning:</b> Probably the easiest way to crash the program is to
-	bring up a JPython console and do something untoward.  JPython and
+	bring up a Jython console and do something untoward.  Jython and
 	scripting offer very low-level control over the engine, but also
 	provide the associated dangers.  The general philosophy is that
-	JPython gives you direct access to the C++ calculation engine and the
+	Jython gives you direct access to the C++ calculation engine and the
 	Java interface has no way of knowing what you are tinkering with.
 	Thus you should tread gently.
 	<p>
@@ -59,7 +59,7 @@
 	If you cannot edit a packet through the GUI, there is a reason for
 	this (for instance, a normal surface list will rely upon its parent
 	triangulation remaining constant and so any triangulation with child
-	surface lists will be uneditable).  Thus you should not use JPython
+	surface lists will be uneditable).  Thus you should not use Jython
 	as a way to get around that barrier; instead you should respect that
 	barrier.  Perhaps you can clone the packet in question without
 	cloning its descendants; the clone then should be editable.

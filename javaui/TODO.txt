@@ -23,7 +23,7 @@ File I/O:
 Help:
 	Write manual! - include context sensitive help, searching and index.
 
-JPython:
+Jython:
 *	Intermediate output in console
 	Support for custom startup commands
 	Check to see whether user libraries are text files

@@ -147,7 +147,7 @@ else
 		echo "    Engine directory: $JNIDir"
 		echo
 		echo "    Location of btools.jar: $BTools"
-		echo "    Location of jpython.jar: $JPython"
+		echo "    Location of jython.jar: $JPython"
 		echo "    Location of jh.jar: $JavaHelp"
 		echo "    Extra classes: $ExtraClasses"
 		echo

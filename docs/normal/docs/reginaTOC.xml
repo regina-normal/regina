@@ -9,7 +9,7 @@
 		<tocitem text="Calculation Engine CORBA Server"
 			target="opt_enginecorba"/>
 	</tocitem>
-	<tocitem text="JPython and scripting" target="jpython">
+	<tocitem text="Jython and scripting" target="jython">
 		<tocitem text="Engine Documentation" target="engine">
 			<tocitem text="Class Hierarchy" target="e_hierarchy"/>
 			<tocitem text="Alphabetical List" target="e_alphalist"/>

@@ -13,6 +13,7 @@ Regina - A Normal Surface Theory Calculator
             - Moved options files to $REGINA_OPTIONS.
             - Ported from JPython 1.1 to Jython 2.1-alpha1.
             - Now supports custom Jython libraries.
+            - Improved support for mnemonics and keyboard accelerators.
         normal.console:
             - Major rearrangements; new class JPythonUtils now does most of
               the Jython work.

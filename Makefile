@@ -21,7 +21,7 @@ export CONF_DIR = configure
 
 export cs = $(CLASSPATH_SEP)
 export other_classes = \
-	$(BTOOLS)$(cs)$(JPYTHON)$(cs)$(JAVAHELP)$(cs)$(EXTRA_CLASSES)
+	$(BTOOLS)$(cs)$(JYTHON)$(cs)$(JAVAHELP)$(cs)$(EXTRA_CLASSES)
 
 export LICENSE = LICENSE.txt
 
