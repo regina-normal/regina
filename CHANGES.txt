@@ -11,6 +11,7 @@ Regina - A Normal Surface Theory Calculator
 Version 3.1  [ (under development) ]
     OVERALL:
         - Added calculation engine test suite.
+        - Build process now uses standard autoconf/automake structure.
     ENGINE:
         Class NCensus:
             - Redesigned to do its work through classes NFacePairing and
@@ -29,6 +30,8 @@ Version 3.1  [ (under development) ]
             - Routine simplifyToLocalMinimum() now make boundary moves last.
         Routine reducedMod():
             - Fixed bug in the midpoint case.
+        File nhashmap.h, nhashset.h:
+            - Added to deal with differing STL extension installations.
         File nknownmanifold.h:
             - Added global 3-manifold recognition routines.
         File nperm.h:

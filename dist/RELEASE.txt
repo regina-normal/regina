@@ -9,6 +9,7 @@ Below are locations of strings that may need changing for a new release.
 All locations are relative to the primary source directory.
 
 Program version:
+    ./configure.ac (AC_INIT, AM_INIT_AUTOMAKE)
     dist/Makefile
     engine/engine/regina.h (#define ENGINE_VERSION, ENGINE_VERSION_MAJOR,
         ENGINE_VERSION_MINOR)
@@ -17,6 +18,7 @@ Program version:
 
 Copyright years:
     ./LICENSE.txt (top of file)
+    ./configure.ac (top of file)
     ./regina.bat (top of file)
     debian/copyright (regina entry)
     docs/LICENSE.txt (top of file)
