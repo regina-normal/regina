@@ -196,10 +196,10 @@ bool NGroupExpression::substitute(unsigned long generator,
 }
 
 void NGroupExpression::writeXMLData(std::ostream& out) const {
-    out << "<expr> ";
+    out << "<reln> ";
     for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
         out << (*it).generator << '^' << (*it).exponent << ' ';
-    out << "</expr>";
+    out << "</reln>";
 }
 
 void NGroupExpression::writeToFile(NFile& out) const {
