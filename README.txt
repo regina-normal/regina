@@ -24,20 +24,6 @@ then move the files out of /usr/local/ and into some other directory,
 Regina will probably not work correctly.  If you wish to use some other
 installation directory, you should rebuild Regina from source.
 
-Notes for Windows users:
-
-  - You will need to run this script from within a cygwin bash shell,
-    though you may use the batch file /usr/local/bin/regina.bat instead
-    to run Regina directly from the Windows desktop.  This batch file
-    must be hand-edited before it can be used (the external Windows
-    environment cannot guess where you have installed cygwin); the batch
-    file itself contains instructions for how to do this.
-
-  - Unlike some previous versions of Regina, this release requires libgmp
-    to be installed as a shared library.  If you experience gmp-related
-    errors when starting Regina, try downloading the latest gmp-cygwin
-    libraries from the Regina download page.
-
 Currently no uninstall utility is provided with the binary
 distributions, since this is generally taken care of by your particular
 operating system's package management system.  Bug your distribution to

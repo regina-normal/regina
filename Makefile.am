@@ -20,12 +20,9 @@ SUBDIRS = \
   pylib \
   scripts
 
-bin_SCRIPTS = @REGINA_BATCH@
-EXTRA_SCRIPTS = regina.bat
-
 EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
   AUTHORS.txt INSTALL.txt LICENSE.txt README.txt \
-  regina.in regina.bat regina.conf.sample \
+  regina.in regina.conf.sample \
   Makefile-help Makefile.cvs
 
 ## ----------------------- Custom targets ----------------------------

@@ -6,7 +6,7 @@
 # Copyright (c) 2002-2003, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Usage: mkdist [ linux | cygwin | doc ]
+# Usage: mkdist [ linux | doc ]
 #
 # Builds a complete binary or documentation distribution archive.
 #
@@ -34,7 +34,7 @@
 set -e
 
 usage () {
-  echo "Usage: $0 [ linux | cygwin | doc ]" 1>&2
+  echo "Usage: $0 [ linux | doc ]" 1>&2
   exit 1
 }
 
@@ -130,10 +130,6 @@ case "$1" in
   linux )
     ./configure
     bindist linux
-  ;;
-  cygwin )
-    ./configure CC=gcc-2 CXX=g++-2 --enable-static-final
-    bindist cygwin
   ;;
   doc )
     if ! test -e config.status; then
