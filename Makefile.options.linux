@@ -79,7 +79,7 @@ export JYTHON := /usr/share/java/jython.jar
 export JAVAHELP := /usr/local/javahelp/javahelp/lib/jh.jar
 #export EXTRA_CLASSES :=
 	# (Most Java compilers already know where their base classes are.)
-export EXTRA_CLASSES := /usr/lib/j2re1.3/lib/rt.jar
+export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
 	# (The jikes compiler needs to be given someone else's base classes
 	#  to work with.)
 
