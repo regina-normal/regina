@@ -82,3 +82,4 @@ void FlatToolButton::drawButton(QPainter* p) {
     }
 }
 
+#include "flatbutton.moc"
