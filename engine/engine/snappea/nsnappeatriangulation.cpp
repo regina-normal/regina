@@ -74,12 +74,18 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
 
 ::Triangulation* NSnapPeaTriangulation::reginaToSnapPea(
         const NTriangulation& tri) {
-    // TODO: check
+    // Make sure SnapPea is likely to be comfortable with it.
     if (tri.getNumberOfTetrahedra() == 0)
         return 0;
-    if (tri.getNumberOfTetrahedra() >= INT_MAX)
+    if (tri.hasBoundaryFaces())
+        return 0;
+    if (! tri.isConnected())
         return 0;
     if (! tri.isValid())
+        return 0;
+    if (! tri.isStandard())
+        return 0;
+    if (tri.getNumberOfTetrahedra() >= INT_MAX)
         return 0;
 
     ::TriangulationData data;
