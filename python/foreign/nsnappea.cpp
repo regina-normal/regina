@@ -26,27 +26,23 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNFace();
-void addNFacePair();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+#include "foreign/nsnappea.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNFace();
-    addNFacePair();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+using namespace boost::python;
+
+namespace {
+    std::string (*stringToToken_chars)(const char*) = &regina::stringToToken;
+    std::string (*stringToToken_string)(const std::string&) =
+        &regina::stringToToken;
+}
+
+void addNSnapPea() {
+    def("readSnapPea", regina::readSnapPea,
+        return_value_policy<manage_new_object>());
+    def("writeSnapPea", regina::writeSnapPea);
+    def("stringToToken", stringToToken_chars);
+    def("stringToToken", stringToToken_string);
 }
 

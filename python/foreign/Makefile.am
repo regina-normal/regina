@@ -9,7 +9,7 @@
 INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 CXXFLAGS = @CXXFLAGS_NODEBUG@
 
-noinst_LTLIBRARIES = libtriangulation.la
+noinst_LTLIBRARIES = libforeign.la
 
-libtriangulation_la_SOURCES = nboundarycomponent.cpp ncomponent.cpp nedge.cpp nface.cpp nfacepair.cpp nperm.cpp ntetface.cpp ntetrahedron.cpp ntriangulation.cpp nvertex.cpp pytriangulation.cpp
+libforeign_la_SOURCES = nsnappea.cpp pyforeign.cpp
 

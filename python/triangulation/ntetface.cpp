@@ -26,27 +26,40 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNFace();
-void addNFacePair();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+#include "triangulation/ntetface.h"
+#include <boost/python.hpp>
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNFace();
-    addNFacePair();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+using namespace boost::python;
+using regina::NTetFace;
+
+namespace {
+    NTetFace inc_operator(NTetFace& p) {
+        return p++;
+    }
+
+    NTetFace dec_operator(NTetFace& p) {
+        return p--;
+    }
+}
+
+void addNTetFace() {
+    class_<NTetFace>("NTetFace")
+        .def(init<int, int>())
+        .def(init<const NTetFace&>())
+        .def_readwrite("tet", &NTetFace::tet)
+        .def_readwrite("face", &NTetFace::face)
+        .def("isBoundary", &NTetFace::isBoundary)
+        .def("isBeforeStart", &NTetFace::isBeforeStart)
+        .def("isPastEnd", &NTetFace::isPastEnd)
+        .def("setFirst", &NTetFace::setFirst)
+        .def("setBoundary", &NTetFace::setBoundary)
+        .def("setBeforeStart", &NTetFace::setBeforeStart)
+        .def("setPastEnd", &NTetFace::setPastEnd)
+        .def("inc", inc_operator)
+        .def("dec", dec_operator)
+        .def(self == self)
+        .def(self < self)
+        .def(self <= self)
+    ;
 }
 

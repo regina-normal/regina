@@ -26,27 +26,9 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNFace();
-void addNFacePair();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+void addNSnapPea();
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNFace();
-    addNFacePair();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+void addForeign() {
+    addNSnapPea();
 }
 

@@ -83,10 +83,7 @@ void addNPerm() {
         .def("__str__", &NPerm::toString)
     ;
 
-    // Global arrays that have been converted into functions:
-    GlobalArray<NPerm>::wrapClass("GlobalArray_NPerm");
-    GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
-
+    // Global arrays:
     scope().attr("allPermsS4") = &allPermsS4_arr;
     scope().attr("allPermsS4Inv") = &allPermsS4Inv_arr;
     scope().attr("orderedPermsS4") = &orderedPermsS4_arr;

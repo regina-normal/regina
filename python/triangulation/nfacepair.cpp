@@ -26,27 +26,38 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNFace();
-void addNFacePair();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+#include "triangulation/nfacepair.h"
+#include <boost/python.hpp>
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNFace();
-    addNFacePair();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+using namespace boost::python;
+using regina::NFacePair;
+
+namespace {
+    void inc_operator(NFacePair& p) {
+        p++;
+    }
+
+    void dec_operator(NFacePair& p) {
+        p--;
+    }
+}
+
+void addNFacePair() {
+    class_<NFacePair>("NFacePair")
+        .def(init<int, int>())
+        .def(init<const NFacePair&>())
+        .def("lower", &NFacePair::lower)
+        .def("upper", &NFacePair::upper)
+        .def("isBeforeStart", &NFacePair::isBeforeStart)
+        .def("isPastEnd", &NFacePair::isPastEnd)
+        .def("complement", &NFacePair::complement)
+        .def(self == self)
+        .def(self < self)
+        .def(self > self)
+        .def(self <= self)
+        .def(self >= self)
+        .def("inc", inc_operator)
+        .def("dec", dec_operator)
+    ;
 }
 

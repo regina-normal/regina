@@ -26,27 +26,40 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNFace();
-void addNFacePair();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+#include "triangulation/nboundarycomponent.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/nedge.h"
+#include "triangulation/nface.h"
+#include "triangulation/ntetrahedron.h"
+#include "triangulation/nvertex.h"
+#include <boost/python.hpp>
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNFace();
-    addNFacePair();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+using namespace boost::python;
+using regina::NComponent;
+
+void addNComponent() {
+    class_<NComponent, bases<regina::ShareableObject>,
+            std::auto_ptr<NComponent>, boost::noncopyable>
+            ("NComponent", no_init)
+        .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
+        .def("getNumberOfFaces", &NComponent::getNumberOfFaces)
+        .def("getNumberOfEdges", &NComponent::getNumberOfEdges)
+        .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
+        .def("getNumberOfBoundaryComponents",
+            &NComponent::getNumberOfBoundaryComponents)
+        .def("getTetrahedron", &NComponent::getTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("getFace", &NComponent::getFace,
+            return_value_policy<reference_existing_object>())
+        .def("getEdge", &NComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("getVertex", &NComponent::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("getBoundaryComponent", &NComponent::getBoundaryComponent,
+            return_value_policy<reference_existing_object>())
+        .def("isIdeal", &NComponent::isIdeal)
+        .def("isOrientable", &NComponent::isOrientable)
+        .def("isClosed", &NComponent::isClosed)
+    ;
 }
 

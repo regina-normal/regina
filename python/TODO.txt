@@ -12,10 +12,8 @@ NLargeInteger:
     Investigate automatic conversion from long.
 
 Wrappers:
-    triangulation
-    angle
-    census
-    foreign
-    split
     subcomplex
+    split
+    census
     surfaces
+    angle

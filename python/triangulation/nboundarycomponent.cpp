@@ -26,27 +26,32 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNFace();
-void addNFacePair();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+#include "triangulation/nboundarycomponent.h"
+#include "triangulation/nedge.h"
+#include "triangulation/nface.h"
+#include "triangulation/nvertex.h"
+#include <boost/python.hpp>
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNFace();
-    addNFacePair();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+using namespace boost::python;
+using regina::NBoundaryComponent;
+
+void addNBoundaryComponent() {
+    class_<NBoundaryComponent, bases<regina::ShareableObject>,
+            std::auto_ptr<NBoundaryComponent>, boost::noncopyable>
+            ("NBoundaryComponent", no_init)
+        .def("getNumberOfFaces", &NBoundaryComponent::getNumberOfFaces)
+        .def("getNumberOfEdges", &NBoundaryComponent::getNumberOfEdges)
+        .def("getNumberOfVertices", &NBoundaryComponent::getNumberOfVertices)
+        .def("getFace", &NBoundaryComponent::getFace,
+            return_value_policy<reference_existing_object>())
+        .def("getEdge", &NBoundaryComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("getVertex", &NBoundaryComponent::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("getEulerCharacteristic",
+            &NBoundaryComponent::getEulerCharacteristic)
+        .def("isIdeal", &NBoundaryComponent::isIdeal)
+        .def("isOrientable", &NBoundaryComponent::isOrientable)
+    ;
 }
 

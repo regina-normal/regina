@@ -26,27 +26,44 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNFace();
-void addNFacePair();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+#include "triangulation/ncomponent.h"
+#include "triangulation/nedge.h"
+#include "triangulation/nface.h"
+#include "triangulation/ntetrahedron.h"
+#include "triangulation/nvertex.h"
+#include "../globalarray.h"
+#include <boost/python.hpp>
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNFace();
-    addNFacePair();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+using namespace boost::python;
+using regina::NTetrahedron;
+
+void addNTetrahedron() {
+    class_<NTetrahedron, bases<regina::ShareableObject>,
+            std::auto_ptr<NTetrahedron> >("NTetrahedron")
+        .def(init<const std::string&>())
+        .def("getDescription", &NTetrahedron::getDescription,
+            return_value_policy<return_by_value>())
+        .def("setDescription", &NTetrahedron::setDescription)
+        .def("getAdjacentTetrahedron", &NTetrahedron::getAdjacentTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("getAdjacentTetrahedronGluing",
+            &NTetrahedron::getAdjacentTetrahedronGluing)
+        .def("getAdjacentFace", &NTetrahedron::getAdjacentFace)
+        .def("hasBoundary", &NTetrahedron::hasBoundary)
+        .def("joinTo", &NTetrahedron::joinTo)
+        .def("unjoin", &NTetrahedron::unjoin,
+            return_value_policy<reference_existing_object>())
+        .def("isolate", &NTetrahedron::isolate)
+        .def("getComponent", &NTetrahedron::getComponent,
+            return_value_policy<reference_existing_object>())
+        .def("getVertex", &NTetrahedron::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("getEdge", &NTetrahedron::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("getFace", &NTetrahedron::getFace,
+            return_value_policy<reference_existing_object>())
+        .def("getEdgeMapping", &NTetrahedron::getEdgeMapping)
+        .def("getFaceMapping", &NTetrahedron::getFaceMapping)
+    ;
 }
 
