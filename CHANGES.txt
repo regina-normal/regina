@@ -10,14 +10,15 @@ Regina - A Normal Surface Theory Calculator
 Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
     OVERALL:
         - Ships with the 7-tetrahedron closed non-orientable census.
-        - Build configuration uses different tests for pthread, since the
-          old tests were broken on some systems.
+        - Compile-time configuration uses different tests for pthread, since
+          the old tests were broken on some systems.
+        - Added a Python caveats section to the reference manual.
     ENGINE:
         Class NEdge, NVertex:
             - Added getDegree() as an alias for getNumberOfEmbeddings().
         Class NGluingPerms:
             - Incorporate new results that allow us to discard more face
-              pairings in a non-orientable census (see math.GT/0307382 v2).
+              pairings in a non-orientable census (see math.GT/0307382:v2).
         Class NLayeredSolidTorus:
             - Added routine flatten() to flatten a layered solid torus
               to a Mobius band.
@@ -31,7 +32,10 @@ Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
         Overall structure:
             - Split out common shell/part material into the separate
               library libregina-kdecommon.
-            - No longer using flat buttons.
+            - Integrated python scripting into the graphical user interface.
+              This is contained within libregina-kdecommon and is accessible
+              through the main menu/toolbar and through the script editor.
+            - Avoid using flat buttons where possible.
         Class ExportDialog:
             - New routine validate() to detect when there are no packets
               suitable for export.
@@ -50,7 +54,7 @@ Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
             - Allow the initially visible tabs to be configured.
         Class NTriGluingsUI:
             - Implemented census lookup for triangulations.
-            - Fixed the bug in updating tetrahedron labels when other
+            - Fixed a bug in the updating of tetrahedron labels when other
               tetrahedra are removed from a triangulation.
         Class PacketChooser:
             - New routine hasPackets() to detect empty packet choosers.
@@ -60,7 +64,7 @@ Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
               and also check whether the selected file already exists.
         Class ReginaPreferences, ReginaPrefSet:
             - Many new configuration options.  In addition to those
-              mentioned above, census data files and Python libraries can
+              mentioned above, census data files and Python options can
               also be configured.
 
 Version 3.96  [ 31 October, 2003 ] - Second prerelease for version 4.0.
