@@ -137,8 +137,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void testSurface(const NNormalSurface* surface, const char* triName,
-                const char* surfaceName, int euler, int connected,
-                int orient, int twoSided, bool compact, bool realBdry,
+                const char* surfaceName, int euler, bool connected,
+                bool orient, bool twoSided, bool compact, bool realBdry,
                 bool vertexLink, unsigned edgeLink,
                 unsigned long central, bool splitting) {
             // Begin with the compactness test so we know which other
@@ -165,12 +165,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Surface [" << surfaceName << "] for " << triName
                     << " should be ";
-                if (connected == 1)
+                if (connected)
                     msg << "connected.";
-                else if (connected == -1)
-                    msg << "disconnected.";
                 else
-                    msg << "of unknown connectedness.";
+                    msg << "disconnected.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
                     surface->isConnected() == connected);
@@ -179,12 +177,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Surface [" << surfaceName << "] for " << triName
                     << " should be ";
-                if (orient == 1)
+                if (orient)
                     msg << "orientable.";
-                else if (orient == -1)
-                    msg << "non-orientable.";
                 else
-                    msg << "of unknown orientability.";
+                    msg << "non-orientable.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
                     surface->isOrientable() == orient);
@@ -193,12 +189,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Surface [" << surfaceName << "] for " << triName
                     << " should be ";
-                if (twoSided == 1)
+                if (twoSided)
                     msg << "2-sided.";
-                else if (twoSided == -1)
-                    msg << "1-sided.";
                 else
-                    msg << "of unknown sidedness.";
+                    msg << "1-sided.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
                     surface->isTwoSided() == twoSided);
@@ -274,8 +268,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void countCompactSurfaces(const NNormalSurfaceList* list,
                 const char* triName, const char* surfaceType,
-                unsigned long expectedCount,
-                int euler, int connected, int orient, int twoSided,
+                unsigned long expectedCount, int euler,
+                bool connected, bool orient, bool twoSided,
                 bool realBdry, bool vertexLink, unsigned edgeLink,
                 unsigned long central, bool splitting) {
             unsigned long tot = 0;
@@ -323,8 +317,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard normal surfaces", 1);
             testSurface(list->getSurface(0), "the Gieseking manifold",
                 "vertex link",
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, true /* two-sided */,
                 true /* compact */, false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -350,8 +344,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard almost normal surfaces", 1);
             testSurface(list->getSurface(0), "the Gieseking manifold",
                 "vertex link",
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, true /* two-sided */,
                 true /* compact */, false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -367,8 +361,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard normal surfaces", 1);
             testSurface(list->getSurface(0), "the figure eight knot complement",
                 "vertex link",
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 true /* compact */, false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -402,8 +396,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard almost normal surfaces", 1);
             testSurface(list->getSurface(0), "the figure eight knot complement",
                 "vertex link",
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 true /* compact */, false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -419,15 +413,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard normal surfaces", 3);
             countCompactSurfaces(list, "the 3-sphere",
                 "standard normal vertex linking spheres", 2,
-                2 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the 3-sphere",
                 "standard normal double-edge linking tori", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
                 1 /* central */, true /* splitting */);
@@ -443,8 +437,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "quad normal surfaces", 1);
             countCompactSurfaces(list, "the 3-sphere",
                 "quad normal double-edge linking tori", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
                 1 /* central */, true /* splitting */);
@@ -460,22 +454,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard almost normal surfaces", 4);
             countCompactSurfaces(list, "the 3-sphere",
                 "standard normal vertex linking spheres", 2,
-                2 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the 3-sphere",
                 "standard normal double-edge linking tori", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
                 1 /* central */, true /* splitting */);
             countCompactSurfaces(list, "the 3-sphere",
                 "standard almost normal central 2-spheres", 1,
-                2 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 1 /* central */, false /* splitting */);
@@ -491,22 +485,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard normal surfaces", 5);
             countCompactSurfaces(list, "the untwisted layered loop C(2)",
                 "standard normal vertex linking spheres", 2,
-                2 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the untwisted layered loop C(2)",
                 "standard normal double-edge linking tori", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
                 2 /* central */, true /* splitting */);
             countCompactSurfaces(list, "the untwisted layered loop C(2)",
                 "standard normal splitting projective planes", 2,
-                1 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                1 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 2 /* central */, true /* splitting */);
@@ -522,15 +516,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "quad normal surfaces", 3);
             countCompactSurfaces(list, "the untwisted layered loop C(2)",
                 "quad normal double-edge linking tori", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
                 2 /* central */, true /* splitting */);
             countCompactSurfaces(list, "the untwisted layered loop C(2)",
                 "quad normal splitting projective planes", 2,
-                1 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                1 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 2 /* central */, true /* splitting */);
@@ -546,22 +540,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard almost normal surfaces", 5);
             countCompactSurfaces(list, "the untwisted layered loop C(2)",
                 "standard normal vertex linking spheres", 2,
-                2 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the untwisted layered loop C(2)",
                 "standard normal double-edge linking tori", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 2 /* edge link */,
                 2 /* central */, true /* splitting */);
             countCompactSurfaces(list, "the untwisted layered loop C(2)",
                 "standard normal splitting projective planes", 2,
-                1 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                1 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 2 /* central */, true /* splitting */);
@@ -577,22 +571,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard normal surfaces", 5);
             countCompactSurfaces(list, "the twisted layered loop C~(3)",
                 "standard normal vertex linking spheres", 1,
-                2 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the twisted layered loop C~(3)",
                 "standard normal edge linking tori", 3,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the twisted layered loop C~(3)",
                 "standard normal splitting Klein bottles", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 3 /* central */, true /* splitting */);
@@ -608,15 +602,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "quad normal surfaces", 4);
             countCompactSurfaces(list, "the twisted layered loop C~(3)",
                 "quad normal edge linking tori", 3,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the twisted layered loop C~(3)",
                 "quad normal splitting Klein bottles", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 3 /* central */, true /* splitting */);
@@ -632,22 +626,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "standard almost normal surfaces", 5);
             countCompactSurfaces(list, "the twisted layered loop C~(3)",
                 "standard normal vertex linking spheres", 1,
-                2 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                2 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the twisted layered loop C~(3)",
                 "standard normal edge linking tori", 3,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list, "the twisted layered loop C~(3)",
                 "standard normal splitting Klein bottles", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 3 /* central */, true /* splitting */);
@@ -664,56 +658,56 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal vertex linking discs", 1,
-                1 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                1 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal thin edge-linking annuli", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal splitting punctured tori", 1,
-                -1 /* euler */, 1 /* connected */,
-                1 /* orient */, -1 /* two-sided */,
+                -1 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 3 /* central */, true /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal central 1-sided Klein bottles", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 3 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal central 2-sided Mobius bands", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 3 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal generic 1-sided Mobius bands", 2,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal generic 1-sided annuli", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -730,40 +724,40 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "quad normal thin edge-linking annuli", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "quad normal central 1-sided Klein bottles", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 3 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "quad normal central 2-sided Mobius bands", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 3 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "quad normal generic 1-sided Mobius bands", 2,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "quad normal generic 1-sided annuli", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -780,56 +774,56 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal vertex linking discs", 1,
-                1 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                1 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 true /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal thin edge-linking annuli", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 1 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal splitting punctured tori", 1,
-                -1 /* euler */, 1 /* connected */,
-                1 /* orient */, -1 /* two-sided */,
+                -1 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 3 /* central */, true /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal central 1-sided Klein bottles", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 false /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 3 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal central 2-sided Mobius bands", 1,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, 1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, true /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 3 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal generic 1-sided Mobius bands", 2,
-                0 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
             countCompactSurfaces(list,
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal generic 1-sided annuli", 1,
-                0 /* euler */, 1 /* connected */,
-                1 /* orient */, -1 /* two-sided */,
+                0 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -837,8 +831,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard almost normal surfaces "
                     "(chi=-1, 1-sided, non-orbl)", 2,
-                -1 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                -1 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -846,8 +840,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard almost normal surfaces "
                     "(chi=-1, 1-sided, orbl)", 1,
-                -1 /* euler */, 1 /* connected */,
-                1 /* orient */, -1 /* two-sided */,
+                -1 /* euler */, true /* connected */,
+                true /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
@@ -855,8 +849,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 "a 3-tetrahedron non-orientable twisted KxI",
                 "standard almost normal surfaces "
                     "(chi=-2, 1-sided, non-orbl)", 2,
-                -2 /* euler */, 1 /* connected */,
-                -1 /* orient */, -1 /* two-sided */,
+                -2 /* euler */, true /* connected */,
+                false /* orient */, false /* two-sided */,
                 true /* realBdry */,
                 false /* vertex link */, 0 /* edge link */,
                 0 /* central */, false /* splitting */);
