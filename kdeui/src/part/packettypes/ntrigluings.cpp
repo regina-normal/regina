@@ -188,7 +188,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actSplitIntoComponents);
 
     KAction* actConnectedSumDecomposition = new KAction(i18n(
-        "C&onnected Sum Decomposition"),
+        "C&onnected Sum Decomposition"), "math_sum",
         0 /* shortcut */, this, SLOT(connectedSumDecomposition()), triActions,
         "tri_connected_sum_decomposition");
     actConnectedSumDecomposition->setToolTip(i18n(
