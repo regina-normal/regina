@@ -23,10 +23,15 @@ stubs :
 	./insertstub stubs/engine \
 		`find ../engine -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
 	./insertstub stubs/javaui `find ../javaui -name "*.java"`
+	./insertstub stubs/testsuite \
+		`find ../testsuite -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
 
 tabs :
 	./replacetabs `find .. -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
 	./replacetabs `find .. -name "*.java"`
 	./replacetabs `find .. -name "*.txt"`
 	./replacetabs ../docs/*.sgml
+	./replacetabs ../pylib/*.py
+	./replacetabs ../scripts/regscript*
+	./replacetabs ../utils/tricensus-manager
 
