@@ -664,7 +664,8 @@
       will have to talk to the calculation engine using &corba;, which
       means you will have to run the &corba; calculation engine as a
       separate server program.  This server should be running on the same
-      machine that is hosting the applet web page.
+      machine that is hosting the applet web page.  The &corba; naming
+      service that is used should also be running on this same machine.
      </para></listitem>
      <listitem><para>
       No reading of configuration files.  The only way to customise
@@ -672,6 +673,13 @@
       described below.
      </para></listitem>
     </itemizedlist>
+    </para>
+    <para>
+     The applet itself will need access to the main user interface jar
+     (<filename>regina.jar</filename>), the jar for &corba; engine
+     access (<filename>regina-corba.jar</filename>) and the &btools; jar
+     (generally <filename>btools.jar</filename>).
+    </para>
   </refsect1>
 
   <refsect1>
