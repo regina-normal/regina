@@ -39,8 +39,6 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 
-// TODO: Check that there are actually potential parents.
-
 void ReginaPart::importDehydration() {
     unimplemented();
 }
