@@ -28,7 +28,6 @@ License details:
     engine/engine/docs.h
     javaui/overview.html
     javaui/normal/Application.java
-    www/index.html
 
 Acknowledgements:
     docs/regina.sgml
