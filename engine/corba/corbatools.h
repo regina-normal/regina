@@ -51,6 +51,9 @@
  * Returns the underlying C++ object wrapped by the given CORBA wrapper
  * object.
  *
+ * The argument \a corba_object will be evaluated multiple times in this
+ * macro.
+ *
  * \ifaces Not present.
  *
  * @param cpp_class the C++ class of the underlying C++ object.
@@ -60,7 +63,24 @@
  * <tt>(<i>cpp_class</i>*)</tt>.
  */
 #define GET_ENGINE_OBJECT(cpp_class, corba_object) \
-    ((::cpp_class*)CORBALongToPtr((corba_object)->getCppPtr()))
+    (CORBA::is_nil(corba_object) ? ((::cpp_class*)0) : \
+    ((::cpp_class*)CORBALongToPtr((corba_object)->getCppPtr())))
+
+/**
+ * \hideinitializer
+ *
+ * Returns the underlying C++ object wrapped by this CORBA wrapper
+ * object.  This macro can only be called from within a member function
+ * of the corresponding CORBA wrapper class.
+ *
+ * \ifaces Not present.
+ *
+ * @return the C++ object wrapped by this CORBA wrapper, of type
+ * <tt>(EngineClass*)</tt> where <tt>EngineClass</tt> is the
+ * corresponding C++ class in the engine.
+ */
+#define MY_ENGINE_OBJECT \
+    ((EngineClass*)CORBALongToPtr(getCppPtr()))
 
 /**
  * \hideinitializer

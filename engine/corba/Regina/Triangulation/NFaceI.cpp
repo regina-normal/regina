@@ -34,34 +34,31 @@
 #include "NTetrahedronI.h"
 
 Regina::Triangulation::NComponent_ptr NFace_i::getComponent() {
-    return NComponent_i::newWrapper(GET_ENGINE_OBJECT(NFace, this)->
-        getComponent());
+    return NComponent_i::newWrapper(MY_ENGINE_OBJECT->getComponent());
 }
 Regina::Triangulation::NBoundaryComponent_ptr
         NFace_i::getBoundaryComponent() {
-    return NBoundaryComponent_i::newWrapper(GET_ENGINE_OBJECT(NFace, this)->
+    return NBoundaryComponent_i::newWrapper(MY_ENGINE_OBJECT->
         getBoundaryComponent());
 }
 Regina::Triangulation::NVertex_ptr NFace_i::getVertex(CORBA::Long index) {
-    return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NFace, this)->
-        getVertex((int)index));
+    return NVertex_i::newWrapper(MY_ENGINE_OBJECT->getVertex((int)index));
 }
 Regina::Triangulation::NEdge_ptr NFace_i::getEdge(CORBA::Long index) {
-    return NEdge_i::newWrapper(GET_ENGINE_OBJECT(NFace, this)->getEdge(index));
+    return NEdge_i::newWrapper(MY_ENGINE_OBJECT->getEdge(index));
 }
 CORBA::Char NFace_i::getEdgeMapping(CORBA::Long index) {
-    return GET_ENGINE_OBJECT(NFace, this)->getEdgeMapping(index).getPermCode();
+    return MY_ENGINE_OBJECT->getEdgeMapping(index).getPermCode();
 }
 CORBA::Boolean NFace_i::isBoundary() {
-    return GET_ENGINE_OBJECT(NFace, this)->isBoundary();
+    return MY_ENGINE_OBJECT->isBoundary();
 }
 CORBA::Long NFace_i::getNumberOfEmbeddings() {
-    return GET_ENGINE_OBJECT(NFace, this)->getNumberOfEmbeddings();
+    return MY_ENGINE_OBJECT->getNumberOfEmbeddings();
 }
 void NFace_i::getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
         CORBA::Long& face, CORBA::Long index) {
-    const NFaceEmbedding& emb =
-        GET_ENGINE_OBJECT(NFace, this)->getEmbedding(index);
+    const NFaceEmbedding& emb = MY_ENGINE_OBJECT->getEmbedding(index);
     tet = NTetrahedron_i::newWrapper(emb.getTetrahedron());
     face = emb.getFace();
 }

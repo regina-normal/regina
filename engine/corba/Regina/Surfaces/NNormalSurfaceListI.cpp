@@ -32,26 +32,25 @@
 #include "NMatrixIntI.h"
 
 CORBA::Long NNormalSurfaceList_i::getFlavour() {
-    return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getFlavour();
+    return MY_ENGINE_OBJECT->getFlavour();
 }
 CORBA::Boolean NNormalSurfaceList_i::allowsAlmostNormal() {
-    return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->allowsAlmostNormal();
+    return MY_ENGINE_OBJECT->allowsAlmostNormal();
 }
 CORBA::Boolean NNormalSurfaceList_i::isEmbeddedOnly() {
-    return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->isEmbeddedOnly();
+    return MY_ENGINE_OBJECT->isEmbeddedOnly();
 }
 Regina::Triangulation::NTriangulation_ptr
         NNormalSurfaceList_i::getTriangulation() {
-    return NTriangulation_i::newWrapper(
-        GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getTriangulation());
+    return NTriangulation_i::newWrapper(MY_ENGINE_OBJECT->getTriangulation());
 }
 CORBA::Long NNormalSurfaceList_i::getNumberOfSurfaces() {
-    return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getNumberOfSurfaces();
+    return MY_ENGINE_OBJECT->getNumberOfSurfaces();
 }
 Regina::Surfaces::NNormalSurface_ptr NNormalSurfaceList_i::getSurface(
         CORBA::Long index) {
     return NNormalSurface_i::newWrapper((NNormalSurface*)
-        (GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getSurface(index)));
+        (MY_ENGINE_OBJECT->getSurface(index)));
 }
 Regina::ShareableObject_ptr NNormalSurfaceList_i::getShareableObject() {
     return _this();
@@ -59,7 +58,7 @@ Regina::ShareableObject_ptr NNormalSurfaceList_i::getShareableObject() {
 
 Regina::Maths::NMatrixInt_ptr
         NNormalSurfaceList_i::recreateMatchingEquations() {
-    return NMatrixInt_i::newWrapper(GET_ENGINE_OBJECT(NNormalSurfaceList,
-        this)->recreateMatchingEquations());
+    return NMatrixInt_i::newWrapper(
+        MY_ENGINE_OBJECT->recreateMatchingEquations());
 }
 

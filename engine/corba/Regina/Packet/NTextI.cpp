@@ -29,9 +29,9 @@
 #include "NTextI.h"
 
 char* NText_i::getText() {
-    return GET_ENGINE_OBJECT(NText, this)->getText().dupe();
+    return MY_ENGINE_OBJECT->getText().dupe();
 }
 void NText_i::setText(const char* newText) {
-    GET_ENGINE_OBJECT(NText, this)->setText(newText);
+    MY_ENGINE_OBJECT->setText(newText);
 }
 

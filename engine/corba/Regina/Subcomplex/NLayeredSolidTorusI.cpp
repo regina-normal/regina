@@ -30,47 +30,38 @@
 #include "NTetrahedronI.h"
 
 Regina::Subcomplex::NLayeredSolidTorus_ptr NLayeredSolidTorus_i::cloneMe() {
-    return NLayeredSolidTorus_i::newWrapper(
-        GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->clone());
+    return NLayeredSolidTorus_i::newWrapper(MY_ENGINE_OBJECT->clone());
 }
 CORBA::Long NLayeredSolidTorus_i::getNumberOfTetrahedra() {
-    return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->
-        getNumberOfTetrahedra();
+    return MY_ENGINE_OBJECT->getNumberOfTetrahedra();
 }
 Regina::Triangulation::NTetrahedron_ptr NLayeredSolidTorus_i::getBase() {
-    return NTetrahedron_i::newWrapper(
-        GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->getBase());
+    return NTetrahedron_i::newWrapper(MY_ENGINE_OBJECT->getBase());
 }
 CORBA::Long NLayeredSolidTorus_i::getBaseEdge(CORBA::Long group,
         CORBA::Long index) {
-    return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->
-        getBaseEdge(group, index);
+    return MY_ENGINE_OBJECT->getBaseEdge(group, index);
 }
 CORBA::Long NLayeredSolidTorus_i::getBaseEdgeGroup(CORBA::Long edge) {
-    return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->
-        getBaseEdgeGroup(edge);
+    return MY_ENGINE_OBJECT->getBaseEdgeGroup(edge);
 }
 CORBA::Long NLayeredSolidTorus_i::getBaseFace(CORBA::Long index) {
-    return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->getBaseFace(index);
+    return MY_ENGINE_OBJECT->getBaseFace(index);
 }
 Regina::Triangulation::NTetrahedron_ptr NLayeredSolidTorus_i::getTopLevel() {
-    return NTetrahedron_i::newWrapper(
-        GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->getTopLevel());
+    return NTetrahedron_i::newWrapper(MY_ENGINE_OBJECT->getTopLevel());
 }
 CORBA::Long NLayeredSolidTorus_i::getMeridinalCuts(CORBA::Long group) {
-    return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->
-        getMeridinalCuts(group);
+    return MY_ENGINE_OBJECT->getMeridinalCuts(group);
 }
 CORBA::Long NLayeredSolidTorus_i::getTopEdge(CORBA::Long group,
         CORBA::Long index) {
-    return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->
-        getTopEdge(group, index);
+    return MY_ENGINE_OBJECT->getTopEdge(group, index);
 }
 CORBA::Long NLayeredSolidTorus_i::getTopEdgeGroup(CORBA::Long edge) {
-    return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->
-        getTopEdgeGroup(edge);
+    return MY_ENGINE_OBJECT->getTopEdgeGroup(edge);
 }
 CORBA::Long NLayeredSolidTorus_i::getTopFace(CORBA::Long index) {
-    return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->getTopFace(index);
+    return MY_ENGINE_OBJECT->getTopFace(index);
 }
 

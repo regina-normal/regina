@@ -35,61 +35,53 @@
 
 Regina::Triangulation::NTetrahedron_ptr
         NTetrahedron_i::getAdjacentTetrahedron(CORBA::Long face) {
-    return NTetrahedron_i::newWrapper(GET_ENGINE_OBJECT(NTetrahedron, this)->
+    return NTetrahedron_i::newWrapper(MY_ENGINE_OBJECT->
         getAdjacentTetrahedron(face));
 }
 CORBA::Char NTetrahedron_i::getAdjacentTetrahedronGluing(CORBA::Long face) {
-    return GET_ENGINE_OBJECT(NTetrahedron, this)->
-        getAdjacentTetrahedronGluing(face).getPermCode();
+    return MY_ENGINE_OBJECT->getAdjacentTetrahedronGluing(face).getPermCode();
 }
 CORBA::Long NTetrahedron_i::getAdjacentFace(CORBA::Long face) {
-    return GET_ENGINE_OBJECT(NTetrahedron, this)->getAdjacentFace(face);
+    return MY_ENGINE_OBJECT->getAdjacentFace(face);
 }
 CORBA::Boolean NTetrahedron_i::hasBoundary() {
-    return GET_ENGINE_OBJECT(NTetrahedron, this)->hasBoundary();
+    return MY_ENGINE_OBJECT->hasBoundary();
 }
 Regina::Triangulation::NComponent_ptr NTetrahedron_i::getComponent() {
-    return NComponent_i::newWrapper(GET_ENGINE_OBJECT(NTetrahedron, this)->
-        getComponent());
+    return NComponent_i::newWrapper(MY_ENGINE_OBJECT->getComponent());
 }
 Regina::Triangulation::NVertex_ptr NTetrahedron_i::getVertex(
         CORBA::Long vertex) {
-    return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NTetrahedron, this)->
-        getVertex(vertex));
+    return NVertex_i::newWrapper(MY_ENGINE_OBJECT->getVertex(vertex));
 }
 Regina::Triangulation::NEdge_ptr NTetrahedron_i::getEdge(CORBA::Long edge) {
-    return NEdge_i::newWrapper(GET_ENGINE_OBJECT(NTetrahedron, this)->
-        getEdge(edge));
+    return NEdge_i::newWrapper(MY_ENGINE_OBJECT->getEdge(edge));
 }
 Regina::Triangulation::NFace_ptr NTetrahedron_i::getFace(CORBA::Long face) {
-    return NFace_i::newWrapper(GET_ENGINE_OBJECT(NTetrahedron, this)->
-        getFace(face));
+    return NFace_i::newWrapper(MY_ENGINE_OBJECT->getFace(face));
 }
 CORBA::Char NTetrahedron_i::getEdgeMapping(CORBA::Long edge) {
-    return GET_ENGINE_OBJECT(NTetrahedron, this)->
-        getEdgeMapping(edge).getPermCode();
+    return MY_ENGINE_OBJECT->getEdgeMapping(edge).getPermCode();
 }
 CORBA::Char NTetrahedron_i::getFaceMapping(CORBA::Long face) {
-    return GET_ENGINE_OBJECT(NTetrahedron, this)->
-        getFaceMapping(face).getPermCode();
+    return MY_ENGINE_OBJECT->getFaceMapping(face).getPermCode();
 }
 void NTetrahedron_i::joinTo(CORBA::Long myFace,
         Regina::Triangulation::NTetrahedron_ptr you, CORBA::Char gluing) {
-    GET_ENGINE_OBJECT(NTetrahedron, this)->joinTo(
-        myFace, GET_ENGINE_OBJECT(NTetrahedron, you), NPerm(gluing));
+    MY_ENGINE_OBJECT->joinTo(myFace,
+        GET_ENGINE_OBJECT(NTetrahedron, you), NPerm(gluing));
 }
 Regina::Triangulation::NTetrahedron_ptr NTetrahedron_i::unjoin(
         CORBA::Long myFace) {
-    return NTetrahedron_i::newWrapper(GET_ENGINE_OBJECT(NTetrahedron, this)->
-        unjoin(myFace));
+    return NTetrahedron_i::newWrapper(MY_ENGINE_OBJECT->unjoin(myFace));
 }
 void NTetrahedron_i::isolate() {
-    GET_ENGINE_OBJECT(NTetrahedron, this)->isolate();
+    MY_ENGINE_OBJECT->isolate();
 }
 char* NTetrahedron_i::getDescription() {
-    return GET_ENGINE_OBJECT(NTetrahedron, this)->getDescription().dupe();
+    return MY_ENGINE_OBJECT->getDescription().dupe();
 }
 void NTetrahedron_i::setDescription(const char* description) {
-    GET_ENGINE_OBJECT(NTetrahedron, this)->setDescription(description);
+    MY_ENGINE_OBJECT->setDescription(description);
 }
 

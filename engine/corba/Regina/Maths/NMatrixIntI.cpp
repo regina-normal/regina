@@ -29,54 +29,49 @@
 #include "NMatrixIntI.h"
 
 void NMatrixInt_i::initialise(const char* value) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->initialise(
-        stringToLarge(value));
+    MY_ENGINE_OBJECT->initialise(stringToLarge(value));
 }
 void NMatrixInt_i::makeIdentity() {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->makeIdentity();
+    MY_ENGINE_OBJECT->makeIdentity();
 }
 CORBA::Long NMatrixInt_i::rows() {
-    return GET_ENGINE_OBJECT(NMatrixInt, this)->rows();
+    return MY_ENGINE_OBJECT->rows();
 }
 CORBA::Long NMatrixInt_i::columns() {
-    return GET_ENGINE_OBJECT(NMatrixInt, this)->columns();
+    return MY_ENGINE_OBJECT->columns();
 }
 char* NMatrixInt_i::getEntry(CORBA::Long row, CORBA::Long column) {
-    return stringFromLarge(GET_ENGINE_OBJECT(NMatrixInt, this)->
-        entry(row, column));
+    return stringFromLarge(MY_ENGINE_OBJECT->entry(row, column));
 }
 void NMatrixInt_i::setEntry(CORBA::Long row, CORBA::Long column,
         const char* value) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->entry(row, column) =
-        stringToLarge(value);
+    MY_ENGINE_OBJECT->entry(row, column) = stringToLarge(value);
 }
 
 void NMatrixInt_i::swapRows(CORBA::Long first, CORBA::Long second) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->swapRows(first, second);
+    MY_ENGINE_OBJECT->swapRows(first, second);
 }
 void NMatrixInt_i::swapColumns(CORBA::Long first, CORBA::Long second) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->swapColumns(first, second);
+    MY_ENGINE_OBJECT->swapColumns(first, second);
 }
 void NMatrixInt_i::addRow_long_long(CORBA::Long source, CORBA::Long dest) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->addRow(source, dest);
+    MY_ENGINE_OBJECT->addRow(source, dest);
 }
 void NMatrixInt_i::addRow_long_long_bigInt(CORBA::Long source,
         CORBA::Long dest, const char* copies) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->addRow(source, dest,
-        stringToLarge(copies));
+    MY_ENGINE_OBJECT->addRow(source, dest, stringToLarge(copies));
 }
 void NMatrixInt_i::addCol_long_long(CORBA::Long source, CORBA::Long dest) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->addCol(source, dest);
+    MY_ENGINE_OBJECT->addCol(source, dest);
 }
 void NMatrixInt_i::addCol_long_long_bigInt(CORBA::Long source,
         CORBA::Long dest, const char* copies) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->addCol(source, dest,
-        stringToLarge(copies));
+    MY_ENGINE_OBJECT->addCol(source, dest, stringToLarge(copies));
 }
 void NMatrixInt_i::multRow(CORBA::Long row, const char* factor) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->multRow(row, stringToLarge(factor));
+    MY_ENGINE_OBJECT->multRow(row, stringToLarge(factor));
 }
 void NMatrixInt_i::multCol(CORBA::Long col, const char* factor) {
-    GET_ENGINE_OBJECT(NMatrixInt, this)->multCol(col, stringToLarge(factor));
+    MY_ENGINE_OBJECT->multCol(col, stringToLarge(factor));
 }
 

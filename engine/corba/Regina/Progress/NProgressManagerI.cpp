@@ -30,13 +30,13 @@
 #include "NProgressI.h"
 
 CORBA::Boolean NProgressManager_i::isStarted() {
-    return GET_ENGINE_OBJECT(NProgressManager, this)->isStarted();
+    return MY_ENGINE_OBJECT->isStarted();
 }
 CORBA::Boolean NProgressManager_i::isFinished() {
-    return GET_ENGINE_OBJECT(NProgressManager, this)->isFinished();
+    return MY_ENGINE_OBJECT->isFinished();
 }
 Regina::Progress::NProgress_ptr NProgressManager_i::getProgress() {
     return NProgress_i::newWrapper((::NProgress*)
-        GET_ENGINE_OBJECT(NProgressManager, this)->getProgress());
+        MY_ENGINE_OBJECT->getProgress());
 }
 

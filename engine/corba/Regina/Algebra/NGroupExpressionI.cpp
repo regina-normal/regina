@@ -29,35 +29,33 @@
 #include "NGroupExpressionI.h"
 
 CORBA::Long NGroupExpression_i::getNumberOfTerms() {
-    return GET_ENGINE_OBJECT(NGroupExpression, this)->getNumberOfTerms();
+    return MY_ENGINE_OBJECT->getNumberOfTerms();
 }
 CORBA::Long NGroupExpression_i::getGenerator(CORBA::Long index) {
-    return GET_ENGINE_OBJECT(NGroupExpression, this)->getGenerator(index);
+    return MY_ENGINE_OBJECT->getGenerator(index);
 }
 CORBA::Long NGroupExpression_i::getExponent(CORBA::Long index) {
-    return GET_ENGINE_OBJECT(NGroupExpression, this)->getExponent(index);
+    return MY_ENGINE_OBJECT->getExponent(index);
 }
 void NGroupExpression_i::addTermFirst(CORBA::Long gen, CORBA::Long exp) {
-    GET_ENGINE_OBJECT(NGroupExpression, this)->addTermFirst(gen, exp);
+    MY_ENGINE_OBJECT->addTermFirst(gen, exp);
 }
 void NGroupExpression_i::addTermLast(CORBA::Long gen, CORBA::Long exp) {
-    GET_ENGINE_OBJECT(NGroupExpression, this)->addTermLast(gen, exp);
+    MY_ENGINE_OBJECT->addTermLast(gen, exp);
 }
 Regina::Algebra::NGroupExpression_ptr NGroupExpression_i::inverse() {
-    return NGroupExpression_i::newWrapper(
-        GET_ENGINE_OBJECT(NGroupExpression, this)->inverse());
+    return NGroupExpression_i::newWrapper(MY_ENGINE_OBJECT->inverse());
 }
 Regina::Algebra::NGroupExpression_ptr NGroupExpression_i::power(
         CORBA::Long exp) {
-    return NGroupExpression_i::newWrapper(
-        GET_ENGINE_OBJECT(NGroupExpression, this)->power(exp));
+    return NGroupExpression_i::newWrapper(MY_ENGINE_OBJECT->power(exp));
 }
 CORBA::Boolean NGroupExpression_i::simplify(CORBA::Boolean cyclic) {
-    return GET_ENGINE_OBJECT(NGroupExpression, this)->simplify(cyclic);
+    return MY_ENGINE_OBJECT->simplify(cyclic);
 }
 CORBA::Boolean NGroupExpression_i::substitute(CORBA::Long gen,
         Regina::Algebra::NGroupExpression_ptr exp, CORBA::Boolean cyclic) {
-    return GET_ENGINE_OBJECT(NGroupExpression, this)->substitute(gen,
+    return MY_ENGINE_OBJECT->substitute(gen,
         *GET_ENGINE_OBJECT(NGroupExpression, exp), cyclic);
 }
 

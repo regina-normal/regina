@@ -29,117 +29,103 @@
 #include "NPacketI.h"
 
 CORBA::Long NPacket_i::getPacketType() {
-    return GET_ENGINE_OBJECT(NPacket, this)->getPacketType();
+    return MY_ENGINE_OBJECT->getPacketType();
 }
 char* NPacket_i::getPacketName() {
-    return GET_ENGINE_OBJECT(NPacket, this)->getPacketName().dupe();
+    return MY_ENGINE_OBJECT->getPacketName().dupe();
 }
 char* NPacket_i::getPacketLabel() {
-    return GET_ENGINE_OBJECT(NPacket, this)->getPacketLabel().dupe();
+    return MY_ENGINE_OBJECT->getPacketLabel().dupe();
 }
 void NPacket_i::setPacketLabel(const char* newLabel) {
-    GET_ENGINE_OBJECT(NPacket, this)->setPacketLabel(newLabel);
+    MY_ENGINE_OBJECT->setPacketLabel(newLabel);
 }
 char* NPacket_i::getFullName() {
-    return GET_ENGINE_OBJECT(NPacket, this)->getFullName().dupe();
+    return MY_ENGINE_OBJECT->getFullName().dupe();
 }
 Regina::Packet::NPacket_ptr NPacket_i::getFirstTreeChild() {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        getFirstTreeChild());
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->getFirstTreeChild());
 }
 Regina::Packet::NPacket_ptr NPacket_i::getLastTreeChild() {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        getLastTreeChild());
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->getLastTreeChild());
 }
 Regina::Packet::NPacket_ptr NPacket_i::getPrevTreeSibling() {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        getPrevTreeSibling());
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->getPrevTreeSibling());
 }
 Regina::Packet::NPacket_ptr NPacket_i::getNextTreeSibling() {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        getNextTreeSibling());
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->getNextTreeSibling());
 }
 Regina::Packet::NPacket_ptr NPacket_i::getTreeParent() {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        getTreeParent());
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->getTreeParent());
 }
 Regina::Packet::NPacket_ptr NPacket_i::getTreeMatriarch() {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        getTreeMatriarch());
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->getTreeMatriarch());
 }
 void NPacket_i::insertChildFirst(Regina::Packet::NPacket_ptr child) {
-    GET_ENGINE_OBJECT(NPacket, this)->insertChildFirst(
-        GET_ENGINE_OBJECT(NPacket, child));
+    MY_ENGINE_OBJECT->insertChildFirst(GET_ENGINE_OBJECT(NPacket, child));
 }
 void NPacket_i::insertChildLast(Regina::Packet::NPacket_ptr child) {
-    GET_ENGINE_OBJECT(NPacket, this)->insertChildLast(
-        GET_ENGINE_OBJECT(NPacket, child));
+    MY_ENGINE_OBJECT->insertChildLast(GET_ENGINE_OBJECT(NPacket, child));
 }
 void NPacket_i::insertChildAfter(Regina::Packet::NPacket_ptr newChild,
         Regina::Packet::NPacket_ptr prevChild) {
-    GET_ENGINE_OBJECT(NPacket, this)->insertChildAfter(
-        GET_ENGINE_OBJECT(NPacket, newChild),
+    MY_ENGINE_OBJECT->insertChildAfter(GET_ENGINE_OBJECT(NPacket, newChild),
         GET_ENGINE_OBJECT(NPacket, prevChild));
 }
 void NPacket_i::makeOrphan() {
-    GET_ENGINE_OBJECT(NPacket, this)->makeOrphan();
+    MY_ENGINE_OBJECT->makeOrphan();
 }
 void NPacket_i::swapWithNextSibling() {
-    GET_ENGINE_OBJECT(NPacket, this)->swapWithNextSibling();
+    MY_ENGINE_OBJECT->swapWithNextSibling();
 }
 Regina::Packet::NPacket_ptr NPacket_i::nextTreePacket_() {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        nextTreePacket());
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->nextTreePacket());
 }
 Regina::Packet::NPacket_ptr NPacket_i::firstTreePacket(const char* type) {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        firstTreePacket(type));
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->firstTreePacket(type));
 }
 Regina::Packet::NPacket_ptr NPacket_i::nextTreePacket_string(
         const char* type) {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        nextTreePacket(type));
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->nextTreePacket(type));
 }
 Regina::Packet::NPacket_ptr NPacket_i::findPacketLabel(const char* type) {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
-        findPacketLabel(type));
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->findPacketLabel(type));
 }
 char* NPacket_i::makeUniqueLabel(const char* base) {
-    return GET_ENGINE_OBJECT(NPacket, this)->makeUniqueLabel(base).dupe();
+    return MY_ENGINE_OBJECT->makeUniqueLabel(base).dupe();
 }
 CORBA::Long NPacket_i::levelsDownTo(
         Regina::Packet::NPacket_ptr descendant) {
-    return GET_ENGINE_OBJECT(NPacket, this)->
+    return MY_ENGINE_OBJECT->
         levelsDownTo(GET_ENGINE_OBJECT(NPacket, descendant));
 }
 CORBA::Long NPacket_i::levelsUpTo(
         Regina::Packet::NPacket_ptr ancestor) {
-    return GET_ENGINE_OBJECT(NPacket, this)->
-        levelsUpTo(GET_ENGINE_OBJECT(NPacket, ancestor));
+    return MY_ENGINE_OBJECT->levelsUpTo(GET_ENGINE_OBJECT(NPacket, ancestor));
 }
 CORBA::Boolean NPacket_i::isGrandparentOf(
         Regina::Packet::NPacket_ptr descendant) {
-    return GET_ENGINE_OBJECT(NPacket, this)->
+    return MY_ENGINE_OBJECT->
         isGrandparentOf(GET_ENGINE_OBJECT(NPacket, descendant));
 }
 CORBA::Long NPacket_i::getNumberOfChildren() {
-    return GET_ENGINE_OBJECT(NPacket, this)->getNumberOfChildren();
+    return MY_ENGINE_OBJECT->getNumberOfChildren();
 }
 CORBA::Long NPacket_i::getNumberOfDescendants() {
-    return GET_ENGINE_OBJECT(NPacket, this)->getNumberOfDescendants();
+    return MY_ENGINE_OBJECT->getNumberOfDescendants();
 }
 CORBA::Long NPacket_i::getTotalTreeSize() {
-    return GET_ENGINE_OBJECT(NPacket, this)->getTotalTreeSize();
+    return MY_ENGINE_OBJECT->getTotalTreeSize();
 }
 CORBA::Boolean NPacket_i::dependsOnParent() {
-    return GET_ENGINE_OBJECT(NPacket, this)->dependsOnParent();
+    return MY_ENGINE_OBJECT->dependsOnParent();
 }
 CORBA::Boolean NPacket_i::isPacketEditable() {
-    return GET_ENGINE_OBJECT(NPacket, this)->isPacketEditable();
+    return MY_ENGINE_OBJECT->isPacketEditable();
 }
 Regina::Packet::NPacket_ptr NPacket_i::clonePacket(
         CORBA::Boolean cloneDescendants, CORBA::Boolean end) {
-    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NPacket, this)->
+    return NPacket_i::newWrapper(MY_ENGINE_OBJECT->
         clone(cloneDescendants, end));
 }
 

@@ -29,45 +29,37 @@
 #include "NAbelianGroupI.h"
 
 void NAbelianGroup_i::addRank(CORBA::Long extraRank) {
-    GET_ENGINE_OBJECT(NAbelianGroup, this)->addRank(extraRank);
+    MY_ENGINE_OBJECT->addRank(extraRank);
 }
 void NAbelianGroup_i::addTorsionElement_bigInt(const char* degree,
         CORBA::Long mult) {
-    GET_ENGINE_OBJECT(NAbelianGroup, this)->addTorsionElement(
-        stringToLarge(degree), mult);
+    MY_ENGINE_OBJECT->addTorsionElement(stringToLarge(degree), mult);
 }
 void NAbelianGroup_i::addTorsionElement_long(CORBA::Long degree,
         CORBA::Long mult) {
-    GET_ENGINE_OBJECT(NAbelianGroup, this)->addTorsionElement(
-        degree, mult);
+    MY_ENGINE_OBJECT->addTorsionElement(degree, mult);
 }
 void NAbelianGroup_i::addGroup_NMatrixInt(Regina::Maths::NMatrixInt_ptr pres) {
-    GET_ENGINE_OBJECT(NAbelianGroup, this)->addGroup(
-        *GET_ENGINE_OBJECT(NMatrixInt, pres));
+    MY_ENGINE_OBJECT->addGroup(*GET_ENGINE_OBJECT(NMatrixInt, pres));
 }
 void NAbelianGroup_i::addGroup_NAbelianGroup(Regina::Algebra::NAbelianGroup_ptr
         group) {
-    GET_ENGINE_OBJECT(NAbelianGroup, this)->addGroup(
-        *GET_ENGINE_OBJECT(NAbelianGroup, group));
+    MY_ENGINE_OBJECT->addGroup(*GET_ENGINE_OBJECT(NAbelianGroup, group));
 }
 
 CORBA::Long NAbelianGroup_i::getRank() {
-    return GET_ENGINE_OBJECT(NAbelianGroup, this)->getRank();
+    return MY_ENGINE_OBJECT->getRank();
 }
 CORBA::Long NAbelianGroup_i::getTorsionRank_bigInt(const char* degree) {
-    return GET_ENGINE_OBJECT(NAbelianGroup, this)->getTorsionRank(
-        stringToLarge(degree));
+    return MY_ENGINE_OBJECT->getTorsionRank(stringToLarge(degree));
 }
 CORBA::Long NAbelianGroup_i::getTorsionRank_long(CORBA::Long degree) {
-    return GET_ENGINE_OBJECT(NAbelianGroup, this)->getTorsionRank(
-        degree);
+    return MY_ENGINE_OBJECT->getTorsionRank(degree);
 }
 CORBA::Long NAbelianGroup_i::getNumberOfInvariantFactors() {
-    return GET_ENGINE_OBJECT(NAbelianGroup, this)->
-        getNumberOfInvariantFactors();
+    return MY_ENGINE_OBJECT->getNumberOfInvariantFactors();
 }
 char* NAbelianGroup_i::getInvariantFactor(CORBA::Long index) {
-    return stringFromLarge(GET_ENGINE_OBJECT(NAbelianGroup, this)->
-        getInvariantFactor(index));
+    return stringFromLarge(MY_ENGINE_OBJECT->getInvariantFactor(index));
 }
 

@@ -32,37 +32,33 @@
 #include "NFaceI.h"
 
 CORBA::Long NBoundaryComponent_i::getEulerCharacteristic() {
-    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->
-        getEulerCharacteristic();
+    return MY_ENGINE_OBJECT->getEulerCharacteristic();
 }
 CORBA::Boolean NBoundaryComponent_i::isIdeal() {
-    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->isIdeal();
+    return MY_ENGINE_OBJECT->isIdeal();
 }
 CORBA::Boolean NBoundaryComponent_i::isOrientable() {
-    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->isOrientable();
+    return MY_ENGINE_OBJECT->isOrientable();
 }
 CORBA::Long NBoundaryComponent_i::getNumberOfFaces() {
-    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfFaces();
+    return MY_ENGINE_OBJECT->getNumberOfFaces();
 }
 CORBA::Long NBoundaryComponent_i::getNumberOfEdges() {
-    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfEdges();
+    return MY_ENGINE_OBJECT->getNumberOfEdges();
 }
 CORBA::Long NBoundaryComponent_i::getNumberOfVertices() {
-    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfVertices();
+    return MY_ENGINE_OBJECT->getNumberOfVertices();
 }
 Regina::Triangulation::NFace_ptr NBoundaryComponent_i::getFace(
         CORBA::Long index) {
-    return NFace_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
-        getFace(index));
+    return NFace_i::newWrapper(MY_ENGINE_OBJECT->getFace(index));
 }
 Regina::Triangulation::NEdge_ptr NBoundaryComponent_i::getEdge(
         CORBA::Long index) {
-    return NEdge_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
-        getEdge(index));
+    return NEdge_i::newWrapper(MY_ENGINE_OBJECT->getEdge(index));
 }
 Regina::Triangulation::NVertex_ptr NBoundaryComponent_i::getVertex(
         CORBA::Long index) {
-    return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
-        getVertex(index));
+    return NVertex_i::newWrapper(MY_ENGINE_OBJECT->getVertex(index));
 }
 

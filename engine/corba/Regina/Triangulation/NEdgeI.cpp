@@ -33,31 +33,28 @@
 #include "NTetrahedronI.h"
 
 Regina::Triangulation::NComponent_ptr NEdge_i::getComponent() {
-    return NComponent_i::newWrapper(GET_ENGINE_OBJECT(NEdge, this)->
-        getComponent());
+    return NComponent_i::newWrapper(MY_ENGINE_OBJECT->getComponent());
 }
 Regina::Triangulation::NBoundaryComponent_ptr
         NEdge_i::getBoundaryComponent() {
-    return NBoundaryComponent_i::newWrapper(GET_ENGINE_OBJECT(NEdge, this)->
+    return NBoundaryComponent_i::newWrapper(MY_ENGINE_OBJECT->
         getBoundaryComponent());
 }
 Regina::Triangulation::NVertex_ptr NEdge_i::getVertex(CORBA::Long index) {
-    return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NEdge, this)->
-        getVertex((int)index));
+    return NVertex_i::newWrapper(MY_ENGINE_OBJECT->getVertex((int)index));
 }
 CORBA::Boolean NEdge_i::isBoundary() {
-    return GET_ENGINE_OBJECT(NEdge, this)->isBoundary();
+    return MY_ENGINE_OBJECT->isBoundary();
 }
 CORBA::Boolean NEdge_i::isValid() {
-    return GET_ENGINE_OBJECT(NEdge, this)->isValid();
+    return MY_ENGINE_OBJECT->isValid();
 }
 CORBA::Long NEdge_i::getNumberOfEmbeddings() {
-    return GET_ENGINE_OBJECT(NEdge, this)->getNumberOfEmbeddings();
+    return MY_ENGINE_OBJECT->getNumberOfEmbeddings();
 }
 void NEdge_i::getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
         CORBA::Long& edge, CORBA::Long index) {
-    const NEdgeEmbedding& emb =
-        GET_ENGINE_OBJECT(NEdge, this)->getEmbedding(index);
+    const NEdgeEmbedding& emb = MY_ENGINE_OBJECT->getEmbedding(index);
     tet = NTetrahedron_i::newWrapper(emb.getTetrahedron());
     edge = emb.getEdge();
 }

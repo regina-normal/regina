@@ -85,13 +85,13 @@ Regina::Surfaces::NSurfaceFilter_ptr NSurfaceFilter_i::newWrapper(
         
 CORBA::Boolean NSurfaceFilter_i::accept(Regina::Surfaces::NNormalSurface_ptr
         surface) {
-    return GET_ENGINE_OBJECT(NSurfaceFilter, this)->accept(
+    return MY_ENGINE_OBJECT->accept(
         *GET_ENGINE_OBJECT(NNormalSurface, surface));
 }
 CORBA::Long NSurfaceFilter_i::getFilterID() {
-    return GET_ENGINE_OBJECT(NSurfaceFilter, this)->getFilterID();
+    return MY_ENGINE_OBJECT->getFilterID();
 }
 char* NSurfaceFilter_i::getFilterName() {
-    return GET_ENGINE_OBJECT(NSurfaceFilter, this)->getFilterName().dupe();
+    return MY_ENGINE_OBJECT->getFilterName().dupe();
 }
 

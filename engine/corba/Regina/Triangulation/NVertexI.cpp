@@ -32,42 +32,40 @@
 #include "NTetrahedronI.h"
 
 Regina::Triangulation::NComponent_ptr NVertex_i::getComponent() {
-    return NComponent_i::newWrapper(GET_ENGINE_OBJECT(NVertex, this)->
-        getComponent());
+    return NComponent_i::newWrapper(MY_ENGINE_OBJECT->getComponent());
 }
 Regina::Triangulation::NBoundaryComponent_ptr
         NVertex_i::getBoundaryComponent() {
-    return NBoundaryComponent_i::newWrapper(GET_ENGINE_OBJECT(NVertex, this)->
+    return NBoundaryComponent_i::newWrapper(MY_ENGINE_OBJECT->
         getBoundaryComponent());
 }
 CORBA::Long NVertex_i::getLink() {
-    return GET_ENGINE_OBJECT(NVertex, this)->getLink();
+    return MY_ENGINE_OBJECT->getLink();
 }
 CORBA::Boolean NVertex_i::isLinkClosed() {
-    return GET_ENGINE_OBJECT(NVertex, this)->isLinkClosed();
+    return MY_ENGINE_OBJECT->isLinkClosed();
 }
 CORBA::Boolean NVertex_i::isIdeal() {
-    return GET_ENGINE_OBJECT(NVertex, this)->isIdeal();
+    return MY_ENGINE_OBJECT->isIdeal();
 }
 CORBA::Boolean NVertex_i::isBoundary() {
-    return GET_ENGINE_OBJECT(NVertex, this)->isBoundary();
+    return MY_ENGINE_OBJECT->isBoundary();
 }
 CORBA::Boolean NVertex_i::isStandard() {
-    return GET_ENGINE_OBJECT(NVertex, this)->isStandard();
+    return MY_ENGINE_OBJECT->isStandard();
 }
 CORBA::Boolean NVertex_i::isLinkOrientable() {
-    return GET_ENGINE_OBJECT(NVertex, this)->isLinkOrientable();
+    return MY_ENGINE_OBJECT->isLinkOrientable();
 }
 CORBA::Long NVertex_i::getLinkEulerCharacteristic() {
-    return GET_ENGINE_OBJECT(NVertex, this)->getLinkEulerCharacteristic();
+    return MY_ENGINE_OBJECT->getLinkEulerCharacteristic();
 }
 CORBA::Long NVertex_i::getNumberOfEmbeddings() {
-    return GET_ENGINE_OBJECT(NVertex, this)->getNumberOfEmbeddings();
+    return MY_ENGINE_OBJECT->getNumberOfEmbeddings();
 }
 void NVertex_i::getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
         CORBA::Long& vertex, CORBA::Long index) {
-    const NVertexEmbedding& emb =
-        GET_ENGINE_OBJECT(NVertex, this)->getEmbedding(index);
+    const NVertexEmbedding& emb = MY_ENGINE_OBJECT->getEmbedding(index);
     tet = NTetrahedron_i::newWrapper(emb.getTetrahedron());
     vertex = emb.getVertex();
 }

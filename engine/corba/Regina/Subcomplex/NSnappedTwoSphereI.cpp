@@ -31,21 +31,19 @@
 #include "NTriangulationI.h"
 
 Regina::Subcomplex::NSnappedTwoSphere_ptr NSnappedTwoSphere_i::cloneMe() {
-    return NSnappedTwoSphere_i::newWrapper(
-        GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->clone());
+    return NSnappedTwoSphere_i::newWrapper(MY_ENGINE_OBJECT->clone());
 }
 Regina::Subcomplex::NSnappedBall_ptr NSnappedTwoSphere_i::getSnappedBall(
         CORBA::Long index) {
-    return NSnappedBall_i::newWrapper(
-        GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->getSnappedBall(index));
+    return NSnappedBall_i::newWrapper(MY_ENGINE_OBJECT->getSnappedBall(index));
 }
 void NSnappedTwoSphere_i::reduceTriangulation() {
-    GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->reduceTriangulation();
+    MY_ENGINE_OBJECT->reduceTriangulation();
 }
 Regina::Triangulation::NTriangulation_ptr
         NSnappedTwoSphere_i::getReducedTriangulation(
         Regina::Triangulation::NTriangulation_ptr original) {
     return NTriangulation_i::newWrapper(
-        GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->getReducedTriangulation(
+        MY_ENGINE_OBJECT->getReducedTriangulation(
         GET_ENGINE_OBJECT(NTriangulation, original)));
 }

@@ -29,27 +29,27 @@
 #include "NProgressI.h"
 
 CORBA::Boolean NProgress_i::hasChanged() {
-    return GET_ENGINE_OBJECT(NProgress, this)->hasChanged();
+    return MY_ENGINE_OBJECT->hasChanged();
 }
 CORBA::Boolean NProgress_i::isFinished() {
-    return GET_ENGINE_OBJECT(NProgress, this)->isFinished();
+    return MY_ENGINE_OBJECT->isFinished();
 }
 CORBA::Boolean NProgress_i::isCancellable() {
-    return GET_ENGINE_OBJECT(NProgress, this)->isCancellable();
+    return MY_ENGINE_OBJECT->isCancellable();
 }
 void NProgress_i::cancel() {
-    GET_ENGINE_OBJECT(NProgress, this)->cancel();
+    MY_ENGINE_OBJECT->cancel();
 }
 CORBA::Boolean NProgress_i::isCancelled() {
-    return GET_ENGINE_OBJECT(NProgress, this)->isCancelled();
+    return MY_ENGINE_OBJECT->isCancelled();
 }
 char* NProgress_i::getDescription() {
-    return GET_ENGINE_OBJECT(NProgress, this)->getDescription().dupe();
+    return MY_ENGINE_OBJECT->getDescription().dupe();
 }
 CORBA::Boolean NProgress_i::isPercent() {
-    return GET_ENGINE_OBJECT(NProgress, this)->isPercent();
+    return MY_ENGINE_OBJECT->isPercent();
 }
 CORBA::Double NProgress_i::getPercent() {
-    return GET_ENGINE_OBJECT(NProgress, this)->getPercent();
+    return MY_ENGINE_OBJECT->getPercent();
 }
 
