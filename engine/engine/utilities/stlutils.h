@@ -64,6 +64,14 @@
 #include <functional>
 
 namespace regina {
+
+/**
+ * Miscellaneous utility classes and routines taken or modified from
+ * the Standard Template Library.
+ *
+ * See the stlutils.h file documentation for Standard Template Library
+ * license details.
+ */
 namespace stl {
 
 /**

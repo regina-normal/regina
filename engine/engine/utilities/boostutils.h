@@ -59,6 +59,13 @@
 #endif
 
 namespace regina {
+
+/**
+ * Miscellaneous utility classes taken or modified from the Boost C++
+ * libraries.
+ *
+ * See the boostutils.h file documentation for Boost license details.
+ */
 namespace boost {
 
 /**

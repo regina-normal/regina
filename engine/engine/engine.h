@@ -34,6 +34,9 @@
  *  \todo \bugurgent Hunt for linear time std::list.size().
  */
 
+/**
+ * Contains the entire Regina calculation engine.
+ */
 namespace regina {
 
 class NAbelianGroup;
