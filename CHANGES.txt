@@ -19,7 +19,7 @@ Version 3.2  [ (under development) ]
             - Using unsigned chars for byte codes.
         Class NCensus:
             - Added findAllCompletions() for completing triangulations
-              with boundary.
+              with boundary. ***
             - New constant PRUNE_P2_REDUCIBLE.
         Class NFacePair:
             - New class for working with pairs of face numbers.
@@ -31,18 +31,21 @@ Version 3.2  [ (under development) ]
             - Uses new NFacePairing routines to identify certain
               situations in which no solutions are possible.
             - Uses a completely redesigned algorithm in the closed
-              orientable prime minimal case.
+              orientable prime minimal case. ***
             - Added pruning during permutation generation to eliminate
               edges identified with themselves in reverse.
             - Added pruning using low-degree edges in the non-orientable
               P2-irreducible case.
+        Class NLayeredSolidTorus:
+            - Fixed a bug in isLayeredSolidTorusBase() that generated
+              false positives in ideal triangulations.
         Class NNormalSurface:
-            - Added routine knownCanCrush().
+            - Added routine knownCanCrush(). ***
         Class NPerm:
             - Using unsigned chars for permutation codes.
         Class NPrismSpec:
             - New class for dealing with triangular prisms defined by
-              slicing along normal quads in a tetrahedron.
+              slicing along normal quads in a tetrahedron. ***
         Class NSFS:
             - Better recognition of common names; now recognises all
               spaces with finite fundamental group.

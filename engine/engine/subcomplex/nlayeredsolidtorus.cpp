@@ -85,7 +85,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorusBase(
 
     if (baseFace2 == -1)
         return 0;
-        
+
     // We have a layered solid torus!!
     // Fill in the details for the bottom layer.
     NLayeredSolidTorus* ans = new NLayeredSolidTorus();
@@ -103,7 +103,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorusBase(
     ans->baseEdge[5] = edgeNumber[ans->topFace[1]][baseFace1];
     for (i = 0; i < 6; i++)
         ans->baseEdgeGroup[ans->baseEdge[i]] = (i == 0 ? 1 : i < 3 ? 2 : 3);
-    
+
     ans->topLevel = tet;
     ans->meridinalCuts[0] = 1;
     ans->meridinalCuts[1] = 2;
@@ -123,6 +123,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorusBase(
     // Now run through and look for layers to add to the torus.
     int adjFace[2]; // Faces of adjacent tetrahedron glued to the torus.
     int adjEdge; // Layering edge of the adjacent tetrahedron.
+    int layerOnEdge[2]; // The two edges of the current top tetrahedron
+                        // corresponding to adjEdge.
     int newTopEdge; // New boundary edge of degree 1 in the torus.
     NPerm adjPerm[2];
     int layerOnGroup;
@@ -132,8 +134,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorusBase(
         if (tet == 0 || tet == ans->topLevel ||
                 tet != ans->topLevel->getAdjacentTetrahedron(ans->topFace[1]))
             break;
+
         // There is a new tetrahedron glued to both torus boundary faces.
-        // If both face gluings preserve orientation, this is a layering.
         adjPerm[0] = ans->topLevel->getAdjacentTetrahedronGluing(
             ans->topFace[0]);
         adjPerm[1] = ans->topLevel->getAdjacentTetrahedronGluing(
@@ -141,19 +143,27 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorusBase(
         if (adjPerm[0].sign() != adjPerm[1].sign())
             break;
 
-        // We have a new layer!
+        // See what the new boundary edge would be.
         adjFace[0] = ans->topLevel->getAdjacentFace(ans->topFace[0]);
         adjFace[1] = ans->topLevel->getAdjacentFace(ans->topFace[1]);
         newTopEdge = edgeNumber[adjFace[0]][adjFace[1]];
         adjEdge = 5 - newTopEdge;
 
-        // On which edge are we doing the layering?
-        layerOnGroup = ans->topEdgeGroup[edgeNumber
-                [adjPerm[0].preImageOf(edgeStart[adjEdge])]
-                [adjPerm[0].preImageOf(edgeEnd[adjEdge])]];
+        // See which edges of the current top tetrahedron are being
+        // layered upon.
+        layerOnEdge[0] = edgeNumber[adjPerm[0].preImageOf(edgeStart[adjEdge])]
+                                   [adjPerm[0].preImageOf(edgeEnd[adjEdge])];
+        layerOnEdge[1] = edgeNumber[adjPerm[1].preImageOf(edgeStart[adjEdge])]
+                                   [adjPerm[1].preImageOf(edgeEnd[adjEdge])];
+        if (layerOnEdge[0] != layerOnEdge[1] &&
+                layerOnEdge[0] + layerOnEdge[1] != 5)
+            break;
+
+        // We have a new layer!
 
         // Before changing anything else, rearrange the topEdge and
         // meridinalCuts arrays.
+        layerOnGroup = ans->topEdgeGroup[layerOnEdge[0]];
         switch(layerOnGroup) {
             case 0:
                 // p q r  ->  q r q+r
