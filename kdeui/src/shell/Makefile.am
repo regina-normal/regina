@@ -28,6 +28,9 @@ shelldesktop_DATA = regina.desktop
 shellrcdir = $(kde_datadir)/regina
 shellrc_DATA = reginamain.rc
 
+mimedir = $(kde_mimedir)/application
+mime_DATA = x-regina.desktop
+
 METASOURCES = AUTO
 
 messages: rc.cpp
