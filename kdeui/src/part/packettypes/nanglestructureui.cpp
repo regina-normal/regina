@@ -40,6 +40,7 @@
 #include <qlabel.h>
 #include <qlistview.h>
 #include <qvbox.h>
+#include <qwhatsthis.h>
 
 #define DEFAULT_ANGLE_COLUMN_WIDTH 40
 #define ANGLE_STATS_PADDING 5
@@ -58,6 +59,16 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
 
     stats = new QLabel(ui);
     stats->setAlignment(Qt::AlignCenter);
+    QWhatsThis::add(stats, i18n("<qt>Displays various statistics about this "
+        "angle structure list, including whether the underlying triangulation "
+        "supports any strict and/or taut angle structures.  A <i>strict</i> "
+        "angle structure has all of its angles strictly between 0 and Pi, "
+        "whereas a <i>taut</i> angle structure has all of its angles equal "
+        "to either 0 or Pi.<p>"
+        "Note that this header might incidate that the triangulation supports "
+        "a strict angle structure even if none appear in the list below "
+        "&ndash; the strict angle structure might only be found as a "
+        "combination of several different vertex angle structures.</qt>"));
 
     QWidget* statsLower = new QWidget(ui);
     statsLower->setMinimumHeight(ANGLE_STATS_PADDING);
@@ -67,6 +78,14 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     table->setAllColumnsShowFocus(true);
     table->setSelectionMode(QListView::NoSelection);
     ui->setStretchFactor(table, 1);
+    QWhatsThis::add(table, i18n("<qt>Displays the vertex angle structures "
+        "in this list.<p>"
+        "Each row represents a single angle structure, and "
+        "each entry in the table is an internal dihedral angle assigned to "
+        "some pair of edges in a tetrahedron.<p>"
+        "For details of which tetrahedron edges each column represents, hover "
+        "the mouse over the column header (or refer to the reference "
+        "manual).</qt>"));
 
     table->addColumn(i18n("Type"), DEFAULT_ANGLE_COLUMN_WIDTH);
 

@@ -14,7 +14,7 @@ General:
     - Enhance the DCOP interface
 
 Docs:
-    + More "What's This?" texts, including a what's this button on the toolbar
+    + More "What's This?" texts and tooltips
     * Include an index of common tasks in the reference manual
 
 Census:

@@ -30,6 +30,7 @@ Version 4.1  [ 29 February, 2004 ]
           when a triangulation is open, etc.).
         - Updated the .desktop file and mimetype tests to work correctly
           with KDE 3.2.
+        - Added "what's this?" support everywhere across the user interface.
         - Added tip-of-the-day support.
         - Added more icons for triangulation actions.
     UTILITIES:
