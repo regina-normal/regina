@@ -20,10 +20,10 @@ done
 
 reginaclasses=""
 for i in "$REGINA_JARDIR"/*.jar; do
-	reginaclasses="$reginaclasses:$i";
+	reginaclasses="$reginaclasses$cps$i";
 done
 
-export CLASSPATH="$reginaclasses:$REGINA_BTOOLS:$REGINA_JYTHON:$REGINA_JAVAHELP:$REGINA_EXTRACLASSES:$CLASSPATH"
+export CLASSPATH="$reginaclasses$cps$REGINA_BTOOLS$cps$REGINA_JYTHON$cps$REGINA_JAVAHELP$cps$REGINA_EXTRACLASSES$cps$CLASSPATH"
 
 # --- Set the Java defines. ---
 
