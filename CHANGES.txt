@@ -14,6 +14,12 @@ Version 2.5  [ (under development) ]
                 NOrderedPair, NPointerSet, NQueue, NSet, NStack
                 and associates:
             - All removed in favour of Standard Template Library classes.
+        Class FuncDelete, FuncNew, HashPointer:
+            - Added for use with Standard Template Library.
+        Class NGroupExpression:
+            - Moved terms from NDoubleList to std::list.
+        Class NGroupExpressionTerm:
+            - Changed from simple ordered pair to its own full class.
 
 Version 2.4  [ 4 April, 2002 ]
     OVERALL:

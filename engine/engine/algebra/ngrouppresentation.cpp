@@ -32,10 +32,10 @@
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
 
-typedef std::deque<NGroupExpressionTerm>::iterator TermIterator;
-typedef std::deque<NGroupExpressionTerm>::const_iterator TermIteratorConst;
+typedef std::list<NGroupExpressionTerm>::iterator TermIterator;
+typedef std::list<NGroupExpressionTerm>::const_iterator TermIteratorConst;
 typedef NDynamicArrayIterator<NGroupExpression*> RelIterator;
-typedef NDoubleListIterator<NGroupExpression*> TmpRelIterator;
+typedef std::list<NGroupExpression*>::iterator TmpRelIterator;
 
 NGroupExpressionTerm NGroupExpressionTerm::readFromFile(NFile& in) {
     return NGroupExpressionTerm(in.readULong(), in.readLong());
@@ -58,6 +58,29 @@ ostream& operator << (ostream& out, const NGroupExpressionTerm& term) {
 
 NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) {
     terms.insert(terms.end(), cloneMe.terms.begin(), cloneMe.terms.end());
+}
+
+NGroupExpressionTerm& NGroupExpression::getTerm(unsigned long index) {
+    for (TermIterator it = terms.begin(); it != terms.end(); it++) {
+        if (index == 0)
+            return *it;
+        index--;
+    }
+    // We should never reach this point!
+    cerr << "Invalid term index passed to NGroupExpression::getTerm().\n";
+    return *(terms.begin());
+}
+
+const NGroupExpressionTerm& NGroupExpression::getTerm(
+        unsigned long index) const {
+    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++) {
+        if (index == 0)
+            return *it;
+        index--;
+    }
+    // We should never reach this point!
+    cerr << "Invalid term index passed to NGroupExpression::getTerm().\n";
+    return *(terms.begin());
 }
 
 NGroupExpression* NGroupExpression::inverse() const {
@@ -106,9 +129,9 @@ bool NGroupExpression::simplify(bool cyclic) {
         if (tmpIt == terms.end()) {
             // No term to merge forwards with.
             next++;
-        } else if ((*next) += (*tmpIt)) {
+        } else if ((*tmpIt) += (*next)) {
             // Successfully merged this with the following term.
-            terms.erase(tmpIt);
+            next = terms.erase(next);
             changed = true;
             // Look at this term again to see if it can be merged further.
         } else {
@@ -161,6 +184,9 @@ bool NGroupExpression::substitute(unsigned long generator,
                 }
 
                 // Fill in exponent copies of use.
+                //
+                // Note that the following insertion will invalidate
+                // current if the wrong type of data structure is being used!
                 for (i = 0; i < exponent; i++)
                     terms.insert(current, use->terms.begin(), use->terms.end());
             }
@@ -196,7 +222,7 @@ void NGroupExpression::writeTextShort(ostream& out) const {
     else {
         copy(terms.begin(), --terms.end(),
             ostream_iterator<NGroupExpressionTerm>(out, " "));
-        out << (*terms.end());
+        out << *(--terms.end());
     }
 }
 
@@ -214,7 +240,7 @@ bool NGroupPresentation::intelligentSimplify() {
     // Store the relations in a temporary linked list for fast insertion
     // and removal.  We'll put the ones we kept back into the original
     // array at the end.
-    NDoubleList<NGroupExpression*> tmpRels;
+    std::list<NGroupExpression*> tmpRels;
     NGroupExpression* rel;
     for (RelIterator it(relations); ! it.done(); it++) {
         rel = *it;
@@ -226,7 +252,7 @@ bool NGroupPresentation::intelligentSimplify() {
             changed = true;
             removed = true;
         } else
-            tmpRels.addLast(rel);
+            tmpRels.push_back(rel);
     }
 
     // At this point all relations are simplified and none are empty.
@@ -252,8 +278,8 @@ bool NGroupPresentation::intelligentSimplify() {
     bool doMoreSubsts = true;
     while (doMoreSubsts) {
         doMoreSubsts = false;
-        it.init(tmpRels);
-        while (! it.done()) {
+        it = tmpRels.begin();
+        while (it != tmpRels.end()) {
             // Can we pull a single variable out of this relation?
             rel = *it;
             // How many times does each generator appear in this relation?
@@ -285,7 +311,8 @@ bool NGroupPresentation::intelligentSimplify() {
             expansion = new NGroupExpression();
             for (tit = rel->getTerms().begin(); (*tit).generator != gen; tit++)
                 expansion->addTermFirst((*tit).inverse());
-            for (tit = rel->getTerms().end(); (*tit).generator != gen; tit--)
+            for (tit = --(rel->getTerms().end());
+                    (*tit).generator != gen; tit--)
                 expansion->addTermLast((*tit).inverse());
             // Check if we need to invert it.
             if ((*tit).exponent == -1) {
@@ -294,13 +321,14 @@ bool NGroupPresentation::intelligentSimplify() {
                 delete rel;
             }
             // Do the substitution.
-            it2.init(tmpRels);
-            while (! it2.done())
-                if (*it2 != *it) {
+            it2 = tmpRels.begin();
+            while (it2 != tmpRels.end())
+                if (it2 != it) {
                     (*it2)->substitute(gen, *expansion, true);
-                    if ((*it2)->getNumberOfTerms() == 0)
-                        delete tmpRels.remove(it2);
-                    else
+                    if ((*it2)->getNumberOfTerms() == 0) {
+                        delete *it2;
+                        it2 = tmpRels.erase(it2);
+                    } else
                         it2++;
                 } else
                     it2++;
@@ -310,8 +338,9 @@ bool NGroupPresentation::intelligentSimplify() {
             nGenerators--;
 
             // Remove the now useless relation and tidy up.
-            delete tmpRels.remove(it);
             delete expansion;
+            delete *it;
+            it = tmpRels.erase(it);
             changed = true;
             removed = true;
             doMoreSubsts = true;
@@ -328,7 +357,7 @@ bool NGroupPresentation::intelligentSimplify() {
                 genMap[gen] = newGen++;
 
         // Now run through the relations and renumber the generators.
-        for (it.init(tmpRels); ! it.done(); it++)
+        for (it = tmpRels.begin(); it != tmpRels.end(); it++)
             for (tit = (*it)->getTerms().begin();
                     tit != (*it)->getTerms().end(); tit++)
                 (*tit).generator = genMap[(*tit).generator];
@@ -337,7 +366,7 @@ bool NGroupPresentation::intelligentSimplify() {
     // Refill the original array if necessary.
     if (removed) {
         relations.flush();
-        for (it.init(tmpRels); ! it.done(); it++)
+        for (it = tmpRels.begin(); it != tmpRels.end(); it++)
             relations.addLast(*it);
     }
 

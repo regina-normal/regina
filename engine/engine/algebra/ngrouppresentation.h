@@ -35,7 +35,7 @@
 #define __NGROUPPRESENTATION_H
 #endif
 
-#include <deque>
+#include <list>
 #include "utilities/ndynamicarray.h"
 #include "property/npropertyholder.h"
 #include "shareableobject.h"
@@ -161,7 +161,7 @@ ostream& operator << (ostream& out, const NGroupExpressionTerm& term);
  */
 class NGroupExpression : public ShareableObject {
     private:
-        std::deque<NGroupExpressionTerm> terms;
+        std::list<NGroupExpressionTerm> terms;
             /** The terms that make up this expression. */
 
     public:
@@ -187,7 +187,7 @@ class NGroupExpression : public ShareableObject {
          *
          * @return the list of terms.
          */
-        std::deque<NGroupExpressionTerm>& getTerms();
+        std::list<NGroupExpressionTerm>& getTerms();
         /**
          * Returns a constant reference to the list of terms in this
          * expression.
@@ -196,7 +196,7 @@ class NGroupExpression : public ShareableObject {
          *
          * @return the list of terms.
          */
-        const std::deque<NGroupExpressionTerm>& getTerms() const;
+        const std::list<NGroupExpressionTerm>& getTerms() const;
         /**
          * Returns the number of terms in this expression.
          *
@@ -576,11 +576,11 @@ inline bool NGroupExpressionTerm::operator += (
 inline NGroupExpression::NGroupExpression() {
 }
 
-inline std::deque<NGroupExpressionTerm>& NGroupExpression::getTerms() {
+inline std::list<NGroupExpressionTerm>& NGroupExpression::getTerms() {
     return terms;
 }
 
-inline const std::deque<NGroupExpressionTerm>& NGroupExpression::getTerms()
+inline const std::list<NGroupExpressionTerm>& NGroupExpression::getTerms()
         const {
     return terms;
 }
@@ -589,22 +589,13 @@ inline unsigned long NGroupExpression::getNumberOfTerms() const {
     return terms.size();
 }
 
-inline NGroupExpressionTerm& NGroupExpression::getTerm(unsigned long index) {
-    return terms[index];
-}
-
-inline const NGroupExpressionTerm& NGroupExpression::getTerm(
-        unsigned long index) const {
-    return terms[index];
-}
-
 inline unsigned long NGroupExpression::getGenerator(unsigned long index)
         const {
-    return terms[index].generator;
+    return getTerm(index).generator;
 }
 
 inline long NGroupExpression::getExponent(unsigned long index) const {
-    return terms[index].exponent;
+    return getTerm(index).exponent;
 }
 
 inline void NGroupExpression::addTermFirst(const NGroupExpressionTerm& term) {
