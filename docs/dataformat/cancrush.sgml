@@ -45,7 +45,7 @@ cancrush ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   An &xml-cancrush; element stores whether or not a normal surface can
+   A &xml-cancrush; element stores whether or not a normal surface can
    be crushed to a point without any unintended topological side-effects.
   </para>
 

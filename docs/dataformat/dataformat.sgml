@@ -21,12 +21,12 @@
  &data-allowstrict;
  &data-allowtaut;
  &data-cancrush;
- &data-compact;
+ &data-compact-surface;
  &data-connected;
  &data-euler-surface;
  &data-flags;
  &data-line;
- &data-orbl;
+ &data-orbl-surface;
  &data-packet;
  &data-packet-anglestructurelist;
  &data-packet-container;
@@ -34,7 +34,7 @@
  &data-packet-script;
  &data-packet-text;
  &data-params;
- &data-realbdry;
+ &data-realbdry-surface;
  &data-reginadata;
  &data-struct;
  &data-surface;

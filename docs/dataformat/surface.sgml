@@ -25,8 +25,9 @@
      <row><entry namest="c1" nameend="c2">
 <synopsis>
 surface ::= (#PCDATA,
-             &xml-cancrush;?, &xml-compact;?, &xml-connected;?,
-             &xml-euler-surface;?, &xml-orbl;?, &xml-realbdry;?,
+             &xml-cancrush;?, &xml-compact-surface;?,
+             &xml-connected;?, &xml-euler-surface;?,
+             &xml-orbl-surface;?, &xml-realbdry-surface;?,
              &xml-twosided;?)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -92,11 +93,11 @@ surface ::= (#PCDATA,
     The following elements occur in <sgmltag>surface</sgmltag>:
     <simplelist type="inline">
      <member>&xml-cancrush;</member>
-     <member>&xml-compact;</member>
+     <member>&xml-compact-surface;</member>
      <member>&xml-connected;</member>
      <member>&xml-euler-surface;</member>
-     <member>&xml-orbl;</member>
-     <member>&xml-realbdry;</member>
+     <member>&xml-orbl-surface;</member>
+     <member>&xml-realbdry-surface;</member>
      <member>&xml-twosided;</member>
     </simplelist>.
    </para>

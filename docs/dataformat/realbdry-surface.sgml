@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-compact">
+<refentry id="data-realbdry-surface">
  <refmeta>
-  <refentrytitle>compact</refentrytitle>
+  <refentrytitle>realbdry (surface)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>compact</refname>
-  <refpurpose>Is a normal surface compact?</refpurpose>
+  <refname>realbdry (surface)</refname>
+  <refpurpose>Does a normal surface have real boundary?</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-compact ::=</synopsis>
+realbdry ::=</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -45,14 +45,16 @@ compact ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   An &xml-compact; element stores whether or not a normal surface is
-   compact, that is, whether it has finitely many normal discs.
+   A &xml-realbdry-surface; element stores whether or not a normal surface has
+   real boundary, that is, whether it meets any boundary faces of the
+   triangulation.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>compact</sgmltag>:
+    The following elements contain <sgmltag>realbdry</sgmltag> (in the
+    context of the boundary of a normal surface):
     <simplelist type="inline">
      <member>&xml-surface;</member>
     </simplelist>.
@@ -62,7 +64,8 @@ compact ::=</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    Element <sgmltag>compact</sgmltag> has no children.
+    Element <sgmltag>realbdry</sgmltag> (in the context of the boundary
+    of a normal surface) has no children.
    </para>
   </refsect2>
  </refsect1>
@@ -75,7 +78,7 @@ compact ::=</synopsis>
     <listitem>
      <para>
       Either <literal>T</literal> or <literal>F</literal>, according to
-      whether the parent surface is or is not compact.
+      whether the parent surface does or does not have real boundary.
      </para>
     </listitem>
    </varlistentry>

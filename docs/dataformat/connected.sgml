@@ -45,7 +45,7 @@ connected ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   An &xml-connected; element stores whether or not a normal surface is
+   A &xml-connected; element stores whether or not a normal surface is
    connected.
   </para>
 

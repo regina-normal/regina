@@ -45,7 +45,7 @@ twosided ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   An &xml-twosided; element stores whether or not a normal surface is
+   A &xml-twosided; element stores whether or not a normal surface is
    two-sided.
   </para>
 

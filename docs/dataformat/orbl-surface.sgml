@@ -2,14 +2,14 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-orbl">
+<refentry id="data-orbl-surface">
  <refmeta>
-  <refentrytitle>orbl</refentrytitle>
+  <refentrytitle>orbl (surface)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>orbl</refname>
+  <refname>orbl (surface)</refname>
   <refpurpose>Is a normal surface orientable?</refpurpose>
  </refnamediv>
 
@@ -45,14 +45,15 @@ orbl ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   An &xml-orbl; element stores whether or not a normal surface is
+   An &xml-orbl-surface; element stores whether or not a normal surface is
    orientable.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>orbl</sgmltag>:
+    The following elements contain <sgmltag>orbl</sgmltag> (in the
+    context of the orientability of a normal surface):
     <simplelist type="inline">
      <member>&xml-surface;</member>
     </simplelist>.
@@ -62,7 +63,8 @@ orbl ::=</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    Element <sgmltag>orbl</sgmltag> has no children.
+    Element <sgmltag>orbl</sgmltag> (in the context of the
+    orientability of a normal surface) has no children.
    </para>
   </refsect2>
  </refsect1>

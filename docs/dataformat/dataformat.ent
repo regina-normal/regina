@@ -5,12 +5,12 @@
 <!ENTITY data-allowstrict SYSTEM "allowstrict.sgml">
 <!ENTITY data-allowtaut SYSTEM "allowtaut.sgml">
 <!ENTITY data-cancrush SYSTEM "cancrush.sgml">
-<!ENTITY data-compact SYSTEM "compact.sgml">
+<!ENTITY data-compact-surface SYSTEM "compact-surface.sgml">
 <!ENTITY data-connected SYSTEM "connected.sgml">
 <!ENTITY data-euler-surface SYSTEM "euler-surface.sgml">
 <!ENTITY data-flags SYSTEM "flags.sgml">
 <!ENTITY data-line SYSTEM "line.sgml">
-<!ENTITY data-orbl SYSTEM "orbl.sgml">
+<!ENTITY data-orbl-surface SYSTEM "orbl-surface.sgml">
 <!ENTITY data-packet SYSTEM "packet.sgml">
 <!ENTITY data-packet-anglestructurelist SYSTEM "packet-anglestructurelist.sgml">
 <!ENTITY data-packet-container SYSTEM "packet-container.sgml">
@@ -18,7 +18,7 @@
 <!ENTITY data-packet-script SYSTEM "packet-script.sgml">
 <!ENTITY data-packet-text SYSTEM "packet-text.sgml">
 <!ENTITY data-params SYSTEM "params.sgml">
-<!ENTITY data-realbdry SYSTEM "realbdry.sgml">
+<!ENTITY data-realbdry-surface SYSTEM "realbdry-surface.sgml">
 <!ENTITY data-reginadata SYSTEM "reginadata.sgml">
 <!ENTITY data-struct SYSTEM "struct.sgml">
 <!ENTITY data-surface SYSTEM "surface.sgml">
@@ -33,8 +33,8 @@
  '<link linkend="data-allowtaut"><sgmltag>allowtaut</sgmltag></link>'>
 <!ENTITY xml-cancrush
  '<link linkend="data-cancrush"><sgmltag>cancrush</sgmltag></link>'>
-<!ENTITY xml-compact
- '<link linkend="data-compact"><sgmltag>compact</sgmltag></link>'>
+<!ENTITY xml-compact-surface
+ '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag> (surface)</link>'>
 <!ENTITY xml-connected
  '<link linkend="data-connected"><sgmltag>connected</sgmltag></link>'>
 <!ENTITY xml-euler-surface
@@ -43,8 +43,8 @@
  '<link linkend="data-flags"><sgmltag>flags</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
-<!ENTITY xml-orbl
- '<link linkend="data-orbl"><sgmltag>orbl</sgmltag></link>'>
+<!ENTITY xml-orbl-surface
+ '<link linkend="data-orbl-surface"><sgmltag>orbl</sgmltag> (surface)</link>'>
 <!ENTITY xml-packet
  '<link linkend="data-packet"><sgmltag>packet</sgmltag></link>'>
 <!ENTITY xml-packet-anglestructurelist
@@ -63,8 +63,8 @@
  '<link linkend="data-packet"><sgmltag>packet</sgmltag> (triangulation)</link>'>
 <!ENTITY xml-params
  '<link linkend="data-params"><sgmltag>params</sgmltag></link>'>
-<!ENTITY xml-realbdry
- '<link linkend="data-realbdry"><sgmltag>realbdry</sgmltag></link>'>
+<!ENTITY xml-realbdry-surface
+ '<link linkend="data-realbdry-surface"><sgmltag>realbdry</sgmltag> (surface)</link>'>
 <!ENTITY xml-reginadata
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-struct
