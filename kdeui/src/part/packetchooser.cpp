@@ -131,6 +131,14 @@ void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
 void PacketChooser::refreshContents() {
     if (isUpdating)
         return;
+
+    // Don't change anything if we don't have to.
+    if (verify())
+        return;
+
+    // Do a straight empty-and-refill.
+    // There are more streamlined ways of doing it, but we'll come to it
+    // when we come to it.
     isUpdating = true;
 
     // Remember how it used to look.
@@ -176,6 +184,34 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
         }
         p = p->nextTreePacket();
     }
+}
+
+bool PacketChooser::verify() {
+    regina::NPacket* p = subtree;
+    std::vector<regina::NPacket*>::const_iterator it = packets.begin();
+
+    // Ignore the None entry if it exists.
+    if (it != packets.end() && (! *it))
+        it++;
+
+    // Now match the packets up one by one.
+    while (it != packets.end() || p != 0) {
+        // Out of packets?
+        if (it == packets.end())
+            return false;
+        // Out of combo box entries?
+        if (! p)
+            return false;
+        // Mismatched entries?
+        if (p != *it)
+            return false;
+
+        // All good.
+        it++;
+        p = p->nextTreePacket();
+    }
+
+    return true;
 }
 
 #include "packetchooser.moc"

@@ -163,6 +163,12 @@ class PacketChooser : public KComboBox, public regina::NPacketListener {
          * A packet to be preselected can be optionally specified.
          */
         void fill(bool allowNone, regina::NPacket* select);
+
+        /**
+         * Verifies whether the current list of packets shown in the
+         * chooser matches the current state of the packet tree.
+         */
+        bool verify();
 };
 
 inline PacketFilter* PacketChooser::getFilter() {
