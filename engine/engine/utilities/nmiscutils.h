@@ -137,7 +137,7 @@ struct FuncNewCopyRef {
  * of type <tt>T</tt>.
  *
  * \pre Type <tt>T</tt> has method <tt>T* clone() const</tt>.  The
- * declared return type may be different, but the result \b must
+ * declared return type may be different, but the result \e must
  * be castable to <tt>T*</tt>.
  *
  * \ifaces Not present.
