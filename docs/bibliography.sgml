@@ -1,0 +1,38 @@
+
+<!-- Regina documentation bibliography.
+     See regina.sgml for further details. -->
+
+<bibliography id="bibliography">
+ <para>
+  This bibliography only describes documents referred to within the
+  reference manual and is in no way intended as a list of
+  acknowledgements or contributers.  For such a list, see the
+  <link linkend="acknowledgements">acknowledgements page</link> instead.
+ </para>
+
+ <biblioentry id="bib-cuspedcensus">
+  <title>A Census of Cusped Hyperbolid 3-Manifolds</title>
+  <authorgroup>
+   <author>
+    <firstname>Patrick</firstname>
+    <othername>J.</othername>
+    <surname>Callahan</surname>
+   </author>
+   <author>
+    <firstname>Martin</firstname>
+    <othername>V.</othername>
+    <surname>Hildebrand</surname>
+   </author>
+   <author>
+    <firstname>Jeffrey</firstname>
+    <othername>R.</othername>
+    <surname>Weeks</surname>
+   </author>
+  </authorgroup>
+  <edition>Mathematics of Computation</edition>
+  <volumenum>Volume 68</volumenum>
+  <issuenum>Number 225</issuenum>
+  <date>January 1999</date>
+  <artpagenums>Pages 321-332</artpagenums>
+ </biblioentry>
+</bibliography>

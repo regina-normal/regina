@@ -74,6 +74,7 @@
  <!ENTITY reginatrouble SYSTEM "trouble.sgml">
  <!ENTITY reginachangeshighlights SYSTEM "../HIGHLIGHTS.txt">
  <!ENTITY reginachangesdetails SYSTEM "../CHANGES.txt">
+ <!ENTITY reginabibliography SYSTEM "bibliography.sgml">
 
  <!ENTITY sessiontriangulation SYSTEM "../examples/triangulation.session">
  <!ENTITY sessiontree SYSTEM "../examples/tree.session">
@@ -299,5 +300,7 @@
    </programlisting>
   </sect1>
  </appendix>
+
+ &reginabibliography;
 
 </book>
