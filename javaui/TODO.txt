@@ -26,7 +26,6 @@ Jython:
 	Syntax highlighting for script editor
 	Autoindent in script editor
 	Compile and run open libraries.
-	Add readline support for text consoles.
 
 Main Window:
 	View file version.
@@ -42,3 +41,6 @@ Normal Surfaces:
 		column should imply resizing all coordinate columns.
 	Right-align coordinates but have padding between numbers and column edge.
 	Allow modification of SurfaceViewer.maxAutoCalcTetrahedra.
+
+Scripts:
+	Expand $REGINA_JNIDIR and $REGINA_EXTRA_CLASSES using cygpath.
