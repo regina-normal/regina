@@ -53,6 +53,9 @@ public class NCORBAEdge extends CORBAShareableObject
             getBoundaryComponent() {
         return NCORBABoundaryComponent.newWrapper(data.getBoundaryComponent());
     }
+    public normal.engine.triangulation.NVertex getVertex(int vertex) {
+        return NCORBAVertex.newWrapper(data.getVertex(vertex));
+    }
 
     public boolean isBoundary() {
         return data.isBoundary();

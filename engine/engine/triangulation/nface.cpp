@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A normal surface theory calculator                           *
- *  Java user interface                                                   *
+ *  Computational engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,23 +26,29 @@
 
 /* end stub */
 
-package normal.engine.implementation.jni.triangulation;
+#include "config.h"
 
-import normal.engine.implementation.jni.*;
-import normal.engine.triangulation.*;
+#ifdef __NO_INCLUDE_PATHS
+    #include "nedge.h"
+    #include "nface.h"
+#else
+    #include "engine/triangulation/nedge.h"
+    #include "engine/triangulation/nface.h"
+#endif
 
-public class NJNIEdge extends JNIShareableObject implements NEdge {
-    public NJNIEdge(Sentry s) {
-        super(s);
-    }
-    
-    public native NComponent getComponent();
-    public native NBoundaryComponent getBoundaryComponent();
-	public native NVertex getVertex(int vertex);
-
-    public native boolean isBoundary();
-    public native boolean isValid();
-
-    public native long getNumberOfEmbeddings();
-    public native NEdgeEmbedding getEmbedding(long index);
+NEdge* NFace::getEdge(int edge) const {
+	NPerm p = embeddings[0]->getVertices();
+	return embeddings[0]->getTetrahedron()->getEdge(
+		edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
 }
+
+NPerm NFace::getEdgeMapping(int edge) const {
+	NPerm facePerm = embeddings[0]->getVertices();
+		// Maps face -> tetrahedron
+	NPerm edgePerm = embeddings[0]->getTetrahedron()->getEdgeMapping(
+		edgeNumber[facePerm[(edge + 1) % 3]][facePerm[(edge + 2) % 3]]);
+		// Maps edge -> tetrahedron
+	return NPerm(facePerm.preImageOf(edgePerm[0]),
+		facePerm.preImageOf(edgePerm[1]), edge, 3);
+}
+

@@ -38,6 +38,12 @@ public class NJNIFace extends JNIShareableObject implements NFace {
     
     public native NComponent getComponent();
     public native NBoundaryComponent getBoundaryComponent();
+	public native NVertex getVertex(int vertex);
+	public native NEdge getEdge(int edge);
+    public NPerm getEdgeMapping(int edge) {
+        return new NPerm(_getEdgeMapping(edge));
+    }
+    public native char _getEdgeMapping(int edge);
 
     public native boolean isBoundary();
 

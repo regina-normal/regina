@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "NVertexI.h"
 #include "NEdgeI.h"
 #include "NComponentI.h"
 #include "NBoundaryComponentI.h"
@@ -39,6 +40,10 @@ Regina::Triangulation::NBoundaryComponent_ptr
         NEdge_i::getBoundaryComponent() {
     return NBoundaryComponent_i::newWrapper(GET_ENGINE_OBJECT(NEdge, this)->
         getBoundaryComponent());
+}
+Regina::Triangulation::NVertex_ptr NEdge_i::getVertex(CORBA::Long index) {
+    return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NEdge, this)->
+		getVertex((int)index));
 }
 CORBA::Boolean NEdge_i::isBoundary() {
     return GET_ENGINE_OBJECT(NEdge, this)->isBoundary();

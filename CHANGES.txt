@@ -10,9 +10,12 @@ Regina - A Normal Surface Theory Calculator
             - Ported CORBA stuff to omniORB3.
         Class NDoubleList, NDynamicArray:
             - Added operator = to the iterator classes.
+        Class NEdge, NFace:
+            - Added extra skeletal query routines.
         Class NGroupExpression, NGroupPresentation:
             - New classes.
-        Class NLayeredLensSpace, NLayeredSolidTorus, NSnappedBall:
+        Class NLayeredLensSpace, NLayeredSolidTorus, NSnappedBall,
+                NSnappedTwoSphere:
             - New classes.
         Class NPacket:
             - Changed meaning of second (boolean) parameter to clone().
@@ -50,6 +53,8 @@ Regina - A Normal Surface Theory Calculator
             - Added subtreeWasDeleted().
         normal.packetui.packet.NContainerViewer:
             - Displays tree size statistics.
+        normal.packetui.triangulation.NTriangulationEditor:
+            - Added triangulation component recognition.
 
 Version 2.1.1a
     OVERALL:

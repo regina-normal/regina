@@ -42,6 +42,7 @@ public interface NEdge extends ShareableObject {
 
     public NComponent getComponent();
     public NBoundaryComponent getBoundaryComponent();
+	public NVertex getVertex(int vertex);
 
     public boolean isBoundary();
     public boolean isValid();

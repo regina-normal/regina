@@ -28,6 +28,7 @@
 
 #include "config.h"
 #ifdef __NO_INCLUDE_PATHS
+    #include "nedge.h"
     #include "nface.h"
     #include "ncomponent.h"
     #include "nboundarycomponent.h"
@@ -35,6 +36,7 @@
     #include "jnitools.h"
     #include "NJNIFace.h"
 #else
+    #include "engine/triangulation/nedge.h"
     #include "engine/triangulation/nface.h"
     #include "engine/triangulation/ncomponent.h"
     #include "engine/triangulation/nboundarycomponent.h"
@@ -60,6 +62,21 @@ JNIEXPORT jobject JNICALL
 }
 
 JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_triangulation_NJNIFace_getEdge
+		(JNIEnv *env, jobject me, jint index) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NFace, me)->getEdge(index),
+        "normal/engine/implementation/jni/triangulation/NJNIEdge");
+}
+
+JNIEXPORT jchar JNICALL
+		Java_normal_engine_implementation_jni_triangulation_NJNIFace__1getEdgeMapping
+		(JNIEnv *env, jobject me, jint index) {
+	return GET_ENGINE_OBJECT(env, NFace, me)->getEdgeMapping(index).
+		getPermCode();
+}
+
+JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getEmbedding
         (JNIEnv *env, jobject me, jint index) {
     NFace* face = GET_ENGINE_OBJECT(env, NFace, me);
@@ -82,6 +99,14 @@ JNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getNumberOfEmbeddings
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFace, me)->getNumberOfEmbeddings();
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_triangulation_NJNIFace_getVertex
+		(JNIEnv *env, jobject me, jint index) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NFace, me)->getVertex(index),
+        "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
 JNIEXPORT jboolean JNICALL

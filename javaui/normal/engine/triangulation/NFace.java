@@ -34,6 +34,9 @@ import java.util.*;
 public interface NFace extends ShareableObject {
     public NComponent getComponent();
     public NBoundaryComponent getBoundaryComponent();
+	public NVertex getVertex(int vertex);
+	public NEdge getEdge(int edge);
+	public NPerm getEdgeMapping(int edge);
 
     public boolean isBoundary();
     

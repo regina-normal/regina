@@ -28,6 +28,7 @@
 
 #include "config.h"
 #ifdef __NO_INCLUDE_PATHS
+    #include "nvertex.h"
     #include "nedge.h"
     #include "ncomponent.h"
     #include "nboundarycomponent.h"
@@ -35,6 +36,7 @@
     #include "jnitools.h"
     #include "NJNIEdge.h"
 #else
+    #include "engine/triangulation/nvertex.h"
     #include "engine/triangulation/nedge.h"
     #include "engine/triangulation/ncomponent.h"
     #include "engine/triangulation/nboundarycomponent.h"
@@ -83,6 +85,14 @@ JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getNumberOfEmbeddings
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NEdge, me)->getNumberOfEmbeddings();
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getVertex
+		(JNIEnv *env, jobject me, jint index) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NEdge, me)->getVertex(index),
+        "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
 JNIEXPORT jboolean JNICALL

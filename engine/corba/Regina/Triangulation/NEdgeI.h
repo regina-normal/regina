@@ -53,6 +53,7 @@ class NEdge_i : public virtual POA_Regina::Triangulation::NEdge,
         virtual Regina::Triangulation::NComponent_ptr getComponent();
         virtual Regina::Triangulation::NBoundaryComponent_ptr
             getBoundaryComponent();
+		virtual Regina::Triangulation::NVertex_ptr getVertex(CORBA::Long index);
         virtual CORBA::Boolean isBoundary();
         virtual CORBA::Boolean isValid();
         virtual CORBA::Long getNumberOfEmbeddings();

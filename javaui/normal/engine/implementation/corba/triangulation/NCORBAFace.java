@@ -30,6 +30,7 @@ package normal.engine.implementation.corba.triangulation;
 
 import normal.engine.implementation.corba.Regina.Triangulation.*;
 import normal.engine.implementation.corba.*;
+import normal.engine.triangulation.NPerm;
 
 public class NCORBAFace extends CORBAShareableObject
         implements normal.engine.triangulation.NFace {
@@ -52,6 +53,15 @@ public class NCORBAFace extends CORBAShareableObject
     public normal.engine.triangulation.NBoundaryComponent
             getBoundaryComponent() {
         return NCORBABoundaryComponent.newWrapper(data.getBoundaryComponent());
+    }
+    public normal.engine.triangulation.NVertex getVertex(int vertex) {
+        return NCORBAVertex.newWrapper(data.getVertex(vertex));
+    }
+    public normal.engine.triangulation.NEdge getEdge(int edge) {
+        return NCORBAEdge.newWrapper(data.getEdge(edge));
+    }
+    public NPerm getEdgeMapping(int edge) {
+        return new NPerm(data.getEdgeMapping(edge));
     }
 
     public boolean isBoundary() {

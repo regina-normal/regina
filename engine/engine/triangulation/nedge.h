@@ -49,7 +49,6 @@
     #include "engine/triangulation/ntetrahedron.h"
 #endif
 
-class NTetrahedron;
 class NComponent;
 class NBoundaryComponent;
 
@@ -264,6 +263,17 @@ class NEdge : public ShareableObject {
          */
         NBoundaryComponent* getBoundaryComponent() const;
 
+		/**
+		 * Returns the vertex in the triangulation skeleton corresponding
+		 * to the given vertex of this edge.
+		 *
+		 * @param vertex the vertex of this edge to examine.  This should
+		 * be 0 or 1.
+		 * @return the vertex of the skeleton corresponding to the
+		 * requested edge vertex.
+		 */
+		NVertex* getVertex(int vertex) const;
+
         /**
          * Determines if this edge lies entirely on the boundary of the
          * triangulation.
@@ -302,6 +312,11 @@ inline NComponent* NEdge::getComponent() const {
 
 inline NBoundaryComponent* NEdge::getBoundaryComponent() const {
     return boundaryComponent;
+}
+
+inline NVertex* NEdge::getVertex(int vertex) const {
+	return embeddings[0].getTetrahedron()->getVertex(
+		embeddings[0].getVertices()[vertex]);
 }
 
 inline bool NEdge::isBoundary() const {
