@@ -35,6 +35,8 @@ Regina - A Normal Surface Theory Calculator
             - Fixed tooltips in tables.
         normal.Application:
             - Moved fileExtension member into normal.mainui.FilePane subclasses.
+        normal.algorithm:
+            - Added class ElementaryMove.
         normal.console:
             - Major rearrangements; new class JPythonUtils now does most of
               the Jython work.
@@ -71,6 +73,8 @@ Regina - A Normal Surface Theory Calculator
             - Coordinate tables in edge weight space now flag boundary edges.
         normal.packetui.surfaces.Coordinates:
             - Some routines now require the triangulation to be passed.
+        normal.packetui.triangulation:
+            - Pulled SkeletonTableFrame out into its own standalone class.
         normal.packetui.triangulation.NTriangulationEditor:
             - Added triangulation component recognition.
 
