@@ -17,6 +17,7 @@ noinst_HEADERS = \
 	coordinatechooser.h \
 	coordinates.h \
 	pythonmanager.h \
+	qtcompat.h \
 	reginaabout.h \
 	reginafilter.h \
 	reginaprefset.h
@@ -35,6 +36,7 @@ libregina_kdecommon_la_SOURCES = \
 	coordinatechooser.cpp \
 	coordinates.cpp \
 	pythonmanager.cpp \
+	qtcompat.cpp \
 	reginaabout.cpp \
 	reginaprefset.cpp
 
