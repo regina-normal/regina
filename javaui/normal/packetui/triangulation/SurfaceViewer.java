@@ -195,7 +195,7 @@ public class SurfaceViewer extends DefaultPacketViewer
             btnZeroEfficient.setEnabled(false);
         }
 
-        if ((! triangulation.knowsZeroEfficient()) &&
+        if ((! triangulation.knowsSplittingSurface()) &&
                 nTet > maxAutoCalcTetrahedra) {
             splittingSurface.setText("Unknown");
             splittingSurface.setForeground(Color.black);

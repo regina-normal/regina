@@ -45,6 +45,8 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
             - Added routine knownCanCrush().  Currently this routine
               is next to useless; it is expected to be enhanced with
               future releases.
+            - Property queries are now const since internal cached
+              properties are declared mutable.
         Class NPerm:
             - Using unsigned chars for permutation codes.
         Class NPrismSpec, NPrismSetSurface:
@@ -63,6 +65,9 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
               answers if the skeleton had not already been calculated.
             - Renamed insertLensSpace() to insertLayeredLensSpace().
             - New routine insertLayeredLoop().
+            - 0-efficiency testing is done in quad space where possible.
+            - New boundary queries hasTwoSphereBoundaryComponents() and
+              hasNegativeIdealBoundaryComponents().
         Routine prior(), next():
             - Copied from the Boost C++ libraries for easy access to
               prior and following iterators.

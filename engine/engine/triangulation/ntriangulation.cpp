@@ -72,6 +72,7 @@ void NTriangulation::initialiseAllProperties() {
     calculatedH1Rel = false;
     calculatedH1Bdry = false;
     calculatedH2 = false;
+    calculatedBoundaryProperties = false;
     calculatedZeroEfficient = false;
     calculatedSplittingSurface = false;
 }
@@ -357,6 +358,12 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
         H2->writeXMLData(out);
         out << "</H2>\n";
     }
+    if (calculatedBoundaryProperties) {
+        out << "  " << xmlValueTag("twosphereboundarycomponents",
+            twoSphereBoundaryComponents) << '\n';
+        out << "  " << xmlValueTag("negativeidealboundarycomponents",
+            negativeIdealBoundaryComponents) << '\n';
+    }
     if (calculatedZeroEfficient)
         out << "  " << xmlValueTag("zeroeff", zeroEfficient) << '\n';
     if (calculatedSplittingSurface)
@@ -535,6 +542,11 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     if (X.calculatedH2) {
         H2 = new NAbelianGroup(*(X.H2));
         calculatedH2 = true;
+    }
+    if (X.calculatedBoundaryProperties) {
+        twoSphereBoundaryComponents = X.twoSphereBoundaryComponents;
+        negativeIdealBoundaryComponents = X.negativeIdealBoundaryComponents;
+        calculatedBoundaryProperties = true;
     }
     if (X.calculatedZeroEfficient) {
         zeroEfficient = X.zeroEfficient;

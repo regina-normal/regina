@@ -552,4 +552,27 @@ void NTriangulation::calculateVertexLinks() {
     }
 }
 
+void NTriangulation::calculateBoundaryProperties() {
+    // Make sure the skeleton has been calculated!
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+
+    twoSphereBoundaryComponents = false;
+    negativeIdealBoundaryComponents = false;
+
+    for (BoundaryComponentIterator it = boundaryComponents.begin();
+            it != boundaryComponents.end(); it++) {
+        if ((*it)->getEulerCharacteristic() == 2)
+            twoSphereBoundaryComponents = true;
+        else if ((*it)->isIdeal() && (*it)->getEulerCharacteristic() < 0)
+            negativeIdealBoundaryComponents = true;
+
+        // Stop the search if we've found everything we're looking for.
+        if (twoSphereBoundaryComponents && negativeIdealBoundaryComponents)
+            break;
+    }
+
+    calculatedBoundaryProperties = true;
+}
+
 } // namespace regina

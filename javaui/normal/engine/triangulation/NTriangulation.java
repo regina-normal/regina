@@ -61,6 +61,9 @@ public interface NTriangulation extends NPacket {
     NFace getFace(long index);
     long getFaceIndex(NFace face);
 
+    boolean hasTwoSphereBoundaryComponents();
+    boolean hasNegativeIdealBoundaryComponents();
+
     long getEulerCharacteristic();
     NGroupPresentation getFundamentalGroup();
     NAbelianGroup getHomologyH1();

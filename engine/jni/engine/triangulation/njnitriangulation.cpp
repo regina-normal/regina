@@ -271,9 +271,23 @@ REGJNIEXPORT jboolean JNICALL
 }
 
 REGJNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_hasNegativeIdealBoundaryComponents
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->
+        hasNegativeIdealBoundaryComponents();
+}
+
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_hasSplittingSurface
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->hasSplittingSurface();
+}
+
+REGJNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_hasTwoSphereBoundaryComponents
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->
+        hasTwoSphereBoundaryComponents();
 }
 
 REGJNIEXPORT jboolean JNICALL

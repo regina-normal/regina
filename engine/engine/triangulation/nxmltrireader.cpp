@@ -202,6 +202,9 @@ namespace {
 NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
+    // We don't read boundary component properties since they're stored
+    // across multiple property tags and they're easy to calculate
+    // anyway.
     if (subTagName == "tetrahedra")
         return new NTetrahedraReader(tri);
     else if (subTagName == "zeroeff") {

@@ -76,6 +76,9 @@ public class NJNITriangulation extends NJNIPacket
     public native NFace getFace(long index);
     public native long getFaceIndex(NFace face);
 
+    public native boolean hasTwoSphereBoundaryComponents();
+    public native boolean hasNegativeIdealBoundaryComponents();
+
     public native long getEulerCharacteristic();
     public native NGroupPresentation getFundamentalGroup();
     public native NAbelianGroup getHomologyH1();

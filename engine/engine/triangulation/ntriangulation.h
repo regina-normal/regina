@@ -170,6 +170,15 @@ class NTriangulation : public NPacket, NPropertyHolder {
         bool calculatedH2;
             /**< Has \a H2 been calculated? */
 
+        bool twoSphereBoundaryComponents;
+            /**< Does the triangulation contain any 2-sphere boundary
+                 components? */
+        bool negativeIdealBoundaryComponents;
+            /**< Does the triangulation contain any boundary components
+                 that are ideal and have negative Euler characteristic? */
+        bool calculatedBoundaryProperties;
+            /**< Have the boundary component properties been calculated? */
+
         bool zeroEfficient;
             /**< Is the triangulation zero-efficient? */
         bool calculatedZeroEfficient;
@@ -616,6 +625,23 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         bool isIsomorphicTo(NTriangulation& other);
 
+        /**
+         * Determines if this triangulation contains any two-sphere
+         * boundary components.
+         *
+         * @return \c true if and only if there is at least one
+         * two-sphere boundary component.
+         */
+        bool hasTwoSphereBoundaryComponents();
+        /**
+         * Determines if this triangulation contains any ideal boundary
+         * components with negative Euler characteristic.
+         *
+         * @return \c true if and only if there is at least one such
+         * boundary component.
+         */
+        bool hasNegativeIdealBoundaryComponents();
+
         /*@}*/
         /**
          * (end: Skeletal Queries)
@@ -854,8 +880,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * A triangulation is 0-efficient if its only normal spheres and
          * discs are vertex linking, and if it has no 2-sphere boundary
          * components.
-         *
-         * \todo \opturgent Run this test in quad space!
          *
          * @return \c true if and only if this triangulation is
          * 0-efficient.
@@ -1648,8 +1672,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         void calculateFaces();
         /**
-         * Calculates the triangulation boundary components and associated
-         * properties.
+         * Calculates the triangulation boundary components and
+         * properties of these boundary components.
          *
          * \warning This should only be called from within
          * calculateSkeleton().
@@ -1667,10 +1691,21 @@ class NTriangulation : public NPacket, NPropertyHolder {
         void calculateVertexLinks();
 
         /**
-         * Calculates all properties that require examination of normal
-         * surfaces.
+         * Calculates all properties of the triangulation relating to
+         * its boundary components.
          */
-        void calculateSurfaceProperties();
+        void calculateBoundaryProperties();
+
+        /**
+         * Calculates all properties that can be deduced from an
+         * examination of normal surfaces in standard tri-quad coordinates.
+         */
+        void calculateStandardSurfaceProperties();
+        /**
+         * Calculates all properties that can be deduced from an
+         * examination of normal surfaces in quadrilateral-only coordinates.
+         */
+        void calculateQuadSurfaceProperties();
 
         void stretchBoundaryForestFromVertex(NVertex*,
                 stdhash::hash_set<NEdge*, HashPointer>&,
@@ -1902,6 +1937,18 @@ inline unsigned long NTriangulation::getFaceIndex(const NFace* face) {
     return faces.index(const_cast<NFace*>(face));
 }
 
+inline bool NTriangulation::hasTwoSphereBoundaryComponents() {
+    if (! calculatedBoundaryProperties)
+        calculateBoundaryProperties();
+    return twoSphereBoundaryComponents;
+}
+
+inline bool NTriangulation::hasNegativeIdealBoundaryComponents() {
+    if (! calculatedBoundaryProperties)
+        calculateBoundaryProperties();
+    return negativeIdealBoundaryComponents;
+}
+
 inline bool NTriangulation::isValid() {
     if (! calculatedSkeleton)
         calculateSkeleton();
@@ -1944,20 +1991,8 @@ inline bool NTriangulation::isConnected() {
     return (components.size() <= 1);
 }
 
-inline bool NTriangulation::isZeroEfficient() {
-    if (! calculatedZeroEfficient)
-        calculateSurfaceProperties();
-    return zeroEfficient;
-}
-
 inline bool NTriangulation::knowsZeroEfficient() const {
     return calculatedZeroEfficient;
-}
-
-inline bool NTriangulation::hasSplittingSurface() {
-    if (! calculatedSplittingSurface)
-        calculateSurfaceProperties();
-    return splittingSurface;
 }
 
 inline bool NTriangulation::knowsSplittingSurface() const {

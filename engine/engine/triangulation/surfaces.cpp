@@ -31,33 +31,143 @@
 
 namespace regina {
 
-void NTriangulation::calculateSurfaceProperties() {
-    // Check for 2-sphere boundary components.
-    if (! calculatedZeroEfficient)
-        for (BoundaryComponentIterator it = boundaryComponents.begin();
-                it != boundaryComponents.end(); it++)
-            if ((*it)->getEulerCharacteristic() == 2) {
-                zeroEfficient = false;
-                calculatedZeroEfficient = true;
-                break;
-            }
+/**
+ * When testing 0-efficiency, to prove that a normal 2-sphere must occur
+ * at a vertex we use Euler characteristic arguments.  One issue that
+ * arises for non-orientable 3-manifolds is whether a non-vertex normal
+ * 2-sphere can be decomposed into two-sided projective planes and other
+ * surfaces of non-positive Euler characteristic.  On this issue, Jaco
+ * writes:
+ *
+ *  "Remember that in any 3-manifold, regular curves of intersection between
+ *   normal surfaces are orientation preserving; thus if you add a two-sided
+ *   projective plane to any other surface, the curves of intersection must
+ *   be trivial curves on the projective plane - thus the result must be
+ *   nonorientable."
+ */
 
-    if (calculatedZeroEfficient && calculatedSplittingSurface)
+/**
+ * In general, in quad space the decomposition of a normal surface S is:
+ *
+ *   k * S + sum of vertex links = sum of vertex normal surfaces
+ *
+ * If S is a 2-sphere or a disc and every vertex link has non-negative
+ * Euler characteristic, it follows that at least one vertex normal surface
+ * has positive Euler characteristic.  From the above comments we see
+ * that this vertex normal surface must be a 2-sphere, a disc or a
+ * 1-sided projective plane (which doubles to a 2-sphere).
+ *
+ * Thus we can test 0-efficiency in quad space if all vertex links have
+ * non-negative Euler characteristic.
+ */
+
+/**
+ * Splitting surfaces must alas be tested for in standard triangle-quad
+ * coordinates.  See the triangulation J_{1|3,-5} (chained triangular
+ * solid torus of major type) of S^3 / Q_32 x Z_3 an an example of a
+ * triangulation with a splitting surface having chi=-1 that can be
+ * decomposed in quad space as the sum of two vertex normal tori minus a
+ * vertex link.
+ */
+
+bool NTriangulation::isZeroEfficient() {
+    if (! calculatedZeroEfficient) {
+        if (hasTwoSphereBoundaryComponents()) {
+            // We have 2-sphere boundary components.
+            // No need to look through normal surfaces.
+            zeroEfficient = false;
+            calculatedZeroEfficient = true;
+        } else if (isValid() && ! hasNegativeIdealBoundaryComponents()) {
+            // We can calculate this using normal surfaces in quad space.
+            calculateQuadSurfaceProperties();
+        } else {
+            // We have to use the slower tri-quad coordinates.
+            calculateStandardSurfaceProperties();
+        }
+    }
+    return zeroEfficient;
+}
+
+bool NTriangulation::hasSplittingSurface() {
+    // Splitting surfaces must unfortunately be calculated using
+    // tri-quad coordinates.
+    if (! calculatedSplittingSurface)
+        calculateStandardSurfaceProperties();
+    return splittingSurface;
+}
+
+void NTriangulation::calculateQuadSurfaceProperties() {
+    // Create a normal surface list.
+    NNormalSurfaceList surfaces(this, NNormalSurfaceList::QUAD);
+
+    // All we can test here is 0-efficiency.
+
+    // Are we allowed to calculate 0-efficiency using quad coordinates?
+    if ((! isValid()) || hasNegativeIdealBoundaryComponents())
         return;
 
+    // Run through all vertex surfaces.
+    if (! calculatedZeroEfficient)
+        zeroEfficient = true;
+
+    unsigned long nSurfaces = surfaces.getNumberOfSurfaces();
+    const NNormalSurface* s;
+    NLargeInteger chi;
+    for (unsigned long i = 0; i < nSurfaces; i++) {
+        s = surfaces.getSurface(i);
+
+        if (! calculatedZeroEfficient) {
+            // Note that all vertex surfaces in quad space are
+            // connected and non-vertex-linking.
+
+            if (s->isCompact()) {
+                chi = s->getEulerCharacteristic();
+                if (s->hasRealBoundary()) {
+                    // Hunt for discs.
+                    if (chi == 1) {
+                        zeroEfficient = false;
+                        calculatedZeroEfficient = true;
+                    }
+                } else {
+                    // Hunt for spheres.
+                    if (chi == 2) {
+                        zeroEfficient = false;
+                        calculatedZeroEfficient = true;
+                    } else if (chi == 1 && s->isTwoSided() == -1) {
+                        zeroEfficient = false;
+                        calculatedZeroEfficient = true;
+                    }
+                }
+            }
+        }
+
+        // See if there is no use running through the rest of the list.
+        if (calculatedZeroEfficient)
+            break;
+    }
+
+    // Done!
+    calculatedZeroEfficient = true;
+
+    // Clean up.
+    surfaces.makeOrphan();
+}
+
+void NTriangulation::calculateStandardSurfaceProperties() {
     // Create a normal surface list.
     NNormalSurfaceList surfaces(this, NNormalSurfaceList::STANDARD);
 
+    // Run through all vertex surfaces.
     if (! calculatedZeroEfficient)
         zeroEfficient = true;
     if (! calculatedSplittingSurface)
         splittingSurface = false;
 
     unsigned long nSurfaces = surfaces.getNumberOfSurfaces();
-    NNormalSurface* s;
+    const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = const_cast<NNormalSurface*>(surfaces.getSurface(i));
+        s = surfaces.getSurface(i);
 
         if (! calculatedSplittingSurface)
             if (s->isSplitting()) {
