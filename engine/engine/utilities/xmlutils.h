@@ -42,9 +42,9 @@
 
 #include <string>
 #include <sstream>
-#include <hash_map>
 #include <libxml/parser.h>
 #include "utilities/nbooleans.h"
+#include "utilities/hashmap.h"
 #include "utilities/hashutils.h"
 
 namespace regina {

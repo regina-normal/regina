@@ -36,7 +36,9 @@
 #define __HASHUTILS_H
 #endif
 
-#include <hash_set>
+#include <config.h>
+
+#include "utilities/hashset.h"
 
 /*! \namespace stdhash
  *  \brief The namespace containing <tt>hash_set</tt>, <tt>hash_map</tt>
@@ -45,18 +47,10 @@
  *  This alias is provided because different compilers place these classes
  *  in different namespaces.
  */
-#ifdef __NO_NAMESPACE_ALIASES
-    #ifdef __HASH_NAMESPACE
-        #define stdhash __HASH_NAMESPACE
-    #else
-        #define stdhash std
-    #endif
+#if __NO_NAMESPACE_ALIASES
+    #define stdhash __HASH_NAMESPACE
 #else
-    #ifdef __HASH_NAMESPACE
-        namespace stdhash = __HASH_NAMESPACE;
-    #else
-        namespace stdhash = std;
-    #endif
+    namespace stdhash = __HASH_NAMESPACE;
 #endif
 
 namespace regina {

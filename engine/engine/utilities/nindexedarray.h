@@ -36,7 +36,7 @@
 #endif
 
 #include <vector>
-#include <hash_map>
+#include "utilities/hashmap.h"
 #include "utilities/hashutils.h"
 
 namespace regina {

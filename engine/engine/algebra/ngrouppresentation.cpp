@@ -28,10 +28,10 @@
 
 #include <iterator>
 #include <sstream>
-#include <hash_map>
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
+#include "utilities/hashmap.h"
 #include "utilities/hashutils.h"
 #include "utilities/stlutils.h"
 

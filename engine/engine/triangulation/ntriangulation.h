@@ -35,9 +35,9 @@
 #define __NTRIANGULATION_H
 #endif
 
-#include <hash_set>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
+#include "utilities/hashset.h"
 #include "utilities/hashutils.h"
 #include "utilities/nindexedarray.h"
 #include "triangulation/ntetrahedron.h"

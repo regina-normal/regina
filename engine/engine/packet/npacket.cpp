@@ -27,9 +27,9 @@
 /* end stub */
 
 #include <sstream>
-#include <hash_set>
 #include "regina.h"
 #include "packet/npacket.h"
+#include "utilities/hashset.h"
 #include "utilities/hashutils.h"
 #include "utilities/xmlutils.h"
 
