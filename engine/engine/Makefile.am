@@ -22,7 +22,6 @@ SUBDIRS = \
   maths \
   packet \
   progress \
-  property \
   split \
   subcomplex \
   surfaces \
