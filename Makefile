@@ -86,7 +86,8 @@ $(DOC_JAR) : docs
 	$(MKDIR) $(DOC_BUILD_DIR)/normal
 	$(MKDIR) $(DOC_BUILD_DIR)/normal/docs
 	$(COPY) -r docs/* $(DOC_BUILD_DIR)/normal/docs
-	$(JAR) -cf $(DOC_JAR) -C $(DOC_BUILD_DIR) normal
+	cd $(DOC_BUILD_DIR) && $(JAR) -cf ../$(DOC_JAR) \
+		$(patsubst %,normal/docs/%, $(misc_doc_mask) $(gen_doc_mask))
 	rm -rf $(DOC_BUILD_DIR)
 bin : binengine binjava
 
@@ -141,7 +142,7 @@ debugcorba : binenginecorba binjavaui binjavacorba
 clean :
 	cd engine && $(MAKE) clean
 	cd javaui && $(MAKE) clean
-	cd docs && $(MAKE) clean
+	cd docs && rm -rf $(gen_doc_mask)
 
 purge : clean
 	-rm $(ENGINE_JNI) $(ENGINE_CORBA)

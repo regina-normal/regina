@@ -17,6 +17,7 @@ include ../Makefile.options
 include ../Makefile.sources
 include ../engine/Makefile.sources
 include ../javaui/Makefile.sources
+include ../idl/Makefile.sources
 
 REGINA_DIR = regina-$(REGINA_VERSION)
 
@@ -26,7 +27,6 @@ DOC_ARCHIVE = regina-$(REGINA_VERSION)_doc.tgz
 DOC_JAR_FINAL = regina-docs-$(REGINA_VERSION).jar
 
 DOC_OVERVIEW = overview.html
-LICENSE = LICENSE.txt
 DOC_HTML_DIR = docs
 
 empty_src_dirs = bin $(DOC_HTML_DIR)/engine $(DOC_HTML_DIR)/javaui
@@ -61,7 +61,8 @@ $(SRC_ARCHIVE):
 			$(java_misc_src_mask)) \
 		$(patsubst %,$(REGINA_DIR)/$(DOC_HTML_DIR)/%, $(misc_doc_mask)) \
 		$(patsubst %,$(REGINA_DIR)/%, \
-			$(scripts) $(misc_src_mask) idl \
+			$(scripts) $(misc_src_mask) \
+			$(dirs_idl:=/*.idl) $(idl_misc_src_mask) \
 			$(empty_src_dirs:=/.keepme) $(dist_mask:%=dist/%))
 	-rm $(REGINA_DIR)
 
@@ -81,7 +82,8 @@ $(DOC_ARCHIVE):
 	cd .. && $(MAKE) docs
 	-rm $(REGINA_DIR)
 	ln -s .. $(REGINA_DIR)
-	$(ARCHIVE) $(DOC_ARCHIVE) $(REGINA_DIR)/docs $(REGINA_DIR)/$(LICENSE)
+	$(ARCHIVE) $(DOC_ARCHIVE) $(patsubst %,$(REGINA_DIR)/docs/%, \
+		$(misc_doc_mask) $(gen_doc_mask))
 	-rm $(REGINA_DIR)
 $(DOC_JAR_FINAL):
 	cd .. && $(MAKE) bindocs

@@ -78,9 +78,12 @@ packages_corba = \
 	normal.engine.implementation.corba.triangulation \
 	normal.engine.implementation.corba
 
-java_aux_mask = normal/images/main/* \
-	normal/images/buttons/* \
-	normal/images/packet/*
+java_aux_mask = normal/images/buttons/*.gif normal/images/packet/*.gif \
+	normal/images/main/*.jpg \
+	normal/images/main/*.gif \
+	normal/images/main/*.xpm \
+	normal/images/main/*.png \
+	normal/images/main/*.ico
 
 java_misc_src_mask = Makefile* findtext *.txt \
 	normal/engine/implementation/jni/package.html \

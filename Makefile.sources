@@ -11,11 +11,19 @@
 # are not built from the program sources.  This file mask must be
 # relative to directory docs/.
 #
+# Sets $(gen_doc_mask) to a file mask of all documentation files that
+# are built from the program sources.  This file mask must be relative
+# to directory docs/.
+#
 # All locations must be relative to this directory unless otherwise
 # specified.
 
 scripts = regina regina.bat scripts/reg*
-misc_src_mask = Makefile* *.txt docs/*.txt lib/*.txt
+misc_src_mask = *.txt lib/*.txt docs/Makefile \
+	Makefile Makefile-help* Makefile.options.* Makefile.sources
 misc_bin_mask = *.txt lib/*.txt
-misc_doc_mask = *.html *.hs *.jhm *.txt *.jpg *.xml *.sgml
-
+misc_doc_mask = *.hs *.jhm *.txt *.jpg *.sgml *.dsl \
+	images/*.txt images/*.gif
+gen_doc_mask = *.html *.1 *.5 *.7 \
+	engine/*.gif engine/*.html engine/*.css engine/*.dot \
+	javaui/normal javaui/package-list javaui/*.html javaui/*.css

@@ -106,6 +106,4 @@ $(DOC_SAMPLE) : $(java_files_ui) $(doc_sources)
 
 clean :
 	-rm $(class_mask)
-	-rm -rf $(DOC_DIR)/*.html $(DOC_DIR)/*.css $(DOC_DIR)/normal \
-		$(DOC_DIR)/package-list
 
