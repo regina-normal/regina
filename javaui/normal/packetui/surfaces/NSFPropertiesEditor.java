@@ -213,12 +213,19 @@ public class NSFPropertiesEditor extends DefaultPacketEditor
                             "No Euler characteristic is provided to add.");
                         return;
                     }
+                    /**
+                     * Don't check whether ec > 2 since singular surfaces can
+                     * have larger values (in which case the integer returned
+                     * is not the Euler characteristic at all).
+                     */
+                    /*
                     if (ec > 2) {
                         shell.error(
                             "No Euler characteristic will ever be larger " +
                             "than 2.");
                         return;
                     }
+                    */
                     addECToList(BigInteger.valueOf(ec));
                 }
             });
