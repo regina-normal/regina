@@ -62,6 +62,16 @@
    <para>
     Any files specified on the command-line will be opened on startup.
    </para>
+   <para>
+    When passing files to open, &windows; users cannot use absolute
+    filenames in &cygwin; format (such as
+    <filename>/home/sam/file.rga</filename>).  You will need to use
+    either absolute pathnames in &windows; format (such as
+    <filename>c:\my\data\file.rga</filename>) or relative pathnames
+    (such as <filename>data/file.rga</filename> or
+    <filename>data\file.rga</filename>).  This constraint does not apply
+    to &linux; users.
+   </para>
    <warning><para>
     When passing command-line arguments, avoid using characters that have
     a special meaning to <filename>bash</filename>
