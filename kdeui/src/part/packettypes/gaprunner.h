@@ -40,6 +40,7 @@ class KProcIO;
 class QLabel;
 
 namespace regina {
+    class NGroupExpression;
     class NGroupPresentation;
 };
 
@@ -63,7 +64,8 @@ class GAPRunner : public KDialogBase {
         QString currOutput;
         QString partialLine;
         int stage;
-        int stageWhichReln;
+        unsigned long stageWhichReln;
+        unsigned long newRelnCount;
         bool cancelled;
 
         /**
@@ -103,13 +105,21 @@ class GAPRunner : public KDialogBase {
         /**
          * Handle I/O to and from GAP.
          */
+        void sendInput(const QString& input);
         bool appearsValid(const QString& output);
         void processOutput(const QString& output);
+        QString origGroupRelns();
+        QString origGroupReln(const regina::NGroupExpression& reln);
 
         /**
          * Display an error to the user and cancel the operation.
          */
         void error(const QString& msg);
+
+        /**
+         * Escape the given string for display in a markup label.
+         */
+        static QString escape(const QString& str);
 
     private slots:
         /**

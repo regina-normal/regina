@@ -31,6 +31,7 @@
 #include "../reginapart.h"
 #include "gaprunner.h"
 
+#include <iostream>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kprocio.h>
@@ -63,16 +64,11 @@ QRegExp reInt("^[0-9]+$");
  */
 QRegExp reValInit("^GAP.*[Vv]ersion");
 QRegExp reValAckFreeGroup("^<free group on the generators");
-QRegExp reValAckFPGroup("^<fp group on the generators");
+QRegExp reValAckFPGroup("^<fp group o[fn] ");
 QRegExp reValAckSimplify("^\\[");
 QRegExp reValRelator("^f[0-9]+");
 
-QRegExp reGAPFreeGroup("^<free group on the generators "
-    "\\[\\s*(f[0-9]+[, ])+\\s*\\]>$");
-QRegExp reGAPFPGroup("^<fp group on the generators "
-    "\\[\\s*(f[0-9]+[, ])+\\s*\\]>$");
-
-const char* GAP_PROMPT = "gap>";
+const char* GAP_PROMPT = "gap> ";
 
 GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         const regina::NGroupPresentation& useOrigGroup) :
@@ -114,7 +110,7 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         SLOT(processExited()));
     connect(proc, SIGNAL(readReady(KProcIO*)), this, SLOT(readReady()));
 
-    if (proc->start())
+    if (proc->start(KProcIO::NotifyOnExit, true /* include stderr */))
         status->setText(i18n("Starting GAP..."));
     else
         error(i18n("GAP could not be started."));
@@ -132,6 +128,7 @@ void GAPRunner::slotCancel() {
         // to Close.
         if (proc->isRunning())
             proc->kill(SIGKILL);
+        proc->enableReadSignals(false);
 
         status->setText(i18n("Simplification cancelled."));
         setButtonCancel(KStdGuiItem::close());
@@ -139,6 +136,11 @@ void GAPRunner::slotCancel() {
         // We've already hit cancel; just close the dialog.
         reject();
     }
+}
+
+void GAPRunner::sendInput(const QString& input) {
+    std::cout << GAP_PROMPT << input << std::endl;
+    proc->writeStdin(input);
 }
 
 bool GAPRunner::appearsValid(const QString& output) {
@@ -169,38 +171,67 @@ bool GAPRunner::appearsValid(const QString& output) {
 void GAPRunner::processOutput(const QString& output) {
     // Note that validity testing has already been done by this stage.
     QString use = output.simplifyWhiteSpace();
-    std::cerr << "PROCESS: " << use << '\n';
+    std::cout << use << std::endl;
 
+    unsigned long count;
+    bool ok;
     switch (stage) {
         case GAP_init:
             // Ignore any output.
-            proc->writeStdin(QString("f := FreeGroup(%1);").arg(
+            sendInput(QString("f := FreeGroup(%1);").arg(
                 origGroup.getNumberOfGenerators()));
             stage = GAP_oldgens;
-            status->setText("Constructing original group presentation...");
+            status->setText(i18n("Constructing original group "
+                "presentation..."));
             return;
         case GAP_oldgens:
             // Ignore any output.
-            // TODO:
+            sendInput("g := f / " + origGroupRelns() + ";");
             stage = GAP_oldrels;
             return;
         case GAP_oldrels:
             // Ignore any output.
-            proc->writeStdin("hom := IsomorphismSimplifiedFpGroup(g);");
+            sendInput("hom := IsomorphismSimplifiedFpGroup(g);");
             stage = GAP_simplify;
-            status->setText("Simplifying group presentation...");
+            status->setText(i18n("Simplifying group presentation..."));
             return;
         case GAP_simplify:
             // Ignore any output.
-            proc->writeStdin("Length(GeneratorsOfGroup(Range(hom)));");
+            sendInput("Length(GeneratorsOfGroup(Range(hom)));");
             stage = GAP_newgens;
-            status->setText("Extracting new group presentation...");
+            status->setText(i18n("Extracting new group presentation..."));
             return;
         case GAP_newgens:
-            // TODO
+            count = use.toULong(&ok);
+            if (ok) {
+                newGroup.reset(new regina::NGroupPresentation());
+                newGroup->addGenerator(count);
+                sendInput("Length(RelatorsOfFpGroup(Range(hom)));");
+                stage = GAP_newrelscount;
+            } else
+                error(i18n("GAP produced the following output where "
+                    "an integer was expected:<p><tt>%1</tt>").arg(
+                    escape(use)));
             return;
         case GAP_newrelscount:
-            // TODO
+            count = use.toULong(&ok);
+            if (ok) {
+                newRelnCount = count;
+                if (count == 0) {
+                    // All finished!
+                    sendInput("quit;");
+                    stage = GAP_done;
+                    status->setText(i18n("Simplification complete."));
+                } else {
+                    // We need to extract the individual relations.
+                    stageWhichReln = 0;
+                    sendInput("RelatorsOfFpGroup(Range(hom))[1];");
+                    stage = GAP_newrelseach;
+                }
+            } else
+                error(i18n("GAP produced the following output where "
+                    "an integer was expected:<p><tt>%1</tt>").arg(
+                    escape(use)));
             return;
         case GAP_newrelseach:
             // TODO
@@ -211,14 +242,63 @@ void GAPRunner::processOutput(const QString& output) {
     };
 }
 
+QString GAPRunner::origGroupRelns() {
+    unsigned long nRels = origGroup.getNumberOfRelations();
+    bool empty = true;
+
+    QString ans = "[ ";
+    for (unsigned long i = 0; i < nRels; i++) {
+        const regina::NGroupExpression& reln(origGroup.getRelation(i));
+        if (reln.getTerms().empty())
+            continue;
+
+        // It's a non-empty relation.  Include it.
+        if (! empty)
+            ans += ", ";
+        ans += origGroupReln(reln);
+        empty = false;
+    }
+    ans += " ]";
+
+    return ans;
+}
+
+QString GAPRunner::origGroupReln(const regina::NGroupExpression& reln) {
+    // Assumes the relation is non-empty.
+    QString ans = "";
+    std::list<regina::NGroupExpressionTerm>::const_iterator it;
+    for (it = reln.getTerms().begin(); it != reln.getTerms().end(); it++) {
+        if (! ans.isEmpty())
+            ans += " * ";
+        ans += QString("f.%1^%2").arg(it->generator + 1).arg(it->exponent);
+    }
+    return ans;
+}
+
 void GAPRunner::error(const QString& msg) {
     status->setText(i18n("<qt><b>Error:</b> %1</qt>").arg(msg));
 
     cancelled = true;
     if (proc->isRunning())
         proc->kill(SIGKILL);
+    proc->enableReadSignals(false);
 
     setButtonCancel(KStdGuiItem::close());
+
+    // Resize in case the error message is large.
+    // We have to go right in and reset the minimum size of the status
+    // label, since using the dialog's sizeHint() on its own doesn't
+    // seem to work.
+    status->setMinimumSize(status->sizeHint());
+    resize(size().expandedTo(sizeHint()));
+}
+
+QString GAPRunner::escape(const QString& str) {
+    QString ans = str;
+    ans.replace('&', "&amp;");
+    ans.replace('<', "&lt;");
+    ans.replace('>', "&gt;");
+    return ans;
 }
 
 void GAPRunner::readReady() {
@@ -228,13 +308,17 @@ void GAPRunner::readReady() {
      */
     QString line;
     bool partial;
-    while ((! cancelled) && (proc->readln(line, false, &partial) >= 0)) {
+    while (proc->readln(line, false, &partial) >= 0) {
+        // Even if we've cancelled, we have to read everything.
+        // Otherwise ackRead() can throw us into an infinite loop.
+        if (cancelled)
+            continue;
+
         if (partial) {
             // Only a partial line, though it might be our prompt.
             // If it's not our prompt, just wait for more.  It might be
             // partial output.
             partialLine += line;
-            std::cout << "PARTIAL: " << partialLine << '\n';
             if (reGAPPrompt.exactMatch(partialLine)) {
                 // It's indeed a prompt.  Are we ready for one?
                 if (currOutput.isEmpty() && stage != GAP_init) {
@@ -261,10 +345,11 @@ void GAPRunner::readReady() {
 
             // Make sure it looks valid, just in case what we're running
             // isn't GAP at all.
-            // TODO: Escape this properly.
-            if (! appearsValid(currOutput))
+            if (! appearsValid(currOutput)) {
+                std::cout << currOutput << std::endl;
                 error(i18n("GAP produced the following unexpected "
-                    "output.<p><tt>%1</tt>").arg(currOutput));
+                    "output:<p><tt>%1</tt>").arg(escape(currOutput)));
+            }
         }
     }
 
