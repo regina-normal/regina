@@ -9,7 +9,7 @@ shift 2
 
 for srcfile
     do tmpfile=$srcfile.stub.tmp
-    if (! insertstub "$sentry" $stubfile < $srcfile > $tmpfile); then
+    if (! ./insertstub "$sentry" $stubfile < $srcfile > $tmpfile); then
         if ! diff $srcfile $tmpfile > /dev/null; then
             if (test -s $tmpfile); then
                 mv $tmpfile $srcfile
