@@ -19,9 +19,9 @@
 # specified.
 
 scripts = regina regina.bat scripts/reg*
-misc_src_mask = *.txt lib/*.txt docs/Makefile \
+misc_src_mask = *.txt lib/*.txt docs/Makefile icons/regina* icons/*.txt \
 	Makefile Makefile-help* Makefile.options.* Makefile.sources
-misc_bin_mask = *.txt lib/*.txt
+misc_bin_mask = *.txt lib/*.txt icons/regina* icons/*.txt
 misc_doc_mask = *.hs *.jhm *.txt *.jpg *.sgml *.dsl \
 	images/*.txt images/*.gif
 gen_doc_mask = *.html *.1 *.5 *.7 \
