@@ -41,6 +41,17 @@ DOC_LICENSE = $(BASE_DOC_DIR)/LICENSE.txt
 DOC_BUILD_DIR = doc-build-tmp
 APP_CLASS = normal.Application
 
+# ------------------------- Rules ----------------------------------
+
+# Allow unrecognised targets in certain subdirectories:
+
+docs/% :
+	cd docs && $(MAKE) $*
+test/% :
+	cd test && $(MAKE) $*
+utils/% :
+	cd utils && $(MAKE) $*
+
 # ------------------------- Targets ----------------------------------
 
 helpgeneral :
