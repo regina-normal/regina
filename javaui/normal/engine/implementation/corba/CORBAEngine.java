@@ -37,6 +37,7 @@ import normal.engine.file.*;
 import normal.engine.maths.*;
 import normal.engine.packet.*;
 import normal.engine.progress.*;
+import normal.engine.subcomplex.*;
 import normal.engine.surfaces.*;
 import normal.engine.triangulation.*;
 import normal.engine.utilities.*;
@@ -45,6 +46,7 @@ import normal.engine.implementation.corba.file.*;
 import normal.engine.implementation.corba.maths.*;
 import normal.engine.implementation.corba.packet.*;
 import normal.engine.implementation.corba.progress.*;
+import normal.engine.implementation.corba.subcomplex.*;
 import normal.engine.implementation.corba.surfaces.*;
 import normal.engine.implementation.corba.triangulation.*;
 import org.omg.CosNaming.*;
@@ -375,6 +377,10 @@ public class CORBAEngine implements Engine {
     public String getVersionString() {
         return data.getVersionString();
     }
+	public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet) {
+		return NCORBALayeredSolidTorus.newWrapper(
+			data.isLayeredSolidTorusBase(((NCORBATetrahedron)tet).data));
+	}
     public NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour) {
         return NCORBAMatrixInt.newWrapper(data.makeMatchingEquations(

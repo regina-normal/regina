@@ -34,6 +34,7 @@
 class NAbelianGroup;
 class NContainer;
 class NFile;
+class NLayeredSolidTorus;
 class NMatrixInt;
 class NNormalSurfaceList;
 class NProgressManager;
@@ -122,6 +123,8 @@ class Engine {
             /**< Calls ::getVersionMinor(). */
         NString getVersionString();
             /**< Calls ::getVersionString(). */
+		NLayeredSolidTorus* isLayeredSolidTorusBase(NTetrahedron& tet);
+			/**< Calls NLayeredSolidTorus::isLayeredSolidTorusBase(). */
         NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
                 int flavour);
             /**< Calls ::makeMatchingEquations(). */

@@ -13,6 +13,7 @@ export dirs_idl = \
 	idl/Packet \
 	idl/Progress \
 	idl/Triangulation \
+	idl/Subcomplex \
 	idl/Surfaces \
 	idl
 

@@ -27,6 +27,7 @@ dirs_engine_engine = \
 	engine/packet \
 	engine/progress \
 	engine/property \
+	engine/subcomplex \
 	engine/surfaces \
 	engine/triangulation \
 	engine/utilities \
@@ -39,6 +40,7 @@ dirs_engine_jni = \
 	jni/engine/maths \
 	jni/engine/packet \
 	jni/engine/progress \
+	jni/engine/subcomplex \
 	jni/engine/surfaces \
 	jni/engine/triangulation \
 	jni/engine \
@@ -52,6 +54,7 @@ dirs_engine_corba = \
 	corba/Regina/Maths \
 	corba/Regina/Packet \
 	corba/Regina/Progress \
+	corba/Regina/Subcomplex \
 	corba/Regina/Surfaces \
 	corba/Regina/Triangulation \
 	corba

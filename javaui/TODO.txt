@@ -18,6 +18,7 @@ Everywhere:
 
 File I/O:
 	Import brings up file dialog first.
+	Import Regina files.
 	SnapPea import uses names from SnapPea.
 
 Help:

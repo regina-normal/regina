@@ -33,11 +33,13 @@
 	#include "ngrouppresentation.h"
     #include "ncensus.h"
     #include "matrixops.h"
+    #include "nlayeredsolidtorus.h"
     #include "nnormalsurfacelist.h"
 #else
     #include "engine/algebra/ngrouppresentation.h"
     #include "engine/census/ncensus.h"
     #include "engine/maths/matrixops.h"
+    #include "engine/subcomplex/nlayeredsolidtorus.h"
     #include "engine/surfaces/nnormalsurfacelist.h"
 #endif
 
@@ -46,6 +48,7 @@
 #include "NFileI.h"
 #include "NGroupExpressionI.h"
 #include "NGroupPresentationI.h"
+#include "NLayeredSolidTorusI.h"
 #include "NMatrixIntI.h"
 #include "NProgressManagerI.h"
 
@@ -113,6 +116,12 @@ CORBA::Long Engine_i::getVersionMinor() {
 }
 char* Engine_i::getVersionString() {
     return NString(ENGINE_VERSION).dupe();
+}
+Regina::Subcomplex::NLayeredSolidTorus_ptr Engine_i::isLayeredSolidTorusBase(
+		Regina::Triangulation::NTetrahedron_ptr tet) {
+	return NLayeredSolidTorus_i::newWrapper(
+		::NLayeredSolidTorus::isLayeredSolidTorusBase(
+		GET_ENGINE_OBJECT(NTetrahedron, tet)));
 }
 Regina::Maths::NMatrixInt_ptr Engine_i::makeMatchingEquations(
         Regina::Triangulation::NTriangulation_ptr triangulation,

@@ -28,6 +28,7 @@ packages_ui = \
 	normal.engine.maths \
 	normal.engine.packet \
 	normal.engine.progress \
+	normal.engine.subcomplex \
 	normal.engine.surfaces \
 	normal.engine.triangulation \
 	normal.engine.utilities \
@@ -52,6 +53,7 @@ packages_jni = \
 	normal.engine.implementation.jni.maths \
 	normal.engine.implementation.jni.packet \
 	normal.engine.implementation.jni.progress \
+	normal.engine.implementation.jni.subcomplex \
 	normal.engine.implementation.jni.surfaces \
 	normal.engine.implementation.jni.triangulation \
 	normal.engine.implementation.jni
@@ -70,6 +72,7 @@ packages_corba = \
 	normal.engine.implementation.corba.maths \
 	normal.engine.implementation.corba.packet \
 	normal.engine.implementation.corba.progress \
+	normal.engine.implementation.corba.subcomplex \
 	normal.engine.implementation.corba.surfaces \
 	normal.engine.implementation.corba.triangulation \
 	normal.engine.implementation.corba

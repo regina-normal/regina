@@ -33,6 +33,7 @@ import normal.engine.file.*;
 import normal.engine.maths.*;
 import normal.engine.packet.*;
 import normal.engine.progress.*;
+import normal.engine.subcomplex.*;
 import normal.engine.surfaces.*;
 import normal.engine.triangulation.*;
 import normal.engine.utilities.*;
@@ -109,6 +110,7 @@ public interface Engine {
     public int getVersionMajor();
     public int getVersionMinor();
     public String getVersionString();
+	public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
     public NMatrixInt makeMatchingEquations(NTriangulation
         triangulation, int flavour);
     public NPacket readFromFile(String fileName);

@@ -37,6 +37,7 @@
     #include "nsnappea.h"
     #include "nfile.h"
     #include "ncensus.h"
+	#include "nlayeredsolidtorus.h"
     #include "nnormalsurfacelist.h"
     #include "matrixops.h"
 #else
@@ -47,6 +48,7 @@
     #include "engine/imports/nsnappea.h"
     #include "engine/file/nfile.h"
     #include "engine/census/ncensus.h"
+    #include "engine/subcomplex/nlayeredsolidtorus.h"
     #include "engine/surfaces/nnormalsurfacelist.h"
     #include "engine/maths/matrixops.h"
 #endif
@@ -72,21 +74,30 @@ JNIEXPORT jlong JNICALL
 }
 
 JNIEXPORT jint JNICALL
-Java_normal_engine_implementation_jni_JNIEngine_getVersionMajor
+		Java_normal_engine_implementation_jni_JNIEngine_getVersionMajor
         (JNIEnv *env, jobject me) {
     return ENGINE_VERSION_MAJOR;
 }
 
 JNIEXPORT jint JNICALL
-Java_normal_engine_implementation_jni_JNIEngine_getVersionMinor
+		Java_normal_engine_implementation_jni_JNIEngine_getVersionMinor
         (JNIEnv *env, jobject me) {
     return ENGINE_VERSION_MINOR;
 }
 
 JNIEXPORT jstring JNICALL
-Java_normal_engine_implementation_jni_JNIEngine_getVersionString
+		Java_normal_engine_implementation_jni_JNIEngine_getVersionString
         (JNIEnv *env, jobject me) {
     return env->NewStringUTF(ENGINE_VERSION);
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_JNIEngine_isLayeredSolidTorusBase
+		(JNIEnv* env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
+		NLayeredSolidTorus::isLayeredSolidTorusBase(
+        GET_ENGINE_OBJECT(env, NTetrahedron, you)),
+        "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
 }
 
 JNIEXPORT jobject JNICALL
