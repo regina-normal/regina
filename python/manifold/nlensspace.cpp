@@ -26,42 +26,23 @@
 
 /* end stub */
 
-#include "algebra/nabeliangroup.h"
 #include "manifold/nlensspace.h"
-#include "subcomplex/nsfs.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
-using regina::NExceptionalFibre;
-using regina::NSFS;
+using regina::NLensSpace;
 
-void addNSFS() {
-    class_<NExceptionalFibre>("NExceptionalFibre")
-        .def(init<long, long>())
-        .def(init<const NExceptionalFibre&>())
-        .def_readwrite("alpha", &NExceptionalFibre::alpha)
-        .def_readwrite("beta", &NExceptionalFibre::beta)
+void addNLensSpace() {
+    class_<NLensSpace, bases<regina::NManifold>,
+            std::auto_ptr<NLensSpace>, boost::noncopyable>
+            ("NLensSpace", init<unsigned long, unsigned long>())
+        .def(init<const NLensSpace&>())
+        .def("getP", &NLensSpace::getP)
+        .def("getQ", &NLensSpace::getQ)
         .def(self == self)
-        .def(self < self)
-        .def(self_ns::str(self))
     ;
 
-    class_<NSFS, bases<regina::ShareableObject>,
-            std::auto_ptr<NSFS>, boost::noncopyable>("NSFS")
-        .def(init<unsigned long, bool, optional<unsigned long> >())
-        .def(init<const NSFS&>())
-        .def("getOrbitGenus", &NSFS::getOrbitGenus)
-        .def("isOrbitOrientable", &NSFS::isOrbitOrientable)
-        .def("getOrbitPunctures", &NSFS::getOrbitPunctures)
-        .def("getFibreCount", &NSFS::getFibreCount)
-        .def("getFibre", &NSFS::getFibre)
-        .def("insertFibre", &NSFS::insertFibre)
-        .def("reduce", &NSFS::reduce)
-        .def("isLensSpace", &NSFS::isLensSpace,
-            return_value_policy<manage_new_object>())
-        .def("getHomologyH1", &NSFS::getHomologyH1,
-            return_value_policy<manage_new_object>())
-        .def("getCommonName", &NSFS::getCommonName)
-    ;
+    implicitly_convertible<std::auto_ptr<NLensSpace>,
+        std::auto_ptr<regina::NManifold> >();
 }
 

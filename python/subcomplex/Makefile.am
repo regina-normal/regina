@@ -11,5 +11,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libsubcomplex.la
 
-libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nknownmanifold.cpp nlayeredchain.cpp nlayeredchainpair.cpp nlayeredlensspace.cpp nlayeredloop.cpp nlayeredsolidtorus.cpp nlensspace.cpp npillowtwosphere.cpp nplugtrisolidtorus.cpp nsfs.cpp nsnappedball.cpp nsnappedtwosphere.cpp nspiralsolidtorus.cpp ntrisolidtorus.cpp pysubcomplex.cpp
+libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nknownmanifold.cpp nlayeredchain.cpp nlayeredchainpair.cpp nlayeredlensspace.cpp nlayeredloop.cpp nlayeredsolidtorus.cpp npillowtwosphere.cpp nplugtrisolidtorus.cpp nsfs.cpp nsnappedball.cpp nsnappedtwosphere.cpp nspiralsolidtorus.cpp ntrisolidtorus.cpp pysubcomplex.cpp
 

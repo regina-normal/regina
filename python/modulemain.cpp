@@ -35,12 +35,17 @@
 void addGlobalArray();
 
 void addAlgebra();
+void addAngle();
+void addCensus();
 void addFile();
 void addForeign();
+void addManifold();
 void addMaths();
 void addPacket();
 void addProgress();
+void addSplit();
 void addSubcomplex();
+void addSurfaces();
 void addTriangulation();
 void addUtilities();
 
@@ -97,8 +102,13 @@ BOOST_PYTHON_MODULE(regina) {
     addAlgebra();
     addPacket();
     addTriangulation();
+    addCensus();
     addFile();
     addForeign();
+    addSplit();
     addSubcomplex();
+    addManifold();
+    addAngle();
+    addSurfaces();
 }
 

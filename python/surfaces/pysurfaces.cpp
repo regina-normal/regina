@@ -26,21 +26,6 @@
 
 /* end stub */
 
-#include "subcomplex/nlensspace.h"
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using regina::NLensSpace;
-
-void addNLensSpace() {
-    class_<NLensSpace, bases<regina::ShareableObject>,
-            std::auto_ptr<NLensSpace>, boost::noncopyable>
-            ("NLensSpace", init<unsigned long, unsigned long>())
-        .def(init<const NLensSpace&>())
-        .def("getP", &NLensSpace::getP)
-        .def("getQ", &NLensSpace::getQ)
-        .def(self == self)
-        .def("getCommonName", &NLensSpace::getCommonName)
-    ;
+void addSurfaces() {
 }
 

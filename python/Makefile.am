@@ -9,7 +9,7 @@
 INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 CXXFLAGS = @CXXFLAGS_NODEBUG@
 
-SUBDIRS = algebra file foreign maths packet progress subcomplex triangulation utilities
+SUBDIRS = algebra file foreign manifold maths packet progress subcomplex triangulation utilities
 
 pkgpythonlibdir = $(pkglibdir)/python
 
@@ -21,6 +21,7 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
   algebra/libalgebra.la \
   file/libfile.la \
   foreign/libforeign.la \
+  manifold/libmanifold.la \
   maths/libmaths.la \
   packet/libpacket.la \
   progress/libprogress.la \

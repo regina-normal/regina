@@ -8,8 +8,8 @@ engine documentation.
 Compilation:
     Remove -pedantic from $CXXFLAGS beneath this directory.
 
-NLargeInteger:
-    Investigate automatic conversion from long.
+Runtime:
+    Automatically load libraries from a configuration file.
 
 Wrappers:
     split

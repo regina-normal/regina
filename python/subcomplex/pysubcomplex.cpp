@@ -33,7 +33,6 @@ void addNLayeredChainPair();
 void addNLayeredLensSpace();
 void addNLayeredLoop();
 void addNLayeredSolidTorus();
-void addNLensSpace();
 void addNPillowTwoSphere();
 void addNPlugTriSolidTorus();
 void addNSFS();
@@ -50,7 +49,6 @@ void addSubcomplex() {
     addNLayeredLensSpace();
     addNLayeredLoop();
     addNLayeredSolidTorus();
-    addNLensSpace();
     addNPillowTwoSphere();
     addNPlugTriSolidTorus();
     addNSFS();
