@@ -1,5 +1,5 @@
 <chapter id="troubleshooting">
- <title>Troubleshooting</title>
+ <title>Troubleshooting and <acronym>FAQ</acronym></title>
 
  <qandaset>
   <qandadiv><title>Compiling &regina;</title>
@@ -12,8 +12,7 @@
     <answer>
      <para>
       First you should make sure that the library is installed.
-      The <ulink url="http://regina.sourceforge.net/sysreq.html">system
-      requirements page</ulink> on the &regina; website lists all of the
+      The &sysreq; on the &regina; website lists all of the
       required libraries and where you can obtain them.
      </para>
      <para>
@@ -241,6 +240,79 @@ checking host system type... i686-pc-linux-gnu
   </qandadiv>
 
   <qandadiv><title>Miscellaneous</title>
+   <qandaentry>
+    <question><para>
+     What is the test suite, and how do I run it?
+    </para></question>
+    <answer>
+     <para>
+      Sometimes, building an application on significantly different
+      hardware or against different versions of helper libraries can lead
+      to unforseen bugs that do not appear on the developer's machine(s).
+      To help guard against such problems, &regina; ships with a test
+      suite.  The test suite uses &regina; to perform a variety of
+      different computations that isolate different portions of
+      &regina;'s mathematical code, and it verifies that &regina; gets
+      the answers correct.
+     </para>
+     <para>
+      The test suite comes with the &regina; source distribution, and it
+      assumes that you are building &regina; yourself.  Note that the
+      test suite requires <application>CppUnit</application> to be
+      installed, as described on the &sysreq; on the &regina; website.
+     </para>
+     <para>
+      To build and run the test suite, simply move into the main source
+      directory and type <userinput>make check</userinput>.  After the
+      test suite has been compiled, you should see the individual tests
+      being run as illustrated below.
+     </para>
+<screen>
+<prompt>example:~/source/regina&gt;</prompt> <userinput>make check</userinput>
+Making check in engine
+make[1]: Entering directory `/home/bab/source/regina/engine'
+...
+... (compiling the test suite)
+...
+make[3]: Entering directory `/home/bab/source/regina/testsuite'
+Regina calculation engine test suite
+
+NIndexedArrayTest.basicChecks... ok.
+NIndexedArrayTest.constructors... ok.
+NIndexedArrayTest.swap... ok.
+NIndexedArrayTest.inserts... ok.
+NIndexedArrayTest.erasures... ok.
+...
+... (running lots more tests)
+...
+NAngleStructureListTest.loopC2... ok.
+NCensusTest.rawCounts... ok.
+NCensusTest.rawCountsPrimeMinimalOr... ok.
+NCensusTest.rawCountsPrimeMinimalNor... ok.
+NFacePairingTest.rawCounts... ok.
+
+
+OK (54 tests)
+
+
+PASS: regtestsuite
+==================
+All 1 tests passed
+==================
+make[3]: Leaving directory `/home/bab/source/regina/testsuite'
+...
+... (more output from make)
+...
+make[1]: Leaving directory `/home/bab/source/regina'
+<prompt>example:~/source/regina&gt;</prompt>
+</screen>
+     <para>
+      We see from the output above that the test suite ran as expected
+      and that all tests were passed.
+     </para>
+    </answer>
+   </qandaentry>
+
    <qandaentry>
     <question><para>
      Something else beyond this rather wanting list of suggestions has gone

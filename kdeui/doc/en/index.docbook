@@ -45,6 +45,9 @@
   <!ENTITY snappea "<application>SnapPea</application>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">
   <!ENTITY sss "S<superscript>3</superscript>">
+  <!ENTITY sysreq
+   "<ulink url='http://regina.sourceforge.net/sysreq.html'>system
+   requirements page</ulink>">
   <!ENTITY theta "<replaceable>t</replaceable>">
   <!ENTITY todo "TODO">
   <!ENTITY twopi "<literal>2*Pi</literal>">
