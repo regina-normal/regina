@@ -58,6 +58,37 @@ class NPacket;
 bool writeXMLFile(const char* fileName, NPacket* subtree,
     bool compressed = true);
 
+/**
+ * Reads the packet tree stored in the given XML file.  It does not
+ * matter whether the XML file is compressed.
+ *
+ * If the matriarch of the packet tree could not be read, this routine
+ * will return 0.  If a lower-level packet could not be read, it (and
+ * its descendants) will simply be ignored.
+ *
+ * @param fileName the pathname of the file to read from.
+ * @return the packet tree read from file, or 0 if problems were
+ * encountered or the file could not be opened.
+ */
+NPacket* readXMLFile(const char* fileName);
+
+/**
+ * Reads a packet tree from a file whose format is unknown.  The file
+ * may be in either XML (optionally compressed) or old-style binary format.
+ *
+ * If the matriarch of the packet tree could not be read, this routine
+ * will return 0.  If a lower-level packet could not be read, it (and
+ * its descendants) will simply be ignored.
+ *
+ * The given file will almost certainly be opened and closed multiple
+ * times during this routine.
+ *
+ * @param fileName the pathname of the file to read from.
+ * @return the packet tree read from file, or 0 if problems were
+ * encountered or the file could not be opened.
+ */
+NPacket* readFileMagic(const std::string& fileName);
+
 } // namespace regina
 
 #endif

@@ -72,7 +72,7 @@ Version 3.0  [ (under development) ]
         Class ZBuffer, CompressionBuffer, DecompressionBuffer,
                 CompressionStream, DecompressionStream:
             - Added.
-        Routine writeXMLFile():
+        Routine readFileMagic(), readXMLFile(), writeXMLFile():
             - Added.
         Routine xmlEncodeSpecialChars(), xmlValueTag():
             - Added.

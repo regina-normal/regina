@@ -198,21 +198,28 @@ JNIEXPORT jobject JNICALL
 }
 
 JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_readFileMagic
+        (JNIEnv *env, jobject me, jstring file) {
+    return makeJNPacket(env, readFileMagic(jstringToCString(env, file)));
+}
+
+JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_readFromFile
         (JNIEnv *env, jobject me, jstring file) {
-    const char* textChars = env->GetStringUTFChars(file, 0);
-    NPacket *ans = readFromFile(textChars);
-    env->ReleaseStringUTFChars(file, textChars);
-    return makeJNPacket(env, ans);
+    return makeJNPacket(env, readFromFile(jstringToCString(env, file).c_str()));
+}
+
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_readXMLFile
+        (JNIEnv *env, jobject me, jstring file) {
+    return makeJNPacket(env, readXMLFile(jstringToCString(env, file).c_str()));
 }
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_readSnapPea
         (JNIEnv *env, jobject me, jstring file) {
-    const char* textChars = env->GetStringUTFChars(file, 0);
-    NTriangulation *triang = readSnapPea(textChars);
-    env->ReleaseStringUTFChars(file, textChars);
-    return CREATE_WRAPPER_OBJECT(env, triang,
+    return CREATE_WRAPPER_OBJECT(env,
+        readSnapPea(jstringToCString(env, file).c_str()),
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 

@@ -195,8 +195,12 @@ class Engine {
         NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
                 int flavour);
             /**< Calls ::makeMatchingEquations(). */
+        NPacket* readFileMagic(const std::string& fileName);
+            /**< Calls ::readFileMagic(). */
         NPacket* readFromFile(const char* fileName);
             /**< Calls ::readFromFile(). */
+        NPacket* readXMLFile(const char* fileName);
+            /**< Calls ::readXMLFile(). */
         NTriangulation* readSnapPea(const char* fileName);
             /**< Calls ::readSnapPea(). */
         void smithNormalForm(NMatrixInt* matrix);

@@ -271,7 +271,9 @@ public class JNIEngine implements Engine {
             char vertexRoles);
     public native NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour);
+    public native NPacket readFileMagic(String fileName);
     public native NPacket readFromFile(String fileName);
+    public native NPacket readXMLFile(String fileName);
     public native NTriangulation readSnapPea(String file);
     public native void smithNormalForm(NMatrixInt matrix);
     public native int testEngine(int value);

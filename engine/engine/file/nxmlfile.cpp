@@ -27,9 +27,14 @@
 /* end stub */
 
 #include <fstream>
+#include "file/nfile.h"
+#include "file/nfileinfo.h"
 #include "file/nxmlfile.h"
 #include "packet/npacket.h"
 #include "utilities/zstream.h"
+
+// TODO: remove ntext.h
+#include "packet/ntext.h"
 
 namespace regina {
 
@@ -46,6 +51,30 @@ bool writeXMLFile(const char* fileName, NPacket* subtree, bool compressed) {
         subtree->writeXMLFile(out);
     }
     return true;
+}
+
+NPacket* readXMLFile(const char*) {
+    // TODO: implement XML file read!
+    NText* oops = new NText("XML reading is not yet implemented.");
+    oops->setPacketLabel("XML Data");
+    return oops;
+}
+
+NPacket* readFileMagic(const std::string& fileName) {
+    NFileInfo* info = NFileInfo::identify(fileName);
+    if (! info)
+        return 0;
+
+    NPacket* ans;
+    if (info->getType() == NFileInfo::TYPE_XML)
+        ans = readXMLFile(fileName.c_str());
+    else if (info->getType() == NFileInfo::TYPE_BINARY)
+        ans = readFromFile(fileName.c_str());
+    else
+        ans = 0;
+
+    delete info;
+    return ans;
 }
 
 } // namespace regina

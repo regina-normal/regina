@@ -136,7 +136,9 @@ public interface Engine {
     public NTriSolidTorus isTriSolidTorus(NTetrahedron tet, NPerm vertexRoles);
     public NMatrixInt makeMatchingEquations(NTriangulation
         triangulation, int flavour);
+    public NPacket readFileMagic(String fileName);
     public NPacket readFromFile(String fileName);
+    public NPacket readXMLFile(String fileName);
     public NTriangulation readSnapPea(String file);
     public void smithNormalForm(NMatrixInt matrix);
     public int testEngine(int value);
