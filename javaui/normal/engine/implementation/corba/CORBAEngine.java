@@ -507,6 +507,12 @@ public class CORBAEngine implements Engine {
         return NCORBASnappedBall.newWrapper(
             data.isSnappedBall(((NCORBATetrahedron)tet).data));
     }
+    public NSpiralSolidTorus isSpiralSolidTorus(NTetrahedron tet,
+            NPerm vertexRoles) {
+        return NCORBASpiralSolidTorus.newWrapper(
+            data.isSpiralSolidTorus(((NCORBATetrahedron)tet).data,
+            vertexRoles.getPermCode()));
+    }
     public NTriSolidTorus isTriSolidTorus(NTetrahedron tet,
             NPerm vertexRoles) {
         return NCORBATriSolidTorus.newWrapper(

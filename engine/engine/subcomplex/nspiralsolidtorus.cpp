@@ -1,0 +1,191 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2001, Ben Burton                                   *
+ *  For further details contact Ben Burton (benb@acm.org).                *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,        *
+ *  MA 02111-1307, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+#include "subcomplex/nspiralsolidtorus.h"
+#include "triangulation/ntriangulation.h"
+#include "utilities/ndoublelist.h"
+#include "utilities/nset.h"
+
+NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
+    NSpiralSolidTorus* ans = new NSpiralSolidTorus(nTet);
+    for (unsigned long i = 0; i < nTet; i++) {
+        ans->tet[i] = tet[i];
+        ans->vertexRoles[i] = vertexRoles[i];
+    }
+    return ans;
+}
+
+void NSpiralSolidTorus::reverse() {
+    NTetrahedron** newTet = new (NTetrahedron*)[nTet];
+    NPerm* newRoles = new NPerm[nTet];
+
+    NPerm switchPerm(3, 2, 1, 0);
+    for (unsigned long i = 0; i < nTet; i++) {
+        newTet[i] = tet[nTet - 1 - i];
+        newRoles[i] = vertexRoles[nTet - 1 - i] * switchPerm;
+    }
+
+    delete[] tet;
+    delete[] vertexRoles;
+    tet = newTet;
+    vertexRoles = newRoles;
+}
+
+void NSpiralSolidTorus::cycle(unsigned long k) {
+    NTetrahedron** newTet = new (NTetrahedron*)[nTet];
+    NPerm* newRoles = new NPerm[nTet];
+
+    for (unsigned long i = 0; i < nTet; i++) {
+        newTet[i] = tet[(i + k) % nTet];
+        newRoles[i] = vertexRoles[(i + k) % nTet];
+    }
+
+    delete[] tet;
+    delete[] vertexRoles;
+    tet = newTet;
+    vertexRoles = newRoles;
+}
+
+bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
+    unsigned long i, index;
+
+    unsigned long baseTet = 0;
+    unsigned long baseIndex = tri->getTetrahedronIndex(tet[0]);
+    for (i = 1; i < nTet; i++) {
+        index = tri->getTetrahedronIndex(tet[i]);
+        if (index < baseIndex) {
+            baseIndex = index;
+            baseTet = i;
+        }
+    }
+
+    bool reverseAlso = (vertexRoles[baseTet][0] > vertexRoles[baseTet][3]);
+
+    if (baseTet == 0 && (! reverseAlso))
+        return false;
+
+    NTetrahedron** newTet = new (NTetrahedron*)[nTet];
+    NPerm* newRoles = new NPerm[nTet];
+
+    if (reverseAlso) {
+        // Make baseTet into tetrahedron 0 and reverse.
+        NPerm switchPerm(3, 2, 1, 0);
+        for (unsigned long i = 0; i < nTet; i++) {
+            newTet[i] = tet[(baseTet + nTet - i) % nTet];
+            newRoles[i] = vertexRoles[(baseTet + nTet - i) % nTet] *
+                switchPerm;
+        }
+    } else {
+        // Make baseTet into tetrahedron 0 but don't reverse.
+        for (unsigned long i = 0; i < nTet; i++) {
+            newTet[i] = tet[(i + baseTet) % nTet];
+            newRoles[i] = vertexRoles[(i + baseTet) % nTet];
+        }
+    }
+
+    delete[] tet;
+    delete[] vertexRoles;
+    tet = newTet;
+    vertexRoles = newRoles;
+
+    return true;
+}
+
+bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
+    if (vertexRoles[0][0] > vertexRoles[0][3])
+        return false;
+
+    unsigned long baseIndex = tri->getTetrahedronIndex(tet[0]);
+    for (unsigned long i = 1; i < nTet; i++)
+        if (tri->getTetrahedronIndex(tet[i]) < baseIndex)
+            return false;
+
+    return true;
+}
+
+NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
+        NPerm useVertexRoles) {
+    NPerm invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
+
+    NTetrahedron* base = tet;
+    NPerm baseRoles(useVertexRoles);
+
+    NDoubleList<NTetrahedron*> tets;
+    NDoubleList<NPerm> roles;
+    NPointerSet<NTetrahedron> usedTets;
+
+    tets.addLast(tet);
+    roles.addLast(useVertexRoles);
+    usedTets.add(tet);
+
+    NTetrahedron* adjTet;
+    NPerm adjRoles;
+
+    while (1) {
+        // Examine the tetrahedron beyond tet.
+        adjTet = tet->getAdjacentTetrahedron(useVertexRoles[0]);
+        adjRoles = tet->getAdjacentTetrahedronGluing(useVertexRoles[0]) *
+            useVertexRoles * invRoleMap;
+
+        if (adjTet == base) {
+            // We're back at the beginning of the loop.
+            // Check that everything is glued up correctly.
+            if (adjRoles != baseRoles)
+                return 0;
+
+            // Success!
+            break;
+        }
+
+        if (usedTets.contains(adjTet))
+            return 0;
+
+        // Move on to the next tetrahedron.
+        tet = adjTet;
+        useVertexRoles = adjRoles;
+
+        tets.addLast(tet);
+        roles.addLast(useVertexRoles);
+        usedTets.add(tet);
+    }
+
+    // We've found a spiralled solid torus.
+    NSpiralSolidTorus* ans = new NSpiralSolidTorus(tets.size());
+
+    NDoubleListIterator<NTetrahedron*> tit(tets);
+    NDoubleListIterator<NPerm> pit(roles);
+    for (unsigned long i = 0; i < ans->nTet; i++) {
+        ans->tet[i] = *tit;
+        ans->vertexRoles[i] = *pit;
+        tit++;
+        pit++;
+    }
+
+    return ans;
+}
+

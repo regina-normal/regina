@@ -40,6 +40,7 @@
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/npillowtwosphere.h"
 #include "subcomplex/nsnappedtwosphere.h"
+#include "subcomplex/nspiralsolidtorus.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "maths/matrixops.h"
@@ -155,6 +156,16 @@ JNIEXPORT jobject JNICALL
         NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(env, NTetrahedron, you)),
         "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
 }
+
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine__1isSpiralSolidTorus
+        (JNIEnv* env, jobject me, jobject tet, jchar perm) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NSpiralSolidTorus::isSpiralSolidTorus(GET_ENGINE_OBJECT(
+        env, NTetrahedron, tet), NPerm(perm)),
+        "normal/engine/implementation/jni/subcomplex/NJNISpiralSolidTorus");
+}
+
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine__1isTriSolidTorus

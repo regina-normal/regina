@@ -1,9 +1,9 @@
 (Applet):
--	Include Java plug-in support
--	Get this working on more browsers.
+ 	Include Java plug-in support
+ 	Get this working on more browsers.
 
 CORBA:
-	Local (client-side) imports and exports
+-	Local (client-side) imports and exports
 
 Everywhere:
 	Disable X-closing for all windows and dialogs except for main window
@@ -17,7 +17,7 @@ Jython:
 	Allow breaking processing in console
 	Check to see whether user libraries are text files
 	Syntax highlighting for script editor
-	Import/export scripts as text files
+-	Import/export scripts as text files
 	Autoindent in script editor
 	Compile and run open libraries.
 	Add readline support for text consoles.
@@ -29,9 +29,9 @@ Main Window:
 
 Menus:
 -	Provide NTriangulation::isIsomorphicTo().
-	Provide NTriangulation::cutAlongSurface() once it is written.
+-	Provide NTriangulation::cutAlongSurface() once it is written.
 
 Normal Surfaces:
--	For matching equations and normal surface coordinates, resizing one
+ 	For matching equations and normal surface coordinates, resizing one
 		column should imply resizing all coordinate columns.
 	Right-align coordinates but have padding between numbers and column edge.

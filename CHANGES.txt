@@ -12,8 +12,8 @@ Regina - A Normal Surface Theory Calculator
             - Removed configuration macros __NO_INCLUDE_PATHS and __BINARY_IO.
             - Introduced macro MY_ENGINE_OBJECT for CORBA wrapper classes.
             - Macros GET_ENGINE_OBJECT no longer crash when null is passed.
-        Class NAugTriSolidTorus, NLayeredChain, NLayeredLoop, NLensSpace, NSFS,
-                NTriSolidTorus:
+        Class NAugTriSolidTorus, NLayeredChain, NLayeredLoop, NLensSpace,
+                NSFS, NSpiralSolidTorus, NTriSolidTorus:
             - New classes.
         Class NDiscSetSurface:
             - Modified parameters for adjacentDisc().

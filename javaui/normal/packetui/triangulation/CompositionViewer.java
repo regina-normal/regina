@@ -115,8 +115,10 @@ public class CompositionViewer extends DefaultPacketViewer
         rootNode.removeAllChildren();
 
         DefaultMutableTreeNode category;
+        DefaultMutableTreeNode subcat;
         DefaultMutableTreeNode instance;
-        long n, i, j, k;
+        String nodeText;
+        long n, m, i, j, k;
 
         // Look for lens spaces.
         category = null;
@@ -266,13 +268,92 @@ public class CompositionViewer extends DefaultPacketViewer
             }
         }
 
+        // Look for spiralled solid tori.
+        category = null;
+        n = triangulation.getNumberOfTetrahedra();
+        long tetIndex[];
+        NPerm p;
+        NPerm roles[];
+        NSpiralSolidTorus spiral;
+        for (i = 0; i < n; i++)
+            for (j = 0; j < 24; j++) {
+                p = NPerm.allPermsS4[(int)j];
+                if (p.imageOf(0) > p.imageOf(3))
+                    continue;
+                spiral = engine.isSpiralSolidTorus(
+                    triangulation.getTetrahedron(i), p);
+                if (spiral == null)
+                    continue;
+                if (! spiral.isCanonical(triangulation)) {
+                    spiral.destroy();
+                    spiral = null;
+                    continue;
+                }
+                
+                // We've got one.
+                m = spiral.getNumberOfTetrahedra();
+
+                tetIndex = new long[(int)m];
+                roles = new NPerm[(int)m];
+                for (k = 0; k < m; k++) {
+                    tetIndex[(int)k] = triangulation.getTetrahedronIndex(
+                        spiral.getTetrahedron((int)k));
+                    roles[(int)k] = spiral.getVertexRoles((int)k);
+                }
+
+                if (category == null) {
+                    category = new DefaultMutableTreeNode(
+                        "Spiralled Solid Tori");
+                    rootNode.add(category);
+                }
+
+                nodeText = (m == 1 ? "Tet " : "Tets ") +
+                    String.valueOf(tetIndex[0]);
+                for (k = 1; k < m; k++)
+                    nodeText = nodeText + ", " +
+                        String.valueOf(tetIndex[(int)k]);
+                instance = new DefaultMutableTreeNode(nodeText);
+                category.add(instance);
+                    
+                instance.add(new DefaultMutableTreeNode(String.valueOf(m) +
+                    (m == 1 ? " tetrahedron" : " tetrahedra")));
+
+                subcat = new DefaultMutableTreeNode("Major edges");
+                for (k = 0; k < m; k++)
+                    subcat.add(new DefaultMutableTreeNode(
+                        edgeString(tetIndex[(int)((k + m - 1) % m)],
+                            roles[(int)((k + m - 1) % m)], 2, 3) + " = " +
+                        edgeString(tetIndex[(int)k],
+                            roles[(int)k], 1, 2) + " = " +
+                        edgeString(tetIndex[(int)((k + 1) % m)],
+                            roles[(int)((k + 1) % m)], 0, 1)));
+                instance.add(subcat);
+
+                subcat = new DefaultMutableTreeNode("Minor edges");
+                for (k = 0; k < m; k++)
+                    subcat.add(new DefaultMutableTreeNode(
+                        edgeString(tetIndex[(int)k],
+                            roles[(int)k], 1, 3) + " = " +
+                        edgeString(tetIndex[(int)((k + 1) % m)],
+                            roles[(int)((k + 1) % m)], 0, 2)));
+                instance.add(subcat);
+
+                subcat = new DefaultMutableTreeNode("Axis edges");
+                for (k = 0; k < m; k++)
+                    subcat.add(new DefaultMutableTreeNode(
+                        edgeString(tetIndex[(int)k], roles[(int)k], 0, 3)));
+                instance.add(subcat);
+
+                spiral.destroy();
+            }
+
+        /*
         // Look for triangular solid tori.
         // Make sure we find each triangular solid torus only once.
         category = null;
         n = triangulation.getNumberOfTetrahedra();
-        long tetIndex[] = new long[3];
-        NPerm p;
-        NPerm roles[] = new NPerm[3];
+        tetIndex = new long[3];
+        roles = new NPerm[3];
         for (i = 0; i < (n - 2); i++)
             for (j = 0; j < 24; j++) {
                 p = NPerm.allPermsS4[(int)j];
@@ -334,6 +415,7 @@ public class CompositionViewer extends DefaultPacketViewer
                     tri.destroy();
                 }
             }
+        */
 
         // Look for snapped 3-balls.
         category = null;

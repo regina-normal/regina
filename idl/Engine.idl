@@ -45,6 +45,7 @@
 #include "Subcomplex/NPillowTwoSphere.idl"
 #include "Subcomplex/NSFS.idl"
 #include "Subcomplex/NSnappedTwoSphere.idl"
+#include "Subcomplex/NSpiralSolidTorus.idl"
 #include "Subcomplex/NTriSolidTorus.idl"
 #include "Surfaces/NNormalSurfaceList.idl"
 #include "Surfaces/NSurfaceFilter.idl"
@@ -139,6 +140,8 @@ module Regina {
             in Triangulation::NTetrahedron tet);
         Subcomplex::NSnappedBall isSnappedBall(
             in Triangulation::NTetrahedron tet);
+        Subcomplex::NSpiralSolidTorus isSpiralSolidTorus(
+            in Triangulation::NTetrahedron tet, in char vertexRoles);
         Subcomplex::NTriSolidTorus isTriSolidTorus(
             in Triangulation::NTetrahedron tet, in char vertexRoles);
         Maths::NMatrixInt makeMatchingEquations(

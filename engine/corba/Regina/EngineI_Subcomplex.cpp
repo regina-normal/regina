@@ -39,6 +39,7 @@
 #include "NSFSI.h"
 #include "NSnappedBallI.h"
 #include "NSnappedTwoSphereI.h"
+#include "NSpiralSolidTorusI.h"
 #include "NTriSolidTorusI.h"
 
 Regina::Subcomplex::NLayeredChain_ptr
@@ -135,6 +136,12 @@ Regina::Subcomplex::NSnappedBall_ptr Engine_i::isSnappedBall(
         Regina::Triangulation::NTetrahedron_ptr tet) {
     return NSnappedBall_i::newWrapper(
         ::NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(NTetrahedron, tet)));
+}
+Regina::Subcomplex::NSpiralSolidTorus_ptr Engine_i::isSpiralSolidTorus(
+        Regina::Triangulation::NTetrahedron_ptr tet, CORBA::Char vertexRoles) {
+    return NSpiralSolidTorus_i::newWrapper(
+        ::NSpiralSolidTorus::isSpiralSolidTorus(
+        GET_ENGINE_OBJECT(NTetrahedron, tet), NPerm(vertexRoles)));
 }
 Regina::Subcomplex::NTriSolidTorus_ptr Engine_i::isTriSolidTorus(
         Regina::Triangulation::NTetrahedron_ptr tet, CORBA::Char vertexRoles) {

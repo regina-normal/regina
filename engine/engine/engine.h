@@ -47,6 +47,7 @@ class NProgressManager;
 class NScript;
 class NSnappedBall;
 class NSnappedTwoSphere;
+class NSpiralSolidTorus;
 class NSurfaceFilter;
 class NSurfaceFilterCombination;
 class NSurfaceFilterProperties;
@@ -173,6 +174,8 @@ class Engine {
             /**< Calls NLayeredSolidTorus::isLayeredSolidTorusBase(). */
         NSnappedBall* isSnappedBall(NTetrahedron* tet);
             /**< Calls NSnappedBall::isSnappedBall(). */
+        NSpiralSolidTorus* isSpiralSolidTorus(NTetrahedron* tet, NPerm roles);
+            /**< Calls NSpiralSolidTorus::isSpiralSolidTorus(). */
         NTriSolidTorus* isTriSolidTorus(NTetrahedron* tet, NPerm vertexRoles);
             /**< Calls NTriSolidTorus::isTriSolidTorus(). */
         NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
