@@ -134,6 +134,7 @@ class NTriangulation_i :
         virtual void insertTriangulation(
             Regina::Triangulation::NTriangulation_ptr source);
         virtual CORBA::Boolean insertRehydration(const char* dehydration);
+        virtual CORBA::Boolean insertSplittingSurface(const char* signature);
         virtual CORBA::Boolean isIsomorphicTo(
             Regina::Triangulation::NTriangulation_ptr other);
 };

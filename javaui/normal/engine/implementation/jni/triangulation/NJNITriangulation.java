@@ -175,6 +175,7 @@ public class NJNITriangulation extends NJNIPacket
     public native void insertLensSpace(long p, long q);
     public native void insertTriangulation(NTriangulation source);
     public native boolean insertRehydration(String dehydration);
+    public native boolean insertSplittingSurface(String signature);
 
     public native boolean isIsomorphicTo(NTriangulation other);
 }

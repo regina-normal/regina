@@ -118,6 +118,7 @@ module Regina {
             void insertLensSpace(in long p, in long q);
             void insertTriangulation(in NTriangulation source);
             boolean insertRehydration(in string dehydration);
+            boolean insertSplittingSurface(in string signature);
 
             boolean isIsomorphicTo(in NTriangulation other);
         };

@@ -69,6 +69,12 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
     private JRadioButton dehydrated;
     
     /**
+     * Button representing the enclosing triangulation of a splitting
+     * surface.
+     */
+    private JRadioButton splittingSurface;
+
+    /**
      * Button representing a random triangulation.
      */
     private JRadioButton random;
@@ -104,6 +110,11 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
     private JTextField dehydration;
 
     /**
+     * Splitting surface signature.
+     */
+    private JTextField signature;
+
+    /**
      * Number of tetrahedra for a random triangulation.
      */
     private JTextField randomTetrahedra;
@@ -128,11 +139,13 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         layered = new JRadioButton("Layered solid torus (a,b,c):");
         lensSpace = new JRadioButton("Lens space L(p,q):");
         dehydrated = new JRadioButton("Dehydration:");
+        splittingSurface = new JRadioButton("Splitting surface:");
         random = new JRadioButton("Random:");
         type.add(empty);
         type.add(layered);
         type.add(lensSpace);
         type.add(dehydrated);
+        type.add(splittingSurface);
         type.add(random);
         random.setEnabled(false);
         
@@ -169,6 +182,13 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         dehydrationPane.add(dehydration);
         dehydration.setEnabled(false);
 
+        JPanel splittingSurfacePane = new JPanel();
+        splittingSurfacePane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        signature = new JTextField(12);
+        splittingSurfacePane.add(new JLabel("Signature:"));
+        splittingSurfacePane.add(signature);
+        signature.setEnabled(false);
+
         JPanel randomPane = new JPanel();
         randomPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         randomTetrahedra = new JTextField(new NonNegativeIntegerDocument(),
@@ -196,8 +216,11 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         add(dehydrated, cButton);
         cExtra.gridy = 3;
         add(dehydrationPane, cExtra);
-        add(random, cButton);
+        add(splittingSurface, cButton);
         cExtra.gridy = 4;
+        add(splittingSurfacePane, cExtra);
+        add(random, cButton);
+        cExtra.gridy = 5;
         add(randomPane, cExtra);
         
         // Add selection listeners.
@@ -219,6 +242,12 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
             public void itemStateChanged(ItemEvent e) {
                 boolean on = (e.getStateChange() == ItemEvent.SELECTED);
                 dehydration.setEnabled(on);
+            }
+        });
+        splittingSurface.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                boolean on = (e.getStateChange() == ItemEvent.SELECTED);
+                signature.setEnabled(on);
             }
         });
         random.addItemListener(new ItemListener() {
@@ -320,6 +349,20 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
                 MessageBox.fgNote(parentDialog,
                     "The given string does not represent a dehydrated " +
                     "triangulation.");
+                newTri.destroy();
+                return null;
+            }
+            return newTri;
+        } else if (splittingSurface.isSelected()) {
+            if (signature.getDocument().getLength() == 0) {
+                MessageBox.fgNote(parentDialog,
+                    "The splitting surface signature cannot be empty.");
+                return null;
+            }
+            NTriangulation newTri = shell.getEngine().newNTriangulation();
+            if (! newTri.insertSplittingSurface(signature.getText())) {
+                MessageBox.fgNote(parentDialog,
+                    "The given splitting surface signature is not valid.");
                 newTri.destroy();
                 return null;
             }

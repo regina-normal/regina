@@ -316,6 +316,9 @@ public class NCORBATriangulation extends NCORBAPacket
     public boolean insertRehydration(String dehydration) {
         return data.insertRehydration(dehydration);
     }
+    public boolean insertSplittingSurface(String signature) {
+        return data.insertSplittingSurface(signature);
+    }
 
     public boolean isIsomorphicTo(
             normal.engine.triangulation.NTriangulation other) {

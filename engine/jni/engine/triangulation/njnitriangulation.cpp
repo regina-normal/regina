@@ -302,6 +302,13 @@ JNIEXPORT jboolean JNICALL
         jstringToNString(env, str));
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertSplittingSurface
+        (JNIEnv *env, jobject me, jstring str) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->insertSplittingSurface(
+        jstringToNString(env, str));
+}
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertTriangulation
         (JNIEnv *env, jobject me, jobject source) {

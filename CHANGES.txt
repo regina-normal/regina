@@ -10,18 +10,19 @@ Regina - A Normal Surface Theory Calculator
 
 Version 2.5  [ (under development) ]
     ENGINE:
+        Overall structure:
+            - Replaced hand-rolled container classes with Standard
+              Template Library classes (transition only partially complete).
         Classes NBoolVector, NHashSet, NInfiniteArray, NIntMap,
                 NOrderedPair, NPointerSet, NQueue, NSet, NStack
                 and associates:
             - All removed in favour of Standard Template Library classes.
         Class FuncDelete, FuncNew, FuncNewCopyPtr, FuncNewCopyRef, HashPointer:
             - Added for use with Standard Template Library.
-        Class NGroupExpression:
-            - Moved terms from NDoubleList to std::list.
         Class NGroupExpressionTerm:
             - Changed from simple ordered pair to its own full class.
-        Class NGroupPresentation:
-            - Moved relations from NDynamicArray to std::vector.
+        Class NTriangulation:
+            - Added insertSplittingSurface().
 
 Version 2.4  [ 4 April, 2002 ]
     OVERALL:
