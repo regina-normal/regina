@@ -22,10 +22,10 @@
 scripts = regina regina.bat scripts/reg*
 misc_src_mask = *.txt lib/*.txt docs/Makefile icons/regina* icons/*.txt \
 	Makefile Makefile-help* Makefile.options.* Makefile.sources \
-	examples/*.rga examples/*.gz examples/*.py examples/*.session \
+	examples/sample-misc.rga examples/*.gz examples/*.py examples/*.session \
 	examples/*.txt pylib/*.txt pylib/*.py *.sample
 misc_bin_mask = *.txt lib/*.txt icons/regina* icons/*.txt \
-	examples/*.rga examples/*.gz examples/*.py examples/*.session \
+	examples/sample-misc.rga examples/*.gz examples/*.py examples/*.session \
 	examples/*.txt pylib/*.txt pylib/*.py *.sample
 misc_doc_mask = *.hs *.jhm *.txt *.gif *.jpg *.png *.sgml *.dsl \
 	images/admon/*.txt images/admon/*.gif \
