@@ -240,6 +240,19 @@ AC_CONFIG_FILES([Makefile
                  engine/engine/surfaces/Makefile
                  engine/engine/triangulation/Makefile
                  engine/engine/utilities/Makefile
+                 engine/jni/Makefile
+                 engine/jni/engine/Makefile
+                 engine/jni/engine/algebra/Makefile
+                 engine/jni/engine/angle/Makefile
+                 engine/jni/engine/file/Makefile
+                 engine/jni/engine/maths/Makefile
+                 engine/jni/engine/packet/Makefile
+                 engine/jni/engine/progress/Makefile
+                 engine/jni/engine/split/Makefile
+                 engine/jni/engine/subcomplex/Makefile
+                 engine/jni/engine/surfaces/Makefile
+                 engine/jni/engine/triangulation/Makefile
+                 engine/jni/registry/Makefile
                  examples/Makefile
                  icons/Makefile
                  pylib/Makefile
