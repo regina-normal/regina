@@ -43,6 +43,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
+#include <ktexteditor/editorchooser.h>
 #include <ktip.h>
 #include <qcheckbox.h>
 #include <qheader.h>
@@ -883,6 +884,22 @@ void ReginaPrefPython::deactivate() {
                 i18n("All of the selected libraries have already been "
                     "deactivated."));
     }
+}
+
+ReginaEditorChooser::ReginaEditorChooser(QWidget* /* ignored */) :
+        KDialogBase(KDialogBase::Plain, i18n("Choose Text Editor Component"),
+        Ok | Cancel, Cancel) {
+    QBoxLayout* layout = new QVBoxLayout(plainPage());
+    layout->setAutoAdd(true);
+
+    chooser = new KTextEditor::EditorChooser(plainPage());
+    setMainWidget(chooser);
+    chooser->readAppSetting();
+}
+
+void ReginaEditorChooser::slotOk() {
+    chooser->writeAppSetting();
+    KDialogBase::slotOk();
 }
 
 #include "reginapref.moc"

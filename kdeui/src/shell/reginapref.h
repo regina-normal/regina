@@ -51,6 +51,10 @@ class ReginaPrefPython;
 class ReginaPrefSurfaces;
 class ReginaPrefTri;
 
+namespace KTextEditor {
+    class EditorChooser;
+}
+
 /**
  * The Regina configuration dialog.
  */
@@ -198,6 +202,24 @@ class ReginaPrefPython : public QVBox {
 
     public:
     friend class ReginaPreferences;
+};
+
+/**
+ * A simple dialog for choosing the text editor component to use.
+ *
+ * Adapted from the KWrite sources, which are released under the LGPL.
+ */
+class ReginaEditorChooser : public KDialogBase {
+    Q_OBJECT
+
+    private:
+        KTextEditor::EditorChooser* chooser;
+
+    public:
+        ReginaEditorChooser(QWidget* parent);
+
+    protected slots:
+        void slotOk();
 };
 
 #endif

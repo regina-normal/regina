@@ -201,6 +201,7 @@ class ReginaMain : public KParts::MainWindow,
         // void optionsShowStatusbar();
         void optionsConfigureKeys();
         void optionsConfigureToolbars();
+        void optionsConfigureEditor();
         void optionsPreferences();
         void helpTipOfDay();
 

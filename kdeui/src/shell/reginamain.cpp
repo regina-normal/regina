@@ -293,6 +293,11 @@ void ReginaMain::optionsConfigureToolbars() {
     dlg.exec();
 }
 
+void ReginaMain::optionsConfigureEditor() {
+    ReginaEditorChooser dlg(this);
+    dlg.exec();
+}
+
 void ReginaMain::optionsPreferences() {
     ReginaPreferences dlg(this);
     dlg.exec();
@@ -352,6 +357,9 @@ void ReginaMain::setupActions() {
     */
 
     // Preferences:
+    act = new KAction(i18n("Choose Text &Editor..."), "configure", 0,
+        this, SLOT(optionsConfigureEditor()), actionCollection(),
+        "configure_editor");
     KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
         actionCollection());
     KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
