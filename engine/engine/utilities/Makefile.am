@@ -16,5 +16,5 @@ noinst_LTLIBRARIES = libutilities.la
 
 libutilities_la_SOURCES = hashutils.cpp nbooleans.cpp nmpi.cpp nrational.cpp nthread.cpp stringutils.cpp xmlutils.cpp zstream.cpp
 
-utilitiesinclude_HEADERS = boostutils.h hashmap.h hashset.h hashutils.h memutils.h nbooleans.h nindexedarray.h nmpi.h nrational.h nthread.h stlutils.h stringutils.h stringutils.tcc xmlutils.h zstream.h
+utilitiesinclude_HEADERS = boostutils.h hashmap.h hashset.h hashutils.h memutils.h nbooleans.h nindexedarray.h nmpi.h nproperty.h nrational.h nthread.h stlutils.h stringutils.h stringutils.tcc xmlutils.h zstream.h
 
