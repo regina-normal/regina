@@ -32,7 +32,7 @@
 #include "reginapart.h"
 #include "foreign/importdialog.h"
 #include "foreign/reginahandler.h"
-#include "foreign/snappea.h"
+#include "foreign/snappeahandler.h"
 #include "../reginafilter.h"
 
 #include <kfiledialog.h>

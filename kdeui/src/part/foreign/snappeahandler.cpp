@@ -26,52 +26,46 @@
 
 /* end stub */
 
-/*! \file snappea.h
- *  \brief Allows interaction with SnapPea data files.
- */
+#include "foreign/nsnappea.h"
+#include "triangulation/ntriangulation.h"
 
-#ifndef __SNAPPEA_H
-#define __SNAPPEA_H
+#include "snappeahandler.h"
+#include "../packetfilter.h"
 
-#include "packetexporter.h"
-#include "packetimporter.h"
+#include <klocale.h>
+#include <kmessagebox.h>
 
-/**
- * An object responsible for importing and export data to and from
- * SnapPea files.
- *
- * Rather than creating new objects of this class, the globally
- * available object SnapPeaHandler::instance should always be used.
- */
-class SnapPeaHandler : public PacketImporter, public PacketExporter {
-    public:
-        /**
-         * A globally available instance of this class.
-         */
-        static const SnapPeaHandler instance;
+const SnapPeaHandler SnapPeaHandler::instance;
 
-    public:
-        /**
-         * PacketImporter overrides:
-         */
-        virtual regina::NPacket* import(const QString& fileName,
-            QWidget* parentWidget) const;
-
-        /**
-         * PacketExporter overrides:
-         */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
-            const QString& fileName, QWidget* parentWidget) const;
-
-    private:
-        /**
-         * Don't allow people to construct their own SnapPea handlers.
-         */
-        SnapPeaHandler();
-};
-
-inline SnapPeaHandler::SnapPeaHandler() {
+regina::NPacket* SnapPeaHandler::import(const QString& fileName,
+        QWidget* parentWidget) const {
+    regina::NPacket* ans = regina::readSnapPea(fileName.ascii());
+    if (! ans)
+        KMessageBox::error(parentWidget, i18n(
+            "The SnapPea file %1 could not be imported.  Perhaps the data "
+            "is not in SnapPea format?").arg(fileName));
+    return ans;
 }
 
-#endif
+PacketFilter* SnapPeaHandler::canExport() const {
+    return new SingleTypeFilter<regina::NTriangulation>();
+}
+
+bool SnapPeaHandler::exportData(regina::NPacket* data,
+        const QString& fileName, QWidget* parentWidget) const {
+    regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
+    if (! tri->isValid()) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation cannot be exported to SnapPea format "
+            "because it is not a valid triangulation."));
+        return false;
+    }
+    if (! regina::writeSnapPea(fileName.ascii(), *tri)) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation could not be exported.  An unknown error, "
+            "probably related to file I/O, occurred during the export."));
+        return false;
+    }
+    return true;
+}
+
