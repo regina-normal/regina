@@ -34,6 +34,7 @@
 #define __REGINAPART_H
 
 #include <kparts/part.h>
+#include <qptrlist.h>
 
 namespace regina {
     class NPacket;
@@ -41,6 +42,7 @@ namespace regina {
 
 class KAboutData;
 class KInstance;
+class PacketPane;
 class PacketTreeView;
 class QLabel;
 
@@ -66,6 +68,17 @@ class ReginaPart : public KParts::ReadWritePart {
         QWidget* dockArea;
 
         /**
+         * Packet panes
+         */
+        QPtrList<PacketPane> allPanes;
+        PacketPane* dockedPane;
+
+        /**
+         * Configuration
+         */
+        bool autoDock;
+
+        /**
          * Actions
          */
         KAction* actSave;
@@ -83,6 +96,7 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         virtual void setReadWrite(bool rw);
         virtual void setModified(bool modified);
+        virtual bool closeURL();
 
         /**
          * Create about data for this part.
@@ -94,6 +108,30 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         static KInstance* factoryInstance();
 
+        /**
+         * Display a newly created packet pane in a sensible manner.
+         * Whether it is docked or in a free-floating window will be
+         * decided according to the current arrangement of panes and any
+         * relevant user settings.
+         *
+         * \pre The given packet pane is currently parentless.
+         */
+        void view(PacketPane* newPane);
+
+        /**
+         * Display a newly created packet pane in the docked area.
+         * Any currently docked pane that refuses to closed will be
+         * forced out into its own floating window.
+         *
+         * \pre The given packet pane is currently parentless.
+         */
+        void dock(PacketPane* newPane);
+
+        /**
+         * Called from a packet pane when it is about to definitively close.
+         */
+        void isClosing(PacketPane* closingPane);
+
     protected:
         /**
          * KPart overrides.
@@ -103,11 +141,6 @@ class ReginaPart : public KParts::ReadWritePart {
 
     public slots:
         /**
-         * Show or hide the Regina icon beneath the packet tree.
-         */
-        void displayIcon(bool);
-
-        /**
          * View or edit the currently selected packet.
          */
         void packetView();
@@ -116,6 +149,26 @@ class ReginaPart : public KParts::ReadWritePart {
          * View or edit the given packet.
          */
         void packetView(regina::NPacket*);
+
+        /**
+         * Attempt to close the currently docked pane.
+         */
+        bool closeDockedPane();
+
+        /**
+         * Attempt to close all panes, docked or undocked.
+         */
+        bool closeAllPanes();
+
+        /**
+         * Show or hide the Regina icon beneath the packet tree.
+         */
+        void displayIcon(bool);
+
+        /**
+         * Update settings from the main window.
+         */
+        void setAutoDock(bool);
 
     private slots:
         /**

@@ -5,6 +5,8 @@ INCLUDES = $(all_includes) -I$(top_srcdir)/../engine/engine
 noinst_HEADERS = \
 	packetmanager.h \
 	packettreeview.h \
+	packetui.h \
+	packetwindow.h \
 	reginapart.h
 
 kde_module_LTLIBRARIES = libreginapart.la
@@ -16,6 +18,7 @@ libreginapart_la_SOURCES = \
 	packetmanager.cpp \
 	packettreeview.cpp \
 	packetui.cpp \
+	packetwindow.cpp \
 	reginapart.cpp
 
 partdesktopdir   = $(kde_servicesdir)

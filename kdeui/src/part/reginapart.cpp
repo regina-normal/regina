@@ -39,12 +39,14 @@
 
 #include <qcolor.h>
 #include <qlabel.h>
+#include <qlayout.h>
 #include <qsplitter.h>
 #include <qvbox.h>
 #include <kaction.h>
 #include <kfiledialog.h>
 #include <kiconloader.h>
 #include <kinstance.h>
+#include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kparts/genericfactory.h>
 
@@ -53,7 +55,8 @@ K_EXPORT_COMPONENT_FACTORY(libreginapart, ReginaPartFactory);
 
 ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
         QObject *parent, const char *name, const QStringList& /*args*/) :
-        KParts::ReadWritePart(parent, name), packetTree(0) {
+        KParts::ReadWritePart(parent, name), packetTree(0),
+        dockedPane(0), autoDock(true) {
     // Get the instance.
     setInstance(factoryInstance());
 
@@ -71,6 +74,12 @@ ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
 }
 
 ReginaPart::~ReginaPart() {
+    // Make an emergency closure of any remaining packet panes.
+    QPtrList<PacketPane> panes = allPanes;
+    for (PacketPane* p = panes.first(); p; p = panes.next())
+        delete p;
+
+    // Finish cleaning up.
     if (packetTree)
         delete packetTree;
 }
@@ -90,12 +99,54 @@ void ReginaPart::setModified(bool modified) {
     ReadWritePart::setModified(modified);
 }
 
+bool ReginaPart::closeURL() {
+    if (! closeAllPanes())
+        return false;
+    return ReadWritePart::closeURL();
+}
+
 KAboutData* ReginaPart::createAboutData() {
     return new ReginaAbout<ReginaPart>("reginapart");
 }
 
 KInstance* ReginaPart::factoryInstance() {
     return ReginaPartFactory::instance();
+}
+
+void ReginaPart::view(PacketPane* newPane) {
+    // Decide whether to dock or float.
+    bool shouldDock;
+
+    if (autoDock) {
+        if (dockedPane) {
+            shouldDock = ! dockedPane->isDirty();
+        } else
+            shouldDock = true;
+    } else
+        shouldDock = false;
+
+    // Display the new pane.
+    if (shouldDock)
+        dock(newPane);
+    else
+        newPane->encloseInFrame()->show();
+
+    // Add it to the list of currently managed panes.
+    allPanes.append(newPane);
+}
+
+void ReginaPart::dock(PacketPane* newPane) {
+    // Get rid of the currently docked pane by whatever means necessary.
+    if (! closeDockedPane())
+        dockedPane->floatPane();
+
+    newPane->reparent(dockArea, QPoint(0, 0));
+    dockedPane = newPane;
+    newPane->show();
+}
+
+void ReginaPart::isClosing(PacketPane* closingPane) {
+    allPanes.removeRef(closingPane);
 }
 
 bool ReginaPart::openFile() {
@@ -110,9 +161,9 @@ bool ReginaPart::openFile() {
             treeView->ensureItemVisible(treeView->firstChild()->firstChild());
         return true;
     } else {
-        KMessageBox::error(widget(), QString(i18n(
-            "Topology data file %1 could not be opened.  Perhaps"
-            "it is not a Regina data file?")).arg(m_file));
+        KMessageBox::error(widget(), i18n(
+            "Topology data file %1 could not be opened.  Perhaps "
+            "it is not a Regina data file?").arg(m_file));
         initPacketTree();
         return false;
     }
@@ -126,10 +177,54 @@ bool ReginaPart::saveFile() {
     if (regina::writeXMLFile(m_file, packetTree))
         return true;
     else {
-        KMessageBox::error(widget(), QString(i18n(
-            "Topology data file %1 could not be saved.")).arg(m_file));
+        KMessageBox::error(widget(), i18n(
+            "Topology data file %1 could not be saved.").arg(m_file));
         return false;
     }
+}
+
+void ReginaPart::packetView() {
+    regina::NPacket* packet = treeView->selectedPacket();
+    if (packet)
+        packetView(packet);
+    else
+        KMessageBox::error(widget(), i18n(
+            "No packet is currently selected within the tree."));
+}
+
+void ReginaPart::packetView(regina::NPacket* packet) {
+    view(new PacketPane(this, packet));
+}
+
+bool ReginaPart::closeDockedPane() {
+    // Is there anything to close?
+    if (! dockedPane)
+        return true;
+
+    // Are we allowed to close it?
+    if (! dockedPane->queryClose())
+        return false;
+
+    // Close it.  Note that queryClose() has already done the
+    // deregistration for us.
+    delete dockedPane;
+    dockedPane = 0;
+
+    return true;
+}
+
+bool ReginaPart::closeAllPanes() {
+    // Copy the list since the original list will be modified as panes
+    // are closed.
+    QPtrList<PacketPane> panes = allPanes;
+
+    // Try to close each pane in return, returning false if a pane
+    // refuses.
+    for (PacketPane* p = panes.first(); p; p = panes.next())
+        if (! p->close())
+            return false;
+
+    return true;
 }
 
 void ReginaPart::displayIcon(bool shouldDisplay) {
@@ -139,17 +234,8 @@ void ReginaPart::displayIcon(bool shouldDisplay) {
         reginaIcon->hide();
 }
 
-void ReginaPart::packetView() {
-    regina::NPacket* packet = treeView->selectedPacket();
-    if (packet)
-        packetView(packet);
-    else
-        KMessageBox::error(widget(), QString(i18n(
-            "No packet is currently selected within the tree.")));
-}
-
-void ReginaPart::packetView(regina::NPacket* packet) {
-    (new PacketWindow(new PacketPane(this, packet)))->show();
+void ReginaPart::setAutoDock(bool value) {
+    autoDock = value;
 }
 
 void ReginaPart::fileSaveAs() {
@@ -160,8 +246,7 @@ void ReginaPart::fileSaveAs() {
 }
 
 void ReginaPart::unimplemented() {
-    KMessageBox::sorry(widget(), QString(i18n(
-        "This feature is not yet implemented.")));
+    KMessageBox::sorry(widget(), i18n("This feature is not yet implemented."));
 }
 
 void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {

@@ -32,7 +32,10 @@
 // UI includes:
 #include "packetmanager.h"
 #include "packetui.h"
+#include "packetwindow.h"
+#include "reginapart.h"
 
+#include <klocale.h>
 #include <kmessagebox.h>
 #include <qlabel.h>
 
@@ -56,39 +59,117 @@ void PacketHeader::refresh() {
     title->setText(packet->getFullName().c_str());
 }
 
+DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket) :
+        packet(newPacket) {
+    label = new QLabel(i18n(
+        "Packets of type %1\nare not yet supported.").arg(
+        packet->getPacketTypeName().c_str()), 0);
+    label->setAlignment(Qt::AlignCenter);
+}
+
+regina::NPacket* DefaultPacketUI::getPacket() {
+    return packet;
+}
+
+QWidget* DefaultPacketUI::getInterface() {
+    return label;
+}
+
+void DefaultPacketUI::refresh() {
+}
+
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
         part(newPart), frame(0) {
     header = new PacketHeader(newPacket, this);
 
-    QWidget* mainUI = new QWidget(this);
+    mainUI = new DefaultPacketUI(newPacket);
+    QWidget* mainUIWidget = mainUI->getInterface();
+    if (mainUIWidget->parent() != this) {
+        mainUIWidget->reparent(this, QPoint(0, 0));
+        mainUIWidget->show();
+    }
+    setStretchFactor(mainUIWidget, 1);
 
     QHBox* footer = new QHBox(this);
     new QLabel("Footer", footer);
+}
 
-    setStretchFactor(mainUI, 1);
+bool PacketPane::isDirty() {
+    return mainUI->isDirty();
 }
 
 bool PacketPane::queryClose() {
-    KMessageBox::sorry(this, QString("Just testing!."));
+    if (isDirty()) {
+        if (KMessageBox::warningYesNo(this, i18n(
+                "This packet contains changes that have not yet been "
+                "committed.  Do you wish to close this packet anyway and "
+                "discard these changes?"),
+                mainUI->getPacket()->getPacketLabel().c_str()) ==
+                KMessageBox::No)
+            return false;
+    }
+
+    // We are definitely going to close the pane.  Do some cleaning up.
+    part->isClosing(this);
     return true;
 }
 
-PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
-        KMainWindow(parent, "Packet#"), heldPane(newPane) {
-    // Resize ourselves nicely.
-    if (! initialGeometrySet())
-        resize(400, 400);
+KMainWindow* PacketPane::encloseInFrame() {
+    if (frame)
+        return 0;
 
-    // Set up the widgets.
-    newPane->reparent(this, QPoint(0, 0));
-    setCentralWidget(newPane);
-    newPane->show();
+    KMainWindow* ans = new PacketWindow(this);
+    frame = ans;
+    return ans;
 }
 
-bool PacketWindow::queryClose() {
-    // TODO
-    return heldPane->queryClose();
+PacketPane* PacketPane::removeFrame() {
+    if (frame) {
+        hide();
+        reparent(0, QPoint(0, 0));
+        delete frame;
+        frame = 0;
+    }
+
+    return this;
+}
+
+void PacketPane::refresh() {
+    header->refresh();
+    mainUI->refresh();
+}
+
+void PacketPane::commit() {
+    mainUI->commit();
+}
+
+bool PacketPane::close() {
+    // Let whoever owns us handle the entire close event.
+    // We'll come back to this class when they call queryClose().
+    if (frame)
+        return frame->close();
+    else
+        return part->closeDockedPane();
+}
+
+void PacketPane::dockPane() {
+    if (! frame)
+        return;
+
+    // The packet pane is currently floating.
+    removeFrame();
+    part->dock(this);
+}
+
+void PacketPane::floatPane() {
+    if (frame)
+        return;
+
+    // The packet pane is currently docked.
+    hide();
+    reparent(0, QPoint(0, 0));
+    encloseInFrame()->show();
 }
 
 #include "packetui.moc"

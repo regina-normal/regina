@@ -33,10 +33,9 @@
 #ifndef __PACKETUI_H
 #define __PACKETUI_H
 
-#include <kmainwindow.h>
 #include <qvbox.h>
 
-class PacketWindow;
+class KMainWindow;
 class QLabel;
 class ReginaPart;
 
@@ -76,53 +75,132 @@ class PacketHeader : public QHBox {
 /**
  * A single item in a Regina packet tree.
  */
-/*
 class PacketUI {
     public:
-        virtual ~PacketUI() {
-        }
+        virtual ~PacketUI();
 
-        NPacket* getPacket();
-        QWidget* getInterface();
-        QWidget* getPrimaryTextComponent();
-        void reflectPacket();
+        virtual regina::NPacket* getPacket() = 0;
+        virtual QWidget* getInterface() = 0;
+        virtual void refresh() = 0;
 
-        bool isEditor();
-        bool hasChanges();
-        void applyChanges();
+        virtual bool isReadWrite();
+        virtual bool isDirty();
+        virtual void commit();
 };
-*/
 
+class DefaultPacketUI : public PacketUI {
+    private:
+        regina::NPacket* packet;
+        QLabel* label;
+
+    public:
+        DefaultPacketUI(regina::NPacket* newPacket);
+        virtual regina::NPacket* getPacket();
+        virtual QWidget* getInterface();
+        virtual void refresh();
+};
+
+/**
+ * A full-featured component through which the user can view or edit a
+ * single packet.
+ *
+ * Packet panes may be either docked within the main ReginaPart widget
+ * or may be floating freely in their own frames.
+ */
 class PacketPane : public QVBox {
     Q_OBJECT
 
     private:
+        PacketHeader* header;
+            /**< The header with which the packet is visually identified. */
+        PacketUI* mainUI;
+            /**< The main packet interface. */
+
         ReginaPart* part;
-            /**< The KPart responsible for this packet pane. */
+            /**< The KPart managing this packet pane. */
         KMainWindow* frame;
             /**< The floating frame containing this packet pane, or 0
                  if this packet pane is currently docked. */
-        PacketHeader* header;
-            /**< The header with which the packet is identified. */
 
     public:
+        /**
+         * Constructs a new packet pane, managed by the given KPart,
+         * that views or edits the given packet.
+         */
         PacketPane(ReginaPart* newPart, regina::NPacket* newPacket,
             QWidget* parent = 0, const char* name = 0);
 
+        /**
+         * Does this packet pane contain any changes that have not yet
+         * been committed?
+         */
+        bool isDirty();
+
+        /**
+         * Are we allowed to close this packet pane?
+         */
         bool queryClose();
+
+        /**
+         * Encloses this packet pane within a new top-level window.
+         *
+         * \pre This packet pane is currently parentless.
+         */
+        KMainWindow* encloseInFrame();
+
+        /**
+         * Removes any frame currently surrounding this packet pane.
+         * This packet pane will become hidden and parentless.
+         */
+        PacketPane* removeFrame();
+
+    public slots:
+        /**
+         * Queries the packet and refreshes the interface accordingly.
+         * Any uncommitted changes will be lost.
+         */
+        void refresh();
+
+        /**
+         * Commits any changes made in the user interface to the
+         * underlying packet.
+         */
+        void commit();
+
+        /**
+         * Closes this packet pane.  All this routine does is delegate
+         * the closure operation to whatever component currently owns
+         * this packet pane.
+         */
+        bool close();
+
+        /**
+         * Docks this packet pane within the main ReginaPart widget, if
+         * it is not already docked.  If another packet pane is
+         * already docked and refuses to be closed, this other pane will
+         * be moved into its own freely floating window.
+         */
+        void dockPane();
+
+        /**
+         * Floats this packet pane in its own top-level window, if it is
+         * not already in such a state.
+         */
+        void floatPane();
 };
 
-class PacketWindow : public KMainWindow {
-    Q_OBJECT
+inline PacketUI::~PacketUI() {
+}
 
-    private:
-        PacketPane* heldPane;
+inline bool PacketUI::isReadWrite() {
+    return false;
+}
 
-    public:
-        PacketWindow(PacketPane* newPane, QWidget* parent = 0);
+inline bool PacketUI::isDirty() {
+    return false;
+}
 
-    protected:
-        virtual bool queryClose();
-};
+inline void PacketUI::commit() {
+}
 
 #endif
