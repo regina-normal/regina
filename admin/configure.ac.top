@@ -281,6 +281,19 @@ REGINA_VAR_IOS_NOCREATE
 
 ###########################################################
 #
+# Host-specific files to install.
+#
+###########################################################
+
+if test "$host_os" = "cygwin"; then
+  REGINA_BATCH=regina.bat
+else
+  REGINA_BATCH=
+fi
+AC_SUBST(REGINA_BATCH)
+
+###########################################################
+#
 # Decide what should and should not be built.
 #
 ###########################################################
