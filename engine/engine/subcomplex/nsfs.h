@@ -316,9 +316,6 @@ class NSFS : public ShareableObject {
          * newly created and it will be up to the caller
          * of this routine to destroy it.
          *
-         * \todo \bug Currently this routine only recognises a Lens
-         * space if its orbit manifold is the 2-sphere.
-         *
          * @return a structure containing the details of this Lens
          * space, or \c null if this is not a Lens space.
          */

@@ -158,8 +158,6 @@ class NAbelianGroup : public ShareableObject {
          * Note that this routine might be slow since calculating the
          * new invariant factors is not trivial.
          *
-         * \todo \bug Memory leaks have been observed in this routine.
-         *
          * @param presentation a presentation matrix for the group to be
          * added to this group, where each column represents a generator
          * and each row a relation.

@@ -82,7 +82,6 @@ class NXMLTriangulationReader;
  *
  * \testpart
  *
- * \todo \opt Use quad space where possible when testing for 0-efficiency.
  * \todo \featureurgent Am I obviously a handlebody?  (Simplify and see
  * if there is nothing left).  Am I obviously not a handlebody?
  * (Compare homology with boundary homology).
