@@ -67,7 +67,7 @@ regina::NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value) {
     jclass c = jni_env->GetObjectClass(value);
     jmethodID m = jni_env->GetMethodID(c, "toString", "()Ljava/lang/String;");
     return jstringToCString(jni_env,
-        (jstring)jni_env->CallObjectMethod(value, m)).c_str();
+        static_cast<jstring>(jni_env->CallObjectMethod(value, m))).c_str();
 }
 
 jobject jBigIntegerFromLarge(JNIEnv* jni_env,

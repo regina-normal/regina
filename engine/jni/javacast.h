@@ -48,82 +48,51 @@ namespace jni {
  * @{
  */
 
-#ifndef __USE_RAW_CASTING
-    /**
-     * Casts the given Java long as a C++ pointer.
-     * This is used when storing a C++ pointer as a long member of a
-     * Java object.  The returned value is recast as a
-     * (regina::ShareableObject*).
-     *
-     * These routines <b>must</b> be used when moving between C++ pointers
-     * and Java longs!  They resolve serious complications caused by multiple
-     * inheritance.
-     *
-     * \ifaces Not present.
-     *
-     * @param i the original Java long.
-     * @return the corresponding C++ pointer.
-     */
-    regina::ShareableObject* javaLongToPtr(jlong i);
-    /**
-     * Casts the given C++ pointer as a Java long.
-     * This is used when storing a C++ pointer as a long member of a
-     * Java object.  The pointer will be recast as a
-     * (regina::ShareableObject*) before conversion.
-     *
-     * These routines <b>must</b> be used when moving between C++ pointers
-     * and Java longs!  They resolve serious complications caused by multiple
-     * inheritance.
-     *
-     * \ifaces Not present.
-     *
-     * @param p the original C++ pointer; this must be of or derived
-     * from type (regina::ShareableObject*).
-     * @return the corresponding Java long.
-     */
-    jlong javaPtrToLong(regina::ShareableObject* p);
-#else
-    /**
-     * \hideinitializer
-     *
-     * Casts the given Java long as a C++ pointer.
-     * This is used when storing a C++ pointer as a long member of a
-     * Java object.  The returned value is recast as a
-     * (regina::ShareableObject*).
-     *
-     * These routines <b>must</b> be used when moving between C++ pointers
-     * and Java longs!  They resolve serious complications caused by multiple
-     * inheritance.
-     *
-     * \ifaces Not present.
-     *
-     * @param i the original Java long.
-     * @return the corresponding C++ pointer; this will be of type
-     * (regina::ShareableObject*).
-     */
-    #define javaLongToPtr(i) ((regina::ShareableObject*)((void*)(i)))
-    /**
-     * \hideinitializer
-     *
-     * Casts the given C++ pointer as a Java long.
-     * This is used when storing a C++ pointer as a long member of a
-     * Java object.  The pointer will be recast as a
-     * (regina::ShareableObject*) before conversion.
-     *
-     * These routines <b>must</b> be used when moving between C++ pointers
-     * and Java longs!  They resolve serious complications caused by multiple
-     * inheritance.
-     *
-     * \ifaces Not present.
-     *
-     * @param p the original C++ pointer; this must be of or derived
-     * from type (regina::ShareableObject*).
-     * @return the corresponding Java long.
-     */
-    #define javaPtrToLong(p) ((jlong)((regina::ShareableObject*)(p)))
-#endif
+/**
+ * Casts the given Java long as a C++ pointer.
+ * This is used when storing a C++ pointer as a long member of a
+ * Java object.  The returned value is recast as a
+ * (regina::ShareableObject*).
+ *
+ * These routines <b>must</b> be used when moving between C++ pointers
+ * and Java longs!  They resolve serious complications caused by multiple
+ * inheritance.
+ *
+ * \ifaces Not present.
+ *
+ * @param i the original Java long.
+ * @return the corresponding C++ pointer.
+ */
+regina::ShareableObject* javaLongToPtr(jlong i);
+/**
+ * Casts the given C++ pointer as a Java long.
+ * This is used when storing a C++ pointer as a long member of a
+ * Java object.  The pointer will be recast as a
+ * (regina::ShareableObject*) before conversion.
+ *
+ * These routines <b>must</b> be used when moving between C++ pointers
+ * and Java longs!  They resolve serious complications caused by multiple
+ * inheritance.
+ *
+ * \ifaces Not present.
+ *
+ * @param p the original C++ pointer; this must be of or derived
+ * from type (regina::ShareableObject*).
+ * @return the corresponding Java long.
+ */
+jlong javaPtrToLong(regina::ShareableObject* p);
 
 /*@}*/
+
+// Inline functions for C++/Java type conversion
+
+inline regina::ShareableObject* javaLongToPtr(jlong i) {
+    return reinterpret_cast<regina::ShareableObject*>(i);
+}
+
+inline jlong javaPtrToLong(regina::ShareableObject* p) {
+    return reinterpret_cast<jlong>(p);
+}
 
 } } // namespace regina::jni
 

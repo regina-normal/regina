@@ -41,7 +41,7 @@
 /**
  * \hideinitializer
  *
- * A local copy of the GMP signed comparison optimisations.
+ * An internal copy of the GMP signed comparison optimisations.
  * This macro should not be used outside this class.
  *
  * By making our own copy of such optimisation macros we can use

@@ -44,7 +44,7 @@ jobject makeJNPacket(JNIEnv *env, regina::NPacket* packet) {
 
     if (type == regina::NSurfaceFilter::packetType) {
         // Pull out the individual cases for different filter types.
-        int id = ((regina::NSurfaceFilter*)packet)->getFilterID();
+        int id = dynamic_cast<regina::NSurfaceFilter*>(packet)->getFilterID();
 
         if (0)
             return 0;

@@ -43,6 +43,13 @@
 #include <regina-config.h>
 
 #ifndef HAVE___INT64
+    /**
+     * \hideinitializer
+     *
+     * Declares an \a __int64 type if no such type already exists.
+     * This macro is only provided for compatibility with different JNI
+     * implementations and should not be used elsewhere.
+     */
     #define __int64 long long
 #endif
 

@@ -41,17 +41,41 @@
 #include "utilities/hashutils.h"
 
 #ifdef DEBUG_NINDEXEDARRAY
+    /**
+     * \hideinitializer
+     * An internal macro to assist with debugging.
+     */
     #define VALIDATE_NINDEXEDARRAY(where) \
         if (! validate()) \
             std::cerr << "Error noticed in: " << where << std::endl;
+    /**
+     * \hideinitializer
+     * An internal macro to assist with debugging.
+     */
     #define VALIDATE_NINDEXEDARRAY_TOP bool __valid = validate(true);
+    /**
+     * \hideinitializer
+     * An internal macro to assist with debugging.
+     */
     #define VALIDATE_NINDEXEDARRAY_BOTTOM(where) \
         if (__valid) \
             if (! validate()) \
                 std::cerr << "Error created in: " << where << std::endl;
 #else
+    /**
+     * \hideinitializer
+     * An internal macro to assist with debugging.
+     */
     #define VALIDATE_NINDEXEDARRAY(where)
+    /**
+     * \hideinitializer
+     * An internal macro to assist with debugging.
+     */
     #define VALIDATE_NINDEXEDARRAY_TOP
+    /**
+     * \hideinitializer
+     * An internal macro to assist with debugging.
+     */
     #define VALIDATE_NINDEXEDARRAY_BOTTOM(where)
 #endif
 
