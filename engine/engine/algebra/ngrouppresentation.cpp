@@ -222,6 +222,7 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
 }
 
 bool NGroupPresentation::intelligentSimplify() {
+	unsigned long oldNGenerators = nGenerators;
 	bool changed = false; // Has anything changed at all?
 	bool removed = false; // Have we deleted any relations?
 
@@ -243,19 +244,26 @@ bool NGroupPresentation::intelligentSimplify() {
 			tmpRels.addLast(rel);
 	}
 
-	TmpRelIterator it;
-	TmpRelIterator it2;
-	TermIterator tit;
 	// At this point all relations are simplified and none are empty.
 	// Throughout the remainder of this routine we will attempt to
 	// preserve this state of affairs.
+	TmpRelIterator it;
+	TmpRelIterator it2;
+	TermIterator tit;
+
+	// Make a table of generators that have been removed.
+	// A value in the array will be set to -1 when the corresponding
+	// generator is removed.
+	unsigned long gen;
+	long* genMap = new long[nGenerators];
+	for (gen = 0; gen < nGenerators; gen++)
+		genMap[gen] = gen;
 
 	// Run through and look for substitutions we can make.
 	// This currently isn't magnificently optimised.
 	NInfiniteArray<long> exponents;
 	NInfiniteArrayIterator<long> expIt;
 	NGroupExpression* expansion;
-	unsigned long genToRemove;
 	bool doMoreSubsts = true;
 	while (doMoreSubsts) {
 		doMoreSubsts = false;
@@ -279,17 +287,15 @@ bool NGroupPresentation::intelligentSimplify() {
 				it++;
 				continue;
 			}
-			genToRemove = expIt.index();
+			gen = expIt.index();
 			exponents.flush();
 
-			// We are going to replace generator genToRemove.
+			// We are going to replace generator gen.
 			// Build up the expansion.
 			expansion = new NGroupExpression();
-			for (tit.init(rel->getTerms());
-					(*tit).first != genToRemove; tit++)
+			for (tit.init(rel->getTerms()); (*tit).first != gen; tit++)
 				expansion->addTermFirst((*tit).first, -(*tit).second);
-			for (tit.initEnd(rel->getTerms());
-					(*tit).first != genToRemove; tit--)
+			for (tit.initEnd(rel->getTerms()); (*tit).first != gen; tit--)
 				expansion->addTermLast((*tit).first, -(*tit).second);
 			// Check if we need to invert it.
 			if ((*tit).second == -1) {
@@ -301,7 +307,7 @@ bool NGroupPresentation::intelligentSimplify() {
 			it2.init(tmpRels);
 			while (! it2.done())
 				if (*it2 != *it) {
-					(*it2)->substitute(genToRemove, *expansion, true);
+					(*it2)->substitute(gen, *expansion, true);
 					if ((*it2)->getNumberOfTerms() == 0)
 						delete tmpRels.remove(it2);
 					else
@@ -310,6 +316,7 @@ bool NGroupPresentation::intelligentSimplify() {
 					it2++;
 
 			// Note that we are removing a generator.
+			genMap[gen] = -1;
 			nGenerators--;
 
 			// Remove the now useless relation and tidy up.
@@ -321,12 +328,29 @@ bool NGroupPresentation::intelligentSimplify() {
 		}
 	}
 
+	// Renumber the generators if necessary so we go from 0 to
+	// nGenerators with no gaps.
+	if (nGenerators < oldNGenerators) {
+		// Rebuild the generator mapping table.
+		unsigned long newGen = 0;
+		for (gen = 0; gen < oldNGenerators; gen++)
+			if (genMap[gen] >= 0)
+				genMap[gen] = newGen++;
+
+		// Now run through the relations and renumber the generators.
+		for (it.init(tmpRels); ! it.done(); it++)
+			for (tit.init((*it)->getTerms()); ! tit.done(); tit++)
+				(*tit).first = genMap[(*tit).first];
+	}
+
 	// Refill the original array if necessary.
 	if (removed) {
 		relations.flush();
 		for (it.init(tmpRels); ! it.done(); it++)
 			relations.addLast(*it);
 	}
+
+	// Done!
 	return changed;
 }
 
@@ -338,7 +362,7 @@ NString NGroupPresentation::recogniseGroup() {
 
 	// Run through cases.
 	if (nGenerators == 0)
-		out << "Trivial group";
+		out << 0;
 	else if (nGenerators == 1) {
 		// Each term is of the form g^k=1.  This is Z_d where d is the
 		// gcd of the various values of k.
@@ -359,12 +383,15 @@ NString NGroupPresentation::recogniseGroup() {
 		if (d == 0)
 			out << 'Z';
 		else if (d == 1)
-			out << "Trivial group";
+			out << 0;
 		else
 			out << "Z_" << d;
 	} else if (nRels == 0)
 		out << "Free group on " << nGenerators << " generators";
-	else {
+	else if  (nGenerators == 2 && nRels == 2) {
+		// See if it's the quaternions.
+		
+	} else {
 		// nGenerators >= 2 and nRels >= 2.
 		// Don't have anything intelligent to say at this point.
 	}
@@ -403,6 +430,8 @@ void NGroupPresentation::writeTextLong(ostream& out) const {
 		out << "(none)";
 	else if (nGenerators == 1)
 		out << "g0";
+	else if (nGenerators == 2)
+		out << "g0, g1";
 	else
 		out << "g0 .. g" << (nGenerators - 1);
 	out << endl;
