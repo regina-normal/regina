@@ -38,12 +38,12 @@
 
 namespace regina {
     class NProgressManager;
-    class NProgressNumeric;
+    class NProgressNumber;
 };
 
 /**
  * A dialog that interacts with the calculation engine progress class
- * regina::NProgressNumeric.
+ * regina::NProgressNumber.
  *
  * Upon calling ProgressDialogNumeric::run(), the dialog will be
  * displayed and it will follow the progress of the underlying
@@ -70,7 +70,7 @@ class ProgressDialogNumeric : public KProgressDialog {
          * More importantly, it must be guaranteed by the calculation
          * engine that the progress watcher to be assigned by the
          * underlying operation to this manager will be of the class
-         * regina::NProgressNumeric.
+         * regina::NProgressNumber.
          */
         ProgressDialogNumeric(regina::NProgressManager* useManager,
                 const QString& dialogTitle, const QString& displayText,
