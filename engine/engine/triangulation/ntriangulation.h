@@ -1383,6 +1383,40 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         bool shellBoundary(NTetrahedron* t,
                 bool check = true, bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a collapse of
+         * an edge in such a way that the topology of the manifold
+         * does not change and the number of vertices of the triangulation
+         * decreases by one.
+         *
+         * This can be done assuming the following conditions.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (faces, components, etc.) will be invalid.
+         *
+         * \pre If the move is being performed and no
+         * check is being run, it must be known in advance that the move
+         * is legal.
+         * \pre The skeleton has been calculated.
+         * Skeleton calculation can be forced by querying the skeleton,
+         * such as calling getNumberOfVertices().
+         *
+         * @param e the edge about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         *
+         * @author David Letscher
+         */
+        bool collapseEdge(NEdge* e, bool check = true, bool perform = true);
 
         /*@}*/
         /**

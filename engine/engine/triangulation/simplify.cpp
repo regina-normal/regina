@@ -75,17 +75,17 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
         oldVertexPerm[oldPos] = (*it).getVertices();
         oldPos++;
     }
-    
+
     if (! perform)
         return true;
 
     #ifdef DEBUG
     cerr << "Performing 3-2 move\n";
     #endif
-    
+
     // Perform the move.
     int oldPos2, newPos, newPos2;
-    
+
     // Allocate the new tetrahedra.
     NTetrahedron* newTet[2];
     for (newPos = 0; newPos < 2; newPos++)
@@ -105,7 +105,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     NTetrahedron* adjTet[2][3];
     int adjFace;
     int oldFace;
-    
+
     for (oldPos = 0; oldPos < 3; oldPos++)
         for (newPos = 0; newPos < 2; newPos++) {
             oldFace = gluings[newPos][oldPos][3];
@@ -310,7 +310,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     twoThreeMove(face23, false, true);
     calculateSkeleton();
     threeTwoMove(oldTet[3]->getEdge(edge32), false, true);
-    
+
     // Tidy up.  Note that clearAllProperties() was already called by
     // twoThreeMove() and threeTwoMove().
     return true;
@@ -396,7 +396,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     // Finally remove and dispose of the tetrahedra.
     delete removeTetrahedron(tet[0]);
     delete removeTetrahedron(tet[1]);
-    
+
     // Tidy up.
     // clearAllProperties() has been called already from
     // removeTetrahedron().
@@ -596,7 +596,7 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
     const NFaceEmbedding& emb = f->getEmbedding(0);
     NTetrahedron* tet = emb.getTetrahedron();
     NPerm vertices = emb.getVertices();
-    
+
     // Check that the face has exactly two boundary edges.
     // Note that this will imply that the face joins two tetrahedra.
     if (check) {
@@ -668,6 +668,122 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
 
     // Actually perform the move.
     removeTetrahedron(t);
+    return true;
+}
+
+bool NTriangulation::collapseEdge(NEdge* e, bool check = true, bool perform = true) {
+
+    // Find the tetrahedra to remove.
+    const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
+    unsigned valence = embs.size();
+    NTetrahedron** oldTet;
+    oldTet = new (NTetrahedron*)[valence];
+    NPerm* oldVertexPerm;
+    oldVertexPerm = new NPerm[valence];
+    int oldPos = 0;
+    for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
+            it != embs.end(); it++) {
+        oldTet[oldPos] =(*it).getTetrahedron();
+        oldVertexPerm[oldPos] = (*it).getVertices();
+        oldPos++;
+    }
+    NVertex* oldVert[2];
+    oldVert[0] = e->getVertex(0);
+    oldVert[1] = e->getVertex(1);
+
+    if (check) {
+        // Check if the vertices are distinct.
+        if (oldVert[0] == oldVert[1])
+            return false;
+        // Cannot have both vertices ideal.
+        if (oldVert[0]->isIdeal() && oldVert[1]->isIdeal())
+            return false;
+        // Cannot have an ideal vertex and one in the boundary.
+        if ( (oldVert[0]->isIdeal() && oldVert[1]->isBoundary()) || \
+                (oldVert[1]->isIdeal() && oldVert[0]->isBoundary()) )
+            return false;
+        // If both of the vertices are in the boundary then so must the edge.
+        if (oldVert[0]->isBoundary() && oldVert[1]->isBoundary() && !e->isBoundary())
+            return false;
+
+        // Make sure no tetrahedron has a top and bottom face in the boundary
+        for (int i=0; i<valence; i++)
+            if (!oldTet[i]->getAdjacentTetrahedron(oldVertexPerm[i][0]) && \
+                    !oldTet[i]->getAdjacentTetrahedron(oldVertexPerm[i][1]))
+                return false;
+
+        // The tetrahedra around the edge must be distinct.
+        for (int i=0; i<valence; i++)
+            for (int j=i+1; j<valence; j++)
+                if (oldTet[i] == oldTet[j])
+                    return false;
+
+        // The edges meeting either the north or south poles must be distinct.
+        // Note this is stronger than necessary and will be weaked later.
+        NEdge **oldEdge;
+        int numEdge;
+        if (e->isBoundary())
+            numEdge = 2*valence+2;
+        else
+            numEdge = 2*valence;
+        oldEdge = new (NEdge *)[numEdge];
+        for (int i=0; i<valence; i++) {
+            oldEdge[2*i] = oldTet[i]->getEdge(edgeNumber[oldVertexPerm[i][0]][oldVertexPerm[i][2]]);
+            oldEdge[2*i+1] = oldTet[i]->getEdge(edgeNumber[oldVertexPerm[i][1]][oldVertexPerm[i][2]]);
+        }
+        if (e->isBoundary()) {
+            oldEdge[2*valence] = oldTet[valence-1]->getEdge(edgeNumber[oldVertexPerm[valence-1][0]][oldVertexPerm[valence-1][3]]);
+            oldEdge[2*valence+1] = oldTet[valence-1]->getEdge(edgeNumber[oldVertexPerm[valence-1][1]][oldVertexPerm[valence-1][3]]);
+        }
+        for (int i=0; i<numEdge; i++)
+            for (int j=i+1; j<numEdge; j++)
+                if (oldEdge[i] == oldEdge[j])
+                    return false;
+
+        delete []oldEdge;
+    }
+
+    if (! perform)
+        return true;
+
+    #ifdef DEBUG
+    cerr << "Performing edge collapse move\n";
+    #endif
+
+    // Perform the move.
+    NPerm topPerm, botPerm;
+    NTetrahedron *top, *bot;
+    int p[4];
+    for (int i=0; i<valence; i++) {
+
+// Totally redo!
+
+        top = oldTet[i]->getAdjacentTetrahedron(oldVertexPerm[i][0]);
+        topPerm = oldTet[i]->getAdjacentTetrahedronGluing(oldVertexPerm[i][0]);
+        bot = oldTet[i]->getAdjacentTetrahedron(oldVertexPerm[i][1]);
+        botPerm = oldTet[i]->getAdjacentTetrahedronGluing(oldVertexPerm[i][1]);
+
+        for (int j=0; j<4; j++) {
+            p[j] = topPerm.preImageOf(j);
+            if (p[j] == oldVertexPerm[i][0])
+                p[j] = oldVertexPerm[i][1];
+            else if (p[j] == oldVertexPerm[i][1])
+                p[j] = oldVertexPerm[i][0];
+            p[j] = botPerm[p[j]];
+        }
+        if (top)
+            top->joinTo(topPerm[oldVertexPerm[i][0]], bot, NPerm(p[0], p[1], p[2], p[3]));
+        else {
+            oldTet[i]->unjoin(oldVertexPerm[i][0]);
+            oldTet[i]->unjoin(oldVertexPerm[i][1]);
+        }
+
+        delete removeTetrahedron(oldTet[i]);
+    }
+
+    delete[] oldVertexPerm;
+    delete[] oldTet;
+
     return true;
 }
 
