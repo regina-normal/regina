@@ -320,7 +320,7 @@ class NFacePairing : public NThread {
          * unaccounted for by this structure.
          *
          * This routine begins with two faces of a given tetrahedron,
-         * described by parameters \a tet and \a face.
+         * described by parameters \a tet and \a faces.
          * If these two faces are both joined to some different
          * tetrahedron, parameter \a tet will be changed to this new
          * tetrahedron and parameter \a faces will be changed to the
@@ -409,6 +409,52 @@ class NFacePairing : public NThread {
          * one-ended chain with a double handle.
          */
         bool hasOneEndedChainWithDoubleHandle() const;
+
+        /**
+         * Determines whether this face pairing contains a wedged
+         * double-ended chain.
+         *
+         * A chain involves a sequence of tetrahedra, each joined to the
+         * next along two faces, and is described in detail in the
+         * documentation for followChain().
+         *
+         * A one-ended chain is a chain in which the first tetrahedron
+         * is also joined to itself along one face (i.e., the underlying
+         * face pairing for a layered solid torus).  A double-ended
+         * chain is a chain in which the first tetrahedron is joined to
+         * itself along one face and the final tetrahedron is also
+         * joined to itself along one face (i.e., the underlying
+         * face pairing for a layered lens space).
+         *
+         * A wedged double-ended chain is created from two one-ended
+         * chains as follows.  Two new tetrahedra are added, and each
+         * one-ended chain is joined to each of the new tetrahedra along
+         * a single face.  In addition, the two new tetrahedra are
+         * joined to each other along a single face.  The remaining two
+         * faces (one from each of the new tetrahedra) remain
+         * unaccounted for by this structure.
+         *
+         * An alternative way of viewing a wedged double-ended chain is
+         * as an ordinary double-ended chain, where one of the internal
+         * tetrahedra is removed and replaced with a pair of tetrahedra
+         * joined to each other.  Whereas the original tetrahedron met its
+         * two neighbouring tetrahedra along two faces each (giving a
+         * total of four face identifications), the two new tetrahedra now
+         * meet each of the two neighbouring tetrahedra along a single
+         * face each (again giving four face identifications).
+         *
+         * Note that if this alternate construction is used to replace
+         * one of the end tetrahedra of the double-ended chain (not an
+         * internal tetrahedron), the resulting structure will either be
+         * a triple edge or a one-ended chain with a double handle
+         * (according to whether the original chain has zero or positive
+         * length).  See hasTripleEdge() and
+         * hasOneEndedChainWithDoubleHandle() for further details.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * wedged double-ended chain.
+         */
+        bool hasWedgedDoubleEndedChain() const;
 
         /**
          * Internal to findAllPairings().  This routine should never be
@@ -652,6 +698,26 @@ class NFacePairing : public NThread {
          */
         bool hasOneEndedChainWithDoubleHandle(unsigned tet,
             unsigned face) const;
+
+        /**
+         * Internal to hasWedgedDoubleEndedChain().  This routine assumes
+         * that the give face of the given tetrahedron is glued to this
+         * same tetrahedron, and attempts to find a wedged double-ended
+         * chain for which this tetrahedron is at one end of the
+         * double-ended chain.
+         *
+         * \pre The given face of the given tetrahedron is paired with
+         * another face of the same tetrahedron under this face pairing.
+         *
+         * @param tet the index in the triangulation of the given
+         * tetrahedron.
+         * @param face the number of the given face in the tetrahedron;
+         * this must be between 0 and 3 inclusive.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * wedged double-ended chain as described above.
+         */
+        bool hasWedgedDoubleEndedChain(unsigned tet, unsigned face) const;
 };
 
 /*@}*/

@@ -48,6 +48,8 @@ namespace {
         &NFacePairing::hasBrokenDoubleEndedChain;
     bool (NFacePairing::*query_oecwdh)() const =
         &NFacePairing::hasOneEndedChainWithDoubleHandle;
+    bool (NFacePairing::*query_wdec)() const =
+        &NFacePairing::hasWedgedDoubleEndedChain;
 
     const NTetFace& getItem(const NFacePairing& p, const NTetFace& index) {
         return p[index];
@@ -76,10 +78,11 @@ void addNFacePairing() {
         .def("followChain", &NFacePairing::followChain)
 
         // For reasons I do not understand, it seems I have to declare
-        // these two routines separately to avoid a compile error with
+        // these routines separately to avoid a compile error with
         // g++ 3.3.  *shrug*
         .def("hasBrokenDoubleEndedChain", query_bdec)
         .def("hasOneEndedChainWithDoubleHandle", query_oecwdh)
+        .def("hasWedgedDoubleEndedChain", query_wdec)
 
         .def("__str__", &NFacePairing::toString)
         .staticmethod("fromTextRep")

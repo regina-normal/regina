@@ -314,6 +314,100 @@ bool NFacePairing::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
     return (handle >= 2);
 }
 
+bool NFacePairing::hasWedgedDoubleEndedChain() const {
+    // Search for the end edge of the first chain.
+    unsigned baseTet;
+    unsigned baseFace;
+    for (baseTet = 0; baseTet < nTetrahedra - 1; baseTet++)
+        for (baseFace = 0; baseFace < 3; baseFace++)
+            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
+                // Here's a face that matches to the same tetrahedron.
+                if (hasWedgedDoubleEndedChain(baseTet, baseFace))
+                    return true;
+
+                // There's no sense in looking for more
+                // self-identifications in this tetrahedron, since if
+                // there's another (different) one it must be a
+                // one-tetrahedron component (and so not applicable).
+                break;
+            }
+
+    // Nothing found.  Boring.
+    return false;
+}
+
+bool NFacePairing::hasWedgedDoubleEndedChain(unsigned baseTet,
+        unsigned baseFace) const {
+    // Follow the chain along and see how far we get.
+    NFacePair bdryFaces =
+        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+    unsigned bdryTet = baseTet;
+    followChain(bdryTet, bdryFaces);
+
+    // Here we expect to find the wedge.
+    NTetFace dest1 = dest(bdryTet, bdryFaces.lower());
+    NTetFace dest2 = dest(bdryTet, bdryFaces.upper());
+
+    if (dest1.isBoundary(nTetrahedra) || dest2.isBoundary(nTetrahedra) ||
+            dest1.tet == dest2.tet)
+        return false;
+
+    // We are joined to two new and distinct graph vertices.
+    // Hunt for the edge joining them, and also see where they follow
+    // through to beyond these two new vertices.
+    // Drawing a diagram whilst reading this code will certainly help. :)
+    NTetFace throughFace[2][3];
+    int nThroughFaces[2];
+    nThroughFaces[0] = nThroughFaces[1] = 0;
+
+    int i, j;
+    NTetFace nextDest;
+    bool foundCrossEdge = false;
+    for (i = 0; i < 4; i++) {
+        if (i != dest1.face) {
+            nextDest = dest(dest1.tet, i);
+            if (nextDest.tet == dest2.tet)
+                foundCrossEdge = true;
+            else if (nextDest.tet != dest1.tet &&
+                    ! nextDest.isBoundary(nTetrahedra))
+                throughFace[0][nThroughFaces[0]++] = nextDest;
+        }
+        if (i != dest2.face) {
+            nextDest = dest(dest2.tet, i);
+            if (nextDest.tet != dest1.tet && nextDest.tet != dest2.tet &&
+                    ! nextDest.isBoundary(nTetrahedra))
+                throughFace[1][nThroughFaces[1]++] = nextDest;
+        }
+    }
+
+    if (! foundCrossEdge)
+        return false;
+
+    // We have our cross edge.
+    // Moreover, all of the faces in throughFace[] belong to previously
+    // unseen tetrahedra.
+    // Hunt for the other half of the double-ended chain.
+    NFacePair chainFaces;
+    unsigned chainTet;
+    for (i = 0; i < nThroughFaces[0]; i++)
+        for (j = 0; j < nThroughFaces[1]; j++)
+            if (throughFace[0][i].tet == throughFace[1][j].tet) {
+                // Bingo.
+                // Follow the chain and see if it ends in a loop.
+                chainTet = throughFace[0][i].tet;
+                chainFaces = NFacePair(throughFace[0][i].face,
+                    throughFace[1][j].face).complement();
+                followChain(chainTet, chainFaces);
+
+                if (dest(chainTet, chainFaces.lower()).tet ==
+                        static_cast<int>(chainTet))
+                    return true;
+            }
+
+    // Nothing found.
+    return false;
+}
+
 bool NFacePairing::findAllPairings(unsigned nTetrahedra,
         NBoolSet boundary, int nBdryFaces, UseFacePairing use,
         void* useArgs, bool newThread) {
