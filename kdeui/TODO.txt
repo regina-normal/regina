@@ -8,11 +8,11 @@ engine documentation.
 General:
     Make "configure shortcuts" work with the part as well as with the shell
     More "What's This?" texts, including a what's this button on the toolbar
-    Enhance the DCOP interface.
+    Include progress dialogs where appropriate
+    Enhance the DCOP interface
 
 Census:
     Implement GUI census creation
-    (4.0) Support searching through a census for a triangulation
 
 Containers:
     Update container viewers whenever their subtrees change, not just when
