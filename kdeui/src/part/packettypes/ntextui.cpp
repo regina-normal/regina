@@ -47,9 +47,9 @@ using regina::NText;
 NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc, bool readWrite) :
         PacketUI(enclosingPane), text(packet), document(doc) {
-    // Create a view before we do anything else.
+    // Create a view (which must be parented) before we do anything else.
     // Otherwise the Vim component crashes.
-    view = document->createView(0);
+    view = document->createView(enclosingPane);
 
     document->setReadWrite(readWrite);
     KTextEditor::wordWrapInterface(document)->setWordWrap(true);

@@ -64,7 +64,7 @@ using regina::NScript;
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc, bool readWrite) :
         PacketUI(enclosingPane), script(packet), document(doc) {
-    ui = new QVBox();
+    ui = new QVBox(enclosingPane);
 
     // --- Action Toolbar ---
 
@@ -102,7 +102,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // --- Text Editor ---
 
-    // Create a view before we do anything else.
+    // Create a view (which must be parented) before we do anything else.
     // Otherwise the Vim component crashes.
     view = document->createView(splitter);
     editInterface = KTextEditor::editInterface(document);
@@ -419,6 +419,8 @@ void NScriptUI::notifyScriptChanged() {
 void NScriptUI::setPythonMode() {
     KTextEditor::HighlightingInterface* hi =
         KTextEditor::highlightingInterface(document);
+    if (! hi)
+        return;
 
     unsigned nModes = hi->hlModeCount();
     for (unsigned i = 0; i < nModes; i++)
