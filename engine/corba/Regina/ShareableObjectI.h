@@ -56,6 +56,11 @@ class ShareableObject_i : public virtual POA_Regina::ShareableObject,
         virtual ~ShareableObject_i() {
         }
 
+		/**
+		 * Activates this object in the default CORBA POA.
+		 */
+		void activateObject();
+
         virtual CORBA::Long getCppPtr();
         virtual CORBA::Boolean sameObject(Regina::ShareableObject_ptr other);
         virtual void destroy();
