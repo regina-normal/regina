@@ -53,6 +53,7 @@ class NLayeredSolidTorus_i :
     public:
         STANDARD_NEW_WRAPPER
 
+		virtual Regina::Subcomplex::NLayeredSolidTorus_ptr cloneMe();
 		virtual CORBA::Long getNumberOfTetrahedra();
 		virtual Regina::Triangulation::NTetrahedron_ptr getBase();
 		virtual CORBA::Long getBaseEdge(CORBA::Long group, CORBA::Long index);

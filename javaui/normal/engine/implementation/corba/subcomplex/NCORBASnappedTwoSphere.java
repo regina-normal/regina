@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A normal surface theory calculator                           *
- *  CORBA interface definition for computational engine                   *
+ *  Java user interface                                                   *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,24 +26,39 @@
 
 /* end stub */
 
-#ifndef __NLAYEREDLENSSPACE_IDL
-#define __NLAYEREDLENSSPACE_IDL
+package normal.engine.implementation.corba.subcomplex;
 
-#include "Subcomplex/NLayeredSolidTorus.idl"
+import normal.engine.implementation.corba.Regina.Subcomplex.*;
+import normal.engine.implementation.corba.triangulation.*;
+import normal.engine.implementation.corba.*;
 
-module Regina {
-    module Subcomplex {
-        interface NLayeredLensSpace : ShareableObject {
-			NLayeredLensSpace cloneMe();
-			long getP();
-			long getQ();
-			NLayeredSolidTorus getTorus();
-			long getMobiusBoundaryGroup();
-			boolean isSnapped();
-			boolean isTwisted();
-        };
-    };
-};
+public class NCORBASnappedTwoSphere extends CORBAShareableObject
+        implements normal.engine.subcomplex.NSnappedTwoSphere {
+    public NSnappedTwoSphere data;
+    public static final Class CORBAClass = NSnappedTwoSphere.class;
+    public static final Class helperClass = NSnappedTwoSphereHelper.class;
 
-#endif
+    public NCORBASnappedTwoSphere(NSnappedTwoSphere data) {
+        super(data);
+        this.data = data;
+    }
 
+    public static NCORBASnappedTwoSphere newWrapper(NSnappedTwoSphere source) {
+        return (source == null ? null : new NCORBASnappedTwoSphere(source));
+    }
+
+	public normal.engine.subcomplex.NSnappedTwoSphere cloneMe() {
+		return NCORBASnappedTwoSphere.newWrapper(data.cloneMe());
+	}
+	public normal.engine.subcomplex.NSnappedBall getSnappedBall(int index) {
+		return NCORBASnappedBall.newWrapper(data.getSnappedBall(index));
+	}
+	public void reduceTriangulation() {
+		data.reduceTriangulation();
+	}
+	public normal.engine.triangulation.NTriangulation getReducedTriangulation(
+			normal.engine.triangulation.NTriangulation original) {
+		return NCORBATriangulation.newWrapper(data.getReducedTriangulation(
+			((NCORBATriangulation)original).data));
+	}
+}

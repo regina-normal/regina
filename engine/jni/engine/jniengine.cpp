@@ -38,7 +38,7 @@
     #include "nfile.h"
     #include "ncensus.h"
 	#include "nlayeredlensspace.h"
-	#include "nsnappedball.h"
+	#include "nsnappedtwosphere.h"
     #include "nnormalsurfacelist.h"
     #include "matrixops.h"
 #else
@@ -50,7 +50,7 @@
     #include "engine/file/nfile.h"
     #include "engine/census/ncensus.h"
     #include "engine/subcomplex/nlayeredlensspace.h"
-    #include "engine/subcomplex/nsnappedball.h"
+    #include "engine/subcomplex/nsnappedtwosphere.h"
     #include "engine/surfaces/nnormalsurfacelist.h"
     #include "engine/maths/matrixops.h"
 #endif
@@ -73,6 +73,26 @@ JNIEXPORT jlong JNICALL
         NBoolSet::fromByteCode(flag2),
         NBoolSet::fromByteCode(flag3),
         nBdryFaces, GET_ENGINE_OBJECT(env, NProgressManager, manager));
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_JNIEngine_formsSnappedTwoSphere__Lnormal_engine_subcomplex_NSnappedBall_2Lnormal_engine_subcomplex_NSnappedBall_2
+		(JNIEnv *env, jobject me, jobject p1, jobject p2) {
+	return CREATE_WRAPPER_OBJECT(env,
+		NSnappedTwoSphere::formsSnappedTwoSphere(
+			GET_ENGINE_OBJECT(env, NSnappedBall, p1),
+			GET_ENGINE_OBJECT(env, NSnappedBall, p2)),
+		"normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_JNIEngine_formsSnappedTwoSphere__Lnormal_engine_triangulation_NTetrahedron_2Lnormal_engine_triangulation_NTetrahedron_2
+		(JNIEnv *env, jobject me, jobject p1, jobject p2) {
+	return CREATE_WRAPPER_OBJECT(env,
+		NSnappedTwoSphere::formsSnappedTwoSphere(
+			GET_ENGINE_OBJECT(env, NTetrahedron, p1),
+			GET_ENGINE_OBJECT(env, NTetrahedron, p2)),
+		"normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
 }
 
 JNIEXPORT jint JNICALL

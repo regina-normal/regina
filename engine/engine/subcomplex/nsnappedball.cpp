@@ -36,6 +36,13 @@
     #include "engine/subcomplex/nsnappedball.h"
 #endif
 
+NSnappedBall* NSnappedBall::clone() const {
+	NSnappedBall* ans = new NSnappedBall();
+	ans->tet = tet;
+	ans->equator = equator;
+	return ans;
+}
+
 NSnappedBall* NSnappedBall::isSnappedBall(NTetrahedron* tet) {
 	int inFace1, inFace2;
 	NPerm perm;

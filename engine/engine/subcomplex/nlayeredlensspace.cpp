@@ -42,6 +42,15 @@
     #include "engine/maths/numbertheory.h"
 #endif
 
+NLayeredLensSpace* NLayeredLensSpace::clone() const {
+	NLayeredLensSpace* ans = new NLayeredLensSpace();
+	ans->torus = torus->clone();
+	ans->mobiusBoundaryGroup = mobiusBoundaryGroup;
+	ans->p = p;
+	ans->q = q;
+	return ans;
+}
+
 NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
 		const NComponent* comp) {
 	// Basic property check.

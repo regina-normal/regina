@@ -89,6 +89,15 @@ class NLayeredSolidTorus : public ShareableObject {
     
     public:
 		/**
+		 * Returns a newly created clone of this structure.
+		 *
+		 * \ifaces This routine is named \a cloneMe.
+		 *
+		 * @return a newly created clone.
+		 */
+		NLayeredSolidTorus* clone() const;
+
+		/**
 		 * Returns the number of tetrahedra in this layered solid torus.
 		 *
 		 * @return the number of tetrahedra.

@@ -29,6 +29,10 @@
 #include "NLayeredSolidTorusI.h"
 #include "NTetrahedronI.h"
 
+Regina::Subcomplex::NLayeredSolidTorus_ptr NLayeredSolidTorus_i::cloneMe() {
+	return NLayeredSolidTorus_i::newWrapper(
+		GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->clone());
+}
 CORBA::Long NLayeredSolidTorus_i::getNumberOfTetrahedra() {
 	return GET_ENGINE_OBJECT(NLayeredSolidTorus, this)->
 		getNumberOfTetrahedra();

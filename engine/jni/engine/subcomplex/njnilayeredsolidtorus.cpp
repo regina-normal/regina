@@ -40,6 +40,14 @@
 #endif
 
 JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_cloneMe
+        (JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->clone(),
+        "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
+}
+
+JNIEXPORT jobject JNICALL
 		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBase
 		(JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,

@@ -73,6 +73,14 @@ class NLayeredLensSpace : public ShareableObject {
 		 * solid torus will also be destroyed.
 		 */
 		virtual ~NLayeredLensSpace();
+		/**
+		 * Returns a newly created clone of this structure.
+		 *
+		 * \ifaces This routine is named \a cloneMe.
+		 *
+		 * @return a newly created clone.
+		 */
+		NLayeredLensSpace* clone() const;
 
 		/**
 		 * Returns the first parameter \a p of this lens space L(p,q).

@@ -116,7 +116,7 @@ public class CompositionViewer extends DefaultPacketViewer
 
 		DefaultMutableTreeNode category;
 		DefaultMutableTreeNode instance;
-		long n, i;
+		long n, i, j;
 
 		// Look for lens spaces.
 		category = null;
@@ -176,10 +176,12 @@ public class CompositionViewer extends DefaultPacketViewer
 		// Look for snapped 3-balls.
 		category = null;
 		NSnappedBall ball;
+		Vector balls = new Vector();
 		n = triangulation.getNumberOfTetrahedra();
 		for (i = 0; i < n; i++) {
 			ball = engine.isSnappedBall(triangulation.getTetrahedron(i));
 			if (ball != null) {
+				balls.addElement(ball);
 				if (category == null) {
 					category = new DefaultMutableTreeNode("Snapped 3-Balls");
 					rootNode.add(category);
@@ -192,9 +194,44 @@ public class CompositionViewer extends DefaultPacketViewer
 				instance.add(new DefaultMutableTreeNode("Equator: edge " +
 					String.valueOf(ball.getInternalFace(0)) +
 					String.valueOf(ball.getInternalFace(1))));
-				ball.destroy();
 			}
 		}
+
+		// Look for snapped 2-spheres.
+		category = null;
+		NSnappedTwoSphere sphere;
+		NSnappedBall ball2;
+		n = balls.size();
+		for (i = 0; i < n; i++) {
+			ball = (NSnappedBall)balls.elementAt((int)i);
+			for (j = i + 1; j < n; j++) {
+				ball2 = (NSnappedBall)balls.elementAt((int)j);
+				sphere = engine.formsSnappedTwoSphere(ball, ball2);
+				if (sphere != null) {
+					if (category == null) {
+						category = new DefaultMutableTreeNode(
+							"Snapped 2-Spheres");
+						rootNode.add(category);
+					}
+					instance = new DefaultMutableTreeNode(
+						"Tetrahedra " +
+						String.valueOf(triangulation.getTetrahedronIndex(
+						ball.getTetrahedron())) + ", " +
+						String.valueOf(triangulation.getTetrahedronIndex(
+						ball2.getTetrahedron())));
+					category.add(instance);
+					instance.add(new DefaultMutableTreeNode("Equator: edge # " +
+						String.valueOf(triangulation.getEdgeIndex(
+						ball.getTetrahedron().getEdge(
+						ball.getEquatorEdge())))));
+				}
+			}
+		}
+
+		// Destroy the cached 3-balls.
+		Enumeration e1 = balls.elements();
+		while (e1.hasMoreElements())
+			((NSnappedBall)e1.nextElement()).destroy();
 
 		if (rootNode.isLeaf())
 			rootNode.add(new DefaultMutableTreeNode(

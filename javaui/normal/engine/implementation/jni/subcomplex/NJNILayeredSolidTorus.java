@@ -38,6 +38,7 @@ public class NJNILayeredSolidTorus extends JNIShareableObject
         super(s);
     }
     
+	public native NLayeredSolidTorus cloneMe();
 	public native long getNumberOfTetrahedra();
 	public native NTetrahedron getBase();
 	public native int getBaseEdge(int group, int index);

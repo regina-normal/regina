@@ -315,7 +315,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         JMenuItem menuPacketDelete = new JMenuItem("Delete");
 		menuPacketDelete.setMnemonic(KeyEvent.VK_D);
 		menuPacketDelete.setAccelerator(KeyStroke.getKeyStroke(
-			KeyEvent.VK_D, ActionEvent.ALT_MASK));
+			KeyEvent.VK_DELETE, 0));
         JMenuItem menuPacketRefresh = new JMenuItem("Refresh Subtree");
 		menuPacketRefresh.setMnemonic(KeyEvent.VK_F);
 		menuPacketRefresh.setAccelerator(KeyStroke.getKeyStroke(

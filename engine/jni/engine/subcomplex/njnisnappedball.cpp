@@ -39,6 +39,14 @@
     #include "jni/engine/subcomplex/NJNISnappedBall.h"
 #endif
 
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_cloneMe
+        (JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NSnappedBall, me)->clone(),
+        "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
+}
+
 JNIEXPORT jint JNICALL
 		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getBoundaryFace
 		(JNIEnv *env, jobject me, jint index) {

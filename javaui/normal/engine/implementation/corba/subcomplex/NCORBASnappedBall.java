@@ -47,6 +47,9 @@ public class NCORBASnappedBall extends CORBAShareableObject
         return (source == null ? null : new NCORBASnappedBall(source));
     }
 
+	public normal.engine.subcomplex.NSnappedBall cloneMe() {
+		return NCORBASnappedBall.newWrapper(data.cloneMe());
+	}
 	public normal.engine.triangulation.NTetrahedron getTetrahedron() {
 		return NCORBATetrahedron.newWrapper(data.getTetrahedron());
 	}

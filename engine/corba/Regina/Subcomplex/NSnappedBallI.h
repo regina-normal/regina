@@ -53,6 +53,7 @@ class NSnappedBall_i:
     public:
         STANDARD_NEW_WRAPPER
 
+		virtual Regina::Subcomplex::NSnappedBall_ptr cloneMe();
 		virtual Regina::Triangulation::NTetrahedron_ptr getTetrahedron();
 		virtual CORBA::Long getBoundaryFace(CORBA::Long index);
 		virtual CORBA::Long getInternalFace(CORBA::Long index);

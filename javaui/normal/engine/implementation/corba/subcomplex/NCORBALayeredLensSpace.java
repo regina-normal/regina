@@ -46,6 +46,9 @@ public class NCORBALayeredLensSpace extends CORBAShareableObject
         return (source == null ? null : new NCORBALayeredLensSpace(source));
     }
 
+	public normal.engine.subcomplex.NLayeredLensSpace cloneMe() {
+		return NCORBALayeredLensSpace.newWrapper(data.cloneMe());
+	}
 	public long getP() {
 		return data.getP();
 	}

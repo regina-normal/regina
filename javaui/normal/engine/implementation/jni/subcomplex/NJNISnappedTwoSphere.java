@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A normal surface theory calculator                           *
- *  CORBA interface definition for computational engine                   *
+ *  Java user interface                                                   *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,24 +26,21 @@
 
 /* end stub */
 
-#ifndef __NLAYEREDLENSSPACE_IDL
-#define __NLAYEREDLENSSPACE_IDL
+package normal.engine.implementation.jni.subcomplex;
 
-#include "Subcomplex/NLayeredSolidTorus.idl"
+import normal.engine.implementation.jni.*;
+import normal.engine.triangulation.*;
+import normal.engine.subcomplex.*;
 
-module Regina {
-    module Subcomplex {
-        interface NLayeredLensSpace : ShareableObject {
-			NLayeredLensSpace cloneMe();
-			long getP();
-			long getQ();
-			NLayeredSolidTorus getTorus();
-			long getMobiusBoundaryGroup();
-			boolean isSnapped();
-			boolean isTwisted();
-        };
-    };
-};
-
-#endif
-
+public class NJNISnappedTwoSphere extends JNIShareableObject
+		implements NSnappedTwoSphere {
+    public NJNISnappedTwoSphere(Sentry s) {
+        super(s);
+    }
+    
+	public native NSnappedTwoSphere cloneMe();
+	public native NSnappedBall getSnappedBall(int index);
+	public native void reduceTriangulation();
+	public native NTriangulation getReducedTriangulation(
+		NTriangulation original);
+}

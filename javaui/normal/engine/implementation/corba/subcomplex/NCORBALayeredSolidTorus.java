@@ -47,6 +47,9 @@ public class NCORBALayeredSolidTorus extends CORBAShareableObject
         return (source == null ? null : new NCORBALayeredSolidTorus(source));
     }
 
+	public normal.engine.subcomplex.NLayeredSolidTorus cloneMe() {
+		return NCORBALayeredSolidTorus.newWrapper(data.cloneMe());
+	}
 	public long getNumberOfTetrahedra() {
 		return data.getNumberOfTetrahedra();
 	}

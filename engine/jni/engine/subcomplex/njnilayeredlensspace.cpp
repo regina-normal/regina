@@ -37,6 +37,14 @@
     #include "jni/engine/subcomplex/NJNILayeredLensSpace.h"
 #endif
 
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_cloneMe
+		(JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+		GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->clone(),
+        "normal/engine/implementation/jni/subcomplex/NJNILayeredLensSpace");
+}
+
 JNIEXPORT jint JNICALL
 		Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getMobiusBoundaryGroup
 		(JNIEnv *env, jobject me) {

@@ -368,6 +368,18 @@ public class CORBAEngine implements Engine {
             boundary.getByteCode(), nBdryFaces,
             ((NCORBAProgressManager)manager).data);
     }
+	public NSnappedTwoSphere formsSnappedTwoSphere(
+			NSnappedBall ball1, NSnappedBall ball2) {
+		return NCORBASnappedTwoSphere.newWrapper(
+			data.formsSnappedTwoSphere_NSnappedBall(
+			((NCORBASnappedBall)ball1).data, ((NCORBASnappedBall)ball2).data));
+	}
+	public NSnappedTwoSphere formsSnappedTwoSphere(
+			NTetrahedron tet1, NTetrahedron tet2) {
+		return NCORBASnappedTwoSphere.newWrapper(
+			data.formsSnappedTwoSphere_NTetrahedron(
+			((NCORBATetrahedron)tet1).data, ((NCORBATetrahedron)tet2).data));
+	}
     public int getVersionMajor() {
         return data.getVersionMajor();
     }

@@ -29,6 +29,10 @@
 #include "NLayeredLensSpaceI.h"
 #include "NLayeredSolidTorusI.h"
 
+Regina::Subcomplex::NLayeredLensSpace_ptr NLayeredLensSpace_i::cloneMe() {
+	return NLayeredLensSpace_i::newWrapper(
+		GET_ENGINE_OBJECT(NLayeredLensSpace, this)->clone());
+}
 CORBA::Long NLayeredLensSpace_i::getP() {
 	return GET_ENGINE_OBJECT(NLayeredLensSpace, this)->getP();
 }

@@ -29,6 +29,10 @@
 #include "NSnappedBallI.h"
 #include "NTetrahedronI.h"
 
+Regina::Subcomplex::NSnappedBall_ptr NSnappedBall_i::cloneMe() {
+	return NSnappedBall_i::newWrapper(
+		GET_ENGINE_OBJECT(NSnappedBall, this)->clone());
+}
 Regina::Triangulation::NTetrahedron_ptr NSnappedBall_i::getTetrahedron() {
 	return NTetrahedron_i::newWrapper(
 		GET_ENGINE_OBJECT(NSnappedBall, this)->getTetrahedron());

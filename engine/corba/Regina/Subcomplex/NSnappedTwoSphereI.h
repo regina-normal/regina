@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A normal surface theory calculator                           *
- *  CORBA interface definition for computational engine                   *
+ *  Computational engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,23 +26,40 @@
 
 /* end stub */
 
-#ifndef __NLAYEREDLENSSPACE_IDL
-#define __NLAYEREDLENSSPACE_IDL
+#ifndef __NSNAPPEDTWOSPHEREI_H
+#define __NSNAPPEDTWOSPHEREI_H
 
-#include "Subcomplex/NLayeredSolidTorus.idl"
+#include "config.h"
 
-module Regina {
-    module Subcomplex {
-        interface NLayeredLensSpace : ShareableObject {
-			NLayeredLensSpace cloneMe();
-			long getP();
-			long getQ();
-			NLayeredSolidTorus getTorus();
-			long getMobiusBoundaryGroup();
-			boolean isSnapped();
-			boolean isTwisted();
-        };
-    };
+#ifdef __NO_INCLUDE_PATHS
+    #include "nsnappedtwosphere.h"
+#else
+    #include "engine/subcomplex/nsnappedtwosphere.h"
+#endif
+
+#include "NSnappedTwoSphereIDL.h"
+#include "ShareableObjectI.h"
+
+class NSnappedTwoSphere_i:
+		public virtual POA_Regina::Subcomplex::NSnappedTwoSphere,
+        public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NSnappedTwoSphere_i, NSnappedTwoSphere,
+		Regina::Subcomplex::NSnappedTwoSphere)
+
+    protected:
+        NSnappedTwoSphere_i(::NSnappedTwoSphere* newCppPtr) :
+				ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER
+
+		virtual Regina::Subcomplex::NSnappedTwoSphere_ptr cloneMe();
+		virtual Regina::Subcomplex::NSnappedBall_ptr getSnappedBall(
+			CORBA::Long index);
+		virtual void reduceTriangulation();
+		virtual Regina::Triangulation::NTriangulation_ptr
+			getReducedTriangulation(
+			Regina::Triangulation::NTriangulation_ptr original);
 };
 
 #endif

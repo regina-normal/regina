@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A normal surface theory calculator                           *
- *  CORBA interface definition for computational engine                   *
+ *  Computational engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,24 +26,48 @@
 
 /* end stub */
 
-#ifndef __NLAYEREDLENSSPACE_IDL
-#define __NLAYEREDLENSSPACE_IDL
+#include "config.h"
+#include "regina.h"
 
-#include "Subcomplex/NLayeredSolidTorus.idl"
+#include "EngineI.h"
+#include "NLayeredLensSpaceI.h"
+#include "NLayeredSolidTorusI.h"
+#include "NSnappedBallI.h"
+#include "NSnappedTwoSphereI.h"
 
-module Regina {
-    module Subcomplex {
-        interface NLayeredLensSpace : ShareableObject {
-			NLayeredLensSpace cloneMe();
-			long getP();
-			long getQ();
-			NLayeredSolidTorus getTorus();
-			long getMobiusBoundaryGroup();
-			boolean isSnapped();
-			boolean isTwisted();
-        };
-    };
-};
-
-#endif
+Regina::Subcomplex::NSnappedTwoSphere_ptr
+		Engine_i::formsSnappedTwoSphere_NSnappedBall(
+		Regina::Subcomplex::NSnappedBall_ptr p1,
+		Regina::Subcomplex::NSnappedBall_ptr p2) {
+	return NSnappedTwoSphere_i::newWrapper(
+		::NSnappedTwoSphere::formsSnappedTwoSphere(
+		GET_ENGINE_OBJECT(NSnappedBall, p1),
+		GET_ENGINE_OBJECT(NSnappedBall, p2)));
+}
+Regina::Subcomplex::NSnappedTwoSphere_ptr
+		Engine_i::formsSnappedTwoSphere_NTetrahedron(
+		Regina::Triangulation::NTetrahedron_ptr p1,
+		Regina::Triangulation::NTetrahedron_ptr p2) {
+	return NSnappedTwoSphere_i::newWrapper(
+		::NSnappedTwoSphere::formsSnappedTwoSphere(
+		GET_ENGINE_OBJECT(NTetrahedron, p1),
+		GET_ENGINE_OBJECT(NTetrahedron, p2)));
+}
+Regina::Subcomplex::NLayeredLensSpace_ptr Engine_i::isLayeredLensSpace(
+		Regina::Triangulation::NComponent_ptr comp) {
+	return NLayeredLensSpace_i::newWrapper(
+		::NLayeredLensSpace::isLayeredLensSpace(
+		GET_ENGINE_OBJECT(NComponent, comp)));
+}
+Regina::Subcomplex::NLayeredSolidTorus_ptr Engine_i::isLayeredSolidTorusBase(
+		Regina::Triangulation::NTetrahedron_ptr tet) {
+	return NLayeredSolidTorus_i::newWrapper(
+		::NLayeredSolidTorus::isLayeredSolidTorusBase(
+		GET_ENGINE_OBJECT(NTetrahedron, tet)));
+}
+Regina::Subcomplex::NSnappedBall_ptr Engine_i::isSnappedBall(
+		Regina::Triangulation::NTetrahedron_ptr tet) {
+	return NSnappedBall_i::newWrapper(
+		::NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(NTetrahedron, tet)));
+}
 

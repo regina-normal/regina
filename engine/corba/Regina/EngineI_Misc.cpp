@@ -46,8 +46,6 @@
 #include "NFileI.h"
 #include "NGroupExpressionI.h"
 #include "NGroupPresentationI.h"
-#include "NLayeredLensSpaceI.h"
-#include "NLayeredSolidTorusI.h"
 #include "NMatrixIntI.h"
 #include "NProgressManagerI.h"
 #include "NSnappedBallI.h"
@@ -116,23 +114,6 @@ CORBA::Long Engine_i::getVersionMinor() {
 }
 char* Engine_i::getVersionString() {
     return NString(ENGINE_VERSION).dupe();
-}
-Regina::Subcomplex::NLayeredLensSpace_ptr Engine_i::isLayeredLensSpace(
-		Regina::Triangulation::NComponent_ptr comp) {
-	return NLayeredLensSpace_i::newWrapper(
-		::NLayeredLensSpace::isLayeredLensSpace(
-		GET_ENGINE_OBJECT(NComponent, comp)));
-}
-Regina::Subcomplex::NLayeredSolidTorus_ptr Engine_i::isLayeredSolidTorusBase(
-		Regina::Triangulation::NTetrahedron_ptr tet) {
-	return NLayeredSolidTorus_i::newWrapper(
-		::NLayeredSolidTorus::isLayeredSolidTorusBase(
-		GET_ENGINE_OBJECT(NTetrahedron, tet)));
-}
-Regina::Subcomplex::NSnappedBall_ptr Engine_i::isSnappedBall(
-		Regina::Triangulation::NTetrahedron_ptr tet) {
-	return NSnappedBall_i::newWrapper(
-		::NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(NTetrahedron, tet)));
 }
 Regina::Maths::NMatrixInt_ptr Engine_i::makeMatchingEquations(
         Regina::Triangulation::NTriangulation_ptr triangulation,

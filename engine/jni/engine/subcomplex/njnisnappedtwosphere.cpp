@@ -26,41 +26,49 @@
 
 /* end stub */
 
-#ifndef __NLAYEREDLENSSPACEI_H
-#define __NLAYEREDLENSSPACEI_H
-
 #include "config.h"
-
 #ifdef __NO_INCLUDE_PATHS
-    #include "nlayeredlensspace.h"
+    #include "nsnappedtwosphere.h"
+    #include "ntetrahedron.h"
+    #include "ntriangulation.h"
+    #include "jnitools.h"
+    #include "NJNISnappedTwoSphere.h"
 #else
-    #include "engine/subcomplex/nlayeredlensspace.h"
+    #include "engine/subcomplex/nsnappedtwosphere.h"
+    #include "engine/triangulation/ntetrahedron.h"
+    #include "engine/triangulation/ntriangulation.h"
+    #include "jni/jnitools.h"
+    #include "jni/engine/subcomplex/NJNISnappedTwoSphere.h"
 #endif
 
-#include "NLayeredLensSpaceIDL.h"
-#include "ShareableObjectI.h"
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_cloneMe
+        (JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->clone(),
+        "normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
+}
 
-class NLayeredLensSpace_i :
-		public virtual POA_Regina::Subcomplex::NLayeredLensSpace,
-        public ShareableObject_i {
-	STANDARD_ENGINE_TYPEDEFS(NLayeredLensSpace_i, NLayeredLensSpace,
-		Regina::Subcomplex::NLayeredLensSpace)
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_getReducedTriangulation
+		(JNIEnv *env, jobject me, jobject you) {
+	return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->getReducedTriangulation(
+		GET_ENGINE_OBJECT(env, NTriangulation, you)),
+        "normal/engine/implementation/jni/triangulation/NJNITriangulation");
+}
 
-    protected:
-        NLayeredLensSpace_i(::NLayeredLensSpace* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
-        }
-    public:
-        STANDARD_NEW_WRAPPER
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_getSnappedBall
+		(JNIEnv *env, jobject me, jint index) {
+	return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->getSnappedBall(index),
+        "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
+}
 
-		virtual Regina::Subcomplex::NLayeredLensSpace_ptr cloneMe();
-		virtual CORBA::Long getP();
-		virtual CORBA::Long getQ();
-		virtual Regina::Subcomplex::NLayeredSolidTorus_ptr getTorus();
-		virtual CORBA::Long getMobiusBoundaryGroup();
-		virtual CORBA::Boolean isSnapped();
-		virtual CORBA::Boolean isTwisted();
-};
-
-#endif
+JNIEXPORT void JNICALL
+		Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_reduceTriangulation
+		(JNIEnv *env, jobject me) {
+	GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->reduceTriangulation();
+}
 

@@ -38,6 +38,29 @@
     #include "engine/subcomplex/nlayeredsolidtorus.h"
 #endif
 
+NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
+	NLayeredSolidTorus* ans = new NLayeredSolidTorus();
+	int i,j;
+	ans->nTetrahedra = nTetrahedra;
+	ans->base = base;
+	ans->topLevel = topLevel;
+	for (i = 0; i < 6; i++) {
+		ans->baseEdge[i] = baseEdge[i];
+		ans->baseEdgeGroup[i] = baseEdgeGroup[i];
+		ans->topEdgeGroup[i] = topEdgeGroup[i];
+	}
+	for (i = 0; i < 2; i++) {
+		ans->baseFace[i] = baseFace[i];
+		ans->topFace[i] = topFace[i];
+	}
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 2; j++)
+			ans->topEdge[i][j] = topEdge[i][j];
+		ans->meridinalCuts[i] = meridinalCuts[i];
+	}
+	return ans;
+}
+
 NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorusBase(
 		NTetrahedron* tet) {
 	int baseFace1;

@@ -107,6 +107,10 @@ public interface Engine {
     public long formCensus(NPacket parent, int nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, NProgressManager manager);
+	public NSnappedTwoSphere formsSnappedTwoSphere(NSnappedBall ball1,
+		NSnappedBall ball2);
+	public NSnappedTwoSphere formsSnappedTwoSphere(NTetrahedron tet1,
+		NTetrahedron tet2);
     public int getVersionMajor();
     public int getVersionMinor();
     public String getVersionString();

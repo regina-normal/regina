@@ -26,21 +26,20 @@
 
 /* end stub */
 
-#ifndef __NLAYEREDLENSSPACE_IDL
-#define __NLAYEREDLENSSPACE_IDL
+#ifndef __NSNAPPEDTWOSPHERE_IDL
+#define __NSNAPPEDTWOSPHERE_IDL
 
-#include "Subcomplex/NLayeredSolidTorus.idl"
+#include "Subcomplex/NSnappedBall.idl"
+#include "Triangulation/NTriangulation.idl"
 
 module Regina {
     module Subcomplex {
-        interface NLayeredLensSpace : ShareableObject {
-			NLayeredLensSpace cloneMe();
-			long getP();
-			long getQ();
-			NLayeredSolidTorus getTorus();
-			long getMobiusBoundaryGroup();
-			boolean isSnapped();
-			boolean isTwisted();
+        interface NSnappedTwoSphere : ShareableObject {
+			NSnappedTwoSphere cloneMe();
+			NSnappedBall getSnappedBall(in long index);
+			void reduceTriangulation();
+			Regina::Triangulation::NTriangulation getReducedTriangulation(
+				in Regina::Triangulation::NTriangulation original);
         };
     };
 };

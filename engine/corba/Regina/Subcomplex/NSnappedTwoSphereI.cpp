@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A normal surface theory calculator                           *
- *  CORBA interface definition for computational engine                   *
+ *  Computational engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,24 +26,26 @@
 
 /* end stub */
 
-#ifndef __NLAYEREDLENSSPACE_IDL
-#define __NLAYEREDLENSSPACE_IDL
+#include "NSnappedBallI.h"
+#include "NSnappedTwoSphereI.h"
+#include "NTriangulationI.h"
 
-#include "Subcomplex/NLayeredSolidTorus.idl"
-
-module Regina {
-    module Subcomplex {
-        interface NLayeredLensSpace : ShareableObject {
-			NLayeredLensSpace cloneMe();
-			long getP();
-			long getQ();
-			NLayeredSolidTorus getTorus();
-			long getMobiusBoundaryGroup();
-			boolean isSnapped();
-			boolean isTwisted();
-        };
-    };
-};
-
-#endif
-
+Regina::Subcomplex::NSnappedTwoSphere_ptr NSnappedTwoSphere_i::cloneMe() {
+	return NSnappedTwoSphere_i::newWrapper(
+		GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->clone());
+}
+Regina::Subcomplex::NSnappedBall_ptr NSnappedTwoSphere_i::getSnappedBall(
+		CORBA::Long index) {
+	return NSnappedBall_i::newWrapper(
+		GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->getSnappedBall(index));
+}
+void NSnappedTwoSphere_i::reduceTriangulation() {
+	GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->reduceTriangulation();
+}
+Regina::Triangulation::NTriangulation_ptr
+		NSnappedTwoSphere_i::getReducedTriangulation(
+		Regina::Triangulation::NTriangulation_ptr original) {
+	return NTriangulation_i::newWrapper(
+		GET_ENGINE_OBJECT(NSnappedTwoSphere, this)->getReducedTriangulation(
+		GET_ENGINE_OBJECT(NTriangulation, original)));
+}

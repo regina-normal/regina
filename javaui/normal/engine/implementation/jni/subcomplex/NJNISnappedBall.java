@@ -38,6 +38,7 @@ public class NJNISnappedBall extends JNIShareableObject
         super(s);
     }
     
+	public native NSnappedBall cloneMe();
 	public native NTetrahedron getTetrahedron();
 	public native int getBoundaryFace(int index);
 	public native int getInternalFace(int index);

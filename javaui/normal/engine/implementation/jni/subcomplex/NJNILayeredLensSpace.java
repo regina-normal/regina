@@ -37,6 +37,7 @@ public class NJNILayeredLensSpace extends JNIShareableObject
         super(s);
     }
 
+	public native NLayeredLensSpace cloneMe();
 	public native long getP();
 	public native long getQ();
 	public native NLayeredSolidTorus getTorus();

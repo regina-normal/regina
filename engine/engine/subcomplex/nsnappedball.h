@@ -38,10 +38,8 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-    #include "shareableobject.h"
 	#include "nedge.h"
 #else
-    #include "engine/shareableobject.h"
 	#include "engine/triangulation/nedge.h"
 #endif
 
@@ -61,6 +59,15 @@ class NSnappedBall : public ShareableObject {
     
     public:
 		/**
+		 * Returns a newly created clone of this structure.
+		 *
+		 * \ifaces This routine is named \a cloneMe.
+		 *
+		 * @return a newly created clone.
+		 */
+		NSnappedBall* clone() const;
+
+		/**
 		 * Returns the tetrahedron that forms this snapped ball.
 		 *
 		 * @return the tetrahedron.
@@ -74,7 +81,7 @@ class NSnappedBall : public ShareableObject {
 		 * You are guaranteed that index 0 will return a smaller face
 		 * number than index 1.
 		 *
-		 * @param specifies which of the two boundary faces to return;
+		 * @param index specifies which of the two boundary faces to return;
 		 * this must be either 0 or 1.
 		 * @return the corresponding face number in the tetrahedron.
 		 */
@@ -85,7 +92,7 @@ class NSnappedBall : public ShareableObject {
 		 * You are guaranteed that index 0 will return a smaller face
 		 * number than index 1.
 		 *
-		 * @param specifies which of the two internal faces to return;
+		 * @param index specifies which of the two internal faces to return;
 		 * this must be either 0 or 1.
 		 * @return the corresponding face number in the tetrahedron.
 		 */

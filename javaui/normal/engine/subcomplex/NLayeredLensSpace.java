@@ -31,6 +31,7 @@ package normal.engine.subcomplex;
 import normal.engine.*;
 
 public interface NLayeredLensSpace extends ShareableObject {
+	public NLayeredLensSpace cloneMe();
 	public long getP();
 	public long getQ();
 	public NLayeredSolidTorus getTorus();

@@ -101,6 +101,14 @@ class Engine_i : public virtual POA_Regina::Engine,
             CORBA::Char orientability, CORBA::Char boundary,
             CORBA::Long nBdryFaces,
             Regina::Progress::NProgressManager_ptr manager);
+		virtual Regina::Subcomplex::NSnappedTwoSphere_ptr
+			formsSnappedTwoSphere_NSnappedBall(
+			Regina::Subcomplex::NSnappedBall_ptr p1,
+			Regina::Subcomplex::NSnappedBall_ptr p2);
+		virtual Regina::Subcomplex::NSnappedTwoSphere_ptr
+			formsSnappedTwoSphere_NTetrahedron(
+			Regina::Triangulation::NTetrahedron_ptr p1,
+			Regina::Triangulation::NTetrahedron_ptr p2);
         virtual CORBA::Long getVersionMajor();
         virtual CORBA::Long getVersionMinor();
         virtual char* getVersionString();
