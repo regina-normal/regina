@@ -3,77 +3,68 @@ Contents
 --------
 
 0. Requirements
-1. Regina Binary Distribution
-2. Regina Source Distribution
+1. Building Regina from Source
+2. Tips and Warnings
 
 ---------------
 0. Requirements
 ---------------
 
-Regina relies upon a variety of external libraries and other tools.
-These are listed below.  They are available with most GNU/Linux
-distributions, but the Regina website (http://regina.sourceforge.net/)
-contains a list of locations from which they can be downloaded
-separately if necessary.
+Regina relies upon a variety of external libraries and other tools
+that are available with most GNU/Linux distributions.  This list of
+requirements is kept up-to-date on the Regina website, where you can
+also find specific information on how to obtain them for your particular
+GNU/Linux distribution:
 
-Essential:
-    libgmp (the GNU multiprecision arithmetic library), version >= 3
-    libxml2 (the GNOME XML library), version >= 2.0.0
-    libpopt (the Popt command-line parsing library), version >= 1.3
+    http://regina.sourceforge.net/source.html
 
-KDE User Interface (optional):
-    qt (the GUI toolkit), version >= 3.2
-    kdelibs (the core KDE libraries), version >= 3.1
+Note that for each required library, you will need both the library and
+its development files.  As an example, for the GNU multiprecision
+arithmetic library (libgmp), Debian users should install both the libgmp3
+and libgmp3-dev packages, and Fedora Core users should install both the
+gmp and gmp-devel packages.
 
-Python Bindings (optional):
-    python (the scripting language), version >= 2.2
-    libboost_python (the Boost.Python libraries), verison >= 1.30.1
+------------------------------
+1. Building Regina from Source
+------------------------------
 
-Documentation (optional, only required at compile-time):
-    doxygen (a C++ documentation system), version >= 1.2.2
-
-Test Suite (optional):
-    cppunit (the testing framework), version >= 1.8.0
-
------------------------------
-1. Regina Binary Distribution
------------------------------
-
-Binary distributions are no longer provided, since they depend so
-strongly upon which versions of external libraries are installed and
-where they are to be found.
-
-It is recommended instead to install the dependencies described above,
-download a source distribution of Regina and build it to work with your
-system.  Otherwise you can bug your distribution to provide packages for
-Regina like Debian does. ;-)
-
------------------------------
-2. Regina Source Distribution
------------------------------
-
-Regina now uses the standard "./configure", "make"
-build procedure.  See INSTALL.txt for details.
+The short summary of building Regina is illustrated below.  For glorious
+details on how this process can be customised, see the file INSTALL.txt.
 
 If you have difficulty compiling or running Regina, you can check the
 troubleshooting page to see if your problem has already been encountered:
 
     http://regina.sourceforge.net/docs/troubleshooting.html
 
-For the impatient, the short summary is as follows.  INSTALL.txt contains
-details for customising this process.
+The steps involved are as follows.
 
-    prompt$ ./configure    (determines features of your system)
-    prompt$ make           (builds Regina)
-    prompt$ make install   (installs Regina)
+    prompt$ ./configure    (to determine features of your system)
+    ...                    (wait a couple of minutes)
+    prompt$ make           (to build Regina)
+    ...                    (wait an hour or two)
+    prompt$ su             (you must be root to install Regina)
+    prompt$ make install   (to install Regina)
+    ...                    (wait a couple of minutes)
+    prompt$                (all done!)
 
-Note that for the KDE user interface to work, you will almost certainly
-need to pass --prefix and possibly other options to ./configure so that
-files are installed in the correct places.  Run "./configure --help" for
-a list of available options.
+To start Regina once you've installed it, run "regina-kde" (or
+alternatively try to locate Regina in your menu of applications).
 
-In particular, Regina must be installed in a place where KDE will find
-it, since it provides most of its functionality as a KPart.
+For some systems this build procedure will need to be customised.  For
+this reason it is strongly recommended that you read the tips and warnings
+section below.
+
+--------------------
+2. Tips and Warnings
+--------------------
+
+Regina *must* be installed in the same location as all other KDE
+applications, or it will not run properly.  You can tell ./configure
+where to install Regina by passing an appropriate --prefix option.
+However, in most cases the ./configure script can work this out on its
+own.  Generally you should not be passing your own --prefix unless it
+is absolutely necessary (e.g., the ./configure script tells you that the
+prefix it's currently trying to use looks incorrect).
 
 The initial "./configure" phase will check which of the required libraries are
 currently installed on your system, and will decide which Regina components
@@ -105,8 +96,19 @@ built, a reason will be given earlier in the "./configure" output.
     ...
     prompt$
 
-If you run into problems you are of course welcome to email either myself
-or the user list (regina-user@lists.sourceforge.net) for assistance.
+If the configure script fails to find some tools or libraries that you
+know are installed, you can generally help it along by passing
+additional arguments to the configure script, e.g.:
+
+    prompt$ ./configure --with-qt-dir=/usr/lib/qt-3.3
+
+Once more, if you run into problems then you might find a solution on the
+ever-expanding troubleshooting page:
+
+    http://regina.sourceforge.net/docs/troubleshooting.html
+
+Alternatively you are of course welcome to email either myself or the user
+list (regina-user@lists.sourceforge.net) for assistance.
 
 Ben Burton (bab@debian.org)
 http://regina.sourceforge.net/
