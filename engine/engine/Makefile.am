@@ -28,11 +28,17 @@ SUBDIRS = \
 
 lib_LTLIBRARIES = libregina-engine.la
 
-libregina_engine_la_SOURCES = engine.cpp shareableobject.cpp
-libregina_engine_la_LDFLAGS = -release @PACKAGE_VERSION@
+# With --enable-static-final, we'll need a convenience engine library as
+# well as the usual shared library.
+
+if STATIC_FINAL
+noinst_LTLIBRARIES = libregina-engine-noinst.la
+endif
 
 pkginclude_HEADERS = docs.h engine.h howto.h shareableobject.h
 
+libregina_engine_la_SOURCES = engine.cpp shareableobject.cpp
+libregina_engine_la_LDFLAGS = -release @PACKAGE_VERSION@
 libregina_engine_la_LIBADD = \
   algebra/libalgebra.la \
   angle/libangle.la \
@@ -50,6 +56,9 @@ libregina_engine_la_LIBADD = \
   triangulation/libtriangulation.la \
   utilities/libutilities.la \
   @ENGINE_LIBS@
+
+libregina_engine_noinst_la_SOURCES = $(libregina_engine_la_SOURCES)
+libregina_engine_noinst_la_LIBADD = $(libregina_engine_la_LIBADD)
 
 ## ----------------------- Custom targets ----------------------------
 

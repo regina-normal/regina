@@ -239,23 +239,26 @@ AC_SUBST(JNI_INCLUDES)
 TESTSUITE_LIBS="$CPPUNIT_LIBS"
 AC_SUBST(TESTSUITE_LIBS)
 
-# The actual calculation engine library with which to link.
-LIB_ENGINE="\$(top_srcdir)/engine/engine/libregina-engine.la"
-AC_SUBST(LIB_ENGINE)
-
 # Classpath required by the Java user interface.
 JAVAUI_CLASSPATH="\$(top_srcdir)/javaui:$CLASSPATH"
 REGINA_CLASSPATH_CONVERT(JAVAUI_CLASSPATH)
 AC_SUBST(JAVAUI_CLASSPATH)
 
-# Do we wish to make final targets statically linked?
+# Do we wish to statically link the calculation engine into final targets?
+__static_final=no
+LIB_ENGINE="\$(top_srcdir)/engine/engine/libregina-engine.la"
 AC_ARG_ENABLE(static-final, AC_HELP_STRING([--enable-static-final],
-    [statically link final executables and modules [[default=no]]]), [
+    [statically link the calculation engine into final executables and modules [[default=no]]]), [
   if test "$enableval" != "no"; then
-    FINAL_LDFLAGS="$FINAL_LDFLAGS -static -Wl,--allow-multiple-definition"
+    __static_final=yes
+    LIB_ENGINE="\$(top_srcdir)/engine/engine/libregina-engine-noinst.la"
   fi
 ])
-AC_SUBST(FINAL_LDFLAGS)
+AM_CONDITIONAL(STATIC_FINAL, test "$__static_final" = "yes")
+
+# The actual calculation engine library with which to link; note that
+# this depends on whether --enable-static-final is being used.
+AC_SUBST(LIB_ENGINE)
 
 ###########################################################
 #
