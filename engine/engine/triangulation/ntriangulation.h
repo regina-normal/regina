@@ -1355,7 +1355,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre \a p \> \a q \>= 0;
          * \pre gcd(\a p, \a q) = 1.
          *
-         * \todo Do this using the fewest possible tetrahedra.
+         * \todo \bug Do this using the fewest possible tetrahedra.
          *
          * @param p a parameter of the desired lens space.
          * @param q a parameter of the desired lens space.
