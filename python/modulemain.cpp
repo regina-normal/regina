@@ -68,12 +68,12 @@ BOOST_PYTHON_MODULE(regina) {
         .def("__str__", &ShareableObject::toString)
     ;
 
-    // Components from subdirectories:
+    // Components from subdirectories (in approximate dependency order):
 
-    addAlgebra();
-    addFile();
-    addMaths();
-    addPacket();
     addUtilities();
+    addMaths();
+    addAlgebra();
+    addPacket();
+    addFile();
 }
 
