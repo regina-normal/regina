@@ -137,7 +137,7 @@ void NNormalSurface::calculateKnownCanCrush() {
     // We'll define the upper prism to be the prism containing vertex 0.
 
     // Work out which tetrahedra contain which quad types.
-    char* quads = new char[nTet];
+    signed char* quads = new (signed char)[nTet];
     unsigned long tet = 0;
     for (tet = 0; tet < nTet; tet++) {
         if (getQuadCoord(tet, 0) != 0)

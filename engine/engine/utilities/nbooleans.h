@@ -51,13 +51,13 @@ namespace regina {
  */
 class NBoolSet {
     private:
-        char elements;
+        unsigned char elements;
             /**< The first two bits of this character represent whether
-             *   or not \c true or \c false belongs to this set. */
+                 or not \c true or \c false belongs to this set. */
 
-        static const char eltTrue;
+        static const unsigned char eltTrue;
             /**< A character with only the \c true member bit set. */
-        static const char eltFalse;
+        static const unsigned char eltFalse;
             /**< A character with only the \c false member bit set. */
 
     public:
@@ -331,7 +331,7 @@ class NBoolSet {
          *
          * @return the byte code representing this set.
          */
-        char getByteCode() const;
+        unsigned char getByteCode() const;
         /**
          * Sets this boolean set to that represented by the given byte
          * code.  See getByteCode() for more information on byte codes.
@@ -341,7 +341,7 @@ class NBoolSet {
          * @param code the byte code that will determine the new value
          * of this set.
          */
-        void setByteCode(char code);
+        void setByteCode(unsigned char code);
         /**
          * Creates a boolean set from the given byte code.
          * See getByteCode() for more information on byte codes.
@@ -351,7 +351,7 @@ class NBoolSet {
          * @param code the byte code from which the new set will be
          * created.
          */
-        static NBoolSet fromByteCode(char code);
+        static NBoolSet fromByteCode(unsigned char code);
 
     friend std::ostream& operator << (std::ostream& out, const NBoolSet& set);
 };
@@ -479,13 +479,13 @@ inline NBoolSet NBoolSet::operator ~ () const {
     return NBoolSet(! hasTrue(), ! hasFalse());
 }
 
-inline char NBoolSet::getByteCode() const {
+inline unsigned char NBoolSet::getByteCode() const {
     return elements;
 }
-inline void NBoolSet::setByteCode(char code) {
+inline void NBoolSet::setByteCode(unsigned char code) {
     elements = code;
 }
-inline NBoolSet NBoolSet::fromByteCode(char code) {
+inline NBoolSet NBoolSet::fromByteCode(unsigned char code) {
     return NBoolSet(code & eltTrue, code & eltFalse);
 }
 
