@@ -6,7 +6,7 @@
 ##  to produce Makefile.in.
 ##
 
-SUBDIRS = engine @REGINA_BUILD_ENGINEJNI@ doc-files
+SUBDIRS = engine doc-files
 
 EXTRA_DIST = README.txt findtext checkdocs
 

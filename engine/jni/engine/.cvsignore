@@ -1,9 +1,0 @@
-*.d
-*.la
-*.lo
-.deps
-.libs
-Makefile
-Makefile.in
-JNI*.h
-Sentry.h

@@ -2,12 +2,6 @@
 for i in `find . -name "*.h"`; do
   if ! grep -r "@{\$" $i > /dev/null; then
     case "$i" in
-      */JNI*.h )
-      ;;
-      */NJNI*.h )
-      ;;
-      */Sentry.h )
-      ;;
       *registry.h )
       ;;
       * )
@@ -17,4 +11,4 @@ for i in `find . -name "*.h"`; do
   elif ! grep -r "@}\*/\$" $i > /dev/null; then
     echo "$i : No group closing tag."
   fi
-done | grep -v JNI
+done
