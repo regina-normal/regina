@@ -878,7 +878,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * degree 2r for which q0^2 is a primitive root of unity of
          * degree r.
          *
-         * \pre This triangulation is valid and closed.
+         * \pre This triangulation is valid, closed and non-empty.
          *
          * @param r the integer r as described above; this must be at
          * least 3.
