@@ -92,7 +92,12 @@ class NCensus {
             /**< Indicates that any triangulation that is not prime (i.e.,
                  can be written as a non-trivial connected sum), any
                  bounded triangulation that is reducible over a disc and
-                 any other non-minimal triangulations may be ignored. */
+                 any triangulation that is non-minimal may be ignored.
+                 Note that this is simply a combination of the constants
+                 \a PURGE_NON_MINIMAL and \a PURGE_NON_PRIME. */
+        static const int PURGE_P2_REDUCIBLE;
+            /**< Indicates that any triangulation containing an embedded
+                 two-sided projective plane may be ignored. */
 
     private:
         NPacket* parent;

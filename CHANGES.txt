@@ -17,6 +17,7 @@ Version 3.2  [ (under development) ]
         Class NCensus:
             - Added findAllCompletions() for completing triangulations
               with boundary.
+            - New constant PRUNE_P2_REDUCIBLE.
         Class NFacePair:
             - New class for working with pairs of face numbers.
         Class NFacePairing:
@@ -30,6 +31,8 @@ Version 3.2  [ (under development) ]
               orientable prime minimal case.
             - Added pruning during permutation generation to eliminate
               edges identified with themselves in reverse.
+            - Added pruning using low-degree edges in the non-orientable
+              P2-irreducible case.
         Class NNormalSurface:
             - Added routine knownCanCrush().
         Class NPerm:

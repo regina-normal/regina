@@ -292,22 +292,30 @@ bool NGluingPerms::mayPurge(const NTetFace& face, int whichPurge,
     if (! whichPurge)
         return false;
 
-    // Are we allowed to purge on edges of degree 1/2?
-    bool mayPurgeDeg12 = (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
-        (whichPurge & NCensus::PURGE_NON_PRIME) && orientableOnly &&
-        finiteOnly && (getNumberOfTetrahedra() > 2);
-
     // Are we allowed to purge on edges of degree 3?
     bool mayPurgeDeg3 = (whichPurge & NCensus::PURGE_NON_MINIMAL);
 
+    // Are we allowed to purge on edges of degree 1 or 2?
+    //
+    // A 2-0 edge move or a 2-1 edge move can result in one or more of
+    // the following topological changes.
+    //
+    // Bigon squashing:
+    //   - Disc reduction;
+    //   - Sphere decomposition or reduction;
+    //   - Crushing embedded RP2 to an invalid edge.
+    //
+    // Pillow squashing:
+    //   - Loss of 3-ball;
+    //   - Loss of 3-sphere;
+    //   - Loss of L(3,1).
+    //
+    bool mayPurgeDeg12 = (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
+        (whichPurge & NCensus::PURGE_NON_PRIME) &&
+        ((whichPurge & NCensus::PURGE_P2_REDUCIBLE) || orientableOnly) &&
+        finiteOnly && (getNumberOfTetrahedra() > 2);
+
     // Currently look for edges of degree 1, 2 or 3.
-    // Edges of degree 3 either lead to simplification or imply an
-    // invalid triangulation.
-    // Edges of degrees 2 and 1 in the orientable case lead to simplification,
-    // S2 reduction, disc reduction (for bounded triangulations),
-    // loss of # L(3,1) or loss of an entire 2 tetrahedron space.
-    // Edges of degrees 2 and 1 lead to all sorts of nasties in the
-    // non-orientable case and will not be avoided.
 
     // For edges of degree 2 or 3 we find out once the larger face of the
     // second largest tetrahedron is glued to the larger face of the
