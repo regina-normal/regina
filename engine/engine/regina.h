@@ -40,9 +40,9 @@
      *   data files. */
 #define ENGINE_VERSION_MAJOR 2
     /**< Major version number of the engine. */
-#define ENGINE_VERSION_MINOR 2
+#define ENGINE_VERSION_MINOR 3
     /**< Minor version number of the engine. */
-#define ENGINE_VERSION "2.2"
+#define ENGINE_VERSION "2.3"
     /**< Complete version number of the engine. */
 #define SIZE_INT 4
     /**< The number of bytes written to files to represent an integer;

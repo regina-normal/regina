@@ -1,6 +1,7 @@
 
 Regina - A Normal Surface Theory Calculator
 
+Version 2.3  [ 12 December, 2001 ]
     OVERALL:
         - Makefile.options variables IDLTOJAVACLIENT and IDLTOCPPSERVER
           became IDLTOJAVA and IDLTOCPP with slightly more generic meanings.

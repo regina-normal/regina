@@ -2,11 +2,11 @@ etc/regina-normal/regina.conf
 usr/bin/regina-normal
 usr/lib/regina-normal/lib/libregina-engine-jni.so
 usr/share/java/regina-normal.jar
-usr/share/java/regina-normal-2.2.jar
+usr/share/java/regina-normal-2.3.jar
 usr/share/java/regina-normal-jni.jar
-usr/share/java/regina-normal-jni-2.2.jar
+usr/share/java/regina-normal-jni-2.3.jar
 usr/share/java/regina-normal-corba.jar
-usr/share/java/regina-normal-corba-2.2.jar
+usr/share/java/regina-normal-corba-2.3.jar
 usr/share/regina-normal/jar/regina.jar
 usr/share/regina-normal/jar/regina-jni.jar
 usr/share/regina-normal/jar/regina-corba.jar
