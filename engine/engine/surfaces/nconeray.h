@@ -181,15 +181,19 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
  * \ifaces Not present.
  *
  * @param results the output iterator to which the resulting extremal
- * rays will be written; this must accept objects of type <tt>NConeRay*</tt>.
+ * rays will be written; this must accept objects of type <tt>NConeRay*</tt>
+ * (or alternatively pointers to the same subclass of NConeRay as is
+ * used for the initial list of rays).
  * @param oldRaysFirst the beginning of the list
  * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
  * defining the cone to intersect with the given hyperplane; this must
- * be a forward iterator over objects of type <tt>const NConeRay*</tt>.
+ * be a forward iterator over objects of type <tt>const NConeRay*</tt>
+ * (or some subclass thereof).
  * @param oldRaysLast the end of the list
  * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
  * defining the cone to intersect with the given hyperplane; this must
- * be a forward iterator over objects of type <tt>const NConeRay*</tt>.
+ * be a forward iterator over objects of type <tt>const NConeRay*</tt>
+ * (or some subclass thereof).
  * @param facesFirst the beginning of the list <tt>[facesFirst, facesLast)</tt>
  * of hyperplanes that determine the faces of the given cone, as described
  * above; each hyperplane is represented by the vector of a ray perpendicular
@@ -258,15 +262,19 @@ void intersectCone(OutputIterator results,
  * \ifaces Not present.
  *
  * @param results the output iterator to which the resulting extremal
- * rays will be written; this must accept objects of type <tt>NConeRay*</tt>.
+ * rays will be written; this must accept objects of type <tt>NConeRay*</tt>
+ * (or alternatively pointers to the same subclass of NConeRay as is
+ * used for the initial list of rays).
  * @param oldRaysFirst the beginning of the list
  * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
  * defining the cone to intersect with the given subspace; this must
- * be a forward iterator over objects of type <tt>const NConeRay*</tt>.
+ * be a forward iterator over objects of type <tt>const NConeRay*</tt>
+ * (or some subclass thereof).
  * @param oldRaysLast the end of the list
  * <tt>[oldRaysFirst, oldRaysLast)</tt> of extremal rays
  * defining the cone to intersect with the given subspace; this must
- * be a forward iterator over objects of type <tt>const NConeRay*</tt>.
+ * be a forward iterator over objects of type <tt>const NConeRay*</tt>
+ * (or some subclass thereof).
  * @param facesFirst the beginning of the list <tt>[facesFirst, facesLast)</tt>
  * of hyperplanes that determine the faces of the given cone, as described
  * above; each hyperplane is represented by the vector of a ray perpendicular

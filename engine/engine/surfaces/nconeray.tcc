@@ -31,6 +31,7 @@
 #include <list>
 #include "maths/nvectormatrix.h"
 #include "maths/nmatrixint.h"
+#include "utilities/boostutils.h"
 #include "utilities/nmiscutils.h"
 
 template <class OutputIterator, class RayIterator, class FaceIterator>
@@ -41,8 +42,10 @@ void intersectCone(OutputIterator results,
     if (oldRaysFirst == oldRaysLast)
         return;
 
-    std::list<NConeRay*> pos;
-    std::list<NConeRay*> neg;
+    typedef std::iterator_traits<RayIterator>::value_type RayClassPtr;
+
+    std::list<RayClassPtr> pos;
+    std::list<RayClassPtr> neg;
 
     // Run through the old rays and determine which side of the
     // hyperplane they lie on.
@@ -53,7 +56,7 @@ void intersectCone(OutputIterator results,
     for (it = oldRaysFirst; it != oldRaysLast; it++) {
         dot = hyperplane * (**it);
         if (dot == NConeRay::zero)
-            *results++ = (NConeRay*)(*it)->clone();
+            *results++ = (RayClassPtr)(*it)->clone();
         else if (dot < NConeRay::zero)
             neg.push_back(*it);
         else
@@ -65,7 +68,7 @@ void intersectCone(OutputIterator results,
     // being added to the solution set.
     // One can prove that no ray will ever have been added to the
     // solution set twice.
-    std::list<NConeRay*>::const_iterator posit, negit;
+    std::list<RayClassPtr>::const_iterator posit, negit;
     FaceIterator faceit;
     NVector<NLargeInteger>* face;
     bool adjacent, hasCommonFaces;
@@ -101,7 +104,8 @@ void intersectCone(OutputIterator results,
             // corresponding intersection with the hyperplane in the
             // results set.
             if (adjacent)
-                *results++ = intersectLine(**posit, **negit, hyperplane);
+                *results++ = (RayClassPtr)intersectLine(**posit,
+                    **negit, hyperplane);
         }
 }
 
@@ -110,12 +114,15 @@ void intersectCone(OutputIterator results,
         RayIterator oldRaysFirst, RayIterator oldRaysLast,
         FaceIterator facesFirst, FaceIterator facesLast,
         const NMatrixInt& subspace, bool testCompatibility) {
+    typedef std::iterator_traits<RayIterator>::value_type RayClassPtr;
+    typedef remove_pointer<RayClassPtr>::type RayClass;
+
     unsigned nEqns = subspace.rows();
     if (nEqns == 0) {
         // There are no hyperplanes in the subspace!
         // We will have to clone the list of extremal rays.
         transform(oldRaysFirst, oldRaysLast, results,
-            FuncNewClonePtr<NConeRay>());
+            FuncNewClonePtr<RayClass>());
         return;
     }
     
@@ -124,8 +131,8 @@ void intersectCone(OutputIterator results,
     // hyperplane.
     // At any point we should have the latest results in
     // list[workingList], with the other list empty.
-    std::list<NConeRay*> list[2];
-    std::back_insert_iterator<std::list<NConeRay*> > inserter[] =
+    std::list<RayClassPtr> list[2];
+    std::back_insert_iterator<std::list<RayClassPtr> > inserter[] =
         { back_inserter(list[0]), back_inserter(list[1]) };
     int workingList = 0;
     intersectCone(inserter[0], oldRaysFirst, oldRaysLast,
@@ -133,7 +140,7 @@ void intersectCone(OutputIterator results,
         testCompatibility);
     
     // Now run around intersecting each extra hyperplane as it comes.
-    FuncDelete<NConeRay> funcDelete;
+    FuncDelete<RayClass> funcDelete;
     for (unsigned i=1; i<nEqns; i++) {
         intersectCone(inserter[1-workingList], list[workingList].begin(),
             list[workingList].end(), facesFirst, facesLast,
