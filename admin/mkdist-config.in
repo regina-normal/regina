@@ -4,7 +4,7 @@
 # Distribution Utility Configuration
 #
 # Copyright (c) 2002, Ben Burton
-# For further details contact Ben Burton (benb@acm.org).
+# For further details contact Ben Burton (bab@debian.org).
 #
 # Provides configuration details for the mkdist utility.
 # This file should be sourced from mkdist; it should not be run directly.

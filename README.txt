@@ -110,6 +110,6 @@ built, a reason will be given earlier in the "./configure" output.
     ...
     prompt$
 
-Ben Burton <benb@acm.org>
+Ben Burton <bab@debian.org>
 http://regina.sourceforge.net/
 

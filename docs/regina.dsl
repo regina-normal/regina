@@ -1,6 +1,6 @@
 <!-- Stylesheet for Regina documentation.
      Based on the docbook-utils stylesheet by Eric Bischoff <eric@caldera.de>.
-     Modified by Ben Burton (benb@acm.org). -->
+     Modified by Ben Burton (bab@debian.org). -->
 
 <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
  <!ENTITY % html "IGNORE">

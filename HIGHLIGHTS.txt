@@ -80,6 +80,6 @@ Version 2.2  [ 7 October, 2001 ]
 
     (See CHANGES.txt for details beyond this point.)
 
-Ben Burton (benb@acm.org)
+Ben Burton (bab@debian.org)
 http://regina.sourceforge.net/
 

@@ -27,4 +27,4 @@ package regina-normal-doc.  You then have two choices:
      You will need to edit /etc/regina-normal/regina.conf to tell Regina
      the location of the JavaHelp library (jh.jar).
 
- -- Ben Burton <benb@acm.org>, Mon,  1 Oct 2001 23:30:00 -0500
+ -- Ben Burton <bab@debian.org>, Mon,  1 Oct 2001 23:30:00 -0500

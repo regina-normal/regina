@@ -44,7 +44,7 @@ rem
 rem If any of these paths contain spaces, this is fine.  Do not use quotes
 rem yourself - the startup scripts will take care of such details.
 rem
-rem Please mail me (benb@acm.org) if you have any questions.
+rem Please mail me (bab@debian.org) if you have any questions.
 
 set REG_CYGDRIVE=C:
 set REG_CYGPATH=\cygwin\bin

@@ -4,7 +4,7 @@
 # Signed Md5sum Generation Utility
 #
 # Copyright (c) 2002, Ben Burton
-# For further details contact Ben Burton (benb@acm.org).
+# For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: mksums <description> <file> [ <file> ... ]
 #
@@ -34,7 +34,7 @@
 set -e
 
 # Details for person doing the GnuPG signing.
-signerid="Ben Burton <benb@acm.org>"
+signerid="Ben Burton <bab@debian.org>"
 signergetkey="typing \"finger bab@db.debian.org\""
 
 # Command-line sanity check.

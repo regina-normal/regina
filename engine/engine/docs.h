@@ -5,7 +5,7 @@
  *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2002, Ben Burton                                   *
- *  For further details contact Ben Burton (benb@acm.org).                *
+ *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
  *  modify it under the terms of the GNU General Public License as        *
@@ -66,7 +66,7 @@
  *  C++ computational engine, as well as the mirroring of these in the
  *  various external interfaces (such as the Java interface).
  *
- *  Contact Ben Burton (<a href="mailto:benb@acm.org">benb@acm.org</a>)
+ *  Contact Ben Burton (<a href="mailto:bab@debian.org">bab@debian.org</a>)
  *  for more details.
  *
  *  Regina has been released under the GNU General Public License, as

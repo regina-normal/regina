@@ -3,7 +3,7 @@ dnl    Regina - A Normal Surface Theory Calculator
 dnl    Configure Script Generator
 dnl
 dnl    Copyright (c) 2002, Ben Burton
-dnl    For further details contact Ben Burton (benb@acm.org).
+dnl    For further details contact Ben Burton (bab@debian.org).
 dnl
 dnl    Process this file with autoconf to produce a configure script.
 dnl    Autoconf version >= 2.50 is required.

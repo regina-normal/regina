@@ -4,7 +4,7 @@
 # Manage a triangulation census distributed amongst several machines
 #
 # Copyright (c) 2002, Ben Burton
-# For further details contact Ben Burton (benb@acm.org).
+# For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: tricensus-manager [ <tricensus-options> ] <pairs-file-prefix>
 #

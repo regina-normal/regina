@@ -4,7 +4,7 @@
 # Makefile.am Update Utility
 #
 # Copyright (c) 2002, Ben Burton
-# For further details contact Ben Burton (benb@acm.org).
+# For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: am_update [ <directory-tree> | path/to/single/Makefile.am ] ...
 #

@@ -9,4 +9,4 @@ The corresponding headers can be found in /usr/include/regina-normal/.
 Thorough documentation for the calculation engine can be found in
 package regina-normal-doc.
 
- -- Ben Burton <benb@acm.org>, Mon, 14 Oct 2002 11:58:46 +1000
+ -- Ben Burton <bab@debian.org>, Mon, 14 Oct 2002 11:58:46 +1000

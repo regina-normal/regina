@@ -1,6 +1,6 @@
 Document: regina
 Title: Regina Reference Manual
-Author: Ben Burton <benb@acm.org>
+Author: Ben Burton <bab@debian.org>
 Abstract: Regina is a topological calculator with a bent towards normal
  surface theory.  It allows 3-manifolds to be created, manipulated and
  their properties of interest determined.

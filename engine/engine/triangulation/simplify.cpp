@@ -5,7 +5,7 @@
  *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2002, Ben Burton                                   *
- *  For further details contact Ben Burton (benb@acm.org).                *
+ *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
  *  modify it under the terms of the GNU General Public License as        *

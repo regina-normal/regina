@@ -2,7 +2,7 @@
  <project preview="" type="Local" name="Regina" >
   <upload/>
   <author>Ben Burton</author>
-  <email>benb@acm.org</email>
+  <email>bab@debian.org</email>
   <item url="shots/all-mini.jpg" />
   <item url="shots/all.jpg" />
   <item url="shots/census-mini.jpg" />

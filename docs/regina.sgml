@@ -1,6 +1,6 @@
 <!-- Documentation for Regina.
      Copyright details included below.
-     Written by Ben Burton (benb@acm.org). -->
+     Written by Ben Burton (bab@debian.org). -->
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
  <!ENTITY regina "<application>Regina</application>">
@@ -20,7 +20,7 @@
     <firstname>Bernhard</firstname>
     <surname>Bablok</surname>
    </author>">
- <!ENTITY regemail "<email>benb@acm.org</email>">
+ <!ENTITY regemail "<email>bab@debian.org</email>">
  <!ENTITY regabstract
   "<para>
     &regina; is a topological calculator with a bent
