@@ -24,22 +24,25 @@ output_rtf = *.rtf
 # --------------------------- Platform-specific ---------------------------
 
 ifeq ($(OSTYPE),cygwin)
-  buildman = echo -e "\n\nMan page generation not supported under windows.\n\n"
+  man_target = noman
 else
-  buildman = $(DOCBOOK2MAN) $(sgml_index)
+  man_target = $(sample_man)
 endif
 
 # --------------------------- Targets -------------------------------------
 
-.PHONY : html man rtf engine javaui clean
+.PHONY : html man noman rtf engine javaui clean
 
 html : $(sample_html)
 $(sample_html) : $(sgml_sources)
 	$(JADE) -t sgml -i html -d $(sgml_dsl)\#html $(sgml_index)
 
-man : $(sample_man)
+man : $(man_target)
 $(sample_man) : $(sgml_sources)
-	$(buildman)
+	$(DOCBOOK2MAN) $(sgml_index)
+
+noman :
+	$(ECHO) "\n\nMan page generation is not supported on this platform.\n\n"
 
 rtf : $(sample_rtf)
 $(sample_rtf) : $(sgml_sources)
