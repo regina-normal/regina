@@ -55,7 +55,7 @@ Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
         Class NLargeInteger:
             - Added third error-detection parameter to constructor
               NLargeInteger(const char*, int).
-        Class NLayeredChainPair:
+        Class NLayeredChainPair, NPlugTriSolidTorus:
             - Added.
         Class NLensSpace:
             - Fixed bug causing reductions to be sometimes non-optimal

@@ -1,0 +1,355 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2002, Ben Burton                                   *
+ *  For further details contact Ben Burton (benb@acm.org).                *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,        *
+ *  MA 02111-1307, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+#include "triangulation/ntriangulation.h"
+#include "subcomplex/nplugtrisolidtorus.h"
+
+namespace regina {
+
+NPlugTriSolidTorus::~NPlugTriSolidTorus() {
+    if (core)
+        delete core;
+    for (int i = 0; i < 3; i++)
+        if (chain[i])
+            delete chain[i];
+}
+
+NPlugTriSolidTorus* NPlugTriSolidTorus::clone() const {
+    NPlugTriSolidTorus* ans = new NPlugTriSolidTorus();
+    ans->core = core->clone();
+    for (int i = 0; i < 3; i++) {
+        if (chain[i])
+            ans->chain[i] = new NLayeredChain(*chain[i]);
+        ans->chainType[i] = chainType[i];
+    }
+    ans->equatorType = equatorType;
+    ans->seifertStructure = seifertStructure;
+    return ans;
+}
+
+void NPlugTriSolidTorus::writeTextShort(std::ostream& out) const {
+    out << "Plugged triangular solid torus: ";
+    seifertStructure.writeTextShort(out);
+}
+
+void NPlugTriSolidTorus::findExceptionalFibres() {
+    seifertStructure.insertFibre(NExceptionalFibre(2, -1));
+    seifertStructure.insertFibre(NExceptionalFibre(3, 1));
+
+    long rot = (equatorType == EQUATOR_MAJOR ? 5 : 4);
+    for (int i = 0; i < 3; i++)
+        if (chainType[i] != CHAIN_NONE) {
+            if (chainType[i] == equatorType)
+                rot += chain[i]->getIndex();
+            else
+                rot -= chain[i]->getIndex();
+        }
+    seifertStructure.insertFibre(NExceptionalFibre(rot, 1));
+
+    seifertStructure.reduce();
+}
+
+NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
+        NTriangulation* tri) {
+    // Basic property checks.
+    if ((! tri->isClosed()) || (! tri->isOrientable()))
+        return 0;
+
+    if (tri->getNumberOfVertices() > 1)
+        return 0;
+
+    unsigned long nTet = tri->getNumberOfTetrahedra();
+    if (nTet < 5)
+        return 0;
+
+    // We have a 1-vertex closed orientable triangulation with at least
+    // 5 tetrahedra.
+
+    // Hunt for a core.  Make sure we find each triangular solid torus
+    // just once.
+    unsigned long tetIndex;
+    int coreIndex;
+    NTriSolidTorus* core;
+    NTetrahedron* coreTet[3];
+    NEdge* axis[3];
+    NPerm coreRoles[3];
+    NTetrahedron* base[2];
+    NPerm baseRoles[2];
+    int i, j;
+    bool error;
+
+    NTetrahedron* plugTet[3][2];
+    NPerm plugRoles[3][2];
+    NPerm realPlugRoles[2];
+
+    NLayeredChain* chain[3];
+    int chainType[3];
+    int equatorType = 0;
+
+    chain[0] = chain[1] = chain[2] = 0;
+
+    for (tetIndex = 0; tetIndex < nTet - 2; tetIndex++)
+        for (coreIndex = 0; coreIndex < 24; coreIndex++) {
+            coreRoles[0] = allPermsS4[coreIndex];
+            if (coreRoles[0][0] > coreRoles[0][3])
+                continue;
+
+            core = NTriSolidTorus::isTriSolidTorus(
+                tri->getTetrahedron(tetIndex), coreRoles[0]);
+            if (! core)
+                continue;
+
+            for (i = 0; i < 3; i++) {
+                coreTet[i] = core->getTetrahedron(i);
+                coreRoles[i] = core->getVertexRoles(i);
+                axis[i] = coreTet[i]->getEdge(
+                    edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
+            }
+
+            if (tri->getTetrahedronIndex(coreTet[1]) < tetIndex ||
+                    tri->getTetrahedronIndex(coreTet[2]) < tetIndex ||
+                    axis[0] == axis[1] || axis[1] == axis[2] ||
+                    axis[2] == axis[0]) {
+                delete core;
+                continue;
+            }
+
+            // We have the triangular solid torus in a unique canonical form.
+            // We also know the three axis edges are distinct.
+
+            // Hunt for chains.
+            for (i = 0; i < 3; i++) {
+                base[0] = coreTet[(i + 1) % 3]->getAdjacentTetrahedron(
+                    coreRoles[(i + 1) % 3][2]);
+                base[1] = coreTet[(i + 2) % 3]->getAdjacentTetrahedron(
+                    coreRoles[(i + 2) % 3][1]);
+                if (base[0] != base[1]) {
+                    // No chain.
+                    chainType[i] = CHAIN_NONE;
+                    continue;
+                }
+
+                // Have we layered over the major axis?
+                baseRoles[0] = coreTet[(i + 1) % 3]->
+                    getAdjacentTetrahedronGluing(coreRoles[(i + 1) % 3][2]) *
+                    coreRoles[(i + 1) % 3] * NPerm(0, 3, 2, 1);
+                baseRoles[1] = coreTet[(i + 2) % 3]->
+                    getAdjacentTetrahedronGluing(coreRoles[(i + 2) % 3][1]) *
+                    coreRoles[(i + 2) % 3] * NPerm(2, 1, 0, 3);
+                if (baseRoles[0] == baseRoles[1]) {
+                    chainType[i] = CHAIN_MAJOR;
+                    chain[i] = new NLayeredChain(base[0], baseRoles[0]);
+                    while (chain[i]->extendAbove())
+                        ;
+                    continue;
+                }
+
+                // Have we layered over the minor axis?
+                baseRoles[0] = coreTet[(i + 1) % 3]->
+                    getAdjacentTetrahedronGluing(coreRoles[(i + 1) % 3][2]) *
+                    coreRoles[(i + 1) % 3] * NPerm(3, 0, 2, 1);
+                baseRoles[1] = coreTet[(i + 2) % 3]->
+                    getAdjacentTetrahedronGluing(coreRoles[(i + 2) % 3][1]) *
+                    coreRoles[(i + 2) % 3] * NPerm(2, 1, 3, 0);
+                if (baseRoles[0] == baseRoles[1]) {
+                    chainType[i] = CHAIN_MINOR;
+                    chain[i] = new NLayeredChain(base[0], baseRoles[0]);
+                    while (chain[i]->extendAbove())
+                        ;
+                    continue;
+                }
+
+                // It's not a chain but it can't be a plug either.
+                // We'll notice the error because i will be less than 3.
+                break;
+            }
+
+            // Check whether we broke out of the previous loop with an error.
+            // Check also whether one of the chains is another in
+            // reverse, and that we've found the correct number of
+            // tetrahedra in total.
+            error = false;
+            if (i < 3)
+                error = true;
+            else if (chain[0] && chain[1] &&
+                    chain[0]->getBottom() == chain[1]->getTop())
+                error = true;
+            else if (chain[1] && chain[2] &&
+                    chain[1]->getBottom() == chain[2]->getTop())
+                error = true;
+            else if (chain[2] && chain[0] &&
+                    chain[2]->getBottom() == chain[0]->getTop())
+                error = true;
+            else if ((chain[0] ? chain[0]->getIndex() : 0) +
+                    (chain[1] ? chain[1]->getIndex() : 0) +
+                    (chain[2] ? chain[2]->getIndex() : 0) +
+                    5 != nTet)
+                error = true;
+
+            if (error) {
+                for (j = 0; j < 3; j++)
+                    if (chain[j]) {
+                        delete chain[j];
+                        chain[j] = 0;
+                    }
+                delete core;
+                continue;
+            }
+
+            // Still hanging in.
+            // We know there's only 2 tetrahedra left.
+            // Now we need to check the plug.
+            error = false;
+
+            for (i = 0; i < 3; i++) {
+                if (chain[i]) {
+                    plugTet[i][0] = chain[i]->getTop()->getAdjacentTetrahedron(
+                        chain[i]->getTopVertexRoles()[3]);
+                    plugTet[i][1] = chain[i]->getTop()->getAdjacentTetrahedron(
+                        chain[i]->getTopVertexRoles()[0]);
+                    plugRoles[i][0] = chain[i]->getTop()->
+                        getAdjacentTetrahedronGluing(chain[i]->
+                        getTopVertexRoles()[3]) *
+                        chain[i]->getTopVertexRoles() *
+                        (chainType[i] == CHAIN_MAJOR ? NPerm(0, 1, 2, 3) :
+                        NPerm(1, 0, 2, 3));
+                    plugRoles[i][1] = chain[i]->getTop()->
+                        getAdjacentTetrahedronGluing(chain[i]->
+                        getTopVertexRoles()[0]) *
+                        chain[i]->getTopVertexRoles() *
+                        (chainType[i] == CHAIN_MAJOR ? NPerm(2, 3, 1, 0) :
+                        NPerm(3, 2, 1, 0));
+                } else {
+                    plugTet[i][0] = coreTet[(i + 1) % 3]->
+                        getAdjacentTetrahedron(coreRoles[(i + 1) % 3][2]);
+                    plugTet[i][1] = coreTet[(i + 2) % 3]->
+                        getAdjacentTetrahedron(coreRoles[(i + 2) % 3][1]);
+                    plugRoles[i][0] = coreTet[(i + 1) % 3]->
+                        getAdjacentTetrahedronGluing(coreRoles[(i + 1) % 3][2])
+                        * coreRoles[(i + 1) % 3] * NPerm(0, 3, 1, 2);
+                    plugRoles[i][1] = coreTet[(i + 2) % 3]->
+                        getAdjacentTetrahedronGluing(coreRoles[(i + 2) % 3][1])
+                        * coreRoles[(i + 2) % 3] * NPerm(0, 3, 2, 1);
+                }
+            }
+
+            // Make sure we meet precisely two tetrahedra, three times
+            // each.  Note that this implies that the plug tetrahedra are
+            // in fact thus far unseen.
+            for (i = 0; i < 2; i++)
+                if (plugTet[0][i] != plugTet[1][i] ||
+                        plugTet[1][i] != plugTet[2][i]) {
+                    error = true;
+                    break;
+                }
+
+            // Make sure also that the gluing permutations for the plug
+            // are correct.
+            if (! error) {
+                if (plugRoles[0][0][0] == plugRoles[1][0][0] &&
+                        plugRoles[1][0][0] == plugRoles[2][0][0]) {
+                    // Type EQUATOR_MINOR.
+                    realPlugRoles[0] = plugRoles[0][0] * NPerm(3, 2, 1, 0);
+                    realPlugRoles[1] = plugRoles[0][1] * NPerm(3, 0, 2, 1);
+
+                    if (realPlugRoles[0] != plugRoles[1][0] *
+                            NPerm(1, 3, 2, 0))
+                        error = true;
+                    else if (realPlugRoles[0] != plugRoles[2][0] *
+                            NPerm(2, 1, 3, 0))
+                        error = true;
+                    else if (realPlugRoles[1] != plugRoles[1][1] *
+                            NPerm(2, 3, 0, 1))
+                        error = true;
+                    else if (realPlugRoles[1] != plugRoles[2][1] *
+                            NPerm(0, 2, 3, 1))
+                        error = true;
+                    else
+                        equatorType = EQUATOR_MINOR;
+                } else if (plugRoles[0][0][1] == plugRoles[1][0][1] &&
+                        plugRoles[1][0][1] == plugRoles[2][0][1]) {
+                    // Type EQUATOR_MAJOR.
+                    realPlugRoles[0] = plugRoles[0][0] * NPerm(3, 2, 0, 1);
+                    realPlugRoles[1] = plugRoles[0][1] * NPerm(3, 1, 2, 0);
+
+                    if (realPlugRoles[0] != plugRoles[1][0] *
+                            NPerm(0, 3, 2, 1))
+                        error = true;
+                    else if (realPlugRoles[0] != plugRoles[2][0] *
+                            NPerm(2, 0, 3, 1))
+                        error = true;
+                    else if (realPlugRoles[1] != plugRoles[1][1] *
+                            NPerm(2, 3, 1, 0))
+                        error = true;
+                    else if (realPlugRoles[1] != plugRoles[2][1] *
+                            NPerm(1, 2, 3, 0))
+                        error = true;
+                    else
+                        equatorType = EQUATOR_MAJOR;
+                } else
+                    error = true;
+            }
+
+            // Finally check the internal face of the plug.
+            if (! error) {
+                if (plugTet[0][0]->getAdjacentTetrahedron(realPlugRoles[0][3])
+                        != plugTet[0][1])
+                    error = true;
+                else if (plugTet[0][0]->getAdjacentTetrahedronGluing(
+                        realPlugRoles[0][3]) * realPlugRoles[0] !=
+                        realPlugRoles[1])
+                    error = true;
+            }
+
+            if (error) {
+                for (j = 0; j < 3; j++)
+                    if (chain[j]) {
+                        delete chain[j];
+                        chain[j] = 0;
+                    }
+                delete core;
+                continue;
+            }
+
+            // Success!
+            NPlugTriSolidTorus* plug = new NPlugTriSolidTorus();
+            plug->core = core;
+            for (i = 0; i < 3; i++) {
+                plug->chain[i] = chain[i];
+                plug->chainType[i] = chainType[i];
+            }
+            plug->equatorType = equatorType;
+            plug->findExceptionalFibres();
+            return plug;
+        }
+
+    // Nothing was found.
+    return 0;
+}
+
+} // namespace regina
