@@ -21,7 +21,7 @@ sample_dvi = regina.dvi
 sample_pdf = regina.pdf
 
 output_html = *.html
-output_man = *.1 *.5 *.7 manpage.*
+output_man = *.[1-8] manpage.*
 output_rtf = *.rtf
 output_tex = *.tex *.aux *.dvi *.pdf *.out *.log
 
@@ -74,3 +74,6 @@ javaui :
 
 clean :
 	-rm $(output_html) $(output_man) $(output_rtf) $(output_tex)
+	-rm engine/*.html engine/*.png engine/*.gif engine/*.css engine/*.dot
+	-rm javaui/*.html javaui/*.css javaui/package-list
+	-rm -rf javaui/normal
