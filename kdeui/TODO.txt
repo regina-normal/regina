@@ -31,6 +31,7 @@ Packets (General):
     Work out how to right-align the packet pane close button
     Work around Vim component bugs in script/text viewers
     Find out how to centre column headers in list views
+    Change the "Docked Packet" menu title according to packet type
 
 Python:
     Allow breaking processing in python consoles
