@@ -13,6 +13,8 @@ Regina - A Normal Surface Theory Calculator
             - New classes.
         Class NPerm:
             - Added operator !=.
+        Class NTriangulation:
+            - Added fourFourMove().
     JAVA USER INTERFACE:
         Overall structure:
             - Loading/saving local files is now possible even through CORBA!

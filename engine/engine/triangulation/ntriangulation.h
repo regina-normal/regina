@@ -89,7 +89,6 @@ class NGroupPresentation;
  * if there is nothing left).  Am I obviously not a handlebody?
  * (Compare homology with boundary homology).
  * \todo \feature Is the boundary incompressible?
- * \todo \feature Implement 4-4 moves.
  * \todo \feature Add set of cusps and three corresponding get functions.
  * \todo \feature Make 0-efficient.
  * \todo \feature Insert a SFS with 3 exceptional fibres.

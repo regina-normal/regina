@@ -69,6 +69,12 @@ public class ElementaryMove extends Modification {
             return tri.threeTwoMove(tri.getEdge(dlg.skelIndex));
         if (dlg.selected == dlg.twoThree)
             return tri.twoThreeMove(tri.getFace(dlg.skelIndex));
+        if (dlg.selected == dlg.fourFour) {
+            if (dlg.skelIndex >= 0)
+                return tri.fourFourMove(tri.getEdge(dlg.skelIndex), 0);
+            else
+                return tri.fourFourMove(tri.getEdge(-(dlg.skelIndex + 1)), 1);
+        }
         if (dlg.selected == dlg.twoZeroEdge)
             return tri.twoZeroMove(tri.getEdge(dlg.skelIndex));
         if (dlg.selected == dlg.twoZeroVertex)
@@ -139,6 +145,11 @@ public class ElementaryMove extends Modification {
         private JRadioButton twoThree;
 
         /**
+         * Button representing a 4-4 move.
+         */
+        private JRadioButton fourFour;
+
+        /**
          * Button representing a 2-0 move about an edge.
          */
         private JRadioButton twoZeroEdge;
@@ -172,6 +183,11 @@ public class ElementaryMove extends Modification {
          * Skeletal component about which to do a 2-3 move.
          */
         private JComboBox twoThreeComp;
+
+        /**
+         * Skeletal component about which to do a 4-4 move.
+         */
+        private JComboBox fourFourComp;
 
         /**
          * Skeletal component about which to do a 2-0 (edge) move.
@@ -228,6 +244,7 @@ public class ElementaryMove extends Modification {
             ButtonGroup type = new ButtonGroup();
             threeTwo = new JRadioButton("3-2");
             twoThree = new JRadioButton("2-3");
+            fourFour = new JRadioButton("4-4");
             twoZeroEdge = new JRadioButton("2-0 (edge)");
             twoZeroVertex = new JRadioButton("2-0 (vertex)");
             twoOne = new JRadioButton("2-1");
@@ -235,6 +252,7 @@ public class ElementaryMove extends Modification {
             shellBoundary = new JRadioButton("Shell boundary");
             type.add(threeTwo);
             type.add(twoThree);
+            type.add(fourFour);
             type.add(twoZeroEdge);
             type.add(twoZeroVertex);
             type.add(twoOne);
@@ -243,6 +261,7 @@ public class ElementaryMove extends Modification {
 
             threeTwoComp = new JComboBox();
             twoThreeComp = new JComboBox();
+            fourFourComp = new JComboBox();
             twoZeroEdgeComp = new JComboBox();
             twoZeroVertexComp = new JComboBox();
             twoOneComp = new JComboBox();
@@ -266,6 +285,8 @@ public class ElementaryMove extends Modification {
             typePanel.add(threeTwoComp, cExtra);
             typePanel.add(twoThree, cButton);
             typePanel.add(twoThreeComp, cExtra);
+            typePanel.add(fourFour, cButton);
+            typePanel.add(fourFourComp, cExtra);
             typePanel.add(twoZeroEdge, cButton);
             typePanel.add(twoZeroEdgeComp, cExtra);
             typePanel.add(twoZeroVertex, cButton);
@@ -333,6 +354,7 @@ public class ElementaryMove extends Modification {
         private void fillMoves() {
             threeTwoComp.removeAllItems();
             twoThreeComp.removeAllItems();
+            fourFourComp.removeAllItems();
             twoZeroEdgeComp.removeAllItems();
             twoZeroVertexComp.removeAllItems();
             twoOneComp.removeAllItems();
@@ -356,6 +378,14 @@ public class ElementaryMove extends Modification {
                 if (tri.threeTwoMove(e, true, false))
                     threeTwoComp.addItem(new ExtendedObject(
                         new Long(i), "Edge " + String.valueOf(i)));
+                if (tri.fourFourMove(e, 0, true, false))
+                    fourFourComp.addItem(new ExtendedObject(
+                        new Long(i), "Edge " + String.valueOf(i) +
+                        " (axis 0)"));
+                if (tri.fourFourMove(e, 1, true, false))
+                    fourFourComp.addItem(new ExtendedObject(
+                        new Long(-(i + 1)), "Edge " + String.valueOf(i) +
+                        " (axis 1)"));
                 if (tri.twoZeroMove(e, true, false))
                     twoZeroEdgeComp.addItem(new ExtendedObject(
                         new Long(i), "Edge " + String.valueOf(i)));
@@ -393,6 +423,10 @@ public class ElementaryMove extends Modification {
             if (twoThreeComp.getItemCount() == 0) {
                 twoThreeComp.setEnabled(false);
                 twoThree.setEnabled(false);
+            }
+            if (fourFourComp.getItemCount() == 0) {
+                fourFourComp.setEnabled(false);
+                fourFour.setEnabled(false);
             }
             if (twoZeroEdgeComp.getItemCount() == 0) {
                 twoZeroEdgeComp.setEnabled(false);
@@ -441,6 +475,10 @@ public class ElementaryMove extends Modification {
                 } else if (twoThree.isSelected()) {
                     selected = twoThree;
                     skelIndex = ((Long)((ExtendedObject)twoThreeComp.
+                        getSelectedItem()).getValue()).longValue();
+                } else if (fourFour.isSelected()) {
+                    selected = fourFour;
+                    skelIndex = ((Long)((ExtendedObject)fourFourComp.
                         getSelectedItem()).getValue()).longValue();
                 } else if (twoZeroEdge.isSelected()) {
                     selected = twoZeroEdge;
