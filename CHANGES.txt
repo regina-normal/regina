@@ -20,7 +20,9 @@ Version 4.1.3  [ 25 July, 2004 ]
         - Allow the choice of text editor component to be configured.
         - Several fixes to make Regina work properly with the vimpart,
           including work-arounds for bugs in the vimpart itself.
-        - Tightened up the handling of read-only mode for internal components.
+        - Tightened up the handling of read-only mode for internal
+          components.  Also removed some loopholes that allowed editing
+          of uneditable packets.
 
 Version 4.1.2  [ 14 June, 2004 ]
     OVERALL:

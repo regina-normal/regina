@@ -458,8 +458,28 @@ void PacketPane::refreshForce() {
     refresh();
 }
 
-void PacketPane::commit() {
+bool PacketPane::commit() {
     if (dirty) {
+        if (! readWrite) {
+            KMessageBox::sorry(this, i18n("This packet is read-only.  "
+                "No changes may be committed."));
+            return false;
+        }
+
+        if (! mainUI->getPacket()->isPacketEditable()) {
+            KMessageBox::sorry(this, i18n("<qt>This packet may not be "
+                "edited at the present time.  Because of this, your "
+                "changes cannot be committed.<p>"
+                "This is generally due to a tight relationship shared "
+                "with some other packet in the tree.  For instance, a "
+                "triangulation containing a normal surface list may "
+                "not be edited, since the normal surfaces are stored "
+                "as coordinates relative to the triangulation.<p>"
+                "As a workaround for this problem, you might wish to try "
+                "cloning this packet and editing the clone instead.</qt>"));
+            return false;
+        }
+
         isCommitting = true;
 
         {
@@ -470,6 +490,82 @@ void PacketPane::commit() {
         setDirty(false); // Just in case somebody forgot.
         isCommitting = false;
     }
+
+    return true;
+}
+
+bool PacketPane::commitToModify() {
+    if (dirty)
+        return commit();
+    else {
+        // No changes to commit, but we still need to check if the
+        // packet may be modified.
+        if (! readWrite) {
+            KMessageBox::sorry(this, i18n("This packet is read-only, and "
+                "so may not be modified."));
+            return false;
+        }
+
+        if (! mainUI->getPacket()->isPacketEditable()) {
+            KMessageBox::sorry(this, i18n("<qt>This packet may not be "
+                "modified at the present time.<p>"
+                "This is generally due to a tight relationship shared "
+                "with some other packet in the tree.  For instance, a "
+                "triangulation containing a normal surface list may "
+                "not be edited, since the normal surfaces are stored "
+                "as coordinates relative to the triangulation.<p>"
+                "As a workaround for this problem, you might wish to try "
+                "cloning this packet and editing the clone instead.</qt>"));
+            return false;
+        }
+
+        return true;
+    }
+}
+
+bool PacketPane::tryCommit() {
+    if (dirty) {
+        if (! readWrite) {
+            if (KMessageBox::warningContinueCancel(this,
+                    i18n("<qt>This packet is read-only, but you appear "
+                    "to have made changes that have not yet been committed.  "
+                    "I cannot commit these changes for you, but I will "
+                    "have to work from an old copy of the packet instead.<p>"
+                    "Do you wish to continue this operation using an old "
+                    "copy of the packet?</qt>"))
+                    != KMessageBox::Continue)
+                return false;
+        }
+
+        if (! mainUI->getPacket()->isPacketEditable()) {
+            if (KMessageBox::warningContinueCancel(this,
+                    i18n("<qt>This packet may not be edited at the present "
+                    "time.  Because of this I cannot commit your recent "
+                    "changes, and I will have to work from an old copy "
+                    "of the packet instead.<p>"
+                    "This is generally due to a tight relationship shared "
+                    "with some other packet in the tree.  For instance, a "
+                    "triangulation containing a normal surface list may "
+                    "not be edited, since the normal surfaces are stored "
+                    "as coordinates relative to the triangulation.<p>"
+                    "Do you wish to continue this operation using an old "
+                    "copy of the packet?</qt>"))
+                    != KMessageBox::Continue)
+                return false;
+        }
+
+        isCommitting = true;
+
+        {
+            NPacket::ChangeEventBlock block(mainUI->getPacket());
+            mainUI->commit();
+        }
+
+        setDirty(false); // Just in case somebody forgot.
+        isCommitting = false;
+    }
+
+    return true;
 }
 
 bool PacketPane::close() {

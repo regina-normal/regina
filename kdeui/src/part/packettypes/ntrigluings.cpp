@@ -495,7 +495,9 @@ void NTriGluingsUI::removeSelectedTets() {
 }
 
 void NTriGluingsUI::simplify() {
-    enclosingPane->commit();
+    if (! enclosingPane->commitToModify())
+        return;
+
     if (! tri->intelligentSimplify())
         KMessageBox::sorry(ui, i18n(
             "The triangulation could not be simplified.  "
@@ -504,12 +506,16 @@ void NTriGluingsUI::simplify() {
 }
 
 void NTriGluingsUI::barycentricSubdivide() {
-    enclosingPane->commit();
+    if (! enclosingPane->commitToModify())
+        return;
+
     tri->barycentricSubdivision();
 }
 
 void NTriGluingsUI::idealToFinite() {
-    enclosingPane->commit();
+    if (! enclosingPane->commitToModify())
+        return;
+
     if (tri->isValid() && ! tri->isIdeal())
         KMessageBox::error(ui, i18n(
             "This triangulation has no ideal vertices to truncate."));
@@ -518,18 +524,26 @@ void NTriGluingsUI::idealToFinite() {
 }
 
 void NTriGluingsUI::elementaryMove() {
-    enclosingPane->commit();
+    if (! enclosingPane->commitToModify())
+        return;
+
     EltMoveDialog dlg(ui, tri);
     dlg.exec();
 }
 
 void NTriGluingsUI::doubleCover() {
-    enclosingPane->commit();
+    if (! enclosingPane->commitToModify())
+        return;
+
     tri->makeDoubleCover();
 }
 
 void NTriGluingsUI::splitIntoComponents() {
-    enclosingPane->commit();
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
     if (tri->getNumberOfComponents() == 0)
         KMessageBox::information(ui, i18n("This triangulation is empty "
             "and therefore has no components."));
@@ -562,7 +576,11 @@ void NTriGluingsUI::splitIntoComponents() {
 }
 
 void NTriGluingsUI::connectedSumDecomposition() {
-    enclosingPane->commit();
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
     if (tri->getNumberOfTetrahedra() == 0)
         KMessageBox::information(ui, i18n("This triangulation is empty."));
     else if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
@@ -615,7 +633,8 @@ void NTriGluingsUI::connectedSumDecomposition() {
 }
 
 void NTriGluingsUI::makeZeroEfficient() {
-    enclosingPane->commit();
+    if (! enclosingPane->commitToModify())
+        return;
 
     unsigned long initTets = tri->getNumberOfTetrahedra();
     if (initTets == 0) {
@@ -721,7 +740,10 @@ void NTriGluingsUI::makeZeroEfficient() {
 }
 
 void NTriGluingsUI::censusLookup() {
-    enclosingPane->commit();
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
 
     // Run through each census file.
     KProgressDialog* progress =

@@ -175,6 +175,9 @@ class PacketUI {
          * This will ensure that the enclosing pane can keep up to date
          * with what is taking place.
          *
+         * No checking needs to be done as to whether the commit should
+         * be allowed; this is taken care of by PacketPane::commit().
+         *
          * This routine should call setDirty(false) once changes have
          * been made.
          */
@@ -500,8 +503,57 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         /**
          * Commits any changes made in the user interface to the
          * underlying packet.
+         *
+         * If the commit should not be allowed (i.e., the packet
+         * pane is in read-only mode or the underlying packet may not
+         * be modified for mathematical reasons), it will not take
+         * place.  Instead an appropriate error message will be displayed.
+         *
+         * Returns \c true if the commit took place (or if there were in
+         * fact no changes to commit), or \c false if the commit was not
+         * allowed to proceed.
          */
-        void commit();
+        bool commit();
+
+        /**
+         * Ensures that the underlying packet may be modified, and
+         * commits any changes made in the user interface.
+         *
+         * This routine behaves identically to commit(), with one
+         * exception.  Even if no changes have been made in the user
+         * interface, an error will still be raised if changes to the
+         * underlying packet are not allowed.
+         *
+         * This routine should be used when an operation plans to modify
+         * the underlying packet, but wishes to commit any changes made
+         * in the UI before proceeding.
+         *
+         * Returns \c true if changes are allowed to the underlying
+         * packet (and therefore any necessary commit took place), or
+         * \c false if changes are not allowed.
+         */
+        bool commitToModify();
+
+        /**
+         * Tries to commit any changes made in the user interface to the
+         * underlying packet, but allows the user to continue if the
+         * commit is not allowed.
+         *
+         * This routine behaves identically to commit(), except that if
+         * the commit is not allowed then the error messages will be
+         * replaced by gentle warnings explaining that an old copy of
+         * the packet is to be used.  The user will be offered the
+         * chance to continue or cancel.
+         *
+         * This routine should be used when an operation would like to
+         * commit current changes made in the UI, but if the commit fails
+         * then it can happily work with the last committed copy.
+         *
+         * Returns \c false if the user chose to cancel the operation,
+         * or \c true if either the commit succeeded or the user was
+         * happy to continue regardless.
+         */
+        bool tryCommit();
 
         /**
          * Closes this packet pane.  The user will be prompted if
