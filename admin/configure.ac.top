@@ -162,6 +162,20 @@ REGINA_PROG_OPTIONAL(docbook2man, DOCBOOK2MAN,
 #
 ###########################################################
 
+# Process --with-extra-includes and --with-extra-libs.
+# We move these flags into CFLAGS/CXXFLAGS/LDFLAGS so that non-KDE
+# material can benefit from them as well.
+KDE_CHECK_EXTRA_LIBS
+if test -n "$USER_INCLUDES"; then
+  CFLAGS="$CFLAGS $USER_INCLUDES"
+  CXXFLAGS="$CXXFLAGS $USER_INCLUDES"
+  USER_INCLUDES=
+fi
+if test -n "$USER_LDFLAGS"; then
+  LDFLAGS="$LDFLAGS $USER_LDFLAGS"
+  USER_LDFLAGS=
+fi
+
 REGINA_HEADER_REQUIRED(zlib.h, [the calculation engine])
 REGINA_LIB_REQUIRED(z, zlibVersion, [the calculation engine])
 
