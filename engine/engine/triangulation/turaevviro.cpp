@@ -28,7 +28,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <complex>
 #include <vector>
+#include "regina-config.h"
+#include "maths/approx.h"
 #include "maths/numbertheory.h"
 #include "triangulation/ntriangulation.h"
 
@@ -217,8 +220,7 @@ namespace {
     };
 }
 
-std::complex<double> NTriangulation::turaevViro(unsigned long r,
-        unsigned long whichRoot) {
+double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot) {
     // Do some basic parameter checks.
     if (r < 3)
         return 0;
@@ -312,7 +314,15 @@ std::complex<double> NTriangulation::turaevViro(unsigned long r,
     }
 
     delete[] colour;
-    return ans;
+
+    if (isNonZero(ans.imag()))
+        std::cerr <<
+            "WARNING: The Turaev-Viro invariant has an imaginary component.\n"
+            "         Please report this (along with the 3-manifold that"
+            "         was used) to " << PACKAGE_BUGREPORT << ".\n"
+            "         Only the real portion of the invariant has been"
+            "         returned from this routine." << std::endl;
+    return ans.real();
 }
 
 } // namespace regina

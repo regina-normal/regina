@@ -35,7 +35,6 @@
 #define __NTRIANGULATION_H
 #endif
 
-#include <complex>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
 #include "utilities/hashset.h"
@@ -878,6 +877,12 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * degree 2r for which q0^2 is a primitive root of unity of
          * degree r.
          *
+         * I believe that these invariants, although computed in the
+         * complex field, are all reals.  However, I have not yet found
+         * a firm assertion of this and so in the meantime this routine
+         * simply returns the real portion and sends a warning to
+         * standard error if the imaginary portion is non-zero.
+         *
          * \pre This triangulation is valid, closed and non-empty.
          *
          * @param r the integer r as described above; this must be at
@@ -887,8 +892,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * between 0 and 2r and must have no common factors with r.
          * @return the requested Turaev-Viro invariant.
          */
-        std::complex<double> turaevViro(unsigned long r,
-            unsigned long whichRoot);
+        double turaevViro(unsigned long r, unsigned long whichRoot);
 
         /*@}*/
         /**
