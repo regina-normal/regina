@@ -20,7 +20,8 @@ p.return {
   border-style: solid;
 }
 
-.pagehdr {
+h1 {
+  font-size: x-large;
   font-weight: bold;
   color: #3D3F53;
   text-align: center;
@@ -33,12 +34,6 @@ p.return {
   border-right: 0px;
   border-color: #B5BCF8;
   border-style: solid;
-}
-
-h1 {
-  font-size: x-large;
-  font-weight: bold;
-  color: #3D3F53;
 }
 
 h2 {
@@ -54,6 +49,18 @@ h3 {
   font-size: larger;
   font-weight: bold;
   color: #3D3F53;
+}
+
+h4 {
+  font-size: medium;
+  font-weight: bold;
+  color: #3D3F53;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  border-color: #B5BCF8;
+  border-style: solid;
 }
 
 table.contentswrapper {
