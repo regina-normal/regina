@@ -47,7 +47,8 @@ enum { GAP_init,
        GAP_oldgens,
        GAP_oldrels,
        GAP_simplify,
-       GAP_newgens,
+       GAP_newgenscount,
+       GAP_newgenseach,
        GAP_newrelscount,
        GAP_newrelseach,
        GAP_done };
@@ -55,8 +56,9 @@ enum { GAP_init,
 /**
  * Full matching regular expressions.
  */
-QRegExp reGAPPrompt("^gap>\\s*$");
 QRegExp reInt("^[0-9]+$");
+QRegExp reGAPPrompt("^gap>\\s*$");
+QRegExp reGAPGenerator("^f[0-9]+$");
 
 /**
  * Regular expressions for validity testing.  Note that each of these
@@ -159,8 +161,10 @@ bool GAPRunner::appearsValid(const QString& output) {
             return (reValAckFPGroup.search(use) == 0);
         case GAP_simplify:
             return (reValAckSimplify.search(use) == 0);
-        case GAP_newgens:
+        case GAP_newgenscount:
             return reInt.exactMatch(use);
+        case GAP_newgenseach:
+            return reGAPGenerator.exactMatch(use);
         case GAP_newrelscount:
             return reInt.exactMatch(use);
         case GAP_newrelseach:
@@ -203,20 +207,49 @@ void GAPRunner::processOutput(const QString& output) {
         case GAP_simplify:
             // Ignore any output.
             sendInput("Length(GeneratorsOfGroup(Range(hom)));");
-            stage = GAP_newgens;
+            stage = GAP_newgenscount;
             status->setText(i18n("Extracting new group presentation..."));
             return;
-        case GAP_newgens:
+        case GAP_newgenscount:
             count = use.toULong(&ok);
             if (ok) {
+                newGenCount = count;
                 newGroup.reset(new regina::NGroupPresentation());
-                newGroup->addGenerator(count);
-                sendInput("Length(RelatorsOfFpGroup(Range(hom)));");
-                stage = GAP_newrelscount;
+                newGroup->addGenerator(newGenCount);
+
+                if (newGenCount == 0) {
+                    // Move straight onto the relations.
+                    sendInput("Length(RelatorsOfFpGroup(Range(hom)));");
+                    stage = GAP_newrelscount;
+                } else {
+                    // Extract the individual generators.
+                    stageWhichGen = 0;
+                    sendInput("GeneratorsOfGroup(Range(hom))[1];");
+                    stage = GAP_newgenseach;
+                }
             } else
                 error(i18n("GAP produced the following output where "
                     "an integer was expected:<p><tt>%1</tt>").arg(
                     escape(use)));
+            return;
+        case GAP_newgenseach:
+            // Validity testing has already shown it to look like a
+            // generator.
+            if (newGens.insert(std::make_pair(use, stageWhichGen)).second) {
+                stageWhichGen++;
+                if (stageWhichGen == newGenCount) {
+                    // On to the relations.
+                    sendInput("Length(RelatorsOfFpGroup(Range(hom)));");
+                    stage = GAP_newrelscount;
+                } else {
+                    // Move on to the next generator.
+                    sendInput(QString("GeneratorsOfGroup(Range(hom))[%1];").
+                        arg(stageWhichGen + 1));
+                }
+            } else
+                error(i18n("GAP produced the same generator <i>%1</i> more "
+                    "than once in its simplified group presentation.").
+                    arg(escape(use)));
             return;
         case GAP_newrelscount:
             count = use.toULong(&ok);
@@ -303,13 +336,14 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
         return 0;
     }
 
-    unsigned long nGens = newGroup->getNumberOfGenerators();
     std::auto_ptr<regina::NGroupExpression> ans(new regina::NGroupExpression);
 
     // Make the regex local to this function since we're capturing text.
-    QRegExp reGAPTerm("f([0-9]+)(\\^(-?[0-9]+))?");
+    QRegExp reGAPTerm("(f[0-9]+)(\\^(-?[0-9]+))?");
 
     QString term;
+    QString genStr;
+    std::map<QString, unsigned long>::iterator genPos;
     unsigned long gen;
     long exp;
     for (QStringList::iterator it = terms.begin(); it != terms.end(); it++) {
@@ -320,18 +354,21 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
             return 0;
         }
 
-        gen = reGAPTerm.cap(1).toULong() - 1;
+        genStr = reGAPTerm.cap(1);
+        genPos = newGens.find(genStr);
+        if (genPos == newGens.end()) {
+            error(i18n("GAP produced the following group relator, which "
+                "includes the unknown generator <i>%1</i>:<p>"
+                "<tt>%2</tt>").arg(genStr).arg(escape(reln)));
+            return 0;
+        } else {
+            gen = (*genPos).second;
+        }
+
         if (reGAPTerm.cap(2).isEmpty())
             exp = 1;
         else
             exp = reGAPTerm.cap(3).toLong();
-
-        if (gen >= nGens) {
-            error(i18n("GAP produced the following group relator, which "
-                "includes the out-of-range generator <i>f%1</i>:<p>"
-                "<tt>%2</tt>").arg(gen).arg(escape(reln)));
-            return 0;
-        }
 
         ans->addTermLast(gen, exp);
     }

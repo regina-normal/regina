@@ -34,6 +34,7 @@
 #define __GAPRUNNER_H
 
 #include <kdialogbase.h>
+#include <map>
 #include <memory>
 
 class KProcIO;
@@ -64,8 +65,11 @@ class GAPRunner : public KDialogBase {
         QString currOutput;
         QString partialLine;
         int stage;
-        unsigned long stageWhichReln;
+        unsigned long newGenCount;
+        unsigned long stageWhichGen;
         unsigned long newRelnCount;
+        unsigned long stageWhichReln;
+        std::map<QString, unsigned long> newGens;
         bool cancelled;
 
         /**
