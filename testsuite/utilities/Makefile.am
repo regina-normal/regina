@@ -6,7 +6,7 @@
 ##  to produce Makefile.in.
 ##
 
-INCLUDES = @ENGINE_INCLUDES@
+INCLUDES = -I$(top_srcdir) @ENGINE_INCLUDES@
 
 check_LIBRARIES = libutilities.a
 
