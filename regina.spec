@@ -15,6 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdelibs
 Requires: kdebase
+Requires: python
 
 BuildRequires: boost-devel
 # BuildRequires: cppunit
@@ -63,8 +64,8 @@ make install-strip DESTDIR=$RPM_BUILD_ROOT
 
 %postun -p /sbin/ldconfig
 
-# %clean
-# rm -rf $RPM_BUILD_ROOT
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
