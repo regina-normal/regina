@@ -23,6 +23,9 @@ Current Development Version:
               replaced what was left with the new class NFilePropertyReader.
         Class ShareableObject:
             - Now derives from regina::boost::noncopyable.
+    USER INTERFACE:
+        Class NTriAlgebraUI:
+            - Made the algebra viewer a little easier to read.
 
 Version 3.95  [ 12 October, 2003 ] - Prelease for version 4.0.
     GRAPHICAL USER INTERFACE:

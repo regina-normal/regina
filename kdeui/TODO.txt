@@ -55,4 +55,5 @@ Triangulations:
     Include isomorphism tests
     Include Turaev-Viro
     Make the skeleton viewer windows appear in a pleasant size
+    Make the algebra viewer look a little neater
 

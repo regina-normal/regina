@@ -180,14 +180,20 @@ void NTriAlgebraUI::refresh() {
         else
             fundGens->setText(i18n("%1 generators: g0 ... g%2").
                 arg(nGens).arg(nGens - 1));
+        fundGens->show();
 
         unsigned long nRels = pres.getNumberOfRelations();
-        if (nRels == 0)
+        if (nRels == 0) {
             fundRelCount->setText(i18n("No relations"));
-        else if (nRels == 1)
+            fundRels->hide();
+        } else if (nRels == 1) {
             fundRelCount->setText(i18n("1 relation:"));
-        else
+            fundRels->show();
+        } else {
             fundRelCount->setText(i18n("%1 relations:").arg(nRels));
+            fundRels->show();
+        }
+        fundRelCount->show();
 
         // Add the relations in reverse order since the QListViewItem
         // constructor puts new items at the front.
@@ -197,9 +203,10 @@ void NTriAlgebraUI::refresh() {
                 QString("1 = ") + pres.getRelation(i).toString().c_str());
     } else {
         fundName->setText(i18n("Cannot calculate\n(disconnected triang.)"));
-        fundGens->setText(i18n("Generators"));
-        fundRelCount->setText(i18n("Relations"));
+        fundGens->hide();
+        fundRelCount->hide();
         fundRels->clear();
+        fundRels->hide();
     }
 }
 
@@ -213,8 +220,9 @@ void NTriAlgebraUI::editingElsewhere() {
     H2Z2->setText(msg);
 
     fundName->setText(msg);
-    fundGens->setText(i18n("Generators"));
-    fundRelCount->setText(i18n("Relations"));
+    fundGens->hide();
+    fundRelCount->hide();
     fundRels->clear();
+    fundRels->hide();
 }
 
