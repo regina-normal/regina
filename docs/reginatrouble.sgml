@@ -2,177 +2,203 @@
 <!-- Regina troubleshooting documentation.
      See regina.sgml for further details. -->
 
-<chapter id="troubleshooting">
+<appendix id="troubleshooting">
  <title>Troubleshooting</title>
 
- <bridgehead renderas="sect2">
-  I cannot start the program at all.  I simply get a message box
-  displaying an error concerning the calculation engine.
- </bridgehead>
- <para>
-  &regina; is split into two components; the &java; user interface (which
-  the user interacts with directly) and the C++ calculation engine
-  (which does all the actual mathematical work).  There are different
-  methods by which these two components can communicate.
- </para>
- <glosslist>
-  <glossentry>
-   <glossterm>&jni;</glossterm>
-   <glossdef><para>
-    The calculation engine is a shared library, found on the
-    filesystem of the machine on which you are running the user
-    interface.  The user interface loads this shared library and calls
-    its routines directly.  This method is the default when &regina; is run
-    as a standalone application.
-    </para><para>
-    If you are using this method,
-    <link linkend="man-regina.conf">check your configuration</link>
-    to ensure that the &jni; engine directory option is set correctly.
-   </para></glossdef>
-  </glossentry>
-  <glossentry>
-   <glossterm>&corba;</glossterm>
-   <glossdef><para>
-    The calculation engine is a separate server application,
-    possibly running on a different machine, with which the user
-    interface communicates across the network using &corba;.  This method
-    is the default when &regina; is run as an applet on a web page.
-    </para><para>
-    If you are using this method and are running &regina; as a standalone
-    application,
-    <link linkend="man-regina.conf">check your configuration</link>
-    to ensure that
-    the &corba; engine host and &corba; engine port options are set
-    corectly.  If you are using this method and are running &regina; as an
-    applet on a web page, contact the owner of the web page.
-    </para><para>
-    You should also ensure that the calculation engine server
-    application is running without problems, and is using the same host
-    and port settings as those mentioned above for the user interface.
-    Note that the server application needs to be started separately.
-   </para></glossdef>
-  </glossentry>
- </glosslist>
- <tip><para>
-  If you are running &regina; as a standalone application, using the
-  <option>--verbose</option> will show you the current configuration
-  being used.
- </para></tip>
+ <qandaset>
+  <qandaentry>
+   <question><para>
+    I cannot start the program at all.  I simply get a message box
+    displaying an error concerning the calculation engine.
+   </para></question>
+   <answer>
+    <para>
+     &regina; is split into two components; the &java; user interface (which
+     the user interacts with directly) and the C++ calculation engine
+     (which does all the actual mathematical work).  There are different
+     methods by which these two components can communicate.
+    </para>
+    <glosslist>
+     <glossentry>
+      <glossterm>&jni;</glossterm>
+      <glossdef><para>
+       The calculation engine is a shared library, found on the
+       filesystem of the machine on which you are running the user
+       interface.  The user interface loads this shared library and calls
+       its routines directly.  This method is the default when &regina; is run
+       as a standalone application.
+       </para><para>
+       If you are using this method,
+       <link linkend="man-regina.conf">check your configuration</link>
+       to ensure that the &jni; engine directory option is set correctly.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>&corba;</glossterm>
+      <glossdef><para>
+       The calculation engine is a separate server application,
+       possibly running on a different machine, with which the user
+       interface communicates across the network using &corba;.  This method
+       is the default when &regina; is run as an applet on a web page.
+       </para><para>
+       If you are using this method and are running &regina; as a standalone
+       application,
+       <link linkend="man-regina.conf">check your configuration</link>
+       to ensure that
+       the &corba; engine host and &corba; engine port options are set
+       corectly.  If you are using this method and are running &regina; as an
+       applet on a web page, contact the owner of the web page.
+       </para><para>
+       You should also ensure that the calculation engine server
+       application is running without problems, and is using the same host
+       and port settings as those mentioned above for the user interface.
+       Note that the server application needs to be started separately.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+    <tip><para>
+     If you are running &regina; as a standalone application, using the
+     <option>--verbose</option> option will show you the current configuration
+     being used.
+    </para></tip>
+   </answer>
+  </qandaentry>
 
- <bridgehead renderas="sect2">
-  I ask for help but I am told that &javahelp; and/or the documentation
-  jar cannot be found.
- </bridgehead>
- <para>
-  The default method for browsing the online documentation uses
-  &javahelp; (an embedded &java; help browser).  &javahelp; is
-  contained in the file <filename>jh.jar</filename> and the
-  documentation itself is found in the file
-  <filename>regina-docs.jar</filename>.  One of
-  these two jar files could not be found on your system (look in the
-  &helpabout; box for further details regarding what can and cannot be
-  found on your system).
- </para>
- <para>
-  <link linkend="man-regina.conf">Check your configuration</link>
-  to ensure that you have the locations of both these jars correct
-  (starting &regina; with the <option>--verbose</option> option will
-  show you where it is currently looking for these jars).
-  Alternatively, use the
-  <menuchoice>
-   <guimenu>Options</guimenu>
-   <guimenuitem>Help Browser</guimenuitem>
-  </menuchoice>
-  menu item to select your favourite web browser instead of &javahelp;.
-  If you do this you will need the documentation fully unpacked
-  somewhere on your system, but neither <filename>jh.jar</filename> or
-  <filename>regina-docs.jar</filename> will be required.
- </para>
- <tip><para>
-  Selecting your favourite web browser to browse help is actually
-  recommended, since &javahelp; (as of the time of writing this
-  document) does not render pages very well at all.
- </para></tip>
- <para>
-  And if you are reading this in the help system provided with the
-  program and sense some logical flow issues arising, be assured that
-  although it took me some time to realise this myself, this page is
-  also on the &regina; website and thus all is not for naught!
- </para>
+  <qandaentry>
+   <question><para>
+    I ask for help but I am told that &javahelp; and/or the documentation
+    jar cannot be found.
+   </para></question>
+   <answer>
+    <para>
+     The default method for browsing the online documentation uses
+     &javahelp; (an embedded &java; help browser).  &javahelp; is
+     contained in the file <filename>jh.jar</filename> and the
+     documentation itself is found in the file
+     <filename>regina-docs.jar</filename>.  One of
+     these two jar files could not be found on your system (look in the
+     &helpabout; box for further details regarding what can and cannot be
+     found on your system).
+    </para>
+    <para>
+     <link linkend="man-regina.conf">Check your configuration</link>
+     to ensure that you have the locations of both these jars correct
+     (starting &regina; with the <option>--verbose</option> option will
+     show you where it is currently looking for these jars).
+     Alternatively, use the
+     <menuchoice>
+      <guimenu>Options</guimenu>
+      <guimenuitem>Help Browser</guimenuitem>
+     </menuchoice>
+     menu item to select your favourite web browser instead of &javahelp;.
+     If you do this you will need the documentation fully unpacked
+     somewhere on your system, but neither <filename>jh.jar</filename> or
+     <filename>regina-docs.jar</filename> will be required.
+    </para>
+    <tip><para>
+     Selecting your favourite web browser to browse help is actually
+     recommended, since &javahelp; (as of the time of writing this
+     document) does not render pages very well at all.
+    </para></tip>
+    <para>
+     And if you are reading this in the help system provided with the
+     program and sense some logical flow issues arising, be assured that
+     although it took me some time to realise this myself, this page is
+     also on the &regina; website and thus all is not for naught!
+    </para>
+   </answer>
+  </qandaentry>
 
- <bridgehead renderas="sect2">
-  There are no menu items or buttons to load or save files.
- </bridgehead>
- <para>
-  You are running &regina; as an applet or are accessing the calculation
-  engine using &corba;.  Neither of these modes currently allows access to
-  the local filesystem.
- </para>
- <para>
-  Filesystem access using &corba; is in the todo list; it's tricky
-  because the calculation engine may not be running on the same machine
-  as the user interface.  Filesystem access for the applet will probably
-  never be implemented since &java; applets are designed to run in a
-  protected environment without any filesystem access at all.
- </para>
- <para>
-  If you wish to be able to load and save files, try running &regina;
-  as a standalone application with the <option>--jni</option> option.
-  See the <link linkend="man-regina">application command-line
-  options</link> for details.
- </para>
+  <qandaentry>
+   <question><para>
+    There are no menu items or buttons to load or save files.
+   </para></question>
+   <answer>
+    <para>
+     You are running &regina; as an applet or are accessing the calculation
+     engine using &corba;.  Neither of these modes currently allows access to
+     the local filesystem.
+    </para>
+    <para>
+     Filesystem access using &corba; is in the todo list; it's tricky
+     because the calculation engine may not be running on the same machine
+     as the user interface.  Filesystem access for the applet will probably
+     never be implemented since &java; applets are designed to run in a
+     protected environment without any filesystem access at all.
+    </para>
+    <para>
+     If you wish to be able to load and save files, try running &regina;
+     as a standalone application with the <option>--jni</option> option.
+     See the <link linkend="man-regina">application command-line
+     options</link> for details.
+    </para>
+   </answer>
+  </qandaentry>
 
- <bridgehead renderas="sect2">
-  The <guimenuitem>Jython Console</guimenuitem>
-  buttons/menu items are disabled.  So are the
-  <guibutton>Run</guibutton> and <guibutton>Compile</guibutton>
-  buttons in the script editor.
- </bridgehead>
- <para>
-  This implies that the &jython; classes could not be found.
-  <link linkend="man-regina.conf">Check your configuration</link>
-  to ensure that you have the location of <filename>jython.jar</filename>
-  correct.
-  If you start &regina; with the <option>--verbose</option> option, you
-  will see where it is currently looking for <filename>jython.jar</filename>.
- </para>
+  <qandaentry>
+   <question><para>
+    The <guimenuitem>Jython Console</guimenuitem>
+    buttons/menu items are disabled.  So are the
+    <guibutton>Run</guibutton> and <guibutton>Compile</guibutton>
+    buttons in the script editor.
+   </para></question>
+   <answer>
+    <para>
+     This implies that the &jython; classes could not be found.
+     <link linkend="man-regina.conf">Check your configuration</link>
+     to ensure that you have the location of <filename>jython.jar</filename>
+     correct.
+     If you start &regina; with the <option>--verbose</option> option, you
+     will see where it is currently looking for <filename>jython.jar</filename>.
+    </para>
+   </answer>
+  </qandaentry>
  
- <bridgehead renderas="sect2">
-  I cannot edit such-and-such-a packet.  I can view it but I can't change
-  anything and there's no <guibutton>Apply</guibutton> button.
-  Or there is an <guibutton>Apply</guibutton> button but it complains
-  if I try to press it.
- </bridgehead>
- <para>
-  If a packet has children that need it to remain constant, it will
-  become uneditable.  An example is a triangulation that has a normal
-  surface list child packet.  The normal surface list stores coordinates
-  based upon the triangulation that created it, so the triangulation
-  must remain constant or else the coordinates will become invalid.
- </para>
- <para>
-  In such a situation you can try cloning the packet without cloning its
-  descendants
-  (<menuchoice>
-   <guimenu>Packet</guimenu>
-   <guisubmenu>Clone</guisubmenu>
-   <guimenuitem>Exclude Descendants</guimenuitem>
-  </menuchoice>).  The clone will have no children to worry if it changes
-  and so it should be editable.  Alternatively you could delete the child
-  packet that is refusing to allow its parent to change.
- </para>
+  <qandaentry>
+   <question><para>
+    I cannot edit such-and-such-a packet.  I can view it but I can't change
+    anything and there's no <guibutton>Apply</guibutton> button.
+    Or there is an <guibutton>Apply</guibutton> button but it complains
+    if I try to press it.
+   </para></question>
+   <answer>
+    <para>
+     If a packet has children that need it to remain constant, it will
+     become uneditable.  An example is a triangulation that has a normal
+     surface list child packet.  The normal surface list stores coordinates
+     based upon the triangulation that created it, so the triangulation
+     must remain constant or else the coordinates will become invalid.
+    </para>
+    <para>
+     In such a situation you can try cloning the packet without cloning its
+     descendants
+     (<menuchoice>
+      <guimenu>Packet</guimenu>
+      <guisubmenu>Clone</guisubmenu>
+      <guimenuitem>Exclude Descendants</guimenuitem>
+     </menuchoice>).  The clone will have no children to worry if it changes
+     and so it should be editable.  Alternatively you could delete the child
+     packet that is refusing to allow its parent to change.
+    </para>
+   </answer>
+  </qandaentry>
 
- <bridgehead renderas="sect2">
-  Something else beyond this rather wanting list of suggestions has gone
-  wrong.  Perhaps something crashed.  Maybe the program gave the wrong
-  answer.  Or it could be just a little too slow.
- </bridgehead>
- <para>
-  Please! - mail me at &regemail; and let me know.  This program is
-  permanently in development.  There is a very long todo list, and
-  chances are your problem is on it.  And then again chances are it's
-  not.  So please let me know so I am sure to know what needs to be
-  fixed/improved.
- </para>
-</chapter>
+  <qandaentry>
+   <question><para>
+    Something else beyond this rather wanting list of suggestions has gone
+    wrong.  Perhaps something crashed.  Maybe the program gave the wrong
+    answer.  Or it could be just a little too slow.
+   </para></question>
+   <answer>
+    <para>
+     Please! - mail me at &regemail; and let me know.  This program is
+     permanently in development.  There is a very long todo list, and
+     chances are your problem is on it.  And then again chances are it's
+     not.  So please let me know so I am sure to know what needs to be
+     fixed/improved.
+    </para>
+   </answer>
+  </qandaentry>
+ </qandaset>
+</appendix>
 
