@@ -29,6 +29,7 @@
 // Regina core includes:
 #include "maths/numbertheory.h"
 #include "split/nsignature.h"
+#include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -47,6 +48,7 @@
 #include <qwhatsthis.h>
 #include <qwidgetstack.h>
 
+using regina::NExampleTriangulation;
 using regina::NTriangulation;
 
 namespace {
@@ -54,14 +56,33 @@ namespace {
      * Triangulation type IDs that correspond to indices in the
      * triangulation type combo box.
      */
-    const int TRI_EMPTY = 0;
-    const int TRI_LAYERED_LENS_SPACE = 1;
-    const int TRI_SFS_3 = 2;
-    const int TRI_LAYERED_SOLID_TORUS = 3;
-    const int TRI_LAYERED_LOOP = 4;
-    const int TRI_AUG_TRI_SOLID_TORUS = 5;
-    const int TRI_DEHYDRATION = 6;
-    const int TRI_SPLITTING_SURFACE = 7;
+    enum {
+        TRI_EMPTY,
+        TRI_LAYERED_LENS_SPACE,
+        TRI_SFS_3,
+        TRI_LAYERED_SOLID_TORUS,
+        TRI_LAYERED_LOOP,
+        TRI_AUG_TRI_SOLID_TORUS,
+        TRI_DEHYDRATION,
+        TRI_SPLITTING_SURFACE,
+        TRI_EXAMPLE
+    };
+
+    /**
+     * Example IDs that correspond to indices in the example
+     * triangulation combo box.
+     */
+    enum {
+        EXAMPLE_S3,
+        EXAMPLE_RP3RP3,
+        EXAMPLE_FIGURE8,
+        EXAMPLE_GIESEKING,
+        EXAMPLE_LENS8_3,
+        EXAMPLE_POINCARE,
+        EXAMPLE_RP2xS1,
+        EXAMPLE_S2xS1,
+        EXAMPLE_SOLIDKLEIN,
+    };
 
     /**
      * Regular expressions describing different sets of parameters.
@@ -230,6 +251,29 @@ NTriangulationCreator::NTriangulationCreator() {
     QWhatsThis::add(splittingSignature, expln);
     hArea->setStretchFactor(splittingSignature, 1);
     details->addWidget(hArea, TRI_SPLITTING_SURFACE);
+
+    type->insertItem(i18n("Example triangulation"));
+    hArea = new QHBox();
+    hArea->setSpacing(5);
+    expln = i18n("<qt>Specifies which particular example triangulation to "
+        "create.<p>"
+        "A selection of ready-made 3-manifold triangulations is offered "
+        "here to help you experiment and see how Regina works.</qt>");
+    QWhatsThis::add(new QLabel(i18n("Example:"), hArea), expln);
+    exampleWhich = new KComboBox(hArea);
+    exampleWhich->insertItem(i18n("3-sphere"));
+    exampleWhich->insertItem(i18n("Connected sum RP3 # RP3"));
+    exampleWhich->insertItem(i18n("Figure eight knot complement"));
+    exampleWhich->insertItem(i18n("Gieseking manifold"));
+    exampleWhich->insertItem(i18n("Lens space L(8,3)"));
+    exampleWhich->insertItem(i18n("Poincare homology sphere"));
+    exampleWhich->insertItem(i18n("Product RP2 x S1"));
+    exampleWhich->insertItem(i18n("Product S2 x S1"));
+    exampleWhich->insertItem(i18n("Solid Klein bottle"));
+    exampleWhich->setCurrentItem(0);
+    QWhatsThis::add(exampleWhich, expln);
+    hArea->setStretchFactor(exampleWhich, 1);
+    details->addWidget(hArea, TRI_EXAMPLE);
 
     // Tidy up.
     type->setCurrentItem(0);
@@ -516,6 +560,31 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         NTriangulation* ans = sig->triangulate();
         delete sig;
         return ans;
+    } else if (typeId == TRI_EXAMPLE) {
+        switch (exampleWhich->currentItem()) {
+            case EXAMPLE_S3:
+                return NExampleTriangulation::threeSphere();
+            case EXAMPLE_RP3RP3:
+                return NExampleTriangulation::rp3rp3();
+            case EXAMPLE_FIGURE8:
+                return NExampleTriangulation::figureEightKnotComplement();
+            case EXAMPLE_GIESEKING:
+                return NExampleTriangulation::gieseking();
+            case EXAMPLE_LENS8_3:
+                return NExampleTriangulation::lens8_3();
+            case EXAMPLE_POINCARE:
+                return NExampleTriangulation::poincareHomologySphere();
+            case EXAMPLE_RP2xS1:
+                return NExampleTriangulation::rp2xs1();
+            case EXAMPLE_S2xS1:
+                return NExampleTriangulation::s2xs1();
+            case EXAMPLE_SOLIDKLEIN:
+                return NExampleTriangulation::solidKleinBottle();
+        }
+
+        KMessageBox::error(parentWidget, i18n("No example triangulation has "
+            "been selected."));
+        return 0;
     }
 
     KMessageBox::error(parentWidget, i18n("No triangulation type has "

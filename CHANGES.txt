@@ -29,6 +29,8 @@ Version 4.2  [ under development ]
             - Fixed vertex link calculations, which were previously
               incorrect if a triangulation contained invalid edges.
     USER INTERFACE:
+        - Include several example triangulations in the triangulation
+          creation dialog.
         - Allow exporting a triangulation to C++ source.
     TEST SUITE:
         - Added tests for SnapPea calculations.

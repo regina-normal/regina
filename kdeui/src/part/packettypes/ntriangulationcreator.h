@@ -63,6 +63,7 @@ class NTriangulationCreator : public PacketCreator {
         QLineEdit* sfsParams;
         QLineEdit* dehydrationString;
         QLineEdit* splittingSignature;
+        QComboBox* exampleWhich;
 
     public:
         /**
