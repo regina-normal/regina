@@ -62,26 +62,16 @@ NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) {
 }
 
 NGroupExpressionTerm& NGroupExpression::getTerm(unsigned long index) {
-    for (TermIterator it = terms.begin(); it != terms.end(); it++) {
-        if (index == 0)
-            return *it;
-        index--;
-    }
-    // We should never reach this point!
-    cerr << "Invalid term index passed to NGroupExpression::getTerm().\n";
-    return *(terms.begin());
+    TermIterator pos = terms.begin();
+    advance(pos, index);
+    return *pos;
 }
 
 const NGroupExpressionTerm& NGroupExpression::getTerm(
         unsigned long index) const {
-    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++) {
-        if (index == 0)
-            return *it;
-        index--;
-    }
-    // We should never reach this point!
-    cerr << "Invalid term index passed to NGroupExpression::getTerm().\n";
-    return *(terms.begin());
+    TermIteratorConst pos = terms.begin();
+    advance(pos, index);
+    return *pos;
 }
 
 NGroupExpression* NGroupExpression::inverse() const {
