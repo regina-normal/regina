@@ -26,11 +26,18 @@
 
 /* end stub */
 
-void addForeignDehydration();
-void addForeignSnapPea();
+#include "snappea/nsnappeatriangulation.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addForeign() {
-    addForeignDehydration();
-    addForeignSnapPea();
+using namespace boost::python;
+using regina::NSnapPeaTriangulation;
+using regina::NTriangulation;
+
+void addNSnapPeaTriangulation() {
+    class_<NSnapPeaTriangulation, boost::noncopyable>
+            ("NSnapPeaTriangulation", init<const NTriangulation&>())
+        .def("volume", &NSnapPeaTriangulation::volume)
+    ;
 }
 

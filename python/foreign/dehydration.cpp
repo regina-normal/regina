@@ -37,7 +37,7 @@ namespace {
         regina::readDehydrationList, 1, 4);
 }
 
-void addDehydration() {
+void addForeignDehydration() {
     def("readDehydrationList", regina::readDehydrationList,
         OL_readDehydrationList()[return_value_policy<manage_new_object>()]);
 }

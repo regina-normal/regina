@@ -21,6 +21,7 @@ SUBDIRS = srcutils \
   maths \
   packet \
   progress \
+  snappea \
   split \
   subcomplex \
   surfaces \
@@ -44,6 +45,7 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
   maths/libmaths.la \
   packet/libpacket.la \
   progress/libprogress.la \
+  snappea/libsnappea.la \
   split/libsplit.la \
   subcomplex/libsubcomplex.la \
   surfaces/libsurfaces.la \

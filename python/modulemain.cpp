@@ -43,6 +43,7 @@ void addManifold();
 void addMaths();
 void addPacket();
 void addProgress();
+void addSnapPea();
 void addSplit();
 void addSubcomplex();
 void addSurfaces();
@@ -124,6 +125,7 @@ BOOST_PYTHON_MODULE(regina) {
     addFile();
     addForeign();
     addSplit();
+    addSnapPea();
     addSubcomplex();
     addManifold();
     addAngle();

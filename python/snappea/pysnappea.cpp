@@ -26,11 +26,11 @@
 
 /* end stub */
 
-void addForeignDehydration();
-void addForeignSnapPea();
+void addNSnapPeaTriangulation();
+void addNSFS();
+void addNSimpleSurfaceBundle();
 
-void addForeign() {
-    addForeignDehydration();
-    addForeignSnapPea();
+void addSnapPea() {
+    addNSnapPeaTriangulation();
 }
 
