@@ -35,8 +35,8 @@ export DOC_JAR := bin/regina-docs.jar
 # EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
 #                  for the calculation engine, such as gmp and pthread.
 
-export JNI_INCLUDES := -I/cygdrive/c/jdk1.3.1/include \
-	-I/cygdrive/c/jdk1.3.1/include/win32
+export JNI_INCLUDES := -I/cygdrive/c/j2sdk1.4.0_01/include \
+	-I/cygdrive/c/j2sdk1.4.0_01/include/win32
 export EXTRA_INCLUDES := -I/usr/include/libxml2
 
 export EXTRA_LIBRARIES := -lgmp -lstdc++ -lz -lxml2
