@@ -8,6 +8,8 @@ Regina - A Normal Surface Theory Calculator
     HIGHLIGHTS.txt in the same directory as this file.
 
 Version 4.1
+    OVERALL:
+        - Further enhancements to the reference manual.
     UTILITIES:
         tricensus:
             - Fixed bug in which --genpairs created empty output files.
