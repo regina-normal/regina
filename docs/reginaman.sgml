@@ -472,7 +472,7 @@
     </varlistentry>
     <varlistentry id="REGINA-JNIDIR">
      <term><parameter>REGINA_JNIDIR</parameter> (default =
-      <filename><replaceable>REGINA_HOME</replaceable>/../../lib/regina:/usr/lib</filename>)</term>
+      <filename><replaceable>jni-install-dir</replaceable>:/usr/lib</filename>)</term>
      <listitem>
       <para>
        A colon-separated list of directories containing &jni; libraries.
@@ -493,17 +493,34 @@
        provide a list of directories, not actual library names.
       </para>
       <para>
-       On some systems this defaults to
-       <filename><replaceable>REGINA_HOME</replaceable>/../../lib/regina-normal:/usr/lib</filename>
-       so as not to conflict with the <application>Regina</application>
-       <acronym>REXX</acronym> interpreter.
+       If &regina; is being run directly out of the source tree then
+       <filename><replaceable>jni-install-dir</replaceable></filename>
+       (used in the default value above) represents the subdirectory in the
+       source tree in which the &jni; calculation engine is built
+       (usually <filename><replaceable>REGINA_HOME</replaceable>/engine/jni/.libs</filename>).
+       If &regina; is being run from a proper installation then
+       <filename><replaceable>jni-install-dir</replaceable></filename>
+       represents the directory in which the &jni; calculation engine
+       was installed.
       </para>
-      <para>
-       If &regina; is being run directly out of the source tree, this
-       defaults to
-       <filename><replaceable>REGINA_HOME</replaceable>/engine/jni/.libs:/usr/lib</filename>
-       instead.
-      </para>
+      <warning>
+       <para>
+        As with the default <parameter>REGINA_HOME</parameter>, the default
+        <parameter>REGINA_JNIDIR</parameter> when running from a proper
+        installation is hard-wired into the startup script.  This hard-wiring
+        takes place at compile time, since the final installation path must
+        be passed to <command>configure</command> using option
+        <option>--prefix</option> before &regina; is built (see
+        <filename>INSTALL.txt</filename> in the source distribution
+        for details).
+       </para>
+       <para>
+        This means that if &regina; is installed into one directory using
+        <command>make install</command> and then moved to another directory
+        by hand, the default <parameter>REGINA_JNIDIR</parameter> will be
+        incorrect.
+       </para>
+      </warning>
      </listitem>
     </varlistentry>
     <varlistentry>
