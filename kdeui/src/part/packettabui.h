@@ -41,6 +41,7 @@
 class KTabCtl;
 class PacketEditorTab;
 class PacketViewerTab;
+class QBoxLayout;
 class QString;
 class QIconSet;
 
@@ -53,6 +54,12 @@ class QIconSet;
  *
  * A tabbed packet interface must contain at least one page; if it has
  * no pages then its behaviour is undefined.
+ *
+ * A tabbed packet interface may, in addition to its tabbed pages,
+ * contain a single header; this is a page that is displayed as a header
+ * above everything else.  This must also be a subclass of PacketViewerTab,
+ * though it will always be visible and will appear outside the entire
+ * tab control.
  *
  * Subclasses of PacketTabbedUI should only need to implement a
  * constructor that sets up the individual pages, with perhaps an
@@ -78,12 +85,15 @@ class PacketTabbedUI : public QObject, public PacketUI {
          */
         std::vector<PacketViewerTab*> viewerTabs;
         PacketEditorTab* editorTab;
+        PacketViewerTab* header;
         PacketViewerTab* visibleViewer;
 
         /**
          * Internal components
          */
-        KTabCtl* ui;
+        QWidget* ui;
+        QBoxLayout* layout;
+        KTabCtl* tabs;
 
     public:
         /**
@@ -95,11 +105,26 @@ class PacketTabbedUI : public QObject, public PacketUI {
         /**
          * Add a new tabbed page to this packet interface.
          *
+         * Note that no more than one editor page may be added, though
+         * there is no restriction upon the number of viewer pages.
+         * At least one page must be added for this tabbed packet
+         * interface to behave correctly.
+         *
          * This packet interface will be responsible for the destruction
          * of the new page.
          */
         void addTab(PacketViewerTab* viewer, const QString& label);
         void addTab(PacketEditorTab* editor, const QString& label);
+
+        /**
+         * Add a header to this packet interface.
+         *
+         * Note that no more than one header may be added.
+         *
+         * This packet interface will be responsible for the
+         * destruction of the header.
+         */
+        void addHeader(PacketViewerTab* viewer);
 
         /**
          * Component queries.

@@ -26,6 +26,9 @@
 
 /* end stub */
 
+// Regina core includes:
+#include "triangulation/ntriangulation.h"
+
 // UI includes:
 #include "ntrialgebra.h"
 #include "ntricomposition.h"
@@ -35,6 +38,7 @@
 #include "ntrisurfaces.h"
 
 #include <klocale.h>
+#include <qlabel.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -42,10 +46,60 @@ using regina::NTriangulation;
 NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
         PacketPane* newEnclosingPane, bool readWrite) :
         PacketTabbedUI(newEnclosingPane) {
+    addHeader(new NTriHeaderUI(packet, this));
     addTab(new NTriGluingsUI(packet, this, readWrite), i18n("&Gluings"));
     addTab(new NTriSkeletonUI(packet, this), i18n("&Skeleton"));
     addTab(new NTriAlgebraUI(packet, this), i18n("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), i18n("&Composition"));
     addTab(new NTriSurfacesUI(packet, this), i18n("Sur&faces"));
+}
+
+NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
+        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
+        tri(packet) {
+    header = new QLabel(0);
+    header->setAlignment(Qt::AlignCenter);
+    header->setMargin(10);
+}
+
+regina::NPacket* NTriHeaderUI::getPacket() {
+    return tri;
+}
+
+QWidget* NTriHeaderUI::getInterface() {
+    return header;
+}
+
+void NTriHeaderUI::refresh() {
+    if (tri->getNumberOfTetrahedra() == 0) {
+        header->setText(i18n("Empty"));
+        return;
+    }
+
+    if (! tri->isValid()) {
+        header->setText(i18n("INVALID TRIANGULATION!"));
+        return;
+    }
+
+    QString msg;
+
+    if (tri->isClosed())
+        msg += i18n("Closed, ");
+    else {
+        if (tri->isIdeal())
+            msg += i18n("Ideal, ");
+        if (tri->hasBoundaryFaces())
+            msg += i18n("Real Bdry, ");
+    }
+
+    msg += (tri->isOrientable() ? i18n("Orientable, ") :
+        i18n("Non-orientable, "));
+    msg += (tri->isConnected() ? i18n("Connected") : i18n("Disconnected"));
+
+    header->setText(msg);
+}
+
+void NTriHeaderUI::editingElsewhere() {
+    header->setText(i18n("Editing..."));
 }
 

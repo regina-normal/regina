@@ -31,13 +31,18 @@
 
 #include <iostream>
 #include <ktabctl.h>
+#include <qlayout.h>
 
 using regina::NPacket;
 
 PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane) :
-        PacketUI(enclosingPane), editorTab(0), visibleViewer(0) {
-    ui = new KTabCtl();
-    connect(ui, SIGNAL(tabSelected(int)), this, SLOT(notifyTabSelected(int)));
+        PacketUI(enclosingPane), editorTab(0), header(0), visibleViewer(0) {
+    ui = new QWidget();
+    layout = new QVBoxLayout(ui);
+
+    tabs = new KTabCtl(ui);
+    layout->addWidget(tabs, 1);
+    connect(tabs, SIGNAL(tabSelected(int)), this, SLOT(notifyTabSelected(int)));
 }
 
 PacketTabbedUI::~PacketTabbedUI() {
@@ -63,6 +68,10 @@ PacketTabbedUI::~PacketTabbedUI() {
     // Finally delete the visible viewer if there was one.
     if (visibleViewer)
         delete visibleViewer;
+
+    // And of course the header is always visible.
+    if (header)
+        delete header;
 }
 
 void PacketTabbedUI::addTab(PacketViewerTab* viewer, const QString& label) {
@@ -74,8 +83,8 @@ void PacketTabbedUI::addTab(PacketViewerTab* viewer, const QString& label) {
     else
         viewer->queuedAction = PacketViewerTab::Refresh;
 
-    viewer->getInterface()->reparent(ui, QPoint(0, 0));
-    ui->addTab(viewer->getInterface(), label);
+    viewer->getInterface()->reparent(tabs, QPoint(0, 0));
+    tabs->addTab(viewer->getInterface(), label);
 }
 
 void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
@@ -87,8 +96,18 @@ void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
     editorTab = editor;
     viewerTabs.push_back(0);
 
-    editor->getInterface()->reparent(ui, QPoint(0, 0));
-    ui->addTab(editor->getInterface(), label);
+    editor->getInterface()->reparent(tabs, QPoint(0, 0));
+    tabs->addTab(editor->getInterface(), label);
+}
+
+void PacketTabbedUI::addHeader(PacketViewerTab* viewer) {
+    // Prepare the header for display.
+    viewer->refresh();
+
+    // Add the header.
+    header = viewer;
+    viewer->getInterface()->reparent(ui, QPoint(0, 0));
+    layout->insertWidget(0, viewer->getInterface(), 0);
 }
 
 regina::NPacket* PacketTabbedUI::getPacket() {
@@ -97,6 +116,9 @@ regina::NPacket* PacketTabbedUI::getPacket() {
      */
     if (editorTab)
         return editorTab->getPacket();
+
+    if (header)
+        return header->getPacket();
 
     for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
         if (*it)
@@ -115,6 +137,9 @@ void PacketTabbedUI::commit() {
     if (editorTab)
         editorTab->commit();
 
+    if (header)
+        header->refresh();
+
     for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
         if (*it) {
             if (*it == visibleViewer)
@@ -129,6 +154,9 @@ void PacketTabbedUI::commit() {
 void PacketTabbedUI::refresh() {
     if (editorTab)
         editorTab->refresh();
+
+    if (header)
+        header->refresh();
 
     for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
         if (*it) {
@@ -147,6 +175,9 @@ void PacketTabbedUI::setReadWrite(bool readWrite) {
 }
 
 void PacketTabbedUI::notifyEditing() {
+    if (header)
+        header->editingElsewhere();
+
     for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
         if (*it) {
             if (*it == visibleViewer)

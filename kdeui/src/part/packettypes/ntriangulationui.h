@@ -35,6 +35,8 @@
 
 #include "../packettabui.h"
 
+class QLabel;
+
 namespace regina {
     class NTriangulation;
 };
@@ -49,6 +51,37 @@ class NTriangulationUI : public PacketTabbedUI {
          */
         NTriangulationUI(regina::NTriangulation* packet,
                 PacketPane* newEnclosingPane, bool readWrite);
+};
+
+/**
+ * A header for the triangulation viewer.
+ */
+class NTriHeaderUI : public PacketViewerTab {
+    private:
+        /**
+         * Packet details
+         */
+        regina::NTriangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QLabel* header;
+
+    public:
+        /**
+         * Constructor.
+         */
+        NTriHeaderUI(regina::NTriangulation* packet,
+                PacketTabbedUI* useParentUI);
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+        void editingElsewhere();
 };
 
 #endif
