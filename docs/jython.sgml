@@ -24,10 +24,10 @@
     either bring up a &jython; console through the
     <guimenu>Tools</guimenu> menu (or the corresponding toolbar button),
     or you can create a new
-    <link linkend="packet-script">script packet</link>.  Script packets have the
-    advantage that you can work with other packets in the same file
-    (this is done by setting script variables), and script packets will
-    be saved with the file for later reuse.
+    <link linkend="packet-script">script packet</link>.  Script packets have
+    the advantage that they work seamlessly with other packets in the
+    same file (through the use of script variables), and script packets will
+    also be saved with the file for later reuse.
    </para>
   </sect2>
 
@@ -55,10 +55,12 @@
     You may also assume that all requested libraries have been loaded (see the
     <link linkend="options-libraries">&jython; library options</link> for
     details).
-    If you need access to packets from a file
-    you currently have open, your best choice is to create a new script
-    packet, where you can set variables equal to other packets in the file
-    before the script is run. 
+   </para>
+   <para>
+    Upon starting a &jython; session certain variables might already be
+    set for you (such as variables representing the calculation engine or
+    the current packet tree).  Read the &jython; session startup messages
+    for details.
    </para>
    <warning><para>
     Probably the easiest way to crash the program is to bring up

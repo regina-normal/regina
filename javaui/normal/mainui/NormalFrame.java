@@ -702,18 +702,29 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         JMenu menuTools = new JMenu("Tools");
         menuTools.setMnemonic(KeyEvent.VK_T);
 
-        JMenuItem menuToolsJythonConsole = new JMenuItem("Jython Console",
-            Images.btnConsole.image());
+        JMenuItem menuToolsJythonConsole = new JMenuItem(
+            "Jython Console", Images.btnConsole.image());
         menuToolsJythonConsole.setMnemonic(KeyEvent.VK_J);
         menuToolsJythonConsole.setAccelerator(KeyStroke.getKeyStroke(
             KeyEvent.VK_J, ActionEvent.ALT_MASK));
         menuToolsJythonConsole.setEnabled(shell.hasFoundJython());
         menuToolsJythonConsole.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                startJythonConsole();
+                startJythonConsole(true);
             }
         });
         menuTools.add(menuToolsJythonConsole);
+
+        JMenuItem menuToolsJythonConsoleAlone = new JMenuItem(
+            "Jython Console (Standalone)");
+        menuToolsJythonConsoleAlone.setMnemonic(KeyEvent.VK_S);
+        menuToolsJythonConsoleAlone.setEnabled(shell.hasFoundJython());
+        menuToolsJythonConsoleAlone.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                startJythonConsole(false);
+            }
+        });
+        menuTools.add(menuToolsJythonConsoleAlone);
 
         menuBar.add(menuTools);
 
@@ -897,7 +908,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         jythonConsole.setEnabled(shell.hasFoundJython());
         jythonConsole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                startJythonConsole();
+                startJythonConsole(true);
             }
         });
         toolBar.add(jythonConsole);
@@ -1367,10 +1378,30 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
     /**
      * Open and start a new Jython console frame.
+     * <p>
+     * If the console is requested to work with the current file and this
+     * is not possible (since there is no current file or the current
+     * file does not contain a packet tree), the console frame will open
+     * anyway in standalone mode.
+     *
+     * @param useFile <tt>true</tt> if the Jython console should attempt
+     * to work with the current file, or <tt>false</tt> if the
+     * Jython console should be independent of any file.
      */
-    public void startJythonConsole() {
-        JPythonConsoleFrame console =
-            ConsoleUtils.createGraphicalConsole(shell, false);
+    public void startJythonConsole(boolean useFile) {
+        JPythonConsoleFrame console = null;
+
+        if (useFile) {
+            TopologyPane top = getCurrentTopologyPane();
+            if (top != null)
+                console = new JPythonConsoleFrame(shell, top.getRootPacket(),
+                    false, new JPythonPacketConsole(shell,
+                    top.getRootPacket()));
+        }
+
+        if (console == null)
+            console = ConsoleUtils.createGraphicalConsole(shell, false);
+
         Positioner.centerOnScreen(console);
         console.show();
         console.startConsole();

@@ -103,6 +103,10 @@ Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
     JAVA USER INTERFACE:
         Overall structure:
             - Incorporated engine enhancements listed above.
+        normal.console:
+            - Added class JPythonPacketConsole.
+        normal.console.JPythonConsole:
+            - Added method getShell().
         normal.engine.implementation.jni.JNIShareableObject:
             - Added static method sameCppPtr() which is necessary when
               using gcc3.
@@ -112,7 +116,9 @@ Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
             - Added boolean compression parameter to constructor.
         normal.mainui:
             - Added class TagEditor.
-            - File information dialog is much more informative.
+            - File information dialog is somewhat more informative.
+        normal.mainui.NormalFrame:
+            - Now supports opening a Jython console linked to a packet tree.
         normal.mainui.PacketPane:
             - Renamed getUI() to getPacketUI() to avoid clashing with j2sdk1.4.
     UTILITIES:
