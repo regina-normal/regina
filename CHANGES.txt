@@ -27,6 +27,8 @@ Version 2.5  [ (under development) ]
               getVariableIndex() and removeVariableAt().
             - Insistance on unique variable names; in enforcing this
               routine addVariable() now returns bool.
+        Class NSignature, NSigCensus, NSigPartialIsomorphism:
+            - Added.
         Class NStringPair:
             - Removed.
         Class NTriangulation:

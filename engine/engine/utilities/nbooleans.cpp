@@ -28,7 +28,7 @@
 
 #include "utilities/nbooleans.h"
 
-#include <iostream.h>
+#include <iostream>
 
 const NBoolSet NBoolSet::sNone;
 const NBoolSet NBoolSet::sTrue(true);

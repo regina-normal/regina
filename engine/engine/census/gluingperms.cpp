@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include <strstream.h>
+#include <strstream>
 
 #include "census/ncensus.h"
 #include "progress/nprogresstypes.h"

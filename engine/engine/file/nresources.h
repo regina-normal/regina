@@ -35,7 +35,7 @@
 #define __NRESOURCES_H
 #endif
 
-#include <fstream.h>
+#include <fstream>
 
 /**
  * Provides a standard random access interface for file-like resources.

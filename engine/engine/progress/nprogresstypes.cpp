@@ -28,7 +28,7 @@
 
 #include "progress/nprogresstypes.h"
 
-#include <strstream.h>
+#include <strstream>
 
 NString NProgressNumber::internalGetDescription() const {
     ostrstream out;

@@ -31,9 +31,9 @@
 
 #include "utilities/nstring.h"
 
-#include <string.h>
-#include <ctype.h>
-#include <limits.h>
+#include <cstring>
+#include <cctype>
+#include <climits>
 
 static void defaultHandler(NString::strError err);
 

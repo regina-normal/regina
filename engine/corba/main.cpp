@@ -28,8 +28,8 @@
 
 #include "Regina/EngineI.h"
 
-#include <iostream.h>
-#include <string.h>
+#include <iostream>
+#include <cstring>
 
 #define HOST_FLAG "-ORBInitialHost"
 #define PORT_FLAG "-ORBInitialPort"

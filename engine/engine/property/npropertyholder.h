@@ -35,7 +35,7 @@
 #define __NPROPERTYHOLDER_H
 #endif
 
-#include <fstream.h>
+#include <fstream>
 
 class NFile;
 

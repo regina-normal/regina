@@ -35,7 +35,7 @@
 #define __NVECTOR_H
 #endif
 
-#include <iostream.h>
+#include <iostream>
 
 /**
  * A vector of elements from a given ring T.

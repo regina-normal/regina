@@ -36,7 +36,7 @@
 #define __NPACKET_H
 #endif
 
-#include <iostream.h>
+#include <iostream>
 
 #include "shareableobject.h"
 

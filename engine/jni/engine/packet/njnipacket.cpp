@@ -31,7 +31,7 @@
 #include "registry/makejnpacket.h"
 #include "engine/packet/NJNIPacket.h"
 
-#include <strstream.h>
+#include <strstream>
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_clonePacket

@@ -37,7 +37,7 @@
 #define __NSTRING_H
 #endif
 
-#include <iostream.h>
+#include <iostream>
 #include <hash_set>
 
 /**

@@ -36,7 +36,7 @@
  */
 
 #include <gmp.h>
-#include <iostream.h>
+#include <iostream>
 
 /**
  * Represents an arbitrary precision integer.

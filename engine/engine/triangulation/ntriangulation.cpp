@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "triangulation/ntriangulation.h"
 #include "algebra/ngrouppresentation.h"

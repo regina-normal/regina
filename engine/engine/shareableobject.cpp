@@ -28,7 +28,7 @@
 
 #include "shareableobject.h"
 
-#include <strstream.h>
+#include <strstream>
 
 NString ShareableObject::toString() const {
     ostrstream out;

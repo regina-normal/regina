@@ -36,7 +36,7 @@
 #define __NMISCUTILS_H
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 
 /**
  * An adaptable generator used to create objects using default constructors.

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include <ctype.h>
+#include <cctype>
 
 #include "triangulation/ntriangulation.h"
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include <strstream.h>
+#include <strstream>
 #include <hash_set>
 
 #include "packet/npacket.h"

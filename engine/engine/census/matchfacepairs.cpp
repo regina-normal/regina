@@ -30,7 +30,7 @@
 #include "progress/nprogresstypes.h"
 #include "utilities/nmiscutils.h"
 
-#include <strstream.h>
+#include <strstream>
 
 void NCensus::matchFacePairs() {
     // Generate a list of joins (without permutations).

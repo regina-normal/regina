@@ -26,10 +26,10 @@
 
 /* end stub */
 
-#include <ctype.h>
-#include <fstream.h>
-#include <iomanip.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
+#include <fstream>
+#include <iomanip>
 
 #include "file/nresources.h"
 #include "foreign/nsnappea.h"

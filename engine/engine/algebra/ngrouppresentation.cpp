@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include <strstream.h>
+#include <strstream>
 #include <hash_map>
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
