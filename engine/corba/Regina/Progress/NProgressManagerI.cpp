@@ -1,8 +1,8 @@
 
 /**************************************************************************
  *                                                                        *
- *  Regina - A normal surface theory calculator                           *
- *  Computational engine                                                  *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *

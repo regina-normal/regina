@@ -1,8 +1,8 @@
 
 /**************************************************************************
  *                                                                        *
- *  Regina - A normal surface theory calculator                           *
- *  CORBA interface definition for computational engine                   *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  CORBA Interface Definition                                            *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *

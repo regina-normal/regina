@@ -1,8 +1,8 @@
 
 /**************************************************************************
  *                                                                        *
- *  Regina - A normal surface theory calculator                           *
- *  Java user interface                                                   *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Java User Interface                                                   *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
