@@ -259,7 +259,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * always reflecting the tetrahedra currently in the
          * triangulation.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list.
          *
          * @return the list of all tetrahedra.
          */
@@ -318,10 +318,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * \pre The given tetrahedron exists in the triangulation.
          *
-         * \ifaces This routine returns nothing.  Furthermore,
-         * the tetrahedron is not only removed but is also destroyed in
-         * the internal C++ engine.
-         *
          * @param tet the tetrahedron to remove.
          * @return the removed tetrahedron.
          */
@@ -337,10 +333,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * There is no need to call gluingsHaveChanged() after calling
          * this function.
-         *
-         * \ifaces This routine returns nothing.  Furthermore,
-         * the tetrahedron is not only removed but is also destroyed in
-         * the internal C++ engine.
          *
          * @param index specifies which tetrahedron to remove; this
          * should be between 0 and getNumberOfTetrahedra()-1 inclusive.
@@ -420,7 +412,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * This reference to the list however will remain valid and
          * up-to-date for as long as the triangulation exists.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list.
          *
          * @return the list of all components.
          */
@@ -437,7 +429,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * This reference to the list however will remain valid and
          * up-to-date for as long as the triangulation exists.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list.
          *
          * @return the list of all boundary components.
          */
@@ -454,7 +446,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * This reference to the list however will remain valid and
          * up-to-date for as long as the triangulation exists.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list.
          *
          * @return the list of all vertices.
          */
@@ -470,7 +462,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * This reference to the list however will remain valid and
          * up-to-date for as long as the triangulation exists.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list.
          *
          * @return the list of all edges.
          */
@@ -486,7 +478,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * This reference to the list however will remain valid and
          * up-to-date for as long as the triangulation exists.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list.
          *
          * @return the list of all faces.
          */
@@ -973,7 +965,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Note that the edge and vertex pointers returned will become
          * invalid once the triangulation has changed.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param edgeSet the set to be emptied and into which the edges
          * of the maximal forest will be placed.
@@ -999,7 +991,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Note that the edge pointers returned will become
          * invalid once the triangulation has changed.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param edgeSet the set to be emptied and into which the edges
          * of the maximal forest will be placed.
@@ -1019,7 +1011,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Note that the face pointers returned will become invalid once
          * the triangulation has changed.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param faceSet the set to be emptied and into which the faces
          * representing the maximal forest will be placed.
@@ -1614,7 +1606,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * plain text.  Prompts will be sent to the given output stream
          * and information will be read from the given input stream.
          *
-         * \ifaces This routine is a member of class Engine.
+         * \ifacespython This routine is a member of class Engine.
          * It takes no parameters; \a in and \a out are always assumed
          * to be standard input and standard output respectively.
          *

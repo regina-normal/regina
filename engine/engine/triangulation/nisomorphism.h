@@ -52,7 +52,7 @@ namespace regina {
  * correspond to different methods of storing the face permutation
  * associated with each tetrahedron.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NIsomorphism {
     protected:
@@ -135,7 +135,7 @@ class NIsomorphism {
  * There is direct write-access to the individual face permutations, but
  * no simple method of iterating through possible face permutations.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NIsomorphismDirect : public NIsomorphism {
     private:
@@ -199,7 +199,7 @@ class NIsomorphismDirect : public NIsomorphism {
  * It is easy to iterate through possible face permutations, but there
  * is no direct write-access to the permutations themselves.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NIsomorphismIndexed : public NIsomorphism {
     private:

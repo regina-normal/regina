@@ -48,7 +48,7 @@ namespace regina {
 /**
  * An XML packet reader that reads a single triangulation.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLTriangulationReader : public NXMLPacketReader {
     private:

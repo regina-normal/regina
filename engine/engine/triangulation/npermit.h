@@ -47,6 +47,8 @@ namespace regina {
 /**
  * An iterator class that runs through all 24 permutations of four
  * elements.
+ *
+ * \ifacespython Not present.
  */
 class NPermItS4 {
     private:

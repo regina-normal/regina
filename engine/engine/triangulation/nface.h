@@ -160,7 +160,7 @@ class NFace : public ShareableObject {
          * Creates a new face and specifies it as belonging to the
          * given triangulation component.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param myComponent the triangulation component to which this
          * face belongs.

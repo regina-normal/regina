@@ -59,8 +59,6 @@ class NBoundaryComponent;
  * The resulting edge number will be between 0 and 5 inclusive.
  *
  * Note that edge numbers of opposite edges will always add to 5.
- *
- * \ifacesjava This array is a static member of \a NEdge.
  */
 extern const int edgeNumber[4][4];
 
@@ -73,8 +71,6 @@ extern const int edgeNumber[4][4];
  * Note that edge numbers of opposite edges will always add to 5.
  * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
  * than <tt>edgeEnd[e]</tt>.
- *
- * \ifacesjava This array is a static member of \a NEdge.
  */
 extern const int edgeStart[6];
 
@@ -87,8 +83,6 @@ extern const int edgeStart[6];
  * Note that edge numbers of opposite edges will always add to 5.
  * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
  * than <tt>edgeEnd[e]</tt>.
- *
- * \ifacesjava This array is a static member of \a NEdge.
  */
 extern const int edgeEnd[6];
 
@@ -109,7 +103,7 @@ class NEdgeEmbedding {
          * unusable until it has some data assigned to it using
          * <tt>operator =</tt>.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          */
         NEdgeEmbedding();
         
@@ -133,8 +127,6 @@ class NEdgeEmbedding {
         /**
          * Assigns to this embedding descriptor the same data as is
          * contained in the given embedding descriptor.
-         *
-         * \ifaces Not present.
          *
          * @param cloneMe the embedding descriptor to clone.
          */
@@ -189,7 +181,7 @@ class NEdge : public ShareableObject {
          * Creates a new edge and specifies it as belonging to the
          * given triangulation component.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param myComponent the triangulation component to which this
          * edge belongs.
@@ -215,7 +207,7 @@ class NEdge : public ShareableObject {
          * for each tetrahedron will produce an ordered
          * chain circling the edge.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list.
          *
          * @return the list of embedding descriptors.
          * @see NEdgeEmbedding

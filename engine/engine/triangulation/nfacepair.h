@@ -59,8 +59,6 @@ namespace regina {
  *
  * The before-the-start and past-the-end values are internally
  * represented as (0,0) and (3,3) respectively.
- *
- * \ifaces Not present.
  */
 class NFacePair {
     private:
@@ -188,12 +186,18 @@ class NFacePair {
          * Increments this face pair.  It will be set to the following
          * face pair in the lexicographical ordering, or to a
          * past-the-end value if there are no more face pairs.
+         *
+         * \ifacespython This routine is called inc(), since Python does
+         * not support the increment operator.
          */
         void operator ++ (int);
         /**
          * Decrements this face pair.  It will be set to the previous
          * face pair in the lexicographical ordering, or to a
          * before-the-start value if there are no previous face pairs.
+         *
+         * \ifacespython This routine is called dec(), since Python does
+         * not support the decrement operator.
          */
         void operator -- (int);
 };

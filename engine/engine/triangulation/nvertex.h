@@ -66,7 +66,7 @@ class NVertexEmbedding {
          * unusable until it has some data assigned to it using
          * <tt>operator =</tt>.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          */
         NVertexEmbedding();
 
@@ -154,7 +154,7 @@ class NVertex : public ShareableObject {
          * Creates a new vertex and specifies it as belonging to the
          * given triangulation component.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param myComponent the triangulation component to which this
          * vertex belongs.
@@ -173,7 +173,7 @@ class NVertex : public ShareableObject {
          * particular tetrahedron, there will be multiple embedding
          * descriptors in the list regarding that tetrahedron.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python list.
          *
          * @return the list of embedding descriptors.
          * @see NVertexEmbedding

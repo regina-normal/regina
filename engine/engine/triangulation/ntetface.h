@@ -61,8 +61,6 @@ namespace regina {
  * tetrahedron \a n, face 0.  The past-the-end value will be represented
  * as tetrahedron \a n, face 1, and the before-the-start value will be
  * represented as tetrahedron -1, face 3.
- *
- * \ifaces Not present.
  */
 struct NTetFace {
     int tet;
@@ -167,6 +165,9 @@ struct NTetFace {
      *
      * \pre This specifier is not past-the-end.
      *
+     * \ifacespython Not present, although the preincrement operator is
+     * present in python as the member function inc().
+     *
      * @return A copy of this specifier after it has been incremented.
      */
     NTetFace operator ++ ();
@@ -178,6 +179,9 @@ struct NTetFace {
      * number.  The overall boundary appears after all other faces.
      *
      * \pre This specifier is not past-the-end.
+     *
+     * \ifacespython This routine is named inc() since python does not
+     * support the increment operator.
      *
      * @return A copy of this specifier before it was incremented.
      */
@@ -191,6 +195,9 @@ struct NTetFace {
      *
      * \pre This specifier is not before-the-start.
      *
+     * \ifacespython Not present, although the predecrement operator is
+     * present in python as the member function dec().
+     *
      * @return A copy of this specifier after it has been decremented.
      */
     NTetFace operator -- ();
@@ -202,6 +209,9 @@ struct NTetFace {
      * number.  The overall boundary appears after all other faces.
      *
      * \pre This specifier is not before-the-start.
+     *
+     * \ifacespython This routine is named dec() since python does not
+     * support the decrement operator.
      *
      * @return A copy of this specifier before it was decremented.
      */

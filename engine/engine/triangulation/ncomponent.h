@@ -78,7 +78,7 @@ class NComponent : public ShareableObject {
         /**
          * Default constructor.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          */
         NComponent();
 

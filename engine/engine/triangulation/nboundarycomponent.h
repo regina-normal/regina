@@ -84,7 +84,7 @@ class NBoundaryComponent : public ShareableObject {
         /**
          * Default constructor.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          */
         NBoundaryComponent();
 
@@ -94,7 +94,7 @@ class NBoundaryComponent : public ShareableObject {
          *
          * \pre The given vertex is ideal as returned by NVertex::isIdeal().
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param idealVertex the vertex to place in the new boundary
          * component.
