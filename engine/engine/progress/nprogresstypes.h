@@ -189,7 +189,7 @@ class NProgressNumber : public NProgress {
          * \pre If the expected total is non-negative, then the new
          * total number of items completed is at most the expected total.
          *
-         * @param incCompleted the number of items to add to the number of
+         * @param extraCompleted the number of items to add to the number of
          * items already completed.
          */
         void incCompleted(unsigned long extraCompleted = 1);
