@@ -64,6 +64,68 @@ struct FuncNew {
 };
 
 /**
+ * An adaptable unary function used to create objects using copy constructors.
+ * This class is for use with the Standard Template Library.
+ *
+ * Note that the template argument need not be a pointer class.  If the
+ * template argument is <tt>T</tt>, this unary function will accept
+ * a \e pointer to <tt>T</tt>, dereference this pointer and pass it to the
+ * copy constructor to return a pointer to a newly created object of
+ * type <tt>T</tt>.
+ *
+ * \ifaces Not present.
+ */
+template <class T>
+struct FuncNewCopyPtr {
+    typedef const T* argument_type;
+        /**< The argument type for this unary function. */
+    typedef T* result_type;
+        /**< The return type for this unary function. */
+
+    /**
+     * Creates a new object using the copy constructor.
+     *
+     * @param ptr the pointer whose data should (after dereferencing) be
+     * passed to the copy constructor.
+     * @return the newly created object.
+     */
+    T* operator() (const T* ptr) const {
+        return new T(*ptr);
+    }
+};
+
+/**
+ * An adaptable unary function used to create objects using copy constructors.
+ * This class is for use with the Standard Template Library.
+ *
+ * Note that the template argument need not be a pointer class.  If the
+ * template argument is <tt>T</tt>, this unary function will accept
+ * a \e reference to <tt>T</tt> and pass it directly to the
+ * copy constructor to return a pointer to a newly created object of
+ * type <tt>T</tt>.
+ *
+ * \ifaces Not present.
+ */
+template <class T>
+struct FuncNewCopyRef {
+    typedef const T& argument_type;
+        /**< The argument type for this unary function. */
+    typedef T* result_type;
+        /**< The return type for this unary function. */
+
+    /**
+     * Creates a new object using the copy constructor.
+     *
+     * @param obj the object whose data should be passed to the copy
+     * constructor.
+     * @return the newly created object.
+     */
+    T* operator() (const T& obj) const {
+        return new T(obj);
+    }
+};
+
+/**
  * An adaptable unary function used to deallocate objects.
  * This class is for use with the Standard Template Library.
  *
