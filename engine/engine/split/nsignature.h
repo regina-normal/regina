@@ -83,8 +83,9 @@ class NTriangulation;
  * A signature cannot represent a splitting surface with more than 26
  * quadrilaterals.
  *
- * For further details on splitting surface signatures, consult
- * Ben Burton's PhD thesis.
+ * For further details on splitting surfaces and their signatures, consult
+ * <i>Minimal triangulations and normal surfaces</i>, Burton, PhD thesis,
+ * available from the Regina website.
  */
 class NSignature : public ShareableObject {
     private:
