@@ -482,6 +482,7 @@
     </menuchoice>
     menu item allows a packet to be given a new label in the packet tree.
     Note that no two packets in the same tree may have the same label.
+   </para>
   </sect2>
 
   <sect2 id="packet-delete">

@@ -65,6 +65,7 @@ surface ::= (#PCDATA,
    have length 4<replaceable>T</replaceable>.  The underlying coordinate
    system is specified in the &xml-params; element of the parent
    &xml-packet-normalsurfacelist;.
+  </para>
   <para>
    The normal surface vector is stored as the character data of this
    &xml; element as follows.
