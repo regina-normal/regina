@@ -58,7 +58,7 @@ namespace regina {
  * vertex enumeration routines might be NRay objects instead of objects
  * of the appropriate derived class.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NRay : public NVectorDense<NLargeInteger> {
     public:
@@ -116,7 +116,7 @@ class NRay : public NVectorDense<NLargeInteger> {
  * \pre The two given rays lie on opposite sides of the given additional
  * hyperplane; neither actually lies within the given additional hyperplane.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param pos one of the two given rays.
  * @param neg the other of the two given rays.

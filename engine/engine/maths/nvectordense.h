@@ -50,7 +50,7 @@ namespace regina {
  *
  * \pre See the preconditions for NVector<T>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NVectorDense : public NVector<T> {

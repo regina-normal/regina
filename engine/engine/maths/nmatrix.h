@@ -50,7 +50,7 @@ namespace regina {
  * \pre An element <i>t</i> of type T can be written to an output stream
  * <i>out</i> using the standard expression <tt>out << t</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present, although the subclass NMatrixInt is.
  */
 template <class T>
 class NMatrix {
@@ -140,18 +140,6 @@ class NMatrix {
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
          *
-         * \ifaces Not present, even if a subclass of NMatrix
-         * is mirrored and its inherited routines are mirrored also.
-         * In such a case, the entry() routines will be replaced by the two
-         * routines <i>getEntry(row, column)</i> and <i>setEntry(row,
-         * column, value)</i> that retrieve and set entries in the
-         * matrix respectively.  Routine \a setEntry returns void and
-         * takes an extra (final) value parameter of type
-         * <tt>(const T&)</tt>.  Routine
-         * \a getEntry returns an object of type T that is a snapshot of
-         * the current matrix entry and will not remain correct if the
-         * matrix later changes.
-         *
          * @param row the row of the desired entry.
          * @param column the column of the desired entry.
          * @return a reference to the entry in the given row and column.
@@ -166,17 +154,8 @@ class NMatrix {
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
          *
-         * \ifaces Not present, even if a subclass of NMatrix
-         * is mirrored and its inherited routines are mirrored also.
-         * In such a case, the entry() routines will be replaced by the two
-         * routines <i>getEntry(row, column)</i> and <i>setEntry(row,
-         * column, value)</i> that retrieve and set entries in the
-         * matrix respectively.  Routine \a setEntry returns void and
-         * takes an extra (final) value parameter of type
-         * <tt>(const T&)</tt>.  Routine
-         * \a getEntry returns an object of type T that is a snapshot of
-         * the current matrix entry and will not remain correct if the
-         * matrix later changes.
+         * \ifacespython Not present, although the non-const form of
+         * this routine is.
          *
          * @param row the row of the desired entry.
          * @param column the column of the desired entry.
@@ -192,7 +171,7 @@ class NMatrix {
          * Each row will be written on a separate line with elements in
          * each row separated by single spaces.
          *
-         * \ifaces Not present, even if a subclass of NMatrix
+         * \ifacespython Not present, even if a subclass of NMatrix
          * is mirrored and its inherited routines are mirrored also.
          *
          * @param out the output stream to which to write.
@@ -257,7 +236,7 @@ class NMatrix {
  * then \c a can be initialised to a long integer \c l using <tt>a(l)</tt>.
  * Here the value 1 refers to the multiplicative identity in the ring T.
  *
- * \ifaces Not present.
+ * \ifacespython Not present, although the subclass NMatrixInt is.
  */
 template <class T>
 class NMatrixRing : public NMatrix<T> {
@@ -411,9 +390,6 @@ class NMatrixRing : public NMatrix<T> {
          *
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
-         *
-         * \ifaces Not present, even if a subclass of NMatrix
-         * is mirrored and its inherited routines are mirrored also.
          *
          * @param other the matrix by which to multiply this matrix.
          * @return a newly allocated matrix representing

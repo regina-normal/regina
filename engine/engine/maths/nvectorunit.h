@@ -67,7 +67,7 @@ namespace regina {
  *
  * \todo \feature Throw an exception if modification routines are called.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NVectorUnit : public NVector<T> {

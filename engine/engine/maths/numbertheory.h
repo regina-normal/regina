@@ -56,8 +56,6 @@ namespace regina {
  *
  * \testfull
  *
- * \ifaces Not present.
- *
  * @param k the number to reduce modulo \a modBase.
  * @param modBase the modular base in which to work.
  */
@@ -70,8 +68,6 @@ long reducedMod(long k, long modBase);
  * \pre Both integers are non-negative.
  *
  * \testfull
- *
- * \ifaces Not present.
  *
  * @param a one of the two integers to work with.
  * @param b the other integer with which to work.
@@ -100,8 +96,6 @@ unsigned long gcd(unsigned long a, unsigned long b);
  *
  * \testfull
  *
- * \ifaces Not present.
- *
  * @param a one of the integers to work with.
  * @param b the other integer with which to work.
  * @param u a variable into which the final coefficient of \a a will be
@@ -120,8 +114,6 @@ long gcdWithCoeffs(long a, long b, long& u, long& v);
  * \pre \a n and \a k have no common factors.
  *
  * \testfull
- *
- * \ifaces Not present.
  *
  * @param n the modular base in which to work.
  * @param k the number whose multiplicative inverse should be found.
@@ -146,7 +138,8 @@ unsigned long modularInverse(unsigned long n, unsigned long k);
  *
  * \pre The given integer is at least 1.
  *
- * \ifaces Not present.
+ * \ifacespython Argument \a factors is not present; instead this
+ * routine returns a python list containing the prime factors.
  *
  * @param n the integer to factorise.
  * @param factors the list into which prime factors will be inserted.
@@ -162,7 +155,8 @@ void factorise(unsigned long n, std::list<unsigned long>& factors);
  *
  * \pre The given list is empty.
  *
- * \ifaces Not present.
+ * \ifacespython Argument \a primes is not present; instead this routine
+ * returns a python list containing the primes up to and including \a roof.
  *
  * @param roof the upper bound up to which primes will be found.
  * @param primes the list into which the primes will be inserted.

@@ -66,7 +66,7 @@ namespace regina {
  *
  * \todo \feature Throw an exception if modification routines are called.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NVectorMatrix : public NVector<T> {
@@ -120,7 +120,7 @@ class NVectorMatrix : public NVector<T> {
  *
  * \pre See the preconditions for NVector<T>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NVectorMatrixRow : public NVectorMatrix<T> {
@@ -152,7 +152,7 @@ class NVectorMatrixRow : public NVectorMatrix<T> {
  *
  * \pre See the preconditions for NVector<T>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NVectorMatrixCol : public NVectorMatrix<T> {

@@ -54,7 +54,7 @@ namespace regina {
  * \pre Type T provides binary operators <tt>+</tt>, <tt>-</tt>, <tt>*</tt> and
  * <tt>/</tt> and unary operators <tt>+=</tt>, <tt>*=</tt> and <tt>/=</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NMatrixField : public NMatrixRing<T> {

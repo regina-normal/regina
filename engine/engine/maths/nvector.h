@@ -71,7 +71,7 @@ namespace regina {
  * \pre An element \c t of type T can be written to an output stream
  * \c out using the standard expression <tt>out << t</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NVector {
@@ -297,6 +297,8 @@ class NVector {
  * Writes the given vector to the given output stream.
  * The vector will be written on a single line with elements separated
  * by a single space.  No newline will be written.
+ *
+ * \ifacespython Not present.
  *
  * @param out the output stream to which to write.
  * @param vector the vector to write.
