@@ -1,0 +1,8 @@
+.deps
+.libs
+Makefile.in
+regconvert
+regfiledump
+regfiletype
+sigcensus
+tricensus
