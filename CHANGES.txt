@@ -13,6 +13,12 @@ Version 4.0  [ currently under development ]
             - Using NProperty to store calculable properties.
             - Using NTriBool instead of 1/-1/0 for orientability,
               two-sidedness and connectedness.
+        Class NProgress:
+            - Removed isCancellable() since this is not really necessary;
+              an operation may simply choose not to poll for cancellation
+              requests.
+        Class NProgressNumber:
+            - New convenience routine incCompleted().
         Class NTriBool:
             - Added for representing three-way booleans.
 

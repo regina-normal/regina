@@ -60,30 +60,22 @@ class NProgressMessage : public NProgress {
         /**
          * Creates a new progress report with an empty progress message.
          * Note that the internal mutex is not locked during construction.
-         *
-         * @param newCancellable \c true if and only if this operation
-         * allows itself to be cancelled by an external interface.
          */
-        NProgressMessage(bool newCancellable = false);
+        NProgressMessage();
         /**
          * Creates a new progress report with the given progress message.
          * Note that the internal mutex is not locked during construction.
          *
          * @param newMessage the current state of progress.
-         * @param newCancellable \c true if and only if this operation
-         * allows itself to be cancelled by an external interface.
          */
-        NProgressMessage(const std::string& newMessage,
-                bool newCancellable = false);
+        NProgressMessage(const std::string& newMessage);
         /**
          * Creates a new progress report with the given progress message.
          * Note that the internal mutex is not locked during construction.
          *
          * @param newMessage the current state of progress.
-         * @param newCancellable \c true if and only if this operation
-         * allows itself to be cancelled by an external interface.
          */
-        NProgressMessage(const char* newMessage, bool newCancellable = false);
+        NProgressMessage(const char* newMessage);
 
         /**
          * Returns a reference to the current progress message.
@@ -123,7 +115,7 @@ class NProgressNumber : public NProgress {
         long outOf;
             /**< The expected total number of items, or -1 if this
              *   total is not known. */
-    
+
     public:
         /**
          * Creates a new progress report containing the given details.
@@ -137,11 +129,8 @@ class NProgressNumber : public NProgress {
          * defaults to 0.
          * @param newOutOf the expected total number of items, or -1 if
          * this total is not known (the default).
-         * @param newCancellable \c true if and only if this operation
-         * allows itself to be cancelled by an external interface.
          */
-        NProgressNumber(long newCompleted = 0, long newOutOf = -1,
-                bool newCancellable = false);
+        NProgressNumber(long newCompleted = 0, long newOutOf = -1);
 
         /**
          * Returns the number of items completed.
@@ -167,6 +156,16 @@ class NProgressNumber : public NProgress {
          */
         void setCompleted(long newCompleted);
         /**
+         * Increases the number of items completed by the given amount.
+         *
+         * \pre If the expected total is non-negative, then the new
+         * total number of items completed is at most the expected total.
+         *
+         * @param incCompleted the number of items to add to the number of
+         * items already completed.
+         */
+        void incCompleted(unsigned long extraCompleted = 1);
+        /**
          * Sets the expected total number of items.
          *
          * \pre If the new expected total is non-negative, then the
@@ -188,16 +187,13 @@ class NProgressNumber : public NProgress {
 
 // Inline functions for NProgressMessage
 
-inline NProgressMessage::NProgressMessage(bool newCancellable) :
-        NProgress(newCancellable) {
+inline NProgressMessage::NProgressMessage() : NProgress() {
 }
-inline NProgressMessage::NProgressMessage(const std::string& newMessage,
-        bool newCancellable) : NProgress(newCancellable),
-        message(newMessage) {
+inline NProgressMessage::NProgressMessage(const std::string& newMessage) :
+        NProgress(), message(newMessage) {
 }
-inline NProgressMessage::NProgressMessage(const char* newMessage,
-        bool newCancellable) : NProgress(newCancellable),
-        message(newMessage) {
+inline NProgressMessage::NProgressMessage(const char* newMessage) :
+        NProgress(), message(newMessage) {
 }
 
 inline std::string NProgressMessage::getMessage() const {
@@ -222,9 +218,8 @@ inline std::string NProgressMessage::internalGetDescription() const {
 
 // Inline functions for NProgress
 
-inline NProgressNumber::NProgressNumber(long newCompleted, long newOutOf,
-        bool newCancellable) : NProgress(newCancellable),
-        completed(newCompleted), outOf(newOutOf) {
+inline NProgressNumber::NProgressNumber(long newCompleted, long newOutOf) :
+        NProgress(), completed(newCompleted), outOf(newOutOf) {
 }
 
 inline long NProgressNumber::getCompleted() const {
@@ -240,6 +235,11 @@ inline void NProgressNumber::setCompleted(long newCompleted) {
     completed = newCompleted;
     setChanged();
 }
+inline void NProgressNumber::incCompleted(unsigned long extraCompleted) {
+    MutexLock(this);
+    completed += extraCompleted;
+    setChanged();
+}
 inline void NProgressNumber::setOutOf(long newOutOf) {
     MutexLock(this);
     outOf = newOutOf;
@@ -253,7 +253,7 @@ inline bool NProgressNumber::isPercent() const {
 
 inline double NProgressNumber::internalGetPercent() const {
     MutexLock(this);
-    return double(completed) * 100 / double(outOf);
+    return (outOf > 0 ? double(completed) * 100 / double(outOf) : double(0));
 }
 
 } // namespace regina

@@ -57,15 +57,14 @@ unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
     // Start the census!
     NProgressMessage* progress;
     if (manager) {
-        progress = new NProgressMessage("Starting census generation...",
-            true);
+        progress = new NProgressMessage("Starting census generation...");
         manager->setProgress(progress);
     } else
         progress = 0;
 
     NCensus* census = new NCensus(parent, finiteness, orientability,
         whichPurge, sieve, sieveArgs, progress);
-    
+
     if (manager) {
         NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
             NCensus::foundFacePairing, census, true);

@@ -60,7 +60,7 @@ namespace regina {
  * deleted without the risk that the writing thread will attempt to
  * access it again.
  *
- * If the operation allows it (see isCancellable()), the reading thread
+ * If the operation allows it, the reading thread
  * may at any time request that the operation be cancelled by calling
  * cancel().  The writing thread should regularly poll isCancelled(),
  * and if it detects a cancellation request should exit cleanly as soon
@@ -90,8 +90,6 @@ class NProgress : public ShareableObject, protected NMutex {
         bool finished;
             /**< Is the operation whose progress we are reporting
              *   completely finished? */
-        bool cancellable;
-            /**< May this operation be cancelled? */
         bool cancelled;
             /**< Has this operation been cancelled? */
 
@@ -103,13 +101,8 @@ class NProgress : public ShareableObject, protected NMutex {
          * \ifacespython Not present; NProgress objects should only be
          * created within calculation engine routines whose progress is
          * being watched.
-         *
-         * @param newCancellable \c true if and only if this operation
-         * allows itself to be cancelled by an external interface.
-         * If \c true, the underlying operation should regularly poll
-         * isCancelled() and cancel itself if appropriate.
          */
-        NProgress(bool newCancellable = false);
+        NProgress();
         /**
          * Destroys this object.
          */
@@ -159,35 +152,26 @@ class NProgress : public ShareableObject, protected NMutex {
         void setFinished();
 
         /**
-         * Determines whether the operation whose progress we are reporting
-         * allows itself to be cancelled by an external interface.
-         *
-         * @return \c true if and only if cancellation is allowed.
-         */
-        bool isCancellable() const;
-        /**
          * Called by an external interface to request that the operation
          * whose progress we are reporting be cancelled.
          * The operation itself should regularly poll
          * isCancelled() to check if an external interface has made this
          * request.
          *
-         * If isCancellable() is \c false, the operation may freely
-         * ignore such cancellation requests and need not poll
-         * isCancelled() at all.
-         *
-         * \pre isCancellable() returns \c true.
+         * Note that if cancellation is not sensible or appropriate, the
+         * operation may freely ignore such cancellation requests and need
+         * not poll isCancelled() at all.
          */
         void cancel();
         /**
          * Determines whether an external interface has requested that
          * the operation whose progress we are reporting be cancelled.
          *
-         * If isCancellable() is \c false, the operation may freely
-         * ignore such cancellation requests.  If isCancellable() is
-         * \c true and the operation calls this function which
-         * returns \c true, the operation should exit cleanly as soon as
-         * possible with only partial or no results.
+         * If the operation is polling for cancellation requests and it finds
+         * that isCancelled() returns \c true, it should generally exit
+         * (cleanly) as soon as possible with only partial or no results.
+         * However, if cancellation is not sensible or appropriate, the
+         * operation may freely ignore such cancellation requests.
          *
          * Note that even if the underlying operation cancels itself, it
          * should still call setFinished().
@@ -286,8 +270,8 @@ class NProgressFinished : public NProgress {
 
 // Inline functions for NProgress
 
-inline NProgress::NProgress(bool newCancellable) : changed(true),
-        finished(false), cancellable(newCancellable), cancelled(false) {
+inline NProgress::NProgress() : changed(true), finished(false),
+        cancelled(false) {
 }
 inline NProgress::~NProgress() {
 }
@@ -304,9 +288,6 @@ inline void NProgress::setFinished() {
     finished = true;
 }
 
-inline bool NProgress::isCancellable() const {
-    return cancellable;
-}
 inline void NProgress::cancel() {
     cancelled = true;
 }
