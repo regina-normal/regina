@@ -30,16 +30,15 @@
 #include "packet/npacket.h"
 
 // UI includes:
+#include "flatbutton.h"
 #include "packetmanager.h"
 #include "packetui.h"
 #include "packetwindow.h"
 #include "reginapart.h"
 
-#include <kaction.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktoolbar.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
 
@@ -85,18 +84,17 @@ void DefaultPacketUI::refresh() {
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
         part(newPart), frame(0) {
-    // Set up the header and dock/undock toolbar.
+    // Set up the header and dock/undock button.
     QHBox* headerBox = new QHBox(this);
 
     header = new PacketHeader(newPacket, headerBox);
     headerBox->setStretchFactor(header, 1);
 
-    KToolBar* dockBar = new KToolBar(0, headerBox, false, "dockBar",
-        false, false);
-    dockUndock = new KToggleAction(i18n("&Dock / Undock"), QString("attach"));
-    dockUndock->setToolTip(i18n("Dock or undock this packet viewer"));
-    dockUndock->plug(dockBar);
-    dockUndock->setChecked(true);
+    dockUndock = new FlatToolButton(headerBox);
+    dockUndock->setToggleButton(true);
+    dockUndock->setPixmap(BarIcon("attach", ReginaPart::factoryInstance()));
+    dockUndock->setTextLabel(i18n("Dock or undock this packet viewer"));
+    dockUndock->setOn(true);
     connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
     mainUI = new DefaultPacketUI(newPacket);
@@ -162,7 +160,7 @@ void PacketPane::dockPane() {
     delete frame;
     frame = 0;
 
-    dockUndock->setChecked(true);
+    dockUndock->setOn(true);
     disconnect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 }
@@ -175,7 +173,7 @@ void PacketPane::floatPane() {
     frame = new PacketWindow(this);
     part->hasUndocked(this);
 
-    dockUndock->setChecked(false);
+    dockUndock->setOn(false);
     disconnect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
 

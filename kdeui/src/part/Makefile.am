@@ -3,6 +3,7 @@
 INCLUDES = $(all_includes) -I$(top_srcdir)/../engine/engine
 
 noinst_HEADERS = \
+	flatbutton.h \
 	packetmanager.h \
 	packettreeview.h \
 	packetui.h \
@@ -15,6 +16,7 @@ libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS)
 libreginapart_la_SOURCES = \
 	actionspart.cpp \
+	flatbutton.cpp \
 	packetmanager.cpp \
 	packettreeview.cpp \
 	packetui.cpp \
