@@ -278,9 +278,18 @@ void NScriptUI::refresh() {
     if (nLines == 0)
         editInterface->clear();
     else {
-        editInterface->setText(script->getLine(0).c_str());
-        for (unsigned long i = 1; i < nLines; i++)
-            editInterface->insertLine(i, script->getLine(i).c_str());
+        // Bloody hell.
+        // Trying to support both kate and vimpart with line-by-line
+        // insertion is just too much drama, especially with vimpart's
+        // continually changing behaviour.
+        // Just use setText() and be done with it.
+        QString allLines;
+        for (unsigned long i = 0; i < nLines; i++) {
+            allLines += script->getLine(i).c_str();
+            if (i + 1 < nLines)
+                allLines += '\n';
+        }
+        editInterface->setText(allLines);
     }
 
     setDirty(false);
