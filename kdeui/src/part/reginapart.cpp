@@ -319,7 +319,14 @@ void ReginaPart::clonePacket() {
     if (! packet)
         return;
 
-    packetView(packet->clone(false, false));
+    regina::NPacket* ans = packet->clone(false, false);
+
+    PacketTreeItem* item = treeView->find(ans);
+    if (item) {
+        treeView->setSelected(item, true);
+        treeView->ensureItemVisible(item);
+    }
+    packetView(ans);
 }
 
 void ReginaPart::cloneSubtree() {
@@ -330,7 +337,14 @@ void ReginaPart::cloneSubtree() {
     if (! packet)
         return;
 
-    packetView(packet->clone(true, false));
+    regina::NPacket* ans = packet->clone(true, false);
+
+    PacketTreeItem* item = treeView->find(ans);
+    if (item) {
+        treeView->setSelected(item, true);
+        treeView->ensureItemVisible(item);
+    }
+    packetView(ans);
 }
 
 void ReginaPart::newCensus() {
