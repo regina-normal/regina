@@ -35,6 +35,8 @@ Version 3.1  [ (under development) ]
               and does not do book opening at all.
             - Routine intelligentSimplify() now tries random 4-4 moves
               and book opening moves.
+            - Fixed bug in 2-3, 3-2 and 4-4 moves that appears when faces of
+              the old tetrahedra are glued to each other.
         Routine reducedMod():
             - Fixed bug in the midpoint case.
         File nhashmap.h, nhashset.h:
@@ -43,6 +45,10 @@ Version 3.1  [ (under development) ]
             - Added global 3-manifold recognition routines.
         File nperm.h:
             - New arrays allPermsS2Inv, allPermsS3Inv, allPermsS4Inv.
+    JAVA USER INTERFACE:
+        normal.packetui.surfaces.NSFPropertiesEditor:
+            - Don't enforce Euler characteristic <= 2 (singular surfaces
+              can give other values).
     UTILITIES:
         tricensus:
             - Completely redesigned interface (now command-line based).

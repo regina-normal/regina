@@ -108,7 +108,10 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
 
     for (oldPos = 0; oldPos < 3; oldPos++)
         for (newPos = 0; newPos < 2; newPos++) {
-            oldFace = gluings[newPos][oldPos][3];
+            // Note that gluings[n][o][3] == oldVertexPerm[o][n], since
+            // twoThreeVertices[i][3] == i.
+            // oldFace = gluings[newPos][oldPos][3];
+            oldFace = oldVertexPerm[oldPos][newPos];
             adjTet[newPos][oldPos] =
                 oldTet[oldPos]->getAdjacentTetrahedron(oldFace);
             if (adjTet[newPos][oldPos]) {
@@ -116,17 +119,30 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
                     if (adjTet[newPos][oldPos] == oldTet[oldPos2]) {
                         adjFace = oldTet[oldPos]->getAdjacentFace(oldFace);
                         for (newPos2 = 0; newPos2 < 2; newPos2++)
-                            if (gluings[newPos2][oldPos2][3] == adjFace) {
+                            // if (gluings[newPos2][oldPos2][3] == adjFace) {
+                            if (oldVertexPerm[oldPos2][newPos2] == adjFace) {
                                 // Face oldFace of oldTet[oldPos] is glued to
                                 // face adjFace of oldTet[oldPos2] and should be
                                 // glued to face oldPos2 of newTet[newPos2].
-                                adjTet[newPos][oldPos] = newTet[newPos2];
-                                gluings[newPos][oldPos] =
-                                    threeTwoVertices[oldPos2]
-                                    * gluings[newPos2][oldPos2].inverse()
-                                    * oldTet[oldPos]->
-                                        getAdjacentTetrahedronGluing(oldFace)
-                                    * gluings[newPos][oldPos];
+                                if ((oldPos2 < oldPos) ||
+                                        (oldPos2 == oldPos &&
+                                        newPos2 < newPos)) {
+                                    // We've already seen this gluing from
+                                    // the other direction and
+                                    // gluings[newPos2][oldPos2] has already
+                                    // been modified.  We'll have to leave
+                                    // this gluing to be made from the
+                                    // other direction.
+                                    adjTet[newPos][oldPos] = 0;
+                                } else {
+                                    adjTet[newPos][oldPos] = newTet[newPos2];
+                                    gluings[newPos][oldPos] =
+                                        threeTwoVertices[oldPos2]
+                                        * gluings[newPos2][oldPos2].inverse()
+                                        * oldTet[oldPos]->
+                                            getAdjacentTetrahedronGluing(oldFace)
+                                        * gluings[newPos][oldPos];
+                                }
                                 break;
                             }
                         break;
@@ -214,7 +230,10 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
 
     for (oldPos = 0; oldPos < 2; oldPos++)
         for (newPos = 0; newPos < 3; newPos++) {
-            oldFace = gluings[newPos][oldPos][3];
+            // Note that gluings[n][o][3] == oldVertexPerm[o][n], since
+            // threeTwoVertices[i][3] == i.
+            // oldFace = gluings[newPos][oldPos][3];
+            oldFace = oldVertexPerm[oldPos][newPos];
             adjTet[newPos][oldPos] =
                 oldTet[oldPos]->getAdjacentTetrahedron(oldFace);
             if (adjTet[newPos][oldPos]) {
@@ -222,17 +241,30 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
                     if (adjTet[newPos][oldPos] == oldTet[oldPos2]) {
                         adjFace = oldTet[oldPos]->getAdjacentFace(oldFace);
                         for (newPos2 = 0; newPos2 < 3; newPos2++)
-                            if (gluings[newPos2][oldPos2][3] == adjFace) {
+                            // if (gluings[newPos2][oldPos2][3] == adjFace) {
+                            if (oldVertexPerm[oldPos2][newPos2] == adjFace) {
                                 // Face oldFace of oldTet[oldPos] is glued to
                                 // face adjFace of oldTet[oldPos2] and should be
                                 // glued to face oldPos2 of newTet[newPos2].
-                                adjTet[newPos][oldPos] = newTet[newPos2];
-                                gluings[newPos][oldPos] =
-                                    twoThreeVertices[oldPos2]
-                                    * gluings[newPos2][oldPos2].inverse()
-                                    * oldTet[oldPos]->
-                                        getAdjacentTetrahedronGluing(oldFace)
-                                    * gluings[newPos][oldPos];
+                                if ((oldPos2 < oldPos) ||
+                                        (oldPos2 == oldPos &&
+                                        newPos2 < newPos)) {
+                                    // We've already seen this gluing from
+                                    // the other direction and
+                                    // gluings[newPos2][oldPos2] has already
+                                    // been modified.  We'll have to leave
+                                    // this gluing to be made from the
+                                    // other direction.
+                                    adjTet[newPos][oldPos] = 0;
+                                } else {
+                                    adjTet[newPos][oldPos] = newTet[newPos2];
+                                    gluings[newPos][oldPos] =
+                                        twoThreeVertices[oldPos2]
+                                        * gluings[newPos2][oldPos2].inverse()
+                                        * oldTet[oldPos]->
+                                            getAdjacentTetrahedronGluing(oldFace)
+                                        * gluings[newPos][oldPos];
+                                }
                                 break;
                             }
                         break;
