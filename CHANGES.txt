@@ -100,6 +100,10 @@ Current Development Version
         Routine isKnownSFS():
             - Removed in favour of
               NStandardTriangulation::isStandardTriangulation().
+        File dehydration.h:
+            - New routine readDehydrationList().
+        File nsnappea.h:
+            - Renamed to snappea.h.
         File stringutils.h:
             - Added routines startsWith() and stripWhitespace().
     PYTHON:

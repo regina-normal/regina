@@ -23,6 +23,7 @@ Icons:
 
 Import/Export:
     Refuse to export invalid triangulations
+    Allow a greater variety of dehydration list file formats
 
 Packets (General):
     Implement packet tags
