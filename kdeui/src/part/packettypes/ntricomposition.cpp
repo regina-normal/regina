@@ -79,23 +79,41 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     QBoxLayout* leftIsoArea = new QVBoxLayout(wideIsoArea, 0);
     wideIsoArea->setStretchFactor(leftIsoArea, 1);
 
-    leftIsoArea->addWidget(new QLabel(
-        i18n("Isomorphism / subcomplex test:"), ui));
+    QString msg = i18n("<qt>Compare this with another triangulation to "
+        "see whether the triangulations are isomorphic, or whether one is "
+        "isomorphic to a subcomplex of the other.<p>"
+        "Select the other triangulation in the drop-down box.  The "
+        "relationship (if any) between this and the selected triangulation "
+        "will be displayed immediately beneath.<p>"
+        "If a relationship is found, the specific isomorphism can be "
+        "examined through the <i>Details</i> button.");
+
+    QLabel* label = new QLabel(i18n("Isomorphism / subcomplex test:"), ui);
+    QWhatsThis::add(label, msg);
+    leftIsoArea->addWidget(label);
 
     QBoxLayout* isoSelectArea = new QHBoxLayout(leftIsoArea, 5);
-    isoSelectArea->addWidget(new QLabel(i18n("Compare with T ="), ui));
+    label = new QLabel(i18n("Compare with T ="), ui);
+    QWhatsThis::add(label, msg);
+    isoSelectArea->addWidget(label);
     isoTest = new PacketChooser(tri->getTreeMatriarch(),
         new SingleTypeFilter<NTriangulation>(), true, 0, ui);
     isoTest->setAutoUpdate(true);
+    QWhatsThis::add(isoTest, msg);
     connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
     isoSelectArea->addWidget(isoTest);
     isoSelectArea->addStretch(1);
 
     isoResult = new QLabel(i18n("Result:"), ui);
+    QWhatsThis::add(isoResult, msg);
     leftIsoArea->addWidget(isoResult);
 
     isoView = new QPushButton(SmallIconSet("viewmag"), i18n("Details..."), ui);
     // isoView->setFlat(true);
+    QWhatsThis::add(isoView, i18n("View the details of the isomorphism "
+        "(if any) between this and the selected triangulation.  The precise "
+        "mapping between tetrahedra and tetrahedron vertices will be "
+        "displayed in a separate window."));
     connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
     wideIsoArea->addWidget(isoView);
     wideIsoArea->addSpacing(5);
@@ -110,18 +128,23 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     layout->addSpacing(5);
 
     // Set up the composition viewer.
-    layout->addWidget(new QLabel(i18n("Triangulation composition:"), ui));
+    msg = i18n("<qt>Displays the details of any standard "
+        "combinatorial structures found within the triangulation.  Also "
+        "displays the precise name of the triangulation and/or underlying "
+        "3-manifold if these happen to be recognised immediately.<p>"
+        "See the reference manual for further details on the different "
+        "combinatorial structures that can be found.</qt>");
+
+    label = new QLabel(i18n("Triangulation composition:"), ui);
+    QWhatsThis::add(label, msg);
+    layout->addWidget(label);
+
     details = new KListView(ui);
     details->header()->hide();
     details->addColumn(QString::null);
     details->setSorting(-1);
     details->setSelectionMode(QListView::NoSelection);
-    QWhatsThis::add(details, i18n("<qt>Displays the details of any standard "
-        "combinatorial structures found within the triangulation.  Also "
-        "displays the precise name of the triangulation and/or underlying "
-        "3-manifold if these happen to be recognised immediately.<p>"
-        "See the reference manual for further details on the different "
-        "combinatorial structures that can be found.</qt>"));
+    QWhatsThis::add(details, msg);
     layout->addWidget(details, 1);
 }
 
