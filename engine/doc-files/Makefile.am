@@ -6,5 +6,5 @@
 ##  to produce Makefile.in.
 ##
 
-EXTRA_DIST = doc-footer.html docs.conf.in
+EXTRA_DIST = doc-footer.html docs.conf
 
