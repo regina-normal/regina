@@ -343,18 +343,20 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
             startTet[comp]++;
         if (startTet[comp] == nDestTetrahedra) {
             // We can't fill this component.
+            // Move back to the previous component.
             startTet[comp] = 0;
             startPerm[comp] = 0;
 
             comp--;
-
-            if (comp >= 0)
+            if (comp >= 0) {
                 for (i = 0; i < nTetrahedra; i++)
                     if (iso->tetImage(i) >= 0 &&
                             whichComp[iso->tetImage(i)] == comp) {
                         whichComp[iso->tetImage(i)] = -1;
                         iso->tetImage(i) = -1;
                     }
+                startPerm[comp]++;
+            }
 
             continue;
         }
