@@ -43,12 +43,12 @@
 
 namespace regina {
 
+class NFacePairing;
+
 /**
  * \weakgroup census
  * @{
  */
-
-class NFacePairing;
 
 /**
  * A list of isomorphisms on pairwise matchings of tetrahedron faces.
@@ -71,7 +71,7 @@ typedef std::list<NIsomorphismDirect*> NFacePairingIsoList;
  * The third parameter may contain arbitrary data as passed to
  * NFacePairing::findAllPairings().
  *
- * Note that the first parameter passed might be \c null to signal that
+ * Note that the first two parameters passed might be \c null to signal that
  * face pairing generation has finished.
  */
 typedef void (*UseFacePairing)(const NFacePairing*, const NFacePairingIsoList*,
@@ -254,7 +254,7 @@ class NFacePairing : public NThread {
          *
          * Once the generation of face pairings has finished, routine
          * \a use will be called once more, this time with \c null as its
-         * first (face pairing) argument.
+         * first two arguments (the face pairing and its automorphisms).
          *
          * The face pairing generation may be run in the current thread
          * or as a separate thread.
