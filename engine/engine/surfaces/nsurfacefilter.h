@@ -127,7 +127,7 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          * @return \c true if and only if the given surface is accepted
          * by this filter.
          */
-        virtual bool accept(NNormalSurface& surface) const;
+        virtual bool accept(const NNormalSurface& surface) const;
 
         /**
          * Returns the unique integer ID corresponding to the filtering
@@ -296,7 +296,7 @@ inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter& cloneMe) :
 inline NSurfaceFilter::~NSurfaceFilter() {
 }
 
-inline bool NSurfaceFilter::accept(NNormalSurface&) const {
+inline bool NSurfaceFilter::accept(const NNormalSurface&) const {
     return true;
 }
 

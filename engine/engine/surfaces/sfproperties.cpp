@@ -53,7 +53,7 @@ void NSurfaceFilterProperties::initialiseAllProperties() {
     realBoundary.fill();
 }
 
-bool NSurfaceFilterProperties::accept(NNormalSurface& surface) const {
+bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
     if (! realBoundary.contains(surface.hasRealBoundary()))
         return false;
     if (! compactness.contains(surface.isCompact()))

@@ -64,7 +64,7 @@ class NSurfaceFilterCombination : public NSurfaceFilter {
         bool usesAnd;
             /**< \c true if children are combined using boolean \a and, or
                  \c false if children are combined using boolean \a or. */
-    
+
     public:
         /**
          * Creates a new surface filter that accepts all normal surfaces.
@@ -93,8 +93,8 @@ class NSurfaceFilterCombination : public NSurfaceFilter {
          * or \c false if this is to be an \a or combination.
          */
         void setUsesAnd(bool value);
-        
-        virtual bool accept(NNormalSurface& surface) const;
+
+        virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);

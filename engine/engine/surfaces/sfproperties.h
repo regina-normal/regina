@@ -73,7 +73,7 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
             /**< The set of allowable compactness properties. */
         NBoolSet realBoundary;
             /**< The set of allowable has-real-boundary properties. */
-    
+
     public:
         /**
          * Creates a new surface filter that accepts all normal surfaces.
@@ -196,8 +196,8 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
          * properties.
          */
         void setRealBoundary(const NBoolSet& value);
-        
-        virtual bool accept(NNormalSurface& surface) const;
+
+        virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);

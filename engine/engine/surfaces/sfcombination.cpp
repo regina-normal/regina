@@ -34,7 +34,7 @@
 
 namespace regina {
 
-bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
+bool NSurfaceFilterCombination::accept(const NNormalSurface& surface) const {
     if (usesAnd) {
         // Combine all child filters using AND.
         for (NPacket* child = getFirstTreeChild(); child;
