@@ -96,7 +96,8 @@ class NGluingPerms {
             /**< The index into array \a allPermsS3 describing how each
                  tetrahedron face is glued to its partner.  Note that this
                  is not a gluing permutation as such but rather a permutation
-                 of 0, 1 and 2 only. */
+                 of 0, 1 and 2 only.  If a permutation has not yet been
+                 selected then this index is -1. */
 
     public:
         /**
@@ -377,6 +378,28 @@ class NGluingPerms {
         void findAllPermsClosedOrPrimeMin(const NFacePairing* newPairing,
             const NFacePairingIsoList* autos, UseGluingPerms use,
             void* useArgs = 0);
+
+        /**
+         * Determines whether the permutations already constructed model
+         * a triangulation with an edge identified with itself in reverse.
+         * Note that such edges can only occur in non-orientable
+         * triangulations.
+         *
+         * Tests that do not refer to the gluing permutation for the
+         * given face will not be run.
+         *
+         * This routine is not fussy about the order in which gluing
+         * permutations are selected, as long as permutations not yet
+         * selected have the corresponding element of permIndices[] set
+         * to -1.
+         *
+         * @param face the specific tetrahedron face upon which tests
+         * will be based.
+         * @return \c true if the permutations under construction will
+         * lead to an edge identified with itself in reverse, or \c false
+         * if no such edge is identified.
+         */
+        bool badEdgeLink(const NTetFace& face);
 
         /**
          * Determines whether the permutations under construction are

@@ -147,9 +147,11 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
             // Head back down to the previous face.
             permIndex(face) = -1;
             face--;
-            while ((! face.isBeforeStart()) &&
-                    (pairing->isUnmatched(face) || pairing->dest(face) < face))
+            while ((! face.isBeforeStart()) && (pairing->isUnmatched(face) ||
+                    pairing->dest(face) < face)) {
+                permIndex(face) = -1;
                 face--;
+            }
             continue;
         }
 
@@ -158,6 +160,9 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
         // Is this going to lead to an unwanted triangulation?
         if (mayPurge(face, whichPurge, orientableOnly, finiteOnly))
             continue;
+        if (! orientableOnly)
+            if (badEdgeLink(face))
+                continue;
 
         // Fix the orientation if appropriate.
         if (pairing->dest(face).face == 0) {
@@ -200,16 +205,18 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
 
             // Back to the previous face.
             face--;
-            while ((! face.isBeforeStart()) &&
-                    (pairing->isUnmatched(face) || pairing->dest(face) < face))
+            while ((! face.isBeforeStart()) && (pairing->isUnmatched(face) ||
+                    pairing->dest(face) < face)) {
+                permIndex(face) = -1;
                 face--;
+            }
         } else if (orientableOnly && pairing->dest(face).face > 0) {
             // Be sure to get the orientation right.
             if (orientation[face.tet] == orientation[pairing->dest(face).tet])
                 permIndex(face) = 1;
             else
                 permIndex(face) = 0;
-            
+
             if ((face.face == 3 ? 0 : 1) +
                     (pairing->dest(face).face == 3 ? 0 : 1) == 1)
                 permIndex(face) = (permIndex(face) + 1) % 2;
@@ -220,6 +227,58 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
 
     // And the search is over.
     use(0, useArgs);
+}
+
+bool NGluingPerms::badEdgeLink(const NTetFace& face) {
+    // Run around all three edges bounding face.
+    unsigned tet, adjTet;
+    NPerm current;
+    NPerm start(face.face, 3);
+    bool started, incomplete;
+    for (unsigned permIdx = 0; permIdx < 3; permIdx++) {
+        start = start * NPerm(1, 2, 0, 3);
+
+        // start maps (0,1,2) to the three vertices of face, with
+        // (0,1) mapped to the edge that we wish to examine.
+
+        // Continue to push through a tetrahedron and then across a
+        // face, until either we hit a boundary or we return to the
+        // original face.
+
+        current = start;
+        tet = face.tet;
+
+        started = false;
+        incomplete = false;
+
+        while ((! started) || ((int)tet != face.tet) ||
+                (start[2] != current[2]) || (start[3] != current[3])) {
+            started = true;
+
+            // Push through the current tetrahedron.
+            current = current * NPerm(2, 3);
+
+            // Push across a face.
+            if (pairing->isUnmatched(tet, current[3])) {
+                incomplete = true;
+                break;
+            }
+            if (permIndex(tet, current[3]) < 0) {
+                incomplete = true;
+                break;
+            }
+            adjTet = pairing->dest(tet, current[3]).tet;
+            current = gluingPerm(tet, current[3]) * current;
+            tet = adjTet;
+        }
+
+        // Did we meet the original edge in reverse?
+        if ((! incomplete) && (start != current))
+            return true;
+    }
+
+    // No bad edge links were found.
+    return false;
 }
 
 bool NGluingPerms::mayPurge(const NTetFace& face, int whichPurge,
