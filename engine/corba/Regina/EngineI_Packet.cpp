@@ -51,13 +51,14 @@ Regina::Packet::NPacket_ptr Engine_i::readFromFile(const char* ref) {
     try {
         CORBA::Object_var res = orb->string_to_object(ref);
         if (CORBA::is_nil(res)) {
-            cerr << "Could not destringify the CORBA random access resource.\n";
+            std::cerr <<
+                "Could not destringify the CORBA random access resource.\n";
             return Regina::Packet::NPacket::_nil();
         }
         Regina::File::NRandomAccessResource_var data =
             Regina::File::NRandomAccessResource::_narrow(res);
         if (CORBA::is_nil(data)) {
-            cerr << "Could not narrow the random access resource to "
+            std::cerr << "Could not narrow the random access resource to "
                 << "the correct class.\n";
             return Regina::Packet::NPacket::_nil();
         }
@@ -72,11 +73,11 @@ Regina::Packet::NPacket_ptr Engine_i::readFromFile(const char* ref) {
             return NPacket_i::newWrapper(ans);
         }
     } catch (CORBA::COMM_FAILURE&) {
-        cerr << "Caught CORBA communication failure in readFromFile().\n";
+        std::cerr << "Caught CORBA communication failure in readFromFile().\n";
     } catch (CORBA::Exception&) {
-        cerr << "Caught CORBA exception in readFromFile().\n";
+        std::cerr << "Caught CORBA exception in readFromFile().\n";
     } catch (...) {
-        cerr << "Caught unknown exception in readFromFile().\n";
+        std::cerr << "Caught unknown exception in readFromFile().\n";
     }
     return Regina::Packet::NPacket::_nil();
 }
@@ -85,13 +86,14 @@ CORBA::Boolean Engine_i::writeToFile(const char* ref,
     try {
         CORBA::Object_var res = orb->string_to_object(ref);
         if (CORBA::is_nil(res)) {
-            cerr << "Could not destringify the CORBA random access resource.\n";
+            std::cerr <<
+                "Could not destringify the CORBA random access resource.\n";
             return Regina::Packet::NPacket::_nil();
         }
         Regina::File::NRandomAccessResource_var data =
             Regina::File::NRandomAccessResource::_narrow(res);
         if (CORBA::is_nil(data)) {
-            cerr << "Could not narrow the random access resource to "
+            std::cerr << "Could not narrow the random access resource to "
                 << "the correct class.\n";
             return Regina::Packet::NPacket::_nil();
         }
@@ -106,11 +108,11 @@ CORBA::Boolean Engine_i::writeToFile(const char* ref,
             return true;
         }
     } catch (CORBA::COMM_FAILURE&) {
-        cerr << "Caught CORBA communication failure in writeToFile().\n";
+        std::cerr << "Caught CORBA communication failure in writeToFile().\n";
     } catch (CORBA::Exception&) {
-        cerr << "Caught CORBA exception in writeToFile().\n";
+        std::cerr << "Caught CORBA exception in writeToFile().\n";
     } catch (...) {
-        cerr << "Caught unknown exception in writeToFile().\n";
+        std::cerr << "Caught unknown exception in writeToFile().\n";
     }
     return false;
 }

@@ -32,14 +32,14 @@
 #define MAXORDER 20
 
 void usage(const char* progName) {
-    cerr << "Usage:\n";
-    cerr << "    " << progName << " <order>\n";
+    std::cerr << "Usage:\n";
+    std::cerr << "    " << progName << " <order>\n";
     exit(1);
 }
 
 void printSignature(const NSignature& sig, const NSigIsoList&, void*) {
-    sig.writeCycles(cout, "", "", ".");
-    cout << '\n';
+    sig.writeCycles(std::cout, "", "", ".");
+    std::cout << '\n';
 }
 
 int main(int argc, char* argv[]) {
@@ -48,13 +48,13 @@ int main(int argc, char* argv[]) {
 
     int order = atoi(argv[1]);
     if (order < 1 || order > MAXORDER) {
-        cerr << "Only numerical orders between 1 and " << MAXORDER
+        std::cerr << "Only numerical orders between 1 and " << MAXORDER
             << " inclusive are accepted.\n";
         usage(argv[0]);
     }
 
     unsigned long result = formSigCensus(order, printSignature, 0);
-    cout << "Total signatures: " << result << '\n';
+    std::cout << "Total signatures: " << result << '\n';
 
     return 0;
 }

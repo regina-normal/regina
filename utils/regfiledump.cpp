@@ -31,15 +31,15 @@
 #include <cstdlib>
 
 void usage(const char* progName) {
-    cerr << "Usage:\n";
-    cerr << "    " << progName << " <file> [ <packet-label> ... ]\n";
+    std::cerr << "Usage:\n";
+    std::cerr << "    " << progName << " <file> [ <packet-label> ... ]\n";
     exit(1);
 }
 
 static const char* separator =
     "************************************************************";
 
-void dumpNoPacket(ostream& out, const char* packetLabel) {
+void dumpNoPacket(std::ostream& out, const char* packetLabel) {
     out << separator << '\n';
     out << "*\n";
     out << "* ERROR: " << packetLabel << '\n';
@@ -49,7 +49,7 @@ void dumpNoPacket(ostream& out, const char* packetLabel) {
     out << '\n';
 }
 
-void dumpPacketHeader(ostream& out, NPacket* p) {
+void dumpPacketHeader(std::ostream& out, NPacket* p) {
     out << separator << '\n';
     out << "*\n";
     out << "* Label: " << p->getPacketLabel() << '\n';
@@ -60,7 +60,7 @@ void dumpPacketHeader(ostream& out, NPacket* p) {
     out << separator << '\n';
 }
 
-void dumpPacket(ostream& out, NPacket* p) {
+void dumpPacket(std::ostream& out, NPacket* p) {
     dumpPacketHeader(out, p);
     out << '\n';
     out << p->toStringLong() << '\n';
@@ -73,21 +73,21 @@ int main(int argc, char* argv[]) {
 
     NPacket* tree = readFromFile(argv[1]);
     if (! tree) {
-        cerr << "File " << argv[1] << " could not be read.\n";
+        std::cerr << "File " << argv[1] << " could not be read.\n";
         return 1;
     }
 
     NPacket* p;
     if (argc == 2)
         for (p = tree; p; p = p->nextTreePacket())
-            dumpPacket(cout, p);
+            dumpPacket(std::cout, p);
     else
         for (int i = 2; i < argc; i++) {
             p = tree->findPacketLabel(argv[i]);
             if (p)
-                dumpPacket(cout, p);
+                dumpPacket(std::cout, p);
             else
-                dumpNoPacket(cerr, argv[i]);
+                dumpNoPacket(std::cerr, argv[i]);
         }
 
     delete tree;

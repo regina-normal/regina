@@ -14,9 +14,10 @@ Version 2.5  [ (under development) ]
             - Replaced hand-rolled container classes with Standard
               Template Library classes (transition only partially complete).
             - Replaced strstreams with stringstreams.
+            - Modified to also build under gcc3.
         Classes NBoolVector, NHashSet, NInfiniteArray, NIntMap,
-                NOrderedPair, NPointerSet, NQueue, NSet, NStack
-                and associates:
+                NOrderedPair, NPointerSet, NQueue, NSet, NStack,
+                NStringPair and associates:
             - All removed in favour of Standard Template Library classes.
         Class FuncDelete, FuncNew, FuncNewClonePtr, FuncNewCopyPtr,
                 FuncNewCopyRef, HashPointer:
@@ -35,10 +36,11 @@ Version 2.5  [ (under development) ]
             - Added.
         Class NString:
             - Added C++ string copy constructor.
-        Class NStringPair:
-            - Removed.
         Class NTriangulation:
             - Added insertSplittingSurface().
+    JAVA USER INTERFACE:
+        Overall structure:
+            - Incorporated engine enhancements listed above.
 
 Version 2.4  [ 4 April, 2002 ]
     OVERALL:
