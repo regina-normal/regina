@@ -117,8 +117,7 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '\.kidl$' | \
     grep -v '\.la$' | \
     grep -v '\.la\.closure$' | \
-    grep -v '\.libs$' | \
-    grep -v '\.libs/' | \
+    grep -v '\.libs\(/\|$\)' | \
     grep -v '\.lo$' | \
     grep -v '\.moc$' | \
     grep -v '\.o$' | \
@@ -132,12 +131,16 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^docs/engine/graph_legend' | \
     grep -v '^docs/man/manpage\.' | \
     grep -v '^engine/engine/regina-config\.h$' | \
+    grep -v '^engine/engine/regina-engine-config$' | \
+    grep -v '^engine/engine/snappea/kernel/unused\(/\|$\)' | \
     grep -v '^engine/engine/stamp-h' | \
+    grep -v '^icons/src\(/\|$\)' | \
     grep -v '^kdeui/.*/index.cache.bz2$' | \
     grep -v '^kdeui/src/shell/regina-kde$' | \
     grep -v '^libtool$' | \
     grep -v '^metrics' | \
     grep -v '^python/regina-python$' | \
+    grep -v '^python/tests\(/\|$\)' | \
     grep -v '^regina.*\.tar\.bz2$' | \
     grep -v '^regina.*\.tar\.gz$' | \
     grep -v '^regina.*\.zip$' | \
@@ -149,6 +152,7 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^test/' | \
     grep -v '^testsuite/regtestsuite$' | \
     grep -v '^utils/[a-z]\+$' | \
+    grep -v '^utils/snappea\(/\|$\)' | \
     grep -v '^www' | \
     sort > "$cvslist" ; then
   echo "The contents of the CVS tree could not be listed."
