@@ -37,6 +37,7 @@
 #include "eltmovedialog.h"
 #include "nfacegluingitems.h"
 #include "ntrigluings.h"
+#include "../patiencedialog.h"
 #include "../reginapart.h"
 
 #include <kaction.h>
@@ -570,6 +571,12 @@ void NTriGluingsUI::connectedSumDecomposition() {
             "currently only available for closed orientable connected "
             "3-manifold triangulations."));
     else {
+        std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(i18n(
+            "Connected sum decomposition can be quite\n"
+            "slow for larger triangulations.\n\n"
+            "Please be patient."),
+            enclosingPane->getPart()->instance(), ui));
+
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
         NPacket* base;
@@ -585,6 +592,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         unsigned long nSummands = tri->connectedSumDecomposition(base);
 
         // Let the user know what happened.
+        dlg.reset();
         if (nSummands == 0)
             KMessageBox::information(ui, i18n("This triangulation represents "
                 "a 3-sphere, and has no prime summands at all."));
@@ -623,6 +631,12 @@ void NTriGluingsUI::makeZeroEfficient() {
         return;
     }
 
+    std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(i18n(
+        "0-efficiency reduction can be quite\n"
+        "slow for larger triangulations.\n\n"
+        "Please be patient."),
+        enclosingPane->getPart()->instance(), ui));
+
     // If it's possible that the triangulation but not the number of
     // tetrahedra is changed, remember the original.
     std::auto_ptr<NTriangulation> orig;
@@ -631,6 +645,8 @@ void NTriGluingsUI::makeZeroEfficient() {
 
     // Make it 0-efficient and see what happens.
     NPacket* decomp = tri->makeZeroEfficient();
+    dlg.reset();
+
     if (decomp) {
         // Composite 3-manifold.
         tri->insertChildLast(decomp);

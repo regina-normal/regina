@@ -60,5 +60,4 @@ Toolbars:
 Triangulations:
     - Make the skeleton viewer windows appear in a pleasant size
     + Only fill the isomorphism combo box when absolutely necessary
-    * Progress dialogs on connected sum decomposition and 3-sphere recognition?
 

@@ -31,6 +31,7 @@
 
 // UI includes:
 #include "ntrisurfaces.h"
+#include "../patiencedialog.h"
 #include "../reginapart.h"
 
 #include <kiconloader.h>
@@ -208,17 +209,38 @@ void NTriSurfacesUI::editingElsewhere() {
 }
 
 void NTriSurfacesUI::calculateZeroEff() {
+    PatienceDialog* dlg = PatienceDialog::warn(i18n(
+        "Deciding whether a triangulation is 0-efficient\n"
+        "can be quite slow for larger triangulations.\n\n"
+        "Please be patient."),
+        enclosingPane->getPart()->instance(), ui);
     tri->isZeroEfficient();
+    delete dlg;
+
     refresh();
 }
 
 void NTriSurfacesUI::calculateSplitting() {
+    PatienceDialog* dlg = PatienceDialog::warn(i18n(
+        "Deciding whether a splitting surface exists can\n"
+        "be quite slow for larger triangulations.\n\n"
+        "Please be patient."),
+        enclosingPane->getPart()->instance(), ui);
     tri->hasSplittingSurface();
+    delete dlg;
+
     refresh();
 }
 
 void NTriSurfacesUI::calculateThreeSphere() {
+    PatienceDialog* dlg = PatienceDialog::warn(i18n(
+        "3-sphere recognition can be quite slow\n"
+        "for larger triangulations.\n\n"
+        "Please be patient."),
+        enclosingPane->getPart()->instance(), ui);
     tri->isThreeSphere();
+    delete dlg;
+
     refresh();
 }
 
