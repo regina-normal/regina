@@ -128,19 +128,19 @@ AC_CHECK_KDEMAXPATHLEN
 ###########################################################
 
 AC_ARG_ENABLE(kdeui, AC_HELP_STRING([--disable-kdeui],
-    [build the KDE user interface [[default=yes]]]), [
+    [do not build the Regina KDE user interface]), [
   if test "$enableval" = "no"; then
     REGINA_DO_NOT_COMPILE([KDEUI])
   fi
 ])
 AC_ARG_ENABLE(python, AC_HELP_STRING([--disable-python],
-    [build the python module [[default=yes]]]), [
+    [do not build the Regina python module]), [
   if test "$enableval" = "no"; then
     REGINA_DO_NOT_COMPILE([PYTHON])
   fi
 ])
 AC_ARG_ENABLE(docs, AC_HELP_STRING([--disable-docs],
-    [build the API documentation [[default=yes]]]), [
+    [do not build the Regina API documentation]), [
   if test "$enableval" = "no"; then
     REGINA_DO_NOT_COMPILE([DOCSENGINE])
   fi
