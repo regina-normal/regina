@@ -448,10 +448,6 @@ void ReginaPart::fileSaveAs() {
         saveAs(file);
 }
 
-void ReginaPart::unimplemented() {
-    KMessageBox::sorry(widget(), i18n("This feature is not yet implemented."));
-}
-
 void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
     QSplitter* splitter = new QSplitter(parentWidget, widgetName);
 

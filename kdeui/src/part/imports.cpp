@@ -30,6 +30,7 @@
 
 #include "packettreeview.h"
 #include "reginapart.h"
+#include "foreign/dehydrationhandler.h"
 #include "foreign/importdialog.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
@@ -40,7 +41,8 @@
 #include <klocale.h>
 
 void ReginaPart::importDehydration() {
-    unimplemented();
+    importFile(DehydrationHandler::instance, 0, i18n(FILTER_ALL),
+        i18n("Import dehydrated triangulation list"));
 }
 
 void ReginaPart::importPython() {

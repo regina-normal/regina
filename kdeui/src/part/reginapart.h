@@ -297,7 +297,6 @@ class ReginaPart : public KParts::ReadWritePart {
          * Implementation of actions.
          */
         void fileSaveAs();
-        void unimplemented();
 
     private:
         /**
