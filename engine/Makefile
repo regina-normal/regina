@@ -129,13 +129,13 @@ endif
 	docs clean
 
 binjni : $(output_jni)
-$(output_jni) : $(obj_engine) $(obj_jni)
-	$(LINKLIB) -o $(output_jni) $(obj_engine) $(obj_jni) \
+$(output_jni) : $(output_lib) $(obj_jni)
+	$(LINKLIB) -o $(output_jni) $(obj_jni) $(output_lib) \
 		$(EXTRA_LIBRARIES)
 
 bincorba : $(bincorba_target)
-$(output_corba) : $(obj_engine) $(obj_corba)
-	$(LINKEXEC) -o $(output_corba) $(obj_engine) $(obj_corba) \
+$(output_corba) : $(output_lib) $(obj_corba)
+	$(LINKEXEC) -o $(output_corba) $(obj_corba) $(output_lib) \
 		$(CORBA_LIBRARIES) $(EXTRA_LIBRARIES)
 
 nocorba :
