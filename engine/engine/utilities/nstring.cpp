@@ -93,6 +93,15 @@ NString::NString(const char* cStr) : len(strlen(cStr)) {
     memcpy(txt, cStr, len);
 }
 
+NString::NString(const string& str) : len(str.length()) {
+    siz = allocLen(len);
+    txt = new char[siz];
+
+    if (txt == 0)
+        errorHandler(seAlloc);
+    memcpy(txt, str.data(), len);
+}
+
 NString::NString(char fillCh, unsigned count) : len(count) {
     siz = allocLen(count);
     txt = new char[siz];

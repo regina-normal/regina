@@ -39,6 +39,7 @@
 
 #include <iostream>
 #include <hash_set>
+#include <string>
 
 /**
  * A string class based upon a public domain string class written by
@@ -116,6 +117,12 @@ class NString {
          * @param cStr the string to clone.
          */
         NString(const char* cStr);
+        /**
+         * Creates a new string equal to the given C++ string.
+         *
+         * @param str the string to clone.
+         */
+        NString(const string& str);
         /**
          * Creates a new string containing the given number of copies of
          * the given character.
