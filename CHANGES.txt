@@ -21,6 +21,7 @@ Regina - A Normal Surface Theory Calculator
         Class NPerm:
             - Added operators = and != and constructor NPerm(const NPerm&).
         Class NTriangulation:
+            - Added isZeroEfficient(), hasVerticalSurface().
             - Added extra condition to shellBoundary() covering two
               boundary faces plus two identified faces.
             - Added extra condition to twoZeroMove(NEdge*, ...) covering

@@ -87,6 +87,9 @@ module Regina {
             boolean isConnected();
             boolean hasBoundaryFaces();
 
+            boolean isZeroEfficient();
+            boolean hasVerticalSurface();
+
             boolean crushMaximalForest();
             boolean intelligentSimplify();
             boolean simplifyToLocalMinimum(in boolean perform);

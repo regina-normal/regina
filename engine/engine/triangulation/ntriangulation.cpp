@@ -49,6 +49,10 @@
 #define PROPID_H2 13
 #define PROPID_FUNDAMENTALGROUP 14
 
+// Property IDs for properties relating to normal surfaces:
+#define PROPID_ZEROEFFICIENT 101
+#define PROPID_VERTICALSURFACE 102
+
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton)
         deleteSkeleton();
@@ -73,6 +77,8 @@ void NTriangulation::initialiseAllProperties() {
     calculatedH1Rel = false;
     calculatedH1Bdry = false;
     calculatedH2 = false;
+    calculatedZeroEfficient = false;
+    calculatedVerticalSurface = false;
 }
 
 void NTriangulation::writeTextLong(ostream& out) const {
@@ -224,6 +230,16 @@ void NTriangulation::writePacket(NFile& out) const {
         H2->writeToFile(out);
         writePropertyFooter(out, bookmark);
     }
+    if (calculatedZeroEfficient) {
+        bookmark = writePropertyHeader(out, PROPID_ZEROEFFICIENT);
+        out.writeBool(zeroEfficient);
+        writePropertyFooter(out, bookmark);
+    }
+    if (calculatedVerticalSurface) {
+        bookmark = writePropertyHeader(out, PROPID_VERTICALSURFACE);
+        out.writeBool(verticalSurface);
+        writePropertyFooter(out, bookmark);
+    }
 
     writeAllPropertiesFooter(out);
 }
@@ -282,6 +298,14 @@ void NTriangulation::readIndividualProperty(NFile& infile, unsigned propType) {
     if (propType == PROPID_H2) {
         H2 = NAbelianGroup::readFromFile(infile);
         calculatedH2 = true;
+    }
+    if (propType == PROPID_ZEROEFFICIENT) {
+        zeroEfficient = infile.readBool();
+        calculatedZeroEfficient = true;
+    }
+    if (propType == PROPID_VERTICALSURFACE) {
+        verticalSurface = infile.readBool();
+        calculatedVerticalSurface = true;
     }
 }
 
@@ -503,6 +527,14 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     if (X.calculatedH2) {
         H2 = new NAbelianGroup(*(X.H2));
         calculatedH2 = true;
+    }
+    if (X.calculatedZeroEfficient) {
+        zeroEfficient = X.zeroEfficient;
+        calculatedZeroEfficient = true;
+    }
+    if (X.calculatedVerticalSurface) {
+        verticalSurface = X.verticalSurface;
+        calculatedVerticalSurface = true;
     }
 }
 

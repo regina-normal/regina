@@ -172,6 +172,15 @@ class NTriangulation : public NPacket, NPropertyHolder {
         bool calculatedH2;
             /**< Has \a H2 been calculated? */
 
+        bool zeroEfficient;
+            /**< Is the triangulation zero-efficient? */
+        bool calculatedZeroEfficient;
+            /**< Has zero-efficiency been calculated? */
+        bool verticalSurface;
+            /**< Does the triangulation have a vertical normal surface? */
+        bool calculatedVerticalSurface;
+            /**< Has the existence of a vertical surface been calculated? */
+
     public:
         /**
          * Default constructor.
@@ -821,6 +830,29 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * connected.
          */
         bool isConnected();
+
+        /**
+         * Determines if this triangulation is 0-efficient.
+         * A triangulation is 0-efficient if its only normal spheres and
+         * discs are vertex linking.
+         *
+         * @return \c true if and only if this triangulation is
+         * 0-efficient.
+         */
+        bool isZeroEfficient();
+        /**
+         * Determines whether this triangulation has a vertical normal
+         * surface.  See NNormalSurface::isVertical() for details
+         * regarding vertical normal surfaces.
+         *
+         * \pre This triangulation is connected.  If the triangulation
+         * is not connected, this routine will still return a result but
+         * that result will be unreliable.
+         *
+         * @return \c true if and only if this triangulation has a
+         * vertical normal surface.
+         */
+        bool hasVerticalSurface();
         
         /**
          * Produces a maximal forest in the 1-skeleton of the
@@ -1491,6 +1523,12 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         void calculateVertexLinks();
 
+        /**
+         * Calculates all properties that require examination of normal
+         * surfaces.
+         */
+        void calculateSurfaceProperties();
+
         void stretchBoundaryForestFromVertex(NVertex*,
                 NPointerSet<NEdge>&, NPointerSet<NVertex>&);
             /**< Internal to maximalForestInBoundary(). */
@@ -1682,6 +1720,18 @@ inline bool NTriangulation::isConnected() {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return (components.size() <= 1);
+}
+
+inline bool NTriangulation::isZeroEfficient() {
+    if (! calculatedZeroEfficient)
+        calculateSurfaceProperties();
+    return zeroEfficient;
+}
+
+inline bool NTriangulation::hasVerticalSurface() {
+    if (! calculatedVerticalSurface)
+        calculateSurfaceProperties();
+    return verticalSurface;
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() {
