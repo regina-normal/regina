@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# Creates a GnuPG-signed set of md5sums for the given set of files.
+#
+# This script should only need to be used by the software author (and is
+# specifically tailored for said author's machine and personal details).
+#
+# Usage: mksums <description> <file> [ <file> ... ]
+# Eg: mksums "Regina distribution files" *.tgz
+#
+# Requires: gpg, md5sum, mktemp, sed
+
+set -e
+
+# Details for person doing the GnuPG signing.
+signerid="Ben Burton <benb@acm.org>"
+signergetkey="typing \"finger bab@debian.org\""
+
+# Command-line sanity check.
+if [ -z "$1" -o -z "$2" ]; then
+  echo "Usage: mksums <description> <file> [ <file> ... ]"
+  exit 1
+fi
+
+# Extract the description string.
+desc="$1"
+shift
+
+# Check that the given files exist as regular files.
+for i; do
+  if [ ! -e "$i" ]; then
+    echo "File $i does not exist."
+	exit 1
+  elif [ ! -f "$i" ]; then
+    echo "File $i is not a regular file."
+	exit 1
+  fi
+done
+
+# Create a temporary file to contain the entire md5sum message.
+plaintext=`mktemp -t md5sums.XXXXXXXXXX` || plaintext=
+if [ -z "$plaintext" ]; then
+  echo "Error creating temporary file."
+  exit 1
+fi
+
+# Build the md5sum message.
+echo > "$plaintext"
+echo "Below are md5sums for the $desc available from this site." >> "$plaintext"
+echo >> "$plaintext"
+md5sum "$@" | sed -e "s/^/  /" >> "$plaintext"
+
+cat >> "$plaintext" <<END
+
+After downloading a file you can verify that it has been neither
+corrupted nor tampered with by running:
+
+  md5sum <filename>
+
+and comparing the output with the md5sums listed above.
+
+These md5sums have been GnuPG-signed using my public key which is
+END
+echo "available by $signergetkey." >> "$plaintext"
+echo >> "$plaintext"
+echo " -- $signerid, `822-date`" >> "$plaintext"
+echo >> "$plaintext"
+
+# Sign the md5sum message.
+cat "$plaintext" | gpg --clearsign
+
+# Clean up.
+rm "$plaintext"

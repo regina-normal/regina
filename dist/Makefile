@@ -65,7 +65,7 @@ empty_src_dirs = bin $(DOC_HTML_DIR)/engine $(DOC_HTML_DIR)/javaui
 debian_src_mask = changelog control copyright *.README.Debian *.doc-base \
 	*.conf *.docs *.examples *.files *.init *.links *.menu *.mime \
 	*.overrides *.sh rules cvs.patch README.*
-dist_mask = Makefile* *.txt *.cpp insertstubreplace replacetabs stub*
+dist_mask = Makefile* *.txt *.cpp insertstubreplace mksums replacetabs stub*
 
 engine_dirs = $(dirs_engine_engine) $(dirs_engine_jni)
 engine_src = $(engine_dirs:=/*.cpp)
