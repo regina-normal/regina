@@ -11,6 +11,7 @@ usr/share/regina-normal/jar/regina.jar
 usr/share/regina-normal/jar/regina-jni.jar
 usr/share/regina-normal/jar/regina-corba.jar
 usr/share/regina-normal/icons
+usr/share/regina-normal/pylib
 usr/share/regina-normal/scripts
 usr/share/regina-normal/regina
 usr/share/man/man1/regina-normal.1

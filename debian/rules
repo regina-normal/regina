@@ -126,6 +126,10 @@ install: build
 	$(INSTALL_DIR) $(regdir)/icons
 	$(INSTALL_FILE) icons/*.xpm icons/*.png icons/README.txt $(regdir)/icons
 
+	# Install the Jython libraries.
+	$(INSTALL_DIR) $(regdir)/pylib
+	$(INSTALL_FILE) pylib/*.txt pylib/*.py $(regdir)/pylib
+
 	# Install the HTML docs.
 	$(INSTALL_DIR) $(docpkgdir)
 	mkdir html-tmp
