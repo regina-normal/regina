@@ -23,7 +23,7 @@ sample_engine = engine/index.html
 sample_javaui = javaui/index.html
 
 sample_all_refs = $(sample_html) $(sample_engine) $(sample_javaui)
-ext_all_refs = css dot dsl gif hs html jhm jpg png txt
+ext_all_refs = css dot gif hs html jhm jpg png txt
 
 doc_jar = @PACKAGE@-docs-@PACKAGE_VERSION@.jar
 doc_link = @PACKAGE@-docs.jar
