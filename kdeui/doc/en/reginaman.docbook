@@ -17,7 +17,7 @@
 
  <!-- Startup Script -->
 
- <refentry id="man-regina">
+ <refentry id="man-regina-kde">
   <refmeta>
    <refentrytitle>regina</refentrytitle>
    <manvolnum>1</manvolnum>
@@ -159,7 +159,7 @@
     <itemizedlist>
      <listitem><para>
       Command-line options to the startup script.  See the
-      <link linkend="man-regina">startup script reference</link> for
+      <link linkend="man-regina-kde">startup script reference</link> for
       further details.
      </para></listitem>
      <listitem><para>
@@ -337,9 +337,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems).
-    <!-- (applet removed) <link linkend="man-applet">regina-applet</link>. -->
+    <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
 

@@ -5,8 +5,8 @@
   <para>
    The main applications <command>regina-kde</command> and
    <command>regina-python</command> are documented in the
-   <link linkend="man-regina">previous reference chapter</link>.
-   This reference chapter documents the other specialised command-line
+   <link linkend="manpages">previous reference chapter</link>.
+   This reference chapter documents the remaining specialised command-line
    utilities that are provided with &regina;.
   </para>
  </partintro>
@@ -66,8 +66,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
 
@@ -164,8 +163,7 @@
    <title>See Also</title>
    <para>
     <link linkend="man-regfiletype">regfiletype</link>,
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
 
@@ -261,8 +259,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
 
@@ -317,8 +314,7 @@
    <title>See Also</title>
    <para>
     <link linkend="man-regconvert">regconvert</link>,
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
 
@@ -396,8 +392,7 @@
    <para>
     <link linkend="man-tricensus">tricensus</link>,
     <link linkend="man-tricensus-manager">tricensus-manager</link>,
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
 
@@ -716,8 +711,7 @@
    <para>
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus-manager">tricensus-manager</link>,
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
 
@@ -877,8 +871,7 @@
    <para>
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus">tricensus</link>,
-    <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>
 
