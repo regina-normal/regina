@@ -72,8 +72,8 @@ make install-strip DESTDIR=$RPM_BUILD_ROOT
 %docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*
 %{_includedir}/regina
-%{_libdir}/*
-%{_libdir}/kde3/*
+%{_libdir}/libregina*
+%{_libdir}/kde3
 %{_libdir}/regina
 %{_docdir}/HTML/en/regina
 # %{_datadir}/applications/*
