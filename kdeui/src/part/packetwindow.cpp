@@ -37,7 +37,9 @@
 #include <kstdaction.h>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
-        KMainWindow(parent, "Packet#"), heldPane(newPane) {
+        KMainWindow(parent, "Packet#",
+        WType_TopLevel | WDestructiveClose | WStyle_ContextHelp),
+        heldPane(newPane) {
     // Resize ourselves nicely.
     if (! initialGeometrySet())
         resize(400, 400);

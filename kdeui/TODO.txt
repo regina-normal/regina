@@ -12,7 +12,6 @@ engine documentation.
 General:
     - Make "configure shortcuts" work with the part as well as with the shell
     - Enhance the DCOP interface
-    * Add a whats-this button in the window decorations.
     * Observing some serious problems with vimpart, as well as with
       katepart word wrapping.
 
@@ -34,17 +33,18 @@ Import/Export:
 Packets (General):
     - Implement packet tags
     - Work out how to right-align the packet pane close button
-    - Work around Vim component bugs in script/text viewers
     - Find out how to centre column headers in list views
+
+Part:
+    - Fix crash on "import regina" when running scripts from within
+        a konqueror embedded preview
+    - Fix missing help icon when running scripts from within a konqueror
+        embedded preview
 
 Python:
     - Allow breaking processing in python consoles
     - Check to see whether user libraries are in fact text files
     - Allow compilation and running of open libraries
-    - Fix crash on "import regina" when running scripts from within
-        a konqueror embedded preview
-    - Fix missing help icon when running scripts from within a konqueror
-        embedded preview
 
 Scripts:
     - Make a script dirty when its variables are changed externally

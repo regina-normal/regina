@@ -61,7 +61,8 @@
 
 unsigned ReginaMain::objectNumber = 1;
 
-ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#" ),
+ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#",
+        WType_TopLevel | WDestructiveClose | WStyle_ContextHelp),
         currentPart(0) {
     // Select a unique DCOP interface name.
     QCString objNumStr;
