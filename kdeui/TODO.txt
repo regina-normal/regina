@@ -24,7 +24,7 @@ Icons:
     Separate mimetype icon set
 
 Import/Export:
-    Refuse to export invalid triangulations
+    (4.0) Refuse to export invalid triangulations
     Allow a greater variety of dehydration list file formats
 
 Packets (General):
@@ -32,7 +32,7 @@ Packets (General):
     Work out how to right-align the packet pane close button
     Work around Vim component bugs in script/text viewers
     Find out how to centre column headers in list views
-    When creating new packets, display a polite error if no parents are
+    (4.0) When creating new packets, display a polite error if no parents are
         available (this goes for imports also)
 
 Python:
