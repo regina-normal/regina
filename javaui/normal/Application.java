@@ -63,7 +63,7 @@ public class Application extends Applet implements ActionListener {
      * Copyright information.
      */
     public static final String copyright =
-        "Copyright © 1999-2001, Ben Burton";
+        "Copyright (c) 1999-2001, Ben Burton";
 
     /**
      * Miscellaneous comments.

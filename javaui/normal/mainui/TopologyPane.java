@@ -1626,7 +1626,7 @@ public class TopologyPane extends FilePane {
             this.pane = pane;
             getContentPane().setLayout(new BorderLayout());
             getContentPane().add(pane, BorderLayout.CENTER);
-            setSize(400,400);
+            this.setSize(400,400);
             setTitle(pane.getPacket().getFullName());
             setIconImage(PacketUIManager.packetIcon(pane.getPacket()).
                 getImage());

@@ -310,7 +310,7 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
             ok.addActionListener(this);
             cancel.addActionListener(this);
             packetBox.addItemListener(this);
-            getRootPane().setDefaultButton(ok);
+            this.getRootPane().setDefaultButton(ok);
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         }
 

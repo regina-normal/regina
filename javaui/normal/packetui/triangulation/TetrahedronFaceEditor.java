@@ -404,7 +404,7 @@ public class TetrahedronFaceEditor extends JButton implements TableCellEditor {
                     }
                 });
             tetrahedron.addItemListener(this);
-            getRootPane().setDefaultButton(ok);
+            this.getRootPane().setDefaultButton(ok);
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         }
 

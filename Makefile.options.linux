@@ -49,8 +49,9 @@ export DOC_JAR := bin/regina-docs.jar
 # EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
 #         for the calculation engine, such as gmp and pthread.
 
-export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
-	-I/usr/lib/j2sdk1.3/include/linux
+#export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
+#	-I/usr/lib/j2sdk1.3/include/linux
+export JNI_INCLUDES := -I/usr/include/kaffe
 export CORBA_INCLUDES := -D__x86__
 export EXTRA_INCLUDES :=
 
@@ -69,12 +70,15 @@ export CLASSPATH_SEP := :
 # JYTHON: Location of jython.jar (containing the Jython classes).
 # JAVAHELP: Location of jh.jar (containing the JavaHelp classes).
 # EXTRA_CLASSES: Locations of any other necessary classes, separated by
-#       the classpath separator as described above.
+#       the classpath separator as described above.  If your Java VM or
+#       compiler needs to know where the core Java classes are, this is
+#       the place to tell them.
 
 export BTOOLS := /home/bab/source/java/lib/btools.jar
 export JYTHON := /usr/local/jython-2.1a1/jython.jar
 export JAVAHELP := /usr/local/javahelp/javahelp/lib/jh.jar
-export EXTRA_CLASSES :=
+#export EXTRA_CLASSES :=
+export EXTRA_CLASSES := /usr/lib/j2re1.3/lib/rt.jar
 
 # Specify here the commands with options for running various tools.
 #
@@ -104,11 +108,14 @@ export COMPILE := g++ -O2 -c -Wall -DDEBUG
 export LINKLIB := g++ -O2 -shared
 export LINKEXEC := g++ -O2
 export DOXYGEN := doxygen
-export JAVAC := javac -target 1.1
-export JAR := jar
+#export JAVAC := javac -target 1.1
+export JAVAC := jikes
+#export JAR := jar
+export JAR := fastjar
 export JAVA := java -Xmx64m
 export JDB := jdb -Xmx64m -Djava.compiler=NONE
 export JAVAH := javah
+#export JAVAH := /usr/lib/kaffe/bin/kaffeh
 export JAVADOC := javadoc -J-Xmx64m
 export IDLTOCPPSERVER := omniidl -bcxx -Wbh=IDL.h -Wbs=SK.cpp
 export IDLTOJAVACLIENT := idlj

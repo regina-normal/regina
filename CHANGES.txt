@@ -67,6 +67,10 @@ Regina - A Normal Surface Theory Calculator
             - Added subtreeWasDeleted().
         normal.packetui.packet.NContainerViewer:
             - Displays tree size statistics.
+        normal.packetui.surfaces:
+            - Coordinate tables in edge weight space now flag boundary edges.
+        normal.packetui.surfaces.Coordinates:
+            - Some routines now require the triangulation to be passed.
         normal.packetui.triangulation.NTriangulationEditor:
             - Added triangulation component recognition.
 

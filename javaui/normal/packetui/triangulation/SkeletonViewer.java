@@ -401,7 +401,7 @@ public class SkeletonViewer extends DefaultPacketViewer
                     break;
             }
             init();
-            setSize(550, 300);
+            this.setSize(550, 300);
             Positioner.centerOnScreen(this);
             skeletonFrames.addElement(this);
         }

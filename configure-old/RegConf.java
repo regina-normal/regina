@@ -1066,7 +1066,7 @@ public class RegConf extends JDialog implements ActionListener {
          */
         public BrowseButton() {
             super("Browse...");
-            setEnabled(false);
+            this.setEnabled(false);
         }
 
         /**
