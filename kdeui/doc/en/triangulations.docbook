@@ -631,7 +631,8 @@
 
    <para>
     The <guilabel>Algebra</guilabel> tab in the triangulation viewer
-    presents a variety of algebraic invariants of the triangulation.
+    contains a variety of smaller tabs describing different
+    algebraic invariants of the triangulation.
    </para>
    <para>
     Note that if the triangulation contains ideal vertices, the
@@ -645,25 +646,71 @@
     In particular, the projective plane cusps they produce will be
     ignored.
    </para></warning>
-   <para>
-    On the left hand side of the algebra panel, different homology
-    groups will be presented.  These include
-    H1(M) (the first homology group),
-    H1(M, Bdry M)
-    (the relative first homology group with respect to the boundary),
-    H1(Bdry M) (the first homology group of the boundary),
-    H2(M) (the second homology group) and
-    H2(M ; Z<subscript>2</subscript>)
-    (the second homology group with coefficients in
-    Z<subscript>2</subscript>).
-   </para>
-   <para>
-    On the right hand side of the algebra panel, the fundamental group
-    will be presented as a set of generators and
-    relations.  The generators and relations will be passed through a
-    fairly weak recognition routine, and if the group is recognised then
-    its common name will be given as well.
-   </para>
+
+   <sect3 id="tri-algebra-homology">
+    <title>Homology Groups</title>
+    <para>
+     The <guilabel>Homology</guilabel> tab of the algebra viewer
+     presents various homology groups of the triangulation.  These include
+     H1(M) (the first homology group),
+     H1(M, Bdry M)
+     (the relative first homology group with respect to the boundary),
+     H1(Bdry M) (the first homology group of the boundary),
+     H2(M) (the second homology group) and
+     H2(M ; Z<subscript>2</subscript>)
+     (the second homology group with coefficients in
+     Z<subscript>2</subscript>).
+    </para>
+   </sect3>
+
+   <sect3 id="tri-algebra-fundgroup">
+    <title>Fundamental Group</title>
+    <para>
+     The <guilabel>Fund. Group</guilabel> tab of the algebra viewer
+     contains the fundamental group of the triangulation,
+     presented as a set of generators and
+     relations.  The generators and relations will be passed through a
+     fairly weak recognition routine, and if the group is recognised then
+     its common name will be given as well.
+    </para>
+   </sect3>
+   <sect3 id="tri-algebra-turaevviro">
+    <title>Turaev-Viro Invariants</title>
+    <para>
+     The <guilabel>Turaev-Viro</guilabel> tab of the algebra viewer
+     allows the calculation of arbitrary Turaev-Viro state sum invariants.
+    </para>
+    <para>
+     Each Turaev-Viro invariant corresponds to a particular set of initial
+     data, as described in the paper of Turaev and Viro in which these
+     invariants appear <xref linkend="bib-turaevviro"/>.  In particular,
+     Section 7 of this paper describes the initial data as determined
+     by an integer <replaceable>r</replaceable>&nbsp;&gt;=&nbsp;3 and a
+     root of unity <replaceable>q</replaceable><subscript>0</subscript>
+     of degree 2<replaceable>r</replaceable>.
+    </para>
+    <para>
+     To calculate a Turaev-Viro invariant, a pair of integers
+     <replaceable>r</replaceable>, <replaceable>root</replaceable>
+     should be entered into the text box provided.  The integer
+     <replaceable>r</replaceable> is used directly in the initial data
+     as described above.  The integer <replaceable>root</replaceable>
+     should be strictly between 0 and 2<replaceable>r</replaceable>;
+     this identifies which particular root of unity
+     <replaceable>q</replaceable><subscript>0</subscript> to use.
+    </para>
+    <para>
+     Note that only small values of <replaceable>r</replaceable>
+     should be used, since the time required to calculate the
+     invariant grows exponentially with <replaceable>r</replaceable>.
+    </para>
+    <para>
+     Once calculated, the invariant will be displayed in the list box
+     provided.  Turaev-Viro invariants are saved to file with the
+     triangulation, so they do not need to be recalculated when the file
+     is closed and reopened.
+    </para>
+   </sect3>
   </sect2>
 
   <sect2 id="tri-composition">
