@@ -67,6 +67,8 @@ ReginaFilePrefList ReginaPrefSet::defaultCensusFiles() {
         "/examples/knot-link-census.rga"));
     ans.push_back(ReginaFilePref(REGINA_DATADIR
         "/examples/snappea-census.rga"));
+    ans.push_back(ReginaFilePref(REGINA_DATADIR
+        "/examples/closed-hyp-census.rga"));
 
     return ans;
 }
