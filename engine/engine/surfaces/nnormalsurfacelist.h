@@ -238,6 +238,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
              * Sets this iterator to be a clone of the given output iterator.
              *
              * @param cloneMe the output iterator to clone.
+             * @return this output iterator.
              */
             SurfaceInserter& operator =(const SurfaceInserter& cloneMe);
 
@@ -245,19 +246,28 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
              * Appends a normal surface to the end of the appropriate
              * surface list.
              *
+             * The given surface will be deallocated with the other
+             * surfaces in this list.
+             *
              * @param surface the normal surface to insert.
+             * @return this output iterator.
              */
             SurfaceInserter& operator =(NNormalSurface* surface);
             /**
              * Appends the normal surface corresponding to the given
              * vector to the end of the appropriate surface list.
              *
+             * The given vector will be owned by the newly created
+             * normal surface and will be deallocated with the other
+             * surfaces in this list.
+             *
              * If the surface list allows almost normal surfaces, the
              * vector will be checked for multiple octagonal discs.  If
              * multiple octagonal discs are found, the vector will be
-             * deleted instead and no surface will be inserted.
+             * deleted immediately and no surface will be inserted.
              *
              * @param vector the vector of the normal surface to insert.
+             * @return this output iterator.
              */
             SurfaceInserter& operator =(NNormalSurfaceVector* vector);
 
