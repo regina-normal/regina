@@ -37,8 +37,6 @@
 #include <kcombobox.h>
 #include <vector>
 
-class PacketFilter;
-
 /**
  * A widget through which a normal surface coordinate system can be
  * selected.  Coordinate systems are described by the integer constants
