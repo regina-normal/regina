@@ -1,4 +1,10 @@
 
+Extra tasks before a release:
+
+    Revert Makefile.options to generic settings
+
+--------------------------------------------------------------------------
+
 Below are locations of strings that may need changing for a new release.
 All locations are relative to the primary source directory.
 
