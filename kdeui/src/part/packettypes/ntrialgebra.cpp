@@ -33,6 +33,7 @@
 
 // UI includes:
 #include "../gridlistview.h"
+#include "gaprunner.h"
 #include "ntrialgebra.h"
 
 #include <kiconloader.h>
@@ -380,8 +381,21 @@ void NTriFundGroupUI::simplifyGAP() {
     if (useExec.isNull())
         return;
 
-    KMessageBox::sorry(ui, i18n("GAP simplification via %1 is not "
-        "yet implemented.").arg(useExec));
+    GAPRunner dlg(ui, useExec, tri->getFundamentalGroup());
+    if (dlg.exec() == GAPRunner::Accepted) {
+        regina::NGroupPresentation* newGroup = dlg.simplifiedGroup().release();
+        if (newGroup) {
+            tri->simplifyFundamentalGroup(newGroup);
+            refresh();
+        } else {
+            KMessageBox::error(ui, i18n("An unexpected error occurred whilst "
+                "attempting to simplify the group presentation using GAP.\n"
+                "Please verify that GAP (Groups, Algorithms and Programming) "
+                "is correctly installed on your system, and that Regina "
+                "has been correctly configured to use it (see the "
+                "Triangulation section of the Regina configuration)."));
+        }
+    }
 }
 
 QString NTriFundGroupUI::verifyGAPExec() {

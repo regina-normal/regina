@@ -14,6 +14,7 @@ noinst_LTLIBRARIES = libpackettypes.la
 
 noinst_HEADERS = \
 	eltmovedialog.h \
+	gaprunner.h \
 	nanglestructurecreator.h \
 	nanglestructureitem.h \
 	nanglestructureui.h \
@@ -43,6 +44,7 @@ noinst_HEADERS = \
 
 libpackettypes_la_SOURCES = \
 	eltmovedialog.cpp \
+	gaprunner.cpp \
 	nanglestructurecreator.cpp \
 	nanglestructureitem.cpp \
 	nanglestructureui.cpp \
