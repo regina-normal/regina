@@ -39,7 +39,7 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST_SUITE(NIndexedArrayTest);
 
-    // CPPUNIT_TEST();
+    CPPUNIT_TEST(basicChecks);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -116,6 +116,109 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
 
         void tearDown() {
             delete[] value;
+        }
+
+        void arrayAssert(const char* arrayName, const char* msg,
+                bool condition) {
+            std::string realMsg("Array ");
+            realMsg += arrayName;
+            realMsg += ": ";
+            realMsg += msg;
+            CPPUNIT_ASSERT_MESSAGE(msg, condition);
+        }
+
+        void validate(const Array& array, const char* arrayName) {
+            arrayAssert(arrayName, "Failed to validate.", array.validate());
+        }
+
+        void basicChecks(const Array& array, const char* arrayName) {
+            // Validate before we start.
+            validate(array, arrayName);
+
+            // Check front, back and emptiness test.
+            if (array.empty()) {
+                arrayAssert(arrayName, "Empty but non-zero size.",
+                    array.size() == 0);
+            } else {
+                arrayAssert(arrayName, "Non-empty but zero size.",
+                    array.size() != 0);
+                arrayAssert(arrayName, "Inconsistent front member.",
+                    array.front() == *(array.begin()));
+                arrayAssert(arrayName, "Inconsistent back member.",
+                    array.back() == *(array.rbegin()));
+            }
+
+            // Check forward iterators.
+            Array::size_type i = 0;
+            for (Array::const_iterator it = array.begin();
+                    it != array.end(); it++) {
+                arrayAssert(arrayName,
+                    "Mismatch between forward iterators and direct indexing.",
+                    array[i] == *it);
+                // TODO: check that the value is as expected;
+                i++;
+            }
+            arrayAssert(arrayName,
+                "Forward iterators do not cover exact array size.",
+                i == array.size());
+
+            // Check reverse iterators.
+            i = array.size();
+            for (Array::const_reverse_iterator it = array.rbegin();
+                    it != array.rend(); it++) {
+                arrayAssert(arrayName,
+                    "Reverse iterators do not cover exact array size.",
+                    i != 0);
+                i--;
+                arrayAssert(arrayName,
+                    "Mismatch between reverse iterators and direct indexing.",
+                    array[i] == *it);
+                // TODO: check that the value is as expected;
+            }
+            arrayAssert(arrayName,
+                "Reverse iterators do not cover exact array size.",
+                i == 0);
+        }
+
+        void basicChecks() {
+            basicChecks(largeUniqueArray, "largeUniqueArray");
+            basicChecks(largeMultiArray, "largeMultiArray");
+            basicChecks(smallUniqueArray, "smallUniqueArray");
+            basicChecks(smallMultiArray, "smallMultiArray");
+            basicChecks(emptyArray, "emptyArray");
+        }
+
+        void newFixedSize() {
+        }
+
+        void newManyObjects() {
+        }
+
+        void newCopy() {
+        }
+
+        void operatorCopy() {
+        }
+
+        void smallChanges() {
+            // push_back, pop_back, swap
+        }
+
+        void inserts() {
+            // insert elt, insert chunk, insert n copies
+        }
+
+        void erasures() {
+            // erase elt, erase chunk, erase all copies
+            // clear
+        }
+
+        void resizes() {
+            // grow, shrink
+        }
+
+        void queries() {
+            // check index
         }
 };
 
