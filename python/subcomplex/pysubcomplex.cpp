@@ -27,7 +27,6 @@
 /* end stub */
 
 void addNAugTriSolidTorus();
-void addNKnownManifold();
 void addNLayeredChain();
 void addNLayeredChainPair();
 void addNLayeredLensSpace();
@@ -44,7 +43,6 @@ void addNTriSolidTorus();
 void addSubcomplex() {
     addNStandardTriangulation();
     addNAugTriSolidTorus();
-    addNKnownManifold();
     addNLayeredChain();
     addNLayeredChainPair();
     addNLayeredLensSpace();
