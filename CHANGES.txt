@@ -8,7 +8,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 3.0.1  [ 12 October, 2002 ]
+Version 3.1  [ 12 October, 2002 ]
     OVERALL:
         - Added calculation engine test suite.
         - Environment variables now take precedence over configuration
@@ -44,8 +44,7 @@ Version 3.0.1  [ 12 October, 2002 ]
             - New routine setPerm(int, int).
         Class NTriangulation:
             - Fixed idealToFinite() which was newly broken in Regina 3.0.
-            - Routine intelligentSimplify() now tries random 4-4 moves
-              and book opening moves.
+            - Routine intelligentSimplify() now tries random 4-4 moves.
             - New routine collapseEdge().
             - Routine simplifyToLocalMinimum() now make boundary moves last
               and does not do book opening at all.

@@ -30,11 +30,11 @@ dnl
 #
 ###########################################################
 
-AC_INIT(Regina, [3.0.1], [regina-user@lists.sourceforge.net], regina)
+AC_INIT(Regina, [3.1], [regina-user@lists.sourceforge.net], regina)
 AC_PREREQ(2.50)
 AC_CONFIG_AUX_DIR(admin)
 AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
-AM_INIT_AUTOMAKE(regina, [3.0.1])
+AM_INIT_AUTOMAKE(regina, [3.1])
 AM_CONFIG_HEADER(engine/engine/regina-config.h)
 
 # Do we need to install using a non-standard package name?

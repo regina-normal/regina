@@ -8,20 +8,19 @@ Regina - A Normal Surface Theory Calculator
     for both the calculation engine and the Java user interface, see
     CHANGES.txt in the same directory as this file.
 
-Version 3.0.1  [ 12 October, 2002 ]
+Version 3.1  [ 12 October, 2002 ]
 
     - Massive optimisation of census code.
     - Census calculations can be split into independent pieces (e.g., for
       running on different machines).
-    - Automated triangulation simplification improved, including random
-      4-4 moves and book opening moves.
+    - Triangulation simplification improved, including random 4-4 moves.
     - Offers more common names for recognised Seifert fibred spaces.
     - Supports multiple vertex enumeration engines (though no new
-      engines are yet added).
+      engines are added yet).
     - Jython consoles start with variable [selected] set to the currently
       selected packet.
     - Fixed ideal-to-finite bug that was introduced in Regina 3.0.
-    - New calculation engine test suite (currently quite small).
+    - New calculation engine test suite (currently fairly small).
     - New autoconf/automake/libtool build system.
 
 Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
