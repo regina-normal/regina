@@ -1,0 +1,25 @@
+#!/bin/sh
+# Replaces each tab with four spaces.
+# Usage: replacetabs [text file] ...
+# Requires: awk, diff
+
+for srcfile
+    do tmpfile=$srcfile.tabs.tmp
+    if (awk '{gsub("\t", "    "); print }' $srcfile > $tmpfile); then
+        if ! diff $srcfile $tmpfile > /dev/null; then
+            if (test -s $tmpfile); then
+                mv $tmpfile $srcfile
+                echo "$srcfile: Tabs replaced"
+            else
+                rm $tmpfile
+                echo "$srcfile: *** FAILURE ***"
+            fi
+        else
+            rm $tmpfile
+            echo "$srcfile: Unchanged"
+        fi
+    else
+        rm $tmpfile
+        echo "$srcfile: *** FAILURE ***"
+    fi
+done
