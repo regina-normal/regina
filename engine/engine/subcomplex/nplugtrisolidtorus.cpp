@@ -74,7 +74,7 @@ std::ostream& NPlugTriSolidTorus::writeName(std::ostream& out) const {
     std::sort(params, params + nParams);
 
     out << (equatorType == EQUATOR_MAJOR ? "P(" : "P'(");
-    if (i == 0)
+    if (nParams == 0)
         return out << "0)";
     for (i = 0; i < nParams; i++) {
         if (i > 0)
@@ -99,7 +99,7 @@ std::ostream& NPlugTriSolidTorus::writeTeXName(std::ostream& out) const {
     std::sort(params, params + nParams);
 
     out << (equatorType == EQUATOR_MAJOR ? "$P_{" : "$P'_{");
-    if (i == 0)
+    if (nParams == 0)
         return out << "0}$";
     for (i = 0; i < nParams; i++) {
         if (i > 0)
