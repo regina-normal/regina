@@ -146,7 +146,7 @@ REGJNIEXPORT jobjectArray JNICALL
     if (! edgeClass)
         return 0;
 
-    jobjectArray array = env->NewObjectArray(2, edgeClass, 0 /* init */);
+    jobjectArray array = (jobjectArray)env->NewObjectArray(2, edgeClass, 0);
     if (! array)
         return 0;
 
