@@ -15,7 +15,6 @@ General:
 
 Census:
     - Implement GUI census creation
-    * Include closed hyperbolic census
 
 Containers:
     - Update container viewers whenever their subtrees change, not just when
