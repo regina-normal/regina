@@ -53,7 +53,7 @@ const NString& NScript::getVariableValue(const NString& name) const {
 }
 
 void NScript::writeTextLong(ostream& o) const {
-    if (variables.size() == 0)
+    if (variables.empty())
         o << "No variables.\n";
     else {
         for (std::map<NString, NString>::const_iterator vit =

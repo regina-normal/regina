@@ -43,7 +43,7 @@ void NAbelianGroup::addTorsionElement(const NLargeInteger& degree,
         unsigned mult) {
     // If there are no current torsion elements, just throw in the new
     // ones.
-    if (invariantFactors.size() == 0) {
+    if (invariantFactors.empty()) {
         for (unsigned j=0; j<mult; j++)
             invariantFactors.insert(invariantFactors.begin(), degree);
         return;
@@ -126,12 +126,12 @@ void NAbelianGroup::addGroup(const NAbelianGroup& group) {
     rank += group.rank;
 
     // Work out the torsion elements.
-    if (invariantFactors.size() == 0) {
+    if (invariantFactors.empty()) {
         // Copy the other group's factors!
         invariantFactors = group.invariantFactors;
         return;
     }
-    if (group.invariantFactors.size() == 0)
+    if (group.invariantFactors.empty())
         return;
 
     // We will have to calculate the invariant factors ourselves.

@@ -444,7 +444,7 @@ void NGroupPresentation::writeTextLong(ostream& out) const {
     out << endl;
 
     out << "Relations:\n";
-    if (relations.size() == 0)
+    if (relations.empty())
         out << "    (none)\n";
     else
         for (RelIteratorConst it = relations.begin();

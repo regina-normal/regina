@@ -31,6 +31,7 @@
  *  an external link to the calculation engine.
  *
  *  \todo \bugurgent Hunt for default copy constructors that are being called.
+ *  \todo \bugurgent Hunt for linear time std::list.size().
  */
 
 class NAbelianGroup;

@@ -168,7 +168,7 @@ void NSFS::reduce() {
 NLensSpace* NSFS::isLensSpace() const {
     if (orbitGenus == 0) {
         // Orbit manifold is the sphere.
-        if (fibres.size() == 0)
+        if (fibres.empty())
             return new NLensSpace(k >= 0 ? k : -k, 1);
         if (fibres.size() > 2)
             return 0;
@@ -231,7 +231,7 @@ void NSFS::writeTextShort(ostream& out) const {
         out << " + " << orbitPunctures << " punctures";
 
     out << ':';
-    if (fibres.size() == 0) {
+    if (fibres.empty()) {
         if (k == 0)
             out << " no fibres";
         else
@@ -246,7 +246,7 @@ void NSFS::writeTextShort(ostream& out) const {
 }
 
 NExceptionalFibre NSFS::getModifiedFinalFibre() const {
-    if (fibres.size() == 0)
+    if (fibres.empty())
         return NExceptionalFibre(1, k);
     NExceptionalFibre ans(fibres.back());
     ans.beta += (k * ans.alpha);
