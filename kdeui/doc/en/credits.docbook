@@ -24,6 +24,17 @@
    <title>Copying and Modification</title>
    &GPLNotice;
   </sect2>
+
+  <sect2 id="licenses-snappea">
+   <title>SnapPea Kernel</title>
+   <para>
+    Since version 4.2 (December 2004), &regina; includes portions of the
+    &snappea; kernel which it uses for certain geometric calculations.
+    &snappea; is copyright &copy; 1991&ndash;2000 by Jeff Weeks, who has
+    graciously given permission for it to be distributed under the
+    terms of the GNU General Public License as described above.
+   </para>
+  </sect2>
  </sect1>
 
  <sect1 id="acknowledgements">
