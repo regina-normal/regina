@@ -68,6 +68,13 @@ JNIEXPORT jobject JNICALL
         NNormalSurface, me)->getFaceArcs(index, type));
 }
 
+JNIEXPORT jstring JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_getName
+        (JNIEnv *env, jobject me) {
+    return jstringFromNString(env,
+        GET_ENGINE_OBJECT(env, NNormalSurface, me)->getName());
+}
+
 JNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_getNumberOfCoords
         (JNIEnv *env, jobject me) {
@@ -146,22 +153,15 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT void JNICALL
-        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_writeRawVector
-        (JNIEnv *env, jobject me) {
-    GET_ENGINE_OBJECT(env, NNormalSurface, me)->writeRawVector(cout);
-}
-
-JNIEXPORT jstring JNICALL
-        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_getName
-        (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
-        GET_ENGINE_OBJECT(env, NNormalSurface, me)->getName());
-}
-
-JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_setName
         (JNIEnv *env, jobject me, jstring name) {
     GET_ENGINE_OBJECT(env, NNormalSurface, me)->setName(
         jstringToNString(env, name));
+}
+
+JNIEXPORT void JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_writeRawVector
+        (JNIEnv *env, jobject me) {
+    GET_ENGINE_OBJECT(env, NNormalSurface, me)->writeRawVector(cout);
 }
 
