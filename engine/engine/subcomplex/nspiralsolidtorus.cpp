@@ -179,16 +179,8 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
 
     // We've found a spiralled solid torus.
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(tets.size());
-
-    std::list<NTetrahedron*>::const_iterator tit = tets.begin();
-    std::list<NPerm>::const_iterator pit = roles.begin();
-    for (unsigned long i = 0; i < ans->nTet; i++) {
-        ans->tet[i] = *tit;
-        ans->vertexRoles[i] = *pit;
-        tit++;
-        pit++;
-    }
-
+    copy(tets.begin(), tets.end(), ans->tet);
+    copy(roles.begin(), roles.end(), ans->vertexRoles);
     return ans;
 }
 

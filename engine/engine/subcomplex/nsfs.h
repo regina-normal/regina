@@ -364,6 +364,12 @@ inline NSFS::NSFS(unsigned long newOrbitGenus, bool newOrbitOrientable,
         k(0), nNonZeroFibres(0) {
 }
 
+inline NSFS::NSFS(const NSFS& cloneMe) : orbitGenus(cloneMe.orbitGenus),
+        orbitOrientable(cloneMe.orbitOrientable),
+        orbitPunctures(cloneMe.orbitPunctures), fibres(cloneMe.fibres),
+        k(cloneMe.k), nNonZeroFibres(cloneMe.nNonZeroFibres) {
+}
+
 inline NSFS::~NSFS() {
 }
 

@@ -56,21 +56,11 @@ bool NExceptionalFibre::operator < (const NExceptionalFibre& compare) const {
     return (b1 < b2);
 }
 
-NSFS::NSFS(const NSFS& cloneMe) : orbitGenus(cloneMe.orbitGenus),
-        orbitOrientable(cloneMe.orbitOrientable),
-        orbitPunctures(cloneMe.orbitPunctures), k(cloneMe.k),
-        nNonZeroFibres(cloneMe.nNonZeroFibres) {
-    fibres.insert(fibres.end(), cloneMe.fibres.begin(), cloneMe.fibres.end());
-}
-
 void NSFS::operator = (const NSFS& cloneMe) {
     orbitGenus = cloneMe.orbitGenus;
     orbitOrientable = cloneMe.orbitOrientable;
     orbitPunctures = cloneMe.orbitPunctures;
-
-    fibres.clear();
-    fibres.insert(fibres.end(), cloneMe.fibres.begin(), cloneMe.fibres.end());
-
+    fibres = cloneMe.fibres;
     k = cloneMe.k;
     nNonZeroFibres = cloneMe.nNonZeroFibres;
 }

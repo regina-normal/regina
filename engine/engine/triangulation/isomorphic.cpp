@@ -73,8 +73,7 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
             (*mapIt).second++;
             it++;
         }
-        if (! (map1.size() == map2.size() &&
-                equal(map1.begin(), map1.end(), map2.begin())))
+        if (! (map1 == map2))
             return false;
         map1.clear();
         map2.clear();
@@ -94,8 +93,7 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
             (*mapIt).second++;
             it++;
         }
-        if (! (map1.size() == map2.size() &&
-                equal(map1.begin(), map1.end(), map2.begin())))
+        if (! (map1 == map2))
             return false;
         map1.clear();
         map2.clear();
@@ -115,8 +113,7 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
             (*mapIt).second++;
             it++;
         }
-        if (! (map1.size() == map2.size() &&
-                equal(map1.begin(), map1.end(), map2.begin())))
+        if (! (map1 == map2))
             return false;
         map1.clear();
         map2.clear();
@@ -136,8 +133,7 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
             (*mapIt).second++;
             it++;
         }
-        if (! (map1.size() == map2.size() &&
-                equal(map1.begin(), map1.end(), map2.begin())))
+        if (! (map1 == map2))
             return false;
         map1.clear();
         map2.clear();
