@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "file/nfile.h"
+#include "file/nxmlfile.h"
 #include "packet/npacket.h"
 #include <cstdlib>
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
     if (argc == 1)
         usage(argv[0]);
 
-    NPacket* tree = regina::readFromFile(argv[1]);
+    NPacket* tree = regina::readFileMagic(argv[1]);
     if (! tree) {
         std::cerr << "File " << argv[1] << " could not be read.\n";
         return 1;

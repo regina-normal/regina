@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "census/ncensus.h"
-#include "file/nfile.h"
+#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "progress/nprogressmanager.h"
@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
     cout << progress->getDescription() << endl;
 
     // Write the completed census to file.
-    if (! regina::writeToFile(argv[1], &parent)) {
+    if (! regina::writeXMLFile(argv[1], &parent)) {
         cerr << "Output file " << argv[1] << " could not be written.\n";
         return 1;
     }
