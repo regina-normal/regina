@@ -92,11 +92,12 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
     
     NTetrahedron* tet;
     NTetrahedron* adjTet;
+    int face;
     int yourOrientation;
     while (! queue.empty()) {
         tet = queue.remove();
         
-        for (int face=0; face<4; face++) {
+        for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
                 yourOrientation = (tet->getAdjacentTetrahedronGluing(face).
