@@ -3,24 +3,21 @@ Regina - A normal surface theory calculator
 
 BINARY DISTRIBUTION:
 
-    - To run, type "regina".
+    - To run, type "./regina".
 
 SOURCE DISTRIBUTION:
 
-    - To configure, edit Makefile.options.
-    - To compile everything, type "make bin".
-    - To make the documentation, type "make bindocs".  The documentation
-          will be generated and placed in docs/.  A complete
-          documentation jar will also be placed in bin/.
+    - To configure, copy one of the template Makefile.options.* files to
+      Makefile.options and edit it to reflect your system.
+    - To compile so you have a basic working runtime, type "make binjni".
+    - To build the documentation, type "make bindocs".  The documentation
+      will be generated and placed in docs/.  A complete documentation
+      jar will also be placed in bin/.
     - For other make options, type "make help".
 
     Be sure to examine Makefile.options to ensure that the configuration
     matches your system.
 
-    The version of Regina that you are using can be found in
-    javaui/normal/Application.java or in the About box when the
-    application is run.
-
-Ben Burton (benb@acm.org)
-http://sourceforge.net/projects/regina/
+Ben Burton <benb@acm.org>
+http://regina.sourceforge.net/
 

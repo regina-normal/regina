@@ -88,7 +88,6 @@ export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
 # DOXYGEN: Generate documentation from C++ sources using doxygen.
 # JAVAC: Compile Java code into class files.
 # JAR: Operate with Java jar archives.
-# JAVA: Execute a Java class.
 # JDB: Execute a Java class in the debugger.
 # JAVAH: Generate JNI include files from compiled Java code.
 # JAVADOC: Generate documentation from Java sources.
@@ -114,7 +113,6 @@ export DOXYGEN := doxygen
 export JAVAC := jikes
 #export JAR := jar
 export JAR := fastjar
-export JAVA := java -Xmx64m
 export JDB := jdb -Xmx64m -Djava.compiler=NONE
 export JAVAH := javah -jni
 #export JAVAH := /usr/lib/kaffe/bin/kaffeh -jni
