@@ -26,10 +26,16 @@
 
 /* end stub */
 
-#include "snappea/kernel/SnapPea.h"
-
 #include <cstdlib>
 #include <iostream>
+
+#include "snappea/kernel/SnapPea.h"
+
+/**
+ * Supply bare-bones UI messaging functions for the SnapPea kernel to use.
+ *
+ * See snappea/kernel/SnapPea.h for details on what each function should do.
+ */
 
 #ifdef __cplusplus
 extern "C" {

@@ -26,16 +26,22 @@
 
 /* end stub */
 
+#include <climits>
+#include <cstring>
+
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/triangulation.h"
 #include "triangulation/ntriangulation.h"
 
-#include <climits>
-#include <cstring>
-
 namespace regina {
 
-class NTriangulation;
+NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
+        ShareableObject() {
+    if (tri.snappeaData)
+        ::copy_triangulation(tri.snappeaData, &snappeaData);
+    else
+        snappeaData = 0;
+}
 
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri) {
     snappeaData = reginaToSnapPea(tri);
@@ -45,14 +51,30 @@ NSnapPeaTriangulation::~NSnapPeaTriangulation() {
     ::free_triangulation(snappeaData);
 }
 
-double NSnapPeaTriangulation::volume() {
+double NSnapPeaTriangulation::volume() const {
     if (! snappeaData)
         return 0;
-    return ::volume(snappeaData, 0 /* returns precision */);
+    return ::volume(snappeaData, 0);
+}
+
+double NSnapPeaTriangulation::volume(int& precision) const {
+    if (! snappeaData)
+        return 0;
+    return ::volume(snappeaData, &precision);
+}
+
+void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
+    if (snappeaData) {
+        out << "SnapPea triangulation with " << snappeaData->num_tetrahedra
+            << " tetrahedra.";
+    } else {
+        out << "Null SnapPea triangulation";
+    }
 }
 
 ::Triangulation* NSnapPeaTriangulation::reginaToSnapPea(
         const NTriangulation& tri) {
+    // TODO: check
     if (tri.getNumberOfTetrahedra() == 0)
         return 0;
     if (tri.getNumberOfTetrahedra() >= INT_MAX)

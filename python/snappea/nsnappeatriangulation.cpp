@@ -34,10 +34,21 @@ using namespace boost::python;
 using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
 
+namespace {
+    double (NSnapPeaTriangulation::*volume_void)() const =
+        &NSnapPeaTriangulation::volume;
+    double (NSnapPeaTriangulation::*volume_precision)(int&) const =
+        &NSnapPeaTriangulation::volume;
+}
+
 void addNSnapPeaTriangulation() {
-    class_<NSnapPeaTriangulation, boost::noncopyable>
-            ("NSnapPeaTriangulation", init<const NTriangulation&>())
-        .def("volume", &NSnapPeaTriangulation::volume)
+    class_<NSnapPeaTriangulation, bases<regina::ShareableObject>,
+            std::auto_ptr<NSnapPeaTriangulation>, boost::noncopyable>
+            ("NSnapPeaTriangulation", init<const NSnapPeaTriangulation&>())
+        .def(init<const NTriangulation&>())
+        .def("isNull", &NSnapPeaTriangulation::isNull)
+        .def("volume", volume_void)
+        .def("volume", volume_precision)
     ;
 }
 
