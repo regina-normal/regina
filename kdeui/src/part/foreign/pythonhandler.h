@@ -26,52 +26,52 @@
 
 /* end stub */
 
-#include "packet/npacket.h"
+/*! \file python.h
+ *  \brief Allows interaction with Python scripts.
+ */
 
-#include "packettreeview.h"
-#include "reginapart.h"
-#include "foreign/exportdialog.h"
-#include "foreign/pythonhandler.h"
-#include "foreign/reginahandler.h"
-#include "foreign/snappeahandler.h"
-#include "../reginafilter.h"
+#ifndef __PYTHONHANDLER_H
+#define __PYTHONHANDLER_H
 
-#include <kfiledialog.h>
-#include <klocale.h>
-#include <kmessagebox.h>
+#include "packetexporter.h"
+#include "packetimporter.h"
 
-void ReginaPart::exportPython() {
-    exportFile(PythonHandler::instance, i18n(FILTER_PYTHON_SCRIPTS),
-        i18n("Export Python Script"));
+/**
+ * An object responsible for importing and export data to and from
+ * Python files.
+ *
+ * Rather than creating new objects of this class, the globally
+ * available object PythonHandler::instance should always be used.
+ */
+class PythonHandler : public PacketImporter, public PacketExporter {
+    public:
+        /**
+         * A globally available instance of this class.
+         */
+        static const PythonHandler instance;
+
+    public:
+        /**
+         * PacketImporter overrides:
+         */
+        virtual regina::NPacket* import(const QString& fileName,
+            QWidget* parentWidget) const;
+
+        /**
+         * PacketExporter overrides:
+         */
+        virtual PacketFilter* canExport() const;
+        virtual bool exportData(regina::NPacket* data,
+            const QString& fileName, QWidget* parentWidget) const;
+
+    private:
+        /**
+         * Don't allow people to construct their own Python handlers.
+         */
+        PythonHandler();
+};
+
+inline PythonHandler::PythonHandler() {
 }
 
-void ReginaPart::exportRegina() {
-    exportFile(ReginaHandler(true), i18n(FILTER_REGINA),
-        i18n("Export Regina Data File"));
-}
-
-void ReginaPart::exportReginaUncompressed() {
-    exportFile(ReginaHandler(false), i18n(FILTER_REGINA),
-        i18n("Export Regina Data File"));
-}
-
-void ReginaPart::exportSnapPea() {
-    exportFile(SnapPeaHandler::instance, i18n(FILTER_SNAPPEA),
-        i18n("Export SnapPea Triangulation"));
-}
-
-void ReginaPart::exportFile(const PacketExporter& exporter,
-        const QString& fileFilter, const QString& dialogTitle) {
-    ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
-        exporter.canExport(), dialogTitle);
-    if (dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* data = dlg.selectedPacket();
-        if (data) {
-            QString file = KFileDialog::getSaveFileName(QString::null,
-                fileFilter, widget(), dialogTitle);
-            if (! file.isEmpty())
-                exporter.exportData(data, file, widget());
-        }
-    }
-}
-
+#endif

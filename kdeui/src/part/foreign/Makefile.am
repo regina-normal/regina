@@ -15,12 +15,14 @@ noinst_HEADERS = \
 	importdialog.h \
 	packetexporter.h \
 	packetimporter.h \
+	pythonhandler.h \
 	reginahandler.h \
 	snappeahandler.h
 
 libforeign_la_SOURCES = \
 	exportdialog.cpp \
 	importdialog.cpp \
+	pythonhandler.cpp \
 	reginahandler.cpp \
 	snappeahandler.cpp
 

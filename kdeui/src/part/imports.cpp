@@ -31,6 +31,7 @@
 #include "packettreeview.h"
 #include "reginapart.h"
 #include "foreign/importdialog.h"
+#include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
 #include "../reginafilter.h"
@@ -45,7 +46,8 @@ void ReginaPart::importDehydration() {
 }
 
 void ReginaPart::importPython() {
-    unimplemented();
+    importFile(PythonHandler::instance, 0, i18n(FILTER_PYTHON_SCRIPTS),
+        i18n("Import Python Script"));
 }
 
 void ReginaPart::importRegina() {
