@@ -1,0 +1,159 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2002, Ben Burton                                   *
+ *  For further details contact Ben Burton (benb@acm.org).                *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,        *
+ *  MA 02111-1307, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+#include <cstdarg>
+#include <iostream>
+#include "utilities/xmlutils.h"
+
+#define ERROR_BUFF_SIZE 1024
+
+namespace regina {
+namespace xml {
+
+XMLParser::XMLParser(XMLParserCallback& callback) : _parser_callback(callback) {
+    xmlSAXHandler sax_handler = {
+        0,                  // internalSubset
+        0,                  // isStandalone
+        0,                  // hasInternalSubset
+        0,                  // hasExternalSubset
+        0,                  // resolveEntity
+        _get_entity,        // getEntity
+        0,                  // entityDecl
+        0,                  // notationDecl
+        0,                  // attributeDecl
+        0,                  // elementDecl
+        0,                  // unparsedEntityDecl
+        0,                  // setDocumentLocator
+        _start_document,    // startDocument
+        _end_document,      // endDocument
+        _start_element,     // startElement
+        _end_element,       // endElement
+        0,                  // reference
+        _characters,        // characters
+        0,                  // ignorableWhitespace
+        0,                  // processingInstruction
+        _comment,           // comment
+        _warning,           // warning
+        _error,             // error
+        _fatal_error,       // fatalError
+        0,                  // getParameterEntity
+        0,                  // cdataBlock
+        0                   // externalSubset
+    };
+
+    _context = xmlCreatePushParserCtxt(&sax_handler, this, 0, 0, 0);
+}
+
+xmlEntityPtr XMLParser::_get_entity(void*, const xmlChar* n) {
+    return xmlGetPredefinedEntity(n);
+}
+void XMLParser::_start_document(void* parser) {
+    ((XMLParser*)parser)->_parser_callback.start_document();
+}
+void XMLParser::_end_document(void* parser) {
+    ((XMLParser*)parser)->_parser_callback.end_document();
+}
+void XMLParser::_start_element(void* parser, const xmlChar* n,
+        const xmlChar** p) {
+    XMLPropertyDict properties;
+
+    if (p) {
+        const xmlChar** cur = p;
+        const char* name;
+        const char* value;
+        while (cur && *cur) {
+            name = (const char*)(*cur++);
+            value = (const char*)(*cur++);
+            properties[name] = value;
+        }
+    }
+
+    ((XMLParser*)parser)->_parser_callback.start_element((const char*)n,
+        properties);
+}
+void XMLParser::_end_element(void* parser, const xmlChar* n) {
+    ((XMLParser*)parser)->_parser_callback.end_element((const char*)n);
+}
+void XMLParser::_characters(void* parser, const xmlChar* s, int len) {
+    ((XMLParser*)parser)->_parser_callback.characters(
+        std::string((const char*)s, len));
+}
+void XMLParser::_comment(void* parser, const xmlChar* s) {
+    ((XMLParser*)parser)->_parser_callback.comment((const char*)s);
+}
+void XMLParser::_warning(void* parser, const char* fmt, ...) {
+    va_list arg;
+    char buff[ERROR_BUFF_SIZE];
+    va_start(arg, fmt);
+    vsprintf(buff, fmt, arg);
+    va_end(arg);
+
+    ((XMLParser*)parser)->_parser_callback.warning(buff);
+}
+void XMLParser::_error(void* parser, const char* fmt, ...) {
+    va_list arg;
+    char buff[ERROR_BUFF_SIZE];
+    va_start(arg, fmt);
+    vsprintf(buff, fmt, arg);
+    va_end(arg);
+
+    ((XMLParser*)parser)->_parser_callback.error(buff);
+}
+void XMLParser::_fatal_error(void* parser, const char* fmt, ...) {
+    va_list arg;
+    char buff[ERROR_BUFF_SIZE];
+    va_start(arg, fmt);
+    vsprintf(buff, fmt, arg);
+    va_end(arg);
+
+    ((XMLParser*)parser)->_parser_callback.fatal_error(buff);
+}
+
+void XMLParser::parse_stream(XMLParserCallback& callback, std::istream& file,
+        unsigned chunkSize) {
+    XMLParser parser(callback);
+
+    char* buf = new char[chunkSize];
+    unsigned chunkRead;
+    while (true) {
+        // Read in the next chunk.
+        for (chunkRead = 0; chunkRead < chunkSize; chunkRead++) {
+            buf[chunkRead] = file.get();
+            if (file.eof())
+                break;
+        }
+        if (chunkRead == 0)
+            break;
+        parser.parse_chunk(std::string(buf, chunkRead));
+    }
+
+    parser.finish();
+    delete[] buf;
+}
+
+} } // namespace regina::xml

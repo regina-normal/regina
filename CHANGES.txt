@@ -62,6 +62,11 @@ Version 2.5  [ (under development) ]
             - Added for use with Standard Template Library.
         Class select1st, select2nd, unary_compose:
             - Added for use with Standard Template Library.
+        Class XMLParser, XMLParserCallback:
+            - Added.
+        Class ZBuffer, CompressionBuffer, DecompressionBuffer,
+                CompressionStream, DecompressionStream:
+            - Added.
     JAVA USER INTERFACE:
         Overall structure:
             - Incorporated engine enhancements listed above.

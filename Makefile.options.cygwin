@@ -37,9 +37,9 @@ export DOC_JAR := bin/regina-docs.jar
 
 export JNI_INCLUDES := -I/cygdrive/c/jdk1.3.1/include \
 	-I/cygdrive/c/jdk1.3.1/include/win32
-export EXTRA_INCLUDES :=
+export EXTRA_INCLUDES := -I/usr/include/libxml2
 
-export EXTRA_LIBRARIES := -lgmp -lstdc++
+export EXTRA_LIBRARIES := -lgmp -lstdc++ -lz -lxml2
 
 # Specify here any compiler-dependent macros that need to be defined.
 # Understood macros include:

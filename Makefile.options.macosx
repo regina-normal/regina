@@ -36,9 +36,9 @@ export DOC_JAR := bin/regina-docs.jar
 #                  for the calculation engine, such as gmp and pthread.
 
 export JNI_INCLUDES := -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers/
-export EXTRA_INCLUDES :=
+export EXTRA_INCLUDES := -I/usr/include/libxml2
 
-export EXTRA_LIBRARIES := -lgmp -lpthread
+export EXTRA_LIBRARIES := -lgmp -lpthread -lz -lxml2
 
 # Specify here any compiler-dependent macros that need to be defined.
 # Understood macros include:
