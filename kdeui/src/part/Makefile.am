@@ -10,7 +10,7 @@ KDE_OPTIONS=noautodist
 
 SUBDIRS = foreign packettypes
 
-AM_CXXFLAGS = '-DREGINA_DATADIR=$(pkgdatadir)'
+AM_CXXFLAGS = '-DREGINA_DATADIR="$(pkgdatadir)"'
 INCLUDES = $(all_includes) -I../common
 
 noinst_HEADERS = \
