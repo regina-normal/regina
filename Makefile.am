@@ -42,6 +42,9 @@ install-exec-local :
 uninstall-local :
 	rm -f $(DESTDIR)$(bindir)/@PACKAGE@
 
+mostlyclean-local :
+	rm -f hs_err_pid*.log
+
 engine :
 	cd engine/engine && $(MAKE)
 jni : engine
