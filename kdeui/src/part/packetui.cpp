@@ -42,6 +42,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kstdguiitem.h>
 #include <ktoolbar.h>
 #include <qclipboard.h>
 #include <qlabel.h>
@@ -220,10 +221,10 @@ bool PacketPane::queryClose() {
     if ((! emergencyClosure) && dirty) {
         if (KMessageBox::warningContinueCancel(this, i18n(
                 "This packet contains changes that have not yet been "
-                "committed.  Closing this packet now will "
-                "discard these changes."),
-                mainUI->getPacket()->getPacketLabel().c_str()) ==
-                KMessageBox::Cancel)
+                "committed.  Are you sure you wish to close this packet "
+                "now and discard these changes?"),
+                mainUI->getPacket()->getPacketLabel().c_str(),
+                KStdGuiItem::close()) == KMessageBox::Cancel)
             return false;
     }
 
