@@ -44,8 +44,8 @@
       <xref linkend="bib-layeredlensspaces"/>);
      </para></listitem>
      <listitem><para>
-      Automatic construction of any &sfslong; over the sphere
-      with at most three exceptional fibres;
+      Automatic construction of &sfslong;s over the sphere
+      with up to three exceptional fibres;
      </para></listitem>
      <listitem><para>
       Reconstruction of triangulations from dehydration strings
@@ -80,15 +80,15 @@
       <xref linkend="bib-turaevviro"/>;
      </para></listitem>
      <listitem><para>
+      3-sphere recognition, as well as a complete connected sum
+      decomposition for closed orientable triangulations;
+     </para></listitem>
+     <listitem><para>
       Triangulation attributes relating to the existence of particular
       types of normal surface, such as 0-efficiency <xref
       linkend="bib-0-efficiency"/>
       and the existence of splitting surfaces
-      (described <link linkend="features-splitting">below</link>);
-     </para></listitem>
-     <listitem><para>
-      3-sphere recognition, as well as a complete connected sum
-      decomposition for closed orientable triangulations.
+      (described <link linkend="features-splitting">below</link>).
      </para></listitem>
     </itemizedlist>
    </para>
@@ -361,9 +361,11 @@
  <sect2 id="features-docs">
   <title>Documentation</title>
   <para>
-   Significant effort has been spent on documentation for the software.  A
-   full reference manual is available for end users to assist them in
-   working with &regina; (you are reading this manual now).
+   Significant effort has been spent on documentation for the software.
+   The graphical user interface offers extensive assistance through
+   tooltips and &quot;What's This?&quot; texts.
+   In addition, a full reference manual is available for using &regina;
+   (you are reading this manual now).
    For users writing &python; scripts or for programmers seeking to modify
    or extend the software, the routines offered by the underlying
    mathematical core are also fully documented.
