@@ -1,4 +1,4 @@
-##########
+################################
 #
 #  Sample Python Script
 #
@@ -8,7 +8,7 @@
 #  See the file "triangulation.session" for the results of running this
 #  script.
 #
-##########
+################################
 
 # Create a new (3,4,7) layered solid torus.  This is a 3-tetrahedron
 # triangulation of a solid torus.

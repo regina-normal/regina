@@ -1,4 +1,4 @@
-##########
+################################
 #
 #  Sample Python Script
 #
@@ -6,7 +6,7 @@
 #
 #  See the file "tree.session" for the results of running this script.
 #
-##########
+################################
 
 # Create a new census of finite orientable closed 3-manifold
 # triangulations with two tetrahedra.
