@@ -1,0 +1,62 @@
+Applet:
+*	Provide instructions on the applet page for upgrading browser version
+*	Include Java plug-in support
+*	Allow/disallow menu options as appropriate
+
+BTools:
+	Richer editing in console
+	Alter behaviour of << / home / >> (beep upon going too far)
+	Clipboard support in frame
+	Autoindent / backspace
+	Edit menu in script editor
+	Cut/paste in script editor
+
+CORBA:
+*	Allow/disallow menu options as appropriate
+*	In the CORBA engine loader, ensure we're not getting a null CORBA object
+		back from the naming context resolve routine.
+
+Everywhere:
+	Disable X-closing for all windows and dialogs except for main window
+		(necessary to ensure progress dialogs cannot be closed).
+*	Allow customisation of types in drop-down boxes
+
+File I/O:
+	Import brings up file dialog first.
+	SnapPea import uses names from SnapPea.
+
+Help:
+	Write manual! - include context sensitive help, searching and index.
+
+JPython:
+	Intermediate output in console
+	Show error messages when running standard startup commands
+	Support for jpython imports / user libraries / custom startup commands
+	Syntax highlighting for script editor
+	Import/export scripts as text files
+
+Main Window:
+	View file version.
+	Implement undo.
+	Use actions in NormalFrame and SystemPane.
+	Have horizontal scrolling in the about box license region.
+
+Menus:
+	Provide NTriangulation::isIsomorphicTo().
+	Provide NTriangulation::cutAlongSurface() once it is written.
+
+Normal Surfaces:
+	For matching equations and normal surface coordinates, resizing one
+		column should imply resizing all coordinate columns.
+	Right-align coordinates but have padding between numbers and column edge.
+*	Check that tooltips are appearing over table columns.
+
+Packet Tree:
+	Ensure horizontal sizes of tree nodes are correct after renaming or
+		inserting new nodes.
+	Have clones appear next to originals in UI tree, both with cloning
+		and running algorithms on clones.
+	Ensure insertUnwrappedDescendants puts the nodes in the right
+		positions in child lists.
+*	Double-clicking on a packet sometimes seems to open it three times.
+*	Ensure refreshing notices which packets have moved out of a subtree.
