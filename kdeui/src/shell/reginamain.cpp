@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "regina-config.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "reginaabout.h"
@@ -38,6 +39,7 @@
 #include <qvbox.h>
 #include <kaccel.h>
 #include <kaction.h>
+#include <kactionclasses.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kedittoolbar.h>
@@ -238,6 +240,21 @@ bool ReginaMain::openURL(const QString& url) {
     return openURL(KURL(url));
 }
 
+bool ReginaMain::openExample(const KURL& url) {
+    // Same as openURL(), but give a pleasant message if the file
+    // doesn't seem to exist.
+    QFile file(url.path());
+    if (! file.exists()) {
+        KMessageBox::sorry(this, i18n("<qt>The example file %1 "
+            "could not be found.<p>Example files should be installed in the "
+            "directory <i>%2</i>.  It appears that they have not been "
+            "installed properly.  Please contact <i>%3</i> for assistance.").
+            arg(url.fileName()).arg(url.directory()).arg(PACKAGE_BUGREPORT));
+        return false;
+    }
+    return openURL(url);
+}
+
 void ReginaMain::pythonConsole() {
     consoles.launchPythonConsole(this, &globalPrefs);
 }
@@ -345,6 +362,10 @@ void ReginaMain::setupActions() {
     KStdAction::open(this, SLOT(fileOpen()), actionCollection());
     fileOpenRecent = KStdAction::openRecent(this, SLOT(openURL(const KURL&)),
         actionCollection());
+    fileOpenExample = new KRecentFilesAction(i18n("Open E&xample"), "bookmark",
+        0, this, SLOT(openExample(const KURL&)), actionCollection(),
+        "file_open_example", 10 /* max items */);
+    fillExamples();
     KStdAction::close(this, SLOT(close()), actionCollection());
     KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
 
@@ -390,6 +411,24 @@ void ReginaMain::setupActions() {
 
     // All done!  Build the GUI.
     createGUI(0);
+}
+
+void ReginaMain::fillExamples() {
+    // Note that the URLs must be added in reverse order!
+    fileOpenExample->addURL("file:" REGINA_DATADIR
+        "/examples/sig-3mfd-census.rga");
+    fileOpenExample->addURL("file:" REGINA_DATADIR
+        "/examples/sig-prime-min-census.rga");
+    fileOpenExample->addURL("file:" REGINA_DATADIR
+        "/examples/knot-link-census.rga");
+    fileOpenExample->addURL("file:" REGINA_DATADIR
+        "/examples/snappea-census.rga");
+    fileOpenExample->addURL("file:" REGINA_DATADIR
+        "/examples/closed-nor-census.rga");
+    fileOpenExample->addURL("file:" REGINA_DATADIR
+        "/examples/closed-or-census.rga");
+    fileOpenExample->addURL("file:" REGINA_DATADIR
+        "/examples/sample-misc.rga");
 }
 
 void ReginaMain::addRecentFile() {

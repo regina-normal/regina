@@ -81,6 +81,8 @@ class ReginaMain : public KParts::MainWindow,
          */
         KRecentFilesAction* fileOpenRecent;
             /**< The menu of recently opened files. */
+        KRecentFilesAction* fileOpenExample;
+            /**< The menu of available example files. */
         KToggleAction* showToolbar;
             /**< Action to show/hide the toolbar. */
         // KToggleAction* showStatusbar;
@@ -172,6 +174,11 @@ class ReginaMain : public KParts::MainWindow,
         bool openURL(const QString& url);
 
         /**
+         * Open the given example file in a manner similar to openURL().
+         */
+        bool openExample(const KURL& url);
+
+        /**
          * Open a new standalone Python console.  The console will not
          * be linked to the document currently in this window (if any).
          */
@@ -221,6 +228,7 @@ class ReginaMain : public KParts::MainWindow,
          * Initial setup.
          */
         void setupActions();
+        void fillExamples();
 
         /**
          * Force this main window to read the given configuration

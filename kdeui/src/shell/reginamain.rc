@@ -7,6 +7,7 @@
     <DefineGroup name="new_merge"/>
     <Action name="file_open"/>
     <Action name="file_open_recent"/>
+    <Action name="file_open_example"/>
     <DefineGroup name="open_merge"/>
     <Separator/>
     <DefineGroup name="save_merge"/>

@@ -9,6 +9,9 @@ Also within this directory is a number of sample files that illustrate how
 Regina can be used.  A good starting point is sample-misc.rga, which can
 be opened directly from within the main user interface.
 
+Most of these census and sample data files can be accessed easily through
+the "File -> Open Example" menu when running Regina.
+
 The subdirectory sigs/ contains a series of plain text files representing
 a census of splitting surface signatures.  See sigs/README.txt for further
 details.
