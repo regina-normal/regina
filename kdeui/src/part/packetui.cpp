@@ -356,12 +356,11 @@ void PacketPane::refresh() {
     header->refresh();
 
     if ((! emergencyRefresh) && dirty)
-        if (KMessageBox::warningYesNo(this, i18n(
+        if (KMessageBox::warningContinueCancel(this, i18n(
                 "This packet contains changes that have not yet been "
-                "committed.  Do you wish to refresh this packet anyway and "
-                "discard these changes?"),
-                mainUI->getPacket()->getPacketLabel().c_str()) ==
-                KMessageBox::No)
+                "committed.  Are you sure you wish to discard these changes?"),
+                mainUI->getPacket()->getPacketLabel().c_str(),
+                KStdGuiItem::discard()) != KMessageBox::Continue)
             return;
 
     emergencyRefresh = false;
