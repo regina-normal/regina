@@ -49,6 +49,7 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     table = new KListView();
     table->setAllColumnsShowFocus(true);
     table->setSorting(-1);
+    table->setSelectionMode(QListView::NoSelection);
 
     // Don't bother creating columns until we first create a set of
     // matching equations.
@@ -98,7 +99,7 @@ void NSurfaceMatchingUI::refresh() {
     setDirty(false);
 }
 
-void NSurfaceMatchingUI::columnResized(int section, int, int newSize) {
+void NSurfaceMatchingUI::columnResized(int, int, int newSize) {
     if (currentlyAutoResizing)
         return;
 

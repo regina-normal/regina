@@ -65,6 +65,7 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     // Set up the table of angles.
     table = new KListView(ui);
     table->setAllColumnsShowFocus(true);
+    table->setSelectionMode(QListView::NoSelection);
     ui->setStretchFactor(table, 1);
 
     table->addColumn(i18n("Type"), DEFAULT_ANGLE_COLUMN_WIDTH);
