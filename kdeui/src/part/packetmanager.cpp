@@ -36,6 +36,7 @@
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nscriptui.h"
+#include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/ntextui.h"
 
 #include <kiconloader.h>
@@ -114,6 +115,17 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             return new ErrorPacketUI(packet, enclosingPane,
                 i18n("An appropriate text editor component could not "
                 "be found."));
+    }
+    if (packet->getPacketType() == NSurfaceFilter::packetType) {
+        if (((NSurfaceFilter*)packet)->getFilterID() ==
+                NSurfaceFilterCombination::filterID)
+            return new NSurfaceFilterCombUI(
+                dynamic_cast<NSurfaceFilterCombination*>(packet),
+                enclosingPane, allowReadWrite);
+        if (((NSurfaceFilter*)packet)->getFilterID() ==
+                NSurfaceFilterProperties::filterID)
+            return new DefaultPacketUI(packet, enclosingPane);
+        return new DefaultPacketUI(packet, enclosingPane);
     }
     if (packet->getPacketType() == NText::packetType) {
         KTextEditor::Document* doc = createDocument();
