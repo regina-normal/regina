@@ -104,7 +104,10 @@ fi
 # ---------- Set defaults and run sanity checks ----------
 
 if [ -z "$REGINA_BTOOLS" ]; then
-	export REGINA_BTOOLS="$REGINA_HOME/lib/btools.jar"
+	export REGINA_BTOOLS=`ls "$REGINA_HOME"/lib/btools*.jar 2> /dev/null`
+	if [ -z "$REGINA_BTOOLS" ]; then
+		export REGINA_BTOOLS="$REGINA_HOME/lib/btools.jar"
+	fi
 fi
 if [ -d "$REGINA_BTOOLS" ]; then
 	error "Error: \$REGINA_BTOOLS is set to a directory, not a file."
@@ -120,7 +123,10 @@ elif [ ! -e "$REGINA_BTOOLS" ]; then
 fi
 
 if [ -z "$REGINA_JYTHON" ]; then
-	export REGINA_JYTHON="$REGINA_HOME/lib/jython.jar"
+	export REGINA_JYTHON=`ls "$REGINA_HOME"/lib/jython*.jar 2> /dev/null`
+	if [ -z "$REGINA_JYTHON" ]; then
+		export REGINA_JYTHON="$REGINA_HOME/lib/jython.jar"
+	fi
 fi
 if [ -d "$REGINA_JYTHON" ]; then
 	warn "Warning: \$REGINA_JYTHON is set to a directory, not a file."
@@ -135,7 +141,10 @@ elif [ ! -e "$REGINA_JYTHON" ]; then
 fi
 
 if [ -z "$REGINA_JAVAHELP" ]; then
-	export REGINA_JAVAHELP="$REGINA_HOME/lib/jh.jar"
+	export REGINA_JAVAHELP=`ls "$REGINA_HOME"/lib/jh.jar 2> /dev/null`
+	if [ -z "$REGINA_JAVAHELP" ]; then
+		export REGINA_JAVAHELP="$REGINA_HOME/lib/jh.jar"
+	fi
 fi
 if [ -d "$REGINA_JAVAHELP" ]; then
 	warn "Warning: \$REGINA_JAVAHELP is set to a directory, not a file."
