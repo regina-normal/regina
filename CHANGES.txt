@@ -19,9 +19,13 @@ Regina - A Normal Surface Theory Calculator
             - Modified parameters for adjacentDisc().
         Class NFace:
             - Added getType(), getSubtype(), isMobiusBand(), isCone().
+        Class NHashSet, NHashSetIterator:
+            - New classes.
         Class NNormalSurface:
             - Added isConnected(), isVertexLink(), isSplitting().
             - Fixed isOrientable() and added isTwoSided().
+        Class NPacket:
+            - Added makeUniqueLabels().
         Class NPerm:
             - Added operators = and != and constructor NPerm(const NPerm&).
         Class NTriangulation:
@@ -35,6 +39,8 @@ Regina - A Normal Surface Theory Calculator
             - Added routine discOrientationFollowsEdge().
         File nnormalsurface.h:
             - Added arrays triDiscArcs, quadDiscArcs, octDiscArcs.
+        Routine hashMap(T*), hashMap(NString):
+            - Added to support new class NHashSet.
         Routine readSnapPea():
             - Sets the new packet label to the SnapPea manifold name.
     JAVA USER INTERFACE:

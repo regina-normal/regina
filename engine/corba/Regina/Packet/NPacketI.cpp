@@ -94,6 +94,9 @@ Regina::Packet::NPacket_ptr NPacket_i::findPacketLabel(const char* type) {
 char* NPacket_i::makeUniqueLabel(const char* base) {
     return MY_ENGINE_OBJECT->makeUniqueLabel(base).dupe();
 }
+CORBA::Boolean NPacket_i::makeUniqueLabels(Regina::Packet::NPacket_ptr ref) {
+    return MY_ENGINE_OBJECT->makeUniqueLabels(GET_ENGINE_OBJECT(NPacket, ref));
+}
 CORBA::Long NPacket_i::levelsDownTo(
         Regina::Packet::NPacket_ptr descendant) {
     return MY_ENGINE_OBJECT->

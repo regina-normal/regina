@@ -29,6 +29,7 @@
 #include <strstream.h>
 
 #include "packet/npacket.h"
+#include "utilities/nset.h"
 
 NPacket::~NPacket() {
     NPacket* tmp;
@@ -300,5 +301,44 @@ NString NPacket::makeUniqueLabel(const NString& base) const {
             extraInt++;
     }
     return "";
+}
+
+bool NPacket::makeUniqueLabels(NPacket* reference) {
+    NPacket* tree[3];
+    if (reference) {
+        tree[0] = reference;
+        tree[1] = this;
+        tree[2] = 0;
+    } else {
+        tree[0] = this;
+        tree[1] = 0;
+    }
+
+    NStringSet labels;
+
+    int whichTree;
+    NPacket* p;
+    NString label, newLabel;
+    unsigned long extraInt;
+    bool changed = false;
+    for (whichTree = 0; tree[whichTree]; whichTree++)
+        for (p = tree[whichTree]; p; p = p->nextTreePacket()) {
+            label = p->getPacketLabel();
+            if (! labels.add(label)) {
+                extraInt = 1;
+                do {
+                    extraInt++;
+                    ostrstream out;
+                    out << ' ' << extraInt << '\0';
+                    newLabel = label + out.str();
+                    out.freeze(0);
+                } while (! labels.add(newLabel));
+
+                p->setPacketLabel(newLabel);
+                changed = true;
+            }
+        }
+
+    return changed;
 }
 

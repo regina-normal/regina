@@ -57,6 +57,7 @@ module Regina {
             NPacket nextTreePacket_string(in string type);
             NPacket findPacketLabel(in string label);
             string makeUniqueLabel(in string base);
+            boolean makeUniqueLabels(in NPacket reference);
 
             long levelsDownTo(in NPacket descendant);
             long levelsUpTo(in NPacket ancestor);

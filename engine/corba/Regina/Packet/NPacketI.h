@@ -67,6 +67,8 @@ class NPacket_i : public virtual POA_Regina::Packet::NPacket,
             const char* type);
         virtual Regina::Packet::NPacket_ptr findPacketLabel(const char* type);
         virtual char* makeUniqueLabel(const char* base);
+        virtual CORBA::Boolean makeUniqueLabels(
+            Regina::Packet::NPacket_ptr reference);
         virtual CORBA::Long levelsDownTo(
             Regina::Packet::NPacket_ptr descendant);
         virtual CORBA::Long levelsUpTo(

@@ -425,6 +425,29 @@ class NPacket : public ShareableObject {
         NString makeUniqueLabel(const NString& base) const;
 
         /**
+         * Ensures that all packet labels in both this and the given
+         * packet tree combined are distinct.  If two packets have the
+         * same label, one will be renamed by adding a space and a number.
+         *
+         * Packets in the given packet tree will be given priority over
+         * the labels; that is, if a packet in this tree has the same
+         * label as a packet in the given tree, it will be the packet in
+         * this tree that is renamed.
+         *
+         * The given packet tree may be \c null, in which case only this
+         * tree will be examined.
+         *
+         * \pre This and the given packet belong to different packet
+         * trees, and are each matriarchs in their respective trees.
+         *
+         * @param reference the packet tree with which to compare this
+         * tree.
+         * @return \c true if and only if any of the packets were
+         * relabelled.
+         */
+        bool makeUniqueLabels(NPacket* reference);
+
+        /**
          * Counts the number of levels between this packet and its given
          * descendant in the tree structure.  If \c descendant is this
          * packet, the number of levels is zero.

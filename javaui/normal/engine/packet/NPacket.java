@@ -55,6 +55,7 @@ public interface NPacket extends ShareableObject {
     public NPacket nextTreePacket(String type);
     public NPacket findPacketLabel(String label);
     public String makeUniqueLabel(String base);
+    public boolean makeUniqueLabels(NPacket reference);
 
     public int levelsDownTo(NPacket descendant);
     public int levelsUpTo(NPacket ancestor);

@@ -60,6 +60,7 @@ public class NJNIPacket extends JNIShareableObject implements NPacket {
     public native NPacket nextTreePacket(String type);
     public native NPacket findPacketLabel(String label);
     public native String makeUniqueLabel(String base);
+    public native boolean makeUniqueLabels(NPacket reference);
 
     public native int levelsDownTo(NPacket descendant);
     public native int levelsUpTo(NPacket ancestor);

@@ -119,6 +119,10 @@ public abstract class Importer extends JPanel implements PacketCreator {
             return null;
         }
 
+        // Run through all imported packets and ensure that their labels
+        // will be unique.
+        data.makeUniqueLabels(parent.getTreeMatriarch());
+
         returnedData = true;
         return data;
     }
@@ -189,7 +193,10 @@ public abstract class Importer extends JPanel implements PacketCreator {
      * the importing of different types of file.
      * <p>
      * This routine should not only import the data, but also set the packet
-     * label for the new data to something appropriate.
+     * label(s) for the new data to something appropriate.  The other
+     * routines in this class will take care of ensuring that packet
+     * labels remain unique once the data is inserted into the parent
+     * tree, so this routine need not concern itself with label uniqueness.
      * <p>
      * You may assume that the given file exists.
      * Any errors that occur during the import should be reported to the

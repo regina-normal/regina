@@ -138,6 +138,9 @@ public class NCORBAPacket extends CORBAShareableObject
     public String makeUniqueLabel(String base) {
         return data.makeUniqueLabel(base);
     }
+    public boolean makeUniqueLabels(normal.engine.packet.NPacket ref) {
+        return data.makeUniqueLabels(((NCORBAPacket)ref).data);
+    }
 
     public int levelsDownTo(normal.engine.packet.NPacket descendant) {
         return data.levelsDownTo(((NCORBAPacket)descendant).data);

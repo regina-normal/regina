@@ -209,6 +209,13 @@ JNIEXPORT jstring JNICALL
         makeUniqueLabel(jstringToNString(env, base)));
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_packet_NJNIPacket_makeUniqueLabels
+        (JNIEnv *env, jobject me, jobject ref) {
+    return GET_ENGINE_OBJECT(env, NPacket, me)->makeUniqueLabels(
+        GET_ENGINE_OBJECT(env, NPacket, ref));
+}
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_nextTreePacket__
         (JNIEnv *env, jobject me) {
