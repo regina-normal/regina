@@ -61,3 +61,10 @@ REGJNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIEdge");
 }
 
+REGJNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_getSeifertStructure
+        (JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env, (NSFS*)
+        &GET_ENGINE_OBJECT(env, NLayeredLoop, me)->getSeifertStructure(),
+        "normal/engine/implementation/jni/subcomplex/NJNISFS");
+}

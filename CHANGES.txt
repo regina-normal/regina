@@ -57,6 +57,8 @@ Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
               NLargeInteger(const char*, int).
         Class NLayeredChainPair, NPlugTriSolidTorus:
             - Added.
+        Class NLayeredLoop:
+            - Added routine getSeifertStructure().
         Class NLensSpace:
             - Fixed bug causing reductions to be sometimes non-optimal
               (although still correct) - see modularInverse() notes below.

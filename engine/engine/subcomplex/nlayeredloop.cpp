@@ -41,6 +41,20 @@ NLayeredLoop* NLayeredLoop::clone() const {
     return ans;
 }
 
+void NLayeredLoop::findExceptionalFibres() {
+    if (hinge[1]) {
+        // Not twisted.
+        seifertStructure.insertFibre(NExceptionalFibre(1, index));
+    } else {
+        // Twisted.
+        seifertStructure.insertFibre(NExceptionalFibre(2, -1));
+        seifertStructure.insertFibre(NExceptionalFibre(2, 1));
+        seifertStructure.insertFibre(NExceptionalFibre(index, 1));
+    }
+    
+    seifertStructure.reduce();
+}
+
 NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
@@ -171,6 +185,7 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                 ans->index = nTet;
                 ans->hinge[0] = base->getEdge(hinge0);
                 ans->hinge[1] = (twisted ? 0 : base->getEdge(hinge1));
+                ans->findExceptionalFibres();
                 return ans;
             }
         }

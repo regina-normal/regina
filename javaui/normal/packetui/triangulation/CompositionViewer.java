@@ -154,6 +154,8 @@ public class CompositionViewer extends DefaultPacketViewer
         // Look for layered loops.
         category = null;
         NLayeredLoop loop;
+        NSFS sfs;
+        NLensSpace lensSpace;
         boolean twisted;
         n = triangulation.getNumberOfComponents();
         for (i = 0; i < n; i++) {
@@ -163,13 +165,25 @@ public class CompositionViewer extends DefaultPacketViewer
                     category = new DefaultMutableTreeNode("Layered Loops");
                     rootNode.add(category);
                 }
-                twisted = loop.isTwisted();
-                instance = new DefaultMutableTreeNode((twisted ?
-                    "Twisted" : "Not twisted") + ", index " +
-                    String.valueOf(loop.getIndex()));
+
+                sfs = loop.getSeifertStructure();
+                lensSpace = sfs.isLensSpace();
+                if (lensSpace == null)
+                    idText = sfs.toString();
+                else {
+                    idText = lensSpace.toString();
+                    lensSpace.destroy();
+                }
+                instance = new DefaultMutableTreeNode(idText);
                 category.add(instance);
+
                 instance.add(new DefaultMutableTreeNode("Component " +
                     String.valueOf(i)));
+
+                twisted = loop.isTwisted();
+                instance.add(new DefaultMutableTreeNode((twisted ?
+                    "Twisted" : "Not twisted") + ", index " +
+                    String.valueOf(loop.getIndex())));
                 if (twisted)
                     instance.add(new DefaultMutableTreeNode("Hinge: edge " +
                         String.valueOf(triangulation.getEdgeIndex(
@@ -187,8 +201,6 @@ public class CompositionViewer extends DefaultPacketViewer
         // Look for layered chain pairs.
         category = null;
         NLayeredChainPair pair;
-        NSFS sfs;
-        NLensSpace lensSpace;
         n = triangulation.getNumberOfComponents();
         for (i = 0; i < n; i++) {
             pair = engine.isLayeredChainPair(triangulation.getComponent(i));

@@ -42,4 +42,5 @@ public class NJNILayeredLoop extends JNIShareableObject
     public native long getIndex();
     public native boolean isTwisted();
     public native NEdge getHinge(int which);
+    public native NSFS getSeifertStructure();
 }

@@ -36,5 +36,6 @@ public interface NLayeredLoop extends ShareableObject {
     long getIndex();
     boolean isTwisted();
     NEdge getHinge(int which);
+    NSFS getSeifertStructure();
 }
 

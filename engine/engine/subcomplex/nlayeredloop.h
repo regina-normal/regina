@@ -36,6 +36,7 @@
 #endif
 
 #include "shareableobject.h"
+#include "subcomplex/nsfs.h"
 
 namespace regina {
 
@@ -74,6 +75,8 @@ class NLayeredLoop : public ShareableObject {
         NEdge* hinge[2];
             /**< The hinge edge(s) of this layered loop.  If the loop is
                  twisted, the second element in this array will be \c null. */
+        NSFS seifertStructure;
+            /**< The structure of the corresponding Seifert fibred space. */
 
     public:
         /**
@@ -117,6 +120,12 @@ class NLayeredLoop : public ShareableObject {
         NEdge* getHinge(int which) const;
 
         /**
+         * Returns the structure of the Seifert fibred space formed by
+         * this layered loop.
+         */
+        const NSFS& getSeifertStructure() const;
+
+        /**
          * Determines if the given triangulation component is a layered
          * loop.
          *
@@ -136,6 +145,12 @@ class NLayeredLoop : public ShareableObject {
          * Creates a new uninitialised structure.
          */
         NLayeredLoop();
+
+        /**
+         * Calculate the Seifert structure according to the other
+         * information already stored in this structure.
+         */
+        void findExceptionalFibres();
 };
 
 // Inline functions for NLayeredLoop
@@ -153,6 +168,9 @@ inline bool NLayeredLoop::isTwisted() const {
 }
 inline NEdge* NLayeredLoop::getHinge(int which) const {
     return hinge[which];
+}
+inline const NSFS& NLayeredLoop::getSeifertStructure() const {
+    return seifertStructure;
 }
 inline void NLayeredLoop::writeTextShort(std::ostream& out) const {
     out << "Layered loop (" << (hinge[1] ? "not twisted" : "twisted") <<
