@@ -11,9 +11,8 @@ Program version:
 Copyright years:
     ./LICENSE.txt (top of file)
     ./regina.bat (top of file)
-    docs/normal/docs/LICENSE.txt (top of file)
-    docs/normal/docs/acknowledgements.html (page heading)
-    docs/normal/docs/welcome.html (page heading)
+    docs/LICENSE.txt (top of file)
+    docs/regina.sgml (twice in entities)
     engine/doc-files/doc-footer.html
     engine/engine/docs.h (General Notes page)
     javaui/LICENSE.txt (top of file)
@@ -24,16 +23,15 @@ Copyright years:
     Source file header comments (generated from dist/stub.*)
 
 License details:
-    LICENSE.txt (./, docs/normal/docs/, javaui/)
-    docs/normal/docs/acknowledgements.html
-    docs/normal/docs/welcome.html
+    LICENSE.txt (./, docs/, javaui/)
+    docs/license.sgml
     engine/engine/docs.h
     javaui/overview.html
     javaui/normal/Application.java
     www/index.html
 
 Acknowledgements:
-    docs/normal/docs/acknowledgements.html
+    docs/regina.sgml
     engine/engine/docs.h (General Notes page)
     javaui/overview.html
     javaui/normal/Application.java (Application.thanks)

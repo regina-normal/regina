@@ -27,7 +27,7 @@ export LICENSE = LICENSE.txt
 # Local variables:
 
 empty_dirs = $(DIST_DIR) $(BIN_DIR) engine javaui idl
-DOC_LICENSE = $(BASE_DOC_DIR)/normal/docs/LICENSE.txt
+DOC_LICENSE = $(BASE_DOC_DIR)/LICENSE.txt
 APP_CLASS = normal.Application
 
 # ------------------------- Targets ----------------------------------

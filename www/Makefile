@@ -1,7 +1,7 @@
 
 docs: clean
 	cd .. && $(MAKE) docs
-	cp -r ../docs/normal/docs .
+	cp -r ../docs .
 
 clean:
 	-rm -rf docs

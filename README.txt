@@ -10,7 +10,7 @@ SOURCE DISTRIBUTION:
     - To configure, edit Makefile.options.
     - To compile everything, type "make bin".
     - To make the documentation, type "make bindocs".  The documentation
-          will be generated and placed in docs/normal/docs/.  A complete
+          will be generated and placed in docs/.  A complete
           documentation jar will also be placed in bin/.
     - For other make options, type "make help".
 

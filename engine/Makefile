@@ -14,7 +14,7 @@ CORBA_DIR = corba/Regina
 
 PWD = $(shell pwd)
 
-DOC_DIR = ../$(BASE_DOC_DIR)/normal/docs/engine
+DOC_DIR = ../$(BASE_DOC_DIR)/engine
 DOC_SAMPLE = $(DOC_DIR)/index.html
 DOC_CONF = doc-files/docs.conf
 

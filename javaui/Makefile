@@ -9,7 +9,7 @@ CORBA_PACKAGE = normal.engine.implementation.corba
 CORBA_DIR = $(subst .,/,$(CORBA_PACKAGE))
 CORBA_MODULE = Regina
 
-DOC_DIR = ../$(BASE_DOC_DIR)/normal/docs/javaui
+DOC_DIR = ../$(BASE_DOC_DIR)/javaui
 DOC_SAMPLE = $(DOC_DIR)/index.html
 DOC_OVERVIEW = overview.html
 

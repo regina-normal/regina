@@ -27,7 +27,7 @@ DOC_JAR_FINAL = regina-docs-$(REGINA_VERSION).jar
 
 DOC_OVERVIEW = overview.html
 LICENSE = LICENSE.txt
-DOC_HTML_DIR = docs/normal/docs
+DOC_HTML_DIR = docs
 
 empty_src_dirs = bin $(DOC_HTML_DIR)/engine $(DOC_HTML_DIR)/javaui
 dist_mask = Makefile* *.txt *.cpp insertstubreplace replacetabs stub*

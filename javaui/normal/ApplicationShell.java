@@ -328,7 +328,7 @@ public class ApplicationShell extends Shell {
                         (javax.help.HelpBroker)getHelpBroker());
                 Frame frame = getPrimaryFrame();
                 javax.help.CSH.setHelpIDString(frame,
-                    id == null ? "welcome" : id);
+                    id == null ? "index" : id);
                 helpViewer.actionPerformed(new ActionEvent(frame, 0, ""));
             } catch (Throwable th) {
                 error("An error occurred whilst trying to browse " +

@@ -9,7 +9,7 @@
 #
 # Sets $(misc_doc_mask) to a file mask of all documentation files that
 # are not built from the program sources.  This file mask must be
-# relative to directory docs/normal/docs.
+# relative to directory docs/.
 #
 # All locations must be relative to this directory unless otherwise
 # specified.
@@ -17,5 +17,5 @@
 scripts = regina regina.bat scripts/reg*
 misc_src_mask = Makefile* *.txt docs/*.txt lib/*.txt
 misc_bin_mask = *.txt lib/*.txt
-misc_doc_mask = *.html *.hs *.jhm *.txt *.jpg *.xml
+misc_doc_mask = *.html *.hs *.jhm *.txt *.jpg *.xml *.sgml
 
