@@ -36,8 +36,8 @@
 #define __NCENSUS_H
 #endif
 
+#include <list>
 #include "utilities/nbooleans.h"
-#include "utilities/ndoublelist.h"
 #include "utilities/nthread.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nisomorphism.h"
@@ -172,7 +172,7 @@ class NCensus : public NThread {
         int* autoPreImage;
             /**< An array containing the preimage of each tetrahedron
              *   under \a automorphism. */
-        NDoubleList<NIsomorphismIndexed*> allAutomorphisms;
+        std::list<NIsomorphismIndexed*> allAutomorphisms;
             /**< A list of all found automorphisms of the face pairings
              *   described by \a joins. */
 

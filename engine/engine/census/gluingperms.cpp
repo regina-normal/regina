@@ -121,9 +121,8 @@ void NCensus::trySolution() {
     // Run through the automorphisms and check we are in canonical form
     // for the permutations.
     // Skip the first automorphism because this will always be the identity.
-    NDoubleListIterator<NIsomorphismIndexed*> it(allAutomorphisms);
-    it++;
-    while (! it.done()) {
+    std::list<NIsomorphismIndexed*>::iterator it = allAutomorphisms.begin();
+    for (it++; it != allAutomorphisms.end(); it++) {
         // Have we been cancelled?
         if (progress && progress->isCancelled())
             return;
@@ -133,7 +132,6 @@ void NCensus::trySolution() {
 
         if (cmpPermsWithPreImage(**it) > 0)
             return;
-        it++;
     }
 
     // Check properties of the triangulation.

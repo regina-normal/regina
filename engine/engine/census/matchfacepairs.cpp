@@ -28,6 +28,7 @@
 
 #include "census/ncensus.h"
 #include "progress/nprogresstypes.h"
+#include "utilities/nmiscutils.h"
 
 #include <strstream.h>
 
@@ -206,7 +207,9 @@ void NCensus::matchFacePairs() {
                 }
 
                 selectGluingPerms();
-                allAutomorphisms.flushAndDelete();
+                for_each(allAutomorphisms.begin(), allAutomorphisms.end(),
+                    FuncDelete<NIsomorphismIndexed>());
+                allAutomorphisms.clear();
             }
 
             // Head back down to the previous gluing and undo it, ready

@@ -28,10 +28,11 @@
 
 #include "census/ncensus.h"
 #include "progress/nprogresstypes.h"
+#include "utilities/nmiscutils.h"
 
 bool NCensus::isCanonicalInternal(int whichTet, const NTetFace& equalUpTo) {
     if (whichTet == (int)nTetrahedra) {
-        allAutomorphisms.addLast(new NIsomorphismIndexed(automorphism));
+        allAutomorphisms.push_back(new NIsomorphismIndexed(automorphism));
         return true;
     }
 
@@ -57,7 +58,9 @@ bool NCensus::isCanonicalInternal(int whichTet, const NTetFace& equalUpTo) {
             if (order < 0)
                 continue;
             if (order > 0) {
-                allAutomorphisms.flushAndDelete();
+                for_each(allAutomorphisms.begin(), allAutomorphisms.end(),
+                    FuncDelete<NIsomorphismIndexed>());
+                allAutomorphisms.clear();
                 autoPreImage[image] = -1;
                 image = -1;
                 index = -1;
