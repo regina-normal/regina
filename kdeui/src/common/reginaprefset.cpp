@@ -46,6 +46,7 @@ ReginaPrefSet::ReginaPrefSet() :
         displayTagsInTree(false),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
+        pythonWordWrap(false),
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
         treeJumpSize(10),
         triEditMode(DirectEdit),

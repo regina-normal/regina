@@ -14,6 +14,7 @@ INCLUDES = $(all_includes) @BOOST_PYTHON_INCLUDES@
 noinst_LTLIBRARIES = libregina-kdepython.la
 
 noinst_HEADERS = \
+	commandedit.h \
 	pythonconsole.h \
 	pythoninterpreter.h \
 	pythonoutputstream.h
@@ -21,6 +22,7 @@ noinst_HEADERS = \
 libregina_kdepython_la_LIBADD = @BOOST_PYTHON_LIBS@ @PYTHON_LIBS@
 
 libregina_kdepython_la_SOURCES = \
+	commandedit.cpp \
 	pythonconsole.cpp \
 	pythoninterpreter.cpp \
 	pythonoutputstream.cpp

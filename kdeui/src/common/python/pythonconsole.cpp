@@ -51,9 +51,6 @@
 #include <qlabel.h>
 #include <qvbox.h>
 
-// TODO: tab
-// TODO: history
-
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         const ReginaPrefSet* initialPrefs, regina::NPacket* tree,
         regina::NPacket* selectedPacket) :
@@ -71,7 +68,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     session = new KTextEdit(box);
     session->setTextFormat(Qt::LogText);
-    session->setWordWrap(QTextEdit::NoWrap);
+    session->setWordWrap(prefs.pythonWordWrap ? QTextEdit::WidgetWidth :
+        QTextEdit::NoWrap);
     session->setAutoFormatting(QTextEdit::AutoNone);
     session->setFont(KGlobalSettings::fixedFont());
     session->setFocusPolicy(QWidget::NoFocus);
@@ -95,7 +93,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     KPopupMenu* menuConsole = new KPopupMenu(this);
     KPopupMenu* menuEdit = new KPopupMenu(this);
 
-    (new KAction(i18n("&Save Log"), "filesave", CTRL+Key_S, this,
+    (new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S, this,
         SLOT(saveLog()), actionCollection(), "console_save"))->
         plug(menuConsole);
     menuConsole->insertSeparator();
@@ -174,6 +172,13 @@ void PythonConsole::saveLog() {
             KMessageBox::error(this, i18n("An error occurred whilst "
                 "attempting to write to the file %1.").arg(file));
     }
+}
+
+void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
+    prefs = newPrefs;
+
+    session->setWordWrap(prefs.pythonWordWrap ? QTextEdit::WidgetWidth :
+        QTextEdit::NoWrap);
 }
 
 void PythonConsole::init(regina::NPacket* tree,

@@ -87,6 +87,8 @@ struct ReginaPrefSet {
     unsigned pythonSpacesPerTab;
         /**< The number of spaces to insert when <TAB> is pressed in a
              python console. */
+    bool pythonWordWrap;
+        /**< Should python consoles be word wrapped? */
     int surfacesCreationCoords;
         /**< The default coordinate system for normal surface creation. */
     unsigned treeJumpSize;

@@ -403,6 +403,7 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.pythonAutoIndent = config->readBoolEntry("AutoIndent", true);
     globalPrefs.pythonSpacesPerTab = config->readUnsignedNumEntry(
         "SpacesPerTab", 4);
+    globalPrefs.pythonWordWrap = config->readBoolEntry("WordWrap", false);
 
     config->setGroup("Surfaces");
     globalPrefs.surfacesCreationCoords = config->readNumEntry(
@@ -474,6 +475,7 @@ void ReginaMain::saveOptions() {
     config->setGroup("Python");
     config->writeEntry("AutoIndent", globalPrefs.pythonAutoIndent);
     config->writeEntry("SpacesPerTab", globalPrefs.pythonSpacesPerTab);
+    config->writeEntry("WordWrap", globalPrefs.pythonWordWrap);
 
     config->setGroup("Surfaces");
     config->writeEntry("CreationCoordinates",

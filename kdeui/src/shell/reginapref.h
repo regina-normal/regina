@@ -162,6 +162,7 @@ class ReginaPrefCensus : public QVBox {
         void deactivate();
         void restoreDefaults();
 
+    public:
     friend class ReginaPreferences;
 };
 
@@ -173,6 +174,7 @@ class ReginaPrefPython : public QVBox {
 
     private:
         QCheckBox* cbAutoIndent;
+        QCheckBox* cbWordWrap;
         QLineEdit* editSpacesPerTab;
 
         QLabel* activeCount;
@@ -192,6 +194,7 @@ class ReginaPrefPython : public QVBox {
         void activate();
         void deactivate();
 
+    public:
     friend class ReginaPreferences;
 };
 

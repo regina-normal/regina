@@ -33,7 +33,10 @@ Packets (General):
     Find out how to centre column headers in list views
 
 Python:
-    (4.0) Implement embedded python scripting
+    (4.0) Support compilation and running of scripts
+    (4.0) Support command-line history
+    (4.0) Catch tab keypresses
+    (4.0) Fix save session transcript
     Allow breaking processing in python consoles
     Check to see whether user libraries are in fact text files
     Allow compilation and running of open libraries

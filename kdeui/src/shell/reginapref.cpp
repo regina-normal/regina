@@ -48,6 +48,12 @@
 #include <qvalidator.h>
 #include <qwhatsthis.h>
 
+/**
+ * Note that QTextEdit does not seem to support word wrap in LogText
+ * mode.  Word wrap configuration has therefore been commented out of
+ * the preferences dialog for the time being.
+ */
+
 namespace {
     /**
      * A list view item for a single ReginaFilePref.
@@ -187,6 +193,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     pythonPrefs->cbAutoIndent->setChecked(prefSet.pythonAutoIndent);
     pythonPrefs->editSpacesPerTab->setText(
         QString::number(prefSet.pythonSpacesPerTab));
+    // pythonPrefs->cbWordWrap->setChecked(prefSet.pythonWordWrap);
 
     for (ReginaFilePrefList::const_iterator it =
             prefSet.pythonLibraries.begin();
@@ -283,6 +290,7 @@ void ReginaPreferences::slotApply() {
         pythonPrefs->editSpacesPerTab->setText(
             QString::number(prefSet.pythonSpacesPerTab));
     }
+    // prefSet.pythonWordWrap = pythonPrefs->cbWordWrap->isChecked();
 
     prefSet.pythonLibraries.clear();
     for (QListViewItem* item = pythonPrefs->listFiles->firstChild();
@@ -609,10 +617,14 @@ void ReginaPrefCensus::restoreDefaults() {
 }
 
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
-    // Set up the auto-indent option.
+    // Set up the checkboxes.
     cbAutoIndent = new QCheckBox(i18n("Auto-indent"), this);
     QWhatsThis::add(cbAutoIndent, i18n("Should command lines in a Python "
         "console be automatically indented?"));
+
+    // cbWordWrap = new QCheckBox(i18n("Word wrap"), this);
+    // QWhatsThis::add(cbWordWrap, i18n("Should Python consoles be word "
+    //     "wrapped?"));
 
     // Add some space.
     (new QWidget(this))->setMinimumHeight(5);

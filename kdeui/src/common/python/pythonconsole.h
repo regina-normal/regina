@@ -167,10 +167,6 @@ class PythonConsole : public KMainWindow {
         };
 };
 
-inline void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
-    prefs = newPrefs;
-}
-
 inline PythonConsole::OutputStream::OutputStream(PythonConsole* console) :
         console_(console) {
 }
