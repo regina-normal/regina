@@ -37,9 +37,10 @@ NTriangulation* NNormalSurface::cutAlong() {
 NTriangulation* NNormalSurface::crush() {
     NTriangulation* ans = new NTriangulation(*triangulation);
     unsigned long nTet = ans->getNumberOfTetrahedra();
+    if (nTet == 0)
+        return new NTriangulation();
 
     // Work out which tetrahedra contain which quad types.
-
     int* quads = new int[nTet];
     long whichTet = 0;
     for (whichTet = 0; whichTet < (long)nTet; whichTet++) {
@@ -90,6 +91,16 @@ NTriangulation* NNormalSurface::crush() {
                     if (adj)
                         adjQuads = quads[ans->getTetrahedronIndex(adj)];
                 }
+
+                // Reglue the tetrahedron face accordingly.
+                tet->unjoin(face);
+                if (! adj)
+                    continue;
+
+                // We haven't yet unglued the face of adj since there is
+                // at least one bad tetrahedron between tet and adj.
+                adj->unjoin(adjFace);
+                tet->joinTo(face, adj, adjPerm);
             }
         }
     
