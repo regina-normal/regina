@@ -22,9 +22,6 @@ Containers:
     - Update container viewers whenever their subtrees change, not just when
         their immediate children change
 
-Docs:
-    - Add information on citing Regina.
-
 Icons:
     - Softer tree for filter_comb.png
     - Icons for separate New actions
