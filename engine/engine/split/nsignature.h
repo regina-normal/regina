@@ -44,6 +44,12 @@ class NSigPartialIsomorphism;
 class NTriangulation;
 
 /**
+ * \addtogroup split Splitting Surfaces
+ * Splitting surfaces in triangulations.
+ * @{
+ */
+
+/**
  * Represents a signature of a splitting surface in a closed 3-manifold
  * triangulation.
  *
@@ -256,6 +262,8 @@ class NSignature : public ShareableObject {
     friend class regina::NSigPartialIsomorphism;
     friend class regina::NSigCensus;
 };
+
+/*@}*/
 
 // Inline functions for NSignature
 

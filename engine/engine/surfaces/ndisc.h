@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * Specifies a single normal disc in a normal surface.
  *
  * There are 10 disc types.  Types 0-3 represent triangles 0-3,
@@ -657,6 +662,8 @@ class NDiscSpecIterator {
          */
         void makeValid();
 };
+
+/*@}*/
 
 // Inline functions for NDiscSpec
 

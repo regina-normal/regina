@@ -44,6 +44,11 @@ class NComponent;
 class NEdge;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a layered loop component of a triangulation.
  *
  * A layered loop is a layered chain of \a n tetrahedra whose bottom
@@ -152,6 +157,8 @@ class NLayeredLoop : public ShareableObject {
          */
         void findExceptionalFibres();
 };
+
+/*@}*/
 
 // Inline functions for NLayeredLoop
 

@@ -43,6 +43,11 @@ namespace regina {
 class regina::NSigCensus;
 
 /**
+ * \weakgroup split
+ * @{
+ */
+
+/**
  * Represents a partial isomorphism between two splitting surface
  * signatures.  See class NSignature for details on splitting surface
  * signatures.
@@ -229,6 +234,8 @@ class NSigPartialIsomorphism {
 
     friend class regina::NSigCensus;
 };
+
+/*@}*/
 
 // Inline functions for NSigPartialIsomorphism
 

@@ -52,6 +52,11 @@ class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * A packet representing a collection of normal surfaces in a 3-manifold.
  * Such a packet must always be a child packet of the triangulation from
  * which the surfaces were obtained.  If this triangulation changes, the
@@ -354,6 +359,8 @@ void createNonNegativeCone(NTriangulation* triangulation, int flavour,
  */
 NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
     int flavour);
+
+/*@}*/
 
 // Inline functions for NNormalSurfaceList
 

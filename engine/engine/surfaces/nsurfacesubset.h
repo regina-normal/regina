@@ -44,6 +44,11 @@ namespace regina {
 class NSurfaceFilter;
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * Represents a subset of a normal surface set.
  * This subset merely contains pointers to some of the normal surfaces
  * stored in the original set.
@@ -91,6 +96,8 @@ class NSurfaceSubset : public ShareableObject, public NSurfaceSet {
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
 };
+
+/*@}*/
 
 // Inline functions for NSurfaceSubset
 

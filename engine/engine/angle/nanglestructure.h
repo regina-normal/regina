@@ -46,6 +46,12 @@ class NTriangulation;
 class NXMLAngleStructureReader;
 
 /**
+ * \addtogroup angle Angle Structures
+ * Angle structures on triangulations.
+ * @{
+ */
+
+/**
  * A vector of integers used to indirectly store the individual angles
  * in an angle structure.
  *
@@ -252,6 +258,8 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
 
     friend class regina::NXMLAngleStructureReader;
 };
+
+/*@}*/
 
 // Inline functions for NAngleStructureVector
 

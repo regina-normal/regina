@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup engine
+ * @{
+ */
+
+/**
  * Facilitates mirroring objects in the underlying C++ calculation
  * engine using the various wrapper classes provided in the various
  * external interfaces (such as the Java interface).
@@ -169,6 +174,8 @@ class ShareableObject {
          */
         std::string toStringLong() const;
 };
+
+/*@}*/
 
 // Inline functions for ShareableObject
 

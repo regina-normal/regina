@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * A common base class for compression/decompression stream buffers.
  * This class should not be instantiated directly; see classes
  * CompressionBuffer and DecompressionBuffer instead.
@@ -328,6 +333,8 @@ class DecompressionStream : public std::istream {
          */
         int close();
 };
+
+/*@}*/
 
 // Inline functions for ZBuffer
 

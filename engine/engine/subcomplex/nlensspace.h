@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a general Lens space.
  */
 class NLensSpace : public ShareableObject {
@@ -107,6 +112,8 @@ class NLensSpace : public ShareableObject {
          */
         void reduce();
 };
+
+/*@}*/
 
 // Inline functions for NLensSpace
 

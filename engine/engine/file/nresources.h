@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup file
+ * @{
+ */
+
+/**
  * Provides a standard random access interface for old-style binary
  * file-like resources.
  *
@@ -197,6 +202,8 @@ class NLocalFileResource : public NRandomAccessResource {
         virtual long getPosition();
         virtual void setPosition(long pos);
 };
+
+/*@}*/
 
 // Inline functions for NRandomAccessResource
 

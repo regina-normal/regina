@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup file
+ * @{
+ */
+
+/**
  * Provides the callbacks for an XMLParser required to parse an entire
  * file using a series of NXMLElementReader objects.
  * See the NXMLElementReader class notes for details of precisely how
@@ -136,6 +141,8 @@ class NXMLCallback : public regina::xml::XMLParserCallback {
          */
         NXMLElementReader* currentReader();
 };
+
+/*@}*/
 
 // Inline functions for NXMLCallback
 

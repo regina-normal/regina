@@ -48,6 +48,12 @@ class NProgressManager;
 class NProgressMessage;
 
 /**
+ * \addtogroup census Census of Triangulations
+ * Census building for 3-manifold triangulations.
+ * @{
+ */
+
+/**
  * Fills the given packet with all triangulations in the census with the
  * requested parameters.  Each triangulation in the census will appear as
  * a child of the given packet.
@@ -374,6 +380,8 @@ class NCensus : public NThread {
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, NProgressManager* manager);
 };
+
+/*@}*/
 
 // Inline functions for NCensus
 

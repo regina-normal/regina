@@ -55,6 +55,12 @@ class NXMLPacketReader;
 class NXMLTriangulationReader;
 
 /**
+ * \addtogroup triangulation Triangulations
+ * Triangulations of 3-manifolds.
+ * @{
+ */
+
+/**
  * Stores the triangulation of a 3-manifold along with its
  * various cellular structures and other information.
  *
@@ -175,6 +181,11 @@ class NTriangulation : public NPacket, NPropertyHolder {
 
     public:
         /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
          * Default constructor.
          * Creates an empty triangulation.
          */
@@ -195,179 +206,35 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * structure and all other properties will also be deallocated.
          */
         virtual ~NTriangulation();
+
+        /*@}*/
+        /**
+         * (end: Constructors and Destructors)
+         */
         
+        /**
+         * \name Packet Administration
+         */
+        /*@{*/
+
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
         
-        static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual void writePacket(NFile& out) const;
-        static NTriangulation* readPacket(NFile& in, NPacket* parent);
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         virtual bool dependsOnParent() const;
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
 
+        /*@}*/
         /**
-         * Allows the user to interactively enter a triangulation in
-         * plain text.  Prompts will be sent to the given output stream
-         * and information will be read from the given input stream.
-         *
-         * \ifaces This routine is a member of class Engine.
-         * It takes no parameters; \a in and \a out are always assumed
-         * to be standard input and standard output respectively.
-         *
-         * @param in the input stream from which text will be read.
-         * @param out the output stream to which prompts will be
-         * written.
-         * @return the triangulation entered in by the user.
+         * (end: Packet Administration)
          */
-        static NTriangulation* enterTextTriangulation(std::istream& in,
-                std::ostream& out);
 
         /**
-         * Returns the Euler characteristic of this triangulation.
-         *
-         * This will be evaluated strictly as
-         * <i>V</i>-<i>E</i>+<i>F</i>-<i>T</i>.  Thus if the manifold
-         * contains cusps, the Euler characteristic will almost
-         * certainly not be the same as the corresponding 3-manifold
-         * with the cusps truncated.
-         *
-         * @return the Euler characteristic.
+         * \name Tetrahedra
          */
-        long getEulerCharacteristic();
-
-        /**
-         * Returns the fundamental group of this triangulation.
-         * If this triangulation contains any ideal or non-standard
-         * vertices, the fundamental group will be
-         * calculated as if each such vertex had been truncated.
-         *
-         * If this triangulation contains any invalid edges, the
-         * calculations will be performed <b>without</b> any truncation
-         * of the corresponding projective plane cusp.  Thus if a
-         * barycentric subdivision is performed on the triangulation, the
-         * result of getFundamentalGroup() will change.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * fundamental group will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getFundamentalGroup() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
-         *
-         * Note that this triangulation is not required to be valid
-         * (see isValid()).
-         *
-         * \pre This triangulation has at most one component.
-         *
-         * @return the fundamental group.
-         */
-        const NGroupPresentation& getFundamentalGroup();
-        /**
-         * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal or non-standard
-         * vertices, the homology group will be
-         * calculated as if each such vertex had been truncated.
-         *
-         * If this triangulation contains any invalid edges, the
-         * calculations will be performed <b>without</b> any truncation
-         * of the corresponding projective plane cusp.  Thus if a
-         * barycentric subdivision is performed on the triangulation, the
-         * result of getHomologyH1() will change.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getHomologyH1() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
-         *
-         * Note that this triangulation is not required to be valid
-         * (see isValid()).
-         *
-         * @return the first homology group.
-         */
-        const NAbelianGroup& getHomologyH1();
-        /**
-         * Returns the relative first homology group with
-         * respect to the boundary for this triangulation.
-         * Note that ideal vertices are considered part of the boundary.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getHomologyH1Rel() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
-         *
-         * \pre This triangulation is valid.
-         *
-         * @return the relative first homology group with respect to the
-         * boundary.
-         */
-        const NAbelianGroup& getHomologyH1Rel();
-        /**
-         * Returns the first homology group of the
-         * boundary for this triangulation.
-         * Note that ideal vertices are considered part of the boundary.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getHomologyH1Bdry() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
-         *
-         * This routine is fairly fast, since it deduces the homology of
-         * each boundary component through knowing what kind of surface
-         * it is.
-         *
-         * \pre This triangulation is valid.
-         *
-         * @return the first homology group of the boundary.
-         */
-        const NAbelianGroup& getHomologyH1Bdry();
-        /**
-         * Returns the second homology group for this triangulation.
-         * If this triangulation contains any ideal vertices,
-         * the homology group will be
-         * calculated as if each such vertex had been truncated.
-         * The algorithm used calculates various first homology groups
-         * and uses homology and cohomology theorems to deduce the
-         * second homology group.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.
-         * Thus the group reference returned should not be kept for
-         * later use.  Instead, getHomologyH2() should be called again;
-         * this will be instantaneous if the group has already been
-         * calculated.
-         *
-         * \pre This triangulation is valid.
-         *
-         * @return the second homology group.
-         */
-        const NAbelianGroup& getHomologyH2();
-        /**
-         * Returns the second homology group with coefficients in Z_2
-         * for this triangulation.
-         * If this triangulation contains any ideal vertices,
-         * the homology group will be
-         * calculated as if each such vertex had been truncated.
-         * The algorithm used calculates the relative first homology group
-         * with respect to the boundary and uses homology and cohomology
-         * theorems to deduce the second homology group.
-         *
-         * This group will simply be the direct sum of several copies of
-         * Z_2, so the number of Z_2 terms is returned.
-         *
-         * \pre This triangulation is valid.
-         *
-         * @return the number of Z_2 terms in the second homology group
-         * with coefficients in Z_2.
-         */
-        unsigned long getHomologyH2Z2();
+        /*@{*/
 
         /**
          * Returns the number of tetrahedra in the triangulation.
@@ -490,6 +357,16 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         void gluingsHaveChanged();
                 
+        /*@}*/
+        /**
+         * (end: Tetrahedra)
+         */
+
+        /**
+         * \name Skeletal Queries
+         */
+        /*@{*/
+
         /**
          * Returns the number of boundary components in this
          * triangulation.  Note that each ideal vertex forms its own
@@ -765,6 +642,44 @@ class NTriangulation : public NPacket, NPropertyHolder {
         #endif
 
         /**
+         * Determines if this triangulation is combinatorially
+         * isomorphic to the given triangulation (this is the same as
+         * simplicially homeomorphic).
+         *
+         * \todo \opt Improve the complexity by choosing a tetrahedron
+         * mapping from each component and following gluings to
+         * determine the others.
+         *
+         * @param other the triangulation to compare with this one.
+         * @return \c true if and only if this and the given
+         * triangulation are combinatorially isomorphic.
+         */
+        bool isIsomorphicTo(NTriangulation& other);
+
+        /*@}*/
+        /**
+         * (end: Skeletal Queries)
+         */
+
+        /**
+         * \name Basic Properties
+         */
+        /*@{*/
+
+        /**
+         * Returns the Euler characteristic of this triangulation.
+         *
+         * This will be evaluated strictly as
+         * <i>V</i>-<i>E</i>+<i>F</i>-<i>T</i>.  Thus if the manifold
+         * contains cusps, the Euler characteristic will almost
+         * certainly not be the same as the corresponding 3-manifold
+         * with the cusps truncated.
+         *
+         * @return the Euler characteristic.
+         */
+        long getEulerCharacteristic();
+
+        /**
          * Determines if this triangulation is valid.
          * A triangulation is valid unless there is some vertex whose
          * link has boundary but is not a disc (i.e., a vertex for which
@@ -822,6 +737,158 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         bool isConnected();
 
+        /*@}*/
+        /**
+         * (end: Basic Properties)
+         */
+
+        /**
+         * \name Algebraic Properties
+         */
+        /*@{*/
+
+        /**
+         * Returns the fundamental group of this triangulation.
+         * If this triangulation contains any ideal or non-standard
+         * vertices, the fundamental group will be
+         * calculated as if each such vertex had been truncated.
+         *
+         * If this triangulation contains any invalid edges, the
+         * calculations will be performed <b>without</b> any truncation
+         * of the corresponding projective plane cusp.  Thus if a
+         * barycentric subdivision is performed on the triangulation, the
+         * result of getFundamentalGroup() will change.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * fundamental group will be deleted.
+         * Thus the group reference returned should not be kept for
+         * later use.  Instead, getFundamentalGroup() should be called again;
+         * this will be instantaneous if the group has already been
+         * calculated.
+         *
+         * Note that this triangulation is not required to be valid
+         * (see isValid()).
+         *
+         * \pre This triangulation has at most one component.
+         *
+         * @return the fundamental group.
+         */
+        const NGroupPresentation& getFundamentalGroup();
+        /**
+         * Returns the first homology group for this triangulation.
+         * If this triangulation contains any ideal or non-standard
+         * vertices, the homology group will be
+         * calculated as if each such vertex had been truncated.
+         *
+         * If this triangulation contains any invalid edges, the
+         * calculations will be performed <b>without</b> any truncation
+         * of the corresponding projective plane cusp.  Thus if a
+         * barycentric subdivision is performed on the triangulation, the
+         * result of getHomologyH1() will change.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * homology groups will be deleted.
+         * Thus the group reference returned should not be kept for
+         * later use.  Instead, getHomologyH1() should be called again;
+         * this will be instantaneous if the group has already been
+         * calculated.
+         *
+         * Note that this triangulation is not required to be valid
+         * (see isValid()).
+         *
+         * @return the first homology group.
+         */
+        const NAbelianGroup& getHomologyH1();
+        /**
+         * Returns the relative first homology group with
+         * respect to the boundary for this triangulation.
+         * Note that ideal vertices are considered part of the boundary.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * homology groups will be deleted.
+         * Thus the group reference returned should not be kept for
+         * later use.  Instead, getHomologyH1Rel() should be called again;
+         * this will be instantaneous if the group has already been
+         * calculated.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return the relative first homology group with respect to the
+         * boundary.
+         */
+        const NAbelianGroup& getHomologyH1Rel();
+        /**
+         * Returns the first homology group of the
+         * boundary for this triangulation.
+         * Note that ideal vertices are considered part of the boundary.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * homology groups will be deleted.
+         * Thus the group reference returned should not be kept for
+         * later use.  Instead, getHomologyH1Bdry() should be called again;
+         * this will be instantaneous if the group has already been
+         * calculated.
+         *
+         * This routine is fairly fast, since it deduces the homology of
+         * each boundary component through knowing what kind of surface
+         * it is.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return the first homology group of the boundary.
+         */
+        const NAbelianGroup& getHomologyH1Bdry();
+        /**
+         * Returns the second homology group for this triangulation.
+         * If this triangulation contains any ideal vertices,
+         * the homology group will be
+         * calculated as if each such vertex had been truncated.
+         * The algorithm used calculates various first homology groups
+         * and uses homology and cohomology theorems to deduce the
+         * second homology group.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * homology groups will be deleted.
+         * Thus the group reference returned should not be kept for
+         * later use.  Instead, getHomologyH2() should be called again;
+         * this will be instantaneous if the group has already been
+         * calculated.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return the second homology group.
+         */
+        const NAbelianGroup& getHomologyH2();
+        /**
+         * Returns the second homology group with coefficients in Z_2
+         * for this triangulation.
+         * If this triangulation contains any ideal vertices,
+         * the homology group will be
+         * calculated as if each such vertex had been truncated.
+         * The algorithm used calculates the relative first homology group
+         * with respect to the boundary and uses homology and cohomology
+         * theorems to deduce the second homology group.
+         *
+         * This group will simply be the direct sum of several copies of
+         * Z_2, so the number of Z_2 terms is returned.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return the number of Z_2 terms in the second homology group
+         * with coefficients in Z_2.
+         */
+        unsigned long getHomologyH2Z2();
+
+        /*@}*/
+        /**
+         * (end: Algebraic Properties)
+         */
+
+        /**
+         * \name Normal Surface Properties
+         */
+        /*@{*/
+
         /**
          * Determines if this triangulation is 0-efficient.
          * A triangulation is 0-efficient if its only normal spheres and
@@ -869,6 +936,16 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @return \c true if and only if this property is already known.
          */
         bool knowsSplittingSurface() const;
+
+        /*@}*/
+        /**
+         * (end: Normal Surface Properties)
+         */
+
+        /**
+         * \name Skeletal Transformations
+         */
+        /*@{*/
         
         /**
          * Produces a maximal forest in the 1-skeleton of the
@@ -1309,6 +1386,16 @@ class NTriangulation : public NPacket, NPropertyHolder {
         bool shellBoundary(NTetrahedron* t,
                 bool check = true, bool perform = true);
 
+        /*@}*/
+        /**
+         * (end: Skeletal Transformations)
+         */
+
+        /**
+         * \name Subdivisions and Covers
+         */
+        /*@{*/
+
         /**
          * Converts this triangulation into its double cover.
          * Each orientable component will be duplicated, and each
@@ -1355,6 +1442,16 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @author David Letscher
          */
         void barycentricSubdivision();
+
+        /*@}*/
+        /**
+         * (end: Subdivisions and Covers)
+         */
+
+        /**
+         * \name Building Triangulations
+         */
+        /*@{*/
 
         /**
          * Inserts a new layered solid torus into the triangulation.
@@ -1436,20 +1533,30 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         bool insertRehydration(const std::string& dehydration);
 
+        /*@}*/
         /**
-         * Determines if this triangulation is combinatorially
-         * isomorphic to the given triangulation (this is the same as
-         * simplicially homeomorphic).
-         *
-         * \todo \opt Improve the complexity by choosing a tetrahedron
-         * mapping from each component and following gluings to
-         * determine the others.
-         *
-         * @param other the triangulation to compare with this one.
-         * @return \c true if and only if this and the given
-         * triangulation are combinatorially isomorphic.
+         * (end: Building Triangulations)
          */
-        bool isIsomorphicTo(NTriangulation& other);
+
+        /**
+         * Allows the user to interactively enter a triangulation in
+         * plain text.  Prompts will be sent to the given output stream
+         * and information will be read from the given input stream.
+         *
+         * \ifaces This routine is a member of class Engine.
+         * It takes no parameters; \a in and \a out are always assumed
+         * to be standard input and standard output respectively.
+         *
+         * @param in the input stream from which text will be read.
+         * @param out the output stream to which prompts will be
+         * written.
+         * @return the triangulation entered in by the user.
+         */
+        static NTriangulation* enterTextTriangulation(std::istream& in,
+                std::ostream& out);
+
+        static NXMLPacketReader* getXMLReader(NPacket* parent);
+        static NTriangulation* readPacket(NFile& in, NPacket* parent);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -1563,6 +1670,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
 
     friend class regina::NXMLTriangulationReader;
 };
+
+/*@}*/
 
 // Inline functions for NTriangulation
 

@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * A set of booleans.  Note that there are only four possible such sets.
  * NBoolSet objects are small enough to pass about by value instead of
  * by reference.
@@ -364,6 +369,8 @@ class NBoolSet {
  * @return a reference to \a out.
  */
 std::ostream& operator << (std::ostream& out, const NBoolSet& set);
+
+/*@}*/
 
 // Inline functions for NBoolSet
 

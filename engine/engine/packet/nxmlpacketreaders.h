@@ -43,6 +43,11 @@
 namespace regina {
 
 /**
+ * \weakgroup packet
+ * @{
+ */
+
+/**
  * An XML packet reader that reads a single container.
  *
  * \ifaces Not present.
@@ -108,6 +113,8 @@ class NXMLTextReader : public NXMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             NXMLElementReader* subReader);
 };
+
+/*@}*/
 
 // Inline functions for NXMLContainerReader
 

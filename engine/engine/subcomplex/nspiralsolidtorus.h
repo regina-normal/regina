@@ -44,6 +44,11 @@ class NTetrahedron;
 class NTriangulation;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a spiralled solid torus in a triangulation.
  *
  * A spiralled solid torus is created by placing tetrahedra one upon
@@ -235,6 +240,8 @@ class NSpiralSolidTorus : public ShareableObject {
          */
         NSpiralSolidTorus(unsigned long newNTet);
 };
+
+/*@}*/
 
 // Inline functions for NSpiralSolidTorus
 

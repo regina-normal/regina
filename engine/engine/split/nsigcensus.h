@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup split
+ * @{
+ */
+
+/**
  * A list of partial isomorphisms on splitting surface signatures.
  */
 typedef std::list<NSigPartialIsomorphism*> NSigIsoList;
@@ -190,6 +195,8 @@ class NSigCensus {
     friend unsigned long formSigCensus(unsigned order, UseSignature use,
         void* useArgs);
 };
+
+/*@}*/
 
 // Inline functions for NSigCensus
 

@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * Represents an arbitrary precision rational number.
  * Calculations with NRational objects will be exact.
  *
@@ -333,6 +338,8 @@ class NRational {
  * @return a reference to \a out.
  */
 std::ostream& operator << (std::ostream& out, const NRational& rat);
+
+/*@}*/
 
 // Inline functions for NRational
 

@@ -43,6 +43,12 @@ namespace regina {
 class NLensSpace;
 
 /**
+ * \addtogroup subcomplex Standard Subcomplexes
+ * Standard combinatorial subcomplexes in 3-manifold triangulations.
+ * @{
+ */
+
+/**
  * Represents an exceptional (<i>alpha</i>, <i>beta</i>) fibre in a Seifert
  * fibred space.  The first parameter \a alpha will always be non-negative.
  *
@@ -331,6 +337,8 @@ class NSFS : public ShareableObject {
          */
         NExceptionalFibre getModifiedFinalFibre() const;
 };
+
+/*@}*/
 
 // Inline functions for NExceptionalFibre
 

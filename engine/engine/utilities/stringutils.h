@@ -43,6 +43,11 @@ class NLargeInteger;
 class NBoolSet;
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * Creates a new C string that is a duplicate of the given C++ string.
  *
  * The deallocation of the new C string is the responsibility of
@@ -174,6 +179,8 @@ bool valueOf(const std::string& str, NBoolSet& dest);
  */
 template <class OutputIterator>
 unsigned basicTokenise(OutputIterator results, const std::string& str);
+
+/*@}*/
 
 } // namespace regina
 

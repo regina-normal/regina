@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup file
+ * @{
+ */
+
+/**
  * Stores information about a Regina data file, including file type and
  * version.
  *
@@ -134,6 +139,8 @@ class NFileInfo : public ShareableObject {
          */
         NFileInfo();
 };
+
+/*@}*/
 
 // Inline functions for NFileInfo
 

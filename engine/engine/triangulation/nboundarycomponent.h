@@ -46,6 +46,11 @@ class NFace;
 class NEdge;
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * Represents a component of the boundary of a triangulation.
  * Note that an ideal vertex constitutes a boundary component of its
  * own. 
@@ -195,6 +200,8 @@ class NBoundaryComponent : public ShareableObject {
     friend class NTriangulation;
         /**< Allow access to private members. */
 };
+
+/*@}*/
 
 // Inline functions for NBoundaryComponent
 

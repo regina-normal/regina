@@ -41,6 +41,12 @@
 namespace regina {
 
 /**
+ * \addtogroup maths Mathematical Support
+ * Underlying mathematical gruntwork.
+ * @{
+ */
+
+/**
  * Reduces \a k modulo \a modBase to give the smallest possible
  * absolute value.  For instance, <tt>reducedMod(10,4) = 4</tt> but
  * <tt>reducedMod(10,6) = -4</tt>.  In the case of a tie, the positive
@@ -149,6 +155,8 @@ void factorise(unsigned long n, std::list<unsigned long>& factors);
  * @param primes the list into which the primes will be inserted.
  */
 void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes);
+
+/*@}*/
 
 } // namespace regina
 

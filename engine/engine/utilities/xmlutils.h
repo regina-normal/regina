@@ -59,6 +59,11 @@ namespace regina {
 namespace xml {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * Represents a hashed map from property names to property values.
  *
  * \ifaces Not present.
@@ -333,6 +338,8 @@ inline std::string xmlValueTag(const std::string& tagName, const T& value) {
             (value.hasFalse() ? 'F' : '-') + "\"/>";
     }
 #endif
+
+/*@}*/
 
 // Inline functions for XMLPropertyDict
 

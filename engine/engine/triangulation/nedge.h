@@ -46,6 +46,11 @@ class NComponent;
 class NBoundaryComponent;
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * <tt>edgeNumber[i][j]</tt> is the number of the
  * edge linking vertices <tt>i</tt> and <tt>j</tt>
  * in a tetrahedron.  <tt>i</tt> and <tt>j</tt>
@@ -285,6 +290,8 @@ class NEdge : public ShareableObject {
     friend class NTriangulation;
         /**< Allow access to private members. */
 };
+
+/*@}*/
 
 // Inline functions for NEdge
 

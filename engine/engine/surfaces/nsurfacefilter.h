@@ -46,6 +46,11 @@ class NXMLPacketReader;
 class NXMLFilterReader;
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * A packet that accepts or rejects normal surfaces.
  * Different subclasses of NSurfaceFilter represent different filtering
  * methods.
@@ -280,6 +285,8 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();
 };
+
+/*@}*/
 
 // Inline functions for NSurfaceFilter
 

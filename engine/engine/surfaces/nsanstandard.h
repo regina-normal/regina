@@ -43,6 +43,11 @@ namespace regina {
 class NMatrixInt;
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * An almost normal surface vector using standard triangle-quad-oct
  * coordinates.
  *
@@ -96,6 +101,8 @@ class NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
             RayOutputIterator rays, FaceOutputIterator faces);
         static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
 };
+
+/*@}*/
 
 // Inline functions for NNormalSurfaceVectorANStandard
 

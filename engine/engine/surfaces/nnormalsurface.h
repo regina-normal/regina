@@ -43,6 +43,12 @@
 namespace regina {
 
 /**
+ * \addtogroup surfaces Normal Surfaces
+ * Normal surfaces in triangulations.
+ * @{
+ */
+
+/**
  * Lists which vertex splits split which pairs of vertices.
  * There are three vertex splits, numbered 0,1,2.  Each vertex
  * split split the four tetrahedron vertices 0,1,2,3 into two pairs.
@@ -939,6 +945,8 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
 
     friend class regina::NXMLNormalSurfaceReader;
 };
+
+/*@}*/
 
 // Inline functions for NNormalSurfaceVector
 

@@ -45,6 +45,11 @@ class NFace;
 class NTriangulation;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a 2-sphere made from two faces glued together along their
  * three edges.  The two faces must be distinct and the three edges of
  * each face must also be distinct.  Neither of the faces may be boundary
@@ -151,6 +156,8 @@ class NPillowTwoSphere : public ShareableObject {
          */
         NPillowTwoSphere();
 };
+
+/*@}*/
 
 // Inline functions for NPillowTwoSphere
 

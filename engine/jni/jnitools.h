@@ -50,6 +50,12 @@ namespace regina {
 namespace jni {
 
 /**
+ * \addtogroup jni Java Interaction
+ * Interacting with Java using JNI.
+ * @{
+ */
+
+/**
  * Signifies that the routine about to be defined is a native JNI routine.
  *
  * This declaration should be used instead of <tt>JNIEXPORT</tt> in C++
@@ -218,6 +224,8 @@ regina::NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value);
  */
 jobject jBigIntegerFromLarge(JNIEnv* jni_env,
     const regina::NLargeInteger& value);
+
+/*@}*/
 
 // Inline global functions
 

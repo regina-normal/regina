@@ -42,6 +42,11 @@ namespace regina {
 class NPacket;
 
 /**
+ * \weakgroup packet
+ * @{
+ */
+
+/**
  * An XML element reader that reads the data for an individual packet.
  *
  * Generally a subclass of NXMLPacketReader will be used to receive and
@@ -153,6 +158,8 @@ class NXMLPacketReader : public NXMLElementReader {
             NXMLElementReader* subReader);
         virtual void abort(NXMLElementReader *subReader);
 };
+
+/*@}*/
 
 // Inline functions for NXMLPacketReader
 

@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * Represents a permutation of {0,1,2,3}.
  * Such permutations are used in specifying how simplices are glued together.
  * NPerm objects are small enough to pass about by value instead of by
@@ -478,6 +483,8 @@ std::string edgeDescription(int edge);
 #ifdef __DOXYGEN
 std::string edgeDescription(const NPerm& edgePerm);
 #endif
+
+/*@}*/
 
 // Inline functions for NPerm
 

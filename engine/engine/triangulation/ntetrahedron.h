@@ -46,6 +46,11 @@ class NVertex;
 class NComponent;
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * Represents a tetrahedron in a triangulation.
  *
  * With each tetrahedron is stored various pieces of information
@@ -373,6 +378,8 @@ class NTetrahedron : public ShareableObject {
     friend class NTriangulation;
         /**< Allow access to private members. */
 };
+
+/*@}*/
 
 // Inline functions for NTetrahedron
 

@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup maths
+ * @{
+ */
+
+/**
  * Represents a matrix of elements from a given field T.
  *
  * \pre Type T has a default constructor and overloads the assignment
@@ -167,6 +172,8 @@ class NMatrixField : public NMatrixRing<T> {
             return ans;
         }
 };
+
+/*@}*/
 
 } // namespace regina
 

@@ -70,6 +70,12 @@ class NText;
 class NTriSolidTorus;
 class NTriangulation;
 
+/**
+ * \addtogroup engine Engine Structure
+ * Overall structure of the calculation engine.
+ * @{
+ */
+
 #ifdef __DOXYGEN
 /**
  * Represents a link from an external interface to the calculation
@@ -267,6 +273,8 @@ std::string getVersionString();
  * @return the same integer that was passed as \a value.
  */
 int testEngine(int value);
+
+/*@}*/
 
 } // namespace regina
 

@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * An XML packet reader that reads a single triangulation.
  *
  * \ifaces Not present.
@@ -63,6 +68,8 @@ class NXMLTriangulationReader : public NXMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             NXMLElementReader* subReader);
 };
+
+/*@}*/
 
 // Inline functions for NXMLTriangulationReader
 

@@ -45,6 +45,12 @@ class NFile;
 class NMatrixInt;
 
 /**
+ * \addtogroup algebra Algebraic Structures
+ * Various algebraic structures.
+ * @{
+ */
+
+/**
  * Represents a finitely generated abelian group.
  *
  * The torsion elements of the group are stored in terms of their
@@ -301,6 +307,8 @@ class NAbelianGroup : public ShareableObject {
          */
         void replaceTorsion(const NMatrixInt& matrix);
 };
+
+/*@}*/
 
 // Inline functions for NAbelianGroup
 

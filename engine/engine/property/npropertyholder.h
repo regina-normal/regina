@@ -42,6 +42,12 @@ namespace regina {
 class NFile;
 
 /**
+ * \addtogroup property Old-Style Properties
+ * Storing properties in old-style binary files.
+ * @{
+ */
+
+/**
  * Represents an object that can have properties, and whose properties
  * can be written to and read from old-style binary files.
  *
@@ -247,6 +253,8 @@ class NPropertyHolder {
          */
         virtual void initialiseAllProperties() = 0;
 };
+
+/*@}*/
 
 // Inline functions for NPropertyHolder
 

@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * A dynamically resizable array of objects of type T with fast random
  * access and fast object-to-index lookup.  The fast object-to-index
  * lookup is achieved by using a hashed dictionary mapping objects to
@@ -497,6 +502,8 @@ inline bool operator < (const NIndexedArray<Data, HashFcn, EqualTo>& array1,
     return lexicograhical_compare(array1.begin(), array1,end(),
         array2.begin(), array2.end());
 }
+
+/*@}*/
 
 } // namespace regina
 

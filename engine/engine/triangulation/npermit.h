@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * An iterator class that runs through all 24 permutations of four
  * elements.
  */
@@ -79,6 +84,8 @@ class NPermItS4 {
          */
         bool done() const;
 };
+
+/*@}*/
 
 // Inline functions for NPermItS4
 

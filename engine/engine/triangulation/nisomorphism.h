@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * Represents a combinatorial isomorphism of a triangulation.
  * This class cannot be directly instantiated; the individual subclasses
  * correspond to different methods of storing the face permutation
@@ -266,6 +271,8 @@ class NIsomorphismIndexed : public NIsomorphism {
          */
         const int& facePermIndex(unsigned tet) const;
 };
+
+/*@}*/
 
 // Inline functions for NIsomorphism
 

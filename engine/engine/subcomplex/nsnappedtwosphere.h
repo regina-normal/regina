@@ -45,6 +45,11 @@ class NTriangulation;
 class NSnappedBall;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a 2-sphere made from two snapped 3-balls in a triangulation.
  * This occurs when two snapped 3-balls are glued together at their
  * equators (note that this gluing does not have to extend to faces).  Each
@@ -158,6 +163,8 @@ class NSnappedTwoSphere : public ShareableObject {
          */
         NSnappedTwoSphere();
 };
+
+/*@}*/
 
 // Inline functions for NSnappedTwoSphere
 

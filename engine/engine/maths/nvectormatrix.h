@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup maths
+ * @{
+ */
+
+/**
  * A vector that corresponds to a row or column of a matrix.
  * Such a vector takes up essentially no storage space, since it merely looks
  * up values in the matrix it references.  Because of this, it should
@@ -170,6 +175,8 @@ class NVectorMatrixCol : public NVectorMatrix<T> {
             return source.entry(index, rowCol);
         }
 };
+
+/*@}*/
 
 } // namespace regina
 

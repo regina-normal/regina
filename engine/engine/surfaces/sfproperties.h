@@ -44,6 +44,11 @@
 namespace regina {
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * A normal surface filter that filters by basic properties of the normal
  * surface.
  *
@@ -210,6 +215,8 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();
 };
+
+/*@}*/
 
 // Inline functions for NSurfaceFilterProperties
 

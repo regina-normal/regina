@@ -44,6 +44,11 @@ namespace regina {
 class NComponent;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a layered chain pair component of a triangulation.
  *
  * A layered chain pair consists of two layered chains (as described by
@@ -135,6 +140,8 @@ class NLayeredChainPair : public ShareableObject {
          */
         void findExceptionalFibres();
 };
+
+/*@}*/
 
 // Inline functions for NLayeredChainPair
 

@@ -45,6 +45,11 @@ class NComponent;
 class NBoundaryComponent;
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * Details how a face in the skeleton forms part of an individual
  * tetrahedron.
  */
@@ -309,6 +314,8 @@ class NFace : public ShareableObject {
     friend class NTriangulation;
         /**< Allow access to private members. */
 };
+
+/*@}*/
 
 // Inline functions for NFace
 

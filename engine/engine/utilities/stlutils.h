@@ -75,6 +75,11 @@ namespace regina {
 namespace stl {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * An adaptable unary function used to select the first element of a pair.
  * This class is for use with the Standard Template Library.
  *
@@ -203,6 +208,8 @@ inline unary_compose<Operation1, Operation2> compose1(
         const Operation1& func1, const Operation2& func2) {
     return unary_compose<Operation1, Operation2>(func1, func2);
 }
+
+/*@}*/
 
 } } // namespace regina::stl
 

@@ -43,6 +43,12 @@ namespace regina {
 class NPacket;
 
 /**
+ * \addtogroup file File I/O
+ * File reading and writing.
+ * @{
+ */
+
+/**
  * Writes the subtree with the given packet as matriarch to disk as a
  * complete XML file.  The XML file may be optionally compressed.
  *
@@ -90,6 +96,8 @@ NPacket* readXMLFile(const char* fileName);
  * encountered or the file could not be opened.
  */
 NPacket* readFileMagic(const std::string& fileName);
+
+/*@}*/
 
 } // namespace regina
 

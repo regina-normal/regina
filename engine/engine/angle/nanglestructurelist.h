@@ -48,6 +48,11 @@ class NXMLPacketReader;
 class NXMLAngleStructureListReader;
 
 /**
+ * \weakgroup angle
+ * @{
+ */
+
+/**
  * A packet representing a collection of angle structures on a triangulation.
  * Such a packet must always be a child packet of the triangulation on
  * which the angle structures lie.  If this triangulation changes, the
@@ -263,6 +268,8 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
 
     friend class regina::NXMLAngleStructureListReader;
 };
+
+/*@}*/
 
 // Inline functions for NAngleStructureList
 

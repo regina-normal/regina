@@ -43,6 +43,11 @@ namespace regina {
 class NTetrahedron;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a three-tetrahedron triangular solid torus in a triangulation.
  * A three-tetrahedron triangular solid torus is a three-tetrahedron
  * triangular prism with its two ends identified.
@@ -265,6 +270,8 @@ class NTriSolidTorus : public ShareableObject {
          */
         NTriSolidTorus();
 };
+
+/*@}*/
 
 // Inline functions for NTriSolidTorus
 

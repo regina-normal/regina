@@ -35,6 +35,11 @@
 #ifndef __REGINA_H
 #define __REGINA_H
 
+/**
+ * \weakgroup engine
+ * @{
+ */
+
 #define PROGRAM_NAME "Regina"
     /**< String name of the program, to be placed at the beginning of
      *   data files. */
@@ -56,6 +61,8 @@
     /**< The number of bytes written to files to represent a file position;
      *   any higher order bytes will be ignored.  This ensures
      *   constancy of file format across platforms. */
+
+/*@}*/
     
 #endif
 

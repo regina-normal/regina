@@ -43,6 +43,11 @@ namespace regina {
 namespace jni {
 
 /**
+ * \weakgroup jni
+ * @{
+ */
+
+/**
  * A shareable object that can provide the underlying implementation of a
  * Java enumeration over a C++ container class.
  *
@@ -95,6 +100,8 @@ class NJNIEnumeration : public ShareableObject {
             out << "C++ container class enumerator";
         }
 };
+
+/*@}*/
 
 } } // namespace regina::jni
 

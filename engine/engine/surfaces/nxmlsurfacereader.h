@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * An XML element reader that reads a single normal surface.
  *
  * \ifaces Not present.
@@ -116,6 +121,8 @@ class NXMLNormalSurfaceListReader : public NXMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             NXMLElementReader* subReader);
 };
+
+/*@}*/
 
 // Inline functions for NXMLNormalSurfaceReader
 

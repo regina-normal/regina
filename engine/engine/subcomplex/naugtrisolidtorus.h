@@ -45,6 +45,11 @@ namespace regina {
 class NComponent;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents an augmented triangular solid torus component of a
  * triangulation.  Such a component is obtained as follows.  Begin with
  * a three-tetrahedron triangular solid torus (as described by
@@ -264,6 +269,8 @@ class NAugTriSolidTorus : public ShareableObject {
          */
         void findExceptionalFibres();
 };
+
+/*@}*/
 
 // Inline functions for NAugTriSolidTorus
 

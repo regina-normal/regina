@@ -46,6 +46,11 @@ namespace regina {
 class NXMLPacketReader;
 
 /**
+ * \weakgroup packet
+ * @{
+ */
+
+/**
  * A packet representing a script that can be run.
  * Accessor methods for a script work a line at a time.
  */
@@ -211,6 +216,8 @@ class NScript : public NPacket, public NPropertyHolder {
             unsigned propType);
         virtual void initialiseAllProperties();
 };
+
+/*@}*/
 
 // Inline functions for NScript
 

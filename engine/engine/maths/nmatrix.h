@@ -38,6 +38,11 @@
 namespace regina {
 
 /**
+ * \weakgroup maths
+ * @{
+ */
+
+/**
  * Represents a matrix of elements of the given type T.
  *
  * \pre Type T has a default constructor and overloads the assignment
@@ -440,6 +445,8 @@ T NMatrixRing<T>::one((long)1);
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
+
+/*@}*/
 
 } // namespace regina
 

@@ -42,6 +42,12 @@ namespace regina {
 class NTriangulation;
 
 /**
+ * \addtogroup foreign Foreign File Formats
+ * Reading and writing foreign file formats.
+ * @{
+ */
+
+/**
  * Reads a triangulation from the given SnapPea file.  A newly allocated
  * triangulation will be returned; it is the user's responsibility to
  * deallocate this when it is finished with.
@@ -97,6 +103,8 @@ std::string stringToToken(const char* str);
  * @return the corresponding token.
  */
 std::string stringToToken(const std::string& str);
+
+/*@}*/
 
 } // namespace regina
 

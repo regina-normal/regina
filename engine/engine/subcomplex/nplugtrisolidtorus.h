@@ -45,6 +45,11 @@ namespace regina {
 class NTriangulation;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a plugged triangular solid torus component of a
  * triangulation.  Such a component is obtained as follows.
  *
@@ -230,6 +235,8 @@ class NPlugTriSolidTorus : public ShareableObject {
          */
         void findExceptionalFibres();
 };
+
+/*@}*/
 
 // Inline functions for NPlugTriSolidTorus
 

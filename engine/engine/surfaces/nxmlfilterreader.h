@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * An XML element reader that reads the specific details of a normal
  * surface filter.  These details are generally contained within a
  * <tt>\<filter\></tt> ... <tt>\</filter\></tt> pair.
@@ -113,6 +118,8 @@ class NXMLFilterPacketReader : public NXMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             NXMLElementReader* subReader);
 };
+
+/*@}*/
 
 // Inline functions for NXMLFilterReader
 

@@ -42,6 +42,12 @@
 namespace regina {
 
 /**
+ * \addtogroup progress Progress Management
+ * Progress reports during long calculations.
+ * @{
+ */
+
+/**
  * An object through which external interfaces can obtain progress
  * reports when running long calculations.
  * The running calculation writes to this object to
@@ -268,6 +274,8 @@ class NProgressFinished : public NProgress {
         virtual std::string internalGetDescription() const;
         virtual double internalGetPercent() const;
 };
+
+/*@}*/
 
 // Inline functions for NProgress
 

@@ -43,6 +43,11 @@ namespace regina {
 class NMatrixInt;
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * A normal surface vector using standard triangle-quad coordinates.
  *
  * If there are \a t tetrahedra in the underlying
@@ -93,6 +98,8 @@ class NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
             RayOutputIterator rays, FaceOutputIterator faces);
         static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
 };
+
+/*@}*/
 
 // Inline functions for NNormalSurfaceVectorStandard
 

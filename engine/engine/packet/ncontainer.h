@@ -43,6 +43,11 @@ namespace regina {
 class NXMLPacketReader;
 
 /**
+ * \weakgroup packet
+ * @{
+ */
+
+/**
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
  */
@@ -68,6 +73,8 @@ class NContainer : public NPacket {
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 };
+
+/*@}*/
 
 // Inline functions for NContainer
 

@@ -43,6 +43,11 @@ namespace regina {
 class NTetrahedron;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a layered chain in a triangulation.
  *
  * A layered chain is a set of \a n tetrahedra glued to each other by
@@ -232,6 +237,8 @@ class NLayeredChain : public ShareableObject {
 
         void writeTextShort(std::ostream& out) const;
 };
+
+/*@}*/
 
 // Inline functions for NLayeredChain
 

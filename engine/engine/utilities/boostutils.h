@@ -69,6 +69,11 @@ namespace regina {
 namespace boost {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * A template class used to remove the indirection from a pointer type.
  *
  * If <tt>T</tt> is a pointer type, then
@@ -209,6 +214,8 @@ template <class T>
 inline reference_wrapper<T const> const cref(T const& t) {
     return reference_wrapper<T const>(t);
 }
+
+/*@}*/
 
 } } // namespace regina::boost
 

@@ -43,6 +43,11 @@ class ShareableObject;
 
 namespace jni {
 
+/**
+ * \weakgroup jni
+ * @{
+ */
+
 #ifndef __USE_RAW_CASTING
     /**
      * Casts the given Java long as a C++ pointer.
@@ -117,6 +122,8 @@ namespace jni {
      */
     #define javaPtrToLong(p) ((jlong)((regina::ShareableObject*)(p)))
 #endif
+
+/*@}*/
 
 } } // namespace regina::jni
 

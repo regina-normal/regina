@@ -42,6 +42,11 @@ namespace regina {
 class NTetrahedron;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a snapped 3-ball in a triangulation.
  * A snapped 3-ball is a single tetrahedron with two faces glued to each
  * other to form a 3-ball with a two triangle boundary.
@@ -130,6 +135,8 @@ class NSnappedBall : public ShareableObject {
          */
         NSnappedBall();
 };
+
+/*@}*/
 
 // Inline functions for NSnappedBall
 

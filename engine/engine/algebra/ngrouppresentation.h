@@ -47,6 +47,11 @@ namespace regina {
 class NFile;
 
 /**
+ * \weakgroup algebra
+ * @{
+ */
+
+/**
  * Represents a power of a generator in a group presentation.
  *
  * \ifaces Not present.
@@ -568,6 +573,8 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();
 };
+
+/*@}*/
 
 // Inline functions for NGroupExpressionTerm
 

@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup angle
+ * @{
+ */
+
+/**
  * An XML element reader that reads a single angle structure.
  *
  * \ifaces Not present.
@@ -111,6 +116,8 @@ class NXMLAngleStructureListReader : public NXMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             NXMLElementReader* subReader);
 };
+
+/*@}*/
 
 // Inline functions for NXMLAngleStructureReader
 

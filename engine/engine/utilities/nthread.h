@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * A mutual exclusion device (mutex) used to ensure that different
  * threads do not interfere when working with the same data.
  *
@@ -167,6 +172,8 @@ class NThread {
          */
         virtual void* run(void* args) = 0;
 };
+
+/*@}*/
 
 // Inline functions for NMutex
 

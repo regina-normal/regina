@@ -44,6 +44,11 @@ namespace regina {
 class NMatrixInt;
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * Represents a ray in the boundary of a cone.
  * The cone is assumed to have its apex at the origin.  A ray is
  * represented by the coordinates of the first point it passes through
@@ -297,6 +302,8 @@ void intersectCone(OutputIterator results,
     RayIterator oldRaysFirst, RayIterator oldRaysLast,
     FaceIterator facesFirst, FaceIterator facesLast,
     const NMatrixInt& subspace, bool testCompatibility);
+
+/*@}*/
 
 // Inline functions for NConeRay
 

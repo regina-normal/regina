@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * A normal surface filter that simply combines other filters.
  * This filter will combine, using boolean \a and or \a or, all of the
  * filters that are immediate children of this packet.  This packet may
@@ -101,6 +106,8 @@ class NSurfaceFilterCombination : public NSurfaceFilter {
         virtual void writeXMLFilterData(std::ostream& out) const;
         virtual void writeFilter(NFile& out) const;
 };
+
+/*@}*/
 
 // Inline functions for NSurfaceFilterCombination
 

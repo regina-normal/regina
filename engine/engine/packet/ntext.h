@@ -42,6 +42,11 @@ namespace regina {
 class NXMLPacketReader;
 
 /**
+ * \weakgroup packet
+ * @{
+ */
+
+/**
  * A packet representing a text string.
  */
 class NText : public NPacket {
@@ -105,6 +110,8 @@ class NText : public NPacket {
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 };
+
+/*@}*/
 
 // Inline functions for NText
 

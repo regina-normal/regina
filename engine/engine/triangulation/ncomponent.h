@@ -47,6 +47,11 @@ class NVertex;
 class NBoundaryComponent;
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * Represents a component of a triangulation.
  * Components are highly temporary; once a triangulation changes, all
  * its component objects will be deleted and new ones will be created.
@@ -212,6 +217,8 @@ class NComponent : public ShareableObject {
     friend class NTriangulation;
         /**< Allow access to private members. */
 };
+
+/*@}*/
 
 // Inline functions for NComponent
 

@@ -44,6 +44,11 @@ class NTriangulation;
 class ShareableObject;
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * Represents a collection of normal surfaces in a 3-manifold.
  * This is a completely abstract base class used to provide a common
  * interface to different types of surface sets.
@@ -157,6 +162,8 @@ class NSurfaceSet {
          */
         void writeAllSurfaces(std::ostream& out) const;
 };
+
+/*@}*/
 
 } // namespace regina
 

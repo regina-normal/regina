@@ -50,6 +50,11 @@ namespace regina {
 class NPacket;
 
 /**
+ * \weakgroup file
+ * @{
+ */
+
+/**
  * Reads a packet tree from the given old-style binary file doing everything
  * in a single step.
  *
@@ -516,6 +521,8 @@ class NFile : public ShareableObject {
         NPacket* readIndividualPacket(NPacket* parent,
             std::streampos& bookmark);
 };
+
+/*@}*/
 
 // Inline functions for NFile
 

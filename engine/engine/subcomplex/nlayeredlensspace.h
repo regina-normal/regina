@@ -42,6 +42,11 @@ namespace regina {
 class NComponent;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a layered lens space component of a triangulation.
  * A layered lens space is considered to be any layered solid torus glued
  * to a degenerate (2,1,1) layered solid torus (i.e., a one-triangle mobius
@@ -147,6 +152,8 @@ class NLayeredLensSpace : public ShareableObject {
          */
         NLayeredLensSpace();
 };
+
+/*@}*/
 
 // Inline functions for NLayeredLensSpace
 

@@ -39,6 +39,11 @@
 namespace regina {
 
 /**
+ * \weakgroup triangulation
+ * @{
+ */
+
+/**
  * A lightweight class used to refer to a particular face of a
  * particular tetrahedron.  Only the tetrahedron index and face number
  * are stored.
@@ -188,6 +193,8 @@ struct NTetFace {
      */
     bool operator <= (const NTetFace& other) const;
 };
+
+/*@}*/
 
 // Inline functions for NTetFace
 

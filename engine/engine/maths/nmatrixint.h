@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup maths
+ * @{
+ */
+
+/**
  * Represents a matrix of arbitrary precision integers.
  * Calculations will be exact no matter how large the integers become.
  *
@@ -88,6 +93,8 @@ inline void NMatrixInt::writeTextShort(std::ostream& out) const {
 inline void NMatrixInt::writeTextLong(std::ostream& out) const {
     writeMatrix(out);
 }
+
+/*@}*/
 
 } // namespace regina
 

@@ -47,6 +47,12 @@ class NFile;
 class NXMLPacketReader;
 
 /**
+ * \addtogroup packet Basic Packet Types
+ * Packet administration and some basic packet types.
+ * @{
+ */
+
+/**
  * Represents a packet of information that may be individually edited or
  * operated upon.  Packets are stored in a dependency tree,
  * where child packets fit within the context of (or otherwise
@@ -114,6 +120,11 @@ class NPacket : public ShareableObject {
 
     public:
         /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
          * Constructor that inserts the new packet into the
          * overall tree structure.  The new packet will be inserted as
          * the last child of the given parent, and will be initialised
@@ -134,6 +145,16 @@ class NPacket : public ShareableObject {
          * packet.
          */
         virtual ~NPacket();
+
+        /*@}*/
+        /**
+         * (end: Constructors and Destructors)
+         */
+
+        /**
+         * \name Packet Identification
+         */
+        /*@{*/
                     
         /**
          * Returns the integer ID representing this type of packet.
@@ -179,6 +200,53 @@ class NPacket : public ShareableObject {
          * @return the descriptive text string.
          */
         std::string getFullName() const;
+
+        /**
+         * Returns a new label that cannot be found anywhere in the
+         * entire tree structure.  This packet need not be the tree
+         * matriarch; this routine will search the entire tree to which
+         * this packet belongs.
+         *
+         * The new label will consist of the given base, possibly
+         * followed by a space and a number.
+         *
+         * @param base a string upon which the new label will be based.
+         * @return a new unique label.
+         */
+        std::string makeUniqueLabel(const std::string& base) const;
+
+        /**
+         * Ensures that all packet labels in both this and the given
+         * packet tree combined are distinct.  If two packets have the
+         * same label, one will be renamed by adding a space and a number.
+         *
+         * Packets in the given packet tree will be given priority over
+         * the labels; that is, if a packet in this tree has the same
+         * label as a packet in the given tree, it will be the packet in
+         * this tree that is renamed.
+         *
+         * The given packet tree may be \c null, in which case only this
+         * tree will be examined.
+         *
+         * \pre This and the given packet belong to different packet
+         * trees, and are each matriarchs in their respective trees.
+         *
+         * @param reference the packet tree with which to compare this
+         * tree.
+         * @return \c true if and only if any of the packets were
+         * relabelled.
+         */
+        bool makeUniqueLabels(NPacket* reference);
+
+        /*@}*/
+        /**
+         * (end: Packet Identification)
+         */
+
+        /**
+         * \name Tags
+         */
+        /*@{*/
 
         /**
          * Determines whether this packet has the given associated tag.
@@ -285,6 +353,16 @@ class NPacket : public ShareableObject {
          */
         const std::set<std::string>& getTags() const;
 
+        /*@}*/
+        /**
+         * (end: Tags)
+         */
+
+        /**
+         * \name Tree Queries
+         */
+        /*@{*/
+
         /**
          * Determines the parent packet in the tree structure.
          *
@@ -347,6 +425,81 @@ class NPacket : public ShareableObject {
         NPacket* getTreeMatriarch() const;
 
         /**
+         * Counts the number of levels between this packet and its given
+         * descendant in the tree structure.  If \c descendant is this
+         * packet, the number of levels is zero.
+         *
+         * \pre This packet is equal to \c descendant, or
+         * can be obtained from \c descendant using only child-to-parent
+         * steps.
+         *
+         * @param descendant the packet whose relationship with this
+         * packet we are examining.
+         * @return the number of levels difference.
+         */
+        unsigned levelsDownTo(const NPacket* descendant) const;
+
+        /**
+         * Counts the number of levels between this packet and its given
+         * ancestor in the tree structure.  If \c ancestor is this
+         * packet, the number of levels is zero.
+         *
+         * \pre This packet is equal to \c ancestor, or
+         * can be obtained from \c ancestor using only parent-to-child
+         * steps.
+         *
+         * @param ancestor the packet whose relationship with this
+         * packet we are examining.
+         * @return the number of levels difference.
+         */
+        unsigned levelsUpTo(const NPacket* ancestor) const;
+
+        /**
+         * Determines if this packet is equal to or an ancestor of
+         * the given packet in the tree structure.
+         *
+         * @param descendant the other packet whose relationships we are
+         * examining.
+         * @return \c true if and only if this packet is equal to or an
+         * ancestor of \c descendant.
+         */
+        bool isGrandparentOf(const NPacket* descendant) const;
+
+        /**
+         * Returns the number of immediate children of this packet.
+         * Grandchildren and so on are not counted.
+         *
+         * @return the number of immediate children.
+         */
+        unsigned long getNumberOfChildren() const;
+        /**
+         * Returns the total number of descendants of this packet.  This
+         * includes children, grandchildren and so on.  This packet is not
+         * included in the count.
+         *
+         * @return the total number of descendants.
+         */
+        unsigned long getNumberOfDescendants() const;
+        /**
+         * Determines the total number of packets in the tree or subtree
+         * for which this packet is matriarch.  This packet is included
+         * in the count.
+         *
+         * @return the total tree or subtree size.
+         */
+        unsigned long getTotalTreeSize() const;
+
+        /*@}*/
+        /**
+         * (end: Tree Queries)
+         */
+
+        /**
+         * \name Tree Manipulation
+         */
+        /*@{*/
+
+        /**
          * Inserts the given packet as the first child of this packet.
          *
          * This routine takes small constant time.
@@ -406,6 +559,16 @@ class NPacket : public ShareableObject {
          * \pre This packet has a next sibling in the packet tree.
          */
         void swapWithNextSibling();
+
+        /*@}*/
+        /**
+         * (end: Tree Manipulation)
+         */
+
+        /**
+         * \name Searching and Iterating
+         */
+        /*@{*/
 
         /**
          * Finds the next packet after this in a complete depth-first
@@ -525,107 +688,15 @@ class NPacket : public ShareableObject {
          */
         const NPacket* findPacketLabel(const std::string& label) const;
 
+        /*@}*/
         /**
-         * Returns a new label that cannot be found anywhere in the
-         * entire tree structure.  This packet need not be the tree
-         * matriarch; this routine will search the entire tree to which
-         * this packet belongs.
-         *
-         * The new label will consist of the given base, possibly
-         * followed by a space and a number.
-         *
-         * @param base a string upon which the new label will be based.
-         * @return a new unique label.
+         * (end: Searching and Iterating)
          */
-        std::string makeUniqueLabel(const std::string& base) const;
 
         /**
-         * Ensures that all packet labels in both this and the given
-         * packet tree combined are distinct.  If two packets have the
-         * same label, one will be renamed by adding a space and a number.
-         *
-         * Packets in the given packet tree will be given priority over
-         * the labels; that is, if a packet in this tree has the same
-         * label as a packet in the given tree, it will be the packet in
-         * this tree that is renamed.
-         *
-         * The given packet tree may be \c null, in which case only this
-         * tree will be examined.
-         *
-         * \pre This and the given packet belong to different packet
-         * trees, and are each matriarchs in their respective trees.
-         *
-         * @param reference the packet tree with which to compare this
-         * tree.
-         * @return \c true if and only if any of the packets were
-         * relabelled.
+         * \name Java Interface Tools
          */
-        bool makeUniqueLabels(NPacket* reference);
-
-        /**
-         * Counts the number of levels between this packet and its given
-         * descendant in the tree structure.  If \c descendant is this
-         * packet, the number of levels is zero.
-         *
-         * \pre This packet is equal to \c descendant, or
-         * can be obtained from \c descendant using only child-to-parent
-         * steps.
-         *
-         * @param descendant the packet whose relationship with this
-         * packet we are examining.
-         * @return the number of levels difference.
-         */
-        unsigned levelsDownTo(const NPacket* descendant) const;
-
-        /**
-         * Counts the number of levels between this packet and its given
-         * ancestor in the tree structure.  If \c ancestor is this
-         * packet, the number of levels is zero.
-         *
-         * \pre This packet is equal to \c ancestor, or
-         * can be obtained from \c ancestor using only parent-to-child
-         * steps.
-         *
-         * @param ancestor the packet whose relationship with this
-         * packet we are examining.
-         * @return the number of levels difference.
-         */
-        unsigned levelsUpTo(const NPacket* ancestor) const;
-
-        /**
-         * Determines if this packet is equal to or an ancestor of
-         * the given packet in the tree structure.
-         *
-         * @param descendant the other packet whose relationships we are
-         * examining.
-         * @return \c true if and only if this packet is equal to or an
-         * ancestor of \c descendant.
-         */
-        bool isGrandparentOf(const NPacket* descendant) const;
-
-        /**
-         * Returns the number of immediate children of this packet.
-         * Grandchildren and so on are not counted.
-         *
-         * @return the number of immediate children.
-         */
-        unsigned long getNumberOfChildren() const;
-        /**
-         * Returns the total number of descendants of this packet.  This
-         * includes children, grandchildren and so on.  This packet is not
-         * included in the count.
-         *
-         * @return the total number of descendants.
-         */
-        unsigned long getNumberOfDescendants() const;
-        /**
-         * Determines the total number of packets in the tree or subtree
-         * for which this packet is matriarch.  This packet is included
-         * in the count.
-         *
-         * @return the total tree or subtree size.
-         */
-        unsigned long getTotalTreeSize() const;
+        /*@{*/
 
         /**
          * Returns a dictionary for the entire packet tree in
@@ -659,6 +730,16 @@ class NPacket : public ShareableObject {
         List makeChildList();
         #endif
 
+        /*@}*/
+        /**
+         * (end: Java Interface Tools)
+         */
+
+        /**
+         * \name Packet Dependencies
+         */
+        /*@{*/
+
         /**
          * Determines if this packet depends upon its parent.
          * This is true if the parent cannot be altered without
@@ -677,6 +758,16 @@ class NPacket : public ShareableObject {
          * @return \c true if and only if this packet may be edited.
          */
         bool isPacketEditable() const;
+
+        /*@}*/
+        /**
+         * (end: Packet Dependencies)
+         */
+
+        /**
+         * \name Cloning
+         */
+        /*@{*/
 
         /**
          * Clones this packet (and possibly its descendants), assigns to it
@@ -704,6 +795,16 @@ class NPacket : public ShareableObject {
          */
         NPacket* clone(bool cloneDescendants = false, bool end = true) const;
 
+        /*@}*/
+        /**
+         * (end: Cloning)
+         */
+
+        /**
+         * \name File I/O
+         */
+        /*@{*/
+
         /**
          * Writes a complete XML file containing the subtree with this
          * packet as matriarch.  This is the preferred way of writing
@@ -723,6 +824,36 @@ class NPacket : public ShareableObject {
          * @param out the output stream to which the XML should be written.
          */
         void writeXMLFile(std::ostream& out) const;
+
+        /**
+         * Writes the packet details to the given old-style binary file.
+         *
+         * You may assume that the packet type and label have already
+         * been written.  Only the actual data stored in the packet need
+         * be written.
+         *
+         * The default implementation for this routine does nothing; new
+         * packet types should not implement this routine since this file
+         * format is now obsolete, and older calculation engines will
+         * simply skip unknown packet types when reading from binary files.
+         *
+         * \deprecated For the preferred way to write packets to file, see
+         * writeXMLFile() and writeXMLPacketData() instead.
+         *
+         * \pre The given file is open for writing and satisfies the
+         * assumptions listed above.
+         *
+         * \ifaces Not present.
+         *
+         * @param out the file to be written to.
+         */
+        virtual void writePacket(NFile& out) const;
+
+        /*@}*/
+        /**
+         * (end: File I/O)
+         */
+
         /**
          * Returns a newly created XML element reader that will read the
          * contents of a single XML packet element.  You may assume that
@@ -756,29 +887,6 @@ class NPacket : public ShareableObject {
         static NXMLPacketReader* getXMLReader(NPacket* parent);
         #endif
 
-        /**
-         * Writes the packet details to the given old-style binary file.
-         *
-         * You may assume that the packet type and label have already
-         * been written.  Only the actual data stored in the packet need
-         * be written.
-         *
-         * The default implementation for this routine does nothing; new
-         * packet types should not implement this routine since this file
-         * format is now obsolete, and older calculation engines will
-         * simply skip unknown packet types when reading from binary files.
-         *
-         * \deprecated For the preferred way to write packets to file, see
-         * writeXMLFile() and writeXMLPacketData() instead.
-         *
-         * \pre The given file is open for writing and satisfies the
-         * assumptions listed above.
-         *
-         * \ifaces Not present.
-         *
-         * @param out the file to be written to.
-         */
-        virtual void writePacket(NFile& out) const;
         /**
          * Reads a single packet from the specified
          * file and returns a newly created object containing that
@@ -895,6 +1003,8 @@ class NPacket : public ShareableObject {
          */
         void internalCloneDescendants(NPacket* parent) const;
 };
+
+/*@}*/
 
 // Inline functions for NPacket
 

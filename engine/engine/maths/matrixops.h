@@ -42,6 +42,11 @@
 namespace regina {
 
 /**
+ * \weakgroup maths
+ * @{
+ */
+
+/**
  * Transforms the given integer matrix into Smith normal form.
  * Note that the given matrix need not be square and need not be of full
  * rank.
@@ -57,6 +62,8 @@ namespace regina {
  * @param matrix the matrix to transform.
  */
 void smithNormalForm(NMatrixInt& matrix);
+
+/*@}*/
 
 } // namespace regina
 

@@ -42,6 +42,11 @@ namespace regina {
 class NTetrahedron;
 
 /**
+ * \weakgroup subcomplex
+ * @{
+ */
+
+/**
  * Represents a layered solid torus in a triangulation.
  * A layered solid torus must contain at least one tetrahedron.
  *
@@ -290,6 +295,8 @@ class NLayeredSolidTorus : public ShareableObject {
          */
         void followEdge(int destGroup, int sourceGroup);
 };
+
+/*@}*/
 
 // Inline functions for NLayeredSolidTorus
 

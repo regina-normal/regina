@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup surfaces
+ * @{
+ */
+
+/**
  * A normal surface vector that is mirrored in another coordinate system
  * to avoid frequent lengthy calculations.  When it is difficult to
  * convert from the native coordinate system to standard tri-quad-oct
@@ -125,6 +130,8 @@ class NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
         virtual NLargeInteger getFaceArcs(unsigned long faceIndex,
             int faceVertex, NTriangulation* triang) const;
 };
+
+/*@}*/
 
 // Inline functions for NNormalSurfaceVectorMirrored
 

@@ -52,6 +52,11 @@ class NPacket;
 namespace jni {
 
 /**
+ * \weakgroup jni
+ * @{
+ */
+
+/**
  * Takes a C++ packet and creates a new Java object of the correct class
  * that wraps this packet.
  * If the given C++ packet is of a particular subclass of NPacket, the
@@ -71,6 +76,8 @@ namespace jni {
  * @return a newly created Java wrapper object, or 0 if \a packet was 0.
  */
 jobject makeJNPacket(JNIEnv *env, regina::NPacket* packet);
+
+/*@}*/
 
 } } // namespace regina::jni
 

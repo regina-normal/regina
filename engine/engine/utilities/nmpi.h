@@ -41,6 +41,12 @@
 namespace regina {
 
 /**
+ * \addtogroup utilities General Utility Classes
+ * General utility classes.
+ * @{
+ */
+
+/**
  * Represents an arbitrary precision integer.
  * Calculations will be exact no matter how large the integers become.
  * Current algorithms and representations use the GNU multiple precision
@@ -597,6 +603,8 @@ class NLargeInteger {
  * @return a reference to \a out.
  */
 std::ostream& operator << (std::ostream& out, const NLargeInteger& large);
+
+/*@}*/
 
 // Inline functions for NLargeInteger
 

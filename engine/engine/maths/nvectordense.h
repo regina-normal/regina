@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup maths
+ * @{
+ */
+
+/**
  * A dense vector of objects of type T.
  * The vector is represented as a simple array on the heap.
  *
@@ -178,6 +183,8 @@ class NVectorDense : public NVector<T> {
             }
         }
 };
+
+/*@}*/
 
 } // namespace regina
 
