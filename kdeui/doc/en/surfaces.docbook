@@ -112,6 +112,11 @@
        coordinates do not, and standard normal coordinates produce vertex
        links which quad normal coordinates do not.
       </para>
+      <para>
+       If there is a particular coordinate system that you regularly
+       use, the default offering can be changed in the
+       <link linkend="options-surfaces">normal surface preferences</link>.
+      </para>
      </glossdef>
     </glossentry>
     <glossentry>

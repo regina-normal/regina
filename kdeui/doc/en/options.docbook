@@ -78,6 +78,22 @@
     </para></glossdef>
    </glossentry>
    <glossentry>
+    <glossterm>Default top-level tab</glossterm>
+    <glossdef><para>
+     This specifies which of the many tabs in the triangulation viewer
+     will be made visible when a new triangulation viewer is first opened.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>Default algebra tab</glossterm>
+    <glossdef><para>
+     Within the triangulation viewer, the <guilabel>Algebra</guilabel>
+     tab contains many smaller tabs of its own.  This option specifies which
+     of these smaller tabs will be made visible when the
+     <guilabel>Algebra</guilabel> tab is first selected.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
     <glossterm>Surface calculation threshold</glossterm>
     <glossdef><para>
      This determines how many tetrahedra a triangulation must have
@@ -90,12 +106,58 @@
   </glosslist>
  </sect1>
 
+ <sect1 id="options-surfaces">
+  <title>Normal Surface Options</title>
+
+  <para>
+   The following options are available on the normal surfaces page.
+  </para>
+
+  <glosslist>
+   <glossentry>
+    <glossterm>Default coordinate system</glossterm>
+    <glossdef><para>
+     This specifies which coordinate system will be offered as the
+     default selection when a new normal surface list is created.
+     See the
+     <link linkend="surfaces-creation">normal surfaces documentation</link>
+     for details.
+    </para></glossdef>
+   </glossentry>
+  </glosslist>
+ </sect1>
+
+ <sect1 id="options-census">
+  <title>Census Options</title>
+
+  <para>
+   The <link linkend="tri-censuslookup">census lookup facility</link>
+   searches for the current triangulation within all available censuses.
+   The census options page allows this list of available censuses to be
+   configured.
+  </para>
+  <para>
+   Census data files can be added or removed and
+   currently active data files can be temporarily disabled.
+   Each census should be a single &regina; data file.  The census lookup
+   will search through all triangulations in each of the currently
+   active files.
+  </para>
+  <para>
+   By pressing the <guibutton>Defaults</guibutton> button, the list will
+   be filled with a number of prepackaged censuses that are shipped with
+   &regina;.  The <link linkend="tri-censuslookup">census lookup
+   documentation</link> describes these prepackaged censuses in further
+   detail.
+  </para>
+ </sect1>
+
  <sect1 id="options-python">
   <title>&python; Options</title>
 
   <para>
    <firstterm>&python; libraries</firstterm> are files containing
-   &python; code that can be run at the beginning of every &python;
+   &python; code that is run at the beginning of every &python;
    session, including every time a &python; console is opened and
    every time a script packet is run.
   </para>

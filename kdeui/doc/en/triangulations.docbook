@@ -833,6 +833,42 @@
     </glosslist>
    </para>
   </sect2>
+
+  <sect2 id="tri-censuslookup">
+   <title>Census Lookup</title>
+
+   <para>
+    &regina; ships with a number of prepackaged censuses of 3-manifold
+    triangulations.
+    The
+    <menuchoice>
+     <guimenu>Docked Packet</guimenu>
+     <guimenuitem>Census Lookup</guimenuitem>
+    </menuchoice>
+    menu item will search for the current triangulation within all of the
+    available censuses.  Any matches will be reported and noted in a new
+    text packet that will be created directly beneath the current
+    triangulation.
+   </para>
+   <para>
+    For a match to occur, the triangulation does not need to use the same
+    tetrahedron and face numbers as in the census; any isomorphic copy will
+    suffice.
+   </para>
+   <para>
+    The list of censuses that will be searched can be configured in
+    the <link linkend="options-census">census options</link>.  All
+    triangulations within each of the configured census files will be examined.
+   </para>
+   <para>
+    By default, the censuses that are searched include censuses of
+    closed orientable and non-orientable 3-manifold triangulations
+    <xref linkend="bib-burton-phd"/> <xref linkend="bib-burton-nor7"/>,
+    cusped hyperbolic 3-manifold triangulations
+    <xref linkend="bib-cuspedcensus"/>
+    and knot and link complements (tabulated by Joe Christy).
+   </para>
+  </sect2>
  </sect1>
 
  <sect1 id="tri-modification">
