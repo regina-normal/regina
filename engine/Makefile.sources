@@ -46,6 +46,6 @@ dirs_engine_jni = \
 	jni/engine \
 	jni
 
-engine_misc_src_mask = Makefile* findtext doc-files/doc* *.txt \
+engine_misc_src_mask = Makefile* checkdocs findtext doc-files/doc* *.txt \
 	engine/census/results.txt
 
