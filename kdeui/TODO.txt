@@ -14,6 +14,9 @@ Toolbars / Menus:
         kdelibs
     Work out how to get decent action names in the configure toolbar dialog
 
+Packet Creators:
+    Implement GUI census creation
+
 Packet Viewers:
     Work out how to right-align the packet pane close button
     Work around bugs with the Vim component in script/text viewers.
@@ -24,6 +27,7 @@ Packet Viewers:
     Make a script dirty when its variables are changed externally
         through renaming or deletion
     Include Turaev-Viro and isomorphism tests
+    Make the skeleton viewer windows come up in a pleasant size
 
 General:
     Make "configure shortcuts" work with the part as well
