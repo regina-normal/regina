@@ -6,7 +6,7 @@ The Regina calculation engine is provided in the C++ shared library
 
 The corresponding headers can be found in /usr/include/regina-normal/.
 
-Thorough documentation for the calculation engine can be found in
-package regina-normal-doc.
+Thorough API documentation for the calculation engine can be found in
+the package regina-normal-doc.
 
- -- Ben Burton <bab@debian.org>, Tue,  4 Feb 2003 15:04:50 +1100
+ -- Ben Burton <bab@debian.org>, Fri, 10 Oct 2003 20:46:12 +1000

@@ -1,42 +1,28 @@
 Regina for Debian
 -----------------
 
-Regina is provided as the binary /usr/bin/regina-normal.  The name was
-changed so as not to conflict with the Regina REXX interpreter.
+Two main binaries are provided with Regina:
 
-Note that this package requires a Java virtual machine that has been
-built using gcc3.  As of June 2003 the unofficial Debian packages for
-Java 1.4 are still built using gcc2, which causes Regina (and other JNI
-apps) to crash unexpectedly.  A gcc3 build of Java 1.4 can be downloaded
-directly from www.blackdown.org.
+- /usr/bin/regina-kde, which starts the KDE user interface;
+- /usr/bin/regina-python, which starts a command-line Python session.
 
-To use a locally installed Java virtual machine with Regina, simply set
-the REGINA_JAVA environment variable to the appropriate Java runtime.
-For example:
+Several other specialised binaries are also provided; see the users'
+reference manual for details.
 
-  export REGINA_JAVA=/usr/local/j2re1.4.1/bin/java
+The users' reference manual is provided with this package and can be
+viewed in the KDE Help Centre, or by entering the URL 'help:/regina/'
+directly into konqueror.
 
-To browse the online documentation from within Regina, you will need the
-package regina-normal-doc.  You then have two choices:
+Sample topology data files and sample Python sessions are provided in
+the directory /usr/share/doc/regina-normal/examples/.
 
-1) Have Regina fire up an external web browser to view documentation.
+If you are using Python scripting or if you are building the Regina
+calculation engine into your own projects, you will probably want the
+calculation engine API documentation.  This is provided in the separate
+package regina-normal-doc.
 
-     In this case you should use the Options->Help Browser menu item
-     to tell Regina the command to fire up your web browser and the
-     location of the installed documentation.  This location is:
+Headers and other development files required for building the Regina
+calculation engine into your own projects are provided by the package
+regina-normal-dev.
 
-     /usr/share/doc/regina-normal/html
-
-2) Use JavaHelp to view documentation.
-
-     The JavaHelp classes sometimes do a poor job of rendering HTML
-     pages (IMHO), but it avoids requiring Regina to spawn an external
-     process.  You will however need JavaHelp installed, which is not
-     available for Debian.  You can obtain it at:
-
-     http://www.javasoft.com/products/javahelp/
-
-     You will need to edit /etc/regina-normal/regina.conf to tell Regina
-     the location of the JavaHelp library (jh.jar).
-
- -- Ben Burton <bab@debian.org>, Fri, 20 Jun 2003 10:30:42 +1000
+ -- Ben Burton <bab@debian.org>, Fri, 10 Oct 2003 20:46:12 +1000

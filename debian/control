@@ -1,58 +1,56 @@
 Source: regina-normal
-Section: contrib/math
+Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
-Build-Depends: debhelper (>> 3.0.0), docbook-utils, doxygen, fastjar, j2sdk1.4, jade, jython, libbtools-java (>= 1.1-0), libgmp3-dev, libpopt-dev, libxml2-dev, zlib1g-dev
-Build-Conflicts: regina-normal-dev (<< 3.2-0), regina-normal-dev (>= 3.2.1-0)
-Standards-Version: 3.5.10.0
+Build-Depends: debhelper (>> 4.0.0), docbook-utils, doxygen, kdelibs4-dev, libboost-python-dev (>= 1.30.0-3), libgmp3-dev, libpopt-dev, libxml2-dev, zlib1g-dev
+Build-Conflicts: regina-normal-dev (<< 3.95-0), regina-normal-dev (>= 3.96-0)
+Standards-Version: 3.6.1
 
 Package: regina-normal
 Architecture: any
-Section: contrib/math
-Depends: j2re1.4 | java-virtual-machine, j2re1.4 | java2-runtime, libbtools-java (>= 1.1-0), ${shlibs:Depends}
-Recommends: jython
-Suggests: regina-normal-dev, regina-normal-doc, snappea
+Section: math
+Depends: ${shlibs:Depends}, ${perl:Depends}
+Suggests: khelpcenter, regina-normal-doc, regina-normal-dev, snappea
 Description: Regina, the 3-manifold normal surface theory calculator
  Regina is a topological calculator with a bent towards normal surface
- theory. It allows 3-manifolds to be created, manipulated and their
- properties of interest determined. 
+ theory. It allows 3-manifolds to be created and manipulated and their
+ properties of interest to be determined.
  .
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface enumeration.  It offers embedded
- Jython scripting giving full access to the calculation engine.
+ Python scripting giving full access to the calculation engine.
  .
- Note that this package requires a Java virtual machine that has been
- built using gcc3.  As of June 2003 the unofficial Debian packages for
- Java 1.4 are still built using gcc2, which causes Regina (and other JNI
- apps) to crash unexpectedly.  A gcc3 build of Java 1.4 can be downloaded
- directly from www.blackdown.org; see
- /usr/share/doc/regina-normal/README.Debian for details of how to use a
- locally installed Java virtual machine with Regina.
+ This package includes the KDE user interface and the command-line
+ Python interface, as well as the users' reference manual.  See the
+ packages regina-normal-dev and regina-normal-doc if you wish to build
+ the Regina calculation engine into your own projects.
 
 Package: regina-normal-dev
 Architecture: any
-Section: contrib/devel
+Section: libdevel
 Depends: regina-normal (= ${Source-Version}), libgmp3-dev, libxml2-dev, zlib1g-dev
 Suggests: regina-normal-doc
 Description: Development files for Regina normal surface theory calculator
  Regina is a normal surface theory calculator for 3-manifold
  topologists.  This package provides development files for compiling
- the Regina calculation engine into other projects.
+ the Regina calculation engine into other projects.  For complete API
+ documentation, see the package regina-normal-doc.
  .
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface enumeration.
 
 Package: regina-normal-doc
 Architecture: all
-Section: contrib/doc
+Section: doc
 Recommends: www-browser
-Suggests: regina-normal
-Description: Regina reference manual for normal surface theory calculator
+Suggests: regina-normal, regina-normal-dev
+Description: Library docs for Regina normal surface theory calculator
  Regina is a normal surface theory calculator for 3-manifold
- topologists.  This package provides a users' reference manual as well
- as complete API documentation for the calculation engine.  Sample data
- files and Jython sessions are also included.
+ topologists.  This package provides complete API documentation for
+ the Regina calculation engine.  This documentation can be used with
+ Python scripting in Regina and when compiling the Regina calculation
+ engine into other projects.
  .
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface enumeration.  It offers embedded
- Jython scripting giving full access to the calculation engine.
+ Python scripting giving full access to the calculation engine.

@@ -1,6 +1,9 @@
 regina-normal (3.95-1) unstable; urgency=low
 
   * New upstream release (prerelease for 4.0).
+  * User interface entirely rewritten in C++.
+  * Moved from contrib to main since it no longer requires Java.
+  * Bumped standards-version to 3.6.1.
 
  -- Ben Burton <bab@debian.org>  Sun, 12 Oct 2003 10:01:39 +1000
 

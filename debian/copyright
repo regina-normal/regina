@@ -7,73 +7,20 @@ Upstream Author: Ben Burton <bab@debian.org>
 
 Copyright:
 
-  This software is copyright (c) 1999-2003 by Ben Burton.
+   This package is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; version 2 dated June, 1991.
 
-  You are free to distribute this software under the terms of
-  the GNU General Public License.
+   This package is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this package; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL'.
-
-------------------------------------------------------------------
-
-The admonition images used in the HTML reference manual
-(/usr/share/doc/regina-normal-doc/html/images/admon/*.gif) were taken
-from the DocBook DSSSL stylesheets.  Their copyright and license are
-attached below.
-
-  Copyright
-  ---------
-
-  Copyright (C) 1997-2001 Norman Walsh
-
-  The original inspiration for these stylesheets came from the
-  work of Jon Bosak, Anders Berglund, Tony Graham, Terry Allen,
-  James Clark, and many others.  I am indebted to them and to the
-  community of users on dssslist@mulberrytech.com for making
-  substantial contributions to this work and for answering my many
-  questions.
-
-  This software may be distributed under the same terms as Jade:
-
-  Permission is hereby granted, free of charge, to any person
-  obtaining a copy of this software and associated documentation
-  files (the ``Software''), to deal in the Software without
-  restriction, including without limitation the rights to use,
-  copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the
-  Software is furnished to do so, subject to the following
-  conditions:
-
-  The above copyright notice and this permission notice shall be
-  included in all copies or substantial portions of the Software.
-
-  Except as contained in this notice, the names of individuals
-  credited with contribution to this software shall not be used in
-  advertising or otherwise to promote the sale, use or other
-  dealings in this Software without prior written authorization
-  from the individuals in question.
-
-  Any stylesheet derived from this Software that is publically
-  distributed will be identified with a different name and the
-  version strings in any derived Software will be changed so that
-  no possibility of confusion between the derived package and this
-  Software will exist.
-
-  Warranty
-  --------
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-  NONINFRINGEMENT.  IN NO EVENT SHALL NORMAN WALSH OR ANY OTHER
-  CONTRIBUTOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-  OTHER DEALINGS IN THE SOFTWARE.
-
-  Contacting the Author
-  ---------------------
-
-  These stylesheets are maintained by Norman Walsh, <ndw@nwalsh.com>.
 

@@ -4,28 +4,31 @@
 #export DH_VERBOSE=1
 
 # This is the debhelper compatability version to use.
-export DH_COMPAT=3
+export DH_COMPAT=4
 
 tmp = debian/tmp
-javadir = $(tmp)/usr/share/java
-regdir = $(tmp)/usr/share/regina-normal
-docpkgdir = $(tmp)/usr/share/doc/regina-normal-doc
-htmldir = $(docpkgdir)/html
-confdir = $(tmp)/etc/regina-normal
-overrides = $(tmp)/usr/share/lintian/overrides
 
 INSTALL_DIR = install -p -d -o root -g root -m 755
 INSTALL_FILE = install -p -o root -g root -m 644
-INSTALL_BIN = install -p -o root -g root -m 755
-INSTALL_SCRIPT = install -p -o root -g root -m 755
+
+ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -g
+endif
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+endif
+
+-include debian/debiandirs
+
+debian/debiandirs: admin/debianrules
+	perl -w admin/debianrules echodirs > debian/debiandirs
 
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-	./configure --disable-maintainer-mode \
-	  --prefix=/usr --mandir=/usr/share/man \
-	  PKGNAME=regina-normal \
-	  JAVAC=/usr/lib/j2se/1.4/bin/javac
+	chmod a+x configure
+	./configure --disable-maintainer-mode PKGNAME=regina-normal \
+	  --includedir=/usr/include $(configkde) --includedir=/usr/include
 	touch configure-stamp
 
 build: configure-stamp build-stamp
@@ -50,45 +53,37 @@ install: build
 	# Main install.
 	$(MAKE) install DESTDIR=`pwd`/$(tmp)
 
-	# Move the jars into the standard debian location.
-	$(INSTALL_DIR) $(javadir)
-	cd $(regdir)/jar && for i in *.jar; do \
-	  mv $$i ../../java; \
-	  ln -s ../../java/$$i $$i; \
-	done
+	# Split into separate binary packages.
+	dh_install --sourcedir=debian/tmp --list-missing
 
-	# Move the docs and examples into the standard debian location.
-	$(INSTALL_DIR) $(htmldir)
-	mv $(regdir)/doc/* $(htmldir)
-	mv $(regdir)/examples $(docpkgdir)
-	for i in $(docpkgdir)/examples/*.rga; do \
+	# Ensure sample data files are stored as compressed XML.
+	for i in $(tmp)/usr/share/doc/regina-normal/examples/*.rga; do \
 	  utils/regconvert -x $$i $$i; \
 	done
 
-	# Ensure sample data files are stored as compressed XML.
-
-	# Clean up the documentation directory.
-	rm -f $(htmldir)/*.txt
-	rm -f $(htmldir)/*.hs
-	rm -f $(htmldir)/*.jhm
-	rm -f $(htmldir)/images/admon/COPYING.txt
-
-	# Install the configuration files.
-	$(INSTALL_DIR) $(confdir)
-	$(INSTALL_FILE) debian/*.conf $(confdir)
-
-	# Install overrides.
-	$(INSTALL_DIR) $(overrides)
-	$(INSTALL_FILE) debian/regina-normal.overrides $(overrides)/regina-normal
+	# Install linda and lintian overrides.
+	for pkg in `dh_listpackages`; do \
+	  if test -e debian/$$pkg.override; then \
+	    $(INSTALL_DIR) debian/$$pkg/usr/share/lintian/overrides; \
+	    $(INSTALL_FILE) debian/$$pkg.override \
+	      debian/$$pkg/usr/share/lintian/overrides/$$pkg; \
+	  fi; \
+	  if test -e debian/$$pkg.linda; then \
+	    $(INSTALL_DIR) debian/$$pkg/usr/share/linda/overrides; \
+	    $(INSTALL_FILE) debian/$$pkg.linda \
+	      debian/$$pkg/usr/share/linda/overrides/$$pkg; \
+	  fi; \
+	done
 
 # Build architecture-independent files here.
 binary-indep: build install
 	dh_testdir
 	dh_testroot
-	dh_movefiles -i
 	dh_installdocs -i
 	dh_installexamples -i
+	dh_installman -i
 	dh_installmenu -i
+	dh_installmime -i
 	dh_installchangelogs -i CHANGES.txt
 	dh_link -i
 	dh_strip -i
@@ -106,13 +101,11 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_movefiles -a
 	dh_installdocs -a
 	dh_installexamples -a
+	dh_installman -a
 	dh_installmenu -a
 	dh_installmime -a
-	dh_installinit -a
-	dh_installman -a
 	dh_installchangelogs -a CHANGES.txt
 	dh_link -a
 	dh_strip -a
