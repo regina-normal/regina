@@ -63,6 +63,8 @@ Version 3.0  [ (under development) ]
         Class NTriangulation:
             - Added insertSplittingSurface().
             - Uses NIndexedArrays for skeletal elements for fast index lookup.
+        Class NXMLCallback, NXMLElementReader:
+            - Added.
         Class reference_wrapper, remove_pointer:
             - Added for use with Standard Template Library.
         Class select1st, select2nd, unary_compose:
