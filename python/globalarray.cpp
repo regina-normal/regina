@@ -26,75 +26,13 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
+#include "triangulation/nperm.h"
+#include "globalarray.h"
 
-#include "engine.h"
-#include "shareableobject.h"
-#include "regina-config.h"
-
-void addGlobalArray();
-
-void addAlgebra();
-void addFile();
-void addMaths();
-void addPacket();
-void addProgress();
-void addTriangulation();
-void addUtilities();
-
-using regina::ShareableObject;
-
-namespace {
-    std::string welcome() {
-        return std::string(PACKAGE_STRING) +
-            "\nA Normal Surface Theory Calculator" +
-            "\nCopyright (c) 1999-2003, Ben Burton";
-    }
-
-    void shareableWriteTextShort(const ShareableObject& obj) {
-        obj.writeTextShort(std::cout);
-    }
-
-    void shareableWriteTextLong(const ShareableObject& obj) {
-        obj.writeTextLong(std::cout);
-    }
-}
-
-BOOST_PYTHON_MODULE(regina) {
-    // Welcome string:
-
-    boost::python::def("welcome", welcome);
-
-    // Wrappers for global array classes:
-
-    addGlobalArray();
-
-    // Core engine routines:
-
-    boost::python::def("getVersionString", regina::getVersionString);
-    boost::python::def("getVersionMajor", regina::getVersionMajor);
-    boost::python::def("getVersionMinor", regina::getVersionMinor);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("writeTextShort", &shareableWriteTextShort)
-        .def("writeTextLong", &shareableWriteTextLong)
-        .def("toString", &ShareableObject::toString)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
-    ;
-
-    // Components from subdirectories (in approximate dependency order):
-
-    addUtilities();
-    addProgress();
-    addMaths();
-    addAlgebra();
-    addPacket();
-    addTriangulation();
-    addFile();
+void addGlobalArray() {
+    regina::python::GlobalArray<int>::wrapClass("GlobalArray_int");
+    regina::python::GlobalArray2D<int>::wrapClass("GlobalArray2D_int");
+    regina::python::GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
+    regina::python::GlobalArray<regina::NPerm>::wrapClass("GlobalArray_NPerm");
 }
 
