@@ -58,7 +58,7 @@ export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
 	-I/usr/lib/j2sdk1.3/include/linux
 #export JNI_INCLUDES := -I/usr/include/kaffe
 export CORBA_INCLUDES := -D__x86__
-export EXTRA_INCLUDES :=
+export EXTRA_INCLUDES := -I/usr/include/g++-v3/ext
 
 export CORBA_LIBRARIES := -lomniORB3 -lomniGK_stub
 #export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
@@ -77,8 +77,8 @@ export EXTRA_LIBRARIES := -lgmp -lpthread
 # __NO_RAW_CASTING: Use this if your compiler will not cast (void*) to
 #                   long and vice versa.
 
-# Recommended for gcc/g++ 2.9x:
-export PD_MACROS :=
+# Recommended for gcc/g++ 3.x:
+export PD_MACROS := __NO_IOS_NOCREATE __NO_RAW_CASTING
 # Recommended for CodeWarrior:
 # export PD_MACROS := __NO_IOS_NOCREATE __NO_RAW_CASTING
 # Recommended for Borland C++ Builder:
@@ -133,10 +133,10 @@ export EXTRA_CLASSES :=
 # SED: Run sed, the stream editor.
 # TOUCH: Create a new empty file with the given name.
 
-export MAKEDEP := g++ -MM
-export COMPILE := g++ -O2 -c -Wall # -DDEBUG
-export LINKEXEC := g++ -O2
-export LINKLIB := g++ -O2 -shared
+export MAKEDEP := g++-3.0 -MM
+export COMPILE := g++-3.0 -O2 -c -Wall # -DDEBUG
+export LINKEXEC := g++-3.0 -O2
+export LINKLIB := g++-3.0 -O2 -shared
 export LINKSTATIC := ar cru
 export DOXYGEN := doxygen
 export JAVAC := javac -target 1.1

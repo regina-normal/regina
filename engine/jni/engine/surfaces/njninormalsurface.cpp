@@ -162,6 +162,6 @@ JNIEXPORT void JNICALL
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_writeRawVector
         (JNIEnv *env, jobject me) {
-    GET_ENGINE_OBJECT(env, NNormalSurface, me)->writeRawVector(cout);
+    GET_ENGINE_OBJECT(env, NNormalSurface, me)->writeRawVector(std::cout);
 }
 

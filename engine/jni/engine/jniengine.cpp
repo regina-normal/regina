@@ -49,7 +49,7 @@ JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_enterTextTriangulation
         (JNIEnv *env, jobject) {
     return CREATE_WRAPPER_OBJECT(env,
-        NTriangulation::enterTextTriangulation(cin, cout),
+        NTriangulation::enterTextTriangulation(std::cin, std::cout),
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 

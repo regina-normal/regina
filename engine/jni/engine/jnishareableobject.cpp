@@ -52,12 +52,12 @@ JNIEXPORT jstring JNICALL
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_writeTextLong
         (JNIEnv *env, jobject me) {
-    GET_ENGINE_OBJECT(env, ShareableObject, me)->writeTextLong(cout);
+    GET_ENGINE_OBJECT(env, ShareableObject, me)->writeTextLong(std::cout);
 }
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_writeTextShort
         (JNIEnv *env, jobject me) {
-    GET_ENGINE_OBJECT(env, ShareableObject, me)->writeTextShort(cout);
+    GET_ENGINE_OBJECT(env, ShareableObject, me)->writeTextShort(std::cout);
 }
 
