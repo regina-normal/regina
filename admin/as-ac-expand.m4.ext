@@ -2,11 +2,12 @@ dnl
 dnl Taken from the GStreamer project at http://www.gstreamer.net/ and
 dnl then modified from the original.
 dnl
-dnl The original AS_AC_EXPAND was written by thomas@apestaart.org and
-dnl licensed under the TODO License.
+dnl The original AS_AC_EXPAND was written by Thomas Vander Stichele
+dnl <thomas@apestaart.org> and licensed under the GNU Lesser General
+dnl Public License.
 dnl
 dnl Modifications were made by Ben Burton <bab@debian.org> and also
-dnl licensed under the TODO License.
+dnl licensed under the GNU Lesser General Public License.
 dnl
 
 dnl
