@@ -35,25 +35,36 @@ import normal.packetfilter.*;
 
 /**
  * An exporter that exports to another Regina data file.
+ * The most recent data file format (XML, optionally compressed) is used.
  *
  * @see normal.exports.Exporter
  */
 public class ReginaExporter extends Exporter {
     /**
+     * Should exported XML files be compressed?
+     */
+    private boolean compress;
+
+    /**
      * Creates a new exporter.
      *
+     * @param compress <tt>true</tt> if exported XML files should be
+     * compressed (the default for this file type), <tt>false</tt> otherwise.
      * @param shell the shell representing the entire program.
      * @param menuLabel the text to display in the menu item
      * corresponding to this export algorithm.
      * @see normal.algorithm.Algorithm
      */
-    public ReginaExporter(Shell shell, String menuLabel) {
+    public ReginaExporter(boolean compress, Shell shell, String menuLabel) {
         super(shell, menuLabel, Standalone.instance);
+        this.compress = compress;
     }
 
     /**
      * Creates a new exporter.
      *
+     * @param compress <tt>true</tt> if exported XML files should be
+     * compressed (the default for this file type), <tt>false</tt> otherwise.
      * @param shell the shell representing the entire program.
      * @param menuLabel the text to display in the menu item
      * corresponding to this export algorithm.
@@ -61,12 +72,15 @@ public class ReginaExporter extends Exporter {
      * corresponding menu item.
      * @see normal.algorithm.Algorithm
      */
-    public ReginaExporter(Shell shell, String menuLabel, int mnemonic) {
+    public ReginaExporter(boolean compress, Shell shell, String menuLabel,
+            int mnemonic) {
         super(shell, menuLabel, mnemonic, Standalone.instance);
+        this.compress = compress;
     }
 
     public boolean exportData(NPacket packet, File file) {
-        if (shell.getEngine().writeXMLFile(file.getAbsolutePath(), packet))
+        if (shell.getEngine().writeXMLFile(file.getAbsolutePath(), packet,
+                compress))
             return true;
         shell.error("An error occurred whilst attempting to export to " +
             file.getAbsolutePath() + ".");

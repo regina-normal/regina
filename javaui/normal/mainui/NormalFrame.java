@@ -447,16 +447,27 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             JMenu menuFileExport = new JMenu("Export");
             menuFileExport.setMnemonic(KeyEvent.VK_E);
 
-            ReginaExporter menuFileExportRegina =
-                new ReginaExporter(shell, "Regina Data File", KeyEvent.VK_R);
+            JMenu menuFileExportRegina = new JMenu("Regina Data File");
+            menuFileExportRegina.setMnemonic(KeyEvent.VK_R);
             menuFileExportRegina.setIcon(Images.mainSmallIcon.image());
-            menuFileExport.add(menuFileExportRegina);
+
+            ReginaExporter menuFileExportReginaDefault =
+                new ReginaExporter(true, shell,
+                "Default Format (Compressed XML)", KeyEvent.VK_D);
+            menuFileExportReginaDefault.setIcon(Images.mainSmallIcon.image());
+            menuFileExportRegina.add(menuFileExportReginaDefault);
+
+            ReginaExporter menuFileExportReginaUncompressed =
+                new ReginaExporter(false, shell,
+                "Viewable Format (Uncompressed XML)", KeyEvent.VK_V);
+            menuFileExportRegina.add(menuFileExportReginaUncompressed);
 
             ReginaBinaryExporter menuFileExportReginaBinary =
                 new ReginaBinaryExporter(shell,
-                "Regina 2.x (Old-Style) Data File", KeyEvent.VK_O);
-            menuFileExportReginaBinary.setIcon(Images.mainSmallIcon.image());
-            menuFileExport.add(menuFileExportReginaBinary);
+                "Old Format (Regina 2.x)", KeyEvent.VK_O);
+            menuFileExportRegina.add(menuFileExportReginaBinary);
+
+            menuFileExport.add(menuFileExportRegina);
 
             SnapPeaExporter menuFileExportSnapPea =
                 new SnapPeaExporter(shell, "SnapPea Triangulation",
