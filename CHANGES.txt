@@ -48,6 +48,11 @@ Regina - A Normal Surface Theory Calculator
         Overall structure:
             - Loading/saving local files is now possible even through CORBA!
             - Incorporated engine enhancements listed above.
+            - Added Jython operator overloads to a number of classes.
+        normal.engine.utilities:
+            - Added NLargeInteger to replace java.math.BigInteger so
+              Jython scripts can use native mathematical operators with
+              arbitrary precision integers.
         normal.exports:
             - Created architecture for exporting to foreign file formats.
             - Added classes Exporter, ReginaExporter, ScriptExporter.
