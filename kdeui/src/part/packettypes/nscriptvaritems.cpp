@@ -42,6 +42,9 @@
 
 using regina::NPacket;
 
+// TODO: Make a script dirty when its variables are changed externally
+// through renaming or deletion.
+
 namespace {
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
 }
@@ -114,6 +117,9 @@ bool ScriptVarNameItem::nameUsedElsewhere(const QString& name) {
 ScriptVarValueItem::ScriptVarValueItem(QTable* table, NPacket* treeMatriarch,
         NPacket* selectedPacket) : QTableItem(table, WhenCurrent),
         packet(selectedPacket), matriarch(treeMatriarch) {
+    if (packet)
+        packet->listen(this);
+
     updateData();
     setReplaceable(false);
 }
@@ -122,6 +128,9 @@ ScriptVarValueItem::ScriptVarValueItem(QTable* table, NPacket* treeMatriarch,
         const QString& packetLabel) : QTableItem(table, WhenCurrent),
         matriarch(treeMatriarch) {
     packet = treeMatriarch->findPacketLabel(packetLabel.ascii());
+    if (packet)
+        packet->listen(this);
+
     updateData();
     setReplaceable(false);
 }
@@ -135,8 +144,35 @@ QWidget* ScriptVarValueItem::createEditor() const {
 }
 
 void ScriptVarValueItem::setContentFromEditor(QWidget* editor) {
-    packet = dynamic_cast<PacketChooser*>(editor)->selectedPacket();
+    if (packet)
+        packet->unlisten(this);
+
+    // Refresh the packet chooser before we extract the packet,
+    // just in case the selected packet has since been destroyed or
+    // renamed.
+    PacketChooser* c = dynamic_cast<PacketChooser*>(editor);
+    c->refreshContents();
+    packet = c->selectedPacket();
+
+    if (packet)
+        packet->listen(this);
     updateData();
+}
+
+void ScriptVarValueItem::packetWasRenamed(NPacket* p) {
+    if (p == packet) {
+        updateData();
+        table()->updateCell(row(), col());
+    }
+}
+
+void ScriptVarValueItem::packetToBeDestroyed(NPacket* p) {
+    if (p == packet) {
+        packet->unlisten(this);
+        packet = 0;
+        updateData();
+        table()->updateCell(row(), col());
+    }
 }
 
 void ScriptVarValueItem::updateData() {

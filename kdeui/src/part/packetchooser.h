@@ -53,6 +53,12 @@ namespace regina {
  * real time if the packet tree is externally modified.  The routine
  * refreshContents() is provided to allow the contents to be manually
  * updated.
+ *
+ * In particular, if it is possible that the selected packet will be
+ * deleted during the lifetime of the packet chooser, it is advisable to
+ * call refreshContents() before extracting the packet with selectedPacket().
+ * This way the selected packet will be replaced with 0 if it has since
+ * been destroyed.
  */
 class PacketChooser : public KComboBox {
     Q_OBJECT

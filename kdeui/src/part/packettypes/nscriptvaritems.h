@@ -33,6 +33,8 @@
 #ifndef __NSCRIPTVARITEMS_H
 #define __NSCRIPTVARITEMS_H
 
+#include "packet/npacketlistener.h"
+
 #include <qtable.h>
 
 namespace regina {
@@ -76,7 +78,7 @@ class ScriptVarNameItem : public QTableItem {
 /**
  * A table item for script variable values.
  */
-class ScriptVarValueItem : public QTableItem {
+class ScriptVarValueItem : public QTableItem, public regina::NPacketListener {
     private:
         /**
          * The selected packet, if any.
@@ -108,6 +110,12 @@ class ScriptVarValueItem : public QTableItem {
          */
         virtual QWidget* createEditor() const;
         virtual void setContentFromEditor(QWidget* editor);
+
+        /**
+         * NPacketListener overrides.
+         */
+        virtual void packetWasRenamed(regina::NPacket* p);
+        virtual void packetToBeDestroyed(regina::NPacket* p);
 
     private:
         /**
