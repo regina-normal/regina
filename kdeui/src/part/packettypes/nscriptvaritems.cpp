@@ -43,6 +43,7 @@ using regina::NPacket;
 
 ScriptVarNameItem::ScriptVarNameItem(QTable* table, const QString& name) :
         QTableItem(table, OnTyping, name) {
+    setReplaceable(false);
 }
 
 QWidget* ScriptVarNameItem::createEditor() const {

@@ -35,6 +35,7 @@
 
 #include "../packetui.h"
 
+class QButton;
 class QSplitter;
 class QTable;
 
@@ -65,6 +66,7 @@ class NScriptUI : public QObject, public PacketUI {
          */
         QSplitter* ui;
         QTable* varTable;
+        QButton* varRemove;
         KTextEditor::Document* document;
         KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
@@ -93,6 +95,18 @@ class NScriptUI : public QObject, public PacketUI {
         void setReadWrite(bool readWrite);
 
     public slots:
+        /**
+         * Add or remove script variables.
+         */
+        void addVariable();
+        void removeSelectedVariables();
+
+        /**
+         * Enable or disable the remove variable(s) button according to
+         * the current table selection.
+         */
+        void updateRemoveState();
+
         /**
          * Called whenever the script or its variables within the interface
          * changes.
