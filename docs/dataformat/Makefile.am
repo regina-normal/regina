@@ -42,10 +42,14 @@ EXTRA_DIST = dataformat.sgml dataformat.ent \
   realbdry-surface.sgml \
   reginadata.sgml \
   reln.sgml \
+  splitsfce.sgml \
   struct.sgml \
   surface.sgml \
   tag.sgml \
+  tet.sgml \
+  tetrahedra.sgml \
   text.sgml \
   twosided.sgml \
-  var.sgml
+  var.sgml \
+  zeroeff.sgml
 

@@ -32,17 +32,22 @@
 <!ENTITY data-packet-script SYSTEM "packet-script.sgml">
 <!ENTITY data-packet-surfacefilter SYSTEM "packet-surfacefilter.sgml">
 <!ENTITY data-packet-text SYSTEM "packet-text.sgml">
+<!ENTITY data-packet-triangulation SYSTEM "packet-triangulation.sgml">
 <!ENTITY data-params SYSTEM "params.sgml">
 <!ENTITY data-realbdry-filter SYSTEM "realbdry-filter.sgml">
 <!ENTITY data-realbdry-surface SYSTEM "realbdry-surface.sgml">
 <!ENTITY data-reginadata SYSTEM "reginadata.sgml">
 <!ENTITY data-reln SYSTEM "reln.sgml">
+<!ENTITY data-splitsfce SYSTEM "splitsfce.sgml">
 <!ENTITY data-struct SYSTEM "struct.sgml">
 <!ENTITY data-surface SYSTEM "surface.sgml">
 <!ENTITY data-tag SYSTEM "tag.sgml">
+<!ENTITY data-tet SYSTEM "tet.sgml">
+<!ENTITY data-tetrahedra SYSTEM "tetrahedra.sgml">
 <!ENTITY data-text SYSTEM "text.sgml">
 <!ENTITY data-twosided SYSTEM "twosided.sgml">
 <!ENTITY data-var SYSTEM "var.sgml">
+<!ENTITY data-zeroeff SYSTEM "zeroeff.sgml">
 
 <!ENTITY xml-abeliangroup
  '<link linkend="data-abeliangroup"><sgmltag>abeliangroup</sgmltag></link>'>
@@ -105,7 +110,7 @@
 <!ENTITY xml-packet-text
  '<link linkend="data-packet-text"><sgmltag>packet</sgmltag> (text)</link>'>
 <!ENTITY xml-packet-triangulation
- '<link linkend="data-packet"><sgmltag>packet</sgmltag> (triangulation)</link>'>
+ '<link linkend="data-packet-triangulation"><sgmltag>packet</sgmltag> (triangulation)</link>'>
 <!ENTITY xml-params
  '<link linkend="data-params"><sgmltag>params</sgmltag></link>'>
 <!ENTITY xml-realbdry-filter
@@ -116,16 +121,24 @@
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-reln
  '<link linkend="data-reln"><sgmltag>reln</sgmltag></link>'>
+<!ENTITY xml-splitsfce
+ '<link linkend="data-splitsfce"><sgmltag>splitsfce</sgmltag></link>'>
 <!ENTITY xml-struct
  '<link linkend="data-struct"><sgmltag>struct</sgmltag></link>'>
 <!ENTITY xml-surface
  '<link linkend="data-surface"><sgmltag>surface</sgmltag></link>'>
+<!ENTITY xml-tet
+ '<link linkend="data-tet"><sgmltag>tet</sgmltag></link>'>
 <!ENTITY xml-tag
  '<link linkend="data-tag"><sgmltag>tag</sgmltag></link>'>
+<!ENTITY xml-tetrahedra
+ '<link linkend="data-tetrahedra"><sgmltag>tetrahedra</sgmltag></link>'>
 <!ENTITY xml-text
  '<link linkend="data-text"><sgmltag>text</sgmltag></link>'>
 <!ENTITY xml-twosided
  '<link linkend="data-twosided"><sgmltag>twosided</sgmltag></link>'>
 <!ENTITY xml-var
  '<link linkend="data-var"><sgmltag>var</sgmltag></link>'>
+<!ENTITY xml-zeroeff
+ '<link linkend="data-zeroeff"><sgmltag>zeroeff</sgmltag></link>'>
 

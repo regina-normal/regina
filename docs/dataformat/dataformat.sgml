@@ -48,16 +48,20 @@
  &data-packet-script;
  &data-packet-surfacefilter;
  &data-packet-text;
+ &data-packet-triangulation;
  &data-params;
  &data-realbdry-filter;
  &data-realbdry-surface;
  &data-reginadata;
  &data-reln;
+ &data-splitsfce;
  &data-struct;
  &data-surface;
  &data-tag;
+ &data-tetrahedra;
  &data-text;
  &data-twosided;
  &data-var;
+ &data-zeroeff;
 
 </reference>
