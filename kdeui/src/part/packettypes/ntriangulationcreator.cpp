@@ -134,9 +134,9 @@ NTriangulationCreator::NTriangulationCreator() {
         "<i>b</i> may lie outside the range [0,<i>a</i>).  There is no "
         "separate twisting parameter; each additional twist can be "
         "incorporated into the existing parameters by replacing some pair "
-        "(<i>a</i>,<i>b</i>) with (<i>a</i>,<i>a</i>+<i>b</i>).  "
-        "Parameters of the form (1,<i>k</i>) and even (1,0) are acceptable "
-        "(in which case a lens space will result).<p>"
+        "(<i>a</i>,<i>b</i>) with the pair (<i>a</i>,<i>a</i>+<i>b</i>).  "
+        "Including pairs of the form (1,<i>k</i>) and even (1,0) is "
+        "acceptable (in which case a lens space will result).<p>"
         "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
         "representing the Poincare homology sphere.</qt>");
     QWhatsThis::add(new QLabel(i18n("Parameters (a1,b1) (a2,b2) (a3,b3):"),
@@ -364,8 +364,9 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 "[0,<i>a</i>).  There is no "
                 "separate twisting parameter; each additional twist can be "
                 "incorporated into the existing parameters by replacing some "
-                "pair (<i>a</i>,<i>b</i>) with (<i>a</i>,<i>a</i>+<i>b</i>).  "
-                "Parameters of the form (1,<i>k</i>) and even (1,0) are "
+                "pair (<i>a</i>,<i>b</i>) with the pair "
+                "(<i>a</i>,<i>a</i>+<i>b</i>).  "
+                "Including pairs of the form (1,<i>k</i>) and even (1,0) is "
                 "acceptable (in which case a lens space will result).<p>"
                 "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
                 "representing the Poincare homology sphere.</qt>"));

@@ -1759,10 +1759,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         void insertLayeredLoop(unsigned long length, bool twisted);
         /**
          * Inserts an augmented triangular solid torus with the given
-         * parameters into this triangulation.  Augmented triangular
-         * solid tori represent Seifert fibred spaces with at most three
-         * exceptional fibres, and are described in more detail in the
-         * NAugTriSolidTorus class notes.
+         * parameters into this triangulation.  Almost all augmented
+         * triangular solid tori represent Seifert fibred spaces with three
+         * or fewer exceptional fibres.  Augmented triangular solid tori
+         * are described in more detail in the NAugTriSolidTorus class notes.
          *
          * The resulting Seifert fibred space will be
          * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)
@@ -1816,7 +1816,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * negative and <i>b</i> may lie outside the range [0..<i>a</i>).
          * There is no separate twisting parameter; each additional
          * twist can be incorporated into the existing parameters
-         * by replacing some (<i>a</i>,<i>b</i>) pair with
+         * by replacing some pair (<i>a</i>,<i>b</i>) with the pair
          * (<i>a</i>,<i>a</i>+<i>b</i>).  For Seifert fibred
          * spaces with less than three exceptional fibres, some or all
          * of the parameter pairs may be (1,<i>k</i>) or even (1,0).
