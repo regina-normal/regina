@@ -385,6 +385,10 @@ public class CORBAEngine implements Engine {
 		return NCORBALayeredSolidTorus.newWrapper(
 			data.isLayeredSolidTorusBase(((NCORBATetrahedron)tet).data));
 	}
+	public NSnappedBall isSnappedBall(NTetrahedron tet) {
+		return NCORBASnappedBall.newWrapper(
+			data.isSnappedBall(((NCORBATetrahedron)tet).data));
+	}
     public NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour) {
         return NCORBAMatrixInt.newWrapper(data.makeMatchingEquations(

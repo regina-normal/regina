@@ -50,6 +50,7 @@
 #include "NLayeredSolidTorusI.h"
 #include "NMatrixIntI.h"
 #include "NProgressManagerI.h"
+#include "NSnappedBallI.h"
 
 Regina::Algebra::NAbelianGroup_ptr Engine_i::newNAbelianGroup_() {
     return NAbelianGroup_i::newWrapper(new ::NAbelianGroup());
@@ -127,6 +128,11 @@ Regina::Subcomplex::NLayeredSolidTorus_ptr Engine_i::isLayeredSolidTorusBase(
 	return NLayeredSolidTorus_i::newWrapper(
 		::NLayeredSolidTorus::isLayeredSolidTorusBase(
 		GET_ENGINE_OBJECT(NTetrahedron, tet)));
+}
+Regina::Subcomplex::NSnappedBall_ptr Engine_i::isSnappedBall(
+		Regina::Triangulation::NTetrahedron_ptr tet) {
+	return NSnappedBall_i::newWrapper(
+		::NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(NTetrahedron, tet)));
 }
 Regina::Maths::NMatrixInt_ptr Engine_i::makeMatchingEquations(
         Regina::Triangulation::NTriangulation_ptr triangulation,

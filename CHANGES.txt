@@ -12,8 +12,8 @@ Regina - A Normal Surface Theory Calculator
             - Added operator = to the iterator classes.
         Class NGroupExpression, NGroupPresentation:
             - New classes.
-        Class NLayeredLensSpace, NLayeredSolidTorus:
-            - New class.
+        Class NLayeredLensSpace, NLayeredSolidTorus, NSnappedBall:
+            - New classes.
         Class NPacket:
             - Changed meaning of second (boolean) parameter to clone().
             - Added getNumberOfDescendants() and getNumberOfChildren();

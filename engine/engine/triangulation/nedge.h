@@ -74,6 +74,8 @@ extern const int edgeNumber[4][4];
  * The resulting vertex number will be between 0 and 3 inclusive.
  *
  * Note that edge numbers of opposite edges will always add to 5.
+ * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
+ * than <tt>edgeEnd[e]</tt>.
  *
  * \ifacesjava This array is a static member of \a NEdge.
  */
@@ -86,6 +88,8 @@ extern const int edgeStart[6];
  * The resulting vertex number will be between 0 and 3 inclusive.
  *
  * Note that edge numbers of opposite edges will always add to 5.
+ * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
+ * than <tt>edgeEnd[e]</tt>.
  *
  * \ifacesjava This array is a static member of \a NEdge.
  */

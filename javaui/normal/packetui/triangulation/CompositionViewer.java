@@ -173,6 +173,29 @@ public class CompositionViewer extends DefaultPacketViewer
 			}
 		}
 
+		// Look for snapped 3-balls.
+		category = null;
+		NSnappedBall ball;
+		n = triangulation.getNumberOfTetrahedra();
+		for (i = 0; i < n; i++) {
+			ball = engine.isSnappedBall(triangulation.getTetrahedron(i));
+			if (ball != null) {
+				if (category == null) {
+					category = new DefaultMutableTreeNode("Snapped 3-Balls");
+					rootNode.add(category);
+				}
+				instance = new DefaultMutableTreeNode(
+					"Tetrahedron " +
+					String.valueOf(triangulation.getTetrahedronIndex(
+					ball.getTetrahedron())));
+				category.add(instance);
+				instance.add(new DefaultMutableTreeNode("Equator: edge " +
+					String.valueOf(ball.getInternalFace(0)) +
+					String.valueOf(ball.getInternalFace(1))));
+				ball.destroy();
+			}
+		}
+
 		if (rootNode.isLeaf())
 			rootNode.add(new DefaultMutableTreeNode(
 				"(nothing recognised)"));

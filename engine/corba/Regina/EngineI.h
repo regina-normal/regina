@@ -108,6 +108,8 @@ class Engine_i : public virtual POA_Regina::Engine,
 			isLayeredLensSpace(Regina::Triangulation::NComponent_ptr comp);
 		virtual Regina::Subcomplex::NLayeredSolidTorus_ptr
 			isLayeredSolidTorusBase(Regina::Triangulation::NTetrahedron_ptr tet);
+		virtual Regina::Subcomplex::NSnappedBall_ptr
+			isSnappedBall(Regina::Triangulation::NTetrahedron_ptr tet);
         virtual Regina::Maths::NMatrixInt_ptr makeMatchingEquations(
             Regina::Triangulation::NTriangulation_ptr triangulation,
             CORBA::Long flavour);

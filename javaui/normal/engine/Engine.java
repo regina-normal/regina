@@ -112,6 +112,7 @@ public interface Engine {
     public String getVersionString();
 	public NLayeredLensSpace isLayeredLensSpace(NComponent comp);
 	public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
+	public NSnappedBall isSnappedBall(NTetrahedron tet);
     public NMatrixInt makeMatchingEquations(NTriangulation
         triangulation, int flavour);
     public NPacket readFromFile(String fileName);

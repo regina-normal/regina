@@ -38,6 +38,7 @@
     #include "nfile.h"
     #include "ncensus.h"
 	#include "nlayeredlensspace.h"
+	#include "nsnappedball.h"
     #include "nnormalsurfacelist.h"
     #include "matrixops.h"
 #else
@@ -49,6 +50,7 @@
     #include "engine/file/nfile.h"
     #include "engine/census/ncensus.h"
     #include "engine/subcomplex/nlayeredlensspace.h"
+    #include "engine/subcomplex/nsnappedball.h"
     #include "engine/surfaces/nnormalsurfacelist.h"
     #include "engine/maths/matrixops.h"
 #endif
@@ -107,6 +109,14 @@ JNIEXPORT jobject JNICALL
 		NLayeredSolidTorus::isLayeredSolidTorusBase(
         GET_ENGINE_OBJECT(env, NTetrahedron, you)),
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_JNIEngine_isSnappedBall
+		(JNIEnv* env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
+		NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(env, NTetrahedron, you)),
+        "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
 }
 
 JNIEXPORT jobject JNICALL

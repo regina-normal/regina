@@ -1,9 +1,9 @@
-Applet:
+(Applet):
 *	Provide instructions on the applet page for upgrading browser version
 *	Include Java plug-in support
 *	Allow/disallow menu options as appropriate
 
-CORBA:
+(CORBA):
 *	Allow/disallow menu options as appropriate
 *	In the CORBA engine loader, ensure we're not getting a null CORBA object
 		back from the naming context resolve routine.
