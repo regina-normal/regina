@@ -570,8 +570,10 @@ AC_DEFUN(REGINA_PROG_JAVAC_USABLE, [
   AC_MSG_RESULT([$javac_ok])
 
   if test "$javac_ok" = "yes"; then
-    AC_MSG_CHECKING([whether $1 has javax.swing])
-    REGINA_TRY_COMPILE_JAVA([$1], [ javax.swing.* ], [ JPanel p = null; ], , [
+    AC_MSG_CHECKING([whether $1 has enough of javax.swing])
+    REGINA_TRY_COMPILE_JAVA([$1], [ javax.swing.* ], [
+      JPanel p = null; javax.swing.text.DefaultStyledDocument d = null;
+    ], , [
       javac_ok=no
     ])
     AC_MSG_RESULT([$javac_ok])
