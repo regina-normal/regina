@@ -183,6 +183,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         mutable NProperty<bool> splittingSurface;
             /**< Does the triangulation have a normal splitting surface? */
 
+        mutable NProperty<bool> threeSphere;
+            /**< Is this a triangulation of a 3-sphere? */
+
         mutable TuraevViroSet turaevViroCache;
             /**< The set of Turaev-Viro invariants that have already
                  been calculated. */
@@ -1528,6 +1531,109 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         /*@}*/
         /**
          * (end: Skeletal Transformations)
+         */
+
+        /**
+         * \name Decompositions
+         */
+        /*@{*/
+
+        /**
+         * Splits a disconnected triangulation into many smaller
+         * triangulations, one for each component.  The new component
+         * triangulations will be inserted as children of the given
+         * parent packet.  The original triangulation will be left
+         * unchanged.
+         *
+         * If the given parent packet is 0, the new component
+         * triangulations will be inserted as children of this
+         * triangulation.
+         *
+         * This routine can optionally assign unique (and sensible)
+         * packet labels to each of the new component triangulations.
+         * Note however that uniqueness testing may be slow, so this
+         * assignment of labels should be disabled if the component
+         * triangulations are only temporary objects used as part
+         * of a larger routine.
+         *
+         * @param componentParent the packet beneath which the new
+         * component triangulations will be inserted, or 0 if they
+         * should be inserted directly beneath this triangulation.
+         * @param setLabels \c true if the new component triangulations
+         * should be assigned unique packet labels, or \c false if
+         * they should be left without labels at all.
+         * @return the number of new component triangulations
+         * constructed.
+         */
+        unsigned long splitIntoComponents(NPacket* componentParent = 0,
+            bool setLabels = true);
+        /**
+         * Splits this triangulation into its connected sum
+         * decomposition.  The individual prime 3-manifold triangulations
+         * that make up this decomposition will be inserted as children
+         * of the given parent packet.  The original triangulation will
+         * be left unchanged.
+         *
+         * If the given parent packet is 0, the new prime summand
+         * triangulations will be inserted as children of this
+         * triangulation.
+         *
+         * This routine uses Jaco and Rubinstein's 0-efficiency prime
+         * decomposition algorithm.  It may only be used with valid
+         * closed orientable connected triangulations.
+         *
+         * This routine can optionally assign unique (and sensible)
+         * packet labels to each of the new prime summand triangulations.
+         * Note however that uniqueness testing may be slow, so this
+         * assignment of labels should be disabled if the summand
+         * triangulations are only temporary objects used as part
+         * of a larger routine.
+         *
+         * If this is a triangulation of a 3-sphere, no prime summand
+         * triangulations will be created at all.
+         *
+         * \warning The algorithms used in this routine rely on normal
+         * surface theory and so can be very slow for larger triangulations.
+         * For 3-sphere testing, see the routine isThreeSphere() which
+         * uses faster methods where possible.
+         *
+         * \pre This triangulation is valid, closed, orientable and
+         * connected.
+         *
+         * @param primeParent the packet beneath which the new prime
+         * summand triangulations will be inserted, or 0 if they
+         * should be inserted directly beneath this triangulation.
+         * @param setLabels \c true if the new prime summand triangulations
+         * should be assigned unique packet labels, or \c false if
+         * they should be left without labels at all.
+         * @return the number of prime summands created, 0 if this
+         * triangulation is a 3-sphere or 0 if this triangulation does
+         * not meet the preconditions described above.
+         */
+        unsigned long connectedSumDecomposition(NPacket* primeParent = 0,
+            bool setLabels = true);
+        /**
+         * Determines whether this is a triangulation of a 3-sphere.
+         *
+         * This routine relies upon a combination of Rubinstein's 3-sphere
+         * recognition algorithm and Jaco and Rubinstein's 0-efficiency
+         * prime decomposition algorithm.
+         *
+         * \warning The algorithms used in this routine rely on normal
+         * surface theory and so can be very slow for larger
+         * triangulations (although faster tests are used where possible).
+         *
+         * \todo \opt In the cases where we resort to the 0-efficiency
+         * decomposition algorithm, stop as soon as the first non-3-sphere
+         * is found.
+         *
+         * @return \c true if and only if this is a 3-sphere triangulation.
+         */
+        bool isThreeSphere() const;
+
+        /*@}*/
+        /**
+         * (end: Decompositions)
          */
 
         /**

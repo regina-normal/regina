@@ -216,6 +216,10 @@ NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
         bool b;
         if (valueOf(props.lookup("value"), b))
             tri->splittingSurface = b;
+    } else if (subTagName == "threesphere") {
+        bool b;
+        if (valueOf(props.lookup("value"), b))
+            tri->threeSphere = b;
     } else if (subTagName == "H1")
         return new NAbelianGroupPropertyReader(tri->H1);
     else if (subTagName == "H1Rel")
