@@ -702,6 +702,76 @@
   </refsect1>
 
   <refsect1>
+   <title>Examples</title>
+
+   <para>
+    The following command forms a census of all 3-tetrahedron closed
+    non-orientable triangulations and puts the results in the file
+    <filename>results.rga</filename>.  To ensure that triangulations are
+    closed we use the options <option>-i</option> (no boundary faces)
+    and <option>-f</option> (no ideal vertices).
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus -t 3 -nif results.rga</userinput>
+    Progress reports are periodic.
+    Not all face pairings used will be reported.
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 2:3 2:2
+    Finished.
+    Total triangulations: 5
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    The following command forms a census of 4-tetrahedron closed
+    orientable triangulations, where the census creation is optimised
+    for prime minimal triangulations.  Although all prime minimal
+    triangulations will be included, there may be some non-prime or
+    non-minimal triangulations that are left out.
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus -t 4 -oifM results.rga</userinput>
+    Progress reports are periodic.
+    Not all face pairings used will be reported.
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 3:0 3:1 | 2:2 ...
+    1:0 1:1 2:0 3:0 | 0:0 0:1 2:1 3:1 | 0:2 1:2 3:2 3:3 | 0:3 ...
+    Finished.
+    Total triangulations: 17
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    The following command generates all face pairings for a
+    5-tetrahedron census where triangulations must have precisely two
+    boundary faces.  The face pairings will be written to
+    <filename>pairings.txt</filename>, whereupon they can be broken up
+    and distributed for processing at a later date.
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus --genpairs -t 5 -B 2 pairings.txt</userinput>
+    Total face pairings: 118
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    The face pairings generated in the previous example can then be fleshed
+    out into a full census of all 3-manifold triangulations with five
+    tetrahedra, precisely two boundary faces and no ideal vertices as
+    follows.  Note that the number of tetrahedra and boundary faces were
+    already specified in the previous command and do not need to be
+    supplied again.  The face pairings will be read from
+    <filename>pairings.txt</filename> and the final census will be
+    written to <filename>results.rga</filename>.
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus --usepairs -f results.rga &lt; pairings.txt</userinput>
+</screen>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-sigcensus">sigcensus</link>,

@@ -259,6 +259,25 @@
     </programlisting>
    </sect3>
   </sect2>
+
+  <sect2 id="tri-census-creation">
+   <title>Census Creation</title>
+
+   <para>
+    &regina; can form censuses of all 3-manifold triangulations
+    satisfying a variety of different constraints.  The best way of
+    doing this is through the command-line tool
+    <link linkend="man-tricensus"><command>tricensus</command></link>.
+    For very long calculations the tool
+    <link linkend="man-tricensus-manager"><command>tricensus-manager</command></link>
+    can be used to distribute the processing amongst a number of
+    different processors.
+   </para>
+   <para>
+    See the <link linkend="utils">separate references</link> for these
+    tools for further details.
+   </para>
+  </sect2>
  </sect1>
 
  <sect1 id="tri-analysis">
