@@ -38,9 +38,12 @@
 
 #include <hash_set>
 
-/**
- * The namespace containing <tt>hash_set</tt>, <tt>hash_map</tt> and
- * other associated Standard Template Library extension classes.
+/*! \namespace stdhash
+ *  \brief The namespace containing <tt>hash_set</tt>, <tt>hash_map</tt>
+ *  and other associated Standard Template Library extension classes.
+ *
+ *  This alias is provided because different compilers place these classes
+ *  in different namespaces.
  */
 #ifdef __NO_NAMESPACE_ALIASES
     #ifdef __HASH_NAMESPACE
