@@ -26,11 +26,19 @@
 
 /* end stub */
 
-void addDehydration();
-void addSnapPea();
+#include "foreign/dehydration.h"
+#include "packet/ncontainer.h"
+#include <boost/python.hpp>
 
-void addForeign() {
-    addDehydration();
-    addSnapPea();
+using namespace boost::python;
+
+namespace {
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_readDehydrationList,
+        regina::readDehydrationList, 1, 4);
+}
+
+void addDehydration() {
+    def("readDehydrationList", regina::readDehydrationList,
+        OL_readDehydrationList()[return_value_policy<manage_new_object>()]);
 }
 

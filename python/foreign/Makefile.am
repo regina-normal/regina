@@ -11,5 +11,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libforeign.la
 
-libforeign_la_SOURCES = snappea.cpp pyforeign.cpp
+libforeign_la_SOURCES = dehydration.cpp snappea.cpp pyforeign.cpp
 

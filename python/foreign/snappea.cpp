@@ -38,7 +38,7 @@ namespace {
         &regina::stringToToken;
 }
 
-void addNSnapPea() {
+void addSnapPea() {
     def("readSnapPea", regina::readSnapPea,
         return_value_policy<manage_new_object>());
     def("writeSnapPea", regina::writeSnapPea);

@@ -40,6 +40,10 @@ namespace {
     NPacket* (NPacket::*findPacketLabel_non_const)(const std::string&) =
         &NPacket::findPacketLabel;
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_moveUp,
+        NPacket::moveUp, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_moveDown,
+        NPacket::moveDown, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nextTreePacket,
         NPacket::nextTreePacket, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_clone,
@@ -111,6 +115,10 @@ void addNPacket() {
         .def("insertChildAfter", insertChildAfter_own)
         .def("makeOrphan", &NPacket::makeOrphan)
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
+        .def("moveUp", &NPacket::moveUp, OL_moveUp())
+        .def("moveDown", &NPacket::moveDown, OL_moveDown())
+        .def("moveToFirst", &NPacket::moveToFirst)
+        .def("moveToLast", &NPacket::moveToLast)
         .def("nextTreePacket", nextTreePacket_non_const, OL_nextTreePacket()
             [return_value_policy<reference_existing_object>()])
         .def("firstTreePacket", firstTreePacket_non_const,
