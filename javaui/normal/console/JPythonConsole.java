@@ -85,6 +85,15 @@ public class JPythonConsole extends ConsolePane {
     }
 
     /**
+     * Returns the shell representing the entire program.
+     *
+     * @return the shell representing the entire program.
+     */
+    public Shell getShell() {
+        return shell;
+    }
+
+    /**
      * Console preprocessing routine.  This will set up the interpreter
      * as described in <tt>JPythonUtils.setupInterpreter()</tt>.
      *
