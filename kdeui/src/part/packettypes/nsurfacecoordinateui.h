@@ -38,11 +38,11 @@
 #include <memory>
 #include <qtooltip.h>
 
+class CoordinateChooser;
 class KAction;
 class KActionCollection;
 class PacketChooser;
 class QBoxLayout;
-class QComboBox;
 class QHeader;
 class QListView;
 class SurfaceHeaderToolTip;
@@ -63,14 +63,13 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         regina::NNormalSurfaceList* surfaces;
-        int coordSystem;
 
         /**
          * Internal components
          */
         QWidget* ui;
         QBoxLayout* uiLayout;
-        QComboBox* coords;
+        CoordinateChooser* coords;
         PacketChooser* filter;
         std::auto_ptr<QListView> table;
         std::auto_ptr<SurfaceHeaderToolTip> headerTips;

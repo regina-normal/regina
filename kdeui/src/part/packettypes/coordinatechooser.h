@@ -26,42 +26,58 @@
 
 /* end stub */
 
-/*! \file nnormalsurfacecreator.h
- *  \brief Allows the creation of normal surface lists.
+/*! \file coordinatechooser.h
+ *  \brief Provides a widget for selecting a normal surface coordinate
+ *  system.
  */
 
-#ifndef __NNORMALSURFACECREATOR_H
-#define __NNORMALSURFACECREATOR_H
+#ifndef __COORDINATECHOOSER_H
+#define __COORDINATECHOOSER_H
 
-#include "../packetcreator.h"
+#include <kcombobox.h>
+#include <vector>
 
-class CoordinateChooser;
-class QCheckBox;
+class PacketFilter;
 
 /**
- * An interface for creating normal surface lists.
+ * A widget through which a normal surface coordinate system can be
+ * selected.  Coordinate systems are described by the integer constants
+ * declared in regina::NNormalSurfaceList.
  */
-class NNormalSurfaceCreator : public PacketCreator {
+class CoordinateChooser : public KComboBox {
+    Q_OBJECT
+
     private:
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        CoordinateChooser* coords;
-        QCheckBox* embedded;
+        std::vector<int> systems;
+            /**< A list of the coordinate systems corresponding to the
+                 available entries in the combo box. */
 
     public:
         /**
-         * Constructor.
+         * Constructor that creates an empty combo box.
          */
-        NNormalSurfaceCreator();
+        CoordinateChooser(QWidget* parent, const char* name = 0);
 
         /**
-         * PacketCreator overrides.
+         * Used to fill the combo box with coordinate systems.
          */
-        QWidget* getInterface();
-        regina::NPacket* createPacket(regina::NPacket* parentPacket,
-            QWidget* parentWidget);
+        void insertSystem(int coordSystem);
+        void insertAllCreators();
+        void insertAllViewers(regina::NNormalSurfaceList* surfaces);
+
+        /**
+         * Get and set the currently selected coordinate system.
+         */
+        void setCurrentSystem(int newSystem);
+        int getCurrentSystem();
 };
+
+inline CoordinateChooser::CoordinateChooser(QWidget* parent,
+        const char* name) : KComboBox(parent, name) {
+}
+
+inline int CoordinateChooser::getCurrentSystem() {
+    return systems[currentItem()];
+}
 
 #endif

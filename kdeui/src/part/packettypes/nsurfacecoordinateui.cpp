@@ -31,6 +31,7 @@
 #include "surfaces/nsurfacefilter.h"
 
 // UI includes:
+#include "coordinatechooser.h"
 #include "coordinates.h"
 #include "nsurfacecoordinateui.h"
 #include "../packetchooser.h"
@@ -38,7 +39,6 @@
 #include "../reginapart.h"
 
 #include <kaction.h>
-#include <kcombobox.h>
 #include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -65,21 +65,10 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
 
     // Set up the coordinate selector.
     hdrLayout->addWidget(new QLabel(i18n("Display coordinates:"), ui));
-    coords = new KComboBox(ui);
-    if (surfaces->allowsAlmostNormal()) {
-        coords->insertItem(Coordinates::name(NNormalSurfaceList::AN_STANDARD));
-        coords->insertItem(Coordinates::name(NNormalSurfaceList::EDGE_WEIGHT));
-        coords->insertItem(Coordinates::name(NNormalSurfaceList::FACE_ARCS));
-    } else {
-        coords->insertItem(Coordinates::name(NNormalSurfaceList::STANDARD));
-        coords->insertItem(Coordinates::name(NNormalSurfaceList::QUAD));
-        coords->insertItem(Coordinates::name(NNormalSurfaceList::EDGE_WEIGHT));
-        coords->insertItem(Coordinates::name(NNormalSurfaceList::FACE_ARCS));
-    }
+    coords = new CoordinateChooser(ui);
+    coords->insertAllViewers(surfaces);
+    coords->setCurrentSystem(surfaces->getFlavour());
     hdrLayout->addWidget(coords);
-
-    // TODO: Set up coordSystem and the combo box appropriately.
-    coordSystem = NNormalSurfaceList::STANDARD;
     // TODO: Listen for actions on the coordinate box.
 
     hdrLayout->addStretch(1);
@@ -152,8 +141,8 @@ void NSurfaceCoordinateUI::refresh() {
     // TODO: Add table columns.
     table->addColumn("hoo");
 
-    headerTips.reset(new SurfaceHeaderToolTip(surfaces, coordSystem,
-        table->header()));
+    headerTips.reset(new SurfaceHeaderToolTip(surfaces,
+        coords->getCurrentSystem(), table->header()));
     connect(table->header(), SIGNAL(sizeChange(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 

@@ -11,6 +11,7 @@ INCLUDES = $(all_includes)
 noinst_LTLIBRARIES = libpackettypes.la
 
 noinst_HEADERS = \
+	coordinatechooser.h \
 	coordinates.h \
 	nanglestructurecreator.h \
 	nanglestructureitem.h \
@@ -39,6 +40,7 @@ noinst_HEADERS = \
 	skeletonwindow.h
 
 libpackettypes_la_SOURCES = \
+	coordinatechooser.cpp \
 	coordinates.cpp \
 	nanglestructurecreator.cpp \
 	nanglestructureitem.cpp \

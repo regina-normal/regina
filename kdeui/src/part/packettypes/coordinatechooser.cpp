@@ -28,62 +28,44 @@
 
 // Regina core includes:
 #include "surfaces/nnormalsurfacelist.h"
-#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "coordinatechooser.h"
-#include "nnormalsurfacecreator.h"
+#include "coordinates.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qwhatsthis.h>
+#include <algorithm>
 
 using regina::NNormalSurfaceList;
 
-NNormalSurfaceCreator::NNormalSurfaceCreator() {
-    // Set up the basic layout.
-    ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(ui);
-
-    QBoxLayout* coordArea = new QHBoxLayout(layout, 5);
-    QString expln = i18n("Specifies the coordinate system in which the "
-        "vertex normal surfaces will be enumerated.");
-    QLabel* label = new QLabel(i18n("Coordinate system:"), ui);
-    QWhatsThis::add(label, expln);
-    coordArea->addWidget(label);
-    coords = new CoordinateChooser(ui);
-    coords->insertAllCreators();
-    QWhatsThis::add(coords, expln);
-    coordArea->addWidget(coords, 1);
-
-    layout->addSpacing(5);
-
-    embedded = new QCheckBox(i18n("Embedded surfaces only"), ui);
-    embedded->setChecked(true);
-    QWhatsThis::add(embedded, i18n("Specifies whether only embedded "
-        "normal surfaces should be enumerated, or whether all normal "
-        "surfaces (embedded, immersed and singular) should be enumerated."));
-    layout->addWidget(embedded);
+void CoordinateChooser::insertSystem(int coordSystem) {
+    insertItem(Coordinates::name(coordSystem));
+    systems.push_back(coordSystem);
 }
 
-QWidget* NNormalSurfaceCreator::getInterface() {
-    return ui;
+void CoordinateChooser::insertAllCreators() {
+    insertSystem(NNormalSurfaceList::STANDARD);
+    insertSystem(NNormalSurfaceList::AN_STANDARD);
+    insertSystem(NNormalSurfaceList::QUAD);
 }
 
-regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
-        QWidget* parentWidget) {
-    if (parent->getPacketType() != regina::NTriangulation::packetType) {
-        KMessageBox::error(parentWidget, i18n(
-            "Normal surface lists can only be created directly beneath "
-            "triangulations."));
-        return 0;
+void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
+    if (surfaces->allowsAlmostNormal()) {
+        insertSystem(NNormalSurfaceList::AN_STANDARD);
+    } else {
+        insertSystem(NNormalSurfaceList::STANDARD);
+        insertSystem(NNormalSurfaceList::QUAD);
     }
 
-    return NNormalSurfaceList::enumerate(
-        dynamic_cast<regina::NTriangulation*>(parent),
-        coords->getCurrentSystem(), embedded->isChecked());
+    insertSystem(NNormalSurfaceList::EDGE_WEIGHT);
+    insertSystem(NNormalSurfaceList::FACE_ARCS);
 }
 
+void CoordinateChooser::setCurrentSystem(int newSystem) {
+    std::vector<int>::const_iterator it =
+        std::find(systems.begin(), systems.end(), newSystem);
+
+    if (it != systems.end())
+        setCurrentItem(it - systems.begin());
+}
+
+#include "coordinatechooser.moc"
