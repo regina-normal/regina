@@ -101,6 +101,21 @@ unsigned long gcd(unsigned long a, unsigned long b);
 long gcdWithCoeffs(long a, long b, long& u, long& v);
 
 /**
+ * Calculates the multiplicative inverse of one integer modulo another.
+ * The inverse returned will be between 0 and <i>n</i>-1 inclusive.
+ *
+ * \pre \a n and \a k are both strictly positive;
+ * \pre \a n and \a k have no common factors.
+ *
+ * \ifaces Not present.
+ *
+ * @param n the modular base in which to work.
+ * @param k the number whose multiplicative inverse should be found.
+ * @return the inverse \a v for which <tt>k * v == 1 (mod n)</tt>.
+ */
+unsigned long modularInverse(unsigned long n, unsigned long k);
+
+/**
  * Calculates the prime factorisation of the given integer.
  * All the prime factors will be inserted into the given list.
  * The algorithm used is <b>very neanderthal</b> and should only be used with

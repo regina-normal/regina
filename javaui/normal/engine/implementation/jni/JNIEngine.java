@@ -214,6 +214,7 @@ public class JNIEngine implements Engine {
     public native int getVersionMajor();
     public native int getVersionMinor();
     public native String getVersionString();
+	public native NLayeredLensSpace isLayeredLensSpace(NComponent comp);
 	public native NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
     public native NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour);

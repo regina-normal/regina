@@ -37,7 +37,7 @@
 #include "Packet/NScript.idl"
 #include "Packet/NText.idl"
 #include "Progress/NProgressManager.idl"
-#include "Subcomplex/NLayeredSolidTorus.idl"
+#include "Subcomplex/NLayeredLensSpace.idl"
 #include "Surfaces/NNormalSurfaceList.idl"
 #include "Surfaces/NSurfaceFilter.idl"
 #include "Surfaces/NSurfaceFilterCombination.idl"
@@ -101,6 +101,8 @@ module Regina {
         long getVersionMajor();
         long getVersionMinor();
         string getVersionString();
+		Subcomplex::NLayeredLensSpace isLayeredLensSpace(
+			in Triangulation::NComponent comp);
 		Subcomplex::NLayeredSolidTorus isLayeredSolidTorusBase(
 			in Triangulation::NTetrahedron tet);
         Maths::NMatrixInt makeMatchingEquations(

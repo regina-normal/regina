@@ -37,7 +37,7 @@
     #include "nsnappea.h"
     #include "nfile.h"
     #include "ncensus.h"
-	#include "nlayeredsolidtorus.h"
+	#include "nlayeredlensspace.h"
     #include "nnormalsurfacelist.h"
     #include "matrixops.h"
 #else
@@ -48,7 +48,7 @@
     #include "engine/imports/nsnappea.h"
     #include "engine/file/nfile.h"
     #include "engine/census/ncensus.h"
-    #include "engine/subcomplex/nlayeredsolidtorus.h"
+    #include "engine/subcomplex/nlayeredlensspace.h"
     #include "engine/surfaces/nnormalsurfacelist.h"
     #include "engine/maths/matrixops.h"
 #endif
@@ -89,6 +89,15 @@ JNIEXPORT jstring JNICALL
 		Java_normal_engine_implementation_jni_JNIEngine_getVersionString
         (JNIEnv *env, jobject me) {
     return env->NewStringUTF(ENGINE_VERSION);
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_JNIEngine_isLayeredLensSpace
+		(JNIEnv *env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
+		NLayeredLensSpace::isLayeredLensSpace(
+        GET_ENGINE_OBJECT(env, NComponent, you)),
+        "normal/engine/implementation/jni/subcomplex/NJNILayeredLensSpace");
 }
 
 JNIEXPORT jobject JNICALL

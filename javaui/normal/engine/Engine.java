@@ -110,6 +110,7 @@ public interface Engine {
     public int getVersionMajor();
     public int getVersionMinor();
     public String getVersionString();
+	public NLayeredLensSpace isLayeredLensSpace(NComponent comp);
 	public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
     public NMatrixInt makeMatchingEquations(NTriangulation
         triangulation, int flavour);

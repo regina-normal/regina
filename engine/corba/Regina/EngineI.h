@@ -104,6 +104,8 @@ class Engine_i : public virtual POA_Regina::Engine,
         virtual CORBA::Long getVersionMajor();
         virtual CORBA::Long getVersionMinor();
         virtual char* getVersionString();
+		virtual Regina::Subcomplex::NLayeredLensSpace_ptr
+			isLayeredLensSpace(Regina::Triangulation::NComponent_ptr comp);
 		virtual Regina::Subcomplex::NLayeredSolidTorus_ptr
 			isLayeredSolidTorusBase(Regina::Triangulation::NTetrahedron_ptr tet);
         virtual Regina::Maths::NMatrixInt_ptr makeMatchingEquations(

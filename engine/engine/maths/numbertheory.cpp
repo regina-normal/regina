@@ -112,6 +112,18 @@ long gcdWithCoeffs(long a, long b, long& u, long& v) {
     return ans;
 }
 
+unsigned long modularInverse(unsigned long n, unsigned long k) {
+	if (n == 1)
+		return 0;
+
+	long u, v;
+	gcdWithCoeffs(n, k, u, v);
+	// GCD should equal 1, so u*n + k*v = 1.
+	// Inverse is v; note that -n < v <= 0.
+	// Since n >= 2 now and (n,k) = 1, we know v != 0.
+	return v + n;
+}
+
 /**
  * Finds the smallest prime factor of the given odd integer.
  * You may specify a known lower bound for this smallest prime factor.
