@@ -92,7 +92,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         NTriangulation genusFourNonOrCusp;
             /**< A triangulation with a genus four non-orientable cusp
              * (i.e., a non-orientable analogue of the two-holed torus). */
-        // TODO: invalid
+        NTriangulation edgeInvalid;
+            /**< A triangulation with two invalid edges but whose
+                 vertices all have 2-sphere links. */
 
     public:
         void setUp() {
@@ -147,6 +149,11 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             s->joinTo(2, s, NPerm(0,2,3,1));
             genusFourNonOrCusp.addTetrahedron(t);
             genusFourNonOrCusp.addTetrahedron(s);
+
+            t = new NTetrahedron();
+            t->joinTo(0, t, NPerm(1,0,3,2));
+            t->joinTo(2, t, NPerm(1,0,3,2));
+            edgeInvalid.addTetrahedron(t);
         }
 
         void tearDown() {
@@ -219,6 +226,19 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 (! genusFourNonOrCusp.hasBoundaryFaces()));
             testIncompatible(genusFourNonOrCusp,
                 "A triangulation with a genus four non-orientable cusp "
+                "should not be representable in SnapPea format.");
+
+            CPPUNIT_ASSERT_MESSAGE(
+                "The triangulation with two invalid edges "
+                "appears to have been incorrectly constructed.",
+                (! edgeInvalid.isValid()) &&
+                edgeInvalid.isConnected() &&
+                (! edgeInvalid.isOrientable()) &&
+                (! edgeInvalid.isIdeal()) &&
+                edgeInvalid.isStandard() &&
+                (! edgeInvalid.hasBoundaryFaces()));
+            testIncompatible(edgeInvalid,
+                "A triangulation with two invalid edges "
                 "should not be representable in SnapPea format.");
         }
 
