@@ -152,6 +152,10 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
         adjRoles = tet->getAdjacentTetrahedronGluing(useVertexRoles[0]) *
             useVertexRoles * invRoleMap;
 
+        // Check that we haven't hit the boundary.
+        if (adjTet == 0)
+            return 0;
+
         if (adjTet == base) {
             // We're back at the beginning of the loop.
             // Check that everything is glued up correctly.
