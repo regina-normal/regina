@@ -71,7 +71,9 @@ export CLASSPATH_SEP := ;
 # BTOOLS: Location of btools.jar (containing the BTools utility classes).
 # JYTHON: Location of jython.jar (containing the Jython classes).
 # EXTRA_CLASSES: Locations of any other necessary classes, separated by
-#       the classpath separator as described above.
+#       the classpath separator as described above.  If your Java VM or
+#       compiler needs to know where the core Java classes are, this is
+#       the place to tell them.
 
 export BTOOLS := c:\cygwin\usr\local\java\jar\btools.jar
 export JYTHON := c:\cygwin\usr\local\java\jar\jython.jar
@@ -96,7 +98,7 @@ export EXTRA_CLASSES :=
 # ARCHIVE: Build an archive using $(ARCHIVE) <archive file> <files to include>.
 # CAT: Write the contents of a file to standard output.
 # COPY: Copy one file to another.
-# ECHO: Write the command line arguments to standard output.
+# ECHO: Write text with escape sequences to standard output.
 # GREP: Search for a pattern in a file.
 # MKDIR: Create a directory.
 # SED: Run sed, the stream editor.
@@ -119,7 +121,7 @@ export DOCBOOK2MAN := docbook2man
 export ARCHIVE := tar --ignore-failed-read -zcf
 export CAT := cat
 export COPY := cp
-export ECHO := echo
+export ECHO := echo -e
 export GREP := grep
 export MKDIR := mkdir
 export SED := sed

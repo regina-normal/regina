@@ -103,7 +103,7 @@ export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
 # ARCHIVE: Build an archive using $(ARCHIVE) <archive file> <files to include>.
 # CAT: Write the contents of a file to standard output.
 # COPY: Copy one file to another.
-# ECHO: Write the command line arguments to standard output.
+# ECHO: Write text with escape sequences to standard output.
 # GREP: Search for a pattern in a file.
 # MKDIR: Create a directory.
 # SED: Run sed, the stream editor.
@@ -129,7 +129,7 @@ export DOCBOOK2MAN := docbook2man
 export ARCHIVE := tar --ignore-failed-read -zcf
 export CAT := cat
 export COPY := cp
-export ECHO := echo
+export ECHO := echo -e
 export GREP := grep
 export MKDIR := mkdir
 export SED := sed
