@@ -144,6 +144,7 @@ REGINA_PROG_OPTIONAL(javadoc, JAVADOC,
 REGINA_HEADER_REQUIRED(zlib.h, [the calculation engine])
 REGINA_LIB_REQUIRED(z, zlibVersion, [the calculation engine])
 
+# It seems libm is required by libxml2 when doing static linking.
 REGINA_LIB_REQUIRED(m, log10, [the calculation engine])
 
 REGINA_HEADER_REQUIRED(gmp.h, [the calculation engine])
