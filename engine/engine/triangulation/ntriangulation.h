@@ -1399,7 +1399,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
         /**
          * Inserts a new lens space L(p,q) into the triangulation.
          * The lens space will be created by gluing together two layered
-         * solid tori.
+         * solid tori in a way that uses the fewest possible tetrahedra.
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
