@@ -361,6 +361,8 @@ void ReginaMain::readOptions(KConfig* config) {
     config->setGroup("Display");
     globalPrefs.autoDock = config->readBoolEntry("PacketDocking", true);
     globalPrefs.displayIcon = config->readBoolEntry("DisplayIcon", true);
+    globalPrefs.displayTagsInTree = config->readBoolEntry("DisplayTagsInTree",
+        false);
 
     config->setGroup("File");
     globalPrefs.autoFileExtension = config->readBoolEntry(
@@ -384,6 +386,7 @@ void ReginaMain::saveOptions() {
     config->setGroup("Display");
     config->writeEntry("PacketDocking", globalPrefs.autoDock);
     config->writeEntry("DisplayIcon", globalPrefs.displayIcon);
+    config->writeEntry("DisplayTagsInTree", globalPrefs.displayTagsInTree);
 
     config->setGroup("File");
     config->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);

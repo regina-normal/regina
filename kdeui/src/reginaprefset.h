@@ -47,6 +47,8 @@ struct ReginaPrefSet {
         /**< Should filenames be given an automatic extension? */
     bool displayIcon;
         /**< Should we display the pretty Regina icon? */
+    bool displayTagsInTree;
+        /**< Should we display packet tags in the visual tree? */
     unsigned treeJumpSize;
         /**< The number of steps corresponding to a jump up or down in
              the packet tree. */
@@ -67,6 +69,7 @@ inline ReginaPrefSet::ReginaPrefSet() :
         autoDock(true),
         autoFileExtension(true),
         displayIcon(true),
+        displayTagsInTree(false),
         treeJumpSize(10),
         triEditMode(DirectEdit),
         triSurfacePropsThreshold(6) {

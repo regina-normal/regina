@@ -86,6 +86,7 @@ class ReginaPrefGeneral : public QVBox {
         QCheckBox* cbAutoDock;
         QCheckBox* cbAutoFileExtension;
         QCheckBox* cbDisplayIcon;
+        QCheckBox* cbDisplayTagsInTree;
         QLineEdit* editTreeJumpSize;
 
     public:

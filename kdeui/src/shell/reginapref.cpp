@@ -61,6 +61,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
     generalPrefs->cbAutoFileExtension->setChecked(prefSet.autoFileExtension);
     generalPrefs->cbDisplayIcon->setChecked(prefSet.displayIcon);
+    generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
 
@@ -84,8 +85,9 @@ void ReginaPreferences::slotApply() {
     unsigned uintVal;
 
     prefSet.autoDock = generalPrefs->cbAutoDock->isChecked();
-    prefSet.displayIcon = generalPrefs->cbDisplayIcon->isChecked();
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
+    prefSet.displayIcon = generalPrefs->cbDisplayIcon->isChecked();
+    prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
 
     uintVal = generalPrefs->editTreeJumpSize->text().toUInt(&ok);
     if (ok && uintVal > 0)
@@ -119,17 +121,23 @@ void ReginaPreferences::slotApply() {
 }
 
 ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QVBox(parent) {
-    cbAutoDock = new QCheckBox(i18n("Automatic packet docking"), this);
-    QWhatsThis::add(cbAutoDock, i18n("Try to dock new packet viewers into "
-        "the main window instead of opening them in new windows."));
-
     cbAutoFileExtension = new QCheckBox(i18n("Automatic file extension"), this);
     QWhatsThis::add(cbAutoFileExtension, i18n("Append the default extension "
         "to filenames when saving if no extension is already given."));
 
+    cbAutoDock = new QCheckBox(i18n("Automatic packet docking"), this);
+    QWhatsThis::add(cbAutoDock, i18n("Try to dock new packet viewers into "
+        "the main window instead of opening them in new windows."));
+
     cbDisplayIcon = new QCheckBox(i18n("Display icon"), this);
     QWhatsThis::add(cbDisplayIcon, i18n("Display the large Regina icon "
         "beneath the packet tree."));
+
+    cbDisplayTagsInTree = new QCheckBox(i18n("Display tags in packet tree"),
+        this);
+    cbDisplayTagsInTree->setEnabled(false);
+    QWhatsThis::add(cbDisplayTagsInTree, i18n("Show full details of any "
+        "packet tags directly within the packet tree."));
 
     // Set up the tree jump size.
     QHBox* box = new QHBox(this);
