@@ -20,7 +20,13 @@ noinst_HEADERS = \
 	nsurfacefiltercomb.h \
 	nsurfacefiltercreator.h \
 	nsurfacefilterprop.h \
-	ntextui.h
+	ntextui.h \
+	ntrialgebra.h \
+	ntriangulationui.h \
+	ntricomposition.h \
+	ntrigluings.h \
+	ntriskeleton.h \
+	ntrisurfaces.h
 
 libpackettypes_la_SOURCES = \
 	nanglestructurecreator.cpp \
@@ -32,7 +38,13 @@ libpackettypes_la_SOURCES = \
 	nsurfacefiltercomb.cpp \
 	nsurfacefiltercreator.cpp \
 	nsurfacefilterprop.cpp \
-	ntextui.cpp
+	ntextui.cpp \
+	ntrialgebra.cpp \
+	ntriangulationui.cpp \
+	ntricomposition.cpp \
+	ntrigluings.cpp \
+	ntriskeleton.cpp \
+	ntrisurfaces.cpp
 
 METASOURCES = AUTO
 

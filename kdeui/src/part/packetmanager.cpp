@@ -39,6 +39,7 @@
 #include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/nsurfacefilterprop.h"
 #include "packettypes/ntextui.h"
+#include "packettypes/ntriangulationui.h"
 
 #include <kiconloader.h>
 #include <klibloader.h>
@@ -140,6 +141,9 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
                 i18n("An appropriate text editor component\n"
                 "could not be found."));
     }
+    if (packet->getPacketType() == NTriangulation::packetType)
+        return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
+            enclosingPane, allowReadWrite);
     return new DefaultPacketUI(packet, enclosingPane);
 }
 
