@@ -1,0 +1,810 @@
+
+<!-- Regina reference documentation.
+     See regina.sgml for further details. -->
+
+<reference id="manpages">
+ <title>Options and Configuration</title>
+
+ <!-- Startup Script -->
+
+ <refentry id="man-regina">
+  <refmeta>
+   <refentrytitle>regina</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina</refname>
+   <refpurpose>&regina; startup script</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regina</command>
+    <group>
+     <arg><option>-q, --quiet</option></arg>
+     <arg><option>-v, --verbose</option></arg>
+    </group>
+    <group>
+     <arg><option>--gui</option></arg>
+     <arg><option>--console</option></arg>
+     <arg><option>--text</option></arg>
+    </group>
+    <group>
+     <arg><option>--jni</option></arg>
+     <arg><option>--corba</option></arg>
+    </group>
+    <arg><option>--jnilibname=</option><replaceable>name</replaceable></arg>
+    <arg><option>-ORBInitialHost</option> <replaceable>host</replaceable></arg>
+    <arg><option>-ORBInitialPort</option> <replaceable>port</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   &regabstract;
+   <para>
+    &linux; users should start &regina; by running the
+    <filename>regina</filename> startup script in the main
+    &regina; directory.  &windows; users may either start a
+    &cygwin; <filename>bash</filename> shell and run this same
+    startup script, or may run <filename>regina.bat</filename>
+    from their usual &windows; environment.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-q</option></term>
+     <term><option>--quiet</option></term>
+     <listitem>
+      <para>
+       Start in quiet mode.  No output will be produced except
+       for errors.
+      </para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_VERBOSITY</parameter>=<literal>0</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-v</option></term>
+     <term><option>--verbose</option></term>
+     <listitem>
+      <para>
+       Start in verbose mode.  Lots of diagnostic
+       information will be output.
+      </para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_VERBOSITY</parameter>=<literal>2</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--gui</option> (default)</term>
+     <listitem>
+      <para>Run with the full GUI.</para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_INTERFACE</parameter>=<literal>gui</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--console</option></term>
+     <listitem>
+      <para>
+       Run as a graphical &jython; console, without loading the full GUI.
+      </para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_INTERFACE</parameter>=<literal>console</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--text</option></term>
+     <listitem>
+      <para>Run as a text &jython; console, with no GUI whatsoever.</para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_INTERFACE</parameter>=<literal>text</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--jni</option> (default)</term>
+     <listitem>
+      <para>
+       Access the C++ calculation engine as a shared library using &jni;.
+      </para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_ENGINE</parameter>=<literal>jni</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--corba</option></term>
+     <listitem>
+      <para>
+       Access the C++ calculation engine as a &corba; server
+       application, possibly running on a different machine.
+      </para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_ENGINE</parameter>=<literal>corba</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--jnilibname=</option><replaceable>name</replaceable>
+      (default = <literal>regina-engine-jni</literal>)</term>
+     <listitem>
+      <para>
+       Use <replaceable>name</replaceable> as the name of the
+       &jni; calculation engine library to load.  This should
+       be the platform-independent library name, so the
+       library will in fact be called
+       <filename>lib<replaceable>name</replaceable>.so</filename> for
+       &linux; users or
+       <filename><replaceable>name</replaceable>.dll</filename> for
+       &windows; users.
+      </para>
+      <para>
+       This option is only relevant when using &jni; engine access
+       (see option <option>--jni</option> for details) and is equivalent
+       to setting configuration option <parameter>REGINA_JNIENGINE</parameter>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-ORBInitialHost</option> <replaceable>host</replaceable>
+      (default = <literal>localhost</literal>)</term>
+     <listitem>
+      <para>
+       Specifies that the &corba; name service is running on
+       the machine <replaceable>host</replaceable>.
+      </para>
+      <para>
+       This option is only relevant when using &corba; engine access
+       (see option <option>--corba</option> for details) and is
+       equivalent to setting configuration option
+       <parameter>REGINA_CORBAHOST</parameter>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-ORBInitialPort</option> <replaceable>port</replaceable>
+      (default = <literal>8088</literal>)</term>
+     <listitem>
+      <para>
+       Specifies that the &corba; name service is listening
+       on port <replaceable>port</replaceable> on the given host.
+      </para>
+      <para>
+       This option is only relevant when using &corba; engine access
+       (see option <option>--corba</option> for details) and is
+       equivalent to setting configuration option
+       <parameter>REGINA_CORBAPORT</parameter>.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>Environment Variables</title>
+   <para>
+    All of the options described in the
+    <link linkend="man-regina.conf">configuration reference</link> can
+    be set as environment variables.  Of particular interest are
+    <envar>REGINA_OPTIONS_GLOBAL</envar> and
+    <envar>REGINA_OPTIONS_LOCAL</envar> which specify the directories
+    containing the configuration files.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina.conf">regina.conf</link>,
+    <link linkend="man-applet">regina-applet</link>,
+    <link linkend="man-engine-corba">regina-engine-corba</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Configuration -->
+
+ <refentry id="man-regina.conf">
+  <refmeta>
+   <refentrytitle>regina.conf</refentrytitle>
+   <manvolnum>5</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina.conf</refname>
+   <refpurpose>&regina; configuration</refpurpose>
+  </refnamediv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    When running &regina; using the standard startup script, you can
+    configure its behaviour in many ways.  The configuration consists of
+    a number of options, each of which may be given a value.
+   </para>
+   <para>
+    The methods by which you may set these options are (in decreasing
+    order of priority):
+    <itemizedlist>
+     <listitem><para>
+      Command-line options to the startup script.  See the
+      <link linkend="man-regina">startup script reference</link> for
+      further details.
+     </para></listitem>
+     <listitem><para>
+      The local configuration file:
+      <filename>~/.regina/regina.conf</filename>
+     </para></listitem>
+     <listitem><para>
+      The global configuration file:
+      <filename>/etc/regina/regina.conf</filename>
+     </para></listitem>
+     <listitem><para>
+      Environment variables.  For instance, you might have environment
+      variable <envar>REGINA_ENGINE</envar> with the value
+      <literal>jni</literal>.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    Any option set by a method lower in this list will be
+    overridden by the same option set higher in the list (for instance,
+    a command-line option will override a setting in the local
+    configuration file).
+   </para>
+   <para>
+    The local and global configuration files should each contain
+    lines of the form:
+    <screen>
+    <replaceable>option</replaceable>=<replaceable>value</replaceable>
+    </screen>
+    Blank lines or lines beginning with a hash (<literal>#</literal>)
+    are ignored.
+   </para>
+   <para>
+    Environment variables <envar>REGINA_OPTIONS_GLOBAL</envar> and
+    <envar>REGINA_OPTIONS_LOCAL</envar> can be used to change the
+    location of the global and local configuration files; see the
+    Options section below for details.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <para>The configuration options that can be set are as follows.</para>
+   <variablelist>
+    <varlistentry>
+     <term><parameter>REGINA_VERBOSITY</parameter>
+      (default = <literal>1</literal>)</term>
+     <listitem>
+      <para>
+       The verbosity level for the startup script.
+       For this option only, a setting in the configuration file(s) will
+       clobber the command-line options <option>-q</option>,
+       <option>--quiet</option>, <option>-v</option> and
+       <option>--verbose</option>.
+       </para>
+       <para>
+       Recognised values are:
+       <variablelist>
+        <varlistentry>
+         <term><literal>0</literal></term>
+         <listitem><para>
+          Display errors only (quiet).
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>1</literal></term>
+         <listitem><para>
+          Display errors and warnings.
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>2</literal></term>
+         <listitem><para>
+          Display errors, warnings and diagnostic output (verbose).
+         </para></listitem>
+        </varlistentry>
+       </variablelist>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_HOME</parameter></term>
+     <listitem>
+      <para>
+       The directory in which &regina; is installed.  This should be the
+       directory containing the &regina; startup script, the
+       <filename>scripts/</filename> subdirectory and so on.
+       This defaults to the directory containing the startup script that
+       was run.
+      </para>
+      <para>This option cannot be set in the configuration files.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_OPTIONS_GLOBAL</parameter>
+      (default = <filename>/etc/regina</filename>)</term>
+     <listitem>
+      <para>
+       The directory containing the global configuration file.
+      </para>
+      <para>
+       Clearly this option cannot be set in the configuration files!
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_OPTIONS_LOCAL</parameter>
+      (default = <filename>~/.regina</filename>)</term>
+     <listitem>
+      <para>
+       The directory containing the local configuration file.
+      </para>
+      <para>
+       Clearly this option cannot be set in the configuration files!
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_BTOOLS</parameter> (default =
+      <filename><replaceable>REGINA_HOME</replaceable>/lib/btools.jar</filename>)</term>
+     <listitem>
+      <para>
+       The location of the &btools; library.  &btools; is a set of
+       &java; classes that are necessary for &regina; to run.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_JYTHON</parameter> (default =
+      <filename><replaceable>REGINA_HOME</replaceable>/lib/jython.jar</filename>)</term>
+     <listitem>
+      <para>
+       The location of the &jython; library.  &jython; is optional, but
+       is needed if you wish to <link linkend="jython">write and run
+       scripts</link>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_JAVAHELP</parameter> (default =
+      <filename><replaceable>REGINA_HOME</replaceable>/lib/jh.jar</filename>)</term>
+     <listitem>
+      <para>
+       The location of the &javahelp; library.  &javahelp; is optional,
+       but is needed if you wish to use the embedded help browser.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_EXTRA_CLASSES</parameter>
+      (default = empty)</term>
+     <listitem>
+      <para>
+       Any other &java; classes that need to be added to the classpath
+       before &regina; is run.  Typically you will not need to put
+       anything here.
+      </para>
+      <para>
+       If you do need to use this option, it should be set to a series
+       of jars and/or directories separated by the standard classpath
+       separator (a colon under &linux; or a semicolon under &windows;).
+       An example is:
+       <literal>/usr/share/java/foo.jar:/home/bab/lib/</literal>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_JAVA</parameter></term>
+     <listitem>
+      <para>
+       The command used to start &java;.  If the command
+       <command>java</command> can be found on the path then this option
+       defaults to the full path of that command
+       (such as <command>/usr/bin/java</command>).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_JNIDIR</parameter> (default =
+      <filename><replaceable>REGINA_HOME</replaceable>/bin</filename>)</term>
+     <listitem>
+      <para>
+       The directory containing the &jni; library.  The &jni; library is
+       optional, but is needed if you wish to connect to the calculation
+       engine using &jni; (see the option
+       <parameter>REGINA_ENGINE</parameter> for further details).
+      </para>
+      <para>
+       The &jni; library itself will usually be called
+       <filename>libregina-engine-jni.so</filename> on &linux; systems
+       or <filename>regina-engine-jni.dll</filename> on &windows;
+       systems, but this can be changed by setting option
+       <parameter>REGINA_JNIENGINE</parameter>.
+      </para>
+      <para>
+       Note that option <parameter>REGINA_JNIDIR</parameter> should only
+       provide a directory, not a library name.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_JARDIR</parameter> (default =
+      <filename><replaceable>REGINA_HOME</replaceable>/bin</filename>)</term>
+     <listitem>
+      <para>
+       The directory containing the &regina; user interface jars.
+       This directory should contain <filename>regina.jar</filename> as
+       well as other optional jars such as
+       <filename>regina-corba.jar</filename> and
+       <filename>regina-docs.jar</filename>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_ENGINE</parameter>
+      (default = <literal>jni</literal>)</term>
+     <listitem>
+      <para>
+       Specifies how the C++ calculation engine will be accessed.
+       Recognised values are:
+       <variablelist>
+        <varlistentry>
+         <term><literal>jni</literal></term>
+         <listitem><para>
+          The engine will be accessed as a shared library using &jni;.
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>corba</literal></term>
+         <listitem><para>
+          The engine will be accessed as a &corba; server application,
+          possibly running on a different machine.
+         </para></listitem>
+        </varlistentry>
+       </variablelist>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_INTERFACE</parameter>
+      (default = <literal>gui</literal>)</term>
+     <listitem>
+      <para>
+       Specifies which style of interface to use when running
+       &regina;.  Recognised values are:
+       <variablelist>
+        <varlistentry>
+         <term><literal>gui</literal></term>
+         <listitem><para>
+          Run the full &regina; GUI.
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>console</literal></term>
+         <listitem><para>
+          Run as a graphical &jython; console, without loading the full GUI.
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>text</literal></term>
+         <listitem><para>
+          Run as a text &jython; console, with no GUI whatsoever.
+         </para></listitem>
+        </varlistentry>
+       </variablelist>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_JNIENGINE</parameter>
+      (default = <literal>regina-engine-jni</literal>)</term>
+     <listitem>
+      <para>
+       The name of the &jni; calculation engine library to load.
+       This should be the platform-independent library name, so if this
+       option has value <literal>foo</literal> then the library will in
+       fact be called <filename>libfoo.so</filename> for &linux; users or
+       <filename>foo.dll</filename> for &windows; users.
+      </para>
+      <para>
+       This option is only relevant when using &jni; engine access
+       (see option <parameter>REGINA_ENGINE</parameter> for details).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_CORBAHOST</parameter>
+      (default = <literal>localhost</literal>)</term>
+     <listitem>
+      <para>
+       The machine on which the &corba; name service is running.
+      </para>
+      <para>
+       This option is only relevant when using &corba; engine access
+       (see option <parameter>REGINA_ENGINE</parameter> for details).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_CORBAPORT</parameter>
+      (default = <literal>8088</literal>)</term>
+     <listitem>
+      <para>
+       The port on which the &corba; name service is listening.
+      </para>
+      <para>
+       This option is only relevant when using &corba; engine access
+       (see option <parameter>REGINA_ENGINE</parameter> for details).
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina">regina</link>,
+    <link linkend="man-applet">regina-applet</link>,
+    <link linkend="man-engine-corba">regina-engine-corba</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Applet Parameters -->
+
+ <refentry id="man-applet">
+  <refmeta>
+   <refentrytitle>regina-applet</refentrytitle>
+   <manvolnum>7</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina-applet</refname>
+   <refpurpose>&regina; &java; applet</refpurpose>
+  </refnamediv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    &regina; may be run as a &java; applet.  Because applets suffer from
+    restricted filesystem access, &regina; will suffer from
+    some loss in functionality.  This will include:
+    <itemizedlist>
+     <listitem><para>
+      No ability to save or load files.
+     </para></listitem>
+     <listitem><para>
+      No &jni; access to the calculation engine.  The user interface
+      will have to talk to the calculation engine using &corba;, which
+      means you will have to run the &corba; calculation engine as a
+      separate server program.  This server should be running on the same
+      machine that is hosting the applet web page.
+     </para></listitem>
+     <listitem><para>
+      No reading of configuration files.  The only way to customise
+      &regina;'s behaviour will be through the applet parameters
+      described below.
+     </para></listitem>
+    </itemizedlist>
+  </refsect1>
+
+  <refsect1>
+   <title>Parameters</title>
+   <para>The applet parameters that &regina; recognises are as follows.</para>
+   <variablelist>
+    <varlistentry>
+     <term><parameter>Docs</parameter>
+      (default = <literal>docs</literal>)</term>
+     <listitem>
+      <para>
+       The URL of the directory in which the unpacked
+       documentation can be found by the web browser.  This is the
+       directory beneath which
+       <filename>normal/docs/index.html</filename> can be found.  This
+       URL may be relative to the location of the applet's web page.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>Engine</parameter>
+      (default = <literal>corba</literal>)</term>
+     <listitem>
+      <para>
+       Specifies how the C++ calculation engine will be accessed.
+       Recognised values are:
+       <variablelist>
+        <varlistentry>
+         <term><literal>corba</literal></term>
+         <listitem><para>
+          The engine will be accessed as a &corba; server application,
+          possibly running on a different machine.
+         </para></listitem>
+        </varlistentry>
+       </variablelist>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>Interface</parameter>
+      (default = <literal>gui</literal>)</term>
+     <listitem>
+      <para>
+       Specifies which style of interface to use when running
+       &regina;.  Recognised values are:
+       <variablelist>
+        <varlistentry>
+         <term><literal>gui</literal></term>
+         <listitem><para>
+          Run the full &regina; GUI.
+         </para></listitem>
+        </varlistentry>
+       </variablelist>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>ORBInitialHost</parameter>
+      (default = <literal>localhost</literal>)</term>
+     <listitem>
+      <para>
+       The machine on which the &corba; name service is running.
+       Parameter <parameter>org.omg.CORBA.ORBInitialHost</parameter>
+       will override this parameter if it is present.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>ORBInitialPort</parameter>
+      (default = <literal>8088</literal>)</term>
+     <listitem>
+      <para>
+       The port on which the &corba; name service is listening.
+       Parameter <parameter>org.omg.CORBA.ORBInitialPort</parameter>
+       will override this parameter if it is present.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina">regina</link>,
+    <link linkend="man-regina.conf">regina.conf</link>,
+    <link linkend="man-engine-corba">regina-engine-corba</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- CORBA engine -->
+
+ <refentry id="man-engine-corba">
+  <refmeta>
+   <refentrytitle>regina-engine-corba</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina-engine-corba</refname>
+   <refpurpose>&regina; &corba; calculation engine server</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regina-engine-corba</command>
+    <arg><option>-ORBInitialHost</option> <replaceable>host</replaceable></arg>
+    <arg><option>-ORBInitialPort</option> <replaceable>port</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    If the &regina; user interface uses &corba; to access the
+    calculation engine, the calculation engine will need to be running
+    as a separate server application.  This is that server application.
+   </para>
+   <para>
+    Note that this server and the user interface may be running on
+    different machines.  You simply need to configure them both to use
+    the same &corba; name service.
+   </para>
+   <para>
+    There is no way to configure this server other than
+    through the command-line options described below.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-ORBInitialHost</option> <replaceable>host</replaceable>
+      (default = <literal>localhost</literal>)</term>
+     <listitem>
+      <para>
+       Specifies that the &corba; name service is running on
+       the machine <replaceable>host</replaceable>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-ORBInitialPort</option> <replaceable>port</replaceable>
+      (default = <literal>8088</literal>)</term>
+     <listitem>
+      <para>
+       Specifies that the &corba; name service is listening
+       on port <replaceable>port</replaceable> on the given host.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina">regina</link>,
+    <link linkend="man-regina.conf">regina.conf</link>,
+    <link linkend="man-applet">regina-applet</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+</reference>

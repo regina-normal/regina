@@ -1,0 +1,260 @@
+<!doctype book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+ <!ENTITY % admon-graphics-path "./images">
+
+ <!ENTITY regina "<application>Regina</application>">
+ <!ENTITY regauthor
+  "<author>
+    <firstname>Ben</firstname>
+    <surname>Burton</surname>
+   </author>">
+ <!ENTITY regauthorplain "Ben Burton">
+ <!ENTITY normal10author
+  "<author>
+    <firstname>David</firstname>
+    <surname>Letscher</surname>
+   </author>">
+ <!ENTITY regemail "<email>benb@acm.org</email>">
+ <!ENTITY regabstract
+  "<para>
+    &regina; is a topological calculator with a bent
+    towards normal surface theory.  It allows 3-manifolds to be created,
+    manipulated and their properties of interest determined.
+   </para>">
+ <!ENTITY editdate "28 September 2001">
+
+ <!ENTITY copyrightyears "1999-2001">
+ <!ENTITY copyrightholder "Ben Burton">
+ <!ENTITY copyrightnotice
+  "Copyright (c) &copyrightyears, &copyrightholder;">
+
+ <!ENTITY jni "<acronym>JNI</acronym>">
+ <!ENTITY corba "<acronym>CORBA</acronym>">
+ <!ENTITY linux "<productname>GNU/Linux</productname>">
+ <!ENTITY cygwin "<productname>Cygwin</productname>">
+ <!ENTITY windows "<productname>Windows</productname>">
+ <!ENTITY btools "<application>BTools</application>">
+ <!ENTITY jython "<application>Jython</application>">
+ <!ENTITY cpython "<application>CPython</application>">
+ <!ENTITY java "<application>Java</application>">
+ <!ENTITY javahelp "<application>JavaHelp</application>">
+
+ <!ENTITY helpabout
+  "<menuchoice>
+    <guimenu>Help</guimenu>
+    <guimenuitem>About</guimenuitem>
+   </menuchoice>">
+
+ <!ENTITY reginatrouble SYSTEM "reginatrouble.sgml">
+ <!ENTITY reginaman SYSTEM "reginaman.sgml">
+ <!ENTITY reginalicense SYSTEM "license.sgml">
+]>
+
+<book>
+ <bookinfo>
+  <graphic fileref="largeicon.jpg" align="right">
+  <title>&regina; Documentation</title>
+  &regauthor;
+  <address>&regemail;</address>
+  <date>&editdate;</date>
+  <copyright>
+   <year>&copyrightyears;</year>
+   <holder>&copyrightholder;</holder>
+  </copyright>
+  <abstract>&regabstract;</abstract>
+ </bookinfo>
+
+ <preface id="welcome">
+  <title>&regina; - A Normal Surface Theory Calculator</title>
+  <informaltable frame="none">
+   <tgroup align="center" cols="1"><tbody>
+    <row><entry><graphic fileref="title.jpg" align="center"></entry></row>
+    <row><entry></entry></row>
+    <row><entry><emphasis>&regina;</emphasis></entry></row>
+    <row><entry>
+     <emphasis>The Application Formerly Known As Normal</emphasis>
+    </entry></row>
+    <row><entry><emphasis>&copyrightnotice;</emphasis></entry></row>
+    <row><entry></entry></row>
+    <row><entry>
+     See the <link linkend="acknowledgements">acknowledgements
+     page</link> for full acknowledgements.
+    </entry></row>
+   </tbody></tgroup>
+  </informaltable>
+  <para>
+   A user manual has not yet been written, but a reference for
+   <link linkend="jython">scripts and the &jython; console</link>
+   is available; this includes <link linkend="autodocs">complete
+   documentation for the calculation engine</link>.
+  </para>
+  <para>
+   Documentation is also available for the
+   <link linkend="autodocs">&java; UI classes</link> for the purposes of
+   understanding or extending the source code.
+  </para>
+  <para>
+   Contact &regauthor; &regemail; for more details.
+  </para>
+
+  &reginalicense;
+
+ </preface>
+
+ <chapter id="gettingstarted">
+  <title>Getting Started</title>
+  <para>
+   Sooner or later there will be a short tutorial in this chapter; not
+   yet.  Never fear, this is the only chapter that has nothing in it.
+  </para>
+ </chapter>
+
+ <chapter id="jython">
+  <title>&jython; and Scripting</title>
+  <para>
+   All scripts are run in &jython;.  &jython; is almost identical to standard
+   python (&cpython;) with a few exceptions that are probably insignificant in
+   this arena.  See <ulink url="http://www.jython.org">www.jython.org</ulink>
+   for more details. 
+  </para>
+  <para>
+   When using &jython;, &java; objects, classes and methods can be directly
+   accessed as if they were &jython; objects, classes and methods.  The
+   <link linkend="autodocs">engine documentation</link> describes in
+   detail the classes that form the engine, packets and other objects
+   that can be manipulated in the program.
+  </para>
+  <para>
+   Wherever &regina; gives you access to &jython;, you may assume that the
+   <parameter>java</parameter> and <parameter>normal</parameter>
+   modules have been imported (thus giving you access to
+   everything beneath them).  If you need access to packets from a file
+   you currently have open, your best choice is to create a new script
+   packet, where you can set variables equal to other packets in the file
+   before the script is run. 
+  </para>
+  <warning><para>
+   Probably the easiest way to crash the program is to bring up
+   a &jython; console and do something untoward.  &jython; and scripting offer
+   very low-level control over the engine, but also provide the
+   associated dangers.  The general idea is that &jython; gives you
+   direct access to the C++ calculation engine and the &java; interface has
+   no way of knowing what you are tinkering with.  Thus you should tread
+   gently. 
+  </para></warning>
+  <para>
+   Whenever packets belonging to an open file are changed through a
+   script or console, you should always refresh the corresponding packet
+   subtree(s) in the main window (a button is provided below the tree for
+   this purpose).  This will automatically update any open packet viewers
+   or editors, so there is no need to update each of these separately.
+   This will also make the user interface find any new packets that have
+   been inserted into the subtree(s) and detect any renaming that has taken
+   place. 
+  </para>
+  <para>
+   You should <emphasis>never</emphasis> use a script or console to
+   delete a packet belonging to a file that is still open!
+   This can only lead to tears.  Instead delete packets
+   using the <guimenuitem>Delete</guimenuitem> button/menu item
+   provided in the main window. 
+  </para>
+  <para>
+   If you cannot edit a packet through the GUI, there is a reason for
+   this (for instance, a normal surface list will rely upon its parent
+   triangulation remaining constant and so any triangulation with child
+   surface lists will be uneditable).  Thus you should not use &jython; as a
+   way to get around that barrier; instead you should respect that
+   barrier.  Perhaps you can clone the packet in question without cloning
+   its descendants (<menuchoice>
+    <guimenu>Packet</guimenu>
+    <guisubmenu>Clone</guisubmenu>
+    <guimenuitem>Exclude Descendants</guimenuitem>
+   </menuchoice>); the clone then should be editable.
+  </para>
+ </chapter>
+
+ <chapter id="autodocs">
+  <title>Engine and &java; UI Documentation</title>
+  <para>
+   Some documentation has been generated from the fairly extensive
+   comments within the &regina; sources.  Available documentation includes:
+   <glosslist>
+    <glossentry>
+     <glossterm>
+      <ulink url="engine/GeneralNotes.html">Calculation Engine API</ulink>
+     </glossterm>
+     <glossdef><para>
+      This is a complete reference for the &regina; calculation engine.
+      It is a useful reference when writing
+      <link linkend="jython">&jython; scripts</link>; be sure to read
+      the <ulink url="engine/InterfaceNotes.html">interface notes page</ulink>
+      and the <ulink url="engine/JavaNotes.html">&java; notes page</ulink>
+      that accompany it.
+     </para></glossdef>
+    </glossentry>
+    <glossentry>
+     <glossterm>
+      <ulink url="javaui/index.html">&java; User Interface API</ulink>
+     </glossterm>
+     <glossdef><para>
+      This documentation is only useful if you wish to understand or
+      extend the sources to the &java; user interface.
+     </para></glossdef>
+    </glossentry>
+   </glosslist>
+ </chapter>
+
+ &reginatrouble;
+
+ <chapter id="acknowledgements">
+  <title>License and Acknowledgements</title>
+  <informaltable frame="none">
+   <tgroup align="center" cols="1"><tbody>
+    <row><entry>
+     <emphasis>&regina;</emphasis>
+    </entry></row>
+    <row><entry>
+     <emphasis>A Normal Surface Theory Calculator</emphasis>
+    </entry></row>
+    <row><entry><emphasis>&copyrightnotice;</emphasis></entry></row>
+    <row><entry></entry></row>
+    <row><entry>Written by &regauthor;</entry></row>
+    <row><entry></entry></row>
+    <row><entry>
+     Normal 1.0 was written by &normal10author;, who also provided
+     invaluable technical advice for this project.
+    </entry></row>
+   </tbody></tgroup>
+  </informaltable>
+  <para>Additional code contributed by:</para>
+  <itemizedlist>
+   <listitem><para>&normal10author;</para></listitem>
+  </itemizedlist>
+  <para>Thanks to:
+  <itemizedlist>
+   <listitem><para><author>
+    <firstname>William</firstname><surname>Jaco</surname>
+   </author></para></listitem>
+   <listitem><para><author>
+    <firstname>Hyam</firstname><surname>Rubinstein</surname>
+   </author></para></listitem>
+   <listitem><para><author>
+    <firstname>Jeff</firstname><surname>Weeks</surname>
+   </author></para></listitem>
+   <listitem><para>The American Institute of Mathematics</para></listitem>
+   <listitem><para>Oklahoma State University</para></listitem>
+   <listitem><para>The University of Melbourne, Australia</para></listitem>
+  </itemizedlist>
+  </para>
+
+  <para>
+   Contact &regauthor; &regemail; for further details.
+  </para>
+
+  &reginalicense;
+
+ </chapter>
+
+ &reginaman;
+
+</book>
