@@ -67,6 +67,11 @@ REGINA_PACKAGE_VERSIONS
 ###########################################################
 
 AC_CHECK_COMPILERS
+
+# Put back the exception handling that KDE takes out, since we need it
+# for boost.
+CXXFLAGS="`echo $CXXFLAGS | sed s/-fno-exceptions//`"
+
 KDE_PROG_LIBTOOL
 LIBTOOL="$LIBTOOL --silent"
 AM_KDE_WITH_NLS
@@ -129,6 +134,12 @@ AC_ARG_ENABLE(kdeui, AC_HELP_STRING([--enable-kdeui],
     [build the KDE user interface [[default=yes]]]), [
   if test "$enableval" = "no"; then
     REGINA_DO_NOT_COMPILE([KDEUI])
+  fi
+])
+AC_ARG_ENABLE(python, AC_HELP_STRING([--enable-python],
+    [build the python module [[default=yes]]]), [
+  if test "$enableval" = "no"; then
+    REGINA_DO_NOT_COMPILE([PYTHON])
   fi
 ])
 AC_ARG_ENABLE(docs, AC_HELP_STRING([--enable-docs],
@@ -233,6 +244,11 @@ AM_PATH_CPPUNIT([1.8.0], , [
   REGINA_DO_NOT_COMPILE(TESTSUITE)
 ])
 
+REGINA_SHOULD_BUILD_INTERNAL(PYTHON)
+if test "$should_build" = "yes"; then
+  REGINA_LIB_BOOST_PYTHON(PYTHON, [the Python interface])
+fi
+
 REGINA_SHOULD_BUILD_INTERNAL(KDEUI)
 if test "$should_build" = "yes"; then
   AC_PATH_KDE
@@ -310,6 +326,7 @@ REGINA_SHOULD_BUILD(ENGINE, engine, [the calculation engine library])
 REGINA_SHOULD_BUILD(ENGINEJNI, jni, [the JNI calculation engine module])
 REGINA_SHOULD_BUILD(KDEUI, kdeui, [the KDE user interface])
 REGINA_SHOULD_BUILD(JAVAUI, javaui, [the Java user interface])
+REGINA_SHOULD_BUILD(PYTHON, python, [the Python interface])
 REGINA_SHOULD_BUILD(UTILS, utils, [command-line utilities])
 REGINA_SHOULD_BUILD(TESTSUITE, testsuite, [the test suite])
 REGINA_SHOULD_BUILD(DOCSENGINE, engine, [calculation engine docs])

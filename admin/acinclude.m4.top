@@ -370,6 +370,83 @@ AC_DEFUN(REGINA_LD_ADD_STDCALL_ALIAS, [
 ])
 
 dnl
+dnl    REGINA_LIB_BOOST_PYTHON(TARGET-LIST, REQUIRED-BY)
+dnl
+dnl    Checks for a usable boost.python installation.
+dnl    Issues a warning and adds <TARGET-LIST> (which may consist of
+dnl    several targets) to $DO_NOT_COMPILE if boost.python is missing.
+dnl
+dnl    AC_SUBST()s the following variables:
+dnl
+dnl        BOOST_PYTHON_INCLUDES: The compiler flags required for
+dnl                               building against boost.python,
+dnl                               including flags for building against
+dnl                               python itself.
+dnl        BOOST_PYTHON_LIBS: The linker flags required for building
+dnl                           against boost.python.
+dnl
+dnl    Example: REGINA_LIB_BOOST_PYTHON(PYTHON, [the Python interface])
+dnl
+AC_DEFUN(REGINA_LIB_BOOST_PYTHON, [
+  AC_LANG_PUSH(C++)
+  AC_CHECK_HEADERS([boost/shared_ptr.hpp], [
+    __regina_py_save_cxxflags="$CXXFLAGS"
+    __regina_py_save_ldflags="$LDFLAGS"
+    __regina_py_ok=0
+    for pyver in python python2.3 python2.2; do
+      for incdir in "/usr/include/$pyver" "/usr/local/include/$pyver" \
+          "/usr/$pyver/include" "/usr/local/$pyver/include" \
+          "$prefix/include/$pyver" "$prefix/$pyver/include"; do
+        CXXFLAGS="$CXXFLAGS -I$incdir"
+        LDFLAGS="$LDFLAGS -shared"
+
+        # Check for python includes.
+        AC_TRY_COMPILE([
+          #include <Python.h>
+        ], [
+          PyObject obj;
+        ], [
+          # Check for compatibility with boost.python.
+          AC_MSG_CHECKING([for boost.python with $incdir/Python.h])
+          AC_TRY_COMPILE([
+            #include <boost/python.hpp>
+            const char* greet() { return "Hello world!"; }
+            BOOST_PYTHON_MODULE(hello) { boost::python::def("greet", greet); }
+          ], [
+            /* No main body. */
+          ], [
+            AC_MSG_RESULT([yes])
+            BOOST_PYTHON_INCLUDES="-I$incdir"
+            BOOST_PYTHON_LIBS="-lboost_python"
+            __regina_py_ok=1
+          ], [
+            AC_MSG_RESULT([no])
+          ])
+        ])
+
+        CXXFLAGS="$__regina_py_save_cxxflags"
+        LDFLAGS="$__regina_py_save_ldflags"
+        if test "$__regina_py_ok" = "1"; then break; fi
+      done
+      if test "$__regina_py_ok" = "1"; then break; fi
+    done
+
+    if test "$__regina_py_ok" != "1"; then
+      BOOST_PYTHON_INCLUDES=
+      BOOST_PYTHON_LIBS=
+      REGINA_WARN_MISSING([A working boost.python installation], [$2])
+      REGINA_DO_NOT_COMPILE([$1])
+    fi
+  ], [
+    REGINA_WARN_MISSING([A working boost installation], [$2])
+    REGINA_DO_NOT_COMPILE([$1])
+  ])
+  AC_LANG_POP(C++)
+  AC_SUBST(BOOST_PYTHON_INCLUDES)
+  AC_SUBST(BOOST_PYTHON_LIBS)
+])
+
+dnl
 dnl    REGINA_LIB_JAVA(LIBNAME, CLASS-IN-LIB, TARGET-LIST, REQUIRED-BY)
 dnl
 dnl    Checks for the given optional Java library.
