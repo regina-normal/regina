@@ -97,9 +97,9 @@ public class RegConf extends JDialog implements ActionListener {
      */
     private static final String btoolsName = "btools.jar";
     /**
-     * The name of the JPython field.
+     * The name of the Jython field.
      */
-    private static final String jpythonName = "jpython.jar";
+    private static final String jythonName = "jython.jar";
     /**
      * The name of the JavaHelp field.
      */
@@ -161,9 +161,9 @@ public class RegConf extends JDialog implements ActionListener {
      */
     private JTextField btools;
     /**
-     * The JPython field.
+     * The Jython field.
      */
-    private JTextField jpython;
+    private JTextField jython;
     /**
      * The JavaHelp field.
      */
@@ -429,7 +429,7 @@ public class RegConf extends JDialog implements ActionListener {
         JPanel libPane = new JPanel();
         libPane.setLayout(new GridBagLayout());
         btools = new JTextField(options.getProperty("BTools", ""), 25);
-        jpython = new JTextField(options.getProperty("JPython", ""), 25);
+        jython = new JTextField(options.getProperty("JPython", ""), 25);
         javahelp = new JTextField(options.getProperty("JavaHelp", ""), 25);
         extraclasses = new JTextField(options.getProperty("ExtraClasses", ""),
             25);
@@ -440,12 +440,12 @@ public class RegConf extends JDialog implements ActionListener {
             "This is the jar containing the binary distribution",
             "of BTools, a collection of miscellaneous Java",
             "utility classes."), cHelp);
-        libPane.add(new JLabel(jpythonName + ":"), cLabel);
-        libPane.add(jpython, cField);
-        libPane.add(new BrowseButton(jpython, "jpython.jar"), cButton);
+        libPane.add(new JLabel(jythonName + ":"), cLabel);
+        libPane.add(jython, cField);
+        libPane.add(new BrowseButton(jython, "jython.jar"), cButton);
         libPane.add(new HelpButton(
             "This is the jar containing the binary distribution",
-            "of JPython, a Java implementation of python."), cHelp);
+            "of Jython, a Java implementation of python."), cHelp);
         libPane.add(new JLabel(javahelpName + ":"), cLabel);
         libPane.add(javahelp, cField);
         libPane.add(new BrowseButton(javahelp, "jh.jar"), cButton);
@@ -506,7 +506,7 @@ public class RegConf extends JDialog implements ActionListener {
             "This specifies which style of user interface to",
             "use when running Regina.  The full GUI is the",
             "standard interface.  The console interfaces offer",
-            "direct access to JPython scripting without running",
+            "direct access to Jython scripting without running",
             "the full GUI."), cButton);
         optPane.add(engineStyleUse = new UseBox(engineStyleName + ":",
             engineStyle, engineStyleOpt != null), cLabel);
@@ -611,8 +611,8 @@ public class RegConf extends JDialog implements ActionListener {
             return;
 
         // Libraries
-        if (! checkUnavailableFile(jpythonName,
-                "JPython scripting", jpython))
+        if (! checkUnavailableFile(jythonName,
+                "Jython scripting", jython))
             return;
         if (! checkUnavailableFile(javahelpName,
                 "the internal help browser", javahelp))
@@ -638,7 +638,7 @@ public class RegConf extends JDialog implements ActionListener {
         options.setProperty("JNIDir", JNIDir.getText().trim());
 
         options.setProperty("BTools", btools.getText().trim());
-        options.setProperty("JPython", jpython.getText().trim());
+        options.setProperty("JPython", jython.getText().trim());
         options.setProperty("JavaHelp", javahelp.getText().trim());
         options.setProperty("ExtraClasses", extraclasses.getText().trim());
 
