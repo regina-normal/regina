@@ -28,9 +28,11 @@ set -e
 
 export tmpinst="`pwd`/tmp-inst"
 export hosttype="@host_cpu@"
+export package="@PACKAGE@"
 export version="@VERSION@"
 export prefix="@prefix@"
 export datadir="@datadir@"
 export pkgdatadir="$datadir/@PACKAGE@"
 export pkgdocdir="$pkgdatadir/doc"
+export pkgjardir="$pkgdatadir/jar"
 

@@ -68,6 +68,7 @@ bindist () {
     fi
   done
   rm -rf "$tmpinst$pkgdocdir"
+  rm -f "$tmpinst$pkgjardir/$package-docs*.jar"
 
   # Archive.
   archbase="regina-${version}_bin_$hosttype-$1"
@@ -103,8 +104,9 @@ docdist () {
   archtgz="`pwd`/$archbase.tgz"
   archzip="`pwd`/$archbase.zip"
   echo "mkdist: Creating archives $archbase.{tgz,zip}..."
-  ( cd "$tmpinst$pkgdocdir" && tar -zcf "$archtgz" * )
-  ( cd "$tmpinst$pkgdocdir" && zip -rqy "$archzip" * )
+  mv "$tmpinst$pkgdocdir" "$tmpinst/regina-doc-$version"
+  ( cd "$tmpinst" && tar -zcf "$archtgz" "regina-doc-$version" )
+  ( cd "$tmpinst" && zip -rqy "$archzip" "regina-doc-$version" )
 
   # Tidy up.
   echo "mkdist: Cleaning up..."
