@@ -362,6 +362,8 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
         }
 
         void primes() {
+            NTriangulation* tri;
+
             // Triangulations obtained from splitting surface signatures:
             verifySigPrime("(aa)", "L(4,1)");
             verifySigPrime("(aabb)", "L(8,3)");
@@ -388,13 +390,14 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             verifySigPrime("(abcdefgh)(abcdefgh)", "L(8,1)");
 
             // And of course the Poincare homology sphere(S3/P120).
-            NTriangulation* tri = new NTriangulation;
+            // We'll build this a few different ways.
 
+            // Poincare homology sphere as a plugged triangular solid torus:
+            tri = new NTriangulation;
             NTetrahedron* tet[5];
             int i;
             for (i = 0; i < 5; i++)
                 tet[i] = new NTetrahedron;
-
             tet[0]->joinTo(0, tet[4], NPerm(1,0,2,3));
             tet[0]->joinTo(1, tet[3], NPerm(0,2,3,1));
             tet[0]->joinTo(2, tet[1], NPerm(0,1,3,2));
@@ -405,11 +408,24 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             tet[2]->joinTo(1, tet[4], NPerm(0,2,3,1));
             tet[2]->joinTo(3, tet[3], NPerm(3,1,2,0));
             tet[3]->joinTo(3, tet[4], NPerm(0,1,2,3));
-
             for (i = 0; i < 5; i++)
                 tri->addTetrahedron(tet[i]);
+            delete verifyPrime(tri, "the Poincare homology sphere (plugged)",
+                "S3/P120");
 
-            delete verifyPrime(tri, "the Poincare homology sphere", "S3/P120");
+            // Poincare homology sphere as an augmented triangular solid
+            // torus:
+            tri = new NTriangulation();
+            tri->insertAugTriSolidTorus(2, -1, 3, 1, 5, -4);
+            delete verifyPrime(tri, "the Poincare homology sphere (aug I)",
+                "S3/P120");
+
+            // Poincare homology sphere as another augmented triangular solid
+            // torus:
+            tri = new NTriangulation();
+            tri->insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
+            delete verifyPrime(tri, "the Poincare homology sphere (aug I)",
+                "S3/P120");
         }
 
         void nonTrivialSums() {
