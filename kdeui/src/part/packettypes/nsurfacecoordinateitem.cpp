@@ -28,6 +28,8 @@
 
 // Regina core includes:
 #include "surfaces/nnormalsurface.h"
+#include "surfaces/nnormalsurfacelist.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "coordinates.h"
@@ -105,7 +107,7 @@ void NSurfaceCoordinateItem::setText(int column, const QString& str) {
 
 QString NSurfaceCoordinateItem::text(int column) const {
     int triBool;
-    if (embeddedOnly) {
+    if (surfaces->isEmbeddedOnly()) {
         switch (column) {
             case 0:
                 return name;
@@ -120,16 +122,122 @@ QString NSurfaceCoordinateItem::text(int column) const {
 
                 triBool = surface->isOrientable();
                 if (triBool == 1)
-                    return i18n("Orbl");
+                    return i18n("Orbl"); // green
                 else if (triBool == -1)
-                    return i18n("Non-orbl");
+                    return i18n("Non-orbl"); // red
                 else
-                    return i18n("Unknown");
+                    return i18n("Unknown"); // yellow
+            case 3:
+                if (! surface->isCompact())
+                    return QString::null;
+
+                triBool = surface->isTwoSided();
+                if (triBool == 1) // green
+                    return "2";
+                else if (triBool == -1) // red
+                    return "1";
+                else
+                    return i18n("Unknown"); // yellow
+            case 4:
+                if (! surface->isCompact())
+                    return i18n("Infinite"); // yellow
+                else if (surface->hasRealBoundary())
+                    return i18n("Real Bdry"); // red
+                else
+                    return i18n("Closed"); // green
+            case 5: {
+                const regina::NVertex* v;
+                std::pair<const regina::NEdge*, const regina::NEdge*> e;
+
+                if ((v = surface->isVertexLink()))
+                    return i18n("Vertex %1").arg(
+                        surfaces->getTriangulation()->getVertexIndex(v));
+                else if ((e = surface->isThinEdgeLink()).first) {
+                    if (e.second)
+                        return i18n("Thin edges %1, %2").
+                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                                e.first)).
+                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                                e.second));
+                    else
+                        return i18n("Thin edge %1").
+                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                                e.first));
+                } else
+                    return QString::null;
+            }
+            case 6:
+                if (surfaces->allowsAlmostNormal() || ! surface->isCompact())
+                    return i18n("N/A"); // yellow
+                else if (surface->knownCanCrush())
+                    return i18n("Yes"); // green
+                else
+                    return i18n("Unknown"); // yellow
+            case 7:
+                if (surface->isSplitting())
+                    return i18n("Splitting");
+                else
+                    return QString::null;
+            default:
+                regina::NLargeInteger ans = Coordinates::getCoordinate(
+                    coordSystem, *surface, column - 8);
+                if (ans == (long)0)
+                    return QString::null;
+                else
+                    return ans.stringValue().c_str();
         }
     } else {
+        switch (column) {
+            case 0:
+                return name;
+            case 1:
+                if (! surface->isCompact())
+                    return QString::null;
+
+                return surface->getEulerCharacteristic().stringValue().c_str();
+            case 2:
+                if (! surface->isCompact())
+                    return i18n("Infinite"); // yellow
+                else if (surface->hasRealBoundary())
+                    return i18n("Real Bdry"); // red
+                else
+                    return i18n("Closed"); // green
+            case 3: {
+                const regina::NVertex* v;
+                std::pair<const regina::NEdge*, const regina::NEdge*> e;
+
+                if ((v = surface->isVertexLink()))
+                    return i18n("Vertex %1").arg(
+                        surfaces->getTriangulation()->getVertexIndex(v));
+                else if ((e = surface->isThinEdgeLink()).first) {
+                    if (e.second)
+                        return i18n("Thin edges %1, %2").
+                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                                e.first)).
+                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                                e.second));
+                    else
+                        return i18n("Thin edge %1").
+                            arg(surfaces->getTriangulation()->getEdgeIndex(
+                                e.first));
+                } else
+                    return QString::null;
+            }
+            case 4:
+                if (surface->isSplitting())
+                    return i18n("Splitting");
+                else
+                    return QString::null;
+            default:
+                regina::NLargeInteger ans = Coordinates::getCoordinate(
+                    coordSystem, *surface, column - 5);
+                if (ans == (long)0)
+                    return QString::null;
+                else
+                    return ans.stringValue().c_str();
+        }
     }
-    // TODO
-    return "bruce";
+    return i18n("Unknown");
 }
 
 void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,

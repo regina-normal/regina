@@ -193,8 +193,8 @@ void NSurfaceCoordinateUI::refreshLocal() {
         s = surfaces->getSurface(i);
         if (appliedFilter && ! appliedFilter->accept(*s))
             continue;
-        (new NSurfaceCoordinateItem(table.get(), s, newName[i], i,
-            embeddedOnly))->setRenameEnabled(0, isReadWrite);
+        (new NSurfaceCoordinateItem(table.get(), surfaces, i, newName[i],
+            coordSystem))->setRenameEnabled(0, isReadWrite);
     }
 
     // Hook up the crush action to the new table.
@@ -264,7 +264,8 @@ void NSurfaceCoordinateUI::crush() {
 
 void NSurfaceCoordinateUI::updateCrushState() {
     actCrush->setEnabled(isReadWrite && table.get() &&
-        table->selectedItem() != 0);
+        table->selectedItem() != 0 && (! surfaces->allowsAlmostNormal())
+        && surfaces->isEmbeddedOnly());
 }
 
 void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {

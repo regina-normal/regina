@@ -37,6 +37,7 @@
 
 namespace regina {
     class NNormalSurface;
+    class NNormalSurfaceList;
 };
 
 /**
@@ -52,15 +53,17 @@ class NSurfaceCoordinateItem : public KListViewItem {
         const regina::NNormalSurface* surface;
         QString& name;
         unsigned long surfaceIndex;
-        bool embeddedOnly;
+        regina::NNormalSurfaceList* surfaces;
+        int coordSystem;
 
     public:
         /**
          * Constructor.
          */
         NSurfaceCoordinateItem(QListView* parent,
-            const regina::NNormalSurface* newSurface, QString& newName,
-            unsigned long newSurfaceIndex, bool fromEmbeddedOnly);
+            regina::NNormalSurfaceList* fromSurfaces,
+            unsigned long newSurfaceIndex, QString& newName,
+            int useCoordSystem);
 
         /**
          * Query this list view item.
@@ -85,10 +88,14 @@ class NSurfaceCoordinateItem : public KListViewItem {
 };
 
 inline NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
-        const regina::NNormalSurface* newSurface, QString& newName,
-        unsigned long newSurfaceIndex, bool fromEmbeddedOnly) :
-        KListViewItem(parent), surface(newSurface), name(newName),
-        surfaceIndex(newSurfaceIndex), embeddedOnly(fromEmbeddedOnly) {
+        regina::NNormalSurfaceList* fromSurfaces,
+        unsigned long newSurfaceIndex, QString& newName, int useCoordSystem) :
+        KListViewItem(parent),
+        surface(fromSurfaces->getSurface(newSurfaceIndex)),
+        name(newName),
+        surfaceIndex(newSurfaceIndex),
+        surfaces(fromSurfaces),
+        coordSystem(useCoordSystem) {
 }
 
 inline const regina::NNormalSurface* NSurfaceCoordinateItem::getSurface() {
