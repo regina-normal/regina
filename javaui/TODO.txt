@@ -23,11 +23,11 @@ Help:
 Jython:
 *	Intermediate output in console
 	Check to see whether user libraries are text files
-	Edit libraries from within Regina
 	Syntax highlighting for script editor
 	Import/export scripts as text files
 	Autoindent in script editor
 	Associate each console window with a file and close it with that file
+	Compile and run open libraries.
 
 Main Window:
 	View file version.

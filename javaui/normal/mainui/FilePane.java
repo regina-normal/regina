@@ -91,6 +91,43 @@ public abstract class FilePane extends JPanel {
 	}
 
 	/**
+	 * Determines if there is any reason this file should not be saved.
+	 * The default implementation simply returns <tt>true</tt> (the file
+	 * may be saved).
+	 *
+	 * @return <tt>true</tt> if and only if this file may be saved.
+	 */
+	public boolean canSave() {
+		return true;
+	}
+
+	/**
+	 * Saves the working data to the given file.
+	 * Any I/O or related errors should be reported to the user.
+	 * There is no need to update the dirty flag; this will be done
+	 * elsewhere.
+	 *
+	 * @param file the file to which to save.
+	 * @return <tt>true</tt> if and only if the file was successfully saved.
+	 */
+	public abstract boolean saveFile(File file);
+
+	/**
+	 * Returns a file filter describing this particular type of file.
+	 *
+	 * @return a file filter for this type of file.
+	 */
+	public abstract javax.swing.filechooser.FileFilter getFileFilter();
+
+	/**
+	 * Returns the default file extension used for this particular type
+	 * of file.  The extension returned will begin with a period (.).
+	 *
+	 * @return the default file extension.
+	 */
+	public abstract String getFileExtension();
+
+	/**
 	 * Returns the shell representing the entire program.
 	 *
 	 * @return the shell representing the entire program.

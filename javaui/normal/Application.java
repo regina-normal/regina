@@ -148,11 +148,6 @@ public class Application extends Applet implements ActionListener {
     public static final String runtimeOptionsFile = "runtime.opt";
 
     /**
-     * Default data file extension.
-     */
-    public static final String fileExtension = ".rga";
-
-    /**
      * Location of the default help set.
      */
     public static final String helpSetLoc = "normal/docs/regina.hs";

@@ -269,6 +269,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 		menuFile.setMnemonic(KeyEvent.VK_F);
 
 		JMenu menuFileNew = new JMenu("New");
+		menuFileNew.setIcon(Standard16.document.image());
 		menuFileNew.setMnemonic(KeyEvent.VK_N);
 
         JMenuItem menuFileNewTopology = new JMenuItem("Topology Data",
@@ -284,7 +285,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         	});
 		menuFileNew.add(menuFileNewTopology);
 
-        JMenuItem menuFileNewLibrary = new JMenuItem("Jython Library");
+        JMenuItem menuFileNewLibrary = new JMenuItem("Jython Library",
+			Images.btnFileNewLibrary.image());
 		menuFileNewLibrary.setMnemonic(KeyEvent.VK_J);
         menuFileNewLibrary.setEnabled(shell.hasFoundJython());
         menuFileNewLibrary.addActionListener(
@@ -349,7 +351,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
        	recentFileActionListener = new ActionListener() {
            	public void actionPerformed(ActionEvent e) {
-               	fileOpen(e.getActionCommand());
+               	fileOpen(new File(e.getActionCommand()));
            	}
        	};
 
@@ -635,8 +637,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 			menuOptionsFile.setMnemonic(KeyEvent.VK_F);
 
         	JCheckBoxMenuItem menuOptionsAutoExtension =
-            	new JCheckBoxMenuItem("Automatic Extension (" +
-                	Application.fileExtension + ")",
+            	new JCheckBoxMenuItem("Automatic File Extension",
                 	options.getBooleanOption("AutoFileExtension", true));
 			menuOptionsAutoExtension.setMnemonic(KeyEvent.VK_E);
         	menuOptionsAutoExtension.addItemListener(new ItemListener() {
@@ -1010,14 +1011,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      * Create a new topology file.
      */
     private void fileNewTopology() {
-        // Make a new packet tree.
-        NPacket newTree = engine.newNContainer();
-        newTree.setPacketLabel("Container");
-        
-        // Make a new topology pane.
-        TopologyPane m = new TopologyPane(shell, newTree);
-        
-        // Add the new pane to the UI.
+        FilePane m = TopologyPane.newPane(shell);
         insertFilePane(m, "New Data");
         fileTabs.setSelectedComponent(m);
     }
@@ -1026,48 +1020,47 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 	 * Create a new Jython library.
 	 */
 	private void fileNewLibrary() {
-		shell.error("In-house library editing is not yet implemented.");
+		FilePane m = LibraryPane.newPane(shell);
+		insertFilePane(m, "New Library");
+		fileTabs.setSelectedComponent(m);
 	}
 
     /**
      * Open the specified file.
      *
-     * @param pathname the complete pathname of the file to open, containing
-     * both file and path information.
+     * @param file the file to open, containing both file and path information.
      */
-    private void fileOpen(String pathname) {
-        NFile file = engine.newNFile();
-        if (! file.open(pathname, file.READ)) {
-            shell.error("The requested file does not exist or is " +
-                "in an unknown format.");
-            file.destroy();
-            return;
-        }
-        NPacket newTree = file.readPacketTree();
-        file.close();
-        file.destroy();
-        if (newTree == null) {
-            shell.error("The requested file contains invalid data " +
-                "and thus could not be opened.");
-            return;
-        }
-        
-        // Make a new topology pane.
-        TopologyPane m = new TopologyPane(shell, newTree);
-        File filebits = new File(pathname);
-        File fileDir = filebits.getParentFile();
+    private void fileOpen(File file) {
+        // Make a new file pane.
+		FilePane m;
+		if (TopologyPane.filenameFilter.accept(file))
+        	m = TopologyPane.newPane(shell, file);
+		else if (LibraryPane.filenameFilter.accept(file))
+			m = LibraryPane.newPane(shell, file);
+		else {
+			shell.error("I don't know what type of file this is.  Make " +
+				"sure the filename has the proper extension (such as .rga " +
+				"for topology data files).");
+			return;
+		}
+
+		if (m == null)
+			return;
+
+		// Update the file details for the new pane.
+        File fileDir = file.getParentFile();
         if (fileDir == null)
             fileDir = new File(".");
         m.setFileDir(fileDir);
-        m.setFileName(filebits.getName());
+        m.setFileName(file.getName());
         
         // Add the new file to the UI.
-        insertFilePane(m, filebits.getName());
+        insertFilePane(m, file.getName());
         fileTabs.setSelectedComponent(m);
         
         // Update the last used directory and recent files list.
         options.setStringOption("LastDir", fileDir.getAbsolutePath());
-        addRecentFile(pathname);
+        addRecentFile(file.getAbsolutePath());
         options.writeToFile();
     }
     
@@ -1077,66 +1070,55 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     private void fileOpen() {
         // Open a file dialog.
         JFileChooser chooser = new JFileChooser();
-        chooser.setFileFilter(TopologyPane.filenameFilter);
+        chooser.addChoosableFileFilter(TopologyPane.filenameFilter);
+        chooser.addChoosableFileFilter(LibraryPane.filenameFilter);
+		chooser.setFileFilter(TopologyPane.filenameFilter);
         chooser.setCurrentDirectory(
             new File(options.getStringOption("LastDir", ".")));
         chooser.setDialogTitle("Open file...");
         if (chooser.showOpenDialog(this) == chooser.APPROVE_OPTION)
-            fileOpen(chooser.getSelectedFile().getAbsolutePath());
+			try {
+            	fileOpen(chooser.getSelectedFile().getCanonicalFile());
+			} catch (IOException e) {
+				fileOpen(chooser.getSelectedFile());
+			}
     }
 
     /**
      * Save the active file.
      */
     private void fileSave() {
-        TopologyPane m = getCurrentTopologyPane();
+        FilePane m = getCurrentFilePane();
         if (m == null)
             return;
-        if (m.unconfirmedEditPanes())
-            if (! shell.confirm("Some edit panes currently in use contain " +
-                    "changes that have not yet been applied.  Do you wish " +
-                    "to continue?"))
-                return;
-            
+
         // If there is no default filename, we really have a File-Save As.
         if (m.getFileName() == null) {
             fileSaveAs();
             return;
         }
+
+		if (! m.canSave())
+			return;
         
         // Attempt to save to the default file.
-        String fileName = new File(m.getFileDir(),
-            m.getFileName()).getAbsolutePath();
-        NFile file = engine.newNFile();
-        if (! file.open(fileName, file.WRITE)) {
-            shell.error("The requested file could not be opened for writing.");
-            file.destroy();
-            return;
-        }
-        file.writePacketTree(m.getRootPacket());
-        file.close();
-        file.destroy();
-        
-        // Update the file properties.
-        m.setDirty(false);
+        if (m.saveFile(new File(m.getFileDir(), m.getFileName())))
+        	m.setDirty(false);
     }
 
     /**
      * Save the active file.
      */
     private void fileSaveAs() {
-        TopologyPane m = getCurrentTopologyPane();
+        FilePane m = getCurrentFilePane();
         if (m == null)
             return;
-        if (m.unconfirmedEditPanes())
-            if (! shell.confirm("Some edit panes currently in use contain " +
-                    "changes that have not yet been applied.  Do you wish " +
-                    "to continue?"))
-                return;
+		if (! m.canSave())
+			return;
 
         // Open a file dialog.
         JFileChooser chooser = new JFileChooser();
-        chooser.setFileFilter(TopologyPane.filenameFilter);
+        chooser.setFileFilter(m.getFileFilter());
 
         File fileDir = m.getFileDir();
         if (fileDir == null)
@@ -1153,21 +1135,21 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         if (chooser.showSaveDialog(this) != chooser.APPROVE_OPTION)
             return;
 
+		// Determine the requested file.
+		File dest;
+		try {
+           	dest = chooser.getSelectedFile().getCanonicalFile();
+		} catch (IOException e) {
+			dest = chooser.getSelectedFile();
+		}
+
+		// Add a file extension if appropriate.
+        if ((! m.getFileFilter().accept(dest)) &&
+				options.getBooleanOption("AutoFileExtension", true))
+            dest = new File(dest.getAbsolutePath() + m.getFileExtension());
+
         // Attempt to save to the requested file.
-        File dest = chooser.getSelectedFile();
-        if (! TopologyPane.filenameFilter.accept(dest))
-            dest = new File(dest.getAbsolutePath() +
-                Application.fileExtension);
-        fileName = dest.getAbsolutePath();
-        NFile file = engine.newNFile();
-        if (! file.open(fileName, file.WRITE)) {
-            shell.error("The requested file could not be opened for writing.");
-            file.destroy();
-            return;
-        }
-        file.writePacketTree(m.getRootPacket());
-        file.close();
-        file.destroy();
+		m.saveFile(dest);
         
         // Update the file properties.
         m.setDirty(false);
@@ -1180,7 +1162,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             
         // Update the last used directory and recent files list.
         options.setStringOption("LastDir", fileDir.getAbsolutePath());
-        addRecentFile(fileName);
+        addRecentFile(dest.getAbsolutePath());
         options.writeToFile();
     }
 

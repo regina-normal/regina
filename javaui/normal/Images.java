@@ -41,6 +41,12 @@ public class Images {
         new StandardImage("normal/images/buttons/fileNewTopology.gif",
 		Images.class);
     /**
+     * A button used to create a new Jython library.
+     */
+    public static final StandardImage btnFileNewLibrary =
+        new StandardImage("normal/images/buttons/fileNewLibrary.gif",
+		Images.class);
+    /**
      * A button representing a Jython console.
      */
     public static final StandardImage btnConsole =

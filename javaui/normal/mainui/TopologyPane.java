@@ -30,6 +30,7 @@ package normal.mainui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -111,11 +112,16 @@ public class TopologyPane extends FilePane {
         new PacketTreeCellRenderer();
 
 	/**
+	 * The default file extension used for topology data files.
+	 */
+	public static final String defaultFileExtension = ".rga";
+
+	/**
 	 * Filter for data files.
 	 */
 	public static final ExtensionFilenameFilter filenameFilter =
-		new ExtensionFilenameFilter(normal.Application.fileExtension,
-		"Topology Data Files (*" + normal.Application.fileExtension + ")");
+		new ExtensionFilenameFilter(defaultFileExtension,
+		"Topology Data Files (*" + defaultFileExtension + ')');
 	
 	// ------------------
 	//    DATA MEMBERS
@@ -229,31 +235,102 @@ public class TopologyPane extends FilePane {
 	//    INITIALISATION
 	// --------------------
 
+	/**
+	 * Create a new pane with a new default set of working data.
+	 *
+	 * @param shell the shell representing the entire program.
+	 * @return the new pane.
+	 */
+	public static TopologyPane newPane(Shell shell) {
+		NPacket root = shell.getEngine().newNContainer();
+		root.setPacketLabel("Container");
+		
+		return new TopologyPane(shell, root);
+	}
+
+	/**
+	 * Create a new pane with the working data read from the given file.
+	 * Any I/O or related errors will be reported to the user.
+	 *
+	 * @param shell the shell representing the entire program.
+	 * @param file the file from which to read.
+	 * @return the new pane, or <tt>null</tt> if an error occurred.
+	 */
+	public static TopologyPane newPane(Shell shell, File file) {
+		NFile f = shell.getEngine().newNFile();
+		if (! f.open(file.getAbsolutePath(), f.READ)) {
+			shell.error("The requested file does not exist or is " +
+				"in an unknown format.");
+			f.destroy();
+			return null;
+		}
+
+		NPacket root = f.readPacketTree();
+		f.close();
+		f.destroy();
+
+		if (root == null) {
+			shell.error("The requested file contains invalid data " +
+				"and thus could not be opened.");
+			return null;
+		}
+
+		return new TopologyPane(shell, root);
+	}
+
     /**
-     * Create a new pane.
+     * Create a new pane containing the given working data.
      *
      * @param shell the shell representing the entire program.
      * @param rootPacket the matriarch of the packet tree that will form
      * the working data for this pane.
      */
-    public TopologyPane(Shell shell, NPacket rootPacket) {
+    private TopologyPane(Shell shell, NPacket rootPacket) {
         super(shell);
         this.rootPacket = rootPacket;
         
-        createTree();
         init();
-
-        // Set the divider location as specified in the options file.
-        int dividerLocation =
-            getOptions().getIntOption("DividerLocation", -1);
-        if (dividerLocation > 0)
-            splitPane.setDividerLocation(dividerLocation);
     }
+
+	public boolean canSave() {
+		if (unconfirmedEditPanes())
+			if (! getShell().confirm(
+					"Some edit panes currently in use contain " +
+					"changes that have not yet been applied.  Do you wish " +
+					"to continue?"))
+				return false;
+		return true;
+	}
+
+	public boolean saveFile(File file) {
+		NFile f = getEngine().newNFile();
+		if (! f.open(file.getAbsolutePath(), f.WRITE)) {
+			getShell().error(
+				"The requested file could not be opened for writing.");
+			f.destroy();
+			return false;
+		}
+		f.writePacketTree(rootPacket);
+		f.close();
+		f.destroy();
+		return true;
+	}
+
+	public javax.swing.filechooser.FileFilter getFileFilter() {
+		return filenameFilter;
+	}
+
+	public String getFileExtension() {
+		return defaultFileExtension;
+	}
 
     /**
      * Initialise interface components.
      */
     private void init() {
+		// Create the visual tree.
+		createTree();
+
         // Set the layout manager.
         this.setLayout(new BorderLayout());
 
@@ -397,6 +474,12 @@ public class TopologyPane extends FilePane {
 
         // Tidy up.
         refreshButtons();
+
+        // Set the divider location as specified in the options file.
+        int dividerLocation =
+            getOptions().getIntOption("DividerLocation", -1);
+        if (dividerLocation > 0)
+            splitPane.setDividerLocation(dividerLocation);
     }
 
     /**

@@ -33,6 +33,8 @@ Regina - A Normal Surface Theory Calculator
             - Now supports custom Jython libraries.
             - Improved support for mnemonics and keyboard accelerators.
             - Fixed tooltips in tables.
+        normal.Application:
+            - Moved fileExtension member into normal.mainui.FilePane subclasses.
         normal.console:
             - Major rearrangements; new class JPythonUtils now does most of
               the Jython work.
@@ -45,6 +47,8 @@ Regina - A Normal Surface Theory Calculator
               editing functionality into FilePane to allow for editing
               different file types.
             - Much all-round cleaning up.
+        normal.mainui.LibraryPane:
+            - New class; allows editing of Jython libraries.
         normal.mainui.NormalFrame:
             - More appropriate enabling/disabling of menu items and buttons.
             - Edit menu hooks into current working file.
