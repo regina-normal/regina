@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file nknot.h
- *  \brief Deals with knots and link in S^3.
+ *  \brief Deals with knots and links in S^3.
  */
 
 #ifndef __NKNOT_H
@@ -40,8 +40,11 @@
 
 namespace regina {
 
+class NTriangulation;
+
 /**
- * \weakgroup triangulation
+ * \addtogroup knot Knots and Links
+ * Knots and links in the 3-sphere.
  * @{
  */
 
@@ -64,7 +67,7 @@ class NKnot {
             /**< Stores the number of components of the link. */
         unsigned numCrossings;
             /**< Stores the number of crossings in the knot/link. */
-        List<List<int>> black, white;
+        std::list<std::list<int> > black, white;
             /**< Stores the internal representations of the black
              * and white regions. */
         bool valid;
@@ -83,7 +86,7 @@ class NKnot {
          * @param s a string storing the Dowker notation for the knot or
          * the spanning surface representation of a link.
          */
-        NKnot(String s);
+        NKnot(const std::string& s);
 
         /**
          * Returns true if a valid knot or link was created.
@@ -108,9 +111,9 @@ class NKnot {
 
 /*@}*/
 
-// Inline functions for nknot
+// Inline functions for NKnot
 
-bool NNknot::isValid() {
+bool NKnot::isValid() const {
     return valid;
 }
 
