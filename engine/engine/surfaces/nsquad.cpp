@@ -61,8 +61,9 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
     unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();
     // One equation per non-boundary edge.
     long nEquations = long(triangulation->getNumberOfEdges());
-    for (NTriangulation::BoundaryComponentIterator bit(triangulation->
-            getBoundaryComponents()); ! bit.done(); bit++)
+    for (NTriangulation::BoundaryComponentIterator bit = triangulation->
+            getBoundaryComponents().begin();
+            bit != triangulation->getBoundaryComponents().end(); bit++)
         nEquations -= (*bit)->getNumberOfEdges();
 
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
@@ -70,11 +71,11 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
 
     // Run through each internal edge and add the corresponding
     // equation.
-    NTriangulation::EdgeIterator eit(triangulation->getEdges());
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NPerm perm;
     unsigned long tetIndex;
-    while (! eit.done()) {
+    for (NTriangulation::EdgeIterator eit = triangulation->getEdges().begin();
+            eit != triangulation->getEdges().end(); eit++) {
         if (! (*eit)->isBoundary()) {
             for (embit = (*eit)->getEmbeddings().begin();
                     embit != (*eit)->getEmbeddings().end(); embit++) {
@@ -88,7 +89,6 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
             }
             row++;
         }
-        eit++;
     }
     return ans;
 }
@@ -152,8 +152,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     NPerm tetPerm, adjPerm;
     unsigned long tetIndex, adjIndex;
     NLargeInteger expect;
-    for (NTriangulation::VertexIterator vit(triang->getVertices());
-            ! vit.done(); vit++) {
+    for (NTriangulation::VertexIterator vit = triang->getVertices().begin();
+            vit != triang->getVertices().end(); vit++) {
         usedEdges[0].clear(); usedEdges[1].clear();
         examine.clear();
         broken = false;

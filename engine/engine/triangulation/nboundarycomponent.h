@@ -234,12 +234,12 @@ inline NVertex* NBoundaryComponent::getVertex(unsigned long index) const {
 
 inline long NBoundaryComponent::getEulerCharacteristic() const {
     return (isIdeal() ?
-        vertices[0]->getLinkEulerCharacteristic() :
+        vertices.front()->getLinkEulerCharacteristic() :
         long(vertices.size()) - long(edges.size()) + long(faces.size()));
 }
 
 inline bool NBoundaryComponent::isIdeal() const {
-    return (faces.size() == 0);
+    return faces.empty();
 }
 
 inline bool NBoundaryComponent::isOrientable() const {

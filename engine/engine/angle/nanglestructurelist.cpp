@@ -50,8 +50,9 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
 
     long nEquations = long(owner->getNumberOfEdges()) +
         long(owner->getNumberOfTetrahedra());
-    for (NTriangulation::BoundaryComponentIterator bit(owner->
-            getBoundaryComponents()); ! bit.done(); bit++)
+    for (NTriangulation::BoundaryComponentIterator bit =
+            owner->getBoundaryComponents().begin();
+            bit != owner->getBoundaryComponents().end(); bit++)
         nEquations -= (*bit)->getNumberOfEdges();
 
     NMatrixInt eqns(nEquations, nCoords);
@@ -60,8 +61,8 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NPerm perm;
     unsigned long index;
-    for (NTriangulation::EdgeIterator eit(owner->getEdges()); ! eit.done();
-            eit++) {
+    for (NTriangulation::EdgeIterator eit = owner->getEdges().begin();
+            eit != owner->getEdges().end(); eit++) {
         if ((*eit)->isBoundary())
             continue;
         for (embit = (*eit)->getEmbeddings().begin();

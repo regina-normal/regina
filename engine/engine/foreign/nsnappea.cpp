@@ -164,8 +164,8 @@ bool writeSnapPea(const char* filename, NTriangulation& tri) {
     out << tri.getNumberOfTetrahedra() << '\n';
 
     int i, j;
-    for (NTriangulation::TetrahedronIterator it(tri.getTetrahedra());
-            ! it.done(); it++) {
+    for (NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
+            it != tri.getTetrahedra().end(); it++) {
         for (i = 0; i < 4; i++)
             out << "   " << tri.getTetrahedronIndex(
                 (*it)->getAdjacentTetrahedron(i)) << ' ';

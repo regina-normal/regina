@@ -53,11 +53,10 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
     // Each non-boundary edge is a relation.
     unsigned long nBdryEdges = 0;
     unsigned long nBdryFaces = 0;
-    BoundaryComponentIterator bit(boundaryComponents);
-    while (! bit.done()) {
+    for (BoundaryComponentIterator bit = boundaryComponents.begin();
+            bit != boundaryComponents.end(); bit++) {
         nBdryEdges += (*bit)->getNumberOfEdges();
         nBdryFaces += (*bit)->getNumberOfFaces();
-        bit++;
     }
     long nGens = getNumberOfFaces() - nBdryFaces - forest.size();
     long nRels = getNumberOfEdges() - nBdryEdges;
@@ -65,29 +64,26 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
 
     // Find out which face corresponds to which generator.
     long* genIndex = new long[getNumberOfFaces()];
-    FaceIterator fit(faces);
     long i = 0;
-    while (! fit.done()) {
+    for (FaceIterator fit = faces.begin(); fit != faces.end(); fit++) {
         if ((*fit)->isBoundary())
-            genIndex[fit.getArrayIndex()] = -1;
+            genIndex[fit - faces.begin()] = -1;
         else if (forest.count(*fit))
-            genIndex[fit.getArrayIndex()] = -1;
+            genIndex[fit - faces.begin()] = -1;
         else {
-            genIndex[fit.getArrayIndex()] = i;
+            genIndex[fit - faces.begin()] = i;
             i++;
         }
-        fit++;
     }
 
     // Run through each edge and put the relations in the matrix.
-    EdgeIterator eit(edges);
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
     NFace* face;
     int currTetFace;
     long faceGenIndex;
     i = 0;
-    while (! eit.done()) {
+    for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++) {
         if (! (*eit)->isBoundary()) {
             // Put in the relation corresponding to this edge.
             for (embit = (*eit)->getEmbeddings().begin();
@@ -95,7 +91,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
                 face = currTet->getFace(currTetFace);
-                faceGenIndex = genIndex[faces.position(face)];
+                faceGenIndex = genIndex[faces.index(face)];
                 if (faceGenIndex >= 0) {
                     if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
                             (face->getEmbedding(0).getFace() == currTetFace))
@@ -106,7 +102,6 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
             }
             i++;
         }
-        eit++;
     }
 
     delete[] genIndex;
@@ -142,19 +137,16 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() {
     unsigned long nBdryEdges = 0;
     unsigned long nBdryFaces = 0;
     unsigned long nClosedComponents = 0;
-    BoundaryComponentIterator bit(boundaryComponents);
-    while (! bit.done()) {
+    for (BoundaryComponentIterator bit = boundaryComponents.begin();
+            bit != boundaryComponents.end(); bit++) {
         nBdryVertices += (*bit)->getNumberOfVertices();
         nBdryEdges += (*bit)->getNumberOfEdges();
         nBdryFaces += (*bit)->getNumberOfFaces();
-        bit++;
     }
-    ComponentIterator cit(components);
-    while (! cit.done()) {
+    for (ComponentIterator cit = components.begin();
+            cit != components.end(); cit++)
         if ((*cit)->isClosed())
             nClosedComponents++;
-        cit++;
-    }
     long nGens = getNumberOfEdges() - nBdryEdges
         - getNumberOfVertices() + nBdryVertices
         + nClosedComponents;
@@ -163,28 +155,25 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() {
 
     // Find out which edge corresponds to which generator.
     long* genIndex = new long[getNumberOfEdges()];
-    EdgeIterator eit(edges);
     long i = 0;
-    while (! eit.done()) {
+    for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++) {
         if ((*eit)->isBoundary())
-            genIndex[eit.getArrayIndex()] = -1;
+            genIndex[eit - edges.begin()] = -1;
         else if (forest.count(*eit))
-            genIndex[eit.getArrayIndex()] = -1;
+            genIndex[eit - edges.begin()] = -1;
         else {
-            genIndex[eit.getArrayIndex()] = i;
+            genIndex[eit - edges.begin()] = i;
             i++;
         }
-        eit++;
     }
 
     // Run through each face and put the relations in the matrix.
-    FaceIterator fit(faces);
     NTetrahedron* currTet;
     NPerm currTetVertices;
     long edgeGenIndex;
     i = 0;
     int faceEdge, currEdgeStart, currEdgeEnd, currEdge;
-    while (! fit.done()) {
+    for (FaceIterator fit = faces.begin(); fit != faces.end(); fit++) {
         if (! (*fit)->isBoundary()) {
             // Put in the relation corresponding to this face.
             currTet = (*fit)->getEmbedding(0).getTetrahedron();
@@ -195,7 +184,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() {
                 // Examine the edge from vertex edgeStart to edgeEnd
                 // in tetrahedron currTet.
                 currEdge = edgeNumber[currEdgeStart][currEdgeEnd];
-                edgeGenIndex = genIndex[edges.position(
+                edgeGenIndex = genIndex[edges.index(
                     currTet->getEdge(currEdge))];
                 if (edgeGenIndex >= 0) {
                     if (currTet->getEdgeMapping(currEdge)[0] == currEdgeStart)
@@ -206,7 +195,6 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() {
             }
             i++;
         }
-        fit++;
     }
 
     delete[] genIndex;
@@ -228,15 +216,14 @@ const NAbelianGroup& NTriangulation::getHomologyH1Bdry() {
     unsigned long z2rank = 0;
 
     // The following line ensures the skeleton has been calculated.
-    BoundaryComponentIterator bit(getBoundaryComponents());
-    while (! bit.done()) {
+    for (BoundaryComponentIterator bit = boundaryComponents.begin();
+            bit != boundaryComponents.end(); bit++) {
         if ((*bit)->isOrientable()) {
             rank += (2 - (*bit)->getEulerCharacteristic());
         } else {
             rank += (1 - (*bit)->getEulerCharacteristic());
             z2rank++;
         }
-        bit++;
     }
 
     // Build the group and tidy up.
@@ -269,13 +256,11 @@ const NAbelianGroup& NTriangulation::getHomologyH2() {
         // Non-orientable!
         // z2rank = # closed cmpts - # closed orientable cmpts
         z2rank = 0;
-        ComponentIterator cit(components);
-        while (! cit.done()) {
+        for (ComponentIterator cit = components.begin();
+                cit != components.end(); cit++)
             if ((*cit)->isClosed())
                 if (! ((*cit)->isOrientable()))
                     z2rank++;
-            cit++;
-        }
 
         // Find rank(Z_2) + rank(Z) and take off z2rank.
         rank = getHomologyH1Rel().getRank() +

@@ -32,8 +32,8 @@
 void NTriangulation::calculateSurfaceProperties() {
     // Check for 2-sphere boundary components.
     if (! calculatedZeroEfficient)
-        for (BoundaryComponentIterator it(boundaryComponents);
-                ! it.done(); it++)
+        for (BoundaryComponentIterator it = boundaryComponents.begin();
+                it != boundaryComponents.end(); it++)
             if ((*it)->getEulerCharacteristic() == 2) {
                 zeroEfficient = false;
                 calculatedZeroEfficient = true;

@@ -11,19 +11,21 @@ Regina - A Normal Surface Theory Calculator
 Version 2.5  [ (under development) ]
     ENGINE:
         Overall structure:
-            - Replaced hand-rolled container classes with Standard
-              Template Library classes (transition mostly complete).
+            - The Great STL Port: replaced hand-rolled container classes
+              with Standard Template Library classes.
             - Replaced strstreams with stringstreams.
             - Modified to also build under gcc3.
-        Classes NBoolVector, NDoubleList, NHashSet, NInfiniteArray, NIntMap,
-                NOrderedPair, NPointerSet, NQueue, NSet, NStack,
-                NStringPair and associates:
+        Classes NBoolVector, NDoubleList, NDynamicArray, NHashSet,
+                NInfiniteArray, NIntMap, NOrderedPair, NPointerSet,
+                NQueue, NSet, NStack, NStringPair and associates:
             - All removed in favour of Standard Template Library classes.
         Class FuncDelete, FuncNew, FuncNewClonePtr, FuncNewCopyPtr,
                 FuncNewCopyRef, HashPointer:
             - Added for use with Standard Template Library.
         Class NGroupExpressionTerm:
             - Changed from simple ordered pair to its own full class.
+        Class NIndexedArray:
+            - Added.
         Class NLocalFileResource:
             - Replaced static members MODE_READ, MODE_WRITE with static
               routines sysModeRead(), sysModeWrite().
@@ -38,6 +40,7 @@ Version 2.5  [ (under development) ]
             - Added C++ string copy constructor.
         Class NTriangulation:
             - Added insertSplittingSurface().
+            - Uses NIndexedArrays for skeletal elements for fast index lookup.
     JAVA USER INTERFACE:
         Overall structure:
             - Incorporated engine enhancements listed above.

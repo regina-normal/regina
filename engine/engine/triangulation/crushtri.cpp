@@ -36,15 +36,10 @@ void NTriangulation::maximalForestInBoundary(
 
     vertexSet.clear();
     edgeSet.clear();
-    BoundaryComponentIterator bit(boundaryComponents);
-    NBoundaryComponent* bc;
-    while (! bit.done()) {
-        bc = *bit;
-        stretchBoundaryForestFromVertex(bc->getVertex(0), edgeSet, vertexSet);
-
-        // Move to the next component.
-        bit++;
-    }
+    for (BoundaryComponentIterator bit = boundaryComponents.begin();
+            bit != boundaryComponents.end(); bit++)
+        stretchBoundaryForestFromVertex((*bit)->getVertex(0),
+            edgeSet, vertexSet);
 }
 
 void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
@@ -92,17 +87,11 @@ void NTriangulation::maximalForestInSkeleton(
     else
         maximalForestInBoundary(edgeSet, vertexSet);
 
-    VertexIterator vit(vertices);
-    NVertex* vertex;
-
-    while (! vit.done()) {
-        vertex = *vit;
-        if (! (vertexSet.count(vertex))) {
-            stretchForestFromVertex(vertex, edgeSet, vertexSet, thisBranch);
+    for (VertexIterator vit = vertices.begin(); vit != vertices.end(); vit++)
+        if (! (vertexSet.count(*vit))) {
+            stretchForestFromVertex(*vit, edgeSet, vertexSet, thisBranch);
             thisBranch.clear();
         }
-        vit++;
-    }
 }
 
 bool NTriangulation::stretchForestFromVertex(NVertex* from,
@@ -158,7 +147,7 @@ bool NTriangulation::crushMaximalForest() {
         cerr << "Dual Faces: " << dual.size() << '\n';
         NPointerSetIterator<NFace> it(dual);
         while (! it.done()) {
-            cerr << faces.position(*it) << ' ';
+            cerr << faces.index(*it) << ' ';
             it++;
         }
         cerr << '\n';
@@ -168,7 +157,7 @@ bool NTriangulation::crushMaximalForest() {
     {
         NPointerSetIterator<NEdge> it(cEdges);
         while (! it.done()) {
-            cerr << edges.position(*it) << ' ';
+            cerr << edges.index(*it) << ' ';
             it++;
         }
         cerr << '\n';
@@ -185,8 +174,7 @@ bool NTriangulation::crushMaximalForest() {
     bool changed = true;
     while (changed) {
         changed = false;
-        tit.init(tetrahedra);
-        while (! tit.done()) {
+        for (tit = tetrahedra.begin(); tit != tetrahedra.end(); tit++) {
             tet = *tit;
             for (face = 0; face < 4; face++) {
                 nLost = 0;
@@ -207,21 +195,17 @@ bool NTriangulation::crushMaximalForest() {
                     changed = true;
                 }
             }
-            
-            tit++;
         }
     }
 
     // Finally extend this list to tetrahedra.
-    tit.init(tetrahedra);
-    while (! tit.done()) {
+    for (tit = tetrahedra.begin(); tit != tetrahedra.end(); tit++) {
         tet = *tit;
         for (edge = 0; edge < 6; edge++)
             if (cEdges.count(tet->getEdge(edge))) {
                 cTetrahedra.insert(tet);
                 break;
             }
-        tit++;
     }
 
     // Are we going to change anything?
@@ -242,8 +226,7 @@ bool NTriangulation::crushMaximalForest() {
     NTetrahedron* tmpTet;
     NPerm adjPerm;
     int adjFace, edgeFrom;
-    tit.init(tetrahedra);
-    while (! tit.done()) {
+    for (tit = tetrahedra.begin(); tit != tetrahedra.end(); tit++) {
         tet = *tit;
         if (! cTetrahedra.count(tet))
             for (face = 0; face < 4; face++) {
@@ -287,15 +270,15 @@ bool NTriangulation::crushMaximalForest() {
                     }
                 }
             }
-        tit++;
     }
 
     // Remove the squished tetrahedra.
     // For each tetrahedron, remove it and delete it.
-    // TODO: Convert the following loop to a for_each() call.
     for (std::hash_set<NTetrahedron*, HashPointer>::iterator tetIt =
-            cTetrahedra.begin(); tetIt != cTetrahedra.end(); tetIt++)
-        delete tetrahedra.remove(*tetIt);
+            cTetrahedra.begin(); tetIt != cTetrahedra.end(); tetIt++) {
+        tetrahedra.erase(*tetIt);
+        delete *tetIt;
+    }
 
     // Tidy up.
     gluingsHaveChanged();
@@ -318,18 +301,13 @@ void NTriangulation::maximalForestInDualSkeleton(
         std::hash_set<NFace*, HashPointer>& faceSet) {
     if (! calculatedSkeleton)
         calculateSkeleton();
+
     faceSet.clear();
-
     std::hash_set<NTetrahedron*, HashPointer> visited;
-    TetrahedronIterator it(tetrahedra);
-    NTetrahedron* tet;
-
-    while (! it.done()) {
-        tet = *it;
-        if (! (visited.count(tet)))
-            stretchDualForestFromTet(tet, faceSet, visited);
-        it++;
-    }
+    for (TetrahedronIterator it = tetrahedra.begin(); it != tetrahedra.end();
+            it++)
+        if (! (visited.count(*it)))
+            stretchDualForestFromTet(*it, faceSet, visited);
 }
 
 void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,

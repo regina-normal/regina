@@ -69,7 +69,8 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
 
         // Look for boundary simplifications.
         if (hasBoundaryFaces()) {
-            for (bit.init(boundaryComponents); !(bit.done()); bit++) {
+            for (bit = boundaryComponents.begin();
+                    bit != boundaryComponents.end(); bit++) {
                 bc = *bit;
 
                 // Run through faces of this boundary component looking
@@ -115,7 +116,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
         }
 
         // Look for internal simplifications.
-        for (eit.init(edges); ! (eit.done()); eit++) {
+        for (eit = edges.begin(); eit != edges.end(); eit++) {
             edge = *eit;
             if (threeTwoMove(edge, true, perform)) {
                 changedNow = true;
@@ -144,7 +145,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             else
                 return true;
         }
-        for (vit.init(vertices); ! (vit.done()); vit++) {
+        for (vit = vertices.begin(); vit != vertices.end(); vit++) {
             if (twoZeroMove(*vit, true, perform)) {
                 changedNow = true;
                 changed = true;

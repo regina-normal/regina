@@ -37,7 +37,7 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
 
     if (tetrahedra.size() != other.tetrahedra.size())
         return false;
-    if (tetrahedra.size() == 0)
+    if (tetrahedra.empty())
         return true;
     if (faces.size() != other.faces.size())
         return false;
@@ -57,21 +57,18 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
     std::map<unsigned long, unsigned long>::iterator mapIt;
 
     {
-        EdgeIterator it(edges);
-        while (! it.done()) {
+        EdgeIterator it;
+        for (it = edges.begin(); it != edges.end(); it++) {
             // Find this degree, or insert it with frequency 0 if it's
             // not already present.
             mapIt = map1.insert(
                 std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
             (*mapIt).second++;
-            it++;
         }
-        it.init(other.edges);
-        while (! it.done()) {
+        for (it = other.edges.begin(); it != other.edges.end(); it++) {
             mapIt = map2.insert(
                 std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
             (*mapIt).second++;
-            it++;
         }
         if (! (map1 == map2))
             return false;
@@ -79,19 +76,16 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
         map2.clear();
     }
     {
-        VertexIterator it(vertices);
-        while (! it.done()) {
+        VertexIterator it;
+        for (it = vertices.begin(); it != vertices.end(); it++) {
             mapIt = map1.insert(
                 std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
             (*mapIt).second++;
-            it++;
         }
-        it.init(other.vertices);
-        while (! it.done()) {
+        for (it = other.vertices.begin(); it != other.vertices.end(); it++) {
             mapIt = map2.insert(
                 std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
             (*mapIt).second++;
-            it++;
         }
         if (! (map1 == map2))
             return false;
@@ -99,19 +93,17 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
         map2.clear();
     }
     {
-        ComponentIterator it(components);
-        while (! it.done()) {
+        ComponentIterator it;
+        for (it = components.begin(); it != components.end(); it++) {
             mapIt = map1.insert(
                 std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
             (*mapIt).second++;
-            it++;
         }
-        it.init(other.components);
-        while (! it.done()) {
+        for (it = other.components.begin();
+                it != other.components.end(); it++) {
             mapIt = map2.insert(
                 std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
             (*mapIt).second++;
-            it++;
         }
         if (! (map1 == map2))
             return false;
@@ -119,19 +111,18 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
         map2.clear();
     }
     {
-        BoundaryComponentIterator it(boundaryComponents);
-        while (! it.done()) {
+        BoundaryComponentIterator it;
+        for (it = boundaryComponents.begin();
+                it != boundaryComponents.end(); it++) {
             mapIt = map1.insert(
                 std::make_pair((*it)->getNumberOfFaces(), 0)).first;
             (*mapIt).second++;
-            it++;
         }
-        it.init(other.boundaryComponents);
-        while (! it.done()) {
+        for (it = other.boundaryComponents.begin();
+                it != other.boundaryComponents.end(); it++) {
             mapIt = map2.insert(
                 std::make_pair((*it)->getNumberOfFaces(), 0)).first;
             (*mapIt).second++;
-            it++;
         }
         if (! (map1 == map2))
             return false;
@@ -234,7 +225,7 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
                 if (myNbr) {
                     // Both tetrahedra have adjacent tetrahedra; check
                     // these map to each other also.
-                    tetIndex = tetrahedra.position(myNbr);
+                    tetIndex = tetrahedra.index(myNbr);
                     if (tetIndex <= mustMatch) {
                         adjPerm = allPermsS4[perm[tetIndex]];
                         if (yourNbr != other.tetrahedra[join[tetIndex]]) {

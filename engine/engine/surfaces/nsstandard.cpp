@@ -103,12 +103,12 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
 
     // Run through each internal face and add the corresponding three
     // equations.
-    NTriangulation::FaceIterator fit(triangulation->getFaces());
     unsigned row = 0;
     int i;
     unsigned long tet0, tet1;
     NPerm perm0, perm1;
-    while (! fit.done()) {
+    for (NTriangulation::FaceIterator fit = triangulation->getFaces().begin();
+            fit != triangulation->getFaces().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->getTetrahedronIndex(
                 (*fit)->getEmbedding(0).getTetrahedron());
@@ -128,7 +128,6 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
                 row++;
             }
         }
-        fit++;
     }
     return ans;
 }

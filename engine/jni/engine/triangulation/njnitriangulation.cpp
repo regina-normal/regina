@@ -72,7 +72,7 @@ JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getBoundaryComponentIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getBoundaryComponents().
-        position(GET_ENGINE_OBJECT(env, NBoundaryComponent, tet));
+        index(GET_ENGINE_OBJECT(env, NBoundaryComponent, tet));
 }
 
 JNIEXPORT jobject JNICALL
@@ -87,7 +87,7 @@ JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getComponentIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getComponents().
-        position(GET_ENGINE_OBJECT(env, NComponent, tet));
+        index(GET_ENGINE_OBJECT(env, NComponent, tet));
 }
 
 JNIEXPORT jobject JNICALL
@@ -102,7 +102,7 @@ JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getEdgeIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getEdges().
-        position(GET_ENGINE_OBJECT(env, NEdge, tet));
+        index(GET_ENGINE_OBJECT(env, NEdge, tet));
 }
 
 JNIEXPORT jlong JNICALL
@@ -123,7 +123,7 @@ JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFaceIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getFaces().
-        position(GET_ENGINE_OBJECT(env, NFace, tet));
+        index(GET_ENGINE_OBJECT(env, NFace, tet));
 }
 
 JNIEXPORT jobject JNICALL
@@ -253,7 +253,7 @@ JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getVertexIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getVertices().
-        position(GET_ENGINE_OBJECT(env, NVertex, tet));
+        index(GET_ENGINE_OBJECT(env, NVertex, tet));
 }
 
 JNIEXPORT void JNICALL

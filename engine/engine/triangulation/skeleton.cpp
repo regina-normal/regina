@@ -58,23 +58,19 @@ void NTriangulation::calculateSkeleton() {
 }
 
 void NTriangulation::calculateComponents() {
-    TetrahedronIterator it(tetrahedra);
+    TetrahedronIterator it;
     NComponent* label;
     NTetrahedron* tet;
-    while (!it.done()) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++)
         (*it)->component = 0;
-        it++;
-    }
 
-    it.init(tetrahedra);
-    while (!it.done()) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         if (tet->component == 0) {
             label = new NComponent();
             labelComponent(tet, label, 1);
-            components.addLast(label);
+            components.push_back(label);
         }
-        it++;
     }
 }
 
@@ -120,28 +116,25 @@ void NTriangulation::labelComponent(NTetrahedron* firstTet,
 }
 
 void NTriangulation::calculateVertices() {
-    TetrahedronIterator it(tetrahedra);
+    TetrahedronIterator it;
     int vertex;
     NTetrahedron* tet;
     NVertex* label;
-    while (!it.done()) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (vertex=0; vertex<4; vertex++)
             tet->vertices[vertex] = 0;
-        it++;
     }
 
-    it.init(tetrahedra);
-    while (!it.done()) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (vertex=0; vertex<4; vertex++)
             if (! tet->getVertex(vertex)) {
                 label = new NVertex(tet->component);
                 tet->component->vertices.push_back(label);
                 labelVertex(tet, vertex, label, 1);
-                vertices.addLast(label);
+                vertices.push_back(label);
             }
-        it++;
     }
 }
 
@@ -215,28 +208,25 @@ void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
 }
 
 void NTriangulation::calculateEdges() {
-    TetrahedronIterator it(tetrahedra);
+    TetrahedronIterator it;
     int edge;
     NTetrahedron* tet;
     NEdge* label;
-    while (!it.done()) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (edge=0; edge<6; edge++)
             tet->edges[edge] = 0;
-        it++;
     }
 
-    it.init(tetrahedra);
-    while (!it.done()) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (edge=0; edge<6; edge++)
             if (! tet->getEdge(edge)) {
                 label = new NEdge(tet->component);
                 tet->component->edges.push_back(label);
                 labelEdge(tet, edge, label, edgeOrdering(edge));
-                edges.addLast(label);
+                edges.push_back(label);
             }
-        it++;
     }
 }
 
@@ -331,22 +321,20 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
 }
 
 void NTriangulation::calculateFaces() {
-    TetrahedronIterator it(tetrahedra);
+    TetrahedronIterator it;
     int face;
     NTetrahedron* tet;
     NTetrahedron* adjTet;
     NFace* label;
     NPerm adjVertices;
     int adjFace;
-    while (!it.done()) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++)
             tet->faces[face] = 0;
-        it++;
     }
 
-    it.init(tetrahedra);
-    while (!it.done()) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (face=3; face>=0; face--)
             if (! tet->getFace(face)) {
@@ -367,9 +355,8 @@ void NTriangulation::calculateFaces() {
                     label->embeddings[1] = new NFaceEmbedding(adjTet, adjFace);
                     label->nEmbeddings = 2;
                 }
-                faces.addLast(label);
+                faces.push_back(label);
             }
-        it++;
     }
 }
 
@@ -377,21 +364,20 @@ void NTriangulation::calculateBoundary() {
     // Sets boundaryComponents, NFace.boundaryComponent,
     //     NEdge.boundaryComponent, NVertex.boundaryComponent,
     //     NComponent.boundaryComponents
-    FaceIterator it(faces);
+    FaceIterator it;
     NFace* face;
     NBoundaryComponent* label;
 
-    while (! it.done()) {
+    for (it = faces.begin(); it != faces.end(); it++) {
         face = *it;
         if (face->nEmbeddings < 2)
             if (face->boundaryComponent == 0) {
                 label = new NBoundaryComponent();
                 label->orientable = true;
                 labelBoundaryFace(face, label, 1);
-                boundaryComponents.addLast(label);
+                boundaryComponents.push_back(label);
                 face->component->boundaryComponents.push_back(label);
             }
-        it++;
     }
 }
 
@@ -487,7 +473,7 @@ void NTriangulation::labelBoundaryFace(NFace* firstFace,
 
 void NTriangulation::calculateVertexLinks() {
     // Runs through each vertex and sets link accordingly.
-    VertexIterator it(vertices);
+    VertexIterator it;
     NVertex* vertex;
     std::vector<NVertexEmbedding>::const_iterator embit;
     NTetrahedron* tet;
@@ -495,7 +481,7 @@ void NTriangulation::calculateVertexLinks() {
 
     NRational v;
     long f, twiceE;
-    while (!it.done()) {
+    for (it = vertices.begin(); it != vertices.end(); it++) {
         vertex = *it;
 
         // Calculate number of faces, edges and vertices in the link.
@@ -553,11 +539,9 @@ void NTriangulation::calculateVertexLinks() {
                 NBoundaryComponent* bc = new NBoundaryComponent(vertex);
                 bc->orientable = vertex->isLinkOrientable();
                 vertex->boundaryComponent = bc;
-                boundaryComponents.addLast(bc);
+                boundaryComponents.push_back(bc);
                 vertex->component->boundaryComponents.push_back(bc);
             }
         }
-
-        it++;
     }
 }

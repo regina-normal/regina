@@ -208,7 +208,8 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // First we make a list of the tetrahedra.
     std::hash_set<NTetrahedron*, HashPointer> tetList;
     std::vector<NVertexEmbedding>::const_iterator vembit;
-    for (VertexIterator vIter(getVertices()); ! vIter.done(); vIter++)
+    for (VertexIterator vIter = vertices.begin();
+            vIter != vertices.end(); vIter++)
         if ((*vIter)->isIdeal() || ! (*vIter)->isStandard())
             for (vembit = (*vIter)->getEmbeddings().begin();
                     vembit != (*vIter)->getEmbeddings().end(); vembit++)

@@ -74,7 +74,7 @@ Regina::Triangulation::NComponent_ptr NTriangulation_i::getComponent(
 }
 CORBA::Long NTriangulation_i::getComponentIndex(
         Regina::Triangulation::NComponent_ptr component) {
-    return MY_ENGINE_OBJECT->getComponents().position(
+    return MY_ENGINE_OBJECT->getComponents().index(
         GET_ENGINE_OBJECT(NComponent, component));
 }
 CORBA::Long NTriangulation_i::getNumberOfBoundaryComponents() {
@@ -88,7 +88,7 @@ Regina::Triangulation::NBoundaryComponent_ptr
 CORBA::Long NTriangulation_i::getBoundaryComponentIndex(
         Regina::Triangulation::NBoundaryComponent_ptr bc) {
     return MY_ENGINE_OBJECT->getBoundaryComponents().
-        position(GET_ENGINE_OBJECT(NBoundaryComponent, bc));
+        index(GET_ENGINE_OBJECT(NBoundaryComponent, bc));
 }
 CORBA::Long NTriangulation_i::getNumberOfVertices() {
     return MY_ENGINE_OBJECT->getNumberOfVertices();
@@ -99,7 +99,7 @@ Regina::Triangulation::NVertex_ptr NTriangulation_i::getVertex(
 }
 CORBA::Long NTriangulation_i::getVertexIndex(
         Regina::Triangulation::NVertex_ptr vertex) {
-    return MY_ENGINE_OBJECT->getVertices().position(
+    return MY_ENGINE_OBJECT->getVertices().index(
         GET_ENGINE_OBJECT(NVertex, vertex));
 }
 CORBA::Long NTriangulation_i::getNumberOfEdges() {
@@ -111,7 +111,7 @@ Regina::Triangulation::NEdge_ptr NTriangulation_i::getEdge(
 }
 CORBA::Long NTriangulation_i::getEdgeIndex(
         Regina::Triangulation::NEdge_ptr edge) {
-    return MY_ENGINE_OBJECT->getEdges().position(
+    return MY_ENGINE_OBJECT->getEdges().index(
         GET_ENGINE_OBJECT(NEdge, edge));
 }
 CORBA::Long NTriangulation_i::getNumberOfFaces() {
@@ -123,7 +123,7 @@ Regina::Triangulation::NFace_ptr NTriangulation_i::getFace(
 }
 CORBA::Long NTriangulation_i::getFaceIndex(
         Regina::Triangulation::NFace_ptr face) {
-    return MY_ENGINE_OBJECT->getFaces().position(
+    return MY_ENGINE_OBJECT->getFaces().index(
         GET_ENGINE_OBJECT(NFace, face));
 }
 CORBA::Long NTriangulation_i::getEulerCharacteristic() {

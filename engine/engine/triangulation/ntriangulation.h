@@ -38,7 +38,7 @@
 #include <hash_set>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
-#include "utilities/ndynamicarray.h"
+#include "utilities/nindexedarray.h"
 #include "utilities/nmiscutils.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nface.h"
@@ -86,25 +86,27 @@ class NGroupPresentation;
  * subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  * \todo \featurelong Random triangulation with <i>n</i> tetrahedra.
- * \todo \optlong Make a <i>pointer</i>-><i>index</i> lookup class using a
- * hash table and use this to speed up routines that use
- * NDynamicArray::position().
  */
 class NTriangulation : public NPacket, NPropertyHolder {
     public:
         static const int packetType;
 
-        typedef NDynamicArrayIterator<NTetrahedron*> TetrahedronIterator;
+        typedef NIndexedArray<NTetrahedron*, HashPointer>::const_iterator
+                TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
-        typedef NDynamicArrayIterator<NFace*> FaceIterator;
+        typedef NIndexedArray<NFace*, HashPointer>::const_iterator
+                FaceIterator;
             /**< Used to iterate through faces. */
-        typedef NDynamicArrayIterator<NEdge*> EdgeIterator;
+        typedef NIndexedArray<NEdge*, HashPointer>::const_iterator
+                EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef NDynamicArrayIterator<NVertex*> VertexIterator;
+        typedef NIndexedArray<NVertex*, HashPointer>::const_iterator
+                VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef NDynamicArrayIterator<NComponent*> ComponentIterator;
+        typedef NIndexedArray<NComponent*, HashPointer>::const_iterator
+                ComponentIterator;
             /**< Used to iterate through components. */
-        typedef NDynamicArrayIterator<NBoundaryComponent*>
+        typedef NIndexedArray<NBoundaryComponent*, HashPointer>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
@@ -112,17 +114,17 @@ class NTriangulation : public NPacket, NPropertyHolder {
         bool calculatedSkeleton;
             /**< Has the skeleton been calculated? */
             
-        NDynamicArray<NTetrahedron*> tetrahedra;
+        NIndexedArray<NTetrahedron*, HashPointer> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
-        NDynamicArray<NFace*> faces;
+        NIndexedArray<NFace*, HashPointer> faces;
             /**< The faces in the triangulation skeleton. */
-        NDynamicArray<NEdge*> edges;
+        NIndexedArray<NEdge*, HashPointer> edges;
             /**< The edges in the triangulation skeleton. */
-        NDynamicArray<NVertex*> vertices;
+        NIndexedArray<NVertex*, HashPointer> vertices;
             /**< The vertices in the triangulation skeleton. */
-        NDynamicArray<NComponent*> components;
+        NIndexedArray<NComponent*, HashPointer> components;
             /**< The components that form the triangulation. */
-        NDynamicArray<NBoundaryComponent*> boundaryComponents;
+        NIndexedArray<NBoundaryComponent*, HashPointer> boundaryComponents;
             /**< The components that form the boundary of the
                  triangulation. */
         
@@ -382,7 +384,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * @return the list of all tetrahedra.
          */
-        const NDynamicArray<NTetrahedron*>& getTetrahedra() const;
+        const NIndexedArray<NTetrahedron*, HashPointer>& getTetrahedra() const;
         /**
          * Returns the tetrahedron with the given index number in the
          * triangulation.
@@ -533,7 +535,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * @return the list of all components.
          */
-        const NDynamicArray<NComponent*>& getComponents();
+        const NIndexedArray<NComponent*, HashPointer>& getComponents();
         /**
          * Returns all boundary components of this triangulation.
          * Note that each ideal vertex forms its own boundary component.
@@ -550,7 +552,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * @return the list of all boundary components.
          */
-        const NDynamicArray<NBoundaryComponent*>& getBoundaryComponents();
+        const NIndexedArray<NBoundaryComponent*, HashPointer>&
+            getBoundaryComponents();
         /**
          * Returns all vertices of this triangulation.
          *
@@ -566,7 +569,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * @return the list of all vertices.
          */
-        const NDynamicArray<NVertex*>& getVertices();
+        const NIndexedArray<NVertex*, HashPointer>& getVertices();
         /**
          * Returns all edges of this triangulation.
          *
@@ -582,7 +585,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * @return the list of all edges.
          */
-        const NDynamicArray<NEdge*>& getEdges();
+        const NIndexedArray<NEdge*, HashPointer>& getEdges();
         /**
          * Returns all faces of this triangulation.
          *
@@ -598,7 +601,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * @return the list of all faces.
          */
-        const NDynamicArray<NFace*>& getFaces();
+        const NIndexedArray<NFace*, HashPointer>& getFaces();
         /**
          * Returns the requested triangulation component.
          *
@@ -1512,16 +1515,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
     private:
         void deleteTetrahedra();
             /**< Deallocates all tetrahedra and empties the list. */
-        void deleteFaces();
-            /**< Deallocates all faces and empties the list. */
-        void deleteEdges();
-            /**< Deallocates all edges and empties the list. */
-        void deleteVertices();
-            /**< Deallocates all vertices and empties the list. */
-        void deleteComponents();
-            /**< Deallocates all components and empties the list. */
-        void deleteBoundaryComponents();
-            /**< Deallocates all boundary components and empties the list. */
         void deleteSkeleton();
             /**< Deallocates all skeletal objects and empties all
                  corresponding lists. */
@@ -1649,25 +1642,30 @@ inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
 
 inline unsigned long NTriangulation::getTetrahedronIndex(
         const NTetrahedron* tet) const {
-    return tetrahedra.position((NTetrahedron*)tet);
+    return tetrahedra.index((NTetrahedron*)tet);
 }
 
 inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
     clearAllProperties();
-    tetrahedra.addLast(t);
+    tetrahedra.push_back(t);
 }
 
 inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
     clearAllProperties();
-    tetrahedra[index]->isolate();
-    return tetrahedra.removeFromPosition(index);
+
+    NTetrahedron* ans = tetrahedra[index];
+    ans->isolate();
+    tetrahedra.erase(tetrahedra.begin() + index);
+    return ans;
 }
 
 inline NTetrahedron* NTriangulation::removeTetrahedron(
         NTetrahedron* tet) {
     clearAllProperties();
+
     tet->isolate();
-    return tetrahedra.remove(tet);
+    tetrahedra.erase(tet);
+    return tet;
 }
 
 inline void NTriangulation::removeAllTetrahedra() {
@@ -1716,37 +1714,39 @@ inline long NTriangulation::getEulerCharacteristic() {
         + long(faces.size()) - long(tetrahedra.size());
 }
 
-inline const NDynamicArray<NBoundaryComponent*> &
+inline const NIndexedArray<NTetrahedron*, HashPointer>&
+        NTriangulation::getTetrahedra() const {
+    return tetrahedra;
+}
+
+inline const NIndexedArray<NBoundaryComponent*, HashPointer>&
         NTriangulation::getBoundaryComponents() {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return boundaryComponents;
 }
 
-inline const NDynamicArray<NTetrahedron*>& NTriangulation::getTetrahedra()
-        const {
-    return tetrahedra;
-}
-
-inline const NDynamicArray<NComponent*>& NTriangulation::getComponents() {
+inline const NIndexedArray<NComponent*, HashPointer>&
+        NTriangulation::getComponents() {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return components;
 }
 
-inline const NDynamicArray<NVertex*>& NTriangulation::getVertices() {
+inline const NIndexedArray<NVertex*, HashPointer>&
+        NTriangulation::getVertices() {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return vertices;
 }
 
-inline const NDynamicArray<NEdge*>& NTriangulation::getEdges() {
+inline const NIndexedArray<NEdge*, HashPointer>& NTriangulation::getEdges() {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return edges;
 }
 
-inline const NDynamicArray<NFace*>& NTriangulation::getFaces() {
+inline const NIndexedArray<NFace*, HashPointer>& NTriangulation::getFaces() {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces;
@@ -1779,7 +1779,7 @@ inline bool NTriangulation::hasBoundaryFaces() {
 inline bool NTriangulation::isClosed() {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return (boundaryComponents.size() == 0);
+    return boundaryComponents.empty();
 }
 
 inline bool NTriangulation::isOrientable() {

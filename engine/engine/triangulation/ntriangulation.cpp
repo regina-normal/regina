@@ -29,9 +29,9 @@
 #include <iostream>
 #include <iomanip>
 
-#include "triangulation/ntriangulation.h"
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
+#include "triangulation/ntriangulation.h"
 
 // Property IDs:
 // #define PROPID_EXTRA_TOPOLOGY 1 -- Do not use!
@@ -103,7 +103,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
                 out << " boundary";
             else {
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
-                out << std::setw(3) << tetrahedra.position(adjTet) << " (";
+                out << std::setw(3) << tetrahedra.index(adjTet) << " (";
                 for (vertex=0; vertex<4; vertex++) {
                     if (vertex == face) continue;
                     out << adjPerm[vertex];
@@ -123,7 +123,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         out << "  " << std::setw(3) << tetPos << "  |          ";
         for (vertex=0; vertex<4; vertex++)
             out << ' ' << std::setw(3) <<
-                vertices.position(tet->getVertex(vertex));
+                vertices.index(tet->getVertex(vertex));
         out << '\n';
     }
     out << '\n';
@@ -137,7 +137,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
                 out << ' ' << std::setw(3)
-                    << edges.position(tet->getEdge(edgeNumber[start][end]));
+                    << edges.index(tet->getEdge(edgeNumber[start][end]));
         out << '\n';
     }
     out << '\n';
@@ -149,7 +149,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         tet = tetrahedra[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
-            out << ' ' << std::setw(3) << faces.position(tet->getFace(face));
+            out << ' ' << std::setw(3) << faces.index(tet->getFace(face));
         out << '\n';
     }
     out << '\n';
@@ -167,17 +167,17 @@ void NTriangulation::writePacket(NFile& out) const {
 
     // Write the name of each tetrahedron.
     TetrahedronIterator it;
-    for (it.init(tetrahedra); ! it.done(); it++)
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++)
         out.writeString((*it)->getDescription());
     
     // Write the joins to take place.
     tetPos = 0;
-    for (it.init(tetrahedra); ! it.done(); it++) {
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = getTetrahedronIndex(adjTet);
+                adjPos = tetrahedra.index(adjTet);
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
@@ -318,10 +318,8 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
     }
     out << '\n';
 
-    for (long i=0; i<nTet; i++) {
-        tet = new NTetrahedron();
-        triang->addTetrahedron(tet);
-    }
+    for (long i=0; i<nTet; i++)
+        triang->addTetrahedron(new NTetrahedron());
 
     // Read in the joins.
     long tetPos, altPos;
@@ -404,76 +402,32 @@ NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
 }
 
 void NTriangulation::deleteTetrahedra() {
-    TetrahedronIterator iter(tetrahedra);
-    while (!iter.done()) {
-        delete *iter;
-        iter++;
-    }
-    tetrahedra.flush();
-}
-
-void NTriangulation::deleteFaces() {
-    FaceIterator iter(faces);
-    while (!iter.done()) {
-        delete *iter;
-        iter++;
-    }
-    faces.flush();
-}
-
-void NTriangulation::deleteEdges() {
-    EdgeIterator iter(edges);
-    while (!iter.done()) {
-        delete *iter;
-        iter++;
-    }
-    edges.flush();
-}
-
-void NTriangulation::deleteVertices() {
-    VertexIterator iter(vertices);
-    while (!iter.done()) {
-        delete *iter;
-        iter++;
-    }
-    vertices.flush();
-}
-
-void NTriangulation::deleteComponents() {
-    ComponentIterator iter(components);
-    while (!iter.done()) {
-        delete *iter;
-        iter++;
-    }
-    components.flush();
-}
-
-void NTriangulation::deleteBoundaryComponents() {
-    BoundaryComponentIterator iter(boundaryComponents);
-    while (!iter.done()) {
-        delete *iter;
-        iter++;
-    }
-    boundaryComponents.flush();
+    for_each(tetrahedra.begin(), tetrahedra.end(), FuncDelete<NTetrahedron>());
+    tetrahedra.clear();
 }
 
 void NTriangulation::deleteSkeleton() {
-    deleteVertices();
-    deleteEdges();
-    deleteFaces();
-    deleteComponents();
-    deleteBoundaryComponents();
+    for_each(vertices.begin(), vertices.end(), FuncDelete<NVertex>());
+    for_each(edges.begin(), edges.end(), FuncDelete<NEdge>());
+    for_each(faces.begin(), faces.end(), FuncDelete<NFace>());
+    for_each(components.begin(), components.end(), FuncDelete<NComponent>());
+    for_each(boundaryComponents.begin(), boundaryComponents.end(),
+        FuncDelete<NBoundaryComponent>());
+
+    vertices.clear();
+    edges.clear();
+    faces.clear();
+    components.clear();
+    boundaryComponents.clear();
 }
 
 void NTriangulation::cloneFrom(const NTriangulation& X) {
     clearAllProperties();
     removeAllTetrahedra();
 
-    TetrahedronIterator it(X.tetrahedra);
-    while (! it.done()) {
+    TetrahedronIterator it;
+    for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++)
         addTetrahedron(new NTetrahedron((*it)->getDescription()));
-        it++;
-    }
 
     // Make the gluings.
     long tetPos, adjPos;
@@ -482,12 +436,12 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     NPerm adjPerm;
     int face;
     tetPos = 0;
-    for (it.init(X.tetrahedra); ! it.done(); it++) {
+    for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = X.getTetrahedronIndex(adjTet);
+                adjPos = X.tetrahedra.index(adjTet);
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
@@ -535,11 +489,9 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
     clearAllProperties();
     unsigned long norig = getNumberOfTetrahedra();
 
-    TetrahedronIterator it(X.tetrahedra);
-    while (! it.done()) {
+    TetrahedronIterator it;
+    for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++)
         addTetrahedron(new NTetrahedron((*it)->getDescription()));
-        it++;
-    }
 
     // Make the gluings.
     long tetPos, adjPos;
@@ -548,12 +500,12 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
     NPerm adjPerm;
     int face;
     tetPos = 0;
-    for (it.init(X.tetrahedra); ! it.done(); it++) {
+    for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++) {
             adjTet = tet->getAdjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = X.getTetrahedronIndex(adjTet);
+                adjPos = X.tetrahedra.index(adjTet);
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {

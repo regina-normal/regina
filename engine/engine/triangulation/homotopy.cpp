@@ -48,8 +48,8 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() {
     // Each non-boundary not-in-forest face is a generator.
     // Each non-boundary edge is a relation.
     unsigned long nBdryFaces = 0;
-    for (BoundaryComponentIterator bit(boundaryComponents);
-            ! bit.done(); bit++)
+    for (BoundaryComponentIterator bit = boundaryComponents.begin();
+            bit != boundaryComponents.end(); bit++)
         nBdryFaces += (*bit)->getNumberOfFaces();
     long nGens = getNumberOfFaces() - nBdryFaces - forest.size();
 
@@ -59,11 +59,11 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() {
     // Find out which face corresponds to which generator.
     long *genIndex = new long[getNumberOfFaces()];
     long i = 0;
-    for (FaceIterator fit(faces); ! fit.done(); fit++)
+    for (FaceIterator fit = faces.begin(); fit != faces.end(); fit++)
         if ((*fit)->isBoundary() || forest.count(*fit))
-            genIndex[fit.getArrayIndex()] = -1;
+            genIndex[fit - faces.begin()] = -1;
         else
-            genIndex[fit.getArrayIndex()] = i++;
+            genIndex[fit - faces.begin()] = i++;
     
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;
@@ -72,7 +72,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() {
     int currTetFace;
     long faceGenIndex;
     NGroupExpression* rel;
-    for (EdgeIterator eit(edges); ! eit.done(); eit++)
+    for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++)
         if (! (*eit)->isBoundary()) {
             // Put in the relation corresponding to this edge.
             rel = new NGroupExpression();
@@ -81,7 +81,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
                 face = currTet->getFace(currTetFace);
-                faceGenIndex = genIndex[faces.position(face)];
+                faceGenIndex = genIndex[faces.index(face)];
                 if (faceGenIndex >= 0) {
                     if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
                             (face->getEmbedding(0).getFace() == currTetFace))
