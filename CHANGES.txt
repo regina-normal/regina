@@ -17,22 +17,22 @@ Version 4.1.3  [ 25 July, 2004 ]
           instead of Python object equality.  That is, it tests whether
           the Python wrappers point to the same C++ object, not whether
           the Python wrappers are in fact the same wrapper.
-        - Added a sample python session for progress reporting.
+        - Fixed scripting in the GUI, which was broken with python 2.3
+          (indented blocks were treated as complete after just one line).
+        - Added a sample python session illustrating progress reporting.
     USER INTERFACE:
         - Added an "Open Example" menu item for easy access to the
           sample files.
-        - Fixed scripting in the GUI, which was broken with python 2.3
-          (indented blocks were treated as complete after just one line).
         - Allow the choice of text editor component to be configured.
         - Several fixes to make Regina work properly with the vimpart,
           including work-arounds for bugs in the vimpart itself.
+        - Fixed the massive resource drain while editing a script's
+          variable table in a heavily populated data file.
+        - Fixed crashes that occured when deleting packets while a
+          drop-down packet chooser is in use elsewhere.
         - Tightened up the handling of read-only mode for internal
           components.  Also removed some loopholes that allowed editing
           of uneditable packets.
-        - Fixed crashes that occured when deleting packets while a
-          drop-down packet chooser is in use.
-        - Fixed the massive resource drain while editing a script's
-          variable table in a heavily populated data file.
         - Improved handling of keyboard focus.
         - Changed "Python Reference" to point to the modules index
           instead of the title page.

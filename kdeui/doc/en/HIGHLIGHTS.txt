@@ -18,12 +18,12 @@ Version 4.1.3  [ 25 July, 2004 ]
     Scripting:
         - Operator == behaves more intuitively for mathematical objects.
           A single mathematical object in the calculation engine may
-          have several Python wrappers.  The usual Python == tests
-          whether two wrappers are in fact the same wrapper; this has
-          now been changed to test whether two wrappers wrap the same
+          have several Python wrapper objects.  The usual Python == tests
+          whether two wrappers are in fact the same wrapper object; this
+          has now been changed to test whether two wrappers wrap the same
           underlying mathematical object.
-        - Fixed broken scripting in the GUI under Python 2.3, where
-          indented blocks were treated as complete after just one line.
+        - Fixed scripting in the GUI, which was broken under Python 2.3
+          (indented blocks were treated as complete after just one line).
           Note that the command-line tool regina-python was never affected.
         - Added a sample Python session illustrating progress reporting.
     Optimisations:
