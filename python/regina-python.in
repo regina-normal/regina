@@ -145,6 +145,7 @@ foreach my $arg (@ARGV) {
 # --- Check that the current options are reasonable. ---
 
 my $prefix = "@prefix@";
+my $exec_prefix = "@exec_prefix@";
 my $datadir = "@datadir@";
 my $libdir = "@libdir@";
 my $package = "@PACKAGE@";
