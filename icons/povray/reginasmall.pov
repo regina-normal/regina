@@ -29,12 +29,12 @@
 #include "textures.inc"
 #include "stones.inc"
 
-#declare Sheet1 = color rgbt <0, 5, 0, 0.95>
-#declare Sheet2 = color rgbt <5, 0, 0, 0.95>
-#declare Sheet3 = color rgbt <0, 0, 5, 0.95>
-#declare All = color rgb <3,0,6>
+#declare Sheet1 = color rgbt <0, 5, 0, 0.95>;
+#declare Sheet2 = color rgbt <5, 0, 0, 0.95>;
+#declare Sheet3 = color rgbt <0, 0, 5, 0.95>;
+#declare All = color rgb <3,0,6>;
 
-#declare loc = <4, 0.6, 0.2>
+#declare loc = <4, 0.6, 0.2>;
 
 camera {
 	location loc
@@ -67,13 +67,13 @@ light_source {
 	color White
 }
 
-#declare root2 = 1.4142136
-#declare root3 = 1.7320508
-#declare a = <2, 0, -root2 / 2>
-#declare b = <-1, root3, -root2 / 2>
-#declare c = <-1, -root3, -root2 / 2>
-#declare d = <0, 0, 3 * root2 / 2>
-#declare tetthickness = 0.175
+#declare root2 = 1.4142136;
+#declare root3 = 1.7320508;
+#declare a = <2, 0, -root2 / 2>;
+#declare b = <-1, root3, -root2 / 2>;
+#declare c = <-1, -root3, -root2 / 2>;
+#declare d = <0, 0, 3 * root2 / 2>;
+#declare tetthickness = 0.175;
 
 #declare tetskeleton = union {
 	cylinder { a, b, tetthickness }
