@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+SUBDIRS = povray
+
 iconsdir = $(pkgdatadir)/icons
 
 icons_DATA = README.txt \
