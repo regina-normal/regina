@@ -14,6 +14,7 @@ SUBDIRS = \
   census \
   file \
   foreign \
+  knot \
   maths \
   packet \
   progress \
@@ -37,6 +38,7 @@ libregina_engine_la_LIBADD = \
   census/libcensus.la \
   file/libfile.la \
   foreign/libforeign.la \
+  knot/libknot.la \
   maths/libmaths.la \
   packet/libpacket.la \
   progress/libprogress.la \
