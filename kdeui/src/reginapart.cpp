@@ -36,9 +36,13 @@
 #include "reginafilter.h"
 #include "reginapart.h"
 
+#include <qcolor.h>
 #include <qlabel.h>
+#include <qsplitter.h>
+#include <qvbox.h>
 #include <kaction.h>
 #include <kfiledialog.h>
+#include <kiconloader.h>
 #include <kinstance.h>
 #include <kmessagebox.h>
 #include <kparts/genericfactory.h>
@@ -51,14 +55,11 @@ ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
         QObject *parent, const char *name, const QStringList& /*args*/) :
         KParts::ReadWritePart(parent, name), packetTree(0) {
     // Get the instance.
-    setInstance( ReginaPartFactory::instance() );
+    setInstance(factoryInstance());
 
-    // TODO: Set up the internal widgets.
-    treeView = new PacketTreeView(parentWidget, widgetName);
-    setWidget(treeView);
-
-    // Set up our actions.
+    // Set up our widgets and actions.
     setXMLFile("reginapart.rc");
+    setupWidgets(parentWidget, widgetName);
     setupActions();
 
     // Initialise the packet tree.
@@ -89,8 +90,12 @@ void ReginaPart::setModified(bool modified) {
     ReadWritePart::setModified(modified);
 }
 
-KAboutData *ReginaPart::createAboutData() {
+KAboutData* ReginaPart::createAboutData() {
     return new ReginaAbout<ReginaPart>("reginapart");
+}
+
+KInstance* ReginaPart::factoryInstance() {
+    return ReginaPartFactory::instance();
 }
 
 bool ReginaPart::openFile() {
@@ -127,6 +132,13 @@ bool ReginaPart::saveFile() {
     }
 }
 
+void ReginaPart::displayIcon(bool shouldDisplay) {
+    if (shouldDisplay)
+        reginaIcon->show();
+    else
+        reginaIcon->hide();
+}
+
 void ReginaPart::fileSaveAs() {
     QString file = KFileDialog::getSaveFileName(QString::null,
         i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
@@ -134,9 +146,53 @@ void ReginaPart::fileSaveAs() {
         saveAs(file);
 }
 
+void ReginaPart::unimplemented() {
+    KMessageBox::sorry(widget(), QString(i18n(
+        "This feature is not yet implemented.")));
+}
+
+void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
+    QSplitter* splitter = new QSplitter(parentWidget, widgetName);
+
+    // Set up the packet tree viewer.
+    QVBox* treeBox = new QVBox(splitter);
+
+    treeView = new PacketTreeView(treeBox);
+    treeBox->setStretchFactor(treeView, 1);
+
+    reginaIcon = new QLabel(treeBox);
+    reginaIcon->setPixmap(UserIcon("reginatrans", instance()));
+    reginaIcon->setPaletteBackgroundPixmap(UserIcon("stars", instance()));
+    reginaIcon->setAlignment(AlignCenter);
+    reginaIcon->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    reginaIcon->hide();
+
+    // Set up the docking area.
+    QVBox* dockArea = new QVBox(splitter);
+
+    // TODO: Adjust the divider position.
+    setWidget(splitter);
+}
+
 void ReginaPart::setupActions() {
     actSave = KStdAction::save(this, SLOT(save()), actionCollection());
     KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
+
+    new KAction(i18n("&Angle Structure List"), "packet_angles", ALT+Key_A,
+        this, SLOT(unimplemented()), actionCollection(), "packet_angles");
+    new KAction(i18n("&Container"), "packet_container", ALT+Key_C,
+        this, SLOT(unimplemented()), actionCollection(), "packet_container");
+    new KAction(i18n("&Filter"), "packet_filter", ALT+Key_F,
+        this, SLOT(unimplemented()), actionCollection(), "packet_filter");
+    new KAction(i18n("&Normal Surface List"), "packet_surfaces", ALT+Key_N,
+        this, SLOT(unimplemented()), actionCollection(), "packet_surfaces");
+    new KAction(i18n("&Script"), "packet_script", ALT+Key_S,
+        this, SLOT(unimplemented()), actionCollection(), "packet_script");
+    new KAction(i18n("Te&xt"), "packet_text", ALT+Key_X,
+        this, SLOT(unimplemented()), actionCollection(), "packet_text");
+    new KAction(i18n("&Triangulation"), "packet_triangulation", ALT+Key_T,
+        this, SLOT(unimplemented()), actionCollection(),
+        "packet_triangulation");
 }
 
 void ReginaPart::initPacketTree() {

@@ -29,6 +29,7 @@
 #include "reginaabout.h"
 #include "reginafilter.h"
 #include "reginamain.h"
+#include "reginapart.h"
 #include "reginapref.h"
 
 #include <qdragobject.h>
@@ -386,17 +387,25 @@ void ReginaMain::saveOptions() {
 }
 
 KParts::ReadWritePart* ReginaMain::newTopologyPart() {
-    KParts::ReadWritePart* ans = 0;
+    ReginaPart* ans = 0;
 
     KLibFactory* libFactory = KLibLoader::self()->factory("libreginapart");
     if (libFactory)
-        ans = (KParts::ReadWritePart*)(libFactory->create(
+        ans = (ReginaPart*)(libFactory->create(
             this, "reginapart", "ReginaPart"));
 
     if (! ans)
         KMessageBox::error(this, QString(i18n(
             "An appropriate topology data component could not be found.")));
 
+    // Connect up signals and slots.
+    connect(this, SIGNAL(changedDisplayIcon(bool)),
+        ans, SLOT(displayIcon(bool)));
+
+    // Perform initial setup on the part.
+    emit changedDisplayIcon(displayIcon);
+
+    // All done!
     return ans;
 }
 

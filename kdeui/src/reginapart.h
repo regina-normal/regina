@@ -40,7 +40,9 @@ namespace regina {
 };
 
 class KAboutData;
+class KInstance;
 class PacketTreeView;
+class QLabel;
 
 /**
  * The Regina topology data editor.
@@ -60,6 +62,7 @@ class ReginaPart : public KParts::ReadWritePart {
          * Components
          */
         PacketTreeView* treeView;
+        QLabel* reginaIcon;
 
         /**
          * Actions
@@ -85,6 +88,11 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         static KAboutData *createAboutData();
 
+        /**
+         * Return the instance stored in the underlying KParts::Factory.
+         */
+        static KInstance* factoryInstance();
+
     protected:
         /**
          * KPart overrides.
@@ -92,16 +100,24 @@ class ReginaPart : public KParts::ReadWritePart {
         virtual bool openFile();
         virtual bool saveFile();
 
+    public slots:
+        /**
+         * Show or hide the Regina icon beneath the packet tree.
+         */
+        void displayIcon(bool);
+
     private slots:
         /**
          * Implementation of actions.
          */
         void fileSaveAs();
+        void unimplemented();
 
     private:
         /**
          * Initial setup.
          */
+        void setupWidgets(QWidget* parentWidget, const char* widgetName);
         void setupActions();
         void initPacketTree();
 };

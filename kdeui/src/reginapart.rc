@@ -5,8 +5,28 @@
     <Action name="file_save" group="save_merge"/>
     <Action name="file_save_as" group="save_merge"/>
   </Menu>
+  <Menu name="packet" noMerge="1"><text>&amp;Packet</text>
+    <Menu name="packet_new"><text>&amp;New</text>
+      <Action name="packet_angles"/>
+      <Action name="packet_container"/>
+      <Action name="packet_filter"/>
+      <Action name="packet_surfaces"/>
+      <Action name="packet_script"/>
+      <Action name="packet_text"/>
+      <Action name="packet_triangulation"/>
+    </Menu>
+  </Menu>
 </MenuBar>
 <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
   <Action name="file_save" group="file_operations"/>
+</ToolBar>
+<ToolBar name="packet" noMerge="1"><text>Packet Toolbar</text>
+  <Action name="packet_angles"/>
+  <Action name="packet_container"/>
+  <Action name="packet_filter"/>
+  <Action name="packet_surfaces"/>
+  <Action name="packet_script"/>
+  <Action name="packet_text"/>
+  <Action name="packet_triangulation"/>
 </ToolBar>
 </kpartgui>

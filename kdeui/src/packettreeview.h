@@ -78,6 +78,10 @@ class PacketTreeItem : public KListViewItem {
         /**
          * Updates the subtree descending from this item to match the
          * corresponding subtree in the underlying packet tree.
+         *
+         * Note that this routine is safe even if some currently
+         * existing tree items correspond to packets that have already
+         * been deleted.
          */
         void refreshSubtree();
         /**
@@ -117,6 +121,10 @@ class PacketTreeView : public KListView {
          * Updates this tree to match the given packet tree.  The final
          * result should be the same as for fill(), but if the tree is
          * already mostly complete then it should be somewhat faster.
+         *
+         * Note that this routine is safe even if some currently
+         * existing tree items correspond to packets that have already
+         * been deleted.
          */
         void refresh(regina::NPacket* topPacket);
 };
