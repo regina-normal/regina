@@ -328,12 +328,22 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             needFile.addElement(menuFileSaveAs);
         }
 
+        JMenuItem menuFileInfo = new JMenuItem("Info");
+        menuFileInfo.setMnemonic(KeyEvent.VK_F);
+        menuFileInfo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fileInfo();
+            }
+        });
+        menuFile.add(menuFileInfo);
+        needFile.addElement(menuFileInfo);
+
         JMenuItem menuFileClose = new JMenuItem("Close",
             Standard16.close.image());
         menuFileClose.setMnemonic(KeyEvent.VK_C);
         menuFileClose.setAccelerator(KeyStroke.getKeyStroke(
             KeyEvent.VK_C, ActionEvent.ALT_MASK));
-        menuFileClose.addActionListener(new java.awt.event.ActionListener() {
+        menuFileClose.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 fileClose();
             }
@@ -1212,6 +1222,18 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         options.setStringOption("LastDir", fileDir.getAbsolutePath());
         addRecentFile(dest.getAbsolutePath());
         options.writeToFile();
+    }
+
+    /**
+     * Display general information about the active file.
+     */
+    public void fileInfo() {
+        FilePane m = getCurrentFilePane();
+        if (m == null)
+            return;
+            
+        // Display information.
+        shell.inform("File type: " + m.getFileType());
     }
 
     /**

@@ -47,6 +47,7 @@ Version 2.3.1  [ (in progress) ]
         normal.mainui.FilePane:
             - Added getFileType() and setFileType().
         normal.mainui.NormalFrame:
+            - Added File->Info menu item.
             - Made various routines public so outsiders can manipulate
               the primary frame.
         normal.packetui.surfaces.CoordinateViewer:

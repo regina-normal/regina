@@ -122,6 +122,11 @@ public class TopologyPane extends FilePane {
     public static final ExtensionFilenameFilter filenameFilter =
         new ExtensionFilenameFilter(defaultFileExtension,
         "Topology Data Files (*" + defaultFileExtension + ')');
+
+    /**
+     * The base of the file type description for topology data files.
+     */
+    public static final String topologyFileTypeBase = "Topology data";
     
     // ------------------
     //    DATA MEMBERS
@@ -245,7 +250,7 @@ public class TopologyPane extends FilePane {
         NPacket root = shell.getEngine().newNContainer();
         root.setPacketLabel("Container");
         
-        return new TopologyPane(shell, root);
+        return new TopologyPane(shell, root, topologyFileTypeBase + " (new)");
     }
 
     /**
@@ -265,7 +270,8 @@ public class TopologyPane extends FilePane {
             return null;
         }
 
-        return new TopologyPane(shell, root);
+        return new TopologyPane(shell, root, topologyFileTypeBase +
+            " (engine X.Y)");
     }
 
     /**
@@ -274,11 +280,14 @@ public class TopologyPane extends FilePane {
      * @param shell the shell representing the entire program.
      * @param rootPacket the matriarch of the packet tree that will form
      * the working data for this pane.
+     * @param fileType a human-readable string describing the type of
+     * file presented in this pane.
      */
-    private TopologyPane(Shell shell, NPacket rootPacket) {
+    private TopologyPane(Shell shell, NPacket rootPacket, String fileType) {
         super(shell);
         this.rootPacket = rootPacket;
-        
+        setFileType(fileType);
+
         init();
     }
 
@@ -293,11 +302,15 @@ public class TopologyPane extends FilePane {
     }
 
     public boolean saveFile(File file) {
-        if (! getEngine().writeToFile(file.getAbsolutePath(), rootPacket)) {
+        Engine engine = getEngine();
+        if (! engine.writeToFile(file.getAbsolutePath(), rootPacket)) {
             getShell().error(
                 "The requested file could not be opened for writing.");
             return false;
         }
+        setFileType(topologyFileTypeBase + " (engine " +
+            String.valueOf(engine.getVersionMajor()) + '.' +
+            String.valueOf(engine.getVersionMinor()) + ".x)");
         return true;
     }
 
