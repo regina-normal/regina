@@ -224,6 +224,12 @@ public class JNIEngine implements Engine {
     public native NLayeredLoop isLayeredLoop(NComponent comp);
     public native NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
     public native NSnappedBall isSnappedBall(NTetrahedron tet);
+    public NTriSolidTorus isTriSolidTorus(NTetrahedron tet,
+            NPerm vertexRoles) {
+        return _isTriSolidTorus(tet, vertexRoles.getPermCode());
+    }
+    public native NTriSolidTorus _isTriSolidTorus(NTetrahedron tet,
+            char vertexRoles);
     public native NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour);
     public native NPacket readFromFile(String fileName);

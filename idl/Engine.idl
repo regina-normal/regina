@@ -41,6 +41,7 @@
 #include "Subcomplex/NLayeredLoop.idl"
 #include "Subcomplex/NPillowTwoSphere.idl"
 #include "Subcomplex/NSnappedTwoSphere.idl"
+#include "Subcomplex/NTriSolidTorus.idl"
 #include "Surfaces/NNormalSurfaceList.idl"
 #include "Surfaces/NSurfaceFilter.idl"
 #include "Surfaces/NSurfaceFilterCombination.idl"
@@ -120,6 +121,8 @@ module Regina {
             in Triangulation::NTetrahedron tet);
         Subcomplex::NSnappedBall isSnappedBall(
             in Triangulation::NTetrahedron tet);
+        Subcomplex::NTriSolidTorus isTriSolidTorus(
+            in Triangulation::NTetrahedron tet, in char vertexRoles);
         Maths::NMatrixInt makeMatchingEquations(
             in Triangulation::NTriangulation triang, in long flavour);
         Packet::NPacket readFromFile(in string fileName);

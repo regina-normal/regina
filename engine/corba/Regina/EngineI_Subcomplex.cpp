@@ -36,6 +36,7 @@
 #include "NPillowTwoSphereI.h"
 #include "NSnappedBallI.h"
 #include "NSnappedTwoSphereI.h"
+#include "NTriSolidTorusI.h"
 
 Regina::Subcomplex::NPillowTwoSphere_ptr
         Engine_i::formsPillowTwoSphere(Regina::Triangulation::NFace_ptr face1,
@@ -86,5 +87,11 @@ Regina::Subcomplex::NSnappedBall_ptr Engine_i::isSnappedBall(
         Regina::Triangulation::NTetrahedron_ptr tet) {
     return NSnappedBall_i::newWrapper(
         ::NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(NTetrahedron, tet)));
+}
+Regina::Subcomplex::NTriSolidTorus_ptr Engine_i::isTriSolidTorus(
+        Regina::Triangulation::NTetrahedron_ptr tet, CORBA::Char vertexRoles) {
+    return NTriSolidTorus_i::newWrapper(
+        ::NTriSolidTorus::isTriSolidTorus(GET_ENGINE_OBJECT(NTetrahedron, tet),
+        NPerm(vertexRoles)));
 }
 

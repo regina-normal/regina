@@ -119,6 +119,7 @@ public interface Engine {
     public NLayeredLoop isLayeredLoop(NComponent comp);
     public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
     public NSnappedBall isSnappedBall(NTetrahedron tet);
+    public NTriSolidTorus isTriSolidTorus(NTetrahedron tet, NPerm vertexRoles);
     public NMatrixInt makeMatchingEquations(NTriangulation
         triangulation, int flavour);
     public NPacket readFromFile(String fileName);

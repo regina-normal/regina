@@ -469,6 +469,12 @@ public class CORBAEngine implements Engine {
         return NCORBASnappedBall.newWrapper(
             data.isSnappedBall(((NCORBATetrahedron)tet).data));
     }
+    public NTriSolidTorus isTriSolidTorus(NTetrahedron tet,
+            NPerm vertexRoles) {
+        return NCORBATriSolidTorus.newWrapper(
+            data.isTriSolidTorus(((NCORBATetrahedron)tet).data,
+            vertexRoles.getPermCode()));
+    }
     public NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour) {
         return NCORBAMatrixInt.newWrapper(data.makeMatchingEquations(

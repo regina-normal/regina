@@ -51,6 +51,7 @@ class NSurfaceFilterProperties;
 class NSurfaceSubset;
 class NTetrahedron;
 class NText;
+class NTriSolidTorus;
 class NTriangulation;
 
 #ifdef __DOXYGEN
@@ -152,6 +153,8 @@ class Engine {
             /**< Calls NLayeredSolidTorus::isLayeredSolidTorusBase(). */
         NSnappedBall* isSnappedBall(NTetrahedron* tet);
             /**< Calls NSnappedBall::isSnappedBall(). */
+        NTriSolidTorus* isTriSolidTorus(NTetrahedron* tet, NPerm vertexRoles);
+            /**< Calls NTriSolidTorus::isTriSolidTorus(). */
         NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
                 int flavour);
             /**< Calls ::makeMatchingEquations(). */

@@ -8,8 +8,10 @@ Regina - A Normal Surface Theory Calculator
         Overall structure:
             - Introduced macro MY_ENGINE_OBJECT for CORBA wrapper classes.
             - Macros GET_ENGINE_OBJECT no longer crash when null is passed.
-        Class NLayeredLoop:
-            - New class.
+        Class NLayeredLoop, NTriSolidTorus:
+            - New classes.
+        Class NPerm:
+            - Added operator !=.
     JAVA USER INTERFACE:
         Overall structure:
             - Loading/saving local files is now possible even through CORBA!
