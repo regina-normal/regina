@@ -38,6 +38,59 @@ using regina::NSnapPeaTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
+// Some of the larger triangulations we will hard-code here.
+int closedHypOrAdjTet[9][4] = {
+    {6, 8, 2, 8},
+    {6, 8, 3, 7},
+    {7, 0, 3, 4},
+    {1, 5, 5, 2},
+    {2, 6, 5, 7},
+    {3, 8, 3, 4},
+    {0, 4, 7, 1},
+    {1, 4, 2, 6},
+    {1, 0, 5, 0}
+};
+
+int closedHypOrAdjPerm[9][4][4] = {
+    { {0,1,3,2}, {3,1,2,0}, {0,2,1,3}, {0,2,1,3} },
+    { {3,1,2,0}, {1,0,2,3}, {3,2,0,1}, {2,3,1,0} },
+    { {2,0,3,1}, {0,2,1,3}, {0,1,3,2}, {3,1,2,0} },
+    { {2,3,1,0}, {3,2,0,1}, {2,1,0,3}, {0,1,3,2} },
+    { {3,1,2,0}, {0,1,3,2}, {0,1,3,2}, {3,2,0,1} },
+    { {2,1,0,3}, {0,2,1,3}, {2,3,1,0}, {0,1,3,2} },
+    { {0,1,3,2}, {0,1,3,2}, {0,1,3,2}, {3,1,2,0} },
+    { {3,2,0,1}, {2,3,1,0}, {1,3,0,2}, {0,1,3,2} },
+    { {1,0,2,3}, {3,1,2,0}, {0,2,1,3}, {0,2,1,3} }
+};
+
+int closedHypNorAdjTet[11][4] = {
+    {8, 2, 8, 2},
+    {5, 3, 2, 9},
+    {1, 4, 0, 0},
+    {6, 1, 4, 6},
+    {10, 2, 10, 3},
+    {7, 7, 6, 1},
+    {8, 3, 3, 5},
+    {5, 9, 8, 5},
+    {0, 0, 6, 7},
+    {10, 10, 1, 7},
+    {9, 4, 4, 9}
+};
+
+int closedHypNorAdjPerm[11][4][4] = {
+    { {1,3,2,0}, {0,3,2,1}, {2,1,0,3}, {3,1,0,2} },
+    { {3,0,1,2}, {3,1,0,2}, {2,1,0,3}, {1,0,3,2} },
+    { {2,1,0,3}, {3,1,2,0}, {2,1,3,0}, {0,3,2,1} },
+    { {2,1,3,0}, {2,1,3,0}, {2,0,3,1}, {0,3,2,1} },
+    { {2,1,0,3}, {3,1,2,0}, {3,2,1,0}, {1,3,0,2} },
+    { {3,1,2,0}, {1,0,3,2}, {0,1,3,2}, {1,2,3,0} },
+    { {2,1,0,3}, {0,3,2,1}, {3,1,0,2}, {0,1,3,2} },
+    { {1,0,3,2}, {0,3,2,1}, {0,1,3,2}, {3,1,2,0} },
+    { {2,1,0,3}, {3,0,2,1}, {2,1,0,3}, {0,1,3,2} },
+    { {3,1,2,0}, {2,0,1,3}, {1,0,3,2}, {0,3,2,1} },
+    { {1,2,0,3}, {3,2,1,0}, {2,1,0,3}, {3,1,2,0} }
+};
+
 class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NSnapPeaTriangulationTest);
 
@@ -64,16 +117,17 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
          * spectra of closed hyperbolic three-manifolds",
          * Craig D. Hodgson and Jeffrey R. Weeks,
          * Experiment. Math. 3/4, 1994, pp 261--274.
+         *
+         * Note that for the time being these triangulations will be
+         * rejected by NSnapPeaTriangulation, since most SnapPea
+         * functions require an ideal triangulation.
          */
-        // TODO
+        NTriangulation closedHypOr, closedHypNor;
 
         /**
          * Triangulations of 3-manifolds whose reported volume should be zero.
          */
         // TODO
-        NTriangulation ordinaryVertex;
-            /**< A triangulation with a torus cusp and an internal vertex. */
-            // TODO: Item 15 2
 
         /**
          * Triangulations that SnapPea should refuse to deal with.
@@ -92,6 +146,8 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         NTriangulation genusFourNonOrCusp;
             /**< A triangulation with a genus four non-orientable cusp
              * (i.e., a non-orientable analogue of the two-holed torus). */
+        NTriangulation cuspedTorus;
+            /**< A solid torus with a cusped boundary and a finite vertex. */
         NTriangulation edgeInvalid;
             /**< A triangulation with two invalid edges but whose
                  vertices all have 2-sphere links. */
@@ -118,6 +174,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             n4_14.insertRehydration("eahdccddakfhq");
             n4_9_2.insertRehydration("ebdbcdddcemre");
             n4_1_2_1.insertRehydration("eahbcdddjxxxj");
+
+            cuspedTorus.insertLayeredSolidTorus(1, 2);
+            cuspedTorus.cuspBoundary();
 
             lst123.insertLayeredSolidTorus(1, 2);
             m2_1_m2_1.insertRehydration("cabbbbaei");
@@ -154,6 +213,42 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             t->joinTo(0, t, NPerm(1,0,3,2));
             t->joinTo(2, t, NPerm(1,0,3,2));
             edgeInvalid.addTetrahedron(t);
+
+            NTetrahedron** tet;
+            NPerm p;
+            int i, j;
+
+            tet = new NTetrahedron*[9];
+            for (i = 0; i < 9; i++)
+                tet[i] = new NTetrahedron();
+            for (i = 0; i < 9; i++)
+                for (j = 0; j < 4; j++)
+                    if (! tet[i]->getAdjacentTetrahedron(j)) {
+                        p = NPerm(closedHypOrAdjPerm[i][j][0],
+                             closedHypOrAdjPerm[i][j][1],
+                             closedHypOrAdjPerm[i][j][2],
+                             closedHypOrAdjPerm[i][j][3]);
+                        tet[i]->joinTo(j, tet[closedHypOrAdjTet[i][j]], p);
+                    }
+            for (i = 0; i < 9; i++)
+                closedHypOr.addTetrahedron(tet[i]);
+            delete[] tet;
+
+            tet = new NTetrahedron*[11];
+            for (i = 0; i < 11; i++)
+                tet[i] = new NTetrahedron();
+            for (i = 0; i < 11; i++)
+                for (j = 0; j < 4; j++)
+                    if (! tet[i]->getAdjacentTetrahedron(j)) {
+                        p = NPerm(closedHypNorAdjPerm[i][j][0],
+                             closedHypNorAdjPerm[i][j][1],
+                             closedHypNorAdjPerm[i][j][2],
+                             closedHypNorAdjPerm[i][j][3]);
+                        tet[i]->joinTo(j, tet[closedHypNorAdjTet[i][j]], p);
+                    }
+            for (i = 0; i < 11; i++)
+                closedHypNor.addTetrahedron(tet[i]);
+            delete[] tet;
         }
 
         void tearDown() {
@@ -240,6 +335,45 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testIncompatible(edgeInvalid,
                 "A triangulation with two invalid edges "
                 "should not be representable in SnapPea format.");
+
+            CPPUNIT_ASSERT_MESSAGE(
+                "The small closed orientable hyperbolic triangulation "
+                "appears to have been incorrectly constructed.",
+                closedHypOr.isValid() &&
+                closedHypOr.isConnected() &&
+                closedHypOr.isOrientable() &&
+                (! closedHypOr.isIdeal()) &&
+                closedHypOr.isStandard() &&
+                (! closedHypOr.hasBoundaryFaces()));
+            testIncompatible(closedHypOr,
+                "A closed orientable hyperbolic triangulation "
+                "should not be representable in SnapPea format.");
+
+            CPPUNIT_ASSERT_MESSAGE(
+                "The small closed non-orientable hyperbolic triangulation "
+                "appears to have been incorrectly constructed.",
+                closedHypNor.isValid() &&
+                closedHypNor.isConnected() &&
+                (! closedHypNor.isOrientable()) &&
+                (! closedHypNor.isIdeal()) &&
+                closedHypNor.isStandard() &&
+                (! closedHypNor.hasBoundaryFaces()));
+            testIncompatible(closedHypNor,
+                "A closed non-orientable hyperbolic triangulation "
+                "should not be representable in SnapPea format.");
+
+            CPPUNIT_ASSERT_MESSAGE(
+                "The cusped solid torus with finite vertex "
+                "appears to have been incorrectly constructed.",
+                cuspedTorus.isValid() &&
+                cuspedTorus.isConnected() &&
+                cuspedTorus.isOrientable() &&
+                cuspedTorus.isIdeal() &&
+                cuspedTorus.isStandard() &&
+                (! cuspedTorus.hasBoundaryFaces()));
+            testIncompatible(cuspedTorus,
+                "A cusped solid torus with an additional finite vertex "
+                "should not be representable in SnapPea format.");
         }
 
         void testVolume(NTriangulation& tri, const char* triName,
@@ -302,6 +436,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testVolume(n4_14,    "N 4_14",    3.9696478012, 9);
             testVolume(n4_9_2,   "N 4_9^2",   4.0597664256, 9);
             testVolume(n4_1_2_1, "N 4_1^2,1", 3.6638623767, 9);
+
+            // testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
+            // testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
         }
 };
 
