@@ -5,11 +5,11 @@ Required libraries:
     regina-jni.jar : link to calculation engine using JNI
     regina-corba.jar : link to calculation engine using CORBA
         (at least one of regina-jni | regina-corba is required)
-    btools.jar : miscellaneous utilities
+    btools.jar : miscellaneous utility classes
 
 Optional libraries:
 
     jython.jar : allows Jython scripting
-    jh.jar : JavaHelp internal help browser
+    jh.jar : JavaHelp embedded help browser
     regina-docs.jar : documentation to view using internal help browser
 

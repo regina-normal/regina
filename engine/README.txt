@@ -1,1 +1,1 @@
-This directory tree contains the engine sources.
+This directory tree contains the calculation engine sources.
