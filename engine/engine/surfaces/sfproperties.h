@@ -150,9 +150,6 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
          * Adds the given Euler characteristic to the set of allowable
          * Euler characteristics.  See getECs() for further details.
          *
-         * \pre The given Euler characteristic is not already in the
-         * allowable set.
-         *
          * @param ec the new allowable Euler characteristic.
          */
         void addEC(const NLargeInteger& ec);
