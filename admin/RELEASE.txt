@@ -17,7 +17,7 @@ License details:
     engine/engine/docs.h
     javaui/overview.html
     javaui/normal/Application.java
-    kdeui/src/reginaabout.h (ReginaAbout constructor, regCopyright)
+    kdeui/src/reginaabout.h (ReginaAbout constructor)
 
 Acknowledgements:
     docs/regina.sgml
