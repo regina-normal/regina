@@ -57,9 +57,11 @@ const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 const char* ReginaAbout::regLicense =
     "Copyright (c) 1999-2004, Ben Burton\n\n"
     "This program is distributed under the terms of the GPL v2.\n\n"
+    "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  The introductory chapter of the\n"
     "Regina reference manual includes a suggested form of reference.\n\n"
+    "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"
     "Free Software Foundation; either version 2 of the License, or (at your\n"
@@ -70,7 +72,13 @@ const char* ReginaAbout::regLicense =
     "Public License for more details.\n\n"
     "You should have received a copy of the GNU General Public License along\n"
     "with this program; if not, write to the Free Software Foundation, Inc.,\n"
-    "59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n";
+    "59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n\n"
+    "SNAPPEA KERNEL:\n\n"
+    "Since version 4.2 (December 2004), Regina includes portions of the\n"
+    "SnapPea kernel which it uses for certain geometric calculations.\n"
+    "SnapPea is copyright (c) 1991-2000 by Jeff Weeks, who has graciously\n"
+    "given permission for it to be distributed under the terms of the GNU\n"
+    "General Public License as described above.\n";
 
 ReginaAbout::ReginaAbout(const char* internalName) :
         KAboutData(internalName, regName, regVersion,
