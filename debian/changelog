@@ -5,7 +5,7 @@ regina-normal (3.2-1) unstable; urgency=low
     versions of libregina-engine.so so we can avoid libtool's relinking bug.
   * Bumped standards-version to 3.5.10.
 
- -- Ben Burton <bab@debian.org>  Wed, 25 Jun 2003 10:01:39 +1000
+ -- Ben Burton <bab@debian.org>  Sun, 22 Jun 2003 10:01:39 +1000
 
 regina-normal (3.1-2) unstable; urgency=low
 

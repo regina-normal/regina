@@ -8,7 +8,7 @@ Regina - A Normal Surface Theory Calculator
     for both the calculation engine and the Java user interface, see
     CHANGES.txt in the same directory as this file.
 
-Version 3.2  [ 25 June, 2003 ] - The post-thesis release!
+Version 3.2  [ 22 June, 2003 ] - The post-thesis release!
 
     Features:
         - Layered loops can be automatically constructed.

@@ -8,7 +8,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 3.2  [ 25 June, 2003 ] - The post-thesis release!
+Version 3.2  [ 22 June, 2003 ] - The post-thesis release!
     OVERALL:
         - Added file format documentation to reference manual.
         - Calculation engine test suite is much enhanced.
