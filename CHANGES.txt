@@ -12,8 +12,8 @@ Version 3.2  [ 22 June, 2003 ] - The post-thesis release!
     OVERALL:
         - Added file format documentation to reference manual.
         - Calculation engine test suite is much enhanced.
-        - Closed orientable and non-orientable censuses added to the list
-          of example files.
+        - Closed orientable census, closed non-orientable census and
+          splitting surface signature census added to example files.
         - PhD thesis submitted on 30 May, 2003!
     ENGINE:
         Overall structure:

@@ -21,8 +21,8 @@ Version 3.2  [ 22 June, 2003 ] - The post-thesis release!
         - Significant performance increase for 0-efficiency calculation,
           obtained by using quad space where possible.
     Miscellaneous:
-        - Added closed orientable and non-orientable censuses to
-          example files.
+        - Added closed orientable census, closed non-orientable census
+          and splitting surface signature census to example files.
         - File format is fully documented in the reference manual.
         - Calculation engine test suite much enhanced.
         - PhD thesis submitted on 30 May, 2003!
