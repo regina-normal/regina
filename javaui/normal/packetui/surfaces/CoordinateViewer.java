@@ -274,12 +274,11 @@ public class CoordinateViewer extends DefaultPacketViewer
         /**
          * The colour to use for green text.
          */
-        public static final Color green =
-            Color.green.darker().darker().darker();
+        private Color green = Color.green.darker().darker().darker();
         /**
          * The colour to use for red text.
          */
-        public static final Color red = Color.red.darker().darker();
+        private Color red = Color.red.darker().darker();
 
         /**
          * Returns the number of rows in the table.
@@ -347,8 +346,8 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 4:
                         if (surface.isVertexLinking())
                             return "Vtx Link";
-                        else if (surface.isVertical())
-                            return "Vertical";
+                        else if (surface.isCentral())
+                            return "Central";
                         else
                             return "";
                     default:
@@ -378,8 +377,8 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 2:
                         if (surface.isVertexLinking())
                             return "Vtx Link";
-                        else if (surface.isVertical())
-                            return "Vertical";
+                        else if (surface.isCentral())
+                            return "Central";
                         else
                             return "";
                     default:
