@@ -428,7 +428,7 @@
   <line># Output the homology of each triangulation.</line>
   <line>t = tri.getFirstTreeChild()</line>
   <line>while t != None:</line>
-  <line>	print t.getPacketLabel() + &quot;: &quot; + str(t.getHomologyH1())</line>
+  <line>	print t.getPacketLabel() + &quot;:&quot;, t.getHomologyH1()</line>
   <line>	t = t.getNextTreeSibling()</line>
 </packet> <!-- Homology Summary (Script) -->
 </packet> <!-- Container (Container) -->
