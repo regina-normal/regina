@@ -13,6 +13,9 @@ Version 4.1
     ENGINE:
         Class NProgress:
             - Added timing utilities getRealTime() and totalCPUTime().
+    USER INTERFACE:
+        - Updated the .desktop file and mimetype tests to work correctly
+          with KDE 3.2.
     UTILITIES:
         tricensus:
             - Fixed bug in which --genpairs created empty output files.

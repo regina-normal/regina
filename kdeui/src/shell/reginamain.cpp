@@ -206,10 +206,11 @@ bool ReginaMain::openURL(const KURL& url) {
         // Try to guess it from the mimetype.
         KMimeType::Ptr mimetype = KMimeType::findByURL(url);
         name = mimetype->name();
-        if (name == "text/xml" || name == "application/x-gzip" ||
+        if (name == "application/x-regina" || name == "text/xml" ||
+                name == "application/x-gzip" ||
                 name == "application/octet-stream")
             type = 'r';
-        else if (name.startsWith("text/"))
+        else if (name == "application/x-python" || name.startsWith("text/"))
             type = 'p';
         else
             name = mimetype->comment();
