@@ -15,6 +15,7 @@ SUBDIRS = \
   docs \
   examples \
   icons \
+  lib \
   pylib \
   scripts
 
