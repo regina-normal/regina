@@ -35,6 +35,9 @@
  *  - GNU g++ (Linux)
  *  - Borland C++ Builder (PC); testing out of date
  *  - CodeWarrior (Mac, PC); testing out of date
+ *
+ *  \todo \opt Get rid of config.h completely and replace it with flags in
+ *  \c Makefile.options.
  */
 
 #ifndef __CONFIG_H
