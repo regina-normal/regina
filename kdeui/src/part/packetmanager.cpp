@@ -40,7 +40,7 @@
 #include <klibloader.h>
 #include <klocale.h>
 #include <ktexteditor/document.h>
-#include <ktrader.h>
+#include <kuserprofile.h>
 
 using namespace regina;
 
@@ -116,9 +116,11 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
 KTextEditor::Document* PacketManager::createDocument() {
     KTextEditor::Document* ans = 0;
 
-    KTrader::OfferList offers = KTrader::self()->query("KTextEditor/Document");
-    if (offers.count() >= 1) {
-        KService::Ptr service = *offers.begin();
+    // TODO: There must be some way of doing this query so that system
+    // settings are honoured.
+    KService::Ptr service = KServiceTypeProfile::preferredService(
+        "KTextEditor/Document", QString::null);
+    if (service) {
         KLibFactory* libFactory = KLibLoader::self()->
             factory(service->library());
         if (libFactory)
