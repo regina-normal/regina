@@ -64,6 +64,7 @@ packages_corba = \
 	normal.engine.implementation.corba.Regina.Maths \
 	normal.engine.implementation.corba.Regina.Packet \
 	normal.engine.implementation.corba.Regina.Progress \
+	normal.engine.implementation.corba.Regina.Subcomplex \
 	normal.engine.implementation.corba.Regina.Surfaces \
 	normal.engine.implementation.corba.Regina.Triangulation \
 	normal.engine.implementation.corba.Regina \
