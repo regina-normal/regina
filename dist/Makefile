@@ -43,6 +43,7 @@ include ../Makefile.options
 include ../Makefile.sources
 include ../engine/Makefile.sources
 include ../javaui/Makefile.sources
+include ../utils/Makefile.sources
 
 REGINA_DIR = regina-$(REGINA_VERSION)
 
@@ -57,7 +58,7 @@ DOC_HTML_DIR = docs
 empty_src_dirs = bin $(DOC_HTML_DIR)/engine $(DOC_HTML_DIR)/javaui
 debian_src_mask = changelog control copyright *.README.Debian *.doc-base \
 	*.conf *.docs *.examples *.files *.init *.links *.menu *.mime \
-	*.overrides *.sh rules cvs.patch README.Packaging
+	*.overrides *.sh rules cvs.patch README.*
 dist_mask = Makefile* *.txt *.cpp insertstubreplace replacetabs stub*
 
 engine_dirs = $(dirs_engine_engine) $(dirs_engine_jni)
@@ -86,6 +87,8 @@ $(SRC_ARCHIVE):
 		$(patsubst %,$(REGINA_DIR)/javaui/%, \
 			$(java_mask) $(java_doc_sources) $(java_aux_mask) \
 			$(java_misc_src_mask)) \
+		$(patsubst %,$(REGINA_DIR)/utils/%, \
+			*.cpp *.h $(utils_misc_src_mask)) \
 		$(patsubst %,$(REGINA_DIR)/$(DOC_HTML_DIR)/%, $(misc_doc_mask)) \
 		$(patsubst %,$(REGINA_DIR)/%, \
 			$(scripts) $(misc_src_mask) \

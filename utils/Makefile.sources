@@ -1,0 +1,10 @@
+
+# Sets $(utils_misc_src_mask) to a file mask of all miscellaneous files in
+# this directory to be included in the source archive.  Files ending
+# in .cpp or .h and residing in this directory will already be placed in
+# the source archive and should not be included in this list.
+#
+# All locations must be relative to this directory.
+
+utils_misc_src_mask = Makefile* *.txt
+

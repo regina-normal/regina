@@ -22,15 +22,15 @@
 scripts = regina regina.bat scripts/reg*
 misc_src_mask = *.txt lib/*.txt docs/Makefile icons/regina* icons/*.txt \
 	Makefile Makefile-help* Makefile.options.* Makefile.sources \
-	examples/sample-misc.rga examples/*.gz examples/*.py examples/*.session \
-	examples/*.txt pylib/*.txt pylib/*.py *.sample
+	examples/*.rga examples/*.py examples/*.session examples/*.txt \
+	bin/*.txt scripts/*.txt pylib/*.txt pylib/*.py *.sample
 misc_bin_mask = *.txt lib/*.txt icons/regina* icons/*.txt \
-	examples/sample-misc.rga examples/*.gz examples/*.py examples/*.session \
-	examples/*.txt pylib/*.txt pylib/*.py *.sample
+	examples/*.rga examples/*.py examples/*.session examples/*.txt \
+	bin/*.txt scripts/*.txt pylib/*.txt pylib/*.py *.sample
 misc_doc_mask = *.hs *.jhm *.txt *.gif *.jpg *.png *.sgml *.dsl \
 	images/admon/*.txt images/admon/*.gif \
 	images/packet/*.gif images/packet/*.png \
 	images/shots/*.jpg images/shots/*.png
-gen_doc_mask = *.html *.1 *.5 *.7 \
+gen_doc_mask = *.html *.[1-8] \
 	engine/*.png engine/*.html engine/*.css engine/*.dot \
 	javaui/normal javaui/package-list javaui/*.html javaui/*.css
