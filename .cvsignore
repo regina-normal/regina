@@ -12,4 +12,5 @@ configure.ac
 libtool
 stamp-h
 stamp-h.in
+regina
 regina.conf
