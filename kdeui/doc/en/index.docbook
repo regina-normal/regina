@@ -38,6 +38,8 @@
   <!ENTITY java "<application>Java</application>">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY pi "<literal>Pi</literal>">
+  <!ENTITY ppirr
+   "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
   <!ENTITY python "<application>Python</application>">
   <!ENTITY snappea "<application>SnapPea</application>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">

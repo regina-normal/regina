@@ -82,7 +82,7 @@
  </biblioentry>
 
  <biblioentry id="bib-0-efficiency">
-  <abbrev>JR</abbrev>
+  <abbrev>JR1</abbrev>
   <authorgroup>
    <author>
     <firstname>William</firstname>
@@ -97,6 +97,24 @@
   <title>0-efficient triangulations of 3-manifolds</title>
   <edition>Preprint (math.GT/0207158)</edition>
   <date>July 2002</date>
+ </biblioentry>
+
+ <biblioentry id="bib-layeredlensspaces">
+  <abbrev>JR2</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>William</firstname>
+    <surname>Jaco</surname>
+   </author>
+   <author>
+    <firstname>J.</firstname>
+    <othername>Hyam</othername>
+    <surname>Rubinstein</surname>
+   </author>
+  </authorgroup>
+  <title>Layered triangulations of lens spaces</title>
+  <edition>In preparation</edition>
+  <date>2003</date>
  </biblioentry>
 
  <biblioentry id="bib-lackenby-taut">
