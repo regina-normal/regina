@@ -1,0 +1,163 @@
+<html>
+<head>
+    <title>Building Regina from Source</title>
+</head>
+<body bgcolor="#FFFFFF" text="#000000"
+    link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<h2><a name="contents">Building Regina from Source</a></h2>
+
+Building Regina from its sources can be either trivially simple or quite
+painstaking depending upon your system configuration.  With each new
+release the scripts that automatically detect your system configuration
+become more sophisticated, and hopefully Regina is thus becoming simple
+to build on more and more systems.
+<p>
+If Regina does not build directly out of the box for you, please
+<a href="mailto:regina-devel@lists.sourceforge.net">drop me an email</a>
+(including your <tt>config.log</tt> if possible) so that the automatic
+detection scripts can be made to work with your system and others like
+yours for the next release.
+<p>
+Basically the steps are as follows.
+<ul>
+    <li>Make sure you have installed all the necessary tools and
+    libraries as listed in the <a href="#sysreq">System
+    Requirements</a> table below.</tt>
+    <li>Download the source archive
+    <tt><b>regina-<i>version</i>_src.tgz</b></tt> from the
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=19698">Regina
+    download site</a>.</li>
+    <li>Unpack this source archive; it will expand into a directory
+    <tt><b>regina-<i>version</i>/</b></tt> on your machine.</li>
+    <li>From within this directory run <tt><b>./configure</b></tt>.  This will
+    run the automatic detection scripts that search for the necessary tools
+    and libraries on your system and work out how they can be used to
+    build Regina.</li>
+    <li>If the configure succeeds, run <tt><b>make</b></tt> to build Regina.
+    Then, as root, run <tt><b>make install</b></tt> to install Regina on your
+    system.</li>
+</ul>
+That's all there is to it.  A full set of instructions is included in the
+file <tt><b>README.txt</b></tt> which is bundled with the archive.
+Please do read it; it's short and it contains some important information.
+<p>
+If you are having trouble compiling or running Regina, you may
+check the <a href="docs/troubleshooting.html">troubleshooting
+page</a> to see if your problem is discussed there.  Of course you
+are also welcome to mail either myself or the users' mailing list
+(<i>regina-user@lists.sourceforge.net</i>) for assistance.
+
+<h2><a name="sysreq">System Requirements</a></h2>
+
+The tools and libraries that you will need installed before you can build
+Regina are listed in the table below.  All of these tools and libraries are
+available for most GNU/Linux distributions and are easily ported to
+other similar systems.
+<p>
+<b>It is highly recommended that you download prebuilt packages of
+these tools for your GNU/Linux distribution</b>, since this is most
+likely to provide standard installations in standard locations that
+Regina can easily find and use.  Where you will find such packages
+depends upon your distribution.  For instance, Debian packages can all
+be found on the <a href="http://packages.debian.org/">usual Debian
+servers</a>, Fedora Core packages can be found on the
+<a href="http://download.fedora.redhat.com/pub/fedora/linux/core/2/i386/os/Fedora/RPMS/">Fedora
+download servers</a> and so on.
+<p>
+The following table lists each requirement along with its Debian package
+name and a commonly-used RPM package name (though these tend to vary
+between different RPM-based distributions).  It also lists the website
+from which each piece of software can be obtained directly if no pre-built
+packages are available.
+<p>
+Please note that if you get an error at build time saying that it cannot
+link with <tt>-lfoo</tt> for some library <tt>foo</tt>, you probably
+just need to install another development package on your system.  For
+instance, Fedora users who get the error
+"<tt>/usr/bin/ld: cannot find -lselinux</tt>"
+need to install the additional package <i>libselinux-devel</i>, and
+users who get the error "<tt>/usr/bin/ld: cannot find -ljpeg</tt>"
+need to install the package <i>libjpeg-devel</i>.
+
+<p align=center>
+Legend:
+<table border=1 align=center><tr>
+        <td bgcolor="#FFA0A0">Required</td>
+        <td bgcolor="#80FF80">Recommended</td>
+        <td bgcolor="#FFFF80">Optional</td>
+</tr></table>
+
+<p>
+<table border=1>
+<tr><td align=center><b>Component</b></td><td align=center><b>Required For</b></td>
+    <td align=center><b>Version</b></td>
+    <td align=center><b>Package Names / Website</b></td></tr>
+<tr><td bgcolor="#FFA0A0">GNU multiprecision arithmetic library <em>(libgmp)</em></td>
+    <td bgcolor="#FFA0A0">Calculation engine</td>
+    <td>&gt;= 3</td>
+    <td>libgmp3-dev (DEB)<br>gmp-devel (RPM)<br>
+    <a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a>
+    </td></tr>
+<tr><td bgcolor="#FFA0A0">GNOME XML library <em>(libxml2)</em></td>
+    <td bgcolor="#FFA0A0">Calculation engine</td>
+    <td>&gt;= 2.0.0</td>
+    <td>libxml2-dev (DEB)<br>libxml2-devel (RPM)<br>
+    <a href="ftp://ftp.gnome.org/pub/gnome/sources/libxml2/">ftp://ftp.gnome.org/.../libxml2/</a>
+    </td></tr>
+<tr><td bgcolor="#80FF80">Popt command-line parsing library <em>(libpopt)</em></td>
+    <td bgcolor="#80FF80">Command-line utilities</td>
+    <td>&gt;= 1.3</td>
+    <td>libpopt-dev (DEB)<br>popt (RPM)<br>
+    <a href="ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.1.x/">ftp://ftp.redhat.com/.../rpm-X.Y.x/</a>
+    </td></tr>
+<tr><td bgcolor="#80FF80">KDE libraries <em>(kdelibs)</em></td>
+    <td bgcolor="#80FF80">Graphical user interface</td>
+    <td>KDE &gt;= 3.1 with Qt &gt;= 3.2</td>
+    <td>kdelibs4-dev + libqt3-mt-dev (DEB)<br>
+    kdelibs-devel + qt-devel (RPM)<br>
+    <a href="http://www.kde.org/">http://www.kde.org/</a>
+    </td></tr>
+<tr><td bgcolor="#FFFF80">Python libraries <em>(libpython)</em></td>
+    <td bgcolor="#FFFF80">Python scripting</td>
+    <td>&gt;= 2.2</td>
+    <td>libpython2.3-dev (DEB)<br>python-devel (RPM)<br>
+    <a href="http://www.python.org/">http://www.python.org/</a><br>
+    <em>(note that some RPM-based systems also require libselinux-devel)</em>
+    </td></tr>
+<tr><td bgcolor="#FFFF80">Boost.Python libraries <em>(libboost_python)</em></td>
+    <td bgcolor="#FFFF80">Python scripting</td>
+    <td>&gt;= 1.30.1</td>
+    <td>libboost-python-dev (DEB)<br>boost-devel (RPM)<br>
+    <a href="http://www.boost.org/">http://www.boost.org/</a>
+    </td></tr>
+<tr><td bgcolor="#FFFF80">Perl</td>
+    <td bgcolor="#FFFF80">Python scripting</td>
+    <td>&gt;= 5</td>
+    <td>perl (DEB)<br>perl (RPM)<br>
+    <a href="http://www.perl.com/pub/a/language/info/software.html">http://www.perl.com/.../software.html</a>
+    </td></tr>
+<tr><td bgcolor="#FFFF80">Doxygen</td>
+    <td bgcolor="#FFFF80">Calculation engine API docs</td>
+    <td>&gt;= 1.2.2</td>
+    <td>doxygen (DEB)<br>doxygen (RPM)<br>
+    <a href="http://www.stack.nl/~dimitri/doxygen/">http://www.stack.nl/~dimitri/doxygen/</a>
+    </td></tr>
+<tr><td bgcolor="#FFFF80">CppUnit</td>
+    <td bgcolor="#FFFF80">Test suite</td>
+    <td>&gt;= 1.8.0</td>
+    <td>cppunit (DEB)<br>
+    <a href="http://cppunit.sourceforge.net/">http://cppunit.sourceforge.net/</a>
+    </td></tr>
+</table>
+
+<p>
+<a href="index.html"><img src="return.jpg"
+    alt="Back to main page ..."
+    border="0" vspace="10"  width="32" height="32"
+    align="middle"></a>
+<a href="index.html">Back to main page ...</a></p>
+
+</body>
+</html>
+
