@@ -97,8 +97,8 @@ export CLASSPATH_SEP := :
 #       compiler needs to know where the core Java classes are, this is
 #       the place to tell them.
 
-export BTOOLS := lib/btools.jar
-export JYTHON := lib/jython.jar
+export BTOOLS := /usr/local/java/jar/btools.jar
+export JYTHON := /usr/local/java/jar/jython.jar
 export EXTRA_CLASSES :=
 	# (Most Java compilers already know where their base classes are.)
 #export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
