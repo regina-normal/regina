@@ -182,6 +182,12 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         new ReginaFilePrefItem(censusPrefs->listFiles, *it);
     censusPrefs->updateActiveCount();
 
+    for (ReginaFilePrefList::const_iterator it =
+            prefSet.pythonLibraries.begin();
+            it != prefSet.pythonLibraries.end(); it++)
+        new ReginaFilePrefItem(pythonPrefs->listFiles, *it);
+    pythonPrefs->updateActiveCount();
+
     // Finish off.
     setHelp("options", "regina");
 }
@@ -259,6 +265,12 @@ void ReginaPreferences::slotApply() {
     for (QListViewItem* item = censusPrefs->listFiles->firstChild();
             item; item = item->nextSibling())
         prefSet.censusFiles.push_back(
+            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
+
+    prefSet.pythonLibraries.clear();
+    for (QListViewItem* item = pythonPrefs->listFiles->firstChild();
+            item; item = item->nextSibling())
+        prefSet.pythonLibraries.push_back(
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
 
     // Save these preferences to the global configuration.
@@ -390,11 +402,13 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
 }
 
 ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
-    QHBox* box = new QHBox(this);
-    box->setSpacing(5);
-
     // Set up the active file count.
     activeCount = new QLabel(this);
+
+    // Prepare the main area.
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+    setStretchFactor(box, 1);
 
     // Set up the list view.
     listFiles = new KListView(box);
@@ -457,9 +471,6 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
         "census files."));
 
     updateButtons();
-
-    // Add some space at the end.
-    setStretchFactor(new QWidget(this), 1);
 }
 
 void ReginaPrefCensus::updateActiveCount() {
@@ -470,11 +481,11 @@ void ReginaPrefCensus::updateActiveCount() {
             count++;
 
     if (count == 0)
-        activeCount->setText(i18n("No active files"));
+        activeCount->setText(i18n("No active census data files"));
     else if (count == 1)
-        activeCount->setText(i18n("1 active file"));
+        activeCount->setText(i18n("1 active census data file"));
     else
-        activeCount->setText(i18n("%1 active files").arg(count));
+        activeCount->setText(i18n("%1 active census data files").arg(count));
 }
 
 void ReginaPrefCensus::updateButtons() {
@@ -556,10 +567,150 @@ void ReginaPrefCensus::restoreDefaults() {
 }
 
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
-    new QLabel(i18n("Python scripting is not yet implemented."), this);
+    // Set up the active file count.
+    activeCount = new QLabel(this);
 
-    // Add some space at the end.
-    setStretchFactor(new QWidget(this), 1);
+    // Prepare the main area.
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+    setStretchFactor(box, 1);
+
+    // Set up the list view.
+    listFiles = new KListView(box);
+    box->setStretchFactor(listFiles, 1);
+    listFiles->header()->hide();
+    listFiles->addColumn(QString::null);
+    listFiles->setSorting(-1);
+    listFiles->setSelectionModeExt(KListView::Extended);
+    listFiles->setItemsMovable(true);
+    QWhatsThis::add(listFiles, i18n("The list of Python libraries to be "
+        "loaded at the beginning of each new Python session.  Note that "
+        "libraries in this list may be deactivated, "
+        "which means that they will not be loaded."));
+    connect(listFiles, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
+
+    // Set up the button panel.
+    QVBox* vBox = new QVBox(box);
+    vBox->setSpacing(5);
+
+    QPushButton* btnAdd = new QPushButton(SmallIconSet("insert_table_row"),
+        i18n("Add..."), vBox);
+    btnAdd->setFlat(true);
+    connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
+    QWhatsThis::add(btnAdd, i18n("Add a new Python library.  "
+        "This list contains the Python libraries to be loaded at "
+        "the beginning of each new Python session."));
+
+    btnRemove = new QPushButton(SmallIconSet("delete_table_row"),
+        i18n("Remove"), vBox);
+    btnRemove->setFlat(true);
+    connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
+    QWhatsThis::add(btnRemove, i18n("Remove the selected Python libraries.  "
+        "This list contains the Python libraries to be loaded at "
+        "the beginning of each new Python session."));
+
+    btnActivate = new QPushButton(SmallIconSet("ok"),
+        i18n("Activate"), vBox);
+    btnActivate->setFlat(true);
+    connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
+    QWhatsThis::add(btnActivate, i18n("Activate the selected Python "
+        "libraries.  When a new Python session is started, only the active "
+        "libraries in this list will be loaded."));
+
+    btnDeactivate = new QPushButton(SmallIconSet("no"),
+        i18n("Deactivate"), vBox);
+    btnDeactivate->setFlat(true);
+    connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
+    QWhatsThis::add(btnDeactivate, i18n("Deactivate the selected Python "
+        "libraries.  When a new Python session is started, only the active "
+        "libraries in this list will be loaded."));
+
+    setStretchFactor(new QWidget(vBox), 1);
+
+    updateButtons();
+}
+
+void ReginaPrefPython::updateActiveCount() {
+    long count = 0;
+    for (QListViewItem* item = listFiles->firstChild(); item;
+            item = item->nextSibling())
+        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().active)
+            count++;
+
+    if (count == 0)
+        activeCount->setText(i18n("No active Python libraries"));
+    else if (count == 1)
+        activeCount->setText(i18n("1 active Python library"));
+    else
+        activeCount->setText(i18n("%1 active Python libraries").arg(count));
+}
+
+void ReginaPrefPython::updateButtons() {
+    bool hasSelection = ! (listFiles->selectedItems().isEmpty());
+    btnRemove->setEnabled(hasSelection);
+    btnActivate->setEnabled(hasSelection);
+    btnDeactivate->setEnabled(hasSelection);
+}
+
+void ReginaPrefPython::add() {
+    QStringList files = KFileDialog::getOpenFileNames(QString::null,
+        FILTER_PYTHON_LIBRARIES, this, i18n("Add Python Libraries"));
+    if (! files.isEmpty()) {
+        for (QStringList::const_iterator it = files.begin();
+                it != files.end(); it++)
+            new ReginaFilePrefItem(listFiles, ReginaFilePref(*it));
+        updateActiveCount();
+    }
+}
+
+void ReginaPrefPython::remove() {
+    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    if (selection.isEmpty())
+        KMessageBox::error(this,
+            i18n("No libraries have been selected to remove."));
+    else {
+        for (QListViewItem* item = selection.first(); item;
+                item = selection.next())
+            delete item;
+        updateActiveCount();
+    }
+}
+
+void ReginaPrefPython::activate() {
+    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    if (selection.isEmpty())
+        KMessageBox::error(this,
+            i18n("No libraries have been selected to activate."));
+    else {
+        bool done = false;
+        for (QListViewItem* item = selection.first(); item;
+                item = selection.next())
+            done |= dynamic_cast<ReginaFilePrefItem*>(item)->activateFile();
+        if (done)
+            updateActiveCount();
+        else
+            KMessageBox::sorry(this,
+                i18n("All of the selected libraries are already active."));
+    }
+}
+
+void ReginaPrefPython::deactivate() {
+    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    if (selection.isEmpty())
+        KMessageBox::error(this,
+            i18n("No libraries have been selected to deactivate."));
+    else {
+        bool done = false;
+        for (QListViewItem* item = selection.first(); item;
+                item = selection.next())
+            done |= dynamic_cast<ReginaFilePrefItem*>(item)->deactivateFile();
+        if (done)
+            updateActiveCount();
+        else
+            KMessageBox::sorry(this,
+                i18n("All of the selected libraries have already been "
+                    "deactivated."));
+    }
 }
 
 #include "reginapref.moc"

@@ -109,6 +109,23 @@ struct ReginaPrefSet {
      * Returns the default census files shipped with Regina.
      */
     static ReginaFilePrefList defaultCensusFiles();
+
+    /**
+     * Returns the full path to the python libraries configuration file.
+     */
+    static QString pythonLibrariesConfig();
+
+    /**
+     * Reads the python libraries from the regina-python configuration
+     * file.
+     */
+    bool readPythonLibraries();
+
+    /**
+     * Writes the python libraries to the regina-python configuration
+     * file.
+     */
+    bool writePythonLibraries() const;
 };
 
 inline ReginaFilePref::ReginaFilePref() : active(true) {

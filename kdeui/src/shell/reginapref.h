@@ -171,8 +171,23 @@ class ReginaPrefCensus : public QVBox {
 class ReginaPrefPython : public QVBox {
     Q_OBJECT
 
+    private:
+        QLabel* activeCount;
+        KListView* listFiles;
+        QPushButton* btnRemove;
+        QPushButton* btnActivate;
+        QPushButton* btnDeactivate;
+
     public:
         ReginaPrefPython(QWidget* parent = 0);
+        void updateActiveCount();
+
+    public slots:
+        void updateButtons();
+        void add();
+        void remove();
+        void activate();
+        void deactivate();
 
     friend class ReginaPreferences;
 };

@@ -435,6 +435,8 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.triSurfacePropsThreshold = config->readUnsignedNumEntry(
         "SurfacePropsThreshold", 6);
 
+    globalPrefs.readPythonLibraries();
+
     emit preferencesChanged(globalPrefs);
 }
 
@@ -500,6 +502,8 @@ void ReginaMain::saveOptions() {
 
     config->writeEntry("SurfacePropsThreshold",
         globalPrefs.triSurfacePropsThreshold);
+
+    globalPrefs.writePythonLibraries();
 
     config->sync();
 
