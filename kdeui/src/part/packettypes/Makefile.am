@@ -17,6 +17,7 @@ noinst_HEADERS = \
 	ncontainerui.h \
 	nscriptui.h \
 	nscriptvaritems.h \
+	nsurfacefiltercreator.h \
 	ntextui.h
 
 libpackettypes_la_SOURCES = \
@@ -26,6 +27,7 @@ libpackettypes_la_SOURCES = \
 	ncontainerui.cpp \
 	nscriptui.cpp \
 	nscriptvaritems.cpp \
+	nsurfacefiltercreator.cpp \
 	ntextui.cpp
 
 METASOURCES = AUTO

@@ -53,6 +53,11 @@ namespace regina {
 class PacketCreator {
     public:
         /**
+         * Virtual destructor.
+         */
+        virtual ~PacketCreator();
+
+        /**
          * Returns the main interface component for this packet creator.
          * This may be 0 if there are no non-generic interface elements
          * required.
@@ -96,6 +101,9 @@ class BasicPacketCreator : public PacketCreator {
             return new T();
         }
 };
+
+inline PacketCreator::~PacketCreator() {
+}
 
 inline QWidget* PacketCreator::getInterface() {
     return 0;

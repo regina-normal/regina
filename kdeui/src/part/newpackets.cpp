@@ -37,6 +37,7 @@
 #include "packettreeview.h"
 #include "reginapart.h"
 #include "packettypes/nanglestructurecreator.h"
+#include "packettypes/nsurfacefiltercreator.h"
 
 #include <klocale.h>
 
@@ -56,7 +57,8 @@ void ReginaPart::newContainer() {
 }
 
 void ReginaPart::newFilter() {
-    unimplemented();
+    newPacket(new NSurfaceFilterCreator(), 0,
+        i18n("New Normal Surface Filter"), i18n("Surface Filter"));
 }
 
 void ReginaPart::newNormalSurfaces() {
