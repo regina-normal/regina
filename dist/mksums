@@ -38,7 +38,7 @@ for i; do
 done
 
 # Create a temporary file to contain the entire md5sum message.
-plaintext=`mktemp -t md5sums.XXXXXXXXXX` || plaintext=
+plaintext="`mktemp -t md5sums.XXXXXXXXXX`" || plaintext=
 if [ -z "$plaintext" ]; then
   echo "Error creating temporary file."
   exit 1
