@@ -249,6 +249,14 @@ void NCensus::matchFacePairs() {
                         break;
                     }
             }
+
+            // If the first tetrahedron doesn't glue to itself and this
+            // is not the first tetrahedron, it can't glue to itself either.
+            // (Note that we already know there is at least 1 tetrahedron.)
+            if (dest(trying).tet == trying.tet && dest(trying).face < 3 &&
+                    trying.tet > 0)
+                if (dest(0, 0).tet != 0)
+                    dest(trying).face = 3;
         }
     }
 
