@@ -1,0 +1,6 @@
+# This script is not meant to be run.
+regina-normal: script-not-executable ./usr/share/regina-normal/scripts/runscript.py
+regina-normal: unusual-interpreter ./usr/share/regina-normal/scripts/runscript.py #!/bin/false
+
+# KDE menu items.
+regina-normal: menu-item-contains-unknown-tag kderemove /usr/lib/menu/regina-normal:6
