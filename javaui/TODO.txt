@@ -32,6 +32,7 @@ Main Window:
 	Implement undo.
 	Use actions in NormalFrame and SystemPane.
 	Allow filenames to be passed to the GUI from the command line.
+	Have the GUI refuse to export invalid triangulations.
 
 Menus:
 	Provide NTriangulation::isIsomorphicTo().
