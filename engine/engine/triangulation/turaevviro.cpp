@@ -216,13 +216,13 @@ std::complex<double> NTriangulation::turaevViro(unsigned long r,
     // Do some basic parameter checks.
     if (r < 3)
         return 0;
-    if (whichRoot >= r)
+    if (whichRoot >= 2 * r)
         return 0;
     if (gcd(r, whichRoot) > 1)
         return 0;
 
     // Set up our initial data.
-    double angle = (2 * M_PI * whichRoot) / r;
+    double angle = (M_PI * whichRoot) / r;
     InitialData init(r, angle);
 
     // Run through all admissible colourings.
@@ -250,12 +250,12 @@ std::complex<double> NTriangulation::turaevViro(unsigned long r,
             valColour *= valColour;
             for (i = 0; i < tetrahedra.size(); i++)
                 valColour *= init.mod(
-                    getEdgeIndex(tetrahedra[i]->getEdge(0)),
-                    getEdgeIndex(tetrahedra[i]->getEdge(1)),
-                    getEdgeIndex(tetrahedra[i]->getEdge(2)),
-                    getEdgeIndex(tetrahedra[i]->getEdge(5)),
-                    getEdgeIndex(tetrahedra[i]->getEdge(4)),
-                    getEdgeIndex(tetrahedra[i]->getEdge(3))
+                    colour[getEdgeIndex(tetrahedra[i]->getEdge(0))],
+                    colour[getEdgeIndex(tetrahedra[i]->getEdge(1))],
+                    colour[getEdgeIndex(tetrahedra[i]->getEdge(3))],
+                    colour[getEdgeIndex(tetrahedra[i]->getEdge(5))],
+                    colour[getEdgeIndex(tetrahedra[i]->getEdge(4))],
+                    colour[getEdgeIndex(tetrahedra[i]->getEdge(2))]
                     );
 
             ans += valColour;
