@@ -145,12 +145,21 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
  * allocated and placed in \a results.  Their deallocation is the
  * responsibility of whoever called this routine.
  *
- * The given cone is represented by a list of its extremal rays.
- * Conditions upon its structure are identical to those for
+ * The given cone is represented by a list of its extremal rays and a
+ * list of hyperplanes that determine its faces.  Specifically the list
+ * of face hyperplanes must be a set of hyperplanes passing through the
+ * origin for which the actual faces of the cone are determined by
+ * intersecting this set of hyperplanes with some subspace of the entire
+ * vector space.  Note that this list of hyperplanes might well be the
+ * faces themselves.
+ *
+ * Conditions upon the structure of the cone and the ray and face lists
+ * are identical to those for
  * intersectCone(const NDoubleList<NConeRay*>&, const NMatrixInt&, bool).
  *
- * The hyperplane must pass through the origin, and is represented by
- * the vector of a ray perpendicular to it.
+ * The hyperplane whose intersection we will take with the cone must pass
+ * through the origin, and is represented by the vector of a ray
+ * perpendicular to it.
  *
  * The resulting extremal rays are guaranteed not to contain any
  * duplicates or redundancies.
@@ -158,8 +167,8 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
  * If \a testCompatibility is set to \c true, only "valid" extremal rays
  * as defined by NConeRay::isCompatibleWith() will be found.
  *
- * \pre The cone described by \a oldRays satisfies the
- * structural requirements given above.
+ * \pre The cone described by \a oldRays and \a faces is convex and
+ * satisfies the structural requirements given above.
  * \pre The list \a oldRays of extremal rays does not
  * contain any duplicates or redundancies.
  * \pre The list \a results is empty.
@@ -172,12 +181,17 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
  * be placed.
  * @param oldRays the extremal rays defining the cone to intersect with
  * the given hyperplane.
+ * @param faces a list of hyperplanes that determine the faces of the
+ * given cone, as described above; each hyperplane is represented by
+ * the vector of a ray perpendicular to it.  Note that this list is
+ * allowed to contain duplicates or redundancies.
  * @param hyperplane the hyperplane to intersect with the given cone.
  * @param testCompatibility \c true if we are to only find "valid" extremal
  * rays as defined by NConeRay::isCompatibleWith().
  */
 void intersectCone(NDoubleList<NConeRay*>& results,
     const NDoubleList<NConeRay*>& oldRays,
+    const NDoubleList<NVector<NLargeInteger>*>& faces,
     const NConeRay& hyperplane,
     bool testCompatibility);
 
@@ -188,10 +202,13 @@ void intersectCone(NDoubleList<NConeRay*>& results,
  * returned.  The deallocation of both the rays and the list is the
  * responsibility of whoever called this routine.
  *
- * The given cone is represented by a list of its extremal rays.
- * It should be a cone that is obtained by intersecting the non-negative
- * cone in the corresponding coordinate space
- * with some previous linear subspace.
+ * The given cone is represented by a list of its extremal rays and a
+ * list of hyperplanes that determine its faces.  Specifically the list
+ * of face hyperplanes must be a set of hyperplanes passing through the
+ * origin for which the actual faces of the cone are determined by
+ * intersecting this set of hyperplanes with some subspace of the entire
+ * vector space.  Note that this list of hyperplanes might well be the
+ * faces themselves.
  *
  * The new linear subspace to intersect is represented by a matrix in
  * which each row represents a hyperplane through
@@ -213,8 +230,8 @@ void intersectCone(NDoubleList<NConeRay*>& results,
  *
  * The algorithm used is a modified double descriptor method.
  *
- * \pre The cone described by \a oldRays satisfies the
- * structural requirements given above.
+ * \pre The cone described by \a oldRays and \a faces is convex and
+ * satisfies the structural requirements given above.
  * \pre The list \a oldRays of extremal rays does not
  * contain any duplicates or redundancies.
  * \pre If \a testCompatibility is passed as \c true, then
@@ -226,6 +243,10 @@ void intersectCone(NDoubleList<NConeRay*>& results,
  *
  * @param oldRays the extremal rays defining the cone to intersect with
  * the given subspace.
+ * @param faces a list of hyperplanes that determine the faces of the
+ * given cone, as described above; each hyperplane is represented by
+ * the vector of a ray perpendicular to it.  Note that this list is
+ * allowed to contain duplicates or redundancies.
  * @param subspace a matrix whose rows are hyperplanes whose intersection
  * defines the subspace to intersect with the given cone.
  * @param testCompatibility \c true if we are to only find "valid" extremal
@@ -236,6 +257,7 @@ void intersectCone(NDoubleList<NConeRay*>& results,
  */
 NDoubleList<NConeRay*>* intersectCone(
     const NDoubleList<NConeRay*>& oldRays,
+    const NDoubleList<NVector<NLargeInteger>*>& faces,
     const NMatrixInt& subspace,
     bool testCompatibility);
 

@@ -29,6 +29,7 @@
 #include "angle/nanglestructurelist.h"
 #include "triangulation/ntriangulation.h"
 #include "maths/nmatrixint.h"
+#include "maths/nvectorunit.h"
 #include "surfaces/nnormalsurface.h"
 #include "file/nfile.h"
 
@@ -87,8 +88,18 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     vector->setElement(nCoords - 1, NLargeInteger::one);
     originalCone.addLast(vector);
 
+    // Form the face list.
+    NDoubleList<NVector<NLargeInteger>*> faces;
+    for (index = 0; index < nCoords - 1; index++)
+        faces.addLast(new NVectorUnit<NLargeInteger>(nCoords, index));
+    NVectorDense<NLargeInteger>* finalFace =
+        new NVectorDense<NLargeInteger>(nCoords, NLargeInteger::one);
+    finalFace->setElement(nCoords - 1, -startValue);
+    faces.addLast(finalFace);
+
     // Find the angle structures.
-    NDoubleList<NConeRay*>* ans = intersectCone(originalCone, eqns, false);
+    NDoubleList<NConeRay*>* ans = intersectCone(originalCone, faces,
+        eqns, false);
     for (NDoubleListIterator<NConeRay*> it(*ans); ! it.done(); it++) {
         vector = (NAngleStructureVector*)(*it);
         structures.addLast(new NAngleStructure(owner, vector));
@@ -96,6 +107,7 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
 
     // Tidy up.
     originalCone.flushAndDelete();
+    faces.flushAndDelete();
     delete ans;
 }
 

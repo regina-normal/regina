@@ -50,15 +50,15 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, a, t) \
     case NNormalSurfaceList::id_name: \
-        return class::createNonNegativeCone(triangulation);
+        class::createNonNegativeCone(triangulation, rays, faces); break;
 
-NDoubleList<NConeRay*>* createNonNegativeCone(
-        NTriangulation* triangulation, int flavour) {
+void createNonNegativeCone(NTriangulation* triangulation, int flavour,
+        NDoubleList<NConeRay*>& rays,
+        NDoubleList<NVector<NLargeInteger>*>& faces) {
     switch(flavour) {
         // Import cases from the flavour registry.
         #include "surfaces/flavourregistry.h"
     }
-    return 0;
 }
 
 #undef REGISTER_FLAVOUR
@@ -80,12 +80,14 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
 
     // Form the matching equations and starting cone.
     NMatrixInt* eqns = makeMatchingEquations(triang, newFlavour);
-    NDoubleList<NConeRay*>* originalCone =
-        createNonNegativeCone(triang, newFlavour);
+
+    NDoubleList<NConeRay*> originalCone;
+    NDoubleList<NVector<NLargeInteger>*> faces;
+    createNonNegativeCone(triang, newFlavour, originalCone, faces);
 
     // Find the normal surfaces.
     NDoubleList<NConeRay*>* ans =
-        intersectCone(*originalCone, *eqns, embeddedOnly);
+        intersectCone(originalCone, faces, *eqns, embeddedOnly);
     NDoubleListIterator<NConeRay*> it(*ans);
     NNormalSurfaceVector* s;
     if (allowsAlmostNormal()) {
@@ -104,8 +106,8 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
             it++;
         }
     }
-    originalCone->flushAndDelete();
-    delete originalCone;
+    originalCone.flushAndDelete();
+    faces.flushAndDelete();
     delete ans;
     delete eqns;
 }

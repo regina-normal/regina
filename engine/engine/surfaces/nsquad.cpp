@@ -33,6 +33,7 @@
 #include "utilities/nqueue.h"
 #include "maths/nmatrixint.h"
 #include "maths/nmatrixfield.h"
+#include "maths/nvectorunit.h"
 #include "triangulation/ntriangulation.h"
 
 bool NNormalSurfaceVectorQuad::isCompatibleWith(const NConeRay& other) const {
@@ -56,19 +57,21 @@ bool NNormalSurfaceVectorQuad::isCompatibleWith(const NConeRay& other) const {
     return true;
 }
 
-NDoubleList<NConeRay*>* NNormalSurfaceVectorQuad::
-        createNonNegativeCone(NTriangulation* triangulation) {
+void NNormalSurfaceVectorQuad::createNonNegativeCone(
+        NTriangulation* triangulation,
+        NDoubleList<NConeRay*>& rays,
+        NDoubleList<NVector<NLargeInteger>*>& faces) {
     unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();
-    NDoubleList<NConeRay*>* ans = new NDoubleList<NConeRay*>;
 
-    // Fill the list with unit vectors.
+    // Fill the lists with unit vectors.
     NNormalSurfaceVector* vector;
     for (unsigned long i=0; i<nCoords; i++) {
-           vector = new NNormalSurfaceVectorQuad(nCoords);
-           vector->setElement(i, NLargeInteger::one);
-           ans->addLast(vector);
-       }
-    return ans;
+        vector = new NNormalSurfaceVectorQuad(nCoords);
+        vector->setElement(i, NLargeInteger::one);
+        rays.addLast(vector);
+
+        faces.addLast(new NVectorUnit<NLargeInteger>(nCoords, i));
+    }
 }
 
 NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(

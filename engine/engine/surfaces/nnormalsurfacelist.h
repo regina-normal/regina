@@ -189,18 +189,24 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
 };
 
 /**
- * Returns a newly allocated list of newly allocated rays representing
+ * Fills the given lists with newly allocated rays and faces representing
  * the cone in the given flavour of coordinate system obtained by
  * setting all coordinates non-negative.
  *
- * The list will contain the extremal rays of this cone, each being a
- * unit vector along a coordinate axis.  They will be placed in the list
- * in order from the unit vector along the 0th coordinate axis to the
- * last, and will be all of the subclass of NNormalSurfaceVector
+ * The \a rays list will be filled with the extremal rays of this cone,
+ * each being a unit vector along a coordinate axis.  They will be placed
+ * in the list in order from the unit vector along the 0th coordinate axis
+ * to the last, and will all be of the subclass of NNormalSurfaceVector
  * corresponding to the given flavour of coordinate system.
  *
- * The resulting list of extremal rays is guaranteed not to contain any
- * duplicates or redundancies.
+ * The \a faces list will be filled with vectors perpendicular to the
+ * hyperplanes that make up the faces of this cone.  Each of these
+ * vectors will also be a unit vector along a coordinate axis.  These
+ * vectors will be placed in the list in the same order as the rays, and
+ * will all be of class NVectorUnit.
+ *
+ * The resulting lists of extremal rays and faces are guaranteed not to
+ * contain any duplicates or redundancies.
  *
  * \ifaces Not present.
  *
@@ -209,11 +215,15 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
  * @param flavour the flavour of coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NNormalSurfaceList.
- * @return a newly allocated list of newly allocated rays representing
- * the extremal rays of the non-negative cone.
+ * @param rays the list to fill with the newly allocated extremal rays;
+ * note that this list will not be emptied at the beginning of this
+ * routine.
+ * @param faces the list to fill with the newly allocated face perpendiculars;
+ * note that this list will not be emptied at the beginning of this
+ * routine.
  */
-NDoubleList<NConeRay*>* createNonNegativeCone(
-        NTriangulation* triangulation, int flavour);
+void createNonNegativeCone(NTriangulation* triangulation, int flavour,
+    NDoubleList<NConeRay*>& rays, NDoubleList<NVector<NLargeInteger>*>& faces);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given flavour of coordinate system.

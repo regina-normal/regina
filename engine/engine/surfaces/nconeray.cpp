@@ -63,6 +63,7 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
 
 void intersectCone(NDoubleList<NConeRay*>& results,
         const NDoubleList<NConeRay*>& oldRays,
+        const NDoubleList<NVector<NLargeInteger>*>& faces,
         const NConeRay& hyperplane,
         bool testCompatibility) {
     if (oldRays.size() == 0)
@@ -76,7 +77,6 @@ void intersectCone(NDoubleList<NConeRay*>& results,
     // Rays lying within the hyperplane will be added to the new
     // solution set.
     NDoubleListIterator<NConeRay*> it(oldRays);
-    unsigned nCoords = (*it)->size();
     NLargeInteger dot;
     while (! it.done()) {
         dot = hyperplane * (**it);
@@ -95,8 +95,9 @@ void intersectCone(NDoubleList<NConeRay*>& results,
     // One can prove that no ray will ever have been added to the
     // solution set twice.
     NDoubleListIterator<NConeRay*> posit, negit;
+    NDoubleListIterator<NVector<NLargeInteger>*> faceit;
+    NVector<NLargeInteger>* face;
     bool adjacent, hasCommonFaces;
-    unsigned i;
     posit.init(pos);
     while (! posit.done()) {
         negit.init(neg);
@@ -118,12 +119,14 @@ void intersectCone(NDoubleList<NConeRay*>& results,
                     continue;
                 }
                 hasCommonFaces = true;
-                for (i=0; i<nCoords; i++)
-                    if ((**posit)[i] == 0 && (**negit)[i] == 0
-                            && (**it)[i] != 0) {
+                for (faceit.init(faces); ! faceit.done(); faceit++) {
+                    face = *faceit;
+                    if ((*face) * (**posit) == 0 && (*face) * (**negit) == 0 &&
+                            (*face) * (**it) != 0) {
                         hasCommonFaces = false;
                         break;
                     }
+                }
                 if (hasCommonFaces) {
                     adjacent = false;
                     break;
@@ -144,6 +147,7 @@ void intersectCone(NDoubleList<NConeRay*>& results,
 
 NDoubleList<NConeRay*>* intersectCone(
         const NDoubleList<NConeRay*>& oldRays,
+        const NDoubleList<NVector<NLargeInteger>*>& faces,
         const NMatrixInt& subspace,
         bool testCompatibility) {
     unsigned nEqns = subspace.rows();
@@ -168,12 +172,12 @@ NDoubleList<NConeRay*>* intersectCone(
     list[0] = new NDoubleList<NConeRay*>;
     list[1] = new NDoubleList<NConeRay*>;
     int workingList = 0;
-    intersectCone(*list[0], oldRays,
+    intersectCone(*list[0], oldRays, faces,
         NVectorMatrixRow<NLargeInteger>(subspace, 0), testCompatibility);
     
     // Now run around intersecting each extra hyperplane as it comes.
     for (unsigned i=1; i<nEqns; i++) {
-        intersectCone(*list[1-workingList], *list[workingList], 
+        intersectCone(*list[1-workingList], *list[workingList], faces,
             NVectorMatrixRow<NLargeInteger>(subspace, i), testCompatibility);
         list[workingList]->flushAndDelete();
         workingList = 1 - workingList;

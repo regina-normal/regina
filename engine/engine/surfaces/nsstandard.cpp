@@ -29,6 +29,7 @@
 #include "surfaces/nsstandard.h"
 #include "utilities/nrational.h"
 #include "maths/nmatrixint.h"
+#include "maths/nvectorunit.h"
 #include "triangulation/ntriangulation.h"
 
 bool NNormalSurfaceVectorStandard::isCompatibleWith(
@@ -91,17 +92,20 @@ NLargeInteger NNormalSurfaceVectorStandard::getFaceArcs(
     return ans;
 }
 
-NDoubleList<NConeRay*>* NNormalSurfaceVectorStandard::
-        createNonNegativeCone(NTriangulation* triangulation) {
+void NNormalSurfaceVectorStandard::createNonNegativeCone(
+        NTriangulation* triangulation,
+        NDoubleList<NConeRay*>& rays,
+        NDoubleList<NVector<NLargeInteger>*>& faces) {
     unsigned long nCoords = 7 * triangulation->getNumberOfTetrahedra();
-    NDoubleList<NConeRay*>* ans = new NDoubleList<NConeRay*>;
+
     NNormalSurfaceVector* vector;
     for (unsigned long i=0; i<nCoords; i++) {
         vector = new NNormalSurfaceVectorStandard(nCoords);
         vector->setElement(i, NLargeInteger::one);
-        ans->addLast(vector);
+        rays.addLast(vector);
+
+        faces.addLast(new NVectorUnit<NLargeInteger>(nCoords, i));
     }
-    return ans;
 }
 
 NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
