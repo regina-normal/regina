@@ -321,7 +321,7 @@ void NScriptUI::removeSelectedVariables() {
             "Are you sure?").arg(varTable->text(*rows.begin(), 0)).
             arg(varTable->text(*rows.rbegin(), 0));
     else
-        message = i18n("%1 variables from %1 to %2 will be removed.  "
+        message = i18n("%1 variables from %2 to %3 will be removed.  "
             "Are you sure?").arg(rows.size()).
             arg(varTable->text(*rows.begin(), 0)).
             arg(varTable->text(*rows.rbegin(), 0));
@@ -333,12 +333,9 @@ void NScriptUI::removeSelectedVariables() {
     // Remove the variables!
     QMemArray<int> arr(rows.size());
     i = 0;
-    std::set<int>::const_iterator it = rows.begin();
-    while (it != rows.end()) {
-        arr[i] = *it;
-        it++;
-        i++;
-    }
+    for (std::set<int>::const_iterator it = rows.begin();
+            it != rows.end(); it++)
+        arr[i++] = *it;
 
     varTable->removeRows(arr);
     setDirty(true);
