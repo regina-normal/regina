@@ -11,7 +11,7 @@ Regina - A Normal Surface Theory Calculator
 Version 3.1  [ 12 October, 2002 ]
 
     - Massive optimisation of census code.
-    - Massive optimisation of normal surface enumeration code.
+    - Strong optimisation of normal surface enumeration code.
     - Census calculations can be split into independent pieces (e.g., for
       running on different machines).
     - Triangulation simplification improved, including random 4-4 moves.
