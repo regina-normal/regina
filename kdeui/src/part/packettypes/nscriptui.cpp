@@ -114,10 +114,11 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         ReginaPart::factoryInstance());
     scriptActionList.setAutoDelete(true);
 
-    KAction* actAdd = new KAction(i18n("&Add Var"), "insert_table_row",
+    actAdd = new KAction(i18n("&Add Var"), "insert_table_row",
         0 /* shortcut */, this, SLOT(addVariable()), scriptActions,
         "script_add_var");
     actAdd->setToolTip(i18n("Add a new script variable"));
+    actAdd->setEnabled(readWrite);
     actAdd->plug(actionBar);
     scriptActionList.append(actAdd);
 
@@ -256,6 +257,9 @@ void NScriptUI::refresh() {
 void NScriptUI::setReadWrite(bool readWrite) {
     varTable->setReadOnly(! readWrite);
     document->setReadWrite(readWrite);
+
+    actAdd->setEnabled(readWrite);
+    updateRemoveState();
 }
 
 void NScriptUI::addVariable() {
@@ -341,7 +345,11 @@ void NScriptUI::removeSelectedVariables() {
 }
 
 void NScriptUI::updateRemoveState() {
-    actRemove->setEnabled(varTable->numSelections() > 0);
+    // Are we read-write?
+    if (actAdd->isEnabled())
+        actRemove->setEnabled(varTable->numSelections() > 0);
+    else
+        actRemove->setEnabled(false);
 }
 
 void NScriptUI::unimplemented() {

@@ -74,6 +74,7 @@ class NScriptUI : public QObject, public PacketUI {
         /**
          * Script actions
          */
+        KAction* actAdd;
         KAction* actRemove;
         KActionCollection* scriptActions;
         QPtrList<KAction> scriptActionList;
