@@ -10,20 +10,24 @@ EXTRA_DIST = dataformat.sgml dataformat.ent \
   allowstrict.sgml \
   allowtaut.sgml \
   cancrush.sgml \
-  compact.sgml \
+  compact-surface.sgml \
   connected.sgml \
   euler-surface.sgml \
+  filter-combination.sgml \
+  filter.sgml \
   flags.sgml \
   line.sgml \
-  orbl.sgml \
+  op.sgml \
+  orbl-surface.sgml \
   packet-anglestructurelist.sgml \
   packet-container.sgml \
   packet-normalsurfacelist.sgml \
   packet-script.sgml \
+  packet-surfacefilter.sgml \
   packet-text.sgml \
   packet.sgml \
   params.sgml \
-  realbdry.sgml \
+  realbdry-surface.sgml \
   reginadata.sgml \
   struct.sgml \
   surface.sgml \

@@ -24,14 +24,18 @@
  &data-compact-surface;
  &data-connected;
  &data-euler-surface;
+ &data-filter;
+ &data-filter-combination;
  &data-flags;
  &data-line;
+ &data-op;
  &data-orbl-surface;
  &data-packet;
  &data-packet-anglestructurelist;
  &data-packet-container;
  &data-packet-normalsurfacelist;
  &data-packet-script;
+ &data-packet-surfacefilter;
  &data-packet-text;
  &data-params;
  &data-realbdry-surface;

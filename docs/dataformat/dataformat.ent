@@ -8,14 +8,18 @@
 <!ENTITY data-compact-surface SYSTEM "compact-surface.sgml">
 <!ENTITY data-connected SYSTEM "connected.sgml">
 <!ENTITY data-euler-surface SYSTEM "euler-surface.sgml">
+<!ENTITY data-filter SYSTEM "filter.sgml">
+<!ENTITY data-filter-combination SYSTEM "filter-combination.sgml">
 <!ENTITY data-flags SYSTEM "flags.sgml">
 <!ENTITY data-line SYSTEM "line.sgml">
+<!ENTITY data-op SYSTEM "op.sgml">
 <!ENTITY data-orbl-surface SYSTEM "orbl-surface.sgml">
 <!ENTITY data-packet SYSTEM "packet.sgml">
 <!ENTITY data-packet-anglestructurelist SYSTEM "packet-anglestructurelist.sgml">
 <!ENTITY data-packet-container SYSTEM "packet-container.sgml">
 <!ENTITY data-packet-normalsurfacelist SYSTEM "packet-normalsurfacelist.sgml">
 <!ENTITY data-packet-script SYSTEM "packet-script.sgml">
+<!ENTITY data-packet-surfacefilter SYSTEM "packet-surfacefilter.sgml">
 <!ENTITY data-packet-text SYSTEM "packet-text.sgml">
 <!ENTITY data-params SYSTEM "params.sgml">
 <!ENTITY data-realbdry-surface SYSTEM "realbdry-surface.sgml">
@@ -39,10 +43,16 @@
  '<link linkend="data-connected"><sgmltag>connected</sgmltag></link>'>
 <!ENTITY xml-euler-surface
  '<link linkend="data-euler-surface"><sgmltag>euler</sgmltag> (surface)</link>'>
+<!ENTITY xml-filter
+ '<link linkend="data-filter"><sgmltag>filter</sgmltag></link>'>
+<!ENTITY xml-filter-combination
+ '<link linkend="data-filter-combination"><sgmltag>filter</sgmltag> (combination)</link>'>
 <!ENTITY xml-flags
  '<link linkend="data-flags"><sgmltag>flags</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
+<!ENTITY xml-op
+ '<link linkend="data-op"><sgmltag>op</sgmltag></link>'>
 <!ENTITY xml-orbl-surface
  '<link linkend="data-orbl-surface"><sgmltag>orbl</sgmltag> (surface)</link>'>
 <!ENTITY xml-packet
@@ -56,7 +66,7 @@
 <!ENTITY xml-packet-script
  '<link linkend="data-packet-script"><sgmltag>packet</sgmltag> (script)</link>'>
 <!ENTITY xml-packet-surfacefilter
- '<link linkend="data-packet"><sgmltag>packet</sgmltag> (surface filter)</link>'>
+ '<link linkend="data-packet-surfacefilter"><sgmltag>packet</sgmltag> (surface filter)</link>'>
 <!ENTITY xml-packet-text
  '<link linkend="data-packet-text"><sgmltag>packet</sgmltag> (text)</link>'>
 <!ENTITY xml-packet-triangulation
