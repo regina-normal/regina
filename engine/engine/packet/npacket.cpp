@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include <strstream>
+#include <sstream>
 #include <hash_set>
 
 #include "packet/npacket.h"
@@ -291,10 +291,9 @@ NString NPacket::makeUniqueLabel(const NString& base) const {
     NString ans;
     unsigned long extraInt = 2;
     while(1) {
-        ostrstream out;
-        out << ' ' << extraInt << '\0';
+        ostringstream out;
+        out << ' ' << extraInt;
         ans = base + out.str();
-        out.freeze(0);
         if (! topLevel->findPacketLabel(ans))
             return ans;
         else
@@ -328,10 +327,9 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
                 extraInt = 1;
                 do {
                     extraInt++;
-                    ostrstream out;
-                    out << ' ' << extraInt << '\0';
+                    ostringstream out;
+                    out << ' ' << extraInt;
                     newLabel = label + out.str();
-                    out.freeze(0);
                 } while (! labels.insert(newLabel).second);
 
                 p->setPacketLabel(newLabel);

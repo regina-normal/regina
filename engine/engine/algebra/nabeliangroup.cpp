@@ -26,8 +26,6 @@
 
 /* end stub */
 
-#include <strstream>
-
 #include "algebra/nabeliangroup.h"
 #include "maths/matrixops.h"
 #include "file/nfile.h"

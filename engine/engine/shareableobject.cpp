@@ -26,25 +26,18 @@
 
 /* end stub */
 
+#include <sstream>
 #include "shareableobject.h"
 
-#include <strstream>
-
 NString ShareableObject::toString() const {
-    ostrstream out;
+    ostringstream out;
     writeTextShort(out);
-    out.put(0);
-    NString ans(out.str());
-    out.freeze(0);
-    return ans;
+    return out.str();
 }
 
 NString ShareableObject::toStringLong() const {
-    ostrstream out;
+    ostringstream out;
     writeTextLong(out);
-    out.put(0);
-    NString ans(out.str());
-    out.freeze(0);
-    return ans;
+    return out.str();
 }
 

@@ -26,8 +26,7 @@
 
 /* end stub */
 
-#include <strstream>
-
+#include <sstream>
 #include "census/ncensus.h"
 #include "progress/nprogresstypes.h"
 
@@ -151,10 +150,9 @@ void NCensus::trySolution() {
     // Put it in the census!
     // Make sure it has a charming label.
     NPacket* item = new NTriangulation(working);
-    ostrstream out;
-    out << "Item " << whichSoln << '\0';
+    ostringstream out;
+    out << "Item " << whichSoln;
     item->setPacketLabel(parent->makeUniqueLabel(out.str()));
-    out.freeze(0);
 
     parent->insertChildLast(item);
     whichSoln++;

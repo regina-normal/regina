@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include <strstream>
+#include <sstream>
 #include <hash_map>
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
@@ -362,7 +362,7 @@ bool NGroupPresentation::intelligentSimplify() {
 }
 
 NString NGroupPresentation::recogniseGroup() {
-    ostrstream out;
+    ostringstream out;
     unsigned long nRels = relations.size();
     NGroupExpression* rel;
     long exp;
@@ -402,10 +402,7 @@ NString NGroupPresentation::recogniseGroup() {
         // nGenerators >= 2 and nRels >= 2.
         // Don't have anything intelligent to say at this point.
     }
-    out.put(0);
-    NString ans(out.str());
-    out.freeze(0);
-    return ans;
+    return out.str();
 }
 
 void NGroupPresentation::writeToFile(NFile& out) const {

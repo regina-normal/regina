@@ -13,6 +13,7 @@ Version 2.5  [ (under development) ]
         Overall structure:
             - Replaced hand-rolled container classes with Standard
               Template Library classes (transition only partially complete).
+            - Replaced strstreams with stringstreams.
         Classes NBoolVector, NHashSet, NInfiniteArray, NIntMap,
                 NOrderedPair, NPointerSet, NQueue, NSet, NStack
                 and associates:
@@ -29,6 +30,8 @@ Version 2.5  [ (under development) ]
               routine addVariable() now returns bool.
         Class NSignature, NSigCensus, NSigPartialIsomorphism:
             - Added.
+        Class NString:
+            - Added C++ string copy constructor.
         Class NStringPair:
             - Removed.
         Class NTriangulation:

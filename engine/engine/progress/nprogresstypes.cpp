@@ -28,10 +28,10 @@
 
 #include "progress/nprogresstypes.h"
 
-#include <strstream>
+#include <sstream>
 
 NString NProgressNumber::internalGetDescription() const {
-    ostrstream out;
+    ostringstream out;
 
     mutexLock();
     out << completed;
@@ -39,9 +39,6 @@ NString NProgressNumber::internalGetDescription() const {
         out << '/' << outOf;
     mutexUnlock();
 
-    out << ends;
-    NString ans(out.str());
-    out.freeze(0);
-    return ans;
+    return out.str();
 }
 

@@ -26,11 +26,10 @@
 
 /* end stub */
 
+#include <sstream>
 #include "census/ncensus.h"
 #include "progress/nprogresstypes.h"
 #include "utilities/nmiscutils.h"
-
-#include <strstream>
 
 void NCensus::matchFacePairs() {
     // Generate a list of joins (without permutations).
@@ -191,7 +190,7 @@ void NCensus::matchFacePairs() {
             if (isCanonical()) {
                 if (progress) {
                     // Update the current state of progress.
-                    ostrstream msg;
+                    ostringstream msg;
                     tmpFace.tet = 0;
                     tmpFace.face = 0;
                     for (; tmpFace.tet < (int)nTetrahedra; tmpFace++) {
@@ -201,9 +200,7 @@ void NCensus::matchFacePairs() {
                             << dest(tmpFace).tet << ':'
                             << dest(tmpFace).face;
                     }
-                    msg << ends;
                     progress->setMessage(msg.str());
-                    msg.freeze(0);
                 }
 
                 selectGluingPerms();
