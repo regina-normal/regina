@@ -31,7 +31,9 @@
 #include "packet/ncontainer.h"
 
 // UI includes:
+#include "packettreeview.h"
 #include "reginaabout.h"
+#include "reginafilter.h"
 #include "reginapart.h"
 
 #include <qlabel.h>
@@ -47,24 +49,20 @@ K_EXPORT_COMPONENT_FACTORY(libreginapart, ReginaPartFactory);
 
 ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
         QObject *parent, const char *name, const QStringList& /*args*/) :
-        KParts::ReadWritePart(parent, name) {
+        KParts::ReadWritePart(parent, name), packetTree(0) {
     // Get the instance.
     setInstance( ReginaPartFactory::instance() );
 
-    // Initialise the packet tree.
-    packetTree = new regina::NContainer();
-    packetTree->setPacketLabel(i18n("Container"));
-
-    // Set up the internal widgets.
-    setWidget(new QLabel(i18n("Welcome to Regina!"), parentWidget,
-        widgetName));
+    // TODO: Set up the internal widgets.
+    treeView = new PacketTreeView(parentWidget, widgetName);
+    setWidget(treeView);
 
     // Set up our actions.
-    actSave = KStdAction::save(this, SLOT(save()), actionCollection());
-    KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
-
-    // Set our XML-UI resource file.
     setXMLFile("reginapart.rc");
+    setupActions();
+
+    // Initialise the packet tree.
+    initPacketTree();
 
     // Other tidying up.
     setReadWrite(true);
@@ -72,7 +70,8 @@ ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
 }
 
 ReginaPart::~ReginaPart() {
-    delete packetTree;
+    if (packetTree)
+        delete packetTree;
 }
 
 void ReginaPart::setReadWrite(bool rw) {
@@ -97,20 +96,21 @@ KAboutData *ReginaPart::createAboutData() {
 bool ReginaPart::openFile() {
     if (packetTree)
         delete packetTree;
-
     packetTree = regina::readFileMagic(m_file);
 
-    if (packetTree)
+    if (packetTree) {
+        treeView->fill(packetTree);
+        // Expand the first level.
+        if (treeView->firstChild()->firstChild())
+            treeView->ensureItemVisible(treeView->firstChild()->firstChild());
         return true;
-    else {
+    } else {
         KMessageBox::error(widget(), QString(i18n(
-            "Topology data file %1 could not be opened.")).arg(m_file));
-        packetTree = new regina::NContainer();
-        packetTree->setPacketLabel(i18n("Container"));
+            "Topology data file %1 could not be opened.  Perhaps"
+            "it is not a Regina data file?")).arg(m_file));
+        initPacketTree();
         return false;
     }
-
-    // TODO: Update the visual representation.
 }
 
 bool ReginaPart::saveFile() {
@@ -128,10 +128,25 @@ bool ReginaPart::saveFile() {
 }
 
 void ReginaPart::fileSaveAs() {
-    // TODO: Fix
-    QString file_name = KFileDialog::getSaveFileName();
-    if (! file_name.isEmpty())
-        saveAs(file_name);
+    QString file = KFileDialog::getSaveFileName(QString::null,
+        i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
+    if (! file.isEmpty())
+        saveAs(file);
+}
+
+void ReginaPart::setupActions() {
+    actSave = KStdAction::save(this, SLOT(save()), actionCollection());
+    KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
+}
+
+void ReginaPart::initPacketTree() {
+    if (packetTree)
+        delete packetTree;
+    packetTree = new regina::NContainer();
+    packetTree->setPacketLabel(i18n("Container"));
+
+    // Update the visual representation.
+    treeView->fill(packetTree);
 }
 
 #include "reginapart.moc"

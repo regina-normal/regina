@@ -26,84 +26,60 @@
 
 /* end stub */
 
-/*! \file reginapart.h
+/*! \file packettreeview.h
  *  \brief Provides the Regina part that does all the real work.
  */
 
-#ifndef __REGINAPART_H
-#define __REGINAPART_H
+#ifndef __PACKETTREEVIEW_H
+#define __PACKETTREEVIEW_H
 
-#include <kparts/part.h>
+#include <klistview.h>
 
 namespace regina {
     class NPacket;
 };
 
-class KAboutData;
-class PacketTreeView;
+class PacketTreeItem : public KListViewItem {
+    private:
+        regina::NPacket* packet;
+
+    public:
+        /**
+         * Constructors and destructors.
+         */
+        PacketTreeItem(QListView* parent, regina::NPacket* realPacket);
+        PacketTreeItem(QListViewItem* parent, regina::NPacket* realPacket);
+        PacketTreeItem(QListView* parent, QListViewItem* after,
+                regina::NPacket* realPacket);
+        PacketTreeItem(QListViewItem* parent, QListViewItem* after,
+                regina::NPacket* realPacket);
+
+        regina::NPacket* getPacket() {
+            return packet;
+        }
+
+        virtual QString text(int) const;
+
+        void fill();
+        void refresh();
+
+    private:
+        void init();
+};
 
 /**
  * The Regina topology data editor.
  *
  * This part does all the real work of working with Regina data files.
  */
-class ReginaPart : public KParts::ReadWritePart {
+class PacketTreeView : public KListView {
     Q_OBJECT
 
-    private:
-        /**
-         * Data
-         */
-        regina::NPacket* packetTree;
-
-        /**
-         * Components
-         */
-        PacketTreeView* treeView;
-
-        /**
-         * Actions
-         */
-        KAction* actSave;
-
     public:
-        /**
-         * Constructors and destructors.
-         */
-        ReginaPart(QWidget *parentWidget, const char *widgetName,
-            QObject *parent, const char *name, const QStringList &args);
-        virtual ~ReginaPart();
+        PacketTreeView(QWidget* parent = 0, const char* name = 0);
 
-        /**
-         * KPart overrides.
-         */
-        virtual void setReadWrite(bool rw);
-        virtual void setModified(bool modified);
-
-        /**
-         * Create about data for this part.
-         */
-        static KAboutData *createAboutData();
-
-    protected:
-        /**
-         * KPart overrides.
-         */
-        virtual bool openFile();
-        virtual bool saveFile();
-
-    private slots:
-        /**
-         * Implementation of actions.
-         */
-        void fileSaveAs();
-
-    private:
-        /**
-         * Initial setup.
-         */
-        void setupActions();
-        void initPacketTree();
+        void fill(regina::NPacket* topPacket);
+        void refresh(regina::NPacket* topPacket);
 };
 
 #endif

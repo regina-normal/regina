@@ -5,11 +5,12 @@ INCLUDES = $(all_includes) -I$(top_srcdir)/../engine/engine
 
 # Project headers:
 noinst_HEADERS = \
+	packettreeview.h \
 	reginaabout.h \
+	reginafilter.h \
 	reginamain.h \
 	reginapart.h \
-	reginapref.h \
-	reginaview.h
+	reginapref.h
 
 # Main program(s):
 bin_PROGRAMS = regina
@@ -21,7 +22,6 @@ regina_SOURCES = \
 	main.cpp \
 	reginamain.cpp \
 	reginapref.cpp \
-	reginaview.cpp \
 	reginaiface.skel
 
 shelldesktopdir   = $(kde_appsdir)/Applications
@@ -37,6 +37,7 @@ libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 libreginapart_la_LIBADD = $(top_srcdir)/../engine/engine/libregina-engine.la \
 	$(LIB_KPARTS)
 libreginapart_la_SOURCES = \
+	packettreeview.cpp \
 	reginapart.cpp
 
 partdesktopdir   = $(kde_servicesdir)
