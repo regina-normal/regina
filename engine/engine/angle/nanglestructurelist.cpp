@@ -83,7 +83,7 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     }
 
     // Form the starting cone.
-    std::list<NConeRay*> originalCone;
+    std::list<NAngleStructureVector*> originalCone;
     NAngleStructureVector* vector;
     NLargeInteger startValue(nCoords - 1);
     for (index = 0; index < nCoords - 1; index++) {
@@ -106,18 +106,12 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     faces.push_back(finalFace);
 
     // Find the angle structures.
-    // TODO: Change this so the output iterator directly creates the new
-    // angle structure.
-    std::list<NConeRay*> ans;
-    intersectCone(back_inserter(ans), originalCone.begin(), originalCone.end(),
-        faces.begin(), faces.end(), eqns, false);
-    for (std::list<NConeRay*>::iterator it = ans.begin(); it != ans.end(); it++)
-        structures.push_back(new NAngleStructure(owner,
-            (NAngleStructureVector*)*it));
+    intersectCone(StructureInserter(*this, owner), originalCone.begin(),
+        originalCone.end(), faces.begin(), faces.end(), eqns, false);
 
     // Tidy up.
     for_each(originalCone.begin(), originalCone.end(),
-        FuncDelete<NConeRay>());
+        FuncDelete<NAngleStructureVector>());
     for_each(faces.begin(), faces.end(),
         FuncDelete<NVector<NLargeInteger> >());
 }
