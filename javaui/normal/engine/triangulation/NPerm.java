@@ -46,6 +46,15 @@ public class NPerm {
         new NPerm(3,2,1,0), new NPerm(3,2,0,1)
     };
 
+    public static final int[] allPermsS4Inv = {
+        0, 1, 4, 3,
+        2, 5, 6, 7,
+        12, 19, 18, 13,
+        8, 11, 20, 15,
+        16, 23, 10, 9,
+        14, 21, 22, 17
+    };
+
     public static final NPerm[] orderedPermsS4 = {
         new NPerm(0,1,2,3), new NPerm(0,1,3,2),
         new NPerm(0,2,1,3), new NPerm(0,2,3,1),
@@ -67,6 +76,12 @@ public class NPerm {
         new NPerm(2,0,1,3), new NPerm(2,1,0,3)
     };
 
+    public static final int[] allPermsS3Inv = {
+        0, 1,
+        4, 3,
+        2, 5
+    };
+
     public static final NPerm[] orderedPermsS3 = {
         new NPerm(0,1,2,3), new NPerm(0,2,1,3),
         new NPerm(1,0,2,3), new NPerm(1,2,0,3),
@@ -75,6 +90,10 @@ public class NPerm {
 
     public static final NPerm[] allPermsS2 = {
         new NPerm(0,1,2,3), new NPerm(1,0,2,3)
+    };
+
+    public static final int[] allPermsS2Inv = {
+        0, 1
     };
 
     /**

@@ -39,6 +39,15 @@ const NPerm allPermsS4[24] = {
     NPerm(3,1,0,2), NPerm(3,1,2,0), NPerm(3,2,1,0), NPerm(3,2,0,1)
 };
 
+const unsigned allPermsS4Inv[24] = {
+    0, 1, 4, 3,
+    2, 5, 6, 7,
+    12, 19, 18, 13,
+    8, 11, 20, 15,
+    16, 23, 10, 9,
+    14, 21, 22, 17
+};
+
 const NPerm orderedPermsS4[24] = {
     NPerm(0,1,2,3), NPerm(0,1,3,2), NPerm(0,2,1,3), NPerm(0,2,3,1),
     NPerm(0,3,1,2), NPerm(0,3,2,1), NPerm(1,0,2,3), NPerm(1,0,3,2),
@@ -54,6 +63,12 @@ const NPerm allPermsS3[6] = {
     NPerm(2,0,1,3), NPerm(2,1,0,3)
 };
 
+const unsigned allPermsS3Inv[6] = {
+    0, 1,
+    4, 3,
+    2, 5
+};
+
 const NPerm orderedPermsS3[6] = {
     NPerm(0,1,2,3), NPerm(0,2,1,3),
     NPerm(1,0,2,3), NPerm(1,2,0,3),
@@ -62,6 +77,10 @@ const NPerm orderedPermsS3[6] = {
 
 const NPerm allPermsS2[2] = {
     NPerm(0,1,2,3), NPerm(1,0,2,3)
+};
+
+const unsigned allPermsS2Inv[2] = {
+    0, 1
 };
 
 bool NPerm::isPermCode(char code) {

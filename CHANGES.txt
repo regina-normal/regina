@@ -8,6 +8,11 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Version 3.1  [ (under development) ]
+    ENGINE:
+        File nperm.h:
+            - New arrays allPermsS2Inv, allPermsS3Inv, allPermsS4Inv.
+
 Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
     OVERALL:
         - Moved from old impenetrable binary data files to new

@@ -336,6 +336,16 @@ class NPerm {
 extern const NPerm allPermsS4[24];
 
 /**
+ * Contains the inverses of the permutations in array \a allPermsS4.
+ *
+ * Specifically, the inverse of permutation <tt>allPermsS4[i]</tt> is
+ * permutation <tt>allPermsS4[ allPermsS4Inv[i] ]</tt>.
+ *
+ * \ifacesjava This array is a static member of class \a NPerm.
+ */
+extern const unsigned allPermsS4Inv[24];
+
+/**
  * Contains all possible permutations of four elements in
  * lexicographical order.
  *
@@ -355,6 +365,16 @@ extern const NPerm orderedPermsS4[24];
  * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm allPermsS3[6];
+
+/**
+ * Contains the inverses of the permutations in array \a allPermsS3.
+ *
+ * Specifically, the inverse of permutation <tt>allPermsS3[i]</tt> is
+ * permutation <tt>allPermsS3[ allPermsS3Inv[i] ]</tt>.
+ *
+ * \ifacesjava This array is a static member of class \a NPerm.
+ */
+extern const unsigned allPermsS3Inv[6];
 
 /**
  * Contains all possible permutations of three elements in
@@ -377,6 +397,16 @@ extern const NPerm orderedPermsS3[6];
  * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm allPermsS2[2];
+
+/**
+ * Contains the inverses of the permutations in array \a allPermsS2.
+ *
+ * Specifically, the inverse of permutation <tt>allPermsS2[i]</tt> is
+ * permutation <tt>allPermsS2[ allPermsS2Inv[i] ]</tt>.
+ *
+ * \ifacesjava This array is a static member of class \a NPerm.
+ */
+extern const unsigned allPermsS2Inv[2];
 
 // Routines for constructing the permutations associated to
 // faces and edges of the triangulation
