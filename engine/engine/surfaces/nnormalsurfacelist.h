@@ -72,6 +72,8 @@ class NXMLNormalSurfaceListReader;
  * \testpart
  *
  * \todo \feature Allow custom matching equations.
+ * \todo \feature Allow enumeration with some coordinates explicitly set
+ * to zero.
  * \todo \feature Allow generating only closed surfaces.
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
