@@ -63,7 +63,7 @@ class NPerm {
     private:
         char code;
             /**< The internal code representing this permutation. */
-    
+
     public:
         /**
          * Creates the identity permutation.
@@ -170,7 +170,7 @@ class NPerm {
         static bool isPermCode(char newCode);
 
         /**
-         * Sets this permutation to the transposition of 
+         * Sets this permutation to the transposition of
          * \a a and \a b.
          * Note that \a a and \a b need not be distinct.
          *
@@ -396,7 +396,7 @@ extern const unsigned allPermsS3Inv[6];
 extern const NPerm orderedPermsS3[6];
 
 /**
- * Contains all possible permutations of two elements.  
+ * Contains all possible permutations of two elements.
  * In each permutation, 2 maps to 2 and 3 maps to 3.
  * The permutations with even indices in the array are the even
  * permutations, and those with odd indices in the array are the odd
@@ -436,7 +436,7 @@ extern const unsigned allPermsS2Inv[2];
  * vertices in the given face.
  */
 NPerm faceOrdering(int face);
-    
+
 /**
  * Returns a permutation mapping (0,1) to the vertices of the
  * given tetrahedron edge in their canonical order.  The images of
