@@ -5,30 +5,48 @@ Note that this TODO list pertains only to the user interface; there is
 also a calculation engine TODO list found under "Related Pages" in the
 engine documentation.
 
+General:
+    Make "configure shortcuts" work with the part as well as with the shell
+    Enhance the DCOP interface.
+
+Census:
+    Implement GUI census creation
+    Support searching through a census for a triangulation
+
+Containers:
+    Update container viewers whenever their subtrees change, not just when
+        their immediate children change
+
 Icons:
     Softer tree for filter_comb.png
     Icons for separate New actions
 
-Toolbars / Menus:
+Import/Export:
+    Refuse to export invalid triangulations
+
+Packets (General):
+    Implement packet tags
+    Work out how to right-align the packet pane close button
+    Work around Vim component bugs in script/text viewers
+    Find out how to centre column headers in list views
+
+Python:
+    Implement embedded python scripting
+    Allow breaking processing in python consoles
+    Check to see whether user libraries are in fact text files
+    Allow compilation and running of open libraries
+
+Scripts:
+    Make a script dirty when its variables are changed externally
+        through renaming or deletion
+
+Toolbars:
     Disable "configure toolbars" until delayed icon loading is fixed in
         kdelibs
     Work out how to get decent action names in the configure toolbar dialog
 
-Packet Creators:
-    Implement GUI census creation
+Triangulations:
+    Include isomorphism tests
+    Include Turaev-Viro
+    Make the skeleton viewer windows appear in a pleasant size
 
-Packet Viewers:
-    Work out how to right-align the packet pane close button
-    Work around bugs with the Vim component in script/text viewers.
-    Update container viewers whenever their subtree changes, not just when
-        their immediate children change
-    Find out how to centre column headers in angle structure and normal
-        surface viewers
-    Make a script dirty when its variables are changed externally
-        through renaming or deletion
-    Include Turaev-Viro and isomorphism tests
-    Make the skeleton viewer windows come up in a pleasant size
-
-General:
-    Make "configure shortcuts" work with the part as well
-    Enhance the DCOP interface.
