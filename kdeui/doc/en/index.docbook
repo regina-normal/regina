@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+  <!ENTITY kappname "&regina;">
+  <!ENTITY regina "<application>Regina</application>">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE">
+]>
+
+<book lang="&language;">
+ <bookinfo>
+  <title>The &regina; Handbook</title>
+
+  <authorgroup>
+   <author>
+    <firstname>Ben</firstname>
+    <surname>Burton</surname>
+    <affiliation>
+     <address><email>bab@debian.org</email></address>
+    </affiliation>
+   </author>
+  </authorgroup>
+
+  <legalnotice>&FDLNotice;</legalnotice>
+
+  <date>1 December 2002</date>
+  <releaseinfo>4.0</releaseinfo>
+
+  <abstract>
+   <para>
+    &regina; is a normal surface theory calculator.
+   </para>
+  </abstract>
+
+  <keywordset>
+   <keyword>KDE</keyword>
+   <keyword>Regina</keyword>
+  </keywordset>
+ </bookinfo>
+
+ <chapter id="introduction">
+  <title>Introduction</title>
+  <para>
+   The documentation for &kappname; has not yet been ported to &kde; docbook.
+  </para>
+  <para>
+   Please check <ulink url="http://regina.sourceforge.net">the &regina;
+   website</ulink> for further information.
+  </para>
+
+  &underFDL;
+
+ </chapter>
+
+ &documentation.index; 
+</book>
+

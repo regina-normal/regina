@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Regina
+Exec=regina %i %m -caption "%c"
+Icon=regina
+Type=Application
+DocPath=regina/index.html
+Comment=A Normal Surface Theory Calculator
+Terminal=0
