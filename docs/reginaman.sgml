@@ -635,11 +635,10 @@
       (default = <literal>docs</literal>)</term>
      <listitem>
       <para>
-       The URL of the directory in which the unpacked
-       documentation can be found by the web browser.  This is the
-       directory beneath which
-       <filename>normal/docs/index.html</filename> can be found.  This
-       URL may be relative to the location of the applet's web page.
+       The URL of the directory in which the unpacked documentation
+       can be found by the web browser.  This should be the directory
+       containing <filename>welcome.html</filename> and the like.
+       This URL may be relative to the location of the applet's web page.
       </para>
      </listitem>
     </varlistentry>

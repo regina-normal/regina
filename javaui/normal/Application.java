@@ -149,9 +149,9 @@ public class Application extends Applet implements ActionListener {
     public static final String helpSetLoc = "normal/docs/regina.hs";
 
     /**
-     * Location of the default help page.
+     * Location of the default help page relative to the docs directory.
      */
-    public static final String defaultHelpPage = "normal/docs/index.html";
+    public static final String defaultHelpPage = "index.html";
 
     /**
      * The version string representing the oldest allowable JDK with

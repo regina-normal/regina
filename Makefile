@@ -80,7 +80,13 @@ binjni : binenginejni binjavaui binjavajni
 bincorba : binenginecorba binjavaui binjavacorba
 bindocs : $(DOC_JAR)
 $(DOC_JAR) : docs
-	cd docs && $(JAR) -cf ../$(DOC_JAR) *
+	-rm -rf doctmp
+	mkdir doctmp
+	mkdir doctmp/normal
+	mkdir doctmp/normal/docs
+	cp -r docs/* doctmp/normal/docs
+	cd doctmp && $(JAR) -cf ../$(DOC_JAR) *
+	rm -rf doctmp
 bin : binengine binjava
 
 docsengine :

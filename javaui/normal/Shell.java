@@ -668,11 +668,14 @@ public abstract class Shell {
     /**
      * Returns the location of the help page correpsonding to the given help
      * topic.  The location will be the path (with components separated by
-     * forward slashes) to a resource belonging to the documentation
-     * jar.  An example is "normal/docs/options.html".  The path will
-     * contain no leading slash.
+     * forward slashes) to a resource relative to the base documentation
+     * directory.  An example is "options.html" or "engine/index.html".
+     * The path will contain no leading slash.
      * <p>
-     * If the given help topic ID cannot be resolved, the location of a
+     * The current implementation simply appends <tt>.html</tt> to the
+     * topic ID.
+     * <p>
+     * If the topic ID is <tt>null</tt>, the location of a
      * suitable default page will be returned instead.
      * 
      * @param id the ID of the help topic to find, or <tt>null</tt>
@@ -680,34 +683,7 @@ public abstract class Shell {
      * @return the location of the requested help page.
      */
     public String getHelpPageResource(String id) {
-        String path = null;
-        if (id != null) {
-            try {
-                javax.help.HelpSet set =
-                    ((javax.help.HelpBroker)helpBroker).getHelpSet();
-                path = set.getCombinedMap().getURLFromID(
-                    javax.help.Map.ID.create(id, set)).getPath();
-            
-                // Remove any leading "jar!".
-                int pos = path.lastIndexOf("jar!");
-                if (pos >= 0) {
-                    path = path.substring(pos + 4);
-                    if (path.length() == 0)
-                        path = null;
-                } else
-                    path = null;
-
-                // Remove any leading '/'.
-                if (path != null)
-                    if (! Character.isLetterOrDigit(path.charAt(0)))
-                        path = path.substring(1);
-            } catch (Throwable th) {
-            }
-        }
-
-        if (path == null)
-            path = Application.defaultHelpPage;
-        return path;
+        return (id == null ? Application.defaultHelpPage : id + ".html");
     }
 }
 

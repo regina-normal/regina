@@ -1,6 +1,6 @@
 
 <map>
 	<mapID target="index" url="index.html"/>
-	<mapID target="jython" url="jpython.html"/>
+	<mapID target="jython" url="jython.html"/>
 </map>
 

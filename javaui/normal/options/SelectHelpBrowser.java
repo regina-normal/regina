@@ -157,11 +157,11 @@ public class SelectHelpBrowser extends JDialog implements ActionListener,
                 "as specified in the fields in the dialog.  Note that this " +
                 "means the documentation may be online.  Otherwise it will " +
                 "probably need to be unpacked somewhere on your system.\n\n" +
-                "Documentation can be viewed by any web browser supporting " +
-                "frames.  The location entered should be the directory " +
-                "beneath which normal/docs/ lies.  For instance, if the " +
-                "documentation index is " +
-                "/usr/share/regina/docs/normal/docs/index.html, the " +
+                "Documentation can be viewed by any web browser.  " +
+                "The location entered should be the directory containing " +
+                "the HTML files such as index.html and welcome.html.  " +
+                "For instance, if the documentation index is " +
+                "/usr/share/regina/docs/index.html, the " +
                 "location entered should be /usr/share/regina/docs.");
         } else if (e.getSource() == ok) {
             if (useJavaHelp.isSelected()) {
