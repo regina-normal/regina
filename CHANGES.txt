@@ -28,7 +28,7 @@ Version 3.1  [ 12 October, 2002 ]
             - Removed in favour of new class NRay.
         Class NFacePairing, NGluingPerms:
             - Added to bear the brunt of census generation.
-            - Massive optimisations throughout census code.
+            - Massive optimisations and rewrites throughout census code.
             - Removed all thread yields, which were causing processes to
               have 0.0% CPU time on some systems.
         Class NIndexedArray:
@@ -55,7 +55,10 @@ Version 3.1  [ 12 October, 2002 ]
         Class NVector:
             - Added negate().
         Class NVertexEnumerator, NDoubleDescriptor:
-            - Added.
+            - Added to bear the brunt of normal surface enumeration and
+              to allow different enumeration engines to be plugged in.
+            - Caches some frequent calculations, resulting in a startling
+              performance increase.
         Routine getVersionString(), getVersionMajor(), getVersionMinor(),
                 testEngine():
             - Moved to engine.h and added to the C++ calculation engine.

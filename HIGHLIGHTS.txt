@@ -11,6 +11,7 @@ Regina - A Normal Surface Theory Calculator
 Version 3.1  [ 12 October, 2002 ]
 
     - Massive optimisation of census code.
+    - Massive optimisation of normal surface enumeration code.
     - Census calculations can be split into independent pieces (e.g., for
       running on different machines).
     - Triangulation simplification improved, including random 4-4 moves.
@@ -56,7 +57,7 @@ Version 2.4  [ 4 April, 2002 ]
     - Added directory of prepackaged Jython libraries.
     - Option REGINA_OPTIONS_GLOBAL is guessed more intelligently.
     - Much enhanced documentation.
-    
+
 Version 2.3  [ 12 December, 2001 ] - The "Farewell Stillwater" release.
 
     - Recognises more families of subcomplexes in a triangulation

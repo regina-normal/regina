@@ -28,7 +28,9 @@
 
 /* To be included from ndoubledescriptor.h. */
 
+#include <iterator>
 #include <list>
+#include <vector>
 #include "enumerate/ncompconstraint.h"
 #include "maths/nvectormatrix.h"
 #include "maths/nmatrixint.h"
@@ -95,23 +97,45 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
 
     typedef typename std::iterator_traits<RayIterator>::value_type RayClassPtr;
 
-    std::list<RayClassPtr> pos;
-    std::list<RayClassPtr> neg;
+    // Establish the number of faces.
+    typename std::iterator_traits<FaceIterator>::difference_type nFaces =
+        std::distance(facesFirst, facesLast);
+
+    // The following table will store which rays lie on which faces.
+    // We'll begin by reserving enough space for the entire table so
+    // iterators won't be invalidated as the table is filled in.
+    typedef std::vector<bool> RayFaceTable;
+    typedef typename RayFaceTable::iterator RayFaceTableIterator;
+    RayFaceTable rayOnFace(std::distance(oldRaysFirst, oldRaysLast) * nFaces);
+
+    // Each of the following lists stores a ray plus the beginning
+    // of the block in table rayOnFace corresponding to that
+    // particular ray.
+    typedef std::list<std::pair<RayClassPtr, RayFaceTableIterator> >
+        ExtendedRayList;
+    typedef typename ExtendedRayList::const_iterator ExtendedRayListIterator;
+    ExtendedRayList pos, neg;
 
     // Run through the old rays and determine which side of the
     // hyperplane they lie on.
+    // Also precalculate which rays lie on which faces.
     // Rays lying within the hyperplane will be added to the new
     // solution set.
     RayIterator it;
+    FaceIterator faceIt;
+    RayFaceTableIterator rayFaceIt = rayOnFace.begin();
     NLargeInteger dot;
     for (it = oldRaysFirst; it != oldRaysLast; it++) {
         dot = hyperplane * (**it);
         if (dot == NRay::zero)
             *results++ = (RayClassPtr)(*it)->clone();
         else if (dot < NRay::zero)
-            neg.push_back(*it);
+            neg.push_back(make_pair(*it, rayFaceIt));
         else
-            pos.push_back(*it);
+            pos.push_back(make_pair(*it, rayFaceIt));
+
+        for (faceIt = facesFirst; faceIt != facesLast; faceIt++)
+            *rayFaceIt++ = ((**faceIt) * (**it) == 0);
     }
 
     // Run through the pairs of positive and negative rays.
@@ -119,44 +143,53 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
     // being added to the solution set.
     // One can prove that no ray will ever have been added to the
     // solution set twice.
-    typename std::list<RayClassPtr>::const_iterator posit, negit;
-    FaceIterator faceit;
-    NVector<NLargeInteger>* face;
+    ExtendedRayListIterator posit, negit;
+    RayFaceTableIterator posFaceIt, negFaceIt, baseFaceIt;
     bool adjacent, hasCommonFaces;
     for (posit = pos.begin(); posit != pos.end(); posit++)
         for (negit = neg.begin(); negit != neg.end(); negit++) {
             // Are we supposed to check for compatibility?
             if (constraints)
-                if (! constraints->isSatisfied(**posit, **negit))
+                if (! constraints->isSatisfied(*(*posit).first,
+                        *(*negit).first))
                     continue;
 
             // Two rays are adjacent if and only if there is no
             // other ray belonging to all of their common faces.
             adjacent = true;
+            baseFaceIt = rayOnFace.begin();
             for (it = oldRaysFirst; it != oldRaysLast; it++) {
-                if (*it == *posit || *it == *negit)
-                    continue;
-                hasCommonFaces = true;
-                for (faceit = facesFirst; faceit != facesLast; faceit++) {
-                    face = *faceit;
-                    if ((*face) * (**posit) == 0 && (*face) * (**negit) == 0 &&
-                            (*face) * (**it) != 0) {
-                        hasCommonFaces = false;
+                if (*it != (*posit).first && *it != (*negit).first) {
+                    hasCommonFaces = true;
+
+                    posFaceIt = (*posit).second;
+                    negFaceIt = (*negit).second;
+                    rayFaceIt = baseFaceIt;
+                    for (faceIt = facesFirst; faceIt != facesLast; faceIt++) {
+                        if ((*posFaceIt) && (*negFaceIt) && ! (*rayFaceIt)) {
+                            hasCommonFaces = false;
+                            break;
+                        }
+                        posFaceIt++;
+                        negFaceIt++;
+                        rayFaceIt++;
+                    }
+
+                    if (hasCommonFaces) {
+                        adjacent = false;
                         break;
                     }
                 }
-                if (hasCommonFaces) {
-                    adjacent = false;
-                    break;
-                }
+
+                baseFaceIt += nFaces;
             }
 
             // If the rays are adjacent then join them and put the
             // corresponding intersection with the hyperplane in the
             // results set.
             if (adjacent)
-                *results++ = (RayClassPtr)intersect(**posit, **negit,
-                    hyperplane);
+                *results++ = (RayClassPtr)intersect(*(*posit).first,
+                    *(*negit).first, hyperplane);
         }
 }
 
