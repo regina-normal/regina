@@ -4,23 +4,64 @@
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="file_save" group="save_merge"/>
     <Action name="file_save_as" group="save_merge"/>
-  </Menu>
-  <Menu name="packet" noMerge="1"><text>&amp;Packet</text>
-    <Menu name="packet_new"><text>&amp;New</text>
-      <Action name="packet_angles"/>
-      <Action name="packet_container"/>
-      <Action name="packet_filter"/>
-      <Action name="packet_surfaces"/>
-      <Action name="packet_script"/>
-      <Action name="packet_text"/>
-      <Action name="packet_triangulation"/>
+    <Menu name="file_import" group="print_merge"><text>&amp;Import</text>
+      <Action name="import_regina"/>
+      <Action name="import_snappea"/>
+      <Action name="import_dehydrated"/>
+      <Action name="import_python"/>
+    </Menu>
+    <Menu name="file_export" group="print_merge"><text>&amp;Export</text>
+      <Action name="export_regina"/>
+      <Action name="export_snappea"/>
+      <Action name="export_python"/>
     </Menu>
   </Menu>
+  <Menu name="packet" noMerge="1"><text>&amp;Packet</text>
+    <Action name="packet_angles"/>
+    <Action name="packet_container"/>
+    <Action name="packet_filter"/>
+    <Action name="packet_surfaces"/>
+    <Action name="packet_script"/>
+    <Action name="packet_text"/>
+    <Action name="packet_triangulation"/>
+    <Separator/>
+    <Action name="packet_view"/>
+    <Action name="packet_rename"/>
+    <Action name="packet_delete"/>
+    <Separator/>
+    <Action name="packet_clone"/>
+    <Action name="packet_clone_subtree"/>
+    <Separator/>
+    <Action name="packet_refresh"/>
+  </Menu>
+  <Menu name="tools" noMerge="1"><text>&amp;Tools</text>
+    <Action name="packet_census"/>
+  </Menu>
 </MenuBar>
-<ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+<ToolBar name="mainToolBar" noMerge="1">
+  <text>Main Toolbar</text>
   <Action name="file_save" group="file_operations"/>
+  <Action name="file_close" group="file_operations"/>
 </ToolBar>
-<ToolBar name="packet" noMerge="1"><text>Packet Toolbar</text>
+<ToolBar name="packetTree" noMerge="1" fullWidth="false">
+  <text>Packet Tree Toolbar</text>
+  <Action name="packet_view"/>
+  <Action name="packet_rename"/>
+  <Action name="packet_delete"/>
+  <Separator/>
+  <Action name="packet_refresh"/>
+  <Separator/>
+  <Action name="nav_shallow"/>
+  <Action name="nav_deep"/>
+  <Action name="nav_up"/>
+  <Action name="nav_pageup"/>
+  <Action name="nav_top"/>
+  <Action name="nav_down"/>
+  <Action name="nav_pagedown"/>
+  <Action name="nav_bottom"/>
+</ToolBar>
+<ToolBar name="packetNew" noMerge="1" fullWidth="false">
+  <text>New Packet Toolbar</text>
   <Action name="packet_angles"/>
   <Action name="packet_container"/>
   <Action name="packet_filter"/>
