@@ -111,6 +111,9 @@ public interface NTriangulation extends NPacket {
     boolean shellBoundary(NTetrahedron t);
     boolean shellBoundary(NTetrahedron t, boolean check);
     boolean shellBoundary(NTetrahedron t, boolean check, boolean perform);
+    boolean collapseEdge(NEdge e);
+    boolean collapseEdge(NEdge e, boolean check);
+    boolean collapseEdge(NEdge e, boolean check, boolean perform);
 
     void makeDoubleCover();
     boolean idealToFinite();

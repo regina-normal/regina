@@ -89,6 +89,8 @@ public class ElementaryMove extends Modification {
             return tri.openBook(tri.getFace(dlg.skelIndex));
         if (dlg.selected == dlg.shellBoundary)
             return tri.shellBoundary(tri.getTetrahedron(dlg.skelIndex));
+        if (dlg.selected == dlg.collapseEdge)
+            return tri.collapseEdge(tri.getEdge(dlg.skelIndex));
 
         // Nothing was done.
         return false;
@@ -175,6 +177,11 @@ public class ElementaryMove extends Modification {
         private JRadioButton shellBoundary;
 
         /**
+         * Button representing a edge collapse move.
+         */
+        private JRadioButton collapseEdge;
+
+        /**
          * Skeletal component about which to do a 3-2 move.
          */
         private JComboBox threeTwoComp;
@@ -215,6 +222,11 @@ public class ElementaryMove extends Modification {
         private JComboBox shellBoundaryComp;
 
         /**
+         * Skeletal component about which to do a edge collapse move.
+         */
+        private JComboBox collapseEdgeComp;
+
+        /**
          * The triangulation which which we are working.
          */
         private NTriangulation tri;
@@ -250,6 +262,7 @@ public class ElementaryMove extends Modification {
             twoOne = new JRadioButton("2-1");
             openBook = new JRadioButton("Open book");
             shellBoundary = new JRadioButton("Shell boundary");
+            collapseEdge = new JRadioButton("Collapse Edge");
             type.add(threeTwo);
             type.add(twoThree);
             type.add(fourFour);
@@ -258,6 +271,7 @@ public class ElementaryMove extends Modification {
             type.add(twoOne);
             type.add(openBook);
             type.add(shellBoundary);
+            type.add(collapseEdge);
 
             threeTwoComp = new JComboBox();
             twoThreeComp = new JComboBox();
@@ -267,6 +281,7 @@ public class ElementaryMove extends Modification {
             twoOneComp = new JComboBox();
             openBookComp = new JComboBox();
             shellBoundaryComp = new JComboBox();
+            collapseEdgeComp = new JComboBox();
 
             fillMoves();
 
@@ -297,6 +312,8 @@ public class ElementaryMove extends Modification {
             typePanel.add(openBookComp, cExtra);
             typePanel.add(shellBoundary, cButton);
             typePanel.add(shellBoundaryComp, cExtra);
+            typePanel.add(collapseEdge, cButton);
+            typePanel.add(collapseEdgeComp, cExtra);
 
             // Make the button panel.
             ok = new JButton("OK");
@@ -360,6 +377,7 @@ public class ElementaryMove extends Modification {
             twoOneComp.removeAllItems();
             openBookComp.removeAllItems();
             shellBoundaryComp.removeAllItems();
+            collapseEdgeComp.removeAllItems();
 
             long nVertices = tri.getNumberOfVertices();
             long nEdges = tri.getNumberOfEdges();
@@ -397,6 +415,9 @@ public class ElementaryMove extends Modification {
                     twoOneComp.addItem(new ExtendedObject(
                         new Long(-(i + 1)), "Edge " + String.valueOf(i) +
                         " (end 1)"));
+                if (tri.collapseEdge(e, true, false))
+                    collapseEdgeComp.addItem(new ExtendedObject(
+                        new Long(-(i + 1)), "Edge " + String.valueOf(i)));
             }
 
             NFace f;
@@ -414,7 +435,7 @@ public class ElementaryMove extends Modification {
                 if (tri.shellBoundary(tri.getTetrahedron(i), true, false))
                     shellBoundaryComp.addItem(new ExtendedObject(
                         new Long(i), "Tet " + String.valueOf(i)));
-            
+
             // Disable any empty combo boxes.
             if (threeTwoComp.getItemCount() == 0) {
                 threeTwoComp.setEnabled(false);
@@ -447,6 +468,10 @@ public class ElementaryMove extends Modification {
             if (shellBoundaryComp.getItemCount() == 0) {
                 shellBoundaryComp.setEnabled(false);
                 shellBoundary.setEnabled(false);
+            }
+            if (collapseEdgeComp.getItemCount() == 0) {
+                collapseEdgeComp.setEnabled(false);
+                collapseEdge.setEnabled(false);
             }
         }
 
@@ -499,6 +524,10 @@ public class ElementaryMove extends Modification {
                 } else if (shellBoundary.isSelected()) {
                     selected = shellBoundary;
                     skelIndex = ((Long)((ExtendedObject)shellBoundaryComp.
+                        getSelectedItem()).getValue()).longValue();
+                } else if (collapseEdge.isSelected()) {
+                    selected = collapseEdge;
+                    skelIndex = ((Long)((ExtendedObject)collapseEdgeComp.
                         getSelectedItem()).getValue()).longValue();
                 } else {
                     shell.error("No elementary move has been selected.");

@@ -163,6 +163,14 @@ public class NJNITriangulation extends NJNIPacket
     }
     public native boolean shellBoundary(NTetrahedron t, boolean check, 
         boolean perform);
+    public boolean collapseEdge(NEdge t) {
+        return collapseEdge(t, true, true);
+    }
+    public boolean collapseEdge(NEdge t, boolean check) {
+        return collapseEdge(t, check, true);
+    }
+    public native boolean collapseEdge(NEdge t, boolean check,
+        boolean perform);
 
     public native void makeDoubleCover();
     public boolean idealToFinite() {
