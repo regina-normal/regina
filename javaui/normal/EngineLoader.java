@@ -129,7 +129,7 @@ public class EngineLoader {
         errMessage.append("Note that on some platforms the real name of the " +
             "library will be different.  ");
         errMessage.append("For instance, Win32 platforms will look for ["
-            + libName
+            + libName + ".dll] or [cyg" + libName
             + ".dll] and unix-style platforms will look for [lib" + libName
             + ".so].  The current path that Java will search for libraries is ["
             + libSearchPath + "].");

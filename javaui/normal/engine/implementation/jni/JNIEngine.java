@@ -92,7 +92,11 @@ public class JNIEngine implements Engine {
         try {
             System.loadLibrary("cyg" + library);
             return;
-        } catch (Throwable th) {}
+        } catch (Throwable th) {
+            // Is this more interesting than a library-not-found error?
+            if (! th.toString().endsWith("in java.library.path"))
+                errMsg = th.toString();
+        }
 
         // Nothing seems to have worked.
         System.out.println("Could not load library " + library + ": "
