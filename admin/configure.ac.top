@@ -230,6 +230,9 @@ if test "$should_build" = "yes"; then
 else
   # There are some tests from AC_PATH_KDE that need to be run regardless.
   AC_CHECK_FUNCS([vsnprintf snprintf])
+
+  # There are also some conditionals that must be defined.
+  AM_CONDITIONAL(include_ARTS, false)
 fi
 
 ###########################################################
@@ -240,6 +243,22 @@ fi
 
 AC_HEADER_STDC
 AC_CHECK_HEADERS([unistd.h])
+
+###########################################################
+#
+# Verify that shared libraries are enabled if required.
+#
+###########################################################
+
+REGINA_SHOULD_BUILD_INTERNAL(KDEUI)
+if test "$should_build" = "yes"; then
+  REGINA_LIBTOOL_SHLIBS_REQUIRED([the KDE user interface], [--disable-kdeui])
+fi
+
+REGINA_SHOULD_BUILD_INTERNAL(PYTHON)
+if test "$should_build" = "yes"; then
+  REGINA_LIBTOOL_SHLIBS_REQUIRED([the Python interface], [--disable-python])
+fi
 
 ###########################################################
 #

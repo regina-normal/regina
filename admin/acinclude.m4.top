@@ -457,6 +457,34 @@ AC_DEFUN([REGINA_LIB_REQUIRED], [
 ])
 
 dnl
+dnl    REGINA_LIBTOOL_SHLIBS_REQUIRED(REQUIRED-BY, FLAG-TO-AVOID-REQ)
+dnl
+dnl    Verifies that libtool is configured with shared libraries enabled.
+dnl    Quits with an informative error message otherwise.
+dnl
+dnl    Example: REGINA_LIBTOOL_SHLIBS_REQUIRED([the KDE user interface],
+dnl        [--disable-kdeui])
+dnl
+AC_DEFUN([REGINA_LIBTOOL_SHLIBS_REQUIRED], [
+  if test "x$enable_shared" != "xyes"; then
+    cat <<END
+
+Shared libraries are currently disabled.  They are however needed by
+$1.
+
+You can enable shared libraries by passing --enable-shared to this
+configure script.  Alternatively, you can pass $2 to
+disable $1.
+
+Please feel free to write to regina-user@lists.sourceforge.net
+for assistance.
+
+END
+    AC_MSG_ERROR([Stopping so that this problem can be resolved.])
+  fi
+])
+
+dnl
 dnl    REGINA_PACKAGE_VERSIONS
 dnl
 dnl    Extracts major and minor version numbers from $PACKAGE_VERSION.
