@@ -161,19 +161,16 @@
       me your additions and I will be able to include them in future
       releases)
      </para></listitem>
-     <listitem><para>
-      Extensive documentation of both the calculation engine and the
-      graphical interface to aid the creation of new routines and the
-      understanding of existing routines
-     </para></listitem>
     </itemizedlist>
    </para></listitem>
-   <listitem><para>User Manual:
+   <listitem><para>Documentation:
     <itemizedlist>
      <listitem><para>
-      Well, more or less.  You're reading it.
-      If anyone's interested in fleshing this out some more,
-      please mail me at &regemail; - I'd love the help!
+      Full reference manual for end users
+     </para></listitem>
+     <listitem><para>
+      Complete documentation for programmers covering both the
+      calculation engine and the graphical user interface
      </para></listitem>
     </itemizedlist>
    </para></listitem>
