@@ -51,6 +51,7 @@
 #include <qhbox.h>
 #include <qlabel.h>
 #include <qvbox.h>
+#include <qwhatsthis.h>
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         const ReginaPrefSet* initialPrefs) :
@@ -73,6 +74,9 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     session->setAutoFormatting(QTextEdit::AutoNone);
     session->setFont(KGlobalSettings::fixedFont());
     session->setFocusPolicy(QWidget::NoFocus);
+    QWhatsThis::add(session, i18n("This area stores a history of the entire "
+        "Python session, including commands that have been typed and the "
+        "output they have produced."));
     box->setStretchFactor(session, 1);
 
     QHBox* inputArea = new QHBox(box);
@@ -83,6 +87,9 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     input->setFont(KGlobalSettings::fixedFont());
     input->setSpacesPerTab(prefs.pythonSpacesPerTab);
     input->setFocus();
+    QString msg = i18n("Type your Python commands into this box.");
+    QWhatsThis::add(prompt, msg);
+    QWhatsThis::add(input, msg);
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
 
     setCentralWidget(box);
@@ -95,12 +102,17 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     KPopupMenu* menuEdit = new KPopupMenu(this);
     KPopupMenu* menuHelp = new KPopupMenu(this);
 
-    (new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S, this,
-        SLOT(saveLog()), actionCollection(), "console_save"))->
-        plug(menuConsole);
+    KAction* act = new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S,
+        this, SLOT(saveLog()), actionCollection(), "console_save");
+    act->setWhatsThis(i18n("Save the entire history of this Python session "
+        "into a text file."));
+    act->plug(menuConsole);
+
     menuConsole->insertSeparator();
-    (new KAction(i18n("&Close"), "fileclose", CTRL+Key_D, this, SLOT(close()),
-        actionCollection(), "console_close"))->plug(menuConsole);
+
+    act = new KAction(i18n("&Close"), "fileclose", CTRL+Key_D, this,
+        SLOT(close()), actionCollection(), "console_close");
+    act->plug(menuConsole);
 
     KAction* actCopy = KStdAction::copy(session, SLOT(copy()),
         actionCollection());
@@ -108,15 +120,26 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     connect(session, SIGNAL(copyAvailable(bool)), actCopy,
         SLOT(setEnabled(bool)));
     actCopy->plug(menuEdit);
+
     KStdAction::selectAll(session, SLOT(selectAll()), actionCollection())->
         plug(menuEdit);
 
-    (new KAction(i18n("&Scripting Overview"), "contents", Key_F1, this,
-        SLOT(scriptingOverview()), actionCollection(), "help_scripting"))->
-        plug(menuHelp);
-    (new KAction(i18n("&Python Reference"), "python_console", 0, this,
-        SLOT(pythonReference()), actionCollection(), "help_engine"))->
-        plug(menuHelp);
+    act = new KAction(i18n("&Scripting Overview"), "contents", Key_F1, this,
+        SLOT(scriptingOverview()), actionCollection(), "help_scripting");
+    act->setWhatsThis(i18n("Open the <i>Python Scripting</i> section of the "
+        "users' reference manual."));
+    act->plug(menuHelp);
+
+    act = new KAction(i18n("&Python Reference"), "python_console", 0, this,
+        SLOT(pythonReference()), actionCollection(), "help_engine");
+    act->setWhatsThis(i18n("Open the detailed reference of classes, methods "
+        "and routines that Regina makes available to Python scripts."));
+    act->plug(menuHelp);
+
+    menuHelp->insertSeparator();
+
+    KStdAction::whatsThis(this, SLOT(whatsThis()),
+        actionCollection())->plug(menuHelp);
 
     menuBar()->insertItem(i18n("&Console"), menuConsole);
     menuBar()->insertItem(i18n("&Edit"), menuEdit);

@@ -456,10 +456,12 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
     listFiles->setSorting(-1);
     listFiles->setSelectionModeExt(KListView::Extended);
     listFiles->setItemsMovable(true);
-    QWhatsThis::add(listFiles, i18n("The list of census files to be searched "
+    QString msg = i18n("The list of census files to be searched "
         "when asked to locate an arbitrary triangulation in all available "
         "censuses.  Note that census files in this list may be deactivated, "
-        "which means that they will not be searched during a census lookup."));
+        "which means that they will not be searched during a census lookup.");
+    QWhatsThis::add(listFiles, msg);
+    QWhatsThis::add(activeCount, msg);
     connect(listFiles, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
 
     // Set up the button panel.
@@ -677,10 +679,12 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
     listFiles->setSorting(-1);
     listFiles->setSelectionModeExt(KListView::Extended);
     listFiles->setItemsMovable(true);
-    QWhatsThis::add(listFiles, i18n("The list of Python libraries to be "
+    msg = i18n("The list of Python libraries to be "
         "loaded at the beginning of each new Python session.  Note that "
         "libraries in this list may be deactivated, "
-        "which means that they will not be loaded."));
+        "which means that they will not be loaded.");
+    QWhatsThis::add(listFiles, msg);
+    QWhatsThis::add(activeCount, msg);
     connect(listFiles, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
 
     // Set up the button panel.

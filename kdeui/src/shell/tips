@@ -53,6 +53,17 @@ or a similar path, depending on your distribution and how Regina was compiled.
 <tip category="Regina">
 <html>
 <p>
+Most user interface elements in Regina come with &quot;what's this&quot;
+help.
+<p>
+To find out what a button, text box, list, menu item, etc. does,
+select <i>What's This?</i> from the <i>Help</i> menu and click on whatever
+object you are curious about.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
 If you wish to remember what role a tetrahedron plays within a
 triangulation, you can name it.
 <p>

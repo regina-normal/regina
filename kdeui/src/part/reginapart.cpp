@@ -43,6 +43,7 @@
 #include <qlayout.h>
 #include <qsplitter.h>
 #include <qvbox.h>
+#include <qwhatsthis.h>
 #include <kaction.h>
 #include <kfiledialog.h>
 #include <kiconloader.h>
@@ -487,6 +488,13 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
     splitter->setResizeMode(treeBox, QSplitter::KeepSize);
 
     treeView = new PacketTreeView(this, treeBox);
+    QWhatsThis::add(treeView, i18n("<qt>You are looking at the packet tree "
+        "for this topology data file.<p>"
+        "Each piece of information stored in a data file "
+        "is a packet: this include triangulations, normal surface "
+        "lists, text items and so on.  "
+        "Packets within a data file are arranged in a tree structure, "
+        "so that each packet may contain one or more child packets.</qt>"));
     treeLayout->addWidget(treeView, 1);
     connect(treeView, SIGNAL(selectionChanged()), this,
         SLOT(updateTreePacketActions()));

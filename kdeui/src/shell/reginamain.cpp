@@ -322,11 +322,20 @@ void ReginaMain::newToolbarConfig() {
 }
 
 void ReginaMain::setupActions() {
+    KAction* act;
+
     // File actions:
-    new KAction(i18n("&New Topology Data"), "filenew", CTRL+Key_N, this,
+    act = new KAction(i18n("&New Topology Data"), "filenew", CTRL+Key_N, this,
         SLOT(newTopology()), actionCollection(), "new_topology");
-    new KAction(i18n("New &Python Library"), "filenew", 0, this,
+    act->setWhatsThis(i18n("Create a new topology data file.  This is "
+        "the standard type of data file used by Regina."));
+
+    act = new KAction(i18n("New &Python Library"), "filenew", 0, this,
         SLOT(newPython()), actionCollection(), "new_python");
+    act->setWhatsThis(i18n("Create a new Python library.  This is "
+        "a Python file that can be loaded when a script is run or a "
+        "new Python session is started."));
+
     KStdAction::open(this, SLOT(fileOpen()), actionCollection());
     fileOpenRecent = KStdAction::openRecent(this, SLOT(openURL(const KURL&)),
         actionCollection());
@@ -353,10 +362,20 @@ void ReginaMain::setupActions() {
     actPython = new KAction(i18n("&Python Console"), "python_console",
         ALT+Key_Y, this, SLOT(pythonConsole()), actionCollection(),
         "python_console");
+    actPython->setWhatsThis(i18n("Open a new Python console.  You can "
+        "use a Python console to interact directly with Regina's "
+        "mathematical engine."));
 
     // Help:
-    new KAction(i18n("&Python Reference"), "python_console", 0, this,
+    act = new KAction(i18n("&Python Reference"), "python_console", 0, this,
         SLOT(pythonReference()), actionCollection(), "help_engine");
+    act->setWhatsThis(i18n("Open the detailed documentation for Regina's "
+        "mathematical engine.  This describes the classes, methods and "
+        "routines that Regina makes available to Python scripts.<p>"
+        "See the <i>Python Scripting</i> chapter of the user's reference "
+        "manual for more information (the user's reference manual is "
+        "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
+
     new KAction(i18n("&Tip of the Day"), "idea", 0, this,
         SLOT(helpTipOfDay()), actionCollection(), "help_tipofday");
 
