@@ -67,6 +67,18 @@ public class NCORBAFace extends CORBAShareableObject
     public boolean isBoundary() {
         return data.isBoundary();
     }
+    public int getType() {
+        return data.getType();
+    }
+    public int getSubtype() {
+        return data.getSubtype();
+    }
+    public boolean isMobiusBand() {
+        return data.isMobiusBand();
+    }
+    public boolean isCone() {
+        return data.isCone();
+    }
 
     public int getNumberOfEmbeddings() {
         return data.getNumberOfEmbeddings();

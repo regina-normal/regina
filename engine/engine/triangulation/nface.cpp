@@ -36,6 +36,66 @@
     #include "engine/triangulation/nface.h"
 #endif
 
+int NFace::getType() {
+    if (type)
+        return type;
+
+    subtype = -1;
+
+    // Determine the face type.
+    NVertex* v[3];
+    NEdge* e[3];
+    int i;
+    for (i = 0; i < 3; i++) {
+        v[i] = getVertex(i);
+        e[i] = getEdge(i);
+    }
+
+    if (e[0] != e[1] && e[1] != e[2] && e[2] != e[0]) {
+        // Three distinct edges.
+        if (v[0] == v[1] && v[1] == v[2])
+            return (type = PARACHUTE);
+        for (i = 0; i < 3; i++)
+            if (v[(i+1)%3] == v[(i+2)%3]) {
+                subtype = i;
+                return (type = SCARF);
+            }
+        return (type = TRIANGLE);
+    }
+
+    if (e[0] == e[1] && e[1] == e[2]) {
+        // All edges identified.
+        if (getEdgeMapping(0).sign() == getEdgeMapping(1).sign() &&
+                getEdgeMapping(1).sign() == getEdgeMapping(2).sign())
+            return (type = ALL);
+
+        for (i = 0; i < 3; i++)
+            if (getEdgeMapping((i+1)%3).sign() ==
+                    getEdgeMapping((i+2)%3).sign()) {
+                subtype = i;
+                return (type = TURBAN);
+            }
+    }
+
+    // Two edges identified.
+    for (i = 0; i < 3; i++)
+        if (e[(i+1)%3] == e[(i+2)%3]) {
+            subtype = i;
+
+            if (getEdgeMapping((i+1)%3).sign() ==
+                    getEdgeMapping((i+2)%3).sign())
+                return (type = MOBIUS);
+
+            if (v[0] == v[1] && v[1] == v[2])
+                return (type = HORN);
+
+            return (type = CONE);
+        }
+
+    // We should never reach this point.
+    return 0;
+}
+
 NEdge* NFace::getEdge(int edge) const {
     NPerm p = embeddings[0]->getVertices();
     return embeddings[0]->getTetrahedron()->getEdge(

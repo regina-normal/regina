@@ -101,6 +101,18 @@ JNIEXPORT jint JNICALL
     return GET_ENGINE_OBJECT(env, NFace, me)->getNumberOfEmbeddings();
 }
 
+JNIEXPORT jint JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNIFace_getSubtype
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NFace, me)->getSubtype();
+}
+
+JNIEXPORT jint JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNIFace_getType
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NFace, me)->getType();
+}
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getVertex
         (JNIEnv *env, jobject me, jint index) {
@@ -113,5 +125,17 @@ JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_isBoundary
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFace, me)->isBoundary();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNIFace_isCone
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NFace, me)->isCone();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNIFace_isMobiusBand
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NFace, me)->isMobiusBand();
 }
 

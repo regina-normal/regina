@@ -142,10 +142,12 @@ public class SkeletonTableFrame extends JDialog {
         JTable table = new JTable(new SkeletonTableModel());
         table.getTableHeader().setReorderingAllowed(false);
         table.getColumnModel().getColumn(0).setPreferredWidth(20);
-        table.getColumnModel().getColumn(1).setPreferredWidth(60);
+        table.getColumnModel().getColumn(1).setPreferredWidth(80);
         table.getColumnModel().getColumn(2).setPreferredWidth(20);
-        table.getColumnModel().getColumn(3).setPreferredWidth(300);
+        table.getColumnModel().getColumn(3).setPreferredWidth(280);
         SkeletonLongStringRenderer r = new SkeletonLongStringRenderer();
+        table.getColumnModel().getColumn(1).setCellRenderer(r);
+        table.getColumnModel().getColumn(1).setCellEditor(r);
         table.getColumnModel().getColumn(3).setCellRenderer(r);
         table.getColumnModel().getColumn(3).setCellEditor(r);
                     
@@ -253,10 +255,17 @@ public class SkeletonTableFrame extends JDialog {
                     switch(link) {
                         case NVertex.SPHERE: return "";
                         case NVertex.DISC: return "Bdry";
-                        case NVertex.TORUS: return "Torus cusp";
-                        case NVertex.KLEIN_BOTTLE: return "Kln btl cusp";
+                        case NVertex.TORUS: return "Cusp (torus)";
+                        case NVertex.KLEIN_BOTTLE: return "Cusp (klein bottle)";
                         case NVertex.NON_STANDARD_CUSP:
-                            return "Non-std cusp";
+                            if (data.isLinkOrientable())
+                                return "Cusp (orbl, genus " + String.valueOf(
+                                    1 - (data.getLinkEulerCharacteristic() / 2))
+                                    + ')';
+                            else
+                                return "Cusp (non-or, genus " + String.valueOf(
+                                    2 - data.getLinkEulerCharacteristic())
+                                    + ')';
                         case NVertex.NON_STANDARD_BDRY:
                             return "Non-std bdry";
                     }
@@ -310,10 +319,18 @@ public class SkeletonTableFrame extends JDialog {
                 if (col == 2)
                     return String.valueOf(tot);
                 else if (col == 1) {
-                    if (data.isBoundary())
-                        return "Bdry";
-                    else
-                        return "";
+                    String response = (data.isBoundary() ? "(Bdry) " : "");
+                    switch (data.getType()) {
+                        case NFace.TRIANGLE: return response + "Triangle";
+                        case NFace.SCARF: return response + "Scarf";
+                        case NFace.PARACHUTE: return response + "Parachute";
+                        case NFace.MOBIUS: return response + "Mobius band";
+                        case NFace.CONE: return response + "Cone";
+                        case NFace.HORN: return response + "Horn";
+                        case NFace.TURBAN: return response + "Turban";
+                        case NFace.ALL: return response + "All";
+                    }
+                    return response + "UNKNOWN";
                 }
                 // Build a long string.
                 StringBuffer response = new StringBuffer();
@@ -393,7 +410,7 @@ public class SkeletonTableFrame extends JDialog {
          * @return whether the given table cell is editable.
          */
         public boolean isCellEditable(int row, int col) {
-            return (col == 3);
+            return (col == 1 || col == 3);
         }
     }
 

@@ -115,6 +115,27 @@ class NFaceEmbedding {
  * \idlfile <tt>Triangulation/NTetrahedron.idl</tt>
  */
 class NFace : public ShareableObject {
+    public:
+        static const int TRIANGLE = 1;
+            /**< Specifies a face with no identified vertices or edges. */
+        static const int SCARF = 2;
+            /**< Specifies a face with two identified vertices. */
+        static const int PARACHUTE = 3;
+            /**< Specifies a face with three identified vertices. */
+        static const int CONE = 4;
+            /**< Specifies a face with two edges identified to form a cone. */
+        static const int MOBIUS = 5;
+            /**< Specifies a face with two edges identified to form a
+                 mobius band. */
+        static const int HORN = 6;
+            /**< Specifies a face with two edges identified to form a
+                 cone with all three vertices identified. */
+        static const int TURBAN = 7;
+            /**< Specifies a face with all three edges identified, some
+                 via orientable and some via non-orientable gluings. */
+        static const int ALL = 8;
+            /**< Specifies a face with all three edges identified using
+                 non-orientable gluings. */
     private:
         NFaceEmbedding* embeddings[2];
             /**< An array of descriptors of how this face forms a part of
@@ -129,6 +150,14 @@ class NFace : public ShareableObject {
         NBoundaryComponent* boundaryComponent;
             /**< The boundary component that this face is a part of,
                  or 0 if this face is internal. */
+        int type;
+            /**< Specifies the face type according to one of the
+                 predefined face type constants in NFace, or 0 if type has
+                 not yet been determined. */
+        int subtype;
+            /**< Specifies the vertex or edge that plays a special role
+                 for the face type specified by \a type.  This is only
+                 relevant for some face types. */
 
     public:
         /**
@@ -157,7 +186,50 @@ class NFace : public ShareableObject {
          * boundary.
          */
         bool isBoundary() const;
+
+        /**
+         * Returns a description of the face type.
+         * The face type describes how the edges and vertices of the
+         * face are identified.
+         *
+         * @return one of the predefined face type constants in NFace.
+         */
+        int getType();
         
+        /**
+         * Return the face vertex or face edge that plays a special role
+         * for the face type of this face.  Note that this routine is
+         * only relevant for some face types.  The face type is returned by
+         * getType().
+         *
+         * @return The vertex or edge that plays a special role (this
+         * will be 0, 1 or 2), or -1 if this face type has no special
+         * vertex or edge.
+         */
+        int getSubtype();
+
+        /**
+         * Determines whether this face is wrapped up to form a Mobius band.
+         *
+         * Note that several different face types (as returned by
+         * getType()) can produce this result.
+         * Note also that a face can be both a Mobius band \a and a cone.
+         *
+         * @return \c true if and only if this face is a Mobius band.
+         */
+        bool isMobiusBand();
+
+        /**
+         * Determines whether this face is wrapped up to form a cone.
+         *
+         * Note that several different face types (as returned by
+         * getType()) can produce this result.
+         * Note also that a face can be both a Mobius band \a and a cone.
+         *
+         * @return \c true if and only if this face is a cone.
+         */
+        bool isCone();
+
         /**
          * Returns the number of descriptors available through
          * getEmbedding().
@@ -251,7 +323,7 @@ class NFace : public ShareableObject {
 // Inline functions for NFace
 
 inline NFace::NFace(NComponent* myComponent) : nEmbeddings(0),
-        component(myComponent), boundaryComponent(0) {
+        component(myComponent), boundaryComponent(0), type(0) {
 }
 
 inline NFace::~NFace() {
@@ -276,6 +348,21 @@ inline NVertex* NFace::getVertex(int vertex) const {
 
 inline bool NFace::isBoundary() const {
     return (boundaryComponent != 0);
+}
+
+inline int NFace::getSubtype() {
+    getType();
+    return subtype;
+}
+
+inline bool NFace::isMobiusBand() {
+    getType();
+    return (type == ALL || type == TURBAN || type == MOBIUS);
+}
+
+inline bool NFace::isCone() {
+    getType();
+    return (type == TURBAN || type == CONE || type == HORN);
 }
 
 inline unsigned NFace::getNumberOfEmbeddings() const {

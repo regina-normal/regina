@@ -46,6 +46,10 @@ public class NJNIFace extends JNIShareableObject implements NFace {
     public native char _getEdgeMapping(int edge);
 
     public native boolean isBoundary();
+    public native int getType();
+    public native int getSubtype();
+    public native boolean isMobiusBand();
+    public native boolean isCone();
 
     public native int getNumberOfEmbeddings();
     public native NFaceEmbedding getEmbedding(int index);

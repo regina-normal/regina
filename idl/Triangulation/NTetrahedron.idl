@@ -78,6 +78,10 @@ module Regina {
             char getEdgeMapping(in long edge);
 
             boolean isBoundary();
+            long getType();
+            long getSubtype();
+            boolean isMobiusBand();
+            boolean isCone();
 
             long getNumberOfEmbeddings();
             void getEmbedding(out NTetrahedron tet, out long face,
