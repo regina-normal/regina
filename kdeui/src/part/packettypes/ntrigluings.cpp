@@ -337,10 +337,13 @@ void NTriGluingsUI::removeSelectedTets() {
             newTetNums[oldRow++] = newRow++;
     }
 
-    for (oldRow = 0; oldRow < nRows; oldRow++)
+    for (oldRow = 0; oldRow < nRows; oldRow++) {
+        dynamic_cast<TetNameItem*>(faceTable->item(oldRow, 0))->
+            tetNumToChange(newTetNums[oldRow]);
         for (i = 1; i < 5; i++)
             dynamic_cast<FaceGluingItem*>(faceTable->item(oldRow, i))->
                 tetNumsToChange(newTetNums);
+    }
 
     delete[] newTetNums;
 
