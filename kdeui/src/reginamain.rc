@@ -25,11 +25,9 @@
   <Menu name="tools">
     <Merge/>
     <Separator/>
-    <Action name="python_standalone" />
+    <Action name="python_console" />
   </Menu>
-  <Menu name="settings">
-  </Menu>
-  <Menu name="help">
-  </Menu>
+  <Menu name="settings"/>
+  <Menu name="help"/>
 </MenuBar>
 </kpartgui>

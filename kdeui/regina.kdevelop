@@ -11,8 +11,8 @@
       <keyword>Qt</keyword>
       <keyword>KDE</keyword>
     </keywords>
-    <version></version>
-    <description></description>
+    <version/>
+    <description/>
     <ignoreparts/>
   </general>
   <kdevautoproject>
@@ -22,21 +22,21 @@
     </general>
     <run>
       <mainprogram>src/regina</mainprogram>
-      <programargs></programargs>
+      <programargs/>
     </run>
     <configurations>
       <default>
         <configargs>--prefix=/usr</configargs>
-        <builddir></builddir>
+        <builddir/>
         <ccompiler>GccOptions</ccompiler>
         <cxxcompiler>GppOptions</cxxcompiler>
         <f77compiler>G77Options</f77compiler>
         <ccompilerbinary>gcc-3.2</ccompilerbinary>
         <cxxcompilerbinary>g++-3.2</cxxcompilerbinary>
-        <f77compilerbinary></f77compilerbinary>
-        <cflags></cflags>
-        <cxxflags></cxxflags>
-        <f77flags></f77flags>
+        <f77compilerbinary/>
+        <cflags/>
+        <cxxflags/>
+        <f77flags/>
       </default>
     </configurations>
     <envvars/>
@@ -44,7 +44,7 @@
       <abortonerror>false</abortonerror>
       <numberofjobs>1</numberofjobs>
       <dontact>false</dontact>
-      <makebin></makebin>
+      <makebin/>
     </make>
   </kdevautoproject>
   <kdevfileview>
@@ -76,8 +76,8 @@
   <kdevdebugger>
     <general>
       <dbgshell>libtool</dbgshell>
-      <programargs></programargs>
-      <gdbpath></gdbpath>
+      <programargs/>
+      <gdbpath/>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>
@@ -99,8 +99,8 @@
     </classstore>
     <filetemplates>
       <choosefiles>false</choosefiles>
-      <interfaceURL></interfaceURL>
-      <implementationURL></implementationURL>
+      <interfaceURL/>
+      <implementationURL/>
       <interfacesuffix>.h</interfacesuffix>
       <implementationsuffix>.cpp</implementationsuffix>
       <lowercasefilenames>true</lowercasefilenames>
@@ -112,12 +112,12 @@
   </kdevclassview>
   <kdevcvs>
     <cvsoptions>-f</cvsoptions>
-    <commitoptions></commitoptions>
+    <commitoptions/>
     <updateoptions>-dP</updateoptions>
-    <addoptions></addoptions>
+    <addoptions/>
     <removeoptions>-f</removeoptions>
     <diffoptions>-u3 -p</diffoptions>
-    <logoptions></logoptions>
+    <logoptions/>
   </kdevcvs>
   <workspace>
     <openfiles/>

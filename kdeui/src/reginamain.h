@@ -43,10 +43,12 @@ class KToggleAction;
 class KURL;
 
 /**
- * The main window for Regina.  This class handles the menus, toolbars
- * and status bars.
+ * A top-level window for Regina.
  *
- * Note that each data file is opened in its own main window.
+ * Each main window is used for a single data file.  Data files are
+ * actually displayed and edited by embedded KParts.
+ *
+ * This class also stores global preferences for Regina.
  */
 class ReginaMain : public KParts::MainWindow {
     Q_OBJECT
@@ -56,10 +58,7 @@ class ReginaMain : public KParts::MainWindow {
          * Components
          */
         KParts::ReadWritePart* currentPart;
-            /**< The part for the currently opened document, or 0 if
-                 no document has yet been opened. */
-        KXMLGUIClient* currentGUI;
-            /**< The GUI for the currently opened document, or 0 if
+            /**< The part containing the currently opened document, or 0 if
                  no document has yet been opened. */
 
         /**
@@ -78,77 +77,91 @@ class ReginaMain : public KParts::MainWindow {
         bool autoDock;
             /**< Do we automatically dock new packet viewers into the
                  parent window? */
-        bool displayIcon;
-            /**< Should we display the pretty Regina icon? */
         bool autoFileExtension;
             /**< Should filenames be given an automatic extension? */
+        bool displayIcon;
+            /**< Should we display the pretty Regina icon? */
 
     public:
         /**
-         * Default Constructor
+         * Constructors and destructors.
          */
         ReginaMain();
-
-        /**
-         * Default Destructor
-         */
         virtual ~ReginaMain();
 
-
-        bool getAutoDock();
-        bool getDisplayIcon();
-        bool getAutoFileExtension();
-
-        void setAutoDock(bool);
-        void setDisplayIcon(bool);
-        void setAutoFileExtension(bool);
+        /**
+         * Retrieve global preferences for Regina.
+         */
+        bool getAutoDock() const;
+        bool getAutoFileExtension() const;
+        bool getDisplayIcon() const;
 
         /**
-         * Forces this main window to reread the global configuration.
+         * Set global preferences for Regina.  These routines update the
+         * user interface accordingly, though they do not write the
+         * preferences to the user's configuration file.
+         */
+        void setAutoDock(bool);
+        void setAutoFileExtension(bool);
+        void setDisplayIcon(bool);
+
+        /**
+         * Force this main window to reread the user's configuration
+         * file and update itself (and its child windows) accordingly.
          */
         void readOptions();
 
         /**
-         * Saves the current preferences to the global configuration.
+         * Save the current preferences to the user's configuration file.
          * All other main windows will then be forced to reread this
-         * configuration.
+         * configuration and update themselves accordingly.
          */
         void saveOptions();
 
     protected:
         /**
-         * Overridden virtuals for Qt drag 'n drop (XDND)
+         * Overridden for drag-and-drop implementation.
          */
         virtual void dragEnterEvent(QDragEnterEvent *event);
         virtual void dropEvent(QDropEvent *event);
 
-    protected:
         /**
-         * This function is called when it is time for the app to save its
-         * properties for session management purposes.
+         * Overridden for session management.
          */
-        void saveProperties(KConfig *);
+        virtual void saveProperties(KConfig *);
+        virtual void readProperties(KConfig *);
 
         /**
-         * This function is called when this app is restored.  The KConfig
-         * object points to the session management config file that was saved
-         * with @ref saveProperties
+         * Overridden to handle window closing.
          */
-        void readProperties(KConfig *);
-
         virtual bool queryClose();
+
+    signals:
+        /**
+         * Emitted when the 'display icon' property for this main
+         * window is changed.
+         */
+        void changedDisplayIcon(bool);
 
     public slots:
         /**
-         * Use this method to load whatever file/URL you have
+         * Open the given URL in this window, or in a new top-level
+         * window if this window already contains an open document.
          */
-        void load(const KURL& url);
+        void openURL(const KURL& url);
+
+        /**
+         * Open a new Python console.  The console will be linked
+         * to the document in this window (if one exists).
+         */
+        void pythonConsole();
 
     private slots:
+        /**
+         * Implementation of actions.
+         */
         void fileNew();
         void fileOpen();
-        void fileSave();
-        void fileSaveAs();
         void optionsShowToolbar();
         void optionsShowStatusbar();
         void optionsConfigureKeys();
@@ -159,21 +172,36 @@ class ReginaMain : public KParts::MainWindow {
         void changeCaption(const QString& text);
 
     private:
-        void setupAccel();
+        /**
+         * Initial setup.
+         */
         void setupActions();
 
+        /**
+         * Add the given URL to the recent file list for every top-level
+         * window (including this one).
+         */
+        void addRecentFile(const KURL& url);
+
+        /**
+         * Force this main window to read the given configuration
+         * and update itself (and its child windows) accordingly.
+         */
         void readOptions(KConfig* config);
 };
 
-inline bool ReginaMain::getAutoDock() {
+inline ReginaMain::~ReginaMain() {
+}
+
+inline bool ReginaMain::getAutoDock() const {
     return autoDock;
 }
 
-inline bool ReginaMain::getAutoFileExtension() {
+inline bool ReginaMain::getAutoFileExtension() const {
     return autoFileExtension;
 }
 
-inline bool ReginaMain::getDisplayIcon() {
+inline bool ReginaMain::getDisplayIcon() const {
     return displayIcon;
 }
 

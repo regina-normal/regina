@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
             for (int i = 0; i < args->count(); i++) {
                 ReginaMain *widget = new ReginaMain;
                 widget->show();
-                widget->load(args->url(i));
+                widget->openURL(args->url(i));
             }
         }
         args->clear();
