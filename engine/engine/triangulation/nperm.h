@@ -61,7 +61,7 @@ namespace regina {
  */
 class NPerm {
     private:
-        char code;
+        unsigned char code;
             /**< The internal code representing this permutation. */
 
     public:
@@ -79,7 +79,7 @@ class NPerm {
          * @param newCode the internal code from which the new
          * permutation will be created.
          */
-        NPerm(char newCode);
+        NPerm(unsigned char newCode);
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -143,7 +143,7 @@ class NPerm {
          *
          * @return the internal code.
          */
-        char getPermCode() const;
+        unsigned char getPermCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -155,7 +155,7 @@ class NPerm {
          * @param newCode the internal code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(char newCode);
+        void setPermCode(unsigned char newCode);
 
         /**
          * Determines whether the given character is a valid internal
@@ -167,7 +167,7 @@ class NPerm {
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
-        static bool isPermCode(char newCode);
+        static bool isPermCode(unsigned char newCode);
 
         /**
          * Sets this permutation to the transposition of
@@ -531,7 +531,7 @@ std::string edgeDescription(const NPerm& edgePerm);
 inline NPerm::NPerm() : code(228) {
 }
 
-inline NPerm::NPerm(char newCode) : code(newCode) {
+inline NPerm::NPerm(unsigned char newCode) : code(newCode) {
 }
 
 inline NPerm::NPerm(int a, int b) {
@@ -546,7 +546,7 @@ inline NPerm::NPerm(int a, int b, int c, int d) {
 
 inline NPerm::NPerm(int a0, int a1, int b0, int b1,
         int c0, int c1, int d0, int d1) {
-    code = char(
+    code = (unsigned char)(
         (a1 << (2*a0)) +
         (b1 << (2*b0)) +
         (c1 << (2*c0)) +
@@ -563,10 +563,10 @@ inline void NPerm::setPerm(int a, int b) {
 }
 
 inline void NPerm::setPerm(int a, int b, int c, int d) {
-    code = (char) ( (d << 6) + (c << 4) + (b << 2) + a);
+    code = (unsigned char) ( (d << 6) + (c << 4) + (b << 2) + a);
 }
 
-inline void NPerm::setPermCode(char newCode) {
+inline void NPerm::setPermCode(unsigned char newCode) {
     code = newCode;
 }
 
@@ -580,13 +580,13 @@ inline NPerm NPerm::operator *(const NPerm& q) const {
 
 inline NPerm NPerm::inverse() const {
     // Specify the inverse by its internal code.
-    return NPerm(char(
+    return NPerm((unsigned char)(
         (1 << (2*imageOf(1))) +
         (2 << (2*imageOf(2))) +
         (3 << (2*imageOf(3)))));
 }
 
-inline char NPerm::getPermCode() const {
+inline unsigned char NPerm::getPermCode() const {
     return code;
 }
 
@@ -603,7 +603,7 @@ inline int NPerm::imageOf(int source) const {
 }
 
 inline bool NPerm::isIdentity() const {
-    return (code == (char)228);
+    return (code == 228);
 }
 
 inline bool NPerm::operator == (const NPerm& other) const {

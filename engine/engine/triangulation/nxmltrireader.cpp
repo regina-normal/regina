@@ -74,10 +74,10 @@ namespace {
                     if (tetIndex < 0 ||
                             tetIndex >= (int)tri->getNumberOfTetrahedra())
                         continue;
-                    if (! NPerm::isPermCode((char)permCode))
+                    if (! NPerm::isPermCode((unsigned char)permCode))
                         continue;
 
-                    perm.setPermCode((char)permCode);
+                    perm.setPermCode((unsigned char)permCode);
                     adjTet = tri->getTetrahedra()[tetIndex];
                     adjFace = perm[k];
                     if (adjTet == tet && adjFace == k)

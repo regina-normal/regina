@@ -83,7 +83,7 @@ const unsigned allPermsS2Inv[2] = {
     0, 1
 };
 
-bool NPerm::isPermCode(char code) {
+bool NPerm::isPermCode(unsigned char code) {
     unsigned char mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));
