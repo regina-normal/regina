@@ -71,17 +71,17 @@ public class NormalOptionSet extends OptionSet {
     /**
      * Full option name for a particular cached option.
      */
-    public static final String optionJPythonLibCount = "JPythonLibCount";
+    public static final String optionJythonLibCount = "JythonLibCount";
 
     /**
      * Option name stub for a particular cached option.
      */
-    public static final String optionJPythonLib = "JPythonLib";
+    public static final String optionJythonLib = "JythonLib";
 
     /**
      * Option name stub for a particular cached option.
      */
-    public static final String optionJPythonLibUse = "JPythonLibUse";
+    public static final String optionJythonLibUse = "JythonLibUse";
 
     /**
      * The default for a particular cached option.
@@ -106,7 +106,7 @@ public class NormalOptionSet extends OptionSet {
 	/**
 	 * A particular cached option.
 	 */
-	private Vector jpythonLibraries;
+	private Vector jythonLibraries;
 
     /**
      * Creates a new option set not associated with any file.
@@ -160,12 +160,12 @@ public class NormalOptionSet extends OptionSet {
         autoDock = getBooleanOption(optionAutoDock, defaultAutoDock);
         displayIcon = getBooleanOption(optionDisplayIcon, defaultDisplayIcon);
 
-		jpythonLibraries = new Vector();
-		int nLibs = getIntOption(optionJPythonLibCount, 0);
+		jythonLibraries = new Vector();
+		int nLibs = getIntOption(optionJythonLibCount, 0);
 		for (int i = 0; i < nLibs; i++)
-			jpythonLibraries.addElement(new JPythonLibrary(
-				getStringOption(optionJPythonLib + String.valueOf(i), ""),
-				getBooleanOption(optionJPythonLibUse + String.valueOf(i),
+			jythonLibraries.addElement(new JythonLibrary(
+				getStringOption(optionJythonLib + String.valueOf(i), ""),
+				getBooleanOption(optionJythonLibUse + String.valueOf(i),
 				false)));
 
         if (caught != null)
@@ -184,21 +184,21 @@ public class NormalOptionSet extends OptionSet {
         setBooleanOption(optionAutoDock, autoDock);
         setBooleanOption(optionDisplayIcon, displayIcon);
 
-		int nLibs = jpythonLibraries.size();
+		int nLibs = jythonLibraries.size();
 		// Clear out all unnecessary library options.
-		int oldNLibs = getIntOption(optionJPythonLibCount, 0);
+		int oldNLibs = getIntOption(optionJythonLibCount, 0);
 		for (int i = nLibs; i < oldNLibs; i++) {
-			removeOption(optionJPythonLib + String.valueOf(i));
-			removeOption(optionJPythonLibUse + String.valueOf(i));
+			removeOption(optionJythonLib + String.valueOf(i));
+			removeOption(optionJythonLibUse + String.valueOf(i));
 		}
 
-		setIntOption(optionJPythonLibCount, nLibs);
-		JPythonLibrary lib;
+		setIntOption(optionJythonLibCount, nLibs);
+		JythonLibrary lib;
 		for (int i = 0; i < nLibs; i++) {
-			lib = (JPythonLibrary)jpythonLibraries.elementAt(i);
-			setStringOption(optionJPythonLib + String.valueOf(i),
+			lib = (JythonLibrary)jythonLibraries.elementAt(i);
+			setStringOption(optionJythonLib + String.valueOf(i),
 				lib.getLibraryPath());
-			setBooleanOption(optionJPythonLibUse + String.valueOf(i),
+			setBooleanOption(optionJythonLibUse + String.valueOf(i),
 				lib.shouldUseLibrary());
 		}
 
@@ -242,33 +242,33 @@ public class NormalOptionSet extends OptionSet {
     }
 
 	/**
-	 * Returns a vector of <tt>JPythonLibrary</tt> objects representing
-	 * the set of available JPython libraries.
+	 * Returns a vector of <tt>JythonLibrary</tt> objects representing
+	 * the set of available Jython libraries.
 	 *
-	 * @return the set of available JPython libraries.
-	 * @see normal.options.NormalOptionSet.JPythonLibrary
+	 * @return the set of available Jython libraries.
+	 * @see normal.options.NormalOptionSet.JythonLibrary
 	 */
-	public Vector getJPythonLibraries() {
-		return jpythonLibraries;
+	public Vector getJythonLibraries() {
+		return jythonLibraries;
 	}
 
 	/**
-	 * Sets the list of available JPython libraries.
+	 * Sets the list of available Jython libraries.
 	 *
-	 * @param value the new list of JPython libraries; this must be a
-	 * vector of <tt>JPythonLibrary</tt> objects.
-	 * @see normal.options.NormalOptionSet.JPythonLibrary
+	 * @param value the new list of Jython libraries; this must be a
+	 * vector of <tt>JythonLibrary</tt> objects.
+	 * @see normal.options.NormalOptionSet.JythonLibrary
 	 */
-	public void setJPythonLibraries(Vector value) {
-		jpythonLibraries = value;
+	public void setJythonLibraries(Vector value) {
+		jythonLibraries = value;
 	}
 
 	/**
-	 * Stores the details of a JPython library.
+	 * Stores the details of a Jython library.
 	 */
-	public static class JPythonLibrary {
+	public static class JythonLibrary {
 		/**
-		 * The path to the JPython library file.
+		 * The path to the Jython library file.
 		 */
 		private String libraryPath;
 		/**
@@ -277,30 +277,30 @@ public class NormalOptionSet extends OptionSet {
 		private boolean useLibrary;
 
 		/**
-		 * Creates a new JPython library specifier.
+		 * Creates a new Jython library specifier.
 		 *
-		 * @param libraryPath the path to the JPython library file.
+		 * @param libraryPath the path to the Jython library file.
 		 * @param useLibrary <tt>true</tt> if and only if the library
 		 * should be used.
 		 */
-		public JPythonLibrary(String libraryPath, boolean useLibrary) {
+		public JythonLibrary(String libraryPath, boolean useLibrary) {
 			this.libraryPath = libraryPath;
 			this.useLibrary = useLibrary;
 		}
 
 		/**
-		 * Returns the path to this particular JPython library file.
+		 * Returns the path to this particular Jython library file.
 		 *
-		 * @return the path to this particular JPython library file.
+		 * @return the path to this particular Jython library file.
 		 */
 		public String getLibraryPath() {
 			return libraryPath;
 		}
 
 		/**
-		 * Returns whether or not this JPython library should be used.
+		 * Returns whether or not this Jython library should be used.
 		 *
-		 * @return <tt>true</tt> if and only if this JPython library
+		 * @return <tt>true</tt> if and only if this Jython library
 		 * should be used.
 		 */
 		public boolean shouldUseLibrary() {

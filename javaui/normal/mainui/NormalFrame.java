@@ -143,7 +143,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     private ActionListener recentFileActionListener;
 
     /**
-     * List of open JPython consoles.
+     * List of open Jython consoles.
      * @serial
      */
     private Vector consoles = new Vector();
@@ -338,11 +338,11 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         // Tools menu
         JMenu menuTools = new JMenu("Tools");
 		menuTools.setMnemonic(KeyEvent.VK_T);
-        JMenuItem menuToolsJPythonConsole = new JMenuItem("JPython Console",
+        JMenuItem menuToolsJythonConsole = new JMenuItem("Jython Console",
             Images.btnConsole.image());
-		menuToolsJPythonConsole.setMnemonic(KeyEvent.VK_J);
-        menuToolsJPythonConsole.setEnabled(shell.hasFoundJPython());
-        menuTools.add(menuToolsJPythonConsole);
+		menuToolsJythonConsole.setMnemonic(KeyEvent.VK_J);
+        menuToolsJythonConsole.setEnabled(shell.hasFoundJython());
+        menuTools.add(menuToolsJythonConsole);
 
         // Options menu
         JMenu menuOptions = new JMenu("Options");
@@ -365,17 +365,17 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 		menuOptionsFile.setMnemonic(KeyEvent.VK_F);
         JMenuItem menuOptionsHelpBrowser = new JMenuItem("Help Browser...");
 		menuOptionsHelpBrowser.setMnemonic(KeyEvent.VK_H);
-        JMenuItem menuOptionsJPythonLibs =
+        JMenuItem menuOptionsJythonLibs =
 			new JMenuItem("Jython Libraries...");
-		menuOptionsJPythonLibs.setMnemonic(KeyEvent.VK_J);
-        menuOptionsJPythonLibs.setEnabled(shell.hasFoundJPython());
+		menuOptionsJythonLibs.setMnemonic(KeyEvent.VK_J);
+        menuOptionsJythonLibs.setEnabled(shell.hasFoundJython());
         menuOptionsDisplay.add(menuOptionsAutoDock);
         menuOptionsDisplay.add(menuOptionsDisplayIcon);
         menuOptions.add(menuOptionsDisplay);
         menuOptionsFile.add(menuOptionsAutoExtension);
         menuOptions.add(menuOptionsFile);
         menuOptions.add(menuOptionsHelpBrowser);
-		menuOptions.add(menuOptionsJPythonLibs);
+		menuOptions.add(menuOptionsJythonLibs);
         menuOptions.add(new LookAndFeelMenu(this));
                 
         // Help menu
@@ -502,9 +502,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
                     m.packetRefresh();
             }
         });
-        menuToolsJPythonConsole.addActionListener(new ActionListener() {
+        menuToolsJythonConsole.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                startJPythonConsole();
+                startJythonConsole();
             }
         });
         menuOptionsAutoDock.addItemListener(new ItemListener() {
@@ -530,7 +530,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
                 new SelectHelpBrowser(shell).show();
             }
         });
-        menuOptionsJPythonLibs.addActionListener(new ActionListener() {
+        menuOptionsJythonLibs.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new ManageJPythonLibraries(shell).show();
             }
@@ -565,9 +565,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         saveFile.setToolTipText("Save File");
         JButton closeFile = new JButton(Standard16.close.image());
         closeFile.setToolTipText("Close File");
-        JButton jpythonConsole = new JButton(Images.btnConsole.image());
-        jpythonConsole.setToolTipText("JPython Console");
-        jpythonConsole.setEnabled(shell.hasFoundJPython());
+        JButton jythonConsole = new JButton(Images.btnConsole.image());
+        jythonConsole.setToolTipText("Jython Console");
+        jythonConsole.setEnabled(shell.hasFoundJython());
         JButton help = new JButton(Standard16.help.image());
         help.setToolTipText("Help");
         
@@ -578,7 +578,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         toolBar.add(saveFile);
         toolBar.add(closeFile);
         toolBar.addSeparator();
-        toolBar.add(jpythonConsole);
+        toolBar.add(jythonConsole);
         toolBar.addSeparator();
         toolBar.add(help);
         needFile.addElement(saveFile);
@@ -605,9 +605,9 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
                 fileClose();
             }
         });
-        jpythonConsole.addActionListener(new java.awt.event.ActionListener() {
+        jythonConsole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                startJPythonConsole();
+                startJythonConsole();
             }
         });
         help.addActionListener(new ActionListener() {
@@ -997,7 +997,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
                 return;
         }
 
-        // Close each open JPython console.
+        // Close each open Jython console.
         while (! consoles.isEmpty())
             ((JPythonConsoleFrame)consoles.elementAt(0)).closeConsole();
         
@@ -1056,22 +1056,22 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     }
 
     /**
-     * Open and start a new JPython console frame.
+     * Open and start a new Jython console frame.
      */
-    private void startJPythonConsole() {
+    private void startJythonConsole() {
 		Frame console = ConsoleUtils.createGraphicalConsole(shell, false);
         Positioner.centerOnScreen(console);
         console.show();
     }
 
     /**
-     * Causes this frame to take ownership of the given JPython console.
+     * Causes this frame to take ownership of the given Jython console.
      * The console will have its look and feel updated with this frame
      * and will be closed with this frame.
      *
      * @param console the console to take ownership of; this should be
      * of class <tt>normal.console.JPythonConsoleFrame</tt>, but it is
-     * passed as a <tt>JFrame</tt> to avoid problems if JPython is not
+     * passed as a <tt>JFrame</tt> to avoid problems if Jython is not
      * available.
      */
     public void ownConsole(JFrame console) {
@@ -1079,7 +1079,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     }
 
     /**
-     * Causes this frame to relinquish ownership of the given JPython
+     * Causes this frame to relinquish ownership of the given Jython
      * console.
      * <p>
      * <b>Prerequisite:</b> The frame currently has ownership of the

@@ -3,18 +3,11 @@ Applet:
 *	Include Java plug-in support
 *	Allow/disallow menu options as appropriate
 
-BTools:
-	Richer editing in console
-	Alter behaviour of << / home / >> (beep upon going too far)
-	Clipboard support in frame
-	Autoindent / backspace
-	Edit menu in script editor
-	Cut/paste in script editor
-
 CORBA:
 *	Allow/disallow menu options as appropriate
 *	In the CORBA engine loader, ensure we're not getting a null CORBA object
 		back from the naming context resolve routine.
+	Local (client-side) file I/O
 
 Everywhere:
 	Disable X-closing for all windows and dialogs except for main window
@@ -31,21 +24,22 @@ Help:
 	Write manual! - include context sensitive help, searching and index.
 
 JPython:
-	Intermediate output in console
+*	Intermediate output in console
 	Support for custom startup commands
 	Check to see whether user libraries are text files
+	Edit libraries from within Regina
 	Syntax highlighting for script editor
 	Import/export scripts as text files
-*	Convert JPython to Jython in GUI strings
+*	Clipboard support in script editor
+	Autoindent in script editor
 
 Main Window:
 	View file version.
 	Implement undo.
 	Use actions in NormalFrame and SystemPane.
-	Have horizontal scrolling in the about box license region.
 
 Menus:
-	Provide NTriangulation::isIsomorphicTo().
+*	Provide NTriangulation::isIsomorphicTo().
 	Provide NTriangulation::cutAlongSurface() once it is written.
 
 Normal Surfaces:

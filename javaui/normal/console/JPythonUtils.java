@@ -37,11 +37,11 @@ import org.python.modules.*;
 import org.python.util.*;
 
 /**
- * Provides various utilities for compiling and running JPython code.
+ * Provides various utilities for compiling and running Jython code.
  */
 public class JPythonUtils {
 	/**
-	 * The commands to be run whenever a new JPython session is started.
+	 * The commands to be run whenever a new Jython session is started.
 	 * These commands will be run (in the order in which they appear in
 	 * the array) before anything else is done.
 	 * Each command should be a single element in the array.
@@ -52,12 +52,12 @@ public class JPythonUtils {
 	};
 
 	/**
-	 * Initialises the given JPython interpreter.
+	 * Initialises the given Jython interpreter.
 	 * The startup commands in <tt>JPythonUtils.startup</tt> are run
 	 * and the variable <tt>engine</tt> is set to the given calculation
 	 * engine.
 	 *
-	 * @param interpreter the JPython interpreter to set up; this should
+	 * @param interpreter the Jython interpreter to set up; this should
 	 * be of class <tt>org.python.util.PythonInterpreter</tt> but is
 	 * passed as an <tt>Object</tt> to ease stability in the cases where
 	 * the python classes are not available.
@@ -95,10 +95,10 @@ public class JPythonUtils {
 
 		// Load libraries.
 		File libFile;
-		NormalOptionSet.JPythonLibrary lib;
-		Enumeration e = shell.getOptions().getJPythonLibraries().elements();
+		NormalOptionSet.JythonLibrary lib;
+		Enumeration e = shell.getOptions().getJythonLibraries().elements();
 		while (e.hasMoreElements()) {
-			lib = (NormalOptionSet.JPythonLibrary)e.nextElement();
+			lib = (NormalOptionSet.JythonLibrary)e.nextElement();
 			if (lib.shouldUseLibrary()) {
 				libFile = new File(lib.getLibraryPath());
 				message = message + "Loading: " + libFile.getName() + '\n';
@@ -120,7 +120,7 @@ public class JPythonUtils {
 	}
 
 	/**
-	 * Compiles the given block of JPython code.  The block of code
+	 * Compiles the given block of Jython code.  The block of code
 	 * should be presented as a number of lines of code separated by
 	 * newlines.
 	 * <p>
@@ -152,7 +152,7 @@ public class JPythonUtils {
 		if (compiled == Py.None) {
 			compiled = null;
 			error.append(
-				"The script was incomplete; JPython expects more code.");
+				"The script was incomplete; Jython expects more code.");
 		}
 
 		// Append a final newline to the error message if necessary.
@@ -168,11 +168,11 @@ public class JPythonUtils {
 	}
 
 	/**
-	 * Compiles the given JPython file.
+	 * Compiles the given Jython file.
 	 * If a compile or file I/O error occurs, the corresponding error
 	 * message will be appended to the given string buffer.
 	 *
-	 * @param file the JPython file to compile.
+	 * @param file the Jython file to compile.
 	 * @param error a string buffer to which any compile errors will be
 	 * appended.  Note that compile errors may contain many lines of
 	 * information and will always end in a final newline.
@@ -208,7 +208,7 @@ public class JPythonUtils {
 		if (compiled == Py.None) {
 			compiled = null;
 			error.append(
-				"The file was incomplete; JPython expects more code.");
+				"The file was incomplete; Jython expects more code.");
 		}
 
 		// Append a final newline to the error message if necessary.
@@ -224,12 +224,12 @@ public class JPythonUtils {
 	}
 
 	/**
-	 * Runs the given pre-compiled JPython code.
+	 * Runs the given pre-compiled Jython code.
 	 * If a runtime error occurs, the corresponding error
 	 * message will be appended to the given string buffer.
 	 *
-	 * @param compiledCode the pre-compiled JPython code to run.
-	 * @param interpreter the JPython interpreter in which to run the code.
+	 * @param compiledCode the pre-compiled Jython code to run.
+	 * @param interpreter the Jython interpreter in which to run the code.
 	 * @param error a string buffer to which any runtime errors will be
 	 * appended.  Note that runtime errors may contain many lines of
 	 * information and will always end in a final newline.

@@ -40,7 +40,7 @@ import btools.image.*;
 import org.python.util.PythonInterpreter;
 
 /**
- * Provides a frame containing a JPython console and associated tools.
+ * Provides a frame containing a Jython console and associated tools.
  */
 public class JPythonConsoleFrame extends JFrame {
     /**
@@ -54,12 +54,12 @@ public class JPythonConsoleFrame extends JFrame {
     private Shell shell;
 
     /**
-     * The actual JPython console contained in this window.
+     * The actual Jython console contained in this window.
      */
     private JPythonConsole console;
 
     /**
-     * Creates a new JPython console frame.  Note that the console must
+     * Creates a new Jython console frame.  Note that the console must
      * still be started before it is offered to the user for
      * interaction; this can be done through the routine
      * <tt>startConsole()</tt>.
@@ -70,7 +70,7 @@ public class JPythonConsoleFrame extends JFrame {
      * @see #startConsole
      */
     public JPythonConsoleFrame(Shell shell, boolean standalone) {
-        super(Application.program + " JPython Console");
+        super(Application.program + " Jython Console");
         this.shell = shell;
         this.standalone = standalone;
     
@@ -85,8 +85,8 @@ public class JPythonConsoleFrame extends JFrame {
         // Set the size of the window according to what is found in the
         // option set.
         NormalOptionSet options = shell.getOptions();
-        int width = options.getIntOption("PreferredJPythonWidth");
-        int height = options.getIntOption("PreferredJPythonHeight");
+        int width = options.getIntOption("PreferredJythonWidth");
+        int height = options.getIntOption("PreferredJythonHeight");
         if (width <= 0)
             width = 550;
         if (height <= 0)
@@ -145,7 +145,7 @@ public class JPythonConsoleFrame extends JFrame {
 		});
 		menuHelpJython.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				shell.viewHelp("jpython");
+				shell.viewHelp("jython");
 			}
 		});
 
@@ -169,7 +169,7 @@ public class JPythonConsoleFrame extends JFrame {
         // Add button event listeners.
         help.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                shell.viewHelp("jpython");
+                shell.viewHelp("jython");
             }
         });
         close.addActionListener(new ActionListener() {
@@ -205,19 +205,19 @@ public class JPythonConsoleFrame extends JFrame {
     }
 
     /**
-     * Returns the actual JPython console used by this frame.
+     * Returns the actual Jython console used by this frame.
      *
-     * @return the actual JPython console.
+     * @return the actual Jython console.
      */
     public JPythonConsole getConsole() {
         return console;
     }
 
     /**
-     * Returns the JPython interpreter used by this console frame.
-     * This can be used to set JPython variables and the like.
+     * Returns the Jython interpreter used by this console frame.
+     * This can be used to set Jython variables and the like.
      *
-     * @return the JPython interpreter used by this console frame.
+     * @return the Jython interpreter used by this console frame.
      */
     public PythonInterpreter getPythonInterpreter() {
         return console.getPythonInterpreter();
@@ -235,8 +235,8 @@ public class JPythonConsoleFrame extends JFrame {
         // Save the preferred console window size.
         Dimension size = getSize();
         NormalOptionSet options = shell.getOptions();
-        options.setIntOption("PreferredJPythonWidth", size.width);
-        options.setIntOption("PreferredJPythonHeight", size.height);
+        options.setIntOption("PreferredJythonWidth", size.width);
+        options.setIntOption("PreferredJythonHeight", size.height);
         options.writeToFile();
 
         dispose();

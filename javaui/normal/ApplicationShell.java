@@ -251,7 +251,7 @@ public class ApplicationShell extends Shell {
     public boolean shouldShowSplashScreen() {
         return (! textOnly);
     }
-    public boolean mayUseJPython() {
+    public boolean mayUseJython() {
         return true;
     }
     public NormalOptionSet loadOptionSet() {

@@ -32,12 +32,12 @@ import java.awt.Frame;
 import normal.*;
 
 /**
- * Provides various utilities for use with JPython consoles.
+ * Provides various utilities for use with Jython consoles.
  */
 public class ConsoleUtils {
     /**
      * Returns the greeting to offer the user when the program is run as
-     * a standalone JPython console.
+     * a standalone Jython console.
 	 * The greeting may span multiple lines, but no final newline
 	 * should be included.
      *
@@ -49,7 +49,7 @@ public class ConsoleUtils {
     }
 
     /**
-     * Runs a standalone text JPython console with no GUI.
+     * Runs a standalone text Jython console with no GUI.
      * Standard input and standard output will be used.
      *
 	 * @param shell the shell representing the entire program.
@@ -68,7 +68,7 @@ public class ConsoleUtils {
     }
 
 	/**
-	 * Creates a new standalone graphical JPython console.
+	 * Creates a new standalone graphical Jython console.
 	 * The console will be displaying welcome messages, initialised and
 	 * ready for user interaction.
 	 * All that will remain to be done will be for the frame to be shown.
@@ -76,7 +76,7 @@ public class ConsoleUtils {
 	 * @param shell the shell representing the entire program.
 	 * @param standalone <tt>true</tt> if and only if this frame will in
 	 * fact be the entire program, with no other GUI present.
-	 * @return the created JPython console frame.
+	 * @return the created Jython console frame.
 	 */
 	public static Frame createGraphicalConsole(Shell shell,
 			boolean standalone) {

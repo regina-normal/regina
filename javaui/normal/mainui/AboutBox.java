@@ -51,9 +51,9 @@ public class AboutBox extends JDialog implements ActionListener {
     private JButton ok = new JButton();
     
     /**
-     * JPython version.
+     * Jython version.
      */
-    private String jpythonVersion;
+    private String jythonVersion;
     
     /**
      * Label displaying the program icon.
@@ -82,13 +82,13 @@ public class AboutBox extends JDialog implements ActionListener {
      * Find useful information about the system to display to the user.
      */
     private void diagnostics() {
-        // Determine the JPython version.
-        if (! shell.hasFoundJPython())
-            jpythonVersion = "unavailable";
+        // Determine the Jython version.
+        if (! shell.hasFoundJython())
+            jythonVersion = "unavailable";
         else {
-            jpythonVersion = "unknown";
+            jythonVersion = "unknown";
             try {
-                jpythonVersion = org.python.core.PySystemState.version;
+                jythonVersion = org.python.core.PySystemState.version;
             } catch (Throwable th) {}
         }
     }
@@ -238,7 +238,7 @@ public class AboutBox extends JDialog implements ActionListener {
         else
             ans.insertLine("JDK " + jdkVersion);
         ans.insertLine("BTools " + btools.Version.btoolsVersion);
-        ans.insertLine("JPython " + jpythonVersion);
+        ans.insertLine("Jython " + jythonVersion);
         if (shell.hasFoundJavaHelp()) {
             ans.insertLine("JavaHelp present");
             ans.insertLine("Documentation jar " +

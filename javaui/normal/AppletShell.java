@@ -117,7 +117,7 @@ public class AppletShell extends Shell {
     public boolean shouldShowSplashScreen() {
         return false;
     }
-    public boolean mayUseJPython() {
+    public boolean mayUseJython() {
         return false;
     }
     public NormalOptionSet loadOptionSet() {

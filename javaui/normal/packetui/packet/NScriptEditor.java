@@ -89,12 +89,12 @@ public class NScriptEditor extends DefaultPacketEditor {
     private Vector variableValues = new Vector();
 
     /**
-     * Do we wish to show a JPython console afterwards?
+     * Do we wish to show a Jython console afterwards?
      */
     private JCheckBox showConsole;
 
     /**
-     * A table displaying the variables that will be set in JPython
+     * A table displaying the variables that will be set in Jython
      * before the script is run.
      */
     private JTable variablesTable;
@@ -150,10 +150,10 @@ public class NScriptEditor extends DefaultPacketEditor {
 
         JButton run = new JButton("Run", Images.btnConsole.image());
         run.setAlignmentX(run.CENTER_ALIGNMENT);
-        run.setEnabled(shell.hasFoundJPython());
+        run.setEnabled(shell.hasFoundJython());
         JButton compile = new JButton("Compile");
         compile.setAlignmentX(compile.CENTER_ALIGNMENT);
-        compile.setEnabled(shell.hasFoundJPython());
+        compile.setEnabled(shell.hasFoundJython());
         JButton warning = new JButton("Warning!");
         warning.setAlignmentX(warning.CENTER_ALIGNMENT);
         warning.setForeground(Color.red);
@@ -279,16 +279,16 @@ public class NScriptEditor extends DefaultPacketEditor {
             public void actionPerformed(ActionEvent e) {
                 shell.inform("You should refresh any packet " +
                     "subtree that is changed through a script or through " +
-                    "the JPython console.  A button for this is located " + 
+                    "the Jython console.  A button for this is located " + 
                     "beneath the packet tree.\n\n" +
                     "You should NEVER delete a packet " +
-                    "through a script or through the JPython console; " +
+                    "through a script or through the Jython console; " +
                     "this will most likely crash the program.");
             }
         });
         help.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                shell.viewHelp("jpython");
+                shell.viewHelp("jython");
             }
         });
     }
@@ -387,7 +387,7 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     /**
-     * Returns this entire script as a string to pass to JPython.
+     * Returns this entire script as a string to pass to Jython.
      * An extra newline will be appended to ensure no loops or procedures
      * are unfinished.  The script used will be as shown in this
      * interface, whether or not the underlying engine contains
@@ -422,7 +422,7 @@ public class NScriptEditor extends DefaultPacketEditor {
      *
      * @param console the console to which compile errors will be sent.
      * @return the compiled code, or <tt>null</tt> if the code did not
-     * compile or if JPython expected more code.
+     * compile or if Jython expected more code.
      */
     private PyObject compileScript(ConsolePane console) {
 		StringBuffer error = new StringBuffer();
@@ -434,7 +434,7 @@ public class NScriptEditor extends DefaultPacketEditor {
 
     /**
      * Attempts to compile this script.  If it fails to compile, a
-     * JPython console will be brought up showing the error.
+     * Jython console will be brought up showing the error.
      *
      * @return <tt>true</tt> if and only if the compilation was
      * successful.
@@ -455,12 +455,12 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     /**
-     * Runs this script, optionally bringing up a JPython console that
+     * Runs this script, optionally bringing up a Jython console that
      * will show the results and allow further interaction.
-     * If a compile error occurs, a JPython console will be brought up
+     * If a compile error occurs, a Jython console will be brought up
      * regardless.
      *
-     * @param shouldShowConsole <tt>true</tt> if and only if a JPython
+     * @param shouldShowConsole <tt>true</tt> if and only if a Jython
      * console should be offered to the user.
      */
     private void runScript(boolean shouldShowConsole) {
@@ -497,10 +497,10 @@ public class NScriptEditor extends DefaultPacketEditor {
 
     /**
      * Runs the standard startup commands and
-     * sets the variables to be used with this script in the given JPython
+     * sets the variables to be used with this script in the given Jython
      * interpreter.
      *
-     * @param interpreter the JPython interpreter in which to set the
+     * @param interpreter the Jython interpreter in which to set the
      * variables.
 	 * @return a text string to inform the user of the initialisation
 	 * that has been done; this may contain multiple lines and will end
@@ -646,7 +646,7 @@ public class NScriptEditor extends DefaultPacketEditor {
 
         /**
          * Returns the value of this variable as an object that can be
-         * used with JPython.
+         * used with Jython.
          *
          * @return the value of this variable.
          */

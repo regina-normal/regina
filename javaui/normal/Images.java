@@ -40,7 +40,7 @@ public class Images {
     public static final StandardImage btnFileNew =
         new StandardImage("normal/images/buttons/fileNew.gif", Images.class);
     /**
-     * A button representing a JPython console.
+     * A button representing a Jython console.
      */
     public static final StandardImage btnConsole =
         new StandardImage("normal/images/buttons/console.gif", Images.class);

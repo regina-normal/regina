@@ -42,7 +42,7 @@ import btools.gui.component.*;
 import btools.gui.dialog.*;
 
 /**
- * A modal dialog allowing the JPython libraries to be configured by the user.
+ * A modal dialog allowing the Jython libraries to be configured by the user.
  * If OK is pressed, the working option set will be changed and written to
  * file.
  */
@@ -65,19 +65,19 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
 	private ButtonRenderer compile;
 
 	/**
-	 * The table of JPython libraries.
+	 * The table of Jython libraries.
 	 */
 	private JTable libTable;
 	/**
-	 * The model for the JPython libraries table.
+	 * The model for the Jython libraries table.
 	 */
 	private LibTableModel libTableModel;
 	/**
-	 * The list of paths to JPython library files.
+	 * The list of paths to Jython library files.
 	 */
 	private Vector libPaths;
 	/**
-	 * The list of whether or not JPython libraries should be used.
+	 * The list of whether or not Jython libraries should be used.
 	 */
 	private Vector libUse;
 
@@ -86,18 +86,18 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
      */
     private Shell shell;
 	/**
-	 * A filename filter representing JPython libraries.
+	 * A filename filter representing Jython libraries.
 	 */
 	private ExtensionFilenameFilter filter =
-		new ExtensionFilenameFilter(".py", "JPython libraries (*.py)");
+		new ExtensionFilenameFilter(".py", "Jython libraries (*.py)");
 
     /**
-     * Creates a new JPython libraries configuration dialog.
+     * Creates a new Jython libraries configuration dialog.
      *
      * @param shell the shell corresponding to the entire program.
      */
     public ManageJPythonLibraries(Shell shell) {
-        super(shell.getPrimaryFrame(), "JPython Libraries", true);
+        super(shell.getPrimaryFrame(), "Jython Libraries", true);
         this.shell = shell;
         init();
         pack();
@@ -110,10 +110,10 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
     private void init() {
 		libPaths = new Vector();
 		libUse = new Vector();
-		Enumeration e = shell.getOptions().getJPythonLibraries().elements();
-		NormalOptionSet.JPythonLibrary lib;
+		Enumeration e = shell.getOptions().getJythonLibraries().elements();
+		NormalOptionSet.JythonLibrary lib;
 		while (e.hasMoreElements()) {
-			lib = (NormalOptionSet.JPythonLibrary)e.nextElement();
+			lib = (NormalOptionSet.JythonLibrary)e.nextElement();
 			libPaths.addElement(lib.getLibraryPath());
 			libUse.addElement(new Boolean(lib.shouldUseLibrary()));
 		}
@@ -188,7 +188,7 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
 			chooser.setCurrentDirectory(new File(
 				shell.getOptions().getStringOption("LastDir", ".")));
 			chooser.setFileFilter(filter);
-			chooser.setDialogTitle("Select JPython library...");
+			chooser.setDialogTitle("Select Jython library...");
 			if (chooser.showOpenDialog(shell.getPrimaryFrame()) ==
 					chooser.APPROVE_OPTION) {
 				libPaths.addElement(chooser.getSelectedFile().
@@ -217,13 +217,13 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
 			Enumeration ePaths = libPaths.elements();
 			Enumeration eUse = libUse.elements();
 			while (ePaths.hasMoreElements()) {
-				libraries.addElement(new NormalOptionSet.JPythonLibrary(
+				libraries.addElement(new NormalOptionSet.JythonLibrary(
 					(String)ePaths.nextElement(),
 					((Boolean)eUse.nextElement()).booleanValue()));
 			}
 
 			NormalOptionSet options = shell.getOptions();
-            options.setJPythonLibraries(libraries);
+            options.setJythonLibraries(libraries);
             options.writeToFile();
             dispose();
 		} else if (e.getSource() == compile.getEditorButton()) {
@@ -241,7 +241,7 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
     }
 
 	/**
-	 * Used to render JPython library names.
+	 * Used to render Jython library names.
 	 */
 	private class LibNameRenderer extends DefaultTableCellRenderer {
 		/**
@@ -264,7 +264,7 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
 	}
 
 	/**
-	 * Provides a model for the table containing the JPython libraries.
+	 * Provides a model for the table containing the Jython libraries.
 	 */
 	private class LibTableModel extends AbstractTableModel {
 		/**

@@ -34,21 +34,21 @@ import org.python.core.*;
 import org.python.util.*;
 
 /**
- * Provides a console that is a JPython interpreter.
+ * Provides a console that is a Jython interpreter.
  */
 public class JPythonConsole extends ConsolePane {
     /**
-     * The system state to be used with JPython.
+     * The system state to be used with Jython.
      */
     private static PySystemState systemState;
 
     /**
-     * The actual JPython interpreter that is used.
+     * The actual Jython interpreter that is used.
      */
-    private InteractiveInterpreter jpython;
+    private InteractiveInterpreter jython;
 
     /**
-     * Create a new JPython console.
+     * Create a new Jython console.
      */
     public JPythonConsole() {
         super();
@@ -57,43 +57,43 @@ public class JPythonConsole extends ConsolePane {
         setConsolePromptAttributes(getConsoleInputAttributes());
         setPrompt(getPySystemState().ps1.toString());
 
-        // Create the new JPython interpreter.
-        jpython = new InteractiveInterpreter();
-        jpython.setOut(new PyFile(getOutputStream(), "<JPython Console>"));
-        jpython.setErr(new PyFile(getOutputStream(), "<JPython Console>"));
+        // Create the new Jython interpreter.
+        jython = new InteractiveInterpreter();
+        jython.setOut(new PyFile(getOutputStream(), "<Jython Console>"));
+        jython.setErr(new PyFile(getOutputStream(), "<Jython Console>"));
 
         // Run a dummy command to speed up response on the first real command.
-        jpython.exec("2");
+        jython.exec("2");
     }
 
     /**
-     * Returns the JPython interpreter used by this console.  This can
-     * be used to set JPython variables and the like.
+     * Returns the Jython interpreter used by this console.  This can
+     * be used to set Jython variables and the like.
      *
-     * @return the JPython interpreter used by this console.
+     * @return the Jython interpreter used by this console.
      */
     public PythonInterpreter getPythonInterpreter() {
-        return jpython;
+        return jython;
     }
 
     protected String processInput(String line) {
-        if (jpython.buffer.length() > 0)
-            jpython.buffer.append('\n');
-        jpython.buffer.append(line);
+        if (jython.buffer.length() > 0)
+            jython.buffer.append('\n');
+        jython.buffer.append(line);
         boolean more =
-            jpython.runsource(jpython.buffer.toString(), "<JPython Console>");
+            jython.runsource(jython.buffer.toString(), "<Jython Console>");
         if (more) {
             setPrompt(getPySystemState().ps2.toString());
         } else {
             setPrompt(getPySystemState().ps1.toString());
-            jpython.resetbuffer();
+            jython.resetbuffer();
         }
         return null;
     }
 
     /**
-     * Returns the shared JPython system state.  The single system state
-     * should be shared amongst all JPython consoles, and will only
+     * Returns the shared Jython system state.  The single system state
+     * should be shared amongst all Jython consoles, and will only
      * be created when first asked for.  If a system state cannot be created,
      * <tt>null</tt> will be returned.
      *

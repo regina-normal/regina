@@ -108,9 +108,9 @@ public abstract class Shell {
     private Frame primaryFrame = null;
 
     /**
-     * Have we successfully located the JPython classes?
+     * Have we successfully located the Jython classes?
      */
-    private boolean foundJPython = false;
+    private boolean foundJython = false;
 
     /**
      * Have we successfully located the JavaHelp classes?
@@ -169,13 +169,13 @@ public abstract class Shell {
 	}
 
     /**
-     * Have we successfully located the JPython classes?
+     * Have we successfully located the Jython classes?
      *
      * @return <tt>true</tt> if and only if we have successfully located
-     * the JPython classes.
+     * the Jython classes.
      */
-    public boolean hasFoundJPython() {
-        return foundJPython;
+    public boolean hasFoundJython() {
+        return foundJython;
     }
     /**
      * Have we successfully located the JavaHelp classes?
@@ -322,12 +322,12 @@ public abstract class Shell {
      */
     public abstract boolean shouldShowSplashScreen();
     /**
-     * Are we even allowed to try to locate the JPython classes?
+     * Are we even allowed to try to locate the Jython classes?
      *
      * @return <tt>true</tt> if and only if we are allowed to attempt to
-     * locate JPython.
+     * locate Jython.
      */
-    public abstract boolean mayUseJPython();
+    public abstract boolean mayUseJython();
     /**
      * Loads the user options for the program.
      *
@@ -374,7 +374,7 @@ public abstract class Shell {
 
     /**
      * The primary program execution routine.
-     * An engine is loaded and a new GUI frame or JPython console is
+     * An engine is loaded and a new GUI frame or Jython console is
      * created in which the user can work.
      *
      * @see normal.mainui.NormalFrame
@@ -452,13 +452,13 @@ public abstract class Shell {
         } else
             splash = null;
 
-        // Set the JPython options.
-        if (mayUseJPython()) {
+        // Set the Jython options.
+        if (mayUseJython()) {
             try {
                 org.python.core.Options.showJavaExceptions = false;
                 //org.python.core.Options.classBasedExceptions = false;
 				org.python.core.PySystemState.initialize();
-                foundJPython = true;
+                foundJython = true;
             } catch (Throwable th) {}
         }
 
@@ -544,13 +544,13 @@ public abstract class Shell {
             case UITextConsole:
                 if (splash != null)
                     splash.dispose();
-                if (foundJPython) {
+                if (foundJython) {
                     normal.console.ConsoleUtils.runTextConsole(this);
                     exit(0);
                     return;
                 } else {
-                    error("JPython could not be found.\n" +
-                        "Please ensure [jpython.jar] is on your classpath.");
+                    error("Jython could not be found.\n" +
+                        "Please ensure [jython.jar] is on your classpath.");
                     exit(1);
                     return;
                 }
@@ -585,7 +585,7 @@ public abstract class Shell {
                     primaryFrame = frame;
                 } else {
                     // Console window UI:
-                    if (foundJPython) {
+                    if (foundJython) {
 						Frame frame = normal.console.ConsoleUtils.
 							createGraphicalConsole(this, true);
                         if (splash != null)
@@ -594,8 +594,8 @@ public abstract class Shell {
                         frame.show();
                         primaryFrame = frame;
                     } else {
-                        error("JPython could not be found.  Please ensure " +
-                            "[jpython.jar] is on your classpath.");
+                        error("Jython could not be found.  Please ensure " +
+                            "[jython.jar] is on your classpath.");
                         if (splash != null)
                             splash.dispose();
                         exit(1);
