@@ -11,7 +11,10 @@ Regina - A Normal Surface Theory Calculator
 Version 3.2  [ (under development) ]
     OVERALL:
         - Added file format documentation to reference manual.
+        - Enhancements to the calculation engine test suite.
     ENGINE:
+        Overall structure:
+            - Using C++-style casts instead of C-style casts.
         Class NBoolSet:
             - Using unsigned chars for byte codes.
         Class NCensus:
