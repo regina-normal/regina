@@ -1,6 +1,7 @@
 regina-normal (2.2.0-cvs-1) unstable; urgency=low
 
   * New CVS snapshot.
+  * Added package regina-normal-dev.
   * Depends and build-depends on newer versions of omniorb(-dev).
   * Updated to conform to new java policy.
 

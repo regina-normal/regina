@@ -3,3 +3,4 @@ usr/bin/regina-engine-corba
 usr/lib/regina-normal/bin/regina-engine-corba
 usr/share/man/man1/regina-engine-corba.1
 usr/share/man/man7/regina-applet.7
+usr/share/lintian/overrides/regina-normal-server

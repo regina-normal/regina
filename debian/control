@@ -10,7 +10,7 @@ Architecture: any
 Section: contrib/math
 Depends: java-virtual-machine, java2-runtime, libbtools-java (>= 1.1-0), ${shlibs:Depends}
 Recommends: jython
-Suggests: regina-normal-doc, snappea
+Suggests: regina-normal-dev, regina-normal-doc, snappea
 Description: Regina, the 3-manifold normal surface theory calculator
  Regina is a topological calculator with a bent towards normal surface
  theory. It allows 3-manifolds to be created, manipulated and their
@@ -42,6 +42,19 @@ Description: Regina CORBA server for normal surface theory calculator
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface calculation.  It offers embedded
  Jython scripting giving full access to the calculation engine.
+
+Package: regina-normal-dev
+Architecture: any
+Section: contrib/devel
+Depends: ${shlibs:Depends}
+Suggests: regina-normal, regina-normal-doc
+Description: Development files for Regina normal surface theory calculator
+ Regina is a normal surface theory calculator for 3-manifold
+ topologists.  This package provides a static library and headers suitable
+ for compiling the Regina calculation engine into other projects.
+ .
+ Highlights of Regina include triangulation analysis and simplification,
+ census creation and normal surface calculation.
 
 Package: regina-normal-doc
 Architecture: all

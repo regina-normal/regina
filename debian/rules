@@ -20,6 +20,8 @@ mandir = $(tmp)/usr/share/man
 docpkgdir = $(tmp)/usr/share/doc/regina-normal-doc
 htmldir = $(docpkgdir)/html
 confdir = $(tmp)/etc/regina-normal
+incdir = $(tmp)/usr/include/regina-normal
+libdir = $(tmp)/usr/lib
 overrides = $(tmp)/usr/share/lintian/overrides
 
 INSTALL_DIR = install -p -d -o root -g root -m 755
@@ -140,9 +142,21 @@ install: build
 	$(INSTALL_DIR) $(confdir)
 	$(INSTALL_FILE) debian/*.conf $(confdir)
 
+	# Install the static library.
+	$(INSTALL_DIR) $(libdir)
+	$(INSTALL_FILE) bin/libregina-engine.a $(libdir)
+
+	# Install the include files.
+	cd engine/engine && for i in `find . -name "*.h"`; do \
+	  $(INSTALL_DIR) ../../$(incdir)/`dirname $$i`; \
+	  $(INSTALL_FILE) $$i ../../$(incdir)/`dirname $$i`; \
+	done
+
 	# Install overrides.
 	$(INSTALL_DIR) $(overrides)
 	$(INSTALL_FILE) debian/regina-normal.overrides $(overrides)/regina-normal
+	$(INSTALL_FILE) debian/regina-normal-server.overrides \
+		$(overrides)/regina-normal-server
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -178,6 +192,7 @@ binary-arch: build install
 	dh_installman -a
 	dh_installchangelogs -pregina-normal CHANGES.txt
 	dh_installchangelogs -pregina-normal-server CHANGES.txt
+	dh_installchangelogs -pregina-normal-dev CHANGES.txt
 	dh_link -a
 	dh_strip -a
 	dh_compress -a
