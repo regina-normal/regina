@@ -69,6 +69,7 @@ $(JNI_DIR)/%.h : ../$(JAVA_UI) ../$(JAVA_JNI)
 	$(JAVAH) -classpath \
 		'../$(JAVA_UI)$(cs)../$(JAVA_JNI)$(cs)$(other_classes)' -o $@ \
 		$(subst /,.,$(patsubst $(JNI_DIR)/%.h,$(JNI_PACKAGE).%,$@))
+	touch $@
 endif
 
 # ----------------------- Sources ------------------------------------
