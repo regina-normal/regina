@@ -14,6 +14,8 @@ Version 4.1  [ 29 February, 2004 ]
         - 3-sphere recognition.
         - Full connected sum decomposition for closed orientable
           triangulations.
+        - Conversion to 0-efficient triangulations for closed orientable
+          3-manifolds.
         - Automated construction of orientable Seifert fibred spaces over
           the sphere with at most three exceptional fibres.
         - Recognition of some more trivial multiple-vertex triangulations.
