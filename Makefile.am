@@ -33,6 +33,7 @@ EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
 .PHONY : engine jni java utils bin \
   enginedocs javadocs html man docjar docs \
   jnihdr jnihdr-clean \
+  valgrind \
   help
 
 install-exec-local :
@@ -71,6 +72,10 @@ jnihdr :
 	cd javaui && $(MAKE) jni
 jnihdr-clean :
 	cd javaui && $(MAKE) jni-clean
+
+valgrind:
+	cd testsuite && $(MAKE) regtestsuite
+	valgrind --skin=memcheck --leak-check=yes testsuite/.libs/regtestsuite
 
 help :
 	@cat Makefile-help

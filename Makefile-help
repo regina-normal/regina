@@ -6,6 +6,7 @@ all - build absolutely everything
 clean - remove all built files
 install - install absolutely everything
 uninstall - uninstall absolutely everything
+check - build and run the test suite
 help - read this help page
 
 Specific Targets
@@ -26,4 +27,6 @@ docs - all of the above documentation targets
 
 jnihdr - build (unnecessary) auto-generated JNI header files
 jnihdr-clean - remove auto-generated JNI header files
+
+valgrind - run valgrind memory tests on the calculation engine
 
