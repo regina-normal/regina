@@ -38,11 +38,11 @@
 #define PROGRAM_NAME "Regina"
     /**< String name of the program, to be placed at the beginning of
      *   data files. */
-#define ENGINE_VERSION_MAJOR 2
+#define ENGINE_VERSION_MAJOR 3
     /**< Major version number of the engine. */
-#define ENGINE_VERSION_MINOR 4
+#define ENGINE_VERSION_MINOR 0
     /**< Minor version number of the engine. */
-#define ENGINE_VERSION "2.4"
+#define ENGINE_VERSION "3.0.0"
     /**< Complete version number of the engine. */
 #define SIZE_INT 4
     /**< The number of bytes written to files to represent an integer;
