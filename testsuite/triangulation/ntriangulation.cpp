@@ -48,6 +48,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NTriangulationTest);
 
     CPPUNIT_TEST(validity);
+    CPPUNIT_TEST(standardness);
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(homologyH1);
@@ -112,6 +113,18 @@ class NTriangulationTest : public CppUnit::TestFixture {
         NTriangulation gieseking;
             /**< The Gieseking manifold. */
 
+        // Invalid edges:
+        NTriangulation invalidEdges;
+            /**< Contains two invalid edges, but all vertices have
+                 2-sphere links. */
+
+        // Non-standard vertex links:
+        NTriangulation twoProjPlaneCusps;
+            /**< A subdivision of invalidEdges, resulting in all edges
+                 valid but two projective plane cusps. */
+        NTriangulation cuspedGenusTwoTorus;
+            /**< A solid genus two torus with a cusped boundary. */
+
     public:
         void generateFromSig(NTriangulation& tri, const std::string& sigStr) {
             NSignature* sig = NSignature::parse(sigStr);
@@ -152,6 +165,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             NTetrahedron* r;
             NTetrahedron* s;
             NTetrahedron* t;
+            NTetrahedron* u;
 
             // A two-tetrahedron two-vertex L(3,1) is straightforward to
             // construct using a vertex of degree two.
@@ -203,6 +217,35 @@ class NTriangulationTest : public CppUnit::TestFixture {
             r->joinTo(0, r, NPerm(1, 2, 0, 3));
             r->joinTo(2, r, NPerm(0, 2, 3, 1));
             gieseking.addTetrahedron(r);
+
+            // For a triangulation with invalid edges, we simply fold
+            // the faces of a tetrahedron together in pairs (as in a
+            // 3-sphere triangulation) but apply a reflection to each fold.
+            r = new NTetrahedron();
+            r->joinTo(0, r, NPerm(1, 0, 3, 2));
+            r->joinTo(2, r, NPerm(1, 0, 3, 2));
+            invalidEdges.addTetrahedron(r);
+
+            twoProjPlaneCusps.insertTriangulation(invalidEdges);
+            twoProjPlaneCusps.barycentricSubdivision();
+
+            // We create the cusped solid genus two torus by
+            // constructing an ordinary solid genus two torus and then
+            // converting the real boundary to an ideal vertex.
+            r = new NTetrahedron();
+            s = new NTetrahedron();
+            t = new NTetrahedron();
+            u = new NTetrahedron();
+            r->joinTo(0, s, NPerm());
+            r->joinTo(1, t, NPerm(1, 2, 3, 0));
+            r->joinTo(2, u, NPerm(1, 0, 3, 2));
+            s->joinTo(3, t, NPerm());
+            t->joinTo(1, u, NPerm());
+            cuspedGenusTwoTorus.addTetrahedron(r);
+            cuspedGenusTwoTorus.addTetrahedron(s);
+            cuspedGenusTwoTorus.addTetrahedron(t);
+            cuspedGenusTwoTorus.addTetrahedron(u);
+            cuspedGenusTwoTorus.cuspBoundary();
         }
 
         void tearDown() {
@@ -246,6 +289,64 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 solidKB.isValid());
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is not valid.",
                 gieseking.isValid());
+            CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
+                "is reported as valid.",
+                ! invalidEdges.isValid());
+            CPPUNIT_ASSERT_MESSAGE("The triangulation with projective plane "
+                "cusps is not valid.",
+                twoProjPlaneCusps.isValid());
+            CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
+                "is not valid.",
+                cuspedGenusTwoTorus.isValid());
+        }
+
+        void standardness() {
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not standard.",
+                empty.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is not standard.",
+                singleTet.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("S^3 is not standard.",
+                s3.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not standard.",
+                s2xs1.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 is not standard.",
+                rp3.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("L(3,1) is not standard.",
+                lens3_1.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not standard.",
+                lens7_1_loop.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("L(8,3) is not standard.",
+                lens8_3.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("Large L(8,3) is not standard.",
+                lens8_3_large.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 is not standard.",
+                rp3rp3.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not standard.",
+                q28.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not standard.",
+                q32xz3.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("L(100,1) is not standard.",
+                lens100_1.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) is not standard.",
+                lst3_4_7.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
+                "is not standard.",
+                figure8.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not standard.",
+                rp2xs1.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle is not standard.",
+                solidKB.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is not standard.",
+                gieseking.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
+                "is not standard.",
+                invalidEdges.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The triangulation with projective plane "
+                "cusps is standard.",
+                ! twoProjPlaneCusps.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
+                "is standard.",
+                ! cuspedGenusTwoTorus.isStandard());
         }
 
         void orientability() {
@@ -286,6 +387,15 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 ! solidKB.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is orientable.",
                 ! gieseking.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
+                "is orientable.",
+                ! invalidEdges.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("The triangulation with projective plane "
+                "cusps is orientable.",
+                ! twoProjPlaneCusps.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
+                "is not orientable.",
+                cuspedGenusTwoTorus.isOrientable());
         }
 
         void boundaryComponents() {
@@ -329,6 +439,15 @@ class NTriangulationTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold "
                 "has no boundary components.",
                 gieseking.getNumberOfBoundaryComponents() > 0);
+            CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
+                "has boundary components.",
+                invalidEdges.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("The triangulation with projective plane "
+                "cusps has no boundary components.",
+                twoProjPlaneCusps.getNumberOfBoundaryComponents() > 0);
+            CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
+                "has no boundary components.",
+                cuspedGenusTwoTorus.getNumberOfBoundaryComponents() > 0);
 
             // TODO: Test the individual boundary components.
             // TODO: Check that nobody has too many boundary components.
@@ -437,6 +556,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "H1(solid Klein bottle)", 1);
             verifyGroup(gieseking.getHomologyH1(),
                 "H1(Gieseking manifold)", 1);
+            verifyGroup(invalidEdges.getHomologyH1(),
+                "H1(tri with invalid edges)", 0);
+            verifyGroup(cuspedGenusTwoTorus.getHomologyH1(),
+                "H1(cusped solid genus two torus)", 2);
         }
 
         void homologyH1Bdry() {
@@ -476,6 +599,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Boundary H1(solid Klein bottle)", 1, 2);
             verifyGroup(gieseking.getHomologyH1Bdry(),
                 "Boundary H1(Gieseking manifold)", 1, 2);
+            verifyGroup(twoProjPlaneCusps.getHomologyH1Bdry(),
+                "Boundary H1(tri with projective plane cusps)", 0, 2, 2);
+            verifyGroup(cuspedGenusTwoTorus.getHomologyH1Bdry(),
+                "Boundary H1(cusped solid genus two torus)", 4);
         }
 
         void verifyFundGroup(const NGroupPresentation& g,
@@ -530,6 +657,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Fund(solid Klein bottle)", "Z");
             //verifyFundGroup(gieseking.getFundamentalGroup(),
             //    "Fund(Gieseking manifold)", 1);
+            verifyFundGroup(invalidEdges.getFundamentalGroup(),
+                "Fund(tri with invalid edges)", "0");
+            verifyFundGroup(cuspedGenusTwoTorus.getFundamentalGroup(),
+                "Fund(cusped solid genus two torus)", "Free (2 generators)");
         }
 
         void zeroEfficiency() {
@@ -573,6 +704,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 // Contains a non-trivial disc.
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is not 0-efficient.",
                 gieseking.isZeroEfficient());
+            // Don't run this one, it takes too long.
+            // CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
+            //     "is 0-efficient.",
+            //     ! cuspedGenusTwoTorus.isZeroEfficient());
         }
 
         void verifyTV3(NTriangulation& t, const std::string& triName) {

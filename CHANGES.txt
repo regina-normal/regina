@@ -25,6 +25,8 @@ Version 4.2  [ under development ]
               incorrect if a triangulation contained invalid edges.
     TEST SUITE:
         - Added tests for SnapPea calculations.
+        - Further additions to the triangulation tests, in particular
+          involving invalid and non-standard triangulations.
 
 Version 4.1.3  [ 25 July, 2004 ]
 
