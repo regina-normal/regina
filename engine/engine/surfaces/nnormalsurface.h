@@ -453,7 +453,7 @@ class NNormalSurfaceVector : public NConeRay {
          * @param faces the output iterator to which the newly allocated face
          * perpendiculars will be written; these vectors may be of any
          * subclass of NVector<NLargeInteger>.  This iterator must
-         * accept objects of type <tt>NVector&lt;NLargeInteger&gt;*</tt>.
+         * accept objects of type <tt>NVector\<NLargeInteger\>*</tt>.
          */
         #ifdef __DOXYGEN
             template <class RayOutputIterator, class FaceOutputIterator>

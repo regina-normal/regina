@@ -195,11 +195,11 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
  * above; each hyperplane is represented by the vector of a ray perpendicular
  * to it.  Note that this list is allowed to contain duplicates or
  * redundancies.  This must be a forward iterator over objects of type
- * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
+ * <tt>NVector\<NLargeInteger\>*</tt>.
  * @param facesLast the end of the list <tt>[facesFirst, facesLast)</tt>
  * of hyperplanes that determine the faces of the given cone.
  * This must be a forward iterator over objects of type
- * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
+ * <tt>NVector\<NLargeInteger\>*</tt>.
  * @param hyperplane the hyperplane to intersect with the given cone.
  * @param testCompatibility \c true if we are to only find "valid" extremal
  * rays as defined by NConeRay::isCompatibleWith().
@@ -272,11 +272,11 @@ void intersectCone(OutputIterator results,
  * above; each hyperplane is represented by the vector of a ray perpendicular
  * to it.  Note that this list is allowed to contain duplicates or
  * redundancies.  This must be a forward iterator over objects of type
- * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
+ * <tt>NVector\<NLargeInteger\>*</tt>.
  * @param facesLast the end of the list <tt>[facesFirst, facesLast)</tt>
  * of hyperplanes that determine the faces of the given cone.
  * This must be a forward iterator over objects of type
- * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
+ * <tt>NVector\<NLargeInteger\>*</tt>.
  * @param subspace a matrix whose rows are hyperplanes whose intersection
  * defines the subspace to intersect with the given cone.
  * @param testCompatibility \c true if we are to only find "valid" extremal

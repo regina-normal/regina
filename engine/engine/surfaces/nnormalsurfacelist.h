@@ -313,7 +313,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
  * will be written; this must accept objects of type <tt>NConeRay*</tt>.
  * @param faces the output iterator to which the newly allocated face
  * perpendiculars will be written; this must accept objects of type
- * <tt>NVector&lt;NLargeInteger&gt;*</tt>.
+ * <tt>NVector\<NLargeInteger\>*</tt>.
  */
 template <class RayOutputIterator, class FaceOutputIterator>
 void createNonNegativeCone(NTriangulation* triangulation, int flavour,
