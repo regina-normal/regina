@@ -175,7 +175,7 @@ class NStandardTriangulation : public ShareableObject {
          * identifications of these boundary faces with each other.
          *
          * @param component the triangulation component under examination.
-         * @return the details of the standard triangualation if the
+         * @return the details of the standard triangulation if the
          * given component is recognised, or 0 otherwise.
          */
         static NStandardTriangulation* isStandardTriangulation(
