@@ -47,6 +47,7 @@ Regina - A Normal Surface Theory Calculator
             - Imported packets now have appropriate packet labels (such
               as their names in the imported files).
             - The file dialog is now brought up before anything else is done.
+            - Added class ReginaImporter to import Regina data files.
         normal.mainui.TopologyPane:
             - Fixed bug where icon was sometimes not displayed.
         normal.packetui.triangulation.CompositionViewer:

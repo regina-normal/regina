@@ -376,6 +376,23 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             });
             menuFileImport.add(menuFileImportSnapPea);
 
+            JMenuItem menuFileImportRegina =
+                new JMenuItem("Regina Data File");
+            menuFileImportRegina.setMnemonic(KeyEvent.VK_R);
+            menuFileImportRegina.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    TopologyPane m = getCurrentTopologyPane();
+                    if (m == null) {
+                        fileNewTopology();
+                        m = getCurrentTopologyPane();
+                        if (m == null)
+                            return;
+                    }
+                    m.importData(new ReginaImporter(shell));
+                }
+            });
+            menuFileImport.add(menuFileImportRegina);
+
             menuFile.add(menuFileImport);
         }
 

@@ -10,9 +10,6 @@ Everywhere:
 		(necessary to ensure progress dialogs cannot be closed).
 -	Allow customisation of types in drop-down boxes
 
-File I/O:
-	Import Regina files.
-
 Help:
 	Write manual! - include context sensitive help, searching and index.
 
