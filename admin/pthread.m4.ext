@@ -1,3 +1,7 @@
+dnl This macro is taken from the GNU autoconf macro archive at
+dnl http://www.gnu.org/software/ac-archive/ and is licensed under
+dnl the GNU General Public License.
+dnl
 dnl @synopsis ACX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 dnl
 dnl This macro figures out how to build C programs using POSIX
