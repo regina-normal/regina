@@ -197,14 +197,15 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
         
         virtual bool accept(NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
-        virtual void writeFilter(NFile& out) const;
-        virtual void writeProperties(NFile& out) const;
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getFilterID() const;
         virtual std::string getFilterName() const;
 
     protected:
+        virtual void writeXMLFilterData(std::ostream& out) const;
+        virtual void writeFilter(NFile& out) const;
+        virtual void writeProperties(NFile& out) const;
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();
 };

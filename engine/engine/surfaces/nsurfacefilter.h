@@ -56,8 +56,8 @@ class NNormalSurfaceList;
  *   be declared and implemented.  You may assume that parameter
  *   \a cloneMe is of the same class as that whose constructor you are
  *   writing.</li>
- *   <li>Virtual functions accept(), writeTextLong() and writeFilter()
- *   should be overridden.</li>
+ *   <li>Virtual functions accept(), writeTextLong() and
+ *   writeXMLFilterData() should be overridden.</li>
  *   <li>Static function readFilter() should be implemented as described
  *   in the documentation below.</li>
  *   <li>Virtual functions getFilterID() and getFilterName()
@@ -65,14 +65,6 @@ class NNormalSurfaceList;
  *   The registry utilities will take care of their implementation.</li>
  *   <li><tt>public static const int filterID</tt> should be declared.
  *   The registry utilities will take care of assigning it a value.</li>
- * </ul>
- *
- * If a derived class is to have properties of its own, the following
- * points should be noted:
- * <ul>
- *   <li> Property IDs 1-1000 are reserved for use by NSurfaceFilter itself.
- *   <li> Routine writeProperties() <b>must</b> begin by calling the
- *   corresponding superclass routine.
  * </ul>
  *
  * \todo \feature Implement property \a lastAppliedTo, which necessitates an
@@ -186,7 +178,20 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
 
     protected:
         /**
-         * Writes the details of this filter to file.
+         * Writes a chunk of XML containing the details of this filter.
+         *
+         * You may assume that the filter opening tag (including the
+         * filter type) has already been written, and that the filter
+         * closing tag will be written immediately after this routine is
+         * called.  This routine need only write the additional details
+         * corresponding to this particular subclass of NSurfaceFilter.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        virtual void writeXMLFilterData(std::ostream& out) const;
+        /**
+         * Writes the details of this filter to the given old-style
+         * binary file.
          *
          * You may assume that general packet information and the filter
          * ID have already been written.  Only the actual data stored for
@@ -195,6 +200,14 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          * Properties should not be written from here; this will be done later
          * by another routine.
          *
+         * The default implementation for this routine does nothing; new
+         * filter types should not implement this routine since this file
+         * format is now obsolete, and older calculation engines will
+         * simply skip unknown filter types when reading from binary files.
+         *
+         * \deprecated For the preferred way to write data to file,
+         * see writeXMLFilterData() instead.
+         *
          * \pre The given file is open for writing and satisfies the
          * assumptions listed above.
          *
@@ -202,19 +215,30 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          */
         virtual void writeFilter(NFile& out) const;
         /**
-         * Writes to file any properties associated specifically with
-         * this particular subclass of NSurfaceFilter.
-         * This should consist of a call to the superclass implementation
-         * followed by a series of writePropertyHeader() and
+         * Writes to the given old-style binary file any properties
+         * associated specifically with this particular subclass of
+         * NSurfaceFilter.
+         *
+         * This routine should consist of a call to the superclass
+         * implementation followed by a series of writePropertyHeader() and
          * writePropertyFooter() calls with property information being
          * written inside these pairs.
          *
          * This routine should <b>not</b> call writeAllPropertiesFooter().
          *
+         * The default implementation for this routine does nothing; new
+         * filter types should not implement this routine since this file
+         * format is now obsolete, and older calculation engines will
+         * simply skip unknown filter types when reading from binary files.
+         *
+         * \deprecated For the preferred way to write data to file,
+         * see writeXMLFilterData() instead.
+         *
          * @param out the file to be written to.
          */
         virtual void writeProperties(NFile& out) const;
         virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual void writeXMLPacketData(std::ostream& out) const;
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();
 };
@@ -230,6 +254,9 @@ inline NSurfaceFilter::~NSurfaceFilter() {
 
 inline bool NSurfaceFilter::accept(NNormalSurface&) const {
     return true;
+}
+
+inline void NSurfaceFilter::writeXMLFilterData(std::ostream& out) const {
 }
 
 inline void NSurfaceFilter::writeFilter(NFile&) const {
