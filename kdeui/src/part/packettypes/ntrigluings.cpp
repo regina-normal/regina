@@ -110,7 +110,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actSimplify);
 
     KAction* actEltMove = new KAction(i18n(
-        "&Elementary Move"),
+        "&Elementary Move..."),
         0 /* shortcut */, this, SLOT(elementaryMove()), triActions,
         "tri_elementary_move");
     actEltMove->setToolTip(i18n(

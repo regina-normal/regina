@@ -74,11 +74,11 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(splitting, 1, 3);
 
     btnZeroEff = new QPushButton(SmallIconSet("run", 0,
-        ReginaPart::factoryInstance()), i18n("Calculate..."), ui);
+        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
     grid->addWidget(btnZeroEff, 0, 5);
     connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
     btnSplitting = new QPushButton(SmallIconSet("run", 0,
-        ReginaPart::factoryInstance()), i18n("Calculate..."), ui);
+        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
     grid->addWidget(btnSplitting, 1, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
 

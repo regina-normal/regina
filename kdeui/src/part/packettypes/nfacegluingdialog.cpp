@@ -37,6 +37,7 @@
 #include <qlayout.h>
 #include <qregexp.h>
 #include <qvalidator.h>
+#include <qwhatsthis.h>
 
 namespace {
     /**
@@ -73,11 +74,19 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
     for (unsigned long i = 0; i < nTets; i++)
         tetrahedron->insertItem(QString::number(i));
     tetrahedron->setCurrentItem(initAdjTet < 0 ? 0 : initAdjTet + 1);
+    QWhatsThis::add(tetrahedron, i18n("The number of the tetrahedron to "
+        "which this face should be joined, or Bdry if this face should "
+        "be a boundary face."));
     layout->addWidget(tetrahedron, 2, 1);
 
     perm = new KLineEdit(initAdjFace, page);
     perm->setValidator(new QRegExpValidator(reTetFace, page));
     perm->setMaxLength(3);
+    QWhatsThis::add(perm, i18n("The specific tetrahedron face to which "
+        "this face should be joined.  The face should be described by "
+        "three vertices (each between 0 and 3 inclusive).  These vertices "
+        "should be given in the order in which they are to be glued to "
+        "the three vertices of this face."));
     layout->addWidget(perm, 2, 2);
 
     connect(tetrahedron, SIGNAL(activated(int)),
