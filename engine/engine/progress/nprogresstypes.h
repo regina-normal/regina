@@ -101,6 +101,27 @@ class NProgressMessage : public NProgress {
 };
 
 /**
+ * A simple structure used for passing around a numeric state of
+ * progress.
+ */
+struct NProgressStateNumeric {
+    long completed;
+        /**< The number of items that have already been completed. */
+    long outOf;
+        /**< The expected total number of items, or -1 if this is not known. */
+
+    /**
+     * Initialises a new structure using the given values.
+     *
+     * @param newCompleted the number of items that have already been
+     * completed.
+     * @param newOutOf the expected total number of items, or -1 if this
+     * is not known.
+     */
+    NProgressStateNumeric(long newCompleted = 0, long newOutOf = -1);
+};
+
+/**
  * A progress report in which the current state of progress is stored as
  * a number of items completed.
  * The expected total number of items can be optionally specified.
@@ -145,6 +166,13 @@ class NProgressNumber : public NProgress {
          * total is not known.
          */
         long getOutOf() const;
+        /**
+         * Returns both the number of items completed and the expected
+         * total number of items.
+         *
+         * @return the current state of progress.
+         */
+        NProgressStateNumeric getNumericState() const;
         /**
          * Sets the number of items completed.
          *
@@ -198,17 +226,18 @@ inline NProgressMessage::NProgressMessage(const char* newMessage) :
 
 inline std::string NProgressMessage::getMessage() const {
     MutexLock(this);
+    changed = false;
     return message;
 }
 inline void NProgressMessage::setMessage(const std::string& newMessage) {
     MutexLock(this);
     message = newMessage;
-    setChanged();
+    changed = true;
 }
 inline void NProgressMessage::setMessage(const char* newMessage) {
     MutexLock(this);
     message = newMessage;
-    setChanged();
+    changed = true;
 }
 
 inline std::string NProgressMessage::internalGetDescription() const {
@@ -216,7 +245,13 @@ inline std::string NProgressMessage::internalGetDescription() const {
     return message;
 }
 
-// Inline functions for NProgress
+// Inline functions for NProgressStateNumeric
+
+inline NProgressStateNumeric::NProgressStateNumeric(long newCompleted,
+        long newOutOf) : completed(newCompleted), outOf(newOutOf) {
+}
+
+// Inline functions for NProgressNumber
 
 inline NProgressNumber::NProgressNumber(long newCompleted, long newOutOf) :
         NProgress(), completed(newCompleted), outOf(newOutOf) {
@@ -224,26 +259,33 @@ inline NProgressNumber::NProgressNumber(long newCompleted, long newOutOf) :
 
 inline long NProgressNumber::getCompleted() const {
     MutexLock(this);
+    changed = false;
     return completed;
 }
 inline long NProgressNumber::getOutOf() const {
     MutexLock(this);
+    changed = false;
     return outOf;
+}
+inline NProgressStateNumeric NProgressNumber::getNumericState() const {
+    MutexLock(this);
+    changed = false;
+    return NProgressStateNumeric(completed, outOf);
 }
 inline void NProgressNumber::setCompleted(long newCompleted) {
     MutexLock(this);
     completed = newCompleted;
-    setChanged();
+    changed = true;
 }
 inline void NProgressNumber::incCompleted(unsigned long extraCompleted) {
     MutexLock(this);
     completed += extraCompleted;
-    setChanged();
+    changed = true;
 }
 inline void NProgressNumber::setOutOf(long newOutOf) {
     MutexLock(this);
     outOf = newOutOf;
-    setChanged();
+    changed = true;
 }
 
 inline bool NProgressNumber::isPercent() const {

@@ -75,18 +75,22 @@ namespace regina {
  *
  * Subclasses of NProgress represent the various ways in which progress
  * can be internally stored.  Note that subclass member functions
- * <b>must</b> lock the mutex whenever internal data is being
- * accessed or modified (see NMutex::MutexLock for how this is done)
- * and <b>must</b> call setChanged() if they alter the state of progress.
+ * must lock the mutex whenever internal data is being
+ * accessed or modified (see NMutex::MutexLock for how this is done).
+ * Any public subclass member function that changes the state of
+ * progress must set the \a changed flag to \c true, and all public
+ * subclass query functions must set the \a changed flag to \c false.
  *
  * \todo \feature Add timer support; measure the time elapsed between
  * the creation of this NProgress object and the call to setFinished() or
  * cancel(); hopefully measure this both in CPU time and real time.
  */
 class NProgress : public ShareableObject, protected NMutex {
-    private:
-        bool changed;
+    protected:
+        mutable bool changed;
             /**< Has the state of progress changed since the last query? */
+
+    private:
         bool finished;
             /**< Is the operation whose progress we are reporting
              *   completely finished? */
@@ -97,6 +101,8 @@ class NProgress : public ShareableObject, protected NMutex {
         /**
          * Performs basic initialisation.
          * Note that the internal mutex is not locked during construction.
+         *
+         * The internal state-has-changed flag is set to \c true.
          *
          * \ifacespython Not present; NProgress objects should only be
          * created within calculation engine routines whose progress is
@@ -111,11 +117,11 @@ class NProgress : public ShareableObject, protected NMutex {
         /**
          * Determines if the state of progress has changed since the
          * last query.  A query is defined to be a call to
-         * getDescription() or getPercent().
+         * getDescription(), getPercent() or any of the
+         * subclass-specific query routines.
          *
          * This routine allows interfaces to avoid calls to the slower
-         * routines getDescription() and getPercent() when they can
-         * avoid it.
+         * query routines when they can avoid it.
          *
          * If no query has yet been made, this routine will return \c true.
          *
@@ -161,8 +167,12 @@ class NProgress : public ShareableObject, protected NMutex {
          * Note that if cancellation is not sensible or appropriate, the
          * operation may freely ignore such cancellation requests and need
          * not poll isCancelled() at all.
+         *
+         * This routine is made const since an external interface should be
+         * able to cancel an operation even though it should never
+         * modify the state of progress.
          */
-        void cancel();
+        void cancel() const;
         /**
          * Determines whether an external interface has requested that
          * the operation whose progress we are reporting be cancelled.
@@ -214,19 +224,7 @@ class NProgress : public ShareableObject, protected NMutex {
 
     protected:
         /**
-         * Sets the flag that the current state of progress has changed.
-         * This routine <b>must</b> be called by any subclass member
-         * function that changes the state of progress.
-         *
-         * The changed flag is initially set to \c true, so this routine
-         * need not be called from any subclass constructors.  This
-         * routine does not lock the mutex.
-         */
-        void setChanged();
-
-        /**
-         * Returns a string description of the current state of
-         * progress.
+         * Returns a string description of the current state of progress.
          *
          * @return the current state of progress.
          */
@@ -288,31 +286,27 @@ inline void NProgress::setFinished() {
     finished = true;
 }
 
-inline void NProgress::cancel() {
-    cancelled = true;
+inline void NProgress::cancel() const {
+    const_cast<NProgress*>(this)->cancelled = true;
 }
 inline bool NProgress::isCancelled() const {
     return cancelled;
 }
 
 inline std::string NProgress::getDescription() const {
-    const_cast<NProgress*>(this)->changed = false;
+    changed = false;
     return internalGetDescription();
 }
 inline bool NProgress::isPercent() const {
     return false;
 }
 inline double NProgress::getPercent() const {
-    const_cast<NProgress*>(this)->changed = false;
+    changed = false;
     return internalGetPercent();
 }
 
 inline void NProgress::writeTextShort(std::ostream& out) const {
     out << "Progress: " << getDescription();
-}
-
-inline void NProgress::setChanged() {
-    changed = true;
 }
 
 inline double NProgress::internalGetPercent() const {
