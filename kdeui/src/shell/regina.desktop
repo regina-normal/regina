@@ -1,9 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
+GenericName=3-Manifold Topology
 Name=Regina
-Exec=regina %i %m -caption "%c"
+MimeType=TODO
+Exec=regina-kde %U
+X-KDE-StartupNotify=true
 Icon=regina
 Type=Application
+MimeType=application/x-regina
 DocPath=regina/index.html
 Comment=A Normal Surface Theory Calculator
 Terminal=0

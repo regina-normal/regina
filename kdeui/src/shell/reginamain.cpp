@@ -400,13 +400,14 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     if (! ans)
         KMessageBox::error(this, QString(i18n(
             "An appropriate topology data component could not be found.")));
+    else {
+        // Connect up signals and slots.
+        connect(this, SIGNAL(changedDisplayIcon(bool)),
+            ans, SLOT(displayIcon(bool)));
 
-    // Connect up signals and slots.
-    connect(this, SIGNAL(changedDisplayIcon(bool)),
-        ans, SLOT(displayIcon(bool)));
-
-    // Perform initial setup on the part.
-    emit changedDisplayIcon(displayIcon);
+        // Perform initial setup on the part.
+        emit changedDisplayIcon(displayIcon);
+    }
 
     // All done!
     return ans;
