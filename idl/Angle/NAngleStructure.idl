@@ -38,6 +38,8 @@ module Regina {
             string getAngleNum(in long tetIndex, in long edgePair);
             string getAngleDen(in long tetIndex, in long edgePair);
             Regina::Triangulation::NTriangulation getTriangulation();
+            boolean isStrict();
+            boolean isTaut();
         };
     };
 };

@@ -36,5 +36,8 @@ public interface NAngleStructure extends ShareableObject {
     public BigInteger getAngleNum(long tetIndex, int edgePair);
     public BigInteger getAngleDen(long tetIndex, int edgePair);
     public NTriangulation getTriangulation();
+
+    public boolean isStrict();
+    public boolean isTaut();
 }
 

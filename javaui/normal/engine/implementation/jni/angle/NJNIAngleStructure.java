@@ -41,4 +41,7 @@ public class NJNIAngleStructure extends JNIShareableObject
     public native BigInteger getAngleNum(long tetIndex, int edgePair);
     public native BigInteger getAngleDen(long tetIndex, int edgePair);
     public native NTriangulation getTriangulation();
+
+    public native boolean isStrict();
+    public native boolean isTaut();
 }

@@ -43,4 +43,10 @@ Regina::Triangulation::NTriangulation_ptr
         NAngleStructure_i::getTriangulation() {
     return NTriangulation_i::newWrapper(MY_ENGINE_OBJECT->getTriangulation());
 }
+CORBA::Boolean NAngleStructure_i::isStrict() {
+    return MY_ENGINE_OBJECT->isStrict();
+}
+CORBA::Boolean NAngleStructure_i::isTaut() {
+    return MY_ENGINE_OBJECT->isTaut();
+}
 

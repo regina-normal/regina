@@ -49,6 +49,8 @@ class NAngleStructure_i : public virtual POA_Regina::Angle::NAngleStructure,
         virtual char* getAngleNum(CORBA::Long tetIndex, CORBA::Long edgePair);
         virtual char* getAngleDen(CORBA::Long tetIndex, CORBA::Long edgePair);
         virtual Regina::Triangulation::NTriangulation_ptr getTriangulation();
+        virtual CORBA::Boolean isStrict();
+        virtual CORBA::Boolean isTaut();
 };
 
 #endif

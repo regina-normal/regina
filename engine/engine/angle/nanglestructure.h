@@ -98,6 +98,17 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
         NTriangulation* triangulation;
             /**< The triangulation on which this angle structure is placed. */
 
+        unsigned long flags;
+            /**< Stores a variety of angle structure properties as
+             *   described by the flag constants in this class.
+             *   Flags can be combined using bitwise OR. */
+        static const unsigned long flagStrict = 1;
+            /**< Signals that this angle structure is strict. */
+        static const unsigned long flagTaut = 2;
+            /**< Signals that this angle structure is taut. */
+        static const unsigned long flagCalculatedType = 4;
+            /**< Signals that the type (strict/taut) has been calculated. */
+
     public:
         /**
          * Creates a new angle structure on the given triangulation with
@@ -157,6 +168,23 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          */
         NTriangulation* getTriangulation() const;
 
+        /**
+         * Determines whether this is a strict angle structure.
+         * A strict angle structure has all angles strictly between (not
+         * including) 0 and <i>pi</i>.
+         *
+         * @return \c true if and only if this is a strict angle structure.
+         */
+        bool isStrict();
+
+        /**
+         * Determines whether this is a taut structure.
+         * A taut structure contains only angles 0 and <i>pi</i>.
+         *
+         * @return \c true if and only if this is a taut structure.
+         */
+        bool isTaut();
+
         void writeTextShort(ostream& out) const;
 
         /**
@@ -195,6 +223,12 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
     protected:
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();
+
+        /**
+         * Calculates the structure type (strict or taut) and stores it
+         * as a property.
+         */
+        void calculateType();
 };
 
 // Inline functions for NAngleStructureVector
@@ -225,6 +259,18 @@ inline NAngleStructure::~NAngleStructure() {
 
 inline NTriangulation* NAngleStructure::getTriangulation() const {
     return triangulation;
+}
+
+inline bool NAngleStructure::isStrict() {
+    if ((flags & flagCalculatedType) == 0)
+        calculateType();
+    return ((flags & flagStrict) != 0);
+}
+
+inline bool NAngleStructure::isTaut() {
+    if ((flags & flagCalculatedType) == 0)
+        calculateType();
+    return ((flags & flagTaut) != 0);
 }
 
 #endif

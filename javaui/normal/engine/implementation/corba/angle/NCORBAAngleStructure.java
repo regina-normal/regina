@@ -57,4 +57,11 @@ public class NCORBAAngleStructure extends CORBAShareableObject
     public normal.engine.triangulation.NTriangulation getTriangulation() {
         return NCORBATriangulation.newWrapper(data.getTriangulation());
     }
+
+    public boolean isStrict() {
+        return data.isStrict();
+    }
+    public boolean isTaut() {
+        return data.isTaut();
+    }
 }

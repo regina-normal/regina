@@ -30,6 +30,9 @@
 #include "triangulation/ntriangulation.h"
 #include "file/nfile.h"
 
+// Property IDs:
+#define PROPID_FLAGS 1
+
 NAngleStructure* NAngleStructure::clone() const {
     return new NAngleStructure(triangulation,
         (NAngleStructureVector*)vector->clone());
@@ -77,7 +80,13 @@ void NAngleStructure::writeToFile(NFile& out) const {
     }
     out.writeInt(-1);
     
-    // Write properties (of which there are currently none).
+    // Write properties.
+    streampos bookmark(0);
+
+    bookmark = writePropertyHeader(out, PROPID_FLAGS);
+    out.writeULong(flags);
+    writePropertyFooter(out, bookmark);
+
     writeAllPropertiesFooter(out);
 }
 
@@ -103,8 +112,59 @@ NAngleStructure* NAngleStructure::readFromFile(NFile& in,
 }
 
 void NAngleStructure::readIndividualProperty(NFile& infile, unsigned propType) {
+    if (propType == PROPID_FLAGS) {
+        flags = infile.readULong();
+    }
 }
 
 void NAngleStructure::initialiseAllProperties() {
+    flags = 0;
+}
+
+void NAngleStructure::calculateType() {
+    unsigned long size = vector->size();
+    if (size == 1) {
+        // We have no tetrahedra at all; this angle structure is both
+        // strict and taut.
+        flags |= flagStrict;
+        flags |= flagTaut;
+        flags |= flagCalculatedType;
+        return;
+    }
+
+    bool taut = true;
+    bool strict = true;
+
+    // Run through the tetrahedra one by one.
+    const NLargeInteger& scale = (*vector)[size - 1];
+    unsigned long pair;
+    for (unsigned long base = 0; base < size - 1; base += 3) {
+        for (pair = 0; pair < 3; pair++) {
+            if ((*vector)[base + pair] == scale) {
+                // We have a pi; thus all three angles in this
+                // tetrahedron are pi or zero.
+                strict = false;
+                break;
+            } else if ((*vector)[base + pair] == NLargeInteger::zero)
+                strict = false;
+            else
+                taut = false;
+        }
+        if ((! strict) && (! taut))
+            break;
+    }
+
+    // Update the flags as appropriate.
+    if (strict)
+        flags |= flagStrict;
+    else
+        flags &= (~flagStrict);
+
+    if (taut)
+        flags |= flagTaut;
+    else
+        flags &= (~flagTaut);
+
+    flags |= flagCalculatedType;
 }
 

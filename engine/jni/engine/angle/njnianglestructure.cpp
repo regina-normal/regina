@@ -53,3 +53,15 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_isStrict
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NAngleStructure, me)->isStrict();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_isTaut
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NAngleStructure, me)->isTaut();
+}
+
