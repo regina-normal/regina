@@ -46,10 +46,16 @@
     "*.rga|Regina Data Files\n*|All Files"
 
 /**
+ * Filename filter for Python libraries.
+ */
+#define FILTER_PYTHON_LIBRARIES \
+    "*.py|Python Libraries\n*|All Files"
+
+/**
  * Filename filter for Python scripts.
  */
-#define FILTER_PYTHON \
-    "*.py|Python Libraries\n*|All Files"
+#define FILTER_PYTHON_SCRIPTS \
+    "*.py|Python Scripts\n*|All Files"
 
 /**
  * Filename filter for SnapPea files.
