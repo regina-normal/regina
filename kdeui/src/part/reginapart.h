@@ -115,6 +115,9 @@ class ReginaPart : public KParts::ReadWritePart {
          * Whether it is docked or in a free-floating window will be
          * decided according to the current arrangement of panes and any
          * relevant user settings.
+         *
+         * Note that this routine should only be called for newly
+         * created packet panes.
          */
         void view(PacketPane* newPane);
 
@@ -131,6 +134,12 @@ class ReginaPart : public KParts::ReadWritePart {
          * packet pane from any preexisting container, or the
          * configuration of the pane's dock/undock button and associated
          * actions.
+         *
+         * Note that this routine is not designed for general use.
+         * For docking a pane that is currently floating,
+         * PacketPane::dockPane() should be used.  For docking a newly
+         * created pane, a combination of ReginaPart::view() and
+         * PacketPane::dockPane() should be used.
          */
         void dock(PacketPane* newPane);
 
@@ -140,6 +149,9 @@ class ReginaPart : public KParts::ReadWritePart {
          *
          * This must always be called when a packet pane is either closed
          * or floated into its own window.
+         *
+         * This routine will happily cope with the case in which the given
+         * packet is in fact not currently docked.
          */
         void hasUndocked(PacketPane* undockedPane);
 

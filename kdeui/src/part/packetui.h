@@ -55,13 +55,16 @@ class PacketHeader : public QHBox {
     Q_OBJECT
 
     private:
+        /**
+         * Packet details
+         */
         regina::NPacket* packet;
-            /**< The packet described by this header. */
 
+        /**
+         * Internal components
+         */
         QLabel* icon;
-            /**< The icon depicting the packet type. */
         QLabel* title;
-            /**< The text title. */
 
     public:
         /**
@@ -72,46 +75,161 @@ class PacketHeader : public QHBox {
 
     public slots:
         /**
-         * Updates the text title according to the current packet label.
+         * Refresh this header according to the current label and
+         * contents of the underlying packet.
          */
         void refresh();
 };
 
 /**
- * A single item in a Regina packet tree.
+ * A packet-specific interface component for viewing or editing a packet.
+ * Generic interface elements such as actions for refreshing or closing
+ * a packet interface are not included.
+ *
+ * Different packet types should use different subclasses of PacketUI for
+ * user interaction.  The PacketManager class is responsible for
+ * creating an interface component appropriate for a given packet.
+ *
+ * Subclasses should call setDirty(true) whenever changes are made in
+ * the interface.  Likewise, they should call setDirty(false) at the
+ * end of their implementations of commit() and refresh().
+ * Changes must never be made to the underlying packet except for within
+ * the commit() routine.
+ *
+ * Each packet interface is either in read-write mode or in read-only
+ * mode, and may be required to change modes throughout its life span.
+ * See setReadWrite() for details.
+ *
+ * Subclasses will generally wish to override many of the PacketUI virtual
+ * functions.
  */
 class PacketUI {
     private:
+        /**
+         * External components
+         */
         PacketPane* enclosingPane;
 
     public:
+        /**
+         * Constructor and destructor.
+         */
         PacketUI(PacketPane* newEnclosingPane);
         virtual ~PacketUI();
 
+        /**
+         * Return the packet that this pane is managing.
+         * This routine should always return the same pointer throughout
+         * the life of this object.
+         */
         virtual regina::NPacket* getPacket() = 0;
+
+        /**
+         * Return the entire interface component.
+         * This routine should always return the same pointer throughout
+         * the life of this object.
+         */
         virtual QWidget* getInterface() = 0;
+
+        /**
+         * Return the primary text component associated with this
+         * interface, or 0 if there is no primary text component.
+         * This routine should always return the same pointer throughout
+         * the life of this object.
+         *
+         * The default implementation of this routine simply returns 0.
+         */
         virtual QTextEdit* getTextComponent();
-        virtual void commit();
+
+        /**
+         * Store any changes currently made in this interface in the
+         * underlying packet.
+         *
+         * This routine should call setDirty(false) once changes have
+         * been made.
+         */
+        virtual void commit() = 0;
+
+        /**
+         * Update this interface to reflect the current contents of the
+         * underlying packet.
+         *
+         * This routine should call setDirty(false) once the interface
+         * has been updated.
+         */
         virtual void refresh() = 0;
-        virtual bool isReadWrite();
-        bool isDirty();
+
+        /**
+         * Modify this interface to be read-write or read-only according
+         * to the given argument.
+         *
+         * If this interface is incapable of editing packets (e.g.,
+         * interfaces for packet types that are inherently read-only
+         * such as containers), this routine need not do anything.
+         */
+        virtual void setReadWrite(bool readWrite) = 0;
 
     protected:
+        /**
+         * Notifies external interface elements that this interface does
+         * (or does not) contain changes that have not yet been committed
+         * to the underlying packet.
+         *
+         * This routine must be called whenever changes are made in the
+         * interface, and must also be called at the end of the
+         * implementations of commit() and refresh().
+         */
         void setDirty(bool newDirty);
 };
 
-class DefaultPacketUI : public PacketUI {
+/**
+ * A packet interface that does not allow changes to be made.
+ * Packets types that are inherently read-only (such as containers)
+ * will probably want to use a subclass of PacketReadOnlyUI for their
+ * interfaces.
+ */
+class PacketReadOnlyUI : public PacketUI {
+    public:
+        /**
+         * Constructor.
+         */
+        PacketReadOnlyUI(PacketPane* newEnclosingPane);
+
+        /**
+         * An implementation of commit() that does nothing but call
+         * setDirty(false).
+         */
+        virtual void commit();
+
+        /**
+         * An implementation of setReadWrite() that does nothing
+         * whatsoever.
+         */
+        virtual void setReadWrite(bool readWrite);
+};
+
+/**
+ * A packet interface that should be used for unknown packet types.
+ * A simple message is displayed indicating that the packet cannot be
+ * viewed.
+ */
+class DefaultPacketUI : public PacketReadOnlyUI {
     private:
         regina::NPacket* packet;
         QLabel* label;
 
     public:
+        /**
+         * Constructor.
+         */
         DefaultPacketUI(regina::NPacket* newPacket,
             PacketPane* newEnclosingPane);
+
+        /**
+         * Implementations of PacketUI virtual functions.
+         */
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
-
-    protected:
         virtual void refresh();
 };
 
@@ -126,41 +244,49 @@ class PacketPane : public QVBox {
     Q_OBJECT
 
     private:
+        /**
+         * External components
+         */
         ReginaPart* part;
-            /**< The KPart managing this packet pane. */
         KMainWindow* frame;
-            /**< The floating frame containing this packet pane, or 0
-                 if this packet pane is currently docked. */
-        bool dirty;
-            /**< Does this packet pane contain any uncommitted changes? */
 
         /**
          * Internal components
          */
         PacketHeader* header;
         PacketUI* mainUI;
+        QToolButton* dockUndockBtn;
 
         /**
-         * Action components
+         * Properties
          */
-        QToolButton* dockUndockBtn;
+        bool dirty;
+        bool emergencyClosure;
+        bool emergencyRefresh;
+
+        /**
+         * Actions
+         */
         KAction* actCommit;
         KAction* actRefresh;
-
         QPtrList<KAction> trackingActions;
 
     public:
         /**
          * Constructs a new packet pane, managed by the given KPart,
          * that views or edits the given packet.
+         *
+         * An appropriate internal interface component will be selected
+         * by way of the PacketManager class.
          */
         PacketPane(ReginaPart* newPart, regina::NPacket* newPacket,
             QWidget* parent = 0, const char* name = 0);
 
         /**
-         * PacketUI interaction
+         * Query components and actions.
          */
         PacketUI* getMainUI();
+        const QPtrList<KAction>& getTrackingActions();
 
         /**
          * Does this packet pane contain any changes that have not yet
@@ -168,14 +294,21 @@ class PacketPane : public QVBox {
          */
         bool isDirty();
 
+        /**
+         * Signals that there are (or are not) changes in this interface
+         * that have not yet been committed.  External interface
+         * components will be updated accordingly.
+         */
         void setDirty(bool newDirty);
 
         /**
          * Are we allowed to close this packet pane?
+         *
+         * If this routine returns \c true, the caller of this routine
+         * must ensure that the packet pane is actually closed (since in
+         * this case queryClose() will call ReginaPart::isClosing()).
          */
         bool queryClose();
-
-        const QPtrList<KAction>& getTrackingActions();
 
     public slots:
         /**
@@ -186,29 +319,64 @@ class PacketPane : public QVBox {
         void refresh();
 
         /**
+         * Like refresh(), except that the user is never prompted.
+         * Any uncommitted changes will be lost.
+         */
+        void refreshForce();
+
+        /**
          * Commits any changes made in the user interface to the
          * underlying packet.
          */
         void commit();
 
         /**
-         * Closes this packet pane.  All this routine does is delegate
-         * the closure operation to whatever component currently owns
-         * this packet pane.
+         * Closes this packet pane.  The user will be prompted if
+         * necessary.
+         *
+         * For a packet pane that is currently docked, this routine
+         * is equivalent to calling ReginaPart::closeDockedPane().
+         *
+         * Note that all this routine does is delegate the closure
+         * operation to whatever component currently owns this packet pane.
          */
         bool close();
 
         /**
-         * Docks this packet pane within the main ReginaPart widget, if
+         * Closes this packet pane without prompting the user and
+         * without the chance of the closure being cancelled.
+         */
+        void closeForce();
+
+        /**
+         * Docks this packet pane into the main ReginaPart widget, if
          * it is not already docked.  If another packet pane is
-         * already docked and refuses to be closed, this other pane will
+         * already docked and refuses to be closed, the other pane will
          * be moved into its own freely floating window.
+         *
+         * This routine is the one and only way to dock a packet pane
+         * that is currently floating in its own window.
+         *
+         * It is assumed that the packet pane is already registered with
+         * the managing ReginaPart and is either already docked or
+         * currently floating in its own window.
          */
         void dockPane();
 
         /**
          * Floats this packet pane in its own top-level window, if it is
          * not already in such a state.
+         *
+         * This routine is the one and only way to construct a
+         * top-level window enclosing a packet pane.
+         *
+         * It is assumed that the packet pane is already registered with
+         * the managing ReginaPart, though it does not matter if the
+         * pane is currently floating, docked or parentless.
+         *
+         * Note that a currently docked packet pane can also be floated by
+         * calling ReginaPart::floatDockedPane(), which simply calls
+         * this routine.
          */
         void floatPane();
 };
@@ -224,19 +392,19 @@ inline QTextEdit* PacketUI::getTextComponent() {
     return 0;
 }
 
-inline bool PacketUI::isReadWrite() {
-    return false;
-}
-
-inline bool PacketUI::isDirty() {
-    return enclosingPane->isDirty();
-}
-
 inline void PacketUI::setDirty(bool newDirty) {
     enclosingPane->setDirty(newDirty);
 }
 
-inline void PacketUI::commit() {
+inline PacketReadOnlyUI::PacketReadOnlyUI(PacketPane* newEnclosingPane) :
+        PacketUI(newEnclosingPane) {
+}
+
+inline void PacketReadOnlyUI::commit() {
+    setDirty(false);
+}
+
+inline void PacketReadOnlyUI::setReadWrite(bool) {
 }
 
 inline PacketUI* PacketPane::getMainUI() {

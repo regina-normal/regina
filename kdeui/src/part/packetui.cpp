@@ -70,7 +70,7 @@ void PacketHeader::refresh() {
 }
 
 DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
-        PacketPane* newEnclosingPane) : PacketUI(newEnclosingPane),
+        PacketPane* newEnclosingPane) : PacketReadOnlyUI(newEnclosingPane),
         packet(newPacket) {
     label = new QLabel(i18n(
         "Packets of type %1\nare not yet supported.").arg(
@@ -91,7 +91,8 @@ void DefaultPacketUI::refresh() {
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
-        part(newPart), frame(0), dirty(false) {
+        part(newPart), frame(0), dirty(false), emergencyClosure(false),
+        emergencyRefresh(false) {
     // Set up the header and dock/undock button.
     QHBox* headerBox = new QHBox(this);
 
@@ -149,7 +150,7 @@ void PacketPane::setDirty(bool newDirty) {
 }
 
 bool PacketPane::queryClose() {
-    if (isDirty()) {
+    if ((! emergencyClosure) && dirty) {
         if (KMessageBox::warningYesNo(this, i18n(
                 "This packet contains changes that have not yet been "
                 "committed.  Do you wish to close this packet anyway and "
@@ -167,7 +168,7 @@ bool PacketPane::queryClose() {
 void PacketPane::refresh() {
     header->refresh();
 
-    if (mainUI->isDirty())
+    if ((! emergencyRefresh) && dirty)
         if (KMessageBox::warningYesNo(this, i18n(
                 "This packet contains changes that have not yet been "
                 "committed.  Do you wish to refresh this packet anyway and "
@@ -175,11 +176,20 @@ void PacketPane::refresh() {
                 mainUI->getPacket()->getPacketLabel().c_str()) ==
                 KMessageBox::No)
             return;
+
+    emergencyRefresh = false;
     mainUI->refresh();
+    setDirty(false); // Just in case somebody forgot.
+}
+
+void PacketPane::refreshForce() {
+    emergencyRefresh = true;
+    refresh();
 }
 
 void PacketPane::commit() {
     mainUI->commit();
+    setDirty(false); // Just in case somebody forgot.
 }
 
 bool PacketPane::close() {
@@ -189,6 +199,11 @@ bool PacketPane::close() {
         return frame->close();
     else
         return part->closeDockedPane();
+}
+
+void PacketPane::closeForce() {
+    emergencyClosure = true;
+    close();
 }
 
 void PacketPane::dockPane() {
