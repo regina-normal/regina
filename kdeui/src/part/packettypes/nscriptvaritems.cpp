@@ -137,6 +137,7 @@ ScriptVarValueItem::ScriptVarValueItem(QTable* table, NPacket* treeMatriarch,
 QWidget* ScriptVarValueItem::createEditor() const {
     PacketChooser* editor = new PacketChooser(matriarch, 0, true, packet,
         table()->viewport());
+    editor->setAutoUpdate(true);
     QObject::connect(editor, SIGNAL(activated(int)), table(),
         SLOT(doValueChanged()));
     return editor;
@@ -150,7 +151,6 @@ void ScriptVarValueItem::setContentFromEditor(QWidget* editor) {
     // just in case the selected packet has since been destroyed or
     // renamed.
     PacketChooser* c = dynamic_cast<PacketChooser*>(editor);
-    c->refreshContents();
     packet = c->selectedPacket();
 
     if (packet)
