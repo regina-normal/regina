@@ -29,6 +29,7 @@
 package normal.engine.implementation.jni.subcomplex;
 
 import normal.engine.implementation.jni.*;
+import normal.engine.algebra.*;
 import normal.engine.subcomplex.*;
 
 public class NJNISFS extends JNIShareableObject
@@ -63,4 +64,5 @@ public class NJNISFS extends JNIShareableObject
     public native void insertFibre(long alpha, long beta);
     public native void reduce();
     public native NLensSpace isLensSpace();
+    public native NAbelianGroup getHomologyH1();
 }

@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
 #include "subcomplex/nsfs.h"
 #include "subcomplex/nlensspace.h"
 #include "jnitools.h"
@@ -49,6 +50,14 @@ REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISFS_getFibreCount
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSFS, me)->getFibreCount();
+}
+
+REGJNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNISFS_getHomologyH1
+        (JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NSFS, me)->getHomologyH1(),
+        "normal/engine/implementation/jni/algebra/NJNIAbelianGroup");
 }
 
 REGJNIEXPORT jlong JNICALL

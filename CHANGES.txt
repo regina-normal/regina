@@ -80,6 +80,8 @@ Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
               getVariableIndex() and removeVariableAt().
             - Insistance on unique variable names; in enforcing this
               routine addVariable() now returns bool.
+        Class NSFS:
+            - Added routine getHomologyH1().
         Class NSignature, NSigCensus, NSigPartialIsomorphism:
             - Added.
         Class NTriangulation:

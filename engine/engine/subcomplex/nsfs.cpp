@@ -28,6 +28,8 @@
 
 #include <algorithm>
 #include <iterator>
+#include "algebra/nabeliangroup.h"
+#include "maths/nmatrixint.h"
 #include "subcomplex/nsfs.h"
 #include "subcomplex/nlensspace.h"
 
@@ -263,6 +265,57 @@ NExceptionalFibre NSFS::getModifiedFinalFibre() const {
         return NExceptionalFibre(1, k);
     NExceptionalFibre ans(fibres.back());
     ans.beta += (k * ans.alpha);
+    return ans;
+}
+
+NAbelianGroup* NSFS::getHomologyH1() const {
+    NAbelianGroup* ans = new NAbelianGroup();
+    unsigned long nFibres = fibres.size();
+
+    if (orbitOrientable) {
+        NMatrixInt pres(nFibres + 1, nFibres + orbitPunctures + 1);
+
+        unsigned long which = 0;
+        for (FibreIteratorConst it = fibres.begin(); it != fibres.end(); it++) {
+            pres.entry(0, which + 1) = 1;
+
+            pres.entry(which + 1, 0) = -(*it).beta;
+            pres.entry(which + 1, which + 1) = (*it).alpha;
+
+            which++;
+        }
+
+        for (which = 0; which < orbitPunctures; which++)
+            pres.entry(0, nFibres + 1 + which) = 1;
+
+        pres.entry(0, 0) = k;
+
+        ans->addGroup(pres);
+        ans->addRank(2 * orbitGenus);
+    } else {
+        NMatrixInt pres(nFibres + 2, orbitGenus + nFibres + orbitPunctures + 1);
+
+        unsigned long which = 0;
+        for (FibreIteratorConst it = fibres.begin(); it != fibres.end(); it++) {
+            pres.entry(0, which + 1) = 1;
+
+            pres.entry(which + 1, 0) = -(*it).beta;
+            pres.entry(which + 1, which + 1) = (*it).alpha;
+
+            which++;
+        }
+
+        for (which = 0; which < orbitPunctures; which++)
+            pres.entry(0, nFibres + 1 + which) = 1;
+        for (which = 0; which < orbitGenus; which++)
+            pres.entry(0, nFibres + orbitPunctures + 1 + which) = 2;
+        pres.entry(0, 0) = k;
+
+        pres.entry(nFibres + 1, 0) = 2;
+
+        ans->addGroup(pres);
+    }
+    
     return ans;
 }
 

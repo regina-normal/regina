@@ -40,6 +40,7 @@
 
 namespace regina {
 
+class NAbelianGroup;
 class NLensSpace;
 
 /**
@@ -321,6 +322,17 @@ class NSFS : public ShareableObject {
          * space, or \c null if this is not a Lens space.
          */
         NLensSpace* isLensSpace() const;
+
+        /**
+         * Returns the first homology group of this Seifert fibred space.
+         *
+         * The abelian group returned will be newly created and should be
+         * destroyed by the caller of this routine once it is no longer
+         * required.
+         *
+         * @return the newly created first homology group.
+         */
+        NAbelianGroup* getHomologyH1() const;
 
         void writeTextShort(std::ostream& out) const;
 

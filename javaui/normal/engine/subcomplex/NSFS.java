@@ -29,6 +29,7 @@
 package normal.engine.subcomplex;
 
 import normal.engine.*;
+import normal.engine.algebra.*;
 
 public interface NSFS extends ShareableObject {
     long getOrbitGenus();
@@ -39,5 +40,6 @@ public interface NSFS extends ShareableObject {
     void insertFibre(long alpha, long beta);
     void reduce();
     NLensSpace isLensSpace();
+    NAbelianGroup getHomologyH1();
 }
 
