@@ -1,6 +1,12 @@
-## Makefile.am for Regina
+##
+##  Regina - A Normal Surface Theory Calculator
+##  Makefile Template
+##
+##  Process this file with automake in the top-level directory
+##  to produce Makefile.in.
+##
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/../engine/engine
+INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
 	reginamain.h \
