@@ -16,7 +16,7 @@ General:
     - Enhance the DCOP interface
 
 Census:
-    + Implement GUI census creation
+    - Implement GUI census creation
 
 Containers:
     - Update container viewers whenever their subtrees change, not just when
@@ -25,7 +25,6 @@ Containers:
 Icons:
     - Softer tree for filter_comb.png
     - Icons for separate New actions
-    * Icons for barycentric subdivision and other triangulation actions
     - Separate mimetype icon set
 
 Import/Export:

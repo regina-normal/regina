@@ -149,7 +149,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(new KActionSeparator());
 
     KAction* actBarycentricSubdivide = new KAction(i18n(
-        "&Barycentric Subdivision"),
+        "&Barycentric Subdivision"), "barycentric",
         0 /* shortcut */, this, SLOT(barycentricSubdivide()), triActions,
         "tri_barycentric_subdivide");
     actBarycentricSubdivide->setToolTip(i18n(
@@ -158,8 +158,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actBarycentricSubdivide);
     triActionList.append(actBarycentricSubdivide);
 
-    KAction* actIdealToFinite = new KAction(i18n(
-        "&Ideal to Finite"),
+    KAction* actIdealToFinite = new KAction(i18n("&Ideal to Finite"), "finite",
         0 /* shortcut */, this, SLOT(idealToFinite()), triActions,
         "tri_ideal_to_finite");
     actIdealToFinite->setToolTip(i18n(
@@ -168,8 +167,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actIdealToFinite);
     triActionList.append(actIdealToFinite);
 
-    KAction* actDoubleCover = new KAction(i18n(
-        "&Double Cover"),
+    KAction* actDoubleCover = new KAction(i18n( "&Double Cover"), "doublecover",
         0 /* shortcut */, this, SLOT(doubleCover()), triActions,
         "tri_double_cover");
     actDoubleCover->setToolTip(i18n(
