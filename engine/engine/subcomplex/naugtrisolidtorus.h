@@ -226,6 +226,12 @@ class NAugTriSolidTorus : public ShareableObject {
          * Returns the structure of the Seifert fibred space formed by
          * this augmented triangular solid torus.
          *
+         * Note that if sufficiently pathological layered chains or
+         * layered solid tori are attached to the core triangular solid
+         * torus, this routine will returne a Seifert structure
+         * containing a (0,1) fibre; this should be interpreted as an
+         * unknown Seifert structure.
+         *
          * @return the structure of the corresponding Seifert fibred space.
          */
         const NSFS& getSeifertStructure() const;

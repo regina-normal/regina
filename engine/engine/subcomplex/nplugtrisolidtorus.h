@@ -193,6 +193,11 @@ class NPlugTriSolidTorus : public ShareableObject {
          * Returns the structure of the Seifert fibred space formed by
          * this plugged triangular solid torus.
          *
+         * Note that if sufficiently pathological layered chains are
+         * attached to the core triangular solid torus, this routine will
+         * return a Seifert structure containing a (0,1) fibre; this
+         * should be interpreted as an unknown Seifert structure.
+         *
          * @return the structure of the corresponding Seifert fibred space.
          */
         const NSFS& getSeifertStructure() const;
