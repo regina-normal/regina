@@ -64,7 +64,8 @@ Suggests: regina-normal
 Description: Regina reference manual for normal surface theory calculator
  Regina is a normal surface theory calculator for 3-manifold
  topologists.  This package provides the HTML reference manual including
- complete API documentation for the calculation engine.
+ complete API documentation for the calculation engine.  Sample data
+ files and Jython sessions are also included.
  .
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface calculation.  It offers embedded
