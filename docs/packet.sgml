@@ -154,6 +154,26 @@
    </sect3>
   </sect2>
 
+  <sect2 id="packet-anglestructures">
+   <title>Angle Structure List</title>
+
+   <para>
+    <inlinegraphic fileref="images/packet/angle.gif">
+   </para>
+   <para>
+    An <firstterm>angle structure list packet</firstterm> represents a set
+    of angle structures on a triangulation.  Typically this will be the
+    set of all vertex angle structures under the standard equations.
+   </para>
+   <para>
+    The parent packet of an angle structure list will always be the
+    triangulation on which the structures lie.
+   </para>
+   <para>
+    <graphic fileref="images/shots/angles.jpg">
+   </para>
+  </sect2>
+
   <sect2 id="packet-script">
    <title>Script</title>
 
