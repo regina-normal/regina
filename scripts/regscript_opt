@@ -104,7 +104,7 @@ fi
 # ---------- Set defaults and run sanity checks ----------
 
 if [ -z "$REGINA_BTOOLS" ]; then
-	export REGINA_BTOOLS=`ls "$REGINA_HOME"/lib/btools*.jar 2> /dev/null`
+	export REGINA_BTOOLS="`ls "$REGINA_HOME"/lib/btools*.jar 2> /dev/null`"
 	if [ -z "$REGINA_BTOOLS" ]; then
 		export REGINA_BTOOLS="$REGINA_HOME/lib/btools.jar"
 	fi
@@ -123,7 +123,7 @@ elif [ ! -e "$REGINA_BTOOLS" ]; then
 fi
 
 if [ -z "$REGINA_JYTHON" ]; then
-	export REGINA_JYTHON=`ls "$REGINA_HOME"/lib/jython*.jar 2> /dev/null`
+	export REGINA_JYTHON="`ls "$REGINA_HOME"/lib/jython*.jar 2> /dev/null`"
 	if [ -z "$REGINA_JYTHON" ]; then
 		export REGINA_JYTHON="$REGINA_HOME/lib/jython.jar"
 	fi
@@ -141,7 +141,7 @@ elif [ ! -e "$REGINA_JYTHON" ]; then
 fi
 
 if [ -z "$REGINA_JAVAHELP" ]; then
-	export REGINA_JAVAHELP=`ls "$REGINA_HOME"/lib/jh.jar 2> /dev/null`
+	export REGINA_JAVAHELP="`ls "$REGINA_HOME"/lib/jh.jar 2> /dev/null`"
 	if [ -z "$REGINA_JAVAHELP" ]; then
 		export REGINA_JAVAHELP="$REGINA_HOME/lib/jh.jar"
 	fi
