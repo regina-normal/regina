@@ -33,7 +33,6 @@
 
 // UI includes:
 #include "ntriangulationcreator.h"
-#include "../reginapart.h"
 
 #include <kcombobox.h>
 #include <klineedit.h>
@@ -52,7 +51,7 @@ using regina::NTriangulation;
 
 namespace {
     /**
-     * Triangulation type IDs that correspond to indexes in the
+     * Triangulation type IDs that correspond to indices in the
      * triangulation type combo box.
      */
     const int TRI_EMPTY = 0;

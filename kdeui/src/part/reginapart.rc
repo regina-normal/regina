@@ -34,6 +34,8 @@
     <Action name="tree_text"/>
     <Action name="tree_triangulation"/>
     <Separator/>
+    <Action name="tree_census"/>
+    <Separator/>
     <Action name="tree_view"/>
     <Action name="tree_rename"/>
     <Action name="tree_delete"/>

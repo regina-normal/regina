@@ -37,6 +37,7 @@
 #include "packettreeview.h"
 #include "reginapart.h"
 #include "packettypes/nanglestructurecreator.h"
+#include "packettypes/nnormalsurfacecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
 #include "packettypes/ntriangulationcreator.h"
 
@@ -46,10 +47,6 @@ void ReginaPart::newAngleStructures() {
     newPacket(new NAngleStructureCreator(),
         new SingleTypeFilter<regina::NTriangulation>(),
         i18n("New Angle Structure Solutions"), i18n("Angle Structures"));
-}
-
-void ReginaPart::newCensus() {
-    unimplemented();
 }
 
 void ReginaPart::newContainer() {
@@ -63,7 +60,9 @@ void ReginaPart::newFilter() {
 }
 
 void ReginaPart::newNormalSurfaces() {
-    unimplemented();
+    newPacket(new NNormalSurfaceCreator(),
+        new SingleTypeFilter<regina::NTriangulation>(),
+        i18n("New Normal Surface List"), i18n("Normal Surfaces"));
 }
 
 void ReginaPart::newScript() {

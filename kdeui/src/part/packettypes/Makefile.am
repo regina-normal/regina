@@ -17,6 +17,7 @@ noinst_HEADERS = \
 	ncontainerui.h \
 	nfacegluingdialog.h \
 	nfacegluingitems.h \
+	nnormalsurfacecreator.h \
 	nscriptui.h \
 	nscriptvaritems.h \
 	nsurfacefiltercomb.h \
@@ -39,6 +40,7 @@ libpackettypes_la_SOURCES = \
 	ncontainerui.cpp \
 	nfacegluingdialog.cpp \
 	nfacegluingitems.cpp \
+	nnormalsurfacecreator.cpp \
 	nscriptui.cpp \
 	nscriptvaritems.cpp \
 	nsurfacefiltercomb.cpp \

@@ -319,7 +319,7 @@ void ReginaPart::clonePacket() {
     if (! packet)
         return;
 
-    packet->clone(false, false);
+    packetView(packet->clone(false, false));
 }
 
 void ReginaPart::cloneSubtree() {
@@ -330,7 +330,14 @@ void ReginaPart::cloneSubtree() {
     if (! packet)
         return;
 
-    packet->clone(true, false);
+    packetView(packet->clone(true, false));
+}
+
+void ReginaPart::newCensus() {
+    KMessageBox::sorry(widget(), i18n("<qt>Census creation is not yet "
+        "available within the GUI.  You can however use the command-line "
+        "program <i>tricensus</i>, which supports a rich set of features "
+        "and is particularly suitable for long census calculations.</qt>"));
 }
 
 void ReginaPart::floatDockedPane() {
