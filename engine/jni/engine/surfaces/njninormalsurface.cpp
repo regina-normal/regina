@@ -132,9 +132,9 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT jboolean JNICALL
-        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isVertical
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isCentral
         (JNIEnv *env, jobject me) {
-    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isVertical();
+    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isCentral();
 }
 
 JNIEXPORT void JNICALL

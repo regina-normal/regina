@@ -176,10 +176,10 @@ class NTriangulation : public NPacket, NPropertyHolder {
             /**< Is the triangulation zero-efficient? */
         bool calculatedZeroEfficient;
             /**< Has zero-efficiency been calculated? */
-        bool verticalSurface;
-            /**< Does the triangulation have a vertical normal surface? */
-        bool calculatedVerticalSurface;
-            /**< Has the existence of a vertical surface been calculated? */
+        bool centralSurface;
+            /**< Does the triangulation have a central normal surface? */
+        bool calculatedCentralSurface;
+            /**< Has the existence of a central surface been calculated? */
 
     public:
         /**
@@ -841,18 +841,18 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         bool isZeroEfficient();
         /**
-         * Determines whether this triangulation has a vertical normal
-         * surface.  See NNormalSurface::isVertical() for details
-         * regarding vertical normal surfaces.
+         * Determines whether this triangulation has a central normal
+         * surface.  See NNormalSurface::isCentral() for details
+         * regarding central normal surfaces.
          *
          * \pre This triangulation is connected.  If the triangulation
          * is not connected, this routine will still return a result but
          * that result will be unreliable.
          *
          * @return \c true if and only if this triangulation has a
-         * vertical normal surface.
+         * central normal surface.
          */
-        bool hasVerticalSurface();
+        bool hasCentralSurface();
         
         /**
          * Produces a maximal forest in the 1-skeleton of the
@@ -1728,10 +1728,10 @@ inline bool NTriangulation::isZeroEfficient() {
     return zeroEfficient;
 }
 
-inline bool NTriangulation::hasVerticalSurface() {
-    if (! calculatedVerticalSurface)
+inline bool NTriangulation::hasCentralSurface() {
+    if (! calculatedCentralSurface)
         calculateSurfaceProperties();
-    return verticalSurface;
+    return centralSurface;
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() {

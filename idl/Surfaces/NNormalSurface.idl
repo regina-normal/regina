@@ -51,7 +51,7 @@ module Regina {
             long isConnected();
             boolean hasRealBoundary();
             boolean isVertexLinking();
-            boolean isVertical();
+            boolean isCentral();
         };
     };
 };

@@ -278,9 +278,9 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT jboolean JNICALL
-        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_hasVerticalSurface
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_hasCentralSurface
         (JNIEnv *env, jobject me) {
-    return GET_ENGINE_OBJECT(env, NTriangulation, me)->hasVerticalSurface();
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->hasCentralSurface();
 }
 
 JNIEXPORT jboolean JNICALL

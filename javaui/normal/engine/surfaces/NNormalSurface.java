@@ -96,6 +96,6 @@ public interface NNormalSurface extends ShareableObject {
     public int isConnected();
     public boolean hasRealBoundary();
     public boolean isVertexLinking();
-    public boolean isVertical();
+    public boolean isCentral();
 }
 

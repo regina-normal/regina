@@ -62,9 +62,9 @@ public class SurfaceViewer extends DefaultPacketViewer
      */
     private JLabel zeroEfficient;
     /**
-     * Displays existance of a vertical surface.
+     * Displays existance of a central surface.
      */
-    private JLabel verticalSurface;
+    private JLabel centralSurface;
 
     /**
      * Components to disable when the packet is being edited.
@@ -92,16 +92,16 @@ public class SurfaceViewer extends DefaultPacketViewer
         propPane.setLayout(new GridBagLayout());
 
         zeroEfficient = new JLabel();
-        verticalSurface = new JLabel();
+        centralSurface = new JLabel();
         componentsToDisable.addElement(zeroEfficient);
-        componentsToDisable.addElement(verticalSurface);
+        componentsToDisable.addElement(centralSurface);
 
         JLabel labelSurfaces = new JLabel("Normal Surface Properties");
-        JLabel labelZero = new JLabel("Zero-efficient");
-        JLabel labelVertical = new JLabel("Vertical surface");
+        JLabel labelZero = new JLabel("Zero-efficient?");
+        JLabel labelCentral = new JLabel("Central surface?");
         componentsToDisable.addElement(labelSurfaces);
         componentsToDisable.addElement(labelZero);
-        componentsToDisable.addElement(labelVertical);
+        componentsToDisable.addElement(labelCentral);
 
         GridBagConstraints cTitle = new GridBagConstraints();
         GridBagConstraints cLabel = new GridBagConstraints();
@@ -122,8 +122,8 @@ public class SurfaceViewer extends DefaultPacketViewer
         propPane.add(labelSurfaces, cTitle);
         propPane.add(labelZero, cLabel);
         propPane.add(zeroEfficient, cTotal);
-        propPane.add(labelVertical, cLabel);
-        propPane.add(verticalSurface, cTotal);
+        propPane.add(labelCentral, cLabel);
+        propPane.add(centralSurface, cTotal);
 
         // Put everything together.
         setLayout(new BorderLayout());
@@ -147,12 +147,12 @@ public class SurfaceViewer extends DefaultPacketViewer
             zeroEfficient.setForeground(red);
         }
 
-        if (triangulation.hasVerticalSurface()) {
-            verticalSurface.setText("True");
-            verticalSurface.setForeground(green);
+        if (triangulation.hasCentralSurface()) {
+            centralSurface.setText("True");
+            centralSurface.setForeground(green);
         } else {
-            verticalSurface.setText("False");
-            verticalSurface.setForeground(red);
+            centralSurface.setText("False");
+            centralSurface.setForeground(red);
         }
     }
 
@@ -162,6 +162,6 @@ public class SurfaceViewer extends DefaultPacketViewer
             ((Component)e.nextElement()).setEnabled(false);
 
         zeroEfficient.setText("");
-        verticalSurface.setText("");
+        centralSurface.setText("");
     }
 }

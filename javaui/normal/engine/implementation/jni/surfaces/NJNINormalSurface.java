@@ -57,5 +57,5 @@ public class NJNINormalSurface extends JNIShareableObject
     public native int isConnected();
     public native boolean hasRealBoundary();
     public native boolean isVertexLinking();
-    public native boolean isVertical();
+    public native boolean isCentral();
 }

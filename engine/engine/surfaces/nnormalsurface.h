@@ -334,8 +334,8 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          */
         virtual bool isVertexLinking(NTriangulation* triang) const;
         /**
-         * Determines if the normal surface represented is vertical in
-         * the given triangulation.  A \a vertical surface
+         * Determines if the normal surface represented is central in
+         * the given triangulation.  A \a central surface
          * is a compact surface containing precisely
          * one quad per tetrahedron and no other normal (or almost
          * normal) discs.
@@ -353,7 +353,7 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          * @return \c true if and only if the normal surface represented
          * is compact.
          */
-        virtual bool isVertical(NTriangulation* triang) const;
+        virtual bool isCentral(NTriangulation* triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -810,8 +810,8 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          */
         bool isVertexLinking() const;
         /**
-         * Determines whether or not this surface is a vertical surface.
-         * A \a vertical surface is a compact surface containing
+         * Determines whether or not this surface is a central surface.
+         * A \a central surface is a compact surface containing
          * precisely one quad per tetrahedron and no other normal (or
          * almost normal) discs.
          *
@@ -825,9 +825,9 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * \todo \opt Cache results.
          * 
-         * @return \c true if and only if this surface is vertical.
+         * @return \c true if and only if this surface is central.
          */
-        bool isVertical() const;
+        bool isCentral() const;
 
         /**
          * Cuts the associated triangulation along this surface and
@@ -975,8 +975,8 @@ inline bool NNormalSurface::isVertexLinking() const {
     return vector->isVertexLinking(triangulation);
 }
 
-inline bool NNormalSurface::isVertical() const {
-    return vector->isVertical(triangulation);
+inline bool NNormalSurface::isCentral() const {
+    return vector->isCentral(triangulation);
 }
         
 #endif

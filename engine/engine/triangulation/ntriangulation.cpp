@@ -51,7 +51,7 @@
 
 // Property IDs for properties relating to normal surfaces:
 #define PROPID_ZEROEFFICIENT 101
-#define PROPID_VERTICALSURFACE 102
+#define PROPID_CENTRALSURFACE 102
 
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton)
@@ -78,7 +78,7 @@ void NTriangulation::initialiseAllProperties() {
     calculatedH1Bdry = false;
     calculatedH2 = false;
     calculatedZeroEfficient = false;
-    calculatedVerticalSurface = false;
+    calculatedCentralSurface = false;
 }
 
 void NTriangulation::writeTextLong(ostream& out) const {
@@ -235,9 +235,9 @@ void NTriangulation::writePacket(NFile& out) const {
         out.writeBool(zeroEfficient);
         writePropertyFooter(out, bookmark);
     }
-    if (calculatedVerticalSurface) {
-        bookmark = writePropertyHeader(out, PROPID_VERTICALSURFACE);
-        out.writeBool(verticalSurface);
+    if (calculatedCentralSurface) {
+        bookmark = writePropertyHeader(out, PROPID_CENTRALSURFACE);
+        out.writeBool(centralSurface);
         writePropertyFooter(out, bookmark);
     }
 
@@ -303,9 +303,9 @@ void NTriangulation::readIndividualProperty(NFile& infile, unsigned propType) {
         zeroEfficient = infile.readBool();
         calculatedZeroEfficient = true;
     }
-    if (propType == PROPID_VERTICALSURFACE) {
-        verticalSurface = infile.readBool();
-        calculatedVerticalSurface = true;
+    if (propType == PROPID_CENTRALSURFACE) {
+        centralSurface = infile.readBool();
+        calculatedCentralSurface = true;
     }
 }
 
@@ -532,9 +532,9 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
         zeroEfficient = X.zeroEfficient;
         calculatedZeroEfficient = true;
     }
-    if (X.calculatedVerticalSurface) {
-        verticalSurface = X.verticalSurface;
-        calculatedVerticalSurface = true;
+    if (X.calculatedCentralSurface) {
+        centralSurface = X.centralSurface;
+        calculatedCentralSurface = true;
     }
 }
 

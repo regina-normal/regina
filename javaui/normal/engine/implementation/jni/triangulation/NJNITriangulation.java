@@ -93,7 +93,7 @@ public class NJNITriangulation extends NJNIPacket
     public native boolean hasBoundaryFaces();
 
     public native boolean isZeroEfficient();
-    public native boolean hasVerticalSurface();
+    public native boolean hasCentralSurface();
 
     public native boolean crushMaximalForest();
     public native boolean intelligentSimplify();
