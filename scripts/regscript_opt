@@ -27,15 +27,16 @@ fi
 # Use nothing if it's not a directory.
 if [ ! -z "$REGINA_OPTIONS_GLOBAL" ]; then
     if [ ! -d "$REGINA_OPTIONS_GLOBAL" ]; then
-        warn "Warning: $REGINA_OPTIONS_GLOBAL is not a directory."
+        if [ ! -e "$REGINA_OPTIONS_GLOBAL" ]; then
+            info "Warning: $REGINA_OPTIONS_GLOBAL does not exist."
+        else
+            warn "Warning: $REGINA_OPTIONS_GLOBAL exists but is not a directory."
+        fi
         export REGINA_OPTIONS_GLOBAL=
     fi
 fi
 
-# Warn the user if we have no global options directory.
-if [ -z "$REGINA_OPTIONS_GLOBAL" ]; then
-    warn "Warning: No global options directory."
-else
+if [ -n "$REGINA_OPTIONS_GLOBAL" ]; then
     info "-- Global options directory (REGINA_OPTIONS_GLOBAL): $REGINA_OPTIONS_GLOBAL"
 fi
 
@@ -61,15 +62,13 @@ if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
             export REGINA_OPTIONS_LOCAL=
         fi
     elif [ ! -d "$REGINA_OPTIONS_LOCAL" ]; then
-        warn "Warning: $REGINA_OPTIONS_LOCAL is not a directory."
+        warn "Warning: $REGINA_OPTIONS_LOCAL exists but is not a directory."
         export REGINA_OPTIONS_LOCAL=
     fi
 fi
 
 # Warn the user if we have no local options directory.
-if [ -z "$REGINA_OPTIONS_LOCAL" ]; then
-    warn "Warning: No local options directory."
-else
+if [ -n "$REGINA_OPTIONS_LOCAL" ]; then
     info "-- Local options directory (REGINA_OPTIONS_LOCAL): $REGINA_OPTIONS_LOCAL"
 fi
 
@@ -83,8 +82,6 @@ if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
         eval $optioncmds;
     elif [ -e "$options" ]; then
         warn "Warning: Options file [$options] is not a regular file."
-    else
-        warn "Warning: No local runtime options file [$options]."
     fi
 fi
 
@@ -96,220 +93,54 @@ if [ ! -z "$REGINA_OPTIONS_GLOBAL" ]; then
         eval $optioncmds;
     elif [ -e "$options" ]; then
         warn "Warning: Options file [$options] is not a regular file."
-    else
-        warn "Warning: No global runtime options file [$options]."
     fi
 fi
 
 # ---------- Set defaults and run sanity checks ----------
 
-if [ -z "$REGINA_BTOOLS" ]; then
-    export REGINA_BTOOLS="`ls "$REGINA_HOME"/jar/btools*.jar 2> /dev/null`"
-    if [ -z "$REGINA_BTOOLS" ]; then
-        export REGINA_BTOOLS="$REGINA_HOME/jar/btools.jar"
-    fi
-fi
-if [ -d "$REGINA_BTOOLS" ]; then
-    error "Error: \$REGINA_BTOOLS is set to a directory, not a file."
-    error "       It should be set to the full pathname of the BTools jar file."
-    error "       For example: REGINA_BTOOLS=/usr/share/java/btools.jar"
-    error "       Please fix this setting and try again."
-    exit 1
-elif [ ! -e "$REGINA_BTOOLS" ]; then
-    error "Error: The BTools library could not be found."
-    error "       Set \$REGINA_BTOOLS to the location of btools.jar"
-    error "       and try again."
-    exit 1
-fi
-
-if [ -z "$REGINA_JYTHON" ]; then
-    export REGINA_JYTHON="`ls "$REGINA_HOME"/jar/jython*.jar 2> /dev/null`"
-    if [ -z "$REGINA_JYTHON" ]; then
-        export REGINA_JYTHON="$REGINA_HOME/jar/jython.jar"
-    fi
-fi
-if [ -d "$REGINA_JYTHON" ]; then
-    warn "Warning: \$REGINA_JYTHON is set to a directory, not a file."
-    warn "         It should be set to the full pathname of the Jython jar file."
-    warn "         For example: REGINA_JYTHON=/usr/share/java/jython.jar"
-    warn "         Scripting will not be available until this is fixed."
-    export REGINA_JYTHON=
-elif [ ! -e "$REGINA_JYTHON" ]; then
-    warn "Warning: The Jython library could not be found."
-    warn "         Scripting will not be available."
-    warn "         To fix this, set \$REGINA_JYTHON to the location"
-    warn "         of jython.jar and try again."
-    export REGINA_JYTHON=
-fi
-
-if [ -z "$REGINA_JAVAHELP" ]; then
-    export REGINA_JAVAHELP="`ls "$REGINA_HOME"/jar/jh.jar 2> /dev/null`"
-    if [ -z "$REGINA_JAVAHELP" ]; then
-        export REGINA_JAVAHELP="$REGINA_HOME/jar/jh.jar"
-    fi
-fi
-if [ -d "$REGINA_JAVAHELP" ]; then
-    warn "Warning: \$REGINA_JAVAHELP is set to a directory, not a file."
-    warn "         It should be set to the full pathname of the JavaHelp jar file."
-    warn "         For example: REGINA_JAVAHELP=/usr/share/java/jh.jar"
-    warn "         The built-in help browser will not be available until"
-    warn "         this is fixed."
-    export REGINA_JAVAHELP=
-elif [ ! -e "$REGINA_JAVAHELP" ]; then
-    warn "Warning: The JavaHelp library could not be found."
-    warn "         The built-in help browser will not be available."
-    warn "         To fix this, set \$REGINA_JAVAHELP to the location"
-    warn "         of jh.jar and try again."
-    export REGINA_JAVAHELP=
-fi
-
-if [ -z "$REGINA_JAVA" ]; then
-    # Take the Java runtime from the path.
-    export REGINA_JAVA=`which java`
-    if [ -z "$REGINA_JAVA" ]; then
-        error "Error: A Java runtime could not be found."
-        error "       Set \$REGINA_JAVA to a Java runtime (such as /usr/bin/java)"
+if [ -z "$REGINA_PYTHON" ]; then
+    # Take the Python interpreter from the path.
+    export REGINA_PYTHON=`which python`
+    if [ -z "$REGINA_PYTHON" ]; then
+        error "Error: A Python interpreter could not be found."
+        error "       Set \$REGINA_PYTHON to a Python interpreter (such as /usr/bin/python)"
         error "       and try again."
         exit 1
     fi
 fi
 
-if [ -z "$REGINA_JNIENGINE" ]; then
-    export REGINA_JNIENGINE=regina-engine-jni
-fi
-
-if [ -z "$REGINA_JNIDIR" ]; then
+if [ -z "$REGINA_PYLIBDIR" ]; then
     if [ "$REGINA_FROMSOURCE" = "1" ]; then
-        export REGINA_JNIDIR="$REGINA_HOME/engine/jni/.libs:/usr/lib"
+        export REGINA_PYLIBDIR="$REGINA_HOME/python/.libs"
     else
-        export REGINA_JNIDIR="$REGINA_PKGLIBDIR:/usr/lib"
+        export REGINA_PYLIBDIR="$REGINA_PKGLIBDIR/python"
     fi
 fi
-# Append /usr/lib/jni to $REGINA_JNIDIR if it's not already there.
-if [ -d "/usr/lib/jni" ]; then
-    foundlib=0
-    IFS=:
-    for i in $REGINA_JNIDIR; do
-        if [ "$i" = "/usr/lib/jni" ]; then
-            foundlib=1
-            break
-        fi
-    done
-    IFS=
-    if [ "$foundlib" = "0" ]; then
-        export REGINA_JNIDIR="$REGINA_JNIDIR:/usr/lib/jni"
-    fi
-fi
-# Look for the JNI library in each colon-separated component of $REGINA_JNIDIR.
-if [ "$OSTYPE" = "cygwin" ]; then
-    jnilib="$REGINA_JNIENGINE.dll"
-    cygjnilib="cyg$REGINA_JNIENGINE.dll"
-else
-    jnilib="lib$REGINA_JNIENGINE.so"
-    cygjnilib="libcyg$REGINA_JNIENGINE.so"
-fi
-foundlib=0
-IFS=:
-for i in $REGINA_JNIDIR; do
-    if [ -e "$i/$jnilib" ]; then
-        foundlib=1
-        break
-    elif [ -e "$i/$cygjnilib" ]; then
-        foundlib=1
-        break
-    fi
-done
-IFS=
-if [ "$foundlib" = "0" ]; then
-    warn "Warning: The JNI library could not be found."
-    warn "         The JNI calculation engine will not be available."
-    warn "         To fix this, set \$REGINA_JNIDIR to the directory"
-    warn "         containing $jnilib and try again."
-fi
-
-if [ -z "$REGINA_JARDIR" ]; then
-    if [ "$REGINA_FROMSOURCE" = "1" ]; then
-        export REGINA_JARDIR="$REGINA_HOME/javaui"
-    else
-        export REGINA_JARDIR="$REGINA_HOME/jar"
-    fi
-fi
-if [ ! -e "$REGINA_JARDIR/$REGINA_PACKAGE.jar" ]; then
-    error "Error: The Regina jar directory could not be found."
-    error "       Set \$REGINA_JARDIR to the directory containing regina.jar"
-    error "       and try again."
+if [ ! -d "$REGINA_PYLIBDIR" ]; then
+    error "Error: \$REGINA_PYLIBDIR is not set to a directory."
+    error "       It should be set to the full pathname of the directory"
+    error "       containing the calculation engine module 'regina.so'."
+    error "       Please fix this setting and try again."
     exit 1
-fi
-
-if [ -z "$REGINA_CACHEDIR" ]; then
-    if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
-        export REGINA_CACHEDIR="$REGINA_OPTIONS_LOCAL/cache"
-    fi
-fi
-if [ ! -z "$REGINA_CACHEDIR" ]; then
-    if [ ! -e "$REGINA_CACHEDIR" ]; then
-        if ! mkdir "$REGINA_CACHEDIR"; then
-            warn "Warning: $REGINA_CACHEDIR could not be created."
-            export REGINA_CACHEDIR=
-        fi
-    elif [ ! -d "$REGINA_CACHEDIR" ]; then
-        warn "Warning: $REGINA_CACHEDIR is not a directory."
-        export REGINA_CACHEDIR=
-    fi
-fi
-if [ -z "$REGINA_CACHEDIR" ]; then
-    warn "Warning: You have no Jython cache directory."
-    warn "         You may not be able to use Jython scripting, or you may"
-    warn "         find a \"package\" directory inadvertently created in the"
-    warn "         current directory (which is safe to delete)."
-    warn "         To fix this problem, set \$REGINA_CACHEDIR to a cache"
-    warn "         directory to which you have write access and try again."
-fi
-
-if [ ! -z "$REGINA_ENGINE" ]; then
-    if ! testvalue "$REGINA_ENGINE" REGINA_ENGINE jni; then
-        export REGINA_ENGINE=""
-    fi
-fi
-
-if [ ! -z "$REGINA_INTERFACE" ]; then
-    if ! testvalue "$REGINA_INTERFACE" REGINA_INTERFACE gui console text; then
-        export REGINA_INTERFACE=""
-    fi
+elif [ ! -f "$REGINA_PYLIBDIR/regina.so" ]; then
+    error "Error: The calculation engine module 'regina.so' could not be found."
+    error "       Please set \$REGINA_PYLIBDIR to the directory containing"
+    error "       the module 'regina.so' and try again."
+    exit 1
 fi
 
 # ---------- Output current options ----------
 
 info ""
 info "----- Configuration options -----"
-info "-- BTools classes (REGINA_BTOOLS): $REGINA_BTOOLS"
-info "-- Jython classes (REGINA_JYTHON): $REGINA_JYTHON"
-info "-- JavaHelp classes (REGINA_JAVAHELP): $REGINA_JAVAHELP"
-info "-- Extra classes (REGINA_EXTRA_CLASSES): $REGINA_EXTRA_CLASSES"
-info "-- Java runtime (REGINA_JAVA): $REGINA_JAVA"
-info "-- JNI library directory (REGINA_JNIDIR): $REGINA_JNIDIR"
-info "-- Regina jar directory (REGINA_JARDIR): $REGINA_JARDIR"
-info "-- Jython cache directory (REGINA_CACHEDIR): $REGINA_CACHEDIR"
-info ""
-info "----- Startup options (excluding command-line options) -----"
-info "-- Computational engine (REGINA_ENGINE): $REGINA_ENGINE"
-info "-- User interface (REGINA_INTERFACE): $REGINA_INTERFACE"
-info "-- JNI engine name (REGINA_JNIENGINE): $REGINA_JNIENGINE"
+info "-- Python interpreter (REGINA_PYTHON): $REGINA_PYTHON"
+info "-- Python library directory (REGINA_PYLIBDIR): $REGINA_PYLIBDIR"
 info ""
 
 # ---------- Export current options ----------
 
-export REGINA_BTOOLS
-export REGINA_JYTHON
-export REGINA_JAVAHELP
-export REGINA_EXTRA_CLASSES
-export REGINA_JAVA
-export REGINA_JNIDIR
-export REGINA_JARDIR
-export REGINA_CACHEDIR
-export REGINA_ENGINE
-export REGINA_INTERFACE
-export REGINA_JNIENGINE
+export REGINA_PYTHON
+export REGINA_PYLIBDIR
 
 # End guard
 fi

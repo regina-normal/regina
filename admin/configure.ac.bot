@@ -1,8 +1,8 @@
 
 # Other files:
-AC_CONFIG_FILES([regina], [chmod +x regina])
-AC_CONFIG_FILES([engine/doc-files/docs.conf])
 AC_CONFIG_FILES([admin/mkdist-config])
+AC_CONFIG_FILES([engine/doc-files/docs.conf])
+AC_CONFIG_FILES([python/regina-python], [chmod +x python/regina-python])
 
 AC_OUTPUT
 

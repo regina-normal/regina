@@ -22,3 +22,11 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
   packet/libpacket.la \
   utilities/libutilities.la
 
+EXTRA_DIST = regina-python.in
+
+install-exec-local :
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_SCRIPT) regina-python $(DESTDIR)$(bindir)
+
+uninstall-local :
+	rm -f $(DESTDIR)$(bindir)/regina-python

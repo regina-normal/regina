@@ -9,8 +9,6 @@
 scriptsdir = $(pkgdatadir)/scripts
 
 scripts_DATA = README.txt \
-  regscript_expandlist \
-  regscript_misc \
   regscript_opt \
   regscript_readopts
 
