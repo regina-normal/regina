@@ -30,4 +30,13 @@
   <Menu name="settings"/>
   <Menu name="help"/>
 </MenuBar>
+
+<ToolBar name="mainToolBar" noMerge="1">
+  <text>Main Toolbar</text>
+  <Action name="file_new"/>
+  <Action name="file_open"/>
+  <Merge/>
+  <Separator/>
+  <Action name="python_console"/>
+</ToolBar>
 </kpartgui>
