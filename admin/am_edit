@@ -1265,7 +1265,7 @@ sub tag_IDLFILES ()
             if ($allidls !~ /$source\_kidl/) {
                 
                 $use_ng = ($MakefileData =~ /\n$source\_DCOPIDLNG\s*=\s*(\S+)\n/);
-                $dcopidl =  $use_ng ? "\$(DCOPIDLNG)" : "\$(DCOPIDL)";
+                $dcopidl =  $use_ng ? "KDECONFIG=\"\$(KDECONFIG)\" \$(DCOPIDLNG)" : "\$(DCOPIDL)";
 
                 $dep_lines .= "$source.kidl: $sourcedir$source.h \$(DCOP_DEPENDENCIES)\n";
                 $dep_lines .= "\t$dcopidl $sourcedir$source.h > $source.kidl || ( rm -f $source.kidl ; false )\n";
