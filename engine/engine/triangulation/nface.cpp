@@ -67,13 +67,13 @@ int NFace::getType() {
         // All edges identified.
         if (getEdgeMapping(0).sign() == getEdgeMapping(1).sign() &&
                 getEdgeMapping(1).sign() == getEdgeMapping(2).sign())
-            return (type = ALL);
+            return (type = L31);
 
         for (i = 0; i < 3; i++)
             if (getEdgeMapping((i+1)%3).sign() ==
                     getEdgeMapping((i+2)%3).sign()) {
                 subtype = i;
-                return (type = TURBAN);
+                return (type = DUNCEHAT);
             }
     }
 

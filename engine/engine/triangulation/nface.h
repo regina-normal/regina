@@ -130,12 +130,13 @@ class NFace : public ShareableObject {
         static const int HORN = 6;
             /**< Specifies a face with two edges identified to form a
                  cone with all three vertices identified. */
-        static const int TURBAN = 7;
+        static const int DUNCEHAT = 7;
             /**< Specifies a face with all three edges identified, some
                  via orientable and some via non-orientable gluings. */
-        static const int ALL = 8;
+        static const int L31 = 8;
             /**< Specifies a face with all three edges identified using
-                 non-orientable gluings. */
+                 non-orientable gluings.  Note that this forms a spine for
+                 the Lens space L(3,1). */
     private:
         NFaceEmbedding* embeddings[2];
             /**< An array of descriptors of how this face forms a part of
@@ -357,12 +358,12 @@ inline int NFace::getSubtype() {
 
 inline bool NFace::isMobiusBand() {
     getType();
-    return (type == ALL || type == TURBAN || type == MOBIUS);
+    return (type == L31 || type == DUNCEHAT || type == MOBIUS);
 }
 
 inline bool NFace::isCone() {
     getType();
-    return (type == TURBAN || type == CONE || type == HORN);
+    return (type == DUNCEHAT || type == CONE || type == HORN);
 }
 
 inline unsigned NFace::getNumberOfEmbeddings() const {

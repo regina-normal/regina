@@ -327,8 +327,8 @@ public class SkeletonTableFrame extends JDialog {
                         case NFace.MOBIUS: return response + "Mobius band";
                         case NFace.CONE: return response + "Cone";
                         case NFace.HORN: return response + "Horn";
-                        case NFace.TURBAN: return response + "Turban";
-                        case NFace.ALL: return response + "All";
+                        case NFace.DUNCEHAT: return response + "Dunce hat";
+                        case NFace.L31: return response + "L(3,1)";
                     }
                     return response + "UNKNOWN";
                 }

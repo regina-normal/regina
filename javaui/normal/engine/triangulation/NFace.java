@@ -38,8 +38,8 @@ public interface NFace extends ShareableObject {
     public static final int CONE = 4;
     public static final int MOBIUS = 5;
     public static final int HORN = 6;
-    public static final int TURBAN = 7;
-    public static final int ALL = 8;
+    public static final int DUNCEHAT = 7;
+    public static final int L31 = 8;
 
     public NComponent getComponent();
     public NBoundaryComponent getBoundaryComponent();
