@@ -61,7 +61,7 @@ typedef ReginaAbout<ReginaMain> About;
 
 unsigned ReginaMain::objectNumber = 1;
 
-ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina" ),
+ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#" ),
         currentPart(0), displayIcon(true) {
     // Select a unique DCOP interface name.
     QCString objNumStr;
