@@ -35,6 +35,7 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 import normal.Shell;
 import normal.engine.packet.*;
+import normal.engine.split.NSignature;
 import normal.engine.triangulation.*;
 import normal.packetfilter.*;
 import normal.packetui.*;
@@ -359,13 +360,15 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
                     "The splitting surface signature cannot be empty.");
                 return null;
             }
-            NTriangulation newTri = shell.getEngine().newNTriangulation();
-            if (! newTri.insertSplittingSurface(signature.getText())) {
+            NSignature sig = shell.getEngine().parseSignature(
+                signature.getText());
+            if (sig == null) {
                 MessageBox.fgNote(parentDialog,
                     "The given splitting surface signature is not valid.");
-                newTri.destroy();
                 return null;
             }
+            NTriangulation newTri = sig.triangulate();
+            sig.destroy();
             return newTri;
         } else if (random.isSelected()) {
             return null;

@@ -196,7 +196,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
         virtual ~NTriangulation();
         
         virtual int getPacketType() const;
-        virtual std::string getPacketName() const;
+        virtual std::string getPacketTypeName() const;
         
         static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual void writePacket(NFile& out) const;
@@ -1434,34 +1434,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \c false if the given string could not be rehydrated.
          */
         bool insertRehydration(const std::string& dehydration);
-        /**
-         * Inserts the triangulation with a splitting surface matching
-         * the given signature.
-         *
-         * A signature is a series of letter cycles representing
-         * chains of quadrilaterals joined together in the splitting
-         * surface.  Each letter must appear precisely twice
-         * (representing the two sides of the corresponding
-         * quadrilateral).  Case <i>is</i> significant (it represents in
-         * which direction a quadrilateral is traversed within a cycle).
-         * For further details, consult Ben Burton's PhD thesis.
-         *
-         * A signature describing <i>n</i> quadrilaterals must use the
-         * first <i>n</i> letters of the alphabet.  A signature cannot
-         * describe more than 26 quadrilaterals.
-         *
-         * Punctuation characters will be interpreted as separating
-         * cycles.  All whitespace will be ignored.
-         *
-         * Examples of valid signatures are <tt>(ab)(bC)(Ca)</tt> and
-         * <tt>AAb-bc-C</tt>.
-         *
-         * @param signature the signature of the splitting surface whose
-         * enclosing triangulation will be inserted.
-         * @return \c true if the insertion was successful, or
-         * \c false if the given signature was not valid.
-         */
-        bool insertSplittingSurface(const std::string& signature);
 
         /**
          * Determines if this triangulation is combinatorially

@@ -124,7 +124,6 @@ public interface NTriangulation extends NPacket {
     public void insertLensSpace(long p, long q);
     public void insertTriangulation(NTriangulation source);
     public boolean insertRehydration(String dehydration);
-    public boolean insertSplittingSurface(String signature);
     
     public boolean isIsomorphicTo(NTriangulation other);
 }
