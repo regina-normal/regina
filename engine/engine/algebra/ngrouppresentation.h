@@ -35,8 +35,7 @@
 #define __NGROUPPRESENTATION_H
 #endif
 
-#include <utility>
-#include "utilities/ndoublelist.h"
+#include <deque>
 #include "utilities/ndynamicarray.h"
 #include "property/npropertyholder.h"
 #include "shareableobject.h"
@@ -45,13 +44,110 @@ class NFile;
 
 /**
  * Represents a power of a generator in a group presentation.
- * The first element of this pair is the number that identifies
- * the generator; the second element is the exponent to which the
- * generator is raised.
  *
  * \ifaces Not present.
  */
-typedef std::pair<unsigned long, long> NGroupExpressionTerm;
+struct NGroupExpressionTerm {
+    unsigned long generator;
+        /**< The number that identifies the generator in this term. */
+    long exponent;
+        /**< The exponent to which the generator is raised. */
+
+    /**
+     * Creates a new uninitialised term.
+     */
+    NGroupExpressionTerm();
+    /**
+     * Creates a new term initialised to the given value.
+     *
+     * @param newGen the number that identifies the generator in the new term.
+     * @param newExp the exponent to which this generator is raised.
+     */
+    NGroupExpressionTerm(unsigned long newGen, long newExp);
+    /**
+     * Creates a new term initialised to the given value.
+     *
+     * @param cloneMe a term whose data will be copied to the new term.
+     */
+    NGroupExpressionTerm(const NGroupExpressionTerm& cloneMe);
+
+    /**
+     * Makes this term identical to the given term.
+     *
+     * @param cloneMe the term whose data will be copied to this term.
+     * @return a reference to this term.
+     */
+    NGroupExpressionTerm& operator = (const NGroupExpressionTerm& cloneMe);
+    /**
+     * Determines whether this and the given term contain identical data.
+     *
+     * @param other the term with which this term will be compared.
+     * @return \c true if and only if this and the given term have both the
+     * same generator and exponent.
+     */
+    bool operator == (const NGroupExpressionTerm& other) const;
+
+    /**
+     * Returns the inverse of this term.  The inverse has the same
+     * generator but a negated exponent.
+     *
+     * Note that this term will remain unchanged.
+     *
+     * @return the inverse of this term.
+     */
+    NGroupExpressionTerm inverse() const;
+
+    /**
+     * Attempts to merge this term with the given term.
+     * If both terms have the same generator, the two exponents will be
+     * added and stored in this term.  If the generators are different,
+     * this routine will do nothing.
+     *
+     * Note that this term might be changed but the given term will remain
+     * unchanged.
+     *
+     * @param other the term to merge with this term.
+     * @return \c true if the two terms were merged into this term, or
+     * \c false if the two terms have different generators.
+     */
+    bool operator += (const NGroupExpressionTerm& other);
+
+    /**
+     * Writes this term to the given file.
+     *
+     * \pre The given file is currently opened for writing.
+     *
+     * \ifaces Not present.
+     *
+     * @param out the file to which to write.
+     */
+    void writeToFile(NFile& out) const;
+    /**
+     * Reads a term from the given file.
+     *
+     * \pre The given file is currently opened for reading.
+     *
+     * \ifaces Not present.
+     *
+     * @param in the file from which to read.
+     * @return the term read from the given file.
+     */
+    static NGroupExpressionTerm readFromFile(NFile& in);
+};
+
+/**
+ * Writes the given term to the given output stream.
+ * The term will be written in the format <tt>g3^-7</tt>, where in this
+ * example the term represents generator number 3 raised to the -7th power.
+ *
+ * If the term has exponent 0 or 1, the output format will be
+ * appropriately simplified.
+ *
+ * @param out the output stream to which to write.
+ * @param term the term to write.
+ * @return a reference to the given output stream.
+ */
+ostream& operator << (ostream& out, const NGroupExpressionTerm& term);
 
 /**
  * Represents an expression involving generators from a group presentation.
@@ -65,7 +161,7 @@ typedef std::pair<unsigned long, long> NGroupExpressionTerm;
  */
 class NGroupExpression : public ShareableObject {
     private:
-        NDoubleList<NGroupExpressionTerm> terms;
+        std::deque<NGroupExpressionTerm> terms;
             /** The terms that make up this expression. */
 
     public:
@@ -91,7 +187,16 @@ class NGroupExpression : public ShareableObject {
          *
          * @return the list of terms.
          */
-        const NDoubleList<NGroupExpressionTerm>& getTerms() const;
+        std::deque<NGroupExpressionTerm>& getTerms();
+        /**
+         * Returns a constant reference to the list of terms in this
+         * expression.
+         *
+         * \ifaces Not present.
+         *
+         * @return the list of terms.
+         */
+        const std::deque<NGroupExpressionTerm>& getTerms() const;
         /**
          * Returns the number of terms in this expression.
          *
@@ -100,6 +205,22 @@ class NGroupExpression : public ShareableObject {
         unsigned long getNumberOfTerms() const;
         /**
          * Returns the term at the given index in this expression.
+         * Index 0 represents the first term, index 1
+         * represents the second term and so on.
+         *
+         * \warning This routine is <i>O(n)</i> where \a n is the number
+         * of terms in this expression.
+         *
+         * \ifaces Not present.
+         *
+         * @param index the index of the term to return; this must be
+         * between 0 and getNumberOfTerms()-1 inclusive.
+         * @return the requested term.
+         */
+        NGroupExpressionTerm& getTerm(unsigned long index);
+        /**
+         * Returns a constant reference to the term at the given
+         * index in this expression.
          * Index 0 represents the first term, index 1
          * represents the second term and so on.
          *
@@ -413,18 +534,63 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
         virtual void initialiseAllProperties();
 };
 
+// Inline functions for NGroupExpressionTerm
+
+inline NGroupExpressionTerm::NGroupExpressionTerm() {
+}
+inline NGroupExpressionTerm::NGroupExpressionTerm(unsigned long newGen,
+        long newExp) : generator(newGen), exponent(newExp) {
+}
+inline NGroupExpressionTerm::NGroupExpressionTerm(
+        const NGroupExpressionTerm& cloneMe) :
+        generator(cloneMe.generator), exponent(cloneMe.exponent) {
+}
+
+inline NGroupExpressionTerm& NGroupExpressionTerm::operator = (
+        const NGroupExpressionTerm& cloneMe) {
+    generator = cloneMe.generator;
+    exponent = cloneMe.exponent;
+    return *this;
+}
+
+inline bool NGroupExpressionTerm::operator == (
+        const NGroupExpressionTerm& other) const {
+    return (generator == other.generator) && (exponent == other.exponent);
+}
+
+inline NGroupExpressionTerm NGroupExpressionTerm::inverse() const {
+    return NGroupExpressionTerm(generator, -exponent);
+}
+
+inline bool NGroupExpressionTerm::operator += (
+        const NGroupExpressionTerm& other) {
+    if (generator == other.generator) {
+        exponent += other.exponent;
+        return true;
+    } else
+        return false;
+}
+
 // Inline functions for NGroupExpression
 
 inline NGroupExpression::NGroupExpression() {
 }
 
-inline const NDoubleList<NGroupExpressionTerm>& NGroupExpression::getTerms()
+inline std::deque<NGroupExpressionTerm>& NGroupExpression::getTerms() {
+    return terms;
+}
+
+inline const std::deque<NGroupExpressionTerm>& NGroupExpression::getTerms()
         const {
     return terms;
 }
 
 inline unsigned long NGroupExpression::getNumberOfTerms() const {
     return terms.size();
+}
+
+inline NGroupExpressionTerm& NGroupExpression::getTerm(unsigned long index) {
+    return terms[index];
 }
 
 inline const NGroupExpressionTerm& NGroupExpression::getTerm(
@@ -434,29 +600,29 @@ inline const NGroupExpressionTerm& NGroupExpression::getTerm(
 
 inline unsigned long NGroupExpression::getGenerator(unsigned long index)
         const {
-    return terms[index].first;
+    return terms[index].generator;
 }
 
 inline long NGroupExpression::getExponent(unsigned long index) const {
-    return terms[index].second;
+    return terms[index].exponent;
 }
 
 inline void NGroupExpression::addTermFirst(const NGroupExpressionTerm& term) {
-    terms.addFirst(term);
+    terms.push_front(term);
 }
 
 inline void NGroupExpression::addTermFirst(unsigned long generator,
         long exponent) {
-    terms.addFirst(NGroupExpressionTerm(generator, exponent));
+    terms.push_front(NGroupExpressionTerm(generator, exponent));
 }
 
 inline void NGroupExpression::addTermLast(const NGroupExpressionTerm& term) {
-    terms.addLast(term);
+    terms.push_back(term);
 }
 
 inline void NGroupExpression::addTermLast(unsigned long generator,
         long exponent) {
-    terms.addLast(NGroupExpressionTerm(generator, exponent));
+    terms.push_back(NGroupExpressionTerm(generator, exponent));
 }
 
 // Inline functions for NGroupPresentation

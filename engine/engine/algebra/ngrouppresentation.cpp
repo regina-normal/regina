@@ -32,20 +32,38 @@
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
 
-typedef NDoubleListIterator<NGroupExpressionTerm> TermIterator;
+typedef std::deque<NGroupExpressionTerm>::iterator TermIterator;
+typedef std::deque<NGroupExpressionTerm>::const_iterator TermIteratorConst;
 typedef NDynamicArrayIterator<NGroupExpression*> RelIterator;
 typedef NDoubleListIterator<NGroupExpression*> TmpRelIterator;
-typedef NDoubleList<NGroupExpressionTerm&> TermList;
+
+NGroupExpressionTerm NGroupExpressionTerm::readFromFile(NFile& in) {
+    return NGroupExpressionTerm(in.readULong(), in.readLong());
+}
+
+void NGroupExpressionTerm::writeToFile(NFile& out) const {
+    out.writeULong(generator);
+    out.writeLong(exponent);
+}
+
+ostream& operator << (ostream& out, const NGroupExpressionTerm& term) {
+    if (term.exponent == 0)
+        out << '1';
+    else if (term.exponent == 1)
+        out << 'g' << term.generator;
+    else
+        out << 'g' << term.generator << '^' << term.exponent;
+    return out;
+}
 
 NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) {
-    for (TermIterator it(cloneMe.terms); ! it.done(); it++)
-        terms.addLast(*it);
+    terms.insert(terms.end(), cloneMe.terms.begin(), cloneMe.terms.end());
 }
 
 NGroupExpression* NGroupExpression::inverse() const {
     NGroupExpression* ans = new NGroupExpression();
-    for (TermIterator it(terms); ! it.done(); it++)
-        ans->terms.addFirst(NGroupExpressionTerm((*it).first, -(*it).second));
+    transform(terms.begin(), terms.end(), front_inserter(ans->terms),
+        mem_fun_ref(&NGroupExpressionTerm::inverse));
     return ans;
 }
 
@@ -55,38 +73,28 @@ NGroupExpression* NGroupExpression::power(long exponent) const {
         return ans;
     
     long i;
-    TermIterator it;
     if (exponent > 0)
         for (i = 0; i < exponent; i++)
-            for (it.init(terms); ! it.done(); it++)
-                ans->terms.addLast(*it);
+            ans->terms.insert(ans->terms.end(), terms.begin(), terms.end());
     else
         for (i = 0; i > exponent; i--)
-            for (it.init(terms); ! it.done(); it++)
-                ans->terms.addFirst(
-                    NGroupExpressionTerm((*it).first, -(*it).second));
+            transform(terms.begin(), terms.end(), front_inserter(ans->terms),
+                mem_fun_ref(&NGroupExpressionTerm::inverse));
     return ans;
 }
 
 bool NGroupExpression::simplify(bool cyclic) {
     bool changed = false;
-    TermIterator next(terms);
-    TermIterator tmpIt;
-    while (! next.done()) {
+    TermIterator next, tmpIt;
+    for (next = terms.begin(); next != terms.end(); ) {
         // Take a look at merging next forwards.
-
-        if ((*next).second == 0) {
+        if ((*next).exponent == 0) {
             // Zero exponent.
             // Delete this term and step back to the previous term in
             // case we can now merge the previous and next terms.
-            tmpIt = next;
-            next--;
-            if (next.done()) {
-                // Can't step backwards; this was the first term.
-                next = tmpIt;
-                next++;
-            }
-            terms.remove(tmpIt);
+            next = terms.erase(next);
+            if (next != terms.begin())
+                next--;
             changed = true;
             continue;
         }
@@ -95,13 +103,12 @@ bool NGroupExpression::simplify(bool cyclic) {
         tmpIt++;
         
         // Now tmpIt points to the term after next.
-        if (tmpIt.done()) {
+        if (tmpIt == terms.end()) {
             // No term to merge forwards with.
             next++;
-        } else if ((*tmpIt).first == (*next).first) {
-            // Merge this and the following term.
-            (*next).second += (*tmpIt).second;
-            terms.remove(tmpIt);
+        } else if ((*next) += (*tmpIt)) {
+            // Successfully merged this with the following term.
+            terms.erase(tmpIt);
             changed = true;
             // Look at this term again to see if it can be merged further.
         } else {
@@ -117,17 +124,14 @@ bool NGroupExpression::simplify(bool cyclic) {
     // We shall do this by popping terms off the back and merging them
     // with the front term.
     while (terms.size() > 1) {
-        next.init(terms);
-        tmpIt.initEnd(terms);
-        if ((*next).first == (*tmpIt).first) {
-            // Merge!
-            (*next).second += (*tmpIt).second;
-            terms.remove(tmpIt);
+        if (terms.front() += terms.back()) {
+            // Merged!
+            terms.pop_back();
             changed = true;
 
             // Did we create an empty term?
-            if ((*next).second == 0)
-                terms.remove(next);
+            if (terms.front().exponent == 0)
+                terms.pop_front();
         } else
             break;
     }
@@ -140,16 +144,12 @@ bool NGroupExpression::substitute(unsigned long generator,
     bool changed = false;
     NGroupExpression* inverse = 0;
     const NGroupExpression* use;
-    long exponent;
-
-    TermIterator current(terms);
-    TermIterator tmp;
-    long i;
-    while (! current.done()) {
-        if ((*current).first != generator)
+    long exponent, i;
+    for (TermIterator current = terms.begin(); current != terms.end(); ) {
+        if ((*current).generator != generator)
             current++;
         else {
-            exponent = (*current).second;
+            exponent = (*current).exponent;
             if (exponent != 0) {
                 if (exponent > 0)
                     use = &expansion;
@@ -162,11 +162,10 @@ bool NGroupExpression::substitute(unsigned long generator,
 
                 // Fill in exponent copies of use.
                 for (i = 0; i < exponent; i++)
-                    for (tmp.init(use->terms); ! tmp.done(); tmp++)
-                        terms.addBefore(*tmp, current);
+                    terms.insert(current, use->terms.begin(), use->terms.end());
             }
 
-            terms.remove(current);
+            current = terms.erase(current);
             changed = true;
         }
     }
@@ -179,30 +178,25 @@ bool NGroupExpression::substitute(unsigned long generator,
 
 void NGroupExpression::writeToFile(NFile& out) const {
     out.writeULong(terms.size());
-    for (TermIterator it(terms); ! it.done(); it++) {
-        out.writeULong((*it).first);
-        out.writeLong((*it).second);
-    }
+    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
+        (*it).writeToFile(out);
 }
 
 NGroupExpression* NGroupExpression::readFromFile(NFile& in) {
     NGroupExpression* ans = new NGroupExpression();
     unsigned long nTerms = in.readULong();
     for (unsigned long i = 0; i < nTerms; i++)
-        ans->terms.addLast(NGroupExpressionTerm(in.readULong(),
-            in.readLong()));
+        ans->terms.push_back(NGroupExpressionTerm::readFromFile(in));
     return ans;
 }
 
 void NGroupExpression::writeTextShort(ostream& out) const {
-    bool first = true;
-    for (TermIterator it(terms); ! it.done(); it++) {
-        if (! first)
-            out << ' ';
-        first = false;
-        out << 'g' << (*it).first;
-        if ((*it).second != 1)
-            out << '^' << (*it).second;
+    if (terms.empty())
+        out << '1';
+    else {
+        copy(terms.begin(), --terms.end(),
+            ostream_iterator<NGroupExpressionTerm>(out, " "));
+        out << (*terms.end());
     }
 }
 
@@ -263,14 +257,15 @@ bool NGroupPresentation::intelligentSimplify() {
             // Can we pull a single variable out of this relation?
             rel = *it;
             // How many times does each generator appear in this relation?
-            for (tit.init(rel->getTerms()); ! tit.done(); tit++) {
+            for (tit = rel->getTerms().begin();
+                    tit != rel->getTerms().end(); tit++) {
                 // Find this generator, or insert it with exponent 0 if
                 // it's not already present.
-                expIt = exponents.insert(make_pair((*tit).first, 0)).first;
-                if ((*tit).second < 0)
-                    (*expIt).second -= (*tit).second;
+                expIt = exponents.insert(make_pair((*tit).generator, 0)).first;
+                if ((*tit).exponent < 0)
+                    (*expIt).second -= (*tit).exponent;
                 else
-                    (*expIt).second += (*tit).second;
+                    (*expIt).second += (*tit).exponent;
             }
             // Did any generator appear precisely once?
             expIt = find_if(exponents.begin(), exponents.end(), compose1(
@@ -288,12 +283,12 @@ bool NGroupPresentation::intelligentSimplify() {
             // We are going to replace generator gen.
             // Build up the expansion.
             expansion = new NGroupExpression();
-            for (tit.init(rel->getTerms()); (*tit).first != gen; tit++)
-                expansion->addTermFirst((*tit).first, -(*tit).second);
-            for (tit.initEnd(rel->getTerms()); (*tit).first != gen; tit--)
-                expansion->addTermLast((*tit).first, -(*tit).second);
+            for (tit = rel->getTerms().begin(); (*tit).generator != gen; tit++)
+                expansion->addTermFirst((*tit).inverse());
+            for (tit = rel->getTerms().end(); (*tit).generator != gen; tit--)
+                expansion->addTermLast((*tit).inverse());
             // Check if we need to invert it.
-            if ((*tit).second == -1) {
+            if ((*tit).exponent == -1) {
                 rel = expansion;
                 expansion = expansion->inverse();
                 delete rel;
@@ -334,8 +329,9 @@ bool NGroupPresentation::intelligentSimplify() {
 
         // Now run through the relations and renumber the generators.
         for (it.init(tmpRels); ! it.done(); it++)
-            for (tit.init((*it)->getTerms()); ! tit.done(); tit++)
-                (*tit).first = genMap[(*tit).first];
+            for (tit = (*it)->getTerms().begin();
+                    tit != (*it)->getTerms().end(); tit++)
+                (*tit).generator = genMap[(*tit).generator];
     }
 
     // Refill the original array if necessary.
