@@ -35,13 +35,16 @@ AC_PREREQ(2.50)
 AC_CONFIG_AUX_DIR(admin)
 AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
 AM_INIT_AUTOMAKE(regina, [3.0.1])
-AM_CONFIG_HEADER(config.h)
+AM_CONFIG_HEADER(engine/engine/regina-config.h)
 
 # Do we need to install using a non-standard package name?
 AC_ARG_VAR(PKGNAME, [the package name to install as (default: regina)])
 if test "x" != "x$PKGNAME"; then
   AC_SUBST(PACKAGE, [$PKGNAME])
 fi
+
+# Extract major and minor package version numbers.
+REGINA_PACKAGE_VERSIONS
 
 AC_CANONICAL_HOST
 
@@ -55,6 +58,10 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_CXXCPP
 AC_PROG_CPP
+
+# Switch on all warnings.
+CFLAGS="$CFLAGS -Wall"
+CXXFLAGS="$CXXFLAGS -Wall"
 
 # Set the default language to C++ for subsequent tests.
 AC_LANG(C++)
