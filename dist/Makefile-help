@@ -10,5 +10,6 @@ stubs - refresh the header comments in all sources
 tabs - replace all the tabs with four spaces in all sources
 
 clean - remove all generated files except for the final archives
+purge - remove all generated files including the final archives
 help - display this help message
 

@@ -41,6 +41,7 @@ debugcorba - run the full Java GUI in the Java debugger with a CORBA engine
 configure - run the RegConf configuration utility
 
 clean - remove all generated files except for final binaries and archives
+purge - remove all generated files including final binaries and archives
 
 help - display help for all targets
 helpgeneral - display help for all general targets

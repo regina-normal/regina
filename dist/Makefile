@@ -47,7 +47,7 @@ java_doc_sources = $(java_package_dirs_ui:=/package.html) $(DOC_OVERVIEW)
 help :
 	@cat Makefile-help
 
-.PHONY : distsrc distbin distdocs dist stubs tabs clean help
+.PHONY : distsrc distbin distdocs dist stubs tabs clean purge help
 
 distsrc : $(SRC_ARCHIVE)
 $(SRC_ARCHIVE):
@@ -114,3 +114,6 @@ clean :
 	-rm insertstub
 	-rm $(REGINA_DIR)
 
+purge : clean
+	cd .. && $(MAKE) purge
+	-rm $(SRC_ARCHIVE) $(BIN_ARCHIVE) $(DOC_ARCHIVE) $(DOC_JAR_FINAL)

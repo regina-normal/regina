@@ -64,7 +64,7 @@ helprun :
 		prepcorba prepjni prepcleancorba prepcleanjni prepclean prep \
 	run runconsole runtext runjni runcorba runcorbaengine \
 	debug debugjni debugcorba configure \
-	clean
+	clean purge
 
 binengine : binenginejni binenginecorba
 binenginejni : prepenginejni
@@ -150,6 +150,11 @@ clean :
 	cd engine && $(MAKE) clean
 	cd javaui && $(MAKE) clean
 	cd $(CONF_DIR) && $(MAKE) clean
+
+purge : clean
+	-rm $(ENGINE_JNI) $(ENGINE_CORBA)
+	-rm $(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA)
+	-rm $(REG_CONF) $(DOC_JAR)
 
 Makefile.options :
 	@echo
