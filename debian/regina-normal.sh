@@ -14,6 +14,9 @@ fi
 if [ -z "$REGINA_JYTHON" ]; then
   export REGINA_JYTHON=/usr/share/java/jython.jar
 fi
+if [ -z "$REGINA_EXTRA_CLASSES" ]; then
+  export REGINA_EXTRA_CLASSES=/usr/share/java/libreadline-java.jar
+fi
 if [ -z "$REGINA_JNIDIR" ]; then
   export REGINA_JNIDIR=/usr/lib/regina-normal/lib:/usr/lib
 fi
