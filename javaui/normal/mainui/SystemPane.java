@@ -1400,20 +1400,27 @@ public class SystemPane extends JPanel {
         NPacket packet = chosen.getPacket();
 
         // Open a dialog to obtain a new name for the packet.
-        String result = InputBox.getInput(shell.getPrimaryFrame(),
-            "Rename packet", packet.getPacketLabel());
-        if (result == null)
-            return;
-        result = result.trim();
-        if (result.length() == 0)
-            return;
+		String newName = packet.getPacketLabel();
+		while (true) {
+        	newName = InputBox.getInput(shell.getPrimaryFrame(),
+            	"Rename packet", newName);
+        	if (newName == null)
+            	return;
+        	newName = newName.trim();
+        	if (newName.length() == 0)
+            	return;
 
-        // Attempt to relabel the packet.
-        if (rootPacket.findPacketLabel(result) != null) {
-            shell.error("A packet with this label already exists.");
-            return;
-        }
-        packet.setPacketLabel(result);
+			// Can we use this name?
+        	if (rootPacket.findPacketLabel(newName) != null) {
+            	shell.error("A packet with this label already exists.");
+            	newName = rootPacket.makeUniqueLabel(newName);
+				continue;
+        	}
+			break;
+		}
+
+		// We have a name we can use.
+        packet.setPacketLabel(newName);
         setDirty(true);
 
         firePacketWasRenamed(packet, null);

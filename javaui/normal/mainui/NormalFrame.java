@@ -218,17 +218,25 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         JMenuItem menuFileNew = new JMenuItem("New",
             Images.btnFileNew.image());
 		menuFileNew.setMnemonic(KeyEvent.VK_N);
+		menuFileNew.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_N, ActionEvent.ALT_MASK));
         JMenuItem menuFileOpen = new JMenuItem("Open",
             Standard16.open.image());
 		menuFileOpen.setMnemonic(KeyEvent.VK_O);
+		menuFileOpen.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_O, ActionEvent.ALT_MASK));
         JMenuItem menuFileSave = new JMenuItem("Save",
             Standard16.save.image());
 		menuFileSave.setMnemonic(KeyEvent.VK_S);
+		menuFileSave.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_S, ActionEvent.ALT_MASK));
         JMenuItem menuFileSaveAs = new JMenuItem("Save As");
 		menuFileSaveAs.setMnemonic(KeyEvent.VK_A);
         JMenuItem menuFileClose = new JMenuItem("Close",
             Standard16.close.image());
 		menuFileClose.setMnemonic(KeyEvent.VK_C);
+		menuFileClose.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_C, ActionEvent.ALT_MASK));
         menuFileRecent = new JMenu("Recent");
 		menuFileRecent.setMnemonic(KeyEvent.VK_R);
         updateRecentFilesMenu();
@@ -239,6 +247,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 		menuFileImportSnapPea.setMnemonic(KeyEvent.VK_S);
         JMenuItem menuFileExit = new JMenuItem("Exit");
 		menuFileExit.setMnemonic(KeyEvent.VK_X);
+		menuFileExit.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_X, ActionEvent.ALT_MASK));
         menuFile.add(menuFileNew);
         menuFile.add(menuFileOpen);
         menuFile.add(menuFileSave);
@@ -290,6 +300,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 		menuPacketNewCensus.setMnemonic(KeyEvent.VK_E);
         JMenuItem menuPacketView = new JMenuItem("View");
 		menuPacketView.setMnemonic(KeyEvent.VK_V);
+		menuPacketView.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_V, ActionEvent.ALT_MASK));
         JMenu menuPacketClone = new JMenu("Clone");
 		menuPacketClone.setMnemonic(KeyEvent.VK_L);
         JMenuItem menuPacketCloneDesc = new JMenuItem("Include Descendants");
@@ -298,10 +310,16 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 		menuPacketCloneNoDesc.setMnemonic(KeyEvent.VK_X);
         JMenuItem menuPacketRename = new JMenuItem("Rename");
 		menuPacketRename.setMnemonic(KeyEvent.VK_R);
+		menuPacketRename.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_R, ActionEvent.ALT_MASK));
         JMenuItem menuPacketDelete = new JMenuItem("Delete");
 		menuPacketDelete.setMnemonic(KeyEvent.VK_D);
+		menuPacketDelete.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_D, ActionEvent.ALT_MASK));
         JMenuItem menuPacketRefresh = new JMenuItem("Refresh Subtree");
 		menuPacketRefresh.setMnemonic(KeyEvent.VK_F);
+		menuPacketRefresh.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_F, ActionEvent.ALT_MASK));
         menuPacketNew.add(menuPacketNewContainer);
         menuPacketNew.add(menuPacketNewText);
         menuPacketNew.add(menuPacketNewTriangulation);
@@ -341,6 +359,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         JMenuItem menuToolsJythonConsole = new JMenuItem("Jython Console",
             Images.btnConsole.image());
 		menuToolsJythonConsole.setMnemonic(KeyEvent.VK_J);
+		menuToolsJythonConsole.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_J, ActionEvent.ALT_MASK));
         menuToolsJythonConsole.setEnabled(shell.hasFoundJython());
         menuTools.add(menuToolsJythonConsole);
 
