@@ -84,11 +84,8 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         static const int AN_STANDARD;
             /**< Represents standard triangle-quad-oct coordinates
              *   for almost normal surfaces. */
-
         static const int QUAD;
-            /**< Represents quad coordinates for normal surfaces.
-             *   This flavour is for representation only; surface
-             *   vectors and lists of this flavour cannot be created. */
+            /**< Represents quad coordinates for normal surfaces. */
 
         static const int EDGE_WEIGHT;
             /**< Represents edge weight coordinates for normal surfaces.
