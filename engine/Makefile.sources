@@ -1,23 +1,23 @@
 
-# Sets $(dirs_engine) to a list of all directories containing sources
+# Sets $(dirs_engine_engine) to a list of all directories containing sources
 # for the C++ calculation engine, excluding any specific external access
 # components.
 #
-# Sets $(dirs_jni) to a list of all directories containing sources for
+# Sets $(dirs_engine_jni) to a list of all directories containing sources for
 # the component of the engine that allows external access from Java
 # using JNI.
 #
-# Sets $(dirs_corba) to a list of all directories containing sources for
-# the component of the engine that allows external access using CORBA.
+# Sets $(dirs_engine_corba) to a list of all directories containing sources
+# for the component of the engine that allows external access using CORBA.
 #
-# Sets $(misc_src_mask) to a file mask of all miscellaneous files to be
+# Sets $(engine_misc_src_mask) to a file mask of all miscellaneous files to be
 # included in the source archive.  Files ending in .cpp or .h and residing
 # in any of the above directories will already be placed in the source
 # archive and should not be included in this list.
 #
 # All locations must be relative to this directory.
 
-dirs_engine = \
+dirs_engine_engine = \
 	engine \
 	engine/algebra \
 	engine/census \
@@ -32,7 +32,7 @@ dirs_engine = \
 	engine/utilities \
 	.
 
-dirs_jni = \
+dirs_engine_jni = \
 	jni/registry \
 	jni/engine/algebra \
 	jni/engine/file \
@@ -44,7 +44,7 @@ dirs_jni = \
 	jni/engine \
 	jni
 
-dirs_corba = \
+dirs_engine_corba = \
 	corba/registry \
 	corba/Regina \
 	corba/Regina/Algebra \
@@ -56,5 +56,5 @@ dirs_corba = \
 	corba/Regina/Triangulation \
 	corba
 
-misc_src_mask = Makefile* findtext doc-files/* *.txt
+engine_misc_src_mask = Makefile* findtext doc-files/* *.txt
 

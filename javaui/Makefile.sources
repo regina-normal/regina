@@ -11,14 +11,14 @@
 # be made for the Java UI component that interacts with the calculation
 # engine as an external (and possibly remote) server application using CORBA.
 #
-# Sets $(aux_mask) to a file mask of all auxiliary files required by the
+# Sets $(java_aux_mask) to a file mask of all auxiliary files required by the
 # user interface, such as graphics and sounds.
 #
-# Sets $(misc_src_mask) to a file mask of all miscellaneous files not
+# Sets $(java_misc_src_mask) to a file mask of all miscellaneous files not
 # included in $(aux_mask) to be included in the source distribution.
 #
-# In either $(aux_mask) or $(misc_src_mask), specifying a directory will
-# result in the inclusion of that entire directory tree.
+# In either $(java_aux_mask) or $(java_misc_src_mask), specifying a directory
+# will result in the inclusion of that entire directory tree.
 #
 # All locations must be relative to this directory.
 
@@ -74,9 +74,9 @@ packages_corba = \
 	normal.engine.implementation.corba.triangulation \
 	normal.engine.implementation.corba
 
-aux_mask = normal/images/main/* \
+java_aux_mask = normal/images/main/* \
 	normal/images/buttons/* \
 	normal/images/packet/*
 
-misc_src_mask = Makefile* findtext *.txt
+java_misc_src_mask = Makefile* findtext *.txt
 

@@ -75,23 +75,23 @@ endif
 
 include Makefile.sources
 
-dirs_all = $(dirs_engine) $(dirs_jni) $(dirs_corba)
+dirs_engine_all = $(dirs_engine_engine) $(dirs_engine_jni) $(dirs_engine_corba)
 
-src_engine = $(wildcard $(dirs_engine:=/*.cpp))
-src_jni = $(wildcard $(dirs_jni:=/*.cpp))
-src_corba = $(wildcard $(dirs_corba:=/*.cpp))
-src_all = $(wildcard $(dirs_all:=/*.cpp))
+src_engine = $(wildcard $(dirs_engine_engine:=/*.cpp))
+src_jni = $(wildcard $(dirs_engine_jni:=/*.cpp))
+src_corba = $(wildcard $(dirs_engine_corba:=/*.cpp))
+src_all = $(wildcard $(dirs_engine_all:=/*.cpp))
 
 src_corba_idl = $(patsubst idl/%.idl,$(CORBA_DIR)/%SK.cpp,$(src_idl))
 
-hdr_engine = $(wildcard $(dirs_engine:=/*.h))
-hdr_jni = $(wildcard $(dirs_jni:=/*.h))
-hdr_corba = $(wildcard $(dirs_corba:=/*.h))
-hdr_all = $(wildcard $(dirs_all:=/*.h))
+hdr_engine = $(wildcard $(dirs_engine_engine:=/*.h))
+hdr_jni = $(wildcard $(dirs_engine_jni:=/*.h))
+hdr_corba = $(wildcard $(dirs_engine_corba:=/*.h))
+hdr_all = $(wildcard $(dirs_engine_all:=/*.h))
 
 JNI_PACKAGE_DIR = ../javaui/$(subst .,/,$(JNI_PACKAGE))
 
-jni_engine_dirs = $(filter $(JNI_DIR)%,$(dirs_jni))
+jni_engine_dirs = $(filter $(JNI_DIR)%,$(dirs_engine_jni))
 jni_java_mask = $(jni_engine_dirs:$(JNI_DIR)%=$(JNI_PACKAGE_DIR)%/*.java)
 jni_java_files = $(wildcard $(jni_java_mask))
 hdr_jni_autogen = $(jni_java_files:$(JNI_PACKAGE_DIR)/%.java=$(JNI_DIR)/%.h)
@@ -106,28 +106,17 @@ dep_jni = $(patsubst %.cpp,%.d,$(src_jni))
 dep_corba = $(patsubst %.cpp,%.d,$(src_corba))
 dep_all = $(patsubst %.cpp,%.d,$(src_all))
 
-misc_src_files = $(wildcard $(misc_src_mask))
+engine_misc_src_files = $(wildcard $(engine_misc_src_mask))
 
 output_jni = ../$(ENGINE_JNI)
 output_corba = ../$(ENGINE_CORBA)
-source_archive = ../$(SRC_ARCHIVE_ENGINE)
 
 # ------------------------- Targets ----------------------------------
 
-.PHONY : srcarchive \
-	binjni bincorba \
+.PHONY : binjni bincorba \
 	prepjni prepcorba \
 	prepcleanjni prepcleancorba \
 	docs clean
-
-$(LICENSE) : ../$(LICENSE)
-	$(COPY) ../$(LICENSE) $(LICENSE)
-
-srcarchive : $(source_archive)
-$(source_archive) : $(src_all) $(hdr_all) $(misc_src_files) $(LICENSE)
-	cd ../.. && $(ARCHIVE) $(BASE_DIR)/$(SRC_ARCHIVE_ENGINE) \
-		$(patsubst %,$(BASE_DIR)/engine/%,$(src_all) $(hdr_all) \
-		$(misc_src_mask))
 
 binjni : $(output_jni)
 $(output_jni) : $(obj_engine) $(obj_jni)
@@ -155,7 +144,7 @@ $(DOC_SAMPLE) : $(hdr_engine) $(DOC_CONF)
 	$(DOXYGEN) $(DOC_CONF)
 
 clean :
-	-rm $(dirs_all:=/*.o) $(dirs_all:=/*.d)
+	-rm $(dirs_engine_all:=/*.o) $(dirs_engine_all:=/*.d)
 	-rm -rf $(DOC_DIR)/*
 	-rm exports.def
 

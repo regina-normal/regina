@@ -60,8 +60,7 @@ made_class_files = $(java_files:.java=.class)
 
 package_overviews_ui = $(patsubst %,%/package.html,$(raw_package_dirs_ui))
 
-aux_files = $(wildcard $(aux_mask))
-misc_src_files = $(wildcard $(misc_src_mask))
+java_aux_files = $(wildcard $(java_aux_mask))
 
 doc_sources = $(package_overviews_ui) $(DOC_OVERVIEW)
 
@@ -69,12 +68,9 @@ jar_ui = ../$(JAVA_UI)
 jar_jni = ../$(JAVA_JNI)
 jar_corba = ../$(JAVA_CORBA)
 
-source_archive = ../$(SRC_ARCHIVE_JAVA)
-
 # --------------------------- Targets -------------------------------------
 
-.PHONY : srcarchive \
-	uibin jnibin corbabin \
+.PHONY : uibin jnibin corbabin \
 	uijar jnijar corbajar \
 	prepcorba prepcleancorba \
 	docs clean
@@ -82,20 +78,13 @@ source_archive = ../$(SRC_ARCHIVE_JAVA)
 $(LICENSE) : ../$(LICENSE)
 	$(COPY) ../$(LICENSE) $(LICENSE)
 
-srcarchive : $(source_archive)
-$(source_archive) : $(java_files) $(doc_sources) $(aux_files) \
-		$(misc_src_files) $(LICENSE)
-	cd ../.. && $(ARCHIVE) $(BASE_DIR)/$(SRC_ARCHIVE_JAVA) \
-		$(patsubst %,$(BASE_DIR)/javaui/%, \
-		$(java_mask) $(doc_sources) $(aux_mask) $(misc_src_mask))
-
 uibin : $(made_class_files_ui)
 jnibin : $(made_class_files_jni)
 corbabin : $(made_class_files_corba)
 
 uijar : $(jar_ui)
-$(jar_ui) : $(made_class_files_ui) $(aux_files) $(LICENSE)
-	$(JAR) -cf $(jar_ui) $(class_mask_ui) $(aux_mask) $(LICENSE)
+$(jar_ui) : $(made_class_files_ui) $(java_aux_files) $(LICENSE)
+	$(JAR) -cf $(jar_ui) $(class_mask_ui) $(java_aux_mask) $(LICENSE)
 
 jnijar : $(jar_jni)
 $(jar_jni) : $(made_class_files_jni) $(LICENSE)

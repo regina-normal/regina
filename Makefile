@@ -10,7 +10,9 @@ include Makefile.options
 
 # Global variables:
 
+include Makefile.sources
 include idl/Makefile.sources
+
 export src_idl = $(wildcard $(dirs_idl:=/*.idl))
 
 export BIN_DIR = bin
@@ -25,25 +27,9 @@ export LICENSE = LICENSE.txt
 
 # Local variables:
 
-scripts = regconf regconf.bat regina
 empty_dirs = $(DIST_DIR) $(BIN_DIR) engine javaui idl
 DOC_LICENSE = $(BASE_DOC_DIR)/normal/docs/LICENSE.txt
 APP_CLASS = normal.Application
-IDL_MODULE = regina_raw
-
-# ------------------------- Rules ------------------------------------
-
-%sentry :
-	$(TOUCH) $@
-
-# ------------------------- Sources ----------------------------------
-
-conf_src_mask = $(CONF_DIR)/M* $(CONF_DIR)/*.java $(CONF_DIR)/*.txt
-misc_src_mask = Makefile* *.txt $(scripts) $(conf_src_mask)
-misc_src_files = $(wildcard $(misc_src_mask)) \
-	$(patsubst %,%/sentry,$(empty_dirs))
-misc_bin_mask = *.txt $(scripts)
-misc_bin_files = $(wildcard $(misc_bin_mask))
 
 # ------------------------- Targets ----------------------------------
 
