@@ -834,7 +834,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
         /**
          * Determines if this triangulation is 0-efficient.
          * A triangulation is 0-efficient if its only normal spheres and
-         * discs are vertex linking.
+         * discs are vertex linking, and if it has no 2-sphere boundary
+         * components.
          *
          * @return \c true if and only if this triangulation is
          * 0-efficient.

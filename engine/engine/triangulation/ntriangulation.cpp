@@ -50,8 +50,8 @@
 #define PROPID_FUNDAMENTALGROUP 14
 
 // Property IDs for properties relating to normal surfaces:
-#define PROPID_ZEROEFFICIENT 101
-#define PROPID_CENTRALSURFACE 102
+#define PROPID_ZEROEFFICIENT 201
+#define PROPID_CENTRALSURFACE 202
 
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton)
