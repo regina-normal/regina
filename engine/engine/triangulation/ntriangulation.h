@@ -89,7 +89,6 @@ class NXMLTriangulationReader;
  * \todo \feature Add set of cusps and three corresponding get functions.
  * \todo \feature Make 0-efficient.
  * \todo \feature Insert a SFS with 3 exceptional fibres.
- * \todo \feature Insert a layered loop of index n.
  * \todo \featurelong Am I a sphere?
  * \todo \featurelong Is the triangulation Haken?
  * \todo \featurelong What is the Heegaard genus?
