@@ -23,7 +23,7 @@
   <!ENTITY regabstract
    "<para>
      &regina; is a suite of mathematical software for 3-manifold
-     topologists.  It focuses upon the study of 3-manifold triangulations
+     topologists.  It deals with the study of 3-manifold triangulations
      and includes support for normal surfaces and angle structures.
     </para>">
   <!ENTITY regwebsite
