@@ -416,6 +416,8 @@ class NGroupExpression : public ShareableObject {
  *
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
+ * \testpart
+ *
  * \todo \optlong The simplification routines really need work!
  */
 class NGroupPresentation : public ShareableObject {
