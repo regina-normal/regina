@@ -77,7 +77,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         public NSurfaceSet {
     public:
         static const int packetType;
-        
+
         static const int STANDARD;
             /**< Represents standard triangle-quad coordinates for
              *   normal surfaces. */
@@ -373,7 +373,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
  * The resulting lists of extremal rays and faces are guaranteed not to
  * contain any duplicates or redundancies.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param triangulation the triangulation upon which the underlying
  * coordinate system is based.

@@ -62,7 +62,7 @@ class NMatrixInt;
  * represent the number of octahedral discs of type 0, 1 and 2 (see
  * NNormalSurface::getOctCoord()).
  *
- * \pre Not present.
+ * \ifacespython Not present.
  */
 class NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
     public:

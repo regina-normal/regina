@@ -71,7 +71,7 @@ namespace regina {
  * setValue(); this will require documentation changes in both this
  * class and in NNormalSurfaceVector.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
     private:

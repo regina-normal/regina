@@ -57,7 +57,7 @@ class NMatrixInt;
  * number of quadrilateral discs of type 0, 1 and 2
  * (see NNormalSurface::getQuadCoord()).
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NNormalSurfaceVectorQuad : public NNormalSurfaceVectorMirrored {
     public:

@@ -57,8 +57,6 @@ class NNormalSurface;
  *
  * \pre This class should only be used with \a embedded
  * normal surfaces.
- *
- * \ifaces Not present.
  */
 struct NPrismSpec {
     unsigned long tetIndex;
@@ -112,8 +110,6 @@ struct NPrismSpec {
  * Writes the given prism specifier to the given output stream.
  * The prism specifier will be written as a pair <tt>(tetIndex, edge)</tt>.
  *
- * \ifaces Not present.
- *
  * @param out the output stream to which to write.
  * @param spec the prism specifier to write.
  * @return a reference to \a out.
@@ -132,8 +128,6 @@ std::ostream& operator << (std::ostream& out, const NPrismSpec& spec);
  * containing no octahedral discs.
  *
  * \warning This class doesn't really do much as yet.
- *
- * \ifaces Not present.
  */
 class NPrismSetSurface {
     private:

@@ -66,8 +66,6 @@ namespace regina {
  * in a particular tetrahedron can be represented by a long integer.
  * \pre This class should only be used with \a embedded
  * normal surfaces.
- *
- * \ifaces Not present.
  */
 struct NDiscSpec {
     unsigned long tetIndex;
@@ -119,7 +117,7 @@ struct NDiscSpec {
      * @return \c true if and only if this and the given disc specifier
      * contain identical information.
      */
-    bool operator == (const NDiscSpec& other);
+    bool operator == (const NDiscSpec& other) const;
 
     friend std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
 };
@@ -128,8 +126,6 @@ struct NDiscSpec {
  * Writes the given disc specifier to the given output stream.
  * The disc specifier will be written as a triple
  * <tt>(tetIndex, type, number)</tt>.
- *
- * \ifaces Not present.
  *
  * @param out the output stream to which to write.
  * @param spec the disc specifier to write.
@@ -140,8 +136,6 @@ std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
 /**
  * Determines whether or not normal discs of the given type are
  * numbered away from the given vertex.
- *
- * \ifaces Not present.
  *
  * @param discType the normal disc type under consideration; this
  * should be between 0 and 9 inclusive, as described by the NDiscSpec
@@ -161,8 +155,6 @@ bool numberDiscsAwayFromVertex(int discType, int vertex);
  * ::quadDiscArcs and ::octDiscArcs.
  *
  * \pre The given normal arc lies on a normal disc of the given type.
- *
- * \ifaces Not present.
  *
  * @param discType the normal disc type under consideration; this should
  * be between 0 and 9 inclusive, as described by the NDiscSpec class
@@ -193,14 +185,12 @@ bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
  * \todo \buglong Have some error flag so we can barf politely if the number
  * of normal discs of a given type does not fit into an <tt>unsigned
  * long</tt>.  See how this affects NDiscSetTetData also.
- *
- * \ifaces Not present.
  */
 class NDiscSetTet {
     protected:
         unsigned long internalNDiscs[10];
             /**< The number of discs of each type. */
-    
+
     public:
         /**
          * Creates a new set of normal discs corresponding to the discs
@@ -307,7 +297,7 @@ class NDiscSetTet {
  * \c a can be declared with no parameters and can then receive the
  * value of \c b using <tt>a=b</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NDiscSetTetData : public NDiscSetTet {
@@ -411,8 +401,6 @@ class NDiscSetTetData : public NDiscSetTet {
  * in a particular tetrahedron can be represented by a long integer.
  * \pre This class should only be used with \a embedded
  * normal surfaces.
- *
- * \ifaces Not present.
  */
 class NDiscSetSurface {
     protected:
@@ -535,7 +523,7 @@ class NDiscSetSurface {
  * \c a can be declared with no parameters and can then receive the
  * value of \c b using <tt>a=b</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 class NDiscSetSurfaceData : public NDiscSetSurface {
@@ -598,8 +586,6 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
  *
  * \pre The number of normal discs of a particular type
  * in a particular tetrahedron can be represented by a long integer.
- *
- * \ifaces Not present.
  */
 class NDiscSpecIterator {
     protected:
@@ -607,7 +593,7 @@ class NDiscSpecIterator {
             /**< The disc set through which we are iterating. */
         NDiscSpec current;
             /**< The disc currently pointed to. */
-    
+
     public:
         /**
          * Creates a new uninitialised iterator.
@@ -627,18 +613,24 @@ class NDiscSpecIterator {
          * @param discSet the disc set used to reinitialise this iterator.
          */
         void init(const NDiscSetSurface& discSet);
-        
+
         /**
          * Points this iterator to the next disc, or makes it
          * past-the-end if there is no next disc.
          *
          * \pre This iterator is not past-the-end.
+         *
+         * \ifacespython This routine is called inc(), since Python does
+         * not support the increment operator.
          */
         void operator++(int);
         /**
          * Returns a reference to the disc pointed to by this iterator.
          *
          * \pre This iterator is not past-the-end.
+         *
+         * \ifacespython This routine is called deref(), since Python does
+         * not support the dereference operator.
          *
          * @return a reference to the disc pointed to by this iterator.
          */
@@ -684,7 +676,7 @@ inline NDiscSpec& NDiscSpec::operator = (const NDiscSpec& cloneMe) {
     number = cloneMe.number;
     return *this;
 }
-inline bool NDiscSpec::operator == (const NDiscSpec& other) {
+inline bool NDiscSpec::operator == (const NDiscSpec& other) const {
     return (tetIndex == other.tetIndex && type == other.type &&
         number == other.number);
 }

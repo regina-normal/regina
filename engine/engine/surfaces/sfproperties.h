@@ -96,7 +96,7 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
          * If this set is empty, all Euler characteristics will be
          * accepted.
          *
-         * \ifaces Not present.
+         * \ifacespython This routine returns a python sequence.
          *
          * @return the set of allowable Euler characteristics.
          */

@@ -69,13 +69,6 @@ class ShareableObject;
  *
  * \warning You should \b never cast down from NSurfaceSet; instead you
  * should always call getShareableObject() and cast down from there.
- *
- * \ifaces This simply defines an interface that derived classes must
- * adhere to; NSurfaceSet is not a wrapper class itself.
- *
- * \ifacesjava NSurfaceSet will be a Java interface, which must be
- * implemented by all wrapper classes for engine classes derived from
- * NSurfaceSet.
  */
 class NSurfaceSet {
     public:
@@ -156,7 +149,8 @@ class NSurfaceSet {
          * details of each surface to the given output stream.  Output
          * will be over many lines.
          *
-         * \ifaces Not present.
+         * \ifacespython Parameter \a out is not present and is assumed
+         * to be standard output.
          *
          * @param out the output stream to which to write.
          */

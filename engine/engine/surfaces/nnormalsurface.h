@@ -55,8 +55,6 @@ namespace regina {
  * split split the four tetrahedron vertices 0,1,2,3 into two pairs.
  * <tt>vertexSplit[i][j]</tt> is the number of the vertex split that
  * keeps vertices <tt>i</tt> and <tt>j</tt> together.
- *
- * \ifacesjava This array is a static member of NNormalSurface.
  */
 extern const int vertexSplit[4][4];
 /**
@@ -65,8 +63,6 @@ extern const int vertexSplit[4][4];
  * <tt>vertexSplitMeeting[i][j][0,1]</tt> are the numbers of the two
  * vertex splits that meet the edge joining tetrahedron vertices
  * <tt>i</tt> and <tt>j</tt>.
- *
- * \ifacesjava This array is a static member of NNormalSurface.
  */
 extern const int vertexSplitMeeting[4][4][2];
 
@@ -76,8 +72,6 @@ extern const int vertexSplitMeeting[4][4][2];
  * Vertex split number \c i splits the vertex pairs
  * <tt>vertexSplitDefn[i][0,1]</tt> and
  * <tt>vertexSplitDefn[i][2,3]</tt>.
- *
- * \ifacesjava This array is a static member of NNormalSurface.
  */
 extern const int vertexSplitDefn[3][4];
 
@@ -87,8 +81,6 @@ extern const int vertexSplitDefn[3][4];
  * See \a vertexSplit for details on what a vertex split is.
  * Vertex split number \c i pairs vertex \c v with
  * vertex <tt>vertexSplitPartner[i][v]</tt>.
- *
- * \ifacesjava This array is a static member of NNormalSurface.
  */
 extern const int vertexSplitPartner[3][4];
 
@@ -99,9 +91,6 @@ extern const int vertexSplitPartner[3][4];
  * <tt>vertexSplitString[i]</tt> and is of the form <tt>02/13</tt>,
  * which in this case is the vertex split that splits vertices 0,2 from
  * vertices 1,3.
- *
- * \ifacesjava This array is a static member of NNormalSurface and
- * is a one dimensional array of strings.
  */
 extern const char vertexSplitString[3][6];
 
@@ -120,7 +109,6 @@ extern const char vertexSplitString[3][6];
  * \ifacescpp This array is replaced by a macro
  * <tt>triDiscArcs(discType, arcIndex)</tt> that essentially looks up
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
- * \ifacesjava This array is a static member of NNormalSurface.
  */
 #ifdef __DOXYGEN
 extern const NPerm triDiscArcs[4][3];
@@ -145,7 +133,6 @@ extern const NPerm __triDiscArcs[12];
  * \ifacescpp This array is replaced by a macro
  * <tt>quadDiscArcs(discType, arcIndex)</tt> that essentially looks up
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
- * \ifacesjava This array is a static member of NNormalSurface.
  */
 #ifdef __DOXYGEN
 extern const NPerm quadDiscArcs[3][4];
@@ -170,7 +157,6 @@ extern const NPerm __quadDiscArcs[12];
  * \ifacescpp This array is replaced by a macro
  * <tt>octDiscArcs(discType, arcIndex)</tt> that essentially looks up
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
- * \ifacesjava This array is a static member of NNormalSurface.
  */
 #ifdef __DOXYGEN
 extern const NPerm octDiscArcs[3][8];
@@ -231,7 +217,7 @@ class NCompConstraintSet;
  * \todo \feature Implement viewing by boundary face arcs.
  * \todo \optlong Investigate using sparse vectors for storage.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NNormalSurfaceVector : public NRay {
     public:
@@ -474,8 +460,6 @@ class NNormalSurfaceVector : public NRay {
          *
          * See ::createNonNegativeCone() for further details.
          *
-         * \ifaces Not present.
-         *
          * @param triangulation the triangulation upon which the
          * underlying coordinate system is based.
          * @param rays the output iterator to which the newly allocated
@@ -500,8 +484,6 @@ class NNormalSurfaceVector : public NRay {
          *
          * See ::makeMatchingEquations() for further details.
          *
-         * \ifaces Not present.
-         *
          * @param triangulation the triangulation upon which these
          * matching equations will be based.
          * @return a newly allocated set of matching equations.
@@ -516,8 +498,6 @@ class NNormalSurfaceVector : public NRay {
          * compatibility constraints will be expressed relative to the
          * flavour of coordinate system corresponding to this particular
          * subclass of NNormalSurfaceVector.
-         *
-         * \ifaces Not present.
          *
          * @param triangulation the triangulation upon which these
          * compatibility constraints will be based.
@@ -608,7 +588,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * normal surface inside the given triangulation.
          * \pre The given coordinate vector cannot be the null pointer.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param triang the triangulation in which this normal surface
          * resides.
@@ -626,8 +606,6 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
 
         /**
          * Creates a newly allocated clone of this normal surface.
-         *
-         * \ifaces Not present.
          *
          * @return a clone of this normal surface.
          */
@@ -754,6 +732,9 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * The text representation will be in standard triangle-quad-oct
          * coordinates.  Octahedral coordinates will only be written if
          * the surface is of a potentially almost normal flavour.
+         *
+         * \ifacespython The paramater \a out does not exist, and is
+         * taken to be standard output.
          */
         void writeTextShort(std::ostream& out) const;
         /**
@@ -763,7 +744,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * system is being used or what each coordinate means.
          * No newline will be written.
          *
-         * \ifaces The paramater \a out does not exist, and is
+         * \ifacespython The paramater \a out does not exist, and is
          * taken to be standard output.
          *
          * @param out the output stream to which to write.
@@ -775,7 +756,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * of its properties.  This routine will be called from within
          * NNormalSurfaceList::writeXMLPacketData().
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -792,7 +773,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * \pre The given file is currently opened for writing.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the file to which to write.
          */
@@ -810,7 +791,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * \pre The given file is currently opened for reading.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param in the file from which to read.
          * @param flavour the flavour of coordinate system that the
@@ -922,8 +903,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * \todo \opt Cache results.
          *
-         * \ifacesjava This routine returns a new array of edges of
-         * size 2.
+         * \ifacespython This routine returns a tuple of size 2.
          *
          * @return a pair containing the thin edge(s) linked by this surface,
          * as described above.

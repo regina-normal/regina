@@ -93,8 +93,6 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          * will be instantiated.  A value need not be assigned;
          * filterregistry.h will take care of this task when you register
          * the filtering class.
-         *
-         * \ifaces Not present.
          */
         static const int filterID;
 
@@ -161,7 +159,7 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          * See the description of parameter \a parent in
          * NPacket::getXMLReader() for further details.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param parent the packet which will become the new filter's
          * parent in the tree structure, or 0 if the new filter is to be
@@ -201,7 +199,7 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          * \pre The given file is open for reading and all above
          * conditions have been satisfied.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param in the file from which to read the filter.
          * @param parent the packet which will become the new filter's
