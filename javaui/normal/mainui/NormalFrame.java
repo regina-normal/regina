@@ -705,6 +705,18 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         JMenu menuOptions = new JMenu("Options");
         menuOptions.setMnemonic(KeyEvent.VK_O);
 
+        if (shell.mayUIAccessFiles()) {
+            JMenuItem menuOptionsCensusData =
+                new JMenuItem("Census Data Files...");
+            menuOptionsCensusData.setMnemonic(KeyEvent.VK_C);
+            menuOptionsCensusData.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new ManageCensusData(shell).show();
+                }
+            });
+            menuOptions.add(menuOptionsCensusData);
+        }
+
         JMenu menuOptionsDisplay = new JMenu("Display");
         menuOptionsDisplay.setMnemonic(KeyEvent.VK_D);
 

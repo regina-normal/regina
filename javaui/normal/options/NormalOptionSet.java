@@ -84,6 +84,21 @@ public class NormalOptionSet extends OptionSet {
     public static final String optionJythonLibUse = "JythonLibUse";
 
     /**
+     * Full option name for a particular cached option.
+     */
+    public static final String optionCensusDataCount = "CensusDataCount";
+
+    /**
+     * Option name stub for a particular cached option.
+     */
+    public static final String optionCensusData = "CensusData";
+
+    /**
+     * Option name stub for a particular cached option.
+     */
+    public static final String optionCensusDataUse = "CensusDataUse";
+
+    /**
      * The default for a particular cached option.
      */
     public static final boolean defaultAutoDock = true;
@@ -107,6 +122,11 @@ public class NormalOptionSet extends OptionSet {
      * A particular cached option.
      */
     private Vector jythonLibraries;
+
+    /**
+     * A particular cached option.
+     */
+    private Vector censusData;
 
     /**
      * Creates a new option set not associated with any file.
@@ -150,6 +170,7 @@ public class NormalOptionSet extends OptionSet {
      */
     protected void init() {
         jythonLibraries = new Vector();
+        censusData = new Vector();
     }
     
     /**
@@ -167,11 +188,19 @@ public class NormalOptionSet extends OptionSet {
         autoDock = getBooleanOption(optionAutoDock, defaultAutoDock);
         displayIcon = getBooleanOption(optionDisplayIcon, defaultDisplayIcon);
 
+        int i;
         int nLibs = getIntOption(optionJythonLibCount, 0);
-        for (int i = 0; i < nLibs; i++)
+        for (i = 0; i < nLibs; i++)
             jythonLibraries.addElement(new JythonLibrary(
                 getStringOption(optionJythonLib + String.valueOf(i), ""),
                 getBooleanOption(optionJythonLibUse + String.valueOf(i),
+                false)));
+
+        int nCensus = getIntOption(optionCensusDataCount, 0);
+        for (i = 0; i < nCensus; i++)
+            censusData.addElement(new CensusData(
+                getStringOption(optionCensusData + String.valueOf(i), ""),
+                getBooleanOption(optionCensusDataUse + String.valueOf(i),
                 false)));
 
         if (caught != null)
@@ -190,22 +219,41 @@ public class NormalOptionSet extends OptionSet {
         setBooleanOption(optionAutoDock, autoDock);
         setBooleanOption(optionDisplayIcon, displayIcon);
 
+        int i;
         int nLibs = jythonLibraries.size();
         // Clear out all unnecessary library options.
         int oldNLibs = getIntOption(optionJythonLibCount, 0);
-        for (int i = nLibs; i < oldNLibs; i++) {
+        for (i = nLibs; i < oldNLibs; i++) {
             removeOption(optionJythonLib + String.valueOf(i));
             removeOption(optionJythonLibUse + String.valueOf(i));
         }
 
         setIntOption(optionJythonLibCount, nLibs);
         JythonLibrary lib;
-        for (int i = 0; i < nLibs; i++) {
+        for (i = 0; i < nLibs; i++) {
             lib = (JythonLibrary)jythonLibraries.elementAt(i);
             setStringOption(optionJythonLib + String.valueOf(i),
                 lib.getLibraryPath());
             setBooleanOption(optionJythonLibUse + String.valueOf(i),
                 lib.shouldUseLibrary());
+        }
+
+        int nCensus = censusData.size();
+        // Clear out all unnecessary census options.
+        int oldNCensus = getIntOption(optionCensusDataCount, 0);
+        for (i = nCensus; i < oldNCensus; i++) {
+            removeOption(optionCensusData + String.valueOf(i));
+            removeOption(optionCensusDataUse + String.valueOf(i));
+        }
+
+        setIntOption(optionCensusDataCount, nCensus);
+        CensusData census;
+        for (i = 0; i < nCensus; i++) {
+            census = (CensusData)censusData.elementAt(i);
+            setStringOption(optionCensusData + String.valueOf(i),
+                census.getCensusPath());
+            setBooleanOption(optionCensusDataUse + String.valueOf(i),
+                census.shouldUseCensus());
         }
 
         super.writeToFile(forceWrite);
@@ -270,6 +318,28 @@ public class NormalOptionSet extends OptionSet {
     }
 
     /**
+     * Returns a vector of <tt>CensusData</tt> objects representing
+     * the set of available census data files.
+     *
+     * @return the set of available census data files.
+     * @see normal.options.NormalOptionSet.CensusData
+     */
+    public Vector getCensusData() {
+        return censusData;
+    }
+
+    /**
+     * Sets the list of available census data files.
+     *
+     * @param value the new list of census data files; this must be a
+     * vector of <tt>CensusData</tt> objects.
+     * @see normal.options.NormalOptionSet.CensusData
+     */
+    public void setCensusData(Vector value) {
+        censusData = value;
+    }
+
+    /**
      * Stores the details of a Jython library.
      */
     public static class JythonLibrary {
@@ -311,6 +381,51 @@ public class NormalOptionSet extends OptionSet {
          */
         public boolean shouldUseLibrary() {
             return useLibrary;
+        }
+    }
+
+    /**
+     * Stores the details of a census data file.
+     */
+    public static class CensusData {
+        /**
+         * The path to the census data file.
+         */
+        private String censusPath;
+        /**
+         * Specifies whether or not the census should be used.
+         */
+        private boolean useCensus;
+
+        /**
+         * Creates a new census data file specifier.
+         *
+         * @param censusPath the path to the census data file.
+         * @param useCensus <tt>true</tt> if and only if the census
+         * should be used.
+         */
+        public CensusData(String censusPath, boolean useCensus) {
+            this.censusPath = censusPath;
+            this.useCensus = useCensus;
+        }
+
+        /**
+         * Returns the path to this particular census data file.
+         *
+         * @return the path to this particular census data file.
+         */
+        public String getCensusPath() {
+            return censusPath;
+        }
+
+        /**
+         * Returns whether or not this census should be used.
+         *
+         * @return <tt>true</tt> if and only if this census should be
+         * used.
+         */
+        public boolean shouldUseCensus() {
+            return useCensus;
         }
     }
 }
