@@ -380,7 +380,7 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
     if (tags)
         for (std::set<std::string>::const_iterator it = tags->begin();
                 it != tags->end(); it++)
-            out << "  <tag name=\"" << xmlEncodeSpecialChars(*it) << "\">\n";
+            out << "  <tag name=\"" << xmlEncodeSpecialChars(*it) << "\"/>\n";
 
     // Write the child packets.
     for (NPacket* p = firstTreeChild; p; p = p->nextTreeSibling)
