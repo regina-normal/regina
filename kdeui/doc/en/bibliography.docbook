@@ -66,6 +66,16 @@
   <date>1999</date>
  </biblioentry>
 
+ <biblioentry id="bib-gap">
+  <abbrev>GAP</abbrev>
+  <corpauthor>The GAP Group</corpauthor>
+  <title>GAP &mdash; Groups, Algorithms and Programming</title>
+  <edition>Version 4.3</edition>
+  <date>2002</date>
+  <publishername>Available from
+   <ulink url="http://www.gap-system.org/"/></publishername>
+ </biblioentry>
+
  <biblioentry id="bib-haken-homeomorphism">
   <abbrev>Ha</abbrev>
   <author>

@@ -763,6 +763,35 @@
      fairly weak recognition routine, and if the group is recognised then
      its common name will be given as well.
     </para>
+    <para>
+     If you have &gaplongurl; installed on your system, you can use &gap;
+     to simplify the fundamental group presentation.  &regina; does
+     perform some automatic simplifications of its own, but &gap;'s
+     simplification routines are far more powerful.
+    </para>
+    <para>
+     To simplify the group presentation using &gap;,
+     press the <guibutton>Simplify using GAP</guibutton> button
+     beneath the fundamental group.  While &regina; is talking to &gap;, the
+     state of the conversation will be displayed in a separate dialog box.
+    </para>
+    <para>
+     If you wish to see a full transcript of the conversation between
+     &regina; and &gap;, start &regina; from the command-line by running
+     <command>regina-kde</command>.  A full transcript of the
+     conversation will be written to the text console beneath the
+     <command>regina-kde</command> command.
+    </para>
+    <para>
+     If &regina; is having trouble starting &gap;, you can tell it where
+     to find &gap; in the
+     <link linkend="options-triangulation">triangulation options</link>.
+    </para>
+    <tip><para>
+     You can try to simplify using &gap; more than once.  Sometimes
+     &gap; gets a better presentation for the group when run a second or
+     third time.
+    </para></tip>
    </sect3>
    <sect3 id="tri-algebra-turaevviro">
     <title>Turaev-Viro Invariants</title>

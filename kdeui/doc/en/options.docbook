@@ -111,6 +111,26 @@
      </para>
     </glossdef>
    </glossentry>
+   <glossentry>
+    <glossterm>&gap; executable</glossterm>
+    <glossdef>
+     <para>
+      This tells &regina; where to find &gaplongurl;.  &gap; is not
+      required by &regina;, but if it is installed then it can help
+      simplify group presentations.  See the
+      <link linkend="tri-algebra-fundgroup">fundamental group</link>
+      documentation for details.
+     </para>
+     <para>
+      This option should be the name of the command that is used to
+      start &gap; (the default is <command>gap</command>).  If &gap; is
+      on your default search path, you may simply provide the command
+      (such as <filename>gap</filename>);
+      otherwise you will need to provide a full path to the executable
+      (such as <filename>/usr/local/bin/gap</filename>).
+     </para>
+    </glossdef>
+   </glossentry>
   </glosslist>
  </sect1>
 

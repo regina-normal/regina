@@ -180,6 +180,8 @@
   <primaryie>configuration</primaryie>
   <secondaryie><link linkend="options-census">census
    lookup</link></secondaryie>
+  <secondaryie><link linkend="options-triangulation">GAP (Groups,
+   Algorithms and Programming)</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
   <secondaryie><link linkend="options-surfaces">normal surface
    enumeration</link></secondaryie>
@@ -383,6 +385,13 @@
  <indexentry>
   <primaryie><link linkend="tri-algebra-fundgroup">fundamental
    group</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>GAP (Groups, Algorithms and Programming)</primaryie>
+  <secondaryie><link linkend="options-triangulation">configuration</link></secondaryie>
+  <secondaryie><link linkend="tri-algebra-fundgroup">using to
+   simplify group presentations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -652,6 +661,11 @@
 
  <indexentry>
   <primaryie><link linkend="tri-sfs3">&sfslong;, creation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>settings</primaryie>
+  <seeie>(see configuration)</seeie>
  </indexentry>
 
  <indexentry>

@@ -43,6 +43,11 @@
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY debian "<productname>Debian</productname>">
   <!ENTITY fedora "<productname>Fedora Core</productname>">
+  <!ENTITY gap "<application><acronym>GAP</acronym></application>">
+  <!ENTITY gaplong "<application><acronym>GAP</acronym>
+   (Groups, Algorithms and Programming)</application>">
+  <!ENTITY gaplongurl "<ulink
+   url='http://www.gap-system.org/'>&gaplong;</ulink>">
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY java "<application>Java</application>">
   <!ENTITY html "<acronym>HTML</acronym>">
