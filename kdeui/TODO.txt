@@ -8,7 +8,7 @@ engine documentation.
 General:
     Make "configure shortcuts" work with the part as well as with the shell
     More "What's This?" texts, including a what's this button on the toolbar
-    Include progress dialogs where appropriate
+    (4.0) Include progress dialogs where appropriate
     Enhance the DCOP interface
 
 Census:
@@ -40,7 +40,7 @@ Python:
 Scripts:
     Make a script dirty when its variables are changed externally
         through renaming or deletion
-    Packet choosers with very large files seem to cause real problems
+    (4.0) Packet choosers with very large files seem to cause real problems
         (e.g., variable table for snappea census)
 
 Toolbars:
