@@ -27,8 +27,10 @@
 /* end stub */
 
 void addNAbelianGroup();
+void addNGroupPresentation();
 
 void addAlgebra() {
     addNAbelianGroup();
+    addNGroupPresentation();
 }
 

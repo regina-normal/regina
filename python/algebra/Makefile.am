@@ -10,5 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 
 noinst_LTLIBRARIES = libalgebra.la
 
-libalgebra_la_SOURCES = nabeliangroup.cpp pyalgebra.cpp
+libalgebra_la_SOURCES = nabeliangroup.cpp ngrouppresentation.cpp pyalgebra.cpp
 

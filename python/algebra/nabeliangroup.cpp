@@ -34,20 +34,21 @@
 using namespace boost::python;
 using regina::NAbelianGroup;
 
-void (NAbelianGroup::*addTorsionElement_large)(const regina::NLargeInteger&,
-    unsigned) = &NAbelianGroup::addTorsionElement;
-void (NAbelianGroup::*addTorsionElement_long)(unsigned long,
-    unsigned) = &NAbelianGroup::addTorsionElement;
-void (NAbelianGroup::*addGroup_matrix)(const regina::NMatrixInt&) =
-    &NAbelianGroup::addGroup;
-void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
-    &NAbelianGroup::addGroup;
-unsigned (NAbelianGroup::*getTorsionRank_large)(const regina::NLargeInteger&)
-    const = &NAbelianGroup::getTorsionRank;
-unsigned (NAbelianGroup::*getTorsionRank_long)(unsigned long)
-    const = &NAbelianGroup::getTorsionRank;
-
 namespace {
+    void (NAbelianGroup::*addTorsionElement_large)(
+        const regina::NLargeInteger&, unsigned) =
+        &NAbelianGroup::addTorsionElement;
+    void (NAbelianGroup::*addTorsionElement_long)(unsigned long,
+        unsigned) = &NAbelianGroup::addTorsionElement;
+    void (NAbelianGroup::*addGroup_matrix)(const regina::NMatrixInt&) =
+        &NAbelianGroup::addGroup;
+    void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
+        &NAbelianGroup::addGroup;
+    unsigned (NAbelianGroup::*getTorsionRank_large)(
+        const regina::NLargeInteger&) const = &NAbelianGroup::getTorsionRank;
+    unsigned (NAbelianGroup::*getTorsionRank_long)(unsigned long)
+        const = &NAbelianGroup::getTorsionRank;
+
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRank,
         NAbelianGroup::addRank, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addTorsionElement,
@@ -86,7 +87,8 @@ namespace {
 }
 
 void addNAbelianGroup() {
-    class_<NAbelianGroup, bases<regina::ShareableObject> >("NAbelianGroup")
+    class_<NAbelianGroup, bases<regina::ShareableObject>,
+            std::auto_ptr<NAbelianGroup> >("NAbelianGroup")
         .def(init<const NAbelianGroup&>())
         .def("addRank", &NAbelianGroup::addRank, OL_addRank())
         .def("addTorsionElement", addTorsionElement_large,
