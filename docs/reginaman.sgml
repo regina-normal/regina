@@ -198,8 +198,8 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina.conf">regina.conf</link>,
-    <link linkend="man-applet">regina-applet</link>.
+    <link linkend="man-regina.conf">regina.conf</link>.
+    <!-- (applet removed) <link linkend="man-applet">regina-applet</link>. -->
    </para>
   </refsect1>
 
@@ -559,8 +559,8 @@
    <title>See Also</title>
    <para>
     <link linkend="man-regina">regina</link>
-     (<link linkend="man-regina">regina-normal</link> on some systems),
-    <link linkend="man-applet">regina-applet</link>.
+     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <!-- (applet removed) <link linkend="man-applet">regina-applet</link>. -->
    </para>
   </refsect1>
 
@@ -575,6 +575,9 @@
  </refentry>
 
  <!-- Applet Parameters -->
+
+ <!-- Comment this out for the time being since the CORBA engine
+      (required by the applet) has been removed.
 
  <refentry id="man-applet">
   <refmeta>
@@ -685,4 +688,7 @@
    </para>
   </refsect1>
  </refentry>
+
+ -->
+
 </reference>
