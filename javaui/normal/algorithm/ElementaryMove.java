@@ -271,7 +271,7 @@ public class ElementaryMove extends Modification {
             type.add(twoOne);
             type.add(openBook);
             type.add(shellBoundary);
-            type.add(collapseEdge);
+            // type.add(collapseEdge);
 
             threeTwoComp = new JComboBox();
             twoThreeComp = new JComboBox();
@@ -312,8 +312,8 @@ public class ElementaryMove extends Modification {
             typePanel.add(openBookComp, cExtra);
             typePanel.add(shellBoundary, cButton);
             typePanel.add(shellBoundaryComp, cExtra);
-            typePanel.add(collapseEdge, cButton);
-            typePanel.add(collapseEdgeComp, cExtra);
+            // typePanel.add(collapseEdge, cButton);
+            // typePanel.add(collapseEdgeComp, cExtra);
 
             // Make the button panel.
             ok = new JButton("OK");
