@@ -38,7 +38,7 @@
 
 #include <vector>
 
-class KTabCtl;
+class ExtTabCtl;
 class PacketEditorTab;
 class PacketTabbedViewerTab;
 class PacketViewerTab;
@@ -94,7 +94,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
          */
         QWidget* ui;
         QBoxLayout* layout;
-        KTabCtl* tabs;
+        ExtTabCtl* tabs;
 
     public:
         /**
@@ -126,6 +126,11 @@ class PacketTabbedUI : public QObject, public PacketUI {
          * destruction of the header.
          */
         void addHeader(PacketViewerTab* viewer);
+
+        /**
+         * Make the tabbed page at the given index visible.
+         */
+        void setCurrentTab(int tabIndex);
 
         /**
          * Component queries.
@@ -289,7 +294,7 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
          */
         QWidget* ui;
         QBoxLayout* layout;
-        KTabCtl* tabs;
+        ExtTabCtl* tabs;
 
     public:
         /**
@@ -312,6 +317,11 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
          * of the header.
          */
         void addHeader(PacketViewerTab* viewer);
+
+        /**
+         * Make the tabbed page at the given index visible.
+         */
+        void setCurrentTab(int tabIndex);
 
         /**
          * Component queries.

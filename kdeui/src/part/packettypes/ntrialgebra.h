@@ -33,6 +33,7 @@
 #ifndef __NTRIALGEBRA_H
 #define __NTRIALGEBRA_H
 
+#include "../../reginaprefset.h"
 #include "../packettabui.h"
 
 class QLabel;
@@ -54,7 +55,8 @@ class NTriAlgebraUI : public PacketTabbedViewerTab {
          * Constructor.
          */
         NTriAlgebraUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI);
+                PacketTabbedUI* useParentUI,
+                ReginaPrefSet::TriAlgebraTab initialTab);
 };
 
 /**

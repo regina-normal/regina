@@ -142,10 +142,20 @@ namespace {
 }
 
 NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI) : PacketTabbedViewerTab(useParentUI) {
+        PacketTabbedUI* useParentUI, ReginaPrefSet::TriAlgebraTab initialTab) :
+        PacketTabbedViewerTab(useParentUI) {
     addTab(new NTriHomologyUI(packet, this), i18n("&Homology"));
     addTab(new NTriFundGroupUI(packet, this), i18n("&Fund. Group"));
     addTab(new NTriTuraevViroUI(packet, this), i18n("&Turaev-Viro"));
+
+    switch (initialTab) {
+        case ReginaPrefSet::Homology:
+            /* already visible */ break;
+        case ReginaPrefSet::FundGroup:
+            setCurrentTab(1); break;
+        case ReginaPrefSet::TuraevViro:
+            setCurrentTab(2); break;
+    }
 }
 
 NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,

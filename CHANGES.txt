@@ -21,9 +21,14 @@ Current Development Version
         Class NSimpleSurfaceBundle, NTrivialTri:
             - Added for recognition of trivial non-orientable triangulations.
     USER INTERFACE:
+        Class ExtTabCtl, PacketTabbedUI, PacketTabbedViewerTab:
+            - Allow changing the current tab (this required a new extension
+              class to KTabCtl).
         Class NScriptUI, NTextUI:
             - Fixed problems with word wrapping and line endings in
               the embedded text editor.
+        Class NTriangulationUI, NTriAlgebraUI, ReginaPrefSet:
+            - Allow the initially visible tab to be configured.
         Class NTriGluingsUI:
             - Fixed the bug in updating tetrahedron labels when other
               tetrahedra are removed from a triangulation.

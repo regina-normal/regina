@@ -52,5 +52,4 @@ Toolbars:
 
 Triangulations:
     Make the skeleton viewer windows appear in a pleasant size
-    (3.97) Allow the default tab to be set
 

@@ -67,6 +67,29 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     triPrefs->comboEditMode->setCurrentItem(
         prefSet.triEditMode == ReginaPrefSet::DirectEdit ? 0 : 1);
+
+    switch (prefSet.triInitialTab) {
+        case ReginaPrefSet::Skeleton:
+            triPrefs->comboInitialTab->setCurrentItem(1); break;
+        case ReginaPrefSet::Algebra:
+            triPrefs->comboInitialTab->setCurrentItem(2); break;
+        case ReginaPrefSet::Composition:
+            triPrefs->comboInitialTab->setCurrentItem(3); break;
+        case ReginaPrefSet::Surfaces:
+            triPrefs->comboInitialTab->setCurrentItem(4); break;
+        default:
+            triPrefs->comboInitialTab->setCurrentItem(0); break;
+    }
+
+    switch (prefSet.triInitialAlgebraTab) {
+        case ReginaPrefSet::FundGroup:
+            triPrefs->comboInitialAlgebraTab->setCurrentItem(1); break;
+        case ReginaPrefSet::TuraevViro:
+            triPrefs->comboInitialAlgebraTab->setCurrentItem(2); break;
+        default:
+            triPrefs->comboInitialAlgebraTab->setCurrentItem(0); break;
+    }
+
     triPrefs->editSurfacePropsThreshold->setText(
         QString::number(prefSet.triSurfacePropsThreshold));
 }
@@ -102,6 +125,28 @@ void ReginaPreferences::slotApply() {
 
     prefSet.triEditMode = (triPrefs->comboEditMode->currentItem() == 0 ?
         ReginaPrefSet::DirectEdit : ReginaPrefSet::Dialog);
+
+    switch (triPrefs->comboInitialTab->currentItem()) {
+        case 1:
+            prefSet.triInitialTab = ReginaPrefSet::Skeleton; break;
+        case 2:
+            prefSet.triInitialTab = ReginaPrefSet::Algebra; break;
+        case 3:
+            prefSet.triInitialTab = ReginaPrefSet::Composition; break;
+        case 4:
+            prefSet.triInitialTab = ReginaPrefSet::Surfaces; break;
+        default:
+            prefSet.triInitialTab = ReginaPrefSet::Gluings; break;
+    }
+
+    switch (triPrefs->comboInitialAlgebraTab->currentItem()) {
+        case 1:
+            prefSet.triInitialAlgebraTab = ReginaPrefSet::FundGroup; break;
+        case 2:
+            prefSet.triInitialAlgebraTab = ReginaPrefSet::TuraevViro; break;
+        default:
+            prefSet.triInitialAlgebraTab = ReginaPrefSet::Homology; break;
+    }
 
     uintVal = triPrefs->editSurfacePropsThreshold->text().toUInt(&ok);
     if (ok)
@@ -162,9 +207,10 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QVBox(parent) {
 ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
     setSpacing(5);
 
+    // WARNING: Note that any change of order in the combo boxes must be
+    // reflected in the ReginaPreferences methods as well.
+
     // Set up the edit mode.
-    // Note that any change of order in the combo box must be reflected
-    // in the ReginaPreferences methods as well.
     QHBox* box = new QHBox(this);
     box->setSpacing(5);
 
@@ -175,6 +221,36 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
     QString msg = i18n("Specifies the way in which face gluings are edited.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(comboEditMode, msg);
+
+    // Set up the initial tab.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("Default top-level tab:"), box);
+    comboInitialTab = new KComboBox(box);
+    comboInitialTab->insertItem(i18n("Gluings"));
+    comboInitialTab->insertItem(i18n("Skeleton"));
+    comboInitialTab->insertItem(i18n("Algebra"));
+    comboInitialTab->insertItem(i18n("Composition"));
+    comboInitialTab->insertItem(i18n("Surfaces"));
+    msg = i18n("Specifies which tab should be initially visible "
+        "when a new triangulation viewer/editor is opened.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(comboInitialTab, msg);
+
+    // Set up the initial algebra tab.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("Default algebra tab:"), box);
+    comboInitialAlgebraTab = new KComboBox(box);
+    comboInitialAlgebraTab->insertItem(i18n("Homology"));
+    comboInitialAlgebraTab->insertItem(i18n("Fundamental Group"));
+    comboInitialAlgebraTab->insertItem(i18n("Turaev-Viro"));
+    msg = i18n("Specifies which tab should be initially visible "
+        "when a new triangulation algebra viewer is opened.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(comboInitialAlgebraTab, msg);
 
     // Set up the surface properties threshold.
     box = new QHBox(this);

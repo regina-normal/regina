@@ -13,6 +13,7 @@ SUBDIRS = foreign packettypes
 INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
+	exttabctl.h \
 	flatbutton.h \
 	newpacketdialog.h \
 	packetchooser.h \
@@ -34,6 +35,7 @@ libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) -lktexteditor \
 libreginapart_la_SOURCES = \
 	actionspart.cpp \
 	exports.cpp \
+	exttabctl.cpp \
 	flatbutton.cpp \
 	imports.cpp \
 	newpacketdialog.cpp \

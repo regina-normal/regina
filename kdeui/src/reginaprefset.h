@@ -39,6 +39,10 @@
 struct ReginaPrefSet {
     enum TriEditMode { DirectEdit, Dialog };
         /**< Possible edit modes for triangulation gluings. */
+    enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces };
+        /**< Available top-level tabs in a triangulation viewer/editor. */
+    enum TriAlgebraTab { Homology, FundGroup, TuraevViro };
+        /**< Available tabs in a triangulation algebra viewer. */
 
     bool autoDock;
         /**< Do we automatically dock new packet
@@ -54,6 +58,12 @@ struct ReginaPrefSet {
              the packet tree. */
     TriEditMode triEditMode;
         /**< The default mode for editing triangulations. */
+    TriTab triInitialTab;
+        /**< The initially visible top-level tab for a new triangulation
+             viewer/editor. */
+    TriAlgebraTab triInitialAlgebraTab;
+        /**< The initially visible tab for a new triangulation algebra
+             viewer. */
     unsigned triSurfacePropsThreshold;
         /**< The maximum number of tetrahedra for which surface-related
              properties of triangulations will be automatically
@@ -72,6 +82,8 @@ inline ReginaPrefSet::ReginaPrefSet() :
         displayTagsInTree(false),
         treeJumpSize(10),
         triEditMode(DirectEdit),
+        triInitialTab(Gluings),
+        triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6) {
 }
 

@@ -27,10 +27,10 @@
 /* end stub */
 
 // UI includes:
+#include "exttabctl.h"
 #include "packettabui.h"
 
 #include <iostream>
-#include <ktabctl.h>
 #include <qlayout.h>
 
 using regina::NPacket;
@@ -40,7 +40,7 @@ PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane) :
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
 
-    tabs = new KTabCtl(ui);
+    tabs = new ExtTabCtl(ui);
     layout->addWidget(tabs, 1);
     connect(tabs, SIGNAL(tabSelected(int)), this, SLOT(notifyTabSelected(int)));
 }
@@ -53,7 +53,7 @@ PacketTabbedUI::~PacketTabbedUI() {
     // will destroy its interface component or not.
     //
     // If so, it's removed from the tabbed pane upon destruction and
-    // therefore won't be destroyed again.  If not, the KTabCtl
+    // therefore won't be destroyed again.  If not, the ExtTabCtl
     // destructor should take care of it.
 
     // These viewers are definitely not visible.
@@ -108,6 +108,10 @@ void PacketTabbedUI::addHeader(PacketViewerTab* viewer) {
     header = viewer;
     viewer->getInterface()->reparent(ui, QPoint(0, 0));
     layout->insertWidget(0, viewer->getInterface(), 0);
+}
+
+void PacketTabbedUI::setCurrentTab(int tabIndex) {
+    tabs->setCurrentTab(tabIndex);
 }
 
 regina::NPacket* PacketTabbedUI::getPacket() {
@@ -221,7 +225,7 @@ PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI) :
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
 
-    tabs = new KTabCtl(ui);
+    tabs = new ExtTabCtl(ui);
     layout->addWidget(tabs, 1);
     connect(tabs, SIGNAL(tabSelected(int)), this, SLOT(notifyTabSelected(int)));
 }
@@ -234,7 +238,7 @@ PacketTabbedViewerTab::~PacketTabbedViewerTab() {
     // will destroy its interface component or not.
     //
     // If so, it's removed from the tabbed pane upon destruction and
-    // therefore won't be destroyed again.  If not, the KTabCtl
+    // therefore won't be destroyed again.  If not, the ExtTabCtl
     // destructor should take care of it.
 
     // These viewers are definitely not visible.
@@ -262,6 +266,10 @@ void PacketTabbedViewerTab::addHeader(PacketViewerTab* viewer) {
     header = viewer;
     viewer->getInterface()->reparent(ui, QPoint(0, 0));
     layout->insertWidget(0, viewer->getInterface(), 0);
+}
+
+void PacketTabbedViewerTab::setCurrentTab(int tabIndex) {
+    tabs->setCurrentTab(tabIndex);
 }
 
 regina::NPacket* PacketTabbedViewerTab::getPacket() {

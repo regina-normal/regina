@@ -374,8 +374,29 @@ void ReginaMain::readOptions(KConfig* config) {
 
     config->setGroup("Triangulation");
     globalPrefs.triEditMode = (
-        config->readEntry( "EditMode", "DirectEdit") == "Dialog" ?
-        ReginaPrefSet::Dialog : ReginaPrefSet::DirectEdit);
+        config->readEntry("EditMode") == "Dialog" ?
+        ReginaPrefSet::Dialog : ReginaPrefSet::DirectEdit /* default */);
+
+    QString str = config->readEntry("InitialTab");
+    if (str == "Skeleton")
+        globalPrefs.triInitialTab = ReginaPrefSet::Skeleton;
+    else if (str == "Algebra")
+        globalPrefs.triInitialTab = ReginaPrefSet::Algebra;
+    else if (str == "Composition")
+        globalPrefs.triInitialTab = ReginaPrefSet::Composition;
+    else if (str == "Surfaces")
+        globalPrefs.triInitialTab = ReginaPrefSet::Surfaces;
+    else
+        globalPrefs.triInitialTab = ReginaPrefSet::Gluings; /* default */
+
+    str = config->readEntry("InitialAlgebraTab");
+    if (str == "FundGroup")
+        globalPrefs.triInitialAlgebraTab = ReginaPrefSet::FundGroup;
+    else if (str == "TuraevViro")
+        globalPrefs.triInitialAlgebraTab = ReginaPrefSet::TuraevViro;
+    else
+        globalPrefs.triInitialAlgebraTab = ReginaPrefSet::Homology; /* def. */
+
     globalPrefs.triSurfacePropsThreshold = config->readUnsignedNumEntry(
         "SurfacePropsThreshold", 6);
 
@@ -399,6 +420,29 @@ void ReginaMain::saveOptions() {
     config->writeEntry("EditMode",
         globalPrefs.triEditMode == ReginaPrefSet::DirectEdit ?
         "DirectEdit" : "Dialog");
+
+    switch (globalPrefs.triInitialTab) {
+        case ReginaPrefSet::Skeleton:
+            config->writeEntry("InitialTab", "Skeleton"); break;
+        case ReginaPrefSet::Algebra:
+            config->writeEntry("InitialTab", "Algebra"); break;
+        case ReginaPrefSet::Composition:
+            config->writeEntry("InitialTab", "Composition"); break;
+        case ReginaPrefSet::Surfaces:
+            config->writeEntry("InitialTab", "Surfaces"); break;
+        default:
+            config->writeEntry("InitialTab", "Gluings"); break;
+    }
+
+    switch (globalPrefs.triInitialAlgebraTab) {
+        case ReginaPrefSet::FundGroup:
+            config->writeEntry("InitialAlgebraTab", "FundGroup"); break;
+        case ReginaPrefSet::TuraevViro:
+            config->writeEntry("InitialAlgebraTab", "TuraevViro"); break;
+        default:
+            config->writeEntry("InitialAlgebraTab", "Homology"); break;
+    }
+
     config->writeEntry("SurfacePropsThreshold",
         globalPrefs.triSurfacePropsThreshold);
 

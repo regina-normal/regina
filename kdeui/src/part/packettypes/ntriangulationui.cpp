@@ -57,15 +57,32 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
 
     gluings->fillToolBar(header->getToolBar());
 
+    // WARNING: If these tabs are reordered, the code below that sets
+    // the default tab must be updated accordingly.
     addHeader(header);
     addTab(gluings, i18n("&Gluings"));
     addTab(new NTriSkeletonUI(packet, this), i18n("&Skeleton"));
-    addTab(new NTriAlgebraUI(packet, this), i18n("&Algebra"));
+    addTab(new NTriAlgebraUI(packet, this,
+        part->getPreferences().triInitialAlgebraTab), i18n("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), i18n("&Composition"));
     addTab(surfaces, i18n("Sur&faces"));
 
     connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
         this, SLOT(updatePreferences(const ReginaPrefSet&)));
+
+    // Select the default tab.
+    switch (part->getPreferences().triInitialTab) {
+        case ReginaPrefSet::Gluings:
+            /* already visible */ break;
+        case ReginaPrefSet::Skeleton:
+            setCurrentTab(1); break;
+        case ReginaPrefSet::Algebra:
+            setCurrentTab(2); break;
+        case ReginaPrefSet::Composition:
+            setCurrentTab(3); break;
+        case ReginaPrefSet::Surfaces:
+            setCurrentTab(4); break;
+    }
 }
 
 const QPtrList<KAction>& NTriangulationUI::getPacketTypeActions() {
