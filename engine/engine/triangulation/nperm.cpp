@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <sstream>
 #include "triangulation/nperm.h"
 
 namespace regina {
@@ -150,6 +151,29 @@ NPerm edgeOrdering(int edge) {
             return NPerm(2,3,0,1);
     }
     return NPerm();
+}
+
+std::string faceDescription(int face) {
+    return faceDescription(faceOrdering(face));
+}
+
+std::string faceDescription(const NPerm& p) {
+    std::string ans;
+    ans += ('0' + p[0]);
+    ans += ('0' + p[1]);
+    ans += ('0' + p[2]);
+    return ans;
+}
+
+std::string edgeDescription(int edge) {
+    return edgeDescription(edgeOrdering(edge));
+}
+
+std::string edgeDescription(const NPerm& p) {
+    std::string ans;
+    ans += ('0' + p[0]);
+    ans += ('0' + p[1]);
+    return ans;
 }
 
 } // namespace regina

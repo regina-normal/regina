@@ -162,8 +162,6 @@ class NPerm {
          * permutation code.  Valid permutation codes can be passed to
          * setPermCode() or NPerm(char) and are returned by getPermCode().
          *
-         * \ifaces Not present.
-         *
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
@@ -176,8 +174,6 @@ class NPerm {
          *
          * \pre \a a and \a b are in {0,1,2,3}.
          *
-         * \ifaces Not present.
-         *
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
@@ -189,8 +185,6 @@ class NPerm {
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>} = {0,1,2,3}.
          *
-         * \ifaces Not present.
-         *
          * @param a the desired image of 0.
          * @param b the desired image of 1.
          * @param c the desired image of 2.
@@ -200,8 +194,6 @@ class NPerm {
 
         /**
          * Sets this permutation to be equal to the given permutation.
-         *
-         * \ifaces Not present.
          *
          * @param cloneMe the permutation whose value will be assigned
          * to this permutation.
@@ -213,9 +205,6 @@ class NPerm {
          * permutation.  If this permutation is <i>p</i>, the
          * resulting permutation will be <i>p o q</i>, satisfying
          * <tt>(p*q)[x] == p[q[x]]</tt>.
-         *
-         * \ifaces This routine is called \a composeWith.
-         * \ifacesjython Provided as an operator overload.
          *
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
@@ -241,9 +230,6 @@ class NPerm {
          * Determines the image of the given integer under this
          * permutation.
          *
-         * \ifaces This routine is called \a imageOf.
-         * \ifacesjython Provided as an operator overload.
-         *
          * @param source the integer whose image we wish to find.  This
          * should be between 0 and 3 inclusive.
          * @return the image of \a source.
@@ -265,9 +251,6 @@ class NPerm {
          * This is true if and only if both permutations have the same
          * images for 0, 1, 2 and 3.
          *
-         * \ifaces Not present.
-         * \ifacesjython Provided as an operator overload.
-         *
          * @param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
          * are equal.
@@ -278,9 +261,6 @@ class NPerm {
          * Determines if this differs from the given permutation.
          * This is true if and only if the two permutations have
          * different images for at least one of 0, 1, 2 or 3.
-         *
-         * \ifaces Not present.
-         * \ifacesjython Provided as an operator overload.
          *
          * @param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
@@ -329,7 +309,22 @@ class NPerm {
          * @return the image of \a source.
          */
         int imageOf(int source) const;
+
+    friend std::ostream& operator << (std::ostream& out, const NPerm& p);
 };
+
+/**
+ * Writes a string representation of the given permutation to the given
+ * output stream.  The format will be the same as is used by
+ * NPerm::toString().
+ *
+ * @param out the output stream to which to write.
+ * @param p the permutation to write.
+ * @return a reference to \a out.
+ */
+inline std::ostream& operator << (std::ostream& out, const NPerm& p) {
+    return (out << p.toString());
+}
 
 // Constants
 
@@ -340,8 +335,6 @@ class NPerm {
  * permutations.
  *
  * Note that the permutations are not necessarily in lexicographical order.
- *
- * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm allPermsS4[24];
 
@@ -350,16 +343,12 @@ extern const NPerm allPermsS4[24];
  *
  * Specifically, the inverse of permutation <tt>allPermsS4[i]</tt> is
  * permutation <tt>allPermsS4[ allPermsS4Inv[i] ]</tt>.
- *
- * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const unsigned allPermsS4Inv[24];
 
 /**
  * Contains all possible permutations of four elements in
  * lexicographical order.
- *
- * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm orderedPermsS4[24];
 
@@ -371,8 +360,6 @@ extern const NPerm orderedPermsS4[24];
  * permutations.
  *
  * Note that the permutations are not necessarily in lexicographical order.
- *
- * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm allPermsS3[6];
 
@@ -381,8 +368,6 @@ extern const NPerm allPermsS3[6];
  *
  * Specifically, the inverse of permutation <tt>allPermsS3[i]</tt> is
  * permutation <tt>allPermsS3[ allPermsS3Inv[i] ]</tt>.
- *
- * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const unsigned allPermsS3Inv[6];
 
@@ -390,8 +375,6 @@ extern const unsigned allPermsS3Inv[6];
  * Contains all possible permutations of three elements in
  * lexicographical order.
  * In each permutation, 3 maps to 3.
- *
- * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm orderedPermsS3[6];
 
@@ -403,8 +386,6 @@ extern const NPerm orderedPermsS3[6];
  * permutations.
  *
  * Note that the permutations are also in lexicographical order.
- *
- * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm allPermsS2[2];
 
@@ -413,8 +394,6 @@ extern const NPerm allPermsS2[2];
  *
  * Specifically, the inverse of permutation <tt>allPermsS2[i]</tt> is
  * permutation <tt>allPermsS2[ allPermsS2Inv[i] ]</tt>.
- *
- * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const unsigned allPermsS2Inv[2];
 
@@ -426,8 +405,6 @@ extern const unsigned allPermsS2Inv[2];
  * given tetrahedron face in their canonical order.  The images of
  * (0,1,2) will be the vertex numbers of the vertices that make up the
  * given face of a generic tetrahedron.
- *
- * \ifacesjava This routine is a static member of class \a NPerm.
  *
  * @param face a face number in a tetrahedron.  This should be between 0
  * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
@@ -446,8 +423,6 @@ NPerm faceOrdering(int face);
  * The images of 2 and 3 in the returned permutation will be chosen so
  * that the permutation will be even.
  *
- * \ifacesjava This routine is a static member of class \a NPerm.
- *
  * @param edge an edge number in a tetrahedron.  This should be between 0
  * and 5 inclusive.  The constant arrays \c edgeNumber, \c edgeStart and
  * \c edgeEnd describe which vertex numbers are joined by which edge
@@ -463,41 +438,28 @@ NPerm edgeOrdering(int edge);
  * canonical order, as described in faceOrdering().
  * Only the images of 0, 1 and 2 will be put in the string.
  *
- * \ifacescpp Not present.
- * \ifacesjava This routine is a static member of class \a NPerm.
- *
  * @param face a face number in a tetrahedron.  This should be between 0
  * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
  * <i>i</i>.
  * @return a string representing the
  * canonical ordering of vertices in the given face.
  */
-#ifdef __DOXYGEN
 std::string faceDescription(int face);
-#endif
 
 /**
  * Returns a string representation of the given permutation with only
  * the images of 0, 1 and 2 included.
  *
- * \ifacescpp Not present.
- * \ifacesjava This routine is a static member of class \a NPerm.
- *
  * @param facePerm the permutation to represent.
  * @return a restricted string representation of the given permutation.
  */
-#ifdef __DOXYGEN
 std::string faceDescription(const NPerm& facePerm);
-#endif
 
 /**
  * Returns a string representation of the permutation mapping
  * (0,1) to the vertices of the given tetrahedron edge in their
  * canonical order, as described in edgeOrdering().
  * Only the images of 0 and 1 will be put in the string.
- *
- * \ifacescpp Not present.
- * \ifacesjava This routine is a static member of class \a NPerm.
  *
  * @param edge an edge number in a tetrahedron.  This should be between 0
  * and 5 inclusive.  The constant arrays \c edgeNumber, \c edgeStart and
@@ -506,23 +468,16 @@ std::string faceDescription(const NPerm& facePerm);
  * @return a string representing the canonical ordering of
  * vertices in the given edge.
  */
-#ifdef __DOXYGEN
 std::string edgeDescription(int edge);
-#endif
 
 /**
  * Returns a string representation of the given permutation with only
  * the images of 0 and 1 included.
  *
- * \ifacescpp Not present.
- * \ifacesjava This routine is a static member of class \a NPerm.
- *
  * @param edgePerm the permutation to represent.
  * @return a restricted string representation of the given permutation.
  */
-#ifdef __DOXYGEN
 std::string edgeDescription(const NPerm& edgePerm);
-#endif
 
 /*@}*/
 
