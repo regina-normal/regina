@@ -64,9 +64,9 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
     protected Shell shell;
 
     /**
-     * The system pane in which we are working.
+     * The topology pane in which we are working.
      */
-    protected SystemPane system;
+    protected TopologyPane system;
 
     /**
      * Is it possible that this algorithm might edit the packet upon
@@ -154,7 +154,7 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
      * @param event contains details of the event that occurred.
      */
     public void actionPerformed(ActionEvent event) {
-        system = shell.getNormalFrame().currentSystem();
+        system = shell.getNormalFrame().getCurrentTopologyPane();
         if (system == null)
             return;
         PacketTreeNode node = system.getSelectedNode();

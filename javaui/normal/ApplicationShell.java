@@ -251,6 +251,9 @@ public class ApplicationShell extends Shell {
     public boolean shouldShowSplashScreen() {
         return (! textOnly);
     }
+	public boolean mayAccessFiles() {
+		return (getEngine().style() == engineJNI);
+	}
     public boolean mayUseJython() {
         return true;
     }

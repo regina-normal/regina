@@ -35,10 +35,11 @@ import btools.image.StandardImage;
  */
 public class Images {
     /**
-     * A button used to create a new file.
+     * A button used to create a new topology file.
      */
-    public static final StandardImage btnFileNew =
-        new StandardImage("normal/images/buttons/fileNew.gif", Images.class);
+    public static final StandardImage btnFileNewTopology =
+        new StandardImage("normal/images/buttons/fileNewTopology.gif",
+		Images.class);
     /**
      * A button representing a Jython console.
      */

@@ -38,7 +38,17 @@ Regina - A Normal Surface Theory Calculator
               the Jython work.
         normal.console.JPythonConsoleFrame:
             - Allows saving the contents of the console to a file.
-        normal.mainui.SystemPane:
+        normal.engine.implementation.corba.CORBAEngine:
+            - Better error handling.
+        normal.mainui:
+            - Renamed SystemPane to TopologyPane and moved generic file
+              editing functionality into FilePane to allow for editing
+              different file types.
+            - Much all-round cleaning up.
+        normal.mainui.NormalFrame:
+            - More appropriate enabling/disabling of menu items and buttons.
+            - Edit menu hooks into current working file.
+        normal.mainui.TopologyPane:
             - Fixed the bug where double clicking on a tree item opens
               it three times.
             - Fixed bugs in the various fire... routines.

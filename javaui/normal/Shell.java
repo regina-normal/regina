@@ -321,6 +321,12 @@ public abstract class Shell {
      * screen.
      */
     public abstract boolean shouldShowSplashScreen();
+	/**
+	 * Do we have access to the local filesystem?
+	 *
+	 * @return <tt>true</tt> if and only if we have local file access.
+	 */
+	public abstract boolean mayAccessFiles();
     /**
      * Are we even allowed to try to locate the Jython classes?
      *
