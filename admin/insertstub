@@ -1,0 +1,182 @@
+#!/usr/bin/perl -w
+#
+# Regina - A Normal Surface Theory Calculator
+# Source Stub Update Utility
+#
+# Copyright (c) 1999-2002, Ben Burton
+# For further details contact Ben Burton (benb@acm.org).
+#
+# Usage: insertstub <stub-file> [ <text-file> ... ]
+#
+# Replaces the copyright/license stub at the beginning of each given file
+# with the given stub file.
+#
+# The end of a stub is signalled by the single-line sentry comment "end stub".
+# If a source file does not contain such a comment, the file will not be
+# modified.
+#
+# The given stub file should be commented in C style (/* ... */).
+# The new stub will be commented in the same style as the sentry.
+#
+# This file is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This file is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+
+use strict;
+
+# --- Command-line sanity check. ---
+
+my $nArgs = @ARGV;
+if ($nArgs < 2) {
+    print STDERR "Usage: insertstub <stub-file> [ <text-file> ... ]\n";
+    exit(1);
+}
+
+my $stubFile;
+my @argFiles;
+
+($stubFile, @argFiles) = @ARGV;
+
+# --- Read the stub file. ---
+
+if (! open(DATA, $stubFile)) {
+    print STDERR "ERROR: Could not open $stubFile for reading.\n";
+    exit(1);
+}
+my @stubLines = <DATA>;
+close(DATA);
+
+# --- Run through each file to process. ---
+
+foreach my $file (@argFiles) {
+    # Read the file contents.
+    if (! open(DATA, $file)) {
+        print STDERR "ERROR: Could not open $file for reading.\n";
+        next;
+    }
+    my @lines = <DATA>;
+    close(DATA);
+
+    # Hunt for a sentry.
+    my @upperLines = ();
+    my $sentryLine = '';
+    my @lowerLines = ();
+    my $changed = 0;
+    my $sentryStyle;
+    my @newStubLines = ();
+
+    foreach my $line (@lines) {
+        if ($sentryLine) {
+            push(@lowerLines, $line);
+            next;
+        }
+
+        # We're still looking for the sentry.
+        if ($line =~ /^\s*\/\*\s*end stub\s*\*\/\s*$/) {
+            $sentryLine = $line;
+            $sentryStyle = '/*';
+        } elsif ($line =~ /^\s*\/\/\s*end stub\s*$/) {
+            $sentryLine = $line;
+            $sentryStyle = '//';
+        } elsif ($line =~ /^\s*#\s*end stub\s*$/) {
+            $sentryLine = $line;
+            $sentryStyle = '#';
+        }
+
+        # Did we find a sentry?
+        if ($sentryLine) {
+            # Create a new stub.
+            # Make sure the new stub is correctly commented.
+            my $stubLine;
+            if ($sentryStyle eq '//') {
+                foreach (@stubLines) {
+                    $stubLine = $_;
+                    if ($stubLine =~ /^(\s*\/\**)\s*$/) {
+                        # Head of block.
+                        $stubLine = "$1/\n";
+                        $stubLine =~ s/\*/\//g;
+                    } elsif ($stubLine =~ /^(\s*) (\**\/)\s*$/) {
+                        # Tail of block.
+                        $stubLine = "$1/$2\n";
+                        $stubLine =~ s/\*/\//g;
+                    } elsif ($stubLine =~ /^(\s*) \*(.*)\*\s*$/) {
+                        # Line in block interior.
+                        $stubLine = "$1//$2//\n";
+                    }
+                    push(@newStubLines, $stubLine);
+                }
+            } elsif ($sentryStyle eq '#') {
+                foreach (@stubLines) {
+                    $stubLine = $_;
+                    if ($stubLine =~ /^(\s*)\/(\**)\s*$/) {
+                        # Head of block.
+                        $stubLine = "$1$2\n";
+                        $stubLine =~ s/\*/#/g;
+                    } elsif ($stubLine =~ /^(\s*) (\**)\/\s*$/) {
+                        # Tail of block.
+                        $stubLine = "$1$2\n";
+                        $stubLine =~ s/\*/#/g;
+                    } elsif ($stubLine =~ /^(\s*) \*(.*)\*\s*$/) {
+                        # Line in block interior.
+                        $stubLine = "$1#$2#\n";
+                    }
+                    push(@newStubLines, $stubLine);
+                }
+            } else {
+                push (@newStubLines, $_) foreach (@stubLines);
+            }
+
+            # Has anything changed?
+            if (arraysAreEqual(\@upperLines, \@newStubLines)) {
+                last;
+            } else {
+                $changed = 1;
+            }
+        } else {
+            # Haven't found a sentry yet.
+            push(@upperLines, $line);
+        }
+    }
+
+    if ($changed) {
+        if (! open(DATA, '>'.$file)) {
+            print STDERR "ERROR: Could not open $file for writing.\n";
+            next;
+        }
+
+        print DATA $_ foreach (@newStubLines);
+        print DATA $sentryLine;
+        print DATA $_ foreach (@lowerLines);
+
+        close(DATA);
+        print "REPLACED: $file.\n";
+    } elsif ($sentryLine) {
+        # print "Unchanged: $file.\n";
+    } else {
+        print "NO SENTRY: $file.\n";
+    }
+}
+
+sub arraysAreEqual {
+    # This routine is taken from the perl man pages.
+    my ($first, $second) = @_;
+    no warnings;
+    return 0 unless @$first == @$second;
+    for (my $i = 0; $i < @$first; $i++) {
+        return 0 if $first->[$i] ne $second->[$i];
+    }
+    return 1;
+}
+
