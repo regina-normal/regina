@@ -206,7 +206,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     for (i=0; i<32*numOldTet; i++)
         addTetrahedron(newTet[i]);
     
-    gluingsHaveChanged();
+    calculateSkeleton();
     
     // Remove the tetrahedra that meet any of the non-standard or
     // ideal vertices.
