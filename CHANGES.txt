@@ -138,6 +138,6 @@ Version 2.1.1
 Version 2.1.0
     (Initial release.)
 
-Ben Burton (benb@acm.org).
-http://sourceforge.net/projects/regina/
+Ben Burton <benb@acm.org>.
+http://regina.sourceforge.net/
 
