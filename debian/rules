@@ -8,7 +8,10 @@
 # This is the debhelper compatability version to use.
 export DH_COMPAT=3
 
+jarversion = 2.2
+
 tmp = debian/tmp
+javadir = $(tmp)/usr/share/java
 regdir = $(tmp)/usr/share/regina-normal
 jnidir = $(tmp)/usr/lib/regina-normal/lib
 pixmaps = $(tmp)/usr/share/pixmaps
@@ -61,9 +64,25 @@ install: build
 	dh_installdirs
 
 	# Install the UI jars.
+	$(INSTALL_DIR) $(javadir)
 	$(INSTALL_DIR) $(regdir)/jar
-	$(INSTALL_FILE) bin/*.jar $(regdir)/jar
+	$(INSTALL_FILE) bin/regina.jar \
+		$(javadir)/regina-normal-$(jarversion).jar
+	$(INSTALL_FILE) bin/regina-jni.jar \
+		$(javadir)/regina-normal-jni-$(jarversion).jar
+	$(INSTALL_FILE) bin/regina-docs.jar \
+		$(javadir)/regina-normal-docs-$(jarversion).jar
 
+	# Create symlinks for jars.
+	for i in regina-normal regina-normal-jni regina-normal-docs; do \
+		ln -s $$i-$(jarversion).jar $(javadir)/$$i.jar; done
+	ln -s ../../java/regina-normal-$(jarversion).jar \
+		$(regdir)/jar/regina.jar
+	ln -s ../../java/regina-normal-jni-$(jarversion).jar \
+		$(regdir)/jar/regina-jni.jar
+	ln -s ../../java/regina-normal-docs-$(jarversion).jar \
+		$(regdir)/jar/regina-docs.jar
+	
 	# Install the JNI library.
 	$(INSTALL_DIR) $(jnidir)
 	$(INSTALL_FILE) bin/*.so $(jnidir)

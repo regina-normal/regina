@@ -1,7 +1,15 @@
 etc/regina-normal/regina.conf
 usr/bin/regina-normal
 usr/lib/regina-normal
-usr/share/regina-normal
+usr/share/java/regina-normal.jar
+usr/share/java/regina-normal-2.2.jar
+usr/share/java/regina-normal-jni.jar
+usr/share/java/regina-normal-jni-2.2.jar
+usr/share/regina-normal/jar/regina.jar
+usr/share/regina-normal/jar/regina-jni.jar
+usr/share/regina-normal/icons
+usr/share/regina-normal/scripts
+usr/share/regina-normal/regina
 usr/share/man/man1/regina-normal.1
 usr/share/man/man5/regina.conf.5
 usr/share/lintian/overrides/regina-normal
