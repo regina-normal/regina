@@ -371,7 +371,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QVBox(parent) {
     QWhatsThis::add(cbAutoDock, i18n("Try to dock new packet viewers into "
         "the main window instead of opening them in new windows."));
 
-    cbDisplayIcon = new QCheckBox(i18n("Display icon"), this);
+    cbDisplayIcon = new QCheckBox(i18n("Display large icon"), this);
     QWhatsThis::add(cbDisplayIcon, i18n("Display the large Regina icon "
         "beneath the packet tree."));
 
