@@ -175,6 +175,7 @@ KDE_CHECK_THREADING
 if test "$kde_use_threading" != "yes"; then
   REGINA_ERR_MISSING([POSIX pthread support], [the calculation engine])
 fi
+LDFLAGS="$LDFLAGS $USE_THREADS"
 
 # The libxml2 check seems to need to be done under C, not C++.
 AC_LANG_PUSH(C)
@@ -228,7 +229,7 @@ ENGINE_INCLUDES="-I\$(top_srcdir)/engine/engine $XML_CFLAGS"
 AC_SUBST(ENGINE_INCLUDES)
 
 # Libraries required by the calculation engine.
-ENGINE_LIBS="$XML_LIBS"
+ENGINE_LIBS="$XML_LIBS $LIBPTHREAD"
 AC_SUBST(ENGINE_LIBS)
 
 # Additional libraries required by the test suite.
