@@ -266,11 +266,15 @@ class NProperty :
          * marked as known.
          *
          * @param newValue the new value to assign to this property.
+         * @return the new value of this property.
          */
-        void operator = (InitType newValue) {
+        QueryType operator = (InitType newValue) {
             Storage<T>::clear();
+
             value_ = newValue;
             known_ = true;
+
+            return value_;
         }
 
         /**
@@ -280,12 +284,21 @@ class NProperty :
          * property will be marked as unknown.
          *
          * @param newValue the property to copy into this property.
+         * @return a reference to this property.
          */
-        void operator = (const NProperty<T, Storage>& newValue) {
+        const NProperty<T, Storage>& operator = (
+                const NProperty<T, Storage>& newValue) {
             Storage<T>::clear();
+
+            // Use the value() query so that we initialise from
+            // QueryType, not from the held type.  This means that if
+            // the value shouldn't be copied directly (e.g., with
+            // StoreManagedPtr) then we'll get a compile error.
             if (newValue.known_)
-                value_ = newValue.value_;
+                value_ = newValue.value();
             known_ = newValue.known_;
+
+            return *this;
         }
 
         // NPropertyBase overrides:
