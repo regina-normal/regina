@@ -76,6 +76,30 @@ int getInt(const char* prompt, int min, int max) {
     }
 }
 
+bool getBool(const char* prompt, char trueChar, char falseChar) {
+    trueChar = tolower(trueChar);
+    falseChar = tolower(falseChar);
+
+    std::string token;
+    while (true) {
+        cout << prompt;
+        cin >> token;
+
+        if (token.empty()) {
+            cerr << "Unexpected end of standard input.\n";
+            exit(1);
+        }
+
+        if (tolower(token[0]) == trueChar)
+            return true;
+        else if (tolower(token[0]) == falseChar)
+            return false;
+        else
+            cout << "Your response should be '" << trueChar << "' or '"
+                << falseChar << "'.\n";
+    }
+}
+
 NBoolSet getBoolSet(const char* prompt, const char* keyDescs,
         const char keys[3]) {
     std::string token;
@@ -118,6 +142,8 @@ int main(int argc, char* argv[]) {
     if (boundary.hasTrue())
         nBdryFaces = getInt("Number of boundary faces (-1 for any): ",
             -1, 2 * nTetrahedra + 2);
+    bool purgeNonMinimal = getBool(
+        "Throw away obviously non-minimal triangulations (y/n)? ", 'y', 'n');
 
     // Build the packet tree.
     regina::NContainer parent;
@@ -149,6 +175,8 @@ int main(int argc, char* argv[]) {
     if (nBdryFaces >= 0)
         descStream << "Requires precisely " << nBdryFaces <<
             " boundary faces.\n";
+    if (purgeNonMinimal)
+        descStream << "Ignored obviously nom-minimal triangulations.\n";
     desc->setText(descStream.str());
 
     regina::NContainer* census = new regina::NContainer();
@@ -159,8 +187,9 @@ int main(int argc, char* argv[]) {
 
     // Start the census running.
     regina::NProgressManager manager;
-    regina::formCensus(census, nTetrahedra, finiteness, orientability,
-        boundary, nBdryFaces, &manager);
+    regina::NCensus::formCensus(census, nTetrahedra, finiteness, orientability,
+        boundary, nBdryFaces,
+        (purgeNonMinimal ? regina::NCensus::mightBeMinimal : 0), 0, &manager);
 
     // Output progress and wait for the census to finish.
     while (! manager.isStarted())

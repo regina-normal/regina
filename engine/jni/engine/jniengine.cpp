@@ -65,11 +65,11 @@ REGJNIEXPORT jlong JNICALL
         (JNIEnv *env, jobject, jobject parent, jint nTets,
         jchar flag1, jchar flag2, jchar flag3, jint nBdryFaces,
         jobject manager) {
-    return formCensus(GET_ENGINE_OBJECT(env, NPacket, parent), nTets,
+    return NCensus::formCensus(GET_ENGINE_OBJECT(env, NPacket, parent), nTets,
         NBoolSet::fromByteCode(flag1),
         NBoolSet::fromByteCode(flag2),
         NBoolSet::fromByteCode(flag3),
-        nBdryFaces, GET_ENGINE_OBJECT(env, NProgressManager, manager));
+        nBdryFaces, 0, 0, GET_ENGINE_OBJECT(env, NProgressManager, manager));
 }
 
 REGJNIEXPORT jobject JNICALL

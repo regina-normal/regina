@@ -35,16 +35,16 @@
 
 namespace regina {
 
-unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
+unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
-        int nBdryFaces, NProgressManager* manager) {
-    // Bail if obviously nothing is going to happen but we won't realise
-    // it until we've actually generated the face pairings.
-    if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone) {
-        if (manager)
-            manager->setProgress(new NProgressFinished());
-        return 0;
-    }
+        int nBdryFaces, AcceptTriangulation sieve, void* sieveArgs,
+        NProgressManager* manager) {
+    // If obviously nothing is going to happen but we won't realise
+    // it until we've actually generated the face pairings, change
+    // nTetrahedra to 0 so we'll realise it immediately once the new
+    // thread starts.
+    if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone)
+        nTetrahedra = 0;
 
     // Start the census!
     NProgressMessage* progress;
@@ -56,7 +56,7 @@ unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
         progress = 0;
 
     NCensus* census = new NCensus(parent, nTetrahedra, finiteness,
-        orientability, progress);
+        orientability, sieve, sieveArgs, progress);
     
     if (manager) {
         NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
@@ -73,9 +73,11 @@ unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
 
 NCensus::NCensus(NPacket* newParent, unsigned nTetrahedra,
         const NBoolSet& newFiniteness, const NBoolSet& newOrientability,
+        AcceptTriangulation newSieve, void* newSieveArgs,
         NProgressMessage* newProgress) : parent(newParent),
         finiteness(newFiniteness), orientability(newOrientability),
-        progress(newProgress), whichSoln(1) {
+        sieve(newSieve), sieveArgs(newSieveArgs), progress(newProgress),
+        whichSoln(1) {
 }
 
 void NCensus::foundFacePairing(const NFacePairing* pairing,
@@ -116,6 +118,9 @@ void NCensus::foundGluingPerms(const NGluingPerms* perms, void* census) {
             ok = false;
         else if ((! realCensus->orientability.hasTrue()) && tri->isOrientable())
             ok = false;
+        else if (realCensus->sieve &&
+                ! realCensus->sieve(tri, realCensus->sieveArgs))
+            ok = false;
 
         if (ok) {
             // Put it in the census!
@@ -131,6 +136,25 @@ void NCensus::foundGluingPerms(const NGluingPerms* perms, void* census) {
             delete tri;
         }
     }
+}
+
+bool NCensus::mightBeMinimal(NTriangulation* tri, void*) {
+    if (! tri->hasBoundaryFaces()) {
+        // No boundary faces.
+        
+        // Tests specific to closed finite orientable triangulations:
+        if (tri->isOrientable() && (! tri->isIdeal())) {
+            // Check for too many vertices.
+            if (tri->getNumberOfVertices() > 1 &&
+                    tri->getNumberOfTetrahedra() > 2)
+                return false;
+        }
+
+        // Check for obvious simplifications.
+        if (tri->intelligentSimplify())
+            return false;
+    }
+    return true;
 }
 
 } // namespace regina

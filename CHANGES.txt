@@ -10,6 +10,12 @@ Regina - A Normal Surface Theory Calculator
 
 Version 3.1  [ (under development) ]
     ENGINE:
+        Class NCensus:
+            - Redesigned to do its work through classes NFacePairing and
+              NGluingPerms.
+            - Added support for arbitrary criterion functions.
+        Class NFacePairing, NGluingPerms:
+            - Added to bear the brunt of census generation.
         File nperm.h:
             - New arrays allPermsS2Inv, allPermsS3Inv, allPermsS4Inv.
 
