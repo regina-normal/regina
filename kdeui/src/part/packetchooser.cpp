@@ -34,6 +34,7 @@
 #include "packetfilter.h"
 #include "packetmanager.h"
 
+#include <algorithm>
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -41,20 +42,23 @@ using regina::NPacket;
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(0) {
+        KComboBox(parent, name), subtree(newSubtree), filter(0),
+        onAutoUpdate(false) {
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(newFilter) {
+        KComboBox(parent, name), subtree(newSubtree), filter(newFilter),
+        onAutoUpdate(false) {
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, bool allowNone,
         regina::NPacket* initialSelection, QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(newFilter) {
+        KComboBox(parent, name), subtree(newSubtree), filter(newFilter),
+        onAutoUpdate(false) {
     fill(allowNone, initialSelection);
 }
 
@@ -70,6 +74,50 @@ NPacket* PacketChooser::selectedPacket() {
         return packets[currentItem()];
 }
 
+void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
+    if (onAutoUpdate == shouldAutoUpdate)
+        return;
+
+    onAutoUpdate = shouldAutoUpdate;
+    if (onAutoUpdate)
+        for (std::vector<regina::NPacket*>::iterator it = packets.begin();
+                it != packets.end(); it++)
+            if (*it)
+                (*it)->listen(this);
+    else
+        unregisterFromAllPackets();
+}
+
+void PacketChooser::packetWasRenamed(regina::NPacket* renamed) {
+    // Just rename the item that was changed.
+    std::vector<regina::NPacket*>::iterator it = std::find(
+        packets.begin(), packets.end(), renamed);
+
+    if (it != packets.end())
+        changeItem(PacketManager::iconSmall(renamed),
+            renamed->getPacketLabel().c_str(), it - packets.begin());
+}
+
+void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
+    // Just remove the item that is being destroyed.
+    std::vector<regina::NPacket*>::iterator it = std::find(
+        packets.begin(), packets.end(), toDestroy);
+
+    if (it != packets.end()) {
+        long destroyIndex = it - packets.begin();
+        bool destroyCurrent = (destroyIndex == currentItem());
+
+        removeItem(destroyIndex);
+        if (destroyCurrent && count() > 0)
+            setCurrentItem(0);
+
+        packets.erase(it);
+
+        // Don't bother unlistening; this will happen in the packet
+        // destructor anyway.
+    }
+}
+
 void PacketChooser::refreshContents() {
     // Remember how it used to look.
     NPacket* remember = selectedPacket();
@@ -77,6 +125,9 @@ void PacketChooser::refreshContents() {
 
     // Empty the combo box.
     // Empty from the end in case it's stored as a vector deep inside.
+    if (onAutoUpdate)
+        unregisterFromAllPackets();
+
     while (count())
         removeItem(count() - 1);
     packets.clear();
@@ -102,6 +153,8 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
             insertItem(PacketManager::iconSmall(p),
                 p->getPacketLabel().c_str());
             packets.push_back(p);
+            if (onAutoUpdate)
+                p->listen(this);
             if (p == select)
                 setCurrentItem(count() - 1);
         }

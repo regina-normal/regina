@@ -49,9 +49,9 @@ namespace regina {
  * subtree.  An optional filter may be applied to the subtree to
  * restrict the available selections.
  *
- * Note that the contents of the packet chooser will not be updated in
- * real time if the packet tree is externally modified.  The routine
- * refreshContents() is provided to allow the contents to be manually
+ * Note that by default the contents of the packet chooser will not be
+ * updated in real time if the packet tree is externally modified.  The
+ * routine refreshContents() is provided to allow the contents to be manually
  * updated.
  *
  * In particular, if it is possible that the selected packet will be
@@ -59,8 +59,18 @@ namespace regina {
  * call refreshContents() before extracting the packet with selectedPacket().
  * This way the selected packet will be replaced with 0 if it has since
  * been destroyed.
+ *
+ * By calling setAutoUpdate(), a packet chooser can be modified to
+ * update itself automatically in response to packets being renamed or
+ * deleted.  However, packet insertions will still go ignored, i.e., no new
+ * packets will be automatically added to the chooser.
+ *
+ * If auto update is on and the selected packet is destroyed,
+ * the first option in the combo box will be selected.  Note however
+ * that no activated() signal will be emitted since this change was not
+ * a result of direct user interaction.
  */
-class PacketChooser : public KComboBox {
+class PacketChooser : public KComboBox, public regina::NPacketListener {
     Q_OBJECT
 
     private:
@@ -72,6 +82,9 @@ class PacketChooser : public KComboBox {
         std::vector<regina::NPacket*> packets;
             /**< A list of the packets corresponding to the available
                  entries in the packet chooser. */
+
+        bool onAutoUpdate;
+            /**< Are listening for changes to the packet tree? */
 
     public:
         /**
@@ -109,6 +122,19 @@ class PacketChooser : public KComboBox {
          * available packets to choose from, this routine will return 0.
          */
         regina::NPacket* selectedPacket();
+
+        /**
+         * Set whether this packet chooser should update itself
+         * automatically in response to its packets being deleted or
+         * renamed.  This feature is disabled by default.
+         */
+        void setAutoUpdate(bool shouldAutoUpdate);
+
+        /**
+         * NPacketListener overrides.
+         */
+        void packetWasRenamed(regina::NPacket* packet);
+        void packetToBeDestroyed(regina::NPacket* packet);
 
     public slots:
         /**

@@ -52,7 +52,7 @@ using regina::NPacket;
 
 NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
-        PacketEditorTab(useParentUI), surfaces(packet),
+        PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0)
         isReadWrite(readWrite), currentlyResizing(false) {
     // Set up the UI.
 
@@ -68,8 +68,8 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     coords = new CoordinateChooser(ui);
     coords->insertAllViewers(surfaces);
     coords->setCurrentSystem(surfaces->getFlavour());
+    connect(coords, SIGNAL(activated(int)), this, SLOT(refresh()));
     hdrLayout->addWidget(coords);
-    // TODO: Listen for actions on the coordinate box.
 
     hdrLayout->addStretch(1);
 
@@ -77,11 +77,9 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     hdrLayout->addWidget(new QLabel(i18n("Apply filter:"), ui));
     filter = new PacketChooser(surfaces->getTreeMatriarch(),
         new SingleTypeFilter<regina::NSurfaceFilter>(), true, 0, ui);
+    filter->setAutoUpdate(true);
+    connect(filter, SIGNAL(activated(int)), this, SLOT(refresh()));
     hdrLayout->addWidget(filter);
-    // TODO: Make sure the chooser refreshes itself whenever it receives
-    // the focus.
-    // TODO: Listen for actions on the filter selector (and refresh
-    // the chooser before performing any such actions).
 
     uiLayout->addSpacing(5);
 
@@ -128,6 +126,18 @@ void NSurfaceCoordinateUI::commit() {
 }
 
 void NSurfaceCoordinateUI::refresh() {
+    // Update the current filter.
+    filter->refreshContents();
+
+    if (filter->selectedPacket() != appliedFilter) {
+        if (appliedFilter)
+            appliedFilter->unlisten(this);
+        appliedFilter = dynamic_cast<regina::NSurfaceFilter*>(
+            filter->selectedPacket());
+        if (appliedFilter)
+            appliedFilter->listen(this);
+    }
+
     // Remove the old table.
     table.reset(0);
 
@@ -163,6 +173,12 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
     }
 
     updateCrushState();
+}
+
+void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket* packet) {
+    // Our currently applied filter is about to be destroyed.
+    filter->setCurrentItem(0); // (i.e., None)
+    refresh();
 }
 
 void NSurfaceCoordinateUI::crush() {
