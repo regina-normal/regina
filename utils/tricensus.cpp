@@ -38,7 +38,7 @@
 #include "progress/nprogressmanager.h"
 
 // Constants.
-const long MAXTET = 10;
+const long MAXTET = 15;
 const unsigned SLEEP_SECONDS = 1;
 
 // Census parameters.
@@ -75,8 +75,20 @@ regina::NText* parameterPacket() {
 
     if (usePairs)
         descStream << "Only used a subset of all available face pairings.\n";
+    else {
+        descStream << nTet << (nTet == 1 ? " tetrahedron\n" : " tetrahedra\n");
 
-    descStream << nTet << (nTet == 1 ? " tetrahedron\n" : " tetrahedra\n");
+        if (boundary == regina::NBoolSet::sTrue)
+            descStream << "Boundary faces only\n";
+        else if (boundary == regina::NBoolSet::sFalse)
+            descStream << "No boundary faces only\n";
+        else
+            descStream << "With and without boundary faces\n";
+
+        if (nBdryFaces >= 0)
+            descStream << "Requires precisely " << nBdryFaces <<
+                " boundary faces\n";
+    }
 
     if (finiteness == regina::NBoolSet::sTrue)
         descStream << "Finite only\n";
@@ -91,17 +103,6 @@ regina::NText* parameterPacket() {
         descStream << "Non-orientable only\n";
     else
         descStream << "Orientable and non-orientable\n";
-
-    if (boundary == regina::NBoolSet::sTrue)
-        descStream << "Boundary faces only\n";
-    else if (boundary == regina::NBoolSet::sFalse)
-        descStream << "No boundary faces only\n";
-    else
-        descStream << "With and without boundary faces\n";
-
-    if (nBdryFaces >= 0)
-        descStream << "Requires precisely " << nBdryFaces <<
-            " boundary faces\n";
 
     if (minimal)
         descStream << "Ignored obviously non-minimal triangulations\n";
@@ -176,6 +177,21 @@ int main(int argc, const char* argv[]) {
     if ((! genPairs) && outFile.empty()) {
         std::cerr << "An output file must be specified.\n";
         broken = true;
+    } else if (genPairs && (argOr || argNor)) {
+        std::cerr << "Orientability options cannot be used with -p/--pairs.\n";
+        broken = true;
+    } else if (genPairs && (argFinite || argIdeal)) {
+        std::cerr << "Finiteness options cannot be used with -p/--pairs.\n";
+        broken = true;
+    } else if (genPairs && minimal) {
+        std::cerr << "Minimality options cannot be used with -p/--pairs.\n";
+        broken = true;
+    } else if (usePairs && nTet) {
+        std::cerr << "Tetrahedron options cannot be used with -P/--usepairs.\n";
+        broken = true;
+    } else if (usePairs && (argBdry || argNoBdry || (nBdryFaces != -1))) {
+        std::cerr << "Boundary options cannot be used with -P/--usepairs.\n";
+        broken = true;
     } else if ((! usePairs) && nTet == 0) {
         std::cerr << "The number of tetrahedra must be specified using "
             << "option -t/--tetrahedra.\n";
@@ -183,10 +199,6 @@ int main(int argc, const char* argv[]) {
     } else if ((! usePairs) && (nTet < 1 || nTet > MAXTET)) {
         std::cerr << "The number of tetrahedra must be between 1 and "
             << MAXTET << " inclusive.\n";
-        broken = true;
-    } else if (usePairs && nTet) {
-        std::cerr << "Options -P/--usepairs and -t/--tetrahedra "
-            << "cannot be used together.\n";
         broken = true;
     } else if (argBdry && argNoBdry) {
         std::cerr << "Options -b/--boundary and -i/--internal "
