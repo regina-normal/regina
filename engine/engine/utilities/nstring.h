@@ -99,9 +99,6 @@ class NString {
              *   NString::strError, which will specify what type of error
              *   has occurred. */
 
-        static std::hash<const char*> hashFunc;
-            /**< Calculates string hash values. */
-
     public:
         /**
          * Creates a new empty string.
@@ -506,10 +503,6 @@ inline int NString::operator != (const NString& str) const {
 
 inline char NString::operator [] (unsigned pos) const {
     return txt[pos];
-}
-
-inline size_t NString::hashValue() const {
-    return hashFunc(txt);
 }
 
 #endif

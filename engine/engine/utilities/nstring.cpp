@@ -476,3 +476,13 @@ ostream& operator << (ostream& output, const NString& str) {
     return output;
 }
 
+size_t NString::hashValue() const {
+    // Clone the STL hash function for now until we replace NString
+    // completely with a standard string class.
+
+    unsigned long ans = 0;
+    for (unsigned index = 0; index < len; ++index)
+        ans = 5 * ans + txt[index];
+    return size_t(ans);
+}
+
