@@ -27,16 +27,18 @@ EXTRA_DIST = \
 stubs :
 	./insertstub stubs/engine \
 		`find ../engine -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
-	./insertstub stubs/javaui `find ../javaui -name "*.java"`
+	./insertstub stubs/kdeui \
+		`find ../kdeui -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
+	./insertstub stubs/python \
+		`find ../python -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
 	./insertstub stubs/testsuite \
 		`find ../testsuite -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
 
 tabs :
 	./replacetabs `find .. -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
-	./replacetabs `find .. -name "*.java"`
 	./replacetabs `find .. -name "*.txt"`
-	./replacetabs ../docs/*.sgml
+	./replacetabs ../kdeui/doc/en/*.docbook
 	./replacetabs ../pylib/*.py
-	./replacetabs ../scripts/regscript*
+	./replacetabs ../scripts/*.py
 	./replacetabs ../utils/tricensus-manager
 
