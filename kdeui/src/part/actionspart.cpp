@@ -73,12 +73,12 @@ void ReginaPart::setupActions() {
     treePacketViewActions.append(act);
 
     act = new KAction(i18n("C&lone Packet"), "editcopy", CTRL+Key_L,
-        this, SLOT(unimplemented()), actionCollection(), "tree_clone");
+        this, SLOT(clonePacket()), actionCollection(), "tree_clone");
     act->setToolTip(i18n("Clone the selected packet only"));
     treePacketEditActions.append(act);
 
     act = new KAction(i18n("Clone Su&btree"), QString::null, 0,
-        this, SLOT(unimplemented()), actionCollection(),
+        this, SLOT(cloneSubtree()), actionCollection(),
         "tree_clone_subtree");
     act->setToolTip(i18n("Clone the subtree beneath the selected packet"));
     treePacketEditActions.append(act);

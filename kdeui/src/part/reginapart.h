@@ -181,29 +181,28 @@ class ReginaPart : public KParts::ReadWritePart {
 
     public slots:
         /**
-         * View or edit the currently selected packet.
-         */
-        void packetView();
-
-        /**
-         * View or edit the given packet.
+         * View the given packet.
          */
         void packetView(regina::NPacket*);
 
         /**
-         * Rename the currently selected packet.
+         * View, rename or delete the currently selected packet.
          */
+        void packetView();
         void packetRename();
-
-        /**
-         * Delete the currently selected packet.
-         */
         void packetDelete();
 
         /**
          * Refresh the subtree beneath the currently selected packet.
          */
         void subtreeRefresh();
+
+        /**
+         * Packet cloning routines, both with and without cloning the
+         * entire subtree.
+         */
+        void clonePacket();
+        void cloneSubtree();
 
         /**
          * Float the currently docked pane.
@@ -257,6 +256,19 @@ class ReginaPart : public KParts::ReadWritePart {
          * Called when the docked pane or its properties have changed.
          */
         void dockChanged();
+
+        /**
+         * Verify that the part or its components are in an appropriate
+         * state and display an error message otherwise.
+         *
+         * Some of these routines return useful information in addition
+         * to performing some form of test.  In these cases, the return
+         * value can always be cast to a boolean that is true if and
+         * only if the test was passed.
+         */
+        bool checkReadWrite();
+        regina::NPacket* checkPacketSelected();
+        regina::NPacket* checkSubtreeSelected();
 };
 
 #endif

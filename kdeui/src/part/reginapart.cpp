@@ -224,32 +224,23 @@ bool ReginaPart::saveFile() {
     }
 }
 
-void ReginaPart::packetView() {
-    regina::NPacket* packet = treeView->selectedPacket();
-    if (packet)
-        packetView(packet);
-    else
-        KMessageBox::error(widget(), i18n(
-            "No packet is currently selected within the tree."));
-}
-
 void ReginaPart::packetView(regina::NPacket* packet) {
     view(new PacketPane(this, packet));
 }
 
-void ReginaPart::packetRename() {
-    if (! isReadWrite()) {
-        KMessageBox::error(widget(), i18n(
-            "This topology data file is currently in read-only mode."));
-        return;
-    }
+void ReginaPart::packetView() {
+    regina::NPacket* packet = checkPacketSelected();
+    if (packet)
+        packetView(packet);
+}
 
-    regina::NPacket* packet = treeView->selectedPacket();
-    if (! packet) {
-        KMessageBox::error(widget(), i18n(
-            "No packet is currently selected within the tree."));
+void ReginaPart::packetRename() {
+    if (! checkReadWrite())
         return;
-    }
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
 
     bool ok;
     QString suggest = packet->getPacketLabel().c_str();
@@ -274,18 +265,12 @@ void ReginaPart::packetRename() {
 }
 
 void ReginaPart::packetDelete() {
-    if (! isReadWrite()) {
-        KMessageBox::error(widget(), i18n(
-            "This topology data file is currently in read-only mode."));
+    if (! checkReadWrite())
         return;
-    }
 
-    regina::NPacket* packet = treeView->selectedPacket();
-    if (! packet) {
-        KMessageBox::error(widget(), i18n(
-            "No packet is currently selected within the tree."));
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
         return;
-    }
 
     if (KMessageBox::warningContinueCancel(widget(), i18n(
             "You are about to delete the packet %1 and all its children.  "
@@ -298,15 +283,12 @@ void ReginaPart::packetDelete() {
 }
 
 void ReginaPart::subtreeRefresh() {
-    // Refresh the tree itself.
-    QListViewItem* rawItem = treeView->selectedItem();
-    if (! rawItem) {
-        KMessageBox::error(widget(), i18n(
-            "No packet subtree is currently selected to refresh."));
+    if (! checkSubtreeSelected())
         return;
-    }
 
-    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(rawItem);
+    // Refresh the tree itself.
+    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(
+        treeView->selectedItem());
     item->refreshSubtree();
 
     // Refresh any relevant packet panes.
@@ -314,6 +296,30 @@ void ReginaPart::subtreeRefresh() {
     for (PacketPane* pane = allPanes.first(); pane; pane = allPanes.next())
         if (subtree->isGrandparentOf(pane->getPacket()))
             pane->refresh();
+}
+
+void ReginaPart::clonePacket() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    packet->clone(false, false);
+    setModified(true);
+}
+
+void ReginaPart::cloneSubtree() {
+    if (! checkReadWrite())
+        return;
+
+    regina::NPacket* packet = checkSubtreeSelected();
+    if (! packet)
+        return;
+
+    packet->clone(true, false);
+    setModified(true);
 }
 
 void ReginaPart::floatDockedPane() {
@@ -458,6 +464,36 @@ void ReginaPart::dockChanged() {
         actCurrUndock->setEnabled(true);
         actCurrClose->setEnabled(true);
     }
+}
+
+bool ReginaPart::checkReadWrite() {
+    if (isReadWrite())
+        return true;
+
+    KMessageBox::error(widget(), i18n(
+        "This topology data file is currently in read-only mode."));
+    return false;
+}
+
+regina::NPacket* ReginaPart::checkPacketSelected() {
+    regina::NPacket* p = treeView->selectedPacket();
+    if (p)
+        return p;
+
+    KMessageBox::error(widget(), i18n(
+        "No packet is currently selected within the tree."));
+    return 0;
+}
+
+regina::NPacket* ReginaPart::checkSubtreeSelected() {
+    regina::NPacket* p = treeView->selectedPacket();
+    if (p)
+        return p;
+
+    KMessageBox::error(widget(), i18n(
+        "No subtree is currently selected.  To work with a packet subtree, "
+        "select the packet at the base of the subtree."));
+    return 0;
 }
 
 #include "reginapart.moc"
