@@ -69,6 +69,50 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
         }
         */
 
+        // Look for internal simplifications.
+        for (eit = edges.begin(); eit != edges.end(); eit++) {
+            edge = *eit;
+            if (threeTwoMove(edge, true, perform)) {
+                changedNow = true;
+                changed = true;
+                break;
+            }
+            if (twoZeroMove(edge, true, perform)) {
+                changedNow = true;
+                changed = true;
+                break;
+            }
+            if (twoOneMove(edge, 0, true, perform)) {
+                changedNow = true;
+                changed = true;
+                break;
+            }
+            if (twoOneMove(edge, 1, true, perform)) {
+                changedNow = true;
+                changed = true;
+                break;
+            }
+        }
+        if (changedNow) {
+            if (perform)
+                continue;
+            else
+                return true;
+        }
+        for (vit = vertices.begin(); vit != vertices.end(); vit++) {
+            if (twoZeroMove(*vit, true, perform)) {
+                changedNow = true;
+                changed = true;
+                break;
+            }
+        }
+        if (changedNow) {
+            if (perform)
+                continue;
+            else
+                return true;
+        }
+
         // Look for boundary simplifications.
         if (hasBoundaryFaces()) {
             for (bit = boundaryComponents.begin();
@@ -108,50 +152,6 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 }
                 if (changedNow)
                     break;
-            }
-        }
-        if (changedNow) {
-            if (perform)
-                continue;
-            else
-                return true;
-        }
-
-        // Look for internal simplifications.
-        for (eit = edges.begin(); eit != edges.end(); eit++) {
-            edge = *eit;
-            if (threeTwoMove(edge, true, perform)) {
-                changedNow = true;
-                changed = true;
-                break;
-            }
-            if (twoZeroMove(edge, true, perform)) {
-                changedNow = true;
-                changed = true;
-                break;
-            }
-            if (twoOneMove(edge, 0, true, perform)) {
-                changedNow = true;
-                changed = true;
-                break;
-            }
-            if (twoOneMove(edge, 1, true, perform)) {
-                changedNow = true;
-                changed = true;
-                break;
-            }
-        }
-        if (changedNow) {
-            if (perform)
-                continue;
-            else
-                return true;
-        }
-        for (vit = vertices.begin(); vit != vertices.end(); vit++) {
-            if (twoZeroMove(*vit, true, perform)) {
-                changedNow = true;
-                changed = true;
-                break;
             }
         }
         if (changedNow) {
