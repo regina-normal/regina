@@ -31,9 +31,11 @@
 #ifdef __NO_INCLUDE_PATHS
     #include "ntetrahedron.h"
     #include "ntrisolidtorus.h"
+    #include "nlayeredchain.h"
 #else
     #include "engine/triangulation/ntetrahedron.h"
     #include "engine/subcomplex/ntrisolidtorus.h"
+    #include "engine/subcomplex/nlayeredchain.h"
 #endif
 
 NTriSolidTorus* NTriSolidTorus::clone() const {
@@ -63,6 +65,35 @@ bool NTriSolidTorus::isAnnulusSelfIdentified(int index, NPerm* roleMap) const {
             vertexRoles[lower];
 
     return true;
+}
+
+unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
+    int right = (otherAnnulus + 1) % 3;
+    int left = (otherAnnulus + 2) % 3;
+    NTetrahedron* adj = tet[right]->getAdjacentTetrahedron(
+        vertexRoles[right][2]);
+    if (adj != tet[left]->getAdjacentTetrahedron(vertexRoles[left][3]))
+        return 0;
+    if (adj == tet[0] || adj == tet[1] || adj == tet[2] || adj == 0)
+        return 0;
+    NPerm roles = tet[right]->getAdjacentTetrahedronGluing(
+        vertexRoles[right][2]) * vertexRoles[right] * NPerm(3, 1, 2, 0);
+    if (roles != tet[left]->getAdjacentTetrahedronGluing(
+            vertexRoles[left][3]) * vertexRoles[left] * NPerm(1, 3, 0, 2))
+        return 0;
+
+    // We've successfully identified the first tetrahedron of the
+    // layered chain.
+    NLayeredChain chain(adj, roles);
+    chain.extendMaximal();
+    if (chain.getTop() != tet[otherAnnulus])
+        return 0;
+    if (chain.getTopVertexRoles() != vertexRoles[otherAnnulus] *
+            NPerm(0, 2, 3, 1))
+        return 0;
+
+    // Success!
+    return chain.getIndex() - 1;
 }
 
 NTriSolidTorus* NTriSolidTorus::isTriSolidTorus(NTetrahedron* tet,

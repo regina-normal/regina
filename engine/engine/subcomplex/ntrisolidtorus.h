@@ -175,6 +175,35 @@ class NTriSolidTorus : public ShareableObject {
         bool isAnnulusSelfIdentified(int index, NPerm* roleMap) const;
 
         /**
+         * Determines whether the two given annuli are linked in a
+         * particular fashion by a layered chain.
+         *
+         * To be identified by this routine, the layered chain
+         * (described by NLayeredChain) must be attached as follows.
+         * The two directed major axes of the two annuli should
+         * correspond to the two hinge edges of the layered chain (with
+         * both hinge edges pointing in the same direction around the
+         * solid torus formed by the layered chain).  The two directed
+         * diagonals of the layered chain (between the two top faces and
+         * between the two bottom faces, each pointing in the same
+         * direction as the hinge edges around the solid torus formed by
+         * the layered chain) should be identified and must correspond
+         * to the (identified) two directed minor axes of the two
+         * annuli.  The remaining boundary edges of the layered chain
+         * should correspond to the axis edges of the triangular solid
+         * torus (this correspondence is determined by the previous
+         * identifications).
+         *
+         * \ifaces Not present.
+         *
+         * @param otherAnnulus the annulus on the solid torus boundary
+         * \a not to be examined; this must be 0, 1 or 2.
+         * @return the number of tetrahedra in the layered chain if the
+         * two annuli are linked as described, or 0 otherwise.
+         */
+        unsigned long areAnnuliLinkedMajor(int otherAnnulus) const;
+
+        /**
          * Determines if the given tetrahedron forms part of a
          * three-tetrahedron triangular solid torus with its vertices
          * playing the given roles in the solid torus.
