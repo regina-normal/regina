@@ -36,6 +36,7 @@
 #include <qvbox.h>
 
 class KMainWindow;
+class PacketPane;
 class QLabel;
 class QPushButton;
 class QTextEdit;
@@ -79,17 +80,23 @@ class PacketHeader : public QHBox {
  * A single item in a Regina packet tree.
  */
 class PacketUI {
+    private:
+        PacketPane* enclosingPane;
+
     public:
+        PacketUI(PacketPane* newEnclosingPane);
         virtual ~PacketUI();
 
         virtual regina::NPacket* getPacket() = 0;
         virtual QWidget* getInterface() = 0;
-        virtual void refresh() = 0;
         virtual QTextEdit* getTextComponent();
-
-        virtual bool isReadWrite();
-        virtual bool isDirty();
         virtual void commit();
+        virtual void refresh() = 0;
+        virtual bool isReadWrite();
+        bool isDirty();
+
+    protected:
+        void setDirty(bool newDirty);
 };
 
 class DefaultPacketUI : public PacketUI {
@@ -98,9 +105,12 @@ class DefaultPacketUI : public PacketUI {
         QLabel* label;
 
     public:
-        DefaultPacketUI(regina::NPacket* newPacket);
+        DefaultPacketUI(regina::NPacket* newPacket,
+            PacketPane* newEnclosingPane);
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
+
+    protected:
         virtual void refresh();
 };
 
@@ -120,6 +130,8 @@ class PacketPane : public QVBox {
         KMainWindow* frame;
             /**< The floating frame containing this packet pane, or 0
                  if this packet pane is currently docked. */
+        bool dirty;
+            /**< Does this packet pane contain any uncommitted changes? */
 
         /**
          * Internal components
@@ -143,15 +155,25 @@ class PacketPane : public QVBox {
             QWidget* parent = 0, const char* name = 0);
 
         /**
+         * PacketUI interaction
+         */
+        PacketUI* getMainUI();
+
+        /**
          * Does this packet pane contain any changes that have not yet
          * been committed?
          */
         bool isDirty();
 
+        void setDirty(bool newDirty);
+
         /**
          * Are we allowed to close this packet pane?
          */
         bool queryClose();
+
+    signals:
+        void dirtinessChanged(bool);
 
     public slots:
         /**
@@ -189,6 +211,10 @@ class PacketPane : public QVBox {
         void floatPane();
 };
 
+inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
+        enclosingPane(newEnclosingPane) {
+}
+
 inline PacketUI::~PacketUI() {
 }
 
@@ -201,10 +227,22 @@ inline bool PacketUI::isReadWrite() {
 }
 
 inline bool PacketUI::isDirty() {
-    return false;
+    return enclosingPane->isDirty();
+}
+
+inline void PacketUI::setDirty(bool newDirty) {
+    enclosingPane->setDirty(newDirty);
 }
 
 inline void PacketUI::commit() {
+}
+
+inline PacketUI* PacketPane::getMainUI() {
+    return mainUI;
+}
+
+inline bool PacketPane::isDirty() {
+    return dirty;
 }
 
 #endif

@@ -62,7 +62,8 @@ void PacketHeader::refresh() {
     title->setText(packet->getFullName().c_str());
 }
 
-DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket) :
+DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
+        PacketPane* newEnclosingPane) : PacketUI(newEnclosingPane),
         packet(newPacket) {
     label = new QLabel(i18n(
         "Packets of type %1\nare not yet supported.").arg(
@@ -83,7 +84,7 @@ void DefaultPacketUI::refresh() {
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
-        part(newPart), frame(0) {
+        part(newPart), frame(0), dirty(false) {
     // Set up the header and dock/undock button.
     QHBox* headerBox = new QHBox(this);
 
@@ -98,7 +99,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
     // Set up the main interface component.
-    mainUI = new DefaultPacketUI(newPacket);
+    mainUI = new DefaultPacketUI(newPacket, this);
     QWidget* mainUIWidget = mainUI->getInterface();
     if (mainUIWidget->parent() != this) {
         mainUIWidget->reparent(this, QPoint(0, 0));
@@ -106,7 +107,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     }
     setStretchFactor(mainUIWidget, 1);
 
-    // Set up the fotter buttons.
+    // Set up the footer buttons.
     QHBox* footer = new QHBox(this);
     commitBtn = new QPushButton(BarIconSet("button_ok"), i18n("Co&mmit"),
         footer);
@@ -120,8 +121,18 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         SIGNAL(clicked()), this, SLOT(close()));
 }
 
-bool PacketPane::isDirty() {
-    return mainUI->isDirty();
+void PacketPane::setDirty(bool newDirty) {
+    if (dirty == newDirty)
+        return;
+
+    dirty = newDirty;
+
+    commitBtn->setEnabled(dirty);
+    refreshBtn->setText(dirty ? i18n("&Discard") : i18n("&Refresh"));
+    refreshBtn->setIconSet(dirty ? BarIconSet("button_cancel") :
+        BarIconSet("reload"));
+
+    emit dirtinessChanged(newDirty);
 }
 
 bool PacketPane::queryClose() {

@@ -37,6 +37,18 @@
 #include <kstdaction.h>
 #include <qtextedit.h>
 
+void PacketWindow::paneDirtinessChanged() {
+    if (heldPane->isDirty()) {
+        actCommit->setEnabled(true);
+        actRefresh->setText(i18n("&Discard"));
+        actRefresh->setIcon("button_cancel");
+    } else {
+        actCommit->setEnabled(false);
+        actRefresh->setText(i18n("&Refresh"));
+        actRefresh->setIcon("reload");
+    }
+}
+
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         KMainWindow(parent, "Packet#"), heldPane(newPane) {
     // Resize ourselves nicely.
@@ -55,9 +67,9 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         SLOT(refresh()), actionCollection(), "packet_refresh");
     createGUI("packetwindow.rc", false);
 
-    // TODO: dirtinessChanged();
-    // TODO: QTextEdit* edit = newPane->getMainUI()->getTextComponent();
-    QTextEdit* edit = 0;
+    paneDirtinessChanged();
+
+    QTextEdit* edit = newPane->getMainUI()->getTextComponent();
     if (edit) {
         KStdAction::cut(edit, SLOT(cut()), actionCollection());
         KStdAction::copy(edit, SLOT(copy()), actionCollection());
@@ -67,6 +79,8 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     // Set up the widgets.
     newPane->reparent(this, QPoint(0, 0));
     setCentralWidget(newPane);
+    connect(newPane, SIGNAL(dirtinessChanged(bool)),
+        this, SLOT(paneDirtinessChanged()));
     newPane->show();
 }
 

@@ -144,6 +144,8 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     newPane->reparent(dockArea, QPoint(0, 0));
     dockedPane = newPane;
+    connect(dockedPane, SIGNAL(dirtinessChanged(bool)),
+        this, SLOT(dockDirtinessChanged()));
     newPane->show();
 
     dockChanged();
@@ -154,8 +156,10 @@ void ReginaPart::isClosing(PacketPane* closingPane) {
 }
 
 void ReginaPart::hasUndocked(PacketPane* undockedPane) {
-    if (dockedPane == undockedPane)
+    if (dockedPane == undockedPane) {
+        disconnect(dockedPane, SIGNAL(dirtinessChanged(bool)), this, 0);
         dockedPane = 0;
+    }
 
     dockChanged();
 }
@@ -259,6 +263,21 @@ void ReginaPart::setAutoDock(bool value) {
     autoDock = value;
 }
 
+void ReginaPart::dockDirtinessChanged() {
+    if (! dockedPane)
+        return;
+
+    if (dockedPane->isDirty()) {
+        actCurrCommit->setEnabled(true);
+        actCurrRefresh->setText(i18n("&Discard"));
+        actCurrRefresh->setIcon("button_cancel");
+    } else {
+        actCurrCommit->setEnabled(false);
+        actCurrRefresh->setText(i18n("&Refresh"));
+        actCurrRefresh->setIcon("reload");
+    }
+}
+
 void ReginaPart::fileSaveAs() {
     QString file = KFileDialog::getSaveFileName(QString::null,
         i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
@@ -329,9 +348,7 @@ void ReginaPart::dockChanged() {
 
         dockDirtinessChanged();
 
-        // TODO: Fix
-        //QTextEdit* edit = dockedPane->getMainUI()->getTextComponent();
-        QTextEdit* edit = 0;
+        QTextEdit* edit = dockedPane->getMainUI()->getTextComponent();
         if (edit) {
             actCut->setEnabled(true);
             actCopy->setEnabled(true);
@@ -349,20 +366,6 @@ void ReginaPart::dockChanged() {
             disconnect(actCopy, SIGNAL(activated()));
             disconnect(actPaste, SIGNAL(activated()));
         }
-    }
-}
-
-void ReginaPart::dockDirtinessChanged() {
-    // TODO: Make sure this is called when a packet pane is modified.
-    if (! dockedPane)
-        return;
-
-    if (dockedPane->isDirty()) {
-        actCurrCommit->setEnabled(true);
-        actCurrRefresh->setText(i18n("&Discard"));
-    } else {
-        actCurrCommit->setEnabled(false);
-        actCurrRefresh->setText(i18n("&Refresh"));
     }
 }
 

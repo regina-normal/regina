@@ -183,6 +183,12 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         void setAutoDock(bool);
 
+        /**
+         * Reflect the fact that the dirtiness of the docked packet has
+         * changed.
+         */
+        void dockDirtinessChanged();
+
     private slots:
         /**
          * Implementation of actions.
@@ -202,7 +208,6 @@ class ReginaPart : public KParts::ReadWritePart {
          * Called when the docked pane or its properties have changed.
          */
         void dockChanged();
-        void dockDirtinessChanged();
 };
 
 #endif

@@ -57,6 +57,9 @@ class PacketWindow : public KMainWindow {
         KAction* actCommit;
         KAction* actRefresh;
 
+    public slots:
+        void paneDirtinessChanged();
+
     private:
         /**
          * Constructor.
