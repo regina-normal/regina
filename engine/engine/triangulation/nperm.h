@@ -277,6 +277,17 @@ class NPerm {
         bool isIdentity() const;
         #endif
 
+        /**
+         * Returns a string representation of this permutation.
+         *
+         * \ifacescpp Not present.
+         *
+         * @return a string representation of this permutation.
+         */
+        #ifdef __DOXYGEN
+        NString toString() const;
+        #endif
+
     private:
         /**
          * Determines the image of the given integer under this

@@ -160,6 +160,10 @@ public class NPerm {
                     sign = -sign;
         return sign;
     }
+    public String toString() {
+        return String.valueOf(mapping[0]) + String.valueOf(mapping[1]) +
+            String.valueOf(mapping[2]) + String.valueOf(mapping[3]);
+    }
 
     static public NPerm faceOrdering(int face) {
         switch(face) {
