@@ -7,7 +7,7 @@ Program version:
     admin/configure.ac.top (AC_INIT, AM_INIT_AUTOMAKE)
     debian/changelog (version, date)
     kdeui/doc/en/index.docbook (&regversion;, &regdate;, date, releaseinfo)
-    kdeui/src/reginaabout.h (regReleased)
+    kdeui/src/common/reginaabout.cpp (regReleased)
     kdeui/src/{shell,part}/*.rc (kpartgui version)
     www/index.html (last updated, current version)
 
