@@ -92,29 +92,44 @@ Thanks to Murray Keir for the gorgeous sunset in the background.
 
 <h3><a name="download">Download</a></h3>
 
-Both binary and source downloads are available from the
-<a href="http://sourceforge.net/projects/regina/">SourceForge
-project site</a>.  Be aware of the
-<a href="#license">GPL License</a> as described above, which is also
-contained in the downloadable archives.
+You can download prebuilt binary distributions for GNU/Linux or Windows systems,
+or you can download the entire source tree to compile Regina for yourself.
+All downloads are available from the
+<a href="http://sourceforge.net/project/showfiles.php?group_id=19698">SourceForge
+project site</a>.
+
+Be aware of the <a href="docs/acknowledgements.html">GNU General Public License</a>,
+which is also contained in the downloadable archives.
+<p>
+Before you download, be sure to visit the <a href="sysreq.html">system requirements
+page</a>.  Regina needs several other pieces of software installed before it will run.
 <ul>
-	<li><b>Linux binaries:</b>
-		Archive <tt><b>regina-<i>version</i>_bin.tgz</b></tt> contains a
-		complete binary distribution for linux.
-		The application will be extracted into directory
+	<li><b>Binaries:</b>
+	<ul>
+		<li>Download the binary archive
+		<tt><b>regina-<i>version</i>_bin_<i>machine</i>.tgz</b></tt>
+		corresponding to your machine type.
+		<ul>
+			<li>GNU/Linux users will want
+			<tt><b>regina-<i>version</i>_bin_i386-linux-gnu.tgz</b></tt>.
+			Note that these binaries are built against <tt>libc6</tt>,
+			<tt>libstdc++2.10</tt> and <tt>libgmp3</tt>.
+
+			<li>Windows users will want
+			<tt><b>regina-<i>version</i>_bin_i686-cygwin.tgz</b></tt>.
+		</ul>
+		<li>Unpack the archive.  The application will be extracted into directory
 		<tt><b>regina-<i>version</i>/</b></tt>.  Instructions for running the
-		application are included in
-		<tt><b>regina-<i>version</i>/README.txt</b></tt>.
-	<li><b>Windows binaries:</b>
-		Currently only linux downloads are available.  I'm still
-		working on windows support; I'll post windows binaries
-		when they're ready.
+		application are included in <tt><b>regina-<i>version</i>/README.txt</b></tt>.
+	</ul>
 	<li><b>Sources:</b>
-		Archive <tt><b>regina-<i>version</i>_src.tgz</b></tt> contains a complete
-		source distribution.  The sources will be extracted into directory
+	<ul>
+		<li>Download the source archive <tt><b>regina-<i>version</i>_src.tgz</b></tt>.
+
+		<li>Unpack the archive.  The sources will be extracted into directory
 		<tt><b>regina-<i>version</i>/</b></tt>.  Instructions for compiling the
-		application are included in
-		<tt><b>regina-<i>version</i>/README.txt</b></tt>.
+		application are included in <tt><b>regina-<i>version</i>/README.txt</b></tt>.
+	</ul>
 </ul>
 <p>
 To extract archive <tt><b>stuff.tgz</b></tt>, type
@@ -124,40 +139,56 @@ To extract archive <tt><b>stuff.tgz</b></tt>, type
 
 <h3><a name="docs">Documentation</a></h3>
 
-The documentation for Regina can be <a href="docs/">viewed
+The Regina Reference Manual can be <a href="docs/index.html">viewed
 here online</a>.
 <p>
-There are several ways of obtaining the documentation on your machine.
-It is recommended that you use a custom help browser (this can be set up
-through the <i>Options-Help Browser</i> menu item), since the internal
-JavaHelp system has problems with some of the HTML.
+There are several ways of obtaining the reference manual on your machine.
+The first of these methods is recommended.  All downloads are available from
+the <a href="http://sourceforge.net/project/showfiles.php?group_id=19698">SourceForge
+project site</a>.
+
 <ul>
-	<li>If you wish to use a custom help browser from inside Regina or
-	if you wish to browse the documentation from outside Regina,
-	download archive <tt><b>regina-<i>version</i>_doc.tgz</b></tt>.
-	This will extract the documentation into directory
-	<tt><b>regina-<i>version</i>/docs/</b></tt>.
+	<li>You can use your favourite web browser to view the documentation.
+	<ul>
+		<li>Download the archive <tt><b>regina-<i>version</i>_doc.tgz</b></tt>
+		or <tt><b>regina-<i>version</i>_doc.zip</b></tt>.
+		<li>Unpack this archive, which will extract the documentation into
+		directory <tt><b>regina-<i>version</i>/docs/</b></tt>.
+		<li>If you wish to use your favourite web browser to view help
+		from within Regina (which is recommended, since the internal JavaHelp
+		system has problems with some of the HTML), run Regina and use
+		the <i>Options-Help Browser</i> menu item to specify the command
+		used to start your web browser and the location where the documentation
+		is unpacked (such as <tt><b>/path/to/regina-<i>version</i>/docs</b></tt>).
+	</ul>
+	<li>You can use Regina's embedded JavaHelp browsing system.
+	<ul>
+		<li>Download the jar archive
+		<tt><b>regina-<i>version</i>_doc-internal.jar</b></tt>.
 
-	<li>If you wish to use Regina's internal help browsing system, you
-	can download the jar archive
-	<tt><b>regina-docs-<i>version</i>.jar</b></tt>.
-	Rename this to <tt><b>regina-docs.jar</b></tt>
-	and the help browser will use this jar
-	as is; there is no need to unpack it.  You will need to run
-	<tt><b>regconf</b></tt> to tell the internal help browser where to
-	find this jar.
-
+		<li>The embedded help browser can use this jar as is; there is no need
+		to unpack it.  Simply rename it to <tt><b>regina-docs.jar</b></tt>
+		and place it in the same directory as the other jar files
+		(<tt><b>regina.jar</b></tt>, <tt><b>regina-jni.jar</b></tt> and so on;
+		this directory is probably <tt><b>regina-<i>version</i>/bin/</b></tt>).
+	</ul>
 	<li>You can generate the documentation from the sources.
-	Move to the main
-	<tt><b>regina-<i>version</i>/</b></tt> directory and type <tt><b>make
-	bindocs</b></tt>.  The documentation will be generated in the
-	subdirectory <tt><b>docs/</b></tt>
-	and a complete documentation jar <tt><b>regina-docs.jar</b></tt> will
-	be created in the subdirectory <tt><b>bin/</b></tt>.
+	<ul>
+		<li>Check the
+		<a href="sysreq.html#docs">system requirements page</a> to ensure that
+		you have installed all the tools you will need.
+
+		<li>Move to the main <tt><b>regina-<i>version</i>/</b></tt> directory
+		(where you have unpacked the sources) and type <tt><b>make bindocs</b></tt>.
+
+		<li>The documentation will be generated in the subdirectory <tt><b>docs/</b></tt>.
+		The title page for the reference manual will be <tt><b>docs/index.html</b></tt>.
+		A jar that the embedded JavaHelp browser can use will be created as
+		<tt><b>bin/regina-docs.jar</b></tt>.  Unix man pages will be generated in
+		the subdirectory <tt><b>docs/</b></tt> (<tt><b>regina.1</b></tt>,
+		<tt><b>regina.conf.5</b></tt> and so on).
+	</ul>
 </ul>
-<p>
-To extract archive <tt><b>stuff.tgz</b></tt>, type
-<tt><b>tar -zxf stuff.tgz</b></tt>.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
