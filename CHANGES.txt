@@ -12,6 +12,8 @@ Current Development Version
     ENGINE:
         Overall structure:
             - Fixed minor memory leaks.
+        Class NFacePairings:
+            - Fixed bug in isCanonical().
         Class NGluingPerms:
             - Further optimisations for non-orientable census generation.
         Class NLargeInteger:

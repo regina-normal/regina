@@ -592,12 +592,12 @@ bool NFacePairing::isCanonical() const {
             if (dest(tet, face + 1) < dest(tet, face))
                 if (! (dest(tet, face + 1) == NTetFace(tet, face)))
                     return false;
-        if (tet > 0) {
+        if (tet > 0)
             if (dest(tet, 0).tet >= static_cast<int>(tet))
                 return false;
+        if (tet > 1)
             if (dest(tet, 0) <= dest(tet - 1, 0))
                 return false;
-        }
     }
 
     // We've met all the preconditions, so we can now run
