@@ -26,6 +26,8 @@
      theory. It allows 3-manifolds to be created and manipulated and their
      properties of interest to be determined.
     </para>">
+  <!ENTITY regwebsite
+   "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
 
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">

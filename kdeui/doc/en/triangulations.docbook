@@ -18,11 +18,11 @@
    <para>
     The simplest way to create a triangulation is through the
     <menuchoice>
-     <guimenu>Packet</guimenu>
-     <guisubmenu>New</guisubmenu>
-     <guimenuitem>Triangulation</guimenuitem>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New Triangulation</guimenuitem>
     </menuchoice>
-    menu item, which will create a new triangulation from scratch.  At
+    menu item (or the corresponding toolbar button),
+    which will create a new triangulation from scratch.  At
     this point, several choices are offered as described below.
    </para>
 
@@ -62,6 +62,11 @@
      parameters of the layered solid torus represent the ways in which
      the different layers have been added.
     </para>
+    <para>
+     Layered solid tori are described in detail in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/>, which is available from the
+     &regwebsite;.
+    </para>
    </sect3>
 
    <sect3 id="tri-new-lens">
@@ -80,6 +85,11 @@
      A <firstterm>layered lens space</firstterm> is a lens space built
      by taking two layered solid tori with appropriate parameters and
      gluing them together along their torus boundaries.
+    </para>
+    <para>
+     Layered lens spaces are described in detail in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/>, which is available from the
+     &regwebsite;.
     </para>
    </sect3>
 
@@ -132,6 +142,11 @@
      a two-vertex triangulation of the lens space
      L(<replaceable>n</replaceable>,1).
     </para>
+    <para>
+     Layered loops are described in detail in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/>, which is available from the
+     &regwebsite;.
+    </para>
    </sect3>
 
    <sect3 id="tri-new-dehydration">
@@ -145,10 +160,9 @@
      A <firstterm>dehydration string</firstterm> is a set of letters such as
      <literal>dadbcccaqhx</literal> containing enough information to
      recreate the triangulation.  Dehydration strings appear in
-     census papers such as the
-     <link linkend="bib-cuspedcensus">hyperbolic cusped census</link>
-     (see the <link linkend="bibliography">bibliography</link>), in which
-     the dehydration format is explicitly described.
+     census papers such as the hyperbolic cusped census of
+     Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
+     in which the dehydration format is explicitly described.
     </para>
    </sect3>
 
