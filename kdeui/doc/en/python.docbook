@@ -22,20 +22,44 @@
      <listitem><para>
       You can run the command-line program
       <link linkend="man-regina-python"><command>regina-python</command></link>
-      without using the graphical user interface at all.  This is fast
-      and allows the redirection of input and output.
+      without using the graphical user interface at all.
+      This uses the standard &python; command-line interpreter and is
+      quite fast.
+      Since it is purely text based, it also supports the redirection of
+      input and output.
      </para></listitem>
      <listitem><para>
-      You can bring up a &python; console through the
-      <guimenu>Tools</guimenu> menu (or the corresponding toolbar button).
+      You can bring up a graphical &python; console through the
+      <menuchoice>
+       <guimenu>Tools</guimenu>
+       <guimenuitem>Python Console</guimenuitem>
+      </menuchoice>
+      menu item or the corresponding toolbar button.
+      The top-level packet of the current file (if any) will be assigned
+      to the special variable <varname>root</varname>.
+      The currently selected packet (if any) will be assigned to the
+      special variable <varname>selected</varname>.
      </para></listitem>
-     <listitem><para>
-      You can create a new <link linkend="packet-script">script
-      packet</link>.  Script packets have the advantage that they
-      can work seamlessly with many other packets in the
-      same file through the use of script variables.
-      Furthermore, script packets are saved with the data file for later reuse.
-     </para></listitem>
+     <listitem>
+      <para>
+       You can create a new <link linkend="packet-script">script
+       packet</link>.  Script packets have the advantage that they
+       can work seamlessly with multiple packets in the
+       same file through the use of script variables.
+       Furthermore, script packets are saved with the data file for later reuse.
+      </para>
+      <para>
+       The editor for script packets includes a table of variables that will be
+       set each time the script is run.  Buttons and menu options are
+       available for running the script or for simply testing whether
+       it compiles.
+      </para>
+      <para>
+       Each time a script is run, a new graphical &python; console is opened.
+       The script is run within this console and the console is then
+       made available to the user for further interaction.
+      </para>
+     </listitem>
     </itemizedlist>
    </para>
   </sect2>
@@ -43,46 +67,48 @@
   <sect2 id="python-python">
    <title>Using &python;</title>
    <para>
-    All scripts are run in &python; (<ulink url="http://www.python.org/"/>).
-    When using &python;, &regina; objects, classes and methods can be
+    All scripts use the &python; scripting language
+    (<ulink url="http://www.python.org/"/>).
+    Within these scripts, &regina; objects, classes and methods can be
     accessed directly as if they were &python; objects, classes and methods.
    </para>
    <para>
+    Each of these objects, classes and methods is available in the
+    module <parameter>regina</parameter>.  For instance, a new
+    triangulation can be created by calling
+    <literal>regina.NTriangulation()</literal> and a file can be
+    read by calling <literal>regina.readXMLFile(filename)</literal>.
+   </para>
+   <para>
     &regina; includes a complete reference for the calculation engine,
-    which describes in detail the objects, classes and methods available
-    when writing &python; scripts.  This documentation is generally
+    which describes in detail the objects, classes and methods made available
+    to &python; scripts.  This documentation is generally
     installed in <filename>/usr/local/share/regina/engine-docs/</filename>
     or <filename>/usr/share/regina/engine-docs/</filename>, although this
-    may differ with your distribution or installation.  The
-    documentation installation path can be changed by passing special
-    options to <userinput>./configure</userinput> when building &regina;
-    from sources.
+    may differ with your distribution or installation.  Like all
+    installation paths, the documentation installation path can be changed
+    by passing special options to <userinput>./configure</userinput> when
+    building &regina; from sources.
    </para>
    <para>
     Wherever &regina; gives you access to &python;, you may assume that the
     <parameter>regina</parameter> module has been imported (thus giving you
     access to everything contained within it).
-    You may also assume that any requested libraries have been loaded.
-    The libraries that should be loaded can be configured through the
-    <link linkend="options-python">&python; options</link> or can be added
-    by hand to the file &regina-libs;, which is described in detail in the
+    You may also assume that all configured libraries have been loaded.
+    These &python; libraries can be configured through the
+    <link linkend="options-python">&python; options</link> page or can be added
+    by hand to the file &regina-libs; (which is described in detail in the
     <link linkend="man-regina-python"><command>regina-python</command></link>
-    reference.
-   </para>
-   <para>
-    Upon starting a &python; session certain variables might already be
-    set for you (such as variables representing the calculation engine or
-    the current packet tree).  Read the &python; session startup messages
-    for details.
+    reference).
    </para>
    <warning><para>
     Probably the easiest way to crash the program is to bring up
     a &python; console and do something untoward.  &python; scripting
     offers very low-level control over the engine, but also comes with the
     associated dangers.  The general idea is that &python; gives you
-    direct access to the &cpp; calculation engine and the user interface has
-    no way of knowing what you are tinkering with.  Thus you should tread
-    gently. 
+    direct access to the mathematical core of the software and the user
+    interface has no way of knowing what you are tinkering with.  Thus you
+    should tread gently.
    </para></warning>
   </sect2>
 
