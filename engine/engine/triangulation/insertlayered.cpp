@@ -194,7 +194,7 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
                 continue;
             }
 
-            // It's (1,1,0).
+            // It's (1,1,0).  But this needs to be handled specially anyway.
             lstTop = insertLayeredSolidTorus(0, 1);
             if (absAxis == 0) {
                 core[i]->joinTo(2, lstTop, NPerm(0, 2, 3, 1));
@@ -206,6 +206,7 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
                 core[i]->joinTo(2, lstTop, NPerm(3, 0, 2, 1));
                 core[(i + 1) % 3]->joinTo(1, lstTop, NPerm(0, 3, 1, 2));
             }
+            continue;
         }
 
         if (absAxis >= absMajor && absAxis >= absMinor) {
