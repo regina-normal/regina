@@ -299,7 +299,9 @@ std::string NSFS::getCommonName() const {
                         ans << "xZ" << m;
                     return ans.str();
                 } else if (m % 2 == 0) {
-                    // S3/D{2^{k+2}a} x Z{2m''+1} where m=2^{k+1}(2m''+1).
+                    // S3/D{2^{k+2}a} x Z{2m''+1} where m=2^k(2m''+1).
+                    // It seems Orlik is missing a factor of two here?
+                    // He uses m=2^{k+1}(2m''+1).
                     long odd = m;
                     long twos = 1;
                     while (! (odd & 1)) {
@@ -308,7 +310,7 @@ std::string NSFS::getCommonName() const {
                     }
 
                     std::ostringstream ans;
-                    ans << "S3/D" << ((twos << 1) * a);
+                    ans << "S3/D" << ((twos << 2) * a);
                     if (odd > 1)
                         ans << "xZ" << odd;
                     return ans.str();
@@ -337,7 +339,9 @@ std::string NSFS::getCommonName() const {
                         }
 
                         std::ostringstream ans;
-                        ans << "S3/P'" << (threes * 8);
+                        // I believe Orlik is missing a factor of three.
+                        // He claims this should be (threes * 8).
+                        ans << "S3/P'" << (threes * 24);
                         if (m > 1)
                             ans << "xZ" << m;
                         return ans.str();
