@@ -9,7 +9,7 @@ Standards-Version: 3.6.1
 Package: regina-normal
 Architecture: any
 Section: math
-Depends: ${shlibs:Depends}, ${perl:Depends}, python2.2
+Depends: ${shlibs:Depends}, ${perl:Depends}
 Suggests: khelpcenter, regina-normal-doc, regina-normal-dev, snappea
 Description: Regina, the 3-manifold normal surface theory calculator
  Regina is a suite of mathematical software for 3-manifold topologists.
