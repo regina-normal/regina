@@ -35,7 +35,7 @@
  *  \brief Provides miscellaneous number theory routines.
  */
 
-#include "utilities/ndoublelist.h"
+#include <list>
 #include "utilities/nmpi.h"
 
 /**
@@ -130,7 +130,7 @@ unsigned long modularInverse(unsigned long n, unsigned long k);
  * @param n the integer to factorise.
  * @param factors the list into which prime factors will be inserted.
  */
-void factorise(unsigned long n, NDoubleList<unsigned long>& factors);
+void factorise(unsigned long n, std::list<unsigned long>& factors);
 
 /**
  * Determines all primes up to and including the given upper bound.
@@ -146,8 +146,7 @@ void factorise(unsigned long n, NDoubleList<unsigned long>& factors);
  * @param roof the upper bound up to which primes will be found.
  * @param primes the list into which the primes will be inserted.
  */
-void primesUpTo(const NLargeInteger& roof,
-        NDoubleList<NLargeInteger>& primes);
+void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes);
 
 #endif
 

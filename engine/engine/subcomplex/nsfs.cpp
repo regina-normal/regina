@@ -29,6 +29,9 @@
 #include "subcomplex/nsfs.h"
 #include "subcomplex/nlensspace.h"
 
+typedef std::list<NExceptionalFibre>::iterator FibreIterator;
+typedef std::list<NExceptionalFibre>::const_iterator FibreIteratorConst;
+
 ostream& operator << (ostream& out, const NExceptionalFibre& f) {
     return (out << '(' << f.alpha << ", " << f.beta << ')');
 }
@@ -57,8 +60,7 @@ NSFS::NSFS(const NSFS& cloneMe) : orbitGenus(cloneMe.orbitGenus),
         orbitOrientable(cloneMe.orbitOrientable),
         orbitPunctures(cloneMe.orbitPunctures), k(cloneMe.k),
         nNonZeroFibres(cloneMe.nNonZeroFibres) {
-    for (FibreIterator it(cloneMe.fibres); ! it.done(); it++)
-        fibres.addLast(*it);
+    fibres.insert(fibres.end(), cloneMe.fibres.begin(), cloneMe.fibres.end());
 }
 
 void NSFS::operator = (const NSFS& cloneMe) {
@@ -66,9 +68,8 @@ void NSFS::operator = (const NSFS& cloneMe) {
     orbitOrientable = cloneMe.orbitOrientable;
     orbitPunctures = cloneMe.orbitPunctures;
 
-    fibres.flush();
-    for (FibreIterator it(cloneMe.fibres); ! it.done(); it++)
-        fibres.addLast(*it);
+    fibres.clear();
+    fibres.insert(fibres.end(), cloneMe.fibres.begin(), cloneMe.fibres.end());
 
     k = cloneMe.k;
     nNonZeroFibres = cloneMe.nNonZeroFibres;
@@ -88,7 +89,10 @@ NExceptionalFibre NSFS::getFibre(unsigned long which) const {
         return NExceptionalFibre(1, k);
     if (which == size - 1)
         return getModifiedFinalFibre();
-    return fibres[which];
+
+    FibreIteratorConst pos = fibres.begin();
+    advance(pos, which);
+    return *pos;
 }
 
 void NSFS::insertFibre(const NExceptionalFibre& fibre) {
@@ -96,7 +100,7 @@ void NSFS::insertFibre(const NExceptionalFibre& fibre) {
     // that alpha is non-negative.
 
     if (fibre.alpha == 0) {
-        fibres.addFirst(NExceptionalFibre(0, 1));
+        fibres.push_front(NExceptionalFibre(0, 1));
         return;
     }
     if (fibre.alpha == 1) {
@@ -117,7 +121,8 @@ void NSFS::insertFibre(const NExceptionalFibre& fibre) {
     // Now we have 0 <= b < a and a >= 2.
     if (b != 0)
         nNonZeroFibres++;
-    fibres.addSort(NExceptionalFibre(a, b));
+    NExceptionalFibre f(a, b);
+    fibres.insert(lower_bound(fibres.begin(), fibres.end(), f), f);
 
     // We're done!
 }
@@ -129,7 +134,7 @@ void NSFS::reduce() {
         k = -k;
 
         FibreIterator it, it2, next;
-        for (it.init(fibres); ! it.done(); it++)
+        for (it = fibres.begin(); it != fibres.end(); it++)
             if ((*it).alpha > 0 && (*it).beta > 0) {
                 (*it).beta = (*it).alpha - (*it).beta;
                 k--;
@@ -138,28 +143,29 @@ void NSFS::reduce() {
         // Resort the array.
         // Each portion of the array with fixed index must be reversed.
         NExceptionalFibre tmpFibre;
-        it.init(fibres);
-        while (! it.done()) {
+        it = fibres.begin();
+        while (it != fibres.end()) {
             // INV: it points to the next block to be reversed.
             it2 = it;
-            for (it2++; (! it2.done()) && (*it2).alpha == (*it).alpha; it2++)
+            for (it2++; it2 != fibres.end() && (*it2).alpha == (*it).alpha;
+                    it2++)
                 ;
 
             // Now it2 points to the first element of the following block.
             next = it2;
-            if (it2.done())
-                it2.initEnd(fibres);
-            else
-                it2--;
+            it2--;
 
             // Now it2 points to the last element of this block.
             // Reverse this block by swapping elements at each end and
             // working towards the centre.
-            while (it.getArrayIndex() < it2.getArrayIndex()) {
+            while (it != it2) {
                 tmpFibre = (*it);
                 (*it) = (*it2);
                 (*it2) = tmpFibre;
+
                 it++;
+                if (it == it2)
+                    break;
                 it2--;
             }
 
@@ -179,20 +185,20 @@ NLensSpace* NSFS::isLensSpace() const {
         long p, q;
         // We will write this space as SFS(S2, (q,p)).
         if (fibres.size() == 1) {
-            q = fibres[0].alpha;
-            p = fibres[0].beta + (k * q);
+            q = fibres.front().alpha;
+            p = fibres.front().beta + (k * q);
         } else {
             // Precisely two fibres.
 
             // Check whether we have a (0,1) fibre, in which case there are
             // no guarantees.
-            if (fibres[0].alpha == 0)
+            if (fibres.front().alpha == 0)
                 return 0;
 
-            q = fibres[1].alpha;
-            p = fibres[1].beta + (k * q);
-            long a = fibres[0].alpha;
-            long b = fibres[0].beta;
+            q = fibres.back().alpha;
+            p = fibres.back().beta + (k * q);
+            long a = fibres.front().alpha;
+            long b = fibres.front().beta;
 
             // INV: We have space (a,b) (q,p) with 0 <= b < a.
             while (b > 0) {
@@ -241,13 +247,10 @@ void NSFS::writeTextShort(ostream& out) const {
         else
             out << ' ' << NExceptionalFibre(1, k);
     } else {
-        unsigned long nFibres = fibres.size();
-        for (unsigned long i = 0; i < nFibres; i++)
-            if (i < nFibres - 1)
-                out << ' ' << fibres[i];
-            else {
-                out << ' ' << getModifiedFinalFibre();
-            }
+        out << ' ';
+        copy(fibres.begin(), --fibres.end(),
+            ostream_iterator<NExceptionalFibre>(out, " "));
+        out << getModifiedFinalFibre();
     }
     out << ']';
 }
@@ -255,7 +258,7 @@ void NSFS::writeTextShort(ostream& out) const {
 NExceptionalFibre NSFS::getModifiedFinalFibre() const {
     if (fibres.size() == 0)
         return NExceptionalFibre(1, k);
-    NExceptionalFibre ans(fibres[fibres.size() - 1]);
+    NExceptionalFibre ans(fibres.back());
     ans.beta += (k * ans.alpha);
     return ans;
 }

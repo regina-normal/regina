@@ -35,8 +35,8 @@
 #define __NSFS_H
 #endif
 
+#include <list>
 #include "shareableobject.h"
-#include "utilities/ndynamicarray.h"
 #include "utilities/nmiscutils.h"
 
 class NLensSpace;
@@ -151,7 +151,7 @@ class NSFS : public ShareableObject {
         unsigned long orbitPunctures;
             /**< The number of punctures in the orbit manifold. */
 
-        NDynamicArray<NExceptionalFibre> fibres;
+        std::list<NExceptionalFibre> fibres;
             /**< The exceptional fibres.  This list will be sorted, will
                  contain no fibres of index 1 and will have all its fibres
                  of the form <tt>0 <= beta < alpha</tt> (unless some alpha
@@ -163,9 +163,6 @@ class NSFS : public ShareableObject {
             /**< The number of exceptional fibres stored whose second
                  parameters are non-zero.  This does not include (0,1)
                  fibres. */
-
-        typedef NDynamicArrayIterator<NExceptionalFibre> FibreIterator;
-            /**< An iterator to iterate through the fibre list. */
 
     public:
         /**

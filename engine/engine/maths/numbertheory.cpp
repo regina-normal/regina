@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include <algorithm>
+#include <functional>
 #include "maths/numbertheory.h"
 
 long reducedMod(long k, long modBase) {
@@ -142,49 +144,39 @@ unsigned long smallestPrimeFactor(unsigned long n,
     return 0;
 }
 
-void factorise(unsigned long n, NDoubleList<unsigned long>& factors) {
+void factorise(unsigned long n, std::list<unsigned long>& factors) {
     // First take out all factors of 2.
     while (n % 2 == 0) {
         n = n / 2;
-        factors.addLast(2);
+        factors.push_back(2);
     }
 
     // Run through finding smallest factors.
     unsigned long factor = 3;
     while ((factor = smallestPrimeFactor(n, factor))) {
-        factors.addLast(factor);
+        factors.push_back(factor);
         n = n / factor;
     }
 
     // Anything left is prime.
     if (n > 1)
-        factors.addLast(n);
+        factors.push_back(n);
 }
 
-void primesUpTo(const NLargeInteger& roof,
-        NDoubleList<NLargeInteger>& primes) {
+void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes) {
     // First check 2.
     if (roof < 2)
         return;
-    primes.addLast(NLargeInteger(2));
+    primes.push_back(NLargeInteger(2));
 
     // Run through the rest.
     NLargeInteger current(3);
-    NDoubleListIterator<NLargeInteger> it;
-    bool isPrime;
     while (current <= roof) {
         // Is current prime?
-        isPrime = true;
-        it.init(primes);
-        while (! it.done()) {
-            if ((current % (*it)) == 0) {
-                isPrime = false;
-                break;
-            }
-            it++;
-        }
-        if (isPrime)
-            primes.addLast(current);
+        if (find_if(primes.begin(), primes.end(), compose1(
+                bind2nd(equal_to<NLargeInteger>(), NLargeInteger::zero),
+                bind1st(modulus<NLargeInteger>(), current))) == primes.end())
+            primes.push_back(current);
         current += 2;
     }
 }

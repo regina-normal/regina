@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <list>
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/ndoublelist.h"
 
 NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(nTet);
@@ -134,12 +134,12 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
     NTetrahedron* base = tet;
     NPerm baseRoles(useVertexRoles);
 
-    NDoubleList<NTetrahedron*> tets;
-    NDoubleList<NPerm> roles;
+    std::list<NTetrahedron*> tets;
+    std::list<NPerm> roles;
     std::hash_set<NTetrahedron*, HashPointer> usedTets;
 
-    tets.addLast(tet);
-    roles.addLast(useVertexRoles);
+    tets.push_back(tet);
+    roles.push_back(useVertexRoles);
     usedTets.insert(tet);
 
     NTetrahedron* adjTet;
@@ -172,16 +172,16 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
         tet = adjTet;
         useVertexRoles = adjRoles;
 
-        tets.addLast(tet);
-        roles.addLast(useVertexRoles);
+        tets.push_back(tet);
+        roles.push_back(useVertexRoles);
         usedTets.insert(tet);
     }
 
     // We've found a spiralled solid torus.
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(tets.size());
 
-    NDoubleListIterator<NTetrahedron*> tit(tets);
-    NDoubleListIterator<NPerm> pit(roles);
+    std::list<NTetrahedron*>::const_iterator tit = tets.begin();
+    std::list<NPerm>::const_iterator pit = roles.begin();
     for (unsigned long i = 0; i < ans->nTet; i++) {
         ans->tet[i] = *tit;
         ans->vertexRoles[i] = *pit;
