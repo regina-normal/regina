@@ -26,5 +26,6 @@ Don't forget:
     changes & highlights (both . and kdeui/doc/en)
     what's this & tooltips
     documentation in reference manual, feature set & index
+    rebuild manpages
     website
     tag CVS
