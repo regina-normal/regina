@@ -362,10 +362,10 @@
   <title>Documentation</title>
   <para>
    Significant effort has been spent on documentation for the software.
-   The graphical user interface offers extensive assistance through
-   tooltips and &quot;What's This?&quot; texts.
-   In addition, a full reference manual is available for using &regina;
+   A full reference manual is available for using &regina;
    (you are reading this manual now).
+   In addition, the graphical user interface offers extensive assistance
+   through tooltips and &quot;What's This?&quot; texts.
    For users writing &python; scripts or for programmers seeking to modify
    or extend the software, the routines offered by the underlying
    mathematical core are also fully documented.
