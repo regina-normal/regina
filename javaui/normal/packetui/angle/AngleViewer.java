@@ -108,6 +108,12 @@ public class AngleViewer extends DefaultPacketViewer {
      */
     private class AngleTableModel extends AbstractTableModel {
         /**
+         * Creates a new table model.
+         */
+        public AngleTableModel() {
+        }
+
+        /**
          * Returns the number of rows in the table.
          * @return the number of rows.
          */

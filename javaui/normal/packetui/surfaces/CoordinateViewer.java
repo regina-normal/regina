@@ -366,6 +366,12 @@ public class CoordinateViewer extends DefaultPacketViewer
         private Color red = Color.red.darker().darker();
 
         /**
+         * Creates a new table model.
+         */
+        public CoordTableModel() {
+        }
+
+        /**
          * Returns the number of rows in the table.
          * @return the number of rows.
          */
