@@ -30,6 +30,21 @@
   </author>
   <title>Face pairing graphs and 3-manifold enumeration</title>
   <edition>Preprint</edition>
+  <issuenum><literal>math.GT/0307382</literal></issuenum>
+  <date>July 2003</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-nor7">
+  <abbrev>Bu2</abbrev>
+  <author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author>
+  <title>Structures of small closed non-orientable 3-manifold
+   triangulations</title>
+  <edition>Preprint</edition>
+  <issuenum><literal>math.GT/0311113</literal></issuenum>
   <date>July 2003</date>
  </biblioentry>
 
@@ -89,6 +104,7 @@
   </authorgroup>
   <title>0-efficient triangulations of 3-manifolds</title>
   <edition>Preprint</edition>
+  <issuenum><literal>math.GT/0207158</literal></issuenum>
   <date>July 2002</date>
  </biblioentry>
 
@@ -142,6 +158,7 @@
   </author>
   <title>Combinatorial optimization in geometry</title>
   <edition>Preprint</edition>
+  <issuenum><literal>math.GT/9907032</literal></issuenum>
   <date>July 1999</date>
  </biblioentry>
 
