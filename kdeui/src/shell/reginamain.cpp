@@ -240,7 +240,7 @@ void ReginaMain::pythonConsole() {
 }
 
 void ReginaMain::pythonReference() {
-    PythonManager::openPythonReference();
+    PythonManager::openPythonReference(this);
 }
 
 void ReginaMain::close() {

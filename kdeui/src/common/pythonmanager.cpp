@@ -33,6 +33,7 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qfileinfo.h>
 
 PythonManager::~PythonManager() {
     closeAllConsoles();
@@ -46,9 +47,16 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
     consoles.erase(console);
 }
 
-void PythonManager::openPythonReference() {
-    KApplication::kApplication()->invokeBrowser(
-        QString("file:%1/engine-docs/index.html").arg(REGINA_DATADIR));
+void PythonManager::openPythonReference(QWidget* parent) {
+    QString index = QString(REGINA_DATADIR) + "/engine-docs/index.html";
+    if (QFileInfo(index).exists())
+        KApplication::kApplication()->invokeBrowser("file:" + index);
+    else
+        KMessageBox::sorry(parent, i18n("<qt>The Python reference could "
+            "not be found.  Perhaps it is not installed?<p>"
+            "The Python reference (i.e., the API documentation for the "
+            "Regina calculation engine) should be installed in the directory "
+            "<tt>%1/engine-docs/</tt>.</qt>").arg(REGINA_DATADIR));
 }
 
 #ifdef HAVE_BOOST_PYTHON

@@ -318,7 +318,7 @@ void PythonConsole::scriptingOverview() {
 }
 
 void PythonConsole::pythonReference() {
-    PythonManager::openPythonReference();
+    PythonManager::openPythonReference(this);
 }
 
 void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
