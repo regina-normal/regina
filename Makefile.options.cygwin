@@ -47,8 +47,8 @@ export DOC_JAR := bin/regina-docs.jar
 # EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
 #         for the calculation engine, such as gmp and pthread.
 
-export JNI_INCLUDES := -I/win/jdk1.3/include \
-	-I/win/jdk1.3/include/win32
+export JNI_INCLUDES := -I/cygdrive/c/jdk1.3.1/include \
+	-I/cygdrive/c/jdk1.3.1/include/win32
 export CORBA_INCLUDES := -D__x86__
 export EXTRA_INCLUDES :=
 
