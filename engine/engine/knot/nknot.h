@@ -50,9 +50,9 @@ class NTriangulation;
 
 /**
  * Represents knots and links in S^3 and allows the construction of
- * a triangulation from them.
+ * triangulations from them.
  *
- * The knot/link can be presented in one of two ways:  Dowker notation
+ * A knot/link can be presented in one of two ways:  Dowker notation
  * which works for knots only, or using an embedded of a sign planar
  * graph in a plane which works for both knots and links.
  *
