@@ -1,0 +1,4 @@
+
+See the AUTHORS.txt in each immediate subdirectory for details.
+
+ -- Ben Burton <benb@acm.org>, Wed,  6 Jun 2001 20:46:19 -0500
