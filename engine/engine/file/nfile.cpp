@@ -267,12 +267,6 @@ NPacket* NFile::readPacketTree(NPacket* parent) {
     // something got out of kilter.
     setPosition(bookmark);
 
-    // If this is the tree matriarch, call tidyReadPacket() for each
-    // packet in the tree.
-    if (parent == 0)
-        for (child = ans; child; child = child->nextTreePacket())
-            child->tidyReadPacket();
-
     return ans;
 }
 
