@@ -116,7 +116,7 @@ else
 	. "$options"
 
 	# Run the application.
-	command="$Java \"-Djava.library.path=$JNIDir\" -cp \"$JavaUI:$JavaJNI:$JavaCORBA:$DocJar:$BTools:$JPython:$JavaHelp:$ExtraClasses\" normal.Application $@"
+	command="$Java \"-Djava.library.path=$JNIDir\" \"-DREGINA_OPTIONS=$REGINA_OPTIONS\" -cp \"$JavaUI:$JavaJNI:$JavaCORBA:$DocJar:$BTools:$JPython:$JavaHelp:$ExtraClasses\" normal.Application $@"
 
 	if ! eval $command; then
 		echo
