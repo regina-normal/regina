@@ -67,9 +67,9 @@ helprun :
 	clean
 
 binengine : binenginejni binenginecorba
-binenginejni :
+binenginejni : prepenginejni
 	cd engine && $(MAKE) binjni
-binenginecorba :
+binenginecorba : prepenginecorba
 	cd engine && $(MAKE) bincorba
 binjava : binjavaui binjavajni binjavacorba
 binjavaui :
