@@ -59,6 +59,11 @@ AC_PROG_CPP
 # Set the default language to C++ for subsequent tests.
 AC_LANG(C++)
 
+# Before we go further, make sure we have (long long).
+AC_CHECK_TYPE([long long], , [
+  REGINA_ERR_MISSING([Type (long long)], [the calculation engine])
+])
+
 AM_PROG_LIBTOOL
 AC_LIBTOOL_CXX
 LIBTOOL="$LIBTOOL --silent"
@@ -210,6 +215,7 @@ AC_SUBST(LIB_ENGINE)
 
 # Classpath required by the Java user interface.
 JAVAUI_CLASSPATH="\$(top_srcdir)/javaui:$CLASSPATH"
+REGINA_CLASSPATH_CONVERT(JAVAUI_CLASSPATH)
 AC_SUBST(JAVAUI_CLASSPATH)
 
 ###########################################################
@@ -222,6 +228,7 @@ AC_SUBST(JAVAUI_CLASSPATH)
 AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
+AC_CHECK_TYPES(__int64)
 
 # Check for library functions.
 AC_FUNC_ERROR_AT_LINE
