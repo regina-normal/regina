@@ -1,0 +1,40 @@
+##
+##  Regina - A Normal Surface Theory Calculator
+##  Makefile Template
+##
+##  Process this file with automake in the top-level directory
+##  to produce Makefile.in.
+##
+
+INCLUDES = @ENGINE_INCLUDES@
+
+utilitiesincludedir = $(pkgincludedir)/utilities
+
+noinst_LTLIBRARIES = libutilities.la
+
+libutilities_la_SOURCES = \
+  nbooleans.cpp \
+  nmpi.cpp \
+  nrational.cpp \
+  nthread.cpp \
+  stringutils.cpp \
+  xmlutils.cpp \
+  zstream.cpp
+
+utilitiesinclude_HEADERS = \
+  boostutils.h \
+  hashmap.h \
+  hashset.h \
+  hashutils.h \
+  memutils.h \
+  nbooleans.h \
+  nindexedarray.h \
+  nmpi.h \
+  nrational.h \
+  nthread.h \
+  stlutils.h \
+  stringutils.h \
+  stringutils.tcc \
+  xmlutils.h \
+  zstream.h
+

@@ -37,6 +37,8 @@
 #define __NRESOURCES_H
 #endif
 
+#include <config.h>
+
 #include <fstream>
 
 namespace regina {
@@ -223,7 +225,7 @@ inline NLocalFileResource::~NLocalFileResource() {
 }
 
 inline std::ios::openmode NLocalFileResource::sysModeRead() {
-    #ifdef __USE_IOS_NOCREATE
+    #if __USE_IOS_NOCREATE
     return std::ios::in | std::ios::binary | std::ios::nocreate;
     #else
     return std::ios::in | std::ios::binary;

@@ -106,11 +106,11 @@ PERL_PATH            = /usr/bin/perl
 
 # Dot options:
 
-HAVE_DOT             = YES
-CLASS_GRAPH          = YES
-COLLABORATION_GRAPH  = YES
-INCLUDE_GRAPH        = YES
-INCLUDED_BY_GRAPH    = YES
+HAVE_DOT             = @HAVE_DOT@
+CLASS_GRAPH          = @HAVE_DOT@
+COLLABORATION_GRAPH  = @HAVE_DOT@
+INCLUDE_GRAPH        = @HAVE_DOT@
+INCLUDED_BY_GRAPH    = @HAVE_DOT@
 GRAPHICAL_HIERARCHY  = NO
 
 # Search engine options:
