@@ -17,31 +17,9 @@ else
 fi
 
 # Address to which questions should be emailed.
-support="Ben Burton <benb@acm.org>"
+support="regina-user@lists.sourceforge.net"
 
 # ---------- Functions ----------
-
-# Send the given error message to stderr.
-# Usage: error <message>
-error () {
-	echo "$1" 1>&2
-}
-
-# Send the given warning message to stderr if $REGINA_VERBOSITY >= 1.
-# Usage: warn <message>
-warn () {
-	if [ 1 -le "$REGINA_VERBOSITY" ]; then
-		echo "$1" 1>&2
-	fi
-}
-
-# Send the given information message to stderr if $REGINA_VERBOSITY >= 2.
-# Usage: info <message>
-info () {
-	if [ 2 -le "$REGINA_VERBOSITY" ]; then
-		echo "$1" 1>&2
-	fi
-}
 
 # Test whether the given variable has one of the given values.
 # Usage: testvalue <value> <variable_name> <value1> [ <value2> ... ]
@@ -83,26 +61,10 @@ case "$REGINA_VERBOSITY" in
 	;;
 esac
 
-# --- Regina home directory ---
-
-# Derive it if nothing is specified.
-if [ -z "$REGINA_HOME" ]; then
-	export REGINA_HOME="`dirname "$0"`"
-fi
-
-# Check it's an appropriate value.
-if [ ! -f "$REGINA_HOME/regina" ]; then
-	error "Error: \$REGINA_HOME should be set to the base Regina directory."
-	error "       This is the directory containing the \"regina\" startup script."
-	exit 1
-fi
-
 # ---------- Export current variables ----------
 
 info "-- Verbosity level (REGINA_VERBOSITY): $REGINA_VERBOSITY"
-info "-- Regina home directory (REGINA_HOME): $REGINA_HOME"
 export REGINA_VERBOSITY
-export REGINA_HOME
 
 # End guard
 fi
