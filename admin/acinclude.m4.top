@@ -116,13 +116,119 @@ AC_DEFUN(REGINA_ERR_MISSING, [
 ])
 
 dnl
+dnl    REGINA_FOLLOW_SYMLINKS(PATH)
+dnl
+dnl    Modified from _ACJNI_FOLLOW_SYMLINKS which is
+dnl    copyright (c) Don Anderson and licensed under the GPL.
+dnl
+dnl    Follows a chain of symlinks beginning with <PATH>, finally setting
+dnl    variable _SYMLINKS_FOLLOWED to the real file or directory at the
+dnl    end of this chain.
+dnl
+dnl    Note that <PATH> may be a real file or directory to begin with.
+dnl
+AC_DEFUN(REGINA_FOLLOW_SYMLINKS, [
+  _cur="$1"
+  while ls -ld "$_cur" 2> /dev/null | grep " -> " > /dev/null; do
+    _slink=`ls -ld "$_cur" | sed 's/^.* -> //'`
+    case "$_slink" in
+      /* )
+        _cur="$_slink"
+        ;;
+      * )
+        # 'X' avoids triggering unwanted echo options.
+        _cur=`echo "X$_cur" | sed -e 's/^X//' -e 's:[[^/]]*$::'`"$_slink"
+        ;;
+    esac
+  done
+  _SYMLINKS_FOLLOWED="$_cur"
+])
+
+dnl
 dnl    REGINA_HEADER_JNI(TARGET-LIST, REQUIRED-BY)
 dnl
-dnl    TODO
+dnl    Based on the ideas in AC_JNI_INCLUDE_DIR which is
+dnl    copyright (c) Don Anderson and licensed under the GPL.
+dnl
+dnl    Checks for the Java JNI headers.
+dnl    Issues a warning and adds <TARGET-LIST> (which may consist of
+dnl    several targets) to $DO_NOT_COMPILE if the headers cannot be found.
+dnl
+dnl    This macro will attempt to locate the specific headers corresponding
+dnl    to the Java compiler $JAVAC.  A basic compilation test will also
+dnl    be done.
+dnl
+dnl    Variable JNI_INCLUDES is defined as precious.
+dnl
+dnl    AC_SUBST()s the following variables:
+dnl
+dnl        JNI_INCLUDES: The compiler flags for including the JNI headers;
+dnl                      this is only set if the headers were actually found.
+dnl                      If this variable has already been set, it will not
+dnl                      be touched.
+dnl
+dnl    Example: REGINA_HEADER_JNI(ENGINEJNI,
+dnl                 [the JNI calculation engine module])
 dnl
 AC_DEFUN(REGINA_HEADER_JNI, [
-  REGINA_DO_NOT_COMPILE([$1])
-  AC_MSG_WARN([Support for $2 is not yet ready.])
+  AC_ARG_VAR(JNI_INCLUDES, [Include flags for JNI headers])
+  if test "x$JNI_INCLUDES" = "x"; then
+    # Find the directory that should contain the headers.
+    progname=false
+    for i in $JAVAC; do progname="$i"; break; done
+    AC_PATH_PROG(_real_progname, [$progname], [$JAVAC])
+
+    AC_MSG_CHECKING([for JNI headers])
+    REGINA_FOLLOW_SYMLINKS([$_real_progname])
+    _JTOPDIR=`echo "$_SYMLINKS_FOLLOWED" | sed -e 's://*:/:g;s:/[[^/]]*$::'`
+    _JTOPDIR2=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
+    case "$host_os" in
+      darwin* )
+        _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
+        _JINC="$_JTOPDIR/Headers"
+        ;;
+      * )
+        _JINC="$_JTOPDIR/include"
+        ;;
+    esac
+
+    _JINC=none
+    for i in "$_JTOPDIR/include" "$_JTOPDIR/Headers" \
+        "$_JTOPDIR2/include" "$_JTOPDIR2/Headers"; do
+      if test -f "$i/jni.h"; then
+        _JINC="$i"
+        break
+      fi
+    done
+
+    if test "x$_JINC" = "xnone"; then
+      AC_MSG_RESULT([not found])
+      REGINA_DO_NOT_COMPILE([$1])
+      AC_MSG_WARN([[The JNI headers are unavailable; $2 will not be built.]])
+    else
+      _TRIAL_JNI="-I$_JINC"
+
+      # Look for machine-dependent subdirectories.
+      for i in "$_JINC"/*; do
+        if test -e "$i/jni_md.h"; then
+          _TRIAL_JNI="$_TRIAL_JNI -I$i"
+          break
+        fi
+      done
+
+      echo "#include <jni.h>" > conftest.$ac_ext
+      echo "jobject obj;" >> conftest.$ac_ext
+      ac_compile='${CXX-g++} -c $_TRIAL_JNI $CXXFLAGS $CPPFLAGS conftest.$ac_ext'
+      if AC_TRY_EVAL(ac_compile); then
+        AC_MSG_RESULT([$_TRIAL_JNI])
+        JNI_INCLUDES="$_TRIAL_JNI"
+      else
+        AC_MSG_RESULT([cannot compile])
+        REGINA_DO_NOT_COMPILE([$1])
+        AC_MSG_WARN([[The JNI headers are unavailable; $2 will not be built.]])
+      fi
+    fi
+  fi
   AC_SUBST(JNI_INCLUDES)
 ])
 
@@ -289,7 +395,7 @@ AC_DEFUN(REGINA_PROG_JAVAC, [
     fi
   else
     REGINA_PROG_JAVAC_USABLE([$JAVAC], , [
-      AC_MSG_WARN([[Java compiler $1 is not suitable; $2 will not be built.]])
+      AC_MSG_WARN([[Java compiler $JAVAC is not suitable; $2 will not be built.]])
       JAVAC=none
     ])
   fi
