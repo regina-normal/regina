@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file python.h
+/*! \file pythonhandler.h
  *  \brief Allows interaction with Python scripts.
  */
 

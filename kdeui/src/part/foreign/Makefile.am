@@ -11,6 +11,7 @@ INCLUDES = $(all_includes)
 noinst_LTLIBRARIES = libforeign.la
 
 noinst_HEADERS = \
+	dehydrationhandler.h \
 	exportdialog.h \
 	importdialog.h \
 	packetexporter.h \
@@ -20,6 +21,7 @@ noinst_HEADERS = \
 	snappeahandler.h
 
 libforeign_la_SOURCES = \
+	dehydrationhandler.cpp \
 	exportdialog.cpp \
 	importdialog.cpp \
 	pythonhandler.cpp \

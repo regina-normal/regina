@@ -26,29 +26,28 @@
 
 /* end stub */
 
-/*! \file snappeahandler.h
- *  \brief Allows interaction with SnapPea data files.
+/*! \file dehydrationhandler.h
+ *  \brief Allows interaction with dehydrated triangulation lists.
  */
 
-#ifndef __SNAPPEAHANDLER_H
-#define __SNAPPEAHANDLER_H
+#ifndef __DEHYDRATIONHANDLER_H
+#define __DEHYDRATIONHANDLER_H
 
-#include "packetexporter.h"
 #include "packetimporter.h"
 
 /**
- * An object responsible for importing and export data to and from
- * SnapPea files.
+ * An object responsible for importing data from
+ * dehydrated triangulation lists.
  *
  * Rather than creating new objects of this class, the globally
- * available object SnapPeaHandler::instance should always be used.
+ * available object DehydrationHandler::instance should always be used.
  */
-class SnapPeaHandler : public PacketImporter, public PacketExporter {
+class DehydrationHandler : public PacketImporter {
     public:
         /**
          * A globally available instance of this class.
          */
-        static const SnapPeaHandler instance;
+        static const DehydrationHandler instance;
 
     public:
         /**
@@ -57,21 +56,14 @@ class SnapPeaHandler : public PacketImporter, public PacketExporter {
         virtual regina::NPacket* import(const QString& fileName,
             QWidget* parentWidget) const;
 
-        /**
-         * PacketExporter overrides:
-         */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
-            const QString& fileName, QWidget* parentWidget) const;
-
     private:
         /**
-         * Don't allow people to construct their own SnapPea handlers.
+         * Don't allow people to construct their own dehydration handlers.
          */
-        SnapPeaHandler();
+        DehydrationHandler();
 };
 
-inline SnapPeaHandler::SnapPeaHandler() {
+inline DehydrationHandler::DehydrationHandler() {
 }
 
 #endif

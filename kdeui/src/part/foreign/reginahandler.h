@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file regina.h
+/*! \file reginahandler.h
  *  \brief Allows interaction with other Regina data files.
  */
 
