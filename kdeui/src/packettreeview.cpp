@@ -37,36 +37,31 @@
 using regina::NPacket;
 
 PacketTreeItem::PacketTreeItem(QListView* parent, NPacket* realPacket) :
-        KListViewItem(parent, realPacket->getFullName()), packet(realPacket) {
+        KListViewItem(parent), packet(realPacket) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(QListViewItem* parent,
         NPacket* realPacket) :
-        KListViewItem(parent, realPacket->getFullName()), packet(realPacket) {
+        KListViewItem(parent), packet(realPacket) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(QListView* parent,
         QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after, realPacket->getFullName()),
-        packet(realPacket) {
+        KListViewItem(parent, after), packet(realPacket) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(QListViewItem* parent,
         QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after, realPacket->getFullName()),
-        packet(realPacket) {
+        KListViewItem(parent, after), packet(realPacket) {
     init();
 }
 
-QString PacketTreeItem::text(int) const {
-    return packet->getFullName();
-}
-
 void PacketTreeItem::init() {
-    //setPixmap(TODO);
+    refreshLabel();
+    // TODO: setPixmap(something appropriate)
 }
 
 void PacketTreeItem::fill() {
@@ -81,9 +76,20 @@ void PacketTreeItem::fill() {
     }
 }
 
-void PacketTreeItem::refresh() {
-    // TODO: Proper refresh.
+void PacketTreeItem::refreshSubtree() {
+    // TODO: Write this routine.
     fill();
+}
+
+void PacketTreeItem::refreshLabel() {
+    if (packet) {
+        std::string newLabel = packet->getPacketLabel();
+        if (packet->hasTags())
+            newLabel += " (+)";
+        if (text(0) != newLabel)
+            setText(0, newLabel);
+    } else
+        setText(0, i18n("<Deleted>"));
 }
 
 PacketTreeView::PacketTreeView(QWidget* parent, const char* name) :

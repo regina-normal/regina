@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file packettreeview.h
- *  \brief Provides the Regina part that does all the real work.
+ *  \brief Provides a visual representation of a Regina packet tree.
  */
 
 #ifndef __PACKETTREEVIEW_H
@@ -39,8 +39,15 @@ namespace regina {
     class NPacket;
 };
 
+/**
+ * A single item in a Regina packet tree.
+ */
 class PacketTreeItem : public KListViewItem {
     private:
+        /**
+         * The underlying packet, or 0 if the underlying packet has
+         * already been destroyed.
+         */
         regina::NPacket* packet;
 
     public:
@@ -54,32 +61,68 @@ class PacketTreeItem : public KListViewItem {
         PacketTreeItem(QListViewItem* parent, QListViewItem* after,
                 regina::NPacket* realPacket);
 
-        regina::NPacket* getPacket() {
-            return packet;
-        }
+        /**
+         * Returns the underlying packet.
+         */
+        regina::NPacket* getPacket();
 
-        virtual QString text(int) const;
-
+        /**
+         * Fills this item with a subtree of items corresponding to the
+         * underlying packet subtree.
+         *
+         * \warning Any existing children of this item will not be
+         * deleted!  This routine must only be done when the subtree is
+         * being initially filled.
+         */
         void fill();
-        void refresh();
+        /**
+         * Updates the subtree descending from this item to match the
+         * corresponding subtree in the underlying packet tree.
+         */
+        void refreshSubtree();
+        /**
+         * Updates the text of this item to match the underlying packet
+         * label.
+         */
+        void refreshLabel();
 
     private:
+        /**
+         * Initialises the appearance of this item.
+         */
         void init();
 };
 
 /**
- * The Regina topology data editor.
+ * A visual representation of an entire Regina packet tree.
  *
- * This part does all the real work of working with Regina data files.
+ * This tree must be filled only with items of type PacketTreeItem.
  */
 class PacketTreeView : public KListView {
     Q_OBJECT
 
     public:
+        /**
+         * Creates an empty tree.  This tree must be initialised using
+         * fill().
+         */
         PacketTreeView(QWidget* parent = 0, const char* name = 0);
 
+        /**
+         * Fills this tree with items corresponding to the given
+         * packet tree.  Any existing items in this tree will be removed.
+         */
         void fill(regina::NPacket* topPacket);
+        /**
+         * Updates this tree to match the given packet tree.  The final
+         * result should be the same as for fill(), but if the tree is
+         * already mostly complete then it should be somewhat faster.
+         */
         void refresh(regina::NPacket* topPacket);
 };
+
+inline regina::NPacket* PacketTreeItem::getPacket() {
+    return packet;
+}
 
 #endif

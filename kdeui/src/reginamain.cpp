@@ -225,7 +225,7 @@ bool ReginaMain::openURL(const KURL& url) {
             "I do not know how to open files of type %1.")).arg(name));
 
     if (! currentPart)
-        return;
+        return false;
 
     // We now have a part with which to edit the given data file.
     embedPart();
