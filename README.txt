@@ -22,6 +22,7 @@ Essential:
     libpopt (the Popt command-line parsing library), version >= 1.3
 
 KDE User Interface (optional):
+    qt (the GUI toolkit), version >= 3.2
     kdelibs (the core KDE libraries), version >= 3.1
 
 Python Bindings (optional):
@@ -54,6 +55,11 @@ Regina like Debian does. ;-)
 
 Regina now uses the standard "./configure", "make"
 build procedure.  See INSTALL.txt for details.
+
+If you have difficulty compiling or running Regina, you can check the
+troubleshooting page to see if your problem has already been encountered:
+
+    http://regina.sourceforge.net/docs/troubleshooting.html
 
 For the impatient, the short summary is as follows.  INSTALL.txt contains
 details for customising this process.
@@ -100,6 +106,9 @@ built, a reason will be given earlier in the "./configure" output.
     ... (lots more Makefiles)
     ...
     prompt$
+
+If you run into problems you are of course welcome to email either myself
+or the user list (regina-user@lists.sourceforge.net) for assistance.
 
 Ben Burton <bab@debian.org>
 http://regina.sourceforge.net/
