@@ -436,8 +436,14 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
 
             if (trying.isPastEnd(nTetrahedra, true)) {
                 // We have a complete automorphism!
-                list.push_back(new NIsomorphismDirect(nTetrahedra));
-                // TODO: make a real automorphism.
+                NIsomorphismDirect* ans = new NIsomorphismDirect(nTetrahedra);
+                for (i = 0; i < nTetrahedra; i++) {
+                    ans->tetImage(i) = image[i * 4].tet;
+                    ans->facePerm(i) = NPerm(image[i * 4].face,
+                        image[i * 4 + 1].face, image[i * 4 + 2].face,
+                        image[i * 4 + 3].face);
+                }
+                list.push_back(ans);
                 stepDown = true;
             } else {
                 // Move to the next candidate.
