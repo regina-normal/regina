@@ -38,6 +38,7 @@
 
 #include <config.h>
 
+#include <string>
 #include "utilities/hashset.h"
 
 /*! \namespace stdhash
