@@ -26,85 +26,36 @@
 
 /* end stub */
 
-/*! \file nscriptui.h
- *  \brief Provides an interface for viewing script packets.
+/*! \file nscriptvaritems.h
+ *  \brief Provides various table items for script variables.
  */
 
-#ifndef __NSCRIPTUI_H
-#define __NSCRIPTUI_H
+#ifndef __NSCRIPTVARITEMS_H
+#define __NSCRIPTVARITEMS_H
 
-#include "../packetui.h"
+#include <qtable.h>
 
-class QSplitter;
-class QTable;
+/**
+ * A table item for script variable names.
+ */
+class ScriptVarNameItem : public QTableItem {
+    public:
+        /**
+         * Constructor.
+         */
+        ScriptVarNameItem(QTable* table, const QString& name);
 
-namespace KTextEditor {
-    class EditInterface;
-    class View;
-};
-
-namespace regina {
-    class NPacket;
-    class NScript;
+        /**
+         * QTableItem overrides.
+         */
+        virtual QWidget* createEditor() const;
+        virtual void setContentFromEditor(QWidget* editor);
 };
 
 /**
- * A packet interface for viewing script packets.
- */
-class NScriptUI : public QObject, public PacketUI {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NScript* script;
-
-        /**
-         * Internal components
-         */
-        QSplitter* ui;
-        QTable* varTable;
-        KTextEditor::Document* document;
-        KTextEditor::EditInterface* editInterface;
-        KTextEditor::View* view;
-
-        /**
-         * Properties
-         */
-        bool isCommitting;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NScriptUI(regina::NScript* packet, PacketPane* newEnclosingPane,
-                KTextEditor::Document* doc, bool readWrite);
-        ~NScriptUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        KTextEditor::Document* getTextComponent();
-        void commit();
-        void refresh();
-        void setReadWrite(bool readWrite);
-
-    public slots:
-        /**
-         * Called whenever the script or its variables within the interface
-         * changes.
-         */
-        void notifyScriptChanged();
-
-    private:
-        /**
-         * Set the internal text editor to use syntax highlighting for
-         * Python, if possible.
-         */
-        void setPythonMode();
+ * A table item for script variable values.
+class ScriptVarValueItem : public QTableItem {
 };
+ */
 
 #endif

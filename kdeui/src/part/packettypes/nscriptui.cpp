@@ -31,13 +31,21 @@
 
 // UI includes:
 #include "nscriptui.h"
+#include "nscriptvaritems.h"
 
 #include <cstring>
+#include <klocale.h>
 #include <ktexteditor/document.h>
 #include <ktexteditor/editinterface.h>
 #include <ktexteditor/highlightinginterface.h>
 #include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
+#include <qsplitter.h>
+#include <qtable.h>
+
+#define SCRIPT_TABLE_WEIGHT 1
+#define SCRIPT_EDITOR_WEIGHT 3
+#define SCRIPT_TOTAL_WEIGHT 4
 
 using regina::NPacket;
 using regina::NScript;
@@ -46,14 +54,60 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc, bool readWrite) :
         PacketUI(enclosingPane), script(packet), document(doc),
         isCommitting(false) {
+    ui = new QSplitter(Qt::Vertical);
+
+    // --- Variable Table ---
+
+    varTable = new QTable(0, 2, ui);
+    varTable->setReadOnly(! readWrite);
+
+    QHeader* hdr = varTable->verticalHeader();
+    hdr->hide();
+    varTable->setLeftMargin(0);
+
+    hdr = varTable->horizontalHeader();
+    hdr->setLabel(0, i18n("Variable"));
+    hdr->setLabel(1, i18n("Value"));
+
+
+
+
+
+
+    varTable->setColumnStretchable(0, true);
+    varTable->setColumnStretchable(1, true);
+
+    varTable->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,
+        QSizePolicy::Expanding, SCRIPT_TABLE_WEIGHT, SCRIPT_TABLE_WEIGHT));
+    ui->setResizeMode(varTable, QSplitter::Stretch);
+
+    // --- Text Editor ---
+
     // Create a view before we do anything else.
     // Otherwise the Vim component crashes.
-    view = document->createView(0);
+    view = document->createView(ui);
     editInterface = KTextEditor::editInterface(document);
 
     // Prepare the components.
     document->setReadWrite(readWrite);
     setPythonMode();
+
+    view->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
+        QSizePolicy::MinimumExpanding, SCRIPT_EDITOR_WEIGHT,
+        SCRIPT_EDITOR_WEIGHT));
+    ui->setResizeMode(view, QSplitter::Stretch);
+
+    // --- Finalising ---
+
+    // Resize the components within the splitter so that the editor has most
+    // of the space.
+    QValueList<int> sizes = ui->sizes();
+    int totalSize = sizes[0] + sizes[1];
+    sizes[0] = totalSize * SCRIPT_TABLE_WEIGHT / SCRIPT_TOTAL_WEIGHT;
+    if (sizes[0] < varTable->minimumHeight())
+        sizes[0] = varTable->minimumHeight();
+    sizes[1] = totalSize - sizes[0];
+    ui->setSizes(sizes);
 
     // Fill the components with data.
     refresh();
@@ -66,9 +120,11 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     else
         KTextEditor::undoInterface(document)->clearUndo();
 
-    // Final tidying up.
+    // Notify us of any changes.
+    connect(varTable, SIGNAL(valueChanged(int, int)),
+        this, SLOT(notifyScriptChanged()));
     connect(document, SIGNAL(textChanged()),
-        this, SLOT(notifyTextChanged()));
+        this, SLOT(notifyScriptChanged()));
 }
 
 NScriptUI::~NScriptUI() {
@@ -80,7 +136,7 @@ NPacket* NScriptUI::getPacket() {
 }
 
 QWidget* NScriptUI::getInterface() {
-    return view;
+    return ui;
 }
 
 KTextEditor::Document* NScriptUI::getTextComponent() {
@@ -104,6 +160,16 @@ void NScriptUI::commit() {
 }
 
 void NScriptUI::refresh() {
+    // Refresh the variables.
+    // TODO
+    unsigned long nVars = script->getNumberOfVariables();
+    varTable->setNumRows(nVars);
+    for (unsigned long i = 0; i < nVars; i++) {
+        varTable->setItem(i, 0, new ScriptVarNameItem(varTable,
+            script->getVariableName(i).c_str()));
+        varTable->setText(i, 1, script->getVariableValue(i).c_str());
+    }
+
     // Refresh the lines.
     editInterface->clear();
     unsigned long nLines = script->getNumberOfLines();
@@ -111,17 +177,15 @@ void NScriptUI::refresh() {
         editInterface->insertLine(editInterface->numLines(),
             script->getLine(i).c_str());
 
-    // Refresh the variables.
-    // TODO
-
     setDirty(false);
 }
 
 void NScriptUI::setReadWrite(bool readWrite) {
+    varTable->setReadOnly(! readWrite);
     document->setReadWrite(readWrite);
 }
 
-void NScriptUI::notifyTextChanged() {
+void NScriptUI::notifyScriptChanged() {
     if (! isCommitting)
         setDirty(true);
 }

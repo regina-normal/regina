@@ -26,85 +26,40 @@
 
 /* end stub */
 
-/*! \file nscriptui.h
- *  \brief Provides an interface for viewing script packets.
- */
+// Regina core includes:
+#include "packet/npacket.h"
 
-#ifndef __NSCRIPTUI_H
-#define __NSCRIPTUI_H
+// UI includes:
+#include "nscriptvaritems.h"
 
-#include "../packetui.h"
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <qlineedit.h>
+#include <qtable.h>
 
-class QSplitter;
-class QTable;
+using regina::NPacket;
 
-namespace KTextEditor {
-    class EditInterface;
-    class View;
-};
+ScriptVarNameItem::ScriptVarNameItem(QTable* table, const QString& name) :
+        QTableItem(table, OnTyping, name) {
+}
 
-namespace regina {
-    class NPacket;
-    class NScript;
-};
+QWidget* ScriptVarNameItem::createEditor() const {
+    QLineEdit* editor = new QLineEdit(text(), table()->viewport());
+    return editor;
+}
 
-/**
- * A packet interface for viewing script packets.
- */
-class NScriptUI : public QObject, public PacketUI {
-    Q_OBJECT
+void ScriptVarNameItem::setContentFromEditor(QWidget* editor) {
+    if (editor->inherits("QLineEdit")) {
+        QString curr = dynamic_cast<QLineEdit*>(editor)->
+            text().stripWhiteSpace();
+        if (curr.isEmpty()) {
+            KMessageBox::error(editor, i18n(
+                "Variable names cannot be empty."));
+        } else
+            setText(curr);
+    } else if (0) {
+        // Hunt for a matching variable name.
+    } else
+        QTableItem::setContentFromEditor(editor);
+}
 
-    private:
-        /**
-         * Packet details
-         */
-        regina::NScript* script;
-
-        /**
-         * Internal components
-         */
-        QSplitter* ui;
-        QTable* varTable;
-        KTextEditor::Document* document;
-        KTextEditor::EditInterface* editInterface;
-        KTextEditor::View* view;
-
-        /**
-         * Properties
-         */
-        bool isCommitting;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NScriptUI(regina::NScript* packet, PacketPane* newEnclosingPane,
-                KTextEditor::Document* doc, bool readWrite);
-        ~NScriptUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        KTextEditor::Document* getTextComponent();
-        void commit();
-        void refresh();
-        void setReadWrite(bool readWrite);
-
-    public slots:
-        /**
-         * Called whenever the script or its variables within the interface
-         * changes.
-         */
-        void notifyScriptChanged();
-
-    private:
-        /**
-         * Set the internal text editor to use syntax highlighting for
-         * Python, if possible.
-         */
-        void setPythonMode();
-};
-
-#endif

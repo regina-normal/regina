@@ -13,11 +13,13 @@ noinst_LTLIBRARIES = libpackettypes.la
 noinst_HEADERS = \
 	ncontainerui.h \
 	nscriptui.h \
+	nscriptvaritems.h \
 	ntextui.h
 
 libpackettypes_la_SOURCES = \
 	ncontainerui.cpp \
 	nscriptui.cpp \
+	nscriptvaritems.cpp \
 	ntextui.cpp
 
 METASOURCES = AUTO
