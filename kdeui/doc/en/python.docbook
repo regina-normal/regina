@@ -7,7 +7,7 @@
   <para>
    &regina; contains inbuilt scripting, which offers you fine control
    over the underlying calculation engine and enables you to automate
-   large amounts of processing using the underlying &python;
+   large amounts of processing using the &python;
    programming language.  Scripts can be written and run from within
    &regina;, and a well-written script can relieve you of much work
    that would otherwise have to be painstakingly done by hand
@@ -17,29 +17,46 @@
   <sect2 id="python-invoking">
    <title>Invoking Scripting</title>
    <para>
-    Scripting is available in &regina; through two means.  You can
-    either bring up a &python; console through the
-    <guimenu>Tools</guimenu> menu (or the corresponding toolbar button),
-    or you can create a new
-    <link linkend="packet-script">script packet</link>.  Script packets have
-    the advantage that they can work seamlessly with many other packets in the
-    same file (through the use of script variables), and script packets will
-    also be saved with the file for later reuse.
+    Scripting is available by several means.
+    <itemizedlist>
+     <listitem><para>
+      You can run the command-line program
+      <link linkend="man-regina-python"><command>regina-python</command></link>
+      without using the graphical user interface at all.  This is fast
+      and allows the redirection of input and output.
+     </para></listitem>
+     <listitem><para>
+      You can bring up a &python; console through the
+      <guimenu>Tools</guimenu> menu (or the corresponding toolbar button).
+     </para></listitem>
+     <listitem><para>
+      You can create a new <link linkend="packet-script">script
+      packet</link>.  Script packets have the advantage that they
+      can work seamlessly with many other packets in the
+      same file through the use of script variables.
+      Furthermore, script packets are saved with the data file for later reuse.
+     </para></listitem>
+    </itemizedlist>
    </para>
   </sect2>
 
   <sect2 id="python-python">
    <title>Using &python;</title>
    <para>
-    All scripts are run in &python;.
-    When using &python;, &regina; objects, classes and methods can be directly
-    accessed as if they were &python; objects, classes and methods.
+    All scripts are run in &python; (<ulink url="http://www.python.org/"/>).
+    When using &python;, &regina; objects, classes and methods can be
+    accessed directly as if they were &python; objects, classes and methods.
    </para>
    <para>
-    Documentation has been generated from the fairly extensive
-    comments within the &regina; sources.  This includes a complete
-    reference for the &regina; calculation engine, which forms a useful
-    reference when writing &python; scripts.
+    &regina; includes a complete reference for the calculation engine,
+    which describes in detail the objects, class and methods available
+    when writing &python; scripts.  This documentation is generally
+    installed in a location similar to
+    <filename>/usr/local/share/regina/engine-docs/</filename>, although this
+    may differ with your distribution or installation.  The
+    documentation installation path can be changed by passing special
+    options to <userinput>./configure</userinput> when building &regina;
+    from sources.
    </para>
    <para>
     Wherever &regina; gives you access to &python;, you may assume that the
@@ -60,8 +77,8 @@
    </para>
    <warning><para>
     Probably the easiest way to crash the program is to bring up
-    a &python; console and do something untoward.  &python; and scripting offer
-    very low-level control over the engine, but also provide the
+    a &python; console and do something untoward.  &python; scripting
+    offers very low-level control over the engine, but also comes with the
     associated dangers.  The general idea is that &python; gives you
     direct access to the &cpp; calculation engine and the user interface has
     no way of knowing what you are tinkering with.  Thus you should tread
@@ -72,10 +89,13 @@
   <sect2 id="python-gui">
    <title>Cooperating with the &gui;</title>
    <para>
-    If you cannot edit a packet through the GUI, there is a reason for
-    this (for instance, a normal surface list will rely upon its parent
-    triangulation remaining constant and so any triangulation with child
-    surface lists will be uneditable).  Thus you should not use &python; as a
+    If you cannot edit a packet from within the GUI, there is generally
+    a reason for this.  For instance, a normal surface list will rely
+    upon its parent triangulation remaining fixed and so any
+    triangulation with child surface lists will be uneditable.
+   </para>
+   <para>
+    Therefore you should not use &python; as a
     way to get around that barrier; instead you should respect that
     barrier.  Perhaps you can <link linkend="packet-clone">clone the
     packet</link> in question without cloning its subtree (<menuchoice>

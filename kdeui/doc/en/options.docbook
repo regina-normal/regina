@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <chapter id="options">
- <title>Internal Configuration</title>
+ <title>Configuration</title>
  <para>
   &regina; can be configured through the
    <menuchoice>
@@ -8,43 +8,53 @@
     <guisubmenu>Configure Regina</guisubmenu>
    </menuchoice>
   menu item.  Several configuration pages are available, each of which
-  is descrobed below.
+  is descrobed here.
  </para>
 
- <sect1 id="options-display">
-  <title>Display Options</title>
+ <sect1 id="options-general">
+  <title>General Options</title>
 
   <para>
-   The following options are available on the display page.
+   The following options are available on the general options page.
   </para>
 
   <glosslist>
    <glossentry>
-    <glossterm>Automatic File Extension</glossterm>
+    <glossterm>Automatic file extension</glossterm>
     <glossdef><para>
      This option can be toggled on or off; it represents whether a
      filename is modified before a &regina; data file is saved.
-     When on, if the user does not specify a filename extension, the
+     When on, if the user does not specify a filename extension then the
      default extension of <filename>.rga</filename> will be appended.
     </para></glossdef>
    </glossentry>
    <glossentry>
-    <glossterm>Automatic Packet Docking</glossterm>
+    <glossterm>Automatic packet docking</glossterm>
     <glossdef><para>
      This option can be toggled on or off.  When off, any new packet
-     panes (created when you <link linkend="packet-view">view or edit
+     viewers (created when you <link linkend="packet-view">view or edit
      a packet</link>) will be opened in
-     separate floating windows.  When on, new packet panes will be
-     docked into the main &regina; window if possible.
+     separate floating windows.  When on, new packet viewers will be
+     docked into the right-hand side of the
+     <link linkend="shot-packettree">main &regina; window</link>
+     if possible.
     </para></glossdef>
    </glossentry>
-
    <glossentry>
-    <glossterm>Display Icon</glossterm>
+    <glossterm>Display icon</glossterm>
     <glossdef><para>
      This option can be toggled on or off; it represents whether the
      large &regina; icon will be displayed beneath the packet tree in
      the main window.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>Packet tree jump size</glossterm>
+    <glossdef><para>
+     This specifies how many steps a packet moves within the tree when
+     the <guimenuitem>Jump Up</guimenuitem> or
+     <guimenuitem>Jump Down</guimenuitem> menu items are selected
+     (or the corresponding toolbar buttons pressed).
     </para></glossdef>
    </glossentry>
   </glosslist>
@@ -59,12 +69,22 @@
 
   <glosslist>
    <glossentry>
-    <glossterm>Automatic File Extension</glossterm>
+    <glossterm>Edit mode</glossterm>
     <glossdef><para>
-     This option can be toggled on or off; it represents whether a
-     filename is modified before a &regina; data file is saved.
-     When on, if the user does not specify a filename extension, the
-     default extension of <filename>.rga</filename> will be appended.
+     This determines whether the triangulation gluings editor uses
+     direct edit mode or pop-up dialog mode.  See the
+     <link linkend="tri-editgluings">gluings editor documentation</link>
+     for details.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>Surface calculation threshold</glossterm>
+    <glossdef><para>
+     This determines how many tetrahedra a triangulation must have
+     before properties relating to its normal
+     surfaces are not automatically calculated.  See the
+     <link linkend="tri-surfaceproperties">normal surface properties
+     documentation</link> for details.
     </para></glossdef>
    </glossentry>
   </glosslist>

@@ -359,7 +359,7 @@
     </menuchoice>
     menu item, the currently selected packet will be opened for viewing
     and/or editing.  Depending in part upon the current setting of
-    the <link linkend="options-display">Automatic Packet Docking</link>
+    the <link linkend="options-general">Automatic Packet Docking</link>
     option, the packet will either be opened directly within the main
     &regina; window or in a new floating window.
    </para>
