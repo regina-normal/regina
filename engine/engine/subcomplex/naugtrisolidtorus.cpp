@@ -30,10 +30,12 @@
 
 #ifdef __NO_INCLUDE_PATHS
     #include "ncomponent.h"
+    #include "nedge.h"
     #include "ntetrahedron.h"
     #include "naugtrisolidtorus.h"
 #else
     #include "engine/triangulation/ncomponent.h"
+    #include "engine/triangulation/nedge.h"
     #include "engine/triangulation/ntetrahedron.h"
     #include "engine/subcomplex/naugtrisolidtorus.h"
 #endif
@@ -258,85 +260,163 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                 }
             }
         }
+
+        // Didn't find anything.
+        return 0;
     }
 
-    // Ignoring the >3 tetrahedron case for now.
-    return 0;
-
-    /*
-    NLayeredSolidTorus* torus;
-    for (unsigned long i = 0; i < nTet; i++) {
-        torus = NLayeredSolidTorus::isLayeredSolidTorusBase(
-            comp->getTetrahedron(i));
-        if (torus) {
-            // We have found a layered solid torus; either this makes the
-            // layered lens space or nothing makes the layered lens space.
-            NTetrahedron* tet = torus->getTopLevel();
-            int tf0 = torus->getTopFace(0);
-            int tf1 = torus->getTopFace(1);
-            if (tet->getAdjacentTetrahedron(tf0) != tet) {
-                delete torus;
+    // We have more than three tetrahedra.
+    // There must be bewteen 1 and 3 layered solid tori (note that there
+    // will be no layered solid tori other than the (1-3) glued to the
+    // boundary annuli on the core, since no other tetrahedron is glued
+    // to itself.
+    int nLayered = 0;
+    NLayeredSolidTorus* layered[4];
+    unsigned long usedTets = 0;
+    for (unsigned long t = 0; t < nTet; t++) {
+        layered[nLayered] = NLayeredSolidTorus::isLayeredSolidTorusBase(
+            comp->getTetrahedron(t));
+        if (layered[nLayered]) {
+            usedTets += layered[nLayered]->getNumberOfTetrahedra();
+            nLayered++;
+            if (nLayered == 4) {
+                // Too many layered solid tori.
+                for (int i = 0; i < nLayered; i++)
+                    delete layered[i];
                 return 0;
             }
+        }
+    }
 
-            // This is the real thing!
-            NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-            ans->torus = torus;
+    if (usedTets + 3 != nTet) {
+        // Should only have the three core tetrahedra leftover.
+        return 0;
+    }
 
-            NPerm perm = tet->getAdjacentTetrahedronGluing(tf0);
-            if (perm[tf1] == tf0) {
-                // Snapped shut.
-                ans->mobiusBoundaryGroup = torus->getTopEdgeGroup(
-                    5 - edgeNumber[tf0][tf1]);
-            } else {
-                // Twisted shut.
-                ans->mobiusBoundaryGroup = torus->getTopEdgeGroup(
-                    edgeNumber[perm[tf1]][tf0]);
+    // We now know nLayered >= 1 since usedTets == nTet - 3.
+
+    // Examine each layered solid torus.
+    NTetrahedron* top[3];
+    int i, j;
+    for (i = 0; i < nLayered; i++) {
+        top[i] = layered[i]->getTopLevel();
+        if (top[i]->getAdjacentTetrahedron(layered[i]->getTopFace(0)) ==
+                top[i]->getAdjacentTetrahedron(layered[i]->getTopFace(1))) {
+            // These two top faces should be glued to different
+            // tetrahedra.
+            for (j = 0; j < nLayered; j++)
+                delete layered[j];
+            return 0;
+        }
+    }
+
+    // Run to the top of the first layered solid torus; this should give
+    // us our core.
+    int topFace = layered[0]->getTopFace(0);
+    NTetrahedron* coreTet = top[0]->getAdjacentTetrahedron(topFace);
+
+    // We will declare that this face hooks onto vertex roles 0, 1 and 2
+    // of the first core tetrahedron.  Thus the vertex roles permutation
+    // should map 0, 1 and 2 (in some order) to all vertices except for
+    // topCoreFace.
+    int topCoreFace = top[0]->getAdjacentFace(topFace);
+    NPerm swap(3, topCoreFace);
+    NTriSolidTorus* core;
+    NTetrahedron* coreTets[3];
+    NPerm coreVertexRoles[3];
+    int whichLayered[3];
+    int usedLayered;
+    NPerm edgeGroupRoles[3];
+    NPerm q;
+    for (int p = 0; p < 6; p++) {
+        core = NTriSolidTorus::isTriSolidTorus(coreTet, swap * allPermsS3[p]);
+        if (core) {
+            // We have a potential core.
+            // Now all that remains is to ensure that the layered solid
+            // tori hang from it accordingly.
+            for (j = 0; j < 3; j++) {
+                coreTets[j] = core->getTetrahedron(j);
+                coreVertexRoles[j] = core->getVertexRoles(j);
             }
-
-            // Work out p and q.
-            switch (ans->mobiusBoundaryGroup) {
-                // For layered solid torus (x < y < z):
-                case 0:
-                    // L( x + 2y, y )
-                    ans->p =
-                        torus->getMeridinalCuts(1) + torus->getMeridinalCuts(2);
-                    ans->q = torus->getMeridinalCuts(1);
-                    break;
-                case 1:
-                    // L( 2x + y, x )
-                    ans->p =
-                        torus->getMeridinalCuts(0) + torus->getMeridinalCuts(2);
-                    ans->q = torus->getMeridinalCuts(0);
-                    break;
-                case 2:
-                    // L( y - x, x )
-                    ans->p =
-                        torus->getMeridinalCuts(1) - torus->getMeridinalCuts(0);
-                    if (ans->p == 0)
-                        ans->q = 1;
-                    else
-                        ans->q = torus->getMeridinalCuts(0) % ans->p;
-                    break;
-            }
-
-            // Find the nicest possible value for q.
-            // Choices are +/- q, +/- 1/q.
-            if (ans->p > 0) {
-                if (2 * ans->q > ans->p)
-                    ans->q = ans->p - ans->q;
-                if (ans->q > 0) {
-                    unsigned long qAlt = modularInverse(ans->p, ans->q);
-                    if (2 * qAlt > ans->p)
-                        qAlt = ans->p - qAlt;
-                    if (qAlt < ans->q)
-                        ans->q = qAlt;
+            usedLayered = 0;
+            for (j = 0; j < 3; j++) {
+                // Check annulus j.
+                // Recall that the 3-manifold is orientable so we don't
+                // have to check for wacky reversed gluings.
+                if (core->isAnnulusSelfIdentified(j, &q)) {
+                    // We have a degenerate (2,1,1) glued in here.
+                    whichLayered[j] = -1;
+                    switch (q[0]) {
+                        case 0:
+                            edgeGroupRoles[j] = NPerm(2, 0, 1, 3); break;
+                        case 1:
+                            edgeGroupRoles[j] = NPerm(0, 1, 2, 3); break;
+                        case 3:
+                            edgeGroupRoles[j] = NPerm(1, 2, 0, 3); break;
+                    }
+                } else {
+                    // There should be a layered solid torus glued in here.
+                    for (whichLayered[j] = 0; whichLayered[j] < nLayered;
+                            whichLayered[j]++)
+                        if (coreTets[(j+1)%3]->getAdjacentTetrahedron(
+                                coreVertexRoles[(j+1)%3][3]) ==
+                                top[whichLayered[j]] &&
+                                coreTets[(j+2)%3]->getAdjacentTetrahedron(
+                                coreVertexRoles[(j+2)%3][2]) ==
+                                top[whichLayered[j]]) {
+                            // Annulus j is glued to torus whichLayered[j].
+                            q = coreTets[(j+1)%3]->
+                                getAdjacentTetrahedronGluing(
+                                coreVertexRoles[(j+1)%3][3]) *
+                                coreVertexRoles[(j+1)%3];
+                            // q maps vertex roles in core tetrahedron j+1 to
+                            // vertices of the top tetrahedron in
+                            // layered[whichLayered[j]].
+                            edgeGroupRoles[j] = NPerm(
+                                layered[whichLayered[j]]->getTopEdgeGroup(
+                                    edgeNumber[q[0]][q[1]]),
+                                layered[whichLayered[j]]->getTopEdgeGroup(
+                                    edgeNumber[q[0]][q[2]]),
+                                layered[whichLayered[j]]->getTopEdgeGroup(
+                                    edgeNumber[q[1]][q[2]]),
+                                3);
+                            usedLayered++;
+                            break;
+                        }
+                    if (whichLayered[j] >= nLayered) {
+                        // This annulus was glued neither to itself nor
+                        // to a layered solid torus.
+                        delete core;
+                        core = 0;
+                        break;
+                    }
                 }
             }
+            if (! core)
+                continue;
 
+            if (usedLayered < nLayered) {
+                // We didn't use all our layered solid tori.
+                delete core;
+                continue;
+            }
+
+            // We've got one!!
+            NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+            ans->core = core;
+            for (j = 0; j < 3; j++) {
+                ans->edgeGroupRoles[j] = edgeGroupRoles[j];
+                if (whichLayered[j] >= 0)
+                    ans->augTorus[j] = layered[whichLayered[j]];
+            }
+
+            ans->findExceptionalFibres();
             return ans;
         }
     }
+        
+    // Nothing was found.
+    for (i = 0; i < nLayered; i++)
+        delete layered[i];
     return 0;
-    */
 }
