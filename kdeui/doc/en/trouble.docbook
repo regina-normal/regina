@@ -2,7 +2,7 @@
  <title>Troubleshooting and <acronym>FAQ</acronym></title>
 
  <qandaset>
-  <qandadiv><title>Compiling &regina;</title>
+  <qandadiv id="trouble-compile"><title>Compiling &regina;</title>
    <qandaentry>
     <question><para>
      The <userinput>./configure</userinput> script tells me that it
@@ -150,7 +150,7 @@ checking host system type... i686-pc-linux-gnu
     </answer>
    </qandaentry>
 
-   <qandaentry>
+   <qandaentry id="trouble-packet-uneditable">
     <question><para>
      I cannot edit a particular packet.  I can view it but I can't change
      anything.
@@ -176,7 +176,7 @@ checking host system type... i686-pc-linux-gnu
     </answer>
    </qandaentry>
 
-   <qandaentry>
+   <qandaentry id="trouble-python-disabled">
     <question><para>
      The program complains that &python; scripting has been disabled.
     </para></question>
@@ -214,7 +214,7 @@ checking host system type... i686-pc-linux-gnu
     </answer>
    </qandaentry>
 
-   <qandaentry>
+   <qandaentry id="trouble-python-typeerror">
     <question><para>
      While working with a &python; object I receive a
      <exceptionname>TypeError</exceptionname> with the message
@@ -240,7 +240,7 @@ checking host system type... i686-pc-linux-gnu
   </qandadiv>
 
   <qandadiv><title>Miscellaneous</title>
-   <qandaentry>
+   <qandaentry id="trouble-testsuite">
     <question><para>
      What is the test suite, and how do I run it?
     </para></question>

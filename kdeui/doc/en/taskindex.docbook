@@ -10,6 +10,15 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>almost normal surfaces</primaryie>
+  <seeie>(see normal surfaces)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="options-python">auto-indent</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-subdivision">barycentric subdivision</link></primaryie>
  </indexentry>
 
@@ -18,17 +27,25 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>calculation engine</primaryie>
+  <secondaryie><link linkend="python">accessing</link></secondaryie>
+  <secondaryie><link linkend="python-docs">documentation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>census</primaryie>
   <secondaryie><link linkend="man-sigcensus">creating a census of splitting
    surface signatures</link></secondaryie>
   <secondaryie><link linkend="tri-census-creation">creating a census of
-   triangulations (GUI)</link></secondaryie>
+   triangulations (&gui;)</link></secondaryie>
   <secondaryie><link linkend="man-tricensus">creating a census of
    triangulations (command-line)</link></secondaryie>
   <secondaryie><link linkend="man-tricensus-manager">distributing census
    creation across several machines</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation in the available censuses</link></secondaryie>
+  <secondaryie><link linkend="options-census">searching for a
+   triangulation, configuration</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -44,6 +61,24 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="trouble-compile">compile errors,
+   fixing</link></primaryie>
+ </indexentry>
+
+ <indexentry id="idx-configuration">
+  <primaryie>configuration</primaryie>
+  <secondaryie><link linkend="options-census">census
+   lookup</link></secondaryie>
+  <secondaryie><link linkend="options-general">general</link></secondaryie>
+  <secondaryie><link linkend="options-surfaces">normal surface
+   creation</link></secondaryie>
+  <secondaryie><link linkend="options-python">&python;
+   scripting</link></secondaryie>
+  <secondaryie><link linkend="options-triangulation">triangulation
+   viewing and editing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-regconvert">conversion between file
    formats</link></primaryie>
  </indexentry>
@@ -54,8 +89,18 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>documentation</primaryie>
+  <secondaryie><link linkend="python-docs">&regina; objects, classes
+   and methods</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-regfiledump">dumping contents of a
    file</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="troubleshooting">errors, fixing</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -65,6 +110,8 @@
 
  <indexentry id="idx-files">
   <primaryie>files</primaryie>
+  <secondaryie><link linkend="options-general">automatic file
+   extension</link></secondaryie>
   <secondaryie><link linkend="man-regconcat">combining data
    files</link></secondaryie>
   <secondaryie><link linkend="man-regconvert">conversion between file
@@ -93,11 +140,42 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="options-python">libraries,
+   &python;</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="licenses">licence details</link></primaryie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="services">mailing lists</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>normal surfaces</primaryie>
+  <secondaryie><link linkend="options-surfaces">configuration of
+   default coordinate system</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>options</primaryie>
+  <seeie>(see configuration)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>packet tree</primaryie>
+  <secondaryie><link linkend="options-general">display large
+   icon</link></secondaryie>
+  <secondaryie><link linkend="options-general">jump size</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>packets</primaryie>
+  <secondaryie><link linkend="options-general">automatic
+   docking</link></secondaryie>
+  <secondaryie><link linkend="trouble-packet-uneditable">cannot be
+   edited</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -121,9 +199,25 @@
 
  <indexentry id="idx-scripting">
   <primaryie>scripting</primaryie>
+  <secondaryie><link linkend="python-python">accessing &regina; objects,
+   classes and methods</link></secondaryie>
+  <secondaryie><link linkend="python-caveats">caveats and
+   traps</link></secondaryie>
   <secondaryie><link linkend="man-regina-python">command-line scripting
    interface</link></secondaryie>
+  <secondaryie><link linkend="options-python">configuration</link></secondaryie>
+  <secondaryie><link linkend="python-docs">documentation of &regina;
+   objects, classes and methods</link></secondaryie>
+  <secondaryie><link linkend="trouble-python-disabled">enabling</link></secondaryie>
   <secondaryie><link linkend="sessions">examples</link></secondaryie>
+  <secondaryie><link linkend="python-invoking">invoking in the
+   &gui;</link></secondaryie>
+  <secondaryie><link linkend="python-ownership">ownership of
+   objects</link></secondaryie>
+  <secondaryie><link linkend="options-python">&python;
+   libraries</link></secondaryie>
+  <secondaryie><link linkend="trouble-python-typeerror"><exceptionname>TypeError</exceptionname>,
+   resolving</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -135,6 +229,19 @@
   <primaryie>splitting surfaces</primaryie>
   <secondaryie><link linkend="man-sigcensus">census of splitting
    surface signatures</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>surfaces, normal</primaryie>
+  <seeie>(see normal surfaces)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="options-python">tab size</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="trouble-testsuite">test suite</link></primaryie>
  </indexentry>
 
  <indexentry>
