@@ -187,7 +187,7 @@
       (default = <literal>localhost</literal>)</term>
      <listitem>
       <para>
-       Specifies that the &corba; name service is running on
+       Specifies that the &corba; naming service is running on
        the machine <replaceable>host</replaceable>.
       </para>
       <para>
@@ -203,7 +203,7 @@
       (default = <literal>8088</literal>)</term>
      <listitem>
       <para>
-       Specifies that the &corba; name service is listening
+       Specifies that the &corba; naming service is listening
        on port <replaceable>port</replaceable> on the given host.
       </para>
       <para>
@@ -592,7 +592,7 @@
       (default = <literal>localhost</literal>)</term>
      <listitem>
       <para>
-       The machine on which the &corba; name service is running.
+       The machine on which the &corba; naming service is running.
       </para>
       <para>
        This option is only relevant when using &corba; engine access
@@ -605,7 +605,7 @@
       (default = <literal>8088</literal>)</term>
      <listitem>
       <para>
-       The port on which the &corba; name service is listening.
+       The port on which the &corba; naming service is listening.
       </para>
       <para>
        This option is only relevant when using &corba; engine access
@@ -732,7 +732,7 @@
       (default = <literal>localhost</literal>)</term>
      <listitem>
       <para>
-       The machine on which the &corba; name service is running.
+       The machine on which the &corba; naming service is running.
        Parameter <parameter>org.omg.CORBA.ORBInitialHost</parameter>
        will override this parameter if it is present.
       </para>
@@ -743,7 +743,7 @@
       (default = <literal>8088</literal>)</term>
      <listitem>
       <para>
-       The port on which the &corba; name service is listening.
+       The port on which the &corba; naming service is listening.
        Parameter <parameter>org.omg.CORBA.ORBInitialPort</parameter>
        will override this parameter if it is present.
       </para>
@@ -790,6 +790,12 @@
     <command>regina-engine-corba</command>
     <arg><option>-ORBInitialHost</option> <replaceable>host</replaceable></arg>
     <arg><option>-ORBInitialPort</option> <replaceable>port</replaceable></arg>
+    <group>
+     <arg><option>-ORBpoa_iiop_name_port</option>
+      <replaceable>host</replaceable></arg>
+     <arg><option>-ORBpoa_iiop_name_port</option>
+      <replaceable>host</replaceable><option>:</option><replaceable>port</replaceable></arg>
+    </group>
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -803,12 +809,27 @@
    <para>
     Note that this server and the user interface may be running on
     different machines.  You simply need to configure them both to use
-    the same &corba; name service.
+    the same &corba; naming service, although read the warning below.
    </para>
    <para>
     There is no way to configure this server other than
-    through the command-line options described below.
+    through the command-line options described here.
    </para>
+   <warning>
+    <para>
+     By default, this engine registers itself with the naming service as
+     running on machine <literal>localhost</literal>.  If the user
+     interface is running on a different machine, it will take this
+     information from the naming service and search for the engine on
+     its own <literal>localhost</literal> which will result in an error.
+    </para>
+    <para>
+     Thus, if you are running this server and the user interface on
+     different machines, you will almost certainly need to run the
+     server with parameter <option>-ORBpoa_iiop_name_port</option>
+     as described below.
+    </para>
+   </warning>
   </refsect1>
 
   <refsect1>
@@ -819,7 +840,7 @@
       (default = <literal>localhost</literal>)</term>
      <listitem>
       <para>
-       Specifies that the &corba; name service is running on
+       Specifies that the &corba; naming service is running on
        the machine <replaceable>host</replaceable>.
       </para>
      </listitem>
@@ -829,8 +850,43 @@
       (default = <literal>8088</literal>)</term>
      <listitem>
       <para>
-       Specifies that the &corba; name service is listening
+       Specifies that the &corba; naming service is listening
        on port <replaceable>port</replaceable> on the given host.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-ORBpoa_iiop_name_port</option>
+      <replaceable>host</replaceable></term>
+     <term><option>-ORBpoa_iiop_name_port</option>
+      <replaceable>host</replaceable><option>:</option><replaceable>port</replaceable>
+      (default = <literal>localhost</literal>, automatically assigned
+      port)</term>
+     <listitem>
+      <para>
+       Specifies that this server is running on the machine
+       <replaceable>host</replaceable> (and, if specified, listening on port
+       <replaceable>port</replaceable> for connections).
+      </para>
+      <para>
+       Use the <replaceable>host</replaceable> parameter to tell the
+       naming service the full IP address of the machine on which this
+       server is running, so that this information can be correctly
+       given out to clients (such as the user interface).  If the
+       default value <literal>localhost</literal> is used, a client
+       running on a different machine will be unable to locate this
+       server.
+      </para>
+      <para>
+       Use the additional <replaceable>port</replaceable> option if you
+       wish to force this server to listen for connections on a particular
+       port.  By default the port will be automatically assigned by the
+       <acronym>ORB</acronym> and this value will be passed on to the
+       naming service.
+      </para>
+      <para>
+       You should only need to use this option if this server is running
+       on a different machine from the user interface.
       </para>
      </listitem>
     </varlistentry>
