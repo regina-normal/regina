@@ -61,6 +61,10 @@
      <listitem><para>
       Creation of a census of all triangulations of a given type
      </para></listitem>
+     <listitem><para>
+      Prepackaged censuses include cusped hyperbolic
+      manifolds and knot/link complements
+     </para></listitem>
     </itemizedlist>
    </para></listitem>
    <listitem><para>Normal Surface Theory:
