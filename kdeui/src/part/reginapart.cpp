@@ -41,6 +41,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qsplitter.h>
+#include <qtextedit.h>
 #include <qvbox.h>
 #include <kaction.h>
 #include <kfiledialog.h>
@@ -69,6 +70,7 @@ ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
     initPacketTree();
 
     // Other tidying up.
+    dockChanged();
     setReadWrite(true);
     setModified(false);
 }
@@ -143,6 +145,8 @@ void ReginaPart::dock(PacketPane* newPane) {
     newPane->reparent(dockArea, QPoint(0, 0));
     dockedPane = newPane;
     newPane->show();
+
+    dockChanged();
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
@@ -152,6 +156,8 @@ void ReginaPart::isClosing(PacketPane* closingPane) {
 void ReginaPart::hasUndocked(PacketPane* undockedPane) {
     if (dockedPane == undockedPane)
         dockedPane = 0;
+
+    dockChanged();
 }
 
 bool ReginaPart::openFile() {
@@ -201,6 +207,14 @@ void ReginaPart::packetView(regina::NPacket* packet) {
     view(new PacketPane(this, packet));
 }
 
+void ReginaPart::floatDockedPane() {
+    // Delegate the entire procedure to PacketPane::floatPane().
+    // Processing will return to this class when PacketPane calls
+    // ReginaPart::hasUndocked().
+    if (dockedPane)
+        dockedPane->floatPane();
+}
+
 bool ReginaPart::closeDockedPane() {
     // Is there anything to close?
     if (! dockedPane)
@@ -214,6 +228,8 @@ bool ReginaPart::closeDockedPane() {
     // deregistration for us.
     delete dockedPane;
     dockedPane = 0;
+
+    dockChanged();
 
     return true;
 }
@@ -293,6 +309,61 @@ void ReginaPart::initPacketTree() {
 
     // Update the visual representation.
     treeView->fill(packetTree);
+}
+
+void ReginaPart::dockChanged() {
+    if (! dockedPane) {
+        actCurrCommit->setEnabled(false);
+        actCurrRefresh->setEnabled(false);
+        actCurrRefresh->setText(i18n("&Refresh"));
+        actCurrUndock->setEnabled(false);
+        actCurrClose->setEnabled(false);
+
+        actCut->setEnabled(false);
+        actCopy->setEnabled(false);
+        actPaste->setEnabled(false);
+    } else {
+        actCurrRefresh->setEnabled(true);
+        actCurrUndock->setEnabled(true);
+        actCurrClose->setEnabled(true);
+
+        dockDirtinessChanged();
+
+        // TODO: Fix
+        //QTextEdit* edit = dockedPane->getMainUI()->getTextComponent();
+        QTextEdit* edit = 0;
+        if (edit) {
+            actCut->setEnabled(true);
+            actCopy->setEnabled(true);
+            actPaste->setEnabled(true);
+
+            connect(actCut, SIGNAL(activated()), edit, SLOT(cut()));
+            connect(actCopy, SIGNAL(activated()), edit, SLOT(copy()));
+            connect(actPaste, SIGNAL(activated()), edit, SLOT(paste()));
+        } else {
+            actCut->setEnabled(false);
+            actCopy->setEnabled(false);
+            actPaste->setEnabled(false);
+
+            disconnect(actCut, SIGNAL(activated()));
+            disconnect(actCopy, SIGNAL(activated()));
+            disconnect(actPaste, SIGNAL(activated()));
+        }
+    }
+}
+
+void ReginaPart::dockDirtinessChanged() {
+    // TODO: Make sure this is called when a packet pane is modified.
+    if (! dockedPane)
+        return;
+
+    if (dockedPane->isDirty()) {
+        actCurrCommit->setEnabled(true);
+        actCurrRefresh->setText(i18n("&Discard"));
+    } else {
+        actCurrCommit->setEnabled(false);
+        actCurrRefresh->setText(i18n("&Refresh"));
+    }
 }
 
 #include "reginapart.moc"

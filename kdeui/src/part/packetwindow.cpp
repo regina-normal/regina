@@ -29,12 +29,40 @@
 // UI includes:
 #include "packetui.h"
 #include "packetwindow.h"
+#include "reginapart.h"
+
+#include <kaction.h>
+#include <klocale.h>
+#include <kmenubar.h>
+#include <kstdaction.h>
+#include <qtextedit.h>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         KMainWindow(parent, "Packet#"), heldPane(newPane) {
     // Resize ourselves nicely.
     if (! initialGeometrySet())
         resize(400, 400);
+
+    // Set up our actions.
+    setInstance(ReginaPart::factoryInstance());
+    new KAction(i18n("&Dock"), "attach", 0, newPane, SLOT(dockPane()),
+        actionCollection(), "viewer_dock");
+    new KAction(i18n("&Close"), "fileclose", 0, newPane, SLOT(close()),
+        actionCollection(), "viewer_close");
+    actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0, newPane,
+        SLOT(commit()), actionCollection(), "packet_commit");
+    actRefresh = new KAction(i18n("&Refresh"), "reload", 0, newPane,
+        SLOT(refresh()), actionCollection(), "packet_refresh");
+    createGUI("packetwindow.rc", false);
+
+    // TODO: dirtinessChanged();
+    // TODO: QTextEdit* edit = newPane->getMainUI()->getTextComponent();
+    QTextEdit* edit = 0;
+    if (edit) {
+        KStdAction::cut(edit, SLOT(cut()), actionCollection());
+        KStdAction::copy(edit, SLOT(copy()), actionCollection());
+        KStdAction::paste(edit, SLOT(paste()), actionCollection());
+    }
 
     // Set up the widgets.
     newPane->reparent(this, QPoint(0, 0));

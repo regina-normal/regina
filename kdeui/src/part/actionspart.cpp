@@ -39,30 +39,35 @@ void ReginaPart::setupActions() {
     actSave = KStdAction::save(this, SLOT(save()), actionCollection());
     KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
 
+    // Edit actions:
+    actCut = KStdAction::cut(0, 0, actionCollection());
+    actCopy = KStdAction::copy(0, 0, actionCollection());
+    actPaste = KStdAction::paste(0, 0, actionCollection());
+
     // Basic packet actions:
     act = new KAction(i18n("&View/Edit"), "viewmag", CTRL+Key_V,
-        this, SLOT(packetView()), actionCollection(), "packet_view");
+        this, SLOT(packetView()), actionCollection(), "tree_view");
     act->setToolTip(i18n("View or edit the selected packet"));
 
     act = new KAction(i18n("&Rename"), "editclear", CTRL+Key_R,
-        this, SLOT(unimplemented()), actionCollection(), "packet_rename");
+        this, SLOT(unimplemented()), actionCollection(), "tree_rename");
     act->setToolTip(i18n("Rename the selected packet"));
 
     act = new KAction(i18n("&Delete"), "editdelete", Key_Delete,
-        this, SLOT(unimplemented()), actionCollection(), "packet_delete");
+        this, SLOT(unimplemented()), actionCollection(), "tree_delete");
     act->setToolTip(i18n("Delete the selected packet"));
 
     act = new KAction(i18n("Refres&h Subtree"), "reload", Key_F5,
-        this, SLOT(unimplemented()), actionCollection(), "packet_refresh");
+        this, SLOT(unimplemented()), actionCollection(), "tree_refresh");
     act->setToolTip(i18n("Refresh the subtree beneath the selected packet"));
 
     act = new KAction(i18n("C&lone Packet"), "editcopy", CTRL+Key_L,
-        this, SLOT(unimplemented()), actionCollection(), "packet_clone");
+        this, SLOT(unimplemented()), actionCollection(), "tree_clone");
     act->setToolTip(i18n("Clone the selected packet only"));
 
     act = new KAction(i18n("Clone Su&btree"), QString::null, 0,
         this, SLOT(unimplemented()), actionCollection(),
-        "packet_clone_subtree");
+        "tree_clone_subtree");
     act->setToolTip(i18n("Clone the subtree beneath the selected packet"));
 
     // Tree reorganisation:
@@ -99,38 +104,39 @@ void ReginaPart::setupActions() {
     act->setToolTip(i18n("Move packet below all its siblings"));
 
     // New packets:
-    act = new KAction(i18n("&Angle Structure List"), "packet_angles", ALT+Key_A,
-        this, SLOT(unimplemented()), actionCollection(), "packet_angles");
+    act = new KAction(i18n("New &Angle Structure List"), "packet_angles",
+        ALT+Key_A, this, SLOT(unimplemented()), actionCollection(),
+        "tree_angles");
     act->setToolTip(i18n("New angle structure list"));
 
-    act = new KAction(i18n("&Container"), "packet_container", ALT+Key_C,
-        this, SLOT(unimplemented()), actionCollection(), "packet_container");
+    act = new KAction(i18n("New &Container"), "packet_container", ALT+Key_C,
+        this, SLOT(unimplemented()), actionCollection(), "tree_container");
     act->setToolTip(i18n("New container"));
 
-    act = new KAction(i18n("&Filter"), "packet_filter", ALT+Key_F,
-        this, SLOT(unimplemented()), actionCollection(), "packet_filter");
+    act = new KAction(i18n("New &Filter"), "packet_filter", ALT+Key_F,
+        this, SLOT(unimplemented()), actionCollection(), "tree_filter");
     act->setToolTip(i18n("New surface filter"));
 
-    act = new KAction(i18n("&Normal Surface List"), "packet_surfaces",
+    act = new KAction(i18n("New &Normal Surface List"), "packet_surfaces",
         ALT+Key_N, this, SLOT(unimplemented()), actionCollection(),
-        "packet_surfaces");
+        "tree_surfaces");
     act->setToolTip(i18n("New normal surface list"));
 
-    act = new KAction(i18n("&Script"), "packet_script", ALT+Key_S,
-        this, SLOT(unimplemented()), actionCollection(), "packet_script");
+    act = new KAction(i18n("New &Script"), "packet_script", ALT+Key_S,
+        this, SLOT(unimplemented()), actionCollection(), "tree_script");
     act->setToolTip(i18n("New script packet"));
 
-    act = new KAction(i18n("Te&xt"), "packet_text", ALT+Key_X,
-        this, SLOT(unimplemented()), actionCollection(), "packet_text");
+    act = new KAction(i18n("New Te&xt"), "packet_text", ALT+Key_X,
+        this, SLOT(unimplemented()), actionCollection(), "tree_text");
     act->setToolTip(i18n("New text packet"));
 
-    act = new KAction(i18n("&Triangulation"), "packet_triangulation", ALT+Key_T,
-        this, SLOT(unimplemented()), actionCollection(),
-        "packet_triangulation");
+    act = new KAction(i18n("New &Triangulation"), "packet_triangulation",
+        ALT+Key_T, this, SLOT(unimplemented()), actionCollection(),
+        "tree_triangulation");
     act->setToolTip(i18n("New triangulation"));
 
     act = new KAction(i18n("Form &Census"), "view_text", 0,
-        this, SLOT(unimplemented()), actionCollection(), "packet_census");
+        this, SLOT(unimplemented()), actionCollection(), "tree_census");
     act->setToolTip(i18n("Form a new census of triangulations"));
 
     // Imports and exports:
@@ -161,5 +167,15 @@ void ReginaPart::setupActions() {
     act = new KAction(i18n("&Python Script"), "packet_script", 0,
         this, SLOT(unimplemented()), actionCollection(), "export_python");
     act->setToolTip(i18n("Export a Python script"));
+
+    // Current packet actions:
+    actCurrCommit = new KAction(i18n("Co&mmit"), "button_ok", 0,
+        this, SLOT(unimplemented()), actionCollection(), "docked_commit");
+    actCurrRefresh = new KAction(i18n("&Refresh"), "reload", 0,
+        this, SLOT(unimplemented()), actionCollection(), "docked_refresh");
+    actCurrUndock = new KAction(i18n("Un&dock"), "attach", 0,
+        this, SLOT(floatDockedPane()), actionCollection(), "docked_undock");
+    actCurrClose = new KAction(i18n("&Close"), "fileclose", 0,
+        this, SLOT(closeDockedPane()), actionCollection(), "docked_close");
 }
 

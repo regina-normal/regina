@@ -90,13 +90,14 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     header = new PacketHeader(newPacket, headerBox);
     headerBox->setStretchFactor(header, 1);
 
-    dockUndock = new FlatToolButton(headerBox);
-    dockUndock->setToggleButton(true);
-    dockUndock->setPixmap(BarIcon("attach", ReginaPart::factoryInstance()));
-    dockUndock->setTextLabel(i18n("Dock or undock this packet viewer"));
-    dockUndock->setOn(true);
-    connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
+    dockUndockBtn = new FlatToolButton(headerBox);
+    dockUndockBtn->setToggleButton(true);
+    dockUndockBtn->setPixmap(BarIcon("attach", ReginaPart::factoryInstance()));
+    dockUndockBtn->setTextLabel(i18n("Dock or undock this packet viewer"));
+    dockUndockBtn->setOn(true);
+    connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
+    // Set up the main interface component.
     mainUI = new DefaultPacketUI(newPacket);
     QWidget* mainUIWidget = mainUI->getInterface();
     if (mainUIWidget->parent() != this) {
@@ -105,9 +106,15 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     }
     setStretchFactor(mainUIWidget, 1);
 
+    // Set up the fotter buttons.
     QHBox* footer = new QHBox(this);
-    new QPushButton(BarIconSet("button_ok"), i18n("Co&mmit"), footer);
-    new QPushButton(BarIconSet("reload"), i18n("&Refresh"), footer);
+    commitBtn = new QPushButton(BarIconSet("button_ok"), i18n("Co&mmit"),
+        footer);
+    commitBtn->setEnabled(false);
+    connect(commitBtn, SIGNAL(clicked()), this, SLOT(commit()));
+    refreshBtn = new QPushButton(BarIconSet("reload"), i18n("&Refresh"),
+        footer);
+    connect(refreshBtn, SIGNAL(clicked()), this, SLOT(refresh()));
     footer->setStretchFactor(new QWidget(footer), 1);
     connect(new QPushButton(BarIconSet("fileclose"), i18n("&Close"), footer),
         SIGNAL(clicked()), this, SLOT(close()));
@@ -135,6 +142,15 @@ bool PacketPane::queryClose() {
 
 void PacketPane::refresh() {
     header->refresh();
+
+    if (mainUI->isDirty())
+        if (KMessageBox::warningYesNo(this, i18n(
+                "This packet contains changes that have not yet been "
+                "committed.  Do you wish to refresh this packet anyway and "
+                "discard these changes?"),
+                mainUI->getPacket()->getPacketLabel().c_str()) ==
+                KMessageBox::No)
+            return;
     mainUI->refresh();
 }
 
@@ -160,9 +176,9 @@ void PacketPane::dockPane() {
     delete frame;
     frame = 0;
 
-    dockUndock->setOn(true);
-    disconnect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
-    connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
+    dockUndockBtn->setOn(true);
+    disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
+    connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 }
 
 void PacketPane::floatPane() {
@@ -173,9 +189,9 @@ void PacketPane::floatPane() {
     frame = new PacketWindow(this);
     part->hasUndocked(this);
 
-    dockUndock->setOn(false);
-    disconnect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
-    connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
+    dockUndockBtn->setOn(false);
+    disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
+    connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
 
     frame->show();
 }

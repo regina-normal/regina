@@ -37,6 +37,8 @@
 
 class KMainWindow;
 class QLabel;
+class QPushButton;
+class QTextEdit;
 class QToolButton;
 class ReginaPart;
 
@@ -83,6 +85,7 @@ class PacketUI {
         virtual regina::NPacket* getPacket() = 0;
         virtual QWidget* getInterface() = 0;
         virtual void refresh() = 0;
+        virtual QTextEdit* getTextComponent();
 
         virtual bool isReadWrite();
         virtual bool isDirty();
@@ -112,18 +115,24 @@ class PacketPane : public QVBox {
     Q_OBJECT
 
     private:
-        PacketHeader* header;
-            /**< The header with which the packet is visually identified. */
-        PacketUI* mainUI;
-            /**< The main packet interface. */
-
         ReginaPart* part;
             /**< The KPart managing this packet pane. */
         KMainWindow* frame;
             /**< The floating frame containing this packet pane, or 0
                  if this packet pane is currently docked. */
-        QToolButton* dockUndock;
-            /**< The docking/floating action for this packet pane. */
+
+        /**
+         * Internal components
+         */
+        PacketHeader* header;
+        PacketUI* mainUI;
+
+        /**
+         * Action components
+         */
+        QToolButton* dockUndockBtn;
+        QPushButton* commitBtn;
+        QPushButton* refreshBtn;
 
     public:
         /**
@@ -147,7 +156,8 @@ class PacketPane : public QVBox {
     public slots:
         /**
          * Queries the packet and refreshes the interface accordingly.
-         * Any uncommitted changes will be lost.
+         * Any uncommitted changes will be lost, though the user will be
+         * prompted first.
          */
         void refresh();
 
@@ -180,6 +190,10 @@ class PacketPane : public QVBox {
 };
 
 inline PacketUI::~PacketUI() {
+}
+
+inline QTextEdit* PacketUI::getTextComponent() {
+    return 0;
 }
 
 inline bool PacketUI::isReadWrite() {

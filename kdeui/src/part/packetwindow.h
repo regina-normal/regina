@@ -35,6 +35,7 @@
 
 #include <kmainwindow.h>
 
+class KAction;
 class PacketPane;
 
 /**
@@ -49,6 +50,12 @@ class PacketWindow : public KMainWindow {
     private:
         PacketPane* heldPane;
             /**< The packet pane held within this frame. */
+
+        /**
+         * Actions
+         */
+        KAction* actCommit;
+        KAction* actRefresh;
 
     private:
         /**

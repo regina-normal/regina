@@ -16,25 +16,32 @@
       <Action name="export_python"/>
     </Menu>
   </Menu>
-  <Menu name="packet" noMerge="1"><text>&amp;Packet</text>
-    <Action name="packet_angles"/>
-    <Action name="packet_container"/>
-    <Action name="packet_filter"/>
-    <Action name="packet_surfaces"/>
-    <Action name="packet_script"/>
-    <Action name="packet_text"/>
-    <Action name="packet_triangulation"/>
+  <Menu name="tree" noMerge="1"><text>&amp;Packet Tree</text>
+    <Action name="tree_angles"/>
+    <Action name="tree_container"/>
+    <Action name="tree_filter"/>
+    <Action name="tree_surfaces"/>
+    <Action name="tree_script"/>
+    <Action name="tree_text"/>
+    <Action name="tree_triangulation"/>
     <Separator/>
-    <Action name="packet_view"/>
-    <Action name="packet_rename"/>
-    <Action name="packet_delete"/>
+    <Action name="tree_view"/>
+    <Action name="tree_rename"/>
+    <Action name="tree_delete"/>
     <Separator/>
-    <Action name="packet_clone"/>
-    <Action name="packet_clone_subtree"/>
+    <Action name="tree_clone"/>
+    <Action name="tree_clone_subtree"/>
     <Separator/>
-    <Action name="packet_refresh"/>
+    <Action name="tree_refresh"/>
   </Menu>
-  <Menu name="tools" noMerge="1"><text>&amp;Tools</text>
+  <Menu name="current" noMerge="1"><text>&amp;Docked Packet</text>
+    <Action name="docked_commit"/>
+    <Action name="docked_refresh"/>
+    <Separator/>
+    <Action name="docked_undock"/>
+    <Action name="docked_close"/>
+  </Menu>
+  <Menu name="tools" noMerge="1"><text>T&amp;ools</text>
     <Action name="packet_census"/>
   </Menu>
 </MenuBar>
@@ -45,11 +52,11 @@
 </ToolBar>
 <ToolBar name="packetTree" noMerge="1">
   <text>Packet Tree Toolbar</text>
-  <Action name="packet_view"/>
-  <Action name="packet_rename"/>
-  <Action name="packet_delete"/>
+  <Action name="tree_view"/>
+  <Action name="tree_rename"/>
+  <Action name="tree_delete"/>
   <Separator/>
-  <Action name="packet_refresh"/>
+  <Action name="tree_refresh"/>
   <Separator/>
   <Action name="nav_shallow"/>
   <Action name="nav_deep"/>
@@ -62,12 +69,12 @@
 </ToolBar>
 <ToolBar name="packetNew" noMerge="1">
   <text>New Packet Toolbar</text>
-  <Action name="packet_angles"/>
-  <Action name="packet_container"/>
-  <Action name="packet_filter"/>
-  <Action name="packet_surfaces"/>
-  <Action name="packet_script"/>
-  <Action name="packet_text"/>
-  <Action name="packet_triangulation"/>
+  <Action name="tree_angles"/>
+  <Action name="tree_container"/>
+  <Action name="tree_filter"/>
+  <Action name="tree_surfaces"/>
+  <Action name="tree_script"/>
+  <Action name="tree_text"/>
+  <Action name="tree_triangulation"/>
 </ToolBar>
 </kpartgui>

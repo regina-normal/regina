@@ -1,0 +1,13 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="packetwindow" version="4.0">
+<MenuBar>
+  <Menu name="file" noMerge="1"><text>&amp;Viewer</text>
+    <Action name="viewer_dock"/>
+    <Action name="viewer_close"/>
+  </Menu>
+  <Menu name="packet" noMerge="1"><text>&amp;Packet</text>
+    <Action name="packet_commit"/>
+    <Action name="packet_refresh"/>
+  </Menu>
+</MenuBar>
+</kpartgui>

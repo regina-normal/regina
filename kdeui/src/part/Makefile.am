@@ -27,7 +27,7 @@ partdesktopdir   = $(kde_servicesdir)
 partdesktop_DATA = reginapart.desktop
 
 partrcdir = $(kde_datadir)/reginapart
-partrc_DATA = reginapart.rc
+partrc_DATA = packetwindow.rc reginapart.rc
 
 METASOURCES = AUTO
 

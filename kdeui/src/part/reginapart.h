@@ -82,6 +82,13 @@ class ReginaPart : public KParts::ReadWritePart {
          * Actions
          */
         KAction* actSave;
+        KAction* actCut;
+        KAction* actCopy;
+        KAction* actPaste;
+        KAction* actCurrCommit;
+        KAction* actCurrRefresh;
+        KAction* actCurrUndock;
+        KAction* actCurrClose;
 
     public:
         /**
@@ -152,6 +159,11 @@ class ReginaPart : public KParts::ReadWritePart {
         void packetView(regina::NPacket*);
 
         /**
+         * Float the currently docked pane.
+         */
+        void floatDockedPane();
+
+        /**
          * Attempt to close the currently docked pane.
          */
         bool closeDockedPane();
@@ -185,6 +197,12 @@ class ReginaPart : public KParts::ReadWritePart {
         void setupWidgets(QWidget* parentWidget, const char* widgetName);
         void setupActions();
         void initPacketTree();
+
+        /**
+         * Called when the docked pane or its properties have changed.
+         */
+        void dockChanged();
+        void dockDirtinessChanged();
 };
 
 #endif
