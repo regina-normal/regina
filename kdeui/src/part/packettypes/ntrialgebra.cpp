@@ -385,7 +385,7 @@ void NTriFundGroupUI::simplifyGAP() {
     if (dlg.exec() == GAPRunner::Accepted) {
         regina::NGroupPresentation* newGroup = dlg.simplifiedGroup().release();
         if (newGroup) {
-            tri->simplifyFundamentalGroup(newGroup);
+            tri->simplifiedFundamentalGroup(newGroup);
             refresh();
         } else {
             KMessageBox::error(ui, i18n("An unexpected error occurred whilst "

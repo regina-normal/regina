@@ -67,9 +67,9 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_idealToFinite,
         NTriangulation::idealToFinite, 0, 1);
 
-    void simplifyFundamentalGroup_own(NTriangulation& tri,
+    void simplifiedFundamentalGroup_own(NTriangulation& tri,
             std::auto_ptr<regina::NGroupPresentation> group) {
-        tri.simplifyFundamentalGroup(group.release());
+        tri.simplifiedFundamentalGroup(group.release());
     }
 
     NTriangulation* enterTextTriangulation_stdio() {
@@ -204,7 +204,7 @@ void addNTriangulation() {
         .def("isConnected", &NTriangulation::isConnected)
         .def("getFundamentalGroup", &NTriangulation::getFundamentalGroup,
             return_internal_reference<>())
-        .def("simplifyFundamentalGroup", simplifyFundamentalGroup_own)
+        .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
         .def("getHomologyH1", &NTriangulation::getHomologyH1,
             return_internal_reference<>())
         .def("getHomologyH1Rel", &NTriangulation::getHomologyH1Rel,

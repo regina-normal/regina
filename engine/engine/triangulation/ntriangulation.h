@@ -850,7 +850,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @param newGroup a new (and hopefully simpler) presentation
          * of the fundamental group of this triangulation.
          */
-        void simplifyFundamentalGroup(NGroupPresentation* newGroup);
+        void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
         /**
          * Returns the first homology group for this triangulation.
          * If this triangulation contains any ideal or non-standard
@@ -2395,7 +2395,7 @@ inline bool NTriangulation::isConnected() const {
     return (components.size() <= 1);
 }
 
-inline void NTriangulation::simplifyFundamentalGroup(
+inline void NTriangulation::simplifiedFundamentalGroup(
         NGroupPresentation* newGroup) {
     fundamentalGroup = newGroup;
 }
