@@ -12,6 +12,7 @@ SUBDIRS = \
   @REGINA_BUILD_JAVAUI@ \
   @REGINA_BUILD_UTILS@ \
   @REGINA_BUILD_TESTSUITE@ \
+  admin \
   docs \
   examples \
   icons \
