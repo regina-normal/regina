@@ -94,6 +94,13 @@
      </para></listitem>
     </itemizedlist>
    </para></listitem>
+   <listitem><para>Angle Structures:
+    <itemizedlist>
+     <listitem><para>
+      Calculation of all vertex angle structures on a triangulation
+     </para></listitem>
+    </itemizedlist>
+   </para></listitem>
    <listitem><para>Scripting:
     <itemizedlist>
      <listitem><para>

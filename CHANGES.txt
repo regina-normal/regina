@@ -16,14 +16,27 @@ Version 2.3.1  [ (in progress) ]
     ENGINE:
         Overall structure:
             - Moved engine/imports to engine/foreign.
+        Class NAngleStructure, NAngleStructureList, NAngleStructureVector:
+            - Added.
+        Class NConeRay:
+            - Now a new class of its own accord, derived from
+              NVectorDense and created to allow vertex solution routines
+              to work in contexts outside normal surfaces.
         Class NNormalSurface:
             - Added getName() and setName().
+        Class NNormalSurfaceVector:
+            - Now derives from NConeRay, to which some routines have moved.
+            - Changed declaration of createNonNegativeCone() to return
+              cone faces as well as extremal rays.
         Class NPerm:
             - Added toString().
         Class NTriangulation:
             - Added insertRehydration().
         File nperm.h:
             - Added constant arrays orderedPermsS4, orderedPermsS3.
+        Routine intersectCone():
+            - Works with more generic cones by requiring cone faces to
+              be passed as well as extremal rays.
         Routine writeSnapPea():
             - Added.
     JAVA USER INTERFACE:
