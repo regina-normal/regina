@@ -141,3 +141,69 @@ table.data td.first {
   border-style: solid
 }
 
+table.data td.req {
+  background-color: #D4FFD1;
+  padding: 2px 2px 2px 2px;
+  border-top: 0px;
+  border-bottom: 2px;
+  border-left: 0px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid
+}
+
+table.data td.reqfirst {
+  background-color: #D4FFD1;
+  padding: 2px 2px 2px 2px;
+  border-top: 0px;
+  border-bottom: 2px;
+  border-left: 2px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid
+}
+
+table.data td.rec {
+  background-color: #80FF80;
+  padding: 2px 2px 2px 2px;
+  border-top: 0px;
+  border-bottom: 2px;
+  border-left: 0px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid
+}
+
+table.data td.recfirst {
+  background-color: #80FF80;
+  padding: 2px 2px 2px 2px;
+  border-top: 0px;
+  border-bottom: 2px;
+  border-left: 2px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid
+}
+
+table.data td.opt {
+  background-color: #F0D7FF;
+  padding: 2px 2px 2px 2px;
+  border-top: 0px;
+  border-bottom: 2px;
+  border-left: 0px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid
+}
+
+table.data td.optfirst {
+  background-color: #F0D7FF;
+  padding: 2px 2px 2px 2px;
+  border-top: 0px;
+  border-bottom: 2px;
+  border-left: 2px;
+  border-right: 2px;
+  border-color: #B5BCF8;
+  border-style: solid
+}
+
