@@ -118,8 +118,6 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     moveTypes->insert(use21, ID_21);
     moveTypes->insert(useOpenBook, ID_OPENBOOK);
     moveTypes->insert(useShellBdry, ID_SHELLBDRY);
-
-    // TODO: Buttons to bring up vertices, edges and faces
 }
 
 EltMoveDialog::~EltMoveDialog() {
