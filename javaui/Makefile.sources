@@ -35,6 +35,7 @@ packages_ui = \
 	normal.engine \
 	normal.algorithm \
 	normal.console \
+	normal.exports \
 	normal.imports \
 	normal.mainui \
 	normal.options \

@@ -47,6 +47,9 @@ Regina - A Normal Surface Theory Calculator
         Overall structure:
             - Loading/saving local files is now possible even through CORBA!
             - Incorporated engine enhancements listed above.
+        normal.exports:
+            - Created architecture for exporting to foreign file formats.
+            - Added classes Exporter and ReginaExporter.
         normal.imports:
             - Redesigned import architecture; replaced old class
               ImportFilePane with new class Importer.

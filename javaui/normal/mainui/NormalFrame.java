@@ -44,6 +44,7 @@ import normal.algorithm.*;
 import normal.console.*;
 import normal.engine.*;
 import normal.engine.packet.*;
+import normal.exports.*;
 import normal.imports.*;
 import normal.options.*;
 import normal.packetui.*;
@@ -396,6 +397,16 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             menuFileImport.add(menuFileImportRegina);
 
             menuFile.add(menuFileImport);
+
+            JMenu menuFileExport = new JMenu("Export");
+            menuFileExport.setMnemonic(KeyEvent.VK_E);
+
+            ReginaExporter menuFileExportRegina =
+                new ReginaExporter(shell, "Regina Data File", KeyEvent.VK_R);
+            menuFileExportRegina.setIcon(Images.mainSmallIcon.image());
+            menuFileExport.add(menuFileExportRegina);
+
+            menuFile.add(menuFileExport);
         }
 
         menuFile.addSeparator();

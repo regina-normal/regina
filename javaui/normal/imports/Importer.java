@@ -86,7 +86,7 @@ public abstract class Importer extends JPanel implements PacketCreator {
     private boolean returnedData = false;
     
     /**
-     * Creates a new pane.
+     * Creates a new importer.
      *
      * @param shell the shell representing the entire program.
      * @param filter a filter specifying the files in which we are
