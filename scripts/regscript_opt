@@ -96,36 +96,36 @@ if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
 	fi
 fi
 
-# ---------- Set reasonable defaults ----------
+# ---------- Set defaults and run sanity checks ----------
 
 if [ -z "$REGINA_BTOOLS" ]; then
 	export REGINA_BTOOLS="$REGINA_HOME/lib/btools.jar"
-	if [ ! -e "$REGINA_BTOOLS" ]; then
-		error "Error: The BTools library could not be found."
-		error "       Set \$REGINA_BTOOLS to the location of btools.jar"
-		error "       and try again."
-		exit 1
-	fi
+fi
+if [ ! -e "$REGINA_BTOOLS" ]; then
+	error "Error: The BTools library could not be found."
+	error "       Set \$REGINA_BTOOLS to the location of btools.jar"
+	error "       and try again."
+	exit 1
 fi
 
 if [ -z "$REGINA_JYTHON" ]; then
 	export REGINA_JYTHON="$REGINA_HOME/lib/jython.jar"
-	if [ ! -e "$REGINA_JYTHON" ]; then
-		warn "Warning: The Jython library could not be found."
-		warn "         Scripting will not be available."
-		warn "         To fix this, set \$REGINA_JYTHON to the location"
-		warn "         of jython.jar and try again."
-	fi
+fi
+if [ ! -e "$REGINA_JYTHON" ]; then
+	warn "Warning: The Jython library could not be found."
+	warn "         Scripting will not be available."
+	warn "         To fix this, set \$REGINA_JYTHON to the location"
+	warn "         of jython.jar and try again."
 fi
 
 if [ -z "$REGINA_JAVAHELP" ]; then
 	export REGINA_JAVAHELP="$REGINA_HOME/lib/jh.jar"
-	if [ ! -e "$REGINA_JAVAHELP" ]; then
-		warn "Warning: The JavaHelp library could not be found."
-		warn "         The built-in help browser will not be available."
-		warn "         To fix this, set \$REGINA_JAVAHELP to the location"
-		warn "         of jh.jar and try again."
-	fi
+fi
+if [ ! -e "$REGINA_JAVAHELP" ]; then
+	warn "Warning: The JavaHelp library could not be found."
+	warn "         The built-in help browser will not be available."
+	warn "         To fix this, set \$REGINA_JAVAHELP to the location"
+	warn "         of jh.jar and try again."
 fi
 
 if [ -z "$REGINA_JAVA" ]; then
@@ -141,25 +141,23 @@ fi
 
 if [ -z "$REGINA_JNIDIR" ]; then
 	export REGINA_JNIDIR="$REGINA_HOME/bin"
-	if [ ! -e "$REGINA_JNIDIR/libregina-engine-jni.so" ]; then
-		warn "Warning: The JNI library directory could not be found."
-		warn "         The JNI calculation engine will not be available."
-		warn "         To fix this, set \$REGINA_JNIDIR to the directory"
-		warn "         containing libregina-engine-jni.so and try again."
-	fi
+fi
+if [ ! -e "$REGINA_JNIDIR/libregina-engine-jni.so" ]; then
+	warn "Warning: The JNI library directory could not be found."
+	warn "         The JNI calculation engine will not be available."
+	warn "         To fix this, set \$REGINA_JNIDIR to the directory"
+	warn "         containing libregina-engine-jni.so and try again."
 fi
 
 if [ -z "$REGINA_JARDIR" ]; then
 	export REGINA_JARDIR="$REGINA_HOME/bin"
-	if [ ! -e "$REGINA_JARDIR/regina.jar" ]; then
-		error "Error: The Regina jar directory could not be found."
-		error "       Set \$REGINA_JAR to the directory containing regina.jar"
-		error "       and try again."
-		exit 1
-	fi
 fi
-
-# ---------- Check optional variables for validity ----------
+if [ ! -e "$REGINA_JARDIR/regina.jar" ]; then
+	error "Error: The Regina jar directory could not be found."
+	error "       Set \$REGINA_JAR to the directory containing regina.jar"
+	error "       and try again."
+	exit 1
+fi
 
 if [ ! -z "$REGINA_ENGINE" ]; then
 	if ! testvalue "$REGINA_ENGINE" REGINA_ENGINE jni corba; then
