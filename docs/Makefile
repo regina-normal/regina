@@ -21,6 +21,14 @@ output_html = *.html
 output_man = *.1 *.5 *.7 manpage.*
 output_rtf = *.rtf
 
+# --------------------------- Platform-specific ---------------------------
+
+ifeq ($(OSTYPE),cygwin)
+  buildman = echo -e "\n\nMan page generation not supported under windows.\n\n"
+else
+  buildman = $(DOCBOOK2MAN) $(sgml_index)
+endif
+
 # --------------------------- Targets -------------------------------------
 
 .PHONY : html man rtf engine javaui clean
@@ -31,7 +39,7 @@ $(sample_html) : $(sgml_sources)
 
 man : $(sample_man)
 $(sample_man) : $(sgml_sources)
-	$(DOCBOOK2MAN) $(sgml_index)
+	$(buildman)
 
 rtf : $(sample_rtf)
 $(sample_rtf) : $(sgml_sources)
