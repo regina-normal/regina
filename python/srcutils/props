@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# Regina - A Normal Surface Theory Calculator
+# Rough Python Binding Analysis
+#
+# Copyright (c) 2003, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: props
+#
+# Roughly analyses various properties of the current python bindings.
+#
+# For each C++ source file containing python bindings for Regina, a line
+# will be output specifying whether boost::noncopyable or std::auto_ptr
+# is used anywhere within this file.
+#
+# This script is dependent upon the specific structure of the Regina
+# python bindings and is only intended for use by the developers of
+# these bindings.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+set -e
+
+cd `dirname "$0"`/..
+sources=`find . -mindepth 2 -name "*.cpp" | sort`
+
+for i in $sources; do
+  name=`echo "$i" | sed -e 's#^./##'`
+
+  case `basename $i` in
+    py*.cpp )
+      continue
+    ;;
+    * )
+    ;;
+  esac
+
+  if grep boost::noncopyable "$i" > /dev/null; then
+    export ncsym="noncopyable"
+  else
+    export ncsym="           ";
+  fi
+
+  if grep std::auto_ptr "$i" > /dev/null; then
+    export apsym="auto_ptr"
+  else
+    export apsym="        ";
+  fi
+
+  echo "$ncsym - $apsym - $name"
+done
+

@@ -9,7 +9,21 @@
 INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 CXXFLAGS = @CXXFLAGS_NODEBUG@
 
-SUBDIRS = algebra angle census file foreign manifold maths packet progress split subcomplex surfaces triangulation utilities
+SUBDIRS = srcutils \
+  algebra \
+  angle \
+  census \
+  file \
+  foreign \
+  manifold \
+  maths \
+  packet \
+  progress \
+  split \
+  subcomplex \
+  surfaces \
+  triangulation \
+  utilities
 
 pkgpythonlibdir = $(pkglibdir)/python
 
