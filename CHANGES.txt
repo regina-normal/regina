@@ -3,7 +3,8 @@ Regina - A Normal Surface Theory Calculator
 
     OVERALL:
         - Builds and runs under windows!
-        - Added support for both global and local configuration files.
+        - Added support for both global and local configuration files;
+          configuration files are now called regina.conf.
         - Vastly reworked runtime scripts.
         - Tidied up Makefiles and CVS.
     ENGINE:

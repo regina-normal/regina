@@ -12,7 +12,7 @@ read_regscript_opt=1
 # ---------- Constants ----------
 
 # File in each options directory containing runtime options.
-runtime_options=runtime.opt
+runtime_options=regina.conf
 
 # ---------- Find options directories ----------
 
