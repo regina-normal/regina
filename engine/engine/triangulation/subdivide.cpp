@@ -29,7 +29,7 @@
 #include "triangulation/ntriangulation.h"
 
 // The indices of the new tetrahedra
-static int index[4][4][4] = {
+static int tetIndex[4][4][4] = {
     { {-1,-1,-1,-1}, {-1,-1,0,1}, {-1,2,-1,3}, {-1,4,5,-1} },
     { {-1,-1,6,7}, {-1,-1,-1,-1}, {8,-1,-1,9}, {10,-1,11,-1} },
     { {-1,12,-1,13}, {14,-1,-1,15}, {-1,-1,-1,-1}, {16,17,-1,-1} },
@@ -59,20 +59,23 @@ void NTriangulation::barycentricSubdivision() {
 
                             // Glue to the tetrahedron on the same face and
                             // on the same edge
-                            newTet[24*tet+index[face][edge][corner]]->joinTo(
-                                corner, newTet[24*tet+index[face][edge][other]],
+                            newTet[24*tet+tetIndex[face][edge][corner]]->
+                                joinTo(corner,
+                                newTet[24*tet+tetIndex[face][edge][other]],
                                 NPerm(corner,other) );
                         
                             // Glue to the tetrahedron on the same face and
                             // at the same corner
-                            newTet[24*tet+index[face][edge][corner]]->joinTo(
-                                other, newTet[24*tet+index[face][other][corner]],
+                            newTet[24*tet+tetIndex[face][edge][corner]]->
+                                joinTo(other,
+                                newTet[24*tet+tetIndex[face][other][corner]],
                                 NPerm(edge,other) );
                         
                             // Glue to the tetrahedron on the adjacent face
                             // sharing an edge and a vertex
-                            newTet[24*tet+index[face][edge][corner]]->joinTo(
-                                edge, newTet[24*tet+index[edge][face][corner]],
+                            newTet[24*tet+tetIndex[face][edge][corner]]->
+                                joinTo(edge,
+                                newTet[24*tet+tetIndex[edge][face][corner]],
                                 NPerm(face, edge) );
 
                             // Glue to the new tetrahedron across an existing
@@ -80,10 +83,10 @@ void NTriangulation::barycentricSubdivision() {
                             oldTet = getTetrahedron(tet);
                             if (oldTet->getAdjacentTetrahedron(face)) {
                                 p = oldTet->getAdjacentTetrahedronGluing(face);
-                                newTet[24*tet+index[face][edge][corner]]->joinTo(
-                                    face, newTet[24*getTetrahedronIndex(
+                                newTet[24*tet+tetIndex[face][edge][corner]]->
+                                    joinTo(face, newTet[24*getTetrahedronIndex(
                                     oldTet->getAdjacentTetrahedron(face))+
-                                    index[p[face]][p[edge]][p[corner]] ],
+                                    tetIndex[p[face]][p[edge]][p[corner]] ],
                                     NPerm(p) );
                              }
                         }
