@@ -28,12 +28,13 @@ rem 1) Change REG_CYGDRIVE and REG_CYGPATH below to reflect the location in
 rem    which you installed cygwin.  This should be the directory containing
 rem    cygwin1.dll and bash.exe.
 rem
-rem 2) Change REG_INSTALL below to reflect the cygwin directory in which
-rem    you installed Regina.  This should be the directory containing
-rem    this file (regina.bat), but it should be written in cygwin format.
+rem 2) Change REG_BIN below to reflect the cygwin directory in which
+rem    the Regina binaries are installed.  This should be the directory
+rem    containing this file (regina.bat), but it should be written in
+rem    cygwin format.
 rem
-rem    Thus, if Regina is installed in C:\cygwin\usr\share\regina then
-rem    you should use /usr/share/regina.  Note that /cygdrive/c refers
+rem    Thus, if the Regina binaries are in C:\cygwin\usr\local\bin then
+rem    you should use /usr/local/bin.  Note that /cygdrive/c refers
 rem    to C:\ (and /cygdrive/d to D:\ and so on), so if Regina is installed
 rem    in C:\apps\regina then you can use /cygdrive/c/apps/regina.
 rem
@@ -47,7 +48,7 @@ rem Please mail me (benb@acm.org) if you have any questions.
 
 set REG_CYGDRIVE=C:
 set REG_CYGPATH=\cygwin\bin
-set REG_INSTALL=/usr/local/regina
+set REG_BIN=/usr/local/bin
 
 rem --- You should not edit anything below this point.
 
@@ -60,7 +61,7 @@ cd %REG_CYGPATH%
 rem --- Start regina.  This should call the startup script "regina" in
 rem     the base regina directory.
 
-bash --login "%REG_INSTALL%/regina" %*
+bash --login "%REG_BIN%/regina" %*
 
 rem --- Pause so the user can see any text output before the console is
 rem     closed; remove this if appropriate.
