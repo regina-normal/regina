@@ -40,6 +40,7 @@
 #include <memory>
 
 class PacketChooser;
+class QPushButton;
 class QListView;
 class QListViewItem;
 
@@ -59,11 +60,19 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
 
     private:
         /**
+         * Describes the type of isomorphism relationship that has been
+         * discovered, if any.
+         */
+        enum IsomorphismType
+            { NoRelationship, IsIsomorphic, IsSubcomplex, IsSupercomplex };
+
+        /**
          * Packet details
          */
         regina::NTriangulation* tri;
         regina::NTriangulation* comparingTri;
         std::auto_ptr<regina::NIsomorphism> isomorphism;
+        IsomorphismType isoType;
 
         /**
          * Internal components
@@ -71,6 +80,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         QWidget* ui;
         PacketChooser* isoTest;
         QLabel* isoResult;
+        QPushButton* isoView;
         QListView* details;
         QListViewItem* components;
         QListViewItem* lastComponent;
@@ -100,6 +110,11 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
          * Update the isomorphism test panel.
          */
         void updateIsoPanel();
+
+        /**
+         * View the isomorphism details.
+         */
+        void viewIsomorphism();
 
     private:
         /**

@@ -53,7 +53,6 @@ Toolbars:
 
 Triangulations:
     (4.0) Include Turaev-Viro
-    Allow viewing isomorphism details
-    Make the skeleton viewer windows appear in a pleasant size
     (4.0) Make the algebra viewer look a little neater
+    Make the skeleton viewer windows appear in a pleasant size
 

@@ -50,12 +50,15 @@
 #include "../packetchooser.h"
 #include "../packetfilter.h"
 
+#include <kiconloader.h>
 #include <klistview.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 #include <memory>
 #include <qheader.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qpushbutton.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -70,19 +73,38 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     layout->addSpacing(5);
 
     // Set up the isomorphism tester.
-    layout->addWidget(new QLabel(
-        i18n("Isomorphism / subcomplex test (this vs T):"), ui));
+    QBoxLayout* wideIsoArea = new QHBoxLayout(layout, 5);
 
-    QBoxLayout* isoArea = new QHBoxLayout(layout, 5);
-    isoArea->addWidget(new QLabel(i18n("T ="), ui));
+    QBoxLayout* leftIsoArea = new QVBoxLayout(wideIsoArea, 0);
+    wideIsoArea->setStretchFactor(leftIsoArea, 1);
+
+    leftIsoArea->addWidget(new QLabel(
+        i18n("Isomorphism / subcomplex test:"), ui));
+
+    QBoxLayout* isoSelectArea = new QHBoxLayout(leftIsoArea, 5);
+    isoSelectArea->addWidget(new QLabel(i18n("Compare with T ="), ui));
     isoTest = new PacketChooser(tri->getTreeMatriarch(),
         new SingleTypeFilter<NTriangulation>(), true, 0, ui);
     isoTest->setAutoUpdate(true);
     connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
-    isoArea->addWidget(isoTest);
+    isoSelectArea->addWidget(isoTest);
+    isoSelectArea->addStretch(1);
+
     isoResult = new QLabel(i18n("Result:"), ui);
-    isoArea->addWidget(isoResult);
-    isoArea->addStretch(1);
+    leftIsoArea->addWidget(isoResult);
+
+    isoView = new QPushButton(SmallIconSet("viewmag"), i18n("Details..."), ui);
+    isoView->setFlat(true);
+    connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
+    wideIsoArea->addWidget(isoView);
+    wideIsoArea->addSpacing(5);
+
+    // Add a central divider.
+    layout->addSpacing(5);
+
+    QFrame* divider = new QFrame(ui);
+    divider->setFrameStyle(QFrame::HLine | QFrame::Sunken);
+    layout->addWidget(divider);
 
     layout->addSpacing(5);
 
@@ -182,18 +204,84 @@ void NTriCompositionUI::updateIsoPanel() {
 
     // Run the isomorphism tests.
     if (comparingTri) {
-        if ((isomorphism = tri->isIsomorphicTo(*comparingTri)).get())
+        if ((isomorphism = tri->isIsomorphicTo(*comparingTri)).get()) {
             isoResult->setText(i18n("Result: Isomorphic (this = T)"));
-        else if ((isomorphism = tri->isContainedIn(*comparingTri)).get())
+            isoType = IsIsomorphic;
+        } else if ((isomorphism = tri->isContainedIn(*comparingTri)).get()) {
             isoResult->setText(i18n("Result: Subcomplex (this < T)"));
-        else if ((isomorphism = comparingTri->isContainedIn(*tri)).get())
+            isoType = IsSubcomplex;
+        } else if ((isomorphism = comparingTri->isContainedIn(*tri)).get()) {
             isoResult->setText(i18n("Result: Subcomplex (T < this)"));
-        else
+            isoType = IsSupercomplex;
+        } else {
             isoResult->setText(i18n("Result: No relationship"));
+            isoType = NoRelationship;
+        }
     } else {
         isomorphism.reset();
         isoResult->setText(i18n("Result:"));
+        isoType = NoRelationship;
     }
+
+    isoView->setEnabled(isomorphism.get());
+}
+
+void NTriCompositionUI::viewIsomorphism() {
+    if (isoType == NoRelationship || ! comparingTri)
+        return;
+
+    QString title, msg;
+    QStringList details;
+
+    details += QString("[%1]  -  [%2]").arg(tri->getPacketLabel().c_str()).
+        arg(comparingTri->getPacketLabel().c_str());
+
+    if (isoType == IsIsomorphic) {
+        title = i18n("Isomorphism Details");
+        msg = i18n("Below are details of the specific isomorphism between "
+            "the two triangulations.  The left hand side refers to this "
+            "triangulation; the right hand side refers to the selected "
+            "triangulation %1.\n"
+            "Each line represents a single tetrahedron and its four "
+            "vertices.").arg(comparingTri->getPacketLabel().c_str());
+
+        for (unsigned long i = 0; i < tri->getNumberOfTetrahedra(); i++)
+            details += QString("%1 (0123)  -  %2 (%3)").
+                arg(i).
+                arg(isomorphism->tetImage(i)).
+                arg(isomorphism->facePerm(i).toString().c_str())
+                ;
+    } else {
+        title = i18n("Subcomplex Details");
+        msg = i18n("Below are details of the specific isomorphism by which "
+            "one triangulation is contained within the other.  The left "
+            "hand side refers to this triangulation; the right hand side "
+            "refers to the selected "
+            "triangulation %1.\n"
+            "Each line represents a single tetrahedron and its four "
+            "vertices.").arg(comparingTri->getPacketLabel().c_str());
+
+        if (isoType == IsSubcomplex)
+            for (unsigned long i = 0; i < tri->getNumberOfTetrahedra(); i++)
+                details += QString("%1 (0123)  -  %2 (%3)").
+                    arg(i).
+                    arg(isomorphism->tetImage(i)).
+                    arg(isomorphism->facePerm(i).toString().c_str())
+                    ;
+        else
+            for (unsigned long i = 0;
+                    i < comparingTri->getNumberOfTetrahedra(); i++)
+                details += QString("%2 (%3)  -  %1 (0123)").
+                    arg(i).
+                    arg(isomorphism->tetImage(i)).
+                    arg(isomorphism->facePerm(i).toString().c_str())
+                    ;
+    }
+
+    if (details.size() == 1)
+        details += i18n("(no tetrahedra)");
+
+    KMessageBox::informationList(ui, msg, details, title);
 }
 
 QListViewItem* NTriCompositionUI::addTopLevelSection(const QString& text) {
