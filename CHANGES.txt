@@ -51,6 +51,9 @@ Version 3.97  [ 21 November, 2003 ] - Third prerelease for version 4.0.
               tetrahedra are removed from a triangulation.
         Class PacketChooser:
             - New routine hasPackets() to detect empty packet choosers.
+        Class ReginaPart:
+            - Make File -> Save (as opposed to File -> Save As) work with
+              new files.
         Class ReginaPreferences, ReginaPrefSet:
             - Many new configuration options.  In addition to those
               mentioned above, census data files and Python libraries can

@@ -36,7 +36,7 @@ void ReginaPart::setupActions() {
     KAction* act;
 
     // File actions:
-    actSave = KStdAction::save(this, SLOT(save()), actionCollection());
+    actSave = KStdAction::save(this, SLOT(fileSave()), actionCollection());
     KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
 
     // Edit actions:

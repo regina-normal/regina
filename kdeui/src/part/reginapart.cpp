@@ -240,6 +240,20 @@ bool ReginaPart::saveFile() {
     }
 }
 
+void ReginaPart::fileSave() {
+    if (url().isEmpty())
+        fileSaveAs();
+    else
+        save();
+}
+
+void ReginaPart::fileSaveAs() {
+    QString file = KFileDialog::getSaveFileName(QString::null,
+        i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
+    if (! file.isEmpty())
+        saveAs(file);
+}
+
 void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree) {
     view(new PacketPane(this, packet));
 
@@ -445,13 +459,6 @@ void ReginaPart::updateTreeEditActions() {
     for (act = treePacketEditActions.first(); act;
             act = treePacketEditActions.next())
         act->setEnabled(enable);
-}
-
-void ReginaPart::fileSaveAs() {
-    QString file = KFileDialog::getSaveFileName(QString::null,
-        i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
-    if (! file.isEmpty())
-        saveAs(file);
 }
 
 void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {

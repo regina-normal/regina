@@ -207,6 +207,12 @@ class ReginaPart : public KParts::ReadWritePart {
 
     public slots:
         /**
+         * Basic file routines.
+         */
+        void fileSave();
+        void fileSaveAs();
+
+        /**
          * View, rename or delete the currently selected packet.
          */
         void packetView();
@@ -298,12 +304,6 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         void updateTreePacketActions();
         void updateTreeEditActions();
-
-    private slots:
-        /**
-         * Implementation of actions.
-         */
-        void fileSaveAs();
 
     private:
         /**

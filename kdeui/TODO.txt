@@ -6,6 +6,7 @@ also a calculation engine TODO list found under "Related Pages" in the
 engine documentation.
 
 General:
+    (4.0) Auto file extension seems broken.
     Make "configure shortcuts" work with the part as well as with the shell
     More "What's This?" texts, including a what's this button on the toolbar
     Include progress dialogs where appropriate
