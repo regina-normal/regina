@@ -42,9 +42,14 @@ namespace {
 }
 
 void NTriangulation::barycentricSubdivision() {
-    // Written by Dave Letscher  11/2/00
+    // (Initially written by Dave Letscher on 11/2/00)
 
     unsigned long nOldTet = tetrahedra.size();
+    if (nOldTet == 0)
+        return;
+
+    ChangeEventBlock block(this);
+
     NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
     NTetrahedron* oldTet;
     NPerm p;
@@ -97,8 +102,6 @@ void NTriangulation::barycentricSubdivision() {
                         }
     }
 
-
-
     // Delete the existing tetrahedra and put in the new ones.
     removeAllTetrahedra();
     for (tet=0; tet<24*nOldTet; tet++)
@@ -115,6 +118,10 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
 
     int i,j,k,l;
     int numOldTet = tetrahedra.size();
+    if (! numOldTet)
+        return false;
+
+    ChangeEventBlock block(this);
 
     NTetrahedron **newTet = new NTetrahedron*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)

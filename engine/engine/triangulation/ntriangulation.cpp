@@ -490,6 +490,8 @@ void NTriangulation::deleteSkeleton() {
 }
 
 void NTriangulation::cloneFrom(const NTriangulation& X) {
+    ChangeEventBlock(this);
+
     clearAllProperties();
     removeAllTetrahedra();
 
@@ -559,6 +561,8 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
 }
 
 void NTriangulation::insertTriangulation(const NTriangulation& X) {
+    ChangeEventBlock(this);
+
     clearAllProperties();
     unsigned long norig = getNumberOfTetrahedra();
 
@@ -589,6 +593,7 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
         }
         tetPos++;
     }
+
     gluingsHaveChanged();
 }
 

@@ -41,6 +41,7 @@
 #include <set>
 
 #include "shareableobject.h"
+#include "utilities/boostutils.h"
 
 namespace regina {
 
@@ -129,6 +130,9 @@ class NPacket : public ShareableObject {
 
         std::auto_ptr<std::set<NPacketListener*> > listeners;
             /**< All objects listening for events on this packet. */
+        unsigned changeEventBlocks;
+            /**< The number of change event blocks currently registered.
+                 Change events will only be fired when this count is zero. */
 
     public:
         /**
@@ -1023,6 +1027,58 @@ class NPacket : public ShareableObject {
 
     protected:
         /**
+         * An object that temporarily blocks listeners from being
+         * notified of packet change events.  As long as this object
+         * is in existence, any calls to fireChangedEvent() for the
+         * corresponding packet will do nothing whatsoever.
+         *
+         * It can sometimes be useful to temporarily block change events
+         * during large modifications that are likely to call
+         * fireChangedEvents() at inopportune times during processing.
+         *
+         * Note that change event blocks are cumulative, i.e., if
+         * several blocks are created then all of these blocks must be
+         * destroyed before listeners will be notified of change events
+         * again.
+         */
+        class ChangeEventBlock : public regina::boost::noncopyable {
+            private:
+                NPacket* packet;
+                    /**< The packet for which change events are blocked. */
+                bool fireOnDestruction;
+                    /**< Should we fire a change event upon destruction? */
+
+            public:
+                /**
+                 * Creates a new change event block for the given
+                 * packet.
+                 *
+                 * As a convenience, passing \c true as the
+                 * parameter \a fireOnDestruction will cause a change
+                 * event to be fired for the given packet when this
+                 * block is destroyed.  Note that this change event will
+                 * still have no effect if other change event blocks
+                 * remain active.
+                 *
+                 * @param packetToBlock the packet for which change
+                 * events will be blocked.
+                 * @param fireOnDestruction \c true if a change event
+                 * should be fired for the given packet when this block
+                 * is destroyed.
+                 */
+                ChangeEventBlock(NPacket* packetToBlock,
+                    bool fireOnDestruction = true);
+
+                /**
+                 * Destructor that removes the single change event block
+                 * that was created by this object.  In addition, a
+                 * change event will be fired if it was requested upon
+                 * construction.
+                 */
+                ~ChangeEventBlock();
+        };
+
+        /**
          * Makes a newly allocated copy of this packet.
          * This routine should <b>not</b> insert the new packet into the
          * tree structure, clone the packet's associated tags or give the
@@ -1044,6 +1100,18 @@ class NPacket : public ShareableObject {
          * changed.  That is, the routine
          * NPacketListener::packetWasChanged() will be called upon all
          * registered listeners.
+         *
+         * If change events are currently blocked, this routine will do
+         * nothing at all.  You may wish to temporarily block change events
+         * during large modifications that are likely to call
+         * fireChangedEvents() at inopportune times during processing.
+         *
+         * Change events can be blocked by creating a local ChangeEventBlock
+         * object; the block will be removed when the object is
+         * destroyed (goes out of scope).  Note that these blocks are
+         * cumulative, i.e., if \e k blocks are created then all \e k
+         * blocks must be destroyed before fireChangeEvents() will notify
+         * listeners again.
          */
         void fireChangedEvent();
 
@@ -1094,7 +1162,7 @@ class NPacket : public ShareableObject {
 // Inline functions for NPacket
 
 inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
-        prevTreeSibling(0), nextTreeSibling(0) {
+        prevTreeSibling(0), nextTreeSibling(0), changeEventBlocks(0) {
     if (parent)
         parent->insertChildLast(this);
     else
@@ -1179,6 +1247,19 @@ inline unsigned long NPacket::getNumberOfDescendants() const {
 }
 
 inline void NPacket::writePacket(NFile&) const {
+}
+
+inline NPacket::ChangeEventBlock::ChangeEventBlock(
+        NPacket* packetToBlock, bool shouldFireOnDestruction) :
+        packet(packetToBlock), fireOnDestruction(shouldFireOnDestruction) {
+    packet->changeEventBlocks++;
+}
+
+inline NPacket::ChangeEventBlock::~ChangeEventBlock() {
+    if (packet->changeEventBlocks)
+        packet->changeEventBlocks--;
+    if (fireOnDestruction)
+        packet->fireChangedEvent();
 }
 
 } // namespace regina

@@ -178,9 +178,11 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     if (broken)
         for (i = 0; i < nTet; i++)
             delete tet[i];
-    else
+    else {
+        ChangeEventBlock block(this);
         for (i = 0; i < nTet; i++)
             addTetrahedron(tet[i]);
+    }
 
     delete[] newTetGluings;
     delete[] tet;

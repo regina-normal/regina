@@ -84,6 +84,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     #endif
 
     // Perform the move.
+    ChangeEventBlock block(this);
     int oldPos2, newPos, newPos2;
 
     // Allocate the new tetrahedra.
@@ -206,6 +207,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    ChangeEventBlock block(this);
     int oldPos2, newPos, newPos2;
 
     // Allocate the new tetrahedra.
@@ -334,6 +336,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     #endif
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
+    ChangeEventBlock block(this);
     NFace* face23 = (newAxis == 0 ?
         oldTet[0]->getFace(embs[0].getVertices()[2]) :
         oldTet[1]->getFace(embs[1].getVertices()[2]));
@@ -406,6 +409,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    ChangeEventBlock block(this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
@@ -484,6 +488,7 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    ChangeEventBlock block(this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
@@ -567,6 +572,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     #endif
 
     // Go ahead and perform the move.
+    ChangeEventBlock block(this);
+
     // First glue together the two faces that will be flattened.
     NTetrahedron* adjTet[2];
     int adjFace[2];
@@ -661,6 +668,7 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    // Don't bother with a block since this is so simple.
     tet->unjoin(emb.getFace());
     gluingsHaveChanged();
     return true;
@@ -699,6 +707,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
     #endif
 
     // Actually perform the move.
+    // Don't bother with a block since this is so simple.
     removeTetrahedron(t);
     return true;
 }
@@ -781,6 +790,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
     #endif
 
     // Perform the move.
+    ChangeEventBlock block(this);
     NPerm topPerm, botPerm;
     NTetrahedron *top, *bot;
 

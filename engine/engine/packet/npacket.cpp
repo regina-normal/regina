@@ -578,7 +578,7 @@ void NPacket::writeXMLFile(std::ostream& out) const {
 }
 
 void NPacket::fireChangedEvent() {
-    if (listeners.get()) {
+    if (changeEventBlocks == 0 && listeners.get()) {
         for (std::set<NPacketListener*>::const_iterator it =
                 listeners->begin(); it != listeners->end(); it++)
             (*it)->packetWasChanged(this);

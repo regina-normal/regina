@@ -36,6 +36,8 @@ void NTriangulation::makeDoubleCover() {
     if (sheetSize == 0)
         return;
 
+    ChangeEventBlock block(this);
+
     // Create a second sheet of tetrahedra.
     NTetrahedron** upper = new NTetrahedron*[sheetSize];
     unsigned long i;

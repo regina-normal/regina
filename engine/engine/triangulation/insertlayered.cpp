@@ -32,6 +32,8 @@ namespace regina {
 
 NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
+    ChangeEventBlock block(this);
+
     unsigned long cuts2 = cuts0 + cuts1;
 
     NTetrahedron* newTet = new NTetrahedron();
@@ -76,11 +78,14 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         base->joinTo(2, newTet, NPerm(3,1,0,2));
         base->joinTo(3, newTet, NPerm(0,2,3,1));
     }
+
     gluingsHaveChanged();
     return newTet;
 }
 
 void NTriangulation::insertLayeredLensSpace(unsigned long p, unsigned long q) {
+    ChangeEventBlock block(this);
+
     NTetrahedron* chain;
     if (p == 0) {
         chain = insertLayeredSolidTorus(1, 1);
@@ -107,12 +112,15 @@ void NTriangulation::insertLayeredLensSpace(unsigned long p, unsigned long q) {
             chain->joinTo(3, chain, NPerm(3, 0, 1, 2));
         }
     }
+
     gluingsHaveChanged();
 }
 
 void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
     if (length == 0)
         return;
+
+    ChangeEventBlock block(this);
 
     // Insert a layered chain of the given length.
     // We should probably split this out into a separate routine.
@@ -140,6 +148,7 @@ void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
         curr->joinTo(0, base, NPerm(1, 0, 2, 3));
         curr->joinTo(3, base, NPerm(0, 1, 3, 2));
     }
+
     gluingsHaveChanged();
 }
 

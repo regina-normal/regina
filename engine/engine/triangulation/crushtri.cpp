@@ -215,6 +215,8 @@ bool NTriangulation::crushMaximalForest() {
     if (cTetrahedra.empty())
         return false;
 
+    ChangeEventBlock block(this);
+
     // Prepare to measure the change in topology.
     /*
     const NAbelianGroup& h1(getHomologyH1());

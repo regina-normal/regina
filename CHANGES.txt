@@ -64,8 +64,9 @@ Current Development Version
             - The NPacket destructor now orphans the packet if this has
               not already been done.
             - Added event listening for packets, including new class
-              NPacketListener and new routines NPacket::listen(),
-              NPacket::isListening() and NPacket::unlisten().
+              NPacketListener, new routines NPacket::listen(),
+              NPacket::isListening() and NPacket::unlisten() and new
+              class NPacket::ChangeEventBlock.
             - New NPacket routines moveUp(), moveDown(), moveToFirst()
               and moveToLast().
             - Reclassified member variables from protected to private.
