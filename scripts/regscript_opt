@@ -17,6 +17,9 @@ runtime_options=regina.conf
 
 # Use default if nothing is specified.
 default_options_global="/etc/$REGINA_PACKAGE"
+if [ ! -e "$default_options_global" ]; then
+    export default_options_global="$REGINA_HOME"
+fi
 if [ -z "$REGINA_OPTIONS_GLOBAL" ]; then
     export REGINA_OPTIONS_GLOBAL="$default_options_global"
 fi
@@ -130,11 +133,13 @@ if [ -d "$REGINA_JYTHON" ]; then
     warn "         It should be set to the full pathname of the Jython jar file."
     warn "         For example: REGINA_JYTHON=/usr/share/java/jython.jar"
     warn "         Scripting will not be available until this is fixed."
+    export REGINA_JYTHON=
 elif [ ! -e "$REGINA_JYTHON" ]; then
     warn "Warning: The Jython library could not be found."
     warn "         Scripting will not be available."
     warn "         To fix this, set \$REGINA_JYTHON to the location"
     warn "         of jython.jar and try again."
+    export REGINA_JYTHON=
 fi
 
 if [ -z "$REGINA_JAVAHELP" ]; then
@@ -149,11 +154,13 @@ if [ -d "$REGINA_JAVAHELP" ]; then
     warn "         For example: REGINA_JAVAHELP=/usr/share/java/jh.jar"
     warn "         The built-in help browser will not be available until"
     warn "         this is fixed."
+    export REGINA_JAVAHELP=
 elif [ ! -e "$REGINA_JAVAHELP" ]; then
     warn "Warning: The JavaHelp library could not be found."
     warn "         The built-in help browser will not be available."
     warn "         To fix this, set \$REGINA_JAVAHELP to the location"
     warn "         of jh.jar and try again."
+    export REGINA_JAVAHELP=
 fi
 
 if [ -z "$REGINA_JAVA" ]; then
@@ -167,23 +174,21 @@ if [ -z "$REGINA_JAVA" ]; then
     fi
 fi
 
+if [ -z "$REGINA_JNIENGINE" ]; then
+    export REGINA_JNIENGINE=regina-engine-jni
+fi
+
 if [ -z "$REGINA_JNIDIR" ]; then
     if [ "$REGINA_FROMSOURCE" = "1" ]; then
         export REGINA_JNIDIR="$REGINA_HOME/engine/jni/.libs:/usr/lib"
     else
-        _grandparent="`cd "$REGINA_HOME"/../.. && pwd`"
-        export REGINA_JNIDIR="$_grandparent/lib/$REGINA_PACKAGE:/usr/lib"
+        export REGINA_JNIDIR="$REGINA_PKGLIBDIR:/usr/lib"
     fi
 fi
-if [ -z "$REGINA_JNIENGINE" ]; then
-    jnilib="regina-engine-jni"
-else
-    jnilib="$REGINA_JNIENGINE"
-fi
 if [ "$OSTYPE" = "cygwin" ]; then
-    jnilib="$jnilib.dll"
+    jnilib="$REGINA_JNIENGINE.dll"
 else
-    jnilib="lib$jnilib.so"
+    jnilib="lib$REGINA_JNIENGINE.so"
 fi
 # Look for the JNI library in each colon-separated component of $REGINA_JNIDIR.
 foundlib=0
