@@ -38,7 +38,7 @@ endif
 
 # Local variables:
 
-empty_dirs = $(DIST_DIR) $(BIN_DIR) engine javaui
+empty_dirs = $(DIST_DIR) engine javaui
 DOC_LICENSE = $(BASE_DOC_DIR)/LICENSE.txt
 DOC_BUILD_DIR = doc-build-tmp
 APP_CLASS = normal.Application
