@@ -39,6 +39,9 @@
 
 namespace regina {
 
+class NLargeInteger;
+class NBoolSet;
+
 /**
  * Creates a new C string that is a duplicate of the given C++ string.
  *
@@ -51,6 +54,113 @@ namespace regina {
  * @return the new duplicate C string.
  */
 char* duplicate(const std::string& str);
+
+/**
+ * Converts the entire given string to an integer and reports whether
+ * this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+bool valueOf(const std::string& str, int& dest);
+/**
+ * Converts the entire given string to an unsigned integer and reports
+ * whether this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting unsigned integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+bool valueOf(const std::string& str, unsigned& dest);
+/**
+ * Converts the entire given string to a long integer and reports whether
+ * this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting long integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+bool valueOf(const std::string& str, long& dest);
+/**
+ * Converts the entire given string to an unsigned long integer and reports
+ * whether this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting unsigned long
+ * integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+bool valueOf(const std::string& str, unsigned long& dest);
+/**
+ * Converts the entire given string to an arbitrary precision integer and
+ * reports whether this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting arbitrary
+ * precision integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+bool valueOf(const std::string& str, NLargeInteger& dest);
+/**
+ * Converts the entire given string to a boolean and reports whether
+ * this conversion was successful.
+ *
+ * If the given string begins with <tt>T</tt> or <tt>F</tt> (either
+ * upper- or lower-case), the string will be successfully converted to
+ * \c true or \c false respectively.  Otherwise the conversion will be
+ * unsuccessful and argument \a dest will be set to \c false.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting boolean.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+bool valueOf(const std::string& str, bool& dest);
+/**
+ * Converts the entire given string to a set of booleans and reports whether
+ * this conversion was successful.
+ *
+ * A set of booleans is represented by one of the four strings
+ * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> or <tt>TF</tt>.  If the
+ * conversion is unsuccessful, argument \a dest will be set to
+ * NBoolSet::sNone and \c false will be returned.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting set of booleans.
+ * @return \c true if the conversion was successful or \c false otherwise.
+ */
+bool valueOf(const std::string& str, NBoolSet& dest);
 
 /**
  * Decomposes the given string into tokens.

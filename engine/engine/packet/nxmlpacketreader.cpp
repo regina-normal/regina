@@ -26,10 +26,10 @@
 
 /* end stub */
 
-#include <cstdlib>
 #include "packet/npacket.h"
 #include "packet/nxmlpacketreader.h"
 #include "packet/packetregistry.h"
+#include "utilities/stringutils.h"
 
 namespace regina {
 
@@ -58,7 +58,9 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
         if (it == subTagProps.end())
             return new NXMLPacketReader();
 
-        int typeID = atoi((*it).second.c_str());
+        long typeID;
+        if (! valueOf((*it).second, typeID))
+            return new NXMLPacketReader();
         if (typeID <= 0)
             return new NXMLPacketReader();
 

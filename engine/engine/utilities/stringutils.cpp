@@ -26,7 +26,10 @@
 
 /* end stub */
 
+#include <cstdlib>
 #include "utilities/stringutils.h"
+#include "utilities/nbooleans.h"
+#include "utilities/nmpi.h"
 
 namespace regina {
 
@@ -39,6 +42,69 @@ char* duplicate(const std::string& str) {
     *pos = 0;
 
     return ans;
+}
+
+bool valueOf(const std::string& str, int& dest) {
+    char* endPtr;
+    dest = strtol(str.c_str(), &endPtr, 10);
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
+bool valueOf(const std::string& str, unsigned& dest) {
+    char* endPtr;
+    dest = strtoul(str.c_str(), &endPtr, 10);
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
+bool valueOf(const std::string& str, long& dest) {
+    char* endPtr;
+    dest = strtol(str.c_str(), &endPtr, 10);
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
+bool valueOf(const std::string& str, unsigned long& dest) {
+    char* endPtr;
+    dest = strtoul(str.c_str(), &endPtr, 10);
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
+bool valueOf(const std::string& str, NLargeInteger& dest) {
+    bool valid;
+    dest = NLargeInteger(str.c_str(), 10, &valid);
+    return valid;
+}
+
+bool valueOf(const std::string& str, bool& dest) {
+    if (str.empty()) {
+        dest = false;
+        return false;
+    }
+    if (str[0] == 't' || str[0] == 'T') {
+        dest = true;
+        return true;
+    }
+    dest = false;
+    return (str[0] == 'F' || str[0] == 'f');
+}
+
+bool valueOf(const std::string& str, NBoolSet& dest) {
+    if (str.length() != 2) {
+        dest = NBoolSet::sNone;
+        return false;
+    }
+    char t = str[0];
+    char f = str[1];
+    if (t != '-' && t != 'T' && t != 't') {
+        dest = NBoolSet::sNone;
+        return false;
+    }
+    if (f != '-' && f != 'F' && f != 'f') {
+        dest = NBoolSet::sNone;
+        return false;
+    }
+
+    dest = NBoolSet(t != '-', f != '-');
+    return true;
 }
 
 } // namespace regina
