@@ -9,5 +9,3 @@ Runtime:
     Automatically load libraries from a configuration file.
     Support passing an argument representing a file to run.
 
-Wrappers:
-    surfaces

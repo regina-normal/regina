@@ -26,25 +26,28 @@
 
 /* end stub */
 
-void addNSurfaceSet();
-void addNDisc();
-void addNNormalSurface();
-void addNNormalSurfaceList();
-void addNPrism();
-void addNSurfaceFilter();
-void addNSurfaceFilterCombination();
-void addNSurfaceFilterProperties();
-void addNSurfaceSubset();
+#include "surfaces/nprism.h"
+#include "surfaces/nnormalsurface.h"
+#include <boost/python.hpp>
 
-void addSurfaces() {
-    addNSurfaceSet();
-    addNDisc();
-    addNNormalSurface();
-    addNNormalSurfaceList();
-    addNPrism();
-    addNSurfaceFilter();
-    addNSurfaceFilterCombination();
-    addNSurfaceFilterProperties();
-    addNSurfaceSubset();
+using namespace boost::python;
+using regina::NPrismSpec;
+using regina::NPrismSetSurface;
+
+void addNPrism() {
+    class_<NPrismSpec>("NPrismSpec")
+        .def(init<unsigned long, int>())
+        .def(init<const NPrismSpec&>())
+        .def_readwrite("tetIndex", &NPrismSpec::tetIndex)
+        .def_readwrite("edge", &NPrismSpec::edge)
+        .def(self == self)
+        .def(self_ns::str(self))
+    ;
+
+    class_<NPrismSetSurface, std::auto_ptr<NPrismSetSurface>,
+            boost::noncopyable>("NPrismSetSurface",
+            init<const regina::NNormalSurface&>())
+        .def("getQuadType", &NPrismSetSurface::getQuadType)
+    ;
 }
 

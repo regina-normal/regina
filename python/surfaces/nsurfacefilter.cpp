@@ -26,25 +26,27 @@
 
 /* end stub */
 
-void addNSurfaceSet();
-void addNDisc();
-void addNNormalSurface();
-void addNNormalSurfaceList();
-void addNPrism();
-void addNSurfaceFilter();
-void addNSurfaceFilterCombination();
-void addNSurfaceFilterProperties();
-void addNSurfaceSubset();
+#include "surfaces/nnormalsurface.h"
+#include "surfaces/nsurfacefilter.h"
+#include <boost/python.hpp>
 
-void addSurfaces() {
-    addNSurfaceSet();
-    addNDisc();
-    addNNormalSurface();
-    addNNormalSurfaceList();
-    addNPrism();
-    addNSurfaceFilter();
-    addNSurfaceFilterCombination();
-    addNSurfaceFilterProperties();
-    addNSurfaceSubset();
+using namespace boost::python;
+using regina::NSurfaceFilter;
+
+void addNSurfaceFilter() {
+    scope s = class_<NSurfaceFilter, bases<regina::NPacket>,
+            std::auto_ptr<NSurfaceFilter>, boost::noncopyable>
+            ("NSurfaceFilter")
+        .def(init<const NSurfaceFilter&>())
+        .def("accept", &NSurfaceFilter::accept)
+        .def("getFilterID", &NSurfaceFilter::getFilterID)
+        .def("getFilterName", &NSurfaceFilter::getFilterName)
+    ;
+
+    s.attr("packetType") = NSurfaceFilter::packetType;
+    s.attr("filterID") = NSurfaceFilter::filterID;
+
+    implicitly_convertible<std::auto_ptr<NSurfaceFilter>,
+        std::auto_ptr<regina::NPacket> >();
 }
 

@@ -26,25 +26,34 @@
 
 /* end stub */
 
-void addNSurfaceSet();
-void addNDisc();
-void addNNormalSurface();
-void addNNormalSurfaceList();
-void addNPrism();
-void addNSurfaceFilter();
-void addNSurfaceFilterCombination();
-void addNSurfaceFilterProperties();
-void addNSurfaceSubset();
+#include "surfaces/nnormalsurface.h"
+#include "surfaces/nsurfaceset.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addSurfaces() {
-    addNSurfaceSet();
-    addNDisc();
-    addNNormalSurface();
-    addNNormalSurfaceList();
-    addNPrism();
-    addNSurfaceFilter();
-    addNSurfaceFilterCombination();
-    addNSurfaceFilterProperties();
-    addNSurfaceSubset();
+using namespace boost::python;
+using regina::NSurfaceSet;
+
+namespace {
+    void writeAllSurfaces_stdio(const NSurfaceSet& s) {
+        s.writeAllSurfaces(std::cout);
+    }
+}
+
+void addNSurfaceSet() {
+    class_<NSurfaceSet, boost::noncopyable, std::auto_ptr<NSurfaceSet> >
+            ("NSurfaceSet", no_init)
+        .def("getFlavour", &NSurfaceSet::getFlavour)
+        .def("allowsAlmostNormal", &NSurfaceSet::allowsAlmostNormal)
+        .def("isEmbeddedOnly", &NSurfaceSet::isEmbeddedOnly)
+        .def("getTriangulation", &NSurfaceSet::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("getNumberOfSurfaces", &NSurfaceSet::getNumberOfSurfaces)
+        .def("getSurface", &NSurfaceSet::getSurface,
+            return_internal_reference<>())
+        .def("getShareableObject", &NSurfaceSet::getShareableObject,
+            return_internal_reference<>())
+        .def("writeAllSurfaces", writeAllSurfaces_stdio)
+    ;
 }
 

@@ -26,25 +26,24 @@
 
 /* end stub */
 
-void addNSurfaceSet();
-void addNDisc();
-void addNNormalSurface();
-void addNNormalSurfaceList();
-void addNPrism();
-void addNSurfaceFilter();
-void addNSurfaceFilterCombination();
-void addNSurfaceFilterProperties();
-void addNSurfaceSubset();
+#include "surfaces/sfcombination.h"
+#include <boost/python.hpp>
 
-void addSurfaces() {
-    addNSurfaceSet();
-    addNDisc();
-    addNNormalSurface();
-    addNNormalSurfaceList();
-    addNPrism();
-    addNSurfaceFilter();
-    addNSurfaceFilterCombination();
-    addNSurfaceFilterProperties();
-    addNSurfaceSubset();
+using namespace boost::python;
+using regina::NSurfaceFilterCombination;
+
+void addNSurfaceFilterCombination() {
+    scope s = class_<NSurfaceFilterCombination, bases<regina::NSurfaceFilter>,
+            std::auto_ptr<NSurfaceFilterCombination>, boost::noncopyable>
+            ("NSurfaceFilterCombination")
+        .def(init<const NSurfaceFilterCombination&>())
+        .def("getUsesAnd", &NSurfaceFilterCombination::getUsesAnd)
+        .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
+    ;
+
+    s.attr("filterID") = NSurfaceFilterCombination::filterID;
+
+    implicitly_convertible<std::auto_ptr<NSurfaceFilterCombination>,
+        std::auto_ptr<regina::NSurfaceFilter> >();
 }
 

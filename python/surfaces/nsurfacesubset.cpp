@@ -26,25 +26,21 @@
 
 /* end stub */
 
-void addNSurfaceSet();
-void addNDisc();
-void addNNormalSurface();
-void addNNormalSurfaceList();
-void addNPrism();
-void addNSurfaceFilter();
-void addNSurfaceFilterCombination();
-void addNSurfaceFilterProperties();
-void addNSurfaceSubset();
+#include "surfaces/nsurfacefilter.h"
+#include "surfaces/nsurfacesubset.h"
+#include <boost/python.hpp>
 
-void addSurfaces() {
-    addNSurfaceSet();
-    addNDisc();
-    addNNormalSurface();
-    addNNormalSurfaceList();
-    addNPrism();
-    addNSurfaceFilter();
-    addNSurfaceFilterCombination();
-    addNSurfaceFilterProperties();
-    addNSurfaceSubset();
+using namespace boost::python;
+using regina::NSurfaceSubset;
+
+void addNSurfaceSubset() {
+    scope s = class_<NSurfaceSubset, bases<regina::ShareableObject,
+            regina::NSurfaceSet>, std::auto_ptr<NSurfaceSubset>,
+            boost::noncopyable>("NSurfaceSubset",
+            init<const regina::NSurfaceSet&, const regina::NSurfaceFilter&>())
+    ;
+
+    implicitly_convertible<std::auto_ptr<NSurfaceSubset>,
+        std::auto_ptr<regina::NSurfaceSet> >();
 }
 
