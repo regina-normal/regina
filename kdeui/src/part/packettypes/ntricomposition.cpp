@@ -115,6 +115,12 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     details->addColumn(QString::null);
     details->setSorting(-1);
     details->setSelectionMode(QListView::NoSelection);
+    QWhatsThis::add(details, i18n("<qt>Displays the details of any standard "
+        "combinatorial structures found within the triangulation.  Also "
+        "displays the precise name of the triangulation and/or underlying "
+        "3-manifold if these happen to be recognised immediately.<p>"
+        "See the reference manual for further details on the combinatorial "
+        "structures that can be found.</qt>"));
     layout->addWidget(details, 1);
 }
 
