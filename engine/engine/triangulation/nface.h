@@ -306,7 +306,7 @@ class NFace : public ShareableObject {
          */
         NPerm getEdgeMapping(int edge) const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     friend class NTriangulation;
         /**< Allow access to private members. */
@@ -365,7 +365,7 @@ inline const NFaceEmbedding& NFace::getEmbedding(unsigned index) const {
     return *(embeddings[index]);
 }
 
-inline void NFace::writeTextShort(ostream& out) const {
+inline void NFace::writeTextShort(std::ostream& out) const {
     out << (isBoundary() ? "Boundary " : "Internal ") << "face";
 }
 

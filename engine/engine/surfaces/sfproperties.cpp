@@ -72,7 +72,7 @@ bool NSurfaceFilterProperties::accept(NNormalSurface& surface) const {
     return true;
 }
 
-void NSurfaceFilterProperties::writeTextLong(ostream& o) const {
+void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
     o << "Filter normal surfaces with restrictions:\n";
 
     if (eulerCharacteristic.size() > 0) {

@@ -97,7 +97,7 @@ class NLensSpace : public ShareableObject {
          */
         bool operator == (const NLensSpace& compare) const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -126,7 +126,7 @@ inline unsigned long NLensSpace::getQ() const {
 inline bool NLensSpace::operator == (const NLensSpace& compare) const {
     return (p == compare.p && q == compare.q);
 }
-inline void NLensSpace::writeTextShort(ostream& out) const {
+inline void NLensSpace::writeTextShort(std::ostream& out) const {
     out << "L(" << p << ',' << q << ')';
 }
 

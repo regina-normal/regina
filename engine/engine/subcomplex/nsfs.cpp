@@ -32,7 +32,7 @@
 typedef std::list<NExceptionalFibre>::iterator FibreIterator;
 typedef std::list<NExceptionalFibre>::const_iterator FibreIteratorConst;
 
-ostream& operator << (ostream& out, const NExceptionalFibre& f) {
+std::ostream& operator << (std::ostream& out, const NExceptionalFibre& f) {
     return (out << '(' << f.alpha << ", " << f.beta << ')');
 }
 
@@ -208,7 +208,7 @@ NLensSpace* NSFS::isLensSpace() const {
     }
 }
 
-void NSFS::writeTextShort(ostream& out) const {
+void NSFS::writeTextShort(std::ostream& out) const {
     out << "SFS [";
     if (orbitOrientable) {
         if (orbitGenus == 0)
@@ -239,7 +239,7 @@ void NSFS::writeTextShort(ostream& out) const {
     } else {
         out << ' ';
         copy(fibres.begin(), --fibres.end(),
-            ostream_iterator<NExceptionalFibre>(out, " "));
+            std::ostream_iterator<NExceptionalFibre>(out, " "));
         out << getModifiedFinalFibre();
     }
     out << ']';

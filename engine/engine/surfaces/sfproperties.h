@@ -194,7 +194,7 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
         void setRealBoundary(const NBoolSet& value);
         
         virtual bool accept(NNormalSurface& surface) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
         virtual void writeFilter(NFile& out) const;
         virtual void writeProperties(NFile& out) const;
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);

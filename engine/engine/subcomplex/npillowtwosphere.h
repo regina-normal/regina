@@ -141,7 +141,7 @@ class NPillowTwoSphere : public ShareableObject {
         static NPillowTwoSphere* formsPillowTwoSphere(NFace* face1,
             NFace* face2);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -160,7 +160,7 @@ inline NFace* NPillowTwoSphere::getFace(int index) const {
 inline NPerm NPillowTwoSphere::getFaceMapping() const {
     return faceMapping;
 }
-inline void NPillowTwoSphere::writeTextShort(ostream& out) const {
+inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";
 }
 

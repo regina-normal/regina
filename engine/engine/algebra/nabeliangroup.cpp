@@ -169,7 +169,7 @@ unsigned NAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
     return ans;
 }
 
-void NAbelianGroup::writeTextShort(ostream& out) const {
+void NAbelianGroup::writeTextShort(std::ostream& out) const {
     bool writtenSomething = false;
 
     if (rank > 0) {

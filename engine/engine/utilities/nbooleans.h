@@ -35,7 +35,7 @@
 #define __NBOOLEANS_H
 #endif
 
-class ostream;
+#include <iostream>
 
 /**
  * A set of booleans.  Note that there are only four possible such sets.
@@ -348,7 +348,7 @@ class NBoolSet {
          */
         static NBoolSet fromByteCode(char code);
 
-    friend ostream& operator << (ostream& out, const NBoolSet& set);
+    friend std::ostream& operator << (std::ostream& out, const NBoolSet& set);
 };
 
 /**
@@ -361,7 +361,7 @@ class NBoolSet {
  * @param set the boolean set to write.
  * @return a reference to \a out.
  */
-ostream& operator << (ostream& out, const NBoolSet& set);
+std::ostream& operator << (std::ostream& out, const NBoolSet& set);
 
 // Inline functions for NBoolSet
 

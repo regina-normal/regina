@@ -253,7 +253,7 @@ bool NRational::operator > (const NRational& compare) const {
     return (mpq_cmp(data, compare.data) > 0);
 }
 
-ostream& operator << (ostream& out, const NRational& rat) {
+std::ostream& operator << (std::ostream& out, const NRational& rat) {
     if (rat.flavour == NRational::f_infinity)
         out << "Inf";
     else if (rat.flavour == NRational::f_undefined)

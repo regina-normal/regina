@@ -212,7 +212,7 @@ class NAugTriSolidTorus : public ShareableObject {
          */
         static NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**

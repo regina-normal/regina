@@ -154,7 +154,7 @@ class ShareableObject {
          *
          * @param out the output stream to which to write.
          */
-        virtual void writeTextShort(ostream& out) const = 0;
+        virtual void writeTextShort(std::ostream& out) const = 0;
         /**
          * Writes this object in long text format to the given output
          * stream.  The output should provided the user with all the
@@ -170,7 +170,7 @@ class ShareableObject {
          *
          * @param out the output stream to which to write.
          */
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
         /**
          * Returns the output from writeTextShort() as a string.
          *
@@ -194,7 +194,7 @@ inline ShareableObject::ShareableObject() {
 inline ShareableObject::~ShareableObject() {
 }
 
-inline void ShareableObject::writeTextLong(ostream& out) const {
+inline void ShareableObject::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << '\n';
 }

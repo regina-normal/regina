@@ -91,7 +91,7 @@ int NSignature::cycleCmp(const NSignature& sig1, unsigned cycle1,
     return 0;
 }
 
-void NSignature::writeCycles(ostream& out, const NString& cycleOpen,
+void NSignature::writeCycles(std::ostream& out, const NString& cycleOpen,
         const NString& cycleClose, const NString& cycleJoin) const {
     out << cycleOpen;
 

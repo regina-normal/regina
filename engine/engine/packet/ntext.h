@@ -90,8 +90,8 @@ class NText : public NPacket {
         virtual int getPacketType() const;
         virtual NString getPacketName() const;
 
-        virtual void writeTextShort(ostream& out) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;
         static NText* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
@@ -123,11 +123,11 @@ inline void NText::setText(const char* newText) {
     text = newText;
 }
 
-inline void NText::writeTextShort(ostream& o) const {
+inline void NText::writeTextShort(std::ostream& o) const {
     o << "Text packet";
 }
 
-inline void NText::writeTextLong(ostream& o) const {
+inline void NText::writeTextLong(std::ostream& o) const {
     o << text << '\n';
 }
 

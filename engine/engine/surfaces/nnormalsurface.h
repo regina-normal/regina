@@ -700,7 +700,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * coordinates.  Octahedral coordinates will only be written if
          * the surface is of a potentially almost normal flavour.
          */
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
         /**
          * Writes the underlying coordinate vector to the given output
          * stream in text format.
@@ -715,7 +715,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * @param out the output stream to which to write.
          */
-        void writeRawVector(ostream& out) const;
+        void writeRawVector(std::ostream& out) const;
 
         /**
          * Writes this normal surface and all of its properties to
@@ -975,7 +975,7 @@ inline void NNormalSurface::setName(const NString& newName) {
     name = newName;
 }
 
-inline void NNormalSurface::writeRawVector(ostream& out) const {
+inline void NNormalSurface::writeRawVector(std::ostream& out) const {
     out << *vector;
 }
 

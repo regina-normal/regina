@@ -164,7 +164,7 @@ void NNormalSurface::initialiseAllProperties() {
     calculatedCompact = false;
 }
 
-void NNormalSurface::writeTextShort(ostream& out) const {
+void NNormalSurface::writeTextShort(std::ostream& out) const {
     unsigned long nTets = triangulation->getNumberOfTetrahedra();
     unsigned long tet;
     unsigned j;

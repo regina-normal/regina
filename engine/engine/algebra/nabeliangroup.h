@@ -271,7 +271,7 @@ class NAbelianGroup : public ShareableObject {
          * invariant factors of the group, as described in the
          * NAbelianGroup notes.
          */
-        virtual void writeTextShort(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
 
     protected:
         /**

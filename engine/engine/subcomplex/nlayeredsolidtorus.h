@@ -257,7 +257,7 @@ class NLayeredSolidTorus : public ShareableObject {
          */
         static NLayeredSolidTorus* isLayeredSolidTorusBase(NTetrahedron* tet);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -328,7 +328,7 @@ inline int NLayeredSolidTorus::getTopFace(int index) const {
     return topFace[index];
 }
 
-inline void NLayeredSolidTorus::writeTextShort(ostream& out) const {
+inline void NLayeredSolidTorus::writeTextShort(std::ostream& out) const {
     out << "( " << meridinalCuts[0] << ", " << meridinalCuts[1] << ", "
         << meridinalCuts[2] << " ) layered solid torus";
 }

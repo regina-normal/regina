@@ -577,7 +577,8 @@ class NLargeInteger {
 
     friend class NRational;
         /**< Allow access to private members. */
-    friend ostream& operator << (ostream& out, const NLargeInteger& large);
+    friend std::ostream& operator << (std::ostream& out,
+        const NLargeInteger& large);
 };
 
 /**
@@ -587,7 +588,7 @@ class NLargeInteger {
  * @param large the integer to write.
  * @return a reference to \a out.
  */
-ostream& operator << (ostream& out, const NLargeInteger& large);
+std::ostream& operator << (std::ostream& out, const NLargeInteger& large);
 
 // Inline functions for NLargeInteger
 

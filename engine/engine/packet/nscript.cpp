@@ -52,7 +52,7 @@ const NString& NScript::getVariableValue(const NString& name) const {
     return (*it).second;
 }
 
-void NScript::writeTextLong(ostream& o) const {
+void NScript::writeTextLong(std::ostream& o) const {
     if (variables.empty())
         o << "No variables.\n";
     else {
@@ -61,7 +61,7 @@ void NScript::writeTextLong(ostream& o) const {
             o << "Variable: " << (*vit).first << " = " << (*vit).second << '\n';
     }
     o << '\n';
-    copy(lines.begin(), lines.end(), ostream_iterator<NString>(o, "\n"));
+    copy(lines.begin(), lines.end(), std::ostream_iterator<NString>(o, "\n"));
 }
 
 NPacket* NScript::internalClonePacket(NPacket*) const {

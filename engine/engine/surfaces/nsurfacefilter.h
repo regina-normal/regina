@@ -177,7 +177,7 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
 
         virtual int getPacketType() const;
         virtual NString getPacketName() const;
-        virtual void writeTextShort(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;
         static NSurfaceFilter* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
@@ -233,7 +233,7 @@ inline bool NSurfaceFilter::accept(NNormalSurface&) const {
 inline void NSurfaceFilter::writeFilter(NFile&) const {
 }
 
-inline void NSurfaceFilter::writeTextShort(ostream& o) const {
+inline void NSurfaceFilter::writeTextShort(std::ostream& o) const {
     o << getFilterName();
 }
 

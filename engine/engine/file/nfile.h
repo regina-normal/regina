@@ -449,7 +449,7 @@ class NFile : public ShareableObject {
          *
          * @return the current file position.
          */
-        streampos getPosition();
+        std::streampos getPosition();
 
         /**
          * Moves to the requested position in the file.
@@ -460,7 +460,7 @@ class NFile : public ShareableObject {
          * 
          * @param pos the position to which to move.
          */
-        void setPosition(streampos pos);
+        void setPosition(std::streampos pos);
 
         /**
          * Reads a file position from file.
@@ -471,7 +471,7 @@ class NFile : public ShareableObject {
          *
          * @return the file position read.
          */
-        streampos readPos();
+        std::streampos readPos();
 
         /**
          * Writes a file position to file.
@@ -482,9 +482,9 @@ class NFile : public ShareableObject {
          *
          * @param pos the file position to write.
          */
-        void writePos(streampos pos);
+        void writePos(std::streampos pos);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -507,7 +507,8 @@ class NFile : public ShareableObject {
          * was read from file, or 0 if problems arose (such as an
          * unrecognised packet type).
          */
-        NPacket* readIndividualPacket(NPacket* parent, streampos& bookmark);
+        NPacket* readIndividualPacket(NPacket* parent,
+            std::streampos& bookmark);
 };
 
 // Inline functions for NFile
@@ -573,11 +574,11 @@ inline NBoolSet NFile::readBoolSet() {
     return NBoolSet(readBool(), readBool());
 }
 
-inline streampos NFile::getPosition() {
-    return (streampos)resource->getPosition();
+inline std::streampos NFile::getPosition() {
+    return (std::streampos)resource->getPosition();
 }
 
-inline void NFile::setPosition(streampos pos) {
+inline void NFile::setPosition(std::streampos pos) {
     resource->setPosition((long)pos);
 }
 

@@ -282,7 +282,7 @@ class NEdge : public ShareableObject {
          */
         bool isValid() const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     friend class NTriangulation;
         /**< Allow access to private members. */
@@ -330,7 +330,7 @@ inline const NEdgeEmbedding& NEdge::getEmbedding(unsigned long index) const {
     return embeddings[index];
 }
 
-inline void NEdge::writeTextShort(ostream& out) const {
+inline void NEdge::writeTextShort(std::ostream& out) const {
     out << (isBoundary() ? "Boundary " : "Internal ")
         << "edge of degree " << getNumberOfEmbeddings();
 }

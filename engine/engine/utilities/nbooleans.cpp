@@ -35,7 +35,7 @@ const NBoolSet NBoolSet::sTrue(true);
 const NBoolSet NBoolSet::sFalse(false);
 const NBoolSet NBoolSet::sBoth(true, true);
 
-ostream& operator << (ostream& out, const NBoolSet& set) {
+std::ostream& operator << (std::ostream& out, const NBoolSet& set) {
     if (set == NBoolSet::sNone)
         out << "{ }";
     else if (set == NBoolSet::sTrue)

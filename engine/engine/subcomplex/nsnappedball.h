@@ -120,7 +120,7 @@ class NSnappedBall : public ShareableObject {
          */
         static NSnappedBall* isSnappedBall(NTetrahedron* tet);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -148,7 +148,7 @@ inline int NSnappedBall::getEquatorEdge() const {
 inline int NSnappedBall::getInternalEdge() const {
     return 5 - equator;
 }
-inline void NSnappedBall::writeTextShort(ostream& out) const {
+inline void NSnappedBall::writeTextShort(std::ostream& out) const {
     out << "Snapped 3-ball";
 }
 

@@ -328,7 +328,7 @@ void NFile::writePos(streampos realVal) {
     }
 }
 
-void NFile::writeTextShort(ostream& out) const {
+void NFile::writeTextShort(std::ostream& out) const {
     NRandomAccessResource::mode openMode = getOpenMode();
     if (! openMode)
         out << "Closed file";

@@ -54,7 +54,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
     return ans;
 }
 
-void NAugTriSolidTorus::writeTextShort(ostream& out) const {
+void NAugTriSolidTorus::writeTextShort(std::ostream& out) const {
     out << "Augmented triangular solid torus " <<
         (torusAnnulus == -1 ? "(three tori): " : "(torus + chain): ");
     seifertStructure.writeTextShort(out);

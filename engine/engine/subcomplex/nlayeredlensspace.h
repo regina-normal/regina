@@ -137,7 +137,7 @@ class NLayeredLensSpace : public ShareableObject {
          */
         static NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -172,7 +172,7 @@ inline bool NLayeredLensSpace::isSnapped() const {
 inline bool NLayeredLensSpace::isTwisted() const {
     return (torus->getTopEdge(mobiusBoundaryGroup, 1) != -1);
 }
-inline void NLayeredLensSpace::writeTextShort(ostream& out) const {
+inline void NLayeredLensSpace::writeTextShort(std::ostream& out) const {
     out << "L( " << p << ", " << q << " ) layered lens space";
 }
 

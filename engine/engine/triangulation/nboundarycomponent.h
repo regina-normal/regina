@@ -190,7 +190,7 @@ class NBoundaryComponent : public ShareableObject {
          */
         bool isOrientable() const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     friend class NTriangulation;
         /**< Allow access to private members. */
@@ -246,7 +246,7 @@ inline bool NBoundaryComponent::isOrientable() const {
     return orientable;
 }
         
-inline void NBoundaryComponent::writeTextShort(ostream& out) const {
+inline void NBoundaryComponent::writeTextShort(std::ostream& out) const {
     out << (isIdeal() ? "Ideal " : "Finite ") << "boundary component";
 }
 

@@ -194,8 +194,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
         
         virtual void writePacket(NFile& out) const;
         static NTriangulation* readPacket(NFile& in, NPacket* parent);
-        virtual void writeTextShort(ostream& out) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
         virtual bool dependsOnParent() const;
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
 
@@ -216,8 +216,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * written.
          * @return the triangulation entered in by the user.
          */
-        static NTriangulation* enterTextTriangulation(istream& in,
-                ostream& out);
+        static NTriangulation* enterTextTriangulation(std::istream& in,
+                std::ostream& out);
 
         /**
          * Returns the Euler characteristic of this triangulation.
@@ -1818,7 +1818,7 @@ inline unsigned long NTriangulation::getHomologyH2Z2() {
     return getHomologyH1Rel().getRank() + getHomologyH1Rel().getTorsionRank(2);
 }
 
-inline void NTriangulation::writeTextShort(ostream& out) const {
+inline void NTriangulation::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << tetrahedra.size() << " tetrahedra.";
 }
 

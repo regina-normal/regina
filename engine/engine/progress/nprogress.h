@@ -214,7 +214,7 @@ class NProgress : public ShareableObject, protected NMutex {
          */
         double getPercent() const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     protected:
         /**
@@ -312,7 +312,7 @@ inline double NProgress::getPercent() const {
     return internalGetPercent();
 }
 
-inline void NProgress::writeTextShort(ostream& out) const {
+inline void NProgress::writeTextShort(std::ostream& out) const {
     out << "Progress: " << getDescription();
 }
 

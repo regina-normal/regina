@@ -107,7 +107,8 @@ struct NExceptionalFibre {
      */
     bool operator < (const NExceptionalFibre& compare) const;
 
-    friend ostream& operator << (ostream& out, const NExceptionalFibre& f);
+    friend std::ostream& operator << (std::ostream& out,
+        const NExceptionalFibre& f);
 };
 
 /**
@@ -119,7 +120,7 @@ struct NExceptionalFibre {
  * @param f the fibre to write.
  * @return the output stream \a out.
  */
-ostream& operator << (ostream& out, const NExceptionalFibre& f);
+std::ostream& operator << (std::ostream& out, const NExceptionalFibre& f);
 
 /**
  * Represents a general Seifert fibred space.
@@ -316,7 +317,7 @@ class NSFS : public ShareableObject {
          */
         NLensSpace* isLensSpace() const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**

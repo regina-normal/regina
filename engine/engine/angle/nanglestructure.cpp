@@ -52,7 +52,7 @@ NRational NAngleStructure::getAngle(unsigned long tetIndex, int edgePair)
     return NRational(num.divExact(gcd), den.divExact(gcd));
 }
 
-void NAngleStructure::writeTextShort(ostream& out) const {
+void NAngleStructure::writeTextShort(std::ostream& out) const {
     unsigned long nTets = triangulation->getNumberOfTetrahedra();
     unsigned j;
     for (unsigned long tet = 0; tet < nTets; tet++) {

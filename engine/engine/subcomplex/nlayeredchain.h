@@ -228,7 +228,7 @@ class NLayeredChain : public ShareableObject {
          */
         void invert();
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 };
 
 // Inline functions for NLayeredChain
@@ -262,7 +262,7 @@ inline NPerm NLayeredChain::getTopVertexRoles() const {
     return topVertexRoles;
 }
 
-inline void NLayeredChain::writeTextShort(ostream& out) const {
+inline void NLayeredChain::writeTextShort(std::ostream& out) const {
     out << "Layered chain of index " << index;
 }
 

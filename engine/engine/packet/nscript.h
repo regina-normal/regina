@@ -192,8 +192,8 @@ class NScript : public NPacket, public NPropertyHolder {
         virtual int getPacketType() const;
         virtual NString getPacketName() const;
 
-        virtual void writeTextShort(ostream& out) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;
         static NScript* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
@@ -253,7 +253,7 @@ inline void NScript::removeAllVariables() {
     variables.clear();
 }
 
-inline void NScript::writeTextShort(ostream& o) const {
+inline void NScript::writeTextShort(std::ostream& o) const {
     o << "Script with " << lines.size() << " line";
     if (lines.size() != 1)
         o << 's';

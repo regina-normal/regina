@@ -35,10 +35,11 @@
 #define __NSURFACESET_H
 #endif
 
+#include <iostream>
+
 class NNormalSurface;
 class NTriangulation;
 class ShareableObject;
-class ostream;
 
 /**
  * Represents a collection of normal surfaces in a 3-manifold.
@@ -152,7 +153,7 @@ class NSurfaceSet {
          *
          * @param out the output stream to which to write.
          */
-        void writeAllSurfaces(ostream& out) const;
+        void writeAllSurfaces(std::ostream& out) const;
 };
 
 #endif

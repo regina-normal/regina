@@ -185,7 +185,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          */
         bool isTaut();
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * Writes this angle structure and all its properties to the

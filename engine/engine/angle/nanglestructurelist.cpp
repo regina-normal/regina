@@ -115,13 +115,13 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     delete ans;
 }
 
-void NAngleStructureList::writeTextShort(ostream& o) const {
+void NAngleStructureList::writeTextShort(std::ostream& o) const {
     o << structures.size() << " vertex angle structure";
     if (structures.size() != 1)
         o << 's';
 }
 
-void NAngleStructureList::writeTextLong(ostream& o) const {
+void NAngleStructureList::writeTextLong(std::ostream& o) const {
     writeTextShort(o);
     o << ":\n";
 

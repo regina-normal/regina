@@ -366,7 +366,7 @@ class NTetrahedron : public ShareableObject {
          */
         NPerm getFaceMapping(int face) const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
     
     friend class NTriangulation;
         /**< Allow access to private members. */
@@ -421,7 +421,7 @@ inline NPerm NTetrahedron::getFaceMapping(int face) const {
     return faceMapping[face];
 }
 
-inline void NTetrahedron::writeTextShort(ostream& out) const {
+inline void NTetrahedron::writeTextShort(std::ostream& out) const {
     out << "Tetrahedron";
     if (description.length() > 0)
         out << " " << description;

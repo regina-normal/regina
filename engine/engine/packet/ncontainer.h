@@ -54,7 +54,7 @@ class NContainer : public NPacket {
         virtual int getPacketType() const;
         virtual NString getPacketName() const;
 
-        virtual void writeTextShort(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;
         static NContainer* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
@@ -68,7 +68,7 @@ class NContainer : public NPacket {
 inline NContainer::NContainer() {
 }
 
-inline void NContainer::writeTextShort(ostream& o) const {
+inline void NContainer::writeTextShort(std::ostream& o) const {
     o << "Container";
 }
 

@@ -152,8 +152,8 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         
         virtual int getPacketType() const;
         virtual NString getPacketName() const;
-        virtual void writeTextShort(ostream& out) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;
         static NNormalSurfaceList* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;

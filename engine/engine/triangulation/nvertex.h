@@ -280,7 +280,7 @@ class NVertex : public ShareableObject {
          */
         long getLinkEulerCharacteristic() const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     friend class NTriangulation;
         /**< Allow access to private members. */

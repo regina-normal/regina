@@ -278,7 +278,8 @@ class NVector {
             ans->addCopies(you, yourCoeff);
         }
 
-    friend ostream& operator << <> (ostream& out, const NVector<T>& vector);
+    friend std::ostream& operator << <> (std::ostream& out,
+        const NVector<T>& vector);
 };
 
 /**
@@ -291,7 +292,7 @@ class NVector {
  * @return a reference to \a out.
  */
 template <class T>
-ostream& operator << (ostream& out, const NVector<T>& vector) {
+std::ostream& operator << (std::ostream& out, const NVector<T>& vector) {
     unsigned size = vector.size();
     if (size == 0)
         return out;

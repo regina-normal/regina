@@ -153,9 +153,9 @@ class NLocalFileResource : public NRandomAccessResource {
                 /**< Open the file for writing. */
         };
     private:
-        ifstream infile;
+        std::ifstream infile;
             /**< The file that is being read from. */
-        ofstream outfile;
+        std::ofstream outfile;
             /**< The file that is being written to. */
         mode openMode;
             /**< The current state of the file. */

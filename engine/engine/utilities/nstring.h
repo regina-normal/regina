@@ -122,7 +122,7 @@ class NString {
          *
          * @param str the string to clone.
          */
-        NString(const string& str);
+        NString(const std::string& str);
         /**
          * Creates a new string containing the given number of copies of
          * the given character.
@@ -419,8 +419,8 @@ class NString {
          */
         static unsigned allocLen(unsigned len);
 
-    friend istream& operator >> (istream& input, NString& str);
-    friend ostream& operator << (ostream& output, const NString& str);
+    friend std::istream& operator >> (std::istream& input, NString& str);
+    friend std::ostream& operator << (std::ostream& output, const NString& str);
 };
 
 /**
@@ -441,7 +441,7 @@ class NString {
  * @param str the object in which to store the string that is read.
  * @return a reference to the given input stream.
  */
-istream& operator >> (istream& input, NString& str);
+std::istream& operator >> (std::istream& input, NString& str);
 
 /**
  * Writes the given string to the given output stream.
@@ -450,16 +450,16 @@ istream& operator >> (istream& input, NString& str);
  * @param str the string to write.
  * @return a reference to the given output stream.
  */
-ostream& operator << (ostream& output, const NString& str);
+std::ostream& operator << (std::ostream& output, const NString& str);
 
-__STL_BEGIN_NAMESPACE
+namespace std {
     /**
      * A hash function for use with the Standard Template Library.
      * This class calculates hash values for NString objects.
      *
      * \ifaces Not present.
      */
-    __STL_TEMPLATE_NULL struct hash<NString> {
+    template<> struct hash<NString> {
         /**
          * Returns a hash value for the given string.
          *
@@ -470,7 +470,7 @@ __STL_BEGIN_NAMESPACE
             return s.hashValue();
         }
     };
-__STL_END_NAMESPACE
+}
 
 // Inline functions for NString
 

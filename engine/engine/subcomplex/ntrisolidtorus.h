@@ -216,7 +216,7 @@ class NTriSolidTorus : public ShareableObject {
         static NTriSolidTorus* isTriSolidTorus(NTetrahedron* tet,
                 NPerm useVertexRoles);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -239,7 +239,7 @@ inline NPerm NTriSolidTorus::getVertexRoles(int index) const {
     return vertexRoles[index];
 }
 
-inline void NTriSolidTorus::writeTextShort(ostream& out) const {
+inline void NTriSolidTorus::writeTextShort(std::ostream& out) const {
     out << "3-tetrahedron triangular solid torus";
 }
 

@@ -73,7 +73,7 @@ void NTriangulation::initialiseAllProperties() {
     calculatedSplittingSurface = false;
 }
 
-void NTriangulation::writeTextLong(ostream& out) const {
+void NTriangulation::writeTextLong(std::ostream& out) const {
     if (! calculatedSkeleton)
         ((NTriangulation*)this)->calculateSkeleton();
 
@@ -301,8 +301,8 @@ void NTriangulation::readIndividualProperty(NFile& infile, unsigned propType) {
     }
 }
 
-NTriangulation* NTriangulation::enterTextTriangulation(istream& in,
-        ostream& out) {
+NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
+        std::ostream& out) {
     NTriangulation* triang = new NTriangulation();
     NTetrahedron* tet;
     long nTet;

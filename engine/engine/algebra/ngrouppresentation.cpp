@@ -47,7 +47,8 @@ void NGroupExpressionTerm::writeToFile(NFile& out) const {
     out.writeLong(exponent);
 }
 
-ostream& operator << (ostream& out, const NGroupExpressionTerm& term) {
+std::ostream& operator << (std::ostream& out,
+        const NGroupExpressionTerm& term) {
     if (term.exponent == 0)
         out << '1';
     else if (term.exponent == 1)
@@ -203,13 +204,13 @@ NGroupExpression* NGroupExpression::readFromFile(NFile& in) {
     return ans;
 }
 
-void NGroupExpression::writeTextShort(ostream& out) const {
+void NGroupExpression::writeTextShort(std::ostream& out) const {
     if (terms.empty())
         out << '1';
     else {
         TermIteratorConst last = --terms.end();
         copy(terms.begin(), last,
-            ostream_iterator<NGroupExpressionTerm>(out, " "));
+            std::ostream_iterator<NGroupExpressionTerm>(out, " "));
         out << *last;
     }
 }
@@ -428,7 +429,7 @@ NGroupPresentation* NGroupPresentation::readFromFile(NFile& in) {
     return ans;
 }
 
-void NGroupPresentation::writeTextLong(ostream& out) const {
+void NGroupPresentation::writeTextLong(std::ostream& out) const {
     out << "Generators: ";
     if (nGenerators == 0)
         out << "(none)";

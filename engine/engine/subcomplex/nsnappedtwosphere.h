@@ -148,7 +148,7 @@ class NSnappedTwoSphere : public ShareableObject {
         static NSnappedTwoSphere* formsSnappedTwoSphere(NSnappedBall* ball1,
             NSnappedBall* ball2);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -167,7 +167,7 @@ inline NSnappedTwoSphere::~NSnappedTwoSphere() {
 inline NSnappedBall* NSnappedTwoSphere::getSnappedBall(int index) const {
     return ball[index];
 }
-inline void NSnappedTwoSphere::writeTextShort(ostream& out) const {
+inline void NSnappedTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Snapped 2-sphere";
 }
 

@@ -62,9 +62,9 @@ class NSignature {
             const NSignature& sig2, unsigned cycle2, unsigned start2,
             int dir2, unsigned* relabel2);
 
-        void writeCycles(ostream& out, const NString& cycleOpen,
+        void writeCycles(std::ostream& out, const NString& cycleOpen,
             const NString& cycleClose, const NString& cycleJoin) const;
-        virtual void writeTextShort(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
 
     private:
         NSignature(unsigned newOrder); // Requires newOrder > 0.
@@ -92,7 +92,7 @@ inline NSignature::~NSignature() {
     delete[] cycleGroupStart;
 }
 
-inline void NSignature::writeTextShort(ostream& out) const {
+inline void NSignature::writeTextShort(std::ostream& out) const {
     writeCycles(out, "(", ")", "");
 }
 

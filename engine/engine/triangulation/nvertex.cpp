@@ -28,7 +28,7 @@
 
 #include "triangulation/nvertex.h"
 
-void NVertex::writeTextShort(ostream& out) const {
+void NVertex::writeTextShort(std::ostream& out) const {
     switch(link) {
         case SPHERE: out << "Internal "; break;
         case DISC: out << "Boundary "; break;

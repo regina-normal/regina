@@ -67,8 +67,8 @@ class NMatrixInt : public NMatrixRing<NLargeInteger>, public ShareableObject {
          */
         NMatrixInt(const NMatrixInt& cloneMe);
 
-        virtual void writeTextShort(ostream& out) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
 };
 
 // Inline functions for NMatrixInt
@@ -80,10 +80,10 @@ inline NMatrixInt::NMatrixInt(const NMatrixInt& cloneMe) :
         NMatrixRing<NLargeInteger>(cloneMe) {
 }
 
-inline void NMatrixInt::writeTextShort(ostream& out) const {
+inline void NMatrixInt::writeTextShort(std::ostream& out) const {
     out << nRows << " x " << nCols << " integer matrix";
 }
-inline void NMatrixInt::writeTextLong(ostream& out) const {
+inline void NMatrixInt::writeTextLong(std::ostream& out) const {
     writeMatrix(out);
 }
 

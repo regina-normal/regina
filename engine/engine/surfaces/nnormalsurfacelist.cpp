@@ -128,7 +128,7 @@ bool NNormalSurfaceList::allowsAlmostNormal() const {
 #define REGISTER_FLAVOUR(id_name, c, name, a, t) \
     case id_name: o << name; break;
 
-void NNormalSurfaceList::writeTextShort(ostream& o) const {
+void NNormalSurfaceList::writeTextShort(std::ostream& o) const {
     o << surfaces.size() << " vertex normal surface";
     if (surfaces.size() != 1)
         o << 's';
@@ -145,7 +145,7 @@ void NNormalSurfaceList::writeTextShort(ostream& o) const {
 #define REGISTER_FLAVOUR(id_name, c, name, a, t) \
     case id_name: o << name << '\n'; break;
 
-void NNormalSurfaceList::writeTextLong(ostream& o) const {
+void NNormalSurfaceList::writeTextLong(std::ostream& o) const {
     if (embedded)
         o << "Embedded ";
     else

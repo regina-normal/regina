@@ -429,7 +429,7 @@ NString NString::toLower() const {
 
 #define NCHARS 10
 
-istream& operator >> (istream& input, NString& str) {
+std::istream& operator >> (std::istream& input, NString& str) {
     // Skip initial whitespace.
     char c = input.get();
     while ((! input.eof()) && isspace(c))
@@ -479,7 +479,7 @@ istream& operator >> (istream& input, NString& str) {
     return input;
 }
 
-ostream& operator << (ostream& output, const NString& str) {
+std::ostream& operator << (std::ostream& output, const NString& str) {
     for (unsigned index = 0; index < str.len; ++index)
         output << str.txt[index];
     return output;

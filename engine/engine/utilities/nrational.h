@@ -316,7 +316,7 @@ class NRational {
          */
         bool operator >= (const NRational& compare) const;
 
-    friend ostream& operator << (ostream& out, const NRational& rat);
+    friend std::ostream& operator << (std::ostream& out, const NRational& rat);
 };
 
 /**
@@ -330,7 +330,7 @@ class NRational {
  * @param rat the rational to write.
  * @return a reference to \a out.
  */
-ostream& operator << (ostream& out, const NRational& rat);
+std::ostream& operator << (std::ostream& out, const NRational& rat);
 
 // Inline functions for NRational
 

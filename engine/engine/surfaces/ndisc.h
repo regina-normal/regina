@@ -114,7 +114,7 @@ struct NDiscSpec {
      */
     bool operator == (const NDiscSpec& other);
 
-    friend ostream& operator << (ostream& out, const NDiscSpec& spec);
+    friend std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
 };
 
 /**
@@ -128,7 +128,7 @@ struct NDiscSpec {
  * @param spec the disc specifier to write.
  * @return a reference to \a out.
  */
-ostream& operator << (ostream& out, const NDiscSpec& spec);
+std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
 
 /**
  * Determines whether or not normal discs of the given type are

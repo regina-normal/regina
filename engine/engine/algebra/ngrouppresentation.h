@@ -148,7 +148,7 @@ struct NGroupExpressionTerm {
  * @param term the term to write.
  * @return a reference to the given output stream.
  */
-ostream& operator << (ostream& out, const NGroupExpressionTerm& term);
+std::ostream& operator << (std::ostream& out, const NGroupExpressionTerm& term);
 
 /**
  * Represents an expression involving generators from a group presentation.
@@ -383,7 +383,7 @@ class NGroupExpression : public ShareableObject {
          * The text representation will be of the form
          * <tt>g2^4 g13^-5 g4</tt>.
          */
-        virtual void writeTextShort(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
 };
 
 /**
@@ -527,8 +527,8 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
          */
         static NGroupPresentation* readFromFile(NFile& in);
 
-        virtual void writeTextShort(ostream& out) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
 
     protected:
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
@@ -652,7 +652,7 @@ inline const NGroupExpression& NGroupPresentation::getRelation(
     return *relations[index];
 }
 
-inline void NGroupPresentation::writeTextShort(ostream& out) const {
+inline void NGroupPresentation::writeTextShort(std::ostream& out) const {
     out << "Group presentation: " << nGenerators << " generators, "
         << relations.size() << " relations";
 }

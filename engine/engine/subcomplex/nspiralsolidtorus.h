@@ -220,7 +220,7 @@ class NSpiralSolidTorus : public ShareableObject {
         static NSpiralSolidTorus* isSpiralSolidTorus(NTetrahedron* tet,
                 NPerm useVertexRoles);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -258,7 +258,7 @@ inline NPerm NSpiralSolidTorus::getVertexRoles(unsigned long index) const {
     return vertexRoles[index];
 }
 
-inline void NSpiralSolidTorus::writeTextShort(ostream& out) const {
+inline void NSpiralSolidTorus::writeTextShort(std::ostream& out) const {
     out << nTet << "-tetrahedron spiralled solid torus";
 }
 

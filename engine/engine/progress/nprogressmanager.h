@@ -146,7 +146,7 @@ class NProgressManager : public ShareableObject {
          */
         void setProgress(NProgress* newProgress);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 };
 
 // Inline functions for NProgressManager
@@ -172,7 +172,7 @@ inline void NProgressManager::setProgress(NProgress* newProgress) {
     progress = newProgress;
 }
 
-inline void NProgressManager::writeTextShort(ostream& out) const {
+inline void NProgressManager::writeTextShort(std::ostream& out) const {
     out << "[Progress Manager]";
 }
 

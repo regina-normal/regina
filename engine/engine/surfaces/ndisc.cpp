@@ -29,7 +29,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/ndisc.h"
 
-ostream& operator << (ostream& out, const NDiscSpec& spec) {
+std::ostream& operator << (std::ostream& out, const NDiscSpec& spec) {
     out << '(' << spec.tetIndex << ", " << spec.type << ", "
         << spec.number << ')';
     return out;

@@ -190,7 +190,7 @@ class NMatrix {
          *
          * @param out the output stream to which to write.
          */
-        virtual void writeMatrix(ostream& out) const {
+        virtual void writeMatrix(std::ostream& out) const {
             unsigned long r, c;
             for (r = 0; r < nRows; r++) {
                 for (c = 0; c < nCols; c++) {

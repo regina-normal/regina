@@ -29,7 +29,7 @@
 #include "surfaces/nsurfaceset.h"
 #include "surfaces/nnormalsurface.h"
 
-void NSurfaceSet::writeAllSurfaces(ostream& out) const {
+void NSurfaceSet::writeAllSurfaces(std::ostream& out) const {
     unsigned long n = getNumberOfSurfaces();
     out << "Number of surfaces is " << n << '\n';
     for (unsigned long i = 0; i < n; i++) {

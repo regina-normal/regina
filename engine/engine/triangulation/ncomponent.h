@@ -207,7 +207,7 @@ class NComponent : public ShareableObject {
          */
         bool isClosed() const;
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     friend class NTriangulation;
         /**< Allow access to private members. */
@@ -274,7 +274,7 @@ inline bool NComponent::isClosed() const {
     return (boundaryComponents.size() == 0);
 }
 
-inline void NComponent::writeTextShort(ostream& out) const {
+inline void NComponent::writeTextShort(std::ostream& out) const {
     out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
 }
 

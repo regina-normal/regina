@@ -130,7 +130,7 @@ NLargeInteger NLargeInteger::gcdWithCoeffs(const NLargeInteger& other,
     return ans;
 }
 
-ostream& operator << (ostream& out, const NLargeInteger& large) {
+std::ostream& operator << (std::ostream& out, const NLargeInteger& large) {
     if (large.infinite)
         out << "inf";
     else {

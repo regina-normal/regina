@@ -86,8 +86,8 @@ class NSurfaceSubset : public ShareableObject, public NSurfaceSet {
         virtual const NNormalSurface* getSurface(unsigned long index) const;
         virtual ShareableObject* getShareableObject();
 
-        virtual void writeTextShort(ostream& out) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
 };
 
 // Inline functions for NSurfaceSubset
@@ -118,12 +118,12 @@ inline ShareableObject* NSurfaceSubset::getShareableObject() {
     return this;
 }
 
-inline void NSurfaceSubset::writeTextShort(ostream& out) const {
+inline void NSurfaceSubset::writeTextShort(std::ostream& out) const {
     out << "Subset containing " << surfaces.size() << " normal surface";
     if (surfaces.size() != 1)
         out << 's';
 }
-inline void NSurfaceSubset::writeTextLong(ostream& out) const {
+inline void NSurfaceSubset::writeTextLong(std::ostream& out) const {
     writeAllSurfaces(out);
 }
 

@@ -88,7 +88,7 @@ class NSurfaceFilterCombination : public NSurfaceFilter {
         void setUsesAnd(bool value);
         
         virtual bool accept(NNormalSurface& surface) const;
-        virtual void writeTextLong(ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
         virtual void writeFilter(NFile& out) const;
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
@@ -111,7 +111,7 @@ inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
     usesAnd = value;
 }
 
-inline void NSurfaceFilterCombination::writeTextLong(ostream& o) const {
+inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {
     o << (usesAnd ? "AND" : "OR") << " combination normal surface filter\n";
 }
 

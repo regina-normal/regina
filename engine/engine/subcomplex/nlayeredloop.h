@@ -127,7 +127,7 @@ class NLayeredLoop : public ShareableObject {
          */
         static NLayeredLoop* isLayeredLoop(const NComponent* comp);
 
-        void writeTextShort(ostream& out) const;
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -152,7 +152,7 @@ inline bool NLayeredLoop::isTwisted() const {
 inline NEdge* NLayeredLoop::getHinge(int which) const {
     return hinge[which];
 }
-inline void NLayeredLoop::writeTextShort(ostream& out) const {
+inline void NLayeredLoop::writeTextShort(std::ostream& out) const {
     out << "Layered loop (" << (hinge[1] ? "not twisted" : "twisted") <<
         ") of index " << index;
 }
