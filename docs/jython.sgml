@@ -44,7 +44,11 @@
    Wherever &regina; gives you access to &jython;, you may assume that the
    <parameter>java</parameter> and <parameter>normal</parameter>
    modules have been imported (thus giving you access to
-   everything beneath them).  If you need access to packets from a file
+   everything beneath them).
+   You may also assume that all requested libraries have been loaded (see the
+   <link linkend="options-libraries">&jython; library options</link> for
+   details).
+   If you need access to packets from a file
    you currently have open, your best choice is to create a new script
    packet, where you can set variables equal to other packets in the file
    before the script is run. 
