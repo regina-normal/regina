@@ -179,8 +179,6 @@ void NSurfaceCoordinateUI::refreshLocal() {
     for (i = 0; i < coordCols; i++)
         table->addColumn(Coordinates::columnName(coordSystem, i, tri),
             DEFAULT_COORDINATE_COLUMN_WIDTH);
-    for (i = 0; i < table->columns(); i++)
-        table->adjustColumn(i);
 
     headerTips.reset(new SurfaceHeaderToolTip(surfaces, coordSystem,
         table->header()));
@@ -196,6 +194,9 @@ void NSurfaceCoordinateUI::refreshLocal() {
         (new NSurfaceCoordinateItem(table.get(), surfaces, i, newName[i],
             coordSystem))->setRenameEnabled(0, isReadWrite);
     }
+
+    for (i = 0; i < table->columns(); i++)
+        table->adjustColumn(i);
 
     // Hook up the crush action to the new table.
     actCrush->setEnabled(false);
