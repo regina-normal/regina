@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "file/nfileinfo.h"
+
 #include "coordinatechooser.h"
 #include "reginafilter.h"
 #include "reginamain.h"
@@ -500,8 +502,33 @@ void ReginaPrefCensus::add() {
         FILTER_REGINA, this, i18n("Add Census File(s)"));
     if (! files.isEmpty()) {
         for (QStringList::const_iterator it = files.begin();
-                it != files.end(); it++)
-            new ReginaFilePrefItem(listFiles, ReginaFilePref(*it));
+                it != files.end(); it++) {
+            // Run a basic check over the file.
+            bool active = true;
+            regina::NFileInfo* info =
+                regina::NFileInfo::identify((*it).ascii());
+            if (! info) {
+                if (KMessageBox::warningContinueCancel(this,
+                        i18n("The file %1 does not appear "
+                        "to be a Regina data file.  Only Regina data files "
+                        "can be used for census data.  Are you sure you wish "
+                        "to add it?").
+                        arg(QFileInfo(*it).fileName())) !=
+                        KMessageBox::Continue)
+                    continue;
+                active = false;
+            } else if (info->isInvalid()) {
+                KMessageBox::information(this, i18n("The file %1 might be a "
+                    "Regina data file, but it appears to contain unusual "
+                    "header information.  It is being deactivated for now; "
+                    "you may wish to examine it more closely.").
+                    arg(QFileInfo(*it).fileName()));
+                active = false;
+            }
+
+            // Add the new item.
+            new ReginaFilePrefItem(listFiles, ReginaFilePref(*it, active));
+        }
         updateActiveCount();
     }
 }
