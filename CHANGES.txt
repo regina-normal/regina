@@ -12,6 +12,12 @@ Version 4.1.3  [ 25 July, 2004 ]
     OVERALL:
         - Make explicit in the reference manual introduction where the
           example files can be found.
+    PYTHON:
+        - For most objects, == now works like C++ pointer equality
+          instead of Python object equality.  That is, it tests whether
+          the Python wrappers point to the same C++ object, not whether
+          the Python wrappers are in fact the same wrapper.
+        - Added a sample python session for progress reporting.
     USER INTERFACE:
         - Added an "Open Example" menu item for easy access to the
           sample files.
