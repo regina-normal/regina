@@ -62,7 +62,7 @@ typedef ReginaAbout<ReginaMain> About;
 unsigned ReginaMain::objectNumber = 1;
 
 ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#" ),
-        currentPart(0), displayIcon(true) {
+        currentPart(0) {
     // Select a unique DCOP interface name.
     QCString objNumStr;
     objNumStr.setNum(objectNumber++);
@@ -93,6 +93,14 @@ void ReginaMain::setDisplayIcon(bool value) {
 
     if (oldValue != value)
         emit changedDisplayIcon(value);
+}
+
+void ReginaMain::setAutoDock(bool value) {
+    bool oldValue = autoDock;
+    autoDock = value;
+
+    if (oldValue != value)
+        emit changedAutoDock(value);
 }
 
 void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
@@ -222,8 +230,8 @@ bool ReginaMain::openURL(const KURL& url) {
     else if (type == 'p')
         currentPart = newTextEditorPart();
     else
-        KMessageBox::sorry(this, QString(i18n(
-            "I do not know how to open files of type %1.")).arg(name));
+        KMessageBox::sorry(this, i18n(
+            "I do not know how to open files of type %1.").arg(name));
 
     if (! currentPart)
         return false;
@@ -383,10 +391,11 @@ void ReginaMain::saveOptions() {
     config->sync();
 
     // Make sure other main windows read in and acknowledge the new options.
-    for (ReginaMain* otherMain = (ReginaMain*)(memberList->first()); otherMain;
-            otherMain = (ReginaMain*)(memberList->next()))
+    for (KMainWindow* otherMain = memberList->first(); otherMain;
+            otherMain = (memberList->next()))
         if (otherMain != this)
-            otherMain->readOptions(config);
+            if (otherMain->className() == ReginaMain::className())
+                dynamic_cast<ReginaMain*>(otherMain)->readOptions(config);
 }
 
 KParts::ReadWritePart* ReginaMain::newTopologyPart() {
@@ -398,14 +407,17 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
             this, "reginapart", "ReginaPart"));
 
     if (! ans)
-        KMessageBox::error(this, QString(i18n(
-            "An appropriate topology data component could not be found.")));
+        KMessageBox::error(this, i18n(
+            "An appropriate topology data component could not be found."));
     else {
         // Connect up signals and slots.
+        connect(this, SIGNAL(changedAutoDock(bool)),
+            ans, SLOT(setAutoDock(bool)));
         connect(this, SIGNAL(changedDisplayIcon(bool)),
             ans, SLOT(displayIcon(bool)));
 
         // Perform initial setup on the part.
+        emit changedAutoDock(autoDock);
         emit changedDisplayIcon(displayIcon);
     }
 
@@ -427,8 +439,8 @@ KParts::ReadWritePart* ReginaMain::newTextEditorPart() {
     }
 
     if (! ans)
-        KMessageBox::error(this, QString(i18n(
-            "An appropriate text editor component could not be found.")));
+        KMessageBox::error(this, i18n(
+            "An appropriate text editor component could not be found."));
 
     return ans;
 }

@@ -50,9 +50,14 @@ int main(int argc, char **argv) {
     app.dcopClient()->registerAs(app.name(), false);
 
     // See if we are starting with session management.
-    if (app.isRestored())
-        RESTORE(ReginaMain)
-    else {
+    if (app.isRestored()) {
+        int winNum = 1;
+        while (KMainWindow::canBeRestored(winNum)) {
+            if (KMainWindow::classNameOfToplevel(winNum) == "ReginaMain")
+                (new ReginaMain)->restore(winNum);
+            winNum++;
+        }
+    } else {
         // No session; just start up normally.
         KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
         if (args->count() == 0) {

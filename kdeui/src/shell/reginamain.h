@@ -148,6 +148,12 @@ class ReginaMain : public KParts::MainWindow,
 
     signals:
         /**
+         * Emitted when the 'auto dock' property for this main window is
+         * changed.
+         */
+        void changedAutoDock(bool);
+
+        /**
          * Emitted when the 'display icon' property for this main
          * window is changed.
          */
@@ -263,10 +269,6 @@ inline bool ReginaMain::getAutoFileExtension() const {
 
 inline bool ReginaMain::getDisplayIcon() const {
     return displayIcon;
-}
-
-inline void ReginaMain::setAutoDock(bool value) {
-    autoDock = value;
 }
 
 inline void ReginaMain::setAutoFileExtension(bool value) {
