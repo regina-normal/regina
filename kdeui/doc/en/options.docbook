@@ -156,10 +156,38 @@
   <title>&python; Options</title>
 
   <para>
-   <firstterm>&python; libraries</firstterm> are files containing
+   The following options are available for fine-tuning the behaviour of
+   &python; consoles.
+  </para>
+  <glosslist>
+   <glossentry>
+    <glossterm>Auto-indent</glossterm>
+    <glossdef><para>
+     If this option is set, each new command line will be automatically
+     indented to match the previous line.  The indent is inserted into the
+     command area and can of course be changed by backspacing or adding
+     additional spaces.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm>Spaces per tab</glossterm>
+    <glossdef><para>
+     Each command line is indented using spaces only, not tabs.  This option
+     controls the number of spaces that are inserted into a command line
+     when the <keycap>Tab</keycap> key is pressed.
+    </para></glossdef>
+   </glossentry>
+  </glosslist>
+  <para>
+   In addition, the &python; options page allows the configuration of
+   <firstterm>&python; libraries</firstterm>.  These are files containing
    &python; code that is run at the beginning of every &python;
-   session, including every time a &python; console is opened and
-   every time a script packet is run.
+   session, including every time a &python; console is opened,
+   every time a script packet is run and every time the program
+   <link linkend="man-regina-python"><command>regina-python</command></link>
+   is started.
+   See the <link linkend="python-overview">&python; scripting
+   overview</link> for general information regarding &python; sessions.
   </para>
   <para>
    The list of currently active libraries is stored in the file
@@ -168,15 +196,10 @@
    beginning with a hash (#) are ignored.
   </para>
   <para>
-   The &python; options page merely offers a convenient way of managing
-   the &regina-libs; file.  Libraries can be added and removed and
-   currently active libraries can be temporarily disabled.
+   The &python; options page offers a convenient way of managing
+   the &regina-libs; file.  Libraries can be added and removed through
+   this page and currently active libraries can be temporarily disabled.
   </para>
-  <para>
-   See the <link linkend="python-overview">&python; scripting
-   overview</link> for general information regarding &python; scripting.
-  </para>
-
   <!-- TODO: Put this in once it's reimplemented.
   <para>
    Each library also has a <guibutton>Compile</guibutton> button beside
@@ -185,7 +208,6 @@
    compiled; it will not be run.
   </para>
   -->
-
   <tip><para>
    A set of prepackaged &python; libraries that might be of use is
    provided with the &regina; distribution.  These libraries are
