@@ -46,6 +46,8 @@ void addNTrivialTri() {
     ;
 
     s.attr("SPHERE_4_VERTEX") = NTrivialTri::SPHERE_4_VERTEX;
+    s.attr("BALL_3_VERTEX") = NTrivialTri::BALL_3_VERTEX;
+    s.attr("BALL_4_VERTEX") = NTrivialTri::BALL_4_VERTEX;
     s.attr("N2") = NTrivialTri::N2;
     s.attr("N3_1") = NTrivialTri::N3_1;
     s.attr("N3_2") = NTrivialTri::N3_2;

@@ -28,8 +28,10 @@
 
 #include <algorithm>
 #include "algebra/nabeliangroup.h"
+#include "manifold/nhandlebody.h"
 #include "manifold/nlensspace.h"
 #include "manifold/nsimplesurfacebundle.h"
+#include "triangulation/nboundarycomponent.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nface.h"
@@ -41,14 +43,37 @@ const int NTrivialTri::N2 = 200;
 const int NTrivialTri::N3_1 = 301;
 const int NTrivialTri::N3_2 = 302;
 const int NTrivialTri::SPHERE_4_VERTEX = 5000;
+const int NTrivialTri::BALL_3_VERTEX = 5100;
+const int NTrivialTri::BALL_4_VERTEX = 5101;
 
 NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
     // Since the triangulations are so small we can use census results
     // to recognise the triangulations by properties alone.
 
-    // We only recognise closed triangulations for now.
-    if (! comp->isClosed())
+    // Are there any boundary components?
+    if (! comp->isClosed()) {
+        if (comp->getNumberOfBoundaryComponents() == 1) {
+            // We have precisely one boundary component.
+            NBoundaryComponent* bc = comp->getBoundaryComponent(0);
+
+            if (! bc->isIdeal()) {
+                // The boundary component includes boundary faces.
+                // Look for a one-tetrahedron ball.
+                if (comp->getNumberOfTetrahedra() == 1) {
+                    if (bc->getNumberOfFaces() == 4)
+                        return new NTrivialTri(BALL_4_VERTEX);
+                    if (bc->getNumberOfFaces() == 2 &&
+                            comp->getNumberOfVertices() == 3)
+                        return new NTrivialTri(BALL_3_VERTEX);
+                }
+            }
+        }
+
+        // Not recognised.
         return 0;
+    }
+
+    // Otherwise we are dealing with a closed component.
 
     // Before we do our validity check, make sure the number of
     // tetrahedra is in the supported range.
@@ -114,6 +139,8 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
 NManifold* NTrivialTri::getManifold() const {
     if (type == SPHERE_4_VERTEX)
         return new NLensSpace(1, 0);
+    else if (type == BALL_3_VERTEX || type == BALL_4_VERTEX)
+        return new NHandlebody(0, true);
     else if (type == N2)
         return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1_TWISTED);
     else if (type == N3_1 || type == N3_2)
@@ -137,6 +164,10 @@ NAbelianGroup* NTrivialTri::getHomologyH1() const {
 inline std::ostream& NTrivialTri::writeName(std::ostream& out) const {
     if (type == SPHERE_4_VERTEX)
         out << "S3 (4-vtx)";
+    else if (type == BALL_3_VERTEX)
+        out << "B3 (3-vtx)";
+    else if (type == BALL_4_VERTEX)
+        out << "B3 (4-vtx)";
     else if (type == N2)
         out << "N(2)";
     else if (type == N3_1)
@@ -148,6 +179,10 @@ inline std::ostream& NTrivialTri::writeName(std::ostream& out) const {
 inline std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
     if (type == SPHERE_4_VERTEX)
         out << "$S^3_{v=4}$";
+    else if (type == BALL_3_VERTEX)
+        out << "$B^3_{v=3}$";
+    else if (type == BALL_4_VERTEX)
+        out << "$B^3_{v=4}$";
     else if (type == N2)
         out << "$N_{2}$";
     else if (type == N3_1)
@@ -159,6 +194,10 @@ inline std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
 inline void NTrivialTri::writeTextLong(std::ostream& out) const {
     if (type == SPHERE_4_VERTEX)
         out << "Two-tetrahedron four-vertex 3-sphere";
+    else if (type == BALL_3_VERTEX)
+        out << "One-tetrahedron three-vertex ball";
+    else if (type == BALL_4_VERTEX)
+        out << "One-tetrahedron four-vertex ball";
     else if (type == N2)
         out << "Non-orientable triangulation N(2)";
     else if (type == N3_1)

@@ -59,6 +59,18 @@ class NTrivialTri : public NStandardTriangulation {
          */
         static const int SPHERE_4_VERTEX;
         /**
+         * Represents the one-tetrahedron three-vertex triangulation of
+         * the ball.  This is a single tetrahedron with two faces as
+         * boundary and the other two faces folded together.
+         */
+        static const int BALL_3_VERTEX;
+        /**
+         * Represents the one-tetrahedron four-vertex triangulation of
+         * the ball.  This is a single tetrahedron with all four faces
+         * as boundary.
+         */
+        static const int BALL_4_VERTEX;
+        /**
          * Represents the two-tetrahedron triangulation N(2) of the
          * twisted 2-sphere bundle over the circle.
          */
