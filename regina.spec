@@ -19,7 +19,6 @@ BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: gmp-devel
-BuildRequires: junk
 BuildRequires: kdelibs-devel
 BuildRequires: libselinux-devel
 BuildRequires: libstdc++-devel
@@ -44,6 +43,7 @@ Python scripting giving full access to the calculation engine.
 %setup -n %{name}-%{version}
 
 %build
+unset QTDIR || : ; . /etc/profile.d/qt.sh
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
@@ -86,5 +86,5 @@ make install-strip DESTDIR=$RPM_BUILD_ROOT
 %{_datadir}/services/*
 
 %changelog
-* Fri 11 Jun 2004 Ben Burton <bab@debian.org> 4.1.2
+* Fri Jun 11 2004 Ben Burton <bab@debian.org> 4.1.2
 - Initial packaging using Fedora Core 2.
