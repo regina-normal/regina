@@ -176,6 +176,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             triPrefs->comboInitialTab->setCurrentItem(3); break;
         case ReginaPrefSet::Surfaces:
             triPrefs->comboInitialTab->setCurrentItem(4); break;
+        case ReginaPrefSet::SnapPea:
+            triPrefs->comboInitialTab->setCurrentItem(5); break;
         default:
             triPrefs->comboInitialTab->setCurrentItem(0); break;
     }
@@ -259,6 +261,8 @@ void ReginaPreferences::slotApply() {
             prefSet.triInitialTab = ReginaPrefSet::Composition; break;
         case 4:
             prefSet.triInitialTab = ReginaPrefSet::Surfaces; break;
+        case 5:
+            prefSet.triInitialTab = ReginaPrefSet::SnapPea; break;
         default:
             prefSet.triInitialTab = ReginaPrefSet::Gluings; break;
     }
@@ -431,6 +435,7 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
     comboInitialTab->insertItem(i18n("Algebra"));
     comboInitialTab->insertItem(i18n("Composition"));
     comboInitialTab->insertItem(i18n("Surfaces"));
+    comboInitialTab->insertItem(i18n("SnapPea"));
     msg = i18n("Specifies which tab should be initially visible "
         "when a new triangulation viewer/editor is opened.");
     QWhatsThis::add(label, msg);

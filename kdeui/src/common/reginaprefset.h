@@ -64,7 +64,7 @@ typedef QValueVector<ReginaFilePref> ReginaFilePrefList;
 struct ReginaPrefSet {
     enum TriEditMode { DirectEdit, Dialog };
         /**< Possible edit modes for triangulation gluings. */
-    enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces };
+    enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
         /**< Available top-level tabs in a triangulation viewer/editor. */
     enum TriAlgebraTab { Homology, FundGroup, TuraevViro };
         /**< Available tabs in a triangulation algebra viewer. */

@@ -35,6 +35,7 @@
 #include "ntriangulationui.h"
 #include "ntrigluings.h"
 #include "ntriskeleton.h"
+#include "ntrisnappea.h"
 #include "ntrisurfaces.h"
 #include "../reginapart.h"
 
@@ -69,6 +70,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     addTab(algebra, i18n("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), i18n("&Composition"));
     addTab(surfaces, i18n("Sur&faces"));
+    addTab(new NTriSnapPeaUI(packet, this), i18n("Snap&Pea"));
 
     connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
         this, SLOT(updatePreferences(const ReginaPrefSet&)));
@@ -85,6 +87,8 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
             setCurrentTab(3); break;
         case ReginaPrefSet::Surfaces:
             setCurrentTab(4); break;
+        case ReginaPrefSet::SnapPea:
+            setCurrentTab(5); break;
     }
 }
 

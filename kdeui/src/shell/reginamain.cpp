@@ -510,6 +510,8 @@ void ReginaMain::readOptions(KConfig* config) {
         globalPrefs.triInitialTab = ReginaPrefSet::Composition;
     else if (str == "Surfaces")
         globalPrefs.triInitialTab = ReginaPrefSet::Surfaces;
+    else if (str == "SnapPea")
+        globalPrefs.triInitialTab = ReginaPrefSet::SnapPea;
     else
         globalPrefs.triInitialTab = ReginaPrefSet::Gluings; /* default */
 
@@ -586,6 +588,8 @@ void ReginaMain::saveOptions() {
             config->writeEntry("InitialTab", "Composition"); break;
         case ReginaPrefSet::Surfaces:
             config->writeEntry("InitialTab", "Surfaces"); break;
+        case ReginaPrefSet::SnapPea:
+            config->writeEntry("InitialTab", "SnapPea"); break;
         default:
             config->writeEntry("InitialTab", "Gluings"); break;
     }

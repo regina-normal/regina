@@ -39,6 +39,7 @@ noinst_HEADERS = \
 	ntricomposition.h \
 	ntrigluings.h \
 	ntriskeleton.h \
+	ntrisnappea.h \
 	ntrisurfaces.h \
 	skeletonwindow.h
 
@@ -69,6 +70,7 @@ libpackettypes_la_SOURCES = \
 	ntricomposition.cpp \
 	ntrigluings.cpp \
 	ntriskeleton.cpp \
+	ntrisnappea.cpp \
 	ntrisurfaces.cpp \
 	skeletonwindow.cpp
 
