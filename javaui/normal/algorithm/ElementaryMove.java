@@ -52,7 +52,7 @@ public class ElementaryMove extends Modification {
      * @param shell the shell representing the entire program.
      */
     public ElementaryMove(Shell shell) {
-        super(shell, "Elementary Move", KeyEvent.VK_E,
+        super(shell, "Elementary Move...", KeyEvent.VK_E,
             "modified", NTriangulation.class);
     }
 
