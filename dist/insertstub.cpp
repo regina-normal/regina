@@ -26,9 +26,9 @@
 // If the sentry string is not found or an error occurs, nothing will be
 // written to standard output and 1 will be returned.
 
-#include <iostream.h>
-#include <fstream.h>
-#include <string.h>
+#include <cstring>
+#include <iostream>
+#include <fstream>
 
 #define MAXLINE 1000
 
