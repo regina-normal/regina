@@ -67,7 +67,7 @@ class NXMLNormalSurfaceListReader;
  * when introducing a new flavour of coordinate system.
  *
  * Normal surface lists should be created using the routine enumerate(),
- * which is new as of Regina 4.0.
+ * which is new as of Regina 3.95.
  *
  * \testpart
  *
