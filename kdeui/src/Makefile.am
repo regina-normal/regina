@@ -19,8 +19,7 @@ noinst_HEADERS = \
 bin_PROGRAMS = regina
 
 regina_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-regina_LDADD   = $(top_srcdir)/../engine/engine/libregina-engine.la \
-	$(LIB_KPARTS)
+regina_LDADD   = $(LIB_ENGINE) $(LIB_KPARTS)
 regina_SOURCES = \
 	main.cpp \
 	reginamain.cpp \
@@ -37,8 +36,7 @@ shellrc_DATA = reginamain.rc
 kde_module_LTLIBRARIES = libreginapart.la
 
 libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
-libreginapart_la_LIBADD = $(top_srcdir)/../engine/engine/libregina-engine.la \
-	$(LIB_KPARTS)
+libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS)
 libreginapart_la_SOURCES = \
 	actionspart.cpp \
 	packetmanager.cpp \

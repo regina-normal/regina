@@ -100,7 +100,7 @@ KInstance* ReginaPart::factoryInstance() {
 bool ReginaPart::openFile() {
     if (packetTree)
         delete packetTree;
-    packetTree = regina::readFileMagic(m_file);
+    packetTree = regina::readFileMagic(m_file.latin1());
 
     if (packetTree) {
         treeView->fill(packetTree);
@@ -179,7 +179,7 @@ void ReginaPart::initPacketTree() {
     if (packetTree)
         delete packetTree;
     packetTree = new regina::NContainer();
-    packetTree->setPacketLabel(i18n("Container"));
+    packetTree->setPacketLabel(i18n("Container").latin1());
 
     // Update the visual representation.
     treeView->fill(packetTree);

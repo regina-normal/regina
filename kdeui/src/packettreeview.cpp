@@ -167,8 +167,8 @@ void PacketTreeItem::refreshLabel() {
         std::string newLabel = packet->getPacketLabel();
         if (packet->hasTags())
             newLabel += " (+)";
-        if (text(0) != newLabel)
-            setText(0, newLabel);
+        if (text(0) != newLabel.c_str())
+            setText(0, newLabel.c_str());
     } else
         setText(0, i18n("<Deleted>"));
 }
