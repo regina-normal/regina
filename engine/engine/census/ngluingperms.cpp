@@ -104,20 +104,16 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
 
     // See if we can guarantee no solutions without even searching for
     // permutations.
-    /**
-     * TODO: Enable this code once we've proven the corresponding
-     * theorems!
     if (nTetrahedra > 2 && orientableOnly &&
             (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
             (whichPurge & NCensus::PURGE_NON_PRIME) &&
             pairing->isClosed()) {
-        if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleChain() ||
-                pairing->hasChainWithDoubleHandle()) {
+        if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain()
+                || pairing->hasOneEndedChainWithDoubleHandle()) {
             use(0, useArgs);
             return;
         }
     }
-    */
 
     // Initialise the internal arrays.
     std::fill(orientation, orientation + nTetrahedra, 0);

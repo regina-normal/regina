@@ -190,21 +190,21 @@ void NFacePairing::followChain(unsigned& tet, NFacePair& faces) const {
     }
 }
 
-bool NFacePairing::hasBrokenDoubleChain() const {
-    // Search for the tail of the first chain.
+bool NFacePairing::hasBrokenDoubleEndedChain() const {
+    // Search for the end edge of the first chain.
     unsigned baseTet;
     unsigned baseFace;
     for (baseTet = 0; baseTet < nTetrahedra - 1; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).tet == (int)baseTet) {
                 // Here's a face that matches to the same tetrahedron.
-                if (hasBrokenDoubleChain(baseTet, baseFace))
+                if (hasBrokenDoubleEndedChain(baseTet, baseFace))
                     return true;
 
                 // There's no sense in looking for more
                 // self-identifications in this tetrahedron, since if
                 // there's another (different) one it must be a
-                // one-tetrahedron component (and so not a double chain).
+                // one-tetrahedron component (and so not applicable).
                 break;
             }
 
@@ -212,7 +212,7 @@ bool NFacePairing::hasBrokenDoubleChain() const {
     return false;
 }
 
-bool NFacePairing::hasBrokenDoubleChain(unsigned baseTet,
+bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
@@ -249,7 +249,7 @@ bool NFacePairing::hasBrokenDoubleChain(unsigned baseTet,
             chainFaces = NFacePair(destFace.face, ignoreFace).complement();
             followChain(chainTet, chainFaces);
 
-            // Did we reach the bottom of a second chain?
+            // Did we reach an end edge of the second chain?
             if (dest(chainTet, chainFaces.lower()).tet == (int)chainTet)
                 return true;
         }
@@ -259,22 +259,21 @@ bool NFacePairing::hasBrokenDoubleChain(unsigned baseTet,
     return false;
 }
 
-bool NFacePairing::hasChainWithDoubleHandle() const {
-    // Search for the tail of the chain.
+bool NFacePairing::hasOneEndedChainWithDoubleHandle() const {
+    // Search for the end edge of the chain.
     unsigned baseTet;
     unsigned baseFace;
     for (baseTet = 0; baseTet < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).tet == (int)baseTet) {
                 // Here's a face that matches to the same tetrahedron.
-                if (hasChainWithDoubleHandle(baseTet, baseFace))
+                if (hasOneEndedChainWithDoubleHandle(baseTet, baseFace))
                     return true;
 
                 // There's no sense in looking for more
                 // self-identifications in this tetrahedron, since if
                 // there's another (different) one it must be a
-                // one-tetrahedron component (and so not a chain with a
-                // double handle).
+                // one-tetrahedron component (and so not applicable).
                 break;
             }
 
@@ -282,7 +281,7 @@ bool NFacePairing::hasChainWithDoubleHandle() const {
     return false;
 }
 
-bool NFacePairing::hasChainWithDoubleHandle(unsigned baseTet,
+bool NFacePairing::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =

@@ -14,11 +14,14 @@ Version 3.2  [ (under development) ]
     ENGINE:
         Class NBoolSet:
             - Using unsigned chars for byte codes.
+        Class NCensus:
+            - Added findAllCompletions() for completing triangulations
+              with boundary.
         Class NFacePair:
             - New class for working with pairs of face numbers.
         Class NFacePairing:
-            - Added hasTripleEdge(), hasBrokenDoubleChain(),
-              hasChainWithDoubleHandle() and associated routines.
+            - Added hasTripleEdge(), hasBrokenDoubleEndedChain(),
+              hasOneEndedChainWithDoubleHandle() and associated routines.
         Class NGluingPerms:
             - Uses new NFacePairing routines to identify certain
               situations in which no solutions are possible.
