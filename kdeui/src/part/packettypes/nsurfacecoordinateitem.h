@@ -33,7 +33,7 @@
 #ifndef __NSURFACECOORDINATEITEM_H
 #define __NSURFACECOORDINATEITEM_H
 
-#include <klistview.h>
+#include "../gridlistview.h"
 
 namespace regina {
     class NNormalSurface;
@@ -43,7 +43,7 @@ namespace regina {
 /**
  * A list view item describing a single normal surface.
  */
-class NSurfaceCoordinateItem : public KListViewItem {
+class NSurfaceCoordinateItem : public GridListViewItem {
     public:
         /**
          * Constants representing the possible colours in which table
@@ -91,15 +91,12 @@ class NSurfaceCoordinateItem : public KListViewItem {
          */
         QString text(int column) const;
         void setText(int column, const QString& str);
-        int width(const QFontMetrics& fm, const QListView* lv, int c) const;
-        void paintCell(QPainter* p, const QColorGroup& cg, int column,
-            int width, int align);
 };
 
 inline NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
         regina::NNormalSurfaceList* fromSurfaces,
         unsigned long newSurfaceIndex, QString& newName, int useCoordSystem) :
-        KListViewItem(parent),
+        GridListViewItem(parent),
         surface(fromSurfaces->getSurface(newSurfaceIndex)),
         name(newName),
         surfaceIndex(newSurfaceIndex),

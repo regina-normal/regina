@@ -70,15 +70,3 @@ QString NAngleStructureItem::angleToString(regina::NRational angle) {
             + " / " + angle.getDenominator().stringValue().c_str();
 }
 
-void NAngleStructureItem::paintCell(QPainter* p, const QColorGroup& cg,
-        int column, int width, int align) {
-    // Do the standard painting.
-    KListViewItem::paintCell(p, cg, column, width, align);
-
-    // Draw a box around the cell.
-    p->setPen((QRgb)listView()->style().styleHint(
-        QStyle::SH_Table_GridLineColor, listView()));
-    p->drawLine(0, height() - 1, width - 1, height() - 1);
-    p->lineTo(width - 1, 0);
-}
-

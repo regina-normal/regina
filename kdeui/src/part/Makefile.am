@@ -16,6 +16,7 @@ INCLUDES = $(all_includes) -I../common
 noinst_HEADERS = \
 	exttabctl.h \
 	flatbutton.h \
+	gridlistview.h \
 	newpacketdialog.h \
 	packetchooser.h \
 	packetcreator.h \
@@ -40,6 +41,7 @@ libreginapart_la_SOURCES = \
 	exports.cpp \
 	exttabctl.cpp \
 	flatbutton.cpp \
+	gridlistview.cpp \
 	imports.cpp \
 	newpacketdialog.cpp \
 	newpackets.cpp \

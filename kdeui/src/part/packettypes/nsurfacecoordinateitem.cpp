@@ -301,35 +301,3 @@ NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
     return Plain;
 }
 
-int NSurfaceCoordinateItem::width(const QFontMetrics& fm, const QListView* lv,
-        int c) const {
-    /**
-     * Add a bit of space so items aren't pressed right against the
-     * grid.
-     */
-    return KListViewItem::width(fm, lv, c) + 2;
-}
-void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
-        int column, int width, int align) {
-    // Do the standard painting.
-    ItemColour colour = getColour(column);
-    if (colour == Plain)
-        KListViewItem::paintCell(p, cg, column, width, align);
-    else {
-        QColorGroup altCg(cg);
-        if (colour == Green)
-            altCg.setColor(QColorGroup::Text, darkGreen);
-        else if (colour == Yellow)
-            altCg.setColor(QColorGroup::Text, darkYellow);
-        else
-            altCg.setColor(QColorGroup::Text, darkRed);
-        KListViewItem::paintCell(p, altCg, column, width, align);
-    }
-
-    // Draw a box around the cell.
-    p->setPen((QRgb)listView()->style().styleHint(
-        QStyle::SH_Table_GridLineColor, listView()));
-    p->drawLine(0, height() - 1, width - 1, height() - 1);
-    p->lineTo(width - 1, 0);
-}
-

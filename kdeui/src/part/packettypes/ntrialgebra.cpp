@@ -32,11 +32,11 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "../gridlistview.h"
 #include "ntrialgebra.h"
 
 #include <kiconloader.h>
 #include <klineedit.h>
-#include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qheader.h>
@@ -70,7 +70,7 @@ namespace {
      * These list view items are sorted numerically and drawn with a
      * grid.
      */
-    class TuraevViroItem : public KListViewItem {
+    class TuraevViroItem : public GridListViewItem {
         private:
             unsigned long r_;
             unsigned long root_;
@@ -79,7 +79,8 @@ namespace {
         public:
             TuraevViroItem(QListView* parent, unsigned long r,
                     unsigned long root, double value) :
-                    KListViewItem(parent), r_(r), root_(root), value_(value) {
+                    GridListViewItem(parent), r_(r), root_(root),
+                    value_(value) {
             }
 
             bool matches(unsigned long r, unsigned long root) {
@@ -116,27 +117,6 @@ namespace {
                     if (value_ > other->value_) return 1;
                     return 0;
                 }
-            }
-
-            int width(const QFontMetrics& fm, const QListView* lv, int c)
-                    const {
-                /**
-                 * Add a bit of space so items aren't pressed right
-                 * against the grid.
-                 */
-                return KListViewItem::width(fm, lv, c) + 2;
-            }
-
-            void paintCell(QPainter* p, const QColorGroup& cg,
-                    int column, int width, int align) {
-                // Do the standard painting.
-                KListViewItem::paintCell(p, cg, column, width, align);
-
-                // Draw a box around the cell.
-                p->setPen((QRgb)listView()->style().styleHint(
-                    QStyle::SH_Table_GridLineColor, listView()));
-                p->drawLine(0, height() - 1, width - 1, height() - 1);
-                p->lineTo(width - 1, 0);
             }
     };
 }

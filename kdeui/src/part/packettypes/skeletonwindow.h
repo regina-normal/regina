@@ -36,8 +36,9 @@
 
 #include "packet/npacketlistener.h"
 
+#include "../gridlistview.h"
+
 #include <kdialogbase.h>
-#include <klistview.h>
 
 class PacketUI;
 class QListView;
@@ -112,7 +113,7 @@ class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
  * not used on its own, but is instead subclassed for each type of
  * skeletal item.
  */
-class SkeletalItem : public KListViewItem {
+class SkeletalItem : public GridListViewItem {
     protected:
         /**
          * Properties of the underlying skeletal object.
@@ -126,13 +127,6 @@ class SkeletalItem : public KListViewItem {
          */
         SkeletalItem(QListView* parent, regina::NTriangulation* useTri,
             unsigned long useItemIndex);
-
-        /**
-         * QListViewItem overrides.
-         */
-        int width(const QFontMetrics& fm, const QListView* lv, int c) const;
-        void paintCell(QPainter* p, const QColorGroup& cg, int column,
-            int width, int align);
 
     protected:
         /**
@@ -258,7 +252,7 @@ class BoundaryComponentItem : public SkeletalItem {
 
 inline SkeletalItem::SkeletalItem(QListView* parent,
         regina::NTriangulation* useTri, unsigned long useItemIndex) :
-        KListViewItem(parent), tri(useTri), itemIndex(useItemIndex) {
+        GridListViewItem(parent), tri(useTri), itemIndex(useItemIndex) {
 }
 
 inline QString& SkeletalItem::appendToList(QString& list,

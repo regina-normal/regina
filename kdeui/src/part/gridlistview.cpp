@@ -26,47 +26,31 @@
 
 /* end stub */
 
-/*! \file nsurfacematchingitem.h
- *  \brief Provides a list view item describing a single normal surface
- *  matching equation.
- */
+#include "gridlistview.h"
 
-#ifndef __NSURFACEMATCHINGITEM_H
-#define __NSURFACEMATCHINGITEM_H
+#include <qpainter.h>
+#include <qstyle.h>
 
-#include "../gridlistview.h"
-
-namespace regina {
-    class NMatrixInt;
-};
-
-/**
- * A list view item describing a single normal surface matching equation.
- */
-class NSurfaceMatchingItem : public GridListViewItem {
-    private:
-        /**
-         * The underlying matching equation.
-         */
-        const regina::NMatrixInt* eqns;
-        unsigned long whichEqn;
-
-    public:
-        /**
-         * Constructor.
-         */
-        NSurfaceMatchingItem(QListView* parent,
-            const regina::NMatrixInt* newEqns, unsigned long newWhichEqn);
-
-        /**
-         * QListItem overrides.
-         */
-        QString text(int column) const;
-};
-
-inline NSurfaceMatchingItem::NSurfaceMatchingItem(QListView* parent,
-        const regina::NMatrixInt* newEqns, unsigned long newWhichEqn) :
-        GridListViewItem(parent), eqns(newEqns), whichEqn(newWhichEqn) {
+int GridListViewItem::width(const QFontMetrics& fm, const QListView* lv, int c)
+        const {
+    /**
+     * Add a bit of space so items aren't pressed right against the
+     * grid.
+     */
+    return KListViewItem::width(fm, lv, c) + 2;
 }
 
-#endif
+void GridListViewItem::paintCell(QPainter* p, const QColorGroup& cg,
+        int column, int width, int align) {
+    // Do the standard painting.
+    KListViewItem::paintCell(p, cg, column, width, align);
+
+    // Draw a box around the cell.
+    p->setPen((QRgb)listView()->style().styleHint(
+        QStyle::SH_Table_GridLineColor, listView()));
+    p->drawLine(0, height() - 1, width - 1, height() - 1);
+    p->lineTo(width - 1, 0);
+}
+
+// (int)(w ? w->colorGroup().mid().rgb() : 0)
+

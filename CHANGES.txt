@@ -7,6 +7,11 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Development Version
+    USER INTERFACE:
+        Class GridListViewItem:
+            - Added to centralise support for list views with grids.
+
 Version 4.0  [ 20 December, 2003 ]
     ENGINE:
         Class NAngleStructureList:

@@ -35,7 +35,7 @@
 
 #include "utilities/nrational.h"
 
-#include <klistview.h>
+#include "../gridlistview.h"
 
 namespace regina {
     class NAngleStructure;
@@ -44,7 +44,7 @@ namespace regina {
 /**
  * A list view item describing a single angle structure.
  */
-class NAngleStructureItem : public KListViewItem {
+class NAngleStructureItem : public GridListViewItem {
     private:
         /**
          * The underlying angle structure.
@@ -62,8 +62,6 @@ class NAngleStructureItem : public KListViewItem {
          * QListItem overrides.
          */
         QString text(int column) const;
-        void paintCell(QPainter* p, const QColorGroup& cg, int column,
-            int width, int align);
 
     private:
         /**
@@ -75,8 +73,8 @@ class NAngleStructureItem : public KListViewItem {
 };
 
 inline NAngleStructureItem::NAngleStructureItem(QListView* parent,
-        const regina::NAngleStructure* newStructure) : KListViewItem(parent),
-        structure(newStructure) {
+        const regina::NAngleStructure* newStructure) :
+        GridListViewItem(parent), structure(newStructure) {
 }
 
 #endif

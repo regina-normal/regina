@@ -167,51 +167,31 @@ QString SkeletonWindow::columnLabel(SkeletalObject type, int column) {
     return QString::null;
 }
 
-int SkeletalItem::width(const QFontMetrics& fm, const QListView* lv, int c)
-        const {
-    /**
-     * Add a bit of space so items aren't pressed right against the
-     * grid.
-     */
-    return KListViewItem::width(fm, lv, c) + 2;
-}
-void SkeletalItem::paintCell(QPainter* p, const QColorGroup& cg,
-        int column, int width, int align) {
-    // Do the standard painting.
-    KListViewItem::paintCell(p, cg, column, width, align);
-
-    // Draw a box around the cell.
-    p->setPen((QRgb)listView()->style().styleHint(
-        QStyle::SH_Table_GridLineColor, listView()));
-    p->drawLine(0, height() - 1, width - 1, height() - 1);
-    p->lineTo(width - 1, 0);
-}
-
-inline VertexItem::VertexItem(QListView* parent,
+VertexItem::VertexItem(QListView* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getVertex(useItemIndex)) {
 }
 
-inline EdgeItem::EdgeItem(QListView* parent,
+EdgeItem::EdgeItem(QListView* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getEdge(useItemIndex)) {
 }
 
-inline FaceItem::FaceItem(QListView* parent,
+FaceItem::FaceItem(QListView* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getFace(useItemIndex)) {
 }
 
-inline ComponentItem::ComponentItem(QListView* parent,
+ComponentItem::ComponentItem(QListView* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getComponent(useItemIndex)) {
 }
 
-inline BoundaryComponentItem::BoundaryComponentItem(QListView* parent,
+BoundaryComponentItem::BoundaryComponentItem(QListView* parent,
                 regina::NTriangulation* useTri, unsigned long useItemIndex) :
         SkeletalItem(parent, useTri, useItemIndex),
         item(useTri->getBoundaryComponent(useItemIndex)) {
