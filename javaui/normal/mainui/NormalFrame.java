@@ -483,18 +483,24 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         JMenuItem menuPacketNewContainer = new JMenuItem("Container",
             PacketUIManager.containerIcon);
         menuPacketNewContainer.setMnemonic(KeyEvent.VK_C);
+        menuPacketNewContainer.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_C, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
         menuPacketNewContainer.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewContainer);
 
         JMenuItem menuPacketNewText = new JMenuItem("Text",
             PacketUIManager.textIcon);
         menuPacketNewText.setMnemonic(KeyEvent.VK_X);
+        menuPacketNewText.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_X, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
         menuPacketNewText.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewText);
 
         JMenuItem menuPacketNewTriangulation = new JMenuItem("Triangulation",
             PacketUIManager.triangulationIcon);
         menuPacketNewTriangulation.setMnemonic(KeyEvent.VK_T);
+        menuPacketNewTriangulation.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_T, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
         menuPacketNewTriangulation.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewTriangulation);
 
@@ -502,6 +508,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             new JMenuItem("Normal Surface List",
             PacketUIManager.surfaceListIcon);
         menuPacketNewNormalSurfaceList.setMnemonic(KeyEvent.VK_N);
+        menuPacketNewNormalSurfaceList.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_N, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
         menuPacketNewNormalSurfaceList.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewNormalSurfaceList);
 
@@ -509,12 +517,16 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             new JMenuItem("Surface Filter",
             PacketUIManager.filterIcon);
         menuPacketNewSurfaceFilter.setMnemonic(KeyEvent.VK_F);
+        menuPacketNewSurfaceFilter.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_F, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
         menuPacketNewSurfaceFilter.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewSurfaceFilter);
 
         JMenuItem menuPacketNewScript = new JMenuItem("Script",
             PacketUIManager.scriptIcon);
         menuPacketNewScript.setMnemonic(KeyEvent.VK_S);
+        menuPacketNewScript.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_S, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
         menuPacketNewScript.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewScript);
 
