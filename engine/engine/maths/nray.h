@@ -101,7 +101,7 @@ class NRay : public NVectorDense<NLargeInteger> {
  * hyperplane.  The resulting ray will be in its smallest integral form.
  *
  * The given additional hyperplane must pass through the origin, and is
- * represented by a ray perpendicular to it.
+ * represented by a vector perpendicular to it.
  *
  * If the arguments \a pos and \a neg are on the positive and negative
  * sides of the hyperplane respectively (where positive and
@@ -124,7 +124,8 @@ class NRay : public NVectorDense<NLargeInteger> {
  * @return a newly allocated ray representing the intersection of
  * \a hyperplane with the hyperplane joining \a a and \a b.
  */
-NRay* intersect(const NRay& pos, const NRay& neg, const NRay& hyperplane);
+NRay* intersect(const NRay& pos, const NRay& neg,
+    const NVector<NLargeInteger>& hyperplane);
 
 /*@}*/
 

@@ -49,7 +49,8 @@ void NRay::scaleDown() {
             elements[i].divByExact(gcd);
 }
 
-NRay* intersect(const NRay& first, const NRay& second, const NRay& hyperplane) {
+NRay* intersect(const NRay& first, const NRay& second,
+        const NVector<NLargeInteger>& hyperplane) {
     // Return (hyperplane * first) second - (hyperplane * second) first.
     // Negate this if (hyperplane * first) is negative.
 
