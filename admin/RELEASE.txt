@@ -22,3 +22,8 @@ Acknowledgements:
     kdeui/doc/en/credits.docbook
     kdeui/src/reginaabout.h (ReginaAbout constructor)
 
+Don't forget:
+    changes / highlights (both . and kdeui/doc/en)
+    what's this / tooltips
+    documentation in reference manual / feature set
+    website
