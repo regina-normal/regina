@@ -31,6 +31,7 @@
 
 #include "../pythonmanager.h"
 #include "../reginafilter.h"
+#include "commandedit.h"
 #include "pythonconsole.h"
 #include "pythoninterpreter.h"
 
@@ -40,7 +41,6 @@
 #include <kapplication.h>
 #include <kfiledialog.h>
 #include <kglobalsettings.h>
-#include <klineedit.h>
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kmessagebox.h>
@@ -79,8 +79,9 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     prompt = new QLabel(inputArea);
     prompt->setFont(KGlobalSettings::fixedFont());
 
-    input = new KLineEdit(inputArea);
+    input = new CommandEdit(inputArea);
     input->setFont(KGlobalSettings::fixedFont());
+    input->setSpacesPerTab(prefs.pythonSpacesPerTab);
     input->setFocus();
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
 
@@ -179,6 +180,7 @@ void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
 
     session->setWordWrap(prefs.pythonWordWrap ? QTextEdit::WidgetWidth :
         QTextEdit::NoWrap);
+    input->setSpacesPerTab(prefs.pythonSpacesPerTab);
 }
 
 void PythonConsole::init(regina::NPacket* tree,

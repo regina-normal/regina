@@ -39,7 +39,7 @@
 
 #include <kmainwindow.h>
 
-class KLineEdit;
+class CommandEdit;
 class KTextEdit;
 class PythonInterpreter;
 class PythonManager;
@@ -66,7 +66,7 @@ class PythonConsole : public KMainWindow {
          */
         KTextEdit* session;
         QLabel* prompt;
-        KLineEdit* input;
+        CommandEdit* input;
         PythonOutputStream* output;
         PythonOutputStream* error;
 
