@@ -55,6 +55,18 @@ void NNormalSurface::calculateOrientable() {
     // This is going to be ghastly.
     // We will create an orientation and side selection for every disc.
 
+    // First check that the precondition (compactness) holds, since if
+    // it doesn't we'll have a rather nasty crash (thanks Nathan).
+    if (! isCompact()) {
+        orientable = 0;
+        twoSided = 0;
+        connected = 0;
+        calculatedOrientable = false;
+        calculatedTwoSided = false;
+        calculatedConnected = false;
+        return;
+    }
+
     // TODO: First check that there aren't too many discs!
 
     // All right.  Off we go.

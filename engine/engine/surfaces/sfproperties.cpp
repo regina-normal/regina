@@ -59,12 +59,21 @@ bool NSurfaceFilterProperties::accept(NNormalSurface& surface) const {
         return false;
     if (! compactness.contains(surface.isCompact()))
         return false;
-    if (! orientability.contains(surface.isOrientable()))
-        return false;
 
-    if (eulerCharacteristic.size() > 0)
-        if (eulerCharacteristic.position(surface.getEulerCharacteristic()) < 0)
-            return false;
+    // Some properties may only be calculated for compact surfaces.
+    if (surface.isCompact()) {
+        int orientable = surface.isOrientable();
+        if (orientable != 0)
+            if (! orientability.contains(orientable == 1))
+                return false;
+
+        if (eulerCharacteristic.size() > 0)
+            if (eulerCharacteristic.position(
+                    surface.getEulerCharacteristic()) < 0)
+                return false;
+    }
+
+    // All tests passed.
     return true;
 }
 
