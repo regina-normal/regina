@@ -231,6 +231,7 @@ void NGroupExpression::writeTextShort(std::ostream& out) const {
 }
 
 NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
+        ShareableObject(), NPropertyHolder(),
         nGenerators(cloneMe.nGenerators) {
     transform(cloneMe.relations.begin(), cloneMe.relations.end(),
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());

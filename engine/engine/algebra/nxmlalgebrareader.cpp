@@ -132,7 +132,7 @@ void NXMLGroupPresentationReader::startElement(const std::string&,
 
 NXMLElementReader* NXMLGroupPresentationReader::startSubElement(
         const std::string& subTagName,
-        const regina::xml::XMLPropertyDict& subTagProps) {
+        const regina::xml::XMLPropertyDict& /* subTagProps */) {
     if (group)
         if (subTagName == "reln")
             return new NExpressionReader(group->getNumberOfGenerators());

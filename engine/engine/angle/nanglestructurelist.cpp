@@ -195,7 +195,8 @@ void NAngleStructureList::writeXMLPacketData(std::ostream& out) const {
         out << "  " << xmlValueTag("allowtaut", doesAllowTaut) << '\n';
 }
 
-NPacket* NAngleStructureList::internalClonePacket(NPacket* parent) const {
+NPacket* NAngleStructureList::internalClonePacket(NPacket* /* parent */)
+        const {
     NAngleStructureList* ans = new NAngleStructureList();
     transform(structures.begin(), structures.end(),
         back_inserter(ans->structures), FuncNewClonePtr<NAngleStructure>());

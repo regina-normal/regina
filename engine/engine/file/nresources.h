@@ -69,7 +69,7 @@ class NRandomAccessResource {
                 /**< The resource is closed. */
             READ = 1,
                 /**< The resource is open for reading. */
-            WRITE = 2,
+            WRITE = 2
                 /**< The resource is open for writing. */
         };
 

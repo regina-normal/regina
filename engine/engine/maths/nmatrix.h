@@ -64,6 +64,10 @@ class NMatrix {
              *   <tt>data[r][c]</tt> is the element in row \a r,
              *   column \a c. */
 
+    private:
+        typedef T* eltPtr;
+            /**< Represents a pointer to an element of the matrix. */
+
     public:
         /**
          * Creates a new matrix of the given size.
@@ -77,7 +81,7 @@ class NMatrix {
          * @param cols the number of columns in the new matrix.
          */
         NMatrix(unsigned long rows, unsigned long cols) :
-                nRows(rows), nCols(cols), data(new (T*)[rows]){
+                nRows(rows), nCols(cols), data(new eltPtr[rows]){
             for (unsigned long i = 0; i < rows; i++)
                 data[i] = new T[cols];
         }
@@ -87,7 +91,7 @@ class NMatrix {
          * @param cloneMe the matrix to clone.
          */
         NMatrix(const NMatrix& cloneMe) : nRows(cloneMe.nRows),
-                nCols(cloneMe.nCols), data(new (T*)[cloneMe.nRows]) {
+                nCols(cloneMe.nCols), data(new eltPtr[cloneMe.nRows]) {
             unsigned long r, c;
             for (r = 0; r < nRows; r++) {
                 data[r] = new T[nCols];

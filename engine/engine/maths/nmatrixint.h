@@ -81,10 +81,10 @@ class NMatrixInt : public NMatrixRing<NLargeInteger>, public ShareableObject {
 // Inline functions for NMatrixInt
 
 inline NMatrixInt::NMatrixInt(unsigned long rows, unsigned long cols) :
-        NMatrixRing<NLargeInteger>(rows, cols) {
+        NMatrixRing<NLargeInteger>(rows, cols), ShareableObject() {
 }
 inline NMatrixInt::NMatrixInt(const NMatrixInt& cloneMe) :
-        NMatrixRing<NLargeInteger>(cloneMe) {
+        NMatrixRing<NLargeInteger>(cloneMe), ShareableObject() {
 }
 
 inline void NMatrixInt::writeTextShort(std::ostream& out) const {

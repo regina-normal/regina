@@ -104,16 +104,16 @@ class NVectorUnit : public NVector<T> {
             else
                 return zero;
         }
-        virtual void setElement(unsigned index, const T& value) {
+        virtual void setElement(unsigned, const T&) {
         }
-    
-        virtual void operator = (const NVector<T>& cloneMe) {
+
+        virtual void operator = (const NVector<T>&) {
         }
-        virtual void operator += (const NVector<T>& other) {
+        virtual void operator += (const NVector<T>&) {
         }
-        virtual void operator -= (const NVector<T>& other) {
+        virtual void operator -= (const NVector<T>&) {
         }
-        virtual void operator *= (const T& factor) {
+        virtual void operator *= (const T&) {
         }
         virtual T operator * (const NVector<T>& other) const {
             return other[direction];
@@ -126,11 +126,9 @@ class NVectorUnit : public NVector<T> {
         virtual T elementSum() const {
             return one;
         }
-        virtual void addCopies(const NVector<T>& other,
-                const T& multiple) {
+        virtual void addCopies(const NVector<T>&, const T&) {
         }
-        virtual void subtractCopies(const NVector<T>& other,
-                const T& multiple) {
+        virtual void subtractCopies(const NVector<T>&, const T&) {
         }
 };
 

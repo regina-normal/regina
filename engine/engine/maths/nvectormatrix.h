@@ -95,22 +95,21 @@ class NVectorMatrix : public NVector<T> {
         virtual NVector<T>* clone() const {
             return new NVectorDense<T>(*this);
         }
-        virtual void setElement(unsigned index, const T& value) {
+        virtual void setElement(unsigned, const T&) {
         }
-        virtual void operator = (const NVector<T>& cloneMe) {
+        virtual void operator = (const NVector<T>&) {
         }
-        virtual void operator += (const NVector<T>& other) {
+        virtual void operator += (const NVector<T>&) {
         }
-        virtual void operator -= (const NVector<T>& other) {
+        virtual void operator -= (const NVector<T>&) {
         }
-        virtual void operator *= (const T& factor) {
+        virtual void operator *= (const T&) {
         }
         virtual void negate() {
         }
-        virtual void addCopies(const NVector<T>& other, const T& multiple) {
+        virtual void addCopies(const NVector<T>&, const T&) {
         }
-        virtual void subtractCopies(const NVector<T>& other,
-                const T& multiple) {
+        virtual void subtractCopies(const NVector<T>&, const T&) {
         }
 };
 
