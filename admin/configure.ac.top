@@ -90,7 +90,8 @@ REGINA_PROG_OPTIONAL([fastjar jar], JAR,
   [the Java user interface])
 
 REGINA_PROG_OPTIONAL([gcjh gcjh-3.1 kaffeh javah], JAVAH,
-  [Javah command for creating JNI headers], , [the (unnecessary) JNI headers])
+  [Javah command for creating JNI headers], [JNIHDR],
+  [the (unnecessary) JNI headers])
 
 ###########################################################
 #
