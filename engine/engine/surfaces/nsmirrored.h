@@ -67,6 +67,10 @@ namespace regina {
  * Subclasses must however implement the routine makeMirror() which creates
  * the alternate mirror vector from this vector.
  *
+ * Note that cloning a vector of this class will \e not clone the
+ * mirror.  Thus a clone may be safely modified before its first
+ * coordinate lookup routine is called.
+ *
  * \todo \prob Allow modification of the vector by overwriting
  * setValue(); this will require documentation changes in both this
  * class and in NNormalSurfaceVector.
