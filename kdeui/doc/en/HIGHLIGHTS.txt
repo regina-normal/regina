@@ -13,6 +13,7 @@ Version 4.1.3  [ 25 July, 2004 ]
     Features:
         - New "Open Example" menu item for easy access to sample files
           and census data.
+        - Includes the closed hyperbolic census of Hodgson and Weeks.
         - Allows the choice of text editor component to be configured.
         - Improved handling of keyboard focus.
     Scripting:
