@@ -12,7 +12,6 @@ engine documentation.
 General:
     - Make "configure shortcuts" work with the part as well as with the shell
     - Enhance the DCOP interface
-    * Is katepart word wrapping broken?
 
 Census:
     - Implement GUI census creation
