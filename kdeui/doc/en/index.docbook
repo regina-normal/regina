@@ -41,6 +41,7 @@
   <!ENTITY ppirr
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
   <!ENTITY python "<application>Python</application>">
+  <!ENTITY qt "<application>Qt</application>">
   <!ENTITY snappea "<application>SnapPea</application>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">
   <!ENTITY sss "S<superscript>3</superscript>">

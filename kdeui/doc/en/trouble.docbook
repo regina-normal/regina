@@ -2,7 +2,155 @@
  <title>Troubleshooting</title>
 
  <qandaset>
-  <!--qandadiv><title>Working With Packets</title-->
+  <qandadiv><title>Compiling &regina;</title>
+   <qandaentry>
+    <question><para>
+     The <userinput>./configure</userinput> script tells me that it
+     can't find a library that it needs (such as
+     <filename>libgmp</filename> or <filename>libxml2</filename>).
+    </para></question>
+    <answer>
+     <para>
+      First you should make sure that the library is installed.
+      The <ulink url="http://regina.sourceforge.net/sysreq.html">system
+      requirements page</ulink> on the &regina; website lists all of the
+      required libraries and where you can obtain them.
+     </para>
+     <para>
+      If the library has been installed in a non-standard location, you
+      might need to pass its location to the
+      <userinput>./configure</userinput> script.  For instance, if the
+      library is installed beneath <filename>/usr/local</filename>
+      with headers in <filename>/usr/local/include</filename> and
+      the library itself in <filename>/usr/local/lib</filename>, you
+      can pass the following options:
+     </para>
+     <para>
+      <prompt>example$</prompt>
+      <userinput>./configure --with-extra-includes=/usr/local/include
+      --with-extra-libs=/usr/local/lib</userinput>
+     </para>
+     <para>
+      Note that some libraries come with their own custom
+      <userinput>./configure</userinput> options.  For instance, the
+      location of the &qt; installation is specified using the option
+      <option>--with-qt-dir</option>, and the location of the
+      <filename>libxml2</filename> installation is specified using the
+      option <option>--with-xml-prefix</option>.  Run
+      <userinput>./configure --help</userinput> for details of all
+      available options.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     The compile breaks somewhere beneath
+     <filename>regina-<replaceable>version</replaceable>/kdeui/src</filename>
+     with complaints of an undeclared identifier.
+    </para></question>
+    <answer>
+     <para>
+      Look at the error message to see which particular identifier has
+      not been declared.  An example of such an error is reproduced
+      below, where the undeclared identifier in this case is
+      <varname>adjustColumn</varname>.
+     </para>
+<screen>
+nanglestructureui.cpp: In constructor `NAngleStructureUI::NAngleStruct...
+nanglestructureui.cpp:84: error: `adjustColumn' undeclared (first use ...
+nanglestructureui.cpp:84: error: (Each undeclared identifier is report...
+make[4]: *** [nanglestructureui.lo] Error 1
+make[4]: Leaving directory `/home/bab/source/regina-4.0/kdeui/src/part...
+</screen>
+     <para>
+      If the undeclared identifier is
+      <varname>adjustColumn</varname> or
+      <varname>SH_Table_GridLineColor</varname>,
+      you almost certainly have a &qt; version problem.  &regina;
+      requires &qt; version 3.2 or higher; trying to compile &regina;
+      against &qt; 3.1 will result in errors such as these.
+     </para>
+     <para>
+      Compatibility for &qt; 3.1 is being worked upon and will hopefully
+      appear in future releases.
+     </para>
+     <para>
+      As of &regina; 4.0.1, if your &qt; version is too old then
+      the <userinput>./configure</userinput> script should complain
+      before compilation begins.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
+  <qandadiv><title>Running &regina;</title>
+   <qandaentry id="troubleqn-prefix">
+    <question><para>
+     &regina; refuses to open any topology data files, claiming that an
+     appropriate topology data component could not be found.
+    </para></question>
+    <answer>
+     <para>
+      It is critical that &regina; be installed in the same location as
+      all other &kde; applications on your system.  For instance, if
+      &kde; is installed beneath <filename>/opt/kde3</filename> then
+      &regina; must be installed there also.
+      Errors such as these occur when &regina; has been installed elsewhere,
+      and &kde; cannot find one or more of its components.
+     </para>
+     <para>
+      The installation in which &regina; is installed is controlled at
+      compile-time, by passing a <option>--prefix</option> option to the
+      <userinput>./configure</userinput> script.  Choosing the correct
+      <option>--prefix</option> and then rebuilding and reinstalling
+      &regina; will almost certainly fix this problem.
+     </para>
+     <para>
+      To find which prefix you <emphasis>should</emphasis> be using,
+      search for the <userinput>kde-config</userinput> program on your
+      system.  Running <userinput>kde-config --prefix</userinput> will
+      report the prefix that was used for your &kde; installation.  You
+      must then pass this same prefix to <userinput>./configure</userinput>.
+     </para>
+     <para>
+      For instance, if <userinput>kde-config --prefix</userinput>
+      reports <computeroutput>/usr</computeroutput> then you should
+      start your &regina; build with
+      <userinput>./configure --prefix=/usr</userinput> as illustrated
+      below.
+     </para>
+<screen>
+<prompt>example:~/source/regina&gt;</prompt> <userinput>kde-config --prefix</userinput>
+/usr
+<prompt>example:~/source/regina&gt;</prompt> <userinput>./configure --prefix=/usr</userinput>
+checking build system type... i686-pc-linux-gnu
+checking host system type... i686-pc-linux-gnu
+...
+</screen>
+     <para>
+      As of &regina; 4.0.1, the <userinput>./configure</userinput>
+      script makes an intelligent guess at the correct prefix if you
+      don't provide one yourself.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     I see no way to create a new topology data file.  There is no
+     <guimenuitem>New Topology Data</guimenuitem>
+     menu item and no correponding toolbar button.
+    </para></question>
+    <answer>
+     <para>
+      These symptoms are caused by the same <option>--prefix</option>
+      issue described in the <link linkend="troubleqn-prefix">previous
+      question</link>, and can be fixed the same way.
+     </para>
+    </answer>
+   </qandaentry>
+
    <qandaentry>
     <question><para>
      I cannot edit a particular packet.  I can view it but I can't change
@@ -28,9 +176,7 @@
      </para>
     </answer>
    </qandaentry>
-  <!--/qandadiv-->
 
-  <!--qandadiv><title>&python; Scripting</title-->
    <qandaentry>
     <question><para>
      The program complains that &python; scripting has been disabled.
@@ -92,9 +238,9 @@
      </para>
     </answer>
    </qandaentry>
-  <!--/qandadiv-->
+  </qandadiv>
 
-  <!--qandadiv><title>Miscellaneous</title-->
+  <qandadiv><title>Miscellaneous</title>
    <qandaentry>
     <question><para>
      Something else beyond this rather wanting list of suggestions has gone
@@ -116,7 +262,7 @@
      </para>
     </answer>
    </qandaentry>
-  <!--/qandadiv-->
+  </qandadiv>
  </qandaset>
 </chapter>
 
