@@ -275,6 +275,12 @@ void NScriptUI::refresh() {
             script->getTreeMatriarch(), script->getVariableValue(i).c_str()));
     }
 
+    // A kate part needs to be in read-write mode before we can alter its
+    // contents.
+    bool wasReadWrite = editInterface->isReadWrite();
+    if (! wasReadWrite)
+        editInterface->setReadWrite(true);
+
     // Refresh the lines.
     // The first line is handled separately to avoid an additional blank
     // line from being appended.
@@ -295,6 +301,9 @@ void NScriptUI::refresh() {
         }
         editInterface->setText(allLines);
     }
+
+    if (! wasReadWrite)
+        editInterface->setReadWrite(false);
 
     setDirty(false);
 }

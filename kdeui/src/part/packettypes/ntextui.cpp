@@ -95,29 +95,28 @@ void NTextUI::commit() {
 }
 
 void NTextUI::refresh() {
+    // A kate part needs to be in read-write mode before we can alter its
+    // contents.
+    bool wasReadWrite = editInterface->isReadWrite();
+    if (! wasReadWrite)
+        editInterface->setReadWrite(true);
+
     editInterface->clear();
 
-    // Add a line at a time; we seem to have problems with line endings
-    // when we add it all at once.
-    unsigned long whichLine = 0;
-    std::string line;
-    std::istringstream lines(text->getText());
+    // Back to all-at-once insertion instead of line-by-line insertion.
+    // Grrr vimpart.
+    if (! text->getText().empty()) {
+        QString data = text->getText().c_str();
 
-    do {
-        line.clear();
-        std::getline(lines, line);
-        if ((! line.empty()) || (! lines.eof())) {
-            // Add this line.
-            // Handle the first line separately to avoid an additional
-            // blank line from being appended.
-            if (whichLine == 0)
-                editInterface->setText(line.c_str());
-            else
-                editInterface->insertLine(editInterface->numLines(),
-                    line.c_str());
-            whichLine++;
-        }
-    } while (! lines.eof());
+        // We are guaranteed that data.length() >= 1.
+        if (data[data.length() - 1] == '\n')
+            data.truncate(data.length() - 1);
+
+        editInterface->setText(data);
+    }
+
+    if (! wasReadWrite)
+        editInterface->setReadWrite(false);
 
     setDirty(false);
 }
