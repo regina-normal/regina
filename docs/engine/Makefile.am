@@ -12,8 +12,6 @@ engine_index = index.html
 
 ## ----------------------- Custom targets ----------------------------
 
-.PHONY : all-local clean-local
-
 all-local : $(engine_index)
 $(engine_index) :
 	cd ../../engine && @DOXYGEN@ doc-files/docs.conf

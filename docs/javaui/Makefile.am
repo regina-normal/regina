@@ -17,8 +17,6 @@ javaui_bottom =  'Copyright &copy; 1999-2002, Ben Burton<br>This software is rel
 
 ## ----------------------- Custom targets ----------------------------
 
-.PHONY : all-local clean-local
-
 all-local : $(javaui_index)
 $(javaui_index) :
 	cd ../../javaui && CLASSPATH="$(USE_CLASSPATH)" @JAVADOC@ -d ../docs/javaui \
