@@ -1,7 +1,7 @@
 
 /**************************************************************************
  *                                                                        *
- *  Regina - A normal surface theory calculator                           *
+ *  Regina - A Normal Surface Theory Calculator                           *
  *                                                                        *
  *  Documentation tools                                                   *
  *  Written by Ben Burton                                                 *
