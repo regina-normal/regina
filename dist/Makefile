@@ -30,6 +30,9 @@ DOC_OVERVIEW = overview.html
 DOC_HTML_DIR = docs
 
 empty_src_dirs = bin $(DOC_HTML_DIR)/engine $(DOC_HTML_DIR)/javaui
+debian_src_mask = changelog control copyright *.README.Debian *.doc-base \
+	*.conf *.docs *.files *.links *.menu *.overrides *.sh rules cvs.patch \
+	README.Packaging
 dist_mask = Makefile* *.txt *.cpp insertstubreplace replacetabs stub*
 
 engine_dirs = $(dirs_engine_engine) $(dirs_engine_jni) $(dirs_engine_corba)
@@ -63,7 +66,8 @@ $(SRC_ARCHIVE):
 		$(patsubst %,$(REGINA_DIR)/%, \
 			$(scripts) $(misc_src_mask) \
 			$(dirs_idl:=/*.idl) $(idl_misc_src_mask) \
-			$(empty_src_dirs:=/.keepme) $(dist_mask:%=dist/%))
+			$(empty_src_dirs:=/.keepme) $(dist_mask:%=dist/%)) \
+		$(patsubst %,$(REGINA_DIR)/debian/%, $(debian_src_mask))
 	-rm $(REGINA_DIR)
 
 distbin : $(BIN_ARCHIVE)
