@@ -6,7 +6,7 @@
 
 # ------------------------- Variables --------------------------------
 
-include Makefile.options
+-include Makefile.options
 
 # Global variables:
 
@@ -151,3 +151,10 @@ clean :
 	cd javaui && $(MAKE) clean
 	cd $(CONF_DIR) && $(MAKE) clean
 
+Makefile.options :
+	@echo
+	@echo "Makefile.options is missing."
+	@echo "Try taking one of the sample files (Makefile.options.*) and"
+	@echo "    modifying it to suit your system."
+	@echo
+	@false
