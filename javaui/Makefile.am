@@ -8,6 +8,8 @@
 
 SUBDIRS = normal
 
+## ----------------------- Variables ---------------------------------
+
 USE_CLASSPATH = @JAVAUI_CLASSPATH@
 
 jar_extra_files = normal/images/buttons/*.gif \
@@ -16,10 +18,15 @@ jar_extra_files = normal/images/buttons/*.gif \
   normal/images/main/*.gif \
   LICENSE.txt
 
-ui_jar = @PACKAGE_TARNAME@-@PACKAGE_VERSION@.jar
-ui_link = @PACKAGE_TARNAME@.jar
+ui_jar = @PACKAGE@-@PACKAGE_VERSION@.jar
+ui_link = @PACKAGE@.jar
 
-.PHONY : all-local clean-local jni jni-clean
+pkgjardir = $(pkgdatadir)/jar
+
+## ----------------------- Custom targets ----------------------------
+
+.PHONY : jni jni-clean \
+  all-local clean-local install-data-local uninstall-local
 
 all-local :
 	@JAR@ -cf $(ui_jar) `find normal -name "*.class"` $(jar_extra_files)
@@ -28,6 +35,18 @@ all-local :
 
 mostlyclean-local :
 	rm -f *.jar
+
+install-data-local :
+	# Install jars if they're present.
+	if [ -e "$(ui_jar)" ]; then \
+		$(mkinstalldirs) $(DESTDIR)$(pkgjardir); \
+		$(INSTALL_DATA) $(ui_jar) $(DESTDIR)$(pkgjardir); \
+		rm -f $(DESTDIR)$(pkgjardir)/$(ui_link); \
+		cd $(DESTDIR)$(pkgjardir) && @LN_S@ $(ui_jar) $(ui_link); \
+	fi
+
+uninstall-local :
+	rm -f $(DESTDIR)$(pkgjardir)/$(ui_jar) $(DESTDIR)$(pkgjardir)/$(ui_link)
 
 jni : all
 	for i in `find normal/engine/implementation/jni -name "*.java"`; do \
@@ -43,6 +62,8 @@ jni-clean :
 		echo "Removing $$_header..."; \
 		rm -f "$$_header"; \
 	done
+
+## ----------------------- Normal Makefile.am stuff ------------------
 
 EXTRA_DIST = JNI.txt LICENSE.txt README.txt REQUIRES.txt TODO.txt \
   findtext overview.html
