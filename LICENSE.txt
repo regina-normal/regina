@@ -1,9 +1,6 @@
 
-        Regina - A Normal Surface Theory Calculator
-        Copyright (c) 1999-2003, Ben Burton
-
-Regina has been released under the GNU General Public License, as
-described below.
+            Regina - A Normal Surface Theory Calculator
+                Copyright (c) 1999-2003, Ben Burton
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
