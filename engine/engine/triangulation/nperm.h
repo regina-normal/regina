@@ -68,8 +68,8 @@ class NPerm {
         /**
          * Creates a permutation from the given internal code.
          *
-         * \pre \a newCode was obtained from some
-         * permutation through getPermCode().
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
          *
          * @param newCode the internal code from which the new
          * permutation will be created.
@@ -133,6 +133,9 @@ class NPerm {
          * Note that the internal code is sufficient to reproduce the
          * entire permutation.
          *
+         * The code returned will be a valid permutation code as
+         * determined by isPermCode().
+         *
          * @return the internal code.
          */
         char getPermCode() const;
@@ -141,13 +144,25 @@ class NPerm {
          * Sets this permutation to that represented by the given
          * internal code.
          *
-         * \pre \a newCode was obtained from some
-         * permutation through getPermCode().
+         * \pre the given code is a valid permutation code; see
+         * isPermCode() for details.
          *
          * @param newCode the internal code that will determine the
          * new value of this permutation.
          */
         void setPermCode(char newCode);
+
+        /**
+         * Determines whether the given character is a valid internal
+         * permutation code.  Valid permutation codes can be passed to
+         * setPermCode() or NPerm(char) and are returned by getPermCode().
+         *
+         * \ifaces Not present.
+         *
+         * @return \c true if and only if the given code is a valid
+         * internal permutation code.
+         */
+        static bool isPermCode(char newCode);
 
         /**
          * Sets this permutation to that mapping (0,1,2,3) to

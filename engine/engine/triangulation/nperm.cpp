@@ -64,6 +64,14 @@ const NPerm allPermsS2[2] = {
     NPerm(0,1,2,3), NPerm(1,0,2,3)
 };
 
+bool NPerm::isPermCode(char code) {
+    unsigned char mask = 0;
+    for (int i = 0; i < 4; i++)
+        mask |= (1 << ((code >> (2 * i)) & 3));
+            // mask |= (1 << imageOf(i));
+    return (mask == 15);
+}
+
 int NPerm::sign() const {
     int sign = 1;
     int i,j;

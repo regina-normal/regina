@@ -51,6 +51,8 @@ Version 3.0  [ (under development) ]
               routines sysModeRead(), sysModeWrite().
         Class NNormalSurfaceList:
             - New nested class NNormalSurfaceList::SurfaceInserter.
+        Class NPerm:
+            - Added isPermCode().
         Class NScript:
             - Changed list of variables to a proper map and removed routines
               getVariableIndex() and removeVariableAt().
