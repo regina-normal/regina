@@ -22,7 +22,7 @@ License details:
 
 Acknowledgements:
     kdeui/doc/en/credits.docbook
-    kdeui/src/reginaabout.h (ReginaAbout constructor)
+    kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
 
 Don't forget:
     changes & highlights (both . and kdeui/doc/en)

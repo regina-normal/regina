@@ -84,6 +84,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     // Credits:
     addCredit("David Letscher",
         I18N_NOOP("Code contributions and technical advice"));
+    addCredit("Jeff Weeks",
+        I18N_NOOP("Use of the SnapPea kernel and helpful discussions"));
     addCredit("William Jaco",
         I18N_NOOP("Supervision and many long discussions"));
     addCredit("Hyam Rubinstein",
@@ -96,11 +98,11 @@ ReginaAbout::ReginaAbout(const char* internalName) :
         I18N_NOOP("Helpful discussions"));
     addCredit("Craig Macintyre",
         I18N_NOOP("Red Hat / Fedora porting assistance"));
-    addCredit("Jeff Weeks",
-        I18N_NOOP("Helpful discussions"));
     addCredit("The American Institute of Mathematics",
         I18N_NOOP("Generous support"));
     addCredit("Oklahoma State University",
+        I18N_NOOP("Generous support"));
+    addCredit("RMIT University, Australia",
         I18N_NOOP("Generous support"));
     addCredit("The University of Melbourne, Australia",
         I18N_NOOP("Generous support"));
