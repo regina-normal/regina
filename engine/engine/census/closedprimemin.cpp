@@ -253,9 +253,6 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
     // the two possible permutations for the previous face.
     //
     // For the remaining faces we try all possible permutations.
-    //
-    // TODO: Include optimisations for the second permutation of an
-    // arbitrary double edge.
 
     int* chainPermIndices = (nChainEdges == 0 ? 0 :
         new int[nChainEdges * 2]);
@@ -419,12 +416,39 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         permIndex(adj) = allPermsS3Inv[permIndex(face)];
 
         // Is this going to lead to an unwanted triangulation?
-        if (mayPurge(face, NCensus::PURGE_NON_MINIMAL_PRIME |
-                NCensus::PURGE_P2_REDUCIBLE, orientableOnly, true))
+        if (lowDegreeEdge(face, true, true))
             continue;
         if (! orientableOnly)
             if (badEdgeLink(face))
                 continue;
+
+        if (orderType[orderElt] == EDGE_DOUBLE_SECOND) {
+            // We can use our double edge results to limit the possible
+            // choices for the second permutation of a double edge.
+
+            // These results boil down to the following:
+            //
+            // 1) You cannot create an edge of degree two;
+            //
+            // 2) Each vertex of the equator edge of the first
+            // tetrahedron must be mapped to two distinct vertices of
+            // the second tetrahedron by the two gluing permutations.
+            //
+            // Note that condition (1) is already verified by the
+            // lowDegreeEdge() and badEdgeLink() tests above.
+
+            // The two vertices of the equator:
+            faces = NFacePair(order[orderElt - 1].face,
+                order[orderElt].face).complement();
+
+            // The two gluing permutations:
+            trial1 = gluingPerm(order[orderElt - 1]);
+            trial2 = gluingPerm(order[orderElt]);
+
+            if (trial1[faces.lower()] == trial2[faces.lower()] ||
+                    trial1[faces.upper()] == trial2[faces.upper()])
+                continue;
+        }
 
         // Fix the orientation if appropriate.
         if (generic && adj.face == 0 && orientableOnly) {

@@ -517,7 +517,35 @@ class NGluingPerms {
          * lead to an edge identified with itself in reverse, or \c false
          * if no such edge is identified.
          */
-        bool badEdgeLink(const NTetFace& face);
+        bool badEdgeLink(const NTetFace& face) const;
+
+        /**
+         * Determines whether the permutations already constructed model
+         * a triangulation with a low degree edge.  Precisely which
+         * types of low degree edges are identified must be specified
+         * through parameters \a testDegree12 and \a testDegree3.
+         *
+         * Tests that do not refer to the gluing permutation for the
+         * given face will not be run.
+         *
+         * This routine is not fussy about the order in which gluing
+         * permutations are selected, as long as permutations not yet
+         * selected have the corresponding element of permIndices[] set
+         * to -1.
+         *
+         * @param face the specific tetrahedron face upon which tests
+         * will be based.
+         * @param testDegree12 \c true if we should test for
+         * non-boundary edges of degree 1 or 2.
+         * @param testDegree3 \c true if we should test for non-boundary
+         * edges of degree 3 involving three distinct tetrahedra.
+         * @return \c true if the permutations under construction will
+         * lead to a low-degree edge as specified by parameters
+         * \a testDegree12 and \a testDegree3, or \c false if no such
+         * edge is identified.
+         */
+        bool lowDegreeEdge(const NTetFace& face, bool testDegree12,
+            bool testDegree3) const;
 
         /**
          * Determines whether the permutations under construction are
@@ -531,15 +559,13 @@ class NGluingPerms {
          * permutations under construction will only lead to
          * triangulations that do meet the given conditions.
          *
-         * This routine must \e only be called from within
-         * findAllPermsInternal() since it relies on specific details of
-         * how these permutations are generated.
-         *
          * Tests that do not refer to the gluing permutation for the
          * given face will not be run.
          *
-         * \pre All gluing permutations for faces up to and including the
-         * given face have already been selected.
+         * This routine is not fussy about the order in which gluing
+         * permutations are selected, as long as permutations not yet
+         * selected have the corresponding element of permIndices[] set
+         * to -1.
          *
          * @param face the specific tetrahedron face upon which tests
          * will be based.
@@ -558,7 +584,7 @@ class NGluingPerms {
          * results are inconclusive.
          */
         bool mayPurge(const NTetFace& face, int whichPurge,
-                bool orientableOnly, bool finiteOnly);
+                bool orientableOnly, bool finiteOnly) const;
 };
 
 /*@}*/

@@ -260,8 +260,8 @@ void NGluingPerms::findAllPermsInternal(const NFacePairingIsoList* autos,
     use(0, useArgs);
 }
 
-bool NGluingPerms::badEdgeLink(const NTetFace& face) {
-    // Run around all three edges bounding face.
+bool NGluingPerms::badEdgeLink(const NTetFace& face) const {
+    // Run around all three edges bounding the face.
     NTetFace adj;
     unsigned tet;
     NPerm current;
@@ -318,11 +318,87 @@ bool NGluingPerms::badEdgeLink(const NTetFace& face) {
     return false;
 }
 
-bool NGluingPerms::mayPurge(const NTetFace& face, int whichPurge,
-        bool orientableOnly, bool finiteOnly) {
-    if (! whichPurge)
-        return false;
+bool NGluingPerms::lowDegreeEdge(const NTetFace& face,
+        bool testDegree12, bool testDegree3) const {
+    // Run around all three edges bounding the face.
+    NTetFace adj;
+    unsigned tet;
+    NPerm current;
+    NPerm start(face.face, 3);
+    bool started, incomplete;
+    unsigned size;
+    for (unsigned permIdx = 0; permIdx < 3; permIdx++) {
+        start = start * NPerm(1, 2, 0, 3);
 
+        // start maps (0,1,2) to the three vertices of face, with
+        // (0,1) mapped to the edge that we wish to examine.
+
+        // Continue to push through a tetrahedron and then across a
+        // face, until either we hit a boundary or we return to the
+        // original face.
+
+        current = start;
+        tet = face.tet;
+
+        started = false;
+        incomplete = false;
+        size = 0;
+
+        while ((! started) || (static_cast<int>(tet) != face.tet) ||
+                (start[2] != current[2]) || (start[3] != current[3])) {
+            started = true;
+
+            // We're about to push through the current tetrahedron; see
+            // if we've already exceeded the size of edge links that we
+            // care about.
+            if (size >= 3) {
+                incomplete = true;
+                break;
+            }
+
+            // Push through the current tetrahedron.
+            current = current * NPerm(2, 3);
+
+            // Push across a face.
+            if (pairing->isUnmatched(tet, current[3])) {
+                incomplete = true;
+                break;
+            }
+            adj = pairing->dest(tet, current[3]);
+
+            if (permIndex(tet, current[3]) >= 0) {
+                current = gluingPerm(tet, current[3]) * current;
+            } else if (permIndex(adj) >= 0) {
+                current = gluingPerm(adj).inverse() * current;
+            } else {
+                incomplete = true;
+                break;
+            }
+
+            tet = adj.tet;
+            size++;
+        }
+
+        if (! incomplete) {
+            if (testDegree12 && size < 3)
+                return true;
+            if (testDegree3 && size == 3) {
+                // Only throw away a degree three edge if it involves
+                // three distinct tetrahedra.
+                int tet1 = pairing->dest(face.tet, start[2]).tet;
+                int tet2 = pairing->dest(face.tet, start[3]).tet;
+                if (face.tet != tet1 && tet1 != tet2 && tet2 != face.tet)
+                    return true;
+            }
+        }
+    }
+
+    // No bad low-degree edges were found.
+    return false;
+}
+
+bool NGluingPerms::mayPurge(const NTetFace& face, int whichPurge,
+        bool orientableOnly, bool finiteOnly) const {
     // Are we allowed to purge on edges of degree 3?
     bool mayPurgeDeg3 = (whichPurge & NCensus::PURGE_NON_MINIMAL);
 
@@ -346,78 +422,10 @@ bool NGluingPerms::mayPurge(const NTetFace& face, int whichPurge,
         ((whichPurge & NCensus::PURGE_P2_REDUCIBLE) || orientableOnly) &&
         finiteOnly && (getNumberOfTetrahedra() > 2);
 
-    // Currently look for edges of degree 1, 2 or 3.
-
-    // For edges of degree 2 or 3 we find out once the larger face of the
-    // second largest tetrahedron is glued to the larger face of the
-    // largest tetrahedron.
-    // For edges of degree 1 we find out once the smaller face is glued
-    // to the larger.
-
-    // We know face has a partner since we just chose its permutation.
-    NTetFace destFace = pairing->dest(face);
-    if (destFace.tet == face.tet) {
-        // Check for an edge of degree 1.
-        // This corresponds to a gluing permutation of order 2
-        // (this includes both the orientable and non-orientable gluings).
-        if (mayPurgeDeg12) {
-            NPerm map(gluingPerm(face));
-            if ((map * map).isIdentity())
-                return true;
-        }
-    } else if (destFace.tet > face.tet) {
-        // Check for an edge of degree 2 or 3.
-        NTetFace destOther;
-        NPerm faceMap, otherMap;
-        for (NTetFace other(face.tet, 0); other < face; other++) {
-            // Examine the edge between faces [other] and [face].
-            destOther = pairing->dest(other);
-            if (destOther.tet == destFace.tet) {
-                // Could be an edge of degree 2.
-                if (mayPurgeDeg12) {
-                    // The tetrahedra are correct; check the permutation.
-                    // We only care about the edge having degree 2; we'll
-                    // catch both the valid and invalid gluings.
-                    faceMap = gluingPerm(face) *
-                        NPerm(face.face, other.face);
-                    otherMap = gluingPerm(other) *
-                        NPerm(face.face, other.face);
-                    if (faceMap[face.face] == otherMap[face.face] &&
-                            faceMap[other.face] == otherMap[other.face])
-                        return true;
-                }
-            } else if (destOther.tet < face.tet) {
-                // Could be an edge of degree 3.
-                if (mayPurgeDeg3) {
-                    // We now know that [other] has a partner as well and that
-                    // we're looking at three different tetrahedra.
-
-                    // We also know that [other] heads to an earlier
-                    // tetrahedron and [face] heads to a later tetrahedron.
-
-                    // Establish how these destination tetrahedra are glued up
-                    // at the back.
-                    faceMap = gluingPerm(face) * NPerm(face.face, other.face);
-                    otherMap = gluingPerm(other) * NPerm(face.face, other.face);
-
-                    if (! (pairing->dest(destOther.tet, otherMap[other.face])
-                            == NTetFace(destFace.tet, faceMap[face.face])))
-                        continue;
-
-                    // The two faces are glued together.
-                    // Check whether the corresponding edge has degree three;
-                    // if so then the triangulation will either be non-minimal
-                    // or invalid.
-                    if (gluingPerm(destOther.tet,
-                            otherMap[other.face])[otherMap[face.face]] ==
-                            faceMap[other.face])
-                        return true;
-                }
-            }
-        }
-    }
-
-    return false;
+    if (mayPurgeDeg12 || mayPurgeDeg3)
+        return lowDegreeEdge(face, mayPurgeDeg12, mayPurgeDeg3);
+    else
+        return false;
 }
 
 } // namespace regina
