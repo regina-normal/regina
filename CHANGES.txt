@@ -9,10 +9,15 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.1.3  [ under development ]
 
+    OVERALL:
+        - Make explicit in the reference manual introduction where the
+          example files can be found.
     USER INTERFACE:
-        - Allow the text editor component to be configured.
-        - Bug fixes to make it work properly with the vimpart, as well
-          as work-arounds for bugs in the vimpart itself.
+        - Added an "Open Example" menu item for easy access to the
+          sample files.
+        - Allow the choice of text editor component to be configured.
+        - Several fixes to make Regina work properly with the vimpart,
+          including work-arounds for bugs in the vimpart itself.
         - Tightened up the handling of read-only mode for internal components.
 
 Version 4.1.2  [ 14 June, 2004 ]
