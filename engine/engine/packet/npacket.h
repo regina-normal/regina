@@ -55,7 +55,7 @@ class NXMLPacketReader;
  * <ul>
  *   <li>Follow the instructions on the \ref HowTo page for adding a
  *     new packet type.</li>
- *   <li>Virtual functions getPacketType() and getPacketName() should
+ *   <li>Virtual functions getPacketType() and getPacketTypeName() should
  *     be declared but not implemented.  The registry utilities
  *     will take care of their implementations.</li>
  *   <li><tt>public static const int packetType</tt> should be declared.
@@ -148,7 +148,7 @@ class NPacket : public ShareableObject {
          *
          * @return the packet type name.
          */
-        virtual std::string getPacketName() const = 0;
+        virtual std::string getPacketTypeName() const = 0;
 
         /**
          * Returns the label associated with this individual packet.
@@ -341,7 +341,7 @@ class NPacket : public ShareableObject {
          * depth-first iteration.
          *
          * @param type the type of packet to search for, as returned by
-         * getPacketName().  Note that string comparisons are case
+         * getPacketTypeName().  Note that string comparisons are case
          * sensitive.
          * @return the first such packet, or 0 if there are no packets of
          * the requested type.
@@ -359,7 +359,7 @@ class NPacket : public ShareableObject {
          * depth-first iteration.
          *
          * @param type the type of packet to search for, as returned by
-         * getPacketName().  Note that string comparisons are case
+         * getPacketTypeName().  Note that string comparisons are case
          * sensitive.
          * @return the first such packet, or 0 if there are no packets of
          * the requested type.
@@ -374,7 +374,7 @@ class NPacket : public ShareableObject {
          * firstTreePacket().
          *
          * @param type the type of packet to search for, as returned by
-         * getPacketName().  Note that string comparisons are case
+         * getPacketTypeName().  Note that string comparisons are case
          * sensitive.
          * @return the next such packet, or 0 if this is the last packet
          * of the requested type in such an iteration.
@@ -389,7 +389,7 @@ class NPacket : public ShareableObject {
          * firstTreePacket().
          *
          * @param type the type of packet to search for, as returned by
-         * getPacketName().  Note that string comparisons are case
+         * getPacketTypeName().  Note that string comparisons are case
          * sensitive.
          * @return the next such packet, or 0 if this is the last packet
          * of the requested type in such an iteration.
@@ -725,26 +725,6 @@ class NPacket : public ShareableObject {
         #ifdef __DOXYGEN
         static NPacket* readPacket(NFile& in, NPacket* parent);
         #endif
-        /**
-         * Called for each packet in the packet tree after the entire
-         * packet tree has been read from file.  This can be used to
-         * update the packet contents according to information that might
-         * not have been read from file when readPacket() was initially
-         * called.
-         *
-         * Generally this routine will do nothing.
-         *
-         * It is guaranteed that
-         * this routine will be called for every packet in the tree as
-         * soon as the entire tree is read.
-         *
-         * The default implementation does nothing.  If this routine is
-         * ever overridden, it must be sure to begin by calling its
-         * superclass implementation.
-         *
-         * \ifaces Not present.
-         */
-        virtual void tidyReadPacket();
     
     protected:
         /**
@@ -824,7 +804,7 @@ inline void NPacket::setPacketLabel(const std::string& newLabel) {
 }
 
 inline std::string NPacket::getFullName() const {
-    return packetLabel + " (" + getPacketName() + ")";
+    return packetLabel + " (" + getPacketTypeName() + ")";
 }
 
 inline NPacket* NPacket::getTreeParent() const {
@@ -856,9 +836,6 @@ inline unsigned long NPacket::getNumberOfDescendants() const {
 }
 
 inline void NPacket::writePacket(NFile&) const {
-}
-
-inline void NPacket::tidyReadPacket() {
 }
 
 } // namespace regina
