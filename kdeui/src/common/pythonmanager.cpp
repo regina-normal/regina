@@ -48,7 +48,7 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
 }
 
 void PythonManager::openPythonReference(QWidget* parent) {
-    QString index = QString(REGINA_DATADIR) + "/engine-docs/index.html";
+    QString index = QString(REGINA_DATADIR) + "/engine-docs/modules.html";
     if (QFileInfo(index).exists())
         KApplication::kApplication()->invokeBrowser("file:" + index);
     else

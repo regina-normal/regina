@@ -28,6 +28,8 @@ Version 4.1.3  [ 25 July, 2004 ]
         - Fixed the massive resource drain while editing a script's
           variable table in a heavily populated data file.
         - Improved handling of keyboard focus.
+        - Changed "Python Reference" to point to the modules index
+          instead of the title page.
 
 Version 4.1.2  [ 14 June, 2004 ]
     OVERALL:
