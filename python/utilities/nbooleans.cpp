@@ -33,10 +33,6 @@ using namespace boost::python;
 using regina::NBoolSet;
 
 void addNBoolSet() {
-    // Static member functions are not yet properly supported
-    // in boost.python.
-    def("NBoolSet_fromByteCode", NBoolSet::fromByteCode);
-
     scope s = class_<NBoolSet>("NBoolSet")
         .def(init<bool>())
         .def(init<const NBoolSet&>())
@@ -65,6 +61,8 @@ void addNBoolSet() {
         .def(~ self)
         .def("getByteCode", &NBoolSet::getByteCode)
         .def("setByteCode", &NBoolSet::setByteCode)
+        .def("fromByteCode", &NBoolSet::fromByteCode)
+        .staticmethod("fromByteCode")
         .def(self_ns::str(self))
     ;
 
