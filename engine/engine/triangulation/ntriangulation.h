@@ -67,7 +67,7 @@ class NXMLTriangulationReader;
  * When the triangulation is deleted, the corresponding
  * tetrahedra, the cellular structure and all other properties
  * will be deallocated.
- * 
+ *
  * Faces, edges, vertices and components are always temporary;
  * whenever a change
  * occurs with the triangulation, these will be deleted and a new
@@ -124,7 +124,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
     private:
         bool calculatedSkeleton;
             /**< Has the skeleton been calculated? */
-            
+
         NIndexedArray<NTetrahedron*, HashPointer> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
         NIndexedArray<NFace*, HashPointer> faces;
@@ -138,7 +138,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
         NIndexedArray<NBoundaryComponent*, HashPointer> boundaryComponents;
             /**< The components that form the boundary of the
                  triangulation. */
-        
+
         bool valid;
             /**< Is the triangulation valid? */
         bool ideal;
@@ -211,7 +211,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
         /**
          * (end: Constructors and Destructors)
          */
-        
+
         /**
          * \name Packet Administration
          */
@@ -219,7 +219,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
 
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
-        
+
         virtual void writePacket(NFile& out) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -263,7 +263,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * This routine will ensure the skeleton is calculated, since
          * other skeleton objects can be accessed from NTetrahedron.
-         * 
+         *
          * @param index specifies which tetrahedron to return; this
          * value should be between 0 and getNumberOfTetrahedra()-1
          * inclusive.
@@ -348,7 +348,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
         void removeAllTetrahedra();
         /**
          * This \b must be called whenever the gluings of tetrahedra are
-         * changed! 
+         * changed!
          * Clears appropriate properties and performs other
          * necessary tasks.
          * The responsibility of calling gluingsHaveChanged()
@@ -356,7 +356,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * component of a triangulation editor, or so on).
          */
         void gluingsHaveChanged();
-                
+
         /*@}*/
         /**
          * (end: Tetrahedra)
@@ -946,7 +946,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \name Skeletal Transformations
          */
         /*@{*/
-        
+
         /**
          * Produces a maximal forest in the 1-skeleton of the
          * triangulation boundary.
@@ -1073,7 +1073,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * only if any simplifications are possible.
          */
         bool simplifyToLocalMinimum(bool perform = true);
-        
+
         /**
          * Checks the eligibility of and/or performs a 3-2 move
          * about the given edge.
@@ -1389,8 +1389,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * does not change and the number of vertices of the triangulation
          * decreases by one.
          *
-         * This can be done assuming the following conditions.
-         *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
@@ -1404,13 +1402,16 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
          *
-         * @param e the edge about which to perform the move.
+         * \todo \bug The restrictions on allowing this move to take
+         * place are currently too strong and rule out some valid cases.
+         *
+         * @param e the edge to collapse.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
+         * if and only if the given edge may be collapsed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          *
@@ -1554,7 +1555,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
-         * 
+         *
          * @param dehydration a dehydrated representation of the
          * triangulation to insert.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
@@ -1604,7 +1605,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * will be cloned.
          */
         void cloneFrom(const NTriangulation& from);
-        
+
     private:
         void deleteTetrahedra();
             /**< Deallocates all tetrahedra and empties the list. */
