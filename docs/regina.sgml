@@ -168,101 +168,123 @@
 
  <chapter id="jython">
   <title>&jython; and Scripting</title>
-  <para>
-   All scripts are run in &jython;.  &jython; is almost identical to standard
-   python (&cpython;) with a few exceptions that are probably insignificant in
-   this arena.  See <ulink url="http://www.jython.org">www.jython.org</ulink>
-   for more details. 
-  </para>
-  <para>
-   When using &jython;, &java; objects, classes and methods can be directly
-   accessed as if they were &jython; objects, classes and methods.  The
-   <link linkend="autodocs">engine documentation</link> describes in
-   detail the classes that form the engine, packets and other objects
-   that can be manipulated in the program.
-  </para>
-  <para>
-   Wherever &regina; gives you access to &jython;, you may assume that the
-   <parameter>java</parameter> and <parameter>normal</parameter>
-   modules have been imported (thus giving you access to
-   everything beneath them).  If you need access to packets from a file
-   you currently have open, your best choice is to create a new script
-   packet, where you can set variables equal to other packets in the file
-   before the script is run. 
-  </para>
-  <warning><para>
-   Probably the easiest way to crash the program is to bring up
-   a &jython; console and do something untoward.  &jython; and scripting offer
-   very low-level control over the engine, but also provide the
-   associated dangers.  The general idea is that &jython; gives you
-   direct access to the C++ calculation engine and the &java; interface has
-   no way of knowing what you are tinkering with.  Thus you should tread
-   gently. 
-  </para></warning>
-  <para>
-   Whenever packets belonging to an open file are changed through a
-   script or console, you should always refresh the corresponding packet
-   subtree(s) in the main window (a button is provided below the tree for
-   this purpose).  This will automatically update any open packet viewers
-   or editors, so there is no need to update each of these separately.
-   This will also make the user interface find any new packets that have
-   been inserted into the subtree(s) and detect any renaming that has taken
-   place. 
-  </para>
-  <para>
-   You should <emphasis>never</emphasis> use a script or console to
-   delete a packet belonging to a file that is still open!
-   This can only lead to tears.  Instead delete packets
-   using the <guimenuitem>Delete</guimenuitem> button/menu item
-   provided in the main window. 
-  </para>
-  <para>
-   If you cannot edit a packet through the GUI, there is a reason for
-   this (for instance, a normal surface list will rely upon its parent
-   triangulation remaining constant and so any triangulation with child
-   surface lists will be uneditable).  Thus you should not use &jython; as a
-   way to get around that barrier; instead you should respect that
-   barrier.  Perhaps you can clone the packet in question without cloning
-   its descendants (<menuchoice>
-    <guimenu>Packet</guimenu>
-    <guisubmenu>Clone</guisubmenu>
-    <guimenuitem>Exclude Descendants</guimenuitem>
-   </menuchoice>); the clone then should be editable.
-  </para>
- </chapter>
 
- <chapter id="autodocs">
-  <title>Engine and &java; UI Documentation</title>
-  <para>
-   Some documentation has been generated from the fairly extensive
-   comments within the &regina; sources.  Available documentation includes:
-   <glosslist>
-    <glossentry>
-     <glossterm>
-      <ulink url="engine/GeneralNotes.html">Calculation Engine API</ulink>
-     </glossterm>
-     <glossdef><para>
-      This is a complete reference for the &regina; calculation engine.
-      It is a useful reference when writing
-      <link linkend="jython">&jython; scripts</link>; be sure to read
-      the <ulink url="engine/InterfaceNotes.html">interface notes page</ulink>
-      and the <ulink url="engine/JavaNotes.html">&java; notes page</ulink>
-      that accompany it.
-     </para></glossdef>
-    </glossentry>
-    <glossentry>
-     <glossterm>
-      <ulink url="javaui/index.html">&java; User Interface API</ulink>
-     </glossterm>
-     <glossdef><para>
-      This documentation is only useful if you wish to understand or
-      extend the sources to the &java; user interface.
-     </para></glossdef>
-    </glossentry>
-   </glosslist>
- </chapter>
+  <sect1 id="jython-overview">
+   <title>Scripting Overview</title>
+   <para>
+    &regina; contains inbuilt scripting, which offers you fine control
+    over the underlying calculation engine and enables you to automate
+    large amounts of processing using the underlying &jython;
+    programming language.  Scripts can be written and run from within
+    &regina;, and a well-written script can relieve you of much work
+    that would otherwise have to be painstakingly done by hand
+    through the point-and-click interface.
+   </para>
+   <para>
+    Scripting is available in &regina; through two means.  You can
+    either bring up a &jython; console through the
+    <guimenu>Tools</guimenu> menu or the corresponding toolbar button,
+    or you can create a new script packet.  Script packets have the
+    advantage that you can work with other packets in the same file
+    (this is done by setting script variables), and script packets will
+    be saved with the file for later reuse.
+   </para>
+   <para>
+    All scripts are run in &jython;.  &jython; is an interpreted
+    language that is almost identical to standard
+    python (&cpython;) with a few exceptions that are probably insignificant in
+    this arena.  See <ulink url="http://www.jython.org">www.jython.org</ulink>
+    for more details. 
+   </para>
+   <para>
+    When using &jython;, &java; objects, classes and methods can be directly
+    accessed as if they were &jython; objects, classes and methods.  The
+    <link linkend="autodocs">engine documentation</link> describes in
+    detail the classes that form the engine, packets and other objects
+    that can be manipulated in the program.
+   </para>
+   <para>
+    Wherever &regina; gives you access to &jython;, you may assume that the
+    <parameter>java</parameter> and <parameter>normal</parameter>
+    modules have been imported (thus giving you access to
+    everything beneath them).  If you need access to packets from a file
+    you currently have open, your best choice is to create a new script
+    packet, where you can set variables equal to other packets in the file
+    before the script is run. 
+   </para>
+   <warning><para>
+    Probably the easiest way to crash the program is to bring up
+    a &jython; console and do something untoward.  &jython; and scripting offer
+    very low-level control over the engine, but also provide the
+    associated dangers.  The general idea is that &jython; gives you
+    direct access to the C++ calculation engine and the &java; interface has
+    no way of knowing what you are tinkering with.  Thus you should tread
+    gently. 
+   </para></warning>
+   <para>
+    Whenever packets belonging to an open file are changed through a
+    script or console, you should always refresh the corresponding packet
+    subtree(s) in the main window (a button is provided below the tree for
+    this purpose).  This will automatically update any open packet viewers
+    or editors, so there is no need to update each of these separately.
+    This will also make the user interface find any new packets that have
+    been inserted into the subtree(s) and detect any renaming that has taken
+    place. 
+   </para>
+   <para>
+    You should <emphasis>never</emphasis> use a script or console to
+    delete a packet belonging to a file that is still open!
+    This can only lead to tears.  Instead delete packets
+    using the <guimenuitem>Delete</guimenuitem> button/menu item
+    provided in the main window. 
+   </para>
+   <para>
+    If you cannot edit a packet through the GUI, there is a reason for
+    this (for instance, a normal surface list will rely upon its parent
+    triangulation remaining constant and so any triangulation with child
+    surface lists will be uneditable).  Thus you should not use &jython; as a
+    way to get around that barrier; instead you should respect that
+    barrier.  Perhaps you can clone the packet in question without cloning
+    its descendants (<menuchoice>
+     <guimenu>Packet</guimenu>
+     <guisubmenu>Clone</guisubmenu>
+     <guimenuitem>Exclude Descendants</guimenuitem>
+    </menuchoice>); the clone then should be editable.
+   </para>
+  </sect1>
 
- &reginatrouble;
+  <sect1 id="autodocs">
+   <title>Engine and &java; UI Documentation</title>
+   <para>
+    Some documentation has been generated from the fairly extensive
+    comments within the &regina; sources.  Available documentation includes:
+    <glosslist>
+     <glossentry>
+      <glossterm>
+       <ulink url="engine/GeneralNotes.html">Calculation Engine API</ulink>
+      </glossterm>
+      <glossdef><para>
+       This is a complete reference for the &regina; calculation engine.
+       It is a useful reference when writing
+       <link linkend="jython">&jython; scripts</link>; be sure to read
+       the <ulink url="engine/InterfaceNotes.html">interface notes page</ulink>
+       and the <ulink url="engine/JavaNotes.html">&java; notes page</ulink>
+       that accompany it.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>
+       <ulink url="javaui/index.html">&java; User Interface API</ulink>
+      </glossterm>
+      <glossdef><para>
+       This documentation is only useful if you wish to understand or
+       extend the sources to the &java; user interface.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+  </sect1>
+ </chapter>
 
  <chapter id="acknowledgements">
   <title>License and Acknowledgements</title>
@@ -314,6 +336,8 @@
  </chapter>
 
  &reginaman;
+
+ &reginatrouble;
 
  <appendix id="history">
   <title>Version History</title>
