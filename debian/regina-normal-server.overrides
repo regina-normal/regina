@@ -1,4 +1,0 @@
-# We explicitly depend on a newer omniorb due to a nasty bug in the
-# older versions.
-
-regina-normal-server: package-has-a-duplicate-relation omniorb

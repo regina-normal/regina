@@ -143,7 +143,7 @@ install: build
 	rm -f $(htmldir)/*.txt
 	rm -f $(htmldir)/*.hs
 	rm -f $(htmldir)/*.jhm
-	rm -f $(htmldir)/images/COPYING.txt
+	rm -f $(htmldir)/images/admon/COPYING.txt
 
 	# Install the man pages.
 	$(INSTALL_DIR) $(mandir)/man1
@@ -173,8 +173,6 @@ install: build
 	# Install overrides.
 	$(INSTALL_DIR) $(overrides)
 	$(INSTALL_FILE) debian/regina-normal.overrides $(overrides)/regina-normal
-	$(INSTALL_FILE) debian/regina-normal-server.overrides \
-		$(overrides)/regina-normal-server
 
 # Build architecture-independent files here.
 binary-indep: build install
