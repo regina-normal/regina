@@ -5,6 +5,10 @@ Regina can be used.
     These are topology data files.  They can be opened directly from within
     the user interface.
 
+*.rga.gz:
+    These are compressed topology data files.  You can use gunzip to
+    uncompressed them.
+
 *.session:
     These are complete transcripts of sample Jython sessions, including
     both user input and program output.  You can start a Jython session

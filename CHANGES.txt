@@ -1,6 +1,8 @@
 
 Regina - A Normal Surface Theory Calculator
 
+    OVERALL:
+        - Added SnapPea census to examples.
     ENGINE:
         Overall structure:
             - Moved engine/imports to engine/foreign.
@@ -8,7 +10,6 @@ Regina - A Normal Surface Theory Calculator
             - Added toString().
         Routine writeSnapPea():
             - Added.
-
     JAVA USER INTERFACE:
         Overall structure:
             - Added readline/editline support using Bablok's wrapper classes.
