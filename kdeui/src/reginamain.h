@@ -35,7 +35,7 @@
 
 #include "reginaview.h"
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <kparts/mainwindow.h>
 
 class KRecentFilesAction;
@@ -135,6 +135,7 @@ class ReginaMain : public KParts::MainWindow {
          * Overridden to handle window closing.
          */
         virtual bool queryClose();
+        virtual bool queryExit();
 
     signals:
         /**
@@ -170,6 +171,7 @@ class ReginaMain : public KParts::MainWindow {
 
         void changeStatusbar(const QString& text);
         void changeCaption(const QString& text);
+        void newToolbarConfig();
 
     private:
         /**
@@ -214,7 +216,7 @@ inline void ReginaMain::setAutoFileExtension(bool value) {
 }
 
 inline void ReginaMain::readOptions() {
-    readOptions(kapp->config());
+    readOptions(KGlobal::config());
 }
 
 #endif

@@ -68,7 +68,10 @@ ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina" ),
     statusBar()->show();
 
     // Read the configuration.
-    readOptions(kapp->config());
+    readOptions(KGlobal::config());
+
+    // Don't forget to save toolbar/etc settings.
+    setAutoSaveSettings(QString::fromLatin1("MainWindow"), true);
 }
 
 void ReginaMain::setDisplayIcon(bool value) {
@@ -101,6 +104,7 @@ void ReginaMain::dropEvent(QDropEvent *event) {
 
 void ReginaMain::saveProperties(KConfig *config) {
     // Argument config represents the session managed config file.
+    // TODO: Get this working.
     if (currentPart) {
         QString url = currentPart->url().url();
         if (url != QString::null)
@@ -117,6 +121,11 @@ void ReginaMain::readProperties(KConfig *config) {
 
 bool ReginaMain::queryClose() {
     return (currentPart ? currentPart->closeURL() : true);
+}
+
+bool ReginaMain::queryExit() {
+    saveOptions();
+    return true;
 }
 
 void ReginaMain::openURL(const KURL& url) {
@@ -227,8 +236,11 @@ void ReginaMain::optionsConfigureKeys() {
 }
 
 void ReginaMain::optionsConfigureToolbars() {
-    // TODO: Something real nasty going on here.
+    saveMainWindowSettings(KGlobal::config(),
+        QString::fromLatin1("MainWindow"));
+
     KEditToolbar dlg(factory());
+    connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
     dlg.exec();
 }
 
@@ -243,6 +255,16 @@ void ReginaMain::changeStatusbar(const QString& text) {
 
 void ReginaMain::changeCaption(const QString& text) {
     setCaption(text);
+}
+
+void ReginaMain::newToolbarConfig() {
+    applyMainWindowSettings(KGlobal::config(),
+        QString::fromLatin1("MainWindow"));
+
+    // Work around a bug that messes up the newly created GUI.
+    createGUI(0);
+    createShellGUI(false);
+    createGUI(currentPart);
 }
 
 void ReginaMain::setupActions() {
@@ -295,7 +317,7 @@ void ReginaMain::readOptions(KConfig* config) {
 }
 
 void ReginaMain::saveOptions() {
-    KConfig* config = kapp->config();
+    KConfig* config = KGlobal::config();
 
     // Save the current set of preferences.
     config->setGroup("Display");
