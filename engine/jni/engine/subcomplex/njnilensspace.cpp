@@ -28,37 +28,36 @@
 
 #include "subcomplex/nlensspace.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNILensSpace.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_getP
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLensSpace, me)->getP();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_getQ
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLensSpace, me)->getQ();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_isEquivalentTo
         (JNIEnv *env, jobject me, jobject you) {
     return (*GET_ENGINE_OBJECT(env, NLensSpace, me) ==
         *GET_ENGINE_OBJECT(env, NLensSpace, you));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_newNJNILensSpace__JJ
         (JNIEnv *env, jobject me, jlong p, jlong q) {
     ASSIGN_ENGINE_OBJECT(env, new NLensSpace(p, q), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_newNJNILensSpace__Lnormal_engine_subcomplex_NLensSpace_2
         (JNIEnv *env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env, new NLensSpace(

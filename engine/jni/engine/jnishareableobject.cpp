@@ -28,44 +28,43 @@
 
 #include "shareableobject.h"
 #include "jnitools.h"
-#include "engine/JNIShareableObject.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_destroy
         (JNIEnv *env, jobject me) {
     delete GET_ENGINE_OBJECT(env, ShareableObject, me);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_sameCppPtr
         (JNIEnv *, jclass, jlong ptr1, jlong ptr2) {
     return (javaLongToPtr(ptr1) == javaLongToPtr(ptr2));
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_toString
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, ShareableObject, me)->toString());
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_toStringLong
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, ShareableObject, me)->toStringLong());
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_writeTextLong
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, ShareableObject, me)->writeTextLong(std::cout);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_writeTextShort
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, ShareableObject, me)->writeTextShort(std::cout);

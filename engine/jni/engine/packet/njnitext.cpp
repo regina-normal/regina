@@ -28,31 +28,30 @@
 
 #include "packet/ntext.h"
 #include "jnitools.h"
-#include "engine/packet/NJNIText.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_getText
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NText, me)->getText());
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_newNText__
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NText(), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_newNText__Ljava_lang_String_2
         (JNIEnv *env, jobject me, jstring newText) {
     ASSIGN_ENGINE_OBJECT(env, new NText(jstringToCString(env, newText)), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_setText
         (JNIEnv *env, jobject me, jstring newText) {
     GET_ENGINE_OBJECT(env, NText, me)->setText(jstringToCString(env, newText));

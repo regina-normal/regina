@@ -29,12 +29,11 @@
 #include "subcomplex/nsnappedball.h"
 #include "triangulation/ntetrahedron.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNISnappedBall.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -42,31 +41,31 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getBoundaryFace
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getBoundaryFace(index);
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getEquatorEdge
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getEquatorEdge();
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getInternalEdge
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getInternalEdge();
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getInternalFace
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NSnappedBall, me)->getInternalFace(index);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_getTetrahedron
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,

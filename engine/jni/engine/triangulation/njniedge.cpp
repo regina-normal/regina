@@ -32,12 +32,11 @@
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/ntetrahedron.h"
 #include "jnitools.h"
-#include "engine/triangulation/NJNIEdge.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getBoundaryComponent
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -45,7 +44,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIBoundaryComponent");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getComponent
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -53,7 +52,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIComponent");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getEmbedding
         (JNIEnv *env, jobject me, jlong index) {
     NEdge* edge = GET_ENGINE_OBJECT(env, NEdge, me);
@@ -73,13 +72,13 @@ JNIEXPORT jobject JNICALL
         embedding.getEdge());
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getNumberOfEmbeddings
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NEdge, me)->getNumberOfEmbeddings();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getVertex
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -87,13 +86,13 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_isBoundary
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NEdge, me)->isBoundary();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_isValid
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NEdge, me)->isValid();

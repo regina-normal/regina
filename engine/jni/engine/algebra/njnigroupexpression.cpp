@@ -28,42 +28,41 @@
 
 #include "algebra/ngrouppresentation.h"
 #include "jnitools.h"
-#include "engine/algebra/NJNIGroupExpression.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_addTermFirst
         (JNIEnv *env, jobject me, jlong gen, jlong exp) {
     GET_ENGINE_OBJECT(env, NGroupExpression, me)->addTermFirst(gen, exp);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_addTermLast
         (JNIEnv *env, jobject me, jlong gen, jlong exp) {
     GET_ENGINE_OBJECT(env, NGroupExpression, me)->addTermLast(gen, exp);
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_getExponent
         (JNIEnv *env, jobject me, jlong index) {
     return GET_ENGINE_OBJECT(env, NGroupExpression, me)->getExponent(index);
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_getGenerator
         (JNIEnv *env, jobject me, jlong index) {
     return GET_ENGINE_OBJECT(env, NGroupExpression, me)->getGenerator(index);
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_getNumberOfTerms
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NGroupExpression, me)->getNumberOfTerms();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_inverse
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, GET_ENGINE_OBJECT(env,
@@ -71,13 +70,13 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/algebra/NJNIGroupExpression");
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_newNGroupExpression__
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NGroupExpression(), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_newNGroupExpression__Lnormal_engine_algebra_NGroupExpression_2
         (JNIEnv *env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env,
@@ -85,7 +84,7 @@ JNIEXPORT void JNICALL
         me);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_power
         (JNIEnv *env, jobject me, jlong exp) {
     return CREATE_WRAPPER_OBJECT(env, GET_ENGINE_OBJECT(env,
@@ -93,13 +92,13 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/algebra/NJNIGroupExpression");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_simplify
         (JNIEnv *env, jobject me, jboolean cyclic) {
     return GET_ENGINE_OBJECT(env, NGroupExpression, me)->simplify(cyclic);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_substitute
         (JNIEnv *env, jobject me, jlong gen, jobject expansion,
         jboolean cyclic) {

@@ -28,12 +28,11 @@
 
 #include "progress/nprogressmanager.h"
 #include "jnitools.h"
-#include "engine/progress/NJNIProgressManager.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgressManager_getProgress
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -42,19 +41,19 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/progress/NJNIProgress");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgressManager_isFinished
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NProgressManager, me)->isFinished();
 }
  
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgressManager_isStarted
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NProgressManager, me)->isStarted();
 }
  
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgressManager_newNProgressManager
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NProgressManager(), me);

@@ -29,12 +29,11 @@
 #include "subcomplex/nlayeredloop.h"
 #include "triangulation/nedge.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNILayeredLoop.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -42,19 +41,19 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNILayeredLoop");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_getIndex
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredLoop, me)->getIndex();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_isTwisted
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredLoop, me)->isTwisted();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_getHinge
         (JNIEnv *env, jobject me, jint which) {
     return CREATE_WRAPPER_OBJECT(env,

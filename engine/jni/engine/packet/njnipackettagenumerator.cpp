@@ -29,27 +29,26 @@
 #include "packet/npacket.h"
 #include "jnitools.h"
 #include "njnienumeration.h"
-#include "engine/packet/NJNIPacketTagEnumerator.h"
 
 using namespace regina;
 using namespace regina::jni;
 
 typedef NJNIEnumeration<std::set<std::string> > NPacketTagEnumerator;
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacketTagEnumerator_hasMoreElements
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NPacketTagEnumerator, me)->hasMoreElements();
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacketTagEnumerator_nextString
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NPacketTagEnumerator,
         me)->nextElement());
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacketTagEnumerator_newPacketTagEnumerator
         (JNIEnv *env, jobject me, jobject packet) {
     ASSIGN_ENGINE_OBJECT(env, new NPacketTagEnumerator(

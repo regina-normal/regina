@@ -29,26 +29,25 @@
 #include "angle/nanglestructure.h"
 #include "triangulation/ntriangulation.h"
 #include "jnitools.h"
-#include "engine/angle/NJNIAngleStructure.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_getAngleDen
         (JNIEnv *env, jobject me, jlong tet, jint edges) {
     return jBigIntegerFromLarge(env, GET_ENGINE_OBJECT(env,
         NAngleStructure, me)->getAngle(tet, edges).getDenominator());
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_getAngleNum
         (JNIEnv *env, jobject me, jlong tet, jint edges) {
     return jBigIntegerFromLarge(env, GET_ENGINE_OBJECT(env,
         NAngleStructure, me)->getAngle(tet, edges).getNumerator());
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_getTriangulation
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -56,13 +55,13 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_isStrict
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAngleStructure, me)->isStrict();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_isTaut
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAngleStructure, me)->isTaut();

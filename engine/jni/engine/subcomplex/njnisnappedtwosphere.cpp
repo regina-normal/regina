@@ -30,12 +30,11 @@
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNISnappedTwoSphere.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -43,7 +42,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_getReducedTriangulation
         (JNIEnv *env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -52,7 +51,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_getSnappedBall
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -60,7 +59,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_reduceTriangulation
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NSnappedTwoSphere, me)->reduceTriangulation();

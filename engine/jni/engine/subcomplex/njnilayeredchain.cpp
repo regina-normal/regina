@@ -29,30 +29,29 @@
 #include "subcomplex/nlayeredchain.h"
 #include "triangulation/ntetrahedron.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNILayeredChain.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_extendAbove
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredChain, me)->extendAbove();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_extendBelow
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredChain, me)->extendBelow();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_extendMaximal
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredChain, me)->extendMaximal();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_getBottom
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -60,20 +59,20 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain__1getBottomVertexRoles
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredChain, me)->getBottomVertexRoles().
         getPermCode();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_getIndex
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredChain, me)->getIndex();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_getTop
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -81,34 +80,34 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain__1getTopVertexRoles
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredChain, me)->getTopVertexRoles().
         getPermCode();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_invert
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NLayeredChain, me)->invert();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_newNJNILayeredChain
         (JNIEnv* env, jobject me, jobject tet, jchar roles) {
     ASSIGN_ENGINE_OBJECT(env, new NLayeredChain(
         GET_ENGINE_OBJECT(env, NTetrahedron, tet), NPerm(roles)), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_newNJNILayeredChain__Lnormal_engine_subcomplex_NLayeredChain_2
         (JNIEnv* env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env, new NLayeredChain(
         *GET_ENGINE_OBJECT(env, NLayeredChain, you)), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_reverse
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NLayeredChain, me)->reverse();

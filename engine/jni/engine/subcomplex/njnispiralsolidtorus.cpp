@@ -29,12 +29,11 @@
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntriangulation.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNISpiralSolidTorus.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISpiralSolidTorus_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -42,20 +41,20 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISpiralSolidTorus");
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISpiralSolidTorus_cycle
         (JNIEnv *env, jobject me, jlong index) {
     GET_ENGINE_OBJECT(env, NSpiralSolidTorus, me)->cycle(index);
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISpiralSolidTorus_getNumberOfTetrahedra
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSpiralSolidTorus, me)->
         getNumberOfTetrahedra();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISpiralSolidTorus_getTetrahedron
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -63,28 +62,28 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISpiralSolidTorus__1getVertexRoles
         (JNIEnv *env, jobject me, jlong index) {
     return GET_ENGINE_OBJECT(env, NSpiralSolidTorus, me)->getVertexRoles(index).
         getPermCode();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISpiralSolidTorus_isCanonical
         (JNIEnv *env, jobject me, jobject tri) {
     return GET_ENGINE_OBJECT(env, NSpiralSolidTorus, me)->isCanonical(
         GET_ENGINE_OBJECT(env, NTriangulation, tri));
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISpiralSolidTorus_makeCanonical
         (JNIEnv *env, jobject me, jobject tri) {
     return GET_ENGINE_OBJECT(env, NSpiralSolidTorus, me)->makeCanonical(
         GET_ENGINE_OBJECT(env, NTriangulation, tri));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISpiralSolidTorus_reverse
         (JNIEnv* env, jobject me) {
     GET_ENGINE_OBJECT(env, NSpiralSolidTorus, me)->reverse();

@@ -28,12 +28,11 @@
 
 #include "subcomplex/nlayeredlensspace.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNILayeredLensSpace.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -41,26 +40,26 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNILayeredLensSpace");
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getMobiusBoundaryGroup
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->
         getMobiusBoundaryGroup();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getP
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->getP();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getQ
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->getQ();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_getTorus
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, (NLayeredSolidTorus*)
@@ -68,13 +67,13 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_isSnapped
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->isSnapped();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_isTwisted
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredLensSpace, me)->isTwisted();

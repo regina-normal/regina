@@ -29,19 +29,18 @@
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "jnitools.h"
-#include "engine/triangulation/NJNITetrahedron.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getAdjacentFace
         (JNIEnv *env, jobject me, jint face) {
     return (jint)GET_ENGINE_OBJECT(env, NTetrahedron, me)->
         getAdjacentFace(face);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getAdjacentTetrahedron
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -49,14 +48,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron__1getAdjacentTetrahedronGluing
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NTetrahedron, me)->
         getAdjacentTetrahedronGluing(index).getPermCode();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getComponent
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -64,14 +63,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIComponent");
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getDescription
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NTetrahedron, me)->
         getDescription());
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getEdge
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -79,14 +78,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIEdge");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron__1getEdgeMapping
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NTetrahedron, me)->getEdgeMapping(index).
         getPermCode();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getFace
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -94,14 +93,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIFace");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron__1getFaceMapping
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NTetrahedron, me)->getFaceMapping(index).
         getPermCode();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getVertex
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -109,46 +108,46 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_hasBoundary
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTetrahedron, me)->hasBoundary();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_isolate
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NTetrahedron, me)->isolate();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron__1joinTo
         (JNIEnv *env, jobject me, jint myFace, jobject you, jchar gluing) {
     GET_ENGINE_OBJECT(env, NTetrahedron, me)->joinTo(myFace,
         GET_ENGINE_OBJECT(env, NTetrahedron, you), NPerm(gluing));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_newNTetrahedron__
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NTetrahedron(), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_newNTetrahedron__Ljava_lang_String_2
         (JNIEnv *env, jobject me, jstring desc) {
     ASSIGN_ENGINE_OBJECT(env,
         new NTetrahedron(jstringToCString(env, desc)), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_setDescription
         (JNIEnv *env, jobject me, jstring newDesc) {
     GET_ENGINE_OBJECT(env, NTetrahedron, me)->setDescription(
         jstringToCString(env, newDesc));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_unjoin
         (JNIEnv *env, jobject me, jint face) {
     return CREATE_WRAPPER_OBJECT(env,

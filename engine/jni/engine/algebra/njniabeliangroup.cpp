@@ -28,45 +28,44 @@
 
 #include "algebra/nabeliangroup.h"
 #include "jnitools.h"
-#include "engine/algebra/NJNIAbelianGroup.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addGroup__Lnormal_engine_algebra_NAbelianGroup_2
         (JNIEnv* env, jobject me, jobject group) {
     GET_ENGINE_OBJECT(env, NAbelianGroup, me)->
         addGroup(*GET_ENGINE_OBJECT(env, NAbelianGroup, group));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addGroup__Lnormal_engine_utilities_NMatrixInt_2
         (JNIEnv* env, jobject me, jobject presentation) {
     GET_ENGINE_OBJECT(env, NAbelianGroup, me)->
         addGroup(*GET_ENGINE_OBJECT(env, NMatrixInt, presentation));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addRank
         (JNIEnv* env, jobject me, jint extraRank) {
     GET_ENGINE_OBJECT(env, NAbelianGroup, me)->addRank(extraRank);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addTorsionElement__JI
         (JNIEnv* env, jobject me, jlong degree, jint mult) {
     GET_ENGINE_OBJECT(env, NAbelianGroup, me)->addTorsionElement(degree, mult);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addTorsionElement__Ljava_math_BigInteger_2I
         (JNIEnv* env, jobject me, jobject degree, jint mult) {
     GET_ENGINE_OBJECT(env, NAbelianGroup, me)->
         addTorsionElement(jBigIntegerToLarge(env, degree), mult);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addTorsionElements
         (JNIEnv* env, jobject me, jobject torsion) {
     std::multiset<NLargeInteger> list;
@@ -82,47 +81,47 @@ JNIEXPORT void JNICALL
     GET_ENGINE_OBJECT(env, NAbelianGroup, me)->addTorsionElements(list);
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_getNumberOfInvariantFactors
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAbelianGroup, me)->
         getNumberOfInvariantFactors();
 }
  
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_getInvariantFactor
         (JNIEnv *env, jobject me, jlong index) {
     return jBigIntegerFromLarge(env,
         GET_ENGINE_OBJECT(env, NAbelianGroup, me)->getInvariantFactor(index));
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_getRank
         (JNIEnv* env, jobject me) {
     return (jint)GET_ENGINE_OBJECT(env, NAbelianGroup, me)->getRank();
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_getTorsionRank__J
         (JNIEnv* env, jobject me, jlong degree) {
     return (jint)GET_ENGINE_OBJECT(env, NAbelianGroup, me)->
         getTorsionRank(degree);
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_getTorsionRank__Ljava_math_BigInteger_2
         (JNIEnv* env, jobject me, jobject degree) {
     return (jint)GET_ENGINE_OBJECT(env, NAbelianGroup, me)->
         getTorsionRank(jBigIntegerToLarge(env, degree));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_newNAbelianGroup__
         (JNIEnv* env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NAbelianGroup(), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_newNAbelianGroup__Lnormal_engine_algebra_NAbelianGroup_2
         (JNIEnv* env, jobject me, jobject cloneMe) {
     ASSIGN_ENGINE_OBJECT(env,

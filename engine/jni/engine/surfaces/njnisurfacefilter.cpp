@@ -28,39 +28,38 @@
 
 #include "surfaces/nsurfacefilter.h"
 #include "jnitools.h"
-#include "engine/surfaces/NJNISurfaceFilter.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilter_accept
         (JNIEnv *env, jobject me, jobject you) {
     return GET_ENGINE_OBJECT(env, NSurfaceFilter, me)->accept(
         *GET_ENGINE_OBJECT(env, NNormalSurface, you));
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilter_getFilterID
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSurfaceFilter, me)->getFilterID();
 }
 
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilter_getFilterName
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NSurfaceFilter, me)->
         getFilterName());
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilter_newNSurfaceFilter__
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NSurfaceFilter(), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilter_newNSurfaceFilter__Lnormal_engine_surfaces_NSurfaceFilter_2
         (JNIEnv *env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env, new NSurfaceFilter(

@@ -29,31 +29,30 @@
 #include "angle/nanglestructurelist.h"
 #include "triangulation/ntriangulation.h"
 #include "jnitools.h"
-#include "engine/angle/NJNIAngleStructureList.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_allowsStrict
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAngleStructureList, me)->allowsStrict();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_allowsTaut
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAngleStructureList, me)->allowsTaut();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_getNumberOfStructures
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAngleStructureList, me)->
         getNumberOfStructures();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_getStructure
         (JNIEnv* env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -62,7 +61,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/angle/NJNIAngleStructure");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_getTriangulation
         (JNIEnv* env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, GET_ENGINE_OBJECT(env,
@@ -70,7 +69,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
-JNIEXPORT void JNICALL Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_newNAngleStructureList
+REGJNIEXPORT void JNICALL Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_newNAngleStructureList
         (JNIEnv* env, jobject me, jobject triangulation) {
     ASSIGN_ENGINE_OBJECT(env, new NAngleStructureList(
         GET_ENGINE_OBJECT(env, NTriangulation, triangulation)), me);

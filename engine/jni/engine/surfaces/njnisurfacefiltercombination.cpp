@@ -28,31 +28,30 @@
 
 #include "surfaces/sfcombination.h"
 #include "jnitools.h"
-#include "engine/surfaces/NJNISurfaceFilterCombination.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilterCombination_getUsesAnd
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSurfaceFilterCombination, me)->getUsesAnd();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilterCombination_newNSurfaceFilterCombination__
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NSurfaceFilterCombination(), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilterCombination_newNSurfaceFilterCombination__Lnormal_engine_surfaces_NSurfaceFilterCombination_2
         (JNIEnv *env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env, new NSurfaceFilterCombination(
         *GET_ENGINE_OBJECT(env, NSurfaceFilterCombination, you)), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilterCombination_setUsesAnd
         (JNIEnv *env, jobject me, jboolean value) {
     GET_ENGINE_OBJECT(env, NSurfaceFilterCombination, me)->setUsesAnd(value);

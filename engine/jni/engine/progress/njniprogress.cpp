@@ -28,55 +28,54 @@
 
 #include "progress/nprogress.h"
 #include "jnitools.h"
-#include "engine/progress/NJNIProgress.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_cancel
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NProgress, me)->cancel();
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_getDescription
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NProgress, me)->getDescription());
 }
 
-JNIEXPORT jdouble JNICALL
+REGJNIEXPORT jdouble JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_getPercent
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NProgress, me)->getPercent();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_hasChanged
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NProgress, me)->hasChanged();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_isCancellable
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NProgress, me)->isCancellable();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_isCancelled
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NProgress, me)->isCancelled();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_isFinished
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NProgress, me)->isFinished();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_isPercent
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NProgress, me)->isPercent();

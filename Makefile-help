@@ -17,11 +17,10 @@ docsman - build the man pages
 docs - build all auto-generated documentation
 ... (all above targets are made beneath docs/)
 
-prepengine - build all auto-generated sources for the calculation engine
-prepjni - build all auto-generated JNI header files
-prepcleanjni - remove all auto-generated JNI header files
-prepclean - remove all auto-generated sources
-prep - build all auto-generated source files
+prep - build all required auto-generated source files
+prepclean - remove all required auto-generated source files
+prepjni - build (unnecessary) auto-generated JNI header files
+prepcleanjni - remove auto-generated JNI header files
 
 run - run the Java user interface using the full GUI with a JNI engine
 runconsole - run the Java UI using only a console window with a JNI engine

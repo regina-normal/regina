@@ -32,12 +32,11 @@
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/ntetrahedron.h"
 #include "jnitools.h"
-#include "engine/triangulation/NJNIFace.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getBoundaryComponent
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -45,7 +44,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIBoundaryComponent");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getComponent
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -53,7 +52,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIComponent");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getEdge
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -61,14 +60,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIEdge");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace__1getEdgeMapping
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NFace, me)->getEdgeMapping(index).
         getPermCode();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getEmbedding
         (JNIEnv *env, jobject me, jint index) {
     NFace* face = GET_ENGINE_OBJECT(env, NFace, me);
@@ -87,25 +86,25 @@ JNIEXPORT jobject JNICALL
     return env->NewObject(embClass, constructor, tet, embedding.getFace());
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getNumberOfEmbeddings
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFace, me)->getNumberOfEmbeddings();
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getSubtype
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFace, me)->getSubtype();
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getType
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFace, me)->getType();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_getVertex
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -113,19 +112,19 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_isBoundary
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFace, me)->isBoundary();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_isCone
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFace, me)->isCone();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIFace_isMobiusBand
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFace, me)->isMobiusBand();

@@ -28,24 +28,23 @@
 
 #include "packet/nscript.h"
 #include "jnitools.h"
-#include "engine/packet/NJNIScript.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_addFirst
         (JNIEnv *env, jobject me, jstring str) {
     GET_ENGINE_OBJECT(env, NScript, me)->addFirst(jstringToCString(env, str));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_addLast
         (JNIEnv *env, jobject me, jstring str) {
     GET_ENGINE_OBJECT(env, NScript, me)->addLast(jstringToCString(env, str));
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_addVariable
         (JNIEnv *env, jobject me, jstring name, jstring value) {
     return GET_ENGINE_OBJECT(env, NScript, me)->addVariable(
@@ -53,84 +52,84 @@ JNIEXPORT jboolean JNICALL
 }
 
 
-JNIEXPORT jstring JNICALL 
+REGJNIEXPORT jstring JNICALL 
         Java_normal_engine_implementation_jni_packet_NJNIScript_getLine
         (JNIEnv *env, jobject me, jlong index) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NScript, me)->
         getLine(index));
 }
 
-JNIEXPORT jlong JNICALL Java_normal_engine_implementation_jni_packet_NJNIScript_getNumberOfLines
+REGJNIEXPORT jlong JNICALL Java_normal_engine_implementation_jni_packet_NJNIScript_getNumberOfLines
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NScript, me)->getNumberOfLines();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_getNumberOfVariables
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NScript, me)->getNumberOfVariables();
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_getVariableName
         (JNIEnv *env, jobject me, jlong index) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NScript, me)->
         getVariableName(index));
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_getVariableValue__J
         (JNIEnv *env, jobject me, jlong index) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NScript, me)->
         getVariableValue(index));
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_getVariableValue__Ljava_lang_String_2
         (JNIEnv *env, jobject me, jstring name) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NScript, me)->
         getVariableValue(jstringToCString(env, name)));
 }
 
-JNIEXPORT void JNICALL 
+REGJNIEXPORT void JNICALL 
         Java_normal_engine_implementation_jni_packet_NJNIScript_insertAtPosition
         (JNIEnv *env, jobject me, jstring str, jlong index) {
     GET_ENGINE_OBJECT(env, NScript, me)->insertAtPosition(
         jstringToCString(env, str), index);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_newNScript
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NScript(), me);
 }
 
-JNIEXPORT void JNICALL 
+REGJNIEXPORT void JNICALL 
         Java_normal_engine_implementation_jni_packet_NJNIScript_removeAllLines
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NScript, me)->removeAllLines();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_removeAllVariables
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NScript, me)->removeAllVariables();
 }
 
-JNIEXPORT void JNICALL 
+REGJNIEXPORT void JNICALL 
         Java_normal_engine_implementation_jni_packet_NJNIScript_removeLineAt
         (JNIEnv *env, jobject me, jlong index) {
     GET_ENGINE_OBJECT(env, NScript, me)->removeLineAt(index);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_removeVariable
         (JNIEnv *env, jobject me, jstring name) {
     GET_ENGINE_OBJECT(env, NScript, me)->removeVariable(
         jstringToCString(env, name));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_replaceAtPosition
         (JNIEnv *env, jobject me, jstring str, jlong index) {
     GET_ENGINE_OBJECT(env, NScript, me)->replaceAtPosition(

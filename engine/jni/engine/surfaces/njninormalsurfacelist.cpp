@@ -30,12 +30,11 @@
 #include "triangulation/ntriangulation.h"
 #include "maths/nmatrixint.h"
 #include "jnitools.h"
-#include "engine/surfaces/NJNINormalSurfaceList.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_allowsAlmostNormal
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NNormalSurfaceList, me)->
@@ -43,21 +42,21 @@ JNIEXPORT jboolean JNICALL
 }
 
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_getFlavour
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NNormalSurfaceList, me)->
         getFlavour();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_getNumberOfSurfaces
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NNormalSurfaceList, me)->
         getNumberOfSurfaces();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_getSurface
         (JNIEnv* env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -66,7 +65,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/surfaces/NJNINormalSurface");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_getTriangulation
         (JNIEnv* env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, GET_ENGINE_OBJECT(env, NNormalSurfaceList,
@@ -74,14 +73,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_isEmbeddedOnly
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NNormalSurfaceList, me)->
         isEmbeddedOnly();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_newNNormalSurfaceList
         (JNIEnv* env, jobject me, jobject triangulation, jint flavour,
         jboolean embedded) {
@@ -90,7 +89,7 @@ JNIEXPORT void JNICALL
         embedded), me);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_recreateMatchingEquations
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, GET_ENGINE_OBJECT(env, NNormalSurfaceList,

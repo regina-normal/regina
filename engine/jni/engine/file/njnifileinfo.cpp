@@ -28,45 +28,44 @@
 
 #include "file/nfileinfo.h"
 #include "jnitools.h"
-#include "engine/file/NJNIFileInfo.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFileInfo_getPathname
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NFileInfo, me)->
         getPathname());
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFileInfo_getType
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFileInfo, me)->getType();
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFileInfo_getTypeDescription
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NFileInfo, me)->
         getTypeDescription());
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFileInfo_getEngine
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env, GET_ENGINE_OBJECT(env, NFileInfo, me)->
         getEngine());
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFileInfo_isCompressed
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFileInfo, me)->isCompressed();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFileInfo_isInvalid
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NFileInfo, me)->isInvalid();

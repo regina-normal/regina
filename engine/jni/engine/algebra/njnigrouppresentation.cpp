@@ -28,39 +28,38 @@
 
 #include "algebra/ngrouppresentation.h"
 #include "jnitools.h"
-#include "engine/algebra/NJNIGroupPresentation.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_addGenerator
         (JNIEnv *env, jobject me, jlong num) {
     return GET_ENGINE_OBJECT(env, NGroupPresentation, me)->addGenerator(num);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_addRelation
         (JNIEnv *env, jobject me, jobject rel) {
     GET_ENGINE_OBJECT(env, NGroupPresentation, me)->addRelation(
         GET_ENGINE_OBJECT(env, NGroupExpression, rel));
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_getNumberOfGenerators
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NGroupPresentation, me)->
         getNumberOfGenerators();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_getNumberOfRelations
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NGroupPresentation, me)->
         getNumberOfRelations();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_getRelation
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -69,20 +68,20 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/algebra/NJNIGroupExpression");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_intelligentSimplify
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NGroupPresentation, me)->
         intelligentSimplify();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_newNGroupPresentation__
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NGroupPresentation(), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_newNGroupPresentation__Lnormal_engine_algebra_NGroupPresentation_2
         (JNIEnv *env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env,
@@ -90,7 +89,7 @@ JNIEXPORT void JNICALL
         env, NGroupPresentation, you)), me);
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_recogniseGroup
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env,

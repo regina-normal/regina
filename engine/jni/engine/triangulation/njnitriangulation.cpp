@@ -30,31 +30,30 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "jnitools.h"
-#include "engine/triangulation/NJNITriangulation.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_addTetrahedron
         (JNIEnv *env, jobject me, jobject newTet) {
     GET_ENGINE_OBJECT(env, NTriangulation, me)->
         addTetrahedron(GET_ENGINE_OBJECT(env, NTetrahedron, newTet));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_barycentricSubdivision
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NTriangulation, me)->barycentricSubdivision();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_crushMaximalForest
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->crushMaximalForest();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_fourFourMove
         (JNIEnv *env, jobject me, jobject e, jint newAxis, jboolean check,
         jboolean perform) {
@@ -62,7 +61,7 @@ JNIEXPORT jboolean JNICALL
         GET_ENGINE_OBJECT(env, NEdge, e), newAxis, check, perform);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getBoundaryComponent
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -71,14 +70,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIBoundaryComponent");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getBoundaryComponentIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getBoundaryComponents().
         index(GET_ENGINE_OBJECT(env, NBoundaryComponent, tet));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getComponent
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -86,14 +85,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIComponent");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getComponentIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getComponents().
         index(GET_ENGINE_OBJECT(env, NComponent, tet));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getEdge
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -101,20 +100,20 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIEdge");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getEdgeIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getEdges().
         index(GET_ENGINE_OBJECT(env, NEdge, tet));
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getEulerCharacteristic
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getEulerCharacteristic();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFace
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -122,14 +121,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIFace");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFaceIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getFaces().
         index(GET_ENGINE_OBJECT(env, NFace, tet));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFundamentalGroup
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -138,7 +137,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/algebra/NJNIGroupPresentation");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getHomologyH1
         (JNIEnv *env, jobject me) {
     // (NAbelianGroup*) casting removes the const because
@@ -150,7 +149,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/algebra/NJNIAbelianGroup");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getHomologyH1Bdry
         (JNIEnv *env, jobject me) {
     // (NAbelianGroup*) casting removes the const because
@@ -162,7 +161,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/algebra/NJNIAbelianGroup");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getHomologyH1Rel
         (JNIEnv *env, jobject me) {
     // (NAbelianGroup*) casting removes the const because
@@ -174,7 +173,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/algebra/NJNIAbelianGroup");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getHomologyH2
         (JNIEnv *env, jobject me) {
     // (NAbelianGroup*) casting removes the const because
@@ -186,50 +185,50 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/algebra/NJNIAbelianGroup");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getHomologyH2Z2
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getHomologyH2Z2();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getNumberOfBoundaryComponents
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation,
         me)->getNumberOfBoundaryComponents();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getNumberOfComponents
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getNumberOfComponents();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getNumberOfEdges
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getNumberOfEdges();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getNumberOfFaces
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getNumberOfFaces();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getNumberOfTetrahedra
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getNumberOfTetrahedra();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getNumberOfVertices
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getNumberOfVertices();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getTetrahedron
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -237,14 +236,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getTetrahedronIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->
         getTetrahedronIndex(GET_ENGINE_OBJECT(env, NTetrahedron, tet));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getVertex
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -252,38 +251,38 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getVertexIndex
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getVertices().
         index(GET_ENGINE_OBJECT(env, NVertex, tet));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_gluingsHaveChanged
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NTriangulation, me)->gluingsHaveChanged();
 }
   
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_hasBoundaryFaces
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->hasBoundaryFaces();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_hasSplittingSurface
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->hasSplittingSurface();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_idealToFinite
         (JNIEnv *env, jobject me, jboolean force) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->idealToFinite(force);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertLayeredSolidTorus
         (JNIEnv *env, jobject me, jlong cuts0, jlong cuts1) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -292,113 +291,113 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertLensSpace
         (JNIEnv *env, jobject me, jlong p, jlong q) {
     GET_ENGINE_OBJECT(env, NTriangulation, me)->insertLensSpace(p, q);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertRehydration
         (JNIEnv *env, jobject me, jstring str) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->insertRehydration(
         jstringToCString(env, str));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertTriangulation
         (JNIEnv *env, jobject me, jobject source) {
     GET_ENGINE_OBJECT(env, NTriangulation, me)->insertTriangulation(
         *(GET_ENGINE_OBJECT(env, NTriangulation, source)));
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_intelligentSimplify
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->intelligentSimplify();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_isClosed
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isClosed();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_isConnected
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isConnected();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_isIdeal
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isIdeal();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_isIsomorphicTo
         (JNIEnv *env, jobject me, jobject you) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isIsomorphicTo(
         *GET_ENGINE_OBJECT(env, NTriangulation, you));
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_isOrientable
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isOrientable();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_isStandard
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isStandard();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_isValid
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isValid();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_isZeroEfficient
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->isZeroEfficient();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_knowsSplittingSurface
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->knowsSplittingSurface();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_knowsZeroEfficient
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->knowsZeroEfficient();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_makeDoubleCover
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NTriangulation, me)->makeDoubleCover();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_newNTriangulation__
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NTriangulation(), me);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_newNTriangulation__Lnormal_engine_triangulation_NTriangulation_2
         (JNIEnv *env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env, new NTriangulation(
         *GET_ENGINE_OBJECT(env, NTriangulation, you)), me);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_openBook
         (JNIEnv *env, jobject me, jobject f, jboolean check,
         jboolean perform) {
@@ -406,27 +405,27 @@ JNIEXPORT jboolean JNICALL
         GET_ENGINE_OBJECT(env, NFace, f), check, perform);
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_removeAllTetrahedra
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NTriangulation, me)->removeAllTetrahedra();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_removeTetrahedron
         (JNIEnv *env, jobject me, jobject tet) {
     delete GET_ENGINE_OBJECT(env, NTriangulation, me)->
         removeTetrahedron(GET_ENGINE_OBJECT(env, NTetrahedron, tet));
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_removeTetrahedronAt
         (JNIEnv *env, jobject me, jlong index) {
     delete GET_ENGINE_OBJECT(env, NTriangulation, me)->
         removeTetrahedronAt(index);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_shellBoundary
         (JNIEnv *env, jobject me, jobject t, jboolean check,
         jboolean perform) {
@@ -434,14 +433,14 @@ JNIEXPORT jboolean JNICALL
         GET_ENGINE_OBJECT(env, NTetrahedron, t), check, perform);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_simplifyToLocalMinimum
         (JNIEnv *env, jobject me, jboolean perform) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->
         simplifyToLocalMinimum(perform);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_threeTwoMove
         (JNIEnv *env, jobject me, jobject e, jboolean check,
         jboolean perform) {
@@ -449,7 +448,7 @@ JNIEXPORT jboolean JNICALL
         GET_ENGINE_OBJECT(env, NEdge, e), check, perform);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_twoOneMove
         (JNIEnv *env, jobject me, jobject e, jint edgeEnd, jboolean check,
         jboolean perform) {
@@ -457,7 +456,7 @@ JNIEXPORT jboolean JNICALL
         GET_ENGINE_OBJECT(env, NEdge, e), edgeEnd, check, perform);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_twoThreeMove
         (JNIEnv *env, jobject me, jobject f, jboolean check,
         jboolean perform) {
@@ -465,7 +464,7 @@ JNIEXPORT jboolean JNICALL
         GET_ENGINE_OBJECT(env, NFace, f), check, perform);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_twoZeroMove__Lnormal_engine_triangulation_NEdge_2ZZ
         (JNIEnv *env, jobject me, jobject e, jboolean check,
         jboolean perform) {
@@ -473,7 +472,7 @@ JNIEXPORT jboolean JNICALL
         GET_ENGINE_OBJECT(env, NEdge, e), check, perform);
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_twoZeroMove__Lnormal_engine_triangulation_NVertex_2ZZ
         (JNIEnv *env, jobject me, jobject v, jboolean check,
         jboolean perform) {

@@ -31,12 +31,11 @@
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/ntetrahedron.h"
 #include "jnitools.h"
-#include "engine/triangulation/NJNIVertex.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_getBoundaryComponent
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -44,7 +43,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIBoundaryComponent");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_getComponent
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -52,7 +51,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIComponent");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_getEmbedding
         (JNIEnv *env, jobject me, jlong index) {
     NVertex* vertex = GET_ENGINE_OBJECT(env, NVertex, me);
@@ -71,49 +70,49 @@ JNIEXPORT jobject JNICALL
     return env->NewObject(embClass, constructor, tet, embedding.getVertex());
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_getLink
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NVertex, me)->getLink();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_getLinkEulerCharacteristic
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NVertex, me)->getLinkEulerCharacteristic();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_getNumberOfEmbeddings
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NVertex, me)->getNumberOfEmbeddings();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_isBoundary
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NVertex, me)->isBoundary();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_isIdeal
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NVertex, me)->isIdeal();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_isLinkClosed
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NVertex, me)->isLinkClosed();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_isLinkOrientable
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NVertex, me)->isLinkOrientable();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIVertex_isStandard
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NVertex, me)->isStandard();

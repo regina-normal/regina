@@ -31,12 +31,11 @@
 #include "triangulation/nedge.h"
 #include "triangulation/nvertex.h"
 #include "jnitools.h"
-#include "engine/triangulation/NJNIBoundaryComponent.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_getEdge
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -44,14 +43,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIEdge");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_getEulerCharacteristic
         (JNIEnv* env, jobject me) {
     return GET_ENGINE_OBJECT(env, NBoundaryComponent, me)->
         getEulerCharacteristic();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_getFace
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -59,26 +58,26 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIFace");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_getNumberOfEdges
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NBoundaryComponent, me)->getNumberOfEdges();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_getNumberOfFaces
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NBoundaryComponent, me)->getNumberOfFaces();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_getNumberOfVertices
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NBoundaryComponent, me)->
         getNumberOfVertices();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_getVertex
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -86,13 +85,13 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_isIdeal
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NBoundaryComponent, me)->isIdeal();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIBoundaryComponent_isOrientable
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NBoundaryComponent, me)->isOrientable();

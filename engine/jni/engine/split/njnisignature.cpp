@@ -29,25 +29,24 @@
 #include "split/nsignature.h"
 #include "triangulation/ntriangulation.h"
 #include "jnitools.h"
-#include "engine/split/NJNISignature.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_split_NJNISignature_getOrder
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSignature, me)->getOrder();
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_split_NJNISignature_newNSignature
         (JNIEnv *env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env,
         new NSignature(*GET_ENGINE_OBJECT(env, NSignature, you)), me);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_split_NJNISignature_triangulate
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,

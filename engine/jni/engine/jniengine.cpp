@@ -28,7 +28,6 @@
 
 #include "regina.h"
 
-#include "engine/JNIEngine.h"
 #include "jnitools.h"
 #include "registry/makejnpacket.h"
 #include "triangulation/ntriangulation.h"
@@ -51,7 +50,7 @@
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_enterTextTriangulation
         (JNIEnv *env, jobject) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -59,7 +58,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_JNIEngine__1formCensus
         (JNIEnv *env, jobject, jobject parent, jint nTets,
         jchar flag1, jchar flag2, jchar flag3, jint nBdryFaces,
@@ -71,7 +70,7 @@ JNIEXPORT jlong JNICALL
         nBdryFaces, GET_ENGINE_OBJECT(env, NProgressManager, manager));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_formsPillowTwoSphere
         (JNIEnv *env, jobject me, jobject f1, jobject f2) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -81,7 +80,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNIPillowTwoSphere");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_formsSnappedTwoSphere__Lnormal_engine_subcomplex_NSnappedBall_2Lnormal_engine_subcomplex_NSnappedBall_2
         (JNIEnv *env, jobject me, jobject p1, jobject p2) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -91,7 +90,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_formsSnappedTwoSphere__Lnormal_engine_triangulation_NTetrahedron_2Lnormal_engine_triangulation_NTetrahedron_2
         (JNIEnv *env, jobject me, jobject p1, jobject p2) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -101,25 +100,25 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISnappedTwoSphere");
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_getVersionMajor
         (JNIEnv *env, jobject me) {
     return ENGINE_VERSION_MAJOR;
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_getVersionMinor
         (JNIEnv *env, jobject me) {
     return ENGINE_VERSION_MINOR;
 }
 
-JNIEXPORT jstring JNICALL
+REGJNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_getVersionString
         (JNIEnv *env, jobject me) {
     return env->NewStringUTF(ENGINE_VERSION);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_identifyFileInfo
         (JNIEnv *env, jobject me, jstring pathname) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -127,7 +126,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/file/NJNIFileInfo");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_isAugTriSolidTorus
         (JNIEnv *env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -136,7 +135,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNIAugTriSolidTorus");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_isLayeredLensSpace
         (JNIEnv *env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -145,7 +144,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNILayeredLensSpace");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_isLayeredLoop
         (JNIEnv *env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -154,7 +153,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNILayeredLoop");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_isLayeredSolidTorusBase
         (JNIEnv* env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -163,7 +162,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_isSnappedBall
         (JNIEnv* env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -171,7 +170,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISnappedBall");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine__1isSpiralSolidTorus
         (JNIEnv* env, jobject me, jobject tet, jchar perm) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -181,7 +180,7 @@ JNIEXPORT jobject JNICALL
 }
 
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine__1isTriSolidTorus
         (JNIEnv* env, jobject me, jobject tet, jchar perm) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -191,7 +190,7 @@ JNIEXPORT jobject JNICALL
 }
 
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_makeMatchingEquations
         (JNIEnv *env, jobject, jobject source, jint flavour) {
     return CREATE_WRAPPER_OBJECT(env, makeMatchingEquations(
@@ -199,7 +198,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIMatrixInt");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_parseSignature
         (JNIEnv *env, jobject me, jstring sig) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -207,25 +206,25 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/split/NJNISignature");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_readFileMagic
         (JNIEnv *env, jobject me, jstring file) {
     return makeJNPacket(env, readFileMagic(jstringToCString(env, file)));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_readFromFile
         (JNIEnv *env, jobject me, jstring file) {
     return makeJNPacket(env, readFromFile(jstringToCString(env, file).c_str()));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_readXMLFile
         (JNIEnv *env, jobject me, jstring file) {
     return makeJNPacket(env, readXMLFile(jstringToCString(env, file).c_str()));
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_readSnapPea
         (JNIEnv *env, jobject me, jstring file) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -233,19 +232,19 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_smithNormalForm
         (JNIEnv *env, jobject, jobject matrix) {
     smithNormalForm(*GET_ENGINE_OBJECT(env, NMatrixInt, matrix));
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_testEngine
         (JNIEnv*, jobject, jint value) {
     return value;
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_writeSnapPea
         (JNIEnv *env, jobject me, jstring file, jobject tri) {
     const char* textChars = env->GetStringUTFChars(file, 0);
@@ -255,7 +254,7 @@ JNIEXPORT jboolean JNICALL
     return ans;
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_writeToFile
         (JNIEnv *env, jobject me, jstring file, jobject tree) {
     const char* textChars = env->GetStringUTFChars(file, 0);
@@ -264,7 +263,7 @@ JNIEXPORT jboolean JNICALL
     return ans;
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_writeXMLFile
         (JNIEnv *env, jobject me, jstring file, jobject tree, jboolean comp) {
     const char* textChars = env->GetStringUTFChars(file, 0);

@@ -31,32 +31,31 @@
 #include "triangulation/ntriangulation.h"
 #include "jnitools.h"
 #include "registry/javasurfacesetregistry.h"
-#include "engine/surfaces/NJNISurfaceSubset.h"
 
 #define __JAVA_SURFACE_SET_REGISTRY_BODY
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jboolean JNICALL 
+REGJNIEXPORT jboolean JNICALL 
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceSubset_allowsAlmostNormal
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSurfaceSubset, me)->allowsAlmostNormal();
 }
 
-JNIEXPORT jint JNICALL 
+REGJNIEXPORT jint JNICALL 
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceSubset_getFlavour
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSurfaceSubset, me)->getFlavour();
 }
 
-JNIEXPORT jlong JNICALL 
+REGJNIEXPORT jlong JNICALL 
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceSubset_getNumberOfSurfaces
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSurfaceSubset, me)->getNumberOfSurfaces();
 }
 
-JNIEXPORT jobject JNICALL 
+REGJNIEXPORT jobject JNICALL 
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceSubset_getSurface
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -65,7 +64,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/surfaces/NJNINormalSurface");
 }
 
-JNIEXPORT jobject JNICALL 
+REGJNIEXPORT jobject JNICALL 
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceSubset_getTriangulation
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, GET_ENGINE_OBJECT(env, NSurfaceSubset,
@@ -73,7 +72,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
-JNIEXPORT jboolean JNICALL 
+REGJNIEXPORT jboolean JNICALL 
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceSubset_isEmbeddedOnly
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NSurfaceSubset, me)->isEmbeddedOnly();
@@ -83,7 +82,7 @@ JNIEXPORT jboolean JNICALL
     else if (env->IsInstanceOf(set, env->FindClass(javaInterface))) \
         realSet = GET_ENGINE_OBJECT(env, cppClass, set);
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceSubset_newNSurfaceSubset
         (JNIEnv *env, jobject me, jobject set, jobject filter) {
     NSurfaceSet* realSet = 0;

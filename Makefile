@@ -76,12 +76,12 @@ helprun :
 	binengine binenginejni binenginelib \
 	binjava binjavaui binjavajni binjni binutils bindocs bin \
 	docsengine docsjava docshtml docsman docsrtf docstex docsdvi docspdf docs \
-	prepengine prepjni prepcleanjni prepclean prep \
+	prep prepclean prepjni prepcleanjni \
 	run runconsole runtext debug \
 	clean purge
 
 binengine : binenginelib binenginejni
-binenginejni : prepjni
+binenginejni :
 	cd engine && $(MAKE) binjni
 binenginelib :
 	cd engine && $(MAKE) binlib
@@ -125,13 +125,12 @@ docs : docsengine docsjava docshtml docsman $(DOC_LICENSE)
 $(DOC_LICENSE) : $(LICENSE)
 	$(COPY) $(LICENSE) $(DOC_LICENSE)
 
-prepengine : prepjni
+prep :
+prepclean :
 prepjni : binjavaui binjavajni
 	cd engine && $(MAKE) prepjni
 prepcleanjni :
 	cd engine && $(MAKE) prepcleanjni
-prepclean : prepcleanjni
-prep : prepengine
 
 run : binenginejni binjavaui binjavajni
 	./regina --gui --jni

@@ -29,12 +29,11 @@
 #include "subcomplex/ntrisolidtorus.h"
 #include "triangulation/ntetrahedron.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNITriSolidTorus.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNITriSolidTorus_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -42,7 +41,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNITriSolidTorus");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNITriSolidTorus_getTetrahedron
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -50,7 +49,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNITriSolidTorus__1getVertexRoles
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NTriSolidTorus, me)->getVertexRoles(index).

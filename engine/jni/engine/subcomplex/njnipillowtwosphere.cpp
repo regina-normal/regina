@@ -30,12 +30,11 @@
 #include "triangulation/nface.h"
 #include "triangulation/ntriangulation.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNIPillowTwoSphere.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -43,7 +42,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNIPillowTwoSphere");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_getFace
         (JNIEnv *env, jobject me, jint index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -51,14 +50,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIFace");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere__1getFaceMapping
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->
         getFaceMapping().getPermCode();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_getReducedTriangulation
         (JNIEnv *env, jobject me, jobject you) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -67,7 +66,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITriangulation");
 }
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_reduceTriangulation
         (JNIEnv *env, jobject me) {
     GET_ENGINE_OBJECT(env, NPillowTwoSphere, me)->reduceTriangulation();

@@ -28,12 +28,11 @@
 
 #include "subcomplex/naugtrisolidtorus.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNIAugTriSolidTorus.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -41,7 +40,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNIAugTriSolidTorus");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getAugTorus
         (JNIEnv *env, jobject me, jint i) {
     return CREATE_WRAPPER_OBJECT(env, (NLayeredSolidTorus*)
@@ -49,7 +48,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getCore
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, (NTriSolidTorus*)
@@ -57,14 +56,14 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNITriSolidTorus");
 }
 
-JNIEXPORT jchar JNICALL
+REGJNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus__1getEdgeGroupRoles
         (JNIEnv *env, jobject me, jint i) {
     return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->
         getEdgeGroupRoles(i).getPermCode();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getSeifertStructure
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env, (NSFS*)
@@ -72,19 +71,19 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNISFS");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getChainLength
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getChainLength();
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getTorusAnnulus
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getTorusAnnulus();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_hasLayeredChain
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->hasLayeredChain();

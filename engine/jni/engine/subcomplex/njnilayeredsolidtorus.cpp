@@ -29,12 +29,11 @@
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "triangulation/ntetrahedron.h"
 #include "jnitools.h"
-#include "engine/subcomplex/NJNILayeredSolidTorus.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_cloneMe
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -42,7 +41,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBase
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -50,54 +49,54 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseEdge
         (JNIEnv *env, jobject me, jint group, jint index) {
     return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
         getBaseEdge(group, index);
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseEdgeGroup
         (JNIEnv *env, jobject me, jint i) {
     return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
         getBaseEdgeGroup(i);
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getBaseFace
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->getBaseFace(index);
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getMeridinalCuts
         (JNIEnv *env, jobject me, jint i) {
     return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
         getMeridinalCuts(i);
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopEdge
         (JNIEnv *env, jobject me, jint group, jint index) {
     return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
         getTopEdge(group, index);
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopEdgeGroup
         (JNIEnv *env, jobject me, jint i) {
     return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->
         getTopEdgeGroup(i);
 }
 
-JNIEXPORT jint JNICALL
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopFace
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->getTopFace(index);
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getTopLevel
         (JNIEnv *env, jobject me) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -105,7 +104,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_getNumberOfTetrahedra
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredSolidTorus, me)->

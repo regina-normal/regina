@@ -28,12 +28,11 @@
 
 #include "packet/ncontainer.h"
 #include "jnitools.h"
-#include "engine/packet/NJNIContainer.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT void JNICALL
+REGJNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIContainer_newNContainer
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NContainer(), me);

@@ -32,12 +32,11 @@
 #include "triangulation/nedge.h"
 #include "triangulation/nvertex.h"
 #include "jnitools.h"
-#include "engine/triangulation/NJNIComponent.h"
 
 using namespace regina;
 using namespace regina::jni;
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getBoundaryComponent
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -45,7 +44,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIBoundaryComponent");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getEdge
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -53,7 +52,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIEdge");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getFace
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -61,38 +60,38 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIFace");
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getNumberOfBoundaryComponents
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NComponent, me)->
         getNumberOfBoundaryComponents();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getNumberOfEdges
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NComponent, me)->getNumberOfEdges();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getNumberOfFaces
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NComponent, me)->getNumberOfFaces();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getNumberOfTetrahedra
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NComponent, me)->getNumberOfTetrahedra();
 }
 
-JNIEXPORT jlong JNICALL
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getNumberOfVertices
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NComponent, me)->getNumberOfVertices();
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getTetrahedron
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -100,7 +99,7 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNITetrahedron");
 }
 
-JNIEXPORT jobject JNICALL
+REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getVertex
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
@@ -108,19 +107,19 @@ JNIEXPORT jobject JNICALL
         "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_isClosed
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NComponent, me)->isClosed();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_isIdeal
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NComponent, me)->isIdeal();
 }
 
-JNIEXPORT jboolean JNICALL
+REGJNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_isOrientable
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NComponent, me)->isOrientable();
