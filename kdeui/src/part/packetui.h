@@ -477,6 +477,8 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         void packetWasChanged(regina::NPacket* packet);
         void packetWasRenamed(regina::NPacket* packet);
         void packetToBeDestroyed(regina::NPacket* packet);
+        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child);
 
     signals:
         /**

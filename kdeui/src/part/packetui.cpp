@@ -395,6 +395,8 @@ void PacketPane::deregisterEditOperation(KAction* act, EditOperation op) {
 }
 
 void PacketPane::packetWasChanged(regina::NPacket*) {
+    // Assume it's this packet.
+
     // Ignore this if we're responsible for the event.
     if (isCommitting)
         return;
@@ -424,11 +426,25 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
 }
 
 void PacketPane::packetWasRenamed(regina::NPacket*) {
+    // Assume it's this packet.
     header->refresh();
 }
 
 void PacketPane::packetToBeDestroyed(regina::NPacket*) {
+    // Assume it's this packet.
     closeForce();
+}
+
+void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
+    // Assume it's this packet.
+    if (packet->isPacketEditable() != readWrite)
+        setReadWrite(!readWrite);
+}
+
+void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*) {
+    // Assume it's this packet.
+    if (packet->isPacketEditable() != readWrite)
+        setReadWrite(!readWrite);
 }
 
 void PacketPane::refresh() {
