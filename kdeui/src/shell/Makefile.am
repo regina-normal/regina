@@ -8,6 +8,7 @@
 
 KDE_OPTIONS=noautodist
 
+AM_CXXFLAGS = '-DREGINA_DATADIR=$(pkgdatadir)'
 INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
