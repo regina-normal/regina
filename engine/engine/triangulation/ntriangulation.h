@@ -88,14 +88,14 @@ class NXMLTriangulationReader;
  *
  * \testpart
  *
- * \todo \featureurgent Am I obviously a handlebody?  (Simplify and see
- * if there is nothing left).  Am I obviously not a handlebody?
- * (Compare homology with boundary homology).
  * \todo \feature Is the boundary incompressible?
  * \todo \feature Add set of cusps and three corresponding get functions.
  * \todo \feature Make 0-efficient.
  * \todo \feature Insert a SFS with 3 exceptional fibres.
  * \todo \featurelong Am I a sphere?
+ * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
+ * if there is nothing left).  Am I obviously not a handlebody?
+ * (Compare homology with boundary homology).
  * \todo \featurelong Is the triangulation Haken?
  * \todo \featurelong What is the Heegaard genus?
  * \todo \featurelong Have a subcomplex as a child packet of a
