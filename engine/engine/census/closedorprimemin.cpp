@@ -29,6 +29,7 @@
 #include <sstream>
 #include "census/ncensus.h"
 #include "census/ngluingperms.h"
+#include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
@@ -230,8 +231,8 @@ void NGluingPerms::findAllPermsClosedOrPrimeMin(const NFacePairing* pairing,
     // In this generation algorithm, the orientation array counts
     // forwards or backwards from zero according to how many times the
     // orientation has been set/verified.
-    std::fill(orientation, orientation + nTetrahedra, 0);
-    std::fill(permIndices, permIndices + nTetrahedra * 4, -1);
+    std::fill(orientation, orientation + nTets, 0);
+    std::fill(permIndices, permIndices + nTets * 4, -1);
 
     int orderElt = 0;
     orientation[order[0].tet] = 1;
@@ -264,7 +265,7 @@ void NGluingPerms::findAllPermsClosedOrPrimeMin(const NFacePairing* pairing,
         permIndex(adj) = allPermsS3Inv[permIndex(face)];
 
         // Is this going to lead to an unwanted triangulation?
-        if (mayPurge(face, NCensus::PURGE_NON_MINIMAL_PRIME, true))
+        if (mayPurge(face, NCensus::PURGE_NON_MINIMAL_PRIME, true, true))
             continue;
 
         // Fix the orientation if appropriate.
@@ -281,7 +282,7 @@ void NGluingPerms::findAllPermsClosedOrPrimeMin(const NFacePairing* pairing,
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (face.tet == (int)nTetrahedra) {
+        if (face.tet == (int)nTets) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             canonical = true;
