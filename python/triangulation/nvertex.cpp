@@ -38,7 +38,7 @@ using regina::NVertex;
 using regina::NVertexEmbedding;
 
 namespace {
-    boost::python::list getEmbeddings_list(const NVertex* v) {
+    boost::python::list vertex_getEmbeddings_list(const NVertex* v) {
         const std::vector<NVertexEmbedding>& embs = v->getEmbeddings();
         std::vector<NVertexEmbedding>::const_iterator it;
 
@@ -60,7 +60,7 @@ void addNVertex() {
 
     scope s = class_<NVertex, bases<regina::ShareableObject>,
             std::auto_ptr<NVertex>, boost::noncopyable>("NVertex", no_init)
-        .def("getEmbeddings", getEmbeddings_list)
+        .def("getEmbeddings", vertex_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &NVertex::getNumberOfEmbeddings)
         .def("getEmbedding", &NVertex::getEmbedding,
             return_internal_reference<>())

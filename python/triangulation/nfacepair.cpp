@@ -33,11 +33,11 @@ using namespace boost::python;
 using regina::NFacePair;
 
 namespace {
-    void inc_operator(NFacePair& p) {
+    void facepair_inc_operator(NFacePair& p) {
         p++;
     }
 
-    void dec_operator(NFacePair& p) {
+    void facepair_dec_operator(NFacePair& p) {
         p--;
     }
 }
@@ -56,8 +56,8 @@ void addNFacePair() {
         .def(self > self)
         .def(self <= self)
         .def(self >= self)
-        .def("inc", inc_operator)
-        .def("dec", dec_operator)
+        .def("inc", facepair_inc_operator)
+        .def("dec", facepair_dec_operator)
     ;
 }
 

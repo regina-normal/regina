@@ -53,7 +53,7 @@ namespace {
     std::string (*edgeDescription_perm)(const NPerm&) =
         &regina::edgeDescription;
 
-    int getItem(const NPerm& p, int index) {
+    int perm_getItem(const NPerm& p, int index) {
         return p[index];
     }
 }
@@ -73,7 +73,7 @@ void addNPerm() {
         .def(self * self)
         .def("inverse", &NPerm::inverse)
         .def("sign", &NPerm::sign)
-        .def("__getitem__", getItem)
+        .def("__getitem__", perm_getItem)
         .def("preImageOf", &NPerm::preImageOf)
         .def(self == self)
         .def(self != self)

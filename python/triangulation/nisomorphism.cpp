@@ -36,7 +36,7 @@ namespace {
     int (NIsomorphism::*tetImage_const)(unsigned) const =
         &NIsomorphism::tetImage;
 
-    regina::NTetFace getItem(const NIsomorphism& iso,
+    regina::NTetFace iso_getItem(const NIsomorphism& iso,
             const regina::NTetFace& f) {
         return iso[f];
     }
@@ -49,7 +49,7 @@ void addNIsomorphism() {
         .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
         .def("tetImage", tetImage_const)
         .def("facePerm", &NIsomorphism::facePerm)
-        .def("__getitem__", getItem)
+        .def("__getitem__", iso_getItem)
     ;
 }
 

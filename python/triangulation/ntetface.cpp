@@ -33,11 +33,11 @@ using namespace boost::python;
 using regina::NTetFace;
 
 namespace {
-    NTetFace inc_operator(NTetFace& p) {
+    NTetFace tetface_inc_operator(NTetFace& p) {
         return p++;
     }
 
-    NTetFace dec_operator(NTetFace& p) {
+    NTetFace tetface_dec_operator(NTetFace& p) {
         return p--;
     }
 }
@@ -55,8 +55,8 @@ void addNTetFace() {
         .def("setBoundary", &NTetFace::setBoundary)
         .def("setBeforeStart", &NTetFace::setBeforeStart)
         .def("setPastEnd", &NTetFace::setPastEnd)
-        .def("inc", inc_operator)
-        .def("dec", dec_operator)
+        .def("inc", tetface_inc_operator)
+        .def("dec", tetface_dec_operator)
         .def(self == self)
         .def(self < self)
         .def(self <= self)

@@ -45,7 +45,7 @@ namespace {
     GlobalArray<int> edgeStart_arr(regina::edgeStart, 6);
     GlobalArray<int> edgeEnd_arr(regina::edgeEnd, 6);
 
-    boost::python::list getEmbeddings_list(const NEdge* e) {
+    boost::python::list edge_getEmbeddings_list(const NEdge* e) {
         const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
         std::deque<NEdgeEmbedding>::const_iterator it;
 
@@ -68,7 +68,7 @@ void addNEdge() {
 
     class_<NEdge, bases<regina::ShareableObject>,
             std::auto_ptr<NEdge>, boost::noncopyable>("NEdge", no_init)
-        .def("getEmbeddings", getEmbeddings_list)
+        .def("getEmbeddings", edge_getEmbeddings_list)
         .def("getNumberOfEmbeddings", &NEdge::getNumberOfEmbeddings)
         .def("getEmbedding", &NEdge::getEmbedding,
             return_internal_reference<>())
