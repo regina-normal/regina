@@ -16,7 +16,6 @@ General:
 Census:
     - Implement GUI census creation
     * Include closed hyperbolic census
-    * More explicit references for the Regina-generated censuses
 
 Containers:
     - Update container viewers whenever their subtrees change, not just when
