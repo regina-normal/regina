@@ -27,7 +27,6 @@
 /* end stub */
 
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <sstream>
