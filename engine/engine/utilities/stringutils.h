@@ -45,6 +45,8 @@ namespace regina {
  * The deallocation of the new C string is the responsibility of
  * the caller of this routine.
  *
+ * \ifaces Not present.
+ *
  * @param str the C++ string to duplicate.
  * @return the new duplicate C string.
  */

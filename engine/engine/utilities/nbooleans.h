@@ -357,6 +357,8 @@ class NBoolSet {
  * <tt>{ true, false }</tt>, <tt>{ true }</tt>,
  * <tt>{ false }</tt> or <tt>{ }</tt>.
  *
+ * \ifaces Not present.
+ *
  * @param out the output stream to which to write.
  * @param set the boolean set to write.
  * @return a reference to \a out.

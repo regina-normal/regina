@@ -66,6 +66,8 @@ namespace regina {
  * \pre Template parameter <tt>HashFcn</tt> satisfies the requirements of
  * a hash function (with argument type <tt>Data</tt>) according to the
  * Standard Template Library.
+ *
+ * \ifaces Not present.
  */
 template <class Data, class HashFcn = stdhash::hash<Data>,
     class EqualTo = std::equal_to<Data> >
