@@ -7,7 +7,8 @@
 
 <h2><a name="contents">Regina - System Requirements</a></h2>
 
-System requirements for Regina are described in the table below.
+System requirements for building Regina from source
+are described in the table below.
 These tools are available for most GNU/Linux distributions and are
 easily ported to other similar systems.
 <p>
@@ -30,44 +31,58 @@ Legend:
 <p>
 <table border=1>
 <tr><td align=center><b>Component</b></td><td align=center><b>Required For</b></td>
-    <td align=center><b>Version</b></td><td align=center><b>Download From</b></td></tr>
+    <td align=center><b>Version</b></td>
+    <td align=center><b>Website / Package Names</b></td></tr>
 <tr><td bgcolor="#FFA0A0">GNU multiprecision arithmetic library <em>(libgmp)</em></td>
     <td bgcolor="#FFA0A0">Calculation engine</td>
     <td>&gt;= 3</td>
-    <td><a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a></td></tr>
+    <td><a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a><br>
+    libgmp3-dev (DEB)<br>gmp-devel (RPM)</td></tr>
+    </td></tr>
 <tr><td bgcolor="#FFA0A0">GNOME XML library <em>(libxml2)</em></td>
     <td bgcolor="#FFA0A0">Calculation engine</td>
     <td>&gt;= 2.0.0</td>
-    <td><a href="ftp://ftp.gnome.org/pub/gnome/sources/libxml2/">ftp://ftp.gnome.org/.../libxml2/</a></td></tr>
+    <td><a href="ftp://ftp.gnome.org/pub/gnome/sources/libxml2/">ftp://ftp.gnome.org/.../libxml2/</a><br>
+    libxml2-dev (DEB)<br>libxml2-devel (RPM)</td></tr>
+    </td></tr>
 <tr><td bgcolor="#80FF80">Popt command-line parsing library <em>(libpopt)</em></td>
     <td bgcolor="#80FF80">Command-line utilities</td>
     <td>&gt;= 1.3</td>
-    <td><a href="ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.1.x/">ftp://ftp.redhat.com/.../rpm-X.Y.x/</a></td></tr>
+    <td><a href="ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.1.x/">ftp://ftp.redhat.com/.../rpm-X.Y.x/</a><br>
+    libpopt-dev (DEB)<br>popt (RPM)</td></tr>
+    </td></tr>
 <tr><td bgcolor="#80FF80">KDE libraries <em>(kdelibs)</em></td>
     <td bgcolor="#80FF80">Graphical user interface</td>
     <td>KDE &gt;= 3.1 with Qt &gt;= 3.2</td>
-    <td><a href="http://www.kde.org/">http://www.kde.org/</a></td></tr>
+    <td><a href="http://www.kde.org/">http://www.kde.org/</a><br>
+    kdelibs4-dev + libqt3-mt-dev (DEB)<br>
+    kdelibs-devel + qt-devel (RPM)</td></tr>
 <tr><td bgcolor="#FFFF80">Python</td>
     <td bgcolor="#FFFF80">Python scripting</td>
     <td>&gt;= 2.2</td>
-    <td><a href="http://www.python.org/">http://www.python.org/</a></td></tr>
+    <td><a href="http://www.python.org/">http://www.python.org/</a><br>
+    libpython2.3-dev (DEB)<br>python-devel (RPM)</td></tr>
 <tr><td bgcolor="#FFFF80">Boost.Python libraries <em>(libboost_python)</em></td>
     <td bgcolor="#FFFF80">Python scripting</td>
     <td>&gt;= 1.30.1</td>
-    <td><a href="http://www.boost.org/">http://www.boost.org/</a></td></tr>
+    <td><a href="http://www.boost.org/">http://www.boost.org/</a><br>
+    libboost-python-dev (DEB)<br>boost-devel (RPM)</td></tr>
 <tr><td bgcolor="#FFFF80">Perl</td>
     <td bgcolor="#FFFF80">Python scripting</td>
     <td>&gt;= 5</td>
-    <td><a href="http://www.perl.com/pub/a/language/info/software.html">http://www.perl.com/.../software.html</a></td></tr>
+    <td><a href="http://www.perl.com/pub/a/language/info/software.html">http://www.perl.com/.../software.html</a><br>
+    perl (DEB)<br>perl (RPM)</td></tr>
 <tr><td bgcolor="#FFFF80">Doxygen</td>
     <td bgcolor="#FFFF80">Calculation engine API docs</td>
     <td>&gt;= 1.2.2</td>
     <td><a href="http://www.stack.nl/~dimitri/doxygen/">
-        http://www.stack.nl/~dimitri/doxygen/</a></td></tr>
+        http://www.stack.nl/~dimitri/doxygen/</a><br>
+    doxygen (DEB)<br>doxygen (RPM)</td></tr>
 <tr><td bgcolor="#FFFF80">CppUnit</td>
     <td bgcolor="#FFFF80">Test suite</td>
     <td>&gt;= 1.8.0</td>
-    <td><a href="http://cppunit.sourceforge.net/">http://cppunit.sourceforge.net/</a></td></tr>
+    <td><a href="http://cppunit.sourceforge.net/">http://cppunit.sourceforge.net/</a><br>
+    cppunit (DEB)</td></tr>
 </table>
 
 <p>
