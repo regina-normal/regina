@@ -34,6 +34,7 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import normal.Shell;
+import normal.options.NormalOptionSet;
 import btools.gui.*;
 
 /**
@@ -93,15 +94,26 @@ public class ImportFilePane extends JPanel implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         JFileChooser chooser = new JFileChooser();
+		NormalOptionSet options = shell.getOptions();
         chooser.setCurrentDirectory(new File(
-            shell.getOptions().getStringOption("LastDir", ".")));
+            options.getStringOption("LastDir", ".")));
         if (filter != null)
             chooser.setFileFilter(filter);
         chooser.setDialogTitle("Import from...");
         chooser.setSelectedFile(new File(fileName.getText()));
-        if (chooser.showOpenDialog(shell.getPrimaryFrame()) ==
+        if (chooser.showOpenDialog(shell.getPrimaryFrame()) !=
                 chooser.APPROVE_OPTION)
-            fileName.setText(chooser.getSelectedFile().getAbsolutePath());
+			return;
+
+		File chosen = chooser.getSelectedFile();
+        fileName.setText(chosen.getAbsolutePath());
+
+		// Update the system properties.
+		String fileDir = chosen.getParentFile().getAbsolutePath();
+		if (fileDir == null)
+			fileDir = ".";
+		options.setStringOption("LastDir", fileDir);
+		options.writeToFile();
     }
 }
 

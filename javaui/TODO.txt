@@ -25,7 +25,6 @@ Help:
 
 Jython:
 *	Intermediate output in console
-	Support for custom startup commands
 	Check to see whether user libraries are text files
 	Edit libraries from within Regina
 	Syntax highlighting for script editor

@@ -182,19 +182,27 @@ public class ManageJPythonLibraries extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == add) {
 			JFileChooser chooser = new JFileChooser();
+			NormalOptionSet options = shell.getOptions();
 			chooser.setCurrentDirectory(new File(
-				shell.getOptions().getStringOption("LastDir", ".")));
+				options.getStringOption("LastDir", ".")));
 			chooser.setFileFilter(filter);
 			chooser.setDialogTitle("Select Jython library...");
 			if (chooser.showOpenDialog(shell.getPrimaryFrame()) ==
 					chooser.APPROVE_OPTION) {
-				libPaths.addElement(chooser.getSelectedFile().
-					getAbsolutePath());
+				File chosen = chooser.getSelectedFile();
+				libPaths.addElement(chosen.getAbsolutePath());
 				libUse.addElement(new Boolean(true));
 				libTableModel.fireTableRowsInserted(
 					libPaths.size() - 1, libPaths.size() - 1);
 				libTable.scrollRectToVisible(
 					libTable.getCellRect(libPaths.size() - 1, 0, true));
+
+				// Update the system properties.
+				String fileDir = chosen.getParentFile().getAbsolutePath();
+				if (fileDir == null)
+					fileDir = ".";
+				options.setStringOption("LastDir", fileDir);
+				options.writeToFile();
 			}
 		} else if (e.getSource() == remove) {
 			if (libTable.getSelectedRowCount() == 0)

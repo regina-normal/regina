@@ -254,7 +254,7 @@ public class JPythonConsoleFrame extends JFrame {
 		}
 
 		// Update the system properties.
-		String fileDir = dest.getParent();
+		String fileDir = dest.getParentFile().getAbsolutePath();
 		if (fileDir == null)
 			fileDir = ".";
 		options.setStringOption("LastDir", fileDir);
