@@ -5,7 +5,7 @@ dnl Taken from the CppUnit project at http://cppunit.sourceforge.net/.
 dnl
 dnl Licensed under the GNU Lesser General Public License.
 dnl
-AC_DEFUN(AM_PATH_CPPUNIT,
+AC_DEFUN([AM_PATH_CPPUNIT],
 [
 
 AC_ARG_WITH(cppunit-prefix,[  --with-cppunit-prefix=PFX   Prefix where CppUnit is installed (optional)],
