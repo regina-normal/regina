@@ -61,7 +61,7 @@ void NTriangulation::clearAllProperties() {
         delete H1Bdry;
     if (calculatedH2)
         delete H2;
-        
+
     NPropertyHolder::clearAllProperties();
 }
 
@@ -172,7 +172,7 @@ void NTriangulation::writePacket(NFile& out) const {
     TetrahedronIterator it;
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++)
         out.writeString((*it)->getDescription());
-    
+
     // Write the joins to take place.
     tetPos = 0;
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
@@ -194,7 +194,7 @@ void NTriangulation::writePacket(NFile& out) const {
         }
         tetPos++;
     }
-    
+
     // Signify no more joins to take place.
     out.writeLong(-1);
 
