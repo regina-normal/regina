@@ -309,24 +309,41 @@ class NPerm {
  * permutations, and those with odd indices in the array are the odd
  * permutations.
  *
- * Note that the permutations are not necessarily in numerical order.
+ * Note that the permutations are not necessarily in lexicographical order.
  *
  * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm allPermsS4[24];
 
 /**
- * Contains all possible permutations of three elements.  
+ * Contains all possible permutations of four elements in
+ * lexicographical order.
+ *
+ * \ifacesjava This array is a static member of class \a NPerm.
+ */
+extern const NPerm orderedPermsS4[24];
+
+/**
+ * Contains all possible permutations of three elements.
  * In each permutation, 3 maps to 3.
  * The permutations with even indices in the array are the even
  * permutations, and those with odd indices in the array are the odd
  * permutations.
  *
- * Note that the permutations are not necessarily in numerical order.
+ * Note that the permutations are not necessarily in lexicographical order.
  *
  * \ifacesjava This array is a static member of class \a NPerm.
  */
 extern const NPerm allPermsS3[6];
+
+/**
+ * Contains all possible permutations of three elements in
+ * lexicographical order.
+ * In each permutation, 3 maps to 3.
+ *
+ * \ifacesjava This array is a static member of class \a NPerm.
+ */
+extern const NPerm orderedPermsS3[6];
 
 /**
  * Contains all possible permutations of two elements.  
@@ -335,7 +352,7 @@ extern const NPerm allPermsS3[6];
  * permutations, and those with odd indices in the array are the odd
  * permutations.
  *
- * Note that the permutations are not necessarily in numerical order.
+ * Note that the permutations are also in lexicographical order.
  *
  * \ifacesjava This array is a static member of class \a NPerm.
  */

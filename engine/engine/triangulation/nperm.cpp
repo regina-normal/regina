@@ -37,9 +37,24 @@ const NPerm allPermsS4[24] = {
     NPerm(3,1,0,2), NPerm(3,1,2,0), NPerm(3,2,1,0), NPerm(3,2,0,1)
 };
 
+const NPerm orderedPermsS4[24] = {
+    NPerm(0,1,2,3), NPerm(0,1,3,2), NPerm(0,2,1,3), NPerm(0,2,3,1),
+    NPerm(0,3,1,2), NPerm(0,3,2,1), NPerm(1,0,2,3), NPerm(1,0,3,2),
+    NPerm(1,2,0,3), NPerm(1,2,3,0), NPerm(1,3,0,2), NPerm(1,3,2,0),
+    NPerm(2,0,1,3), NPerm(2,0,3,1), NPerm(2,1,0,3), NPerm(2,1,3,0),
+    NPerm(2,3,0,1), NPerm(2,3,1,0), NPerm(3,0,1,2), NPerm(3,0,2,1),
+    NPerm(3,1,0,2), NPerm(3,1,2,0), NPerm(3,2,0,1), NPerm(3,2,1,0)
+};
+
 const NPerm allPermsS3[6] = {
     NPerm(0,1,2,3), NPerm(0,2,1,3),
     NPerm(1,2,0,3), NPerm(1,0,2,3),
+    NPerm(2,0,1,3), NPerm(2,1,0,3)
+};
+
+const NPerm orderedPermsS3[6] = {
+    NPerm(0,1,2,3), NPerm(0,2,1,3),
+    NPerm(1,0,2,3), NPerm(1,2,0,3),
     NPerm(2,0,1,3), NPerm(2,1,0,3)
 };
 
