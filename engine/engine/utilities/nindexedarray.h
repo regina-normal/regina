@@ -39,6 +39,21 @@
 #include "utilities/hashmap.h"
 #include "utilities/hashutils.h"
 
+#ifdef DEBUG_NINDEXEDARRAY
+    #define VALIDATE_NINDEXEDARRAY(where) \
+        if (! validate()) \
+            std::cerr << "Error noticed in: " << where << std::endl;
+    #define VALIDATE_NINDEXEDARRAY_TOP bool __valid = validate(true);
+    #define VALIDATE_NINDEXEDARRAY_BOTTOM(where) \
+        if (__valid) \
+            if (! validate()) \
+                std::cerr << "Error created in: " << where << std::endl;
+#else
+    #define VALIDATE_NINDEXEDARRAY(where)
+    #define VALIDATE_NINDEXEDARRAY_TOP
+    #define VALIDATE_NINDEXEDARRAY_BOTTOM(where)
+#endif
+
 namespace regina {
 
 /**
@@ -60,8 +75,8 @@ namespace regina {
  * <tt>iterator</tt> is the same as type <tt>const_iterator</tt> (and
  * similarly for reverse iterators).
  *
- * Additional routines beyond the C++ standard requirements include index()
- * and erase(const_reference).
+ * Additional routines beyond the C++ standard requirements include index(),
+ * erase(const_reference) and validate().
  *
  * Template parameter <tt>HashFcn</tt> will be used to generate hash
  * values for array elements.
@@ -121,18 +136,21 @@ class NIndexedArray {
          */
         NIndexedArray(size_type n) : objects(n) {
             insertIndices(objects.begin(), objects.end());
+            VALIDATE_NINDEXEDARRAY("NIndexedArray(size_type)")
         }
         /**
          * See the C++ standard.
          */
         NIndexedArray(size_type n, const Data& t) : objects(n, t) {
             insertIndices(objects.begin(), objects.end());
+            VALIDATE_NINDEXEDARRAY("NIndexedArray(size_type, const Data&)")
         }
         /**
          * See the C++ standard.
          */
         NIndexedArray(const NIndexedArray<Data, HashFcn, EqualTo>& array) :
                 objects(array.objects), indices(array.indices) {
+            VALIDATE_NINDEXEDARRAY("NIndexedArray(const NIndexedArray&)")
         }
         /**
          * See the C++ standard.
@@ -141,11 +159,14 @@ class NIndexedArray {
         NIndexedArray(InputIterator first, InputIterator last) :
                 objects(first, last) {
             insertIndices(objects.begin(), objects.end());
+            VALIDATE_NINDEXEDARRAY(
+                "NIndexedArray(InputIterator, InputIterator)")
         }
         /**
          * See the C++ standard.
          */
         ~NIndexedArray() {
+            VALIDATE_NINDEXEDARRAY("~NIndexedArray")
         }
 
         /**
@@ -227,8 +248,10 @@ class NIndexedArray {
          */
         NIndexedArray<Data, HashFcn>& operator =
                 (const NIndexedArray<Data, HashFcn, EqualTo>& array) {
+            VALIDATE_NINDEXEDARRAY_TOP
             objects = array.objects;
             indices = array.indices;
+            VALIDATE_NINDEXEDARRAY_BOTTOM("operator =")
         }
         /**
          * See the C++ standard.
@@ -246,30 +269,38 @@ class NIndexedArray {
          * See the C++ standard.
          */
         void push_back(const Data& item) {
+            VALIDATE_NINDEXEDARRAY_TOP
             indices.insert(std::make_pair(item, objects.size()));
             objects.push_back(item);
+            VALIDATE_NINDEXEDARRAY_BOTTOM("push_back")
         }
         /**
          * See the C++ standard.
          */
         void pop_back() {
+            VALIDATE_NINDEXEDARRAY_TOP
             eraseIndex(objects.size() - 1);
             objects.pop_back();
+            VALIDATE_NINDEXEDARRAY_BOTTOM("pop_back")
         }
         /**
          * See the C++ standard.
          */
         void swap(NIndexedArray<Data, HashFcn>& array) {
+            VALIDATE_NINDEXEDARRAY_TOP
             objects.swap(array.objects);
             indices.swap(array.indices);
+            VALIDATE_NINDEXEDARRAY_BOTTOM("swap")
         }
         /**
          * See the C++ standard.
          */
         iterator insert(iterator pos, const Data& x) {
+            VALIDATE_NINDEXEDARRAY_TOP
             incrementIndices(pos, objects.end(), 1);
             pos = objects.insert(convertIterator(pos), x);
             insertIndices(pos, pos + 1);
+            VALIDATE_NINDEXEDARRAY_BOTTOM("insert(iterator, const Data&)")
             return pos;
         }
         /**
@@ -277,6 +308,7 @@ class NIndexedArray {
          */
         template <class InputIterator>
         void insert(iterator pos, InputIterator first, InputIterator last) {
+            VALIDATE_NINDEXEDARRAY_TOP
             difference_type posIndex = pos - objects.begin();
             difference_type newElts = last - first;
 
@@ -284,30 +316,39 @@ class NIndexedArray {
             objects.insert(convertIterator(pos), first, last);
             pos = objects.begin() + posIndex;
             insertIndices(pos, pos + newElts);
+            VALIDATE_NINDEXEDARRAY_BOTTOM(
+                "insert(iterator, InputIterator, InputIterator)")
         }
         /**
          * See the C++ standard.
          */
         void insert(iterator pos, size_type n, const Data& x) {
+            VALIDATE_NINDEXEDARRAY_TOP
             difference_type posIndex = pos - objects.begin();
 
             incrementIndices(pos, objects.end(), n);
             objects.insert(convertIterator(pos), n, x);
             pos = objects.begin() + posIndex;
             insertIndices(pos, pos + n);
+            VALIDATE_NINDEXEDARRAY_BOTTOM(
+                "insert(iterator, size_type, const Data&)")
         }
         /**
          * See the C++ standard.
          */
         iterator erase(iterator pos) {
+            VALIDATE_NINDEXEDARRAY_TOP
             incrementIndices(pos + 1, objects.end(), -1);
             eraseIndex(pos - objects.begin());
-            return objects.erase(convertIterator(pos));
+            iterator retVal = objects.erase(convertIterator(pos));
+            VALIDATE_NINDEXEDARRAY_BOTTOM("erase(iterator)")
+            return retVal;
         }
         /**
          * See the C++ standard.
          */
         iterator erase(iterator first, iterator last) {
+            VALIDATE_NINDEXEDARRAY_TOP
             difference_type lostElts = last - first;
             incrementIndices(last, objects.end(), -lostElts);
 
@@ -315,14 +356,19 @@ class NIndexedArray {
             for (iterator it = first; it != last; it++)
                 eraseIndex(index++);
 
-            return objects.erase(convertIterator(first), convertIterator(last));
+            iterator retVal =
+                objects.erase(convertIterator(first), convertIterator(last));
+            VALIDATE_NINDEXEDARRAY_BOTTOM("erase(iterator, iterator)")
+            return retVal;
         }
         /**
          * See the C++ standard.
          */
         void clear() {
+            VALIDATE_NINDEXEDARRAY_TOP
             objects.clear();
             indices.clear();
+            VALIDATE_NINDEXEDARRAY_BOTTOM("clear")
         }
         /**
          * See the C++ standard.
@@ -330,6 +376,7 @@ class NIndexedArray {
         void resize(size_type n) {
             if (n == objects.size())
                 return;
+            VALIDATE_NINDEXEDARRAY_TOP
             if (n > objects.size()) {
                 // Increase the size.
                 insert(objects.end(), n - objects.size(), Data());
@@ -337,6 +384,7 @@ class NIndexedArray {
                 // Decrease the size.
                 erase(objects.begin() + n, objects.end());
             }
+            VALIDATE_NINDEXEDARRAY_BOTTOM("resize(size_type)")
         }
         /**
          * See the C++ standard.
@@ -344,6 +392,7 @@ class NIndexedArray {
         void resize(size_type n, const Data& t) {
             if (n == objects.size())
                 return;
+            VALIDATE_NINDEXEDARRAY_TOP
             if (n > objects.size()) {
                 // Increase the size.
                 insert(objects.end(), n - objects.size(), t);
@@ -351,6 +400,7 @@ class NIndexedArray {
                 // Decrease the size.
                 erase(objects.begin() + n, objects.end());
             }
+            VALIDATE_NINDEXEDARRAY_BOTTOM("resize(size_type, const Data&)")
         }
 
         /**
@@ -379,6 +429,7 @@ class NIndexedArray {
          * @param value the object to remove from the array.
          */
         void erase(const_reference value) {
+            VALIDATE_NINDEXEDARRAY_TOP
             std::pair<typename IndexMap::iterator,
                 typename IndexMap::iterator> range =
                 indices.equal_range(value);
@@ -389,6 +440,105 @@ class NIndexedArray {
                 objects.erase(objects.begin() + (*it).second);
             }
             indices.erase(range.first, range.second);
+            VALIDATE_NINDEXEDARRAY_BOTTOM("erase(const_reference)")
+        }
+
+        /**
+         * Checks the structural integrity of this array.
+         *
+         * The internal hashed dictionary is compared with the internal
+         * array to ensure they are consistent with one another.
+         *
+         * Any inconsistencies are written to standard error (unless
+         * parameter \a silent is passed as \c true).
+         *
+         * @param silent \c true if error reporting should be suppressed, or
+         * \c false (the default) if errors should be reported to standard
+         * error as described above.  Either way, the return value can
+         * still be used to determine if any inconsistencies were
+         * discovered.
+         * @return \c true if no problems were found, or \c false if
+         * any inconsistencies were discovered.
+         */
+        bool validate(bool silent = false) {
+            bool ok = true;
+            typename ObjectArray::difference_type index;
+
+            // Check the container sizes.
+            if (objects.size() != indices.size()) {
+                if (! silent) {
+                    std::cerr <<
+                        "ERR: Internal containers have different sizes.\n";
+                    std::cerr << "Array size: " << objects.size() << '\n';
+                    std::cerr << "Dictionary size: " << indices.size()
+                        << std::endl;
+                }
+                ok = false;
+            }
+
+            // Check that each element of the hashed dictionary appears
+            // in the vector.
+            typename IndexMap::const_iterator hashIt;
+            for (hashIt = indices.begin(); hashIt != indices.end(); hashIt++) {
+                index = (*hashIt).second;
+                if (index < 0 || index >= objects.size()) {
+                    if (! silent) {
+                        std::cerr << "ERR: Invalid value in dictionary.\n";
+                        std::cerr <<
+                            "Dictionary value (should be array index): "
+                            << index << '\n';
+                        std::cerr << "Array size: " << objects.size()
+                            << std::endl;
+                    }
+                    ok = false;
+                } else if (! (objects[index] == (*hashIt).first)) {
+                    if (! silent) {
+                        std::cerr << "ERR: Dictionary key != array value.\n";
+                        std::cerr << "Dictionary value / array index: "
+                            << index << std::endl;
+                    }
+                    ok = false;
+                }
+            }
+
+            // Check that each element of the vector appears in the
+            // hashed dictionary.
+            typename ObjectArray::const_iterator arrIt;
+            std::pair<typename IndexMap::iterator, typename IndexMap::iterator>
+                range;
+            unsigned foundCount;
+
+            index = 0;
+            for (arrIt = objects.begin(); arrIt != objects.end(); arrIt++) {
+                // Count the number of matching elements in the hashed
+                // dictionary.
+                range = indices.equal_range(*arrIt);
+                foundCount = 0;
+                for ( ; range.first != range.second; range.first++)
+                    if ((*range.first).second == index)
+                        foundCount++;
+
+                if (foundCount == 0) {
+                    if (! silent) {
+                        std::cerr << "ERR: Array element not in dictionary.\n";
+                        std::cerr << "Array index: " << index << std::endl;
+                    }
+                    ok = false;
+                } else if (foundCount > 1) {
+                    if (! silent) {
+                        std::cerr << "ERR: Duplicate entries in dictionary.\n";
+                        std::cerr << "Array index: " << index << '\n';
+                        std::cerr << "Number of duplicates: " << foundCount
+                            << std::endl;
+                    }
+                    ok = false;
+                }
+
+                index++;
+            }
+
+            // All done.
+            return ok;
         }
 
     private:
