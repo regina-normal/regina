@@ -93,8 +93,6 @@ void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
             if (item)
                 treeView->ensureItemVisible(item);
             packetView(newPacket);
-
-            setModified(true);
         }
     }
 }

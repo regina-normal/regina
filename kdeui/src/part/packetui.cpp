@@ -377,13 +377,14 @@ void PacketPane::refreshForce() {
 }
 
 void PacketPane::commit() {
-    isCommitting = true;
+    if (dirty) {
+        isCommitting = true;
 
-    mainUI->commit();
-    setDirty(false); // Just in case somebody forgot.
-    part->setModified(true);
+        mainUI->commit();
+        setDirty(false); // Just in case somebody forgot.
 
-    isCommitting = false;
+        isCommitting = false;
+    }
 }
 
 bool PacketPane::close() {

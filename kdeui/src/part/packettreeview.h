@@ -37,6 +37,7 @@
 
 #include <klistview.h>
 
+class PacketTreeView;
 class ReginaPart;
 
 namespace regina {
@@ -54,15 +55,20 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
          */
         regina::NPacket* packet;
 
+        /**
+         * The KPart responsible for this packet tree.
+         */
+        ReginaPart* part;
+
     public:
         /**
          * Constructors and destructors.
          */
-        PacketTreeItem(QListView* parent, regina::NPacket* realPacket);
-        PacketTreeItem(QListViewItem* parent, regina::NPacket* realPacket);
-        PacketTreeItem(QListView* parent, QListViewItem* after,
+        PacketTreeItem(PacketTreeView* parent, regina::NPacket* realPacket);
+        PacketTreeItem(PacketTreeItem* parent, regina::NPacket* realPacket);
+        PacketTreeItem(PacketTreeView* parent, QListViewItem* after,
                 regina::NPacket* realPacket);
-        PacketTreeItem(QListViewItem* parent, QListViewItem* after,
+        PacketTreeItem(PacketTreeItem* parent, QListViewItem* after,
                 regina::NPacket* realPacket);
 
         /**
@@ -97,6 +103,7 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
         /**
          * NPacketListener overrides.
          */
+        void packetWasChanged(regina::NPacket* packet);
         void packetWasRenamed(regina::NPacket* packet);
         void packetToBeDestroyed(regina::NPacket* packet);
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
@@ -148,6 +155,11 @@ class PacketTreeView : public KListView {
          */
         PacketTreeItem* find(regina::NPacket* packet);
 
+        /**
+         * Return the KPart responsible for this packet tree.
+         */
+        ReginaPart* getPart();
+
     public slots:
         /**
          * View or edit the packet corresponding to the given list item.
@@ -173,6 +185,10 @@ inline regina::NPacket* PacketTreeItem::getPacket() {
 inline regina::NPacket* PacketTreeView::selectedPacket() {
     QListViewItem* item = selectedItem();
     return (item ? dynamic_cast<PacketTreeItem*>(item)->getPacket() : 0);
+}
+
+inline ReginaPart* PacketTreeView::getPart() {
+    return part;
 }
 
 #endif

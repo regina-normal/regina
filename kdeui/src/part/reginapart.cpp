@@ -199,8 +199,11 @@ void ReginaPart::hasUndocked(PacketPane* undockedPane) {
 }
 
 bool ReginaPart::openFile() {
-    if (packetTree)
+    if (packetTree) {
         delete packetTree;
+        setModified(false);
+    }
+
     packetTree = regina::readFileMagic(m_file.ascii());
 
     if (packetTree) {
@@ -266,7 +269,6 @@ void ReginaPart::packetRename() {
         } else {
             // It's a unique label; we can rename it!
             packet->setPacketLabel(newLabel.ascii());
-            setModified(true);
             return;
         }
     }
@@ -287,7 +289,6 @@ void ReginaPart::packetDelete() {
         return;
 
     delete packet;
-    setModified(true);
 }
 
 void ReginaPart::subtreeRefresh() {
@@ -315,7 +316,6 @@ void ReginaPart::clonePacket() {
         return;
 
     packet->clone(false, false);
-    setModified(true);
 }
 
 void ReginaPart::cloneSubtree() {
@@ -327,7 +327,6 @@ void ReginaPart::cloneSubtree() {
         return;
 
     packet->clone(true, false);
-    setModified(true);
 }
 
 void ReginaPart::floatDockedPane() {

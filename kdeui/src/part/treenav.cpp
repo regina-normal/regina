@@ -76,8 +76,6 @@ void ReginaPart::moveShallow() {
         treeView->setSelected(item, true);
         treeView->ensureItemVisible(item);
     }
-
-    setModified(true);
 }
 
 void ReginaPart::moveDeep() {
@@ -118,8 +116,6 @@ void ReginaPart::moveDeep() {
         treeView->setSelected(item, true);
         treeView->ensureItemVisible(item);
     }
-
-    setModified(true);
 }
 
 void ReginaPart::moveUp() {
@@ -141,7 +137,6 @@ void ReginaPart::moveUp() {
     }
 
     packet->getPrevTreeSibling()->swapWithNextSibling();
-    setModified(true);
 }
 
 void ReginaPart::moveDown() {
@@ -164,7 +159,6 @@ void ReginaPart::moveDown() {
     }
 
     packet->swapWithNextSibling();
-    setModified(true);
 }
 
 void ReginaPart::movePageUp() {
@@ -186,7 +180,6 @@ void ReginaPart::movePageUp() {
     }
 
     packet->moveUp(TREE_PAGE_SIZE);
-    setModified(true);
 }
 
 void ReginaPart::movePageDown() {
@@ -209,7 +202,6 @@ void ReginaPart::movePageDown() {
     }
 
     packet->moveDown(TREE_PAGE_SIZE);
-    setModified(true);
 }
 
 void ReginaPart::moveTop() {
@@ -231,7 +223,6 @@ void ReginaPart::moveTop() {
     }
 
     packet->moveToFirst();
-    setModified(true);
 }
 
 void ReginaPart::moveBottom() {
@@ -254,6 +245,5 @@ void ReginaPart::moveBottom() {
     }
 
     packet->moveToLast();
-    setModified(true);
 }
 

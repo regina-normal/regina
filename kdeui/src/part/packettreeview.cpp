@@ -40,26 +40,27 @@
 
 using regina::NPacket;
 
-PacketTreeItem::PacketTreeItem(QListView* parent, NPacket* realPacket) :
-        KListViewItem(parent), packet(realPacket) {
+PacketTreeItem::PacketTreeItem(PacketTreeView* parent, NPacket* realPacket) :
+        KListViewItem(parent), packet(realPacket), part(parent->getPart()) {
     init();
 }
 
-PacketTreeItem::PacketTreeItem(QListViewItem* parent,
+PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
         NPacket* realPacket) :
-        KListViewItem(parent), packet(realPacket) {
+        KListViewItem(parent), packet(realPacket), part(parent->part) {
     init();
 }
 
-PacketTreeItem::PacketTreeItem(QListView* parent,
+PacketTreeItem::PacketTreeItem(PacketTreeView* parent,
         QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after), packet(realPacket) {
+        KListViewItem(parent, after), packet(realPacket),
+        part(parent->getPart()) {
     init();
 }
 
-PacketTreeItem::PacketTreeItem(QListViewItem* parent,
+PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
         QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after), packet(realPacket) {
+        KListViewItem(parent, after), packet(realPacket), part(parent->part) {
     init();
 }
 
@@ -182,13 +183,19 @@ void PacketTreeItem::refreshLabel() {
         setText(0, i18n("<Deleted>"));
 }
 
+void PacketTreeItem::packetWasChanged(regina::NPacket*) {
+    part->setModified(true);
+}
+
 void PacketTreeItem::packetWasRenamed(regina::NPacket*) {
     refreshLabel();
+    part->setModified(true);
 }
 
 void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
     packet = 0;
     refreshLabel();
+    part->setModified(true);
 
     // I'm a bit worried about this line, but I understand it will
     // behave correctly. :/
@@ -197,14 +204,17 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
 
 void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
     refreshSubtree();
+    part->setModified(true);
 }
 
 void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*) {
     refreshSubtree();
+    part->setModified(true);
 }
 
 void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
     refreshSubtree();
+    part->setModified(true);
 }
 
 PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent,

@@ -78,8 +78,6 @@ void ReginaPart::importFile(const PacketImporter& importer,
                 if (item)
                     treeView->ensureItemVisible(item);
                 packetView(newTree);
-
-                setModified(true);
             } else
                 delete newTree;
         }
