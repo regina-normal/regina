@@ -68,15 +68,15 @@ dnl    Example: REGINA_CHECK_COMPILER_FLAG(Wall, [CXXFLAGS="$CXXFLAGS -Wall"])
 dnl
 AC_DEFUN(REGINA_CHECK_COMPILER_FLAG, [
   AC_MSG_CHECKING([whether $CXX supports -$1])
-  save_CXXFLAGS="$CXXFLAGS"
+  __check_flag_save_cxxflags="$CXXFLAGS"
   CXXFLAGS="$CXXFLAGS -$1"
   AC_TRY_COMPILE([], [return 0;], [
     AC_MSG_RESULT([yes])
-    CXXFLAGS="$save_CXXFLAGS"
+    CXXFLAGS="$__check_flag_save_cxxflags"
     ifelse([$2], , :, [$2])
   ], [
     AC_MSG_RESULT([no])
-    CXXFLAGS="$save_CXXFLAGS"
+    CXXFLAGS="$__check_flag_save_cxxflags"
     ifelse([$3], , :, [$3])
   ])
 ])
