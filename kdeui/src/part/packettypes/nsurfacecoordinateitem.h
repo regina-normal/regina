@@ -44,6 +44,13 @@ namespace regina {
  * A list view item describing a single normal surface.
  */
 class NSurfaceCoordinateItem : public KListViewItem {
+    public:
+        /**
+         * Constants representing the possible colours in which table
+         * entries might be drawn.
+         */
+        enum ItemColour { Plain = 0, Green, Yellow, Red };
+
     private:
         /**
          * The underlying normal surface.
@@ -70,6 +77,7 @@ class NSurfaceCoordinateItem : public KListViewItem {
          */
         const regina::NNormalSurface* getSurface();
         unsigned long getSurfaceIndex();
+        ItemColour getColour(int column);
 
         /**
          * Query the property columns of the coordinate viewer.

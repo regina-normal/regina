@@ -122,29 +122,29 @@ QString NSurfaceCoordinateItem::text(int column) const {
 
                 triBool = surface->isOrientable();
                 if (triBool == 1)
-                    return i18n("Orbl"); // green
+                    return i18n("Orbl");
                 else if (triBool == -1)
-                    return i18n("Non-orbl"); // red
+                    return i18n("Non-orbl");
                 else
-                    return i18n("Unknown"); // yellow
+                    return i18n("Unknown");
             case 3:
                 if (! surface->isCompact())
                     return QString::null;
 
                 triBool = surface->isTwoSided();
-                if (triBool == 1) // green
+                if (triBool == 1)
                     return "2";
-                else if (triBool == -1) // red
+                else if (triBool == -1)
                     return "1";
                 else
-                    return i18n("Unknown"); // yellow
+                    return i18n("Unknown");
             case 4:
                 if (! surface->isCompact())
-                    return i18n("Infinite"); // yellow
+                    return i18n("Infinite");
                 else if (surface->hasRealBoundary())
-                    return i18n("Real Bdry"); // red
+                    return i18n("Real Bdry");
                 else
-                    return i18n("Closed"); // green
+                    return i18n("Closed");
             case 5: {
                 const regina::NVertex* v;
                 std::pair<const regina::NEdge*, const regina::NEdge*> e;
@@ -168,11 +168,11 @@ QString NSurfaceCoordinateItem::text(int column) const {
             }
             case 6:
                 if (surfaces->allowsAlmostNormal() || ! surface->isCompact())
-                    return i18n("N/A"); // yellow
+                    return i18n("N/A");
                 else if (surface->knownCanCrush())
-                    return i18n("Yes"); // green
+                    return i18n("Yes");
                 else
-                    return i18n("Unknown"); // yellow
+                    return i18n("Unknown");
             case 7:
                 if (surface->isSplitting())
                     return i18n("Splitting");
@@ -197,11 +197,11 @@ QString NSurfaceCoordinateItem::text(int column) const {
                 return surface->getEulerCharacteristic().stringValue().c_str();
             case 2:
                 if (! surface->isCompact())
-                    return i18n("Infinite"); // yellow
+                    return i18n("Infinite");
                 else if (surface->hasRealBoundary())
-                    return i18n("Real Bdry"); // red
+                    return i18n("Real Bdry");
                 else
-                    return i18n("Closed"); // green
+                    return i18n("Closed");
             case 3: {
                 const regina::NVertex* v;
                 std::pair<const regina::NEdge*, const regina::NEdge*> e;
@@ -240,6 +240,62 @@ QString NSurfaceCoordinateItem::text(int column) const {
     return i18n("Unknown");
 }
 
+NSurfaceCoordinateItem::ItemColour NSurfaceCoordinateItem::getColour(
+        int column) {
+    if (surfaces->isEmbeddedOnly()) {
+        int triBool;
+        switch (column) {
+            case 2:
+                if (! surface->isCompact())
+                    return Plain;
+
+                triBool = surface->isOrientable();
+                if (triBool == 1)
+                    return Green;
+                else if (triBool == -1)
+                    return Red;
+                else
+                    return Yellow;
+            case 3:
+                if (! surface->isCompact())
+                    return Plain;
+
+                triBool = surface->isTwoSided();
+                if (triBool == 1)
+                    return Green;
+                else if (triBool == -1)
+                    return Red;
+                else
+                    return Yellow;
+            case 4:
+                if (! surface->isCompact())
+                    return Yellow;
+                else if (surface->hasRealBoundary())
+                    return Red;
+                else
+                    return Green;
+            case 6:
+                if (surfaces->allowsAlmostNormal() || ! surface->isCompact())
+                    return Yellow;
+                else if (surface->knownCanCrush())
+                    return Green;
+                else
+                    return Yellow;
+        }
+    } else {
+        switch (column) {
+            case 2:
+                if (! surface->isCompact())
+                    return Yellow;
+                else if (surface->hasRealBoundary())
+                    return Red;
+                else
+                    return Green;
+        }
+    }
+    return Plain;
+}
+
 int NSurfaceCoordinateItem::width(const QFontMetrics& fm, const QListView* lv,
         int c) const {
     /**
@@ -251,8 +307,19 @@ int NSurfaceCoordinateItem::width(const QFontMetrics& fm, const QListView* lv,
 void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
         int column, int width, int align) {
     // Do the standard painting.
-    // TODO: Change colour if appropriate.
-    KListViewItem::paintCell(p, cg, column, width, align);
+    ItemColour colour = getColour(column);
+    if (colour == Plain)
+        KListViewItem::paintCell(p, cg, column, width, align);
+    else {
+        QColorGroup altCg(cg);
+        if (colour == Green)
+            altCg.setColor(QColorGroup::Text, darkGreen);
+        else if (colour == Yellow)
+            altCg.setColor(QColorGroup::Text, darkYellow);
+        else
+            altCg.setColor(QColorGroup::Text, darkRed);
+        KListViewItem::paintCell(p, altCg, column, width, align);
+    }
 
     // Draw a box around the cell.
     p->setPen((QRgb)listView()->style().styleHint(
