@@ -32,6 +32,12 @@
    "<link linkend='python-python'>calculation engine documentation</link>">
   <!ENTITY regina-libs "<filename>~/.regina-libs</filename>">
 
+  <!ENTITY a1 "<replaceable>a<subscript>1</subscript></replaceable>">
+  <!ENTITY a2 "<replaceable>a<subscript>2</subscript></replaceable>">
+  <!ENTITY a3 "<replaceable>a<subscript>3</subscript></replaceable>">
+  <!ENTITY b1 "<replaceable>b<subscript>1</subscript></replaceable>">
+  <!ENTITY b2 "<replaceable>b<subscript>2</subscript></replaceable>">
+  <!ENTITY b3 "<replaceable>b<subscript>3</subscript></replaceable>">
   <!ENTITY boost-python "<application>boost.python</application>">
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">
@@ -42,6 +48,7 @@
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
   <!ENTITY python "<application>Python</application>">
   <!ENTITY qt "<application>Qt</application>">
+  <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">
   <!ENTITY sss "S<superscript>3</superscript>">
@@ -50,6 +57,8 @@
    requirements page</ulink>">
   <!ENTITY theta "<replaceable>t</replaceable>">
   <!ENTITY todo "TODO">
+  <!ENTITY trist "triangular solid torus">
+  <!ENTITY trists "triangular solid tori">
   <!ENTITY twopi "<literal>2*Pi</literal>">
   <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY xml "<acronym>XML</acronym>">

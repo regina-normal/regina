@@ -44,6 +44,10 @@
       <xref linkend="bib-layeredlensspaces"/>);
      </para></listitem>
      <listitem><para>
+      Automatic construction of any &sfslong; over the sphere
+      with at most three exceptional fibres;
+     </para></listitem>
+     <listitem><para>
       Reconstruction of triangulations from dehydration strings
       (these are text-based representations of triangulations defined and used
       by Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>);

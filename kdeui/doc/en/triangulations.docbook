@@ -37,6 +37,68 @@
     </para>
    </sect3>
 
+   <sect3 id="tri-new-lens">
+    <title>Layered Lens Space</title>
+
+    <para>
+     This will create a layered lens space with parameters
+     (<replaceable>p</replaceable>, <replaceable>q</replaceable>)
+     where both parameters are non-negative, coprime and
+     <replaceable>p</replaceable>&gt;<replaceable>q</replaceable>
+     (with exceptional case (0, 1) also allowed).
+     These two parameters must be provided before the triangulation
+     can be created.
+    </para>
+    <para>
+     A <firstterm>layered lens space</firstterm> is a lens space built
+     by taking two layered solid tori with appropriate parameters
+     (<link linkend="tri-new-layered">described below</link>)
+     and gluing them together along their torus boundaries.
+    </para>
+    <para>
+     Layered lens spaces are discussed by Jaco and Rubinstein
+     <xref linkend="bib-0-efficiency"/>,
+     <xref linkend="bib-layeredlensspaces"/> and others,
+     and are described in detail in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/> which is available from the
+     &regwebsite;.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-sfs3">
+    <title>&sfslong;s</title>
+
+    <para>
+     This will create an orientable &sfslong; over the 2-sphere with at
+     most three exceptional fibres.  &regina; will choose the simplest
+     construction based upon the given &sfslong; parameters.  Examples of
+     constructions that are used include
+     <link linkend="tri-new-lens">layered lens spaces</link>,
+     <link linkend="tri-new-loop">layered loops</link> and
+     <link linkend="tri-new-aug">augmented &trists;</link>,
+     all of which are described elsewhere in this section.
+    </para>
+    <para>
+     The parameters for the &sfslong; must be given as three pairs of
+     integers (&a1;,&b1;) (&a2;,&b2;) (&a3;,&b3;) representing the three
+     exceptional fibres.  The two integers in each pair must be
+     relatively prime, and none of &a1;, &a2; or &a3; may be zero.
+    </para>
+    <para>
+     Each pair of parameters
+     (<replaceable>a</replaceable>,<replaceable>b</replaceable>)
+     does not need to be normalised, i.e., the parameters may be positive or
+     negative and <replaceable>b</replaceable> may lie outside the range
+     [0,<replaceable>a</replaceable>).  There is no separate twisting
+     parameter; each additional twist can be incorporated into the existing
+     parameters by replacing some pair
+     (<replaceable>a</replaceable>,<replaceable>b</replaceable>) with the pair
+     (<replaceable>a</replaceable>,<replaceable>a</replaceable>+<replaceable>b</replaceable>).
+     Including pairs of the form (1,<replaceable>k</replaceable>) and even
+     (1,0) is acceptable (in which case a lens space will result).
+    </para>
+   </sect3>
+
    <sect3 id="tri-new-layered">
     <title>Layered Solid Torus</title>
 
@@ -62,32 +124,11 @@
      the different layers have been added.
     </para>
     <para>
-     Layered solid tori are described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/>, which is available from the
-     &regwebsite;.
-    </para>
-   </sect3>
-
-   <sect3 id="tri-new-lens">
-    <title>Layered Lens Space</title>
-
-    <para>
-     This will create a layered lens space with parameters
-     (<replaceable>p</replaceable>, <replaceable>q</replaceable>)
-     where both parameters are non-negative, coprime and
-     <replaceable>p</replaceable>&gt;<replaceable>q</replaceable>
-     (with exceptional case (0, 1) also allowed).
-     These two parameters must be provided before the triangulation
-     can be created.
-    </para>
-    <para>
-     A <firstterm>layered lens space</firstterm> is a lens space built
-     by taking two layered solid tori with appropriate parameters and
-     gluing them together along their torus boundaries.
-    </para>
-    <para>
-     Layered lens spaces are described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/>, which is available from the
+     Layered solid tori are discussed by Jaco and Rubinstein
+     <xref linkend="bib-0-efficiency"/>,
+     <xref linkend="bib-layeredlensspaces"/> and others,
+     and are described in detail in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/> which is available from the
      &regwebsite;.
     </para>
    </sect3>
@@ -122,6 +163,37 @@
      untwisted layered loop of length <replaceable>n</replaceable> forms
      a two-vertex triangulation of the lens space
      L(<replaceable>n</replaceable>,1).
+    </para>
+   </sect3>
+
+   <sect3 id="tri-new-aug">
+    <title>Augmented Triangular Solid Torus</title>
+
+    <para>
+     This will create an augmented &trist; with the given parameters.
+     An augmented &trist; is created by starting with
+     a core three-tetrahedron solid torus and attaching three
+     <link linkend="tri-new-layered">layered solid tori</link> to its
+     boundary.
+    </para>
+    <para>
+     Details of the augmented &trist; construction can be found in
+     Burton's PhD thesis <xref linkend="bib-burton-phd"/>, which is
+     available from the &regwebsite;.
+    </para>
+    <para>
+     Parameters for the augmented &trist; must be provided before the
+     construction can take place; these parameters must be given as three
+     pairs of integers (&a1;,&b1;) (&a2;,&b2;) (&a3;,&b3;).  These pairs
+     of integers describe the three layered solid tori that are attached
+     to the core as described above.  The two integers in each pair must be
+     relatively prime, and both positive and negative integers are allowed.
+    </para>
+    <para>
+     Note that if none of &a1;, &a2; or &a3; are zero then an augmented
+     &trist; always produces a &sfslong; over the sphere with at most
+     three exceptional fibres.  Conversely, any &sfslong; with these
+     properties can be represented as an augmented &trist;.
     </para>
    </sect3>
 
