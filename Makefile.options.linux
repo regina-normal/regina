@@ -110,7 +110,7 @@ export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
 # TOUCH: Create a new empty file with the given name.
 
 export MAKEDEP := g++ -MM
-export COMPILE := g++ -O2 -c -Wall -DDEBUG
+export COMPILE := g++ -O2 -c -Wall # -DDEBUG
 export LINKLIB := g++ -O2 -shared
 export LINKEXEC := g++ -O2
 export DOXYGEN := doxygen
