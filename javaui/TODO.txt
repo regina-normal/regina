@@ -37,7 +37,6 @@ Main Window:
 Menus:
 -	Provide NTriangulation::isIsomorphicTo().
 	Provide NTriangulation::cutAlongSurface() once it is written.
-*	Allow skeletal viewing whilst performing elementary moves.
 
 Normal Surfaces:
 -	For matching equations and normal surface coordinates, resizing one

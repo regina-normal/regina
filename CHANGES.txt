@@ -74,7 +74,8 @@ Regina - A Normal Surface Theory Calculator
         normal.packetui.surfaces.Coordinates:
             - Some routines now require the triangulation to be passed.
         normal.packetui.triangulation:
-            - Pulled SkeletonTableFrame out into its own standalone class.
+            - Pulled SkeletonTableFrame out into its own standalone class
+              and turned it into a dialog.
         normal.packetui.triangulation.NTriangulationEditor:
             - Added triangulation component recognition.
 
