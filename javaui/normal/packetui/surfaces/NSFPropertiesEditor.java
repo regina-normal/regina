@@ -216,7 +216,7 @@ public class NSFPropertiesEditor extends DefaultPacketEditor
                     /**
                      * Don't check whether ec > 2 since singular surfaces can
                      * have larger values (in which case the integer returned
-                     * is not the Euler characteristic at all).
+                     * might not be the Euler characteristic at all).
                      */
                     /*
                     if (ec > 2) {
