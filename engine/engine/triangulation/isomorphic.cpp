@@ -26,8 +26,8 @@
 
 /* end stub */
 
+#include <map>
 #include "triangulation/ntriangulation.h"
-#include "utilities/ninfinitearray.h"
 
 bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
     if (! calculatedSkeleton)
@@ -37,6 +37,8 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
 
     if (tetrahedra.size() != other.tetrahedra.size())
         return false;
+    if (tetrahedra.size() == 0)
+        return true;
     if (faces.size() != other.faces.size())
         return false;
     if (edges.size() != other.edges.size())
@@ -50,72 +52,95 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
     if (isOrientable() ^ other.isOrientable())
         return false;
 
-    NInfiniteArray<unsigned long> map;
-    NInfiniteArray<unsigned long> otherMap;
+    std::map<unsigned long, unsigned long> map1;
+    std::map<unsigned long, unsigned long> map2;
+    std::map<unsigned long, unsigned long>::iterator mapIt;
 
     {
         EdgeIterator it(edges);
         while (! it.done()) {
-            map.elementAt((*it)->getNumberOfEmbeddings(), 0)++;
+            // Find this degree, or insert it with frequency 0 if it's
+            // not already present.
+            mapIt = map1.insert(
+                make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            (*mapIt).second++;
             it++;
         }
         it.init(other.edges);
         while (! it.done()) {
-            otherMap.elementAt((*it)->getNumberOfEmbeddings(), 0)++;
+            mapIt = map2.insert(
+                make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            (*mapIt).second++;
             it++;
         }
-        if (! map.isIdentical(otherMap))
+        if (! (map1.size() == map2.size() &&
+                equal(map1.begin(), map1.end(), map2.begin())))
             return false;
-        map.flush();
-        otherMap.flush();
+        map1.clear();
+        map2.clear();
     }
     {
         VertexIterator it(vertices);
         while (! it.done()) {
-            map.elementAt((*it)->getNumberOfEmbeddings(), 0)++;
+            mapIt = map1.insert(
+                make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            (*mapIt).second++;
             it++;
         }
         it.init(other.vertices);
         while (! it.done()) {
-            otherMap.elementAt((*it)->getNumberOfEmbeddings(), 0)++;
+            mapIt = map2.insert(
+                make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+            (*mapIt).second++;
             it++;
         }
-        if (! map.isIdentical(otherMap))
+        if (! (map1.size() == map2.size() &&
+                equal(map1.begin(), map1.end(), map2.begin())))
             return false;
-        map.flush();
-        otherMap.flush();
+        map1.clear();
+        map2.clear();
     }
     {
         ComponentIterator it(components);
         while (! it.done()) {
-            map.elementAt((*it)->getNumberOfTetrahedra(), 0)++;
+            mapIt = map1.insert(
+                make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
+            (*mapIt).second++;
             it++;
         }
         it.init(other.components);
         while (! it.done()) {
-            otherMap.elementAt((*it)->getNumberOfTetrahedra(), 0)++;
+            mapIt = map2.insert(
+                make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
+            (*mapIt).second++;
             it++;
         }
-        if (! map.isIdentical(otherMap))
+        if (! (map1.size() == map2.size() &&
+                equal(map1.begin(), map1.end(), map2.begin())))
             return false;
-        map.flush();
-        otherMap.flush();
+        map1.clear();
+        map2.clear();
     }
     {
         BoundaryComponentIterator it(boundaryComponents);
         while (! it.done()) {
-            map.elementAt((*it)->getNumberOfFaces(), 0)++;
+            mapIt = map1.insert(
+                make_pair((*it)->getNumberOfFaces(), 0)).first;
+            (*mapIt).second++;
             it++;
         }
         it.init(other.boundaryComponents);
         while (! it.done()) {
-            otherMap.elementAt((*it)->getNumberOfFaces(), 0)++;
+            mapIt = map2.insert(
+                make_pair((*it)->getNumberOfFaces(), 0)).first;
+            (*mapIt).second++;
             it++;
         }
-        if (! map.isIdentical(otherMap))
+        if (! (map1.size() == map2.size() &&
+                equal(map1.begin(), map1.end(), map2.begin())))
             return false;
-        map.flush();
-        otherMap.flush();
+        map1.clear();
+        map2.clear();
     }
 
     // Try to make an exact matching.
