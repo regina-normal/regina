@@ -58,4 +58,7 @@ public class NJNINormalSurface extends JNIShareableObject
     public native boolean hasRealBoundary();
     public native boolean isVertexLinking();
     public native boolean isSplitting();
+
+    public native NTriangulation cutAlong();
+    public native NTriangulation crush();
 }

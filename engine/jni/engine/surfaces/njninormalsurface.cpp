@@ -32,7 +32,23 @@
 #include "engine/surfaces/NJNINormalSurface.h"
 
 JNIEXPORT jobject JNICALL
-Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_getEdgeWeight
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_crush
+        (JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NNormalSurface, me)->crush(),
+        "normal/engine/implementation/jni/triangulation/NJNITriangulation");
+}
+
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_cutAlong
+        (JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NNormalSurface, me)->cutAlong(),
+        "normal/engine/implementation/jni/triangulation/NJNITriangulation");
+}
+
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_getEdgeWeight
         (JNIEnv *env, jobject me, jlong index) {
     return jBigIntegerFromLarge(env, GET_ENGINE_OBJECT(env,
         NNormalSurface, me)->getEdgeWeight(index));

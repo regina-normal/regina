@@ -52,6 +52,9 @@ module Regina {
             boolean hasRealBoundary();
             boolean isVertexLinking();
             boolean isSplitting();
+
+            Regina::Triangulation::NTriangulation cutAlong();
+            Regina::Triangulation::NTriangulation crush();
         };
     };
 };

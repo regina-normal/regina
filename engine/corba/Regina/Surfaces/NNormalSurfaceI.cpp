@@ -81,4 +81,10 @@ CORBA::Boolean NNormalSurface_i::isVertexLinking() {
 CORBA::Boolean NNormalSurface_i::isSplitting() {
     return MY_ENGINE_OBJECT->isSplitting();
 }
+Regina::Triangulation::NTriangulation_ptr NNormalSurface_i::cutAlong() {
+    return NTriangulation_i::newWrapper(MY_ENGINE_OBJECT->cutAlong());
+}
+Regina::Triangulation::NTriangulation_ptr NNormalSurface_i::crush() {
+    return NTriangulation_i::newWrapper(MY_ENGINE_OBJECT->crush());
+}
 

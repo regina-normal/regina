@@ -97,5 +97,8 @@ public interface NNormalSurface extends ShareableObject {
     public boolean hasRealBoundary();
     public boolean isVertexLinking();
     public boolean isSplitting();
+
+    public NTriangulation cutAlong();
+    public NTriangulation crush();
 }
 

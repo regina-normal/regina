@@ -63,6 +63,8 @@ class NNormalSurface_i : public virtual POA_Regina::Surfaces::NNormalSurface,
         virtual CORBA::Boolean hasRealBoundary();
         virtual CORBA::Boolean isVertexLinking();
         virtual CORBA::Boolean isSplitting();
+        virtual Regina::Triangulation::NTriangulation_ptr cutAlong();
+        virtual Regina::Triangulation::NTriangulation_ptr crush();
 };
 
 #endif

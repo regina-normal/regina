@@ -22,6 +22,7 @@ Regina - A Normal Surface Theory Calculator
         Class NHashSet, NHashSetIterator:
             - New classes.
         Class NNormalSurface:
+            - Added crush().
             - Added isConnected(), isVertexLink(), isSplitting().
             - Fixed isOrientable() and added isTwoSided().
         Class NPacket:

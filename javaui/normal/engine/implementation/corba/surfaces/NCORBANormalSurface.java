@@ -98,4 +98,11 @@ public class NCORBANormalSurface extends CORBAShareableObject
     public boolean isSplitting() {
         return data.isSplitting();
     }
+
+    public normal.engine.triangulation.NTriangulation cutAlong() {
+        return NCORBATriangulation.newWrapper(data.cutAlong());
+    }
+    public normal.engine.triangulation.NTriangulation crush() {
+        return NCORBATriangulation.newWrapper(data.crush());
+    }
 }

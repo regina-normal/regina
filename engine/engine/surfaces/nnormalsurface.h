@@ -825,24 +825,54 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * The original triangulation is not changed.
          *
          * \warning The number of tetrahedra in the new triangulation
-         * can be very large ((6<i>D</i>+5<i>T</i> as an upper bound,
+         * can be very large (6<i>D</i>+5<i>T</i> as an upper bound,
          * where <i>D</i> is the number of normal discs in the surface).
-         * \warning This routine currently <b>does nothing</b>; the code
-         * is still being written.
+         * \warning <b>This routine has not been implemented and so
+         * currently returns an empty triangulation.</b>
          *
-         * \pre This normal surface is compact.
+         * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octahedral discs.
          *
          * \todo \feature Implement this routine.
          *
-         * \ifaces Not present and will not be present until this
-         * routine is implemented.
+         * @return a pointer to the newly allocated resulting
+         * triangulation.
+         */
+        NTriangulation* cutAlong();
+
+        /**
+         * Crushes this surface to a point in the associated
+         * triangulation and returns a newly created resulting
+         * triangulation.  The original triangulation is not changed.
+         *
+         * Crushing the surface will produce a number of tetrahedra,
+         * triangular pillows and/or footballs.  The pillows and
+         * footballs will then be flattened to faces and edges
+         * respectively (resulting in the possible
+         * changes mentioned below) to produce a proper triangulation.
+         *
+         * Note that the new triangulation will have at most the same
+         * number of tetrahedra as the old triangulation, and will have
+         * strictly fewer tetrahedra if this surface is not vertex
+         * linking.
+         *
+         * \warning The new triangulation might represent a
+         * different 3-manifold from the old triangulation.  Changes
+         * may take place such as connected sum decompositions,
+         * removal of 3-spheres and small Lens spaces and so
+         * on; a full list of possible changes is beyond the scope of
+         * this API documentation.
+         * \warning In exceptional cases with non-orientable
+         * 3-manifolds, the new triangulation might have invalid edges
+         * (edges whose midpoints are projective plane cusps).
+         *
+         * \pre This normal surface is compact and embedded.
+         * \pre This normal surface contains no octahedral discs.
          *
          * @return a pointer to the newly allocated resulting
          * triangulation.
-         * @author David Letscher
          */
-        NTriangulation* cutAlong();
+        NTriangulation* crush();
 
     protected:
         virtual void readIndividualProperty(NFile& infile,
