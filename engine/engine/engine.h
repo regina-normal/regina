@@ -91,6 +91,11 @@ class NTriangulation;
  */
 class Engine {
     public:
+        /**
+         * \name Class Constructors
+         */
+        /*@{*/
+
         NAbelianGroup* newNAbelianGroup();
             /**< Calls the corresponding constructor. */
         NAbelianGroup* newNAbelianGroup(const NAbelianGroup& cloneMe);
@@ -169,6 +174,16 @@ class Engine {
         NTriangulation* newNTriangulation(const NTriangulation& cloneMe);
             /**< Calls the corresponding constructor. */
 
+        /*@}*/
+        /**
+         * (end: Class Constructors)
+         */
+
+        /**
+         * \name Global and Static Routines
+         */
+        /*@{*/
+
         NTriangulation* enterTextTriangulation();
             /**< Calls NTriangulation::enterTextTriangulation(). */
         long formCensus(NPacket* parent, int nTetrahedra,
@@ -229,6 +244,11 @@ class Engine {
         bool writeXMLFile(const char* fileName, NPacket* subtree,
                 bool compressed = true);
             /**< Calls ::writeXMLFile(). */
+
+        /*@}*/
+        /**
+         * (end: Global and Static Routines)
+         */
 };
 
 /**
