@@ -59,6 +59,9 @@ class NTriangulation;
  * Once a knot or link is created ideal and finite triangulations of
  * the complement can be constructed.
  *
+ * \warning This class is incomplete and at the present time should not
+ * be used!
+ *
  * @author David Letscher
  */
 class NKnot {

@@ -14,5 +14,5 @@ noinst_LTLIBRARIES = libknot.la
 
 libknot_la_SOURCES = nknot.cpp
 
-knotinclude_HEADERS = nknot.h
+noinst_HEADERS = nknot.h
 
