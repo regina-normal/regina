@@ -16,6 +16,7 @@ License details:
     LICENSE.txt
     engine/engine/docs.h
     engine/engine/regina-engine-config.1
+    engine/engine/snappea/kernel/README.txt
     kdeui/doc/en/credits.docbook
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
