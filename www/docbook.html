@@ -1,0 +1,80 @@
+<html>
+<head>
+	<title>Regina - Windows DocBook Support</title>
+</head>
+<body bgcolor="#C0C0C0" text="#000000"
+	link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<h2><a name="contents">Regina - Windows DocBook Support</a></h2>
+
+Note that this page only pertains to Windows users.  Linux users
+should search their Linux distribution as described on the
+<a href="sysreq.html#sgmlnotes">system requirements page</a>.
+
+<ul>
+	<li><a href="#cygwin">Installing DocBook Tools</a></li>
+	<li><a href="index.html">Back to main page ...</a></li>
+	<li><a href="sysreq.html#docs">Back to system requirements ...</a></li>
+</ul>
+
+<h3><a name="cygwin">Installing DocBook Tools</a></h3>
+
+Visit the <a href="sysreq.html#docs">system requirements page</a>
+and download all of the software you need; this should include
+the DocBook SGML DTD, the DocBook DSSSL stylesheets, the ISO
+entity sets and Jade.
+<p>
+Make a directory on your system for SGML-related tools (such as
+<tt>c:\sgml</tt> and unpack each of these software bundles in
+its own directory beneath it.  For instance, you might have
+<tt>c:\sgml\docbook</tt>, <tt>c:\sgml\docbook-dsssl</tt>,
+<tt>c:\sgml\isoents</tt> and <tt>c:\sgml\jade</tt>.
+<p>
+Set the following two environment variables.  Windows NT and
+2000 users should do this through the control panel (select
+<i>System</i> and look for <i>Environment Variables</i>);
+Windows 95 and 98 users should do this in <tt>autoexec.bat</tt>
+(which will require a reboot, go figure).
+<ul>
+ <li><b>SGML_CATALOG_FILES</b> - This should be a semicolon-separated
+ list of the catalog files installed with the DocBook SGML DTD, the
+ DocBook DSSSL stylesheets and Jade.  You should prepend <tt>.\catalog</tt>
+ to this list.  An example is:<br>
+ <center>
+  <tt>.\catalog;c:\sgml\docbook\docbook.cat;c:\sgml\docbook-dsssl\catalog;c:\sgml\jade\catalog</tt>
+ </center></li>
+ <li><b>SGML_SEARCH_PATH</b> - This should be a semicolon-separated
+ list of all the directories in which you have just unpacked software.
+ You should prepend <tt>.</tt> to this list.  An example is:<br>
+ <center>
+  <tt>.;c:\sgml\docbook;c:\sgml\docbook-dsssl;c:\sgml\isoents;c:\sgml\jade</tt>
+ </center></li>
+</ul>
+<p>
+But we're not done yet.  The ISO entity files will all need to be renamed.
+They currently have names like <tt>ISOamsa</tt>, <tt>ISOgrk1</tt> and the like.
+You need to change these names to <tt>iso-amsa.gml</tt>, <tt>iso-grk1.gml</tt> and
+the like.  You can either do this by hand (there were 19 files last time I looked),
+or if you have Cygwin installed with the appropriate packages (see the
+<a href="cygwin.html#cygwin">Cygwin support page</a> for details)
+then you can fire up a bash shell, change to the corresponding
+directory (remember that <tt>C:\</tt> can be found in bash as <tt>/cygdrive/c/</tt>) and
+enter the following command:
+<ul>
+<li><tt>for i in ISO*; do mv $i `echo $i | sed -e s/ISO/iso-/`.gml; done</tt></li>
+</ul>
+And we're done!  Now you can run up a Cygwin shell, go to the main Regina
+source directory, run <tt>make docshtml</tt> and see what happens!
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<p>
+<a href="index.html"><img src="return.gif"
+	alt="Back to main page ..."
+	border="0" vspace="10"  width="32" height="32"
+	align="middle"></a>
+<a href="index.html">Back to main page ...</a></p>
+
+</body>
+</html>
+
