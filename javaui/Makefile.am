@@ -26,8 +26,8 @@ all-local :
 	rm -f $(ui_link)
 	@LN_S@ $(ui_jar) $(ui_link)
 
-clean-local :
-	rm -f $(ui_jar) $(ui_link)
+mostlyclean-local :
+	rm -f *.jar
 
 jni : all
 	for i in `find normal/engine/implementation/jni -name "*.java"`; do \
