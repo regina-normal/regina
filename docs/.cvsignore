@@ -5,3 +5,8 @@ manpage.refs
 *.5
 *.7
 *.rtf
+*.tex
+*.aux
+*.log
+*.dvi
+*.pdf
