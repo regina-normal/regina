@@ -34,13 +34,6 @@ EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
   valgrind \
   help
 
-install-exec-local :
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_SCRIPT) regina $(DESTDIR)$(bindir)/@PACKAGE@
-
-uninstall-local :
-	rm -f $(DESTDIR)$(bindir)/@PACKAGE@
-
 mostlyclean-local :
 	rm -f hs_err_pid*.log
 
