@@ -106,6 +106,9 @@ class NLargeInteger {
          * Whitespace may be present in the given string and will simply
          * be ignored.
          *
+         * Error detection is possible by passing a non-null boolean
+         * pointer as the third parameter to this constructor.
+         *
          * \pre The given base is zero, or is between 2 and 36 inclusive.
          * \pre The given string represents a finite integer
          * in the given base, with optional whitespace added.
@@ -113,8 +116,11 @@ class NLargeInteger {
          * @param value the new value of this integer, represented as a string
          * of digits in base \a base.
          * @param base the base in which \a value is given.
+         * @param valid if this pointer is not null, the boolean referenced
+         * will be set to \c true if the entire given string was a valid
+         * large integer representation and \c false otherwise.
          */
-        NLargeInteger(const char* value, int base = 10);
+        NLargeInteger(const char* value, int base = 10, bool* valid = 0);
         /**
          * Destroys this integer.
          */
@@ -604,9 +610,12 @@ inline NLargeInteger::NLargeInteger(const NLargeInteger& value) :
         infinite(value.infinite) {
     mpz_init_set(data, value.data);
 }
-inline NLargeInteger::NLargeInteger(const char* value, int base) :
+inline NLargeInteger::NLargeInteger(const char* value, int base, bool* valid) :
         infinite(false) {
-    mpz_init_set_str(data, value, base);
+    if (valid)
+        *valid = (mpz_init_set_str(data, value, base) == 0);
+    else
+        mpz_init_set_str(data, value, base);
 }
 inline NLargeInteger::NLargeInteger(bool, bool) : infinite(true) {
     // Private constructor.
