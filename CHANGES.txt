@@ -2,8 +2,7 @@
 Regina - A Normal Surface Theory Calculator
 
     This file contains specific details of most changes, including
-    changes to the API for both the calculation engine and the Java
-    user interface.
+    changes to the API for the calculation engine.
 
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.

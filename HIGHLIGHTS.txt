@@ -5,8 +5,8 @@ Regina - A Normal Surface Theory Calculator
     releases.
 
     For specific details of these changes as well as changes to the API
-    for both the calculation engine and the Java user interface, see
-    CHANGES.txt in the same directory as this file.
+    for the calculation engine, see CHANGES.txt in the same directory
+    as this file.
 
 Version 3.95  [ 12 October, 2003 ] - Prerelease for version 4.0.
 
