@@ -206,6 +206,10 @@ class NVector {
             return ans;
         }
         /**
+         * Negates every element of this vector.
+         */
+        virtual void negate() = 0;
+        /**
          * Returns the norm of this vector.
          * This is the dot product of the vector with itself.
          * The default implementation simply runs through the elements

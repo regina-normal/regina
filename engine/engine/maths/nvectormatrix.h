@@ -105,6 +105,8 @@ class NVectorMatrix : public NVector<T> {
         }
         virtual void operator *= (const T& factor) {
         }
+        virtual void negate() {
+        }
         virtual void addCopies(const NVector<T>& other, const T& multiple) {
         }
         virtual void subtractCopies(const NVector<T>& other,

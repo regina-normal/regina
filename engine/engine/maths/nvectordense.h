@@ -144,6 +144,10 @@ class NVectorDense : public NVector<T> {
             for (unsigned i=0; i<vectorSize; i++)
                 elements[i] *= factor;
         }
+        virtual void negate() {
+            for (unsigned i=0; i<vectorSize; i++)
+                elements[i] = -elements[i];
+        }
         virtual void addCopies(const NVector<T>& other,
                 const T& multiple) {
             if (multiple == zero)

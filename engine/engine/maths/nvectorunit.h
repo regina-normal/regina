@@ -118,6 +118,8 @@ class NVectorUnit : public NVector<T> {
         virtual T operator * (const NVector<T>& other) const {
             return other[direction];
         }
+        virtual void negate() {
+        }
         virtual T norm() const {
             return one;
         }
