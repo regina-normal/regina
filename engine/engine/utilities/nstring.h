@@ -38,6 +38,7 @@
 #endif
 
 #include <iostream.h>
+#include <hash_set>
 
 /**
  * A string class based upon a public domain string class written by
@@ -97,6 +98,9 @@ class NString {
              *   Such a function should take one argument of type
              *   NString::strError, which will specify what type of error
              *   has occurred. */
+
+        static std::hash<const char*> hashFunc;
+            /**< Calculates string hash values. */
 
     public:
         /**
@@ -377,13 +381,24 @@ class NString {
         /**
          * Returns an all upper-case version of this string.
          * This string is not changed.
+         *
+         * @return an upper-case version of this string.
          */
         NString toUpper() const;
         /**
          * Returns an all lower-case version of this string.
          * This string is not changed.
+         *
+         * @return a lower-case version of this string.
          */
         NString toLower() const;
+
+        /**
+         * Calculates a hash value for this string.
+         *
+         * @return the hash value.
+         */
+        size_t hashValue() const;
 
     private:
         /**
@@ -433,6 +448,26 @@ istream& operator >> (istream& input, NString& str);
  */
 ostream& operator << (ostream& output, const NString& str);
 
+__STL_BEGIN_NAMESPACE
+    /**
+     * A hash function for use with the Standard Template Library.
+     * This class calculates hash values for NString objects.
+     *
+     * \ifaces Not present.
+     */
+    __STL_TEMPLATE_NULL struct hash<NString> {
+        /**
+         * Returns a hash value for the given string.
+         *
+         * @param s the string whose hash value should be calculated.
+         * @return the corresponding hash value.
+         */
+        size_t operator() (const NString& s) const {
+            return s.hashValue();
+        };
+    };
+__STL_END_NAMESPACE
+
 // Inline functions for NString
 
 inline NString::NString() : len(0), siz(allocIncr), txt(new char[allocIncr]) {
@@ -471,6 +506,10 @@ inline int NString::operator != (const NString& str) const {
 
 inline char NString::operator [] (unsigned pos) const {
     return txt[pos];
+}
+
+inline size_t NString::hashValue() const {
+    return hashFunc(txt);
 }
 
 #endif
