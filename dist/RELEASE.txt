@@ -17,6 +17,7 @@ Program version:
 Copyright years:
     ./LICENSE.txt (top of file)
     ./regina.bat (top of file)
+    debian/copyright (regina entry)
     docs/LICENSE.txt (top of file)
     docs/regina.sgml (twice in entities)
     engine/doc-files/doc-footer.html
