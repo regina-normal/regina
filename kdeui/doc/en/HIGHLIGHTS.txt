@@ -8,6 +8,12 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
+Version 4.0.1  [ 26 January, 2004 ]
+
+    Features:
+        - Better compile-time magic to detect whether the Qt version is
+          sufficient and to select the correct --prefix automatically.
+
 Version 4.0  [ 20 December, 2003 ]
 
     Features:

@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="packetwindow" version="4.0">
+<kpartgui name="packetwindow" version="4.0.1">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;Viewer</text>
     <Action name="viewer_dock"/>

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Combine several data files into a single larger data file             *
  *                                                                        *
- *  Copyright (c) 1999-2003, Ben Burton                                   *
+ *  Copyright (c) 1999-2004, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
