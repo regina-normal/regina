@@ -71,6 +71,9 @@ class NSnapPeaTriangulation : public ShareableObject {
     private:
         ::Triangulation* snappeaData;
             /**< The triangulation stored in SnapPea's native format. */
+        static bool kernelMessages;
+            /**< Should the SnapPea kernel write diagnostic messages to
+                 standard output? */
 
     public:
         /**
@@ -151,6 +154,39 @@ class NSnapPeaTriangulation : public ShareableObject {
 
         virtual void writeTextShort(std::ostream& out) const;
 
+        /**
+         * Returns whether or not the SnapPea kernel writes diagnostic
+         * messages to standard output.
+         *
+         * By default such diagnostic messages are enabled.  To disable
+         * them, call disableKernelMessages().
+         *
+         * @return \c true if and only if diagonstic messages are enabled.
+         */
+        static bool kernelMessagesEnabled();
+
+        /**
+         * Configures whether or not the SnapPea kernel should write
+         * diagnostic messages to standard output.
+         *
+         * By default such diagnostic messages are enabled.
+         *
+         * @param enabled \c true if diagnostic messages should be
+         * enabled, or \c false otherwise.
+         */
+        static void enableKernelMessages(bool enabled = true);
+
+        /**
+         * Specifies that the SnapPea kernel should not write diagnostic
+         * messages to standard output.
+         *
+         * Calling this routine is equivalent to calling
+         * enableKernelMessages(false).
+         *
+         * Note that diagnostic messages are enabled by default.
+         */
+        static void disableKernelMessages();
+
     private:
         /**
          * Creates a new raw SnapPea structure mirroring the given Regina
@@ -180,6 +216,18 @@ class NSnapPeaTriangulation : public ShareableObject {
 
 inline bool NSnapPeaTriangulation::isNull() const {
     return (snappeaData == 0);
+}
+
+inline bool NSnapPeaTriangulation::kernelMessagesEnabled() {
+    return kernelMessages;
+}
+
+inline void NSnapPeaTriangulation::enableKernelMessages(bool enabled) {
+    kernelMessages = enabled;
+}
+
+inline void NSnapPeaTriangulation::disableKernelMessages() {
+    kernelMessages = false;
 }
 
 } // namespace regina

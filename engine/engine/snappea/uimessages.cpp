@@ -29,7 +29,10 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/SnapPea.h"
+
+bool regina::NSnapPeaTriangulation::kernelMessages = true;
 
 /**
  * Supply bare-bones UI messaging functions for the SnapPea kernel to use.
@@ -42,17 +45,20 @@ extern "C" {
 #endif
 
 void uAcknowledge(const char *message) {
-    std::cout << message << std::endl;
+    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
+        std::cout << message << std::endl;
 }
 
 int uQuery(const char *message, const int num_responses,
         const char *responses[], const int default_response) {
-    std::cout << message << std::endl;
-    for (int i = 0; i < num_responses; i++) {
-        std::cout << i << ". " << responses[i] << std::endl;
+    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled()) {
+        std::cout << message << std::endl;
+        for (int i = 0; i < num_responses; i++) {
+            std::cout << i << ". " << responses[i] << std::endl;
+        }
+        std::cout << "Responding with default (" << default_response << ')'
+            << std::endl;
     }
-    std::cout << "Responding with default (" << default_response << ')'
-        << std::endl;
     return default_response;
 }
 
@@ -73,7 +79,8 @@ void uPrepareMemFullMessage() {
 }
 
 void uLongComputationBegins(char *message, Boolean /* is_abortable */) {
-    std::cout << message << std::endl;
+    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
+        std::cout << message << std::endl;
 }
 
 FuncResult uLongComputationContinues() {

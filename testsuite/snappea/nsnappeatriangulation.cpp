@@ -58,6 +58,10 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
+            // Keep the kernel quiet.  It interferes with the test
+            // suite's running progress messages.
+            NSnapPeaTriangulation::disableKernelMessages();
+
             m2_1.insertRehydration("cabbbbaei");
             m2_2.insertRehydration("cabbbbapt");
             m3_9.insertRehydration("dagacccfwkn");
