@@ -35,9 +35,17 @@
 
 #include "../packettabui.h"
 
+#include <memory>
+#include <qtooltip.h>
+
 class KAction;
 class KActionCollection;
+class PacketChooser;
+class QBoxLayout;
+class QComboBox;
+class QHeader;
 class QListView;
+class SurfaceHeaderToolTip;
 
 namespace regina {
     class NPacket;
@@ -55,12 +63,17 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         regina::NNormalSurfaceList* surfaces;
+        int coordSystem;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QListView* table;
+        QBoxLayout* uiLayout;
+        QComboBox* coords;
+        PacketChooser* filter;
+        std::auto_ptr<QListView> table;
+        std::auto_ptr<SurfaceHeaderToolTip> headerTips;
 
         /**
          * Surface list actions
@@ -68,7 +81,12 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab {
         KAction* actCrush;
         KActionCollection* surfaceActions;
         QPtrList<KAction> surfaceActionList;
-        QPtrList<KAction> enableWhenWritable;
+
+        /**
+         * Internal status
+         */
+        bool isReadWrite;
+        bool currentlyResizing;
 
     public:
         /**
@@ -103,6 +121,36 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab {
          * Notify us of the fact that an edit has been made.
          */
         void notifySurfaceRenamed();
+
+        /**
+         * Provides auto-resizing of columns.
+         */
+        void columnResized(int section, int oldSize, int newSize);
+};
+
+/**
+ * A utility class for displaying tooltips for table headers.
+ */
+class SurfaceHeaderToolTip : public QToolTip {
+    private:
+        /**
+         * Surface information
+         */
+        regina::NNormalSurfaceList* surfaces;
+        int coordSystem;
+
+    public:
+        /**
+         * Constructor.
+         */
+        SurfaceHeaderToolTip(regina::NNormalSurfaceList* useSurfaces,
+            int useCoordSystem, QHeader* header, QToolTipGroup* group = 0);
+
+    protected:
+        /**
+         * QToolTip overrides.
+         */
+        void maybeTip(const QPoint& p);
 };
 
 #endif

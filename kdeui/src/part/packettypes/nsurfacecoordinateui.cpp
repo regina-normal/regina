@@ -28,30 +28,78 @@
 
 // Regina core includes:
 #include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/nsurfacefilter.h"
 
 // UI includes:
+#include "coordinates.h"
 #include "nsurfacecoordinateui.h"
+#include "../packetchooser.h"
+#include "../packetfilter.h"
 #include "../reginapart.h"
 
 #include <kaction.h>
+#include <kcombobox.h>
 #include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qheader.h>
 #include <qlabel.h>
+#include <qlayout.h>
+#include <qstyle.h>
 
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
 NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
-        PacketEditorTab(useParentUI), surfaces(packet) {
+        PacketEditorTab(useParentUI), surfaces(packet),
+        isReadWrite(readWrite), currentlyResizing(false) {
     // Set up the UI.
-    // TODO
 
     ui = new QWidget();
+    uiLayout = new QVBoxLayout(ui);
+    uiLayout->addSpacing(5);
+
+    QBoxLayout* hdrLayout = new QHBoxLayout(uiLayout);
+    hdrLayout->setSpacing(5);
+
+    // Set up the coordinate selector.
+    hdrLayout->addWidget(new QLabel(i18n("Display coordinates:"), ui));
+    coords = new KComboBox(ui);
+    if (surfaces->allowsAlmostNormal()) {
+        coords->insertItem(Coordinates::name(NNormalSurfaceList::AN_STANDARD));
+        coords->insertItem(Coordinates::name(NNormalSurfaceList::EDGE_WEIGHT));
+        coords->insertItem(Coordinates::name(NNormalSurfaceList::FACE_ARCS));
+    } else {
+        coords->insertItem(Coordinates::name(NNormalSurfaceList::STANDARD));
+        coords->insertItem(Coordinates::name(NNormalSurfaceList::QUAD));
+        coords->insertItem(Coordinates::name(NNormalSurfaceList::EDGE_WEIGHT));
+        coords->insertItem(Coordinates::name(NNormalSurfaceList::FACE_ARCS));
+    }
+    hdrLayout->addWidget(coords);
+
+    // TODO: Set up coordSystem and the combo box appropriately.
+    coordSystem = NNormalSurfaceList::STANDARD;
+    // TODO: Listen for actions on the coordinate box.
+
+    hdrLayout->addStretch(1);
+
+    // Set up the filter selector.
+    hdrLayout->addWidget(new QLabel(i18n("Apply filter:"), ui));
+    filter = new PacketChooser(surfaces->getTreeMatriarch(),
+        new SingleTypeFilter<regina::NSurfaceFilter>(), true, 0, ui);
+    hdrLayout->addWidget(filter);
+    // TODO: Make sure the chooser refreshes itself whenever it receives
+    // the focus.
+    // TODO: Listen for actions on the filter selector (and refresh
+    // the chooser before performing any such actions).
+
+    uiLayout->addSpacing(5);
+
+    // And leave space for the table.
+    // We won't actually set up the table until we refresh.
 
     // Set up the surface list actions.
-
     surfaceActions = new KActionCollection(0, 0, 0,
         ReginaPart::factoryInstance());
     surfaceActionList.setAutoDelete(true);
@@ -61,11 +109,9 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "surface_crush");
     actCrush->setToolTip(i18n("Crush the selected surface to a point"));
     actCrush->setEnabled(readWrite);
-    enableWhenWritable.append(actCrush);
     surfaceActionList.append(actCrush);
 
     // Tidy up.
-
     refresh();
 }
 
@@ -88,29 +134,115 @@ QWidget* NSurfaceCoordinateUI::getInterface() {
 }
 
 void NSurfaceCoordinateUI::commit() {
-    // TODO
+    // TODO: Commit changes
     setDirty(false);
 }
 
 void NSurfaceCoordinateUI::refresh() {
-    // TODO
+    // Remove the old table.
+    table.reset(0);
+
+    // Set up the new table.
+    table.reset(new KListView(ui));
+    table->setAllColumnsShowFocus(true);
+    table->setSorting(-1);
+    table->setSelectionMode(QListView::Single);
+    uiLayout->addWidget(table.get(), 1);
+
+    // TODO: Add table columns.
+    table->addColumn("hoo");
+
+    headerTips.reset(new SurfaceHeaderToolTip(surfaces, coordSystem,
+        table->header()));
+    connect(table->header(), SIGNAL(sizeChange(int, int, int)),
+        this, SLOT(columnResized(int, int, int)));
+
+    // TODO: Insert surfaces into the table.
+    // Don't forget to check whether they satisfy the selected filter.
+
+    table->show();
     setDirty(false);
 }
 
 void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
-    // TODO
+    isReadWrite = readWrite;
+
+    if (table.get()) {
+        for (QListViewItem* item = table->firstChild(); item;
+                item = item->nextSibling())
+            item->setRenameEnabled(0, readWrite);
+    }
+
+    updateCrushState();
 }
 
 void NSurfaceCoordinateUI::crush() {
-    // TODO
+    // TODO: Crush normal surface
 }
 
 void NSurfaceCoordinateUI::updateCrushState() {
-    // TODO, don't forget to check read-write status.
+    actCrush->setEnabled(isReadWrite && table->selectedItem() != 0);
 }
 
 void NSurfaceCoordinateUI::notifySurfaceRenamed() {
     setDirty(true);
+}
+
+void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
+    int nNonCoordSections = (surfaces->isEmbeddedOnly() ? 8 : 5);
+    if (currentlyResizing || section < nNonCoordSections)
+        return;
+
+    // A coordinate column has been resized.
+    // Resize all coordinate columns.
+    currentlyResizing = true;
+    for (long i = nNonCoordSections; i < table->columns(); i++)
+        table->setColumnWidth(i, newSize);
+    currentlyResizing = false;
+}
+
+SurfaceHeaderToolTip::SurfaceHeaderToolTip(
+        regina::NNormalSurfaceList* useSurfaces, int useCoordSystem,
+        QHeader* header, QToolTipGroup* group) : QToolTip(header, group),
+        surfaces(useSurfaces), coordSystem(useCoordSystem) {
+}
+
+void SurfaceHeaderToolTip::maybeTip(const QPoint& p) {
+    QHeader *header = dynamic_cast<QHeader*>(parentWidget());
+    int section = header->sectionAt(p.x());
+
+    QString tipString;
+    if (surfaces->isEmbeddedOnly())
+        switch (section) {
+            case 0: tipString = i18n(
+                "Name (this has no special meaning and can be edited)"); break;
+            case 1: tipString = i18n("Euler characteristic"); break;
+            case 2: tipString = i18n("Orientability"); break;
+            case 3: tipString = i18n("1-sided or 2-sided"); break;
+            case 4: tipString = i18n("Does this surface have boundary?"); break;
+            case 5: tipString = i18n("Has this surface been identified as "
+                "the link of a particular subcomplex?"); break;
+            case 6: tipString = i18n(
+                "Is it safe to crush this surface to a point?"); break;
+            case 7: tipString = i18n("Other interesting properties"); break;
+            default: tipString = Coordinates::columnName(coordSystem,
+                section - 8, surfaces->getTriangulation()); break;
+        }
+    else
+        switch (section) {
+            case 0: tipString = i18n(
+                "Name (this has no special meaning and can be edited)"); break;
+            case 1: tipString = i18n("Euler characteristic"); break;
+            case 2: tipString = i18n("Does this surface have boundary?"); break;
+            case 3: tipString = i18n("Has this surface been identified as "
+                "the link of a particular subcomplex?"); break;
+            case 4: tipString = i18n("Other interesting properties"); break;
+            default: tipString = Coordinates::columnName(coordSystem,
+                section - 5, surfaces->getTriangulation()); break;
+        }
+
+    tip(header->sectionRect(section), Coordinates::columnDesc(coordSystem,
+        section, surfaces->getTriangulation()));
 }
 
 #include "nsurfacecoordinateui.moc"
