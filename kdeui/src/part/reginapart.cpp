@@ -34,6 +34,7 @@
 #include "../reginaabout.h"
 #include "../reginafilter.h"
 #include "packettreeview.h"
+#include "packetui.h"
 #include "reginapart.h"
 
 #include <qcolor.h>
@@ -138,6 +139,19 @@ void ReginaPart::displayIcon(bool shouldDisplay) {
         reginaIcon->hide();
 }
 
+void ReginaPart::packetView() {
+    regina::NPacket* packet = treeView->selectedPacket();
+    if (packet)
+        packetView(packet);
+    else
+        KMessageBox::error(widget(), QString(i18n(
+            "No packet is currently selected within the tree.")));
+}
+
+void ReginaPart::packetView(regina::NPacket* packet) {
+    (new PacketWindow(new PacketPane(this, packet)))->show();
+}
+
 void ReginaPart::fileSaveAs() {
     QString file = KFileDialog::getSaveFileName(QString::null,
         i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
@@ -155,8 +169,10 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
 
     // Set up the packet tree viewer.
     QVBox* treeBox = new QVBox(splitter);
+    treeBox->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
+        QSizePolicy::MinimumExpanding, 1, 1));
 
-    treeView = new PacketTreeView(treeBox);
+    treeView = new PacketTreeView(this, treeBox);
     treeBox->setStretchFactor(treeView, 1);
 
     reginaIcon = new QLabel(treeBox);
@@ -167,11 +183,15 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
     reginaIcon->hide();
 
     // Set up the docking area.
-    QVBox* dockArea = new QVBox(splitter);
+    dockArea = new QVBox(splitter);
     dockArea->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
-        QSizePolicy::MinimumExpanding));
+        QSizePolicy::MinimumExpanding, 5, 5));
 
-    // TODO: Adjust the divider position.
+    // Make sure the docking area gets some space even when there's
+    // nothing in it.
+    dynamic_cast<QBoxLayout*>(dockArea->layout())->addStrut(100);
+
+    // Make the splitter our main widget.
     setWidget(splitter);
 }
 

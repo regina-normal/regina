@@ -41,7 +41,7 @@ void ReginaPart::setupActions() {
 
     // Basic packet actions:
     act = new KAction(i18n("&View/Edit"), "viewmag", CTRL+Key_V,
-        this, SLOT(unimplemented()), actionCollection(), "packet_view");
+        this, SLOT(packetView()), actionCollection(), "packet_view");
     act->setToolTip(i18n("View or edit the selected packet"));
 
     act = new KAction(i18n("&Rename"), "editclear", CTRL+Key_R,

@@ -15,6 +15,7 @@ libreginapart_la_SOURCES = \
 	actionspart.cpp \
 	packetmanager.cpp \
 	packettreeview.cpp \
+	packetui.cpp \
 	reginapart.cpp
 
 partdesktopdir   = $(kde_servicesdir)

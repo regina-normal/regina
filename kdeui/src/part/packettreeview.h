@@ -35,6 +35,8 @@
 
 #include <klistview.h>
 
+class ReginaPart;
+
 namespace regina {
     class NPacket;
 };
@@ -105,18 +107,36 @@ class PacketTreeItem : public KListViewItem {
 class PacketTreeView : public KListView {
     Q_OBJECT
 
+    private:
+        ReginaPart* part;
+            /**< The KPart responsible for this packet tree. */
+
     public:
         /**
          * Creates an empty tree.  This tree must be initialised using
          * fill().
          */
-        PacketTreeView(QWidget* parent = 0, const char* name = 0);
+        PacketTreeView(ReginaPart* newPart, QWidget* parent = 0,
+            const char* name = 0);
+
+        /**
+         * Returns the currently selected packet, or 0 if no packet is
+         * selected.
+         */
+        regina::NPacket* selectedPacket();
 
         /**
          * Fills this tree with items corresponding to the given
          * packet tree.  Any existing items in this tree will be removed.
          */
         void fill(regina::NPacket* topPacket);
+
+    public slots:
+        /**
+         * View or edit the packet corresponding to the given list item.
+         */
+        void packetView(QListViewItem* packet);
+
         /**
          * Updates this tree to match the given packet tree.  The final
          * result should be the same as for fill(), but if the tree is
@@ -131,6 +151,11 @@ class PacketTreeView : public KListView {
 
 inline regina::NPacket* PacketTreeItem::getPacket() {
     return packet;
+}
+
+inline regina::NPacket* PacketTreeView::selectedPacket() {
+    QListViewItem* item = selectedItem();
+    return (item ? dynamic_cast<PacketTreeItem*>(item)->getPacket() : 0);
 }
 
 #endif

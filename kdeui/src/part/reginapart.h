@@ -63,6 +63,7 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         PacketTreeView* treeView;
         QLabel* reginaIcon;
+        QWidget* dockArea;
 
         /**
          * Actions
@@ -105,6 +106,16 @@ class ReginaPart : public KParts::ReadWritePart {
          * Show or hide the Regina icon beneath the packet tree.
          */
         void displayIcon(bool);
+
+        /**
+         * View or edit the currently selected packet.
+         */
+        void packetView();
+
+        /**
+         * View or edit the given packet.
+         */
+        void packetView(regina::NPacket*);
 
     private slots:
         /**

@@ -32,6 +32,7 @@
 // UI includes:
 #include "packetmanager.h"
 #include "packettreeview.h"
+#include "reginapart.h"
 
 #include <qheader.h>
 #include <kdebug.h>
@@ -173,17 +174,25 @@ void PacketTreeItem::refreshLabel() {
         setText(0, i18n("<Deleted>"));
 }
 
-PacketTreeView::PacketTreeView(QWidget* parent, const char* name) :
-        KListView(parent, name) {
+PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent,
+        const char* name) : KListView(parent, name), part(newPart) {
     addColumn(QString::null);
     setRootIsDecorated(true);
     setSorting(-1);
     header()->hide();
+
+    connect(this, SIGNAL(executed(QListViewItem*)), this,
+        SLOT(packetView(QListViewItem*)));
 }
 
 void PacketTreeView::fill(NPacket* topPacket) {
     clear();
     (new PacketTreeItem(this, topPacket))->fill();
+}
+
+void PacketTreeView::packetView(QListViewItem* packet) {
+    if (packet)
+        part->packetView(dynamic_cast<PacketTreeItem*>(packet)->getPacket());
 }
 
 void PacketTreeView::refresh(NPacket* topPacket) {
