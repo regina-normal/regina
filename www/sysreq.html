@@ -89,21 +89,28 @@ need everything from both <i>Binaries</i> and <i>Source</i> columns.
 
 <h4><a name="windoze">Windows (at least Win95):</a></h4>
 
-I still haven't actually tried building under windows.  In
-theory the sources <i>should</i> compile fine on windows assuming tools similar
-to those listed above are available on the system (the
-<a href="http://www.cygwin.com/">Cygwin development tools</a> are a great
-place to start).
+Although Regina is primarily written and tested under linux, it <i>should</i>
+be portable enough to build and run under windows.  The current status of
+the windows port is as follows:
+<ul>
+	<li>RegConf configuration utility:
+		<i><font color="darkGreen">builds</font>, <font color="darkGreen">runs</font></i></li>
+	<li>Calculation engine (JNI):
+		<i><font color="darkGreen">builds</font>, <font color="darkGreen">runs</font></i></li>
+	<li>Calculation engine (CORBA):
+		<i><font color="darkRed">build not tested</font></i></li>
+	<li>Java user interface (JNI):
+		<i><font color="darkGreen">builds</font>, <font color="darkGreen">runs</font></i></li>
+	<li>Java user interface (CORBA):
+		<i><font color="darkGreen">builds</font>, <font color="darkRed">run not tested</font></i></li>
+</ul>
+
 <p>
 <table border=1>
 <tr><td align=center><b>Component</b></td><td align=center><b>Version</b></td>
 	<td align=center><b>Download From</b></td>
 	<td align=center><b><i>Binaries</i></b></td>
 	<td align=center><b><i>Source</i></b></td></tr>
-<tr><td>GNU multiprecision arithmetic library</td><td>&gt;= 2</td>
-	<td>Not quite sure yet.</td>
-	<td>Shared library <i>libgmp.so</i></td><td>Linkable library
-	<i>libgmp.a</i> plus the corresponding header files</td></tr>
 <tr><td>Java</td><td>&gt;= 1.3 is recommended but
 		&gt;= 1.2.2 will do</td>
 	<td><a href="http://www.javasoft.com/j2se/">
@@ -127,15 +134,16 @@ place to start).
 		http://www.javasoft.com/products/javahelp/</a></td>
 	<td>Regina only needs access to the single file <i>jh.jar</i>.</td>
 	<td></td></tr>
-<tr><td>Cygwin development tools</td><td>&gt;= 1.1.4</td>
+<tr><td>Cygwin development tools</td><td>&gt;= 1.3</td>
 	<td><a href="http://www.cygwin.com/">http://www.cygwin.com/</a></td>
-	<td></td><td>You absolutely need packages <i>bash</i>, <i>binutils</i>,
-		<i>cygwin</i>, <i>fileutils</i>, <i>gcc</i>, <i>gzip</i>,
-		<i>make</i>, <i>sed</i>, <i>shellutils</i>, <i>tar</i> and
-		<i>textutils</i>, but the other packages are quite useful;
-		I'd just get everything.
-		Please <a href="mailto:benb@acm.org">mail me</a> if you discover any
-		other packages that need to be added to this list.</td></tr>
+	<td></td><td>See the <a href="cygwin.html#cygwin">Cygwin support page</a>
+	for details on which Cygwin packages you will need.</td></tr>
+<tr><td>GNU multiprecision arithmetic library</td><td>&gt;= 2</td>
+	<td><a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a>
+		(<i>libgmp</i> sources) or the <a href="cygwin.html#gmp">Cygwin support page</a>
+		(prebuilt <i>libgmp</i> libraries)</td>
+	<td></td><td>Linkable library
+	<i>libgmp.a</i> plus the corresponding header files</td></tr>
 <tr><td>Doxygen (<b>optional</b> - used to make HTML documentation for
 	the computation engine)</td><td>&gt;= 1.2.2</td>
 	<td><a href="http://www.stack.nl/~dimitri/doxygen/">

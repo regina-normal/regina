@@ -1,0 +1,82 @@
+<html>
+<head>
+	<title>Regina - Cygwin Support</title>
+</head>
+<body background="back.jpg" bgcolor="#C0C0C0" text="#000000"
+	link="#0000EE" vlink="#551A8B" alink="#FF0000">
+
+<a name="contents"><h2>Regina - Cygwin Support</h2></a>
+
+<ul>
+	<li><a href="#cygwin">Installing Cygwin</a></li>
+	<li><a href="#gmp">GNU Multiple Precision Arithmetic Library</a></li>
+	<li><a href="./">Back to main page ...</li>
+	<li><a href="sysreq.html#windoze">Back to system requirements ...</li>
+</ul>
+
+<h4><a name="cygwin">Installing Cygwin</a></h4>
+
+Cygwin provides a windows port of many of the development tools
+that one generally finds on a GNU/Linux system.  You can download
+it from <a href="http://www.cygwin.com/">http://www.cygwin.com/</a>.
+<p>
+You should then be able to build Regina from within a cygwin shell the
+same way you would build Regina under linux.
+<p>
+When installing Cygwin you are offered a choice of several packages to
+install.  To build Regina you will absolutely need packages
+<i>bash</i>, <i>binutils</i>,
+<i>cygwin</i>, <i>fileutils</i>, <i>findutils</i>, <i>gcc</i>, <i>gzip</i>,
+<i>make</i>, <i>sed</i>, <i>sh-utils</i>, <i>tar</i>,
+<i>textutils</i> and <i>w32api</i> (although many of the other packages are
+also useful).
+Please <a href="mailto:benb@acm.org">mail me</a> if you discover any
+additional packages that need to be added to this list.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<h4><a name="gmp">GNU Multiple Precision Arithmetic Library</a></h4>
+
+To build the Regina calculation engine you will need the GNU Multiple
+Precision Arithmetic Library (<i>libgmp</i>).  There are two methods
+of obtaining this library:
+<ul>
+	<li><b>Sources:</b> You can download the <i>libgmp</i> sources from
+		<a href="ftp://ftp.gnu.org/gnu/gmp/">ftp://ftp.gnu.org/gnu/gmp/</a>
+		and build the library yourself.  Unpack the sources, move into
+		the main source directory (the directory containing
+		<i>configure</i>) and then issue the commands:
+		<ul>
+			<li><tt>./configure</tt></li>
+			<li><tt>make</tt></li>
+			<li><tt>make install</tt></li>
+		</ul></li>
+	<li><b>Binaries:</b> You can download prebuilt <i>libgmp</i> binaries.
+		Visit the
+		<a href="http://sourceforge.net/project/showfiles.php?group_id=19698&release_id=38970">Regina
+		download site</a> and look in the support/cygwin module.  You should find a prebuilt <i>libgmp</i>
+		cygwin binary archive (<i>gmp-</i>version<i>_cygwin-bin.tgz</i>).  Unpack this archive in your
+		root cygwin directory using the following commands (issued from within a cygwin shell):
+		<ul>
+			<li><tt>cd /</tt></li>
+			<li><tt>tar -zxf path/to/gmp-version_cygwin-bin.tgz</tt></li>
+		</ul>
+		where <tt>path/to</tt> is changed to reflect where you saved the archive
+		and <tt>version</tt> is changed to reflect the name of the archive.
+		You should now have the library <i>/usr/local/lib/libgmp.a</i> and the header
+		<i>/usr/local/include/gmp.h</i>.</li>
+</ul>
+
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<p>
+<a href="./"><img src="return.gif"
+	alt="Back to main page ..."
+	border="0" vspace="10"  width="32" height="32"
+	align="middle"></a>
+<a href="./">Back to main page ...</a></p>
+
+</body>
+</html>
+
