@@ -38,6 +38,7 @@
 #include "reginapart.h"
 
 #include <qcolor.h>
+#include <qfileinfo.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qsplitter.h>
@@ -49,6 +50,7 @@
 #include <klineeditdlg.h>
 #include <kmainwindow.h>
 #include <kmessagebox.h>
+#include <kstdguiitem.h>
 #include <kparts/genericfactory.h>
 
 typedef KParts::GenericFactory<ReginaPart> ReginaPartFactory;
@@ -250,8 +252,24 @@ void ReginaPart::fileSave() {
 void ReginaPart::fileSaveAs() {
     QString file = KFileDialog::getSaveFileName(QString::null,
         i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
-    if (! file.isEmpty())
-        saveAs(file);
+
+    if (file.isEmpty())
+        return;
+
+    // Do we need to add an extension?
+    if (prefs.autoFileExtension && QFileInfo(file).extension().isEmpty())
+        file += ReginaAbout::regDataExt;
+
+    // Does this file already exist?
+    if (QFileInfo(file).exists())
+        if (KMessageBox::warningContinueCancel(widget(), i18n("A file with "
+                "this name already exists.  Are you sure you wish to "
+                "overwrite it?"), QString::null, KStdGuiItem::save())
+                != KMessageBox::Continue)
+            return;
+
+    // Go ahead and save it.
+    saveAs(file);
 }
 
 void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree) {
