@@ -64,7 +64,7 @@
 
  <indexentry>
   <primaryie><link linkend="tri-new-aug">augmented triangular solid
-   torus, creation</link></secondaryie>
+   torus, creation</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -251,10 +251,10 @@
 
  <indexentry>
   <primaryie>dehydrated triangulations</primaryie>
-  <secondaryie><link linkend="tri-imoprt-dehydrationlist">importing
-   a list of dehydration strings</link></primaryie>
+  <secondaryie><link linkend="tri-import-dehydrationlist">importing
+   a list of dehydration strings</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">rehydrating from
-   a dehydration string</link></primaryie>
+   a dehydration string</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -399,10 +399,10 @@
  <indexentry>
   <primaryie>ideal vertices</primaryie>
   <secondaryie><link linkend="tri-subdivision">converting
-   to real boundary</link></primaryie>
+   to real boundary</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">testing
-   for</link></primaryie>
-  <secondaryie><link linkend="tri-vertextype">viewing</link></primaryie>
+   for</link></secondaryie>
+  <secondaryie><link linkend="tri-vertextype">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -423,11 +423,11 @@
  <indexentry>
   <primaryie>importing triangulations</primaryie>
   <secondaryie><link linkend="tri-import-dehydrationlist">from
-   dehydration lists</link></primaryie>
+   dehydration lists</link></secondaryie>
   <secondaryie><link linkend="tri-import-snappea">from
-   &regina; data files</link></primaryie>
+   &regina; data files</link></secondaryie>
   <secondaryie><link linkend="tri-import-snappea">from
-   &snappea;</link></primaryie>
+   &snappea;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -442,22 +442,22 @@
 
  <indexentry>
   <primaryie><link linkend="tri-new-lens">layered lens space,
-   creation</link></secondaryie>
+   creation</link></primaryie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="tri-new-loop">layered loop,
-   creation</link></secondaryie>
+   creation</link></primaryie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="tri-new-layered">layered solid torus,
-   creation</link></secondaryie>
+   creation</link></primaryie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="tri-new-lens">lens space,
-   creation</link></secondaryie>
+   creation</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -649,7 +649,7 @@
 
  <indexentry>
   <primaryie><link linkend="tri-sfs3">Seifert fibred space,
-   creation</link></secondaryie>
+   creation</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -680,7 +680,7 @@
  <indexentry>
   <primaryie>&snappea;</primaryie>
   <secondaryie><link linkend="tri-import-snappea">importing
-   from</link></primaryie>
+   from</link></secondaryie>
  </indexentry>
 
  <indexentry id="idx-splitting-surfaces">
@@ -753,8 +753,8 @@
  </indexentry>
 
  <indexentry>
-  <secondaryie><link linkend="tri-editgluings">tetrahedron face
-   gluings, editing</link></secondaryie>
+  <primaryie><link linkend="tri-editgluings">tetrahedron face
+   gluings, editing</link></primaryie>
  </indexentry>
 
  <indexentry>

@@ -907,7 +907,7 @@
    </para>
    <para>
     <glosslist>
-     <glossentry id="prop-0eff">
+     <glossentry id="tri-prop0eff">
       <glossterm>Zero-Efficient</glossterm>
       <glossdef><para>
        Determines whether the triangulation is 0-efficient.  A
