@@ -231,7 +231,8 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
 
 bool NGluingPerms::badEdgeLink(const NTetFace& face) {
     // Run around all three edges bounding face.
-    unsigned tet, adjTet;
+    NTetFace adj;
+    unsigned tet;
     NPerm current;
     NPerm start(face.face, 3);
     bool started, incomplete;
@@ -263,13 +264,18 @@ bool NGluingPerms::badEdgeLink(const NTetFace& face) {
                 incomplete = true;
                 break;
             }
-            if (permIndex(tet, current[3]) < 0) {
+            adj = pairing->dest(tet, current[3]);
+
+            if (permIndex(tet, current[3]) >= 0) {
+                current = gluingPerm(tet, current[3]) * current;
+            } else if (permIndex(adj) >= 0) {
+                current = gluingPerm(adj).inverse() * current;
+            } else {
                 incomplete = true;
                 break;
             }
-            adjTet = pairing->dest(tet, current[3]).tet;
-            current = gluingPerm(tet, current[3]) * current;
-            tet = adjTet;
+
+            tet = adj.tet;
         }
 
         // Did we meet the original edge in reverse?
