@@ -43,26 +43,40 @@
 #include <eval.h>
 #include <sysmodule.h>
 
-long PythonInterpreter::nInterpreters = 0;
-bool PythonInterpreter::createdGIL = false;
+/**
+ * WARNING: We never call Py_Finalize().
+ *
+ * It can't be called during the program since multiple
+ * initialise/finalise sequences cause problems with boost.python
+ * modules.
+ *
+ * It can't be called during global object destruction since this seems to
+ * be too late and a crash results (PyThreadState_Get: no current thread).
+ *
+ * Ideally it is called at program exit, before the destruction of
+ * global objects.  This is a hassle though, and since there should be
+ * no external resource usage and since memory leaks are reclaimed by the
+ * operating system, we simply choose to ignore the problem.
+ */
+
 regina::NMutex PythonInterpreter::globalMutex;
+bool PythonInterpreter::pythonInitialised = false;
 
 PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         PythonOutputStream* pyStdErr) {
     regina::NMutex::MutexLock lock(globalMutex);
 
     // Acquire the global interpreter lock.
-    if (! createdGIL) {
-        PyEval_InitThreads();
-        createdGIL = true;
-    } else
+    if (pythonInitialised)
         PyEval_AcquireLock();
+    else {
+        PyEval_InitThreads();
+        Py_Initialize();
+        pythonInitialised = true;
+    }
 
     // Create the new interpreter.
-    if (nInterpreters == 0)
-        Py_Initialize();
     state = Py_NewInterpreter();
-    nInterpreters++;
 
     // Record the main module.
     mainModule = PyImport_AddModule("__main__"); // Borrowed ref.
@@ -95,11 +109,7 @@ PythonInterpreter::~PythonInterpreter() {
     PyEval_RestoreThread(state);
 
     // Destroy the interpreter.
-    nInterpreters--;
-    if (nInterpreters == 0)
-        Py_Finalize();
-    else
-        Py_EndInterpreter(state);
+    Py_EndInterpreter(state);
 
     // Release the global interpreter lock.
     PyEval_ReleaseLock();
@@ -257,6 +267,9 @@ bool PythonInterpreter::importRegina() {
     if (regModule) {
         PyDict_SetItemString(mainNamespace, "regina", regModule);
         Py_DECREF(regModule);
+    } else {
+        PyErr_Print();
+        PyErr_Clear();
     }
 
     state = PyEval_SaveThread();

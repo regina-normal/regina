@@ -39,7 +39,9 @@ void PythonOutputStream::write(const std::string& data) {
 }
 
 void PythonOutputStream::flush() {
-    processOutput(buffer);
-    buffer.clear();
+    if (! buffer.empty()) {
+        processOutput(buffer);
+        buffer.clear();
+    }
 }
 

@@ -52,7 +52,7 @@ class QLabel;
  * Generally objects of this class are not created directly; instead
  * PacketManager::launchPythonConsole() is used.
  */
-class PythonConsole : public KMainWindow, public PythonOutputStream {
+class PythonConsole : public KMainWindow {
     Q_OBJECT
 
     private:
@@ -67,6 +67,8 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
         KTextEdit* session;
         QLabel* prompt;
         KLineEdit* input;
+        PythonOutputStream* output;
+        PythonOutputStream* error;
 
         /**
          * Python components
@@ -104,18 +106,12 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
          */
         void updatePreferences(const ReginaPrefSet& newPrefs);
 
-    protected:
-        /**
-         * PythonOutputStream overrides.
-         */
-        void processOutput(const std::string& data);
-
     private:
         /**
          * Initialise the python interpreter and otherwise prepare the
          * console for use.
          */
-        void init();
+        void init(regina::NPacket* tree, regina::NPacket* selectedPacket);
 
         /**
          * Change the visible prompt.
@@ -123,10 +119,11 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
         void setPromptMode(PromptMode mode = PRIMARY);
 
         /**
-         * Write input or output to the session transcript.
+         * Write input, output or error to the session transcript.
          */
         void addInput(const QString& input);
         void addOutput(const QString& output);
+        void addError(const QString& error);
 
         /**
          * Encode special characters so that the given text can be
@@ -139,10 +136,46 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
          * Calculate the indent at the beginning of the given line.
          */
         static QString initialIndent(const QString& line);
+
+        /**
+         * An output stream that writes data using addOutput().
+         */
+        class OutputStream : public PythonOutputStream {
+            private:
+                PythonConsole* console_;
+
+            public:
+                OutputStream(PythonConsole* console);
+
+            protected:
+                void processOutput(const std::string& data);
+        };
+
+        /**
+         * An output stream that writes data using addError().
+         */
+        class ErrorStream : public PythonOutputStream {
+            private:
+                PythonConsole* console_;
+
+            public:
+                ErrorStream(PythonConsole* console);
+
+            protected:
+                void processOutput(const std::string& data);
+        };
 };
 
 inline void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
     prefs = newPrefs;
+}
+
+inline PythonConsole::OutputStream::OutputStream(PythonConsole* console) :
+        console_(console) {
+}
+
+inline PythonConsole::ErrorStream::ErrorStream(PythonConsole* console) :
+        console_(console) {
 }
 
 #endif

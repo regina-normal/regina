@@ -27,13 +27,18 @@
 /* end stub */
 
 #include "regina-config.h"
+#include "packet/npacket.h"
 
 #include "../pythonmanager.h"
+#include "../reginafilter.h"
 #include "pythonconsole.h"
 #include "pythoninterpreter.h"
 
+#include <fstream>
 #include <iostream>
 #include <kaction.h>
+#include <kapplication.h>
+#include <kfiledialog.h>
 #include <kglobalsettings.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -47,8 +52,6 @@
 #include <qvbox.h>
 
 // TODO: tab, history
-// TODO: save log ; cut, copy, paste, select all
-// TODO: long processing notification and visual updates
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         regina::NPacket* tree, regina::NPacket* selectedPacket) :
@@ -93,12 +96,13 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     (new KAction(i18n("&Close"), "fileclose", CTRL+Key_D, this, SLOT(close()),
         actionCollection(), "console_close"))->plug(menuConsole);
 
-    KStdAction::cut(input, SLOT(cut()), actionCollection())->plug(menuEdit);
-    KStdAction::copy(input, SLOT(copy()), actionCollection())->plug(menuEdit);
-    KStdAction::paste(input, SLOT(paste()), actionCollection())->
-        plug(menuEdit);
-    menuEdit->insertSeparator();
-    KStdAction::selectAll(input, SLOT(selectAll()), actionCollection())->
+    KAction* actCopy = KStdAction::copy(session, SLOT(copy()),
+        actionCollection());
+    actCopy->setEnabled(false);
+    connect(session, SIGNAL(copyAvailable(bool)), actCopy,
+        SLOT(setEnabled(bool)));
+    actCopy->plug(menuEdit);
+    KStdAction::selectAll(session, SLOT(selectAll()), actionCollection())->
         plug(menuEdit);
 
     menuBar()->insertItem(i18n("&Console"), menuConsole);
@@ -107,31 +111,41 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     // Prepare the console for use.
     if (manager)
         manager->registerConsole(this);
-    interpreter = new PythonInterpreter(this, this);
-    init();
+
+    output = new PythonConsole::OutputStream(this);
+    error = new PythonConsole::ErrorStream(this);
+    interpreter = new PythonInterpreter(output, error);
+
+    init(tree, selectedPacket);
 }
 
 PythonConsole::~PythonConsole() {
     delete interpreter;
+    delete output;
+    delete error;
     if (manager)
         manager->deregisterConsole(this);
 }
 
 void PythonConsole::processCommand() {
+    input->setEnabled(false);
+
     QString cmd = input->text();
     lastIndent = initialIndent(cmd);
 
     // Log the input line.
     // Include the prompt but ignore the initial space.
     addInput(prompt->text().mid(1) + cmd);
-    input->clear();
+    input->setText(i18n("Processing..."));
     setPromptMode(PROCESSING);
 
-    // Do the actual processing.
+    // Do the actual processing (which could take some time).
+    KApplication::kApplication()->processEvents();
     bool done = interpreter->executeLine(cmd.ascii());
 
-    // Log the output.
-    PythonOutputStream::flush();
+    // Finish the output.
+    output->flush();
+    error->flush();
 
     // Prepare for a new command.
     setPromptMode(done ? PRIMARY : SECONDARY);
@@ -139,21 +153,26 @@ void PythonConsole::processCommand() {
         input->setText(lastIndent);
         input->end(false);
     }
+    input->setEnabled(true);
+    input->setFocus();
 }
 
 void PythonConsole::saveLog() {
-    // TODO
+    QString file = KFileDialog::getSaveFileName(QString::null,
+        i18n(FILTER_ALL), this, i18n("Save Session Transcript"));
+    if (! file.isEmpty()) {
+        std::ofstream out(file.ascii());
+        if (out)
+            out << session->text(); // TODO: This doesn't work (tags).
+        else
+            KMessageBox::error(this, i18n("An error occurred whilst "
+                "attempting to write to the file %1.").arg(file));
+    }
 }
 
-void PythonConsole::processOutput(const std::string& data) {
-    // Strip the final newline (if any) before we process the string.
-    if ((! data.empty()) && *(data.rbegin()) == '\n')
-        addOutput(data.substr(0, data.length() - 1).c_str());
-    else
-        addOutput(data.c_str());
-}
-
-void PythonConsole::init() {
+void PythonConsole::init(regina::NPacket* tree,
+        regina::NPacket* selectedPacket) {
+    // Import the regina module.
     if (! interpreter->importRegina()) {
         KMessageBox::error(this, i18n("<qt>The Python module <i>regina</i> "
             "could not be loaded.  None of Regina's functions will "
@@ -162,11 +181,38 @@ void PythonConsole::init() {
             "<tt>%1/regina.so</tt>.  Please write to %2 if you require "
             "further assistance.</qt>")
             .arg(REGINA_PYLIBDIR).arg(PACKAGE_BUGREPORT));
-        addOutput(i18n("Unable to load module \"regina\"."));
-    } else
-        interpreter->executeLine("print regina.welcome()");
+        addError(i18n("Unable to load module \"regina\"."));
+    } else {
+        interpreter->executeLine("print regina.welcome() + '\\n'");
 
-    // TODO: More startup tasks.
+        // Set base variables.
+        if (tree) {
+            if (interpreter->setVar("root", tree))
+                addOutput(i18n("The root of the packet tree is in the "
+                    "variable [root]."));
+            else {
+                KMessageBox::error(this, i18n("<qt>An error occurred "
+                    "whilst attempting to place the root of the packet "
+                    "tree in the variable <i>root</i>.</qt>"));
+                addError(i18n("The variable \"root\" has not been set."));
+            }
+        }
+        if (selectedPacket) {
+            if (interpreter->setVar("selected", tree))
+                addOutput(i18n("The selected packet (%1) is in the "
+                    "variable [selected].")
+                    .arg(selectedPacket->getPacketLabel().c_str()));
+            else {
+                KMessageBox::error(this, i18n("<qt>An error occurred "
+                    "whilst attempting to place the selected packet (%1) "
+                    "in the variable <i>selected</i>.</qt>")
+                    .arg(selectedPacket->getPacketLabel().c_str()));
+                addError(i18n("The variable \"selected\" has not been set."));
+            }
+        }
+    }
+
+    // TODO: Run library scripts.
 
     setPromptMode(PRIMARY);
 }
@@ -188,11 +234,24 @@ void PythonConsole::setPromptMode(PromptMode mode) {
 void PythonConsole::addInput(const QString& input) {
     session->append("<b>" + encode(input) + "</b>");
     session->scrollToBottom();
+    KApplication::kApplication()->processEvents();
 }
 
 void PythonConsole::addOutput(const QString& output) {
-    session->append(encode(output));
+    // Since empty output has no tags we need to be explicitly sure that
+    // blank lines are still written.
+    if (output.isEmpty())
+        session->append("<br>");
+    else
+        session->append(encode(output));
     session->scrollToBottom();
+    KApplication::kApplication()->processEvents();
+}
+
+void PythonConsole::addError(const QString& output) {
+    session->append("<font color=\"dark red\">" + encode(output) + "</font>");
+    session->scrollToBottom();
+    KApplication::kApplication()->processEvents();
 }
 
 QString PythonConsole::encode(const QString& plaintext) {
@@ -213,6 +272,22 @@ QString PythonConsole::initialIndent(const QString& line) {
         return "";
     else
         return line.left(pos - start);
+}
+
+void PythonConsole::OutputStream::processOutput(const std::string& data) {
+    // Strip the final newline (if any) before we process the string.
+    if ((! data.empty()) && *(data.rbegin()) == '\n')
+        console_->addOutput(data.substr(0, data.length() - 1).c_str());
+    else
+        console_->addOutput(data.c_str());
+}
+
+void PythonConsole::ErrorStream::processOutput(const std::string& data) {
+    // Strip the final newline (if any) before we process the string.
+    if ((! data.empty()) && *(data.rbegin()) == '\n')
+        console_->addError(data.substr(0, data.length() - 1).c_str());
+    else
+        console_->addError(data.c_str());
 }
 
 #include "pythonconsole.moc"

@@ -56,13 +56,11 @@ namespace regina {
  */
 class PythonInterpreter {
     private:
-        static long nInterpreters;
-            /**< The number of currently active interpreters. */
-        static bool createdGIL;
-            /**< Have we created the python global interpreter lock? */
         static regina::NMutex globalMutex;
             /**< A mutual exclusion device for the creation and
                  destruction of subinterpreters. */
+        static bool pythonInitialised;
+            /**< Has the python system been initialised yet? */
 
         PyThreadState* state;
             /**< The first thread state created in this particular

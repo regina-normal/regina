@@ -109,6 +109,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         QSizePolicy::MinimumExpanding, SCRIPT_EDITOR_WEIGHT,
         SCRIPT_EDITOR_WEIGHT));
     splitter->setResizeMode(view, QSplitter::Stretch);
+    view->setFocus();
 
     // --- Script Actions ---
 
