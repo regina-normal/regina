@@ -59,6 +59,8 @@ bindist () {
   fi
   mkdir "$tmpinst"
   make install DESTDIR="$tmpinst"
+  install -p -m 644 CHANGES.txt HIGHLIGHTS.txt LICENSE.txt \
+    "$tmpinst$pkgdatadir"
 
   # Strip.
   echo "mkdist: Stripping binaries..."
@@ -71,7 +73,7 @@ bindist () {
       echo "$base (could not be stripped)"
     fi
   done
-  rm -rf "$tmpinst$docdir"
+  rm -rf "$tmpinst$pkgdocdir"
 
   # Archive.
   archbase="regina-${version}_bin_$hosttype-$1"
@@ -107,8 +109,8 @@ docdist () {
   archtgz="`pwd`/$archbase.tgz"
   archzip="`pwd`/$archbase.zip"
   echo "mkdist: Creating archives $archbase.{tgz,zip}..."
-  ( cd "$tmpinst$docdir" && "$fakeroot" tar -zcf "$archtgz" * )
-  ( cd "$tmpinst$docdir" && "$fakeroot" zip -rqy "$archzip" * )
+  ( cd "$tmpinst$pkgdocdir" && "$fakeroot" tar -zcf "$archtgz" * )
+  ( cd "$tmpinst$pkgdocdir" && "$fakeroot" zip -rqy "$archzip" * )
 
   # Tidy up.
   echo "mkdist: Cleaning up..."

@@ -31,5 +31,6 @@ export hosttype="@host_cpu@"
 export version="@VERSION@"
 export prefix="@prefix@"
 export datadir="@datadir@"
-export docdir="$datadir/@PACKAGE@/doc"
+export pkgdatadir="$datadir/@PACKAGE@"
+export pkgdocdir="$pkgdatadir/doc"
 
