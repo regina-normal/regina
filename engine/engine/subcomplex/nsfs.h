@@ -305,6 +305,10 @@ class NSFS : public ShareableObject {
         /**
          * Determines if this Seifert fibred space is a Lens space.
          *
+         * If this is a Lens space, the NLensSpace returned will be
+         * newly created and it will be up to the caller
+         * of this routine to destroy it.
+         *
          * \todo \bug Currently this routine only recognises a Lens
          * space if its orbit manifold is the 2-sphere.
          *

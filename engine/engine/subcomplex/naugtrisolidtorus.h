@@ -68,7 +68,7 @@ class NComponent;
  *
  * Note that (unless a (1,1,0) layered solid torus is used with the 0
  * edge glued to an axis edge) the resulting space will be a Seifert
- * fibred space with at most three exceptional fibres.
+ * fibred space over the 2-sphere with at most three exceptional fibres.
  */
 class NAugTriSolidTorus : public ShareableObject {
     private:
