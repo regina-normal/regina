@@ -1,3 +1,0 @@
-#!/bin/sh
-find normal -name "*.java" -exec grep "$1" {} \; -print
-find normal -name "*.html" -exec grep "$1" {} \; -print

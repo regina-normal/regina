@@ -1,8 +1,0 @@
-
-Census counts for 1,2,3 tetrahedra:
-
-All connected triangulations:
-5 37 342
-
-All orientable triangulations:
-4 27 213 2584
