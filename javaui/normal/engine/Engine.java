@@ -130,6 +130,7 @@ public interface Engine {
     NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     NLayeredLoop isLayeredLoop(NComponent comp);
     NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
+    NPlugTriSolidTorus isPlugTriSolidTorus(NTriangulation tri);
     NSnappedBall isSnappedBall(NTetrahedron tet);
     NSpiralSolidTorus isSpiralSolidTorus(NTetrahedron tet, NPerm roles);
     NTriSolidTorus isTriSolidTorus(NTetrahedron tet, NPerm vertexRoles);

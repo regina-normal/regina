@@ -54,6 +54,7 @@ class NLayeredLoop;
 class NLayeredSolidTorus;
 class NMatrixInt;
 class NNormalSurfaceList;
+class NPlugTriSolidTorus;
 class NProgressManager;
 class NScript;
 class NSignature;
@@ -192,6 +193,8 @@ class Engine {
             /**< Calls NLayeredLoop::isLayeredLoop(). */
         NLayeredSolidTorus* isLayeredSolidTorusBase(NTetrahedron* tet);
             /**< Calls NLayeredSolidTorus::isLayeredSolidTorusBase(). */
+        NPlugTriSolidTorus* isPlugTriSolidTorus(NTriangulation* tri);
+            /**< Calls NPlugTriSolidTorus::isPlugTriSolidTorus(). */
         NSnappedBall* isSnappedBall(NTetrahedron* tet);
             /**< Calls NSnappedBall::isSnappedBall(). */
         NSpiralSolidTorus* isSpiralSolidTorus(NTetrahedron* tet, NPerm roles);

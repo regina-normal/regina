@@ -262,6 +262,7 @@ public class JNIEngine implements Engine {
     public native NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     public native NLayeredLoop isLayeredLoop(NComponent comp);
     public native NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
+    public native NPlugTriSolidTorus isPlugTriSolidTorus(NTriangulation tri);
     public native NSnappedBall isSnappedBall(NTetrahedron tet);
     public NSpiralSolidTorus isSpiralSolidTorus(NTetrahedron tet,
             NPerm vertexRoles) {

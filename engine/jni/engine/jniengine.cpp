@@ -42,6 +42,7 @@
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/npillowtwosphere.h"
+#include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nspiralsolidtorus.h"
 #include "subcomplex/ntrisolidtorus.h"
@@ -170,6 +171,15 @@ REGJNIEXPORT jobject JNICALL
         NLayeredSolidTorus::isLayeredSolidTorusBase(
         GET_ENGINE_OBJECT(env, NTetrahedron, you)),
         "normal/engine/implementation/jni/subcomplex/NJNILayeredSolidTorus");
+}
+
+REGJNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_isPlugTriSolidTorus
+        (JNIEnv* env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NPlugTriSolidTorus::isPlugTriSolidTorus(
+        GET_ENGINE_OBJECT(env, NTriangulation, you)),
+        "normal/engine/implementation/jni/subcomplex/NJNIPlugTriSolidTorus");
 }
 
 REGJNIEXPORT jobject JNICALL

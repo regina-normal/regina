@@ -264,6 +264,56 @@ public class CompositionViewer extends DefaultPacketViewer
             }
         }
 
+        // Look for plugged triangular solid tori.
+        category = null;
+        NPlugTriSolidTorus plug;
+        NLayeredChain chain;
+        {
+            plug = engine.isPlugTriSolidTorus(triangulation);
+            if (plug != null) {
+                if (category == null) {
+                    category = new DefaultMutableTreeNode(
+                        "Plugged Triangular Solid Tori");
+                    rootNode.add(category);
+                }
+                sfs = plug.getSeifertStructure();
+                instance = new DefaultMutableTreeNode(sfs.toString());
+                category.add(instance);
+                lensSpace = sfs.isLensSpace();
+                if (lensSpace != null) {
+                    instance.add(new DefaultMutableTreeNode("Reduces to " +
+                        lensSpace.toString()));
+                    lensSpace.destroy();
+                }
+                tri = plug.getCore();
+                instance.add(new DefaultMutableTreeNode("Core: tets " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    tri.getTetrahedron(0))) + ", " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    tri.getTetrahedron(1))) + ", " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    tri.getTetrahedron(2)))));
+
+                nodeText = "Chains: lengths ";
+                for (j = 0; j < 3; j++) {
+                    chain = plug.getChain((int)j);
+                    nodeText = nodeText + (chain == null ? "0" :
+                        String.valueOf(chain.getIndex()) +
+                        (plug.getChainType((int)j) == plug.CHAIN_MAJOR ?
+                         " [major]" : " [minor]"));
+                    if (j < 2)
+                        nodeText = nodeText + ", ";
+                }
+                instance.add(new DefaultMutableTreeNode(nodeText));
+
+                instance.add(new DefaultMutableTreeNode(
+                    "Plug equator type: " +
+                    (plug.getEquatorType() == plug.EQUATOR_MAJOR ?
+                    "major" : "minor")));
+                plug.destroy();
+            }
+        }
+
         // Look for layered solid tori.
         category = null;
         n = triangulation.getNumberOfTetrahedra();
