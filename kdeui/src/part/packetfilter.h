@@ -69,7 +69,7 @@ class AllPacketsFilter : public PacketFilter {
  * A packet filter that accepts only packets that can be happily
  * separated from their parents.
  */
-class StandaloneFilter {
+class StandaloneFilter : public PacketFilter {
     public:
         /**
          * PacketFilter overrides.
@@ -85,7 +85,7 @@ class StandaloneFilter {
  * NPacket::getPacketType() upon each packet being questioned.
  */
 template <class T>
-class SingleTypeFilter {
+class SingleTypeFilter : public PacketFilter {
     public:
         /**
          * PacketFilter overrides.
@@ -103,7 +103,7 @@ class SingleTypeFilter {
  * NPacket::getPacketType() upon each packet being questioned.
  */
 template <class S, class T>
-class TwoTypeFilter {
+class TwoTypeFilter : public PacketFilter {
     public:
         /**
          * PacketFilter overrides.
