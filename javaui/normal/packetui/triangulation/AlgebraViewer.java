@@ -176,7 +176,6 @@ public class AlgebraViewer extends DefaultPacketViewer
         fgpRelModel = new DefaultListModel();
         fgpRelations = new JList(fgpRelModel);
         fgpRelations.setVisibleRowCount(6);
-        fgpRelations.setBorder(BorderFactory.createLoweredBevelBorder());
         componentsToDisable.addElement(fgpName);
         componentsToDisable.addElement(fgpGenerators);
         componentsToDisable.addElement(fgpRelations);
@@ -206,7 +205,7 @@ public class AlgebraViewer extends DefaultPacketViewer
         fgpPane.add(fgpName, cTotal2);
         fgpPane.add(fgpGenerators, cLabel2);
         fgpPane.add(labelFgpRelations, cLabel2);
-        fgpPane.add(fgpRelations, cList);
+        fgpPane.add(new JScrollPane(fgpRelations), cList);
 
         // Put everything together.
         JSplitPane all = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
