@@ -11,6 +11,7 @@ Regina - A Normal Surface Theory Calculator
 Version 3.1  [ (under development) ]
 
     - Massive optimisation of census code.
+    - Fixed ideal-to-finite bug that was introduced in Regina 3.0.
 
 Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
 

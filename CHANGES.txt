@@ -17,6 +17,9 @@ Version 3.1  [ (under development) ]
             - Added support for splitting a census into pieces.
         Class NFacePairing, NGluingPerms:
             - Added to bear the brunt of census generation.
+        Class NTriangulation:
+            - Fixed idealToFinite() which was newly broken in Regina 3.0.
+            - Routine simplifyToLocalMinimum() now make boundary moves last.
         File nperm.h:
             - New arrays allPermsS2Inv, allPermsS3Inv, allPermsS4Inv.
     UTILITIES:
