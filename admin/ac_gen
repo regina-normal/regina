@@ -1,12 +1,15 @@
 #!/bin/sh
 #
 # Regina - A Normal Surface Theory Calculator
-# CVS Utility Script
+# Autoconf Preparation Utility
 #
 # Copyright (c) 2002, Ben Burton
 # For further details contact Ben Burton (benb@acm.org).
 #
-# Regenerates ../configure.ac and ../acinclude.m4.
+# Usage: ac_gen
+#
+# Regenerates ../configure.ac and ../acinclude.m4 from files within this
+# (admin) subdirectory.
 #
 # This script should NOT be run directly; to use it run "make -f Makefile.cvs"
 # from the top-level source directory (the directory above this).
