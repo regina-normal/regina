@@ -156,11 +156,8 @@ public abstract class Shell {
 			return optionsDir;
 
 		// Try to read the corresponding system property.
-        String optionsDirName = null;
-        try {
-            optionsDirName = System.getProperty(Application.optionsDirProperty);
-        } catch (Throwable th) {
-        }
+        String optionsDirName = NormalOptionSet.getSystemProperty(
+			Application.optionsDirProperty);
         if (optionsDirName == null || optionsDirName.length() == 0)
             optionsDirName = Application.optionsDirDefault;
  

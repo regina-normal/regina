@@ -28,6 +28,8 @@
 
 package normal.engine.implementation.jni;
 
+import org.gjt.btools.utilities.OptionSet;
+
 /**
  * Exception thrown when a shared library to be used with JNI could not
  * be loaded.
@@ -49,9 +51,6 @@ public class JNILibraryException extends Exception {
      * could not be determined.
      */    
     public String getLibraryPath() {
-        try {
-            return System.getProperty("java.library.path");
-        } catch (Throwable th) {}
-        return null;
+        return OptionSet.getSystemProperty("java.library.path");
     }    
 }
