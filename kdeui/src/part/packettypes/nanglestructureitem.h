@@ -62,6 +62,8 @@ class NAngleStructureItem : public KListViewItem {
          * QListItem overrides.
          */
         QString text(int column) const;
+        void paintCell(QPainter* p, const QColorGroup& cg, int column,
+            int width, int align);
 
     private:
         /**
