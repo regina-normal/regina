@@ -1,3 +1,10 @@
+Java User Interface TODO List
+-----------------------------
+
+Note that this TODO list pertains only to the user interface; there is
+also a calculation engine TODO list found under "Related Pages" in the
+engine documentation.
+
 (Applet):
  	Include Java plug-in support
  	Get this working on more browsers.
@@ -9,9 +16,12 @@ Everywhere:
 	Disable X-closing for all windows and dialogs except for main window
 		(necessary to ensure progress dialogs cannot be closed).
 -	Allow customisation of types in drop-down boxes
+-	Possibly distribute btools.jar?
 
 Help:
 	Write manual! - include context sensitive help, searching and index.
+-	Distribute sample data file.
+-	Distribute sample (commented) jython session.
 
 Jython:
 	Allow breaking processing in console
