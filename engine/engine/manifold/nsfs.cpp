@@ -239,6 +239,39 @@ NTriangulation* NSFS::construct() const {
         return t;
     }
 
+    // Pull off the number of fibres we're capable of dealing with.
+    // At this moment this is four.
+    if (nFibres > 4)
+        return 0;
+
+    NExceptionalFibre fibre[4];
+    std::copy(fibres.begin(), fibres.end(), fibre);
+
+    // We can construct any SFS with three exceptional fibres
+    // over the 3-sphere.
+    if (orbitGenus == 0 && orbitOrientable && orbitPunctures == 0) {
+        // Orbit manifold is the 3-sphere, and we must have >= 3
+        // exceptional fibres (since lens spaces have already been dealt
+        // with).
+        NExceptionalFibre two(2, 1);
+
+        // Some parameters allow particularly nice triangulations.
+        if (fibre[0] == two && fibre[1] == two &&
+                fibre[2].alpha * (k + 1) + fibre[2].beta == 1) {
+            // (2, 1) (2, 1) (a, -a+1)
+            NTriangulation* ans = new NTriangulation();
+            ans->insertLayeredLoop(fibre[2].alpha, true);
+            return ans;
+        }
+
+        // Fall through to the default case.
+        NTriangulation* ans = new NTriangulation();
+        ans->insertAugTriSolidTorus(fibre[0].alpha, fibre[0].beta,
+            fibre[1].alpha, fibre[1].beta, fibre[2].alpha,
+            fibre[2].beta + (k - 1) * fibre[2].alpha);
+        return ans;
+    }
+
     return 0;
 }
 
