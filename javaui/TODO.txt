@@ -21,6 +21,7 @@ Everywhere:
 		(necessary to ensure progress dialogs cannot be closed).
 *	Allow customisation of types in drop-down boxes
 *	Read *.opt from home directory instead of current directory.
+*	Handle missing runtime.opt.
 
 File I/O:
 	Import brings up file dialog first.
