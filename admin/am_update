@@ -11,13 +11,12 @@
 # Updates all Makefile.am lines of the form:
 #   ...HEADERS =...
 #   ...SOURCES =...
-#   ...java_sources =...
-#   ...java_classes =...
 # within the given source subtrees to reflect all available sources in
 # the corresponding directories.
 #
 # Running without any arguments will perform this update in the usual
-# directories.
+# directories (note that this does not include kdeui, which does not
+# interact well with this script).
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -110,8 +109,6 @@ sub updateFile {
 
     my @HEADERS;
     my @SOURCES;
-    my @java_sources;
-    my @java_classes;
 
     foreach my $entry (glob($amDir.'/*')) {
         if ($entry eq "$amDir/regina-config.h") {
@@ -121,15 +118,6 @@ sub updateFile {
             push(@HEADERS, $1);
         } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.cpp)$/) {
             push(@SOURCES, $1);
-        } elsif ($entry =~ /^\Q${amDir}\E\/(.*)\.java$/) {
-            push(@java_sources, $1.'.java');
-            push(@java_classes, $1.'.class');
-        } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.gif)$/) {
-            push(@java_sources, $1);
-        } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.jpg)$/) {
-            push(@java_sources, $1);
-        } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.png)$/) {
-            push(@java_sources, $1);
         }
     }
 
@@ -148,10 +136,6 @@ sub updateFile {
             $newLine = "$1HEADERS =".fileSet(@HEADERS)."\n";
         } elsif ($line =~ /^(.*)SOURCES\s*=/) {
             $newLine = "$1SOURCES =".fileSet(@SOURCES)."\n";
-        } elsif ($line =~ /^(.*)java_sources\s*=/) {
-            $newLine = "$1java_sources =".fileSet(@java_sources)."\n";
-        } elsif ($line =~ /^(.*)java_classes\s*=/) {
-            $newLine = "$1java_classes =".fileSet(@java_classes)."\n";
         } else {
             $newLine = $line;
         }
