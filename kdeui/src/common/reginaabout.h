@@ -59,6 +59,8 @@ class ReginaAbout : public KAboutData {
             /**< The version number of the current application release. */
         static const QString regWebsite;
             /**< The home website of the application. */
+        static const char* regLicense;
+            /**< The licensing agreement for the application. */
 
         ReginaAbout(const char* internalName);
 };

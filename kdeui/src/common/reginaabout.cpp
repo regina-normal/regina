@@ -30,8 +30,11 @@
 
 #include "reginaabout.h"
 
+#include <cstdlib>
 #include <klocale.h>
+#include <kstandarddirs.h>
 #include <qdatetime.h>
+#include <qfile.h>
 
 const QString ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
@@ -51,10 +54,30 @@ const QString ReginaAbout::regVersion(PACKAGE_VERSION);
 
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
+const char* ReginaAbout::regLicense =
+    "Copyright (c) 1999-2004, Ben Burton\n\n"
+    "This program is distributed under the terms of the GPL v2.\n\n"
+    "If you find Regina useful in your research, please consider citing it as\n"
+    "you would any other paper that you use.  The introductory chapter of the\n"
+    "Regina reference manual includes a suggested form of reference.\n\n"
+    "This program is free software; you can redistribute it and/or modify it\n"
+    "under the terms of the GNU General Public License as published by the\n"
+    "Free Software Foundation; either version 2 of the License, or (at your\n"
+    "option) any later version.\n\n"
+    "This program is distributed in the hope that it will be useful, but\n"
+    "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General\n"
+    "Public License for more details.\n\n"
+    "You should have received a copy of the GNU General Public License along\n"
+    "with this program; if not, write to the Free Software Foundation, Inc.,\n"
+    "59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n";
+
 ReginaAbout::ReginaAbout(const char* internalName) :
         KAboutData(internalName, regName, regVersion,
-        regDescription, License_GPL, regCopyright,
+        regDescription, License_Custom, regCopyright,
         regReleased, regWebsite, regBugAddress) {
+    setLicenseText(regLicense);
+
     // Authors:
     addAuthor("Ben Burton", 0, "bab@debian.org");
 

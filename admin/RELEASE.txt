@@ -12,14 +12,13 @@ Program version:
     www/index.html (last updated, current version)
 
 License details:
-    LICENSE.txt (./, docs/)
+    LICENSE.txt
     engine/engine/docs.h
     kdeui/doc/en/credits.docbook
     kdeui/src/reginaabout.h (ReginaAbout constructor)
     www/index.html
 
 Acknowledgements:
-    engine/engine/docs.h (General Notes page)
     kdeui/doc/en/credits.docbook
     kdeui/src/reginaabout.h (ReginaAbout constructor)
 

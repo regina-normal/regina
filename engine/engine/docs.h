@@ -36,38 +36,19 @@
  *  Regina<br>
  *  A Normal Surface Theory Calculator<br>
  *  Copyright &copy; 1999-2004, Ben Burton
- *  </b>
- *  <p>
- *  Written by Ben Burton
- *  <p>
- *  Normal 1.0 was written by David Letscher, who also provided invaluable
- *  technical advice for this project.
- *  </center>
- *
- *  <h3>Regina - A Normal Surface Theory Calculator</h3>
- *
- *  Additional code contributed by:
- *  <ul>
- *     <li>David Letscher</li>
- *  </ul>
- *  Thanks to:
- *  <ul>
- *      <li>Marc Culler</li>
- *      <li>Nathan Dunfield</li>
- *      <li>William Jaco</li>
- *      <li>Hyam Rubinstein</li>
- *      <li>Jeff Weeks</li>
- *      <li>The American Institute of Mathematics</li>
- *      <li>Oklahoma State University</li>
- *      <li>The University of Melbourne, Australia</li>
- *  </ul>
+ *  </b></center>
  *
  *  This documentation describes the functions, classes and related
  *  entities in the C++ calculation engine, as well as the mirroring of
  *  these in Python.
  *
- *  Contact Ben Burton (<a href="mailto:bab@debian.org">bab@debian.org</a>)
- *  for more details.
+ *  <h3>Citation</h3>
+ *
+ *  If you find Regina useful in your research, please consider citing it as
+ *  you would any other paper that you use.  The introductory chapter of the
+ *  Regina reference manual includes a suggested form of reference.
+ *
+ *  <h3>Copying and Modification</h3>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -83,5 +64,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  *  02111-1307, USA.
+ *
+ *  <h3>Acknowledgements</h3>
+ *
+ *  Many people have been of assistance with this project, be it through
+ *  time, knowledge, testing or code.  Please see the full list of
+ *  acknowledgements in the final chapter of the reference manual.
  */
 

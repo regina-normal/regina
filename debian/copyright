@@ -7,6 +7,17 @@ Upstream Author: Ben Burton <bab@debian.org>
 
 Copyright:
 
+   Regina - A Normal Surface Theory Calculator
+   Copyright (c) 1999-2004, Ben Burton
+
+   CITATION:
+
+   If you find Regina useful in your research, please consider citing it as
+   you would any other paper that you use.  The introductory chapter of the
+   Regina reference manual includes a suggested form of reference.
+
+   COPYING AND MODIFICATION:
+
    This package is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; version 2 dated June, 1991.

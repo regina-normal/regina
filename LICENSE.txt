@@ -2,6 +2,11 @@
             Regina - A Normal Surface Theory Calculator
                 Copyright (c) 1999-2004, Ben Burton
 
+  If you find Regina useful in your research, please consider citing it as
+you would any other paper that you use.  The introductory chapter of the
+Regina reference manual includes a suggested form of reference.
+
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 

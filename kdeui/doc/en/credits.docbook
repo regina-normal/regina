@@ -3,23 +3,27 @@
 
  <sect1 id="licenses">
   <title>License Details</title>
-
   <para>
-   <emphasis>&regina; &ndash; A Normal Surface Theory Calculator</emphasis>
+   &regina; &ndash; A Normal Surface Theory Calculator
+  </para>
+  <para>
+   &copyrightnotice;
   </para>
 
-  <para>
-   <emphasis>&copyrightnotice;</emphasis>
-  </para>
+  <sect2 id="licenses-citation">
+  <title>Citation</title>
+   <para>
+    If you find &regina; useful in your research, please consider
+    citing it as you would any other paper that you use.  See the
+    section on <link linkend="citing">citing &regina;</link> for a
+    suggested form of reference.
+   </para>
+  </sect2>
 
-  <para>
-   If you find &regina; useful in your research, please consider
-   citing it as you would any other paper that you use.  See the
-   section on <link linkend="citing">citing &regina;</link> for a
-   suggested form of reference.
-  </para>
-
-  &GPLNotice;
+  <sect2 id="licenses-gpl">
+   <title>Copying and Modification</title>
+   &GPLNotice;
+  </sect2>
  </sect1>
 
  <sect1 id="acknowledgements">
