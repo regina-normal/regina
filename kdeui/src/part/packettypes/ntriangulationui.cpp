@@ -51,7 +51,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
         PacketTabbedUI(newEnclosingPane) {
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
     gluings = new NTriGluingsUI(packet, this,
-        part->getPreferences().triEditMode, readWrite);
+        part->getPreferences(), readWrite);
     surfaces = new NTriSurfacesUI(packet, this,
         part->getPreferences().triSurfacePropsThreshold);
 
@@ -90,7 +90,7 @@ const QPtrList<KAction>& NTriangulationUI::getPacketTypeActions() {
 }
 
 void NTriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    gluings->setEditMode(newPrefs.triEditMode);
+    gluings->updatePreferences(newPrefs);
     surfaces->setAutoCalcThreshold(newPrefs.triSurfacePropsThreshold);
 }
 

@@ -78,6 +78,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Preferences
          */
         ReginaPrefSet::TriEditMode editMode;
+        ReginaFilePrefList censusFiles;
 
     public:
         /**
@@ -85,7 +86,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          */
         NTriGluingsUI(regina::NTriangulation* packet,
                 PacketTabbedUI* useParentUI,
-                ReginaPrefSet::TriEditMode newMode, bool readWrite);
+                const ReginaPrefSet& initialPrefs, bool readWrite);
         ~NTriGluingsUI();
 
         /**
@@ -98,10 +99,9 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void fillToolBar(KToolBar* bar);
 
         /**
-         * Query and modify the edit mode.
+         * Update the preferences.
          */
-        ReginaPrefSet::TriEditMode getEditMode() const;
-        void setEditMode(ReginaPrefSet::TriEditMode mode);
+        void updatePreferences(const ReginaPrefSet& newPrefs);
 
         /**
          * PacketEditorTab overrides.
@@ -128,6 +128,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void idealToFinite();
         void elementaryMove();
         void doubleCover();
+        void censusLookup();
 
         /**
          * Update the states of internal components.
@@ -140,12 +141,9 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void notifyGluingsChanged();
 };
 
-inline ReginaPrefSet::TriEditMode NTriGluingsUI::getEditMode() const {
-    return editMode;
-}
-
-inline void NTriGluingsUI::setEditMode(ReginaPrefSet::TriEditMode mode) {
-    editMode = mode;
+inline void NTriGluingsUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+    editMode = newPrefs.triEditMode;
+    censusFiles = newPrefs.censusFiles;
 }
 
 #endif

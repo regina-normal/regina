@@ -27,6 +27,9 @@
 /* end stub */
 
 // Regina core includes:
+#include "file/nxmlfile.h"
+#include "packet/ntext.h"
+#include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -39,6 +42,7 @@
 #include <klocale.h>
 #include <ktoolbar.h>
 #include <kmessagebox.h>
+#include <qfileinfo.h>
 #include <qlabel.h>
 #include <qtable.h>
 #include <set>
@@ -46,10 +50,28 @@
 using regina::NPacket;
 using regina::NTriangulation;
 
+namespace {
+    /**
+     * A structure for storing a single hit in a census lookup.
+     */
+    struct CensusHit {
+        QString triName;
+        QString censusFile;
+
+        CensusHit() {
+        }
+
+        CensusHit(const QString& newTriName, const QString& newCensusFile) :
+                triName(newTriName), censusFile(newCensusFile) {
+        }
+    };
+}
+
 NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI,
-        ReginaPrefSet::TriEditMode newMode, bool readWrite) :
-        PacketEditorTab(useParentUI), tri(packet), editMode(newMode) {
+        const ReginaPrefSet& initPrefs, bool readWrite) :
+        PacketEditorTab(useParentUI), tri(packet),
+        editMode(initPrefs.triEditMode), censusFiles(initPrefs.censusFiles) {
     // Set up the table of face gluings.
 
     faceTable = new QTable(0, 5, 0);
@@ -142,8 +164,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actIdealToFinite);
     triActionList.append(actIdealToFinite);
 
-    triActionList.append(new KActionSeparator());
-
     KAction* actDoubleCover = new KAction(i18n(
         "&Double Cover"),
         0 /* shortcut */, this, SLOT(doubleCover()), triActions,
@@ -153,6 +173,15 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actDoubleCover->setEnabled(readWrite);
     enableWhenWritable.append(actDoubleCover);
     triActionList.append(actDoubleCover);
+
+    triActionList.append(new KActionSeparator());
+
+    KAction* actCensusLookup = new KAction(i18n("Ce&nsus Lookup"), "find",
+        0 /* shortcut */, this, SLOT(censusLookup()), triActions,
+        "tri_census_lookup");
+    actCensusLookup->setToolTip(i18n(
+        "Search for this triangulation in the configured list of censuses"));
+    triActionList.append(actCensusLookup);
 
     // Tidy up.
 
@@ -391,6 +420,75 @@ void NTriGluingsUI::elementaryMove() {
 void NTriGluingsUI::doubleCover() {
     enclosingPane->commit();
     tri->makeDoubleCover();
+}
+
+void NTriGluingsUI::censusLookup() {
+    enclosingPane->commit();
+
+    // Run through each census file.
+    QValueVector<CensusHit> results;
+    QString searched = i18n("The following censuses were searched:");
+    NPacket* census;
+    NPacket* p;
+    for (ReginaFilePrefList::const_iterator it = censusFiles.begin();
+            it != censusFiles.end(); it++) {
+        if (! ((*it).active))
+            continue;
+        census = regina::readFileMagic((*it).filename.ascii());
+        if (! census) {
+            KMessageBox::error(ui, i18n("The census data file %1 "
+                "could not be read.\nYou might consider temporarily "
+                "disabling this file in the census settings.").
+                arg((*it).filename));
+            continue;
+        }
+
+        // Search for the triangulation!
+        for (p = census; p; p = p->nextTreePacket())
+            if (p->getPacketType() == NTriangulation::packetType)
+                if (tri->isIsomorphicTo(
+                        *dynamic_cast<NTriangulation*>(p)).get())
+                    results.push_back(CensusHit(p->getPacketLabel().c_str(),
+                        (*it).filename));
+        delete census;
+        searched = searched + '\n' + (*it).filename;
+    }
+
+    // Were there any hits?
+    if (results.empty())
+        KMessageBox::detailedSorry(ui, i18n("The triangulation could not "
+            "be found in any of the available censuses.\n"
+            "You can add more censuses to this search list through the "
+            "census settings."),
+            searched, i18n("No matches"));
+    else {
+        QString detailsText = i18n("Identified by census lookup:");
+        QString detailsHTML = i18n("<qt>The triangulation was identified:");
+        QString censusName;
+        for (QValueVector<CensusHit>::const_iterator it = results.begin();
+                it != results.end(); it++) {
+            censusName = QFileInfo((*it).censusFile).fileName();
+            detailsHTML += i18n("<p>Name: %1<br>Census: %2").
+                arg((*it).triName).arg(censusName);
+            detailsText += i18n("\n\nName: %1\nCensus: %2").
+                arg((*it).triName).arg(censusName);
+        }
+        detailsHTML += "</qt>";
+
+        // Show the hits to the user.
+        KMessageBox::information(ui, detailsHTML,
+            (results.size() == 1 ? i18n("1 match found") :
+                i18n("%1 matches found").arg(results.size())));
+
+        // If we're in read-write mode, store the hits as a text packet
+        // also.
+        if (! faceTable->isReadOnly()) {
+            regina::NText* text = new regina::NText(detailsText.ascii());
+            text->setPacketLabel(tri->makeUniqueLabel(
+                "ID: " + tri->getPacketLabel()));
+            tri->insertChildLast(text);
+        }
+    }
 }
 
 void NTriGluingsUI::updateRemoveState() {
