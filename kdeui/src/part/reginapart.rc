@@ -43,7 +43,7 @@
   <Action name="file_save" group="file_operations"/>
   <Action name="file_close" group="file_operations"/>
 </ToolBar>
-<ToolBar name="packetTree" noMerge="1" fullWidth="false">
+<ToolBar name="packetTree" noMerge="1">
   <text>Packet Tree Toolbar</text>
   <Action name="packet_view"/>
   <Action name="packet_rename"/>
@@ -60,7 +60,7 @@
   <Action name="nav_pagedown"/>
   <Action name="nav_bottom"/>
 </ToolBar>
-<ToolBar name="packetNew" noMerge="1" fullWidth="false">
+<ToolBar name="packetNew" noMerge="1">
   <text>New Packet Toolbar</text>
   <Action name="packet_angles"/>
   <Action name="packet_container"/>
