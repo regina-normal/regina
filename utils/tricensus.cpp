@@ -176,7 +176,7 @@ int main(int argc, char* argv[]) {
         descStream << "Requires precisely " << nBdryFaces <<
             " boundary faces\n";
     if (purgeNonMinimal)
-        descStream << "Ignored obviously nom-minimal triangulations\n";
+        descStream << "Ignored obviously non-minimal triangulations\n";
     desc->setText(descStream.str());
 
     regina::NContainer* census = new regina::NContainer();
