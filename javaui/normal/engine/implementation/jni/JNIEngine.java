@@ -108,6 +108,19 @@ public class JNIEngine implements Engine {
     public NContainer newNContainer() {
         return new NJNIContainer();
     }
+	public NGroupExpression newNGroupExpression() {
+		return new NJNIGroupExpression();
+	}
+	public NGroupExpression newNGroupExpression(NGroupExpression cloneMe) {
+		return new NJNIGroupExpression(cloneMe);
+	}
+	public NGroupPresentation newNGroupPresentation() {
+		return new NJNIGroupPresentation();
+	}
+	public NGroupPresentation newNGroupPresentation(
+			NGroupPresentation cloneMe) {
+		return new NJNIGroupPresentation(cloneMe);
+	}
     public NFile newNFile() {
         return new NJNIFile();
     }

@@ -62,6 +62,7 @@ public interface NTriangulation extends NPacket {
     public long getFaceIndex(NFace face);
 
     public long getEulerCharacteristic();
+    public NGroupPresentation getFundamentalGroup();
     public NAbelianGroup getHomologyH1();
     public NAbelianGroup getHomologyH1Rel();
     public NAbelianGroup getHomologyH1Bdry();

@@ -63,6 +63,8 @@
     #include "engine/algebra/nabeliangroup.h"
 #endif
 
+class NGroupPresentation;
+
 /**
  * Stores the triangulation of a 3-manifold along with its
  * various cellular structures and other information.
@@ -147,6 +149,10 @@ class NTriangulation : public NPacket, NPropertyHolder {
         bool orientable;
             /**< Is the triangulation orientable? */
 
+		NGroupPresentation* fundamentalGroup;
+			/**< Fundamental group of the triangulation. */
+		bool calculatedFundamentalGroup;
+			/**< Has \a fundamentalGroup been calculated? */
         NAbelianGroup* H1;
             /**< First homology group of the triangulation. */
         bool calculatedH1;
@@ -231,6 +237,31 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         long getEulerCharacteristic();
 
+        /**
+         * Returns the fundamental group of this triangulation.
+         * If this triangulation contains any ideal or non-standard
+         * vertices, the fundamental group will be
+         * calculated as if each such vertex had been truncated.
+         *
+         * If this triangulation contains any invalid edges, the
+         * calculations will be performed <b>without</b> any truncation
+         * of the corresponding projective plane cusp.  Thus if a
+         * barycentric subdivision is performed on the triangulation, the
+         * result of getFundamentalGroup() will change.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * fundamental group will be deleted.
+         * Thus the group reference returned should not be kept for
+         * later use.  Instead, getFundamentalGroup() should be called again;
+         * this will be instantaneous if the group has already been
+         * calculated.
+         *
+         * Note that this triangulation is not required to be valid
+         * (see isValid()).
+         *
+         * @return the fundamental group.
+         */
+		const NGroupPresentation& getFundamentalGroup();
         /**
          * Returns the first homology group for this triangulation.
          * If this triangulation contains any ideal or non-standard
@@ -1251,6 +1282,10 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation (this is the same as
          * simplicially homeomorphic).
+		 *
+		 * \todo \opt Improve the complexity by choosing a tetrahedron
+		 * mapping from each component and following gluings to
+		 * determine the others.
          *
          * @param other the triangulation to compare with this one.
          * @return \c true if and only if this and the given

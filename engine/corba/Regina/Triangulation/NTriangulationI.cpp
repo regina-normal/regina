@@ -34,6 +34,7 @@
 #include "NFaceI.h"
 #include "NTetrahedronI.h"
 #include "NAbelianGroupI.h"
+#include "NGroupPresentationI.h"
 
 CORBA::Long NTriangulation_i::getNumberOfTetrahedra() {
     return GET_ENGINE_OBJECT(NTriangulation, this)->getNumberOfTetrahedra();
@@ -136,6 +137,11 @@ CORBA::Long NTriangulation_i::getFaceIndex(
 }
 CORBA::Long NTriangulation_i::getEulerCharacteristic() {
     return GET_ENGINE_OBJECT(NTriangulation, this)->getEulerCharacteristic();
+}
+Regina::Algebra::NGroupPresentation_ptr
+		NTriangulation_i::getFundamentalGroup() {
+    return NGroupPresentation_i::newWrapper(&(::NGroupPresentation&)
+        (GET_ENGINE_OBJECT(NTriangulation, this)->getFundamentalGroup()));
 }
 Regina::Algebra::NAbelianGroup_ptr NTriangulation_i::getHomologyH1() {
     return NAbelianGroup_i::newWrapper(&(::NAbelianGroup&)

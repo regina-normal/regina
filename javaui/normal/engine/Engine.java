@@ -67,6 +67,11 @@ public interface Engine {
     public NAbelianGroup newNAbelianGroup(NAbelianGroup cloneMe);
     public NContainer newNContainer();
     public NFile newNFile();
+	public NGroupExpression newNGroupExpression();
+	public NGroupExpression newNGroupExpression(NGroupExpression cloneMe);
+	public NGroupPresentation newNGroupPresentation();
+	public NGroupPresentation newNGroupPresentation(
+		NGroupPresentation cloneMe);
     public NMatrixInt newNMatrixInt(int rows, int columns);
     public NMatrixInt newNMatrixInt(NMatrixInt cloneMe);
     public NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner,

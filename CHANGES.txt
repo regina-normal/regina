@@ -8,10 +8,16 @@ Regina - A Normal Surface Theory Calculator
     ENGINE:
         Overall structure:
             - Ported CORBA stuff to omniORB3.
+        Class NDoubleList, NDynamicArray:
+            - Added operator = to the iterator classes.
+        Class NGroupExpression, NGroupPresentation:
+            - New classes.
         Class NPacket:
             - Changed meaning of second (boolean) parameter to clone().
             - Added getNumberOfDescendants() and getNumberOfChildren();
               renamed totalTreeSize() to getTotalTreeSize().
+        Class NTriangulation:
+            - Added fundamental group as a new property.
     JAVA USER INTERFACE:
         Overall structure:
             - Moved options files to $REGINA_OPTIONS.

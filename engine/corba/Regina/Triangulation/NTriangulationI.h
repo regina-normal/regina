@@ -87,6 +87,7 @@ class NTriangulation_i :
         virtual CORBA::Long getFaceIndex(
             Regina::Triangulation::NFace_ptr face);
         virtual CORBA::Long getEulerCharacteristic();
+        virtual Regina::Algebra::NGroupPresentation_ptr getFundamentalGroup();
         virtual Regina::Algebra::NAbelianGroup_ptr getHomologyH1();
         virtual Regina::Algebra::NAbelianGroup_ptr getHomologyH1Rel();
         virtual Regina::Algebra::NAbelianGroup_ptr getHomologyH1Bdry();

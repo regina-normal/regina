@@ -31,6 +31,7 @@
 
 #include "Packet/NPacket.idl"
 #include "Algebra/NAbelianGroup.idl"
+#include "Algebra/NGroupPresentation.idl"
 #include "Triangulation/NTetrahedron.idl"
 
 module Regina {
@@ -71,6 +72,7 @@ module Regina {
             long getFaceIndex(in NFace face);
 
             long getEulerCharacteristic();
+            Regina::Algebra::NGroupPresentation getFundamentalGroup();
             Regina::Algebra::NAbelianGroup getHomologyH1();
             Regina::Algebra::NAbelianGroup getHomologyH1Rel();
             Regina::Algebra::NAbelianGroup getHomologyH1Bdry();

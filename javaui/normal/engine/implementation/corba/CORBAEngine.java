@@ -248,6 +248,24 @@ public class CORBAEngine implements Engine {
     public NFile newNFile() {
         return NCORBAFile.newWrapper(data.newNFile());
     }
+	public NGroupExpression newNGroupExpression() {
+		return NCORBAGroupExpression.newWrapper(data.newNGroupExpression_());
+	}
+	public NGroupExpression newNGroupExpression(NGroupExpression cloneMe) {
+		return NCORBAGroupExpression.newWrapper(
+			data.newNGroupExpression_NGroupExpression(
+			((NCORBAGroupExpression)cloneMe).data));
+	}
+	public NGroupPresentation newNGroupPresentation() {
+		return NCORBAGroupPresentation.newWrapper(
+			data.newNGroupPresentation_());
+	}
+	public NGroupPresentation newNGroupPresentation(
+			NGroupPresentation cloneMe) {
+		return NCORBAGroupPresentation.newWrapper(
+			data.newNGroupPresentation_NGroupPresentation(
+			((NCORBAGroupPresentation)cloneMe).data));
+	}
     public NMatrixInt newNMatrixInt(int rows, int columns) {
         return NCORBAMatrixInt.newWrapper(data.newNMatrixInt_long_long(
             rows, columns));

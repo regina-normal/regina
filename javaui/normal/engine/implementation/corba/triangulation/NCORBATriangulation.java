@@ -131,6 +131,9 @@ public class NCORBATriangulation extends NCORBAPacket
     public long getEulerCharacteristic() {
         return data.getEulerCharacteristic();
     }
+    public normal.engine.algebra.NGroupPresentation getFundamentalGroup() {
+        return NCORBAGroupPresentation.newWrapper(data.getFundamentalGroup());
+    }
     public normal.engine.algebra.NAbelianGroup getHomologyH1() {
         return NCORBAAbelianGroup.newWrapper(data.getHomologyH1());
     }

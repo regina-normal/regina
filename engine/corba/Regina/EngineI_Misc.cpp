@@ -30,10 +30,12 @@
 #include "regina.h"
 
 #ifdef __NO_INCLUDE_PATHS
+	#include "ngrouppresentation.h"
     #include "ncensus.h"
     #include "matrixops.h"
     #include "nnormalsurfacelist.h"
 #else
+    #include "engine/algebra/ngrouppresentation.h"
     #include "engine/census/ncensus.h"
     #include "engine/maths/matrixops.h"
     #include "engine/surfaces/nnormalsurfacelist.h"
@@ -42,6 +44,8 @@
 #include "EngineI.h"
 #include "NAbelianGroupI.h"
 #include "NFileI.h"
+#include "NGroupExpressionI.h"
+#include "NGroupPresentationI.h"
 #include "NMatrixIntI.h"
 #include "NProgressManagerI.h"
 
@@ -52,6 +56,24 @@ Regina::Algebra::NAbelianGroup_ptr Engine_i::newNAbelianGroup_NAbelianGroup(
         Regina::Algebra::NAbelianGroup_ptr cloneMe) {
     return NAbelianGroup_i::newWrapper(new ::NAbelianGroup(
         *GET_ENGINE_OBJECT(NAbelianGroup, cloneMe)));
+}
+Regina::Algebra::NGroupExpression_ptr Engine_i::newNGroupExpression_() {
+    return NGroupExpression_i::newWrapper(new ::NGroupExpression());
+}
+Regina::Algebra::NGroupExpression_ptr
+		Engine_i::newNGroupExpression_NGroupExpression(
+        Regina::Algebra::NGroupExpression_ptr cloneMe) {
+    return NGroupExpression_i::newWrapper(new ::NGroupExpression(
+        *GET_ENGINE_OBJECT(NGroupExpression, cloneMe)));
+}
+Regina::Algebra::NGroupPresentation_ptr Engine_i::newNGroupPresentation_() {
+    return NGroupPresentation_i::newWrapper(new ::NGroupPresentation());
+}
+Regina::Algebra::NGroupPresentation_ptr
+		Engine_i::newNGroupPresentation_NGroupPresentation(
+        Regina::Algebra::NGroupPresentation_ptr cloneMe) {
+    return NGroupPresentation_i::newWrapper(new ::NGroupPresentation(
+        *GET_ENGINE_OBJECT(NGroupPresentation, cloneMe)));
 }
 
 Regina::File::NFile_ptr Engine_i::newNFile() {

@@ -30,6 +30,7 @@
 #define __ENGINE_IDL
 
 #include "Algebra/NAbelianGroup.idl"
+#include "Algebra/NGroupPresentation.idl"
 #include "Maths/NMatrixInt.idl"
 #include "File/NFile.idl"
 #include "Packet/NContainer.idl"
@@ -49,6 +50,12 @@ module Regina {
         Algebra::NAbelianGroup newNAbelianGroup_();
         Algebra::NAbelianGroup newNAbelianGroup_NAbelianGroup(
             in Algebra::NAbelianGroup cloneMe);
+		Algebra::NGroupExpression newNGroupExpression_();
+		Algebra::NGroupExpression newNGroupExpression_NGroupExpression(
+			in Algebra::NGroupExpression cloneMe);
+		Algebra::NGroupPresentation newNGroupPresentation_();
+		Algebra::NGroupPresentation newNGroupPresentation_NGroupPresentation(
+			in Algebra::NGroupPresentation cloneMe);
 
         File::NFile newNFile();
 

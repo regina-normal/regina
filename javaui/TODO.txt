@@ -32,6 +32,7 @@ Jython:
 	Import/export scripts as text files
 *	Clipboard support in script editor
 	Autoindent in script editor
+	Associate each console window with a file and close it with that file
 
 Main Window:
 	View file version.

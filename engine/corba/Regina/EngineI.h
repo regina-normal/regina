@@ -43,6 +43,15 @@ class Engine_i : public virtual POA_Regina::Engine,
         virtual Regina::Algebra::NAbelianGroup_ptr
             newNAbelianGroup_NAbelianGroup(
             Regina::Algebra::NAbelianGroup_ptr cloneMe);
+        virtual Regina::Algebra::NGroupExpression_ptr newNGroupExpression_();
+        virtual Regina::Algebra::NGroupExpression_ptr
+            newNGroupExpression_NGroupExpression(
+            Regina::Algebra::NGroupExpression_ptr cloneMe);
+        virtual Regina::Algebra::NGroupPresentation_ptr
+			newNGroupPresentation_();
+        virtual Regina::Algebra::NGroupPresentation_ptr
+            newNGroupPresentation_NGroupPresentation(
+            Regina::Algebra::NGroupPresentation_ptr cloneMe);
 
         virtual Regina::File::NFile_ptr newNFile();
 

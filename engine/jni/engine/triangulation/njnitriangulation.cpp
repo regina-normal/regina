@@ -30,11 +30,13 @@
 #ifdef __NO_INCLUDE_PATHS
     #include "ntriangulation.h"
     #include "nabeliangroup.h"
+    #include "ngrouppresentation.h"
     #include "jnitools.h"
     #include "NJNITriangulation.h"
 #else
     #include "engine/triangulation/ntriangulation.h"
     #include "engine/algebra/nabeliangroup.h"
+    #include "engine/algebra/ngrouppresentation.h"
     #include "jni/jnitools.h"
     #include "jni/engine/triangulation/NJNITriangulation.h"
 #endif
@@ -123,6 +125,15 @@ JNIEXPORT jlong JNICALL
         (JNIEnv *env, jobject me, jobject tet) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->getFaces().
         position(GET_ENGINE_OBJECT(env, NFace, tet));
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFundamentalGroup
+		(JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+        (NGroupPresentation*)&GET_ENGINE_OBJECT(env, NTriangulation, me)->
+        getFundamentalGroup(),
+        "normal/engine/implementation/jni/algebra/NJNIGroupPresentation");
 }
 
 JNIEXPORT jobject JNICALL
