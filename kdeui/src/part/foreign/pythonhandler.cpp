@@ -102,6 +102,7 @@ regina::NPacket* PythonHandler::import(const QString& fileName,
             ans->addLast(line);
         }
 
+        line.clear(); // To deal with files with no final newline.
         getline(in, line);
     }
 
