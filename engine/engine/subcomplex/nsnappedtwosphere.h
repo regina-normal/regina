@@ -139,8 +139,8 @@ class NSnappedTwoSphere : public ShareableObject {
          *
          * \ifaces This routine is a member of class Engine.
          *
-         * @param tet1 the first snapped 3-ball to examine.
-         * @param tet2 the second snapped 3-ball to examine.
+         * @param ball1 the first snapped 3-ball to examine.
+         * @param ball2 the second snapped 3-ball to examine.
          * @return a newly created structure containing details of the
          * snapped 2-sphere, or \c null if the given snapped 3-balls do not
          * form a snapped 2-sphere.

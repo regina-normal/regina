@@ -108,7 +108,7 @@ class NLargeInteger {
          * \pre The given string represents a finite integer
          * in the given base, with optional whitespace added.
          *
-         * @param the new value of this integer, represented as a string
+         * @param value the new value of this integer, represented as a string
          * of digits in base \a base.
          * @param base the base in which \a value is given.
          */
@@ -179,7 +179,7 @@ class NLargeInteger {
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
          *
-         * @param the new value of this integer, represented as a string
+         * @param value the new value of this integer, represented as a string
          * of digits in base 10.
          * @return a reference to this integer with its new value.
          */

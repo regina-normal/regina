@@ -252,8 +252,7 @@ class NVertex : public ShareableObject {
          * considered as on the boundary are those whose links are
          * spheres.
          *
-         * @param \c true if and only if this vertex lies on the
-         * boundary.
+         * @return \c true if and only if this vertex lies on the boundary.
          * @see isIdeal()
          */
         bool isBoundary() const;

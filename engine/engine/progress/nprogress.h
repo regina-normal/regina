@@ -214,7 +214,7 @@ class NProgress : public ShareableObject, protected NMutex {
          */
         double getPercent() const;
 
-        void writeTextShort(ostream&) const;
+        void writeTextShort(ostream& out) const;
 
     protected:
         /**

@@ -87,10 +87,10 @@ class NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
 
         virtual NVector<NLargeInteger>* clone() const;
 
-        static void createNonNegativeCone(NTriangulation* triang,
+        static void createNonNegativeCone(NTriangulation* triangulation,
             NDoubleList<NConeRay*>& rays,
             NDoubleList<NVector<NLargeInteger>*>& faces);
-        static NMatrixInt* makeMatchingEquations(NTriangulation* triang);
+        static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
 };
 
 // Inline functions for NNormalSurfaceVectorStandard

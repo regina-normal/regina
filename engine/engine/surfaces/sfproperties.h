@@ -107,7 +107,7 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
          * Returns the allowable Euler characteristic at the given index
          * in the set.  See getECs() for further details.
          *
-         * @param the index in the set of allowable Euler
+         * @param index the index in the set of allowable Euler
          * characteristics; this must be between 0 and getNumberOfECs()-1
          * inclusive.
          * @return the requested allowable Euler characteristic.
@@ -196,7 +196,7 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
         void setRealBoundary(const NBoolSet& value);
         
         virtual bool accept(NNormalSurface& surface) const;
-        virtual void writeTextLong(ostream& o) const;
+        virtual void writeTextLong(ostream& out) const;
         virtual void writeFilter(NFile& out) const;
         virtual void writeProperties(NFile& out) const;
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
@@ -205,7 +205,7 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
         virtual NString getFilterName() const;
 
     protected:
-        virtual void readIndividualProperty(NFile& in, unsigned propType);
+        virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();
 };
 

@@ -256,7 +256,7 @@ class NSFS : public ShareableObject {
          * returning a <tt>long</tt>, which return the first and second
          * parameters of the requested fibre respectively.
          *
-         * @param determines which fibre to return; this must be between
+         * @param which determines which fibre to return; this must be between
          * 0 and getFibreCount()-1 inclusive.
          * @return the requested fibre.
          */

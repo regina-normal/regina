@@ -447,7 +447,7 @@ NString faceDescription(const NPerm& facePerm);
  * vertices in the given edge.
  */
 #ifdef __DOXYGEN
-NString edgeDescription(int face);
+NString edgeDescription(int edge);
 #endif
 
 /**

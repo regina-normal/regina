@@ -175,8 +175,7 @@ class NFace : public ShareableObject {
          * Determines if this face lies entirely on the boundary of the
          * triangulation.
          *
-         * @param \c true if and only if this face lies on the
-         * boundary.
+         * @return \c true if and only if this face lies on the boundary.
          */
         bool isBoundary() const;
 

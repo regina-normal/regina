@@ -88,7 +88,7 @@ class NSurfaceFilterCombination : public NSurfaceFilter {
         void setUsesAnd(bool value);
         
         virtual bool accept(NNormalSurface& surface) const;
-        virtual void writeTextLong(ostream& o) const;
+        virtual void writeTextLong(ostream& out) const;
         virtual void writeFilter(NFile& out) const;
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 

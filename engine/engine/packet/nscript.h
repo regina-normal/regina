@@ -211,8 +211,8 @@ class NScript : public NPacket, public NPropertyHolder {
         virtual int getPacketType() const;
         virtual NString getPacketName() const;
 
-        virtual void writeTextShort(ostream& o) const;
-        virtual void writeTextLong(ostream& o) const;
+        virtual void writeTextShort(ostream& out) const;
+        virtual void writeTextLong(ostream& out) const;
         virtual void writePacket(NFile& out) const;
         static NScript* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;

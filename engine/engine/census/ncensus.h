@@ -370,8 +370,9 @@ class NCensus : public NThread {
          */
         void* run(void* param);
     
-    friend unsigned long formCensus(NPacket*, unsigned,
-        NBoolSet, NBoolSet, NBoolSet, int, NProgressManager*);
+    friend unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
+        NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
+        int nBdryFaces, NProgressManager* manager);
 };
 
 // Inline functions for NCensus

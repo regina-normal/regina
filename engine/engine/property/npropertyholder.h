@@ -125,6 +125,8 @@ class NPropertyHolder {
          * from which readProperties() will be called.  Otherwise it
          * should be at the position immediately after the previous
          * property footer was written.
+         * @param propType the property type to write in the property
+         * header.
          * @return bookmarking information that should later be passed
          * to writePropertyFooter().
          */

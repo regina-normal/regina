@@ -318,6 +318,7 @@ class NString {
          *
          * @param pos the position of the first character to delete;
          * this must be between 0 and length() inclusive.
+         * @param count the number of characters to delete.
          * @count the number of consecutive characters to delete.
          */
         void remove(unsigned pos, unsigned count);
