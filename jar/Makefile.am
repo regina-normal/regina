@@ -6,5 +6,9 @@
 ##  to produce Makefile.in.
 ##
 
-EXTRA_DIST = README.txt
+jardir = $(pkgdatadir)/jar
+
+jar_DATA = README.txt
+
+EXTRA_DIST = $(jar_DATA)
 

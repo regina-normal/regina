@@ -307,7 +307,7 @@ AC_DEFUN(REGINA_LIB_JAVA, [
     AC_MSG_RESULT([no])
     AC_MSG_CHECKING([for $1 jar])
     found_jar=no
-    for _libdir in "`pwd`/lib" /usr/share/java /usr/share/java/jar /usr/local/java /usr/local/java/jar /usr/local/share/java /usr/local/share/java/jar; do
+    for _libdir in "`pwd`/jar" /usr/share/java /usr/share/java/jar /usr/local/java /usr/local/java/jar /usr/local/share/java /usr/local/share/java/jar; do
       for jar in "$_libdir/$1.jar" "$_libdir/lib$1.jar" "$_libdir/lib$1-java.jar"; do
         if test -e "$jar"; then
           REGINA_CLASSPATH_SAVE

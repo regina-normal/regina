@@ -34,12 +34,28 @@ info () {
 
 # --- Base Regina directory and package name. ---
 
-# Package name (which should also be the name of this script when installed).
-export REGINA_PACKAGE="@PACKAGE@"
+# Variables set:
+#
+#   REGINA_HOME: See reference manual; this is only set if it's not already
+#                in the environment.
+#   REGINA_PACKAGE: The package name under which Regina has been installed.
+#   REGINA_FROMSOURCE: 1 if we're running directly from the source tree,
+#                      0 if we're running from an installation.
+
+# Are we running directly from the source tree?
+if [ -f "`dirname "$0"`/regina.in" -a -f "`dirname "$0"`/admin/ac_gen" ]; then
+	export REGINA_FROMSOURCE=1
+	export REGINA_PACKAGE="regina"
+	default_regina_home="`dirname "$0"`"
+else
+	export REGINA_FROMSOURCE=0
+	export REGINA_PACKAGE="@PACKAGE@"
+	default_regina_home="@prefix@/share/@PACKAGE@"
+fi
 
 # Derive REGINA_HOME if nothing is specified.
 if [ -z "$REGINA_HOME" ]; then
-	export REGINA_HOME="@prefix@/@PACKAGE@"
+	export REGINA_HOME="$default_regina_home"
 fi
 
 # Check REGINA_HOME is an appropriate value.
@@ -67,7 +83,6 @@ done
 # Now we have established our verbosity level, output $REGINA_HOME if
 # appropriate.
 info "-- Regina home directory (REGINA_HOME): $REGINA_HOME"
-export REGINA_HOME
 
 # --- Determine which platform we're running on. ---
 

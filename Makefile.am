@@ -15,13 +15,14 @@ SUBDIRS = \
   docs \
   examples \
   icons \
-  lib \
+  jar \
   pylib \
   scripts
 
 EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
   AUTHORS.txt INSTALL.txt LICENSE.txt README.txt \
-  regina regina.bat regina.conf.sample runfromsrc
+  regina.in regina.bat regina.conf.sample \
+  Makefile-help Makefile.cvs
 
 ## ----------------------- Custom targets ----------------------------
 

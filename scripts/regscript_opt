@@ -6,9 +6,6 @@
 if [ "$read_regscript_opt" != 1 ]; then
 read_regscript_opt=1
 
-# Read includes.
-. "`dirname "$0"`/scripts/regscript_misc"
-
 # ---------- Constants ----------
 
 # File in each options directory containing runtime options.
@@ -19,11 +16,7 @@ runtime_options=regina.conf
 # --- Global options directory ---
 
 # Use default if nothing is specified.
-if [ -d /etc/regina ]; then
-	default_options_global=/etc/regina
-else
-	default_options_global="$REGINA_HOME"
-fi
+default_options_global="/etc/$REGINA_PACKAGE"
 if [ -z "$REGINA_OPTIONS_GLOBAL" ]; then
 	export REGINA_OPTIONS_GLOBAL="$default_options_global"
 fi
@@ -108,9 +101,9 @@ fi
 # ---------- Set defaults and run sanity checks ----------
 
 if [ -z "$REGINA_BTOOLS" ]; then
-	export REGINA_BTOOLS="`ls "$REGINA_HOME"/lib/btools*.jar 2> /dev/null`"
+	export REGINA_BTOOLS="`ls "$REGINA_HOME"/jar/btools*.jar 2> /dev/null`"
 	if [ -z "$REGINA_BTOOLS" ]; then
-		export REGINA_BTOOLS="$REGINA_HOME/lib/btools.jar"
+		export REGINA_BTOOLS="$REGINA_HOME/jar/btools.jar"
 	fi
 fi
 if [ -d "$REGINA_BTOOLS" ]; then
@@ -127,9 +120,9 @@ elif [ ! -e "$REGINA_BTOOLS" ]; then
 fi
 
 if [ -z "$REGINA_JYTHON" ]; then
-	export REGINA_JYTHON="`ls "$REGINA_HOME"/lib/jython*.jar 2> /dev/null`"
+	export REGINA_JYTHON="`ls "$REGINA_HOME"/jar/jython*.jar 2> /dev/null`"
 	if [ -z "$REGINA_JYTHON" ]; then
-		export REGINA_JYTHON="$REGINA_HOME/lib/jython.jar"
+		export REGINA_JYTHON="$REGINA_HOME/jar/jython.jar"
 	fi
 fi
 if [ -d "$REGINA_JYTHON" ]; then
@@ -145,9 +138,9 @@ elif [ ! -e "$REGINA_JYTHON" ]; then
 fi
 
 if [ -z "$REGINA_JAVAHELP" ]; then
-	export REGINA_JAVAHELP="`ls "$REGINA_HOME"/lib/jh.jar 2> /dev/null`"
+	export REGINA_JAVAHELP="`ls "$REGINA_HOME"/jar/jh.jar 2> /dev/null`"
 	if [ -z "$REGINA_JAVAHELP" ]; then
-		export REGINA_JAVAHELP="$REGINA_HOME/lib/jh.jar"
+		export REGINA_JAVAHELP="$REGINA_HOME/jar/jh.jar"
 	fi
 fi
 if [ -d "$REGINA_JAVAHELP" ]; then
@@ -175,7 +168,12 @@ if [ -z "$REGINA_JAVA" ]; then
 fi
 
 if [ -z "$REGINA_JNIDIR" ]; then
-	export REGINA_JNIDIR="$REGINA_HOME/bin:/usr/lib"
+	if [ "$REGINA_FROMSOURCE" = "1" ]; then
+		export REGINA_JNIDIR="$REGINA_HOME/engine/jni/.libs:/usr/lib"
+	else
+		_grandparent="`cd "$REGINA_HOME"/../.. && pwd`"
+		export REGINA_JNIDIR="$_grandparent/lib/$REGINA_PACKAGE:/usr/lib"
+	fi
 fi
 if [ -z "$REGINA_JNIENGINE" ]; then
 	jnilib="regina-engine-jni"
@@ -204,9 +202,13 @@ if [ "$foundlib" = "0" ]; then
 fi
 
 if [ -z "$REGINA_JARDIR" ]; then
-	export REGINA_JARDIR="$REGINA_HOME/bin"
+	if [ "$REGINA_FROMSOURCE" = "1" ]; then
+		export REGINA_JARDIR="$REGINA_HOME/javaui"
+	else
+		export REGINA_JARDIR="$REGINA_HOME/jar"
+	fi
 fi
-if [ ! -e "$REGINA_JARDIR/regina.jar" ]; then
+if [ ! -e "$REGINA_JARDIR/$REGINA_PACKAGE.jar" ]; then
 	error "Error: The Regina jar directory could not be found."
 	error "       Set \$REGINA_JARDIR to the directory containing regina.jar"
 	error "       and try again."
