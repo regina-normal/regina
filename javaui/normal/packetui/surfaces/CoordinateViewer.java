@@ -38,6 +38,7 @@ import javax.swing.table.*;
 import normal.Shell;
 import normal.engine.packet.*;
 import normal.engine.surfaces.*;
+import normal.engine.triangulation.*;
 import normal.mainui.TopologyPane;
 import normal.packetui.*;
 import org.gjt.btools.gui.component.*;
@@ -293,6 +294,11 @@ public class CoordinateViewer extends DefaultPacketViewer
             col.setHeaderValue(new FancyData(model.getColumnName(i),
                 model.getColumnToolTip(i)));
         }
+
+        // Some columns might need to be a little wider than default.
+        // Subcomplex link:
+        table.getColumnModel().getColumn(
+            (set.isEmbeddedOnly() ? 5 : 3)).setPreferredWidth(120);
     }
 
     /**
@@ -386,10 +392,10 @@ public class CoordinateViewer extends DefaultPacketViewer
         public int getColumnCount() {
             if (set.isEmbeddedOnly())
                 return Coordinates.getNumberOfCoordinates(flavour,
-                    set.getTriangulation()) + 6;
+                    set.getTriangulation()) + 7;
             else
                 return Coordinates.getNumberOfCoordinates(flavour,
-                    set.getTriangulation()) + 4;
+                    set.getTriangulation()) + 5;
         }
 
         /**
@@ -410,6 +416,8 @@ public class CoordinateViewer extends DefaultPacketViewer
          */
         public Object getValueAt(int row, int column) {
             NNormalSurface surface = set.getSurface(row);
+            NVertex v;
+            NEdge[] e;
             if (set.isEmbeddedOnly())
                 switch(column) {
                     case 0:
@@ -447,15 +455,31 @@ public class CoordinateViewer extends DefaultPacketViewer
                         else
                             return new FancyData("Closed", green);
                     case 5:
-                        if (surface.isVertexLinking())
-                            return "Vtx Link";
-                        else if (surface.isSplitting())
+                        // Note that we must list *all* links found.
+                        // Note also that vertex and thin edge links cannot
+                        // coincide.
+                        if ((v = surface.isVertexLink()) != null)
+                            return "Vertex " + String.valueOf(
+                                set.getTriangulation().getVertexIndex(v));
+                        else if ((e = surface.isThinEdgeLink())[0] != null) {
+                            String ans = String.valueOf(
+                                set.getTriangulation().getEdgeIndex(e[0]));
+                            if (e[1] == null)
+                                return "Thin edge " + ans;
+                            else
+                                return "Thin edges " + ans + ", " +
+                                    String.valueOf(
+                                    set.getTriangulation().getEdgeIndex(e[1]));
+                        } else
+                            return "";
+                    case 6:
+                        if (surface.isSplitting())
                             return "Splitting";
                         else
                             return "";
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
-                            surface, column - 6);
+                            surface, column - 7);
                         if (bigAns == null)
                             return "Inf";
                         else if (bigAns.signum() == 0)
@@ -480,15 +504,31 @@ public class CoordinateViewer extends DefaultPacketViewer
                         else
                             return new FancyData("Closed", green);
                     case 3:
-                        if (surface.isVertexLinking())
-                            return "Vtx Link";
-                        else if (surface.isSplitting())
+                        // Note that we must list *all* links found.
+                        // Note also that vertex and thin edge links cannot
+                        // coincide.
+                        if ((v = surface.isVertexLink()) != null)
+                            return "Vertex " + String.valueOf(
+                                set.getTriangulation().getVertexIndex(v));
+                        else if ((e = surface.isThinEdgeLink())[0] != null) {
+                            String ans = String.valueOf(
+                                set.getTriangulation().getEdgeIndex(e[0]));
+                            if (e[1] == null)
+                                return "Thin edge " + ans;
+                            else
+                                return "Thin edges " + ans + ", " +
+                                    String.valueOf(
+                                    set.getTriangulation().getEdgeIndex(e[1]));
+                        } else
+                            return "";
+                    case 4:
+                        if (surface.isSplitting())
                             return "Splitting";
                         else
                             return "";
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
-                            surface, column - 4);
+                            surface, column - 5);
                         if (bigAns == null)
                             return "Inf";
                         else if (bigAns.signum() == 0)
@@ -530,10 +570,12 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 4:
                         return "Bdry";
                     case 5:
+                        return "Link";
+                    case 6:
                         return "Type";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            set.getTriangulation(), column - 6);
+                            set.getTriangulation(), column - 7);
                 }
             else
                 switch(column) {
@@ -544,10 +586,12 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 2:
                         return "Bdry";
                     case 3:
+                        return "Link";
+                    case 4:
                         return "Type";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            set.getTriangulation(), column - 4);
+                            set.getTriangulation(), column - 5);
                 }
         }
 
@@ -570,10 +614,12 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 4:
                         return "Boundary";
                     case 5:
+                        return "Identified as link of subcomplex?";
+                    case 6:
                         return "Other interesting properties";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            set.getTriangulation(), column - 6);
+                            set.getTriangulation(), column - 7);
                 }
             else
                 switch(column) {
@@ -584,10 +630,12 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 2:
                         return "Boundary";
                     case 3:
+                        return "Identified as link of subcomplex?";
+                    case 4:
                         return "Other interesting properties";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            set.getTriangulation(), column - 4);
+                            set.getTriangulation(), column - 5);
                 }
         }
     }

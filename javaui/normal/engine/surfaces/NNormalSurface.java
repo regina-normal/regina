@@ -98,6 +98,8 @@ public interface NNormalSurface extends ShareableObject {
     int isConnected();
     boolean hasRealBoundary();
     boolean isVertexLinking();
+    NVertex isVertexLink();
+    NEdge[] isThinEdgeLink();
     boolean isSplitting();
 
     NTriangulation cutAlong();

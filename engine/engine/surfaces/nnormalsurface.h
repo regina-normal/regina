@@ -179,6 +179,8 @@ extern const NPerm __octDiscArcs[24];
 #endif
 
 class NTriangulation;
+class NEdge;
+class NVertex;
 class NXMLNormalSurfaceReader;
 
 /**
@@ -334,6 +336,44 @@ class NNormalSurfaceVector : public NConeRay {
          * is vertex linking.
          */
         virtual bool isVertexLinking(NTriangulation* triang) const;
+        /**
+         * Determines if a rational multiple of the normal surface represented
+         * is the link of a single vertex.
+         *
+         * The default implementation for this routine involves counting the
+         * number of discs of every type.
+         * Subclasses of NNormalSurfaceVector should override this if
+         * they can provide a faster implementation.
+         * 
+         * @param triang the triangulation in which this normal surface lives.
+         * @return the vertex linked by this surface, or 0 if this
+         * surface is not the link of a single vertex.
+         */
+        virtual NVertex* isVertexLink(NTriangulation* triang) const;
+        /**
+         * Determines if a rational multiple of the normal surface represented
+         * is the link of a single thin edge.
+         *
+         * If there are two different thin edges <i>e1</i> and <i>e2</i> for
+         * which the surface could be expressed as either the link of
+         * <i>e1</i> or the link of <i>e2</i>, the pair
+         * (<i>e1</i>,<i>e2</i>) will be returned.
+         * If the surface is the link of only one thin edge <i>e</i>,
+         * the pair (<i>e</i>,0) will be returned.
+         * If the surface is not the link of any thin edges, the pair
+         * (0,0) will be returned.
+         *
+         * The default implementation for this routine involves counting the
+         * number of discs of every type.
+         * Subclasses of NNormalSurfaceVector should override this if
+         * they can provide a faster implementation.
+         * 
+         * @param triang the triangulation in which this normal surface lives.
+         * @return a pair containing the thin edge(s) linked by this surface,
+         * as described above.
+         */
+        virtual std::pair<NEdge*, NEdge*> isThinEdgeLink(
+            NTriangulation* triang) const;
         /**
          * Determines if the normal surface represented is a splitting
          * surface in the given triangulation.  A \a splitting surface
@@ -844,6 +884,46 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          */
         bool isVertexLinking() const;
         /**
+         * Determines whether or not a rational multiple of this surface
+         * is the link of a single vertex.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \todo \opt Cache results.
+         * 
+         * @return the vertex linked by this surface, or 0 if this
+         * surface is not the link of a single vertex.
+         */
+        virtual NVertex* isVertexLink() const;
+        /**
+         * Determines whether or not a rational multiple of this surface
+         * is the link of a single thin edge.
+         *
+         * If there are two different thin edges <i>e1</i> and <i>e2</i> for
+         * which this surface could be expressed as either the link of
+         * <i>e1</i> or the link of <i>e2</i>, the pair
+         * (<i>e1</i>,<i>e2</i>) will be returned.
+         * If this surface is the link of only one thin edge <i>e</i>,
+         * the pair (<i>e</i>,0) will be returned.
+         * If this surface is not the link of any thin edges, the pair
+         * (0,0) will be returned.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * \todo \opt Cache results.
+         *
+         * \ifacesjava This routine returns a new array of edges of
+         * size 2.
+         * 
+         * @return a pair containing the thin edge(s) linked by this surface,
+         * as described above.
+         */
+        virtual std::pair<NEdge*, NEdge*> isThinEdgeLink() const;
+        /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing
          * precisely one quad per tetrahedron and no other normal (or
@@ -1047,6 +1127,14 @@ inline bool NNormalSurface::hasRealBoundary() {
 
 inline bool NNormalSurface::isVertexLinking() const {
     return vector->isVertexLinking(triangulation);
+}
+
+inline NVertex* NNormalSurface::isVertexLink() const {
+    return vector->isVertexLink(triangulation);
+}
+
+inline std::pair<NEdge*, NEdge*> NNormalSurface::isThinEdgeLink() const {
+    return vector->isThinEdgeLink(triangulation);
 }
 
 inline bool NNormalSurface::isSplitting() const {

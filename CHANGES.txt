@@ -65,6 +65,8 @@ Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
         Class NLocalFileResource:
             - Replaced static members MODE_READ, MODE_WRITE with static
               routines sysModeRead(), sysModeWrite().
+        Class NNormalSurface:
+            - Added routines isVertexLink() and isThinEdgeLink().
         Class NNormalSurfaceList:
             - New nested class NNormalSurfaceList::SurfaceInserter.
         Class NPacket:

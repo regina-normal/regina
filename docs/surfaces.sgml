@@ -372,6 +372,44 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
+      <glossterm>Link</glossterm>
+      <glossdef><para>
+       If a normal surface (or a rational multiple of that surface)
+       is recognised as being a link of any interesting subcomplexes
+       in the triangulation, these subcomplexes will be listed in
+       this column.  The following links are currently recognised.
+       <glosslist>
+        <glossentry>
+         <glossterm>Vertex</glossterm>
+         <glossdef><para>
+          Indicates that the surface is an individual vertex link.
+          The corresponding vertex number in the triangulation will be
+          listed.
+         </para>
+         <para>
+          Vertex numbers and the tetrahedron vertices to which they
+          correspond can be found in the skeleton section of the
+          <link linkend="tri-vertexedgeface">triangulation viewer</link>.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm>Thin Edge</glossterm>
+         <glossdef><para>
+          Indicates that the surface is an individual thin edge link.
+          The corresponding edge number(s) in the triangulation will be
+          listed.  Note that a surface might be both the link of one thin
+          edge and also (independently) the link of another thin edge.
+         </para>
+         <para>
+          Edge numbers and the tetrahedron edges/vertices to which they
+          correspond can be found in the skeleton section of the
+          <link linkend="tri-vertexedgeface">triangulation viewer</link>.
+         </para></glossdef>
+        </glossentry>
+       </glosslist>
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
       <glossterm>Type</glossterm>
       <glossdef><para>
        If a normal surface is recognised as playing a particular role in
@@ -379,12 +417,6 @@
        most one such role will be displayed for any particular surface.
        The following roles are currently recognised.
        <glosslist>
-        <glossentry>
-         <glossterm>Vtx Link</glossterm>
-         <glossdef><para>
-          Indicates that the surface is vertex linking.
-         </para></glossdef>
-        </glossentry>
         <glossentry>
          <glossterm>Splitting</glossterm>
          <glossdef><para>

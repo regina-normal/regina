@@ -79,6 +79,7 @@ class NNormalSurfaceVectorQuad : public NNormalSurfaceVectorMirrored {
 
         virtual bool allowsAlmostNormal() const;
         virtual bool isCompatibleWith(const NConeRay& other) const;
+        virtual NVertex* isVertexLink(NTriangulation* triang) const;
 
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType, NTriangulation* triang) const;
@@ -101,6 +102,12 @@ inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
 inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
         const NVector<NLargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
+}
+
+inline NVertex* NNormalSurfaceVectorQuad::isVertexLink(
+        NTriangulation* triang) const {
+    // Quad space does not contain vertex links at all.
+    return 0;
 }
 
 inline NLargeInteger NNormalSurfaceVectorQuad::getOctCoord(

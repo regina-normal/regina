@@ -136,10 +136,40 @@ REGJNIEXPORT jint JNICALL
     return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isOrientable();
 }
 
+REGJNIEXPORT jobjectArray JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isThinEdgeLink
+        (JNIEnv *env, jobject me) {
+    std::pair<NEdge*, NEdge*> ans =
+        GET_ENGINE_OBJECT(env, NNormalSurface, me)->isThinEdgeLink();
+
+    jclass edgeClass = env->FindClass("normal/engine/triangulation/NEdge");
+    if (! edgeClass)
+        return 0;
+
+    jobjectArray array = env->NewObjectArray(2, edgeClass, 0 /* init */);
+    if (! array)
+        return 0;
+
+    env->SetObjectArrayElement(array, 0, CREATE_WRAPPER_OBJECT(env, ans.first,
+        "normal/engine/implementation/jni/triangulation/NJNIEdge"));
+    env->SetObjectArrayElement(array, 1, CREATE_WRAPPER_OBJECT(env, ans.second,
+        "normal/engine/implementation/jni/triangulation/NJNIEdge"));
+
+    return array;
+}
+
 REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isTwoSided
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isTwoSided();
+}
+
+REGJNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isVertexLink
+        (JNIEnv *env, jobject me) {
+    return CREATE_WRAPPER_OBJECT(env,
+        GET_ENGINE_OBJECT(env, NNormalSurface, me)->isVertexLink(),
+        "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
 REGJNIEXPORT jboolean JNICALL

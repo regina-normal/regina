@@ -227,23 +227,6 @@ bool NNormalSurfaceVector::isCompact(NTriangulation* triang) const {
     return true;
 }
 
-bool NNormalSurfaceVector::isVertexLinking(NTriangulation* triang) const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
-    unsigned long tet;
-    int type;
-    for (tet = 0; tet < nTets; tet++) {
-        for (type = 0; type < 3; type++)
-            if (getQuadCoord(tet, type, triang) != 0)
-                return false;
-    }
-    if (allowsAlmostNormal())
-        for (tet = 0; tet < nTets; tet++)
-            for (type = 0; type < 3; type++)
-                if (getOctCoord(tet, type, triang) != 0)
-                    return false;
-    return true;
-}
-
 bool NNormalSurfaceVector::isSplitting(NTriangulation* triang) const {
     unsigned long nTets = triang->getNumberOfTetrahedra();
     unsigned long tet;

@@ -31,7 +31,7 @@ package normal.engine.implementation.jni.surfaces;
 import java.math.BigInteger;
 import normal.engine.implementation.jni.*;
 import normal.engine.surfaces.*;
-import normal.engine.triangulation.NTriangulation;
+import normal.engine.triangulation.*;
 
 public class NJNINormalSurface extends JNIShareableObject
         implements NNormalSurface {
@@ -59,6 +59,8 @@ public class NJNINormalSurface extends JNIShareableObject
     public native int isConnected();
     public native boolean hasRealBoundary();
     public native boolean isVertexLinking();
+    public native NVertex isVertexLink();
+    public native NEdge[] isThinEdgeLink();
     public native boolean isSplitting();
 
     public native NTriangulation cutAlong();
