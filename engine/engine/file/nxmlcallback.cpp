@@ -66,7 +66,9 @@ void NXMLCallback::start_element(const std::string& n,
         NXMLElementReader* current = currentReader();
         if (charsAreInitial)
             current->initialChars(currChars);
+
         NXMLElementReader* child = current->startSubElement(n, p);
+        readers.push(child);
         child->startElement(n, p, current);
         currChars.clear();
         charsAreInitial = true;
