@@ -104,6 +104,16 @@
      </para></listitem>
     </itemizedlist>
    </para></listitem>
+   <listitem><para>Splitting Surfaces:
+    <itemizedlist>
+     <listitem><para>
+      Reconstructing triangulations from splitting surface signatures
+     </para></listitem>
+     <listitem><para>
+      Creation of a census of all splitting surface signatures of a given type
+     </para></listitem>
+    </itemizedlist>
+   </para></listitem>
    <listitem><para>Scripting:
     <itemizedlist>
      <listitem><para>
@@ -125,6 +135,9 @@
      <listitem><para>
       Support for storing miscellaneous data such as notes and scripts
       along with topological structures in a single file
+     </para></listitem>
+     <listitem><para>
+      Data saved as compressed XML (since &regina;&nbsp;3.0)
      </para></listitem>
     </itemizedlist>
    </para></listitem>
