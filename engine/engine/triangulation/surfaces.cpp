@@ -71,12 +71,11 @@ namespace regina {
  */
 
 bool NTriangulation::isZeroEfficient() {
-    if (! calculatedZeroEfficient) {
+    if (! zeroEfficient.known()) {
         if (hasTwoSphereBoundaryComponents()) {
             // We have 2-sphere boundary components.
             // No need to look through normal surfaces.
             zeroEfficient = false;
-            calculatedZeroEfficient = true;
         } else if (isValid() && ! hasNegativeIdealBoundaryComponents()) {
             // We can calculate this using normal surfaces in quad space.
             calculateQuadSurfaceProperties();
@@ -85,15 +84,15 @@ bool NTriangulation::isZeroEfficient() {
             calculateStandardSurfaceProperties();
         }
     }
-    return zeroEfficient;
+    return zeroEfficient.value();
 }
 
 bool NTriangulation::hasSplittingSurface() {
     // Splitting surfaces must unfortunately be calculated using
     // tri-quad coordinates.
-    if (! calculatedSplittingSurface)
+    if (! splittingSurface.known())
         calculateStandardSurfaceProperties();
-    return splittingSurface;
+    return splittingSurface.value();
 }
 
 void NTriangulation::calculateQuadSurfaceProperties() {
@@ -108,16 +107,13 @@ void NTriangulation::calculateQuadSurfaceProperties() {
         return;
 
     // Run through all vertex surfaces.
-    if (! calculatedZeroEfficient)
-        zeroEfficient = true;
-
     unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
         s = surfaces->getSurface(i);
 
-        if (! calculatedZeroEfficient) {
+        if (! zeroEfficient.known()) {
             // Note that all vertex surfaces in quad space are
             // connected and non-vertex-linking.
 
@@ -125,30 +121,26 @@ void NTriangulation::calculateQuadSurfaceProperties() {
                 chi = s->getEulerCharacteristic();
                 if (s->hasRealBoundary()) {
                     // Hunt for discs.
-                    if (chi == 1) {
+                    if (chi == 1)
                         zeroEfficient = false;
-                        calculatedZeroEfficient = true;
-                    }
                 } else {
                     // Hunt for spheres.
-                    if (chi == 2) {
+                    if (chi == 2)
                         zeroEfficient = false;
-                        calculatedZeroEfficient = true;
-                    } else if (chi == 1 && s->isTwoSided() == -1) {
+                    else if (chi == 1 && s->isTwoSided() == -1)
                         zeroEfficient = false;
-                        calculatedZeroEfficient = true;
-                    }
                 }
             }
         }
 
         // See if there is no use running through the rest of the list.
-        if (calculatedZeroEfficient)
+        if (zeroEfficient.known())
             break;
     }
 
     // Done!
-    calculatedZeroEfficient = true;
+    if (! zeroEfficient.known())
+        zeroEfficient = true;
 
     // Clean up.
     surfaces->makeOrphan();
@@ -161,24 +153,17 @@ void NTriangulation::calculateStandardSurfaceProperties() {
         NNormalSurfaceList::STANDARD);
 
     // Run through all vertex surfaces.
-    if (! calculatedZeroEfficient)
-        zeroEfficient = true;
-    if (! calculatedSplittingSurface)
-        splittingSurface = false;
-
     unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
         s = surfaces->getSurface(i);
 
-        if (! calculatedSplittingSurface)
-            if (s->isSplitting()) {
+        if (! splittingSurface.known())
+            if (s->isSplitting())
                 splittingSurface = true;
-                calculatedSplittingSurface = true;
-            }
 
-        if (! calculatedZeroEfficient)
+        if (! zeroEfficient.known())
             if (! s->isVertexLinking()) {
                 // No need to test for connectedness since these are
                 // vertex normal surfaces.
@@ -187,30 +172,27 @@ void NTriangulation::calculateStandardSurfaceProperties() {
                 chi = s->getEulerCharacteristic();
                 if (s->hasRealBoundary()) {
                     // Hunt for discs.
-                    if (chi == 1) {
+                    if (chi == 1)
                         zeroEfficient = false;
-                        calculatedZeroEfficient = true;
-                    }
                 } else {
                     // Hunt for spheres.
-                    if (chi == 2) {
+                    if (chi == 2)
                         zeroEfficient = false;
-                        calculatedZeroEfficient = true;
-                    } else if (chi == 1 && s->isTwoSided() == -1) {
+                    else if (chi == 1 && s->isTwoSided() == -1)
                         zeroEfficient = false;
-                        calculatedZeroEfficient = true;
-                    }
                 }
             }
 
         // See if there is no use running through the rest of the list.
-        if (calculatedZeroEfficient && calculatedSplittingSurface)
+        if (zeroEfficient.known() && splittingSurface.known())
             break;
     }
 
     // Done!
-    calculatedZeroEfficient = true;
-    calculatedSplittingSurface = true;
+    if (! zeroEfficient.known())
+        zeroEfficient = true;
+    if (! splittingSurface.known())
+        splittingSurface = false;
 
     // Clean up.
     surfaces->makeOrphan();

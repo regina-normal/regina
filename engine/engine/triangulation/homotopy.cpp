@@ -27,20 +27,17 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
-#include "algebra/ngrouppresentation.h"
 
 namespace regina {
 
 const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
-    if (calculatedFundamentalGroup)
-        return *fundamentalGroup;
+    if (fundamentalGroup.known())
+        return *fundamentalGroup.value();
 
-    fundamentalGroup = new NGroupPresentation();
+    NGroupPresentation* ans = new NGroupPresentation();
 
-    if (getNumberOfTetrahedra() == 0) {
-        calculatedFundamentalGroup = true;
-        return *fundamentalGroup;
-    }
+    if (getNumberOfTetrahedra() == 0)
+        return *(fundamentalGroup = ans);
 
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
@@ -56,7 +53,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     long nGens = getNumberOfFaces() - nBdryFaces - forest.size();
 
     // Insert the generators.
-    fundamentalGroup->addGenerator(nGens);
+    ans->addGenerator(nGens);
 
     // Find out which face corresponds to which generator.
     long *genIndex = new long[getNumberOfFaces()];
@@ -66,7 +63,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
             genIndex[fit - faces.begin()] = -1;
         else
             genIndex[fit - faces.begin()] = i++;
-    
+
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
@@ -92,15 +89,14 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
                         rel->addTermLast(faceGenIndex, -1);
                 }
             }
-            fundamentalGroup->addRelation(rel);
+            ans->addRelation(rel);
         }
 
     // Tidy up.
     delete[] genIndex;
-    fundamentalGroup->intelligentSimplify();
+    ans->intelligentSimplify();
 
-    calculatedFundamentalGroup = true;
-    return *fundamentalGroup;
+    return *(fundamentalGroup = ans);
 }
 
 } // namespace regina

@@ -35,14 +35,11 @@
 namespace regina {
 
 const NAbelianGroup& NTriangulation::getHomologyH1() const {
-    if (calculatedH1)
-        return *H1;
+    if (H1.known())
+        return *H1.value();
 
-    if (getNumberOfTetrahedra() == 0) {
-        H1 = new NAbelianGroup();
-        calculatedH1 = true;
-        return *H1;
-    }
+    if (getNumberOfTetrahedra() == 0)
+        return *(H1 = new NAbelianGroup());
 
     // Calculate the first homology.
     // Find a maximal forest in the dual 1-skeleton.
@@ -109,21 +106,17 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    H1 = new NAbelianGroup();
-    H1->addGroup(pres);
-    calculatedH1 = true;
-    return *H1;
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addGroup(pres);
+    return *(H1 = ans);
 }
 
 const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
-    if (calculatedH1Rel)
-        return *H1Rel;
+    if (H1Rel.known())
+        return *H1Rel.value();
 
-    if (getNumberOfBoundaryComponents() == 0) {
-        H1Rel = new NAbelianGroup(getHomologyH1());
-        calculatedH1Rel = true;
-        return *H1Rel;
-    }
+    if (getNumberOfBoundaryComponents() == 0)
+        return *(H1Rel = new NAbelianGroup(getHomologyH1()));
 
     // Calculate the relative first homology wrt the boundary.
 
@@ -202,15 +195,14 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    H1Rel = new NAbelianGroup();
-    H1Rel->addGroup(pres);
-    calculatedH1Rel = true;
-    return *H1Rel;
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addGroup(pres);
+    return *(H1Rel = ans);
 }
 
 const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
-    if (calculatedH1Bdry)
-        return *H1Bdry;
+    if (H1Bdry.known())
+        return *H1Bdry.value();
 
     // Run through the individual boundary components and add the
     // appropriate pieces to the homology group.
@@ -232,22 +224,18 @@ const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
     }
 
     // Build the group and tidy up.
-    H1Bdry = new NAbelianGroup();
-    H1Bdry->addRank(rank);
-    H1Bdry->addTorsionElement(2, z2rank);
-    calculatedH1Bdry = true;
-    return *H1Bdry;
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addRank(rank);
+    ans->addTorsionElement(2, z2rank);
+    return *(H1Bdry = ans);
 }
 
 const NAbelianGroup& NTriangulation::getHomologyH2() const {
-    if (calculatedH2)
-        return *H2;
+    if (H2.known())
+        return *H2.value();
 
-    if (getNumberOfTetrahedra() == 0) {
-        H2 = new NAbelianGroup();
-        calculatedH2 = true;
-        return *H2;
-    }
+    if (getNumberOfTetrahedra() == 0)
+        return *(H2 = new NAbelianGroup());
 
     // Calculations are different for orientable vs non-orientable
     // components.
@@ -275,12 +263,11 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
     }
 
     // Build the new group and tidy up.
-    H2 = new NAbelianGroup();
-    H2->addRank(rank);
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addRank(rank);
     if (z2rank)
-        H2->addTorsionElement(2, z2rank);
-    calculatedH2 = true;
-    return *H2;
+        ans->addTorsionElement(2, z2rank);
+    return *(H2 = ans);
 }
 
 } // namespace regina

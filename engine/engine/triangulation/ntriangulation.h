@@ -36,18 +36,20 @@
 #endif
 
 #include <memory>
+#include "algebra/nabeliangroup.h"
+#include "algebra/ngrouppresentation.h"
 #include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
 #include "utilities/hashset.h"
 #include "utilities/hashutils.h"
 #include "utilities/nindexedarray.h"
+#include "utilities/nproperty.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nface.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nvertex.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nboundarycomponent.h"
-#include "algebra/nabeliangroup.h"
 
 namespace regina {
 
@@ -151,45 +153,29 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         mutable bool orientable;
             /**< Is the triangulation orientable? */
 
-        mutable NGroupPresentation* fundamentalGroup;
+        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundamentalGroup;
             /**< Fundamental group of the triangulation. */
-        mutable bool calculatedFundamentalGroup;
-            /**< Has \a fundamentalGroup been calculated? */
-        mutable NAbelianGroup* H1;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1;
             /**< First homology group of the triangulation. */
-        mutable bool calculatedH1;
-            /**< Has \a H1 been calculated? */
-        mutable NAbelianGroup* H1Rel;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Rel;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
-        mutable bool calculatedH1Rel;
-            /**< Has \a H1Rel been calculated? */
-        mutable NAbelianGroup* H1Bdry;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Bdry;
             /**< First homology group of the boundary. */
-        mutable bool calculatedH1Bdry;
-            /**< Has \a H1Bdry been calculated? */
-        mutable NAbelianGroup* H2;
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2;
             /**< Second homology group of the triangulation. */
-        mutable bool calculatedH2;
-            /**< Has \a H2 been calculated? */
 
-        mutable bool twoSphereBoundaryComponents;
+        mutable NProperty<bool> twoSphereBoundaryComponents;
             /**< Does the triangulation contain any 2-sphere boundary
                  components? */
-        mutable bool negativeIdealBoundaryComponents;
+        mutable NProperty<bool> negativeIdealBoundaryComponents;
             /**< Does the triangulation contain any boundary components
                  that are ideal and have negative Euler characteristic? */
-        mutable bool calculatedBoundaryProperties;
-            /**< Have the boundary component properties been calculated? */
 
-        mutable bool zeroEfficient;
+        mutable NProperty<bool> zeroEfficient;
             /**< Is the triangulation zero-efficient? */
-        mutable bool calculatedZeroEfficient;
-            /**< Has zero-efficiency been calculated? */
-        mutable bool splittingSurface;
+        mutable NProperty<bool> splittingSurface;
             /**< Does the triangulation have a normal splitting surface? */
-        mutable bool calculatedSplittingSurface;
-            /**< Has the existence of a splitting surface been calculated? */
 
     public:
         /**
@@ -1721,12 +1707,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
                  corresponding lists. */
 
         /**
-         * Declares all calculated properties unknown.  This routine
-         * should only ever be called from constructors or from
-         * clearAllProperties().
-         */
-        virtual void initialiseAllProperties();
-        /**
          * Clears any calculated properties and declares them all
          * unknown.  All dynamic memory used for storing known
          * properties is deallocated.
@@ -1841,13 +1821,11 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
 
 // Inline functions for NTriangulation
 
-inline NTriangulation::NTriangulation() {
-    initialiseAllProperties();
+inline NTriangulation::NTriangulation() : calculatedSkeleton(false) {
 }
 
 inline NTriangulation::NTriangulation(const NTriangulation& cloneMe) :
-        NPacket(), NFilePropertyReader() {
-    initialiseAllProperties();
+        NPacket(), NFilePropertyReader(), calculatedSkeleton(false) {
     cloneFrom(cloneMe);
 }
 
@@ -2060,15 +2038,15 @@ inline unsigned long NTriangulation::getFaceIndex(const NFace* face) const {
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
-    if (! calculatedBoundaryProperties)
+    if (! twoSphereBoundaryComponents.known())
         calculateBoundaryProperties();
-    return twoSphereBoundaryComponents;
+    return twoSphereBoundaryComponents.value();
 }
 
 inline bool NTriangulation::hasNegativeIdealBoundaryComponents() const {
-    if (! calculatedBoundaryProperties)
+    if (! negativeIdealBoundaryComponents.known())
         calculateBoundaryProperties();
-    return negativeIdealBoundaryComponents;
+    return negativeIdealBoundaryComponents.value();
 }
 
 inline bool NTriangulation::isValid() const {
@@ -2114,11 +2092,11 @@ inline bool NTriangulation::isConnected() const {
 }
 
 inline bool NTriangulation::knowsZeroEfficient() const {
-    return calculatedZeroEfficient;
+    return zeroEfficient.known();
 }
 
 inline bool NTriangulation::knowsSplittingSurface() const {
-    return calculatedSplittingSurface;
+    return splittingSurface.known();
 }
 
 inline unsigned long NTriangulation::getHomologyH2Z2() const {

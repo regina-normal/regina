@@ -29,7 +29,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
@@ -49,32 +48,16 @@
 namespace regina {
 
 void NTriangulation::clearAllProperties() {
-    if (calculatedSkeleton)
+    if (calculatedSkeleton) {
         deleteSkeleton();
-    if (calculatedFundamentalGroup)
-        delete fundamentalGroup;
-    if (calculatedH1)
-        delete H1;
-    if (calculatedH1Rel)
-        delete H1Rel;
-    if (calculatedH1Bdry)
-        delete H1Bdry;
-    if (calculatedH2)
-        delete H2;
+        calculatedSkeleton = false;
+    }
 
-    initialiseAllProperties();
-}
-
-void NTriangulation::initialiseAllProperties() {
-    calculatedSkeleton = false;
-    calculatedFundamentalGroup = false;
-    calculatedH1 = false;
-    calculatedH1Rel = false;
-    calculatedH1Bdry = false;
-    calculatedH2 = false;
-    calculatedBoundaryProperties = false;
-    calculatedZeroEfficient = false;
-    calculatedSplittingSurface = false;
+    fundamentalGroup.clear();
+    H1.clear();
+    H1Rel.clear();
+    H1Bdry.clear();
+    H2.clear();
 }
 
 void NTriangulation::writeTextLong(std::ostream& out) const {
@@ -202,39 +185,39 @@ void NTriangulation::writePacket(NFile& out) const {
     // Write the properties.
     std::streampos bookmark(0);
 
-    if (calculatedFundamentalGroup) {
+    if (fundamentalGroup.known()) {
         bookmark = out.writePropertyHeader(PROPID_FUNDAMENTALGROUP);
-        fundamentalGroup->writeToFile(out);
+        fundamentalGroup.value()->writeToFile(out);
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedH1) {
+    if (H1.known()) {
         bookmark = out.writePropertyHeader(PROPID_H1);
-        H1->writeToFile(out);
+        H1.value()->writeToFile(out);
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedH1Rel) {
+    if (H1Rel.known()) {
         bookmark = out.writePropertyHeader(PROPID_H1REL);
-        H1Rel->writeToFile(out);
+        H1Rel.value()->writeToFile(out);
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedH1Bdry) {
+    if (H1Bdry.known()) {
         bookmark = out.writePropertyHeader(PROPID_H1BDRY);
-        H1Bdry->writeToFile(out);
+        H1Bdry.value()->writeToFile(out);
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedH2) {
+    if (H2.known()) {
         bookmark = out.writePropertyHeader(PROPID_H2);
-        H2->writeToFile(out);
+        H2.value()->writeToFile(out);
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedZeroEfficient) {
+    if (zeroEfficient.known()) {
         bookmark = out.writePropertyHeader(PROPID_ZEROEFFICIENT);
-        out.writeBool(zeroEfficient);
+        out.writeBool(zeroEfficient.value());
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedSplittingSurface) {
+    if (splittingSurface.known()) {
         bookmark = out.writePropertyHeader(PROPID_SPLITTINGSURFACE);
-        out.writeBool(splittingSurface);
+        out.writeBool(splittingSurface.value());
         out.writePropertyFooter(bookmark);
     }
 
@@ -276,34 +259,20 @@ NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* /* parent */) {
 }
 
 void NTriangulation::readIndividualProperty(NFile& infile, unsigned propType) {
-    if (propType == PROPID_FUNDAMENTALGROUP) {
+    if (propType == PROPID_FUNDAMENTALGROUP)
         fundamentalGroup = NGroupPresentation::readFromFile(infile);
-        calculatedFundamentalGroup = true;
-    }
-    if (propType == PROPID_H1) {
+    if (propType == PROPID_H1)
         H1 = NAbelianGroup::readFromFile(infile);
-        calculatedH1 = true;
-    }
-    if (propType == PROPID_H1REL) {
+    if (propType == PROPID_H1REL)
         H1Rel = NAbelianGroup::readFromFile(infile);
-        calculatedH1Rel = true;
-    }
-    if (propType == PROPID_H1BDRY) {
+    if (propType == PROPID_H1BDRY)
         H1Bdry = NAbelianGroup::readFromFile(infile);
-        calculatedH1Bdry = true;
-    }
-    if (propType == PROPID_H2) {
+    if (propType == PROPID_H2)
         H2 = NAbelianGroup::readFromFile(infile);
-        calculatedH2 = true;
-    }
-    if (propType == PROPID_ZEROEFFICIENT) {
+    if (propType == PROPID_ZEROEFFICIENT)
         zeroEfficient = infile.readBool();
-        calculatedZeroEfficient = true;
-    }
-    if (propType == PROPID_SPLITTINGSURFACE) {
+    if (propType == PROPID_SPLITTINGSURFACE)
         splittingSurface = infile.readBool();
-        calculatedSplittingSurface = true;
-    }
 }
 
 void NTriangulation::writeXMLPacketData(std::ostream& out) const {
@@ -333,41 +302,43 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
     }
     out << "  </tetrahedra>\n";
 
-    if (calculatedFundamentalGroup) {
+    if (fundamentalGroup.known()) {
         out << "  <fundgroup>\n";
-        fundamentalGroup->writeXMLData(out);
+        fundamentalGroup.value()->writeXMLData(out);
         out << "  </fundgroup>\n";
     }
-    if (calculatedH1) {
+    if (H1.known()) {
         out << "  <H1>";
-        H1->writeXMLData(out);
+        H1.value()->writeXMLData(out);
         out << "</H1>\n";
     }
-    if (calculatedH1Rel) {
+    if (H1Rel.known()) {
         out << "  <H1Rel>";
-        H1Rel->writeXMLData(out);
+        H1Rel.value()->writeXMLData(out);
         out << "</H1Rel>\n";
     }
-    if (calculatedH1Bdry) {
+    if (H1Bdry.known()) {
         out << "  <H1Bdry>";
-        H1Bdry->writeXMLData(out);
+        H1Bdry.value()->writeXMLData(out);
         out << "</H1Bdry>\n";
     }
-    if (calculatedH2) {
+    if (H2.known()) {
         out << "  <H2>";
-        H2->writeXMLData(out);
+        H2.value()->writeXMLData(out);
         out << "</H2>\n";
     }
-    if (calculatedBoundaryProperties) {
+    if (twoSphereBoundaryComponents.known())
         out << "  " << xmlValueTag("twosphereboundarycomponents",
-            twoSphereBoundaryComponents) << '\n';
+            twoSphereBoundaryComponents.value()) << '\n';
+    if (negativeIdealBoundaryComponents.known())
         out << "  " << xmlValueTag("negativeidealboundarycomponents",
-            negativeIdealBoundaryComponents) << '\n';
-    }
-    if (calculatedZeroEfficient)
-        out << "  " << xmlValueTag("zeroeff", zeroEfficient) << '\n';
-    if (calculatedSplittingSurface)
-        out << "  " << xmlValueTag("splitsfce", splittingSurface) << '\n';
+            negativeIdealBoundaryComponents.value()) << '\n';
+    if (zeroEfficient.known())
+        out << "  " << xmlValueTag("zeroeff", zeroEfficient.value())
+            << '\n';
+    if (splittingSurface.known())
+        out << "  " << xmlValueTag("splitsfce", splittingSurface.value())
+            << '\n';
 }
 
 NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,
@@ -524,39 +495,21 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     gluingsHaveChanged();
 
     // Properties:
-    if (X.calculatedFundamentalGroup) {
-        fundamentalGroup= new NGroupPresentation(*(X.fundamentalGroup));
-        calculatedFundamentalGroup = true;
-    }
-    if (X.calculatedH1) {
-        H1 = new NAbelianGroup(*(X.H1));
-        calculatedH1 = true;
-    }
-    if (X.calculatedH1Rel) {
-        H1Rel = new NAbelianGroup(*(X.H1Rel));
-        calculatedH1Rel = true;
-    }
-    if (X.calculatedH1Bdry) {
-        H1Bdry = new NAbelianGroup(*(X.H1Bdry));
-        calculatedH1Bdry = true;
-    }
-    if (X.calculatedH2) {
-        H2 = new NAbelianGroup(*(X.H2));
-        calculatedH2 = true;
-    }
-    if (X.calculatedBoundaryProperties) {
-        twoSphereBoundaryComponents = X.twoSphereBoundaryComponents;
-        negativeIdealBoundaryComponents = X.negativeIdealBoundaryComponents;
-        calculatedBoundaryProperties = true;
-    }
-    if (X.calculatedZeroEfficient) {
-        zeroEfficient = X.zeroEfficient;
-        calculatedZeroEfficient = true;
-    }
-    if (X.calculatedSplittingSurface) {
-        splittingSurface = X.splittingSurface;
-        calculatedSplittingSurface = true;
-    }
+    if (X.fundamentalGroup.known())
+        fundamentalGroup= new NGroupPresentation(*X.fundamentalGroup.value());
+    if (X.H1.known())
+        H1 = new NAbelianGroup(*(X.H1.value()));
+    if (X.H1Rel.known())
+        H1Rel = new NAbelianGroup(*(X.H1Rel.value()));
+    if (X.H1Bdry.known())
+        H1Bdry = new NAbelianGroup(*(X.H1Bdry.value()));
+    if (X.H2.known())
+        H2 = new NAbelianGroup(*(X.H2.value()));
+
+    twoSphereBoundaryComponents = X.twoSphereBoundaryComponents;
+    negativeIdealBoundaryComponents = X.negativeIdealBoundaryComponents;
+    zeroEfficient = X.zeroEfficient;
+    splittingSurface = X.splittingSurface;
 }
 
 void NTriangulation::insertTriangulation(const NTriangulation& X) {

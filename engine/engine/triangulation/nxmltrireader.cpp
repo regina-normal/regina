@@ -132,21 +132,21 @@ namespace {
      * Reads an abelian group property.
      */
     class NAbelianGroupPropertyReader : public NXMLElementReader {
+        public:
+            typedef NProperty<NAbelianGroup, StoreManagedPtr> PropType;
+
         private:
-            NAbelianGroup** groupProp;
-            bool* calculatedProp;
+            PropType& prop;
 
         public:
-            NAbelianGroupPropertyReader(NAbelianGroup** newProp,
-                    bool* newCalc) : groupProp(newProp),
-                    calculatedProp(newCalc) {
+            NAbelianGroupPropertyReader(PropType& newProp) : prop(newProp) {
             }
 
             virtual NXMLElementReader* startSubElement(
                     const std::string& subTagName,
                     const regina::xml::XMLPropertyDict&) {
                 if (subTagName == "abeliangroup")
-                    if (! (*calculatedProp))
+                    if (! prop.known())
                         return new NXMLAbelianGroupReader();
                 return new NXMLElementReader();
             }
@@ -154,11 +154,11 @@ namespace {
             virtual void endSubElement(const std::string& subTagName,
                     NXMLElementReader* subReader) {
                 if (subTagName == "abeliangroup") {
-                    *groupProp =
+                    NAbelianGroup* ans =
                         dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
                         getGroup();
-                    if (*groupProp)
-                        *calculatedProp = true;
+                    if (ans)
+                        prop = ans;
                 }
             }
     };
@@ -167,21 +167,22 @@ namespace {
      * Reads a group presentation property.
      */
     class NGroupPresentationPropertyReader : public NXMLElementReader {
+        public:
+            typedef NProperty<NGroupPresentation, StoreManagedPtr> PropType;
+
         private:
-            NGroupPresentation** groupProp;
-            bool* calculatedProp;
+            PropType& prop;
 
         public:
-            NGroupPresentationPropertyReader(NGroupPresentation** newProp,
-                    bool* newCalc) : groupProp(newProp),
-                    calculatedProp(newCalc) {
+            NGroupPresentationPropertyReader(PropType& newProp) :
+                    prop(newProp) {
             }
 
             virtual NXMLElementReader* startSubElement(
                     const std::string& subTagName,
                     const regina::xml::XMLPropertyDict&) {
                 if (subTagName == "group")
-                    if (! (*calculatedProp))
+                    if (! prop.known())
                         return new NXMLGroupPresentationReader();
                 return new NXMLElementReader();
             }
@@ -189,11 +190,11 @@ namespace {
             virtual void endSubElement(const std::string& subTagName,
                     NXMLElementReader* subReader) {
                 if (subTagName == "group") {
-                    *groupProp =
+                    NGroupPresentation* ans =
                         dynamic_cast<NXMLGroupPresentationReader*>(subReader)->
                         getGroup();
-                    if (*groupProp)
-                        *calculatedProp = true;
+                    if (ans)
+                        prop = ans;
                 }
             }
     };
@@ -208,24 +209,23 @@ NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
     if (subTagName == "tetrahedra")
         return new NTetrahedraReader(tri);
     else if (subTagName == "zeroeff") {
-        if (valueOf(props.lookup("value"), tri->zeroEfficient))
-            tri->calculatedZeroEfficient = true;
+        bool b;
+        if (valueOf(props.lookup("value"), b))
+            tri->zeroEfficient = b;
     } else if (subTagName == "splitsfce") {
-        if (valueOf(props.lookup("value"), tri->splittingSurface))
-            tri->calculatedSplittingSurface = true;
+        bool b;
+        if (valueOf(props.lookup("value"), b))
+            tri->splittingSurface = b;
     } else if (subTagName == "H1")
-        return new NAbelianGroupPropertyReader(&tri->H1, &tri->calculatedH1);
+        return new NAbelianGroupPropertyReader(tri->H1);
     else if (subTagName == "H1Rel")
-        return new NAbelianGroupPropertyReader(&tri->H1Rel,
-            &tri->calculatedH1Rel);
+        return new NAbelianGroupPropertyReader(tri->H1Rel);
     else if (subTagName == "H1Bdry")
-        return new NAbelianGroupPropertyReader(&tri->H1Bdry,
-            &tri->calculatedH1Bdry);
+        return new NAbelianGroupPropertyReader(tri->H1Bdry);
     else if (subTagName == "H2")
-        return new NAbelianGroupPropertyReader(&tri->H2, &tri->calculatedH2);
+        return new NAbelianGroupPropertyReader(tri->H2);
     else if (subTagName == "fundgroup")
-        return new NGroupPresentationPropertyReader(&tri->fundamentalGroup,
-            &tri->calculatedFundamentalGroup);
+        return new NGroupPresentationPropertyReader(tri->fundamentalGroup);
     return new NXMLElementReader();
 }
 

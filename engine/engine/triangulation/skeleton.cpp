@@ -557,22 +557,24 @@ void NTriangulation::calculateBoundaryProperties() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
-    twoSphereBoundaryComponents = false;
-    negativeIdealBoundaryComponents = false;
+    bool localTwoSphereBoundaryComponents = false;
+    bool localNegativeIdealBoundaryComponents = false;
 
     for (BoundaryComponentIterator it = boundaryComponents.begin();
             it != boundaryComponents.end(); it++) {
         if ((*it)->getEulerCharacteristic() == 2)
-            twoSphereBoundaryComponents = true;
+            localTwoSphereBoundaryComponents = true;
         else if ((*it)->isIdeal() && (*it)->getEulerCharacteristic() < 0)
-            negativeIdealBoundaryComponents = true;
+            localNegativeIdealBoundaryComponents = true;
 
         // Stop the search if we've found everything we're looking for.
-        if (twoSphereBoundaryComponents && negativeIdealBoundaryComponents)
+        if (localTwoSphereBoundaryComponents &&
+                localNegativeIdealBoundaryComponents)
             break;
     }
 
-    calculatedBoundaryProperties = true;
+    twoSphereBoundaryComponents = localTwoSphereBoundaryComponents;
+    negativeIdealBoundaryComponents = localNegativeIdealBoundaryComponents;
 }
 
 } // namespace regina
