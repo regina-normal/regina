@@ -29,7 +29,7 @@
 package normal.engine.surfaces;
 
 import normal.engine.*;
-import normal.engine.triangulation.NTriangulation;
+import normal.engine.triangulation.*;
 import java.math.BigInteger;
 
 public interface NNormalSurface extends ShareableObject {
@@ -58,6 +58,25 @@ public interface NNormalSurface extends ShareableObject {
     public static final String vertexSplitString[] = {
         "01/23", "02/13", "03/12"
     };
+    public static final NPerm triDiscArcs[][] = {
+        { new NPerm(0,1,2,3), new NPerm(0,2,3,1), new NPerm(0,3,1,2) },
+        { new NPerm(1,0,3,2), new NPerm(1,3,2,0), new NPerm(1,2,0,3) },
+        { new NPerm(2,3,0,1), new NPerm(2,0,1,3), new NPerm(2,1,3,0) },
+        { new NPerm(3,2,1,0), new NPerm(3,1,0,2), new NPerm(3,0,2,1) }
+    };
+    public static final NPerm quadDiscArcs[][] = {
+        { new NPerm(0,2,3,1), new NPerm(3,0,1,2), new NPerm(1,3,2,0), new NPerm(2,1,0,3) },
+        { new NPerm(0,3,1,2), new NPerm(1,0,2,3), new NPerm(2,1,3,0), new NPerm(3,2,0,1) },
+        { new NPerm(0,1,2,3), new NPerm(2,0,3,1), new NPerm(3,2,1,0), new NPerm(1,3,0,2) }
+    };
+    public static final NPerm octDiscArcs[][] = {
+        { new NPerm(0,3,1,2), new NPerm(0,1,2,3), new NPerm(2,0,3,1), new NPerm(2,3,1,0),
+          new NPerm(1,2,0,3), new NPerm(1,0,3,2), new NPerm(3,1,2,0), new NPerm(3,2,0,1) },
+        { new NPerm(0,1,2,3), new NPerm(0,2,3,1), new NPerm(3,0,1,2), new NPerm(3,1,2,0),
+          new NPerm(2,3,0,1), new NPerm(2,0,1,3), new NPerm(1,2,3,0), new NPerm(1,3,0,2) },
+        { new NPerm(0,2,3,1), new NPerm(0,3,1,2), new NPerm(1,0,2,3), new NPerm(1,2,3,0),
+          new NPerm(3,1,0,2), new NPerm(3,0,2,1), new NPerm(2,3,1,0), new NPerm(2,1,0,3) }
+    };
 
     public BigInteger getTriangleCoord(long tetIndex, int vertex);
     public BigInteger getQuadCoord(long tetIndex, int quadType);
@@ -73,6 +92,7 @@ public interface NNormalSurface extends ShareableObject {
     public boolean isCompact();
     public BigInteger getEulerCharacteristic();
     public int isOrientable();
+    public int isTwoSided();
     public boolean hasRealBoundary();
 }
 

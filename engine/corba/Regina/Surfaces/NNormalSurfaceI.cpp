@@ -66,6 +66,9 @@ char* NNormalSurface_i::getEulerCharacteristic() {
 CORBA::Long NNormalSurface_i::isOrientable() {
     return MY_ENGINE_OBJECT->isOrientable();
 }
+CORBA::Long NNormalSurface_i::isTwoSided() {
+    return MY_ENGINE_OBJECT->isTwoSided();
+}
 CORBA::Boolean NNormalSurface_i::hasRealBoundary() {
     return MY_ENGINE_OBJECT->hasRealBoundary();
 }

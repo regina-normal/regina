@@ -64,6 +64,7 @@ class NNormalSurface_i : public virtual POA_Regina::Surfaces::NNormalSurface,
         virtual CORBA::Boolean isCompact();
         virtual char* getEulerCharacteristic();
         virtual CORBA::Long isOrientable();
+        virtual CORBA::Long isTwoSided();
         virtual CORBA::Boolean hasRealBoundary();
 };
 

@@ -11,10 +11,18 @@ Regina - A Normal Surface Theory Calculator
         Class NAugTriSolidTorus, NLayeredLoop, NLensSpace, NSFS,
                 NTriSolidTorus:
             - New classes.
+        Class NDiscSetSurface:
+            - Modified parameters for adjacentDisc().
+        Class NNormalSurface:
+            - Fixed isOrientable() and added isTwoSided().
         Class NPerm:
             - Added operators = and != and constructor NPerm(const NPerm&).
         Class NTriangulation:
             - Added fourFourMove().
+        File ndisc.h:
+            - Added routine discOrientationFollowsEdge().
+        File nnormalsurface.h:
+            - Added arrays triDiscArcs, quadDiscArcs, octDiscArcs.
     JAVA USER INTERFACE:
         Overall structure:
             - Loading/saving local files is now possible even through CORBA!

@@ -49,6 +49,38 @@ bool numberDiscsAwayFromVertex(int discType, int vertex) {
         vertexSplitPartner[(discType - 1) % 3][0]);
 }
 
+bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
+        int edgeEnd) {
+    NPerm forwards(vertex, edgeStart, edgeEnd, 6-vertex-edgeStart-edgeEnd);
+    NPerm reverse(vertex, edgeEnd, edgeStart, 6-vertex-edgeStart-edgeEnd);
+
+    if (discType < 4) {
+        for (int i = 0; i < 3; i++) {
+            if (triDiscArcs(discType, i) == forwards)
+                return true;
+            if (triDiscArcs(discType, i) == reverse)
+                return false;
+        }
+    }
+    else if (discType < 7) {
+        for (int i = 0; i < 4; i++) {
+            if (quadDiscArcs(discType - 4, i) == forwards)
+                return true;
+            if (quadDiscArcs(discType - 4, i) == reverse)
+                return false;
+        }
+    }
+    else {
+        for (int i = 0; i < 8; i++) {
+            if (octDiscArcs(discType - 7, i) == forwards)
+                return true;
+            if (octDiscArcs(discType - 7, i) == reverse)
+                return false;
+        }
+    }
+    return false;
+}
+
 NDiscSetTet::NDiscSetTet(const NNormalSurface& surface,
         unsigned long tetIndex) {
     int i;
@@ -136,20 +168,20 @@ NDiscSetSurface::~NDiscSetSurface() {
 }
 
 NDiscSpec* NDiscSetSurface::adjacentDisc(const NDiscSpec& disc,
-        int arcFace, int arcVertex, int& adjFace, int& adjVertex) const {
+        NPerm arc, NPerm& adjArc) const {
     NTetrahedron* tet = triangulation->getTetrahedron(disc.tetIndex);
+    int arcFace = arc[3];
     if (tet->getAdjacentTetrahedron(arcFace) == 0)
         return 0;
 
     NDiscSpec* ans = new NDiscSpec;
     ans->tetIndex = triangulation->getTetrahedronIndex(
         tet->getAdjacentTetrahedron(arcFace));
-    adjFace = tet->getAdjacentFace(arcFace);
-    adjVertex = tet->getAdjacentTetrahedronGluing(arcFace)[arcVertex];
+    adjArc = tet->getAdjacentTetrahedronGluing(arcFace) * arc;
 
     unsigned long arcNumber = discSets[disc.tetIndex]->arcFromDisc(
-        arcFace, arcVertex, disc.type, disc.number);
-    discSets[ans->tetIndex]->discFromArc(adjFace, adjVertex, arcNumber,
+        arcFace, arc[0], disc.type, disc.number);
+    discSets[ans->tetIndex]->discFromArc(adjArc[3], adjArc[0], arcNumber,
         ans->type, ans->number);
 
     return ans;

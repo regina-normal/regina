@@ -129,6 +129,8 @@ struct NDiscSpec {
  * The disc specifier will be written as a triple
  * <tt>(tetIndex, type, number)</tt>.
  *
+ * \ifaces Not present.
+ *
  * @param out the output stream to which to write.
  * @param spec the disc specifier to write.
  * @return a reference to \a out.
@@ -138,6 +140,8 @@ ostream& operator << (ostream& out, const NDiscSpec& spec);
 /**
  * Determines whether or not normal discs of the given type are
  * numbered away from the given vertex.
+ *
+ * \ifaces Not present.
  *
  * @param discType the normal disc type under consideration; this
  * should be between 0 and 9 inclusive, as described by the NDiscSpec
@@ -149,6 +153,28 @@ ostream& operator << (ostream& out, const NDiscSpec& spec);
  * numbered towards the given vertex.
  */
 bool numberDiscsAwayFromVertex(int discType, int vertex);
+
+/**
+ * Determines whether or not the natural boundary orientation of a normal
+ * disc of the given type follows the given directed normal arc.
+ * Natural boundary orientation is defined by arrays ::triDiscArcs,
+ * ::quadDiscArcs and ::octDiscArcs.
+ *
+ * \pre The given normal arc lies on a normal disc of the given type.
+ *
+ * \ifaces Not present.
+ *
+ * @param discType the normal disc type under consideration; this should
+ * be between 0 and 9 inclusive, as described by the NDiscSpec class
+ * notes.
+ * @param vertex the vertex about which the normal arc runs.
+ * @param edgeStart the start vertex of the edge to which the normal arc
+ * is parallel.
+ * @param edgeEnd the end vertex of the edge to which the normal arc is
+ * parallel.
+ */
+bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
+        int edgeEnd);
 
 /**
  * Represents a set of normal discs inside a single tetrahedron.
@@ -463,34 +489,31 @@ class NDiscSetSurface {
 
         /**
          * Determines which normal disc is adjacent to the given normal disc
-         * along the given normal arc in the surface described by this
-         * disc set.
+         * along the given directed normal arc in the surface described by
+         * this disc set.
          *
-         * \pre Parameters \a arcFace and \a arcVertex
-         * must together describe a normal arc that the given normal
-         * disc actually meets.
+         * A directed normal arc will be specified by a permutation
+         * <i>p</i>, where the arc runs around vertex <tt>p[0]</tt>
+         * parallel to the directed edge from vertex <tt>p[1]</tt> to
+         * <tt>p[2]</tt>.
          *
          * @param disc the given normal disc; this must be a disc in this
          * disc set.
-         * @param arcFace the tetrahedron face containing the given
-         * normal arc (between 0 and 3 inclusive).
-         * @param arcVertex the vertex about which the given normal arc
-         * runs (between 0 and 3 inclusive); this must be different from
-         * \a arcFace.
-         * @param adjFace returns the tetrahedron face of the adjacent
-         * tetrahedron containing the given normal arc.
-         * Any value may be initially passed.
-         * @param adjVertex returns the tetrahedron vertex of the
-         * adjacent tetrahedron about which the given normal arc runs.
-         * Any value may be initially passed.
+         * @param arc the given normal arc; this must actually be an arc
+         * on the boundary of the given normal disc (although it may run
+         * in either direction).
+         * @param adjArc returns the same directed normal arc that was
+         * passed, but expressed in terms of the vertices of the
+         * adjacent tetrahedron.  Any value may be initially passed.  If
+         * there is no adjacent disc/tetrahedron, this permutation will
+         * remain unchanged.
          * @return the normal disc adjacent to the given disc along the
          * given arc, or 0 if there is no adjacent disc.  This disc
          * specifier will be newly created, and it is up to the caller
          * of this routine to dispose of it.
          */
-        NDiscSpec* adjacentDisc(const NDiscSpec& disc,
-                int arcFace, int arcVertex,
-                int& adjFace, int& adjVertex) const;
+        NDiscSpec* adjacentDisc(const NDiscSpec& disc, NPerm arc,
+                NPerm& adjArc) const;
 };
 
 /**

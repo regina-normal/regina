@@ -83,6 +83,9 @@ public class NCORBANormalSurface extends CORBAShareableObject
     public int isOrientable() {
         return data.isOrientable();
     }
+    public int isTwoSided() {
+        return data.isTwoSided();
+    }
     public boolean hasRealBoundary() {
         return data.hasRealBoundary();
     }

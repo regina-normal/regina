@@ -242,8 +242,10 @@ public class CoordinateViewer extends DefaultPacketViewer
 
         TableCellRenderer renderer = new FancyCellRenderer();
         table.getColumnModel().getColumn(1).setCellRenderer(renderer);
-        if (set.isEmbeddedOnly())
+        if (set.isEmbeddedOnly()) {
             table.getColumnModel().getColumn(2).setCellRenderer(renderer);
+            table.getColumnModel().getColumn(3).setCellRenderer(renderer);
+        }
 
         TableColumn col;
         renderer = new FancyColumnHeaderRenderer(table);
@@ -293,7 +295,7 @@ public class CoordinateViewer extends DefaultPacketViewer
         public int getColumnCount() {
             if (set.isEmbeddedOnly())
                 return Coordinates.getNumberOfCoordinates(flavour,
-                    set.getTriangulation()) + 3;
+                    set.getTriangulation()) + 4;
             else
                 return Coordinates.getNumberOfCoordinates(flavour,
                     set.getTriangulation()) + 2;
@@ -326,6 +328,16 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return "Unknown";
                     case 2:
                         if (! surface.isCompact())
+                            return "";
+                        intAns = surface.isTwoSided();
+                        if (intAns == 1)
+                            return new FancyData("2", green);
+                        else if (intAns == -1)
+                            return new FancyData("1", red);
+                        else
+                            return "Unknown";
+                    case 3:
+                        if (! surface.isCompact())
                             return "Infinite";
                         else if (surface.hasRealBoundary())
                             return new FancyData("Real Bdry", red);
@@ -333,7 +345,7 @@ public class CoordinateViewer extends DefaultPacketViewer
                             return new FancyData("Closed", green);
                     default:
                         BigInteger bigAns = Coordinates.getCoordinate(flavour,
-                            surface, column - 3);
+                            surface, column - 4);
                         if (bigAns == null)
                             return "Inf";
                         else if (bigAns.signum() == 0)
@@ -380,10 +392,12 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 1:
                         return "Orient";
                     case 2:
+                        return "Sides";
+                    case 3:
                         return "Bdry";
                     default:
                         return Coordinates.getCoordinateAbbr(flavour,
-                            set.getTriangulation(), column - 3);
+                            set.getTriangulation(), column - 4);
                 }
             else
                 switch(column) {
@@ -410,10 +424,12 @@ public class CoordinateViewer extends DefaultPacketViewer
                     case 1:
                         return "Orientability";
                     case 2:
+                        return "Number of Sides";
+                    case 3:
                         return "Boundary";
                     default:
                         return Coordinates.getCoordinateDesc(flavour,
-                            set.getTriangulation(), column - 3);
+                            set.getTriangulation(), column - 4);
                 }
             else
                 switch(column) {

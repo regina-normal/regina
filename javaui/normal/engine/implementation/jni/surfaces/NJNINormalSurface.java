@@ -53,5 +53,6 @@ public class NJNINormalSurface extends JNIShareableObject
     public native boolean isCompact();
     public native BigInteger getEulerCharacteristic();
     public native int isOrientable();
+    public native int isTwoSided();
     public native boolean hasRealBoundary();
 }

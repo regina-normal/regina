@@ -113,6 +113,12 @@ JNIEXPORT jint JNICALL
     return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isOrientable();
 }
 
+JNIEXPORT jint JNICALL
+        Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_isTwoSided
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NNormalSurface, me)->isTwoSided();
+}
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_writeRawVector
         (JNIEnv *env, jobject me) {

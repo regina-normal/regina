@@ -48,9 +48,10 @@
 
 // Property IDs:
 #define PROPID_EULERCHARACTERISTIC 1
-#define PROPID_ORIENTABILITY 4
 #define PROPID_REALBOUNDARY 5
 #define PROPID_COMPACT 6
+#define PROPID_ORIENTABILITY 7
+#define PROPID_TWOSIDEDNESS 8
 
 const int vertexSplit[4][4] = {
     { -1, 0, 1, 2 },
@@ -79,6 +80,30 @@ const int vertexSplitPartner[3][4] = {
 };
 
 const char vertexSplitString[3][6] = { "01/23", "02/13", "03/12" };
+
+// The following three arrays cannot be made 2-D because of a g++-2.95 bug.
+
+const NPerm __triDiscArcs[12] = {
+    NPerm(0,1,2,3), NPerm(0,2,3,1), NPerm(0,3,1,2),
+    NPerm(1,0,3,2), NPerm(1,3,2,0), NPerm(1,2,0,3),
+    NPerm(2,3,0,1), NPerm(2,0,1,3), NPerm(2,1,3,0),
+    NPerm(3,2,1,0), NPerm(3,1,0,2), NPerm(3,0,2,1)
+};
+
+const NPerm __quadDiscArcs[12] = {
+    NPerm(0,2,3,1), NPerm(3,0,1,2), NPerm(1,3,2,0), NPerm(2,1,0,3),
+    NPerm(0,3,1,2), NPerm(1,0,2,3), NPerm(2,1,3,0), NPerm(3,2,0,1),
+    NPerm(0,1,2,3), NPerm(2,0,3,1), NPerm(3,2,1,0), NPerm(1,3,0,2)
+};
+
+const NPerm __octDiscArcs[24] = {
+    NPerm(0,3,1,2), NPerm(0,1,2,3), NPerm(2,0,3,1), NPerm(2,3,1,0),
+    NPerm(1,2,0,3), NPerm(1,0,3,2), NPerm(3,1,2,0), NPerm(3,2,0,1),
+    NPerm(0,1,2,3), NPerm(0,2,3,1), NPerm(3,0,1,2), NPerm(3,1,2,0),
+    NPerm(2,3,0,1), NPerm(2,0,1,3), NPerm(1,2,3,0), NPerm(1,3,0,2),
+    NPerm(0,2,3,1), NPerm(0,3,1,2), NPerm(1,0,2,3), NPerm(1,2,3,0),
+    NPerm(3,1,0,2), NPerm(3,0,2,1), NPerm(2,3,1,0), NPerm(2,1,0,3)
+};
 
 void NNormalSurfaceVector::scaleDown() {
     NLargeInteger gcd; // Initialised to 0.
@@ -110,6 +135,10 @@ NNormalSurface* NNormalSurface::clone() const {
         ans->orientable = orientable;
         ans->calculatedOrientable = true;
     }
+    if (calculatedTwoSided) {
+        ans->twoSided = twoSided;
+        ans->calculatedTwoSided = true;
+    }
     if (calculatedRealBoundary) {
         ans->realBoundary = realBoundary;
         ans->calculatedRealBoundary = true;
@@ -131,6 +160,10 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
         orientable = infile.readInt();
         calculatedOrientable = true;
     }
+    else if (propType == PROPID_TWOSIDEDNESS) {
+        twoSided = infile.readInt();
+        calculatedTwoSided = true;
+    }
     else if (propType == PROPID_REALBOUNDARY) {
         realBoundary = infile.readBool();
         calculatedRealBoundary = true;
@@ -144,6 +177,7 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
 void NNormalSurface::initialiseAllProperties() {
     calculatedEulerChar = false;
     calculatedOrientable = false;
+    calculatedTwoSided = false;
     calculatedRealBoundary = false;
     calculatedCompact = false;
 }
@@ -315,6 +349,11 @@ void NNormalSurface::writeToFile(NFile& out) const {
     if (calculatedOrientable) {
         bookmark = writePropertyHeader(out, PROPID_ORIENTABILITY);
         out.writeInt(orientable);
+        writePropertyFooter(out, bookmark);
+    }
+    if (calculatedTwoSided) {
+        bookmark = writePropertyHeader(out, PROPID_TWOSIDEDNESS);
+        out.writeInt(twoSided);
         writePropertyFooter(out, bookmark);
     }
     if (calculatedRealBoundary) {

@@ -42,11 +42,13 @@
     #include "nmpi.h"
     #include "nvectordense.h"
     #include "npropertyholder.h"
+    #include "nperm.h"
 #else
     #include "engine/shareableobject.h"
     #include "engine/utilities/nmpi.h"
     #include "engine/maths/nvectordense.h"
     #include "engine/property/npropertyholder.h"
+    #include "engine/triangulation/nperm.h"
 #endif
 
 /**
@@ -56,7 +58,7 @@
  * <tt>vertexSplit[i][j]</tt> is the number of the vertex split that
  * keeps vertices <tt>i</tt> and <tt>j</tt> together.
  *
- * \ifacesjava This array is a static member of \a NNormalSurface.
+ * \ifacesjava This array is a static member of NNormalSurface.
  */
 extern const int vertexSplit[4][4];
 /**
@@ -66,7 +68,7 @@ extern const int vertexSplit[4][4];
  * vertex splits that meet the edge joining tetrahedron vertices
  * <tt>i</tt> and <tt>j</tt>.
  *
- * \ifacesjava This array is a static member of \a NNormalSurface.
+ * \ifacesjava This array is a static member of NNormalSurface.
  */
 extern const int vertexSplitMeeting[4][4][2];
 
@@ -77,7 +79,7 @@ extern const int vertexSplitMeeting[4][4][2];
  * <tt>vertexSplitDefn[i][0,1]</tt> and
  * <tt>vertexSplitDefn[i][2,3]</tt>.
  *
- * \ifacesjava This array is a static member of \a NNormalSurface.
+ * \ifacesjava This array is a static member of NNormalSurface.
  */
 extern const int vertexSplitDefn[3][4];
 
@@ -88,7 +90,7 @@ extern const int vertexSplitDefn[3][4];
  * Vertex split number \c i pairs vertex \c v with
  * vertex <tt>vertexSplitPartner[i][v]</tt>.
  *
- * \ifacesjava This array is a static member of \a NNormalSurface.
+ * \ifacesjava This array is a static member of NNormalSurface.
  */
 extern const int vertexSplitPartner[3][4];
 
@@ -100,10 +102,84 @@ extern const int vertexSplitPartner[3][4];
  * which in this case is the vertex split that splits vertices 0,2 from
  * vertices 1,3.
  *
- * \ifacesjava This array is a static member of \a NNormalSurface and
+ * \ifacesjava This array is a static member of NNormalSurface and
  * is a one dimensional array of strings.
  */
 extern const char vertexSplitString[3][6];
+
+/**
+ * Lists in consecutive order the directed normal arcs that form the
+ * boundary of each type of triangular normal disc.  Each permutation \a p
+ * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
+ * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ *
+ * Array <tt>triDiscArcs[i]</tt> lists the boundary arcs of the
+ * triangular disc of type <i>i</i>.  See NNormalSurface::getTriangleCoord()
+ * for further details.
+ *
+ * Note that every permutation in this array is even.
+ *
+ * \ifacescpp This array is replaced by a macro
+ * <tt>triDiscArcs(discType, arcIndex)</tt> that essentially looks up
+ * the corresponding array.  This is necessary because of a bug in gcc 2.95.
+ * \ifacesjava This array is a static member of NNormalSurface.
+ */
+#ifdef __DOXYGEN
+extern const NPerm triDiscArcs[4][3];
+#else
+extern const NPerm __triDiscArcs[12];
+#define triDiscArcs(i, j) __triDiscArcs[(3 * (i)) + (j)]
+#endif
+
+/**
+ * Lists in consecutive order the directed normal arcs that form the
+ * boundary of each type of quadrilateral normal disc.  Each permutation \a p
+ * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
+ * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ *
+ * Array <tt>quadDiscArcs[i]</tt> lists the boundary arcs of the
+ * quadrilateral disc of type <i>i</i>.  See NNormalSurface::getQuadCoord()
+ * for further details.
+ *
+ * Note that permutation <tt>quadDiscArcs[i][j]</tt> will be even
+ * precisely when <tt>j</tt> is even.
+ *
+ * \ifacescpp This array is replaced by a macro
+ * <tt>quadDiscArcs(discType, arcIndex)</tt> that essentially looks up
+ * the corresponding array.  This is necessary because of a bug in gcc 2.95.
+ * \ifacesjava This array is a static member of NNormalSurface.
+ */
+#ifdef __DOXYGEN
+extern const NPerm quadDiscArcs[3][4];
+#else
+extern const NPerm __quadDiscArcs[12];
+#define quadDiscArcs(i, j) __quadDiscArcs[(4 * (i)) + (j)]
+#endif
+
+/**
+ * Lists in consecutive order the directed normal arcs that form the
+ * boundary of each type of octahedral normal disc.  Each permutation \a p
+ * represents an arc about vertex <tt>p[0]</tt> parallel to the directed
+ * edge from <tt>p[1]</tt> to <tt>p[2]</tt>.
+ *
+ * Array <tt>octDiscArcs[i]</tt> lists the boundary arcs of the
+ * octahedral disc of type <i>i</i>.  See NNormalSurface::getOctCoord()
+ * for further details.
+ *
+ * Note that permutation <tt>octDiscArcs[i][j]</tt> will be even
+ * precisely when <tt>j</tt> is 0, 1, 4 or 5.
+ *
+ * \ifacescpp This array is replaced by a macro
+ * <tt>octDiscArcs(discType, arcIndex)</tt> that essentially looks up
+ * the corresponding array.  This is necessary because of a bug in gcc 2.95.
+ * \ifacesjava This array is a static member of NNormalSurface.
+ */
+#ifdef __DOXYGEN
+extern const NPerm octDiscArcs[3][8];
+#else
+extern const NPerm __octDiscArcs[24];
+#define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
+#endif
 
 class NTriangulation;
 
@@ -417,6 +493,12 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
         bool calculatedOrientable;
             /**< Have we calculated the orientability of this surface
                  (or the indeterminibility thereof)? */
+        int twoSided;
+            /**< Is this surface two-sided?
+                 1 is true, -1 is false and 0 is undetermined. */
+        bool calculatedTwoSided;
+            /**< Have we calculated the two-sidedness of this surface
+                 (or the indeterminibility thereof)? */
         bool realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
              *   any boundary faces)? */
@@ -645,6 +727,16 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          */
         int isOrientable();
         /**
+         * Returns whether or not this surface is two-sided.
+         *
+         * \pre This normal surface is compact (has finitely many discs).
+         *
+         * @return 1 if this surface is two-sided, -1 if this surface
+         * is one-sided and 0 if two-sidedness cannot be determined
+         * (for instance, if there are too many normal discs).
+         */
+        int isTwoSided();
+        /**
          * Determines if this surface has any real boundary, that is,
          * whether it meets any boundary faces of the triangulation.
          *
@@ -690,8 +782,8 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          */
         void calculateEulerCharacteristic();
         /**
-         * Calculates whether this surface is orientable and stores the
-         * result as a property.
+         * Calculates whether this surface is orientable and/or
+         * two-sided and stores the results as properties.
          *
          * \pre This normal surface is compact (has finitely many discs).
          */
@@ -774,6 +866,12 @@ inline int NNormalSurface::isOrientable() {
     if (! calculatedOrientable)
         calculateOrientable();
     return orientable;
+}
+
+inline int NNormalSurface::isTwoSided() {
+    if (! calculatedTwoSided)
+        calculateOrientable();
+    return twoSided;
 }
 
 inline bool NNormalSurface::hasRealBoundary() {
