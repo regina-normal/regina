@@ -37,10 +37,9 @@
 #endif
 
 #include <list>
+#include "census/nfacepairing.h"
 #include "utilities/nbooleans.h"
-#include "utilities/nthread.h"
 #include "triangulation/ntriangulation.h"
-#include "triangulation/nisomorphism.h"
 
 namespace regina {
 
@@ -125,17 +124,9 @@ unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
  * refer to this class directly.  It is used to store temporary
  * information when forming the census.
  *
- * \todo \optlong When generating face pairings, do some checking to eliminate
- * cases in which tetrahedron (<i>k</i> > 0) can be swapped with tetrahedron 0
- * to produce a smaller representation of the same pairing.
- * \todo \optlong When generating automorphism groups, produce their generating
- * complete permutation sets instead of the entire automorphism groups.
- * \todo \optlong Change <i>isCanonicalInternal()</i> to a non-recursive
- * routine.
- *
  * \ifaces Not present.
  */
-class NCensus : public NThread {
+class NCensus {
     private:
         NPacket* parent;
             /**< The argument passed to formCensus(). */
@@ -164,23 +155,10 @@ class NCensus : public NThread {
         int* orientation;
             /**< The orientation of each tetrahedron.  Orientation is
              *   +/-1, or 0 if unknown. */
-        NTetFace* joins;
-            /**< The face to which each tetrahedron face is joined.
-             *   If the destination for a particular face has not yet been
-             *   decided, the face will be joined to itself. */
         int* joinPermIndices;
             /**< The index into array \a allPermsS3 representing the
              *   permutation with which each tetrahedron face is
              *   joined to its partner. */
-        NIsomorphismIndexed automorphism;
-            /**< The currently working automorphism of the face pairings
-             *   described by \a joins. */
-        int* autoPreImage;
-            /**< An array containing the preimage of each tetrahedron
-             *   under \a automorphism. */
-        std::list<NIsomorphismIndexed*> allAutomorphisms;
-            /**< A list of all found automorphisms of the face pairings
-             *   described by \a joins. */
 
     private:
         /**
@@ -201,27 +179,6 @@ class NCensus : public NThread {
             NProgressMessage* newProgress = 0);
 
         /**
-         * Returns a reference to the face to which the given face is
-         * joined.
-         *
-         * \pre The given face is a real tetrahedron
-         * face (not boundary, before-the-start or past-the-end).
-         *
-         * @param source the face under investigation.
-         * @return a reference to the face to which \a source is joined.
-         */
-        NTetFace& dest(const NTetFace& source);
-        /**
-         * Returns a reference to the face to which the given face is
-         * joined.
-         *
-         * @param tet the tetrahedron under investigation (between 0 and
-         * <i>nTetrahedra</i>-1 inclusive).
-         * @param face the face of the given tetrahedron under
-         * investigation (between 0 and 3 inclusive).
-         */
-        NTetFace& dest(int tet, int face);
-        /**
          * Returns a reference to the index into array \a allPermsS3
          * representing the permutation with which the given face
          * is joined to its partner.
@@ -233,131 +190,63 @@ class NCensus : public NThread {
          * @return a reference to the corresponding array index.
          */
         int& joinPermIndex(const NTetFace& source);
-        /**
-         * Determines if the destination join for the given face has not
-         * yet been decided.
-         *
-         * \pre The given face is a real tetrahedron
-         * face (not boundary, before-the-start or past-the-end).
-         *
-         * @param source the face under investigation.
-         * @return \c true if and only if the destination for the given
-         * face has not yet been decided.
-         */
-        bool noDest(const NTetFace& source);
-        /**
-         * Determines if the destination join for the given face has not
-         * yet been decided.
-         *
-         * @param tet the tetrahedron under investigation (between 0 and
-         * <i>nTetrahedra</i>-1 inclusive).
-         * @param face the face of the given tetrahedron under
-         * investigation (between 0 and 3 inclusive).
-         * @return \c true if and only if the destination for the given
-         * face has not yet been decided.
-         */
-        bool noDest(int tet, int face);
 
         /**
-         * Runs through all combinatorially different ways of pairing
-         * off faces (note that faces may also be paired with the
-         * boundary).  This is the outermost layer of the census
-         * generation routine.
-         */
-        void matchFacePairs();
-        /**
-         * Determines if the current set of face pairings is in
-         * canonical (smallest lexicographical) form.
-         * If so, \a allAutomorphisms will be filled with the set of all
-         * combinatorial automorphisms of the set of face pairings.
-         * If not, \a allAutomorphisms will be left empty.
+         * Calls selectGluingPermsInternal() upon the given census
+         * object.
          *
-         * \pre \a allAutomorphisms is empty.
-         *
-         * @return \c true if and only if the current set of face
-         * pairings is in canonical form.
+         * @param pairing the face pairing parameter to pass to
+         * selectGluingPermsInternal().
+         * @param autos the automorphism list to pass to
+         * selectGluingPermsInternal().
+         * @param census the census upon which
+         * selectGluingPermsInternal() should be called; this must
+         * really be of class NCensus.
          */
-        bool isCanonical();
+        static void selectGluingPerms(const NFacePairing* pairing,
+            const NFacePairingIsoList* autos, void* census);
+
         /**
          * Runs through all permutations that can be used to actually
          * glue together the faces that have already been paired off.
-         * Solutions that are equivalent under automorphisms in the list
-         * \a allAutomorphisms will not be counted more than once.
+         * Solutions that are equivalent under automorphisms in the
+         * given list will not be counted more than once.
          * This is the innermost layer of the census routine.
+         *
+         * @param pairing the way in which the tetrahedron faces are to
+         * be paired off.
+         * @param autos the set of all automorphisms of the given face pairing.
          */
-        void selectGluingPerms();
+        void selectGluingPermsInternal(const NFacePairing* pairing,
+            const NFacePairingIsoList* autos);
         /**
          * Called when a triangulation has been found.
          * Builds the triangulation from the blueprint, checks any
          * required properties and places it in the final census if
          * appropriate.
+         *
+         * @param pairing the pairing of faces corresponding to the
+         * triangulation that has been found.
+         * @param autos the set of all automorphisms of the given face
+         * pairing.
          */
-        void trySolution();
+        void trySolution(const NFacePairing* pairing,
+            const NFacePairingIsoList* autos);
 
-        /**
-         * Internal to isCanonical(); runs through all possible images
-         * of the faces of the given tetrahedron.
-         *
-         * \pre The current set of face pairings and its
-         * preimage under \a automorphism are known to be
-         * lexicographically equal for all faces strictly less than
-         * \a equalUpTo.
-         *
-         * @param whichTet the first tetrahedron whose face images under
-         * \a automorphism have not yet been decided.
-         * @param equalUpTo the first face for which it is \a not known
-         * that the current set of face pairings and its preimage under
-         * \a automorphism are equal.  This parameter can
-         * be used to reduce the execution time of this routine.
-         * @return \c false if it is already known that the current set
-         * of face pairings is \a not in canonical form; \c true
-         * if we are still undecided.
-         */
-        bool isCanonicalInternal(int whichTet, const NTetFace& equalUpTo);
-        /**
-         * Lexicographically compares the current set of face pairings
-         * with its preimage under \a automorphism, where the
-         * automorphism may not yet be completely determined.
-         *
-         * Only the gluings of the faces of the first \a compareTets
-         * tetrahedra will be compared.  If the first lexicographical
-         * discrepancy occurs where the gluing of some face in the
-         * preimage is still undetermined, the pairings will be
-         * considered equal.
-         *
-         * \pre The preimages themselves of the faces of
-         * the first \a compareTets tetrahedra have been determined.
-         * \pre The two pairing sets are already known to be
-         * lexicographically equal for all faces strictly less than
-         * \a equalUpTo.
-         *
-         * \post The two pairing sets are now known to
-         * be lexicographically equal for all faces strictly less than
-         * the returned value of \a equalUpTo.
-         *
-         * @param compareTets the number of tetrahedra to compare.
-         * @param equalUpTo the first face for which it is \a not known
-         * that the two sets of pairings are equal.  This parameter can
-         * be used to reduce the execution time of this routine.
-         * If nothing is known about the two sets of pairings, simply
-         * pass <tt>NTetFace(0, 0)</tt>.  This parameter will be changed
-         * during the routine; see the postcondition above for details.
-         * @return -1 if this set is less than its preimage, 0 if this
-         * set equals its preimage and 1 if this set is greater than its
-         * preimage.
-         */
-        int cmpWithPreImage(unsigned compareTets, NTetFace& equalUpTo);
         /**
          * Compares the current set of gluing permutations with its
          * preimage under the given automorphism of face pairings, in order
          * to see which is closer to canonical form.
          *
+         * @param pairing the pairing of faces to which the given
+         * automorphism should be applied.
          * @param automorph the given automorphism.
          * @return -1 if this set is closer to canonical form, 0 if this set
          * equals its preimage and 1 if its preimage is closer to canonical
          * form.
          */
-        int cmpPermsWithPreImage(const NIsomorphism& automorph);
+        int cmpPermsWithPreImage(const NFacePairing* pairing,
+            const NIsomorphism& automorph);
     
     public:
         /**
@@ -366,16 +255,6 @@ class NCensus : public NThread {
          */
         virtual ~NCensus();
 
-        /**
-         * Runs a complete census generation.  At most one copy of this
-         * routine should be running at any given time for a particular
-         * NCensus.
-         *
-         * @param param this parameter is ignored.
-         * @return 0.
-         */
-        void* run(void* param);
-    
     friend unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, NProgressManager* manager);
@@ -385,27 +264,8 @@ class NCensus : public NThread {
 
 // Inline functions for NCensus
 
-inline NTetFace& NCensus::dest(const NTetFace& source) {
-    return joins[4 * source.tet + source.face];
-}
-inline NTetFace& NCensus::dest(int tet, int face) {
-    return joins[4 * tet + face];
-}
-
 inline int& NCensus::joinPermIndex(const NTetFace& source) {
     return joinPermIndices[4 * source.tet + source.face];
-}
-
-inline bool NCensus::noDest(const NTetFace& source) {
-    return dest(source) == source;
-}
-inline bool NCensus::noDest(int tet, int face) {
-    NTetFace& f = joins[4 * tet + face];
-    return (f.tet == tet && f.face == face);
-}
-
-inline bool NCensus::isCanonical() {
-    return isCanonicalInternal(0, NTetFace(0, 0));
 }
 
 } // namespace regina

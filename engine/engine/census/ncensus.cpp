@@ -35,16 +35,9 @@ namespace regina {
 unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, NProgressManager* manager) {
-    // Bail if obviously nothing is going to happen.
-    if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone ||
-            boundary == NBoolSet::sNone || nTetrahedra == 0) {
-        if (manager)
-            manager->setProgress(new NProgressFinished());
-        return 0;
-    }
-    if (boundary.hasTrue() && nBdryFaces >= 0 &&
-            (nBdryFaces % 2 == 1 || nBdryFaces > 2 * (int)nTetrahedra + 2
-            || (nBdryFaces == 0 && ! boundary.hasFalse()))) {
+    // Bail if obviously nothing is going to happen but we won't realise
+    // it until we've actually generated the face pairings.
+    if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone) {
         if (manager)
             manager->setProgress(new NProgressFinished());
         return 0;
@@ -63,10 +56,12 @@ unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
         orientability, boundary, nBdryFaces, progress);
     
     if (manager) {
-        census->start(0, true);
+        NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
+            NCensus::selectGluingPerms, census, true);
         return 0;
     } else {
-        census->run(0);
+        NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
+            NCensus::selectGluingPerms, census, false);
         unsigned long ans = census->whichSoln - 1;
         delete census;
         return ans;
@@ -79,8 +74,7 @@ NCensus::NCensus(NPacket* newParent, unsigned newNTetrahedra,
         NProgressMessage* newProgress) : parent(newParent),
         nTetrahedra(newNTetrahedra), finiteness(newFiniteness),
         orientability(newOrientability), boundary(newBoundary),
-        nBdryFaces(newNBdryFaces), progress(newProgress),
-        whichSoln(1), automorphism(newNTetrahedra) {
+        nBdryFaces(newNBdryFaces), progress(newProgress), whichSoln(1) {
     // Initialise the triangulation and dynamic arrays.
     tet = new (NTetrahedron*)[nTetrahedra];
     orientation = new int[nTetrahedra];
@@ -92,34 +86,15 @@ NCensus::NCensus(NPacket* newParent, unsigned newNTetrahedra,
         orientation[i] = 0;
     }
 
-    joins = new NTetFace[4 * nTetrahedra];
     joinPermIndices = new int[4 * nTetrahedra];
-    for (NTetFace f(0,0); f.tet < (int)nTetrahedra; f++) {
-        dest(f) = f;
-        joinPermIndex(f) = -1;
-    }
-
-    // Initialise the automorphism and related members.
-    autoPreImage = new int[nTetrahedra];
-    for (i = 0; i < nTetrahedra; i++) {
-        automorphism.tetImage(i) = 0;
-        automorphism.facePermIndex(i) = -1;
-        autoPreImage[i] = -1;
-    }
+    std::fill(joinPermIndices, joinPermIndices + nTetrahedra * 4, -1);
 }
 
 NCensus::~NCensus() {
     working.removeAllTetrahedra();
     delete[] tet;
     delete[] orientation;
-    delete[] joins;
     delete[] joinPermIndices;
-    delete[] autoPreImage;
-}
-
-void* NCensus::run(void*) {
-    matchFacePairs();
-    return 0;
 }
 
 } // namespace regina

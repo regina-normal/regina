@@ -32,11 +32,32 @@
 
 namespace regina {
 
-void NCensus::selectGluingPerms() {
+void NCensus::selectGluingPerms(const NFacePairing* pairing,
+        const NFacePairingIsoList* autos, void* census) {
+    NCensus* realCensus = (NCensus*)census;
+    if (pairing) {
+        // We've found another face pairing.
+        if (realCensus->progress)
+            realCensus->progress->setMessage(pairing->toString());
+
+        // Select the individual gluing permutations.
+        realCensus->selectGluingPermsInternal(pairing, autos);
+    } else {
+        // Census generation has finished.
+        if (realCensus->progress) {
+            realCensus->progress->setMessage("Finished.");
+            realCensus->progress->setFinished();
+            delete realCensus;
+        }
+    }
+}
+
+void NCensus::selectGluingPermsInternal(const NFacePairing* pairing,
+        const NFacePairingIsoList* autos) {
     NTetFace face(0, 0);
-    if (dest(face).isBoundary(nTetrahedra)) {
+    if (pairing->dest(face).isBoundary(nTetrahedra)) {
         // There are no permutations to choose!
-        trySolution();
+        trySolution(pairing, autos);
         return;
     }
 
@@ -49,11 +70,11 @@ void NCensus::selectGluingPerms() {
             return;
 
         // Play nicely with the other children.
-        yield();
+        NThread::yield();
 
         // When moving to the next permutation, be sure to preserve the
         // orientation of the permutation if necessary.
-        if (orientability.hasFalse() || dest(face).face == 0)
+        if (orientability.hasFalse() || pairing->dest(face).face == 0)
             joinPermIndex(face)++;
         else
             joinPermIndex(face) += 2;
@@ -66,51 +87,56 @@ void NCensus::selectGluingPerms() {
                 tet[face.tet]->unjoin(face.face);
             face--;
             while ((! face.isBeforeStart()) &&
-                    (dest(face).isBoundary(nTetrahedra) || dest(face) < face))
+                    (pairing->dest(face).isBoundary(nTetrahedra) ||
+                    pairing->dest(face) < face))
                 face--;
             continue;
         }
 
         // We are sitting on a new permutation to try.
-        gluing = NPerm(dest(face).face, 3) * allPermsS3[joinPermIndex(face)] *
-            NPerm(face.face, 3);
+        gluing = NPerm(pairing->dest(face).face, 3) *
+            allPermsS3[joinPermIndex(face)] * NPerm(face.face, 3);
         if (tet[face.tet]->getAdjacentTetrahedron(face.face))
             tet[face.tet]->unjoin(face.face);
-        tet[face.tet]->joinTo(face.face, tet[dest(face).tet], gluing);
+        tet[face.tet]->joinTo(face.face, tet[pairing->dest(face).tet], gluing);
 
         // Fix the orientation if appropriate.
-        if (dest(face).face == 0) {
+        if (pairing->dest(face).face == 0) {
             // It's the first time we've hit this tetrahedron.
             if ((joinPermIndex(face) + (face.face == 3 ? 0 : 1) +
-                    (dest(face).face == 3 ? 0 : 1)) % 2 == 0)
-                orientation[dest(face).tet] = -orientation[face.tet];
+                    (pairing->dest(face).face == 3 ? 0 : 1)) % 2 == 0)
+                orientation[pairing->dest(face).tet] = -orientation[face.tet];
             else
-                orientation[dest(face).tet] = orientation[face.tet];
+                orientation[pairing->dest(face).tet] = orientation[face.tet];
         }
 
         // Move on to the next face.
         face++;
         while (face.tet < (int)nTetrahedra &&
-                (dest(face).isBoundary(nTetrahedra) || dest(face) < face))
+                (pairing->dest(face).isBoundary(nTetrahedra) ||
+                pairing->dest(face) < face))
             face++;
 
         // If we're at the end, try the solution and step back.
         if (face.tet == (int)nTetrahedra) {
-            trySolution();
+            trySolution(pairing, autos);
 
             // Back to the previous face.
             face--;
             while ((! face.isBeforeStart()) &&
-                    (dest(face).isBoundary(nTetrahedra) || dest(face) < face))
+                    (pairing->dest(face).isBoundary(nTetrahedra) ||
+                    pairing->dest(face) < face))
                 face--;
-        } else if ((! orientability.hasFalse()) && dest(face).face > 0) {
+        } else if ((! orientability.hasFalse()) &&
+                pairing->dest(face).face > 0) {
             // Be sure to get the orientation right.
-            if (orientation[face.tet] == orientation[dest(face).tet])
+            if (orientation[face.tet] == orientation[pairing->dest(face).tet])
                 joinPermIndex(face) = 1;
             else
                 joinPermIndex(face) = 0;
             
-            if ((face.face == 3 ? 0 : 1) + (dest(face).face == 3 ? 0 : 1) == 1)
+            if ((face.face == 3 ? 0 : 1) +
+                    (pairing->dest(face).face == 3 ? 0 : 1) == 1)
                 joinPermIndex(face) = (joinPermIndex(face) + 1) % 2;
 
             joinPermIndex(face) -= 2;
@@ -118,20 +144,21 @@ void NCensus::selectGluingPerms() {
     }
 }
 
-void NCensus::trySolution() {
+void NCensus::trySolution(const NFacePairing* pairing,
+        const NFacePairingIsoList* autos) {
     // Run through the automorphisms and check we are in canonical form
     // for the permutations.
     // Skip the first automorphism because this will always be the identity.
-    std::list<NIsomorphismIndexed*>::iterator it = allAutomorphisms.begin();
-    for (it++; it != allAutomorphisms.end(); it++) {
+    std::list<NIsomorphismDirect*>::const_iterator it = autos->begin();
+    for (it++; it != autos->end(); it++) {
         // Have we been cancelled?
         if (progress && progress->isCancelled())
             return;
 
         // Play nicely with the other children.
-        yield();
+        NThread::yield();
 
-        if (cmpPermsWithPreImage(**it) > 0)
+        if (cmpPermsWithPreImage(pairing, **it) > 0)
             return;
     }
 
@@ -160,12 +187,13 @@ void NCensus::trySolution() {
     whichSoln++;
 }
 
-int NCensus::cmpPermsWithPreImage(const NIsomorphism& automorph) {
+int NCensus::cmpPermsWithPreImage(const NFacePairing* pairing,
+        const NIsomorphism& automorph) {
     NTetFace faceDest, faceImage;
     NPerm myPerm, yourPerm;
     int order;
     for (NTetFace face(0, 0); face.tet < (int)nTetrahedra; face++) {
-        faceDest = dest(face);
+        faceDest = pairing->dest(face);
         faceImage = automorph[face];
         if (faceDest.isBoundary(nTetrahedra) || faceDest < face)
             continue;
