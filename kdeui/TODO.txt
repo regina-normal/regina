@@ -23,6 +23,7 @@ Packet Viewers:
         surface viewers
     Make a script dirty when its variables are changed externally
         through renaming or deletion
+    Include Turaev-Viro and isomorphism tests
 
 General:
     Make "configure shortcuts" work with the part as well
