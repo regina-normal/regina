@@ -101,10 +101,7 @@
      <arg><option>-q, --quiet</option></arg>
      <arg><option>-v, --verbose</option></arg>
     </group>
-    <arg>
-     <replaceable>script</replaceable>
-     <arg><replaceable>script-args</replaceable></arg>
-    </arg>
+    <arg><replaceable>script</replaceable> <arg><replaceable>script-args</replaceable></arg></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
 
