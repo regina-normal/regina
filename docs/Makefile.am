@@ -6,6 +6,8 @@
 ##  to produce Makefile.in.
 ##
 
+SUBDIRS = engine javaui images
+
 ## ----------------------- Variables ---------------------------------
 
 sgml_index = regina.sgml
