@@ -99,6 +99,8 @@ class NSnappedTwoSphere : public ShareableObject {
 		 * Note that if this 2-sphere is separating, this routine will
 		 * effectively split the corresponding connected sum into its
 		 * two original terms.
+		 *
+		 * \todo \bugurgent This routine currently does nothing!
 		 */
 		void reduceTriangulation() const;
 		/**
@@ -106,6 +108,8 @@ class NSnappedTwoSphere : public ShareableObject {
 		 * described by reduceTriangulation().  The original
 		 * triangulation containing this 2-sphere will not be modified.
 		 * The clone will have no parent packet.
+		 *
+		 * \todo \bugurgent This routine currently does nothing!
 		 *
 		 * @param original the triangulation in which this 2-sphere occurs.
 		 * @return the newly created reduced triangulation.
