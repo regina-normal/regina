@@ -35,6 +35,8 @@ Python:
     Allow breaking processing in python consoles
     Check to see whether user libraries are in fact text files
     Allow compilation and running of open libraries
+    (4.0) Include a Help menu in the python console window
+    (4.0) Make engine documentation available through the Help menus
 
 Scripts:
     Make a script dirty when its variables are changed externally
