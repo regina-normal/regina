@@ -14,8 +14,8 @@
 # All locations must be relative to this directory unless otherwise
 # specified.
 
-scripts = regina scripts/reg*
-misc_src_mask = Makefile* *.txt docs/*.txt
-misc_bin_mask = *.txt
+scripts = regina regina.bat scripts/reg*
+misc_src_mask = Makefile* *.txt docs/*.txt lib/*.txt
+misc_bin_mask = *.txt lib/*.txt
 misc_doc_mask = *.html *.hs *.jhm *.txt *.jpg *.xml
 
