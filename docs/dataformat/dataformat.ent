@@ -2,22 +2,33 @@
 <!-- Entities for documenting the Regina data file format.
      See ../regina.sgml for further details. -->
 
+<!ENTITY data-allowstrict SYSTEM "allowstrict.sgml">
+<!ENTITY data-allowtaut SYSTEM "allowtaut.sgml">
+<!ENTITY data-flags SYSTEM "flags.sgml">
 <!ENTITY data-line SYSTEM "line.sgml">
 <!ENTITY data-packet SYSTEM "packet.sgml">
+<!ENTITY data-packet-anglestructurelist SYSTEM "packet-anglestructurelist.sgml">
 <!ENTITY data-packet-container SYSTEM "packet-container.sgml">
 <!ENTITY data-packet-script SYSTEM "packet-script.sgml">
 <!ENTITY data-packet-text SYSTEM "packet-text.sgml">
 <!ENTITY data-reginadata SYSTEM "reginadata.sgml">
+<!ENTITY data-struct SYSTEM "struct.sgml">
 <!ENTITY data-tag SYSTEM "tag.sgml">
 <!ENTITY data-text SYSTEM "text.sgml">
 <!ENTITY data-var SYSTEM "var.sgml">
 
+<!ENTITY xml-allowstrict
+ '<link linkend="data-allowstrict"><sgmltag>allowstrict</sgmltag></link>'>
+<!ENTITY xml-allowtaut
+ '<link linkend="data-allowtaut"><sgmltag>allowtaut</sgmltag></link>'>
+<!ENTITY xml-flags
+ '<link linkend="data-flags"><sgmltag>flags</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
 <!ENTITY xml-packet
  '<link linkend="data-packet"><sgmltag>packet</sgmltag></link>'>
 <!ENTITY xml-packet-anglestructurelist
- '<link linkend="data-packet"><sgmltag>packet</sgmltag>
+ '<link linkend="data-packet-anglestructurelist"><sgmltag>packet</sgmltag>
   (angle structure list)</link>'>
 <!ENTITY xml-packet-container
  '<link linkend="data-packet-container"><sgmltag>packet</sgmltag>
@@ -39,6 +50,8 @@
   (triangulation)</link>'>
 <!ENTITY xml-reginadata
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
+<!ENTITY xml-struct
+ '<link linkend="data-struct"><sgmltag>struct</sgmltag></link>'>
 <!ENTITY xml-tag
  '<link linkend="data-tag"><sgmltag>tag</sgmltag></link>'>
 <!ENTITY xml-text

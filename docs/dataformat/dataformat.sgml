@@ -18,12 +18,17 @@
   </para>
  </partintro>
 
+ &data-allowstrict;
+ &data-allowtaut;
+ &data-flags;
  &data-line;
  &data-packet;
+ &data-packet-anglestructurelist;
  &data-packet-container;
  &data-packet-script;
  &data-packet-text;
  &data-reginadata;
+ &data-struct;
  &data-tag;
  &data-text;
  &data-var;

@@ -1,0 +1,181 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-struct">
+ <refmeta>
+  <refentrytitle>struct</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>struct</refname>
+  <refpurpose>A single angle structure</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols=2>
+    <colspec colname="c1">
+    <colspec colname="c2">
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+struct ::= (#PCDATA, &xml-flags;?)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>len</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-struct; element stores a single angle structure on a
+   3-manifold triangulation.
+  </para>
+  <para>
+   An angle structure on a <replaceable>T</replaceable>-tetrahedron
+   triangulation is represented by a vector of
+   3<replaceable>T</replaceable>+1 integers.  This vector is stored as
+   the character data of this &xml; element as follows.
+  </para>
+  <para>
+   Since an angle structure vector will generally contain many zeroes,
+   only the non-zero elements are listed.  The character data should
+   thus consist of a whitespace-separated sequence of integer pairs.
+   Each integer pair represents a non-zero coordinate in the vector; the
+   first element of the pair identifies which coordinate is being
+   described (coordinates are numbered 0, 1, 2, ...) and the second element
+   of the pair is the actual value at this coordinate.
+  </para>
+  <para>
+   There are 3<replaceable>T</replaceable> actual angles stored in an
+   angle structure; these are
+   <literal>0:01/23</literal>, <literal>0:02/13</literal>,
+   <literal>0:03/12</literal>, <literal>1:01/23</literal>,
+   <literal>1:02/13</literal>, <literal>1:03/12</literal>,
+   <literal>2:01/23</literal>, etc, where
+   <literal><replaceable>t</replaceable>:<replaceable>ab</replaceable>/<replaceable>cd</replaceable></literal>
+   represents the angle assigned to the edge in tetrahedron
+   <replaceable>t</replaceable> that joins tetrahedron vertices
+   <replaceable>a</replaceable> and <replaceable>b</replaceable>, as
+   well as the (opposite) edge that joins tetrahedron vertices
+   <replaceable>c</replaceable> and <replaceable>d</replaceable>
+   (<replaceable>a</replaceable>, <replaceable>b</replaceable>,
+   <replaceable>c</replaceable> and <replaceable>d</replaceable>
+   will always be 0, 1, 2 and 3 in some order).
+  </para>
+  <para>
+   To determine the <replaceable>k</replaceable>th of these angles, take
+   the <replaceable>k</replaceable>th integer in the angle structure
+   vector, divide by the final element of the vector and multiply by &pi;.
+  </para>
+
+  <refsect2>
+   <title>Flags</title>
+   <para>
+    The child &xml-flags; element can be used to store properties of the
+    angle structure.  The flags should be a bitwise combination of the
+    following values:
+   </para>
+   <informaltable frame="all">
+    <tgroup cols=2>
+     <colspec colname="c1" colwidth="1*">
+     <colspec colname="c2" colwidth="8*">
+     <tbody>
+      <row>
+       <entry><emphasis role="bold">Value</emphasis></entry>
+       <entry><emphasis role="bold">Meaning</emphasis></entry>
+      </row>
+      <row>
+       <entry>1</entry>
+       <entry>The angle structure is strict (all angles are strictly
+        between 0 and &pi;).  This flag is only meaningful if the angle
+        structure type has been calculated; see below.</entry>
+      </row>
+      <row>
+       <entry>2</entry>
+       <entry>The angle structure is taut (all angles are either 0 or
+        &pi;).  This flag is only meaningful if the angle structure type
+        has been calculated; see below.</entry>
+      </row>
+      <row>
+       <entry>4</entry>
+       <entry>The angle structure type (strict/taut) has been
+        calculated.</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </informaltable>
+  </refsect2>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>struct</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-anglestructurelist;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>struct</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-flags;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>len</sgmltag></term>
+    <listitem>
+     <para>
+      The length of the angle structure vector.
+      This will always be 3<replaceable>T</replaceable>+1, where
+      <replaceable>T</replaceable> is the number of tetrahedra in the
+      underlying 3-manifold triangulation.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents an angle structure on a
+   2-tetrahedron triangulation.  The angle structure vector is
+   (0, 0, 2, 1, 1, 0, 2).  The corresponding six angles are
+   (0, 0, &pi;, &pi;/2, &pi;/2, 0).
+  </para>
+  <para>
+   The flags indicate that the angle structure type has been calculated
+   but the angle structure was found to be neither strict nor taut.
+  </para>
+  <programlisting>
+&lt;struct len=&quot;7&quot;&gt; 2 2 3 1 4 1 6 2 &lt;flags value=&quot;4&quot;/&gt;&lt;/struct&gt;
+  </programlisting>
+ </refsect1>
+</refentry>
