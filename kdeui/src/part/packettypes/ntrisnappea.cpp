@@ -35,13 +35,16 @@
 #include "snappeacomponents.h"
 
 #include <climits>
+#include <cmath>
 #include <klocale.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qwhatsthis.h>
 #include <qwidgetstack.h>
 
-// TODO: Write 0 when abs(vol) < precision
+// TODO: Add snappea calculations to the test suite
+// TODO: Look over preconditions
+// TODO: Look over display
 
 using regina::NPacket;
 using regina::NSnapPeaTriangulation;
@@ -125,8 +128,35 @@ void NTriSnapPeaUI::refresh() {
         data->raiseWidget(dataValid);
 
         int places;
-        volume->setText(i18n("%1  (%2 places accuracy)").
-            arg(snappeaTri->volume(places), 0, 'g', 9).arg(places));
+        double ans = snappeaTri->volume(places);
+
+        // Can we say that the volume is approximately zero?
+        bool approxZero = false;
+        if (places >= 6 && fabs(ans) < 1e-7) {
+            // The volume is fairly small and the accuracy is high.
+            // Test whether zero lies comfortably within the estimated
+            // margin of error.
+            double epsilon = 1.0;
+            for (int i = 0; i < places + 1; i++)
+                epsilon /= 10;
+
+            // Now we should have epsilon == 1e-(places+1).
+            if (fabs(ans) < epsilon)
+                approxZero = true;
+        }
+
+        if (approxZero) {
+            // Zero is within the margin of error, and this margin of
+            // error is small.  Report it as zero, with the exact result
+            // beneath.
+            volume->setText(i18n("Possibly zero\n(calculated %1,\n"
+                "est. %2 places accuracy)").
+                arg(snappeaTri->volume(places), 0, 'g', 9).arg(places));
+        } else {
+            volume->setText(i18n("%1\n(est. %2 places accuracy)").
+                arg(snappeaTri->volume(places), 0, 'g', 9).arg(places));
+        }
+
         volume->setEnabled(true);
     }
 }
