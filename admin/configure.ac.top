@@ -139,7 +139,7 @@ AC_ARG_ENABLE(python, AC_HELP_STRING([--enable-python],
 AC_ARG_ENABLE(docs, AC_HELP_STRING([--enable-docs],
     [build the Regina documentation [[default=yes]]]), [
   if test "$enableval" = "no"; then
-    REGINA_DO_NOT_COMPILE([DOCSENGINE DOCSHTML DOCSMAN])
+    REGINA_DO_NOT_COMPILE([DOCSENGINE DOCSMAN])
   fi
 ])
 
@@ -153,26 +153,8 @@ REGINA_PROG_OPTIONAL(doxygen, DOXYGEN,
   [Doxygen command for C++ source documentation], [DOCSENGINE],
   [calculation engine documentation])
 
-AC_ARG_VAR(DOT, [Dot command for drawing directed graphs])
-AC_CHECK_PROGS(DOT, dot, none)
-if test "$DOT" = "none"; then
-  AC_SUBST(HAVE_DOT, NO)
-  AC_SUBST(DOT, "\$(top_srcdir)/admin/missing dot")
-  REGINA_WARN_MISSING(dot, [graphs in the engine documentation])
-else
-  AC_SUBST(HAVE_DOT, YES)
-fi
-
 REGINA_PROG_OPTIONAL(docbook2man, DOCBOOK2MAN,
   [Command for converting SGML to man pages], [DOCSMAN], [the man pages])
-
-REGINA_PROG_OPTIONAL(jade, JADE,
-  [Jade command for converting SGML to HTML],
-  [DOCSHTML DOCSPDF DOCSRTF], [the reference manual])
-
-REGINA_PROG_OPTIONAL(pdfjadetex, PDFJADETEX,
-  [JadeTeX command for converting TeX to PDF], DOCSPDF,
-  [the PDF reference manual])
 
 ###########################################################
 #
@@ -293,7 +275,6 @@ REGINA_SHOULD_BUILD(PYTHON, python, [the Python interface])
 REGINA_SHOULD_BUILD(UTILS, utils, [command-line utilities])
 REGINA_SHOULD_BUILD(TESTSUITE, testsuite, [the test suite])
 REGINA_SHOULD_BUILD(DOCSENGINE, engine, [calculation engine docs])
-REGINA_SHOULD_BUILD(DOCSHTML, html, [the reference manual])
 REGINA_SHOULD_BUILD(DOCSMAN, man, [man pages])
 
 ###########################################################
