@@ -46,7 +46,19 @@ namespace regina {
 /**
  * A triangulation page for viewing algebraic properties.
  */
-class NTriAlgebraUI : public PacketViewerTab {
+class NTriAlgebraUI : public PacketTabbedViewerTab {
+    public:
+        /**
+         * Constructor.
+         */
+        NTriAlgebraUI(regina::NTriangulation* packet,
+                PacketTabbedUI* useParentUI);
+};
+
+/**
+ * A triangulation page for viewing homology groups.
+ */
+class NTriHomologyUI : public PacketViewerTab {
     private:
         /**
          * Packet details
@@ -62,6 +74,37 @@ class NTriAlgebraUI : public PacketViewerTab {
         QLabel* H1Bdry;
         QLabel* H2;
         QLabel* H2Z2;
+
+    public:
+        /**
+         * Constructor.
+         */
+        NTriHomologyUI(regina::NTriangulation* packet,
+                PacketTabbedViewerTab* useParentUI);
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+        void editingElsewhere();
+};
+
+/**
+ * A triangulation page for viewing the fundamental group.
+ */
+class NTriFundGroupUI : public PacketViewerTab {
+    private:
+        /**
+         * Packet details
+         */
+        regina::NTriangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
         QLabel* fundName;
         QLabel* fundGens;
         QLabel* fundRelCount;
@@ -71,8 +114,39 @@ class NTriAlgebraUI : public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriAlgebraUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI);
+        NTriFundGroupUI(regina::NTriangulation* packet,
+                PacketTabbedViewerTab* useParentUI);
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+        void editingElsewhere();
+};
+
+/**
+ * A triangulation page for viewing Turaev-Viro invariants.
+ */
+class NTriTuraevViroUI : public PacketViewerTab {
+    private:
+        /**
+         * Packet details
+         */
+        regina::NTriangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+
+    public:
+        /**
+         * Constructor.
+         */
+        NTriTuraevViroUI(regina::NTriangulation* packet,
+                PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.

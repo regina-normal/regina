@@ -25,10 +25,15 @@ Current Development Version:
             - Now derives from regina::boost::noncopyable.
     USER INTERFACE:
         Class NTriAlgebraUI:
-            - Made the algebra viewer a little easier to read.
+            - Redesigned the algebra viewer to make it easier to read.
         Class NTriCompositionUI:
             - Included isomorphism / subcomplex testing.
             - Fixed crash when refreshing.
+        Class PacketTabbedViewerTab:
+            - Added to support tabbed UIs within tabbed UIs.
+        Class ReginaPart:
+            - Make the tree/dock splitter remember its place when packet
+              panes are changed.
 
 Version 3.95  [ 12 October, 2003 ] - Prelease for version 4.0.
     GRAPHICAL USER INTERFACE:

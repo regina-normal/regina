@@ -43,104 +43,56 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
+        PacketTabbedUI* useParentUI) : PacketTabbedViewerTab(useParentUI) {
+    addTab(new NTriHomologyUI(packet, this), i18n("&Homology"));
+    addTab(new NTriFundGroupUI(packet, this), i18n("&Fund. Group"));
+    addTab(new NTriTuraevViroUI(packet, this), i18n("&Turaev-Viro"));
+}
+
+NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
+        PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
-    QBoxLayout* layout = new QHBoxLayout(ui);
 
-    // Set up the homology area.
-    QBoxLayout* homologyArea = new QVBoxLayout(layout, 5);
-    layout->setStretchFactor(homologyArea, 1);
-
-    homologyArea->addStretch(2);
-
-    QLabel* label = new QLabel(i18n("Homology"), ui);
-    label->setAlignment(Qt::AlignCenter);
-    homologyArea->addWidget(label);
-
-    homologyArea->addStretch(1);
-
-    QGridLayout* homologyGrid = new QGridLayout(homologyArea, 5, 4);
+    QGridLayout* homologyGrid = new QGridLayout(ui, 7, 4, 0, 5);
+    homologyGrid->setRowStretch(0, 1);
+    homologyGrid->setRowStretch(6, 1);
     homologyGrid->setColStretch(0, 1);
     homologyGrid->setColStretch(3, 1);
 
+    QLabel* label;
     label = new QLabel(i18n("H1(M)"), ui);
-    homologyGrid->addWidget(label, 0, 1);
-    label = new QLabel(i18n("H1(M, Bdry M)"), ui);
     homologyGrid->addWidget(label, 1, 1);
-    label = new QLabel(i18n("H1(Bdry M)"), ui);
+    label = new QLabel(i18n("H1(M, Bdry M)"), ui);
     homologyGrid->addWidget(label, 2, 1);
-    label = new QLabel(i18n("H2(M)"), ui);
+    label = new QLabel(i18n("H1(Bdry M)"), ui);
     homologyGrid->addWidget(label, 3, 1);
-    label = new QLabel(i18n("H2(M ; Z_2)"), ui);
+    label = new QLabel(i18n("H2(M)"), ui);
     homologyGrid->addWidget(label, 4, 1);
+    label = new QLabel(i18n("H2(M ; Z_2)"), ui);
+    homologyGrid->addWidget(label, 5, 1);
 
     H1 = new QLabel(ui);
-    homologyGrid->addWidget(H1, 0, 2);
+    homologyGrid->addWidget(H1, 1, 2);
     H1Rel = new QLabel(ui);
-    homologyGrid->addWidget(H1Rel, 1, 2);
+    homologyGrid->addWidget(H1Rel, 2, 2);
     H1Bdry = new QLabel(ui);
-    homologyGrid->addWidget(H1Bdry, 2, 2);
+    homologyGrid->addWidget(H1Bdry, 3, 2);
     H2 = new QLabel(ui);
-    homologyGrid->addWidget(H2, 3, 2);
+    homologyGrid->addWidget(H2, 4, 2);
     H2Z2 = new QLabel(ui);
-    homologyGrid->addWidget(H2Z2, 4, 2);
-
-    homologyArea->addStretch(2);
-
-    // Add a central divider.
-    QFrame* divider = new QFrame(ui);
-    divider->setFrameStyle(QFrame::VLine | QFrame::Sunken);
-    layout->addWidget(divider);
-
-    // Set up the fundamental group area.
-
-    QBoxLayout* fundArea = new QVBoxLayout(layout, 5);
-    layout->setStretchFactor(fundArea, 1);
-
-    fundArea->addStretch(2);
-
-    label = new QLabel(i18n("Fundamental Group"), ui);
-    label->setAlignment(Qt::AlignCenter);
-    fundArea->addWidget(label);
-
-    fundArea->addStretch(1);
-
-    fundName = new QLabel(ui);
-    fundName->setAlignment(Qt::AlignCenter);
-    fundArea->addWidget(fundName);
-
-    fundArea->addStretch(1);
-
-    QBoxLayout* wideFundPresArea = new QHBoxLayout(fundArea);
-    wideFundPresArea->addStretch(1);
-
-    QBoxLayout* fundPresArea = new QVBoxLayout(wideFundPresArea);
-    fundGens = new QLabel(ui);
-    fundPresArea->addWidget(fundGens);
-    fundRelCount = new QLabel(ui);
-    fundPresArea->addWidget(fundRelCount);
-    fundRels = new KListView(ui);
-    fundRels->header()->hide();
-    fundRels->addColumn(QString::null);
-    fundRels->setSorting(-1);
-    fundRels->setSelectionMode(QListView::NoSelection);
-    fundPresArea->addWidget(fundRels, 1);
-
-    wideFundPresArea->addStretch(1);
-
-    fundArea->addStretch(2);
+    homologyGrid->addWidget(H2Z2, 5, 2);
 }
 
-regina::NPacket* NTriAlgebraUI::getPacket() {
+regina::NPacket* NTriHomologyUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriAlgebraUI::getInterface() {
+QWidget* NTriHomologyUI::getInterface() {
     return ui;
 }
 
-void NTriAlgebraUI::refresh() {
+void NTriHomologyUI::refresh() {
     H1->setText(tri->getHomologyH1().toString().c_str());
     if (tri->isValid()) {
         H1Rel->setText(tri->getHomologyH1Rel().toString().c_str());
@@ -160,7 +112,60 @@ void NTriAlgebraUI::refresh() {
         H2->setText(msg);
         H2Z2->setText(msg);
     }
+}
 
+void NTriHomologyUI::editingElsewhere() {
+    QString msg(i18n("Editing..."));
+
+    H1->setText(msg);
+    H1Rel->setText(msg);
+    H1Bdry->setText(msg);
+    H2->setText(msg);
+    H2Z2->setText(msg);
+}
+
+NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
+        PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
+        tri(packet) {
+    ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(ui, 5, 0);
+
+    layout->addStretch(1);
+
+    fundName = new QLabel(ui);
+    fundName->setAlignment(Qt::AlignCenter);
+    layout->addWidget(fundName);
+
+    layout->addSpacing(5);
+
+    QBoxLayout* wideFundPresArea = new QHBoxLayout(layout);
+    wideFundPresArea->addStretch(1);
+
+    QBoxLayout* fundPresArea = new QVBoxLayout(wideFundPresArea);
+    fundGens = new QLabel(ui);
+    fundPresArea->addWidget(fundGens);
+    fundRelCount = new QLabel(ui);
+    fundPresArea->addWidget(fundRelCount);
+    fundRels = new KListView(ui);
+    fundRels->header()->hide();
+    fundRels->addColumn(QString::null);
+    fundRels->setSorting(-1);
+    fundRels->setSelectionMode(QListView::NoSelection);
+    fundPresArea->addWidget(fundRels, 1);
+
+    wideFundPresArea->addStretch(1);
+    layout->addStretch(1);
+}
+
+regina::NPacket* NTriFundGroupUI::getPacket() {
+    return tri;
+}
+
+QWidget* NTriFundGroupUI::getInterface() {
+    return ui;
+}
+
+void NTriFundGroupUI::refresh() {
     if (tri->getNumberOfComponents() <= 1) {
         const regina::NGroupPresentation& pres = tri->getFundamentalGroup();
 
@@ -210,19 +215,34 @@ void NTriAlgebraUI::refresh() {
     }
 }
 
-void NTriAlgebraUI::editingElsewhere() {
-    QString msg(i18n("Editing..."));
-
-    H1->setText(msg);
-    H1Rel->setText(msg);
-    H1Bdry->setText(msg);
-    H2->setText(msg);
-    H2Z2->setText(msg);
-
-    fundName->setText(msg);
+void NTriFundGroupUI::editingElsewhere() {
+    fundName->setText(i18n("Editing..."));
     fundGens->hide();
     fundRelCount->hide();
     fundRels->clear();
     fundRels->hide();
+}
+
+NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
+        PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
+        tri(packet) {
+    // TODO
+    ui = new QWidget();
+}
+
+regina::NPacket* NTriTuraevViroUI::getPacket() {
+    return tri;
+}
+
+QWidget* NTriTuraevViroUI::getInterface() {
+    return ui;
+}
+
+void NTriTuraevViroUI::refresh() {
+    // TODO
+}
+
+void NTriTuraevViroUI::editingElsewhere() {
+    // TODO
 }
 

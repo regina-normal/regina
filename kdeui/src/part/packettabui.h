@@ -40,6 +40,7 @@
 
 class KTabCtl;
 class PacketEditorTab;
+class PacketTabbedViewerTab;
 class PacketViewerTab;
 class QBoxLayout;
 class QString;
@@ -187,11 +188,6 @@ class PacketViewerTab : public PacketReadOnlyUI {
         enum Action { None = 0, Refresh, EditingElsewhere };
 
         /**
-         * External components
-         */
-        PacketTabbedUI* parentUI;
-
-        /**
          * The event to perform immediately before this page is made
          * visible, if any.
          */
@@ -199,9 +195,10 @@ class PacketViewerTab : public PacketReadOnlyUI {
 
     public:
         /**
-         * Constructor.
+         * Constructors.
          */
         PacketViewerTab(PacketTabbedUI* useParentUI);
+        PacketViewerTab(PacketTabbedViewerTab* useParentUI);
 
         /**
          * Updates the interface components in this page to reflect the
@@ -214,6 +211,7 @@ class PacketViewerTab : public PacketReadOnlyUI {
         virtual void editingElsewhere();
 
     friend class PacketTabbedUI;
+    friend class PacketTabbedViewerTab;
 };
 
 /**
@@ -249,13 +247,102 @@ class PacketEditorTab : public PacketUI {
         void setDirty(bool newDirty);
 };
 
+/**
+ * A tabbed packet interface designed to be inserted into a larger
+ * tabbed packet interface.
+ *
+ * This class provides a read-only pane within a larger tabbed packet
+ * interface and so inherits from PacketViewerTab.  However, this class
+ * itself provides an internal tabbed pane with an optional header, similar
+ * to the way in which PacketTabbedUI works.
+ *
+ * For further information on how to use this class, see the
+ * PacketTabbedUI class notes.  A PacketTabbedViewerTab is used
+ * identically to a PacketTabbedUI, except for the fact that there is no
+ * support for editor panes (this is a read-only interface).
+ *
+ * Note that like PacketViewerTab, this viewer and its internal pages will
+ * not be refreshed until absolutely necessary.  Indeed, if it is never
+ * made visible then this viewer will never be refreshed at all.
+ */
+class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
+    private:
+        /**
+         * Used for iterating through viewer pages.
+         */
+        typedef std::vector<PacketViewerTab*>::iterator ViewerIterator;
+
+        /**
+         * Packet interfaces for individual pages.
+         *
+         * The indices of viewerTabs correspond precisely to tab
+         * indices.
+         */
+        std::vector<PacketViewerTab*> viewerTabs;
+        PacketViewerTab* header;
+        PacketViewerTab* visibleViewer;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QBoxLayout* layout;
+        KTabCtl* tabs;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        PacketTabbedViewerTab(PacketTabbedUI* useParentUI);
+        virtual ~PacketTabbedViewerTab();
+
+        /**
+         * Add a new tabbed page to this packet interface.
+         */
+        void addTab(PacketViewerTab* viewer, const QString& label);
+
+        /**
+         * Add a header to this packet interface.
+         *
+         * Note that no more than one header may be added.
+         *
+         * This packet interface will be responsible for the destruction
+         * of the header.
+         */
+        void addHeader(PacketViewerTab* viewer);
+
+        /**
+         * Component queries.
+         */
+        PacketPane* getEnclosingPane();
+
+        /**
+         * PacketUI overrides.
+         */
+        virtual regina::NPacket* getPacket();
+        virtual QWidget* getInterface();
+        virtual void refresh();
+        virtual void editingElsewhere();
+
+    public slots:
+        /**
+         * Notification that a new tab has been selected.
+         */
+        void notifyTabSelected(int newTab);
+};
+
 inline PacketPane* PacketTabbedUI::getEnclosingPane() {
     return enclosingPane;
 }
 
 inline PacketViewerTab::PacketViewerTab(PacketTabbedUI* useParentUI) :
-        PacketReadOnlyUI(useParentUI->getEnclosingPane()),
-        parentUI(useParentUI), queuedAction(None) {
+        PacketReadOnlyUI(useParentUI->getEnclosingPane()), queuedAction(None) {
+}
+
+inline PacketViewerTab::PacketViewerTab(PacketTabbedViewerTab* useParentUI) :
+        PacketReadOnlyUI(useParentUI->getEnclosingPane()), queuedAction(None) {
 }
 
 inline void PacketViewerTab::editingElsewhere() {
@@ -263,6 +350,10 @@ inline void PacketViewerTab::editingElsewhere() {
 
 inline PacketEditorTab::PacketEditorTab(PacketTabbedUI* useParentUI) :
         PacketUI(useParentUI->getEnclosingPane()), parentUI(useParentUI) {
+}
+
+inline PacketPane* PacketTabbedViewerTab::getEnclosingPane() {
+    return enclosingPane;
 }
 
 #endif

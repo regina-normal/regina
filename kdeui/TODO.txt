@@ -33,8 +33,6 @@ Packets (General):
     Find out how to centre column headers in list views
     When creating new packets, display a polite error if no parents are
         available (this goes for imports also)
-    (4.0) Make the tree/dock splitter remember its place when packet panes
-        are changed
 
 Python:
     (4.0) Implement embedded python scripting
@@ -53,6 +51,5 @@ Toolbars:
 
 Triangulations:
     (4.0) Include Turaev-Viro
-    (4.0) Make the algebra viewer look a little neater
     Make the skeleton viewer windows appear in a pleasant size
 

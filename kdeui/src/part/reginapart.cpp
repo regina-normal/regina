@@ -456,6 +456,7 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
     QBoxLayout* treeLayout = new QVBoxLayout(treeBox);
     treeBox->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
         QSizePolicy::MinimumExpanding, 1, 1));
+    splitter->setResizeMode(treeBox, QSplitter::KeepSize);
 
     treeView = new PacketTreeView(this, treeBox);
     treeLayout->addWidget(treeView, 1);

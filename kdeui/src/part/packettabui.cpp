@@ -142,9 +142,10 @@ void PacketTabbedUI::commit() {
 
     for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
         if (*it) {
-            if (*it == visibleViewer)
+            if (*it == visibleViewer) {
                 (*it)->refresh();
-            else
+                (*it)->queuedAction = PacketViewerTab::None;
+            } else
                 (*it)->queuedAction = PacketViewerTab::Refresh;
         }
 
@@ -160,9 +161,10 @@ void PacketTabbedUI::refresh() {
 
     for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
         if (*it) {
-            if (*it == visibleViewer)
+            if (*it == visibleViewer) {
                 (*it)->refresh();
-            else
+                (*it)->queuedAction = PacketViewerTab::None;
+            } else
                 (*it)->queuedAction = PacketViewerTab::Refresh;
         }
 
@@ -180,9 +182,10 @@ void PacketTabbedUI::notifyEditing() {
 
     for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
         if (*it) {
-            if (*it == visibleViewer)
+            if (*it == visibleViewer) {
                 (*it)->editingElsewhere();
-            else
+                (*it)->queuedAction = PacketViewerTab::None;
+            } else
                 (*it)->queuedAction = PacketViewerTab::EditingElsewhere;
         }
 }
@@ -211,6 +214,104 @@ void PacketEditorTab::setDirty(bool newDirty) {
         parentUI->notifyEditing();
 
     PacketUI::setDirty(newDirty);
+}
+
+PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI) :
+        PacketViewerTab(useParentUI), header(0), visibleViewer(0) {
+    ui = new QWidget();
+    layout = new QVBoxLayout(ui);
+
+    tabs = new KTabCtl(ui);
+    layout->addWidget(tabs, 1);
+    connect(tabs, SIGNAL(tabSelected(int)), this, SLOT(notifyTabSelected(int)));
+}
+
+PacketTabbedViewerTab::~PacketTabbedViewerTab() {
+    // Destroy each of the pages one at a time, leaving the visible page
+    // until last.
+    //
+    // We destroy the pages here because we don't know if a PacketUI
+    // will destroy its interface component or not.
+    //
+    // If so, it's removed from the tabbed pane upon destruction and
+    // therefore won't be destroyed again.  If not, the KTabCtl
+    // destructor should take care of it.
+
+    // These viewers are definitely not visible.
+    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
+        if ((*it) != visibleViewer)
+            delete (*it);
+
+    // Finally delete the visible viewer if there was one.
+    if (visibleViewer)
+        delete visibleViewer;
+
+    // And of course the header is always visible.
+    if (header)
+        delete header;
+}
+
+void PacketTabbedViewerTab::addTab(PacketViewerTab* viewer,
+        const QString& label) {
+    viewerTabs.push_back(viewer);
+    viewer->getInterface()->reparent(tabs, QPoint(0, 0));
+    tabs->addTab(viewer->getInterface(), label);
+}
+
+void PacketTabbedViewerTab::addHeader(PacketViewerTab* viewer) {
+    header = viewer;
+    viewer->getInterface()->reparent(ui, QPoint(0, 0));
+    layout->insertWidget(0, viewer->getInterface(), 0);
+}
+
+regina::NPacket* PacketTabbedViewerTab::getPacket() {
+    return viewerTabs.front()->getPacket();
+}
+
+QWidget* PacketTabbedViewerTab::getInterface() {
+    return ui;
+}
+
+void PacketTabbedViewerTab::refresh() {
+    if (header)
+        header->refresh();
+
+    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
+        if (*it == visibleViewer) {
+            (*it)->refresh();
+            (*it)->queuedAction = PacketViewerTab::None;
+        } else
+            (*it)->queuedAction = PacketViewerTab::Refresh;
+
+    setDirty(false);
+}
+
+void PacketTabbedViewerTab::editingElsewhere() {
+    if (header)
+        header->editingElsewhere();
+
+    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
+        if (*it == visibleViewer) {
+            (*it)->editingElsewhere();
+            (*it)->queuedAction = PacketViewerTab::None;
+        } else
+            (*it)->queuedAction = PacketViewerTab::EditingElsewhere;
+}
+
+void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
+    // This covers all cases in which nothing has changed.
+    if (visibleViewer == viewerTabs[newTab])
+        return;
+
+    // We're really moving to a new tab.
+    visibleViewer = viewerTabs[newTab];
+
+    // Perform any pending actions.
+    if (visibleViewer->queuedAction == PacketViewerTab::Refresh)
+        visibleViewer->refresh();
+    else if (visibleViewer->queuedAction == PacketViewerTab::EditingElsewhere)
+        visibleViewer->editingElsewhere();
+    visibleViewer->queuedAction = PacketViewerTab::None;
 }
 
 #include "packettabui.moc"
