@@ -49,7 +49,7 @@ docs/% :
 	cd docs && $(MAKE) $*
 test/% :
 	cd test && $(MAKE) $*
-utils/% :
+utils/% : binenginelib
 	cd utils && $(MAKE) $*
 
 # ------------------------- Targets ----------------------------------
