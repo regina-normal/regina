@@ -66,6 +66,8 @@
  <!ENTITY reginafeatureset SYSTEM "featureset.sgml">
  <!ENTITY reginatutorial SYSTEM "tutorial.sgml">
  <!ENTITY reginapacket SYSTEM "packet.sgml">
+ <!ENTITY reginatriangulations SYSTEM "triangulations.sgml">
+ <!ENTITY reginasurfaces SYSTEM "surfaces.sgml">
  <!ENTITY reginajython SYSTEM "jython.sgml">
  <!ENTITY reginaoptions SYSTEM "options.sgml">
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
@@ -110,18 +112,9 @@
    </tbody></tgroup>
   </informaltable>
   <para>
-   A user manual has not yet been written, but a reference for
-   <link linkend="jython">scripts and the &jython; console</link>
-   is available; this includes <link linkend="autodocs">complete
-   documentation for the calculation engine</link>.
-  </para>
-  <para>
-   Documentation is also available for the
-   <link linkend="autodocs">&java; UI classes</link> for the purposes of
-   understanding or extending the source code.
-  </para>
-  <para>
-   Contact &regauthor; &regemail; for more details.
+   General queries can be mailed to &regauthor; &regemail;, although
+   the <link linkend="sourceforge">bug tracking system and
+   mailing lists</link> are encouraged where appropriate.
   </para>
 
   &reginalicense;
@@ -184,6 +177,10 @@
  &reginatutorial;
 
  &reginapacket;
+
+ &reginatriangulations;
+
+ &reginasurfaces;
 
  &reginajython;
 

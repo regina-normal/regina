@@ -163,7 +163,7 @@
   <title>&jython; Library Options</title>
 
   <para>
-   &jython; libraries are files containing
+   <firstterm>Jython libraries</firstterm> are files containing
    &jython; code to run at the beginning of every &jython;
    session, including every time a &jython; console is opened and
    every time a script packet is run.  See the
