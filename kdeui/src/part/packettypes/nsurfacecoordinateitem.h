@@ -83,6 +83,7 @@ class NSurfaceCoordinateItem : public KListViewItem {
          */
         QString text(int column) const;
         void setText(int column, const QString& str);
+        int width(const QFontMetrics& fm, const QListView* lv, int c) const;
         void paintCell(QPainter* p, const QColorGroup& cg, int column,
             int width, int align);
 };

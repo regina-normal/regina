@@ -240,6 +240,14 @@ QString NSurfaceCoordinateItem::text(int column) const {
     return i18n("Unknown");
 }
 
+int NSurfaceCoordinateItem::width(const QFontMetrics& fm, const QListView* lv,
+        int c) const {
+    /**
+     * Add a bit of space so items aren't pressed right against the
+     * grid.
+     */
+    return KListViewItem::width(fm, lv, c) + 2;
+}
 void NSurfaceCoordinateItem::paintCell(QPainter* p, const QColorGroup& cg,
         int column, int width, int align) {
     // Do the standard painting.
