@@ -1089,8 +1089,11 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         static NNormalSurface* findNonTrivialSphere(NTriangulation* tri);
 
         /**
-         * Searches for an almost normal 2-sphere within the given
-         * triangulation.
+         * Searches for a vertex octagonal almost normal 2-sphere within
+         * the given triangulation.  Note that only the vertex almost
+         * normal surfaces will be examined, which may or may not
+         * reflect whether an octagonal almost normal 2-sphere exists at
+         * all.
          *
          * Note that the surface returned (if any) depends upon the
          * given triangulation, and so this surface must be destroyed
@@ -1106,7 +1109,8 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
          * @return a newly allocated almost normal sphere within the
          * given triangulation, or 0 if no such sphere exists.
          */
-        static NNormalSurface* findAlmostNormalSphere(NTriangulation* tri);
+        static NNormalSurface* findVtxOctAlmostNormalSphere(
+            NTriangulation* tri);
 
     protected:
         virtual void readIndividualProperty(NFile& infile,

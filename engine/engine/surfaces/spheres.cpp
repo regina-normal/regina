@@ -89,8 +89,8 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
     return 0;
 }
 
-NNormalSurface* NNormalSurface::findAlmostNormalSphere(NTriangulation* tri) {
-    // TODO: Need to check on this almost normal sphere algorithm.
+NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
+        NTriangulation* tri) {
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri,
         NNormalSurfaceList::AN_STANDARD);
     unsigned long nSurfaces = surfaces->getNumberOfSurfaces();

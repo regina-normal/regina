@@ -126,7 +126,7 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
         initZ3 = homology.getTorsionRank(3);
     }
 
-    // Start crushing normal surfaces.
+    // Start crushing normal spheres.
     NContainer toProcess;
     toProcess.insertChildLast(working);
 
@@ -165,16 +165,38 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
                 delete crushed;
             }
         } else {
-            // We have no non-trivial normal 2-spheres!  It's prime
-            // at least.  Is it a 3-sphere?
-            sphere = NNormalSurface::findAlmostNormalSphere(processing);
-            if (sphere) {
-                // It's a 3-sphere.  Toss this component away.
+            // We have no non-trivial normal 2-spheres!
+            // The triangulation is 0-efficient (and prime).
+            // Is it a 3-sphere?
+            if (processing->getNumberOfVertices() > 1) {
+                // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
+                // paper:  If a closed orientable triangulation T is
+                // 0-efficient then either T has one vertex or T is a
+                // 3-sphere with precisely two vertices.
+                //
+                // It follows then that this is a 3-sphere.
+                // Toss it away.
                 delete sphere;
                 delete processing;
             } else {
-                // It's a real prime component.
-                primeComponents.push_back(processing);
+                // Now we have a one-vertex prime 0-efficient triangulation.
+                // We have to look for an almost normal sphere.
+                //
+                // From the proof of Proposition 5.12 in Jaco & Rubinstein's
+                // 0-efficiency paper, we see that we can restrict our
+                // search to octagonal almost normal surfaces.
+                // Furthermore, from Casson's proof (directly following
+                // Proposition 5.12), we see that we can restrict this
+                // search further to vertex octagonal almost normal surfaces.
+                sphere = findVtxOctAlmostNormalSphere(processing);
+                if (sphere) {
+                    // It's a 3-sphere.  Toss this component away.
+                    delete sphere;
+                    delete processing;
+                } else {
+                    // It's a non-trivial prime component!
+                    primeComponents.push_back(processing);
+                }
             }
         }
     }
@@ -281,18 +303,40 @@ bool NTriangulation::isThreeSphere() const {
                 delete crushed;
             }
         } else {
-            // We have no non-trivial normal 2-spheres!  We can now test
-            // directly whether we have a 3-sphere.
-            sphere = NNormalSurface::findAlmostNormalSphere(processing);
-            if (sphere) {
-                // It's a 3-sphere.  Toss this component away.
+            // We have no non-trivial normal 2-spheres!
+            // The triangulation is 0-efficient.
+            // We can now test directly whether we have a 3-sphere.
+            if (processing->getNumberOfVertices() > 1) {
+                // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
+                // paper:  If a closed orientable triangulation T is
+                // 0-efficient then either T has one vertex or T is a
+                // 3-sphere with precisely two vertices.
+                //
+                // It follows then that this is a 3-sphere.
+                // Toss it away.
                 delete sphere;
                 delete processing;
             } else {
-                // It's not a 3-sphere.  We're done!
-                threeSphere = false;
-                delete processing;
-                return false;
+                // Now we have a one-vertex 0-efficient triangulation.
+                // We have to look for an almost normal sphere.
+                //
+                // From the proof of Proposition 5.12 in Jaco & Rubinstein's
+                // 0-efficiency paper, we see that we can restrict our
+                // search to octagonal almost normal surfaces.
+                // Furthermore, from Casson's proof (directly following
+                // Proposition 5.12), we see that we can restrict this
+                // search further to vertex octagonal almost normal surfaces.
+                sphere = findVtxOctAlmostNormalSphere(processing);
+                if (sphere) {
+                    // It's a 3-sphere.  Toss this component away.
+                    delete sphere;
+                    delete processing;
+                } else {
+                    // It's not a 3-sphere.  We're done!
+                    threeSphere = false;
+                    delete processing;
+                    return false;
+                }
             }
         }
     }

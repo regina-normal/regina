@@ -107,10 +107,11 @@ void addNNormalSurface() {
         .def("knownCanCrush", &NNormalSurface::knownCanCrush)
         .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
             return_value_policy<manage_new_object>())
-        .def("findAlmostNormalSphere", &NNormalSurface::findAlmostNormalSphere,
+        .def("findVtxOctAlmostNormalSphere",
+            &NNormalSurface::findVtxOctAlmostNormalSphere,
             return_value_policy<manage_new_object>())
         .staticmethod("findNonTrivialSphere")
-        .staticmethod("findAlmostNormalSphere")
+        .staticmethod("findVtxOctAlmostNormalSphere")
     ;
 
     // Global arrays:

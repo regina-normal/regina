@@ -13,8 +13,8 @@ Version 4.1  [ 29 February, 2004 ]
     ENGINE:
         Class NNormalSurface:
             - New routine doubleSurface().
-            - Routines findNonTrivialSphere() and findAlmostNormalSphere()
-              added to support 0-efficiency algorithms.
+            - Added findNonTrivialSphere() and findVtxOctAlmostNormalSphere()
+              to support 0-efficiency algorithms.
         Class NProgress:
             - Added timing utilities getRealTime() and totalCPUTime().
         Class NTriangulation:
