@@ -511,13 +511,22 @@ class NGluingPerms {
          * selected have the corresponding element of permIndices[] set
          * to -1.
          *
+         * If \a finiteOnly is passed as \c true, additional tests will
+         * be run that can eliminate triangulations with non-orientable
+         * vertex links.  Although these tests are not searching for bad
+         * edge links per se, they can be performed within this routine
+         * with very little additional work needing to be done.
+         *
          * @param face the specific tetrahedron face upon which tests
          * will be based.
+         * @param finiteOnly \c true if only gluing permutations
+         * corresponding to finite triangulations are being
+         * constructed, or \c false otherwise.
          * @return \c true if the permutations under construction will
          * lead to an edge identified with itself in reverse, or \c false
          * if no such edge is identified.
          */
-        bool badEdgeLink(const NTetFace& face) const;
+        bool badEdgeLink(const NTetFace& face, bool finiteOnly) const;
 
         /**
          * Determines whether the permutations already constructed model

@@ -419,7 +419,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         if (lowDegreeEdge(face, true, true))
             continue;
         if (! orientableOnly)
-            if (badEdgeLink(face))
+            if (badEdgeLink(face, true))
                 continue;
 
         if (orderType[orderElt] == EDGE_DOUBLE_SECOND) {

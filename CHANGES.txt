@@ -12,6 +12,8 @@ Current Development Version
     ENGINE:
         Overall structure:
             - Fixed minor memory leaks.
+        Class NGluingPerms:
+            - Further optimisations for non-orientable census generation.
         Class NLargeInteger:
             - Added constructor and assignment taking a const std::string&.
             - Routine stringValue() now returns a std::string, not a char*.

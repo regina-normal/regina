@@ -192,7 +192,7 @@ void NGluingPerms::findAllPermsInternal(const NFacePairingIsoList* autos,
         if (mayPurge(face, whichPurge, orientableOnly, finiteOnly))
             continue;
         if (! orientableOnly)
-            if (badEdgeLink(face))
+            if (badEdgeLink(face, finiteOnly))
                 continue;
 
         // Fix the orientation if appropriate.
@@ -260,7 +260,7 @@ void NGluingPerms::findAllPermsInternal(const NFacePairingIsoList* autos,
     use(0, useArgs);
 }
 
-bool NGluingPerms::badEdgeLink(const NTetFace& face) const {
+bool NGluingPerms::badEdgeLink(const NTetFace& face, bool finiteOnly) const {
     // Run around all three edges bounding the face.
     NTetFace adj;
     unsigned tet;
@@ -285,9 +285,15 @@ bool NGluingPerms::badEdgeLink(const NTetFace& face) const {
 
         while ((! started) || (static_cast<int>(tet) != face.tet) ||
                 (start[2] != current[2]) || (start[3] != current[3])) {
-            started = true;
+            // Test for a return to the original tetrahedron with the
+            // orientation reversed; this either means a bad edge link
+            // or a bad vertex link.
+            if (started && finiteOnly && static_cast<int>(tet) == face.tet)
+                if (start[3] == current[3] && start.sign() != current.sign())
+                    return true;
 
             // Push through the current tetrahedron.
+            started = true;
             current = current * NPerm(2, 3);
 
             // Push across a face.
