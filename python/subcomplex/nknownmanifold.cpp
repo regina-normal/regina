@@ -26,8 +26,8 @@
 
 /* end stub */
 
+#include "manifold/nsfs.h"
 #include "subcomplex/nknownmanifold.h"
-#include "subcomplex/nsfs.h"
 #include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 

@@ -26,38 +26,49 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
+#include "manifold/nlensspace.h"
 #include "manifold/nsfs.h"
-#include "subcomplex/naugtrisolidtorus.h"
-#include "triangulation/ncomponent.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
-using regina::NAugTriSolidTorus;
+using regina::NExceptionalFibre;
+using regina::NSFS;
 
-void addNAugTriSolidTorus() {
-    scope s = class_<NAugTriSolidTorus, bases<regina::ShareableObject>,
-            std::auto_ptr<NAugTriSolidTorus>, boost::noncopyable>
-            ("NAugTriSolidTorus", no_init)
-        .def("clone", &NAugTriSolidTorus::clone,
-            return_value_policy<manage_new_object>())
-        .def("getCore", &NAugTriSolidTorus::getCore,
-            return_internal_reference<>())
-        .def("getAugTorus", &NAugTriSolidTorus::getAugTorus,
-            return_internal_reference<>())
-        .def("getEdgeGroupRoles", &NAugTriSolidTorus::getEdgeGroupRoles)
-        .def("getChainLength", &NAugTriSolidTorus::getChainLength)
-        .def("getChainType", &NAugTriSolidTorus::getChainType)
-        .def("getTorusAnnulus", &NAugTriSolidTorus::getTorusAnnulus)
-        .def("hasLayeredChain", &NAugTriSolidTorus::hasLayeredChain)
-        .def("getSeifertStructure", &NAugTriSolidTorus::getSeifertStructure,
-            return_internal_reference<>())
-        .def("isAugTriSolidTorus", &NAugTriSolidTorus::isAugTriSolidTorus,
-            return_value_policy<manage_new_object>())
-        .staticmethod("isAugTriSolidTorus")
+namespace {
+    void (NSFS::*insertFibre_fibre)(const NExceptionalFibre&) =
+        &NSFS::insertFibre;
+    void (NSFS::*insertFibre_longs)(long, long) = &NSFS::insertFibre;
+}
+
+void addNSFS() {
+    class_<NExceptionalFibre>("NExceptionalFibre")
+        .def(init<long, long>())
+        .def(init<const NExceptionalFibre&>())
+        .def_readwrite("alpha", &NExceptionalFibre::alpha)
+        .def_readwrite("beta", &NExceptionalFibre::beta)
+        .def(self == self)
+        .def(self < self)
+        .def(self_ns::str(self))
     ;
 
-    s.attr("CHAIN_NONE") = NAugTriSolidTorus::CHAIN_NONE;
-    s.attr("CHAIN_MAJOR") = NAugTriSolidTorus::CHAIN_MAJOR;
-    s.attr("CHAIN_AXIS") = NAugTriSolidTorus::CHAIN_AXIS;
+    class_<NSFS, bases<regina::NManifold>,
+            std::auto_ptr<NSFS>, boost::noncopyable>("NSFS")
+        .def(init<unsigned long, bool, optional<unsigned long> >())
+        .def(init<const NSFS&>())
+        .def("getOrbitGenus", &NSFS::getOrbitGenus)
+        .def("isOrbitOrientable", &NSFS::isOrbitOrientable)
+        .def("getOrbitPunctures", &NSFS::getOrbitPunctures)
+        .def("getFibreCount", &NSFS::getFibreCount)
+        .def("getFibre", &NSFS::getFibre)
+        .def("insertFibre", insertFibre_fibre)
+        .def("insertFibre", insertFibre_longs)
+        .def("reduce", &NSFS::reduce)
+        .def("isLensSpace", &NSFS::isLensSpace,
+            return_value_policy<manage_new_object>())
+    ;
+
+    implicitly_convertible<std::auto_ptr<NSFS>,
+        std::auto_ptr<regina::NManifold> >();
 }
 

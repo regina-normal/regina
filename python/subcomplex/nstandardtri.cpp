@@ -27,41 +27,46 @@
 /* end stub */
 
 #include "algebra/nabeliangroup.h"
-#include "manifold/nlensspace.h"
-#include "subcomplex/nsfs.h"
+#include "manifold/nmanifold.h"
+#include "subcomplex/nstandardtri.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
-using regina::NExceptionalFibre;
-using regina::NSFS;
+using regina::NStandardTriangulation;
 
-void addNSFS() {
-    class_<NExceptionalFibre>("NExceptionalFibre")
-        .def(init<long, long>())
-        .def(init<const NExceptionalFibre&>())
-        .def_readwrite("alpha", &NExceptionalFibre::alpha)
-        .def_readwrite("beta", &NExceptionalFibre::beta)
-        .def(self == self)
-        .def(self < self)
-        .def(self_ns::str(self))
-    ;
+namespace {
+    void writeName_stdio(const NStandardTriangulation& t) {
+        t.writeName(std::cout);
+    }
+    void writeTeXName_stdio(const NStandardTriangulation& t) {
+        t.writeTeXName(std::cout);
+    }
+    NStandardTriangulation* (*isStandardTri_comp)(regina::NComponent*) =
+        &NStandardTriangulation::isStandardTriangulation;
+    NStandardTriangulation* (*isStandardTri_tri)(regina::NTriangulation*) =
+        &NStandardTriangulation::isStandardTriangulation;
+}
 
-    class_<NSFS, bases<regina::ShareableObject>,
-            std::auto_ptr<NSFS>, boost::noncopyable>("NSFS")
-        .def(init<unsigned long, bool, optional<unsigned long> >())
-        .def(init<const NSFS&>())
-        .def("getOrbitGenus", &NSFS::getOrbitGenus)
-        .def("isOrbitOrientable", &NSFS::isOrbitOrientable)
-        .def("getOrbitPunctures", &NSFS::getOrbitPunctures)
-        .def("getFibreCount", &NSFS::getFibreCount)
-        .def("getFibre", &NSFS::getFibre)
-        .def("insertFibre", &NSFS::insertFibre)
-        .def("reduce", &NSFS::reduce)
-        .def("isLensSpace", &NSFS::isLensSpace,
+void addNStandardTriangulation() {
+    class_<NStandardTriangulation, boost::noncopyable,
+            bases<regina::ShareableObject>,
+            std::auto_ptr<NStandardTriangulation> >
+            ("NStandardTriangulation", no_init)
+        .def("getName", &NStandardTriangulation::getName)
+        .def("getTeXName", &NStandardTriangulation::getTeXName)
+        .def("getManifold", &NStandardTriangulation::getManifold,
             return_value_policy<manage_new_object>())
-        .def("getHomologyH1", &NSFS::getHomologyH1,
+        .def("getHomologyH1", &NStandardTriangulation::getHomologyH1,
             return_value_policy<manage_new_object>())
-        .def("getCommonName", &NSFS::getCommonName)
+        .def("writeName", writeName_stdio)
+        .def("writeTeXName", writeTeXName_stdio)
+        .def("isStandardTriangulation", isStandardTri_comp,
+            return_value_policy<manage_new_object>())
+        .def("isStandardTriangulation", isStandardTri_tri,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isStandardTriangulation")
     ;
 }
 

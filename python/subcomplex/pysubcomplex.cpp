@@ -35,13 +35,14 @@ void addNLayeredLoop();
 void addNLayeredSolidTorus();
 void addNPillowTwoSphere();
 void addNPlugTriSolidTorus();
-void addNSFS();
 void addNSnappedBall();
 void addNSnappedTwoSphere();
 void addNSpiralSolidTorus();
+void addNStandardTriangulation();
 void addNTriSolidTorus();
 
 void addSubcomplex() {
+    addNStandardTriangulation();
     addNAugTriSolidTorus();
     addNKnownManifold();
     addNLayeredChain();
@@ -51,7 +52,6 @@ void addSubcomplex() {
     addNLayeredSolidTorus();
     addNPillowTwoSphere();
     addNPlugTriSolidTorus();
-    addNSFS();
     addNSnappedBall();
     addNSnappedTwoSphere();
     addNSpiralSolidTorus();

@@ -35,7 +35,7 @@ using namespace boost::python;
 using regina::NLayeredLoop;
 
 void addNLayeredLoop() {
-    class_<NLayeredLoop, bases<regina::ShareableObject>,
+    class_<NLayeredLoop, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NLayeredLoop>, boost::noncopyable>
             ("NLayeredLoop", no_init)
         .def("clone", &NLayeredLoop::clone,
@@ -45,11 +45,12 @@ void addNLayeredLoop() {
         .def("isTwisted", &NLayeredLoop::isTwisted)
         .def("getHinge", &NLayeredLoop::getHinge,
             return_value_policy<reference_existing_object>())
-        .def("getSeifertStructure", &NLayeredLoop::getSeifertStructure,
-            return_internal_reference<>())
         .def("isLayeredLoop", &NLayeredLoop::isLayeredLoop,
             return_value_policy<manage_new_object>())
         .staticmethod("isLayeredLoop")
     ;
+
+    implicitly_convertible<std::auto_ptr<NLayeredLoop>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

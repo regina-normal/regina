@@ -36,7 +36,7 @@
 #endif
 
 #include <list>
-#include "shareableobject.h"
+#include "nmanifold.h"
 
 namespace regina {
 
@@ -44,22 +44,25 @@ class NAbelianGroup;
 class NLensSpace;
 
 /**
- * \addtogroup subcomplex Standard Subcomplexes
- * Standard combinatorial subcomplexes in 3-manifold triangulations.
+ * \weakgroup manifold
  * @{
  */
 
 /**
  * Represents an exceptional (<i>alpha</i>, <i>beta</i>) fibre in a Seifert
- * fibred space.  The first parameter \a alpha will always be non-negative.
+ * fibred space.
+ *
+ * The first parameter \a alpha must be strictly positive, and
+ * the two parameters \a alpha and \a beta must be coprime.
  */
 struct NExceptionalFibre {
     long alpha;
         /**< The first parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
              Note that this is the index of the exceptional fibre.
-             This parameter should always be non-negative. */
+             This parameter must always be strictly positive. */
     long beta;
-        /**< The second parameter of this (<i>alpha</i>, <i>beta</i>) fibre. */
+        /**< The second parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
+             This parameter must have no common factors with \a alpha. */
 
     /**
      * Creates a new uninitialised exceptional fibre.
@@ -69,8 +72,9 @@ struct NExceptionalFibre {
      * Creates a new exceptional fibre with the given parameters.
      *
      * @param newAlpha the first parameter (the index) of this
-     * exceptional fibre; this must be non-negative.
-     * @param newBeta the second parameter of this exceptional fibre.
+     * exceptional fibre; this must be strictly positive.
+     * @param newBeta the second parameter of this exceptional fibre;
+     * this must have no common factors with the first parameter \a newAlpha.
      */
     NExceptionalFibre(long newAlpha, long newBeta);
     /**
@@ -106,8 +110,6 @@ struct NExceptionalFibre {
      * tie, the fibres are considered equivalent and this routine will
      * return \c false.
      *
-     * \pre The first parameter of each fibre is non-negative.
-     *
      * @param compare the fibre with which this will be compared.
      * @return \c true if and only if this is smaller than the given fibre.
      */
@@ -120,7 +122,7 @@ struct NExceptionalFibre {
 /**
  * Writes the given fibre in human-readable format to the given output
  * stream.  The fibre will be written in the format
- * <tt>(alpha, beta)</tt> with no newline appended.
+ * <tt>(alpha,beta)</tt> with no newline appended.
  *
  * @param out the output stream to which to write.
  * @param f the fibre to write.
@@ -131,13 +133,9 @@ std::ostream& operator << (std::ostream& out, const NExceptionalFibre& f);
 /**
  * Represents a general orientable Seifert fibred space.
  *
- * This class will store fibres of (illegal) index 0, but in this case
- * there are no guarantees as to the structure of the corresponding
- * 3-manifold, i.e., all bets are off.  If a fibre has index 0, its
- * corresponding NExceptionalFibre::beta will always be presented as 1.
- *
  * When queried, this class will return the list of exceptional fibres
- * in standard form.  This is a form similar to that used by Matveev.
+ * in standard form.  This is a form similar to that used by Matveev and
+ * satisfies the following properties.
  *
  * There will be no fibres of index 1; these will instead be merged with
  * other exceptional fibres.  If there are no exceptional fibres, all
@@ -148,8 +146,15 @@ std::ostream& operator << (std::ostream& out, const NExceptionalFibre& f);
  * NExceptionalFibre::operator<.  All fibres except for the last will
  * have NExceptionalFibre::beta between 0 and NExceptionalFibre::alpha-1
  * inclusive.
+ *
+ * The NManifold routine getHomologyH1() is implemented for all
+ * instances of this class, whereas the NManifold routine construct() is
+ * only implemented for a restricted class of Seifert fibred spaces.
+ *
+ * \todo Implement recognition of more common names.
+ * \todo Implement triangulation construction for more Seifert fibred spaces.
  */
-class NSFS : public ShareableObject {
+class NSFS : public NManifold {
     private:
         unsigned long orbitGenus;
             /**< The genus of the orbit manifold.  For non-orientable
@@ -161,16 +166,15 @@ class NSFS : public ShareableObject {
 
         std::list<NExceptionalFibre> fibres;
             /**< The exceptional fibres.  This list will be sorted, will
-                 contain no fibres of index 1 and will have all its fibres
-                 of the form <tt>0 <= beta < alpha</tt> (unless some alpha
-                 is zero, in which case the corresponding beta will be 1). */
+                 contain no fibres of index <= 1 and will have all its fibres
+                 of the form <tt>0 <= beta < alpha</tt> with \a alpha and
+                 \a beta coprime. */
+        unsigned long nFibres;
+            /**< The size of the \a fibres list, used to avoid calling
+                 the linear time fibres.size(). */
         long k;
             /**< We will assume there is one additional (1,k) fibre with
                  no restrictions on \a k. */
-        long nNonZeroFibres;
-            /**< The number of exceptional fibres stored whose second
-                 parameters are non-zero.  This does not include (0,1)
-                 fibres. */
 
     public:
         /**
@@ -236,12 +240,15 @@ class NSFS : public ShareableObject {
         unsigned long getOrbitPunctures() const;
 
         /**
-         * Returns the number of exceptional fibres.
+         * Returns the number of exceptional fibres required to describe
+         * this Seifert fibred space.
          *
-         * Note that if there are no exceptional fibres but there is a
-         * single (1,k) fibre with \a k non-zero, this count will be 1
-         * to include this (1,k) fibre.  See the general class notes for
-         * further details.
+         * Note that (1,k) fibres are not included in this count, with
+         * the following exception.  If there are no exceptional fibres
+         * but there is a single (1,k) fibre with \a k non-zero, then
+         * this routine will return 1 to include this (1,k) fibre.
+         *
+         * See the general class notes for further details.
          *
          * @return the number of exceptional fibres.
          */
@@ -263,21 +270,31 @@ class NSFS : public ShareableObject {
          * Note that there is no restriction on the range of the second
          * parameter of the fibre.  The index of this fibre may be 1.
          *
-         * The index of this fibre may also be 0, but in this case there
-         * will be no guarantees as to what the resulting 3-manifold will
-         * be; all bets are off.
-         *
          * Once this fibre is added, the fibres of this space will be
-         * converted to standard form as described in the general class
+         * converted to standard form as described in the NSFS class
          * notes.
          *
-         * \pre The two parameters of the given fibre must be coprime
-         * (have gcd=1).  This is of utmost importance; otherwise all
-         * hell may break loose further down the track.
-         * \pre The first parameter of the given fibre (its index) must be
-         * non-negative.
+         * @param fibre the fibre to insert.  The first parameter of
+         * this fibre (i.e., its index) must be strictly positive, and
+         * the two parameters of this fibre must be coprime.
          */
         void insertFibre(const NExceptionalFibre& fibre);
+
+        /**
+         * Adds the given fibre to this Seifert fibred space.
+         * Note that there is no restriction on the range of the second
+         * parameter of the fibre.  The index of this fibre may be 1.
+         *
+         * Once this fibre is added, the fibres of this space will be
+         * converted to standard form as described in the NSFS class
+         * notes.
+         *
+         * @param alpha the first parameter (i.e., the index) of the
+         * fibre to insert; this must be strictly positive.
+         * @param beta the second parameter of the fibre to insert; this
+         * must have no common factors with the first parameter \a alpha.
+         */
+        void insertFibre(long alpha, long beta);
 
         /**
          * Reduces the parameters of this Seifert fibred space to a
@@ -308,34 +325,11 @@ class NSFS : public ShareableObject {
          */
         NLensSpace* isLensSpace() const;
 
-        /**
-         * Returns the first homology group of this Seifert fibred space.
-         *
-         * The abelian group returned will be newly created and should be
-         * destroyed by the caller of this routine once it is no longer
-         * required.
-         *
-         * @return the newly created first homology group.
-         */
+        NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
-
-        /**
-         * Returns the common name of this Seifert fibred space.
-         * The list of common names for spaces will presumably grow
-         * between Regina releases.  If no common name is known at this
-         * time, the parameters of this Seifert fibred space will simply
-         * be returned in human-readable form.
-         *
-         * Calling reduce() before invoking this routine increases the
-         * chances of a successful identification of a common name.
-         *
-         * \todo \feature Add more common names to this routine.
-         *
-         * @return the common name of this Seifert fibred space.
-         */
-        std::string getCommonName() const;
-
-        void writeTextShort(std::ostream& out) const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        std::ostream& writeStructure(std::ostream& out) const;
 
     private:
         /**
@@ -349,6 +343,18 @@ class NSFS : public ShareableObject {
          * @return the modified final exceptional fibre.
          */
         NExceptionalFibre getModifiedFinalFibre() const;
+
+        /**
+         * Provides the actual implementation of routines writeName() and
+         * writeTeXName().  These routines are implemented together in
+         * writeCommonName() since they share a common internal structure.
+         *
+         * @param out the output stream to which to write.
+         * @param tex \c true if we are handling writeTeXName(), or
+         * \c false if we are handling writeName().
+         * @return a reference to \a out.
+         */
+        std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
 
 /*@}*/
@@ -376,20 +382,20 @@ inline bool NExceptionalFibre::operator == (const NExceptionalFibre& compare)
 // Inline functions for NSFS
 
 inline NSFS::NSFS() : orbitGenus(0), orbitOrientable(true), orbitPunctures(0),
-        k(0), nNonZeroFibres(0) {
+        nFibres(0), k(0) {
 }
 
 inline NSFS::NSFS(unsigned long newOrbitGenus, bool newOrbitOrientable,
         unsigned long newOrbitPunctures) : orbitGenus(newOrbitGenus),
         orbitOrientable(newOrbitOrientable), orbitPunctures(newOrbitPunctures),
-        k(0), nNonZeroFibres(0) {
+        nFibres(0), k(0) {
 }
 
-inline NSFS::NSFS(const NSFS& cloneMe) : ShareableObject(),
+inline NSFS::NSFS(const NSFS& cloneMe) : NManifold(),
         orbitGenus(cloneMe.orbitGenus),
         orbitOrientable(cloneMe.orbitOrientable),
         orbitPunctures(cloneMe.orbitPunctures), fibres(cloneMe.fibres),
-        k(cloneMe.k), nNonZeroFibres(cloneMe.nNonZeroFibres) {
+        nFibres(cloneMe.nFibres), k(cloneMe.k) {
 }
 
 inline NSFS::~NSFS() {
@@ -405,6 +411,10 @@ inline bool NSFS::isOrbitOrientable() const {
 
 inline unsigned long NSFS::getOrbitPunctures() const {
     return orbitPunctures;
+}
+
+inline void NSFS::insertFibre(const NExceptionalFibre& fibre) {
+    insertFibre(fibre.alpha, fibre.beta);
 }
 
 } // namespace regina

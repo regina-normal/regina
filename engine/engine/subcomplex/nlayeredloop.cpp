@@ -26,6 +26,9 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
+#include "manifold/nlensspace.h"
+#include "manifold/nsfs.h"
 #include "triangulation/nedge.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
@@ -41,18 +44,19 @@ NLayeredLoop* NLayeredLoop::clone() const {
     return ans;
 }
 
-void NLayeredLoop::findExceptionalFibres() {
+NManifold* NLayeredLoop::getManifold() const {
     if (hinge[1]) {
         // Not twisted.
-        seifertStructure.insertFibre(NExceptionalFibre(1, length));
+        return new NLensSpace(length, 1);
     } else {
         // Twisted.
-        seifertStructure.insertFibre(NExceptionalFibre(2, -1));
-        seifertStructure.insertFibre(NExceptionalFibre(2, 1));
-        seifertStructure.insertFibre(NExceptionalFibre(length, 1));
+        NSFS* ans = new NSFS();
+        ans->insertFibre(2, -1);
+        ans->insertFibre(2, 1);
+        ans->insertFibre(length, 1);
+        ans->reduce();
+        return ans;
     }
-    
-    seifertStructure.reduce();
 }
 
 NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
@@ -185,7 +189,6 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                 ans->length = nTet;
                 ans->hinge[0] = base->getEdge(hinge0);
                 ans->hinge[1] = (twisted ? 0 : base->getEdge(hinge1));
-                ans->findExceptionalFibres();
                 return ans;
             }
         }
@@ -193,6 +196,22 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
 
     // Nothing found.
     return 0;
+}
+
+NAbelianGroup* NLayeredLoop::getHomologyH1() const {
+    NAbelianGroup* ans = new NAbelianGroup();
+    if (hinge[1]) {
+        // Untwisted.
+        if (length > 1)
+            ans->addTorsionElement(length);
+    } else {
+        // Twisted.
+        if (length % 2 == 0)
+            ans->addTorsionElement(2, 2);
+        else
+            ans->addTorsionElement(4);
+    }
+    return ans;
 }
 
 } // namespace regina

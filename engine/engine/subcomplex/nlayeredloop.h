@@ -36,11 +36,10 @@
 #endif
 
 #include "shareableobject.h"
-#include "subcomplex/nsfs.h"
+#include "subcomplex/nstandardtri.h"
 
 namespace regina {
 
-class NComponent;
 class NEdge;
 
 /**
@@ -73,15 +72,13 @@ class NEdge;
  * The \a length of the layered loop is the number of tetrahedra it
  * contains.  A layered loop must contain at least one tetrahedron.
  */
-class NLayeredLoop : public ShareableObject {
+class NLayeredLoop : public NStandardTriangulation {
     private:
         unsigned long length;
             /**< The length of this layered loop. */
         NEdge* hinge[2];
             /**< The hinge edge(s) of this layered loop.  If the loop is
                  twisted, the second element in this array will be \c null. */
-        NSFS seifertStructure;
-            /**< The structure of the corresponding Seifert fibred space. */
 
     public:
         /**
@@ -133,12 +130,6 @@ class NLayeredLoop : public ShareableObject {
         NEdge* getHinge(int which) const;
 
         /**
-         * Returns the structure of the Seifert fibred space formed by
-         * this layered loop.
-         */
-        const NSFS& getSeifertStructure() const;
-
-        /**
          * Determines if the given triangulation component is a layered
          * loop.
          *
@@ -149,19 +140,17 @@ class NLayeredLoop : public ShareableObject {
          */
         static NLayeredLoop* isLayeredLoop(const NComponent* comp);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
          * Creates a new uninitialised structure.
          */
         NLayeredLoop();
-
-        /**
-         * Calculate the Seifert structure according to the other
-         * information already stored in this structure.
-         */
-        void findExceptionalFibres();
 };
 
 /*@}*/
@@ -185,10 +174,13 @@ inline bool NLayeredLoop::isTwisted() const {
 inline NEdge* NLayeredLoop::getHinge(int which) const {
     return hinge[which];
 }
-inline const NSFS& NLayeredLoop::getSeifertStructure() const {
-    return seifertStructure;
+inline std::ostream& NLayeredLoop::writeName(std::ostream& out) const {
+    return out << (hinge[1] ? "C(" : "C~(") << length << ')';
 }
-inline void NLayeredLoop::writeTextShort(std::ostream& out) const {
+inline std::ostream& NLayeredLoop::writeTeXName(std::ostream& out) const {
+    return out << (hinge[1] ? "$C_{" : "$\\tilde{C}_{") << length << "}$";
+}
+inline void NLayeredLoop::writeTextLong(std::ostream& out) const {
     out << "Layered loop (" << (hinge[1] ? "not twisted" : "twisted") <<
         ") of length " << length;
 }

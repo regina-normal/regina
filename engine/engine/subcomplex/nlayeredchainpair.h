@@ -35,9 +35,9 @@
 #define __NLAYEREDCHAINPAIR_H
 #endif
 
+#include "manifold/nsfs.h"
 #include "shareableobject.h"
 #include "subcomplex/nlayeredchain.h"
-#include "subcomplex/nsfs.h"
 
 namespace regina {
 

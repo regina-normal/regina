@@ -26,38 +26,23 @@
 
 /* end stub */
 
-#include "manifold/nsfs.h"
-#include "subcomplex/naugtrisolidtorus.h"
-#include "triangulation/ncomponent.h"
+#include "manifold/nhandlebody.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
-using regina::NAugTriSolidTorus;
+using regina::NHandlebody;
 
-void addNAugTriSolidTorus() {
-    scope s = class_<NAugTriSolidTorus, bases<regina::ShareableObject>,
-            std::auto_ptr<NAugTriSolidTorus>, boost::noncopyable>
-            ("NAugTriSolidTorus", no_init)
-        .def("clone", &NAugTriSolidTorus::clone,
-            return_value_policy<manage_new_object>())
-        .def("getCore", &NAugTriSolidTorus::getCore,
-            return_internal_reference<>())
-        .def("getAugTorus", &NAugTriSolidTorus::getAugTorus,
-            return_internal_reference<>())
-        .def("getEdgeGroupRoles", &NAugTriSolidTorus::getEdgeGroupRoles)
-        .def("getChainLength", &NAugTriSolidTorus::getChainLength)
-        .def("getChainType", &NAugTriSolidTorus::getChainType)
-        .def("getTorusAnnulus", &NAugTriSolidTorus::getTorusAnnulus)
-        .def("hasLayeredChain", &NAugTriSolidTorus::hasLayeredChain)
-        .def("getSeifertStructure", &NAugTriSolidTorus::getSeifertStructure,
-            return_internal_reference<>())
-        .def("isAugTriSolidTorus", &NAugTriSolidTorus::isAugTriSolidTorus,
-            return_value_policy<manage_new_object>())
-        .staticmethod("isAugTriSolidTorus")
+void addNHandlebody() {
+    class_<NHandlebody, bases<regina::NManifold>,
+            std::auto_ptr<NHandlebody>, boost::noncopyable>
+            ("NHandlebody", init<unsigned long, bool>())
+        .def(init<const NHandlebody&>())
+        .def("getHandles", &NHandlebody::getHandles)
+        .def("isOrientable", &NHandlebody::isOrientable)
+        .def(self == self)
     ;
 
-    s.attr("CHAIN_NONE") = NAugTriSolidTorus::CHAIN_NONE;
-    s.attr("CHAIN_MAJOR") = NAugTriSolidTorus::CHAIN_MAJOR;
-    s.attr("CHAIN_AXIS") = NAugTriSolidTorus::CHAIN_AXIS;
+    implicitly_convertible<std::auto_ptr<NHandlebody>,
+        std::auto_ptr<regina::NManifold> >();
 }
 

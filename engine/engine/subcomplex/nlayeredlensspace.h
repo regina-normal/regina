@@ -36,10 +36,9 @@
 #endif
 
 #include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/nstandardtri.h"
 
 namespace regina {
-
-class NComponent;
 
 /**
  * \weakgroup subcomplex
@@ -56,7 +55,7 @@ class NComponent;
  * 
  * A layered lens space must contain at least one tetrahedron.
  */
-class NLayeredLensSpace : public ShareableObject {
+class NLayeredLensSpace : public NStandardTriangulation {
     private:
         NLayeredSolidTorus* torus;
             /**< The layered solid torus that forms the basis of this
@@ -140,7 +139,11 @@ class NLayeredLensSpace : public ShareableObject {
          */
         static NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -177,8 +180,14 @@ inline bool NLayeredLensSpace::isSnapped() const {
 inline bool NLayeredLensSpace::isTwisted() const {
     return (torus->getTopEdge(mobiusBoundaryGroup, 1) != -1);
 }
-inline void NLayeredLensSpace::writeTextShort(std::ostream& out) const {
-    out << "L( " << p << ", " << q << " ) layered lens space";
+inline std::ostream& NLayeredLensSpace::writeName(std::ostream& out) const {
+    return out << "L(" << p << ',' << q << ')';
+}
+inline std::ostream& NLayeredLensSpace::writeTeXName(std::ostream& out) const {
+    return out << "$L(" << p << ',' << q << ")$";
+}
+inline void NLayeredLensSpace::writeTextLong(std::ostream& out) const {
+    out << "Layered lens space L(" << p << ',' << q << ')';
 }
 
 } // namespace regina

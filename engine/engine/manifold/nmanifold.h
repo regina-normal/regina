@@ -63,7 +63,7 @@ class NManifold : public ShareableObject {
         /**
          * A destructor that does nothing.
          */
-        ~NManifold();
+        virtual ~NManifold();
 
         /**
          * Returns the common name of this 3-manifold as a
@@ -120,7 +120,8 @@ class NManifold : public ShareableObject {
          * The homology group will be newly allocated and must be destroyed
          * by the caller of this routine.
          *
-         * @return the first homology group of this 3-manifold.
+         * @return the first homology group of this 3-manifold, or 0 if
+         * the appropriate calculation routine has not yet been implemented.
          */
         virtual NAbelianGroup* getHomologyH1() const;
 

@@ -19,17 +19,29 @@ Current Development Version
             - Fixed bug in isCanonical().
         Class NGluingPerms:
             - Further optimisations for non-orientable census generation.
+        Class NHandlebody:
+            - Added as a new 3-manifold class.
         Class NLargeInteger:
             - Added constructor and assignment taking a const std::string&.
             - Routine stringValue() now returns a std::string, not a char*.
-        Class NLensSpace, NSFS:
+        Class NLensSpace:
             - Changed to fit into the new NManifold structure.
+        Class NLayeredLensSpace:
+            - Changed to fit into the new NStandardTriangulation structure.
+        Class NLayeredLoop:
+            - Changed to fit into the new NStandardTriangulation structure.
         Class NManifold:
             - New class to represent a 3-manifold irrespective of its
               triangulation.
         Class NPerm:
             - Routines edgeDescription() and faceDescription()
               implemented in the calculation engine.
+        Class NSFS:
+            - Changed to fit into the new NManifold structure.
+            - New overloaded routine insertFibre(long, long).
+            - No longer allows illegal (0,k) fibres to be added.
+        Class NStandardTriangulation:
+            - New class to represent a standard triangulation.
         Class NTriangulation:
             - New routine turaevViro().
     PYTHON:

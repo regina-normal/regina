@@ -36,9 +36,9 @@
 #define __NAUGTRISOLIDTORUS_H
 #endif
 
+#include "manifold/nsfs.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredsolidtorus.h"
-#include "subcomplex/nsfs.h"
 
 namespace regina {
 

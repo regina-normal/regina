@@ -12,7 +12,7 @@ subcomplexincludedir = $(pkgincludedir)/subcomplex
 
 noinst_LTLIBRARIES = libsubcomplex.la
 
-libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nknownmanifold.cpp nlayeredchain.cpp nlayeredchainpair.cpp nlayeredlensspace.cpp nlayeredloop.cpp nlayeredsolidtorus.cpp npillowtwosphere.cpp nplugtrisolidtorus.cpp nsfs.cpp nsnappedball.cpp nsnappedtwosphere.cpp nspiralsolidtorus.cpp ntrisolidtorus.cpp
+libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nknownmanifold.cpp nlayeredchain.cpp nlayeredchainpair.cpp nlayeredlensspace.cpp nlayeredloop.cpp nlayeredsolidtorus.cpp npillowtwosphere.cpp nplugtrisolidtorus.cpp nsnappedball.cpp nsnappedtwosphere.cpp nspiralsolidtorus.cpp nstandardtri.cpp ntrisolidtorus.cpp
 
-subcomplexinclude_HEADERS = naugtrisolidtorus.h nknownmanifold.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h npillowtwosphere.h nplugtrisolidtorus.h nsfs.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h ntrisolidtorus.h
+subcomplexinclude_HEADERS = naugtrisolidtorus.h nknownmanifold.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h npillowtwosphere.h nplugtrisolidtorus.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntrisolidtorus.h
 

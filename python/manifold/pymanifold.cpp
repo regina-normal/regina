@@ -26,11 +26,15 @@
 
 /* end stub */
 
+void addNHandlebody();
 void addNManifold();
 void addNLensSpace();
+void addNSFS();
 
 void addManifold() {
     addNManifold();
+    addNHandlebody();
     addNLensSpace();
+    addNSFS();
 }
 

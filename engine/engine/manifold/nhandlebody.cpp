@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2003, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,38 +26,51 @@
 
 /* end stub */
 
-#include "manifold/nsfs.h"
-#include "subcomplex/naugtrisolidtorus.h"
-#include "triangulation/ncomponent.h"
-#include <boost/python.hpp>
+#include "algebra/nabeliangroup.h"
+#include "manifold/nhandlebody.h"
 
-using namespace boost::python;
-using regina::NAugTriSolidTorus;
+namespace regina {
 
-void addNAugTriSolidTorus() {
-    scope s = class_<NAugTriSolidTorus, bases<regina::ShareableObject>,
-            std::auto_ptr<NAugTriSolidTorus>, boost::noncopyable>
-            ("NAugTriSolidTorus", no_init)
-        .def("clone", &NAugTriSolidTorus::clone,
-            return_value_policy<manage_new_object>())
-        .def("getCore", &NAugTriSolidTorus::getCore,
-            return_internal_reference<>())
-        .def("getAugTorus", &NAugTriSolidTorus::getAugTorus,
-            return_internal_reference<>())
-        .def("getEdgeGroupRoles", &NAugTriSolidTorus::getEdgeGroupRoles)
-        .def("getChainLength", &NAugTriSolidTorus::getChainLength)
-        .def("getChainType", &NAugTriSolidTorus::getChainType)
-        .def("getTorusAnnulus", &NAugTriSolidTorus::getTorusAnnulus)
-        .def("hasLayeredChain", &NAugTriSolidTorus::hasLayeredChain)
-        .def("getSeifertStructure", &NAugTriSolidTorus::getSeifertStructure,
-            return_internal_reference<>())
-        .def("isAugTriSolidTorus", &NAugTriSolidTorus::isAugTriSolidTorus,
-            return_value_policy<manage_new_object>())
-        .staticmethod("isAugTriSolidTorus")
-    ;
-
-    s.attr("CHAIN_NONE") = NAugTriSolidTorus::CHAIN_NONE;
-    s.attr("CHAIN_MAJOR") = NAugTriSolidTorus::CHAIN_MAJOR;
-    s.attr("CHAIN_AXIS") = NAugTriSolidTorus::CHAIN_AXIS;
+NAbelianGroup* NHandlebody::getHomologyH1() const {
+    NAbelianGroup* ans = new NAbelianGroup();
+    if (nHandles)
+        ans->addRank(nHandles);
+    return ans;
 }
+
+std::ostream& NHandlebody::writeName(std::ostream& out) const {
+    if (nHandles == 0)
+        out << "B3";
+    else if (nHandles == 1) {
+        if (orientable)
+            out << "B2 x S1";
+        else
+            out << "B2 x~ S1";
+    } else {
+        if (orientable)
+            out << "Handle-Or(" << nHandles << ')';
+        else
+            out << "Handle-Nor(" << nHandles << ')';
+    }
+    return out;
+}
+
+std::ostream& NHandlebody::writeTeXName(std::ostream& out) const {
+    if (nHandles == 0)
+        out << "$B^3$";
+    else if (nHandles == 1) {
+        if (orientable)
+            out << "$B^2 \\times S^1$";
+        else
+            out << "$B^2 \\twisted S^1$";
+    } else {
+        if (orientable)
+            out << "$\\mathit{Handle-Or}(" << nHandles << ")$";
+        else
+            out << "$\\mathit{Handle-Nor}(" << nHandles << ")$";
+    }
+    return out;
+}
+
+} // namespace regina
 

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2003, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,38 +26,42 @@
 
 /* end stub */
 
-#include "manifold/nsfs.h"
-#include "subcomplex/naugtrisolidtorus.h"
-#include "triangulation/ncomponent.h"
-#include <boost/python.hpp>
+#include <sstream>
+#include "subcomplex/nlayeredlensspace.h"
+#include "subcomplex/nlayeredloop.h"
+#include "triangulation/ntriangulation.h"
 
-using namespace boost::python;
-using regina::NAugTriSolidTorus;
+namespace regina {
 
-void addNAugTriSolidTorus() {
-    scope s = class_<NAugTriSolidTorus, bases<regina::ShareableObject>,
-            std::auto_ptr<NAugTriSolidTorus>, boost::noncopyable>
-            ("NAugTriSolidTorus", no_init)
-        .def("clone", &NAugTriSolidTorus::clone,
-            return_value_policy<manage_new_object>())
-        .def("getCore", &NAugTriSolidTorus::getCore,
-            return_internal_reference<>())
-        .def("getAugTorus", &NAugTriSolidTorus::getAugTorus,
-            return_internal_reference<>())
-        .def("getEdgeGroupRoles", &NAugTriSolidTorus::getEdgeGroupRoles)
-        .def("getChainLength", &NAugTriSolidTorus::getChainLength)
-        .def("getChainType", &NAugTriSolidTorus::getChainType)
-        .def("getTorusAnnulus", &NAugTriSolidTorus::getTorusAnnulus)
-        .def("hasLayeredChain", &NAugTriSolidTorus::hasLayeredChain)
-        .def("getSeifertStructure", &NAugTriSolidTorus::getSeifertStructure,
-            return_internal_reference<>())
-        .def("isAugTriSolidTorus", &NAugTriSolidTorus::isAugTriSolidTorus,
-            return_value_policy<manage_new_object>())
-        .staticmethod("isAugTriSolidTorus")
-    ;
-
-    s.attr("CHAIN_NONE") = NAugTriSolidTorus::CHAIN_NONE;
-    s.attr("CHAIN_MAJOR") = NAugTriSolidTorus::CHAIN_MAJOR;
-    s.attr("CHAIN_AXIS") = NAugTriSolidTorus::CHAIN_AXIS;
+std::string NStandardTriangulation::getName() const {
+    std::ostringstream ans;
+    writeName(ans);
+    return ans.str();
 }
+
+std::string NStandardTriangulation::getTeXName() const {
+    std::ostringstream ans;
+    writeTeXName(ans);
+    return ans.str();
+}
+
+NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
+        NComponent* comp) {
+    NStandardTriangulation* ans;
+    if ((ans = NLayeredLensSpace::isLayeredLensSpace(comp)))
+        return ans;
+    if ((ans = NLayeredLoop::isLayeredLoop(comp)))
+        return ans;
+
+    return 0;
+}
+
+NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
+        NTriangulation* tri) {
+    if (tri->getNumberOfComponents() != 1)
+        return 0;
+    return isStandardTriangulation(tri->getComponent(0));
+}
+
+} // namespace regina
 

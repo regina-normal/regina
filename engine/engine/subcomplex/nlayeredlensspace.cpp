@@ -26,11 +26,13 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
+#include "manifold/nlensspace.h"
+#include "maths/numbertheory.h"
+#include "subcomplex/nlayeredlensspace.h"
 #include "triangulation/nedge.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
-#include "subcomplex/nlayeredlensspace.h"
-#include "maths/numbertheory.h"
 
 namespace regina {
 
@@ -133,6 +135,19 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
         }
     }
     return 0;
+}
+
+NManifold* NLayeredLensSpace::getManifold() const {
+    return new NLensSpace(p, q);
+}
+
+NAbelianGroup* NLayeredLensSpace::getHomologyH1() const {
+    NAbelianGroup* ans = new NAbelianGroup();
+    if (p == 0)
+        ans->addRank();
+    else if (p > 1)
+        ans->addTorsionElement(p);
+    return ans;
 }
 
 } // namespace regina

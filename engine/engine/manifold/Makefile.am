@@ -12,7 +12,7 @@ manifoldincludedir = $(pkgincludedir)/manifold
 
 noinst_LTLIBRARIES = libmanifold.la
 
-libmanifold_la_SOURCES = nlensspace.cpp nmanifold.cpp
+libmanifold_la_SOURCES = nhandlebody.cpp nlensspace.cpp nmanifold.cpp nsfs.cpp
 
-manifoldinclude_HEADERS = nlensspace.h nmanifold.h
+manifoldinclude_HEADERS = nhandlebody.h nlensspace.h nmanifold.h nsfs.h
 

@@ -42,27 +42,6 @@ NSFS* isKnownSFS(NTriangulation* tri) {
     // We have just one component.
     NComponent* comp = tri->getComponents().front();
 
-    // Layered lens space?
-    {
-        NLayeredLensSpace* lens = NLayeredLensSpace::isLayeredLensSpace(comp);
-        if (lens) {
-            NSFS* ans = new NSFS();
-            ans->insertFibre(NExceptionalFibre(lens->getQ(), lens->getP()));
-            delete lens;
-            return ans;
-        }
-    }
-
-    // Layered loop?
-    {
-        NLayeredLoop* loop = NLayeredLoop::isLayeredLoop(comp);
-        if (loop) {
-            NSFS* ans = new NSFS(loop->getSeifertStructure());
-            delete loop;
-            return ans;
-        }
-    }
-
     // Layered chain pair?
     {
         NLayeredChainPair* pair = NLayeredChainPair::isLayeredChainPair(comp);

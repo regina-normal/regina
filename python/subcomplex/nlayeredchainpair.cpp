@@ -26,8 +26,8 @@
 
 /* end stub */
 
+#include "manifold/nsfs.h"
 #include "subcomplex/nlayeredchainpair.h"
-#include "subcomplex/nsfs.h"
 #include "triangulation/ncomponent.h"
 #include <boost/python.hpp>
 
