@@ -24,17 +24,12 @@ SUBDIRS = \
   triangulation \
   utilities
 
-noinst_LTLIBRARIES = libregina-engine.la
+lib_LTLIBRARIES = libregina-engine.la
 
-libregina_engine_la_SOURCES = \
-  shareableobject.cpp
+libregina_engine_la_SOURCES = shareableobject.cpp
+libregina_engine_la_LDFLAGS = -static
 
-pkginclude_HEADERS = \
-  docs.h \
-  engine.h \
-  howto.h \
-  regina.h \
-  shareableobject.h
+pkginclude_HEADERS = docs.h engine.h howto.h regina.h shareableobject.h
 
 libregina_engine_la_LIBADD = \
   algebra/libalgebra.la \

@@ -10,7 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libfile.la
 
-libfile_la_SOURCES = \
-  njnifile.cpp \
-  njnifileinfo.cpp
+libfile_la_SOURCES = njnifile.cpp njnifileinfo.cpp
 

@@ -10,12 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libtriangulation.la
 
-libtriangulation_la_SOURCES = \
-  njniboundarycomponent.cpp \
-  njnicomponent.cpp \
-  njniedge.cpp \
-  njniface.cpp \
-  njnitetrahedron.cpp \
-  njnitriangulation.cpp \
-  njnivertex.cpp
+libtriangulation_la_SOURCES = njniboundarycomponent.cpp njnicomponent.cpp njniedge.cpp njniface.cpp njnitetrahedron.cpp njnitriangulation.cpp njnivertex.cpp
 

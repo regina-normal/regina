@@ -10,11 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libsurfaces.la
 
-libsurfaces_la_SOURCES = \
-  njninormalsurface.cpp \
-  njninormalsurfacelist.cpp \
-  njnisurfacefilter.cpp \
-  njnisurfacefiltercombination.cpp \
-  njnisurfacefilterproperties.cpp \
-  njnisurfacesubset.cpp
+libsurfaces_la_SOURCES = njninormalsurface.cpp njninormalsurfacelist.cpp njnisurfacefilter.cpp njnisurfacefiltercombination.cpp njnisurfacefilterproperties.cpp njnisurfacesubset.cpp
 

@@ -13,10 +13,10 @@ SUFFIXES = .java .class
 %.class : %.java
 	CLASSPATH="$(USE_CLASSPATH)" @JAVAC@ $<
 
-java_sources = $(wildcard *.java)
+java_sources = NNormalSurface.java NNormalSurfaceList.java NSurfaceFilter.java NSurfaceFilterCombination.java NSurfaceFilterProperties.java NSurfaceSet.java NSurfaceSubset.java
 
 # Note that $(java_classes) does _not_ include inner classes.
-java_classes = $(java_sources:.java=.class)
+java_classes = NNormalSurface.class NNormalSurfaceList.class NSurfaceFilter.class NSurfaceFilterCombination.class NSurfaceFilterProperties.class NSurfaceSet.class NSurfaceSubset.class
 
 all-local : $(java_classes)
 

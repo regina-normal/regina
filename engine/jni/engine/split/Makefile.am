@@ -10,6 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libsplit.la
 
-libsplit_la_SOURCES = \
-  njnisignature.cpp
+libsplit_la_SOURCES = njnisignature.cpp
 

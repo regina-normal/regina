@@ -12,9 +12,7 @@ propertyincludedir = $(pkgincludedir)/property
 
 noinst_LTLIBRARIES = libproperty.la
 
-libproperty_la_SOURCES = \
-  npropertyholder.cpp
+libproperty_la_SOURCES = npropertyholder.cpp
 
-propertyinclude_HEADERS = \
-  npropertyholder.h
+propertyinclude_HEADERS = npropertyholder.h
 

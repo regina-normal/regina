@@ -10,8 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libalgebra.la
 
-libalgebra_la_SOURCES = \
-  njniabeliangroup.cpp \
-  njnigroupexpression.cpp \
-  njnigrouppresentation.cpp
+libalgebra_la_SOURCES = njniabeliangroup.cpp njnigroupexpression.cpp njnigrouppresentation.cpp
 

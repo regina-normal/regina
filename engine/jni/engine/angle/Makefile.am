@@ -10,7 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libangle.la
 
-libangle_la_SOURCES = \
-  njnianglestructure.cpp \
-  njnianglestructurelist.cpp
+libangle_la_SOURCES = njnianglestructure.cpp njnianglestructurelist.cpp
 

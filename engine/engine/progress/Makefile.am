@@ -12,11 +12,7 @@ progressincludedir = $(pkgincludedir)/progress
 
 noinst_LTLIBRARIES = libprogress.la
 
-libprogress_la_SOURCES = \
-  nprogresstypes.cpp
+libprogress_la_SOURCES = nprogresstypes.cpp
 
-progressinclude_HEADERS = \
-  nprogress.h \
-  nprogressmanager.h \
-  nprogresstypes.h
+progressinclude_HEADERS = nprogress.h nprogressmanager.h nprogresstypes.h
 

@@ -13,10 +13,10 @@ SUFFIXES = .java .class
 %.class : %.java
 	CLASSPATH="$(USE_CLASSPATH)" @JAVAC@ $<
 
-java_sources = $(wildcard *.java)
+java_sources = AllowAll.java PacketFilter.java SingleClass.java Standalone.java TwoClasses.java
 
 # Note that $(java_classes) does _not_ include inner classes.
-java_classes = $(java_sources:.java=.class)
+java_classes = AllowAll.class PacketFilter.class SingleClass.class Standalone.class TwoClasses.class
 
 all-local : $(java_classes)
 

@@ -10,12 +10,7 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libregistry.la
 
-libregistry_la_SOURCES = \
-  makejnpacket.cpp
+libregistry_la_SOURCES = makejnpacket.cpp
 
-noinst_HEADERS = \
-  javafilterregistry.h \
-  javapacketregistry.h \
-  javasurfacesetregistry.h \
-  makejnpacket.h
+noinst_HEADERS = javafilterregistry.h javapacketregistry.h javasurfacesetregistry.h makejnpacket.h
 

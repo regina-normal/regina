@@ -13,10 +13,10 @@ SUFFIXES = .java .class
 %.class : %.java
 	CLASSPATH="$(USE_CLASSPATH)" @JAVAC@ $<
 
-java_sources = $(wildcard *.java)
+java_sources = NContainer.java NPacket.java NScript.java NText.java
 
 # Note that $(java_classes) does _not_ include inner classes.
-java_classes = $(java_sources:.java=.class)
+java_classes = NContainer.class NPacket.class NScript.class NText.class
 
 all-local : $(java_classes)
 

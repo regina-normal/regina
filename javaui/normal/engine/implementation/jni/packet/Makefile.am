@@ -13,10 +13,10 @@ SUFFIXES = .java .class
 %.class : %.java
 	CLASSPATH="$(USE_CLASSPATH)" @JAVAC@ $<
 
-java_sources = $(wildcard *.java)
+java_sources = NJNIContainer.java NJNIPacket.java NJNIPacketTagEnumerator.java NJNIScript.java NJNIText.java
 
 # Note that $(java_classes) does _not_ include inner classes.
-java_classes = $(java_sources:.java=.class)
+java_classes = NJNIContainer.class NJNIPacket.class NJNIPacketTagEnumerator.class NJNIScript.class NJNIText.class
 
 all-local : $(java_classes)
 

@@ -12,13 +12,7 @@ algebraincludedir = $(pkgincludedir)/algebra
 
 noinst_LTLIBRARIES = libalgebra.la
 
-libalgebra_la_SOURCES = \
-  nabeliangroup.cpp \
-  ngrouppresentation.cpp \
-  nxmlalgebrareader.cpp
+libalgebra_la_SOURCES = nabeliangroup.cpp ngrouppresentation.cpp nxmlalgebrareader.cpp
 
-algebrainclude_HEADERS = \
-  nabeliangroup.h \
-  ngrouppresentation.h \
-  nxmlalgebrareader.h
+algebrainclude_HEADERS = nabeliangroup.h ngrouppresentation.h nxmlalgebrareader.h
 

@@ -10,7 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libprogress.la
 
-libprogress_la_SOURCES = \
-  njniprogress.cpp \
-  njniprogressmanager.cpp
+libprogress_la_SOURCES = njniprogress.cpp njniprogressmanager.cpp
 

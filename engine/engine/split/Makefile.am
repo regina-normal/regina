@@ -12,13 +12,7 @@ splitincludedir = $(pkgincludedir)/split
 
 noinst_LTLIBRARIES = libsplit.la
 
-libsplit_la_SOURCES = \
-  nsigcensus.cpp \
-  nsigisomorphism.cpp \
-  nsignature.cpp
+libsplit_la_SOURCES = nsigcensus.cpp nsigisomorphism.cpp nsignature.cpp
 
-splitinclude_HEADERS = \
-  nsigcensus.h \
-  nsigisomorphism.h \
-  nsignature.h
+splitinclude_HEADERS = nsigcensus.h nsigisomorphism.h nsignature.h
 

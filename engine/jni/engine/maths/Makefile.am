@@ -10,6 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libmaths.la
 
-libmaths_la_SOURCES = \
-  njnimatrixint.cpp
+libmaths_la_SOURCES = njnimatrixint.cpp
 

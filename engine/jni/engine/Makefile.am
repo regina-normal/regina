@@ -22,7 +22,7 @@ SUBDIRS = \
 
 noinst_LTLIBRARIES = libengine.la
 
-libengine_la_SOURCES = jniengine.cpp jnishareableobject.cpp 
+libengine_la_SOURCES = jniengine.cpp jnishareableobject.cpp
 
 libengine_la_LIBADD = \
   algebra/libalgebra.la \

@@ -10,10 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @JNI_INCLUDES@
 
 noinst_LTLIBRARIES = libpacket.la
 
-libpacket_la_SOURCES = \
-  njnicontainer.cpp \
-  njnipacket.cpp \
-  njnipackettagenumerator.cpp \
-  njniscript.cpp \
-  njnitext.cpp
+libpacket_la_SOURCES = njnicontainer.cpp njnipacket.cpp njnipackettagenumerator.cpp njniscript.cpp njnitext.cpp
 

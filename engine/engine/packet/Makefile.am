@@ -12,21 +12,7 @@ packetincludedir = $(pkgincludedir)/packet
 
 noinst_LTLIBRARIES = libpacket.la
 
-libpacket_la_SOURCES = \
-  ncontainer.cpp \
-  npacket.cpp \
-  npackettype.cpp \
-  nscript.cpp \
-  ntext.cpp \
-  nxmlpacketreader.cpp \
-  nxmlpacketreaders.cpp
+libpacket_la_SOURCES = ncontainer.cpp npacket.cpp npackettype.cpp nscript.cpp ntext.cpp nxmlpacketreader.cpp nxmlpacketreaders.cpp
 
-packetinclude_HEADERS = \
-  ncontainer.h \
-  npacket.h \
-  nscript.h \
-  ntext.h \
-  nxmlpacketreader.h \
-  nxmlpacketreaders.h \
-  packetregistry.h
+packetinclude_HEADERS = ncontainer.h npacket.h nscript.h ntext.h nxmlpacketreader.h nxmlpacketreaders.h packetregistry.h
 
