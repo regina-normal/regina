@@ -68,6 +68,7 @@ void addNVertex() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NVertex::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("getDegree", &NVertex::getDegree)
         .def("getLink", &NVertex::getLink)
         .def("isLinkClosed", &NVertex::isLinkClosed)
         .def("isIdeal", &NVertex::isIdeal)

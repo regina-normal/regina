@@ -216,12 +216,12 @@ class NEdge : public ShareableObject {
 
         /**
          * Returns the number of descriptors in the list returned by
-         * getEmbeddings().
+         * getEmbeddings().  Note that this is identical to getDegree().
          *
          * @return the number of embedding descriptors.
          */
         unsigned long getNumberOfEmbeddings() const;
-        
+
         /**
          * Returns the requested descriptor from the list returned by
          * getEmbeddings().
@@ -239,7 +239,7 @@ class NEdge : public ShareableObject {
          * @return the component containing this edge.
          */
         NComponent* getComponent() const;
-        
+
         /**
          * Returns the boundary component of the triangulation to which
          * this edge belongs.
@@ -259,6 +259,14 @@ class NEdge : public ShareableObject {
          * requested edge vertex.
          */
         NVertex* getVertex(int vertex) const;
+
+        /**
+         * Returns the degree of this edge.  Note that this is identical
+         * to getNumberOfEmbeddings().
+         *
+         * @return the degree of this edge.
+         */
+        unsigned long getDegree() const;
 
         /**
          * Determines if this edge lies entirely on the boundary of the
@@ -305,6 +313,10 @@ inline NBoundaryComponent* NEdge::getBoundaryComponent() const {
 inline NVertex* NEdge::getVertex(int vertex) const {
     return embeddings.front().getTetrahedron()->getVertex(
         embeddings.front().getVertices()[vertex]);
+}
+
+inline unsigned long NEdge::getDegree() const {
+    return embeddings.size();
 }
 
 inline bool NEdge::isBoundary() const {

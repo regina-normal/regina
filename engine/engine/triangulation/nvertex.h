@@ -59,7 +59,7 @@ class NVertexEmbedding {
             /**< The tetrahedron in which this vertex is contained. */
         int vertex;
             /**< The vertex number of the tetrahedron that is this vertex. */
-    
+
     public:
         /**
          * Default constructor.  The embedding descriptor created is
@@ -94,7 +94,7 @@ class NVertexEmbedding {
          * @param cloneMe the embedding descriptor to clone.
          */
         NVertexEmbedding& operator =(const NVertexEmbedding& cloneMe);
-            
+
         /**
          * Returns the tetrahedron in which this vertex is contained.
          *
@@ -148,7 +148,7 @@ class NVertex : public ShareableObject {
             /**< Specifies whether the vertex link is orientable. */
         long linkEulerCharacteristic;
             /**< Specifies the Euler characteristic of the vertex link. */
-        
+
     public:
         /**
          * Creates a new vertex and specifies it as belonging to the
@@ -182,7 +182,7 @@ class NVertex : public ShareableObject {
 
         /**
          * Returns the number of descriptors in the list returned by
-         * getEmbeddings().
+         * getEmbeddings().  Note that this is identical to getDegree().
          *
          * @return the number of embedding descriptors.
          */
@@ -223,6 +223,14 @@ class NVertex : public ShareableObject {
          * as determined by isBoundary().
          */
         NBoundaryComponent* getBoundaryComponent() const;
+
+        /**
+         * Returns the degree of this vertex.  Note that this is
+         * identical to getNumberOfEmbeddings().
+         *
+         * @return the degree of this vertex.
+         */
+        unsigned long getDegree() const;
 
         /**
          * Returns a description of the link of the vertex.
@@ -306,6 +314,10 @@ inline NComponent* NVertex::getComponent() const {
 
 inline NBoundaryComponent* NVertex::getBoundaryComponent() const {
     return boundaryComponent;
+}
+
+inline unsigned long NVertex::getDegree() const {
+    return embeddings.size();
 }
 
 inline int NVertex::getLink() const {

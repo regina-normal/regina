@@ -11,11 +11,15 @@ Current Development Version
     OVERALL:
         - Ships with the 7-tetrahedron closed non-orientable census.
     ENGINE:
+        Class NEdge, NVertex:
+            - Added getDegree() as an alias for getNumberOfEmbeddings().
         Class NLayeredSolidTorus:
             - Added routine flatten() to flatten a layered solid torus
               to a Mobius band.
         Class NNormalSurface, NNormalSurfaceVector:
             - Added routine isCentral() to test for central surfaces.
+        Class NSimpleSurfaceBundle, NTrivialTri:
+            - Added for recognition of trivial non-orientable triangulations.
     USER INTERFACE:
         Class NScriptUI, NTextUI:
             - Fixed problems with word wrapping and line endings in

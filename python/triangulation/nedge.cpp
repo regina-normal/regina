@@ -78,6 +78,7 @@ void addNEdge() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NEdge::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("getDegree", &NEdge::getDegree)
         .def("isBoundary", &NEdge::isBoundary)
         .def("isValid", &NEdge::isValid)
     ;
