@@ -42,7 +42,7 @@ Description: Development files for Regina, the 3-manifold topology software
 Package: regina-normal-doc
 Architecture: all
 Section: doc
-Recommends: www-browser
+Recommends: konqueror | www-browser
 Suggests: regina-normal, regina-normal-dev
 Description: API docs for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.

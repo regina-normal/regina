@@ -4,6 +4,8 @@ regina-normal (4.1.2-1) unstable; urgency=low
   * Updated to use python2.3 to stay consistent with boost.python (and
     versioned the libboost-python-dev dependency at >= 1.31.0-5 accordingly).
   * Suggests gap, which can now be used to help simplify fundamental groups.
+  * Recommends (konqueror | www-browser) for regina-normal-doc instead of
+    just www-browser.
 
  -- Ben Burton <bab@debian.org>  Mon, 14 Jun 2004 01:07:41 +1000
 
