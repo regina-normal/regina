@@ -51,6 +51,11 @@ class PacketManager {
          * Returns a small (16x16) icon appropriate for the given packet.
          */
         static QPixmap iconSmall(regina::NPacket* packet);
+
+        /**
+         * Returns a toolbar (22x22) icon appropriate for the given packet.
+         */
+        static QPixmap iconBar(regina::NPacket* packet);
 };
 
 #endif

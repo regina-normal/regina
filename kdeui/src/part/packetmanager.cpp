@@ -40,7 +40,7 @@ using namespace regina;
 
 QPixmap PacketManager::iconSmall(NPacket* packet) {
     if (packet->getPacketType() == NAngleStructureList::packetType)
-        return SmallIcon("packet_angle", ReginaPart::factoryInstance());
+        return SmallIcon("packet_angles", ReginaPart::factoryInstance());
     if (packet->getPacketType() == NContainer::packetType)
         return SmallIcon("packet_container", ReginaPart::factoryInstance());
     if (packet->getPacketType() == NSurfaceFilter::packetType) {
@@ -55,11 +55,36 @@ QPixmap PacketManager::iconSmall(NPacket* packet) {
     if (packet->getPacketType() == NScript::packetType)
         return SmallIcon("packet_script", ReginaPart::factoryInstance());
     if (packet->getPacketType() == NNormalSurfaceList::packetType)
-        return SmallIcon("packet_surface", ReginaPart::factoryInstance());
+        return SmallIcon("packet_surfaces", ReginaPart::factoryInstance());
     if (packet->getPacketType() == NText::packetType)
         return SmallIcon("packet_text", ReginaPart::factoryInstance());
     if (packet->getPacketType() == NTriangulation::packetType)
         return SmallIcon("packet_triangulation", ReginaPart::factoryInstance());
+    return QPixmap();
+}
+
+QPixmap PacketManager::iconBar(NPacket* packet) {
+    if (packet->getPacketType() == NAngleStructureList::packetType)
+        return BarIcon("packet_angles", ReginaPart::factoryInstance());
+    if (packet->getPacketType() == NContainer::packetType)
+        return BarIcon("packet_container", ReginaPart::factoryInstance());
+    if (packet->getPacketType() == NSurfaceFilter::packetType) {
+        if (((NSurfaceFilter*)packet)->getFilterID() ==
+                NSurfaceFilterCombination::filterID)
+            return BarIcon("filter_comb", ReginaPart::factoryInstance());
+        if (((NSurfaceFilter*)packet)->getFilterID() ==
+                NSurfaceFilterProperties::filterID)
+            return BarIcon("filter_prop", ReginaPart::factoryInstance());
+        return BarIcon("packet_filter", ReginaPart::factoryInstance());
+    }
+    if (packet->getPacketType() == NScript::packetType)
+        return BarIcon("packet_script", ReginaPart::factoryInstance());
+    if (packet->getPacketType() == NNormalSurfaceList::packetType)
+        return BarIcon("packet_surfaces", ReginaPart::factoryInstance());
+    if (packet->getPacketType() == NText::packetType)
+        return BarIcon("packet_text", ReginaPart::factoryInstance());
+    if (packet->getPacketType() == NTriangulation::packetType)
+        return BarIcon("packet_triangulation", ReginaPart::factoryInstance());
     return QPixmap();
 }
 
