@@ -495,32 +495,26 @@ bool PacketPane::commit() {
 }
 
 bool PacketPane::commitToModify() {
-    if (dirty)
-        return commit();
-    else {
-        // No changes to commit, but we still need to check if the
-        // packet may be modified.
-        if (! readWrite) {
-            KMessageBox::sorry(this, i18n("This packet is read-only, and "
-                "so may not be modified."));
-            return false;
-        }
-
-        if (! mainUI->getPacket()->isPacketEditable()) {
-            KMessageBox::sorry(this, i18n("<qt>This packet may not be "
-                "modified at the present time.<p>"
-                "This is generally due to a tight relationship shared "
-                "with some other packet in the tree.  For instance, a "
-                "triangulation containing a normal surface list may "
-                "not be edited, since the normal surfaces are stored "
-                "as coordinates relative to the triangulation.<p>"
-                "As a workaround for this problem, you might wish to try "
-                "cloning this packet and editing the clone instead.</qt>"));
-            return false;
-        }
-
-        return true;
+    if (! readWrite) {
+        KMessageBox::sorry(this, i18n("This packet is read-only, and "
+            "so may not be modified."));
+        return false;
     }
+
+    if (! mainUI->getPacket()->isPacketEditable()) {
+        KMessageBox::sorry(this, i18n("<qt>This packet may not be "
+            "modified at the present time.<p>"
+            "This is generally due to a tight relationship shared "
+            "with some other packet in the tree.  For instance, a "
+            "triangulation containing a normal surface list may "
+            "not be edited, since the normal surfaces are stored "
+            "as coordinates relative to the triangulation.<p>"
+            "As a workaround for this problem, you might wish to try "
+            "cloning this packet and editing the clone instead.</qt>"));
+        return false;
+    }
+
+    return commit();
 }
 
 bool PacketPane::tryCommit() {
@@ -535,9 +529,7 @@ bool PacketPane::tryCommit() {
                     "copy of the packet?</qt>"))
                     != KMessageBox::Continue)
                 return false;
-        }
-
-        if (! mainUI->getPacket()->isPacketEditable()) {
+        } else if (! mainUI->getPacket()->isPacketEditable()) {
             if (KMessageBox::warningContinueCancel(this,
                     i18n("<qt>This packet may not be edited at the present "
                     "time.  Because of this I cannot commit your recent "
@@ -552,17 +544,17 @@ bool PacketPane::tryCommit() {
                     "copy of the packet?</qt>"))
                     != KMessageBox::Continue)
                 return false;
+        } else {
+            isCommitting = true;
+
+            {
+                NPacket::ChangeEventBlock block(mainUI->getPacket());
+                mainUI->commit();
+            }
+
+            setDirty(false); // Just in case somebody forgot.
+            isCommitting = false;
         }
-
-        isCommitting = true;
-
-        {
-            NPacket::ChangeEventBlock block(mainUI->getPacket());
-            mainUI->commit();
-        }
-
-        setDirty(false); // Just in case somebody forgot.
-        isCommitting = false;
     }
 
     return true;
