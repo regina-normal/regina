@@ -2,7 +2,7 @@
 <!-- Regina normal surface documentation.
      See regina.sgml for further details. -->
 
-<chapter id="surfaces">
+<!--chapter id="surfaces">
  <title>Working with Normal Surfaces</title>
 
  <sect1 id="surfaces-creation">
@@ -22,4 +22,4 @@
 
   <para>TODO: This section still to be written.</para>
  </sect1>
-</chapter>
+</chapter-->
