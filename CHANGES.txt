@@ -26,14 +26,15 @@ Version 4.1  [ 7 March, 2004 ]
               and insertSFSOverSphere().
     USER INTERFACE:
         - Actions specific to each packet type now appear in their own
-          context-specific menus (i.e., a "Triangulation" menu appears
-          when a triangulation is open, etc.).
+          context-specific menus, i.e., a "Triangulation" menu appears
+          when a triangulation is open, etc.
+        - Added "Please Wait" dialogs during slow operations.
+        - Thorough "What's This?" support and tooltips offered across the
+          entire user interface.
+        - New tip-of-the-day support.
+        - More icons for triangulation actions.
         - Updated the .desktop file and mimetype tests to work correctly
           with KDE 3.2.
-        - Added "what's this?" support everywhere across the user interface.
-        - Added warning dialogs when a slow calculation is to be run.
-        - Added tip-of-the-day support.
-        - Added more icons for triangulation actions.
     UTILITIES:
         tricensus:
             - Fixed bug in which --genpairs created empty output files.
