@@ -120,6 +120,8 @@ public class CompositionViewer extends DefaultPacketViewer
         String nodeText;
         long n, m, i, j, k;
 
+        String idText = null;
+
         // Look for layered lens spaces.
         category = null;
         NLayeredLensSpace lens;
@@ -132,9 +134,9 @@ public class CompositionViewer extends DefaultPacketViewer
                     category = new DefaultMutableTreeNode("Layered Lens Spaces");
                     rootNode.add(category);
                 }
-                instance = new DefaultMutableTreeNode("L(" +
-                    String.valueOf(lens.getP()) + "," +
-                    String.valueOf(lens.getQ()) + ")");
+                idText = "L(" + String.valueOf(lens.getP()) + "," +
+                    String.valueOf(lens.getQ()) + ")";
+                instance = new DefaultMutableTreeNode(idText);
                 category.add(instance);
                 instance.add(new DefaultMutableTreeNode("Component " +
                     String.valueOf(i)));
@@ -197,12 +199,14 @@ public class CompositionViewer extends DefaultPacketViewer
                     rootNode.add(category);
                 }
                 sfs = pair.getSeifertStructure();
-                instance = new DefaultMutableTreeNode(sfs.toString());
+                idText = sfs.toString();
+                instance = new DefaultMutableTreeNode(idText);
                 category.add(instance);
                 lensSpace = sfs.isLensSpace();
                 if (lensSpace != null) {
+                    idText = lensSpace.toString();
                     instance.add(new DefaultMutableTreeNode("Reduces to " +
-                        lensSpace.toString()));
+                        idText));
                     lensSpace.destroy();
                 }
                 instance.add(new DefaultMutableTreeNode("Component " +
@@ -228,12 +232,14 @@ public class CompositionViewer extends DefaultPacketViewer
                     rootNode.add(category);
                 }
                 sfs = aug.getSeifertStructure();
-                instance = new DefaultMutableTreeNode(sfs.toString());
+                idText = sfs.toString();
+                instance = new DefaultMutableTreeNode(idText);
                 category.add(instance);
                 lensSpace = sfs.isLensSpace();
                 if (lensSpace != null) {
+                    idText = lensSpace.toString();
                     instance.add(new DefaultMutableTreeNode("Reduces to " +
-                        lensSpace.toString()));
+                        idText));
                     lensSpace.destroy();
                 }
                 instance.add(new DefaultMutableTreeNode("Component " +
@@ -277,12 +283,14 @@ public class CompositionViewer extends DefaultPacketViewer
                     rootNode.add(category);
                 }
                 sfs = plug.getSeifertStructure();
-                instance = new DefaultMutableTreeNode(sfs.toString());
+                idText = sfs.toString();
+                instance = new DefaultMutableTreeNode(idText);
                 category.add(instance);
                 lensSpace = sfs.isLensSpace();
                 if (lensSpace != null) {
+                    idText = lensSpace.toString();
                     instance.add(new DefaultMutableTreeNode("Reduces to " +
-                        lensSpace.toString()));
+                        idText));
                     lensSpace.destroy();
                 }
                 tri = plug.getCore();
@@ -598,6 +606,11 @@ public class CompositionViewer extends DefaultPacketViewer
         Enumeration e1 = balls.elements();
         while (e1.hasMoreElements())
             ((NSnappedBall)e1.nextElement()).destroy();
+
+        // Was the space identified?
+        if (idText != null)
+            rootNode.insert(new DefaultMutableTreeNode(
+                "Identified: " + idText), 0);
 
         if (rootNode.isLeaf())
             rootNode.add(new DefaultMutableTreeNode(
