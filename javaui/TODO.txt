@@ -40,4 +40,4 @@ Normal Surfaces:
 	Allow modification of SurfaceViewer.maxAutoCalcTetrahedra.
 
 Scripts:
-	Expand $REGINA_JNIDIR, $REGINA_EXTRA_CLASSES and file args using cygpath.
+	Expand file args using cygpath.
