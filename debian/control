@@ -23,7 +23,7 @@ Description: Regina, the 3-manifold normal surface theory calculator
 Package: regina-normal-server
 Architecture: any
 Section: contrib/math
-Depends: omniorb (>= 1:3.0.4-2.2), ${shlibs:Depends}
+Depends: ${shlibs:Depends}
 Suggests: regina-normal, regina-normal-doc
 Description: Regina CORBA server for normal surface theory calculator
  Regina is a normal surface theory calculator for 3-manifold
@@ -46,7 +46,7 @@ Description: Regina CORBA server for normal surface theory calculator
 Package: regina-normal-dev
 Architecture: any
 Section: contrib/devel
-Depends: ${shlibs:Depends}, libgmp3-dev, libstdc++2.10-dev
+Depends: libgmp3-dev, libstdc++2.10-dev
 Suggests: regina-normal, regina-normal-doc
 Description: Development files for Regina normal surface theory calculator
  Regina is a normal surface theory calculator for 3-manifold
