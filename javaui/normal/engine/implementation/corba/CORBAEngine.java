@@ -327,6 +327,14 @@ public class CORBAEngine implements Engine {
             data.newNGroupPresentation_NGroupPresentation(
             ((NCORBAGroupPresentation)cloneMe).data));
     }
+    public NLensSpace newNLensSpace(long p, long q) {
+        return NCORBALensSpace.newWrapper(data.newNLensSpace_long_long(
+            (int)p, (int)q));
+    }
+    public NLensSpace newNLensSpace(NLensSpace cloneMe) {
+        return NCORBALensSpace.newWrapper(data.newNLensSpace_NLensSpace(
+            ((NCORBALensSpace)cloneMe).data));
+    }
     public NMatrixInt newNMatrixInt(int rows, int columns) {
         return NCORBAMatrixInt.newWrapper(data.newNMatrixInt_long_long(
             rows, columns));
@@ -346,6 +354,21 @@ public class CORBAEngine implements Engine {
     }
     public NProgressManager newNProgressManager() {
         return NCORBAProgressManager.newWrapper(data.newNProgressManager());
+    }
+    public NSFS newNSFS() {
+        return NCORBASFS.newWrapper(data.newNSFS_());
+    }
+    public NSFS newNSFS(long orbitGenus, boolean orbitOrientable) {
+        return newNSFS(orbitGenus, orbitOrientable, 0);
+    }
+    public NSFS newNSFS(long orbitGenus, boolean orbitOrientable,
+            long orbitPunctures) {
+        return NCORBASFS.newWrapper(data.newNSFS_long_boolean_long(
+            (int)orbitGenus, orbitOrientable, (int)orbitPunctures));
+    }
+    public NSFS newNSFS(NSFS cloneMe) {
+        return NCORBASFS.newWrapper(data.newNSFS_NSFS(
+            ((NCORBASFS)cloneMe).data));
     }
     public NScript newNScript() {
         return NCORBAScript.newWrapper(data.newNScript());

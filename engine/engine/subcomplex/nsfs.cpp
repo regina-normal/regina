@@ -223,12 +223,15 @@ void NSFS::writeTextShort(ostream& out) const {
         else
             out << "Non-or, g=" << orbitGenus;
     }
-    if (orbitPunctures > 0)
-        out << ", " << orbitPunctures << " punctures";
+    if (orbitPunctures == 1)
+        out << " + " << orbitPunctures << " puncture";
+    else if (orbitPunctures > 1)
+        out << " + " << orbitPunctures << " punctures";
 
+    out << ':';
     if (fibres.size() == 0) {
         if (k == 0)
-            out << ", no fibres";
+            out << " no fibres";
         else
             out << ' ' << NExceptionalFibre(1, k);
     } else {

@@ -76,6 +76,16 @@ class Engine_i : public virtual POA_Regina::Engine,
 
         virtual Regina::Progress::NProgressManager_ptr newNProgressManager();
 
+        virtual Regina::Subcomplex::NLensSpace_ptr newNLensSpace_long_long(
+            CORBA::Long p, CORBA::Long q);
+        virtual Regina::Subcomplex::NLensSpace_ptr newNLensSpace_NLensSpace(
+            Regina::Subcomplex::NLensSpace_ptr cloneMe);
+        virtual Regina::Subcomplex::NSFS_ptr newNSFS_();
+        virtual Regina::Subcomplex::NSFS_ptr newNSFS_long_boolean_long(
+            CORBA::Long genus, CORBA::Boolean orient, CORBA::Long punctures);
+        virtual Regina::Subcomplex::NSFS_ptr newNSFS_NSFS(
+            Regina::Subcomplex::NSFS_ptr cloneMe);
+
         virtual Regina::Surfaces::NNormalSurfaceList_ptr newNNormalSurfaceList(
             Regina::Triangulation::NTriangulation_ptr owner,
             CORBA::Long flavour, CORBA::Boolean isEmbeddedOnly);

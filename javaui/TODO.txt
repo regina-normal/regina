@@ -25,6 +25,7 @@ Jython:
 	Import/export scripts as text files
 	Autoindent in script editor
 	Compile and run open libraries.
+	Add readline support for text consoles.
 
 Main Window:
 	View file version.

@@ -87,6 +87,10 @@ class Engine {
         NGroupPresentation* newNGroupPresentation(
                 const NGroupPresentation& cloneMe);
             /**< Calls the corresponding constructor. */
+        NLensSpace* newNLensSpace(unsigned long p, unsigned long q);
+            /**< Calls the corresponding constructor. */
+        NLensSpace* newNLensSpace(const NLensSpace& cloneMe);
+            /**< Calls the corresponding constructor. */
         NMatrixInt* newNMatrixInt(int rows, int columns);
             /**< Calls the corresponding constructor. */
         NMatrixInt* newNMatrixInt(const NMatrixInt& cloneMe);
@@ -95,6 +99,13 @@ class Engine {
                 int flavour, bool isEmbeddedOnly = true);
             /**< Calls the corresponding constructor. */
         NProgressManager* newNProgressManager();
+            /**< Calls the corresponding constructor. */
+        NSFS* newNSFS();
+            /**< Calls the corresponding constructor. */
+        NSFS* newNSFS(unsigned long newOrbitGenus, bool newOrbitOrientable,
+                unsigned long newOrbitPunctures);
+            /**< Calls the corresponding constructor. */
+        NSFS* newNSFS(const NSFS& cloneMe);
             /**< Calls the corresponding constructor. */
         NScript* newNScript();
             /**< Calls the corresponding constructor. */

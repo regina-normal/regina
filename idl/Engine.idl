@@ -40,7 +40,9 @@
 #include "Subcomplex/NAugTriSolidTorus.idl"
 #include "Subcomplex/NLayeredLensSpace.idl"
 #include "Subcomplex/NLayeredLoop.idl"
+#include "Subcomplex/NLensSpace.idl"
 #include "Subcomplex/NPillowTwoSphere.idl"
+#include "Subcomplex/NSFS.idl"
 #include "Subcomplex/NSnappedTwoSphere.idl"
 #include "Subcomplex/NTriSolidTorus.idl"
 #include "Surfaces/NNormalSurfaceList.idl"
@@ -76,6 +78,14 @@ module Regina {
         Packet::NText newNText_string(in string newText);
 
         Progress::NProgressManager newNProgressManager();
+
+        Subcomplex::NLensSpace newNLensSpace_long_long(in long p, in long q);
+        Subcomplex::NLensSpace newNLensSpace_NLensSpace(
+            in Subcomplex::NLensSpace cloneMe);
+        Subcomplex::NSFS newNSFS_();
+        Subcomplex::NSFS newNSFS_long_boolean_long(in long orbitGenus,
+            in boolean orbitOrientable, in long orbitPunctures);
+        Subcomplex::NSFS newNSFS_NSFS(in Subcomplex::NSFS cloneMe);
 
         Surfaces::NNormalSurfaceList newNNormalSurfaceList(
             in Triangulation::NTriangulation owner,

@@ -34,10 +34,37 @@
 #include "NLayeredLensSpaceI.h"
 #include "NLayeredLoopI.h"
 #include "NLayeredSolidTorusI.h"
+#include "NLensSpaceI.h"
 #include "NPillowTwoSphereI.h"
+#include "NSFSI.h"
 #include "NSnappedBallI.h"
 #include "NSnappedTwoSphereI.h"
 #include "NTriSolidTorusI.h"
+
+Regina::Subcomplex::NLensSpace_ptr Engine_i::newNLensSpace_long_long(
+        CORBA::Long p, CORBA::Long q) {
+    return NLensSpace_i::newWrapper(new ::NLensSpace(p, q));
+}
+
+Regina::Subcomplex::NLensSpace_ptr Engine_i::newNLensSpace_NLensSpace(
+        Regina::Subcomplex::NLensSpace_ptr cloneMe) {
+    return NLensSpace_i::newWrapper(new ::NLensSpace(
+        *GET_ENGINE_OBJECT(NLensSpace, cloneMe)));
+}
+
+Regina::Subcomplex::NSFS_ptr Engine_i::newNSFS_() {
+    return NSFS_i::newWrapper(new ::NSFS());
+}
+
+Regina::Subcomplex::NSFS_ptr Engine_i::newNSFS_long_boolean_long(
+        CORBA::Long genus, CORBA::Boolean orient, CORBA::Long punctures) {
+    return NSFS_i::newWrapper(new ::NSFS(genus, orient, punctures));
+}
+
+Regina::Subcomplex::NSFS_ptr Engine_i::newNSFS_NSFS(
+        Regina::Subcomplex::NSFS_ptr cloneMe) {
+    return NSFS_i::newWrapper(new ::NSFS(*GET_ENGINE_OBJECT(NSFS, cloneMe)));
+}
 
 Regina::Subcomplex::NPillowTwoSphere_ptr
         Engine_i::formsPillowTwoSphere(Regina::Triangulation::NFace_ptr face1,

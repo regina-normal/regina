@@ -44,6 +44,7 @@ import normal.engine.implementation.jni.file.*;
 import normal.engine.implementation.jni.maths.*;
 import normal.engine.implementation.jni.packet.*;
 import normal.engine.implementation.jni.progress.*;
+import normal.engine.implementation.jni.subcomplex.*;
 import normal.engine.implementation.jni.surfaces.*;
 import normal.engine.implementation.jni.triangulation.*;
 
@@ -125,6 +126,12 @@ public class JNIEngine implements Engine {
     public NFile newNFile() {
         return new NJNIFile();
     }
+    public NLensSpace newNLensSpace(long p, long q) {
+        return new NJNILensSpace(p, q);
+    }
+    public NLensSpace newNLensSpace(NLensSpace cloneMe) {
+        return new NJNILensSpace(cloneMe);
+    }
     public NMatrixInt newNMatrixInt(int rows, int columns) {
         return new NJNIMatrixInt(rows, columns);
     }
@@ -141,6 +148,19 @@ public class JNIEngine implements Engine {
     }
     public NProgressManager newNProgressManager() {
         return new NJNIProgressManager();
+    }
+    public NSFS newNSFS() {
+        return new NJNISFS();
+    }
+    public NSFS newNSFS(long orbitGenus, boolean orbitOrientable) {
+        return new NJNISFS(orbitGenus, orbitOrientable, 0);
+    }
+    public NSFS newNSFS(long orbitGenus, boolean orbitOrientable,
+            long orbitPunctures) {
+        return new NJNISFS(orbitGenus, orbitOrientable, orbitPunctures);
+    }
+    public NSFS newNSFS(NSFS cloneMe) {
+        return new NJNISFS(cloneMe);
     }
     public NScript newNScript() {
         return new NJNIScript();

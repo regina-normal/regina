@@ -8,7 +8,8 @@ Regina - A Normal Surface Theory Calculator
         Overall structure:
             - Introduced macro MY_ENGINE_OBJECT for CORBA wrapper classes.
             - Macros GET_ENGINE_OBJECT no longer crash when null is passed.
-        Class NAugTriSolidTorus, NLayeredLoop, NTriSolidTorus:
+        Class NAugTriSolidTorus, NLayeredLoop, NLensSpace, NSFS,
+                NTriSolidTorus:
             - New classes.
         Class NPerm:
             - Added operator !=.

@@ -73,6 +73,8 @@ public interface Engine {
     public NGroupPresentation newNGroupPresentation();
     public NGroupPresentation newNGroupPresentation(
         NGroupPresentation cloneMe);
+    public NLensSpace newNLensSpace(long p, long q);
+    public NLensSpace newNLensSpace(NLensSpace cloneMe);
     public NMatrixInt newNMatrixInt(int rows, int columns);
     public NMatrixInt newNMatrixInt(NMatrixInt cloneMe);
     public NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner,
@@ -80,6 +82,11 @@ public interface Engine {
     public NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner,
         int flavour);
     public NProgressManager newNProgressManager();
+    public NSFS newNSFS();
+    public NSFS newNSFS(long orbitGenus, boolean orbitOrientable);
+    public NSFS newNSFS(long orbitGenus, boolean orbitOrientable,
+        long orbitPunctures);
+    public NSFS newNSFS(NSFS cloneMe);
     public NScript newNScript();
     public NSurfaceFilter newNSurfaceFilter();
     public NSurfaceFilter newNSurfaceFilter(NSurfaceFilter cloneMe);
