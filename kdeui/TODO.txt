@@ -18,3 +18,4 @@ Toolbars:
 
 General:
     Make "configure shortcuts" work with the part as well
+    Enhance the DCOP interface.
