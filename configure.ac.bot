@@ -1,0 +1,6 @@
+
+# Other files:
+AC_CONFIG_FILES([engine/doc-files/docs.conf])
+
+AC_OUTPUT
+

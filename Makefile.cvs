@@ -1,0 +1,15 @@
+##
+##  Regina - A Normal Surface Theory Calculator
+##  Makefile for CVS Usage
+##
+##  This makefile should only be needed when doing a fresh CVS checkout.
+##
+##  Running "make -f Makefile.cvs" will recreate configure.ac and update
+##  any existing Makefile.am control files.
+##
+##  This file should not be included in the usual source distribution.
+##
+
+all :
+	/bin/sh admin/ac_gen.sh
+
