@@ -74,6 +74,39 @@
   </para>
  </sect1>
 
+ <sect1 id="citing">
+  <title>Citing Regina</title>
+
+  <para>
+   If you find &regina; useful in your research and would like to cite
+   it, the following style of reference is suggested.
+  </para>
+  <para>
+   [Bu]
+   <author>
+    <firstname>Benjamin</firstname>
+    <othername>A.</othername>
+    <surname>Burton.</surname>
+   </author>
+   <emphasis>Regina: Normal Surface and 3-Manifold Topology
+    Software.</emphasis>
+   <ulink url="http://regina.sourceforge.net/"></ulink>.
+   1999&ndash;2004.
+  </para>
+  <para>
+   For &bibtex; users, the following &bibtex; entry may be used.
+  </para>
+<programlisting>
+@misc{regina,
+    author = {Benjamin A. Burton},
+    title = {Regina: Normal Surface and 3-Manifold Topology Software},
+    howpublished = {{\tt http://\allowbreak regina.\allowbreak
+        sourceforge.\allowbreak net/}},
+    year = {1999--2004}
+}
+</programlisting>
+ </sect1>
+
  <sect1 id="who">
   <title>Who is Regina?</title>
 

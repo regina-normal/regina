@@ -38,6 +38,7 @@
   <!ENTITY b1 "<replaceable>b<subscript>1</subscript></replaceable>">
   <!ENTITY b2 "<replaceable>b<subscript>2</subscript></replaceable>">
   <!ENTITY b3 "<replaceable>b<subscript>3</subscript></replaceable>">
+  <!ENTITY bibtex "<application>BibTeX</application>">
   <!ENTITY boost-python "<application>boost.python</application>">
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">
