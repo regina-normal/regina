@@ -8,6 +8,26 @@ Regina - A Normal Surface Theory Calculator
     for both the calculation engine and the Java user interface, see
     CHANGES.txt in the same directory as this file.
 
+Version 3.95  [ 12 October, 2003 ] - Prerelease for version 4.0.
+
+    User Interface Rewrites:
+        - The graphical user interface has been completely rewritten in C++
+          using the KDE libraries.  It is much faster and cleaner, and no
+          longer relies on Java support.  The user interface can be started
+          by running "regina-kde".
+        - Python scripting now uses standard Python, not Jython.  The API
+          is much closer to that of the C++ calculation engine and
+          everything has been moved into the single module "regina".
+          A python session can be started by running "regina-python".
+    Features:
+        - Better and more consistent support for recognising standard
+          triangulations and their underlying 3-manifolds.
+        - Calculates Turaev-Viro invariants of triangulations.
+        - Finds isomorphic copies of bounded triangulations within
+          larger triangulations.
+        - External objects can now be automatically notified of changes
+          to packets and packet trees.
+
 Version 3.2  [ 22 June, 2003 ] - The post-thesis release!
 
     Features:

@@ -8,11 +8,23 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Current Development Version
+Version 3.95  [ 12 October, 2003 ] - Prelease for version 4.0.
+    GRAPHICAL USER INTERFACE:
+        - Rewrote the entire user interface in C++ using the KDE
+          libraries.  The result is much faster, cleaner and easier to
+          maintain.  The old Java user interface is gone!  The user
+          interface can be started by running "regina-kde".
+    PYTHON:
+        - Python scripting rewritten to use standard Python, not Jython.
+          A python session can be started by running "regina-python".
+        - The Python API has changed to be much more faithful to the C++
+          calculation engine, especially with respect to global and static
+          routines and constants.
+        - All classes now sit directly within the module regina.
     ENGINE:
         Overall structure:
             - Fixed minor memory leaks.
-            - Made a few more routines const.
+            - Made more routines const.
             - Beginning to incorporate std::auto_ptr.
         Class Engine:
             - Removed since this is no longer necessary with the new
@@ -92,7 +104,7 @@ Current Development Version
             - Changed to fit into the new NStandardTriangulation structure.
             - Renamed isTriSolidTorus() to formsTriSolidTorus().
         Class NTriangulation:
-            - New routine turaevViro().
+            - New routine turaevViro() to calculate Turaev-Viro invariants.
             - Changed isIsomorphicTo() to return an entire isomorphism,
               not just whether an isomorphism exists.
             - New routine isContainedIn() to test for boundary
@@ -106,13 +118,6 @@ Current Development Version
             - Renamed to snappea.h.
         File stringutils.h:
             - Added routines startsWith() and stripWhitespace().
-    PYTHON:
-        - Added python bindings for standard python (i.e., cpython) to
-          replace the old Jython bindings.
-        - All classes now sit directly within the module regina.
-        - Python bindings are much more faithful to the C++ calculation
-          engine interface, especially with respect to global and static
-          routines and constants.
 
 Version 3.2  [ 22 June, 2003 ] - The post-thesis release!
     OVERALL:
