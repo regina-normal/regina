@@ -28,23 +28,39 @@
 
 // Regina core includes:
 #include "angle/nanglestructurelist.h"
+#include "progress/nprogressmanager.h"
+#include "progress/nprogressmanager.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "nanglestructurecreator.h"
+#include "../progressdialogs.h"
 
 #include <klocale.h>
 #include <kmessagebox.h>
 
 regina::NPacket* NAngleStructureCreator::createPacket(
         regina::NPacket* parentPacket, QWidget* parentWidget) {
-    if (parentPacket->getPacketType() == regina::NTriangulation::packetType)
-        return regina::NAngleStructureList::enumerate(
-            dynamic_cast<regina::NTriangulation*>(parentPacket));
-    else {
+    if (parentPacket->getPacketType() != regina::NTriangulation::packetType) {
         KMessageBox::error(parentWidget, i18n(
             "Angle structure lists can only be created directly beneath "
             "triangulations."));
+        return 0;
+    }
+
+    regina::NProgressManager manager;
+    ProgressDialogNumeric dlg(&manager, i18n("Angle Structure Enumeration"),
+        i18n("Enumerating vertex angle structures..."), parentWidget);
+
+    regina::NAngleStructureList* ans = regina::NAngleStructureList::enumerate(
+            dynamic_cast<regina::NTriangulation*>(parentPacket), &manager);
+
+    if (dlg.run())
+        return ans;
+    else {
+        delete ans;
+        KMessageBox::information(parentWidget,
+            i18n("The angle structure enumeration was cancelled."));
         return 0;
     }
 }

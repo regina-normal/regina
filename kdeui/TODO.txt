@@ -8,7 +8,6 @@ engine documentation.
 General:
     Make "configure shortcuts" work with the part as well as with the shell
     More "What's This?" texts, including a what's this button on the toolbar
-    (4.0) Include progress dialogs where appropriate
     Enhance the DCOP interface
 
 Census:

@@ -9,6 +9,9 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.0  [ currently under development ]
     ENGINE:
+        Class NAngleStructureList:
+            - Enumeration routine now takes an optional progress manager
+              and can run in a separate thread.
         Class NNormalSurface:
             - Using NProperty to store calculable properties.
             - Using NTriBool instead of 1/-1/0 for orientability,
@@ -31,10 +34,12 @@ Version 4.0  [ currently under development ]
         Class NTriBool:
             - Added for representing three-way booleans.
     USER INTERFACE:
+        Class NAngleStructureCreator:
+            - Displays progress and allows cancellation.
         Class NNormalSurfaceCreator:
             - Displays progress and allows cancellation.
         Class ProgressDialogNumeric:
-            - Added for displaying progress from regina::NProgressNumeric.
+            - Added for displaying progress from regina::NProgressNumber.
 
 Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
     OVERALL:

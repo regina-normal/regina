@@ -27,11 +27,23 @@
 /* end stub */
 
 #include "angle/nanglestructurelist.h"
+#include "progress/nprogressmanager.h"
 #include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NAngleStructureList;
+
+namespace {
+    // Write manual overload wrappers since this is a static member function.
+    NAngleStructureList* enumerate_1(regina::NTriangulation* owner) {
+        return NAngleStructureList::enumerate(owner);
+    }
+    NAngleStructureList* enumerate_2(regina::NTriangulation* owner,
+            regina::NProgressManager* manager) {
+        return NAngleStructureList::enumerate(owner, manager);
+    }
+}
 
 void addNAngleStructureList() {
     scope s = class_<NAngleStructureList, bases<regina::NPacket>,
@@ -45,7 +57,9 @@ void addNAngleStructureList() {
             return_internal_reference<>())
         .def("allowsStrict", &NAngleStructureList::allowsStrict)
         .def("allowsTaut", &NAngleStructureList::allowsTaut)
-        .def("enumerate", &NAngleStructureList::enumerate,
+        .def("enumerate", enumerate_1,
+            return_value_policy<reference_existing_object>())
+        .def("enumerate", enumerate_2,
             return_value_policy<reference_existing_object>())
         .staticmethod("enumerate")
     ;

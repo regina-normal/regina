@@ -28,11 +28,13 @@
 
 #include "angle/nanglestructurelist.h"
 #include "enumerate/ndoubledescriptor.h"
-#include "triangulation/ntriangulation.h"
+#include "file/nfile.h"
 #include "maths/nmatrixint.h"
 #include "maths/nvectorunit.h"
+#include "progress/nprogressmanager.h"
+#include "progress/nprogresstypes.h"
 #include "surfaces/nnormalsurface.h"
-#include "file/nfile.h"
+#include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
 // Property IDs:
@@ -43,22 +45,23 @@ namespace regina {
 
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
-NAngleStructureList::NAngleStructureList() {
-}
-
-NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
-    owner->insertChildLast(this);
+void* NAngleStructureList::Enumerator::run(void*) {
+    NProgressNumber* progress = 0;
+    if (manager) {
+        progress = new NProgressNumber(0, 2);
+        manager->setProgress(progress);
+    }
 
     // Form the matching equations (one per non-boundary edge plus
     // one per tetrahedron).
-    unsigned long nTetrahedra = owner->getNumberOfTetrahedra();
+    unsigned long nTetrahedra = triang->getNumberOfTetrahedra();
     unsigned long nCoords = 3 * nTetrahedra + 1;
 
-    long nEquations = long(owner->getNumberOfEdges()) +
-        long(owner->getNumberOfTetrahedra());
+    long nEquations = long(triang->getNumberOfEdges()) +
+        long(triang->getNumberOfTetrahedra());
     for (NTriangulation::BoundaryComponentIterator bit =
-            owner->getBoundaryComponents().begin();
-            bit != owner->getBoundaryComponents().end(); bit++)
+            triang->getBoundaryComponents().begin();
+            bit != triang->getBoundaryComponents().end(); bit++)
         nEquations -= (*bit)->getNumberOfEdges();
 
     NMatrixInt eqns(nEquations, nCoords);
@@ -67,13 +70,13 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NPerm perm;
     unsigned long index;
-    for (NTriangulation::EdgeIterator eit = owner->getEdges().begin();
-            eit != owner->getEdges().end(); eit++) {
+    for (NTriangulation::EdgeIterator eit = triang->getEdges().begin();
+            eit != triang->getEdges().end(); eit++) {
         if ((*eit)->isBoundary())
             continue;
         for (embit = (*eit)->getEmbeddings().begin();
                 embit != (*eit)->getEmbeddings().end(); embit++) {
-            index = owner->getTetrahedronIndex((*embit).getTetrahedron());
+            index = triang->getTetrahedronIndex((*embit).getTetrahedron());
             perm = (*embit).getVertices();
             eqns.entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
         }
@@ -111,16 +114,47 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     finalFace->setElement(nCoords - 1, -startValue);
     faces.push_back(finalFace);
 
+    if (progress)
+        progress->incCompleted();
+
     // Find the angle structures.
-    NDoubleDescriptor().enumerateVertices(StructureInserter(*this, owner),
+    NDoubleDescriptor().enumerateVertices(StructureInserter(*list, triang),
         originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
-        eqns, 0);
+        eqns, 0, progress);
 
     // Tidy up.
     for_each(originalCone.begin(), originalCone.end(),
         FuncDelete<NAngleStructureVector>());
     for_each(faces.begin(), faces.end(),
         FuncDelete<NVector<NLargeInteger> >());
+
+    // All done!
+    triang->insertChildLast(list);
+
+    if (progress) {
+        progress->incCompleted();
+        progress->setFinished();
+    }
+
+    return 0;
+}
+
+NAngleStructureList* NAngleStructureList::enumerate(NTriangulation* owner,
+        NProgressManager* manager) {
+    NAngleStructureList* ans = new NAngleStructureList();
+    Enumerator* e = new Enumerator(ans, owner, manager);
+
+    if (manager) {
+        if (! e->start(0, true)) {
+            delete ans;
+            return 0;
+        }
+        return ans;
+    } else {
+        e->run(0);
+        delete e;
+        return ans;
+    }
 }
 
 NTriangulation* NAngleStructureList::getTriangulation() const {
