@@ -27,7 +27,7 @@ SUBDIRS = \
 lib_LTLIBRARIES = libregina-engine.la
 
 libregina_engine_la_SOURCES = shareableobject.cpp
-libregina_engine_la_LDFLAGS = -static
+libregina_engine_la_LDFLAGS = -release @PACKAGE_VERSION@
 
 pkginclude_HEADERS = docs.h engine.h howto.h regina.h shareableobject.h
 
