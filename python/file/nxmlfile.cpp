@@ -26,40 +26,22 @@
 
 /* end stub */
 
+#include "file/nxmlfile.h"
+#include "packet/npacket.h"
 #include <boost/python.hpp>
 
-#include "engine.h"
-#include "shareableobject.h"
+using namespace boost::python;
 
-void addAlgebra();
-void addFile();
-void addPacket();
-void addUtilities();
+namespace {
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeXMLFile,
+        regina::writeXMLFile, 2, 3);
+}
 
-using regina::ShareableObject;
-
-BOOST_PYTHON_MODULE(regina) {
-    // Core engine routines:
-
-    boost::python::def("getVersionString", regina::getVersionString);
-    boost::python::def("getVersionMajor", regina::getVersionMajor);
-    boost::python::def("getVersionMinor", regina::getVersionMinor);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("toString", &ShareableObject::toString)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
-    ;
-
-    // Components from subdirectories:
-
-    addAlgebra();
-    addFile();
-    addPacket();
-    addUtilities();
+void addNXMLFile() {
+    def("writeXMLFile", regina::writeXMLFile, OL_writeXMLFile());
+    def("readXMLFile", regina::readXMLFile,
+        return_value_policy<manage_new_object>());
+    def("readFileMagic", regina::readFileMagic,
+        return_value_policy<manage_new_object>());
 }
 

@@ -26,40 +26,25 @@
 
 /* end stub */
 
+#include "packet/ntext.h"
 #include <boost/python.hpp>
 
-#include "engine.h"
-#include "shareableobject.h"
+using namespace boost::python;
+using regina::NText;
 
-void addAlgebra();
-void addFile();
-void addPacket();
-void addUtilities();
+void (NText::*setText_string)(const std::string&) = &NText::setText;
+void (NText::*setText_chars)(const char*) = &NText::setText;
 
-using regina::ShareableObject;
-
-BOOST_PYTHON_MODULE(regina) {
-    // Core engine routines:
-
-    boost::python::def("getVersionString", regina::getVersionString);
-    boost::python::def("getVersionMajor", regina::getVersionMajor);
-    boost::python::def("getVersionMinor", regina::getVersionMinor);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("toString", &ShareableObject::toString)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
+void addNText() {
+    scope s = class_<NText, bases<regina::NPacket> >("NText")
+        .def(init<const std::string&>())
+        .def(init<const char*>())
+        .def("getText", &NText::getText,
+            return_value_policy<return_by_value>())
+        .def("setText", setText_string)
+        .def("setText", setText_chars)
     ;
 
-    // Components from subdirectories:
-
-    addAlgebra();
-    addFile();
-    addPacket();
-    addUtilities();
+    s.attr("packetType") = NText::packetType;
 }
 
