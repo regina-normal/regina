@@ -17,6 +17,7 @@ Version 2.3.1  [ (in progress) ]
     - Text consoles have readline/editline support.
     - More keyboard accelerators.
     - Added SnapPea census and knot/link census to examples.
+    - Added directory of prepackaged Jython libraries.
     - Option REGINA_OPTIONS_GLOBAL is guessed more intelligently.
     - Much enhanced documentation.
     
