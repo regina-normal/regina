@@ -91,31 +91,33 @@ int NGluingPerms::cmpPermsWithPreImage(const NFacePairing* pairing,
 
 void NGluingPerms::findAllPerms(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, bool orientableOnly,
-        int whichPurge, UseGluingPerms use, void* useArgs) {
+        bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
     NGluingPerms perms(pairing);
-    perms.findAllPermsInternal(pairing, autos, orientableOnly, whichPurge,
-        use, useArgs);
-}
 
-void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
-        const NFacePairingIsoList* autos, bool orientableOnly,
-        int whichPurge, UseGluingPerms use, void* useArgs) {
-    unsigned nTetrahedra = getNumberOfTetrahedra();
-
-    // See if we can guarantee no solutions without even searching for
-    // permutations.
-    if (nTetrahedra > 2 && orientableOnly &&
-            (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
-            (whichPurge & NCensus::PURGE_NON_PRIME) &&
-            pairing->isClosed()) {
-        if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain()
-                || pairing->hasOneEndedChainWithDoubleHandle()) {
-            use(0, useArgs);
+    // Call an optimised internal generation routine if possible.
+    if (pairing->getNumberOfTetrahedra() >= 3) {
+        if (orientableOnly && finiteOnly && pairing->isClosed() &&
+                (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
+                (whichPurge & NCensus::PURGE_NON_PRIME)) {
+            // Closed orientable prime minimal triangulations with >= 3
+            // tetrahedra.
+            perms.findAllPermsClosedOrPrimeMin(pairing, autos, use, useArgs);
             return;
         }
     }
 
+    perms.findAllPermsInternal(pairing, autos, orientableOnly, finiteOnly,
+        whichPurge, use, useArgs);
+}
+
+void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
+        const NFacePairingIsoList* autos, bool orientableOnly,
+        bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
+    unsigned nTetrahedra = getNumberOfTetrahedra();
+
     // Initialise the internal arrays.
+    //
+    // In this generation algorithm, each orientation is simply +/-1.
     std::fill(orientation, orientation + nTetrahedra, 0);
     std::fill(permIndices, permIndices + nTetrahedra * 4, -1);
 
@@ -154,7 +156,7 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
         // We are sitting on a new permutation to try.
 
         // Is this going to lead to an unwanted triangulation?
-        if (mayPurge(face, whichPurge, orientableOnly))
+        if (mayPurge(face, whichPurge, orientableOnly, finiteOnly))
             continue;
 
         // Fix the orientation if appropriate.
@@ -221,14 +223,14 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
 }
 
 bool NGluingPerms::mayPurge(const NTetFace& face, int whichPurge,
-        bool orientableOnly) {
+        bool orientableOnly, bool finiteOnly) {
     if (! whichPurge)
         return false;
 
     // Are we allowed to purge on edges of degree 1/2?
     bool mayPurgeDeg12 = (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
         (whichPurge & NCensus::PURGE_NON_PRIME) && orientableOnly &&
-        (getNumberOfTetrahedra() > 2);
+        finiteOnly && (getNumberOfTetrahedra() > 2);
 
     // Are we allowed to purge on edges of degree 3?
     bool mayPurgeDeg3 = (whichPurge & NCensus::PURGE_NON_MINIMAL);

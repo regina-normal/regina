@@ -87,7 +87,11 @@ class NGluingPerms {
             /**< The face pairing complemented by this permutation set. */
         int* orientation;
             /**< The orientation of each tetrahedron.  Orientation is
-                 +/-1, or 0 if unknown. */
+                 positive/negative, or 0 if unknown.
+                 Note that in some algorithms the orientation is simply
+                 +/-1, and in some algorithms the orientation counts
+                 forwards or backwards from 0 according to how many
+                 times the orientation has been set or verified. */
         int* permIndices;
             /**< The index into array \a allPermsS3 describing how each
                  tetrahedron face is glued to its partner.  Note that this
@@ -188,12 +192,17 @@ class NGluingPerms {
          *
          * Parameter \a whichPurge may be used to avoid constructing
          * permutation sets that correspond to triangulations satisfying
-         * the given constraints (such as non-minimality).  This can
-         * significantly speed up the permutation set generation.
-         * Note that not all such permutation sets will be avoided,
-         * but it is guaranteed that every permutation set whose
-         * corresonding triangulation does \e not satisfy the given
-         * constraints will be generated.
+         * the given constraints (such as non-minimality).  The use of
+         * this parameter, combined with parameters \a orientableOnly
+         * and \a finiteOnly, can significantly speed up the permutation
+         * set generation.  For some combinations of these parameters
+         * entirely different algorithms are used.
+         *
+         * Note that not all permutation sets described by parameter
+         * \a whichPurge will be avoided.  It is guaranteed however that
+         * every permutation set whose corresonding triangulation does \e not
+         * satisfy the constraints described by \a whichPurge will be
+         * generated.
          *
          * \pre The given face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
@@ -218,6 +227,9 @@ class NGluingPerms {
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
+         * @param finiteOnly \c true if only gluing permutations
+         * corresponding to finite triangulations should be
+         * generated, or \c false if no such restriction should be imposed.
          * @param whichPurge specifies which permutation sets we may
          * avoid constructing (see the function notes above for details).
          * This should be a bitwise OR of purge constants from class NCensus,
@@ -237,7 +249,8 @@ class NGluingPerms {
          */
         static void findAllPerms(const NFacePairing* newPairing,
             const NFacePairingIsoList* autos, bool orientableOnly,
-            int whichPurge, UseGluingPerms use, void* useArgs = 0);
+            bool finiteOnly, int whichPurge, UseGluingPerms use,
+            void* useArgs = 0);
 
     private:
         /**
@@ -335,7 +348,8 @@ class NGluingPerms {
          *
          * This routine in fact performs the same processing as
          * findAllPerms() but is non-static.  Routine findAllPerms() does
-         * nothing but call this routine upon a newly created (and
+         * nothing but call this routine (or one of its replacements
+         * such as findAllPermsClosedOrPrimeMin()) upon a newly created (and
          * uninitialised) gluing permutation set.
          *
          * All parameters are as described for findAllPerms().
@@ -344,7 +358,25 @@ class NGluingPerms {
          */
         void findAllPermsInternal(const NFacePairing* newPairing,
             const NFacePairingIsoList* autos, bool orientableOnly,
-            int whichPurge, UseGluingPerms use, void* useArgs = 0);
+            bool finiteOnly, int whichPurge, UseGluingPerms use,
+            void* useArgs = 0);
+
+        /**
+         * Internal to findAllPerms().
+         *
+         * This routine is a replacement for findAllPermsInternal()
+         * in the case in which only closed orientable prime minimal
+         * triangulations are required and the given face pairing
+         * has order at least three.  An entirely different (and
+         * significantly optimised) algorithm is used.
+         *
+         * All parameters are as described for findAllPerms().
+         *
+         * \pre As described for findAllPerms().
+         */
+        void findAllPermsClosedOrPrimeMin(const NFacePairing* newPairing,
+            const NFacePairingIsoList* autos, UseGluingPerms use,
+            void* useArgs = 0);
 
         /**
          * Determines whether the permutations under construction are
@@ -377,12 +409,15 @@ class NGluingPerms {
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations are being
          * constructed, or \c false otherwise.
+         * @param finiteOnly \c true if only gluing permutations
+         * corresponding to finite triangulations are being
+         * constructed, or \c false otherwise.
          * @return \c true if the permutations under construction will only
          * lead to triangulations that may be purged, or \c false if the
          * results are inconclusive.
          */
         bool mayPurge(const NTetFace& face, int whichPurge,
-                bool orientableOnly);
+                bool orientableOnly, bool finiteOnly);
 };
 
 /*@}*/

@@ -20,18 +20,23 @@ Version 3.2  [ (under development) ]
         Class NFacePair:
             - New class for working with pairs of face numbers.
         Class NFacePairing:
+            - Added convenience operator [].
             - Added hasTripleEdge(), hasBrokenDoubleEndedChain(),
               hasOneEndedChainWithDoubleHandle() and associated routines.
         Class NGluingPerms:
             - Uses new NFacePairing routines to identify certain
               situations in which no solutions are possible.
+            - Uses a completely redesigned algorithm in the closed
+              orientable prime minimal case.
         Class NNormalSurface:
-            - Added knownCanCrush().
+            - Added routine knownCanCrush().
         Class NPerm:
             - Using unsigned chars for permutation codes.
         Class NPrismSpec:
             - New class for dealing with triangular prisms defined by
               slicing along normal quads in a tetrahedron.
+        Class NTetFace:
+            - Added routine setFirst().
         Class NTriangulation:
             - Interface-only skeletal query routines are now also
               implemented in the C++ calculation engine.

@@ -93,8 +93,8 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
     NCensus census(parent, finiteness, orientability, whichPurge,
         sieve, sieveArgs, 0);
     NGluingPerms::findAllPerms(pairing, &autos,
-        ! census.orientability.hasFalse(), census.whichPurge,
-        NCensus::foundGluingPerms, &census);
+        ! census.orientability.hasFalse(), ! census.finiteness.hasFalse(),
+        census.whichPurge, NCensus::foundGluingPerms, &census);
 
     // Clean up.
     std::for_each(autos.begin(), autos.end(), FuncDelete<NIsomorphismDirect>());
@@ -120,8 +120,9 @@ void NCensus::foundFacePairing(const NFacePairing* pairing,
 
         // Select the individual gluing permutations.
         NGluingPerms::findAllPerms(pairing, autos,
-            ! realCensus->orientability.hasFalse(), realCensus->whichPurge,
-            NCensus::foundGluingPerms, census);
+            ! realCensus->orientability.hasFalse(),
+            ! realCensus->finiteness.hasFalse(),
+            realCensus->whichPurge, NCensus::foundGluingPerms, census);
     } else {
         // Census generation has finished.
         if (realCensus->progress) {
