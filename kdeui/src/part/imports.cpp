@@ -26,59 +26,51 @@
 
 /* end stub */
 
-#include "packet/ncontainer.h"
-#include "packet/nscript.h"
-#include "packet/ntext.h"
+#include "packet/npacket.h"
 
-#include "newpacketdialog.h"
-#include "packetcreator.h"
 #include "packettreeview.h"
 #include "reginapart.h"
+#include "foreign/importdialog.h"
+#include "foreign/snappea.h"
+#include "../reginafilter.h"
 
+#include <kfiledialog.h>
 #include <klocale.h>
 
-void ReginaPart::newAngleStructures() {
+void ReginaPart::importDehydration() {
     unimplemented();
 }
 
-void ReginaPart::newContainer() {
-    newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
-        i18n("New Container"), i18n("Container"));
-}
-
-void ReginaPart::newFilter() {
+void ReginaPart::importPython() {
     unimplemented();
 }
 
-void ReginaPart::newNormalSurfaces() {
+void ReginaPart::importRegina() {
     unimplemented();
 }
 
-void ReginaPart::newScript() {
-    newPacket(new BasicPacketCreator<regina::NScript>(), 0,
-        i18n("New Script"), i18n("Script"));
+void ReginaPart::importSnapPea() {
+    importFile(new SnapPeaImporter(), 0, i18n(FILTER_SNAPPEA),
+        i18n("Import SnapPea Triangulation"));
 }
 
-void ReginaPart::newText() {
-    newPacket(new BasicPacketCreator<regina::NText>(), 0,
-        i18n("New Text Packet"), i18n("Text"));
-}
-
-void ReginaPart::newTriangulation() {
-    unimplemented();
-}
-
-void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
-        const QString& dialogTitle, const QString& suggestedLabel) {
-    NewPacketDialog dlg(widget(), creator, packetTree,
-        treeView->selectedPacket(), parentFilter, dialogTitle, suggestedLabel);
-    if (dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* newPacket = dlg.createdPacket();
-        if (newPacket) {
-            QListViewItem* item = treeView->find(newPacket);
-            if (item)
-                treeView->ensureItemVisible(item);
-            packetView(newPacket);
+void ReginaPart::importFile(PacketImporter* importer,
+        PacketFilter* parentFilter, const QString& fileFilter,
+        const QString& dialogTitle) {
+    QString file = KFileDialog::getOpenFileName(QString::null,
+        fileFilter, widget(), dialogTitle);
+    if (! file.isEmpty()) {
+        regina::NPacket* newTree = importer->import(file, widget());
+        if (newTree) {
+            ImportDialog dlg(widget(), newTree, packetTree,
+                treeView->selectedPacket(), parentFilter, dialogTitle);
+            if (dlg.exec() == QDialog::Accepted) {
+                QListViewItem* item = treeView->find(newTree);
+                if (item)
+                    treeView->ensureItemVisible(item);
+                packetView(newTree);
+            } else
+                delete newTree;
         }
     }
 }

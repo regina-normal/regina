@@ -43,6 +43,8 @@ namespace regina {
 class KAboutData;
 class KInstance;
 class PacketCreator;
+class PacketFilter;
+class PacketImporter;
 class PacketPane;
 class PacketTreeView;
 class QLabel;
@@ -229,6 +231,14 @@ class ReginaPart : public KParts::ReadWritePart {
         void newTriangulation();
 
         /**
+         * Packet import routines.
+         */
+        void importDehydration();
+        void importPython();
+        void importRegina();
+        void importSnapPea();
+
+        /**
          * Float the currently docked pane.
          */
         void floatDockedPane();
@@ -297,8 +307,10 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Generic packet creation.
          */
-        void newPacket(PacketCreator* creator, const QString& dialogTitle,
-            const QString& suggestedLabel);
+        void newPacket(PacketCreator* creator, PacketFilter* parentFilter,
+            const QString& dialogTitle, const QString& suggestedLabel);
+        void importFile(PacketImporter* importer, PacketFilter* parentFilter,
+            const QString& fileFilter, const QString& dialogTitle);
 };
 
 #endif

@@ -26,60 +26,68 @@
 
 /* end stub */
 
-#include "packet/ncontainer.h"
-#include "packet/nscript.h"
-#include "packet/ntext.h"
+/*! \file importdialog.h
+ *  \brief Provides a dialog through which the user can insert
+ *  already-imported data into the packet tree.
+ */
 
-#include "newpacketdialog.h"
-#include "packetcreator.h"
-#include "packettreeview.h"
-#include "reginapart.h"
+#ifndef __IMPORTDIALOG_H
+#define __IMPORTDIALOG_H
 
-#include <klocale.h>
+#include <kdialogbase.h>
 
-void ReginaPart::newAngleStructures() {
-    unimplemented();
-}
+class PacketChooser;
+class PacketFilter;
+class QLineEdit;
 
-void ReginaPart::newContainer() {
-    newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
-        i18n("New Container"), i18n("Container"));
-}
+namespace regina {
+    class NPacket;
+};
 
-void ReginaPart::newFilter() {
-    unimplemented();
-}
+/**
+ * A dialog used to inserted previously imported data into the packet tree.
+ *
+ * If OK is pressed, the imported data will be inserted into the packet
+ * tree.  If the dialog is cancelled however, no further action will be
+ * taken (and in particular the imported data will need to be destroyed
+ * elsewhere).
+ */
+class ImportDialog : public KDialogBase {
+    Q_OBJECT
 
-void ReginaPart::newNormalSurfaces() {
-    unimplemented();
-}
+    private:
+        /**
+         * Internal components:
+         */
+        PacketChooser* chooser;
+        QLineEdit* label;
 
-void ReginaPart::newScript() {
-    newPacket(new BasicPacketCreator<regina::NScript>(), 0,
-        i18n("New Script"), i18n("Script"));
-}
+        /**
+         * Packet tree structure:
+         */
+        regina::NPacket* tree;
+        regina::NPacket* newTree;
 
-void ReginaPart::newText() {
-    newPacket(new BasicPacketCreator<regina::NText>(), 0,
-        i18n("New Text Packet"), i18n("Text"));
-}
+    public:
+        /**
+         * Dialog constructor.
+         *
+         * The filter passed is used to restrict the possible parents of
+         * the imported data.  It may be 0, in which case any parent will
+         * be allowed.
+         *
+         * This dialog and its components will claim ownership of the
+         * given packet filter.
+         */
+        ImportDialog(QWidget* parent, regina::NPacket* importedData,
+            regina::NPacket* packetTree, regina::NPacket* defaultParent,
+            PacketFilter* useFilter, const QString& dialogTitle);
 
-void ReginaPart::newTriangulation() {
-    unimplemented();
-}
+    protected slots:
+        /**
+         * KDialogBase overrides.
+         */
+        virtual void slotOk();
+};
 
-void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
-        const QString& dialogTitle, const QString& suggestedLabel) {
-    NewPacketDialog dlg(widget(), creator, packetTree,
-        treeView->selectedPacket(), parentFilter, dialogTitle, suggestedLabel);
-    if (dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* newPacket = dlg.createdPacket();
-        if (newPacket) {
-            QListViewItem* item = treeView->find(newPacket);
-            if (item)
-                treeView->ensureItemVisible(item);
-            packetView(newPacket);
-        }
-    }
-}
-
+#endif

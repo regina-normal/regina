@@ -6,7 +6,7 @@
 ##  to produce Makefile.in.
 ##
 
-SUBDIRS = packettypes
+SUBDIRS = foreign packettypes
 
 INCLUDES = $(all_includes)
 
@@ -26,10 +26,12 @@ kde_module_LTLIBRARIES = libreginapart.la
 
 libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) \
+	foreign/libforeign.la \
 	packettypes/libpackettypes.la
 libreginapart_la_SOURCES = \
 	actionspart.cpp \
 	flatbutton.cpp \
+	imports.cpp \
 	newpacketdialog.cpp \
 	newpackets.cpp \
 	packetchooser.cpp \

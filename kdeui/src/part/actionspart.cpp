@@ -171,22 +171,23 @@ void ReginaPart::setupActions() {
 
     // Imports and exports:
     act = new KAction(i18n("&Regina Data File"), "regina", 0,
-        this, SLOT(unimplemented()), actionCollection(), "import_regina");
+        this, SLOT(importRegina()), actionCollection(), "import_regina");
     act->setToolTip(i18n("Import a Regina data file"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("&SnapPea Triangulation"), "snappea", 0,
-        this, SLOT(unimplemented()), actionCollection(), "import_snappea");
+        this, SLOT(importSnapPea()), actionCollection(), "import_snappea");
     act->setToolTip(i18n("Import a SnapPea triangulation"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("&Dehydrated Triangulation List"), "dehydrated", 0,
-        this, SLOT(unimplemented()), actionCollection(), "import_dehydrated");
+        this, SLOT(importDehydration()), actionCollection(),
+        "import_dehydrated");
     act->setToolTip(i18n("Import a dehydrated triangulation list"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("&Python Script"), "packet_script", 0,
-        this, SLOT(unimplemented()), actionCollection(), "import_python");
+        this, SLOT(importPython()), actionCollection(), "import_python");
     act->setToolTip(i18n("Import a Python script"));
     treeGeneralEditActions.append(act);
 

@@ -26,60 +26,25 @@
 
 /* end stub */
 
-#include "packet/ncontainer.h"
-#include "packet/nscript.h"
-#include "packet/ntext.h"
+/*! \file snappea.h
+ *  \brief Allows interaction with SnapPea data files.
+ */
 
-#include "newpacketdialog.h"
-#include "packetcreator.h"
-#include "packettreeview.h"
-#include "reginapart.h"
+#ifndef __SNAPPEA_H
+#define __SNAPPEA_H
 
-#include <klocale.h>
+#include "packetimporter.h"
 
-void ReginaPart::newAngleStructures() {
-    unimplemented();
-}
+/**
+ * An object responsible for importing data from a SnapPea file.
+ */
+class SnapPeaImporter : public PacketImporter {
+    public:
+        /**
+         * PacketImporter overrides:
+         */
+        virtual regina::NPacket* import(const QString& fileName,
+            QWidget* parentWidget);
+};
 
-void ReginaPart::newContainer() {
-    newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
-        i18n("New Container"), i18n("Container"));
-}
-
-void ReginaPart::newFilter() {
-    unimplemented();
-}
-
-void ReginaPart::newNormalSurfaces() {
-    unimplemented();
-}
-
-void ReginaPart::newScript() {
-    newPacket(new BasicPacketCreator<regina::NScript>(), 0,
-        i18n("New Script"), i18n("Script"));
-}
-
-void ReginaPart::newText() {
-    newPacket(new BasicPacketCreator<regina::NText>(), 0,
-        i18n("New Text Packet"), i18n("Text"));
-}
-
-void ReginaPart::newTriangulation() {
-    unimplemented();
-}
-
-void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
-        const QString& dialogTitle, const QString& suggestedLabel) {
-    NewPacketDialog dlg(widget(), creator, packetTree,
-        treeView->selectedPacket(), parentFilter, dialogTitle, suggestedLabel);
-    if (dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* newPacket = dlg.createdPacket();
-        if (newPacket) {
-            QListViewItem* item = treeView->find(newPacket);
-            if (item)
-                treeView->ensureItemVisible(item);
-            packetView(newPacket);
-        }
-    }
-}
-
+#endif
