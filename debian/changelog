@@ -2,7 +2,16 @@ regina-normal (3.1.1-1) unstable; urgency=low
 
   * Current development snapshot.
 
- -- Ben Burton <bab@debian.org>  Mon, 18 Nov 2002 14:15:59 +1100
+ -- Ben Burton <bab@debian.org>  Tue,  4 Feb 2003 15:04:50 +1100
+
+regina-normal (3.1-2) unstable; urgency=low
+
+  * Now builds under j2sdk1.4.
+  * Reflect the fact that gcc 3.2 is now the default compiler.
+  * New maintainer email address.
+  * Bumped standards-version to 3.5.8.
+
+ -- Ben Burton <bab@debian.org>  Tue,  4 Feb 2003 15:04:50 +1100
 
 regina-normal (3.1-1) unstable; urgency=low
 

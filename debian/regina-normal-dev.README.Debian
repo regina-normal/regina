@@ -2,11 +2,11 @@ Regina Development Files for Debian
 -----------------------------------
 
 The Regina calculation engine is provided in the C++ shared library
-/usr/lib/libregina-engine.so.  This library has been built under g++-3.2.
+/usr/lib/libregina-engine.so.
 
 The corresponding headers can be found in /usr/include/regina-normal/.
 
 Thorough documentation for the calculation engine can be found in
 package regina-normal-doc.
 
- -- Ben Burton <bab@debian.org>, Mon, 14 Oct 2002 11:58:46 +1000
+ -- Ben Burton <bab@debian.org>, Tue,  4 Feb 2003 15:04:50 +1100

@@ -24,8 +24,7 @@ configure-stamp:
 	dh_testdir
 	./configure --prefix=/usr --mandir=/usr/share/man \
 	  PKGNAME=regina-normal \
-	  CC=gcc-3.2 CXX=g++-3.2 \
-	  JAVAC=/usr/lib/j2se/1.3/bin/javac
+	  JAVAC=/usr/lib/j2se/1.4/bin/javac
 	touch configure-stamp
 
 build: configure-stamp build-stamp
