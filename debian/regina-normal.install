@@ -1,6 +1,6 @@
 usr/bin
-usr/lib/libregina-engine-4.0.1.so
-usr/lib/libregina-kdecommon-4.0.1.so
+usr/lib/libregina-engine-4.1.so
+usr/lib/libregina-kdecommon-4.1.so
 usr/lib/libregina-kdecommon.la
 usr/lib/kde3/libreginapart.so
 usr/lib/kde3/libreginapart.la
