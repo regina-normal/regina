@@ -173,8 +173,8 @@ AC_DEFUN(REGINA_LIB_JAVA, [
     AC_MSG_RESULT([no])
     AC_MSG_CHECKING([for $1 jar])
     found_jar=no
-    for libdir in ./lib /usr/share/java /usr/share/java/jar /usr/local/java /usr/local/java/jar /usr/local/share/java /usr/local/share/java/jar; do
-      for jar in "$libdir/$1.jar" "$libdir/lib$1.jar" "$libdir/lib$1-java.jar"; do
+    for _libdir in ./lib /usr/share/java /usr/share/java/jar /usr/local/java /usr/local/java/jar /usr/local/share/java /usr/local/share/java/jar; do
+      for jar in "$_libdir/$1.jar" "$_libdir/lib$1.jar" "$_libdir/lib$1-java.jar"; do
         if test -e "$jar"; then
           REGINA_CLASSPATH_SAVE
           export CLASSPATH="$jar:$CLASSPATH"
@@ -545,20 +545,25 @@ dnl                  Macros borrowed from external sources
 dnl
 dnl    -----------------------------------------------------------------
 dnl
-dnl    All macros below are licensed under the GNU General Public License.
+dnl    All macros below are licensed under the GNU General Public License
+dnl    unless otherwise specified.
+dnl
+dnl    They have been renamed (with a prepended REGEXT_) to avoid conflicts.
 dnl
 dnl    Macros included:
 dnl
-dnl        ACX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
+dnl        REGEXT_ACX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
+dnl        REGEXT_AM_PATH_CPPUNIT(MINIMUM-VERSION, [ACTION-IF-FOUND [,
+dnl            ACTION-IF-NOT-FOUND]]])
 dnl
 
-dnl ---------------
+dnl ----------------------
 dnl
-dnl   ACX_PTHREAD
+dnl   REGEXT_ACX_PTHREAD
 dnl
-dnl ---------------
+dnl ----------------------
 
-dnl @synopsis ACX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
+dnl @synopsis REGEXT_ACX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 dnl
 dnl This macro figures out how to build C programs using POSIX
 dnl threads.  It sets the PTHREAD_LIBS output variable to the threads
@@ -597,7 +602,7 @@ dnl
 dnl @version $Id$
 dnl @author Steven G. Johnson <stevenj@alum.mit.edu> and Alejandro Forero Cuervo <bachue@bachue.com>
 
-AC_DEFUN([ACX_PTHREAD], [
+AC_DEFUN([REGEXT_ACX_PTHREAD], [
 AC_REQUIRE([AC_CANONICAL_HOST])
 acx_pthread_ok=no
 
@@ -781,5 +786,96 @@ else
         $2
 fi
 
-])dnl ACX_PTHREAD
+])dnl REGEXT_ACX_PTHREAD
+
+dnl --------------------------
+dnl
+dnl   REGEXT_AM_PATH_CPPUNIT
+dnl
+dnl --------------------------
+
+dnl
+dnl REGEXT_AM_PATH_CPPUNIT([MINIMUM-VERSION, [ACTION-IF-FOUND [,
+dnl     ACTION-IF-NOT-FOUND]]])
+dnl
+dnl Taken from the CppUnit project at http://cppunit.sourceforge.net/.
+dnl
+dnl Licensed under the GNU Lesser General Public License.
+dnl
+AC_DEFUN(REGEXT_AM_PATH_CPPUNIT,
+[
+
+AC_ARG_WITH(cppunit-prefix,[  --with-cppunit-prefix=PFX   Prefix where CppUnit is installed (optional)],
+            cppunit_config_prefix="$withval", cppunit_config_prefix="")
+AC_ARG_WITH(cppunit-exec-prefix,[  --with-cppunit-exec-prefix=PFX  Exec prefix where CppUnit is installed (optional)],
+            cppunit_config_exec_prefix="$withval", cppunit_config_exec_prefix="")
+
+  if test x$cppunit_config_exec_prefix != x ; then
+     cppunit_config_args="$cppunit_config_args --exec-prefix=$cppunit_config_exec_prefix"
+     if test x${CPPUNIT_CONFIG+set} != xset ; then
+        CPPUNIT_CONFIG=$cppunit_config_exec_prefix/bin/cppunit-config
+     fi
+  fi
+  if test x$cppunit_config_prefix != x ; then
+     cppunit_config_args="$cppunit_config_args --prefix=$cppunit_config_prefix"
+     if test x${CPPUNIT_CONFIG+set} != xset ; then
+        CPPUNIT_CONFIG=$cppunit_config_prefix/bin/cppunit-config
+     fi
+  fi
+
+  AC_PATH_PROG(CPPUNIT_CONFIG, cppunit-config, no)
+  cppunit_version_min=$1
+
+  AC_MSG_CHECKING(for Cppunit - version >= $cppunit_version_min)
+  no_cppunit=""
+  if test "$CPPUNIT_CONFIG" = "no" ; then
+    no_cppunit=yes
+  else
+    CPPUNIT_CFLAGS=`$CPPUNIT_CONFIG --cflags`
+    CPPUNIT_LIBS=`$CPPUNIT_CONFIG --libs`
+    cppunit_version=`$CPPUNIT_CONFIG --version`
+
+    cppunit_major_version=`echo $cppunit_version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+    cppunit_minor_version=`echo $cppunit_version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+    cppunit_micro_version=`echo $cppunit_version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+    cppunit_major_min=`echo $cppunit_version_min | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+    cppunit_minor_min=`echo $cppunit_version_min | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+    cppunit_micro_min=`echo $cppunit_version_min | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+    cppunit_version_proper=`expr \
+        $cppunit_major_version \> $cppunit_major_min \| \
+        $cppunit_major_version \= $cppunit_major_min \& \
+        $cppunit_minor_version \> $cppunit_minor_min \| \
+        $cppunit_major_version \= $cppunit_major_min \& \
+        $cppunit_minor_version \= $cppunit_minor_min \& \
+        $cppunit_micro_version \>= $cppunit_micro_min `
+
+    if test "$cppunit_version_proper" = "1" ; then
+      AC_MSG_RESULT([$cppunit_major_version.$cppunit_minor_version.$cppunit_micro_version])
+    else
+      AC_MSG_RESULT(no)
+      no_cppunit=yes
+    fi
+  fi
+
+  if test "x$no_cppunit" = x ; then
+     ifelse([$2], , :, [$2])     
+  else
+     CPPUNIT_CFLAGS=""
+     CPPUNIT_LIBS=""
+     ifelse([$3], , :, [$3])
+  fi
+
+  AC_SUBST(CPPUNIT_CFLAGS)
+  AC_SUBST(CPPUNIT_LIBS)
+])
+
+
 
