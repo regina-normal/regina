@@ -62,7 +62,8 @@
  <!ENTITY reginatrouble SYSTEM "reginatrouble.sgml">
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
  <!ENTITY reginalicense SYSTEM "license.sgml">
- <!ENTITY reginachangelog SYSTEM "../CHANGES.txt">
+ <!ENTITY reginachangeshighlights SYSTEM "../HIGHLIGHTS.txt">
+ <!ENTITY reginachangesdetails SYSTEM "../CHANGES.txt">
 
  <!ENTITY sessiontriangulation SYSTEM "../examples/triangulation.session">
  <!ENTITY sessiontree SYSTEM "../examples/tree.session">
@@ -482,9 +483,21 @@
  <appendix id="history">
   <title>Version History</title>
 
-  <programlisting>
-   &reginachangelog;
-  </programlisting>
+  <sect1 id="history-highlights">
+   <title>General Highlights</title>
+
+   <programlisting>
+    &reginachangeshighlights;
+   </programlisting>
+  </sect1>
+
+  <sect1 id="history-details">
+   <title>Specific Details</title>
+
+   <programlisting>
+    &reginachangesdetails;
+   </programlisting>
+  </sect1>
  </appendix>
 
 </book>
