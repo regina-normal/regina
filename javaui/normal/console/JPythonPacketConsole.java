@@ -45,14 +45,29 @@ public class JPythonPacketConsole extends JPythonConsole {
     private NPacket tree;
 
     /**
-     * Create a new Jython console linked to the given packet tree.
+     * A preselected packet within the corresponding packet tree for
+     * which a variable will be provided for direct access.
+     */
+    private NPacket selected;
+
+    /**
+     * Creates a new Jython console linked to the given packet tree.
+     * Variable <i>root</i> will be provided for accessing the root of
+     * this packet tree.  Variable <i>selected</i> may be optionally provided
+     * for accessing some other preselected packet within this tree.
      *
      * @param shell the shell representing the entire program.
-     * @param tree the packet tree to which the new console will be linked.
+     * @param tree the matriarch of the packet tree to which the new
+     * console will be linked.  This may not be <tt>null</tt>.
+     * @param selected an optional packet within the given packet tree
+     * for which an additional variable will be provided for direct access.
+     * This may be <tt>null</tt>, in which case no such additional variable
+     * will be provided.
      */
-    public JPythonPacketConsole(Shell shell, NPacket tree) {
+    public JPythonPacketConsole(Shell shell, NPacket tree, NPacket selected) {
         super(shell);
         this.tree = tree;
+        this.selected = selected;
     }
 
     protected void preProcess() {
@@ -66,6 +81,13 @@ public class JPythonPacketConsole extends JPythonConsole {
         interpreter.set("root", tree);
         writer.println(
             "The root of the packet tree is in the variable [root].");
+
+        if (selected != null) {
+            interpreter.set("selected", selected);
+            writer.println(
+                "Selected packet \"" + selected.getPacketLabel() +
+                "\" is in the variable [selected].");
+        }
 
         interpreter.set("packetDict", tree.makeTreeDict());
         writer.println(

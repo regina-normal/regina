@@ -18,6 +18,8 @@ Version 3.0.1  [ 12 October, 2002 ]
     - Offers more common names for recognised Seifert fibred spaces.
     - Supports multiple vertex enumeration engines (though no new
       engines are yet added).
+    - Jython consoles start with variable [selected] set to the currently
+      selected packet.
     - Fixed ideal-to-finite bug that was introduced in Regina 3.0.
     - New calculation engine test suite (currently quite small).
     - New autoconf/automake/libtool build system.

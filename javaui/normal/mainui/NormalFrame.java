@@ -1396,7 +1396,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             if (top != null)
                 console = new JPythonConsoleFrame(shell, top.getRootPacket(),
                     false, new JPythonPacketConsole(shell,
-                    top.getRootPacket()));
+                    top.getRootPacket(), top.getSelectedPacket()));
         }
 
         if (console == null)

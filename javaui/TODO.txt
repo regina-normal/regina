@@ -16,7 +16,6 @@ Jython:
     Syntax highlighting for script editor.
     Autoindent in script editor.
     Compile and run open libraries.
-    Provide a special jython variable for the currently viewed packet.
 
 Main Window:
     Implement undo.
