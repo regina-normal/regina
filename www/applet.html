@@ -43,7 +43,7 @@ and download the Java plug-in for your browser.
 
 <SCRIPT LANGUAGE="JavaScript"><!--
     if (_ie == true) document.writeln('<OBJECT classid="clsid:CAFEEFAC-0013-0001-0000-ABCDEFFEDCBA" WIDTH = 200 HEIGHT = 50 VSPACE = 10 ALT = "Regina Applet"  codebase="http://java.sun.com/products/plugin/1.3.1/jinstall-131-win32.cab#Version=1,3,1,0"><NOEMBED><XMP>');
-    else if (_ns == true && _ns6 == false) document.writeln('<EMBED type="application/x-java-applet;jpi-version=1.3.1"  CODE = "normal/Application.class" ARCHIVE = "jar/regina.jar, jar/regina-corba.jar, jar/btools.jar" ALT = "Regina Applet" WIDTH = 200 HEIGHT = 50 VSPACE = 10 ORBInitialHost = "emerald.debian.net" ORBInitialPort = 8088  scriptable=false pluginspage="http://java.sun.com/products/plugin/1.3.1/plugin-install.html"><NOEMBED><XMP>');
+    else if (_ns == true && _ns6 == false) document.writeln('<EMBED type="application/x-java-applet;jpi-version=1.3.1"  CODE = "normal/Application.class" ARCHIVE = "jar/regina.jar, jar/regina-corba.jar, jar/btools.jar" ALT = "Regina Applet" WIDTH = 200 HEIGHT = 50 VSPACE = 10 ORBInitialHost = "localhost" ORBInitialPort = 8088  scriptable=false pluginspage="http://java.sun.com/products/plugin/1.3.1/plugin-install.html"><NOEMBED><XMP>');
 //--></SCRIPT>
 <APPLET  CODE = "normal/Application.class" ARCHIVE = "jar/regina.jar, jar/regina-corba.jar, jar/btools.jar" WIDTH = 200 HEIGHT = 50 VSPACE = 10 ALT = "Regina Applet"></XMP>
 <PARAM NAME = CODE VALUE = "normal/Application.class" >
@@ -51,7 +51,7 @@ and download the Java plug-in for your browser.
 
 <PARAM NAME="type" VALUE="application/x-java-applet;jpi-version=1.3.1">
 <PARAM NAME="scriptable" VALUE="false">
-<PARAM NAME = "ORBInitialHost" VALUE ="emerald.debian.net">
+<PARAM NAME = "ORBInitialHost" VALUE ="localhost">
 <PARAM NAME = "ORBInitialPort" VALUE =8088>
 
 Your web browser will not run Java applets.  Ensure that Java is
@@ -65,7 +65,7 @@ Your web browser will not run Java applets.  Ensure that Java is
 
 <!--
 <APPLET CODE = "normal/Application.class" ARCHIVE = "jar/regina.jar, jar/regina-corba.jar, jar/btools.jar" WIDTH = 200 HEIGHT = 50 VSPACE = 10 ALT = "Regina Applet">
-<PARAM NAME = "ORBInitialHost" VALUE ="emerald.debian.net">
+<PARAM NAME = "ORBInitialHost" VALUE ="localhost">
 <PARAM NAME = "ORBInitialPort" VALUE =8088>
 Your web browser will not run Java applets.  Ensure that Java is
 	enabled in the browser preferences.  If this does not help, try
