@@ -86,11 +86,6 @@ bool NTriangulation::intelligentSimplify() {
             // Perform a random 4-4 move on the clone.
             fourFourChoice = fourFourAvailable[
                 ((unsigned)rand()) % fourFourAvailable.size()];
-            // TODO: remove debug output
-            std::cerr << "attempt " << fourFourAttempts << " of "
-                << fourFourCap << '\n';
-            std::cerr << "try: " << use->getEdges().index(fourFourChoice.first)
-                << " / " << fourFourChoice.second << "\n";
             use->fourFourMove(fourFourChoice.first, fourFourChoice.second,
                 false, true);
 
