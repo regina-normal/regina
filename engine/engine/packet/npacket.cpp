@@ -37,14 +37,18 @@
 namespace regina {
 
 NPacket::~NPacket() {
+    // Orphan this packet before doing anything else.
+    // The destructor can lead to callbacks for packet listeners, which
+    // might in turn involve tree traversal.  It can't be good for
+    // anyone to start querying packets whose destructors are already
+    // being carried out.
+    if (treeParent)
+        makeOrphan();
+
     // Destroy all descendants.
     // Note that the NPacket destructor now orphans the packet as well.
     while(firstTreeChild)
         delete firstTreeChild;
-
-    // Orphan this packet if necessary.
-    if (treeParent)
-        makeOrphan();
 
     // Fire a packet event and unregister all listeners.
     if (listeners.get()) {
