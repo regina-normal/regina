@@ -12,6 +12,8 @@ Version 4.0  [ currently under development ]
         Class NAngleStructureList:
             - Enumeration routine now takes an optional progress manager
               and can run in a separate thread.
+        Class NGroupPresentation:
+            - Improved simplification of group presentations.
         Class NNormalSurface:
             - Using NProperty to store calculable properties.
             - Using NTriBool instead of 1/-1/0 for orientability,

@@ -31,6 +31,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
+#include "utilities/boostutils.h"
 #include "utilities/hashmap.h"
 #include "utilities/hashutils.h"
 #include "utilities/stlutils.h"
@@ -262,8 +263,7 @@ bool NGroupPresentation::intelligentSimplify() {
     // At this point all relations are simplified and none are empty.
     // Throughout the remainder of this routine we will attempt to
     // preserve this state of affairs.
-    TmpRelIterator it;
-    TmpRelIterator it2;
+    TmpRelIterator it, it2, it3;
     TermIterator tit;
 
     // Make a table of generators that have been removed.
@@ -279,9 +279,14 @@ bool NGroupPresentation::intelligentSimplify() {
     stdhash::hash_map<unsigned long, long> exponents;
     stdhash::hash_map<unsigned long, long>::iterator expIt;
     NGroupExpression* expansion;
+    unsigned long gen1, gen2;
+    long exp1a, exp1b, exp2a, exp2b, expSubst;
+
     bool doMoreSubsts = true;
     while (doMoreSubsts) {
         doMoreSubsts = false;
+
+        // Look for generator substitution.
         it = tmpRels.begin();
         while (it != tmpRels.end()) {
             // Can we pull a single variable out of this relation?
@@ -350,6 +355,85 @@ bool NGroupPresentation::intelligentSimplify() {
             removed = true;
             doMoreSubsts = true;
         }
+
+        // Look for pairs of two-generator relations that imply gi == gj.
+        // As soon as we find such a pair we perform the substitution
+        // and break from the loop.
+        for (it = tmpRels.begin();
+                it != tmpRels.end() && (! doMoreSubsts); it++) {
+            if ((*it)->getNumberOfTerms() != 2)
+                continue;
+            gen1 = (*it)->getGenerator(0);
+            gen2 = (*it)->getGenerator(1);
+            if (gen1 == gen2)
+                continue;
+            exp1a = (*it)->getExponent(0);
+            exp2a = (*it)->getExponent(1);
+
+            for (it2 = regina::boost::next(it); it2 != tmpRels.end(); it2++) {
+                if ((*it2)->getNumberOfTerms() != 2)
+                    continue;
+                if (gen1 == (*it2)->getGenerator(0) &&
+                        gen2 == (*it2)->getGenerator(1)) {
+                    exp1b = (*it2)->getExponent(0);
+                    exp2b = (*it2)->getExponent(1);
+                } else if (gen1 == (*it2)->getGenerator(1) &&
+                        gen2 == (*it2)->getGenerator(0)) {
+                    exp1b = (*it2)->getExponent(1);
+                    exp2b = (*it2)->getExponent(0);
+                } else
+                    continue;
+
+                // We have two relations of the form
+                // (x^a y^b == 1), (x^c y^d == 1).
+                if ((exp1b == -exp1a + 1 && exp2b == -exp2a - 1) ||
+                        (exp1b == -exp1a - 1 && exp2b == -exp2a + 1) ||
+                        (exp1b == exp1a - 1 && exp2b == exp2a + 1) ||
+                        (exp1b == exp1a + 1 && exp2b == exp2a - 1)) {
+                    // We may conclude that x == y.
+                    expSubst = 1;
+                } else if ((exp1b == -exp1a + 1 && exp2b == -exp2a + 1) ||
+                        (exp1b == -exp1a - 1 && exp2b == -exp2a - 1) ||
+                        (exp1b == exp1a + 1 && exp2b == exp2a + 1) ||
+                        (exp1b == exp1a - 1 && exp2b == exp2a - 1)) {
+                    // We may conclude that x == y^-1.
+                    expSubst = -1;
+                } else
+                    continue;
+
+                // We can now replace gen2 with gen1^expSubst.
+                NGroupExpression expansion;
+                expansion.addTermLast(gen1, expSubst);
+
+                // Do the substitution.
+                it3 = tmpRels.begin();
+                while (it3 != tmpRels.end())
+                    if (it3 != it2) {
+                        (*it3)->substitute(gen2, expansion, true);
+                        if ((*it3)->getNumberOfTerms() == 0) {
+                            delete *it3;
+                            it3 = tmpRels.erase(it3);
+                        } else
+                            it3++;
+                    } else
+                        it3++;
+
+                // Note that we are removing a generator.
+                genMap[gen2] = -1;
+                nGenerators--;
+
+                // Remove the now useless relation, tidy up and break
+                // from the loops.
+                delete *it2;
+                tmpRels.erase(it2);
+                changed = true;
+                removed = true;
+                doMoreSubsts = true;
+                break;
+            }
+        }
+
+        // TODO: Look for duplicate relations.
     }
 
     // Renumber the generators if necessary so we go from 0 to
