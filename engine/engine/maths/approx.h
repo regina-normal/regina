@@ -50,10 +50,10 @@ namespace regina {
 extern const double epsilon;
 
 /**
- * Determines whether the given real or complex number is zero.
+ * Determines whether the given real number is zero.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
- * \pre R must be of a floating point real or complex type.
+ * \pre R must be of a floating point real type.
  *
  * \ifacespython Not present.
  *
@@ -66,10 +66,10 @@ inline bool isZero(R x) {
 }
 
 /**
- * Determines whether the given real or complex number is non-zero.
+ * Determines whether the given real number is non-zero.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
- * \pre R must be of a floating point real or complex type.
+ * \pre R must be of a floating point real type.
  *
  * \ifacespython Not present.
  *
@@ -82,10 +82,10 @@ inline bool isNonZero(R x) {
 }
 
 /**
- * Determines whether the given real or complex number is strictly positive.
+ * Determines whether the given real number is strictly positive.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
- * \pre R must be of a floating point real or complex type.
+ * \pre R must be of a floating point real type.
  *
  * \ifacespython Not present.
  *
@@ -98,10 +98,10 @@ inline bool isPositive(R x) {
 }
 
 /**
- * Determines whether the given real or complex number is strictly negative.
+ * Determines whether the given real number is strictly negative.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
- * \pre R must be of a floating point real or complex type.
+ * \pre R must be of a floating point real type.
  *
  * \ifacespython Not present.
  *
@@ -114,10 +114,10 @@ inline bool isNegative(R x) {
 }
 
 /**
- * Determines whether the given real or complex number is non-negative.
+ * Determines whether the given real number is non-negative.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
- * \pre R must be of a floating point real or complex type.
+ * \pre R must be of a floating point real type.
  *
  * \ifacespython Not present.
  *
@@ -130,10 +130,10 @@ inline bool isNonNegative(R x) {
 }
 
 /**
- * Determines whether the given real or complex number is non-positive.
+ * Determines whether the given real number is non-positive.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
- * \pre R must be of a floating point real or complex type.
+ * \pre R must be of a floating point real type.
  *
  * \ifacespython Not present.
  *
