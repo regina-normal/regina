@@ -121,6 +121,14 @@ class NPerm {
         NPerm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1);
 
         /**
+         * Creates a permutation that is a clone of the given
+         * permutation.
+         *
+         * @param cloneMe the permutation to clone.
+         */
+        NPerm(const NPerm& cloneMe);
+
+        /**
          * Returns the internal code representing this permutation.
          * Note that the internal code is sufficient to reproduce the
          * entire permutation.
@@ -155,6 +163,16 @@ class NPerm {
          * @param d the desired image of 3.
          */
         void setPerm(int a, int b, int c, int d);
+
+        /**
+         * Sets this permutation to be equal to the given permutation.
+         *
+         * \ifaces Not present.
+         *
+         * @param cloneMe the permutation whose value will be assigned
+         * to this permutation.
+         */
+        void operator = (const NPerm& cloneMe);
 
         /**
          * Returns the composition of this permutation with the given
@@ -417,12 +435,10 @@ NString edgeDescription(const NPerm& edgePerm);
 
 // Inline functions for NPerm
 
-inline NPerm::NPerm() {
-    code = 228;
+inline NPerm::NPerm() : code(228) {
 }
 
-inline NPerm::NPerm(char newCode) {
-    code = newCode;
+inline NPerm::NPerm(char newCode) : code(newCode) {
 }
 
 inline NPerm::NPerm(int a, int b) {
@@ -444,12 +460,19 @@ inline NPerm::NPerm(int a0, int a1, int b0, int b1,
         (d1 << (2*d0)));
 }
 
+inline NPerm::NPerm(const NPerm& cloneMe) : code(cloneMe.code) {
+}
+
 inline void NPerm::setPerm(int a, int b, int c, int d) {
     code = (char) ( (d << 6) + (c << 4) + (b << 2) + a);
 }
 
 inline void NPerm::setPermCode(char newCode) {
     code = newCode;
+}
+
+inline void NPerm::operator = (const NPerm& cloneMe) {
+    code = cloneMe.code;
 }
 
 inline NPerm NPerm::operator *(const NPerm& q) const {

@@ -12,7 +12,7 @@ Regina - A Normal Surface Theory Calculator
                 NTriSolidTorus:
             - New classes.
         Class NPerm:
-            - Added operator !=.
+            - Added operators = and != and constructor NPerm(const NPerm&).
         Class NTriangulation:
             - Added fourFourMove().
     JAVA USER INTERFACE:

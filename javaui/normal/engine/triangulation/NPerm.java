@@ -61,7 +61,6 @@ public class NPerm {
     public NPerm() {
         for (int i=0; i<4; i++)
             mapping[i] = i;
-            
     }
     public NPerm(char newCode) {
         setPermCode(newCode);
@@ -83,6 +82,10 @@ public class NPerm {
         mapping[b0] = b1;
         mapping[c0] = c1;
         mapping[d0] = d1;
+    }
+    public NPerm(NPerm cloneMe) {
+        for (int i=0; i<4; i++)
+            mapping[i] = cloneMe.mapping[i];
     }
         
     public NPerm composeWith(NPerm q) {
