@@ -24,6 +24,7 @@ noinst_HEADERS = \
 	nsurfacefilterprop.h \
 	ntextui.h \
 	ntrialgebra.h \
+	ntriangulationcreator.h \
 	ntriangulationui.h \
 	ntricomposition.h \
 	ntrigluings.h \
@@ -45,6 +46,7 @@ libpackettypes_la_SOURCES = \
 	nsurfacefilterprop.cpp \
 	ntextui.cpp \
 	ntrialgebra.cpp \
+	ntriangulationcreator.cpp \
 	ntriangulationui.cpp \
 	ntricomposition.cpp \
 	ntrigluings.cpp \

@@ -38,6 +38,7 @@
 #include "reginapart.h"
 #include "packettypes/nanglestructurecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
+#include "packettypes/ntriangulationcreator.h"
 
 #include <klocale.h>
 
@@ -76,7 +77,8 @@ void ReginaPart::newText() {
 }
 
 void ReginaPart::newTriangulation() {
-    unimplemented();
+    newPacket(new NTriangulationCreator(), 0,
+        i18n("New Triangulation"), i18n("Triangulation"));
 }
 
 void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
