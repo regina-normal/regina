@@ -54,14 +54,13 @@ export DOC_JAR := bin/regina-docs.jar
 # EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
 #                  for the calculation engine, such as gmp and pthread.
 
-#export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
-#	-I/usr/lib/j2sdk1.3/include/linux
-export JNI_INCLUDES := -I/usr/include/kaffe
+export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
+	-I/usr/lib/j2sdk1.3/include/linux
 export CORBA_INCLUDES := -D__x86__
 export EXTRA_INCLUDES :=
 
 export CORBA_LIBRARIES := -lomniORB3 -lomniGK_stub
-# export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
+#export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
 export EXTRA_LIBRARIES := -lgmp -lpthread
 
 # Specify here any platform-dependent macros that need to be defined.
@@ -99,11 +98,11 @@ export CLASSPATH_SEP := :
 #       compiler needs to know where the core Java classes are, this is
 #       the place to tell them.
 
-export BTOOLS := /usr/share/java/libbtools-java.jar
-export JYTHON := /usr/share/java/jython.jar
-#export EXTRA_CLASSES :=
+export BTOOLS := lib/btools.jar
+export JYTHON := lib/jython.jar
+export EXTRA_CLASSES :=
 	# (Most Java compilers already know where their base classes are.)
-export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
+#export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
 	# (The jikes compiler needs to be given someone else's base classes
 	#  to work with.)
 
@@ -139,13 +138,11 @@ export LINKEXEC := c++ -O2
 export LINKLIB := c++ -O2 -shared
 export LINKSTATIC := ar cru
 export DOXYGEN := doxygen
-#export JAVAC := javac -target 1.1
-export JAVAC := jikes
+export JAVAC := javac -target 1.1
+#export JAVAC := jikes
 export JAR := jar
-#export JAR := fastjar
 export JDB := jdb -Xmx64m -Djava.compiler=NONE
 export JAVAH := javah -jni
-#export JAVAH := /usr/lib/kaffe/bin/kaffeh -jni
 export JAVADOC := javadoc -J-Xmx64m
 export IDLTOCPP := omniidl -bcxx -Wbh=IDL.h -Wbs=SK.cpp
 export IDLTOJAVA := idlj

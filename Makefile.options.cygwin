@@ -60,7 +60,7 @@ export CORBA_INCLUDES := -D__x86__
 export EXTRA_INCLUDES :=
 
 export CORBA_LIBRARIES := -lomniORB3 -lomniGK_stub
-# export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
+#export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
 export EXTRA_LIBRARIES := -lgmp -lstdc++
 
 # Specify here any platform-dependent macros that need to be defined.
@@ -101,7 +101,7 @@ export CLASSPATH_SEP := ;
 export BTOOLS := c:\cygwin\usr\local\java\jar\btools.jar
 export JYTHON := c:\cygwin\usr\local\java\jar\jython.jar
 export EXTRA_CLASSES :=
-  # (Most Java compilers already know where their base classes are.)
+	# (Most Java compilers already know where their base classes are.)
 
 # Specify here the commands with options for running various tools.
 #
@@ -138,7 +138,7 @@ export DOXYGEN := doxygen
 export JAVAC := javac -target 1.1
 export JAR := jar
 export JDB := jdb -Xmx64m -Djava.compiler=NONE
-export JAVAH := javah
+export JAVAH := javah -jni
 export JAVADOC := javadoc -J-Xmx64m
 export IDLTOCPP := omniidl -bcxx -Wbh=IDL.h -Wbs=SK.cpp
 export IDLTOJAVA := idlj
