@@ -194,7 +194,7 @@ void NSurfaceCoordinateUI::refreshLocal() {
     table->setSorting(-1);
     table->setSelectionMode(QListView::Single);
     table->setDefaultRenameAction(QListView::Accept);
-    QWhatsThis::add(table, tableWhatsThis);
+    QWhatsThis::add(table.get(), tableWhatsThis);
     uiLayout->addWidget(table.get(), 1);
 
     // Add table columns.

@@ -103,6 +103,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     KAction* act = new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S,
         this, SLOT(saveLog()), actionCollection(), "console_save");
+    act->setToolTip(i18n("Save session history"));
     act->setWhatsThis(i18n("Save the entire history of this Python session "
         "into a text file."));
     act->plug(menuConsole);
@@ -111,6 +112,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = new KAction(i18n("&Close"), "fileclose", CTRL+Key_D, this,
         SLOT(close()), actionCollection(), "console_close");
+    act->setToolTip(i18n("Close Python console"));
     act->plug(menuConsole);
 
     KAction* actCopy = KStdAction::copy(session, SLOT(copy()),
@@ -125,12 +127,14 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = new KAction(i18n("&Scripting Overview"), "contents", Key_F1, this,
         SLOT(scriptingOverview()), actionCollection(), "help_scripting");
+    act->setToolTip(i18n("Read Python scripting overview"));
     act->setWhatsThis(i18n("Open the <i>Python Scripting</i> section of the "
         "users' reference manual."));
     act->plug(menuHelp);
 
     act = new KAction(i18n("&Python Reference"), "python_console", 0, this,
         SLOT(pythonReference()), actionCollection(), "help_engine");
+    act->setToolTip(i18n("Read detailed Python scripting reference"));
     act->setWhatsThis(i18n("Open the detailed reference of classes, methods "
         "and routines that Regina makes available to Python scripts."));
     act->plug(menuHelp);

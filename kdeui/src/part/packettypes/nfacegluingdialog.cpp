@@ -37,6 +37,7 @@
 #include <qlayout.h>
 #include <qregexp.h>
 #include <qvalidator.h>
+#include <qtooltip.h>
 #include <qwhatsthis.h>
 
 namespace {
@@ -102,13 +103,13 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
     perm->setMaxLength(3);
     QWhatsThis::add(perm, i18n("Specify precisely how this tetrahedron face "
         "is to be identified with a face of the adjacent tetrahedron.<p>"
-        "The face of the adjacent tetrahedron should be specified by "
-        "its three vertices (each between 0 and 3 inclusive).  These vertices "
-        "will be matched with the three vertices of this tetrahedron face "
-        "(listed immediately above).<p>"
-        "Note that only the three vertices of the adjacent tetrahedron "
+        "The face of the adjacent tetrahedron should be described in this box "
+        "by its three vertices (each between 0 and 3 inclusive).  These "
+        "vertices will be matched with the three vertices of the current "
+        "tetrahedron face (listed immediately above).<p>"
+        "Note that just the three vertices of the adjacent tetrahedron "
         "should be entered into this text area (i.e., not the adjacent "
-        "tetrahedron number, which may be specified in the drop-down list "
+        "tetrahedron number, which should be specified in the drop-down list "
         "to the left).</qt>"));
     layout->addWidget(perm, 2, 2);
 
@@ -158,6 +159,7 @@ NFaceGluingButton::NFaceGluingButton(unsigned long useNTets,
         tableItem(useTableItem), nTets(useNTets), myTet(useMyTet),
         myFace(useMyFace), adjTet(initAdjTet), adjFace(initAdjFace) {
     setFlat(true);
+    QToolTip::add(this, i18n("Press to edit the gluing for this face"));
 
     if (initAdjTet >= 0)
         setText(QString("%1 (%2)").arg(initAdjTet).arg(initAdjFace));

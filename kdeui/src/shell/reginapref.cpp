@@ -49,6 +49,7 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qvalidator.h>
+#include <qtooltip.h>
 #include <qwhatsthis.h>
 
 /**
@@ -472,6 +473,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
         i18n("Add..."), vBox);
     // btnAdd->setFlat(true);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
+    QToolTip::add(btnAdd, i18n("Add a new census file"));
     QWhatsThis::add(btnAdd, i18n("Add a new census file.  "
         "This list contains the census files that are searched when asked "
         "to locate an arbitrary triangulation in all available censuses."));
@@ -480,6 +482,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
         i18n("Remove"), vBox);
     // btnRemove->setFlat(true);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
+    QToolTip::add(btnRemove, i18n("Remove selected census file(s)"));
     QWhatsThis::add(btnRemove, i18n("Remove the selected census file(s).  "
         "This list contains the census files that are searched when asked "
         "to locate an arbitrary triangulation in all available censuses."));
@@ -488,6 +491,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
         i18n("Activate"), vBox);
     // btnActivate->setFlat(true);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
+    QToolTip::add(btnActivate, i18n("Activate selected census file(s)"));
     QWhatsThis::add(btnActivate, i18n("Activate the selected census "
         "file(s).  When asked to locate an arbitrary triangulation in all "
         "available censuses, only the activated census files in this list "
@@ -497,6 +501,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
         i18n("Deactivate"), vBox);
     // btnDeactivate->setFlat(true);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
+    QToolTip::add(btnDeactivate, i18n("Deactivate selected census file(s)"));
     QWhatsThis::add(btnDeactivate, i18n("Deactivate the selected census "
         "file(s).  When asked to locate an arbitrary triangulation in all "
         "available censuses, only the activated census files in this list "
@@ -507,6 +512,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
     QPushButton* btnDefaults = new QPushButton(i18n("Defaults"), vBox);
     // btnDefaults->setFlat(true);
     connect(btnDefaults, SIGNAL(clicked()), this, SLOT(restoreDefaults()));
+    QToolTip::add(btnDefaults, i18n("Restore default list of census files"));
     QWhatsThis::add(btnDefaults, i18n("Restore the default list of "
         "census files."));
 
@@ -695,6 +701,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
         i18n("Add..."), vBox);
     // btnAdd->setFlat(true);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
+    QToolTip::add(btnAdd, i18n("Add a new Python library"));
     QWhatsThis::add(btnAdd, i18n("Add a new Python library.  "
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
@@ -703,6 +710,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
         i18n("Remove"), vBox);
     // btnRemove->setFlat(true);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
+    QToolTip::add(btnRemove, i18n("Remove selected Python libraries"));
     QWhatsThis::add(btnRemove, i18n("Remove the selected Python libraries.  "
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
@@ -711,6 +719,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
         i18n("Activate"), vBox);
     // btnActivate->setFlat(true);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
+    QToolTip::add(btnActivate, i18n("Activate selected Python libraries"));
     QWhatsThis::add(btnActivate, i18n("Activate the selected Python "
         "libraries.  When a new Python session is started, only the active "
         "libraries in this list will be loaded."));
@@ -719,6 +728,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
         i18n("Deactivate"), vBox);
     // btnDeactivate->setFlat(true);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
+    QToolTip::add(btnDeactivate, i18n("Deactivate selected Python libraries"));
     QWhatsThis::add(btnDeactivate, i18n("Deactivate the selected Python "
         "libraries.  When a new Python session is started, only the active "
         "libraries in this list will be loaded."));

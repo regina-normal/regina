@@ -161,7 +161,8 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         "until they are committed."));
     actRefresh = new KAction(i18n("&Refresh"), "reload", 0 /* shortcut */,
         this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
-    actRefresh->setToolTip(i18n("Discard any changes and refresh this viewer"));
+    actRefresh->setToolTip(i18n("Discard any changes and refresh this "
+        "packet viewer"));
     actRefresh->setWhatsThis(i18n("Refresh this viewer to show the most "
         "recent state of the packet.  Any changes you mave made inside this "
         "viewer that have not been committed will be discarded."));

@@ -59,6 +59,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qtooltip.h>
 #include <qwhatsthis.h>
 
 using regina::NPacket;
@@ -110,6 +111,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
 
     isoView = new QPushButton(SmallIconSet("viewmag"), i18n("Details..."), ui);
     // isoView->setFlat(true);
+    QToolTip::add(isoView, i18n("View details of isomorphism"));
     QWhatsThis::add(isoView, i18n("View the details of the isomorphism "
         "(if any) between this and the selected triangulation.  The precise "
         "mapping between tetrahedra and tetrahedron vertices will be "

@@ -87,10 +87,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "each tetrahedron are numbered 0, 1, 2 and 3.  Each row of the table "
         "represents a single tetrahedron, and shows the identifications "
         "for each of its four faces.<p>"
-        "As an example, a gluing of <i>5 (031)</i> for face 012 of "
-        "tetrahedron 7 shows that this face is identified with face 031 of "
-        "tetrahedron 5, in such a way that vertices 0, 1 and 2 of tetrahedron "
-        "5 are mapped to vertices 0, 3 and 1 respectively of tetrahedron 7.<p>"
+        "As an example, if we are looking at the table cell for face 012 of "
+        "tetrahedron 7, a gluing of <i>5 (031)</i> shows that "
+        "that this face is identified with face 031 of tetrahedron 5, in "
+        "such a way that vertices 0, 1 and 2 of tetrahedron "
+        "7 are mapped to vertices 0, 3 and 1 respectively of tetrahedron 5.<p>"
         "To change these identifications, simply type your own gluings into "
         "the table.</qt>"));
 

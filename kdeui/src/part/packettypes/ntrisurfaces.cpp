@@ -38,6 +38,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qtooltip.h>
 #include <qwhatsthis.h>
 
 #define THREE_SPHERE_AUTO_CALC_ADJUSTMENT 2
@@ -100,6 +101,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     btnZeroEff = new QPushButton(SmallIconSet("run", 0,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
+    QToolTip::add(btnZeroEff, i18n("Calculate 0-efficiency"));
     QWhatsThis::add(btnZeroEff, i18n("<qt>Calculate whether this "
         "triangulation is 0-efficient.<p>"
         "<b>Warning:</b> This calculation can be quite slow for larger "
@@ -110,6 +112,8 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     btnSplitting = new QPushButton(SmallIconSet("run", 0,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
+    QToolTip::add(btnSplitting, i18n("Calculate existence of a splitting "
+        "surface"));
     QWhatsThis::add(btnSplitting, i18n("<qt>Calculate whether this "
         "triangulation contains a splitting surface.<p>"
         "<b>Warning:</b> This calculation can be quite slow for larger "
@@ -120,6 +124,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     btnThreeSphere = new QPushButton(SmallIconSet("run", 0,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
+    QToolTip::add(btnThreeSphere, i18n("Calculate whether this is a 3-sphere"));
     QWhatsThis::add(btnThreeSphere, i18n("<qt>Calculate whether this "
         "is a triangulation of a 3-sphere.<p>"
         "<b>Warning:</b> This calculation is occasionally quite slow for "

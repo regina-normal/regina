@@ -173,6 +173,7 @@ QString SkeletonWindow::overview(SkeletalObject type) {
     switch (type) {
         case Vertices: return i18n("<qt>Displays details of each "
             "vertex of this triangulation.<p>"
+            "The different vertices are numbered from 0 upwards.  "
             "Each row describes properties of the vertex as well as "
             "listing precisely which vertices of which tetrahedra it "
             "corresponds to.<p>"
@@ -180,6 +181,7 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "column of the table means.</qt>");
         case Edges: return i18n("<qt>Displays details of each edge of "
             "this triangulation.<p>"
+            "The different edges are numbered from 0 upwards.  "
             "Each row describes properties of the edge as well as "
             "listing precisely which vertices of which tetrahedra it "
             "corresponds to.<p>"
@@ -194,6 +196,13 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "See the reference manual for further details on what each "
             "column of the table means.</qt>");
         case Components: return i18n("<qt>Displays details of each "
+            "connected component of this triangulation.<p>"
+            "The different components are numbered from 0 upwards.  "
+            "Each row describes properties of the component as well as "
+            "listing precisely which tetrahedra the component contains.<p>"
+            "See the reference manual for further details on what each "
+            "column of the table means.</qt>");
+        case BoundaryComponents: return i18n("<qt>Displays details of each "
             "boundary component of this triangulation.  A boundary "
             "component may be a collection of adjacent boundary faces, "
             "or it may be a single ideal vertex, whose link is closed but "
@@ -203,13 +212,6 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "well as which tetrahedron faces (for a real boundary component) "
             "or which tetrahedron vertex (for an ideal boundary component) "
             "it is formed from.<p>"
-            "See the reference manual for further details on what each "
-            "column of the table means.</qt>");
-        case BoundaryComponents: return i18n("<qt>Displays details of each "
-            "connected component of this triangulation.<p>"
-            "The different components are numbered from 0 upwards.  "
-            "Each row describes properties of the component as well as "
-            "listing precisely which tetrahedra the component contains.<p>"
             "See the reference manual for further details on what each "
             "column of the table means.</qt>");
     }
