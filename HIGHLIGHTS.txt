@@ -1,0 +1,44 @@
+
+Regina - A Normal Surface Theory Calculator
+
+    This file describes general highlights of the changes between
+    releases.
+
+    For specific details of these changes as well as changes to the API
+    for both the calculation engine and the Java user interface, see
+    CHANGES.txt in the same directory as this file.
+
+Version 2.3.1  [ (in progress) ]
+
+    - Exports SnapPea files.
+    - Filenames may be specified on the command-line.
+    - Text consoles have readline/editline support.
+    - More keyboard accelerators.
+    - Added SnapPea census to examples.
+    - Option REGINA_OPTIONS_GLOBAL is guessed more intelligently.
+    
+Version 2.3  [ 12 December, 2001 ] - The "Farewell Stillwater" release.
+
+    - Recognises more families of subcomplexes in a triangulation
+      (layered chain, layered loop, lens space, Seifert fibred space,
+      triangular / spiralled / augmented triangular solid torus).
+    - Recognises specific face types in a triangulation.
+    - Crushes normal surfaces to a point.
+    - More triangulation properties (0-efficient, has splitting surface).
+    - More normal surface properties (connectedness, vertex link,
+      splitting surface, 2-sided).
+    - 4-4 moves can be performed on a triangulation.
+    - Imports and exports Regina files and scripts.
+    - Jython scripting behaves more naturally.
+    - Loading/saving files works even through a remote CORBA engine.
+    - Builds calculation engine as a shared library to link into other
+      programs.
+    - Various bug fixes.
+
+Version 2.2  [ 7 October, 2001 ]
+
+    (See CHANGES.txt for details beyond this point.)
+
+Ben Burton (benb@acm.org)
+http://regina.sourceforge.net/
+

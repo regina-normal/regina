@@ -1,8 +1,17 @@
 
 Regina - A Normal Surface Theory Calculator
 
+    This file contains specific details of most changes, including
+    changes to the API for both the calculation engine and the Java
+    user interface.
+
+    For general highlights of the changes between releases, see
+    HIGHLIGHTS.txt in the same directory as this file.
+
+Version 2.3.1  [ (in progress) ]
     OVERALL:
         - Added SnapPea census to examples.
+        - Added functionality changelog (HIGHLIGHTS.txt).
     ENGINE:
         Overall structure:
             - Moved engine/imports to engine/foreign.
@@ -14,6 +23,8 @@ Regina - A Normal Surface Theory Calculator
         Overall structure:
             - Added readline/editline support using Bablok's wrapper classes.
             - Converted option REGINA_JNIDIR to a list of directories.
+            - Option REGINA_OPTIONS_GLOBAL defaults to REGINA_HOME if
+              /etc/regina does not exist.
         normal.ApplicationShell.CommandLineArguments:
             - Added.
         normal.Shell:
