@@ -34,7 +34,6 @@ Packets (General):
     Find out how to centre column headers in list views
     When creating new packets, display a polite error if no parents are
         available (this goes for imports also)
-    (4.0) Wrapping on by default in text packets would be nice.
 
 Python:
     (4.0) Implement embedded python scripting
