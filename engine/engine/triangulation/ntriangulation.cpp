@@ -58,6 +58,10 @@ void NTriangulation::clearAllProperties() {
     H1Rel.clear();
     H1Bdry.clear();
     H2.clear();
+    zeroEfficient.clear();
+    splittingSurface.clear();
+    twoSphereBoundaryComponents.clear();
+    negativeIdealBoundaryComponents.clear();
 }
 
 void NTriangulation::writeTextLong(std::ostream& out) const {
