@@ -12,6 +12,20 @@ REGINA_VERSION = 2.3
 
 # ------------------------------ Platform-specific ----------------------
 
+# Determine which platform we're running on.
+
+ifeq ($(OSTYPE),)
+	ifeq ($(wildcard /usr/bin/cygpath.exe),/usr/bin/cygpath.exe)
+		export OSTYPE = cygwin
+	endif
+endif
+
+ifeq ($(HOSTTYPE),)
+	ifeq ($(wildcard /usr/bin/cygpath.exe),/usr/bin/cygpath.exe)
+		export HOSTTYPE = i686
+	endif
+endif
+
 # What should be bundled into a binary release?
 
 ifeq ($(OSTYPE),cygwin)

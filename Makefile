@@ -8,6 +8,14 @@
 
 -include Makefile.options
 
+# Platform-specific flags:
+
+ifeq ($(OSTYPE),)
+	ifeq ($(wildcard /usr/bin/cygpath.exe),/usr/bin/cygpath.exe)
+		export OSTYPE = cygwin
+	endif
+endif
+
 # Global variables:
 
 include Makefile.sources

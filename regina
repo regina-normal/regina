@@ -12,6 +12,14 @@ for i; do
 	fi
 done
 
+# --- Determine which platform we're running on. ---
+
+if [ -z "$OSTYPE" ]; then
+	if [ -e /usr/bin/cygpath.exe ]; then
+		export OSTYPE=cygwin
+	fi
+fi
+
 # --- Read runtime options. ---
 
 . "`dirname "$0"`/scripts/regscript_opt"
