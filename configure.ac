@@ -37,7 +37,7 @@ AM_CONFIG_HEADER(config.h)
 
 ###########################################################
 #
-# Check for programs.
+# Check for C/C++ tools.
 #
 ###########################################################
 
@@ -52,46 +52,57 @@ AC_PROG_MAKE_SET
 # Sets the default language to C++ for subsequent tests.
 AC_LANG(C++)
 
-AC_ARG_VAR(DOXYGEN, [Doxygen command for C++ source documentation])
-AC_CHECK_PROGS(DOXYGEN, doxygen, none)
-if test "$DOXYGEN" = "none"; then
-  DO_NOT_COMPILE="$DO_NOT_COMPILE DOCSENGINE"
-  AC_SUBST(DOXYGEN, "\$(top_srcdir)/missing doxygen")
-fi
+###########################################################
+#
+# Check for Java tools.
+#
+###########################################################
+
+REGINA_PROG_JAVA([JAVAUI DOCSJAVAUI], [the Java user interface])
+
+REGINA_PROG_OPTIONAL([fastjar jar], JAR,
+  [Jar command for creating Java JAR archives], [JAVAUI DOCSJAVAUI],
+  [the Java user interface])
+
+###########################################################
+#
+# Check for documentation tools.
+#
+###########################################################
+
+REGINA_PROG_OPTIONAL(doxygen, DOXYGEN,
+  [Doxygen command for C++ source documentation], DOCSENGINE,
+  [calculation engine documentation])
 
 AC_ARG_VAR(DOT, [Dot command for drawing directed graphs])
 AC_CHECK_PROGS(DOT, dot, none)
 if test "$DOT" = "none"; then
   AC_SUBST(HAVE_DOT, NO)
   AC_SUBST(DOT, "\$(top_srcdir)/missing dot")
+  REGINA_WARN_MISSING(dot, [graphs in the engine documentation])
 else
   AC_SUBST(HAVE_DOT, YES)
 fi
 
-AC_ARG_VAR(DOCBOOK2MAN, [Command for converting SGML to man pages])
-AC_CHECK_PROGS(DOCBOOK2MAN, docbook2man, none)
-if test "$DOCBOOK2MAN" = "none"; then
-  DO_NOT_COMPILE="$DO_NOT_COMPILE DOCSMAN"
-  AC_SUBST(DOCBOOK2MAN, "\$(top_srcdir)/missing docbook2man")
-fi
+REGINA_PROG_OPTIONAL(docbook2man, DOCBOOK2MAN,
+  [Command for converting SGML to man pages], DOCSMAN,
+  [the man pages])
 
-AC_ARG_VAR(JADE, [Jade command for converting SGML to HTML])
-AC_CHECK_PROGS(JADE, jade, none)
-if test "$JADE" = "none"; then
-  DO_NOT_COMPILE="$DO_NOT_COMPILE DOCSHTML DOCSPDF DOCSRTF"
-  AC_SUBST(JADE, "\$(top_srcdir)/missing jade")
-fi
+REGINA_PROG_OPTIONAL(jade, JADE,
+  [Jade command for converting SGML to HTML], [DOCSHTML DOCSPDF DOCSRTF],
+  [the reference manual])
 
-AC_ARG_VAR(PDFJADETEX, [JadeTeX command for converting TeX to PDF])
-AC_CHECK_PROGS(PDFJADETEX, pdfjadetex, none)
-if test "$PDFJADETEX" = "none"; then
-  DO_NOT_COMPILE="$DO_NOT_COMPILE DOCSPDF"
-  AC_SUBST(PDFJADETEX, "\$(top_srcdir)/missing pdfjadetex")
-fi
+REGINA_PROG_OPTIONAL(pdfjadetex, PDFJADETEX,
+  [JadeTeX command for converting TeX to PDF], DOCSPDF,
+  [the PDF reference manual])
+
+REGINA_PROG_OPTIONAL(javadoc, JAVADOC,
+  [JavaDoc command for Java source documentation], DOCSJAVAUI,
+  [Java UI class documentation])
 
 ###########################################################
 #
-# Check for mandatory libraries.
+# Check for mandatory headers and libraries.
 #
 ###########################################################
 
@@ -115,7 +126,7 @@ AC_LANG_POP(C)
 
 ###########################################################
 #
-# Check for optional libraries.
+# Check for optional headers and libraries.
 #
 ###########################################################
 
@@ -125,8 +136,10 @@ REGINA_LIB_OPTIONAL(popt, poptGetContext, UTILS_LIBS, UTILS,
 
 AM_PATH_CPPUNIT([1.8.0], , [
   REGINA_WARN_MISSING([Library cppunit], [the test suite])
-  DO_NOT_COMPILE="$DO_NOT_COMPILE TESTSUITE"
+  REGINA_DO_NOT_COMPILE(TESTSUITE)
 ])
+
+REGINA_HEADER_JNI(ENGINEJNI, [the JNI calculation engine module])
 
 ###########################################################
 #
@@ -185,9 +198,6 @@ REGINA_VAR_IOS_NOCREATE
 #
 ###########################################################
 
-# Unsupported targets:
-DO_NOT_COMPILE="$DO_NOT_COMPILE DOCSJAVAUI ENGINEJNI JAVAUI"
-
 REGINA_SHOULD_BUILD(ENGINE, engine, [the calculation engine library])
 REGINA_SHOULD_BUILD(ENGINEJNI, jni, [the JNI calculation engine module])
 REGINA_SHOULD_BUILD(JAVAUI, javaui, [the Java user interface])
@@ -209,6 +219,10 @@ AC_CONFIG_FILES([Makefile
                  docs/Makefile
                  docs/engine/Makefile
                  docs/javaui/Makefile
+                 docs/images/Makefile
+                 docs/images/admon/Makefile
+                 docs/images/packet/Makefile
+                 docs/images/shots/Makefile
                  engine/Makefile
                  engine/doc-files/Makefile
                  engine/engine/Makefile
