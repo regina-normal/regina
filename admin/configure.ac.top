@@ -144,6 +144,8 @@ REGINA_PROG_OPTIONAL(javadoc, JAVADOC,
 REGINA_HEADER_REQUIRED(zlib.h, [the calculation engine])
 REGINA_LIB_REQUIRED(z, zlibVersion, [the calculation engine])
 
+REGINA_LIB_REQUIRED(m, log10, [the calculation engine])
+
 REGINA_HEADER_REQUIRED(gmp.h, [the calculation engine])
 REGINA_LIB_REQUIRED(gmp, __gmpz_init, [the calculation engine])
 
