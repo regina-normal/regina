@@ -117,6 +117,7 @@ bool runAllTests() {
 
     // Triangulation:
     addNTriangulation(runner);
+    addConnectedSumDecomp(runner);
 
     // Surfaces:
     addNNormalSurfaceList(runner);

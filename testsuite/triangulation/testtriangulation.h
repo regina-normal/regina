@@ -39,4 +39,5 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addNTriangulation(CppUnit::TextUi::TestRunner& runner);
+void addConnectedSumDecomp(CppUnit::TextUi::TestRunner& runner);
 
