@@ -188,32 +188,258 @@
   </sect2>
  </sect1>
 
- <sect1 id="tri-analysis">
+ <!--sect1 id="tri-analysis">
   <title>Analysis</title>
-  <para>TODO: This section still to be written.</para>
- </sect1>
+
+  <sect2 id="tri-viewgluings">
+   <title>Face Gluings</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
+
+  <sect2 id="tri-skeleton">
+   <title>Skeletal Information</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
+
+  <sect2 id="tri-algebra">
+   <title>Algebraic Properties</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
+
+  <sect2 id="tri-composition">
+   <title>Combinatorial Composition</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
+
+  <sect2 id="tri-surfaceproperties">
+   <title>Properties of Normal Surfaces</title>
+   <para>TODO: This section still to be written.</para>
+  </sect2>
+ </sect1-->
 
  <sect1 id="tri-modification">
   <title>Modification</title>
 
   <sect2 id="tri-editgluings">
    <title>Editing Face Gluings</title>
-   <para>TODO: This section still to be written.</para>
+
+   <para>
+    When viewing a triangulation, the <guilabel>Gluings</guilabel> tab
+    allows the user to add or remove tetrahedra and manually edit the
+    gluings between tetrahedron faces.
+   </para>
+   <para>
+    Tetrahedra are numbered beginning at 0; thus if a triangulation has
+    three tetrahedra they will be numbered 0, 1 and 2.  Tetrahedra can
+    be added and removed using the <guilabel>Add</guilabel> and
+    <guilabel>Remove</guilabel> buttons above the gluing editor.
+   </para>
+   <para>
+    The gluing editor itself contains a grid of tetrahedron faces.  Each
+    row represents a tetrahedron in the triangulation and each column
+    represents one of the four tetrahedron faces.  Tetrahedron vertices
+    are numbered 0, 1, 2 and 3, and each tetrahedron face is identified
+    by the three vertices that it contains.
+   </para>
+   <para>
+    Each cell of this grid identifies to what the corresponding face is
+    glued.  To change how the face is glued, click on the cell and a
+    dialog will appear allowing the gluing to be changed.
+   </para>
+   <para>
+    If a cell contains the word <literal>Boundary</literal>, the
+    corresponding face is a boundary face and is glued to nothing at
+    all.  Otherwise it will contain a string like
+    <literal>&gt; 5 (312)</literal>.  This means that the face for
+    that cell is
+    glued to face 312 of tetrahedron 5.  In particular, if the cell in
+    question belongs to face 013 of tetrahedron 4, this means that
+    vertices 0, 1 and 3 of tetrahedron 4 are glued to vertices 3, 1 and
+    2 of tetrahedron 5 respectively.  Thus the cell contents describe
+    the precise gluing permutation.
+   </para>
+   <para>
+    Tetrahedra can be optionally named to help
+    keep track of their roles within a triangulation.  To change the
+    name of a tetrahedron, click on the row header for that tetrahedron (this
+    is the cell on the left hand side of the grid containing the tetrahedron
+    number).  The new name can be typed directly into the cell.
+   </para>
   </sect2>
 
   <sect2 id="tri-elementarymove">
    <title>Elementary Moves</title>
-   <para>TODO: This section still to be written.</para>
+
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Modify</guimenu>
+     <guisubmenu>Triangulation</guisubmenu>
+     <guimenuitem>Elementary Move</guimenuitem>
+    </menuchoice>
+    menu item will present a list of elementary moves that can be
+    performed on the chosen triangulation.  Note that there are
+    restrictions on when particular moves may be performed and as a
+    result some elementary moves might not be available.
+   </para>
+   <para>
+    An elementary move will never change the topology of the
+    3-manifold.  The individual moves and their restrictions are
+    described in full detail in the
+    <ulink url="engine/classNTriangulation.html"><classname>NTriangulation</classname>
+    class reference</ulink> in the calculation engine documentation, but a
+    brief summary is provided below.
+   </para>
+   <para>
+    <glosslist>
+     <glossentry>
+      <glossterm>3-2 Move</glossterm>
+      <glossdef><para>
+       A <firstterm>3-2 move</firstterm> about an edge of degree 3 involves
+       replacing the three tetrahedra joined at that edge
+       with two tetrahedra joined by a face.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>2-3 Move</glossterm>
+      <glossdef><para>
+       A <firstterm>2-3 move</firstterm> about a non-boundary face involves
+       replacing the two tetrahedra joined at that face with three
+       tetrahedra joined by an edge.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>4-4 Move</glossterm>
+      <glossdef><para>
+       A <firstterm>4-4 move</firstterm> about an edge of degree 4 involves
+       replacing the four tetrahedra joined at that edge with four
+       tetrahedra joined along a different edge in a different position.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>2-0 Move (Edge)</glossterm>
+      <glossdef><para>
+       A <firstterm>2-0 move</firstterm> about an edge of degree 2 involves
+       taking the two tetrahedra joined at that edge and squashing them flat.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>2-0 Move (Vertex)</glossterm>
+      <glossdef><para>
+       A <firstterm>2-0 move</firstterm> about a vertex of degree 2 involves
+       taking the two tetrahedra joined at that vertex and squashing them flat.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>2-1 Move</glossterm>
+      <glossdef><para>
+       A <firstterm>2-1 move</firstterm> about an edge of degree 1 involves
+       merging the tetrahedron containing that edge with one of the
+       tetrahedra joining it.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Open Book</glossterm>
+      <glossdef><para>
+       A <firstterm>book opening move</firstterm> on a face that touches
+       the boundary involves ungluing that face to create two new boundary
+       faces and thus exposing the tetrahedra inside to the boundary.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Shell Boundary</glossterm>
+      <glossdef><para>
+       A <firstterm>boundary shelling move</firstterm> on a boundary
+       tetrahedron involves simply removing that tetrahedron.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
   </sect2>
 
   <sect2 id="tri-subdivision">
    <title>Global Subdivision</title>
-   <para>TODO: This section still to be written.</para>
+
+   <para>
+    A few routines are available for performing standard
+    subdivisions on triangulations.
+   </para>
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Modify</guimenu>
+     <guisubmenu>Triangulation</guisubmenu>
+     <guimenuitem>Barycentric Subdivision</guimenuitem>
+    </menuchoice>
+    menu item will perform a barycentric subdivision on the chosen
+    triangulation.  A <firstterm>barycentric subdivision</firstterm>
+    involves taking each tetrahedron, adding new vertices at the
+    centroid of the tetrahedron, the centroid of each face and the
+    midpoint of each edge and joining them with edges to split the
+    tetrahedron into 24 smaller tetrahedra.
+   </para>
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Modify</guimenu>
+     <guisubmenu>Triangulation</guisubmenu>
+     <guimenuitem>Convert from Ideal to Finite</guimenuitem>
+    </menuchoice>
+    menu item will convert the chosen triangulation to a finite
+    triangulation (one with no ideal vertices).  This is done by
+    subdividing each tetrahedron and then truncating at the ideal
+    vertices.  The resulting triangulation has each ideal or
+    non-standard vertex
+    converted to a real boundary component (one made from boundary faces
+    of tetrahedra).
+   </para>
   </sect2>
 
   <sect2 id="tri-simplification">
    <title>Global Simplification</title>
-   <para>TODO: This section still to be written.</para>
+
+   <para>
+    Currently only a fairly basic routine is available for simplifying a
+    triangulation as far as possible without manual intervention.
+    Selecting the
+    <menuchoice>
+     <guimenu>Modify</guimenu>
+     <guisubmenu>Triangulation</guisubmenu>
+     <guimenuitem>Basic Simplify</guimenuitem>
+    </menuchoice>
+    menu item will use <link linkend="tri-elementarymove">elementary
+    moves</link> to reduce the triangulation to a local minimum number
+    of tetrahedra.  In particular, it is not guaranteed to produce
+    <emphasis>the</emphasis> minimum number of tetrahedra required.
+   </para>
+   <para>
+    This simplification routine will
+    <emphasis>not</emphasis> use intelligent techniques like trying random
+    4-4 moves to get out of the local minimum.  It's on the &todo; list.
+   </para>
+  </sect2>
+
+  <sect2 id="tri-crush">
+   <title>Crushing Normal Surfaces</title>
+
+   <para>
+    A triangulation can be modified by finding a normal surface within
+    it and crushing that surface to a point.  Note that this action
+    might change the topology of the 3-manifold, and in some cases might
+    introduce ideal vertices or even invalid edges.  For details see
+    <ulink url="engine/classNNormalSurface.html"><function><classname>NNormalSurface</classname>::crush()</function></ulink>
+    in the calculation engine documentation.
+   </para>
+   <para>
+    To crush a normal surface, bring up a list of normal surfaces such
+    as can be found in a
+    <link linkend="packet-surfacelist">normal surface list packet</link>
+    or a <link linkend="packet-filter">surface filter packet</link>.
+    Select the surface to crush and press the
+    <guibutton>Crush</guibutton> button beside the list of surfaces.  A
+    new triangulation will be created as a result of crushing the normal
+    surface; the original triangulation will not be changed.
+   </para>
   </sect2>
  </sect1>
 </chapter>

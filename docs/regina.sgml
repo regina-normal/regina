@@ -55,6 +55,7 @@
  <!ENTITY bsd "<acronym>BSD</acronym>">
  <!ENTITY readline "<application>&gnu; readline</application>">
  <!ENTITY editline "<application>&bsd; editline</application>">
+ <!ENTITY todo "TODO">
 
  <!ENTITY helpabout
   "<menuchoice>
