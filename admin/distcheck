@@ -142,6 +142,8 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^regina.*\.tar\.gz$' | \
     grep -v '^regina.*\.zip$' | \
     grep -v '^regina.spec$' | \
+    grep -v '^rpmspec' | \
+    grep -v '^sfdist' | \
     grep -v '^stuff' | \
     grep -v '^test$' | \
     grep -v '^test/' | \
