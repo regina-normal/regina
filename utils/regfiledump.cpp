@@ -80,6 +80,17 @@ void dumpPacketHeader(std::ostream& out, NPacket* p) {
     out << "* Type: " << p->getPacketTypeName() << '\n';
     out << "* Parent: " << (p->getTreeParent() ?
         p->getTreeParent()->getPacketLabel() : "(none)") << '\n';
+    if (p->hasTags()) {
+        out << "* Tags: ";
+        const std::set<std::string>& tags = p->getTags();
+        for (std::set<std::string>::const_iterator it = tags.begin();
+                it != tags.end(); it++) {
+            if (it != tags.begin())
+                out << ", ";
+            out << *it;
+        }
+        out << '\n';
+    }
     out << "*\n";
     out << separator << '\n';
 }
