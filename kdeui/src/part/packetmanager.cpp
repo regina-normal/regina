@@ -34,6 +34,7 @@
 #include "packetmanager.h"
 #include "reginapart.h"
 #include "packettypes/ncontainerui.h"
+#include "packettypes/nscriptui.h"
 #include "packettypes/ntextui.h"
 
 #include <kiconloader.h>
@@ -100,6 +101,16 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NContainer::packetType)
         return new NContainerUI(dynamic_cast<NContainer*>(packet),
             enclosingPane);
+    if (packet->getPacketType() == NScript::packetType) {
+        KTextEditor::Document* doc = createDocument();
+        if (doc)
+            return new NScriptUI(dynamic_cast<NScript*>(packet), enclosingPane,
+                doc, allowReadWrite);
+        else
+            return new ErrorPacketUI(packet, enclosingPane,
+                i18n("An appropriate text editor component could not "
+                "be found."));
+    }
     if (packet->getPacketType() == NText::packetType) {
         KTextEditor::Document* doc = createDocument();
         if (doc)
