@@ -101,6 +101,28 @@
  </para>
 
  <bridgehead renderas="sect2">
+  There are no menu items or buttons to load or save files.
+ </bridgehead>
+ <para>
+  You are running &regina; as an applet or are accessing the calculation
+  engine using &corba;.  Neither of these modes currently allows access to
+  the local filesystem.
+ </para>
+ <para>
+  Filesystem access using &corba; is in the todo list; it's tricky
+  because the calculation engine may not be running on the same machine
+  as the user interface.  Filesystem access for the applet will probably
+  never be implemented since &java; applets are designed to run in a
+  protected environment without any filesystem access at all.
+ </para>
+ <para>
+  If you wish to be able to load and save files, try running &regina;
+  as a standalone application with the <option>--jni</option> option.
+  See the <link linkend="man-regina">application command-line
+  options</link> for details.
+ </para>
+
+ <bridgehead renderas="sect2">
   The <guimenuitem>Jython Console</guimenuitem>
   buttons/menu items are disabled.  So are the
   <guibutton>Run</guibutton> and <guibutton>Compile</guibutton>
