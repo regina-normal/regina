@@ -826,6 +826,32 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          */
         const NGroupPresentation& getFundamentalGroup() const;
         /**
+         * Notifies the triangulation that you have simplified the
+         * presentation of its fundamental group.  The old group
+         * presentation will be destroyed, and this triangulation will
+         * take ownership of the new (hopefully simpler) group that is
+         * passed.
+         *
+         * This routine is useful for situations in which some external
+         * body (such as GAP) has simplified the group presentation
+         * better than Regina can.
+         *
+         * Regina does <i>not</i> verify that the new group presentation
+         * is equivalent to the old, since this is - well, hard.
+         *
+         * If the fundamental group has not yet been calculated for this
+         * triangulation, this routine will nevertheless take ownership
+         * of the new group, under the assumption that you have worked
+         * out the group through some other clever means without ever
+         * having needed to call getFundamentalGroup() at all.
+         *
+         * Note that this routine will not fire a packet change event.
+         *
+         * @param newGroup a new (and hopefully simpler) presentation
+         * of the fundamental group of this triangulation.
+         */
+        void simplifyFundamentalGroup(NGroupPresentation* newGroup);
+        /**
          * Returns the first homology group for this triangulation.
          * If this triangulation contains any ideal or non-standard
          * vertices, the homology group will be
@@ -2367,6 +2393,11 @@ inline bool NTriangulation::isConnected() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return (components.size() <= 1);
+}
+
+inline void NTriangulation::simplifyFundamentalGroup(
+        NGroupPresentation* newGroup) {
+    fundamentalGroup = newGroup;
 }
 
 inline bool NTriangulation::knowsZeroEfficient() const {
