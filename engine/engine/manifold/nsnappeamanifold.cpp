@@ -64,24 +64,19 @@ std::ostream& NSnapPeaCensusManifold::writeName(std::ostream& out) const {
 }
 
 std::ostream& NSnapPeaCensusManifold::writeTeXName(std::ostream& out) const {
-    // TODO
-    /*
-    out << "$\\mathit{SnapPea} ";
-    out << '$';
-    if (nHandles == 0)
-        out << "$B^3$";
-    else if (nHandles == 1) {
-        if (orientable)
-            out << "$B^2 \\times S^1$";
-        else
-            out << "$B^2 \\twisted S^1$";
-    } else {
-        if (orientable)
-            out << "$\\mathit{Handle-Or}(" << nHandles << ")$";
-        else
-            out << "$\\mathit{Handle-Nor}(" << nHandles << ")$";
-    }
-    */
+    out << '$' << section << "_{";
+
+    // Pad the index with leading zeroes.
+    // All sections are written with three-digit indices, except for
+    // 7-tetrahedron orientable which uses four-digit indices.
+    if (section == SEC_7_OR && index < 1000)
+        out << '0';
+    if (index < 100)
+        out << '0';
+    if (index < 10)
+        out << '0';
+    out << index << "}$";
+
     return out;
 }
 
