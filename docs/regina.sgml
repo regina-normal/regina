@@ -15,6 +15,11 @@
     <firstname>David</firstname>
     <surname>Letscher</surname>
    </author>">
+ <!ENTITY javareadlineauthor
+  "<author>
+    <firstname>Bernhard</firstname>
+    <surname>Bablok</surname>
+   </author>">
  <!ENTITY regemail "<email>benb@acm.org</email>">
  <!ENTITY regabstract
   "<para>
@@ -32,6 +37,7 @@
  <!ENTITY jni "<acronym>JNI</acronym>">
  <!ENTITY corba "<acronym>CORBA</acronym>">
  <!ENTITY linux "<productname>GNU/Linux</productname>">
+ <!ENTITY debian "<productname>Debian</productname>">
  <!ENTITY cygwin "<productname>Cygwin</productname>">
  <!ENTITY windows "<productname>Windows</productname>">
  <!ENTITY btools "<application>BTools</application>">
@@ -41,6 +47,10 @@
  <!ENTITY javahelp "<application>JavaHelp</application>">
  <!ENTITY snappea "<application>SnapPea</application>">
  <!ENTITY sourceforge "<productname>SourceForge</productname>">
+ <!ENTITY gnu "<acronym>GNU</acronym>">
+ <!ENTITY bsd "<acronym>BSD</acronym>">
+ <!ENTITY readline "<application>&gnu; readline</application>">
+ <!ENTITY editline "<application>&bsd; editline</application>">
 
  <!ENTITY helpabout
   "<menuchoice>
@@ -289,6 +299,67 @@
    </para>
   </sect1>
 
+  <sect1 id="readline">
+   <title>Enabling Readline Support</title>
+   <para>
+    When running &regina; as a text &jython; console (for instance, when
+    running <userinput>regina --text</userinput>), life is made somewhat
+    easier with intelligent line editing such as the use of
+    <keycap>Left</keycap>/<keycap>Right</keycap>/<keycap>Home</keycap>/<keycap>End</keycap>
+    for navigation within a line and <keycap>Up</keycap>/<keycap>Down</keycap>
+    for recalling previous commands.  For
+    this you will need to enable readline support.
+   </para>
+   <para>
+    &readline; and &editline; are system libraries for &linux; and
+    related systems that provide intelligent line editing as described
+    above.  If you are running such a system, make sure you have these
+    libraries installed (&linux; users should search their distribution
+    for these) and read on.
+   </para>
+   <para>
+    &javareadlineauthor; has written a set of &java; wrappers for
+    &readline; and &editline;.  You will need to download these from
+    <ulink url="http://www.bablokb.de/java/readline.html"></ulink>
+    (&debian; &linux; users can install the
+    <literal>libreadline-java</literal> package instead).
+    Once you have these wrappers installed you will have libraries
+    <filename>libJavaEditline.so</filename> and
+    <filename>libJavaReadline.so</filename> and jar file
+    <filename>java_readline.jar</filename>.
+   </para>
+   <para>
+    You now need to tell &regina; where you have these files installed.
+    <itemizedlist>
+     <listitem><para>
+      The directory containing <filename>libJavaEditline.so</filename>
+      and <filename>libJavaReadline.so</filename> must be added to option
+      <link linkend="REGINA-JNIDIR"><parameter>REGINA_JNIDIR</parameter></link>.
+      If these files
+      are in <filename><replaceable>REGINA_HOME</replaceable>/bin</filename>
+      or <filename>/usr/lib</filename> then there is nothing to do; the
+      default value of <parameter>REGINA_JNIDIR</parameter> will
+      suffice.
+     </para></listitem>
+     <listitem><para>
+      File <filename>java_readline.jar</filename> (with full path
+      information) needs to be added to option
+      <link linkend="REGINA-EXTRA-CLASSES"><parameter>REGINA_EXTRA_CLASSES</parameter></link>.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    See the <link linkend="man-regina.conf">&regina; configuration
+    reference</link> for details on how to set these options.
+   </para>
+   <para>
+    At this point you take a deep breath, run
+    <userinput>regina --text</userinput>, try the arrow keys and
+    hope it all works!  You can post to the
+    <link linkend="sourceforge">mailing lists</link> if there are problems.
+   </para>
+  </sect1>
+
   <sect1 id="sessions">
    <title>Sample &jython; Sessions</title>
    <para>
@@ -336,9 +407,9 @@
       </para></listitem>
       <listitem><para>
        You might wish to subscribe to
-       <email>regina-announce@lists.sourceforge.net</email>, where
-       important announcements will be sent.  This list has extremely
-       low traffic.  See the
+       <email>regina-announce@lists.sourceforge.net</email> where
+       important announcements will be sent (such as new releases of
+       &regina;).  This list has extremely low traffic.  See the
        <ulink url="http://sourceforge.net/mail/?group_id=19698">&sourceforge;
        lists page</ulink> for subscription instructions.
       </para></listitem>

@@ -435,7 +435,7 @@
       </para>
      </listitem>
     </varlistentry>
-    <varlistentry>
+    <varlistentry id="REGINA-EXTRA-CLASSES">
      <term><parameter>REGINA_EXTRA_CLASSES</parameter>
       (default = empty)</term>
      <listitem>
@@ -464,7 +464,7 @@
       </para>
      </listitem>
     </varlistentry>
-    <varlistentry>
+    <varlistentry id="REGINA-JNIDIR">
      <term><parameter>REGINA_JNIDIR</parameter> (default =
       <filename><replaceable>REGINA_HOME</replaceable>/bin:/usr/lib</filename>)</term>
      <listitem>
