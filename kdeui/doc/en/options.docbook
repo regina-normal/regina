@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<chapter id="options">
+ <title>Internal Configuration</title>
+ <para>
+  This section details configuration options available through the
+  <guimenu>Options</guimenu> menu.
+ </para>
+
+ <sect1 id="options-display">
+  <title>Display Options</title>
+
+  <para>
+   The following options are available through the
+   <menuchoice>
+    <guimenu>Options</guimenu>
+    <guisubmenu>Display</guisubmenu>
+   </menuchoice>
+   menu.
+  </para>
+
+  <glosslist>
+   <glossentry>
+    <glossterm>Automatic Window Docking</glossterm>
+    <glossdef><para>
+     This option can be toggled on or off.  When off, any new packet
+     panes (created when you <link linkend="packet-view">view or edit
+     a packet</link>) will be opened in
+     separate floating windows.  When on, new packet panes will be
+     docked into the main &regina; window if possible.
+    </para></glossdef>
+   </glossentry>
+
+   <glossentry>
+    <glossterm>Display Icon</glossterm>
+    <glossdef><para>
+     This option can be toggled on or off; it represents whether the
+     large &regina; icon will be displayed beneath the packet tree in
+     the main window.
+    </para></glossdef>
+   </glossentry>
+  </glosslist>
+ </sect1>
+
+ <sect1 id="options-file">
+  <title>File Options</title>
+
+  <para>
+   The following options are available through the
+   <menuchoice>
+    <guimenu>Options</guimenu>
+    <guisubmenu>File</guisubmenu>
+   </menuchoice>
+   menu.
+  </para>
+
+  <glosslist>
+   <glossentry>
+    <glossterm>Automatic File Extension</glossterm>
+    <glossdef><para>
+     This option can be toggled on or off; it represents whether a
+     filename is modified before a &regina; data file is saved.
+     When on, if the user does not specify a filename extension, the
+     default extension of <filename>.rga</filename> will be appended.
+    </para></glossdef>
+   </glossentry>
+  </glosslist>
+ </sect1>
+
+ <sect1 id="options-libraries">
+  <title>&python; Library Options</title>
+
+  <para>
+   <firstterm>Jython libraries</firstterm> are files containing
+   &python; code to run at the beginning of every &python;
+   session, including every time a &python; console is opened and
+   every time a script packet is run.  See the
+   <link linkend="python-overview">&python; scripting overview</link>
+   for further details.
+  </para>
+
+  <para>
+   The
+   <menuchoice>
+    <guimenu>Options</guimenu>
+    <guisubmenu>Jython Libraries</guisubmenu>
+   </menuchoice>
+   menu item brings up a list of &python; libraries that &regina; currently
+   knows about.  Beside each library is a checkbox labelled
+   <guilabel>Use</guilabel>.  Only the libraries whose
+   <guilabel>Use</guilabel> boxes are checked will be loaded at the
+   beginning of each &python; session.  Thus by unchecking its
+   <guilabel>Use</guilabel> box you can disable a library but still have
+   &regina; remember its location.
+  </para>
+
+  <para>
+   Each library also has a <guibutton>Compile</guibutton> button beside
+   it.  Pressing this button will test whether or not the library
+   actually compiles under &python;.  The library code will only be
+   compiled; it will not be run.
+  </para>
+
+  <tip><para>
+   A set of prepackaged &python; libraries that might be of use is
+   provided with the &regina; distribution.  You should find these
+   libraries in the directory
+   <filename><replaceable>REGINA_HOME</replaceable>/pylib</filename>.
+  </para></tip>
+ </sect1>
+</chapter>

@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<appendix id="troubleshooting">
+ <title>Troubleshooting</title>
+
+ <qandaset>
+  <qandadiv><title>Working With Packets</title>
+   <qandaentry>
+    <question><para>
+     I cannot edit such-and-such-a packet.  I can view it but I can't change
+     anything and there's no <guibutton>Apply</guibutton> button.
+     Or there is an <guibutton>Apply</guibutton> button but it complains
+     if I try to press it.
+    </para></question>
+    <answer>
+     <para>
+      If a packet has children that need that packet to remain constant, it will
+      become uneditable.  An example is a triangulation that has a normal
+      surface list child packet.  The normal surface list stores coordinates
+      based upon the triangulation that created it, so the triangulation
+      must remain constant or else the coordinates will become invalid.
+     </para>
+     <para>
+      In such a situation you can try <link linkend="packet-clone">cloning
+      the packet</link> without cloning its descendants (<menuchoice>
+       <guimenu>Packet</guimenu>
+       <guisubmenu>Clone</guisubmenu>
+       <guimenuitem>Exclude Descendants</guimenuitem>
+      </menuchoice>).  The clone will have no children to worry about
+      and so should be editable.  Alternatively you could delete the child
+      packet that is refusing to allow its parent to change.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
+  <qandadiv><title>&python; Scripting</title>
+   <qandaentry>
+    <question><para>
+     The <guimenuitem>Jython Console</guimenuitem>
+     buttons/menu items are disabled.  So are the
+     <guibutton>Run</guibutton> and <guibutton>Compile</guibutton>
+     buttons in the script editor.
+    </para></question>
+    <answer>
+     <para>
+      This implies that &regina; was not built with &python; support.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
+  <qandadiv><title>Miscellaneous</title>
+   <qandaentry>
+    <question><para>
+     Something else beyond this rather wanting list of suggestions has gone
+     wrong.  Perhaps something crashed.  Maybe the program gave the wrong
+     answer.  Or it could be just a little too slow.
+    </para></question>
+    <answer>
+     <para>
+      Please! - mail me at &regemail; and let me know.  Or even better,
+      use the <link linkend="services">&sourceforge; services</link>
+      such as the bug tracking system and mailing lists so that the
+      problem you report is publicly archived.
+     </para>
+     <para>
+      This program is permanently in development.  There is a very
+      long todo list, and chances are your problem is on it.  And
+      then again chances are it's not.  So please let me know so I
+      am sure to know what needs to be fixed/improved.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+ </qandaset>
+</appendix>
+

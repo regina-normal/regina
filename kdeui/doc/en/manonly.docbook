@@ -1,0 +1,28 @@
+
+<!-- This index file is used by docbook2man to generate man pages
+     without the need to parse the entire reference manual. -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+  <!ENTITY regina "<application>Regina</application>">
+
+  <!ENTITY regauthorplain "Ben Burton">
+  <!ENTITY regemail "<email>bab@debian.org</email>">
+  <!ENTITY regabstract
+   "<para>
+     &regina; is a topological calculator with a bent towards normal surface
+     theory. It allows 3-manifolds to be created and manipulated and their
+     properties of interest to be determined.
+    </para>">
+
+  <!ENTITY python "<application>Python</application>">
+  <!ENTITY xml "<acronym>XML</acronym>">
+
+  <!ENTITY reginaman SYSTEM "reginaman.docbook">
+  <!ENTITY reginautils SYSTEM "utils.docbook">
+]>
+
+<book>
+ &reginaman;
+ &reginautils;
+</book>
+

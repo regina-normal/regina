@@ -1,0 +1,159 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-surface">
+ <refmeta>
+  <refentrytitle>surface</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>surface</refname>
+  <refpurpose>A single normal surface</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+surface ::= (#PCDATA,
+             &xml-cancrush;?, &xml-compact-surface;?,
+             &xml-connected;?, &xml-euler-surface;?,
+             &xml-orbl-surface;?, &xml-realbdry-surface;?,
+             &xml-twosided;?)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>len</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>name</sgmltag></entry>
+      <entry><type>CDATA</type></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-surface; element stores a single normal surface in a
+   3-manifold triangulation.
+  </para>
+  <para>
+   A normal surface in a <replaceable>T</replaceable>-tetrahedron
+   triangulation is traditionally represented by a vector of integers, whose
+   length depends upon the underlying coordinate system.  For instance, under
+   standard tri-quad coordinates the vector will have length
+   7<replaceable>T</replaceable>, and under quad coordinates it will
+   have length 4<replaceable>T</replaceable>.  The underlying coordinate
+   system is specified in the &xml-params; element of the parent
+   &xml-packet-normalsurfacelist;.
+  </para>
+  <para>
+   The normal surface vector is stored as the character data of this
+   &xml; element as follows.
+   Since a normal surface vector will generally contain many zeroes,
+   only the non-zero elements are listed.  The character data should
+   thus consist of a whitespace-separated sequence of integer pairs.
+   Each integer pair represents a non-zero coordinate in the vector; the
+   first element of the pair identifies which coordinate is being
+   described (coordinates are numbered 0, 1, 2, ...) and the second element
+   of the pair is the actual value at this coordinate.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>surface</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-normalsurfacelist;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>surface</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-cancrush;</member>
+     <member>&xml-compact-surface;</member>
+     <member>&xml-connected;</member>
+     <member>&xml-euler-surface;</member>
+     <member>&xml-orbl-surface;</member>
+     <member>&xml-realbdry-surface;</member>
+     <member>&xml-twosided;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>len</sgmltag></term>
+    <listitem>
+     <para>
+      The length of the underlying normal surface vector.
+      This depends upon the coordinate system in which the normal
+      surface was originally generated.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>name</sgmltag></term>
+    <listitem>
+     <para>
+      A human-readable name given to this surface.  Surface names need
+      not be distinct and exist merely for the convenience of the user.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents a normal surface in a
+   4-tetrahedron triangulation.  The normal surface vector is:
+   <programlisting>
+(0, 0, 0, 0, 0, 2, 0,
+ 0, 0, 1, 1, 1, 0, 0,
+ 1, 1, 0, 0, 1, 0, 0,
+ 0, 0, 0, 0, 0, 2, 0)</programlisting>
+  </para>
+  <para>
+   The child elements of this normal surface indicate that the
+   surface has Euler characteristic -2 and real boundary, and is
+   compact, connected, orientable and two-sided.
+  </para>
+  <programlisting>
+&lt;surface len=&quot;28&quot;&gt; 5 2 9 1 10 1 11 1 14 1 15 1 18 1 26 2
+    &lt;euler value=&quot;-2&quot;/&gt;
+    &lt;realbdry value=&quot;T&quot;/&gt;
+    &lt;compact value=&quot;T&quot;/&gt;
+    &lt;connected value=&quot;1&quot;/&gt;
+    &lt;orbl value=&quot;1&quot;/&gt;
+    &lt;twosided value=&quot;1&quot;/&gt; &lt;/surface&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

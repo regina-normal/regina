@@ -1,0 +1,68 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<reference id="dataformat">
+ <title>Data File Format</title>
+
+ <partintro>
+  <para>
+   Since &regina; version 3.0, data files are now saved in an optionally
+   compressed &xml; format.  If a data file is compressed, it can be piped
+   through <command>gunzip</command> to recover the plain text &xml;.
+  </para>
+  <para>
+   This reference chapter documents the various &xml; elements that form
+   a &regina; data file and how they are used.  The top-level element
+   for a data file is &xml-reginadata;.
+  </para>
+ </partintro>
+
+ &data-abeliangroup;
+ &data-allowstrict;
+ &data-allowtaut;
+ &data-cancrush;
+ &data-compact-filter;
+ &data-compact-surface;
+ &data-connected;
+ &data-euler-filter;
+ &data-euler-surface;
+ &data-filter;
+ &data-filter-combination;
+ &data-filter-properties;
+ &data-flags;
+ &data-fundgroup;
+ &data-group;
+ &data-H1;
+ &data-H1Bdry;
+ &data-H1Rel;
+ &data-H2;
+ &data-line;
+ &data-op;
+ &data-orbl-filter;
+ &data-orbl-surface;
+ &data-packet;
+ &data-packet-anglestructurelist;
+ &data-packet-container;
+ &data-packet-normalsurfacelist;
+ &data-packet-script;
+ &data-packet-surfacefilter;
+ &data-packet-text;
+ &data-packet-triangulation;
+ &data-params;
+ &data-realbdry-filter;
+ &data-realbdry-surface;
+ &data-reginadata;
+ &data-reln;
+ &data-splitsfce;
+ &data-struct;
+ &data-surface;
+ &data-tag;
+ &data-tet;
+ &data-tetrahedra;
+ &data-text;
+ &data-twosided;
+ &data-var;
+ &data-zeroeff;
+
+</reference>

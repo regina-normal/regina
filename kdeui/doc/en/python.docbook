@@ -1,0 +1,119 @@
+<?xml version="1.0" ?>
+<chapter id="python">
+ <title>&python; and Scripting</title>
+
+ <sect1 id="python-overview">
+  <title>Scripting Overview</title>
+  <para>
+   &regina; contains inbuilt scripting, which offers you fine control
+   over the underlying calculation engine and enables you to automate
+   large amounts of processing using the underlying &python;
+   programming language.  Scripts can be written and run from within
+   &regina;, and a well-written script can relieve you of much work
+   that would otherwise have to be painstakingly done by hand
+   through the point-and-click interface.
+  </para>
+
+  <sect2 id="python-invoking">
+   <title>Invoking Scripting</title>
+   <para>
+    Scripting is available in &regina; through two means.  You can
+    either bring up a &python; console through the
+    <guimenu>Tools</guimenu> menu (or the corresponding toolbar button),
+    or you can create a new
+    <link linkend="packet-script">script packet</link>.  Script packets have
+    the advantage that they can work seamlessly with many other packets in the
+    same file (through the use of script variables), and script packets will
+    also be saved with the file for later reuse.
+   </para>
+  </sect2>
+
+  <sect2 id="python-python">
+   <title>Using &python;</title>
+   <para>
+    All scripts are run in &python;.
+    When using &python;, &regina; objects, classes and methods can be directly
+    accessed as if they were &python; objects, classes and methods.  The
+    <link linkend="autodocs">engine documentation</link> describes in
+    detail the classes that form the packets and other objects
+    that can be manipulated in the program.
+   </para>
+   <para>
+    Wherever &regina; gives you access to &python;, you may assume that the
+    <parameter>java</parameter> and <parameter>normal</parameter>
+    modules have been imported (thus giving you access to
+    everything beneath them).
+    You may also assume that all requested libraries have been loaded (see the
+    <link linkend="options-libraries">&python; library options</link> for
+    details).
+   </para>
+   <para>
+    Upon starting a &python; session certain variables might already be
+    set for you (such as variables representing the calculation engine or
+    the current packet tree).  Read the &python; session startup messages
+    for details.
+   </para>
+   <warning><para>
+    Probably the easiest way to crash the program is to bring up
+    a &python; console and do something untoward.  &python; and scripting offer
+    very low-level control over the engine, but also provide the
+    associated dangers.  The general idea is that &python; gives you
+    direct access to the C++ calculation engine and the user interface has
+    no way of knowing what you are tinkering with.  Thus you should tread
+    gently. 
+   </para></warning>
+  </sect2>
+
+  <sect2 id="python-gui">
+   <title>Cooperating with the &gui;</title>
+   <para>
+    If you cannot edit a packet through the GUI, there is a reason for
+    this (for instance, a normal surface list will rely upon its parent
+    triangulation remaining constant and so any triangulation with child
+    surface lists will be uneditable).  Thus you should not use &python; as a
+    way to get around that barrier; instead you should respect that
+    barrier.  Perhaps you can <link linkend="packet-clone">clone the
+    packet</link> in question without cloning its descendants (<menuchoice>
+     <guimenu>Packet</guimenu>
+     <guisubmenu>Clone</guisubmenu>
+     <guimenuitem>Exclude Descendants</guimenuitem>
+    </menuchoice>); the clone then should be editable.
+   </para>
+  </sect2>
+ </sect1>
+
+ <sect1 id="autodocs">
+  <title>Engine Documentation</title>
+  <para>
+   Documentation has been generated from the fairly extensive
+   comments within the &regina; sources.  This includes a complete
+   reference for the &regina; calculation engine, which forms a useful
+   reference when writing
+   <link linkend="python-overview">&python; scripts</link>.
+  </para>
+ </sect1>
+
+ <sect1 id="sessions">
+  <title>Sample &python; Sessions</title>
+  <para>
+   Reproduced below are a number of sample &python; sessions.
+   Each session was started by running
+   <userinput>regina --console</userinput>
+   from the command line.
+  </para>
+
+  <sect2 id="sessiontriangulation">
+   <title>Working with a triangulation</title>
+   <programlisting>
+    &sessiontriangulation;
+   </programlisting>
+  </sect2>
+
+  <sect2 id="sessiontree">
+   <title>Working with a packet tree</title>
+   <programlisting>
+    &sessiontree;
+   </programlisting>
+  </sect2>
+ </sect1>
+</chapter>

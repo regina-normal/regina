@@ -1,0 +1,357 @@
+<reference id="manpages">
+ <title>Startup Options and Configuration</title>
+
+ <partintro>
+  <para>
+   This reference chapter documents the usual &regina; startup script, as
+   well as various methods of configurating your &regina; installation.
+  </para>
+  <para>
+   For documentation on the other various command-line utilities that
+   are provided with &regina;, see the later reference chapter on
+   <link linkend="utils">command-line utilities</link>.
+  </para>
+ </partintro>
+
+ <!-- Startup Script -->
+
+ <refentry id="man-regina">
+  <refmeta>
+   <refentrytitle>regina</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina</refname>
+   <refpurpose>&regina; startup script</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regina</command>
+    <group>
+     <arg><option>-q, --quiet</option></arg>
+     <arg><option>-v, --verbose</option></arg>
+    </group>
+    <arg rep="repeat"><replaceable>file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   &regabstract;
+   <para>
+    Users should start &regina; by running the
+    <command>regina</command> startup script in the binary
+    installation directory (such as <filename>/usr/bin</filename>
+    or <filename>/usr/local/bin</filename>).
+   </para>
+   <para>
+    &regina; may be run directly out of its source tree without being
+    properly installed; this is done by running the <command>regina</command>
+    startup script in the top-level source directory.  Default locations
+    for various &regina; components will be transparently modified to
+    look inside the source tree; see the
+    <link linkend="man-regina.conf">configuration reference</link>
+    for details.
+   </para>
+   <para>
+    Any files specified on the command-line will be opened on startup.
+   </para>
+   <warning><para>
+    When passing command-line arguments, avoid using characters that have
+    a special meaning to <filename>bash</filename>
+    (such as quotes, brackets, backslashes and
+    the like).  You should <emphasis>only</emphasis> use the arguments
+    described below.  Using special characters in command-line arguments
+    can have unpredictable results, and may in the worst case result in
+    data loss (although I've tried to make the scripts foolproof enough
+    to prevent this).
+   </para></warning>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-q</option></term>
+     <term><option>--quiet</option></term>
+     <listitem>
+      <para>
+       Start in quiet mode.  No output will be produced except
+       for errors.
+      </para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_VERBOSITY</parameter>=<literal>0</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-v</option></term>
+     <term><option>--verbose</option></term>
+     <listitem>
+      <para>
+       Start in verbose mode.  Lots of diagnostic
+       information will be output.
+      </para>
+      <para>
+       This is equivalent to setting configuration option
+       <parameter>REGINA_VERBOSITY</parameter>=<literal>2</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>Environment Variables</title>
+   <para>
+    All of the options described in the
+    <link linkend="man-regina.conf">configuration reference</link> can
+    be set as environment variables.  Of particular interest are
+    <envar>REGINA_OPTIONS_GLOBAL</envar> and
+    <envar>REGINA_OPTIONS_LOCAL</envar> which specify the directories
+    containing the configuration files.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina.conf">regina.conf</link>.
+    <!-- (applet removed) <link linkend="man-applet">regina-applet</link>. -->
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Configuration -->
+
+ <refentry id="man-regina.conf">
+  <refmeta>
+   <refentrytitle>regina.conf</refentrytitle>
+   <manvolnum>5</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina.conf</refname>
+   <refpurpose>&regina; configuration</refpurpose>
+  </refnamediv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    When running &regina; using the standard startup script, you can
+    configure its behaviour in many ways.  The configuration consists of
+    a number of options, each of which may be given a value.
+   </para>
+   <para>
+    The methods by which you may set these options are (in decreasing
+    order of priority):
+    <itemizedlist>
+     <listitem><para>
+      Command-line options to the startup script.  See the
+      <link linkend="man-regina">startup script reference</link> for
+      further details.
+     </para></listitem>
+     <listitem><para>
+      Environment variables.  For instance, you might have environment
+      variable <envar>REGINA_ENGINE</envar> with the value
+      <literal>jni</literal>.
+     </para></listitem>
+     <listitem><para>
+      The local configuration file:
+      <filename>~/.regina/regina.conf</filename>
+     </para></listitem>
+     <listitem><para>
+      The global configuration file:
+      <filename>/etc/regina/regina.conf</filename> (or
+      <filename><replaceable>REGINA_HOME</replaceable>/regina.conf</filename>
+      if directory <filename>/etc/regina</filename> does not exist)
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    Any option set by a method lower in this list will be
+    overridden by the same option set higher in the list (for instance,
+    a command-line option will override a setting in the local
+    configuration file).
+   </para>
+   <para>
+    On some systems the global configuration file is installed as
+    <filename>/etc/regina-normal/regina.conf</filename> so as not to
+    conflict with the <application>Regina</application>
+    <acronym>REXX</acronym> interpreter.
+   </para>
+   <para>
+    The local and global configuration files should each contain
+    lines of the form:
+    <screen>
+    <replaceable>option</replaceable>=<replaceable>value</replaceable>
+    </screen>
+    Blank lines or lines beginning with a hash (<literal>#</literal>)
+    are ignored.
+   </para>
+   <para>
+    Environment variables <envar>REGINA_OPTIONS_GLOBAL</envar> and
+    <envar>REGINA_OPTIONS_LOCAL</envar> can be used to change the
+    location of the global and local configuration files; see the
+    Options section below for details.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <para>The configuration options that can be set are as follows.</para>
+   <variablelist>
+    <varlistentry>
+     <term><parameter>REGINA_VERBOSITY</parameter>
+      (default = <literal>1</literal>)</term>
+     <listitem>
+      <para>
+       The verbosity level for the startup script.
+       For this option only, a setting in the configuration file(s) will
+       clobber the command-line options <option>-q</option>,
+       <option>--quiet</option>, <option>-v</option> and
+       <option>--verbose</option>.
+       </para>
+       <para>
+       Recognised values are:
+       <variablelist>
+        <varlistentry>
+         <term><literal>0</literal></term>
+         <listitem><para>
+          Display errors only (quiet).
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>1</literal></term>
+         <listitem><para>
+          Display errors and warnings.
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>2</literal></term>
+         <listitem><para>
+          Display errors, warnings and diagnostic output (verbose).
+         </para></listitem>
+        </varlistentry>
+       </variablelist>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_HOME</parameter></term>
+     <listitem>
+      <para>
+       The directory in which &regina; data files are installed.  This
+       should be the directory containing the <filename>scripts/</filename>
+       subdirectory, the <filename>icons/</filename> subdirectory and so on.
+      </para>
+      <para>
+       If &regina; is being run directly out of the source tree, this
+       defaults to the top-level source directory.  If &regina; is being
+       run from a proper installation, this defaults to the corresponding
+       installation directory.  In normal situations you should never need
+       to set this option yourself.
+      </para>
+      <warning>
+       <para>
+        Note that the default <parameter>REGINA_HOME</parameter>
+        when running from a proper installation is actually hard-wired into
+        the startup script.  This hard-wiring takes place at compile time,
+        since the final installation path must be passed to
+        <command>configure</command> using option <option>--prefix</option>
+        before &regina; is built (see <filename>INSTALL.txt</filename> in
+        the source distribution for details).
+       </para>
+       <para>
+        This means that if &regina; is installed into one directory using
+        <command>make install</command> and then moved to another directory
+        by hand, the default <parameter>REGINA_HOME</parameter> will be
+        incorrect.
+       </para>
+      </warning>
+      <para>
+       This option cannot be set in the configuration files.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_OPTIONS_GLOBAL</parameter>
+      (default = <filename>/etc/regina</filename>, but see below)</term>
+     <listitem>
+      <para>
+       The directory containing the global configuration file.
+      </para>
+      <para>
+       Clearly this option cannot be set in the configuration files!
+      </para>
+      <para>
+       This defaults to <filename>/etc/regina</filename>, or
+       <filename><replaceable>REGINA_HOME</replaceable></filename> if
+       directory <filename>/etc/regina</filename> does not exist.
+      </para>
+      <para>
+       On some systems this defaults to
+       <filename>/etc/regina-normal</filename> so as not to
+       conflict with the <application>Regina</application>
+       <acronym>REXX</acronym> interpreter.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_OPTIONS_LOCAL</parameter>
+      (default = <filename>~/.regina</filename>)</term>
+     <listitem>
+      <para>
+       The directory containing the local configuration file.
+      </para>
+      <para>
+       Clearly this option cannot be set in the configuration files!
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_PYTHON</parameter></term>
+     <listitem>
+      <para>
+       The command used to start the &python; interpreter.  If the command
+       <command>python</command> can be found on the path then this option
+       defaults to the full path of that command
+       (such as <command>/usr/bin/python</command>).
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems).
+    <!-- (applet removed) <link linkend="man-applet">regina-applet</link>. -->
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+</reference>

@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<chapter id="services">
+ <title>Bug Tracking and Mailing Lists</title>
+ <para>
+  &regina; is currently hosted by &sourceforge; at
+  <ulink url="http://sourceforge.net/projects/regina"></ulink>.
+  The &sourceforge; site provides the following services:
+  <itemizedlist>
+   <listitem><para>
+    A <ulink
+    url="http://sourceforge.net/tracker/?group_id=19698&amp;atid=119698">bug
+    tracking system</ulink> which also handles feature requests;
+   </para></listitem>
+   <listitem><para>
+    <ulink url="http://sourceforge.net/mail/?group_id=19698">Mailing
+    lists</ulink> for general assistance and discussion.
+    <itemizedlist>
+     <listitem><para>
+      General comments and questions can be posted to
+      <email>regina-user@lists.sourceforge.net</email>.
+     </para></listitem>
+     <listitem><para>
+      You might wish to subscribe to
+      <email>regina-announce@lists.sourceforge.net</email> where
+      important announcements will be sent (such as new releases of
+      &regina;).  This list has extremely low traffic.  See the
+      <ulink url="http://sourceforge.net/mail/?group_id=19698">&sourceforge;
+      lists page</ulink> for subscription instructions.
+     </para></listitem>
+    </itemizedlist>
+   </para></listitem>
+  </itemizedlist>
+ </para>
+ <para>
+  As more people use &regina;, I'm hoping people will start
+  using the bug tracking system and mailing lists.  I'm happy to answer
+  private emails, but by using the above services you ensure that
+  the ensuing discussion is publicly available to help others with
+  similar issues.
+ </para>
+</chapter>
+

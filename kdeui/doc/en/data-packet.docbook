@@ -1,0 +1,162 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-packet">
+ <refmeta>
+  <refentrytitle>packet</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>packet</refname>
+  <refpurpose>A single packet in a data file</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+packet ::= (<replaceable>type-specific content</replaceable>,
+            &xml-tag;*, &xml-packet;*)</synopsis>
+      The contents of a <sgmltag>packet</sgmltag> element
+      depend upon the particular type of packet (such as container,
+      text, triangulation and so on).  The specific content model for each
+      packet type is documented on its own reference page; see below for
+      details.
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>label</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>parent</sgmltag></entry>
+      <entry><type>CDATA</type></entry>
+     </row>
+     <row>
+      <entry><sgmltag>type</sgmltag></entry>
+      <entry><type>CDATA</type></entry>
+     </row>
+     <row>
+      <entry><sgmltag>typeid</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-packet; element represents a single packet in a &regina; data
+   file.  A packet is a single data object, such as a triangulation, a
+   text note or a &python; script.  A general discussion of packets and
+   their different types can be found in the chapter on
+   <link linkend="packet">working with packets</link>.
+  </para>
+  <para>
+   The precise &xml-packet; content model differs between packet types.
+   These type-specific content models are individually documented on
+   the following reference pages.
+   <itemizedlist>
+    <listitem><para>&xml-packet-anglestructurelist;</para></listitem>
+    <listitem><para>&xml-packet-container;</para></listitem>
+    <listitem><para>&xml-packet-normalsurfacelist;</para></listitem>
+    <listitem><para>&xml-packet-script;</para></listitem>
+    <listitem><para>&xml-packet-surfacefilter;</para></listitem>
+    <listitem><para>&xml-packet-text;</para></listitem>
+    <listitem><para>&xml-packet-triangulation;</para></listitem>
+   </itemizedlist>
+  </para>
+  <para>
+   Each packet may have an arbitrary set of string tags associated with
+   it; these are represented by the child &xml-tag; elements.
+  </para>
+  <para>
+   Packets in a data file are arranged in a tree structure; each packet
+   (aside from the top-level packet) has a single parent packet and zero
+   or more child packets.  The child packets of this packet are
+   represented by the child &xml-packet; elements of this element.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>packet</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet;</member>
+     <member>&xml-reginadata;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>packet</sgmltag> regardless
+    of packet type:
+    <simplelist type="inline">
+     <member>&xml-packet;</member>
+     <member>&xml-tag;</member>
+    </simplelist>.
+   </para>
+   <para>
+    Additional elements may also occur for specific packet types; these
+    are documented on separate reference pages for each individual
+    packet type (see above).
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>label</sgmltag></term>
+    <listitem><para>
+     The label of this particular packet, i.e., the name associated
+     with this packet in the overall packet tree.  No two packets in a
+     packet tree should have the same label.
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>parent</sgmltag></term>
+    <listitem><para>
+     The label of the parent of this packet in the overall packet tree.
+     This attribute should be the empty string if this packet has no
+     parent (i.e., this packet is the root of the entire packet tree).
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>type</sgmltag></term>
+    <listitem><para>
+     The packet type expressed as a human-readable string.
+     Example types are <literal>Container</literal>,
+     <literal>Text</literal> and <literal>Triangulation</literal>.
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>typeid</sgmltag></term>
+    <listitem><para>
+     The packet type expressed as an internal
+     identification code.  This will be a positive integer.
+    </para></listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+</refentry>

@@ -1,0 +1,105 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-compact-filter">
+ <refmeta>
+  <refentrytitle>compact (filter)</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>compact (filter)</refname>
+  <refpurpose>A constraint on compactness</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+compact ::=</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>value</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-compact-filter; element represents a constraint on the
+   compactness of a normal surface.  A compact surface is one containing
+   finitely many normal discs.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>compact</sgmltag> (in the
+    context of a constraint on surface properties):
+    <simplelist type="inline">
+     <member>&xml-filter-properties;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>compact</sgmltag> (in the context of a
+    constraint on surface properties) has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>value</sgmltag></term>
+    <listitem>
+     <para>
+      Contains the specific constraint upon the compactness of a surface.
+      The following values are allowed.
+      <itemizedlist>
+       <listitem><para>
+        <literal>TF</literal> signifies that the surface may be either
+        compact or non-compact, i.e., no constraint is imposed.
+       </para></listitem>
+       <listitem><para>
+        <literal>T-</literal> signifies that the surface must be
+        compact.
+       </para></listitem>
+       <listitem><para>
+        <literal>-F</literal> signifies that the surface must be
+        non-compact.
+       </para></listitem>
+       <listitem><para>
+        <literal>--</literal> signifies that the surface must be neither
+        compact nor non-compact, i.e., no surfaces are accepted.
+       </para></listitem>
+      </itemizedlist>
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+</refentry>

@@ -1,0 +1,63 @@
+example$ regina-python
+Regina 4.0
+A Normal Surface Theory Calculator
+Copyright (c) 1999-2003, Ben Burton
+&gt;&gt;&gt; # Create a new census of finite orientable closed 3-manifolds with
+... # two tetrahedra.
+... from regina import NBoolSet
+&gt;&gt;&gt; census = regina.NContainer()
+&gt;&gt;&gt; regina.NCensus.formCensus(census, 2, NBoolSet.sTrue,
+...     NBoolSet.sTrue, NBoolSet.sFalse, 0, 0)
+16
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Calculate the homology of each triangulation in the census.
+... # The triangulations are the child packets of the census container.
+... tri = census.getFirstTreeChild()
+&gt;&gt;&gt; while tri != None:
+...     print tri.getPacketLabel() + ":", tri.getHomologyH1()
+...     tri = tri.getNextTreeSibling()
+...
+Item 1: Z_7
+Item 2: Z_5
+Item 3: Z
+Item 4: Z_3
+Item 5: Z_8
+Item 6: 0
+Item 7: 0
+Item 8: 0
+Item 9: Z_2
+Item 10: 0
+Item 11: 0
+Item 12: Z_3
+Item 13: 0
+Item 14: Z_3
+Item 15: 2 Z_2
+Item 16: Z_2
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Remove from the tree each triangulation with trivial homology.
+... tri = census.getFirstTreeChild()
+&gt;&gt;&gt; while tri != None:
+...     next = tri.getNextTreeSibling()
+...     hom = tri.getHomologyH1()
+...     if hom.getRank() == 0 and hom.getNumberOfInvariantFactors() == 0:
+...         tri.makeOrphan()
+...     tri = next
+...
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Print the homology of each remaining triangulation.
+... tri = census.getFirstTreeChild()
+&gt;&gt;&gt; while tri != None:
+...     print tri.getPacketLabel() + ":", tri.getHomologyH1()
+...     tri = tri.getNextTreeSibling()
+...
+Item 1: Z_7
+Item 2: Z_5
+Item 3: Z
+Item 4: Z_3
+Item 5: Z_8
+Item 9: Z_2
+Item 12: Z_3
+Item 14: Z_3
+Item 15: 2 Z_2
+Item 16: Z_2
+&gt;&gt;&gt;

@@ -1,0 +1,169 @@
+<?xml version="1.0" ?>
+<chapter id="angles">
+ <title>Angle Structures</title>
+
+ <para>
+  An <firstterm>angle structure</firstterm> on a triangulation is a
+  generalisation of a hyperbolic structure that contains some but not all
+  of the properties required to produce a hyperbolic metric.
+ </para>
+ <para>
+  In an angle structure, each of the six edges in each tetrahedron are
+  assigned an angle.  Opposite edges in a tetrahedron must be assigned
+  the same angle.  Furthermore, the six angles assigned for each
+  tetrahedron must sum to &twopi;, and the sum of all angles around each
+  non-boundary edge in the triangulation must sum to &twopi;.
+ </para>
+ <para>
+  Angle structures are represented here as vectors containing three
+  elements per tetrahedron (corresponding to the three pairs of equal
+  angles in each tetrahedron).
+ </para>
+
+ <warning>
+  <para>
+   An angle structure list in the packet tree <emphasis>must</emphasis> be a
+   child packet of the triangulation on which the structures are placed.
+  </para>
+  <para>
+   Furthermore, since each angle structure is stored as a vector relative
+   to the triangulation's tetrahedra, a triangulation cannot be changed
+   once it has a child angle structure list packet.  If you wish to edit
+   such a triangulation, try cloning the packet (excluding descendants so
+   the angle structures are not cloned as well) and edit the clone instead.
+  </para>
+ </warning>
+
+ <sect1 id="angles-creation">
+  <title>Creation</title>
+
+  <para>
+   A new list of angle structures can be created through the
+   <menuchoice>
+    <guimenu>Packet</guimenu>
+    <guisubmenu>New</guisubmenu>
+    <guimenuitem>Angle Structure Solutions</guimenuitem>
+   </menuchoice>
+   menu item.
+  </para>
+  <para>
+   Only <firstterm>vertex angle structures</firstterm> will be placed in
+   the new list; all other angle structures can be formed as convex
+   combinations of these vertex structures.
+  </para>
+  <para>
+   Before the angle structures are created, you will be asked to specify
+   the triangulation on which the structures are to be placed.
+   This triangulation should be some packet in the packet tree.
+  </para>
+ </sect1>
+
+ <sect1 id="angles-analysis">
+  <title>Analysis</title>
+
+  <para>
+   Various properties of the individual structures that form an angle
+   structure list are available in the angle structure list viewer.
+  </para>
+
+  <sect2 id="angles-viewlistprops">
+   <title>Basic Structure List Properties</title>
+
+   <para>
+    Above the table of structures in the angle structure list viewer
+    are displayed some basic properties of the angle structure list.
+    These include:
+    <itemizedlist>
+     <listitem><para>
+      a count of the total number of vertex structures contained within;
+     </para></listitem>
+     <listitem><para>
+      whether or not the convex span of these vertex structures
+      contains any strict and/or taut angle structures.  See the
+      <link linkend="angles-viewstructureprops">individual
+      structure properties</link> section below for details on what these
+      mean.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+  </sect2>
+
+  <sect2 id="angles-viewstructurecoords">
+   <title>Individual Angles</title>
+
+   <para>
+    The angle structure list viewer contains a table of all the
+    individual angle structures that form this list.  Each
+    structure is presented as a vector of individual angles.
+   </para>
+   <para>
+    Each row of this table represents an individual angle structure.
+    The left few columns of the table contain various miscellaneous
+    structure properties (see the <link
+    linkend="angles-viewstructureprops">individual structure
+    properties</link> section below).
+    The remaining columns contain the actual angles.
+   </para>
+   <para>
+    The individual angle columns are labelled
+    <literal>0:01/23</literal>, <literal>0:02/13</literal>,
+    <literal>0:03/12</literal>, <literal>1:01/23</literal>,
+    <literal>1:02/13</literal>, <literal>1:03/12</literal>,
+    <literal>2:01/23</literal>, etc.  Coordinate
+    <literal><replaceable>t</replaceable>:<replaceable>ab</replaceable>/<replaceable>cd</replaceable></literal>
+    represents the angle assigned to the edge in tetrahedron
+    <replaceable>t</replaceable> that joins tetrahedron vertices
+    <replaceable>a</replaceable> and <replaceable>b</replaceable>, as
+    well as the (opposite) edge that joins tetrahedron vertices
+    <replaceable>c</replaceable> and <replaceable>d</replaceable>
+    (<replaceable>a</replaceable>, <replaceable>b</replaceable>,
+    <replaceable>c</replaceable> and <replaceable>d</replaceable>
+    will always be 0, 1, 2 and 3 in some order).
+   </para>
+  </sect2>
+
+  <sect2 id="angles-viewstructureprops">
+   <title>Individual Structure Properties</title>
+
+   <para>
+    As described in the
+    <link linkend="angles-viewstructurecoords">individual angles</link>
+    section above, the angle structure list viewer contains a table of
+    every vertex structure contained in this list.
+   </para>
+   <para>
+    The left few columns of this table contain a variety of angle structure
+    properties as described below.
+   </para>
+   <para>
+    <glosslist>
+     <glossentry>
+      <glossterm>Type</glossterm>
+      <glossdef><para>
+       If a structure is recognised as being of a particular type,
+       that type will be listed in this column.  At most one such type
+       will be displayed for any particular angle structure.
+       The following types are currently recognised.
+       <glosslist>
+        <glossentry>
+         <glossterm>Strict</glossterm>
+         <glossdef><para>
+          Indicates a strict angle structure (none of its angles are
+          equal to 0 or &pi;).
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm>Taut</glossterm>
+         <glossdef><para>
+          Indicates a taut angle structure (all of its angles are
+          equal to 0 or &pi;).
+         </para></glossdef>
+        </glossentry>
+       </glosslist>
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+  </sect2>
+ </sect1>
+</chapter>

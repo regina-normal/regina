@@ -1,56 +1,129 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
-  <!ENTITY kappname "&regina;">
   <!ENTITY regina "<application>Regina</application>">
+  <!ENTITY kappname "&regina;">
+
+  <!ENTITY regversion "3.95 (4.0 prerelease)">
+  <!ENTITY regdate "12 October 2003">
+  <!ENTITY regauthorplain "Ben Burton">
+  <!ENTITY copyrightyears "1999&ndash;2003">
+  <!ENTITY copyrightholder "&regauthorplain;">
+  <!ENTITY copyrightnotice
+   "Copyright &copy; &copyrightyears;, &copyrightholder;">
+  <!ENTITY reguserlist "<email>regina-user@lists.sourceforge.net</email>">
+  <!ENTITY regemail "<email>bab@debian.org</email>">
+  <!ENTITY regauthor
+   "<author>
+     <firstname>Benjamin</firstname>
+     <surname>Burton</surname>
+     <affiliation>
+      <address>&regemail;</address>
+     </affiliation>
+    </author>">
+  <!ENTITY regabstract
+   "<para>
+     &regina; is a topological calculator with a bent towards normal surface
+     theory. It allows 3-manifolds to be created and manipulated and their
+     properties of interest to be determined.
+    </para>">
+
+  <!ENTITY gui "<acronym>GUI</acronym>">
+  <!ENTITY java "<application>Java</application>">
+  <!ENTITY pi "<literal>Pi</literal>">
+  <!ENTITY python "<application>Python</application>">
+  <!ENTITY snappea "<application>SnapPea</application>">
+  <!ENTITY sourceforge "<productname>SourceForge</productname>">
+  <!ENTITY sss "S<superscript>3</superscript>">
+  <!ENTITY todo "TODO">
+  <!ENTITY twopi "<literal>2*Pi</literal>">
+  <!ENTITY xml "<acronym>XML</acronym>">
+
+  <!ENTITY reginaabout SYSTEM "about.docbook">
+  <!ENTITY reginafeatureset SYSTEM "featureset.docbook">
+  <!ENTITY reginapacket SYSTEM "packet.docbook">
+  <!ENTITY reginatriangulations SYSTEM "triangulations.docbook">
+  <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
+  <!ENTITY reginaangles SYSTEM "angles.docbook">
+  <!ENTITY reginapython SYSTEM "python.docbook">
+  <!ENTITY reginaoptions SYSTEM "options.docbook">
+  <!ENTITY reginaservices SYSTEM "services.docbook">
+  <!ENTITY reginacredits SYSTEM "credits.docbook">
+  <!ENTITY reginatrouble SYSTEM "trouble.docbook">
+  <!ENTITY dataformat SYSTEM "dataformat.docbook">
+  <!ENTITY reginahighlights SYSTEM "HIGHLIGHTS.txt">
+  <!ENTITY reginaman SYSTEM "reginaman.docbook">
+  <!ENTITY reginautils SYSTEM "utils.docbook">
+  <!ENTITY bibliography SYSTEM "bibliography.docbook">
+  <!ENTITY sessiontriangulation SYSTEM "triangulation.session">
+  <!ENTITY sessiontree SYSTEM "tree.session">
+
+  <!ENTITY % dataformat-entities SYSTEM "dataformat.ent">
+  %dataformat-entities;
+
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 ]>
 
 <book lang="&language;">
  <bookinfo>
-  <title>The &regina; Handbook</title>
+  <!-- TODO: largeicon to the right? -->
+  <title>&regina; Reference Manual</title>
 
   <authorgroup>
-   <author>
-    <firstname>Ben</firstname>
-    <surname>Burton</surname>
-    <affiliation>
-     <address><email>bab@debian.org</email></address>
-    </affiliation>
-   </author>
+   &regauthor;
   </authorgroup>
+
+  <copyright>
+   <year>&copyrightyears;</year>
+   <holder>&copyrightholder;</holder>
+  </copyright>
 
   <legalnotice>&FDLNotice;</legalnotice>
 
-  <date>1 December 2002</date>
-  <releaseinfo>4.0</releaseinfo>
+  <date>2003-10-12</date>
+  <releaseinfo>3.95 (4.0 prerelease)</releaseinfo>
 
   <abstract>
+   &regabstract;
    <para>
-    &regina; is a normal surface theory calculator.
+    This reference manual is current as of &regdate; for &regina; &regversion;.
    </para>
   </abstract>
 
   <keywordset>
    <keyword>KDE</keyword>
    <keyword>Regina</keyword>
+   <keyword>topology</keyword>
+   <keyword>3-manifold</keyword>
+   <keyword>normal surfaces</keyword>
   </keywordset>
  </bookinfo>
 
- <chapter id="introduction">
-  <title>Introduction</title>
-  <para>
-   The documentation for &kappname; has not yet been ported to &kde; docbook.
-  </para>
-  <para>
-   Please check <ulink url="http://regina.sourceforge.net">the &regina;
-   website</ulink> for further information.
-  </para>
+ <!-- Chapters -->
+ &reginaabout;
+ &reginapacket;
+ &reginatriangulations;
+ &reginasurfaces;
+ &reginaangles;
+ &reginapython;
+ &reginaoptions;
+ &reginaservices;
+ &reginacredits;
 
-  &underFDL;
+ <!-- References -->
+ &reginaman;
+ &reginautils;
+ &dataformat;
 
- </chapter>
+ <!-- Appendices -->
+ &reginatrouble;
+ <appendix id="history">
+  <title>Version History</title>
+  <programlisting>&reginahighlights;</programlisting>
+ </appendix>
 
- &documentation.index; 
+ <!-- Final Material -->
+ &bibliography;
+ &documentation.index;
 </book>
 

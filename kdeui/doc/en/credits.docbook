@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<chapter id="credits">
+ <title>License and Acknowledgements</title>
+
+ <sect1 id="licenses">
+  <title>License Details</title>
+
+  <para>
+   <emphasis>&regina; &ndash; A Normal Surface Theory Calculator</emphasis>
+  </para>
+
+  <para>
+   &copyrightnotice;
+  </para>
+
+  &GPLNotice;
+  &underFDL;
+ </sect1>
+
+ <sect1 id="acknowledgements">
+  <title>Acknowledgements</title>
+  <para>
+   &regina; was written by &regauthor;.
+  </para>
+
+  <para>
+   Normal 1.0 was written by
+   <author><firstname>David</firstname><surname>Letscher</surname></author>,
+   who also provided invaluable technical advice for this project.
+  </para>
+
+  <para>Additional code contributed by:
+   <itemizedlist>
+    <listitem><para><author>
+     <firstname>David</firstname><surname>Letscher</surname>
+    </author></para></listitem>
+   </itemizedlist>
+  </para>
+  <para>Thanks to:
+   <itemizedlist>
+    <listitem><para><author>
+     <firstname>Marc</firstname><surname>Culler</surname>
+    </author></para></listitem>
+    <listitem><para><author>
+     <firstname>Nathan</firstname><surname>Dunfield</surname>
+    </author></para></listitem>
+    <listitem><para><author>
+     <firstname>William</firstname><surname>Jaco</surname>
+    </author></para></listitem>
+    <listitem><para><author>
+     <firstname>Hyam</firstname><surname>Rubinstein</surname>
+    </author></para></listitem>
+    <listitem><para><author>
+     <firstname>Jeff</firstname><surname>Weeks</surname>
+    </author></para></listitem>
+    <listitem><para>The American Institute of Mathematics</para></listitem>
+    <listitem><para>Oklahoma State University</para></listitem>
+    <listitem><para>The University of Melbourne, Australia</para></listitem>
+   </itemizedlist>
+  </para>
+ </sect1>
+</chapter>

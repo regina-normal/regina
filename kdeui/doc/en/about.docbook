@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<chapter id="about">
+ <title>Introduction</title>
+ &reginafeatureset;
+
+ <sect1 id="preface">
+  <title>&regina; &ndash; A Normal Surface Theory Calculator</title>
+  <para>TODO</para>
+ </sect1>
+
+ <sect1 id="tutorial">
+  <title>Getting Started</title>
+  <para>
+   The best way to become familiar with &regina; is simply to play
+   around with it.  &regina; ships with several example files, including
+   a number of censuses of 3-manifold triangulations.
+  </para>
+  <para>
+   The file <filename>sample-misc.rga</filename> is an excellent
+   starting point, since it contains examples of most of the
+   structures that &regina; can work with.  Sample &python; sessions are
+   also included to illustrate how the in-built &python; scripting can
+   be used.
+  </para>
+  <para>
+   As a final note, users are encouraged to write to &reguserlist; with
+   any questions as described on the <link linkend="services">user
+   services page</link>.
+  </para>
+ </sect1>
+
+ <sect1 id="genealogy">
+  <title>Genealogy</title>
+
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="normalicon.png" align="right"/>
+   </imageobject>
+  </mediaobject>
+
+  <para>
+   In 1997 in Melbourne, David Letscher, Richard Rannard and Ben Burton
+   under the guidance of Hyam Rubinstein planned out a program that
+   would do normal surface theory and everything else besides.  Much
+   groundwork planning was done, epsilon code was written and then
+   things kind of faded away.  David Letscher revived the project on his
+   own and in 1999 presented <application>Normal 1.0</application>.
+   This program performed
+   triangulation simplification and found vertex normal surfaces, was
+   written in &java; and was a proof-of-concept program that normal
+   surface theory was computationally feasible.
+  </para>
+  <para>
+   In March 1999, David and Ben sat down to write a new version
+   of the program from scratch.  The new version would have a
+   calculation engine written in C++ for speed and would have a &java;
+   GUI for portability.  It would be carefully
+   designed and written with rigour and extensibility in mind, allowing
+   for the possibility of add-ons written by other people.
+  </para>
+  <para>
+   David however leads a busy life and pulled out of the project, but
+   remains to offer fabulous technical advice.  In late 2000 a
+   prerelease of the new program was ready (under an appropriate
+   definition of "ready") and voila, here we are today.
+  </para>
+ </sect1>
+
+ <sect1 id="who">
+  <title>Who is Regina?</title>
+
+  <para>
+   This normal surface theory calculator has been named after Regina
+   Grenfell (nee Basman) who once told me she was the most normal person
+   I knew.  She's doing a mathematics PhD, reads cool books and sometimes
+   draws people, and she likes running around rainforests in the dark.
+  </para>
+
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="basman.png"/>
+   </imageobject>
+  </mediaobject>
+ </sect1>
+</chapter>

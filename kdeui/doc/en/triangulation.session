@@ -1,0 +1,107 @@
+example$ regina-python
+Regina 4.0
+A Normal Surface Theory Calculator
+Copyright (c) 1999-2003, Ben Burton
+&gt;&gt;&gt; # Create a new (3,4,7) layered solid torus.
+... t = regina.NTriangulation()
+&gt;&gt;&gt; t.insertLayeredSolidTorus(3,4)
+&lt;regina.NTetrahedron object at 0x40216d14&gt;
+&gt;&gt;&gt; print t
+Triangulation with 3 tetrahedra.
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Dump skeletal information for the triangulation.
+... print t.toStringLong()
+Size of the skeleton:
+  Tetrahedra: 3
+  Faces: 7
+  Edges: 5
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  glued to:      (012)      (013)      (023)      (123)
+  -----+-------------------------------------------------------
+    0  |              boundary   boundary    1 (012)    1 (130)
+    1  |               0 (023)    0 (312)    2 (013)    2 (120)
+    2  |               1 (312)    1 (023)    2 (312)    2 (230)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   2   2   1   3
+    1  |           1   2   3   3   2   4
+    2  |           2   4   3   3   4   3
+
+Faces:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           2   3   4   5
+    2  |           5   4   6   6
+
+
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Calculate various properties of the triangulation.
+... print t.getHomologyH1()
+Z
+&gt;&gt;&gt; print t.getHomologyH1Bdry()
+2 Z
+&gt;&gt;&gt; print t.isZeroEfficient()
+0
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Get a list of normal surfaces in standard tri-quad coordinates.
+... from regina import NNormalSurfaceList
+&gt;&gt;&gt; surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Dump the entire list of vertex normal surfaces.
+... print surfaces.toStringLong()
+Embedded vertex normal surfaces
+Coordinates: Standard normal (tri-quad)
+Number of surfaces is 9
+0 0 0 0 ; 0 1 0 || 0 0 0 0 ; 1 0 0 || 0 0 0 0 ; 0 1 0
+0 0 1 1 ; 1 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
+1 1 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0
+1 1 1 1 ; 0 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
+0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
+0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0
+1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
+0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0
+3 3 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 2 || 1 1 0 0 ; 0 0 1
+
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Print the Euler characteristic and orientability of each surface.
+... for i in range(surfaces.getNumberOfSurfaces()):
+...     s = surfaces.getSurface(i)
+...     print "Chi =", s.getEulerCharacteristic(), "; Or =", s.isOrientable()
+...
+Chi = -1 ; Or = -1
+Chi = -2 ; Or = 1
+Chi = 0 ; Or = -1
+Chi = -1 ; Or = 1
+Chi = 0 ; Or = 1
+Chi = 0 ; Or = 1
+Chi = 1 ; Or = 1
+Chi = 0 ; Or = 1
+Chi = 1 ; Or = 1
+&gt;&gt;&gt;
+&gt;&gt;&gt; # List all the surfaces with more than one quad in the first
+&gt;&gt;&gt; tetrahedron.
+... for i in range(surfaces.getNumberOfSurfaces()):
+...     s = surfaces.getSurface(i)
+...     if s.getQuadCoord(0,0) + s.getQuadCoord(0,1) + s.getQuadCoord(0,2) &gt; 1:
+...         print s
+...
+0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0
+0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Tidy up.
+... # Delete the triangulation; this will automatically delete the surface
+... # list since the surface list is a child packet of the triangulation.
+... t = None
+&gt;&gt;&gt;

@@ -1,0 +1,87 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-packet-anglestructurelist">
+ <refmeta>
+  <refentrytitle>packet (angle structure list)</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>packet (angle structure list)</refname>
+  <refpurpose>An angle structure list packet</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+packet ::= (&xml-struct;*, &xml-allowstrict;?, &xml-allowtaut;?,
+            &xml-tag;*, &xml-packet;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      See the general &xml-packet; element documentation.
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   An <link linkend="packet-anglestructures">angle structure list
+   packet</link> stores a list of angle structures on a particular
+   triangulation.  Generally this list will contain the vertex
+   structures whose convex span is the set of all angle structures on
+   the triangulation.
+  </para>
+  <para>
+   The parent element of this angle structure list must be the
+   triangulation on which the angle structures lie.  The individual
+   angle structures in this list are contained in the child &xml-struct;
+   elements.
+  </para>
+  <para>
+   The roles played by the child &xml-tag; and &xml-packet; elements are
+   described in the general &xml-packet; element documentation.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>packet</sgmltag> for
+    an angle structure list packet:
+    <simplelist type="inline">
+     <member>&xml-packet-triangulation;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>packet</sgmltag> for
+    an angle structure list packet:
+    <simplelist type="inline">
+     <member>&xml-allowstrict;</member>
+     <member>&xml-allowtaut;</member>
+     <member>&xml-packet;</member>
+     <member>&xml-struct;</member>
+     <member>&xml-tag;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+</refentry>
