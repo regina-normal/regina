@@ -412,6 +412,32 @@ AC_DEFUN(REGINA_LIB_REQUIRED, [
 ])
 
 dnl
+dnl    REGINA_PACKAGE_VERSIONS
+dnl
+dnl    Extracts major and minor version numbers from $PACKAGE_VERSION.
+dnl
+dnl    Variable $PACKAGE_VERSION must contain a set of components
+dnl    separated by periods (such as 2.3.1).  The first two of these
+dnl    components are defined to be the major and minor versions
+dnl    respectively, and must be integers.
+dnl
+dnl    AC_DEFINE()s the following integer variables:
+dnl
+dnl        PACKAGE_VERSION_MAJOR: The extracted major version.
+dnl        PACKAGE_VERSION_MINOR: The extracted minor version.
+dnl
+AC_DEFUN(REGINA_PACKAGE_VERSIONS, [
+  PACKAGE_VERSION_MAJOR=`echo "$PACKAGE_VERSION" | \
+    sed -e 's#\..*##'`
+  PACKAGE_VERSION_MINOR=`echo "$PACKAGE_VERSION" | \
+    sed -e 's#^[0-9]*\.##' | sed -e 's#\..*##'`
+  AC_DEFINE_UNQUOTED(PACKAGE_VERSION_MAJOR, [$PACKAGE_VERSION_MAJOR],
+    [Major version number of the package.])
+  AC_DEFINE_UNQUOTED(PACKAGE_VERSION_MINOR, [$PACKAGE_VERSION_MINOR],
+    [Minor version number of the package.])
+])
+
+dnl
 dnl    REGINA_PROG_JAVAC(TARGET-LIST, REQUIRED-BY)
 dnl
 dnl    Finds a Java compiler that satisfies the requirements of the
