@@ -161,12 +161,16 @@ int main(int argc, char* argv[]) {
         sleep(SLEEP_SECONDS);
 
     const regina::NProgress* progress = manager.getProgress();
+    std::cout.flush();
     while (! manager.isFinished()) {
-        if (progress->hasChanged())
+        if (progress->hasChanged()) {
             std::cout << progress->getDescription() << '\n';
+            std::cout.flush();
+        }
         sleep(SLEEP_SECONDS);
     }
     std::cout << progress->getDescription() << '\n';
+    std::cout.flush();
 
     // Write the completed census to file.
     if (! regina::writeToFile(argv[1], &parent)) {
@@ -176,6 +180,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Total triangulations: "
         << census->getNumberOfChildren() << '\n';
+    std::cout.flush();
     return 0;
 }
 
