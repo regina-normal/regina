@@ -162,7 +162,7 @@ if [ -n "$1" ]; then
         error "Error: The script $1 does not exist."
         exit 1
     fi
-    if "$REGINA_PYTHON" "$REGINA_HOME/scripts/runscript.py" -- "$1"; then
+    if "$REGINA_PYTHON" "$REGINA_HOME/scripts/runscript.py" -- "$@"; then
         exit 0
     fi
 else
