@@ -58,7 +58,7 @@ export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
 	-I/usr/lib/j2sdk1.3/include/linux
 #export JNI_INCLUDES := -I/usr/include/kaffe
 export CORBA_INCLUDES := -D__x86__
-export EXTRA_INCLUDES := -I/usr/include/g++-v3/ext
+export EXTRA_INCLUDES := -idirafter /usr/include/g++-v3/ext
 
 export CORBA_LIBRARIES := -lomniORB3 -lomniGK_stub
 #export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
@@ -74,6 +74,9 @@ export EXTRA_LIBRARIES := -lgmp -lpthread
 # __HASH_NAMESPACE=<namespace>: Use this if hash_set, hash_map and related
 #                               classes from the Standard Template Library
 #                               do not belong to the std:: namespace.
+# __NO_NAMESPACE_ALIASES: Use this if your compiler has trouble with
+#                         namespace aliases (namespace foo = bar).  This
+#                         option will replace aliases with #defines.
 
 export PD_MACROS :=
 

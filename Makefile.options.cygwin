@@ -73,8 +73,11 @@ export EXTRA_LIBRARIES := -lgmp -lstdc++
 # __HASH_NAMESPACE=<namespace>: Use this if hash_set, hash_map and related
 #                               classes from the Standard Template Library
 #                               do not belong to the std:: namespace.
+# __NO_NAMESPACE_ALIASES: Use this if your compiler has trouble with
+#                         namespace aliases (namespace foo = bar).  This
+#                         option will replace aliases with #defines.
 
-export PD_MACROS := __USE_IOS_NOCREATE
+export PD_MACROS := __USE_IOS_NOCREATE __NO_NAMESPACE_ALIASES
 
 # Specify here the character that separates components on the classpath.
 # This will for instance be : under linux/unix and ; under windows.

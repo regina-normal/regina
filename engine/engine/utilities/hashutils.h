@@ -42,10 +42,18 @@
  * The namespace containing <tt>hash_set</tt>, <tt>hash_map</tt> and
  * other associated Standard Template Library extension classes.
  */
-#ifdef __HASH_NAMESPACE
-    namespace stdhash = __HASH_NAMESPACE;
+#ifdef __NO_NAMESPACE_ALIASES
+    #ifdef __HASH_NAMESPACE
+        #define stdhash __HASH_NAMESPACE
+    #else
+        #define stdhash std
+    #endif
 #else
-    namespace stdhash = std;
+    #ifdef __HASH_NAMESPACE
+        namespace stdhash = __HASH_NAMESPACE;
+    #else
+        namespace stdhash = std;
+    #endif
 #endif
 
 /**
