@@ -45,6 +45,10 @@
       <numberofjobs>1</numberofjobs>
       <dontact>false</dontact>
       <makebin/>
+      <envvars>
+        <envvar value="1" name="WANT_AUTOCONF_2_5" />
+        <envvar value="1" name="WANT_AUTOMAKE_1_6" />
+      </envvars>
     </make>
   </kdevautoproject>
   <kdevfileview>
