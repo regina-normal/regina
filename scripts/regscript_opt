@@ -171,7 +171,7 @@ if [ -z "$REGINA_JAVA" ]; then
 fi
 
 if [ -z "$REGINA_JNIDIR" ]; then
-	export REGINA_JNIDIR="$REGINA_HOME/bin"
+	export REGINA_JNIDIR="$REGINA_HOME/bin:/usr/lib"
 fi
 if [ -z "$REGINA_JNIENGINE" ]; then
 	jnilib="regina-engine-jni"
@@ -183,8 +183,17 @@ if [ "$OSTYPE" = "cygwin" ]; then
 else
 	jnilib="lib$jnilib.so"
 fi
-if [ ! -e "$REGINA_JNIDIR/$jnilib" ]; then
-	warn "Warning: The JNI library directory could not be found."
+# Look for the JNI library in each colon-separated component of $REGINA_JNIDIR.
+foundlib=0
+IFS=:
+for i in $REGINA_JNIDIR; do
+	if [ -e "$i/$jnilib" ]; then
+		foundlib=1
+	fi
+done
+IFS=
+if [ "$foundlib" = "0" ]; then
+	warn "Warning: The JNI library could not be found."
 	warn "         The JNI calculation engine will not be available."
 	warn "         To fix this, set \$REGINA_JNIDIR to the directory"
 	warn "         containing $jnilib and try again."

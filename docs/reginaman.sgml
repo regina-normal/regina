@@ -466,16 +466,17 @@
     </varlistentry>
     <varlistentry>
      <term><parameter>REGINA_JNIDIR</parameter> (default =
-      <filename><replaceable>REGINA_HOME</replaceable>/bin</filename>)</term>
+      <filename><replaceable>REGINA_HOME</replaceable>/bin:/usr/lib</filename>)</term>
      <listitem>
       <para>
-       The directory containing the &jni; library.  The &jni; library is
-       optional, but is needed if you wish to connect to the calculation
-       engine using &jni; (see the option
+       A colon-separated list of directories containing &jni; libraries.
+       If you wish to connect to the calculation engine using &jni;, one
+       of these directories must contain the &jni; calculation engine
+       library (see the option
        <parameter>REGINA_ENGINE</parameter> for further details).
       </para>
       <para>
-       The &jni; library itself will usually be called
+       The &jni; calculation engine library itself will usually be called
        <filename>libregina-engine-jni.so</filename> on &linux; systems
        or <filename>regina-engine-jni.dll</filename> on &windows;
        systems, but this can be changed by setting option
@@ -483,7 +484,7 @@
       </para>
       <para>
        Note that option <parameter>REGINA_JNIDIR</parameter> should only
-       provide a directory, not a library name.
+       provide a list of directories, not actual library names.
       </para>
      </listitem>
     </varlistentry>
