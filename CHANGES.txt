@@ -9,6 +9,8 @@ Regina - A Normal Surface Theory Calculator
     HIGHLIGHTS.txt in the same directory as this file.
 
 Version 3.1  [ (under development) ]
+    OVERALL:
+        - Added calculation engine test suite.
     ENGINE:
         Class NCensus:
             - Redesigned to do its work through classes NFacePairing and
@@ -23,6 +25,8 @@ Version 3.1  [ (under development) ]
         Class NTriangulation:
             - Fixed idealToFinite() which was newly broken in Regina 3.0.
             - Routine simplifyToLocalMinimum() now make boundary moves last.
+        Routine reducedMod():
+            - Fixed bug in the midpoint case.
         File nperm.h:
             - New arrays allPermsS2Inv, allPermsS3Inv, allPermsS4Inv.
     UTILITIES:

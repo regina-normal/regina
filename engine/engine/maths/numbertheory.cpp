@@ -118,7 +118,7 @@ unsigned long modularInverse(unsigned long n, unsigned long k) {
         return 0;
 
     long u, v;
-    gcdWithCoeffs(n, k, u, v);
+    gcdWithCoeffs(n, k % n, u, v);
     // GCD should equal 1, so u*n + k*v = 1.
     // Inverse is v; note that -n < v <= 0.
     // Since n >= 2 now and (n,k) = 1, we know v != 0.
