@@ -13,20 +13,12 @@ Specific Targets
 ----------------
 
 engine - build the C++ calculation engine library
-jni - build the engine library that communicates with the Java user interface
-java - build the Java user interface
-utils - build all miscellaneous utility programs
-bin - all of the above binary targets
+kdeui - build the KDE user interface
+python - build the Python bindings
+utils - build the command-line utility programs
 
 enginedocs - build the C++ calculation engine documentation
-javadocs - build the Java user interface documentation
-html - build the HTML reference manual
 man - build the man pages
-docjar - build a complete documentation jar for the Java UI help system
-docs - all of the above documentation targets
-
-jnihdr - build (unnecessary) auto-generated JNI header files
-jnihdr-clean - remove auto-generated JNI header files
 
 valgrind - run valgrind memory tests on the calculation engine
 

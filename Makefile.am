@@ -22,13 +22,12 @@ SUBDIRS = \
 
 EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
   AUTHORS.txt INSTALL.txt LICENSE.txt README.txt \
-  regina.in regina.conf.sample \
   Makefile-help Makefile.cvs
 
 ## ----------------------- Custom targets ----------------------------
 
-.PHONY : engine utils bin \
-  enginedocs html man docs \
+.PHONY : engine kdeui python utils \
+  enginedocs man \
   valgrind help
 
 mostlyclean-local :
@@ -36,17 +35,17 @@ mostlyclean-local :
 
 engine :
 	cd engine/engine && $(MAKE)
+kdeui : engine
+	cd kdeui && $(MAKE)
+python : engine
+	cd python && $(MAKE)
 utils : engine
 	cd utils && $(MAKE)
-bin : engine utils
 
 enginedocs :
 	cd docs/engine && $(MAKE)
-html :
-	cd docs && $(MAKE) html
 man :
 	cd docs && $(MAKE) man
-docs : enginedocs html man
 
 valgrind:
 	## Run the test suite so that libtool regenerates lt-regtestsuite.
