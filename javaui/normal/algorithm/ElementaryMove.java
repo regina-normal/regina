@@ -31,9 +31,11 @@ package normal.algorithm;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import normal.Shell;
 import normal.engine.packet.*;
 import normal.engine.triangulation.*;
+import normal.packetui.triangulation.SkeletonTableFrame;
 import org.gjt.btools.gui.*;
 import org.gjt.btools.gui.component.*;
 import org.gjt.btools.utilities.*;
@@ -103,12 +105,27 @@ public class ElementaryMove extends Modification {
 		/**
 		 * OK button.
 		 */
-		private JButton ok = new JButton();
+		private JButton ok;
 
 		/**
 		 * Cancel button.
 		 */
-		private JButton cancel = new JButton();
+		private JButton cancel;
+
+		/**
+		 * View vertex details.
+		 */
+		private JButton vertices;
+
+		/**
+		 * View edge details.
+		 */
+		private JButton edges;
+
+		/**
+		 * View face details.
+		 */
+		private JButton faces;
 
 		/**
 		 * Button representing a 3-2 move.
@@ -253,24 +270,43 @@ public class ElementaryMove extends Modification {
 			typePanel.add(shellBoundary, cButton);
 			typePanel.add(shellBoundaryComp, cExtra);
 
-			//Make the button panel.
-			ok.setText("OK");
-			cancel.setText("Cancel");
+			// Make the button panel.
+			ok = new JButton("OK");
+			cancel = new JButton("Cancel");
 
 			JPanel buttonPanel = new JPanel();
 			buttonPanel.setLayout(new FlowLayout());
 			buttonPanel.add(ok);
 			buttonPanel.add(cancel);
 
+			// Make the skeleton viewer panel.
+			vertices = new JButton("Vertices...");
+			edges = new JButton("Edges...");
+			faces = new JButton("Faces...");
+
+			JPanel skelPanel = new JPanel();
+			skelPanel.setLayout(new FlowLayout());
+			skelPanel.add(vertices);
+			skelPanel.add(edges);
+			skelPanel.add(faces);
+			skelPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+
 			// Insert everything into the main pane.
 			getContentPane().setLayout(new BorderLayout());
 			getContentPane().add(new PaddedPane(typePanel, 2, 2, 2, 2),
 				BorderLayout.CENTER);
-			getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+			JPanel allButtons = new JPanel();
+			allButtons.setLayout(new GridLayout(2,1));
+			allButtons.add(buttonPanel);
+			allButtons.add(skelPanel);
+			getContentPane().add(allButtons, BorderLayout.SOUTH);
 
 			// Add action listeners.
 			ok.addActionListener(this);
 			cancel.addActionListener(this);
+			vertices.addActionListener(this);
+			edges.addActionListener(this);
+			faces.addActionListener(this);
 
 			// Tidy up.
 			this.getRootPane().setDefaultButton(ok);
@@ -372,7 +408,8 @@ public class ElementaryMove extends Modification {
 		 * Called when a dialog button has been pressed.
 		 */
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == ok) {
+			Object src = e.getSource();
+			if (src == ok) {
 				if (threeTwo.isSelected()) {
 					selected = threeTwo;
 					skelIndex = ((Long)((ExtendedObject)threeTwoComp.
@@ -405,8 +442,23 @@ public class ElementaryMove extends Modification {
 					shell.error("No elementary move has been selected.");
 					return;
 				}
+				dispose();
+			} else if (src == cancel) {
+				dispose();
+			} else {
+				int style;
+				if (src == vertices)
+					style = SkeletonTableFrame.VERTICES;
+				else if (src == edges)
+					style = SkeletonTableFrame.EDGES;
+				else if (src == faces)
+					style = SkeletonTableFrame.FACES;
+				else
+					return;
+
+				SkeletonTableFrame f = new SkeletonTableFrame(tri, style);
+				f.show();
 			}
-			dispose();
 		}
 	}
 }
