@@ -62,6 +62,19 @@ namespace Coordinates {
         }
     }
 
+    unsigned long numColumns(int coordSystem, regina::NTriangulation* tri) {
+        if (coordSystem == NNormalSurfaceList::STANDARD)
+            return tri->getNumberOfTetrahedra() * 7;
+        else if (coordSystem == NNormalSurfaceList::AN_STANDARD)
+            return tri->getNumberOfTetrahedra() * 10;
+        else if (coordSystem == NNormalSurfaceList::QUAD)
+            return tri->getNumberOfTetrahedra() * 3;
+        else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
+            return tri->getNumberOfEdges();
+        else if (coordSystem == NNormalSurfaceList::FACE_ARCS)
+            return tri->getNumberOfFaces() * 3;
+    }
+
     QString columnName(int coordSystem, unsigned long whichCoord,
             regina::NTriangulation* tri) {
         if (coordSystem == NNormalSurfaceList::STANDARD) {

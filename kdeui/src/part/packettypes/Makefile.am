@@ -23,6 +23,7 @@ noinst_HEADERS = \
 	nnormalsurfaceui.h \
 	nscriptui.h \
 	nscriptvaritems.h \
+	nsurfacecoordinateitem.h \
 	nsurfacecoordinateui.h \
 	nsurfacefiltercomb.h \
 	nsurfacefiltercreator.h \
@@ -52,6 +53,7 @@ libpackettypes_la_SOURCES = \
 	nnormalsurfaceui.cpp \
 	nscriptui.cpp \
 	nscriptvaritems.cpp \
+	nsurfacecoordinateitem.cpp \
 	nsurfacecoordinateui.cpp \
 	nsurfacefiltercomb.cpp \
 	nsurfacefiltercreator.cpp \

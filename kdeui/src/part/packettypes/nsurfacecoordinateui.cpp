@@ -33,6 +33,7 @@
 // UI includes:
 #include "coordinatechooser.h"
 #include "coordinates.h"
+#include "nsurfacecoordinateitem.h"
 #include "nsurfacecoordinateui.h"
 #include "../packetchooser.h"
 #include "../packetfilter.h"
@@ -52,7 +53,7 @@ using regina::NPacket;
 
 NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
-        PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0)
+        PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
         isReadWrite(readWrite), currentlyResizing(false) {
     // Set up the UI.
 
@@ -148,11 +149,23 @@ void NSurfaceCoordinateUI::refresh() {
     table->setSelectionMode(QListView::Single);
     uiLayout->addWidget(table.get(), 1);
 
-    // TODO: Add table columns.
-    table->addColumn("hoo");
+    // Add table columns.
+    int coordSystem = coords->getCurrentSystem();
+    regina::NTriangulation* tri = surfaces->getTriangulation();
 
-    headerTips.reset(new SurfaceHeaderToolTip(surfaces,
-        coords->getCurrentSystem(), table->header()));
+    bool embeddedOnly = surfaces->isEmbeddedOnly();
+    unsigned propCols = NSurfaceCoordinateItem::propertyColCount(embeddedOnly);
+    unsigned long coordCols = Coordinates::numColumns(coordSystem, tri);
+
+    unsigned long i;
+    for (i = 0; i < propCols; i++)
+        table->addColumn(NSurfaceCoordinateItem::propertyColName(i,
+            embeddedOnly));
+    for (i = 0; i < coordCols; i++)
+        table->addColumn(Coordinates::columnName(coordSystem, i, tri));
+
+    headerTips.reset(new SurfaceHeaderToolTip(surfaces, coordSystem,
+        table->header()));
     connect(table->header(), SIGNAL(sizeChange(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 
@@ -175,7 +188,7 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
     updateCrushState();
 }
 
-void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket* packet) {
+void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
     // Our currently applied filter is about to be destroyed.
     filter->setCurrentItem(0); // (i.e., None)
     refresh();
@@ -215,39 +228,20 @@ SurfaceHeaderToolTip::SurfaceHeaderToolTip(
 void SurfaceHeaderToolTip::maybeTip(const QPoint& p) {
     QHeader *header = dynamic_cast<QHeader*>(parentWidget());
     int section = header->sectionAt(p.x());
+    if (section < 0)
+        return;
+
+    int propertyCols = NSurfaceCoordinateItem::propertyColCount(
+        surfaces->isEmbeddedOnly());
 
     QString tipString;
-    if (surfaces->isEmbeddedOnly())
-        switch (section) {
-            case 0: tipString = i18n(
-                "Name (this has no special meaning and can be edited)"); break;
-            case 1: tipString = i18n("Euler characteristic"); break;
-            case 2: tipString = i18n("Orientability"); break;
-            case 3: tipString = i18n("1-sided or 2-sided"); break;
-            case 4: tipString = i18n("Does this surface have boundary?"); break;
-            case 5: tipString = i18n("Has this surface been identified as "
-                "the link of a particular subcomplex?"); break;
-            case 6: tipString = i18n(
-                "Is it safe to crush this surface to a point?"); break;
-            case 7: tipString = i18n("Other interesting properties"); break;
-            default: tipString = Coordinates::columnName(coordSystem,
-                section - 8, surfaces->getTriangulation()); break;
-        }
+    if (section < propertyCols)
+        tipString = NSurfaceCoordinateItem::propertyColDesc(
+            section, surfaces->isEmbeddedOnly());
     else
-        switch (section) {
-            case 0: tipString = i18n(
-                "Name (this has no special meaning and can be edited)"); break;
-            case 1: tipString = i18n("Euler characteristic"); break;
-            case 2: tipString = i18n("Does this surface have boundary?"); break;
-            case 3: tipString = i18n("Has this surface been identified as "
-                "the link of a particular subcomplex?"); break;
-            case 4: tipString = i18n("Other interesting properties"); break;
-            default: tipString = Coordinates::columnName(coordSystem,
-                section - 5, surfaces->getTriangulation()); break;
-        }
-
-    tip(header->sectionRect(section), Coordinates::columnDesc(coordSystem,
-        section, surfaces->getTriangulation()));
+        tipString = Coordinates::columnDesc(coordSystem,
+            section - propertyCols, surfaces->getTriangulation());
+    tip(header->sectionRect(section), tipString);
 }
 
 #include "nsurfacecoordinateui.moc"

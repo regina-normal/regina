@@ -112,7 +112,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * NPacketListener overrides.
          */
-        void packetToBeDestroyed(NPacket* packet);
+        void packetToBeDestroyed(regina::NPacket* packet);
 
     public slots:
         /**

@@ -154,6 +154,8 @@ AngleHeaderToolTip::AngleHeaderToolTip(QHeader *header,
 void AngleHeaderToolTip::maybeTip(const QPoint& p) {
     QHeader *header = dynamic_cast<QHeader*>(parentWidget());
     int section = header->sectionAt(p.x());
+    if (section < 0)
+        return;
 
     QString tipString;
     if (section == 0)

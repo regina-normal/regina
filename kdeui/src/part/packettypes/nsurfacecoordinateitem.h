@@ -26,62 +26,56 @@
 
 /* end stub */
 
-/*! \file coordinates.h
- *  \brief Assists working in different normal surface coordinate systems.
+/*! \file nsurfacecoordinateitem.h
+ *  \brief Provides a list view item describing a single normal surface.
  */
 
-#ifndef __COORDINATES_H
-#define __COORDINATES_H
+#ifndef __NSURFACECOORDINATEITEM_H
+#define __NSURFACECOORDINATEITEM_H
 
-#include "utilities/nmpi.h"
-
-#include <qstring.h>
+#include <klistview.h>
 
 namespace regina {
     class NNormalSurface;
-    class NTriangulation;
-}
-
-namespace Coordinates {
-    /**
-     * Return a human-readable name for the given coordinate system.
-     */
-    QString name(int coordSystem, bool capitalise = true);
-
-    /**
-     * Return the number of coordinate columns in the given coordinate
-     * system.
-     */
-    unsigned long numColumns(int coordSystem, regina::NTriangulation* tri);
-
-    /**
-     * Return a column header for the given coordinate of the given
-     * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
-     */
-    QString columnName(int coordSystem, unsigned long whichCoord,
-        regina::NTriangulation* tri = 0);
-
-    /**
-     * Return a column description for the given coordinate of the given
-     * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
-     */
-    QString columnDesc(int coordSystem, unsigned long whichCoord,
-        regina::NTriangulation* tri = 0);
-
-    /**
-     * Return a particular coordinate of a normal surface in the given
-     * coordinate system.
-     */
-    regina::NLargeInteger getCoordinate(int coordSystem,
-        const regina::NNormalSurface& surface, unsigned long whichCoord);
 };
+
+/**
+ * A list view item describing a single normal surface.
+ */
+class NSurfaceCoordinateItem : public KListViewItem {
+    private:
+        /**
+         * The underlying normal surface.
+         */
+        const regina::NNormalSurface* surface;
+        bool embeddedOnly;
+
+    public:
+        /**
+         * Constructor.
+         */
+        NSurfaceCoordinateItem(QListView* parent,
+            const regina::NNormalSurface* newSurface, bool fromEmbeddedOnly);
+
+        /**
+         * Query the property columns of the coordinate viewer.
+         */
+        static unsigned propertyColCount(bool embeddedOnly);
+        static QString propertyColName(int whichCol, bool embeddedOnly);
+        static QString propertyColDesc(int whichCol, bool embeddedOnly);
+
+        /**
+         * QListItem overrides.
+         */
+        QString text(int column) const;
+        void paintCell(QPainter* p, const QColorGroup& cg, int column,
+            int width, int align);
+};
+
+inline NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
+        const regina::NNormalSurface* newSurface, bool fromEmbeddedOnly) :
+        KListViewItem(parent), surface(newSurface),
+        embeddedOnly(fromEmbeddedOnly) {
+}
 
 #endif

@@ -119,6 +119,8 @@ MatchingHeaderToolTip::MatchingHeaderToolTip(regina::NTriangulation* useTri,
 void MatchingHeaderToolTip::maybeTip(const QPoint& p) {
     QHeader *header = dynamic_cast<QHeader*>(parentWidget());
     int section = header->sectionAt(p.x());
+    if (section < 0)
+        return;
 
     tip(header->sectionRect(section), Coordinates::columnDesc(coordSystem,
         section, tri));
