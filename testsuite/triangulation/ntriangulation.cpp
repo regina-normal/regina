@@ -52,6 +52,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(homologyH1Bdry);
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(turaevViro);
+    CPPUNIT_TEST(propertyUpdates);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -671,6 +672,59 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             verifyTVS2xS1(4); verifyTVS2xS1(5); verifyTVS2xS1(6);
             verifyTVS2xS1(7); verifyTVS2xS1(8);
+        }
+
+        void propertyUpdates() {
+            // Begin with an empty triangulation and calculate various
+            // properties.
+            NTriangulation t;
+
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not valid.",
+                t.isValid());
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not orientable.",
+                t.isOrientable());
+            verifyGroup(t.getHomologyH1(),
+                "H1(empty triangulation)", 0);
+            verifyGroup(t.getHomologyH1Bdry(),
+                "Boundary H1(empty triangulation)", 0);
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not "
+                "0-efficient.", t.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation has a "
+                "splitting surface.", ! t.hasSplittingSurface());
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation has a "
+                "two-sphere boundary component.",
+                ! t.hasTwoSphereBoundaryComponents());
+
+            // Add a single tetrahedron.
+            t.addTetrahedron(new NTetrahedron());
+
+            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is "
+                "0-efficient.", ! t.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron has no "
+                "splitting surface.", t.hasSplittingSurface());
+            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron has no "
+                "two-sphere boundary components.",
+                t.hasTwoSphereBoundaryComponents());
+
+            // Glue the tetrahedron to itself to form a solid torus.
+            t.getTetrahedron(0)->joinTo(0, t.getTetrahedron(0),
+                NPerm(1, 2, 3, 0));
+            t.gluingsHaveChanged();
+
+            verifyGroup(t.getHomologyH1(),
+                "H1(LST(1,2,3))", 1);
+            verifyGroup(t.getHomologyH1Bdry(),
+                "Boundary H1(LST(1,2,3))", 2);
+
+            // Glue the remaining two faces in a non-orientable fashion.
+            t.getTetrahedron(0)->joinTo(2, t.getTetrahedron(0),
+                NPerm(1, 0, 3, 2));
+            t.gluingsHaveChanged();
+
+            CPPUNIT_ASSERT_MESSAGE("A bad 1-tetrahedron triangulation "
+                "is valid.", ! t.isValid());
+            CPPUNIT_ASSERT_MESSAGE("A bad 1-tetrahedron triangulation "
+                "is orientable.", ! t.isOrientable());
         }
 };
 
