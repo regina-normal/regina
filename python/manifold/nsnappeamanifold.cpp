@@ -26,19 +26,29 @@
 
 /* end stub */
 
-void addNHandlebody();
-void addNManifold();
-void addNLensSpace();
-void addNSFS();
-void addNSimpleSurfaceBundle();
-void addNSnapPeaCensusManifold();
+#include "manifold/nsnappeamanifold.h"
+#include <boost/python.hpp>
 
-void addManifold() {
-    addNManifold();
-    addNHandlebody();
-    addNLensSpace();
-    addNSFS();
-    addNSimpleSurfaceBundle();
-    addNSnapPeaCensusManifold();
+using namespace boost::python;
+using regina::NSnapPeaCensusManifold;
+
+void addNSnapPeaCensusManifold() {
+    scope s = class_<NSnapPeaCensusManifold, bases<regina::NManifold>,
+            std::auto_ptr<NSnapPeaCensusManifold>, boost::noncopyable>
+            ("NSnapPeaCensusManifold", init<char, unsigned long>())
+        .def(init<const NSnapPeaCensusManifold&>())
+        .def("getSection", &NSnapPeaCensusManifold::getSection)
+        .def("getIndex", &NSnapPeaCensusManifold::getIndex)
+        .def(self == self)
+    ;
+
+    s.attr("SEC_5") = NSnapPeaCensusManifold::SEC_5;
+    s.attr("SEC_6_OR") = NSnapPeaCensusManifold::SEC_6_OR;
+    s.attr("SEC_6_NOR") = NSnapPeaCensusManifold::SEC_6_NOR;
+    s.attr("SEC_7_OR") = NSnapPeaCensusManifold::SEC_7_OR;
+    s.attr("SEC_7_NOR") = NSnapPeaCensusManifold::SEC_7_NOR;
+
+    implicitly_convertible<std::auto_ptr<NSnapPeaCensusManifold>,
+        std::auto_ptr<regina::NManifold> >();
 }
 

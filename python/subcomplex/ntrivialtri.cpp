@@ -49,6 +49,11 @@ void addNTrivialTri() {
     s.attr("N2") = NTrivialTri::N2;
     s.attr("N3_1") = NTrivialTri::N3_1;
     s.attr("N3_2") = NTrivialTri::N3_2;
+    s.attr("SNAPPEA_M000") = NTrivialTri::SNAPPEA_M000;
+    s.attr("SNAPPEA_M001") = NTrivialTri::SNAPPEA_M001;
+    s.attr("SNAPPEA_M002") = NTrivialTri::SNAPPEA_M002;
+    s.attr("SNAPPEA_M003") = NTrivialTri::SNAPPEA_M003;
+    s.attr("SNAPPEA_M004") = NTrivialTri::SNAPPEA_M004;
 
     implicitly_convertible<std::auto_ptr<NTrivialTri>,
         std::auto_ptr<regina::NStandardTriangulation> >();

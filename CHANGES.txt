@@ -20,6 +20,9 @@ Version 4.2  [ under development ]
               sample triangulations.
         Class NFacePairing:
             - New routine hasWedgedDoubleEndedChain.
+        Class NSnapPeaCensusManifold:
+            - Added to aid recognition of very small SnapPea census
+              triangulations.
         Class NSnapPeaTriangulation:
             - Added to give Regina triangulations access to the SnapPea kernel.
         Class NTriangulation:
@@ -28,6 +31,9 @@ Version 4.2  [ under development ]
               make it easier to hard-code triangulations in source code.
             - Fixed vertex link calculations, which were previously
               incorrect if a triangulation contained invalid edges.
+        Class NTrivialTri:
+            - Added recognition of very small SnapPea census
+              triangulations (m000 to m004 inclusive).
     USER INTERFACE:
         - Include several example triangulations in the triangulation
           creation dialog.
