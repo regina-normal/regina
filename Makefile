@@ -17,7 +17,6 @@ export src_idl = $(wildcard $(dirs_idl:=/*.idl))
 
 export BIN_DIR = bin
 export BASE_DOC_DIR = docs
-export CONF_DIR = configure
 
 export cs = $(CLASSPATH_SEP)
 export other_classes = \
@@ -52,18 +51,17 @@ helprun :
 	@$(ECHO); $(ECHO) "Run targets:"; $(ECHO); \
 		$(GREP) "^run" Makefile-help; \
 		$(GREP) "^debug" Makefile-help; \
-		$(GREP) "^conf" Makefile-help; \
 		$(ECHO)
 
 .PHONY : help helpgeneral helpbin helpdocs helpprep helprun \
 	binengine binenginejni binenginecorba \
 	binjava binjavaui binjavajni binjavacorba \
-	binjni bincorba binconf bindocs bin \
+	binjni bincorba bindocs bin \
 	docsengine docsjava docs \
 	prepengine prepenginejni prepenginecorba prepjava prepjavacorba \
 		prepcorba prepjni prepcleancorba prepcleanjni prepclean prep \
 	run runconsole runtext runjni runcorba runcorbaengine \
-	debug debugjni debugcorba configure \
+	debug debugjni debugcorba \
 	clean purge
 
 binengine : binenginejni binenginecorba
@@ -80,12 +78,10 @@ binjavacorba :
 	cd javaui && $(MAKE) corbajar
 binjni : binenginejni binjavaui binjavajni
 bincorba : binenginecorba binjavaui binjavacorba
-binconf :
-	cd $(CONF_DIR) && $(MAKE) jar
 bindocs : $(DOC_JAR)
 $(DOC_JAR) : docs
 	cd docs && $(JAR) -cf ../$(DOC_JAR) *
-bin : binengine binjava binconf
+bin : binengine binjava
 
 docsengine :
 	cd engine && $(MAKE) docs
@@ -143,18 +139,15 @@ debugcorba : binenginecorba binjavaui binjavacorba
 	$(JDB) -classpath \
 		'$(JAVA_UI)$(cs)$(JAVA_CORBA)$(cs)$(DOC_JAR)$(cs)$(other_classes)' \
 		$(APP_CLASS)
-configure : binconf
-	$(JAVA) -jar $(REG_CONF)
 
 clean :
 	cd engine && $(MAKE) clean
 	cd javaui && $(MAKE) clean
-	cd $(CONF_DIR) && $(MAKE) clean
 
 purge : clean
 	-rm $(ENGINE_JNI) $(ENGINE_CORBA)
 	-rm $(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA)
-	-rm $(REG_CONF) $(DOC_JAR)
+	-rm $(DOC_JAR)
 
 Makefile.options :
 	@echo

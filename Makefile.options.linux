@@ -23,7 +23,6 @@ export ORBInitialPort := 8088
 #         the calculation engine as an external (and possibly remote)
 #         server application using CORBA.
 #
-# REG_CONF: The jar containing the RegConf configuration utility.
 # DOC_JAR: The complete documentation jar for use with the internal
 #         help browser.
  
@@ -34,7 +33,6 @@ export JAVA_UI := bin/regina.jar
 export JAVA_JNI := bin/regina-jni.jar
 export JAVA_CORBA := bin/regina-corba.jar
 
-export REG_CONF := bin/regconf.jar
 export DOC_JAR := bin/regina-docs.jar
 
 # Specify here any compiler or linker flags required to include external

@@ -1,9 +1,6 @@
 
 # Sets $(scripts) to a list of all runtime scripts.
 #
-# Sets $(conf_src_mask) to a list of all source files for the RegConf
-# configuration utility.
-#
 # Sets $(misc_src_mask) to a file mask of all miscellaneous files to be
 # included in the source archive.
 #
@@ -17,8 +14,7 @@
 # All locations must be relative to this directory unless otherwise
 # specified.
 
-scripts = regconf regina
-conf_src_mask = configure/M* configure/*.java configure/*.txt
+scripts = regina
 misc_src_mask = Makefile* *.txt docs/*.txt
 misc_bin_mask = *.txt
 misc_doc_mask = *.html *.hs *.jhm *.txt *.jpg *.xml
