@@ -41,14 +41,12 @@
 
 #define HORIZONTAL_SPACING 10
 
-// TODO: Display the newly created packet in the tree and in a packet pane.
-
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle,
         const QString& suggestedLabel) :
         KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
-        creator(newCreator), tree(packetTree) {
+        creator(newCreator), tree(packetTree), newPacket(0) {
     QFrame* page = plainPage();
     QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
 
@@ -115,7 +113,7 @@ void NewPacketDialog::slotOk() {
     // Create the new packet.  Hide ourselves since this could take a
     // while.
     hide();
-    regina::NPacket* newPacket = creator->createPacket(parentPacket, this);
+    newPacket = creator->createPacket(parentPacket, this);
     if (! newPacket) {
         show();
         return;

@@ -42,10 +42,8 @@ void ReginaPart::newAngleStructures() {
 }
 
 void ReginaPart::newContainer() {
-    NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NContainer>(),
-        packetTree, treeView->selectedPacket(), 0,
+    newPacket(new BasicPacketCreator<regina::NContainer>(),
         i18n("New Container"), i18n("Container"));
-    dlg.exec();
 }
 
 void ReginaPart::newFilter() {
@@ -57,20 +55,31 @@ void ReginaPart::newNormalSurfaces() {
 }
 
 void ReginaPart::newScript() {
-    NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NScript>(),
-        packetTree, treeView->selectedPacket(), 0,
+    newPacket(new BasicPacketCreator<regina::NScript>(),
         i18n("New Script"), i18n("Script"));
-    dlg.exec();
 }
 
 void ReginaPart::newText() {
-    NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NText>(),
-        packetTree, treeView->selectedPacket(), 0,
+    newPacket(new BasicPacketCreator<regina::NText>(),
         i18n("New Text Packet"), i18n("Text"));
-    dlg.exec();
 }
 
 void ReginaPart::newTriangulation() {
     unimplemented();
+}
+
+void ReginaPart::newPacket(PacketCreator* creator, const QString& dialogTitle,
+        const QString& suggestedLabel) {
+    NewPacketDialog dlg(widget(), creator, packetTree,
+        treeView->selectedPacket(), 0, dialogTitle, suggestedLabel);
+    if (dlg.exec() == QDialog::Accepted) {
+        regina::NPacket* newPacket = dlg.createdPacket();
+        if (newPacket) {
+            QListViewItem* item = treeView->find(newPacket);
+            if (item)
+                treeView->ensureItemVisible(item);
+            packetView(newPacket);
+        }
+    }
 }
 

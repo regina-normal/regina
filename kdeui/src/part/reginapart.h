@@ -42,6 +42,7 @@ namespace regina {
 
 class KAboutData;
 class KInstance;
+class PacketCreator;
 class PacketPane;
 class PacketTreeView;
 class QLabel;
@@ -292,6 +293,12 @@ class ReginaPart : public KParts::ReadWritePart {
         bool checkReadWrite();
         regina::NPacket* checkPacketSelected();
         regina::NPacket* checkSubtreeSelected();
+
+        /**
+         * Generic packet creation.
+         */
+        void newPacket(PacketCreator* creator, const QString& dialogTitle,
+            const QString& suggestedLabel);
 };
 
 #endif

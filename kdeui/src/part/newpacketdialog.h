@@ -67,6 +67,7 @@ class NewPacketDialog : public KDialogBase {
          * Packet tree structure:
          */
         regina::NPacket* tree;
+        regina::NPacket* newPacket;
 
     public:
         /**
@@ -85,11 +86,20 @@ class NewPacketDialog : public KDialogBase {
             const QString& suggestedLabel);
         virtual ~NewPacketDialog();
 
+        /**
+         * Returns the packet that was created by this dialog, if any.
+         */
+        regina::NPacket* createdPacket();
+
     protected slots:
         /**
          * KDialogBase overrides.
          */
         virtual void slotOk();
 };
+
+inline regina::NPacket* NewPacketDialog::createdPacket() {
+    return newPacket;
+}
 
 #endif
