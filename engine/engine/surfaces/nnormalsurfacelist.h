@@ -57,6 +57,8 @@ class NMatrixInt;
  *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow generating only closed surfaces.
+ * \todo \feature Generate facets of the solution space representing
+ * embedded surfaces.
  */
 class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         public NSurfaceSet {
