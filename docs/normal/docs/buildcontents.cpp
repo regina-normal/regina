@@ -85,25 +85,26 @@ int main() {
             // Look into this contents item.
             target = e.attribute("target");
             if (target.isNull() || ! (page = helpMap[target]))
-                cout << "<li>" << e.attribute("text") << endl;
+                cout << "<li>" << e.attribute("text");
             else
                 cout << "<li><a href=\"" << *page <<
                     "\" target=\"reginadocs\">" << e.attribute("text")
-                    << "</a>\n";
+                    << "</a>";
         }
 
         // Move to the next node.
         if ((! finishedNode) && (! n.firstChild().isNull())) {
             n = n.firstChild();
-            cout << "<ul>\n";
+            cout << "\n<ul>\n";
             finishedNode = false;
         } else if (! n.nextSibling().isNull()) {
             n = n.nextSibling();
+			cout << "</li>\n";
             finishedNode = false;
         } else {
             n = n.parentNode();
             finishedNode = true;
-            cout << "</ul>\n";
+            cout << "</li>\n</ul></li>\n";
         }
     }
 
