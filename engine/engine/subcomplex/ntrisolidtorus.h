@@ -144,6 +144,37 @@ class NTriSolidTorus : public ShareableObject {
         NPerm getVertexRoles(int index) const;
 
         /**
+         * Determines whether the two faces of the requested annulus are
+         * glued to each other.
+         *
+         * If the two faces are glued, parameter \a roleMap will be
+         * modified to return a permutation describing how the vertex
+         * roles are glued to each other.  This will describe directly
+         * how axis edges, major edges and minor edges map to each other
+         * without having to worry about the specific assignment of
+         * tetrahedron vertex numbers.  For a discussion of vertex
+         * roles, see getVertexRoles().
+         *
+         * Note that annulus <tt>index</tt> uses faces
+         * from tetrahedra <tt>index+1</tt> and <tt>index+2</tt>.
+         * The gluing permutation that maps vertices
+         * of tetrahedron <tt>index+1</tt> to vertices of tetrahedron
+         * <tt>index+2</tt> will be <tt>getVertexRoles(index+2) * roleMap *
+         * getVertexRoles(index+1).inverse()</tt>.
+         *
+         * \ifaces Not present.
+         *
+         * @param index specifies which annulus on the solid torus
+         * boundary to examine; this must be 0, 1 or 2.
+         * @param roleMap a pointer to a permutation that, if this
+         * routine returns \c true, will be modified to describe the gluing
+         * of vertex roles.  This parameter may be \c null.
+         * @return \c true if and only if the two faces of the requested
+         * annulus are glued together.
+         */
+        bool isAnnulusSelfIdentified(int index, NPerm* roleMap) const;
+
+        /**
          * Determines if the given tetrahedron forms part of a
          * three-tetrahedron triangular solid torus with its vertices
          * playing the given roles in the solid torus.

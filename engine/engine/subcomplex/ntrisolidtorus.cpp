@@ -45,6 +45,26 @@ NTriSolidTorus* NTriSolidTorus::clone() const {
     return ans;
 }
 
+bool NTriSolidTorus::isAnnulusSelfIdentified(int index, NPerm* roleMap) const {
+    int lower = (index + 1) % 3;
+    int upper = (index + 2) % 3;
+    if (tet[lower]->getAdjacentTetrahedron(vertexRoles[lower][3]) !=
+            tet[upper])
+        return false;
+    if (tet[lower]->getAdjacentFace(vertexRoles[lower][3]) !=
+            vertexRoles[upper][2])
+        return false;
+
+    // We have a self-identification.
+
+    if (roleMap)
+        *roleMap = vertexRoles[upper].inverse() *
+            tet[lower]->getAdjacentTetrahedronGluing(vertexRoles[lower][3]) *
+            vertexRoles[lower];
+
+    return true;
+}
+
 NTriSolidTorus* NTriSolidTorus::isTriSolidTorus(NTetrahedron* tet,
         NPerm useVertexRoles) {
     NTriSolidTorus* ans = new NTriSolidTorus();
