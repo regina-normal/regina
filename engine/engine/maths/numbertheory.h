@@ -54,6 +54,8 @@ namespace regina {
  *
  * \pre \a modBase is strictly positive.
  *
+ * \testfull
+ *
  * \ifaces Not present.
  *
  * @param k the number to reduce modulo \a modBase.
@@ -66,6 +68,8 @@ long reducedMod(long k, long modBase);
  * This routine is not recursive.
  *
  * \pre Both integers are non-negative.
+ *
+ * \testfull
  *
  * \ifaces Not present.
  *
@@ -94,6 +98,8 @@ unsigned long gcd(unsigned long a, unsigned long b);
  * will be 1 or -1 so that <tt>u*a + v*b = d</tt> still holds.  If both
  * given integers are zero, both of the coefficients will be set to zero.
  *
+ * \testfull
+ *
  * \ifaces Not present.
  *
  * @param a one of the integers to work with.
@@ -112,6 +118,8 @@ long gcdWithCoeffs(long a, long b, long& u, long& v);
  *
  * \pre \a n and \a k are both strictly positive;
  * \pre \a n and \a k have no common factors.
+ *
+ * \testfull
  *
  * \ifaces Not present.
  *
