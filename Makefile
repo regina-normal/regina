@@ -162,7 +162,8 @@ debugcorba : binenginecorba binjavaui binjavacorba
 clean :
 	cd engine && $(MAKE) clean
 	cd javaui && $(MAKE) clean
-	cd docs && rm -rf $(gen_doc_mask) manpage.*
+	cd docs && $(MAKE) clean
+	-rm -rf javaui/Regina
 
 purge : clean
 	-rm $(ENGINE_JNI) $(ENGINE_CORBA) $(ENGINE_LIB)
