@@ -128,12 +128,11 @@ stubs : insertstub
 	./insertstubreplace "/* end stub */" stub.javaui \
 		`find ../javaui -name "*.java"`
 tabs :
-	./replacetabs `find ../engine -name "*.cpp"`
-	./replacetabs `find ../engine -name "*.h"`
-	./replacetabs `find ../javaui -name "*.java"`
-	./replacetabs ../CHANGES.txt ../README.txt ../examples/README.txt
+	./replacetabs `find .. -name "*.cpp"`
+	./replacetabs `find .. -name "*.h"`
+	./replacetabs `find .. -name "*.java"`
+	./replacetabs `find .. -name "*.txt"`
 	./replacetabs ../docs/*.sgml
-	./replacetabs *.txt *.cpp
 
 clean :
 	cd .. && $(MAKE) clean
