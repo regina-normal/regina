@@ -30,6 +30,7 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/filterregistry.h"
 #include "file/nfile.h"
+#include "utilities/xmlutils.h"
 
 namespace regina {
 
@@ -46,12 +47,32 @@ void NSurfaceFilter::writePacket(NFile& out) const {
     writeAllPropertiesFooter(out);
 }
 
+#define REGISTER_FILTER(id, c, name) \
+    case id: out << regina::xml::xmlEncodeSpecialChars(name); break;
+
+void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
+    int id = getFilterID();
+
+    out << "  <filter type=\"";
+    switch(id) {
+        // Import cases from the filter registry.
+        #include "surfaces/filterregistry.h"
+        default: out << "Unknown"; break;
+    }
+    out << "\" typeid=\"" << id << "\">\n";
+
+    writeXMLFilterData(out);
+
+    out << "  </filter>\n";
+}
+
 void NSurfaceFilter::readIndividualProperty(NFile& in, unsigned propType) {
 }
 
 void NSurfaceFilter::writeProperties(NFile& out) const {
 }
 
+#undef REGISTER_FILTER
 #define REGISTER_FILTER(id, class, n) \
     case id: ans = class::readFilter(in, parent); break;
 

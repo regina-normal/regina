@@ -28,8 +28,10 @@
 
 #include <sstream>
 #include <hash_set>
+#include "regina.h"
 #include "packet/npacket.h"
 #include "utilities/hashutils.h"
+#include "utilities/xmlutils.h"
 
 namespace regina {
 
@@ -340,6 +342,44 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
         }
 
     return changed;
+}
+
+void NPacket::writeXMLFile(std::ostream& out) const {
+    // Write the XML header.
+    out << "<?xml version=\"1.0\"?>\n";
+
+    // Write the regina data opening tag including engine version.
+    out << "<reginadata engine=\"" << ENGINE_VERSION << "\">\n";
+
+    // Write the packet tree.
+    writeXMLPacketTree(out);
+
+    // Write the regina data closing tag.
+    out << "</reginadata>\n";
+}
+
+void NPacket::writeXMLPacketTree(std::ostream& out) const {
+    using regina::xml::xmlEncodeSpecialChars;
+
+    // Write the packet opening tag including packet label and type.
+    out << "<packet label=\"" << xmlEncodeSpecialChars(packetLabel) << "\"\n";
+    out << "\ttype=\"" << getPacketName() << "\" typeid=\""
+        << getPacketType() << "\"\n";
+    out << "\tparent=\"";
+    if (treeParent)
+        out << xmlEncodeSpecialChars(treeParent->packetLabel);
+    out << "\">\n";
+
+    // Write the internal packet data.
+    writeXMLPacketData(out);
+
+    // Write the child packets.
+    for (NPacket* p = firstTreeChild; p; p = p->nextTreeSibling)
+        p->writeXMLPacketTree(out);
+
+    // Write the packet closing tag.
+    out << "</packet> <!-- " << xmlEncodeSpecialChars(packetLabel)
+        << " (" << getPacketName() << ") -->\n";
 }
 
 } // namespace regina

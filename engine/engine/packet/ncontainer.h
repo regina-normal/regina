@@ -63,6 +63,7 @@ class NContainer : public NPacket {
     
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual void writeXMLPacketData(std::ostream& out) const;
 };
 
 // Inline functions for NContainer
@@ -83,6 +84,9 @@ inline bool NContainer::dependsOnParent() const {
 
 inline NPacket* NContainer::internalClonePacket(NPacket*) const {
     return new NContainer();
+}
+
+inline void NContainer::writeXMLPacketData(std::ostream& out) const {
 }
 
 } // namespace regina

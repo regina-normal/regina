@@ -8,8 +8,10 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 2.5  [ (under development) ]
+Version 3.0  [ (under development) ]
     OVERALL:
+        - Moved from old impenetrable binary data files to new
+          compressed XML data files.
         - Removed CORBA engine/interface.  It was too much hassle to
           maintain, and with Regina building on more platforms it has
           lots much of its usefulness.
@@ -19,6 +21,7 @@ Version 2.5  [ (under development) ]
             - The Great STL Port: replaced hand-rolled container classes
               with Standard Template Library classes.
             - Replaced strstreams with stringstreams.
+            - Added XML reading/writing routines to appropriate classes.
             - Modified to also build under gcc3.
             - Removed configuration macro __MUTE_WARNINGS.
             - Replaced configuration macros __NO_IOS_NOCREATE and
@@ -37,6 +40,8 @@ Version 2.5  [ (under development) ]
             - Added for use with Standard Template Library.
         Class NAngleStructureList:
             - New nested class NAngleStructureList::StructureInserter.
+        Class NFileInfo:
+            - Added.
         Class NGroupExpressionTerm:
             - Changed from simple ordered pair to its own full class.
         Class NIndexedArray:
@@ -66,6 +71,10 @@ Version 2.5  [ (under development) ]
             - Added.
         Class ZBuffer, CompressionBuffer, DecompressionBuffer,
                 CompressionStream, DecompressionStream:
+            - Added.
+        Routine writeXMLFile():
+            - Added.
+        Routine xmlEncodeSpecialChars(), xmlValueTag():
             - Added.
     JAVA USER INTERFACE:
         Overall structure:

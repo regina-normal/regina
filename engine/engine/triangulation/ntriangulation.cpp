@@ -32,6 +32,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/xmlutils.h"
 
 // Property IDs:
 // #define PROPID_EXTRA_TOPOLOGY 1 -- Do not use!
@@ -302,6 +303,52 @@ void NTriangulation::readIndividualProperty(NFile& infile, unsigned propType) {
         splittingSurface = infile.readBool();
         calculatedSplittingSurface = true;
     }
+}
+
+void NTriangulation::writeXMLPacketData(std::ostream& out) const {
+    using regina::xml::xmlEncodeSpecialChars;
+    using regina::xml::xmlValueTag;
+
+    // Write the tetrahedron gluings.
+    TetrahedronIterator it;
+    NTetrahedron* adjTet;
+    int face;
+
+    out << "  <tetrahedra ntet=\"" << tetrahedra.size() << "\">\n";
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
+        out << "    <tet name=\"" <<
+            xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
+        for (face = 0; face < 4; face++) {
+            adjTet = (*it)->getAdjacentTetrahedron(face);
+            if (adjTet) {
+                out << tetrahedra.index(adjTet) << ' '
+                    << (int)(*it)->getAdjacentTetrahedronGluing(face).
+                        getPermCode()
+                    << ' ';
+            } else
+                out << "-1 -1 ";
+        }
+        out << "</tet>\n";
+    }
+    out << "  </tetrahedra>\n";
+
+    // TODO: Write properties to XML.
+    /*
+    if (calculatedFundamentalGroup)
+        fundamentalGroup->writeToFile(out);
+    if (calculatedH1)
+        H1->writeToFile(out);
+    if (calculatedH1Rel)
+        H1Rel->writeToFile(out);
+    if (calculatedH1Bdry)
+        H1Bdry->writeToFile(out);
+    if (calculatedH2)
+        H2->writeToFile(out);
+    */
+    if (calculatedZeroEfficient)
+        out << "  " << xmlValueTag("zeroeff", zeroEfficient) << '\n';
+    if (calculatedSplittingSurface)
+        out << "  " << xmlValueTag("splitsfce", splittingSurface) << '\n';
 }
 
 NTriangulation* NTriangulation::enterTextTriangulation(std::istream& in,

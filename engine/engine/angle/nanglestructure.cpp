@@ -29,6 +29,7 @@
 #include "angle/nanglestructure.h"
 #include "triangulation/ntriangulation.h"
 #include "file/nfile.h"
+#include "utilities/xmlutils.h"
 
 // Property IDs:
 #define PROPID_FLAGS 1
@@ -117,6 +118,26 @@ NAngleStructure* NAngleStructure::readFromFile(NFile& in,
     ans->readProperties(in);
 
     return ans;
+}
+
+void NAngleStructure::writeXMLData(std::ostream& out) const {
+    // Write the vector length.
+    unsigned vecLen = vector->size();
+    out << "  <struct len=\"" << vecLen << "\"> ";
+
+    // Write the non-zero elements.
+    NLargeInteger entry;
+    for (unsigned i = 0; i < vecLen; i++) {
+        entry = (*vector)[i];
+        if (entry != 0)
+            out << i << ' ' << entry << ' ';
+    }
+
+    // Write properties.
+    out << regina::xml::xmlValueTag("flags", flags);
+
+    // Write the closing tag.
+    out << "</struct>\n";
 }
 
 void NAngleStructure::readIndividualProperty(NFile& infile, unsigned propType) {

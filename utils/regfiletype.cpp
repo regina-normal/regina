@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Identify the type (binary/XML) and version of a data file             *
  *                                                                        *
  *  Copyright (c) 1999-2002, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,53 +26,26 @@
 
 /* end stub */
 
-#include "surfaces/sfcombination.h"
-#include "file/nfile.h"
+#include "file/nfileinfo.h"
+#include <cstdlib>
 
-#define OP_AND "and"
-#define OP_OR "or"
-
-#define TYPE_AND 1
-#define TYPE_OR 2
-
-namespace regina {
-
-bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
-    if (usesAnd) {
-        // Combine all child filters using AND.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (! ((NSurfaceFilter*)child)->accept(surface))
-                    return false;
-        return true;
-    } else {
-        // Combine all child filters using OR.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (((NSurfaceFilter*)child)->accept(surface))
-                    return true;
-        return false;
-    }
+void usage(const char* progName) {
+    std::cerr << "Usage:\n";
+    std::cerr << "    " << progName << " <file>\n";
+    exit(1);
 }
 
-void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
-    out << "    <op type=\"" << (usesAnd ? OP_AND : OP_OR) << "\"/>\n";
-}
+int main(int argc, char* argv[]) {
+    if (argc != 2)
+        usage(argv[0]);
 
-void NSurfaceFilterCombination::writeFilter(NFile& out) const {
-    if (usesAnd)
-        out.writeInt(TYPE_AND);
+    regina::NFileInfo* info = regina::NFileInfo::identify(argv[1]);
+
+    if (info)
+        info->writeTextLong(std::cout);
     else
-        out.writeInt(TYPE_OR);
-}
+        std::cout << "Unknown file format or file could not be opened.\n";
 
-NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
-    NSurfaceFilterCombination* ans = new NSurfaceFilterCombination();
-    ans->usesAnd = (in.readInt() == TYPE_AND);
-    return ans;
+    return 0;
 }
-
-} // namespace regina
 

@@ -718,10 +718,24 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
         void writeRawVector(std::ostream& out) const;
 
         /**
+         * Writes a chunk of XML containing this normal surface and all
+         * of its properties.  This routine will be called from within
+         * NNormalSurfaceList::writeXMLPacketData().
+         *
+         * \ifaces Not present.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        virtual void writeXMLData(std::ostream& out) const;
+
+        /**
          * Writes this normal surface and all of its properties to
-         * the given file.
+         * the given old-style binary file.
          *
          * This routine writes precisely what readFromFile() reads.
+         *
+         * \deprecated For the preferred way to write data to file, see
+         * writeXMLData() instead.
          *
          * \pre The given file is currently opened for writing.
          *

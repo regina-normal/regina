@@ -44,6 +44,7 @@ class NAngleStructureList;
 class NAugTriSolidTorus;
 class NContainer;
 class NFile;
+class NFileInfo;
 class NGroupExpression;
 class NGroupPresentation;
 class NLayeredChain;
@@ -175,6 +176,8 @@ class Engine {
             /**< Calls ::getVersionMinor(). */
         std::string getVersionString();
             /**< Calls ::getVersionString(). */
+        NFileInfo* identifyFileInfo(const std::string& idPathname);
+            /**< Calls NFileInfo::identify(). */
         NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
             /**< Calls NAugTriSolidTorus::isAugTriSolidTorus(). */
         NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
@@ -202,6 +205,9 @@ class Engine {
             /**< Calls ::testEngine(). */
         bool writeToFile(const char* fileName, NPacket* packet);
             /**< Calls ::writeToFile(). */
+        bool writeXMLFile(const char* fileName, NPacket* subtree,
+                bool compressed = true);
+            /**< Calls ::writeXMLFile(). */
 };
 
 /**
@@ -212,9 +218,7 @@ class Engine {
  *
  * @return the major version number of the engine.
  */
-#ifdef __DOXYGEN
 int getVersionMajor();
-#endif
 /**
  * Returns the minor version number of the calculation engine currently
  * in use.
@@ -223,9 +227,7 @@ int getVersionMajor();
  *
  * @return the minor version number of the engine.
  */
-#ifdef __DOXYGEN
 int getVersionMinor();
-#endif
 /**
  * Returns the entire version string of the calculation engine currently
  * in use.
@@ -234,9 +236,7 @@ int getVersionMinor();
  *
  * @return the version of the engine.
  */
-#ifdef __DOXYGEN
 std::string getVersionString();
-#endif
 
 /**
  * Tests to see if the interface can successfully communicate with the
@@ -251,9 +251,7 @@ std::string getVersionString();
  * @param value any integer; this same integer will be returned.
  * @return the same integer that was passed as \a value.
  */
-#ifdef __DOXYGEN
 int testEngine(int value);
-#endif
 
 } // namespace regina
 

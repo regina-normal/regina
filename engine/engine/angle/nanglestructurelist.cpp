@@ -32,6 +32,7 @@
 #include "maths/nvectorunit.h"
 #include "surfaces/nnormalsurface.h"
 #include "file/nfile.h"
+#include "utilities/xmlutils.h"
 
 // Property IDs:
 #define PROPID_ALLOWSTRICT 1
@@ -171,6 +172,21 @@ NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
     ans->readProperties(in);
 
     return ans;
+}
+
+void NAngleStructureList::writeXMLPacketData(std::ostream& out) const {
+    using regina::xml::xmlValueTag;
+
+    // Write the individual structures.
+    for (StructureIteratorConst it = structures.begin();
+            it != structures.end(); it++)
+        (*it)->writeXMLData(out);
+
+    // Write the properties.
+    if (calculatedAllowStrict)
+        out << "  " << xmlValueTag("allowstrict", doesAllowStrict) << '\n';
+    if (calculatedAllowTaut)
+        out << "  " << xmlValueTag("allowtaut", doesAllowTaut) << '\n';
 }
 
 NPacket* NAngleStructureList::internalClonePacket(NPacket* parent) const {

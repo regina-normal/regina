@@ -1,7 +1,9 @@
 *.jar
 *.dll
 *.exe
+regconvert
 regfiledump
+regfiletype
 sigcensus
 tricensus
 test

@@ -126,6 +126,7 @@ public interface Engine {
     public int getVersionMajor();
     public int getVersionMinor();
     public String getVersionString();
+    public NFileInfo identifyFileInfo(String idPathname);
     public NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
     public NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     public NLayeredLoop isLayeredLoop(NComponent comp);
@@ -141,5 +142,8 @@ public interface Engine {
     public int testEngine(int value);
     public boolean writeSnapPea(String fileName, NTriangulation tri);
     public boolean writeToFile(String fileName, NPacket packet);
+    public boolean writeXMLFile(String fileName, NPacket subtree);
+    public boolean writeXMLFile(String fileName, NPacket subtree,
+        boolean compressed);
 }
 

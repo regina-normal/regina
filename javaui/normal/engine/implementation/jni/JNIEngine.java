@@ -251,6 +251,7 @@ public class JNIEngine implements Engine {
     public native int getVersionMajor();
     public native int getVersionMinor();
     public native String getVersionString();
+    public native NFileInfo identifyFileInfo(String idPathname);
     public native NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
     public native NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     public native NLayeredLoop isLayeredLoop(NComponent comp);
@@ -276,4 +277,9 @@ public class JNIEngine implements Engine {
     public native int testEngine(int value);
     public native boolean writeSnapPea(String fileName, NTriangulation tri);
     public native boolean writeToFile(String fileName, NPacket packet);
+    public boolean writeXMLFile(String fileName, NPacket subtree) {
+        return writeXMLFile(fileName, subtree, true);
+    }
+    public native boolean writeXMLFile(String fileName, NPacket subtree,
+            boolean compressed);
 }

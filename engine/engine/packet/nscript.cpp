@@ -29,6 +29,7 @@
 #include <iterator>
 #include "packet/nscript.h"
 #include "file/nfile.h"
+#include "utilities/xmlutils.h"
 
 #define PROP_VARIABLE 1
 
@@ -111,6 +112,20 @@ NScript* NScript::readPacket(NFile& in, NPacket*) {
     ans->readProperties(in);
 
     return ans;
+}
+
+void NScript::writeXMLPacketData(std::ostream& out) const {
+    using regina::xml::xmlEncodeSpecialChars;
+
+    for (std::map<std::string, std::string>::const_iterator vit =
+            variables.begin(); vit != variables.end(); vit++)
+        out << "  <var name=\"" << xmlEncodeSpecialChars((*vit).first)
+            << "\" value=\"" << xmlEncodeSpecialChars((*vit).second)
+            << "\"/>\n";
+
+    for (std::vector<std::string>::const_iterator it = lines.begin();
+            it != lines.end(); it++)
+        out << "  <line>" << xmlEncodeSpecialChars(*it) << "</line>\n";
 }
 
 void NScript::initialiseAllProperties() {

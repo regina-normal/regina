@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Java User Interface                                                   *
  *                                                                        *
  *  Copyright (c) 1999-2002, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,53 +26,20 @@
 
 /* end stub */
 
-#include "surfaces/sfcombination.h"
-#include "file/nfile.h"
+package normal.engine.implementation.jni.file;
 
-#define OP_AND "and"
-#define OP_OR "or"
+import normal.engine.implementation.jni.*;
+import normal.engine.file.*;
 
-#define TYPE_AND 1
-#define TYPE_OR 2
-
-namespace regina {
-
-bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
-    if (usesAnd) {
-        // Combine all child filters using AND.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (! ((NSurfaceFilter*)child)->accept(surface))
-                    return false;
-        return true;
-    } else {
-        // Combine all child filters using OR.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (((NSurfaceFilter*)child)->accept(surface))
-                    return true;
-        return false;
+public class NJNIFileInfo extends JNIShareableObject implements NFileInfo {
+    public NJNIFileInfo(Sentry s) {
+        super(s);
     }
+    
+    public native String getPathname();
+    public native int getType();
+    public native String getTypeDescription();
+    public native String getEngine();
+    public native boolean isCompressed();
+    public native boolean isInvalid();
 }
-
-void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
-    out << "    <op type=\"" << (usesAnd ? OP_AND : OP_OR) << "\"/>\n";
-}
-
-void NSurfaceFilterCombination::writeFilter(NFile& out) const {
-    if (usesAnd)
-        out.writeInt(TYPE_AND);
-    else
-        out.writeInt(TYPE_OR);
-}
-
-NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
-    NSurfaceFilterCombination* ans = new NSurfaceFilterCombination();
-    ans->usesAnd = (in.readInt() == TYPE_AND);
-    return ans;
-}
-
-} // namespace regina
-

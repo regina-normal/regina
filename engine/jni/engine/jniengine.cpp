@@ -34,6 +34,8 @@
 #include "triangulation/ntriangulation.h"
 #include "foreign/nsnappea.h"
 #include "file/nfile.h"
+#include "file/nfileinfo.h"
+#include "file/nxmlfile.h"
 #include "census/ncensus.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nlayeredlensspace.h"
@@ -113,6 +115,14 @@ JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_getVersionString
         (JNIEnv *env, jobject me) {
     return env->NewStringUTF(ENGINE_VERSION);
+}
+
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_identifyFileInfo
+        (JNIEnv *env, jobject me, jstring pathname) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NFileInfo::identify(jstringToCString(env, pathname)),
+        "normal/engine/implementation/jni/file/NJNIFileInfo");
 }
 
 JNIEXPORT jobject JNICALL
@@ -237,3 +247,12 @@ JNIEXPORT jboolean JNICALL
     return ans;
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_writeXMLFile__Ljava_lang_String_2Lnormal_engine_packet_NPacket_2Z
+        (JNIEnv *env, jobject me, jstring file, jobject tree, jboolean comp) {
+    const char* textChars = env->GetStringUTFChars(file, 0);
+    bool ans = writeXMLFile(textChars, GET_ENGINE_OBJECT(env, NPacket, tree),
+        comp);
+    env->ReleaseStringUTFChars(file, textChars);
+    return ans;
+}

@@ -26,53 +26,39 @@
 
 /* end stub */
 
-#include "surfaces/sfcombination.h"
-#include "file/nfile.h"
+/*! \file nxmlfile.h
+ *  \brief Deals with storing program data (including packet trees)
+ *  in XML data files.
+ */
 
-#define OP_AND "and"
-#define OP_OR "or"
-
-#define TYPE_AND 1
-#define TYPE_OR 2
+#ifndef __NXMLFILE_H
+#ifndef __DOXYGEN
+#define __NXMLFILE_H
+#endif
 
 namespace regina {
 
-bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
-    if (usesAnd) {
-        // Combine all child filters using AND.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (! ((NSurfaceFilter*)child)->accept(surface))
-                    return false;
-        return true;
-    } else {
-        // Combine all child filters using OR.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (((NSurfaceFilter*)child)->accept(surface))
-                    return true;
-        return false;
-    }
-}
+class NPacket;
 
-void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
-    out << "    <op type=\"" << (usesAnd ? OP_AND : OP_OR) << "\"/>\n";
-}
-
-void NSurfaceFilterCombination::writeFilter(NFile& out) const {
-    if (usesAnd)
-        out.writeInt(TYPE_AND);
-    else
-        out.writeInt(TYPE_OR);
-}
-
-NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
-    NSurfaceFilterCombination* ans = new NSurfaceFilterCombination();
-    ans->usesAnd = (in.readInt() == TYPE_AND);
-    return ans;
-}
+/**
+ * Writes the subtree with the given packet as matriarch to disk as a
+ * complete XML file.  The XML file may be optionally compressed.
+ *
+ * This is the preferred way of writing a packet tree to file.
+ *
+ * \pre The given packet does not depend on its parent.
+ *
+ * @param fileName the pathname of the file to write to.
+ * @param subtree the matriarch of the packet tree that should be written.
+ * @param compressed \c true if the XML file should be compressed or
+ * \c false if it should be stored as plain text.
+ * @return \c true if and only if the packet subtree was successfully
+ * written.
+ */
+bool writeXMLFile(const char* fileName, NPacket* subtree,
+    bool compressed = true);
 
 } // namespace regina
+
+#endif
 

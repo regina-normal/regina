@@ -146,6 +146,7 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
         NAngleStructureList();
 
         virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual void writeXMLPacketData(std::ostream& out) const;
 
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();

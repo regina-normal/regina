@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file xmlutils.h
- *  \brief Various classes and routines for XML manipulation, mostly taken
+ *  \brief Various classes and routines for XML manipulation, some taken
  *  or modified from the libxml++ library.  The libxml2 library is used
  *  to do most of the underlying work.
  *
@@ -41,14 +41,16 @@
 #endif
 
 #include <string>
+#include <sstream>
 #include <hash_map>
 #include <libxml/parser.h>
+#include "utilities/nbooleans.h"
 #include "utilities/hashutils.h"
 
 namespace regina {
 
 /**
- * Various classes and routines for XML manipulation, mostly taken or
+ * Various classes and routines for XML manipulation, some taken or
  * modified from the libxml++ library.  The libxml2 library is used
  * to do most of the underlying work.
  *
@@ -70,6 +72,8 @@ typedef stdhash::hash_map<std::string, std::string, HashString>
  * The routines in this class do nothing; you will need to create a
  * derived class that overrides some or all of these routines to do the
  * processing that you require.
+ *
+ * \ifaces Not present.
  *
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
@@ -146,6 +150,8 @@ class XMLParserCallback {
  * repeatedly with consecutive pieces of the XML file.  Once the entire
  * XML file has been sent through parse_chunk(), routine finish() should
  * be called once to signal that processing is complete.
+ *
+ * \ifaces Not present.
  *
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
@@ -244,6 +250,8 @@ class XMLParser {
  * entities.  For instance, the string <tt>"a \< b"</tt> would be
  * converted to <tt>"a \&lt; b"</tt>.
  *
+ * \ifaces Not present.
+ *
  * @param original the string to convert; this string will not be
  * changed.
  * @return the converted string with special characters replaced by
@@ -252,6 +260,49 @@ class XMLParser {
  * @author Ben Burton
  */
 std::string xmlEncodeSpecialChars(const std::string& original);
+
+/**
+ * Returns an XML tag with a single property containing the given value.
+ * The tag will be of the form <tt>\<tagName value="..."/\></tt>.
+ *
+ * The value itself will be written to the tag string using the standard
+ * output stream operator \<\<.
+ *
+ * \pre The property value when written to an output stream does not
+ * contain any special characters (such as <tt>\<</tt> or <tt>\&</tt>)
+ * that need to be encoded as XML entities.
+ *
+ * @param tagName the name of the XML tag to create.
+ * @param value the value to assign to the <i>value</i> property of the tag.
+ * @return the corresponding XML tag.
+ *
+ * @author Ben Burton
+ */
+template <class T>
+inline std::string xmlValueTag(const std::string& tagName, const T& value) {
+    std::ostringstream out;
+    out << '<' << tagName << " value=\"" << value << "\"/>";
+    return out.str();
+}
+
+#ifndef __DOXYGEN
+    /**
+     * Specialisations of xmlValueTag():
+     */
+    template <>
+    inline std::string xmlValueTag<bool>(const std::string& tagName,
+            const bool& value) {
+        return '<' + tagName + " value=\"" + (value ? 'T' : 'F') + "\"/>";
+    }
+
+    template <>
+    inline std::string xmlValueTag<NBoolSet>(const std::string& tagName,
+            const NBoolSet& value) {
+        return '<' + tagName + " value=\"" +
+            (value.hasTrue() ? 'T' : '-') +
+            (value.hasFalse() ? 'F' : '-') + "\"/>";
+    }
+#endif
 
 // Inline functions for XMLParserCallback
 

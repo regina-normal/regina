@@ -31,6 +31,7 @@
 #include "triangulation/ntriangulation.h"
 #include "maths/nmatrixint.h"
 #include "file/nfile.h"
+#include "utilities/xmlutils.h"
 
 namespace regina {
 
@@ -151,6 +152,28 @@ void NNormalSurfaceList::writePacket(NFile& out) const {
     // Write the properties.
     // At the moment there are no properties!
     writeAllPropertiesFooter(out);
+}
+
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, c, name, a, t) \
+    case id_name: out << regina::xml::xmlEncodeSpecialChars(name); break;
+
+void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
+    // Write the surface list parameters.
+    out << "  <params embedded=\"" << (embedded ? 1 : 0)
+        << "\" flavourid=\"" << flavour << "\"\n";
+    out << "\tflavour=\"";
+    switch(flavour) {
+        // Import cases from the flavour registry.
+        #include "surfaces/flavourregistry.h"
+        default: out << "Unknown"; break;
+    }
+    out << "\"/>\n";
+
+    // Write the individual surfaces.
+    std::vector<NNormalSurface*>::const_iterator it;
+    for (it = surfaces.begin(); it != surfaces.end(); it++)
+        (*it)->writeXMLData(out);
 }
 
 #undef REGISTER_FLAVOUR

@@ -8,7 +8,7 @@
 
 # ------------------------ Variables -------------------------------------
 
-utils = regfiledump sigcensus tricensus
+utils = regconvert regfiledump regfiletype sigcensus tricensus
 
 INCLUDES = -I../engine/engine $(EXTRA_INCLUDES)
 PD_DEFS = $(PD_MACROS:%=-D%)

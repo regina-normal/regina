@@ -28,6 +28,7 @@
 
 #include "packet/ntext.h"
 #include "file/nfile.h"
+#include "utilities/xmlutils.h"
 
 namespace regina {
 
@@ -37,6 +38,11 @@ void NText::writePacket(NFile& out) const {
 
 NText* NText::readPacket(NFile& in, NPacket*) {
     return new NText(in.readString());
+}
+
+void NText::writeXMLPacketData(std::ostream& out) const {
+    out << "  <text>" << regina::xml::xmlEncodeSpecialChars(text)
+        << "</text>\n";
 }
 
 } // namespace regina

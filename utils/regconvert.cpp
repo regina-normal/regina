@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Convert old-style binary data files to new-style XML                  *
  *                                                                        *
  *  Copyright (c) 1999-2002, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,53 +26,38 @@
 
 /* end stub */
 
-#include "surfaces/sfcombination.h"
 #include "file/nfile.h"
+#include "file/nxmlfile.h"
+#include "packet/npacket.h"
+#include <cstdlib>
 
-#define OP_AND "and"
-#define OP_OR "or"
+void usage(const char* progName) {
+    std::cerr << "Usage:\n";
+    std::cerr << "    " << progName
+        << " <old-binary-file> [ <new-XML-file> ]\n";
+    std::cerr << "\nThe same filename may be given for both arguments.\n";
+    exit(1);
+}
 
-#define TYPE_AND 1
-#define TYPE_OR 2
+int main(int argc, char* argv[]) {
+    if (argc < 2 || argc > 3)
+        usage(argv[0]);
 
-namespace regina {
-
-bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
-    if (usesAnd) {
-        // Combine all child filters using AND.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (! ((NSurfaceFilter*)child)->accept(surface))
-                    return false;
-        return true;
-    } else {
-        // Combine all child filters using OR.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (((NSurfaceFilter*)child)->accept(surface))
-                    return true;
-        return false;
+    regina::NPacket* tree = regina::readFromFile(argv[1]);
+    if (! tree) {
+        std::cerr << "Binary file " << argv[1] << " could not be read.\n";
+        return 1;
     }
-}
 
-void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
-    out << "    <op type=\"" << (usesAnd ? OP_AND : OP_OR) << "\"/>\n";
-}
+    if (argc == 2)
+        tree->writeXMLFile(std::cout);
+    else if (! regina::writeXMLFile(argv[2], tree, true)) {
+        std::cerr << "XML file " << argv[2] << " could not be written.\n";
+        delete tree;
+        return 1;
+    }
 
-void NSurfaceFilterCombination::writeFilter(NFile& out) const {
-    if (usesAnd)
-        out.writeInt(TYPE_AND);
-    else
-        out.writeInt(TYPE_OR);
+    delete tree;
+    return 0;
 }
-
-NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
-    NSurfaceFilterCombination* ans = new NSurfaceFilterCombination();
-    ans->usesAnd = (in.readInt() == TYPE_AND);
-    return ans;
-}
-
-} // namespace regina
 

@@ -589,10 +589,39 @@ class NPacket : public ShareableObject {
         NPacket* clone(bool cloneDescendants = false, bool end = true) const;
 
         /**
-         * Writes the packet to the given file.
+         * Writes a complete XML file containing the subtree with this
+         * packet as matriarch.  This is the preferred way of writing
+         * a packet tree to file.
+         *
+         * The output from this routine cannot be used as a piece of an
+         * XML file; it must be the entire XML file.  For a piece of an
+         * XML file, see routine writeXMLPacketTree() instead.
+         *
+         * For a handy wrapper to this routine that handles file I/O and
+         * compression, see regina::writeXMLFile().
+         *
+         * \pre This packet does not depend upon its parent.
+         *
+         * \ifaces Not present.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        void writeXMLFile(std::ostream& out) const;
+
+        /**
+         * Writes the packet details to the given old-style binary file.
+         *
          * You may assume that the packet type and label have already
          * been written.  Only the actual data stored in the packet need
          * be written.
+         *
+         * The default implementation for this routine does nothing; new
+         * packet types should not implement this routine since this file
+         * format is now obsolete, and older calculation engines will
+         * simply skip unknown packet types when reading from binary files.
+         *
+         * \deprecated For the preferred way to write packets to file, see
+         * writeXMLFile() and writeXMLPacketData() instead.
          *
          * \pre The given file is open for writing and satisfies the
          * assumptions listed above.
@@ -601,7 +630,7 @@ class NPacket : public ShareableObject {
          *
          * @param out the file to be written to.
          */
-        virtual void writePacket(NFile& out) const = 0;
+        virtual void writePacket(NFile& out) const;
         /**
          * Reads a single packet from the specified
          * file and returns a newly created object containing that
@@ -689,6 +718,33 @@ class NPacket : public ShareableObject {
          */
         virtual NPacket* internalClonePacket(NPacket* parent) const = 0;
     
+        /**
+         * Writes a chunk of XML containing the subtree with this packet
+         * as matriarch.  This is the preferred way of writing a packet
+         * tree to file.
+         *
+         * The output from this routine is only a piece of XML; it
+         * should not be used as a complete XML file.  For a complete
+         * XML file, see routine writeXMLFile() instead.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        void writeXMLPacketTree(std::ostream& out) const;
+        /**
+         * Writes a chunk of XML containing the data for this packet
+         * only.
+         *
+         * You may assume that the packet opening tag (including
+         * the packet type and label) has already been written, and that
+         * all child packets followed by the corresponding packet closing
+         * tag will be written immediately after this routine is called.
+         * This routine need only write the internal data stored in
+         * this specific packet.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        virtual void writeXMLPacketData(std::ostream& out) const = 0;
+
     private:
         /**
          * Clones the descendants of this packet and inserts them as
@@ -752,6 +808,9 @@ inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {
 
 inline unsigned long NPacket::getNumberOfDescendants() const {
     return getTotalTreeSize() - 1;
+}
+
+inline void NPacket::writePacket(NFile&) const {
 }
 
 inline void NPacket::tidyReadPacket() {

@@ -29,6 +29,7 @@
 #include "surfaces/sfproperties.h"
 #include "surfaces/nnormalsurface.h"
 #include "file/nfile.h"
+#include "utilities/xmlutils.h"
 
 #define PROPID_EULER 1001
 #define PROPID_ORIENT 1002
@@ -91,6 +92,26 @@ void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
         o << "    Compactness: " << compactness << '\n';
     if (realBoundary != NBoolSet::sBoth)
         o << "    Has real boundary: " << realBoundary << '\n';
+}
+
+void NSurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
+    using regina::xml::xmlValueTag;
+
+    if (eulerCharacteristic.size() > 0) {
+        out << "    <euler> ";
+        for (std::set<NLargeInteger>::const_iterator it =
+                eulerCharacteristic.begin(); it != eulerCharacteristic.end();
+                it++)
+            out << (*it) << ' ';
+        out << "</euler>\n";
+    }
+
+    if (orientability != NBoolSet::sBoth)
+        out << "    " << xmlValueTag("orbl", orientability) << '\n';
+    if (compactness != NBoolSet::sBoth)
+        out << "    " << xmlValueTag("compact", compactness) << '\n';
+    if (realBoundary != NBoolSet::sBoth)
+        out << "    " << xmlValueTag("realbdry", realBoundary) << '\n';
 }
 
 void NSurfaceFilterProperties::writeProperties(NFile& out) const {

@@ -190,10 +190,24 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
         void writeTextShort(std::ostream& out) const;
 
         /**
-         * Writes this angle structure and all its properties to the
-         * given file.
+         * Writes a chunk of XML containing this angle structure and all
+         * of its properties.  This routine will be called from within
+         * NAngleStructureList::writeXMLPacketData().
+         *
+         * \ifaces Not present.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        void writeXMLData(std::ostream& out) const;
+
+        /**
+         * Writes this angle structure and all of its properties to the
+         * given old-style binary file.
          *
          * This routine writes precisely what readFromFile() reads.
+         *
+         * \deprecated For the preferred way to write data to file, see
+         * writeXMLData() instead.
          *
          * \pre The given file is currently opened for writing.
          *

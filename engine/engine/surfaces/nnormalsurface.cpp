@@ -32,6 +32,7 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/xmlutils.h"
 
 #define __FLAVOUR_REGISTRY_BODY
 
@@ -345,6 +346,39 @@ void NNormalSurface::calculateRealBoundary() {
     }
     realBoundary = false;
     calculatedRealBoundary = true;
+}
+
+void NNormalSurface::writeXMLData(std::ostream& out) const {
+    using regina::xml::xmlValueTag;
+
+    // Write the opening tag including vector length.
+    unsigned vecLen = vector->size();
+    out << "  <surface len=\"" << vecLen << "\" name=\"" << name << "\">";
+
+    // Write all non-zero entries.
+    NLargeInteger entry;
+    for (unsigned i = 0; i < vecLen; i++) {
+        entry = (*vector)[i];
+        if (entry != 0)
+            out << ' ' << i << ' ' << entry;
+    }
+
+    // Write properties.
+    if (calculatedEulerChar)
+        out << "\n\t" << xmlValueTag("euler", eulerChar);
+    if (calculatedOrientable)
+        out << "\n\t" << xmlValueTag("orbl", orientable);
+    if (calculatedTwoSided)
+        out << "\n\t" << xmlValueTag("twosided", twoSided);
+    if (calculatedConnected)
+        out << "\n\t" << xmlValueTag("connected", connected);
+    if (calculatedRealBoundary)
+        out << "\n\t" << xmlValueTag("realbdry", realBoundary);
+    if (calculatedCompact)
+        out << "\n\t" << xmlValueTag("compact", compact);
+
+    // Write the closing tag.
+    out << " </surface>\n";
 }
 
 void NNormalSurface::writeToFile(NFile& out) const {

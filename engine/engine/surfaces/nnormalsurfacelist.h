@@ -183,6 +183,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         NNormalSurfaceList();
 
         virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual void writeXMLPacketData(std::ostream& out) const;
 
         virtual void readIndividualProperty(NFile& infile,
             unsigned propType);

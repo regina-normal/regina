@@ -100,6 +100,7 @@ class NText : public NPacket {
     
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual void writeXMLPacketData(std::ostream& out) const;
 };
 
 // Inline functions for NText

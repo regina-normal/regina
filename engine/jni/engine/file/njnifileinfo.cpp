@@ -26,53 +26,48 @@
 
 /* end stub */
 
-#include "surfaces/sfcombination.h"
-#include "file/nfile.h"
+#include "file/nfileinfo.h"
+#include "jnitools.h"
+#include "engine/file/NJNIFileInfo.h"
 
-#define OP_AND "and"
-#define OP_OR "or"
+using namespace regina;
 
-#define TYPE_AND 1
-#define TYPE_OR 2
-
-namespace regina {
-
-bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
-    if (usesAnd) {
-        // Combine all child filters using AND.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (! ((NSurfaceFilter*)child)->accept(surface))
-                    return false;
-        return true;
-    } else {
-        // Combine all child filters using OR.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
-            if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (((NSurfaceFilter*)child)->accept(surface))
-                    return true;
-        return false;
-    }
+JNIEXPORT jstring JNICALL
+        Java_normal_engine_implementation_jni_file_NJNIFileInfo_getPathname
+        (JNIEnv *env, jobject me) {
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NFileInfo, me)->
+        getPathname());
 }
 
-void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
-    out << "    <op type=\"" << (usesAnd ? OP_AND : OP_OR) << "\"/>\n";
+JNIEXPORT jint JNICALL
+        Java_normal_engine_implementation_jni_file_NJNIFileInfo_getType
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NFileInfo, me)->getType();
 }
 
-void NSurfaceFilterCombination::writeFilter(NFile& out) const {
-    if (usesAnd)
-        out.writeInt(TYPE_AND);
-    else
-        out.writeInt(TYPE_OR);
+JNIEXPORT jstring JNICALL
+        Java_normal_engine_implementation_jni_file_NJNIFileInfo_getTypeDescription
+        (JNIEnv *env, jobject me) {
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NFileInfo, me)->
+        getTypeDescription());
 }
 
-NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
-    NSurfaceFilterCombination* ans = new NSurfaceFilterCombination();
-    ans->usesAnd = (in.readInt() == TYPE_AND);
-    return ans;
+JNIEXPORT jstring JNICALL
+        Java_normal_engine_implementation_jni_file_NJNIFileInfo_getEngine
+        (JNIEnv *env, jobject me) {
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NFileInfo, me)->
+        getEngine());
 }
 
-} // namespace regina
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_file_NJNIFileInfo_isCompressed
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NFileInfo, me)->isCompressed();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_file_NJNIFileInfo_isInvalid
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NFileInfo, me)->isInvalid();
+}
 
