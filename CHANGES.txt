@@ -26,6 +26,9 @@ Current Development Version:
     USER INTERFACE:
         Class NTriAlgebraUI:
             - Made the algebra viewer a little easier to read.
+        Class NTriCompositionUI:
+            - Included isomorphism / subcomplex testing.
+            - Fixed crash when refreshing.
 
 Version 3.95  [ 12 October, 2003 ] - Prelease for version 4.0.
     GRAPHICAL USER INTERFACE:

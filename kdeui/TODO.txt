@@ -52,8 +52,8 @@ Toolbars:
     Work out how to get decent action names in the configure toolbar dialog
 
 Triangulations:
-    Include isomorphism tests
     Include Turaev-Viro
+    Allow viewing isomorphism details
     Make the skeleton viewer windows appear in a pleasant size
     Make the algebra viewer look a little neater
 

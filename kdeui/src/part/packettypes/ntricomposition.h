@@ -33,12 +33,18 @@
 #ifndef __NTRICOMPOSITION_H
 #define __NTRICOMPOSITION_H
 
+#include "packet/npacketlistener.h"
+
 #include "../packettabui.h"
 
+#include <memory>
+
+class PacketChooser;
 class QListView;
 class QListViewItem;
 
 namespace regina {
+    class NIsomorphism;
     class NPacket;
     class NStandardTriangulation;
     class NTriangulation;
@@ -47,17 +53,24 @@ namespace regina {
 /**
  * A triangulation page for viewing the combinatorial composition.
  */
-class NTriCompositionUI : public PacketViewerTab {
+class NTriCompositionUI : public QObject, public PacketViewerTab,
+        public regina::NPacketListener {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
          */
         regina::NTriangulation* tri;
+        regina::NTriangulation* comparingTri;
+        std::auto_ptr<regina::NIsomorphism> isomorphism;
 
         /**
          * Internal components
          */
         QWidget* ui;
+        PacketChooser* isoTest;
+        QLabel* isoResult;
         QListView* details;
         QListViewItem* components;
         QListViewItem* lastComponent;
@@ -76,6 +89,17 @@ class NTriCompositionUI : public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+        /**
+         * NPacketListener overrides.
+         */
+        void packetToBeDestroyed(regina::NPacket* packet);
+
+    public slots:
+        /**
+         * Update the isomorphism test panel.
+         */
+        void updateIsoPanel();
 
     private:
         /**

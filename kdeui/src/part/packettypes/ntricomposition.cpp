@@ -41,31 +41,59 @@
 #include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nspiralsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
+#include "triangulation/nisomorphism.h"
 #include "triangulation/npermit.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "ntricomposition.h"
+#include "../packetchooser.h"
+#include "../packetfilter.h"
 
 #include <klistview.h>
 #include <klocale.h>
 #include <memory>
 #include <qheader.h>
+#include <qlabel.h>
+#include <qlayout.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
 
 NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        tri(packet), components(0), lastComponent(0) {
-    details = new KListView();
+        tri(packet), comparingTri(0), components(0), lastComponent(0) {
+    // Set up the UI.
+
+    ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(ui);
+    layout->addSpacing(5);
+
+    // Set up the isomorphism tester.
+    layout->addWidget(new QLabel(
+        i18n("Isomorphism / subcomplex test (this vs T):"), ui));
+
+    QBoxLayout* isoArea = new QHBoxLayout(layout, 5);
+    isoArea->addWidget(new QLabel(i18n("T ="), ui));
+    isoTest = new PacketChooser(tri->getTreeMatriarch(),
+        new SingleTypeFilter<NTriangulation>(), true, 0, ui);
+    isoTest->setAutoUpdate(true);
+    connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
+    isoArea->addWidget(isoTest);
+    isoResult = new QLabel(i18n("Result:"), ui);
+    isoArea->addWidget(isoResult);
+    isoArea->addStretch(1);
+
+    layout->addSpacing(5);
+
+    // Set up the composition viewer.
+    layout->addWidget(new QLabel(i18n("Triangulation composition:"), ui));
+    details = new KListView(ui);
     details->header()->hide();
     details->addColumn(QString::null);
     details->setSorting(-1);
     details->setSelectionMode(QListView::NoSelection);
-
-    // For now make the composition tree the entire UI.
-    ui = details;
+    layout->addWidget(details, 1);
 }
 
 regina::NPacket* NTriCompositionUI::getPacket() {
@@ -77,7 +105,10 @@ QWidget* NTriCompositionUI::getInterface() {
 }
 
 void NTriCompositionUI::refresh() {
+    updateIsoPanel();
+
     details->clear();
+    components = lastComponent = 0;
 
     // Try to identify the 3-manifold.
     std::auto_ptr<regina::NStandardTriangulation> standardTri(
@@ -128,6 +159,41 @@ void NTriCompositionUI::editingElsewhere() {
     details->clear();
     new KListViewItem(details, i18n("Editing..."));
     details->setRootIsDecorated(false);
+}
+
+void NTriCompositionUI::packetToBeDestroyed(regina::NPacket*) {
+    // Our current isomorphism test triangulation is about to be
+    // destroyed.
+    isoTest->setCurrentItem(0); // (i.e., None)
+    updateIsoPanel();
+}
+
+void NTriCompositionUI::updateIsoPanel() {
+    // Update the packet chooser in case things have changed.
+    isoTest->refreshContents();
+
+    if (isoTest->selectedPacket() != comparingTri) {
+        if (comparingTri)
+            comparingTri->unlisten(this);
+        comparingTri = dynamic_cast<NTriangulation*>(isoTest->selectedPacket());
+        if (comparingTri)
+            comparingTri->listen(this);
+    }
+
+    // Run the isomorphism tests.
+    if (comparingTri) {
+        if ((isomorphism = tri->isIsomorphicTo(*comparingTri)).get())
+            isoResult->setText(i18n("Result: Isomorphic (this = T)"));
+        else if ((isomorphism = tri->isContainedIn(*comparingTri)).get())
+            isoResult->setText(i18n("Result: Subcomplex (this < T)"));
+        else if ((isomorphism = comparingTri->isContainedIn(*tri)).get())
+            isoResult->setText(i18n("Result: Subcomplex (T < this)"));
+        else
+            isoResult->setText(i18n("Result: No relationship"));
+    } else {
+        isomorphism.reset();
+        isoResult->setText(i18n("Result:"));
+    }
 }
 
 QListViewItem* NTriCompositionUI::addTopLevelSection(const QString& text) {
@@ -602,3 +668,4 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
         arg(roles[endPreimage]);
 }
 
+#include "ntricomposition.moc"
