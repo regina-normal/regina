@@ -258,6 +258,7 @@ public class JNIEngine implements Engine {
     public native String getVersionString();
     public native NFileInfo identifyFileInfo(String idPathname);
     public native NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
+    public native NLayeredChainPair isLayeredChainPair(NComponent comp);
     public native NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     public native NLayeredLoop isLayeredLoop(NComponent comp);
     public native NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);

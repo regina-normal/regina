@@ -126,6 +126,7 @@ public interface Engine {
     String getVersionString();
     NFileInfo identifyFileInfo(String idPathname);
     NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
+    NLayeredChainPair isLayeredChainPair(NComponent comp);
     NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     NLayeredLoop isLayeredLoop(NComponent comp);
     NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);

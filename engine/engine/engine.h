@@ -184,6 +184,8 @@ class Engine {
             /**< Calls NFileInfo::identify(). */
         NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
             /**< Calls NAugTriSolidTorus::isAugTriSolidTorus(). */
+        NLayeredChainPair* isLayeredChainPair(const NComponent* comp);
+            /**< Calls NLayeredChainPair::isLayeredChainPair(). */
         NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
             /**< Calls NLayeredLensSpace::isLayeredLensSpace(). */
         NLayeredLoop* isLayeredLoop(const NComponent* comp);

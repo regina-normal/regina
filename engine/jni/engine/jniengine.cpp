@@ -38,6 +38,7 @@
 #include "census/ncensus.h"
 #include "split/nsignature.h"
 #include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/npillowtwosphere.h"
@@ -133,6 +134,15 @@ REGJNIEXPORT jobject JNICALL
         NAugTriSolidTorus::isAugTriSolidTorus(
         GET_ENGINE_OBJECT(env, NComponent, you)),
         "normal/engine/implementation/jni/subcomplex/NJNIAugTriSolidTorus");
+}
+
+REGJNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_isLayeredChainPair
+        (JNIEnv *env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NLayeredChainPair::isLayeredChainPair(
+        GET_ENGINE_OBJECT(env, NComponent, you)),
+        "normal/engine/implementation/jni/subcomplex/NJNILayeredChainPair");
 }
 
 REGJNIEXPORT jobject JNICALL
