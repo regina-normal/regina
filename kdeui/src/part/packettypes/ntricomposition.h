@@ -103,6 +103,8 @@ class NTriCompositionUI : public PacketViewerTab {
          */
         static QString edgeString(unsigned long tetIndex, int edge1,
             int edge2);
+        static QString edgeString(unsigned long tetIndex,
+            const regina::NPerm& roles, int startPreimage, int endPreimage);
 };
 
 #endif

@@ -38,7 +38,9 @@
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappedball.h"
 #include "subcomplex/nsnappedtwosphere.h"
+#include "subcomplex/nspiralsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
+#include "triangulation/npermit.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -460,7 +462,96 @@ void NTriCompositionUI::findSnappedSpheres() {
 }
 
 void NTriCompositionUI::findSpiralSolidTori() {
-    // TODO
+    unsigned long nTets = tri->getNumberOfTetrahedra();
+
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    regina::NSpiralSolidTorus* spiral;
+    regina::NTetrahedron* tet;
+    regina::NPermItS4 it;
+    unsigned long i, j;
+    for (i = 0; i < nTets; i++) {
+        tet = tri->getTetrahedron(i);
+        for (it.init(); ! it.done(); it++) {
+            if ((*it)[0] > (*it)[3])
+                continue;
+
+            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet, *it);
+            if (! spiral)
+                continue;
+            if (! spiral->isCanonical(tri)) {
+                delete spiral;
+                continue;
+            }
+
+            // We've got one!
+            id = addComponentSection(i18n("Spiralled solid torus ") +
+                spiral->getName().c_str());
+
+            unsigned long spiralTets = spiral->getNumberOfTetrahedra();
+
+            unsigned long* tetIndex = new unsigned long[spiralTets];
+            for (j = 0; j < spiralTets; j++)
+                tetIndex[j] = tri->getTetrahedronIndex(
+                    spiral->getTetrahedron(j));
+
+            QString tetSet(spiralTets == 1 ? i18n("Tet: ") : i18n("Tets: "));
+            for (j = 0; j < spiralTets; j++) {
+                if (j > 0)
+                    tetSet += ", ";
+                tetSet += QString::number(tetIndex[j]);
+            }
+            details = new KListViewItem(id, tetSet);
+
+            QString data;
+            QListViewItem* edge;
+            details = new KListViewItem(id, details, i18n("Major edges:"));
+            edge = 0;
+            for (j = 0; j < spiralTets; j++) {
+                data =
+                    edgeString(tetIndex[(j + spiralTets - 1) % spiralTets],
+                        spiral->getVertexRoles(
+                        (j + spiralTets - 1) % spiralTets), 2, 3) +
+                    " = " +
+                    edgeString(tetIndex[j], spiral->getVertexRoles(j), 1, 2) +
+                    " = " +
+                    edgeString(tetIndex[(j + 1) % spiralTets],
+                        spiral->getVertexRoles((j + 1) % spiralTets), 0, 1);
+                if (edge)
+                    edge = new KListViewItem(details, edge, data);
+                else
+                    edge = new KListViewItem(details, data);
+            }
+
+            details = new KListViewItem(id, details, i18n("Minor edges:"));
+            edge = 0;
+            for (j = 0; j < spiralTets; j++) {
+                data =
+                    edgeString(tetIndex[j], spiral->getVertexRoles(j), 1, 3) +
+                    " = " +
+                    edgeString(tetIndex[(j + 1) % spiralTets],
+                        spiral->getVertexRoles((j + 1) % spiralTets), 0, 2);
+                if (edge)
+                    edge = new KListViewItem(details, edge, data);
+                else
+                    edge = new KListViewItem(details, data);
+            }
+
+            details = new KListViewItem(id, details, i18n("Axis edges:"));
+            edge = 0;
+            for (j = 0; j < spiralTets; j++) {
+                data = edgeString(tetIndex[j], spiral->getVertexRoles(j),
+                    0, 3);
+                if (edge)
+                    edge = new KListViewItem(details, edge, data);
+                else
+                    edge = new KListViewItem(details, data);
+            }
+
+            delete spiral;
+        }
+    }
 }
 
 QString NTriCompositionUI::edgeString(unsigned long tetIndex,
@@ -475,5 +566,11 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
             arg(regina::edgeStart[edge1]).arg(regina::edgeEnd[edge1]).
             arg(tetIndex).
             arg(regina::edgeStart[edge2]).arg(regina::edgeEnd[edge2]);
+}
+
+QString NTriCompositionUI::edgeString(unsigned long tetIndex,
+        const regina::NPerm& roles, int startPreimage, int endPreimage) {
+    return QString("%1 (%2%3)").arg(tetIndex).arg(roles[startPreimage]).
+        arg(roles[endPreimage]);
 }
 
