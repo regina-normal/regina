@@ -304,8 +304,6 @@ class NPerm {
          * This is true if and only if each of 0, 1, 2 and 3 is
          * mapped to itself.
          *
-         * \ifacescpp Not present.
-         *
          * @return \c true if and only if this is the identity
          * permutation.
          */
