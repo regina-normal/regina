@@ -30,7 +30,6 @@
 #include "reginamain.h"
 
 #include <dcopclient.h>
-#include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
@@ -41,36 +40,7 @@ static KCmdLineOptions options[] = {
 };
 
 int main(int argc, char **argv) {
-    QString releaseDate = I18N_NOOP("Released ") +
-        ReginaAbout::date.toString(Qt::TextDate);
-    KAboutData about(ReginaAbout::internalName, ReginaAbout::name,
-        ReginaAbout::version, ReginaAbout::description,
-        KAboutData::License_GPL, ReginaAbout::copyright,
-        releaseDate, ReginaAbout::website, ReginaAbout::bugAddress);
-
-    about.addAuthor("Ben Burton", 0, "bab@debian.org");
-
-    about.addCredit("David Letscher",
-        I18N_NOOP("Code contributions and technical advice"));
-    about.addCredit("William Jaco",
-        I18N_NOOP("Supervision and many long discussions"));
-    about.addCredit("Hyam Rubinstein",
-        I18N_NOOP("Supervision and many long discussions"));
-    about.addCredit("Marc Culler",
-        I18N_NOOP("Helpful discussions"));
-    about.addCredit("Nathan Dunfield",
-        I18N_NOOP("Helpful discussions"));
-    about.addCredit("Jeff Weeks",
-        I18N_NOOP("Helpful discussions"));
-    about.addCredit("The American Institute of Mathematics",
-        I18N_NOOP("Generous support"));
-    about.addCredit("Oklahoma State University",
-        I18N_NOOP("Generous support"));
-    about.addCredit("The University of Melbourne, Australia",
-        I18N_NOOP("Generous support"));
-    about.addCredit("Debian GNU/Linux",
-        I18N_NOOP("An exceptional working environment"),
-        "http://www.debian.org/");
+    ReginaAbout<ReginaMain> about("regina");
 
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions(options);

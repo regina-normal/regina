@@ -1,0 +1,12 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="reginapart" version="3.1">
+<MenuBar>
+  <Menu name="file" noMerge="1"><text>&amp;File</text>
+    <Action name="file_save" group="save_merge"/>
+    <Action name="file_save_as" group="save_merge"/>
+  </Menu>
+</MenuBar>
+<ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+  <Action name="file_save" group="file_operations"/>
+</ToolBar>
+</kpartgui>

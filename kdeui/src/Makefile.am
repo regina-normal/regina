@@ -1,40 +1,51 @@
 ## Makefile.am for Regina
 
-# this is the program that gets installed.  it's name is used for all
-# of the other Makefile.am variables
-bin_PROGRAMS = regina regina_client
-
-# set the include path for X, qt and KDE
+# Flags for compilation:
 INCLUDES = $(all_includes) -I$(top_srcdir)/../engine/engine
 
-# the library search path. 
+# Project headers:
+noinst_HEADERS = \
+	reginaabout.h \
+	reginamain.h \
+	reginapart.h \
+	reginapref.h \
+	reginaview.h
+
+# Main program(s):
+bin_PROGRAMS = regina
+
 regina_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-
-# the libraries to link against.
-regina_LDADD   = $(top_srcdir)/../engine/engine/libregina-engine.la $(LIB_KFILE) $(LIB_KPARTS)
-
-# which sources should be compiled for regina
+regina_LDADD   = $(top_srcdir)/../engine/engine/libregina-engine.la \
+	$(LIB_KPARTS)
 regina_SOURCES = \
-	reginaabout.cpp \
 	main.cpp \
 	reginamain.cpp \
 	reginapref.cpp \
 	reginaview.cpp \
 	reginaiface.skel
 
-# these are the headers for your project
-noinst_HEADERS = \
-	reginaabout.h \
-	reginamain.h \
-	reginapref.h \
-	reginaview.h
+shelldesktopdir   = $(kde_appsdir)/Applications
+shelldesktop_DATA = regina.desktop
 
-# client stuff
-regina_client_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-regina_client_LDADD   = $(LIB_KDECORE)
-regina_client_SOURCES = regina_client.cpp
+shellrcdir = $(kde_datadir)/regina
+shellrc_DATA = reginamain.rc
 
-# let automoc handle all of the meta source files (moc)
+# KPart:
+kde_module_LTLIBRARIES = libreginapart.la
+
+libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+libreginapart_la_LIBADD = $(top_srcdir)/../engine/engine/libregina-engine.la \
+	$(LIB_KPARTS)
+libreginapart_la_SOURCES = \
+	reginapart.cpp
+
+partdesktopdir   = $(kde_servicesdir)
+partdesktop_DATA = reginapart.desktop
+
+partrcdir = $(kde_datadir)/reginapart
+partrc_DATA = reginapart.rc
+
+# Other KDE stuff:
 METASOURCES = AUTO
 
 messages: rc.cpp
@@ -42,10 +53,3 @@ messages: rc.cpp
 
 KDE_ICON = regina
 
-# this is where the kdelnk file will go 
-kdelnkdir   = $(kde_appsdir)/Applications
-kdelnk_DATA = regina.desktop
-
-# this is where the XML-GUI resource file goes
-rcdir = $(kde_datadir)/regina
-rc_DATA = reginamain.rc

@@ -26,21 +26,71 @@
 
 /* end stub */
 
-// Regina core includes:
-#include "regina-config.h"
+/*! \file reginapart.h
+ *  \brief Provides the Regina part that does all the real work.
+ */
 
-// UI includes:
-#include "reginaabout.h"
+#ifndef __REGINAPART_H
+#define __REGINAPART_H
 
-#include <klocale.h>
+#include <kparts/part.h>
 
-const char* ReginaAbout::bugAddress = PACKAGE_BUGREPORT;
-const char* ReginaAbout::copyright = "Copyright (c) 1999-2002, Ben Burton";
-const QDate ReginaAbout::date(2002, 10, 18);
-const char* ReginaAbout::description =
-    I18N_NOOP("A normal surface theory calculator");
-const char* ReginaAbout::internalName = "regina";
-const char* ReginaAbout::name = I18N_NOOP("Regina");
-const char* ReginaAbout::version = PACKAGE_VERSION;
-const char* ReginaAbout::website = "http://regina.sourceforge.net/";
+namespace regina {
+    class NPacket;
+};
 
+class KAboutData;
+
+/**
+ * The Regina topology data editor.
+ *
+ * This part does all the real work of working with Regina data files.
+ */
+class ReginaPart : public KParts::ReadWritePart {
+    Q_OBJECT
+
+    private:
+        /**
+         * Data
+         */
+        regina::NPacket* packetTree;
+
+        /**
+         * Actions
+         */
+        KAction* actSave;
+
+    public:
+        /**
+         * Constructors and destructors.
+         */
+        ReginaPart(QWidget *parentWidget, const char *widgetName,
+            QObject *parent, const char *name, const QStringList &args);
+        virtual ~ReginaPart();
+
+        /**
+         * KPart overrides.
+         */
+        virtual void setReadWrite(bool rw);
+        virtual void setModified(bool modified);
+
+        /**
+         * Create about data for this part.
+         */
+        static KAboutData *createAboutData();
+
+    protected:
+        /**
+         * KPart overrides.
+         */
+        virtual bool openFile();
+        virtual bool saveFile();
+
+    private slots:
+        /**
+         * Implementation of actions.
+         */
+        void fileSaveAs();
+};
+
+#endif

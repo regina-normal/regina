@@ -211,17 +211,18 @@ class ReginaMain : public KParts::MainWindow,
         void changeCaption(const QString& text);
         void newToolbarConfig();
 
+        /**
+         * Add the current working URL to the recent file list for every
+         * top-level window (including this one) and save the file list to
+         * the global configuration.
+         */
+        void addRecentFile();
+
     private:
         /**
          * Initial setup.
          */
         void setupActions();
-
-        /**
-         * Add the given URL to the recent file list for every top-level
-         * window (including this one).
-         */
-        void addRecentFile(const KURL& url);
 
         /**
          * Force this main window to read the given configuration
@@ -240,6 +241,13 @@ class ReginaMain : public KParts::MainWindow,
          * be created, an error is displayed and 0 is returned.
          */
         KParts::ReadWritePart* newTextEditorPart();
+
+        /**
+         * Inserts \a currentPart into the main window and performs any
+         * additional setup that is required.  This routine can cope if
+         * \a currentPart is 0.
+         */
+        void embedPart();
 };
 
 inline ReginaMain::~ReginaMain() {

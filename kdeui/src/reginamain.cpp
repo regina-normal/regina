@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "reginaabout.h"
 #include "reginamain.h"
 #include "reginapref.h"
 
@@ -34,6 +35,7 @@
 #include <kaccel.h>
 #include <kaction.h>
 #include <kconfig.h>
+#include <kdebug.h>
 #include <kedittoolbar.h>
 #include <kfiledialog.h>
 #include <kglobal.h>
@@ -52,6 +54,8 @@
 #include <ktexteditor/view.h>
 #include <ktrader.h>
 #include <kurl.h>
+
+typedef ReginaAbout<ReginaMain> About;
 
 unsigned ReginaMain::objectNumber = 1;
 
@@ -149,10 +153,7 @@ void ReginaMain::newTopology() {
     }
 
     currentPart = newTopologyPart();
-    if (currentPart) {
-        setCentralWidget(currentPart->widget());
-        createGUI(currentPart);
-    }
+    embedPart();
 }
 
 void ReginaMain::newPython() {
@@ -164,10 +165,7 @@ void ReginaMain::newPython() {
     }
 
     currentPart = newTextEditorPart();
-    if (currentPart) {
-        setCentralWidget(currentPart->widget());
-        createGUI(currentPart);
-    }
+    embedPart();
 }
 
 void ReginaMain::openURL(const KURL& url) {
@@ -187,9 +185,6 @@ void ReginaMain::openURL(const KURL& url) {
     //   'r' : Regina data file
     //   'p' : Python library
     //   0 : Unknown
-    //
-    // TODO: Move the default extension to the same header as the one
-    // containing the filename filters.
 
     char type = 0;
     QString name;
@@ -197,7 +192,8 @@ void ReginaMain::openURL(const KURL& url) {
     // Variable name will initially contain the mimetype name, but if
     // the mimetype is not suitable it will be changed to the mimetype
     // comment so we can display it to the user.
-    if (url.fileName().right(4).lower() == ".rga")
+    if (url.fileName().right(About::regDataExt.length()).lower() ==
+            About::regDataExt)
         type = 'r';
     else {
         // Try to guess it from the mimetype.
@@ -224,33 +220,8 @@ void ReginaMain::openURL(const KURL& url) {
         return;
 
     // We now have a part with which to edit the given data file.
-
-    // Insert the part.
-    setCentralWidget(currentPart->widget());
-    createGUI(currentPart);
-
-    // Open the given URL in the new part.
+    embedPart();
     currentPart->openURL(url);
-    addRecentFile(url);
-    saveOptions();
-
-    // TODO: Use the following code in the topology data part.
-
-    #if 0
-    // download the contents
-    QString target;
-    if (KIONetAccess::download(url, target))
-    {
-        // set our caption
-        setCaption(url);
-
-        // load in the file (target is always local)
-        loadFile(target);
-
-        // and remove the temp file
-        KIONetAccess::removeTempFile(target);
-    }
-    #endif
 }
 
 void ReginaMain::openURL(const QString& url) {
@@ -272,9 +243,9 @@ void ReginaMain::quit() {
 }
 
 void ReginaMain::fileOpen() {
-    // TODO: Move the filters to headers specific to different file types.
     KURL url = KFileDialog::getOpenURL(QString::null,
-        i18n("*.rga|Regina Data Files\n*.py|Python Scripts\n*|All Files"),
+        "*" + About::regDataExt +
+        i18n("|Regina Data Files\n*.py|Python Libraries\n*|All Files"),
         this, i18n("Open Data File"));
 
     if (!url.isEmpty())
@@ -365,10 +336,14 @@ void ReginaMain::setupActions() {
     createGUI(0);
 }
 
-void ReginaMain::addRecentFile(const KURL& url) {
-    for (ReginaMain* main = (ReginaMain*)(memberList->first()); main;
-            main = (ReginaMain*)(memberList->next()))
-        main->fileOpenRecent->addURL(url);
+void ReginaMain::addRecentFile() {
+    if (currentPart && ! currentPart->url().isEmpty()) {
+        fileOpenRecent->addURL(currentPart->url());
+
+        // Save the new file list to the global configuration.
+        // Note that the other main windows will be updated because of this.
+        saveOptions();
+    }
 }
 
 void ReginaMain::readOptions(KConfig* config) {
@@ -408,7 +383,10 @@ void ReginaMain::saveOptions() {
 KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     KParts::ReadWritePart* ans = 0;
 
-    // TODO: Implement a topology data part!
+    KLibFactory* libFactory = KLibLoader::self()->factory("libreginapart");
+    if (libFactory)
+        ans = (KParts::ReadWritePart*)(libFactory->create(
+            this, "reginapart", "ReginaPart"));
 
     if (! ans)
         KMessageBox::error(this, QString(i18n(
@@ -426,7 +404,7 @@ KParts::ReadWritePart* ReginaMain::newTextEditorPart() {
         KLibFactory *libFactory =
             KLibLoader::self()->factory(service->library());
         if (libFactory)
-            ans = (KTextEditor::Editor*)(libFactory->create(
+            ans = (KParts::ReadWritePart*)(libFactory->create(
                 this, service->name(), "KTextEditor::Editor"));
     }
 
@@ -435,6 +413,15 @@ KParts::ReadWritePart* ReginaMain::newTextEditorPart() {
             "An appropriate text editor component could not be found.")));
 
     return ans;
+}
+
+void ReginaMain::embedPart() {
+    if (currentPart) {
+        setCentralWidget(currentPart->widget());
+        currentPart->widget()->show();
+        createGUI(currentPart);
+        connect(currentPart, SIGNAL(completed()), this, SLOT(addRecentFile()));
+    }
 }
 
 #include "reginamain.moc"
