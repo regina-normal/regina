@@ -280,6 +280,20 @@ class XMLParser {
 std::string xmlEncodeSpecialChars(const std::string& original);
 
 /**
+ * Returns the given string encoded so it is suitable for use inside an
+ * XML comment.  As well as converting special characters to XML
+ * entities, this routine will replace dashes with underscores to avoid
+ * double-hyphens (which are illegal in XML comments).
+ *
+ * \ifaces Not present.
+ *
+ * @param comment the string to convert; this string will not be
+ * changed.
+ * @return the string converted to be usable inside an XML comment.
+ */
+std::string xmlEncodeComment(const std::string& comment);
+
+/**
  * Returns an XML tag with a single property containing the given value.
  * The tag will be of the form <tt>\<tagName value="..."/\></tt>.
  *

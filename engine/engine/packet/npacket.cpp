@@ -363,6 +363,7 @@ void NPacket::writeXMLFile(std::ostream& out) const {
 
 void NPacket::writeXMLPacketTree(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
+    using regina::xml::xmlEncodeComment;
 
     // Write the packet opening tag including packet label and type.
     out << "<packet label=\"" << xmlEncodeSpecialChars(packetLabel) << "\"\n";
@@ -387,8 +388,8 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
         p->writeXMLPacketTree(out);
 
     // Write the packet closing tag.
-    out << "</packet> <!-- " << xmlEncodeSpecialChars(packetLabel)
-        << " (" << getPacketTypeName() << ") -->\n";
+    out << "</packet> <!-- " << xmlEncodeComment(packetLabel)
+        << " (" << xmlEncodeComment(getPacketTypeName()) << ") -->\n";
 }
 
 } // namespace regina

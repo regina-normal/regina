@@ -167,4 +167,20 @@ std::string xmlEncodeSpecialChars(const std::string& original) {
     return ansStr;
 }
 
+std::string xmlEncodeComment(const std::string& original) {
+    // Encode special characters.
+    xmlChar* ans = ::xmlEncodeSpecialChars(0,
+        (const xmlChar*)(original.c_str()));
+
+    // Replace dashes with underscores.
+    for (xmlChar* c = ans; *c; c++)
+        if (*c == '-')
+            (*c = '_');
+
+    // Tidy up and return.
+    std::string ansStr((const char*)ans);
+    delete[] ans;
+    return ansStr;
+}
+
 } } // namespace regina::xml
