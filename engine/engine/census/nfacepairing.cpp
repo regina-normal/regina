@@ -207,7 +207,7 @@ void* NFacePairing::run(void* param) {
         // set of tetrahedra.  This time we will avoid sending the last
         // face of a set of tetrahedra to the boundary.
         if (usedFaces % 4 == 3 && usedFaces < 4 * (int)nTetrahedra - 1 &&
-                noDest((usedFaces / 4) + 1, 0) && isUnmatched(dest(trying))) {
+                noDest((usedFaces / 4) + 1, 0) && isUnmatched(trying)) {
             // Can't use the boundary; all we can do is push past the
             // end.
             dest(trying)++;
@@ -239,7 +239,7 @@ void* NFacePairing::run(void* param) {
 
             // Otherwise undo the previous gluing and prepare to loop
             // again trying the next option.
-            if (isUnmatched(dest(trying))) {
+            if (isUnmatched(trying)) {
                 usedFaces--;
                 boundaryFaces--;
             } else {
@@ -251,7 +251,7 @@ void* NFacePairing::run(void* param) {
         }
 
         // Let's match it up and head to the next free face!
-        if (isUnmatched(dest(trying))) {
+        if (isUnmatched(trying)) {
             usedFaces++;
             boundaryFaces++;
         } else {
@@ -278,7 +278,7 @@ void* NFacePairing::run(void* param) {
             // Head back down to the previous gluing and undo it, ready
             // for the next loop.
             trying = oldTrying;
-            if (isUnmatched(dest(trying))) {
+            if (isUnmatched(trying)) {
                 usedFaces--;
                 boundaryFaces--;
             } else {
@@ -310,7 +310,7 @@ void* NFacePairing::run(void* param) {
                             // boundary, so we need to move back one
                             // step so we will be pushed back onto the
                             // boundary.
-                            if (isUnmatched(dest(trying)))
+                            if (isUnmatched(trying))
                                 dest(trying)--;
                         }
                         break;
