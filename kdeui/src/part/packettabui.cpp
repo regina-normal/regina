@@ -43,6 +43,8 @@ PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane) :
     tabs = new ExtTabCtl(ui);
     layout->addWidget(tabs, 1);
     connect(tabs, SIGNAL(tabSelected(int)), this, SLOT(notifyTabSelected(int)));
+
+    ui->setFocusProxy(tabs);
 }
 
 PacketTabbedUI::~PacketTabbedUI() {

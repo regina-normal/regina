@@ -60,6 +60,8 @@ class ExtTabCtl : public KTabCtl {
 
 inline ExtTabCtl::ExtTabCtl(QWidget* parent, const char* name) :
         KTabCtl(parent, name) {
+    // Grr, KTabCtl should do this itself.
+    setFocusProxy(tabs);
 }
 
 inline void ExtTabCtl::setCurrentTab(int tabIndex) {

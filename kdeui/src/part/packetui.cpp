@@ -181,6 +181,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         mainUIWidget->show();
     }
     setStretchFactor(mainUIWidget, 1);
+    setFocusProxy(mainUIWidget);
 
     // Set up the footer buttons and other actions.
     KToolBar* footer = new KToolBar(this, "packetEditorBar", false, false);

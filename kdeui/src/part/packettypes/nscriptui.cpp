@@ -125,6 +125,9 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
+    splitter->setTabOrder(view, varTable);
+    ui->setFocusProxy(view);
+
     // --- Script Actions ---
 
     scriptActions = new KActionCollection(0, 0, 0,

@@ -101,6 +101,9 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
         "their Euler characteristic."));
     layout->addWidget(useEuler, 4, 1, Qt::AlignLeft);
 
+    // Focus goes by default to the first checkbox.
+    ui->setFocusProxy(useOrient);
+
     // Set up the boolean options.
     // We always have TRUE then FALSE in each combo box.
     optOrient = new KComboBox(ui);

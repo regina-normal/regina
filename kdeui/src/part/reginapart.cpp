@@ -150,9 +150,10 @@ void ReginaPart::view(PacketPane* newPane) {
         shouldDock = false;
 
     // Display the new pane.
-    if (shouldDock)
+    if (shouldDock) {
         dock(newPane);
-    else
+        newPane->setFocus();
+    } else
         newPane->floatPane();
 
     // Add it to the list of currently managed panes.

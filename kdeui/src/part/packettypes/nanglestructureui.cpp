@@ -104,6 +104,8 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     headerTips = new AngleHeaderToolTip(table->header());
     connect(table->header(), SIGNAL(sizeChange(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
+
+    ui->setFocusProxy(table);
 }
 
 NAngleStructureUI::~NAngleStructureUI() {

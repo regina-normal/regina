@@ -39,7 +39,6 @@ Packets (General):
     - Work out how to right-align the packet pane close button
     - Find out how to centre column headers in list views
     - Clearly point out in the UI if a packet is uneditable
-    * Set focus on internal editor parts
 
 Part:
     - Fix crash on "import regina" when running scripts from within

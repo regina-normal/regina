@@ -93,6 +93,11 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
 
     layout->addStretch(1);
 
+    // Give focus by default to the first available option.
+    // TODO: Focus should actually be passed to the selected option (not
+    // the first), but this requires the focus proxy to change.
+    ui->setFocusProxy(typeAnd);
+
     // Set up the list of child filters.
     QBoxLayout* wideChildLayout = new QHBoxLayout(layout);
     layout->setStretchFactor(wideChildLayout, 3);
