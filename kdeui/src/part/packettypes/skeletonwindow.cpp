@@ -36,6 +36,7 @@
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qstyle.h>
+#include <qwhatsthis.h>
 
 using regina::NBoundaryComponent;
 using regina::NComponent;
@@ -59,6 +60,7 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     table->addColumn(columnLabel(objectType, 3));
     table->setSelectionMode(QListView::NoSelection);
     table->setSorting(-1);
+    QWhatsThis::add(table, overview(objectType));
     layout->addWidget(table);
 
     refresh();
@@ -164,6 +166,53 @@ QString SkeletonWindow::columnLabel(SkeletalObject type, int column) {
             return QString::null;
     }
 
+    return QString::null;
+}
+
+QString SkeletonWindow::overview(SkeletalObject type) {
+    switch (type) {
+        case Vertices: return i18n("<qt>Displays details of each "
+            "vertex of this triangulation.<p>"
+            "Each row describes properties of the vertex as well as "
+            "listing precisely which vertices of which tetrahedra it "
+            "corresponds to.<p>"
+            "See the reference manual for further details on what each "
+            "column of the table means.</qt>");
+        case Edges: return i18n("<qt>Displays details of each edge of "
+            "this triangulation.<p>"
+            "Each row describes properties of the edge as well as "
+            "listing precisely which vertices of which tetrahedra it "
+            "corresponds to.<p>"
+            "See the reference manual for further details on what each "
+            "column of the table means.</qt>");
+        case Faces: return i18n("<qt>Displays details of each "
+            "face of this triangulation.<p>"
+            "The different faces are numbered from 0 upwards.  "
+            "Each row describes the shape of the face as well as "
+            "listing precisely which vertices of which tetrahedra it "
+            "corresponds to.<p>"
+            "See the reference manual for further details on what each "
+            "column of the table means.</qt>");
+        case Components: return i18n("<qt>Displays details of each "
+            "boundary component of this triangulation.  A boundary "
+            "component may be a collection of adjacent boundary faces, "
+            "or it may be a single ideal vertex, whose link is closed but "
+            "not a 2-sphere.<p>"
+            "The different boundary components are numbered from 0 upwards.  "
+            "Each row describes properties of the boundary component, as "
+            "well as which tetrahedron faces (for a real boundary component) "
+            "or which tetrahedron vertex (for an ideal boundary component) "
+            "it is formed from.<p>"
+            "See the reference manual for further details on what each "
+            "column of the table means.</qt>");
+        case BoundaryComponents: return i18n("<qt>Displays details of each "
+            "connected component of this triangulation.<p>"
+            "The different components are numbered from 0 upwards.  "
+            "Each row describes properties of the component as well as "
+            "listing precisely which tetrahedra the component contains.<p>"
+            "See the reference manual for further details on what each "
+            "column of the table means.</qt>");
+    }
     return QString::null;
 }
 

@@ -106,6 +106,7 @@ class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
          */
         static QString typeLabel(SkeletalObject type);
         static QString columnLabel(SkeletalObject type, int column);
+        static QString overview(SkeletalObject type);
 };
 
 /**

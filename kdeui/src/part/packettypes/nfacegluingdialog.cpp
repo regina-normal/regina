@@ -56,6 +56,10 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
     QFrame* page = plainPage();
     QGridLayout* layout = new QGridLayout(page, 3, 3, spacingHint());
 
+    QWhatsThis::add(page, i18n("This dialog allows you to specify the other "
+        "tetrahedron face with which this face should be identified (or "
+        "whether this face should simply be left as a boundary face)."));
+
     layout->addWidget(new QLabel(i18n("Tetrahedron"), page), 0, 1,
         Qt::AlignCenter);
     layout->addWidget(new QLabel(i18n("Face"), page), 0, 2,
@@ -64,29 +68,48 @@ NFaceGluingDialog::NFaceGluingDialog(QWidget* parent, unsigned long useNTets,
         Qt::AlignLeft);
     layout->addWidget(new QLabel(i18n("Destination:"), page), 2, 0,
         Qt::AlignLeft);
-    layout->addWidget(new QLabel(QString::number(myTet), page), 1, 1,
-        Qt::AlignCenter);
-    layout->addWidget(new QLabel(regina::faceDescription(myFace).c_str(),
-        page), 1, 2, Qt::AlignCenter);
+
+    QLabel* label;
+    label = new QLabel(QString::number(myTet), page);
+    QWhatsThis::add(label, i18n("<qt>Shows the tetrahedron number "
+        "corresponding to this tetrahedron face.<p>"
+        "This face will be identified with a face of the adjacent "
+        "tetrahedron as specified in the drop-down list below.</qt>"));
+    layout->addWidget(label, 1, 1, Qt::AlignCenter);
+    label = new QLabel(regina::faceDescription(myFace).c_str(), page);
+    QWhatsThis::add(label, i18n("<qt>Shows the three vertices that form this "
+        "tetrahedron face (each tetrahedron has vertices 0, 1, 2 and 3).<p>"
+        "These three vertices will be identified with the three "
+        "vertices of the adjacent tetrahedron as specified in the text area "
+        "below.</qt>"));
+    layout->addWidget(label, 1, 2, Qt::AlignCenter);
 
     tetrahedron = new KComboBox(page);
     tetrahedron->insertItem(i18n("Bdry"));
     for (unsigned long i = 0; i < nTets; i++)
         tetrahedron->insertItem(QString::number(i));
     tetrahedron->setCurrentItem(initAdjTet < 0 ? 0 : initAdjTet + 1);
-    QWhatsThis::add(tetrahedron, i18n("The number of the tetrahedron to "
-        "which this face should be joined, or Bdry if this face should "
-        "be a boundary face."));
+    QWhatsThis::add(tetrahedron, i18n("<qt>Specify which tetrahedron this "
+        "face should be joined to, or <i>Bdry</i> if this face should "
+        "be left as a boundary face.<p>"
+        "Only the adjacent tetrahedron number is required &ndash; the precise "
+        "face of the adjacent tetrahedron should be specified in the text "
+        "area to the right.</qt>"));
     layout->addWidget(tetrahedron, 2, 1);
 
     perm = new KLineEdit(initAdjFace, page);
     perm->setValidator(new QRegExpValidator(reTetFace, page));
     perm->setMaxLength(3);
-    QWhatsThis::add(perm, i18n("The specific tetrahedron face to which "
-        "this face should be joined.  The face should be described by "
-        "three vertices (each between 0 and 3 inclusive).  These vertices "
-        "should be given in the order in which they are to be glued to "
-        "the three vertices of this face."));
+    QWhatsThis::add(perm, i18n("Specify precisely how this tetrahedron face "
+        "is to be identified with a face of the adjacent tetrahedron.<p>"
+        "The face of the adjacent tetrahedron should be specified by "
+        "its three vertices (each between 0 and 3 inclusive).  These vertices "
+        "will be matched with the three vertices of this tetrahedron face "
+        "(listed immediately above).<p>"
+        "Note that only the three vertices of the adjacent tetrahedron "
+        "should be entered into this text area (i.e., not the adjacent "
+        "tetrahedron number, which may be specified in the drop-down list "
+        "to the left).</qt>"));
     layout->addWidget(perm, 2, 2);
 
     connect(tetrahedron, SIGNAL(activated(int)),
