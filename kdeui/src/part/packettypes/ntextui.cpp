@@ -88,7 +88,7 @@ QString NTextUI::getPacketMenuText() const {
 }
 
 void NTextUI::commit() {
-    text->setText(editInterface->text());
+    text->setText(editInterface->text().ascii());
     setDirty(false);
 }
 
