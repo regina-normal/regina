@@ -1,6 +1,6 @@
 etc/regina-normal/regina.conf
 usr/bin/regina-normal
-usr/lib/regina-normal
+usr/lib/regina-normal/lib/libregina-engine-jni.so
 usr/share/java/regina-normal.jar
 usr/share/java/regina-normal-2.2.jar
 usr/share/java/regina-normal-jni.jar

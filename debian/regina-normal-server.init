@@ -1,0 +1,40 @@
+#! /bin/sh
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/lib/regina-normal/bin/regina-engine-corba
+NAME="regina-normal-server"
+DESC="Regina calculation engine"
+HOST="`/bin/hostname --fqdn`"
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	start-stop-daemon --start --quiet --chuid nobody --background \
+		--exec $DAEMON --user nobody -- -ORBpoa_iiop_name_port "$HOST"
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --stop --quiet --exec $DAEMON --user nobody --oknodo
+	echo "$NAME."
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon --stop --quiet --exec $DAEMON --user nobody --oknodo
+	sleep 1
+	start-stop-daemon --start --quiet --chuid nobody --background \
+		--exec $DAEMON --user nobody -- -ORBpoa_iiop_name_port "$HOST"
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

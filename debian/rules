@@ -14,6 +14,7 @@ tmp = debian/tmp
 javadir = $(tmp)/usr/share/java
 regdir = $(tmp)/usr/share/regina-normal
 jnidir = $(tmp)/usr/lib/regina-normal/lib
+bindir = $(tmp)/usr/lib/regina-normal/bin
 pixmaps = $(tmp)/usr/share/pixmaps
 mandir = $(tmp)/usr/share/man
 docpkgdir = $(tmp)/usr/share/doc/regina-normal-doc
@@ -23,6 +24,7 @@ overrides = $(tmp)/usr/share/lintian/overrides
 
 INSTALL_DIR = install -p -d -o root -g root -m 755
 INSTALL_FILE = install -p -o root -g root -m 644
+INSTALL_BIN = install -p -o root -g root -m 755
 INSTALL_SCRIPT = install -p -o root -g root -m 755
 
 JAR = /usr/lib/j2se/1.3/bin/jar
@@ -36,7 +38,7 @@ configure-stamp:
 build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
-	$(MAKE) binjni binjava \
+	$(MAKE) bin \
 		JNI_INCLUDES="-I/usr/lib/j2se/1.3/include -I/usr/lib/j2se/1.3/include/linux" \
 		EXTRA_CLASSES="" \
 		JAVAC="/usr/lib/j2se/1.3/bin/javac -target 1.1" \
@@ -91,12 +93,18 @@ install: build
 	$(INSTALL_DIR) $(jnidir)
 	$(INSTALL_FILE) bin/*.so $(jnidir)
 
+	# Install the CORBA engine.
+	$(INSTALL_DIR) $(bindir)
+	$(INSTALL_BIN) bin/regina-engine-corba $(bindir)
+
 	# Install the scripts.
 	$(INSTALL_DIR) $(regdir)/scripts
 	$(INSTALL_DIR) $(tmp)/usr/bin
 	$(INSTALL_FILE) scripts/reg* $(regdir)/scripts
 	$(INSTALL_SCRIPT) regina $(regdir)
 	$(INSTALL_SCRIPT) debian/regina-normal.sh $(tmp)/usr/bin/regina-normal
+	$(INSTALL_SCRIPT) debian/regina-engine-corba.sh \
+		$(tmp)/usr/bin/regina-engine-corba
 
 	# Install the icons.
 	$(INSTALL_DIR) $(regdir)/icons
@@ -166,8 +174,10 @@ binary-arch: build install
 	dh_installexamples -a
 	dh_installmenu -a
 	dh_installmime -a
+	dh_installinit -a
 	dh_installman -a
 	dh_installchangelogs -pregina-normal CHANGES.txt
+	dh_installchangelogs -pregina-normal-server CHANGES.txt
 	dh_link -a
 	dh_strip -a
 	dh_compress -a

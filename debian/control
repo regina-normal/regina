@@ -2,11 +2,12 @@ Source: regina-normal
 Section: contrib/math
 Priority: extra
 Maintainer: Ben Burton <benb@acm.org>
-Build-Depends: debhelper (>> 3.0.0), docbook-utils, doxygen, graphviz, j2sdk1.3, jade, jython, libbtools-java (>= 1.1-0), libgmp3-dev
+Build-Depends: debhelper (>> 3.0.0), docbook-utils, doxygen, graphviz, j2sdk1.3, jade, jython, libbtools-java (>= 1.1-0), libgmp3-dev, omniorb-dev (>= 1:3.0.1-0)
 Standards-Version: 3.5.6
 
 Package: regina-normal
 Architecture: any
+Section: contrib/math
 Depends: java2-runtime, libbtools-java (>= 1.1-0), ${shlibs:Depends}
 Recommends: jython
 Suggests: regina-normal-doc, snappea
@@ -14,6 +15,29 @@ Description: Regina, the 3-manifold normal surface theory calculator
  Regina is a topological calculator with a bent towards normal surface
  theory. It allows 3-manifolds to be created, manipulated and their
  properties of interest determined. 
+ .
+ Highlights of Regina include triangulation analysis and simplification,
+ census creation and normal surface calculation.  It offers embedded
+ Jython scripting giving full access to the calculation engine.
+
+Package: regina-normal-server
+Architecture: any
+Section: contrib/math
+Depends: ${shlibs:Depends}
+Suggests: regina-normal, regina-normal-doc
+Description: Regina CORBA server for normal surface theory calculator
+ Regina is a normal surface theory calculator for 3-manifold
+ topologists.  This package provides the calculation engine as a CORBA
+ server.
+ .
+ The Regina user interface is written entirely in Java and can be run on
+ a different machine (and under a different operating system).  It can
+ call upon this CORBA server to do all of its mathematical work.
+ .
+ If you have package regina-normal installed you probably don't need
+ this; regina-normal provides the calculation engine as a native JNI
+ library that is faster and safer (but can only be accessed by the user
+ interface on this machine).
  .
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface calculation.  It offers embedded
