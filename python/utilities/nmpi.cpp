@@ -29,14 +29,72 @@
 #include "pyutilities.h"
 #include "utilities/nmpi.h"
 
-// Make a temporary routine so we can see that the python module is
-// built correctly.
+using namespace boost::python;
+using regina::NLargeInteger;
 
-const char* greet() {
-    return "Hello world!";
+namespace {
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
+        NLargeInteger::stringValue, 0, 1);
 }
 
 void addNLargeInteger() {
-    boost::python::def("greet", greet);
+    scope s = class_<NLargeInteger>("NLargeInteger")
+        .def(init<long>())
+        .def(init<const NLargeInteger&>())
+        .def(init<const char*, optional<int> >())
+        .def("isInfinite", &NLargeInteger::isInfinite)
+        .def("longValue", &NLargeInteger::longValue)
+        .def("stringValue", &NLargeInteger::stringValue, OL_stringValue())
+        .def("swap", &NLargeInteger::swap)
+        .def(self == self)
+        .def(self == long())
+        .def(self != self)
+        .def(self != long())
+        .def(self < self)
+        .def(self < long())
+        .def(self > self)
+        .def(self > long())
+        .def(self <= self)
+        .def(self <= long())
+        .def(self >= self)
+        .def(self >= long())
+        .def(self + self)
+        .def(self + long())
+        .def(self - self)
+        .def(self - long())
+        .def(self * self)
+        .def(self * long())
+        .def(self / self)
+        .def(self / long())
+        .def("divExact", &NLargeInteger::divExact)
+        .def(self % self)
+        .def(self % long())
+        .def(- self)
+        .def(self += self)
+        .def(self += long())
+        .def(self -= self)
+        .def(self -= long())
+        .def(self *= self)
+        .def(self *= long())
+        .def(self /= self)
+        .def(self /= long())
+        .def("divByExact", &NLargeInteger::divByExact,
+            return_internal_reference<>())
+        .def(self %= self)
+        .def(self %= long())
+        .def("negate", &NLargeInteger::negate)
+        .def("raiseToPower", &NLargeInteger::raiseToPower)
+        .def("abs", &NLargeInteger::abs)
+        .def("gcd", &NLargeInteger::gcd)
+        .def("lcm", &NLargeInteger::lcm)
+        .def("gcdWithCoeffs", &NLargeInteger::gcdWithCoeffs)
+        .def(self_ns::str(self))
+    ;
+
+    // Apparently there is no way in python to make a module attribute
+    // read-only.
+    s.attr("zero") = NLargeInteger::zero;
+    s.attr("one") = NLargeInteger::one;
+    s.attr("infinity") = NLargeInteger::infinity;
 }
 
