@@ -25,4 +25,5 @@ all :
 	autoheader
 	autoconf
 	automake
+	perl -w admin/am_edit
 

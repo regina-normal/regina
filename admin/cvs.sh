@@ -27,7 +27,7 @@ strip_makefile()
 
 check_autotool_versions()
 {
-AUTOCONF_VERSION=`$AUTOCONF --version | head -1`
+AUTOCONF_VERSION=`$AUTOCONF --version | head -n 1`
 case $AUTOCONF_VERSION in
   Autoconf*2.5* | autoconf*2.5* ) : ;;
   "" )
@@ -42,7 +42,7 @@ case $AUTOCONF_VERSION in
     ;;
 esac
  
-AUTOHEADER_VERSION=`$AUTOHEADER --version | head -1`
+AUTOHEADER_VERSION=`$AUTOHEADER --version | head -n 1`
 case $AUTOHEADER_VERSION in
   Autoconf*2.5* | autoheader*2.5* ) : ;;
   "" )
@@ -57,7 +57,7 @@ case $AUTOHEADER_VERSION in
     ;;
 esac
 
-AUTOMAKE_STRING=`$AUTOMAKE --version | head -1`
+AUTOMAKE_STRING=`$AUTOMAKE --version | head -n 1`
 case $AUTOMAKE_STRING in
   automake*1.5d* )
     echo "*** YOU'RE USING $AUTOMAKE_STRING."
@@ -189,6 +189,7 @@ $AUTOHEADER
 $AUTOMAKE --foreign --include-deps
 perl -w ../admin/am_edit
 call_and_fix_autoconf
+touch stamp-h.in
 }
 
 configure_in()
@@ -234,17 +235,23 @@ for i in $mfs; do
       fi
   fi
 done
-egrep '^dnl AC_OUTPUT\(.*\)' `cat configure.files` | sed -e "s#^.*dnl AC_OUTPUT(\(.*\))#AC_CONFIG_FILES([ \1 ])#" >> configure.in.new
+
+files=`cat configure.files`
+list=`egrep '^dnl AC_OUTPUT\(.*\)' $files | sed -e "s#^.*dnl AC_OUTPUT(\(.*\))#\1#"`
+for file in $list; do 
+    echo "AC_CONFIG_FILES([ $file ])" >>  configure.in.new
+done
+
 if test -n "$UNSERMAKE"; then
   echo "AC_CONFIG_FILES([ MakeVars ])" >> configure.in.new
 fi
 echo "AC_OUTPUT" >> configure.in.new
 modulename=
 if test -f configure.in.in; then
-   if head -2 configure.in.in | egrep "^#MIN_CONFIG\(.*\)$" > /dev/null; then
+   if head -n 2 configure.in.in | egrep "^#MIN_CONFIG\(.*\)$" > /dev/null; then
       kde_use_qt_param=`cat configure.in.in | sed -n -e "s/#MIN_CONFIG(\(.*\))/\1/p"`
    fi
-   if head -2 configure.in.in | egrep "^#MIN_CONFIG" > /dev/null; then
+   if head -n 2 configure.in.in | egrep "^#MIN_CONFIG" > /dev/null; then
       line=`grep "^AM_INIT_AUTOMAKE(" configure.in.in`
       if test -n "$line"; then
 	  modulename=`echo $line | sed -e "s#AM_INIT_AUTOMAKE(\([^,]*\),.*#\1#"`
@@ -255,7 +262,7 @@ if test -f configure.in.in; then
    fi
 fi
 if test -z "$VERSION" || test "$VERSION" = "@VERSION@"; then
-     VERSION="\"3.0.9\""
+     VERSION="\"3.1.2\""
 fi
 if test -z "$modulename" || test "$modulename" = "@MODULENAME@"; then
    modulename=`pwd`; 
@@ -284,11 +291,12 @@ for i in . .. ../.. ../../..; do
 done
 rm -f configure.files
 touch configure.files
-if test -f configure.in.in && head -2 configure.in.in | grep "^#MIN_CONFIG" > /dev/null; then
+if test -f configure.in.in && head -n 2 configure.in.in | grep "^#MIN_CONFIG" > /dev/null; then
 	echo $admindir/configure.in.min >> configure.files
 fi
 test -f configure.in.in && echo configure.in.in >> configure.files
-list=`find . -name "configure.in.in" -o -name "configure.in.bot" | sort`
+list=`find . -name "configure.in.in" -o -name "configure.in.bot" | \
+               sed -e "s,/configure,/aaaconfigure," | sort | sed -e "s,/aaaconfigure,/configure,"`
 for i in $list; do if test -f $i && test `dirname $i` != "." ; then
   echo $i >> configure.files
 fi; done
@@ -299,8 +307,8 @@ test -f configure.in.bot && echo configure.in.bot >> configure.files
 subdirs()
 {
 dirs=
-compilefirst=`sed -ne 's#^COMPILE_FIRST[ ]*=[ ]*##p' $makefile_am | head -1`
-compilelast=`sed -ne 's#^COMPILE_LAST[ ]*=[ ]*##p' $makefile_am | head -1`
+compilefirst=`sed -ne 's#^COMPILE_FIRST[ ]*=[ ]*##p' $makefile_am | head -n 1`
+compilelast=`sed -ne 's#^COMPILE_LAST[ ]*=[ ]*##p' $makefile_am | head -n 1`
 for i in `ls -1`; do
     if test -f $i/Makefile.am; then
        case " $compilefirst $compilelast " in
@@ -317,11 +325,11 @@ for d in $compilefirst; do
 done
 
 (for d in $dirs; do 
-   list=`sed -ne "s#^COMPILE_BEFORE_$d""[ ]*=[ ]*##p" $makefile_am | head -1`
+   list=`sed -ne "s#^COMPILE_BEFORE_$d""[ ]*=[ ]*##p" $makefile_am | head -n 1`
    for s in $list; do
       echo $s $d
    done
-   list=`sed -ne "s#^COMPILE_AFTER_$d""[ ]*=[ ]*##p" $makefile_am | head -1`
+   list=`sed -ne "s#^COMPILE_AFTER_$d""[ ]*=[ ]*##p" $makefile_am | head -n 1`
    for s in $list; do
       echo $d $s
    done
