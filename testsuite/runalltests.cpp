@@ -107,22 +107,22 @@ bool runAllTests() {
      * be added below.
      */
 
-    // Census:
-    addNCensus(runner);
-    addNFacePairing(runner);
+    // Utilities:
+    addNIndexedArray(runner);
+    addNLargeInteger(runner);
 
     // Maths:
     addNumberTheory(runner);
 
-    // Surfaces:
-    addNNormalSurfaceList(runner);
-
     // Triangulation:
     addNTriangulation(runner);
 
-    // Utilities:
-    addNIndexedArray(runner);
-    addNLargeInteger(runner);
+    // Surfaces:
+    addNNormalSurfaceList(runner);
+
+    // Census:
+    addNCensus(runner);
+    addNFacePairing(runner);
 
     /**
      * END REGINA TEST SUITES
