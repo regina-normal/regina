@@ -77,7 +77,7 @@
     module <parameter>regina</parameter>.  For instance, a new
     triangulation can be created by calling
     <literal>regina.NTriangulation()</literal> and a file can be
-    read by calling <literal>regina.readXMLFile(filename)</literal>.
+    read by calling <literal>regina.readFileMagic(filename)</literal>.
    </para>
    <para>
     &regina; includes a complete reference for the calculation engine,
