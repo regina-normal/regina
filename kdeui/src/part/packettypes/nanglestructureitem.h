@@ -26,77 +26,55 @@
 
 /* end stub */
 
-/*! \file nanglestructureui.h
- *  \brief Provides an interface for viewing angle structure lists.
+/*! \file nanglestructureitem.h
+ *  \brief Provides a list view item describing a single angle structure.
  */
 
-#ifndef __NANGLESTRUCTUREUI_H
-#define __NANGLESTRUCTUREUI_H
+#ifndef __NANGLESTRUCTUREITEM_H
+#define __NANGLESTRUCTUREITEM_H
 
-#include "../packetui.h"
+#include "utilities/nrational.h"
 
-#include <qtooltip.h>
-
-class AngleHeaderToolTip;
-class QHeader;
-class QLabel;
-class QListView;
-class QVBox;
+#include <klistview.h>
 
 namespace regina {
-    class NAngleStructureList;
-    class NPacket;
+    class NAngleStructure;
 };
 
 /**
- * A packet interface for viewing angle structure lists.
+ * A list view item describing a single angle structure.
  */
-class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
+class NAngleStructureItem : public KListViewItem {
     private:
         /**
-         * Packet details
+         * The underlying angle structure.
          */
-        regina::NAngleStructureList* structures;
+        const regina::NAngleStructure* structure;
 
-        /**
-         * Internal components
-         */
-        QVBox* ui;
-        QLabel* stats;
-        QListView* table;
-        AngleHeaderToolTip* headerTips;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NAngleStructureUI(regina::NAngleStructureList* packet,
-                PacketPane* newEnclosingPane);
-        ~NAngleStructureUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-};
-
-/**
- * A utility class for displaying tooltips for table headers.
- */
-class AngleHeaderToolTip : public QToolTip {
     public:
         /**
          * Constructor.
          */
-        AngleHeaderToolTip(QHeader *header, QToolTipGroup *group = 0);
+        NAngleStructureItem(QListView* parent,
+            const regina::NAngleStructure* newStructure);
 
-    protected:
         /**
-         * QToolTip overrides.
+         * QListItem overrides.
          */
-        void maybeTip(const QPoint& p);
+        QString text(int column) const;
+
+    private:
+        /**
+         * String conversions.
+         *
+         * This routine returns QString::null if the given angle is 0.
+         */
+        static QString angleToString(regina::NRational angle);
 };
+
+inline NAngleStructureItem::NAngleStructureItem(QListView* parent,
+        const regina::NAngleStructure* newStructure) : KListViewItem(parent),
+        structure(newStructure) {
+}
 
 #endif

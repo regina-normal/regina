@@ -26,77 +26,45 @@
 
 /* end stub */
 
-/*! \file nanglestructureui.h
- *  \brief Provides an interface for viewing angle structure lists.
- */
+// Regina core includes:
+#include "angle/nanglestructure.h"
 
-#ifndef __NANGLESTRUCTUREUI_H
-#define __NANGLESTRUCTUREUI_H
+// UI includes:
+#include "nanglestructureitem.h"
 
-#include "../packetui.h"
+#include <klocale.h>
+#include <klistview.h>
 
-#include <qtooltip.h>
+using regina::NAngleStructure;
 
-class AngleHeaderToolTip;
-class QHeader;
-class QLabel;
-class QListView;
-class QVBox;
+QString NAngleStructureItem::text(int column) const {
+    if (column == 0) {
+        if (structure->isStrict())
+            return i18n("Strict");
+        else if (structure->isTaut())
+            return i18n("Taut");
+        else
+            return QString::null;
+    }
 
-namespace regina {
-    class NAngleStructureList;
-    class NPacket;
-};
+    return angleToString(structure->getAngle((column - 1) / 3,
+        (column - 1) % 3));
+}
 
-/**
- * A packet interface for viewing angle structure lists.
- */
-class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
-    private:
-        /**
-         * Packet details
-         */
-        regina::NAngleStructureList* structures;
+QString NAngleStructureItem::angleToString(regina::NRational angle) {
+    if (angle == 0)
+        return QString::null;
 
-        /**
-         * Internal components
-         */
-        QVBox* ui;
-        QLabel* stats;
-        QListView* table;
-        AngleHeaderToolTip* headerTips;
+    static const QString pi(i18n("Pi"));
 
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NAngleStructureUI(regina::NAngleStructureList* packet,
-                PacketPane* newEnclosingPane);
-        ~NAngleStructureUI();
+    if (angle == 1)
+        return pi;
+    else if (angle.getDenominator() == 1)
+        return QString(angle.getNumerator().stringValue().c_str()) + ' ' + pi;
+    else if (angle.getNumerator() == 1)
+        return pi + " / " + angle.getDenominator().stringValue().c_str();
+    else
+        return QString(angle.getNumerator().stringValue().c_str()) + ' ' + pi
+            + " / " + angle.getDenominator().stringValue().c_str();
+}
 
-        /**
-         * PacketUI overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-};
-
-/**
- * A utility class for displaying tooltips for table headers.
- */
-class AngleHeaderToolTip : public QToolTip {
-    public:
-        /**
-         * Constructor.
-         */
-        AngleHeaderToolTip(QHeader *header, QToolTipGroup *group = 0);
-
-    protected:
-        /**
-         * QToolTip overrides.
-         */
-        void maybeTip(const QPoint& p);
-};
-
-#endif

@@ -27,18 +27,21 @@
 /* end stub */
 
 // Regina core includes:
-#include "angle/nanglestructure.h"
 #include "angle/nanglestructurelist.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "nanglestructureitem.h"
 #include "nanglestructureui.h"
 
 #include <klocale.h>
+#include <qheader.h>
 #include <qlabel.h>
-#include <qtable.h>
+#include <qlistview.h>
 #include <qvbox.h>
+
+#define DEFAULT_ANGLE_COLUMN_WIDTH 40
 
 using regina::NAngleStructureList;
 using regina::NPacket;
@@ -48,23 +51,29 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         structures(packet) {
     ui = new QVBox();
 
+    // Set up the statistics label.
     stats = new QLabel(ui);
     stats->setAlignment(Qt::AlignCenter);
 
-    table = new QTable(ui);
-    table->setReadOnly(true);
+    // Set up the table of angles.
+    table = new KListView(ui);
     ui->setStretchFactor(table, 1);
 
-    QHeader* hdr = table->verticalHeader();
-    hdr->hide();
-    table->setLeftMargin(0);
+    table->addColumn(i18n("Type"), DEFAULT_ANGLE_COLUMN_WIDTH);
+
+    unsigned long nTets = packet->getTriangulation()->getNumberOfTetrahedra();
+    unsigned long i, j;
+    for (i = 0; i < nTets; i++)
+        for (j = 0; j < 3; j++)
+            table->addColumn(QString::number(i) + ": " +
+                regina::vertexSplitString[j]);
 
     refresh();
 
     // Final tidying up for the table now that it is full of data.
-    for (int i = 0; i < table->numCols(); i++)
+    for (int i = 0; i < table->columns(); i++)
         table->adjustColumn(i);
-    headerTips = new AngleHeaderToolTip(table->horizontalHeader());
+    headerTips = new AngleHeaderToolTip(table->header());
 }
 
 NAngleStructureUI::~NAngleStructureUI() {
@@ -104,60 +113,13 @@ void NAngleStructureUI::refresh() {
     stats->setText(statStr);
 
     // Empty the table.
-    table->setNumRows(0);
+    table->clear();
 
     // Update the table.
-    unsigned long nTets =
-        structures->getTriangulation()->getNumberOfTetrahedra();
-
-    table->setNumRows(nStructs);
-    table->setNumCols(3 * nTets + 1);
-
-    QHeader* hdr = table->horizontalHeader();
-    hdr->setLabel(0, i18n("Type"));
-    unsigned long i, j, k;
-    for (i = 0; i < nTets; i++)
-        for (j = 0; j < 3; j++)
-            hdr->setLabel(3 * i + j + 1, QString::number(i) + ": " +
-                regina::vertexSplitString[j]);
-
-    const regina::NAngleStructure* s;
-    regina::NRational angle;
-    QString pi = i18n("Pi");
-    for (i = 0; i < nStructs; i++) {
-        s = structures->getStructure(i);
-
-        if (s->isStrict())
-            table->setText(i, 0, i18n("Strict"));
-        else if (s->isTaut())
-            table->setText(i, 0, i18n("Taut"));
-
-        for (j = 0; j < nTets; j++)
-            for (k = 0; k < 3; k++) {
-                angle = s->getAngle(j, k);
-                if (angle != 0)
-                    table->setText(i, 3 * j + k + 1, angleToString(angle));
-            }
-    }
+    for (unsigned long i = 0; i < nStructs; i++)
+        new NAngleStructureItem(table, structures->getStructure(i));
 
     setDirty(false);
-}
-
-QString NAngleStructureUI::angleToString(regina::NRational angle) {
-    if (angle == 0)
-        return "0";
-
-    static const QString pi(i18n("Pi"));
-
-    if (angle == 1)
-        return pi;
-    else if (angle.getDenominator() == 1)
-        return QString(angle.getNumerator().stringValue().c_str()) + ' ' + pi;
-    else if (angle.getNumerator() == 1)
-        return pi + " / " + angle.getDenominator().stringValue().c_str();
-    else
-        return QString(angle.getNumerator().stringValue().c_str()) + ' ' + pi
-            + " / " + angle.getDenominator().stringValue().c_str();
 }
 
 AngleHeaderToolTip::AngleHeaderToolTip(QHeader *header,

@@ -12,6 +12,7 @@ noinst_LTLIBRARIES = libpackettypes.la
 
 noinst_HEADERS = \
 	nanglestructurecreator.h \
+	nanglestructureitem.h \
 	nanglestructureui.h \
 	ncontainerui.h \
 	nscriptui.h \
@@ -20,6 +21,7 @@ noinst_HEADERS = \
 
 libpackettypes_la_SOURCES = \
 	nanglestructurecreator.cpp \
+	nanglestructureitem.cpp \
 	nanglestructureui.cpp \
 	ncontainerui.cpp \
 	nscriptui.cpp \
