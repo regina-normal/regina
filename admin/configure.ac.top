@@ -74,19 +74,6 @@ AM_KDE_WITH_NLS
 # Set the default language to C++ for subsequent tests.
 AC_LANG(C++)
 
-# Switch on all warnings.
-AC_ARG_ENABLE(warnings, AC_HELP_STRING([--disable-warnings],
-    [do not switch on compiler warnings (enabled by default)]), [
-  __internal_warnings="$enableval"
-], [
-  __internal_warnings=""
-])
-if test "$__internal_warnings" != "no"; then
-  REGINA_CHECK_COMPILER_FLAG(Wall, [CXXFLAGS="$CXXFLAGS -Wall"])
-  REGINA_CHECK_COMPILER_FLAG(Wold-style-cast,
-    [CXXFLAGS="$CXXFLAGS -Wold-style-cast"])
-fi
-
 # Before we go further, make sure we have (long long).
 AC_CHECK_TYPE([long long], , [
   REGINA_ERR_MISSING([Type (long long)], [the calculation engine])
