@@ -1,6 +1,7 @@
 regina-normal (4.1.1-1) unstable; urgency=low
 
-  * New upstream release.
+  * New upstream bugfix release.
+  * Built against Boost.Python 1.31.0.
   * Fixed compile error with Python 2.3 (closes: #243303).
 
  -- Ben Burton <bab@debian.org>  Fri, 23 Apr 2004 09:22:24 +1000
