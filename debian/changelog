@@ -1,6 +1,7 @@
 regina-normal (3.97-1) unstable; urgency=low
 
   * New upstream release (third prerelease for 4.0).
+  * Depend on python, oops.
 
  -- Ben Burton <bab@debian.org>  Fri, 21 Nov 2003 19:26:47 +1100
 
