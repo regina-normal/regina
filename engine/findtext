@@ -1,0 +1,3 @@
+#!/bin/sh
+find . -name "*.h" -exec grep "$1" {} \; -print
+find . -name "*.cpp" -exec grep "$1" {} \; -print
