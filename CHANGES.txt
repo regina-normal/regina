@@ -8,18 +8,18 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 3.2  [ (under development) ]
+Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
     OVERALL:
         - Added file format documentation to reference manual.
         - Enhancements to the calculation engine test suite.
+        - PhD thesis submitted on 30 May, 2003!
     ENGINE:
         Overall structure:
             - Using C++-style casts instead of C-style casts.
+            - Signedness of chars is explicitly specified where it matters. 
         Class NBoolSet:
             - Using unsigned chars for byte codes.
         Class NCensus:
-            - Added findAllCompletions() for completing triangulations
-              with boundary. ***
             - New constant PRUNE_P2_REDUCIBLE.
         Class NFacePair:
             - New class for working with pairs of face numbers.
@@ -31,7 +31,7 @@ Version 3.2  [ (under development) ]
             - Uses new NFacePairing routines to identify certain
               situations in which no solutions are possible.
             - Uses a completely redesigned algorithm in the closed
-              orientable prime minimal case. ***
+              orientable prime minimal case.
             - Added pruning during permutation generation to eliminate
               edges identified with themselves in reverse.
             - Added pruning using low-degree edges in the non-orientable
@@ -40,12 +40,15 @@ Version 3.2  [ (under development) ]
             - Fixed a bug in isLayeredSolidTorusBase() that generated
               false positives in ideal triangulations.
         Class NNormalSurface:
-            - Added routine knownCanCrush(). ***
+            - Added routine knownCanCrush().  Currently this routine
+              is next to useless; it is expected to be enhanced with
+              future releases.
         Class NPerm:
             - Using unsigned chars for permutation codes.
-        Class NPrismSpec:
-            - New class for dealing with triangular prisms defined by
-              slicing along normal quads in a tetrahedron. ***
+        Class NPrismSpec, NPrismSetSurface:
+            - New classes for dealing with triangular prisms defined by
+              slicing along normal quads in a tetrahedron.  Currently
+              these classes do very little.
         Class NSFS:
             - Better recognition of common names; now recognises all
               spaces with finite fundamental group.
