@@ -141,6 +141,44 @@ class NSnapPeaTriangulation : public ShareableObject {
         double volume() const;
 
         /**
+         * Dumps the underlying SnapPea data to standard output.
+         *
+         * This routine should be regarded primarily as a diagnostic tool
+         * for investigating how the SnapPea kernel has modified and/or
+         * analysed a triangulation.
+         *
+         * Note that the SnapPea data is written using C-style output
+         * (i.e., using the \a stdout file pointer), which may or may not
+         * cause unexpected behaviour when used in conjunction with
+         * \a std::cout.
+         *
+         * If this triangulation does not contain any valid SnapPea
+         * data, this routine will do nothing.  See isNull() for further
+         * details.
+         *
+         * @param filename the name of the SnapPea file to write.
+         */
+        void dump() const;
+
+        /**
+         * Saves the underlying triangulation as a native SnapPea file.
+         * Like dump(), this routine is provided primarily as a diagnostic
+         * tool.
+         *
+         * Passing an empty string as the filename will cause the
+         * SnapPea data to be written to standard output, just like
+         * dump().  See the dump() documentation for caveats when
+         * combining the C-style output of this routine with \a std::cout.
+         *
+         * If this triangulation does not contain any valid SnapPea
+         * data, this routine will do nothing.  See isNull() for further
+         * details.
+         *
+         * @param filename the name of the SnapPea file to write.
+         */
+        void saveAsSnapPea(const char* filename) const;
+
+        /**
          * Computes the volume of the underlying 3-manifold and
          * estimates the accuracy of the answer.
          *
@@ -216,6 +254,10 @@ class NSnapPeaTriangulation : public ShareableObject {
 
 inline bool NSnapPeaTriangulation::isNull() const {
     return (snappeaData == 0);
+}
+
+inline void NSnapPeaTriangulation::dump() const {
+    saveAsSnapPea("");
 }
 
 inline bool NSnapPeaTriangulation::kernelMessagesEnabled() {

@@ -31,6 +31,7 @@
 
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/triangulation.h"
+#include "snappea/kernel/unix_file_io.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -49,6 +50,11 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri) {
 
 NSnapPeaTriangulation::~NSnapPeaTriangulation() {
     ::free_triangulation(snappeaData);
+}
+
+void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
+    if (snappeaData)
+        save_triangulation(snappeaData, const_cast<char*>(filename));
 }
 
 double NSnapPeaTriangulation::volume() const {

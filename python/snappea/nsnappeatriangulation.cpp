@@ -47,6 +47,8 @@ void addNSnapPeaTriangulation() {
             ("NSnapPeaTriangulation", init<const NSnapPeaTriangulation&>())
         .def(init<const NTriangulation&>())
         .def("isNull", &NSnapPeaTriangulation::isNull)
+        .def("dump", &NSnapPeaTriangulation::dump)
+        .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
         .def("volume", volume_void)
         .def("volume", volume_precision)
     ;
