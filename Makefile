@@ -44,7 +44,7 @@ APP_CLASS = normal.Application
 
 docs/% :
 	cd docs && $(MAKE) $*
-test/% :
+test/% : binenginelib
 	cd test && $(MAKE) $*
 utils/% : binenginelib
 	cd utils && $(MAKE) $*
