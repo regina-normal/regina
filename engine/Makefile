@@ -54,7 +54,7 @@ corba/%.d : corba/%.cpp
 		[ -s $@ ] || rm -f $@'
 
 $(CORBA_DIR)/%SK.cpp : $(IDL_DIR)/%.idl
-	cd $(dir $@) && $(IDLTOCPPSERVER) -I$(PWD)/$(IDL_DIR) $(PWD)/$<
+	cd $(dir $@) && $(IDLTOCPP) -I$(PWD)/$(IDL_DIR) $(PWD)/$<
 
 # Only include the JNI dependencies if prepjni appears on the
 # Makefile command line.

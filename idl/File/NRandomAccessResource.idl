@@ -29,13 +29,23 @@
 #ifndef __NRANDOMACCESSRESOURCE_IDL
 #define __NRANDOMACCESSRESOURCE_IDL
 
+/**
+ * This class is designed to allow the CORBA server access to remote
+ * resources.  It used in the reverse direction as compared to most
+ * of Regina's CORBA classes.
+ *
+ * Class NFile in the CORBA server should use this class as a client.
+ * The user interface should provide an approprate servant implementation
+ * of NRandomAccessResource to pass to NFile for reading and writing.
+ */
 module Regina {
     module File {
         interface NRandomAccessResource {
             boolean openRead();
             boolean openWrite();
             void close();
-            long getMode();
+            long getOpenMode();
+
             char getChar();
             void putChar(in char c);
             long getPosition();

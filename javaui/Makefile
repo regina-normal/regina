@@ -9,6 +9,9 @@ CORBA_PACKAGE = normal.engine.implementation.corba
 CORBA_DIR = $(subst .,/,$(CORBA_PACKAGE))
 CORBA_MODULE = Regina
 
+java_files_corba_server = \
+	$(CORBA_DIR)/$(CORBA_MODULE)/File/_NRandomAccessResourceImplBase.java
+
 DOC_DIR = ../$(BASE_DOC_DIR)/javaui
 DOC_SAMPLE = $(DOC_DIR)/index.html
 DOC_OVERVIEW = overview.html
@@ -22,8 +25,12 @@ DOC_BOTTOM = 'Copyright &copy; 1999-2001, Ben Burton<br>This software is release
 	$(JAVAC) -classpath '.$(cs)$(other_classes)' $<
 
 $(CORBA_DIR)/$(CORBA_MODULE)/%.java : $(IDL_DIR)/%.idl
-	$(IDLTOJAVACLIENT) -pkgPrefix $(CORBA_MODULE) $(CORBA_PACKAGE) \
+	$(IDLTOJAVA) -pkgPrefix $(CORBA_MODULE) $(CORBA_PACKAGE) \
 		-i $(IDL_DIR) -td . $<
+
+$(CORBA_DIR)/$(CORBA_MODULE)/File/_%ImplBase.java : $(IDL_DIR)/File/%.idl
+	$(IDLTOJAVA) -pkgPrefix $(CORBA_MODULE) $(CORBA_PACKAGE) \
+		-i $(IDL_DIR) -td . -fserver $<
 
 # --------------------------- Sources -------------------------------------
 
@@ -92,7 +99,7 @@ corbajar : $(jar_corba)
 $(jar_corba) : $(java_files_corba_idl) $(made_class_files_corba) $(LICENSE)
 	$(JAR) -cf $(jar_corba) $(class_mask_corba) $(LICENSE)
 
-prepcorba : $(java_files_corba_idl)
+prepcorba : $(java_files_corba_idl) $(java_files_corba_server)
 
 prepcleancorba :
 	-rm -rf $(CORBA_DIR)/$(CORBA_MODULE)
