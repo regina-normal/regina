@@ -41,6 +41,11 @@
 namespace regina {
 
 /**
+ * \weakgroup progress
+ * @{
+ */
+
+/**
  * Manages the sharing of an NProgress object between reading and
  * writing threads.
  *
@@ -150,6 +155,8 @@ class NProgressManager : public ShareableObject {
 
         void writeTextShort(std::ostream& out) const;
 };
+
+/*@}*/
 
 // Inline functions for NProgressManager
 

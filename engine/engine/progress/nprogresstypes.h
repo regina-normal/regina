@@ -40,6 +40,11 @@
 namespace regina {
 
 /**
+ * \weakgroup progress
+ * @{
+ */
+
+/**
  * A progress report in which the current state of progress is stored as a
  * string message.
  *
@@ -176,6 +181,8 @@ class NProgressNumber : public NProgress {
         virtual std::string internalGetDescription() const;
         virtual double internalGetPercent() const;
 };
+
+/*@}*/
 
 // Inline functions for NProgressMessage
 
