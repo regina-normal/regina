@@ -16,6 +16,11 @@
       <Action name="export_python"/>
     </Menu>
   </Menu>
+  <Menu name="edit" noMerge="1"><text>&amp;Edit</text>
+    <Action name="edit_cut"/>
+    <Action name="edit_copy"/>
+    <Action name="edit_paste"/>
+  </Menu>
   <Menu name="tree" noMerge="1"><text>&amp;Packet Tree</text>
     <Action name="tree_angles"/>
     <Action name="tree_container"/>
