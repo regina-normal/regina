@@ -258,6 +258,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * Note that this triangulation is not required to be valid
          * (see isValid()).
+		 *
+		 * \pre This triangulation has at most one component.
          *
          * @return the fundamental group.
          */

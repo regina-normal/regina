@@ -82,6 +82,10 @@ public class AlgebraViewer extends DefaultPacketViewer
 	 */
 	private JList fgpRelations;
 	/**
+	 * The label for the fundamental group relations list.
+	 */
+	private JLabel labelFgpRelations;
+	/**
 	 * The list model for the fundamental group relations.
 	 */
 	private DefaultListModel fgpRelModel;
@@ -178,7 +182,7 @@ public class AlgebraViewer extends DefaultPacketViewer
 		componentsToDisable.addElement(fgpRelations);
 
 		JLabel labelFgpName = new JLabel("Fundamental Group");
-		JLabel labelFgpRelations = new JLabel("Relations:");
+		labelFgpRelations = new JLabel("Relations:");
 		componentsToDisable.add(labelFgpName);
 		componentsToDisable.add(labelFgpRelations);
 
@@ -241,27 +245,35 @@ public class AlgebraViewer extends DefaultPacketViewer
             H2Z2.setText("Invalid Triangulation");
         }
 
-		NGroupPresentation fgp = triangulation.getFundamentalGroup();
-		String name = fgp.recogniseGroup();
-		if (name.length() == 0)
-			fgpName.setText("Not recognised");
-		else
-			fgpName.setText(name);
+		if (triangulation.getNumberOfComponents() <= 1) {
+			NGroupPresentation fgp = triangulation.getFundamentalGroup();
+			String name = fgp.recogniseGroup();
+			if (name.length() == 0)
+				fgpName.setText("Not recognised");
+			else
+				fgpName.setText(name);
 
-		long n = fgp.getNumberOfGenerators();
-		if (n == 0)
-			fgpGenerators.setText("Generators: (none)");
-		else if (n == 1)
-			fgpGenerators.setText("Generator: g0");
-		else if (n == 2)
-			fgpGenerators.setText("Generators: g0, g1");
-		else
-			fgpGenerators.setText("Generators: g0 .. g" +
-				String.valueOf(n - 1));
+			long n = fgp.getNumberOfGenerators();
+			if (n == 0)
+				fgpGenerators.setText("Generators: (none)");
+			else if (n == 1)
+				fgpGenerators.setText("Generator: g0");
+			else if (n == 2)
+				fgpGenerators.setText("Generators: g0, g1");
+			else
+				fgpGenerators.setText("Generators: g0 .. g" +
+					String.valueOf(n - 1));
 
-		n = fgp.getNumberOfRelations();
-		for (long i =0; i < n; i++)
-			fgpRelModel.addElement("1 = " + fgp.getRelation(i).toString());
+			n = fgp.getNumberOfRelations();
+			for (long i =0; i < n; i++)
+				fgpRelModel.addElement("1 = " + fgp.getRelation(i).toString());
+		} else {
+			fgpName.setText("Cannot calculate");
+			fgpGenerators.setText("(disconnected manifold)");
+			fgpRelModel.removeAllElements();
+			labelFgpRelations.setEnabled(false);
+			fgpRelations.setEnabled(false);
+		}
     }
 
     public void editingElsewhere() {
