@@ -35,11 +35,13 @@
 #include "packetwindow.h"
 #include "reginapart.h"
 
+#include <kaction.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <ktoolbar.h>
 #include <qlabel.h>
-#include <qtoolbutton.h>
+#include <qpushbutton.h>
 
 using regina::NPacket;
 
@@ -83,13 +85,18 @@ void DefaultPacketUI::refresh() {
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
         part(newPart), frame(0) {
-    header = new PacketHeader(newPacket, this);
-    dockUndock = new QToolButton(header);
-    dockUndock->setToggleButton(true);
-    dockUndock->setIconSet(BarIconSet("attach", 0,
-        ReginaPart::factoryInstance()));
-    dockUndock->setTextLabel(i18n("Dock or undock this packet viewer"));
-    dockUndock->setOn(true);
+    // Set up the header and dock/undock toolbar.
+    QHBox* headerBox = new QHBox(this);
+
+    header = new PacketHeader(newPacket, headerBox);
+    headerBox->setStretchFactor(header, 1);
+
+    KToolBar* dockBar = new KToolBar(0, headerBox, false, "dockBar",
+        false, false);
+    dockUndock = new KToggleAction(i18n("&Dock / Undock"), QString("attach"));
+    dockUndock->setToolTip(i18n("Dock or undock this packet viewer"));
+    dockUndock->plug(dockBar);
+    dockUndock->setChecked(true);
     connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
     mainUI = new DefaultPacketUI(newPacket);
@@ -101,7 +108,11 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     setStretchFactor(mainUIWidget, 1);
 
     QHBox* footer = new QHBox(this);
-    new QLabel("Footer", footer);
+    new QPushButton(BarIconSet("button_ok"), i18n("Co&mmit"), footer);
+    new QPushButton(BarIconSet("reload"), i18n("&Refresh"), footer);
+    footer->setStretchFactor(new QWidget(footer), 1);
+    connect(new QPushButton(BarIconSet("fileclose"), i18n("&Close"), footer),
+        SIGNAL(clicked()), this, SLOT(close()));
 }
 
 bool PacketPane::isDirty() {
@@ -151,7 +162,7 @@ void PacketPane::dockPane() {
     delete frame;
     frame = 0;
 
-    dockUndock->setOn(true);
+    dockUndock->setChecked(true);
     disconnect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 }
@@ -164,7 +175,7 @@ void PacketPane::floatPane() {
     frame = new PacketWindow(this);
     part->hasUndocked(this);
 
-    dockUndock->setOn(false);
+    dockUndock->setChecked(false);
     disconnect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
 

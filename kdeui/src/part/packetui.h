@@ -35,9 +35,9 @@
 
 #include <qvbox.h>
 
+class KToggleAction;
 class KMainWindow;
 class QLabel;
-class QToolButton;
 class ReginaPart;
 
 namespace regina {
@@ -122,7 +122,7 @@ class PacketPane : public QVBox {
         KMainWindow* frame;
             /**< The floating frame containing this packet pane, or 0
                  if this packet pane is currently docked. */
-        QToolButton* dockUndock;
+        KToggleAction* dockUndock;
             /**< The docking/floating action for this packet pane. */
 
     public:
