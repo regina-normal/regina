@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <deque>
+#include "enumerate/ncompconstraint.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsstandard.h"
 #include "utilities/nrational.h"
@@ -36,27 +37,6 @@
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
-
-bool NNormalSurfaceVectorQuad::isCompatibleWith(const NConeRay& other) const {
-    unsigned base = 0;
-    int quad;
-    bool foundQuads;
-        // Have we already found a quad type in this tetrahedron?
-    while (base < size()) {
-        // Check that each tetrahedron has at most one quad type.
-        foundQuads = false;
-        for (quad = 0; quad < 3; quad++) {
-            if ((*this)[base + quad] != 0 || other[base + quad] != 0) {
-                if (foundQuads)
-                    return false;
-                else
-                    foundQuads = true;
-            }
-        }
-        base += 3;
-    }
-    return true;
-}
 
 NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
         NTriangulation* triangulation) {
@@ -92,6 +72,27 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
             row++;
         }
     }
+    return ans;
+}
+
+NCompConstraintSet* NNormalSurfaceVectorQuad::makeEmbeddedConstraints(
+        NTriangulation* triangulation) {
+    NCompConstraintSet* ans = new NCompConstraintSet();
+    NCompConstraint* constraint;
+
+    unsigned i;
+    unsigned long base = 0;
+    for (unsigned long tet = 0; tet < triangulation->getNumberOfTetrahedra();
+            tet++) {
+        constraint = new NCompConstraint(1);
+        for (i = 0; i < 3; i++)
+            constraint->getCoordinates().insert(
+                constraint->getCoordinates().end(), base + i);
+        base += 3;
+
+        ans->push_back(constraint);
+    }
+
     return ans;
 }
 

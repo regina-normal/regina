@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "enumerate/ncompconstraint.h"
 #include "surfaces/nsanstandard.h"
 #include "utilities/nrational.h"
 #include "maths/nmatrixint.h"
@@ -33,41 +34,6 @@
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
-
-bool NNormalSurfaceVectorANStandard::isCompatibleWith(
-        const NConeRay& other) const {
-    unsigned base = 4;
-    int quad, oct;
-    bool foundQuads;
-        // Have we already found a quad type in this tetrahedron?
-    bool foundOcts = false;
-        // Have we already found an oct type anywhere?
-    while (base < size()) {
-        // Check that each tetrahedron has at most one quad type.
-        foundQuads = false;
-        for (quad = 0; quad < 3; quad++) {
-            if ((*this)[base + quad] != 0 || other[base + quad] != 0) {
-                if (foundQuads)
-                    return false;
-                else
-                    foundQuads = true;
-            }
-        }
-        // Look for octahedra.
-        // An octahedral type is incompatible with any other octahedral
-        // type, as well as any quad type in this tetrahedron.
-        for (oct = 0; oct < 3; oct++) {
-            if ((*this)[base + 3 + oct] != 0 || other[base + 3 + oct] != 0) {
-                if (foundOcts || foundQuads)
-                    return false;
-                else
-                    foundOcts = true;
-            }
-        }
-        base += 10;
-    }
-    return true;
-}
 
 NLargeInteger NNormalSurfaceVectorANStandard::getEdgeWeight(
         unsigned long edgeIndex, NTriangulation* triang) const {
@@ -163,6 +129,34 @@ NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
             }
         }
     }
+    return ans;
+}
+
+NCompConstraintSet* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
+        NTriangulation* triangulation) {
+    // At most one quad/oct per tetrahedron.
+    // Also at most one oct type overall.
+    NCompConstraintSet* ans = new NCompConstraintSet();
+    NCompConstraint* globalOctConstraint = new NCompConstraint(1);
+    std::set<unsigned>& globalOctCoords(globalOctConstraint->getCoordinates());
+    NCompConstraint* constraint;
+
+    unsigned i;
+    unsigned long base = 0;
+    for (unsigned long tet = 0; tet < triangulation->getNumberOfTetrahedra();
+            tet++) {
+        constraint = new NCompConstraint(1);
+        for (i = 4; i < 10; i++)
+            constraint->getCoordinates().insert(
+                constraint->getCoordinates().end(), base + i);
+        for (i = 7; i < 10; i++)
+            globalOctCoords.insert(globalOctCoords.end(), base + i);
+        base += 10;
+
+        ans->push_back(constraint);
+    }
+
+    ans->push_back(globalOctConstraint);
     return ans;
 }
 

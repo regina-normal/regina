@@ -78,7 +78,6 @@ class NNormalSurfaceVectorQuad : public NNormalSurfaceVectorMirrored {
         virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang) const;
 
         virtual bool allowsAlmostNormal() const;
-        virtual bool isCompatibleWith(const NConeRay& other) const;
         virtual const NVertex* isVertexLink(NTriangulation* triang) const;
 
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
@@ -90,6 +89,8 @@ class NNormalSurfaceVectorQuad : public NNormalSurfaceVectorMirrored {
         static void createNonNegativeCone(NTriangulation* triangulation,
             RayOutputIterator rays, FaceOutputIterator faces);
         static NMatrixInt* makeMatchingEquations(NTriangulation* triangulation);
+        static NCompConstraintSet* makeEmbeddedConstraints(
+            NTriangulation* triangulation);
 };
 
 /*@}*/
