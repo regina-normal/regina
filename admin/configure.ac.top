@@ -59,12 +59,13 @@ AC_PROG_CC
 AC_PROG_CXXCPP
 AC_PROG_CPP
 
-# Switch on all warnings.
-CFLAGS="$CFLAGS -Wall"
-CXXFLAGS="$CXXFLAGS -Wall"
-
 # Set the default language to C++ for subsequent tests.
 AC_LANG(C++)
+
+# Switch on all warnings.
+REGINA_CHECK_COMPILER_FLAG(Wall, [CXXFLAGS="$CXXFLAGS -Wall"])
+REGINA_CHECK_COMPILER_FLAG(Wold-style-cast,
+  [CXXFLAGS="$CXXFLAGS -Wold-style-cast"])
 
 # Before we go further, make sure we have (long long).
 AC_CHECK_TYPE([long long], , [
