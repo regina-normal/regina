@@ -27,15 +27,19 @@
 /* end stub */
 
 // Regina core includes:
+#include "progress/nprogressmanager.h"
+#include "progress/nprogresstypes.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "coordinatechooser.h"
 #include "nnormalsurfacecreator.h"
+#include "../progressdialogs.h"
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kprogress.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -83,8 +87,21 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         return 0;
     }
 
-    return NNormalSurfaceList::enumerate(
+    regina::NProgressManager manager;
+    ProgressDialogNumeric dlg(&manager, i18n("Normal Surface Enumeration"),
+        i18n("Enumerating vertex normal surfaces..."), parentWidget);
+
+    NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
         dynamic_cast<regina::NTriangulation*>(parent),
-        coords->getCurrentSystem(), embedded->isChecked());
+        coords->getCurrentSystem(), embedded->isChecked(), &manager);
+
+    if (dlg.run())
+        return ans;
+    else {
+        delete ans;
+        KMessageBox::information(parentWidget,
+            i18n("The normal surface enumeration was cancelled."));
+        return 0;
+    }
 }
 

@@ -25,6 +25,7 @@ noinst_HEADERS = \
 	packettreeview.h \
 	packetui.h \
 	packetwindow.h \
+	progressdialogs.h \
 	reginapart.h
 
 kde_module_LTLIBRARIES = libreginapart.la
@@ -48,6 +49,7 @@ libreginapart_la_SOURCES = \
 	packettreeview.cpp \
 	packetui.cpp \
 	packetwindow.cpp \
+	progressdialogs.cpp \
 	reginapart.cpp \
 	treenav.cpp
 

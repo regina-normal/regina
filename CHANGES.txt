@@ -20,10 +20,21 @@ Version 4.0  [ currently under development ]
             - Removed isCancellable() since this is not really necessary;
               an operation may simply choose not to poll for cancellation
               requests.
+            - Removed isChanged() and made the changed flag protected so
+              subclasses can modify it directly.
+            - Requires subclasses to adjust the changed flag on all
+              public access/update routines.
+            - Made cancel() const so that reading threads can use it.
         Class NProgressNumber:
             - New convenience routine incCompleted().
+            - New lookup routine getNumericState().
         Class NTriBool:
             - Added for representing three-way booleans.
+    USER INTERFACE:
+        Class NNormalSurfaceCreator:
+            - Displays progress and allows cancellation.
+        Class ProgressDialogNumeric:
+            - Added for displaying progress from regina::NProgressNumeric.
 
 Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
     OVERALL:
