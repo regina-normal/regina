@@ -815,13 +815,23 @@
     as a separate server application.  This is that server application.
    </para>
    <para>
-    Note that this server and the user interface may be running on
-    different machines.  You simply need to configure them both to use
-    the same &corba; naming service, although read the warning below.
-   </para>
-   <para>
     There is no way to configure this server other than
-    through the command-line options described here.
+    through the command-line options outlined above.
+   </para>
+   <warning>
+    <para>
+     Be warned that this server is <emphasis>not</emphasis> secure!
+     In particular, a remote user can exploit it to gain access to
+     the filesystem on which it
+     is running.  You should <emphasis>always</emphasis>
+     run this server as a guest user (such as <literal>nobody</literal>
+     on &linux; systems).
+    </para>
+   </warning>
+   <para>
+    Note that this server and the user interface may be running on
+    different machines.  You simply need to configure them both to refer
+    to the same &corba; naming service, although read the warning below.
    </para>
    <warning>
     <para>
