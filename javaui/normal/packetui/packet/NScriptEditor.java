@@ -40,10 +40,10 @@ import normal.console.*;
 import normal.engine.*;
 import normal.engine.packet.*;
 import normal.packetui.*;
-import btools.ext.*;
-import btools.gui.*;
-import btools.gui.component.*;
-import btools.gui.dialog.*;
+import org.gjt.btools.ext.*;
+import org.gjt.btools.gui.*;
+import org.gjt.btools.gui.component.*;
+import org.gjt.btools.gui.dialog.*;
 import org.python.core.*;
 import org.python.util.*;
 
@@ -679,11 +679,7 @@ public class NScriptEditor extends DefaultPacketEditor {
         }
 
         public Object getValue() {
-            try {
-                return Py.None;
-            } catch (Throwable th) {
-                return null;
-            }
+            return Py.None;
         }
     }
 

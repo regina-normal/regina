@@ -33,8 +33,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import normal.*;
-import btools.gui.component.*;
-import btools.license.License;
+import org.gjt.btools.gui.component.*;
+import org.gjt.btools.license.License;
 
 /**
  * Provides an About box.
@@ -87,9 +87,7 @@ public class AboutBox extends JDialog implements ActionListener {
             jythonVersion = "unavailable";
         else {
             jythonVersion = "unknown";
-            try {
-                jythonVersion = org.python.core.PySystemState.version;
-            } catch (Throwable th) {}
+            jythonVersion = org.python.core.PySystemState.version;
         }
     }
 
@@ -232,12 +230,12 @@ public class AboutBox extends JDialog implements ActionListener {
 
         ans.insertLine("Engine " + shell.getEngine().getVersionString());
         ans.insertLine("- " + shell.getEngine().styleDescription());
-        String jdkVersion = btools.Version.javaVersion();
+        String jdkVersion = org.gjt.btools.Version.javaVersion();
         if (jdkVersion == null)
             ans.insertLine("JDK unknown");
         else
             ans.insertLine("JDK " + jdkVersion);
-        ans.insertLine("BTools " + btools.Version.btoolsVersion);
+        ans.insertLine("BTools " + org.gjt.btools.Version.btoolsVersion);
         ans.insertLine("Jython " + jythonVersion);
         if (shell.hasFoundJavaHelp()) {
             ans.insertLine("JavaHelp present");
