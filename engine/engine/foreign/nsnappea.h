@@ -62,7 +62,11 @@ class NTriangulation;
 NTriangulation* readSnapPea(const char *filename);
 
 /**
- * Writes a triangulation to the given SnapPea file.
+ * Writes the given triangulation to the given file in SnapPea format.
+ * All information aside from tetrahedron gluings will be flagged as
+ * unknown for SnapPea to recalculate.
+ * The manifold name written in the file will be derived from the packet
+ * label.
  *
  * \pre The given triangulation is not invalid.
  *

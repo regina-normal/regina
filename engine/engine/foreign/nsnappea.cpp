@@ -176,7 +176,7 @@ bool writeSnapPea(const char* filename, NTriangulation& tri) {
 
         // Incident cusps.
         for (i = 0; i < 4; i++)
-            out << "   0 ";
+            out << "  -1 ";
         out << '\n';
 
         // Meridians and longitudes.
@@ -196,7 +196,7 @@ bool writeSnapPea(const char* filename, NTriangulation& tri) {
 NString stringToToken(const char* str) {
     char* ans = new char[strlen(str) + 1];
     strcpy(ans, str);
-    for (char* c = ans; c != 0; c++)
+    for (char* c = ans; *c; c++)
         if (isspace(*c))
             *c = '_';
 
@@ -207,7 +207,7 @@ NString stringToToken(const char* str) {
 
 NString stringToToken(const NString& str) {
     char* ans = str.dupe();
-    for (char* c = ans; c != 0; c++)
+    for (char* c = ans; *c; c++)
         if (isspace(*c))
             *c = '_';
 
