@@ -22,7 +22,8 @@ INSTALL_SCRIPT = install -p -o root -g root -m 755
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-	./configure --prefix=/usr --mandir=/usr/share/man \
+	./configure --disable-maintainer-mode \
+	  --prefix=/usr --mandir=/usr/share/man \
 	  PKGNAME=regina-normal \
 	  JAVAC=/usr/lib/j2se/1.4/bin/javac
 	touch configure-stamp

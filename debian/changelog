@@ -3,6 +3,7 @@ regina-normal (3.2-1) unstable; urgency=low
   * New upstream release.
   * Build-conflicts with regina-normal-dev packages that provide different
     versions of libregina-engine.so so we can avoid libtool's relinking bug.
+  * Using AM_MAINTAINER_MODE.
   * Bumped standards-version to 3.5.10.
 
  -- Ben Burton <bab@debian.org>  Sun, 22 Jun 2003 10:01:39 +1000
