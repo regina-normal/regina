@@ -124,6 +124,8 @@ class Engine_i : public virtual POA_Regina::Engine,
         virtual CORBA::Long getVersionMajor();
         virtual CORBA::Long getVersionMinor();
         virtual char* getVersionString();
+        virtual Regina::Subcomplex::NAugTriSolidTorus_ptr
+            isAugTriSolidTorus(Regina::Triangulation::NComponent_ptr comp);
         virtual Regina::Subcomplex::NLayeredLensSpace_ptr
             isLayeredLensSpace(Regina::Triangulation::NComponent_ptr comp);
         virtual Regina::Subcomplex::NLayeredLoop_ptr

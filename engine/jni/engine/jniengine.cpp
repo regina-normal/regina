@@ -37,6 +37,7 @@
     #include "nsnappea.h"
     #include "nfile.h"
     #include "ncensus.h"
+    #include "naugtrisolidtorus.h"
     #include "nlayeredlensspace.h"
     #include "nlayeredloop.h"
     #include "npillowtwosphere.h"
@@ -52,6 +53,7 @@
     #include "engine/imports/nsnappea.h"
     #include "engine/file/nfile.h"
     #include "engine/census/ncensus.h"
+    #include "engine/subcomplex/naugtrisolidtorus.h"
     #include "engine/subcomplex/nlayeredlensspace.h"
     #include "engine/subcomplex/nlayeredloop.h"
     #include "engine/subcomplex/npillowtwosphere.h"
@@ -127,6 +129,15 @@ JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_getVersionString
         (JNIEnv *env, jobject me) {
     return env->NewStringUTF(ENGINE_VERSION);
+}
+
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_isAugTriSolidTorus
+        (JNIEnv *env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NAugTriSolidTorus::isAugTriSolidTorus(
+        GET_ENGINE_OBJECT(env, NComponent, you)),
+        "normal/engine/implementation/jni/subcomplex/NJNIAugTriSolidTorus");
 }
 
 JNIEXPORT jobject JNICALL

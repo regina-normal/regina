@@ -32,6 +32,7 @@
  */
 
 class NAbelianGroup;
+class NAugTriSolidTorus;
 class NContainer;
 class NFile;
 class NGroupExpression;
@@ -145,6 +146,8 @@ class Engine {
             /**< Calls ::getVersionMinor(). */
         NString getVersionString();
             /**< Calls ::getVersionString(). */
+        NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
+            /**< Calls NAugTriSolidTorus::isAugTriSolidTorus(). */
         NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
             /**< Calls NLayeredLensSpace::isLayeredLensSpace(). */
         NLayeredLoop* isLayeredLoop(const NComponent* comp);

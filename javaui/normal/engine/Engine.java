@@ -115,6 +115,7 @@ public interface Engine {
     public int getVersionMajor();
     public int getVersionMinor();
     public String getVersionString();
+    public NAugTriSolidTorus isAugTriSolidTorus(NComponent comp);
     public NLayeredLensSpace isLayeredLensSpace(NComponent comp);
     public NLayeredLoop isLayeredLoop(NComponent comp);
     public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);

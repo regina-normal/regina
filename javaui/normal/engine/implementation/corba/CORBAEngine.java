@@ -453,6 +453,10 @@ public class CORBAEngine implements Engine {
     public String getVersionString() {
         return data.getVersionString();
     }
+    public NAugTriSolidTorus isAugTriSolidTorus(NComponent comp) {
+        return NCORBAAugTriSolidTorus.newWrapper(
+            data.isAugTriSolidTorus(((NCORBAComponent)comp).data));
+    }
     public NLayeredLensSpace isLayeredLensSpace(NComponent comp) {
         return NCORBALayeredLensSpace.newWrapper(
             data.isLayeredLensSpace(((NCORBAComponent)comp).data));

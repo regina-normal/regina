@@ -30,6 +30,7 @@
 #include "regina.h"
 
 #include "EngineI.h"
+#include "NAugTriSolidTorusI.h"
 #include "NLayeredLensSpaceI.h"
 #include "NLayeredLoopI.h"
 #include "NLayeredSolidTorusI.h"
@@ -64,6 +65,12 @@ Regina::Subcomplex::NSnappedTwoSphere_ptr
         ::NSnappedTwoSphere::formsSnappedTwoSphere(
         GET_ENGINE_OBJECT(NTetrahedron, p1),
         GET_ENGINE_OBJECT(NTetrahedron, p2)));
+}
+Regina::Subcomplex::NAugTriSolidTorus_ptr Engine_i::isAugTriSolidTorus(
+        Regina::Triangulation::NComponent_ptr comp) {
+    return NAugTriSolidTorus_i::newWrapper(
+        ::NAugTriSolidTorus::isAugTriSolidTorus(
+        GET_ENGINE_OBJECT(NComponent, comp)));
 }
 Regina::Subcomplex::NLayeredLensSpace_ptr Engine_i::isLayeredLensSpace(
         Regina::Triangulation::NComponent_ptr comp) {

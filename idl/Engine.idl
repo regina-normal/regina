@@ -37,6 +37,7 @@
 #include "Packet/NScript.idl"
 #include "Packet/NText.idl"
 #include "Progress/NProgressManager.idl"
+#include "Subcomplex/NAugTriSolidTorus.idl"
 #include "Subcomplex/NLayeredLensSpace.idl"
 #include "Subcomplex/NLayeredLoop.idl"
 #include "Subcomplex/NPillowTwoSphere.idl"
@@ -113,6 +114,8 @@ module Regina {
         long getVersionMajor();
         long getVersionMinor();
         string getVersionString();
+        Subcomplex::NAugTriSolidTorus isAugTriSolidTorus(
+            in Triangulation::NComponent comp);
         Subcomplex::NLayeredLensSpace isLayeredLensSpace(
             in Triangulation::NComponent comp);
         Subcomplex::NLayeredLoop isLayeredLoop(
