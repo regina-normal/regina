@@ -35,9 +35,10 @@
 #define __NCOMPCONSTRAINT_H
 #endif
 
+#include <deque>
 #include <set>
 #include "maths/nvector.h"
-#include "utils/memutils.h"
+#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -213,7 +214,7 @@ class NCompConstraintSet : public std::deque<NCompConstraint*> {
          */
         template <class T>
         bool isSatisfied(const NVector<T>& v) const;
-}
+};
 
 /*@}*/
 
