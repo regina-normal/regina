@@ -28,7 +28,6 @@
 
 // Regina core includes:
 #include "progress/nprogressmanager.h"
-#include "progress/nprogresstypes.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
