@@ -36,10 +36,11 @@
 #define __NNORMALSURFACELIST_H
 #endif
 
+#include <vector>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
-#include "utilities/ndynamicarray.h"
 #include "utilities/ndoublelist.h"
+#include "utilities/nmiscutils.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfaceset.h"
 
@@ -87,7 +88,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
              *   vectors and lists of this flavour cannot be created. */
 
     protected:
-        NDynamicArray<NNormalSurface*> surfaces;
+        std::vector<NNormalSurface*> surfaces;
             /**< Contains the normal surfaces stored in this packet. */
         int flavour;
             /**< Stores which flavour of coordinate system is being
@@ -251,7 +252,7 @@ inline NNormalSurfaceList::NNormalSurfaceList() {
 }
 
 inline NNormalSurfaceList::~NNormalSurfaceList() {
-    surfaces.flushAndDelete();
+    for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
 }
 
 inline int NNormalSurfaceList::getFlavour() const {

@@ -36,7 +36,7 @@ NSurfaceSubset::NSurfaceSubset(const NSurfaceSet& set,
     for (unsigned long i = 0; i < n; i++) {
         s = (NNormalSurface*)set.getSurface(i);
         if (filter.accept(*s))
-            surfaces.addLast(s);
+            surfaces.push_back(s);
     }
 }
 

@@ -95,14 +95,14 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
         while (! it.done()) {
             s = (NNormalSurfaceVector*)(*it);
             if (! (s->hasMultipleOctDiscs(triang)))
-                surfaces.addLast(new NNormalSurface(triang, s));
+                surfaces.push_back(new NNormalSurface(triang, s));
             it++;
         }
     } else {
         // Just add in all the surfaces.
         while (! it.done()) {
             s = (NNormalSurfaceVector*)(*it);
-            surfaces.addLast(new NNormalSurface(triang, s));
+            surfaces.push_back(new NNormalSurface(triang, s));
             it++;
         }
     }
@@ -165,11 +165,9 @@ void NNormalSurfaceList::writePacket(NFile& out) const {
     out.writeBool(embedded);
 
     out.writeULong(surfaces.size());
-    NDynamicArrayIterator<NNormalSurface*> it(surfaces);
-    while (! it.done()) {
+    std::vector<NNormalSurface*>::const_iterator it;
+    for (it = surfaces.begin(); it != surfaces.end(); it++)
         (*it)->writeToFile(out);
-        it++;
-    }
 
     // Write the properties.
     // At the moment there are no properties!
@@ -197,7 +195,7 @@ NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
 
     unsigned long nSurfaces = in.readULong();
     for (unsigned long i=0; i<nSurfaces; i++)
-        ans->surfaces.addLast(NNormalSurface::readFromFile(in, ans->flavour,
+        ans->surfaces.push_back(NNormalSurface::readFromFile(in, ans->flavour,
             (NTriangulation*)parent));
 
     // Read the properties.
@@ -210,11 +208,8 @@ NPacket* NNormalSurfaceList::internalClonePacket(NPacket* parent) const {
     NNormalSurfaceList* ans = new NNormalSurfaceList();
     ans->flavour = flavour;
     ans->embedded = embedded;
-    NDynamicArrayIterator<NNormalSurface*> it(surfaces);
-    while (! it.done()) {
-        ans->surfaces.addLast((*it)->clone());
-        it++;
-    }
+    transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),
+        FuncNewClonePtr<NNormalSurface>());
     return ans;
 }
 

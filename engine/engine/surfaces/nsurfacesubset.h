@@ -35,9 +35,9 @@
 #define __NSURFACESUBSET_H
 #endif
 
+#include <vector>
 #include "shareableobject.h"
 #include "surfaces/nsurfaceset.h"
-#include "utilities/ndynamicarray.h"
 
 class NSurfaceFilter;
 
@@ -55,7 +55,7 @@ class NSurfaceFilter;
  */
 class NSurfaceSubset : public ShareableObject, public NSurfaceSet {
     private:
-        NDynamicArray<NNormalSurface*> surfaces;
+        std::vector<NNormalSurface*> surfaces;
             /**< Contains the surfaces contained in this subset.
                  These will all be pointers to surfaces stored in
                  \a source. */
