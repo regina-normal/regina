@@ -64,8 +64,8 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
 
     QLabel* label = new QLabel(i18n("Combine using:"), ui);
     QWhatsThis::add(label, i18n("Specifies whether this combination "
-        "filter will combine its children using boolean AND or using "
-        "boolean OR."));
+        "filter will use boolean AND or boolean OR to combine its "
+        "children."));
     typeLayout->addWidget(label);
     typeLayout->addSpacing(10);
 

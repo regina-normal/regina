@@ -247,9 +247,9 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
     fundName = new QLabel(ui);
     fundName->setAlignment(Qt::AlignCenter);
     QWhatsThis::add(fundName, i18n("The common name of the fundamental "
-        "group, if it can be recognised.  Note that if even a relatively "
-        "straightforward group is given a nasty presentation, there is "
-        "no guarantee that it will be recognised."));
+        "group of this triangulation, if it can be recognised.  Note that "
+        "for even a relatively straightforward group, if the presentation "
+        "is too complicated then the group might still not be recognised."));
     layout->addWidget(fundName);
 
     layout->addSpacing(5);
@@ -259,21 +259,18 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
 
     QBoxLayout* fundPresArea = new QVBoxLayout(wideFundPresArea);
     fundGens = new QLabel(ui);
-    QWhatsThis::add(fundGens, i18n("The generators in a presentation "
-        "of the fundamental group of this triangulation"));
     fundPresArea->addWidget(fundGens);
     fundRelCount = new QLabel(ui);
-    QWhatsThis::add(fundRelCount, i18n("The number of relations in a "
-        "presentation of the fundamental group of this triangulation"));
     fundPresArea->addWidget(fundRelCount);
     fundRels = new KListView(ui);
     fundRels->header()->hide();
     fundRels->addColumn(QString::null);
     fundRels->setSorting(-1);
     fundRels->setSelectionMode(QListView::NoSelection);
-    QWhatsThis::add(fundRels, i18n("The entire list of relations in a "
-        "presentation of the fundamental group of this triangulation"));
     fundPresArea->addWidget(fundRels, 1);
+
+    QWhatsThis::add(ui, i18n("A full set of generators and relations forming "
+        "a presentation of the fundamental group of this triangulation."));
 
     wideFundPresArea->addStretch(1);
     layout->addStretch(1);
@@ -354,7 +351,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     QBoxLayout* paramsArea = new QHBoxLayout(layout);
     paramsArea->addStretch(1);
 
-    QString expln = i18n("<qt>The (r, root) parameters of the Turaev-Viro "
+    QString expln = i18n("<qt>The (r, root) parameters of a Turaev-Viro "
         "invariant to calculate.  These parameters describe the initial data "
         "for the invariant as described in <i>State sum invariants of "
         "3-manifolds and quantum 6j-symbols</i>, Turaev and Viro, "
@@ -379,8 +376,8 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     calculate = new QPushButton(SmallIconSet("exec"), i18n("Calculate"), ui);
     // calculate->setFlat(true);
     QWhatsThis::add(calculate, i18n("<qt>Calculate the Turaev-Viro invariant "
-        "for the (r, root) parameters in the nearby text box.  The result "
-        "will be added to the list below.<p>"
+        "corresponding to the (r, root) parameters in the nearby text "
+        "box.  The result will be added to the list below.<p>"
         "<b>Warning:</b> This calculation can be quite slow for large "
         "values of <i>r</i>, since the processing time grows exponentially "
         "with <i>r</i>.</qt>"));

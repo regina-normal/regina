@@ -74,7 +74,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     hdrLayout->setSpacing(5);
 
     // Set up the coordinate selector.
-    QLabel* label = new QLabel(i18n("Display coordinates:"), ui)
+    QLabel* label = new QLabel(i18n("Display coordinates:"), ui);
     hdrLayout->addWidget(label);
     coords = new CoordinateChooser(ui);
     coords->insertAllViewers(surfaces);

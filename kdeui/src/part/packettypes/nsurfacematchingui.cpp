@@ -36,6 +36,7 @@
 #include "nsurfacematchingui.h"
 
 #include <klistview.h>
+#include <klocale.h>
 #include <qheader.h>
 #include <qwhatsthis.h>
 
@@ -53,7 +54,7 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     table->setSelectionMode(QListView::NoSelection);
     QWhatsThis::add(table, i18n("<qt>Displays the normal surface matching "
         "equations that were used in the vertex enumeration when this "
-        "list was created.<p>"
+        "list was originally created.<p>"
         "Each row represents a single equation.  Each equation involves "
         "setting a linear combination of normal surface coordinates to "
         "zero.  The columns of this table represent the different "

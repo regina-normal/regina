@@ -74,7 +74,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(zeroEff, 0, 3);
     msg = i18n("<qt>Is this a 0-efficient triangulation?  "
         "A <i>0-efficient triangulation</i> is one whose only normal "
-        "spheres or discs are vertex links, and which has no 2-sphere "
+        "spheres or discs are vertex linking, and which has no 2-sphere "
         "boundary components.</qt>");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(zeroEff, msg);

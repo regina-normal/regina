@@ -95,7 +95,7 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     nComps = new QLabel(ui);
     nComps->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nComps, 0, 9);
-    msg = i18n("The total number of disconnected components in this "
+    msg = i18n("The total number of connected components in this "
         "triangulation.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(nComps, msg);
@@ -123,36 +123,36 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
     // btn->setFlat(true);
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
-        "individual vertices."));
+        "individual vertices in a separate window."));
     connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
     grid->addWidget(btn, 0, 5);
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
-        "individual edges."));
+        "individual edges in a separate window."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
     grid->addWidget(btn, 1, 5);
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
-        "individual faces."));
+        "individual faces in a separate window."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewFaces()));
     grid->addWidget(btn, 2, 5);
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
-        "individual components."));
+        "individual connected components in a separate window."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
     grid->addWidget(btn, 0, 11);
 
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
     QWhatsThis::add(btn, i18n("View details of this triangulation's "
-        "individual boundary components.  Note that boundary components "
-        "can either be ideal vertices of collections of adjacent "
-        "boundary faces."));
+        "individual boundary components in a separate window.  Note that "
+        "boundary components can either be ideal vertices of collections "
+        "of adjacent boundary faces."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewBoundaryComponents()));
     grid->addWidget(btn, 1, 11);

@@ -71,8 +71,8 @@ NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
     header->setMargin(10);
     QWhatsThis::add(header, i18n("Displays the parameters of the "
         "vertex enumeration that created this list of surfaces, including "
-        "the specific coordinate system that was used.  Also displays "
-        "the total number of surfaces in this list."));
+        "the specific coordinate system that was originally used.  Also "
+        "displays the total number of surfaces in this list."));
 
     ui = header;
 }
@@ -98,7 +98,7 @@ void NSurfaceHeaderUI::refresh() {
         count = i18n("%1 %2 normal surfaces").arg(
             surfaces->getNumberOfSurfaces()).arg(embType);
 
-    header->setText(count + i18n("\nEnumerated in %1 coordinates.").arg(
+    header->setText(count + i18n("\nEnumerated in %1 coordinates").arg(
         Coordinates::name(surfaces->getFlavour(), false)));
 }
 
