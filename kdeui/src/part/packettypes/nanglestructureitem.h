@@ -39,6 +39,7 @@
 
 namespace regina {
     class NAngleStructure;
+    class NTriangulation;
 };
 
 /**
@@ -50,13 +51,15 @@ class NAngleStructureItem : public GridListViewItem {
          * The underlying angle structure.
          */
         const regina::NAngleStructure* structure;
+        int coordCols;
 
     public:
         /**
          * Constructor.
          */
         NAngleStructureItem(QListView* parent,
-            const regina::NAngleStructure* newStructure);
+            const regina::NAngleStructure* newStructure,
+            const regina::NTriangulation* fromTri);
 
         /**
          * QListItem overrides.
@@ -71,10 +74,5 @@ class NAngleStructureItem : public GridListViewItem {
          */
         static QString angleToString(regina::NRational angle);
 };
-
-inline NAngleStructureItem::NAngleStructureItem(QListView* parent,
-        const regina::NAngleStructure* newStructure) :
-        GridListViewItem(parent), structure(newStructure) {
-}
 
 #endif

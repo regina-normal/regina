@@ -37,7 +37,11 @@
 #include <qstyle.h>
 
 QString NSurfaceMatchingItem::text(int column) const {
+    if (column < 0 || static_cast<unsigned>(column) >= eqns->columns())
+        return QString::null;
+
     regina::NLargeInteger ans = eqns->entry(whichEqn, column);
+
     if (ans == 0)
         return QString::null;
     else

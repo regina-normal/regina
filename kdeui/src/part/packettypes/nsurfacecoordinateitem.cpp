@@ -39,6 +39,19 @@
 #include <qpainter.h>
 #include <qstyle.h>
 
+NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
+        regina::NNormalSurfaceList* fromSurfaces,
+        unsigned long newSurfaceIndex, QString& newName, int useCoordSystem) :
+        GridListViewItem(parent),
+        surface(fromSurfaces->getSurface(newSurfaceIndex)),
+        name(newName),
+        surfaceIndex(newSurfaceIndex),
+        surfaces(fromSurfaces),
+        coordSystem(useCoordSystem),
+        coordCols(Coordinates::numColumns(useCoordSystem,
+            fromSurfaces->getTriangulation())) {
+}
+
 unsigned NSurfaceCoordinateItem::propertyColCount(bool embeddedOnly) {
     return (embeddedOnly ? 8 : 5);
 }
@@ -184,6 +197,9 @@ QString NSurfaceCoordinateItem::text(int column) const {
                         return QString::null;
                 }
             default:
+                if (column >= coordCols + 8 || column < 0)
+                    return QString::null;
+
                 regina::NLargeInteger ans = Coordinates::getCoordinate(
                     coordSystem, *surface, column - 8);
                 if (ans == (long)0)
@@ -234,6 +250,9 @@ QString NSurfaceCoordinateItem::text(int column) const {
                 else
                     return QString::null;
             default:
+                if (column >= coordCols + 5 || column < 0)
+                    return QString::null;
+
                 regina::NLargeInteger ans = Coordinates::getCoordinate(
                     coordSystem, *surface, column - 5);
                 if (ans == (long)0)

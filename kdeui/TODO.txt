@@ -53,9 +53,6 @@ Scripts:
     - Make a script dirty when its variables are changed externally
         through renaming or deletion
 
-Surfaces:
-    * Fix crash when editing surface names through the GUI
-
 Toolbars:
     - Work out how to get decent action names in the configure toolbar dialog
 

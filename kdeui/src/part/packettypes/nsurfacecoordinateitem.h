@@ -62,6 +62,7 @@ class NSurfaceCoordinateItem : public GridListViewItem {
         unsigned long surfaceIndex;
         regina::NNormalSurfaceList* surfaces;
         int coordSystem;
+        int coordCols;
 
     public:
         /**
@@ -94,17 +95,6 @@ class NSurfaceCoordinateItem : public GridListViewItem {
         void paintCell(QPainter* p, const QColorGroup& cg, int column,
             int width, int align);
 };
-
-inline NSurfaceCoordinateItem::NSurfaceCoordinateItem(QListView* parent,
-        regina::NNormalSurfaceList* fromSurfaces,
-        unsigned long newSurfaceIndex, QString& newName, int useCoordSystem) :
-        GridListViewItem(parent),
-        surface(fromSurfaces->getSurface(newSurfaceIndex)),
-        name(newName),
-        surfaceIndex(newSurfaceIndex),
-        surfaces(fromSurfaces),
-        coordSystem(useCoordSystem) {
-}
 
 inline const regina::NNormalSurface* NSurfaceCoordinateItem::getSurface() {
     return surface;

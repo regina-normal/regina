@@ -28,6 +28,7 @@
 
 // Regina core includes:
 #include "angle/nanglestructure.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "nanglestructureitem.h"
@@ -39,6 +40,13 @@
 
 using regina::NAngleStructure;
 
+NAngleStructureItem::NAngleStructureItem(QListView* parent,
+        const regina::NAngleStructure* newStructure,
+        const regina::NTriangulation* fromTri) :
+        GridListViewItem(parent), structure(newStructure),
+        coordCols(3 * fromTri->getNumberOfTetrahedra()) {
+}
+
 QString NAngleStructureItem::text(int column) const {
     if (column == 0) {
         if (structure->isStrict())
@@ -48,6 +56,9 @@ QString NAngleStructureItem::text(int column) const {
         else
             return QString::null;
     }
+
+    if (column >= coordCols + 1 || column < 0)
+        return QString::null;
 
     return angleToString(structure->getAngle((column - 1) / 3,
         (column - 1) % 3));
