@@ -343,6 +343,12 @@ int main(int argc, const char* argv[]) {
                     pairingList += "INVALID: ";
                     pairingList += pairingRep;
                     pairingList += '\n';
+                } else if (! pairing->isCanonical()) {
+                    std::cerr << "Non-canonical face pairing: " << pairingRep
+                        << std::endl;
+                    pairingList += "NON-CANONICAL: ";
+                    pairingList += pairingRep;
+                    pairingList += '\n';
                 } else {
                     std::cout << pairing->toString() << std::endl;
                     regina::NCensus::formPartialCensus(pairing, census,
