@@ -43,6 +43,7 @@
 #include <qlayout.h>
 #include <qradiobutton.h>
 #include <qvalidator.h>
+#include <qwhatsthis.h>
 
 using regina::NBoolSet;
 using regina::NPacket;
@@ -68,6 +69,9 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
         PacketPane* enclosingPane, bool readWrite) : PacketUI(enclosingPane),
         filter(packet), allowReadWrite(readWrite) {
     ui = new QWidget();
+    QWhatsThis::add(ui, i18n("Specify on this page which properties "
+        "a normal surface must satisfy in order to be displayed by this "
+        "filter."));
 
     // Set up the enclosing grid.
     QGridLayout* layout = new QGridLayout(ui, 6, 4);
@@ -81,12 +85,20 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
 
     // Set up the available restriction types.
     useOrient = new QCheckBox(i18n("Orientability"), ui);
+    QWhatsThis::add(useOrient, i18n("Filter surfaces according to whether "
+        "or not they are orientable."));
     layout->addWidget(useOrient, 1, 1, Qt::AlignLeft);
     useCompact = new QCheckBox(i18n("Compactness"), ui);
+    QWhatsThis::add(useCompact, i18n("Filter surfaces according to whether "
+        "or not they are compact (have finitely many discs)."));
     layout->addWidget(useCompact, 2, 1, Qt::AlignLeft);
     useBdry = new QCheckBox(i18n("Boundary"), ui);
+    QWhatsThis::add(useBdry, i18n("Filter surfaces according to whether "
+        "or not they meet the boundary of the 3-manifold triangulation."));
     layout->addWidget(useBdry, 3, 1, Qt::AlignLeft);
     useEuler = new QCheckBox(i18n("Euler char."), ui);
+    QWhatsThis::add(useEuler, i18n("Filter surfaces according to "
+        "their Euler characteristic."));
     layout->addWidget(useEuler, 4, 1, Qt::AlignLeft);
 
     // Set up the boolean options.
@@ -94,16 +106,30 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
     optOrient = new KComboBox(ui);
     optOrient->insertItem(i18n("Orientable only"));
     optOrient->insertItem(i18n("Non-orientable only"));
+    QWhatsThis::add(optOrient, i18n("Choose whether the filter should "
+        "only display orientable surfaces or whether it should only "
+        "display non-orientable surfaces."));
     layout->addWidget(optOrient, 1, 2);
 
     optCompact = new KComboBox(ui);
     optCompact->insertItem(i18n("Compact only"));
     optCompact->insertItem(i18n("Non-compact only"));
+    QWhatsThis::add(optCompact, i18n("<qt>Choose whether the filter should "
+        "only display compact surfaces or whether it should only display "
+        "non-compact surfaces.<p>"
+        "A <i>compact</i> surface is one with finitely many normal discs.  "
+        "Spun normal surfaces, which can appear in quad space and have "
+        "infinitely many discs, are examples of non-compact surfaces."));
     layout->addWidget(optCompact, 2, 2);
 
     optBdry = new KComboBox(ui);
     optBdry->insertItem(i18n("With real boundary only"));
     optBdry->insertItem(i18n("Without real boundary only"));
+    QWhatsThis::add(optOrient, i18n("<qt>Choose whether the filter should "
+        "only display surfaces with real boundary or whether it should "
+        "only display surfaces without real boundary.<p>"
+        "A real boundary occurs when a normal surface meets the boundary "
+        "of the enclosing 3-manifold triangulation."));
     layout->addWidget(optBdry, 3, 2);
 
     // Set up the Euler char. options.
@@ -122,6 +148,14 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
         "(separate with spaces or commas)"), ui);
     ecBox->addWidget(eulerExpln2);
     ecBox->addSpacing(5);
+
+    QString msg = i18n("Fill this box with a list of the possible Euler "
+        "characteristics that this filter should accept, separated by "
+        "spaces or commas.  Only surfaces whose Euler characteristic is "
+        "equal to one of these values will be displayed by this filter.");
+    QWhatsThis::add(eulerExpln1, msg);
+    QWhatsThis::add(eulerList, msg);
+    QWhatsThis::add(eulerExpln2, msg);
 
     // Fill the components with data.
     refresh();

@@ -51,6 +51,7 @@
 #include <qsplitter.h>
 #include <qtable.h>
 #include <qvbox.h>
+#include <qwhatsthis.h>
 #include <set>
 
 #define SCRIPT_TABLE_WEIGHT 1
@@ -93,6 +94,11 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     varTable->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,
         QSizePolicy::Expanding, SCRIPT_TABLE_WEIGHT, SCRIPT_TABLE_WEIGHT));
     splitter->setResizeMode(varTable, QSplitter::Stretch);
+    QWhatsThis::add(varTable, i18n("<qt>A list of variables that will be "
+        "set before the script is run.  Each variable may refer to a "
+        "single packet.<p>"
+        "This allows your script to easily access the other packets in "
+        "this data file.</qt>"));
 
     // --- Text Editor ---
 
@@ -111,6 +117,9 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         SCRIPT_EDITOR_WEIGHT));
     splitter->setResizeMode(view, QSplitter::Stretch);
     view->setFocus();
+    QWhatsThis::add(view, i18n("Type the Python script into this "
+        "area.  Any variables listed in the table above will be "
+        "set before the script is run."));
 
     // --- Script Actions ---
 
@@ -123,6 +132,11 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         "script_add_var");
     actAdd->setToolTip(i18n("Add a new script variable"));
     actAdd->setEnabled(readWrite);
+    actAdd->setWhatsThis(i18n("Add a new variable to this script.<p>"
+        "A script may come with any number of variables, each of which "
+        "refers to a single packet.  "
+        "This allows your script to easily access the other packets in "
+        "this data file."));
     actAdd->plug(actionBar);
     scriptActionList.append(actAdd);
 
@@ -132,6 +146,12 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     actRemove->setToolTip(i18n(
         "Remove the currently selected script variable(s)"));
     actRemove->setEnabled(false);
+    actRemove->setWhatsThis(i18n("Remove the selected variable(s) from "
+        "this script.<p>"
+        "A script may come with any number of variables, each of which "
+        "refers to a single packet.  "
+        "This allows your script to easily access the other packets in "
+        "this data file."));
     connect(varTable, SIGNAL(selectionChanged()), this,
         SLOT(updateRemoveState()));
     actRemove->plug(actionBar);
@@ -143,14 +163,19 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     KAction* actCompile = new KAction(i18n("&Compile"), "compfile",
         0 /* shortcut */, this, SLOT(compile()), scriptActions,
         "script_compile");
-    actCompile->setToolTip(i18n("Compile the python script"));
+    actCompile->setToolTip(i18n("Compile the Python script"));
+    actCompile->setWhatsThis(i18n("Test whether this Python script "
+        "actually compiles.  Any errors will be shown in a separate "
+        "Python console."));
     actCompile->plug(actionBar);
     scriptActionList.append(actCompile);
 
     KAction* actRun = new KAction(i18n("&Run"), "run", 0 /* shortcut */,
         this, SLOT(execute()), scriptActions,
         "script_run");
-    actRun->setToolTip(i18n("Execute the python script"));
+    actRun->setToolTip(i18n("Execute the Python script"));
+    actCompile->setWhatsThis(i18n("Execute this Python script.  The "
+        "script will be run in a separate Python console."));
     actRun->plug(actionBar);
     scriptActionList.append(actRun);
 
@@ -366,7 +391,7 @@ void NScriptUI::compile() {
         #endif
     } else
         KMessageBox::error(ui, i18n("The script does not compile.\n"
-            "See the python console for details.  You may interact with "
+            "See the Python console for details.  You may interact with "
             "this console to further investigate the problem."),
             i18n("Compile Failure"));
 }
