@@ -148,8 +148,14 @@ public class NCORBAPacket extends CORBAShareableObject
     public boolean isGrandparentOf(normal.engine.packet.NPacket descendant) {
         return data.isGrandparentOf(((NCORBAPacket)descendant).data);
     }
-    public long totalTreeSize() {
-        return data.totalTreeSize();
+    public long getNumberOfChildren() {
+        return data.getNumberOfChildren();
+    }
+    public long getNumberOfDescendants() {
+        return data.getNumberOfDescendants();
+    }
+    public long getTotalTreeSize() {
+        return data.getTotalTreeSize();
     }
 
     public Map makeTreeDict() {

@@ -233,13 +233,17 @@ bool NPacket::isGrandparentOf(const NPacket* descendant) const {
     return false;
 }
 
-unsigned long NPacket::totalTreeSize() const {
+unsigned long NPacket::getNumberOfChildren() const {
+	unsigned long tot = 0;
+	for (NPacket* tmp = firstTreeChild; tmp; tmp = tmp->nextTreeSibling)
+		tot++;
+	return tot;
+}
+
+unsigned long NPacket::getTotalTreeSize() const {
     unsigned long tot = 1;
-    NPacket* tmp = firstTreeChild;
-    while (tmp) {
-        tot += tmp->totalTreeSize();
-        tmp = tmp->nextTreeSibling;
-    }
+	for (NPacket* tmp = firstTreeChild; tmp; tmp = tmp->nextTreeSibling)
+        tot += tmp->getTotalTreeSize();
     return tot;
 }
 

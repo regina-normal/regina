@@ -64,7 +64,9 @@ public class NJNIPacket extends JNIShareableObject implements NPacket {
     public native int levelsDownTo(NPacket descendant);
     public native int levelsUpTo(NPacket ancestor);
     public native boolean isGrandparentOf(NPacket descendant);
-    public native long totalTreeSize();
+    public native long getNumberOfChildren();
+    public native long getNumberOfDescendants();
+    public native long getTotalTreeSize();
 
     public Map makeTreeDict() {
         HashMap ans = new HashMap();

@@ -122,8 +122,14 @@ CORBA::Boolean NPacket_i::isGrandparentOf(
     return GET_ENGINE_OBJECT(NPacket, this)->
         isGrandparentOf(GET_ENGINE_OBJECT(NPacket, descendant));
 }
-CORBA::Long NPacket_i::totalTreeSize() {
-    return GET_ENGINE_OBJECT(NPacket, this)->totalTreeSize();
+CORBA::Long NPacket_i::getNumberOfChildren() {
+    return GET_ENGINE_OBJECT(NPacket, this)->getNumberOfChildren();
+}
+CORBA::Long NPacket_i::getNumberOfDescendants() {
+    return GET_ENGINE_OBJECT(NPacket, this)->getNumberOfDescendants();
+}
+CORBA::Long NPacket_i::getTotalTreeSize() {
+    return GET_ENGINE_OBJECT(NPacket, this)->getTotalTreeSize();
 }
 CORBA::Boolean NPacket_i::dependsOnParent() {
     return GET_ENGINE_OBJECT(NPacket, this)->dependsOnParent();

@@ -59,7 +59,9 @@ public interface NPacket extends ShareableObject {
     public int levelsDownTo(NPacket descendant);
     public int levelsUpTo(NPacket ancestor);
     public boolean isGrandparentOf(NPacket descendant);
-    public long totalTreeSize();
+    public long getNumberOfChildren();
+    public long getNumberOfDescendants();
+    public long getTotalTreeSize();
 
     Map makeTreeDict();
     List makeChildList();

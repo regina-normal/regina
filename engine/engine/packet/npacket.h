@@ -468,6 +468,21 @@ class NPacket : public ShareableObject {
          */
         bool isGrandparentOf(const NPacket* descendant) const;
 
+		/**
+		 * Returns the number of immediate children of this packet.
+		 * Grandchildren and so on are not counted.
+		 *
+		 * @return the number of immediate children.
+		 */
+		unsigned long getNumberOfChildren() const;
+		/**
+		 * Returns the total number of descendants of this packet.  This
+		 * includes children, grandchildren and so on.  This packet is not
+		 * included in the count.
+		 *
+		 * @return the total number of descendants.
+		 */
+		unsigned long getNumberOfDescendants() const;
         /**
          * Determines the total number of packets in the tree or subtree
          * for which this packet is matriarch.  This packet is included
@@ -475,7 +490,7 @@ class NPacket : public ShareableObject {
          *
          * @return the total tree or subtree size.
          */
-        unsigned long totalTreeSize() const;
+        unsigned long getTotalTreeSize() const;
 
         /**
          * Returns a dictionary for the entire packet tree in
@@ -712,6 +727,10 @@ inline NPacket* NPacket::getNextTreeSibling() const {
 
 inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {
     return ancestor->levelsDownTo(this);
+}
+
+inline unsigned long NPacket::getNumberOfDescendants() const {
+	return getTotalTreeSize() - 1;
 }
 
 inline void NPacket::tidyReadPacket() {

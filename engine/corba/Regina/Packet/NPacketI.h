@@ -79,7 +79,9 @@ class NPacket_i : public virtual POA_Regina::Packet::NPacket,
             Regina::Packet::NPacket_ptr ancestor);
         virtual CORBA::Boolean isGrandparentOf(
             Regina::Packet::NPacket_ptr descendant);
-        virtual CORBA::Long totalTreeSize();
+        virtual CORBA::Long getNumberOfChildren();
+        virtual CORBA::Long getNumberOfDescendants();
+        virtual CORBA::Long getTotalTreeSize();
         virtual CORBA::Boolean dependsOnParent();
         virtual CORBA::Boolean isPacketEditable();
         virtual Regina::Packet::NPacket_ptr clonePacket(

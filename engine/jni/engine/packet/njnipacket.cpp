@@ -96,6 +96,18 @@ JNIEXPORT jobject JNICALL
         GET_ENGINE_OBJECT(env, NPacket, me)->getNextTreeSibling());
 }
 
+JNIEXPORT jlong JNICALL
+		Java_normal_engine_implementation_jni_packet_NJNIPacket_getNumberOfChildren
+		(JNIEnv *env, jobject me) {
+	return GET_ENGINE_OBJECT(env, NPacket, me)->getNumberOfChildren();
+}
+
+JNIEXPORT jlong JNICALL
+		Java_normal_engine_implementation_jni_packet_NJNIPacket_getNumberOfDescendants
+		(JNIEnv *env, jobject me) {
+	return GET_ENGINE_OBJECT(env, NPacket, me)->getNumberOfDescendants();
+}
+
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_getPacketLabel
         (JNIEnv *env, jobject me) {
@@ -121,6 +133,12 @@ JNIEXPORT jobject JNICALL
         (JNIEnv *env, jobject me) {
     return makeJNPacket(env, 
         GET_ENGINE_OBJECT(env, NPacket, me)->getPrevTreeSibling());
+}
+
+JNIEXPORT jlong JNICALL
+		Java_normal_engine_implementation_jni_packet_NJNIPacket_getTotalTreeSize
+		(JNIEnv *env, jobject me) {
+	return GET_ENGINE_OBJECT(env, NPacket, me)->getTotalTreeSize();
 }
 
 JNIEXPORT jobject JNICALL
@@ -224,11 +242,5 @@ JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_swapWithNextSibling
         (JNIEnv* env, jobject me) {
     GET_ENGINE_OBJECT(env, NPacket, me)->swapWithNextSibling();
-}
-
-JNIEXPORT jlong JNICALL
-        Java_normal_engine_implementation_jni_packet_NJNIPacket_totalTreeSize
-        (JNIEnv *env, jobject me) {
-    return GET_ENGINE_OBJECT(env, NPacket, me)->totalTreeSize();
 }
 
