@@ -209,10 +209,12 @@ public class Application extends Applet implements ActionListener {
         String[][] info = {
             { "Docs", "String",
                 "the directory containing the unpacked documentation" },
+            { "Engine", "String",
+                "the method of engine access to use (currently only corba)" },
             { "Interface", "String",
                 "the style of interface to use (currently only gui)" },
-            { "ORBInitialHost", "String", "the CORBA name service host" },
-            { "ORBInitialPort", "String", "the CORBA name service port" }
+            { "ORBInitialHost", "String", "the CORBA naming service host" },
+            { "ORBInitialPort", "String", "the CORBA naming service port" }
         };
         return info;
     }
