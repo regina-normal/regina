@@ -106,8 +106,8 @@
    <para>
     For those wishing to read this documentation from outside the
     program, it is generally installed in
-    <filename>/usr/local/share/regina/engine-docs/</filename>
-    or <filename>/usr/share/regina/engine-docs/</filename>, although this
+    <filename>/usr/share/regina/engine-docs/</filename>
+    or <filename>/usr/local/share/regina/engine-docs/</filename>, although this
     may differ with your distribution or installation.
    </para>
   </sect2>

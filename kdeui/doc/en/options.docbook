@@ -224,8 +224,8 @@
     A set of prepackaged &python; libraries that might be of use is
     provided with the &regina; distribution.  These libraries are
     generally installed in
-    <filename>/usr/local/share/regina/pylib</filename> or
-    <filename>/usr/share/regina/pylib</filename>, though this may differ
+    <filename>/usr/share/regina/pylib</filename> or
+    <filename>/usr/local/share/regina/pylib</filename>, though this may differ
     with your distribution.
    </para></tip>
   </sect2>

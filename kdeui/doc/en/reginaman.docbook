@@ -309,8 +309,8 @@
     The calculation engine documentation should also be
     installed, describing in detail all of the &regina;
     objects, classes and methods that are available.  This is generally
-    installed in <filename>/usr/local/share/regina/engine-docs/</filename>
-    or <filename>/usr/share/regina/engine-docs/</filename>, though your
+    installed in <filename>/usr/share/regina/engine-docs/</filename>
+    or <filename>/usr/local/share/regina/engine-docs/</filename>, though your
     distribution may differ.
    </para>
   </refsect1>
