@@ -1,0 +1,6 @@
+# The following scripts are sourced by other scripts.  They should not
+# be executable.
+
+regina-normal: script-not-executable ./usr/share/regina-normal/scripts/regscript_misc
+regina-normal: script-not-executable ./usr/share/regina-normal/scripts/regscript_opt
+

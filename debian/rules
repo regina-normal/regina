@@ -1,0 +1,161 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This is the debhelper compatability version to use.
+export DH_COMPAT=3
+
+tmp = debian/tmp
+regdir = $(tmp)/usr/share/regina-normal
+jnidir = $(tmp)/usr/lib/regina-normal/lib
+pixmaps = $(tmp)/usr/share/pixmaps
+mandir = $(tmp)/usr/share/man
+docpkgdir = $(tmp)/usr/share/doc/regina-normal-doc
+htmldir = $(docpkgdir)/html
+confdir = $(tmp)/etc/regina-normal
+overrides = $(tmp)/usr/share/lintian/overrides
+
+INSTALL_DIR = install -p -d -o root -g root -m 755
+INSTALL_FILE = install -p -o root -g root -m 644
+INSTALL_SCRIPT = install -p -o root -g root -m 755
+
+JAR = /usr/lib/j2se/1.3/bin/jar
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	cp -f Makefile.options.linux Makefile.options
+	touch configure-stamp
+
+build: configure-stamp build-stamp
+build-stamp:
+	dh_testdir
+	$(MAKE) binjni \
+		JNI_INCLUDES="-I/usr/lib/j2se/1.3/include -I/usr/lib/j2se/1.3/include/linux" \
+		EXTRA_CLASSES="" \
+		JAVAC="/usr/lib/j2se/1.3/bin/javac -target 1.1" \
+		JAR="$(JAR)" \
+		JAVAH="/usr/lib/j2se/1.3/bin/javah -jni" \
+		IDLTOJAVACLIENT="/usr/lib/j2se/1.3/bin/idlj"
+	$(MAKE) bindocs \
+		EXTRA_CLASSES="" \
+		JAVADOC="/usr/lib/j2se/1.3/bin/javadoc -J-Xmx64m" \
+		JAR="$(JAR)"
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	-$(MAKE) purge
+	rm -f build-stamp configure-stamp
+	rm -f Makefile.options
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Install the UI jars.
+	$(INSTALL_DIR) $(regdir)/jar
+	$(INSTALL_FILE) bin/*.jar $(regdir)/jar
+
+	# Install the JNI library.
+	$(INSTALL_DIR) $(jnidir)
+	$(INSTALL_FILE) bin/*.so $(jnidir)
+
+	# Install the scripts.
+	$(INSTALL_DIR) $(regdir)/scripts
+	$(INSTALL_DIR) $(tmp)/usr/bin
+	$(INSTALL_FILE) scripts/reg* $(regdir)/scripts
+	$(INSTALL_SCRIPT) regina $(regdir)
+	$(INSTALL_SCRIPT) debian/regina-normal.sh $(tmp)/usr/bin/regina-normal
+
+	# Install the icons.
+	$(INSTALL_DIR) $(regdir)/icons
+	$(INSTALL_FILE) icons/*.xpm icons/*.png icons/README.txt $(regdir)/icons
+
+	# Install the HTML docs.
+	$(INSTALL_DIR) $(docpkgdir)
+	mkdir html-tmp
+	cd html-tmp && $(JAR) -xf ../bin/regina-docs.jar
+	mv html-tmp/normal/docs $(htmldir)
+	rm -rf html-tmp
+
+	# Clean up the documentation directory.
+	rm -f $(htmldir)/*.sgml
+	rm -f $(htmldir)/*.dsl
+	rm -f $(htmldir)/*.txt
+	rm -f $(htmldir)/*.hs
+	rm -f $(htmldir)/*.jhm
+	rm -f $(htmldir)/images/COPYING.txt
+
+	# Install the man pages.
+	$(INSTALL_DIR) $(mandir)/man1
+	$(INSTALL_DIR) $(mandir)/man5
+	$(INSTALL_DIR) $(mandir)/man7
+	mv $(htmldir)/*.1 $(mandir)/man1
+	mv $(htmldir)/*.5 $(mandir)/man5
+	mv $(htmldir)/*.7 $(mandir)/man7
+
+	# Rename man pages where appropriate.
+	mv $(mandir)/man1/regina.1 $(mandir)/man1/regina-normal.1
+
+	# Install the global configuration file.
+	$(INSTALL_DIR) $(confdir)
+	$(INSTALL_FILE) debian/regina.conf $(confdir)
+
+	# Install overrides.
+	$(INSTALL_DIR) $(overrides)
+	$(INSTALL_FILE) debian/regina-normal.overrides $(overrides)/regina-normal
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_movefiles -i
+	dh_installdocs -i
+	dh_installexamples -i
+	dh_installmenu -i
+	dh_installchangelogs -pregina-normal-doc
+	dh_link -i
+	dh_strip -i
+	dh_compress -i
+	dh_fixperms -i
+	# dh_makeshlibs -i
+	dh_installdeb -i
+	# dh_perl -i
+	dh_shlibdeps -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_movefiles -a
+	dh_installdocs -a
+	dh_installexamples -a
+	dh_installmenu -a
+	dh_installmime -a
+	dh_installman -a
+	dh_installchangelogs -pregina-normal CHANGES.txt
+	dh_link -a
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_makeshlibs -a
+	dh_installdeb -a
+	# dh_perl -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

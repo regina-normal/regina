@@ -1,0 +1,5 @@
+?package(regina-normal):needs=X11\
+  section=Apps/Math\
+  title="Regina"\
+  command="/usr/bin/regina-normal"\
+  icon="/usr/share/pixmaps/regina-normal.xpm"

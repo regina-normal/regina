@@ -1,0 +1,34 @@
+Source: regina-normal
+Section: contrib/math
+Priority: extra
+Maintainer: Ben Burton <benb@acm.org>
+Build-Depends: debhelper (>> 3.0.0), docbook-utils, doxygen, graphviz, j2sdk1.3, jade, jython, libbtools-java, libgmp3-dev
+Standards-Version: 3.5.6
+
+Package: regina-normal
+Architecture: any
+Depends: java2-runtime, libbtools-java, ${shlibs:Depends}
+Recommends: jython
+Suggests: regina-normal-doc, snappea
+Description: Regina, the 3-manifold normal surface theory calculator
+ Regina is a topological calculator with a bent towards normal surface
+ theory. It allows 3-manifolds to be created, manipulated and their
+ properties of interest determined. 
+ .
+ Highlights of Regina include triangulation analysis and simplification,
+ census creation and normal surface calculation.  It offers embedded
+ Jython scripting giving full access to the calculation engine.
+
+Package: regina-normal-doc
+Architecture: all
+Section: contrib/doc
+Recommends: www-browser
+Suggests: regina-normal
+Description: Regina reference manual for normal surface theory calculator
+ Regina is a normal surface theory calculator for 3-manifold
+ topologists.  This package provides the HTML reference manual including
+ complete API documentation for the calculation engine.
+ .
+ Highlights of Regina include triangulation analysis and simplification,
+ census creation and normal surface calculation.  It offers embedded
+ Jython scripting giving full access to the calculation engine.

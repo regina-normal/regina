@@ -1,0 +1,27 @@
+Regina for Debian
+-----------------
+
+To browse the online documentation from within Regina, you will need the
+package regina-normal-doc.  You then have two choices:
+
+1) Have Regina fire up an external web browser to view documentation.
+
+     In this case you should use the Options->Help Browser menu item
+     to tell Regina the command to fire up your web browser and the
+     location of the installed documentation.  This location is:
+
+     /usr/share/doc/regina-normal/html
+
+2) Use JavaHelp to view documentation.
+
+     The JavaHelp classes sometimes do a poor job of rendering HTML
+     pages (IMHO), but it avoids requiring Regina to spawn an external
+     process.  You will however need JavaHelp installed, which is not
+     available for Debian.  You can obtain it at:
+
+     http://www.javasoft.com/products/javahelp/
+
+     You will need to edit /etc/regina-normal/regina.conf to tell Regina
+     the location of the JavaHelp library (jh.jar).
+
+ -- Ben Burton <benb@acm.org>, Mon,  1 Oct 2001 23:30:00 -0500

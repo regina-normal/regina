@@ -1,0 +1,6 @@
+*.debhelper
+*.substvars
+files
+regina-normal
+regina-normal-doc
+tmp

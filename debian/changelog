@@ -1,0 +1,9 @@
+regina-normal (2.2-1) unstable; urgency=low
+
+  * Initial Release (closes: Bug#114151).
+
+ -- Ben Burton <benb@acm.org>  Mon,  1 Oct 2001 20:44:04 -0500
+
+Local variables:
+mode: debian-changelog
+End:
