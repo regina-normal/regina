@@ -8,7 +8,7 @@
 
 INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@
-LDFLAGS = @ENGINE_LIBS@ @UTILS_LIBS@
+LDFLAGS = @UTILS_LIBS@
 
 bin_PROGRAMS = regconvert regfiledump regfiletype sigcensus tricensus
 
