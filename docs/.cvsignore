@@ -10,3 +10,4 @@ manpage.refs
 *.log
 *.dvi
 *.pdf
+*.out

@@ -23,7 +23,7 @@ sample_pdf = regina.pdf
 output_html = *.html
 output_man = *.1 *.5 *.7 manpage.*
 output_rtf = *.rtf
-output_tex = *.tex *.aux *.dvi *.pdf *.log
+output_tex = *.tex *.aux *.dvi *.pdf *.out *.log
 
 # --------------------------- Platform-specific ---------------------------
 
