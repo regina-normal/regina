@@ -18,7 +18,7 @@ Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
     - Supports arbitrary packet tags.
     - Optimisations for skeletal calculations in triangulations.
     - Introduced various command-line utility programs.
-    - Reference manual expanded for normal surfaces and angle structures.
+    - Reference manual much enhanced.
     - The Great STL Port: calculation engine completely reworked to use
       and play well with the C++ Standard Template Library.  Also made
       more standards-compliant (i.e., compiles under gcc3) and put in

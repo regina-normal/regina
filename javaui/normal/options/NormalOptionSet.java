@@ -106,7 +106,7 @@ public class NormalOptionSet extends OptionSet {
     /**
      * The default for a particular cached option.
      */
-    public static final boolean defaultDisplayIcon = true;
+    public static final boolean defaultDisplayIcon = false;
     
     /**
      * A particular cached option.
