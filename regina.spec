@@ -60,6 +60,9 @@ make check
 rm -rf $RPM_BUILD_ROOT
 make install-strip DESTDIR=$RPM_BUILD_ROOT
 
+# Delete /usr/lib/regina/python/regina.a, which is huge and unnecessary.
+rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
@@ -79,7 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/regina
 %{_libdir}/libregina*
 %{_libdir}/kde3
-%{_libdir}/regina
+# Make sure we don't ship %{_libdir}/regina/python/regina.a by accident.
+%{_libdir}/regina/python/regina.la
+%{_libdir}/regina/python/regina.so
 %{_docdir}/HTML/en/regina
 # %{_datadir}/applications/*
 %{_datadir}/applnk/*/*
