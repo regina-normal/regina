@@ -1,6 +1,14 @@
-## Makefile.am for Regina
+##
+##  Regina - A Normal Surface Theory Calculator
+##  Makefile Template
+##
+##  Process this file with automake in the top-level directory
+##  to produce Makefile.in.
+##
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/../engine/engine
+SUBDIRS = packettypes
+
+INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
 	flatbutton.h \
@@ -13,7 +21,8 @@ noinst_HEADERS = \
 kde_module_LTLIBRARIES = libreginapart.la
 
 libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
-libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS)
+libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) \
+	packettypes/libpackettypes.la
 libreginapart_la_SOURCES = \
 	actionspart.cpp \
 	flatbutton.cpp \

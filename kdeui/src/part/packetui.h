@@ -33,6 +33,8 @@
 #ifndef __PACKETUI_H
 #define __PACKETUI_H
 
+#include "packet/npacketlistener.h"
+
 #include <qptrlist.h>
 #include <qvbox.h>
 
@@ -240,7 +242,7 @@ class DefaultPacketUI : public PacketReadOnlyUI {
  * Packet panes may be either docked within the main ReginaPart widget
  * or may be floating freely in their own frames.
  */
-class PacketPane : public QVBox {
+class PacketPane : public QVBox, public regina::NPacketListener {
     Q_OBJECT
 
     private:
@@ -263,6 +265,7 @@ class PacketPane : public QVBox {
         bool dirty;
         bool emergencyClosure;
         bool emergencyRefresh;
+        bool isCommitting;
 
         /**
          * Actions
@@ -309,6 +312,13 @@ class PacketPane : public QVBox {
          * this case queryClose() will call ReginaPart::isClosing()).
          */
         bool queryClose();
+
+        /**
+         * NPacketListener overrides.
+         */
+        void packetWasChanged(regina::NPacket* packet);
+        void packetWasRenamed(regina::NPacket* packet);
+        void packetToBeDestroyed(regina::NPacket* packet);
 
     public slots:
         /**

@@ -92,7 +92,7 @@ void DefaultPacketUI::refresh() {
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
         part(newPart), frame(0), dirty(false), emergencyClosure(false),
-        emergencyRefresh(false) {
+        emergencyRefresh(false), isCommitting(false) {
     // Set up the header and dock/undock button.
     QHBox* headerBox = new QHBox(this);
 
@@ -137,6 +137,9 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     actClose->plug(footer);
     // footer->insertSeparator(2, RIGHT_ALIGN_SEPARATOR_ID);
     // footer->alignItemRight(RIGHT_ALIGN_SEPARATOR_ID);
+
+    // Register this pane as a packet listener.
+    newPacket->listen(this);
 }
 
 void PacketPane::setDirty(bool newDirty) {
@@ -166,6 +169,36 @@ bool PacketPane::queryClose() {
     return true;
 }
 
+void PacketPane::packetWasChanged(regina::NPacket*) {
+    // Ignore this if we're responsible for the event.
+    if (isCommitting)
+        return;
+
+    header->refresh();
+
+    if (dirty)
+        if (KMessageBox::warningYesNo(this, i18n(
+                "This packet has been changed from within a script or "
+                "another interface.  However, this interface contains "
+                "changes that have not yet been committed.  Do you wish "
+                "to refresh this interface to reflect the changes "
+                "that have been made elsewhere?"),
+                mainUI->getPacket()->getPacketLabel().c_str()) ==
+                KMessageBox::No)
+            return;
+
+    mainUI->refresh();
+    setDirty(false); // Just in case somebody forgot.
+}
+
+void PacketPane::packetWasRenamed(regina::NPacket*) {
+    header->refresh();
+}
+
+void PacketPane::packetToBeDestroyed(regina::NPacket*) {
+    closeForce();
+}
+
 void PacketPane::refresh() {
     header->refresh();
 
@@ -189,8 +222,12 @@ void PacketPane::refreshForce() {
 }
 
 void PacketPane::commit() {
+    isCommitting = true;
+
     mainUI->commit();
     setDirty(false); // Just in case somebody forgot.
+
+    isCommitting = false;
 }
 
 bool PacketPane::close() {

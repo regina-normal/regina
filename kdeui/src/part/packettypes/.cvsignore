@@ -1,0 +1,8 @@
+*_skel.cpp
+*.kidl
+*.lo
+*.moc
+.deps
+.libs
+Makefile
+Makefile.in
