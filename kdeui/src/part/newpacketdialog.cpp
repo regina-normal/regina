@@ -41,12 +41,12 @@
 
 #define HORIZONTAL_SPACING 10
 
-// TODO: Allow a default parent, e.g., the currently selected packet.
 // TODO: Display the newly created packet in the tree and in a packet pane.
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
-        regina::NPacket* packetTree, PacketFilter* useFilter,
-        const QString& dialogTitle, const QString& suggestedLabel) :
+        regina::NPacket* packetTree, regina::NPacket* defaultParent,
+        PacketFilter* useFilter, const QString& dialogTitle,
+        const QString& suggestedLabel) :
         KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(packetTree) {
     QFrame* page = plainPage();
@@ -56,7 +56,8 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     parentStrip->setSpacing(HORIZONTAL_SPACING);
     layout->addWidget(parentStrip);
     new QLabel(i18n("Create beneath:"), parentStrip);
-    chooser = new PacketChooser(tree, useFilter, parentStrip);
+    chooser = new PacketChooser(tree, useFilter, false, defaultParent,
+        parentStrip);
     parentStrip->setStretchFactor(chooser, 1);
 
     QHBox* labelStrip = new QHBox(page);

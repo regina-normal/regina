@@ -32,6 +32,7 @@
 
 #include "newpacketdialog.h"
 #include "packetcreator.h"
+#include "packettreeview.h"
 #include "reginapart.h"
 
 #include <klocale.h>
@@ -42,7 +43,8 @@ void ReginaPart::newAngleStructures() {
 
 void ReginaPart::newContainer() {
     NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NContainer>(),
-        packetTree, 0, i18n("New Container"), i18n("Container"));
+        packetTree, treeView->selectedPacket(), 0,
+        i18n("New Container"), i18n("Container"));
     dlg.exec();
 }
 
@@ -56,13 +58,15 @@ void ReginaPart::newNormalSurfaces() {
 
 void ReginaPart::newScript() {
     NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NScript>(),
-        packetTree, 0, i18n("New Script"), i18n("Script"));
+        packetTree, treeView->selectedPacket(), 0,
+        i18n("New Script"), i18n("Script"));
     dlg.exec();
 }
 
 void ReginaPart::newText() {
     NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NText>(),
-        packetTree, 0, i18n("New Text Packet"), i18n("Text"));
+        packetTree, treeView->selectedPacket(), 0,
+        i18n("New Text Packet"), i18n("Text"));
     dlg.exec();
 }
 

@@ -80,8 +80,9 @@ class NewPacketDialog : public KDialogBase {
          * given PacketCreator and PacketFilter.
          */
         NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
-            regina::NPacket* packetTree, PacketFilter* useFilter,
-            const QString& dialogTitle, const QString& suggestedLabel);
+            regina::NPacket* packetTree, regina::NPacket* defaultParent,
+            PacketFilter* useFilter, const QString& dialogTitle,
+            const QString& suggestedLabel);
         virtual ~NewPacketDialog();
 
     protected slots:
