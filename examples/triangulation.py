@@ -60,4 +60,3 @@ for i in range(surfaces.getNumberOfSurfaces()):
 # Delete the triangulation; this will automatically delete the surface
 # list since the surface list is a child packet of the triangulation.
 t = None
-
