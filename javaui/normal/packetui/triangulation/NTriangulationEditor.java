@@ -87,6 +87,8 @@ public class NTriangulationEditor extends PacketTabbedEditor {
         skeletonViewer = new SkeletonViewer(packet);
         addUI(skeletonViewer, "Skeleton");
         addUI(new AlgebraViewer(packet), "Algebra");
+		addUI(new CompositionViewer(packet, getShell().getEngine()),
+			"Composition");
     }
 
     public void update(boolean isEditing, PacketInfoUI source) {
