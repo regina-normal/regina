@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include <sstream>
 #include "census/ncensus.h"
 #include "census/ngluingperms.h"
@@ -65,6 +66,20 @@ NTriangulation* NGluingPerms::triangulate() const {
 
     delete[] tet;
     return ans;
+}
+
+int NGluingPerms::gluingToIndex(const NTetFace& source,
+        const NPerm& gluing) const {
+    NPerm permS3 = NPerm(pairing->dest(source).face, 3) * gluing *
+        NPerm(source.face, 3);
+    return (std::find(allPermsS3, allPermsS3 + 6, permS3) - allPermsS3);
+}
+
+int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
+        const NPerm& gluing) const {
+    NPerm permS3 = NPerm(pairing->dest(tet, face).face, 3) * gluing *
+        NPerm(face, 3);
+    return (std::find(allPermsS3, allPermsS3 + 6, permS3) - allPermsS3);
 }
 
 int NGluingPerms::cmpPermsWithPreImage(const NFacePairing* pairing,
