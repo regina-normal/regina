@@ -34,6 +34,8 @@
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/nplugtrisolidtorus.h"
+#include "subcomplex/nsnappedball.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
@@ -144,7 +146,6 @@ QListViewItem* NTriCompositionUI::addComponentSection(const QString& text) {
 void NTriCompositionUI::findAugTriSolidTori() {
     unsigned long nComps = tri->getNumberOfComponents();
 
-    QListViewItem* section = 0;
     QListViewItem* id = 0;
     QListViewItem* details = 0;
 
@@ -153,7 +154,18 @@ void NTriCompositionUI::findAugTriSolidTori() {
         aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(
             tri->getComponent(i));
         if (aug) {
-            QString type;
+            id = addComponentSection(i18n(
+                "Augmented triangular solid torus ") + aug->getName().c_str());
+
+            details = new KListViewItem(id, i18n("Component %1").arg(i));
+
+            const regina::NTriSolidTorus& core = aug->getCore();
+            details = new KListViewItem(id, details,
+                i18n("Core: tets %1, %2, %3").
+                arg(tri->getTetrahedronIndex(core.getTetrahedron(0))).
+                arg(tri->getTetrahedronIndex(core.getTetrahedron(1))).
+                arg(tri->getTetrahedronIndex(core.getTetrahedron(2))));
+
             if (aug->hasLayeredChain()) {
                 QString chainType;
                 if (aug->getChainType() ==
@@ -165,28 +177,12 @@ void NTriCompositionUI::findAugTriSolidTori() {
                 else
                     chainType = i18n("unknown");
 
-                type = i18n("With layered chain (%1) + layered solid torus").
-                    arg(chainType);
-            } else {
-                type = i18n("With 3 layered solid tori");
-            }
-
-            if (section)
-                id = new KListViewItem(section, id, type);
-            else {
-                section = addComponentSection(i18n(
-                    "Augmented Triangular Solid Tori"));
-                id = new KListViewItem(section, type);
-            }
-
-            details = new KListViewItem(id, i18n("Component %1").arg(i));
-
-            const regina::NTriSolidTorus& core = aug->getCore();
-            details = new KListViewItem(id, details,
-                i18n("Core: tets %1, %2, %3").
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(0))).
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(1))).
-                arg(tri->getTetrahedronIndex(core.getTetrahedron(2))));
+                details = new KListViewItem(id, details,
+                    i18n("Attached: layered chain (%1) + layered solid torus").
+                    arg(chainType));
+            } else
+                details = new KListViewItem(id, details,
+                    i18n("Attached: 3 layered solid tori"));
 
             delete aug;
         }
@@ -196,7 +192,6 @@ void NTriCompositionUI::findAugTriSolidTori() {
 void NTriCompositionUI::findLayeredChainPairs() {
     unsigned long nComps = tri->getNumberOfComponents();
 
-    QListViewItem* section = 0;
     QListViewItem* id = 0;
     QListViewItem* details = 0;
 
@@ -205,18 +200,15 @@ void NTriCompositionUI::findLayeredChainPairs() {
         pair = regina::NLayeredChainPair::isLayeredChainPair(
             tri->getComponent(i));
         if (pair) {
-            QString type(i18n("Chain lengths %1, %2").
-                arg(pair->getChain(0)->getIndex()).
-                arg(pair->getChain(1)->getIndex()));
-
-            if (section)
-                id = new KListViewItem(section, id, type);
-            else {
-                section = addComponentSection(i18n("Layered Chain Pairs"));
-                id = new KListViewItem(section, type);
-            }
+            id = addComponentSection(i18n("Layered chain pair ") +
+                pair->getName().c_str());
 
             details = new KListViewItem(id, i18n("Component %1").arg(i));
+
+            details = new KListViewItem(id, details,
+                i18n("Chain lengths: %1, %2").
+                arg(pair->getChain(0)->getIndex()).
+                arg(pair->getChain(1)->getIndex()));
 
             delete pair;
         }
@@ -226,7 +218,6 @@ void NTriCompositionUI::findLayeredChainPairs() {
 void NTriCompositionUI::findLayeredLensSpaces() {
     unsigned long nComps = tri->getNumberOfComponents();
 
-    QListViewItem* section = 0;
     QListViewItem* id = 0;
     QListViewItem* details = 0;
 
@@ -235,14 +226,8 @@ void NTriCompositionUI::findLayeredLensSpaces() {
         lens = regina::NLayeredLensSpace::isLayeredLensSpace(
             tri->getComponent(i));
         if (lens) {
-            QString type(i18n("L(%1, %2)").arg(lens->getP()).arg(lens->getQ()));
-
-            if (section)
-                id = new KListViewItem(section, id, type);
-            else {
-                section = addComponentSection(i18n("Layered Lens Spaces"));
-                id = new KListViewItem(section, type);
-            }
+            id = addComponentSection(i18n("Layered lens space ") +
+                lens->getName().c_str());
 
             details = new KListViewItem(id, i18n("Component %1").arg(i));
 
@@ -263,7 +248,6 @@ void NTriCompositionUI::findLayeredLensSpaces() {
 void NTriCompositionUI::findLayeredLoops() {
     unsigned long nComps = tri->getNumberOfComponents();
 
-    QListViewItem* section = 0;
     QListViewItem* id = 0;
     QListViewItem* details = 0;
 
@@ -271,28 +255,25 @@ void NTriCompositionUI::findLayeredLoops() {
     for (unsigned long i = 0; i < nComps; i++) {
         loop = regina::NLayeredLoop::isLayeredLoop(tri->getComponent(i));
         if (loop) {
-            bool twisted = loop->isTwisted();
-            QString type(i18n("Length %1, %2").arg(loop->getLength()).
-                arg(twisted ? i18n("twisted") : i18n("not twisted")));
-
-            if (section)
-                id = new KListViewItem(section, id, type);
-            else {
-                section = addComponentSection(i18n("Layered Loops"));
-                id = new KListViewItem(section, type);
-            }
+            id = addComponentSection(i18n("Layered loop ") +
+                loop->getName().c_str());
 
             details = new KListViewItem(id, i18n("Component %1").arg(i));
 
-            if (twisted)
+            if (loop->isTwisted()) {
+                details = new KListViewItem(id, details, i18n(
+                    "Length %1, twisted").arg(loop->getLength()));
                 details = new KListViewItem(id, details, i18n(
                     "Hinge: edge %1").
                     arg(tri->getEdgeIndex(loop->getHinge(0))));
-            else
+            } else {
+                details = new KListViewItem(id, details, i18n(
+                    "Length %1, not twisted").arg(loop->getLength()));
                 details = new KListViewItem(id, details, i18n(
                     "Hinges: edge %1, %2").
                     arg(tri->getEdgeIndex(loop->getHinge(0))).
                     arg(tri->getEdgeIndex(loop->getHinge(1))));
+            }
 
             delete loop;
         }
@@ -302,7 +283,6 @@ void NTriCompositionUI::findLayeredLoops() {
 void NTriCompositionUI::findLayeredSolidTori() {
     unsigned long nTets = tri->getNumberOfTetrahedra();
 
-    QListViewItem* section = 0;
     QListViewItem* id = 0;
     QListViewItem* details = 0;
 
@@ -312,16 +292,8 @@ void NTriCompositionUI::findLayeredSolidTori() {
         torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(
             tri->getTetrahedron(i));
         if (torus) {
-            QString type = QString::number(torus->getMeridinalCuts(0)) + '-' +
-                QString::number(torus->getMeridinalCuts(1)) + '-' +
-                QString::number(torus->getMeridinalCuts(2));
-
-            if (section)
-                id = new KListViewItem(section, id, type);
-            else {
-                section = addComponentSection(i18n("Layered Solid Tori"));
-                id = new KListViewItem(section, type);
-            }
+            id = addComponentSection(i18n("Layered solid torus ") +
+                torus->getName().c_str());
 
             details = new KListViewItem(id, i18n("Base: tet %1").arg(
                 tri->getTetrahedronIndex(torus->getBase())));
@@ -352,11 +324,76 @@ void NTriCompositionUI::findPillowSpheres() {
 }
 
 void NTriCompositionUI::findPlugTriSolidTori() {
-    // TODO
+    unsigned long nComps = tri->getNumberOfComponents();
+
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    regina::NPlugTriSolidTorus* plug;
+    const regina::NLayeredChain* chain;
+    for (unsigned long i = 0; i < nComps; i++) {
+        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(
+            tri->getComponent(i));
+        if (plug) {
+            id = addComponentSection(i18n("Plugged triangular solid torus ") +
+                plug->getName().c_str());
+
+            details = new KListViewItem(id, i18n("Component %1").arg(i));
+
+            const regina::NTriSolidTorus& core(plug->getCore());
+            details = new KListViewItem(id, details,
+                i18n("Core: tets %1, %2, %3").
+                arg(tri->getTetrahedronIndex(core.getTetrahedron(0))).
+                arg(tri->getTetrahedronIndex(core.getTetrahedron(1))).
+                arg(tri->getTetrahedronIndex(core.getTetrahedron(2))));
+
+            QString lengths(i18n("Chain lengths: "));
+            for (int j = 0; j < 3; j++) {
+                chain = plug->getChain(j);
+                if (chain)
+                    lengths += i18n("%1 (%2)").arg(chain->getIndex()).
+                        arg(plug->getChainType(j) ==
+                        regina::NPlugTriSolidTorus::CHAIN_MAJOR ?
+                        i18n("major") : i18n("minor"));
+                else
+                    lengths += "0";
+                if (j < 2)
+                    lengths += ", ";
+            }
+            details = new KListViewItem(id, details, lengths);
+
+            details = new KListViewItem(id, details,
+                i18n("Equator type: ") +
+                (plug->getEquatorType() ==
+                regina::NPlugTriSolidTorus::EQUATOR_MAJOR ?
+                i18n("major") : i18n("minor")));
+
+            delete plug;
+        }
+    }
 }
 
 void NTriCompositionUI::findSnappedBalls() {
-    // TODO
+    unsigned long nTets = tri->getNumberOfTetrahedra();
+
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    regina::NSnappedBall* ball;
+    for (unsigned long i = 0; i < nTets; i++) {
+        ball = regina::NSnappedBall::formsSnappedBall(
+            tri->getTetrahedron(i));
+        if (ball) {
+            id = addComponentSection(i18n("Snapped 3-ball"));
+
+            details = new KListViewItem(id, i18n("Tetrahedron %1").arg(i));
+
+            details = new KListViewItem(id, details, i18n("Equator: edge %1%2").
+                arg(ball->getInternalFace(0)).arg(ball->getInternalFace(1)));
+
+            delete ball;
+        }
+    }
 }
 
 void NTriCompositionUI::findSnappedSpheres() {

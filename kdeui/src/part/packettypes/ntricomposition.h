@@ -40,6 +40,7 @@ class QListViewItem;
 
 namespace regina {
     class NPacket;
+    class NStandardTriangulation;
     class NTriangulation;
 };
 
