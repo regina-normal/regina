@@ -65,6 +65,7 @@ class NNormalSurfaceUI : public PacketTabbedUI {
          * PacketUI overrides.
          */
         const QPtrList<KAction>& getPacketTypeActions();
+        QString getPacketMenuText() const;
 };
 
 /**

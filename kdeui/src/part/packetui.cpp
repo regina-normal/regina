@@ -46,6 +46,7 @@
 #include <ktoolbar.h>
 #include <qclipboard.h>
 #include <qlabel.h>
+#include <qptrlist.h>
 #include <ktexteditor/document.h>
 #include <ktexteditor/selectioninterface.h>
 #include <ktexteditor/view.h>
@@ -103,6 +104,10 @@ QWidget* ErrorPacketUI::getInterface() {
     return label;
 }
 
+QString ErrorPacketUI::getPacketMenuText() const {
+    return i18n("&Unknown Packet");
+}
+
 void ErrorPacketUI::refresh() {
 }
 
@@ -140,18 +145,16 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     }
     setStretchFactor(mainUIWidget, 1);
 
-    // Set up the footer buttons.
+    // Set up the footer buttons and other actions.
     actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0 /* shortcut */,
         this, SLOT(commit()), (KActionCollection*)0, "packet_editor_commit");
     actCommit->setEnabled(false);
     actRefresh = new KAction(i18n("&Refresh"), "reload", 0 /* shortcut */,
         this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
-    KAction* actClose = new KAction(i18n("&Close"), "fileclose", 0,
+    actDockUndock = new KAction(i18n("Un&dock"), "attach", 0,
+        this, SLOT(floatPane()), (KActionCollection*)0, "packet_editor_dock");
+    actClose = new KAction(i18n("&Close"), "fileclose", 0,
         this, SLOT(close()), (KActionCollection*)0, "packet_editor_close");
-
-    trackingActions.append(actCommit);
-    trackingActions.append(actRefresh);
-    trackingActions.setAutoDelete(true);
 
     KToolBar* footer = new KToolBar(this, "packetEditorBar", false, false);
     footer->setFullSize(true);
@@ -161,6 +164,24 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     actClose->plug(footer);
     // footer->insertSeparator(2, RIGHT_ALIGN_SEPARATOR_ID);
     // footer->alignItemRight(RIGHT_ALIGN_SEPARATOR_ID);
+
+    // Set up the packet type menu.
+    actSeparator = new KActionSeparator();
+    packetTypeMenu = new KActionMenu(mainUI->getPacketMenuText());
+
+    const QPtrList<KAction>& packetTypeActions(mainUI->getPacketTypeActions());
+    if (! packetTypeActions.isEmpty()) {
+        for (QPtrListIterator<KAction> it(packetTypeActions);
+                it.current(); ++it)
+            packetTypeMenu->insert(it.current());
+        packetTypeMenu->insert(actSeparator);
+    }
+
+    packetTypeMenu->insert(actCommit);
+    packetTypeMenu->insert(actRefresh);
+    packetTypeMenu->insert(actSeparator);
+    packetTypeMenu->insert(actDockUndock);
+    packetTypeMenu->insert(actClose);
 
     // Register ourselves to listen for various events.
     newPacket->listen(this);
@@ -185,6 +206,12 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
 PacketPane::~PacketPane() {
     delete mainUI;
+    delete actCommit;
+    delete actRefresh;
+    delete actSeparator;
+    delete actDockUndock;
+    delete actClose;
+    delete packetTypeMenu;
 }
 
 void PacketPane::setDirty(bool newDirty) {
@@ -411,8 +438,11 @@ void PacketPane::dockPane() {
     frame = 0;
 
     dockUndockBtn->setOn(true);
+    actDockUndock->setText(i18n("Un&dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
+    disconnect(actDockUndock, SIGNAL(activated()), this, SLOT(dockPane()));
+    connect(actDockUndock, SIGNAL(activated()), this, SLOT(floatPane()));
 }
 
 void PacketPane::floatPane() {
@@ -424,8 +454,11 @@ void PacketPane::floatPane() {
     part->hasUndocked(this);
 
     dockUndockBtn->setOn(false);
+    actDockUndock->setText(i18n("&Dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
+    disconnect(actDockUndock, SIGNAL(activated()), this, SLOT(floatPane()));
+    connect(actDockUndock, SIGNAL(activated()), this, SLOT(dockPane()));
 
     frame->show();
 }

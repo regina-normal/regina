@@ -207,15 +207,5 @@ void ReginaPart::setupActions() {
     act = new KAction(i18n("&Python Script"), "packet_script", 0,
         this, SLOT(exportPython()), actionCollection(), "export_python");
     act->setToolTip(i18n("Export a Python script"));
-
-    // Current packet actions:
-    actCurrUndock = new KAction(i18n("Un&dock"), "attach", 0,
-        this, SLOT(floatDockedPane()), actionCollection(), "docked_undock");
-    actCurrClose = new KAction(i18n("&Close"), "fileclose", 0,
-        this, SLOT(closeDockedPane()), actionCollection(), "docked_close");
-
-    // A single separator:
-    separatorList.append(new KActionSeparator());
-    separatorList.setAutoDelete(true);
 }
 

@@ -57,14 +57,7 @@
     <Separator/>
     <Action name="tree_refresh"/>
   </Menu>
-  <Menu name="current" noMerge="1"><text>&amp;Docked Packet</text>
-    <ActionList name="packet_type_actions"/>
-    <ActionList name="packet_type_separator"/>
-    <ActionList name="packet_tracking_actions"/>
-    <ActionList name="packet_tracking_separator"/>
-    <Action name="docked_undock"/>
-    <Action name="docked_close"/>
-  </Menu>
+  <ActionList name="packet_type_menu"/>
   <Menu name="tools" noMerge="1"><text>T&amp;ools</text>
     <Action name="packet_census"/>
   </Menu>

@@ -34,6 +34,7 @@
 
 #include <cstring>
 #include <sstream>
+#include <klocale.h>
 #include <ktexteditor/document.h>
 #include <ktexteditor/editinterface.h>
 #include <ktexteditor/undointerface.h>
@@ -80,6 +81,10 @@ QWidget* NTextUI::getInterface() {
 
 KTextEditor::Document* NTextUI::getTextComponent() {
     return document;
+}
+
+QString NTextUI::getPacketMenuText() const {
+    return i18n("Te&xt");
 }
 
 void NTextUI::commit() {

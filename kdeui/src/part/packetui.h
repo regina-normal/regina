@@ -39,6 +39,7 @@
 #include <qvbox.h>
 
 class KAction;
+class KActionMenu;
 class KMainWindow;
 class PacketPane;
 class QLabel;
@@ -159,6 +160,13 @@ class PacketUI {
         virtual const QPtrList<KAction>& getPacketTypeActions();
 
         /**
+         * Return the label of the menu that should contain the actions
+         * specific to this particular type of packet.  This label
+         * may contain an ampersand (for keyboard shortcuts).
+         */
+        virtual QString getPacketMenuText() const = 0;
+
+        /**
          * Store any changes currently made in this interface in the
          * underlying packet.
          *
@@ -268,6 +276,7 @@ class ErrorPacketUI : public PacketReadOnlyUI {
          */
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
+        virtual QString getPacketMenuText() const;
         virtual void refresh();
 };
 
@@ -331,7 +340,10 @@ class PacketPane : public QVBox, public regina::NPacketListener {
          */
         KAction* actCommit;
         KAction* actRefresh;
-        QPtrList<KAction> trackingActions;
+        KAction* actDockUndock;
+        KAction* actClose;
+        KAction* actSeparator;
+        KActionMenu* packetTypeMenu;
 
         /**
          * Externally registered actions
@@ -359,8 +371,7 @@ class PacketPane : public QVBox, public regina::NPacketListener {
          */
         regina::NPacket* getPacket();
         bool hasTextComponent();
-        const QPtrList<KAction>& getTrackingActions();
-        const QPtrList<KAction>& getPacketTypeActions();
+        KActionMenu* getPacketTypeMenu();
         ReginaPart* getPart();
 
         /**
@@ -587,12 +598,8 @@ inline bool PacketPane::isReadWrite() {
     return readWrite;
 }
 
-inline const QPtrList<KAction>& PacketPane::getTrackingActions() {
-    return trackingActions;
-}
-
-inline const QPtrList<KAction>& PacketPane::getPacketTypeActions() {
-    return mainUI->getPacketTypeActions();
+inline KActionMenu* PacketPane::getPacketTypeMenu() {
+    return packetTypeMenu;
 }
 
 #endif

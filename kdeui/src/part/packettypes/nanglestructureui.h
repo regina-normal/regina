@@ -86,6 +86,7 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
+        QString getPacketMenuText() const;
         void refresh();
 
     public slots:

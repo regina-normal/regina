@@ -193,6 +193,11 @@ class PacketViewerTab : public PacketReadOnlyUI {
         enum Action { None = 0, Refresh, EditingElsewhere };
 
         /**
+         * External components
+         */
+        PacketUI* parentUI;
+
+        /**
          * The event to perform immediately before this page is made
          * visible, if any.
          */
@@ -214,6 +219,11 @@ class PacketViewerTab : public PacketReadOnlyUI {
          * display for this page unchanged.
          */
         virtual void editingElsewhere();
+
+        /**
+         * PacketUI overrides.
+         */
+        QString getPacketMenuText() const;
 
     friend class PacketTabbedUI;
     friend class PacketTabbedViewerTab;
@@ -249,6 +259,7 @@ class PacketEditorTab : public PacketUI {
         /**
          * PacketUI overrides.
          */
+        QString getPacketMenuText() const;
         void setDirty(bool newDirty);
 };
 
@@ -348,18 +359,28 @@ inline PacketPane* PacketTabbedUI::getEnclosingPane() {
 }
 
 inline PacketViewerTab::PacketViewerTab(PacketTabbedUI* useParentUI) :
-        PacketReadOnlyUI(useParentUI->getEnclosingPane()), queuedAction(None) {
+        PacketReadOnlyUI(useParentUI->getEnclosingPane()),
+        parentUI(useParentUI), queuedAction(None) {
 }
 
 inline PacketViewerTab::PacketViewerTab(PacketTabbedViewerTab* useParentUI) :
-        PacketReadOnlyUI(useParentUI->getEnclosingPane()), queuedAction(None) {
+        PacketReadOnlyUI(useParentUI->getEnclosingPane()),
+        parentUI(useParentUI), queuedAction(None) {
 }
 
 inline void PacketViewerTab::editingElsewhere() {
 }
 
+inline QString PacketViewerTab::getPacketMenuText() const {
+    return parentUI->getPacketMenuText();
+}
+
 inline PacketEditorTab::PacketEditorTab(PacketTabbedUI* useParentUI) :
         PacketUI(useParentUI->getEnclosingPane()), parentUI(useParentUI) {
+}
+
+inline QString PacketEditorTab::getPacketMenuText() const {
+    return parentUI->getPacketMenuText();
 }
 
 inline PacketPane* PacketTabbedViewerTab::getEnclosingPane() {

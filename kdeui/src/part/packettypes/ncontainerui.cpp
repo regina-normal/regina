@@ -89,6 +89,10 @@ QWidget* NContainerUI::getInterface() {
     return interface;
 }
 
+QString NContainerUI::getPacketMenuText() const {
+    return i18n("&Container");
+}
+
 void NContainerUI::refresh() {
     children->setText(QString::number(container->getNumberOfChildren()));
     descendants->setText(QString::number(container->getNumberOfDescendants()));

@@ -75,6 +75,7 @@ class NContainerUI : public PacketReadOnlyUI, public regina::NPacketListener {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
+        QString getPacketMenuText() const;
         void refresh();
 
         /**

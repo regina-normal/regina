@@ -91,6 +91,10 @@ const QPtrList<KAction>& NTriangulationUI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 
+QString NTriangulationUI::getPacketMenuText() const {
+    return i18n("T&riangulation");
+}
+
 void NTriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
     gluings->updatePreferences(newPrefs);
     surfaces->setAutoCalcThreshold(newPrefs.triSurfacePropsThreshold);

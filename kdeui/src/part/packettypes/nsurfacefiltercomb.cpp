@@ -134,6 +134,10 @@ QWidget* NSurfaceFilterCombUI::getInterface() {
     return ui;
 }
 
+QString NSurfaceFilterCombUI::getPacketMenuText() const {
+    return i18n("Surface F&ilter");
+}
+
 void NSurfaceFilterCombUI::commit() {
     filter->setUsesAnd(boolType->selectedId() == ID_AND ? true : false);
     setDirty(false);

@@ -99,6 +99,10 @@ QWidget* NAngleStructureUI::getInterface() {
     return ui;
 }
 
+QString NAngleStructureUI::getPacketMenuText() const {
+    return i18n("&Angle Structures");
+}
+
 void NAngleStructureUI::refresh() {
     QString statStr;
 

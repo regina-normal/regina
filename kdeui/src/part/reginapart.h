@@ -95,9 +95,6 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actPaste;
         KAction* actUndo;
         KAction* actRedo;
-        KAction* actCurrUndock;
-        KAction* actCurrClose;
-        QPtrList<KAction> separatorList;
         QPtrList<KAction> treePacketViewActions;
         QPtrList<KAction> treePacketEditActions;
         QPtrList<KAction> treeGeneralEditActions;

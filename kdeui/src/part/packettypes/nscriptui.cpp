@@ -208,6 +208,10 @@ const QPtrList<KAction>& NScriptUI::getPacketTypeActions() {
     return scriptActionList;
 }
 
+QString NScriptUI::getPacketMenuText() const {
+    return i18n("S&cript");
+}
+
 void NScriptUI::commit() {
     // Update the lines.
     script->removeAllLines();

@@ -58,6 +58,10 @@ const QPtrList<KAction>& NNormalSurfaceUI::getPacketTypeActions() {
     return coords->getPacketTypeActions();
 }
 
+QString NNormalSurfaceUI::getPacketMenuText() const {
+    return i18n("&Normal Surfaces");
+}
+
 NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet) {

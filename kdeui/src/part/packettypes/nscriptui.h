@@ -94,6 +94,7 @@ class NScriptUI : public QObject, public PacketUI {
         QWidget* getInterface();
         KTextEditor::Document* getTextComponent();
         const QPtrList<KAction>& getPacketTypeActions();
+        QString getPacketMenuText() const;
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);

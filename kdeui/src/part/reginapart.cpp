@@ -166,13 +166,9 @@ void ReginaPart::dock(PacketPane* newPane) {
     newPane->reparent(dockArea, QPoint(0, 0));
     dockedPane = newPane;
 
-    const QPtrList<KAction>& typeActions(newPane->getPacketTypeActions());
-    if (! typeActions.isEmpty()) {
-        plugActionList("packet_type_actions", typeActions);
-        plugActionList("packet_type_separator", separatorList);
-    }
-    plugActionList("packet_tracking_actions", newPane->getTrackingActions());
-    plugActionList("packet_tracking_separator", separatorList);
+    QPtrList<KAction> typeActions;
+    typeActions.append(newPane->getPacketTypeMenu());
+    plugActionList("packet_type_menu", typeActions);
 
     newPane->show();
 
@@ -201,10 +197,7 @@ void ReginaPart::hasUndocked(PacketPane* undockedPane) {
     }
 
     if (dockedPane == undockedPane) {
-        unplugActionList("packet_type_actions");
-        unplugActionList("packet_type_separator");
-        unplugActionList("packet_tracking_actions");
-        unplugActionList("packet_tracking_separator");
+        unplugActionList("packet_type_menu");
         dockedPane = 0;
     }
 
@@ -534,13 +527,8 @@ void ReginaPart::initPacketTree() {
 }
 
 void ReginaPart::dockChanged() {
-    if (! dockedPane) {
-        actCurrUndock->setEnabled(false);
-        actCurrClose->setEnabled(false);
-    } else {
-        actCurrUndock->setEnabled(true);
-        actCurrClose->setEnabled(true);
-    }
+    // This was once useful, but since the packet type menus were
+    // rearranged this routine is no longer needed.
 }
 
 bool ReginaPart::checkReadWrite() {

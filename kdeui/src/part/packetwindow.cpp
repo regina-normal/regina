@@ -44,10 +44,6 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
 
     // Set up our actions.
     setInstance(ReginaPart::factoryInstance());
-    new KAction(i18n("&Dock"), "attach", 0, newPane, SLOT(dockPane()),
-        actionCollection(), "viewer_dock");
-    new KAction(i18n("&Close"), "fileclose", 0, newPane, SLOT(close()),
-        actionCollection(), "viewer_close");
 
     if (newPane->hasTextComponent()) {
         KAction* cut = KStdAction::cut(0, 0, actionCollection());
@@ -63,17 +59,11 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         newPane->registerEditOperation(redo, PacketPane::editRedo);
     }
 
-    separatorList.append(new KActionSeparator());
-    separatorList.setAutoDelete(true);
-
     createGUI("packetwindow.rc", false);
 
-    const QPtrList<KAction>& typeActions(newPane->getPacketTypeActions());
-    if (! typeActions.isEmpty()) {
-        plugActionList("packet_type_actions", typeActions);
-        plugActionList("packet_type_separator", separatorList);
-    }
-    plugActionList("packet_tracking_actions", newPane->getTrackingActions());
+    QPtrList<KAction> typeActions;
+    typeActions.append(newPane->getPacketTypeMenu());
+    plugActionList("packet_type_menu", typeActions);
 
     // Set up the widgets.
     newPane->reparent(this, QPoint(0, 0));

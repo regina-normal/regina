@@ -78,6 +78,7 @@ class NTextUI : public QObject, public PacketUI {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         KTextEditor::Document* getTextComponent();
+        QString getPacketMenuText() const;
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);

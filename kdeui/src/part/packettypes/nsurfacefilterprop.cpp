@@ -164,6 +164,10 @@ QWidget* NSurfaceFilterPropUI::getInterface() {
     return ui;
 }
 
+QString NSurfaceFilterPropUI::getPacketMenuText() const {
+    return i18n("Surface F&ilter");
+}
+
 void NSurfaceFilterPropUI::commit() {
     filter->setOrientability(getBoolSet(useOrient, optOrient));
     filter->setCompactness(getBoolSet(useCompact, optCompact));
