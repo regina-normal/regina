@@ -36,6 +36,18 @@
     <Action name="tree_view"/>
     <Action name="tree_rename"/>
     <Action name="tree_delete"/>
+    <Menu name="tree_nav"><text>&amp;Move</text>
+      <Action name="nav_shallow"/>
+      <Action name="nav_deep"/>
+      <Separator/>
+      <Action name="nav_up"/>
+      <Action name="nav_pageup"/>
+      <Action name="nav_top"/>
+      <Separator/>
+      <Action name="nav_down"/>
+      <Action name="nav_pagedown"/>
+      <Action name="nav_bottom"/>
+    </Menu>
     <Separator/>
     <Action name="tree_clone"/>
     <Action name="tree_clone_subtree"/>
