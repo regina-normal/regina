@@ -27,11 +27,10 @@
 /* end stub */
 
 #include <strstream.h>
-
+#include <hash_map>
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
-#include "utilities/ninfinitearray.h"
 
 typedef NDoubleListIterator<NGroupExpressionTerm> TermIterator;
 typedef NDynamicArrayIterator<NGroupExpression*> RelIterator;
@@ -253,8 +252,8 @@ bool NGroupPresentation::intelligentSimplify() {
 
     // Run through and look for substitutions we can make.
     // This currently isn't magnificently optimised.
-    NInfiniteArray<long> exponents;
-    NInfiniteArrayIterator<long> expIt;
+    std::hash_map<unsigned long, long> exponents;
+    std::hash_map<unsigned long, long>::iterator expIt;
     NGroupExpression* expansion;
     bool doMoreSubsts = true;
     while (doMoreSubsts) {
@@ -264,23 +263,27 @@ bool NGroupPresentation::intelligentSimplify() {
             // Can we pull a single variable out of this relation?
             rel = *it;
             // How many times does each generator appear in this relation?
-            for (tit.init(rel->getTerms()); ! tit.done(); tit++)
+            for (tit.init(rel->getTerms()); ! tit.done(); tit++) {
+                // Find this generator, or insert it with exponent 0 if
+                // it's not already present.
+                expIt = exponents.insert(make_pair((*tit).first, 0)).first;
                 if ((*tit).second < 0)
-                    exponents.elementAt((*tit).first, 0) -= (*tit).second;
+                    (*expIt).second -= (*tit).second;
                 else
-                    exponents.elementAt((*tit).first, 0) += (*tit).second;
+                    (*expIt).second += (*tit).second;
+            }
             // Did any generator appear precisely once?
-            for (expIt.init(exponents); ! expIt.done(); expIt++)
-                if (expIt.value() == 1)
-                    break;
-            if (expIt.done()) {
+            expIt = find_if(exponents.begin(), exponents.end(), compose1(
+                bind2nd(equal_to<long>(), 1),
+                select2nd<pair<unsigned long, long> >()));
+            if (expIt == exponents.end()) {
                 // Can't use this relation.  Move on.
-                exponents.flush();
+                exponents.clear();
                 it++;
                 continue;
             }
-            gen = expIt.index();
-            exponents.flush();
+            gen = (*expIt).first;
+            exponents.clear();
 
             // We are going to replace generator gen.
             // Build up the expansion.
