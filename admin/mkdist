@@ -13,7 +13,8 @@
 # It is strongly recommended (though not required) to run "make distclean"
 # before running this script.
 #
-# Recommends: fakeroot
+# It is also recommended to run this script within a fakeroot environment
+# to ensure tarballs store correct file ownership details.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -32,13 +33,6 @@
 #
 set -e
 
-# Check for fakeroot.
-if which fakeroot > /dev/null 2>&1; then
-  fakeroot="fakeroot"
-else
-  fakeroot=
-fi
-
 usage () {
   echo "Usage: $0 [ linux | cygwin | doc ]" 1>&2
   exit 1
@@ -46,7 +40,7 @@ usage () {
 
 bindist () {
   # Read in configuration details.
-  source admin/mkdist-config
+  . admin/mkdist-config
 
   # Compile.
   echo "mkdist: Building..."
@@ -80,8 +74,8 @@ bindist () {
   archtgz="`pwd`/$archbase.tgz"
   archzip="`pwd`/$archbase.zip"
   echo "mkdist: Creating archives $archbase.{tgz.zip}..."
-  ( cd "$tmpinst" && "$fakeroot" tar -zcf "$archtgz" * )
-  ( cd "$tmpinst" && "$fakeroot" zip -rqy "$archzip" * )
+  ( cd "$tmpinst" && tar -zcf "$archtgz" * )
+  ( cd "$tmpinst" && zip -rqy "$archzip" * )
 
   # Tidy up.
   echo "mkdist: Cleaning up..."
@@ -90,7 +84,7 @@ bindist () {
 
 docdist () {
   # Read in configuration details.
-  source admin/mkdist-config
+  . admin/mkdist-config
 
   # Compile.
   echo "mkdist: Building..."
@@ -109,8 +103,8 @@ docdist () {
   archtgz="`pwd`/$archbase.tgz"
   archzip="`pwd`/$archbase.zip"
   echo "mkdist: Creating archives $archbase.{tgz,zip}..."
-  ( cd "$tmpinst$pkgdocdir" && "$fakeroot" tar -zcf "$archtgz" * )
-  ( cd "$tmpinst$pkgdocdir" && "$fakeroot" zip -rqy "$archzip" * )
+  ( cd "$tmpinst$pkgdocdir" && tar -zcf "$archtgz" * )
+  ( cd "$tmpinst$pkgdocdir" && zip -rqy "$archzip" * )
 
   # Tidy up.
   echo "mkdist: Cleaning up..."
