@@ -5,14 +5,18 @@
 <!ENTITY data-allowstrict SYSTEM "allowstrict.sgml">
 <!ENTITY data-allowtaut SYSTEM "allowtaut.sgml">
 <!ENTITY data-cancrush SYSTEM "cancrush.sgml">
+<!ENTITY data-compact-filter SYSTEM "compact-filter.sgml">
 <!ENTITY data-compact-surface SYSTEM "compact-surface.sgml">
 <!ENTITY data-connected SYSTEM "connected.sgml">
+<!ENTITY data-euler-filter SYSTEM "euler-filter.sgml">
 <!ENTITY data-euler-surface SYSTEM "euler-surface.sgml">
 <!ENTITY data-filter SYSTEM "filter.sgml">
 <!ENTITY data-filter-combination SYSTEM "filter-combination.sgml">
+<!ENTITY data-filter-properties SYSTEM "filter-properties.sgml">
 <!ENTITY data-flags SYSTEM "flags.sgml">
 <!ENTITY data-line SYSTEM "line.sgml">
 <!ENTITY data-op SYSTEM "op.sgml">
+<!ENTITY data-orbl-filter SYSTEM "orbl-filter.sgml">
 <!ENTITY data-orbl-surface SYSTEM "orbl-surface.sgml">
 <!ENTITY data-packet SYSTEM "packet.sgml">
 <!ENTITY data-packet-anglestructurelist SYSTEM "packet-anglestructurelist.sgml">
@@ -22,6 +26,7 @@
 <!ENTITY data-packet-surfacefilter SYSTEM "packet-surfacefilter.sgml">
 <!ENTITY data-packet-text SYSTEM "packet-text.sgml">
 <!ENTITY data-params SYSTEM "params.sgml">
+<!ENTITY data-realbdry-filter SYSTEM "realbdry-filter.sgml">
 <!ENTITY data-realbdry-surface SYSTEM "realbdry-surface.sgml">
 <!ENTITY data-reginadata SYSTEM "reginadata.sgml">
 <!ENTITY data-struct SYSTEM "struct.sgml">
@@ -37,22 +42,30 @@
  '<link linkend="data-allowtaut"><sgmltag>allowtaut</sgmltag></link>'>
 <!ENTITY xml-cancrush
  '<link linkend="data-cancrush"><sgmltag>cancrush</sgmltag></link>'>
+<!ENTITY xml-compact-filter
+ '<link linkend="data-compact-filter"><sgmltag>compact</sgmltag> (filter)</link>'>
 <!ENTITY xml-compact-surface
  '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag> (surface)</link>'>
 <!ENTITY xml-connected
  '<link linkend="data-connected"><sgmltag>connected</sgmltag></link>'>
+<!ENTITY xml-euler-filter
+ '<link linkend="data-euler-filter"><sgmltag>euler</sgmltag> (filter)</link>'>
 <!ENTITY xml-euler-surface
  '<link linkend="data-euler-surface"><sgmltag>euler</sgmltag> (surface)</link>'>
 <!ENTITY xml-filter
  '<link linkend="data-filter"><sgmltag>filter</sgmltag></link>'>
 <!ENTITY xml-filter-combination
  '<link linkend="data-filter-combination"><sgmltag>filter</sgmltag> (combination)</link>'>
+<!ENTITY xml-filter-properties
+ '<link linkend="data-filter-properties"><sgmltag>filter</sgmltag> (properties)</link>'>
 <!ENTITY xml-flags
  '<link linkend="data-flags"><sgmltag>flags</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
 <!ENTITY xml-op
  '<link linkend="data-op"><sgmltag>op</sgmltag></link>'>
+<!ENTITY xml-orbl-filter
+ '<link linkend="data-orbl-filter"><sgmltag>orbl</sgmltag> (filter)</link>'>
 <!ENTITY xml-orbl-surface
  '<link linkend="data-orbl-surface"><sgmltag>orbl</sgmltag> (surface)</link>'>
 <!ENTITY xml-packet
@@ -73,6 +86,8 @@
  '<link linkend="data-packet"><sgmltag>packet</sgmltag> (triangulation)</link>'>
 <!ENTITY xml-params
  '<link linkend="data-params"><sgmltag>params</sgmltag></link>'>
+<!ENTITY xml-realbdry-filter
+ '<link linkend="data-realbdry-filter"><sgmltag>realbdry</sgmltag> (filter)</link>'>
 <!ENTITY xml-realbdry-surface
  '<link linkend="data-realbdry-surface"><sgmltag>realbdry</sgmltag> (surface)</link>'>
 <!ENTITY xml-reginadata

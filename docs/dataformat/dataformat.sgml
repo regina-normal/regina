@@ -21,14 +21,18 @@
  &data-allowstrict;
  &data-allowtaut;
  &data-cancrush;
+ &data-compact-filter;
  &data-compact-surface;
  &data-connected;
+ &data-euler-filter;
  &data-euler-surface;
  &data-filter;
  &data-filter-combination;
+ &data-filter-properties;
  &data-flags;
  &data-line;
  &data-op;
+ &data-orbl-filter;
  &data-orbl-surface;
  &data-packet;
  &data-packet-anglestructurelist;
@@ -38,6 +42,7 @@
  &data-packet-surfacefilter;
  &data-packet-text;
  &data-params;
+ &data-realbdry-filter;
  &data-realbdry-surface;
  &data-reginadata;
  &data-struct;
