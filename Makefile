@@ -65,7 +65,7 @@ helprun :
 	debug debugjni debugcorba \
 	clean purge
 
-binengine : binenginejni binenginecorba
+binengine : binenginelib binenginejni binenginecorba
 binenginejni : prepenginejni
 	cd engine && $(MAKE) binjni
 binenginecorba : prepenginecorba
@@ -147,7 +147,7 @@ clean :
 	cd docs && rm -rf $(gen_doc_mask) manpage.*
 
 purge : clean
-	-rm $(ENGINE_JNI) $(ENGINE_CORBA)
+	-rm $(ENGINE_JNI) $(ENGINE_CORBA) $(ENGINE_LIB)
 	-rm $(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA)
 	-rm $(DOC_JAR)
 
