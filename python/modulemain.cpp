@@ -76,6 +76,11 @@ namespace regina {
             const ShareableObject& b) {
         return &a == &b;
     }
+
+    static inline bool operator != (const ShareableObject& a,
+            const ShareableObject& b) {
+        return &a != &b;
+    }
 }
 
 BOOST_PYTHON_MODULE(regina) {
@@ -104,6 +109,7 @@ BOOST_PYTHON_MODULE(regina) {
         .def("toStringLong", &ShareableObject::toStringLong)
         .def("__str__", &ShareableObject::toString)
         .def(self == self)
+        .def(self != self)
     ;
 
     // Components from subdirectories (in approximate dependency order):
