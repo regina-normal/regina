@@ -10,9 +10,9 @@
 
 Building Regina from its sources can be either trivially simple or quite
 painstaking depending upon your system configuration.  With each new
-release the scripts that automatically detect your system configuration
-become more sophisticated, and hopefully Regina is thus becoming simple
-to build on more and more systems.
+release, the scripts that automatically detect your system configuration
+become more sophisticated, hopefully making Regina simple to build on more
+and more systems.
 <p>
 If Regina does not build directly out of the box for you, please
 <a href="mailto:regina-devel@lists.sourceforge.net">drop me an email</a>
@@ -47,18 +47,17 @@ If you are having trouble compiling or running Regina, you may
 check the <a href="docs/troubleshooting.html">troubleshooting
 page</a> to see if your problem is discussed there.  Of course you
 are also welcome to mail either myself or the users' mailing list
-(<i>regina-user@lists.sourceforge.net</i>) for assistance.
+<a href="mailto:regina-user@lists.sourceforge.net"><i>regina-user@lists.sourceforge.net</i></a> for assistance.
 
 <h2><a name="sysreq">System Requirements</a></h2>
 
 The tools and libraries that you will need installed before you can build
-Regina are listed in the table below.  All of these tools and libraries are
-available for most GNU/Linux distributions and are easily ported to
-other similar systems.
+Regina are listed in the table below.  All of these tools and libraries
+should be available for most GNU/Linux distributions.
 <p>
-<b>It is highly recommended that you download prebuilt packages of
-these tools for your GNU/Linux distribution</b>, since this is most
-likely to provide standard installations in standard locations that
+<b>It is highly recommended that you download ready-made packages of these
+tools and libraries for your GNU/Linux distribution</b>, since this is the
+best way to provide standard installations in standard locations that
 Regina can easily find and use.  Where you will find such packages
 depends upon your distribution.  For instance, Debian packages can all
 be found on the <a href="http://packages.debian.org/">usual Debian
@@ -69,12 +68,12 @@ download servers</a> and so on.
 The following table lists each requirement along with its Debian package
 name and a commonly-used RPM package name (though these tend to vary
 between different RPM-based distributions).  It also lists the website
-from which each piece of software can be obtained directly if no pre-built
-packages are available.
+from which each piece of software can be obtained directly if no ready-made
+packages are available, though this should be avoided where possible.
 <p>
-Please note that if you get an error at build time saying that it cannot
+Please note that if you get an error at build time saying that Regina cannot
 link with <tt>-lfoo</tt> for some library <tt>foo</tt>, you probably
-just need to install another development package on your system.  For
+just need to install another library development package on your system.  For
 instance, Fedora users who get the error
 "<tt>/usr/bin/ld: cannot find -lselinux</tt>"
 need to install the additional package <i>libselinux-devel</i>, and
