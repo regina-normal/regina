@@ -116,6 +116,10 @@ class NPropertyHolder {
          * pointer at the wrong location, this will be rectified and
          * later properties will not be affected.
          *
+         * \deprecated New-style XML data files should simply bundle object
+         * properties in with the standard XML read/write routines for the
+         * corresponding classes.
+         *
          * @param infile the file from which to read the properties.
          * This should be open for reading and at the correct position.
          */
@@ -126,6 +130,10 @@ class NPropertyHolder {
          * containing the property type and some bookmarking details.
          * The bookmark returned should later be passed to
          * writePropertyFooter() for housekeeping.
+         *
+         * \deprecated New-style XML data files should simply bundle object
+         * properties in with the standard XML read/write routines for the
+         * corresponding classes.
          *
          * @param outfile the file to which the property header will be
          * written.  This should be open for writing.
@@ -145,6 +153,10 @@ class NPropertyHolder {
          * Writes a footer to an old-style binary file for a property
          * containing bookmarking details.
          *
+         * \deprecated New-style XML data files should simply bundle object
+         * properties in with the standard XML read/write routines for the
+         * corresponding classes.
+         *
          * @param outfile the file to which the footer will be written.
          * This should be open for writing and at the position
          * immediately after the internal property details were written.
@@ -156,6 +168,10 @@ class NPropertyHolder {
         /**
          * Writes a footer to an old-style binary file to signify that all
          * properties have now been written.
+         *
+         * \deprecated New-style XML data files should simply bundle object
+         * properties in with the standard XML read/write routines for the
+         * corresponding classes.
          *
          * @param outfile the file to which the footer will be written.
          * This should be open for writing and at the position
@@ -178,6 +194,10 @@ class NPropertyHolder {
          * Note that if this routine is being overridden, the
          * subclass implementation must <b>always</b> begin with a call to
          * the superclass implementation.
+         *
+         * \deprecated New-style XML data files should simply bundle object
+         * properties in with the standard XML read/write routines for the
+         * corresponding classes.
          *
          * @param infile the file from which to read the property.  This
          * should be open for reading and at the position immediately after

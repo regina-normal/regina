@@ -748,10 +748,13 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
 
         /**
          * Reads a normal surface and all of its properties from the
-         * given file.  The flavour of coordinate system being used must
-         * be known in advance and passed to this routine.
+         * given old-style binary file.  The flavour of coordinate system
+         * being used must be known in advance and passed to this routine.
          *
          * This routine reads precisely what writeToFile() writes.
+         *
+         * \deprecated For the preferred way to read surfaces from file,
+         * see class NXMLNormalSurfaceReader instead.
          *
          * \pre The given file is currently opened for reading.
          *

@@ -255,9 +255,12 @@ class NAbelianGroup : public ShareableObject {
          */
         void writeToFile(NFile& out) const;
         /**
-         * Reads an abelian group from the given file.
+         * Reads an abelian group from the given old-style binary file.
          * The group will be newly allocated, and responsibility for its
          * destruction lies with the caller of this routine.
+         *
+         * \deprecated For the preferred way of reading abelian groups
+         * from file, see class NXMLAbelianGroupReader instead.
          *
          * \pre The given file is currently opened for reading.
          *

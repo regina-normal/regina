@@ -130,7 +130,11 @@ struct NGroupExpressionTerm {
      */
     void writeToFile(NFile& out) const;
     /**
-     * Reads a term from the given file.
+     * Reads a term from the given old-style binary file.
+     *
+     * \deprecated For the preferred way of reading group
+     * presentations from file, see class NXMLGroupPresentationReader
+     * instead.
      *
      * \pre The given file is currently opened for reading.
      *
@@ -378,9 +382,13 @@ class NGroupExpression : public ShareableObject {
          */
         void writeToFile(NFile& out) const;
         /**
-         * Reads an expression from the given file.
+         * Reads an expression from the given old-style binary file.
          * The expression will be newly allocated, and responsibility for
          * its destruction lies with the caller of this routine.
+         *
+         * \deprecated For the preferred way of reading group
+         * presentations from file, see class NXMLGroupPresentationReader
+         * instead.
          *
          * \pre The given file is currently opened for reading.
          *
@@ -535,9 +543,13 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
          */
         void writeToFile(NFile& out) const;
         /**
-         * Reads a group presentation from the given file.
+         * Reads a group presentation from the given old-style binary file.
          * The presentation will be newly allocated, and responsibility for
          * its destruction lies with the caller of this routine.
+         *
+         * \deprecated For the preferred way of reading group
+         * presentations from file, see class NXMLGroupPresentationReader
+         * instead.
          *
          * \pre The given file is currently opened for reading.
          *

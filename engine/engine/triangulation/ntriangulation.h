@@ -74,7 +74,6 @@ class NXMLTriangulationReader;
  * properties will be recalculated when necessary.  It is not necessary
  * to call this function when adding or removing tetrahedra.
  *
- * \todo \featureurgent Write properties to XML.
  * \todo \featureurgent Am I obviously a handlebody?  (Simplify and see
  * if there is nothing left).  Am I obviously not a handlebody?
  * (Compare homology with boundary homology).

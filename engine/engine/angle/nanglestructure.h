@@ -220,9 +220,12 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
 
         /**
          * Reads an angle structure and all its properties from the
-         * given file.
+         * given old-style binary file.
          *
          * This routine reads precisely what writeToFile() writes.
+         *
+         * \deprecated For the preferred way of reading angle structures
+         * from file, see class NXMLAngleStructureReader instead.
          *
          * \pre The given file is currently opened for reading.
          *

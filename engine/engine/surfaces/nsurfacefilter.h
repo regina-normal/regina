@@ -166,10 +166,11 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
         /**
          * Reads the details of a normal surface filter from the
-         * specified file and returns a newly created filter containing
-         * that information.  You may assume that the filter is of the
-         * same class as the class in which you are implementing this
-         * routine.  The newly created filter must also be of this type.
+         * specified old-style binary file and returns a newly created
+         * filter containing that information.  You may assume that the
+         * filter is of the same class as the class in which you are
+         * implementing this routine.  The newly created filter must also
+         * be of this type.
          *
          * The general packet information and the filter ID may be
          * assumed to have already been read from the file, and should
@@ -184,6 +185,13 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          * for reference only, and need not be used.
          * See the description of parameter \a parent in
          * NPacket::readPacket() for further details.
+         *
+         * New filter types should make this routine simply return 0
+         * since this file format is now obsolete, and older calculation
+         * engines will not understand newer filter types anyway.
+         *
+         * \deprecated For the preferred way to read filters from file,
+         * see getXMLFilterReader() and class NXMLFilterReader instead.
          *
          * \pre The given file is open for reading and all above
          * conditions have been satisfied.
