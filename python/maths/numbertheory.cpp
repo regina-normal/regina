@@ -26,54 +26,43 @@
 
 /* end stub */
 
+#include "maths/numbertheory.h"
 #include <boost/python.hpp>
 
-#include "engine.h"
-#include "shareableobject.h"
-
-void addAlgebra();
-void addFile();
-void addMaths();
-void addPacket();
-void addUtilities();
-
-using regina::ShareableObject;
+using namespace boost::python;
 
 namespace {
-    void shareableWriteTextShort(const ShareableObject& obj) {
-        obj.writeTextShort(std::cout);
+    boost::python::list factorise_list(unsigned long n) {
+        std::list<unsigned long> factors;
+        std::list<unsigned long>::const_iterator it;
+
+        regina::factorise(n, factors);
+
+        boost::python::list ans;
+        for (it = factors.begin(); it != factors.end(); it++)
+            ans.append(*it);
+        return ans;
     }
 
-    void shareableWriteTextLong(const ShareableObject& obj) {
-        obj.writeTextLong(std::cout);
+    boost::python::list primesUpTo_list(const regina::NLargeInteger& roof) {
+        std::list<regina::NLargeInteger> primes;
+        std::list<regina::NLargeInteger>::const_iterator it;
+
+        regina::primesUpTo(roof, primes);
+
+        boost::python::list ans;
+        for (it = primes.begin(); it != primes.end(); it++)
+            ans.append(*it);
+        return ans;
     }
 }
 
-BOOST_PYTHON_MODULE(regina) {
-    // Core engine routines:
-
-    boost::python::def("getVersionString", regina::getVersionString);
-    boost::python::def("getVersionMajor", regina::getVersionMajor);
-    boost::python::def("getVersionMinor", regina::getVersionMinor);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("writeTextShort", &shareableWriteTextShort)
-        .def("writeTextLong", &shareableWriteTextLong)
-        .def("toString", &ShareableObject::toString)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
-    ;
-
-    // Components from subdirectories:
-
-    addAlgebra();
-    addFile();
-    addMaths();
-    addPacket();
-    addUtilities();
+void addNumberTheory() {
+    def("reducedMod", regina::reducedMod);
+    def("gcd", regina::gcd);
+    def("gcdWithCoeffs", regina::gcdWithCoeffs);
+    def("modularInverse", regina::modularInverse);
+    def("factorise", factorise_list);
+    def("primesUpTo", primesUpTo_list);
 }
 

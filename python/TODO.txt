@@ -15,7 +15,6 @@ Wrappers:
     angle
     census
     foreign
-    maths
     packet
     progress
     split

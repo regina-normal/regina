@@ -26,54 +26,46 @@
 
 /* end stub */
 
+#include "maths/nmatrixint.h"
 #include <boost/python.hpp>
 
-#include "engine.h"
-#include "shareableobject.h"
-
-void addAlgebra();
-void addFile();
-void addMaths();
-void addPacket();
-void addUtilities();
-
-using regina::ShareableObject;
+using namespace boost::python;
+using regina::NMatrixInt;
 
 namespace {
-    void shareableWriteTextShort(const ShareableObject& obj) {
-        obj.writeTextShort(std::cout);
-    }
+    regina::NLargeInteger& (NMatrixInt::*entry_non_const)(unsigned long,
+        unsigned long) = &NMatrixInt::entry;
+    void (NMatrixInt::*addRow_triple)(unsigned long, unsigned long,
+        regina::NLargeInteger) = &NMatrixInt::addRow;
+    void (NMatrixInt::*addCol_triple)(unsigned long, unsigned long,
+        regina::NLargeInteger) = &NMatrixInt::addCol;
 
-    void shareableWriteTextLong(const ShareableObject& obj) {
-        obj.writeTextLong(std::cout);
-    }
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRow,
+        NMatrixInt::addRow, 2, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addCol,
+        NMatrixInt::addCol, 2, 3);
 }
 
-BOOST_PYTHON_MODULE(regina) {
-    // Core engine routines:
-
-    boost::python::def("getVersionString", regina::getVersionString);
-    boost::python::def("getVersionMajor", regina::getVersionMajor);
-    boost::python::def("getVersionMinor", regina::getVersionMinor);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("writeTextShort", &shareableWriteTextShort)
-        .def("writeTextLong", &shareableWriteTextLong)
-        .def("toString", &ShareableObject::toString)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
+void addNMatrixInt() {
+    scope s = class_<NMatrixInt, bases<regina::ShareableObject>,
+            std::auto_ptr<NMatrixInt> >("NMatrixInt",
+            init<unsigned long, unsigned long>())
+        .def(init<const NMatrixInt&>())
+        .def("initialise", &NMatrixInt::initialise)
+        .def("rows", &NMatrixInt::rows)
+        .def("columns", &NMatrixInt::columns)
+        .def("entry", entry_non_const, return_internal_reference<>())
+        .def("swapRows", &NMatrixInt::swapRows)
+        .def("swapColumns", &NMatrixInt::swapColumns)
+        .def("makeIdentity", &NMatrixInt::makeIdentity)
+        .def("addRow", addRow_triple, OL_addRow())
+        .def("addCol", addCol_triple, OL_addCol())
+        .def("multRow", &NMatrixInt::multRow)
+        .def("multCol", &NMatrixInt::multCol)
+        .def(self * self)
     ;
 
-    // Components from subdirectories:
-
-    addAlgebra();
-    addFile();
-    addMaths();
-    addPacket();
-    addUtilities();
+    s.attr("zero") = NMatrixInt::zero;
+    s.attr("one") = NMatrixInt::one;
 }
 
