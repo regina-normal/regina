@@ -802,16 +802,6 @@ class NPacket : public ShareableObject {
          */
 
         /**
-         * \name Java Interface Tools
-         */
-        /*@{*/
-
-        /*@}*/
-        /**
-         * (end: Java Interface Tools)
-         */
-
-        /**
          * \name Packet Dependencies
          */
         /*@{*/
