@@ -39,6 +39,8 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kstandarddirs.h>
+#include <qfileinfo.h>
 #include <qheader.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -285,7 +287,7 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
 
     QBoxLayout* btnArea = new QHBoxLayout(layout);
     btnArea->addStretch(1);
-    QPushButton* btnGAP = new QPushButton(SmallIconSet("wizard"),
+    btnGAP = new QPushButton(SmallIconSet("wizard"),
         i18n("Simplify using GAP"), ui);
     QToolTip::add(btnGAP, i18n("Simplify the group presentation using "
         "GAP (Groups, Algorithms and Programming)"));
@@ -347,12 +349,15 @@ void NTriFundGroupUI::refresh() {
         for (long i = nRels - 1; i >= 0; i--)
             new KListViewItem(fundRels,
                 QString("1 = ") + pres.getRelation(i).toString().c_str());
+
+        btnGAP->setEnabled(true);
     } else {
         fundName->setText(i18n("Cannot calculate\n(disconnected triang.)"));
         fundGens->hide();
         fundRelCount->hide();
         fundRels->clear();
         fundRels->hide();
+        btnGAP->setEnabled(false);
     }
 }
 
@@ -362,11 +367,62 @@ void NTriFundGroupUI::editingElsewhere() {
     fundRelCount->hide();
     fundRels->clear();
     fundRels->hide();
+    btnGAP->setEnabled(false);
 }
 
 void NTriFundGroupUI::simplifyGAP() {
+    // Make sure the triangulation is not being edited.
+    if (! btnGAP->isEnabled())
+        return;
+
+    // Can we actually run GAP?
+    QString useExec = verifyGAPExec();
+    if (useExec.isNull())
+        return;
+
     KMessageBox::sorry(ui, i18n("GAP simplification via %1 is not "
-        "yet implemented.").arg(GAPExec));
+        "yet implemented.").arg(useExec));
+}
+
+QString NTriFundGroupUI::verifyGAPExec() {
+    QString useExec = GAPExec;
+
+    if (useExec.find('/') < 0) {
+        // Hunt on the search path.
+        useExec = KStandardDirs::findExe(useExec);
+        if (useExec.isNull()) {
+            KMessageBox::sorry(ui, i18n("The GAP executable \"%1\" could "
+                "not be found on the default search path.\n"
+                "If you have GAP (Groups, Algorithms and Programming) "
+                "installed on your system, please go into the Regina "
+                "configuration (Triangulation section) and tell Regina "
+                "where it can find GAP.").arg(useExec));
+            return QString::null;
+        }
+    }
+
+    // We have a full path to the GAP executable.
+    QFileInfo info(useExec);
+    if (! info.exists()) {
+        KMessageBox::sorry(ui, i18n("The GAP executable \"%1\" does "
+            "not exist.\n"
+            "If you have GAP (Groups, Algorithms and Programming) "
+            "installed on your system, please go into the Regina "
+            "configuration (Triangulation section) and tell Regina "
+            "where it can find GAP.").arg(useExec));
+        return QString::null;
+    } else if (! (info.isFile() && info.isExecutable())) {
+        KMessageBox::sorry(ui, i18n("The GAP executable \"%1\" does "
+            "not actually appear to be an executable file.\n"
+            "If you have GAP (Groups, Algorithms and Programming) "
+            "installed on your system, please go into the Regina "
+            "configuration (Triangulation section) and tell Regina "
+            "where it can find GAP.").arg(useExec));
+        return QString::null;
+    }
+
+    // All good.
+    return useExec;
 }
 
 NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,

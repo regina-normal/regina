@@ -126,6 +126,7 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
         QLabel* fundGens;
         QLabel* fundRelCount;
         QListView* fundRels;
+        QPushButton* btnGAP;
 
         /**
          * The GAP executable.
@@ -157,6 +158,13 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
          * Group simplification actions.
          */
         void simplifyGAP();
+
+    private:
+        /**
+         * Returns the full path to the GAP executable, or QString::null
+         * if the GAP executable does not appear to be valid.
+         */
+        QString verifyGAPExec();
 };
 
 /**
