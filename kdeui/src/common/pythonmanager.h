@@ -72,11 +72,18 @@ class PythonManager {
          * console is automatically registered with this python manager.
          *
          * If python scripting is not built in, a notice is displayed
-         * to the user.
+         * to the user and 0 is returned.
          */
-        void launchPythonConsole(QWidget* parent = 0,
+        PythonConsole* launchPythonConsole(QWidget* parent = 0,
                 regina::NPacket* tree = 0,
                 regina::NPacket* selectedPacket = 0);
+
+        /**
+         * Destroys any consoles still in existence that were either
+         * launched through this python manager or externally registered
+         * with this python manager.
+         */
+        void closeAllConsoles();
 
         /**
          * Asks this python manager to claim responsibility for the

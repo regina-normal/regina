@@ -8,6 +8,8 @@
 
 KDE_OPTIONS=noautodist
 
+SUBDIRS = @REGINA_BUILD_PYTHON@
+
 AM_CXXFLAGS = '-DREGINA_DATADIR="$(pkgdatadir)"'
 INCLUDES = $(all_includes)
 
@@ -22,7 +24,13 @@ noinst_HEADERS = \
 lib_LTLIBRARIES = libregina-kdecommon.la
 
 libregina_kdecommon_la_LDFLAGS = -release @PACKAGE_VERSION@ $(all_libraries)
+
+if COND_BUILD_PYTHON
+libregina_kdecommon_la_LIBADD = $(LIB_ENGINE) python/libregina-kdepython.la
+else
 libregina_kdecommon_la_LIBADD = $(LIB_ENGINE)
+endif
+
 libregina_kdecommon_la_SOURCES = \
 	coordinatechooser.cpp \
 	coordinates.cpp \

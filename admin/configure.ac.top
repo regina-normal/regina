@@ -293,6 +293,8 @@ REGINA_SHOULD_BUILD(TESTSUITE, testsuite, [the test suite])
 REGINA_SHOULD_BUILD(DOCSENGINE, engine, [calculation engine docs])
 REGINA_SHOULD_BUILD(DOCSMAN, man, [man pages])
 
+AM_CONDITIONAL(COND_BUILD_PYTHON, test -n "$REGINA_BUILD_PYTHON")
+
 ###########################################################
 #
 # Prepare output files.

@@ -33,9 +33,30 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+PythonManager::~PythonManager() {
+    closeAllConsoles();
+}
+
+void PythonManager::registerConsole(PythonConsole* console) {
+    consoles.insert(console);
+}
+
+void PythonManager::deregisterConsole(PythonConsole* console) {
+    consoles.erase(console);
+}
+
 #ifdef HAVE_BOOST_PYTHON
 
-PythonManager::~PythonManager() {
+#include "python/pythonconsole.h"
+
+PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
+        regina::NPacket* tree, regina::NPacket* selectedPacket) {
+    PythonConsole* ans = new PythonConsole(parent, this, tree, selectedPacket);
+    ans->show();
+    return ans;
+}
+
+void PythonManager::closeAllConsoles() {
     std::set<PythonConsole*>::iterator it, next;
 
     it = consoles.begin();
@@ -56,27 +77,10 @@ PythonManager::~PythonManager() {
     }
 }
 
-void PythonManager::launchPythonConsole(QWidget* parent, regina::NPacket*,
-        regina::NPacket*) {
-    KMessageBox::sorry(parent, i18n("<qt>Python scripting has not yet "
-        "been reimplemented for the KDE user interface.  This should "
-        "be completed for version 4.0.<p>"
-        "In the meantime, you can still use Python scripting with Regina "
-        "through the command-line <b>regina-python</b> application.</qt>"));
-}
-
-void PythonManager::registerConsole(PythonConsole* console) {
-    consoles.insert(console);
-}
-
-void PythonManager::deregisterConsole(PythonConsole* console) {
-    consoles.erase(console);
-}
-
 #else
 
 namespace {
-    void scriptingDisabled(QWidget* parent) {
+    PythonConsole* scriptingDisabled(QWidget* parent) {
         KMessageBox::sorry(parent, i18n("<qt>Python scripting has been "
             "disabled in your particular build of Regina.  This is probably "
             "because no usable boost.python installation could be found.<p>"
@@ -84,10 +88,8 @@ namespace {
             "for a more detailed explanation of why this has happened.  "
             "Please write to <tt>%1</tt> if you would like further "
             "assistance.</qt>").arg(PACKAGE_BUGREPORT));
+        return 0;
     }
-}
-
-PythonManager::~PythonManager() {
 }
 
 void PythonManager::launchPythonConsole(QWidget* parent, regina::NPacket*,
@@ -95,10 +97,7 @@ void PythonManager::launchPythonConsole(QWidget* parent, regina::NPacket*,
     scriptingDisabled(parent);
 }
 
-void PythonManager::registerConsole(PythonConsole*) {
-}
-
-void PythonManager::deregisterConsole(PythonConsole*) {
+void PythonManager::closeAllConsoles() {
 }
 
 #endif

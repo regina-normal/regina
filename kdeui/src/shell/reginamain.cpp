@@ -130,6 +130,7 @@ void ReginaMain::readProperties(KConfig *config) {
 }
 
 bool ReginaMain::queryClose() {
+    consoles.closeAllConsoles();
     if (currentPart) {
         lastURL = currentPart->url();
         return currentPart->closeURL();
