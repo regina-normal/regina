@@ -83,6 +83,15 @@ class ImportDialog : public KDialogBase {
             regina::NPacket* packetTree, regina::NPacket* defaultParent,
             PacketFilter* useFilter, const QString& dialogTitle);
 
+        /**
+         * Returns whether or not there are any possible parent packets
+         * at all.  If not, an appropriate error is displayed to the user.
+         *
+         * This routine should be called before the dialog is displayed,
+         * and the operation aborted if it returns \c false.
+         */
+        bool validate();
+
     protected slots:
         /**
          * KDialogBase overrides.

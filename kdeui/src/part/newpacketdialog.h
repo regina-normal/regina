@@ -87,6 +87,15 @@ class NewPacketDialog : public KDialogBase {
         virtual ~NewPacketDialog();
 
         /**
+         * Returns whether or not there are any possible parent packets at
+         * all.  If not, an appropriate error is displayed to the user.
+         *
+         * This routine should be called before the dialog is displayed,
+         * and the operation aborted if it returns \c false.
+         */
+        bool validate();
+
+        /**
          * Returns the packet that was created by this dialog, if any.
          */
         regina::NPacket* createdPacket();

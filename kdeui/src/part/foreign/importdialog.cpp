@@ -69,6 +69,18 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
     layout->addStretch(1);
 }
 
+bool ImportDialog::validate() {
+    if (chooser->hasPackets())
+        return true;
+    KMessageBox::sorry(this, i18n(
+        "No suitable parent packets could be found for the imported data.\n"
+        "Some packets have particular requirements of their parents.  "
+        "For instance, a list of normal surfaces or angle structures must "
+        "be imported beneath the triangulation in which they live.\n"
+        "See the reference manual for further information."));
+    return false;
+}
+
 void ImportDialog::slotOk() {
     // Get the parent packet.
     regina::NPacket* parentPacket = chooser->selectedPacket();

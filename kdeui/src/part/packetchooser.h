@@ -112,6 +112,13 @@ class PacketChooser : public KComboBox, public regina::NPacketListener {
         PacketFilter* getFilter();
 
         /**
+         * Returns whether any packets at all are made available by this
+         * packet chooser.  If the packet chooser is empty or if it
+         * contains only a "None" entry, this routine returns \c false.
+         */
+        bool hasPackets();
+
+        /**
          * Returns the currently selected packet.
          *
          * If the selected packet has since been destroyed, this routine
@@ -158,6 +165,10 @@ class PacketChooser : public KComboBox, public regina::NPacketListener {
 
 inline PacketFilter* PacketChooser::getFilter() {
     return filter;
+}
+
+inline bool PacketChooser::hasPackets() {
+    return (packets.size() > 1 || (packets.size() == 1 && packets.front()));
 }
 
 #endif

@@ -77,6 +77,16 @@ class ExportDialog : public KDialogBase {
             const QString& dialogTitle);
 
         /**
+         * Returns whether or not there are any packets at all made
+         * available for export.  If not, an appropriate error is
+         * displayed to the user.
+         *
+         * This routine should be called before the dialog is displayed,
+         * and the operation aborted if it returns \c false.
+         */
+        bool validate();
+
+        /**
          * Returns the packet or packet subtree selected by the user.
          */
         regina::NPacket* selectedPacket();

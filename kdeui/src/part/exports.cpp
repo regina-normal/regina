@@ -64,7 +64,7 @@ void ReginaPart::exportFile(const PacketExporter& exporter,
         const QString& fileFilter, const QString& dialogTitle) {
     ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
         exporter.canExport(), dialogTitle);
-    if (dlg.exec() == QDialog::Accepted) {
+    if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* data = dlg.selectedPacket();
         if (data) {
             QString file = KFileDialog::getSaveFileName(QString::null,

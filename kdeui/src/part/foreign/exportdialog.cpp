@@ -60,6 +60,15 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     layout->addStretch(1);
 }
 
+bool ExportDialog::validate() {
+    if (chooser->hasPackets())
+        return true;
+    KMessageBox::sorry(this, i18n(
+        "No packets could be found that are suitable for export in this "
+        "format."));
+    return false;
+}
+
 void ExportDialog::slotOk() {
     // Get the selected packet.
     chosenPacket = chooser->selectedPacket();
