@@ -12,6 +12,9 @@ Current Development Version
     ENGINE:
         Overall structure:
             - Fixed minor memory leaks.
+        Class Engine:
+            - Removed since this is no longer necessary with the new
+              python bindings.
         Class NFacePairings:
             - Fixed bug in isCanonical().
         Class NGluingPerms:
@@ -24,6 +27,13 @@ Current Development Version
               implemented in the calculation engine.
         Class NTriangulation:
             - New routine turaevViro().
+    PYTHON:
+        - Added python bindings for standard python (i.e., cpython) to
+          replace the old Jython bindings.
+        - All classes now sit directly within the module regina.
+        - Python bindings are much more faithful to the C++ calculation
+          engine interface, especially with respect to global and static
+          routines and constants.
 
 Version 3.2  [ 22 June, 2003 ] - The post-thesis release!
     OVERALL:
