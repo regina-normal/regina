@@ -14,9 +14,10 @@ EXTRA_DIST = \
   README.txt RELEASE.txt \
   acinclude.m4.top as-ac-expand.m4.ext cppunit.m4.ext kde.m4.ext \
   libtool.m4.ext configure.ac.bot configure.ac.top \
-  Doxyfile.am Doxyfile.global Makefile.common am_edit conf.change.pl \
-  config.guess config.pl config.sub cvs-clean.pl cvs.sh debianrules \
-  detect-autoconf.sh install-sh ltmain.sh missing mkinstalldirs \
+  Doxyfile.am Doxyfile.global Makefile.common am_edit \
+  bcheck.pl conf.change.pl config.guess config.pl config.sub \
+  cvs-clean.pl cvs.sh debianrules deps.am detect-autoconf.sh \
+  install-sh ltmain.sh missing mkinstalldirs nmcheck oldinclude.m4.in \
   ac_gen am_update distcheck insertstub mksums replacetabs
 
 ## ----------------------- Custom targets ----------------------------

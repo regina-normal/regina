@@ -14,6 +14,7 @@ AM_CXXFLAGS = '-DREGINA_DATADIR="$(pkgdatadir)"'
 INCLUDES = $(all_includes) -I../common
 
 noinst_HEADERS = \
+	eventids.h \
 	exttabctl.h \
 	flatbutton.h \
 	gridlistview.h \
