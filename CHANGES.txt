@@ -15,6 +15,8 @@ Version 4.2  [ under development ]
         Overall structure:
             - Included portions of the SnapPea kernel (thanks again to
               Jeff Weeks).
+            - Added a regina-engine-config script to make it easier to
+              build Regina into other applications.
         Class NExampleTriangulation:
             - Added to facilitate construction of several different
               sample triangulations.

@@ -250,7 +250,9 @@ AC_CHECK_HEADERS([unistd.h])
 # Includes required by the calculation engine.
 # AM_PATH_XML2 seems to have switched recently from using XML_CFLAGS to
 # XML_CPPFLAGS; we'd better allow for either here.
-ENGINE_INCLUDES="-I\$(top_srcdir)/engine/engine $XML_CFLAGS $XML_CPPFLAGS"
+ENGINE_EXTERNAL_INCLUDES="$XML_CFLAGS $XML_CPPFLAGS"
+ENGINE_INCLUDES="-I\$(top_srcdir)/engine/engine $ENGINE_EXTERNAL_INCLUDES"
+AC_SUBST(ENGINE_EXTERNAL_INCLUDES)
 AC_SUBST(ENGINE_INCLUDES)
 
 # Libraries required by the calculation engine.

@@ -64,14 +64,21 @@ libregina_engine_la_LIBADD = \
 libregina_engine_noinst_la_SOURCES = engine.cpp shareableobject.cpp
 libregina_engine_noinst_la_LIBADD = $(libregina_engine_la_LIBADD)
 
+EXTRA_DIST = regina-engine-config.in
+
 ## ----------------------- Custom targets ----------------------------
 
-.PHONY : install-data-local uninstall-local
+.PHONY : install-data-local install-exec-local uninstall-local
 
 install-data-local :
 	$(mkinstalldirs) $(DESTDIR)$(pkgincludedir)
 	$(INSTALL_DATA) regina-config.h $(DESTDIR)$(pkgincludedir)
 
+install-exec-local :
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_SCRIPT) regina-engine-config $(DESTDIR)$(bindir)
+
 uninstall-local :
 	rm -f $(DESTDIR)$(pkgincludedir)/regina-config.h
+	rm -f $(DESTDIR)$(bindir)/regina-engine-config
 
