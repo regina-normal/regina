@@ -49,7 +49,7 @@ void ReginaPart::importPython() {
 }
 
 void ReginaPart::importRegina() {
-    importFile(ReginaHandler::instance, 0, i18n(FILTER_REGINA),
+    importFile(ReginaHandler(), 0, i18n(FILTER_REGINA),
         i18n("Import Regina Data File"));
 }
 

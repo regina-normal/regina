@@ -34,8 +34,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-const ReginaHandler ReginaHandler::instance;
-
 regina::NPacket* ReginaHandler::import(const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPacket* ans = regina::readFileMagic(fileName.ascii());
@@ -57,7 +55,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             "This packet cannot be separated from its parent."));
         return false;
     }
-    if (! regina::writeXMLFile(fileName.ascii(), data, true)) {
+    if (! regina::writeXMLFile(fileName.ascii(), data, compressed)) {
         KMessageBox::error(parentWidget, i18n(
             "This packet subtree could not be exported.  An unknown error, "
             "probably related to file I/O, occurred during the export."));

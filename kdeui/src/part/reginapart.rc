@@ -12,6 +12,7 @@
     </Menu>
     <Menu name="file_export" group="print_merge"><text>&amp;Export</text>
       <Action name="export_regina"/>
+      <Action name="export_regina_uncompressed"/>
       <Action name="export_snappea"/>
       <Action name="export_python"/>
     </Menu>

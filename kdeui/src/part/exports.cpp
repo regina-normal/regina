@@ -44,7 +44,12 @@ void ReginaPart::exportPython() {
 }
 
 void ReginaPart::exportRegina() {
-    exportFile(ReginaHandler::instance, i18n(FILTER_REGINA),
+    exportFile(ReginaHandler(true), i18n(FILTER_REGINA),
+        i18n("Export Regina Data File"));
+}
+
+void ReginaPart::exportReginaUncompressed() {
+    exportFile(ReginaHandler(false), i18n(FILTER_REGINA),
         i18n("Export Regina Data File"));
 }
 

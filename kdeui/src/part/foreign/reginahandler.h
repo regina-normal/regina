@@ -39,18 +39,18 @@
 /**
  * An object responsible for importing and export data to and from
  * other Regina data files.
- *
- * Rather than creating new objects of this class, the globally
- * available object ReginaHandler::instance should always be used.
  */
 class ReginaHandler : public PacketImporter, public PacketExporter {
-    public:
-        /**
-         * A globally available instance of this class.
-         */
-        static const ReginaHandler instance;
+    private:
+        bool compressed;
+            /**< Should exported data files be compressed? */
 
     public:
+        /**
+         * Constructor.
+         */
+        ReginaHandler(bool newCompressed = true);
+
         /**
          * PacketImporter overrides:
          */
@@ -63,15 +63,10 @@ class ReginaHandler : public PacketImporter, public PacketExporter {
         virtual PacketFilter* canExport() const;
         virtual bool exportData(regina::NPacket* data,
             const QString& fileName, QWidget* parentWidget) const;
-
-    private:
-        /**
-         * Don't allow people to construct their own Regina handlers.
-         */
-        ReginaHandler();
 };
 
-inline ReginaHandler::ReginaHandler() {
+inline ReginaHandler::ReginaHandler(bool newCompressed) :
+        compressed(newCompressed) {
 }
 
 #endif

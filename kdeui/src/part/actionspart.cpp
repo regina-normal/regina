@@ -193,7 +193,12 @@ void ReginaPart::setupActions() {
 
     act = new KAction(i18n("&Regina Data File"), "regina", 0,
         this, SLOT(exportRegina()), actionCollection(), "export_regina");
-    act->setToolTip(i18n("Export a Regina data file"));
+    act->setToolTip(i18n("Export a compressed Regina data file"));
+
+    act = new KAction(i18n("Regina Data File (&Uncompressed)"), "regina", 0,
+        this, SLOT(exportReginaUncompressed()), actionCollection(),
+        "export_regina_uncompressed");
+    act->setToolTip(i18n("Export an uncompressed Regina data file"));
 
     act = new KAction(i18n("&SnapPea Triangulation"), "snappea", 0,
         this, SLOT(exportSnapPea()), actionCollection(), "export_snappea");

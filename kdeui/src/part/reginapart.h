@@ -245,6 +245,7 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         void exportPython();
         void exportRegina();
+        void exportReginaUncompressed();
         void exportSnapPea();
 
         /**
