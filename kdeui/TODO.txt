@@ -17,6 +17,7 @@ General:
 
 Census:
     - Implement GUI census creation
+    * Include closed hyperbolic census
 
 Containers:
     - Update container viewers whenever their subtrees change, not just when
@@ -50,6 +51,7 @@ Python:
     - Allow breaking processing in python consoles
     - Check to see whether user libraries are in fact text files
     - Allow compilation and running of open libraries
+    * Something nasty with the python console & looping
 
 Scripts:
     - Make a script dirty when its variables are changed externally
