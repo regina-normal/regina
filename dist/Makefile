@@ -130,12 +130,12 @@ stubs : insertstub
 	./insertstubreplace "/* end stub */" stub.engine \
 		`find ../engine -name "*.cpp"`
 	./insertstubreplace "/* end stub */" stub.engine \
-		`find ../engine -name "*.h"`
+		`find ../engine -name "*.h" -o -name "*.tcc"`
 	./insertstubreplace "/* end stub */" stub.javaui \
 		`find ../javaui -name "*.java"`
 tabs :
 	./replacetabs `find .. -name "*.cpp"`
-	./replacetabs `find .. -name "*.h"`
+	./replacetabs `find .. -name "*.h" -o -name "*.tcc"`
 	./replacetabs `find .. -name "*.java"`
 	./replacetabs `find .. -name "*.txt"`
 	./replacetabs ../docs/*.sgml
