@@ -106,7 +106,13 @@ fi
 if [ -z "$REGINA_BTOOLS" ]; then
 	export REGINA_BTOOLS="$REGINA_HOME/lib/btools.jar"
 fi
-if [ ! -e "$REGINA_BTOOLS" ]; then
+if [ -d "$REGINA_BTOOLS" ]; then
+	error "Error: \$REGINA_BTOOLS is set to a directory, not a file."
+	error "       It should be set to the full pathname of the BTools jar file."
+	error "       For example: REGINA_BTOOLS=/usr/share/java/btools.jar"
+	error "       Please fix this setting and try again."
+	exit 1
+elif [ ! -e "$REGINA_BTOOLS" ]; then
 	error "Error: The BTools library could not be found."
 	error "       Set \$REGINA_BTOOLS to the location of btools.jar"
 	error "       and try again."
@@ -116,7 +122,12 @@ fi
 if [ -z "$REGINA_JYTHON" ]; then
 	export REGINA_JYTHON="$REGINA_HOME/lib/jython.jar"
 fi
-if [ ! -e "$REGINA_JYTHON" ]; then
+if [ -d "$REGINA_JYTHON" ]; then
+	warn "Warning: \$REGINA_JYTHON is set to a directory, not a file."
+	warn "         It should be set to the full pathname of the Jython jar file."
+	warn "         For example: REGINA_JYTHON=/usr/share/java/jython.jar"
+	warn "         Scripting will not be available until this is fixed."
+elif [ ! -e "$REGINA_JYTHON" ]; then
 	warn "Warning: The Jython library could not be found."
 	warn "         Scripting will not be available."
 	warn "         To fix this, set \$REGINA_JYTHON to the location"
@@ -126,7 +137,13 @@ fi
 if [ -z "$REGINA_JAVAHELP" ]; then
 	export REGINA_JAVAHELP="$REGINA_HOME/lib/jh.jar"
 fi
-if [ ! -e "$REGINA_JAVAHELP" ]; then
+if [ -d "$REGINA_JAVAHELP" ]; then
+	warn "Warning: \$REGINA_JAVAHELP is set to a directory, not a file."
+	warn "         It should be set to the full pathname of the JavaHelp jar file."
+	warn "         For example: REGINA_JAVAHELP=/usr/share/java/jh.jar"
+	warn "         The built-in help browser will not be available until"
+	warn "         this is fixed."
+elif [ ! -e "$REGINA_JAVAHELP" ]; then
 	warn "Warning: The JavaHelp library could not be found."
 	warn "         The built-in help browser will not be available."
 	warn "         To fix this, set \$REGINA_JAVAHELP to the location"
