@@ -9,6 +9,9 @@
 INCLUDES = @ENGINE_INCLUDES@
 LDFLAGS = @ENGINE_LIBS@ @TESTSUITE_LIBS@
 
+SUBDIRS = \
+  maths
+
 TESTS = regtestsuite
 
 check_PROGRAMS = regtestsuite
