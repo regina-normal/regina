@@ -12,6 +12,8 @@ engine documentation.
 General:
     - Make "configure shortcuts" work with the part as well as with the shell
     - Enhance the DCOP interface
+    * Don't allow --disable-shared with the KDE UI
+    * Upgrade admin/ (specifically libtool) for darwin/fink support
 
 Census:
     - Implement GUI census creation
