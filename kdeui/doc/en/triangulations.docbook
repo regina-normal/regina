@@ -720,32 +720,74 @@
     presents information regarding the combinatorial structure of the
     triangulation.
    </para>
-   <para>
-    If the triangulation and/or its underlying 3-manifold can be
-    identified, these will be reported.  In addition, the program will
-    search for a variety of standard subcomplexes within the
-    triangulation.  If any of these subcomplexes are found, these too
-    will be reported along with precise details of where they occur.
-   </para>
-   <para>
-    Most of the subcomplexes that are identified are
-    described in detail in Burton's PhD thesis
-    <xref linkend="bib-burton-phd"/> which is available from the
-    &regwebsite;.  These descriptions can be quite laborious, and will
-    not be repeated here.
-   </para>
-   <screenshot>
-    <screeninfo>Viewing the combinatorial composition</screeninfo>
-    <mediaobject>
-     <imageobject>
-      <imagedata fileref="composition.png"/>
-     </imageobject>
-     <textobject>
-      <phrase>Viewing the combinatorial composition</phrase>
-     </textobject>
-     <caption><para>Viewing the combinatorial composition</para></caption>
-    </mediaobject>
-   </screenshot>
+
+   <sect3 id="tri-composition-isomorphism">
+    <title>Isomorphism / Subcomplex Tests</title>
+    <para>
+     At the top of the composition tab is an area for performing
+     isomorphism and subcomplex tests.  A drop-down box is provided in
+     which a second triangulation <replaceable>T</replaceable> can be
+     selected.  Each time a new triangulation <replaceable>T</replaceable>
+     is chosen, an isomorphism / subcomplex test is performed.
+    </para>
+    <para>
+     Specifically, the program tests for any of the following
+     relationships:
+     <itemizedlist>
+      <listitem><para>
+       this triangulation and <replaceable>T</replaceable> are isomorphic;
+      </para></listitem>
+      <listitem><para>
+       this triangulation is isomorphic to a subcomplex of
+       <replaceable>T</replaceable>;
+      </para></listitem>
+      <listitem><para>
+       <replaceable>T</replaceable> is isomorphic to a subcomplex of
+       this triangulation.
+      </para></listitem>
+     </itemizedlist>
+     The relationship (if any) is reported alongside the drop-down
+     box.  Furthermore, if a relationship does exist then the adjacent
+     <guibutton>Details</guibutton> button can be pressed to obtain a
+     precise mapping of tetrahedra and tetrahedron vertices
+     corresponding to this isomorphism.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-composition-composition">
+    <title>Triangulation Composition</title>
+    <para>
+     Forming the lower portion of the composition tab is a large region
+     in which further details of the triangulation composition and the
+     underlying 3-manifold are displayed.
+    </para>
+    <para>
+     If the triangulation and/or its underlying 3-manifold can be
+     identified, these are reported.  In addition, the program
+     searches for a variety of standard subcomplexes within the
+     triangulation.  If any of these subcomplexes are found, these too
+     are reported along with precise details of where they occur.
+    </para>
+    <para>
+     Most of the subcomplexes that are identified are
+     described in detail in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/> which is available from the
+     &regwebsite;.  These descriptions can be quite laborious and will
+     not be repeated here.
+    </para>
+    <screenshot>
+     <screeninfo>Viewing the triangulation composition</screeninfo>
+     <mediaobject>
+      <imageobject>
+       <imagedata fileref="composition.png"/>
+      </imageobject>
+      <textobject>
+       <phrase>Viewing the triangulation composition</phrase>
+      </textobject>
+      <caption><para>Viewing the triangulation composition</para></caption>
+     </mediaobject>
+    </screenshot>
+   </sect3>
   </sect2>
 
   <sect2 id="tri-surfaceproperties">
