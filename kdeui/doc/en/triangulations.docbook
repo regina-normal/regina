@@ -777,7 +777,12 @@
     <para>
      Forming the lower portion of the composition tab is a large region
      in which further details of the triangulation composition and the
-     underlying 3-manifold are displayed.
+     underlying 3-manifold are displayed.  Presented here is all the
+     information that &regina; can deduce simply by searching for
+     well-structured features within the triangulation that it can
+     recognise.  Some triangulations can be completely identified;
+     others (frequently poorly-structured non-minimal triangulations)
+     yield little or no useful information at all.
     </para>
     <para>
      If the triangulation and/or its underlying 3-manifold can be
@@ -1145,6 +1150,86 @@
     A new triangulation will be created in which the surface has been
     crushed.  The original triangulation will not be changed.
    </para>
+  </sect2>
+ </sect1>
+
+ <sect1 id="tri-decomposition">
+  <title>Decomposition</title>
+
+  <para>
+   Recall the analysis of <link linkend="tri-composition">combinatorial
+   composition</link> described earlier.  This analysis simply involves
+   searching for well-structured features that &regina; can recognise
+   within a triangulation.  For triangulations without any particularly
+   nice structure, the combinatorial composition may give no information
+   at all (many non-minimal triangulations are like this).
+  </para>
+
+  <para>
+   Here we describe some more complete decomposition tools that are
+   available.  These decomposition tools are guaranteed to work on any
+   triangulation, regardless of whether it is minimal and/or
+   particularly well-structured.  The trade-off is that these
+   decomposition tools often make heavy use of normal surfaces and can
+   be quite slow for larger triangulations.
+  </para>
+
+  <sect2 id="tri-decomposition-component">
+   <title>Component Decomposition</title>
+
+   <para>
+    &regina; can work with disconnected triangulations as well as
+    connected triangulations.  It may be desirable at times to break a
+    large disconnected triangulation into smaller separate triangulations
+    for its individual components.  For this operation the
+    <menuchoice>
+     <guimenu>Docked Packet</guimenu>
+     <guimenuitem>Extract Components</guimenuitem>
+    </menuchoice>
+    menu item can be used.
+   </para>
+   <para>
+    Each (connected) component triangulation will be inserted as a new
+    triangulation beneath the original in the packet tree.  The
+    original triangulation will remain unchanged.
+   </para>
+   <para>
+    Unlike most of the decomposition algorithms described in this
+    section, component decomposition is very fast and should perform
+    without problems for very large triangulations.
+   </para>
+  </sect2>
+
+  <sect2 id="tri-decomposition-connsum">
+   <title>Connected Sum Decomposition</title>
+
+   <para>
+    For closed orientable connected 3-manifold triangulations,
+    &regina; can in fact completely decompose the triangulation into a
+    connected sum of prime 3-manifolds.
+    The algorithm used is essentially the 0-efficiency algorithm of
+    Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>, which in turn
+    relies upon Rubinstein's 3-sphere recognition algorithm
+    <xref linkend="bib-rubin-3sphere1"/> <xref linkend="bib-rubin-3sphere2"/>.
+   </para>
+
+   <para>
+    This decomposition can be performed using the
+    <menuchoice>
+     <guimenu>Docked Packet</guimenu>
+     <guimenuitem>Connected Sum Decomposition</guimenuitem>
+    </menuchoice>
+    menu item.  As before, a smaller prime triangulation for each
+    summand will be inserted beneath the original triangulation in
+    the packet tree, with the original triangulation remaining unchanged.
+    It is guaranteed that each of the smaller prime triangulations will
+    be 0-efficient (i.e., will have no non-vertex-linking normal spheres).
+   </para>
+
+   <warning><para>
+    This procedure involves an analysis of normal surfaces and can be
+    very slow for large triangulations.
+   </para></warning>
   </sect2>
  </sect1>
 </chapter>
