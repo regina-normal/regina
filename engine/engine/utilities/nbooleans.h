@@ -143,6 +143,9 @@ class NTriBool {
          * That is, true is equal to true and false is equal to false.
          * Unknown is equal to neither true nor false.
          *
+         * \ifacespython Not present, to avoid accidental integer
+         * conversions in Python.
+         *
          * @param other the standard boolean to compare with this.
          * @return \c true if and only if this and the given value are
          * equal.
@@ -167,6 +170,9 @@ class NTriBool {
          * That is, true is equal to true and false is equal to false.
          * Unknown is equal to neither true nor false.
          *
+         * \ifacespython Not present, to avoid accidental integer
+         * conversions in Python.
+         *
          * @param other the standard boolean to compare with this.
          * @return \c true if and only if this and the given value are
          * different.
@@ -183,6 +189,9 @@ class NTriBool {
         /**
          * Sets this three-way boolean to be identical to the given
          * standard boolean.
+         *
+         * \ifacespython Not present, to avoid accidental integer
+         * conversions in Python.
          *
          * @param cloneMe the value to assign to this object.
          * @return a reference to this object.
@@ -202,6 +211,9 @@ class NTriBool {
          * Unknown is handled in the intuitive way.  For instance,
          * (unknown or true) is true, and (unknown or false) is unknown.
          *
+         * \ifacespython Not present, to avoid accidental integer
+         * conversions in Python.
+         *
          * @param other the value to combine with this value.
          * @return a reference to this object.
          */
@@ -219,6 +231,9 @@ class NTriBool {
          * Sets this to be the conjunction of this and the given value.
          * Unknown is handled in the intuitive way.  For instance,
          * (unknown and true) is unknown, and (unknown and false) is false.
+         *
+         * \ifacespython Not present, to avoid accidental integer
+         * conversions in Python.
          *
          * @param other the value to combine with this value.
          * @return a reference to this object.
@@ -238,6 +253,9 @@ class NTriBool {
          * Unknown is handled in the intuitive way.  For instance,
          * (unknown or true) is true, and (unknown or false) is unknown.
          *
+         * \ifacespython Not present, to avoid accidental integer
+         * conversions in Python.
+         *
          * @param other the value to combine with this value.
          * @return the disjunction of this and the given value.
          */
@@ -255,6 +273,9 @@ class NTriBool {
          * Returns the conjunction of this and the given value.
          * Unknown is handled in the intuitive way.  For instance,
          * (unknown and true) is unknown, and (unknown and false) is false.
+         *
+         * \ifacespython Not present, to avoid accidental integer
+         * conversions in Python.
          *
          * @param other the value to combine with this value.
          * @return the conjunction of this and the given value.
