@@ -12,11 +12,6 @@ Copyright:
   You are free to distribute this software under the terms of
   the GNU General Public License.
 
-  It is hereby explicitly allowed that this software may be run
-  with any implementation of the core Java classes (the classes that
-  implement the official Java API) without the GPL applying to that
-  implementation of the core Java classes.
-
 On Debian GNU/Linux systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL'.
 
