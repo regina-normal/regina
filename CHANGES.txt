@@ -23,6 +23,8 @@ Version 3.1  [ (under development) ]
         Class NFacePairing, NGluingPerms:
             - Added to bear the brunt of census generation.
             - Massive optimisations throughout census code.
+        Class NIndexedArray:
+            - Added routine validate().
         Class NLensSpace, NSFS:
             - Added getCommonName().
         Class NPerm:
