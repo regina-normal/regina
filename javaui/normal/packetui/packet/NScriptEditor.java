@@ -682,6 +682,12 @@ public class NScriptEditor extends DefaultPacketEditor {
      */
     private static class NoneVariable implements Variable {
         /**
+         * Creates a new variable.
+         */
+        public NoneVariable() {
+        }
+
+        /**
          * Provides a string representation of this value.
          *
          * @return a string representation of this value.
@@ -749,6 +755,12 @@ public class NScriptEditor extends DefaultPacketEditor {
      */
     private static class VariableRenderer extends DefaultListCellRenderer {
         /**
+         * Creates a new renderer.
+         */
+        public VariableRenderer() {
+        }
+
+        /**
          * Returns the component to be used to draw the given variable
          * value.
          */
@@ -771,6 +783,12 @@ public class NScriptEditor extends DefaultPacketEditor {
      * associated with this script.
      */
     private class VariablesTableModel extends AbstractTableModel {
+        /**
+         * Creates a new table model.
+         */
+        public VariablesTableModel() {
+        }
+
         /**
          * Returns the number of rows in the table.
          *
