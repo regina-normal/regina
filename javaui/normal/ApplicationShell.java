@@ -32,6 +32,7 @@ import java.applet.Applet;
 import java.awt.Frame;
 import java.awt.event.*;
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.Properties;
 import normal.engine.Engine;
 import normal.options.NormalOptionSet;
@@ -64,6 +65,11 @@ public class ApplicationShell extends Shell {
      * appropriate.
      */
     private ActionListener helpViewer = null;
+
+    /**
+     * The JavaHelp method used to set a context sensitive help ID.
+     */
+    private Method setHelpIDMethod = null;
 
     /**
      * Creates a new program shell for a standalone application.
@@ -323,12 +329,41 @@ public class ApplicationShell extends Shell {
                 return;
             }
             try {
-                if (helpViewer == null)
-                    helpViewer = new javax.help.CSH.DisplayHelpFromSource(
-                        (javax.help.HelpBroker)getHelpBroker());
+                // Check we have the methods we'll need.
+                if (setHelpIDMethod == null) {
+                    Class[] params = {
+                        java.awt.Component.class, java.lang.String.class
+                    };
+                    setHelpIDMethod = ClassLoader.getSystemClassLoader().
+                        loadClass("javax.help.CSH").getMethod(
+                        "setHelpIDString", params);
+                }
+
+                // Create a new help viewer if necessary.
+                if (helpViewer == null) {
+                    Class displayHelpClass = ClassLoader.getSystemClassLoader().
+                        loadClass("javax.help.CSH$DisplayHelpFromSource");
+                    Class[] createParams = {
+                        ClassLoader.getSystemClassLoader().loadClass(
+                            "javax.help.HelpBroker")
+                    };
+                    Constructor construct =
+                        displayHelpClass.getConstructor(createParams);
+                    Object[] createArgs = {
+                        getHelpBroker()
+                    };
+                    helpViewer =
+                        (ActionListener)construct.newInstance(createArgs);
+                }
+
+                // Prepare to jump to the correct help page.
                 Frame frame = getPrimaryFrame();
-                javax.help.CSH.setHelpIDString(frame,
-                    id == null ? "index" : id);
+                Object[] setIDArgs = {
+                    frame, id == null ? "index" : id
+                };
+                setHelpIDMethod.invoke(null, setIDArgs);
+
+                // Open the help page.
                 helpViewer.actionPerformed(new ActionEvent(frame, 0, ""));
             } catch (Throwable th) {
                 error("An error occurred whilst trying to browse " +

@@ -31,6 +31,7 @@ package normal;
 import java.applet.Applet;
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.*;
 import java.net.URL;
 import java.util.*;
 import javax.swing.*;
@@ -515,14 +516,40 @@ public abstract class Shell {
 
         // Open up the help set.
         try {
-            URL url = javax.help.HelpSet.findHelpSet(null,
-                Application.helpSetLoc);
-            foundJavaHelp = true;
             // Doesn't matter if a null pointer exception is raised in
-            // the following lines, due to the try-catch blocks.
-            if (url != null)
-                helpBroker =
-                    new javax.help.HelpSet(null, url).createHelpBroker();
+            // the following code, due to the try-catch blocks.
+
+            // Find the HelpSet class.
+            Class cHelpSet = ClassLoader.getSystemClassLoader().loadClass(
+                "javax.help.HelpSet");
+
+            // Get the URL of the documentation help set.
+            Class[] findParams = {
+                java.lang.ClassLoader.class, java.lang.String.class
+            };
+            Method method = cHelpSet.getMethod("findHelpSet", findParams);
+            Object[] findArgs = {
+                null, Application.helpSetLoc
+            };
+            URL url = (URL)method.invoke(null, findArgs);
+                
+            foundJavaHelp = true;
+
+            if (url != null) {
+                // Create a new help set.
+                Class[] createParams = {
+                    java.lang.ClassLoader.class, java.net.URL.class
+                };
+                Constructor construct = cHelpSet.getConstructor(createParams);
+                Object[] createArgs = {
+                    null, url
+                };
+                Object helpSet = construct.newInstance(createArgs);
+
+                // Create the help broker.
+                method = helpSet.getClass().getMethod("createHelpBroker", null);
+                helpBroker = method.invoke(helpSet, null);
+            }
         } catch (Throwable th) {
         }
 

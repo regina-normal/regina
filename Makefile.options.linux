@@ -66,7 +66,6 @@ export CLASSPATH_SEP := :
 #
 # BTOOLS: Location of btools.jar (containing the BTools utility classes).
 # JYTHON: Location of jython.jar (containing the Jython classes).
-# JAVAHELP: Location of jh.jar (containing the JavaHelp classes).
 # EXTRA_CLASSES: Locations of any other necessary classes, separated by
 #       the classpath separator as described above.  If your Java VM or
 #       compiler needs to know where the core Java classes are, this is
@@ -74,7 +73,6 @@ export CLASSPATH_SEP := :
 
 export BTOOLS := /usr/share/java/libbtools-java.jar
 export JYTHON := /usr/share/java/jython.jar
-export JAVAHELP := /usr/local/javahelp/javahelp/lib/jh.jar
 #export EXTRA_CLASSES :=
 	# (Most Java compilers already know where their base classes are.)
 export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar

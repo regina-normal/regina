@@ -41,6 +41,8 @@ Regina - A Normal Surface Theory Calculator
         normal.Application:
             - Moved fileExtension member into normal.mainui.FilePane subclasses.
         normal.Shell:
+            - Dynamically finds JavaHelp classes so JavaHelp is not
+              necessary for compilation.
             - Cleanly handles missing runtime options file.
             - Added a registry of all open Jython consoles.
         normal.algorithm:

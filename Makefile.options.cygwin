@@ -65,13 +65,11 @@ export CLASSPATH_SEP := ;
 #
 # BTOOLS: Location of btools.jar (containing the BTools utility classes).
 # JYTHON: Location of jython.jar (containing the Jython classes).
-# JAVAHELP: Location of jh.jar (containing the JavaHelp classes).
 # EXTRA_CLASSES: Locations of any other necessary classes, separated by
 #       the classpath separator as described above.
 
 export BTOOLS := c:\cygwin\usr\local\java\jar\btools.jar
 export JYTHON := c:\cygwin\usr\local\java\jar\jython.jar
-export JAVAHELP := c:\cygwin\usr\local\java\jar\jh.jar
 export EXTRA_CLASSES :=
 
 # Specify here the commands with options for running various tools.

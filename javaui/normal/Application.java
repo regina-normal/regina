@@ -144,7 +144,7 @@ public class Application extends Applet implements ActionListener {
     public static final String optionsFile = "regina.opt";
 
     /**
-     * Location of the default help set.
+     * Location of the default help set in the documentation jar.
      */
     public static final String helpSetLoc = "normal/docs/regina.hs";
 
