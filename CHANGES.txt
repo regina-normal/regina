@@ -79,9 +79,11 @@ Version 3.0  [ (under development) ]
     JAVA USER INTERFACE:
         Overall structure:
             - Incorporated engine enhancements listed above.
-        Class JNIShareableObject:
+        normal.engine.implementation.jni.JNIShareableObject:
             - Added static method sameCppPtr() which is necessary when
               using gcc3.
+        normal.exports:
+            - Added class ReginaBinaryExporter.
 
 Version 2.4  [ 4 April, 2002 ]
     OVERALL:
