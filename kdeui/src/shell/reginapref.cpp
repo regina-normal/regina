@@ -102,6 +102,9 @@ ReginaPrefFile::ReginaPrefFile(QWidget* parent) : QVBox(parent) {
 
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
     new QLabel(i18n("Python scripting is not yet implemented."), this);
+
+    // Add some space at the end.
+    setStretchFactor(new QWidget(this), 1);
 }
 
 #include "reginapref.moc"
