@@ -196,7 +196,7 @@ void ReginaPart::hasUndocked(PacketPane* undockedPane) {
 bool ReginaPart::openFile() {
     if (packetTree)
         delete packetTree;
-    packetTree = regina::readFileMagic(m_file.latin1());
+    packetTree = regina::readFileMagic(m_file.ascii());
 
     if (packetTree) {
         treeView->fill(packetTree);
@@ -671,7 +671,7 @@ void ReginaPart::initPacketTree() {
     if (packetTree)
         delete packetTree;
     packetTree = new regina::NContainer();
-    packetTree->setPacketLabel(i18n("Container").latin1());
+    packetTree->setPacketLabel(i18n("Container").ascii());
 
     // Update the visual representation.
     treeView->fill(packetTree);
