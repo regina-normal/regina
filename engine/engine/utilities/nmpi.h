@@ -38,6 +38,26 @@
 #include <gmp.h>
 #include <iostream>
 
+/**
+ * \hideinitializer
+ *
+ * A local copy of the GMP signed comparison optimisations.
+ * This macro should not be used outside this class.
+ *
+ * By making our own copy of such optimisation macros we can use
+ * C++-style casts instead of C-style casts and avoid noisy compiler
+ * warnings.  I'd love a better way of doing this.
+ */
+#ifdef __GNUC__
+    #define mpz_cmp_si_cpp(z, si) \
+        (__builtin_constant_p(si) && (si) == 0 ? mpz_sgn(z) : \
+        __builtin_constant_p(si) && (si) > 0 ? _mpz_cmp_ui(z, \
+            static_cast<unsigned long>(si)) : \
+        _mpz_cmp_si(z, si))
+#else
+    #define mpz_cmp_si_cpp(z, si) _mpz_cmp_si(z, si)
+#endif
+
 namespace regina {
 
 /**
@@ -667,7 +687,7 @@ inline bool NLargeInteger::operator ==(const NLargeInteger& compareTo) const {
         mpz_cmp(data, compareTo.data) == 0));
 }
 inline bool NLargeInteger::operator ==(long compareTo) const {
-    return ((! infinite) && mpz_cmp_si(data, compareTo) == 0);
+    return ((! infinite) && mpz_cmp_si_cpp(data, compareTo) == 0);
 }
 inline bool NLargeInteger::operator !=(const NLargeInteger& compareTo) const {
     return (((! infinite) || (! compareTo.infinite)) &&
@@ -675,35 +695,35 @@ inline bool NLargeInteger::operator !=(const NLargeInteger& compareTo) const {
         mpz_cmp(data, compareTo.data) != 0));
 }
 inline bool NLargeInteger::operator !=(long compareTo) const {
-    return (infinite || mpz_cmp_si(data, compareTo) != 0);
+    return (infinite || mpz_cmp_si_cpp(data, compareTo) != 0);
 }
 inline bool NLargeInteger::operator <(const NLargeInteger& compareTo) const {
     return ((! infinite) &&
         (compareTo.infinite || mpz_cmp(data, compareTo.data) < 0));
 }
 inline bool NLargeInteger::operator <(long compareTo) const {
-    return ((! infinite) && mpz_cmp_si(data, compareTo) < 0);
+    return ((! infinite) && mpz_cmp_si_cpp(data, compareTo) < 0);
 }
 inline bool NLargeInteger::operator >(const NLargeInteger& compareTo) const {
     return ((! compareTo.infinite) &&
         (infinite || mpz_cmp(data, compareTo.data) > 0));
 }
 inline bool NLargeInteger::operator >(long compareTo) const {
-    return (infinite || mpz_cmp_si(data, compareTo) > 0);
+    return (infinite || mpz_cmp_si_cpp(data, compareTo) > 0);
 }
 inline bool NLargeInteger::operator <=(const NLargeInteger& compareTo) const {
     return (compareTo.infinite ||
         ((! infinite) && mpz_cmp(data, compareTo.data) <= 0));
 }
 inline bool NLargeInteger::operator <=(long compareTo) const {
-    return ((! infinite) && mpz_cmp_si(data, compareTo) <= 0);
+    return ((! infinite) && mpz_cmp_si_cpp(data, compareTo) <= 0);
 }
 inline bool NLargeInteger::operator >=(const NLargeInteger& compareTo) const {
     return (infinite ||
         ((! compareTo.infinite) && mpz_cmp(data, compareTo.data) >= 0));
 }
 inline bool NLargeInteger::operator >=(long compareTo) const {
-    return (infinite || mpz_cmp_si(data, compareTo) >= 0);
+    return (infinite || mpz_cmp_si_cpp(data, compareTo) >= 0);
 }
 
 inline NLargeInteger NLargeInteger::operator +(const NLargeInteger& other)
@@ -736,7 +756,7 @@ inline NLargeInteger NLargeInteger::operator /(const NLargeInteger& other)
         return infinity;
     if (other.infinite)
         return zero;
-    if (mpz_cmp_si(other.data, 0) == 0)
+    if (mpz_sgn(other.data) == 0)
         return infinity;
     NLargeInteger ans;
     mpz_tdiv_q(ans.data, data, other.data);
@@ -811,7 +831,7 @@ inline NLargeInteger& NLargeInteger::operator /=(const NLargeInteger& other) {
     if (! infinite) {
         if (other.infinite)
             (*this) = zero;
-        else if (mpz_cmp_si(other.data, 0) == 0)
+        else if (mpz_sgn(other.data) == 0)
             infinite = true;
         else
             mpz_tdiv_q(data, data, other.data);
