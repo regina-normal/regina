@@ -1,0 +1,24 @@
+<tip category="Regina">
+<html>
+<p>
+Each piece of information stored in a topology data file is called a
+<i>packet</i>.  There are many different types of packets: containers,
+triangulations, normal surface lists, text items and more.
+<p>
+Packets are arranged in a tree (displayed on the left hand side of the
+main window), so each packet may &lquot;contain&rquot; several other
+packets.  This allows you to store large amounts of data in an organised
+fashion.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+Each time a packet is opened in the main window, the <i>Docked
+Packet</i> menu is filled with actions appropriate to the packet type.
+<p>
+For instance, when a triangulation is opened, the <i>Docked Packet</i>
+menu contains actions such as barycentric subdivision and connected sum
+decomposition.
+</html>
+</tip>

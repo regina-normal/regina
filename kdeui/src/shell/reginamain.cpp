@@ -56,6 +56,7 @@
 #include <ktexteditor/document.h>
 #include <ktexteditor/editorchooser.h>
 #include <ktexteditor/view.h>
+#include <ktip.h>
 #include <kurl.h>
 
 unsigned ReginaMain::objectNumber = 1;
@@ -296,6 +297,10 @@ void ReginaMain::optionsPreferences() {
     dlg.exec();
 }
 
+void ReginaMain::helpTipOfDay() {
+    KTipDialog::showTip(this, QString::null, true);
+}
+
 /*
 void ReginaMain::changeStatusbar(const QString& text) {
     statusBar()->message(text);
@@ -352,6 +357,8 @@ void ReginaMain::setupActions() {
     // Help:
     new KAction(i18n("&Python Reference"), "python_console", 0, this,
         SLOT(pythonReference()), actionCollection(), "help_engine");
+    new KAction(i18n("&Tip of the Day"), "idea", 0, this,
+        SLOT(helpTipOfDay()), actionCollection(), "help_tipofday");
 
     // All done!  Build the GUI.
     createGUI(0);

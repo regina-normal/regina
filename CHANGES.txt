@@ -25,10 +25,10 @@ Version 4.1  [ 29 February, 2004 ]
             - New Seifert fibred space constructions insertAugTriSolidTorus()
               and insertSFSOverSphere().
     USER INTERFACE:
-        General:
-            - Updated the .desktop file and mimetype tests to work correctly
-              with KDE 3.2.
-            - Added more icons for triangulation actions.
+        - Updated the .desktop file and mimetype tests to work correctly
+          with KDE 3.2.
+        - Added tip-of-the-day support.
+        - Added more icons for triangulation actions.
     UTILITIES:
         tricensus:
             - Fixed bug in which --genpairs created empty output files.

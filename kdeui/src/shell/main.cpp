@@ -33,6 +33,7 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
+#include <ktip.h>
 
 static KCmdLineOptions options[] = {
     { "+[URL]", I18N_NOOP("Document to open."), 0 },
@@ -72,6 +73,9 @@ int main(int argc, char **argv) {
         }
         args->clear();
     }
+
+    // Show a tip of the day if appropriate.
+    KTipDialog::showTip();
 
     // Run the application.
     return app.exec();

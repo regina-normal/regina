@@ -34,12 +34,15 @@
 #include "reginapref.h"
 
 #include <kcombobox.h>
+#include <kconfig.h>
 #include <kfiledialog.h>
+#include <kglobal.h>
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <ktip.h>
 #include <qcheckbox.h>
 #include <qheader.h>
 #include <qlabel.h>
@@ -154,6 +157,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
 
+    generalPrefs->cbTipOfDay->setChecked(
+        KConfigGroup(KGlobal::config(), "TipOfDay").
+        readBoolEntry("RunOnStart", true));
+
     triPrefs->comboEditMode->setCurrentItem(
         prefSet.triEditMode == ReginaPrefSet::DirectEdit ? 0 : 1);
 
@@ -222,6 +229,7 @@ void ReginaPreferences::slotApply() {
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
     prefSet.displayIcon = generalPrefs->cbDisplayIcon->isChecked();
     prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
+    KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
 
     uintVal = generalPrefs->editTreeJumpSize->text().toUInt(&ok);
     if (ok && uintVal > 0)
@@ -337,6 +345,11 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QVBox(parent) {
         "or Jump Down is selected.");
     QWhatsThis::add(label, msg);
     QWhatsThis::add(editTreeJumpSize, msg);
+
+    // More options.
+    cbTipOfDay = new QCheckBox(i18n("Show tip of the day"), this);
+    QWhatsThis::add(cbTipOfDay, i18n("Show a tip of the day each time "
+        "Regina is started."));
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);

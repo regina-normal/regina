@@ -12,6 +12,7 @@ engine documentation.
 General:
     - Make "configure shortcuts" work with the part as well as with the shell
     + More "What's This?" texts, including a what's this button on the toolbar
+    + More tips of the day.
     * Include an index of common tasks in the reference manual
     - Enhance the DCOP interface
 

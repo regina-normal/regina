@@ -29,6 +29,7 @@
   <Menu name="settings"/>
   <Menu name="help">
     <Action name="help_engine"/>
+    <Action name="help_tipofday"/>
   </Menu>
 </MenuBar>
 
