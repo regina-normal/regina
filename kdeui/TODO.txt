@@ -12,6 +12,7 @@ engine documentation.
 General:
     - Make "configure shortcuts" work with the part as well as with the shell
     - Enhance the DCOP interface
+    * Add a whats-this button in the window decorations.
     * Observing some serious problems with vimpart, as well as with
       katepart word wrapping.
 
