@@ -45,7 +45,8 @@ if (defined $ENV{DEB_BUILD_OPTIONS} &&
 }
 else {
   $enable_debug="--disable-debug";
-  $enable_final="--enable-final";
+  # $enable_final="--enable-final";
+  $enable_final="";
 }
 
 if (@ARGV && $ARGV[0] eq 'echodirs') {
