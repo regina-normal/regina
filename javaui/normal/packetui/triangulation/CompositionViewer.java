@@ -120,7 +120,7 @@ public class CompositionViewer extends DefaultPacketViewer
         String nodeText;
         long n, m, i, j, k;
 
-        // Look for lens spaces.
+        // Look for layered lens spaces.
         category = null;
         NLayeredLensSpace lens;
         NLayeredSolidTorus torus;
@@ -129,7 +129,7 @@ public class CompositionViewer extends DefaultPacketViewer
             lens = engine.isLayeredLensSpace(triangulation.getComponent(i));
             if (lens != null) {
                 if (category == null) {
-                    category = new DefaultMutableTreeNode("Lens Spaces");
+                    category = new DefaultMutableTreeNode("Layered Lens Spaces");
                     rootNode.add(category);
                 }
                 instance = new DefaultMutableTreeNode("L(" +
