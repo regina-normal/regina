@@ -543,15 +543,149 @@
 
  <sect1 id="surfaces-filtering">
   <title>Filtering</title>
-  <!-- TODO: Document surface filters. -->
 
   <para>
-   Documentation for normal surface filters has yet to be written.
+   Sometimes you are faced with a very long list of surfaces from which
+   you wish to extract just the tori, or just the discs, or some other
+   subset of surfaces described by one or more simple constraints.
+   For tasks such as these, surface filters can be used.
   </para>
   <para>
-   Meanwhile, have a play around with creating filter packets or take a
-   look at the <link linkend="tutorial">sample data files</link>
-   included in the &regina; distribution.
+   A surface filter essentially represents some series of tests that can
+   be performed upon a surface.  Tests can include a variety of easily
+   calculable properties such as orientability and Euler characteristic.
+   At its most basic level, a surface filter is a device that either
+   accepts or rejects each surface that is passed through it.
   </para>
+  <para>
+   Each surface filter is stored as a separate packet in the packet tree.
+   Details of the types of filter that can be created are discussed
+   in the <link linkend="surfaces-filtering-creating">following
+   section</link>.
+  </para>
+  <para>
+   To restrict a normal surface list according to some filter, open the
+   surface list <link linkend="surfaces-viewsurfacecoords">coordinate
+   viewer</link> where the entire list of surfaces is displayed.
+   Above the table of coordinates is a drop-down box filled with the
+   available filters.  If a filter is selected from this
+   box then the surface list is restricted to include only those
+   surfaces that the selected filter accepts.  To remove the filter, select
+   the <guilabel>None</guilabel> option from this same drop-down box.
+  </para>
+
+  <sect2 id="surfaces-filtering-creating">
+   <title>Creating Filters</title>
+
+   <para>
+    Filters are created through the
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New Filter</guimenuitem>
+    </menuchoice>
+    menu item (or the corresponding toolbar button).  The following types
+    of filter are available.
+   </para>
+
+   <sect3 id="surfaces-filterprop">
+    <title>Filter by Properties</title>
+
+    <para>
+     A property-based filter allows surfaces to be restricted according
+     to a variety of easily calculable properties.
+    </para>
+    <para>
+     To be accepted a surface must satisfy all of the restrictions listed
+     in the filter.  For instance, if a filter restricts by
+     orientability (allow orientable surfaces only), by compactness
+     (allow compact surfaces only) and also
+     by Euler characteristic (allow Euler characteristic 1 only), then
+     the filter will accept normal discs and nothing else.
+    </para>
+    <para>
+     The properties by which surfaces can be restricted are as follows.
+     <variablelist>
+      <varlistentry>
+       <term>Orientability</term>
+       <listitem><para>
+        This restriction can be used to only allow orientable surfaces
+        or only allow non-orientable surfaces.
+       </para></listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>Compactness</term>
+       <listitem><para>
+        This restriction can be used to only allow compact surfaces
+        (i.e., surfaces with finitely many discs) or only allow
+        non-compact surfaces (e.g., spun normal surfaces).
+       </para></listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>Boundary</term>
+       <listitem><para>
+        This restriction can be used to only allow surfaces with real
+        boundary edges or only allow surfaces with no real boundary edges.
+        Note that spun normal surfaces, though they are not closed, do
+        not have real boundary edges.
+       </para></listitem>
+      </varlistentry>
+      <varlistentry>
+       <term>Euler Characteristic</term>
+       <listitem><para>
+        This restriction can be used to only allow surfaces whose Euler
+        characteristic belongs to a given list.
+       </para></listitem>
+      </varlistentry>
+     </variablelist>
+    </para>
+   </sect3>
+
+   <sect3 id="surfaces-filtercomb">
+    <title>Combination Filter</title>
+
+    <para>
+     A combination filter is a high-level filter that combines some
+     other group of filters using boolean <literal>AND</literal> or
+     <literal>OR</literal>.  The combination filter will combine all
+     packet filters found directly beneath it in the packet tree.
+    </para>
+    <para>
+     For instance, to create a filter that accepts either discs or tori,
+     you can create a <link linkend="surfaces-filterprop">property
+     filter</link> for discs and another property filter for tori.
+     These are both placed within the packet tree directly beneath
+     a boolean <literal>OR</literal> combination filter, as
+     illustrated in the following screenshot.
+    </para>
+    <screenshot>
+     <screeninfo>A sample combination filter</screeninfo>
+     <mediaobject>
+      <imageobject>
+       <imagedata fileref="filtercombeg.png"/>
+      </imageobject>
+      <textobject>
+       <phrase>A sample combination filter</phrase>
+      </textobject>
+      <caption><para>A sample combination filter</para></caption>
+     </mediaobject>
+    </screenshot>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="filtercombtree.png" align="right"/>
+      </imageobject>
+     </inlinemediaobject>
+     Note that a combination filter will only combine its immediate children.
+     Suppose for instance that a combination filter
+     <replaceable>C</replaceable> has child filters
+     <replaceable>P</replaceable> and <replaceable>Q</replaceable>,
+     and that <replaceable>Q</replaceable> in turn has child filters
+     <replaceable>X</replaceable> and <replaceable>Y</replaceable>,
+     as illustrated in the diagram to the right.
+     Then <replaceable>C</replaceable> forms a boolean combination of
+     <replaceable>P</replaceable> and <replaceable>Q</replaceable> only.
+    </para>
+   </sect3>
+  </sect2>
  </sect1>
 </chapter>
