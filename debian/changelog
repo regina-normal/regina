@@ -1,6 +1,7 @@
-regina-normal (3.1.1-1) unstable; urgency=low
+regina-normal (3.2-1) unstable; urgency=low
 
-  * Current development snapshot.
+  * New upstream release.
+  * Bumped standards-version to 3.5.10.
 
  -- Ben Burton <bab@debian.org>  Tue,  4 Feb 2003 15:04:50 +1100
 
