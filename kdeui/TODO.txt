@@ -1,19 +1,20 @@
 KDE User Interface TODO List
 ----------------------------
 
-No proper TODO list will be kept for the KDE UI until it reaches a somewhat
-usable state.
+Note that this TODO list pertains only to the user interface; there is
+also a calculation engine TODO list found under "Related Pages" in the
+engine documentation.
 
 Icons:
-	Softer borders for regina.png
-	Softer tree for filter_comb.png
-	Icons for separate New actions
+    Softer borders for regina.png
+    Softer tree for filter_comb.png
+    Icons for separate New actions
 
 Toolbars:
-	Disable "configure toolbars" until delayed icon loading is fixed in
-		kdelibs
-	Work out how on earth to get file_close on the toolbar
-	Work out how to get decent action names in the configure toolbar dialog
+    Disable "configure toolbars" until delayed icon loading is fixed in
+        kdelibs
+    Work out how on earth to get file_close on the toolbar
+    Work out how to get decent action names in the configure toolbar dialog
 
 General:
-	Make "configure shortcuts" work with the part as well
+    Make "configure shortcuts" work with the part as well

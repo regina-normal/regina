@@ -1,10 +1,7 @@
-Regina - KDE User Interface
----------------------------
+Regina KDE User Interface Directory
+-----------------------------------
 
-This KDE user interface will eventually replace the Java user interface.
-At the moment it is in an embryonic stage and should not be used.  For
-now try the Java user interface instead.
+This directory tree contains the C++ sources for the KDE user interface.
 
-Ben Burton (bab@debian.org)
-http://regina.sourceforge.net/
+This user interface requires KDE version 3 or above.
 
