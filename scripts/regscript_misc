@@ -10,7 +10,11 @@ read_regscript_misc=1
 
 # Classpath separator.
 # This should be ":" under linux/unix environments and ";" under windows.
-cps=":"
+if [ "$OSTYPE" = "cygwin" ]; then
+	cps=";"
+else
+	cps=":"
+fi
 
 # Address to which questions should be emailed.
 support="Ben Burton <benb@acm.org>"
