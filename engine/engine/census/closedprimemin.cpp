@@ -161,10 +161,13 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         orderDone++;
     }
 
+    // Record the number of one-ended chains.
+
+    unsigned nChains = orderDone;
+
     // Continue by following each one-ended chain whose base was
     // identified in the previous loop.
 
-    unsigned nChains = orderDone;
     unsigned i;
     int tet;
     NTetFace dest1, dest2;
@@ -213,7 +216,12 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         }
     }
 
-    // Run now through the remaining faces.
+    // Record the number of edges in the face pairing graph
+    // belonging to one-ended chains.
+
+    unsigned nChainEdges = orderDone;
+
+    // Run through the remaining faces.
     for (face.setFirst(); ! face.isPastEnd(nTets, true); face++)
         if (! orderAssigned[face.tet * 4 + face.face]) {
             order[orderDone] = face;
@@ -232,19 +240,129 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
             orderAssigned[adj.tet * 4 + adj.face] = true;
         }
 
+    // ---------- Calculating the possible gluing permutations ----------
+
+    // For each face in the order[] array of type EDGE_CHAIN_END or
+    // EDGE_CHAIN_INTERNAL_FIRST, we calculate the two gluing permutations
+    // that must be tried.
+    //
+    // For each face of type EDGE_CHAIN_INTERNAL_SECOND, the gluing
+    // permutation can be derived from the permutation chosen for the
+    // previous face (of type EDGE_CHAIN_INTERNAL_FIRST); in this case we
+    // calculate the two permutations for this face that correspond to
+    // the two possible permutations for the previous face.
+    //
+    // For the remaining faces we try all possible permutations.
+    //
+    // TODO: Include optimisations for the second permutation of an
+    // arbitrary double edge.
+
+    int* chainPermIndices = (nChainEdges == 0 ? 0 :
+        new int[nChainEdges * 2]);
+
+    NFacePair facesAdj, comp, compAdj;
+    NPerm trial1, trial2;
+    for (i = 0; i < nChainEdges; i++) {
+        if (orderType[i] == EDGE_CHAIN_END) {
+            faces = NFacePair(order[i].face, pairing->dest(order[i]).face);
+            comp = faces.complement();
+
+            // order[i].face == faces.lower(),
+            // pairing->dest(order[i]).face == faces.upper().
+            chainPermIndices[2 * i] = gluingToIndex(order[i],
+                NPerm(faces.lower(), faces.upper(),
+                      faces.upper(), comp.lower(),
+                      comp.lower(), comp.upper(),
+                      comp.upper(), faces.lower()));
+            chainPermIndices[2 * i + 1] = gluingToIndex(order[i],
+                NPerm(faces.lower(), faces.upper(),
+                      faces.upper(), comp.upper(),
+                      comp.upper(), comp.lower(),
+                      comp.lower(), faces.lower()));
+        } else if (orderType[i] == EDGE_CHAIN_INTERNAL_FIRST) {
+            faces = NFacePair(order[i].face, order[i + 1].face);
+            comp = faces.complement();
+            facesAdj = NFacePair(pairing->dest(order[i]).face,
+                pairing->dest(order[i + 1]).face);
+            compAdj = facesAdj.complement();
+
+            // order[i].face == faces.lower(),
+            // order[i + 1].face == faces.upper(),
+            // pairing->dest(order[i]).face == facesAdj.lower().
+            // pairing->dest(order[i + 1]).face == facesAdj.upper().
+            trial1 = NPerm(faces.lower(), facesAdj.lower(),
+                           faces.upper(), compAdj.lower(),
+                           comp.lower(), compAdj.upper(),
+                           comp.upper(), facesAdj.upper());
+            trial2 = NPerm(faces.lower(), facesAdj.lower(),
+                           faces.upper(), compAdj.upper(),
+                           comp.lower(), compAdj.lower(),
+                           comp.upper(), facesAdj.upper());
+            if (trial1.compareWith(trial2) < 0) {
+                chainPermIndices[2 * i] = gluingToIndex(order[i], trial1);
+                chainPermIndices[2 * i + 2] = gluingToIndex(order[i + 1],
+                    NPerm(faces.lower(), compAdj.upper(),
+                          faces.upper(), facesAdj.upper(),
+                          comp.lower(), facesAdj.lower(),
+                          comp.upper(), compAdj.lower()));
+            } else {
+                chainPermIndices[2 * i] = gluingToIndex(order[i], trial2);
+                chainPermIndices[2 * i + 2] = gluingToIndex(order[i + 1],
+                    NPerm(faces.lower(), compAdj.lower(),
+                          faces.upper(), facesAdj.upper(),
+                          comp.lower(), facesAdj.lower(),
+                          comp.upper(), compAdj.upper()));
+            }
+
+            trial1 = NPerm(faces.lower(), facesAdj.lower(),
+                           faces.upper(), compAdj.lower(),
+                           comp.lower(), facesAdj.upper(),
+                           comp.upper(), compAdj.upper());
+            trial2 = NPerm(faces.lower(), facesAdj.lower(),
+                           faces.upper(), compAdj.upper(),
+                           comp.lower(), facesAdj.upper(),
+                           comp.upper(), compAdj.lower());
+            if (trial1.compareWith(trial2) < 0) {
+                chainPermIndices[2 * i + 1] = gluingToIndex(order[i], trial1);
+                chainPermIndices[2 * i + 3] = gluingToIndex(order[i + 1],
+                    NPerm(faces.lower(), compAdj.upper(),
+                          faces.upper(), facesAdj.upper(),
+                          comp.lower(), compAdj.lower(),
+                          comp.upper(), facesAdj.lower()));
+            } else {
+                chainPermIndices[2 * i + 1] = gluingToIndex(order[i], trial2);
+                chainPermIndices[2 * i + 3] = gluingToIndex(order[i + 1],
+                    NPerm(faces.lower(), compAdj.lower(),
+                          faces.upper(), facesAdj.upper(),
+                          comp.lower(), compAdj.upper(),
+                          comp.upper(), facesAdj.lower()));
+            }
+        }
+    }
+
     // ---------- Selecting the individual gluing permutations ----------
+
+    // Observe that in a canonical face pairing, one-ended chains always
+    // follow an increasing sequence of tetrahedra from boundary to end,
+    // or follow the sequence of tetrahedra 0, 1, ..., k from end to
+    // boundary.
+    //
+    // In particular, this means that for any tetrahedron not internal
+    // to a one-ended chain (with the possible exception of tetrahedron
+    // order[nChainEdges].tet), face 0 of this tetrahedron is not
+    // involved in a one-ended chain.
 
     // Initialise the internal arrays.
     //
-    // In this generation algorithm, the orientation array counts
-    // forwards or backwards from zero according to how many times the
-    // orientation has been set/verified.
+    // In this generation algorithm, each orientation is simply +/-1.
+    // We won't bother assigning orientations to the tetrahedra internal
+    // to the one-ended chains.
     std::fill(orientation, orientation + nTets, 0);
     std::fill(permIndices, permIndices + nTets * 4, -1);
 
     int orderElt = 0;
-    orientation[order[0].tet] = 1;
-    bool canonical;
+    orientation[order[nChainEdges].tet] = 1;
+    bool canonical, generic;
     std::list<NIsomorphismDirect*>::const_iterator it;
     while (orderElt >= 0) {
         face = order[orderElt];
@@ -252,20 +370,46 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
 
         // TODO: Check for cancellation.
 
-        // When moving to the next permutation, be sure to preserve the
-        // orientation of the permutation if necessary.
-        if (orientation[(*pairing)[face].tet] == 0)
-            permIndex(face)++;
-        else
-            permIndex(face) += 2;
+        // Move to the next permutation.
+        if (orderType[orderElt] == EDGE_CHAIN_END ||
+                orderType[orderElt] == EDGE_CHAIN_INTERNAL_FIRST) {
+            // Choose from one of the two permutations stored in array
+            // chainPermIndices[].
+            generic = false;
+            if (permIndex(face) < 0)
+                permIndex(face) = chainPermIndices[2 * orderElt];
+            else if (permIndex(face) == chainPermIndices[2 * orderElt])
+                permIndex(face) = chainPermIndices[2 * orderElt + 1];
+            else
+                permIndex(face) = 6;
+        } else if (orderType[orderElt] == EDGE_CHAIN_INTERNAL_SECOND) {
+            // The permutation is predetermined.
+            generic = false;
+            if (permIndex(face) < 0) {
+                if (permIndex(order[orderElt - 1]) ==
+                        chainPermIndices[2 * orderElt - 2])
+                    permIndex(face) = chainPermIndices[2 * orderElt];
+                else
+                    permIndex(face) = chainPermIndices[2 * orderElt + 1];
+            } else
+                permIndex(face) = 6;
+        } else {
+            // Generic case.
+            generic = true;
 
+            // Be sure to preserve the orientation of the permutation if
+            // necessary.
+            if ((! orientableOnly) || pairing->dest(face).face == 0)
+                permIndex(face)++;
+            else
+                permIndex(face) += 2;
+        }
+
+        // Are we out of ideas for this face?
         if (permIndex(face) >= 6) {
-            // Out of ideas for this face.
             // Head back down to the previous face.
             permIndex(face) = -1;
-            face--;
-            while ((! face.isBeforeStart()) && pairing->dest(face) < face)
-                face--;
+            orderElt--;
             continue;
         }
 
@@ -273,11 +417,15 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         permIndex(adj) = allPermsS3Inv[permIndex(face)];
 
         // Is this going to lead to an unwanted triangulation?
-        if (mayPurge(face, NCensus::PURGE_NON_MINIMAL_PRIME, true, true))
+        if (mayPurge(face, NCensus::PURGE_NON_MINIMAL_PRIME |
+                NCensus::PURGE_P2_REDUCIBLE, orientableOnly, true))
             continue;
+        if (! orientableOnly)
+            if (badEdgeLink(face))
+                continue;
 
         // Fix the orientation if appropriate.
-        if (adj.face == 0) {
+        if (generic && adj.face == 0) {
             // It's the first time we've hit this tetrahedron.
             if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
                     (adj.face == 3 ? 0 : 1)) % 2 == 0)
@@ -290,7 +438,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (face.tet == static_cast<int>(nTets)) {
+        if (orderElt == static_cast<int>(nTets) * 2) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             canonical = true;
@@ -307,21 +455,24 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
                 use(this, useArgs);
 
             // Back to the previous face.
-            face--;
-            while ((! face.isBeforeStart()) && pairing->dest(face) < face)
-                face--;
-        } else if (pairing->dest(face).face > 0) {
+            orderElt--;
+        } else {
+            // We've moved onto a new face.
             // Be sure to get the orientation right.
-            if (orientation[face.tet] == orientation[pairing->dest(face).tet])
-                permIndex(face) = 1;
-            else
-                permIndex(face) = 0;
+            face = order[orderElt];
+            if (orientableOnly && pairing->dest(face).face > 0) {
+                // permIndex(face) will be set to -1 or -2 as appropriate.
+                adj = (*pairing)[face];
+                if (orientation[face.tet] == orientation[adj.tet])
+                    permIndex(face) = 1;
+                else
+                    permIndex(face) = 0;
 
-            if ((face.face == 3 ? 0 : 1) +
-                    (pairing->dest(face).face == 3 ? 0 : 1) == 1)
-                permIndex(face) = (permIndex(face) + 1) % 2;
+                if ((face.face == 3 ? 0 : 1) + (adj.face == 3 ? 0 : 1) == 1)
+                    permIndex(face) = (permIndex(face) + 1) % 2;
 
-            permIndex(face) -= 2;
+                permIndex(face) -= 2;
+            }
         }
     }
 
@@ -330,6 +481,8 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
     delete[] order;
     delete[] orderType;
     delete[] orderAssigned;
+    if (chainPermIndices)
+        delete[] chainPermIndices;
 
     use(0, useArgs);
 }
