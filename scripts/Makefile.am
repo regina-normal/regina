@@ -14,3 +14,5 @@ scripts_DATA = README.txt \
   regscript_opt \
   regscript_readopts
 
+EXTRA_DIST = $(scripts_DATA)
+

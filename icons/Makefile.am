@@ -15,3 +15,5 @@ icons_DATA = README.txt \
   reginatiny-lo.xpm \
   reginatiny.gif reginatiny.ico reginatiny.png reginatiny.xpm
 
+EXTRA_DIST = $(icons_DATA)
+

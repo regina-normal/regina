@@ -11,3 +11,5 @@ pylibdir = $(pkgdatadir)/pylib
 pylib_DATA = README.txt \
   packetType.py
 
+EXTRA_DIST = $(pylib_DATA)
+
