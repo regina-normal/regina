@@ -828,7 +828,7 @@
     An elementary move will never change the topology of the
     3-manifold.  The individual moves and their restrictions are
     described in full detail in the <classname>NTriangulation</classname>
-    class notes in the calculation engine documentation,
+    class notes in the &regenginedocs;,
     and most are described with diagrams in Burton's PhD thesis
     <xref linkend="bib-burton-phd"/> which is available from the
     &regwebsite;.  A brief summary is provided below.
@@ -987,7 +987,7 @@
     of slicing along the surface, and in some cases might
     introduce ideal vertices or even invalid edges.  For details see
     <function><classname>NNormalSurface</classname>::crush()</function>
-    in the calculation engine documentation.
+    in the &regenginedocs;.
    </para>
    <para>
     A normal surface can be crushed as follows.

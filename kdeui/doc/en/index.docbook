@@ -28,6 +28,8 @@
     </para>">
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
+  <!ENTITY regenginedocs
+   "<link linkend='python-python'>calculation engine documentation</link>">
 
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">

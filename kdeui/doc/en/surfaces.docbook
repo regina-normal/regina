@@ -5,7 +5,7 @@
  <para>
   <inlinemediaobject>
    <imageobject>
-    <imagedata fileref="largeicon.png" align="right"/>
+    <imagedata fileref="reginawhite.png" align="right"/>
    </imageobject>
   </inlinemediaobject>
   The primary motivation for originally writing &regina; was to create a
@@ -33,29 +33,28 @@
   three possible types of octahedral disc.
  </para>
  <para>
-  Normal surfaces are represented as integer vectors indictaing how many
+  Normal surfaces are represented as integer vectors indicating how many
   discs of each type in each tetrahedron are used to make up the surface.
  </para>
  <para>
-  A summary of normal surface theory that should cover enough to use this
-  program can be found in <link linkend="bib-burton-phd">Ben Burton's
-  PhD thesis</link>
-  (see the <link linkend="bibliography">bibliography</link>).
+  A summary of enough normal surface theory to use this
+  program can be found in Burton's PhD thesis
+  <xref linkend="bib-burton-phd"/>, available from the &regwebsite;.
  </para>
 
- <warning>
+ <note>
   <para>
-   A normal surface list in the packet tree <emphasis>must</emphasis> be a
+   A normal surface list in the packet tree must be a
    child packet of the triangulation in which the surfaces are contained.
   </para>
   <para>
    Furthermore, since each normal surface is stored as a vector relative
-   to the triangulation's tetrahedra, a triangulation cannot be changed
-   once it has a child normal surface list packet.  If you wish to edit
+   to the triangulation's tetrahedra, a triangulation cannot be modified
+   once it has a normal surface list as a child.  If you wish to edit
    such a triangulation, try cloning the packet (excluding descendants so
    the normal surfaces are not cloned as well) and edit the clone instead.
   </para>
- </warning>
+ </note>
 
  <sect1 id="surfaces-creation">
   <title>Creation</title>
@@ -63,33 +62,32 @@
   <para>
    A new list of normal surfaces can be created through the
    <menuchoice>
-    <guimenu>Packet</guimenu>
-    <guisubmenu>New</guisubmenu>
-    <guimenuitem>Normal Surface List</guimenuitem>
+    <guimenu>Packet Tree</guimenu>
+    <guimenuitem>New Normal Surface List</guimenuitem>
    </menuchoice>
-   menu item.
+   menu item (or the corresponding toolbar button).
   </para>
   <para>
    Only <firstterm>vertex normal surfaces</firstterm> will be placed in
-   the new list; all other normal surfaces can be formed as non-negative
-   linear combinations of these vertex surfaces.
+   the new list; all other normal surfaces can be formed as convex
+   combinations of these vertex surfaces.
   </para>
   <para>
    Before the normal surface list is created, you will be asked for some
    additional details as follows.
    <glosslist>
     <glossentry>
-     <glossterm>Derive From</glossterm>
+     <glossterm>Create beneath</glossterm>
      <glossdef>
       <para>
        Here you must select the triangulation that will contain the new
-       normal surfaces.  This triangulation should be some packet in
-       the packet tree.
+       normal surfaces (this must be a triangulation already in
+       the packet tree).
       </para>
      </glossdef>
     </glossentry>
     <glossentry>
-     <glossterm>Coordinates</glossterm>
+     <glossterm>Coordinate system</glossterm>
      <glossdef>
       <para>
        Here you must select the coordinate system in which the normal
@@ -105,19 +103,19 @@
       <para>
        Note that this coordinate system refers only to creation; you will
        be able to view these normal surfaces in a variety of different
-       coordinate systems.
+       coordinate systems later on.
       </para>
       <para>
        Note also that this choice of coordinate system will affect which
        normal surfaces are produced.  For instance, quad normal
-       coordinates produce spun normal surfaces (which standard normal
-       coordinates do not), and standard normal coordinates produce vertex
-       links (which quad normal coordinates do not).
+       coordinates produce spun normal surfaces which standard normal
+       coordinates do not, and standard normal coordinates produce vertex
+       links which quad normal coordinates do not.
       </para>
      </glossdef>
     </glossentry>
     <glossentry>
-     <glossterm>Embedded Surfaces Only</glossterm>
+     <glossterm>Embedded surfaces only</glossterm>
      <glossdef>
       <para>
        Here you must specify whether the search should be restricted to
@@ -140,13 +138,13 @@
   <title>Analysis</title>
 
   <para>
-   Various properties of the normal surfaces that form a surface list
+   Several properties of a normal surface list and its individual surfaces
    are available; most of these properties can be viewed by clicking on the
    different tabs in the normal surface list viewer.
   </para>
 
   <sect2 id="surfaces-viewlistprops">
-   <title>Basic Surface List Properties</title>
+   <title>List Properties</title>
 
    <para>
     Above all of the tabs in the surface list viewer are displayed some
@@ -156,10 +154,12 @@
       a count of the total number of vertex normal surfaces contained within;
      </para></listitem>
      <listitem><para>
-      a reminder of whether or not the original surface search was restricted
+      a reminder of how the surface list was
+      originally created, including the coordinate system used and
+      whether or not the search was restricted
       to embedded surfaces only.  Note that this does
-      <emphasis>not</emphasis> actually look at the surfaces in the list
-      - an unrestricted search might have only produced embedded
+      not actually look at the surfaces in the list
+      &ndash; an unrestricted search might have only produced embedded
       surfaces, but this reminder will still say
       <literal>embedded/immersed/singular</literal>.
      </para></listitem>
@@ -172,14 +172,14 @@
 
    <para>
     The <guilabel>Surface Coordinates</guilabel> tab in the surface list
-    viewer contains a table of all the individual vertex surfaces that form
+    viewer contains a table of all the vertex surfaces that form
     this list.  Each surface is presented as a vector in some underlying
     coordinate system (this coordinate system is displayed immediately
     above the table).
    </para>
    <para>
-    Each row of this table represents an individual normal surface.
-    The left few columns of the table contain various miscellaneous surface
+    Each row of this table represents a single normal surface.
+    The left few columns of the table contain various surface
     properties (see the <link
     linkend="surfaces-viewsurfaceprops">individual surface properties</link>
     section below).  The remaining columns contain the actual surface
@@ -190,17 +190,17 @@
     surfaces, simply select a new coordinate system from the drop-down
     box above the table.  Note that this will <emphasis>not</emphasis>
     regenerate the vertex normal surfaces in the new coordinate system;
-    it will simply rewrite the surfaces that you already have in the new
+    it will simply redisplay the surfaces that you already have in the new
     system.  So, for instance, if a spun surface is created during a quad
     space search and the surfaces are viewed in standard (tri-quad)
-    coordinates, this spun surface will remain in the table with
+    coordinates, this spun surface will be redisplayed in the table with
     triangular coordinates of infinity.  Furthermore, vertex links (which
-    are not found during a quad space search) will not suddenly appear
-    in the list.
+    are not found during a quad space search) will not all of a sudden
+    appear in the list.
    </para>
    <para>
     The meanings of the individual coordinate columns in the table
-    depend upon the underlying coordinate system and are described below.
+    depend upon the underlying coordinate system as follows.
     <glosslist>
      <glossentry>
       <glossterm>Standard normal (tri-quad) coordinates</glossterm>
@@ -283,7 +283,7 @@
        </para>
        <para>
         Edge numbers and the tetrahedron edges/vertices to which they
-        correspond can be found in the skeleton section of the
+        correspond can be seen in the skeleton section of the
         <link linkend="tri-vertexedgeface">triangulation viewer</link>.
        </para>
       </glossdef>
@@ -304,7 +304,7 @@
        </para>
        <para>
         Face numbers and the tetrahedron faces/vertices to which they
-        correspond can be found in the skeleton section of the
+        correspond can be seen in the skeleton section of the
         <link linkend="tri-vertexedgeface">triangulation viewer</link>.
        </para>
       </glossdef>
@@ -319,9 +319,8 @@
    <para>
     As described in the
     <link linkend="surfaces-viewsurfacecoords">surface coordinates</link>
-    section above, the <guilabel>Surface Coordinates</guilabel> tab in the
-    surface list viewer contains a table of every vertex
-    surface contained in this list.
+    section above, the <guilabel>Surface Coordinates</guilabel> tab
+    presents a table of all of the normal surfaces in the list.
    </para>
    <para>
     The left few columns of this table contain a variety of surface
@@ -337,9 +336,9 @@
       <glossterm>Name</glossterm>
       <glossdef>
        <para>
-        Individual surfaces can be optionally named to help keep track of
-        additional properties that have been derived by hand.  Surface
-        names do not need to be unique.
+        Individual surfaces can be optionally named by the user
+        to help keep track of which surface is which.
+        Surface names are not used by &regina;, and do not need to be unique.
        </para>
        <para>
         To rename a surface, just click on the corresponding table cell
@@ -375,35 +374,35 @@
      <glossentry>
       <glossterm>Link</glossterm>
       <glossdef><para>
-       If a normal surface (or a rational multiple of that surface)
+       If a normal surface or a rational multiple of that surface
        is recognised as being a link of any interesting subcomplexes
-       in the triangulation, these subcomplexes will be listed in
-       this column.  The following links are currently recognised.
+       within the triangulation, these subcomplexes will be listed here.
+       The following links are currently recognised.
        <glosslist>
         <glossentry>
          <glossterm>Vertex</glossterm>
          <glossdef><para>
-          Indicates that the surface is an individual vertex link.
+          Indicates that the surface is a vertex link.
           The corresponding vertex number in the triangulation will be
           listed.
          </para>
          <para>
           Vertex numbers and the tetrahedron vertices to which they
-          correspond can be found in the skeleton section of the
+          correspond can be seen in the skeleton section of the
           <link linkend="tri-vertexedgeface">triangulation viewer</link>.
          </para></glossdef>
         </glossentry>
         <glossentry>
          <glossterm>Thin Edge</glossterm>
          <glossdef><para>
-          Indicates that the surface is an individual thin edge link.
+          Indicates that the surface is a thin edge link.
           The corresponding edge number(s) in the triangulation will be
           listed.  Note that a surface might be both the link of one thin
           edge and also (independently) the link of another thin edge.
          </para>
          <para>
           Edge numbers and the tetrahedron edges/vertices to which they
-          correspond can be found in the skeleton section of the
+          correspond can be seen in the skeleton section of the
           <link linkend="tri-vertexedgeface">triangulation viewer</link>.
          </para></glossdef>
         </glossentry>
@@ -425,16 +424,16 @@
         Note that this column will only ever contain
         <literal>Yes</literal> or <literal>Unknown</literal>, according
         to whether the surface can with certainty be crushed or whether
-        the program cannot deduce this result on its own.
+        the program cannot deduce the answer on its own.
        </para>
       </glossdef>
      </glossentry>
      <glossentry>
       <glossterm>Type</glossterm>
       <glossdef><para>
-       If a normal surface is recognised as playing a particular role in
-       the triangulation, that role will be listed in this column.  At
-       most one such role will be displayed for any particular surface.
+       If a normal surface is recognised as playing a particular role
+       within the triangulation, that role will be listed in this column.
+       At most one such role will be displayed for any particular surface.
        The following roles are currently recognised.
        <glosslist>
         <glossentry>
@@ -458,13 +457,14 @@
    <para>
     The <guilabel>Matching Equations</guilabel> tab in the surface list
     viewer contains a table of the individual matching equations that
-    were used to form this list of vertex surfaces.
+    were used to form this list.
    </para>
    <para>
     The matching equations are presented in the coordinate system that
     was used to originally create this surface list (see the
     <link linkend="surfaces-creation">surface list creation reference</link>).
-    This coordinate system is displayed immediately above the table.
+    This coordinate system is displayed above all of the tabs in the
+    surface list viewer.
    </para>
    <para>
     Each row of this table represents an individual matching equation.
@@ -492,23 +492,26 @@
    <title>Crushing a Surface</title>
    <para>
     A normal surface can be crushed to a point in the underlying
-    triangulation using the <guibutton>Crush</guibutton> button
-    under the <guilabel>Surface Coordinates</guilabel> tab in the
-    surface list viewer.  Simply select the surface to crush in the
-    surface table and press this <guibutton>Crush</guibutton> button.
+    triangulation by selecting the surface within the table
+    and invoking the
+    <menuchoice>
+     <guimenu>Docked Packet</guimenu>
+     <guimenuitem>Crush</guimenuitem>
+    </menuchoice>
+    menu item.
    </para>
    <para>
-    The original triangulation will not be changed; a new triangulation with
-    the corresponding surface crushed will appear as a child packet of this
-    surface list.
+    The original triangulation will not be changed; a new triangulation
+    in which the selected surface has been crushed
+    will appear as a child packet of this surface list.
    </para>
    <para>
     Note that crushing a normal surface might change the topology of the
     underlying 3-manifold (beyond the simple act of slicing along the
     surface) and in some cases might introduce ideal vertices
     or even invalid edges.  For details see
-    <ulink url="engine/classregina_1_1NNormalSurface.html"><function><classname>NNormalSurface</classname>::crush()</function></ulink>
-    in the calculation engine documentation.
+    <function><classname>NNormalSurface</classname>::crush()</function>
+    in the &regenginedocs;.
    </para>
   </sect2>
   <sect2>
@@ -539,14 +542,16 @@
  </sect1>
 
  <sect1 id="surfaces-filtering">
-  <title>Filtering (INCOMPLETE)</title>
+  <title>Filtering</title>
+  <!-- TODO: Document surface filters. -->
 
   <para>
-   Documentation for normal surface filters is still to be written.
+   Documentation for normal surface filters has yet to be written.
   </para>
   <para>
-   Meanwhile have a play around with creating filter packets, or take a
-   look at the sample data files included in the &regina; distribution.
+   Meanwhile, have a play around with creating filter packets or take a
+   look at the <link linkend="tutorial">sample data files</link>
+   included in the &regina; distribution.
   </para>
  </sect1>
 </chapter>
