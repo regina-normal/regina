@@ -77,8 +77,6 @@ class NSnappedTwoSphere : public ShareableObject {
         /**
          * Returns a newly created clone of this structure.
          *
-         * \ifaces This routine is named \a cloneMe.
-         *
          * @return a newly created clone.
          */
         NSnappedTwoSphere* clone() const;
@@ -91,7 +89,7 @@ class NSnappedTwoSphere : public ShareableObject {
          * this must be either 0 or 1.
          * @return the corresponding snapped 3-ball.
          */
-        NSnappedBall* getSnappedBall(int index) const;
+        const NSnappedBall* getSnappedBall(int index) const;
         /**
          * Cuts along the 2-sphere and fills the two new boundary components
          * with 3-balls.  The number of tetrahedra in the triangulation
@@ -124,8 +122,6 @@ class NSnappedTwoSphere : public ShareableObject {
          *
          * \pre The two given tetrahedra are distinct.
          *
-         * \ifaces This routine is a member of class Engine.
-         *
          * @param tet1 the first tetrahedron to examine.
          * @param tet2 the second tetrahedron to examine.
          * @return a newly created structure containing details of the
@@ -143,8 +139,6 @@ class NSnappedTwoSphere : public ShareableObject {
          * original 3-balls, not the original 3-balls themselves.
          *
          * \pre The two given snapped 3-balls use distinct tetrahedra.
-         *
-         * \ifaces This routine is a member of class Engine.
          *
          * @param ball1 the first snapped 3-ball to examine.
          * @param ball2 the second snapped 3-ball to examine.
@@ -173,7 +167,7 @@ inline NSnappedTwoSphere::NSnappedTwoSphere() {
 inline NSnappedTwoSphere::~NSnappedTwoSphere() {
     delete ball[0]; delete ball[1];
 }
-inline NSnappedBall* NSnappedTwoSphere::getSnappedBall(int index) const {
+inline const NSnappedBall* NSnappedTwoSphere::getSnappedBall(int index) const {
     return ball[index];
 }
 inline void NSnappedTwoSphere::writeTextShort(std::ostream& out) const {

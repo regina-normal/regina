@@ -96,8 +96,6 @@ class NLensSpace : public ShareableObject {
          * the same 3-manifold.  Note that this may be true even if they
          * were initialised with different parameters.
          *
-         * \ifaces This routine is named \a isEquivalentTo.
-         *
          * @param compare the Lens space with which this will be compared.
          * @return \c true if and only if this and the given Lens space
          * are homeomorphic.

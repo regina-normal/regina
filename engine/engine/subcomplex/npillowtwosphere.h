@@ -77,8 +77,6 @@ class NPillowTwoSphere : public ShareableObject {
         /**
          * Returns a newly created clone of this structure.
          *
-         * \ifaces This routine is named \a cloneMe.
-         *
          * @return a newly created clone.
          */
         NPillowTwoSphere* clone() const;
@@ -136,8 +134,6 @@ class NPillowTwoSphere : public ShareableObject {
          * 2-sphere.
          *
          * \pre The two given faces are distinct.
-         *
-         * \ifaces This routine is a member of class Engine.
          *
          * @param face1 the first face to examine.
          * @param face2 the second face to examine.

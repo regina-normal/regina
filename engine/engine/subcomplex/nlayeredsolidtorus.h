@@ -98,8 +98,6 @@ class NLayeredSolidTorus : public ShareableObject {
         /**
          * Returns a newly created clone of this structure.
          *
-         * \ifaces This routine is named \a cloneMe.
-         *
          * @return a newly created clone.
          */
         NLayeredSolidTorus* clone() const;
@@ -254,8 +252,6 @@ class NLayeredSolidTorus : public ShareableObject {
          * Note that the base tetrahedron of a layered solid torus is the
          * tetrahedron furthest from the boundary of the torus, i.e. the
          * tetrahedron glued to itself with a twist.
-         *
-         * \ifaces This routine is a member of class Engine.
          *
          * @param tet the tetrahedron to examine as a potential base.
          * @return a newly created structure containing details of the

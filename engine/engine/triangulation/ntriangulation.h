@@ -305,6 +305,11 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * There is no need to call gluingsHaveChanged() after calling
          * this function.
          *
+         * \ifacespython Since this triangulation takes ownership
+         * of the given tetrahedron, the python object containing the
+         * given tetrahedron becomes a null object and should no longer
+         * be used.
+         *
          * @param tet the tetrahedron to insert.
          */
         void addTetrahedron(NTetrahedron* tet);

@@ -52,8 +52,6 @@ class NLensSpace;
 /**
  * Represents an exceptional (<i>alpha</i>, <i>beta</i>) fibre in a Seifert
  * fibred space.  The first parameter \a alpha will always be non-negative.
- *
- * \ifaces Not present.
  */
 struct NExceptionalFibre {
     long alpha;
@@ -209,8 +207,6 @@ class NSFS : public ShareableObject {
          * Modifies this Seifert fibred space to be a clone of the given
          * space.
          *
-         * \ifaces Not present.
-         *
          * @param cloneMe the Seifert fibred space to clone.
          */
         void operator = (const NSFS& cloneMe);
@@ -256,11 +252,6 @@ class NSFS : public ShareableObject {
          * fibres will be in standard form, as described in the general
          * class notes.
          *
-         * \ifaces This routine is replaced with the two routines
-         * <tt>getAlpha(index)</tt> and <tt>getBeta(index)</tt>, each
-         * returning a <tt>long</tt>, which return the first and second
-         * parameters of the requested fibre respectively.
-         *
          * @param which determines which fibre to return; this must be between
          * 0 and getFibreCount()-1 inclusive.
          * @return the requested fibre.
@@ -285,10 +276,6 @@ class NSFS : public ShareableObject {
          * hell may break loose further down the track.
          * \pre The first parameter of the given fibre (its index) must be
          * non-negative.
-         *
-         * \ifaces Parameter \a fibre is replaced by two <tt>long</tt>
-         * parameters \a alpha and \a beta representing the two
-         * parameters of the new fibre.
          */
         void insertFibre(const NExceptionalFibre& fibre);
 

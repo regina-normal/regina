@@ -97,8 +97,6 @@ class NTriSolidTorus : public ShareableObject {
         /**
          * Returns a newly created clone of this structure.
          *
-         * \ifaces This routine is named \a cloneMe.
-         *
          * @return a newly created clone.
          */
         NTriSolidTorus* clone() const;
@@ -162,8 +160,6 @@ class NTriSolidTorus : public ShareableObject {
          * <tt>index+2</tt> will be <tt>getVertexRoles(index+2) * roleMap *
          * getVertexRoles(index+1).inverse()</tt>.
          *
-         * \ifaces Not present.
-         *
          * @param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
          * @param roleMap a pointer to a permutation that, if this
@@ -198,8 +194,6 @@ class NTriSolidTorus : public ShareableObject {
          * torus (this correspondence is determined by the previous
          * identifications).
          *
-         * \ifaces Not present.
-         *
          * @param otherAnnulus the annulus on the solid torus boundary
          * \a not to be examined; this must be 0, 1 or 2.
          * @return the number of tetrahedra in the layered chain if the
@@ -233,8 +227,6 @@ class NTriSolidTorus : public ShareableObject {
          * the previous identifications; the axis edge between the two
          * annuli will be identified to both of the others in reverse).
          *
-         * \ifaces Not present.
-         *
          * @param otherAnnulus the annulus on the solid torus boundary
          * \a not to be examined; this must be 0, 1 or 2.
          * @return the number of tetrahedra in the layered chain if the
@@ -246,8 +238,6 @@ class NTriSolidTorus : public ShareableObject {
          * Determines if the given tetrahedron forms part of a
          * three-tetrahedron triangular solid torus with its vertices
          * playing the given roles in the solid torus.
-         *
-         * \ifaces This routine is a member of class Engine.
          *
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each

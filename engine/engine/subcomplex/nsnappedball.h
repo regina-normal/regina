@@ -62,8 +62,6 @@ class NSnappedBall : public ShareableObject {
         /**
          * Returns a newly created clone of this structure.
          *
-         * \ifaces This routine is named \a cloneMe.
-         *
          * @return a newly created clone.
          */
         NSnappedBall* clone() const;
@@ -117,8 +115,6 @@ class NSnappedBall : public ShareableObject {
          * within a triangulation.  The ball need not be the entire
          * triangulation; the boundary faces may be glued to something
          * else (or to each other).
-         *
-         * \ifaces This routine is a member of class Engine.
          *
          * @param tet the tetrahedron to examine as a potential 3-ball.
          * @return a newly created structure containing details of the

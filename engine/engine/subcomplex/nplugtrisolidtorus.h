@@ -136,8 +136,6 @@ class NPlugTriSolidTorus : public ShareableObject {
         /**
          * Returns a newly created clone of this structure.
          *
-         * \ifaces This routine is named \a cloneMe.
-         *
          * @return a newly created clone.
          */
         NPlugTriSolidTorus* clone() const;
@@ -210,8 +208,6 @@ class NPlugTriSolidTorus : public ShareableObject {
         /**
          * Determines if the given triangulation is a
          * plugged triangular solid torus.
-         *
-         * \ifaces This routine is a member of class Engine.
          *
          * @param tri the triangulation to examine.
          * @return a newly created structure containing details of the

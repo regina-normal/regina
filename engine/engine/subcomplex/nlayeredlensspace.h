@@ -77,8 +77,6 @@ class NLayeredLensSpace : public ShareableObject {
         /**
          * Returns a newly created clone of this structure.
          *
-         * \ifaces This routine is named \a cloneMe.
-         *
          * @return a newly created clone.
          */
         NLayeredLensSpace* clone() const;
@@ -134,8 +132,6 @@ class NLayeredLensSpace : public ShareableObject {
         /**
          * Determines if the given triangulation component is a layered
          * lens space.
-         *
-         * \ifaces This routine is a member of class Engine.
          *
          * @param comp the triangulation component to examine.
          * @return a newly created structure containing details of the

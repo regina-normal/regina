@@ -102,8 +102,6 @@ class NSpiralSolidTorus : public ShareableObject {
         /**
          * Returns a newly created clone of this structure.
          *
-         * \ifaces This routine is named \a cloneMe.
-         *
          * @return a newly created clone.
          */
         NSpiralSolidTorus* clone() const;
@@ -211,8 +209,6 @@ class NSpiralSolidTorus : public ShareableObject {
          * Determines if the given tetrahedron forms part of a
          * spiralled solid torus with its vertices
          * playing the given roles in the solid torus.
-         *
-         * \ifaces This routine is a member of class Engine.
          *
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each
