@@ -85,7 +85,7 @@
       </para>
      </glossdef>
     </glossentry>
-    <glossentry>
+    <glossentry id="surfaces-selectcoords">
      <glossterm>Coordinate system</glossterm>
      <glossdef>
       <para>
@@ -118,7 +118,7 @@
       </para>
      </glossdef>
     </glossentry>
-    <glossentry>
+    <glossentry id="surfaces-embeddedonly">
      <glossterm>Embedded surfaces only</glossterm>
      <glossdef>
       <para>
@@ -206,7 +206,7 @@
     The meanings of the individual coordinate columns in the table
     depend upon the underlying coordinate system as follows.
     <glosslist>
-     <glossentry>
+     <glossentry id="surfaces-defstandard">
       <glossterm>Standard normal (tri-quad) coordinates</glossterm>
       <glossdef>
        <para>
@@ -246,7 +246,7 @@
        </para>
       </glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-defquad">
       <glossterm>Quad normal coordinates</glossterm>
       <glossdef>
        <para>
@@ -256,7 +256,7 @@
        </para>
       </glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-defstandardan">
       <glossterm>Standard almost normal (tri-quad-oct) coordinates</glossterm>
       <glossdef>
        <para>
@@ -275,7 +275,7 @@
        </para>
       </glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-defedgewt">
       <glossterm>Edge weight coordinates</glossterm>
       <glossdef>
        <para>
@@ -292,7 +292,7 @@
        </para>
       </glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="surfaces-deffacearc">
       <glossterm>Face arc coordinates</glossterm>
       <glossdef>
        <para>
@@ -503,7 +503,7 @@
    follows.
   </para>
 
-  <sect2>
+  <sect2 id="surfaces-crush">
    <title>Crushing a Surface</title>
    <para>
     A normal surface can be crushed to a point in the underlying
@@ -529,7 +529,7 @@
     in the &regenginedocs;.
    </para>
   </sect2>
-  <sect2>
+  <sect2 id="surfaces-cut">
    <title>Cutting Along a Surface</title>
    <para>
     Instead of crushing a surface to a point, one might wish to simply
@@ -550,7 +550,7 @@
    <para>
     But just like the waiter in Stillwater who talked us through the wine
     list before explaining he couldn't actually sell us any because it
-    was Sunday, at this point I explain that cutting along a surface is
+    was a Sunday, at this point I explain that cutting along a surface is
     not yet implemented in &regina;.  It's on the &todo; list.
    </para>
   </sect2>

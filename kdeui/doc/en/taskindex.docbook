@@ -84,7 +84,7 @@
    lookup</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
   <secondaryie><link linkend="options-surfaces">normal surface
-   creation</link></secondaryie>
+   enumeration</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
    scripting</link></secondaryie>
   <secondaryie><link linkend="options-triangulation">triangulation
@@ -94,6 +94,18 @@
  <indexentry>
   <primaryie><link linkend="man-regconvert">conversion between file
    formats</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>coordinate systems, normal surface</primaryie>
+  <secondaryie><link linkend="options-surfaces">configuring default
+   coordinate system</link></secondaryie>
+  <secondaryie><link linkend="surfaces-selectcoords">enumerating in a
+   particular coordinate system</link></secondaryie>
+  <secondaryie><link linkend="surfaces-viewsurfacecoords">explanation of
+   different coordinate systems</link></secondaryie>
+  <secondaryie><link linkend="surfaces-viewsurfacecoords">viewing in a
+   different coordinate system</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -110,6 +122,16 @@
  <indexentry>
   <primaryie><link linkend="man-regfiledump">dumping contents of a
    file</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>edge weight normal coordinates</primaryie>
+  <seeie>(see coordinate systems)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-embeddedonly">embedded normal surfaces,
+   enumerating</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -130,6 +152,11 @@
   <primaryie>examples</primaryie>
   <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>face arc normal coordinates</primaryie>
+  <seeie>(see coordinate systems)</seeie>
  </indexentry>
 
  <indexentry>
@@ -154,6 +181,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="surfaces-filtering">filtering normal surface
+   lists</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="troubleshooting">frequently asked
    questions</link></primaryie>
  </indexentry>
@@ -161,6 +193,11 @@
  <indexentry>
   <primaryie><link linkend="man-regfiletype">identifying file
    types</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-embeddedonly">immersed / singular
+   normal surfaces, enumerating</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -182,11 +219,29 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="surfaces-viewmatching">matching
+   equations for normal surfaces</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>normal surfaces</primaryie>
   <secondaryie><link linkend="options-surfaces">configuration of
    default coordinate system</link></secondaryie>
+  <secondaryie><link linkend="surfaces-crush">crushing a
+   surface</link></secondaryie>
+  <secondaryie><link linkend="surfaces-cut">cutting along a
+   surface</link></secondaryie>
+  <secondaryie><link linkend="surfaces">definition</link></secondaryie>
   <secondaryie><link linkend="surfaces-creation">enumerating vertex
    normal surfaces</link></secondaryie>
+  <secondaryie><link linkend="surfaces-viewsurfacecoords">explanation
+   of different coordinate systems</link></secondaryie>
+  <secondaryie><link linkend="surfaces-filtering">filtering surface
+   lists</link></secondaryie>
+  <secondaryie><link linkend="surfaces-viewmatching">matching
+   equations</link></secondaryie>
+  <secondaryie><link linkend="surfaces-viewsurfacecoords">viewing in a
+   different coordinate system</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -212,6 +267,11 @@
  <indexentry>
   <primaryie>&python; scripting</primaryie>
   <seeie>(see scripting)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>quad normal coordinates</primaryie>
+  <seeie>(see coordinate systems)</seeie>
  </indexentry>
 
  <indexentry>
@@ -256,10 +316,20 @@
   <seeie>(see splitting surfaces)</seeie>
  </indexentry>
 
+ <indexentry>
+  <primaryie><link linkend="surfaces-embeddedonly">singular / immersed
+   normal surfaces, enumerating</link></primaryie>
+ </indexentry>
+
  <indexentry id="idx-splitting-surfaces">
   <primaryie>splitting surfaces</primaryie>
   <secondaryie><link linkend="man-sigcensus">census of splitting
    surface signatures</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>standard normal coordinates</primaryie>
+  <seeie>(see coordinate systems)</seeie>
  </indexentry>
 
  <indexentry>
@@ -297,6 +367,16 @@
    interface</link></secondaryie>
   <secondaryie><link linkend="utils">specialised command-line
    utilities</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>vertex angle structures</primaryie>
+  <seeie>(see angle structures)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>vertex normal surfaces</primaryie>
+  <seeie>(see normal surfaces)</seeie>
  </indexentry>
 
  <indexentry>
