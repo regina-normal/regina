@@ -1,0 +1,113 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A normal surface theory calculator                           *
+ *  CORBA interface definition for computational engine                   *
+ *                                                                        *
+ *  Copyright (c) 1999-2001, Ben Burton                                   *
+ *  For further details contact Ben Burton (benb@acm.org).                *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,        *
+ *  MA 02111-1307, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+#ifndef __NTRIANGULATION_IDL
+#define __NTRIANGULATION_IDL
+
+#include "Packet/NPacket.idl"
+#include "Algebra/NAbelianGroup.idl"
+#include "Triangulation/NTetrahedron.idl"
+
+module Regina {
+	module Triangulation {
+		interface NTetrahedron;
+		interface NFace;
+		interface NEdge;
+		interface NVertex;
+		interface NComponent;
+		interface NBoundaryComponent;
+
+		interface NTriangulation : Regina::Packet::NPacket {
+			long getNumberOfTetrahedra();
+			NTetrahedron getTetrahedron(in long index);
+			long getTetrahedronIndex(in NTetrahedron tetrahedron);
+
+			void addTetrahedron(in NTetrahedron newTet);
+			void removeTetrahedronAt(in long index);
+			void removeTetrahedron(in NTetrahedron tet);
+			void removeAllTetrahedra();
+
+			void gluingsHaveChanged();
+
+			long getNumberOfComponents();
+			NComponent getComponent(in long index);
+			long getComponentIndex(in NComponent component);
+			long getNumberOfBoundaryComponents();
+			NBoundaryComponent getBoundaryComponent(in long index);
+			long getBoundaryComponentIndex(in NBoundaryComponent bc);
+			long getNumberOfVertices();
+			NVertex getVertex(in long index);
+			long getVertexIndex(in NVertex vertex);
+			long getNumberOfEdges();
+			NEdge getEdge(in long index);
+			long getEdgeIndex(in NEdge edge);
+			long getNumberOfFaces();
+			NFace getFace(in long index);
+			long getFaceIndex(in NFace face);
+
+			long getEulerCharacteristic();
+			Regina::Algebra::NAbelianGroup getHomologyH1();
+			Regina::Algebra::NAbelianGroup getHomologyH1Rel();
+			Regina::Algebra::NAbelianGroup getHomologyH1Bdry();
+			Regina::Algebra::NAbelianGroup getHomologyH2();
+			long getHomologyH2Z2();
+
+			boolean isIdeal();
+			boolean isValid();
+			boolean isStandard();
+			boolean isClosed();
+			boolean isOrientable();
+			boolean isConnected();
+			boolean hasBoundaryFaces();
+
+			boolean crushMaximalForest();
+			boolean intelligentSimplify();
+
+			boolean threeTwoMove(in NEdge e, in boolean chk, in boolean pfm);
+			boolean twoThreeMove(in NFace f, in boolean chk, in boolean pfm);
+			boolean twoZeroMove(in NEdge e, in boolean chk, in boolean pfm);
+			boolean twoOneMove(in NEdge e, in long edgeEnd,
+				in boolean chk, in boolean pfm);
+			boolean openBook(in NFace f, in boolean chk, in boolean pfm);
+			boolean shellBoundary(in NTetrahedron t, in boolean chk,
+				in boolean pfm);
+
+			boolean idealToFinite(in boolean forceDivision);
+			void barycentricSubdivision();
+
+			NTetrahedron insertLayeredSolidTorus(in long cuts0, in long cuts1);
+			void insertLensSpace(in long p, in long q);
+			void insertTriangulation(in NTriangulation source);
+
+			boolean isIsomorphicTo(in NTriangulation other);
+		};
+	};
+};
+
+#endif
+

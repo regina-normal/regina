@@ -1,0 +1,54 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A normal surface theory calculator                           *
+ *  CORBA interface definition for computational engine                   *
+ *                                                                        *
+ *  Copyright (c) 1999-2001, Ben Burton                                   *
+ *  For further details contact Ben Burton (benb@acm.org).                *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,        *
+ *  MA 02111-1307, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+#ifndef __NABELIANGROUP_IDL
+#define __NABELIANGROUP_IDL
+
+#include "Maths/NMatrixInt.idl"
+
+module Regina {
+	module Algebra {
+		interface NAbelianGroup : ShareableObject {
+			void addRank(in long extraRank);
+			void addTorsionElement_bigInt(in string degree, in long mult);
+			void addTorsionElement_long(in long degree, in long mult);
+			void addGroup_NMatrixInt(
+				in Regina::Maths::NMatrixInt presentation);
+			void addGroup_NAbelianGroup(in NAbelianGroup group);
+
+			long getRank();
+			long getTorsionRank_bigInt(in string degree);
+			long getTorsionRank_long(in long degree);
+			long getNumberOfInvariantFactors();
+			string getInvariantFactor(in long index);
+		};
+	};
+};
+
+#endif
+

@@ -1,0 +1,107 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A normal surface theory calculator                           *
+ *  CORBA interface definition for computational engine                   *
+ *                                                                        *
+ *  Copyright (c) 1999-2001, Ben Burton                                   *
+ *  For further details contact Ben Burton (benb@acm.org).                *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,        *
+ *  MA 02111-1307, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+#ifndef __ENGINE_IDL
+#define __ENGINE_IDL
+
+#include "Algebra/NAbelianGroup.idl"
+#include "Maths/NMatrixInt.idl"
+#include "File/NFile.idl"
+#include "Packet/NContainer.idl"
+#include "Packet/NScript.idl"
+#include "Packet/NText.idl"
+#include "Progress/NProgressManager.idl"
+#include "Surfaces/NNormalSurfaceList.idl"
+#include "Surfaces/NSurfaceFilter.idl"
+#include "Surfaces/NSurfaceFilterCombination.idl"
+#include "Surfaces/NSurfaceFilterProperties.idl"
+#include "Surfaces/NSurfaceSubset.idl"
+#include "Triangulation/NTetrahedron.idl"
+#include "Triangulation/NTriangulation.idl"
+
+module Regina {
+	interface Engine {
+		Algebra::NAbelianGroup newNAbelianGroup_();
+		Algebra::NAbelianGroup newNAbelianGroup_NAbelianGroup(
+			in Algebra::NAbelianGroup cloneMe);
+
+		File::NFile newNFile();
+
+		Maths::NMatrixInt newNMatrixInt_long_long(
+			in long rows, in long columns);
+		Maths::NMatrixInt newNMatrixInt_NMatrixInt(
+			in Maths::NMatrixInt cloneMe);
+
+		Packet::NContainer newNContainer();
+		Packet::NScript newNScript();
+		Packet::NText newNText_();
+		Packet::NText newNText_string(in string newText);
+
+		Progress::NProgressManager newNProgressManager();
+
+		Surfaces::NNormalSurfaceList newNNormalSurfaceList(
+			in Triangulation::NTriangulation owner,
+			in long flavour, in boolean isEmbeddedOnly);
+		Surfaces::NSurfaceFilter newNSurfaceFilter_();
+		Surfaces::NSurfaceFilter newNSurfaceFilter_NSurfaceFilter(
+			in Surfaces::NSurfaceFilter cloneMe);
+		Surfaces::NSurfaceFilterCombination newNSurfaceFilterCombination_();
+		Surfaces::NSurfaceFilterCombination
+			newNSurfaceFilterCombination_NSurfaceFilterCombination(
+			in Surfaces::NSurfaceFilterCombination cloneMe);
+		Surfaces::NSurfaceFilterProperties newNSurfaceFilterProperties_();
+		Surfaces::NSurfaceFilterProperties
+			newNSurfaceFilterProperties_NSurfaceFilterProperties(
+			in Surfaces::NSurfaceFilterProperties cloneMe);
+		Surfaces::NSurfaceSubset newNSurfaceSubset(
+			in Surfaces::NSurfaceSet set, in Surfaces::NSurfaceFilter filter);
+
+		Triangulation::NTetrahedron newNTetrahedron_();
+		Triangulation::NTetrahedron newNTetrahedron_string(in string desc);
+		Triangulation::NTriangulation newNTriangulation_();
+		Triangulation::NTriangulation newNTriangulation_NTriangulation(
+			in Triangulation::NTriangulation cloneMe);
+
+		long formCensus(in Packet::NPacket parent, in long nTetrahedra,
+			in char finiteness, in char orientability, in char boundary,
+			in long nBdryFaces, in Progress::NProgressManager manager);
+		long getVersionMajor();
+		long getVersionMinor();
+		string getVersionString();
+		Maths::NMatrixInt makeMatchingEquations(
+			in Triangulation::NTriangulation triangulation, in long flavour);
+		Packet::NPacket readFromFile(in string fileName);
+		Triangulation::NTriangulation readSnapPea(in string fileName);
+		void smithNormalForm(in Maths::NMatrixInt matrix);
+		long testEngine(in long value);
+		boolean writeToFile(in string fileName, in Packet::NPacket packet);
+	};
+};
+
+#endif
+
