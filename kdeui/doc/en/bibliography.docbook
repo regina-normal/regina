@@ -8,15 +8,28 @@
  </para>
 
  <biblioentry id="bib-burton-phd">
-  <abbrev>Bu</abbrev>
+  <abbrev>Bu1</abbrev>
   <author>
    <firstname>Benjamin</firstname>
+   <othername>A.</othername>
    <surname>Burton</surname>
   </author>
   <title>Minimal triangulations and normal surfaces</title>
   <edition>PhD Thesis</edition>
   <publishername>University of Melbourne</publishername>
   <date>May 2003</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-facegraphs">
+  <abbrev>Bu2</abbrev>
+  <author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author>
+  <title>Face pairing graphs and 3-manifold enumeration</title>
+  <edition>Preprint</edition>
+  <date>July 2003</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
