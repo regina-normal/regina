@@ -27,6 +27,9 @@
 /* end stub */
 
 #include "manifold/nsnappeacensusmfd.h"
+#include "subcomplex/nsnappeacensustri.h"
+#include "triangulation/nexampletriangulation.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
@@ -35,6 +38,27 @@ const char NSnapPeaCensusManifold::SEC_6_OR = 's';
 const char NSnapPeaCensusManifold::SEC_6_NOR = 'x';
 const char NSnapPeaCensusManifold::SEC_7_OR = 'v';
 const char NSnapPeaCensusManifold::SEC_7_NOR = 'y';
+
+NTriangulation* NSnapPeaCensusManifold::construct() const {
+    // TODO
+    NTriangulation* ans = 0;
+
+    if (section == SEC_5) {
+        if (index == 0)
+            ans = NExampleTriangulation::gieseking();
+        else if (index == 4)
+            ans = NExampleTriangulation::figureEightKnotComplement();
+    }
+
+    if (ans)
+        ans->setPacketLabel("");
+
+    return ans;
+}
+
+NAbelianGroup* NSnapPeaCensusManifold::getHomologyH1() const {
+    return NSnapPeaCensusTri(section, index).getHomologyH1();
+}
 
 std::ostream& NSnapPeaCensusManifold::writeName(std::ostream& out) const {
     // Some manifolds will get special names, and will have their usual
@@ -47,37 +71,11 @@ std::ostream& NSnapPeaCensusManifold::writeName(std::ostream& out) const {
     }
 
     // No special names, just the usual SnapPea notation.
-    out << "SnapPea " << section;
-
-    // Pad the index with leading zeroes.
-    // All sections are written with three-digit indices, except for
-    // 7-tetrahedron orientable which uses four-digit indices.
-    if (section == SEC_7_OR && index < 1000)
-        out << '0';
-    if (index < 100)
-        out << '0';
-    if (index < 10)
-        out << '0';
-    out << index;
-
-    return out;
+    return NSnapPeaCensusTri(section, index).writeName(out);
 }
 
 std::ostream& NSnapPeaCensusManifold::writeTeXName(std::ostream& out) const {
-    out << '$' << section << "_{";
-
-    // Pad the index with leading zeroes.
-    // All sections are written with three-digit indices, except for
-    // 7-tetrahedron orientable which uses four-digit indices.
-    if (section == SEC_7_OR && index < 1000)
-        out << '0';
-    if (index < 100)
-        out << '0';
-    if (index < 10)
-        out << '0';
-    out << index << "}$";
-
-    return out;
+    return NSnapPeaCensusTri(section, index).writeTeXName(out);
 }
 
 std::ostream& NSnapPeaCensusManifold::writeStructure(std::ostream& out) const {
@@ -85,7 +83,7 @@ std::ostream& NSnapPeaCensusManifold::writeStructure(std::ostream& out) const {
     if (section == SEC_5) {
         // Gieseking manifold and figure eight knot complement:
         if (index == 0 || index == 4)
-            out << "SnapPea m00" << index;
+            return NSnapPeaCensusTri(section, index).writeName(out);
     }
 
     return out;

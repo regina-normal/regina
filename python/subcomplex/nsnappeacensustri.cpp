@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2004, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,60 +26,35 @@
 
 /* end stub */
 
-#include <sstream>
-#include "subcomplex/naugtrisolidtorus.h"
-#include "subcomplex/nl31pillow.h"
-#include "subcomplex/nlayeredchainpair.h"
-#include "subcomplex/nlayeredlensspace.h"
-#include "subcomplex/nlayeredloop.h"
-#include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
-#include "subcomplex/ntrivialtri.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/ncomponent.h"
+#include <boost/python.hpp>
 
-namespace regina {
+using namespace boost::python;
+using regina::NSnapPeaCensusTri;
 
-std::string NStandardTriangulation::getName() const {
-    std::ostringstream ans;
-    writeName(ans);
-    return ans.str();
+void addNSnapPeaCensusTri() {
+    scope s = class_<NSnapPeaCensusTri, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<NSnapPeaCensusTri>, boost::noncopyable>
+            ("NSnapPeaCensusTri", no_init)
+        .def("clone", &NSnapPeaCensusTri::clone,
+            return_value_policy<manage_new_object>())
+        .def("getSection", &NSnapPeaCensusTri::getSection)
+        .def("getIndex", &NSnapPeaCensusTri::getIndex)
+        .def(self == self)
+        .def("isSmallSnapPeaCensusTri",
+            &NSnapPeaCensusTri::isSmallSnapPeaCensusTri,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isSmallSnapPeaCensusTri")
+    ;
+
+    s.attr("SEC_5") = NSnapPeaCensusTri::SEC_5;
+    s.attr("SEC_6_OR") = NSnapPeaCensusTri::SEC_6_OR;
+    s.attr("SEC_6_NOR") = NSnapPeaCensusTri::SEC_6_NOR;
+    s.attr("SEC_7_OR") = NSnapPeaCensusTri::SEC_7_OR;
+    s.attr("SEC_7_NOR") = NSnapPeaCensusTri::SEC_7_NOR;
+
+    implicitly_convertible<std::auto_ptr<NSnapPeaCensusTri>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
-
-std::string NStandardTriangulation::getTeXName() const {
-    std::ostringstream ans;
-    writeTeXName(ans);
-    return ans.str();
-}
-
-NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
-        NComponent* comp) {
-    NStandardTriangulation* ans;
-    if ((ans = NTrivialTri::isTrivialTriangulation(comp)))
-        return ans;
-    if ((ans = NL31Pillow::isL31Pillow(comp)))
-        return ans;
-    if ((ans = NLayeredLensSpace::isLayeredLensSpace(comp)))
-        return ans;
-    if ((ans = NLayeredLoop::isLayeredLoop(comp)))
-        return ans;
-    if ((ans = NLayeredChainPair::isLayeredChainPair(comp)))
-        return ans;
-    if ((ans = NAugTriSolidTorus::isAugTriSolidTorus(comp)))
-        return ans;
-    if ((ans = NPlugTriSolidTorus::isPlugTriSolidTorus(comp)))
-        return ans;
-    if ((ans = NSnapPeaCensusTri::isSmallSnapPeaCensusTri(comp)))
-        return ans;
-
-    return 0;
-}
-
-NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
-        NTriangulation* tri) {
-    if (tri->getNumberOfComponents() != 1)
-        return 0;
-    return isStandardTriangulation(tri->getComponent(0));
-}
-
-} // namespace regina
 

@@ -35,6 +35,7 @@ void addNLayeredLoop();
 void addNLayeredSolidTorus();
 void addNPillowTwoSphere();
 void addNPlugTriSolidTorus();
+void addNSnapPeaCensusTri();
 void addNSnappedBall();
 void addNSnappedTwoSphere();
 void addNSpiralSolidTorus();
@@ -53,6 +54,7 @@ void addSubcomplex() {
     addNLayeredSolidTorus();
     addNPillowTwoSphere();
     addNPlugTriSolidTorus();
+    addNSnapPeaCensusTri();
     addNSnappedBall();
     addNSnappedTwoSphere();
     addNSpiralSolidTorus();

@@ -20,7 +20,7 @@ Version 4.2  [ under development ]
               sample triangulations.
         Class NFacePairing:
             - New routine hasWedgedDoubleEndedChain.
-        Class NSnapPeaCensusManifold:
+        Class NSnapPeaCensusManifold, NSnapPeaCensusTri:
             - Added to aid recognition of very small SnapPea census
               triangulations.
         Class NSnapPeaTriangulation:

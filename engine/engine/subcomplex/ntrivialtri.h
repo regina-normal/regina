@@ -75,33 +75,6 @@ class NTrivialTri : public NStandardTriangulation {
          * triangulation has two Mobius band faces.
          */
         static const int N3_2;
-        /**
-         * Represents the one-tetrahedron non-orientable triangulation
-         * m000 from the SnapPea census.  Note that this represents the
-         * Gieseking manifold.
-         */
-        static const int SNAPPEA_M000;
-        /**
-         * Represents the two-tetrahedron non-orientable triangulation
-         * m001 from the SnapPea census.
-         */
-        static const int SNAPPEA_M001;
-        /**
-         * Represents the two-tetrahedron non-orientable triangulation
-         * m002 from the SnapPea census.
-         */
-        static const int SNAPPEA_M002;
-        /**
-         * Represents the two-tetrahedron orientable triangulation
-         * m003 from the SnapPea census.
-         */
-        static const int SNAPPEA_M003;
-        /**
-         * Represents the two-tetrahedron orientable triangulation
-         * m004 from the SnapPea census.  Note that this represents the
-         * figure eight knot complement.
-         */
-        static const int SNAPPEA_M004;
     private:
         int type;
             /**< The specific triangulation being represented.
