@@ -1,9 +1,5 @@
 
 # This makefile should only ever be called from ../Makefile.
-#
-# To make target "foo" in this directory, move to the parent directory
-# and type "make utils/foo".
-#
 # See ../Makefile for further details.
 
 # ------------------------ Variables -------------------------------------

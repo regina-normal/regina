@@ -1,13 +1,12 @@
+Regina Sample File Directory
+----------------------------
+
 This directory contains a number of sample files that illustrate how
 Regina can be used.
 
 *.rga:
     These are topology data files.  They can be opened directly from within
     the user interface.
-
-*.rga.gz:
-    These are compressed topology data files.  You can use gunzip to
-    uncompressed them.
 
 *.session:
     These are complete transcripts of sample Jython sessions, including
@@ -18,3 +17,4 @@ Regina can be used.
     These are the same sample Jython sessions as above but only the user
     input has been included.  These scripts may be fed directly into Regina
     using a command of the form "regina --text < foo.py"
+

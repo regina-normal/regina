@@ -1,1 +1,5 @@
-This directory tree contains the Java user interface sources.
+Regina Java User Interface Directory
+------------------------------------
+
+This directory tree contains the Java sources for the Java user interface.
+

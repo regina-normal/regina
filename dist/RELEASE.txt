@@ -28,7 +28,7 @@ Copyright years:
     javaui/normal/Application.java (Application.copyright)
     www/applet.html
     www/index.html
-    Source file header comments (generated from dist/stub.*)
+    Source file header comments (mostly generated from dist/stub.*)
 
 License details:
     LICENSE.txt (./, docs/, javaui/)

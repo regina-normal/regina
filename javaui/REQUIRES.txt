@@ -1,13 +1,13 @@
 
-Required libraries:
+Required libraries for running the Java UI:
 
     regina.jar : main GUI
     regina-jni.jar : link to calculation engine using JNI
     btools.jar : miscellaneous utility classes
 
-Optional libraries:
+Optional libraries for running the Java UI:
 
     jython.jar : allows Jython scripting
     jh.jar : JavaHelp embedded help browser
-    regina-docs.jar : documentation to view using internal help browser
+    regina-docs.jar : documentation viewable using internal help browser
 
