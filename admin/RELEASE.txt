@@ -27,3 +27,4 @@ Don't forget:
     what's this / tooltips
     documentation in reference manual / feature set
     website
+    tag CVS
