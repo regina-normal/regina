@@ -129,6 +129,11 @@ class ReginaPart : public KParts::ReadWritePart {
         void packetView(regina::NPacket*, bool makeVisibleInTree = true);
 
         /**
+         * Ensure that the given packet is visible in the packet tree.
+         */
+        void ensureVisibleInTree(regina::NPacket* packet);
+
+        /**
          * Display a newly created packet pane in a sensible manner.
          * Whether it is docked or in a free-floating window will be
          * decided according to the current arrangement of panes and any

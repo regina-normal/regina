@@ -178,6 +178,24 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     triActionList.append(new KActionSeparator());
 
+    KAction* actSplitIntoComponents = new KAction(i18n(
+        "E&xtract Components"),
+        0 /* shortcut */, this, SLOT(splitIntoComponents()), triActions,
+        "tri_split_into_components");
+    actSplitIntoComponents->setToolTip(i18n(
+        "Form a new triangulation for each disconnected component"));
+    triActionList.append(actSplitIntoComponents);
+
+    KAction* actConnectedSumDecomposition = new KAction(i18n(
+        "C&onnected Sum Decomposition"),
+        0 /* shortcut */, this, SLOT(connectedSumDecomposition()), triActions,
+        "tri_connected_sum_decomposition");
+    actConnectedSumDecomposition->setToolTip(i18n(
+        "Split into a connected sum of prime 3-manifolds"));
+    triActionList.append(actConnectedSumDecomposition);
+
+    triActionList.append(new KActionSeparator());
+
     KAction* actCensusLookup = new KAction(i18n("Ce&nsus Lookup"), "find",
         0 /* shortcut */, this, SLOT(censusLookup()), triActions,
         "tri_census_lookup");
@@ -422,6 +440,58 @@ void NTriGluingsUI::elementaryMove() {
 void NTriGluingsUI::doubleCover() {
     enclosingPane->commit();
     tri->makeDoubleCover();
+}
+
+void NTriGluingsUI::splitIntoComponents() {
+    enclosingPane->commit();
+    if (tri->getNumberOfComponents() == 0)
+        KMessageBox::information(ui, i18n("This triangulation is empty "
+            "and therefore has no components."));
+    else if (tri->getNumberOfComponents() == 1)
+        KMessageBox::information(ui, i18n("This triangulation is connected "
+            "and therefore has only one component."));
+    else {
+        unsigned long nComps = tri->splitIntoComponents();
+
+        // Make sure the new components are visible.
+        enclosingPane->getPart()->ensureVisibleInTree(tri->getLastTreeChild());
+
+        // Tell the user what happened.
+        KMessageBox::information(ui, i18n("%1 components were extracted.").
+            arg(nComps));
+    }
+}
+
+void NTriGluingsUI::connectedSumDecomposition() {
+    enclosingPane->commit();
+    if (tri->getNumberOfTetrahedra() == 0)
+        KMessageBox::information(ui, i18n("This triangulation is empty."));
+    else if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
+            tri->isConnected()))
+        KMessageBox::sorry(ui, i18n("Connected sum decomposition is "
+            "currently only available for closed orientable connected "
+            "3-manifold triangulations."));
+    else {
+        unsigned long nSummands = tri->connectedSumDecomposition();
+        if (nSummands == 0)
+            KMessageBox::information(ui, i18n("This is a 3-sphere "
+                "triangulation, with no prime summands at all."));
+        else {
+            // There is at least one new summand triangulation.
+
+            // Make sure the new summands are visible.
+            enclosingPane->getPart()->ensureVisibleInTree(
+                tri->getLastTreeChild());
+
+            // Tell the user what happened.
+            if (nSummands == 1)
+                KMessageBox::information(ui, i18n("This is a prime 3-manifold "
+                    "triangulation.  It cannot be decomposed any further."));
+            else
+                KMessageBox::information(ui, i18n("The triangulation was "
+                    "broken down into %1 prime summands.").arg(nSummands));
+        }
+    }
 }
 
 void NTriGluingsUI::censusLookup() {

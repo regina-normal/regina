@@ -130,6 +130,12 @@ KInstance* ReginaPart::factoryInstance() {
     return ReginaPartFactory::instance();
 }
 
+void ReginaPart::ensureVisibleInTree(regina::NPacket* packet) {
+    QListViewItem* item = treeView->find(packet);
+    if (item)
+        treeView->ensureItemVisible(item);
+}
+
 void ReginaPart::view(PacketPane* newPane) {
     // Decide whether to dock or float.
     bool shouldDock;
@@ -275,11 +281,8 @@ void ReginaPart::fileSaveAs() {
 void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree) {
     view(new PacketPane(this, packet));
 
-    if (makeVisibleInTree) {
-        QListViewItem* item = treeView->find(packet);
-        if (item)
-            treeView->ensureItemVisible(item);
-    }
+    if (makeVisibleInTree)
+        ensureVisibleInTree(packet);
 }
 
 void ReginaPart::packetView() {

@@ -128,6 +128,8 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void idealToFinite();
         void elementaryMove();
         void doubleCover();
+        void splitIntoComponents();
+        void connectedSumDecomposition();
         void censusLookup();
 
         /**
