@@ -85,6 +85,25 @@ class NTriBool {
         NTriBool(bool value);
 
         /**
+         * Is the value of this three-way boolean equal to true?
+         *
+         * @return whether or not this object has the value of true.
+         */
+        bool isTrue() const;
+        /**
+         * Is the value of this three-way boolean equal to false?
+         *
+         * @return whether or not this object has the value of false.
+         */
+        bool isFalse() const;
+        /**
+         * Is the value of this three-way boolean equal to unknown?
+         *
+         * @return whether or not this object has the value of unknown.
+         */
+        bool isUnknown() const;
+
+        /**
          * Determines whether this and the given three-way boolean are equal.
          * This routine makes a straightforward comparison of states.
          * That is, true is equal to true, false is equal to false and
@@ -553,6 +572,18 @@ inline NTriBool::NTriBool(const NTriBool& cloneMe) : code(cloneMe.code) {
 }
 
 inline NTriBool::NTriBool(bool value) : code(value ? codeTrue : codeFalse) {
+}
+
+inline bool NTriBool::isTrue() const {
+    return (code == codeTrue);
+}
+
+inline bool NTriBool::isFalse() const {
+    return (code == codeFalse);
+}
+
+inline bool NTriBool::isUnknown() const {
+    return (code == codeUnknown);
 }
 
 inline bool NTriBool::operator == (const NTriBool& other) const {
