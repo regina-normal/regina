@@ -476,12 +476,6 @@ void PacketPane::refreshForce() {
 
 bool PacketPane::commit() {
     if (dirty) {
-        if (! readWrite) {
-            KMessageBox::sorry(this, i18n("This packet is read-only.  "
-                "No changes may be committed."));
-            return false;
-        }
-
         if (! mainUI->getPacket()->isPacketEditable()) {
             KMessageBox::sorry(this, i18n("<qt>This packet may not be "
                 "edited at the present time.  Because of this, your "
@@ -493,6 +487,12 @@ bool PacketPane::commit() {
                 "as coordinates relative to the triangulation.<p>"
                 "As a workaround for this problem, you might wish to try "
                 "cloning this packet and editing the clone instead.</qt>"));
+            return false;
+        }
+
+        if (! readWrite) {
+            KMessageBox::sorry(this, i18n("This packet is read-only.  "
+                "No changes may be committed."));
             return false;
         }
 
@@ -511,12 +511,6 @@ bool PacketPane::commit() {
 }
 
 bool PacketPane::commitToModify() {
-    if (! readWrite) {
-        KMessageBox::sorry(this, i18n("This packet is read-only, and "
-            "so may not be modified."));
-        return false;
-    }
-
     if (! mainUI->getPacket()->isPacketEditable()) {
         KMessageBox::sorry(this, i18n("<qt>This packet may not be "
             "modified at the present time.<p>"
@@ -530,22 +524,18 @@ bool PacketPane::commitToModify() {
         return false;
     }
 
+    if (! readWrite) {
+        KMessageBox::sorry(this, i18n("This packet is read-only, and "
+            "so may not be modified."));
+        return false;
+    }
+
     return commit();
 }
 
 bool PacketPane::tryCommit() {
     if (dirty) {
-        if (! readWrite) {
-            if (KMessageBox::warningContinueCancel(this,
-                    i18n("<qt>This packet is read-only, but you appear "
-                    "to have made changes that have not yet been committed.  "
-                    "I cannot commit these changes for you, but I will "
-                    "have to work from an old copy of the packet instead.<p>"
-                    "Do you wish to continue this operation using an old "
-                    "copy of the packet?</qt>"))
-                    != KMessageBox::Continue)
-                return false;
-        } else if (! mainUI->getPacket()->isPacketEditable()) {
+        if (! mainUI->getPacket()->isPacketEditable()) {
             if (KMessageBox::warningContinueCancel(this,
                     i18n("<qt>This packet may not be edited at the present "
                     "time.  Because of this I cannot commit your recent "
@@ -556,6 +546,16 @@ bool PacketPane::tryCommit() {
                     "triangulation containing a normal surface list may "
                     "not be edited, since the normal surfaces are stored "
                     "as coordinates relative to the triangulation.<p>"
+                    "Do you wish to continue this operation using an old "
+                    "copy of the packet?</qt>"))
+                    != KMessageBox::Continue)
+                return false;
+        } else if (! readWrite) {
+            if (KMessageBox::warningContinueCancel(this,
+                    i18n("<qt>This packet is read-only, but you appear "
+                    "to have made changes that have not yet been committed.  "
+                    "I cannot commit these changes for you, and so I will "
+                    "have to work from an old copy of the packet instead.<p>"
                     "Do you wish to continue this operation using an old "
                     "copy of the packet?</qt>"))
                     != KMessageBox::Continue)
