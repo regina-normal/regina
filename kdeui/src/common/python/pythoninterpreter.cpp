@@ -29,7 +29,9 @@
 #include "regina-config.h"
 #include "packet/npacket.h"
 
+// Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
 #include "pythoninterpreter.h"
+
 #include "pythonoutputstream.h"
 
 #include <boost/python.hpp>
