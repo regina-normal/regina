@@ -449,9 +449,9 @@ public class SystemPane extends JPanel {
         createTreeModel();
         packetTree = new JTree(treeModel) {
             protected void processMouseEvent(MouseEvent e) {
-                if (e.getClickCount() >= 2) {
+                if (e.getID() == e.MOUSE_CLICKED && e.getClickCount() >= 2)
                     packetView();
-                } else
+                else
                     super.processMouseEvent(e);
             }
         };
