@@ -12,6 +12,7 @@ SUBDIRS = \
   engine \
   exports \
   images \
+  imports \
   mainui \
   options \
   packetfilter \
