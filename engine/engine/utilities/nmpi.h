@@ -75,6 +75,8 @@ namespace regina {
  * Infinity is catered for.  For comparison operations, infinity is
  * considered larger than any other integer but equal to itself.
  *
+ * \testpart
+ *
  * \ifaces Not present.
  * \ifacesjava A class <tt>normal.engine.utilities.NLargeInteger</tt> is
  * provided that subclasses <tt>java.math.BigInteger</tt>.  This also
