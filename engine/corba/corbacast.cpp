@@ -28,7 +28,7 @@
 
 #include "corbacast.h"
 
-#ifdef __NO_RAW_CASTING
+#ifndef __USE_RAW_CASTING
     ::ShareableObject* CORBALongToPtr(CORBA::Long i) {
         void* addr = &i;
         return *((::ShareableObject**)addr);

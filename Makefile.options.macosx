@@ -62,25 +62,18 @@ export CORBA_LIBRARIES := -lomniORB3 -lomniGK_stub
 #export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
 export EXTRA_LIBRARIES := -lgmp -lpthread
 
-# Specify here any platform-dependent macros that need to be defined.
+# Specify here any compiler-dependent macros that need to be defined.
 # Understood macros include:
 #
-# __MUTE_WARNINGS: Use this to mute a small set of known non-dangerous
-#                  warnings over small portions of known correct code.
-#                  This macro will insert "#pragma warn -xxx"
-#                  and "#pragma warn .xxx" directives to bypass these
-#                  specific warnings over these specific regions of code.
-# __NO_IOS_NOCREATE: Use this if ios::nocreate is not a valid file
-#                    opening flag.
-# __NO_RAW_CASTING: Use this if your compiler will not cast (void*) to
-#                   long and vice versa.
+# __USE_IOS_NOCREATE: Use this if std::ios::nocreate is a valid file
+#                     opening flag.
+# __USE_RAW_CASTING: Use this to use a direct typecast instead of a function
+#                    call for converting (void*) to (long) and vice versa.
+# __HASH_NAMESPACE=<namespace>: Use this if hash_set, hash_map and related
+#                               classes from the Standard Template Library
+#                               do not belong to the std:: namespace.
 
-# Recommended for gcc/g++:
-export PD_MACROS :=
-# Recommended for CodeWarrior:
-# export PD_MACROS := __NO_IOS_NOCREATE __NO_RAW_CASTING
-# Recommended for Borland C++ Builder:
-# export PD_MACROS := __MUTE_WARNINGS __NO_IOS_NOCREATE
+export PD_MACROS := __USE_IOS_NOCREATE
 
 # Specify here the character that separates components on the classpath.
 # This will for instance be : under linux/unix and ; under windows.

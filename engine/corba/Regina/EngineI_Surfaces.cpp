@@ -79,11 +79,6 @@ Regina::Surfaces::NSurfaceSubset_ptr Engine_i::newNSurfaceSubset(
         Regina::Surfaces::NSurfaceFilter_ptr filter) {
     ::NSurfaceSet* realSet = 0;
 
-    #ifdef __MUTE_WARNINGS
-        #pragma warn -ccc
-        #pragma warn -rch
-    #endif
-
     // Define something for REGISTER_CORBA_SURFACE_SET to do.
     #define REGISTER_CORBA_SURFACE_SET(cppClass, IDLClass, ptrClass) \
         { \
@@ -95,11 +90,6 @@ Regina::Surfaces::NSurfaceSubset_ptr Engine_i::newNSurfaceSubset(
     // Import the REGISTER_CORBA_SURFACE_SET lines.
     #define __CORBA_SURFACE_SET_REGISTRY_BODY
     #include "registry/corbasurfacesetregistry.h"
-
-    #ifdef __MUTE_WARNINGS
-        #pragma warn .ccc
-        #pragma warn .rch
-    #endif
 
     if (realSet == 0)
         return Regina::Surfaces::NSurfaceSubset::_nil();

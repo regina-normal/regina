@@ -36,11 +36,6 @@ Regina::Packet::NPacket_ptr NPacket_i::newWrapper(::NPacket* newCppPtr) {
 
     int type = newCppPtr->getPacketType();
 
-    #ifdef __MUTE_WARNINGS
-        #pragma warn -ccc
-        #pragma warn -rch
-    #endif
-
     if (0)
         return 0;
 
@@ -58,10 +53,5 @@ Regina::Packet::NPacket_ptr NPacket_i::newWrapper(::NPacket* newCppPtr) {
         p->activateObject();
         return p->_this();
     }
-
-    #ifdef __MUTE_WARNINGS
-        #pragma warn .ccc
-        #pragma warn .rch
-    #endif
 }
 

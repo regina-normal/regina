@@ -39,7 +39,7 @@
 
 class ShareableObject;
 
-#ifdef __NO_RAW_CASTING
+#ifndef __USE_RAW_CASTING
     /**
      * Casts the given Java long as a C++ pointer.
      * This is used when storing a C++ pointer as a long member of a

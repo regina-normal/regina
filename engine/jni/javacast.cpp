@@ -28,7 +28,7 @@
 
 #include "javacast.h"
 
-#ifdef __NO_RAW_CASTING
+#ifndef __USE_RAW_CASTING
     ShareableObject* javaLongToPtr(jlong i) {
         void* addr = &i;
         return *((ShareableObject**)addr);

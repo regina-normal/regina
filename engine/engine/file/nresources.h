@@ -205,10 +205,10 @@ inline NLocalFileResource::~NLocalFileResource() {
 }
 
 inline std::ios::openmode NLocalFileResource::sysModeRead() {
-    #ifdef __NO_IOS_NOCREATE
-    return std::ios::in | std::ios::binary;
-    #else
+    #ifdef __USE_IOS_NOCREATE
     return std::ios::in | std::ios::binary | std::ios::nocreate;
+    #else
+    return std::ios::in | std::ios::binary;
     #endif
 }
 

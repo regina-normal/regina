@@ -39,11 +39,6 @@ jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
     int type = packet->getPacketType();
     std::string classPath;
 
-    #ifdef __MUTE_WARNINGS
-        #pragma warn -ccc
-        #pragma warn -rch
-    #endif
-
     if (type == NSurfaceFilter::packetType) {
         // Pull out the individual cases for different filter types.
         int id = ((NSurfaceFilter*)packet)->getFilterID();
@@ -75,11 +70,6 @@ jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
 
     else
         classPath = DEFAULT_PACKET_CLASS;
-
-    #ifdef __MUTE_WARNINGS
-        #pragma warn .ccc
-        #pragma warn .rch
-    #endif
 
     // Make the new Java wrapper.
     return CREATE_WRAPPER_OBJECT(env, packet, classPath.c_str());

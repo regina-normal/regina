@@ -40,11 +40,6 @@ Regina::Surfaces::NSurfaceFilter_ptr NSurfaceFilter_i::newWrapper(
     
     int type = newCppPtr->getFilterID();
 
-    #ifdef __MUTE_WARNINGS
-        #pragma warn -ccc
-        #pragma warn -rch
-    #endif
-
     // Check for NSurfaceFilter first so we don't recursively call
     // NSurfaceFilter_i::newWrapper().
     if (type == ::NSurfaceFilter::filterID) {
@@ -67,11 +62,6 @@ Regina::Surfaces::NSurfaceFilter_ptr NSurfaceFilter_i::newWrapper(
         f->activateObject();
         return f->_this();
     }
-    
-    #ifdef __MUTE_WARNINGS
-        #pragma warn .ccc
-        #pragma warn .rch
-    #endif
 }
         
 CORBA::Boolean NSurfaceFilter_i::accept(Regina::Surfaces::NNormalSurface_ptr
