@@ -43,8 +43,8 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kio/netaccess.h>
-#include <klibloader.h>
 #include <kkeydialog.h>
+#include <klibloader.h>
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kmessagebox.h>
@@ -53,8 +53,8 @@
 #include <kstdaccel.h>
 #include <kstdaction.h>
 #include <ktexteditor/document.h>
+#include <ktexteditor/editorchooser.h>
 #include <ktexteditor/view.h>
-#include <ktrader.h>
 #include <kurl.h>
 
 typedef ReginaAbout<ReginaMain> About;
@@ -432,17 +432,8 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
 }
 
 KParts::ReadWritePart* ReginaMain::newTextEditorPart() {
-    KParts::ReadWritePart* ans = 0;
-
-    KTrader::OfferList offers = KTrader::self()->query("KTextEditor/Editor");
-    if (offers.count() >= 1) {
-        KService::Ptr service = *offers.begin();
-        KLibFactory *libFactory =
-            KLibLoader::self()->factory(service->library());
-        if (libFactory)
-            ans = (KParts::ReadWritePart*)(libFactory->create(
-                this, service->name(), "KTextEditor::Editor"));
-    }
+    KTextEditor::Editor* ans = KTextEditor::EditorChooser::createEditor(
+        this, this);
 
     if (! ans)
         KMessageBox::error(this, i18n(

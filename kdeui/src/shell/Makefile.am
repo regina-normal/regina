@@ -15,7 +15,7 @@ noinst_HEADERS = \
 bin_PROGRAMS = regina-kde
 
 regina_kde_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-regina_kde_LDADD   = $(LIB_ENGINE) $(LIB_KPARTS)
+regina_kde_LDADD   = $(LIB_ENGINE) $(LIB_KPARTS) -lktexteditor
 regina_kde_SOURCES = \
 	main.cpp \
 	reginamain.cpp \
