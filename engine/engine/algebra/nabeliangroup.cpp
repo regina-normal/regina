@@ -239,6 +239,14 @@ void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
     }
 }
 
+void NAbelianGroup::writeXMLData(std::ostream& out) const {
+    out << "<abeliangroup rank=\"" << rank << "\"> ";
+    for (std::multiset<NLargeInteger>::const_iterator it =
+            invariantFactors.begin(); it != invariantFactors.end(); it++)
+        out << (*it) << ' ';
+    out << "</abeliangroup>";
+}
+
 void NAbelianGroup::writeToFile(NFile& out) const {
     out.writeUInt(rank);
     out.writeULong(invariantFactors.size());

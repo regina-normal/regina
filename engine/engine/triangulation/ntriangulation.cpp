@@ -332,19 +332,31 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
     }
     out << "  </tetrahedra>\n";
 
-    // TODO: Write properties to XML.
-    /*
-    if (calculatedFundamentalGroup)
-        fundamentalGroup->writeToFile(out);
-    if (calculatedH1)
-        H1->writeToFile(out);
-    if (calculatedH1Rel)
-        H1Rel->writeToFile(out);
-    if (calculatedH1Bdry)
-        H1Bdry->writeToFile(out);
-    if (calculatedH2)
-        H2->writeToFile(out);
-    */
+    if (calculatedFundamentalGroup) {
+        out << "  <fundgroup>\n";
+        fundamentalGroup->writeXMLData(out);
+        out << "  </fundgroup>\n";
+    }
+    if (calculatedH1) {
+        out << "  <H1>";
+        H1->writeXMLData(out);
+        out << "</H1>\n";
+    }
+    if (calculatedH1Rel) {
+        out << "  <H1Rel>";
+        H1Rel->writeXMLData(out);
+        out << "</H1Rel>\n";
+    }
+    if (calculatedH1Bdry) {
+        out << "  <H1Bdry>";
+        H1Bdry->writeXMLData(out);
+        out << "</H1Bdry>\n";
+    }
+    if (calculatedH2) {
+        out << "  <H2>";
+        H2->writeXMLData(out);
+        out << "</H2>\n";
+    }
     if (calculatedZeroEfficient)
         out << "  " << xmlValueTag("zeroeff", zeroEfficient) << '\n';
     if (calculatedSplittingSurface)

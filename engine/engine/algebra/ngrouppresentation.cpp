@@ -195,6 +195,13 @@ bool NGroupExpression::substitute(unsigned long generator,
     return changed;
 }
 
+void NGroupExpression::writeXMLData(std::ostream& out) const {
+    out << "<expr> ";
+    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
+        out << (*it).generator << '^' << (*it).exponent << ' ';
+    out << "</expr>";
+}
+
 void NGroupExpression::writeToFile(NFile& out) const {
     out.writeULong(terms.size());
     for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
@@ -410,6 +417,16 @@ std::string NGroupPresentation::recogniseGroup() {
         // Don't have anything intelligent to say at this point.
     }
     return out.str();
+}
+
+void NGroupPresentation::writeXMLData(std::ostream& out) const {
+    out << "<group generators=\"" << nGenerators << "\">\n";
+    for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
+        out << "  ";
+        (*it)->writeXMLData(out);
+        out << '\n';
+    }
+    out << "</group>\n";
 }
 
 void NGroupPresentation::writeToFile(NFile& out) const {

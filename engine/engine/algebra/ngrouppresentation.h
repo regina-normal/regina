@@ -117,7 +117,10 @@ struct NGroupExpressionTerm {
     bool operator += (const NGroupExpressionTerm& other);
 
     /**
-     * Writes this term to the given file.
+     * Writes this term to the given old-style binary file.
+     *
+     * \deprecated For the preferred way to write data to file, see
+     * NGroupExpression::writeXMLData() instead.
      *
      * \pre The given file is currently opened for writing.
      *
@@ -354,7 +357,18 @@ class NGroupExpression : public ShareableObject {
             const NGroupExpression& expansion, bool cyclic = false);
     
         /**
-         * Writes this expression to the given file.
+         * Writes a chunk of XML containing this expression.
+         *
+         * \ifaces Not present.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        void writeXMLData(std::ostream& out) const;
+        /**
+         * Writes this expression to the given old-style binary file.
+         *
+         * \deprecated For the preferred way to write data to file, see
+         * writeXMLData() instead.
          *
          * \pre The given file is currently opened for writing.
          *
@@ -500,7 +514,18 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
         std::string recogniseGroup();
 
         /**
-         * Writes this group presentation to the given file.
+         * Writes a chunk of XML containing this group presentation.
+         *
+         * \ifaces Not present.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        void writeXMLData(std::ostream& out) const;
+        /**
+         * Writes this group presentation to the given old-style binary file.
+         *
+         * \deprecated For the preferred way to write data to file, see
+         * writeXMLData() instead.
          *
          * \pre The given file is currently opened for writing.
          *

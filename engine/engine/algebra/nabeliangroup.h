@@ -234,7 +234,18 @@ class NAbelianGroup : public ShareableObject {
         const NLargeInteger& getInvariantFactor(unsigned long index) const;
 
         /**
-         * Writes this abelian group to the given file.
+         * Writes a chunk of XML containing this abelian group.
+         *
+         * \ifaces Not present.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        void writeXMLData(std::ostream& out) const;
+        /**
+         * Writes this abelian group to the given old-style binary file.
+         *
+         * \deprecated For the preferred way to write data to file, see
+         * writeXMLData() instead.
          *
          * \pre The given file is currently opened for writing.
          *
