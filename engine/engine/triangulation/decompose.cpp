@@ -31,6 +31,7 @@
 
 #include "packet/ncontainer.h"
 #include "surfaces/nnormalsurface.h"
+#include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -346,6 +347,50 @@ bool NTriangulation::isThreeSphere() const {
     // Our triangulation is the connected sum of 0 components!
     threeSphere = true;
     return true;
+}
+
+bool NTriangulation::knowsThreeSphere() const {
+    if (threeSphere.known())
+        return true;
+
+    // Run some very fast prelimiary tests before we give up and say no.
+    if (! (isValid() && isClosed() && isOrientable() && isConnected())) {
+        threeSphere = false;
+        return true;
+    }
+
+    // More work is required.
+    return false;
+}
+
+NPacket* NTriangulation::makeZeroEfficient() {
+    // Extract a connected sum decomposition.
+    NContainer* connSum = new NContainer();
+    connSum->setPacketLabel(getPacketLabel() + " - Decomposition");
+
+    unsigned long ans = connectedSumDecomposition(connSum, true);
+    if (ans > 1) {
+        // Composite!
+        return connSum;
+    } else if (ans == 1) {
+        // Prime.
+        NTriangulation* newTri = dynamic_cast<NTriangulation*>(
+            connSum->getLastTreeChild());
+        if (! isIsomorphicTo(*newTri).get()) {
+            removeAllTetrahedra();
+            insertTriangulation(*newTri);
+        }
+        delete connSum;
+        return 0;
+    } else {
+        // 3-sphere.
+        if (getNumberOfTetrahedra() > 1) {
+            removeAllTetrahedra();
+            insertLayeredLensSpace(1,0);
+        }
+        delete connSum;
+        return 0;
+    }
 }
 
 } // namespace regina

@@ -45,6 +45,7 @@
 #include <ktoolbar.h>
 #include <kmessagebox.h>
 #include <kprogress.h>
+#include <memory>
 #include <qfileinfo.h>
 #include <qlabel.h>
 #include <qtable.h>
@@ -194,6 +195,16 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actConnectedSumDecomposition->setToolTip(i18n(
         "Split into a connected sum of prime 3-manifolds"));
     triActionList.append(actConnectedSumDecomposition);
+
+    KAction* actZeroEff = new KAction(i18n(
+        "Make &0-Efficient"),
+        0 /* shortcut */, this, SLOT(makeZeroEfficient()), triActions,
+        "tri_make_zero_efficient");
+    actZeroEff->setToolTip(i18n(
+        "Convert this into a 0-efficient triangulation if possible"));
+    actZeroEff->setEnabled(readWrite);
+    enableWhenWritable.append(actZeroEff);
+    triActionList.append(actZeroEff);
 
     triActionList.append(new KActionSeparator());
 
@@ -519,6 +530,104 @@ void NTriGluingsUI::connectedSumDecomposition() {
                 KMessageBox::information(ui, i18n("The triangulation was "
                     "broken down into %1 prime summands.").arg(nSummands));
         }
+    }
+}
+
+void NTriGluingsUI::makeZeroEfficient() {
+    enclosingPane->commit();
+
+    unsigned long initTets = tri->getNumberOfTetrahedra();
+    if (initTets == 0) {
+        KMessageBox::information(ui, i18n("This triangulation is empty."));
+        return;
+    }
+
+    if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
+            tri->isConnected())) {
+        KMessageBox::sorry(ui, i18n("0-efficiency reduction is "
+            "currently only available for closed orientable connected "
+            "3-manifold triangulations."));
+        return;
+    }
+
+    // If it's possible that the triangulation but not the number of
+    // tetrahedra is changed, remember the original.
+    std::auto_ptr<NTriangulation> orig;
+    if (initTets <= 2)
+        orig.reset(new NTriangulation(*tri));
+
+    // Make it 0-efficient and see what happens.
+    NPacket* decomp = tri->makeZeroEfficient();
+    if (decomp) {
+        // Composite 3-manifold.
+        tri->insertChildLast(decomp);
+        decomp->getTreeMatriarch()->makeUniqueLabels(0);
+        enclosingPane->getPart()->ensureVisibleInTree(
+            decomp->getLastTreeChild());
+
+        KMessageBox::sorry(ui, i18n("This is a composite 3-manifold "
+            "triangulation, which means it cannot be made 0-efficient.  "
+            "A connected sum decomposition into prime summands has been "
+            "extracted (without modifying this triangulation)."));
+    } else {
+        // Prime 3-manifold.
+        unsigned long finalTets = tri->getNumberOfTetrahedra();
+        if (finalTets <= 2) {
+            // Check for special cases.
+            if ((! tri->isZeroEfficient()) &&
+                    tri->getHomologyH1().getRank() == 0 &&
+                    tri->getHomologyH1().getTorsionRank(2) == 1 &&
+                    tri->getHomologyH1().getNumberOfInvariantFactors() == 1) {
+                // RP3.
+                if (finalTets < initTets)
+                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                        "RP<sup>3</sup> does not have a 0-efficient "
+                        "triangulation.  This triangulation has instead "
+                        "been converted to a minimal two-tetrahedron "
+                        "triangulation of RP<sup>3</sup>.</qt>"));
+                else if (orig->isIsomorphicTo(*tri).get())
+                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                        "RP<sup>3</sup> does not have a 0-efficient "
+                        "triangulation.  This triangulation has been "
+                        "left unchanged.</qt>"));
+                else
+                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                        "RP<sup>3</sup> does not have a 0-efficient "
+                        "triangulation.  This triangulation has instead been "
+                        "converted to a one-vertex minimal triangulation "
+                        "of RP<sup>3</sup>.</qt>"));
+                return;
+            } else if ((! tri->isZeroEfficient()) &&
+                    tri->getHomologyH1().getRank() == 1 &&
+                    tri->getHomologyH1().getNumberOfInvariantFactors() == 0) {
+                // S2xS1.
+                if (finalTets < initTets)
+                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                        "S<sup>2</sup> x S<sup>1</sup> does not have "
+                        "a 0-efficient triangulation.  This triangulation has "
+                        "instead been converted to a minimal two-tetrahedron "
+                        "triangulation of "
+                        "S<sup>2</sup> x S<sup>1</sup>.</qt>"));
+                else
+                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                        "S<sup>2</sup> x S<sup>1</sup> does not have "
+                        "a 0-efficient triangulation.  This triangulation has "
+                        "been left unchanged.</qt>"));
+                return;
+            } else if (finalTets == initTets && ! orig->isZeroEfficient()) {
+                // The triangulation has been made 0-efficient
+                // without changing the number of tetrahedra; don't
+                // report this as a no-op to the user.
+                // This specifically occurs with some L(3,1) triangulations.
+                return;
+            }
+
+            // Fall through - it's an ordinary case.
+        }
+
+        if (finalTets == initTets)
+            KMessageBox::information(ui, i18n("This triangulation is already "
+                "0-efficient.  No changes are necessary."));
     }
 }
 

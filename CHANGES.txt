@@ -18,8 +18,9 @@ Version 4.1  [ 29 February, 2004 ]
         Class NProgress:
             - Added timing utilities getRealTime() and totalCPUTime().
         Class NTriangulation:
-            - New decomposition routines splitIntoComponents(),
-              connectedSumDecomposition() and isThreeSphere().
+            - New 0-efficiency / decomposition routines splitIntoComponents(),
+              connectedSumDecomposition(), isThreeSphere(), knowsThreeSphere()
+              and makeZeroEfficient().
             - New Seifert fibred space constructions insertAugTriSolidTorus()
               and insertSFSOverSphere().
     USER INTERFACE:

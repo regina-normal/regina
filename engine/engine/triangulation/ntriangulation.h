@@ -90,9 +90,6 @@ class NXMLTriangulationReader;
  *
  * \todo \feature Is the boundary incompressible?
  * \todo \feature Add set of cusps and three corresponding get functions.
- * \todo \feature Make 0-efficient.
- * \todo \feature Insert a SFS with 3 exceptional fibres.
- * \todo \featurelong Am I a sphere?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
  * if there is nothing left).  Am I obviously not a handlebody?
  * (Compare homology with boundary homology).
@@ -1574,13 +1571,14 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * of the given parent packet.  The original triangulation will
          * be left unchanged.
          *
+         * Note that this routine is currently only available for
+         * closed orientable triangulations; see the list of
+         * preconditions for full details.  The 0-efficiency prime
+         * decomposition algorithm of Jaco and Rubinstein is used.
+         *
          * If the given parent packet is 0, the new prime summand
          * triangulations will be inserted as children of this
          * triangulation.
-         *
-         * This routine uses Jaco and Rubinstein's 0-efficiency prime
-         * decomposition algorithm.  It may only be used with valid
-         * closed orientable connected triangulations.
          *
          * This routine can optionally assign unique (and sensible)
          * packet labels to each of the new prime summand triangulations.
@@ -1622,10 +1620,76 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * \warning The algorithms used in this routine rely on normal
          * surface theory and so can be very slow for larger
          * triangulations (although faster tests are used where possible).
+         * The routine knowsThreeSphere() can be called to see if this
+         * property is already known or if it happens to be very fast to
+         * calculate for this triangulation.
          *
          * @return \c true if and only if this is a 3-sphere triangulation.
          */
         bool isThreeSphere() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not this
+         * is a triangulation of a 3-sphere?  See isThreeSphere() for
+         * further details.
+         *
+         * If this property is indeed already known, future calls to
+         * isThreeSphere() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * If this property is not already known, this routine will
+         * nevertheless run some very fast preliminary tests to see if the
+         * answer is obviously no.  If so, it will store \c false as the
+         * precalculated value for isThreeSphere() and this routine will
+         * return \c true.
+         *
+         * Otherwise a call to isThreeSphere() may potentially require more
+         * significant work, and so this routine will return \c false.
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsThreeSphere() const;
+        /**
+         * Converts this into a 0-efficient triangulation of the same
+         * underlying 3-manifold.  A triangulation is 0-efficient if its
+         * only normal spheres and discs are vertex linking, and if it has
+         * no 2-sphere boundary components.
+         *
+         * Note that this routine is currently only available for
+         * closed orientable triangulations; see the list of
+         * preconditions for details.  The 0-efficiency algorithm of
+         * Jaco and Rubinstein is used.
+         *
+         * If the underlying 3-manifold is prime, it can always be made
+         * 0-efficient (with the exception of the special cases RP3 and
+         * S2xS1 as noted below).  In this case the original triangulation
+         * will be modified directly and 0 will be returned.
+         *
+         * If the underyling 3-manifold is RP3 or S2xS1, it cannot
+         * be made 0-efficient; in this case the original triangulation
+         * will be reduced to a two-tetrahedron minimal triangulation
+         * and 0 will again be returned.
+         *
+         * If the underlying 3-manifold is not prime, it cannot be made
+         * 0-efficient.  In this case the original triangulation will
+         * remain unchanged and a new connected sum decomposition will
+         * be returned.  This will be presented as a newly allocated
+         * container packet with one child triangulation for each prime
+         * summand.
+         *
+         * \warning The algorithms used in this routine rely on normal
+         * surface theory and so can be very slow for larger triangulations.
+         *
+         * \pre This triangulation is valid, closed, orientable and
+         * connected.
+         *
+         * @return 0 if the underlying 3-manifold is prime (in which
+         * case the original triangulation was modified directly), or
+         * a newly allocated connected sum decomposition if the
+         * underlying 3-manifold is composite (in which case the
+         * original triangulation was not changed).
+         */
+        NPacket* makeZeroEfficient();
 
         /*@}*/
         /**

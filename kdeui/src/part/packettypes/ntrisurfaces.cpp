@@ -57,7 +57,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout(layout, 2, 7, 5);
+    QGridLayout* grid = new QGridLayout(layout, 3, 7, 5);
     grid->setColStretch(0, 1);
     grid->setColSpacing(2, 5); // Horizontal gap
     grid->setColSpacing(4, 5); // Horizontal gap
@@ -67,11 +67,15 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(label, 0, 1);
     label = new QLabel(i18n("Splitting surface?"), ui);
     grid->addWidget(label, 1, 1);
+    label = new QLabel(i18n("3-sphere?"), ui);
+    grid->addWidget(label, 2, 1);
 
     zeroEff = new QLabel(ui);
     grid->addWidget(zeroEff, 0, 3);
     splitting = new QLabel(ui);
     grid->addWidget(splitting, 1, 3);
+    threeSphere = new QLabel(ui);
+    grid->addWidget(threeSphere, 2, 3);
 
     btnZeroEff = new QPushButton(SmallIconSet("run", 0,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
@@ -81,6 +85,11 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
     grid->addWidget(btnSplitting, 1, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
+    btnThreeSphere = new QPushButton(SmallIconSet("run", 0,
+        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
+    grid->addWidget(btnThreeSphere, 2, 5);
+    connect(btnThreeSphere, SIGNAL(clicked()), this,
+        SLOT(calculateThreeSphere()));
 
     layout->addStretch(3);
 }
@@ -125,6 +134,22 @@ void NTriSurfacesUI::refresh() {
         splitting->unsetPalette();
         btnSplitting->setEnabled(true);
     }
+
+    if (tri->knowsThreeSphere() ||
+            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+        if (tri->isThreeSphere()) {
+            threeSphere->setText(i18n("True"));
+            threeSphere->setPaletteForegroundColor(Qt::darkGreen);
+        } else {
+            threeSphere->setText(i18n("False"));
+            threeSphere->setPaletteForegroundColor(Qt::darkRed);
+        }
+        btnThreeSphere->setEnabled(false);
+    } else {
+        threeSphere->setText(i18n("Unknown"));
+        threeSphere->unsetPalette();
+        btnThreeSphere->setEnabled(true);
+    }
 }
 
 void NTriSurfacesUI::editingElsewhere() {
@@ -145,6 +170,11 @@ void NTriSurfacesUI::calculateZeroEff() {
 
 void NTriSurfacesUI::calculateSplitting() {
     tri->hasSplittingSurface();
+    refresh();
+}
+
+void NTriSurfacesUI::calculateThreeSphere() {
+    tri->isThreeSphere();
     refresh();
 }
 

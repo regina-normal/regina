@@ -8,6 +8,7 @@ engine documentation.
 General:
     Make "configure shortcuts" work with the part as well as with the shell
     More "What's This?" texts, including a what's this button on the toolbar
+    Include an index of common tasks in the reference manual
     Enhance the DCOP interface
 
 Census:
@@ -20,7 +21,7 @@ Containers:
 Icons:
     Softer tree for filter_comb.png
     Icons for separate New actions
-    Icon for barycentric subdivision
+    Icons for barycentric subdivision and other triangulation actions
     Separate mimetype icon set
 
 Import/Export:
@@ -56,5 +57,5 @@ Toolbars:
 Triangulations:
     Make the skeleton viewer windows appear in a pleasant size
     Only fill the isomorphism combo box when absolutely necessary
-    UI hooks for 3-sphere recognition and "make 0-efficient".
+    Progress dialogs on connected sum decomposition and 3-sphere recognition?
 
