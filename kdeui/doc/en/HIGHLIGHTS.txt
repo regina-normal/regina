@@ -11,8 +11,11 @@ Regina - A Normal Surface Theory Calculator
 Version 4.0.1  [ 26 January, 2004 ]
 
     Features:
-        - Better compile-time magic to detect whether the Qt version is
-          sufficient and to select the correct --prefix automatically.
+        - Better compile-time magic to select the correct --prefix
+          automatically and to detect whether the Qt version is sufficient.
+        - No longer requires docbook-utils and its complicated
+          dependencies (instead Regina ships with pregenerated manpages).
+        - Expanded troubleshooting section of the reference manual.
 
 Version 4.0  [ 20 December, 2003 ]
 

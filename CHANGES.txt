@@ -9,10 +9,12 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.0.1  [ 26 January, 2004 ]
     OVERALL:
-        - The ./configure script now insists upon Qt >= 3.2, takes a
-          guess at the correct --prefix and runs sanity tests upon it.
+        - The ./configure script now takes a guess at the correct --prefix,
+          runs sanity tests upon it and insists upon Qt >= 3.2.
+        - Regina now ships with pregenerated manpages to avoid the need
+          for docbook-utils and its complicated dependencies.
         - The troubleshooting section of the reference manual now
-          includes compile-time problems as well as runtime problems.
+          includes compile-time problems and discusses the test suite.
     USER INTERFACE:
         Class GridListViewItem:
             - Added to centralise support for list views with grids.
