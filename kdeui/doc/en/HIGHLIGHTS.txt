@@ -8,15 +8,25 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.1  [ 29 February, 2004 ]
+Version 4.1  [ 7 March, 2004 ]
 
     Features:
         - 3-sphere recognition.
         - Full connected sum decomposition for closed orientable
           triangulations.
+        - Conversion to 0-efficient triangulations for closed orientable
+          3-manifolds.
         - Automated construction of orientable Seifert fibred spaces over
-          the sphere with at most three exceptional fibres.
-        - Recognition of some more trivial multiple-vertex triangulations.
+          the sphere with up to three exceptional fibres.
+        - Better recognition of small multiple-vertex triangulations.
+    Usability:
+        - Each packet type now offers its own menu of possible actions,
+          e.g., "Triangulation" menu, "Script" menu, etc.
+        - Thorough use of "What's This?" help and tooltips across the
+          entire user interface.
+        - New tip-of-the-day support.
+        - Added an index of common tasks to the reference manual.
+        - Various other enhancements for improved feedback and ease of use.
     Bug Fixes:
         - Fixed bug in "tricensus --genpairs" that caused empty output files.
         - Updates for compatibility with KDE 3.2.
