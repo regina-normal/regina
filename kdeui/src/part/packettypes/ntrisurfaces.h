@@ -64,12 +64,22 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QButton* btnZeroEff;
         QButton* btnSplitting;
 
+        /**
+         * Properties
+         */
+        unsigned autoCalcThreshold;
+
     public:
         /**
          * Constructor.
          */
         NTriSurfacesUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI);
+            PacketTabbedUI* useParentUI, unsigned newAutoCalcThreshold);
+
+        /**
+         * Update properties.
+         */
+        void setAutoCalcThreshold(unsigned newThreshold);
 
         /**
          * PacketViewerTab overrides.
@@ -86,5 +96,9 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         void calculateZeroEff();
         void calculateSplitting();
 };
+
+inline void NTriSurfacesUI::setAutoCalcThreshold(unsigned newThreshold) {
+    autoCalcThreshold = newThreshold;
+}
 
 #endif

@@ -42,14 +42,10 @@
 using regina::NPacket;
 using regina::NTriangulation;
 
-// TODO: Make the auto-calculation threshold configurable.
-namespace {
-    const unsigned surfaceAutoCalcThreshold = 2;
-}
-
 NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        tri(packet) {
+        PacketTabbedUI* useParentUI, unsigned newAutoCalcThreshold) :
+        PacketViewerTab(useParentUI), tri(packet),
+        autoCalcThreshold(newAutoCalcThreshold) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
@@ -99,7 +95,7 @@ QWidget* NTriSurfacesUI::getInterface() {
 
 void NTriSurfacesUI::refresh() {
     if (tri->knowsZeroEfficient() ||
-            tri->getNumberOfTetrahedra() <= surfaceAutoCalcThreshold) {
+            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
         if (tri->isZeroEfficient()) {
             zeroEff->setText(i18n("True"));
             zeroEff->setPaletteForegroundColor(Qt::darkGreen);
@@ -115,7 +111,7 @@ void NTriSurfacesUI::refresh() {
     }
 
     if (tri->knowsSplittingSurface() ||
-            tri->getNumberOfTetrahedra() <= surfaceAutoCalcThreshold) {
+            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
         if (tri->hasSplittingSurface()) {
             splitting->setText(i18n("True"));
             splitting->setPaletteForegroundColor(Qt::darkGreen);

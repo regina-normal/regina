@@ -133,7 +133,7 @@ class ReginaMain : public KParts::MainWindow,
 
     signals:
         /**
-         * Emitted when global properties are changed.
+         * Emitted when the global preferences have been changed.
          */
         void preferencesChanged(const ReginaPrefSet&);
 

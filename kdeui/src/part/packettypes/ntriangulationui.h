@@ -37,7 +37,9 @@
 
 class KToolBar;
 class NTriGluingsUI;
+class NTriSurfacesUI;
 class QLabel;
+class ReginaPrefSet;
 
 namespace regina {
     class NTriangulation;
@@ -47,23 +49,33 @@ namespace regina {
  * A packet interface for viewing triangulations.
  */
 class NTriangulationUI : public PacketTabbedUI {
+    Q_OBJECT
+
     private:
         /**
          * Internal components
          */
         NTriGluingsUI* gluings;
+        NTriSurfacesUI* surfaces;
 
     public:
         /**
          * Constructor.
          */
         NTriangulationUI(regina::NTriangulation* packet,
-                PacketPane* newEnclosingPane, bool readWrite);
+            PacketPane* newEnclosingPane, ReginaPart* part, bool readWrite);
 
         /**
          * PacketUI overrides.
          */
         const QPtrList<KAction>& getPacketTypeActions();
+
+    public slots:
+        /**
+         * Notify this interface that the global preferences have been
+         * updated.
+         */
+        void updatePreferences(const ReginaPrefSet& newPrefs);
 };
 
 /**

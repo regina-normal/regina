@@ -378,6 +378,8 @@ void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
         reginaIcon->show();
     else
         reginaIcon->hide();
+
+    emit preferencesChanged(prefs);
 }
 
 void ReginaPart::updateTreePacketActions() {

@@ -178,12 +178,25 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         void isClosing(PacketPane* closingPane);
 
+        /**
+         * Returns the current set of preferences.
+         */
+        const ReginaPrefSet& getPreferences() const;
+
     protected:
         /**
          * KPart overrides.
          */
         virtual bool openFile();
         virtual bool saveFile();
+
+    signals:
+        /**
+         * Emitted when the global preferences have been changed
+         * externally (such as through the main window preferences
+         * dialog).
+         */
+        void preferencesChanged(const ReginaPrefSet&);
 
     public slots:
         /**
@@ -268,7 +281,8 @@ class ReginaPart : public KParts::ReadWritePart {
         bool closeAllPanes();
 
         /**
-         * Update the global preferences.
+         * Update the global preferences.  Note that this routine emits
+         * a preferencesChanged() signal.
          */
         void updatePreferences(const ReginaPrefSet& newPrefs);
 
@@ -322,5 +336,9 @@ class ReginaPart : public KParts::ReadWritePart {
         void exportFile(const PacketExporter& exporter,
             const QString& fileFilter, const QString& dialogTitle);
 };
+
+inline const ReginaPrefSet& ReginaPart::getPreferences() const {
+    return prefs;
+}
 
 #endif

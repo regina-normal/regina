@@ -36,6 +36,7 @@
 #include "ntrigluings.h"
 #include "ntriskeleton.h"
 #include "ntrisurfaces.h"
+#include "../reginapart.h"
 
 #include <klocale.h>
 #include <ktoolbar.h>
@@ -46,10 +47,12 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
-        PacketPane* newEnclosingPane, bool readWrite) :
+        PacketPane* newEnclosingPane, ReginaPart* part, bool readWrite) :
         PacketTabbedUI(newEnclosingPane) {
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
     gluings = new NTriGluingsUI(packet, this, readWrite);
+    surfaces = new NTriSurfacesUI(packet, this,
+        part->getPreferences().triSurfacePropsThreshold);
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -58,11 +61,18 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     addTab(new NTriSkeletonUI(packet, this), i18n("&Skeleton"));
     addTab(new NTriAlgebraUI(packet, this), i18n("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), i18n("&Composition"));
-    addTab(new NTriSurfacesUI(packet, this), i18n("Sur&faces"));
+    addTab(surfaces, i18n("Sur&faces"));
+
+    connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
+        this, SLOT(updatePreferences(const ReginaPrefSet&)));
 }
 
 const QPtrList<KAction>& NTriangulationUI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
+}
+
+void NTriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+    surfaces->setAutoCalcThreshold(newPrefs.triSurfacePropsThreshold);
 }
 
 NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
@@ -120,3 +130,4 @@ void NTriHeaderUI::editingElsewhere() {
     header->setText(i18n("Editing..."));
 }
 
+#include "ntriangulationui.moc"

@@ -38,6 +38,7 @@
 
 class PacketPane;
 class PacketUI;
+class ReginaPart;
 
 namespace KTextEditor {
     class Document;
@@ -68,18 +69,16 @@ class PacketManager {
          * Returns a newly created interface appropriate for viewing or
          * editing the given packet.
          *
-         * The interface should be in read-only or read-write mode
-         * according to the parameter \a allowReadWrite.  It may be
-         * assumed that the read-write status of the enclosing KPart as
-         * well as the return value of NPacket::isPacketEditable() have
-         * already been consulted.
+         * The interface will be created in read-write or read-only mode
+         * according to the read-write status of the enclosing KPart as
+         * well as the return value of NPacket::isPacketEditable().
          *
          * Note that the interface may be required to change its
          * read-only or read-write status throughout its lifetime.
          * See PacketUI::setReadWrite() for details.
          */
         static PacketUI* createUI(regina::NPacket* packet,
-            PacketPane* enclosingPane, bool allowReadWrite);
+            PacketPane* enclosingPane, ReginaPart* part);
 
     private:
         /**
