@@ -36,13 +36,12 @@
 #define __NPLUGTRISOLIDTORUS_H
 #endif
 
-#include "manifold/nsfs.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
 
 namespace regina {
 
-class NTriangulation;
+class NComponent;
 
 /**
  * \weakgroup subcomplex
@@ -85,8 +84,12 @@ class NTriangulation;
  * the other (where the \e tips of the plug are the vertices not meeting the
  * interior face).  The gluings must also be made so that the resulting
  * triangulation component is orientable.
+ *
+ * Of the optional NStandardTriangulation routines, getManifold() is
+ * implemented for most plugged triangular solid tori and
+ * getHomologyH1() is not implemented at all.
  */
-class NPlugTriSolidTorus : public ShareableObject {
+class NPlugTriSolidTorus : public NStandardTriangulation {
     public:
         static const int CHAIN_NONE;
             /**< Indicates an annulus on the triangular solid torus
@@ -124,8 +127,6 @@ class NPlugTriSolidTorus : public ShareableObject {
         int equatorType;
             /**< Indicates which types of edges form the equator of the
                  plug. */
-        NSFS seifertStructure;
-            /**< The structure of the corresponding Seifert fibred space. */
     
     public:
         /**
@@ -193,30 +194,20 @@ class NPlugTriSolidTorus : public ShareableObject {
         int getEquatorType() const;
 
         /**
-         * Returns the structure of the Seifert fibred space formed by
-         * this plugged triangular solid torus.
-         *
-         * Note that if sufficiently pathological layered chains are
-         * attached to the core triangular solid torus, this routine will
-         * return a Seifert structure containing a (0,1) fibre; this
-         * should be interpreted as an unknown Seifert structure.
-         *
-         * @return the structure of the corresponding Seifert fibred space.
-         */
-        const NSFS& getSeifertStructure() const;
-
-        /**
-         * Determines if the given triangulation is a
+         * Determines if the given triangulation component is a
          * plugged triangular solid torus.
          *
-         * @param tri the triangulation to examine.
+         * @param comp the triangulation component to examine.
          * @return a newly created structure containing details of the
          * plugged triangular solid torus, or \c null if the given
-         * triangulation is not a plugged triangular solid torus.
+         * component is not a plugged triangular solid torus.
          */
-        static NPlugTriSolidTorus* isPlugTriSolidTorus(NTriangulation* tri);
+        static NPlugTriSolidTorus* isPlugTriSolidTorus(NComponent* comp);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -224,12 +215,6 @@ class NPlugTriSolidTorus : public ShareableObject {
          * initialised to \c null.
          */
         NPlugTriSolidTorus();
-
-        /**
-         * Calculate the Seifert structure according to the
-         * other information already stored in this structure.
-         */
-        void findExceptionalFibres();
 };
 
 /*@}*/
@@ -252,9 +237,6 @@ inline int NPlugTriSolidTorus::getChainType(int annulus) const {
 }
 inline int NPlugTriSolidTorus::getEquatorType() const {
     return equatorType;
-}
-inline const NSFS& NPlugTriSolidTorus::getSeifertStructure() const {
-    return seifertStructure;
 }
 
 } // namespace regina

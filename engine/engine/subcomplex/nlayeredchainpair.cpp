@@ -26,6 +26,9 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
+#include "manifold/nsfs.h"
+#include "maths/nmatrixint.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayeredchainpair.h"
@@ -38,20 +41,7 @@ NLayeredChainPair* NLayeredChainPair::clone() const {
         ans->chain[0] = new NLayeredChain(*chain[0]);
     if (chain[1])
         ans->chain[1] = new NLayeredChain(*chain[1]);
-    ans->seifertStructure = seifertStructure;
     return ans;
-}
-
-void NLayeredChainPair::findExceptionalFibres() {
-    seifertStructure.insertFibre(NExceptionalFibre(2, -1));
-    if (chain[0])
-        seifertStructure.insertFibre(NExceptionalFibre(
-            chain[0]->getIndex() + 1, 1));
-    if (chain[1])
-        seifertStructure.insertFibre(NExceptionalFibre(
-            chain[1]->getIndex() + 1, 1));
-
-    seifertStructure.reduce();
 }
 
 NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
@@ -124,7 +114,6 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                             firstBottomRoles[0]) * firstBottomRoles *
                             NPerm(0, 2, 1, 3));
 
-                    ans->findExceptionalFibres();
                     delete first;
                     return ans;
                 }
@@ -183,8 +172,6 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                 ans->chain[0] = first;
                 ans->chain[1] = second;
             }
-
-            ans->findExceptionalFibres();
             return ans;
         } else {
             delete first;
@@ -194,6 +181,36 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
 
     // Nothing was found.  Sigh.
     return 0;
+}
+
+NManifold* NLayeredChainPair::getManifold() const {
+    NSFS* ans = new NSFS();
+
+    ans->insertFibre(2, -1);
+    ans->insertFibre(chain[0]->getIndex() + 1, 1);
+    ans->insertFibre(chain[1]->getIndex() + 1, 1);
+
+    ans->reduce();
+    return ans;
+}
+
+NAbelianGroup* NLayeredChainPair::getHomologyH1() const {
+    // The first homology group can be obtained from the matrix:
+    //
+    //   [  1  -1   1 ]
+    //   [ n_1  1   1 ]
+    //   [  1  n_2 -1 ]
+    //
+    // This is established simply by examining the edges on the boundary
+    // of each layered chain.
+    NAbelianGroup* ans = new NAbelianGroup();
+    NMatrixInt mat(3, 3);
+    mat.initialise(1);
+    mat.entry(0, 1) = mat.entry(2, 2) = -1;
+    mat.entry(1, 0) = chain[0]->getIndex();
+    mat.entry(2, 1) = chain[1]->getIndex();
+    ans->addGroup(mat);
+    return ans;
 }
 
 } // namespace regina

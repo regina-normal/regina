@@ -88,14 +88,25 @@ class NStandardTriangulation : public ShareableObject {
          */
         std::string getTeXName() const;
         /**
-         * Returns the 3-manifold represented by this triangulation.
+         * Returns the 3-manifold represented by this triangulation, if
+         * such a recognition routine has been implemented.  If the
+         * 3-manifold cannot be recognised then this routine will return 0.
+         *
+         * The details of which standard triangulations have 3-manifold
+         * recognition routines can be found in the notes for the
+         * corresponding subclasses of NStandardTriangulation.  The
+         * default implementation of this routine returns 0.
+         *
+         * It is expected that the number of triangulations whose
+         * underlying 3-manifolds can be recognised will grow between
+         * releases.
          *
          * The 3-manifold will be newly allocated and must be destroyed
          * by the caller of this routine.
          *
          * @return the underlying 3-manifold.
          */
-        virtual NManifold* getManifold() const = 0;
+        virtual NManifold* getManifold() const;
         /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
@@ -193,6 +204,10 @@ class NStandardTriangulation : public ShareableObject {
 // Inline functions for NStandardTriangulation
 
 inline NStandardTriangulation::~NStandardTriangulation() {
+}
+
+inline NManifold* NStandardTriangulation::getManifold() const {
+    return 0;
 }
 
 inline NAbelianGroup* NStandardTriangulation::getHomologyH1() const {

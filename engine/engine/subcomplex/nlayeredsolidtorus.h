@@ -55,6 +55,9 @@ class NTetrahedron;
  * degenerate (2,1,1) mobius strip and layer over the mobius strip
  * boundary (including the minimal (1,1,0) triangulation) are not
  * described by this class.
+ *
+ * All optional NStandardTriangulation routines are implemented for this
+ * class.
  */
 class NLayeredSolidTorus : public NStandardTriangulation {
     private:

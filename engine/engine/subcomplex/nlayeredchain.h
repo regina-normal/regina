@@ -79,6 +79,9 @@ class NTetrahedron;
  * Note that for the purposes of getManifold() and getHomologyH1(), a
  * layered chain containing only one tetrahedron will be considered as a
  * standalone tetrahedron that forms a 3-ball (and not a solid torus).
+ *
+ * All optional NStandardTriangulation routines are implemented for this
+ * class.
  */
 class NLayeredChain : public NStandardTriangulation {
     private:

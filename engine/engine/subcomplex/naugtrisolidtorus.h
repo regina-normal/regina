@@ -36,7 +36,6 @@
 #define __NAUGTRISOLIDTORUS_H
 #endif
 
-#include "manifold/nsfs.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 
@@ -76,8 +75,12 @@ class NComponent;
  * Note that (unless a (1,1,0) layered solid torus is used with the 0
  * edge glued to an axis edge) the resulting space will be a Seifert
  * fibred space over the 2-sphere with at most three exceptional fibres.
+ *
+ * Of the optional NStandardTriangulation routines, getManifold() is
+ * implemented for most augmented triangular solid tori and
+ * getHomologyH1() is not implemented at all.
  */
-class NAugTriSolidTorus : public ShareableObject {
+class NAugTriSolidTorus : public NStandardTriangulation {
     public:
         static const int CHAIN_NONE;
             /**< Indicates that this augmented triangular solid torus
@@ -117,9 +120,7 @@ class NAugTriSolidTorus : public ShareableObject {
             /**< The annulus to which the single layered solid torus is
                  attached (if there is a layered chain), or -1 if there is
                  no layered chain. */
-        NSFS seifertStructure;
-            /**< The structure of the corresponding Seifert fibred space. */
-    
+
     public:
         /**
          * Destroys this augmented solid torus; note that the corresponding
@@ -226,20 +227,6 @@ class NAugTriSolidTorus : public ShareableObject {
         bool hasLayeredChain() const;
 
         /**
-         * Returns the structure of the Seifert fibred space formed by
-         * this augmented triangular solid torus.
-         *
-         * Note that if sufficiently pathological layered chains or
-         * layered solid tori are attached to the core triangular solid
-         * torus, this routine will returne a Seifert structure
-         * containing a (0,1) fibre; this should be interpreted as an
-         * unknown Seifert structure.
-         *
-         * @return the structure of the corresponding Seifert fibred space.
-         */
-        const NSFS& getSeifertStructure() const;
-
-        /**
          * Determines if the given triangulation component is an
          * augmented triangular solid torus.
          *
@@ -250,7 +237,10 @@ class NAugTriSolidTorus : public ShareableObject {
          */
         static NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -260,10 +250,14 @@ class NAugTriSolidTorus : public ShareableObject {
         NAugTriSolidTorus();
 
         /**
-         * Calculate the Seifert structure according to the
-         * other information already stored in this structure.
+         * Contains code common to both writeName() and writeTeXName().
+         *
+         * @param out the output stream to which to write.
+         * @param tex \c true if this routine is called from
+         * writeTeXName() or \c false if it is called from writeName().
+         * @return a reference to \a out.
          */
-        void findExceptionalFibres();
+        std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
 
 /*@}*/
@@ -296,9 +290,6 @@ inline int NAugTriSolidTorus::getTorusAnnulus() const {
 }
 inline bool NAugTriSolidTorus::hasLayeredChain() const {
     return (chainIndex != 0);
-}
-inline const NSFS& NAugTriSolidTorus::getSeifertStructure() const {
-    return seifertStructure;
 }
 
 } // namespace regina

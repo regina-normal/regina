@@ -35,7 +35,7 @@ using namespace boost::python;
 using regina::NAugTriSolidTorus;
 
 void addNAugTriSolidTorus() {
-    scope s = class_<NAugTriSolidTorus, bases<regina::ShareableObject>,
+    scope s = class_<NAugTriSolidTorus, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NAugTriSolidTorus>, boost::noncopyable>
             ("NAugTriSolidTorus", no_init)
         .def("clone", &NAugTriSolidTorus::clone,
@@ -49,8 +49,6 @@ void addNAugTriSolidTorus() {
         .def("getChainType", &NAugTriSolidTorus::getChainType)
         .def("getTorusAnnulus", &NAugTriSolidTorus::getTorusAnnulus)
         .def("hasLayeredChain", &NAugTriSolidTorus::hasLayeredChain)
-        .def("getSeifertStructure", &NAugTriSolidTorus::getSeifertStructure,
-            return_internal_reference<>())
         .def("isAugTriSolidTorus", &NAugTriSolidTorus::isAugTriSolidTorus,
             return_value_policy<manage_new_object>())
         .staticmethod("isAugTriSolidTorus")
@@ -59,5 +57,8 @@ void addNAugTriSolidTorus() {
     s.attr("CHAIN_NONE") = NAugTriSolidTorus::CHAIN_NONE;
     s.attr("CHAIN_MAJOR") = NAugTriSolidTorus::CHAIN_MAJOR;
     s.attr("CHAIN_AXIS") = NAugTriSolidTorus::CHAIN_AXIS;
+
+    implicitly_convertible<std::auto_ptr<NAugTriSolidTorus>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

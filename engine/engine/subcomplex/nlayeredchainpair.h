@@ -35,7 +35,6 @@
 #define __NLAYEREDCHAINPAIR_H
 #endif
 
-#include "manifold/nsfs.h"
 #include "subcomplex/nlayeredchain.h"
 
 namespace regina {
@@ -71,13 +70,14 @@ class NComponent;
  * Note that a layered chain pair in which one of the chains contains
  * only one tetrahedron is in fact a layered loop with a twist
  * (see class NLayeredLoop).
+ *
+ * All optional NStandardTriangulation routines are implemented for this
+ * class.
  */
-class NLayeredChainPair : public ShareableObject {
+class NLayeredChainPair : public NStandardTriangulation {
     private:
         NLayeredChain* chain[2];
             /**< The two layered chains that make up this pair. */
-        NSFS seifertStructure;
-            /**< The structure of the corresponding Seifert fibred space. */
 
     public:
         /**
@@ -103,14 +103,6 @@ class NLayeredChainPair : public ShareableObject {
         const NLayeredChain* getChain(int which) const;
 
         /**
-         * Returns the structure of the Seifert fibred space formed by
-         * this layered chain pair.
-         *
-         * @return the structure of the corresponding Seifert fibred space.
-         */
-        const NSFS& getSeifertStructure() const;
-
-        /**
          * Determines if the given triangulation component is a layered
          * chain pair.
          *
@@ -121,19 +113,17 @@ class NLayeredChainPair : public ShareableObject {
          */
         static NLayeredChainPair* isLayeredChainPair(const NComponent* comp);
 
-        void writeTextShort(std::ostream& out) const;
+        NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
          * Creates a new uninitialised structure.
          */
         NLayeredChainPair();
-
-        /**
-         * Calculate the Seifert structure according to the other
-         * information already stored in this structure.
-         */
-        void findExceptionalFibres();
 };
 
 /*@}*/
@@ -151,13 +141,17 @@ inline NLayeredChainPair::~NLayeredChainPair() {
 inline const NLayeredChain* NLayeredChainPair::getChain(int which) const {
     return chain[which];
 }
-inline const NSFS& NLayeredChainPair::getSeifertStructure() const {
-    return seifertStructure;
+inline std::ostream& NLayeredChainPair::writeName(std::ostream& out) const {
+    return out << "C("
+        << chain[0]->getIndex() << ',' << chain[1]->getIndex() << ')';
 }
-inline void NLayeredChainPair::writeTextShort(std::ostream& out) const {
+inline std::ostream& NLayeredChainPair::writeTeXName(std::ostream& out) const {
+    return out << "$C_{"
+        << chain[0]->getIndex() << ',' << chain[1]->getIndex() << "}$";
+}
+inline void NLayeredChainPair::writeTextLong(std::ostream& out) const {
     out << "Layered chain pair (chain lengths "
-        << (chain[0] ? chain[0]->getIndex() : '?') << ", "
-        << (chain[1] ? chain[1]->getIndex() : '?') << ')';
+        << chain[0]->getIndex() << ", " << chain[1]->getIndex() << ')';
 }
 
 } // namespace regina

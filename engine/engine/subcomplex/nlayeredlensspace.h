@@ -54,6 +54,9 @@ namespace regina {
  * shut (in one of two possible ways) or snapping it shut without any twist.
  * 
  * A layered lens space must contain at least one tetrahedron.
+ *
+ * All optional NStandardTriangulation routines are implemented for this
+ * class.
  */
 class NLayeredLensSpace : public NStandardTriangulation {
     private:

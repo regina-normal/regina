@@ -70,6 +70,9 @@ class NEdge;
  *
  * The \a length of the layered loop is the number of tetrahedra it
  * contains.  A layered loop must contain at least one tetrahedron.
+ *
+ * All optional NStandardTriangulation routines are implemented for this
+ * class.
  */
 class NLayeredLoop : public NStandardTriangulation {
     private:

@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include <algorithm>
+#include "manifold/nsfs.h"
 #include "triangulation/ntriangulation.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 
@@ -54,18 +56,68 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::clone() const {
         ans->chainType[i] = chainType[i];
     }
     ans->equatorType = equatorType;
-    ans->seifertStructure = seifertStructure;
     return ans;
 }
 
-void NPlugTriSolidTorus::writeTextShort(std::ostream& out) const {
-    out << "Plugged triangular solid torus: ";
-    seifertStructure.writeTextShort(out);
+std::ostream& NPlugTriSolidTorus::writeName(std::ostream& out) const {
+    long params[3];
+    int nParams = 0;
+
+    int i;
+    for (i = 0; i < 3; i++)
+        if (chainType[i] != CHAIN_NONE) {
+            if (chainType[i] == CHAIN_MAJOR)
+                params[nParams++] = chain[i]->getIndex();
+            else
+                params[nParams++] = -chain[i]->getIndex();
+        }
+    std::sort(params, params + nParams);
+
+    out << (equatorType == EQUATOR_MAJOR ? "P(" : "P'(");
+    if (i == 0)
+        return out << "0)";
+    for (i = 0; i < nParams; i++) {
+        if (i > 0)
+            out << ',';
+        out << params[i];
+    }
+    return out << ')';
 }
 
-void NPlugTriSolidTorus::findExceptionalFibres() {
-    seifertStructure.insertFibre(NExceptionalFibre(2, -1));
-    seifertStructure.insertFibre(NExceptionalFibre(3, 1));
+std::ostream& NPlugTriSolidTorus::writeTeXName(std::ostream& out) const {
+    long params[3];
+    int nParams = 0;
+
+    int i;
+    for (i = 0; i < 3; i++)
+        if (chainType[i] != CHAIN_NONE) {
+            if (chainType[i] == CHAIN_MAJOR)
+                params[nParams++] = chain[i]->getIndex();
+            else
+                params[nParams++] = -chain[i]->getIndex();
+        }
+    std::sort(params, params + nParams);
+
+    out << (equatorType == EQUATOR_MAJOR ? "$P_{" : "$P'_{");
+    if (i == 0)
+        return out << "0}$";
+    for (i = 0; i < nParams; i++) {
+        if (i > 0)
+            out << ',';
+        out << params[i];
+    }
+    return out << "}$";
+}
+
+void NPlugTriSolidTorus::writeTextLong(std::ostream& out) const {
+    out << "Plugged triangular solid torus: ";
+    writeName(out);
+}
+
+NManifold* NPlugTriSolidTorus::getManifold() const {
+    NSFS* ans = new NSFS();
+    ans->insertFibre(2, -1);
+    ans->insertFibre(3, 1);
 
     long rot = (equatorType == EQUATOR_MAJOR ? 5 : 4);
     for (int i = 0; i < 3; i++)
@@ -75,25 +127,34 @@ void NPlugTriSolidTorus::findExceptionalFibres() {
             else
                 rot -= chain[i]->getIndex();
         }
-    seifertStructure.insertFibre(NExceptionalFibre(rot, 1));
+    if (rot != 0)
+        ans->insertFibre(rot, 1);
+    else {
+        delete ans;
+        return 0;
+    }
 
-    seifertStructure.reduce();
+    ans->reduce();
+    return ans;
 }
 
 NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
-        NTriangulation* tri) {
+        NComponent* comp) {
+    // TODO: Each triangular solid torus is tested three times since we
+    // can't call getTetrahedronIndex() from within a component only.
+
     // Basic property checks.
-    if ((! tri->isClosed()) || (! tri->isOrientable()))
+    if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
 
-    if (tri->getNumberOfVertices() > 1)
+    if (comp->getNumberOfVertices() > 1)
         return 0;
 
-    unsigned long nTet = tri->getNumberOfTetrahedra();
+    unsigned long nTet = comp->getNumberOfTetrahedra();
     if (nTet < 5)
         return 0;
 
-    // We have a 1-vertex closed orientable triangulation with at least
+    // We have a 1-vertex closed orientable component with at least
     // 5 tetrahedra.
 
     // Hunt for a core.  Make sure we find each triangular solid torus
@@ -126,7 +187,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 continue;
 
             core = NTriSolidTorus::formsTriSolidTorus(
-                tri->getTetrahedron(tetIndex), coreRoles[0]);
+                comp->getTetrahedron(tetIndex), coreRoles[0]);
             if (! core)
                 continue;
 
@@ -137,16 +198,14 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                     edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
             }
 
-            if (tri->getTetrahedronIndex(coreTet[1]) < tetIndex ||
-                    tri->getTetrahedronIndex(coreTet[2]) < tetIndex ||
-                    axis[0] == axis[1] || axis[1] == axis[2] ||
+            if (axis[0] == axis[1] || axis[1] == axis[2] ||
                     axis[2] == axis[0]) {
                 delete core;
                 continue;
             }
 
-            // We have the triangular solid torus in a unique canonical form.
-            // We also know the three axis edges are distinct.
+            // We have the triangular solid torus and we know the three
+            // axis edges are distinct.
 
             // Hunt for chains.
             for (i = 0; i < 3; i++) {
@@ -350,7 +409,6 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 plug->chainType[i] = chainType[i];
             }
             plug->equatorType = equatorType;
-            plug->findExceptionalFibres();
             return plug;
         }
 

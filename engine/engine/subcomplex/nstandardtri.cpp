@@ -27,8 +27,11 @@
 /* end stub */
 
 #include <sstream>
+#include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
+#include "subcomplex/nplugtrisolidtorus.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -51,6 +54,12 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     if ((ans = NLayeredLensSpace::isLayeredLensSpace(comp)))
         return ans;
     if ((ans = NLayeredLoop::isLayeredLoop(comp)))
+        return ans;
+    if ((ans = NLayeredChainPair::isLayeredChainPair(comp)))
+        return ans;
+    if ((ans = NAugTriSolidTorus::isAugTriSolidTorus(comp)))
+        return ans;
+    if ((ans = NPlugTriSolidTorus::isPlugTriSolidTorus(comp)))
         return ans;
 
     return 0;

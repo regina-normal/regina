@@ -26,6 +26,10 @@
 
 /* end stub */
 
+#include <algorithm>
+#include <utility>
+#include "algebra/nabeliangroup.h"
+#include "manifold/nsfs.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
 #include "triangulation/ntetrahedron.h"
@@ -57,21 +61,15 @@ NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
     ans->chainIndex = chainIndex;
     ans->chainType = chainType;
     ans->torusAnnulus = torusAnnulus;
-    ans->seifertStructure = seifertStructure;
     return ans;
 }
 
-void NAugTriSolidTorus::writeTextShort(std::ostream& out) const {
-    out << "Augmented triangular solid torus " <<
-        (torusAnnulus == -1 ? "(three tori): " : "(torus + chain): ");
-    seifertStructure.writeTextShort(out);
-}
-
-void NAugTriSolidTorus::findExceptionalFibres() {
+NManifold* NAugTriSolidTorus::getManifold() const {
+    NSFS* ans = new NSFS();
     if (chainType == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
-        seifertStructure.insertFibre(NExceptionalFibre(2, 1));
-        seifertStructure.insertFibre(NExceptionalFibre(chainIndex + 1, 1));
+        ans->insertFibre(2, 1);
+        ans->insertFibre(chainIndex + 1, 1);
 
         long q, r;
         if (edgeGroupRoles[torusAnnulus][2] == 2) {
@@ -100,11 +98,15 @@ void NAugTriSolidTorus::findExceptionalFibres() {
             r = -r;
             q = -q;
         }
-        seifertStructure.insertFibre(NExceptionalFibre(r, q));
+        if (r == 0) {
+            delete ans;
+            return 0;
+        } else
+            ans->insertFibre(r, q);
     } else if (chainType == CHAIN_AXIS) {
         // Layered solid torus + layered chain.
-        seifertStructure.insertFibre(NExceptionalFibre(2, 1));
-        seifertStructure.insertFibre(NExceptionalFibre(2, -1));
+        ans->insertFibre(2, 1);
+        ans->insertFibre(2, -1);
 
         long q, r;
         if (edgeGroupRoles[torusAnnulus][2] == 2) {
@@ -134,10 +136,14 @@ void NAugTriSolidTorus::findExceptionalFibres() {
             alpha = -alpha;
             beta = -beta;
         }
-        seifertStructure.insertFibre(NExceptionalFibre(alpha, beta));
+        if (alpha == 0) {
+            delete ans;
+            return 0;
+        } else
+            ans->insertFibre(alpha, beta);
     } else {
         // Three layered solid tori.
-        seifertStructure.insertFibre(NExceptionalFibre(1, 1));
+        ans->insertFibre(1, 1);
 
         long alpha, beta;
         for (int i = 0; i < 3; i++) {
@@ -158,11 +164,16 @@ void NAugTriSolidTorus::findExceptionalFibres() {
                     beta = -(edgeGroupRoles[i][1] == 2 ? 2 : 1);
                 }
             }
-            seifertStructure.insertFibre(NExceptionalFibre(alpha, beta));
+            if (alpha == 0) {
+                delete ans;
+                return 0;
+            } else
+                ans->insertFibre(alpha, beta);
         }
     }
 
-    seifertStructure.reduce();
+    ans->reduce();
+    return ans;
 }
 
 NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
@@ -230,8 +241,6 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                     ans->chainIndex = 0;
                     ans->chainType = CHAIN_NONE;
                     ans->torusAnnulus = -1;
-
-                    ans->findExceptionalFibres();
                     return ans;
                 }
             }
@@ -320,8 +329,6 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                     ans->chainIndex = chainLen;
                     ans->chainType = chainType;
                     ans->torusAnnulus = torusAnnulus;
-
-                    ans->findExceptionalFibres();
                     return ans;
                 }
 
@@ -390,8 +397,6 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             ans->chainIndex = chain.getIndex() - 1;
                             ans->chainType = chainType;
                             ans->torusAnnulus = 0;
-        
-                            ans->findExceptionalFibres();
                             return ans;
                         }
 
@@ -452,8 +457,6 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             ans->chainIndex = chain.getIndex();
                             ans->chainType = chainType;
                             ans->torusAnnulus = 0;
-        
-                            ans->findExceptionalFibres();
                             return ans;
                         }
 
@@ -635,8 +638,6 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                 ans->chainIndex = chainLen;
                 ans->chainType = chainType;
                 ans->torusAnnulus = torusAnnulus;
-
-                ans->findExceptionalFibres();
                 return ans;
             } else {
                 // We're not looking for a layered chain.
@@ -651,17 +652,101 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                 ans->chainIndex = 0;
                 ans->chainType = CHAIN_NONE;
                 ans->torusAnnulus = -1;
-
-                ans->findExceptionalFibres();
                 return ans;
             }
         }
     }
-        
+
     // Nothing was found.
     for (i = 0; i < nLayered; i++)
         delete layered[i];
     return 0;
+}
+
+std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
+        bool tex) const {
+    if (chainIndex) {
+        // We have a layered solid torus and a layered chain.
+        NPerm roles = edgeGroupRoles[torusAnnulus];
+        const NLayeredSolidTorus* torus = augTorus[torusAnnulus];
+
+        long params[3];
+        if (torus) {
+            params[0] = torus->getMeridinalCuts(0);
+            params[1] = torus->getMeridinalCuts(1);
+            params[2] = - torus->getMeridinalCuts(2);
+        } else {
+            params[0] = 1;
+            params[1] = 1;
+            params[2] = -2;
+        }
+
+        if (params[roles[0]] < 0) {
+            params[0] = - params[0];
+            params[1] = - params[1];
+            params[2] = - params[2];
+        }
+
+        if (chainType == CHAIN_MAJOR)
+            out << (tex ? "$J_{" : "J(");
+        else
+            out << (tex ? "$X_{" : "X(");
+        return out << chainIndex << " | " << params[roles[0]] << ','
+            << params[roles[1]] << (tex ? "}$" : ")");
+    } else {
+        // We have three layered solid tori.
+        std::pair<long, long> allParams[3];
+        int nAllParams = 0;
+        NPerm roles;
+        const NLayeredSolidTorus* torus;
+        long params[3];
+        std::pair<long, long> lstParams;
+        int i;
+        for (i = 0; i < 3; i++) {
+            roles = edgeGroupRoles[i];
+            torus = augTorus[i];
+            if (torus) {
+                params[0] = torus->getMeridinalCuts(0);
+                params[1] = torus->getMeridinalCuts(1);
+                params[2] = - torus->getMeridinalCuts(2);
+            } else {
+                params[0] = 1;
+                params[1] = 1;
+                params[2] = -2;
+            }
+            lstParams = std::make_pair(params[roles[0]], params[roles[1]]);
+            if (lstParams.first < 0) {
+                lstParams.first = - lstParams.first;
+                lstParams.second = - lstParams.second;
+            }
+            if (! (lstParams.first == 2 && lstParams.second == -1))
+                allParams[nAllParams++] = lstParams;
+        }
+        sort(allParams, allParams + nAllParams);
+
+        out << (tex ? "$A_{" : "A(");
+        for (i = 0; i < nAllParams; i++) {
+            if (i > 0)
+                out << " | ";
+            out << allParams[i].first << ',' << allParams[i].second;
+        }
+        return out << (tex ? "}$" : ")");
+    }
+}
+
+std::ostream& NAugTriSolidTorus::writeName(std::ostream& out) const {
+    return writeCommonName(out, false);
+}
+
+std::ostream& NAugTriSolidTorus::writeTeXName(std::ostream& out) const {
+    return writeCommonName(out, true);
+}
+
+void NAugTriSolidTorus::writeTextLong(std::ostream& out) const {
+    out << (chainIndex ? "Chained " : "Augmented ")
+        << "triangular solid torus "
+        << (torusAnnulus == -1 ? "(three tori): " : "(torus + chain): ");
+    writeName(out);
 }
 
 } // namespace regina

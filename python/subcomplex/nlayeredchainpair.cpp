@@ -26,7 +26,6 @@
 
 /* end stub */
 
-#include "manifold/nsfs.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "triangulation/ncomponent.h"
 #include <boost/python.hpp>
@@ -35,18 +34,19 @@ using namespace boost::python;
 using regina::NLayeredChainPair;
 
 void addNLayeredChainPair() {
-    class_<NLayeredChainPair, bases<regina::ShareableObject>,
+    class_<NLayeredChainPair, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NLayeredChainPair>, boost::noncopyable>
             ("NLayeredChainPair", no_init)
         .def("clone", &NLayeredChainPair::clone,
             return_value_policy<manage_new_object>())
         .def("getChain", &NLayeredChainPair::getChain,
             return_internal_reference<>())
-        .def("getSeifertStructure", &NLayeredChainPair::getSeifertStructure,
-            return_internal_reference<>())
         .def("isLayeredChainPair", &NLayeredChainPair::isLayeredChainPair,
             return_value_policy<manage_new_object>())
         .staticmethod("isLayeredChainPair")
     ;
+
+    implicitly_convertible<std::auto_ptr<NLayeredChainPair>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

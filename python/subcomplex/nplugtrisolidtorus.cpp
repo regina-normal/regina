@@ -34,7 +34,7 @@ using namespace boost::python;
 using regina::NPlugTriSolidTorus;
 
 void addNPlugTriSolidTorus() {
-    scope s = class_<NPlugTriSolidTorus, bases<regina::ShareableObject>,
+    scope s = class_<NPlugTriSolidTorus, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NPlugTriSolidTorus>, boost::noncopyable>
             ("NPlugTriSolidTorus", no_init)
         .def("clone", &NPlugTriSolidTorus::clone,
@@ -45,8 +45,6 @@ void addNPlugTriSolidTorus() {
             return_internal_reference<>())
         .def("getChainType", &NPlugTriSolidTorus::getChainType)
         .def("getEquatorType", &NPlugTriSolidTorus::getEquatorType)
-        .def("getSeifertStructure", &NPlugTriSolidTorus::getSeifertStructure,
-            return_internal_reference<>())
         .def("isPlugTriSolidTorus", &NPlugTriSolidTorus::isPlugTriSolidTorus,
             return_value_policy<manage_new_object>())
         .staticmethod("isPlugTriSolidTorus")
@@ -57,5 +55,8 @@ void addNPlugTriSolidTorus() {
     s.attr("CHAIN_MINOR") = NPlugTriSolidTorus::CHAIN_MINOR;
     s.attr("EQUATOR_MAJOR") = NPlugTriSolidTorus::EQUATOR_MAJOR;
     s.attr("EQUATOR_MINOR") = NPlugTriSolidTorus::EQUATOR_MINOR;
+
+    implicitly_convertible<std::auto_ptr<NPlugTriSolidTorus>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

@@ -15,6 +15,8 @@ Current Development Version
         Class Engine:
             - Removed since this is no longer necessary with the new
               python bindings.
+        Class NAugTriSolidTorus:
+            - Changed to fit into the new NStandardTriangulation structure.
         Class NFacePairings:
             - Fixed bug in isCanonical().
         Class NGluingPerms:
@@ -42,6 +44,8 @@ Current Development Version
         Class NPerm:
             - Routines edgeDescription() and faceDescription()
               implemented in the calculation engine.
+        Class NPlugTriSolidTorus:
+            - Changed to fit into the new NStandardTriangulation structure.
         Class NSFS:
             - Changed to fit into the new NManifold structure.
             - New overloaded routine insertFibre(long, long).
@@ -59,6 +63,9 @@ Current Development Version
             - Renamed isTriSolidTorus() to formsTriSolidTorus().
         Class NTriangulation:
             - New routine turaevViro().
+        Routine isKnownSFS():
+            - Removed in favour of
+              NStandardTriangulation::isStandardTriangulation().
     PYTHON:
         - Added python bindings for standard python (i.e., cpython) to
           replace the old Jython bindings.

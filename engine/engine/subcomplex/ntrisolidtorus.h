@@ -77,6 +77,9 @@ class NTetrahedron;
  *
  * Note that all three tetrahedra in the triangular solid torus must be
  * distinct.
+ *
+ * All optional NStandardTriangulation routines are implemented for this
+ * class.
  */
 class NTriSolidTorus : public NStandardTriangulation {
     private:

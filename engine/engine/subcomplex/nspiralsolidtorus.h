@@ -82,6 +82,9 @@ class NTriangulation;
  * Note also that class NTriSolidTorus represents a spiralled solid
  * torus with precisely three tetrahedra.  A spiralled solid torus with
  * only one tetrahedron is in fact a (1,2,3) layered solid torus.
+ *
+ * All optional NStandardTriangulation routines are implemented for this
+ * class.
  */
 class NSpiralSolidTorus : public NStandardTriangulation {
     private:
