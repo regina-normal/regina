@@ -1,11 +1,10 @@
 body {
   font-family: sans-serif;
-  font-size: 10pt;
+  font-size: medium;
   background-color: #FFFFFF;
 }
 
 p {
-  font-size: 10pt;
   text-indent: 0px;
   color: #000000;
 }
@@ -22,7 +21,7 @@ p.return {
 }
 
 .pagehdr {
-  font-weight: 600;
+  font-weight: bold;
   color: #3D3F53;
   text-align: center;
   background-color: #FFFFFF;
@@ -37,14 +36,14 @@ p.return {
 }
 
 h1 {
-  font-size: 14pt;
-  font-weight: 600;
+  font-size: x-large;
+  font-weight: bold;
   color: #3D3F53;
 }
 
 h2 {
-  font-size: 12pt;
-  font-weight: 600;
+  font-size: large;
+  font-weight: bold;
   color: #3D3F53;
   background-color: #B5BCF8;
   padding: 5px;
@@ -52,8 +51,8 @@ h2 {
 }
 
 h3 {
-  font-size: 11pt;
-  font-weight: 600;
+  font-size: larger;
+  font-weight: bold;
   color: #3D3F53;
 }
 
@@ -63,7 +62,7 @@ table.contentswrapper {
 }
 
 table.contentswrapper th {
-  font-weight: 600;
+  font-weight: bold;
   color: #3D3F53;
   background-color: #B5BCF8;
   padding: 2px 1ex 2px 1ex;
