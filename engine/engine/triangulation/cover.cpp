@@ -37,14 +37,14 @@ void NTriangulation::makeDoubleCover() {
         return;
 
     // Create a second sheet of tetrahedra.
-    NTetrahedron** upper = new (NTetrahedron*)[sheetSize];
+    NTetrahedron** upper = new NTetrahedron*[sheetSize];
     unsigned long i;
     TetrahedronIterator tit = tetrahedra.begin();
     for (i = 0; i < sheetSize; i++) {
         upper[i] = new NTetrahedron((*tit)->getDescription());
         tit++;
     }
-        
+
     // Reset each tetrahedron orientation.
     tit = tetrahedra.begin();
     for (i = 0; i < sheetSize; i++) {

@@ -63,7 +63,8 @@ XMLParser::XMLParser(XMLParserCallback& callback) : _parser_callback(callback) {
         _fatal_error,       // fatalError
         0,                  // getParameterEntity
         0,                  // cdataBlock
-        0                   // externalSubset
+        0,                  // externalSubset
+        1                   // initialized
     };
 
     _context = xmlCreatePushParserCtxt(&sax_handler, this, 0, 0, 0);

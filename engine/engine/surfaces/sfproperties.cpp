@@ -146,7 +146,7 @@ void NSurfaceFilterProperties::writeProperties(NFile& out) const {
     }
 }
 
-NSurfaceFilter* NSurfaceFilterProperties::readFilter(NFile& in, NPacket*) {
+NSurfaceFilter* NSurfaceFilterProperties::readFilter(NFile&, NPacket*) {
     return new NSurfaceFilterProperties();
 }
 

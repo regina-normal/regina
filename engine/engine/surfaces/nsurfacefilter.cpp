@@ -66,10 +66,10 @@ void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
     out << "  </filter>\n";
 }
 
-void NSurfaceFilter::readIndividualProperty(NFile& in, unsigned propType) {
+void NSurfaceFilter::readIndividualProperty(NFile&, unsigned) {
 }
 
-void NSurfaceFilter::writeProperties(NFile& out) const {
+void NSurfaceFilter::writeProperties(NFile&) const {
 }
 
 #undef REGISTER_FILTER
@@ -93,7 +93,7 @@ NSurfaceFilter* NSurfaceFilter::readPacket(NFile& in, NPacket* parent) {
 #define REGISTER_FILTER(id, class, n) \
     case id: return new class(dynamic_cast<const class&>(*this));
 
-NPacket* NSurfaceFilter::internalClonePacket(NPacket* parent) const {
+NPacket* NSurfaceFilter::internalClonePacket(NPacket* /* parent */) const {
     switch (getFilterID()) {
         // Import cases from the filter registry.
         #include "surfaces/filterregistry.h"

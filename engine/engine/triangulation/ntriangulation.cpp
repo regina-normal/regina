@@ -241,7 +241,7 @@ void NTriangulation::writePacket(NFile& out) const {
     writeAllPropertiesFooter(out);
 }
 
-NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* parent) {
+NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* /* parent */) {
     NTriangulation* triang = new NTriangulation();
     NTetrahedron* tet;
 

@@ -45,7 +45,7 @@ void NTriangulation::barycentricSubdivision() {
     // Written by Dave Letscher  11/2/00
 
     unsigned long nOldTet = tetrahedra.size();
-    NTetrahedron** newTet = new (NTetrahedron*)[nOldTet * 24];
+    NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
     NTetrahedron* oldTet;
     NPerm p;
     unsigned long tet;
@@ -68,14 +68,14 @@ void NTriangulation::barycentricSubdivision() {
                                 joinTo(corner,
                                 newTet[24*tet+tetIndex[face][edge][other]],
                                 NPerm(corner,other) );
-                        
+
                             // Glue to the tetrahedron on the same face and
                             // at the same corner
                             newTet[24*tet+tetIndex[face][edge][corner]]->
                                 joinTo(other,
                                 newTet[24*tet+tetIndex[face][other][corner]],
                                 NPerm(edge,other) );
-                        
+
                             // Glue to the tetrahedron on the adjacent face
                             // sharing an edge and a vertex
                             newTet[24*tet+tetIndex[face][edge][corner]]->
@@ -112,40 +112,40 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     if (isValid() && ! isIdeal())
         if (! forceDivision)
             return false;
-    
+
     int i,j,k,l;
     int numOldTet = tetrahedra.size();
-    
-    NTetrahedron **newTet = new (NTetrahedron *)[32*numOldTet];
+
+    NTetrahedron **newTet = new NTetrahedron*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)
         newTet[i] = new NTetrahedron();
-    
+
     int tip[numOldTet][4];
     int interior[numOldTet][4];
     int edge[numOldTet][4][4];
     int vertex[numOldTet][4][4];
-    
+
     l = 0;
     for (i=0; i<numOldTet; i++) {
         for (j=0; j<4; j++) {
-            tip[i][j] = l++;            
+            tip[i][j] = l++;
             interior[i][j] = l++;
-            
+
             for (k=0; k<4; k++)
                 if (j != k) {
-                    edge[i][j][k] = l++;                    
+                    edge[i][j][k] = l++;
                     vertex[i][j][k] = l++;
                 }
         }
     }
-        
+
     // First glue all of the tetrahedra inside the same
     // old tetrahedron together.
     for (i=0; i<numOldTet; i++) {
         // Glue the tip tetrahedra to the others.
         for (j=0; j<4; j++)
-            newTet[tip[i][j]]->joinTo(j, newTet[interior[i][j]], NPerm());        
-        
+            newTet[tip[i][j]]->joinTo(j, newTet[interior[i][j]], NPerm());
+
         // Glue the interior tetrahedra to the others.
         for (j=0; j<4; j++) {
             for (k=0; k<4; k++)
@@ -154,14 +154,14 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
                         newTet[vertex[i][k][j]], NPerm());
                 }
         }
-        
+
         // Glue the edge tetrahedra to the others.
         for (j=0; j<4; j++)
             for (k=0; k<4; k++)
                 if (j != k) {
                     newTet[edge[i][j][k]]->joinTo(j,
                         newTet[edge[i][k][j]], NPerm(j,k));
-                    
+
                     for (l=0; l<4; l++)
                         if ( (l != j) && (l != k) )
                             newTet[edge[i][j][k]]->joinTo(l,
@@ -179,35 +179,35 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
             if (ot->getAdjacentTetrahedron(j)) {
                  oppTet = getTetrahedronIndex(ot->getAdjacentTetrahedron(j));
                  p = ot->getAdjacentTetrahedronGluing(j);
-                 
+
                  // First deal with the tip tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
                           newTet[tip[i][k]]->joinTo(j,
                               newTet[tip[oppTet][p[k]]], p);
-                 
+
                  // Next the edge tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
                          newTet[edge[i][j][k]]->joinTo(k,
                              newTet[edge[oppTet][p[j]][p[k]]], p);
-                 
+
                  // Finally, the vertex tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
                          newTet[vertex[i][j][k]]->joinTo(k,
                              newTet[vertex[oppTet][p[j]][p[k]]], p);
-                         
+
             }
     }
 
-    removeAllTetrahedra();    
-    
+    removeAllTetrahedra();
+
     for (i=0; i<32*numOldTet; i++)
         addTetrahedron(newTet[i]);
-    
+
     calculateSkeleton();
-    
+
     // Remove the tetrahedra that meet any of the non-standard or
     // ideal vertices.
     // First we make a list of the tetrahedra.
@@ -219,7 +219,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
             for (vembit = (*vIter)->getEmbeddings().begin();
                     vembit != (*vIter)->getEmbeddings().end(); vembit++)
                 tetList.insert((*vembit).getTetrahedron());
-    
+
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
     for_each(tetList.begin(), tetList.end(),

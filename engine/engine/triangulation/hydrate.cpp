@@ -93,7 +93,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     }
 
     // Create the tetrahedra and start gluing.
-    NTetrahedron** tet = new (NTetrahedron*)[nTet];
+    NTetrahedron** tet = new NTetrahedron*[nTet];
     for (i = 0; i < nTet; i++)
         tet[i] = new NTetrahedron();
 

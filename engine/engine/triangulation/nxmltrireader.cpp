@@ -106,7 +106,7 @@ namespace {
                     readTets(0) {
             }
 
-            virtual void startElement(const std::string& tagName,
+            virtual void startElement(const std::string& /* tagName */,
                     const regina::xml::XMLPropertyDict& props,
                     NXMLElementReader*) {
                 long nTets;

@@ -134,7 +134,7 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
 
     // Try to make an exact matching.
     unsigned long nTetrahedra = tetrahedra.size();
-    unsigned long* join = new (unsigned long)[nTetrahedra];
+    unsigned long* join = new unsigned long[nTetrahedra];
     bool* used = new bool[nTetrahedra];
     int* perm = new int[nTetrahedra];
     for (unsigned long i=0; i<nTetrahedra; i++) {
