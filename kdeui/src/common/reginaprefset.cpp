@@ -41,6 +41,12 @@ ReginaPrefSet::ReginaPrefSet() :
         triInitialTab(Gluings),
         triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6) {
+    useDefaultCensusFiles();
+}
+
+void ReginaPrefSet::useDefaultCensusFiles() {
+    censusFiles.clear();
+
     censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
         "/examples/closed-or-census.rga"));
     censusFiles.push_back(ReginaFilePref(REGINA_DATADIR

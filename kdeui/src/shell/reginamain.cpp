@@ -367,6 +367,34 @@ void ReginaMain::readOptions(KConfig* config) {
     globalPrefs.displayTagsInTree = config->readBoolEntry("DisplayTagsInTree",
         false);
 
+    config->setGroup("Census");
+    QStringList censusStrings = config->readListEntry("Files");
+    if (censusStrings.empty())
+        globalPrefs.useDefaultCensusFiles();
+    else {
+        globalPrefs.censusFiles.clear();
+
+        // Each string must start with + or - (active or inactive).
+        // Any other strings will be ignored.
+        for (QStringList::const_iterator it = censusStrings.begin();
+                it != censusStrings.end(); it++) {
+            if ((*it).isEmpty())
+                continue;
+            switch ((*it)[0]) {
+                case '+':
+                    // Active file.
+                    globalPrefs.censusFiles.push_back(ReginaFilePref(
+                        (*it).mid(1), true));
+                    break;
+                case '-':
+                    // Inactive file.
+                    globalPrefs.censusFiles.push_back(ReginaFilePref(
+                        (*it).mid(1), false));
+                    break;
+            }
+        }
+    }
+
     config->setGroup("File");
     globalPrefs.autoFileExtension = config->readBoolEntry(
         "AutomaticExtension", true);
@@ -418,6 +446,19 @@ void ReginaMain::saveOptions() {
     config->writeEntry("PacketDocking", globalPrefs.autoDock);
     config->writeEntry("DisplayIcon", globalPrefs.displayIcon);
     config->writeEntry("DisplayTagsInTree", globalPrefs.displayTagsInTree);
+
+    config->setGroup("Census");
+    QStringList censusStrings;
+    // Distinguish an empty list from an uninitialised list.
+    if (globalPrefs.censusFiles.empty())
+        censusStrings.push_back("0");
+    else
+        for (ReginaFilePrefList::const_iterator it =
+                globalPrefs.censusFiles.begin();
+                it != globalPrefs.censusFiles.end(); it++)
+            censusStrings.push_back(((*it).active ? '+' : '-') +
+                (*it).filename);
+    config->writeEntry("Files", censusStrings);
 
     config->setGroup("File");
     config->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);

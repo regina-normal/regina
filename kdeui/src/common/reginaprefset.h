@@ -104,6 +104,11 @@ struct ReginaPrefSet {
      * Default constructor that provides a reasonable set of defaults.
      */
     ReginaPrefSet();
+
+    /**
+     * Sets the list of census files to the default set shipped with Regina.
+     */
+    void useDefaultCensusFiles();
 };
 
 inline ReginaFilePref::ReginaFilePref() : active(true) {
