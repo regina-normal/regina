@@ -39,6 +39,8 @@
 #include "utilities/nstring.h"
 
 /**
+ * \hideinitializer
+ *
  * Recasts a void pointer as an unsigned integer, even if the compiler does
  * not allow this.  Note that \a p must be a variable name so that we can
  * find its memory address.
