@@ -78,5 +78,7 @@ java_aux_mask = normal/images/main/* \
 	normal/images/buttons/* \
 	normal/images/packet/*
 
-java_misc_src_mask = Makefile* findtext *.txt
+java_misc_src_mask = Makefile* findtext *.txt \
+	normal/engine/implementation/jni/package.html \
+	normal/engine/implementation/corba/package.html
 
