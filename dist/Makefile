@@ -22,7 +22,7 @@ include ../idl/Makefile.sources
 REGINA_DIR = regina-$(REGINA_VERSION)
 
 SRC_ARCHIVE = regina-$(REGINA_VERSION)_src.tgz
-BIN_ARCHIVE = regina-$(REGINA_VERSION)_bin_$(MACHTYPE).tgz
+BIN_ARCHIVE = regina-$(REGINA_VERSION)_bin_$(HOSTTYPE)-$(OSTYPE).tgz
 DOC_ARCHIVE = regina-$(REGINA_VERSION)_doc.tgz
 DOC_JAR_FINAL = regina-$(REGINA_VERSION)_doc-internal.jar
 
