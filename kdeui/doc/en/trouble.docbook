@@ -61,7 +61,7 @@
      <!-- TODO: Remove once embedded scripting is reimplemented. -->
      <note>
       <para>
-       &regina; version 3.96 does not offer embedded &python;
+       &regina; version 3.97 does not offer embedded &python;
        scripting at all &ndash; it still needs to be reimplemented in the new
        &kde; user interface.  This is a temporary issue and should be
        resolved before version 4.0.  Scripting is however still
