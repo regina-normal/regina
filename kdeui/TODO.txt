@@ -38,9 +38,8 @@ Packets (General):
     - Implement packet tags
     - Work out how to right-align the packet pane close button
     - Find out how to centre column headers in list views
+    - Clearly point out in the UI if a packet is uneditable
     * Set focus on internal editor parts
-    * If a packet viewer is opened read-write and then obtains a bad
-        child, ensure we cannot subsequently modify it
 
 Part:
     - Fix crash on "import regina" when running scripts from within
