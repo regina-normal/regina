@@ -44,9 +44,9 @@ const NBoolSet NBoolSet::sFalse(false);
 const NBoolSet NBoolSet::sBoth(true, true);
 
 std::ostream& operator << (std::ostream& out, const NTriBool& tri) {
-    if (tri == NTriBool::True)
+    if (tri.isTrue())
         out << "true";
-    else if (tri == NTriBool::False)
+    else if (tri.isFalse())
         out << "false";
     else
         out << "unknown";

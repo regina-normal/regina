@@ -104,6 +104,19 @@ class NTriBool {
         bool isUnknown() const;
 
         /**
+         * Sets this three-way boolean to true.
+         */
+        void setTrue();
+        /**
+         * Sets this three-way boolean to false.
+         */
+        void setFalse();
+        /**
+         * Sets this three-way boolean to unknown.
+         */
+        void setUnknown();
+
+        /**
          * Determines whether this and the given three-way boolean are equal.
          * This routine makes a straightforward comparison of states.
          * That is, true is equal to true, false is equal to false and
@@ -584,6 +597,18 @@ inline bool NTriBool::isFalse() const {
 
 inline bool NTriBool::isUnknown() const {
     return (code == codeUnknown);
+}
+
+inline void NTriBool::setTrue() {
+    code = codeTrue;
+}
+
+inline void NTriBool::setFalse() {
+    code = codeFalse;
+}
+
+inline void NTriBool::setUnknown() {
+    code = codeUnknown;
 }
 
 inline bool NTriBool::operator == (const NTriBool& other) const {
