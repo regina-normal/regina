@@ -56,13 +56,20 @@ class NTriSkeletonUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QLabel* nVertices;
+        QLabel* nEdges;
+        QLabel* nFaces;
+        QLabel* nTets;
+        QLabel* nComps;
+        QLabel* nBdryComps;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
         NTriSkeletonUI(regina::NTriangulation* packet,
                 PacketTabbedUI* useParentUI);
+        ~NTriSkeletonUI();
 
         /**
          * PacketViewerTab overrides.
@@ -71,6 +78,21 @@ class NTriSkeletonUI : public QObject, public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+    public slots:
+        /**
+         * Open skeleton windows.
+         */
+        void viewVertices();
+        void viewEdges();
+        void viewFaces();
+        void viewComponents();
+        void viewBoundaryComponents();
+
+        /**
+         * Close all skeleton windows.
+         */
+        void closeAllSkeletonWindows();
 };
 
 #endif

@@ -32,8 +32,11 @@
 // UI includes:
 #include "ntriskeleton.h"
 
+#include <kiconloader.h>
 #include <klocale.h>
 #include <qlabel.h>
+#include <qlayout.h>
+#include <qpushbutton.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -41,10 +44,72 @@ using regina::NTriangulation;
 NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    // TODO
-    QLabel* label = new QLabel(QString("SKELETON"), 0);
-    label->setAlignment(Qt::AlignCenter);
-    ui = label;
+    ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(ui);
+    layout->addStretch(1);
+
+    QGridLayout* grid = new QGridLayout(layout, 3, 13, 5 /* spacing */);
+    grid->setColStretch(0, 1);
+    grid->setColSpacing(2, 5);
+    grid->setColSpacing(4, 10);
+    grid->setColSpacing(6, 10);
+    grid->setColSpacing(8, 5);
+    grid->setColSpacing(10, 10);
+    grid->setColStretch(12, 1);
+
+    grid->addWidget(new QLabel(i18n("Vertices:"), ui), 0, 1);
+    grid->addWidget(new QLabel(i18n("Edges:"), ui), 1, 1);
+    grid->addWidget(new QLabel(i18n("Faces:"), ui), 2, 1);
+    grid->addWidget(new QLabel(i18n("Components:"), ui), 0, 7);
+    grid->addWidget(new QLabel(i18n("Bdry Components:"), ui), 1, 7);
+    grid->addWidget(new QLabel(i18n("Tetrahedra:"), ui), 2, 7);
+
+    nVertices = new QLabel(ui);
+    nVertices->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(nVertices, 0, 3);
+    nEdges = new QLabel(ui);
+    nEdges ->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(nEdges, 1, 3);
+    nFaces = new QLabel(ui);
+    nFaces->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(nFaces, 2, 3);
+    nComps = new QLabel(ui);
+    nComps->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(nComps, 0, 9);
+    nBdryComps = new QLabel(ui);
+    nBdryComps->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(nBdryComps, 1, 9);
+    nTets = new QLabel(ui);
+    nTets->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(nTets, 2, 9);
+
+    QPushButton* btn;
+    btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    btn->setFlat(true);
+    connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
+    grid->addWidget(btn, 0, 5);
+    btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    btn->setFlat(true);
+    connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
+    grid->addWidget(btn, 1, 5);
+    btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    btn->setFlat(true);
+    connect(btn, SIGNAL(clicked()), this, SLOT(viewFaces()));
+    grid->addWidget(btn, 2, 5);
+    btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    btn->setFlat(true);
+    connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
+    grid->addWidget(btn, 0, 11);
+    btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    btn->setFlat(true);
+    connect(btn, SIGNAL(clicked()), this, SLOT(viewBoundaryComponents()));
+    grid->addWidget(btn, 1, 11);
+
+    layout->addStretch(1);
+}
+
+NTriSkeletonUI::~NTriSkeletonUI() {
+    closeAllSkeletonWindows();
 }
 
 regina::NPacket* NTriSkeletonUI::getPacket() {
@@ -56,12 +121,49 @@ QWidget* NTriSkeletonUI::getInterface() {
 }
 
 void NTriSkeletonUI::refresh() {
-    std::cerr << "Skeleton refresh\n";
-    // TODO
+    nVertices->setText(QString::number(tri->getNumberOfVertices()));
+    nEdges->setText(QString::number(tri->getNumberOfEdges()));
+    nFaces->setText(QString::number(tri->getNumberOfFaces()));
+    nTets->setText(QString::number(tri->getNumberOfTetrahedra()));
+    nComps->setText(QString::number(tri->getNumberOfComponents()));
+    nBdryComps->setText(QString::number(tri->getNumberOfBoundaryComponents()));
+
+    // TODO: Refresh skeleton windows.
 }
 
 void NTriSkeletonUI::editingElsewhere() {
-    // TODO
+    nVertices->setText(i18n("Editing..."));
+    nEdges->setText(i18n("Editing..."));
+    nFaces->setText(i18n("Editing..."));
+    nTets->setText(i18n("Editing..."));
+    nComps->setText(i18n("Editing..."));
+    nBdryComps->setText(i18n("Editing..."));
+
+    closeAllSkeletonWindows();
+}
+
+void NTriSkeletonUI::viewVertices() {
+    // TODO: vertices
+}
+
+void NTriSkeletonUI::viewEdges() {
+    // TODO: edges
+}
+
+void NTriSkeletonUI::viewFaces() {
+    // TODO: faces
+}
+
+void NTriSkeletonUI::viewComponents() {
+    // TODO: comps
+}
+
+void NTriSkeletonUI::viewBoundaryComponents() {
+    // TODO: bdry
+}
+
+void NTriSkeletonUI::closeAllSkeletonWindows() {
+    // TODO: closeAll
 }
 
 #include "ntriskeleton.moc"
