@@ -33,6 +33,7 @@
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/census/testcensus.h"
 #include "testsuite/maths/testmaths.h"
+#include "testsuite/utilities/testutilities.h"
 
 /**
  * Improves the readability of the test name "FIXTURE.TEST".
@@ -110,6 +111,9 @@ bool runAllTests() {
 
     // Maths:
     addNumberTheory(runner);
+
+    // Utilities:
+    addNIndexedArray(runner);
 
     /**
      * END REGINA TEST SUITES
