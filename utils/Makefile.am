@@ -10,7 +10,9 @@ INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@
 
 bin_SCRIPTS = tricensus-manager
-bin_PROGRAMS = regconvert regfiledump regfiletype sigcensus tricensus
+bin_PROGRAMS = regconcat regconvert regfiledump regfiletype sigcensus tricensus
+
+regconcat_SOURCES = regconcat.cpp
 
 regconvert_SOURCES = regconvert.cpp
 

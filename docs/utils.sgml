@@ -17,6 +17,76 @@
   </para>
  </partintro>
 
+ <!-- File Concatenator -->
+
+ <refentry id="man-regconcat">
+  <refmeta>
+   <refentrytitle>regconcat</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regconcat</refname>
+   <refpurpose>Combine several &regina; data files</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regconcat</command>
+    <arg><option>-o</option> <replaceable>output-file</replaceable></arg>
+    <arg rep=repeat choice=req><replaceable>input-file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility combines several individual &regina; data files into
+    a single larger data file.  The new file will have a container as its
+    top-level packet, beneath which will be placed the packet trees from
+    each of the supplied input files.
+   </para>
+   <para>
+    If an output file is specified through option <option>-o</option>,
+    the new file will be written as compressed &xml; to this output file.
+    Otherwise the new file will be written as uncompressed &xml; to
+    standard output.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-o</option> <replaceable>output-file</replaceable></term>
+     <listitem>
+      <para>
+       Specifies that the new combined data file should be written
+       as compressed &xml; to the given output file.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems).
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
  <!-- File Converter -->
 
  <refentry id="man-regconvert">

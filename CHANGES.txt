@@ -24,6 +24,9 @@ Version 3.2  [ (under development) ]
         Class NTriangulation:
             - Interface-only skeletal query routines are now also
               implemented in the C++ calculation engine.
+    UTILITIES:
+        regconcat:
+            - New utility for combining several data files.
 
 Version 3.1  [ 18 October, 2002 ]
     OVERALL:

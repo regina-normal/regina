@@ -2,6 +2,7 @@
 .libs
 Makefile
 Makefile.in
+regconcat
 regconvert
 regfiledump
 regfiletype
