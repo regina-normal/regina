@@ -70,7 +70,9 @@ for i in libNames:
     try:
         print 'Running ' + i + '...'
         execfile(i)
-    except :
+    except SystemExit:
+        pass
+    except:
         sys.excepthook(*sys.exc_info())
         print "ERROR: The custom library '" + i + "' could not be executed."
         sys.exit(1)
@@ -82,7 +84,9 @@ if scriptName != None:
     try:
         execfile(scriptName)
         sys.exit(0)
-    except :
+    except SystemExit:
+        pass
+    except:
         sys.excepthook(*sys.exc_info())
         print 'ERROR: An error occurred whilst executing the script.'
         sys.exit(1)
