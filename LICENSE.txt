@@ -6,6 +6,14 @@
 you would any other paper that you use.  The introductory chapter of the
 Regina reference manual includes a suggested form of reference.
 
+  Since version 4.2, Regina includes portions of the SnapPea kernel which
+it uses for certain geometric calculations.  SnapPea is copyright
+(c) 1991-2000 by Jeff Weeks, who has graciously given permission for it
+to be distributed under the terms of the GNU General Public License.
+
+  Regina itself is likewise distributed under the terms of the GNU
+General Public License, which is presented in full below.
+
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
