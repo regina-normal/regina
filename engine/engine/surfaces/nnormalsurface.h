@@ -1035,8 +1035,15 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * side-effects that can occur are given in the documentation
          * for the crush() routine.
          *
+         * \warning Currently this routine always returns \c false,
+         * i.e., an inconclusive result.  Its abilities are expected
+         * to improve with future releases.
+         *
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octahedral discs.
+         *
+         * \todo \feature Implement this routine!  At least
+         * for embedded 2-spheres.
          *
          * @return \c true if this routine determines that this surface
          * can be crushed without unintended side-effects, or \c false if

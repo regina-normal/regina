@@ -131,6 +131,8 @@ std::ostream& operator << (std::ostream& out, const NPrismSpec& spec);
  * \pre This class should only be used with \e embedded normal surfaces
  * containing no octahedral discs.
  *
+ * \warning This class doesn't really do much as yet.
+ *
  * \ifaces Not present.
  */
 class NPrismSetSurface {
@@ -139,6 +141,7 @@ class NPrismSetSurface {
             /**< A list of which types of normal quad are contained in which
                  tetrahedra.  Tetrahedra containing no quads at all
                  will have quad type -1 in this array. */
+
     public:
         /**
          * Creates a new prism set corresponding to the prisms defined
@@ -155,6 +158,25 @@ class NPrismSetSurface {
          * Destroys this prism set.
          */
         virtual ~NPrismSetSurface();
+
+        /**
+         * Returns the quadrilateral type with which the underlying
+         * normal surface meets the given tetrahedron.  Note that the
+         * surface might contain many quadrilateral discs of this type.
+         * However, since the underlying surface is embedded, there
+         * cannot be more than one such quadrilateral type.
+         *
+         * @param tetIndex the index in the triangulation of the
+         * tetrahedron in which we are interested; this should be
+         * between 0 and NTriangulation::getNumberOfTetrahedra()-1
+         * inclusive.
+         * @return the quadrilateral type found within this tetrahedron.
+         * This is 0, 1 or 2 and represents the same type parameter as is
+         * used by NNormalSurface::getQuadCoord().  If the underlying surface
+         * does not meet the given tetrahedron in any quadrilateral discs,
+         * this routine returns -1.
+         */
+        signed char getQuadType(unsigned long tetIndex) const;
 };
 
 /*@}*/
@@ -184,6 +206,11 @@ inline bool NPrismSpec::operator == (const NPrismSpec& other) const {
 inline NPrismSetSurface::~NPrismSetSurface() {
     if (quadType)
         delete[] quadType;
+}
+
+inline signed char NPrismSetSurface::getQuadType(unsigned long tetIndex)
+        const {
+    return quadType[tetIndex];
 }
 
 } // namespace regina
