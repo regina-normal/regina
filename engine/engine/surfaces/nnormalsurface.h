@@ -36,8 +36,7 @@
 #endif
 
 #include "shareableobject.h"
-#include "utilities/nmpi.h"
-#include "maths/nvectordense.h"
+#include "surfaces/nconeray.h"
 #include "property/npropertyholder.h"
 #include "triangulation/nperm.h"
 
@@ -207,7 +206,7 @@ class NTriangulation;
  *   implemented.  The registry utilities will take care of their
  *   implementations.</li>
  *   <li>All abstract functions must be implemented.</li>
- *   <li>Static public functions <tt>NDoubleList<NNormalSurfaceVector*>*
+ *   <li>Static public functions <tt>NDoubleList<NConeRay*>*
  *   createNonNegativeCone(NTriangulation*)</tt> and
  *   <tt>NMatrixInt* makeMatchingEquations(NTriangulation*)</tt> must be
  *   declared and implemented.  See ::createNonNegativeCone() and
@@ -220,7 +219,7 @@ class NTriangulation;
  *
  * \ifaces Not present.
  */
-class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
+class NNormalSurfaceVector : public NConeRay {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -252,6 +251,9 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          * Determines if this and the given embedded normal surface can
          * be summed to give another embedded normal surface.
          *
+         * Thus for normal surfaces, the definition of "valid" according
+         * to NConeRay::isCompatibleWith() is "embedded".
+         *
          * \pre Both this and the given vector
          * represent \e embedded normal surfaces.
          * \pre Both this and the given vector use the
@@ -263,8 +265,7 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          * @return \c true if and only if this and the given vector can
          * be added to give an embedded normal surface.
          */
-        virtual bool isCompatibleWith(const NNormalSurfaceVector& other)
-            const = 0;
+        virtual bool isCompatibleWith(const NConeRay& other) const = 0;
         /**
          * Determines if this normal surface has more than one
          * octahedral disc.  It may be assumed that at most one
@@ -429,23 +430,14 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
             int faceVertex, NTriangulation* triang) const = 0;
 
         /**
-         * Scales this vector down by the greatest common divisor of all
-         * its elements.  The resulting vector will be the smallest
-         * multiple of the original that maintains integeral entries,
-         * and these entries will have the same signs as the originals.
-         *
-         * This routine poses no problem for vectors containing infinite
-         * elements; such elements are simply ignored and left at
-         * infinity.
-         */
-        void scaleDown();
-
-        /**
          * Returns a newly allocated list of newly allocated rays
          * representing the cone obtained by setting all coordinates
          * non-negative in the flavour of coordinate system
          * corresponding to this particular subclass of
          * NNormalSurfaceVector.
+         *
+         * The elements of the list returned \b must be of this
+         * particular subclass of NNormalSurfaceVector.
          *
          * See ::createNonNegativeCone() for further details.
          *
@@ -453,11 +445,13 @@ class NNormalSurfaceVector : public NVectorDense<NLargeInteger> {
          *
          * @param triangulation the triangulation upon which the
          * underlying coordinate system is based.
-         * @return a newly allocated list of newly allocated arrays
-         * representing the extremal rays of the non-negative cone.
+         * @return a newly allocated list of newly allocated rays
+         * representing the extremal rays of the non-negative cone;
+         * these rays must all be of this particular subclass of
+         * NNormalSurfaceVector.
          */
         #ifdef __DOXYGEN
-            static NDoubleList<NNormalSurfaceVector*>* createNonNegativeCone(
+            static NDoubleList<NConeRay*>* createNonNegativeCone(
                 NTriangulation* triangulation);
         #endif
         /**
@@ -673,6 +667,8 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
         /**
          * Returns the triangulation in which this normal surface
          * resides.
+         *
+         * @return the underlying triangulation.
          */
         NTriangulation* getTriangulation() const;
 
@@ -921,11 +917,10 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
 // Inline functions for NNormalSurfaceVector
 
 inline NNormalSurfaceVector::NNormalSurfaceVector(unsigned length) :
-        NVectorDense<NLargeInteger>(length, zero) {
+        NConeRay(length) {
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
-        const NVector<NLargeInteger>& cloneMe) :
-        NVectorDense<NLargeInteger>(cloneMe) {
+        const NVector<NLargeInteger>& cloneMe) : NConeRay(cloneMe) {
 }
 
 // Inline functions for NNormalSurface

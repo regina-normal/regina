@@ -72,14 +72,14 @@ class NNormalSurfaceVectorQuad : public NNormalSurfaceVectorMirrored {
         virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang) const;
 
         virtual bool allowsAlmostNormal() const;
-        virtual bool isCompatibleWith(const NNormalSurfaceVector& other) const;
+        virtual bool isCompatibleWith(const NConeRay& other) const;
 
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType, NTriangulation* triang) const;
 
         virtual NVector<NLargeInteger>* clone() const;
 
-        static NDoubleList<NNormalSurfaceVector*>* createNonNegativeCone(
+        static NDoubleList<NConeRay*>* createNonNegativeCone(
             NTriangulation* triang);
         static NMatrixInt* makeMatchingEquations(NTriangulation* triang);
 };

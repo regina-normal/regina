@@ -35,8 +35,7 @@
 #include "maths/nmatrixfield.h"
 #include "triangulation/ntriangulation.h"
 
-bool NNormalSurfaceVectorQuad::isCompatibleWith(
-        const NNormalSurfaceVector& other) const {
+bool NNormalSurfaceVectorQuad::isCompatibleWith(const NConeRay& other) const {
     unsigned base = 0;
     int quad;
     bool foundQuads;
@@ -57,11 +56,10 @@ bool NNormalSurfaceVectorQuad::isCompatibleWith(
     return true;
 }
 
-NDoubleList<NNormalSurfaceVector*>* NNormalSurfaceVectorQuad::
+NDoubleList<NConeRay*>* NNormalSurfaceVectorQuad::
         createNonNegativeCone(NTriangulation* triangulation) {
     unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();
-    NDoubleList<NNormalSurfaceVector*>* ans =
-        new NDoubleList<NNormalSurfaceVector*>;
+    NDoubleList<NConeRay*>* ans = new NDoubleList<NConeRay*>;
 
     // Fill the list with unit vectors.
     NNormalSurfaceVector* vector;
@@ -79,9 +77,8 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
     // One equation per non-boundary edge.
     long nEquations = long(triangulation->getNumberOfEdges());
     for (NTriangulation::BoundaryComponentIterator bit(triangulation->
-            getBoundaryComponents()); ! bit.done(); bit++) {
+            getBoundaryComponents()); ! bit.done(); bit++)
         nEquations -= (*bit)->getNumberOfEdges();
-    }
 
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
     unsigned long row = 0;

@@ -31,7 +31,6 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
 #include "triangulation/ntriangulation.h"
-#include "maths/nvectordense.h"
 
 #define __FLAVOUR_REGISTRY_BODY
 
@@ -95,25 +94,6 @@ const NPerm __octDiscArcs[24] = {
     NPerm(0,2,3,1), NPerm(0,3,1,2), NPerm(1,0,2,3), NPerm(1,2,3,0),
     NPerm(3,1,0,2), NPerm(3,0,2,1), NPerm(2,3,1,0), NPerm(2,1,0,3)
 };
-
-void NNormalSurfaceVector::scaleDown() {
-    NLargeInteger gcd; // Initialised to 0.
-    unsigned i;
-    for (i=0; i<vectorSize; i++) {
-        if (elements[i].isInfinite() || elements[i] == zero)
-            continue;
-        gcd = gcd.gcd(elements[i]);
-        if (gcd < 0)
-            gcd.negate();
-        if (gcd == one)
-            return;
-    }
-    if (gcd == zero)
-        return;
-    for (i=0; i<vectorSize; i++)
-        if ((! elements[i].isInfinite()) && elements[i] != zero)
-            elements[i].divByExact(gcd);
-}
 
 NNormalSurface* NNormalSurface::clone() const {
     NNormalSurface* ans = new NNormalSurface(triangulation,

@@ -32,7 +32,7 @@
 #include "triangulation/ntriangulation.h"
 
 bool NNormalSurfaceVectorANStandard::isCompatibleWith(
-        const NNormalSurfaceVector& other) const {
+        const NConeRay& other) const {
     unsigned base = 4;
     int quad, oct;
     bool foundQuads;
@@ -114,11 +114,10 @@ NLargeInteger NNormalSurfaceVectorANStandard::getFaceArcs(
     return ans;
 }
 
-NDoubleList<NNormalSurfaceVector*>* NNormalSurfaceVectorANStandard::
+NDoubleList<NConeRay*>* NNormalSurfaceVectorANStandard::
         createNonNegativeCone(NTriangulation* triangulation) {
     unsigned long nCoords = 10 * triangulation->getNumberOfTetrahedra();
-    NDoubleList<NNormalSurfaceVector*>* ans =
-        new NDoubleList<NNormalSurfaceVector*>;
+    NDoubleList<NConeRay*>* ans = new NDoubleList<NConeRay*>;
     NNormalSurfaceVector* vector;
     for (unsigned long i=0; i<nCoords; i++) {
         vector = new NNormalSurfaceVectorANStandard(nCoords);

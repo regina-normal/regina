@@ -31,6 +31,25 @@
 #include "maths/nvectormatrix.h"
 #include "maths/nmatrixint.h"
 
+void NConeRay::scaleDown() {
+    NLargeInteger gcd; // Initialised to 0.
+    unsigned i;
+    for (i = 0; i < vectorSize; i++) {
+        if (elements[i].isInfinite() || elements[i] == zero)
+            continue;
+        gcd = gcd.gcd(elements[i]);
+        if (gcd < 0)
+            gcd.negate();
+        if (gcd == one)
+            return;
+    }
+    if (gcd == zero)
+        return;
+    for (i = 0; i < vectorSize; i++)
+        if ((! elements[i].isInfinite()) && elements[i] != zero)
+            elements[i].divByExact(gcd);
+}
+
 NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
         const NConeRay& hyperplane) {
     NConeRay* ans = (NConeRay*)neg.clone();
@@ -45,7 +64,7 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
 void intersectCone(NDoubleList<NConeRay*>& results,
         const NDoubleList<NConeRay*>& oldRays,
         const NConeRay& hyperplane,
-        bool embeddedOnly) {
+        bool testCompatibility) {
     if (oldRays.size() == 0)
         return;
 
@@ -83,7 +102,7 @@ void intersectCone(NDoubleList<NConeRay*>& results,
         negit.init(neg);
         while (! negit.done()) {
             // Are we supposed to check for compatibility?
-            if (embeddedOnly)
+            if (testCompatibility)
                 if (! (*posit)->isCompatibleWith(**negit)) {
                     negit++;
                     continue;
@@ -126,7 +145,7 @@ void intersectCone(NDoubleList<NConeRay*>& results,
 NDoubleList<NConeRay*>* intersectCone(
         const NDoubleList<NConeRay*>& oldRays,
         const NMatrixInt& subspace,
-        bool embeddedOnly) {
+        bool testCompatibility) {
     unsigned nEqns = subspace.rows();
     if (nEqns == 0) {
         // There are no hyperplanes in the subspace!
@@ -150,12 +169,12 @@ NDoubleList<NConeRay*>* intersectCone(
     list[1] = new NDoubleList<NConeRay*>;
     int workingList = 0;
     intersectCone(*list[0], oldRays,
-        NVectorMatrixRow<NLargeInteger>(subspace, 0), embeddedOnly);
+        NVectorMatrixRow<NLargeInteger>(subspace, 0), testCompatibility);
     
     // Now run around intersecting each extra hyperplane as it comes.
     for (unsigned i=1; i<nEqns; i++) {
         intersectCone(*list[1-workingList], *list[workingList], 
-            NVectorMatrixRow<NLargeInteger>(subspace, i), embeddedOnly);
+            NVectorMatrixRow<NLargeInteger>(subspace, i), testCompatibility);
         list[workingList]->flushAndDelete();
         workingList = 1 - workingList;
     }

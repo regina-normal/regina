@@ -139,7 +139,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         /**
          * Destroys this list and all the surfaces within.
          */
-        ~NNormalSurfaceList();
+        virtual ~NNormalSurfaceList();
 
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
@@ -196,7 +196,8 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
  * The list will contain the extremal rays of this cone, each being a
  * unit vector along a coordinate axis.  They will be placed in the list
  * in order from the unit vector along the 0th coordinate axis to the
- * last.
+ * last, and will be all of the subclass of NNormalSurfaceVector
+ * corresponding to the given flavour of coordinate system.
  *
  * The resulting list of extremal rays is guaranteed not to contain any
  * duplicates or redundancies.
@@ -208,10 +209,10 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
  * @param flavour the flavour of coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NNormalSurfaceList.
- * @return a newly allocated list of newly allocated arrays representing
+ * @return a newly allocated list of newly allocated rays representing
  * the extremal rays of the non-negative cone.
  */
-NDoubleList<NNormalSurfaceVector*>* createNonNegativeCone(
+NDoubleList<NConeRay*>* createNonNegativeCone(
         NTriangulation* triangulation, int flavour);
 /**
  * Creates a new set of normal surface matching equations for the

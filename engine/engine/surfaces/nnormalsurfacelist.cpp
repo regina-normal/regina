@@ -28,7 +28,6 @@
 
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
-#include "surfaces/nconeray.h"
 #include "triangulation/ntriangulation.h"
 #include "maths/nmatrixint.h"
 #include "file/nfile.h"
@@ -53,7 +52,7 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
     case NNormalSurfaceList::id_name: \
         return class::createNonNegativeCone(triangulation);
 
-NDoubleList<NNormalSurfaceVector*>* createNonNegativeCone(
+NDoubleList<NConeRay*>* createNonNegativeCone(
         NTriangulation* triangulation, int flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
@@ -81,24 +80,27 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
 
     // Form the matching equations and starting cone.
     NMatrixInt* eqns = makeMatchingEquations(triang, newFlavour);
-    NDoubleList<NNormalSurfaceVector*>* originalCone =
+    NDoubleList<NConeRay*>* originalCone =
         createNonNegativeCone(triang, newFlavour);
 
     // Find the normal surfaces.
-    NDoubleList<NNormalSurfaceVector*>* ans =
+    NDoubleList<NConeRay*>* ans =
         intersectCone(*originalCone, *eqns, embeddedOnly);
-    NDoubleListIterator<NNormalSurfaceVector*> it(*ans);
+    NDoubleListIterator<NConeRay*> it(*ans);
+    NNormalSurfaceVector* s;
     if (allowsAlmostNormal()) {
         // Prune the surfaces with more than one oct disc.
         while (! it.done()) {
-            if (! ((*it)->hasMultipleOctDiscs(triang)))
-                surfaces.addLast(new NNormalSurface(triang, *it));
+            s = (NNormalSurfaceVector*)(*it);
+            if (! (s->hasMultipleOctDiscs(triang)))
+                surfaces.addLast(new NNormalSurface(triang, s));
             it++;
         }
     } else {
         // Just add in all the surfaces.
         while (! it.done()) {
-            surfaces.addLast(new NNormalSurface(triang, *it));
+            s = (NNormalSurfaceVector*)(*it);
+            surfaces.addLast(new NNormalSurface(triang, s));
             it++;
         }
     }

@@ -72,7 +72,7 @@ class NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
         NNormalSurfaceVectorStandard(const NVector<NLargeInteger>& cloneMe);
 
         virtual bool allowsAlmostNormal() const;
-        virtual bool isCompatibleWith(const NNormalSurfaceVector& other) const;
+        virtual bool isCompatibleWith(const NConeRay& other) const;
 
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex, NTriangulation* triang) const;
@@ -87,7 +87,7 @@ class NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
 
         virtual NVector<NLargeInteger>* clone() const;
 
-        static NDoubleList<NNormalSurfaceVector*>* createNonNegativeCone(
+        static NDoubleList<NConeRay*>* createNonNegativeCone(
             NTriangulation* triang);
         static NMatrixInt* makeMatchingEquations(NTriangulation* triang);
 };
