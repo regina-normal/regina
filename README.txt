@@ -5,6 +5,14 @@ BINARY DISTRIBUTION:
 
     - To run, type "./regina".
 
+    - Windows users:
+        - If you wish to run "./regina", you will need to do it from
+          within a Cygwin bash shell.
+        - Alternatively you can run "regina.bat" from your usual windows
+          environment.  You will need to edit this batch file before you
+          first run it; the batch file itself contains instructions for
+          how to do this.
+
 SOURCE DISTRIBUTION:
 
     - Before compiling, copy one of the template Makefile.options.* files
