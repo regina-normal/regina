@@ -26,24 +26,37 @@
 
 /* end stub */
 
+#include <cctype>
 #include <iostream>
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
+#include "testsuite/census/testcensus.h"
 #include "testsuite/maths/testmaths.h"
 
 /**
- * Removes "FIXTURE." from "FIXTURE.TEST" since the fixture name
- * seems to always be "ATestFixtureType" unless RTTI is used.
+ * Improves the readability of the test name "FIXTURE.TEST".
  */
 std::string truncateFixture(const std::string& testName) {
-    std::string::size_type pos = testName.find('.');
+    static const std::string genericFixturePrefix("ATestFixtureType.");
+    static const unsigned genericFixtureLen(genericFixturePrefix.length());
 
-    // Don't truncate if the first period is right at the end.
-    if (pos + 1 < testName.length())
-        return testName.substr(pos + 1, testName.length() - pos - 1);
-    else
-        return testName;
+    unsigned len = testName.length();
+
+    // Remove the fixture type altogether if it's the generic type.
+    if (len > genericFixtureLen)
+        if (testName.compare(0, genericFixtureLen, genericFixturePrefix) == 0)
+            return testName.substr(genericFixtureLen, len - genericFixtureLen);
+
+    // Otherwise prune any leading digits from the fixture name.
+    int pos = 0;
+    while (pos < len && isdigit(testName[pos]))
+        pos++;
+    if (pos > 0 && pos < len)
+        return testName.substr(pos, len - pos);
+
+    // Otherwise don't modify anything.
+    return testName;
 }
 
 /**
@@ -84,9 +97,22 @@ bool runAllTests() {
     CppUnit::TextUi::TestRunner runner;
     ReginaProgress progress;
 
-    // Add individual groups of tests.
+    /**
+     * BEGIN REGINA TEST SUITES
+     *
+     * Individual test suites for various components of Regina should
+     * be added below.
+     */
+
+    // Census:
+    addNFacePairing(runner);
+
     // Maths:
     addNumberTheory(runner);
+
+    /**
+     * END REGINA TEST SUITES
+     */
 
     runner.eventManager().addListener(&progress);
     return runner.run("", false, true, false);
