@@ -173,7 +173,8 @@ class NLargeInteger {
          * will be set to \c true if the entire given string was a valid
          * large integer representation and \c false otherwise.
          */
-        NLargeInteger(const std::string&, int base = 10, bool* valid = 0);
+        NLargeInteger(const std::string& value, int base = 10,
+                bool* valid = 0);
         /**
          * Destroys this integer.
          */
