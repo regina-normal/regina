@@ -14,5 +14,5 @@ noinst_LTLIBRARIES = libenumerate.la
 
 libenumerate_la_SOURCES =
 
-enumerateinclude_HEADERS = ncompconstraint.h ncompconstraint.tcc
+enumerateinclude_HEADERS = ncompconstraint.h ncompconstraint.tcc ndoubledescriptor.h ndoubledescriptor.tcc nenumerator.h
 
