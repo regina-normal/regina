@@ -246,29 +246,31 @@ public class CORBAEngine implements Engine {
      * @param max the maximum number of bindings to dump.
      */
     private void dumpBindings(NamingContext ncRef, int max) {
-        BindingListHolder bl = new BindingListHolder();
-        BindingIteratorHolder bi = new BindingIteratorHolder();
+        try {
+            BindingListHolder bl = new BindingListHolder();
+            BindingIteratorHolder bi = new BindingIteratorHolder();
 
-        System.out.println("NamingContext bindings:");
+            System.out.println("NamingContext bindings:");
 
-        ncRef.list(max, bl, bi);
+            ncRef.list(max, bl, bi);
 
-        int i, j;
-        Binding binding;
-        NameComponent nc;
-        for (i = 0; i < bl.value.length; i++) {
-            binding = bl.value[i];
-            for (j = 0; j < binding.binding_name.length; j++) {
-                nc = binding.binding_name[j];
-                if (j > 0)
-                    System.out.print(" / ");
-                System.out.print(nc.id + " : " + nc.kind);
+            int i, j;
+            Binding binding;
+            NameComponent nc;
+            for (i = 0; i < bl.value.length; i++) {
+                binding = bl.value[i];
+                for (j = 0; j < binding.binding_name.length; j++) {
+                    nc = binding.binding_name[j];
+                    if (j > 0)
+                        System.out.print(" / ");
+                    System.out.print(nc.id + " : " + nc.kind);
+                }
+                System.out.println();
             }
-            System.out.println();
-        }
 
-        System.out.println("-- displayed " + String.valueOf(bl.value.length)
-            + " binding(s).");
+            System.out.println("-- displayed " +
+                String.valueOf(bl.value.length) + " binding(s).");
+        } catch (Throwable th) {}
     }
 
     /**
