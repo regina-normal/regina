@@ -45,6 +45,7 @@
 <!ENTITY data-tet SYSTEM "data-tet.docbook">
 <!ENTITY data-tetrahedra SYSTEM "data-tetrahedra.docbook">
 <!ENTITY data-text SYSTEM "data-text.docbook">
+<!ENTITY data-turaevviro SYSTEM "data-turaevviro.docbook">
 <!ENTITY data-twosided SYSTEM "data-twosided.docbook">
 <!ENTITY data-var SYSTEM "data-var.docbook">
 <!ENTITY data-zeroeff SYSTEM "data-zeroeff.docbook">
@@ -135,6 +136,8 @@
  '<link linkend="data-tetrahedra"><sgmltag>tetrahedra</sgmltag></link>'>
 <!ENTITY xml-text
  '<link linkend="data-text"><sgmltag>text</sgmltag></link>'>
+<!ENTITY xml-turaevviro
+ '<link linkend="data-turaevviro"><sgmltag>turaevviro</sgmltag></link>'>
 <!ENTITY xml-twosided
  '<link linkend="data-twosided"><sgmltag>twosided</sgmltag></link>'>
 <!ENTITY xml-var

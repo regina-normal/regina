@@ -159,4 +159,27 @@
   <date>1998</date>
   <artpagenums>pp. 359&ndash;374</artpagenums>
  </biblioentry>
+
+ <biblioentry id="bib-turaevviro">
+  <abbrev>TV</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Vladimir</firstname>
+    <othername>G.</othername>
+    <surname>Turaev</surname>
+   </author>
+   <author>
+    <firstname>Oleg</firstname>
+    <othername>Y.</othername>
+    <surname>Viro</surname>
+   </author>
+  </authorgroup>
+  <title>State sum invariants of 3-manifolds and quantum
+   6<replaceable>j</replaceable>-symbols</title>
+  <edition>Topology</edition>
+  <volumenum>vol. 31</volumenum>
+  <issuenum>no. 4</issuenum>
+  <date>1992</date>
+  <artpagenums>pp. 865&ndash;902</artpagenums>
+ </biblioentry>
 </bibliography>

@@ -26,7 +26,7 @@
 <synopsis>
 packet ::= (&xml-tetrahedra;,
             &xml-fundgroup;?, &xml-H1;?, &xml-H1Bdry;?, &xml-H1Rel;?, &xml-H2;?,
-            &xml-splitsfce;?, &xml-zeroeff;?,
+            &xml-splitsfce;?, &xml-zeroeff;?, &xml-turaevviro;*,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -83,6 +83,7 @@ packet ::= (&xml-tetrahedra;,
      <member>&xml-splitsfce;</member>
      <member>&xml-tag;</member>
      <member>&xml-tetrahedra;</member>
+     <member>&xml-turaevviro;</member>
      <member>&xml-zeroeff;</member>
     </simplelist>.
    </para>

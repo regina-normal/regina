@@ -1,0 +1,123 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-turaevviro">
+ <refmeta>
+  <refentrytitle>turaevviro</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>turaevviro</refname>
+  <refpurpose>A single Turaev-Viro invariant for a triangulation</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+turaevviro ::=</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>r</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>root</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>value</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-turaevviro; element stores a single calculated Turaev-Viro
+   invariant for a triangulation.
+  </para>
+  <para>
+   Each Turaev-Viro invariant corresponds to a particular set of initial
+   data, as described in the paper of Turaev and Viro in which these
+   invariants appear <xref linkend="bib-turaevviro"/>.  In particular,
+   Section 7 of this paper describes the initial data as determined
+   by an integer <replaceable>r</replaceable>&nbsp;&gt;=&nbsp;3 and a root of
+   unity <replaceable>q</replaceable><subscript>0</subscript>
+   of degree 2<replaceable>r</replaceable>.
+  </para>
+  <para>
+   This initial data, as well as the value of the resulting invariant,
+   are stored in the attributes of the &xml-turaevviro; element.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>turaevviro</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-triangulation;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>turaevviro</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>r</sgmltag></term>
+    <listitem>
+     <para>
+      The integer <replaceable>r</replaceable>&nbsp;&gt;=&nbsp;3 used in
+      the initial data for this invariant.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>root</sgmltag></term>
+    <listitem>
+     <para>
+      An integer strictly between 0 and 2<replaceable>r</replaceable>
+      identifying the particular root of unity used in the initial data
+      for this invariant.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>value</sgmltag></term>
+    <listitem>
+     <para>
+      The value of this invariant expressed as a real number.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+</refentry>

@@ -93,6 +93,12 @@ bool valueOf(const std::string& str, NLargeInteger& dest) {
     return valid;
 }
 
+bool valueOf(const std::string& str, double& dest) {
+    char* endPtr;
+    dest = strtod(str.c_str(), &endPtr);
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
 bool valueOf(const std::string& str, bool& dest) {
     if (str.empty()) {
         dest = false;

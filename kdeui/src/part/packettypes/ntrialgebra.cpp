@@ -28,19 +28,118 @@
 
 // Regina core includes:
 #include "algebra/ngrouppresentation.h"
+#include "maths/numbertheory.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "ntrialgebra.h"
 
+#include <kiconloader.h>
+#include <klineedit.h>
 #include <klistview.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 #include <qheader.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qpainter.h>
+#include <qpushbutton.h>
+#include <qregexp.h>
+#include <qstyle.h>
+#include <qwhatsthis.h>
+#include <qvalidator.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
+
+namespace {
+    /**
+     * How large does r have to be before we start warning the user about
+     * Turaev-Viro computation time?
+     */
+    const unsigned long TV_WARN_LARGE_R = 10;
+
+    /**
+     * A regular expression for Turaev-Viro parameters.
+     */
+    QRegExp reTVParams("^[ \\(]*(\\d+)[ ,]+(\\d+)[ \\)]*$");
+
+    /**
+     * A list view item for storing a single Turaev-Viro invariant.
+     *
+     * These list view items are sorted numerically and drawn with a
+     * grid.
+     */
+    class TuraevViroItem : public KListViewItem {
+        private:
+            unsigned long r_;
+            unsigned long root_;
+            double value_;
+
+        public:
+            TuraevViroItem(QListView* parent, unsigned long r,
+                    unsigned long root, double value) :
+                    KListViewItem(parent), r_(r), root_(root), value_(value) {
+            }
+
+            bool matches(unsigned long r, unsigned long root) {
+                return (r_ == r && root_ == root);
+            }
+
+            QString text(int col) const {
+                if (col == 0)
+                    return QString::number(r_);
+                else if (col == 1)
+                    return QString::number(root_);
+                else
+                    return QString::number(value_);
+            }
+
+            int compare(QListViewItem* i, int col, bool) const {
+                TuraevViroItem* other = dynamic_cast<TuraevViroItem*>(i);
+                if (col == 0) {
+                    if (r_ < other->r_) return -1;
+                    if (r_ > other->r_) return 1;
+                    // If they're equal, fall back to column 1.
+                    if (root_ < other->root_) return -1;
+                    if (root_ > other->root_) return 1;
+                    return 0;
+                } else if (col == 1) {
+                    if (root_ < other->root_) return -1;
+                    if (root_ > other->root_) return 1;
+                    // If they're equal, fall back to column 0.
+                    if (r_ < other->r_) return -1;
+                    if (r_ > other->r_) return 1;
+                    return 0;
+                } else {
+                    if (value_ < other->value_) return -1;
+                    if (value_ > other->value_) return 1;
+                    return 0;
+                }
+            }
+
+            int width(const QFontMetrics& fm, const QListView* lv, int c)
+                    const {
+                /**
+                 * Add a bit of space so items aren't pressed right
+                 * against the grid.
+                 */
+                return KListViewItem::width(fm, lv, c) + 2;
+            }
+
+            void paintCell(QPainter* p, const QColorGroup& cg,
+                    int column, int width, int align) {
+                // Do the standard painting.
+                KListViewItem::paintCell(p, cg, column, width, align);
+
+                // Draw a box around the cell.
+                p->setPen((QRgb)listView()->style().styleHint(
+                    QStyle::SH_Table_GridLineColor, listView()));
+                p->drawLine(0, height() - 1, width - 1, height() - 1);
+                p->lineTo(width - 1, 0);
+            }
+    };
+}
 
 NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketTabbedViewerTab(useParentUI) {
@@ -226,8 +325,58 @@ void NTriFundGroupUI::editingElsewhere() {
 NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    // TODO
     ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(ui, 5, 5);
+
+    QBoxLayout* paramsArea = new QHBoxLayout(layout);
+    paramsArea->addStretch(1);
+
+    QString expln = i18n("<qt>The (r, root) parameters of the Turaev-Viro "
+        "invariant to calculate.  These parameters describe the initial data "
+        "for the invariant as described in <i>State sum invariants of "
+        "3-manifolds and quantum 6j-symbols</i>, Turaev and Viro, "
+        "published in <i>Topology</i> <b>31</b> (4), 1992.<p>"
+        "In particular, <i>r</i> and <i>root</i> must both be positive "
+        "integers with 0&nbsp;&lt;&nbsp;<i>root</i>&nbsp;&lt;&nbsp;2<i>r</i>, "
+        "where <i>root</i> describes a 2<i>r</i>-th root of unity.  "
+        "Example parameters are <i>5,3</i>.<p>"
+        "Note that only very small (e.g., one-digit) values of <i>r</i> "
+        "should be used, since the time required to calculate the invariant "
+        "grows exponentially with <i>r</i>.</qt>");
+    paramsLabel = new QLabel(i18n("Parameters (r, root):"), ui);
+    QWhatsThis::add(paramsLabel, expln);
+    paramsArea->addWidget(paramsLabel);
+
+    params = new KLineEdit(ui);
+    params->setValidator(new QRegExpValidator(reTVParams, ui));
+    QWhatsThis::add(params, expln);
+    connect(params, SIGNAL(returnPressed()), this, SLOT(calculateInvariant()));
+    paramsArea->addWidget(params);
+
+    calculate = new QPushButton(SmallIconSet("exec"), i18n("Calculate"), ui);
+    calculate->setFlat(true);
+    connect(calculate, SIGNAL(clicked()), this, SLOT(calculateInvariant()));
+    paramsArea->addWidget(calculate);
+
+    paramsArea->addStretch(1);
+
+    QBoxLayout* invArea = new QHBoxLayout(layout);
+    layout->setStretchFactor(invArea, 1);
+    invArea->addStretch(1);
+
+    invariants = new KListView(ui);
+    invariants->addColumn(i18n("r"));
+    invariants->addColumn(i18n("root"));
+    invariants->addColumn(i18n("value"));
+    invariants->setSelectionMode(QListView::NoSelection);
+    invariants->setSorting(0);
+    invariants->setColumnAlignment(0, Qt::AlignLeft);
+    invariants->setColumnAlignment(1, Qt::AlignLeft);
+    invariants->setColumnAlignment(2, Qt::AlignLeft);
+    invariants->setResizeMode(QListView::AllColumns);
+    invArea->addWidget(invariants, 1);
+
+    invArea->addStretch(1);
 }
 
 regina::NPacket* NTriTuraevViroUI::getPacket() {
@@ -239,10 +388,104 @@ QWidget* NTriTuraevViroUI::getInterface() {
 }
 
 void NTriTuraevViroUI::refresh() {
-    // TODO
+    paramsLabel->setEnabled(true);
+    params->setEnabled(true);
+    calculate->setEnabled(true);
+
+    invariants->clear();
+
+    const NTriangulation::TuraevViroSet& invs(tri->allCalculatedTuraevViro());
+    for (NTriangulation::TuraevViroSet::const_iterator it = invs.begin();
+            it != invs.end(); it++)
+        new TuraevViroItem(invariants, (*it).first.first,
+            (*it).first.second, (*it).second);
 }
 
 void NTriTuraevViroUI::editingElsewhere() {
-    // TODO
+    paramsLabel->setEnabled(false);
+    params->setEnabled(false);
+    calculate->setEnabled(false);
+
+    invariants->clear();
 }
 
+void NTriTuraevViroUI::calculateInvariant() {
+    // Make sure the triangulation is not being edited.
+    if (! params->isEnabled())
+        return;
+
+    // Run sanity checks.
+    if (! (tri->isValid() && tri->isClosed() &&
+            tri->getNumberOfTetrahedra() > 0)) {
+        KMessageBox::sorry(ui, i18n("Turaev-Viro invariants are only "
+            "available for closed, valid, non-empty triangulations at "
+            "the present time."));
+        return;
+    }
+
+    if (! reTVParams.exactMatch(params->text())) {
+        KMessageBox::error(ui, i18n("<qt>The invariant parameters "
+            "(<i>r</i>, <i>root</i>) must be two positive integers.<p>"
+            "These parameters describe the initial data "
+            "for the invariant as described in <i>State sum invariants of "
+            "3-manifolds and quantum 6j-symbols</i>, Turaev and Viro, "
+            "published in <i>Topology</i> <b>31</b> (4), 1992.<p>"
+            "In particular, <i>r</i> and <i>root</i> must both be positive "
+            "integers with "
+            "0&nbsp;&lt;&nbsp;<i>root</i>&nbsp;&lt;&nbsp;2<i>r</i>, "
+            "where <i>root</i> describes a 2<i>r</i>-th root of unity.  "
+            "Example parameters are <i>5,3</i>.<p>"
+            "Note that only very small (e.g., one-digit) values of <i>r</i> "
+            "should be used, since the time required to calculate the "
+            "invariant grows exponentially with <i>r</i>.</qt>"));
+        return;
+    }
+
+    unsigned long r = reTVParams.cap(1).toULong();
+    unsigned long root = reTVParams.cap(2).toULong();
+
+    if (r < 3) {
+        KMessageBox::error(ui, i18n("<qt>The first parameter <i>r</i> must be "
+            "at least 3.</qt>"));
+        return;
+    }
+
+    if (root <= 0 || root >= 2 * r) {
+        KMessageBox::error(ui, i18n("<qt>The second parameter <i>root</i> "
+            "must be strictly between 0 and 2<i>r</i> (it specifies a "
+            "2<i>r</i>-th root of unity).  Example parameters "
+            "are <i>5,3</i>.</qt>"));
+        return;
+    }
+
+    if (regina::gcd(r, root) > 1) {
+        KMessageBox::error(ui, i18n("<qt>The invariant parameters must have "
+            "no common factors.  Example parameters are <i>5,3</i>.</qt>"));
+        return;
+    }
+
+    if (r >= TV_WARN_LARGE_R)
+        if (KMessageBox::warningContinueCancel(ui, i18n("<qt>This calculation "
+                "is likely to take a long time, since the time required "
+                "for calculating Turaev-Viro invariants grows exponentially "
+                "with <i>r</i>.  It is recommended only to use "
+                "r&nbsp;&lt;&nbsp;%1.  Are you sure you wish to "
+                "proceed?</qt>").arg(TV_WARN_LARGE_R))
+                == KMessageBox::Cancel)
+            return;
+
+    // Calculate the invariant!
+    // Don't forget to check for duplicate list items.
+    double value = tri->turaevViro(r, root);
+
+    for (QListViewItem* i = invariants->firstChild(); i;
+            i = i->nextSibling())
+        if (dynamic_cast<TuraevViroItem*>(i)->matches(r, root)) {
+            delete i;
+            break;
+        }
+
+    new TuraevViroItem(invariants, r, root, value);
+}
+
+#include "ntrialgebra.moc"

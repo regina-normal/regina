@@ -36,7 +36,9 @@
 #include "../packettabui.h"
 
 class QLabel;
+class QLineEdit;
 class QListView;
+class QPushButton;
 
 namespace regina {
     class NPacket;
@@ -129,7 +131,9 @@ class NTriFundGroupUI : public PacketViewerTab {
 /**
  * A triangulation page for viewing Turaev-Viro invariants.
  */
-class NTriTuraevViroUI : public PacketViewerTab {
+class NTriTuraevViroUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -140,6 +144,10 @@ class NTriTuraevViroUI : public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QLabel* paramsLabel;
+        QLineEdit* params;
+        QPushButton* calculate;
+        QListView* invariants;
 
     public:
         /**
@@ -155,6 +163,12 @@ class NTriTuraevViroUI : public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+    public slots:
+        /**
+         * Calculate the requested Turaev-Viro invariant.
+         */
+        void calculateInvariant();
 };
 
 #endif

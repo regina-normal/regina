@@ -35,7 +35,9 @@
 #define __NTRIANGULATION_H
 #endif
 
+#include <map>
 #include <memory>
+
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "file/nfilepropertyreader.h"
@@ -125,6 +127,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
+        typedef std::map<std::pair<unsigned long, unsigned long>, double>
+                TuraevViroSet;
+            /**< A map from (r, whichRoot) pairs to Turaev-Viro invariants. */
+
     private:
         mutable bool calculatedSkeleton;
             /**< Has the skeleton been calculated? */
@@ -176,6 +182,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
             /**< Is the triangulation zero-efficient? */
         mutable NProperty<bool> splittingSurface;
             /**< Does the triangulation have a normal splitting surface? */
+
+        mutable TuraevViroSet turaevViroCache;
+            /**< The set of Turaev-Viro invariants that have already
+                 been calculated. */
 
     public:
         /**
@@ -946,8 +956,29 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * e^(2i * Pi * whichRoot / 2r); this argument must be strictly
          * between 0 and 2r and must have no common factors with r.
          * @return the requested Turaev-Viro invariant.
+         * @see allCalculatedTuraevViro
          */
         double turaevViro(unsigned long r, unsigned long whichRoot) const;
+        /**
+         * Returns the set of all Turaev-Viro state sum invariants that
+         * have already been calculated for this 3-manifold.
+         *
+         * Turaev-Viro invariants are described by an (r, whichRoot)
+         * pair as described in the turaevViro() notes.  The set
+         * returned by this routine maps (r, whichRoot) pairs to the
+         * corresponding invariant values.
+         *
+         * Each time turaevViro() is called, the result will be stored
+         * in this set (as well as being returned to the user).  This
+         * set will be emptied whenever the triangulation is modified.
+         *
+         * \ifacespython Not present.
+         *
+         * @return the set of all Turaev-Viro invariants that have
+         * already been calculated.
+         * @see turaevViro
+         */
+        const TuraevViroSet& allCalculatedTuraevViro() const;
 
         /*@}*/
         /**
@@ -2101,6 +2132,11 @@ inline bool NTriangulation::knowsSplittingSurface() const {
 
 inline unsigned long NTriangulation::getHomologyH2Z2() const {
     return getHomologyH1Rel().getRank() + getHomologyH1Rel().getTorsionRank(2);
+}
+
+inline const NTriangulation::TuraevViroSet&
+        NTriangulation::allCalculatedTuraevViro() const {
+    return turaevViroCache;
 }
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {

@@ -7,10 +7,10 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Current Development Version:
+Version 3.96  [ 31 October, 2003 ] - Second prerelease for version 4.0.
     ENGINE:
         Overall structure:
-            - Even more routines made const.
+            - Yet more routines made const.
         Class NAbelianGroup:
             - Added global comparisons isTrivial() and operator ==.
         Class NMutex:
@@ -21,13 +21,17 @@ Current Development Version:
         Class NPropertyHolder:
             - Moved most of its functionality directly into NFile and
               replaced what was left with the new class NFilePropertyReader.
+        Class NTriangulation:
+            - Turaev-Viro invariants are now cached; this includes a new
+              routine allCalculatedTuraevViro().
         Class ShareableObject:
             - Now derives from regina::boost::noncopyable.
     USER INTERFACE:
         Class NTriAlgebraUI:
             - Redesigned the algebra viewer to make it easier to read.
+            - Incorporatd Turaev-Viro invariants into the UI.
         Class NTriCompositionUI:
-            - Included isomorphism / subcomplex testing.
+            - Incorporated isomorphism / subcomplex testing into the UI.
             - Fixed crash when refreshing.
         Class PacketTabbedViewerTab:
             - Added to support tabbed UIs within tabbed UIs.

@@ -171,6 +171,23 @@ bool valueOf(const std::string& str, unsigned long& dest);
  */
 bool valueOf(const std::string& str, NLargeInteger& dest);
 /**
+ * Converts the entire given string to a double precision real number and
+ * reports whether this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the real number that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * \ifacespython Not present.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting real number.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+bool valueOf(const std::string& str, double& dest);
+/**
  * Converts the entire given string to a boolean and reports whether
  * this conversion was successful.
  *

@@ -226,6 +226,14 @@ NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
         return new NAbelianGroupPropertyReader(tri->H2);
     else if (subTagName == "fundgroup")
         return new NGroupPresentationPropertyReader(tri->fundamentalGroup);
+    else if (subTagName == "turaevviro") {
+        unsigned long r, root;
+        double value;
+        if (valueOf(props.lookup("r"), r) &&
+                valueOf(props.lookup("root"), root) &&
+                valueOf(props.lookup("value"), value))
+            tri->turaevViroCache[std::make_pair(r, root)] = value;
+    }
     return new NXMLElementReader();
 }
 

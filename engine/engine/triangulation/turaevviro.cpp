@@ -222,6 +222,12 @@ namespace {
 
 double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
         const {
+    // Have we already calculated this invariant?
+    std::pair<unsigned long, unsigned long> tvParams(r, whichRoot);
+    TuraevViroSet::const_iterator it = turaevViroCache.find(tvParams);
+    if (it != turaevViroCache.end())
+        return (*it).second;
+
     // Do some basic parameter checks.
     if (r < 3)
         return 0;
@@ -323,6 +329,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
             "         was used) to " << PACKAGE_BUGREPORT << ".\n"
             "         Only the real portion of the invariant has been"
             "         returned from this routine." << std::endl;
+    turaevViroCache[tvParams] = ans.real();
     return ans.real();
 }
 

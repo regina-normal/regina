@@ -7,6 +7,7 @@ engine documentation.
 
 General:
     Make "configure shortcuts" work with the part as well as with the shell
+    More "What's This?" texts, including a what's this button on the toolbar
     Enhance the DCOP interface.
 
 Census:
@@ -50,6 +51,5 @@ Toolbars:
     Work out how to get decent action names in the configure toolbar dialog
 
 Triangulations:
-    (4.0) Include Turaev-Viro
     Make the skeleton viewer windows appear in a pleasant size
 
