@@ -28,9 +28,19 @@
 
 #include <boost/python.hpp>
 
+#include "engine.h"
 #include "utilities/pyutilities.h"
 
 BOOST_PYTHON_MODULE(regina) {
+    // Core engine routines:
+
+    boost::python::def("getVersionString", regina::getVersionString);
+    boost::python::def("getVersionMajor", regina::getVersionMajor);
+    boost::python::def("getVersionMinor", regina::getVersionMinor);
+    boost::python::def("testEngine", regina::testEngine);
+
+    // Components from subdirectories:
+
     // utilities:
     addNLargeInteger();
 }
