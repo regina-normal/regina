@@ -58,7 +58,7 @@ done
 
 # --- Run the application. ---
 
-command="$REGINA_JAVA $javadefs normal.Application $@"
+command="$REGINA_JAVA $javadefs normal.Application \"$@\""
 
 info "Command: $command"
 info "Classpath: $CLASSPATH"

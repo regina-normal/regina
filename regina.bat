@@ -18,7 +18,7 @@ cd \cygwin\bin
 rem --- Start regina.  This should call the startup script "regina" in
 rem     the base regina directory.
 
-bash --login -c "/home/Ben/source/regina/regina %*"
+bash --login /home/Ben/source/regina/regina %*
 
 rem --- Pause so the user can see any text output before the console is
 rem     closed; remove this if appropriate.
