@@ -108,6 +108,9 @@ NXMLElementReader* NXMLNormalSurfaceReader::startSubElement(
     } else if (subTagName == "compact") {
         if (valueOf(props.lookup("value"), surface->compact))
             surface->calculatedCompact = true;
+    } else if (subTagName == "cancrush") {
+        if (valueOf(props.lookup("value"), surface->canCrush))
+            surface->calculatedCanCrush = true;
     }
     return new NXMLElementReader();
 }
