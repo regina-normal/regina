@@ -182,19 +182,48 @@ QWidget* NTriGluingsUI::getInterface() {
 }
 
 void NTriGluingsUI::commit() {
-    /*
     tri->removeAllTetrahedra();
 
-    unsigned long nRows = facetable->numRows();
+    long nRows = faceTable->numRows();
     if (nRows > 0) {
-        unsigned long tetNum;
+        regina::NTetrahedron** tets = new regina::NTetrahedron*[nRows];
+        FaceGluingItem* item;
+        long tetNum, adjTetNum;
+        int face, adjFace;
 
-        for (tetNum = 0; tetNum < nRows; tetNum++) {
-        }
+        // Create the tetrahedra.
+        for (tetNum = 0; tetNum < nRows; tetNum++)
+            tets[tetNum] = new regina::NTetrahedron(
+                dynamic_cast<TetNameItem*>(faceTable->item(tetNum, 0))->
+                getName().ascii());
 
+        // Glue the tetrahedra together.
+        for (tetNum = 0; tetNum < nRows; tetNum++)
+            for (face = 0; face < 4; face++) {
+                item = dynamic_cast<FaceGluingItem*>(faceTable->item(tetNum,
+                    4 - face));
+
+                adjTetNum = item->getAdjacentTetrahedron();
+                if (adjTetNum < tetNum)
+                    continue;
+                adjFace = item->getAdjacentFace();
+                if (adjTetNum == tetNum && adjFace < face)
+                    continue;
+
+                // It's a forward gluing.
+                tets[tetNum]->joinTo(face, tets[adjTetNum],
+                    item->getAdjacentTetrahedronGluing());
+            }
+
+        // Add the tetrahedra to the triangulation.
+        for (tetNum = 0; tetNum < nRows; tetNum++)
+            tri->addTetrahedron(tets[tetNum]);
+
+        // Tidy up.
+        delete[] tets;
     }
-    TODO
-    */
+
+    setDirty(false);
 }
 
 void NTriGluingsUI::refresh() {
@@ -235,7 +264,13 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
 }
 
 void NTriGluingsUI::addTet() {
-    // TODO
+    long newRow = faceTable->numRows();
+
+    faceTable->setNumRows(newRow + 1);
+    faceTable->setItem(newRow, 0, new TetNameItem(faceTable, newRow, ""));
+    for (int face = 0; face < 4; face++)
+        faceTable->setItem(newRow, 4 - face, new FaceGluingItem(faceTable));
+
     setDirty(true);
 }
 

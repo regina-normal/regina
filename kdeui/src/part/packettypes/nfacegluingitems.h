@@ -89,8 +89,18 @@ class FaceGluingItem : public QTableItem {
         /**
          * Query properties.
          */
+        bool isBoundary() const;
         long getAdjacentTetrahedron() const;
+        int getMyFace() const;
+        int getAdjacentFace() const;
         const regina::NPerm& getAdjacentTetrahedronGluing() const;
+
+        /**
+         * Adjust the adjacent tetrahedron number.  This will need to be used
+         * when tetrahedron indexes change as a result of other tetrahedra
+         * being added or removed.
+         */
+        void setAdjacentTetrahedron(long newTetNum);
 
         /**
          * QTableItem overrides.
@@ -100,8 +110,8 @@ class FaceGluingItem : public QTableItem {
 
     private:
         /**
-         * Return a short string describing the destination of a face
-         * gluing.
+         * Return a short string describing the destination of a
+         * (non-boundary) face gluing.
          */
         static QString destString(int srcFace, int destTet,
                 const regina::NPerm& gluing);
@@ -117,13 +127,29 @@ inline const QString& TetNameItem::getName() const {
     return name;
 }
 
+inline bool FaceGluingItem::isBoundary() const {
+    return (adjTet < 0);
+}
+
 inline long FaceGluingItem::getAdjacentTetrahedron() const {
     return adjTet;
+}
+
+inline int FaceGluingItem::getMyFace() const {
+    return 4 - col();
+}
+
+inline int FaceGluingItem::getAdjacentFace() const {
+    return (adjTet < 0 ? -1 : adjPerm[getMyFace()]);
 }
 
 inline const regina::NPerm& FaceGluingItem::getAdjacentTetrahedronGluing()
         const {
     return adjPerm;
+}
+
+inline void FaceGluingItem::setAdjacentTetrahedron(long newTetNum) {
+    adjTet = newTetNum;
 }
 
 #endif
