@@ -29,7 +29,9 @@ Regina - A Normal Surface Theory Calculator
             - Added modularInverse().
     JAVA USER INTERFACE:
         Overall structure:
-            - Moved options files to $REGINA_OPTIONS.
+            - Reads Regina options from directory $REGINA_OPTIONS_LOCAL
+              and reads runtime options from system properties (which
+              should be set by startup scripts).
             - Ported from JPython 1.1 to Jython 2.1-alpha1.
             - Now supports custom Jython libraries.
             - Improved support for mnemonics and keyboard accelerators.
