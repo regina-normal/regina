@@ -15,6 +15,7 @@ General:
 
 Census:
     - Implement GUI census creation
+    * Inclusive upgrades for census lookup configuration
 
 Containers:
     - Update container viewers whenever their subtrees change, not just when
