@@ -26,39 +26,69 @@
 
 /* end stub */
 
-#include "newpacketdialog.h"
-#include "reginapart.h"
-#include "packettypes/ntextcreator.h"
+/*! \file newpacketdialog.h
+ *  \brief Provides a dialog through which the user can create a new
+ *  packet.
+ */
 
-#include <klocale.h>
+#ifndef __NEWPACKETDIALOG_H
+#define __NEWPACKETDIALOG_H
 
-void ReginaPart::newAngleStructures() {
-    unimplemented();
-}
+#include <kdialogbase.h>
 
-void ReginaPart::newContainer() {
-    unimplemented();
-}
+class PacketChooser;
+class PacketCreator;
+class PacketFilter;
+class QLineEdit;
 
-void ReginaPart::newFilter() {
-    unimplemented();
-}
+namespace regina {
+    class NPacket;
+};
 
-void ReginaPart::newNormalSurfaces() {
-    unimplemented();
-}
+/**
+ * A dialog used to create a new packet.
+ *
+ * New packets of all types should be created using this dialog.
+ * The real work is done by the PacketCreator class, which is
+ * overridden for each different packet type.
+ */
+class NewPacketDialog : public KDialogBase {
+    Q_OBJECT
 
-void ReginaPart::newScript() {
-    unimplemented();
-}
+    private:
+        /**
+         * Internal components:
+         */
+        PacketCreator* creator;
+        PacketChooser* chooser;
+        QLineEdit* label;
 
-void ReginaPart::newText() {
-    NewPacketDialog dlg(widget(), new NTextCreator(), packetTree, 0,
-        i18n("New Text Packet"), i18n("Text"));
-    dlg.exec();
-}
+        /**
+         * Packet tree structure:
+         */
+        regina::NPacket* tree;
 
-void ReginaPart::newTriangulation() {
-    unimplemented();
-}
+    public:
+        /**
+         * Constructor and destructor.
+         *
+         * The filter passed is used to restrict the possible parents of
+         * the new packet.  It may be 0, in which case any parent will
+         * be allowed.
+         *
+         * This dialog and its components will claim ownership of the
+         * given PacketCreator and PacketFilter.
+         */
+        NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
+            regina::NPacket* packetTree, PacketFilter* useFilter,
+            const QString& dialogTitle, const QString& suggestedLabel);
+        virtual ~NewPacketDialog();
 
+    protected slots:
+        /**
+         * KDialogBase overrides.
+         */
+        virtual void slotOk();
+};
+
+#endif

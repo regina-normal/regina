@@ -26,39 +26,30 @@
 
 /* end stub */
 
-#include "newpacketdialog.h"
-#include "reginapart.h"
-#include "packettypes/ntextcreator.h"
+/*! \file ntextcreator.h
+ *  \brief Provides an interface for creating text packets.
+ */
 
-#include <klocale.h>
+#ifndef __NTEXTCREATOR_H
+#define __NTEXTCREATOR_H
 
-void ReginaPart::newAngleStructures() {
-    unimplemented();
-}
+#include "../packetcreator.h"
 
-void ReginaPart::newContainer() {
-    unimplemented();
-}
+namespace regina {
+    class NPacket;
+    class NText;
+};
 
-void ReginaPart::newFilter() {
-    unimplemented();
-}
+/**
+ * A packet interface for creating text packets.
+ */
+class NTextCreator : public PacketCreator {
+    public:
+        /**
+         * PacketCreator overrides.
+         */
+        regina::NPacket* createPacket(regina::NPacket* parentPacket,
+            QWidget* parentWidget);
+};
 
-void ReginaPart::newNormalSurfaces() {
-    unimplemented();
-}
-
-void ReginaPart::newScript() {
-    unimplemented();
-}
-
-void ReginaPart::newText() {
-    NewPacketDialog dlg(widget(), new NTextCreator(), packetTree, 0,
-        i18n("New Text Packet"), i18n("Text"));
-    dlg.exec();
-}
-
-void ReginaPart::newTriangulation() {
-    unimplemented();
-}
-
+#endif

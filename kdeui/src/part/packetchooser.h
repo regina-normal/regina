@@ -88,6 +88,11 @@ class PacketChooser : public KComboBox {
         ~PacketChooser();
 
         /**
+         * Returns the filter used by this packet chooser.
+         */
+        PacketFilter* getFilter();
+
+        /**
          * Returns the currently selected packet.
          *
          * If the selected packet has since been destroyed, this routine
@@ -117,5 +122,9 @@ class PacketChooser : public KComboBox {
          */
         void fill(bool allowNone, regina::NPacket* select);
 };
+
+inline PacketFilter* PacketChooser::getFilter() {
+    return filter;
+}
 
 #endif
