@@ -74,6 +74,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="packet-clone">cloning packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-regconcat">combining data
    files</link></primaryie>
  </indexentry>
@@ -109,6 +113,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="packet-container">container
+   packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-regconvert">conversion between file
    formats</link></primaryie>
  </indexentry>
@@ -141,6 +150,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>deleting</primaryie>
+  <secondaryie><link linkend="packet-delete">packets</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>documentation</primaryie>
   <secondaryie><link linkend="python-docs">&regina; objects, classes
    and methods</link></secondaryie>
@@ -159,6 +173,10 @@
  <indexentry>
   <primaryie>edge weight normal coordinates</primaryie>
   <seeie>(see coordinate systems)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="packet-view">editing packets</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -263,6 +281,7 @@
 
  <indexentry>
   <primaryie>naming</primaryie>
+  <secondaryie><link linkend="packet-rename">packets</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedra in a
    triangulation</link></secondaryie>
   <secondaryie><link linkend="surfaces-propname">surfaces in a
@@ -321,14 +340,25 @@
   <secondaryie><link linkend="options-general">display large
    icon</link></secondaryie>
   <secondaryie><link linkend="options-general">jump size</link></secondaryie>
+  <secondaryie><link linkend="packet-tree">overview</link></secondaryie>
+  <secondaryie><link linkend="packet-refresh">refreshing a
+   subtree</link></secondaryie>
  </indexentry>
 
  <indexentry>
   <primaryie>packets</primaryie>
   <secondaryie><link linkend="options-general">automatic
    docking</link></secondaryie>
-  <secondaryie><link linkend="trouble-packet-uneditable">cannot be
+  <secondaryie><link linkend="packet-types">available packet
+   types</link></secondaryie>
+  <secondaryie><link linkend="packet-uneditable">cannot be
    edited</link></secondaryie>
+  <secondaryie><link linkend="packet-clone">cloning</link></secondaryie>
+  <secondaryie><link linkend="packet-new">creating new
+   packets</link></secondaryie>
+  <secondaryie><link linkend="packet-delete">deleting</link></secondaryie>
+  <secondaryie><link linkend="packet-view">viewing and
+   editing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -349,6 +379,16 @@
  <indexentry>
   <primaryie>real boundary</primaryie>
   <seeie>(see boundary)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>removing</primaryie>
+  <seeie>(see deleting)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>renaming</primaryie>
+  <seeie>(see naming)</seeie>
  </indexentry>
 
  <indexentry>
@@ -379,6 +419,8 @@
    objects</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
    libraries</link></secondaryie>
+  <secondaryie><link linkend="packet-script">script
+   packets</link></secondaryie>
   <secondaryie><link linkend="trouble-python-typeerror"><exceptionname>TypeError</exceptionname>,
    resolving</link></secondaryie>
  </indexentry>
@@ -444,6 +486,15 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="packet-text">text packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>tree</primaryie>
+  <seeie>(see packet tree)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="troubleshooting">troubleshooting</link></primaryie>
  </indexentry>
 
@@ -475,6 +526,10 @@
  <indexentry>
   <primaryie>vertex normal surfaces</primaryie>
   <seeie>(see normal surfaces)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="packet-view">viewing packets</link></primaryie>
  </indexentry>
 
  <indexentry>

@@ -388,7 +388,7 @@
     </para>
    </sect3>
 
-   <sect3>
+   <sect3 id="packet-uneditable">
     <title>Uneditable Packets</title>
 
     <para>
@@ -396,10 +396,9 @@
      packet, this means that
      the packet cannot be edited.  Some packets by nature cannot be edited
      (such as containers).  Other packets may be constrained by their
-     children.  For instance, if a triangulation is parent to a
-     normal surface list, this triangulation will be uneditable since the
-     normal surfaces are stored as vectors relative to this parent
-     triangulation.
+     children &ndash; for instance, if a triangulation is parent to a
+     normal surface list, this triangulation must remain constant so
+     that the normal surface coordinates are not invalidated.
     </para>
     <para>
      In such a situation, try <link linkend="packet-clone">cloning the
