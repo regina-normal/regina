@@ -1,7 +1,7 @@
 
 Regina - A Normal Surface Theory Calculator
 
-Version 2.2
+Version 2.2  [ 7 October, 2001 ]
     OVERALL:
         - Documentation now DocBook-based; generates HTML and man pages.
         - Documentation now in docs/, not docs/normal/docs/.
@@ -94,7 +94,7 @@ Version 2.2
         normal.packetui.triangulation.NTriangulationEditor:
             - Added triangulation component recognition.
 
-Version 2.1.1a
+Version 2.1.1a  [ 8 March, 2001 ]
     OVERALL:
         - Set up system for creating distributions.
         - Final tidying up for proper release.
@@ -135,7 +135,7 @@ Version 2.1.1
             - Fixed the bug in which changes in the filter were not
               always being immediately reflected in the surface list.
 
-Version 2.1.0
+Version 2.1.0  [ 18 December, 2000 ]
     (Initial public release.)
 
 Ben Burton (benb@acm.org)
