@@ -38,6 +38,7 @@
     #include "nfile.h"
     #include "ncensus.h"
 	#include "nlayeredlensspace.h"
+	#include "npillowtwosphere.h"
 	#include "nsnappedtwosphere.h"
     #include "nnormalsurfacelist.h"
     #include "matrixops.h"
@@ -50,6 +51,7 @@
     #include "engine/file/nfile.h"
     #include "engine/census/ncensus.h"
     #include "engine/subcomplex/nlayeredlensspace.h"
+    #include "engine/subcomplex/npillowtwosphere.h"
     #include "engine/subcomplex/nsnappedtwosphere.h"
     #include "engine/surfaces/nnormalsurfacelist.h"
     #include "engine/maths/matrixops.h"
@@ -73,6 +75,16 @@ JNIEXPORT jlong JNICALL
         NBoolSet::fromByteCode(flag2),
         NBoolSet::fromByteCode(flag3),
         nBdryFaces, GET_ENGINE_OBJECT(env, NProgressManager, manager));
+}
+
+JNIEXPORT jobject JNICALL
+		Java_normal_engine_implementation_jni_JNIEngine_formsPillowTwoSphere
+		(JNIEnv *env, jobject me, jobject f1, jobject f2) {
+	return CREATE_WRAPPER_OBJECT(env,
+		NPillowTwoSphere::formsPillowTwoSphere(
+			GET_ENGINE_OBJECT(env, NFace, f1),
+			GET_ENGINE_OBJECT(env, NFace, f2)),
+		"normal/engine/implementation/jni/subcomplex/NJNIPillowTwoSphere");
 }
 
 JNIEXPORT jobject JNICALL

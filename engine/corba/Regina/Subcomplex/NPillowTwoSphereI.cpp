@@ -26,58 +26,30 @@
 
 /* end stub */
 
-#include "config.h"
-#include "regina.h"
-
-#include "EngineI.h"
-#include "NLayeredLensSpaceI.h"
-#include "NLayeredSolidTorusI.h"
 #include "NPillowTwoSphereI.h"
-#include "NSnappedBallI.h"
-#include "NSnappedTwoSphereI.h"
+#include "NFaceI.h"
+#include "NTriangulationI.h"
 
-Regina::Subcomplex::NPillowTwoSphere_ptr
-		Engine_i::formsPillowTwoSphere(Regina::Triangulation::NFace_ptr face1,
-		Regina::Triangulation::NFace_ptr face2) {
+Regina::Subcomplex::NPillowTwoSphere_ptr NPillowTwoSphere_i::cloneMe() {
 	return NPillowTwoSphere_i::newWrapper(
-		::NPillowTwoSphere::formsPillowTwoSphere(
-		GET_ENGINE_OBJECT(NFace, face1),
-		GET_ENGINE_OBJECT(NFace, face2)));
+		GET_ENGINE_OBJECT(NPillowTwoSphere, this)->clone());
 }
-
-Regina::Subcomplex::NSnappedTwoSphere_ptr
-		Engine_i::formsSnappedTwoSphere_NSnappedBall(
-		Regina::Subcomplex::NSnappedBall_ptr p1,
-		Regina::Subcomplex::NSnappedBall_ptr p2) {
-	return NSnappedTwoSphere_i::newWrapper(
-		::NSnappedTwoSphere::formsSnappedTwoSphere(
-		GET_ENGINE_OBJECT(NSnappedBall, p1),
-		GET_ENGINE_OBJECT(NSnappedBall, p2)));
+Regina::Triangulation::NFace_ptr NPillowTwoSphere_i::getFace(
+		CORBA::Long index) {
+	return NFace_i::newWrapper(
+		GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getFace(index));
 }
-Regina::Subcomplex::NSnappedTwoSphere_ptr
-		Engine_i::formsSnappedTwoSphere_NTetrahedron(
-		Regina::Triangulation::NTetrahedron_ptr p1,
-		Regina::Triangulation::NTetrahedron_ptr p2) {
-	return NSnappedTwoSphere_i::newWrapper(
-		::NSnappedTwoSphere::formsSnappedTwoSphere(
-		GET_ENGINE_OBJECT(NTetrahedron, p1),
-		GET_ENGINE_OBJECT(NTetrahedron, p2)));
+CORBA::Char NPillowTwoSphere_i::getFaceMapping() {
+	return GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getFaceMapping().
+		getPermCode();
 }
-Regina::Subcomplex::NLayeredLensSpace_ptr Engine_i::isLayeredLensSpace(
-		Regina::Triangulation::NComponent_ptr comp) {
-	return NLayeredLensSpace_i::newWrapper(
-		::NLayeredLensSpace::isLayeredLensSpace(
-		GET_ENGINE_OBJECT(NComponent, comp)));
+void NPillowTwoSphere_i::reduceTriangulation() {
+	GET_ENGINE_OBJECT(NPillowTwoSphere, this)->reduceTriangulation();
 }
-Regina::Subcomplex::NLayeredSolidTorus_ptr Engine_i::isLayeredSolidTorusBase(
-		Regina::Triangulation::NTetrahedron_ptr tet) {
-	return NLayeredSolidTorus_i::newWrapper(
-		::NLayeredSolidTorus::isLayeredSolidTorusBase(
-		GET_ENGINE_OBJECT(NTetrahedron, tet)));
+Regina::Triangulation::NTriangulation_ptr
+		NPillowTwoSphere_i::getReducedTriangulation(
+		Regina::Triangulation::NTriangulation_ptr original) {
+	return NTriangulation_i::newWrapper(
+		GET_ENGINE_OBJECT(NPillowTwoSphere, this)->getReducedTriangulation(
+		GET_ENGINE_OBJECT(NTriangulation, original)));
 }
-Regina::Subcomplex::NSnappedBall_ptr Engine_i::isSnappedBall(
-		Regina::Triangulation::NTetrahedron_ptr tet) {
-	return NSnappedBall_i::newWrapper(
-		::NSnappedBall::isSnappedBall(GET_ENGINE_OBJECT(NTetrahedron, tet)));
-}
-

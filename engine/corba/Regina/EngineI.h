@@ -101,6 +101,9 @@ class Engine_i : public virtual POA_Regina::Engine,
             CORBA::Char orientability, CORBA::Char boundary,
             CORBA::Long nBdryFaces,
             Regina::Progress::NProgressManager_ptr manager);
+		virtual Regina::Subcomplex::NPillowTwoSphere_ptr
+			formsPillowTwoSphere(Regina::Triangulation::NFace_ptr face1,
+			Regina::Triangulation::NFace_ptr face2);
 		virtual Regina::Subcomplex::NSnappedTwoSphere_ptr
 			formsSnappedTwoSphere_NSnappedBall(
 			Regina::Subcomplex::NSnappedBall_ptr p1,

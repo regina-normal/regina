@@ -44,6 +44,6 @@ Menus:
 	Provide NTriangulation::cutAlongSurface() once it is written.
 
 Normal Surfaces:
-	For matching equations and normal surface coordinates, resizing one
+-	For matching equations and normal surface coordinates, resizing one
 		column should imply resizing all coordinate columns.
 	Right-align coordinates but have padding between numbers and column edge.

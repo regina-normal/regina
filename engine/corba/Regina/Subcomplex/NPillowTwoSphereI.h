@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A normal surface theory calculator                           *
- *  Java user interface                                                   *
+ *  Computational engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2001, Ben Burton                                   *
  *  For further details contact Ben Burton (benb@acm.org).                *
@@ -26,15 +26,41 @@
 
 /* end stub */
 
-package normal.engine.subcomplex;
+#ifndef __NPILLOWTWOSPHEREI_H
+#define __NPILLOWTWOSPHEREI_H
 
-import normal.engine.*;
-import normal.engine.triangulation.*;
+#include "config.h"
 
-public interface NSnappedTwoSphere extends ShareableObject {
-	public NSnappedTwoSphere cloneMe();
-	public NSnappedBall getSnappedBall(int index);
-	public void reduceTriangulation();
-	public NTriangulation getReducedTriangulation(NTriangulation original);
-}
+#ifdef __NO_INCLUDE_PATHS
+    #include "npillowtwosphere.h"
+#else
+    #include "engine/subcomplex/npillowtwosphere.h"
+#endif
+
+#include "NPillowTwoSphereIDL.h"
+#include "ShareableObjectI.h"
+
+class NPillowTwoSphere_i:
+		public virtual POA_Regina::Subcomplex::NPillowTwoSphere,
+        public ShareableObject_i {
+	STANDARD_ENGINE_TYPEDEFS(NPillowTwoSphere_i, NPillowTwoSphere,
+		Regina::Subcomplex::NPillowTwoSphere)
+
+    protected:
+        NPillowTwoSphere_i(::NPillowTwoSphere* newCppPtr) :
+				ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER
+
+		virtual Regina::Subcomplex::NPillowTwoSphere_ptr cloneMe();
+		virtual Regina::Triangulation::NFace_ptr getFace(CORBA::Long index);
+		virtual CORBA::Char getFaceMapping();
+		virtual void reduceTriangulation();
+		virtual Regina::Triangulation::NTriangulation_ptr
+			getReducedTriangulation(
+			Regina::Triangulation::NTriangulation_ptr original);
+};
+
+#endif
 

@@ -14,8 +14,8 @@ Regina - A Normal Surface Theory Calculator
             - Added extra skeletal query routines.
         Class NGroupExpression, NGroupPresentation:
             - New classes.
-        Class NLayeredLensSpace, NLayeredSolidTorus, NSnappedBall,
-                NSnappedTwoSphere:
+        Class NLayeredLensSpace, NLayeredSolidTorus, NPillowTwoSphere,
+                NSnappedBall, NSnappedTwoSphere:
             - New classes.
         Class NPacket:
             - Changed meaning of second (boolean) parameter to clone().

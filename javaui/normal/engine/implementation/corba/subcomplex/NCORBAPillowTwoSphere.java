@@ -26,15 +26,43 @@
 
 /* end stub */
 
-package normal.engine.subcomplex;
+package normal.engine.implementation.corba.subcomplex;
 
-import normal.engine.*;
-import normal.engine.triangulation.*;
+import normal.engine.implementation.corba.Regina.Subcomplex.*;
+import normal.engine.implementation.corba.triangulation.*;
+import normal.engine.implementation.corba.*;
+import normal.engine.triangulation.NPerm;
 
-public interface NSnappedTwoSphere extends ShareableObject {
-	public NSnappedTwoSphere cloneMe();
-	public NSnappedBall getSnappedBall(int index);
-	public void reduceTriangulation();
-	public NTriangulation getReducedTriangulation(NTriangulation original);
+public class NCORBAPillowTwoSphere extends CORBAShareableObject
+        implements normal.engine.subcomplex.NPillowTwoSphere {
+    public NPillowTwoSphere data;
+    public static final Class CORBAClass = NPillowTwoSphere.class;
+    public static final Class helperClass = NPillowTwoSphereHelper.class;
+
+    public NCORBAPillowTwoSphere(NPillowTwoSphere data) {
+        super(data);
+        this.data = data;
+    }
+
+    public static NCORBAPillowTwoSphere newWrapper(NPillowTwoSphere source) {
+        return (source == null ? null : new NCORBAPillowTwoSphere(source));
+    }
+
+	public normal.engine.subcomplex.NPillowTwoSphere cloneMe() {
+		return NCORBAPillowTwoSphere.newWrapper(data.cloneMe());
+	}
+	public normal.engine.triangulation.NFace getFace(int index) {
+		return NCORBAFace.newWrapper(data.getFace(index));
+	}
+	public NPerm getFaceMapping() {
+		return new NPerm(data.getFaceMapping());
+	}
+	public void reduceTriangulation() {
+		data.reduceTriangulation();
+	}
+	public normal.engine.triangulation.NTriangulation getReducedTriangulation(
+			normal.engine.triangulation.NTriangulation original) {
+		return NCORBATriangulation.newWrapper(data.getReducedTriangulation(
+			((NCORBATriangulation)original).data));
+	}
 }
-

@@ -211,6 +211,8 @@ public class JNIEngine implements Engine {
     public native long _formCensus(NPacket parent, int nTetrahedra, 
             char finiteness, char orientability, char boundary,
             int nBdryFaces, NProgressManager manager);
+	public native NPillowTwoSphere formsPillowTwoSphere(
+		NFace face1, NFace face2);
 	public native NSnappedTwoSphere formsSnappedTwoSphere(
 		NSnappedBall ball1, NSnappedBall ball2);
 	public native NSnappedTwoSphere formsSnappedTwoSphere(

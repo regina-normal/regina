@@ -26,15 +26,25 @@
 
 /* end stub */
 
-package normal.engine.subcomplex;
+package normal.engine.implementation.jni.subcomplex;
 
-import normal.engine.*;
+import normal.engine.implementation.jni.*;
 import normal.engine.triangulation.*;
+import normal.engine.subcomplex.*;
 
-public interface NSnappedTwoSphere extends ShareableObject {
-	public NSnappedTwoSphere cloneMe();
-	public NSnappedBall getSnappedBall(int index);
-	public void reduceTriangulation();
-	public NTriangulation getReducedTriangulation(NTriangulation original);
+public class NJNIPillowTwoSphere extends JNIShareableObject
+		implements NPillowTwoSphere {
+    public NJNIPillowTwoSphere(Sentry s) {
+        super(s);
+    }
+    
+	public native NPillowTwoSphere cloneMe();
+	public native NFace getFace(int index);
+	public NPerm getFaceMapping() {
+		return new NPerm(_getFaceMapping());
+	}
+	public native char _getFaceMapping();
+	public native void reduceTriangulation();
+	public native NTriangulation getReducedTriangulation(
+		NTriangulation original);
 }
-

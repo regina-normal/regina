@@ -38,6 +38,7 @@
 #include "Packet/NText.idl"
 #include "Progress/NProgressManager.idl"
 #include "Subcomplex/NLayeredLensSpace.idl"
+#include "Subcomplex/NPillowTwoSphere.idl"
 #include "Subcomplex/NSnappedTwoSphere.idl"
 #include "Surfaces/NNormalSurfaceList.idl"
 #include "Surfaces/NSurfaceFilter.idl"
@@ -99,6 +100,8 @@ module Regina {
         long formCensus(in Packet::NPacket parent, in long nTetrahedra,
             in char finiteness, in char orientability, in char boundary,
             in long nBdryFaces, in Progress::NProgressManager manager);
+		Subcomplex::NPillowTwoSphere formsPillowTwoSphere(
+			in Triangulation::NFace face1, in Triangulation::NFace face2);
 		Subcomplex::NSnappedTwoSphere formsSnappedTwoSphere_NSnappedBall(
 			in Subcomplex::NSnappedBall ball1,
 			in Subcomplex::NSnappedBall ball2);

@@ -224,6 +224,40 @@ public class CompositionViewer extends DefaultPacketViewer
 						String.valueOf(triangulation.getEdgeIndex(
 						ball.getTetrahedron().getEdge(
 						ball.getEquatorEdge())))));
+					sphere.destroy();
+				}
+			}
+		}
+
+		// Look for pillow 2-spheres.
+		category = null;
+		NPillowTwoSphere pillowSphere;
+		NFace f1, f2;
+		n = triangulation.getNumberOfFaces();
+		for (i = 0; i < n; i++) {
+			f1 = triangulation.getFace(i);
+			for (j = i + 1; j < n; j++) {
+				f2 = triangulation.getFace(j);
+				pillowSphere = engine.formsPillowTwoSphere(f1, f2);
+				if (pillowSphere != null) {
+					if (category == null) {
+						category = new DefaultMutableTreeNode(
+							"Pillow 2-Spheres");
+						rootNode.add(category);
+					}
+					instance = new DefaultMutableTreeNode(
+						"Face #s " +
+						String.valueOf(triangulation.getFaceIndex(f1) + ", " +
+						String.valueOf(triangulation.getFaceIndex(f2))));
+					category.add(instance);
+					instance.add(new DefaultMutableTreeNode("Equator: edge #s " +
+						String.valueOf(triangulation.getEdgeIndex(
+						f1.getEdge(0))) + ", " +
+						String.valueOf(triangulation.getEdgeIndex(
+						f1.getEdge(1))) + ", " +
+						String.valueOf(triangulation.getEdgeIndex(
+						f1.getEdge(2)))));
+					pillowSphere.destroy();
 				}
 			}
 		}
