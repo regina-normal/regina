@@ -98,7 +98,8 @@ bool NTriangulation::hasSplittingSurface() {
 
 void NTriangulation::calculateQuadSurfaceProperties() {
     // Create a normal surface list.
-    NNormalSurfaceList surfaces(this, NNormalSurfaceList::QUAD);
+    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(this,
+        NNormalSurfaceList::QUAD);
 
     // All we can test here is 0-efficiency.
 
@@ -110,11 +111,11 @@ void NTriangulation::calculateQuadSurfaceProperties() {
     if (! calculatedZeroEfficient)
         zeroEfficient = true;
 
-    unsigned long nSurfaces = surfaces.getNumberOfSurfaces();
+    unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces.getSurface(i);
+        s = surfaces->getSurface(i);
 
         if (! calculatedZeroEfficient) {
             // Note that all vertex surfaces in quad space are
@@ -150,12 +151,14 @@ void NTriangulation::calculateQuadSurfaceProperties() {
     calculatedZeroEfficient = true;
 
     // Clean up.
-    surfaces.makeOrphan();
+    surfaces->makeOrphan();
+    delete surfaces;
 }
 
 void NTriangulation::calculateStandardSurfaceProperties() {
     // Create a normal surface list.
-    NNormalSurfaceList surfaces(this, NNormalSurfaceList::STANDARD);
+    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(this,
+        NNormalSurfaceList::STANDARD);
 
     // Run through all vertex surfaces.
     if (! calculatedZeroEfficient)
@@ -163,11 +166,11 @@ void NTriangulation::calculateStandardSurfaceProperties() {
     if (! calculatedSplittingSurface)
         splittingSurface = false;
 
-    unsigned long nSurfaces = surfaces.getNumberOfSurfaces();
+    unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces.getSurface(i);
+        s = surfaces->getSurface(i);
 
         if (! calculatedSplittingSurface)
             if (s->isSplitting()) {
@@ -210,7 +213,8 @@ void NTriangulation::calculateStandardSurfaceProperties() {
     calculatedSplittingSurface = true;
 
     // Clean up.
-    surfaces.makeOrphan();
+    surfaces->makeOrphan();
+    delete surfaces;
 }
 
 } // namespace regina

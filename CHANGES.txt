@@ -15,6 +15,9 @@ Current Development Version
         Class Engine:
             - Removed since this is no longer necessary with the new
               python bindings.
+        Class NAngleStructureList:
+            - Made the enumerating constructor private and added the
+              public replacement enumerate().
         Class NAugTriSolidTorus:
             - Changed to fit into the new NStandardTriangulation structure.
         Class NFacePairings:
@@ -52,6 +55,9 @@ Current Development Version
         Class NManifold:
             - New class to represent a 3-manifold irrespective of its
               triangulation.
+        Class NNormalSurfaceList:
+            - Made the enumerating constructor private and added the
+              public replacement enumerate().
         Class NPerm:
             - Routines edgeDescription() and faceDescription()
               implemented in the calculation engine.

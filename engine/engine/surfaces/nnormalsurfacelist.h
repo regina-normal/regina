@@ -65,6 +65,9 @@ class NXMLNormalSurfaceListReader;
  * See the NNormalSurfaceVector class notes for details of what to do
  * when introducing a new flavour of coordinate system.
  *
+ * Normal surface lists should be created using the routine enumerate(),
+ * which is new as of Regina 4.0.
+ *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow generating only closed surfaces.
  * \todo \feature Generate facets of the solution space representing
@@ -108,20 +111,25 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
 
     public:
         /**
-         * Creates a new list of normal surfaces in the given
+         * Destroys this list and all the surfaces within.
+         */
+        virtual ~NNormalSurfaceList();
+
+        /**
+         * Enumerates all normal surfaces in the given
          * triangulation using the given flavour of coordinate system.
          * The normal surfaces will actually be calculated in
          * this routine, so it may be slow; all vertex surfaces in the
-         * given coordinate
-         * space will be found and stored.  Their representations will
+         * given coordinate system will be found and stored in a list.
+         * Their representations will
          * use the smallest possible integer coordinates.
          * The option is offered to find only embedded normal surfaces
          * or to also include immersed and singular normal surfaces.
          *
-         * This constructor will insert this normal surface list as a
+         * The normal surface list that is created will be inserted as a
          * child of the given triangulation.  This triangulation \b must
          * remain the parent of this normal surface list, and must not
-         * change while this normal surface list is alive.
+         * change while this normal surface list remains in existence.
          *
          * \todo \feature Allow picking up the first ``interesting'' surface
          * and bailing en route.
@@ -141,13 +149,11 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to
          * \c true.
+         * @return a newly created normal surface list containing the
+         * enumerated vertex normal surfaces.
          */
-        NNormalSurfaceList(NTriangulation* owner, int newFlavour,
-                bool embeddedOnly = true);
-        /**
-         * Destroys this list and all the surfaces within.
-         */
-        virtual ~NNormalSurfaceList();
+        static NNormalSurfaceList* enumerate(NTriangulation* owner,
+            int newFlavour, bool embeddedOnly = true);
 
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
@@ -301,6 +307,49 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
             SurfaceInserter& operator ++(int);
         };
 
+    private:
+        /**
+         * Creates a new list of normal surfaces in the given
+         * triangulation using the given flavour of coordinate system.
+         * The normal surfaces will actually be calculated in
+         * this routine, so it may be slow; all vertex surfaces in the
+         * given coordinate
+         * space will be found and stored.  Their representations will
+         * use the smallest possible integer coordinates.
+         * The option is offered to find only embedded normal surfaces
+         * or to also include immersed and singular normal surfaces.
+         *
+         * This constructor will insert this normal surface list as a
+         * child of the given triangulation.  This triangulation \b must
+         * remain the parent of this normal surface list, and must not
+         * change while this normal surface list is alive.
+         *
+         * This constructor has been made private so that external
+         * routines are forced to use the safer enumerate() interface
+         * instead.
+         *
+         * \todo \feature Allow picking up the first ``interesting'' surface
+         * and bailing en route.
+         * \todo \featurelong Determine the faces of the normal solution
+         * space.
+         * \todo \featurelong Allow either subsets of normal surface
+         * lists or allow deletion of surfaces from lists.
+         * \todo \opt Investigate obvious compressions.
+         * \todo \opt Investigate monte carlo methods.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalSurfaceList.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to
+         * \c true.
+         */
+        NNormalSurfaceList(NTriangulation* owner, int newFlavour,
+                bool embeddedOnly = true);
+
     friend class regina::NXMLNormalSurfaceListReader;
 };
 
@@ -370,6 +419,11 @@ inline NNormalSurfaceList::NNormalSurfaceList() {
 
 inline NNormalSurfaceList::~NNormalSurfaceList() {
     for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
+        int newFlavour, bool embeddedOnly) {
+    return new NNormalSurfaceList(owner, newFlavour, embeddedOnly);
 }
 
 inline int NNormalSurfaceList::getFlavour() const {

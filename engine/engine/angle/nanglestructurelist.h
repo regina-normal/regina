@@ -57,6 +57,9 @@ class NXMLAngleStructureListReader;
  * Such a packet must always be a child packet of the triangulation on
  * which the angle structures lie.  If this triangulation changes, the
  * information contained in this packet will become invalid.
+ *
+ * Angle structure lists should be created using the routine enumerate(),
+ * which is new as of Regina 4.0.
  */
 class NAngleStructureList : public NPacket, public NPropertyHolder {
     public:
@@ -77,17 +80,6 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
             /**< Have we calculated \a doesAllowTaut? */
 
     public:
-        /**
-         * Creates a new list of angle structures on the given
-         * triangulation.  The angle structures produced will be
-         * the vertices of the angle structure solution space.
-         *
-         * This constructor will insert this angle structure list as a
-         * child of the given triangulation.  This triangulation \b must
-         * remain the parent of this angle structure list, and must not
-         * change while this angle structure list is alive.
-         */
-        NAngleStructureList(NTriangulation* owner);
         /**
          * Destroys this list and all the angle structures within.
          */
@@ -137,6 +129,23 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
          * @return \c true if and only if a taut structure can be produced.
          */
         bool allowsTaut();
+
+        /**
+         * Enumerates all angle structures on the given triangulation.
+         * A list containing all vertices of the angle structure solution
+         * space will be returned.
+         *
+         * The angle structure list that is created will be inserted as a
+         * child of the given triangulation.  This triangulation \b must
+         * remain the parent of this angle structure list, and must not
+         * change while this angle structure list remains in existence.
+         *
+         * @param owner the triangulation for which the vertex
+         * angle structures will be enumerated.
+         * @return a newly created angle structure list containing the
+         * vertex angle structures.
+         */
+        static NAngleStructureList* enumerate(NTriangulation* owner);
 
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
@@ -266,6 +275,23 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
             StructureInserter& operator ++(int);
         };
 
+    private:
+        /**
+         * Creates a new list of angle structures on the given
+         * triangulation.  The angle structures produced will be
+         * the vertices of the angle structure solution space.
+         *
+         * This constructor will insert this angle structure list as a
+         * child of the given triangulation.  This triangulation \b must
+         * remain the parent of this angle structure list, and must not
+         * change while this angle structure list is alive.
+         *
+         * This constructor has been made private so that external
+         * routines are forced to use the safer enumerate() interface
+         * instead.
+         */
+        NAngleStructureList(NTriangulation* owner);
+
     friend class regina::NXMLAngleStructureListReader;
 };
 
@@ -301,6 +327,11 @@ inline bool NAngleStructureList::allowsTaut() {
     if (! calculatedAllowTaut)
         calculateAllowTaut();
     return doesAllowTaut;
+}
+
+inline NAngleStructureList* NAngleStructureList::enumerate(
+        NTriangulation* owner) {
+    return new NAngleStructureList(owner);
 }
 
 inline bool NAngleStructureList::dependsOnParent() const {
