@@ -36,6 +36,7 @@
 #define __NPROGRESS_H
 #endif
 
+#include <ctime>
 #include "shareableobject.h"
 #include "utilities/nthread.h"
 
@@ -73,6 +74,10 @@ namespace regina {
  * calculation engine, and the second thread must <b>only</b> read the
  * current state of progress and do nothing else.
  *
+ * NProgress also contains timing support, with measurements in both
+ * real time and CPU time.  See the routines getRealTime() and
+ * totalCPUTime() for details.
+ *
  * Subclasses of NProgress represent the various ways in which progress
  * can be internally stored.  Note that subclass member functions
  * must lock the mutex whenever internal data is being
@@ -80,10 +85,6 @@ namespace regina {
  * Any public subclass member function that changes the state of
  * progress must set the \a changed flag to \c true, and all public
  * subclass query functions must set the \a changed flag to \c false.
- *
- * \todo \feature Add timer support; measure the time elapsed between
- * the creation of this NProgress object and the call to setFinished() or
- * cancel(); hopefully measure this both in CPU time and real time.
  */
 class NProgress : public ShareableObject, protected NMutex {
     protected:
@@ -96,6 +97,18 @@ class NProgress : public ShareableObject, protected NMutex {
              *   completely finished? */
         bool cancelled;
             /**< Has this operation been cancelled? */
+        time_t startReal;
+            /**< A real time marker representing when this progress
+                 object was constructed. */
+        clock_t startCPU;
+            /**< A CPU time marker representing when this progress
+                 object was constructed. */
+        time_t endReal;
+            /**< A real time marker representing when this progress
+                 object was marked finished. */
+        clock_t endCPU;
+            /**< A CPU time marker representing when this progress
+                 object was marked finished. */
 
     public:
         /**
@@ -219,6 +232,37 @@ class NProgress : public ShareableObject, protected NMutex {
          * @return the current state of progress as a percentage.
          */
         double getPercent() const;
+        /**
+         * Returns the real time elapsed since this operation began.
+         * This routine may be called both during and after the
+         * operation.
+         *
+         * If the operation has been marked as finished, the total
+         * elapsed time from start to finish will be reported.
+         * Otherwise the time elasped thus far will be reported.
+         *
+         * @return the total elapsed real time, measured in seconds.
+         *
+         * @see totalCPUTime()
+         */
+        long getRealTime() const;
+        /**
+         * Returns the total CPU time consumed by the program from the
+         * beginning to the end of this operation.  This routine will
+         * only return useful results after the operation has finished.
+         *
+         * If the operation has not yet been marked as finished, this
+         * routine will return 0.
+         *
+         * \warning For CPU time calculations to be correct, the same
+         * thread that constructs this progress object must also mark it
+         * finished.
+         *
+         * @return the total CPU time consumed, measured in seconds.
+         *
+         * @see getRealTime()
+         */
+        long totalCPUTime() const;
 
         void writeTextShort(std::ostream& out) const;
 
@@ -270,6 +314,8 @@ class NProgressFinished : public NProgress {
 
 inline NProgress::NProgress() : changed(true), finished(false),
         cancelled(false) {
+    startReal = std::time(0);
+    startCPU = std::clock();
 }
 inline NProgress::~NProgress() {
 }
@@ -283,6 +329,8 @@ inline bool NProgress::isFinished() const {
 }
 inline void NProgress::setFinished() {
     MutexLock(this);
+    endReal = std::time(0);
+    endCPU = std::clock();
     finished = true;
 }
 
@@ -312,6 +360,16 @@ inline void NProgress::writeTextShort(std::ostream& out) const {
 inline double NProgress::internalGetPercent() const {
     return 0;
 }
+
+inline long NProgress::getRealTime() const {
+    MutexLock(this);
+    return (finished ? endReal : std::time(0)) - startReal;
+}
+
+inline long NProgress::totalCPUTime() const {
+    MutexLock(this);
+    return (finished ? (endCPU - startCPU) / CLOCKS_PER_SEC : 0);
+};
 
 // Inline functions for NProgressFinished
 

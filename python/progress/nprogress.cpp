@@ -44,6 +44,8 @@ void addNProgress() {
         .def("getDescription", &NProgress::getDescription)
         .def("isPercent", &NProgress::isPercent)
         .def("getPercent", &NProgress::getPercent)
+        .def("getRealTime", &NProgress::getRealTime)
+        .def("totalCPUTime", &NProgress::totalCPUTime)
     ;
 }
 

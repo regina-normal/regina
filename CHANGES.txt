@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 4.1
     OVERALL:
         - Further enhancements to the reference manual.
+    ENGINE:
+        Class NProgress:
+            - Added timing utilities getRealTime() and totalCPUTime().
     UTILITIES:
         tricensus:
             - Fixed bug in which --genpairs created empty output files.
