@@ -86,7 +86,7 @@ ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
     QString msg = errorMessage;
     msg += "\n\nPlease mail\n";
     msg += PACKAGE_BUGREPORT;
-    msg += "\nfor assistance.";
+    msg += "\nfor further assistance.";
 
     label = new QLabel(msg, 0);
     label->setAlignment(Qt::AlignCenter);

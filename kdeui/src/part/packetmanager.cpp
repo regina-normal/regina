@@ -118,8 +118,8 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
                 doc, allowReadWrite);
         else
             return new ErrorPacketUI(packet, enclosingPane,
-                i18n("An appropriate text editor component could not "
-                "be found."));
+                i18n("An appropriate text editor component\n"
+                "could not be found."));
     }
     return new DefaultPacketUI(packet, enclosingPane);
 }
