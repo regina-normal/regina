@@ -32,7 +32,7 @@
 #include "jnitools.h"
 #include "registry/makejnpacket.h"
 #include "triangulation/ntriangulation.h"
-#include "imports/nsnappea.h"
+#include "foreign/nsnappea.h"
 #include "file/nfile.h"
 #include "census/ncensus.h"
 #include "subcomplex/naugtrisolidtorus.h"
@@ -214,6 +214,16 @@ JNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_testEngine
         (JNIEnv*, jobject, jint value) {
     return value;
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_writeSnapPea
+        (JNIEnv *env, jobject me, jstring file, jobject tri) {
+    const char* textChars = env->GetStringUTFChars(file, 0);
+    bool ans = writeSnapPea(textChars,
+        *GET_ENGINE_OBJECT(env, NTriangulation, tri));
+    env->ReleaseStringUTFChars(file, textChars);
+    return ans;
 }
 
 JNIEXPORT jboolean JNICALL

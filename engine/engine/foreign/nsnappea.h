@@ -27,13 +27,15 @@
 /* end stub */
 
 /*! \file nsnappea.h
- *  \brief Provides a mechanism for reading SnapPea files.
+ *  \brief Allows reading and writing SnapPea files.
  */
 
 #ifndef __NSNAPPEA_H
 #ifndef __DOXYGEN
 #define __NSNAPPEA_H
 #endif
+
+#include "utilities/nstring.h"
 
 class NTriangulation;
 
@@ -53,13 +55,42 @@ class NTriangulation;
  * simply be ``<tt>% Triangulation</tt>''.  The second line is the name of
  * the manifold.
  *
- * \todo \feature Allow exporting of SnapPea files also.
- *
  * @param filename the name of the SnapPea file from which to read.
  * @return a new triangulation containing the data read from the SnapPea
  * file, or 0 on error.
  */
 NTriangulation* readSnapPea(const char *filename);
+
+/**
+ * Writes a triangulation to the given SnapPea file.
+ *
+ * \pre The given triangulation is not invalid.
+ *
+ * @param filename the name of the SnapPea file to which to write.
+ * @param tri the triangulation to write to the SnapPea file.
+ * @return \c true if the export was successful, or \c false otherwise.
+ */
+bool writeSnapPea(const char* filename, NTriangulation& tri);
+
+/**
+ * Returns a token derived from the given string.
+ * All whitespace characters in the given string will be replaced with
+ * an underscore.
+ *
+ * @param str the string on which to base the token.
+ * @return the corresponding token.
+ */
+NString stringToToken(const char* str);
+
+/**
+ * Returns a token derived from the given string.
+ * All whitespace characters in the given string will be replaced with
+ * an underscore.
+ *
+ * @param str the string on which to base the token.
+ * @return the corresponding token.
+ */
+NString stringToToken(const NString& str);
 
 #endif
 

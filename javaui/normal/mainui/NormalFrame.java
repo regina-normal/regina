@@ -424,6 +424,12 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             menuFileExportRegina.setIcon(Images.mainSmallIcon.image());
             menuFileExport.add(menuFileExportRegina);
 
+            SnapPeaExporter menuFileExportSnapPea =
+                new SnapPeaExporter(shell, "SnapPea Triangulation",
+                KeyEvent.VK_S);
+            menuFileExportSnapPea.setIcon(Images.snapPeaIcon.image());
+            menuFileExport.add(menuFileExportSnapPea);
+
             ScriptExporter menuFileExportScript =
                 new ScriptExporter(shell, "Jython Script", KeyEvent.VK_J);
             menuFileExportScript.setIcon(Images.btnScript.image());

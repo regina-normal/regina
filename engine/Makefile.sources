@@ -21,7 +21,7 @@ dirs_engine_engine = \
 	engine/algebra \
 	engine/census \
 	engine/file \
-	engine/imports \
+	engine/foreign \
 	engine/maths \
 	engine/packet \
 	engine/progress \

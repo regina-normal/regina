@@ -167,6 +167,8 @@ class Engine_i : public virtual POA_Regina::Engine,
         virtual CORBA::Long testEngine(CORBA::Long value);
         virtual CORBA::Boolean writeToFile(const char* fileName,
             Regina::Packet::NPacket_ptr packet);
+        virtual CORBA::Boolean writeSnapPea(const char* fileName,
+            Regina::Triangulation::NTriangulation_ptr tri);
 };
 
 #endif

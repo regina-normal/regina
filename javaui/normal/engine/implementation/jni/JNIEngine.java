@@ -269,5 +269,6 @@ public class JNIEngine implements Engine {
     public native NTriangulation readSnapPea(String file);
     public native void smithNormalForm(NMatrixInt matrix);
     public native int testEngine(int value);
+    public native boolean writeSnapPea(String fileName, NTriangulation tri);
     public native boolean writeToFile(String fileName, NPacket packet);
 }

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "imports/nsnappea.h"
+#include "foreign/nsnappea.h"
 
 #include "EngineI.h"
 #include "NTetrahedronI.h"
@@ -56,3 +56,9 @@ Regina::Triangulation::NTriangulation_ptr Engine_i::readSnapPea(
     // return NTriangulation_i::newWrapper(::readSnapPea(fileName));
 }
 
+CORBA::Boolean Engine_i::writeSnapPea(const char* fileName,
+        Regina::Triangulation::NTriangulation_ptr tri) {
+    // Don't allow local filesystem access.
+    return false;
+    // return ::writeSnapPea(fileName, *GET_ENGINE_OBJECT(NTriangulation, tri));
+}

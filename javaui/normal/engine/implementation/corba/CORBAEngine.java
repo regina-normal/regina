@@ -546,6 +546,9 @@ public class CORBAEngine implements Engine {
     public int testEngine(int value) {
         return data.testEngine(value);
     }
+    public boolean writeSnapPea(String fileName, NTriangulation tri) {
+        return data.writeSnapPea(fileName, ((NCORBATriangulation)tri).data);
+    }
     public boolean writeToFile(String fileName, NPacket packet) {
         try {
             NCORBAFileResource res = new NCORBAFileResource(fileName);

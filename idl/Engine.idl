@@ -150,6 +150,8 @@ module Regina {
         Triangulation::NTriangulation readSnapPea(in string fileName);
         void smithNormalForm(in Maths::NMatrixInt matrix);
         long testEngine(in long value);
+        boolean writeSnapPea(in string fileName,
+            in Triangulation::NTriangulation tri);
         boolean writeToFile(in string fileName, in Packet::NPacket basePacket);
     };
 };

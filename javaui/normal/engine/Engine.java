@@ -137,6 +137,7 @@ public interface Engine {
     public NTriangulation readSnapPea(String file);
     public void smithNormalForm(NMatrixInt matrix);
     public int testEngine(int value);
+    public boolean writeSnapPea(String fileName, NTriangulation tri);
     public boolean writeToFile(String fileName, NPacket packet);
 }
 

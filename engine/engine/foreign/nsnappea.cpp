@@ -26,11 +26,13 @@
 
 /* end stub */
 
+#include <ctype.h>
 #include <fstream.h>
 #include <iomanip.h>
+#include <string.h>
 
-#include "imports/nsnappea.h"
 #include "file/nresources.h"
+#include "foreign/nsnappea.h"
 #include "triangulation/ntriangulation.h"
 
 NTriangulation* readSnapPea(const char* filename) {
@@ -137,3 +139,79 @@ NTriangulation* readSnapPea(const char* filename) {
     return triang;
 }
 
+bool writeSnapPea(const char* filename, NTriangulation& tri) {
+    // Open the file.
+    ofstream out(filename, NLocalFileResource::MODE_WRITE);
+    if (!out)
+        return 0;
+
+    // Write header information.
+    out << "% Triangulation\n";
+    if (tri.getPacketLabel().length() == 0)
+        out << "Regina_Triangulation\n";
+    else
+        out << stringToToken(tri.getPacketLabel()) << '\n';
+
+    // Write general details.
+    out << "not_attempted 0.0\n";
+    out << "unknown_orientability\n";
+    out << "CS_unknown\n";
+
+    // Write cusps.
+    out << "0 0\n";
+
+    // Write tetrahedra.
+    out << tri.getNumberOfTetrahedra() << '\n';
+
+    int i, j;
+    for (NTriangulation::TetrahedronIterator it(tri.getTetrahedra());
+            ! it.done(); it++) {
+        for (i = 0; i < 4; i++)
+            out << "   " << tri.getTetrahedronIndex(
+                (*it)->getAdjacentTetrahedron(i)) << ' ';
+        out << '\n';
+        for (i = 0; i < 4; i++)
+            out << ' ' << (*it)->getAdjacentTetrahedronGluing(i).toString();
+        out << '\n';
+
+        // Incident cusps.
+        for (i = 0; i < 4; i++)
+            out << "   0 ";
+        out << '\n';
+
+        // Meridians and longitudes.
+        for (i = 0; i < 4; i++) {
+            for (j = 0; j < 16; j++)
+                out << "  0";
+            out << '\n';
+        }
+
+        // Tetrahedron shape.
+        out << "0.0 0.0\n";
+    }
+
+    return true;
+}
+
+NString stringToToken(const char* str) {
+    char* ans = new char[strlen(str) + 1];
+    strcpy(ans, str);
+    for (char* c = ans; c != 0; c++)
+        if (isspace(*c))
+            *c = '_';
+
+    NString ret(ans);
+    delete[] ans;
+    return ret;
+}
+
+NString stringToToken(const NString& str) {
+    char* ans = str.dupe();
+    for (char* c = ans; c != 0; c++)
+        if (isspace(*c))
+            *c = '_';
+
+    NString ret(ans);
+    delete[] ans;
+    return ret;
+}
