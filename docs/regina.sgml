@@ -27,7 +27,8 @@
     towards normal surface theory.  It allows 3-manifolds to be created,
     manipulated and their properties of interest determined.
    </para>">
- <!ENTITY editdate "28 January 2002">
+ <!ENTITY regversion "3.0.0">
+ <!ENTITY regdate "28 June 2002">
 
  <!ENTITY copyrightyears "1999-2002">
  <!ENTITY copyrightholder "Ben Burton">
@@ -90,12 +91,17 @@
   <title>&regina; Reference Manual</title>
   &regauthor;
   <address>&regemail;</address>
-  <date>&editdate;</date>
   <copyright>
    <year>&copyrightyears;</year>
    <holder>&copyrightholder;</holder>
   </copyright>
-  <abstract>&regabstract;</abstract>
+  <abstract>
+   &regabstract;
+   <para>
+    This reference manual is current as of &regdate; for
+    &regina;&nbsp;&regversion;.
+   </para>
+  </abstract>
  </bookinfo>
 
  <preface id="welcome">
