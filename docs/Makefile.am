@@ -10,11 +10,18 @@ SUBDIRS = engine javaui images
 
 ## ----------------------- Variables ---------------------------------
 
+USE_CLASSPATH = @JAVAUI_CLASSPATH@
+
 sgml_index = regina.sgml
 sgml_dsl = regina.dsl
 
 engine_index = engine/index.html
 engine_conf = ../engine/doc-files/docs.conf
+
+javaui_index = javaui/index.html
+javaui_overview  = overview.html
+javaui_title = 'Regina - Java User Interface'
+javaui_bottom =  'Copyright &copy; 1999-2002, Ben Burton<br>This software is released under the GNU Public License.<br>For further information, or to submit a bug or other problem, please contact Ben Burton (<a href="mailto:benb@acm.org">benb@acm.org</a>).'
 
 sample_html = index.html
 sample_man = regina.1
@@ -51,8 +58,12 @@ engine : $(engine_index)
 $(engine_index) : $(engine_conf)
 	cd ../engine && @DOXYGEN@ $(engine_conf)
 
-javaui :
-	false
+javaui : $(javaui_index)
+$(javaui_index) :
+	cd ../javaui && CLASSPATH="$(USE_CLASSPATH)" @JAVADOC@ -d ../docs/javaui \
+		-overview $(javaui_overview) -windowtitle $(javaui_title) \
+		-doctitle $(javaui_title) -bottom $(javaui_bottom) -package -use \
+		`find normal -name package.html | sed -e 's#/package.html$$##'`
 
 html : $(sample_html)
 $(sample_html) : $(sgml_sources)
