@@ -207,12 +207,12 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // ideal vertices.
     // First we make a list of the tetrahedra.
     std::hash_set<NTetrahedron*, HashPointer> tetList;
+    std::vector<NVertexEmbedding>::const_iterator vembit;
     for (VertexIterator vIter(getVertices()); ! vIter.done(); vIter++)
         if ((*vIter)->isIdeal() || ! (*vIter)->isStandard())
-            transform((*vIter)->getEmbeddings().begin(),
-                (*vIter)->getEmbeddings().end(),
-                inserter(tetList, tetList.begin()),
-                std::mem_fun_ref(&NVertexEmbedding::getTetrahedron));
+            for (vembit = (*vIter)->getEmbeddings().begin();
+                    vembit != (*vIter)->getEmbeddings().end(); vembit++)
+                tetList.insert((*vembit).getTetrahedron());
     
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
