@@ -322,14 +322,14 @@ public class CompositionViewer extends DefaultPacketViewer
                         edgeString(tetIndex[0], roles[0], 0, 2) + " = " +
                         edgeString(tetIndex[1], roles[1], 3, 1)));
                     instance.add(new DefaultMutableTreeNode("Minor edge: " +
-                        edgeString(tetIndex[1], roles[1], 1, 2) + " = " +
-                        edgeString(tetIndex[2], roles[2], 3, 0)));
+                        edgeString(tetIndex[1], roles[1], 2, 1) + " = " +
+                        edgeString(tetIndex[2], roles[2], 0, 3)));
                     instance.add(new DefaultMutableTreeNode("Minor edge: " +
-                        edgeString(tetIndex[2], roles[2], 1, 2) + " = " +
-                        edgeString(tetIndex[0], roles[0], 3, 0)));
+                        edgeString(tetIndex[2], roles[2], 2, 1) + " = " +
+                        edgeString(tetIndex[0], roles[0], 0, 3)));
                     instance.add(new DefaultMutableTreeNode("Minor edge: " +
-                        edgeString(tetIndex[0], roles[0], 1, 2) + " = " +
-                        edgeString(tetIndex[1], roles[1], 3, 0)));
+                        edgeString(tetIndex[0], roles[0], 2, 1) + " = " +
+                        edgeString(tetIndex[1], roles[1], 0, 3)));
 
                     tri.destroy();
                 }

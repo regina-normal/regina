@@ -60,15 +60,15 @@ class NTetrahedron;
  * edges will only meet two of the tetrahedra (the \a minor edge).
  *
  * Assume the axis of the layered solid torus is oriented.  The three
- * major axes together form a loop on the boundary torus.  This loop can
+ * major edges together form a loop on the boundary torus.  This loop can
  * be oriented to run around the solid torus in the same direction as
  * the axis; this then induces an orientation on the boundary of a
  * meridinal disc.  Thus, using an axis edge as longitude, the three major
  * edges will together form a (1,1) curve on the boundary torus.
  *
- * We can now orient the minor axes so they run around the solid torus
- * in a direction \a opposite to that of the axis, together forming a
- * (-2, 1) curve on the boundary torus.
+ * We can now orient the minor edges so they also run around the solid torus
+ * in the same direction as the axis, together forming a
+ * (2, -1) curve on the boundary torus.
  *
  * Finally, the three tetrahedra can be numbered 0, 1 and 2 in an order
  * that follows the axis, and the annuli can be numbered 0, 1 and 2 in
@@ -123,8 +123,8 @@ class NTriSolidTorus : public ShareableObject {
          * to <tt>p[3]</tt> to <tt>p[1]</tt> follows the three oriented
          * major edges.  In particular, the major edge for annulus
          * \a index will run from vertices <tt>p[2]</tt> to <tt>p[3]</tt>.
-         * Edges <tt>p[1]</tt> to <tt>p[2]</tt> and <tt>p[3]</tt> to
-         * <tt>p[0]</tt> will both be oriented minor edges.
+         * Edges <tt>p[0]</tt> to <tt>p[3]</tt> and <tt>p[2]</tt> to
+         * <tt>p[1]</tt> will both be oriented minor edges.
          *
          * Note that annulus <tt>index+1</tt> uses face <tt>p[2]</tt> of
          * the requested tetrahedron and annulus <tt>index+2</tt> uses
@@ -132,7 +132,7 @@ class NTriSolidTorus : public ShareableObject {
          * use the axis edge <tt>p[0]</tt> to <tt>p[1]</tt>, and each
          * annulus uses one other major edge and one other minor edge so
          * that (according to homology) the axis edge equals the major
-         * edge minus the minor edge.
+         * edge plus the minor edge.
          *
          * See the general class notes for further details.
          *
@@ -180,15 +180,15 @@ class NTriSolidTorus : public ShareableObject {
          *
          * To be identified by this routine, the layered chain
          * (described by NLayeredChain) must be attached as follows.
-         * The two directed major axes of the two annuli should
+         * The two directed major edges of the two annuli should
          * correspond to the two hinge edges of the layered chain (with
          * both hinge edges pointing in the same direction around the
          * solid torus formed by the layered chain).  The two directed
          * diagonals of the layered chain (between the two top faces and
-         * between the two bottom faces, each pointing in the same
-         * direction as the hinge edges around the solid torus formed by
+         * between the two bottom faces, each pointing in the opposite
+         * direction to the hinge edges around the solid torus formed by
          * the layered chain) should be identified and must correspond
-         * to the (identified) two directed minor axes of the two
+         * to the (identified) two directed minor edges of the two
          * annuli.  The remaining boundary edges of the layered chain
          * should correspond to the axis edges of the triangular solid
          * torus (this correspondence is determined by the previous
