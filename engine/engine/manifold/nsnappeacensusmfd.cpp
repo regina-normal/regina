@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "manifold/nsnappeamanifold.h"
+#include "manifold/nsnappeacensusmfd.h"
 
 namespace regina {
 

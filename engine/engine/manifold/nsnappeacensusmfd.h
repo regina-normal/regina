@@ -26,13 +26,13 @@
 
 /* end stub */
 
-/*! \file nsnappeamanifold.h
+/*! \file nsnappeacensusmfd.h
  *  \brief Deals with 3-manifolds from the SnapPea census.
  */
 
-#ifndef __NSNAPPEAMANIFOLD_H
+#ifndef __NSNAPPEACENSUSMFD_H
 #ifndef __DOXYGEN
-#define __NSNAPPEAMANIFOLD_H
+#define __NSNAPPEACENSUSMFD_H
 #endif
 
 #include "nmanifold.h"
