@@ -54,7 +54,7 @@ class NSignature {
         NSignature(const NSignature& sig);
         virtual ~NSignature();
 
-        static NSignature* parse(const NString& sig); // Cannot be empty.
+        static NSignature* parse(const std::string& sig); // Cannot be empty.
         NTriangulation* triangulate() const;
 
         static int cycleCmp(const NSignature& sig1, unsigned cycle1,
@@ -62,8 +62,8 @@ class NSignature {
             const NSignature& sig2, unsigned cycle2, unsigned start2,
             int dir2, unsigned* relabel2);
 
-        void writeCycles(std::ostream& out, const NString& cycleOpen,
-            const NString& cycleClose, const NString& cycleJoin) const;
+        void writeCycles(std::ostream& out, const std::string& cycleOpen,
+            const std::string& cycleClose, const std::string& cycleJoin) const;
         virtual void writeTextShort(std::ostream& out) const;
 
     private:

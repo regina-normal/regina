@@ -90,7 +90,7 @@ JNIEXPORT void JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_recogniseGroup
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NGroupPresentation, me)->recogniseGroup());
 }
 

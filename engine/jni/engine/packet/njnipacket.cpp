@@ -48,14 +48,14 @@ JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_findPacketLabel
         (JNIEnv *env, jobject me, jstring newLabel) {
     return makeJNPacket(env, GET_ENGINE_OBJECT(env, NPacket, me)->
-        findPacketLabel(jstringToNString(env, newLabel)));
+        findPacketLabel(jstringToCString(env, newLabel)));
 }
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_firstTreePacket
         (JNIEnv *env, jobject me, jstring newLabel) {
     return makeJNPacket(env, GET_ENGINE_OBJECT(env, NPacket, me)
-        ->firstTreePacket(jstringToNString(env, newLabel)));
+        ->firstTreePacket(jstringToCString(env, newLabel)));
 }
 
 JNIEXPORT jobject JNICALL
@@ -68,7 +68,7 @@ JNIEXPORT jobject JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_getFullName
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NPacket, me)->getFullName());
 }
 
@@ -101,14 +101,14 @@ JNIEXPORT jlong JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_getPacketLabel
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NPacket, me)->getPacketLabel());
 }
 
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_getPacketName
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NPacket, me)->getPacketName());
 }
 
@@ -203,8 +203,8 @@ JNIEXPORT void JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_makeUniqueLabel
         (JNIEnv *env, jobject me, jstring base) {
-    return jstringFromNString(env, GET_ENGINE_OBJECT(env, NPacket, me)->
-        makeUniqueLabel(jstringToNString(env, base)));
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NPacket, me)->
+        makeUniqueLabel(jstringToCString(env, base)));
 }
 
 JNIEXPORT jboolean JNICALL
@@ -225,14 +225,14 @@ JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_nextTreePacket__Ljava_lang_String_2
         (JNIEnv *env, jobject me, jstring newLabel) {
     return makeJNPacket(env, GET_ENGINE_OBJECT(env, NPacket, me)->
-        nextTreePacket(jstringToNString(env, newLabel)));
+        nextTreePacket(jstringToCString(env, newLabel)));
 }
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_setPacketLabel
         (JNIEnv *env, jobject me, jstring newLabel) {
     GET_ENGINE_OBJECT(env, NPacket, me)->setPacketLabel(
-        jstringToNString(env, newLabel));
+        jstringToCString(env, newLabel));
 }
 
 JNIEXPORT void JNICALL

@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
 #include "NNormalSurfaceI.h"
 #include "NTriangulationI.h"
 
@@ -58,7 +59,7 @@ Regina::Triangulation::NTriangulation_ptr
     return NTriangulation_i::newWrapper(MY_ENGINE_OBJECT->getTriangulation());
 }
 char* NNormalSurface_i::getName() {
-    return MY_ENGINE_OBJECT->getName().dupe();
+    return duplicate(MY_ENGINE_OBJECT->getName());
 }
 void NNormalSurface_i::setName(const char* newName) {
     MY_ENGINE_OBJECT->setName(newName);

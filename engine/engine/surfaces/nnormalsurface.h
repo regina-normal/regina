@@ -508,7 +508,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
         NTriangulation* triangulation;
             /**< The triangulation in which this normal surface resides. */
 
-        NString name;
+        std::string name;
             /**< An optional name associated with this surface. */
 
         NLargeInteger eulerChar;
@@ -685,7 +685,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * @return the name of associated with this surface.
          */
-        const NString& getName() const;
+        const std::string& getName() const;
         /**
          * Sets the name associated with this normal surface.
          * Names are optional and need not be unique.
@@ -693,7 +693,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * @param newName the new name to associate with this surface.
          */
-        void setName(const NString& newName);
+        void setName(const std::string& newName);
 
         /**
          * The text representation will be in standard triangle-quad-oct
@@ -968,10 +968,10 @@ inline NTriangulation* NNormalSurface::getTriangulation() const {
     return triangulation;
 }
 
-inline const NString& NNormalSurface::getName() const {
+inline const std::string& NNormalSurface::getName() const {
     return name;
 }
-inline void NNormalSurface::setName(const NString& newName) {
+inline void NNormalSurface::setName(const std::string& newName) {
     name = newName;
 }
 

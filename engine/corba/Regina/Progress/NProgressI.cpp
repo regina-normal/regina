@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
 #include "NProgressI.h"
 
 CORBA::Boolean NProgress_i::hasChanged() {
@@ -44,7 +45,7 @@ CORBA::Boolean NProgress_i::isCancelled() {
     return MY_ENGINE_OBJECT->isCancelled();
 }
 char* NProgress_i::getDescription() {
-    return MY_ENGINE_OBJECT->getDescription().dupe();
+    return duplicate(MY_ENGINE_OBJECT->getDescription());
 }
 CORBA::Boolean NProgress_i::isPercent() {
     return MY_ENGINE_OBJECT->isPercent();

@@ -36,10 +36,11 @@
 #define __NNORMALSURFACELIST_H
 #endif
 
+#include <algorithm>
 #include <vector>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
-#include "utilities/nmiscutils.h"
+#include "utilities/memutils.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfaceset.h"
 
@@ -150,7 +151,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         virtual ShareableObject* getShareableObject();
         
         virtual int getPacketType() const;
-        virtual NString getPacketName() const;
+        virtual std::string getPacketName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;

@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
 #include "NGroupPresentationI.h"
 #include "NGroupExpressionI.h"
 
@@ -51,6 +52,6 @@ CORBA::Boolean NGroupPresentation_i::intelligentSimplify() {
     return MY_ENGINE_OBJECT->intelligentSimplify();
 }
 char* NGroupPresentation_i::recogniseGroup() {
-    return MY_ENGINE_OBJECT->recogniseGroup().dupe();
+    return duplicate(MY_ENGINE_OBJECT->recogniseGroup());
 }
 

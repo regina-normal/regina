@@ -45,14 +45,14 @@ JNIEXPORT jboolean JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_toString
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, ShareableObject, me)->toString());
 }
 
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_toStringLong
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, ShareableObject, me)->toStringLong());
 }
 

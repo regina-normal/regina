@@ -64,7 +64,7 @@ JNIEXPORT jobject JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getDescription
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env, GET_ENGINE_OBJECT(env, NTetrahedron, me)->
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NTetrahedron, me)->
         getDescription());
 }
 
@@ -135,14 +135,14 @@ JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_newNTetrahedron__Ljava_lang_String_2
         (JNIEnv *env, jobject me, jstring desc) {
     ASSIGN_ENGINE_OBJECT(env,
-        new NTetrahedron(jstringToNString(env, desc)), me);
+        new NTetrahedron(jstringToCString(env, desc)), me);
 }
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_setDescription
         (JNIEnv *env, jobject me, jstring newDesc) {
     GET_ENGINE_OBJECT(env, NTetrahedron, me)->setDescription(
-        jstringToNString(env, newDesc));
+        jstringToCString(env, newDesc));
 }
 
 JNIEXPORT jobject JNICALL

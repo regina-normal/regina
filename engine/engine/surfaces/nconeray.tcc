@@ -32,7 +32,7 @@
 #include "maths/nvectormatrix.h"
 #include "maths/nmatrixint.h"
 #include "utilities/boostutils.h"
-#include "utilities/nmiscutils.h"
+#include "utilities/memutils.h"
 
 template <class OutputIterator, class RayIterator, class FaceIterator>
 void intersectCone(OutputIterator results,

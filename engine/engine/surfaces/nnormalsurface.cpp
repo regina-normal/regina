@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include "file/nfile.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"

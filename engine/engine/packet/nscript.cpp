@@ -31,22 +31,23 @@
 
 #define PROP_VARIABLE 1
 
-static const NString emptyString;
+static const std::string emptyString;
 
-const NString& NScript::getVariableName(unsigned long index) const {
-    std::map<NString, NString>::const_iterator it = variables.begin();
+const std::string& NScript::getVariableName(unsigned long index) const {
+    std::map<std::string, std::string>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).first;
 }
 
-const NString& NScript::getVariableValue(unsigned long index) const {
-    std::map<NString, NString>::const_iterator it = variables.begin();
+const std::string& NScript::getVariableValue(unsigned long index) const {
+    std::map<std::string, std::string>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).second;
 }
 
-const NString& NScript::getVariableValue(const NString& name) const {
-    std::map<NString, NString>::const_iterator it = variables.find(name);
+const std::string& NScript::getVariableValue(const std::string& name) const {
+    std::map<std::string, std::string>::const_iterator it =
+        variables.find(name);
     if (it == variables.end())
         return emptyString;
     return (*it).second;
@@ -56,12 +57,13 @@ void NScript::writeTextLong(std::ostream& o) const {
     if (variables.empty())
         o << "No variables.\n";
     else {
-        for (std::map<NString, NString>::const_iterator vit =
+        for (std::map<std::string, std::string>::const_iterator vit =
                 variables.begin(); vit != variables.end(); vit++)
             o << "Variable: " << (*vit).first << " = " << (*vit).second << '\n';
     }
     o << '\n';
-    copy(lines.begin(), lines.end(), std::ostream_iterator<NString>(o, "\n"));
+    copy(lines.begin(), lines.end(),
+        std::ostream_iterator<std::string>(o, "\n"));
 }
 
 NPacket* NScript::internalClonePacket(NPacket*) const {
@@ -73,7 +75,7 @@ NPacket* NScript::internalClonePacket(NPacket*) const {
 
 void NScript::writePacket(NFile& out) const {
     out.writeULong(lines.size());
-    for (std::vector<NString>::const_iterator it = lines.begin();
+    for (std::vector<std::string>::const_iterator it = lines.begin();
             it != lines.end(); it++)
         out.writeString(*it);
 
@@ -83,8 +85,8 @@ void NScript::writePacket(NFile& out) const {
     // The variables will be written as properties to allow for changing
     // of their representation in future file formats.
 
-    for (std::map<NString, NString>::const_iterator vit = variables.begin();
-            vit != variables.end(); vit++) {
+    for (std::map<std::string, std::string>::const_iterator vit =
+            variables.begin(); vit != variables.end(); vit++) {
         bookmark = writePropertyHeader(out, PROP_VARIABLE);
         out.writeString((*vit).first);
         out.writeString((*vit).second);

@@ -45,7 +45,7 @@
  */
 class NProgressMessage : public NProgress {
     private:
-        NString message;
+        std::string message;
             /**< The current state of progress. */
 
     public:
@@ -65,7 +65,7 @@ class NProgressMessage : public NProgress {
          * @param newCancellable \c true if and only if this operation
          * allows itself to be cancelled by an external interface.
          */
-        NProgressMessage(const NString& newMessage,
+        NProgressMessage(const std::string& newMessage,
                 bool newCancellable = false);
         /**
          * Creates a new progress report with the given progress message.
@@ -82,13 +82,13 @@ class NProgressMessage : public NProgress {
          *
          * @return the current progress message.
          */
-        NString getMessage() const;
+        std::string getMessage() const;
         /**
          * Sets the current progress message to the given string.
          *
          * @param newMessage the new state of progress.
          */
-        void setMessage(const NString& newMessage);
+        void setMessage(const std::string& newMessage);
         /**
          * Sets the current progress message to the given string.
          *
@@ -97,7 +97,7 @@ class NProgressMessage : public NProgress {
         void setMessage(const char* newMessage);
 
     protected:
-        virtual NString internalGetDescription() const;
+        virtual std::string internalGetDescription() const;
 };
 
 /**
@@ -171,7 +171,7 @@ class NProgressNumber : public NProgress {
         virtual bool isPercent() const;
 
     protected:
-        virtual NString internalGetDescription() const;
+        virtual std::string internalGetDescription() const;
         virtual double internalGetPercent() const;
 };
 
@@ -180,7 +180,7 @@ class NProgressNumber : public NProgress {
 inline NProgressMessage::NProgressMessage(bool newCancellable) :
         NProgress(newCancellable) {
 }
-inline NProgressMessage::NProgressMessage(const NString& newMessage,
+inline NProgressMessage::NProgressMessage(const std::string& newMessage,
         bool newCancellable) : NProgress(newCancellable),
         message(newMessage) {
 }
@@ -189,13 +189,13 @@ inline NProgressMessage::NProgressMessage(const char* newMessage,
         message(newMessage) {
 }
 
-inline NString NProgressMessage::getMessage() const {
+inline std::string NProgressMessage::getMessage() const {
     mutexLock();
-    NString ans = message;
+    std::string ans = message;
     mutexUnlock();
     return ans;
 }
-inline void NProgressMessage::setMessage(const NString& newMessage) {
+inline void NProgressMessage::setMessage(const std::string& newMessage) {
     mutexLock();
     message = newMessage;
     setChanged();
@@ -208,9 +208,9 @@ inline void NProgressMessage::setMessage(const char* newMessage) {
     mutexUnlock();
 }
 
-inline NString NProgressMessage::internalGetDescription() const {
+inline std::string NProgressMessage::internalGetDescription() const {
     mutexLock();
-    NString ans = message;
+    std::string ans = message;
     mutexUnlock();
     return ans;
 }

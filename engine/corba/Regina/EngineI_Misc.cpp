@@ -32,6 +32,7 @@
 #include "census/ncensus.h"
 #include "maths/matrixops.h"
 #include "surfaces/nnormalsurfacelist.h"
+#include "utilities/stringutils.h"
 
 #include "EngineI.h"
 #include "NAbelianGroupI.h"
@@ -105,7 +106,7 @@ CORBA::Long Engine_i::getVersionMinor() {
     return ENGINE_VERSION_MINOR;
 }
 char* Engine_i::getVersionString() {
-    return NString(ENGINE_VERSION).dupe();
+    return duplicate(ENGINE_VERSION);
 }
 Regina::Maths::NMatrixInt_ptr Engine_i::makeMatchingEquations(
         Regina::Triangulation::NTriangulation_ptr triangulation,

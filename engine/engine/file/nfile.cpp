@@ -197,27 +197,20 @@ void NFile::writeLarge(const NLargeInteger& i) {
     delete[] str;
 }
 
-NLargeInteger NFile::readLarge() {
-    char* str = readString().dupe();
-    NLargeInteger ans = NLargeInteger(str);
-    delete[] str;
-    return ans;
-}
-
-void NFile::writeString(const NString& s) {
+void NFile::writeString(const std::string& s) {
     unsigned len = s.length();
     writeUInt(len);
     for (unsigned i=0; i<len; i++)
         resource->putChar(s[i]);
 }
 
-NString NFile::readString() {
+std::string NFile::readString() {
     unsigned len = readUInt();
     char* buf = new char[len+1];
     for (unsigned i=0; i<len; i++)
         buf[i] = resource->getChar();
     buf[len] = 0;
-    return NString(buf);
+    return buf;
 }
 
 void NFile::writePacketTree(NPacket* packet) {
@@ -284,7 +277,7 @@ NPacket* NFile::readPacketTree(NPacket* parent) {
 NPacket* NFile::readIndividualPacket(NPacket* parent,
         std::streampos& bookmark) {
     int packetType = readInt();
-    NString packetLabel = readString();
+    std::string packetLabel = readString();
     bookmark = readPos();
     
     // Check through each possible packet type.

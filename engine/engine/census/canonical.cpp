@@ -28,7 +28,7 @@
 
 #include "census/ncensus.h"
 #include "progress/nprogresstypes.h"
-#include "utilities/nmiscutils.h"
+#include "utilities/memutils.h"
 
 bool NCensus::isCanonicalInternal(int whichTet, const NTetFace& equalUpTo) {
     if (whichTet == (int)nTetrahedra) {

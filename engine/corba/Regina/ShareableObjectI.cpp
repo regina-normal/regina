@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
 #include "ShareableObjectI.h"
 
 ShareableObject_i::ShareableObject_i(::ShareableObject* newCppPtr) :
@@ -48,9 +49,9 @@ void ShareableObject_i::destroy() {
     delete cppPtr;
 }
 char* ShareableObject_i::toString() {
-    return cppPtr->toString().dupe();
+    return duplicate(cppPtr->toString());
 }
 char* ShareableObject_i::toStringLong() {
-    return cppPtr->toStringLong().dupe();
+    return duplicate(cppPtr->toStringLong());
 }
 

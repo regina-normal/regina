@@ -29,13 +29,13 @@
 #include <sstream>
 #include "shareableobject.h"
 
-NString ShareableObject::toString() const {
+std::string ShareableObject::toString() const {
     std::ostringstream out;
     writeTextShort(out);
     return out.str();
 }
 
-NString ShareableObject::toStringLong() const {
+std::string ShareableObject::toStringLong() const {
     std::ostringstream out;
     writeTextLong(out);
     return out.str();

@@ -42,7 +42,7 @@
  */
 class NText : public NPacket {
     private:
-        NString text;
+        std::string text;
             /**< The text string stored in this packet. */
     public:
         static const int packetType;
@@ -57,7 +57,7 @@ class NText : public NPacket {
          *
          * @param newText the new value for the packet.
          */
-        NText(const NString& newText);
+        NText(const std::string& newText);
 
         /**
          * Initialises the packet to the given string.
@@ -71,14 +71,14 @@ class NText : public NPacket {
          *
          * @return the stored string.
          */
-        const NString& getText() const;
+        const std::string& getText() const;
 
         /**
          * Sets the packet data to the given string.
          *
          * @param newText the new value for the packet.
          */
-        void setText(const NString& newText);
+        void setText(const std::string& newText);
 
         /**
          * Sets the packet data to the given string.
@@ -88,7 +88,7 @@ class NText : public NPacket {
         void setText(const char* newText);
 
         virtual int getPacketType() const;
-        virtual NString getPacketName() const;
+        virtual std::string getPacketName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -105,17 +105,17 @@ class NText : public NPacket {
 inline NText::NText() {
 }
 
-inline NText::NText(const NString& newText) : text(newText) {
+inline NText::NText(const std::string& newText) : text(newText) {
 }
 
 inline NText::NText(const char* newText) : text(newText) {
 }
 
-inline const NString& NText::getText() const {
+inline const std::string& NText::getText() const {
     return text;
 }
 
-inline void NText::setText(const NString& newText) {
+inline void NText::setText(const std::string& newText) {
     text = newText;
 }
 

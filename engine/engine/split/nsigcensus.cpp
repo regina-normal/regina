@@ -28,7 +28,7 @@
 
 #include <algorithm>
 #include "split/nsigcensus.h"
-#include "utilities/nmiscutils.h"
+#include "utilities/memutils.h"
 
 unsigned long formSigCensus(unsigned order, UseSignature use, void* useArgs) {
     NSigCensus census(order, use, useArgs);

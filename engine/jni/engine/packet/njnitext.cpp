@@ -33,7 +33,7 @@
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_getText
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NText, me)->getText());
 }
 
@@ -46,12 +46,12 @@ JNIEXPORT void JNICALL
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_newNText__Ljava_lang_String_2
         (JNIEnv *env, jobject me, jstring newText) {
-    ASSIGN_ENGINE_OBJECT(env, new NText(jstringToNString(env, newText)), me);
+    ASSIGN_ENGINE_OBJECT(env, new NText(jstringToCString(env, newText)), me);
 }
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_setText
         (JNIEnv *env, jobject me, jstring newText) {
-    GET_ENGINE_OBJECT(env, NText, me)->setText(jstringToNString(env, newText));
+    GET_ENGINE_OBJECT(env, NText, me)->setText(jstringToCString(env, newText));
 }
 

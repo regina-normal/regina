@@ -168,7 +168,7 @@ class Engine {
             /**< Calls ::getVersionMajor(). */
         int getVersionMinor();
             /**< Calls ::getVersionMinor(). */
-        NString getVersionString();
+        std::string getVersionString();
             /**< Calls ::getVersionString(). */
         NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
             /**< Calls NAugTriSolidTorus::isAugTriSolidTorus(). */
@@ -230,7 +230,7 @@ int getVersionMinor();
  * @return the version of the engine.
  */
 #ifdef __DOXYGEN
-NString getVersionString();
+std::string getVersionString();
 #endif
 
 /**

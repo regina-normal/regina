@@ -88,7 +88,7 @@ class NPacket : public ShareableObject {
         static const int packetType;
         #endif
     protected:
-        NString packetLabel;
+        std::string packetLabel;
             /**< The unique label for this individual packet of information. */
 
         NPacket* treeParent;
@@ -140,7 +140,7 @@ class NPacket : public ShareableObject {
          *
          * @return the packet type name.
          */
-        virtual NString getPacketName() const = 0;
+        virtual std::string getPacketName() const = 0;
 
         /**
          * Returns the label associated with this individual packet.
@@ -150,7 +150,7 @@ class NPacket : public ShareableObject {
          *
          * @return this individual packet's label.
          */
-        const NString& getPacketLabel() const;
+        const std::string& getPacketLabel() const;
 
         /**
          * Sets the label associated with this individual packet.
@@ -160,7 +160,7 @@ class NPacket : public ShareableObject {
          *
          * @param newLabel the new label to give this packet.
          */
-        void setPacketLabel(const NString& newLabel);
+        void setPacketLabel(const std::string& newLabel);
 
         /**
          * Returns a descriptive text string for the packet.
@@ -168,7 +168,7 @@ class NPacket : public ShareableObject {
          *
          * @return the descriptive text string.
          */
-        NString getFullName() const;
+        std::string getFullName() const;
 
         /**
          * Determines the parent packet in the tree structure.
@@ -338,7 +338,7 @@ class NPacket : public ShareableObject {
          * @return the first such packet, or 0 if there are no packets of
          * the requested type.
          */
-        NPacket* firstTreePacket(const NString& type);
+        NPacket* firstTreePacket(const std::string& type);
 
         /**
          * Finds the first packet of the requested type in a complete
@@ -356,7 +356,7 @@ class NPacket : public ShareableObject {
          * @return the first such packet, or 0 if there are no packets of
          * the requested type.
          */
-        const NPacket* firstTreePacket(const NString& type) const;
+        const NPacket* firstTreePacket(const std::string& type) const;
 
         /**
          * Finds the next packet after this of the requested type in a
@@ -371,7 +371,7 @@ class NPacket : public ShareableObject {
          * @return the next such packet, or 0 if this is the last packet
          * of the requested type in such an iteration.
          */
-        NPacket* nextTreePacket(const NString& type);
+        NPacket* nextTreePacket(const std::string& type);
 
         /**
          * Finds the next packet after this of the requested type in a
@@ -386,7 +386,7 @@ class NPacket : public ShareableObject {
          * @return the next such packet, or 0 if this is the last packet
          * of the requested type in such an iteration.
          */
-        const NPacket* nextTreePacket(const NString& type) const;
+        const NPacket* nextTreePacket(const std::string& type) const;
 
         /**
          * Finds the packet with the requested label in the tree or
@@ -397,7 +397,7 @@ class NPacket : public ShareableObject {
          * @return the packet with the requested label, or 0 if there is
          * no such packet.
          */
-        NPacket* findPacketLabel(const NString& label);
+        NPacket* findPacketLabel(const std::string& label);
 
         /**
          * Finds the packet with the requested label in the tree or
@@ -408,7 +408,7 @@ class NPacket : public ShareableObject {
          * @return the packet with the requested label, or 0 if there is
          * no such packet.
          */
-        const NPacket* findPacketLabel(const NString& label) const;
+        const NPacket* findPacketLabel(const std::string& label) const;
 
         /**
          * Returns a new label that cannot be found anywhere in the
@@ -422,7 +422,7 @@ class NPacket : public ShareableObject {
          * @param base a string upon which the new label will be based.
          * @return a new unique label.
          */
-        NString makeUniqueLabel(const NString& base) const;
+        std::string makeUniqueLabel(const std::string& base) const;
 
         /**
          * Ensures that all packet labels in both this and the given
@@ -713,15 +713,15 @@ inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
         treeParent = 0;
 }
 
-inline const NString& NPacket::getPacketLabel() const {
+inline const std::string& NPacket::getPacketLabel() const {
     return packetLabel;
 }
 
-inline void NPacket::setPacketLabel(const NString& newLabel) {
+inline void NPacket::setPacketLabel(const std::string& newLabel) {
     packetLabel = newLabel;
 }
 
-inline NString NPacket::getFullName() const {
+inline std::string NPacket::getFullName() const {
     return packetLabel + " (" + getPacketName() + ")";
 }
 

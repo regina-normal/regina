@@ -29,13 +29,13 @@
 #include "packet/packetregistry.h"
 
 // Define a task for each REGISTER_PACKET to perform.
-#define REGISTER_PACKET(class, type, name) \
-    int class::getPacketType() const {     \
-        return type;                       \
-    }                                      \
-    const int class::packetType = type;    \
-    NString class::getPacketName() const { \
-        return NString(name);              \
+#define REGISTER_PACKET(class, type, name)     \
+    int class::getPacketType() const {         \
+        return type;                           \
+    }                                          \
+    const int class::packetType = type;        \
+    std::string class::getPacketName() const { \
+        return name;                           \
     }
 
 // Import all the REGISTER_PACKET lines.

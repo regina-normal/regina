@@ -93,7 +93,7 @@ class NSurfaceFilterCombination : public NSurfaceFilter {
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getFilterID() const;
-        virtual NString getFilterName() const;
+        virtual std::string getFilterName() const;
 };
 
 // Inline functions for NSurfaceFilterCombination

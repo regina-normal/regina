@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include "split/nsignature.h"
 
 NSignature::NSignature(const NSignature& sig) : order(sig.order),
@@ -41,7 +42,7 @@ NSignature::NSignature(const NSignature& sig) : order(sig.order),
         cycleGroupStart);
 }
 
-NSignature* NSignature::parse(const NString& sig) {
+NSignature* NSignature::parse(const std::string& sig) {
     // TODO
     return 0;
 }
@@ -91,8 +92,8 @@ int NSignature::cycleCmp(const NSignature& sig1, unsigned cycle1,
     return 0;
 }
 
-void NSignature::writeCycles(std::ostream& out, const NString& cycleOpen,
-        const NString& cycleClose, const NString& cycleJoin) const {
+void NSignature::writeCycles(std::ostream& out, const std::string& cycleOpen,
+        const std::string& cycleClose, const std::string& cycleJoin) const {
     out << cycleOpen;
 
     unsigned cycle = 0;

@@ -36,10 +36,11 @@
 #define __NANGLESTRUCTURELIST_H
 #endif
 
+#include <algorithm>
 #include <vector>
 #include "angle/nanglestructure.h"
 #include "packet/npacket.h"
-#include "utilities/nmiscutils.h"
+#include "utilities/memutils.h"
 
 /**
  * A packet representing a collection of angle structures on a triangulation.
@@ -128,7 +129,7 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
         bool allowsTaut();
 
         virtual int getPacketType() const;
-        virtual NString getPacketName() const;
+        virtual std::string getPacketName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;

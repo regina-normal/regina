@@ -35,7 +35,7 @@
 #define __NPERM_H
 #endif
 
-#include "utilities/nstring.h"
+#include <string>
 
 /**
  * Represents a permutation of {0,1,2,3}.
@@ -287,7 +287,7 @@ class NPerm {
          *
          * @return a string representation of this permutation.
          */
-        NString toString() const;
+        std::string toString() const;
 
     private:
         /**
@@ -413,7 +413,7 @@ NPerm edgeOrdering(int edge);
  * canonical ordering of vertices in the given face.
  */
 #ifdef __DOXYGEN
-NString faceDescription(int face);
+std::string faceDescription(int face);
 #endif
 
 /**
@@ -427,7 +427,7 @@ NString faceDescription(int face);
  * @return a restricted string representation of the given permutation.
  */
 #ifdef __DOXYGEN
-NString faceDescription(const NPerm& facePerm);
+std::string faceDescription(const NPerm& facePerm);
 #endif
 
 /**
@@ -447,7 +447,7 @@ NString faceDescription(const NPerm& facePerm);
  * vertices in the given edge.
  */
 #ifdef __DOXYGEN
-NString edgeDescription(int edge);
+std::string edgeDescription(int edge);
 #endif
 
 /**
@@ -461,7 +461,7 @@ NString edgeDescription(int edge);
  * @return a restricted string representation of the given permutation.
  */
 #ifdef __DOXYGEN
-NString edgeDescription(const NPerm& edgePerm);
+std::string edgeDescription(const NPerm& edgePerm);
 #endif
 
 // Inline functions for NPerm

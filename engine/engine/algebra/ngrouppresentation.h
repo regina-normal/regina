@@ -35,10 +35,11 @@
 #define __NGROUPPRESENTATION_H
 #endif
 
+#include <algorithm>
 #include <list>
 #include <vector>
 #include "property/npropertyholder.h"
-#include "utilities/nmiscutils.h"
+#include "utilities/memutils.h"
 #include "shareableobject.h"
 
 class NFile;
@@ -500,7 +501,7 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
          * recognised, or an empty string if the group is not
          * recognised.
          */
-        NString recogniseGroup();
+        std::string recogniseGroup();
 
         /**
          * Writes this group presentation to the given file.

@@ -30,7 +30,7 @@
 
 #include <sstream>
 
-NString NProgressNumber::internalGetDescription() const {
+std::string NProgressNumber::internalGetDescription() const {
     std::ostringstream out;
 
     mutexLock();

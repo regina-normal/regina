@@ -53,28 +53,18 @@ jobject CREATE_WRAPPER_OBJECT(JNIEnv* jni_env, ShareableObject* cpp_object,
     return ans;
 }
 
-NString jstringToNString(JNIEnv* jni_env, jstring str) {
+std::string jstringToCString(JNIEnv* jni_env, jstring str) {
     const char* strChars = jni_env->GetStringUTFChars(str, 0);
-    NString ans(strChars);
+    std::string ans(strChars);
     jni_env->ReleaseStringUTFChars(str, strChars);
-    return ans;
-}
-
-jstring jstringFromNString(JNIEnv* jni_env, const NString& str) {
-    char* strChars = str.dupe();
-    jstring ans = jni_env->NewStringUTF(strChars);
-    delete[] strChars;
     return ans;
 }
 
 NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value) {
     jclass c = jni_env->GetObjectClass(value);
     jmethodID m = jni_env->GetMethodID(c, "toString", "()Ljava/lang/String;");
-    char* decimal = jstringToNString(jni_env,
-        (jstring)jni_env->CallObjectMethod(value, m)).dupe();
-    NLargeInteger ans(decimal);
-    delete[] decimal;
-    return ans;
+    return jstringToCString(jni_env,
+        (jstring)jni_env->CallObjectMethod(value, m)).c_str();
 }
 
 jobject jBigIntegerFromLarge(JNIEnv* jni_env, const NLargeInteger& value) {

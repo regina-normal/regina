@@ -157,7 +157,7 @@ jobject CREATE_WRAPPER_OBJECT(JNIEnv* jni_env, ShareableObject* cpp_object,
  * @param str the Java string to convert.
  * @return the corresponding C++ string.
  */
-NString jstringToNString(JNIEnv* jni_env, jstring str);
+std::string jstringToCString(JNIEnv* jni_env, jstring str);
 /**
  * Converts the given C++ string to a Java string.
  *
@@ -167,7 +167,7 @@ NString jstringToNString(JNIEnv* jni_env, jstring str);
  * @param str the C++ string to convert.
  * @return the corresponding Java string.
  */
-jstring jstringFromNString(JNIEnv* jni_env, const NString& str);
+jstring jstringFromCString(JNIEnv* jni_env, const std::string& str);
 
 /**
  * Converts the given Java BigInteger to a C++ NLargeInteger.
@@ -197,6 +197,12 @@ NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value);
  * <tt>normal.engine.utilities.NLargeInteger</tt>) or \c null.
  */
 jobject jBigIntegerFromLarge(JNIEnv* jni_env, const NLargeInteger& value);
+
+// Inline global functions
+
+inline jstring jstringFromCString(JNIEnv* jni_env, const std::string& str) {
+    return jni_env->NewStringUTF(str.c_str());
+}
         
 #endif
 

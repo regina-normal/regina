@@ -37,7 +37,7 @@ jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
         return 0;
 
     int type = packet->getPacketType();
-    NString classPath;
+    std::string classPath;
 
     #ifdef __MUTE_WARNINGS
         #pragma warn -ccc
@@ -82,9 +82,6 @@ jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
     #endif
 
     // Make the new Java wrapper.
-    char* classChars = classPath.dupe();
-    jobject ans = CREATE_WRAPPER_OBJECT(env, packet, classChars);
-    delete[] classChars;
-    return ans;
+    return CREATE_WRAPPER_OBJECT(env, packet, classPath.c_str());
 }
 

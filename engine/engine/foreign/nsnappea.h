@@ -35,7 +35,7 @@
 #define __NSNAPPEA_H
 #endif
 
-#include "utilities/nstring.h"
+#include <string>
 
 class NTriangulation;
 
@@ -84,7 +84,7 @@ bool writeSnapPea(const char* filename, NTriangulation& tri);
  * @param str the string on which to base the token.
  * @return the corresponding token.
  */
-NString stringToToken(const char* str);
+std::string stringToToken(const char* str);
 
 /**
  * Returns a token derived from the given string.
@@ -94,7 +94,7 @@ NString stringToToken(const char* str);
  * @param str the string on which to base the token.
  * @return the corresponding token.
  */
-NString stringToToken(const NString& str);
+std::string stringToToken(const std::string& str);
 
 #endif
 

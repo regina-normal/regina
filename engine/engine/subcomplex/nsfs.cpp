@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include "subcomplex/nsfs.h"
 #include "subcomplex/nlensspace.h"
 

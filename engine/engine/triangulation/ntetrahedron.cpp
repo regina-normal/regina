@@ -34,7 +34,7 @@ NTetrahedron::NTetrahedron() {
         tetrahedra[i] = 0;
 }
 
-NTetrahedron::NTetrahedron(const NString& desc) : description(desc) {
+NTetrahedron::NTetrahedron(const std::string& desc) : description(desc) {
     int i;
     for (i=0; i<4; i++)
         tetrahedra[i] = 0;

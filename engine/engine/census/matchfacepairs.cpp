@@ -29,7 +29,7 @@
 #include <sstream>
 #include "census/ncensus.h"
 #include "progress/nprogresstypes.h"
-#include "utilities/nmiscutils.h"
+#include "utilities/memutils.h"
 
 void NCensus::matchFacePairs() {
     // Generate a list of joins (without permutations).

@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
+
 #include "registry/corbafilterregistry.h"
 #include "corbatools.h"
 
@@ -81,6 +83,6 @@ CORBA::Long NSurfaceFilter_i::getFilterID() {
     return MY_ENGINE_OBJECT->getFilterID();
 }
 char* NSurfaceFilter_i::getFilterName() {
-    return MY_ENGINE_OBJECT->getFilterName().dupe();
+    return duplicate(MY_ENGINE_OBJECT->getFilterName());
 }
 

@@ -47,10 +47,10 @@
  */
 class NScript : public NPacket, public NPropertyHolder {
     private:
-        std::vector<NString> lines;
+        std::vector<std::string> lines;
             /**< An array storing the lines of this script; none of
              *   these strings should contain newlines. */
-        std::map<NString, NString> variables;
+        std::map<std::string, std::string> variables;
             /**< A map storing the variables with which this script
              *   is to be run.  Variable names are mapped to their
              *   corresponding values. */
@@ -76,20 +76,20 @@ class NScript : public NPacket, public NPropertyHolder {
          * between 0 and getNumberOfLines()-1 inclusive.
          * @return the requested line.
          */
-        const NString& getLine(unsigned long index) const;
+        const std::string& getLine(unsigned long index) const;
 
         /**
          * Adds the given line to the beginning of this script.
          *
          * @param line the line to insert.
          */
-        void addFirst(const NString& line);
+        void addFirst(const std::string& line);
         /**
          * Adds the given line to the end of this script.
          *
          * @param line the line to add.
          */
-        void addLast(const NString& line);
+        void addLast(const std::string& line);
         /**
          * Inserts the given line into the given position in this script.
          * All subsequent lines will be shifted down to make room.
@@ -98,7 +98,7 @@ class NScript : public NPacket, public NPropertyHolder {
          * @param index the index at which the new line will be placed;
          * this must be between 0 and getNumberOfLines() inclusive.
          */
-        void insertAtPosition(const NString& line, unsigned long index);
+        void insertAtPosition(const std::string& line, unsigned long index);
         /**
          * Replaces a line of this script with the given line.
          *
@@ -106,7 +106,7 @@ class NScript : public NPacket, public NPropertyHolder {
          * @param index the index of the line to replace; this must be
          * between 0 and getNumberOfLines()-1 inclusive.
          */
-        void replaceAtPosition(const NString& line, unsigned long index);
+        void replaceAtPosition(const std::string& line, unsigned long index);
         /**
          * Removes the requested line from this script.
          *
@@ -133,7 +133,7 @@ class NScript : public NPacket, public NPropertyHolder {
          * be between 0 and getNumberOfVariables()-1 inclusive.
          * @return the name of the requested variable.
          */
-        const NString& getVariableName(unsigned long index) const;
+        const std::string& getVariableName(unsigned long index) const;
         /**
          * Returns the value of the requested variable associated with
          * this script.
@@ -145,7 +145,7 @@ class NScript : public NPacket, public NPropertyHolder {
          * be between 0 and getNumberOfVariables()-1 inclusive.
          * @return the value of the requested variable.
          */
-        const NString& getVariableValue(unsigned long index) const;
+        const std::string& getVariableValue(unsigned long index) const;
         /**
          * Returns the value of the variable stored with the given
          * name.  The return strings are as described in
@@ -158,7 +158,7 @@ class NScript : public NPacket, public NPropertyHolder {
          * names are case sensitive.
          * @return the value of the requested variable.
          */
-        const NString& getVariableValue(const NString& name) const;
+        const std::string& getVariableValue(const std::string& name) const;
 
         /**
          * Adds a new variable to be associated with this script.
@@ -171,7 +171,7 @@ class NScript : public NPacket, public NPropertyHolder {
          * @return \c true if the variable was successfully added, or
          * \c false if a variable with the given name was already stored.
          */
-        bool addVariable(const NString& name, const NString& value);
+        bool addVariable(const std::string& name, const std::string& value);
         /**
          * Removes the variable stored with the given name.
          * Note that the indices of other variables may change as a
@@ -183,14 +183,14 @@ class NScript : public NPacket, public NPropertyHolder {
          * @param name the name of the variable to remove; note that
          * names are case sensitive.
          */
-        void removeVariable(const NString& name);
+        void removeVariable(const std::string& name);
         /**
          * Removes all variables associated with this script.
          */
         void removeAllVariables();
 
         virtual int getPacketType() const;
-        virtual NString getPacketName() const;
+        virtual std::string getPacketName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -215,21 +215,21 @@ inline NScript::NScript() {
 inline unsigned long NScript::getNumberOfLines() const {
     return lines.size();
 }
-inline const NString& NScript::getLine(unsigned long index) const {
+inline const std::string& NScript::getLine(unsigned long index) const {
     return lines[index];
 }
 
-inline void NScript::addFirst(const NString& line) {
+inline void NScript::addFirst(const std::string& line) {
     lines.insert(lines.begin(), line);
 }
-inline void NScript::addLast(const NString& line) {
+inline void NScript::addLast(const std::string& line) {
     lines.push_back(line);
 }
-inline void NScript::insertAtPosition(const NString& line,
+inline void NScript::insertAtPosition(const std::string& line,
         unsigned long index) {
     lines.insert(lines.begin() + index, line);
 }
-inline void NScript::replaceAtPosition(const NString& line,
+inline void NScript::replaceAtPosition(const std::string& line,
         unsigned long index) {
     lines[index] = line;
 }
@@ -243,10 +243,11 @@ inline void NScript::removeAllLines() {
 inline unsigned long NScript::getNumberOfVariables() const {
     return variables.size();
 }
-inline bool NScript::addVariable(const NString& name, const NString& value) {
+inline bool NScript::addVariable(const std::string& name,
+        const std::string& value) {
     return variables.insert(std::make_pair(name, value)).second;
 }
-inline void NScript::removeVariable(const NString& name) {
+inline void NScript::removeVariable(const std::string& name) {
     variables.erase(name);
 }
 inline void NScript::removeAllVariables() {

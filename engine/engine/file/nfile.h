@@ -319,7 +319,7 @@ class NFile : public ShareableObject {
          *
          * @return the string read.
          */
-        NString readString();
+        std::string readString();
 
         /**
          * Reads a bool from file.
@@ -418,7 +418,7 @@ class NFile : public ShareableObject {
          *
          * @param s the string to write.
          */
-        void writeString(const NString& s);
+        void writeString(const std::string& s);
             
         /**
          * Writes a bool to file.
@@ -547,6 +547,10 @@ inline bool NFile::versionEarlierThan(int major, int minor) {
     if (majorVersion < major) return true;
     else if (majorVersion > major) return false;
     else return (minorVersion < minor);
+}
+
+inline NLargeInteger NFile::readLarge() {
+    return readString().c_str();
 }
 
 inline void NFile::writeChar(char c) {

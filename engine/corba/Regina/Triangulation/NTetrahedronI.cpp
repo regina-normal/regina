@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
 #include "NTetrahedronI.h"
 #include "NVertexI.h"
 #include "NEdgeI.h"
@@ -79,7 +80,7 @@ void NTetrahedron_i::isolate() {
     MY_ENGINE_OBJECT->isolate();
 }
 char* NTetrahedron_i::getDescription() {
-    return MY_ENGINE_OBJECT->getDescription().dupe();
+    return duplicate(MY_ENGINE_OBJECT->getDescription());
 }
 void NTetrahedron_i::setDescription(const char* description) {
     MY_ENGINE_OBJECT->setDescription(description);

@@ -37,7 +37,7 @@
         return id; \
     } \
     const int class::filterID = id; \
-    NString class::getFilterName() const { \
+    std::string class::getFilterName() const { \
         return name; \
     }
 

@@ -71,7 +71,7 @@ JNIEXPORT jobject JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_getName
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NNormalSurface, me)->getName());
 }
 
@@ -156,7 +156,7 @@ JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_setName
         (JNIEnv *env, jobject me, jstring name) {
     GET_ENGINE_OBJECT(env, NNormalSurface, me)->setName(
-        jstringToNString(env, name));
+        jstringToCString(env, name));
 }
 
 JNIEXPORT void JNICALL

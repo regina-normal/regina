@@ -55,7 +55,7 @@ NTriangulation* readSnapPea(const char* filename) {
         return 0;
     
     // Read in junk.
-    NString tempStr;
+    std::string tempStr;
     double tempDbl;
 
     in >> tempStr;         // Solution type
@@ -193,25 +193,18 @@ bool writeSnapPea(const char* filename, NTriangulation& tri) {
     return true;
 }
 
-NString stringToToken(const char* str) {
-    char* ans = new char[strlen(str) + 1];
-    strcpy(ans, str);
-    for (char* c = ans; *c; c++)
-        if (isspace(*c))
-            *c = '_';
-
-    NString ret(ans);
-    delete[] ans;
-    return ret;
+std::string stringToToken(const char* str) {
+    std::string ans(str);
+    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
+        if (isspace(*it))
+            *it = '_';
+    return ans;
 }
 
-NString stringToToken(const NString& str) {
-    char* ans = str.dupe();
-    for (char* c = ans; *c; c++)
-        if (isspace(*c))
-            *c = '_';
-
-    NString ret(ans);
-    delete[] ans;
-    return ret;
+std::string stringToToken(const std::string& str) {
+    std::string ans(str);
+    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
+        if (isspace(*it))
+            *it = '_';
+    return ans;
 }

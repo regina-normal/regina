@@ -36,7 +36,8 @@
 #define __SHAREABLEOBJECT_H
 #endif
 
-#include "utilities/nstring.h"
+#include <iostream>
+#include <string>
 
 /**
  * Facilitates mirroring objects in the underlying C++ calculation
@@ -178,13 +179,13 @@ class ShareableObject {
          *
          * @return a short text representation of this object.
          */
-        NString toString() const;
+        std::string toString() const;
         /**
          * Returns the output from writeTextLong() as a string.
          *
          * @return a long text representation of this object.
          */
-        NString toStringLong() const;
+        std::string toStringLong() const;
 };
 
 // Inline functions for ShareableObject

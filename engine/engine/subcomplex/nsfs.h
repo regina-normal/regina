@@ -37,7 +37,6 @@
 
 #include <list>
 #include "shareableobject.h"
-#include "utilities/nmiscutils.h"
 
 class NLensSpace;
 

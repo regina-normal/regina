@@ -38,8 +38,8 @@
 #include <hash_set>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
+#include "utilities/hashutils.h"
 #include "utilities/nindexedarray.h"
-#include "utilities/nmiscutils.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nface.h"
 #include "triangulation/nedge.h"
@@ -192,7 +192,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
         virtual ~NTriangulation();
         
         virtual int getPacketType() const;
-        virtual NString getPacketName() const;
+        virtual std::string getPacketName() const;
         
         virtual void writePacket(NFile& out) const;
         static NTriangulation* readPacket(NFile& in, NPacket* parent);
@@ -1451,7 +1451,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @return \c true if the insertion was successful, or
          * \c false if the given string could not be rehydrated.
          */
-        bool insertRehydration(const NString& dehydration);
+        bool insertRehydration(const std::string& dehydration);
         /**
          * Inserts the triangulation with a splitting surface matching
          * the given signature.
@@ -1479,7 +1479,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @return \c true if the insertion was successful, or
          * \c false if the given signature was not valid.
          */
-        bool insertSplittingSurface(const NString& signature);
+        bool insertSplittingSurface(const std::string& signature);
 
         /**
          * Determines if this triangulation is combinatorially

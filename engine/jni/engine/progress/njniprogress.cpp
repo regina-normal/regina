@@ -39,7 +39,7 @@ JNIEXPORT void JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_getDescription
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env,
+    return jstringFromCString(env,
         GET_ENGINE_OBJECT(env, NProgress, me)->getDescription());
 }
 

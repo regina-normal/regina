@@ -40,7 +40,7 @@
  */
 #define LETTER(x) (char((x) + 'a'))
 
-bool NTriangulation::insertRehydration(const NString& dehydration) {
+bool NTriangulation::insertRehydration(const std::string& dehydration) {
     unsigned len = dehydration.length();
 
     // Ensure the string is non-empty.
@@ -49,11 +49,12 @@ bool NTriangulation::insertRehydration(const NString& dehydration) {
 
     // Rewrite the string in lower case and verify that it contains only
     // letters.
-    NString proper(dehydration.toLower());
-    unsigned i, j;
-    for (i = 0; i < len; i++)
-        if (! isalpha(proper[i]))
+    std::string proper(dehydration);
+    for (std::string::iterator it = proper.begin(); it != proper.end(); it++)
+        if (! isalpha(*it))
             return false;
+        else if (isupper(*it))
+            *it = tolower(*it);
 
     // Determine the number of tetrahedra.
     unsigned nTet = VAL(proper[0]);
@@ -70,6 +71,7 @@ bool NTriangulation::insertRehydration(const NString& dehydration) {
     bool* newTetGluings = new bool[2 * nTet];
 
     unsigned val;
+    unsigned i, j;
     for (i = 0; i < lenNewTet; i++) {
         val = VAL(proper[i + 1]);
         if (val > 15) {

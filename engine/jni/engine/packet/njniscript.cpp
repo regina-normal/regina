@@ -33,27 +33,27 @@
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_addFirst
         (JNIEnv *env, jobject me, jstring str) {
-    GET_ENGINE_OBJECT(env, NScript, me)->addFirst(jstringToNString(env, str));
+    GET_ENGINE_OBJECT(env, NScript, me)->addFirst(jstringToCString(env, str));
 }
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_addLast
         (JNIEnv *env, jobject me, jstring str) {
-    GET_ENGINE_OBJECT(env, NScript, me)->addLast(jstringToNString(env, str));
+    GET_ENGINE_OBJECT(env, NScript, me)->addLast(jstringToCString(env, str));
 }
 
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_addVariable
         (JNIEnv *env, jobject me, jstring name, jstring value) {
     return GET_ENGINE_OBJECT(env, NScript, me)->addVariable(
-        jstringToNString(env, name), jstringToNString(env, value));
+        jstringToCString(env, name), jstringToCString(env, value));
 }
 
 
 JNIEXPORT jstring JNICALL 
         Java_normal_engine_implementation_jni_packet_NJNIScript_getLine
         (JNIEnv *env, jobject me, jlong index) {
-    return jstringFromNString(env, GET_ENGINE_OBJECT(env, NScript, me)->
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NScript, me)->
         getLine(index));
 }
 
@@ -71,29 +71,29 @@ JNIEXPORT jlong JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_getVariableName
         (JNIEnv *env, jobject me, jlong index) {
-    return jstringFromNString(env, GET_ENGINE_OBJECT(env, NScript, me)->
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NScript, me)->
         getVariableName(index));
 }
 
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_getVariableValue__J
         (JNIEnv *env, jobject me, jlong index) {
-    return jstringFromNString(env, GET_ENGINE_OBJECT(env, NScript, me)->
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NScript, me)->
         getVariableValue(index));
 }
 
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_getVariableValue__Ljava_lang_String_2
         (JNIEnv *env, jobject me, jstring name) {
-    return jstringFromNString(env, GET_ENGINE_OBJECT(env, NScript, me)->
-        getVariableValue(jstringToNString(env, name)));
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NScript, me)->
+        getVariableValue(jstringToCString(env, name)));
 }
 
 JNIEXPORT void JNICALL 
         Java_normal_engine_implementation_jni_packet_NJNIScript_insertAtPosition
         (JNIEnv *env, jobject me, jstring str, jlong index) {
     GET_ENGINE_OBJECT(env, NScript, me)->insertAtPosition(
-        jstringToNString(env, str), index);
+        jstringToCString(env, str), index);
 }
 
 JNIEXPORT void JNICALL
@@ -124,13 +124,13 @@ JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_removeVariable
         (JNIEnv *env, jobject me, jstring name) {
     GET_ENGINE_OBJECT(env, NScript, me)->removeVariable(
-        jstringToNString(env, name));
+        jstringToCString(env, name));
 }
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_replaceAtPosition
         (JNIEnv *env, jobject me, jstring str, jlong index) {
     GET_ENGINE_OBJECT(env, NScript, me)->replaceAtPosition(
-        jstringToNString(env, str), index);
+        jstringToCString(env, str), index);
 }
 

@@ -26,10 +26,11 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
 #include "NTextI.h"
 
 char* NText_i::getText() {
-    return MY_ENGINE_OBJECT->getText().dupe();
+    return duplicate(MY_ENGINE_OBJECT->getText());
 }
 void NText_i::setText(const char* newText) {
     MY_ENGINE_OBJECT->setText(newText);

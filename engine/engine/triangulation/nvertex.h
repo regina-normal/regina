@@ -35,7 +35,7 @@
 #define __NVERTEX_H
 #endif
 
-#include <list>
+#include <vector>
 #include "shareableobject.h"
 
 class NTetrahedron;

@@ -26,13 +26,14 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
 #include "NScriptI.h"
 
 CORBA::Long NScript_i::getNumberOfLines() {
     return MY_ENGINE_OBJECT->getNumberOfLines();
 }
 char* NScript_i::getLine(CORBA::Long index) {
-    return MY_ENGINE_OBJECT->getLine(index).dupe();
+    return duplicate(MY_ENGINE_OBJECT->getLine(index));
 }
 void NScript_i::addFirst(const char* line) {
     MY_ENGINE_OBJECT->addFirst(line);
@@ -56,13 +57,13 @@ CORBA::Long NScript_i::getNumberOfVariables() {
     return MY_ENGINE_OBJECT->getNumberOfVariables();
 }
 char* NScript_i::getVariableName(CORBA::Long index) {
-    return MY_ENGINE_OBJECT->getVariableName(index).dupe();
+    return duplicate(MY_ENGINE_OBJECT->getVariableName(index));
 }
 char* NScript_i::getVariableValue_long(CORBA::Long index) {
-    return MY_ENGINE_OBJECT->getVariableValue(index).dupe();
+    return duplicate(MY_ENGINE_OBJECT->getVariableValue(index));
 }
 char* NScript_i::getVariableValue_string(const char* name) {
-    return MY_ENGINE_OBJECT->getVariableValue(name).dupe();
+    return duplicate(MY_ENGINE_OBJECT->getVariableValue(name));
 }
 CORBA::Boolean NScript_i::addVariable(const char* name, const char* value) {
     return MY_ENGINE_OBJECT->addVariable(name, value);

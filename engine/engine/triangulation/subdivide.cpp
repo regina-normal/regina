@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
+#include "utilities/memutils.h"
 
 // The indices of the new tetrahedra
 static int tetIndex[4][4][4] = {

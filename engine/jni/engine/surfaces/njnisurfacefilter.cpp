@@ -47,7 +47,7 @@ JNIEXPORT jint JNICALL
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilter_getFilterName
         (JNIEnv *env, jobject me) {
-    return jstringFromNString(env, GET_ENGINE_OBJECT(env, NSurfaceFilter, me)->
+    return jstringFromCString(env, GET_ENGINE_OBJECT(env, NSurfaceFilter, me)->
         getFilterName());
 }
 

@@ -76,7 +76,7 @@ class NTetrahedron : public ShareableObject {
                  represents the permutation \c p such that vertex \c v of
                  this tetrahedron is glued to vertex <tt>p[v]</tt> of
                  the tetrahedron joined to face \c f. */
-        NString description;
+        std::string description;
             /**< A text description of this tetrahedron.
                  Descriptions are not mandatory and need not be unique. */
         
@@ -123,7 +123,7 @@ class NTetrahedron : public ShareableObject {
          *
          * @param desc the description to give the new tetrahedron.
          */
-        NTetrahedron(const NString& desc);
+        NTetrahedron(const std::string& desc);
         /**
          * Destroys this tetrahedron.
          */
@@ -135,7 +135,7 @@ class NTetrahedron : public ShareableObject {
          *
          * @return the description of this tetrahedron.
          */
-        const NString& getDescription() const;
+        const std::string& getDescription() const;
 
         /**
          * Sets the text description associated with this tetrahedron.
@@ -144,7 +144,7 @@ class NTetrahedron : public ShareableObject {
          * @param desc the new description to assign to this
          * tetrahedron.
          */
-        void setDescription(const NString& desc);
+        void setDescription(const std::string& desc);
 
         /**
          * Returns the tetrahedron glued to the given face of this
@@ -377,11 +377,11 @@ class NTetrahedron : public ShareableObject {
 inline NTetrahedron::~NTetrahedron() {
 }
 
-inline const NString& NTetrahedron::getDescription() const {
+inline const std::string& NTetrahedron::getDescription() const {
     return description;
 }
 
-inline void NTetrahedron::setDescription(const NString& desc) {
+inline void NTetrahedron::setDescription(const std::string& desc) {
     description = desc;
 }
 

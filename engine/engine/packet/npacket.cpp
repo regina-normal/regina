@@ -28,8 +28,8 @@
 
 #include <sstream>
 #include <hash_set>
-
 #include "packet/npacket.h"
+#include "utilities/hashutils.h"
 
 NPacket::~NPacket() {
     NPacket* tmp;
@@ -151,19 +151,19 @@ const NPacket* NPacket::nextTreePacket() const {
     return 0;
 }
 
-NPacket* NPacket::firstTreePacket(const NString& type) {
+NPacket* NPacket::firstTreePacket(const std::string& type) {
     if (getPacketName() == type)
         return this;
     return nextTreePacket(type);
 }
 
-const NPacket* NPacket::firstTreePacket(const NString& type) const {
+const NPacket* NPacket::firstTreePacket(const std::string& type) const {
     if (getPacketName() == type)
         return this;
     return nextTreePacket(type);
 }
 
-NPacket* NPacket::nextTreePacket(const NString& type) {
+NPacket* NPacket::nextTreePacket(const std::string& type) {
     NPacket* ans = nextTreePacket();
     while (ans) {
         if (ans->getPacketName() == type)
@@ -173,7 +173,7 @@ NPacket* NPacket::nextTreePacket(const NString& type) {
     return 0;
 }
 
-const NPacket* NPacket::nextTreePacket(const NString& type) const {
+const NPacket* NPacket::nextTreePacket(const std::string& type) const {
     const NPacket* ans = nextTreePacket();
     while (ans) {
         if (ans->getPacketName() == type)
@@ -183,7 +183,7 @@ const NPacket* NPacket::nextTreePacket(const NString& type) const {
     return 0;
 }
 
-NPacket* NPacket::findPacketLabel(const NString& label) {
+NPacket* NPacket::findPacketLabel(const std::string& label) {
     if (packetLabel == label)
         return this;
     NPacket* tmp = firstTreeChild;
@@ -197,7 +197,7 @@ NPacket* NPacket::findPacketLabel(const NString& label) {
     return 0;
 }
 
-const NPacket* NPacket::findPacketLabel(const NString& label) const {
+const NPacket* NPacket::findPacketLabel(const std::string& label) const {
     if (packetLabel == label)
         return this;
     NPacket* tmp = firstTreeChild;
@@ -280,7 +280,7 @@ void NPacket::internalCloneDescendants(NPacket* parent) const {
     }
 }
 
-NString NPacket::makeUniqueLabel(const NString& base) const {
+std::string NPacket::makeUniqueLabel(const std::string& base) const {
     const NPacket* topLevel = this;
     while (topLevel->treeParent)
         topLevel = topLevel->treeParent;
@@ -288,7 +288,7 @@ NString NPacket::makeUniqueLabel(const NString& base) const {
     if (! topLevel->findPacketLabel(base))
         return base;
 
-    NString ans;
+    std::string ans;
     unsigned long extraInt = 2;
     while(1) {
         std::ostringstream out;
@@ -313,11 +313,11 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
         tree[1] = 0;
     }
 
-    std::hash_set<NString> labels;
+    std::hash_set<std::string, HashString> labels;
 
     int whichTree;
     NPacket* p;
-    NString label, newLabel;
+    std::string label, newLabel;
     unsigned long extraInt;
     bool changed = false;
     for (whichTree = 0; tree[whichTree]; whichTree++)

@@ -139,7 +139,7 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
          *
          * @return a string description of this filtering method.
          */
-        virtual NString getFilterName() const;
+        virtual std::string getFilterName() const;
 
         /**
          * Reads the details of a normal surface filter from the
@@ -176,7 +176,7 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getPacketType() const;
-        virtual NString getPacketName() const;
+        virtual std::string getPacketName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;
         static NSurfaceFilter* readPacket(NFile& in, NPacket* parent);

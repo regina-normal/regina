@@ -26,22 +26,23 @@
 
 /* end stub */
 
+#include "utilities/stringutils.h"
 #include "NPacketI.h"
 
 CORBA::Long NPacket_i::getPacketType() {
     return MY_ENGINE_OBJECT->getPacketType();
 }
 char* NPacket_i::getPacketName() {
-    return MY_ENGINE_OBJECT->getPacketName().dupe();
+    return duplicate(MY_ENGINE_OBJECT->getPacketName());
 }
 char* NPacket_i::getPacketLabel() {
-    return MY_ENGINE_OBJECT->getPacketLabel().dupe();
+    return duplicate(MY_ENGINE_OBJECT->getPacketLabel());
 }
 void NPacket_i::setPacketLabel(const char* newLabel) {
     MY_ENGINE_OBJECT->setPacketLabel(newLabel);
 }
 char* NPacket_i::getFullName() {
-    return MY_ENGINE_OBJECT->getFullName().dupe();
+    return duplicate(MY_ENGINE_OBJECT->getFullName());
 }
 Regina::Packet::NPacket_ptr NPacket_i::getFirstTreeChild() {
     return NPacket_i::newWrapper(MY_ENGINE_OBJECT->getFirstTreeChild());
@@ -92,7 +93,7 @@ Regina::Packet::NPacket_ptr NPacket_i::findPacketLabel(const char* type) {
     return NPacket_i::newWrapper(MY_ENGINE_OBJECT->findPacketLabel(type));
 }
 char* NPacket_i::makeUniqueLabel(const char* base) {
-    return MY_ENGINE_OBJECT->makeUniqueLabel(base).dupe();
+    return duplicate(MY_ENGINE_OBJECT->makeUniqueLabel(base));
 }
 CORBA::Boolean NPacket_i::makeUniqueLabels(Regina::Packet::NPacket_ptr ref) {
     return MY_ENGINE_OBJECT->makeUniqueLabels(GET_ENGINE_OBJECT(NPacket, ref));

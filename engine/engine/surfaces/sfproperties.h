@@ -200,7 +200,7 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getFilterID() const;
-        virtual NString getFilterName() const;
+        virtual std::string getFilterName() const;
 
     protected:
         virtual void readIndividualProperty(NFile& infile, unsigned propType);

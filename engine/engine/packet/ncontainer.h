@@ -52,7 +52,7 @@ class NContainer : public NPacket {
         NContainer();
 
         virtual int getPacketType() const;
-        virtual NString getPacketName() const;
+        virtual std::string getPacketName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writePacket(NFile& out) const;

@@ -29,7 +29,7 @@
 #include <cctype>
 #include <algorithm>
 #include "triangulation/ntriangulation.h"
-#include "utilities/nmiscutils.h"
+#include "utilities/memutils.h"
 
 static NPerm exitFace(bool firstOccurrence, bool lowerCase) {
     if (firstOccurrence) {
@@ -45,7 +45,7 @@ static NPerm exitFace(bool firstOccurrence, bool lowerCase) {
     }
 }
 
-bool NTriangulation::insertSplittingSurface(const NString& sig) {
+bool NTriangulation::insertSplittingSurface(const std::string& sig) {
     // See if the string looks correctly formed.
     // Note that we're not yet counting the individual frequency of each
     // letter, just the overall number of letters.

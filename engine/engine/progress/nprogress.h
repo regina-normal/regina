@@ -192,7 +192,7 @@ class NProgress : public ShareableObject, protected NMutex {
          *
          * @return the current state of progress.
          */
-        NString getDescription() const;
+        std::string getDescription() const;
         /**
          * Determines if the state of progress can be expressed as a
          * percentage.
@@ -234,7 +234,7 @@ class NProgress : public ShareableObject, protected NMutex {
          *
          * @return the current state of progress.
          */
-        virtual NString internalGetDescription() const = 0;
+        virtual std::string internalGetDescription() const = 0;
         /**
          * Returns the current state of progress as a percentage.
          *
@@ -263,7 +263,7 @@ class NProgressFinished : public NProgress {
         virtual bool isPercent() const;
 
     protected:
-        virtual NString internalGetDescription() const;
+        virtual std::string internalGetDescription() const;
         virtual double internalGetPercent() const;
 };
 
@@ -300,7 +300,7 @@ inline bool NProgress::isCancelled() const {
     return cancelled;
 }
 
-inline NString NProgress::getDescription() const {
+inline std::string NProgress::getDescription() const {
     ((NProgress*)this)->changed = false;
     return internalGetDescription();
 }
@@ -334,7 +334,7 @@ inline bool NProgressFinished::isPercent() const {
     return true;
 }
 
-inline NString NProgressFinished::internalGetDescription() const {
+inline std::string NProgressFinished::internalGetDescription() const {
     return "Finished.";
 }
 inline double NProgressFinished::internalGetPercent() const {

@@ -17,10 +17,12 @@ Version 2.5  [ (under development) ]
             - Modified to also build under gcc3.
         Classes NBoolVector, NDoubleList, NDynamicArray, NHashSet,
                 NInfiniteArray, NIntMap, NOrderedPair, NPointerSet,
-                NQueue, NSet, NStack, NStringPair and associates:
+                NQueue, NSet, NStack, NString, NStringPair and associates:
             - All removed in favour of Standard Template Library classes.
         Class FuncDelete, FuncNew, FuncNewClonePtr, FuncNewCopyPtr,
-                FuncNewCopyRef, HashPointer:
+                FuncNewCopyRef:
+            - Added for use with Standard Template Library.
+        Class HashPointer, HashString:
             - Added for use with Standard Template Library.
         Class NAngleStructureList:
             - New nested class NAngleStructureList::StructureInserter.
@@ -45,6 +47,8 @@ Version 2.5  [ (under development) ]
         Class NTriangulation:
             - Added insertSplittingSurface().
             - Uses NIndexedArrays for skeletal elements for fast index lookup.
+        Class reference_wrapper, remove_pointer:
+            - Added for use with Standard Template Library.
     JAVA USER INTERFACE:
         Overall structure:
             - Incorporated engine enhancements listed above.
