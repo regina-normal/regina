@@ -40,6 +40,9 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NIndexedArrayTest);
 
     CPPUNIT_TEST(basicChecks);
+    CPPUNIT_TEST(constructors);
+    CPPUNIT_TEST(swap);
+    CPPUNIT_TEST(queries);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -118,20 +121,75 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
             delete[] value;
         }
 
-        void arrayAssert(const char* arrayName, const char* msg,
+        static void arrayAssert(const char* arrayName, const char* msg,
                 bool condition) {
             std::string realMsg("Array ");
             realMsg += arrayName;
             realMsg += ": ";
             realMsg += msg;
-            CPPUNIT_ASSERT_MESSAGE(msg, condition);
+            CPPUNIT_ASSERT_MESSAGE(realMsg, condition);
         }
 
-        void validate(const Array& array, const char* arrayName) {
+        static void validate(const Array& array, const char* arrayName) {
             arrayAssert(arrayName, "Failed to validate.", array.validate());
         }
 
-        void basicChecks(const Array& array, const char* arrayName) {
+        static void compare(const Array& array1, const Array& array2,
+                const char* name1, const char* name2) {
+            std::string realMsg("Arrays ");
+            realMsg += name1;
+            realMsg += " and ";
+            realMsg += name2;
+            realMsg += " are not identical.";
+
+            Array::const_iterator it1 = array1.begin();
+            Array::const_iterator it2 = array2.begin();
+
+            bool ok = true;
+            while (ok && it1 != array1.end() && it2 != array2.end()) {
+                if (*it1 != *it2)
+                    ok = false;
+                it1++;
+                it2++;
+            }
+            if (it1 != array1.end() || it2 != array2.end())
+                ok = false;
+
+            CPPUNIT_ASSERT_MESSAGE(realMsg, ok);
+        }
+
+        int* expectedElement(const Array& array,
+                Array::size_type index) const {
+            const Array* address = &array;
+
+            int nUse;
+            if (address == &smallUniqueArray || address == &smallMultiArray)
+                nUse = nSmall;
+            else if (address == &largeUniqueArray ||
+                    address == &largeMultiArray)
+                nUse = nLarge;
+            else
+                nUse = 0;
+
+            if (address == &smallUniqueArray || address == &largeUniqueArray) {
+                if (index < nUse)
+                    return value + index;
+            } else if (address == &smallMultiArray ||
+                    address == &largeMultiArray) {
+                if (index < nUse)
+                    return value + index;
+                index -= nUse;
+                if (index < nUse)
+                    return value + nUse - index - 1;
+                index -= nUse;
+                if (index < 3 * nUse)
+                    return value + (index / 3);
+            }
+
+            return 0;
+        }
+
+        void basicChecks(const Array& array, const char* arrayName) const {
             // Validate before we start.
             validate(array, arrayName);
 
@@ -155,7 +213,9 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
                 arrayAssert(arrayName,
                     "Mismatch between forward iterators and direct indexing.",
                     array[i] == *it);
-                // TODO: check that the value is as expected;
+                arrayAssert(arrayName,
+                    "Incorrect array element found during forward iteration.",
+                    *it == expectedElement(array, i));
                 i++;
             }
             arrayAssert(arrayName,
@@ -173,7 +233,9 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
                 arrayAssert(arrayName,
                     "Mismatch between reverse iterators and direct indexing.",
                     array[i] == *it);
-                // TODO: check that the value is as expected;
+                arrayAssert(arrayName,
+                    "Incorrect array element found during reverse iteration.",
+                    *it == expectedElement(array, i));
             }
             arrayAssert(arrayName,
                 "Reverse iterators do not cover exact array size.",
@@ -188,37 +250,92 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
             basicChecks(emptyArray, "emptyArray");
         }
 
-        void newFixedSize() {
+        void constructors(const Array& array, const char* arrayName) const {
+            Array clone(array);
+            validate(clone, "new clone");
+            compare(array, clone, arrayName, "new clone");
+
+            Array copy(smallMultiArray);
+            copy.push_back(value);
+            copy = array;
+            validate(copy, "assigned copy");
+            compare(array, copy, arrayName, "assigned copy");
         }
 
-        void newManyObjects() {
+        void constructors() {
+            constructors(largeUniqueArray, "largeUniqueArray");
+            constructors(largeMultiArray, "largeMultiArray");
+            constructors(smallUniqueArray, "smallUniqueArray");
+            constructors(smallMultiArray, "smallMultiArray");
+            constructors(emptyArray, "emptyArray");
+
+            Array fixedSize(nSmall);
+            validate(fixedSize, "new small fixed size");
+            arrayAssert("new small fixed size", "Has incorrect size.",
+                fixedSize.size() == nSmall);
+
+            Array manyObjects(nLarge, value);
+            validate(manyObjects, "new many identical elements");
+            arrayAssert("new many identical elements", "Has incorrect size.",
+                manyObjects.size() == nLarge);
+            for (Array::const_iterator it = manyObjects.begin();
+                    it != manyObjects.end(); it++)
+                arrayAssert("new many identical elements",
+                    "Contains incorrect element.", *it == value);
         }
 
-        void newCopy() {
-        }
+        void swap() {
+            Array largeUniqueClone(largeUniqueArray);
+            Array smallMultiClone(smallMultiArray);
 
-        void operatorCopy() {
-        }
+            largeUniqueClone.swap(smallMultiClone);
 
-        void smallChanges() {
-            // push_back, pop_back, swap
+            validate(smallMultiClone, "swapped smallMultiClone");
+            validate(largeUniqueClone, "swapped largeUniqueClone");
+            compare(smallMultiClone, largeUniqueArray,
+                "swapped smallMultiClone", "largeUniqueArray");
+            compare(largeUniqueClone, smallMultiArray,
+                "swapped largeUniqueClone", "smallMultiArray");
         }
 
         void inserts() {
-            // insert elt, insert chunk, insert n copies
+            // TODO: push_back, insert elt, insert chunk, insert n copies
         }
 
         void erasures() {
-            // erase elt, erase chunk, erase all copies
-            // clear
+            // TODO: pop_back, erase elt, erase chunk, erase all copies
+            // TODO: clear
         }
 
         void resizes() {
-            // grow, shrink
+            // TODO: grow, shrink
+        }
+
+        void queries(const Array& array, const char* arrayName) const {
+            Array::difference_type index;
+
+            for (Array::const_iterator it = array.begin();
+                    it != array.end(); it++) {
+                index = array.index(*it);
+                arrayAssert(arrayName,
+                    "Returned out-of-bounds index from array element search.",
+                    index >= 0 && index < array.size());
+                arrayAssert(arrayName,
+                    "Returned incorrect index from array element search.",
+                    array[index] == *it);
+            }
+
+            arrayAssert(arrayName,
+                "Returned incorrect index from non-existent element search.",
+                array.index(0) == -1);
         }
 
         void queries() {
-            // check index
+            queries(largeUniqueArray, "largeUniqueArray");
+            queries(largeMultiArray, "largeMultiArray");
+            queries(smallUniqueArray, "smallUniqueArray");
+            queries(smallMultiArray, "smallMultiArray");
+            queries(emptyArray, "emptyArray");
         }
 };
 
