@@ -64,14 +64,8 @@ char* NScript_i::getVariableValue_long(CORBA::Long index) {
 char* NScript_i::getVariableValue_string(const char* name) {
     return MY_ENGINE_OBJECT->getVariableValue(name).dupe();
 }
-CORBA::Long NScript_i::getVariableIndex(const char* name) {
-    return MY_ENGINE_OBJECT->getVariableIndex(name);
-}
-void NScript_i::addVariable(const char* name, const char* value) {
-    MY_ENGINE_OBJECT->addVariable(name, value);
-}
-void NScript_i::removeVariableAt(CORBA::Long index) {
-    MY_ENGINE_OBJECT->removeVariableAt(index);
+CORBA::Boolean NScript_i::addVariable(const char* name, const char* value) {
+    return MY_ENGINE_OBJECT->addVariable(name, value);
 }
 void NScript_i::removeVariable(const char* name) {
     MY_ENGINE_OBJECT->removeVariable(name);

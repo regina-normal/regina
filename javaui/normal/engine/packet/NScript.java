@@ -45,10 +45,8 @@ public interface NScript extends NPacket {
     public String getVariableName(long index);
     public String getVariableValue(long index);
     public String getVariableValue(String name);
-    public long getVariableIndex(String name);
 
-    public void addVariable(String name, String value);
-    public void removeVariableAt(long index);
+    public boolean addVariable(String name, String value);
     public void removeVariable(String name);
     public void removeAllVariables();
 }

@@ -361,15 +361,20 @@ public class NScriptEditor extends DefaultPacketEditor {
 
         packet.removeAllVariables();
         int tot = variableNames.size();
+        String name;
         Variable var;
         int i;
         for (i=0; i<tot; i++) {
+            name = (String)variableNames.elementAt(i);
+            if (name.length() == 0)
+                continue;
+
             var = (Variable)variableValues.elementAt(i);
             if (var.getValue() instanceof NPacket)
-                packet.addVariable((String)variableNames.elementAt(i),
+                packet.addVariable(name,
                     ((NPacket)var.getValue()).getPacketLabel());
             else
-                packet.addVariable((String)variableNames.elementAt(i), "");
+                packet.addVariable(name, "");
         }
 
         packet.removeAllLines();
@@ -550,10 +555,11 @@ public class NScriptEditor extends DefaultPacketEditor {
                 shell.inform("One of the variables has no name.");
                 return false;
             }
-            if (name.equals("engine") || variableNames.indexOf(name, i+1) >= 0)
-                if (! shell.confirm("The variable [" + name +
-                        "] appears twice.  Do you wish to continue?"))
-                    return false;
+            if (name.equals("engine") ||
+                    variableNames.indexOf(name, i+1) >= 0) {
+                shell.inform("The variable [" + name + "] appears twice.");
+                return false;
+            }
         }
         return true;
     }

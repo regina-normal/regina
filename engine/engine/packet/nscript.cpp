@@ -31,83 +31,51 @@
 
 #define PROP_VARIABLE 1
 
-const NString emptyString;
+static const NString emptyString;
+
+const NString& NScript::getVariableName(unsigned long index) const {
+    std::map<NString, NString>::const_iterator it = variables.begin();
+    advance(it, index);
+    return (*it).first;
+}
+
+const NString& NScript::getVariableValue(unsigned long index) const {
+    std::map<NString, NString>::const_iterator it = variables.begin();
+    advance(it, index);
+    return (*it).second;
+}
 
 const NString& NScript::getVariableValue(const NString& name) const {
-    NDynamicArrayIterator<NStringPair> it(variables);
-    while (! it.done()) {
-        if ((*it).first == name)
-            return (*it).second;
-        it++;
-    }
-    return emptyString;
-}
-
-long NScript::getVariableIndex(const NString& name) const {
-    NDynamicArrayIterator<NStringPair> it(variables);
-    while (! it.done()) {
-        if ((*it).first == name)
-            return it.getArrayIndex();
-        it++;
-    }
-    return -1;
-}
-
-void NScript::removeVariable(const NString& name) {
-    NDynamicArrayIterator<NStringPair> it(variables);
-    while (! it.done()) {
-        if ((*it).first == name)
-            variables.remove(it);
-        it++;
-    }
+    std::map<NString, NString>::const_iterator it = variables.find(name);
+    if (it == variables.end())
+        return emptyString;
+    return (*it).second;
 }
 
 void NScript::writeTextLong(ostream& o) const {
     if (variables.size() == 0)
         o << "No variables.\n";
     else {
-        NDynamicArrayIterator<NStringPair> vit(variables);
-        while (! vit.done()) {
-            o << "Variable: " << (*vit).first << " = "
-                << (*vit).second << '\n';
-            vit++;
-        }
+        for (std::map<NString, NString>::const_iterator vit =
+                variables.begin(); vit != variables.end(); vit++)
+            o << "Variable: " << (*vit).first << " = " << (*vit).second << '\n';
     }
-
     o << '\n';
-
-    NDynamicArrayIterator<NString> it(lines);
-    while (! it.done()) {
-        o << *it << '\n';
-        it++;
-    }
+    copy(lines.begin(), lines.end(), ostream_iterator<NString>(o, "\n"));
 }
 
 NPacket* NScript::internalClonePacket(NPacket*) const {
     NScript* ans = new NScript();
-
-    NDynamicArrayIterator<NString> it(lines);
-    while (! it.done()) {
-        ans->lines.addLast(*it);
-        it++;
-    }
-
-    NDynamicArrayIterator<NStringPair> vit(variables);
-    while (! vit.done()) {
-        ans->variables.addLast(*vit);
-        vit++;
-    }
-
+    ans->lines = lines;
+    ans->variables = variables;
     return ans;
 }
 
 void NScript::writePacket(NFile& out) const {
     out.writeULong(lines.size());
-    NDynamicArrayIterator<NString> it(lines);
-    while (! it.done()) {
+    for (std::vector<NString>::const_iterator it = lines.begin();
+            it != lines.end(); it++)
         out.writeString(*it);
-        it++;
-    }
 
     // Write the properties.
     streampos bookmark(0);
@@ -115,13 +83,12 @@ void NScript::writePacket(NFile& out) const {
     // The variables will be written as properties to allow for changing
     // of their representation in future file formats.
 
-    NDynamicArrayIterator<NStringPair> vit(variables);
-    while (! vit.done()) {
+    for (std::map<NString, NString>::const_iterator vit = variables.begin();
+            vit != variables.end(); vit++) {
         bookmark = writePropertyHeader(out, PROP_VARIABLE);
         out.writeString((*vit).first);
         out.writeString((*vit).second);
         writePropertyFooter(out, bookmark);
-        vit++;
     }
 
     // At the moment there are no properties to write!
@@ -132,7 +99,7 @@ NScript* NScript::readPacket(NFile& in, NPacket*) {
     NScript* ans = new NScript();
     unsigned long size = in.readULong();
     for (unsigned long i=0; i<size; i++)
-        ans->lines.addLast(in.readString());
+        ans->lines.push_back(in.readString());
 
     ans->readProperties(in);
 
@@ -144,7 +111,6 @@ void NScript::initialiseAllProperties() {
 
 void NScript::readIndividualProperty(NFile& infile, unsigned propType) {
     if (propType == PROP_VARIABLE)
-        variables.addLast(NStringPair(infile.readString(),
-            infile.readString()));
+        variables.insert(make_pair(infile.readString(), infile.readString()));
 }
 

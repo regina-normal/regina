@@ -35,15 +35,11 @@
 #define __NSCRIPT_H
 #endif
 
+#include <map>
 #include <utility>
+#include <vector>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
-#include "utilities/ndynamicarray.h"
-
-/**
- * An ordered pair of strings.
- */
-typedef std::pair<NString, NString> NStringPair;
 
 /**
  * A packet representing a script that can be run.
@@ -51,13 +47,13 @@ typedef std::pair<NString, NString> NStringPair;
  */
 class NScript : public NPacket, public NPropertyHolder {
     private:
-        NDynamicArray<NString> lines;
+        std::vector<NString> lines;
             /**< An array storing the lines of this script; none of
              *   these strings should contain newlines. */
-        NDynamicArray<NStringPair> variables;
-            /**< An array storing the variables with which this script
-             *   is to be run.  The first element of each ordered pair
-             *   is the variable name and the second is the value. */
+        std::map<NString, NString> variables;
+            /**< A map storing the variables with which this script
+             *   is to be run.  Variable names are mapped to their
+             *   corresponding values. */
 
     public:
         static const int packetType;
@@ -151,7 +147,7 @@ class NScript : public NPacket, public NPropertyHolder {
          */
         const NString& getVariableValue(unsigned long index) const;
         /**
-         * Returns the value of the first variable stored with the given
+         * Returns the value of the variable stored with the given
          * name.  The return strings are as described in
          * getVariableValue(unsigned long).
          *
@@ -163,36 +159,21 @@ class NScript : public NPacket, public NPropertyHolder {
          * @return the value of the requested variable.
          */
         const NString& getVariableValue(const NString& name) const;
-        /**
-         * Returns the index of the first variable stored with the given
-         * name.
-         *
-         * @param name the name of the requested variable.
-         * @return the index of the requested variable (between 0 and
-         * getNumberOfVertices()-1 inclusive) or -1 if no such variable
-         * is stored.
-         */
-        long getVariableIndex(const NString& name) const;
 
         /**
          * Adds a new variable to be associated with this script.
-         * This variable will be added to the end of the list.
+         * If a variable with the given name is already stored, this
+         * routine will do nothing.
          *
          * @param name the name of the new variable.
          * @param value the value of the new variable, as described in
          * the notes for getVariableValue().
+         * @return \c true if the variable was successfully added, or
+         * \c false if a variable with the given name was already stored.
          */
-        void addVariable(const NString& name, const NString& value);
+        bool addVariable(const NString& name, const NString& value);
         /**
-         * Removes the variable at the given index in this script.  Note
-         * that the indices of other variables may change as a result.
-         *
-         * @param index the index of the variable to remove; this should
-         * be between 0 and getNumberOfVariables()-1 inclusive.
-         */
-        void removeVariableAt(unsigned long index);
-        /**
-         * Removes the first variable stored with the given name.
+         * Removes the variable stored with the given name.
          * Note that the indices of other variables may change as a
          * result of this action.
          *
@@ -239,43 +220,37 @@ inline const NString& NScript::getLine(unsigned long index) const {
 }
 
 inline void NScript::addFirst(const NString& line) {
-    lines.addFirst(line);
+    lines.insert(lines.begin(), line);
 }
 inline void NScript::addLast(const NString& line) {
-    lines.addLast(line);
+    lines.push_back(line);
 }
 inline void NScript::insertAtPosition(const NString& line,
         unsigned long index) {
-    lines.addAtPosition(line, index);
+    lines.insert(lines.begin() + index, line);
 }
 inline void NScript::replaceAtPosition(const NString& line,
         unsigned long index) {
     lines[index] = line;
 }
 inline void NScript::removeLineAt(unsigned long index) {
-    lines.removeFromPosition(index);
+    lines.erase(lines.begin() + index);
 }
 inline void NScript::removeAllLines() {
-    lines.flush();
+    lines.clear();
 }
 
 inline unsigned long NScript::getNumberOfVariables() const {
     return variables.size();
 }
-inline const NString& NScript::getVariableName(unsigned long index) const {
-    return variables[index].first;
+inline bool NScript::addVariable(const NString& name, const NString& value) {
+    return variables.insert(make_pair(name, value)).second;
 }
-inline const NString& NScript::getVariableValue(unsigned long index) const {
-    return variables[index].second;
-}
-inline void NScript::addVariable(const NString& name, const NString& value) {
-    variables.addLast(NStringPair(name, value));
-}
-inline void NScript::removeVariableAt(unsigned long index) {
-    variables.removeFromPosition(index);
+inline void NScript::removeVariable(const NString& name) {
+    variables.erase(name);
 }
 inline void NScript::removeAllVariables() {
-    variables.flush();
+    variables.clear();
 }
 
 inline void NScript::writeTextShort(ostream& o) const {

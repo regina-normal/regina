@@ -55,10 +55,8 @@ public class NJNIScript extends NJNIPacket implements NScript {
     public native String getVariableName(long index);
     public native String getVariableValue(long index);
     public native String getVariableValue(String name);
-    public native long getVariableIndex(String name);
 
-    public native void addVariable(String name, String value);
-    public native void removeVariableAt(long index);
+    public native boolean addVariable(String name, String value);
     public native void removeVariable(String name);
     public native void removeAllVariables();
 }

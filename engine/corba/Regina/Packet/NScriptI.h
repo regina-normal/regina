@@ -56,9 +56,7 @@ class NScript_i : public virtual POA_Regina::Packet::NScript,
         virtual char* getVariableName(CORBA::Long index);
         virtual char* getVariableValue_long(CORBA::Long index);
         virtual char* getVariableValue_string(const char* name);
-        virtual CORBA::Long getVariableIndex(const char* name);
-        virtual void addVariable(const char* name, const char* value);
-        virtual void removeVariableAt(CORBA::Long index);
+        virtual CORBA::Boolean addVariable(const char* name, const char* value);
         virtual void removeVariable(const char* name);
         virtual void removeAllVariables();
 };

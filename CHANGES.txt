@@ -21,6 +21,13 @@ Version 2.5  [ (under development) ]
             - Added for use with Standard Template Library.
         Class NGroupExpressionTerm:
             - Changed from simple ordered pair to its own full class.
+        Class NScript:
+            - Changed list of variables to a proper map and removed routines
+              getVariableIndex() and removeVariableAt().
+            - Insistance on unique variable names; in enforcing this
+              routine addVariable() now returns bool.
+        Class NStringPair:
+            - Removed.
         Class NTriangulation:
             - Added insertSplittingSurface().
 

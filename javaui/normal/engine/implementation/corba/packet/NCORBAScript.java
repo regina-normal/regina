@@ -84,15 +84,9 @@ public class NCORBAScript extends NCORBAPacket
     public String getVariableValue(String name) {
         return data.getVariableValue_string(name);
     }
-    public long getVariableIndex(String name) {
-        return data.getVariableIndex(name);
-    }
  
-    public void addVariable(String name, String value) {
-        data.addVariable(name, value);
-    }
-    public void removeVariableAt(long index) {
-        data.removeVariableAt((int)index);
+    public boolean addVariable(String name, String value) {
+        return data.addVariable(name, value);
     }
     public void removeVariable(String name) {
         data.removeVariable(name);

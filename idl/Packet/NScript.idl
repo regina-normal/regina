@@ -48,10 +48,8 @@ module Regina {
             string getVariableName(in long index);
             string getVariableValue_long(in long index);
             string getVariableValue_string(in string name);
-            long getVariableIndex(in string name);
 
-            void addVariable(in string name, in string value);
-            void removeVariableAt(in long index);
+            boolean addVariable(in string name, in string value);
             void removeVariable(in string name);
             void removeAllVariables();
         };
