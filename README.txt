@@ -88,7 +88,6 @@ built, a reason will be given earlier in the "./configure" output.
     checking whether to build command-line utilities... yes
     checking whether to build the test suite... yes
     checking whether to build calculation engine docs... yes
-    checking whether to build the reference manual... yes
     checking whether to build man pages... yes
     configure: creating ./config.status
     config.status: creating Makefile
