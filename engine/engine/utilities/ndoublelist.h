@@ -500,6 +500,7 @@ class NDoubleList {
         }
 
     friend class Iterator;
+        /**< Allow access to private members. */
 
     protected:
         /**
@@ -661,6 +662,7 @@ class NDoubleListIterator {
         }
         
     friend class List;
+        /**< Allow access to private members. */
 };
 
 #endif

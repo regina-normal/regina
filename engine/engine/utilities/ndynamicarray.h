@@ -481,6 +481,7 @@ class NDynamicArray
         }
 
     friend class NDynamicArrayIterator<T>;
+        /**< Allow access to private members. */
 
     protected:
         /**
@@ -757,6 +758,7 @@ class NDynamicArrayIterator
         }
 
     friend class NDynamicArray<T>;
+        /**< Allow access to private members. */
 };
 
 #endif

@@ -242,6 +242,7 @@ class NInfiniteArray {
         }
     
     friend class Iterator;
+        /**< Allow access to private members. */
 };
 
 /**
@@ -373,6 +374,7 @@ class NInfiniteArrayIterator {
         }
         
     friend class List;
+        /**< Allow access to private members. */
 };
 
 #endif

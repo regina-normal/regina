@@ -569,6 +569,7 @@ class NLargeInteger {
         NLargeInteger(bool, bool);
 
     friend class NRational;
+        /**< Allow access to private members. */
     friend ostream& operator << (ostream& out, const NLargeInteger& large);
 };
 

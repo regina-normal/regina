@@ -159,6 +159,7 @@ class NPointerSet {
         }
     
     friend class Iterator;
+        /**< Allow access to private members. */
 };
 
 /**
@@ -271,6 +272,7 @@ class NPointerSetIterator {
         }
         
     friend class List;
+        /**< Allow access to private members. */
 };
 
 #endif

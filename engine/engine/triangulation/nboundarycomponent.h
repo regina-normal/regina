@@ -201,6 +201,7 @@ class NBoundaryComponent : public ShareableObject {
         void writeTextShort(ostream& out) const;
 
     friend class NTriangulation;
+        /**< Allow access to private members. */
 };
 
 // Inline functions for NBoundaryComponent
