@@ -10,7 +10,8 @@
 <ul>
 	<li><a href="#linux">Linux</a></li>
 	<li><a href="#windoze">Windows</a></li>
-	<li><a href="./">Back to main page ...</a></li>
+	<li><a href="#docs">Generating Documentation</a></li>
+	<li><a href="index.html">Back to main page ...</a></li>
 </ul>
 
 If you just wish to run Regina, you can download prebuilt binaries for
@@ -30,6 +31,11 @@ distribution; it may be worth searching there before visiting each
 individual website and installing each individual piece of software.
 Certainly <a href="http://www.debian.org/">debian</a> (unstable)
 offers all of the tools in this list except for JavaHelp.
+
+<p>
+If you wish to generate the documentation (such as the calculation engine
+docs or the HTML reference manual), see the separate
+<a href="#docs">documentation section</a> below.
 
 <p align=center>
 Legend:
@@ -93,16 +99,6 @@ Legend:
 		<a href="mailto:benb@acm.org">mail me</a> if you discover
 		anything that needs to be added to this list.</td>
 		<!-->leaving out cat, cp, pwd, rm, touch<--></tr>
-<tr><td>Doxygen (<b>optional</b> - used to make HTML documentation for
-		the calculation engine)</td><td>&gt;= 1.2.2</td>
-	<td><a href="http://www.stack.nl/~dimitri/doxygen/">
-		http://www.stack.nl/~dimitri/doxygen/</a></td>
-	<td></td><td bgcolor="#50FF50">A binary doxygen package plus graphviz (see below)</td></tr>
-<tr><td>Graphviz (<b>optional</b> - required if doxygen is used;
-		see above)</td><td>&gt;= 1.5</td>
-	<td><a href="http://www.research.att.com/sw/tools/graphviz/">
-		http://www.research.att.com/sw/tools/graphviz/</a></td>
-	<td></td><td bgcolor="#50FF50">A binary graphviz package</td></tr>
 </table>
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
@@ -122,6 +118,11 @@ windows support is as follows:
 	<li>Java user interface (CORBA):
 		<i><font color="#006600">builds</font>, <font color="#600000">run not tested</font></i></li>
 </ul>
+
+<p>
+If you wish to generate the documentation (such as the calculation engine
+docs or the HTML reference manual), see the separate
+<a href="#docs">documentation section</a> below.
 
 <p align=center>
 Legend:
@@ -170,26 +171,79 @@ Legend:
 		(prebuilt <i>libgmp</i> libraries)</td>
 	<td></td><td bgcolor="#FF7979">Linkable library
 	<i>libgmp.a</i> plus the corresponding header files</td></tr>
-<tr><td>Doxygen (<b>optional</b> - used to make HTML documentation for
-	the calculation engine)</td><td>&gt;= 1.2.2</td>
-	<td><a href="http://www.stack.nl/~dimitri/doxygen/">
-		http://www.stack.nl/~dimitri/doxygen/</a></td>
-	<td></td><td bgcolor="#50FF50">A binary doxygen package plus graphviz (see below)</td></tr>
-<tr><td>Graphviz (<b>optional</b> - required if doxygen is used;
-	see above)</td><td>&gt;= 1.5</td>
-	<td><a href="http://www.research.att.com/sw/tools/graphviz/">
-		http://www.research.att.com/sw/tools/graphviz/</a></td>
-	<td></td><td bgcolor="#50FF50">A binary graphviz package</td></tr>
 </table>
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
+<h3><a name="docs">Generating Documentation:</a></h3>
+
+If you'd rather regenerate the documentation from the sources
+instead of downloading a prebuilt documentation bundle, you
+will need the following tools.
 <p>
-<a href="./"><img src="return.gif"
+Note that you might not need all of the tools in this list.  For
+instance, if you only wish to regenerate the calculation engine docs
+(perhaps you've modified the C++ sources), you will only need
+Doxygen and Graphviz (but then you should be careful to invoke
+<tt><b>make docsengine</b></tt> instead of <tt><b>make docs</b></tt>
+to avoid rebuilding the other components of the documentation).
+
+<p>
+<table border=1>
+<tr><td align=center><b>Component</b></td><td align=center><b>Version</b></td>
+	<td align=center><b>Reason</b></td>
+	<td align=center><b>Download From</b></td></tr>
+<tr><td>Doxygen</td>
+	<td>&gt;= 1.2.2</td>
+	<td>Calculation engine docs</td>
+	<td><a href="http://www.stack.nl/~dimitri/doxygen/">
+		http://www.stack.nl/~dimitri/doxygen/</a></td></tr>
+<tr><td>Graphviz</td><td>&gt;= 1.5</td>
+	<td>Calculation engine docs</td>
+	<td><a href="http://www.research.att.com/sw/tools/graphviz/">
+		http://www.research.att.com/sw/tools/graphviz/</a></td></tr>
+<tr><td>JavaDoc</td><td>&gt;= 1.3</td>
+	<td>Java UI class docs</td>
+	<td>(should come bundled with your Java compiler)</td></tr>
+<tr><td>DocBook SGML DTD <a href="#sgmlnotes">[+]</a></td><td>4.1</td>
+	<td>HTML reference manual</td>
+	<td><a href="http://www.oasis-open.org/docbook/sgml/4.1/">
+		http://www.oasis-open.org/docbook/sgml/4.1/</a></td></tr>
+<tr><td>DocBook DSSSL Stylesheets <a href="#sgmlnotes">[+]</a></td><td>&gt;= 1.73</td>
+	<td>HTML reference manual</td>
+	<td><a href="http://sourceforge.net/project/showfiles.php?group_id=21935">
+		http://sourceforge.net/projects/docbook-dsssl</a></td></tr>
+<tr><td>ISO Entity Sets <a href="#sgmlnotes">[+]</a></td><td></td>
+	<td>HTML reference manual</td>
+	<td><a href="http://www.oasis-open.org/cover/ISOEnts.zip">
+		http://www.oasis-open.org/cover/ISOEnts.zip</a></td></tr>
+<tr><td>Jade <a href="#sgmlnotes">[+]</a></td><td>&gt;= 1.2.1</td>
+	<td>HTML reference manual</td>
+	<td><a href="http://www.jclark.com/jade/">http://www.jclark.com/jade/</a></td></tr>
+<tr><td></td><td></td>
+	<td>Man pages</td>
+</table>
+<p>
+<a name="sgmlnotes"><b>[+]</b></a>
+The DocBook-related tools are not at all easy to set up.
+If you are using Linux, it is strongly recommended that you search your
+Linux distribution for these tools instead of downloading them from the sites
+provided.  Hopefully they will come preconfigured.
+<p>
+For Debian users, the packages you will need are <tt>docbook</tt>, <tt>docbook-dsssl</tt>,
+<tt>sgml-data</tt> and <tt>jade</tt>.
+<p>
+If you are using Windows, you should visit the <a href="docbook.html">DocBook
+support page</a> for instructions on configuring these tools correctly.
+<p>
+<i><a href="#contents">(Back to contents...)</a></i>
+
+<p>
+<a href="index.html"><img src="return.gif"
 	alt="Back to main page ..."
 	border="0" vspace="10"  width="32" height="32"
 	align="middle"></a>
-<a href="./">Back to main page ...</a></p>
+<a href="index.html">Back to main page ...</a></p>
 
 </body>
 </html>
