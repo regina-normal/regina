@@ -482,6 +482,7 @@ void NTriangulation::calculateVertexLinks() const {
     VertexIterator it;
     NVertex* vertex;
     std::vector<NVertexEmbedding>::const_iterator embit;
+    NEdge* edge;
     NTetrahedron* tet;
     int tetVertex, secondVertex;
 
@@ -504,8 +505,11 @@ void NTriangulation::calculateVertexLinks() const {
             for (secondVertex = 0; secondVertex < 4; secondVertex++) {
                 if (secondVertex == tetVertex)
                     continue;
-                v += NRational(1, tet->getEdge(edgeNumber[tetVertex]
-                    [secondVertex])->getEmbeddings().size());
+                edge = tet->getEdge(edgeNumber[tetVertex][secondVertex]);
+                if (edge->valid)
+                    v += NRational(1, edge->getEmbeddings().size());
+                else
+                    v += NRational(1, 2 * edge->getEmbeddings().size());
                 if (tet->getFace(secondVertex)->isBoundary())
                     twiceE++;
             }
