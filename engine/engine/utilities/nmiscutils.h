@@ -136,7 +136,9 @@ struct FuncNewCopyRef {
  * corresponding object, returning a pointer to the newly created clone
  * of type <tt>T</tt>.
  *
- * \pre Type <tt>T</tt> has method <tt>T* clone() const</tt>.
+ * \pre Type <tt>T</tt> has method <tt>T* clone() const</tt>.  The
+ * declared return type may be different, but the result \b must
+ * be castable to <tt>T*</tt>.
  *
  * \ifaces Not present.
  */
@@ -154,7 +156,7 @@ struct FuncNewClonePtr {
      * @return the newly created clone.
      */
     T* operator() (const T* ptr) const {
-        return ptr->clone();
+        return (T*)(ptr->clone());
     }
 };
 
