@@ -101,8 +101,8 @@
 (define acceptable-mediaobject-notations
   (list "EPS" "BMP" "GIF" "linespecific"))                                                                                                    
 ; === Rendering ===
-(define %admon-graphics% #t)                ;; use symbols for Caution|
-(define %admon-graphics-path% "images/")    ;; Important|Note|Tip|Warning
+(define %admon-graphics% #t)                   ;; use symbols for Caution|
+(define %admon-graphics-path% "images/admon/") ;; Important|Note|Tip|Warning
 
 ; === Books only ===
 (define %generate-book-titlepage% #t)

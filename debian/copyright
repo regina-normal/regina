@@ -23,9 +23,9 @@ Public License can be found in `/usr/share/common-licenses/GPL'.
 ------------------------------------------------------------------
 
 The admonition images used in the HTML reference manual
-(/usr/share/doc/regina-normal-doc/html/images/*.gif) were taken from the
-DocBook DSSSL stylesheets.  Their copyright and license are attached
-below.
+(/usr/share/doc/regina-normal-doc/html/images/admon/*.gif) were taken
+from the DocBook DSSSL stylesheets.  Their copyright and license are
+attached below.
 
   Copyright
   ---------
