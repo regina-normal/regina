@@ -7,6 +7,7 @@
 ##
 
 EXTRA_DIST = dataformat.sgml dataformat.ent \
+  abeliangroup.sgml \
   allowstrict.sgml \
   allowtaut.sgml \
   cancrush.sgml \
@@ -19,6 +20,12 @@ EXTRA_DIST = dataformat.sgml dataformat.ent \
   filter-properties.sgml \
   filter.sgml \
   flags.sgml \
+  fundgroup.sgml \
+  group.sgml \
+  H1.sgml \
+  H1Bdry.sgml \
+  H1Rel.sgml \
+  H2.sgml \
   line.sgml \
   op.sgml \
   orbl-filter.sgml \
@@ -34,6 +41,7 @@ EXTRA_DIST = dataformat.sgml dataformat.ent \
   realbdry-filter.sgml \
   realbdry-surface.sgml \
   reginadata.sgml \
+  reln.sgml \
   struct.sgml \
   surface.sgml \
   tag.sgml \

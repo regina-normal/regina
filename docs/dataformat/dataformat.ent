@@ -2,6 +2,7 @@
 <!-- Entities for documenting the Regina data file format.
      See ../regina.sgml for further details. -->
 
+<!ENTITY data-abeliangroup SYSTEM "abeliangroup.sgml">
 <!ENTITY data-allowstrict SYSTEM "allowstrict.sgml">
 <!ENTITY data-allowtaut SYSTEM "allowtaut.sgml">
 <!ENTITY data-cancrush SYSTEM "cancrush.sgml">
@@ -14,6 +15,12 @@
 <!ENTITY data-filter-combination SYSTEM "filter-combination.sgml">
 <!ENTITY data-filter-properties SYSTEM "filter-properties.sgml">
 <!ENTITY data-flags SYSTEM "flags.sgml">
+<!ENTITY data-fundgroup SYSTEM "fundgroup.sgml">
+<!ENTITY data-group SYSTEM "group.sgml">
+<!ENTITY data-H1 SYSTEM "H1.sgml">
+<!ENTITY data-H1Bdry SYSTEM "H1Bdry.sgml">
+<!ENTITY data-H1Rel SYSTEM "H1Rel.sgml">
+<!ENTITY data-H2 SYSTEM "H2.sgml">
 <!ENTITY data-line SYSTEM "line.sgml">
 <!ENTITY data-op SYSTEM "op.sgml">
 <!ENTITY data-orbl-filter SYSTEM "orbl-filter.sgml">
@@ -29,6 +36,7 @@
 <!ENTITY data-realbdry-filter SYSTEM "realbdry-filter.sgml">
 <!ENTITY data-realbdry-surface SYSTEM "realbdry-surface.sgml">
 <!ENTITY data-reginadata SYSTEM "reginadata.sgml">
+<!ENTITY data-reln SYSTEM "reln.sgml">
 <!ENTITY data-struct SYSTEM "struct.sgml">
 <!ENTITY data-surface SYSTEM "surface.sgml">
 <!ENTITY data-tag SYSTEM "tag.sgml">
@@ -36,6 +44,8 @@
 <!ENTITY data-twosided SYSTEM "twosided.sgml">
 <!ENTITY data-var SYSTEM "var.sgml">
 
+<!ENTITY xml-abeliangroup
+ '<link linkend="data-abeliangroup"><sgmltag>abeliangroup</sgmltag></link>'>
 <!ENTITY xml-allowstrict
  '<link linkend="data-allowstrict"><sgmltag>allowstrict</sgmltag></link>'>
 <!ENTITY xml-allowtaut
@@ -60,6 +70,18 @@
  '<link linkend="data-filter-properties"><sgmltag>filter</sgmltag> (properties)</link>'>
 <!ENTITY xml-flags
  '<link linkend="data-flags"><sgmltag>flags</sgmltag></link>'>
+<!ENTITY xml-fundgroup
+ '<link linkend="data-fundgroup"><sgmltag>fundgroup</sgmltag></link>'>
+<!ENTITY xml-group
+ '<link linkend="data-group"><sgmltag>group</sgmltag></link>'>
+<!ENTITY xml-H1
+ '<link linkend="data-H1"><sgmltag>H1</sgmltag></link>'>
+<!ENTITY xml-H1Bdry
+ '<link linkend="data-H1Bdry"><sgmltag>H1Bdry</sgmltag></link>'>
+<!ENTITY xml-H1Rel
+ '<link linkend="data-H1Rel"><sgmltag>H1Rel</sgmltag></link>'>
+<!ENTITY xml-H2
+ '<link linkend="data-H2"><sgmltag>H2</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
 <!ENTITY xml-op
@@ -92,6 +114,8 @@
  '<link linkend="data-realbdry-surface"><sgmltag>realbdry</sgmltag> (surface)</link>'>
 <!ENTITY xml-reginadata
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
+<!ENTITY xml-reln
+ '<link linkend="data-reln"><sgmltag>reln</sgmltag></link>'>
 <!ENTITY xml-struct
  '<link linkend="data-struct"><sgmltag>struct</sgmltag></link>'>
 <!ENTITY xml-surface

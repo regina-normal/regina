@@ -18,6 +18,7 @@
   </para>
  </partintro>
 
+ &data-abeliangroup;
  &data-allowstrict;
  &data-allowtaut;
  &data-cancrush;
@@ -30,6 +31,12 @@
  &data-filter-combination;
  &data-filter-properties;
  &data-flags;
+ &data-fundgroup;
+ &data-group;
+ &data-H1;
+ &data-H1Bdry;
+ &data-H1Rel;
+ &data-H2;
  &data-line;
  &data-op;
  &data-orbl-filter;
@@ -45,6 +52,7 @@
  &data-realbdry-filter;
  &data-realbdry-surface;
  &data-reginadata;
+ &data-reln;
  &data-struct;
  &data-surface;
  &data-tag;
