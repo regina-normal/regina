@@ -1,0 +1,158 @@
+<index id="taskindex">
+ <title>Index</title>
+
+ <indexentry id="idx-0-efficiency">
+  <primaryie>0-efficiency</primaryie>
+  <secondaryie><link linkend="tri-make0eff">making a triangulaton
+   0-efficient</link></secondaryie>
+  <secondaryie><link linkend="tri-surfaceproperties">testing for
+   0-efficiency</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-subdivision">barycentric subdivision</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="services">bug reporting</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>census</primaryie>
+  <secondaryie><link linkend="man-sigcensus">creating a census of splitting
+   surface signatures</link></secondaryie>
+  <secondaryie><link linkend="tri-census-creation">creating a census of
+   triangulations (GUI)</link></secondaryie>
+  <secondaryie><link linkend="man-tricensus">creating a census of
+   triangulations (command-line)</link></secondaryie>
+  <secondaryie><link linkend="man-tricensus-manager">distributing census
+   creation across several machines</link></secondaryie>
+  <secondaryie><link linkend="tri-censuslookup">searching for a
+   triangulation in the available censuses</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="man-regconcat">combining data
+   files</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>command-line tools</primaryie>
+  <secondaryie><link linkend="man-regina-python">scripting
+   interface</link></secondaryie>
+  <secondaryie><link linkend="utils">specialised utilities</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="man-regconvert">conversion between file
+   formats</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>data files</primaryie>
+  <seeie>(see files)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="man-regfiledump">dumping contents of a
+   file</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>examples</primaryie>
+  <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
+ </indexentry>
+
+ <indexentry id="idx-files">
+  <primaryie>files</primaryie>
+  <secondaryie><link linkend="man-regconcat">combining data
+   files</link></secondaryie>
+  <secondaryie><link linkend="man-regconvert">conversion between file
+   formats</link></secondaryie>
+  <secondaryie><link linkend="man-regfiledump">dumping contents of a
+   file</link></secondaryie>
+  <secondaryie><link linkend="man-regfiletype">identifying file
+   types</link></secondaryie>
+  <secondaryie><link linkend="dataformat">specification of file
+   format</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="troubleshooting">frequently asked
+   questions</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="man-regfiletype">identifying file
+   types</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>interface</primaryie>
+  <seeie>(see user interface)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="licenses">licence details</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="services">mailing lists</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>&python; scripting</primaryie>
+  <seeie>(see scripting)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="troubleshooting">questions, frequently
+   asked</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="services">reporting bugs</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>samples</primaryie>
+  <seeie>(see examples)</seeie>
+ </indexentry>
+
+ <indexentry id="idx-scripting">
+  <primaryie>scripting</primaryie>
+  <secondaryie><link linkend="man-regina-python">command-line scripting
+   interface</link></secondaryie>
+  <secondaryie><link linkend="sessions">examples</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>signatures, splitting surface</primaryie>
+  <seeie>(see splitting surfaces)</seeie>
+ </indexentry>
+
+ <indexentry id="idx-splitting-surfaces">
+  <primaryie>splitting surfaces</primaryie>
+  <secondaryie><link linkend="man-sigcensus">census of splitting
+   surface signatures</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="troubleshooting">troubleshooting</link></primaryie>
+ </indexentry>
+
+ <indexentry id="idx-user-interface">
+  <primaryie>user interface</primaryie>
+  <secondaryie><link linkend="man-regina-python">command-line scripting
+   interface</link></secondaryie>
+  <secondaryie><link linkend="man-regina-kde">graphical user
+   interface</link></secondaryie>
+  <secondaryie><link linkend="utils">specialised command-line
+   utilities</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>zero-efficiency</primaryie>
+  <seeie>(see 0-effiency)</seeie>
+ </indexentry>
+</index>

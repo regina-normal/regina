@@ -79,6 +79,7 @@
   <!ENTITY reginaman SYSTEM "reginaman.docbook">
   <!ENTITY reginautils SYSTEM "utils.docbook">
   <!ENTITY bibliography SYSTEM "bibliography.docbook">
+  <!ENTITY taskindex SYSTEM "taskindex.docbook">
   <!ENTITY sessiontriangulation SYSTEM "triangulation.session">
   <!ENTITY sessiontree SYSTEM "tree.session">
 
@@ -147,6 +148,7 @@
  </appendix>
 
  <!-- Final Material -->
+ &taskindex;
  &bibliography;
  &documentation.index;
 </book>

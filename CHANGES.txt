@@ -9,7 +9,8 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.1  [ 29 February, 2004 ]
     OVERALL:
-        - Further enhancements to the reference manual.
+        - Further enhancements to the reference manual, including more
+          detailed explanations in the main body as well as a new index.
     ENGINE:
         Class NNormalSurface:
             - New routine doubleSurface().
