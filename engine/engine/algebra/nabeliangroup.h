@@ -35,7 +35,7 @@
 #define __NABELIANGROUP_H
 #endif
 
-#include "utilities/ndoublelist.h"
+#include <set>
 #include "utilities/nmpi.h"
 #include "shareableobject.h"
 
@@ -61,7 +61,7 @@ class NAbelianGroup : public ShareableObject {
     protected:
         unsigned rank;
             /**< The rank of the group (the number of Z components). */
-        NDoubleList<NLargeInteger> invariantFactors;
+        std::multiset<NLargeInteger> invariantFactors;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
              *   described in the NAbelianGroup notes. */
     
@@ -151,7 +151,7 @@ class NAbelianGroup : public ShareableObject {
          * @param torsion a list containing the torsion elements to add,
          * as described above.
          */
-        void addTorsionElements(const NDoubleList<NLargeInteger>& torsion);
+        void addTorsionElements(const std::multiset<NLargeInteger>& torsion);
         /**
          * Adds the abelian group defined by the given presentation to this
          * group.
@@ -299,6 +299,10 @@ class NAbelianGroup : public ShareableObject {
 inline NAbelianGroup::NAbelianGroup() : rank(0) {
 }
 
+inline NAbelianGroup::NAbelianGroup(const NAbelianGroup& g) : rank(g.rank),
+        invariantFactors(g.invariantFactors) {
+}
+
 inline NAbelianGroup::~NAbelianGroup() {
 }
 
@@ -321,11 +325,6 @@ inline unsigned NAbelianGroup::getTorsionRank(unsigned long degree) const {
 
 inline unsigned long NAbelianGroup::getNumberOfInvariantFactors() const {
     return invariantFactors.size();
-}
-
-inline const NLargeInteger& NAbelianGroup::getInvariantFactor(
-        unsigned long index) const {
-    return invariantFactors[index];
 }
 
 #endif

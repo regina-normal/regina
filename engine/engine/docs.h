@@ -238,7 +238,8 @@
  *  <tt>normal.engine.utilities.NLargeInteger</tt> which provides
  *  improved interaction with Jython scripting.
  *
- *  If a C++ routine takes an NDoubleList argument, the corresponding
+ *  If a C++ routine takes a container class as an argument (such as
+ *  <tt>std::list</tt> or <tt>std::multiset</tt>), the corresponding
  *  Java routine should take a <tt>java.util.Enumeration</tt> of objects
  *  of the appropriate class.
  *

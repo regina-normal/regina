@@ -66,14 +66,14 @@ JNIEXPORT void JNICALL
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addTorsionElements
         (JNIEnv* env, jobject me, jobject torsion) {
-    NDoubleList<NLargeInteger> list;
+    std::multiset<NLargeInteger> list;
     jclass c = env->GetObjectClass(torsion);
     jmethodID hasMoreElements = env->GetMethodID(c, "hasMoreElements",
         "()Z");
     jmethodID nextElement = env->GetMethodID(c, "nextElement",
         "()Ljava/lang/Object;");
     while (env->CallBooleanMethod(torsion, hasMoreElements)) {
-        list.addLast(jBigIntegerToLarge(env,
+        list.insert(jBigIntegerToLarge(env,
             env->CallObjectMethod(torsion, nextElement)));
     }
     GET_ENGINE_OBJECT(env, NAbelianGroup, me)->addTorsionElements(list);

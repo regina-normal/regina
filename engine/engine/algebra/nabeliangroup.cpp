@@ -32,12 +32,11 @@
 #include "maths/matrixops.h"
 #include "file/nfile.h"
 
-NAbelianGroup::NAbelianGroup(const NAbelianGroup& g) : rank(g.rank) {
-    NDoubleListIterator<NLargeInteger> it(g.invariantFactors);
-    while (!it.done()) {
-        invariantFactors.addLast(*it);
-        it++;
-    }
+const NLargeInteger& NAbelianGroup::getInvariantFactor(
+        unsigned long index) const {
+    std::multiset<NLargeInteger>::const_iterator it = invariantFactors.begin();
+    advance(it, index);
+    return *it;
 }
 
 void NAbelianGroup::addTorsionElement(const NLargeInteger& degree,
@@ -46,7 +45,7 @@ void NAbelianGroup::addTorsionElement(const NLargeInteger& degree,
     // ones.
     if (invariantFactors.size() == 0) {
         for (unsigned j=0; j<mult; j++)
-            invariantFactors.addLast(degree);
+            invariantFactors.insert(invariantFactors.begin(), degree);
         return;
     }
 
@@ -56,11 +55,10 @@ void NAbelianGroup::addTorsionElement(const NLargeInteger& degree,
 
     // Put our own invariant factors in the top.
     unsigned i=0;
-    NDoubleListIterator<NLargeInteger> it(invariantFactors);
-    while (! it.done()) {
+    std::multiset<NLargeInteger>::const_iterator it;
+    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
         a.entry(i,i) = *it;
         i++;
-        it++;
     }
 
     // Put the passed torsion elements beneath.
@@ -74,7 +72,7 @@ void NAbelianGroup::addTorsionElement(const NLargeInteger& degree,
     replaceTorsion(a);
 }
 
-void NAbelianGroup::addTorsionElements(const NDoubleList<NLargeInteger>&
+void NAbelianGroup::addTorsionElements(const std::multiset<NLargeInteger>&
         torsion) {
     // Build a presentation matrix for the torsion.
     unsigned len = invariantFactors.size() + torsion.size();
@@ -82,19 +80,16 @@ void NAbelianGroup::addTorsionElements(const NDoubleList<NLargeInteger>&
 
     // Put our own invariant factors in the top.
     unsigned i=0;
-    NDoubleListIterator<NLargeInteger> it(invariantFactors);
-    while (! it.done()) {
+    std::multiset<NLargeInteger>::const_iterator it;
+    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
         a.entry(i,i) = *it;
         i++;
-        it++;
     }
 
     // Put the passed torsion elements beneath.
-    it.init(torsion);
-    while (! it.done()) {
+    for (it = torsion.begin(); it != torsion.end(); it++) {
         a.entry(i,i) = *it;
         i++;
-        it++;
     }
 
     // Go calculate!
@@ -116,11 +111,10 @@ void NAbelianGroup::addGroup(const NMatrixInt& presentation) {
     
     // Fill in the invariant factors in the top.
     i = 0;
-    NDoubleListIterator<NLargeInteger> it(invariantFactors);
-    while (! it.done()) {
-        a.entry(i, i) = *it;
+    std::multiset<NLargeInteger>::const_iterator it;
+    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
+        a.entry(i,i) = *it;
         i++;
-        it++;
     }
 
     // Go calculate!
@@ -134,11 +128,7 @@ void NAbelianGroup::addGroup(const NAbelianGroup& group) {
     // Work out the torsion elements.
     if (invariantFactors.size() == 0) {
         // Copy the other group's factors!
-        NDoubleListIterator<NLargeInteger> it(group.invariantFactors);
-        while (! it.done()) {
-            invariantFactors.addLast(*it);
-            it++;
-        }
+        invariantFactors = group.invariantFactors;
         return;
     }
     if (group.invariantFactors.size() == 0)
@@ -150,19 +140,17 @@ void NAbelianGroup::addGroup(const NAbelianGroup& group) {
 
     // Put our own invariant factors in the top.
     unsigned i = 0;
-    NDoubleListIterator<NLargeInteger> it(invariantFactors);
-    while (! it.done()) {
+    std::multiset<NLargeInteger>::const_iterator it;
+    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
         a.entry(i,i) = *it;
         i++;
-        it++;
     }
 
     // Put the other group's invariant factors beneath.
-    it.init(group.invariantFactors);
-    while (! it.done()) {
+    for (it = group.invariantFactors.begin();
+            it != group.invariantFactors.end(); it++) {
         a.entry(i,i) = *it;
         i++;
-        it++;
     }
 
     // Go calculate!
@@ -171,18 +159,15 @@ void NAbelianGroup::addGroup(const NAbelianGroup& group) {
 }
 
 unsigned NAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
-    NDoubleListIterator<NLargeInteger> it;
-    it.initEnd(invariantFactors);
+    std::multiset<NLargeInteger>::const_reverse_iterator it;
     unsigned ans = 0;
     // Because we have SNF, we can bail as soon as we reach a factor
     // that is not divisible by degree.
-    while (! it.done()) {
+    for (it = invariantFactors.rbegin(); it != invariantFactors.rend(); it++)
         if (((*it) % degree) == 0)
             ans++;
         else
             return ans;
-        it--;
-    }
     return ans;
 }
 
@@ -196,11 +181,12 @@ void NAbelianGroup::writeTextShort(ostream& out) const {
         writtenSomething = true;
     }
 
-    NDoubleListIterator<NLargeInteger> it(invariantFactors);
+    std::multiset<NLargeInteger>::const_iterator it =
+        invariantFactors.begin();
     NLargeInteger currDegree;
     unsigned currMult = 0;
     while(true) {
-        if (! it.done()) {
+        if (it != invariantFactors.end()) {
             if ((*it) == currDegree) {
                 currMult++;
                 it++;
@@ -215,7 +201,7 @@ void NAbelianGroup::writeTextShort(ostream& out) const {
             out << "Z_" << currDegree.stringValue();
             writtenSomething = true;
         }
-        if (it.done())
+        if (it == invariantFactors.end())
             break;
         currDegree = *it;
         currMult = 1;
@@ -228,7 +214,7 @@ void NAbelianGroup::writeTextShort(ostream& out) const {
 
 void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
     // Delete any preexisting torsion.
-    invariantFactors.flush();
+    invariantFactors.clear();
 
     // Run up the diagonal until we hit 1.
     // Hopefully this will be faster than running down the diagonal
@@ -247,7 +233,8 @@ void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
         else if (matrix.entry(i-1, i-1) == 1)
             return;
         else
-            invariantFactors.addFirst(matrix.entry(i-1, i-1));
+            invariantFactors.insert(invariantFactors.begin(),
+                matrix.entry(i-1, i-1));
         i--;
     }
 }
@@ -255,11 +242,9 @@ void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
 void NAbelianGroup::writeToFile(NFile& out) const {
     out.writeUInt(rank);
     out.writeULong(invariantFactors.size());
-    NDoubleListIterator<NLargeInteger> it(invariantFactors);
-    while (! it.done()) {
+    for (std::multiset<NLargeInteger>::const_iterator it =
+            invariantFactors.begin(); it != invariantFactors.end(); it++)
         out.writeLarge(*it);
-        it++;
-    }
 }
 
 NAbelianGroup* NAbelianGroup::readFromFile(NFile& in) {
@@ -267,7 +252,8 @@ NAbelianGroup* NAbelianGroup::readFromFile(NFile& in) {
     ans->rank = in.readUInt();
     unsigned long nFactors = in.readULong();
     for (unsigned long i=0; i<nFactors; i++)
-        ans->invariantFactors.addLast(in.readLarge());
+        ans->invariantFactors.insert(ans->invariantFactors.end(),
+            in.readLarge());
     return ans;
 }
 
