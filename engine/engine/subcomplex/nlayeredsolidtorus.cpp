@@ -241,6 +241,70 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
     return ans;
 }
 
+NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
+    // Start with some basic property checks.
+    if (! comp->isOrientable())
+        return 0;
+    if (comp->getNumberOfBoundaryComponents() != 1)
+        return 0;
+    if (comp->getBoundaryComponent(0)->getNumberOfFaces() != 2)
+        return 0;
+
+    NFaceEmbedding f0 = comp->getBoundaryComponent(0)->getFace(0)->
+        getEmbedding(0);
+    NFaceEmbedding f1 = comp->getBoundaryComponent(0)->getFace(1)->
+        getEmbedding(0);
+
+    NTetrahedron* top = f0.getTetrahedron();
+    if (f1.getTetrahedron() != top)
+        return 0;
+
+    // We have precisely one boundary component, which consists of two
+    // faces belonging to the same tetrahedron.
+
+    // Follow the adjacent tetrahedra down to what should be the base
+    // tetrahedron.  Don't worry about gluing permutations for now.
+
+    // Run a full search.
+
+    // We use formsLayeredSolidTorusBase(), which works out the full structure
+    // for us.  It would be faster to just follow straight down from
+    // the top level tetrahedron (which we already know), but this would
+    // also require us to code up the entire structure again.
+
+    NFacePair underFaces = NFacePair(f0.getFace(), f1.getFace()).complement();
+    NTetrahedron* currTet = top;
+    NTetrahedron* nextTet;
+    while (1) {
+        // INV: Thus far we have seen a chain of tetrahedra, with each
+        // tetrahedron glued to the next along two faces.
+
+        // See where the next two faces lead.
+        // Note that they cannot lead back to a previous tetrahedron,
+        // since each previous tetrahedron already has all four faces
+        // accounted for (thus showing this loop will terminate).
+        // They also cannot be boundary faces, since there are only two
+        // boundary faces and these have already been seen.
+        nextTet = currTet->getAdjacentTetrahedron(underFaces.lower());
+        if (nextTet != currTet->getAdjacentTetrahedron(underFaces.upper()))
+            return 0;
+
+        // They both lead to the same adjacent tetrahedron.
+        // Have we reached the end?
+        if (nextTet == currTet)
+            break;
+
+        // No; we have simply moved on to the next tetrahedron.
+        underFaces = NFacePair(currTet->getAdjacentFace(underFaces.lower()),
+            currTet->getAdjacentFace(underFaces.upper())).complement();
+        currTet = nextTet;
+    }
+
+    // Here we are at the bottom.  Now check the individual permutations
+    // and fill in the structural details.
+    return formsLayeredSolidTorusBase(currTet);
+}
+
 void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     int pos;
     NPerm adjPerm;

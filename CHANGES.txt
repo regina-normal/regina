@@ -20,6 +20,9 @@ Version 4.2  [ under development ]
               sample triangulations.
         Class NFacePairing:
             - New routine hasWedgedDoubleEndedChain.
+        Class NLayeredSolidTorus:
+            - New routine isLayeredSolidTorus for classifying an entire
+              triangulation component.
         Class NSnapPeaCensusManifold, NSnapPeaCensusTri:
             - Added to aid recognition of very small SnapPea census
               triangulations.

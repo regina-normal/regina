@@ -287,6 +287,23 @@ class NLayeredSolidTorus : public NStandardTriangulation {
         static NLayeredSolidTorus* formsLayeredSolidTorusBase(
             NTetrahedron* tet);
 
+        /**
+         * Determines if the given triangulation component forms a
+         * layered solid torus in its entirity.
+         *
+         * Note that, unlike formsLayeredSolidTorusBase(), this routine
+         * tests for a component that is a layered solid torus with no
+         * additional tetrahedra or gluings.  That is, the two boundary
+         * faces of the layered solid torus must in fact be boundary
+         * faces of the component.
+         *
+         * @param comp the triangulation component to examine.
+         * @return a newly created structure containing details of the
+         * layered solid torus, or \c null if the given component is not
+         * a layered solid torus.
+         */
+        static NLayeredSolidTorus* isLayeredSolidTorus(NComponent* comp);
+
         NManifold* getManifold() const;
         NAbelianGroup* getHomologyH1() const;
         std::ostream& writeName(std::ostream& out) const;
