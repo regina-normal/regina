@@ -1,7 +1,11 @@
-Regina Sample File Directory
-----------------------------
+Regina Census and Sample File Directory
+---------------------------------------
 
-This directory contains a number of sample files that illustrate how
+This directory contains a number of censuses of triangulations of
+different types.  Each census data file includes a text packet
+containing a full description of the census including its origin.
+
+Also within this directory is a number of sample files that illustrate how
 Regina can be used.
 
 *.rga:
