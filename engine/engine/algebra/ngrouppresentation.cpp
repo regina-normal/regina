@@ -221,9 +221,10 @@ void NGroupExpression::writeTextShort(ostream& out) const {
     if (terms.empty())
         out << '1';
     else {
-        copy(terms.begin(), --terms.end(),
+        TermIteratorConst last = --terms.end();
+        copy(terms.begin(), last,
             ostream_iterator<NGroupExpressionTerm>(out, " "));
-        out << *(--terms.end());
+        out << *last;
     }
 }
 
