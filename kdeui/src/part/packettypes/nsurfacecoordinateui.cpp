@@ -162,6 +162,7 @@ void NSurfaceCoordinateUI::refreshLocal() {
     table->setAllColumnsShowFocus(true);
     table->setSorting(-1);
     table->setSelectionMode(QListView::Single);
+    table->setDefaultRenameAction(QListView::Accept);
     uiLayout->addWidget(table.get(), 1);
 
     // Add table columns.
