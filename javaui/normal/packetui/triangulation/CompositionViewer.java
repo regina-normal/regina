@@ -180,6 +180,44 @@ public class CompositionViewer extends DefaultPacketViewer
             }
         }
 
+        // Look for augmented triangular solid tori.
+        category = null;
+        NAugTriSolidTorus aug;
+        NTriSolidTorus tri;
+        NSFS sfs;
+        NLensSpace lensSpace;
+        n = triangulation.getNumberOfComponents();
+        for (i = 0; i < n; i++) {
+            aug = engine.isAugTriSolidTorus(triangulation.getComponent(i));
+            if (aug != null) {
+                if (category == null) {
+                    category = new DefaultMutableTreeNode(
+                        "Augmented Triangular Solid Tori");
+                    rootNode.add(category);
+                }
+                sfs = aug.getSeifertStructure();
+                instance = new DefaultMutableTreeNode(sfs.toString());
+                category.add(instance);
+                lensSpace = sfs.isLensSpace();
+                if (lensSpace != null) {
+                    instance.add(new DefaultMutableTreeNode("Reduces to " +
+                        lensSpace.toString()));
+                    lensSpace.destroy();
+                }
+                instance.add(new DefaultMutableTreeNode("Component " +
+                    String.valueOf(i)));
+                tri = aug.getCore();
+                instance.add(new DefaultMutableTreeNode("Core: tets " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    tri.getTetrahedron(0))) + ", " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    tri.getTetrahedron(1))) + ", " +
+                    String.valueOf(triangulation.getTetrahedronIndex(
+                    tri.getTetrahedron(2)))));
+                aug.destroy();
+            }
+        }
+
         // Look for layered solid tori.
         category = null;
         n = triangulation.getNumberOfTetrahedra();
