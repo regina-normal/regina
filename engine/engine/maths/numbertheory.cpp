@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <functional>
 #include "maths/numbertheory.h"
+#include "utilities/stlutils.h"
 
 long reducedMod(long k, long modBase) {
     long ans = k % modBase;
@@ -50,52 +51,54 @@ unsigned long gcd(unsigned long a, unsigned long b) {
     return a;
 }
 
-long gcdWithCoeffsInternal(long a, long b, long& u, long& v) {
-    // This routine assumes a and b to be non-negative.
-    long a_orig = a;
-    long b_orig = b;
-    u = 1;
-    v = 0;
-    long uu = 0;
-    long vv = 1;
-    long tmp1, tmp2, q;
-    while (a != b && b != 0) {
-        // At each stage:
-        // u*(a_orig) + v*(b_orig) = a_curr;
-        // uu*(a_orig) + vv*(b_orig) = b_curr.
-        tmp1 = u; tmp2 = v;
-        u = uu; v = vv;
-        q = a / b;
-        uu = tmp1 - (q * uu); vv = tmp2 - (q * vv);
+namespace {
+    long gcdWithCoeffsInternal(long a, long b, long& u, long& v) {
+        // This routine assumes a and b to be non-negative.
+        long a_orig = a;
+        long b_orig = b;
+        u = 1;
+        v = 0;
+        long uu = 0;
+        long vv = 1;
+        long tmp1, tmp2, q;
+        while (a != b && b != 0) {
+            // At each stage:
+            // u*(a_orig) + v*(b_orig) = a_curr;
+            // uu*(a_orig) + vv*(b_orig) = b_curr.
+            tmp1 = u; tmp2 = v;
+            u = uu; v = vv;
+            q = a / b;
+            uu = tmp1 - (q * uu); vv = tmp2 - (q * vv);
 
-        tmp1 = a;
-        a = b;
-        b = tmp1 % b;
-    }
+            tmp1 = a;
+            a = b;
+            b = tmp1 % b;
+        }
 
-    // a is now our gcd.
+        // a is now our gcd.
 
-    // Put u and v in the correct range.
-    if (b_orig == 0)
+        // Put u and v in the correct range.
+        if (b_orig == 0)
+            return a;
+
+        // We are allowed to add (b_orig/d, -a_orig/d) to (u,v).
+        a_orig = -(a_orig / a);
+        b_orig = b_orig / a;
+
+        // Now we are allowed to add (b_orig, a_orig), where b_orig >= 0.
+        // Add enough copies to put u between 1 and b_orig inclusive.
+        long k;
+        if (u > 0)
+            k = -((u-1) % b_orig);
+        else
+            k = (b_orig-u) % b_orig;
+        if (k) {
+            u += k * b_orig;
+            v += k * a_orig;
+        }
+
         return a;
-
-    // We are allowed to add (b_orig/d, -a_orig/d) to (u,v).
-    a_orig = -(a_orig / a);
-    b_orig = b_orig / a;
-
-    // Now we are allowed to add (b_orig, a_orig), where b_orig >= 0.
-    // Add enough copies to put u between 1 and b_orig inclusive.
-    long k;
-    if (u > 0)
-        k = -((u-1) % b_orig);
-    else
-        k = (b_orig-u) % b_orig;
-    if (k) {
-        u += k * b_orig;
-        v += k * a_orig;
     }
-
-    return a;
 }
 
 long gcdWithCoeffs(long a, long b, long& u, long& v) {
@@ -120,28 +123,30 @@ unsigned long modularInverse(unsigned long n, unsigned long k) {
     return v + n;
 }
 
-/**
- * Finds the smallest prime factor of the given odd integer.
- * You may specify a known lower bound for this smallest prime factor.
- * If the given integer is prime, 0 is returned.
- *
- * \pre \a n is odd.
- * \pre The smallest prime factor of \a n is known to
- * be at least as large as (and possibly equal to) \a lowerBound.
- * \pre \a lowerBound is odd.
- * 
- * @param n the integer whose smallest prime factor we wish to find.
- * @param lowerBound a known lower bound for this smallest prime factor.
- * @return the smallest prime factor of \a n, or 0 if \a n is prime.
- */
-unsigned long smallestPrimeFactor(unsigned long n,
-        unsigned long lowerBound = 1) {
-    while (lowerBound * lowerBound <= n) {
-        if (n % lowerBound == 0)
-            return lowerBound;
-        lowerBound += 2;
+namespace {
+    /**
+     * Finds the smallest prime factor of the given odd integer.
+     * You may specify a known lower bound for this smallest prime factor.
+     * If the given integer is prime, 0 is returned.
+     *
+     * \pre \a n is odd.
+     * \pre The smallest prime factor of \a n is known to
+     * be at least as large as (and possibly equal to) \a lowerBound.
+     * \pre \a lowerBound is odd.
+     * 
+     * @param n the integer whose smallest prime factor we wish to find.
+     * @param lowerBound a known lower bound for this smallest prime factor.
+     * @return the smallest prime factor of \a n, or 0 if \a n is prime.
+     */
+    unsigned long smallestPrimeFactor(unsigned long n,
+            unsigned long lowerBound = 1) {
+        while (lowerBound * lowerBound <= n) {
+            if (n % lowerBound == 0)
+                return lowerBound;
+            lowerBound += 2;
+        }
+        return 0;
     }
-    return 0;
 }
 
 void factorise(unsigned long n, std::list<unsigned long>& factors) {
@@ -173,7 +178,7 @@ void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes) {
     NLargeInteger current(3);
     while (current <= roof) {
         // Is current prime?
-        if (find_if(primes.begin(), primes.end(), compose1(
+        if (find_if(primes.begin(), primes.end(), regina::stl::compose1(
                 bind2nd(std::equal_to<NLargeInteger>(), NLargeInteger::zero),
                 bind1st(std::modulus<NLargeInteger>(), current))) ==
                 primes.end())

@@ -28,14 +28,16 @@
 
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
+#include "utilities/stlutils.h"
 
-// The indices of the new tetrahedra
-static int tetIndex[4][4][4] = {
-    { {-1,-1,-1,-1}, {-1,-1,0,1}, {-1,2,-1,3}, {-1,4,5,-1} },
-    { {-1,-1,6,7}, {-1,-1,-1,-1}, {8,-1,-1,9}, {10,-1,11,-1} },
-    { {-1,12,-1,13}, {14,-1,-1,15}, {-1,-1,-1,-1}, {16,17,-1,-1} },
-    { {-1,18,19,-1}, {20,-1,21,-1}, {22,23,-1,-1}, {-1,-1,-1,-1} } };
-
+namespace {
+    // The indices of the new tetrahedra
+    int tetIndex[4][4][4] = {
+        { {-1,-1,-1,-1}, {-1,-1,0,1}, {-1,2,-1,3}, {-1,4,5,-1} },
+        { {-1,-1,6,7}, {-1,-1,-1,-1}, {8,-1,-1,9}, {10,-1,11,-1} },
+        { {-1,12,-1,13}, {14,-1,-1,15}, {-1,-1,-1,-1}, {16,17,-1,-1} },
+        { {-1,18,19,-1}, {20,-1,21,-1}, {22,23,-1,-1}, {-1,-1,-1,-1} } };
+}
 
 void NTriangulation::barycentricSubdivision() {
     // Written by Dave Letscher  11/2/00
@@ -219,7 +221,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
     for_each(tetList.begin(), tetList.end(),
-        compose1(FuncDelete<NTetrahedron>(),
+        regina::stl::compose1(FuncDelete<NTetrahedron>(),
         std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this)));
 
     gluingsHaveChanged();

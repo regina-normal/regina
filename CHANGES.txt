@@ -19,8 +19,9 @@ Version 2.5  [ (under development) ]
             - Replaced configuration macros __NO_IOS_NOCREATE and
               __NO_RAW_CASTING with their negations __USE_IOS_NOCREATE and
               __USE_RAW_CASTING which are optional in all situations.
-            - Added configuration macro __HASH_NAMESPACE.
-        Classes NBoolVector, NDoubleList, NDynamicArray, NHashSet,
+            - Added configuration macros __HASH_NAMESPACE and
+              __NO_NAMESPACE_ALIASES.
+        Class NBoolVector, NDoubleList, NDynamicArray, NHashSet,
                 NInfiniteArray, NIntMap, NOrderedPair, NPointerSet,
                 NQueue, NSet, NStack, NString, NStringPair and associates:
             - All removed in favour of Standard Template Library classes.
@@ -53,6 +54,8 @@ Version 2.5  [ (under development) ]
             - Added insertSplittingSurface().
             - Uses NIndexedArrays for skeletal elements for fast index lookup.
         Class reference_wrapper, remove_pointer:
+            - Added for use with Standard Template Library.
+        Class select1st, select2nd, unary_compose:
             - Added for use with Standard Template Library.
     JAVA USER INTERFACE:
         Overall structure:

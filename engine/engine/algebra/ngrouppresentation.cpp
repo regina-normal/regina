@@ -26,12 +26,14 @@
 
 /* end stub */
 
+#include <iterator>
 #include <sstream>
 #include <hash_map>
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
 #include "utilities/hashutils.h"
+#include "utilities/stlutils.h"
 
 typedef std::list<NGroupExpressionTerm>::iterator TermIterator;
 typedef std::list<NGroupExpressionTerm>::const_iterator TermIteratorConst;
@@ -285,9 +287,9 @@ bool NGroupPresentation::intelligentSimplify() {
                     (*expIt).second += (*tit).exponent;
             }
             // Did any generator appear precisely once?
-            expIt = find_if(exponents.begin(), exponents.end(), compose1(
-                bind2nd(std::equal_to<long>(), 1),
-                std::select2nd<std::pair<unsigned long, long> >()));
+            expIt = find_if(exponents.begin(), exponents.end(),
+                regina::stl::compose1(bind2nd(std::equal_to<long>(), 1),
+                regina::stl::select2nd<std::pair<unsigned long, long> >()));
             if (expIt == exponents.end()) {
                 // Can't use this relation.  Move on.
                 exponents.clear();
