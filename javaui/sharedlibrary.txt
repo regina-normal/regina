@@ -1,0 +1,14 @@
+
+When using JNI, if Java can't find the calculation engine library you may
+need to specify the library path on the java command line.
+
+eg: java -Djava.library.path=../bin normal.Application
+
+All necessary classes can be found in:
+    regina.jar (required: main GUI)
+    regina-jni.jar, regina-corba.jar (requires at least one: link to
+        calculation engine)
+    btools.jar (required: miscellaneous utilities)
+    jpython.jar (optional: allows JPython scripting)
+    jh.jar (optional: JavaHelp internal help browser)
+
