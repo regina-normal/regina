@@ -98,8 +98,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
 
     // Note that our surfaces are guaranteed to be in smallest possible
     // integer coordinates.
-    // We are also guaranteed at most one non-zero octahedral
-    // coordinate.
+    // We are also guaranteed at most one non-zero octahedral coordinate.
 
     // Note that in this search a 1-sided projective plane is no good,
     // since when doubled it gives too many octahedral discs.

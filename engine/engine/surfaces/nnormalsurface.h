@@ -1069,45 +1069,55 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
 
         /**
          * Searches for a non-vertex-linking normal 2-sphere within the
-         * given triangulation.
+         * given triangulation.  If a non-vertex linking normal 2-sphere
+         * exists anywhere at all within the triangulation, then this routine
+         * is guaranteed to find one.
          *
          * Note that the surface returned (if any) depends upon the
-         * given triangulation, and so this surface must be destroyed
-         * before the triangulation itself.
+         * triangulation, and so must be destroyed before the triangulation
+         * itself.
          *
          * \warning Currently this routine is quite slow since it
-         * performs a complete enumeration of vertex normal surfaces.
+         * involves a full enumeration of vertex normal surfaces.
          *
          * \todo \opturgent Use maximisation of Euler characteristic to
          * make this routine much faster than a plain vertex enumeration.
          *
          * @param tri the triangulation in which to search.
-         * @return a newly allocated surface representing a
-         * non-vertex-linking normal sphere in the given triangulation,
-         * or 0 if no such sphere exists.
+         * @return a newly allocated non-vertex-linking normal sphere
+         * within the given triangulation, or 0 if no such sphere exists.
          */
         static NNormalSurface* findNonTrivialSphere(NTriangulation* tri);
 
         /**
-         * Searches for a vertex octagonal almost normal 2-sphere within
-         * the given triangulation.  Note that only the vertex almost
-         * normal surfaces will be examined, which may or may not
-         * reflect whether an octagonal almost normal 2-sphere exists at
-         * all.
+         * Searches the vertex octagonal almost normal surfaces for an
+         * almost normal 2-sphere within the given triangulation.  Only
+         * the vertex octagonal almost normal surfaces will be examined,
+         * i.e., if there is a tubed almost normal 2-sphere or a
+         * non-vertex octagonal almost normal 2-sphere then it is not
+         * guaranteed to be found.
+         *
+         * In some cases however (such as with closed orientable
+         * one-vertex 0-efficient triangulations), it is known that if
+         * any almost normal 2-sphere exists then an octagonal almost
+         * normal 2-sphere exists at a vertex of the solution space
+         * (and so will be found by this routine).  It is up to the caller
+         * of this routine to decide whether results such as this are
+         * applicable to the problem at hand.
          *
          * Note that the surface returned (if any) depends upon the
-         * given triangulation, and so this surface must be destroyed
-         * before the triangulation itself.
+         * triangulation, and so must be destroyed before the triangulation
+         * itself.
          *
          * \warning Currently this routine is quite slow since it
-         * performs a complete enumeration of vertex almost normal surfaces.
+         * performs a full enumeration of vertex almost normal surfaces.
          *
          * \todo \opturgent Use maximisation of Euler characteristic to
          * make this routine much faster than a plain vertex enumeration.
          *
          * @param tri the triangulation in which to search.
-         * @return a newly allocated almost normal sphere within the
-         * given triangulation, or 0 if no such sphere exists.
+         * @return a newly allocated vertex octagonal almost normal sphere
+         * within the given triangulation, or 0 if no such sphere exists.
          */
         static NNormalSurface* findVtxOctAlmostNormalSphere(
             NTriangulation* tri);
