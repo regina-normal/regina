@@ -39,6 +39,31 @@
 #include <stdlib.h>
 
 /**
+ * An adaptable generator used to create objects using default constructors.
+ * This class is for use with the Standard Template Library.
+ *
+ * Note that the template argument need not be a pointer class.  If the
+ * template argument is <tt>T</tt>, this generator will return a
+ * \e pointer to a newly created object of type <tt>T</tt>.
+ *
+ * \ifaces Not present.
+ */
+template <class T>
+struct FuncNew {
+    typedef T* result_type;
+        /**< The return type for this generator. */
+
+    /**
+     * Creates a new object using the default constructor.
+     *
+     * @return the newly created object.
+     */
+    T* operator() () const {
+        return new T;
+    }
+};
+
+/**
  * An adaptable unary function used to deallocate objects.
  * This class is for use with the Standard Template Library.
  *
