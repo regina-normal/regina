@@ -311,14 +311,14 @@ inline bool NProgress::isCancelled() const {
 }
 
 inline std::string NProgress::getDescription() const {
-    ((NProgress*)this)->changed = false;
+    const_cast<NProgress*>(this)->changed = false;
     return internalGetDescription();
 }
 inline bool NProgress::isPercent() const {
     return false;
 }
 inline double NProgress::getPercent() const {
-    ((NProgress*)this)->changed = false;
+    const_cast<NProgress*>(this)->changed = false;
     return internalGetPercent();
 }
 

@@ -151,7 +151,8 @@ bool NFacePairing::hasTripleEdge() const {
         // Is there a triple edge coming from this tetrahedron?
         equal = 0;
         for (i = 0; i < 4; i++)
-            if ((! isUnmatched(tet, i)) && dest(tet, i).tet > (int)tet) {
+            if ((! isUnmatched(tet, i)) &&
+                    dest(tet, i).tet > static_cast<int>(tet)) {
                 // This face joins to a real face of a later tetrahedron.
                 for (j = i + 1; j < 4; j++)
                     if (dest(tet, i).tet == dest(tet, j).tet)
@@ -181,7 +182,7 @@ void NFacePairing::followChain(unsigned& tet, NFacePair& faces) const {
             return;
 
         // Do the two faces lead to a *different* tetrahedron?
-        if (dest1.tet == (int)tet)
+        if (dest1.tet == static_cast<int>(tet))
             return;
 
         // Follow the chain along.
@@ -196,7 +197,7 @@ bool NFacePairing::hasBrokenDoubleEndedChain() const {
     unsigned baseFace;
     for (baseTet = 0; baseTet < nTetrahedra - 1; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).tet == (int)baseTet) {
+            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasBrokenDoubleEndedChain(baseTet, baseFace))
                     return true;
@@ -223,7 +224,7 @@ bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
     // Here's where we must diverge and move into the second chain.
 
     // We cannot glue the working pair of faces to each other.
-    if (dest(bdryTet, bdryFaces.lower()).tet == (int)bdryTet)
+    if (dest(bdryTet, bdryFaces.lower()).tet == static_cast<int>(bdryTet))
         return false;
 
     // Try each possible direction away from the working faces into the
@@ -240,7 +241,7 @@ bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
             continue;
 
         for (ignoreFace = 0; ignoreFace < 4; ignoreFace++) {
-            if (destFace.face == (int)ignoreFace)
+            if (destFace.face == static_cast<int>(ignoreFace))
                 continue;
             // Try to follow the chain along from tetrahedron
             // destFace.tet, using the two faces that are *not*
@@ -250,7 +251,8 @@ bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
             followChain(chainTet, chainFaces);
 
             // Did we reach an end edge of the second chain?
-            if (dest(chainTet, chainFaces.lower()).tet == (int)chainTet)
+            if (dest(chainTet, chainFaces.lower()).tet ==
+                    static_cast<int>(chainTet))
                 return true;
         }
     }
@@ -265,7 +267,7 @@ bool NFacePairing::hasOneEndedChainWithDoubleHandle() const {
     unsigned baseFace;
     for (baseTet = 0; baseTet < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).tet == (int)baseTet) {
+            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasOneEndedChainWithDoubleHandle(baseTet, baseFace))
                     return true;
@@ -334,7 +336,7 @@ bool NFacePairing::findAllPairings(unsigned nTetrahedra,
 }
 
 void* NFacePairing::run(void* param) {
-    NFacePairingArgs* args = (NFacePairingArgs*)param;
+    NFacePairingArgs* args = static_cast<NFacePairingArgs*>(param);
 
     // Bail if it's obvious that nothing will happen.
     if (args->boundary == NBoolSet::sNone || nTetrahedra == 0) {
@@ -344,7 +346,7 @@ void* NFacePairing::run(void* param) {
     }
     if (args->boundary.hasTrue() && args->nBdryFaces >= 0 &&
             (args->nBdryFaces % 2 == 1 ||
-            args->nBdryFaces > 2 * (int)nTetrahedra + 2
+            args->nBdryFaces > 2 * static_cast<int>(nTetrahedra) + 2
             || (args->nBdryFaces == 0 && ! args->boundary.hasFalse()))) {
         args->use(0, 0, args->useArgs);
         delete args;
@@ -352,7 +354,7 @@ void* NFacePairing::run(void* param) {
     }
 
     // Initialise the pairings to unspecified (i.e., face -> itself).
-    for (NTetFace f(0,0); f.tet < (int)nTetrahedra; f++)
+    for (NTetFace f(0,0); f.tet < static_cast<int>(nTetrahedra); f++)
         dest(f) = f;
 
     // Note that we have at least one tetrahedron.
@@ -385,7 +387,8 @@ void* NFacePairing::run(void* param) {
         // We will now avoid tying the last two faces in a set together,
         // and later we will avoid sending the last face of a set to the
         // boundary.
-        if (usedFaces % 4 == 2 && usedFaces < 4 * (int)nTetrahedra - 2 &&
+        if (usedFaces % 4 == 2 &&
+                usedFaces < 4 * static_cast<int>(nTetrahedra) - 2 &&
                 noDest((usedFaces / 4) + 1, 0) &&
                 dest(trying).tet <= (usedFaces / 4)) {
             // Move to the first unused tetrahedron.
@@ -403,15 +406,17 @@ void* NFacePairing::run(void* param) {
                 if (! args->boundary.hasFalse()) {
                     // We must have some boundary though.
                     if (boundaryFaces == 0 &&
-                            usedFaces == 4 * (int)nTetrahedra - 2 &&
-                            dest(trying).tet < (int)nTetrahedra)
+                            usedFaces ==
+                                4 * static_cast<int>(nTetrahedra) - 2 &&
+                            dest(trying).tet <
+                                static_cast<int>(nTetrahedra))
                         dest(trying).setBoundary(nTetrahedra);
                 }
             } else {
                 // We're specific about the number of boundary faces.
                 if (usedFaces - boundaryFaces + args->nBdryFaces ==
-                        4 * (int)nTetrahedra &&
-                        dest(trying).tet < (int)nTetrahedra)
+                        4 * static_cast<int>(nTetrahedra) &&
+                        dest(trying).tet < static_cast<int>(nTetrahedra))
                     // We've used our entire quota of non-boundary faces.
                     dest(trying).setBoundary(nTetrahedra);
             }
@@ -421,14 +426,15 @@ void* NFacePairing::run(void* param) {
         // We still don't know whether this destination is valid however.
         while(true) {
             // Move onwards to the next free destination.
-            while (dest(trying).tet < (int)nTetrahedra &&
+            while (dest(trying).tet < static_cast<int>(nTetrahedra) &&
                     ! noDest(dest(trying)))
                 dest(trying)++;
 
             // If we are past face 0 of a tetrahedron and the previous face
             // was not used, we can't do anything with this tetrahedron.
             // Move to the next tetrahedron.
-            if (dest(trying).tet < (int)nTetrahedra && dest(trying).face > 0 &&
+            if (dest(trying).tet < static_cast<int>(nTetrahedra) &&
+                    dest(trying).face > 0 &&
                     noDest(dest(trying).tet, dest(trying).face - 1)) {
                 dest(trying).tet++;
                 dest(trying).face = 0;
@@ -443,14 +449,16 @@ void* NFacePairing::run(void* param) {
         // unused.  Note that face == 0 implies tet > 0.
         // In this case, we've passed the last sane choice; head
         // straight to the boundary.
-        if (dest(trying).tet < (int)nTetrahedra && dest(trying).face == 0 &&
+        if (dest(trying).tet < static_cast<int>(nTetrahedra) &&
+                dest(trying).face == 0 &&
                 noDest(dest(trying).tet - 1, 0))
             dest(trying).setBoundary(nTetrahedra);
 
         // Finally, return to the issue of prematurely closing off a
         // set of tetrahedra.  This time we will avoid sending the last
         // face of a set of tetrahedra to the boundary.
-        if (usedFaces % 4 == 3 && usedFaces < 4 * (int)nTetrahedra - 1 &&
+        if (usedFaces % 4 == 3 &&
+                usedFaces < 4 * static_cast<int>(nTetrahedra) - 1 &&
                 noDest((usedFaces / 4) + 1, 0) && isUnmatched(trying)) {
             // Can't use the boundary; all we can do is push past the
             // end.
@@ -506,11 +514,11 @@ void* NFacePairing::run(void* param) {
         // Now we increment trying to move to the next unmatched face.
         oldTrying = trying;
         trying++;
-        while (trying.tet < (int)nTetrahedra && ! noDest(trying))
+        while (trying.tet < static_cast<int>(nTetrahedra) && ! noDest(trying))
             trying++;
 
         // Have we got a solution?
-        if (trying.tet == (int)nTetrahedra) {
+        if (trying.tet == static_cast<int>(nTetrahedra)) {
             // Deal with the solution!
             if (isCanonical(allAutomorphisms)) {
                 args->use(this, &allAutomorphisms, args->useArgs);

@@ -163,7 +163,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
 
         // Currently tet and faces refer to the two faces of the base
         // tetrahedron that are pointing outwards.
-        while (dest1.tet == dest2.tet && dest1.tet != (int)tet &&
+        while (dest1.tet == dest2.tet && dest1.tet != static_cast<int>(tet) &&
                 (! orderAssigned[tet * 4 + faces.lower()]) &&
                 (! orderAssigned[tet * 4 + faces.upper()])) {
             // Insert this pair of edges into the ordering and follow
@@ -196,7 +196,8 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
                     continue;
                 dest2 = pairing->dest(tet, j);
 
-                if (dest1.tet == dest2.tet && dest1.tet != (int)tet) {
+                if (dest1.tet == dest2.tet &&
+                        dest1.tet != static_cast<int>(tet)) {
                     // Insert this double edge.
                     order[orderDone] = NTetFace(tet, i);
                     order[orderDone + 1] = NTetFace(tet, j);
@@ -283,7 +284,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (face.tet == (int)nTets) {
+        if (face.tet == static_cast<int>(nTets)) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             canonical = true;

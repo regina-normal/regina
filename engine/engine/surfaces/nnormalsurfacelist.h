@@ -380,10 +380,6 @@ inline bool NNormalSurfaceList::isEmbeddedOnly() const {
     return embedded;
 }
 
-inline NTriangulation* NNormalSurfaceList::getTriangulation() const {
-    return (NTriangulation*)getTreeParent();
-}
-
 inline unsigned long NNormalSurfaceList::getNumberOfSurfaces() const {
     return surfaces.size();
 }

@@ -185,10 +185,10 @@ inline NMutex::~NMutex() {
 }
 
 inline void NMutex::mutexLock() const {
-    pthread_mutex_lock(&((NMutex*)this)->mutex);
+    pthread_mutex_lock(& const_cast<NMutex*>(this)->mutex);
 }
 inline void NMutex::mutexUnlock() const {
-    pthread_mutex_unlock(&((NMutex*)this)->mutex);
+    pthread_mutex_unlock(& const_cast<NMutex*>(this)->mutex);
 }
 
 // Inline functions for NThread

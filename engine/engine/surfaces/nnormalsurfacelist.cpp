@@ -101,6 +101,10 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
     delete eqns;
 }
 
+NTriangulation* NNormalSurfaceList::getTriangulation() const {
+    return (NTriangulation*)getTreeParent();
+}
+
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, c, n, almost_normal, t) \
     case id_name: return almost_normal;

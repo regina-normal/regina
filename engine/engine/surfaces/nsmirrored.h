@@ -154,29 +154,29 @@ inline NNormalSurfaceVectorMirrored::~NNormalSurfaceVectorMirrored() {
 inline NLargeInteger NNormalSurfaceVectorMirrored::getTriangleCoord(
         unsigned long tetIndex, int vertex, NTriangulation* triang) const {
     if (! mirror)
-        ((NNormalSurfaceVectorMirrored*)this)->mirror = makeMirror(triang);
-        // Cast as non-const so the mirror can be created.
+        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+            makeMirror(triang);
     return mirror->getTriangleCoord(tetIndex, vertex, triang);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getQuadCoord(
         unsigned long tetIndex, int quadType, NTriangulation* triang) const {
     if (! mirror)
-        ((NNormalSurfaceVectorMirrored*)this)->mirror = makeMirror(triang);
-        // Cast as non-const so the mirror can be created.
+        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+            makeMirror(triang);
     return mirror->getQuadCoord(tetIndex, quadType, triang);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getOctCoord(
         unsigned long tetIndex, int octType, NTriangulation* triang) const {
     if (! mirror)
-        ((NNormalSurfaceVectorMirrored*)this)->mirror = makeMirror(triang);
-        // Cast as non-const so the mirror can be created.
+        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+            makeMirror(triang);
     return mirror->getOctCoord(tetIndex, octType, triang);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getEdgeWeight(
         unsigned long edgeIndex, NTriangulation* triang) const {
     if (! mirror)
-        ((NNormalSurfaceVectorMirrored*)this)->mirror = makeMirror(triang);
-        // Cast as non-const so the mirror can be created.
+        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+            makeMirror(triang);
     return mirror->getEdgeWeight(edgeIndex, triang);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::getFaceArcs(
@@ -185,7 +185,6 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::getFaceArcs(
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
-        // Cast as non-const so the mirror can be created.
     return mirror->getFaceArcs(faceIndex, faceVertex, triang);
 }
 

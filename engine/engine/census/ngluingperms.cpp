@@ -71,8 +71,8 @@ int NGluingPerms::cmpPermsWithPreImage(const NFacePairing* pairing,
         const NIsomorphism& automorph) {
     NTetFace faceDest, faceImage;
     int order;
-    for (NTetFace face(0, 0); face.tet < (int)pairing->getNumberOfTetrahedra();
-            face++) {
+    for (NTetFace face(0, 0); face.tet <
+            static_cast<int>(pairing->getNumberOfTetrahedra()); face++) {
         faceDest = pairing->dest(face);
         if (pairing->isUnmatched(face) || faceDest < face)
             continue;
@@ -178,7 +178,7 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
         }
 
         // Move on to the next face.
-        for (face++; face.tet < (int)nTetrahedra; face++) {
+        for (face++; face.tet < static_cast<int>(nTetrahedra); face++) {
             if (pairing->isUnmatched(face))
                 continue;
             if (face < pairing->dest(face))
@@ -190,7 +190,7 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
         }
 
         // If we're at the end, try the solution and step back.
-        if (face.tet == (int)nTetrahedra) {
+        if (face.tet == static_cast<int>(nTetrahedra)) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             canonical = true;
@@ -255,7 +255,7 @@ bool NGluingPerms::badEdgeLink(const NTetFace& face) {
         started = false;
         incomplete = false;
 
-        while ((! started) || ((int)tet != face.tet) ||
+        while ((! started) || (static_cast<int>(tet) != face.tet) ||
                 (start[2] != current[2]) || (start[3] != current[3])) {
             started = true;
 

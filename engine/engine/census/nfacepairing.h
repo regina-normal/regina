@@ -672,7 +672,8 @@ inline bool NFacePairing::noDest(const NTetFace& source) const {
 }
 inline bool NFacePairing::noDest(unsigned tet, unsigned face) const {
     NTetFace& f = pairs[4 * tet + face];
-    return (f.tet == (int)tet && f.face == (int)face);
+    return (f.tet == static_cast<int>(tet) &&
+        f.face == static_cast<int>(face));
 }
 
 inline void NFacePairing::findAutomorphisms(NFacePairingIsoList& list) const {

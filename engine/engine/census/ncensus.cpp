@@ -113,7 +113,7 @@ NCensus::NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
 
 void NCensus::foundFacePairing(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, void* census) {
-    NCensus* realCensus = (NCensus*)census;
+    NCensus* realCensus = static_cast<NCensus*>(census);
     if (pairing) {
         // We've found another face pairing.
         if (realCensus->progress)
@@ -139,7 +139,7 @@ void NCensus::foundGluingPerms(const NGluingPerms* perms, void* census) {
         // We've found another permutation set.
         // Triangulate and see what we've got.
         NTriangulation* tri = perms->triangulate();
-        NCensus* realCensus = (NCensus*)census;
+        NCensus* realCensus = static_cast<NCensus*>(census);
 
         bool ok = true;
         if (! tri->isValid())
