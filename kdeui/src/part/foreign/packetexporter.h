@@ -26,52 +26,49 @@
 
 /* end stub */
 
-/*! \file snappea.h
- *  \brief Allows interaction with SnapPea data files.
+/*! \file packetexporter.h
+ *  \brief Provides a basic infrastructure for exporting packets or
+ *  packet subtrees to foreign file formats.
  */
 
-#ifndef __SNAPPEA_H
-#define __SNAPPEA_H
+#ifndef __PACKETEXPORTER_H
+#define __PACKETEXPORTER_H
 
-#include "packetexporter.h"
-#include "packetimporter.h"
+class PacketFilter;
+class QString;
+class QWidget;
 
-/**
- * An object responsible for importing and export data to and from
- * SnapPea files.
- *
- * Rather than creating new objects of this class, the globally
- * available object SnapPeaHandler::instance should always be used.
- */
-class SnapPeaHandler : public PacketImporter, public PacketExporter {
-    public:
-        /**
-         * A globally available instance of this class.
-         */
-        static const SnapPeaHandler instance;
-
-    public:
-        /**
-         * PacketImporter overrides:
-         */
-        virtual regina::NPacket* import(const QString& fileName,
-            QWidget* parentWidget) const;
-
-        /**
-         * PacketExporter overrides:
-         */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
-            const QString& fileName, QWidget* parentWidget) const;
-
-    private:
-        /**
-         * Don't allow people to construct their own SnapPea handlers.
-         */
-        SnapPeaHandler();
+namespace regina {
+    class NPacket;
 };
 
-inline SnapPeaHandler::SnapPeaHandler() {
-}
+/**
+ * An object responsible for exporting a packet or packet subtree to a
+ * foreign file format.  Different foreign file formats should correspond
+ * to different subclasses of PacketExporter.
+ */
+class PacketExporter {
+    public:
+        /**
+         * Returns a newly created packet filter describing which
+         * packets can be exported by this subclass of PacketExporter.
+         *
+         * The caller of this routine is responsible for destroying the
+         * new filter.
+         */
+        virtual PacketFilter* canExport() const = 0;
+
+        /**
+         * Export a packet or packet subtree to the given file.
+         *
+         * This routine should return \c true if and only if the export
+         * was successful.  If the export was unsuccessful, an
+         * appropriate error should be displayed to the user (with the
+         * argument \a parentWidget as the parent widget of the message
+         * box).
+         */
+        virtual bool exportData(regina::NPacket* data,
+            const QString& fileName, QWidget* parentWidget) const = 0;
+};
 
 #endif

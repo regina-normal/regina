@@ -26,52 +26,43 @@
 
 /* end stub */
 
-/*! \file snappea.h
- *  \brief Allows interaction with SnapPea data files.
- */
+#include "packet/npacket.h"
 
-#ifndef __SNAPPEA_H
-#define __SNAPPEA_H
+#include "packettreeview.h"
+#include "reginapart.h"
+#include "foreign/exportdialog.h"
+#include "foreign/snappea.h"
+#include "../reginafilter.h"
 
-#include "packetexporter.h"
-#include "packetimporter.h"
+#include <kfiledialog.h>
+#include <klocale.h>
+#include <kmessagebox.h>
 
-/**
- * An object responsible for importing and export data to and from
- * SnapPea files.
- *
- * Rather than creating new objects of this class, the globally
- * available object SnapPeaHandler::instance should always be used.
- */
-class SnapPeaHandler : public PacketImporter, public PacketExporter {
-    public:
-        /**
-         * A globally available instance of this class.
-         */
-        static const SnapPeaHandler instance;
-
-    public:
-        /**
-         * PacketImporter overrides:
-         */
-        virtual regina::NPacket* import(const QString& fileName,
-            QWidget* parentWidget) const;
-
-        /**
-         * PacketExporter overrides:
-         */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
-            const QString& fileName, QWidget* parentWidget) const;
-
-    private:
-        /**
-         * Don't allow people to construct their own SnapPea handlers.
-         */
-        SnapPeaHandler();
-};
-
-inline SnapPeaHandler::SnapPeaHandler() {
+void ReginaPart::exportPython() {
+    unimplemented();
 }
 
-#endif
+void ReginaPart::exportRegina() {
+    unimplemented();
+}
+
+void ReginaPart::exportSnapPea() {
+    exportFile(SnapPeaHandler::instance, i18n(FILTER_SNAPPEA),
+        i18n("Export SnapPea Triangulation"));
+}
+
+void ReginaPart::exportFile(const PacketExporter& exporter,
+        const QString& fileFilter, const QString& dialogTitle) {
+    ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
+        exporter.canExport(), dialogTitle);
+    if (dlg.exec() == QDialog::Accepted) {
+        regina::NPacket* data = dlg.selectedPacket();
+        if (data) {
+            QString file = KFileDialog::getSaveFileName(QString::null,
+                fileFilter, widget(), dialogTitle);
+            if (! file.isEmpty())
+                exporter.exportData(data, file, widget());
+        }
+    }
+}
+

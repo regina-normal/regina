@@ -44,7 +44,7 @@ namespace regina {
 /**
  * An object responsible for importing a packet tree from a foreign file
  * format.  Different foreign file formats should correspond to different
- * subclasses of ImportDialog.
+ * subclasses of PacketImporter.
  */
 class PacketImporter {
     public:
@@ -60,7 +60,7 @@ class PacketImporter {
          * imported tree.
          */
         virtual regina::NPacket* import(const QString& fileName,
-            QWidget* parentWidget) = 0;
+            QWidget* parentWidget) const = 0;
 };
 
 #endif

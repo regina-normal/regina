@@ -64,7 +64,10 @@ PacketChooser::~PacketChooser() {
 }
 
 NPacket* PacketChooser::selectedPacket() {
-    return packets[currentItem()];
+    if (count() == 0)
+        return 0;
+    else
+        return packets[currentItem()];
 }
 
 void PacketChooser::refreshContents() {

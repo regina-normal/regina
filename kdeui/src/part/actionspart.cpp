@@ -165,7 +165,7 @@ void ReginaPart::setupActions() {
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("Form &Census"), "view_text", 0,
-        this, SLOT(unimplemented()), actionCollection(), "tree_census");
+        this, SLOT(newCensus()), actionCollection(), "tree_census");
     act->setToolTip(i18n("Form a new census of triangulations"));
     treeGeneralEditActions.append(act);
 
@@ -192,15 +192,15 @@ void ReginaPart::setupActions() {
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("&Regina Data File"), "regina", 0,
-        this, SLOT(unimplemented()), actionCollection(), "export_regina");
+        this, SLOT(exportRegina()), actionCollection(), "export_regina");
     act->setToolTip(i18n("Export a Regina data file"));
 
     act = new KAction(i18n("&SnapPea Triangulation"), "snappea", 0,
-        this, SLOT(unimplemented()), actionCollection(), "export_snappea");
+        this, SLOT(exportSnapPea()), actionCollection(), "export_snappea");
     act->setToolTip(i18n("Export a SnapPea triangulation"));
 
     act = new KAction(i18n("&Python Script"), "packet_script", 0,
-        this, SLOT(unimplemented()), actionCollection(), "export_python");
+        this, SLOT(exportPython()), actionCollection(), "export_python");
     act->setToolTip(i18n("Export a Python script"));
 
     // Current packet actions:

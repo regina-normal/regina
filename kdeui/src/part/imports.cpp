@@ -37,6 +37,8 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 
+// TODO: Check that there are actually potential parents.
+
 void ReginaPart::importDehydration() {
     unimplemented();
 }
@@ -50,17 +52,20 @@ void ReginaPart::importRegina() {
 }
 
 void ReginaPart::importSnapPea() {
-    importFile(new SnapPeaImporter(), 0, i18n(FILTER_SNAPPEA),
+    importFile(SnapPeaHandler::instance, 0, i18n(FILTER_SNAPPEA),
         i18n("Import SnapPea Triangulation"));
 }
 
-void ReginaPart::importFile(PacketImporter* importer,
+void ReginaPart::importFile(const PacketImporter& importer,
         PacketFilter* parentFilter, const QString& fileFilter,
         const QString& dialogTitle) {
+    if (! checkReadWrite())
+        return;
+
     QString file = KFileDialog::getOpenFileName(QString::null,
         fileFilter, widget(), dialogTitle);
     if (! file.isEmpty()) {
-        regina::NPacket* newTree = importer->import(file, widget());
+        regina::NPacket* newTree = importer.import(file, widget());
         if (newTree) {
             ImportDialog dlg(widget(), newTree, packetTree,
                 treeView->selectedPacket(), parentFilter, dialogTitle);
@@ -69,6 +74,8 @@ void ReginaPart::importFile(PacketImporter* importer,
                 if (item)
                     treeView->ensureItemVisible(item);
                 packetView(newTree);
+
+                setModified(true);
             } else
                 delete newTree;
         }

@@ -26,52 +26,70 @@
 
 /* end stub */
 
-/*! \file snappea.h
- *  \brief Allows interaction with SnapPea data files.
+/*! \file exportdialog.h
+ *  \brief Provides a dialog through which the user can select a packet
+ *  or packet subtree to export.
  */
 
-#ifndef __SNAPPEA_H
-#define __SNAPPEA_H
+#ifndef __EXPORTDIALOG_H
+#define __EXPORTDIALOG_H
 
-#include "packetexporter.h"
-#include "packetimporter.h"
+#include <kdialogbase.h>
+
+class PacketChooser;
+class PacketFilter;
+
+namespace regina {
+    class NPacket;
+};
 
 /**
- * An object responsible for importing and export data to and from
- * SnapPea files.
- *
- * Rather than creating new objects of this class, the globally
- * available object SnapPeaHandler::instance should always be used.
+ * A dialog used to select a packet or packet subtree to export.
  */
-class SnapPeaHandler : public PacketImporter, public PacketExporter {
-    public:
-        /**
-         * A globally available instance of this class.
-         */
-        static const SnapPeaHandler instance;
-
-    public:
-        /**
-         * PacketImporter overrides:
-         */
-        virtual regina::NPacket* import(const QString& fileName,
-            QWidget* parentWidget) const;
-
-        /**
-         * PacketExporter overrides:
-         */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
-            const QString& fileName, QWidget* parentWidget) const;
+class ExportDialog : public KDialogBase {
+    Q_OBJECT
 
     private:
         /**
-         * Don't allow people to construct their own SnapPea handlers.
+         * Internal components:
          */
-        SnapPeaHandler();
+        PacketChooser* chooser;
+
+        /**
+         * Packet tree structure:
+         */
+        regina::NPacket* tree;
+        regina::NPacket* chosenPacket;
+
+    public:
+        /**
+         * Dialog constructor.
+         *
+         * The filter passed is used to restrict the possible selections.
+         * It may be 0, in which case any packet or packet subtree
+         * will be allowed.
+         *
+         * This dialog and its components will claim ownership of the
+         * given packet filter.
+         */
+        ExportDialog(QWidget* parent, regina::NPacket* packetTree,
+            regina::NPacket* defaultSelection, PacketFilter* useFilter,
+            const QString& dialogTitle);
+
+        /**
+         * Returns the packet or packet subtree selected by the user.
+         */
+        regina::NPacket* selectedPacket();
+
+    protected slots:
+        /**
+         * KDialogBase overrides.
+         */
+        virtual void slotOk();
 };
 
-inline SnapPeaHandler::SnapPeaHandler() {
+inline regina::NPacket* ExportDialog::selectedPacket() {
+    return chosenPacket;
 }
 
 #endif

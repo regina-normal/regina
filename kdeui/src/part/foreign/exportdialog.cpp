@@ -26,52 +26,58 @@
 
 /* end stub */
 
-/*! \file snappea.h
- *  \brief Allows interaction with SnapPea data files.
- */
+#include "packet/npacket.h"
 
-#ifndef __SNAPPEA_H
-#define __SNAPPEA_H
+#include "exportdialog.h"
+#include "../packetchooser.h"
+#include "../packetfilter.h"
 
-#include "packetexporter.h"
-#include "packetimporter.h"
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <qframe.h>
+#include <qhbox.h>
+#include <qlabel.h>
+#include <qlayout.h>
 
-/**
- * An object responsible for importing and export data to and from
- * SnapPea files.
- *
- * Rather than creating new objects of this class, the globally
- * available object SnapPeaHandler::instance should always be used.
- */
-class SnapPeaHandler : public PacketImporter, public PacketExporter {
-    public:
-        /**
-         * A globally available instance of this class.
-         */
-        static const SnapPeaHandler instance;
+#define HORIZONTAL_SPACING 10
 
-    public:
-        /**
-         * PacketImporter overrides:
-         */
-        virtual regina::NPacket* import(const QString& fileName,
-            QWidget* parentWidget) const;
+ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
+        regina::NPacket* defaultSelection, PacketFilter* useFilter,
+        const QString& dialogTitle) :
+        KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
+        tree(packetTree), chosenPacket(0) {
+    QFrame* page = plainPage();
+    QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
 
-        /**
-         * PacketExporter overrides:
-         */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
-            const QString& fileName, QWidget* parentWidget) const;
+    QHBox* chosenStrip = new QHBox(page);
+    chosenStrip->setSpacing(HORIZONTAL_SPACING);
+    layout->addWidget(chosenStrip);
+    new QLabel(i18n("Data to export:"), chosenStrip);
+    chooser = new PacketChooser(tree, useFilter, false, defaultSelection,
+        chosenStrip);
+    chosenStrip->setStretchFactor(chooser, 1);
 
-    private:
-        /**
-         * Don't allow people to construct their own SnapPea handlers.
-         */
-        SnapPeaHandler();
-};
-
-inline SnapPeaHandler::SnapPeaHandler() {
+    layout->addStretch(1);
 }
 
-#endif
+void ExportDialog::slotOk() {
+    // Get the selected packet.
+    chosenPacket = chooser->selectedPacket();
+    if (! chosenPacket) {
+        KMessageBox::error(this, i18n(
+            "No packet has been selected to export."));
+        return;
+    }
+    PacketFilter* filter = chooser->getFilter();
+    if (filter && ! filter->accept(chosenPacket)) {
+        KMessageBox::error(this, i18n(
+            "The packet %1 cannot be exported to this file format.").
+            arg(chosenPacket->getPacketLabel().c_str()));
+        return;
+    }
+
+    // We're done!
+    KDialogBase::slotOk();
+}
+
+#include "exportdialog.moc"

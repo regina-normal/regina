@@ -99,7 +99,8 @@ class PacketChooser : public KComboBox {
          * will return an invalid pointer which, if used, will probably
          * cause a crash.
          *
-         * If the "None" entry is selected, this routine will return 0.
+         * If the "None" entry is selected or if there are in fact no
+         * available packets to choose from, this routine will return 0.
          */
         regina::NPacket* selectedPacket();
 

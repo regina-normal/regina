@@ -30,17 +30,42 @@
 #include "triangulation/ntriangulation.h"
 
 #include "snappea.h"
+#include "../packetfilter.h"
 
 #include <klocale.h>
 #include <kmessagebox.h>
 
-regina::NPacket* SnapPeaImporter::import(const QString& fileName,
-        QWidget* parentWidget) {
+const SnapPeaHandler SnapPeaHandler::instance;
+
+regina::NPacket* SnapPeaHandler::import(const QString& fileName,
+        QWidget* parentWidget) const {
     regina::NPacket* ans = regina::readSnapPea(fileName.ascii());
     if (! ans)
         KMessageBox::error(parentWidget, i18n(
             "The SnapPea file %1 could not be imported.  Perhaps the data "
             "is not in SnapPea format?").arg(fileName));
     return ans;
+}
+
+PacketFilter* SnapPeaHandler::canExport() const {
+    return new SingleTypeFilter<regina::NTriangulation>();
+}
+
+bool SnapPeaHandler::exportData(regina::NPacket* data,
+        const QString& fileName, QWidget* parentWidget) const {
+    regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
+    if (! tri->isValid()) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation cannot be exported to SnapPea format "
+            "because it is not a valid triangulation."));
+        return false;
+    }
+    if (! regina::writeSnapPea(fileName.ascii(), *tri)) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation could not be exported.  An unknown error, "
+            "probably related to file I/O, occurred during the export."));
+        return false;
+    }
+    return true;
 }
 

@@ -30,6 +30,7 @@ libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) \
 	packettypes/libpackettypes.la
 libreginapart_la_SOURCES = \
 	actionspart.cpp \
+	exports.cpp \
 	flatbutton.cpp \
 	imports.cpp \
 	newpacketdialog.cpp \
