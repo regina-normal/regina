@@ -6,7 +6,8 @@ different types.  Each census data file includes a text packet
 containing a full description of the census including its origin.
 
 Also within this directory is a number of sample files that illustrate how
-Regina can be used.
+Regina can be used.  A good starting point is sample-misc.rga, which can
+be opened directly from within the main user interface.
 
 The subdirectory sigs/ contains a series of plain text files representing
 a census of splitting surface signatures.  See sigs/README.txt for further
@@ -16,15 +17,15 @@ Files within this directory are of the following types.
 
 *.rga:
     These are topology data files.  They can be opened directly from within
-    the user interface.
+    the main user interface.
 
 *.session:
-    These are complete transcripts of sample Jython sessions, including
-    both user input and program output.  You can start a Jython session
-    from the command line using "regina --console".
+    These are complete transcripts of sample python sessions, including
+    both user input and program output.  You can start a python session
+    from the command line by running "regina-python".
 
 *.py:
-    These are the same sample Jython sessions as above but only the user
+    These are the same sample python sessions as above but only the user
     input has been included.  These scripts may be fed directly into Regina
-    using a command of the form "regina --text < foo.py"
+    using a command of the form "regina-python < foo.py"
 

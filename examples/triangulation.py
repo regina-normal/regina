@@ -1,19 +1,19 @@
 # Create a new (3,4,7) layered solid torus.
-t = engine.newNTriangulation()
+t = regina.NTriangulation()
 t.insertLayeredSolidTorus(3,4)
-t
+print t
 
 # Dump skeletal information for the triangulation.
 print t.toStringLong()
 
 # Calculate various properties of the triangulation.
-t.getHomologyH1()
-t.getHomologyH1Bdry()
-t.isZeroEfficient()
+print t.getHomologyH1()
+print t.getHomologyH1Bdry()
+print t.isZeroEfficient()
 
 # Get a list of normal surfaces in standard tri-quad coordinates.
-from normal.engine.surfaces import NNormalSurfaceList
-surfaces = engine.newNNormalSurfaceList(t, NNormalSurfaceList.STANDARD)
+from regina import NNormalSurfaceList
+surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
 
 # Dump the entire list of vertex normal surfaces.
 print surfaces.toStringLong()
@@ -34,5 +34,5 @@ for i in range(surfaces.getNumberOfSurfaces()):
 # Tidy up.
 # Delete the triangulation; this will automatically delete the surface
 # list since the surface list is a child packet of the triangulation.
-t.destroy()
+t = None
 

@@ -1,22 +1,16 @@
-
-Regina 2.3
+example$ regina-python
+Regina 4.0
 A Normal Surface Theory Calculator
-Copyright (c) 1999-2001, Ben Burton
-
-Jython 2.1b1 on java1.3.1 (JIT: null)
-
-Running startup commands...
-The calculation engine (type normal.engine.Engine) is in the variable [engine].
-
+Copyright (c) 1999-2003, Ben Burton
 >>> # Create a new (3,4,7) layered solid torus.
->>> t = engine.newNTriangulation()
+... t = regina.NTriangulation()
 >>> t.insertLayeredSolidTorus(3,4)
-Tetrahedron
->>> t
+<regina.NTetrahedron object at 0x40216d14>
+>>> print t
 Triangulation with 3 tetrahedra.
->>> 
+>>>
 >>> # Dump skeletal information for the triangulation.
->>> print t.toStringLong()
+... print t.toStringLong()
 Size of the skeleton:
   Tetrahedra: 3
   Faces: 7
@@ -52,21 +46,21 @@ Faces:
     2  |           5   4   6   6
 
 
->>> 
+>>>
 >>> # Calculate various properties of the triangulation.
->>> t.getHomologyH1()
+... print t.getHomologyH1()
 Z
->>> t.getHomologyH1Bdry()
+>>> print t.getHomologyH1Bdry()
 2 Z
->>> t.isZeroEfficient()
+>>> print t.isZeroEfficient()
 0
->>> 
+>>>
 >>> # Get a list of normal surfaces in standard tri-quad coordinates.
->>> from normal.engine.surfaces import NNormalSurfaceList
->>> surfaces = engine.newNNormalSurfaceList(t, NNormalSurfaceList.STANDARD)
->>> 
+... from regina import NNormalSurfaceList
+>>> surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
+>>>
 >>> # Dump the entire list of vertex normal surfaces.
->>> print surfaces.toStringLong()
+... print surfaces.toStringLong()
 Embedded vertex normal surfaces
 Coordinates: Standard normal (tri-quad)
 Number of surfaces is 9
@@ -80,12 +74,12 @@ Number of surfaces is 9
 0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0
 3 3 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 2 || 1 1 0 0 ; 0 0 1
 
->>> 
+>>>
 >>> # Print the Euler characteristic and orientability of each surface.
->>> for i in range(surfaces.getNumberOfSurfaces()):
+... for i in range(surfaces.getNumberOfSurfaces()):
 ...     s = surfaces.getSurface(i)
 ...     print "Chi =", s.getEulerCharacteristic(), "; Or =", s.isOrientable()
-... 
+...
 Chi = -1 ; Or = -1
 Chi = -2 ; Or = 1
 Chi = 0 ; Or = -1
@@ -95,18 +89,19 @@ Chi = 0 ; Or = 1
 Chi = 1 ; Or = 1
 Chi = 0 ; Or = 1
 Chi = 1 ; Or = 1
->>> 
->>> # List all the surfaces with more than one quad in the first tetrahedron.
->>> for i in range(surfaces.getNumberOfSurfaces()):
+>>>
+>>> # List all the surfaces with more than one quad in the first
+>>> tetrahedron.
+... for i in range(surfaces.getNumberOfSurfaces()):
 ...     s = surfaces.getSurface(i)
 ...     if s.getQuadCoord(0,0) + s.getQuadCoord(0,1) + s.getQuadCoord(0,2) > 1:
 ...         print s
-... 
+...
 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0
 0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0
->>> 
+>>>
 >>> # Tidy up.
->>> # Delete the triangulation; this will automatically delete the surface
->>> # list since the surface list is a child packet of the triangulation.
->>> t.destroy()
->>> 
+... # Delete the triangulation; this will automatically delete the surface
+... # list since the surface list is a child packet of the triangulation.
+... t = None
+>>>
