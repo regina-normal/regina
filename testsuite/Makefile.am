@@ -22,8 +22,8 @@ regtestsuite_LDADD = \
   census/libcensus.a \
   maths/libmaths.a \
   utilities/libutilities.a \
-  @LIB_ENGINE@
-regtestsuite_LDFLAGS = @TESTSUITE_LIBS@
+  @LIB_ENGINE@ \
+  @TESTSUITE_LIBS@
 
 EXTRA_DIST = README.txt findtext
 

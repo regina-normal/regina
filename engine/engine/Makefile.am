@@ -29,7 +29,7 @@ SUBDIRS = \
 lib_LTLIBRARIES = libregina-engine.la
 
 libregina_engine_la_SOURCES = shareableobject.cpp
-libregina_engine_la_LDFLAGS = @ENGINE_LIBS@ -release @PACKAGE_VERSION@
+libregina_engine_la_LDFLAGS = -release @PACKAGE_VERSION@
 
 pkginclude_HEADERS = docs.h engine.h howto.h regina.h shareableobject.h
 
@@ -37,7 +37,6 @@ libregina_engine_la_LIBADD = \
   algebra/libalgebra.la \
   angle/libangle.la \
   census/libcensus.la \
-  enumerate/libenumerate.la \
   file/libfile.la \
   foreign/libforeign.la \
   knot/libknot.la \
@@ -49,5 +48,6 @@ libregina_engine_la_LIBADD = \
   subcomplex/libsubcomplex.la \
   surfaces/libsurfaces.la \
   triangulation/libtriangulation.la \
-  utilities/libutilities.la
+  utilities/libutilities.la \
+  @ENGINE_LIBS@
 
