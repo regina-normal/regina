@@ -81,7 +81,8 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
 void NXMLPacketReader::endSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "packet") {
-        NPacket* child = ((NXMLPacketReader*)subReader)->getPacket();
+        NPacket* child =
+            dynamic_cast<NXMLPacketReader*>(subReader)->getPacket();
         if (child) {
             NPacket* me = getPacket();
             if (me) {

@@ -49,9 +49,9 @@ NLargeInteger NLargeInteger::gcdWithCoeffs(const NLargeInteger& other,
 
     // Check for zero coefficients.
     if ((*this) == 0) {
-        u = (long)0;
+        u = 0L;
         if (other == 0) {
-            v = (long)0;
+            v = 0L;
             // ans is already zero.
             return ans;
         }
@@ -64,7 +64,7 @@ NLargeInteger NLargeInteger::gcdWithCoeffs(const NLargeInteger& other,
         return ans;
     }
     if (other == 0) {
-        v = (long)0;
+        v = 0L;
         u = 1;
         ans = *this;
         if (ans < 0) {

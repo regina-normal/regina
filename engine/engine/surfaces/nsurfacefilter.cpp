@@ -91,7 +91,7 @@ NSurfaceFilter* NSurfaceFilter::readPacket(NFile& in, NPacket* parent) {
 
 #undef REGISTER_FILTER
 #define REGISTER_FILTER(id, class, n) \
-    case id: return new class((const class&)(*this));
+    case id: return new class(dynamic_cast<const class&>(*this));
 
 NPacket* NSurfaceFilter::internalClonePacket(NPacket* parent) const {
     switch (getFilterID()) {

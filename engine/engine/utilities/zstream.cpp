@@ -37,7 +37,7 @@ std::streamsize ZBuffer::xsgetn(char* s, std::streamsize n) {
         int ans = gzread(file, s, n);
         return (ans == -1 ? zEOF : ans);
     } else {
-        *s = (char)next;
+        *s = static_cast<char>(next);
         int ans = gzread(file, s + 1, n - 1);
         next = -1;
         return (ans == -1 ? zEOF : ans + 1);

@@ -44,11 +44,12 @@ namespace {
 
     void* NThreadRuntime(void* runtimeArgs) {
         // Get the arguments.
-        NThread* thread = ((NThreadRuntimeArgs*)runtimeArgs)->thread;
-        void* args = ((NThreadRuntimeArgs*)runtimeArgs)->args;
-        bool deleteAfterwards = ((NThreadRuntimeArgs*)runtimeArgs)->
-            deleteAfterwards;
-        delete (NThreadRuntimeArgs*)runtimeArgs;
+        NThread* thread =
+            static_cast<NThreadRuntimeArgs*>(runtimeArgs)->thread;
+        void* args = static_cast<NThreadRuntimeArgs*>(runtimeArgs)->args;
+        bool deleteAfterwards =
+            static_cast<NThreadRuntimeArgs*>(runtimeArgs)->deleteAfterwards;
+        delete static_cast<NThreadRuntimeArgs*>(runtimeArgs);
 
         // Do the work.
         void* ans = thread->run(args);

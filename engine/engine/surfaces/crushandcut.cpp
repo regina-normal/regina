@@ -47,7 +47,7 @@ NTriangulation* NNormalSurface::crush() {
     // Work out which tetrahedra contain which quad types.
     int* quads = new int[nTet];
     long whichTet = 0;
-    for (whichTet = 0; whichTet < (long)nTet; whichTet++) {
+    for (whichTet = 0; whichTet < static_cast<long>(nTet); whichTet++) {
         if (getQuadCoord(whichTet, 0) != 0)
             quads[whichTet] = 0;
         else if (getQuadCoord(whichTet, 1) != 0)
@@ -65,7 +65,7 @@ NTriangulation* NNormalSurface::crush() {
     NPerm adjPerm;
     NPerm swap;
     int face, adjFace;
-    for (whichTet = 0; whichTet < (long)nTet; whichTet++)
+    for (whichTet = 0; whichTet < static_cast<long>(nTet); whichTet++)
         if (quads[whichTet] == -1) {
             // We want to keep this tetrahedron, so make sure it's glued
             // up correctly.

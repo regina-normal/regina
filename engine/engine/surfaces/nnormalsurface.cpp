@@ -102,7 +102,7 @@ const NPerm __octDiscArcs[24] = {
 
 NNormalSurface* NNormalSurface::clone() const {
     NNormalSurface* ans = new NNormalSurface(triangulation,
-        (NNormalSurfaceVector*)vector->clone());
+        dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
     if (calculatedEulerChar) {
         ans->eulerChar = eulerChar;
         ans->calculatedEulerChar = true;
@@ -246,7 +246,7 @@ bool NNormalSurfaceVector::isSplitting(NTriangulation* triang) const {
         for (type = 0; type < 4; type++)
             if (getTriangleCoord(tet, type, triang) != 0)
                 return false;
-        tot = (long)0;
+        tot = 0L;
         for (type = 0; type < 3; type++)
             tot += getQuadCoord(tet, type, triang);
         if (tot != 1)

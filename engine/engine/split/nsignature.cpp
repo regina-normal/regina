@@ -82,7 +82,7 @@ NSignature* NSignature::parse(const std::string& str) {
                 largestLetter = letter - 'a';
         }
 
-    if ((int)nAlpha != 2 * (largestLetter + 1))
+    if (static_cast<int>(nAlpha) != 2 * (largestLetter + 1))
         return 0;
     if (nAlpha == 0)
         return 0;

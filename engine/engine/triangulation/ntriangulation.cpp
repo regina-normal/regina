@@ -78,7 +78,7 @@ void NTriangulation::initialiseAllProperties() {
 
 void NTriangulation::writeTextLong(std::ostream& out) const {
     if (! calculatedSkeleton)
-        ((NTriangulation*)this)->calculateSkeleton();
+        const_cast<NTriangulation*>(this)->calculateSkeleton();
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << tetrahedra.size() << '\n';
@@ -322,8 +322,8 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
             adjTet = (*it)->getAdjacentTetrahedron(face);
             if (adjTet) {
                 out << tetrahedra.index(adjTet) << ' '
-                    << (int)(*it)->getAdjacentTetrahedronGluing(face).
-                        getPermCode()
+                    << static_cast<int>((*it)->
+                        getAdjacentTetrahedronGluing(face).getPermCode())
                     << ' ';
             } else
                 out << "-1 -1 ";

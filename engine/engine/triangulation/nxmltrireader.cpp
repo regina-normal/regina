@@ -71,13 +71,14 @@ namespace {
                     if (! valueOf(tokens[2 * k + 1], permCode))
                         continue;
 
-                    if (tetIndex < 0 ||
-                            tetIndex >= (int)tri->getNumberOfTetrahedra())
+                    if (tetIndex < 0 || tetIndex >=
+                            static_cast<int>(tri->getNumberOfTetrahedra()))
                         continue;
-                    if (! NPerm::isPermCode((unsigned char)permCode))
+                    if (! NPerm::isPermCode(
+                            static_cast<unsigned char>(permCode)))
                         continue;
 
-                    perm.setPermCode((unsigned char)permCode);
+                    perm.setPermCode(static_cast<unsigned char>(permCode));
                     adjTet = tri->getTetrahedra()[tetIndex];
                     adjFace = perm[k];
                     if (adjTet == tet && adjFace == k)
@@ -153,7 +154,8 @@ namespace {
             virtual void endSubElement(const std::string& subTagName,
                     NXMLElementReader* subReader) {
                 if (subTagName == "abeliangroup") {
-                    *groupProp = ((NXMLAbelianGroupReader*)subReader)->
+                    *groupProp =
+                        dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
                         getGroup();
                     if (*groupProp)
                         *calculatedProp = true;
@@ -187,7 +189,8 @@ namespace {
             virtual void endSubElement(const std::string& subTagName,
                     NXMLElementReader* subReader) {
                 if (subTagName == "group") {
-                    *groupProp = ((NXMLGroupPresentationReader*)subReader)->
+                    *groupProp =
+                        dynamic_cast<NXMLGroupPresentationReader*>(subReader)->
                         getGroup();
                     if (*groupProp)
                         *calculatedProp = true;

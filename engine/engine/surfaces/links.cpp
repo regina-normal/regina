@@ -29,7 +29,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 
-#define NO_EDGES std::make_pair((NEdge*)0, (NEdge*)0)
+#define NO_EDGES std::make_pair(static_cast<NEdge*>(0), static_cast<NEdge*>(0))
 
 namespace regina {
 

@@ -40,7 +40,7 @@ bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
         for (NPacket* child = getFirstTreeChild(); child;
                 child = child->getNextTreeSibling())
             if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (! ((NSurfaceFilter*)child)->accept(surface))
+                if (! (dynamic_cast<NSurfaceFilter*>(child)->accept(surface)))
                     return false;
         return true;
     } else {
@@ -48,7 +48,7 @@ bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
         for (NPacket* child = getFirstTreeChild(); child;
                 child = child->getNextTreeSibling())
             if (child->getPacketType() == NSurfaceFilter::packetType)
-                if (((NSurfaceFilter*)child)->accept(surface))
+                if (dynamic_cast<NSurfaceFilter*>(child)->accept(surface))
                     return true;
         return false;
     }

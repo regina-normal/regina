@@ -57,7 +57,7 @@ void NTriangulation::calculateSurfaceProperties() {
     NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = (NNormalSurface*)surfaces.getSurface(i);
+        s = const_cast<NNormalSurface*>(surfaces.getSurface(i));
 
         if (! calculatedSplittingSurface)
             if (s->isSplitting()) {

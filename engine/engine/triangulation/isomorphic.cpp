@@ -249,7 +249,7 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
 
         if (canJoin) {
             mustMatch++;
-            if (mustMatch == (long)nTetrahedra) {
+            if (mustMatch == static_cast<long>(nTetrahedra)) {
                 delete[] join;
                 delete[] perm;
                 delete[] used;

@@ -127,7 +127,7 @@ namespace {
                 if (subTagName == "euler") {
                     std::list<std::string> tokens;
                     basicTokenise(back_inserter(tokens),
-                        ((NXMLCharsReader*)subReader)->getChars());
+                        dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
 
                     NLargeInteger val;
                     for (std::list<std::string>::const_iterator it =

@@ -583,7 +583,7 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          * normal disc.
          */
         T& data(const NDiscSpec& disc) {
-            return ((NDiscSetTetData<T>*)discSets[disc.tetIndex])->
+            return dynamic_cast<NDiscSetTetData<T>*>(discSets[disc.tetIndex])->
                 data(disc.type, disc.number);
         }
 };

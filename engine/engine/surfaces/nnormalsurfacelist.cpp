@@ -102,7 +102,7 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
 }
 
 NTriangulation* NNormalSurfaceList::getTriangulation() const {
-    return (NTriangulation*)getTreeParent();
+    return dynamic_cast<NTriangulation*>(getTreeParent());
 }
 
 #undef REGISTER_FLAVOUR
@@ -211,7 +211,7 @@ NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
     unsigned long nSurfaces = in.readULong();
     for (unsigned long i=0; i<nSurfaces; i++)
         ans->surfaces.push_back(NNormalSurface::readFromFile(in, ans->flavour,
-            (NTriangulation*)parent));
+            dynamic_cast<NTriangulation*>(parent)));
 
     // Read the properties.
     ans->readProperties(in);

@@ -36,7 +36,7 @@ NSurfaceSubset::NSurfaceSubset(const NSurfaceSet& set,
     unsigned long n = set.getNumberOfSurfaces();
     NNormalSurface* s;
     for (unsigned long i = 0; i < n; i++) {
-        s = (NNormalSurface*)set.getSurface(i);
+        s = const_cast<NNormalSurface*>(set.getSurface(i));
         if (filter.accept(*s))
             surfaces.push_back(s);
     }

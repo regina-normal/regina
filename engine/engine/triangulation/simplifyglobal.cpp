@@ -85,7 +85,7 @@ bool NTriangulation::intelligentSimplify() {
 
             // Perform a random 4-4 move on the clone.
             fourFourChoice = fourFourAvailable[
-                ((unsigned)rand()) % fourFourAvailable.size()];
+                static_cast<unsigned>(rand()) % fourFourAvailable.size()];
             use->fourFourMove(fourFourChoice.first, fourFourChoice.second,
                 false, true);
 

@@ -73,9 +73,9 @@ NXMLElementReader* NXMLScriptReader::startContentSubElement(
 void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "line")
-        script->addLast(((NXMLCharsReader*)subReader)->getChars());
+        script->addLast(dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
     else if (subTagName == "var") {
-        NScriptVarReader* var = (NScriptVarReader*)subReader;
+        NScriptVarReader* var = dynamic_cast<NScriptVarReader*>(subReader);
         if (! var->getName().empty())
             script->addVariable(var->getName(), var->getValue());
     }

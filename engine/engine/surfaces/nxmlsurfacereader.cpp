@@ -145,12 +145,14 @@ void NXMLNormalSurfaceListReader::endContentSubElement(
     if (list)
         if (subTagName == "surface")
             if (NNormalSurface* s =
-                    ((NXMLNormalSurfaceReader*)subReader)->getSurface())
+                    dynamic_cast<NXMLNormalSurfaceReader*>(subReader)->
+                    getSurface())
                 list->surfaces.push_back(s);
 }
 
 NXMLPacketReader* NNormalSurfaceList::getXMLReader(NPacket* parent) {
-    return new NXMLNormalSurfaceListReader((NTriangulation*)parent);
+    return new NXMLNormalSurfaceListReader(
+        dynamic_cast<NTriangulation*>(parent));
 }
 
 } // namespace regina

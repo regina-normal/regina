@@ -76,10 +76,10 @@ xmlEntityPtr XMLParser::_get_entity(void*, const xmlChar* n) {
     return xmlGetPredefinedEntity(n);
 }
 void XMLParser::_start_document(void* parser) {
-    ((XMLParser*)parser)->_parser_callback.start_document();
+    static_cast<XMLParser*>(parser)->_parser_callback.start_document();
 }
 void XMLParser::_end_document(void* parser) {
-    ((XMLParser*)parser)->_parser_callback.end_document();
+    static_cast<XMLParser*>(parser)->_parser_callback.end_document();
 }
 void XMLParser::_start_element(void* parser, const xmlChar* n,
         const xmlChar** p) {
@@ -96,18 +96,20 @@ void XMLParser::_start_element(void* parser, const xmlChar* n,
         }
     }
 
-    ((XMLParser*)parser)->_parser_callback.start_element((const char*)n,
-        properties);
+    static_cast<XMLParser*>(parser)->_parser_callback.start_element(
+        (const char*)(n), properties);
 }
 void XMLParser::_end_element(void* parser, const xmlChar* n) {
-    ((XMLParser*)parser)->_parser_callback.end_element((const char*)n);
+    static_cast<XMLParser*>(parser)->_parser_callback.end_element(
+        (const char*)(n));
 }
 void XMLParser::_characters(void* parser, const xmlChar* s, int len) {
-    ((XMLParser*)parser)->_parser_callback.characters(
-        std::string((const char*)s, len));
+    static_cast<XMLParser*>(parser)->_parser_callback.characters(
+        std::string((const char*)(s), len));
 }
 void XMLParser::_comment(void* parser, const xmlChar* s) {
-    ((XMLParser*)parser)->_parser_callback.comment((const char*)s);
+    static_cast<XMLParser*>(parser)->_parser_callback.comment(
+        (const char*)(s));
 }
 void XMLParser::_warning(void* parser, const char* fmt, ...) {
     va_list arg;
@@ -116,7 +118,7 @@ void XMLParser::_warning(void* parser, const char* fmt, ...) {
     vsprintf(buff, fmt, arg);
     va_end(arg);
 
-    ((XMLParser*)parser)->_parser_callback.warning(buff);
+    static_cast<XMLParser*>(parser)->_parser_callback.warning(buff);
 }
 void XMLParser::_error(void* parser, const char* fmt, ...) {
     va_list arg;
@@ -125,7 +127,7 @@ void XMLParser::_error(void* parser, const char* fmt, ...) {
     vsprintf(buff, fmt, arg);
     va_end(arg);
 
-    ((XMLParser*)parser)->_parser_callback.error(buff);
+    static_cast<XMLParser*>(parser)->_parser_callback.error(buff);
 }
 void XMLParser::_fatal_error(void* parser, const char* fmt, ...) {
     va_list arg;
@@ -134,7 +136,7 @@ void XMLParser::_fatal_error(void* parser, const char* fmt, ...) {
     vsprintf(buff, fmt, arg);
     va_end(arg);
 
-    ((XMLParser*)parser)->_parser_callback.fatal_error(buff);
+    static_cast<XMLParser*>(parser)->_parser_callback.fatal_error(buff);
 }
 
 void XMLParser::parse_stream(XMLParserCallback& callback, std::istream& file,

@@ -55,7 +55,7 @@ NRay* intersect(const NRay& first, const NRay& second,
     // Negate this if (hyperplane * first) is negative.
 
     NLargeInteger firstCoeff(hyperplane * first);
-    NRay* ans = (NRay*)second.clone();
+    NRay* ans = dynamic_cast<NRay*>(second.clone());
     (*ans) *= firstCoeff;
     (*ans).subtractCopies(first, hyperplane * second);
     (*ans).scaleDown();

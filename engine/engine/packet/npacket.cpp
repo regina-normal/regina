@@ -48,7 +48,7 @@ NPacket::~NPacket() {
 }
 
 NPacket* NPacket::getTreeMatriarch() const {
-    NPacket* p = (NPacket*)this;
+    NPacket* p = const_cast<NPacket*>(this);
     while (p->treeParent)
         p = p->treeParent;
     return p;
@@ -268,7 +268,7 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     if (end)
         treeParent->insertChildLast(ans);
     else
-        treeParent->insertChildAfter(ans, (NPacket*)this);
+        treeParent->insertChildAfter(ans, const_cast<NPacket*>(this));
     if (cloneDescendants)
         internalCloneDescendants(ans);
     return ans;
