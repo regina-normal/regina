@@ -23,8 +23,8 @@ Containers:
         their immediate children change
 
 Docs:
-    + Include a walk-through
-    + More sample python sessions
+    * Include a walk-through
+    * More sample python sessions
 
 Icons:
     - Softer tree for filter_comb.png
