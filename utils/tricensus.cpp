@@ -28,6 +28,7 @@
 
 #include <cctype>
 #include <fstream>
+#include <memory>
 #include <sstream>
 #include <popt.h>
 #include <unistd.h>
@@ -53,7 +54,7 @@ int minimalPrimeP2 = 0;
 int usePairs = 0;
 
 // Variables used for a dump of face pairings.
-std::ostream* dumpStream = 0;
+std::auto_ptr<std::ostream> dumpStream;
 unsigned long totPairings = 0;
 
 /**
@@ -61,8 +62,11 @@ unsigned long totPairings = 0;
  */
 void dumpPairing(const regina::NFacePairing* pair,
         const regina::NFacePairingIsoList*, void*) {
-    if (pair && dumpStream) {
-        (*dumpStream) << (*pair).toTextRep() << std::endl;
+    if (pair) {
+        if (dumpStream.get())
+            (*dumpStream) << (*pair).toTextRep() << std::endl;
+        else
+            std::cout << (*pair).toTextRep() << std::endl;
         totPairings++;
     }
 }
@@ -279,15 +283,12 @@ int main(int argc, const char* argv[]) {
 
     // Are we only dumping face pairings?
     if (genPairs) {
-        if (outFile.empty())
-            dumpStream = &std::cout;
-        else {
-            std::ofstream out(outFile.c_str());
-            if (! out) {
+        if (! outFile.empty()) {
+            dumpStream.reset(new std::ofstream(outFile.c_str()));
+            if ((! dumpStream.get()) || (! *dumpStream)) {
                 std::cerr << "Could not write to file " << outFile << ".\n";
                 return 1;
             }
-            dumpStream = &out;
         }
 
         regina::NFacePairing::findAllPairings(nTet, boundary, nBdryFaces,

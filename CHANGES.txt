@@ -7,6 +7,11 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Version 4.1
+    UTILITIES:
+        tricensus:
+            - Fixed bug in which --genpairs created empty output files.
+
 Version 4.0.1  [ 26 January, 2004 ]
     OVERALL:
         - The ./configure script now takes a guess at the correct --prefix,
