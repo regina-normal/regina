@@ -30,6 +30,7 @@
 #include "packet/npacket.h"
 
 // UI includes:
+#include "eventids.h"
 #include "packetmanager.h"
 #include "packettreeview.h"
 #include "reginapart.h"
@@ -39,10 +40,6 @@
 #include <qheader.h>
 #include <kdebug.h>
 #include <klocale.h>
-
-// Custom event types.
-// Note that QEvent::User is 1000.
-#define EVT_REFRESH_ICON 2000
 
 using regina::NPacket;
 
@@ -190,17 +187,11 @@ void PacketTreeItem::refreshLabel() {
         setText(0, i18n("<Deleted>"));
 }
 
-void PacketTreeItem::refreshIcon() {
-    if (packet)
-        setPixmap(0, PacketManager::iconSmall(packet, true));
-}
-
 void PacketTreeItem::updateEditable() {
     if (packet && packet->isPacketEditable() != isEditable) {
         // We need updating.
         isEditable = ! isEditable;
-        QApplication::postEvent(tree, new QCustomEvent(
-            static_cast<QEvent::Type>(EVT_REFRESH_ICON), this));
+        setPixmap(0, PacketManager::iconSmall(packet, true));
     }
 }
 
@@ -224,17 +215,20 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
 }
 
 void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
-    refreshSubtree();
-    updateEditable();
-    getPart()->setModified(true);
+    // Be careful.  We might not be in the GUI thread.
+    QApplication::postEvent(tree, new QCustomEvent(
+        static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
 void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*,
         bool inParentDestructor) {
-    refreshSubtree();
-    if (! inParentDestructor)
+    // If we're in the parent destructor, it's all going to be done in
+    // this->packetToBeDestroyed() anyway.
+    if (! inParentDestructor) {
+        refreshSubtree();
         updateEditable();
-    getPart()->setModified(true);
+        getPart()->setModified(true);
+    }
 }
 
 void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
@@ -294,8 +288,20 @@ void PacketTreeView::refresh(NPacket* topPacket) {
 }
 
 void PacketTreeView::customEvent(QCustomEvent* evt) {
-    if (evt->type() == EVT_REFRESH_ICON)
-        static_cast<PacketTreeItem*>(evt->data())->refreshIcon();
+    switch (evt->type()) {
+        case EVT_TREE_CHILD_ADDED:
+            {
+                PacketTreeItem* item =
+                    static_cast<PacketTreeItem*>(evt->data());
+
+                item->refreshSubtree();
+                item->updateEditable();
+                part->setModified(true);
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 #include "packettreeview.moc"

@@ -86,12 +86,6 @@ class PacketHeader : public QHBox {
          * contents of the underlying packet.
          */
         void refresh();
-
-    protected:
-        /**
-         * Allow GUI updates from within a non-GUI thread.
-         */
-        void customEvent(QCustomEvent* evt);
 };
 
 /**
@@ -620,6 +614,12 @@ class PacketPane : public QVBox, public regina::NPacketListener {
          */
         void updateClipboardActions();
         void updateUndoActions();
+
+    protected:
+        /**
+         * Allow GUI updates from within a non-GUI thread.
+         */
+        void customEvent(QCustomEvent* evt);
 };
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :

@@ -31,6 +31,7 @@
 #include "packet/npacket.h"
 
 // UI includes:
+#include "eventids.h"
 #include "flatbutton.h"
 #include "packetmanager.h"
 #include "packetui.h"
@@ -58,10 +59,6 @@
     (! (KApplication::kApplication()->clipboard()-> \
         text(QClipboard::Clipboard).isNull()) )
 
-// Custom event types.
-// Note that QEvent::User is 1000.
-#define EVT_REFRESH_HEADER 3000
-
 using regina::NPacket;
 
 namespace {
@@ -88,11 +85,6 @@ PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
 void PacketHeader::refresh() {
     title->setText(packet->getFullName().c_str());
     icon->setPixmap(PacketManager::iconBar(packet, true));
-}
-
-void PacketHeader::customEvent(QCustomEvent* evt) {
-    if (evt->type() == EVT_REFRESH_HEADER)
-        refresh();
 }
 
 ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
@@ -448,9 +440,12 @@ void PacketPane::packetToBeDestroyed(regina::NPacket*) {
 
 void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
     // Assume it's this packet.
+    // Watch out though.  We may not be in the GUI thread.
+    // Better do it all through Qt events.
     if (packet->isPacketEditable() != readWrite)
-        setReadWrite(!readWrite);
-    QApplication::postEvent(header, new QCustomEvent(EVT_REFRESH_HEADER));
+        QApplication::postEvent(this, new QCustomEvent(
+            readWrite ? EVT_PANE_SET_READONLY : EVT_PANE_SET_READWRITE));
+    QApplication::postEvent(this, new QCustomEvent(EVT_REFRESH_HEADER));
 }
 
 void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
@@ -459,7 +454,7 @@ void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
     if (packet->isPacketEditable() != readWrite)
         setReadWrite(!readWrite);
     if (! inParentDestructor)
-        QApplication::postEvent(header, new QCustomEvent(EVT_REFRESH_HEADER));
+        header->refresh();
 }
 
 void PacketPane::refresh() {
@@ -663,6 +658,19 @@ void PacketPane::updateUndoActions() {
         if (extRedo)
             extRedo->setEnabled(KTextEditor::undoInterface(edit)->redoCount()
                 && edit->isReadWrite());
+    }
+}
+
+void PacketPane::customEvent(QCustomEvent* evt) {
+    switch (evt->type()) {
+        case EVT_PANE_SET_READONLY:
+            setReadWrite(false); break;
+        case EVT_PANE_SET_READWRITE:
+            setReadWrite(true); break;
+        case EVT_REFRESH_HEADER:
+            header->refresh(); break;
+        default:
+            break;
     }
 }
 

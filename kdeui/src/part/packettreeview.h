@@ -112,15 +112,6 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
          */
         void refreshLabel();
         /**
-         * Updates the icon of this item to match the underlying packet
-         * type and whether or not it is editable.
-         *
-         * Note that this routine may only be called from within the GUI
-         * thread!  Calling it from a different thread can cause an Xlib
-         * crash.
-         */
-        void refreshIcon();
-        /**
          * Updates the appearance of this item to correctly reflect whether
          * or not the underlying packet is editable.  This refers purely to
          * child packet constraints; whether or not the overall KPart is
@@ -129,7 +120,9 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
          * This will only make a physical update if the editability has in
          * fact changed; otherwise it will do nothing.
          *
-         * This routine is safe to call from within a non-GUI thread.
+         * Note that this routine may only be called from within the GUI
+         * thread!  Calling it from a different thread can cause an Xlib
+         * crash.
          */
         void updateEditable();
 
