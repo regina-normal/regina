@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "regina.h"
+#include "reginamain.h"
 #include "pref.h"
 
 #include <qdragobject.h>
@@ -55,7 +55,7 @@
 #include <kaction.h>
 #include <kstdaction.h>
 
-Regina::Regina()
+ReginaMain::ReginaMain()
     : KMainWindow( 0, "Regina" ),
       m_view(new ReginaView(this)),
       m_printer(0)
@@ -80,11 +80,11 @@ Regina::Regina()
 
 }
 
-Regina::~Regina()
+ReginaMain::~ReginaMain()
 {
 }
 
-void Regina::load(const KURL& url)
+void ReginaMain::load(const KURL& url)
 {
     QString target;
     // the below code is what you should normally do.  in this
@@ -110,7 +110,7 @@ void Regina::load(const KURL& url)
     m_view->openURL(url);
 }
 
-void Regina::setupActions()
+void ReginaMain::setupActions()
 {
     KStdAction::openNew(this, SLOT(fileNew()), actionCollection());
     KStdAction::open(this, SLOT(fileOpen()), actionCollection());
@@ -134,7 +134,7 @@ void Regina::setupActions()
     createGUI();
 }
 
-void Regina::saveProperties(KConfig *config)
+void ReginaMain::saveProperties(KConfig *config)
 {
     // the 'config' object points to the session managed
     // config file.  anything you write here will be available
@@ -144,7 +144,7 @@ void Regina::saveProperties(KConfig *config)
         config->writeEntry("lastURL", m_view->currentURL()); 
 }
 
-void Regina::readProperties(KConfig *config)
+void ReginaMain::readProperties(KConfig *config)
 {
     // the 'config' object points to the session managed
     // config file.  this function is automatically called whenever
@@ -157,13 +157,13 @@ void Regina::readProperties(KConfig *config)
         m_view->openURL(KURL(url));
 }
 
-void Regina::dragEnterEvent(QDragEnterEvent *event)
+void ReginaMain::dragEnterEvent(QDragEnterEvent *event)
 {
     // accept uri drops only
     event->accept(QUriDrag::canDecode(event));
 }
 
-void Regina::dropEvent(QDropEvent *event)
+void ReginaMain::dropEvent(QDropEvent *event)
 {
     // this is a very simplistic implementation of a drop event.  we
     // will only accept a dropped URL.  the Qt dnd code can do *much*
@@ -182,17 +182,17 @@ void Regina::dropEvent(QDropEvent *event)
     }
 }
 
-void Regina::fileNew()
+void ReginaMain::fileNew()
 {
     // this slot is called whenever the File->New menu is selected,
     // the New shortcut is pressed (usually CTRL+N) or the New toolbar
     // button is clicked
 
     // create a new window
-    (new Regina)->show();
+    (new ReginaMain)->show();
 }
 
-void Regina::fileOpen()
+void ReginaMain::fileOpen()
 {
     // this slot is called whenever the File->Open menu is selected,
     // the Open shortcut is pressed (usually CTRL+O) or the Open toolbar
@@ -202,7 +202,7 @@ void Regina::fileOpen()
         m_view->openURL(url);
 }
 
-void Regina::fileSave()
+void ReginaMain::fileSave()
 {
     // this slot is called whenever the File->Save menu is selected,
     // the Save shortcut is pressed (usually CTRL+S) or the Save toolbar
@@ -211,7 +211,7 @@ void Regina::fileSave()
     // save the current file
 }
 
-void Regina::fileSaveAs()
+void ReginaMain::fileSaveAs()
 {
     // this slot is called whenever the File->Save As menu is selected,
     KURL file_url = KFileDialog::getSaveURL();
@@ -221,7 +221,7 @@ void Regina::fileSaveAs()
     }
 }
 
-void Regina::filePrint()
+void ReginaMain::filePrint()
 {
     // this slot is called whenever the File->Print menu is selected,
     // the Print shortcut is pressed (usually CTRL+P) or the Print toolbar
@@ -244,7 +244,7 @@ void Regina::filePrint()
     }
 }
 
-void Regina::optionsShowToolbar()
+void ReginaMain::optionsShowToolbar()
 {
     // this is all very cut and paste code for showing/hiding the
     // toolbar
@@ -254,7 +254,7 @@ void Regina::optionsShowToolbar()
         toolBar()->hide();
 }
 
-void Regina::optionsShowStatusbar()
+void ReginaMain::optionsShowStatusbar()
 {
     // this is all very cut and paste code for showing/hiding the
     // statusbar
@@ -264,12 +264,12 @@ void Regina::optionsShowStatusbar()
         statusBar()->hide();
 }
 
-void Regina::optionsConfigureKeys()
+void ReginaMain::optionsConfigureKeys()
 {
     KKeyDialog::configureKeys(actionCollection(), "reginaui.rc");
 }
 
-void Regina::optionsConfigureToolbars()
+void ReginaMain::optionsConfigureToolbars()
 {
     // use the standard toolbar editor
     KEditToolbar dlg(actionCollection());
@@ -280,7 +280,7 @@ void Regina::optionsConfigureToolbars()
     } 
 }
 
-void Regina::optionsPreferences()
+void ReginaMain::optionsPreferences()
 {
     // popup some sort of preference dialog, here
     ReginaPreferences dlg;
@@ -290,15 +290,15 @@ void Regina::optionsPreferences()
     }
 }
 
-void Regina::changeStatusbar(const QString& text)
+void ReginaMain::changeStatusbar(const QString& text)
 {
     // display the text on the statusbar
     statusBar()->message(text);
 }
 
-void Regina::changeCaption(const QString& text)
+void ReginaMain::changeCaption(const QString& text)
 {
     // display the text on the caption
     setCaption(text);
 }
-#include "regina.moc"
+#include "reginamain.moc"

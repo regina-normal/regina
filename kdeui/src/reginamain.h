@@ -26,12 +26,8 @@
 
 /* end stub */
 
-#ifndef _REGINA_H_
-#define _REGINA_H_
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif 
+#ifndef _REGINAMAIN_H_
+#define _REGINAMAIN_H_
 
 #include <kapp.h>
 #include <kmainwindow.h>
@@ -50,19 +46,19 @@ class KURL;
  * @author $AUTHOR <$EMAIL>
  * @version $APP_VERSION
  */
-class Regina : public KMainWindow
+class ReginaMain : public KMainWindow
 {
     Q_OBJECT
 public:
     /**
      * Default Constructor
      */
-    Regina();
+    ReginaMain();
 
     /**
      * Default Destructor
      */
-    virtual ~Regina();
+    virtual ~ReginaMain();
 
     /**
      * Use this method to load whatever file/URL you have
@@ -118,4 +114,4 @@ private:
     KToggleAction *m_statusbarAction;
 };
 
-#endif // _REGINA_H_
+#endif // _REGINAMAIN_H_
