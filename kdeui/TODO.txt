@@ -12,6 +12,8 @@ engine documentation.
 General:
     - Make "configure shortcuts" work with the part as well as with the shell
     - Enhance the DCOP interface
+    * Observing some serious problems with vimpart, as well as with
+      katepart word wrapping.
 
 Census:
     - Implement GUI census creation
