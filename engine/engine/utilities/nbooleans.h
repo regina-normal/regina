@@ -267,6 +267,20 @@ class NTriBool {
          * boolean.
          */
         explicit NTriBool(Code newCode);
+        /**
+         * A private integer constructor that should never be
+         * called.  This private routine exists so that illegal integer
+         * constructions don't automatically convert to boolean
+         * constructions.
+         */
+        NTriBool(int);
+        /**
+         * A private integer assignment operator that should never be
+         * called.  This private routine exists so that illegal integer
+         * assignments don't automatically convert to boolean
+         * assignments.
+         */
+        NTriBool& operator = (int);
 };
 
 /**
@@ -279,6 +293,20 @@ class NTriBool {
  * @return a reference to \a out.
  */
 std::ostream& operator << (std::ostream& out, const NTriBool& set);
+
+/**
+ * An exception thrown when the illegal integer constructor for NTriBool
+ * is called.
+ */
+class NTriBool_Illegal_Integer_Constructor {
+};
+
+/**
+ * An exception thrown when the illegal integer assignment operator for
+ * NTriBool is called.
+ */
+class NTriBool_Illegal_Integer_Assignment {
+};
 
 /**
  * A set of booleans.  Note that there are only four possible such sets.
@@ -700,6 +728,14 @@ inline NTriBool NTriBool::operator ~ () const {
 inline NTriBool::NTriBool(Code newCode) :
         code((newCode == codeTrue || newCode == codeFalse) ? newCode :
             codeUnknown) {
+}
+
+inline NTriBool::NTriBool(int) {
+    throw NTriBool_Illegal_Integer_Constructor();
+}
+
+inline NTriBool& NTriBool::operator = (int) {
+    throw NTriBool_Illegal_Integer_Assignment();
 }
 
 // Inline functions for NBoolSet
