@@ -35,6 +35,9 @@
 
 #include "../packettabui.h"
 
+class QLabel;
+class QListView;
+
 namespace regina {
     class NPacket;
     class NTriangulation;
@@ -54,6 +57,15 @@ class NTriAlgebraUI : public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QLabel* H1;
+        QLabel* H1Rel;
+        QLabel* H1Bdry;
+        QLabel* H2;
+        QLabel* H2Z2;
+        QLabel* fundName;
+        QLabel* fundGens;
+        QLabel* fundRelCount;
+        QListView* fundRels;
 
     public:
         /**
