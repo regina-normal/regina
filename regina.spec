@@ -1,9 +1,13 @@
+# Known to work for:
+# - Fedora Core 2
+
 Name: regina
 Summary: 3-manifold topology software with normal surface support
 Version: 4.1.2
 Release: 1.%{_vendor}
 License: GPL
-Group: Applications/Math
+# I wish there were a more sane group (like Applications/Mathematics).
+Group: Applications/Engineering
 Source: http://prdownloads.sourceforge.net/regina/%{name}-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
