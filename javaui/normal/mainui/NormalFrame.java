@@ -253,8 +253,6 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      * @return the completely filled menu bar.
      */
     private JMenuBar makeMenus() {
-        boolean fileIO = shell.mayAccessFiles();
-
         JMenuBar menuBar = new JMenuBar();
 
         // --- File menu ---
@@ -293,7 +291,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
         menuFile.add(menuFileNew);
 
-        if (fileIO) {
+        if (shell.mayEngineAccessFiles()) {
             JMenuItem menuFileOpen = new JMenuItem("Open",
                 Standard16.open.image());
             menuFileOpen.setMnemonic(KeyEvent.VK_O);
@@ -343,13 +341,13 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         menuFile.add(menuFileClose);
         needFile.addElement(menuFileClose);
 
-           recentFileActionListener = new ActionListener() {
-               public void actionPerformed(ActionEvent e) {
-                   fileOpen(new File(e.getActionCommand()));
-               }
-           };
+        recentFileActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fileOpen(new File(e.getActionCommand()));
+            }
+        };
 
-        if (fileIO) {
+        if (shell.mayEngineAccessFiles()) {
             menuFile.addSeparator();
 
             menuFileRecent = new JMenu("Recent");
@@ -626,7 +624,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
         menuOptions.add(menuOptionsDisplay);
 
-        if (fileIO) {
+        if (shell.mayEngineAccessFiles()) {
             JMenu menuOptionsFile = new JMenu("File");
             menuOptionsFile.setMnemonic(KeyEvent.VK_F);
 
@@ -646,16 +644,18 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             menuOptions.add(menuOptionsFile);
         }
 
-        JMenuItem menuOptionsHelpBrowser = new JMenuItem("Help Browser...");
-        menuOptionsHelpBrowser.setMnemonic(KeyEvent.VK_H);
-        menuOptionsHelpBrowser.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new SelectHelpBrowser(shell).show();
-            }
-        });
-        menuOptions.add(menuOptionsHelpBrowser);
+        if (shell.getShellStyle() != shell.shellApplet) {
+            JMenuItem menuOptionsHelpBrowser = new JMenuItem("Help Browser...");
+            menuOptionsHelpBrowser.setMnemonic(KeyEvent.VK_H);
+            menuOptionsHelpBrowser.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new SelectHelpBrowser(shell).show();
+                }
+            });
+            menuOptions.add(menuOptionsHelpBrowser);
+        }
 
-        if (fileIO) {
+        if (shell.mayUIAccessFiles()) {
             JMenuItem menuOptionsJythonLibs =
                 new JMenuItem("Jython Libraries...");
             menuOptionsJythonLibs.setMnemonic(KeyEvent.VK_J);
@@ -709,8 +709,6 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      * @return the completely filled tool bar.
      */
     private JToolBar makeToolBar() {
-        boolean fileIO = shell.mayAccessFiles();
-
         JToolBar toolBar = new JToolBar();
 
         JButton newFile = new JButton(Images.btnFileNewTopology.image());
@@ -722,7 +720,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         });
         toolBar.add(newFile);
 
-        if (fileIO) {
+        if (shell.mayEngineAccessFiles()) {
             JButton openFile = new JButton(Standard16.open.image());
             openFile.setToolTipText("Open File");
             openFile.addActionListener(new java.awt.event.ActionListener() {
