@@ -30,15 +30,16 @@ endif
 
 # All utilities:
 
-all : regfiledump$(EXE)
+all : regfiledump$(EXE) sigcensus$(EXE)
 
 # Individual utilities:
 
 regfiledump$(EXE) : regfiledump.o
+sigcensus$(EXE) : sigcensus.o
 
 # Other targets:
 
 clean :
 	-rm *.o *.d
-	-rm regfiledump$(EXE)
+	-rm regfiledump$(EXE) sigcensus$(EXE)
 
