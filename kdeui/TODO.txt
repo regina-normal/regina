@@ -5,57 +5,61 @@ Note that this TODO list pertains only to the user interface; there is
 also a calculation engine TODO list found under "Related Pages" in the
 engine documentation.
 
+* means must be implemented in the next release.
++ means would be nice to have implemented in the next release.
+- means would be pleasant to have some time.
+
 General:
-    Make "configure shortcuts" work with the part as well as with the shell
-    More "What's This?" texts, including a what's this button on the toolbar
-    Include an index of common tasks in the reference manual
-    Enhance the DCOP interface
+    - Make "configure shortcuts" work with the part as well as with the shell
+    + More "What's This?" texts, including a what's this button on the toolbar
+    * Include an index of common tasks in the reference manual
+    - Enhance the DCOP interface
 
 Census:
-    Implement GUI census creation
+    + Implement GUI census creation
 
 Containers:
-    Update container viewers whenever their subtrees change, not just when
+    - Update container viewers whenever their subtrees change, not just when
         their immediate children change
 
 Icons:
-    Softer tree for filter_comb.png
-    Icons for separate New actions
-    Icons for barycentric subdivision and other triangulation actions
-    Separate mimetype icon set
+    - Softer tree for filter_comb.png
+    - Icons for separate New actions
+    * Icons for barycentric subdivision and other triangulation actions
+    - Separate mimetype icon set
 
 Import/Export:
-    Allow a greater variety of dehydration list file formats
+    - Allow a greater variety of dehydration list file formats
 
 Packets (General):
-    Implement packet tags
-    Work out how to right-align the packet pane close button
-    Work around Vim component bugs in script/text viewers
-    Find out how to centre column headers in list views
-    Change the "Docked Packet" menu title according to packet type
+    - Implement packet tags
+    - Work out how to right-align the packet pane close button
+    - Work around Vim component bugs in script/text viewers
+    - Find out how to centre column headers in list views
+    + Change the "Docked Packet" menu title according to packet type
 
 Python:
-    Allow breaking processing in python consoles
-    Check to see whether user libraries are in fact text files
-    Allow compilation and running of open libraries
-    Fix crash on "import regina" when running scripts from within
+    - Allow breaking processing in python consoles
+    - Check to see whether user libraries are in fact text files
+    - Allow compilation and running of open libraries
+    - Fix crash on "import regina" when running scripts from within
         a konqueror embedded preview
-    Fix missing help icon when running scripts from within a konqueror
+    - Fix missing help icon when running scripts from within a konqueror
         embedded preview
 
 Scripts:
-    Make a script dirty when its variables are changed externally
+    - Make a script dirty when its variables are changed externally
         through renaming or deletion
-    Packet choosers with very large files seem to cause real problems
+    - Packet choosers with very large files seem to cause real problems
         (e.g., variable table for snappea census)
 
 Toolbars:
-    Disable "configure toolbars" until delayed icon loading is fixed in
+    - Disable "configure toolbars" until delayed icon loading is fixed in
         kdelibs
-    Work out how to get decent action names in the configure toolbar dialog
+    - Work out how to get decent action names in the configure toolbar dialog
 
 Triangulations:
-    Make the skeleton viewer windows appear in a pleasant size
-    Only fill the isomorphism combo box when absolutely necessary
-    Progress dialogs on connected sum decomposition and 3-sphere recognition?
+    - Make the skeleton viewer windows appear in a pleasant size
+    + Only fill the isomorphism combo box when absolutely necessary
+    * Progress dialogs on connected sum decomposition and 3-sphere recognition?
 
