@@ -35,6 +35,7 @@
 #include "../reginapart.h"
 
 #include <cstring>
+#include <kaction.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -43,8 +44,8 @@
 #include <ktexteditor/highlightinginterface.h>
 #include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
+#include <ktoolbar.h>
 #include <qhbox.h>
-#include <qpushbutton.h>
 #include <qsplitter.h>
 #include <qtable.h>
 #include <qvbox.h>
@@ -61,15 +62,21 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
         KTextEditor::Document* doc, bool readWrite) :
         PacketUI(enclosingPane), script(packet), document(doc),
         isCommitting(false) {
-    ui = new QSplitter(Qt::Vertical);
+    ui = new QVBox();
+
+    // --- Action Toolbar ---
+
+    KToolBar* actionBar = new KToolBar(ui, "scriptActionBar", false, false);
+    actionBar->setFullSize(true);
+    actionBar->setIconText(KToolBar::IconTextRight);
 
     // --- Variable Table ---
 
-    QHBox* varBox = new QHBox(ui);
+    // Prepare a splitter for the remaining components.
+    QSplitter* splitter = new QSplitter(Qt::Vertical, ui);
 
-    varTable = new QTable(0, 2, varBox);
+    varTable = new QTable(0, 2, splitter);
     varTable->setReadOnly(! readWrite);
-    varBox->setStretchFactor(varTable, 1);
 
     QHeader* hdr = varTable->verticalHeader();
     hdr->hide();
@@ -84,41 +91,13 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     varTable->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,
         QSizePolicy::Expanding, SCRIPT_TABLE_WEIGHT, SCRIPT_TABLE_WEIGHT));
-
-    // --- Script Actions ---
-
-    QVBox* varActions = new QVBox(varBox);
-    varBox->setStretchFactor(varActions, 0);
-
-    QButton* varAdd = new QPushButton(SmallIconSet("insert_table_row", 0,
-        ReginaPart::factoryInstance()), i18n("&Add Var"), varActions);
-    connect(varAdd, SIGNAL(clicked()), this, SLOT(addVariable()));
-
-    varRemove = new QPushButton(SmallIconSet("delete_table_row", 0,
-        ReginaPart::factoryInstance()), i18n("Re&move Var"), varActions);
-    varRemove->setEnabled(false);
-    connect(varRemove, SIGNAL(clicked()), this,
-        SLOT(removeSelectedVariables()));
-    connect(varTable, SIGNAL(selectionChanged()), this,
-        SLOT(updateRemoveState()));
-
-    QWidget* stretch = new QWidget(varActions);
-    varActions->setStretchFactor(stretch, 1);
-
-    QButton* pyCompile = new QPushButton(SmallIconSet("compfile", 0,
-        ReginaPart::factoryInstance()), i18n("&Compile"), varActions);
-    connect(pyCompile, SIGNAL(clicked()), this, SLOT(unimplemented()));
-    QButton* pyRun = new QPushButton(SmallIconSet("run", 0,
-        ReginaPart::factoryInstance()), i18n("&Run"), varActions);
-    connect(pyRun, SIGNAL(clicked()), this, SLOT(unimplemented()));
-
-    ui->setResizeMode(varBox, QSplitter::Stretch);
+    splitter->setResizeMode(varTable, QSplitter::Stretch);
 
     // --- Text Editor ---
 
     // Create a view before we do anything else.
     // Otherwise the Vim component crashes.
-    view = document->createView(ui);
+    view = document->createView(splitter);
     editInterface = KTextEditor::editInterface(document);
 
     // Prepare the components.
@@ -128,19 +107,54 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     view->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
         QSizePolicy::MinimumExpanding, SCRIPT_EDITOR_WEIGHT,
         SCRIPT_EDITOR_WEIGHT));
-    ui->setResizeMode(view, QSplitter::Stretch);
+    splitter->setResizeMode(view, QSplitter::Stretch);
+
+    // --- Script Actions ---
+
+    scriptActions = new KActionCollection(0, 0, 0,
+        ReginaPart::factoryInstance());
+
+    KAction* actAdd = new KAction(i18n("&Add Var"), "insert_table_row",
+        0 /* shortcut */, this, SLOT(addVariable()), scriptActions,
+        "script_add_var");
+    actAdd->setToolTip(i18n("Add a new script variable"));
+    actAdd->plug(actionBar);
+
+    actRemove = new KAction(i18n("Re&move Var"), "delete_table_row",
+        0 /* shortcut */, this, SLOT(removeSelectedVariables()),
+        scriptActions, "script_remove_var");
+    actRemove->setToolTip(i18n(
+        "Remove the currently selected script variable(s)"));
+    actRemove->setEnabled(false);
+    connect(varTable, SIGNAL(selectionChanged()), this,
+        SLOT(updateRemoveState()));
+    actRemove->plug(actionBar);
+
+    actionBar->insertLineSeparator();
+
+    KAction* actCompile = new KAction(i18n("&Compile"), "compfile",
+        0 /* shortcut */, this, SLOT(unimplemented()), scriptActions,
+        "script_compile");
+    actCompile->setToolTip(i18n("Compile the python script"));
+    actCompile->plug(actionBar);
+
+    KAction* actRun = new KAction(i18n("&Run"), "run", 0 /* shortcut */,
+        this, SLOT(unimplemented()), scriptActions,
+        "script_run");
+    actRun->setToolTip(i18n("Execute the python script"));
+    actRun->plug(actionBar);
 
     // --- Finalising ---
 
     // Resize the components within the splitter so that the editor has most
     // of the space.
-    QValueList<int> sizes = ui->sizes();
+    QValueList<int> sizes = splitter->sizes();
     int totalSize = sizes[0] + sizes[1];
     sizes[0] = totalSize * SCRIPT_TABLE_WEIGHT / SCRIPT_TOTAL_WEIGHT;
-    if (sizes[0] < varBox->minimumHeight())
-        sizes[0] = varBox->minimumHeight();
+    if (sizes[0] < varTable->minimumHeight())
+        sizes[0] = varTable->minimumHeight();
     sizes[1] = totalSize - sizes[0];
-    ui->setSizes(sizes);
+    splitter->setSizes(sizes);
 
     // Fill the components with data.
     refresh();
@@ -162,6 +176,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
 NScriptUI::~NScriptUI() {
     delete document;
+    delete scriptActions;
 }
 
 NPacket* NScriptUI::getPacket() {
@@ -316,7 +331,7 @@ void NScriptUI::removeSelectedVariables() {
 }
 
 void NScriptUI::updateRemoveState() {
-    varRemove->setEnabled(varTable->numSelections() > 0);
+    actRemove->setEnabled(varTable->numSelections() > 0);
 }
 
 void NScriptUI::unimplemented() {

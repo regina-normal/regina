@@ -35,7 +35,8 @@
 
 #include "../packetui.h"
 
-class QButton;
+class KAction;
+class KActionCollection;
 class QSplitter;
 class QTable;
 
@@ -64,12 +65,17 @@ class NScriptUI : public QObject, public PacketUI {
         /**
          * Internal components
          */
-        QSplitter* ui;
+        QVBox* ui;
         QTable* varTable;
-        QButton* varRemove;
         KTextEditor::Document* document;
         KTextEditor::EditInterface* editInterface;
         KTextEditor::View* view;
+
+        /**
+         * Script actions
+         */
+        KAction* actRemove;
+        KActionCollection* scriptActions;
 
         /**
          * Properties
