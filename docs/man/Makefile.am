@@ -11,21 +11,17 @@ man_MANS = \
   regconvert.1 \
   regfiledump.1 \
   regfiletype.1 \
-  @PACKAGE@.1 \
   sigcensus.1 \
   tricensus.1 \
   tricensus-manager.1 \
-  regina.conf.5
+  regina-kde.1 \
+  regina-python.1
 
 SUFFIXES = .1 .2 .3 .4 .5 .6 .7 .8
 
 %.1 %.2 %.3 %.4 %.5 %.6 %.7 %.8 :
-	cd .. && @DOCBOOK2MAN@ -o man regina.sgml
-	rm -f *.5reg
-	if [ "x@PACKAGE@" != "xregina" ]; then \
-		mv regina.1 @PACKAGE@.1; \
-	fi
+	cd ../../kdeui/doc/en && @DOCBOOK2MAN@ -o ../../../docs/man manonly.docbook
 
 mostlyclean-local :
-	rm -f *.[1-8] *.5reg manpage.*
+	rm -f *.[1-8] manpage.*
 
