@@ -1,14 +1,79 @@
 #!/bin/sh
 
-# Put us in the base Regina directory.
-cd `dirname $0`
+# ---------- Options ----------
 
-export options=runtime.opt
-export regconf=regconf
-export command=regina.cmd
+# File in the options directory containing runtime options.
+options=runtime.opt
 
-# Check that there is a runtime configuration file.
-if [ ! -f $options ]; then
+# Script used to run the RegConf utility.
+regconf=regconf
+
+# ---------- End Options ----------
+
+# Test that the given argument is a directory.
+# On success, returns 0 and sets dir_err to the empty string.
+# On error, returns 1 and sets dir_err to an appropriate error message.
+# Usage: testdir <dir> [ -c ]
+#     -c: attempt to create the directory if it does not exist.
+function testdir() {
+	dir_err=
+	if [ ! -e "$1" ]; then
+		if [ "$2" == "-c" ]; then
+			if ! mkdir "$1"; then
+				dir_err="This directory could not be created."
+			fi
+		else
+			dir_err="This directory does not exist."
+		fi
+	elif [ ! -d "$1" ]; then
+		dir_err="This is not a directory."
+	fi
+
+	if [ -z "$dir_err" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Test that the given argument exists and is a regular file.
+# On success, returns 0 and sets file_err to the empty string.
+# On error, returns 1 and sets file_err to an appropriate error message.
+# Usage: testfile <file>
+function testfile() {
+	file_err=
+	if [ ! -e "$1" ]; then
+		file_err="This file does not exist."
+	elif [ ! -f "$1" ]; then
+		file_err="This exists but is not a regular file."
+	fi
+
+	if [ -z "$file_err" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Set the options directory.
+
+if [ -z "$REGINA_OPTIONS" ]; then
+	export REGINA_OPTIONS="`echo ~/.regina`"
+fi
+
+# Set the full path to the runtime options file.
+
+case "$REGINA_OPTIONS" in
+	*/ )
+		options="$REGINA_OPTIONS$options"
+	;;
+	* )
+		options="$REGINA_OPTIONS/$options"
+	;;
+esac
+
+# Check that there is a runtime options file.
+if [ ! -e "$options" ]; then
 	echo
 	echo "######################################"
 	echo "#                                    #"
@@ -20,22 +85,40 @@ if [ ! -f $options ]; then
 	echo
 	echo "There is no runtime options file $options."
 	echo "You should run the RegConf configuration utility \"$regconf\","
-	echo "    found in the base Regina directory ($PWD)."
+	echo "    found in the same directory as this script (`dirname "$0"`)."
 	echo "I will try to do this now."
 	echo
-	if $regconf; then
+	if "`dirname "$0"`/$regconf"; then
 		echo
 		echo "Now that you have set the runtime options, try running this" \
 			"program again."
 		echo
 	fi
 	exit 1
+elif [ ! -f "$options" ]; then
+	echo
+	echo "###################################"
+	echo "#                                 #"
+	echo "#             REGINA              #"
+	echo "#                                 #"
+	echo "#  Invalid runtime options file!  #"
+	echo "#                                 #"
+	echo "###################################"
+	echo
+	echo "The runtime options file is currently set to \"$options\"."
+	echo "This exists but is not a regular file."
+	echo
+	echo "Try deleting or renaming it, and then run this program again."
+	echo
+	exit 1
 else
-	# Read in the options file.
-	. $options
+	# Read in the runtime options file.
+	. "$options"
 
 	# Run the application.
-	if ! $Java "-Djava.library.path=$JNIDir" -cp "$JavaUI:$JavaJNI:$JavaCORBA:$DocJar:$BTools:$JPython:$JavaHelp:$ExtraClasses" normal.Application $@ ; then
+	command="$Java \"-Djava.library.path=$JNIDir\" -cp \"$JavaUI:$JavaJNI:$JavaCORBA:$DocJar:$BTools:$JPython:$JavaHelp:$ExtraClasses\" normal.Application $@"
+
+	if ! eval $command; then
 		echo
 		echo "################################"
 		echo "#                              #"
@@ -47,8 +130,7 @@ else
 		echo
 		echo "An error occurred whilst trying to run the application."
 		echo "The command used was:"
-		echo
-		echo "    $Java \"-Djava.library.path=$JNIDir\" -cp \"$JavaUI:$JavaJNI:$JavaCORBA:$DocJar:$BTools:$JPython:$JavaHelp:$ExtraClasses\" normal.Application $@"
+		echo "    $command"
 		echo
 		echo "The runtime options are set as follows:"
 		echo
@@ -66,8 +148,8 @@ else
 		echo "    Extra classes: $ExtraClasses"
 		echo
 		echo "Check that these options are correct and if necessary run the"
-		echo "RegConf configuration utility \"$regconf\", found in the base"
-		echo "Regina directory ($PWD)."
+		echo "RegConf configuration utility \"$regconf\", found in the same"
+		echo "directory as this script (`dirname "$0"`)."
 		echo
 		exit 1
 	fi
