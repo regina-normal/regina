@@ -114,6 +114,7 @@ public class NLargeInteger extends BigInteger {
      * Jython operator overload.
      */
     public int __cmp__(Object obj) {
+        System.out.println("cmp");
         if (obj instanceof BigInteger)
             return compareTo(obj);
         if (obj instanceof Number)
@@ -124,6 +125,7 @@ public class NLargeInteger extends BigInteger {
      * Jython operator overload.
      */
     public Object __eq__(Object obj) {
+        System.out.println("eq");
         if (obj instanceof BigInteger)
             return (equals(obj) ? TRUE : FALSE);
         if (obj instanceof Number)
@@ -134,6 +136,7 @@ public class NLargeInteger extends BigInteger {
      * Jython operator overload.
      */
     public Object __ne__(Object obj) {
+        System.out.println("ne");
         if (obj instanceof BigInteger)
             return (equals(obj) ? FALSE : TRUE);
         if (obj instanceof Number)
@@ -144,6 +147,7 @@ public class NLargeInteger extends BigInteger {
      * Jython operator overload.
      */
     public Object __le__(Object obj) {
+        System.out.println("le");
         if (obj instanceof BigInteger)
             return (compareTo(obj) <= 0 ? TRUE : FALSE);
         if (obj instanceof Number)
@@ -155,6 +159,7 @@ public class NLargeInteger extends BigInteger {
      * Jython operator overload.
      */
     public Object __lt__(Object obj) {
+        System.out.println("lt");
         if (obj instanceof BigInteger)
             return (compareTo(obj) < 0 ? TRUE : FALSE);
         if (obj instanceof Number)
@@ -166,6 +171,7 @@ public class NLargeInteger extends BigInteger {
      * Jython operator overload.
      */
     public Object __ge__(Object obj) {
+        System.out.println("ge");
         if (obj instanceof BigInteger)
             return (compareTo(obj) >= 0 ? TRUE : FALSE);
         if (obj instanceof Number)
@@ -177,6 +183,7 @@ public class NLargeInteger extends BigInteger {
      * Jython operator overload.
      */
     public Object __gt__(Object obj) {
+        System.out.println("gt");
         if (obj instanceof BigInteger)
             return (compareTo(obj) > 0 ? TRUE : FALSE);
         if (obj instanceof Number)
