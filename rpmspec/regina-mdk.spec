@@ -7,7 +7,7 @@ Version: 4.1.2
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
-Group: Applications/Engineering
+Group: Sciences/Mathematics
 Source: http://prdownloads.sourceforge.net/regina/regina-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
@@ -68,9 +68,28 @@ make install-strip DESTDIR=$RPM_BUILD_ROOT
 # rm -f $RPM_BUILD_ROOT%{_libdir}/regina-normal/python/regina.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/libreginapart.a
 
-%post -p /sbin/ldconfig
+# Create the Mandrake menu file.
+install -m755 -d $RPM_BUILD_ROOT%{_menudir}
+cat << EOF > $RPM_BUILD_ROOT%{_menudir}/%{name}
+?package(%{name}):command="/usr/bin/regina-kde" \
+icon="%{name}.png" needs="X11" \
+section="More applications/Sciences/Mathematics" \
+title="Regina" longtitle="3-manifold topology software" \
+startup_notify="true" mimetypes="application/x-regina,application/x-python" \
+accept_url="true" multiple_files="true"
+EOF
 
-%postun -p /sbin/ldconfig
+# Install icons for the Mandrake menu.
+install -m644 icons/reginatiny.png -D $RPM_BUILD_ROOT%{_miconsdir}/%{name}.png
+install -m644 icons/regina.png -D $RPM_BUILD_ROOT%{_iconsdir}/%{name}.png
+
+%post
+/sbin/ldconfig
+%{update_menus}
+
+%postun
+/sbin/ldconfig
+%{clean_menus}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -101,6 +120,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mimelnk/*/*
 %{_datadir}/regina-normal
 %{_datadir}/services/*
+
+# Mandrake-specific files:
+%{_menudir}/%{name}
+%{_miconsdir}/%{name}.png
+%{_iconsdir}/%{name}.png
 
 %changelog
 * Fri Jun 25 2004 Ben Burton <bab@debian.org> 4.1.2
