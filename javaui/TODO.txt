@@ -21,7 +21,7 @@ Help:
 	Write manual! - include context sensitive help, searching and index.
 
 Jython:
-*	Intermediate output in console
+	Intermediate output in console (problem runs back to jython here)
 	Check to see whether user libraries are text files
 	Syntax highlighting for script editor
 	Import/export scripts as text files
