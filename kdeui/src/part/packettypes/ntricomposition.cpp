@@ -28,6 +28,8 @@
 
 // Regina core includes:
 #include "manifold/nmanifold.h"
+#include "subcomplex/nlayeredlensspace.h"
+#include "subcomplex/nlayeredloop.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
@@ -145,11 +147,79 @@ void NTriCompositionUI::findLayeredChainPairs() {
 }
 
 void NTriCompositionUI::findLayeredLensSpaces() {
-    // TODO
+    unsigned long nComps = tri->getNumberOfComponents();
+
+    QListViewItem* section = 0;
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    regina::NLayeredLensSpace* lens;
+    for (unsigned long i = 0; i < nComps; i++) {
+        lens = regina::NLayeredLensSpace::isLayeredLensSpace(
+            tri->getComponent(i));
+        if (lens) {
+            QString type(i18n("L(%1, %2)").arg(lens->getP()).arg(lens->getQ()));
+
+            if (section)
+                id = new KListViewItem(section, id, type);
+            else {
+                section = addComponentSection(i18n("Layered Lens Spaces"));
+                id = new KListViewItem(section, type);
+            }
+
+            details = new KListViewItem(id, i18n("Component %1").arg(i));
+
+            const regina::NLayeredSolidTorus& torus(lens->getTorus());
+            details = new KListViewItem(id, details, i18n(
+                "Layered %1-%2-%3 solid torus %4").
+                arg(torus.getMeridinalCuts(0)).
+                arg(torus.getMeridinalCuts(1)).
+                arg(torus.getMeridinalCuts(2)).
+                arg(lens->isSnapped() ? i18n("snapped shut") :
+                    i18n("twisted shut")));
+
+            delete lens;
+        }
+    }
 }
 
 void NTriCompositionUI::findLayeredLoops() {
-    // TODO
+    unsigned long nComps = tri->getNumberOfComponents();
+
+    QListViewItem* section = 0;
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    regina::NLayeredLoop* loop;
+    for (unsigned long i = 0; i < nComps; i++) {
+        loop = regina::NLayeredLoop::isLayeredLoop(tri->getComponent(i));
+        if (loop) {
+            bool twisted = loop->isTwisted();
+            QString type(i18n("Length %1, %2").arg(loop->getLength()).
+                arg(twisted ? i18n("twisted") : i18n("not twisted")));
+
+            if (section)
+                id = new KListViewItem(section, id, type);
+            else {
+                section = addComponentSection(i18n("Layered Loops"));
+                id = new KListViewItem(section, type);
+            }
+
+            details = new KListViewItem(id, i18n("Component %1").arg(i));
+
+            if (twisted)
+                details = new KListViewItem(id, details, i18n(
+                    "Hinge: edge %1").
+                    arg(tri->getEdgeIndex(loop->getHinge(0))));
+            else
+                details = new KListViewItem(id, details, i18n(
+                    "Hinges: edge %1, %2").
+                    arg(tri->getEdgeIndex(loop->getHinge(0))).
+                    arg(tri->getEdgeIndex(loop->getHinge(1))));
+
+            delete loop;
+        }
+    }
 }
 
 void NTriCompositionUI::findLayeredSolidTori() {
