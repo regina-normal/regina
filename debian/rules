@@ -87,7 +87,7 @@ binary-indep: build install
 	dh_installchangelogs -i CHANGES.txt
 	dh_link -i
 	dh_strip -i
-	dh_compress -i -X.rga -X.docbook -X.bz2 -X.png -X.css
+	dh_compress -i -X.bz2 -X.css -X.docbook -X.rga
 	dh_fixperms -i
 	# dh_makeshlibs -i
 	dh_installdeb -i
@@ -109,7 +109,9 @@ binary-arch: build install
 	dh_installchangelogs -a CHANGES.txt
 	dh_link -a
 	dh_strip -a
-	dh_compress -a -X.rga -X.docbook -X.bz2 -X.png -X.css
+	dh_compress -a -X.bz2 -X.css -X.docbook -X.rga
+	for i in `find debian/regina-normal/usr/share/doc/kde -name "*.gz"`; do \
+	  gunzip $$i; done
 	dh_fixperms -a
 	dh_makeshlibs -a
 	dh_installdeb -a
