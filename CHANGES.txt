@@ -1,7 +1,10 @@
 
 Regina - A Normal Surface Theory Calculator
 
+Version 2.2
     OVERALL:
+        - Documentation now DocBook-based; generates HTML and man pages.
+        - Documentation now in docs/, not docs/normal/docs/.
         - Builds and runs under windows!
         - Added support for both global and local configuration files;
           configuration files are now called regina.conf.
@@ -30,7 +33,6 @@ Regina - A Normal Surface Theory Calculator
             - Added modularInverse().
     JAVA USER INTERFACE:
         Overall structure:
-            - Documentation now in docs/, not docs/normal/docs/.
             - Reads Regina options from directory $REGINA_OPTIONS_LOCAL
               and reads runtime options from system properties (which
               should be set by startup scripts).

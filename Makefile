@@ -121,34 +121,21 @@ prep : prepjava prepengine
 
 run : runjni
 runconsole : binenginejni binjavaui binjavajni
-	$(JAVA) -Djava.library.path=$(BIN_DIR) -cp \
-		'$(JAVA_UI)$(cs)$(JAVA_JNI)$(cs)$(DOC_JAR)$(cs)$(other_classes)' \
-		$(APP_CLASS) --console
+	./regina --console --jni
 runtext : binenginejni binjavaui binjavajni
-	$(JAVA) -Djava.library.path=$(BIN_DIR) -cp \
-		'$(JAVA_UI)$(cs)$(JAVA_JNI)$(cs)$(DOC_JAR)$(cs)$(other_classes)' \
-		$(APP_CLASS) --text
+	./regina --text --jni
 runjni : binenginejni binjavaui binjavajni
-	$(JAVA) -Djava.library.path=$(BIN_DIR) -cp \
-		'$(JAVA_UI)$(cs)$(JAVA_JNI)$(cs)$(DOC_JAR)$(cs)$(other_classes)' \
-		$(APP_CLASS)
+	./regina --gui --jni
 runcorba : binjavaui binjavacorba
-	$(JAVA) -cp \
-		'$(JAVA_UI)$(cs)$(JAVA_CORBA)$(cs)$(DOC_JAR)$(cs)$(other_classes)' \
-		$(APP_CLASS) --corba \
-		-ORBInitialHost $(ORBInitialHost) -ORBInitialPort $(ORBInitialPort)
+	./regina --gui --corba
 runcorbaengine : binenginecorba
 	$(ENGINE_CORBA) \
 		-ORBInitialHost $(ORBInitialHost) -ORBInitialPort $(ORBInitialPort)
 debug : debugjni
 debugjni : binenginejni binjavaui binjavajni
-	$(JDB) -Djava.library.path=$(BIN_DIR) -classpath \
-		'$(JAVA_UI)$(cs)$(JAVA_JNI)$(cs)$(DOC_JAR)$(cs)$(other_classes)' \
-		$(APP_CLASS)
+	export REGINA_JAVA="$(JDB)" && ./regina --gui --jni
 debugcorba : binenginecorba binjavaui binjavacorba
-	$(JDB) -classpath \
-		'$(JAVA_UI)$(cs)$(JAVA_CORBA)$(cs)$(DOC_JAR)$(cs)$(other_classes)' \
-		$(APP_CLASS)
+	export REGINA_JAVA="$(JDB)" && ./regina --gui --corba
 
 clean :
 	cd engine && $(MAKE) clean
