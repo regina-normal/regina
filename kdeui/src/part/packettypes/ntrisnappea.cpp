@@ -42,10 +42,6 @@
 #include <qwhatsthis.h>
 #include <qwidgetstack.h>
 
-// TODO: Look over preconditions
-// TODO: Look over display
-// TODO: Look over solution type strings
-
 using regina::NPacket;
 using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
