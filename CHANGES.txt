@@ -22,6 +22,11 @@ Current Development Version
         Class NLargeInteger:
             - Added constructor and assignment taking a const std::string&.
             - Routine stringValue() now returns a std::string, not a char*.
+        Class NLensSpace, NSFS:
+            - Changed to fit into the new NManifold structure.
+        Class NManifold:
+            - New class to represent a 3-manifold irrespective of its
+              triangulation.
         Class NPerm:
             - Routines edgeDescription() and faceDescription()
               implemented in the calculation engine.
