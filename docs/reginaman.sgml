@@ -179,8 +179,9 @@
        be the platform-independent library name, so the
        library will in fact be called
        <filename>lib<replaceable>name</replaceable>.so</filename> for
-       &linux; users or
-       <filename><replaceable>name</replaceable>.dll</filename> for
+       &linux; users, or
+       <filename><replaceable>name</replaceable>.dll</filename> or
+       <filename>cyg<replaceable>name</replaceable>.dll</filename> for
        &windows; users.
       </para>
       <para>
@@ -484,7 +485,8 @@
       <para>
        The &jni; calculation engine library itself will usually be called
        <filename>libregina-engine-jni.so</filename> on &linux; systems
-       or <filename>regina-engine-jni.dll</filename> on &windows;
+       or <filename>regina-engine-jni.dll</filename> or
+       <filename>cygregina-engine-jni.dll</filename> on &windows;
        systems, but this can be changed by setting option
        <parameter>REGINA_JNIENGINE</parameter>.
       </para>
@@ -612,8 +614,9 @@
        The name of the &jni; calculation engine library to load.
        This should be the platform-independent library name, so if this
        option has value <literal>foo</literal> then the library will in
-       fact be called <filename>libfoo.so</filename> for &linux; users or
-       <filename>foo.dll</filename> for &windows; users.
+       fact be called <filename>libfoo.so</filename> for &linux; users, or
+       <filename>foo.dll</filename> or
+       <filename>cygfoo.dll</filename> for &windows; users.
       </para>
       <para>
        This option is only relevant when using &jni; engine access

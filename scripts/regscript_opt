@@ -187,8 +187,10 @@ if [ -z "$REGINA_JNIDIR" ]; then
 fi
 if [ "$OSTYPE" = "cygwin" ]; then
     jnilib="$REGINA_JNIENGINE.dll"
+    cygjnilib="cyg$REGINA_JNIENGINE.dll"
 else
     jnilib="lib$REGINA_JNIENGINE.so"
+    cygjnilib="libcyg$REGINA_JNIENGINE.so"
 fi
 # Look for the JNI library in each colon-separated component of $REGINA_JNIDIR.
 foundlib=0
@@ -196,6 +198,10 @@ IFS=:
 for i in $REGINA_JNIDIR; do
     if [ -e "$i/$jnilib" ]; then
         foundlib=1
+        break
+    elif [ -e "$i/$cygjnilib" ]; then
+        foundlib=1
+        break
     fi
 done
 IFS=

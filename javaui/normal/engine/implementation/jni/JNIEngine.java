@@ -73,19 +73,31 @@ public class JNIEngine implements Engine {
      * calculation engine.  Note that the real name of the library may differ
      * between platforms.  For instance, a library called <i>name</i> will be
      * found as lib<i>name</i>.so on unix-style platforms, or <i>name</i>.dll
-     * on Win32 platforms.
+     * or cyg<i>name</i>.dll on Win32 platforms.
      * @throws JNILibraryException thrown when the external library failed
      * to load.
      */
     public JNIEngine(String library) throws JNILibraryException {
         this.library = library;
+
+        String errMsg = null;
         try {
             System.loadLibrary(library);
+            return;
         } catch (Throwable th) {
-            System.out.println("Could not load library " + library + ": "
-                + th.toString());
-            throw new JNILibraryException(library);
+            errMsg = th.toString();
         }
+
+        // The library failed to load.  Try a cygwin-style library name.
+        try {
+            System.loadLibrary("cyg" + library);
+            return;
+        } catch (Throwable th) {}
+
+        // Nothing seems to have worked.
+        System.out.println("Could not load library " + library + ": "
+            + errMsg);
+        throw new JNILibraryException(library);
     }
 
     /**
