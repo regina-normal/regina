@@ -1,10 +1,12 @@
 #!/usr/bin/perl -w
 #
 # Regina - A Normal Surface Theory Calculator
-# CVS Utility Script
+# Makefile.am Update Utility
 #
 # Copyright (c) 2002, Ben Burton
 # For further details contact Ben Burton (benb@acm.org).
+#
+# Usage: am_update [ <directory-tree> | path/to/single/Makefile.am ] ...
 #
 # Updates all Makefile.am lines of the form:
 #   ...HEADERS =...
@@ -14,7 +16,6 @@
 # within the given source subtrees to reflect all available sources in
 # the corresponding directories.
 #
-# Usage: am_update [ <directory-tree> | path/to/single/Makefile.am ] ...
 # Running without any arguments will perform this update in the usual
 # directories.
 #
@@ -57,13 +58,13 @@ if ($nArgs) {
 # --- Update each file or directory tree. ---
 
 foreach my $item (@dirsAndFiles) {
-    if (-e "$item") {
-        if (-l "$item") {
+    if (-e $item) {
+        if (-l $item) {
             print STDERR "ERROR: File $item is a symbolic link.\n";
             exit(1);
-        } elsif (-d "$item") {
+        } elsif (-d $item) {
             updateDir($item);
-        } elsif ((-f "$item") && ($item =~ /Makefile.am$/)) {
+        } elsif ((-f $item) && ($item =~ /Makefile.am$/)) {
             updateFile($item);
         } else {
             print STDERR "ERROR: File $item is not a Makefile.am.\n";
@@ -84,7 +85,7 @@ sub updateDir {
     foreach my $entry (@files) {
         if ($entry =~ /Makefile.am$/) {
             updateFile($entry);
-        } elsif (-d "$entry") {
+        } elsif (-d $entry) {
             updateDir($entry);
         }
     }
@@ -99,9 +100,9 @@ sub updateFile {
     if ($fullAm =~ /^(.*)\/Makefile.am$/) {
         $amDir = $1;
     } elsif ($fullAm eq 'Makefile.am' ) {
-        $amDir = ".";
+        $amDir = '.';
     } else {
-        print STDERR "ERROR: Badly formed Makefile.am filename ($fullAm).";
+        print STDERR "ERROR: Badly formed Makefile.am filename ($fullAm).\n";
         exit(1);
     }
 
@@ -122,11 +123,17 @@ sub updateFile {
         } elsif ($entry =~ /^\Q${amDir}\E\/(.*)\.java$/) {
             push(@java_sources, $1.'.java');
             push(@java_classes, $1.'.class');
+        } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.gif)$/) {
+            push(@java_sources, $1);
+        } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.jpg)$/) {
+            push(@java_sources, $1);
+        } elsif ($entry =~ /^\Q${amDir}\E\/(.*\.png)$/) {
+            push(@java_sources, $1);
         }
     }
 
     if (! open(DATA, $fullAm)) {
-        print STDERR "ERROR: Could not open $fullAm for reading.";
+        print STDERR "ERROR: Could not open $fullAm for reading.\n";
         exit(1);
     }
     my @lines = <DATA>;
@@ -155,7 +162,7 @@ sub updateFile {
 
     if ($changed) {
         if (! open(NEWDATA, '>'.$fullAm)) {
-            print STDERR "ERROR: Could not open $fullAm for writing.";
+            print STDERR "ERROR: Could not open $fullAm for writing.\n";
             exit(1);
         }
         foreach my $newLine (@newLines) {
