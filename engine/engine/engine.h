@@ -31,6 +31,8 @@
  *  an external link to the calculation engine.
  *
  *  \todo \bugurgent Hunt for default copy constructors that are being called.
+ *  \todo \featurelong Create a test suite for the calculation engine
+ *  (<i>cppunit</i> is a promising candidate toolkit).
  */
 
 /**

@@ -91,9 +91,9 @@ namespace {
         // Add enough copies to put u between 1 and b_orig inclusive.
         long k;
         if (u > 0)
-            k = -((u-1) % b_orig);
+            k = -((u-1) / b_orig);
         else
-            k = (b_orig-u) % b_orig;
+            k = (b_orig-u) / b_orig;
         if (k) {
             u += k * b_orig;
             v += k * a_orig;

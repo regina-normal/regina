@@ -51,6 +51,9 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
         Class NLargeInteger:
             - Added third error-detection parameter to constructor
               NLargeInteger(const char*, int).
+        Class NLensSpace:
+            - Fixed bug causing reductions to be sometimes non-optimal
+              (although still correct) - see modularInverse() notes below.
         Class NLocalFileResource:
             - Replaced static members MODE_READ, MODE_WRITE with static
               routines sysModeRead(), sysModeWrite().
@@ -84,6 +87,9 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
             - Added.
         Routine basicTokenise(), duplicate(), valueOf():
             - Added.
+        Routine modularInverse():
+            - Fixed a rather nasty bug in gcdWithCoeffsInternal() that
+              caused modularInverse() to sometimes give wrong answers.
         Routine readFileMagic(), readXMLFile(), writeXMLFile():
             - Added.
         Routine xmlEncodeSpecialChars(), xmlValueTag():
