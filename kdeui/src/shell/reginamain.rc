@@ -20,16 +20,6 @@
     <Separator/>
     <Action name="file_quit"/>
   </Menu>
-  <Menu name="edit"><text>&amp;Edit</text>
-    <DefineGroup name="edit_undo_merge"/>
-    <Separator/>
-    <DefineGroup name="edit_paste_merge"/>
-    <Separator/>
-    <DefineGroup name="edit_select_merge"/>
-    <Separator/>
-    <DefineGroup name="edit_find_merge"/>
-    <Merge/>
-  </Menu>
   <Merge/>
   <Menu name="tools">
     <Merge/>
