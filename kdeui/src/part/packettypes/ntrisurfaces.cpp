@@ -39,6 +39,8 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 
+#define THREE_SPHERE_AUTO_CALC_ADJUSTMENT 2
+
 using regina::NPacket;
 using regina::NTriangulation;
 
@@ -136,7 +138,8 @@ void NTriSurfacesUI::refresh() {
     }
 
     if (tri->knowsThreeSphere() ||
-            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            tri->getNumberOfTetrahedra() + THREE_SPHERE_AUTO_CALC_ADJUSTMENT
+            <= autoCalcThreshold) {
         if (tri->isThreeSphere()) {
             threeSphere->setText(i18n("True"));
             threeSphere->setPaletteForegroundColor(Qt::darkGreen);
