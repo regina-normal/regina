@@ -50,11 +50,11 @@ public class EngineLoader {
      */
     public static final String defaultJNILibrary = "regina-engine-jni";
     /**
-     * Default name service host for the CORBA calculation engine.
+     * Default naming service host for the CORBA calculation engine.
      */
     public static final String defaultCORBAHost = "localhost";
     /**
-     * Default name service port for the CORBA calculation engine.
+     * Default naming service port for the CORBA calculation engine.
      */
     public static final String defaultCORBAPort = "8088";
 
@@ -159,10 +159,10 @@ public class EngineLoader {
 
         String host = shell.getParameter(
             "org.omg.CORBA.ORBInitialHost", 1, false, true,
-            "CORBA name service host");
+            "CORBA naming service host");
         if (host == null) {
             host = shell.getParameter("ORBInitialHost", 1, false,
-                true, "CORBA name service host");
+                true, "CORBA naming service host");
             if (host == null) {
                 host = NormalOptionSet.getSystemProperty(
                     "REGINA_CORBAHOST", defaultCORBAHost);
@@ -172,10 +172,10 @@ public class EngineLoader {
 
         String port = shell.getParameter(
             "org.omg.CORBA.ORBInitialPort", 1, false, true,
-            "CORBA name service port");
+            "CORBA naming service port");
         if (port == null) {
             port = shell.getParameter("ORBInitialPort", 1, false,
-                true, "CORBA name service port");
+                true, "CORBA naming service port");
             if (port == null) {
                 port = NormalOptionSet.getSystemProperty(
                     "REGINA_CORBAPORT", defaultCORBAPort);
@@ -234,7 +234,7 @@ public class EngineLoader {
                     normal.engine.implementation.corba.CORBAException)
                 error("A CORBA connection to the engine could not be " +
                     "initialised.  " + e.getMessage() +
-                    "\nThe requested name service was at host [" + host +
+                    "\nThe requested naming service was at host [" + host +
                     "], port [" + port + "].");
             else
                 e.printStackTrace();

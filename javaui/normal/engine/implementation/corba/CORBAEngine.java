@@ -65,11 +65,11 @@ public class CORBAEngine implements Engine {
      */
     private normal.engine.implementation.corba.Regina.Engine data;
     /**
-     * The CORBA name service host being used.
+     * The CORBA naming service host being used.
      */
     private String host;
     /**
-     * The CORBA name service port being used.
+     * The CORBA naming service port being used.
      */
     private String port;
 
@@ -78,16 +78,16 @@ public class CORBAEngine implements Engine {
      * This routine should be called only when the program is run as a
      * standalone application.
      * The engine should be in a server application accessible
-     * through CORBA via a name service.
+     * through CORBA via a naming service.
      *
      * @param args a list of command-line arguments to the application,
      * possibly including flags that should be passed to the ORB
      * initialisation.
-     * @param host the CORBA name service host being requested.  This
+     * @param host the CORBA naming service host being requested.  This
      * information is <b>not</b> passed to the ORB initialisation; it
      * is for diagnostic purposes only.  This information needs to be
      * replicated appropriately in parameter <i>args</i>.
-     * @param port the CORBA name service port being requested.  This
+     * @param port the CORBA naming service port being requested.  This
      * information is <b>not</b> passed to the ORB initialisation; it
      * is for diagnostic purposes only.  This information needs to be
      * replicated appropriately in parameter <i>args</i>.
@@ -125,14 +125,14 @@ public class CORBAEngine implements Engine {
      * This routine should be called only when the program is run as an
      * applet on a web page.
      * The engine should be in a server application accessible
-     * through CORBA via a name service.
+     * through CORBA via a naming service.
      *
      * @param applet the applet we are running, whose parameters might
      * contain flags that should be passed to the ORB initialisation.
-     * @param host the CORBA name service host being requested.  This
+     * @param host the CORBA naming service host being requested.  This
      * information <b>is</b> passed to the ORB initialisation, but will
      * be overridden by any applet parameters.
-     * @param port the CORBA name service port being requested.  This
+     * @param port the CORBA naming service port being requested.  This
      * information <b>is</b> passed to the ORB initialisation, but will
      * be overridden by any applet parameters.
      * @throws CORBAException thrown when the CORBA connection could not
@@ -181,7 +181,7 @@ public class CORBAEngine implements Engine {
             objRef = orb.resolve_initial_references("NameService");
         } catch (Throwable th) {
             throw new normal.engine.implementation.corba.CORBAException(
-                "The requested name service could not be found.");
+                "The requested naming service could not be found.");
         }
 
         NamingContext ncRef;
@@ -189,7 +189,7 @@ public class CORBAEngine implements Engine {
             ncRef = NamingContextHelper.narrow(objRef);
         } catch (Throwable th) {
             throw new normal.engine.implementation.corba.CORBAException(
-                "The name service could not be narrowed to " +
+                "The naming service could not be narrowed to " +
                 "the correct class.");
         }
 
@@ -203,7 +203,7 @@ public class CORBAEngine implements Engine {
             dumpBindings(ncRef, 100);
             throw new normal.engine.implementation.corba.CORBAException(
                 "The Regina naming context could not be located " +
-                "by the name service.");
+                "by the naming service.");
         }
 
         String msg = null;
@@ -231,7 +231,7 @@ public class CORBAEngine implements Engine {
                 System.out.println(th.toString());
                 throw new normal.engine.implementation.corba.CORBAException(
                     "An unknown problem occurred whilst retrieving the " +
-                    "engine via the name service; details have been " +
+                    "engine via the naming service; details have been " +
                     "written to standard output.");
             } else
                 throw new normal.engine.implementation.corba.CORBAException(
