@@ -26,6 +26,12 @@ ifeq ($(HOSTTYPE),)
 	export HOSTTYPE = $(shell uname -m)
 endif
 
+ifeq ($(OSTYPE),cygwin)
+	export EXE = .exe
+else
+	export EXE =
+endif
+
 # What should be bundled into a binary release?
 
 ifeq ($(OSTYPE),cygwin)
@@ -103,7 +109,7 @@ $(BIN_ARCHIVE) :
 	ln -s .. $(REGINA_DIR)
 	$(ARCHIVE) $(BIN_ARCHIVE) $(patsubst %,$(REGINA_DIR)/%, \
 		$(ENGINE_BIN) $(JAVA_UI) $(JAVA_JNI) \
-		$(misc_bin_mask) $(scripts))
+		$(patsubst %,bin/%$(EXE),$(utils)) $(misc_bin_mask) $(scripts))
 	-rm $(REGINA_DIR)
 
 distdocs : $(DOC_ARCHIVE) $(DOC_JAR_FINAL)

@@ -26,10 +26,15 @@ export BIN_DIR = bin
 export BASE_DOC_DIR = docs
 
 export cs = $(CLASSPATH_SEP)
-export other_classes = \
-	$(BTOOLS)$(cs)$(JYTHON)$(cs)$(EXTRA_CLASSES)
+export other_classes = $(BTOOLS)$(cs)$(JYTHON)$(cs)$(EXTRA_CLASSES)
 
 export LICENSE = LICENSE.txt
+
+ifeq ($(OSTYPE),cygwin)
+  export EXE = .exe
+else
+  export EXE =
+endif
 
 # Local variables:
 

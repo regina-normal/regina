@@ -4,17 +4,9 @@
 
 # ------------------------ Variables -------------------------------------
 
-utils = regconvert regfiledump regfiletype sigcensus tricensus
-
 INCLUDES = -I../engine/engine $(EXTRA_INCLUDES)
 PD_DEFS = $(PD_MACROS:%=-D%)
 BIN_DIR = ../bin
-
-ifeq ($(OSTYPE),cygwin)
-  EXE = .exe
-else
-  EXE =
-endif
 
 # ------------------------ Rules -------------------------------------
 
@@ -24,6 +16,8 @@ $(BIN_DIR)/%$(EXE) : %.o ../$(ENGINE_LIB)
 	$(LINKEXEC) -o $@ $< ../$(ENGINE_LIB) $(EXTRA_LIBRARIES)
 
 # ------------------------ Sources -------------------------------------
+
+include Makefile.sources
 
 allobjs = $(utils:=.o)
 allexes = $(utils:%=$(BIN_DIR)/%$(EXE))
