@@ -34,11 +34,11 @@ import normal.engine.packet.NPacket;
 import normal.packetfilter.*;
 
 /**
- * An exporter that exports to another Regina data file.
+ * An exporter that exports to an old-style binary Regina data file.
  *
  * @see normal.exports.Exporter
  */
-public class ReginaExporter extends Exporter {
+public class ReginaBinaryExporter extends Exporter {
     /**
      * Creates a new exporter.
      *
@@ -47,7 +47,7 @@ public class ReginaExporter extends Exporter {
      * corresponding to this export algorithm.
      * @see normal.algorithm.Algorithm
      */
-    public ReginaExporter(Shell shell, String menuLabel) {
+    public ReginaBinaryExporter(Shell shell, String menuLabel) {
         super(shell, menuLabel, Standalone.instance);
     }
 
@@ -61,12 +61,12 @@ public class ReginaExporter extends Exporter {
      * corresponding menu item.
      * @see normal.algorithm.Algorithm
      */
-    public ReginaExporter(Shell shell, String menuLabel, int mnemonic) {
+    public ReginaBinaryExporter(Shell shell, String menuLabel, int mnemonic) {
         super(shell, menuLabel, mnemonic, Standalone.instance);
     }
 
     public boolean exportData(NPacket packet, File file) {
-        if (shell.getEngine().writeXMLFile(file.getAbsolutePath(), packet))
+        if (shell.getEngine().writeToFile(file.getAbsolutePath(), packet))
             return true;
         shell.error("An error occurred whilst attempting to export to " +
             file.getAbsolutePath() + ".");

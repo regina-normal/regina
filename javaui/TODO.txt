@@ -26,6 +26,7 @@ Main Window:
 	Implement undo.
 	Use actions in NormalFrame and SystemPane.
 	Have the GUI refuse to export invalid triangulations.
+	Allow exporting to uncompressed XML.
 
 Menus:
 	Provide NTriangulation::isIsomorphicTo().

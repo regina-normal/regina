@@ -262,7 +262,7 @@ public class TopologyPane extends FilePane {
      * @return the new pane, or <tt>null</tt> if an error occurred.
      */
     public static TopologyPane newPane(Shell shell, File file) {
-        NPacket root = shell.getEngine().readFromFile(file.getAbsolutePath());
+        NPacket root = shell.getEngine().readFileMagic(file.getAbsolutePath());
 
         if (root == null) {
             shell.error("The requested file [" + file.getName() +
@@ -303,7 +303,7 @@ public class TopologyPane extends FilePane {
 
     public boolean saveFile(File file) {
         Engine engine = getEngine();
-        if (! engine.writeToFile(file.getAbsolutePath(), rootPacket)) {
+        if (! engine.writeXMLFile(file.getAbsolutePath(), rootPacket)) {
             getShell().error(
                 "The requested file could not be opened for writing.");
             return false;

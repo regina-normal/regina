@@ -55,7 +55,7 @@ public class ReginaImporter extends Importer {
 
     protected NPacket importData(Shell shell, File dataFile) {
         NPacket packet =
-            shell.getEngine().readFromFile(dataFile.getAbsolutePath());
+            shell.getEngine().readFileMagic(dataFile.getAbsolutePath());
         if (packet == null) {
             shell.error("An error occurred whilst attempting to import from "
                 + dataFile.getAbsolutePath() + ".");
