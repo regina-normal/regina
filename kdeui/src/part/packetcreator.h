@@ -80,6 +80,23 @@ class PacketCreator {
             QWidget* parentWidget) = 0;
 };
 
+/**
+ * A basic interface for creating packets of a particular type.
+ *
+ * The interface will contain no non-generic interface components, and
+ * new packets will be created using the default constructor.
+ */
+template <class T>
+class BasicPacketCreator : public PacketCreator {
+    public:
+        /**
+         * PacketCreator overrides.
+         */
+        regina::NPacket* createPacket(regina::NPacket*, QWidget*) {
+            return new T();
+        }
+};
+
 inline QWidget* PacketCreator::getInterface() {
     return 0;
 }

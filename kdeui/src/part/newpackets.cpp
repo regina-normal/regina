@@ -26,10 +26,13 @@
 
 /* end stub */
 
+#include "packet/ncontainer.h"
+#include "packet/nscript.h"
+#include "packet/ntext.h"
+
 #include "newpacketdialog.h"
+#include "packetcreator.h"
 #include "reginapart.h"
-#include "packettypes/ncontainercreator.h"
-#include "packettypes/ntextcreator.h"
 
 #include <klocale.h>
 
@@ -38,8 +41,8 @@ void ReginaPart::newAngleStructures() {
 }
 
 void ReginaPart::newContainer() {
-    NewPacketDialog dlg(widget(), new NContainerCreator(), packetTree, 0,
-        i18n("New Container"), i18n("Container"));
+    NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NContainer>(),
+        packetTree, 0, i18n("New Container"), i18n("Container"));
     dlg.exec();
 }
 
@@ -52,12 +55,14 @@ void ReginaPart::newNormalSurfaces() {
 }
 
 void ReginaPart::newScript() {
-    unimplemented();
+    NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NScript>(),
+        packetTree, 0, i18n("New Script"), i18n("Script"));
+    dlg.exec();
 }
 
 void ReginaPart::newText() {
-    NewPacketDialog dlg(widget(), new NTextCreator(), packetTree, 0,
-        i18n("New Text Packet"), i18n("Text"));
+    NewPacketDialog dlg(widget(), new BasicPacketCreator<regina::NText>(),
+        packetTree, 0, i18n("New Text Packet"), i18n("Text"));
     dlg.exec();
 }
 
