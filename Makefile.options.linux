@@ -54,7 +54,7 @@ export JNI_INCLUDES := -I/usr/lib/j2sdk1.3/include \
 export CORBA_INCLUDES :=
 export EXTRA_INCLUDES :=
 
-export CORBA_LIBRARIES := -lomniORB2 -lomniGK_alone
+export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
 export EXTRA_LIBRARIES := -lgmp -lpthread
 
 # Specify here the character that separates components on the classpath.
@@ -110,7 +110,7 @@ export JAVA := java -Xmx64m
 export JDB := jdb -Xmx64m -Djava.compiler=NONE
 export JAVAH := javah
 export JAVADOC := javadoc -J-Xmx64m
-export IDLTOCPPSERVER := omniidl2 -h IDL.h -s SK.cpp
+export IDLTOCPPSERVER := omniidl -h IDL.h -s SK.cpp
 export IDLTOJAVACLIENT := idlj
 export ARCHIVE := tar --ignore-failed-read -zcf
 export CAT := cat
