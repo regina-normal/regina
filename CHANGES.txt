@@ -51,6 +51,8 @@ Version 3.2  [ (under development) ]
     UTILITIES:
         regconcat:
             - New utility for combining several data files.
+        tricensus:
+            - New option --minprimep2 for P2-irreducibility.
 
 Version 3.1  [ 18 October, 2002 ]
     OVERALL:

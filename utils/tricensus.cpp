@@ -49,6 +49,7 @@ regina::NBoolSet
     boundary(true, true);
 int minimal = 0;
 int minimalPrime = 0;
+int minimalPrimeP2 = 0;
 int usePairs = 0;
 
 // Variables used for a dump of face pairings.
@@ -105,7 +106,10 @@ regina::NText* parameterPacket() {
     else
         descStream << "Orientable and non-orientable\n";
 
-    if (minimalPrime)
+    if (minimalPrimeP2)
+        descStream << "Ignored obviously non-minimal, non-prime, "
+            << "disc-reducible and/or P2-reducible triangulations\n";
+    else if (minimalPrime)
         descStream << "Ignored obviously non-minimal, non-prime and/or "
             << "disc-reducible triangulations\n";
     else if (minimal)
@@ -145,6 +149,8 @@ int main(int argc, const char* argv[]) {
             "Ignore obviously non-minimal triangulations.", 0 },
         { "minprime", 'M', POPT_ARG_NONE, &minimalPrime, 0,
             "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
+        { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
+            "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", 0 },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
             "Only generate face pairings, not triangulations.", 0 },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
@@ -190,7 +196,7 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && (argFinite || argIdeal)) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && (minimal || minimalPrime)) {
+    } else if (genPairs && (minimal || minimalPrime || minimalPrimeP2)) {
         std::cerr << "Minimality options cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (usePairs && nTet) {
@@ -309,7 +315,10 @@ int main(int argc, const char* argv[]) {
 
     // Start the census running.
     int whichPurge;
-    if (minimalPrime)
+    if (minimalPrimeP2)
+        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME |
+            regina::NCensus::PURGE_P2_REDUCIBLE;
+    else if (minimalPrime)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
     else if (minimal)
         whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
@@ -338,7 +347,7 @@ int main(int argc, const char* argv[]) {
                     std::cout << pairing->toString() << std::endl;
                     regina::NCensus::formPartialCensus(pairing, census,
                         finiteness, orientability, whichPurge,
-                        ((minimal || minimalPrime) ?
+                        ((minimal || minimalPrime || minimalPrimeP2) ?
                         regina::NCensus::mightBeMinimal : 0), 0);
 
                     pairingList += pairing->toString();
@@ -361,8 +370,9 @@ int main(int argc, const char* argv[]) {
             << std::endl;
 
         regina::NProgressManager manager;
-        regina::NCensus::formCensus(census, nTet, finiteness, orientability,
-            boundary, nBdryFaces, whichPurge, ((minimal || minimalPrime) ?
+        regina::NCensus::formCensus(census, nTet, finiteness,
+            orientability, boundary, nBdryFaces, whichPurge,
+            ((minimal || minimalPrime || minimalPrimeP2) ?
             regina::NCensus::mightBeMinimal : 0), 0, &manager);
 
         // Output progress and wait for the census to finish.

@@ -450,6 +450,7 @@
     <group>
      <arg><option>-m, --minimal</option></arg>
      <arg><option>-M, --minprime</option></arg>
+     <arg><option>-N, --minprimep2</option></arg>
     </group>
     <group>
      <arg><option>-p, --genpairs</option></arg>
@@ -610,6 +611,27 @@
        be ignored.  What <emphasis>is</emphasis> guaranteed is that any
        triangulation that is minimal, prime and disc-irreducible will
        certainly be included in the census.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-N, --minprimep2</option></term>
+     <listitem>
+      <para>
+       Do not include triangulations that are obviously non-minimal,
+       non-prime, P2-reducible and/or disc-reducible.
+      </para>
+      <para>
+       As with the <option>--minprime</option> option,
+       this option can significantly speed up the census and vastly
+       reduce the final number of triangulations produced.
+      </para>
+      <para>
+       A triangulation satisfying any of the above conditions might be
+       left out of the census, although not all such triangulations will
+       be ignored.  What <emphasis>is</emphasis> guaranteed is that any
+       triangulation that is minimal, prime, P2-irreducible and
+       disc-irreducible will certainly be included in the census.
       </para>
      </listitem>
     </varlistentry>
