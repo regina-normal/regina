@@ -42,7 +42,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
 }
 
 void NSpiralSolidTorus::reverse() {
-    NTetrahedron** newTet = new (NTetrahedron*)[nTet];
+    NTetrahedron** newTet = new NTetrahedron*[nTet];
     NPerm* newRoles = new NPerm[nTet];
 
     NPerm switchPerm(3, 2, 1, 0);
@@ -58,7 +58,7 @@ void NSpiralSolidTorus::reverse() {
 }
 
 void NSpiralSolidTorus::cycle(unsigned long k) {
-    NTetrahedron** newTet = new (NTetrahedron*)[nTet];
+    NTetrahedron** newTet = new NTetrahedron*[nTet];
     NPerm* newRoles = new NPerm[nTet];
 
     for (unsigned long i = 0; i < nTet; i++) {
@@ -90,7 +90,7 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
     if (baseTet == 0 && (! reverseAlso))
         return false;
 
-    NTetrahedron** newTet = new (NTetrahedron*)[nTet];
+    NTetrahedron** newTet = new NTetrahedron*[nTet];
     NPerm* newRoles = new NPerm[nTet];
 
     if (reverseAlso) {

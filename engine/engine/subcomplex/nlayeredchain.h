@@ -247,8 +247,8 @@ inline NLayeredChain::NLayeredChain(NTetrahedron* tet, NPerm vertexRoles) :
         topVertexRoles(vertexRoles) {
 }
 inline NLayeredChain::NLayeredChain(const NLayeredChain& cloneMe) :
-        bottom(cloneMe.bottom), top(cloneMe.top), index(cloneMe.index),
-        bottomVertexRoles(cloneMe.bottomVertexRoles),
+        ShareableObject(), bottom(cloneMe.bottom), top(cloneMe.top),
+        index(cloneMe.index), bottomVertexRoles(cloneMe.bottomVertexRoles),
         topVertexRoles(cloneMe.topVertexRoles) {
 }
 inline NLayeredChain::~NLayeredChain() {

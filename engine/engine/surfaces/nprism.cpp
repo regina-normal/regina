@@ -47,7 +47,7 @@ NPrismSetSurface::NPrismSetSurface(const NNormalSurface& surface) {
     }
 
     // Work out which tetrahedra contain which quad types.
-    quadType = new (signed char)[nTet];
+    quadType = new signed char[nTet];
     for (unsigned long tet = 0; tet < nTet; tet++)
         if (surface.getQuadCoord(tet, 0) != 0)
             quadType[tet] = 0;

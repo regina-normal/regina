@@ -79,7 +79,7 @@ void NSnappedTwoSphere::reduceTriangulation() const {
 }
 
 NTriangulation* NSnappedTwoSphere::getReducedTriangulation(
-        const NTriangulation* original) const {
+        const NTriangulation* /* original */) const {
     return 0;
 }
 

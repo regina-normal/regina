@@ -220,7 +220,7 @@ NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
     return ans;
 }
 
-NPacket* NNormalSurfaceList::internalClonePacket(NPacket* parent) const {
+NPacket* NNormalSurfaceList::internalClonePacket(NPacket* /* parent */) const {
     NNormalSurfaceList* ans = new NNormalSurfaceList();
     ans->flavour = flavour;
     ans->embedded = embedded;
@@ -232,8 +232,7 @@ NPacket* NNormalSurfaceList::internalClonePacket(NPacket* parent) const {
 void NNormalSurfaceList::initialiseAllProperties() {
 }
 
-void NNormalSurfaceList::readIndividualProperty(NFile& infile,
-        unsigned propType) {
+void NNormalSurfaceList::readIndividualProperty(NFile&, unsigned) {
 }
 
 } // namespace regina

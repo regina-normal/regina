@@ -88,7 +88,7 @@ void NPillowTwoSphere::reduceTriangulation() const {
 }
 
 NTriangulation* NPillowTwoSphere::getReducedTriangulation(
-        const NTriangulation* original) const {
+        const NTriangulation* /* original */) const {
     return 0;
 }
 

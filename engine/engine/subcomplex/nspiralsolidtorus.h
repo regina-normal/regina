@@ -246,7 +246,7 @@ class NSpiralSolidTorus : public ShareableObject {
 // Inline functions for NSpiralSolidTorus
 
 inline NSpiralSolidTorus::NSpiralSolidTorus(unsigned long newNTet) :
-        nTet(newNTet), tet(new (NTetrahedron*)[newNTet]),
+        nTet(newNTet), tet(new NTetrahedron*[newNTet]),
         vertexRoles(new NPerm[newNTet]) {
 }
 

@@ -38,7 +38,7 @@ unsigned long formSigCensus(unsigned order, UseSignature use, void* useArgs) {
     return census.totalFound;
 }
 
-void* NSigCensus::run(void* param) {
+void* NSigCensus::run(void*) {
     // Initialisations.
     sig.nCycles = 0;
     sig.nCycleGroups = 0;

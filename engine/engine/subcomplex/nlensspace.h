@@ -131,7 +131,7 @@ inline NLensSpace::NLensSpace(unsigned long newP, unsigned long newQ) :
     reduce();
 }
 inline NLensSpace::NLensSpace(const NLensSpace& cloneMe) :
-        p(cloneMe.p), q(cloneMe.q) {
+        ShareableObject(), p(cloneMe.p), q(cloneMe.q) {
 }
 inline NLensSpace::~NLensSpace() {
 }

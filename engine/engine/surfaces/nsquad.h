@@ -106,7 +106,7 @@ inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
 }
 
 inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
-        NTriangulation* triang) const {
+        NTriangulation*) const {
     // Quad space does not contain vertex links at all.
     return 0;
 }

@@ -50,9 +50,10 @@ namespace {
     }
 }
 
-NSignature::NSignature(const NSignature& sig) : order(sig.order),
-        label(new unsigned[2 * sig.order]), labelInv(new bool[2 * sig.order]),
-        nCycles(sig.nCycles), cycleStart(new unsigned[sig.nCycles + 1]),
+NSignature::NSignature(const NSignature& sig) : ShareableObject(),
+        order(sig.order), label(new unsigned[2 * sig.order]),
+        labelInv(new bool[2 * sig.order]), nCycles(sig.nCycles),
+        cycleStart(new unsigned[sig.nCycles + 1]),
         nCycleGroups(sig.nCycleGroups),
         cycleGroupStart(new unsigned[sig.nCycleGroups + 1]) {
     std::copy(sig.label, sig.label + 2 * sig.order, label);
@@ -165,7 +166,7 @@ NTriangulation* NSignature::triangulate() const {
     // Tetrahedron vertices will be:
     //   bottom left -> top right: 0 -> 1
     //   bottom right -> top left: 2 -> 3
-    NTetrahedron** tet = new (NTetrahedron*)[order];
+    NTetrahedron** tet = new NTetrahedron*[order];
     std::generate(tet, tet + order, FuncNew<NTetrahedron>());
 
     // Store the first occurrence of each symbol.

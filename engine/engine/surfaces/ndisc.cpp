@@ -138,7 +138,7 @@ NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
     if (tot == 0)
         discSets = 0;
     else
-        discSets = new (NDiscSetTet*)[tot];
+        discSets = new NDiscSetTet*[tot];
 }
 
 NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface) :
@@ -147,7 +147,7 @@ NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface) :
     if (tot == 0)
         discSets = 0;
     else {
-        discSets = new (NDiscSetTet*)[tot];
+        discSets = new NDiscSetTet*[tot];
         for (unsigned long index = 0; index < tot; index++)
             discSets[index] = new NDiscSetTet(surface, index);
     }

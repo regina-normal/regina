@@ -42,7 +42,7 @@ namespace {
             std::string name, value;
 
         public:
-            virtual void startElement(const std::string& tagName,
+            virtual void startElement(const std::string& /* tagName */,
                     const regina::xml::XMLPropertyDict& props,
                     NXMLElementReader*) {
                 name = props.lookup("name");
