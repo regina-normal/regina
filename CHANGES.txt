@@ -58,6 +58,9 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
               spaces with finite fundamental group.
         Class NTetFace:
             - Added routine setFirst().
+            - Added copy constructor.
+            - Operators ++ and -- are now implemented in all forms
+              (++x, x++, --x, x--) and all have return values.
         Class NTriangulation:
             - Interface-only skeletal query routines are now also
               implemented in the C++ calculation engine.

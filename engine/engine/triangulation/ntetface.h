@@ -87,6 +87,13 @@ struct NTetFace {
      * inclusive.
      */
     NTetFace(int newTet, int newFace);
+    /**
+     * Creates a new specifier referring to the same tetrahedron face as
+     * the given specifier.
+     *
+     * @param cloneMe the specifier to clone.
+     */
+    NTetFace(const NTetFace& cloneMe);
 
     /**
      * Determines if this specifier represents the overall boundary.
@@ -159,8 +166,22 @@ struct NTetFace {
      * number.  The overall boundary appears after all other faces.
      *
      * \pre This specifier is not past-the-end.
+     *
+     * @return A copy of this specifier after it has been incremented.
      */
-    void operator ++ (int);
+    NTetFace operator ++ ();
+    /**
+     * Increments this specifier.  It will be changed to point to the
+     * next tetrahedron face.
+     *
+     * Faces are ordered first by tetrahedron index and then by face
+     * number.  The overall boundary appears after all other faces.
+     *
+     * \pre This specifier is not past-the-end.
+     *
+     * @return A copy of this specifier before it was incremented.
+     */
+    NTetFace operator ++ (int);
     /**
      * Decrements this specifier.  It will be changed to point to the
      * previous tetrahedron face.
@@ -169,8 +190,22 @@ struct NTetFace {
      * number.  The overall boundary appears after all other faces.
      *
      * \pre This specifier is not before-the-start.
+     *
+     * @return A copy of this specifier after it has been decremented.
      */
-    void operator -- (int);
+    NTetFace operator -- ();
+    /**
+     * Decrements this specifier.  It will be changed to point to the
+     * previous tetrahedron face.
+     *
+     * Faces are ordered first by tetrahedron index and then by face
+     * number.  The overall boundary appears after all other faces.
+     *
+     * \pre This specifier is not before-the-start.
+     *
+     * @return A copy of this specifier before it was decremented.
+     */
+    NTetFace operator -- (int);
 
     /**
      * Determines if this and the given specifier are identical.
@@ -207,6 +242,9 @@ inline NTetFace::NTetFace() {
 inline NTetFace::NTetFace(int newTet, int newFace) : tet(newTet),
         face(newFace) {
 }
+inline NTetFace::NTetFace(const NTetFace& cloneMe) : tet(cloneMe.tet),
+        face(cloneMe.face) {
+}
 
 inline bool NTetFace::isBoundary(unsigned nTetrahedra) const {
     return (tet == static_cast<int>(nTetrahedra) && face == 0);
@@ -241,19 +279,39 @@ inline NTetFace& NTetFace::operator = (const NTetFace& other) {
     face = other.face;
     return *this;
 }
-inline void NTetFace::operator ++ (int) {
+inline NTetFace NTetFace::operator ++ () {
     face++;
     if (face == 4) {
         face = 0;
         tet++;
     }
+    return *this;
 }
-inline void NTetFace::operator -- (int) {
+inline NTetFace NTetFace::operator ++ (int) {
+    NTetFace ans(*this);
+    face++;
+    if (face == 4) {
+        face = 0;
+        tet++;
+    }
+    return ans;
+}
+inline NTetFace NTetFace::operator -- () {
     face--;
     if (face == -1) {
         face = 3;
         tet--;
     }
+    return *this;
+}
+inline NTetFace NTetFace::operator -- (int) {
+    NTetFace ans(*this);
+    face--;
+    if (face == -1) {
+        face = 3;
+        tet--;
+    }
+    return ans;
 }
 
 inline bool NTetFace::operator == (const NTetFace& other) const {
