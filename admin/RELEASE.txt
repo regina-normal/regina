@@ -3,22 +3,22 @@ Below are locations of strings that may need changing for a new release.
 All locations are relative to the primary source directory.
 
 Program version:
-    CHANGES.txt, HIGHLIGHTS.txt (version, date)
+    CHANGES.txt, HIGHLIGHTS.txt, kdeui/doc/en/HIGHLIGHTS.txt (version, date)
     admin/configure.ac.top (AC_INIT, AM_INIT_AUTOMAKE)
     debian/changelog (version, date)
-    docs/regina.sgml (entities &regversion;, &regdate;)
-    www/index.html (last updated, current version)
+    kdeui/doc/en/index.docbook (&regversion;, &regdate;, date, releaseinfo)
     kdeui/src/reginaabout.h (regReleased)
     kdeui/src/{shell,part}/*.rc (kpartgui version)
+    www/index.html (last updated, current version)
 
 License details:
     LICENSE.txt (./, docs/)
-    docs/license.sgml
     engine/engine/docs.h
+    kdeui/doc/en/credits.docbook
     kdeui/src/reginaabout.h (ReginaAbout constructor)
 
 Acknowledgements:
-    docs/regina.sgml
     engine/engine/docs.h (General Notes page)
+    kdeui/doc/en/credits.docbook
     kdeui/src/reginaabout.h (ReginaAbout constructor)
 
