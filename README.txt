@@ -2,43 +2,53 @@
 Contents
 --------
 
+0. Requirements
 1. Regina Binary Distribution
 2. Regina Source Distribution
 
+---------------
+0. Requirements
+---------------
+
+Regina relies upon a variety of external libraries and other tools.
+These are listed below.  They are available with most GNU/Linux
+distributions, but the Regina website (http://regina.sourceforge.net/)
+contains a list of locations from which they can be downloaded
+separately if necessary.
+
+Essential:
+    libgmp (the GNU multiprecision arithmetic library), version >= 3
+    libxml2 (the GNOME XML library), version >= 2.0.0
+    libpopt (the Popt command-line parsing library), version >= 1.3
+
+KDE User Interface (optional):
+    kdelibs (the core KDE libraries), version >= 3.1
+
+Python Bindings (optional):
+    libboost-python (the Boost.Python libraries), verison >= 1.30.0
+
+Documentation (optional, only required at compile-time):
+    doxygen (a C++ documentation system), version >= 1.2.2
+    docbook-utils (includes docbook2man), version >= 0.6.9
+
 -----------------------------
 1. Regina Binary Distribution
 -----------------------------
 
-To start Regina, run the script /usr/local/bin/regina.
+Binary distributions are no longer provided, since they depend so
+strongly upon which versions of external libraries are installed and
+where they are to be found.
 
-Regina requires various external libraries to be present at runtime.
-A full list of requirements can be found on the Regina website
-(http://regina.sourceforge.net/).
-
-As Regina provides more and more components, it has become fussier
-about where it is installed.  The installation directories are specified
-at compile time (as options to ./configure; see below for details).
-
-This means that if you simply download the binary distribution and
-then move the files out of /usr/local/ and into some other directory,
-Regina will probably not work correctly.  If you wish to use some other
-installation directory, you should rebuild Regina from source.
-
-Currently no uninstall utility is provided with the binary
-distributions, since this is generally taken care of by your particular
-operating system's package management system.  Bug your distribution to
-make a package for Regina like Debian does. :) 
-
-Meanwhile, you can look at the contents of the downloaded binary archive
-to see which files were installed.  After removing directories
-/usr/local/include/regina, /usr/local/lib/regina and
-/usr/local/share/regina, there will be very few files left.
+It is recommended instead to install the dependencies described above,
+download a source distribution of Regina and build it to work with your
+system.  Otherwise you can bug your distribution to provide packages for
+Regina like Debian does. ;-)
 
 -----------------------------
 2. Regina Source Distribution
 -----------------------------
 
-Regina has been reorganised to use the standard "./configure", "make"
+Regina now uses the standard "./configure", "make"
 build procedure.  See INSTALL.txt for details.
 
 For the impatient, the short summary is as follows.  INSTALL.txt contains
@@ -48,16 +58,15 @@ details for customising this process.
     prompt$ make           (builds Regina)
     prompt$ make install   (installs Regina)
 
-Note that Regina can be run directly out of the source tree (once
-it has been built); there is no need to actually install it if you
-don't want to.  Simply run "./regina" from the top-level source
-directory (the directory containing this file).
+Note that for the KDE user interface to work, you will almost certainly
+need to pass --prefix and possibly other options to ./configure so that
+files are installed in the correct places.  Run "./configure --help" for
+a list of available options.
 
-Regina requires various external libraries to be present during compilation.
-A full list of requirements can be found on the Regina website
-(http://regina.sourceforge.net/).
+In particular, Regina must be installed in a place where KDE will find
+it, since it provides most of its functionality as a KPart.
 
-The initial "./configure" phase will check which of these libraries are
+The initial "./configure" phase will check which of the required libraries are
 currently installed on your system, and will decide which Regina components
 can be built.  This list will be output immediately before the individual
 Makefiles are created, as illustrated below.  You should check this list
@@ -68,26 +77,19 @@ built, a reason will be given earlier in the "./configure" output.
     ...
     ... (lots of tests)
     ...
-    configure: WARNING: No suitable Java compiler could be found; the Java
-    user interface will not be built.
-    ...
-    ... (more tests)
-    ...
-    configure: WARNING: The JNI headers are unavailable; the JNI calculation
-    engine module will not be built.
+    configure: WARNING: A working boost.python installation is
+    unavailable; the Python interface will not be built.
     ...
     ... (more tests)
     ...
     checking whether to build the calculation engine library... yes
-    checking whether to build the JNI calculation engine module... no
-    checking whether to build the Java user interface... no
+    checking whether to build the KDE user interface... yes
+    checking whether to build the Python interface... no
     checking whether to build command-line utilities... yes
     checking whether to build the test suite... yes
     checking whether to build calculation engine docs... yes
-    checking whether to build Java user interface docs... no
     checking whether to build the reference manual... yes
     checking whether to build man pages... yes
-    checking whether to build the documentation jar... no
     configure: creating ./config.status
     config.status: creating Makefile
     config.status: creating admin/Makefile
