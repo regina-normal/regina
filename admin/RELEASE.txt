@@ -29,6 +29,6 @@ Don't forget:
     rebuild manpages
     website
     debian packages (include cvs.diff)
-    fedora packages
+    fedora packages (include vendor)
     tag CVS
     mail regina-announce
