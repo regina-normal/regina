@@ -255,6 +255,7 @@ class NIndexedArray {
             objects = array.objects;
             indices = array.indices;
             VALIDATE_NINDEXEDARRAY_BOTTOM("operator =")
+            return *this;
         }
         /**
          * See the C++ standard.
@@ -407,11 +408,14 @@ class NIndexedArray {
         }
 
         /**
-         * Finds the index in the array of the first occurrence of the
-         * given value.
+         * Finds the index of the given value in the array.
          *
          * This routine is made quite fast through use of the internal
          * hashed dictionary.
+         *
+         * If the given value is stored more than once in the array,
+         * one of its indices will be returned but there is no guarantee
+         * as to which of these indices it will be.
          *
          * @param value the object to search for in the array.
          * @return the corresponding array index, or -1 if the given
@@ -465,7 +469,7 @@ class NIndexedArray {
          */
         bool validate(bool silent = false) const {
             bool ok = true;
-            typename ObjectArray::difference_type index;
+            difference_type index;
 
             // Check the container sizes.
             if (objects.size() != indices.size()) {
@@ -484,7 +488,7 @@ class NIndexedArray {
             typename IndexMap::const_iterator hashIt;
             for (hashIt = indices.begin(); hashIt != indices.end(); hashIt++) {
                 index = (*hashIt).second;
-                if (index < 0 || index >= objects.size()) {
+                if (index < 0 || index >= (difference_type)objects.size()) {
                     if (! silent) {
                         std::cerr << "ERR: Invalid value in dictionary.\n";
                         std::cerr <<
@@ -538,6 +542,16 @@ class NIndexedArray {
                 }
 
                 index++;
+            }
+
+            // Finally check the reported size.
+            if (index != (difference_type)size()) {
+                if (! silent) {
+                    std::cerr << "ERR: Reported array size is incorrect.\n";
+                    std::cerr << "Reported size: " << size() << '\n';
+                    std::cerr << "Number of elements found: " << index << '\n';
+                }
+                ok = false;
             }
 
             // All done.
