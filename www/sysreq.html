@@ -220,21 +220,47 @@ to avoid rebuilding the other components of the documentation).
 <tr><td>Jade <a href="#sgmlnotes">[+]</a></td><td>&gt;= 1.2.1</td>
 	<td>HTML reference manual</td>
 	<td><a href="http://www.jclark.com/jade/">http://www.jclark.com/jade/</a></td></tr>
-<tr><td></td><td></td>
+<tr><td>Perl <a href="#utilsnotes">[++]</a></td><td>&gt;= 5</td>
 	<td>Man pages</td>
+	<td><a href="http://www.perl.com/pub/a/language/info/software.html">http://www.perl.com/pub/a/language/info/software.html</a></td></tr>
+<tr><td>SP (SGML parser) <a href="#utilsnotes">[++]</a></td><td></td>
+	<td>Man pages</td>
+	<td><a href="http://www.jclark.com/sp/">http://www.jclark.com/sp/</a></td></tr>
+<tr><td>SGMLSpm (Perl modules) <a href="#utilsnotes">[++]</a></td><td>&gt;= 1.03ii</td>
+	<td>Man pages</td>
+	<td><a href="ftp://ftp.kde.org/pub/kde/devel/docbook/SOURCES">ftp://ftp.kde.org/pub/kde/devel/docbook/SOURCES</a>
+	(file <tt>SGMLSpm-<i>version</i>.tar.gz</tt>)</td></tr>
+<tr><td>DocBook Utils <a href="#utilsnotes">[++]</a></td><td>&gt;= 0.6.9</td>
+	<td>Man pages</td>
+	<td><a href="ftp://ftp.kde.org/pub/kde/devel/docbook/SOURCES">ftp://ftp.kde.org/pub/kde/devel/docbook/SOURCES</a>
+	(file <tt>docbook-utils-<i>version</i>.tar.gz</tt>)</td></tr>
 </table>
 <p>
-<a name="sgmlnotes"><b>[+]</b></a>
+<a name="sgmlnotes"><b>[+] HTML reference manual:</b></a>
+<p>
 The DocBook-related tools are not at all easy to set up.
 If you are using Linux, it is strongly recommended that you search your
 Linux distribution for these tools instead of downloading them from the sites
 provided.  Hopefully they will come preconfigured.
 <p>
-For Debian users, the packages you will need are <tt>docbook</tt>, <tt>docbook-dsssl</tt>,
+For Debian users, the Debian packages you will need are <tt>docbook</tt>, <tt>docbook-dsssl</tt>,
 <tt>sgml-data</tt> and <tt>jade</tt>.
 <p>
 If you are using Windows, you should visit the <a href="docbook.html">DocBook
 support page</a> for instructions on configuring these tools correctly.
+<p>
+<a name="utilsnotes"><b>[++] Man pages:</b></a>
+<p>
+Building man pages requires DocBook Utils; the other tools marked [++] are
+merely to support DocBook Utils.
+<p>
+Building man pages is currently not supported under Windows.
+Again, if you are using Linux, it is strongly recommended that you search your
+Linux distribution for these tools instead of downloading them
+from the given sites.
+<p>
+Debian users should simply install Debian package <tt>docbook-utils</tt> and
+its dependencies.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
