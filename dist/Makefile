@@ -8,7 +8,7 @@
 
 # Specify here the version of Regina being released:
 
-REGINA_VERSION = 2.3
+REGINA_VERSION = 2.4
 
 # ------------------------------ Platform-specific ----------------------
 
