@@ -76,8 +76,8 @@ install: build
 		$(javadir)/regina-normal-docs-$(jarversion).jar
 
 	# Create symlinks for jars.
-	for i in regina-normal regina-normal-jni regina-normal-docs; do \
-		ln -s $$i-$(jarversion).jar $(javadir)/$$i.jar; done
+	for i in normal normal-jni normal-corba normal-docs; do \
+		ln -s regina-$$i-$(jarversion).jar $(javadir)/regina-$$i.jar; done
 	ln -s ../../java/regina-normal-$(jarversion).jar \
 		$(regdir)/jar/regina.jar
 	ln -s ../../java/regina-normal-jni-$(jarversion).jar \
