@@ -66,6 +66,26 @@
   </glosslist>
  </sect1>
 
+ <sect1 id="options-triangulation">
+  <title>Triangulation Options</title>
+
+  <para>
+   Better fill this in.
+  </para>
+
+  <glosslist>
+   <glossentry>
+    <glossterm>Automatic File Extension</glossterm>
+    <glossdef><para>
+     This option can be toggled on or off; it represents whether a
+     filename is modified before a &regina; data file is saved.
+     When on, if the user does not specify a filename extension, the
+     default extension of <filename>.rga</filename> will be appended.
+    </para></glossdef>
+   </glossentry>
+  </glosslist>
+ </sect1>
+
  <sect1 id="options-libraries">
   <title>&python; Library Options</title>
 

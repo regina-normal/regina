@@ -107,31 +107,13 @@
      <replaceable>n</replaceable> is formed by layering
      <replaceable>n</replaceable> tetrahedra one upon another to form a
      closed loop of tetrahedra.
+     In a twisted layered loop, a 180 degree rotation takes place
+     before the final layering is performed.
     </para>
     <para>
-     For each tetrahedron we select two top faces, two bottom faces and
-     two hinge edges, so that the top faces are adjacent, the bottom
-     faces are adjacent, the hinge edges are opposite and each hinge
-     meets both a top and a bottom face.  The tetrahedron can thus be
-     thought of as a fattened square with the top and bottom faces above
-     and below the square respectively, and the hinges as the top and
-     bottom edges of the square.  The left and right edges of the square
-     are identified to form an annulus.
-    </para>
-    <para>
-     For each <replaceable>i</replaceable>, the bottom faces of tetrahedron
-     <replaceable>i</replaceable>+1 are layered upon the top faces
-     of tetrahedron <replaceable>i</replaceable>.  In particular we
-     layer upon the identified left and right edges of the square formed
-     by tetrahedron <replaceable>i</replaceable>.
-    </para>
-    <para>
-     To close the loop, the bottom faces of the first tetrahedron are
-     similarly layered upon the top faces of the last tetrahedron.  In
-     an untwisted layered loop, this final layering
-     is done directly; in a twisted layered loop
-     the faces are rotated by 180 degrees before this final layering is
-     performed.
+     Layered loops are described in detail in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/>, which is available from the
+     &regwebsite;.
     </para>
     <para>
      Note that a twisted layered loop of length
@@ -141,11 +123,6 @@
      untwisted layered loop of length <replaceable>n</replaceable> forms
      a two-vertex triangulation of the lens space
      L(<replaceable>n</replaceable>,1).
-    </para>
-    <para>
-     Layered loops are described in detail in Burton's PhD thesis
-     <xref linkend="bib-burton-phd"/>, which is available from the
-     &regwebsite;.
     </para>
    </sect3>
 
@@ -193,8 +170,9 @@
     </para>
     <para>
      The precise format of splitting surface signatures is described
-     in <link linkend="bib-burton-phd">Ben Burton's PhD thesis</link>
-     (see the <link linkend="bibliography">bibliography</link>).
+     in Burton's PhD thesis
+     <xref linkend="bib-burton-phd"/>, which is available from the
+     &regwebsite;.
     </para>
    </sect3>
   </sect2>
@@ -395,7 +373,8 @@
     <para>
      The second column (labelled <guilabel>Type</guilabel>) describes
      properties of each vertex, edge or face using zero or more
-     of the property labels described below.  Note that an object might
+     of the <link linkend="tri-vertextype">property labels
+     described below</link>.  Note that an object might
      have no interesting properties at all.
     </para>
     <para>
@@ -434,8 +413,8 @@
     </para>
     <para>
      The second column describes properties of each component or
-     boundary component, again using zero or more of the property
-     labels described below.
+     boundary component, again using zero or more of the
+     <link linkend="tri-comptype">property labels described below</link>.
     </para>
     <para>
      The third column lists the number of tetrahedra in the component or
@@ -455,6 +434,8 @@
    <sect3 id="tri-vertextype">
     <title>Vertex Properties</title>
     <para>
+     The following information may appear in the
+     <guilabel>Type</guilabel> column for a vertex table.
      <glosslist>
       <glossentry>
        <glossterm>Bdry</glossterm>
@@ -495,6 +476,8 @@
    <sect3 id="tri-edgetype">
     <title>Edge Properties</title>
     <para>
+     The following information may appear in the
+     <guilabel>Type</guilabel> column for an edge table.
      <glosslist>
       <glossentry>
        <glossterm>Bdry</glossterm>
@@ -515,6 +498,8 @@
    <sect3 id="tri-facetype">
     <title>Face Properties</title>
     <para>
+     The following information may appear in the
+     <guilabel>Type</guilabel> column for a face table.
      <glosslist>
       <glossentry>
        <glossterm>Bdry</glossterm>
@@ -585,6 +570,8 @@
    <sect3 id="tri-comptype">
     <title>Component Properties</title>
     <para>
+     The following information may appear in the
+     <guilabel>Type</guilabel> column for a component table.
      <glosslist>
       <glossentry>
        <glossterm>Real</glossterm>
@@ -617,6 +604,8 @@
    <sect3 id="tri-bdrycomptype">
     <title>Boundary Component Properties</title>
     <para>
+     The following information may appear in the
+     <guilabel>Type</guilabel> column for a boundary component table.
      <glosslist>
       <glossentry>
        <glossterm>Real</glossterm>
@@ -678,12 +667,38 @@
   </sect2>
 
   <sect2 id="tri-composition">
-   <title>Combinatorial Composition (INCOMPLETE)</title>
+   <title>Combinatorial Composition</title>
    <para>
-    <emphasis>An awful lot needs to be written here regarding the
-    combinatorial subcomplexes the program finds within a
-    triangulation.</emphasis>
+    The <guilabel>Composition</guilabel> tab in the triangulation viewer
+    presents information regarding the combinatorial structure of the
+    triangulation.
    </para>
+   <para>
+    If the triangulation and/or its underlying 3-manifold can be
+    identified, these will be reported.  In addition, the program will
+    search for a variety of standard subcomplexes within the
+    triangulation.  If any of these subcomplexes are found, these too
+    will be reported along with precise details of where they occur.
+   </para>
+   <para>
+    Most of the subcomplexes that are identified are
+    described in detail in Burton's PhD thesis
+    <xref linkend="bib-burton-phd"/> which is available from the
+    &regwebsite;.  These descriptions can be quite laborious, and will
+    not be repeated here.
+   </para>
+   <screenshot>
+    <screeninfo>Viewing the combinatorial composition</screeninfo>
+    <mediaobject>
+     <imageobject>
+      <imagedata fileref="composition.png"/>
+     </imageobject>
+     <textobject>
+      <phrase>Viewing the combinatorial composition</phrase>
+     </textobject>
+     <caption><para>Viewing the combinatorial composition</para></caption>
+    </mediaobject>
+   </screenshot>
   </sect2>
 
   <sect2 id="tri-surfaceproperties">
@@ -699,7 +714,9 @@
     not be calculated by default since the calculations could be quite
     slow.  If a property is listed as <literal>Unknown</literal>, press
     the corresponding <guibutton>Calculate</guibutton> button
-    (and be prepared to wait).
+    (and be prepared to wait).  Just how large is <quote>sufficiently
+    large</quote> can be adjusted in the
+    <link linkend="options-triangulation">triangulation options</link>.
    </para>
    <para>
     The available properties pertaining to normal surfaces are as follows.
@@ -732,6 +749,15 @@
  <sect1 id="tri-modification">
   <title>Modification</title>
 
+  <para>
+   Once a triangulation has been created, a variety of options are
+   available for modifying it.  Many of these modifications are found in
+   the <guimenu>Docked Packet</guimenu> menu &ndash; note that these
+   menu items will only appear when a triangulation is currently
+   being viewed, and will be performed upon this triangulation (and not
+   whatever is selected in the visual packet tree).
+  </para>
+
   <sect2 id="tri-editgluings">
    <title>Editing Face Gluings</title>
 
@@ -743,8 +769,8 @@
    <para>
     Tetrahedra are numbered beginning at 0; thus if a triangulation has
     three tetrahedra they will be numbered 0, 1 and 2.  Tetrahedra can
-    be added and removed using the <guilabel>Add</guilabel> and
-    <guilabel>Remove</guilabel> buttons above the gluing editor.
+    be added and removed using the <guilabel>Add Tet</guilabel> and
+    <guilabel>Remove Tet</guilabel> buttons above the gluing editor.
    </para>
    <para>
     The gluing editor itself contains a grid of tetrahedron faces.  Each
@@ -755,15 +781,10 @@
    </para>
    <para>
     Each cell of this grid identifies to what the corresponding face is
-    glued.  To change how the face is glued, click on the cell and a
-    dialog will appear allowing the gluing to be changed.
-   </para>
-   <para>
-    If a cell contains the word <literal>Boundary</literal>, the
+    glued.  If a cell is empty,
     corresponding face is a boundary face and is glued to nothing at
     all.  Otherwise it will contain a string like
-    <literal>&gt; 5 (312)</literal>.  This means that the face for
-    that cell is
+    <literal>5 (312)</literal>.  This means that the face for that cell is
     glued to face 312 of tetrahedron 5.  In particular, if the cell in
     question belongs to face 013 of tetrahedron 4, this means that
     vertices 0, 1 and 3 of tetrahedron 4 are glued to vertices 3, 1 and
@@ -771,11 +792,21 @@
     the precise gluing permutation.
    </para>
    <para>
+    To change how the face is glued, click in the cell.
+    If you are in direct edit mode, you can simply type a new gluing
+    over top of the old one in the format described above.  If you are
+    in pop-up dialog mode, a button will appear; when this button is
+    clicked a dialog will appear that allows a new gluing to be
+    selected.  The mode can be changed between direct edit and
+    pop-up dialog in the
+    <link linkend="options-triangulation">triangulation options</link>.
+   </para>
+   <para>
     Tetrahedra can be optionally named to help
     keep track of their roles within a triangulation.  To change the
-    name of a tetrahedron, click on the row header for that tetrahedron (this
-    is the cell containing the tetrahedron number on the left hand side of
-    the grid).  The new name can be typed directly into the cell.
+    name of a tetrahedron, click on the cell containing the tetrahedron
+    number on the left hand side of the grid.  The new name can be
+    typed directly into the cell.
    </para>
   </sect2>
 
@@ -785,22 +816,22 @@
    <para>
     The
     <menuchoice>
-     <guimenu>Modify</guimenu>
-     <guisubmenu>Triangulation</guisubmenu>
+     <guimenu>Docked Packet</guimenu>
      <guimenuitem>Elementary Move</guimenuitem>
     </menuchoice>
     menu item will present a list of elementary moves that can be
-    performed on the chosen triangulation.  Note that there are
-    restrictions on when particular moves may be performed and as a
-    result some elementary moves might not be available.
+    performed upon the triangulation that is currently being viewed.
+    Note that since there are restrictions on when particular moves may
+    be performed, some elementary moves might not be available.
    </para>
    <para>
     An elementary move will never change the topology of the
     3-manifold.  The individual moves and their restrictions are
-    described in full detail in the
-    <ulink url="engine/classregina_1_1NTriangulation.html"><classname>NTriangulation</classname>
-    class reference</ulink> in the calculation engine documentation, but a
-    brief summary is provided below.
+    described in full detail in the <classname>NTriangulation</classname>
+    class notes in the calculation engine documentation,
+    and most are described with diagrams in Burton's PhD thesis
+    <xref linkend="bib-burton-phd"/> which is available from the
+    &regwebsite;.  A brief summary is provided below.
    </para>
    <para>
     <glosslist>
@@ -879,12 +910,12 @@
    <para>
     The
     <menuchoice>
-     <guimenu>Modify</guimenu>
-     <guisubmenu>Triangulation</guisubmenu>
+     <guimenu>Docked Packet</guimenu>
      <guimenuitem>Barycentric Subdivision</guimenuitem>
     </menuchoice>
-    menu item will perform a barycentric subdivision on the chosen
-    triangulation.  A <firstterm>barycentric subdivision</firstterm>
+    menu item will perform a barycentric subdivision on the
+    triangulation currently being viewed.
+    A <firstterm>barycentric subdivision</firstterm>
     involves taking each tetrahedron, adding new vertices at the
     centroid of the tetrahedron, the centroid of each face and the
     midpoint of each edge and joining them with edges to split the
@@ -893,12 +924,11 @@
    <para>
     The
     <menuchoice>
-     <guimenu>Modify</guimenu>
-     <guisubmenu>Triangulation</guisubmenu>
+     <guimenu>Docked Packet</guimenu>
      <guimenuitem>Convert from Ideal to Finite</guimenuitem>
     </menuchoice>
-    menu item will convert the chosen triangulation to a finite
-    triangulation (one with no ideal vertices).  This is done by
+    menu item will convert the triangulation currently being viewed to
+    a finite triangulation (one with no ideal vertices).  This is done by
     subdividing each tetrahedron and then truncating at the ideal
     vertices.  The resulting triangulation has each ideal or
     non-standard vertex
@@ -915,17 +945,16 @@
     simplifying a triangulation as far as possible without manual
     intervention.  Selecting the
     <menuchoice>
-     <guimenu>Modify</guimenu>
-     <guisubmenu>Triangulation</guisubmenu>
-     <guimenuitem>Intelligent Simplify</guimenuitem>
+     <guimenu>Docked Packet</guimenu>
+     <guimenuitem>Simplify</guimenuitem>
     </menuchoice>
     menu item will use <link linkend="tri-elementarymove">elementary
     moves</link> to reduce the triangulation to a local minimum number
-    of tetrahedra.  In particular, it is not guaranteed to produce
+    of tetrahedra.  Note that this is not guaranteed to produce
     <emphasis>the</emphasis> minimum number of tetrahedra required.
    </para>
    <para>
-    As well as performing immediate reductions, this routine tries
+    As well as performing obvious reductions, this routine tries
     random 4-4 moves if it cannot reduce the triangulation directly.
     It does not yet try increasing the size of the triangulation (such
     as through 2-3 moves) to escape a local minimum well in which it
@@ -939,8 +968,7 @@
    <para>
     The
     <menuchoice>
-     <guimenu>Modify</guimenu>
-     <guisubmenu>Triangulation</guisubmenu>
+     <guimenu>Docked Packet</guimenu>
      <guimenuitem>Double Cover</guimenuitem>
     </menuchoice>
     menu item will convert a triangulation to its double cover.  Each
@@ -955,21 +983,24 @@
    <para>
     A triangulation can be modified by finding a normal surface within
     it and crushing that surface to a point.  Note that this action
-    might change the topology of the 3-manifold (beyond the simple act
-    of sliding along the surface), and in some cases might
+    might change the topology of the 3-manifold beyond the simple act
+    of slicing along the surface, and in some cases might
     introduce ideal vertices or even invalid edges.  For details see
-    <ulink url="engine/classregina_1_1NNormalSurface.html"><function><classname>NNormalSurface</classname>::crush()</function></ulink>
+    <function><classname>NNormalSurface</classname>::crush()</function>
     in the calculation engine documentation.
    </para>
    <para>
-    To crush a normal surface, bring up a list of normal surfaces such
-    as can be found in a
-    <link linkend="packet-surfacelist">normal surface list packet</link>
-    or a <link linkend="packet-filter">surface filter packet</link>.
-    Select the surface to crush and press the
-    <guibutton>Crush</guibutton> button beside the list of surfaces.  A
-    new triangulation will be created as a result of crushing the normal
-    surface; the original triangulation will not be changed.
+    A normal surface can be crushed as follows.
+    Open a list of normal surfaces,
+    select the surface to crush and invoke the
+    <menuchoice>
+     <guimenu>Docked Packet</guimenu>
+     <guimenuitem>Crush</guimenuitem>
+    </menuchoice>
+    menu item (note that this menu item only appears when viewing a
+    normal surface list).
+    A new triangulation will be created in which the surface has been
+    crushed.  The original triangulation will not be changed.
    </para>
   </sect2>
  </sect1>

@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <chapter id="surfaces">
  <title>Normal Surfaces</title>
- <mediaobject>
-  <imageobject>
-   <imagedata fileref="largeicon.png" align="right"/>
-  </imageobject>
- </mediaobject>
 
  <para>
+  <inlinemediaobject>
+   <imageobject>
+    <imagedata fileref="largeicon.png" align="right"/>
+   </imageobject>
+  </inlinemediaobject>
   The primary motivation for ever writing &regina; was to create a
   tool for calculating vertex normal surfaces within a triangulation.
  </para>
