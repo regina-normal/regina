@@ -51,11 +51,17 @@
 #include <qlabel.h>
 #include <qvbox.h>
 
-// TODO: tab, history
+// TODO: tab
+// TODO: history
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
-        regina::NPacket* tree, regina::NPacket* selectedPacket) :
+        const ReginaPrefSet* initialPrefs, regina::NPacket* tree,
+        regina::NPacket* selectedPacket) :
         KMainWindow(parent, "PythonConsole#"), manager(useManager) {
+    // Initialise preferences.
+    if (initialPrefs)
+        prefs = *initialPrefs;
+
     // Resize ourselves nicely.
     if (! initialGeometrySet())
         resize(500, 400);
@@ -172,6 +178,14 @@ void PythonConsole::saveLog() {
 
 void PythonConsole::init(regina::NPacket* tree,
         regina::NPacket* selectedPacket) {
+    // Show the user what's going on.
+    setPromptMode(PROCESSING);
+    input->setEnabled(false);
+    input->setText(i18n("Initialising..."));
+
+    show();
+    KApplication::kApplication()->processEvents();
+
     // Import the regina module.
     if (! interpreter->importRegina()) {
         KMessageBox::error(this, i18n("<qt>The Python module <i>regina</i> "
@@ -212,9 +226,31 @@ void PythonConsole::init(regina::NPacket* tree,
         }
     }
 
-    // TODO: Run library scripts.
+    // Run library scripts.
+    for (ReginaFilePrefList::const_iterator it = prefs.pythonLibraries.begin();
+            it != prefs.pythonLibraries.end(); it++) {
+        if (! (*it).active)
+            continue;
+
+        QString shortName = QFileInfo((*it).filename).fileName();
+        addOutput(i18n("Loading %1...").arg(shortName));
+        if (! interpreter->runScript((*it).filename, shortName)) {
+            if (! QFileInfo((*it).filename).exists())
+                addError(i18n("The library %1 does not exist.").
+                    arg((*it).filename));
+            else
+                addError(i18n("The library %1 could not be loaded.").
+                    arg(shortName));
+        }
+    }
+
+    // Ready!
+    addOutput("Ready.");
 
     setPromptMode(PRIMARY);
+    input->clear();
+    input->setEnabled(true);
+    input->setFocus();
 }
 
 void PythonConsole::setPromptMode(PromptMode mode) {

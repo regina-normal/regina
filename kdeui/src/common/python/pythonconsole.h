@@ -87,6 +87,7 @@ class PythonConsole : public KMainWindow {
          * Constructor and destructor.
          */
         PythonConsole(QWidget* parent = 0, PythonManager* useManager = 0,
+                const ReginaPrefSet* initialPrefs = 0,
                 regina::NPacket* tree = 0, regina::NPacket* selectedPacket = 0);
         ~PythonConsole();
 

@@ -236,7 +236,7 @@ bool ReginaMain::openURL(const QString& url) {
 }
 
 void ReginaMain::pythonConsole() {
-    consoles.launchPythonConsole(this);
+    consoles.launchPythonConsole(this, &globalPrefs);
 }
 
 void ReginaMain::close() {

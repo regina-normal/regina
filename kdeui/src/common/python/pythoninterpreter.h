@@ -97,6 +97,8 @@ class PythonInterpreter {
          */
         bool importRegina();
         bool setVar(const char* name, regina::NPacket* value);
+        bool runScript(const char* filename, const char* shortName);
+        bool runScript(const char* code);
 
     private:
         /**

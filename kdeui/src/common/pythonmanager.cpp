@@ -50,10 +50,9 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
 #include "python/pythonconsole.h"
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        regina::NPacket* tree, regina::NPacket* selectedPacket) {
-    PythonConsole* ans = new PythonConsole(parent, this, tree, selectedPacket);
-    ans->show();
-    return ans;
+        const ReginaPrefSet* initialPrefs, regina::NPacket* tree,
+        regina::NPacket* selectedPacket) {
+    return new PythonConsole(parent, this, initialPrefs, tree, selectedPacket);
 }
 
 void PythonManager::closeAllConsoles() {

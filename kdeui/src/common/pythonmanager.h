@@ -76,6 +76,7 @@ class PythonManager {
          * to the user and 0 is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent = 0,
+                const ReginaPrefSet* initialPrefs = 0,
                 regina::NPacket* tree = 0,
                 regina::NPacket* selectedPacket = 0);
 

@@ -394,7 +394,7 @@ void ReginaPart::newCensus() {
 }
 
 void ReginaPart::pythonConsole() {
-    consoles.launchPythonConsole(widget(), packetTree,
+    consoles.launchPythonConsole(widget(), &prefs, packetTree,
         treeView->selectedPacket());
 }
 
