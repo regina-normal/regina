@@ -337,6 +337,9 @@ public class CoordinateViewer extends DefaultPacketViewer
             // Add the corresponding node to the tree structure.
             topPane.fireSubtreeWasInserted(crushed,
                 CoordinateViewer.this, true);
+
+            // Tidy up.
+            topPane.setDirty(true);
         }
     }
 
