@@ -26,28 +26,42 @@
 
 /* end stub */
 
-/*! \file reginaiface.h
- *  \brief Provides DCOP interfaces for general Regina classes.
+/*! \file reginafilter.h
+ *  \brief A variety of filename filters for use with KFileDialog.
  */
 
-#ifndef __REGINAIFACE_H
-#define __REGINAIFACE_H
-
-#include <dcopobject.h>
+#ifndef __REGINAFILTER_H
+#define __REGINAFILTER_H
 
 /**
- * A DCOP interface for a top-level Regina window.
+ * Filename filter for all supported files.
  */
-class ReginaMainInterface : virtual public DCOPObject {
-    K_DCOP
+#define FILTER_SUPPORTED \
+    "*.rga|Regina Data Files\n*.py|Python Libraries\n*|All Files"
 
-    k_dcop:
-        virtual void newTopology() = 0;
-        virtual void newPython() = 0;
-        virtual bool openURL(const QString& url) = 0;
-        virtual void pythonConsole() = 0;
-        virtual void close() = 0;
-        virtual void quit() = 0;
-};
+/**
+ * Filename filter for Regina data files.
+ */
+#define FILTER_REGINA \
+    "*.rga|Regina Data Files\n*|All Files"
+
+/**
+ * Filename filter for Python scripts.
+ */
+#define FILTER_PYTHON \
+    "*.py|Python Libraries\n*|All Files"
+
+/**
+ * Filename filter for SnapPea files.
+ */
+#define FILTER_SNAPPEA \
+    "*|SnapPea Files\n*|All Files"
+
+/**
+ * Filename filter for all files.
+ */
+#define FILTER_ALL \
+    "*|All Files"
 
 #endif
+

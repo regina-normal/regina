@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "reginaabout.h"
+#include "reginafilter.h"
 #include "reginamain.h"
 #include "reginapref.h"
 
@@ -168,13 +169,20 @@ void ReginaMain::newPython() {
     embedPart();
 }
 
-void ReginaMain::openURL(const KURL& url) {
+bool ReginaMain::openURL(const KURL& url) {
     // Do we already have a document open?
     if (currentPart) {
+        // Open the new document in a new window.
+        // If the document failed to open, close this new window before
+        // it's shown.
         ReginaMain* top = new ReginaMain;
-        top->show();
-        top->openURL(url);
-        return;
+        if (top->openURL(url)) {
+            top->show();
+            return true;
+        } else {
+            top->close();
+            return false;
+        }
     }
 
     // Semi-intelligently try to work out what type of file we're
@@ -221,11 +229,11 @@ void ReginaMain::openURL(const KURL& url) {
 
     // We now have a part with which to edit the given data file.
     embedPart();
-    currentPart->openURL(url);
+    return currentPart->openURL(url);
 }
 
-void ReginaMain::openURL(const QString& url) {
-    openURL(KURL(url));
+bool ReginaMain::openURL(const QString& url) {
+    return openURL(KURL(url));
 }
 
 void ReginaMain::pythonConsole() {
@@ -243,11 +251,8 @@ void ReginaMain::quit() {
 }
 
 void ReginaMain::fileOpen() {
-    KURL url = KFileDialog::getOpenURL(QString::null,
-        "*" + About::regDataExt +
-        i18n("|Regina Data Files\n*.py|Python Libraries\n*|All Files"),
+    KURL url = KFileDialog::getOpenURL(QString::null, i18n(FILTER_SUPPORTED),
         this, i18n("Open Data File"));
-
     if (!url.isEmpty())
         openURL(url);
 }

@@ -172,13 +172,13 @@ class ReginaMain : public KParts::MainWindow,
          * Open the given URL in this window, or in a new top-level
          * window if this window already contains an open document.
          */
-        void openURL(const KURL& url);
+        bool openURL(const KURL& url);
 
         /**
          * Open the given URL in this window, or in a new top-level
          * window if this window already contains an open document.
          */
-        void openURL(const QString& url);
+        bool openURL(const QString& url);
 
         /**
          * Open a new Python console.  The console will be linked
