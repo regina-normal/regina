@@ -180,8 +180,9 @@
    In addition to forming new censuses, &regina; ships with a number of
    prepackaged censuses including closed 3-manifolds
    <xref linkend="bib-burton-phd"/>, <xref linkend="bib-burton-nor7"/>,
-   cusped hyperbolic 3-manifolds <xref linkend="bib-cuspedcensus"/> and
-   knot and link complements (tabulated by Joe Christy).
+   cusped and closed hyperbolic 3-manifolds
+   <xref linkend="bib-cuspedcensus"/>, <xref linkend="bib-closedhypcensus"/>
+   and knot and link complements (tabulated by Joe Christy).
    A census lookup facility for arbitrary triangulations is provided.
   </para>
  </sect2>

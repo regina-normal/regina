@@ -90,6 +90,29 @@
   <date>1962</date>
  </biblioentry>
 
+ <biblioentry id="bib-closedhypcensus">
+  <abbrev>HW</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Craig</firstname>
+    <othername>D.</othername>
+    <surname>Hodgson</surname>
+   </author>
+   <author>
+    <firstname>Jeffrey</firstname>
+    <othername>R.</othername>
+    <surname>Weeks</surname>
+   </author>
+  </authorgroup>
+  <title>Symmetries, isometries and length spectra of
+   closed hyperbolic three-manifolds</title>
+  <edition>Experiment. Math.</edition>
+  <volumenum>vol. 3</volumenum>
+  <issuenum>no. 4</issuenum>
+  <artpagenums>pp. 261&ndash;274</artpagenums>
+  <date>1994</date>
+ </biblioentry>
+
  <biblioentry id="bib-0-efficiency">
   <abbrev>JR1</abbrev>
   <authorgroup>
