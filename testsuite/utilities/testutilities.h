@@ -39,4 +39,5 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addNIndexedArray(CppUnit::TextUi::TestRunner& runner);
+void addNLargeInteger(CppUnit::TextUi::TestRunner& runner);
 

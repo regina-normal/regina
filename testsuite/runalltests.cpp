@@ -114,6 +114,7 @@ bool runAllTests() {
 
     // Utilities:
     addNIndexedArray(runner);
+    addNLargeInteger(runner);
 
     /**
      * END REGINA TEST SUITES
