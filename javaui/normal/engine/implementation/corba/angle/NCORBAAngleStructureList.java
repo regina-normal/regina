@@ -57,4 +57,11 @@ public class NCORBAAngleStructureList extends NCORBAPacket implements
     public normal.engine.angle.NAngleStructure getStructure(long index) {
         return NCORBAAngleStructure.newWrapper(data.getStructure((int)index));
     }
+
+    public boolean allowsStrict() {
+        return data.allowsStrict();
+    }
+    public boolean allowsTaut() {
+        return data.allowsTaut();
+    }
 }

@@ -33,6 +33,10 @@
 #include "surfaces/nnormalsurface.h"
 #include "file/nfile.h"
 
+// Property IDs:
+#define PROPID_ALLOWSTRICT 1
+#define PROPID_ALLOWTAUT 2
+
 NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     NAngleStructureList::initialiseAllProperties();
     owner->insertChildLast(this);
@@ -138,7 +142,19 @@ void NAngleStructureList::writePacket(NFile& out) const {
     }
 
     // Write the properties.
-    // At the moment there are no properties!
+    streampos bookmark(0);
+
+    if (calculatedAllowStrict) {
+        bookmark = writePropertyHeader(out, PROPID_ALLOWSTRICT);
+        out.writeBool(doesAllowStrict);
+        writePropertyFooter(out, bookmark);
+    }
+    if (calculatedAllowTaut) {
+        bookmark = writePropertyHeader(out, PROPID_ALLOWTAUT);
+        out.writeBool(doesAllowTaut);
+        writePropertyFooter(out, bookmark);
+    }
+
     writeAllPropertiesFooter(out);
 }
 
@@ -164,13 +180,110 @@ NPacket* NAngleStructureList::internalClonePacket(NPacket* parent) const {
         ans->structures.addLast((*it)->clone());
         it++;
     }
+
+    if (calculatedAllowStrict) {
+        ans->doesAllowStrict = doesAllowStrict;
+        ans->calculatedAllowStrict = true;
+    }
+    if (calculatedAllowTaut) {
+        ans->doesAllowTaut = doesAllowTaut;
+        ans->calculatedAllowTaut = true;
+    }
+
     return ans;
 }
 
 void NAngleStructureList::initialiseAllProperties() {
+    calculatedAllowStrict = false;
+    calculatedAllowTaut = false;
 }
 
 void NAngleStructureList::readIndividualProperty(NFile& infile,
         unsigned propType) {
+    if (propType == PROPID_ALLOWSTRICT) {
+        doesAllowStrict = infile.readBool();
+        calculatedAllowStrict = true;
+    } else if (propType == PROPID_ALLOWTAUT) {
+        doesAllowTaut = infile.readBool();
+        calculatedAllowTaut = true;
+    }
+}
+
+void NAngleStructureList::calculateAllowStrict() {
+    calculatedAllowStrict = true;
+
+    if (structures.size() == 0) {
+        doesAllowStrict = false;
+        return;
+    }
+
+    unsigned long nTets = getTriangulation()->getNumberOfTetrahedra();
+    if (nTets == 0) {
+        doesAllowStrict = true;
+        return;
+    }
+
+    // We run into trouble if there's a 0 or pi angle that never changes.
+    NRational* fixedAngles = new NRational[nTets * 3];
+    unsigned long nFixed = 0;
+
+    // Get the list of bad unchanging angles from the first structure.
+    StructureIterator it(structures);
+    NAngleStructure* s = *it;
+
+    NRational angle;
+    unsigned long tet;
+    int edges;
+    for (tet = 0; tet < nTets; tet++)
+        for (edges = 0; edges < 3; edges++) {
+            angle = s->getAngle(tet, edges);
+            if (angle == NRational::zero || angle == NRational::one) {
+                fixedAngles[3 * tet + edges] = angle;
+                nFixed++;
+            } else
+                fixedAngles[3 * tet + edges] = NRational::undefined;
+        }
+
+    if (nFixed == 0) {
+        doesAllowStrict = true;
+        delete[] fixedAngles;
+        return;
+    }
+
+    // Run through the rest of the structures to see if these bad angles
+    // do ever change.
+    for (it++; ! it.done(); it++) {
+        s = *it;
+        for (tet = 0; tet < nTets; tet++)
+            for (edges = 0; edges < 3; edges++) {
+                if (fixedAngles[3 * tet + edges] == NRational::undefined)
+                    continue;
+                if (s->getAngle(tet, edges) != fixedAngles[3 * tet + edges]) {
+                    // Here's a bad angle that finally changed.
+                    fixedAngles[3 * tet + edges] = NRational::undefined;
+                    nFixed--;
+                    if (nFixed == 0) {
+                        doesAllowStrict = true;
+                        delete[] fixedAngles;
+                        return;
+                    }
+                }
+            }
+    }
+
+    // Some of the bad angles never changed.
+    doesAllowStrict = false;
+    delete[] fixedAngles;
+}
+
+void NAngleStructureList::calculateAllowTaut() {
+    calculatedAllowTaut = true;
+
+    for (StructureIterator it(structures); ! it.done(); it++)
+        if ((*it)->isTaut()) {
+            doesAllowTaut = true;
+            return;
+        }
+    doesAllowTaut = false;
 }
 

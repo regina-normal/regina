@@ -37,5 +37,8 @@ public interface NAngleStructureList extends NPacket {
     public NTriangulation getTriangulation();
     public long getNumberOfStructures();
     public NAngleStructure getStructure(long index);
+
+    public boolean allowsStrict();
+    public boolean allowsTaut();
 }
 

@@ -47,4 +47,7 @@ public class NJNIAngleStructureList extends NJNIPacket
     public native NTriangulation getTriangulation();
     public native long getNumberOfStructures();
     public native NAngleStructure getStructure(long index);
+
+    public native boolean allowsStrict();
+    public native boolean allowsTaut();
 }

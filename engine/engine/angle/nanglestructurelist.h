@@ -54,6 +54,20 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
         NDynamicArray<NAngleStructure*> structures;
             /**< Contains the angle structures stored in this packet. */
 
+        bool doesAllowStrict;
+            /**< Does the convex span of this list include a strict
+             *   angle structure? */
+        bool calculatedAllowStrict;
+            /**< Have we calculated \a doesAllowStrict? */
+        bool doesAllowTaut;
+            /**< Does the convex span of this list include a taut structure? */
+        bool calculatedAllowTaut;
+            /**< Have we calculated \a doesAllowTaut? */
+
+        typedef NDynamicArrayIterator<NAngleStructure*> StructureIterator;
+            /**< An iterator class used to run through the individual
+             *   angle structures in this list. */
+
     public:
         /**
          * Creates a new list of angle structures on the given
@@ -96,6 +110,26 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
          */
         const NAngleStructure* getStructure(unsigned long index) const;
 
+        /**
+         * Determines whether any convex combination of the angle
+         * structures in this list is a strict angle structure.
+         * See NAngleStructure::isStrict() for details on strict angle
+         * structures.
+         *
+         * @return \c true if and only if a strict angle structure can
+         * be produced.
+         */
+        bool allowsStrict();
+        /**
+         * Determines whether any convex combination of the angle
+         * structures in this list is a taut structure.
+         * See NAngleStructure::isTaut() for details on taut
+         * structures.
+         *
+         * @return \c true if and only if a taut structure can be produced.
+         */
+        bool allowsTaut();
+
         virtual int getPacketType() const;
         virtual NString getPacketName() const;
         virtual void writeTextShort(ostream& o) const;
@@ -115,6 +149,17 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
 
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
         virtual void initialiseAllProperties();
+
+        /**
+         * Calculate whether the convex span of this list includes a
+         * strict angle structure.
+         */
+        void calculateAllowStrict();
+        /**
+         * Calculate whether the convex span of this list includes a
+         * taut structure.
+         */
+        void calculateAllowTaut();
 };
 
 // Inline functions for NAngleStructureList
@@ -138,6 +183,18 @@ inline unsigned long NAngleStructureList::getNumberOfStructures() const {
 inline const NAngleStructure* NAngleStructureList::getStructure(
         unsigned long index) const {
     return structures[index];
+}
+
+inline bool NAngleStructureList::allowsStrict() {
+    if (! calculatedAllowStrict)
+        calculateAllowStrict();
+    return doesAllowStrict;
+}
+
+inline bool NAngleStructureList::allowsTaut() {
+    if (! calculatedAllowTaut)
+        calculateAllowTaut();
+    return doesAllowTaut;
 }
 
 inline bool NAngleStructureList::dependsOnParent() const {

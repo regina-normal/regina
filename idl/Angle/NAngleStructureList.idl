@@ -37,6 +37,8 @@ module Regina {
             Regina::Triangulation::NTriangulation getTriangulation();
             long getNumberOfStructures();
             NAngleStructure getStructure(in long index);
+            boolean allowsStrict();
+            boolean allowsTaut();
         };
     };
 };

@@ -42,4 +42,10 @@ Regina::Angle::NAngleStructure_ptr NAngleStructureList_i::getStructure(
     return NAngleStructure_i::newWrapper((NAngleStructure*)
         (MY_ENGINE_OBJECT->getStructure(index)));
 }
+CORBA::Boolean NAngleStructureList_i::allowsStrict() {
+    return MY_ENGINE_OBJECT->allowsStrict();
+}
+CORBA::Boolean NAngleStructureList_i::allowsTaut() {
+    return MY_ENGINE_OBJECT->allowsTaut();
+}
 

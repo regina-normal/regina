@@ -51,6 +51,8 @@ class NAngleStructureList_i :
         virtual CORBA::Long getNumberOfStructures();
         virtual Regina::Angle::NAngleStructure_ptr getStructure(
             CORBA::Long index);
+        virtual CORBA::Boolean allowsStrict();
+        virtual CORBA::Boolean allowsTaut();
 };
 
 #endif

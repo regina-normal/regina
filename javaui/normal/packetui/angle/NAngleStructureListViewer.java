@@ -49,6 +49,11 @@ public class NAngleStructureListViewer extends DefaultPacketViewer {
     private JLabel header;
 
     /**
+     * Displays various properties of the angle structure list.
+     */
+    private JLabel properties;
+
+    /**
      * Displays the individual angle structures.
      */
     private AngleViewer angleViewer;
@@ -86,10 +91,16 @@ public class NAngleStructureListViewer extends DefaultPacketViewer {
 
         // Initialise the components.
         header = new JLabel("", JLabel.CENTER);
+        properties = new JLabel("", JLabel.CENTER);
         angleViewer = new AngleViewer(angles);
 
+        JPanel headerPane = new JPanel();
+        headerPane.setLayout(new GridLayout(0, 1));
+        headerPane.add(header);
+        headerPane.add(properties);
+
         // Insert the components.
-        add(new PaddedPane(header, 5), BorderLayout.NORTH);
+        add(new PaddedPane(headerPane, 5), BorderLayout.NORTH);
         add(angleViewer, BorderLayout.CENTER);
     }
 
@@ -99,6 +110,7 @@ public class NAngleStructureListViewer extends DefaultPacketViewer {
 
     public void reflectPacket() {
         header.setText(getHeader());
+        properties.setText(getListProperties());
         angleViewer.reflectPacket();
     }
 
@@ -109,12 +121,32 @@ public class NAngleStructureListViewer extends DefaultPacketViewer {
      *
      * @return an appropriate header for the table.
      */
-    public String getHeader() {
+    private String getHeader() {
         long n = angles.getNumberOfStructures();
         if (n == 0)
             return "No vertex angle structures";
         if (n == 1)
             return "1 vertex angle structure";
         return String.valueOf(n) + " vertex angle structures";
+    }
+
+    /**
+     * Returns a human-readable string describing various properties
+     * of the angle structure list.
+     *
+     * @return a string describing various list properties.
+     */
+    private String getListProperties() {
+        StringBuffer ans = new StringBuffer("Span includes: ");
+
+        if (! angles.allowsStrict())
+            ans.append("NO ");
+        ans.append("Strict, ");
+
+        if (! angles.allowsTaut())
+            ans.append("NO ");
+        ans.append("Taut");
+
+        return ans.toString();
     }
 }

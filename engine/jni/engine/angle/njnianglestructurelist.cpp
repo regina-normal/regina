@@ -31,6 +31,18 @@
 #include "jnitools.h"
 #include "engine/angle/NJNIAngleStructureList.h"
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_allowsStrict
+        (JNIEnv* env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NAngleStructureList, me)->allowsStrict();
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_allowsTaut
+        (JNIEnv* env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NAngleStructureList, me)->allowsTaut();
+}
+
 JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_getNumberOfStructures
         (JNIEnv* env, jobject me) {
