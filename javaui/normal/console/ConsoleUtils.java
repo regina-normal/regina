@@ -28,80 +28,63 @@
 
 package normal.console;
 
-import normal.Application;
-import normal.engine.Engine;
+import java.awt.Frame;
+import normal.*;
 
 /**
  * Provides various utilities for use with JPython consoles.
  */
 public class ConsoleUtils {
     /**
-     * The commands to be run whenever a new JPython session is started.
-     * These commands will be run before anything else is done.
-     * Each command should be terminated by a newline.  All commands
-     * should be concatenated into a single string.
-     */
-    public static final String startup =
-        "import java;\nfrom java.lang import *;\n" +
-            "import normal;\nimport btools;";
-    
-    /**
-     * Runs a standalone text JPython console with no GUI.
-     * Standard input and standard output will be used.
-     *
-     * @param engine the calculation engine currently in use.
-     */
-    public static void runTextConsole(Engine engine) {
-        System.out.println();
-        System.out.println(consoleGreeting());
-        System.out.println();
-
-        // Start the interpreter.
-        org.python.util.InteractiveConsole console =
-            new org.python.util.InteractiveConsole();
-        System.out.println(consoleSetup(console, engine));
-        System.out.println();
-        console.interact();
-    }
-    
-    /**
      * Returns the greeting to offer the user when the program is run as
-     * a standalone JPython console without the full GUI.
-     * No final newline is included.
+     * a standalone JPython console.
+	 * The greeting may span multiple lines, but no final newline
+	 * should be included.
      *
      * @return the program console greeting.
      */
-    public static String consoleGreeting() {
+    public static String standaloneGreeting() {
         return Application.program + ' ' + Application.version + '\n' +
             Application.comments + '\n' + Application.copyright;
     }
 
     /**
-     * Runs the standard startup commands and
-     * sets up the local variables in a JPython interpreter that is to
-     * be used standalone, without the full program GUI.
-     * This routine will return a
-     * string to be displayed to the user to notify them of this setup;
-     * no final newline will be included.
+     * Runs a standalone text JPython console with no GUI.
+     * Standard input and standard output will be used.
      *
-     * @param interpreter the JPython interpreter to set up; this should
-     * be of class <tt>org.python.util.PythonInterpreter</tt> but is
-     * passed as an <tt>Object</tt> to avoid crashes in case the python
-     * classes are not available.
-     * @param engine the calculation engine currently in use.
-     * @return a string to inform the user of the newly arranged setup.
+	 * @param shell the shell representing the entire program.
      */
-    public static String consoleSetup(Object interpreter, Engine engine) {
-        try {
-            org.python.core.PyObject code =
-                org.python.modules.codeop.compile_command(
-                startup, "<startup>", "exec");
-            if (code != org.python.core.Py.None)
-                ((org.python.util.PythonInterpreter)interpreter).exec(code);
-        } catch (RuntimeException exc) {}
+    public static void runTextConsole(Shell shell) {
+        System.out.println();
+        System.out.println(standaloneGreeting());
+        System.out.println();
 
-        ((org.python.util.PythonInterpreter)interpreter).set("engine", engine);
-        return "The calculation engine (type normal.engine.Engine) is " +
-            "in the variable [engine].";
+        // Start the interpreter.
+        org.python.util.InteractiveConsole console =
+            new org.python.util.InteractiveConsole();
+		System.out.print(JPythonUtils.setupInterpreter(console, shell));
+        System.out.println();
+        console.interact();
     }
+
+	/**
+	 * Creates a new standalone graphical JPython console.
+	 * The console will be displaying welcome messages, initialised and
+	 * ready for user interaction.
+	 * All that will remain to be done will be for the frame to be shown.
+	 *
+	 * @param shell the shell representing the entire program.
+	 * @param standalone <tt>true</tt> if and only if this frame will in
+	 * fact be the entire program, with no other GUI present.
+	 * @return the created JPython console frame.
+	 */
+	public static Frame createGraphicalConsole(Shell shell,
+			boolean standalone) {
+		JPythonConsoleFrame frame = new JPythonConsoleFrame(shell, standalone);
+		frame.startConsole(standaloneGreeting() + "\n\n" +
+			org.python.util.InteractiveConsole.getDefaultBanner() + "\n" +
+			JPythonUtils.setupInterpreter(frame.getPythonInterpreter(),
+				shell) + "\n");
+		return frame;
+	}
 }

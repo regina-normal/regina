@@ -32,12 +32,10 @@ Help:
 
 JPython:
 	Intermediate output in console
-	Show error messages when running standard startup commands
-	Support for jpython imports / user libraries / custom startup commands
+	Support for custom startup commands
 	Check to see whether user libraries are text files
 	Syntax highlighting for script editor
 	Import/export scripts as text files
-	Port from jpython to jython.
 
 Main Window:
 	View file version.

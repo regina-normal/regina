@@ -29,6 +29,7 @@
 package normal.options;
 
 import java.io.*;
+import java.util.Vector;
 import btools.utilities.OptionSet;
 
 /**
@@ -68,6 +69,21 @@ public class NormalOptionSet extends OptionSet {
     public static final String optionDisplayIcon = "DisplayIcon";
 
     /**
+     * Full option name for a particular cached option.
+     */
+    public static final String optionJPythonLibCount = "JPythonLibCount";
+
+    /**
+     * Option name stub for a particular cached option.
+     */
+    public static final String optionJPythonLib = "JPythonLib";
+
+    /**
+     * Option name stub for a particular cached option.
+     */
+    public static final String optionJPythonLibUse = "JPythonLibUse";
+
+    /**
      * The default for a particular cached option.
      */
     public static final boolean defaultAutoDock = true;
@@ -86,6 +102,11 @@ public class NormalOptionSet extends OptionSet {
      * A particular cached option.
      */
     private boolean displayIcon;
+
+	/**
+	 * A particular cached option.
+	 */
+	private Vector jpythonLibraries;
 
     /**
      * Creates a new option set not associated with any file.
@@ -138,6 +159,15 @@ public class NormalOptionSet extends OptionSet {
         }
         autoDock = getBooleanOption(optionAutoDock, defaultAutoDock);
         displayIcon = getBooleanOption(optionDisplayIcon, defaultDisplayIcon);
+
+		jpythonLibraries = new Vector();
+		int nLibs = getIntOption(optionJPythonLibCount, 0);
+		for (int i = 0; i < nLibs; i++)
+			jpythonLibraries.addElement(new JPythonLibrary(
+				getStringOption(optionJPythonLib + String.valueOf(i), ""),
+				getBooleanOption(optionJPythonLibUse + String.valueOf(i),
+				false)));
+
         if (caught != null)
             throw caught;
     }
@@ -153,6 +183,25 @@ public class NormalOptionSet extends OptionSet {
     public void writeToFile(boolean forceWrite) throws IOException {
         setBooleanOption(optionAutoDock, autoDock);
         setBooleanOption(optionDisplayIcon, displayIcon);
+
+		int nLibs = jpythonLibraries.size();
+		// Clear out all unnecessary library options.
+		int oldNLibs = getIntOption(optionJPythonLibCount, 0);
+		for (int i = nLibs; i < oldNLibs; i++) {
+			removeOption(optionJPythonLib + String.valueOf(i));
+			removeOption(optionJPythonLibUse + String.valueOf(i));
+		}
+
+		setIntOption(optionJPythonLibCount, nLibs);
+		JPythonLibrary lib;
+		for (int i = 0; i < nLibs; i++) {
+			lib = (JPythonLibrary)jpythonLibraries.elementAt(i);
+			setStringOption(optionJPythonLib + String.valueOf(i),
+				lib.getLibraryPath());
+			setBooleanOption(optionJPythonLibUse + String.valueOf(i),
+				lib.shouldUseLibrary());
+		}
+
         super.writeToFile(forceWrite);
     }
 
@@ -191,4 +240,72 @@ public class NormalOptionSet extends OptionSet {
     public void setDisplayIcon(boolean value) {
         displayIcon = value;
     }
+
+	/**
+	 * Returns a vector of <tt>JPythonLibrary</tt> objects representing
+	 * the set of available JPython libraries.
+	 *
+	 * @return the set of available JPython libraries.
+	 * @see normal.options.NormalOptionSet.JPythonLibrary
+	 */
+	public Vector getJPythonLibraries() {
+		return jpythonLibraries;
+	}
+
+	/**
+	 * Sets the list of available JPython libraries.
+	 *
+	 * @param value the new list of JPython libraries; this must be a
+	 * vector of <tt>JPythonLibrary</tt> objects.
+	 * @see normal.options.NormalOptionSet.JPythonLibrary
+	 */
+	public void setJPythonLibraries(Vector value) {
+		jpythonLibraries = value;
+	}
+
+	/**
+	 * Stores the details of a JPython library.
+	 */
+	public static class JPythonLibrary {
+		/**
+		 * The path to the JPython library file.
+		 */
+		private String libraryPath;
+		/**
+		 * Specifies whether or not the library should be used.
+		 */
+		private boolean useLibrary;
+
+		/**
+		 * Creates a new JPython library specifier.
+		 *
+		 * @param libraryPath the path to the JPython library file.
+		 * @param useLibrary <tt>true</tt> if and only if the library
+		 * should be used.
+		 */
+		public JPythonLibrary(String libraryPath, boolean useLibrary) {
+			this.libraryPath = libraryPath;
+			this.useLibrary = useLibrary;
+		}
+
+		/**
+		 * Returns the path to this particular JPython library file.
+		 *
+		 * @return the path to this particular JPython library file.
+		 */
+		public String getLibraryPath() {
+			return libraryPath;
+		}
+
+		/**
+		 * Returns whether or not this JPython library should be used.
+		 *
+		 * @return <tt>true</tt> if and only if this JPython library
+		 * should be used.
+		 */
+		public boolean shouldUseLibrary() {
+			return useLibrary;
+		}
+	}
 }
+

@@ -264,7 +264,7 @@ public class NScriptEditor extends DefaultPacketEditor {
             public void actionPerformed(ActionEvent e) {
                 finishVariableEditing();
                 if (checkVariables())
-                       runScript(showConsole.isSelected());
+                    runScript(showConsole.isSelected());
             }
         });
         compile.addActionListener(new ActionListener() {
@@ -425,27 +425,12 @@ public class NScriptEditor extends DefaultPacketEditor {
      * compile or if JPython expected more code.
      */
     private PyObject compileScript(ConsolePane console) {
-        PyObject code = null;
-        try {
-            code = org.python.modules.codeop.compile_command(
-                entireScript(), "<script>", "exec");
-        } catch (RuntimeException exc) {
-            if (exc instanceof PyException)
-                if (Py.matchException((PyException)exc, Py.SyntaxError)) {
-                    // Compile error.
-                    console.outputMessage(exc.toString());
-                    return null;
-                }
-            throw exc;
-        }
-        if (code == Py.None) {
-            // More code needed.
-            console.outputLine("The script was incomplete; " +
-                "JPython expects more code.");
-            return null;
-        }
-        return code;
-    }
+		StringBuffer error = new StringBuffer();
+		PyObject code = JPythonUtils.compileCode(entireScript(), error);
+		if (code == null)
+			console.outputMessage(error.toString());
+		return code;
+	}
 
     /**
      * Attempts to compile this script.  If it fails to compile, a
@@ -457,7 +442,8 @@ public class NScriptEditor extends DefaultPacketEditor {
     private boolean compileScript() {
         JPythonConsoleFrame console =
             new JPythonConsoleFrame(shell, false);
-        interpreterSetup(console.getPythonInterpreter());
+        console.getConsole().outputLine(
+			setupInterpreter(console.getPythonInterpreter()));
 
         if (compileScript(console.getConsole()) != null)
             return true;
@@ -480,9 +466,10 @@ public class NScriptEditor extends DefaultPacketEditor {
     private void runScript(boolean shouldShowConsole) {
         JPythonConsoleFrame console =
             new JPythonConsoleFrame(shell, false);
-        interpreterSetup(console.getPythonInterpreter());
+        console.getConsole().outputLine(
+			setupInterpreter(console.getPythonInterpreter()));
 
-        String greeting = null;
+		String greeting = null;
         PyObject code = compileScript(console.getConsole());
         if (code == null) {
             shouldShowConsole = true;
@@ -491,17 +478,14 @@ public class NScriptEditor extends DefaultPacketEditor {
             // Try actually running the code.
             console.getConsole().outputMessage("Running script [" +
                 packet.getPacketLabel() + "]:\n\n");
-            try {
-                console.getPythonInterpreter().exec(code);
-            } catch (RuntimeException exc) {
-                if (exc instanceof PyException) {
-                    // Runtime error!
-                    shouldShowConsole = true;
-                    console.getConsole().outputMessage(exc.toString());
-                    greeting = "\nA runtime error occurred in the script.\n";
-                } else
-                    throw exc;
-            }
+
+			StringBuffer error = new StringBuffer();
+			if (! JPythonUtils.runCode(code, console.getPythonInterpreter(),
+					error)) {
+                shouldShowConsole = true;
+                console.getConsole().outputMessage(error.toString());
+                greeting = "\nA runtime error occurred in the script.\n";
+			}
         }
 
         if (shouldShowConsole) {
@@ -518,20 +502,20 @@ public class NScriptEditor extends DefaultPacketEditor {
      *
      * @param interpreter the JPython interpreter in which to set the
      * variables.
+	 * @return a text string to inform the user of the initialisation
+	 * that has been done; this may contain multiple lines and will end
+	 * in a final newline.
      */
-    private void interpreterSetup(PythonInterpreter interpreter) {
-        try {
-            PyObject code = org.python.modules.codeop.compile_command(
-                ConsoleUtils.startup, "<startup>", "exec");
-            if (code != Py.None)
-                interpreter.exec(code);
-        } catch (RuntimeException exc) {}
+    private String setupInterpreter(PythonInterpreter interpreter) {
+		String message =
+			JPythonUtils.setupInterpreter(interpreter, shell);
 
-        interpreter.set("engine", shell.getEngine());
         int tot = variableNames.size();
         for (int i=0; i<tot; i++)
             interpreter.set((String)variableNames.elementAt(i),
                 ((Variable)variableValues.elementAt(i)).getValue());
+
+		return message + "Assigned values to script variables.\n";
     }
 
     /**
@@ -684,7 +668,7 @@ public class NScriptEditor extends DefaultPacketEditor {
 
         public Object getValue() {
             try {
-                return new PyNone();
+                return Py.None;
             } catch (Throwable th) {
                 return null;
             }

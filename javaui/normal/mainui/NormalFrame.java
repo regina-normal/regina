@@ -88,7 +88,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      */
     static private ExtensionFilenameFilter filenameFilter =
         new ExtensionFilenameFilter(normal.Application.fileExtension,
-        normal.Application.program + " Data Files");
+        normal.Application.program + " Data Files (" +
+		normal.Application.fileExtension + ")");
     
     /**
      * A pane containing a tab for each open file.
@@ -1013,12 +1014,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      * Open and start a new JPython console frame.
      */
     private void startJPythonConsole() {
-        JPythonConsoleFrame console =
-            new JPythonConsoleFrame(shell, false);
-        console.startConsole(ConsoleUtils.consoleSetup(
-            console.getPythonInterpreter(), engine) +
-            "\n\nUsing JPython " + org.python.core.PySystemState.version
-            + '\n');
+		Frame console = ConsoleUtils.createGraphicalConsole(shell, false);
         Positioner.centerOnScreen(console);
         console.show();
     }

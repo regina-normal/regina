@@ -83,7 +83,7 @@ public class SelectHelpBrowser extends JDialog implements ActionListener,
      * @param shell the shell corresponding to the entire program.
      */
     public SelectHelpBrowser(Shell shell) {
-        super(shell.getPrimaryFrame(), "Help Browser");
+        super(shell.getPrimaryFrame(), "Help Browser", true);
         this.shell = shell;
         init();
         pack();

@@ -34,7 +34,6 @@ import java.io.*;
 import java.net.URL;
 import java.util.Properties;
 import javax.swing.*;
-import normal.console.ConsoleUtils;
 import normal.engine.Engine;
 import normal.mainui.NormalFrame;
 import normal.options.NormalOptionSet;
@@ -456,8 +455,9 @@ public abstract class Shell {
         // Set the JPython options.
         if (mayUseJPython()) {
             try {
-                org.python.core.Options.showJavaExceptions = true;
-                org.python.core.Options.classBasedExceptions = false;
+                org.python.core.Options.showJavaExceptions = false;
+                //org.python.core.Options.classBasedExceptions = false;
+				org.python.core.PySystemState.initialize();
                 foundJPython = true;
             } catch (Throwable th) {}
         }
@@ -545,7 +545,7 @@ public abstract class Shell {
                 if (splash != null)
                     splash.dispose();
                 if (foundJPython) {
-                    ConsoleUtils.runTextConsole(engine);
+                    normal.console.ConsoleUtils.runTextConsole(this);
                     exit(0);
                     return;
                 } else {
@@ -586,15 +586,8 @@ public abstract class Shell {
                 } else {
                     // Console window UI:
                     if (foundJPython) {
-                        normal.console.JPythonConsoleFrame frame =
-                            new normal.console.JPythonConsoleFrame(this, true);
-                        frame.startConsole(ConsoleUtils.consoleGreeting() +
-                            "\n\n" +
-                            ConsoleUtils.consoleSetup(
-                                frame.getPythonInterpreter(), engine) +
-                            "\n\n" +
-                            org.python.util.InteractiveConsole.
-                                getDefaultBanner() + '\n');
+						Frame frame = normal.console.ConsoleUtils.
+							createGraphicalConsole(this, true);
                         if (splash != null)
                             splash.dispose();
                         Positioner.centerOnScreen(frame);
