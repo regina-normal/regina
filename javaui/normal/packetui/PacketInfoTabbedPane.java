@@ -294,6 +294,13 @@ public class PacketInfoTabbedPane extends JTabbedPane
                 subtreeToBeDeleted(subtree, ui, owner);
     }
 
+    public void subtreeWasDeleted(NPacket parent, PacketUI ui, Frame owner) {
+        int n = getTabCount();
+        for (int i=0; i<n; i++)
+            ((UIDetails)uis.get(getComponent(i))).ui.
+                subtreeWasDeleted(parent, ui, owner);
+    }
+
     public void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner) {
         int n = getTabCount();
         for (int i=0; i<n; i++)

@@ -8,6 +8,10 @@ Regina - A Normal Surface Theory Calculator
     ENGINE:
         Overall structure:
             - Ported CORBA stuff to omniORB3.
+        Class NPacket:
+            - Changed meaning of second (boolean) parameter to clone().
+            - Added getNumberOfDescendants() and getNumberOfChildren();
+              renamed totalTreeSize() to getTotalTreeSize().
     JAVA USER INTERFACE:
         Overall structure:
             - Moved options files to $REGINA_OPTIONS.
@@ -21,6 +25,17 @@ Regina - A Normal Surface Theory Calculator
         normal.mainui.SystemPane:
             - Fixed the bug where double clicking on a tree item opens
               it three times.
+            - Fixed bugs in the various fire... routines.
+            - Improved interaction with the packet rename dialog.
+        normal.mainui.PacketTreeNode:
+            - Replaced insertUnwrappedDescendants() with
+              verifyDescendants() which actually does what it should; thus
+              the refresh button now works properly.
+            - Added findChildNodeIndex().
+        normal.packetui.PacketUI:
+            - Added subtreeWasDeleted().
+        normal.packetui.packet.NContainerViewer:
+            - Displays tree size statistics.
 
 Version 2.1.1a
     OVERALL:

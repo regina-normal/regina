@@ -197,6 +197,9 @@ public abstract class DefaultPacketEditor extends JPanel implements PacketUI {
     public void subtreeToBeDeleted(NPacket packet, PacketUI ui, Frame owner) {
     }
 
+    public void subtreeWasDeleted(NPacket packet, PacketUI ui, Frame owner) {
+    }
+
     public void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner) {
     }
 

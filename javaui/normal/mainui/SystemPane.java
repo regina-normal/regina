@@ -1067,10 +1067,16 @@ public class SystemPane extends JPanel {
      * <p>
      * Any pane containing a packet that belongs to the marked
      * subtree will be forcibly closed by this routine.
+     * <p>
+	 * This routine should be called <i>before</i> the subtree is
+	 * deleted; note that <tt>fireSubtreeWasDeleted()</tt> should also
+	 * be called <i>after</i> the subtree has been deleted.
      *
      * @param subtree the packet subtree about to be deleted.
      * @param ui the interface that caused the deletion; this may be
      * <tt>null</tt>.
+	 *
+	 * @see #fireSubtreeWasDeleted
      */
     public void fireSubtreeToBeDeleted(NPacket subtree, PacketUI ui) {
         // Update the interfaces.
@@ -1099,6 +1105,37 @@ public class SystemPane extends JPanel {
         TreeNode disownedParent = packetNode.getParent();
         packetNode.removeFromParent();
         treeModel.reload(disownedParent);
+    }
+
+    /**
+     * This should be called whenever a packet subtree has been deleted,
+     * so that all interfaces and the visual packet tree can be updated
+     * accordingly.  This routine
+     * should only be called for the root packet of that subtree and
+     * should not be called again for its descendants.
+     * Note that the matriarch of the packet tree should never be
+     * deleted.
+     * <p>
+	 * This routine should be called <i>after</i> the subtree has been
+	 * deleted; note that <tt>fireSubtreeToBeDeleted()</tt> should also
+	 * be called <i>before</i> the subtree is deleted.
+     *
+     * @param parent the parent packet immediately above the subtree
+	 * that was deleted.
+     * @param ui the interface that caused the deletion; this may be
+     * <tt>null</tt>.
+	 *
+	 * @see #fireSubtreeToBeDeleted
+     */
+    public void fireSubtreeWasDeleted(NPacket parent, PacketUI ui) {
+        // Update the interfaces.
+        PacketPane pane;
+        Enumeration e = allPacketPanes.elements();
+        while (e.hasMoreElements()) {
+            pane = (PacketPane)e.nextElement();
+            pane.getUI().subtreeWasDeleted(parent, ui,
+                pane.getParentFrame());
+        }
     }
 
     /**
@@ -1444,6 +1481,8 @@ public class SystemPane extends JPanel {
                 + packet.getPacketLabel() + " and all of its children?"))
             return;
         
+		NPacket parent = packet.getTreeParent();
+
         // Notify interfaces and the visual tree that the packet is about to
         // be deleted.
         fireSubtreeToBeDeleted(packet, null);
@@ -1453,6 +1492,9 @@ public class SystemPane extends JPanel {
 
         // Destroy the underlying native packet structure.
         packet.destroy();
+
+		// Notify interfaces that the packet has now been deleted.
+		fireSubtreeWasDeleted(parent, null);
 
         // Tidy up.
         setDirty(true);

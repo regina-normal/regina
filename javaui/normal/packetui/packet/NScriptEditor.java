@@ -570,6 +570,8 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     public void packetWasRenamed(NPacket packet, PacketUI ui, Frame owner) {
+		super.packetWasRenamed(packet, ui, owner);
+
         finishVariableEditing();
 
         int tot = variableNames.size();
@@ -580,6 +582,8 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     public void subtreeToBeDeleted(NPacket subtree, PacketUI ui, Frame owner) {
+		super.subtreeToBeDeleted(subtree, ui, owner);
+
         finishVariableEditing();
 
         // Remove all the offensive packets from the combo box.
@@ -611,6 +615,8 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     public void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner) {
+		super.subtreeWasInserted(subtree, ui, owner);
+
         finishVariableEditing();
 
         variableValueEditor.setModel(new DefaultComboBoxModel(
@@ -618,6 +624,8 @@ public class NScriptEditor extends DefaultPacketEditor {
     }
 
     public void subtreeHasChanged(NPacket subtree, PacketUI ui, Frame owner) {
+		super.subtreeHasChanged(subtree, ui, owner);
+
         finishVariableEditing();
 
         variableValueEditor.setModel(new DefaultComboBoxModel(

@@ -89,6 +89,9 @@ public abstract class DefaultPacketViewer extends JPanel
     public void subtreeToBeDeleted(NPacket packet, PacketUI ui, Frame owner) {
     }
 
+    public void subtreeWasDeleted(NPacket packet, PacketUI ui, Frame owner) {
+    }
+
     public void subtreeWasInserted(NPacket subtree, PacketUI ui, Frame owner) {
     }
 
