@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2002, Ben Burton                                   *
+ *  Copyright (c) 1999-2003, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -107,7 +107,7 @@ const QString ReginaAbout<T>::regBugAddress(PACKAGE_BUGREPORT);
 
 template <class T>
 const QString ReginaAbout<T>::regCopyright(
-    "Copyright (c) 1999-2002, Ben Burton");
+    "Copyright (c) 1999-2003, Ben Burton");
 
 template <class T>
 const QString ReginaAbout<T>::regDataExt(".rga");

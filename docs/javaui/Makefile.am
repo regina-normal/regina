@@ -13,7 +13,7 @@ USE_CLASSPATH = @JAVAUI_CLASSPATH@
 javaui_index = index.html
 javaui_overview = ../../javaui/overview.html
 javaui_title = 'Regina - Java User Interface'
-javaui_bottom =  'Copyright &copy; 1999-2002, Ben Burton<br>This software is released under the GNU Public License.<br>For further information, or to submit a bug or other problem, please contact Ben Burton (<a href="mailto:bab@debian.org">bab@debian.org</a>).'
+javaui_bottom =  'Copyright &copy; 1999-2003, Ben Burton<br>This software is released under the GNU Public License.<br>For further information, or to submit a bug or other problem, please contact Ben Burton (<a href="mailto:bab@debian.org">bab@debian.org</a>).'
 
 ## ----------------------- Custom targets ----------------------------
 

@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Binary / Documentation Distribution Utility
 #
-# Copyright (c) 2002, Ben Burton
+# Copyright (c) 2002-2003, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: mkdist [ linux | cygwin | doc ]

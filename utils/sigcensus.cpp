@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Form a census of splitting surface signatures of given order          *
  *                                                                        *
- *  Copyright (c) 1999-2002, Ben Burton                                   *
+ *  Copyright (c) 1999-2003, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
