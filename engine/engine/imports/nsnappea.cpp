@@ -42,13 +42,20 @@ NTriangulation* readSnapPea(const char* filename) {
     // Check that this is a SnapPea triangulation.
     if (in.peek() != '%')
         return 0;
+
+    // Read in junk.
+    in.ignore(1001, '\n'); // Junk
+
+    // Read in the manifold name.
+    char name[1001];
+    in.getline(name, 1000);
+    if (in.fail() || in.eof())
+        return 0;
     
     // Read in junk.
     NString tempStr;
     double tempDbl;
 
-    in.ignore(1001, '\n');
-    in.ignore(1001, '\n'); // Name line
     in >> tempStr;         // Solution type
     in >> tempDbl;         // Volume
     in >> tempStr;         // Orientability
@@ -123,6 +130,7 @@ NTriangulation* readSnapPea(const char* filename) {
     
     // Build the acutal triangulation.
     NTriangulation* triang = new NTriangulation();
+    triang->setPacketLabel(name);
     for (i=0; i<numTet; i++)        
         triang->addTetrahedron(tet[i]);
     delete[] tet;

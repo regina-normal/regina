@@ -42,6 +42,9 @@ class NTriangulation;
  * triangulation will be returned; it is the user's responsibility to
  * deallocate this when it is finished with.
  *
+ * The new triangulation will have a packet label corresponding to the
+ * manifold name stored in the SnapPea file.
+ *
  * If the file could not be read or if the data was not in the correct
  * format, 0 will be returned.
  *
