@@ -13,7 +13,7 @@ SUFFIXES = .java .class
 %.class : %.java
 	CLASSPATH="$(USE_CLASSPATH)" @JAVAC@ $<
 
-java_sources =
+java_sources = angle.gif container.gif filter.gif filtercomb.gif filterprop.gif script.gif surface.gif text.gif triangulation.gif unknown.gif
 
 # Note that $(java_classes) does _not_ include inner classes.
 java_classes =
