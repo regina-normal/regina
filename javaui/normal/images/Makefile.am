@@ -25,5 +25,5 @@ all-local : $(java_classes)
 mostlyclean-local :
 	rm -f *.class
 
-EXTRA_DIST = $(java_sources) package.html
+EXTRA_DIST = $(java_sources)
 
