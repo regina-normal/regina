@@ -291,7 +291,7 @@ QString FaceItem::text(int column) const {
         case 1: {
             QString prefix;
             if (item->isBoundary())
-                prefix = i18n("(Bdry )");
+                prefix = i18n("(Bdry) ");
 
             int type = item->getType();
             if (type == NFace::TRIANGLE)
