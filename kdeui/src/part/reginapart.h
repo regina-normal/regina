@@ -90,6 +90,9 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actCurrUndock;
         KAction* actCurrClose;
         QPtrList<KAction> separatorList;
+        QPtrList<KAction> treePacketViewActions;
+        QPtrList<KAction> treePacketEditActions;
+        QPtrList<KAction> treeGeneralEditActions;
 
     public:
         /**
@@ -213,6 +216,12 @@ class ReginaPart : public KParts::ReadWritePart {
          * Set whether view() tries to dock packets by default.
          */
         void setAutoDock(bool);
+
+        /**
+         * Various UI updates.
+         */
+        void updateTreePacketActions();
+        void updateTreeEditActions();
 
     private slots:
         /**

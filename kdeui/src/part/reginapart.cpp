@@ -73,6 +73,8 @@ ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
     dockChanged();
     setReadWrite(true);
     setModified(false);
+    updateTreeEditActions();
+    updateTreePacketActions();
 }
 
 ReginaPart::~ReginaPart() {
@@ -92,7 +94,8 @@ void ReginaPart::setReadWrite(bool rw) {
     for (PacketPane* p = panes.first(); p; p = panes.next())
         p->setReadWrite(rw);
 
-    // TODO: Update r/w status for the tree and file-level actions.
+    // TODO: Update r/w status for console actions.
+    updateTreeEditActions();
 
     // Finally call the parent implementation.
     ReadWritePart::setReadWrite(rw);
@@ -285,6 +288,34 @@ void ReginaPart::setAutoDock(bool value) {
     autoDock = value;
 }
 
+void ReginaPart::updateTreePacketActions() {
+    KAction* act;
+
+    bool enable = (treeView->selectedItem() != 0);
+    for (act = treePacketViewActions.first(); act;
+            act = treePacketViewActions.next())
+        act->setEnabled(enable);
+
+    enable = enable && isReadWrite();
+    for (act = treePacketEditActions.first(); act;
+            act = treePacketEditActions.next())
+        act->setEnabled(enable);
+}
+
+void ReginaPart::updateTreeEditActions() {
+    KAction* act;
+
+    bool enable = isReadWrite();
+    for (act = treeGeneralEditActions.first(); act;
+            act = treeGeneralEditActions.next())
+        act->setEnabled(enable);
+
+    enable = enable && (treeView->selectedItem() != 0);
+    for (act = treePacketEditActions.first(); act;
+            act = treePacketEditActions.next())
+        act->setEnabled(enable);
+}
+
 void ReginaPart::fileSaveAs() {
     QString file = KFileDialog::getSaveFileName(QString::null,
         i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
@@ -306,6 +337,8 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
 
     treeView = new PacketTreeView(this, treeBox);
     treeBox->setStretchFactor(treeView, 1);
+    connect(treeView, SIGNAL(selectionChanged()), this,
+        SLOT(updateTreePacketActions()));
 
     reginaIcon = new QLabel(treeBox);
     reginaIcon->setPixmap(UserIcon("reginatrans", instance()));
