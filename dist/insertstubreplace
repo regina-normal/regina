@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Replaces the stub at the beginning of each file.
 # Usage: insertstubreplace <sentry-string> <stub-file> [text file] ...
 # Requires: insertstub, diff
@@ -9,14 +9,14 @@ shift 2
 
 for srcfile
     do tmpfile=$srcfile.stub.tmp
-    if (! ./insertstub "$sentry" $stubfile < $srcfile > $tmpfile); then
+    if (./insertstub "$sentry" $stubfile < $srcfile > $tmpfile); then
         if ! diff $srcfile $tmpfile > /dev/null; then
             if (test -s $tmpfile); then
                 mv $tmpfile $srcfile
                 echo "$srcfile: Stub replaced"
             else
                 rm $tmpfile
-                echo "$srcfile: *** FAILURE ***"
+                echo "$srcfile: *** ERROR *** (no output)"
             fi
         else
             rm $tmpfile
@@ -24,6 +24,6 @@ for srcfile
         fi
     else
         rm $tmpfile
-        echo "$srcfile: Unchanged"
+        echo "$srcfile: *** FAILURE ***"
     fi
 done
