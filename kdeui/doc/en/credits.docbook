@@ -25,7 +25,7 @@
   <para>
    Normal 1.0 was written by
    <author><firstname>David</firstname><surname>Letscher</surname></author>,
-   who also provided invaluable technical advice for this project.
+   who also provided excellent technical advice for this project.
   </para>
 
   <para>Additional code contributed by:
@@ -47,7 +47,8 @@
      <firstname>William</firstname><surname>Jaco</surname>
     </author></para></listitem>
     <listitem><para><author>
-     <firstname>Hyam</firstname><surname>Rubinstein</surname>
+     <firstname>J.</firstname><othername>Hyam</othername>
+     <surname>Rubinstein</surname>
     </author></para></listitem>
     <listitem><para><author>
      <firstname>Jeff</firstname><surname>Weeks</surname>
