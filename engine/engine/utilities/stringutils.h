@@ -41,6 +41,7 @@ namespace regina {
 
 class NLargeInteger;
 class NBoolSet;
+class NTriBool;
 
 /**
  * \weakgroup utilities
@@ -204,6 +205,25 @@ bool valueOf(const std::string& str, double& dest);
  * otherwise.
  */
 bool valueOf(const std::string& str, bool& dest);
+/**
+ * Converts the entire given string to a three-way boolean (true, false or
+ * unknown) and reports whether this conversion was successful.
+ *
+ * If the given string begins with <tt>T</tt>, <tt>F</tt> or <tt>U</tt>
+ * (either upper- or lower-case), the string will be successfully converted
+ * to true, false or unknown respectively.  If the string is one of
+ * <tt>1</tt>, <tt>-1</tt> or <tt>0</tt>, the string will likewise be
+ * converted to true, false or unknown respectively.  Otherwise the
+ * conversion will be unsuccessful and argument \a dest will be set to
+ * unknown.
+ *
+ * \ifacespython Not present.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting set of booleans.
+ * @return \c true if the conversion was successful or \c false otherwise.
+ */
+bool valueOf(const std::string& str, NTriBool& dest);
 /**
  * Converts the entire given string to a set of booleans and reports whether
  * this conversion was successful.

@@ -112,6 +112,23 @@ bool valueOf(const std::string& str, bool& dest) {
     return (str[0] == 'F' || str[0] == 'f');
 }
 
+bool valueOf(const std::string& str, NTriBool& dest) {
+    if (str.empty()) {
+        dest.setUnknown();
+        return false;
+    }
+    if (str[0] == 't' || str[0] == 'T' || str == "1") {
+        dest = true;
+        return true;
+    }
+    if (str[0] == 'f' || str[0] == 'F' || str == "-1") {
+        dest = false;
+        return true;
+    }
+    dest.setUnknown();
+    return (str[0] == 'u' || str[0] == 'U' || str == "0");
+}
+
 bool valueOf(const std::string& str, NBoolSet& dest) {
     if (str.length() != 2) {
         dest = NBoolSet::sNone;
