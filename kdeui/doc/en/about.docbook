@@ -13,11 +13,23 @@
   <para>
    The best way to become familiar with &regina; is simply to play
    around with it.  &regina; ships with several example files, including
-   a number of censuses of 3-manifold triangulations.
+   a number of censuses of 3-manifold triangulations.  Many of these example
+   files can be easily accessed through the
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guimenuitem>Open Example</guimenuitem>
+   </menuchoice>
+   menu when running &regina;.
   </para>
   <para>
-   The file <filename>sample-misc.rga</filename> is an excellent
-   starting point, since it contains examples of most of the
+   The full set of examples is usually installed in the directory
+   <filename>/usr/share/regina/examples</filename> or
+   <filename>/usr/local/share/regina/examples</filename>,
+   though some distributions install them in a different location.
+  </para>
+  <para>
+   The example file <filename>sample-misc.rga</filename> is an excellent
+   starting point, since it illustrates most of the
    structures that &regina; can work with.  Sample &python; sessions are
    also included to illustrate how the in-built &python; scripting can
    be used.
