@@ -526,7 +526,7 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
          * recognised, or an empty string if the group is not
          * recognised.
          */
-        std::string recogniseGroup();
+        std::string recogniseGroup() const;
 
         /**
          * Writes a chunk of XML containing this group presentation.

@@ -379,7 +379,7 @@ bool NGroupPresentation::intelligentSimplify() {
     return changed;
 }
 
-std::string NGroupPresentation::recogniseGroup() {
+std::string NGroupPresentation::recogniseGroup() const {
     std::ostringstream out;
     unsigned long nRels = relations.size();
     NGroupExpression* rel;
