@@ -36,7 +36,7 @@ import java.util.Properties;
 import normal.engine.Engine;
 import normal.options.NormalOptionSet;
 import org.gjt.btools.gui.dialog.MessageBox;
-import org.gjt.btools.utilities.ResourceUtils;
+import org.gjt.btools.utilities.*;
 
 /**
  * The program shell to use when the program is run as a standalone
@@ -148,7 +148,7 @@ public class ApplicationShell extends Shell {
         return value;
     }
 
-    public int getUIType(Properties runtimeOptions) {
+    public int getUIType() {
         int uiType = unspecified;
 
         // Look up the command-line parameters.
@@ -175,23 +175,22 @@ public class ApplicationShell extends Shell {
         }
 
         // Look up the runtime options if necessary.
-        if (uiType == unspecified)
-            if (runtimeOptions != null) {
-                String iface = runtimeOptions.getProperty("Interface");
-                if (iface != null) {
-                    if (iface.equalsIgnoreCase("gui"))
-                        uiType = UIFullGUI;
-                    else if (iface.equalsIgnoreCase("console"))
-                        uiType = UIConsoleWindow;
-                    else if (iface.equalsIgnoreCase("text"))
-                        uiType = UITextConsole;
-                    else {
-                        error("An invalid style of interface [" + iface
-                            + "] has been requested.");
-                        return invalid;
-                    }
+        if (uiType == unspecified) {
+            String iface = OptionSet.getSystemProperty("REGINA_INTERFACE");
+            if (iface != null) {
+                if (iface.equalsIgnoreCase("gui"))
+                    uiType = UIFullGUI;
+                else if (iface.equalsIgnoreCase("console"))
+                    uiType = UIConsoleWindow;
+                else if (iface.equalsIgnoreCase("text"))
+                    uiType = UITextConsole;
+                else {
+                    error("An invalid style of interface [" + iface
+                        + "] has been requested.");
+                    return invalid;
                 }
             }
+        }
 
         // Use the default if nothing has been selected.
         if (uiType == unspecified)
@@ -203,7 +202,7 @@ public class ApplicationShell extends Shell {
 
         return uiType;
     }
-    public int getEngineType(Properties runtimeOptions) {
+    public int getEngineType() {
         int engineType = unspecified;
 
         // Look up the command-line parameters.
@@ -226,21 +225,20 @@ public class ApplicationShell extends Shell {
         }
 
         // Look up the runtime options if necessary.
-        if (engineType == unspecified)
-            if (runtimeOptions != null) {
-                String engine = runtimeOptions.getProperty("Engine");
-                if (engine != null) {
-                    if (engine.equalsIgnoreCase("jni"))
-                        engineType = engineJNI;
-                    else if (engine.equalsIgnoreCase("corba"))
-                        engineType = engineCORBA;
-                    else {
-                        error("An invalid style of engine access [" +
-                            engine + "] has been requested.");
-                        return invalid;
-                    }
+        if (engineType == unspecified) {
+            String engine = OptionSet.getSystemProperty("REGINA_ENGINE");
+            if (engine != null) {
+                if (engine.equalsIgnoreCase("jni"))
+                    engineType = engineJNI;
+                else if (engine.equalsIgnoreCase("corba"))
+                    engineType = engineCORBA;
+                else {
+                    error("An invalid style of engine access [" +
+                        engine + "] has been requested.");
+                    return invalid;
                 }
             }
+        }
 
         // Use the default if nothing has been selected.
         if (engineType == unspecified)

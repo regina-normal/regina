@@ -62,21 +62,14 @@ public class EngineLoader {
      * The shell representing the entire program.
      */
     private Shell shell;
-    /**
-     * The runtime options as set by the RegConf configuration utility.
-     */
-    private Properties runtimeOptions;
 
     /**
      * Creates a new engine loader for the given program shell.
      *
      * @param shell the shell representing the entire program.
-     * @param runtimeOptions the runtime options as set by the RegConf
-     * configuration utility; this may be <tt>null</tt>.
      */
-    public EngineLoader(Shell shell, Properties runtimeOptions) {
+    public EngineLoader(Shell shell) {
         this.shell = shell;
-        this.runtimeOptions = runtimeOptions;
     }
 
     /**
@@ -87,7 +80,7 @@ public class EngineLoader {
      */
     public Engine loadEngine() {
         // Find out what style of engine access should be used.
-        int engineType = shell.getEngineType(runtimeOptions);
+        int engineType = shell.getEngineType();
         if (engineType == shell.invalid)
             return null;
         
@@ -110,10 +103,8 @@ public class EngineLoader {
         String libName = shell.getParameter("jnilibname", 2, true, false,
             "JNI library name");
         if (libName == null) {
-			if (runtimeOptions != null)
-            	libName = runtimeOptions.getProperty("JNIEngine");
-            if (libName == null)
-                libName = defaultJNILibrary;
+			libName = NormalOptionSet.getSystemProperty("REGINA_JNIENGINE",
+				defaultJNILibrary);
         }
 
         // Attempt to load the engine.
@@ -173,10 +164,8 @@ public class EngineLoader {
             host = shell.getParameter("ORBInitialHost", 1, false,
                 true, "CORBA name service host");
             if (host == null) {
-				if (runtimeOptions != null)
-                	host = runtimeOptions.getProperty("CORBAHost");
-                if (host == null)
-                    host = defaultCORBAHost;
+				host = NormalOptionSet.getSystemProperty(
+					"REGINA_CORBAHOST", defaultCORBAHost);
             } else
                 gaveHostParameter = true;
         }
@@ -188,10 +177,8 @@ public class EngineLoader {
             port = shell.getParameter("ORBInitialPort", 1, false,
                 true, "CORBA name service port");
             if (port == null) {
-				if (runtimeOptions != null)
-                	port = runtimeOptions.getProperty("CORBAPort");
-                if (port == null)
-                    port = defaultCORBAPort;
+				port = NormalOptionSet.getSystemProperty(
+					"REGINA_CORBAPORT", defaultCORBAPort);
             } else
                 gavePortParameter = true;
         }

@@ -360,21 +360,17 @@ public abstract class Shell {
      * This will be one of the user interface constants
      * defined in this class, or will be <tt>invalid</tt>.
      *
-     * @param runtimeOptions the runtime options as set by the RegConf
-     * configuration utility.  This parameter may be <tt>null</tt>.
      * @return the style of user interface to use.
      */
-    public abstract int getUIType(Properties runtimeOptions);
+    public abstract int getUIType();
     /**
      * Returns the style of engine access that should be used.
      * This will be one of the engine access constants
      * defined in this class, or will be <tt>invalid</tt>.
      *
-     * @param runtimeOptions the runtime options as set by the RegConf
-     * configuration utility.  This parameter may be <tt>null</tt>.
      * @return the style of engine access to use.
      */
-    public abstract int getEngineType(Properties runtimeOptions);
+    public abstract int getEngineType();
     /**
      * Should we show a splash screen while the program is initialising?
      *
@@ -486,20 +482,8 @@ public abstract class Shell {
             }
         }
 
-        // Read in the runtime options.
-        Properties runtimeOptions = null;
-        try {
-            FileInputStream in = new FileInputStream(
-                new File(getOptionsDir(), Application.runtimeOptionsFile));
-            runtimeOptions = new Properties();
-            runtimeOptions.load(in);
-            in.close();
-        } catch (Throwable th) {
-            runtimeOptions = null;
-        }
-
         // Find out what kind of UI is desired.
-        int uiType = getUIType(runtimeOptions);
+        int uiType = getUIType();
         if (uiType == invalid) {
             exit(1);
             return;
@@ -548,7 +532,7 @@ public abstract class Shell {
             options = new NormalOptionSet();
 
         // Attempt to access an engine.
-        engine = new EngineLoader(this, runtimeOptions).loadEngine();
+        engine = new EngineLoader(this).loadEngine();
         if (engine == null) {
             if (splash != null)
                 splash.dispose();

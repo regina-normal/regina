@@ -35,7 +35,7 @@ import java.util.Properties;
 import normal.engine.Engine;
 import normal.options.NormalOptionSet;
 import org.gjt.btools.gui.dialog.MessageBox;
-import org.gjt.btools.utilities.ResourceUtils;
+import org.gjt.btools.utilities.*;
 
 /**
  * The program shell to use when the program is run as an applet.
@@ -70,7 +70,7 @@ public class AppletShell extends Shell {
         return applet.getParameter(paramName);
     }
 
-    public int getUIType(Properties runtimeOptions) {
+    public int getUIType() {
         int uiType = unspecified;
 
         // Look up the applet parameters.
@@ -78,8 +78,7 @@ public class AppletShell extends Shell {
 
         // Look up the runtime options if necessary.
         if (iface == null)
-            if (runtimeOptions != null)
-                iface = runtimeOptions.getProperty("Interface");
+            iface = OptionSet.getSystemProperty("REGINA_INTERFACE");
 
         // Return the correct UI type.
         if (iface == null)
@@ -92,7 +91,7 @@ public class AppletShell extends Shell {
             "Only style [gui] is allowed for the web page applet.");
         return invalid;
     }
-    public int getEngineType(Properties runtimeOptions) {
+    public int getEngineType() {
         int engineType = unspecified;
 
         // Look up the applet parameters.
@@ -100,8 +99,7 @@ public class AppletShell extends Shell {
 
         // Look up the runtime options if necessary.
         if (engine == null)
-            if (runtimeOptions != null)
-                engine = runtimeOptions.getProperty("Engine");
+            engine = OptionSet.getSystemProperty("REGINA_ENGINE");
 
         // Return the correct engine type.
         if (engine == null)
