@@ -39,7 +39,6 @@
 #include <algorithm>
 #include <vector>
 #include "packet/npacket.h"
-#include "property/npropertyholder.h"
 #include "utilities/memutils.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfaceset.h"
@@ -73,8 +72,7 @@ class NXMLNormalSurfaceListReader;
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
  */
-class NNormalSurfaceList : public NPacket, public NPropertyHolder,
-        public NSurfaceSet {
+class NNormalSurfaceList : public NPacket, public NSurfaceSet {
     public:
         static const int packetType;
 
@@ -195,10 +193,6 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
 
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
-
-        virtual void readIndividualProperty(NFile& infile,
-            unsigned propType);
-        virtual void initialiseAllProperties();
 
         /**
          * An output iterator used to insert surfaces into an
@@ -411,7 +405,6 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 // Inline functions for NNormalSurfaceList
 
 inline NNormalSurfaceList::NNormalSurfaceList() {
-    NNormalSurfaceList::initialiseAllProperties();
 }
 
 inline NNormalSurfaceList::~NNormalSurfaceList() {

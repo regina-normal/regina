@@ -61,7 +61,7 @@ class NXMLAngleStructureListReader;
  * Angle structure lists should be created using the routine enumerate(),
  * which is new as of Regina 4.0.
  */
-class NAngleStructureList : public NPacket, public NPropertyHolder {
+class NAngleStructureList : public NPacket, public NFilePropertyReader {
     public:
         static const int packetType;
 
@@ -165,9 +165,7 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
 
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
-
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
-        virtual void initialiseAllProperties();
 
         /**
          * Calculate whether the convex span of this list includes a
@@ -298,10 +296,6 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
 /*@}*/
 
 // Inline functions for NAngleStructureList
-
-inline NAngleStructureList::NAngleStructureList() {
-    NAngleStructureList::initialiseAllProperties();
-}
 
 inline NAngleStructureList::~NAngleStructureList() {
     for_each(structures.begin(), structures.end(),

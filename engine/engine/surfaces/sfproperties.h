@@ -210,7 +210,6 @@ class NSurfaceFilterProperties : public NSurfaceFilter {
         virtual void writeFilter(NFile& out) const;
         virtual void writeProperties(NFile& out) const;
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
-        virtual void initialiseAllProperties();
 };
 
 /*@}*/

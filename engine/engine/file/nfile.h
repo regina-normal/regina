@@ -47,6 +47,7 @@
 
 namespace regina {
 
+class NFilePropertyReader;
 class NPacket;
 
 /**
@@ -127,7 +128,7 @@ class NFile : public ShareableObject {
     private:
         NRandomAccessResource* resource;
             /**< The underlying resource containing this file's contents. */
-        
+
     public:
         /**
          * Creates a new closed file.
@@ -193,7 +194,7 @@ class NFile : public ShareableObject {
          * @return the current state of the file.
          */
         NRandomAccessResource::mode getOpenMode() const;
-        
+
         /**
          * Returns the major version number of the engine responsible
          * for this file.
@@ -207,7 +208,7 @@ class NFile : public ShareableObject {
          * @return the major version number.
          */
         int getMajorVersion();
-        
+
         /**
          * Returns the minor version number of the engine responsible
          * for this file.
@@ -221,7 +222,7 @@ class NFile : public ShareableObject {
          * @return the minor version number.
          */
         int getMinorVersion();
-        
+
         /**
          * Determines if this file has a version earlier than the given
          * version.
@@ -243,7 +244,7 @@ class NFile : public ShareableObject {
          * @param packet the packet tree to be written to file.
          */
         void writePacketTree(NPacket* packet);
-        
+
         /**
          * Reads a packet tree from file.  This routine can also be used
          * to read a packet subtree.
@@ -266,7 +267,100 @@ class NFile : public ShareableObject {
          * encountered with the highest level packet in the tree.
          */
         NPacket* readPacketTree(NPacket* parent = 0);
-        
+
+        /**
+         * Writes a header for a property associated with some object.
+         * This header will include the given property type as well as
+         * some bookmarking details.  The bookmark returned should later
+         * be passed to writePropertyFooter() for housekeeping.
+         *
+         * If some set of properties is to be stored for some object,
+         * the procedure for writing properties to a file is as follows.
+         *
+         * - For each property:
+         *   - Call writePropertyHeader(), passing a unique integer
+         *     (the property type) that indicates which particular property
+         *     is being written;
+         *   - Write the contents of the property to file (there is no need
+         *     to write the property type);
+         *   - Call writePropertyFooter(), passing the bookmarking
+         *     information that was returned from the earlier call to
+         *     writePropertyHeader().
+         * - After all properties have been written, call
+         *   writeAllPropertiesFooter().
+         *
+         * This allows an NFilePropertyReader to read the properties from
+         * file in a manner independent of which version of Regina was
+         * originally used to create the file.  In particular,
+         * properties of unknown type can simply be ignored, and errors
+         * in reading individual properties can be gracefully overcome.
+         *
+         * To read a set of properties that has been stored for some
+         * object, call readProperties() with an NFilePropertyReader that
+         * understands the different potential property types.
+         *
+         * \pre The file is currently opened for writing.
+         *
+         * @param propType the property type to write in the property
+         * header; this must be strictly positive.
+         * @return bookmarking information that should later be passed
+         * to writePropertyFooter().
+         */
+        std::streampos writePropertyHeader(unsigned propType);
+
+        /**
+         * Writes a footer for a property associated with some object.
+         * See the writePropertyHeader() notes for details about writing
+         * object properties to file.
+         *
+         * \pre The file is currently opened for writing.
+         *
+         * @param bookmark the bookmark returned from the corresponding
+         * call to writePropertyHeader().
+         */
+        void writePropertyFooter(std::streampos bookmark);
+
+        /**
+         * Writes a footer indicating that all properties associated with
+         * the current object have now been written.
+         * See the writePropertyHeader() notes for details about writing
+         * object properties to file.
+         *
+         * \pre The file is currently opened for writing.
+         */
+        void writeAllPropertiesFooter();
+
+        /**
+         * Reads in an entire set of properties associated with some
+         * object.  These properties must have been written using the
+         * mechanism described in the writePropertyHeader() notes.
+         *
+         * Note that different types of properties may have been written to
+         * file, some of which can be understood and some of which cannot
+         * (since a different version of Regina may have been used to
+         * originally write the file).  Properties that cannot be
+         * understood will simply be ignored.  If errors occur whilst
+         * reading properties that can be understood, these errors will
+         * be gracefully overcome.
+         *
+         * The property reader that is passed is responsible for
+         * declaring which property types are recognised as well as
+         * reading and processing individual properties of recognised
+         * types.
+         *
+         * Once this routine has finished the current position in the
+         * file will be after the final property footer as written by
+         * writeAllPropertiesFooter().
+         *
+         * \pre The file is currently opened for reading.
+         *
+         * @param reader the property reader responsible for reading
+         * individual properties.  This may be 0, in which case all
+         * properties will be ignored (though the current file position
+         * will still be adjusted as described above).
+         */
+        void readProperties(NFilePropertyReader* reader);
+
         /**
          * Reads a signed integer from file.
          *
@@ -275,7 +369,7 @@ class NFile : public ShareableObject {
          * @return the integer read.
          */
         int readInt();
-        
+
         /**
          * Reads an unsigned integer from file.
          *
@@ -284,7 +378,7 @@ class NFile : public ShareableObject {
          * @return the integer read.
          */
         unsigned readUInt();
-        
+
         /**
          * Reads a signed long integer from file.
          *
@@ -293,7 +387,7 @@ class NFile : public ShareableObject {
          * @return the long integer read.
          */
         long readLong();
-        
+
         /**
          * Reads an unsigned long integer from file.
          *
@@ -302,7 +396,7 @@ class NFile : public ShareableObject {
          * @return the long integer read.
          */
         unsigned long readULong();
-        
+
         /**
          * Reads an arbitrary precision integer from file.
          *
@@ -311,7 +405,7 @@ class NFile : public ShareableObject {
          * @return the arbitrary precision integer read.
          */
         NLargeInteger readLarge();
-        
+
         /**
          * Reads a character from file.
          *
@@ -410,7 +504,7 @@ class NFile : public ShareableObject {
          * @param s the string to write.
          */
         void writeString(const std::string& s);
-            
+
         /**
          * Writes a bool to file.
          *

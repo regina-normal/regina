@@ -53,7 +53,6 @@ libregina_engine_la_LIBADD = \
   maths/libmaths.la \
   packet/libpacket.la \
   progress/libprogress.la \
-  property/libproperty.la \
   split/libsplit.la \
   subcomplex/libsubcomplex.la \
   surfaces/libsurfaces.la \

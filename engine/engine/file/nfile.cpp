@@ -30,6 +30,7 @@
 
 #include "engine.h"
 #include "file/nfile.h"
+#include "file/nfilepropertyreader.h"
 #include "packet/packetregistry.h"
 
 #define TREE_CHILD 'c'
@@ -114,6 +115,35 @@ bool NFile::open(NRandomAccessResource* newResource,
         }
     }
     return false;
+}
+
+std::streampos NFile::writePropertyHeader(unsigned propType) {
+    writeUInt(propType);
+    std::streampos bookmark = getPosition();
+    writePos(0);
+    return bookmark;
+}
+
+void NFile::writePropertyFooter(std::streampos bookmark) {
+    std::streampos finalPos = getPosition();
+    setPosition(bookmark);
+    writePos(finalPos);
+    setPosition(finalPos);
+}
+
+void NFile::writeAllPropertiesFooter() {
+    writeUInt(0);
+}
+
+void NFile::readProperties(NFilePropertyReader* reader) {
+    unsigned propType = readUInt();
+    while (propType) {
+        std::streampos bookmark = readPos();
+        if (reader)
+            reader->readIndividualProperty(*this, propType);
+        setPosition(bookmark);
+        propType = readUInt();
+    }
 }
 
 void NFile::writeInt(int val) {

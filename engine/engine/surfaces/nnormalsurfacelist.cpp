@@ -70,7 +70,6 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
         int newFlavour, bool embeddedOnly) : flavour(newFlavour),
         embedded(embeddedOnly) {
-    NNormalSurfaceList::initialiseAllProperties();
     triang->insertChildLast(this);
 
     // Perform any pre-enumeration tests and fetch any necessary
@@ -165,7 +164,7 @@ void NNormalSurfaceList::writePacket(NFile& out) const {
 
     // Write the properties.
     // At the moment there are no properties!
-    writeAllPropertiesFooter(out);
+    out.writeAllPropertiesFooter();
 }
 
 #undef REGISTER_FLAVOUR
@@ -215,7 +214,7 @@ NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
             dynamic_cast<NTriangulation*>(parent)));
 
     // Read the properties.
-    ans->readProperties(in);
+    in.readProperties(0);
 
     return ans;
 }
@@ -227,12 +226,6 @@ NPacket* NNormalSurfaceList::internalClonePacket(NPacket* /* parent */) const {
     transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),
         FuncNewClonePtr<NNormalSurface>());
     return ans;
-}
-
-void NNormalSurfaceList::initialiseAllProperties() {
-}
-
-void NNormalSurfaceList::readIndividualProperty(NFile&, unsigned) {
 }
 
 // Tidy up.

@@ -87,7 +87,7 @@ NGroupExpression* NGroupExpression::power(long exponent) const {
     NGroupExpression* ans = new NGroupExpression();
     if (exponent == 0)
         return ans;
-    
+
     long i;
     if (exponent > 0)
         for (i = 0; i < exponent; i++)
@@ -117,7 +117,7 @@ bool NGroupExpression::simplify(bool cyclic) {
 
         tmpIt = next;
         tmpIt++;
-        
+
         // Now tmpIt points to the term after next.
         if (tmpIt == terms.end()) {
             // No term to merge forwards with.
@@ -135,7 +135,7 @@ bool NGroupExpression::simplify(bool cyclic) {
 
     if (! cyclic)
         return changed;
-    
+
     // Now trying merging front and back terms.
     // We shall do this by popping terms off the back and merging them
     // with the front term.
@@ -231,8 +231,7 @@ void NGroupExpression::writeTextShort(std::ostream& out) const {
 }
 
 NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
-        ShareableObject(), NPropertyHolder(),
-        nGenerators(cloneMe.nGenerators) {
+        ShareableObject(), nGenerators(cloneMe.nGenerators) {
     transform(cloneMe.relations.begin(), cloneMe.relations.end(),
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }
@@ -453,9 +452,9 @@ void NGroupPresentation::writeToFile(NFile& out) const {
     out.writeULong(relations.size());
     for (RelIteratorConst it = relations.begin(); it != relations.end(); it++)
         (*it)->writeToFile(out);
-    
+
     // Write properties.
-    writeAllPropertiesFooter(out);
+    out.writeAllPropertiesFooter();
 }
 
 NGroupPresentation* NGroupPresentation::readFromFile(NFile& in) {
@@ -466,7 +465,7 @@ NGroupPresentation* NGroupPresentation::readFromFile(NFile& in) {
         ans->relations.push_back(NGroupExpression::readFromFile(in));
 
     // Read properties.
-    ans->readProperties(in);
+    in.readProperties(0);
 
     return ans;
 }

@@ -37,8 +37,8 @@
 
 #include <utility>
 #include "shareableobject.h"
+#include "file/nfilepropertyreader.h"
 #include "maths/nray.h"
-#include "property/npropertyholder.h"
 #include "triangulation/nperm.h"
 
 namespace regina {
@@ -531,7 +531,7 @@ class NNormalSurfaceVector : public NRay {
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  */
-class NNormalSurface : public ShareableObject, public NPropertyHolder {
+class NNormalSurface : public ShareableObject, public NFilePropertyReader {
     protected:
         NNormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
@@ -1036,7 +1036,6 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
     protected:
         virtual void readIndividualProperty(NFile& infile,
             unsigned propType);
-        virtual void initialiseAllProperties();
 
         /**
          * Calculates the Euler characteristic of this surface and
@@ -1081,11 +1080,6 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(
 
 // Inline functions for NNormalSurface
 
-inline NNormalSurface::NNormalSurface(NTriangulation* triang,
-        NNormalSurfaceVector* newVector) : vector(newVector),
-        triangulation(triang) {
-    NNormalSurface::initialiseAllProperties();
-}
 inline NNormalSurface::~NNormalSurface() {
     delete vector;
 }

@@ -38,7 +38,6 @@
 #include <algorithm>
 #include <list>
 #include <vector>
-#include "property/npropertyholder.h"
 #include "utilities/memutils.h"
 #include "shareableobject.h"
 
@@ -419,7 +418,7 @@ class NGroupExpression : public ShareableObject {
  *
  * \todo \optlong The simplification routines really need work!
  */
-class NGroupPresentation : public ShareableObject, public NPropertyHolder {
+class NGroupPresentation : public ShareableObject {
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
@@ -570,10 +569,6 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-
-    protected:
-        virtual void readIndividualProperty(NFile& infile, unsigned propType);
-        virtual void initialiseAllProperties();
 };
 
 /*@}*/
@@ -698,12 +693,6 @@ inline const NGroupExpression& NGroupPresentation::getRelation(
 inline void NGroupPresentation::writeTextShort(std::ostream& out) const {
     out << "Group presentation: " << nGenerators << " generators, "
         << relations.size() << " relations";
-}
-
-inline void NGroupPresentation::readIndividualProperty(NFile&, unsigned) {
-}
-
-inline void NGroupPresentation::initialiseAllProperties() {
 }
 
 } // namespace regina

@@ -175,7 +175,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     newTet[0]->joinTo(3, newTet[1], NPerm());
 
     // Tidy up.
-    clearAllProperties();
+    gluingsHaveChanged();
     return true;
 }
 
@@ -301,7 +301,7 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
     newTet[2]->joinTo(2, newTet[0], internalPerm);
 
     // Tidy up.
-    clearAllProperties();
+    gluingsHaveChanged();
     return true;
 }
 
@@ -346,7 +346,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     calculateSkeleton();
     threeTwoMove(oldTet[3]->getEdge(edge32), false, true);
 
-    // Tidy up.  Note that clearAllProperties() was already called by
+    // Tidy up.  Note that gluingsHaveChanged() was already called by
     // twoThreeMove() and threeTwoMove().
     return true;
 }
@@ -434,8 +434,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     delete removeTetrahedron(tet[1]);
 
     // Tidy up.
-    // clearAllProperties() has been called already from
-    // removeTetrahedron().
+    // Properties have already been cleared in removeTetrahedron().
     return true;
 }
 
@@ -511,8 +510,7 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     delete removeTetrahedron(tet[1]);
 
     // Tidy up.
-    // clearAllProperties() has been called already from
-    // removeTetrahedron().
+    // Properties have already been cleared in removeTetrahedron().
     return true;
 }
 
@@ -626,8 +624,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     delete removeTetrahedron(top);
 
     // Tidy up.
-    // clearAllProperties() has been called already from
-    // removeTetrahedron().
+    // Properties have already been cleared in removeTetrahedron().
     return true;
 }
 

@@ -36,9 +36,9 @@
 #endif
 
 #include "shareableobject.h"
-#include "property/npropertyholder.h"
-#include "utilities/nrational.h"
+#include "file/nfilepropertyreader.h"
 #include "maths/nray.h"
+#include "utilities/nrational.h"
 
 namespace regina {
 
@@ -99,7 +99,7 @@ class NAngleStructureVector : public NRay {
  * Once the underlying triangulation changes, this angle structure
  * is no longer valid.
  */
-class NAngleStructure : public ShareableObject, public NPropertyHolder {
+class NAngleStructure : public ShareableObject, public NFilePropertyReader {
     private:
         NAngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
@@ -240,7 +240,6 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
 
     protected:
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
-        virtual void initialiseAllProperties();
 
         /**
          * Calculates the structure type (strict or taut) and stores it
@@ -271,8 +270,7 @@ inline NVector<NLargeInteger>* NAngleStructureVector::clone() const {
 
 inline NAngleStructure::NAngleStructure(NTriangulation* triang,
         NAngleStructureVector* newVector) : vector(newVector),
-        triangulation(triang) {
-    NAngleStructure::initialiseAllProperties();
+        triangulation(triang), flags(0) {
 }
 
 inline NAngleStructure::~NAngleStructure() {

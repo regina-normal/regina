@@ -43,8 +43,12 @@ namespace regina {
 
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
-NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
-    NAngleStructureList::initialiseAllProperties();
+NAngleStructureList::NAngleStructureList() :
+        calculatedAllowStrict(false), calculatedAllowTaut(false) {
+}
+
+NAngleStructureList::NAngleStructureList(NTriangulation* owner) :
+        calculatedAllowStrict(false), calculatedAllowTaut(false) {
     owner->insertChildLast(this);
 
     // Form the matching equations (one per non-boundary edge plus
@@ -152,17 +156,17 @@ void NAngleStructureList::writePacket(NFile& out) const {
     std::streampos bookmark(0);
 
     if (calculatedAllowStrict) {
-        bookmark = writePropertyHeader(out, PROPID_ALLOWSTRICT);
+        bookmark = out.writePropertyHeader(PROPID_ALLOWSTRICT);
         out.writeBool(doesAllowStrict);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedAllowTaut) {
-        bookmark = writePropertyHeader(out, PROPID_ALLOWTAUT);
+        bookmark = out.writePropertyHeader(PROPID_ALLOWTAUT);
         out.writeBool(doesAllowTaut);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
 
-    writeAllPropertiesFooter(out);
+    out.writeAllPropertiesFooter();
 }
 
 NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
@@ -175,7 +179,7 @@ NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
             dynamic_cast<NTriangulation*>(parent)));
 
     // Read the properties.
-    ans->readProperties(in);
+    in.readProperties(ans);
 
     return ans;
 }
@@ -211,11 +215,6 @@ NPacket* NAngleStructureList::internalClonePacket(NPacket* /* parent */)
     }
 
     return ans;
-}
-
-void NAngleStructureList::initialiseAllProperties() {
-    calculatedAllowStrict = false;
-    calculatedAllowTaut = false;
 }
 
 void NAngleStructureList::readIndividualProperty(NFile& infile,

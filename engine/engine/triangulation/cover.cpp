@@ -127,7 +127,7 @@ void NTriangulation::makeDoubleCover() {
 
     // Tidy up.
     delete[] upper;
-    clearAllProperties();
+    gluingsHaveChanged();
 }
 
 } // namespace regina

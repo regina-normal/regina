@@ -44,15 +44,6 @@ NLargeInteger NSurfaceFilterProperties::getEC(unsigned long index) const {
     return *it;
 }
 
-void NSurfaceFilterProperties::initialiseAllProperties() {
-    NSurfaceFilter::initialiseAllProperties();
-
-    eulerCharacteristic.clear();
-    orientability.fill();
-    compactness.fill();
-    realBoundary.fill();
-}
-
 bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
     if (! realBoundary.contains(surface.hasRealBoundary()))
         return false;

@@ -35,8 +35,8 @@
 #define __NSURFACEFILTER_H
 #endif
 
+#include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
-#include "property/npropertyholder.h"
 
 namespace regina {
 
@@ -76,7 +76,7 @@ class NXMLFilterReader;
  *
  * \todo \feature Implement property \a lastAppliedTo.
  */
-class NSurfaceFilter : public NPacket, public NPropertyHolder {
+class NSurfaceFilter : public NPacket, public NFilePropertyReader {
     public:
         /**
          * Contains the integer ID for this type of surface filter.
@@ -276,7 +276,6 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
         virtual void readIndividualProperty(NFile& infile, unsigned propType);
-        virtual void initialiseAllProperties();
 };
 
 /*@}*/
@@ -307,9 +306,6 @@ inline void NSurfaceFilter::writeTextShort(std::ostream& o) const {
 
 inline bool NSurfaceFilter::dependsOnParent() const {
     return false;
-}
-
-inline void NSurfaceFilter::initialiseAllProperties() {
 }
 
 } // namespace regina

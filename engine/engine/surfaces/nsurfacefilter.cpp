@@ -44,7 +44,7 @@ void NSurfaceFilter::writePacket(NFile& out) const {
     out.writeInt(getFilterID());
     writeFilter(out);
     writeProperties(out);
-    writeAllPropertiesFooter(out);
+    out.writeAllPropertiesFooter();
 }
 
 #define REGISTER_FILTER(id, c, name) \
@@ -85,7 +85,7 @@ NSurfaceFilter* NSurfaceFilter::readPacket(NFile& in, NPacket* parent) {
         default: ans = new NSurfaceFilter();
     }
 
-    ans->readProperties(in);
+    in.readProperties(ans);
     return ans;
 }
 

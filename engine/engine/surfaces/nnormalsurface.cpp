@@ -168,14 +168,17 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
         name = infile.readString();
 }
 
-void NNormalSurface::initialiseAllProperties() {
-    calculatedEulerChar = false;
-    calculatedOrientable = false;
-    calculatedTwoSided = false;
-    calculatedConnected = false;
-    calculatedRealBoundary = false;
-    calculatedCompact = false;
-    calculatedCanCrush = false;
+NNormalSurface::NNormalSurface(NTriangulation* triang,
+        NNormalSurfaceVector* newVector) :
+        vector(newVector),
+        triangulation(triang),
+        calculatedEulerChar(false),
+        calculatedOrientable(false),
+        calculatedTwoSided(false),
+        calculatedConnected(false),
+        calculatedRealBoundary(false),
+        calculatedCompact(false),
+        calculatedCanCrush(false) {
 }
 
 void NNormalSurface::writeTextShort(std::ostream& out) const {
@@ -397,47 +400,47 @@ void NNormalSurface::writeToFile(NFile& out) const {
     // Write properties.
     std::streampos bookmark(0);
 
-    bookmark = writePropertyHeader(out, PROPID_SURFACENAME);
+    bookmark = out.writePropertyHeader(PROPID_SURFACENAME);
     out.writeString(name);
-    writePropertyFooter(out, bookmark);
+    out.writePropertyFooter(bookmark);
 
     if (calculatedEulerChar) {
-        bookmark = writePropertyHeader(out, PROPID_EULERCHARACTERISTIC);
+        bookmark = out.writePropertyHeader(PROPID_EULERCHARACTERISTIC);
         out.writeLarge(eulerChar);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedOrientable) {
-        bookmark = writePropertyHeader(out, PROPID_ORIENTABILITY);
+        bookmark = out.writePropertyHeader(PROPID_ORIENTABILITY);
         out.writeInt(orientable);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedTwoSided) {
-        bookmark = writePropertyHeader(out, PROPID_TWOSIDEDNESS);
+        bookmark = out.writePropertyHeader(PROPID_TWOSIDEDNESS);
         out.writeInt(twoSided);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedConnected) {
-        bookmark = writePropertyHeader(out, PROPID_CONNECTEDNESS);
+        bookmark = out.writePropertyHeader(PROPID_CONNECTEDNESS);
         out.writeInt(connected);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedRealBoundary) {
-        bookmark = writePropertyHeader(out, PROPID_REALBOUNDARY);
+        bookmark = out.writePropertyHeader(PROPID_REALBOUNDARY);
         out.writeBool(realBoundary);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedCompact) {
-        bookmark = writePropertyHeader(out, PROPID_COMPACT);
+        bookmark = out.writePropertyHeader(PROPID_COMPACT);
         out.writeBool(compact);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedCanCrush) {
-        bookmark = writePropertyHeader(out, PROPID_CANCRUSH);
+        bookmark = out.writePropertyHeader(PROPID_CANCRUSH);
         out.writeBool(canCrush);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
 
-    writeAllPropertiesFooter(out);
+    out.writeAllPropertiesFooter();
 }
 
 #define REGISTER_FLAVOUR(id_name, class, n, a, t) \

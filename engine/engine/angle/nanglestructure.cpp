@@ -92,11 +92,11 @@ void NAngleStructure::writeToFile(NFile& out) const {
     // Write properties.
     std::streampos bookmark(0);
 
-    bookmark = writePropertyHeader(out, PROPID_FLAGS);
+    bookmark = out.writePropertyHeader(PROPID_FLAGS);
     out.writeULong(flags);
-    writePropertyFooter(out, bookmark);
+    out.writePropertyFooter(bookmark);
 
-    writeAllPropertiesFooter(out);
+    out.writeAllPropertiesFooter();
 }
 
 NAngleStructure* NAngleStructure::readFromFile(NFile& in,
@@ -115,7 +115,7 @@ NAngleStructure* NAngleStructure::readFromFile(NFile& in,
     NAngleStructure* ans = new NAngleStructure(triangulation, vector);
 
     // Read in properties.
-    ans->readProperties(in);
+    in.readProperties(ans);
 
     return ans;
 }
@@ -144,10 +144,6 @@ void NAngleStructure::readIndividualProperty(NFile& infile, unsigned propType) {
     if (propType == PROPID_FLAGS) {
         flags = infile.readULong();
     }
-}
-
-void NAngleStructure::initialiseAllProperties() {
-    flags = 0;
 }
 
 void NAngleStructure::calculateType() const {

@@ -36,8 +36,8 @@
 #endif
 
 #include <memory>
+#include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
-#include "property/npropertyholder.h"
 #include "utilities/hashset.h"
 #include "utilities/hashutils.h"
 #include "utilities/nindexedarray.h"
@@ -100,7 +100,7 @@ class NXMLTriangulationReader;
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  * \todo \featurelong Random triangulation with <i>n</i> tetrahedra.
  */
-class NTriangulation : public NPacket, NPropertyHolder {
+class NTriangulation : public NPacket, public NFilePropertyReader {
     public:
         static const int packetType;
 
@@ -1683,8 +1683,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
-        virtual void clearAllProperties();
-        virtual void initialiseAllProperties();
 
         /**
          * Turns this triangulation into a clone of the given
@@ -1703,6 +1701,23 @@ class NTriangulation : public NPacket, NPropertyHolder {
         void deleteSkeleton();
             /**< Deallocates all skeletal objects and empties all
                  corresponding lists. */
+
+        /**
+         * Declares all calculated properties unknown.  This routine
+         * should only ever be called from constructors or from
+         * clearAllProperties().
+         */
+        virtual void initialiseAllProperties();
+        /**
+         * Clears any calculated properties and declares them all
+         * unknown.  All dynamic memory used for storing known
+         * properties is deallocated.
+         *
+         * In most cases this functionality is achieved through a call
+         * to gluingsHaveChanged(), which also fires a packet change
+         * event.
+         */
+        virtual void clearAllProperties();
 
         /**
          * Recalculates vertices, edges, faces, components and
@@ -1809,12 +1824,12 @@ class NTriangulation : public NPacket, NPropertyHolder {
 // Inline functions for NTriangulation
 
 inline NTriangulation::NTriangulation() {
-    NTriangulation::initialiseAllProperties();
+    initialiseAllProperties();
 }
 
 inline NTriangulation::NTriangulation(const NTriangulation& cloneMe) :
-        NPacket(), NPropertyHolder() {
-    NTriangulation::initialiseAllProperties();
+        NPacket(), NFilePropertyReader() {
+    initialiseAllProperties();
     cloneFrom(cloneMe);
 }
 
@@ -1847,35 +1862,29 @@ inline unsigned long NTriangulation::getTetrahedronIndex(
 }
 
 inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
-    clearAllProperties();
     tetrahedra.push_back(t);
-    fireChangedEvent();
+    gluingsHaveChanged();
 }
 
 inline NTetrahedron* NTriangulation::removeTetrahedronAt(unsigned long index) {
-    clearAllProperties();
-
     NTetrahedron* ans = tetrahedra[index];
     ans->isolate();
     tetrahedra.erase(tetrahedra.begin() + index);
-    fireChangedEvent();
+    gluingsHaveChanged();
     return ans;
 }
 
 inline NTetrahedron* NTriangulation::removeTetrahedron(
         NTetrahedron* tet) {
-    clearAllProperties();
-
     tet->isolate();
     tetrahedra.erase(tet);
-    fireChangedEvent();
+    gluingsHaveChanged();
     return tet;
 }
 
 inline void NTriangulation::removeAllTetrahedra() {
-    clearAllProperties();
     deleteTetrahedra();
-    fireChangedEvent();
+    gluingsHaveChanged();
 }
 
 inline void NTriangulation::gluingsHaveChanged() {

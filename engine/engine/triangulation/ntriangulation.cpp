@@ -62,7 +62,7 @@ void NTriangulation::clearAllProperties() {
     if (calculatedH2)
         delete H2;
 
-    NPropertyHolder::clearAllProperties();
+    initialiseAllProperties();
 }
 
 void NTriangulation::initialiseAllProperties() {
@@ -203,42 +203,42 @@ void NTriangulation::writePacket(NFile& out) const {
     std::streampos bookmark(0);
 
     if (calculatedFundamentalGroup) {
-        bookmark = writePropertyHeader(out, PROPID_FUNDAMENTALGROUP);
+        bookmark = out.writePropertyHeader(PROPID_FUNDAMENTALGROUP);
         fundamentalGroup->writeToFile(out);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedH1) {
-        bookmark = writePropertyHeader(out, PROPID_H1);
+        bookmark = out.writePropertyHeader(PROPID_H1);
         H1->writeToFile(out);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedH1Rel) {
-        bookmark = writePropertyHeader(out, PROPID_H1REL);
+        bookmark = out.writePropertyHeader(PROPID_H1REL);
         H1Rel->writeToFile(out);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedH1Bdry) {
-        bookmark = writePropertyHeader(out, PROPID_H1BDRY);
+        bookmark = out.writePropertyHeader(PROPID_H1BDRY);
         H1Bdry->writeToFile(out);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedH2) {
-        bookmark = writePropertyHeader(out, PROPID_H2);
+        bookmark = out.writePropertyHeader(PROPID_H2);
         H2->writeToFile(out);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedZeroEfficient) {
-        bookmark = writePropertyHeader(out, PROPID_ZEROEFFICIENT);
+        bookmark = out.writePropertyHeader(PROPID_ZEROEFFICIENT);
         out.writeBool(zeroEfficient);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
     if (calculatedSplittingSurface) {
-        bookmark = writePropertyHeader(out, PROPID_SPLITTINGSURFACE);
+        bookmark = out.writePropertyHeader(PROPID_SPLITTINGSURFACE);
         out.writeBool(splittingSurface);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
 
-    writeAllPropertiesFooter(out);
+    out.writeAllPropertiesFooter();
 }
 
 NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* /* parent */) {
@@ -269,7 +269,7 @@ NTriangulation* NTriangulation::readPacket(NFile& in, NPacket* /* parent */) {
     }
 
     // Read in properties.
-    triang->readProperties(in);
+    in.readProperties(triang);
 
     // Return the completed triangulation.
     return triang;
@@ -492,7 +492,6 @@ void NTriangulation::deleteSkeleton() {
 void NTriangulation::cloneFrom(const NTriangulation& X) {
     ChangeEventBlock(this);
 
-    clearAllProperties();
     removeAllTetrahedra();
 
     TetrahedronIterator it;
@@ -563,7 +562,6 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
 void NTriangulation::insertTriangulation(const NTriangulation& X) {
     ChangeEventBlock(this);
 
-    clearAllProperties();
     unsigned long norig = getNumberOfTetrahedra();
 
     TetrahedronIterator it;

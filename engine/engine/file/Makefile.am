@@ -16,5 +16,5 @@ noinst_LTLIBRARIES = libfile.la
 
 libfile_la_SOURCES = nfile.cpp nfileinfo.cpp nresources.cpp nxmlcallback.cpp nxmlfile.cpp
 
-fileinclude_HEADERS = nfile.h nfileinfo.h nresources.h nxmlcallback.h nxmlelementreader.h nxmlfile.h
+fileinclude_HEADERS = nfile.h nfileinfo.h nfilepropertyreader.h nresources.h nxmlcallback.h nxmlelementreader.h nxmlfile.h
 

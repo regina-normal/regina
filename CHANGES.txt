@@ -7,9 +7,13 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Current Development Version:
     ENGINE:
         Class NAbelianGroup:
             - Added global comparisons isTrivial() and operator ==.
+        Class NPropertyHolder:
+            - Moved most of its functionality directly into NFile and
+              replaced what was left with the new class NFilePropertyReader.
 
 Version 3.95  [ 12 October, 2003 ] - Prelease for version 4.0.
     GRAPHICAL USER INTERFACE:

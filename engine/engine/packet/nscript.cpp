@@ -93,14 +93,14 @@ void NScript::writePacket(NFile& out) const {
 
     for (std::map<std::string, std::string>::const_iterator vit =
             variables.begin(); vit != variables.end(); vit++) {
-        bookmark = writePropertyHeader(out, PROP_VARIABLE);
+        bookmark = out.writePropertyHeader(PROP_VARIABLE);
         out.writeString((*vit).first);
         out.writeString((*vit).second);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
 
     // At the moment there are no properties to write!
-    writeAllPropertiesFooter(out);
+    out.writeAllPropertiesFooter();
 }
 
 NScript* NScript::readPacket(NFile& in, NPacket*) {
@@ -109,7 +109,7 @@ NScript* NScript::readPacket(NFile& in, NPacket*) {
     for (unsigned long i=0; i<size; i++)
         ans->lines.push_back(in.readString());
 
-    ans->readProperties(in);
+    in.readProperties(ans);
 
     return ans;
 }
@@ -126,9 +126,6 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
     for (std::vector<std::string>::const_iterator it = lines.begin();
             it != lines.end(); it++)
         out << "  <line>" << xmlEncodeSpecialChars(*it) << "</line>\n";
-}
-
-void NScript::initialiseAllProperties() {
 }
 
 void NScript::readIndividualProperty(NFile& infile, unsigned propType) {
