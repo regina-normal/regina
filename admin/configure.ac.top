@@ -58,6 +58,7 @@ LIBTOOL="$LIBTOOL --silent"
 
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
+AC_PROG_LN_S
 
 ###########################################################
 #
@@ -70,6 +71,9 @@ REGINA_PROG_JAVAC([JAVAUI DOCSJAVAUI], [the Java user interface])
 REGINA_PROG_OPTIONAL([fastjar jar], JAR,
   [Jar command for creating Java JAR archives], [JAVAUI DOCSJAVAUI],
   [the Java user interface])
+
+REGINA_PROG_OPTIONAL([gcjh gcjh-3.1 kaffeh javah], JAVAH,
+  [Javah command for creating JNI headers], , [the (unnecessary) JNI headers])
 
 ###########################################################
 #
