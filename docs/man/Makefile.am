@@ -7,6 +7,7 @@
 ##
 
 man_MANS = \
+  regconcat.1 \
   regconvert.1 \
   regfiledump.1 \
   regfiletype.1 \
