@@ -3,8 +3,8 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "3.96 (4.0 prerelease)">
-  <!ENTITY regdate "31 October 2003">
+  <!ENTITY regversion "3.97 (4.0 prerelease)">
+  <!ENTITY regdate "21 November 2003">
   <!ENTITY regauthorplain "Ben Burton">
   <!ENTITY copyrightyears "1999&ndash;2003">
   <!ENTITY copyrightholder "&regauthorplain;">
@@ -88,8 +88,8 @@
 
   <legalnotice>&underGPL;</legalnotice>
 
-  <date>2003-10-31</date>
-  <releaseinfo>3.96 (4.0 prerelease)</releaseinfo>
+  <date>2003-11-21</date>
+  <releaseinfo>3.97 (4.0 prerelease)</releaseinfo>
 
   <abstract>
    &regabstract;

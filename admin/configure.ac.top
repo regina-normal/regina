@@ -30,7 +30,7 @@ dnl
 #
 ###########################################################
 
-AC_INIT(Regina, [3.96], [regina-user@lists.sourceforge.net], regina)
+AC_INIT(Regina, [3.97], [regina-user@lists.sourceforge.net], regina)
 AC_PREREQ(2.50)
 AC_CONFIG_AUX_DIR(admin)
 AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
@@ -47,7 +47,7 @@ AC_ARG_PROGRAM
 
 # The KDE folks say that we should not do the automake initialisation
 # until this point.
-AM_INIT_AUTOMAKE(regina, [3.96])
+AM_INIT_AUTOMAKE(regina, [3.97])
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(engine/engine/regina-config.h)
 
