@@ -32,6 +32,7 @@
 
 // UI includes:
 #include "packetmanager.h"
+#include "packetui.h"
 #include "reginapart.h"
 
 #include <kiconloader.h>
@@ -86,5 +87,10 @@ QPixmap PacketManager::iconBar(NPacket* packet) {
     if (packet->getPacketType() == NTriangulation::packetType)
         return BarIcon("packet_triangulation", ReginaPart::factoryInstance());
     return QPixmap();
+}
+
+PacketUI* PacketManager::createUI(regina::NPacket* packet,
+        PacketPane* enclosingPane, bool /* allowReadWrite */) {
+    return new DefaultPacketUI(packet, enclosingPane);
 }
 

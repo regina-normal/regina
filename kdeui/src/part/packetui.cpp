@@ -107,7 +107,8 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
     // Set up the main interface component.
-    mainUI = new DefaultPacketUI(newPacket, this);
+    mainUI = PacketManager::createUI(newPacket, this,
+        newPart->isReadWrite() && newPacket->isPacketEditable());
     QWidget* mainUIWidget = mainUI->getInterface();
     if (mainUIWidget->parent() != this) {
         mainUIWidget->reparent(this, QPoint(0, 0));
