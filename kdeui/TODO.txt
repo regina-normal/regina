@@ -47,8 +47,6 @@ Part:
         a konqueror embedded preview
     - Fix missing help icon when running scripts from within a konqueror
         embedded preview
-    * A read-only katepart never gets filled with text, whereas a
-        read-only vimpart can in fact be edited (but not committed)
 
 Python:
     - Allow breaking processing in python consoles
