@@ -34,8 +34,10 @@
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/npillowtwosphere.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappedball.h"
+#include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
@@ -320,7 +322,36 @@ void NTriCompositionUI::findLayeredSolidTori() {
 }
 
 void NTriCompositionUI::findPillowSpheres() {
-    // TODO
+    unsigned long nFaces = tri->getNumberOfFaces();
+
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    unsigned long i, j;
+    regina::NFace* f1;
+    regina::NFace* f2;
+    regina::NPillowTwoSphere* pillow;
+    for (i = 0; i < nFaces; i++) {
+        f1 = tri->getFace(i);
+        for (j = i + 1; j < nFaces; j++) {
+            f2 = tri->getFace(j);
+            pillow = regina::NPillowTwoSphere::formsPillowTwoSphere(f1, f2);
+            if (pillow) {
+                id = addComponentSection(i18n("Pillow 2-sphere"));
+
+                details = new KListViewItem(id, i18n("Faces: %1, %2").
+                    arg(i).arg(j));
+
+                details = new KListViewItem(id, details, i18n(
+                    "Equator: edges %1, %2, %3").
+                     arg(tri->getEdgeIndex(f1->getEdge(0))).
+                     arg(tri->getEdgeIndex(f1->getEdge(1))).
+                     arg(tri->getEdgeIndex(f1->getEdge(2))));
+
+                delete pillow;
+            }
+        }
+    }
 }
 
 void NTriCompositionUI::findPlugTriSolidTori() {
@@ -397,7 +428,35 @@ void NTriCompositionUI::findSnappedBalls() {
 }
 
 void NTriCompositionUI::findSnappedSpheres() {
-    // TODO
+    unsigned long nTets = tri->getNumberOfTetrahedra();
+
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    unsigned long i, j;
+    regina::NTetrahedron* t1;
+    regina::NTetrahedron* t2;
+    regina::NSnappedTwoSphere* sphere;
+    for (i = 0; i < nTets; i++) {
+        t1 = tri->getTetrahedron(i);
+        for (j = i + 1; j < nTets; j++) {
+            t2 = tri->getTetrahedron(j);
+            sphere = regina::NSnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
+            if (sphere) {
+                id = addComponentSection(i18n("Snapped 2-sphere"));
+
+                details = new KListViewItem(id, i18n("Tetrahedra: %1, %2").
+                    arg(i).arg(j));
+
+                const regina::NSnappedBall* ball = sphere->getSnappedBall(0);
+                details = new KListViewItem(id, details, i18n(
+                    "Equator: edge %1").arg(tri->getEdgeIndex(
+                    ball->getTetrahedron()->getEdge(ball->getEquatorEdge()))));
+
+                delete sphere;
+            }
+        }
+    }
 }
 
 void NTriCompositionUI::findSpiralSolidTori() {
