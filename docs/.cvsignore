@@ -1,2 +1,7 @@
 manpage.links
 manpage.refs
+*.html
+*.1
+*.5
+*.7
+*.rtf

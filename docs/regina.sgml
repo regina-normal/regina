@@ -54,7 +54,7 @@
 <book>
  <bookinfo>
   <graphic fileref="largeicon.jpg" align="right">
-  <title>&regina; Documentation</title>
+  <title>&regina; Reference Manual</title>
   &regauthor;
   <address>&regemail;</address>
   <date>&editdate;</date>

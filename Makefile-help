@@ -13,6 +13,8 @@ bin - make all engine and Java UI binaries, EXCLUDING the documentation jar
 
 docsengine - build the calculation engine documentation
 docsjava - build the Java user interface documentation
+docshtml - build the HTML reference manual
+docsman - build the man pages
 docs - build all auto-generated documentation
 ... (all above targets are made beneath docs/)
 

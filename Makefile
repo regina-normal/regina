@@ -57,7 +57,7 @@ helprun :
 	binengine binenginejni binenginecorba \
 	binjava binjavaui binjavajni binjavacorba \
 	binjni bincorba bindocs bin \
-	docsengine docsjava docs \
+	docsengine docsjava docshtml docsman docs \
 	prepengine prepenginejni prepenginecorba prepjava prepjavacorba \
 		prepcorba prepjni prepcleancorba prepcleanjni prepclean prep \
 	run runconsole runtext runjni runcorba runcorbaengine \
@@ -93,7 +93,11 @@ docsengine :
 	cd engine && $(MAKE) docs
 docsjava :
 	cd javaui && $(MAKE) docs
-docs : docsengine docsjava $(DOC_LICENSE)
+docshtml :
+	cd docs && $(MAKE) html
+docsman :
+	cd docs && $(MAKE) man
+docs : docsengine docsjava docshtml docsman $(DOC_LICENSE)
 $(DOC_LICENSE) : $(LICENSE)
 	$(COPY) $(LICENSE) $(DOC_LICENSE)
 
@@ -149,6 +153,7 @@ debugcorba : binenginecorba binjavaui binjavacorba
 clean :
 	cd engine && $(MAKE) clean
 	cd javaui && $(MAKE) clean
+	cd docs && $(MAKE) clean
 
 purge : clean
 	-rm $(ENGINE_JNI) $(ENGINE_CORBA)
