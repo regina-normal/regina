@@ -346,19 +346,5 @@ class NPointerSetIterator : public NHashSetIterator<T*> {
         }
 };
 
-/**
- * A set of strings implemented using a hash table.
- *
- * \ifaces Not present.
- */
-typedef NHashSet<NString> NStringSet;
-
-/**
- * An iterator used for running through elements of an NStringSet.
- *
- * \ifaces Not present.
- */
-typedef NHashSetIterator<NString> NStringSetIterator;
-
 #endif
 

@@ -27,9 +27,9 @@
 /* end stub */
 
 #include <strstream.h>
+#include <hash_set>
 
 #include "packet/npacket.h"
-#include "utilities/nset.h"
 
 NPacket::~NPacket() {
     NPacket* tmp;
@@ -314,7 +314,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
         tree[1] = 0;
     }
 
-    NStringSet labels;
+    std::hash_set<NString> labels;
 
     int whichTree;
     NPacket* p;
@@ -324,7 +324,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
     for (whichTree = 0; tree[whichTree]; whichTree++)
         for (p = tree[whichTree]; p; p = p->nextTreePacket()) {
             label = p->getPacketLabel();
-            if (! labels.add(label)) {
+            if (! labels.insert(label).second) {
                 extraInt = 1;
                 do {
                     extraInt++;
@@ -332,7 +332,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
                     out << ' ' << extraInt << '\0';
                     newLabel = label + out.str();
                     out.freeze(0);
-                } while (! labels.add(newLabel));
+                } while (! labels.insert(newLabel).second);
 
                 p->setPacketLabel(newLabel);
                 changed = true;
