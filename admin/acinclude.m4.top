@@ -180,21 +180,29 @@ dnl    This macro will attempt to locate the specific headers corresponding
 dnl    to the Java compiler $JAVAC.  A basic compilation test will also
 dnl    be done.
 dnl
-dnl    Variable JNI_INCLUDES is defined as precious.
+dnl    Configure argument --with-jni is defined.
 dnl
 dnl    AC_SUBST()s the following variables:
 dnl
 dnl        JNI_INCLUDES: The compiler flags for including the JNI headers;
 dnl                      this is only set if the headers were actually found.
-dnl                      If this variable has already been set, it will not
-dnl                      be touched.
+dnl                      If configure argument --with-jni was specified,
+dnl                      that value will be used without further testing.
 dnl
 dnl    Example: REGINA_HEADER_JNI(ENGINEJNI,
 dnl                 [the JNI calculation engine module])
 dnl
 AC_DEFUN(REGINA_HEADER_JNI, [
-  AC_ARG_VAR(JNI_INCLUDES, [Include flags for JNI headers])
-  if test "x$JNI_INCLUDES" = "x"; then
+  AC_ARG_WITH(jni, AC_HELP_STRING([--with-jni=FLAGS],
+      [compiler flags for including jni.h]), [
+    JNI_INCLUDES="$with_jni"
+  ], [
+    JNI_INCLUDES=
+  ])
+  if test "x$JNI_INCLUDES" = "xno"; then
+    REGINA_DO_NOT_COMPILE([$1])
+    AC_MSG_WARN([[Option --without-jni has been specified; $2 will not be built.]])
+  elif test "x$JNI_INCLUDES" = "x"; then
     # Find the directory that should contain the headers.
     progname=false
     for i in $JAVAC; do progname="$i"; break; done
