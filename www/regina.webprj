@@ -14,9 +14,10 @@
 <item url="index.html" />
 <item url="return.jpg" />
 <item url="title.jpg" />
-<item url="sysreq.html" />
 <templates>templates/</templates>
 <toolbars>toolbars/</toolbars>
 <item url="data.html" />
+<item url="regina.css" />
+<item url="source.html" />
 </project>
 </webproject>
