@@ -97,7 +97,7 @@ namespace {
         InitialData(unsigned long newR, double newAngle) :
                 r(newR), angle(newAngle), fact(angle, 3 * r / 2) {
             // Note that we may use negative this value instead for baseW.
-            baseW = sqrt(static_cast<double>(2 * r)) / 2 * sin(angle);
+            baseW = sqrt(static_cast<double>(2 * r)) / (2 * sin(angle));
         }
 
         /**
@@ -138,12 +138,18 @@ namespace {
          */
         std::complex<double> delta(unsigned long i, unsigned long j,
                 unsigned long k) const {
-            double deltaSquared =
+            /*
+            return complexRoot(
+                fact[(i + j - k) / 2] *
+                fact[(j + k - i) / 2] *
+                fact[(k + i - j) / 2]) /
+                complexRoot(fact[(i + j + k + 2) / 2]);
+            */
+            return complexRoot(
                 fact[(i + j - k) / 2] *
                 fact[(j + k - i) / 2] *
                 fact[(k + i - j) / 2] /
-                fact[(i + j + k + 2) / 2];
-            return complexRoot(deltaSquared);
+                fact[(i + j + k + 2) / 2]);
         }
 
         /**
@@ -246,7 +252,7 @@ std::complex<double> NTriangulation::turaevViro(unsigned long r,
             for (i = 0; i < vertices.size(); i++)
                 valColour /= init.baseW;
             for (i = 0; i < nEdges; i++)
-                valColour *= init.w(i);
+                valColour *= init.w(colour[i]);
             valColour *= valColour;
             for (i = 0; i < tetrahedra.size(); i++)
                 valColour *= init.mod(
