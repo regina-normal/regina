@@ -35,9 +35,11 @@
 #include "packetwindow.h"
 #include "reginapart.h"
 
+#include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qlabel.h>
+#include <qtoolbutton.h>
 
 using regina::NPacket;
 
@@ -82,6 +84,13 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
         part(newPart), frame(0) {
     header = new PacketHeader(newPacket, this);
+    dockUndock = new QToolButton(header);
+    dockUndock->setToggleButton(true);
+    dockUndock->setIconSet(BarIconSet("attach", 0,
+        ReginaPart::factoryInstance()));
+    dockUndock->setTextLabel(i18n("Dock or undock this packet viewer"));
+    dockUndock->setOn(true);
+    connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
     mainUI = new DefaultPacketUI(newPacket);
     QWidget* mainUIWidget = mainUI->getInterface();
@@ -115,26 +124,6 @@ bool PacketPane::queryClose() {
     return true;
 }
 
-KMainWindow* PacketPane::encloseInFrame() {
-    if (frame)
-        return 0;
-
-    KMainWindow* ans = new PacketWindow(this);
-    frame = ans;
-    return ans;
-}
-
-PacketPane* PacketPane::removeFrame() {
-    if (frame) {
-        hide();
-        reparent(0, QPoint(0, 0));
-        delete frame;
-        frame = 0;
-    }
-
-    return this;
-}
-
 void PacketPane::refresh() {
     header->refresh();
     mainUI->refresh();
@@ -158,8 +147,13 @@ void PacketPane::dockPane() {
         return;
 
     // The packet pane is currently floating.
-    removeFrame();
     part->dock(this);
+    delete frame;
+    frame = 0;
+
+    dockUndock->setOn(true);
+    disconnect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
+    connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 }
 
 void PacketPane::floatPane() {
@@ -167,9 +161,14 @@ void PacketPane::floatPane() {
         return;
 
     // The packet pane is currently docked.
-    hide();
-    reparent(0, QPoint(0, 0));
-    encloseInFrame()->show();
+    frame = new PacketWindow(this);
+    part->hasUndocked(this);
+
+    dockUndock->setOn(false);
+    disconnect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
+    connect(dockUndock, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
+
+    frame->show();
 }
 
 #include "packetui.moc"

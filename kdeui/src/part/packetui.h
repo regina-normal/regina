@@ -37,6 +37,7 @@
 
 class KMainWindow;
 class QLabel;
+class QToolButton;
 class ReginaPart;
 
 namespace regina {
@@ -121,6 +122,8 @@ class PacketPane : public QVBox {
         KMainWindow* frame;
             /**< The floating frame containing this packet pane, or 0
                  if this packet pane is currently docked. */
+        QToolButton* dockUndock;
+            /**< The docking/floating action for this packet pane. */
 
     public:
         /**
@@ -140,19 +143,6 @@ class PacketPane : public QVBox {
          * Are we allowed to close this packet pane?
          */
         bool queryClose();
-
-        /**
-         * Encloses this packet pane within a new top-level window.
-         *
-         * \pre This packet pane is currently parentless.
-         */
-        KMainWindow* encloseInFrame();
-
-        /**
-         * Removes any frame currently surrounding this packet pane.
-         * This packet pane will become hidden and parentless.
-         */
-        PacketPane* removeFrame();
 
     public slots:
         /**

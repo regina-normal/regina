@@ -129,7 +129,7 @@ void ReginaPart::view(PacketPane* newPane) {
     if (shouldDock)
         dock(newPane);
     else
-        newPane->encloseInFrame()->show();
+        newPane->floatPane();
 
     // Add it to the list of currently managed panes.
     allPanes.append(newPane);
@@ -147,6 +147,11 @@ void ReginaPart::dock(PacketPane* newPane) {
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
     allPanes.removeRef(closingPane);
+}
+
+void ReginaPart::hasUndocked(PacketPane* undockedPane) {
+    if (dockedPane == undockedPane)
+        dockedPane = 0;
 }
 
 bool ReginaPart::openFile() {

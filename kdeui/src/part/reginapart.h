@@ -113,8 +113,6 @@ class ReginaPart : public KParts::ReadWritePart {
          * Whether it is docked or in a free-floating window will be
          * decided according to the current arrangement of panes and any
          * relevant user settings.
-         *
-         * \pre The given packet pane is currently parentless.
          */
         void view(PacketPane* newPane);
 
@@ -122,10 +120,13 @@ class ReginaPart : public KParts::ReadWritePart {
          * Display a newly created packet pane in the docked area.
          * Any currently docked pane that refuses to closed will be
          * forced out into its own floating window.
-         *
-         * \pre The given packet pane is currently parentless.
          */
         void dock(PacketPane* newPane);
+
+        /**
+         * Called from a packet pane when it has left the docking area.
+         */
+        void hasUndocked(PacketPane* undockedPane);
 
         /**
          * Called from a packet pane when it is about to definitively close.
