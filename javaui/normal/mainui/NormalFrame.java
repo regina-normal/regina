@@ -323,13 +323,17 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
                 Application.fileExtension + ")",
                 options.getBooleanOption("AutoFileExtension", true));
         JMenu menuOptionsFile = new JMenu("File");
-        JMenuItem menuOptionsHelpBrowser = new JMenuItem("Help Browser");
+        JMenuItem menuOptionsHelpBrowser = new JMenuItem("Help Browser...");
+        JMenuItem menuOptionsJPythonLibs =
+			new JMenuItem("JPython Libraries...");
+        menuOptionsJPythonLibs.setEnabled(shell.hasFoundJPython());
         menuOptionsDisplay.add(menuOptionsAutoDock);
         menuOptionsDisplay.add(menuOptionsDisplayIcon);
         menuOptions.add(menuOptionsDisplay);
         menuOptionsFile.add(menuOptionsAutoExtension);
         menuOptions.add(menuOptionsFile);
         menuOptions.add(menuOptionsHelpBrowser);
+		menuOptions.add(menuOptionsJPythonLibs);
         menuOptions.add(new LookAndFeelMenu(this));
                 
         // Help menu
@@ -478,6 +482,11 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         menuOptionsHelpBrowser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new SelectHelpBrowser(shell).show();
+            }
+        });
+        menuOptionsJPythonLibs.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new ManageJPythonLibraries(shell).show();
             }
         });
         menuHelpContents.addActionListener(new ActionListener() {
