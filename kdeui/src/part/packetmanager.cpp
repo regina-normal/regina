@@ -34,6 +34,7 @@
 #include "packetmanager.h"
 #include "reginapart.h"
 #include "packettypes/ncontainerui.h"
+#include "packettypes/ntextui.h"
 
 #include <kiconloader.h>
 
@@ -90,10 +91,13 @@ QPixmap PacketManager::iconBar(NPacket* packet) {
 }
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
-        PacketPane* enclosingPane, bool /* allowReadWrite */) {
+        PacketPane* enclosingPane, bool allowReadWrite) {
     if (packet->getPacketType() == NContainer::packetType)
         return new NContainerUI(dynamic_cast<NContainer*>(packet),
             enclosingPane);
+    if (packet->getPacketType() == NText::packetType)
+        return new NTextUI(dynamic_cast<NText*>(packet), enclosingPane,
+            allowReadWrite);
     return new DefaultPacketUI(packet, enclosingPane);
 }
 

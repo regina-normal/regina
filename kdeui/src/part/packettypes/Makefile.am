@@ -11,10 +11,12 @@ INCLUDES = $(all_includes)
 noinst_LTLIBRARIES = libpackettypes.la
 
 noinst_HEADERS = \
-	ncontainerui.h
+	ncontainerui.h \
+	ntextui.h
 
 libpackettypes_la_SOURCES = \
-	ncontainerui.cpp
+	ncontainerui.cpp \
+	ntextui.cpp
 
 METASOURCES = AUTO
 
