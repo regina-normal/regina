@@ -1,0 +1,77 @@
+<chapter id="packet">
+ <title>Working with Packets</title>
+
+ <sect1 id="packet-tree">
+  <title>The Packet Tree</title>
+
+  <para>stuff</para>
+ </sect1>
+
+ <sect1 id="packet-types">
+  <title>Different Packet Types</title>
+
+  <sect2 id="packet-container">
+   <title>Container</title>
+
+   <graphic fileref="../javaui/normal/images/packet/container.gif"
+    align="left">
+   <para>stuff</para>
+  </sect2>
+
+  <sect2 id="packet-text">
+   <title>Text</title>
+
+   <graphic fileref="../javaui/normal/images/packet/text.gif"
+    align="left">
+   <para>stuff</para>
+  </sect2>
+
+  <sect2 id="packet-triangulation">
+   <title>Triangulation</title>
+
+   <graphic fileref="../javaui/normal/images/packet/triangulation.gif"
+    align="left">
+   <para>stuff</para>
+  </sect2>
+
+  <sect2 id="packet-surfacelist">
+   <title>Normal Surface List</title>
+
+   <graphic fileref="../javaui/normal/images/packet/surface.gif"
+    align="left">
+   <para>stuff</para>
+  </sect2>
+
+  <sect2 id="packet-filter">
+   <title>Surface Filter</title>
+
+   <graphic fileref="../javaui/normal/images/packet/filter.gif"
+    align="left">
+   <para>stuff</para>
+
+   <sect3 id="packet-filterprop">
+    <title>Property Filter</title>
+
+    <graphic fileref="../javaui/normal/images/packet/filterprop.gif"
+     align="left">
+    <para>stuff</para>
+   </sect3>
+
+   <sect3 id="packet-filtercomb">
+    <title>Combination Filter</title>
+
+    <graphic fileref="../javaui/normal/images/packet/filtercomb.gif"
+     align="left">
+    <para>stuff</para>
+   </sect3>
+  </sect2>
+
+  <sect2 id="packet-script">
+   <title>Script</title>
+
+   <graphic fileref="../javaui/normal/images/packet/script.gif"
+    align="left">
+   <para>stuff</para>
+  </sect2>
+ </sect1>
+</chapter>
