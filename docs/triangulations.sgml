@@ -274,10 +274,272 @@
 
    <para>
     The <guilabel>Skeleton</guilabel> tab in the triangulation viewer
-    offers details of the individual vertices, edges, faces, components
-    and boundary components that make up the triangulation.
+    offers combinatorial details of the individual
+    vertices, edges, faces, components and boundary components that
+    make up the triangulation (note that
+    each ideal vertex is treated as an individual boundary component).
    </para>
-   <para>TODO: This section still to be written.</para>
+   <para>
+    In the <guilabel>Skeleton</guilabel> tab itself appears the
+    total number of vertices, edges and so on.  Beside each count
+    is a <guibutton>View</guibutton> button that brings up a table
+    providing explicit structural details for each individual object
+    as described below.
+   </para>
+
+   <sect3 id="tri-vertexedgeface">
+    <title>Vertices, Edges and Faces</title>
+    <para>
+     The vertex table, the edge table and the face table all have similar
+     structures.
+    </para>
+    <para>
+     In the first column, the vertices, edges or faces are individually
+     numbered from 0 upwards.
+    </para>
+    <para>
+     The second column (labelled <guilabel>Type</guilabel>) describes
+     properties of each vertex, edge or face in the form of zero or more
+     of the property labels described below.  Note that an object might
+     have no interesting properties at all.
+    </para>
+    <para>
+     The third column in the table lists the degree of the vertex,
+     edge or face.
+    </para>
+    <para>
+     The final column lists precisely which vertices
+     of which tetrahedra form the vertex, edge or face (recall that the
+     four vertices of an individual tetrahedron are numbered 0, 1, 2 and
+     3).  An example using an edge is
+     <literal>1(20), 4(12), 2(21)</literal> which shows that
+     the edge is the result of identifying edge 20 of tetrahedron 1,
+     edge 12 of tetrahedron 4 and edge 21 of tetrahedron 2 (where edge
+     21 for instance is the edge joining vertex 2 with vertex 1 of that
+     tetrahedron).
+     The order of vertices is important; this example also shows that
+     vertex 2 of tetrahedron 1, vertex 1 of tetrahedron 4 and vertex 2
+     of tetrahedron 2 all represent the same end of the edge.
+    </para>
+    <para>
+     In the case of edges, the order in which the tetrahedra are
+     presented in this column is also important.  Tetrahedra are presented
+     in the order in which they are seen when following around the edge link.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-compbdrycomp">
+    <title>Components and Boundary Components</title>
+    <para>
+     The component and boundary component tables are similarly structured.
+    </para>
+    <para>
+     The first column individually numbers the components or
+     boundary components from 0 upwards.
+    </para>
+    <para>
+     The second column describes properties of each component or
+     boundary component, again using zero or more of the property
+     labels described below.
+    </para>
+    <para>
+     The third column lists the number of tetrahedra in the component or
+     the number of faces in the boundary component.  Note that a
+     boundary component formed by an ideal vertex will have zero faces.
+    </para>
+    <para>
+     The fourth column lists the individual tetrahedra forming the
+     component or the individual faces or vertices forming the
+     boundary component.  In the case of a boundary component, faces and
+     vertices will be listed using their individual identification
+     numbers as found in the first column of the face and vertex tables
+     described above.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-vertextype">
+    <title>Vertex Properties</title>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm>Bdry</glossterm>
+       <glossdef><para>
+        Indicates a standard boundary vertex; the vertex link is a disc.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Cusp (torus)</glossterm>
+       <glossdef><para>
+        Indicates a torus cusp.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Cusp (klein bottle)</glossterm>
+       <glossdef><para>
+        Indicates a Klein bottle cusp.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Cusp (<replaceable>surface</replaceable>)</glossterm>
+       <glossdef><para>
+        Indicates a non-standard cusp; <replaceable>surface</replaceable>
+        will describe the orientability and genus of the cusp surface.
+        An example is <literal>Cusp (orbl, genus 3)</literal>.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Non-std bdry</glossterm>
+       <glossdef><para>
+        Indicates a non-standard boundary vertex; the vertex link has
+        boundary but is not a disc.
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+   <sect3 id="tri-edgetype">
+    <title>Edge Properties</title>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm>Bdry</glossterm>
+       <glossdef><para>
+        Indicates a boundary edge.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>INVALID</glossterm>
+       <glossdef><para>
+        Indicates an edge glued to itself in reverse; the midpoint of
+        this edge is a projective plane cusp.
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+   <sect3 id="tri-facetype">
+    <title>Face Properties</title>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm>Bdry</glossterm>
+       <glossdef><para>
+        Indicates a boundary face.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Triangle</glossterm>
+       <glossdef><para>
+        No vertices or edges of the face are identified.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Scarf</glossterm>
+       <glossdef><para>
+        Two vertices of the face are identified; all edges are distinct.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Parachute</glossterm>
+       <glossdef><para>
+        All three vertices of the face are identified; all edges are
+        distinct.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Mobius band</glossterm>
+       <glossdef><para>
+        Two edges of the face are identified to form a Mobius band
+        (causing all three vertices to be identified); the third edge
+        remains distinct.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Cone</glossterm>
+       <glossdef><para>
+        Two edges of the face are identified to form a cone (causing
+        two vertices to be identified); the third edge and third vertex
+        remain distinct.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Horn</glossterm>
+       <glossdef><para>
+        Two edges of the face are identified to form a cone and all
+        the third vertex is identified with the others; the third edge
+        remains distinct.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Dunce hat</glossterm>
+       <glossdef><para>
+        All three edges of the face are identified, some with
+        orientable and some with non-orientable gluings.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>L(3,1)</glossterm>
+       <glossdef><para>
+        All three edges of the face are identified using non-orientable
+        gluings; note that this forms a spine for the lens space L(3,1).
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+   <sect3 id="tri-comptype">
+    <title>Component Properties</title>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm>Real</glossterm>
+       <glossdef><para>
+        Indicates that the component contains no ideal vertices (see below).
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Ideal</glossterm>
+       <glossdef><para>
+        Indicates that the component contains an ideal vertex (one whose
+        link is closed but not a 2-sphere).
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Ortbl</glossterm>
+       <glossdef><para>
+        Indicates that the component is orientable.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Non-ortbl</glossterm>
+       <glossdef><para>
+        Indicates that the component is non-orientable.
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+   <sect3 id="tri-bdrycomptype">
+    <title>Boundary Component Properties</title>
+    <para>
+     <glosslist>
+      <glossentry>
+       <glossterm>Real</glossterm>
+       <glossdef><para>
+        Indicates that the boundary component is made from boundary
+        faces of tetrahedra.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Ideal</glossterm>
+       <glossdef><para>
+        Indicates that the boundary component consists only of
+        a single ideal vertex.
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
   </sect2>
 
   <sect2 id="tri-algebra">
@@ -321,8 +583,12 @@
   </sect2>
 
   <sect2 id="tri-composition">
-   <title>Combinatorial Composition</title>
-   <para>TODO: This section still to be written.</para>
+   <title>Combinatorial Composition (INCOMPLETE)</title>
+   <para>
+    <emphasis>An awful lot needs to be written here regarding the
+    combinatorial subcomplexes the program finds within a
+    triangulation.</emphasis>
+   </para>
   </sect2>
 
   <sect2 id="tri-surfaceproperties">
