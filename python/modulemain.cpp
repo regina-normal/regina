@@ -38,6 +38,16 @@ void addUtilities();
 
 using regina::ShareableObject;
 
+namespace {
+    void shareableWriteTextShort(const ShareableObject& obj) {
+        obj.writeTextShort(std::cout);
+    }
+
+    void shareableWriteTextLong(const ShareableObject& obj) {
+        obj.writeTextLong(std::cout);
+    }
+}
+
 BOOST_PYTHON_MODULE(regina) {
     // Core engine routines:
 
@@ -50,6 +60,8 @@ BOOST_PYTHON_MODULE(regina) {
 
     boost::python::class_<ShareableObject, boost::noncopyable>
             ("ShareableObject", boost::python::no_init)
+        .def("writeTextShort", &shareableWriteTextShort)
+        .def("writeTextLong", &shareableWriteTextLong)
         .def("toString", &ShareableObject::toString)
         .def("toStringLong", &ShareableObject::toStringLong)
         .def("__str__", &ShareableObject::toString)
