@@ -74,6 +74,7 @@ void PacketTabbedUI::addTab(PacketViewerTab* viewer, const QString& label) {
     else
         viewer->queuedAction = PacketViewerTab::Refresh;
 
+    viewer->getInterface()->reparent(ui, QPoint(0, 0));
     ui->addTab(viewer->getInterface(), label);
 }
 
@@ -86,6 +87,7 @@ void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
     editorTab = editor;
     viewerTabs.push_back(0);
 
+    editor->getInterface()->reparent(ui, QPoint(0, 0));
     ui->addTab(editor->getInterface(), label);
 }
 
