@@ -2,7 +2,7 @@ Source: regina-normal
 Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
-Build-Depends: debhelper (>> 4.0.0), docbook-utils, doxygen, kdelibs4-dev, libboost-python-dev (>= 1.30.0-3), libgmp3-dev, libpopt-dev, libxml2-dev, zlib1g-dev
+Build-Depends: cppunit, debhelper (>> 4.0.0), docbook-utils, doxygen, kdelibs4-dev, libboost-python-dev (>= 1.30.0-3), libgmp3-dev, libpopt-dev, libxml2-dev, zlib1g-dev
 Build-Conflicts: regina-normal-dev (<< 3.97-0), regina-normal-dev (>= 3.98-0)
 Standards-Version: 3.6.1
 
