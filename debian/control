@@ -20,6 +20,14 @@ Description: Regina, the 3-manifold normal surface theory calculator
  Highlights of Regina include triangulation analysis and simplification,
  census creation and normal surface enumeration.  It offers embedded
  Jython scripting giving full access to the calculation engine.
+ .
+ Note that this package requires a Java virtual machine that has been
+ built using gcc3.  As of June 2003 the unofficial Debian packages for
+ Java 1.4 are still built using gcc2, which causes Regina (and other JNI
+ apps) to crash unexpectedly.  A gcc3 build of Java 1.4 can be downloaded
+ directly from www.blackdown.org; see
+ /usr/share/doc/regina-normal/README.Debian for details of how to use a
+ locally installed Java virtual machine with Regina.
 
 Package: regina-normal-dev
 Architecture: any
