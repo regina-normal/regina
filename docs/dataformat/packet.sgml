@@ -53,7 +53,7 @@ packet ::= (<replaceable>type-specific content</replaceable>,
      </row>
      <row>
       <entry><sgmltag>typeid</sgmltag></entry>
-      <entry><type>CDATA</type> (required)</entry>
+      <entry><type>NUMBER</type> (required)</entry>
      </row>
     </tbody>
    </tgroup>
