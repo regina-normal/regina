@@ -8,3 +8,17 @@ engine documentation.
 Compilation:
     Remove -pedantic from $CXXFLAGS beneath this directory.
 
+NLargeInteger:
+    Investigate automatic conversion from long.
+
+Wrappers:
+    angle
+    census
+    foreign
+    maths
+    packet
+    progress
+    split
+    subcomplex
+    surfaces
+    triangulation
