@@ -1776,7 +1776,6 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
          *
-         * \pre None of \a a1, \a a2 or \a a3 are 0.
          * \pre gcd(\a a1, \a b1) = 1.
          * \pre gcd(\a a2, \a b2) = 1.
          * \pre gcd(\a a3, \a b3) = 1.

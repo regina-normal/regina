@@ -186,9 +186,7 @@ NTriangulationCreator::NTriangulationCreator() {
         "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
         "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
         "of the new augmented triangular solid torus.  The two integers "
-        "in each pair must be relatively prime, and none of "
-        "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> "
-        "or <i>a<sub>3</sub></i> can be zero.  Both "
+        "in each pair must be relatively prime, and both "
         "positive and negative integers are allowed.<p>"
         "Example parameters are <i>(2,1) (3,-2) (5,-4)</i>.</qt>");
     QWhatsThis::add(new QLabel(i18n("Parameters (a1,b1) (a2,b2) (a3,b3):"),
@@ -424,9 +422,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
                 "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
                 "must be supplied.  The two integers "
-                "in each pair must be relatively prime, and none of "
-                "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> "
-                "or <i>a<sub>3</sub></i> can be zero.  Both "
+                "in each pair must be relatively prime, and both "
                 "positive and negative integers are allowed.<p>"
                 "Example parameters are <i>(2,1) (3,-2) (5,-4)</i>.</qt>"));
             return 0;
@@ -438,13 +434,6 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         long b2 = reSFS3Params.cap(4).toLong();
         long a3 = reSFS3Params.cap(5).toLong();
         long b3 = reSFS3Params.cap(6).toLong();
-
-        if (a1 == 0 || a2 == 0 || a3 == 0) {
-            KMessageBox::error(parentWidget, i18n("<qt>None of the parameters "
-                "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i> or "
-                "<i>a<sub>3</sub></i> may be zero.</qt>"));
-            return 0;
-        }
 
         // For gcd calculations, use gcdWithCoeffs() which can cope with
         // negatives.
