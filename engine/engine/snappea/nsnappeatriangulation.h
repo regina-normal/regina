@@ -70,6 +70,8 @@ class NTriangulation;
  *
  * See http://www.geometrygames.org/SnapPea/ for further information on
  * SnapPea.
+ *
+ * \testpart
  */
 class NSnapPeaTriangulation : public ShareableObject {
     public:
