@@ -227,6 +227,7 @@ inline NSurfaceFilterProperties::NSurfaceFilterProperties() :
 }
 inline NSurfaceFilterProperties::NSurfaceFilterProperties(
         const NSurfaceFilterProperties& cloneMe) :
+        NSurfaceFilter(),
         eulerCharacteristic(cloneMe.eulerCharacteristic),
         orientability(cloneMe.orientability),
         compactness(cloneMe.compactness),

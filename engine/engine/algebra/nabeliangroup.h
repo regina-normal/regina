@@ -315,7 +315,8 @@ class NAbelianGroup : public ShareableObject {
 inline NAbelianGroup::NAbelianGroup() : rank(0) {
 }
 
-inline NAbelianGroup::NAbelianGroup(const NAbelianGroup& g) : rank(g.rank),
+inline NAbelianGroup::NAbelianGroup(const NAbelianGroup& g) :
+        ShareableObject(), rank(g.rank),
         invariantFactors(g.invariantFactors) {
 }
 

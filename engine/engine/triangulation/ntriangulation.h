@@ -1675,7 +1675,8 @@ inline NTriangulation::NTriangulation() {
     NTriangulation::initialiseAllProperties();
 }
 
-inline NTriangulation::NTriangulation(const NTriangulation& cloneMe) {
+inline NTriangulation::NTriangulation(const NTriangulation& cloneMe) :
+        NPacket(), NPropertyHolder() {
     NTriangulation::initialiseAllProperties();
     cloneFrom(cloneMe);
 }

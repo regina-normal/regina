@@ -292,7 +292,8 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
 
 inline NSurfaceFilter::NSurfaceFilter() {
 }
-inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter& cloneMe) {
+inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter& cloneMe) :
+        NPacket(), NPropertyHolder() {
 }
 inline NSurfaceFilter::~NSurfaceFilter() {
 }

@@ -90,7 +90,7 @@ class NVectorDense : public NVector<T> {
          *
          * @param cloneMe the vector to clone.
          */
-        NVectorDense(const NVector<T>& cloneMe) :
+        NVectorDense(const NVector<T>& cloneMe) : NVector<T>(),
                 vectorSize(cloneMe.size()) {
             elements = new T[vectorSize];
             for (unsigned i=0; i<vectorSize; i++)
@@ -101,7 +101,7 @@ class NVectorDense : public NVector<T> {
          *
          * @param cloneMe the vector to clone.
          */
-        NVectorDense(const NVectorDense<T>& cloneMe) :
+        NVectorDense(const NVectorDense<T>& cloneMe) : NVector<T>(),
                 vectorSize(cloneMe.size()) {
             elements = new T[vectorSize];
             for (unsigned i=0; i<vectorSize; i++)

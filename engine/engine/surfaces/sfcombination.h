@@ -114,7 +114,8 @@ class NSurfaceFilterCombination : public NSurfaceFilter {
 inline NSurfaceFilterCombination::NSurfaceFilterCombination() : usesAnd(true) {
 }
 inline NSurfaceFilterCombination::NSurfaceFilterCombination(
-        const NSurfaceFilterCombination& cloneMe) : usesAnd(cloneMe.usesAnd) {
+        const NSurfaceFilterCombination& cloneMe) : NSurfaceFilter(),
+        usesAnd(cloneMe.usesAnd) {
 }
 
 inline bool NSurfaceFilterCombination::getUsesAnd() const {
