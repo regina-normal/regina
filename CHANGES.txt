@@ -7,6 +7,10 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Version 4.1.1  [ 23 April, 2004 ]
+    USER INTERFACE:
+        - Fix compile error when building against Python 2.3.
+
 Version 4.1  [ 7 March, 2004 ]
     OVERALL:
         - Further enhancements to the reference manual, including more
