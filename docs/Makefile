@@ -27,15 +27,15 @@ output_rtf = *.rtf
 
 html : $(sample_html)
 $(sample_html) : $(sgml_sources)
-	jade -t sgml -i html -d $(sgml_dsl)\#html $(sgml_index)
+	$(JADE) -t sgml -i html -d $(sgml_dsl)\#html $(sgml_index)
 
 man : $(sample_man)
 $(sample_man) : $(sgml_sources)
-	docbook2man $(sgml_index)
+	$(DOCBOOK2MAN) $(sgml_index)
 
 rtf : $(sample_rtf)
 $(sample_rtf) : $(sgml_sources)
-	jade -t rtf -d $(sgml_dsl)\#print $(sgml_index)
+	$(JADE) -t rtf -d $(sgml_dsl)\#print $(sgml_index)
 
 engine :
 	cd $(ENGINE_DIR) && $(MAKE) docs
