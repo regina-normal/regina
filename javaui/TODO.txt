@@ -40,4 +40,4 @@ Normal Surfaces:
 	Allow modification of SurfaceViewer.maxAutoCalcTetrahedra.
 
 Scripts:
-	Expand file args using cygpath.
+	Expand file args using cygpath (and alter docs accordingly).

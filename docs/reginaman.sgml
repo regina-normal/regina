@@ -297,7 +297,9 @@
      </para></listitem>
      <listitem><para>
       The global configuration file:
-      <filename>/etc/regina/regina.conf</filename>
+      <filename>/etc/regina/regina.conf</filename> (or
+      <filename><replaceable>REGINA_HOME</replaceable>/regina.conf</filename>
+      if directory <filename>/etc/regina</filename> does not exist)
      </para></listitem>
      <listitem><para>
       Environment variables.  For instance, you might have environment
@@ -390,13 +392,18 @@
     </varlistentry>
     <varlistentry>
      <term><parameter>REGINA_OPTIONS_GLOBAL</parameter>
-      (default = <filename>/etc/regina</filename>)</term>
+      (default = <filename>/etc/regina</filename>, but see below)</term>
      <listitem>
       <para>
        The directory containing the global configuration file.
       </para>
       <para>
        Clearly this option cannot be set in the configuration files!
+      </para>
+      <para>
+       This defaults to <filename>/etc/regina</filename>, or
+       <filename><replaceable>REGINA_HOME</replaceable></filename> if
+       directory <filename>/etc/regina</filename> does not exist.
       </para>
       <para>
        On some systems this defaults to

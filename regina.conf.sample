@@ -1,0 +1,8 @@
+# Regina global configuration file
+#
+# See regina.conf in the reference manual for options that can be set in
+# this file.
+#
+# This file should be called regina.conf and placed in directory /etc/regina.
+# If /etc/regina does not exist, it may be placed in REGINA_HOME (this
+# directory) instead.

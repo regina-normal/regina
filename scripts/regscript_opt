@@ -19,7 +19,11 @@ runtime_options=regina.conf
 # --- Global options directory ---
 
 # Use default if nothing is specified.
-default_options_global=/etc/regina
+if [ -d /etc/regina ]; then
+	default_options_global=/etc/regina
+else
+	default_options_global="$REGINA_HOME"
+fi
 if [ -z "$REGINA_OPTIONS_GLOBAL" ]; then
 	export REGINA_OPTIONS_GLOBAL="$default_options_global"
 fi
