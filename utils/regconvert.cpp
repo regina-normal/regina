@@ -31,28 +31,102 @@
 #include "packet/npacket.h"
 #include <cstdlib>
 
-void usage(const char* progName) {
+void usage(const char* progName, const std::string& error = std::string()) {
+    if (! error.empty())
+        std::cerr << error << "\n\n";
+
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName
-        << " <old-binary-file> [ <new-XML-file> ]\n";
-    std::cerr << "\nThe same filename may be given for both arguments.\n";
+    std::cerr << "    " << progName << " [ -x | -u | -b ]"
+        << " <old-file> [ <new-file> ]\n";
+    std::cerr << std::endl;
+    std::cerr << "    -x : Convert to compressed XML (default)\n";
+    std::cerr << "    -u : Convert to uncompressed XML\n";
+    std::cerr << "    -b : Convert to old-style binary format\n";
+    std::cerr << std::endl;
+    std::cerr << "    <new-file> may be the same as <old-file>.\n";
+    std::cerr << "    <new-file> defaults to standard output (implies -u).\n";
     exit(1);
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 2 || argc > 3)
-        usage(argv[0]);
+    std::string oldFile, newFile;
+    char typeOpt = 0;
 
-    regina::NPacket* tree = regina::readFromFile(argv[1]);
+    // Parse command line.
+    char optChar;
+    for (int i = 1; i < argc; i++) {
+        if (*argv[i] == '-') {
+            // Option.
+            if (! argv[i][1])
+                usage(argv[0], std::string("Invalid option: ") + argv[i]);
+            else if (argv[i][2])
+                usage(argv[0], std::string("Invalid option: ") + argv[i]);
+
+            // Argument has length 2.
+            optChar = argv[i][1];
+            if (optChar == 'x' || optChar == 'u' || optChar == 'b') {
+                if (typeOpt)
+                    usage(argv[0],
+                        "More than one file type has been specified.");
+                else
+                    typeOpt = optChar;
+            } else
+                usage(argv[0], std::string("Invalid option: ") + argv[i]);
+        } else if (*argv[i]) {
+            // Filename.
+            if (oldFile.empty())
+                oldFile = argv[i];
+            else if (newFile.empty())
+                newFile = argv[i];
+            else
+                usage(argv[0], "More than two files have been specified.");
+        } else
+            usage(argv[0], "Empty arguments are not allowed.");
+    }
+
+    if (oldFile.empty())
+        usage(argv[0], "No files have been specified.");
+
+    // Add default options.
+    if (! typeOpt)
+        typeOpt = (newFile.empty() ? 'u' : 'x');
+
+    // Check we're allowed to use stdout if we've asked for it.
+    if (newFile.empty() && typeOpt != 'u')
+        usage(argv[0],
+            "Only uncompressed XML can be written to standard output.");
+
+    // Read the old file.
+    regina::NPacket* tree = regina::readFileMagic(oldFile);
     if (! tree) {
-        std::cerr << "Binary file " << argv[1] << " could not be read.\n";
+        std::cerr << "File " << oldFile << " could not be read.\n";
         return 1;
     }
 
-    if (argc == 2)
-        tree->writeXMLFile(std::cout);
-    else if (! regina::writeXMLFile(argv[2], tree, true)) {
-        std::cerr << "XML file " << argv[2] << " could not be written.\n";
+    // Write the new file.
+    bool result;
+    if (newFile.empty()) {
+        // Standard output
+        if (typeOpt == 'u') {
+            tree->writeXMLFile(std::cout);
+            result = true;
+        } else
+            result = false;
+        newFile = "<stdout>"; // (for error messages)
+    } else {
+        // Real output file.
+        if (typeOpt == 'b') {
+            // Binary file
+            result = regina::writeToFile(newFile.c_str(), tree);
+        } else {
+            // Compressed / uncompressed XML
+            result = regina::writeXMLFile(newFile.c_str(), tree,
+                typeOpt == 'x');
+        }
+    }
+
+    if (! result) {
+        std::cerr << "File " << newFile << " could not be written.\n";
         delete tree;
         return 1;
     }

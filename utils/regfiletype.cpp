@@ -31,20 +31,29 @@
 
 void usage(const char* progName) {
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " <file>\n";
+    std::cerr << "    " << progName << " <file> ...\n";
     exit(1);
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 2)
+    if (argc < 2)
         usage(argv[0]);
 
-    regina::NFileInfo* info = regina::NFileInfo::identify(argv[1]);
+    regina::NFileInfo* info;
+    for (int i = 1; i < argc; i++) {
+        if (argc != 2)
+            std::cout << "[ " << argv[i] << " ]\n";
 
-    if (info)
-        info->writeTextLong(std::cout);
-    else
-        std::cout << "Unknown file format or file could not be opened.\n";
+        info = regina::NFileInfo::identify(argv[i]);
+        if (info)
+            info->writeTextLong(std::cout);
+        else
+            std::cout << "Unknown file format or file could not be opened.\n";
+        delete info;
+
+        if (argc != 2)
+            std::cout << std::endl;
+    }
 
     return 0;
 }
