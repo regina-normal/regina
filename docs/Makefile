@@ -9,7 +9,7 @@ ENGINE_DIR = ../engine
 
 # --------------------------- Sources -------------------------------------
 
-sgml_sources = $(wildcard *.sgml)
+sgml_sources = $(wildcard *.sgml) $(wildcard *.session)
 sgml_index = regina.sgml
 sgml_dsl = regina.dsl
 
