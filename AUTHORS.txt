@@ -1,1 +1,3 @@
-See the AUTHORS.txt in each immediate subdirectory for details.
+Ben Burton <benb@acm.org>, with help from others.
+
+See the reference manual for full acknowledgements.

@@ -1,4 +1,0 @@
-Ben Burton <benb@acm.org>
-
-Additional code contributed by:
-    David Letscher <letscher@math.okstate.edu>
