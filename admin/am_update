@@ -15,8 +15,10 @@
 # the corresponding directories.
 #
 # Running without any arguments will perform this update in the usual
-# directories (note that this does not include kdeui, which does not
-# interact well with this script).
+# directories (excluding kdeui).
+#
+# WARNING: This script should never be used within the kdeui/ directory
+# since it interferes with the KDE magic.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
