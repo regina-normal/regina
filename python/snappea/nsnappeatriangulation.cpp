@@ -39,18 +39,44 @@ namespace {
         &NSnapPeaTriangulation::volume;
     double (NSnapPeaTriangulation::*volume_precision)(int&) const =
         &NSnapPeaTriangulation::volume;
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_enableKernelMessages,
+        NSnapPeaTriangulation::enableKernelMessages, 0, 1);
 }
 
 void addNSnapPeaTriangulation() {
-    class_<NSnapPeaTriangulation, bases<regina::ShareableObject>,
+    scope s = class_<NSnapPeaTriangulation, bases<regina::ShareableObject>,
             std::auto_ptr<NSnapPeaTriangulation>, boost::noncopyable>
             ("NSnapPeaTriangulation", init<const NSnapPeaTriangulation&>())
         .def(init<const NTriangulation&>())
         .def("isNull", &NSnapPeaTriangulation::isNull)
-        .def("dump", &NSnapPeaTriangulation::dump)
-        .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
+        .def("solutionType", &NSnapPeaTriangulation::solutionType)
         .def("volume", volume_void)
         .def("volume", volume_precision)
+        .def("dump", &NSnapPeaTriangulation::dump)
+        .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
+        .def("kernelMessagesEnabled",
+            &NSnapPeaTriangulation::kernelMessagesEnabled)
+        .def("enableKernelMessages",
+            &NSnapPeaTriangulation::enableKernelMessages,
+            OL_enableKernelMessages())
+        .def("disableKernelMessages",
+            &NSnapPeaTriangulation::disableKernelMessages)
+        .staticmethod("kernelMessagesEnabled")
+        .staticmethod("enableKernelMessages")
+        .staticmethod("disableKernelMessages")
+    ;
+
+    enum_<NSnapPeaTriangulation::SolutionType>("SolutionType")
+        .value("not_attempted", NSnapPeaTriangulation::not_attempted)
+        .value("geometric_solution", NSnapPeaTriangulation::geometric_solution)
+        .value("nongeometric_solution",
+            NSnapPeaTriangulation::nongeometric_solution)
+        .value("flat_solution", NSnapPeaTriangulation::flat_solution)
+        .value("degenerate_solution",
+            NSnapPeaTriangulation::degenerate_solution)
+        .value("other_solution", NSnapPeaTriangulation::other_solution)
+        .value("no_solution", NSnapPeaTriangulation::no_solution)
     ;
 }
 
