@@ -32,6 +32,7 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.JTextComponent;
 import normal.engine.Engine;
 import normal.engine.packet.NPacket;
 import btools.gui.dialog.MessageBox;
@@ -232,6 +233,10 @@ public class PacketInfoTabbedPane extends JTabbedPane
     public Component getInterface() {
         return this;
     }
+
+	public JTextComponent getPrimaryTextComponent() {
+		return null;
+	}
 
     public void reflectPacket() {
         update(false, null);
