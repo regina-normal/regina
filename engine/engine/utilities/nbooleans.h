@@ -50,9 +50,9 @@ class NBoolSet {
             /**< The first two bits of this character represent whether
              *   or not \c true or \c false belongs to this set. */
 
-        static const char eltTrue = 1;
+        static const char eltTrue;
             /**< A character with only the \c true member bit set. */
-        static const char eltFalse = 2;
+        static const char eltFalse;
             /**< A character with only the \c false member bit set. */
 
     public:

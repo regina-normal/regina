@@ -34,6 +34,12 @@
 
 #define __FLAVOUR_REGISTRY_BODY
 
+const int NNormalSurfaceList::STANDARD = 0;
+const int NNormalSurfaceList::AN_STANDARD = 100;
+const int NNormalSurfaceList::QUAD = 1;
+const int NNormalSurfaceList::EDGE_WEIGHT = 200;
+const int NNormalSurfaceList::FACE_ARCS = 201;
+
 #define REGISTER_FLAVOUR(id_name, class, n, a, t) \
     case NNormalSurfaceList::id_name: \
         return class::makeMatchingEquations(triangulation);

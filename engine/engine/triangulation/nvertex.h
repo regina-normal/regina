@@ -115,18 +115,18 @@ class NVertexEmbedding {
  */
 class NVertex : public ShareableObject {
     public:
-        static const int SPHERE = 1;
+        static const int SPHERE;
             /**< Specifies a vertex link that is a sphere. */
-        static const int DISC = 2;
+        static const int DISC;
             /**< Specifies a vertex link that is a disc. */
-        static const int TORUS = 3;
+        static const int TORUS;
             /**< Specifies a vertex link that is a torus. */
-        static const int KLEIN_BOTTLE = 4;
+        static const int KLEIN_BOTTLE;
             /**< Specifies a vertex link that is a Klein bottle. */
-        static const int NON_STANDARD_CUSP = 5;
+        static const int NON_STANDARD_CUSP;
             /**< Specifies a vertex link that is closed and is not a
                  sphere, torus or Klein bottle. */
-        static const int NON_STANDARD_BDRY = 6;
+        static const int NON_STANDARD_BDRY;
             /**< Specifies a vertex link that has boundary and is not a
                  disc. */
     private:

@@ -108,24 +108,24 @@ class NFaceEmbedding {
  */
 class NFace : public ShareableObject {
     public:
-        static const int TRIANGLE = 1;
+        static const int TRIANGLE;
             /**< Specifies a face with no identified vertices or edges. */
-        static const int SCARF = 2;
+        static const int SCARF;
             /**< Specifies a face with two identified vertices. */
-        static const int PARACHUTE = 3;
+        static const int PARACHUTE;
             /**< Specifies a face with three identified vertices. */
-        static const int CONE = 4;
+        static const int CONE;
             /**< Specifies a face with two edges identified to form a cone. */
-        static const int MOBIUS = 5;
+        static const int MOBIUS;
             /**< Specifies a face with two edges identified to form a
                  mobius band. */
-        static const int HORN = 6;
+        static const int HORN;
             /**< Specifies a face with two edges identified to form a
                  cone with all three vertices identified. */
-        static const int DUNCEHAT = 7;
+        static const int DUNCEHAT;
             /**< Specifies a face with all three edges identified, some
                  via orientable and some via non-orientable gluings. */
-        static const int L31 = 8;
+        static const int L31;
             /**< Specifies a face with all three edges identified using
                  non-orientable gluings.  Note that this forms a spine for
                  the Lens space L(3,1). */

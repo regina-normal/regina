@@ -66,23 +66,23 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
     public:
         static const int packetType;
         
-        static const int STANDARD = 0;
+        static const int STANDARD;
             /**< Represents standard triangle-quad coordinates for
              *   normal surfaces. */
-        static const int AN_STANDARD = 100;
+        static const int AN_STANDARD;
             /**< Represents standard triangle-quad-oct coordinates
              *   for almost normal surfaces. */
 
-        static const int QUAD = 1;
+        static const int QUAD;
             /**< Represents quad coordinates for normal surfaces.
              *   This flavour is for representation only; surface
              *   vectors and lists of this flavour cannot be created. */
 
-        static const int EDGE_WEIGHT = 200;
+        static const int EDGE_WEIGHT;
             /**< Represents edge weight coordinates for normal surfaces.
              *   This flavour is for representation only; surface
              *   vectors and lists of this flavour cannot be created. */
-        static const int FACE_ARCS = 201;
+        static const int FACE_ARCS;
             /**< Represents face arc coordinates for normal surfaces.
              *   This flavour is for representation only; surface
              *   vectors and lists of this flavour cannot be created. */

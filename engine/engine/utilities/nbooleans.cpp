@@ -30,6 +30,8 @@
 
 #include <iostream>
 
+const char NBoolSet::eltTrue = 1;
+const char NBoolSet::eltFalse = 2;
 const NBoolSet NBoolSet::sNone;
 const NBoolSet NBoolSet::sTrue(true);
 const NBoolSet NBoolSet::sFalse(false);

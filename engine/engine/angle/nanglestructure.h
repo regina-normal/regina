@@ -102,11 +102,11 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
             /**< Stores a variety of angle structure properties as
              *   described by the flag constants in this class.
              *   Flags can be combined using bitwise OR. */
-        static const unsigned long flagStrict = 1;
+        static const unsigned long flagStrict;
             /**< Signals that this angle structure is strict. */
-        static const unsigned long flagTaut = 2;
+        static const unsigned long flagTaut;
             /**< Signals that this angle structure is taut. */
-        static const unsigned long flagCalculatedType = 4;
+        static const unsigned long flagCalculatedType;
             /**< Signals that the type (strict/taut) has been calculated. */
 
     public:

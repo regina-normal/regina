@@ -28,6 +28,13 @@
 
 #include "triangulation/nvertex.h"
 
+const int NVertex::SPHERE = 1;
+const int NVertex::DISC = 2;
+const int NVertex::TORUS = 3;
+const int NVertex::KLEIN_BOTTLE = 4;
+const int NVertex::NON_STANDARD_CUSP = 5;
+const int NVertex::NON_STANDARD_BDRY = 6;
+
 void NVertex::writeTextShort(std::ostream& out) const {
     switch(link) {
         case SPHERE: out << "Internal "; break;

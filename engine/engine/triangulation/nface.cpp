@@ -29,6 +29,15 @@
 #include "triangulation/nedge.h"
 #include "triangulation/nface.h"
 
+const int NFace::TRIANGLE = 1;
+const int NFace::SCARF = 2;
+const int NFace::PARACHUTE = 3;
+const int NFace::CONE = 4;
+const int NFace::MOBIUS = 5;
+const int NFace::HORN = 6;
+const int NFace::DUNCEHAT = 7;
+const int NFace::L31 = 8;
+
 int NFace::getType() {
     if (type)
         return type;
