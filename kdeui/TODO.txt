@@ -33,6 +33,8 @@ Packets (General):
     Find out how to centre column headers in list views
     When creating new packets, display a polite error if no parents are
         available (this goes for imports also)
+    Make the tree/dock splitter remember its place when packet panes are
+        changed
 
 Python:
     Implement embedded python scripting
