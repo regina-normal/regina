@@ -53,7 +53,7 @@ class NBoolSet;
  * The deallocation of the new C string is the responsibility of
  * the caller of this routine.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param str the C++ string to duplicate.
  * @return the new duplicate C string.
@@ -68,6 +68,8 @@ char* duplicate(const std::string& str);
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
+ *
+ * \ifacespython Not present.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting integer.
@@ -84,6 +86,8 @@ bool valueOf(const std::string& str, int& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
+ * \ifacespython Not present.
+ *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting unsigned integer.
  * @return \c true if the conversion was completely successful or \c false
@@ -99,6 +103,8 @@ bool valueOf(const std::string& str, unsigned& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
+ * \ifacespython Not present.
+ *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting long integer.
  * @return \c true if the conversion was completely successful or \c false
@@ -113,6 +119,8 @@ bool valueOf(const std::string& str, long& dest);
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
+ *
+ * \ifacespython Not present.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting unsigned long
@@ -130,6 +138,8 @@ bool valueOf(const std::string& str, unsigned long& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
+ * \ifacespython Not present.
+ *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting arbitrary
  * precision integer.
@@ -146,6 +156,8 @@ bool valueOf(const std::string& str, NLargeInteger& dest);
  * \c true or \c false respectively.  Otherwise the conversion will be
  * unsuccessful and argument \a dest will be set to \c false.
  *
+ * \ifacespython Not present.
+ *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting boolean.
  * @return \c true if the conversion was completely successful or \c false
@@ -161,6 +173,8 @@ bool valueOf(const std::string& str, bool& dest);
  * conversion is unsuccessful, argument \a dest will be set to
  * NBoolSet::sNone and \c false will be returned.
  *
+ * \ifacespython Not present.
+ *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting set of booleans.
  * @return \c true if the conversion was successful or \c false otherwise.
@@ -171,6 +185,8 @@ bool valueOf(const std::string& str, NBoolSet& dest);
  * Decomposes the given string into tokens.
  * This is an extremely simple tokeniser; tokens are defined to be
  * separated by whitespace.
+ *
+ * \ifacespython Not present.
  *
  * @param results the output iterator to which the resulting tokens will
  * be written; this must accept objects of type <tt>const std::string&</tt>.

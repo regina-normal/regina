@@ -71,7 +71,7 @@ namespace regina {
  * hash value.  Two pointers pointing to identical data in two different
  * memory locations might very well return two different hash values.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 struct HashPointer {
     /**
@@ -91,7 +91,7 @@ struct HashPointer {
  * A hash function used to calculate hash values for C++ strings.
  * This class is for use with the Standard Template Library.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 struct HashString {
     private:

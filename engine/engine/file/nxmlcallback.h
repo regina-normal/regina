@@ -52,7 +52,7 @@ namespace regina {
  * See the NXMLElementReader class notes for details of precisely how
  * processing will take place.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLCallback : public regina::xml::XMLParserCallback {
     public:

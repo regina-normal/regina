@@ -114,7 +114,7 @@ namespace regina {
  *
  * \testfull
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class Data, class HashFcn = stdhash::hash<Data>,
     class EqualTo = std::equal_to<Data> >

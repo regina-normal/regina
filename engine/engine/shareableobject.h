@@ -49,9 +49,7 @@ namespace regina {
 /**
  * Facilitates mirroring objects in the underlying C++ calculation
  * engine using the various wrapper classes provided in the various
- * external interfaces (such as the Java interface).
- * Any object that is to be so mirrored should be derived
- * from this class.
+ * external interfaces (such as the Python interface).
  *
  * In the underlying C++ engine, a ShareableObject is an object that can
  * be shared with the outside world.  In the external
@@ -67,7 +65,7 @@ class ShareableObject {
         /**
          * Default constructor that does nothing.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          */
         ShareableObject();
         /**
@@ -76,69 +74,11 @@ class ShareableObject {
         virtual ~ShareableObject();
 
         /**
-         * Determines if this and the given wrapper both refer to the
-         * same underlying C++ engine object.
-         * If both wrappers refer to nothing, this function will return
-         * \c true.
-         *
-         * \ifacescpp Not present.
-         * \ifacesjava The function <tt>Object.equals()</tt> is also
-         * overridden to call this function after first verifying that
-         * the other object is also a shareable object.
-         *
-         * @param other the wrapper to compare with this one.  This may be
-         * a null object if such a thing exists in the interface
-         * language (for instance, in Java this may be <tt>null</tt>);
-         * if a null object is passed, this routine will simply return
-         * \c false.
-         * @return \c true if and only if both this and the other
-         * wrapper refer to the same underlying engine object.
-         */
-        #ifdef __DOXYGEN
-        bool sameObject(const ShareableObject& other) const;
-        #endif
-        /**
-         * Destroys (deallocates) the underlying C++ engine object that
-         * this wrapper refers to.  This wrapper will become invalid.
-         *
-         * \pre This wrapper in fact refers to an object
-         * in the underlying C++ engine.
-         *
-         * \ifacescpp Not present.
-         */
-        #ifdef __DOXYGEN
-        void destroy();
-        #endif
-        /**
-         * Returns a new wrapper for this object using the given wrapper
-         * class.
-         * The new wrapper will wrap the same object as this wrapper,
-         * but will be of the given subclass or superclass
-         * of this wrapper's class.
-         *
-         * \pre The underlying C++ engine object that is being wrapped is
-         * actually of the engine class corresponding to the given
-         * wrapper class \a cls.
-         *
-         * \ifacescpp Not present.
-         * \ifacesjava Parameter \a cls should be of type
-         * <tt>java.lang.Class</tt>.
-         *
-         * @param cls the wrapper class that the new wrapper shall be an
-         * instance of; this must be an instantiatable subclass or superclass
-         * of whichever class this wrapper is an instance of.
-         * @return the new wrapper.
-         */
-        #ifdef __DOXYGEN
-        ShareableObject castAs(Class cls);
-        #endif
-
-        /**
          * Writes this object in short text format to the given output stream.
          * The output should fit on a single line and no newline should
          * be written.
          *
-         * \ifaces The parameter \a out does not exist;
+         * \ifacespython The parameter \a out does not exist;
          * standard output will be used.
          *
          * @param out the output stream to which to write.
@@ -153,7 +93,7 @@ class ShareableObject {
          * The default implementation of this routine merely calls
          * writeTextShort() and adds a newline.
          *
-         * \ifaces The parameter \a out does not exist;
+         * \ifacespython The parameter \a out does not exist;
          * standard output will be used.
          *
          * @param out the output stream to which to write.
@@ -162,7 +102,7 @@ class ShareableObject {
         /**
          * Returns the output from writeTextShort() as a string.
          *
-         * \ifacesjava This overrides <tt>Object.toString()</tt>.
+         * \ifacespython This implements the <tt>__str__()</tt> function.
          *
          * @return a short text representation of this object.
          */

@@ -53,7 +53,7 @@ namespace regina {
  * The standard \e zlib compression library is used for
  * compression and decompression.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class ZBuffer : public std::streambuf {
     public:
@@ -184,7 +184,7 @@ class ZBuffer : public std::streambuf {
  *
  * This stream buffer should \e not be used for input.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class CompressionBuffer : public ZBuffer {
     public:
@@ -219,7 +219,7 @@ class CompressionBuffer : public ZBuffer {
  *
  * This stream buffer should \e not be used for output.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class DecompressionBuffer : public ZBuffer {
     public:
@@ -252,7 +252,7 @@ class DecompressionBuffer : public ZBuffer {
  *
  * This stream does its work through a CompressionBuffer.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class CompressionStream : public std::ostream {
     private:
@@ -296,7 +296,7 @@ class CompressionStream : public std::ostream {
  *
  * This stream does its work through a DecompressionBuffer.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class DecompressionStream : public std::istream {
     private:

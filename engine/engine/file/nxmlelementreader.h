@@ -75,7 +75,7 @@ namespace regina {
  * new regina::xml::XMLParser with an NXMLCallback as its corresponding
  * callback object.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLElementReader {
     public:
@@ -177,6 +177,8 @@ class NXMLElementReader {
  * A reader for an XML element that contains only characters.
  * Any XML subelements will be ignored (as will any characters occurring
  * after any subelements).
+ *
+ * \ifacespython Not present.
  */
 class NXMLCharsReader : public NXMLElementReader {
     private:

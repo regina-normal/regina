@@ -61,7 +61,7 @@ namespace regina {
  * Alternatively, a standalone NMutex object can be passed about between
  * routines.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NMutex {
     private:
@@ -119,7 +119,7 @@ typedef pthread_t NThreadID;
  * required of each new thread.  Then start() may be called whenever a
  * new thread is required.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NThread {
     public:

@@ -51,7 +51,7 @@ namespace regina {
  * template argument is <tt>T</tt>, this generator will return a
  * \e pointer to a newly created object of type <tt>T</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 struct FuncNew {
@@ -78,7 +78,7 @@ struct FuncNew {
  * copy constructor to return a pointer to a newly created object of
  * type <tt>T</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 struct FuncNewCopyPtr {
@@ -109,7 +109,7 @@ struct FuncNewCopyPtr {
  * copy constructor to return a pointer to a newly created object of
  * type <tt>T</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 struct FuncNewCopyRef {
@@ -145,7 +145,7 @@ struct FuncNewCopyRef {
  * declared return type may be different, but the result \e must
  * be castable to <tt>T*</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 struct FuncNewClonePtr {
@@ -173,7 +173,7 @@ struct FuncNewClonePtr {
  * template argument is <tt>T</tt>, this unary function will accept (and
  * call \c delete upon) \e pointers to <tt>T</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 template <class T>
 struct FuncDelete {

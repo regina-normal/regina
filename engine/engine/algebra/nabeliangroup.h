@@ -148,6 +148,8 @@ class NAbelianGroup : public ShareableObject {
          *
          * \pre Each integer in the given list is strictly greater than 1.
          *
+         * \ifacespython This routine takes a python list as its argument.
+         *
          * @param torsion a list containing the torsion elements to add,
          * as described above.
          */
@@ -240,7 +242,7 @@ class NAbelianGroup : public ShareableObject {
         /**
          * Writes a chunk of XML containing this abelian group.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -253,7 +255,7 @@ class NAbelianGroup : public ShareableObject {
          *
          * \pre The given file is currently opened for writing.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the file to which to write.
          */
@@ -268,7 +270,7 @@ class NAbelianGroup : public ShareableObject {
          *
          * \pre The given file is currently opened for reading.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param in the file from which to read.
          * @return a newly allocated group read from the given file, or

@@ -150,8 +150,6 @@ class NBoolSet {
         /**
          * Determines if this set is equal to the given set.
          *
-         * \ifaces This routine is called \a sameSet.
-         *
          * @param other the set to compare with this.
          * @return \c true if and only if this and the given set are
          * equal.
@@ -159,8 +157,6 @@ class NBoolSet {
         bool operator == (const NBoolSet& other) const;
         /**
          * Determines if this set is not equal to the given set.
-         *
-         * \ifaces This routine is called \a notSameSet.
          *
          * @param other the set to compare with this.
          * @return \c true if and only if this and the given set are
@@ -170,8 +166,6 @@ class NBoolSet {
         /**
          * Determines if this set is a proper subset of the given set.
          *
-         * \ifaces This routine is called \a properSubsetOf.
-         *
          * @param other the set to compare with this.
          * @return \c true if and only if this is a proper subset of the
          * given set.
@@ -179,8 +173,6 @@ class NBoolSet {
         bool operator < (const NBoolSet& other) const;
         /**
          * Determines if this set is a proper superset of the given set.
-         *
-         * \ifaces This routine is called \a properSupersetOf.
          *
          * @param other the set to compare with this.
          * @return \c true if and only if this is a proper superset of the
@@ -191,8 +183,6 @@ class NBoolSet {
          * Determines if this set is a subset of (possibly equal to)
          * the given set.
          *
-         * \ifaces This routine is called \a subsetOf.
-         *
          * @param other the set to compare with this.
          * @return \c true if and only if this is a subset of the
          * given set.
@@ -201,8 +191,6 @@ class NBoolSet {
         /**
          * Determines if this set is a superset of (possibly equal to)
          * the given set.
-         *
-         * \ifaces This routine is called \a supersetOf.
          *
          * @param other the set to compare with this.
          * @return \c true if and only if this is a superset of the
@@ -213,8 +201,6 @@ class NBoolSet {
         /**
          * Sets this set to be identical to the given set.
          *
-         * \ifaces This routine is called \a setTo.
-         *
          * @param cloneMe the set whose value this set will take.
          * @return a reference to this set.
          */
@@ -222,8 +208,6 @@ class NBoolSet {
         /**
          * Sets this set to the single member set containing the given
          * element.
-         *
-         * \ifaces This routine is called \a setTo.
          *
          * @param member the single element to include in this set.
          * @return a reference to this set.
@@ -235,8 +219,6 @@ class NBoolSet {
          * belong to either of the original sets.
          * Note that this set will be modified.
          *
-         * \ifaces Not present.
-         *
          * @param other the set to union with this set.
          * @return a reference to this set.
          */
@@ -246,8 +228,6 @@ class NBoolSet {
          * The result is a set containing precisely the elements that
          * belong to both original sets.
          * Note that this set will be modified.
-         *
-         * \ifaces Not present.
          *
          * @param other the set to intersect with this set.
          * @return a reference to this set.
@@ -259,8 +239,6 @@ class NBoolSet {
          * The result is a set containing precisely the elements that
          * belong to one but not both of the original sets.
          * Note that this set will be modified.
-         *
-         * \ifaces Not present.
          *
          * @param other the set whose symmetric difference with this set
          * is to be found.
@@ -274,8 +252,6 @@ class NBoolSet {
          * belong to either of the original sets.
          * This set is not changed.
          *
-         * \ifaces This routine is called \a formUnion.
-         *
          * @param other the set to union with this set.
          * @return the union of this and the given set.
          */
@@ -285,8 +261,6 @@ class NBoolSet {
          * The result is a set containing precisely the elements that
          * belong to both original sets.
          * This set is not changed.
-         *
-         * \ifaces This routine is called \a formIntersection.
          *
          * @param other the set to intersect with this set.
          * @return the intersection of this and the given set.
@@ -298,8 +272,6 @@ class NBoolSet {
          * belong to one but not both of the original sets.
          * This set is not changed.
          *
-         * \ifaces This routine is called \a formSymmDiff.
-         *
          * @param other the set whose symmetric difference with this set
          * is to be found.
          * @return the symmetric difference of this and the given set.
@@ -310,8 +282,6 @@ class NBoolSet {
          * The result is a set containing precisely the elements that
          * this set does not contain.
          * This set is not changed.
-         *
-         * \ifaces This routine is called \a formComplement.
          *
          * @return the complement of this set.
          */
@@ -361,8 +331,6 @@ class NBoolSet {
  * The set will be written in the form
  * <tt>{ true, false }</tt>, <tt>{ true }</tt>,
  * <tt>{ false }</tt> or <tt>{ }</tt>.
- *
- * \ifaces Not present.
  *
  * @param out the output stream to which to write.
  * @param set the boolean set to write.

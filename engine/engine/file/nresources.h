@@ -55,14 +55,12 @@ namespace regina {
  * \deprecated The preferred way of representing data is using XML
  * which is accessed using text I/O streams.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NRandomAccessResource {
     public:
         /**
          * Specifies the current state of a resource.
-         *
-         * \ifaces This enumeration is a public member of class NFile.
          */
         enum mode {
             CLOSED = 0,
@@ -153,6 +151,8 @@ class NRandomAccessResource {
  *
  * \deprecated The preferred way of representing data is using XML
  * which is accessed using text I/O streams.
+ *
+ * \ifacespython Not present.
  */
 class NLocalFileResource : public NRandomAccessResource {
     private:

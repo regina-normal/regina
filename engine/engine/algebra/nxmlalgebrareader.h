@@ -51,7 +51,7 @@ namespace regina {
  * An abelian group is generally contained within an
  * <tt>\<abeliangroup\></tt> ... <tt>\</abeliangroup\></tt> pair.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLAbelianGroupReader : public NXMLElementReader {
     private:
@@ -83,7 +83,7 @@ class NXMLAbelianGroupReader : public NXMLElementReader {
  * A group presentation is generally contained within a
  * <tt>\<group\></tt> ... <tt>\</group\></tt> pair.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLGroupPresentationReader : public NXMLElementReader {
     private:

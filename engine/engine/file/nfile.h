@@ -83,6 +83,8 @@ class NPacket;
  * is accessed using text I/O streams.  See routines readXMLFile() and
  * readFileMagic() for corresponding XML all-at-once read routines.
  *
+ * \ifacespython Not present.
+ *
  * @param fileName the pathname of the file to read from.
  * @return the packet tree read from file, or \c null if problems
  * were encountered or the file could not be opened.
@@ -96,6 +98,8 @@ NPacket* readFromFile(const char* fileName);
  * \deprecated The preferred way of representing data is using XML which
  * is accessed using text I/O streams.  See routine writeXMLFile() for a
  * corresponding XML all-at-once write routine.
+ *
+ * \ifacespython Not present.
  *
  * @param fileName the pathname of the file to write to.
  * @param packet the packet tree to write to file.
@@ -111,8 +115,7 @@ bool writeToFile(const char* fileName, NPacket* packet);
  * \deprecated The preferred way of representing data is using XML which
  * is accessed using text I/O streams.
  *
- * \ifaces The enumeration NRandomAccessResource::mode is a public
- * member of this class.
+ * \ifacespython Not present.
  */
 class NFile : public ShareableObject {
     protected:
@@ -150,8 +153,6 @@ class NFile : public ShareableObject {
          *
          * \pre This file is currently closed.
          *
-         * \ifaces Not present.
-         *
          * @param newResource the resource to open.
          * @param newOpenMode specifies in which mode the resource is to be
          * opened.  This should be either \c READ or \c WRITE.
@@ -168,9 +169,6 @@ class NFile : public ShareableObject {
          * existing file contents.
          *
          * \pre This file is currently closed.
-         *
-         * \ifaces This method will do nothing and always fail.  Use the
-         * wrapper routines ::readFromFile() and ::writeToFile() instead.
          *
          * @param fileName the pathname of the file to open.
          * @param newOpenMode specifies in which mode the file is to be
@@ -274,8 +272,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for reading.
          *
-         * \ifaces Not present.
-         *
          * @return the integer read.
          */
         int readInt();
@@ -284,8 +280,6 @@ class NFile : public ShareableObject {
          * Reads an unsigned integer from file.
          *
          * \pre The file is currently opened for reading.
-         *
-         * \ifaces Not present.
          *
          * @return the integer read.
          */
@@ -296,8 +290,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for reading.
          *
-         * \ifaces Not present.
-         *
          * @return the long integer read.
          */
         long readLong();
@@ -306,8 +298,6 @@ class NFile : public ShareableObject {
          * Reads an unsigned long integer from file.
          *
          * \pre The file is currently opened for reading.
-         *
-         * \ifaces Not present.
          *
          * @return the long integer read.
          */
@@ -318,8 +308,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for reading.
          *
-         * \ifaces Not present.
-         *
          * @return the arbitrary precision integer read.
          */
         NLargeInteger readLarge();
@@ -328,8 +316,6 @@ class NFile : public ShareableObject {
          * Reads a character from file.
          *
          * \pre The file is currently opened for reading.
-         *
-         * \ifaces Not present.
          *
          * @return the character read.
          */
@@ -340,8 +326,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for reading.
          *
-         * \ifaces Not present.
-         *
          * @return the string read.
          */
         std::string readString();
@@ -350,8 +334,6 @@ class NFile : public ShareableObject {
          * Reads a bool from file.
          *
          * \pre The file is currently opend for reading.
-         *
-         * \ifaces Not present.
          *
          * @return the bool read.
          */
@@ -362,8 +344,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opend for reading.
          *
-         * \ifaces Not present.
-         *
          * @return the boolean set read.
          */
         NBoolSet readBoolSet();
@@ -372,8 +352,6 @@ class NFile : public ShareableObject {
          * Writes a signed integer to file.
          *
          * \pre The file is currently opened for writing.
-         *
-         * \ifaces Not present.
          *
          * @param i the integer to write.
          */
@@ -384,8 +362,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for writing.
          *
-         * \ifaces Not present.
-         *
          * @param i the integer to write.
          */
         void writeUInt(unsigned i);
@@ -394,8 +370,6 @@ class NFile : public ShareableObject {
          * Writes a signed long integer to file.
          *
          * \pre The file is currently opened for writing.
-         *
-         * \ifaces Not present.
          *
          * @param i the long integer to write.
          */
@@ -406,8 +380,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for writing.
          *
-         * \ifaces Not present.
-         *
          * @param i the long integer to write.
          */
         void writeULong(unsigned long i);
@@ -416,8 +388,6 @@ class NFile : public ShareableObject {
          * Writes an arbitrary precision integer to file.
          *
          * \pre The file is currently opened for writing.
-         *
-         * \ifaces Not present.
          *
          * @param i the arbitrary precision integer to write.
          */
@@ -428,8 +398,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for writing.
          *
-         * \ifaces Not present.
-         *
          * @param c the character to write.
          */
         void writeChar(char c);
@@ -438,8 +406,6 @@ class NFile : public ShareableObject {
          * Writes a string to file.
          *
          * \pre The file is currently opened for writing.
-         *
-         * \ifaces Not present.
          *
          * @param s the string to write.
          */
@@ -450,8 +416,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for writing.
          *
-         * \ifaces Not present.
-         *
          * @param b the bool to write.
          */
         void writeBool(bool b);
@@ -460,8 +424,6 @@ class NFile : public ShareableObject {
          * Writes a boolean set to file.
          *
          * \pre The file is currently opened for writing.
-         *
-         * \ifaces Not present.
          *
          * @param b the boolean set to write.
          */
@@ -472,8 +434,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently open.
          *
-         * \ifaces Not present.
-         *
          * @return the current file position.
          */
         std::streampos getPosition();
@@ -483,8 +443,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently open.
          *
-         * \ifaces Not present.
-         * 
          * @param pos the position to which to move.
          */
         void setPosition(std::streampos pos);
@@ -494,8 +452,6 @@ class NFile : public ShareableObject {
          *
          * \pre The file is currently opened for reading.
          *
-         * \ifaces Not present.
-         *
          * @return the file position read.
          */
         std::streampos readPos();
@@ -504,8 +460,6 @@ class NFile : public ShareableObject {
          * Writes a file position to file.
          *
          * \pre The file is currently opened for writing.
-         *
-         * \ifaces Not present.
          *
          * @param pos the file position to write.
          */

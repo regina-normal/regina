@@ -86,7 +86,7 @@ namespace stl {
  * \pre The template argument <tt>Pair</tt> has a data member
  * <tt>Pair::first</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @author This class was taken and modified from the Standard Template
  * Library (<tt>http://www.stlport.org/</tt>).
@@ -111,7 +111,7 @@ struct select1st : public std::unary_function<Pair, typename Pair::first_type> {
  * \pre The template argument <tt>Pair</tt> has a data member
  * <tt>Pair::second</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @author This class was taken and modified from the Standard Template
  * Library (<tt>http://www.stlport.org/</tt>).
@@ -142,7 +142,7 @@ struct select2nd : public std::unary_function<Pair,
  * \pre Type <tt>Operation1::argument_type</tt> is the same as (or can
  * be constructed from) type <tt>Operation2::result_type</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @author This class was taken and modified from the Standard Template
  * Library (<tt>http://www.stlport.org/</tt>).
@@ -194,7 +194,7 @@ class unary_compose : public std::unary_function<
  * \pre Type <tt>Operation1::argument_type</tt> is the same as (or can
  * be constructed from) type <tt>Operation2::result_type</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param func1 the first function to use in the composition.
  * @param func2 the second function to use in the composition.

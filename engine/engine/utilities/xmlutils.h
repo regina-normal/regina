@@ -66,7 +66,7 @@ namespace xml {
 /**
  * Represents a hashed map from property names to property values.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class XMLPropertyDict : public stdhash::hash_map<std::string,
         std::string, HashString> {
@@ -98,7 +98,7 @@ class XMLPropertyDict : public stdhash::hash_map<std::string,
  * derived class that overrides some or all of these routines to do the
  * processing that you require.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
@@ -176,7 +176,7 @@ class XMLParserCallback {
  * XML file has been sent through parse_chunk(), routine finish() should
  * be called once to signal that processing is complete.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
@@ -275,7 +275,7 @@ class XMLParser {
  * entities.  For instance, the string <tt>"a \< b"</tt> would be
  * converted to <tt>"a \&lt; b"</tt>.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param original the string to convert; this string will not be
  * changed.
@@ -290,7 +290,7 @@ std::string xmlEncodeSpecialChars(const std::string& original);
  * entities, this routine will replace dashes with underscores to avoid
  * double-hyphens (which are illegal in XML comments).
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param comment the string to convert; this string will not be
  * changed.
@@ -308,6 +308,8 @@ std::string xmlEncodeComment(const std::string& comment);
  * \pre The property value when written to an output stream does not
  * contain any special characters (such as <tt>\<</tt> or <tt>\&</tt>)
  * that need to be encoded as XML entities.
+ *
+ * \ifacespython Not present.
  *
  * @param tagName the name of the XML tag to create.
  * @param value the value to assign to the <i>value</i> property of the tag.

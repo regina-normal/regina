@@ -77,15 +77,6 @@ namespace regina {
  * considered larger than any other integer but equal to itself.
  *
  * \testpart
- *
- * \ifaces Not present.
- * \ifacesjava A class <tt>normal.engine.utilities.NLargeInteger</tt> is
- * provided that subclasses <tt>java.math.BigInteger</tt>.  This also
- * provides arbitrary precision integer arithmetic, but otherwise bears no
- * relation to the engine NLargeInteger class.  It provides additional
- * routines for operator overloads in Jython scripting, and reimplements
- * <tt>BigInteger</tt> routines to return <tt>NLargeInteger</tt> objects
- * where <tt>BigInteger</tt> objects would otherwise be returned.
  */
 class NLargeInteger {
     public:
@@ -141,6 +132,8 @@ class NLargeInteger {
          * \pre The given base is zero, or is between 2 and 36 inclusive.
          * \pre The given string represents a finite integer
          * in the given base, with optional whitespace added.
+         *
+         * \ifacespython The final parameter \a valid is not present.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base \a base.

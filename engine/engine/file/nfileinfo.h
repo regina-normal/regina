@@ -120,9 +120,6 @@ class NFileInfo : public ShareableObject {
         /**
          * Return information about the given Regina data file.
          *
-         * \ifaces This routine is a member of class Engine and is
-         * called Engine::identifyFileInfo().
-         *
          * @param idPathname the pathname of the data file to be examined.
          * @return a newly created NFileInfo structure containing
          * information about the given file, or 0 if the file type could not

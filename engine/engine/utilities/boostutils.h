@@ -92,7 +92,7 @@ namespace boost {
  * <tt>T</tt> remains unchanged.  For example <tt>int*</tt> becomes
  * <tt>int</tt>, but <tt>int&</tt> remains unchanged.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @author This class was taken and modified from the Boost C++ libraries
  * (<tt>http://www.boost.org/</tt>).
@@ -140,7 +140,7 @@ struct remove_pointer {
  * See global routines ::ref() and ::cref() for simple creation of these
  * wrappers.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @author This class was taken and modified from the Boost C++ libraries
  * (<tt>http://www.boost.org/</tt>).
@@ -195,7 +195,7 @@ class reference_wrapper {
  * Returns a wrapper for the given reference.  See reference_wrapper for
  * further details.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param t the reference to wrap.
  * @return the corresponding wrapper.
@@ -212,7 +212,7 @@ inline reference_wrapper<T> const ref(T& t) {
  * Returns a wrapper for the given const reference.  See reference_wrapper for
  * further details.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param t the reference to wrap.
  * @return the corresponding wrapper.
@@ -232,10 +232,13 @@ inline reference_wrapper<T const> const cref(T const& t) {
  *
  * Only the decrement operator <tt>--it</tt> needs to be defined.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param it the iterator to examine.
  * @return the iterator prior to the given iterator.
+ *
+ * @author This routine was taken and modified from the Boost C++ libraries
+ * (<tt>http://www.boost.org/</tt>).
  */
 template <class T>
 inline T prior(T it) {
@@ -249,10 +252,13 @@ inline T prior(T it) {
  *
  * Only the increment operator <tt>++it</tt> needs to be defined.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  *
  * @param it the iterator to examine.
  * @return the iterator following the given iterator.
+ *
+ * @author This routine was taken and modified from the Boost C++ libraries
+ * (<tt>http://www.boost.org/</tt>).
  */
 template <class T>
 inline T next(T it) {
