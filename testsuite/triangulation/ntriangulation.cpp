@@ -121,7 +121,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
         // Non-standard vertex links:
         NTriangulation twoProjPlaneCusps;
             /**< A subdivision of invalidEdges, resulting in all edges
-                 valid but two projective plane cusps. */
+                 valid but two projective plane cusps.  Note that this
+                 triangulation has a 3-sphere orientable double cover. */
         NTriangulation cuspedGenusTwoTorus;
             /**< A solid genus two torus with a cusped boundary. */
 
@@ -558,6 +559,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "H1(Gieseking manifold)", 1);
             verifyGroup(invalidEdges.getHomologyH1(),
                 "H1(tri with invalid edges)", 0);
+            verifyGroup(twoProjPlaneCusps.getHomologyH1(),
+                "H1(tri with projective plane cusps)", 0, 2);
             verifyGroup(cuspedGenusTwoTorus.getHomologyH1(),
                 "H1(cusped solid genus two torus)", 2);
         }
@@ -659,6 +662,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             //    "Fund(Gieseking manifold)", 1);
             verifyFundGroup(invalidEdges.getFundamentalGroup(),
                 "Fund(tri with invalid edges)", "0");
+            verifyFundGroup(twoProjPlaneCusps.getFundamentalGroup(),
+                "Fund(tri with projective plane cusps)", "Z_2");
             verifyFundGroup(cuspedGenusTwoTorus.getFundamentalGroup(),
                 "Fund(cusped solid genus two torus)", "Free (2 generators)");
         }
