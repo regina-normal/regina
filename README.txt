@@ -108,6 +108,6 @@ built, a reason will be given earlier in the "./configure" output.
 If you run into problems you are of course welcome to email either myself
 or the user list (regina-user@lists.sourceforge.net) for assistance.
 
-Ben Burton <bab@debian.org>
+Ben Burton (bab@debian.org)
 http://regina.sourceforge.net/
 
