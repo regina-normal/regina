@@ -39,9 +39,12 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI) {
+        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
+        tri(packet) {
     // TODO
-    ui = new QLabel(QString("SKELETON"), 0);
+    QLabel* label = new QLabel(QString("SKELETON"), 0);
+    label->setAlignment(Qt::AlignCenter);
+    ui = label;
 }
 
 regina::NPacket* NTriSkeletonUI::getPacket() {

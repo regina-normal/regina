@@ -36,6 +36,7 @@
 #include "../packettabui.h"
 
 class QListView;
+class QListViewItem;
 
 namespace regina {
     class NPacket;
@@ -72,6 +73,26 @@ class NTriCompositionUI : public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+    private:
+        /**
+         * Add new items to the list view.
+         */
+        QListViewItem* addSection(const QString& text);
+
+        /**
+         * Fill the list view with information.
+         */
+        void findAugTriSolidTori();
+        void findLayeredChainPairs();
+        void findLayeredLensSpaces();
+        void findLayeredLoops();
+        void findLayeredSolidTori();
+        void findPillowSpheres();
+        void findPlugTriSolidTori();
+        void findSnappedBalls();
+        void findSnappedSpheres();
+        void findSpiralSolidTori();
 };
 
 #endif

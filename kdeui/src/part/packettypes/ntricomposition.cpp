@@ -27,6 +27,8 @@
 /* end stub */
 
 // Regina core includes:
+#include "manifold/nmanifold.h"
+#include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -34,13 +36,15 @@
 
 #include <klistview.h>
 #include <klocale.h>
+#include <memory>
 #include <qheader.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
 
 NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI) {
+        PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
+        tri(packet) {
     details = new KListView();
     details->header()->hide();
     details->addColumn(QString::null);
@@ -62,12 +66,37 @@ QWidget* NTriCompositionUI::getInterface() {
 void NTriCompositionUI::refresh() {
     details->clear();
 
-    // TODO: Fill composition details.
+    // Try to identify the 3-manifold.
+    std::auto_ptr<regina::NStandardTriangulation> standardTri(
+        regina::NStandardTriangulation::isStandardTriangulation(tri));
+    if (standardTri.get()) {
+        addSection(i18n("Triangulation: ") + standardTri->getName().c_str());
+
+        std::auto_ptr<regina::NManifold> manifold(standardTri->getManifold());
+        if (manifold.get())
+            addSection(i18n("3-manifold: ") + manifold->getName().c_str());
+        else
+            addSection(i18n("3-manifold not recognised"));
+    } else
+        addSection(i18n("Triangulation not recognised"));
+
+    // Look for complete closed triangulations.
+    findAugTriSolidTori();
+    findLayeredChainPairs();
+    findLayeredLensSpaces();
+    findLayeredLoops();
+    findPlugTriSolidTori();
+
+    // Look for bounded subcomplexes.
+    findLayeredSolidTori();
+    findSpiralSolidTori();
+    findSnappedBalls();
+
+    // Look for interesting surfaces.
+    findPillowSpheres();
+    findSnappedSpheres();
 
     // Tidy up.
-    if (details->childCount() == 0)
-        new KListViewItem(details, i18n("Nothing recognised"));
-
     details->setRootIsDecorated(
         details->childCount() > 1 ||
         details->firstChild()->childCount() > 0);
@@ -77,5 +106,52 @@ void NTriCompositionUI::editingElsewhere() {
     details->clear();
     new KListViewItem(details, i18n("Editing..."));
     details->setRootIsDecorated(false);
+}
+
+QListViewItem* NTriCompositionUI::addSection(const QString& text) {
+    if (details->lastItem())
+        return new KListViewItem(details, details->lastItem(), text);
+    else
+        return new KListViewItem(details, text);
+}
+
+void NTriCompositionUI::findAugTriSolidTori() {
+    // TODO
+}
+
+void NTriCompositionUI::findLayeredChainPairs() {
+    // TODO
+}
+
+void NTriCompositionUI::findLayeredLensSpaces() {
+    // TODO
+}
+
+void NTriCompositionUI::findLayeredLoops() {
+    // TODO
+}
+
+void NTriCompositionUI::findLayeredSolidTori() {
+    // TODO
+}
+
+void NTriCompositionUI::findPillowSpheres() {
+    // TODO
+}
+
+void NTriCompositionUI::findPlugTriSolidTori() {
+    // TODO
+}
+
+void NTriCompositionUI::findSnappedBalls() {
+    // TODO
+}
+
+void NTriCompositionUI::findSnappedSpheres() {
+    // TODO
+}
+
+void NTriCompositionUI::findSpiralSolidTori() {
+    // TODO
 }
 

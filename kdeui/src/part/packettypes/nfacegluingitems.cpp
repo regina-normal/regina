@@ -32,6 +32,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qpushbutton.h>
 #include <qregexp.h>
 #include <qtable.h>
 #include <qvalidator.h>
@@ -114,8 +115,10 @@ QWidget* FaceGluingItem::createEditor() const {
 
         return editor;
     } else {
+        QPushButton* button = new QPushButton("123", table()->viewport());
+        button->setFlat(true);
         // TODO
-        return new QLineEdit("TODO", table()->viewport());
+        return button;
     }
 }
 
