@@ -12,11 +12,15 @@ Version 3.2  [ (under development) ]
     OVERALL:
         - Added file format documentation to reference manual.
     ENGINE:
+        Class NBoolSet:
+            - Using unsigned chars for byte codes.
+        Class NNormalSurface:
+            - Added knownCanCrush().
+        Class NPerm:
+            - Using unsigned chars for permutation codes.
         Class NPrismSpec:
             - New class for dealing with triangular prisms defined by
               slicing along normal quads in a tetrahedron.
-        Class NNormalSurface:
-            - Added knownCanCrush().
         Class NTriangulation:
             - Interface-only skeletal query routines are now also
               implemented in the C++ calculation engine.
