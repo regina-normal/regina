@@ -32,7 +32,6 @@
 #include "packet/ntext.h"
 
 // TODO: remove once individual routines are all implemented.
-#include "triangulation/ntriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/nsurfacefilter.h"
 #include "angle/nanglestructurelist.h"
@@ -151,11 +150,6 @@ NXMLPacketReader* NText::getXMLReader(NPacket*) {
 
 NXMLPacketReader* NScript::getXMLReader(NPacket*) {
     return new NScriptReader();
-}
-
-NXMLPacketReader* NTriangulation::getXMLReader(NPacket*) {
-    // TODO: implement real packet reader
-    return new NXMLPacketReader();
 }
 
 NXMLPacketReader* NNormalSurfaceList::getXMLReader(NPacket*) {

@@ -316,7 +316,7 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
 
     out << "  <tetrahedra ntet=\"" << tetrahedra.size() << "\">\n";
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
-        out << "    <tet name=\"" <<
+        out << "    <tet desc=\"" <<
             xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
         for (face = 0; face < 4; face++) {
             adjTet = (*it)->getAdjacentTetrahedron(face);
