@@ -327,6 +327,28 @@ class NGluingPerms {
         void findAllPermsInternal(const NFacePairing* newPairing,
             const NFacePairingIsoList* autos, bool orientableOnly,
             UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Determines whether the permutations under construction are
+         * doomed to model a triangulation that is obviously non-minimal.
+         *
+         * This routine must \e only be called from within
+         * findAllPermsInternal() since it relies on specific details of
+         * how these permutations are generated.
+         *
+         * Tests that do not refer to the gluing permutation for the
+         * given face will not be run.
+         *
+         * \pre All gluing permutations for faces up to and including the
+         * given face have already been selected.
+         *
+         * @param face the specific tetrahedron face upon which tests
+         * will be based.
+         * @return \c true if the permutations under construction must lead
+         * to a non-minimal triangulation, or \c false if the results are
+         * inconclusive.
+         */
+        bool isObviouslyNonMinimal(const NTetFace& face);
 };
 
 /*@}*/
