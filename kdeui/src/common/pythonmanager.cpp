@@ -99,7 +99,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->executeScript(script, i18n("user script"));
 
     // All ready!
-    ans->addOutput(i18n("Ready."));
+    ans->addOutput(i18n("\nReady."));
     ans->allowInput();
     return ans;
 }
