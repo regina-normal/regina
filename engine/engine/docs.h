@@ -44,7 +44,7 @@
  *  technical advice for this project.
  *  </center>
  *
- *  <h3>Regina 2.1 - A Normal Surface Theory Calculator</h3>
+ *  <h3>Regina 2.2 - A Normal Surface Theory Calculator</h3>
  *
  *  Additional code contributed by:
  *  <ul>

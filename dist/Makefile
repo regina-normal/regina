@@ -8,7 +8,7 @@
 
 # Specify here the version of Regina being released:
 
-REGINA_VERSION = 2.1.1a
+REGINA_VERSION = 2.2
 
 # ------------------------------ Variables ------------------------------
 
