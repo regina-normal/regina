@@ -112,6 +112,7 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v 'CVS/' | \
     grep -v 'Makefile$' | \
     grep -v '\.[157]$' | \
+    grep -v '\.a$' | \
     grep -v '\.class$' | \
     grep -v '\.cvsignore$' | \
     grep -v '\.deps$' | \
@@ -150,6 +151,7 @@ if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^stuff' | \
     grep -v '^test$' | \
     grep -v '^test/' | \
+    grep -v '^testsuite/regtestsuite$' | \
     grep -v '^utils/[a-z]\+$' | \
     grep -v '^www' | \
     sort > "$cvslist" ; then
