@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <cstdlib>
+#include <cctype>
 #include "utilities/stringutils.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmpi.h"
@@ -42,6 +43,24 @@ char* duplicate(const std::string& str) {
     *pos = 0;
 
     return ans;
+}
+
+bool startsWith(const std::string& str, const std::string& prefix) {
+    if (str.length() < prefix.length())
+        return false;
+    return (str.compare(0, prefix.length(), prefix) == 0);
+}
+
+std::string stripWhitespace(const std::string& str) {
+    std::string::size_type start = 0;
+    std::string::size_type end = str.length();
+
+    while (start < end && isspace(str[start]))
+        start++;
+    while (start < end && isspace(str[end - 1]))
+        end--;
+
+    return str.substr(start, end - start);
 }
 
 bool valueOf(const std::string& str, int& dest) {

@@ -61,6 +61,29 @@ class NBoolSet;
 char* duplicate(const std::string& str);
 
 /**
+ * Determines whether the given C++ string begins with the given prefix.
+ *
+ * \ifacespython Not present.
+ *
+ * @param str the full C++ string to examine.
+ * @param prefix the prefix whose presence we are testing for.
+ * @return \c true if and only if \a str begins with \a prefix.
+ */
+bool startsWith(const std::string& str, const std::string& prefix);
+
+/**
+ * Strips all whitespace from the beginning and end of the given C++ string.
+ * The new stripped string is returned; the original string is not
+ * altered.
+ *
+ * \ifacespython Not present.
+ *
+ * @param str the string to be stripped.
+ * @return the resulting stripped string.
+ */
+std::string stripWhitespace(const std::string& str);
+
+/**
  * Converts the entire given string to an integer and reports whether
  * this conversion was successful.
  *

@@ -98,6 +98,8 @@ Current Development Version
         Routine isKnownSFS():
             - Removed in favour of
               NStandardTriangulation::isStandardTriangulation().
+        File stringutils.h:
+            - Added routines startsWith() and stripWhitespace().
     PYTHON:
         - Added python bindings for standard python (i.e., cpython) to
           replace the old Jython bindings.
