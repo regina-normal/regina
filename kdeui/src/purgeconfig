@@ -1,0 +1,10 @@
+#!/bin/sh
+for i in ~/.kde/share/config/reginarc \
+    ~/.kde/share/apps/regina/*.rc \
+    ~/.kde/share/apps/katepart/*.rc ; do
+  if rm "$i" 2> /dev/null; then
+    echo "Removed: $i"
+  else
+    echo "Not present: $i"
+  fi
+done
