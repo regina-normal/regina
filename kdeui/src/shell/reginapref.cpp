@@ -296,11 +296,11 @@ void ReginaPreferences::slotApply() {
         // Let's be anal about it.
         QFileInfo info(strVal);
         if (! info.exists()) {
-            KMessageBox::error(this, i18n("The GAP executable %1 "
+            KMessageBox::error(this, i18n("The GAP executable \"%1\" "
                 "does not exist.").arg(strVal));
             triPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else if (! (info.isFile() && info.isExecutable())) {
-            KMessageBox::error(this, i18n("The GAP executable %1 "
+            KMessageBox::error(this, i18n("The GAP executable \"%1\" "
                 "is not actually an executable file.").arg(strVal));
             triPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else {
@@ -313,7 +313,7 @@ void ReginaPreferences::slotApply() {
         // Leave their setting alone, whatever it is, since they're
         // being vague about it.  Maybe they don't have GAP installed.
         if (KStandardDirs::findExe(strVal).isNull())
-            KMessageBox::informationList(this, i18n("The GAP executable %1 "
+            KMessageBox::informationList(this, i18n("The GAP executable \"%1\" "
                 "could not be found on the default search path.  This means "
                 "that you will not be able to use GAP from within Regina.\n"
                 "This is not really a problem; it just means that Regina "
