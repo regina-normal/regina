@@ -73,6 +73,8 @@ namespace Coordinates {
             return tri->getNumberOfEdges();
         else if (coordSystem == NNormalSurfaceList::FACE_ARCS)
             return tri->getNumberOfFaces() * 3;
+        else
+            return 0;
     }
 
     QString columnName(int coordSystem, unsigned long whichCoord,
