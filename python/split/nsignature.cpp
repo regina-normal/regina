@@ -26,9 +26,31 @@
 
 /* end stub */
 
-void addNSignature();
+#include "split/nsignature.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addSplit() {
-    addNSignature();
+using namespace boost::python;
+using regina::NSignature;
+
+namespace {
+    void writeCycles(const NSignature& sig, const std::string& cycleOpen,
+            const std::string& cycleClose, const std::string& cycleJoin) {
+        sig.writeCycles(std::cout, cycleOpen, cycleClose, cycleJoin);
+    }
+}
+
+void addNSignature() {
+    class_<NSignature, bases<regina::ShareableObject>,
+            std::auto_ptr<NSignature> >("NSignature",
+            init<const NSignature&>())
+        .def("getOrder", &NSignature::getOrder)
+        .def("parse", &NSignature::parse,
+            return_value_policy<manage_new_object>())
+        .def("triangulate", &NSignature::triangulate,
+            return_value_policy<manage_new_object>())
+        .def("writeCycles", &writeCycles)
+        .staticmethod("parse")
+    ;
 }
 

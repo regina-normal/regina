@@ -11,5 +11,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libsplit.la
 
-libsplit_la_SOURCES = pysplit.cpp
+libsplit_la_SOURCES = nsignature.cpp pysplit.cpp
 

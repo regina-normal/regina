@@ -13,7 +13,6 @@ Runtime:
     Support passing an argument representing a file to run.
 
 Wrappers:
-    split
     census
     surfaces
     angle
