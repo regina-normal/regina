@@ -40,6 +40,7 @@
  <!ENTITY java "<application>Java</application>">
  <!ENTITY javahelp "<application>JavaHelp</application>">
  <!ENTITY snappea "<application>SnapPea</application>">
+ <!ENTITY sourceforge "<productname>SourceForge</productname>">
 
  <!ENTITY helpabout
   "<menuchoice>
@@ -284,6 +285,29 @@
     </glosslist>
    </para>
   </sect1>
+ </chapter>
+
+ <chapter id="sourceforge">
+  <title>Bug Tracking and Mailing Lists</title>
+  <para>
+   &regina; is currently hosted by &sourceforge; at
+   <ulink url="http://sourceforge.net/projects/regina"></ulink>.
+   The &sourceforge; site provides the following services:
+   <itemizedlist>
+    <listitem><para>A bug tracking system which also handles
+     feature requests;</para></listitem>
+    <listitem><para>Two mailing lists, one for &regina; users and one
+     for &regina; developers.</para></listitem>
+   </itemizedlist>
+  </para>
+  <para>
+   As more people use &regina;, I'm hoping people will start
+   using the bug tracking system and mailing lists for bug reports,
+   feature requests and support requests.  I'm happy to answer private
+   emails, but by using the above services you ensure that
+   the ensuing discussion is publicly available to help others with
+   similar problems.
+  </para>
  </chapter>
 
  <chapter id="acknowledgements">

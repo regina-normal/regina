@@ -191,11 +191,16 @@
    </para></question>
    <answer>
     <para>
-     Please! - mail me at &regemail; and let me know.  This program is
-     permanently in development.  There is a very long todo list, and
-     chances are your problem is on it.  And then again chances are it's
-     not.  So please let me know so I am sure to know what needs to be
-     fixed/improved.
+     Please! - mail me at &regemail; and let me know.  Or even better,
+     use the <link linkend="sourceforge">&sourceforge; services</link>
+     such as the bug tracking system and mailing lists so that the
+     problem you report is publicly archived.
+    </para>
+    <para>
+     This program is permanently in development.  There is a very
+     long todo list, and chances are your problem is on it.  And
+     then again chances are it's not.  So please let me know so I
+     am sure to know what needs to be fixed/improved.
     </para>
    </answer>
   </qandaentry>
