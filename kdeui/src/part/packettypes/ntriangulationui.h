@@ -35,6 +35,8 @@
 
 #include "../packettabui.h"
 
+class KToolBar;
+class NTriGluingsUI;
 class QLabel;
 
 namespace regina {
@@ -45,12 +47,23 @@ namespace regina {
  * A packet interface for viewing triangulations.
  */
 class NTriangulationUI : public PacketTabbedUI {
+    private:
+        /**
+         * Internal components
+         */
+        NTriGluingsUI* gluings;
+
     public:
         /**
          * Constructor.
          */
         NTriangulationUI(regina::NTriangulation* packet,
                 PacketPane* newEnclosingPane, bool readWrite);
+
+        /**
+         * PacketUI overrides.
+         */
+        const QPtrList<KAction>& getPacketTypeActions();
 };
 
 /**
@@ -66,7 +79,9 @@ class NTriHeaderUI : public PacketViewerTab {
         /**
          * Internal components
          */
+        QWidget* ui;
         QLabel* header;
+        KToolBar* bar;
 
     public:
         /**
@@ -76,6 +91,11 @@ class NTriHeaderUI : public PacketViewerTab {
                 PacketTabbedUI* useParentUI);
 
         /**
+         * Component queries.
+         */
+        KToolBar* getToolBar();
+
+        /**
          * PacketViewerTab overrides.
          */
         regina::NPacket* getPacket();
@@ -83,5 +103,9 @@ class NTriHeaderUI : public PacketViewerTab {
         void refresh();
         void editingElsewhere();
 };
+
+inline KToolBar* NTriHeaderUI::getToolBar() {
+    return bar;
+}
 
 #endif

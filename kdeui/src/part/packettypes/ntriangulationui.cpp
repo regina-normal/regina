@@ -38,7 +38,9 @@
 #include "ntrisurfaces.h"
 
 #include <klocale.h>
+#include <ktoolbar.h>
 #include <qlabel.h>
+#include <qvbox.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -46,18 +48,33 @@ using regina::NTriangulation;
 NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
         PacketPane* newEnclosingPane, bool readWrite) :
         PacketTabbedUI(newEnclosingPane) {
-    addHeader(new NTriHeaderUI(packet, this));
-    addTab(new NTriGluingsUI(packet, this, readWrite), i18n("&Gluings"));
+    NTriHeaderUI* header = new NTriHeaderUI(packet, this);
+    gluings = new NTriGluingsUI(packet, this, readWrite);
+
+    gluings->fillToolBar(header->getToolBar());
+
+    addHeader(header);
+    addTab(gluings, i18n("&Gluings"));
     addTab(new NTriSkeletonUI(packet, this), i18n("&Skeleton"));
     addTab(new NTriAlgebraUI(packet, this), i18n("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), i18n("&Composition"));
     addTab(new NTriSurfacesUI(packet, this), i18n("Sur&faces"));
 }
 
+const QPtrList<KAction>& NTriangulationUI::getPacketTypeActions() {
+    return gluings->getPacketTypeActions();
+}
+
 NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    header = new QLabel(0);
+    ui = new QVBox();
+
+    bar = new KToolBar(ui, "triangulationActionBar", false, false);
+    bar->setFullSize(true);
+    bar->setIconText(KToolBar::IconTextRight);
+
+    header = new QLabel(ui);
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
 }
@@ -67,7 +84,7 @@ regina::NPacket* NTriHeaderUI::getPacket() {
 }
 
 QWidget* NTriHeaderUI::getInterface() {
-    return header;
+    return ui;
 }
 
 void NTriHeaderUI::refresh() {

@@ -15,6 +15,7 @@ noinst_HEADERS = \
 	nanglestructureitem.h \
 	nanglestructureui.h \
 	ncontainerui.h \
+	nfacegluingitems.h \
 	nscriptui.h \
 	nscriptvaritems.h \
 	nsurfacefiltercomb.h \
@@ -33,6 +34,7 @@ libpackettypes_la_SOURCES = \
 	nanglestructureitem.cpp \
 	nanglestructureui.cpp \
 	ncontainerui.cpp \
+	nfacegluingitems.cpp \
 	nscriptui.cpp \
 	nscriptvaritems.cpp \
 	nsurfacefiltercomb.cpp \

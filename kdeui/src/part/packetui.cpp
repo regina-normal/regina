@@ -380,9 +380,12 @@ void PacketPane::commit() {
     if (dirty) {
         isCommitting = true;
 
-        mainUI->commit();
-        setDirty(false); // Just in case somebody forgot.
+        {
+            NPacket::ChangeEventBlock block(mainUI->getPacket());
+            mainUI->commit();
+        }
 
+        setDirty(false); // Just in case somebody forgot.
         isCommitting = false;
     }
 }

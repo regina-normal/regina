@@ -35,6 +35,11 @@
 
 #include "../packettabui.h"
 
+class KAction;
+class KActionCollection;
+class KToolBar;
+class QTable;
+
 namespace regina {
     class NPacket;
     class NTriangulation;
@@ -56,22 +61,70 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Internal components
          */
         QWidget* ui;
+        QTable* faceTable;
+
+        /**
+         * Gluing actions
+         */
+        KAction* actAddTet;
+        KAction* actRemoveTet;
+        KAction* actSimplify;
+        KActionCollection* triActions;
+        QPtrList<KAction> triActionList;
+        QPtrList<KAction> enableWhenWritable;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
         NTriGluingsUI(regina::NTriangulation* packet,
                 PacketTabbedUI* useParentUI, bool readWrite);
+        ~NTriGluingsUI();
+
+        /**
+         * Fill the given toolbar with triangulation actions.
+         *
+         * This is necessary since the toolbar will not be a part of
+         * this page, but this page (as the editor) keeps track of the
+         * available actions.
+         */
+        void fillToolBar(KToolBar* bar);
 
         /**
          * PacketEditorTab overrides.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
+        const QPtrList<KAction>& getPacketTypeActions();
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);
+
+    public slots:
+        /**
+         * Gluing edit actions.
+         */
+        void addTet();
+        void removeSelectedTets();
+
+        /**
+         * Triangulation actions.
+         */
+        void simplify();
+        void barycentricSubdivide();
+        void idealToFinite();
+        void elementaryMove();
+        void doubleCover();
+
+        /**
+         * Update the states of internal components.
+         */
+        void updateRemoveState();
+
+        /**
+         * Notify us of the fact that an edit has been made.
+         */
+        void notifyGluingsChanged();
 };
 
 #endif
