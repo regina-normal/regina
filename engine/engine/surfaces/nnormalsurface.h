@@ -560,42 +560,42 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
         std::string name;
             /**< An optional name associated with this surface. */
 
-        NLargeInteger eulerChar;
+        mutable NLargeInteger eulerChar;
             /**< The Euler characteristic of this surface. */
-        bool calculatedEulerChar;
+        mutable bool calculatedEulerChar;
             /**< Have we calculated the Euler characteristic? */
-        int orientable;
+        mutable int orientable;
             /**< Is this surface orientable?
                  1 is true, -1 is false and 0 is undetermined. */
-        bool calculatedOrientable;
+        mutable bool calculatedOrientable;
             /**< Have we calculated the orientability of this surface
                  (or the indeterminibility thereof)? */
-        int twoSided;
+        mutable int twoSided;
             /**< Is this surface two-sided?
                  1 is true, -1 is false and 0 is undetermined. */
-        bool calculatedTwoSided;
+        mutable bool calculatedTwoSided;
             /**< Have we calculated the two-sidedness of this surface
                  (or the indeterminibility thereof)? */
-        int connected;
+        mutable int connected;
             /**< Is this surface connected? */
-        bool calculatedConnected;
+        mutable bool calculatedConnected;
             /**< Have we calculated the connectedness of this surface
                  (or the indeterminibility thereof)? */
-        bool realBoundary;
+        mutable bool realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
              *   any boundary faces)? */
-        bool calculatedRealBoundary;
+        mutable bool calculatedRealBoundary;
             /**< Have we calculated whether this surface has real
              *   boundary? */
-        bool compact;
+        mutable bool compact;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
-        bool calculatedCompact;
+        mutable bool calculatedCompact;
             /**< Have we calculated whether this surface is compact? */
-        bool canCrush;
+        mutable bool canCrush;
             /**< Can this surface be crushed without unintended
                  topological side-effects? */
-        bool calculatedCanCrush;
+        mutable bool calculatedCanCrush;
             /**< Have we calculated whether this surface can be safely
                  crushed? */
 
@@ -829,7 +829,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * @return \c true if and only if this normal surface is compact.
          */
-        bool isCompact();
+        bool isCompact() const;
         /**
          * Returns the Euler characteristic of this surface.
          *
@@ -837,7 +837,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * @return the Euler characteristic.
          */
-        NLargeInteger getEulerCharacteristic();
+        NLargeInteger getEulerCharacteristic() const;
         /**
          * Returns whether or not this surface is orientable.
          *
@@ -847,7 +847,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * is non-orientable and 0 if orientability cannot be determined
          * (for instance, if there are too many normal discs).
          */
-        int isOrientable();
+        int isOrientable() const;
         /**
          * Returns whether or not this surface is two-sided.
          *
@@ -857,7 +857,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * is one-sided and 0 if two-sidedness cannot be determined
          * (for instance, if there are too many normal discs).
          */
-        int isTwoSided();
+        int isTwoSided() const;
         /**
          * Returns whether or not this surface is connected.
          *
@@ -867,14 +867,14 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * is not connected and 0 if connectedness cannot be determined
          * (for instance, if there are too many normal discs).
          */
-        int isConnected();
+        int isConnected() const;
         /**
          * Determines if this surface has any real boundary, that is,
          * whether it meets any boundary faces of the triangulation.
          *
          * @return \c true if and only if this surface has real boundary.
          */
-        bool hasRealBoundary();
+        bool hasRealBoundary() const;
 
         /**
          * Determines whether or not this surface is vertex linking.
@@ -971,7 +971,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * @return a pointer to the newly allocated resulting
          * triangulation.
          */
-        NTriangulation* cutAlong();
+        NTriangulation* cutAlong() const;
 
         /**
          * Crushes this surface to a point in the associated
@@ -1013,7 +1013,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * @return a pointer to the newly allocated resulting
          * triangulation.
          */
-        NTriangulation* crush();
+        NTriangulation* crush() const;
 
         /**
          * Determines whether this surface can be crushed to a point in
@@ -1049,7 +1049,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * can be crushed without unintended side-effects, or \c false if
          * this routine cannot produce a definite answer.
          */
-        bool knownCanCrush();
+        bool knownCanCrush() const;
 
     protected:
         virtual void readIndividualProperty(NFile& infile,
@@ -1062,26 +1062,26 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * \pre This normal surface is compact (has finitely many discs).
          */
-        void calculateEulerCharacteristic();
+        void calculateEulerCharacteristic() const;
         /**
          * Calculates whether this surface is orientable and/or
          * two-sided and stores the results as properties.
          *
          * \pre This normal surface is compact (has finitely many discs).
          */
-        void calculateOrientable();
+        void calculateOrientable() const;
         /**
          * Calculates whether this surface has any real boundary and
          * stores the result as a property.
          */
-        void calculateRealBoundary();
+        void calculateRealBoundary() const;
         /**
          * Calculates whether it can be quickly determined that this
          * surface can be crushed to a point without unintended
          * topological side-effects.  If conclusive, the result is
          * stored as a property.
          */
-        void calculateKnownCanCrush();
+        void calculateKnownCanCrush() const;
 
     friend class regina::NXMLNormalSurfaceReader;
 };
@@ -1147,7 +1147,7 @@ inline void NNormalSurface::writeRawVector(std::ostream& out) const {
     out << *vector;
 }
 
-inline bool NNormalSurface::isCompact() {
+inline bool NNormalSurface::isCompact() const {
     if (! calculatedCompact) {
         compact = vector->isCompact(triangulation);
         calculatedCompact = true;
@@ -1155,31 +1155,31 @@ inline bool NNormalSurface::isCompact() {
     return compact;
 }
 
-inline NLargeInteger NNormalSurface::getEulerCharacteristic() {
+inline NLargeInteger NNormalSurface::getEulerCharacteristic() const {
     if (! calculatedEulerChar)
         calculateEulerCharacteristic();
     return eulerChar;
 }
 
-inline int NNormalSurface::isOrientable() {
+inline int NNormalSurface::isOrientable() const {
     if (! calculatedOrientable)
         calculateOrientable();
     return orientable;
 }
 
-inline int NNormalSurface::isTwoSided() {
+inline int NNormalSurface::isTwoSided() const {
     if (! calculatedTwoSided)
         calculateOrientable();
     return twoSided;
 }
 
-inline int NNormalSurface::isConnected() {
+inline int NNormalSurface::isConnected() const {
     if (! calculatedConnected)
         calculateOrientable();
     return connected;
 }
 
-inline bool NNormalSurface::hasRealBoundary() {
+inline bool NNormalSurface::hasRealBoundary() const {
     if (! calculatedRealBoundary)
         calculateRealBoundary();
     return realBoundary;
@@ -1202,7 +1202,7 @@ inline bool NNormalSurface::isSplitting() const {
     return vector->isSplitting(triangulation);
 }
 
-inline bool NNormalSurface::knownCanCrush() {
+inline bool NNormalSurface::knownCanCrush() const {
     if (! calculatedCanCrush)
         calculateKnownCanCrush();
     return (calculatedCanCrush && canCrush);

@@ -260,7 +260,7 @@ bool NNormalSurfaceVector::isSplitting(NTriangulation* triang) const {
     return true;
 }
 
-void NNormalSurface::calculateEulerCharacteristic() {
+void NNormalSurface::calculateEulerCharacteristic() const {
     unsigned long index, tot;
     int type;
     eulerChar = NLargeInteger::zero;
@@ -291,7 +291,7 @@ void NNormalSurface::calculateEulerCharacteristic() {
     calculatedEulerChar = true;
 }
 
-void NNormalSurface::calculateRealBoundary() {
+void NNormalSurface::calculateRealBoundary() const {
     if (triangulation->isClosed()) {
         realBoundary = false;
         calculatedRealBoundary = true;

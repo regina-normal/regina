@@ -33,12 +33,12 @@
 
 namespace regina {
 
-NTriangulation* NNormalSurface::cutAlong() {
+NTriangulation* NNormalSurface::cutAlong() const {
     // TODO: Actually write this routine.
     return new NTriangulation();
 }
 
-NTriangulation* NNormalSurface::crush() {
+NTriangulation* NNormalSurface::crush() const {
     NTriangulation* ans = new NTriangulation(*triangulation);
     unsigned long nTet = ans->getNumberOfTetrahedra();
     if (nTet == 0)
@@ -117,7 +117,7 @@ NTriangulation* NNormalSurface::crush() {
     return ans;
 }
 
-void NNormalSurface::calculateKnownCanCrush() {
+void NNormalSurface::calculateKnownCanCrush() const {
     if (calculatedCanCrush)
         return;
 

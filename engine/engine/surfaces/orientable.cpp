@@ -55,7 +55,7 @@ namespace {
     };
 }
 
-void NNormalSurface::calculateOrientable() {
+void NNormalSurface::calculateOrientable() const {
     // This is going to be ghastly.
     // We will create an orientation and side selection for every disc.
 
