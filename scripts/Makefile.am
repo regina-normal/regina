@@ -10,7 +10,8 @@ scriptsdir = $(pkgdatadir)/scripts
 
 scripts_DATA = README.txt \
   regscript_opt \
-  regscript_readopts
+  regscript_readopts \
+  runscript.py
 
 EXTRA_DIST = $(scripts_DATA)
 

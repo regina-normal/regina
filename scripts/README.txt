@@ -1,7 +1,8 @@
 Regina Scripts Directory
 ------------------------
 
-This directory contains script components used by the Regina startup script.
+This directory contains script components used by the various Regina
+startup scripts.
 
 Nothing in this directory should actually be run directly.
 
