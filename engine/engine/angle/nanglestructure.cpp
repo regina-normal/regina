@@ -34,8 +34,10 @@
 #define PROPID_FLAGS 1
 
 NAngleStructure* NAngleStructure::clone() const {
-    return new NAngleStructure(triangulation,
+    NAngleStructure* ans = new NAngleStructure(triangulation,
         (NAngleStructureVector*)vector->clone());
+    ans->flags = flags;
+    return ans;
 }
 
 NRational NAngleStructure::getAngle(unsigned long tetIndex, int edgePair)
