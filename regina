@@ -16,6 +16,18 @@ done
 
 . "`dirname "$0"`/scripts/regscript_opt"
 
+# --- Convert filenames if necessary for cygwin.
+
+if [ "$OSTYPE" = "cygwin" ]; then
+	# We'll do this carefully because the windows paths will
+	# contain backslashes.
+	for i in REGINA_OPTIONS_LOCAL REGINA_BTOOLS REGINA_JYTHON REGINA_JAVAHELP REGINA_JNIDIR REGINA_JARDIR; do
+	if ( eval "[ ! -z \"\$$i\" ]" ); then
+		eval 'export '"$i"'=`cygpath -aw $'"$i"'`'
+	fi
+	done
+fi
+
 # --- Set the classpath. ---
 
 reginaclasses=""
