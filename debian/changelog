@@ -1,7 +1,7 @@
 regina-normal (4.1.3-1) unstable; urgency=low
 
   * New upstream release.
-  * Build-depend on libcppunit-dev (was formerly cppunit).
+  * Build-depends on libcppunit-dev (was formerly cppunit).
 
  -- Ben Burton <bab@debian.org>  Sun, 25 Jul 2004 11:32:25 +1000
 
