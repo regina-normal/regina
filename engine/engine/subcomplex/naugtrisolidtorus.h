@@ -79,14 +79,14 @@ class NComponent;
  */
 class NAugTriSolidTorus : public ShareableObject {
     public:
-        static const int CHAIN_NONE = 0;
+        static const int CHAIN_NONE;
             /**< Indicates that this augmented triangular solid torus
                  contains no layered chain. */
-        static const int CHAIN_MAJOR = 1;
+        static const int CHAIN_MAJOR;
             /**< Indicates that this augmented triangular solid torus
                  contains a layered chain attached as described by
                  NTriSolidTorus::areAnnuliLinkedMajor(). */
-        static const int CHAIN_AXIS = 2;
+        static const int CHAIN_AXIS;
             /**< Indicates that this augmented triangular solid torus
                  contains a layered chain attached as described by
                  NTriSolidTorus::areAnnuliLinkedAxis(). */

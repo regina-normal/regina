@@ -31,6 +31,12 @@
 
 namespace regina {
 
+const int NPlugTriSolidTorus::CHAIN_NONE = 0;
+const int NPlugTriSolidTorus::CHAIN_MAJOR = 1;
+const int NPlugTriSolidTorus::CHAIN_MINOR = 3;
+const int NPlugTriSolidTorus::EQUATOR_MAJOR = 1;
+const int NPlugTriSolidTorus::EQUATOR_MINOR = 3;
+
 NPlugTriSolidTorus::~NPlugTriSolidTorus() {
     if (core)
         delete core;

@@ -34,6 +34,10 @@
 
 namespace regina {
 
+const int NAugTriSolidTorus::CHAIN_NONE = 0;
+const int NAugTriSolidTorus::CHAIN_MAJOR = 1;
+const int NAugTriSolidTorus::CHAIN_AXIS = 2;
+
 NAugTriSolidTorus::~NAugTriSolidTorus() {
     if (core)
         delete core;

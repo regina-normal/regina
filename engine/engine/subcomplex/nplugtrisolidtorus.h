@@ -88,23 +88,23 @@ class NTriangulation;
  */
 class NPlugTriSolidTorus : public ShareableObject {
     public:
-        static const int CHAIN_NONE = 0;
+        static const int CHAIN_NONE;
             /**< Indicates an annulus on the triangular solid torus
                  boundary with no attached layered chain. */
-        static const int CHAIN_MAJOR = 1;
+        static const int CHAIN_MAJOR;
             /**< Indicates an annulus on the triangular solid torus
                  boundary with an attached layered chain layered over
                  the major edge of the annulus. */
-        static const int CHAIN_MINOR = 3;
+        static const int CHAIN_MINOR;
             /**< Indicates an annulus on the triangular solid torus
                  boundary with an attached layered chain layered over
                  the minor edge of the annulus. */
 
-        static const int EQUATOR_MAJOR = 1;
+        static const int EQUATOR_MAJOR;
             /**< Indicates that, if no layered chains were present, the
                  equator of the plug would consist of major edges of the
                  core triangular solid torus. */
-        static const int EQUATOR_MINOR = 3;
+        static const int EQUATOR_MINOR;
             /**< Indicates that, if no layered chains were present, the
                  equator of the plug would consist of minor edges of the
                  core triangular solid torus. */
