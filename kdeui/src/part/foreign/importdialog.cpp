@@ -39,6 +39,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
+#include <qwhatsthis.h>
 
 #define HORIZONTAL_SPACING 10
 
@@ -57,6 +58,9 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
     chooser = new PacketChooser(tree, useFilter, false, defaultParent,
         parentStrip);
     parentStrip->setStretchFactor(chooser, 1);
+    QWhatsThis::add(parentStrip, i18n("Select where in the packet tree "
+        "the new data should be imported.  The imported data will be "
+        "made a new child of the selected packet."));
 
     QHBox* labelStrip = new QHBox(page);
     labelStrip->setSpacing(HORIZONTAL_SPACING);
@@ -65,6 +69,9 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
     label = new QLineEdit(
         tree->makeUniqueLabel(newTree->getPacketLabel()).c_str(), labelStrip);
     labelStrip->setStretchFactor(label, 1);
+    QWhatsThis::add(labelStrip, i18n("Select a packet label for the new "
+        "imported data.  This will become the label of the first packet that "
+        "is imported."));
 
     layout->addStretch(1);
 }

@@ -47,6 +47,7 @@
 #include <qclipboard.h>
 #include <qlabel.h>
 #include <qptrlist.h>
+#include <qwhatsthis.h>
 #include <ktexteditor/document.h>
 #include <ktexteditor/selectioninterface.h>
 #include <ktexteditor/view.h>
@@ -128,12 +129,17 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
     header = new PacketHeader(newPacket, headerBox);
     headerBox->setStretchFactor(header, 1);
+    QWhatsThis::add(header, i18n("This shows the label of the packet "
+        "being viewed, as well as its packet type."));
 
     dockUndockBtn = new FlatToolButton(headerBox);
     dockUndockBtn->setToggleButton(true);
     dockUndockBtn->setPixmap(BarIcon("attach", ReginaPart::factoryInstance()));
     dockUndockBtn->setTextLabel(i18n("Dock or undock this packet viewer"));
     dockUndockBtn->setOn(true);
+    QWhatsThis::add(dockUndockBtn, i18n("Dock or undock this packet viewer.  "
+        "A docked viewer sits within the main window, to the right of "
+        "the packet tree.  An undocked viewer floats in its own window."));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
     // Set up the main interface component.
@@ -149,12 +155,23 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0 /* shortcut */,
         this, SLOT(commit()), (KActionCollection*)0, "packet_editor_commit");
     actCommit->setEnabled(false);
+    actCommit->setWhatsThis("Commit any changes you have made inside this "
+        "packet viewer.  Changes you make will have no effect elsewhere "
+        "until they are committed.");
     actRefresh = new KAction(i18n("&Refresh"), "reload", 0 /* shortcut */,
         this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
+    actRefresh->setWhatsThis(i18n("Refresh this viewer to show the most "
+        "recent state of the packet.  Any changes you mave made inside this "
+        "viewer that have not been committed will be discarded."));
     actDockUndock = new KAction(i18n("Un&dock"), "attach", 0,
         this, SLOT(floatPane()), (KActionCollection*)0, "packet_editor_dock");
+    actDockUndock->setWhatsThis(i18n("Dock or undock this packet viewer.  "
+        "A docked viewer sits within the main window, to the right of "
+        "the packet tree.  An undocked viewer floats in its own window."));
     actClose = new KAction(i18n("&Close"), "fileclose", 0,
         this, SLOT(close()), (KActionCollection*)0, "packet_editor_close");
+    actClose->setWhatsThis(i18n("Close this packet viewer.  Any changes "
+        "that have not been committed will be discarded."));
 
     KToolBar* footer = new KToolBar(this, "packetEditorBar", false, false);
     footer->setFullSize(true);

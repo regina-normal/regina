@@ -80,6 +80,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     box->setStretchFactor(session, 1);
 
     QHBox* inputArea = new QHBox(box);
+    QWhatsThis::add(inputArea, i18n("Type your Python commands into "
+        "this box."));
     prompt = new QLabel(inputArea);
     prompt->setFont(KGlobalSettings::fixedFont());
 
@@ -87,9 +89,6 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     input->setFont(KGlobalSettings::fixedFont());
     input->setSpacesPerTab(prefs.pythonSpacesPerTab);
     input->setFocus();
-    QString msg = i18n("Type your Python commands into this box.");
-    QWhatsThis::add(prompt, msg);
-    QWhatsThis::add(input, msg);
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
 
     setCentralWidget(box);

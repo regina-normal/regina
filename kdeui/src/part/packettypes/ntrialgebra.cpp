@@ -150,27 +150,50 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
     homologyGrid->setColStretch(3, 1);
 
     QLabel* label;
+    QString msg;
+
     label = new QLabel(i18n("H1(M)"), ui);
     homologyGrid->addWidget(label, 1, 1);
-    label = new QLabel(i18n("H1(M, Bdry M)"), ui);
-    homologyGrid->addWidget(label, 2, 1);
-    label = new QLabel(i18n("H1(Bdry M)"), ui);
-    homologyGrid->addWidget(label, 3, 1);
-    label = new QLabel(i18n("H2(M)"), ui);
-    homologyGrid->addWidget(label, 4, 1);
-    label = new QLabel(i18n("H2(M ; Z_2)"), ui);
-    homologyGrid->addWidget(label, 5, 1);
-
     H1 = new QLabel(ui);
     homologyGrid->addWidget(H1, 1, 2);
+    msg = i18n("The first homology group of this triangulation.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(H1, msg);
+
+    label = new QLabel(i18n("H1(M, Bdry M)"), ui);
+    homologyGrid->addWidget(label, 2, 1);
     H1Rel = new QLabel(ui);
     homologyGrid->addWidget(H1Rel, 2, 2);
+    msg = i18n("The relative first homology group of this triangulation "
+        "with respect to the boundary.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(H1Rel, msg);
+
+    label = new QLabel(i18n("H1(Bdry M)"), ui);
+    homologyGrid->addWidget(label, 3, 1);
     H1Bdry = new QLabel(ui);
     homologyGrid->addWidget(H1Bdry, 3, 2);
+    msg = i18n("The first homology group of the boundary of this "
+        "triangulation.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(H1Bdry, msg);
+
+    label = new QLabel(i18n("H2(M)"), ui);
+    homologyGrid->addWidget(label, 4, 1);
     H2 = new QLabel(ui);
     homologyGrid->addWidget(H2, 4, 2);
+    msg = i18n("The second homology group of this triangulation.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(H2, msg);
+
+    label = new QLabel(i18n("H2(M ; Z_2)"), ui);
+    homologyGrid->addWidget(label, 5, 1);
     H2Z2 = new QLabel(ui);
     homologyGrid->addWidget(H2Z2, 5, 2);
+    msg = i18n("<qt>The second homology group of this triangulation "
+        "with coefficients in Z<sub>2</sub>.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(H2Z2, msg);
 }
 
 regina::NPacket* NTriHomologyUI::getPacket() {

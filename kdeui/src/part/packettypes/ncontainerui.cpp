@@ -36,6 +36,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qvbox.h>
+#include <qwhatsthis.h>
 
 using regina::NPacket;
 using regina::NContainer;
@@ -53,6 +54,7 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
     layout->setColStretch(3, 1);
 
     QLabel* label;
+    QString msg;
 
     label = new QLabel(i18n("Immediate children:"), grid);
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
@@ -63,6 +65,12 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     layout->addWidget(children, 0, 2, Qt::AlignRight);
 
+    msg = i18n("Shows the number of immediate children of this "
+        "container, i.e., the number of child packets that have this "
+        "container as their immediate parent.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(children, msg);
+
     label = new QLabel(i18n("Total descendants:"), grid);
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     layout->addWidget(label, 1, 1, Qt::AlignRight);
@@ -71,6 +79,12 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
     descendants->setSizePolicy(
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     layout->addWidget(descendants, 1, 2, Qt::AlignRight);
+
+    msg = i18n("Shows the total number of descendants of this "
+        "container, i.e., the number of children, grandchildren, "
+        "great-grandchildren and so on.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(descendants, msg);
 
     interface->setStretchFactor(new QWidget(interface), 1);
 

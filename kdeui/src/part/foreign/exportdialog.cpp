@@ -38,6 +38,7 @@
 #include <qhbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qwhatsthis.h>
 
 #define HORIZONTAL_SPACING 10
 
@@ -56,6 +57,8 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     chooser = new PacketChooser(tree, useFilter, false, defaultSelection,
         chosenStrip);
     chosenStrip->setStretchFactor(chooser, 1);
+    QWhatsThis::add(chosenStrip,
+        i18n("Select the piece of data that you wish to export."));
 
     layout->addStretch(1);
 }

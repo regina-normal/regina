@@ -40,6 +40,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
+#include <qwhatsthis.h>
 
 namespace {
     const int ID_PROPS = 0;
@@ -52,22 +53,33 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     layout->setColStretch(1, 1);
 
     QLabel* pic;
+    QString msg;
 
     pic = new QLabel(ui);
     pic->setPixmap(SmallIcon("filter_prop", ReginaPart::factoryInstance()));
     layout->addWidget(pic, 0, 0, Qt::AlignRight);
 
-    pic = new QLabel(ui);
-    pic->setPixmap(SmallIcon("filter_comb", ReginaPart::factoryInstance()));
-    layout->addWidget(pic, 1, 0, Qt::AlignRight);
-
     QRadioButton* props = new QRadioButton(
         i18n("Filter by properties"), ui);
     layout->addWidget(props, 0, 1, Qt::AlignLeft);
 
+    msg = i18n("Create a filter that examines properties of normal surfaces, "
+        "such as orientability, boundary and Euler characteristic.");
+    QWhatsThis::add(pic, msg);
+    QWhatsThis::add(props, msg);
+
+    pic = new QLabel(ui);
+    pic->setPixmap(SmallIcon("filter_comb", ReginaPart::factoryInstance()));
+    layout->addWidget(pic, 1, 0, Qt::AlignRight);
+
     QRadioButton* comb = new QRadioButton(
         i18n("Combination (and/or) filter"), ui);
     layout->addWidget(comb, 1, 1, Qt::AlignLeft);
+
+    msg = i18n("Create a filter that combines other filters using boolean "
+        "AND or OR.");
+    QWhatsThis::add(pic, msg);
+    QWhatsThis::add(comb, msg);
 
     group = new QButtonGroup();
     group->insert(props, ID_PROPS);
