@@ -27,33 +27,78 @@
 /* end stub */
 
 #include "algebra/nabeliangroup.h"
+#include "maths/nmatrixint.h"
 #include <boost/python.hpp>
+#include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;
 using regina::NAbelianGroup;
-using regina::NLargeInteger;
 
-void (NAbelianGroup::*addTorsionElement_large)(const NLargeInteger&,
+void (NAbelianGroup::*addTorsionElement_large)(const regina::NLargeInteger&,
     unsigned) = &NAbelianGroup::addTorsionElement;
 void (NAbelianGroup::*addTorsionElement_long)(unsigned long,
     unsigned) = &NAbelianGroup::addTorsionElement;
+void (NAbelianGroup::*addGroup_matrix)(const regina::NMatrixInt&) =
+    &NAbelianGroup::addGroup;
+void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
+    &NAbelianGroup::addGroup;
+unsigned (NAbelianGroup::*getTorsionRank_large)(const regina::NLargeInteger&)
+    const = &NAbelianGroup::getTorsionRank;
+unsigned (NAbelianGroup::*getTorsionRank_long)(unsigned long)
+    const = &NAbelianGroup::getTorsionRank;
 
 namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRank,
         NAbelianGroup::addRank, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addTorsionElement,
         NAbelianGroup::addTorsionElement, 1, 2);
+
+    void addTorsionElements_dict(NAbelianGroup& g,
+            boost::python::list elements) {
+        std::multiset<regina::NLargeInteger> set;
+
+        long len = boost::python::len(elements);
+        for (long i = 0; i < len; i++) {
+            // Accept any type that we know how to convert to a large
+            // integer.
+            extract<regina::NLargeInteger&> x_large(elements[i]);
+            if (x_large.check()) {
+                set.insert(x_large());
+                continue;
+            }
+            extract<long> x_long(elements[i]);
+            if (x_long.check()) {
+                set.insert(x_long());
+                continue;
+            }
+            extract<const char*> x_str(elements[i]);
+            if (x_str.check()) {
+                set.insert(x_str());
+                continue;
+            }
+
+            // Throw an exception.
+            x_large();
+        }
+
+        g.addTorsionElements(set);
+    }
 }
 
 void addNAbelianGroup() {
     class_<NAbelianGroup, bases<regina::ShareableObject> >("NAbelianGroup")
         .def(init<const NAbelianGroup&>())
         .def("addRank", &NAbelianGroup::addRank, OL_addRank())
-        .def("getRank", &NAbelianGroup::getRank)
         .def("addTorsionElement", addTorsionElement_large,
             OL_addTorsionElement())
         .def("addTorsionElement", addTorsionElement_long,
             OL_addTorsionElement())
+        .def("addTorsionElements", addTorsionElements_dict)
+        .def("addGroup", addGroup_matrix)
+        .def("addGroup", addGroup_group)
+        .def("getRank", &NAbelianGroup::getRank)
+        .def("getTorsionRank", getTorsionRank_large)
+        .def("getTorsionRank", getTorsionRank_long)
         .def("getNumberOfInvariantFactors",
             &NAbelianGroup::getNumberOfInvariantFactors)
         .def("getInvariantFactor", &NAbelianGroup::getInvariantFactor,
