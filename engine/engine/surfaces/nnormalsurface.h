@@ -297,7 +297,7 @@ class NNormalSurfaceVector : public NRay {
          * count is found or all disc types have been examined.
          * Subclasses of NNormalSurfaceVector should override this if
          * they can provide a faster implementation.
-         * 
+         *
          * @param triang the triangulation in which this normal surface lives.
          * @return \c true if and only if the normal surface represented
          * is compact.
@@ -313,7 +313,7 @@ class NNormalSurfaceVector : public NRay {
          * has no corresponding discs.
          * Subclasses of NNormalSurfaceVector should override this if
          * they can provide a faster implementation.
-         * 
+         *
          * @param triang the triangulation in which this normal surface lives.
          * @return \c true if and only if the normal surface represented
          * is vertex linking.
@@ -327,7 +327,7 @@ class NNormalSurfaceVector : public NRay {
          * number of discs of every type.
          * Subclasses of NNormalSurfaceVector should override this if
          * they can provide a faster implementation.
-         * 
+         *
          * @param triang the triangulation in which this normal surface lives.
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
@@ -350,7 +350,7 @@ class NNormalSurfaceVector : public NRay {
          * number of discs of every type.
          * Subclasses of NNormalSurfaceVector should override this if
          * they can provide a faster implementation.
-         * 
+         *
          * @param triang the triangulation in which this normal surface lives.
          * @return a pair containing the thin edge(s) linked by this surface,
          * as described above.
@@ -372,7 +372,7 @@ class NNormalSurfaceVector : public NRay {
          * \pre The given triangulation is connected.  If the
          * triangulation is not connected, this routine will still
          * return a result but that result will be unreliable.
-         * 
+         *
          * @param triang the triangulation in which this normal surface lives.
          * @return \c true if and only if the normal surface represented
          * is compact.
@@ -756,7 +756,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * No indication will be given as to which coordinate
          * system is being used or what each coordinate means.
          * No newline will be written.
-         * 
+         *
          * \ifaces The paramater \a out does not exist, and is
          * taken to be standard output.
          *
@@ -820,7 +820,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
         /**
          * Determines if this normal surface is compact (has
          * finitely many discs).
-         * 
+         *
          * @return \c true if and only if this normal surface is compact.
          */
         bool isCompact();
@@ -892,7 +892,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * called.
          *
          * \todo \opt Cache results.
-         * 
+         *
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
@@ -918,7 +918,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          *
          * \ifacesjava This routine returns a new array of edges of
          * size 2.
-         * 
+         *
          * @return a pair containing the thin edge(s) linked by this surface,
          * as described above.
          */
@@ -938,7 +938,7 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * return a result but that result will be unreliable.
          *
          * \todo \opt Cache results.
-         * 
+         *
          * @return \c true if and only if this is a splitting surface.
          */
         bool isSplitting() const;
@@ -948,9 +948,12 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * returns a newly created resulting triangulation.
          * The original triangulation is not changed.
          *
+         * Note that, unlike crushing a surface to a point, this
+         * operation will not change the topology of the underlying
+         * 3-manifold beyond simply slicing along this surface.
+         *
          * \warning The number of tetrahedra in the new triangulation
-         * can be very large (6<i>D</i>+5<i>T</i> as an upper bound,
-         * where <i>D</i> is the number of normal discs in the surface).
+         * can be <i>very</i> large.
          * \warning <b>This routine has not been implemented and so
          * currently returns an empty triangulation.</b>
          *
@@ -1143,6 +1146,6 @@ inline bool NNormalSurface::isSplitting() const {
 }
 
 } // namespace regina
-        
+
 #endif
 
