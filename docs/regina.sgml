@@ -49,6 +49,7 @@
  <!ENTITY reginatrouble SYSTEM "reginatrouble.sgml">
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
  <!ENTITY reginalicense SYSTEM "license.sgml">
+ <!ENTITY reginachangelog SYSTEM "../CHANGES.txt">
 ]>
 
 <book>
@@ -258,5 +259,13 @@
  </chapter>
 
  &reginaman;
+
+ <appendix id="changelog">
+  <title>Version History</title>
+
+  <programlisting>
+   &reginachangelog;
+  </programlisting>
+ </appendix>
 
 </book>

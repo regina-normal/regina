@@ -136,8 +136,8 @@ Version 2.1.1
               always being immediately reflected in the surface list.
 
 Version 2.1.0
-    (Initial release.)
+    (Initial public release.)
 
-Ben Burton <benb@acm.org>.
+Ben Burton (benb@acm.org)
 http://regina.sourceforge.net/
 
