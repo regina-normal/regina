@@ -183,14 +183,9 @@ inline bool NLayeredLensSpace::isSnapped() const {
 inline bool NLayeredLensSpace::isTwisted() const {
     return (torus->getTopEdge(mobiusBoundaryGroup, 1) != -1);
 }
-inline std::ostream& NLayeredLensSpace::writeName(std::ostream& out) const {
-    return out << "L(" << p << ',' << q << ')';
-}
-inline std::ostream& NLayeredLensSpace::writeTeXName(std::ostream& out) const {
-    return out << "$L(" << p << ',' << q << ")$";
-}
 inline void NLayeredLensSpace::writeTextLong(std::ostream& out) const {
-    out << "Layered lens space L(" << p << ',' << q << ')';
+    out << "Layered lens space ";
+    writeName(out);
 }
 
 } // namespace regina

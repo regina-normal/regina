@@ -23,6 +23,8 @@ Current Development Version
             - Further optimisations for non-orientable census generation.
         Class NHandlebody:
             - Added as a new 3-manifold class.
+        Class NL31Pillow:
+            - New class for identifying particular L(3,1) triangulations.
         Class NLargeInteger:
             - Added constructor and assignment taking a const std::string&.
             - Routine stringValue() now returns a std::string, not a char*.

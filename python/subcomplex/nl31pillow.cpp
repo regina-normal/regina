@@ -26,35 +26,29 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNPillowTwoSphere();
-void addNPlugTriSolidTorus();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTriSolidTorus();
+#include "subcomplex/nl31pillow.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/ntetrahedron.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNPillowTwoSphere();
-    addNPlugTriSolidTorus();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTriSolidTorus();
+using namespace boost::python;
+using regina::NL31Pillow;
+
+void addNL31Pillow() {
+    class_<NL31Pillow, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<NL31Pillow>, boost::noncopyable>
+            ("NL31Pillow", no_init)
+        .def("clone", &NL31Pillow::clone,
+            return_value_policy<manage_new_object>())
+        .def("getTetrahedron", &NL31Pillow::getTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("getInteriorVertex", &NL31Pillow::getInteriorVertex)
+        .def("isL31Pillow", &NL31Pillow::isL31Pillow,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isL31Pillow")
+    ;
+
+    implicitly_convertible<std::auto_ptr<NL31Pillow>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

@@ -28,6 +28,7 @@
 
 #include <sstream>
 #include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nl31pillow.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
@@ -51,6 +52,8 @@ std::string NStandardTriangulation::getTeXName() const {
 NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         NComponent* comp) {
     NStandardTriangulation* ans;
+    if ((ans = NL31Pillow::isL31Pillow(comp)))
+        return ans;
     if ((ans = NLayeredLensSpace::isLayeredLensSpace(comp)))
         return ans;
     if ((ans = NLayeredLoop::isLayeredLoop(comp)))
