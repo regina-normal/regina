@@ -1,6 +1,12 @@
 
 Regina - A Normal Surface Theory Calculator
 
+    OVERALL:
+        - Ported CORBA stuff to omniORB3.
+        - Tightened up runtime scripts.
+        - Tidied up Makefiles and CVS.
+        - Moved options files to $REGINA_OPTIONS.
+
 Version 2.1.1a
     OVERALL:
         - Set up system for creating distributions.
