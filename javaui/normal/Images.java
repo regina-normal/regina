@@ -63,6 +63,12 @@ public class Images {
     public static final StandardImage btnDockUndocked =
         new StandardImage("normal/images/buttons/dockUndocked.gif",
             Images.class);
+    /**
+     * A button representing a Jython script.
+     */
+    public static final StandardImage btnScript =
+        new StandardImage("normal/images/buttons/script.gif",
+            Images.class);
 
     /**
      * The program title image.

@@ -408,7 +408,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
 
             ScriptExporter menuFileExportScript =
                 new ScriptExporter(shell, "Jython Script", KeyEvent.VK_J);
-            menuFileExportScript.setIcon(Images.btnConsole.image());
+            menuFileExportScript.setIcon(Images.btnScript.image());
             menuFileExport.add(menuFileExportScript);
 
             menuFile.add(menuFileExport);

@@ -50,6 +50,8 @@ Regina - A Normal Surface Theory Calculator
         normal.exports:
             - Created architecture for exporting to foreign file formats.
             - Added classes Exporter, ReginaExporter, ScriptExporter.
+        normal.images:
+            - A couple of new icons.
         normal.imports:
             - Redesigned import architecture; replaced old class
               ImportFilePane with new class Importer.
