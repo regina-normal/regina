@@ -26,100 +26,47 @@
 
 /* end stub */
 
-/*! \file reginapref.h
- *  \brief Handles configuration of the user interface.
+/*! \file reginaprefset.h
+ *  \brief Provides a single data structure for all Regina preferences.
  */
 
-#ifndef __REGINAPREF_H
-#define __REGINAPREF_H
-
-#include "../reginaprefset.h"
-
-#include <qvbox.h>
-#include <kdialogbase.h>
-
-class QCheckBox;
-class QComboBox;
-class QLineEdit;
-class ReginaMain;
-class ReginaPrefGeneral;
-class ReginaPrefPython;
-class ReginaPrefTri;
+#ifndef __REGINAPREFSET_H
+#define __REGINAPREFSET_H
 
 /**
- * The Regina configuration dialog.
+ * A structure holding all Regina preferences.
  */
-class ReginaPreferences : public KDialogBase {
-    Q_OBJECT
+struct ReginaPrefSet {
+    enum TriEditMode { DirectEdit, Dialog };
+        /**< Possible edit modes for triangulation gluings. */
 
-    private:
-        ReginaMain* mainWindow;
+    bool autoDock;
+        /**< Do we automatically dock new packet
+             viewers into the parent window? */
+    bool autoFileExtension;
+        /**< Should filenames be given an automatic extension? */
+    bool displayIcon;
+        /**< Should we display the pretty Regina icon? */
+    TriEditMode triEditMode;
+        /**< The default mode for editing triangulations. */
+    unsigned triSurfacePropsThreshold;
+        /**< The maximum number of tetrahedra for which surface-related
+             properties of triangulations will be automatically
+             calculated. */
 
-        ReginaPrefSet prefSet;
-
-        ReginaPrefGeneral* generalPrefs;
-        ReginaPrefTri* triPrefs;
-        ReginaPrefPython* pythonPrefs;
-
-    public:
-        ReginaPreferences(ReginaMain* parent);
-
-        /**
-         * Overridden to call slotApply() when OK is pressed.
-         */
-        virtual int exec();
-
-    public slots:
-        /**
-         * Propagate changes back to the main UI.
-         */
-        virtual void slotApply();
+    /**
+     * Default constructor that provides a reasonable set of defaults.
+     */
+    ReginaPrefSet();
 };
 
-/**
- * The page of the Regina configuration dialog for general preferences.
- */
-class ReginaPrefGeneral : public QVBox {
-    Q_OBJECT
-
-    private:
-        QCheckBox* cbAutoDock;
-        QCheckBox* cbAutoFileExtension;
-        QCheckBox* cbDisplayIcon;
-
-    public:
-        ReginaPrefGeneral(QWidget* parent = 0);
-
-    friend class ReginaPreferences;
-};
-
-/**
- * The page of the Regina configuration dialog for triangulation
- * preferences.
- */
-class ReginaPrefTri : public QVBox {
-    Q_OBJECT
-
-    private:
-        QLineEdit* editSurfacePropsThreshold;
-        QComboBox* comboEditMode;
-
-    public:
-        ReginaPrefTri(QWidget* parent = 0);
-
-    friend class ReginaPreferences;
-};
-
-/**
- * The page of the Regina configuration dialog for Python preferences.
- */
-class ReginaPrefPython : public QVBox {
-    Q_OBJECT
-
-    public:
-        ReginaPrefPython(QWidget* parent = 0);
-
-    friend class ReginaPreferences;
-};
+inline ReginaPrefSet::ReginaPrefSet() :
+        autoDock(true),
+        autoFileExtension(true),
+        displayIcon(true),
+        triEditMode(Dialog),
+        triSurfacePropsThreshold(6) {
+}
 
 #endif
+

@@ -34,6 +34,7 @@
 #define __REGINAMAIN_H_
 
 #include "reginaiface.h"
+#include "../reginaprefset.h"
 
 #include <kapplication.h>
 #include <kparts/mainwindow.h>
@@ -53,12 +54,6 @@ class KURL;
 class ReginaMain : public KParts::MainWindow,
         virtual public ReginaMainInterface {
     Q_OBJECT
-
-    public:
-        /**
-         * Possible triangulation gluing edit modes.
-         */
-        enum TriEditMode { DirectEdit, Dialog };
 
     private:
         /**
@@ -89,19 +84,7 @@ class ReginaMain : public KParts::MainWindow,
         /**
          * Preferences
          */
-        bool autoDock;
-            /**< Do we automatically dock new packet viewers into the
-                 parent window? */
-        bool autoFileExtension;
-            /**< Should filenames be given an automatic extension? */
-        bool displayIcon;
-            /**< Should we display the pretty Regina icon? */
-        TriEditMode triEditMode;
-            /**< The default mode for editing triangulations. */
-        unsigned triSurfacePropsThreshold;
-            /**< The maximum number of tetrahedra for which
-                 surface-related properties of triangulations will be
-                 automatically calculated. */
+        ReginaPrefSet globalPrefs;
 
     public:
         /**
@@ -111,24 +94,10 @@ class ReginaMain : public KParts::MainWindow,
         virtual ~ReginaMain();
 
         /**
-         * Retrieve global preferences for Regina.
+         * Retrieve and set global preferences.
          */
-        bool getAutoDock() const;
-        bool getAutoFileExtension() const;
-        bool getDisplayIcon() const;
-        TriEditMode getTriEditMode() const;
-        unsigned getTriSurfacePropsThreshold() const;
-
-        /**
-         * Set global preferences for Regina.  These routines update the
-         * user interface accordingly, though they do not write the
-         * preferences to the user's configuration file.
-         */
-        void setAutoDock(bool);
-        void setAutoFileExtension(bool);
-        void setDisplayIcon(bool);
-        void setTriEditMode(TriEditMode);
-        void setTriSurfacePropsThreshold(unsigned);
+        const ReginaPrefSet& getPreferences() const;
+        void setPreferences(const ReginaPrefSet& prefs);
 
         /**
          * Force this main window to reread the user's configuration
@@ -164,12 +133,9 @@ class ReginaMain : public KParts::MainWindow,
 
     signals:
         /**
-         * Emitted when various global properties are changed.
+         * Emitted when global properties are changed.
          */
-        void changedAutoDock(bool);
-        void changedDisplayIcon(bool);
-        void changedTriEditMode(TriEditMode);
-        void changedTriSurfacePropsThreshold(unsigned);
+        void preferencesChanged(const ReginaPrefSet&);
 
     public slots:
         /**
@@ -271,28 +237,8 @@ class ReginaMain : public KParts::MainWindow,
 inline ReginaMain::~ReginaMain() {
 }
 
-inline bool ReginaMain::getAutoDock() const {
-    return autoDock;
-}
-
-inline bool ReginaMain::getAutoFileExtension() const {
-    return autoFileExtension;
-}
-
-inline bool ReginaMain::getDisplayIcon() const {
-    return displayIcon;
-}
-
-inline ReginaMain::TriEditMode ReginaMain::getTriEditMode() const {
-    return triEditMode;
-}
-
-inline unsigned ReginaMain::getTriSurfacePropsThreshold() const {
-    return triSurfacePropsThreshold;
-}
-
-inline void ReginaMain::setAutoFileExtension(bool value) {
-    autoFileExtension = value;
+inline const ReginaPrefSet& ReginaMain::getPreferences() const {
+    return globalPrefs;
 }
 
 inline void ReginaMain::readOptions() {

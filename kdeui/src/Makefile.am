@@ -12,7 +12,8 @@ INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
 	reginaabout.h \
-	reginafilter.h
+	reginafilter.h \
+	reginaprefset.h
 
 METASOURCES = AUTO
 

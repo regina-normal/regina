@@ -49,7 +49,6 @@
 #include <kmenubar.h>
 #include <kmessagebox.h>
 #include <kparts/event.h>
-// #include <kstatusbar.h>
 #include <kstdaccel.h>
 #include <kstdaction.h>
 #include <ktexteditor/document.h>
@@ -87,36 +86,9 @@ ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#" ),
     setAutoSaveSettings(QString::fromLatin1("MainWindow"), true);
 }
 
-void ReginaMain::setDisplayIcon(bool value) {
-    bool oldValue = displayIcon;
-    displayIcon = value;
-
-    if (oldValue != value)
-        emit changedDisplayIcon(value);
-}
-
-void ReginaMain::setAutoDock(bool value) {
-    bool oldValue = autoDock;
-    autoDock = value;
-
-    if (oldValue != value)
-        emit changedAutoDock(value);
-}
-
-void ReginaMain::setTriEditMode(TriEditMode mode) {
-    TriEditMode oldMode = triEditMode;
-    triEditMode = mode;
-
-    if (oldMode != mode)
-        emit changedTriEditMode(mode);
-}
-
-void ReginaMain::setTriSurfacePropsThreshold(unsigned value) {
-    unsigned oldValue = triSurfacePropsThreshold;
-    triSurfacePropsThreshold = value;
-
-    if (oldValue != value)
-        emit changedTriSurfacePropsThreshold(value);
+void ReginaMain::setPreferences(const ReginaPrefSet& prefs) {
+    globalPrefs = prefs;
+    emit preferencesChanged(globalPrefs);
 }
 
 void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
@@ -388,18 +360,22 @@ void ReginaMain::addRecentFile() {
 void ReginaMain::readOptions(KConfig* config) {
     // Read in new preferences.
     config->setGroup("Display");
-    setAutoDock(config->readBoolEntry("PacketDocking", true));
-    setDisplayIcon(config->readBoolEntry("DisplayIcon", true));
+    globalPrefs.autoDock = config->readBoolEntry("PacketDocking", true);
+    globalPrefs.displayIcon = config->readBoolEntry("DisplayIcon", true);
 
     config->setGroup("File");
-    setAutoFileExtension(config->readBoolEntry("AutomaticExtension", true));
+    globalPrefs.autoFileExtension = config->readBoolEntry(
+        "AutomaticExtension", true);
     fileOpenRecent->loadEntries(config);
 
     config->setGroup("Triangulation");
-    setTriEditMode(config->readEntry("EditMode", "Dialog") == "DirectEdit" ?
-        DirectEdit : Dialog);
-    setTriSurfacePropsThreshold(config->readUnsignedNumEntry(
-        "SurfacePropsThreshold", 6));
+    globalPrefs.triEditMode = (
+        config->readEntry( "EditMode", "Dialog") == "DirectEdit" ?
+        ReginaPrefSet::DirectEdit : ReginaPrefSet::Dialog);
+    globalPrefs.triSurfacePropsThreshold = config->readUnsignedNumEntry(
+        "SurfacePropsThreshold", 6);
+
+    emit preferencesChanged(globalPrefs);
 }
 
 void ReginaMain::saveOptions() {
@@ -407,17 +383,19 @@ void ReginaMain::saveOptions() {
 
     // Save the current set of preferences.
     config->setGroup("Display");
-    config->writeEntry("PacketDocking", autoDock);
-    config->writeEntry("DisplayIcon", displayIcon);
+    config->writeEntry("PacketDocking", globalPrefs.autoDock);
+    config->writeEntry("DisplayIcon", globalPrefs.displayIcon);
 
     config->setGroup("File");
-    config->writeEntry("AutomaticExtension", autoFileExtension);
+    config->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
     fileOpenRecent->saveEntries(config);
 
     config->setGroup("Triangulation");
     config->writeEntry("EditMode",
-        triEditMode == DirectEdit ? "DirectEdit" : "Dialog");
-    config->writeEntry("SurfacePropsThreshold", triSurfacePropsThreshold);
+        globalPrefs.triEditMode == ReginaPrefSet::DirectEdit ?
+        "DirectEdit" : "Dialog");
+    config->writeEntry("SurfacePropsThreshold",
+        globalPrefs.triSurfacePropsThreshold);
 
     config->sync();
 
@@ -442,14 +420,11 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
             "An appropriate topology data component could not be found."));
     else {
         // Connect up signals and slots.
-        connect(this, SIGNAL(changedAutoDock(bool)),
-            ans, SLOT(setAutoDock(bool)));
-        connect(this, SIGNAL(changedDisplayIcon(bool)),
-            ans, SLOT(displayIcon(bool)));
+        connect(this, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
+            ans, SLOT(updatePreferences(const ReginaPrefSet&)));
 
         // Perform initial setup on the part.
-        emit changedAutoDock(autoDock);
-        emit changedDisplayIcon(displayIcon);
+        emit preferencesChanged(globalPrefs);
     }
 
     // All done!

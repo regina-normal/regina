@@ -33,6 +33,8 @@
 #ifndef __REGINAPART_H
 #define __REGINAPART_H
 
+#include "../reginaprefset.h"
+
 #include <kparts/part.h>
 #include <qptrlist.h>
 
@@ -80,7 +82,7 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Configuration
          */
-        bool autoDock;
+        ReginaPrefSet prefs;
 
         /**
          * Actions
@@ -266,14 +268,9 @@ class ReginaPart : public KParts::ReadWritePart {
         bool closeAllPanes();
 
         /**
-         * Show or hide the Regina icon beneath the packet tree.
+         * Update the global preferences.
          */
-        void displayIcon(bool);
-
-        /**
-         * Set whether view() tries to dock packets by default.
-         */
-        void setAutoDock(bool);
+        void updatePreferences(const ReginaPrefSet& newPrefs);
 
         /**
          * Various UI updates.

@@ -42,7 +42,8 @@
 
 ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         KDialogBase(IconList, i18n("Regina Preferences"),
-        Help|Ok|Apply|Cancel, Ok), mainWindow(parent) {
+        Help|Ok|Apply|Cancel, Ok), mainWindow(parent),
+        prefSet(mainWindow->getPreferences()) {
     // Construct the individual preferences pages.
     QVBox* frame = addVBoxPage(i18n("General"), i18n("General Options"),
         BarIcon("regina", KIcon::SizeMedium));
@@ -57,15 +58,14 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     pythonPrefs = new ReginaPrefPython(frame);
 
     // Read the current preferences from the main window.
-    generalPrefs->cbAutoDock->setChecked(mainWindow->getAutoDock());
-    generalPrefs->cbAutoFileExtension->setChecked(
-        mainWindow->getAutoFileExtension());
-    generalPrefs->cbDisplayIcon->setChecked(mainWindow->getDisplayIcon());
+    generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
+    generalPrefs->cbAutoFileExtension->setChecked(prefSet.autoFileExtension);
+    generalPrefs->cbDisplayIcon->setChecked(prefSet.displayIcon);
 
     triPrefs->comboEditMode->setCurrentItem(
-        mainWindow->getTriEditMode() == ReginaMain::DirectEdit ? 0 : 1);
+        prefSet.triEditMode == ReginaPrefSet::DirectEdit ? 0 : 1);
     triPrefs->editSurfacePropsThreshold->setText(
-        QString::number(mainWindow->getTriSurfacePropsThreshold()));
+        QString::number(prefSet.triSurfacePropsThreshold));
 }
 
 int ReginaPreferences::exec() {
@@ -78,30 +78,29 @@ int ReginaPreferences::exec() {
 
 void ReginaPreferences::slotApply() {
     // Propagate changes to the main window.
-    mainWindow->setAutoDock(generalPrefs->cbAutoDock->isChecked());
-    mainWindow->setDisplayIcon(generalPrefs->cbDisplayIcon->isChecked());
-    mainWindow->setAutoFileExtension(
-        generalPrefs->cbAutoFileExtension->isChecked());
+    prefSet.autoDock = generalPrefs->cbAutoDock->isChecked();
+    prefSet.displayIcon = generalPrefs->cbDisplayIcon->isChecked();
+    prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
 
-    mainWindow->setTriEditMode(
-        triPrefs->comboEditMode->currentItem() == 0 ?
-        ReginaMain::DirectEdit : ReginaMain::Dialog);
+    prefSet.triEditMode = (triPrefs->comboEditMode->currentItem() == 0 ?
+        ReginaPrefSet::DirectEdit : ReginaPrefSet::Dialog);
 
     bool ok;
     unsigned uintVal =
         triPrefs->editSurfacePropsThreshold->text().toUInt(&ok);
     if (ok)
-        mainWindow->setTriSurfacePropsThreshold(uintVal);
+        prefSet.triSurfacePropsThreshold = uintVal;
     else {
         KMessageBox::error(triPrefs, i18n("The surface calculation "
             "threshold must be a non-negative integer.  "
             "This is the maximum number of tetrahedra for which normal "
             "surface properties will be calculated automatically."));
         triPrefs->editSurfacePropsThreshold->setText(
-            QString::number(mainWindow->getTriSurfacePropsThreshold()));
+            QString::number(prefSet.triSurfacePropsThreshold));
     }
 
     // Save these preferences to the global configuration.
+    mainWindow->setPreferences(prefSet);
     mainWindow->saveOptions();
 }
 

@@ -57,7 +57,7 @@ K_EXPORT_COMPONENT_FACTORY(libreginapart, ReginaPartFactory);
 ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
         QObject *parent, const char *name, const QStringList& /*args*/) :
         KParts::ReadWritePart(parent, name), packetTree(0),
-        dockedPane(0), autoDock(true) {
+        dockedPane(0) {
     // Get the instance.
     setInstance(factoryInstance());
 
@@ -127,7 +127,7 @@ void ReginaPart::view(PacketPane* newPane) {
     // Decide whether to dock or float.
     bool shouldDock;
 
-    if (autoDock) {
+    if (prefs.autoDock) {
         if (dockedPane) {
             shouldDock = ! dockedPane->isDirty();
         } else
@@ -370,15 +370,14 @@ bool ReginaPart::closeAllPanes() {
     return true;
 }
 
-void ReginaPart::displayIcon(bool shouldDisplay) {
-    if (shouldDisplay)
+void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
+    prefs = newPrefs;
+
+    // Act immediately upon this new set of preferences where required.
+    if (prefs.displayIcon)
         reginaIcon->show();
     else
         reginaIcon->hide();
-}
-
-void ReginaPart::setAutoDock(bool value) {
-    autoDock = value;
 }
 
 void ReginaPart::updateTreePacketActions() {
