@@ -108,8 +108,8 @@ class NIsomorphism : public ShareableObject {
          * Determines the image of the given source tetrahedron under
          * this isomorphism.
          *
-         * @param tet the index of the source tetrahedron; this must be
-         * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @param sourceTet the index of the source tetrahedron; this must
+         * be between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
          * @return a reference to the index of the destination tetrahedron
          * that the source tetrahedron maps to.
          */
@@ -118,8 +118,8 @@ class NIsomorphism : public ShareableObject {
          * Determines the image of the given source tetrahedron under
          * this isomorphism.
          *
-         * @param tet the index of the source tetrahedron; this must be
-         * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @param sourceTet the index of the source tetrahedron; this must
+         * be between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
          * @return the index of the destination tetrahedron
          * that the source tetrahedron maps to.
          */
@@ -137,7 +137,7 @@ class NIsomorphism : public ShareableObject {
          * @return the permutation applied to the four faces of the
          * source tetrahedron.
          */
-        virtual NPerm facePerm(unsigned tet) const = 0;
+        virtual NPerm facePerm(unsigned sourceTet) const = 0;
         /**
          * Determines the image of the given source tetrahedron face
          * under this isomorphism.  Note that a value only is returned; this
@@ -259,7 +259,7 @@ class NIsomorphismIndexed : public NIsomorphism {
          */
         virtual ~NIsomorphismIndexed();
 
-        virtual NPerm facePerm(unsigned tet) const;
+        virtual NPerm facePerm(unsigned sourceTet) const;
 
         /**
          * Returns a read-write reference to the index into

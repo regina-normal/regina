@@ -143,6 +143,10 @@ class NPacketListener {
          */
         virtual void childrenWereReordered(NPacket* packet);
 
+    /**
+     * Allow packets to automatically deregister listeners as they are
+     * destroyed.
+     */
     friend class NPacket;
 };
 
