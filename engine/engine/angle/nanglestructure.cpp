@@ -88,7 +88,7 @@ void NAngleStructure::writeToFile(NFile& out) const {
         }
     }
     out.writeInt(-1);
-    
+
     // Write properties.
     std::streampos bookmark(0);
 
@@ -150,7 +150,7 @@ void NAngleStructure::initialiseAllProperties() {
     flags = 0;
 }
 
-void NAngleStructure::calculateType() {
+void NAngleStructure::calculateType() const {
     unsigned long size = vector->size();
     if (size == 1) {
         // We have no tetrahedra at all; this angle structure is both

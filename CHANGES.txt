@@ -16,6 +16,8 @@ Current Development Version
         Class Engine:
             - Removed since this is no longer necessary with the new
               python bindings.
+        Class NAngleStructure:
+            - Routines isStrict() and isTaut() are now const.
         Class NAngleStructureList:
             - Made the enumerating constructor private and added the
               public replacement enumerate().

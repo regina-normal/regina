@@ -107,7 +107,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
         NTriangulation* triangulation;
             /**< The triangulation on which this angle structure is placed. */
 
-        unsigned long flags;
+        mutable unsigned long flags;
             /**< Stores a variety of angle structure properties as
              *   described by the flag constants in this class.
              *   Flags can be combined using bitwise OR. */
@@ -176,7 +176,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          *
          * @return \c true if and only if this is a strict angle structure.
          */
-        bool isStrict();
+        bool isStrict() const;
 
         /**
          * Determines whether this is a taut structure.
@@ -184,7 +184,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          *
          * @return \c true if and only if this is a taut structure.
          */
-        bool isTaut();
+        bool isTaut() const;
 
         void writeTextShort(std::ostream& out) const;
 
@@ -246,7 +246,7 @@ class NAngleStructure : public ShareableObject, public NPropertyHolder {
          * Calculates the structure type (strict or taut) and stores it
          * as a property.
          */
-        void calculateType();
+        void calculateType() const;
 
     friend class regina::NXMLAngleStructureReader;
 };
@@ -283,13 +283,13 @@ inline NTriangulation* NAngleStructure::getTriangulation() const {
     return triangulation;
 }
 
-inline bool NAngleStructure::isStrict() {
+inline bool NAngleStructure::isStrict() const {
     if ((flags & flagCalculatedType) == 0)
         calculateType();
     return ((flags & flagStrict) != 0);
 }
 
-inline bool NAngleStructure::isTaut() {
+inline bool NAngleStructure::isTaut() const {
     if ((flags & flagCalculatedType) == 0)
         calculateType();
     return ((flags & flagTaut) != 0);
