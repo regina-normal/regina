@@ -10,6 +10,18 @@
 
 REGINA_VERSION = 2.2
 
+# ------------------------------ Platform-specific ----------------------
+
+# What should be bundled into a binary release?
+
+ifeq ($(OSTYPE),cygwin)
+	PARENT_TARGET = binjni binjavacorba
+	ENGINE_BIN = $(ENGINE_JNI)
+else
+	PARENT_TARGET = bin
+	ENGINE_BIN = $(ENGINE_JNI) $(ENGINE_CORBA)
+endif
+
 # ------------------------------ Variables ------------------------------
 
 include ../Makefile.options
@@ -72,12 +84,11 @@ $(SRC_ARCHIVE):
 
 distbin : $(BIN_ARCHIVE)
 $(BIN_ARCHIVE) :
-	cd .. && $(MAKE) bin
+	cd .. && $(MAKE) $(PARENT_TARGET)
 	-rm $(REGINA_DIR)
 	ln -s .. $(REGINA_DIR)
 	$(ARCHIVE) $(BIN_ARCHIVE) $(patsubst %,$(REGINA_DIR)/%, \
-		$(ENGINE_JNI) $(ENGINE_CORBA) \
-		$(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA) \
+		$(ENGINE_BIN) $(JAVA_UI) $(JAVA_JNI) $(JAVA_CORBA) \
 		$(misc_bin_mask) $(scripts))
 	-rm $(REGINA_DIR)
 
