@@ -46,7 +46,7 @@ std::string truncateFixture(const std::string& testName) {
 
     // Remove the fixture type altogether if it's the generic type.
     if (len > genericFixtureLen)
-        if (testName.compare(0, genericFixtureLen, genericFixturePrefix) == 0)
+        if (testName.substr(0, genericFixtureLen) == genericFixturePrefix)
             return testName.substr(genericFixtureLen, len - genericFixtureLen);
 
     // Otherwise prune any leading digits from the fixture name.
