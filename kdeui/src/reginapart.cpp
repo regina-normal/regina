@@ -46,7 +46,6 @@
 #include <kinstance.h>
 #include <kmessagebox.h>
 #include <kparts/genericfactory.h>
-#include <kstdaction.h>
 
 typedef KParts::GenericFactory<ReginaPart> ReginaPartFactory;
 K_EXPORT_COMPONENT_FACTORY(libreginapart, ReginaPartFactory);
@@ -169,30 +168,11 @@ void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
 
     // Set up the docking area.
     QVBox* dockArea = new QVBox(splitter);
+    dockArea->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
+        QSizePolicy::MinimumExpanding));
 
     // TODO: Adjust the divider position.
     setWidget(splitter);
-}
-
-void ReginaPart::setupActions() {
-    actSave = KStdAction::save(this, SLOT(save()), actionCollection());
-    KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
-
-    new KAction(i18n("&Angle Structure List"), "packet_angles", ALT+Key_A,
-        this, SLOT(unimplemented()), actionCollection(), "packet_angles");
-    new KAction(i18n("&Container"), "packet_container", ALT+Key_C,
-        this, SLOT(unimplemented()), actionCollection(), "packet_container");
-    new KAction(i18n("&Filter"), "packet_filter", ALT+Key_F,
-        this, SLOT(unimplemented()), actionCollection(), "packet_filter");
-    new KAction(i18n("&Normal Surface List"), "packet_surfaces", ALT+Key_N,
-        this, SLOT(unimplemented()), actionCollection(), "packet_surfaces");
-    new KAction(i18n("&Script"), "packet_script", ALT+Key_S,
-        this, SLOT(unimplemented()), actionCollection(), "packet_script");
-    new KAction(i18n("Te&xt"), "packet_text", ALT+Key_X,
-        this, SLOT(unimplemented()), actionCollection(), "packet_text");
-    new KAction(i18n("&Triangulation"), "packet_triangulation", ALT+Key_T,
-        this, SLOT(unimplemented()), actionCollection(),
-        "packet_triangulation");
 }
 
 void ReginaPart::initPacketTree() {
