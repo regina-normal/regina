@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/perl -w
 #
 # Regina - A Normal Surface Theory Calculator
 # Python Startup Script
@@ -27,172 +27,267 @@
 # License along with this program; if not, write to the Free
 # Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 # MA 02111-1307, USA.
-#
-set -e
+
+use strict;
+use File::Basename;
 
 # --- Constants. ---
 
+# The program name.
+my $prog_name = $0;
+
 # Address to which questions should be emailed.
-regina_support="regina-user@lists.sourceforge.net"
-default_verbosity=1
+my $regina_support = "regina-user\@lists.sourceforge.net";
 
-# --- Diagnostic output routines. ---
+# Default verbosity level.
+my $default_verbosity = 1;
 
-# Send the given error message to stderr.
-# Usage: error <message>
-error () {
-  echo "$1" 1>&2
+# Local configuration files.
+my $home = $ENV{HOME};
+if (! $home) {
+    $home = `echo ~`;
+}
+my $python_conf = $home . "/.regina-python";
+my $libs_conf = $home . "/.regina-libs";
+
+# --- Variables. ---
+
+my $quiet = 0;
+my $verbose = 0;
+my $regina_home = '';
+my $from_source = 0;
+my $python_lib_dir = '';
+my $python_cmd = '';
+my @python_libs;
+my $script = '';
+my @script_args;
+
+# --- Extract variables from the configuration file.
+
+if (open(CONF, $python_conf)) {
+    my @lines = <CONF>;
+    chomp @lines;
+    close(CONF);
+
+    foreach my $line (@lines) {
+        if ($line =~ /^\s*$/ or $line =~ /^\s*#/) {
+            next;
+        }
+        if ($line =~ /^\s*([A-Za-z_]+)\s*=\s*$/) {
+            &warn("W: Variable $1 is not assigned a value in $python_conf.\n");
+            next;
+        }
+        if ($line =~ /^\s*([A-Za-z_]+)\s*=\s*(\S(.*\S)?)\s*$/) {
+            # We have a configuration variable.
+            if ($1 eq 'REGINA_VERBOSITY') {
+                &setVerbosity($2);
+            } elsif ($1 eq 'REGINA_PYTHON') {
+                &setPythonCmd($2);
+            } elsif ($1 eq 'REGINA_PYLIBDIR') {
+                &setPythonLibDir($2);
+            } elsif ($1 eq 'REGINA_HOME') {
+                &setReginaHome($2);
+            } else {
+                &warn("W: Unknown variable $1 in $python_conf.\n");
+            }
+            next;
+        }
+        &warn("W: Bad line in $python_conf:\n$line\n");
+    }
 }
 
-# Send the given warning message to stderr if $REGINA_VERBOSITY >= 1.
-# Usage: warn <message>
-warn () {
-  if [ 1 -le "$REGINA_VERBOSITY" ]; then
-    echo "$1" 1>&2
-  fi
+# --- Extract variables from the environment. ---
+
+if ($ENV{REGINA_VERBOSITY}) {
+    &setVerbosity($ENV{REGINA_VERBOSITY});
+}
+if ($ENV{REGINA_HOME}) {
+    &setReginaHome($ENV{REGINA_HOME});
+}
+if ($ENV{REGINA_PYTHON}) {
+    &setPythonCmd($ENV{REGINA_PYTHON});
+}
+if ($ENV{REGINA_PYLIBDIR}) {
+    &setPythonLibDir($ENV{REGINA_PYLIBDIR});
 }
 
-# Send the given information message to stderr if $REGINA_VERBOSITY >= 2.
-# Usage: info <message>
-info () {
-  if [ 2 -le "$REGINA_VERBOSITY" ]; then
-    echo "$1" 1>&2
-  fi
+# --- Parse the command-line options. ---
+
+my $readingScriptArgs = 0;
+foreach my $arg (@ARGV) {
+    if ($readingScriptArgs) {
+        push @script_args, $arg;
+        next;
+    }
+
+    if ($arg eq '-q' or $arg eq '--quiet') {
+        $quiet = 1;
+        $verbose = 0;
+        next;
+    }
+
+    if ($arg eq '-v' or $arg eq '--verbose') {
+        $quiet = 0;
+        $verbose = 1;
+        next;
+    }
+
+    if ($arg =~ /^-/) {
+        &err("Unrecognised option: $arg\n");
+        &usage;
+    }
+
+    # We must be onto the script.
+    $script = $arg;
+    $readingScriptArgs = 1;
 }
 
-# --- Base Regina directory and package name. ---
+# --- Check that the current options are reasonable. ---
 
-# Variables set:
+my $prefix = "@prefix@";
+my $datadir = "@datadir@";
+my $libdir = "@libdir@";
+my $package = "@PACKAGE@";
+
+if (! $regina_home) {
+    if ( -e "$prog_name.in" and -f dirname($prog_name) . '/../admin/ac_gen') {
+        &info("I: Running from the source tree.\n");
+        $from_source = 1;
+        &setReginaHome(dirname($prog_name) . '/..');
+    } else {
+        &info("I: Running from an installation.\n");
+        &setReginaHome("$datadir/$package");
+    }
+}
+
+if (! $python_cmd) {
+    my $which_python;
+    chomp($which_python = `which python`);
+    if (! $which_python) {
+        &err("E: A Python interpreter could not be found.\n");
+        &err("E: Set \$REGINA_PYTHON to a Python interpreter (such as /usr/bin/python)\n");
+        &err("E: and try again.\n");
+        exit 1;
+    }
+    &setPythonCmd($which_python);
+}
+
+if (! $python_lib_dir) {
+    &setPythonLibDir($from_source ? "$regina_home/python/.libs" :
+        "$libdir/$package/python");
+}
+
+# --- Go ahead and run the application. ---
+
+if ($ENV{PYTHONPATH}) {
+    $ENV{PYTHONPATH} = "$python_lib_dir:$ENV{PYTHONPATH}";
+} else {
+    $ENV{PYTHONPATH} = $python_lib_dir;
+}
+&info("I: Using \$PYTHONPATH=$ENV{PYTHONPATH}.\n");
+
+my @fullCommandLine = ( $python_cmd );
+
+if ($script) {
+    if (! -e $script) {
+        &err("E: The script $script could not be found.\n");
+        &usage();
+    }
+    my @fullCommandLine = ( $python_cmd, "$regina_home/scripts/runscript.py");
+    push @fullCommandLine, @python_libs;
+    push @fullCommandLine, ( '--', $script );
+    push @fullCommandLine, @script_args;
+    exec @fullCommandLine or &execError();
+} else {
+    my @fullCommandLine = ( $python_cmd, '-i',
+        "$regina_home/scripts/runscript.py" );
+    push @fullCommandLine, @python_libs;
+    exec @fullCommandLine or &execError();
+}
+
+# --- Helper routines. ---
+
+# Set various configuration options.
 #
-#   REGINA_HOME: See reference manual; this is only set if it's not already
-#                in the environment.
-#   REGINA_PACKAGE: The package name for the Regina installation we are using.
-#   REGINA_PKGLIBDIR: The directory in which the Python module has been
-#                     (or will be) installed.
-#   REGINA_FROMSOURCE: 1 if we're running directly from the source tree,
-#                      0 if we're running from an installation.
+sub setVerbosity() {
+    &info("I: Setting verbosity to $_[0].\n");
+    if ($_[0] eq '0') {
+        $quiet = 1;
+        $verbose = 0;
+    } elsif ($_[0] eq '1') {
+        $quiet = 0;
+        $verbose = 0;
+    } elsif ($_[0] eq '2') {
+        $quiet = 0;
+        $verbose = 1;
+    } else {
+        &err("E: The verbosity level $_[0] is not recognised.\n");
+        &err("E: This should be 0 (errors), 1 (errors/warnings) or 2 (everything).\n");
+    }
+}
+sub setPythonCmd() {
+    &info("I: Setting python command to $_[0].\n");
+    $python_cmd = $_[0];
+}
+sub setPythonLibDir() {
+    &info("I: Setting python module directory to $_[0].\n");
+    if ( ! -e "$_[0]/regina.so") {
+        &err("E: The calculation engine module 'regina.so' could not be \n");
+        &err("   found in the directory $_[0].\n");
+        &err("E: Please set \$REGINA_PYLIBDIR to the directory containing\n");
+        &err("   the module 'regina.so' and try again.\n");
+        exit 1;
+    }
+    $python_lib_dir = $_[0];
+}
+sub setReginaHome() {
+    &info("I: Setting Regina home directory to $_[0].\n");
+    if ( ! -e "$_[0]/scripts/runscript.py") {
+        &err("E: \$REGINA_HOME should be set to the Regina base directory.\n");
+        &err("   This is the directory containing the 'scripts' subdirectory,\n");
+        &err("   the 'icons' subdirectory and so on.\n");
+        &err("E: It is currently set to $regina_home.\n");
+        exit 1;
+    }
+    $regina_home = $_[0];
+}
 
-prefix=@prefix@
-datadir=@datadir@
-libdir=@libdir@
+# Write the given message to stderr if verbose mode is on.
+#
+sub info {
+    if ($verbose) {
+        print STDERR $_[0];
+    }
+}
+# Write the given message to stderr if quiet mode is off.
+#
+sub warn {
+    if (! $quiet) {
+        print STDERR $_[0];
+    }
+}
 
-# Are we running directly from the source tree?
-if [ -f "$0.in" -a -f "`dirname "$0"`/../admin/ac_gen" ]; then
-  export REGINA_FROMSOURCE=1
-  export REGINA_PACKAGE="regina"
-  default_regina_home="`dirname "$0"`/.."
-else
-  export REGINA_FROMSOURCE=0
-  export REGINA_PACKAGE="@PACKAGE@"
-  default_regina_home="$datadir/@PACKAGE@"
-fi
-export REGINA_PKGLIBDIR="$libdir/@PACKAGE@"
+# Write the given message to stderr.
+#
+sub err {
+    print STDERR $_[0];
+}
 
-# Derive REGINA_HOME if nothing is specified.
-if [ -z "$REGINA_HOME" ]; then
-  export REGINA_HOME="$default_regina_home"
-fi
+# Display usage information and exit.
+#
+sub usage {
+    print STDERR "Usage: $prog_name [ -q, --quiet | -v, --verbose ]\n";
+    print STDERR "       [ script [ script_args ... ]]\n";
+    exit 1;
+}
 
-# Check REGINA_HOME is an appropriate value.
-if [ ! -f "$REGINA_HOME/scripts/regscript_opt" ]; then
-  error "Error: \$REGINA_HOME should be set to the base Regina directory."
-  error "       This is the directory containing the \"scripts\" subdirectory,"
-  error "       the \"icons\" subdirectory and so on."
-  error "       It is currently set to $REGINA_HOME."
-  exit 1
-fi
-
-# --- Check command-line options. ---
-
-while [ "$#" != 0 ]; do
-  case "$1" in
-    --verbose | -v )
-      export REGINA_VERBOSITY=2
-      ;;
-    --quiet | -q )
-      export REGINA_VERBOSITY=0
-      ;;
-    -* )
-      error "Error: Unknown option $1."
-      exit 1
-      ;;
-    * )
-      # We've found a script to run.
-      break
-      ;;
-  esac
-  shift
-done
-
-# --- Decide upon a verbosity level. ---
-
-# Use default verbosity if nothing is specified.
-if [ -z "$REGINA_VERBOSITY" ]; then
-    export REGINA_VERBOSITY="$default_verbosity"
-fi
-
-# Check that the verbosity is an appropriate value.
-case "$REGINA_VERBOSITY" in
-    [012] )
-    ;;
-    * )
-        error "Error: \$REGINA_VERBOSITY should be 0, 1 or 2."
-        error "       (0 = errors, 1 = errors/warnings, 2 = everything)"
-        exit 1
-    ;;
-esac
-
-# Now we have established our verbosity level, output $REGINA_HOME and
-# $REGINA_VERBOSITY if appropriate.
-info "-- Verbosity level (REGINA_VERBOSITY): $REGINA_VERBOSITY"
-info "-- Regina home directory (REGINA_HOME): $REGINA_HOME"
-
-# --- Read runtime options. ---
-
-. "$REGINA_HOME/scripts/regscript_opt"
-
-# --- Set the python path and run the application. ---
-
-export PYTHONPATH="$REGINA_PYLIBDIR:$PYTHONPATH"
-info "Python interpreter: $REGINA_PYTHON"
-info "Python path: $PYTHONPATH"
-
-if [ -n "$1" ]; then
-    # Run the given script.
-    if [ ! -e "$1" ]; then
-        error "Error: The script $1 does not exist."
-        exit 1
-    fi
-    if "$REGINA_PYTHON" "$REGINA_HOME/scripts/runscript.py" -- "$@"; then
-        exit 0
-    fi
-else
-    # Start an interactive interpreter.
-    if "$REGINA_PYTHON" -i "$REGINA_HOME/scripts/runscript.py"; then
-        exit 0
-    fi
-fi
-
-error
-error "################################"
-error "#                              #"
-error "#            REGINA            #"
-error "#                              #"
-error "#  Could not run application!  #"
-error "#                              #"
-error "################################"
-error
-error "An error occurred whilst trying to run the application.  Use:"
-error
-error "    $0 --verbose"
-error
-error "to see more diagnostic output such as the runtime options"
-error "that are being used.  You may wish to verify that these"
-error "options are correct and edit the runtime options file(s)"
-error "if appropriate."
-error
-error "If you still can't run the application, please mail"
-error "$regina_support for assistance."
-error
-exit 1
+# The python interpreter could not be started.
+#
+sub execError() {
+    &err("E: An error occurred whilst trying to start the Python interpreter.\n");
+    &err("E: Run '$prog_name --verbose' to see more detailed diagnostic output,\n");
+    &err("   including the runtime options being used.\n");
+    &err("E: If you still cannot resolve the problem, please mail\n");
+    &err("   $regina_support for assistance.\n");
+}
 
