@@ -242,6 +242,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
 }
 
 void PythonInterpreter::importRegina() {
+    // TODO
 }
 
 void PythonInterpreter::setVar(const char* name, regina::NPacket* value) {

@@ -75,9 +75,10 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
         PythonManager* manager;
 
         /**
-         * Configuration
+         * Configuration and attributes
          */
         ReginaPrefSet prefs;
+        QString lastIndent;
 
     public:
         /**
@@ -132,7 +133,12 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
          * appended to the session transcript without causing HTML
          * confusion.
          */
-        QString encode(const QString& plaintext);
+        static QString encode(const QString& plaintext);
+
+        /**
+         * Calculate the indent at the beginning of the given line.
+         */
+        static QString initialIndent(const QString& line);
 };
 
 inline void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {

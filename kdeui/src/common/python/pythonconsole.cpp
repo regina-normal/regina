@@ -44,7 +44,7 @@
 #include <qlabel.h>
 #include <qvbox.h>
 
-// TODO: tab, history, autoindent
+// TODO: tab, history
 // TODO: save log ; cut, copy, paste, select all
 // TODO: long processing notification and visual updates
 
@@ -117,6 +117,7 @@ PythonConsole::~PythonConsole() {
 
 void PythonConsole::processCommand() {
     QString cmd = input->text();
+    lastIndent = initialIndent(cmd);
 
     // Log the input line.
     // Include the prompt but ignore the initial space.
@@ -129,7 +130,13 @@ void PythonConsole::processCommand() {
 
     // Log the output.
     PythonOutputStream::flush();
+
+    // Prepare for a new command.
     setPromptMode(done ? PRIMARY : SECONDARY);
+    if (prefs.pythonAutoIndent) {
+        input->setText(lastIndent);
+        input->end(false);
+    }
 }
 
 void PythonConsole::saveLog() {
@@ -145,8 +152,11 @@ void PythonConsole::processOutput(const std::string& data) {
 }
 
 void PythonConsole::init() {
-    // TODO: print regina.welcome()
-    addOutput("Welcome!");
+    interpreter->importRegina();
+    interpreter->executeLine("print regina.welcome()");
+
+    // TODO: More startup tasks.
+
     setPromptMode(PRIMARY);
 }
 
@@ -179,6 +189,19 @@ QString PythonConsole::encode(const QString& plaintext) {
     return ans.replace('&', "&amp;").
         replace('>', "&gt;").
         replace('<', "&lt;");
+}
+
+QString PythonConsole::initialIndent(const QString& line) {
+    const char* start = line.ascii();
+    const char* pos = start;
+    while (*pos && isspace(*pos))
+        pos++;
+
+    // If the line is entirely whitespace then return no indent.
+    if (*pos == 0)
+        return "";
+    else
+        return line.left(pos - start);
 }
 
 #include "pythonconsole.moc"
