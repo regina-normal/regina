@@ -68,7 +68,7 @@ inline ReginaPrefSet::ReginaPrefSet() :
         autoFileExtension(true),
         displayIcon(true),
         treeJumpSize(10),
-        triEditMode(Dialog),
+        triEditMode(DirectEdit),
         triSurfacePropsThreshold(6) {
 }
 

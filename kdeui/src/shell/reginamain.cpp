@@ -370,8 +370,8 @@ void ReginaMain::readOptions(KConfig* config) {
 
     config->setGroup("Triangulation");
     globalPrefs.triEditMode = (
-        config->readEntry( "EditMode", "Dialog") == "DirectEdit" ?
-        ReginaPrefSet::DirectEdit : ReginaPrefSet::Dialog);
+        config->readEntry( "EditMode", "DirectEdit") == "Dialog" ?
+        ReginaPrefSet::Dialog : ReginaPrefSet::DirectEdit);
     globalPrefs.triSurfacePropsThreshold = config->readUnsignedNumEntry(
         "SurfacePropsThreshold", 6);
 
