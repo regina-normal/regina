@@ -1,14 +1,14 @@
 # Known to work for:
 # - Fedora Core 2
 
-Name: regina
+Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
 Version: 4.1.2
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
 Group: Applications/Engineering
-Source: http://prdownloads.sourceforge.net/regina/%{name}-%{version}.tar.gz
+Source: http://prdownloads.sourceforge.net/regina/regina-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
@@ -16,6 +16,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 Requires: kdelibs
 Requires: kdebase
 Requires: python
+Conflicts: regina
 
 BuildRequires: boost-devel
 # BuildRequires: cppunit
@@ -45,7 +46,7 @@ census creation and normal surface enumeration.  It offers embedded
 Python scripting giving full access to the calculation engine.
 
 %prep
-%setup -n %{name}-%{version}
+%setup -n regina-%{version}
 
 %build
 unset QTDIR || : ; . /etc/profile.d/qt.sh
