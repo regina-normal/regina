@@ -23,6 +23,7 @@ ui_link = @PACKAGE_TARNAME@.jar
 
 all-local :
 	@JAR@ -cf $(ui_jar) `find normal -name "*.class"` $(jar_extra_files)
+	rm -f $(ui_link)
 	@LN_S@ $(ui_jar) $(ui_link)
 
 clean-local :
