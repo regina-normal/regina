@@ -217,7 +217,10 @@ const NAbelianGroup& NTriangulation::getHomologyH1Bdry() {
     unsigned long rank = 0;
     unsigned long z2rank = 0;
 
-    // The following line ensures the skeleton has been calculated.
+    // Ensure that the skeleton has been calculated.
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+
     for (BoundaryComponentIterator bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++) {
         if ((*bit)->isOrientable()) {
