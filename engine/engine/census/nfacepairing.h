@@ -162,6 +162,22 @@ class NFacePairing : public NThread {
         const NTetFace& dest(unsigned tet, unsigned face) const;
 
         /**
+         * Returns the other face to which the given tetrahedron face is
+         * paired.  This is a convenience operator whose behaviour is
+         * identical to that of dest().
+         *
+         * If the given face is left deliberately unmatched, the value
+         * returned will be boundary (as returned by NTetFace::isBoundary()).
+         *
+         * \pre The given face is a real tetrahedron face (not boundary,
+         * before-the-start or past-the-end).
+         *
+         * @param source the face under investigation.
+         * @return the other face to which the given face is paired.
+         */
+        const NTetFace& operator [](const NTetFace& source) const;
+
+        /**
          * Determines whether the given tetrahedron face has been left
          * deliberately unmatched.
          *
@@ -501,6 +517,22 @@ class NFacePairing : public NThread {
          * @return the other face to which the given face is paired.
          */
         NTetFace& dest(unsigned tet, unsigned face);
+
+        /**
+         * Returns the other face to which the given tetrahedron face is
+         * paired.  This is a convenience operator whose behaviour is
+         * identical to that of dest().
+         *
+         * If the given face is left deliberately unmatched, the value
+         * returned will be boundary (as returned by NTetFace::isBoundary()).
+         *
+         * \pre The given face is a real tetrahedron face (not boundary,
+         * before-the-start or past-the-end).
+         *
+         * @param source the face under investigation.
+         * @return the other face to which the given face is paired.
+         */
+        NTetFace& operator [](const NTetFace& source);
 
         /**
          * Determines whether the matching for the given tetrahedron face
