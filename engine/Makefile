@@ -111,6 +111,7 @@ engine_misc_src_files = $(wildcard $(engine_misc_src_mask))
 
 output_jni = ../$(ENGINE_JNI)
 output_corba = ../$(ENGINE_CORBA)
+output_lib = ../$(ENGINE_LIB)
 
 # ------------------------- Platform-specific ------------------------
 
@@ -122,7 +123,7 @@ endif
 
 # ------------------------- Targets ----------------------------------
 
-.PHONY : binjni bincorba nocorba \
+.PHONY : binjni bincorba nocorba binlib \
 	prepjni prepcorba \
 	prepcleanjni prepcleancorba \
 	docs clean
@@ -139,6 +140,10 @@ $(output_corba) : $(obj_engine) $(obj_corba)
 
 nocorba :
 	$(ECHO) "\n\nThe CORBA engine is not supported on this platform.\n\n"
+
+binlib : $(output_lib)
+$(output_lib) : $(obj_engine)
+	$(LINKSTATIC) $(output_lib) $(obj_engine)
 
 prepjni : $(hdr_jni_autogen)
 

@@ -14,6 +14,8 @@ export ORBInitialPort := 8088
 #         shared library from the Java UI using JNI.
 # ENGINE_CORBA: The complete C++ calculation engine, to be accessed as a
 #         server application using CORBA.
+# ENGINE_LIB : A static library containing the core C++ calculation
+#         engine classes.
 #
 # JAVA_UI: The jar containing the general Java user interface,
 #         without any specific engine interaction components.
@@ -28,6 +30,7 @@ export ORBInitialPort := 8088
  
 export ENGINE_JNI := bin/libregina-engine-jni.so
 export ENGINE_CORBA := bin/regina-engine-corba
+export ENGINE_LIB := bin/libregina-engine.a
 
 export JAVA_UI := bin/regina.jar
 export JAVA_JNI := bin/regina-jni.jar
@@ -88,8 +91,9 @@ export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
 #
 # MAKEDEP: Make header dependency files.
 # COMPILE: Compile C++ code into object files.
-# LINKLIB: Compile object files into a shared library.
 # LINKEXEC: Compile object files into an executable.
+# LINKLIB: Compile object files into a shared library.
+# LINKSTATIC: Compile object files into a static library.
 # DOXYGEN: Generate documentation from C++ sources using doxygen.
 # JAVAC: Compile Java code into class files.
 # JAR: Operate with Java jar archives.
@@ -111,8 +115,9 @@ export EXTRA_CLASSES := /usr/lib/j2se/1.3/jre/lib/rt.jar
 
 export MAKEDEP := g++ -MM
 export COMPILE := g++ -O2 -c -Wall # -DDEBUG
-export LINKLIB := g++ -O2 -shared
 export LINKEXEC := g++ -O2
+export LINKLIB := g++ -O2 -shared
+export LINKSTATIC := ar cru
 export DOXYGEN := doxygen
 #export JAVAC := javac -target 1.1
 export JAVAC := jikes

@@ -55,7 +55,7 @@ helprun :
 		$(ECHO)
 
 .PHONY : help helpgeneral helpbin helpdocs helpprep helprun \
-	binengine binenginejni binenginecorba \
+	binengine binenginejni binenginecorba binenginelib \
 	binjava binjavaui binjavajni binjavacorba \
 	binjni bincorba bindocs bin \
 	docsengine docsjava docshtml docsman docs \
@@ -70,6 +70,8 @@ binenginejni : prepenginejni
 	cd engine && $(MAKE) binjni
 binenginecorba : prepenginecorba
 	cd engine && $(MAKE) bincorba
+binenginelib :
+	cd engine && $(MAKE) binlib
 binjava : binjavaui binjavajni binjavacorba
 binjavaui :
 	cd javaui && $(MAKE) uijar

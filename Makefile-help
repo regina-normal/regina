@@ -1,6 +1,7 @@
 binengine - make all C++ calculation engine binaries
 binenginejni - make the engine binary that offers JNI access
 binenginecorba - make the engine binary that offers CORBA access
+binenginelib - make a static library containing the core engine classes.
 binjava - make all Java user interface binary jars
 binjavaui - make the jar containing the general Java UI but no engine access
 binjavajni - make the jar for the Java UI providing JNI engine access only
