@@ -1075,8 +1075,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * flattened onto faces \e g1 and \e g2 of the other
          * respectively, we must
          * have (a) \e f1 and \e g1 distinct, (b) \e f2 and \e g2 distinct,
-         * (c) not both <i>f1</i>=<i>g2</i> and <i>g1</i>=<i>f2</i>, and
-         * (d) not both <i>f1</i>=<i>f2</i> and <i>g1</i>=<i>g2</i>.
+         * (c) not both <i>f1</i>=<i>g2</i> and <i>g1</i>=<i>f2</i>,
+         * (d) not both <i>f1</i>=<i>f2</i> and <i>g1</i>=<i>g2</i> and
+         * (e) not two of the faces boundary with the other two identified.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -1240,10 +1241,12 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * This involves simply popping off a tetrahedron that touches
          * the boundary.
          * This can be done only if precisely 1, 2 or 3 faces of the
-         * tetrahedron lie in the boundary
+         * tetrahedron lie in the boundary.
          * Furthermore, if 1 face lies in the boundary, the opposite
          * vertex may not lie in the boundary.  If 2 faces lie in the
-         * boundary, the remaining edge may not lie in the boundary.
+         * boundary, the remaining edge may not lie in the boundary and
+         * the remaining two faces of the tetrahedron may not be glued
+         * together.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.

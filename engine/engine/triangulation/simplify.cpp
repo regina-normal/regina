@@ -365,9 +365,11 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
             return false;
         if (face[0][1] == face[1][1])
             return false;
-        if (face[0][0] == face[1][1] && face[0][1] == face[1][0])
-            return false;
-        if (face[0][0] == face[0][1] && face[1][0] == face[1][1])
+
+        // The cases with two pairs of identified faces and with one
+        // pair of identified faces plus one pair of boundary faces are
+        // all covered by the following check.
+        if (tet[0]->getComponent()->getNumberOfTetrahedra() == 2)
             return false;
     }
 
@@ -656,7 +658,10 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
             if (t->getVertex(bdry[0])->isBoundary())
                 return false;
         } else if (nBdry == 2) {
-            if (t->getEdge(edgeNumber[bdry[0]][bdry[1]])->isBoundary())
+            int edge = edgeNumber[bdry[0]][bdry[1]];
+            if (t->getEdge(edge)->isBoundary())
+                return false;
+            if (t->getAdjacentTetrahedron(edgeStart[6 - edge]) == t)
                 return false;
         }
     }
