@@ -43,7 +43,6 @@
 #define PROPID_ORIENTABILITY 7
 #define PROPID_TWOSIDEDNESS 8
 #define PROPID_CONNECTEDNESS 9
-#define PROPID_CANCRUSH 10
 #define PROPID_SURFACENAME 100
 
 namespace regina {
@@ -127,10 +126,6 @@ NNormalSurface* NNormalSurface::clone() const {
         ans->compact = compact;
         ans->calculatedCompact = true;
     }
-    if (calculatedCanCrush) {
-        ans->canCrush = canCrush;
-        ans->calculatedCanCrush = true;
-    }
     return ans;
 }
 
@@ -160,10 +155,6 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
         compact = infile.readBool();
         calculatedCompact = true;
     }
-    else if (propType == PROPID_CANCRUSH) {
-        canCrush = infile.readBool();
-        calculatedCanCrush = true;
-    }
     else if (propType == PROPID_SURFACENAME)
         name = infile.readString();
 }
@@ -175,7 +166,6 @@ void NNormalSurface::initialiseAllProperties() {
     calculatedConnected = false;
     calculatedRealBoundary = false;
     calculatedCompact = false;
-    calculatedCanCrush = false;
 }
 
 void NNormalSurface::writeTextShort(std::ostream& out) const {
@@ -371,8 +361,6 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
         out << "\n\t" << xmlValueTag("realbdry", realBoundary);
     if (calculatedCompact)
         out << "\n\t" << xmlValueTag("compact", compact);
-    if (calculatedCanCrush)
-        out << "\n\t" << xmlValueTag("cancrush", canCrush);
 
     // Write the closing tag.
     out << " </surface>\n";
@@ -429,11 +417,6 @@ void NNormalSurface::writeToFile(NFile& out) const {
     if (calculatedCompact) {
         bookmark = writePropertyHeader(out, PROPID_COMPACT);
         out.writeBool(compact);
-        writePropertyFooter(out, bookmark);
-    }
-    if (calculatedCanCrush) {
-        bookmark = writePropertyHeader(out, PROPID_CANCRUSH);
-        out.writeBool(canCrush);
         writePropertyFooter(out, bookmark);
     }
 

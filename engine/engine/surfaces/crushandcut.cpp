@@ -26,9 +26,7 @@
 
 /* end stub */
 
-#include <algorithm>
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nprism.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -107,7 +105,7 @@ NTriangulation* NNormalSurface::crush() {
                 tet->joinTo(face, adj, adjPerm);
             }
         }
-
+    
     // Delete unwanted tetrahedra.
     for (whichTet = nTet - 1; whichTet >= 0; whichTet--)
         if (quads[whichTet] >= 0)
@@ -115,66 +113,6 @@ NTriangulation* NNormalSurface::crush() {
 
     delete[] quads;
     return ans;
-}
-
-void NNormalSurface::calculateKnownCanCrush() {
-    if (calculatedCanCrush)
-        return;
-
-    // We'll run through the prisms (defined by slicing tetrahedra along quads)
-    // looking for cycles of adjacent prisms; if there are no such cycles
-    // then we're fine.
-
-    unsigned long nTet = triangulation->getNumberOfTetrahedra();
-
-    const unsigned char UPPER = 1;
-    const unsigned char LOWER = 2;
-    unsigned char* seenPrism = new unsigned char[nTet];
-    std::fill(seenPrism, seenPrism + nTet, 0);
-
-    // Boolean (seenPrism[tet] & UPPER) tells whether we've already
-    // processed the upper prism of tetrahedron tet; similarly for LOWER.
-    // We'll define the upper prism to be the prism containing vertex 0.
-
-    // Work out which tetrahedra contain which quad types.
-    char* quads = new char[nTet];
-    unsigned long tet = 0;
-    for (tet = 0; tet < nTet; tet++) {
-        if (getQuadCoord(tet, 0) != 0)
-            quads[tet] = 0;
-        else if (getQuadCoord(tet, 1) != 0)
-            quads[tet] = 1;
-        else if (getQuadCoord(tet, 2) != 0)
-            quads[tet] = 2;
-        else
-            quads[tet] = -1;
-    }
-
-    // Run through each tetrahedron in turn.
-    bool foundCycle = false;
-    for (tet = 0; tet < nTet; tet++) {
-        if (quads[tet] == -1)
-            continue;
-
-        // Process the upper prism.
-        if (! (seenPrism[tet] & UPPER)) {
-            // TODO
-        }
-
-        // Process the lower prism.
-        if (! (seenPrism[tet] & LOWER)) {
-            // TODO
-        }
-    }
-
-    // Did we find a cycle of prisms?
-    if (! foundCycle) {
-        calculatedCanCrush = true;
-        canCrush = true;
-    }
-
-    delete[] quads;
-    delete[] seenPrism;
 }
 
 } // namespace regina

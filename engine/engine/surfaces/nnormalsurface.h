@@ -592,12 +592,6 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
              *   finitely many discs)? */
         bool calculatedCompact;
             /**< Have we calculated whether this surface is compact? */
-        bool canCrush;
-            /**< Can this surface be crushed without unintended
-                 topological side-effects? */
-        bool calculatedCanCrush;
-            /**< Have we calculated whether this surface can be safely
-                 crushed? */
 
     public:
         /**
@@ -989,22 +983,14 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * strictly fewer tetrahedra if this surface is not vertex
          * linking.
          *
-         * The act of flattening pillows and footballs as described
-         * above can lead to unintended topological side-effects, beyond
-         * the effects of merely cutting along this surface and
-         * identifying the new boundary surface(s) to points.
-         * Examples of these unintended side-effects can include
-         * connected sum decompositions, removal of 3-spheres and
-         * small Lens spaces and so on; a full list of possible changes
-         * is beyond the scope of this API documentation.
-         *
-         * Routine knownCanCrush() can be used to help identify whether
-         * these unintended side-effects might occur.
-         *
-         * \warning This routine can have unintended topological
-         * side-effects, as described above.
+         * \warning The new triangulation might represent a
+         * different 3-manifold from the old triangulation.  Changes
+         * may take place such as connected sum decompositions,
+         * removal of 3-spheres and small Lens spaces and so
+         * on; a full list of possible changes is beyond the scope of
+         * this API documentation.
          * \warning In exceptional cases with non-orientable
-         * 3-manifolds, these side-effects might lead to invalid edges
+         * 3-manifolds, the new triangulation might have invalid edges
          * (edges whose midpoints are projective plane cusps).
          *
          * \pre This normal surface is compact and embedded.
@@ -1014,35 +1000,6 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * triangulation.
          */
         NTriangulation* crush();
-
-        /**
-         * Determines whether this surface can be crushed to a point in
-         * the associated triangulation with no unintended topological
-         * side-effects.
-         *
-         * Note that this routine cannot determine that there \e will be
-         * unintended side-effects; it will either determine that there
-         * \e won't be unintended side-effects or it will remain
-         * inconclusive.
-         *
-         * Unintended side-effects include any topological change other
-         * than the pure topological effects of cutting along this surface
-         * and then identifying the new boundary surface(s) to points.
-         *
-         * These unintended side-effects can occur when the algorithm
-         * used by the crush() routine collapses pillows and footballs
-         * to obtain a proper triangulation.  Some examples of the
-         * side-effects that can occur are given in the documentation
-         * for the crush() routine.
-         *
-         * \pre This normal surface is compact and embedded.
-         * \pre This normal surface contains no octahedral discs.
-         *
-         * @return \c true if this routine determines that this surface
-         * can be crushed without unintended side-effects, or \c false if
-         * this routine cannot produce a definite answer.
-         */
-        bool knownCanCrush();
 
     protected:
         virtual void readIndividualProperty(NFile& infile,
@@ -1068,13 +1025,6 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * stores the result as a property.
          */
         void calculateRealBoundary();
-        /**
-         * Calculates whether it can be quickly determined that this
-         * surface can be crushed to a point without unintended
-         * topological side-effects.  If conclusive, the result is
-         * stored as a property.
-         */
-        void calculateKnownCanCrush();
 
     friend class regina::NXMLNormalSurfaceReader;
 };
@@ -1193,12 +1143,6 @@ inline std::pair<const NEdge*, const NEdge*> NNormalSurface::isThinEdgeLink()
 
 inline bool NNormalSurface::isSplitting() const {
     return vector->isSplitting(triangulation);
-}
-
-inline bool NNormalSurface::knownCanCrush() {
-    if (! calculatedCanCrush)
-        calculateKnownCanCrush();
-    return (calculatedCanCrush && canCrush);
 }
 
 } // namespace regina
