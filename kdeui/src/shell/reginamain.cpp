@@ -29,6 +29,7 @@
 #include "regina-config.h"
 #include "surfaces/nnormalsurfacelist.h"
 
+#include "examplesaction.h"
 #include "reginaabout.h"
 #include "reginafilter.h"
 #include "reginamain.h"
@@ -362,9 +363,8 @@ void ReginaMain::setupActions() {
     KStdAction::open(this, SLOT(fileOpen()), actionCollection());
     fileOpenRecent = KStdAction::openRecent(this, SLOT(openURL(const KURL&)),
         actionCollection());
-    fileOpenExample = new KRecentFilesAction(i18n("Open E&xample"), "bookmark",
-        0, this, SLOT(openExample(const KURL&)), actionCollection(),
-        "file_open_example", 10 /* max items */);
+    fileOpenExample = new ExamplesAction(this, SLOT(openExample(const KURL&)),
+        actionCollection(), "file_open_example");
     fillExamples();
     KStdAction::close(this, SLOT(close()), actionCollection());
     KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
@@ -414,21 +414,20 @@ void ReginaMain::setupActions() {
 }
 
 void ReginaMain::fillExamples() {
-    // Note that the URLs must be added in reverse order!
-    fileOpenExample->addURL("file:" REGINA_DATADIR
-        "/examples/sig-3mfd-census.rga");
-    fileOpenExample->addURL("file:" REGINA_DATADIR
-        "/examples/sig-prime-min-census.rga");
-    fileOpenExample->addURL("file:" REGINA_DATADIR
-        "/examples/knot-link-census.rga");
-    fileOpenExample->addURL("file:" REGINA_DATADIR
-        "/examples/snappea-census.rga");
-    fileOpenExample->addURL("file:" REGINA_DATADIR
-        "/examples/closed-nor-census.rga");
-    fileOpenExample->addURL("file:" REGINA_DATADIR
-        "/examples/closed-or-census.rga");
-    fileOpenExample->addURL("file:" REGINA_DATADIR
-        "/examples/sample-misc.rga");
+    fileOpenExample->addURL("sample-misc.rga",
+        i18n("Introductory Examples"));
+    fileOpenExample->addURL("closed-or-census.rga",
+        i18n("Closed Orientable Census"));
+    fileOpenExample->addURL("closed-nor-census.rga",
+        i18n("Closed Non-Orientable Census"));
+    fileOpenExample->addURL("snappea-census.rga",
+        i18n("Cusped Hyperbolic Census"));
+    fileOpenExample->addURL("knot-link-census.rga",
+        i18n("Knot / Link Complements"));
+    fileOpenExample->addURL("sig-3mfd-census.rga",
+        i18n("Splitting Surface Sigs (General)"));
+    fileOpenExample->addURL("sig-prime-min-census.rga",
+        i18n("Splitting Surface Sigs (Prime, Minimal)"));
 }
 
 void ReginaMain::addRecentFile() {

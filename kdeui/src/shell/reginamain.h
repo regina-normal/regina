@@ -40,6 +40,7 @@
 #include <kapplication.h>
 #include <kparts/mainwindow.h>
 
+class ExamplesAction;
 class KAction;
 class KRecentFilesAction;
 class KToggleAction;
@@ -81,7 +82,7 @@ class ReginaMain : public KParts::MainWindow,
          */
         KRecentFilesAction* fileOpenRecent;
             /**< The menu of recently opened files. */
-        KRecentFilesAction* fileOpenExample;
+        ExamplesAction* fileOpenExample;
             /**< The menu of available example files. */
         KToggleAction* showToolbar;
             /**< Action to show/hide the toolbar. */
