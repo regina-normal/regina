@@ -125,6 +125,18 @@ public class Application extends Applet implements ActionListener {
      */
     public static final String licenseFile = "normal/gpl.txt";
 
+	/**
+	 * System property dictating in which directory options files are
+	 * stored.
+	 */
+	public static final String optionsDirProperty = "REGINA_OPTIONS";
+
+	/**
+	 * Directory to use for options files if system property
+	 * <i>optionsDirProperty</i> does not exist or is inaccessible.
+	 */
+	public static final String optionsDirDefault = ".";
+
     /**
      * User options file.
      */

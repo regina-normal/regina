@@ -98,6 +98,10 @@ public abstract class Shell {
      * The current user options for the program.
      */
     private NormalOptionSet options;
+	/**
+	 * The directory in which options files are stored.
+	 */
+	private File optionsDir = null;
 
     /**
      * The primary frame of the user interface.
@@ -137,6 +141,33 @@ public abstract class Shell {
     public NormalOptionSet getOptions() {
         return options;
     }
+	/**
+	 * Returns the directory in which options files are placed.
+	 *
+	 * @return the options files directory.
+	 */
+	public File getOptionsDir() {
+		if (optionsDir != null)
+			return optionsDir;
+
+		// Try to read the corresponding system property.
+        String optionsDirName = null;
+        try {
+            optionsDirName = System.getProperty(Application.optionsDirProperty);
+        } catch (Throwable th) {
+        }
+        if (optionsDirName == null || optionsDirName.length() == 0)
+            optionsDirName = Application.optionsDirDefault;
+ 
+		// Create the actual file object.
+		optionsDir = new File(optionsDirName);
+        try {
+			optionsDir = optionsDir.getCanonicalFile();
+        } catch (IOException exc) {
+        }
+
+		return optionsDir;
+	}
 
     /**
      * Have we successfully located the JPython classes?
@@ -393,7 +424,7 @@ public abstract class Shell {
         Properties runtimeOptions = null;
         try {
             FileInputStream in = new FileInputStream(
-                new File(Application.runtimeOptionsFile));
+                new File(getOptionsDir(), Application.runtimeOptionsFile));
             runtimeOptions = new Properties();
             runtimeOptions.load(in);
             in.close();

@@ -256,7 +256,8 @@ public class ApplicationShell extends Shell {
     }
     public NormalOptionSet loadOptionSet() {
         try {
-            return new NormalOptionSet(new File(Application.optionsFile));
+            return new NormalOptionSet(new File(getOptionsDir(),
+				Application.optionsFile));
         } catch (Throwable th) {
             return null;
         }
