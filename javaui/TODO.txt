@@ -47,7 +47,3 @@ Normal Surfaces:
 	For matching equations and normal surface coordinates, resizing one
 		column should imply resizing all coordinate columns.
 	Right-align coordinates but have padding between numbers and column edge.
-
-Packet Tree:
-	Ensure horizontal sizes of tree nodes are correct after renaming or
-		inserting new nodes.

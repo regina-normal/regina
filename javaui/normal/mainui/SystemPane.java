@@ -1052,8 +1052,9 @@ public class SystemPane extends JPanel {
         }
 
         // Update the visual tree.
-        findTreeNode(packet).setUserObject(packet.getPacketLabel());
-        packetTree.repaint();
+		PacketTreeNode node = findTreeNode(packet);
+		node.setUserObject(packet.getPacketLabel());
+		treeModel.nodeChanged(node);
     }
 
     /**

@@ -40,6 +40,7 @@ Regina - A Normal Surface Theory Calculator
               it three times.
             - Fixed bugs in the various fire... routines.
             - Improved interaction with the packet rename dialog.
+            - Fixed the packet renaming bug in the visual tree display.
         normal.mainui.PacketTreeNode:
             - Replaced insertUnwrappedDescendants() with
               verifyDescendants() which actually does what it should; thus
