@@ -26,10 +26,12 @@
 
 /* end stub */
 
+#include <cmath>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "maths/approx.h"
+#include "maths/numbertheory.h"
 #include "split/nsignature.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
@@ -55,10 +57,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
     private:
         // Closed orientable:
+        NTriangulation s3;
+            /**< A one-vertex 3-sphere. */
         NTriangulation s2xs1;
             /**< The product space S^2 x S^1. */
         NTriangulation rp3;
             /**< A two-vertex triangulation of RP^3. */
+        NTriangulation lens3_1;
+            /**< A two-vertex lens space L(3,1). */
         NTriangulation lens8_3;
             /**< The layered lens space L(8,3). */
         NTriangulation lens8_3_large;
@@ -113,6 +119,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
         void setUp() {
             // Some of our triangulations can be constructed automatically.
+            s3.insertLayeredLensSpace(1, 0);
             s2xs1.insertLayeredLensSpace(0, 1);
             rp3.insertLayeredLoop(2, false);
             lens8_3.insertLayeredLensSpace(8, 3);
@@ -131,6 +138,17 @@ class NTriangulationTest : public CppUnit::TestFixture {
             NTetrahedron* r;
             NTetrahedron* s;
             NTetrahedron* t;
+
+            // A two-tetrahedron two-vertex L(3,1) is straightforward to
+            // construct using a vertex of degree two.
+            r = new NTetrahedron();
+            s = new NTetrahedron();
+            r->joinTo(0, s, NPerm(0, 2, 3, 1));
+            r->joinTo(1, s, NPerm());
+            r->joinTo(2, s, NPerm());
+            r->joinTo(3, s, NPerm());
+            lens3_1.addTetrahedron(r);
+            lens3_1.addTetrahedron(s);
 
             // The two-tetrahedron figure eight knot complement is
             // described at the beginning of chapter 8 of Richard
@@ -177,10 +195,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void validity() {
+            CPPUNIT_ASSERT_MESSAGE("S^3 is not valid.",
+                s3.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not valid.",
                 s2xs1.isValid());
             CPPUNIT_ASSERT_MESSAGE("RP^3 is not valid.",
                 rp3.isValid());
+            CPPUNIT_ASSERT_MESSAGE("L(3,1) is not valid.",
+                lens3_1.isValid());
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not valid.",
                 lens7_1_loop.isValid());
             CPPUNIT_ASSERT_MESSAGE("L(8,3) is not valid.",
@@ -209,10 +231,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void orientability() {
+            CPPUNIT_ASSERT_MESSAGE("S^3 is not orientable.",
+                s3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not orientable.",
                 s2xs1.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("RP^3 is not orientable.",
                 rp3.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("L(3,1) is not orientable.",
+                lens3_1.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not orientable.",
                 lens7_1_loop.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("L(8,3) is not orientable.",
@@ -241,10 +267,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void boundaryComponents() {
+            CPPUNIT_ASSERT_MESSAGE("S^3 has boundary components.",
+                s3.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 has boundary components.",
                 s2xs1.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("RP^3 has boundary components.",
                 rp3.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("L(3,1) has boundary components.",
+                lens3_1.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) "
                 "has boundary components.",
                 lens7_1_loop.getNumberOfBoundaryComponents() == 0);
@@ -345,10 +375,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void homologyH1() {
+            verifyGroup(s3.getHomologyH1(),
+                "H1(S^3)", 0);
             verifyGroup(s2xs1.getHomologyH1(),
                 "H1(S^2 x S^1)", 1);
             verifyGroup(rp3.getHomologyH1(),
                 "H1(RP^3)", 0, 2);
+            verifyGroup(lens3_1.getHomologyH1(),
+                "H1(L(3,1))", 0, 3);
             verifyGroup(lens7_1_loop.getHomologyH1(),
                 "H1(Loop L(7,1))", 0, 7);
             verifyGroup(lens8_3.getHomologyH1(),
@@ -376,10 +410,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void homologyH1Bdry() {
+            verifyGroup(s3.getHomologyH1Bdry(),
+                "Boundary H1(S^3)", 0);
             verifyGroup(s2xs1.getHomologyH1Bdry(),
                 "Boundary H1(S^2 x S^1)", 0);
             verifyGroup(rp3.getHomologyH1Bdry(),
                 "Boundary H1(RP^3)", 0);
+            verifyGroup(lens3_1.getHomologyH1Bdry(),
+                "Boundary H1(L(3,1))", 0);
             verifyGroup(lens7_1_loop.getHomologyH1Bdry(),
                 "Boundary H1(Loop L(7,1))", 0);
             verifyGroup(lens8_3.getHomologyH1Bdry(),
@@ -407,10 +445,14 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void zeroEfficiency() {
+            CPPUNIT_ASSERT_MESSAGE("S^3 is not 0-efficient.",
+                s3.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is 0-efficient.",
                 ! s2xs1.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("RP^3 is 0-efficient.",
                 ! rp3.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("L(3,1) is 0-efficient.",
+                ! lens3_1.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is 0-efficient.",
                 ! lens7_1_loop.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("L(8,3) is not 0-efficient.",
@@ -466,9 +508,116 @@ class NTriangulationTest : public CppUnit::TestFixture {
             }
         }
 
+        void verifyTVS3(unsigned r) {
+            // Verify all Turaev-Viro invariants for S^3 for the given
+            // value of r.
+            // The expected values are described in the paper of Turaev
+            // and Viro.
+            for (unsigned q0 = 1; q0 < 2 * r; q0++) {
+                if (regina::gcd(q0, r) > 1)
+                    continue;
+
+                double tv = s3.turaevViro(r, q0);
+
+                double expectedTV = 2 * sin(M_PI * q0 / static_cast<double>(r));
+                expectedTV = (expectedTV * expectedTV) /
+                    (2 * static_cast<double>(r));
+
+                if (regina::isNonZero(tv - expectedTV)) {
+                    std::ostringstream msg;
+                    msg << "Turaev-Viro(S^3, r = " << r << ", root = " << q0
+                        << ") is " << tv << ", not " << expectedTV << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void verifyTVRP3(unsigned r) {
+            // Verify all Turaev-Viro invariants for RP^3 for the given
+            // value of r.
+            // The expected values are described in the paper of Turaev
+            // and Viro.
+            for (unsigned q0 = 1; q0 < 2 * r; q0++) {
+                if (regina::gcd(q0, r) > 1)
+                    continue;
+
+                double tv = rp3.turaevViro(r, q0);
+
+                double expectedTV;
+                if (q0 % 2 == r % 2)
+                    expectedTV = 0.0;
+                else {
+                    double real = cos(M_PI * q0 / static_cast<double>(r)) -
+                        1.0;
+                    double imag = sin(M_PI * q0 / static_cast<double>(r));
+                    expectedTV = (real * real) + (imag * imag);
+                    expectedTV /= static_cast<double>(r);
+                }
+
+                if (regina::isNonZero(tv - expectedTV)) {
+                    std::ostringstream msg;
+                    msg << "Turaev-Viro(RP^3, r = " << r << ", root = " << q0
+                        << ") is " << tv << ", not " << expectedTV << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void verifyTVL31(unsigned r) {
+            // Verify all Turaev-Viro invariants for L(3,1) for the given
+            // value of r.
+            // The expected values are described in the paper of Turaev
+            // and Viro.
+            for (unsigned q0 = 1; q0 < 2 * r; q0++) {
+                if (regina::gcd(q0, r) > 1)
+                    continue;
+
+                double tv = lens3_1.turaevViro(r, q0);
+
+                unsigned q0pow = ((r - 2) / 3) + 1;
+                double expectedTV = 2 * sin(M_PI * q0 * q0pow /
+                    static_cast<double>(r));
+                expectedTV = (expectedTV * expectedTV) /
+                    (2 * static_cast<double>(r));
+
+                if (regina::isNonZero(tv - expectedTV)) {
+                    std::ostringstream msg;
+                    msg << "Turaev-Viro(L(3,1), r = " << r << ", root = "
+                        << q0 << ") is " << tv << ", not " << expectedTV
+                        << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void verifyTVS2xS1(unsigned r) {
+            // Verify all Turaev-Viro invariants for S^2 x S^1 for the given
+            // value of r.
+            // The expected values are described in the paper of Turaev
+            // and Viro.
+            for (unsigned q0 = 1; q0 < 2 * r; q0++) {
+                if (regina::gcd(q0, r) > 1)
+                    continue;
+
+                double tv = s2xs1.turaevViro(r, q0);
+
+                double expectedTV = 1.0;
+
+                if (regina::isNonZero(tv - expectedTV)) {
+                    std::ostringstream msg;
+                    msg << "Turaev-Viro(S^2 x S^1, r = " << r << ", root = "
+                        << q0 << ") is " << tv << ", not " << expectedTV
+                        << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
         void turaevViro() {
+            verifyTV3(s3, "S^3");
             verifyTV3(s2xs1, "S^2 x S^1");
             verifyTV3(rp3, "RP^3");
+            verifyTV3(lens3_1, "L(3,1)");
             verifyTV3(lens7_1_loop, "Layered loop L(7,1)");
             verifyTV3(lens8_3, "L(8,3)");
             verifyTV3(lens8_3_large, "Large L(8,3)");
@@ -476,6 +625,18 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyTV3(q28, "S^3 / Q_28");
             verifyTV3(q32xz3, "S^3 / Q_32 x Z_3");
             verifyTV3(rp2xs1, "RP^2 x S^1");
+
+            verifyTVS3(4); verifyTVS3(5); verifyTVS3(6);
+            verifyTVS3(7); verifyTVS3(8);
+
+            verifyTVRP3(4); verifyTVRP3(5); verifyTVRP3(6);
+            verifyTVRP3(7); verifyTVRP3(8);
+
+            verifyTVL31(4); verifyTVL31(5); verifyTVL31(6);
+            verifyTVL31(7); verifyTVL31(8);
+
+            verifyTVS2xS1(4); verifyTVS2xS1(5); verifyTVS2xS1(6);
+            verifyTVS2xS1(7); verifyTVS2xS1(8);
         }
 };
 
