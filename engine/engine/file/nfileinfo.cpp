@@ -134,7 +134,7 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
                 err = true;
             else if (s[3].length() < 8)
                 err = true;
-            else if (s[3].compare(0, 8, "engine=\"") != 0)
+            else if (s[3].substr(0, 8).compare("engine=\"") != 0)
                 err = true;
             else {
                 s[3].erase(0, 8);

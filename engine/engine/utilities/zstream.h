@@ -394,14 +394,14 @@ inline CompressionStream::CompressionStream(const char* path) :
 inline int CompressionStream::open(const char* path) {
     int ans = buf.open(path);
     if (ans)
-        setstate(std::ios_base::failbit);
+        setstate(std::ios::failbit);
     return ans;
 }
 
 inline int CompressionStream::close() {
     int ans = buf.close();
     if (ans)
-        setstate(std::ios_base::failbit);
+        setstate(std::ios::failbit);
     return ans;
 }
 
@@ -420,14 +420,14 @@ inline DecompressionStream::DecompressionStream(const char* path) :
 inline int DecompressionStream::open(const char* path) {
     int ans = buf.open(path);
     if (ans)
-        setstate(std::ios_base::failbit);
+        setstate(std::ios::failbit);
     return ans;
 }
 
 inline int DecompressionStream::close() {
     int ans = buf.close();
     if (ans)
-        setstate(std::ios_base::failbit);
+        setstate(std::ios::failbit);
     return ans;
 }
 
