@@ -34,6 +34,8 @@
 #ifndef __SKELETONWINDOW_H
 #define __SKELETONWINDOW_H
 
+#include "packet/npacketlistener.h"
+
 #include <kdialogbase.h>
 #include <klistview.h>
 
@@ -53,11 +55,10 @@ namespace regina {
  * A modeless dialog for viewing all skeletal objects of a particular
  * type in a triangulation.
  *
- * Note that skeleton windows must be manually refreshed when necessary;
- * they do not by default listen for changes on the underlying
- * triangulation.
+ * Skeleton windows automatically listen for changes on the underlying
+ * triangulation and update themselves when necessary.
  */
-class SkeletonWindow : public KDialogBase {
+class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
     Q_OBJECT
 
     public:
@@ -93,6 +94,13 @@ class SkeletonWindow : public KDialogBase {
         void updateCaption();
 
         /**
+         * NPacketListener overrides.
+         */
+        void packetWasChanged(regina::NPacket* packet);
+        void packetWasRenamed(regina::NPacket* packet);
+        void packetToBeDestroyed(regina::NPacket* packet);
+
+        /**
          * Return information specific to different skeletal object types.
          */
         static QString typeLabel(SkeletalObject type);
@@ -105,11 +113,19 @@ class SkeletonWindow : public KDialogBase {
  * skeletal item.
  */
 class SkeletalItem : public KListViewItem {
+    protected:
+        /**
+         * Properties of the underlying skeletal object.
+         */
+        regina::NTriangulation* tri;
+        unsigned long itemIndex;
+
     public:
         /**
          * Constructor.
          */
-        SkeletalItem(QListView* parent);
+        SkeletalItem(QListView* parent, regina::NTriangulation* useTri,
+            unsigned long useItemIndex);
 
         /**
          * QListViewItem overrides.
@@ -117,6 +133,12 @@ class SkeletalItem : public KListViewItem {
         int width(const QFontMetrics& fm, const QListView* lv, int c) const;
         void paintCell(QPainter* p, const QColorGroup& cg, int column,
             int width, int align);
+
+    protected:
+        /**
+         * Aids the construction of a comma-separated string list.
+         */
+        static QString& appendToList(QString& list, const QString& item);
 };
 
 /**
@@ -128,14 +150,13 @@ class VertexItem : public SkeletalItem {
          * The underlying skeletal item.
          */
         regina::NVertex* item;
-        unsigned long itemIndex;
 
     public:
         /**
          * Constructor.
          */
-        VertexItem(QListView* parent, regina::NVertex* vertex,
-            unsigned long newItemIndex);
+        VertexItem(QListView* parent, regina::NTriangulation* useTri,
+            unsigned long useItemIndex);
 
         /**
          * QListViewItem overrides.
@@ -152,14 +173,13 @@ class EdgeItem : public SkeletalItem {
          * The underlying skeletal item.
          */
         regina::NEdge* item;
-        unsigned long itemIndex;
 
     public:
         /**
          * Constructor.
          */
-        EdgeItem(QListView* parent, regina::NEdge* edge,
-            unsigned long newItemIndex);
+        EdgeItem(QListView* parent, regina::NTriangulation* useTri,
+            unsigned long useItemIndex);
 
         /**
          * QListViewItem overrides.
@@ -176,14 +196,13 @@ class FaceItem : public SkeletalItem {
          * The underlying skeletal item.
          */
         regina::NFace* item;
-        unsigned long itemIndex;
 
     public:
         /**
          * Constructor.
          */
-        FaceItem(QListView* parent, regina::NFace* face,
-            unsigned long newItemIndex);
+        FaceItem(QListView* parent, regina::NTriangulation* useTri,
+            unsigned long useItemIndex);
 
         /**
          * QListViewItem overrides.
@@ -200,14 +219,13 @@ class ComponentItem : public SkeletalItem {
          * The underlying skeletal item.
          */
         regina::NComponent* item;
-        unsigned long itemIndex;
 
     public:
         /**
          * Constructor.
          */
-        ComponentItem(QListView* parent, regina::NComponent* component,
-            unsigned long newItemIndex);
+        ComponentItem(QListView* parent, regina::NTriangulation* useTri,
+            unsigned long useItemIndex);
 
         /**
          * QListViewItem overrides.
@@ -224,14 +242,13 @@ class BoundaryComponentItem : public SkeletalItem {
          * The underlying skeletal item.
          */
         regina::NBoundaryComponent* item;
-        unsigned long itemIndex;
 
     public:
         /**
          * Constructor.
          */
-        BoundaryComponentItem(QListView* parent,
-            regina::NBoundaryComponent* bdryCmpt, unsigned long newItemIndex);
+        BoundaryComponentItem(QListView* parent, regina::NTriangulation* useTri,
+            unsigned long useItemIndex);
 
         /**
          * QListViewItem overrides.
@@ -239,32 +256,14 @@ class BoundaryComponentItem : public SkeletalItem {
         QString text(int column) const;
 };
 
-inline SkeletalItem::SkeletalItem(QListView* parent) : KListViewItem(parent) {
+inline SkeletalItem::SkeletalItem(QListView* parent,
+        regina::NTriangulation* useTri, unsigned long useItemIndex) :
+        KListViewItem(parent), tri(useTri), itemIndex(useItemIndex) {
 }
 
-inline VertexItem::VertexItem(QListView* parent, regina::NVertex* vertex,
-        unsigned long newItemIndex) :
-        SkeletalItem(parent), item(vertex), itemIndex(newItemIndex) {
-}
-
-inline EdgeItem::EdgeItem(QListView* parent, regina::NEdge* edge,
-        unsigned long newItemIndex) :
-        SkeletalItem(parent), item(edge), itemIndex(newItemIndex) {
-}
-
-inline FaceItem::FaceItem(QListView* parent, regina::NFace* face,
-        unsigned long newItemIndex) :
-        SkeletalItem(parent), item(face), itemIndex(newItemIndex) {
-}
-
-inline ComponentItem::ComponentItem(QListView* parent,
-        regina::NComponent* component, unsigned long newItemIndex) :
-        SkeletalItem(parent), item(component), itemIndex(newItemIndex) {
-}
-
-inline BoundaryComponentItem::BoundaryComponentItem(QListView* parent,
-        regina::NBoundaryComponent* bdryCmpt, unsigned long newItemIndex) :
-        SkeletalItem(parent), item(bdryCmpt), itemIndex(newItemIndex) {
+inline QString& SkeletalItem::appendToList(QString& list,
+        const QString& item) {
+    return (list.isEmpty() ? (list = item) : (list.append(", ").append(item)));
 }
 
 #endif

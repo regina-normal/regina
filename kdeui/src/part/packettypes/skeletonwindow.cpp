@@ -69,28 +69,28 @@ void SkeletonWindow::refresh() {
     switch (objectType) {
         case Vertices:
             for (unsigned i = 0; i < tri->getNumberOfVertices(); i++)
-                new VertexItem(table, tri->getVertex(i), i);
+                new VertexItem(table, tri, i);
             break;
         case Edges:
             for (unsigned i = 0; i < tri->getNumberOfEdges(); i++)
-                new EdgeItem(table, tri->getEdge(i), i);
+                new EdgeItem(table, tri, i);
             break;
         case Faces:
             for (unsigned i = 0; i < tri->getNumberOfFaces(); i++)
-                new FaceItem(table, tri->getFace(i), i);
+                new FaceItem(table, tri, i);
             break;
         case Components:
             for (unsigned i = 0; i < tri->getNumberOfComponents(); i++)
-                new ComponentItem(table, tri->getComponent(i), i);
+                new ComponentItem(table, tri, i);
             break;
         case BoundaryComponents:
             for (unsigned i = 0; i < tri->getNumberOfBoundaryComponents(); i++)
-                new BoundaryComponentItem(table, tri->getBoundaryComponent(i),
-                    i);
+                new BoundaryComponentItem(table, tri, i);
             break;
     }
 
     updateCaption();
+    tri->listen(this);
 }
 
 void SkeletonWindow::editingElsewhere() {
@@ -101,6 +101,18 @@ void SkeletonWindow::editingElsewhere() {
 void SkeletonWindow::updateCaption() {
     setCaption(typeLabel(objectType) + " (" +
         tri->getPacketLabel().c_str() + ')');
+}
+
+void SkeletonWindow::packetWasChanged(regina::NPacket*) {
+    refresh();
+}
+
+void SkeletonWindow::packetWasRenamed(regina::NPacket*) {
+    updateCaption();
+}
+
+void SkeletonWindow::packetToBeDestroyed(regina::NPacket*) {
+    slotClose();
 }
 
 QString SkeletonWindow::typeLabel(SkeletalObject type) {
@@ -170,6 +182,36 @@ void SkeletalItem::paintCell(QPainter* p, const QColorGroup& cg,
     p->lineTo(width - 1, 0);
 }
 
+inline VertexItem::VertexItem(QListView* parent,
+                regina::NTriangulation* useTri, unsigned long useItemIndex) :
+        SkeletalItem(parent, useTri, useItemIndex),
+        item(useTri->getVertex(useItemIndex)) {
+}
+
+inline EdgeItem::EdgeItem(QListView* parent,
+                regina::NTriangulation* useTri, unsigned long useItemIndex) :
+        SkeletalItem(parent, useTri, useItemIndex),
+        item(useTri->getEdge(useItemIndex)) {
+}
+
+inline FaceItem::FaceItem(QListView* parent,
+                regina::NTriangulation* useTri, unsigned long useItemIndex) :
+        SkeletalItem(parent, useTri, useItemIndex),
+        item(useTri->getFace(useItemIndex)) {
+}
+
+inline ComponentItem::ComponentItem(QListView* parent,
+                regina::NTriangulation* useTri, unsigned long useItemIndex) :
+        SkeletalItem(parent, useTri, useItemIndex),
+        item(useTri->getComponent(useItemIndex)) {
+}
+
+inline BoundaryComponentItem::BoundaryComponentItem(QListView* parent,
+                regina::NTriangulation* useTri, unsigned long useItemIndex) :
+        SkeletalItem(parent, useTri, useItemIndex),
+        item(useTri->getBoundaryComponent(useItemIndex)) {
+}
+
 QString VertexItem::text(int column) const {
     switch (column) {
         case 0:
@@ -199,8 +241,14 @@ QString VertexItem::text(int column) const {
         case 2:
             return QString::number(item->getNumberOfEmbeddings());
         case 3:
-            /* TODO */
-            return QString::null;
+            QString ans;
+            std::vector<regina::NVertexEmbedding>::const_iterator it;
+            for (it = item->getEmbeddings().begin();
+                    it != item->getEmbeddings().end(); it++)
+                appendToList(ans, QString("%1 (%2)").
+                    arg(tri->getTetrahedronIndex((*it).getTetrahedron())).
+                    arg((*it).getVertex()));
+            return ans;
     }
     return QString::null;
 }
@@ -219,8 +267,14 @@ QString EdgeItem::text(int column) const {
         case 2:
             return QString::number(item->getNumberOfEmbeddings());
         case 3:
-            /* TODO */
-            return QString::null;
+            QString ans;
+            std::deque<regina::NEdgeEmbedding>::const_iterator it;
+            for (it = item->getEmbeddings().begin();
+                    it != item->getEmbeddings().end(); it++)
+                appendToList(ans, QString("%1 (%2)").
+                    arg(tri->getTetrahedronIndex((*it).getTetrahedron())).
+                    arg(regina::edgeDescription((*it).getVertices()).c_str()));
+            return ans;
     }
     return QString::null;
 }
@@ -256,8 +310,14 @@ QString FaceItem::text(int column) const {
         case 2:
             return QString::number(item->getNumberOfEmbeddings());
         case 3:
-            /* TODO */
-            return QString::null;
+            QString ans;
+            for (unsigned i = 0; i < item->getNumberOfEmbeddings(); i++)
+                appendToList(ans, QString("%1 (%2)").
+                    arg(tri->getTetrahedronIndex(
+                        item->getEmbedding(i).getTetrahedron())).
+                    arg(regina::faceDescription(
+                        item->getEmbedding(i).getVertices()).c_str()));
+            return ans;
     }
     return QString::null;
 }
@@ -272,8 +332,11 @@ QString ComponentItem::text(int column) const {
         case 2:
             return QString::number(item->getNumberOfTetrahedra());
         case 3:
-            /* TODO */
-            return QString::null;
+            QString ans;
+            for (unsigned long i = 0; i < item->getNumberOfTetrahedra(); i++)
+                appendToList(ans, QString::number(tri->getTetrahedronIndex(
+                    item->getTetrahedron(i))));
+            return ans;
     }
     return QString::null;
 }
@@ -289,8 +352,16 @@ QString BoundaryComponentItem::text(int column) const {
             return (item->isIdeal() ? i18n("1 vertex") :
                 i18n("%1 faces").arg(item->getNumberOfFaces()));
         case 3:
-            /* TODO */
-            return QString::null;
+            if (item->isIdeal())
+                return i18n("Vertex %1").arg(tri->getVertexIndex(
+                    item->getVertex(0)));
+            else {
+                QString ans;
+                for (unsigned long i = 0; i < item->getNumberOfFaces(); i++)
+                    appendToList(ans, QString::number(tri->getFaceIndex(
+                        item->getFace(i))));
+                return i18n("Faces ") + ans;
+            }
     }
     return QString::null;
 }
