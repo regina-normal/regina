@@ -45,6 +45,8 @@ Version 4.2  [ under development ]
           creation dialog.
         - Allow exporting a triangulation to C++ source.
         - Renamed "Ideal to Finite" as "Truncate Ideal Vertices" in the menu.
+        - Include a padlock in the corner of a packet icon if the packet
+          is uneditable.
     TEST SUITE:
         - Added tests for SnapPea calculations.
         - Further additions to the triangulation tests, in particular

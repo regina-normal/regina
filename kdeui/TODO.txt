@@ -38,7 +38,6 @@ Packets (General):
     - Implement packet tags
     - Work out how to right-align the packet pane close button
     - Find out how to centre column headers in list views
-    - Clearly point out in the UI if a packet is uneditable
     - Use focus-in events instead of focus proxies for complex packet UIs
 
 Part:

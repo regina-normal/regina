@@ -56,9 +56,16 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
         regina::NPacket* packet;
 
         /**
-         * The KPart responsible for this packet tree.
+         * The packet tree containing this item.
          */
-        ReginaPart* part;
+        PacketTreeView* tree;
+
+        /**
+         * Do we currently believe the underlying packet to be editable?
+         * We refer here purely to child packet constraints; whether
+         * or not the overall KPart is read-only is irrelevant here.
+         */
+        bool isEditable;
 
     public:
         /**
@@ -75,6 +82,11 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
          * Returns the underlying packet.
          */
         regina::NPacket* getPacket();
+
+        /**
+         * Return the KPart responsible for this packet tree.
+         */
+        ReginaPart* getPart();
 
         /**
          * Fills this item with a subtree of items corresponding to the
@@ -99,6 +111,27 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
          * label.
          */
         void refreshLabel();
+        /**
+         * Updates the icon of this item to match the underlying packet
+         * type and whether or not it is editable.
+         *
+         * Note that this routine may only be called from within the GUI
+         * thread!  Calling it from a different thread can cause an Xlib
+         * crash.
+         */
+        void refreshIcon();
+        /**
+         * Updates the appearance of this item to correctly reflect whether
+         * or not the underlying packet is editable.  This refers purely to
+         * child packet constraints; whether or not the overall KPart is
+         * read-only is irrelevant here.
+         *
+         * This will only make a physical update if the editability has in
+         * fact changed; otherwise it will do nothing.
+         *
+         * This routine is safe to call from within a non-GUI thread.
+         */
+        void updateEditable();
 
         /**
          * NPacketListener overrides.
@@ -176,10 +209,20 @@ class PacketTreeView : public KListView {
          * been deleted.
          */
         void refresh(regina::NPacket* topPacket);
+
+    protected:
+        /**
+         * Allow GUI updates from within a non-GUI thread.
+         */
+        void customEvent(QCustomEvent* evt);
 };
 
 inline regina::NPacket* PacketTreeItem::getPacket() {
     return packet;
+}
+
+inline ReginaPart* PacketTreeItem::getPart() {
+    return tree->getPart();
 }
 
 inline regina::NPacket* PacketTreeView::selectedPacket() {

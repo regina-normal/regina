@@ -214,7 +214,7 @@ void NSurfaceFilterCombUI::refreshChildList() {
             p = p->getPrevTreeSibling())
         if (p->getPacketType() == regina::NSurfaceFilter::packetType) {
             item = new KListViewItem(children, p->getPacketLabel().c_str());
-            item->setPixmap(0, PacketManager::iconSmall(p));
+            item->setPixmap(0, PacketManager::iconSmall(p, false));
 
             // Listen for renaming events.  We won't ever call
             // unlisten() - it's a lot of hassle for a minor issue, and

@@ -34,6 +34,7 @@
 #ifndef __PACKETMANAGER_H
 #define __PACKETMANAGER_H
 
+#include <qimage.h>
 #include <qpixmap.h>
 
 class PacketPane;
@@ -53,16 +54,34 @@ namespace regina {
  * packet type.
  */
 class PacketManager {
+    private:
+        /**
+         * Support for overlaying a read-only lock onto an icon.
+         */
+        static bool lockInitialised;
+        static QImage lockSmall;
+        static QImage lockBar;
+
     public:
         /**
          * Returns a small (16x16) icon appropriate for the given packet.
+         *
+         * If \a allowLock is true and the packet is not editable
+         * according to NPacket::isPacketEditable(), a small padlock
+         * will be overlaid onto the icon.
          */
-        static QPixmap iconSmall(regina::NPacket* packet);
+        static QPixmap iconSmall(regina::NPacket* packet,
+            bool allowLock = false);
 
         /**
          * Returns a toolbar (22x22) icon appropriate for the given packet.
+         *
+         * If \a allowLock is true and the packet is not editable
+         * according to NPacket::isPacketEditable(), a small padlock
+         * will be overlaid onto the icon.
          */
-        static QPixmap iconBar(regina::NPacket* packet);
+        static QPixmap iconBar(regina::NPacket* packet,
+            bool allowLock = false);
 
         /**
          * Returns a newly created interface appropriate for viewing or
@@ -79,11 +98,38 @@ class PacketManager {
         static PacketUI* createUI(regina::NPacket* packet,
             PacketPane* enclosingPane);
 
+        /**
+         * Overlays a small read-only padlock onto the given icon.
+         *
+         * The routines overlayLockSmall() and overlayLockBar() are for
+         * small and toolbar sized icons respectively.
+         *
+         * Each of these routines returns \c true if the overlay was
+         * successful and \c false otherwise.  If the overlay was
+         * unsuccessful, the given icon will not be altered.
+         */
+        static bool overlayLockSmall(QPixmap& icon);
+        static bool overlayLockBar(QPixmap& icon);
+
     private:
+        /**
+         * Support for overlaying a read-only lock onto an icon.
+         */
+        static void initLock();
+        static bool overlayLock(QPixmap& icon, QImage& lock);
+
         /**
          * Create a new KTextEditor::Document through a KTrader query.
          */
         static KTextEditor::Document* createDocument();
 };
+
+inline bool PacketManager::overlayLockSmall(QPixmap& icon) {
+    return overlayLock(icon, lockSmall);
+}
+
+inline bool PacketManager::overlayLockBar(QPixmap& icon) {
+    return overlayLock(icon, lockBar);
+}
 
 #endif

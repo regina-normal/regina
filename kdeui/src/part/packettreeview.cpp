@@ -34,40 +34,47 @@
 #include "packettreeview.h"
 #include "reginapart.h"
 
+#include <qapplication.h>
+#include <qevent.h>
 #include <qheader.h>
 #include <kdebug.h>
 #include <klocale.h>
 
+// Custom event types.
+// Note that QEvent::User is 1000.
+#define EVT_REFRESH_ICON 2000
+
 using regina::NPacket;
 
 PacketTreeItem::PacketTreeItem(PacketTreeView* parent, NPacket* realPacket) :
-        KListViewItem(parent), packet(realPacket), part(parent->getPart()) {
+        KListViewItem(parent), packet(realPacket), tree(parent) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
         NPacket* realPacket) :
-        KListViewItem(parent), packet(realPacket), part(parent->part) {
+        KListViewItem(parent), packet(realPacket), tree(parent->tree) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeView* parent,
         QListViewItem* after, NPacket* realPacket) :
         KListViewItem(parent, after), packet(realPacket),
-        part(parent->getPart()) {
+        tree(parent) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
         QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after), packet(realPacket), part(parent->part) {
+        KListViewItem(parent, after), packet(realPacket), tree(parent->tree) {
     init();
 }
 
 void PacketTreeItem::init() {
     packet->listen(this);
     refreshLabel();
-    setPixmap(0, PacketManager::iconSmall(packet));
+    setPixmap(0, PacketManager::iconSmall(packet, true));
+    isEditable = packet->isPacketEditable();
 }
 
 void PacketTreeItem::fill() {
@@ -183,19 +190,33 @@ void PacketTreeItem::refreshLabel() {
         setText(0, i18n("<Deleted>"));
 }
 
+void PacketTreeItem::refreshIcon() {
+    if (packet)
+        setPixmap(0, PacketManager::iconSmall(packet, true));
+}
+
+void PacketTreeItem::updateEditable() {
+    if (packet && packet->isPacketEditable() != isEditable) {
+        // We need updating.
+        isEditable = ! isEditable;
+        QApplication::postEvent(tree, new QCustomEvent(
+            static_cast<QEvent::Type>(EVT_REFRESH_ICON), this));
+    }
+}
+
 void PacketTreeItem::packetWasChanged(regina::NPacket*) {
-    part->setModified(true);
+    getPart()->setModified(true);
 }
 
 void PacketTreeItem::packetWasRenamed(regina::NPacket*) {
     refreshLabel();
-    part->setModified(true);
+    getPart()->setModified(true);
 }
 
 void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
     packet = 0;
     refreshLabel();
-    part->setModified(true);
+    getPart()->setModified(true);
 
     // I'm a bit worried about this line, but I understand it will
     // behave correctly. :/
@@ -204,17 +225,19 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
 
 void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
     refreshSubtree();
-    part->setModified(true);
+    updateEditable();
+    getPart()->setModified(true);
 }
 
 void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*) {
     refreshSubtree();
-    part->setModified(true);
+    updateEditable();
+    getPart()->setModified(true);
 }
 
 void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
     refreshSubtree();
-    part->setModified(true);
+    getPart()->setModified(true);
 }
 
 PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent,
@@ -266,6 +289,11 @@ void PacketTreeView::refresh(NPacket* topPacket) {
         fill(topPacket);
     else
         ((PacketTreeItem*)firstChild())->refreshSubtree();
+}
+
+void PacketTreeView::customEvent(QCustomEvent* evt) {
+    if (evt->type() == EVT_REFRESH_ICON)
+        static_cast<PacketTreeItem*>(evt->data())->refreshIcon();
 }
 
 #include "packettreeview.moc"

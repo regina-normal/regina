@@ -177,7 +177,7 @@ void ScriptVarValueItem::packetToBeDestroyed(NPacket* p) {
 void ScriptVarValueItem::updateData() {
     if (packet && ! packet->getPacketLabel().empty()) {
         setText(packet->getPacketLabel().c_str());
-        setPixmap(QPixmap(PacketManager::iconSmall(packet)));
+        setPixmap(QPixmap(PacketManager::iconSmall(packet, false)));
     } else {
         setText("<None>");
         setPixmap(QPixmap());

@@ -70,7 +70,7 @@ QPtrList<KAction> PacketUI::noActions;
 PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
         const char* name) : QHBox(parent, name), packet(pkt) {
     icon = new QLabel(this);
-    icon->setPixmap(PacketManager::iconBar(packet));
+    icon->setPixmap(PacketManager::iconBar(packet, true));
 
     title = new QLabel(packet->getFullName().c_str(), this);
     title->setAlignment(AlignCenter);
@@ -81,8 +81,8 @@ PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
 }
 
 void PacketHeader::refresh() {
-    // We assume the packet has not changed type!
     title->setText(packet->getFullName().c_str());
+    icon->setPixmap(PacketManager::iconBar(packet, true));
 }
 
 ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
@@ -440,12 +440,14 @@ void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
     // Assume it's this packet.
     if (packet->isPacketEditable() != readWrite)
         setReadWrite(!readWrite);
+    header->refresh();
 }
 
 void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*) {
     // Assume it's this packet.
     if (packet->isPacketEditable() != readWrite)
         setReadWrite(!readWrite);
+    header->refresh();
 }
 
 void PacketPane::refresh() {
