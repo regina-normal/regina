@@ -5,8 +5,43 @@
   <primaryie>0-efficiency</primaryie>
   <secondaryie><link linkend="tri-make0eff">making a triangulaton
    0-efficient</link></secondaryie>
-  <secondaryie><link linkend="tri-surfaceproperties">testing for
+  <secondaryie><link linkend="tri-prop0eff">testing for
    0-efficiency</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>2-0 edge move</primaryie>
+  <seeie>(see elementary moves)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>2-0 vertex move</primaryie>
+  <seeie>(see elementary moves)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>2-1 move</primaryie>
+  <seeie>(see elementary moves)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>2-3 move</primaryie>
+  <seeie>(see elementary moves)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>3-2 move</primaryie>
+  <seeie>(see elementary moves)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-prop3sphere">3-sphere
+   recognition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>4-4 move</primaryie>
+  <seeie>(see elementary moves)</seeie>
  </indexentry>
 
  <indexentry>
@@ -28,6 +63,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-new-aug">augmented triangular solid
+   torus, creation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="options-python">auto-indent</link></primaryie>
  </indexentry>
 
@@ -37,9 +77,26 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>book opening move</primaryie>
+  <seeie>(see elementary moves)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>boundary</primaryie>
   <secondaryie><link linkend="surfaces-boundary">of a normal
    surface</link></secondaryie>
+  <secondaryie><link linkend="tri-propbdry">of a normal
+   triangulation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-compbdrycomp">boundary components, viewing
+   in a triangulation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>boundary shelling move</primaryie>
+  <seeie>(see elementary moves)</seeie>
  </indexentry>
 
  <indexentry>
@@ -78,6 +135,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-composition-composition">combinatorial
+   composition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-regconcat">combining data
    files</link></primaryie>
  </indexentry>
@@ -99,6 +161,21 @@
    fixing</link></primaryie>
  </indexentry>
 
+ <indexentry>
+  <primaryie><link linkend="tri-decomposition-component">component
+   decomposition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-compbdrycomp">components, viewing
+   in a triangulation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>composition, combinatorial</primaryie>
+  <seeie>(see combinatorial composition)</seeie>
+ </indexentry>
+
  <indexentry id="idx-configuration">
   <primaryie>configuration</primaryie>
   <secondaryie><link linkend="options-census">census
@@ -110,6 +187,16 @@
    scripting</link></secondaryie>
   <secondaryie><link linkend="options-triangulation">triangulation
    viewing and editing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-decomposition-connsum">connected
+   sum decomposition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-propconn">connectedness,
+   testing for</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -140,6 +227,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-vertextype">cusps, identifying
+   in a triangulation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="surfaces-cut">cutting along a normal
    surface</link></primaryie>
  </indexentry>
@@ -147,6 +239,22 @@
  <indexentry>
   <primaryie>data files</primaryie>
   <seeie>(see files)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>decomposition</primaryie>
+  <secondaryie><link linkend="tri-decomposition-component">by
+   components</link></secondaryie>
+  <secondaryie><link linkend="tri-decomposition-connsum">by
+   connected sum</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>dehydrated triangulations</primaryie>
+  <secondaryie><link linkend="tri-imoprt-dehydrationlist">importing
+   a list of dehydration strings</link></primaryie>
+  <secondaryie><link linkend="tri-new-dehydration">rehydrating from
+   a dehydration string</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -158,6 +266,11 @@
   <primaryie>documentation</primaryie>
   <secondaryie><link linkend="python-docs">&regina; objects, classes
    and methods</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>double cover</primaryie>
+  <seeie>(see orientable double cover)</seeie>
  </indexentry>
 
  <indexentry>
@@ -176,7 +289,17 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-vertexedgeface">edges, viewing
+   in a triangulation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="packet-view">editing packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-elementarymove">elementary moves
+   on triangulations</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -216,6 +339,16 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>face gluings</primaryie>
+  <seeie>(see tetrahedron face gluings)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-vertexedgeface">faces, viewing
+   in a triangulation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="featureset">feature set</link></primaryie>
  </indexentry>
 
@@ -231,6 +364,8 @@
    file</link></secondaryie>
   <secondaryie><link linkend="man-regfiletype">identifying file
    types</link></secondaryie>
+  <secondaryie><link linkend="tri-imported">importing
+   data</link></secondaryie>
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
   <secondaryie><link linkend="dataformat">specification of file
    format</link></secondaryie>
@@ -247,6 +382,35 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-algebra-fundgroup">fundamental
+   group</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>gluings</primaryie>
+  <seeie>(see tetrahedron face gluings)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-algebra-homology">homology
+   groups</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>ideal vertices</primaryie>
+  <secondaryie><link linkend="tri-subdivision">converting
+   to real boundary</link></primaryie>
+  <secondaryie><link linkend="tri-propideal">testing
+   for</link></primaryie>
+  <secondaryie><link linkend="tri-vertextype">viewing</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>identifications</primaryie>
+  <seeie>(see tetrahedron face gluings)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-regfiletype">identifying file
    types</link></primaryie>
  </indexentry>
@@ -257,8 +421,43 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>importing triangulations</primaryie>
+  <secondaryie><link linkend="tri-import-dehydrationlist">from
+   dehydration lists</link></primaryie>
+  <secondaryie><link linkend="tri-import-snappea">from
+   &regina; data files</link></primaryie>
+  <secondaryie><link linkend="tri-import-snappea">from
+   &snappea;</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>interface</primaryie>
   <seeie>(see user interface)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>invalid</primaryie>
+  <seeie>(see valid)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-new-lens">layered lens space,
+   creation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-new-loop">layered loop,
+   creation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-new-layered">layered solid torus,
+   creation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-new-lens">lens space,
+   creation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -268,6 +467,11 @@
 
  <indexentry>
   <primaryie><link linkend="licenses">licence details</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>look up</primaryie>
+  <seeie>(see search)</seeie>
  </indexentry>
 
  <indexentry>
@@ -325,6 +529,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>open book</primaryie>
+  <seeie>(see elementary moves)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>options</primaryie>
   <seeie>(see configuration)</seeie>
  </indexentry>
@@ -333,6 +542,13 @@
   <primaryie>orientability</primaryie>
   <secondaryie><link linkend="surfaces-proporient">of a normal
    surface</link></secondaryie>
+  <secondaryie><link linkend="tri-proporient">of a
+   triangulation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-cover">orientable double
+   cover</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -426,6 +642,22 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>search</primaryie>
+  <secondaryie><link linkend="tri-censuslookup">for a triangulation in
+   the available censuses</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-sfs3">Seifert fibred space,
+   creation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>shell boundary</primaryie>
+  <seeie>(see elementary moves)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="surfaces-propsides">sidedness of a
    normal surface</link></primaryie>
  </indexentry>
@@ -436,8 +668,19 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-simplification">simplification of
+   triangulations</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="surfaces-embeddedonly">singular / immersed
    normal surfaces, enumerating</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>&snappea;</primaryie>
+  <secondaryie><link linkend="tri-import-snappea">importing
+   from</link></primaryie>
  </indexentry>
 
  <indexentry id="idx-splitting-surfaces">
@@ -446,6 +689,10 @@
    surface signatures</link></secondaryie>
   <secondaryie><link linkend="surfaces-propsplitting">recognising in a
    surface list</link></secondaryie>
+  <secondaryie><link linkend="tri-new-splitting">reconstructing a
+   triangulation from</link></secondaryie>
+  <secondaryie><link linkend="tri-propsplitting">testing for existence
+   in a triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -454,8 +701,28 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>standard subcomplexes</primaryie>
+  <secondaryie><link linkend="tri-creation">creating</link></secondaryie>
+  <secondaryie><link linkend="tri-composition-composition">testing
+   for</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="angles-viewstructureprops">strict angle
    structures</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>subcomplex</primaryie>
+  <secondaryie><link linkend="tri-composition-composition">searching
+   for standard subcomplexes</link></secondaryie>
+  <secondaryie><link linkend="tri-composition-isomorphism">testing
+   between two triangulations</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-subdivision">subdivision of
+   triangulations</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -486,6 +753,11 @@
  </indexentry>
 
  <indexentry>
+  <secondaryie><link linkend="tri-editgluings">tetrahedron face
+   gluings, editing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="packet-text">text packets</link></primaryie>
  </indexentry>
 
@@ -495,7 +767,74 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>triangulation</primaryie>
+  <secondaryie><link linkend="tri-prop0eff">0-efficiency,
+   testing for</link></secondaryie>
+  <secondaryie><link linkend="tri-make0eff">0-efficient triangulation,
+   conversion to</link></secondaryie>
+  <secondaryie><link linkend="tri-prop3sphere">3-sphere
+   recognition</link></secondaryie>
+  <secondaryie><link linkend="tri-subdivision">barycentric
+   subdivision</link></secondaryie>
+  <secondaryie><link linkend="tri-propbdry">boundary,
+   testing for</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton">boundary components,
+   viewing</link></secondaryie>
+  <secondaryie><link linkend="tri-composition-composition">combinatorial
+   composition</link></secondaryie>
+  <secondaryie><link linkend="tri-decomposition-component">component
+   decomposition</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton">components,
+   viewing</link></secondaryie>
+  <secondaryie><link linkend="tri-decomposition-connsum">connected
+   sum decomposition</link></secondaryie>
+  <secondaryie><link linkend="tri-propconn">connectedness</link></secondaryie>
+  <secondaryie><link linkend="tri-creation">creation</link></secondaryie>
+  <secondaryie><link linkend="tri-vertextype">cusps</link></secondaryie>
+  <secondaryie><link linkend="tri-new-dehydration">dehydration
+   string, rehydrating</link></secondaryie>
+  <secondaryie><link linkend="tri-elementarymove">elementary
+   moves (3-2, 4-4, open book, etc.)</link></secondaryie>
+  <secondaryie><link linkend="tri-facetype">faces,
+   viewing shapes</link></secondaryie>
+  <secondaryie><link linkend="tri-algebra-fundgroup">fundamental
+   group</link></secondaryie>
+  <secondaryie><link linkend="tri-algebra-homology">homology
+   groups</link></secondaryie>
+  <secondaryie><link linkend="tri-subdivision">ideal to finite,
+   conversion</link></secondaryie>
+  <secondaryie><link linkend="tri-propideal">ideal vertices,
+   testing for</link></secondaryie>
+  <secondaryie><link linkend="tri-imported">importing from
+   external files</link></secondaryie>
+  <secondaryie><link linkend="tri-composition-isomorphism">isomorphism
+   and subcomplex testing</link></secondaryie>
+  <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
+  <secondaryie><link linkend="tri-cover">orientable double
+   cover</link></secondaryie>
+  <secondaryie><link linkend="tri-censuslookup">search for a
+   triangulation in the available censuses</link></secondaryie>
+  <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton">skeleton,
+   viewing details</link></secondaryie>
+  <secondaryie><link linkend="tri-new-splitting">splitting surface,
+   reconstructing triangulation from</link></secondaryie>
+  <secondaryie><link linkend="tri-propsplitting">splitting surface,
+   testing for</link></secondaryie>
+  <secondaryie><link linkend="tri-editgluings">tetrahedron face
+   gluings, editing</link></secondaryie>
+  <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
+   invariants</link></secondaryie>
+  <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="troubleshooting">troubleshooting</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
+   invariants</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -514,6 +853,16 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-edgetype">valid edges,
+   testing for</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-propvalid">valid triangulation,
+   testing for</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>vertex angle structures</primaryie>
   <seeie>(see angle structures)</seeie>
  </indexentry>
@@ -526,6 +875,11 @@
  <indexentry>
   <primaryie>vertex normal surfaces</primaryie>
   <seeie>(see normal surfaces)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-vertexedgeface">vertices, viewing
+   in a triangulation</link></primaryie>
  </indexentry>
 
  <indexentry>

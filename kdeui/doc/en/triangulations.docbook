@@ -376,7 +376,7 @@
        Signifies that the triangulation contains no tetrahedra at all.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="tri-propvalid">
       <glossterm>Invalid</glossterm>
       <glossdef><para>
        Signifies that the triangulation contains an invalid vertex
@@ -384,33 +384,33 @@
        invalid edge (an edge glued to itself in reverse).
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="tri-propclosed">
       <glossterm>Closed</glossterm>
       <glossdef><para>
        Signifies that the triangulation has no boundary faces and no
        ideal vertices.  All vertex links must be 2-spheres.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="tri-propideal">
       <glossterm>Ideal</glossterm>
       <glossdef><para>
        Signifies that the triangulation contains an ideal vertex (a
        vertex whose link is closed but not a 2-sphere).
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="tri-propbdry">
       <glossterm>Real Bdry</glossterm>
       <glossdef><para>
        Signifies that the triangulation contains a boundary face.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="tri-proporient">
       <glossterm>Orientable / Non-orientable</glossterm>
       <glossdef><para>
        Shows whether the triangulation is orientable.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="tri-propconn">
       <glossterm>Connected / Disconnected</glossterm>
       <glossdef><para>
        Shows whether the triangulation forms a single connected piece.
@@ -907,7 +907,7 @@
    </para>
    <para>
     <glosslist>
-     <glossentry>
+     <glossentry id="prop-0eff">
       <glossterm>Zero-Efficient</glossterm>
       <glossdef><para>
        Determines whether the triangulation is 0-efficient.  A
@@ -916,7 +916,7 @@
        boundary components.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="tri-propsplitting">
       <glossterm>Splitting Surface</glossterm>
       <glossdef><para>
        Determines whether the triangulation has a splitting
@@ -925,7 +925,7 @@
        and no other normal (or almost normal) discs.
       </para></glossdef>
      </glossentry>
-     <glossentry>
+     <glossentry id="tri-prop3sphere">
       <glossterm>3-Sphere</glossterm>
       <glossdef><para>
        Determines whether this is in fact a triangulation
