@@ -45,6 +45,7 @@
 #include <kstdguiitem.h>
 #include <ktoolbar.h>
 #include <qclipboard.h>
+#include <qevent.h>
 #include <qlabel.h>
 #include <qptrlist.h>
 #include <qwhatsthis.h>
@@ -56,6 +57,10 @@
 #define CLIPBOARD_HAS_TEXT \
     (! (KApplication::kApplication()->clipboard()-> \
         text(QClipboard::Clipboard).isNull()) )
+
+// Custom event types.
+// Note that QEvent::User is 1000.
+#define EVT_REFRESH_HEADER 3000
 
 using regina::NPacket;
 
@@ -83,6 +88,11 @@ PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
 void PacketHeader::refresh() {
     title->setText(packet->getFullName().c_str());
     icon->setPixmap(PacketManager::iconBar(packet, true));
+}
+
+void PacketHeader::customEvent(QCustomEvent* evt) {
+    if (evt->type() == EVT_REFRESH_HEADER)
+        refresh();
 }
 
 ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
@@ -440,14 +450,16 @@ void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
     // Assume it's this packet.
     if (packet->isPacketEditable() != readWrite)
         setReadWrite(!readWrite);
-    header->refresh();
+    QApplication::postEvent(header, new QCustomEvent(EVT_REFRESH_HEADER));
 }
 
-void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*) {
+void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
+        bool inParentDestructor) {
     // Assume it's this packet.
     if (packet->isPacketEditable() != readWrite)
         setReadWrite(!readWrite);
-    header->refresh();
+    if (! inParentDestructor)
+        QApplication::postEvent(header, new QCustomEvent(EVT_REFRESH_HEADER));
 }
 
 void PacketPane::refresh() {

@@ -117,7 +117,9 @@ void NContainerUI::childWasAdded(NPacket*, NPacket*) {
     refresh();
 }
 
-void NContainerUI::childWasRemoved(NPacket*, NPacket*) {
-    refresh();
+void NContainerUI::childWasRemoved(NPacket*, NPacket*,
+        bool inParentDestructor) {
+    if (! inParentDestructor)
+        refresh();
 }
 

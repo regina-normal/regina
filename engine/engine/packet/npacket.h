@@ -127,6 +127,9 @@ class NPacket : public ShareableObject {
             /**< The number of change event blocks currently registered.
                  Change events will only be fired when this count is zero. */
 
+        bool inDestructor;
+            /**< Have we entered the packet destructor? */
+
     public:
         /**
          * \name Constructors and Destructors
@@ -1145,7 +1148,8 @@ class NPacket : public ShareableObject {
 // Inline functions for NPacket
 
 inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
-        prevTreeSibling(0), nextTreeSibling(0), changeEventBlocks(0) {
+        prevTreeSibling(0), nextTreeSibling(0), changeEventBlocks(0),
+        inDestructor(false) {
     if (parent)
         parent->insertChildLast(this);
     else

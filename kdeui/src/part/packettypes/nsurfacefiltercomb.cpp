@@ -190,8 +190,9 @@ void NSurfaceFilterCombUI::childWasAdded(NPacket* p, NPacket*) {
         refreshChildList();
 }
 
-void NSurfaceFilterCombUI::childWasRemoved(NPacket* p, NPacket*) {
-    if (p == filter)
+void NSurfaceFilterCombUI::childWasRemoved(NPacket* p, NPacket*,
+        bool inParentDestructor) {
+    if ((! inParentDestructor) && p == filter)
         refreshChildList();
 }
 

@@ -37,6 +37,8 @@
 namespace regina {
 
 NPacket::~NPacket() {
+    inDestructor = true;
+
     // Orphan this packet before doing anything else.
     // The destructor can lead to callbacks for packet listeners, which
     // might in turn involve tree traversal.  It can't be good for
@@ -180,7 +182,7 @@ void NPacket::makeOrphan() {
         for (std::set<NPacketListener*>::const_iterator it =
                 oldParent->listeners->begin();
                 it != oldParent->listeners->end(); it++)
-            (*it)->childWasRemoved(oldParent, this);
+            (*it)->childWasRemoved(oldParent, this, oldParent->inDestructor);
     }
 }
 

@@ -27,6 +27,10 @@ Version 4.2  [ under development ]
         Class NLayeredSolidTorus:
             - New routine isLayeredSolidTorus for classifying an entire
               triangulation component.
+        Class NPacketListener:
+            - Added an extra boolean argument to childWasRemoved() to
+              indicate the situation in which the parent is also being
+              destroyed.
         Class NSnapPeaCensusManifold, NSnapPeaCensusTri:
             - Added to aid recognition of very small SnapPea census
               triangulations.

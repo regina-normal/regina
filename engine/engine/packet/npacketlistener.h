@@ -133,12 +133,22 @@ class NPacketListener {
          * the packet.  Note that the child packet may be about to be
          * destroyed (although this destruction will not have happened yet).
          *
+         * Note also that this packet (the parent) may have already
+         * entered its destructor (which removes and destroys all child
+         * packets as a matter of course).  In this situation it may be
+         * unsafe to query or update this packet, and so the third argument
+         * \a inParentDestructor is provided to indicate such a situation.
+         *
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to.
          * @param child the child packet that was removed.
+         * @param set to \c true if the parent packet is in fact being
+         * destroyed, and the child was simply removed as part of the
+         * standard subtree destruction.
          */
-        virtual void childWasRemoved(NPacket* packet, NPacket* child);
+        virtual void childWasRemoved(NPacket* packet, NPacket* child,
+            bool inParentDestructor);
         /**
          * Called when the child packets directly beneath the packet
          * have been reordered.
@@ -172,7 +182,7 @@ inline void NPacketListener::packetToBeDestroyed(NPacket*) {
 inline void NPacketListener::childWasAdded(NPacket*, NPacket*) {
 }
 
-inline void NPacketListener::childWasRemoved(NPacket*, NPacket*) {
+inline void NPacketListener::childWasRemoved(NPacket*, NPacket*, bool) {
 }
 
 inline void NPacketListener::childrenWereReordered(NPacket*) {

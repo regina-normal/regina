@@ -91,7 +91,8 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
          */
         void packetWasRenamed(regina::NPacket* packet);
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+            bool inParentDestructor);
         void childrenWereReordered(regina::NPacket* packet);
 
     public slots:

@@ -140,7 +140,8 @@ class PacketTreeItem : public KListViewItem, public regina::NPacketListener {
         void packetWasRenamed(regina::NPacket* packet);
         void packetToBeDestroyed(regina::NPacket* packet);
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+            bool inParentDestructor);
         void childrenWereReordered(regina::NPacket* packet);
 
     private:

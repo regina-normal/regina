@@ -82,7 +82,8 @@ class NContainerUI : public PacketReadOnlyUI, public regina::NPacketListener {
          * NPacketListener overrides.
          */
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+            bool inParentDestructor);
 };
 
 #endif

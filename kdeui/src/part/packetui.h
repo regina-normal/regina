@@ -86,6 +86,12 @@ class PacketHeader : public QHBox {
          * contents of the underlying packet.
          */
         void refresh();
+
+    protected:
+        /**
+         * Allow GUI updates from within a non-GUI thread.
+         */
+        void customEvent(QCustomEvent* evt);
 };
 
 /**
@@ -478,7 +484,8 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         void packetWasRenamed(regina::NPacket* packet);
         void packetToBeDestroyed(regina::NPacket* packet);
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+            bool inParentDestructor);
 
     signals:
         /**

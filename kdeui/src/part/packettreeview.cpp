@@ -229,9 +229,11 @@ void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
     getPart()->setModified(true);
 }
 
-void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*) {
+void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*,
+        bool inParentDestructor) {
     refreshSubtree();
-    updateEditable();
+    if (! inParentDestructor)
+        updateEditable();
     getPart()->setModified(true);
 }
 
