@@ -19,6 +19,7 @@ Copyright years:
     javaui/Makefile (variable DOC_BOTTOM)
     javaui/overview.html (page heading)
     javaui/normal/Application.java (Application.copyright)
+    www/applet.html
     www/index.html
     Source file header comments (generated from dist/stub.*)
 
