@@ -36,8 +36,8 @@ all-local :
 mostlyclean-local :
 	rm -f *.jar
 
+# Install jars if they're present.
 install-data-local :
-	# Install jars if they're present.
 	if [ -e "$(ui_jar)" ]; then \
 		$(mkinstalldirs) $(DESTDIR)$(pkgjardir); \
 		$(INSTALL_DATA) $(ui_jar) $(DESTDIR)$(pkgjardir); \

@@ -103,8 +103,9 @@ mostlyclean-local :
 	rm -f *.pdf *.rtf
 	rm -f *.jar
 
+# Install the individual documentation files.
+# Install the documentation jar if it's been built.
 install-data-local :
-	# Install the individual documentation files.
 	for ext in $(ext_all_refs); do \
 		for i in `find . -name "*.$$ext"`; do \
 			_destdir="$(DESTDIR)$(pkgdocdir)/`dirname "$$i"`"; \
@@ -112,7 +113,6 @@ install-data-local :
 			$(INSTALL_DATA) $$i "$$_destdir"; \
 		done; \
 	done
-	# Install the documentation jar if it's been built.
 	if [ -e "$(doc_jar)" ]; then \
 		$(mkinstalldirs) $(DESTDIR)$(pkgjardir); \
 		$(INSTALL_DATA) $(doc_jar) $(DESTDIR)$(pkgjardir); \
