@@ -41,5 +41,13 @@ ReginaPrefSet::ReginaPrefSet() :
         triInitialTab(Gluings),
         triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6) {
+    censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
+        "/examples/closed-or-census.rga"));
+    censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
+        "/examples/closed-nor-census.rga"));
+    censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
+        "/examples/knot-link-census.rga"));
+    censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
+        "/examples/snappea-census.rga"));
 }
 

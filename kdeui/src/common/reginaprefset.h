@@ -33,6 +33,31 @@
 #ifndef __REGINAPREFSET_H
 #define __REGINAPREFSET_H
 
+#include <qvaluevector.h>
+
+/**
+ * A structure holding a single filename which may or may not be active
+ * (such as a census file or a python library).
+ */
+struct ReginaFilePref {
+    QString filename;
+        /**< The full filename. */
+    bool active;
+        /**< Whether or not this filename is currently active. */
+
+    /**
+     * Constructors that make the filename active by default.
+     */
+    ReginaFilePref();
+    ReginaFilePref(const QString& newFilename, bool newActive = true);
+};
+
+/**
+ * A structure holding a list of filenames each of which may or may not
+ * be active.
+ */
+typedef QValueVector<ReginaFilePref> ReginaFilePrefList;
+
 /**
  * A structure holding all Regina preferences.
  */
@@ -49,10 +74,14 @@ struct ReginaPrefSet {
              viewers into the parent window? */
     bool autoFileExtension;
         /**< Should filenames be given an automatic extension? */
+    ReginaFilePrefList censusFiles;
+        /**< The list of data files to use for census lookups. */
     bool displayIcon;
         /**< Should we display the pretty Regina icon? */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
+    ReginaFilePrefList pythonLibraries;
+        /**< The python libraries to load upon each session startup. */
     int surfacesCreationCoords;
         /**< The default coordinate system for normal surface creation. */
     unsigned treeJumpSize;
@@ -76,6 +105,13 @@ struct ReginaPrefSet {
      */
     ReginaPrefSet();
 };
+
+inline ReginaFilePref::ReginaFilePref() : active(true) {
+}
+
+inline ReginaFilePref::ReginaFilePref(const QString& newFilename,
+        bool newActive) : filename(newFilename), active(newActive) {
+}
 
 #endif
 
