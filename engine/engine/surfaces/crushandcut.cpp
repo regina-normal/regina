@@ -121,6 +121,9 @@ void NNormalSurface::calculateKnownCanCrush() {
     if (calculatedCanCrush)
         return;
 
+    // TODO: actually implement this routine.
+    return;
+
     // We'll run through the prisms (defined by slicing tetrahedra along quads)
     // looking for cycles of adjacent prisms; if there are no such cycles
     // then we're fine.
