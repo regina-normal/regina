@@ -17,8 +17,7 @@ EXTRA_DIST = \
   Doxyfile.am Doxyfile.global Makefile.common am_edit conf.change.pl \
   config.guess config.pl config.sub cvs-clean.pl cvs.sh debianrules \
   detect-autoconf.sh install-sh ltmain.sh missing mkinstalldirs \
-  ac_gen am_update distcheck insertstub mkdist mkdist-config.in mksums \
-  replacetabs
+  ac_gen am_update distcheck insertstub mksums replacetabs
 
 ## ----------------------- Custom targets ----------------------------
 
