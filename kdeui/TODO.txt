@@ -27,7 +27,7 @@ Import/Export:
     Allow a greater variety of dehydration list file formats
 
 Packets (General):
-    Implement packet tags
+    (4.0) Implement packet tags
     Work out how to right-align the packet pane close button
     Work around Vim component bugs in script/text viewers
     Find out how to centre column headers in list views
