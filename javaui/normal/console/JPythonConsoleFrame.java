@@ -33,6 +33,7 @@ import normal.mainui.NormalFrame;
 import normal.options.NormalOptionSet;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.text.Keymap;
@@ -43,7 +44,8 @@ import org.python.util.PythonInterpreter;
 /**
  * Provides a frame containing a Jython console and associated tools.
  */
-public class JPythonConsoleFrame extends JFrame {
+public class JPythonConsoleFrame extends JFrame
+		implements PropertyChangeListener {
     /**
      * Is this window the entire program?
      */
@@ -58,6 +60,16 @@ public class JPythonConsoleFrame extends JFrame {
      * The actual Jython console contained in this window.
      */
     private JPythonConsole console;
+
+	/**
+	 * The break processing menu item.
+	 */
+	private JMenuItem menuConsoleBreak;
+
+	/**
+	 * The close console menu item.
+	 */
+	private JMenuItem menuConsoleClose;
 
     /**
      * Creates a new Jython console frame.  Note that the console must
@@ -118,16 +130,24 @@ public class JPythonConsoleFrame extends JFrame {
 		// Set up the menus.
 		JMenu menuConsole = new JMenu("Console");
 		menuConsole.setMnemonic(KeyEvent.VK_C);
+		menuConsoleBreak = new JMenuItem("Break Processing",
+			Standard16.cross.image());
+		menuConsoleBreak.setMnemonic(KeyEvent.VK_B);
+		menuConsoleBreak.setAccelerator(KeyStroke.getKeyStroke(
+			KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+		menuConsoleBreak.setEnabled(false);
 		JMenuItem menuConsoleSave = new JMenuItem("Save Contents",
 			Standard16.save.image());
 		menuConsoleSave.setMnemonic(KeyEvent.VK_S);
 		menuConsoleSave.setAccelerator(KeyStroke.getKeyStroke(
 			KeyEvent.VK_S, ActionEvent.ALT_MASK));
-		JMenuItem menuConsoleClose = new JMenuItem("Close",
+		menuConsoleClose = new JMenuItem("Close",
 			Standard16.close.image());
 		menuConsoleClose.setMnemonic(KeyEvent.VK_C);
 		menuConsoleClose.setAccelerator(KeyStroke.getKeyStroke(
 			KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+		menuConsole.add(menuConsoleBreak);
+		menuConsole.addSeparator();
 		menuConsole.add(menuConsoleSave);
 		menuConsole.add(menuConsoleClose);
 
@@ -144,17 +164,26 @@ public class JPythonConsoleFrame extends JFrame {
 		bar.add(menuHelp);
 		setJMenuBar(bar);
 
+		// Set up some standard actions.
+		Action actionBreak = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+                   console.cancelProcessing();
+			}
+		};
+		Action actionClose = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+                   closeConsole();
+			}
+		};
+
 		// Add menu event listeners.
+		menuConsoleBreak.addActionListener(actionBreak);
 		menuConsoleSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveContents();
 			}
 		});
-		menuConsoleClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				closeConsole();
-			}
-		});
+		menuConsoleClose.addActionListener(actionClose);
 		menuHelpJython.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				shell.viewHelp("jython");
@@ -166,18 +195,16 @@ public class JPythonConsoleFrame extends JFrame {
         getContentPane().add(new JScrollPane(console),
             BorderLayout.CENTER);
 
-        // Add a key mapping for Ctrl-D so it closes the window instead
-		// of doing its usual function.
+        // Add key mappings.
 		Keymap keymap = console.addKeymap("Jython Console",
 			console.getKeymap());
 		keymap.addActionForKeyStroke(KeyStroke.getKeyStroke(
-			KeyEvent.VK_D, KeyEvent.CTRL_MASK), new AbstractAction() {
-				public void actionPerformed(ActionEvent e) {
-                    closeConsole();
-				}
-			});
+			KeyEvent.VK_C, KeyEvent.CTRL_MASK), actionBreak);
+		keymap.addActionForKeyStroke(KeyStroke.getKeyStroke(
+			KeyEvent.VK_D, KeyEvent.CTRL_MASK), actionClose);
 		console.setKeymap(keymap);
 
+		console.addPropertyChangeListener("processing", this);
         addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 console.requestFocus();
@@ -190,6 +217,18 @@ public class JPythonConsoleFrame extends JFrame {
         });
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     }
+
+	/**
+	 * For internal use.
+	 * Called when the console starts or stops processing.
+	 *
+	 * @param e the corresponding event.
+	 */
+	public void propertyChange(PropertyChangeEvent e) {
+		boolean proc = console.isProcessing();
+		menuConsoleBreak.setEnabled(proc);
+		menuConsoleClose.setEnabled(! proc);
+	}
 
     /**
      * Returns the actual Jython console used by this frame.
@@ -215,6 +254,11 @@ public class JPythonConsoleFrame extends JFrame {
      * appropriate.
      */
     public void closeConsole() {
+		if (console.isProcessing()) {
+			console.oops();
+			return;
+		}
+
         Frame frame = shell.getPrimaryFrame();
         if (frame != null && frame instanceof NormalFrame)
             ((NormalFrame)frame).disownConsole(this);
