@@ -42,8 +42,6 @@ Packets (General):
     - Use focus-in events instead of focus proxies for complex packet UIs
 
 Part:
-    - Fix crash on "import regina" when running scripts from within
-        a konqueror embedded preview
     - Fix missing help icon when running scripts from within a konqueror
         embedded preview
 
