@@ -1,6 +1,5 @@
 
 # Other files:
-AC_CONFIG_FILES([admin/mkdist-config])
 AC_CONFIG_FILES([python/regina-python], [chmod +x python/regina-python])
 
 AC_OUTPUT
