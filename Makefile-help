@@ -1,0 +1,48 @@
+binengine - make all C++ calculation engine binaries
+binenginejni - make the engine binary that offers JNI access
+binenginecorba - make the engine binary that offers CORBA access
+binjava - make all Java user interface binary jars
+binjavaui - make the jar containing the general Java UI but no engine access
+binjavajni - make the jar for the Java UI providing JNI engine access only
+binjavacorba - make the jar for the Java UI providing CORBA engine access only
+binconf - make the RegConf configuration utility jar
+bindocs - make a complete documentation jar for the Java UI help system
+bin - make all engine and Java UI binaries, EXCLUDING the documentation jar
+... (all above targets are made in bin/) ...
+
+docsengine - build the calculation engine documentation
+docsjava - build the Java user interface documentation
+docs - build all auto-generated documentation
+... (all above targets are made beneath docs/)
+
+prepengine - build all auto-generated sources for the calculation engine
+prepenginecorba - build the auto-generated CORBA engine sources
+prepenginejni - build the auto-generated JNI engine header files
+prepjava - build all auto-generated sources for the Java user interface
+prepjavacorba - build the auto-generated CORBA Java UI sources
+prepcorba - build all auto-generated CORBA sources
+prepjni - build all auto-generated JNI header files
+prepcleancorba - remove all auto-generated CORBA sources
+prepcleanjni - remove all auto-generated JNI header files
+prepclean - remove all auto-generated sources
+prep - build all auto-generated source files
+
+run - run the Java user interface using the full GUI with a JNI engine
+runconsole - run the Java UI using only a console window with a JNI engine
+runtext - run the Java UI using only a text console with a JNI engine
+runjni - run the Java UI using the full GUI with a JNI engine
+runcorba - run the Java UI using the full GUI to access a CORBA engine
+runcorbaengine - run the calculation engine as a CORBA server
+debug - run the full Java GUI in the Java debugger with a JNI engine
+debugjni - run the full Java GUI in the Java debugger with a JNI engine
+debugcorba - run the full Java GUI in the Java debugger with a CORBA engine
+configure - run the RegConf configuration utility
+
+clean - remove all generated files except for final binaries and archives
+
+help - display help for all targets
+helpgeneral - display help for all general targets
+helpbin - display help for all binary targets
+helpdocs - display help for all documentation targets
+helpprep - display help for all preparation targets
+helprun - display help for all run targets

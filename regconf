@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Put us in the base Regina directory.
+cd `dirname $0`
+
+export command="java -jar bin/regconf.jar"
+
+if ! $command; then
+	echo
+	echo "############################"
+	echo "#                          #"
+	echo "#         REGCONF          #"
+	echo "#                          #"
+	echo "#  Could not run RegConf!  #"
+	echo "#                          #"
+	echo "############################"
+	echo
+	echo "I could not run the RegConf configuration utility."
+	echo "The command I tried to run was:"
+	echo "    $command"
+	echo
+	echo "Perhaps a different command is required to run Java."
+	echo "Check that you have a Java runtime >= 1.2.2."
+	echo "Then edit the script \"regconf\" in which this command is stored."
+	echo "Edit this command at the beginning of the script, replacing"
+	echo "    \"java\" with whatever command is used to run a Java"
+	echo "    application on your system."
+	echo
+	exit 1
+fi

@@ -1,0 +1,341 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A normal surface theory calculator                           *
+ *  Computational engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2001, Ben Burton                                   *
+ *  For further details contact Ben Burton (benb@acm.org).                *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,        *
+ *  MA 02111-1307, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+#include "config.h"
+
+#ifdef __NO_INCLUDE_PATHS
+    #include "nsquad.h"
+    #include "nsstandard.h"
+    #include "nrational.h"
+    #include "nset.h"
+    #include "nqueue.h"
+    #include "nmatrixint.h"
+    #include "nmatrixfield.h"
+    #include "ntriangulation.h"
+#else
+    #include "engine/surfaces/nsquad.h"
+    #include "engine/surfaces/nsstandard.h"
+    #include "engine/utilities/nrational.h"
+    #include "engine/utilities/nset.h"
+    #include "engine/utilities/nqueue.h"
+    #include "engine/maths/nmatrixint.h"
+    #include "engine/maths/nmatrixfield.h"
+    #include "engine/triangulation/ntriangulation.h"
+#endif
+
+bool NNormalSurfaceVectorQuad::isCompatibleWith(
+        const NNormalSurfaceVector& other) const {
+    unsigned base = 0;
+    int quad;
+    bool foundQuads;
+        // Have we already found a quad type in this tetrahedron?
+    while (base < size()) {
+        // Check that each tetrahedron has at most one quad type.
+        foundQuads = false;
+        for (quad = 0; quad < 3; quad++) {
+            if ((*this)[base + quad] != 0 || other[base + quad] != 0) {
+                if (foundQuads)
+                    return false;
+                else
+                    foundQuads = true;
+            }
+        }
+        base += 3;
+    }
+    return true;
+}
+
+NDoubleList<NNormalSurfaceVector*>* NNormalSurfaceVectorQuad::
+        createNonNegativeCone(NTriangulation* triangulation) {
+    unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();
+    NDoubleList<NNormalSurfaceVector*>* ans =
+        new NDoubleList<NNormalSurfaceVector*>;
+
+    // Fill the list with unit vectors.
+    NNormalSurfaceVector* vector;
+    for (unsigned long i=0; i<nCoords; i++) {
+           vector = new NNormalSurfaceVectorQuad(nCoords);
+           vector->setElement(i, NLargeInteger::one);
+           ans->addLast(vector);
+       }
+    return ans;
+}
+
+NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
+        NTriangulation* triangulation) {
+    unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();
+    // One equation per non-boundary edge.
+    long nEquations = long(triangulation->getNumberOfEdges());
+    for (NTriangulation::BoundaryComponentIterator bit(triangulation->
+            getBoundaryComponents()); ! bit.done(); bit++) {
+        nEquations -= (*bit)->getNumberOfEdges();
+    }
+
+    NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
+    unsigned long row = 0;
+
+    // Run through each internal edge and add the corresponding
+    // equation.
+    NTriangulation::EdgeIterator eit(triangulation->getEdges());
+    NDynamicArrayIterator<NEdgeEmbedding> embit;
+    NPerm perm;
+    unsigned long tetIndex;
+    while (! eit.done()) {
+        if (! (*eit)->isBoundary()) {
+            embit.init((*eit)->getEmbeddings());
+            while (! embit.done()) {
+                tetIndex = triangulation->getTetrahedronIndex(
+                    (*embit).getTetrahedron());
+                perm = (*embit).getVertices();
+                ans->entry(row, 3 * tetIndex + vertexSplit[perm[0]][perm[2]])
+                    += 1;
+                ans->entry(row, 3 * tetIndex + vertexSplit[perm[0]][perm[3]])
+                    -= 1;
+                embit++;
+            }
+            row++;
+        }
+        eit++;
+    }
+    return ans;
+}
+
+/**
+ * A structure representing a particular end of an edge.
+ */
+struct EdgeEnd {
+    NEdge* edge;
+        /**< The edge under consideration. */
+    int end;
+        /**< The end of the edge under consideration; this is 0 or 1. */
+
+    EdgeEnd() {}
+    EdgeEnd(NEdge* newEdge, int newEnd) : edge(newEdge), end(newEnd) {}
+    EdgeEnd(const EdgeEnd& cloneMe) : edge(cloneMe.edge), end(cloneMe.end) {}
+    void operator = (const EdgeEnd& cloneMe) {
+        edge = cloneMe.edge; end = cloneMe.end;
+    }
+};
+
+NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
+        NTriangulation* triang) const {
+    // We're going to do this by wrapping around each edge and seeing
+    // what comes.
+    unsigned long nRows = 7 * triang->getNumberOfTetrahedra();
+    NNormalSurfaceVectorStandard* ans =
+        new NNormalSurfaceVectorStandard(nRows);
+
+    // Set every triangular coordinate in the answer to infinity.
+    // For coordinates about vertices not enjoying infinitely many discs,
+    // infinity will mean "unknown".
+    unsigned long row;
+    int i;
+    for (row = 0; row < nRows; row+=7)
+        for (i = 0; i < 4; i++)
+            ans->setElement(row + i, NLargeInteger::infinity);
+    for (row = 0; 7 * row < nRows; row++)
+        for (i = 0; i < 3; i++)
+            ans->setElement(7 * row + 4 + i, (*this)[3 * row + i]);
+
+    // Run through the vertices and work out the triangular coordinates
+    // about each vertex in turn.
+    NPointerSet<NEdge> usedEdges[2];
+        // usedEdges[i] contains the edges for which we have already
+        // examined end i.
+    NLargeInteger min;
+        // The minimum coordinate that has been assigned about this
+        // vertex.
+    NQueue<EdgeEnd> examine;
+    bool broken;
+        // Are the matching equations broken about this edge end?
+    int end;
+    NEdge* edge;
+    EdgeEnd current;
+    NDynamicArrayIterator<NVertexEmbedding> vembit;
+    NDynamicArrayIterator<NEdgeEmbedding> eembit;
+    NDynamicArrayIterator<NEdgeEmbedding> backupit;
+    NTetrahedron* tet;
+    NTetrahedron* adj;
+    NPerm tetPerm, adjPerm;
+    unsigned long tetIndex, adjIndex;
+    NLargeInteger expect;
+    for (NTriangulation::VertexIterator vit(triang->getVertices());
+            ! vit.done(); vit++) {
+        usedEdges[0].flush(); usedEdges[1].flush();
+        examine.flush();
+        broken = false;
+
+        // Pick some triangular disc and set it to zero.
+        const NVertexEmbedding& vemb = (*vit)->getEmbedding(0);
+        row = 7 * triang->getTetrahedronIndex(vemb.getTetrahedron())
+            + vemb.getVertex();
+        ans->setElement(row, NLargeInteger::zero);
+
+        min = NLargeInteger::zero;
+
+        // Mark the three surrounding edge ends for examination.
+        for (i=0; i<4; i++) {
+            if (i == vemb.getVertex())
+                continue;
+            edge = vemb.getTetrahedron()->getEdge(
+                edgeNumber[vemb.getVertex()][i]);
+            end = vemb.getTetrahedron()->getEdgeMapping(
+                edgeNumber[vemb.getVertex()][i])[0] == i ? 1 : 0;
+            if (! usedEdges[end].contains(edge)) {
+                usedEdges[end].add(edge);
+                examine.insert(EdgeEnd(edge, end));
+            }
+        }
+
+        // Cycle through edge ends until we are finished or until the
+        // matching equations are broken.  Each time we pick a value for
+        // a coordinate, add the corresponding nearby edge ends to the
+        // list of edge ends to examine.
+        while ((! broken) && (! examine.empty())) {
+            current = examine.remove();
+
+            // Run around this edge end.
+            // We know there is a pre-chosen coordinate somewhere; run
+            // forwards and find this.
+            for (eembit.init(current.edge->getEmbeddings());
+                    ! eembit.done(); eembit++)
+                if (! (*ans)[7 * triang->getTetrahedronIndex(
+                        (*eembit).getTetrahedron()) +
+                        (*eembit).getVertices()[current.end]].isInfinite())
+                    break;
+
+            // We are now at the first pre-chosen coordinate about this
+            // vertex.  Run backwards from here and fill in all the
+            // holes.
+            backupit = eembit;
+            adj = (*eembit).getTetrahedron();
+            adjPerm = (*eembit).getVertices();
+            adjIndex = triang->getTetrahedronIndex(adj);
+            for (eembit--; ! eembit.done(); eembit--) {
+                // Work out the coordinate for the disc type at eembit.
+                tet = (*eembit).getTetrahedron();
+                tetPerm = (*eembit).getVertices();
+                tetIndex = triang->getTetrahedronIndex(tet);
+
+                expect =
+                    (*ans)[7 * adjIndex + adjPerm[current.end]] +
+                    (*ans)[7 * adjIndex + 4 +
+                        vertexSplit[adjPerm[3]][adjPerm[current.end]]] -
+                    (*ans)[7 * tetIndex + 4 +
+                        vertexSplit[tetPerm[2]][tetPerm[current.end]]];
+                ans->setElement(7 * tetIndex + tetPerm[current.end], expect);
+                if (expect < min)
+                    min = expect;
+
+                // Remember to examine the new edge end if appropriate.
+                edge = tet->getEdge(
+                    edgeNumber[tetPerm[2]][tetPerm[current.end]]);
+                end = tet->getEdgeMapping(
+                    edgeNumber[tetPerm[2]][tetPerm[current.end]])[0]
+                    == tetPerm[2] ? 1 : 0;
+                if (! usedEdges[end].contains(edge)) {
+                    usedEdges[end].add(edge);
+                    examine.insert(EdgeEnd(edge, end));
+                }
+
+                adj = tet;
+                adjPerm = tetPerm;
+                adjIndex = tetIndex;
+            }
+
+            // Now move forwards from the original first pre-chosen
+            // coordinate and fill in the holes from here onwards,
+            // always checking to ensure the
+            // matching equations have not been broken.
+            eembit = backupit;
+            adj = (*eembit).getTetrahedron();
+            adjPerm = (*eembit).getVertices();
+            adjIndex = triang->getTetrahedronIndex(adj);
+            for (eembit++; ! eembit.done(); eembit++) {
+                // Work out the coordinate for the disc type at eembit.
+                tet = (*eembit).getTetrahedron();
+                tetPerm = (*eembit).getVertices();
+                tetIndex = triang->getTetrahedronIndex(tet);
+
+                expect =
+                    (*ans)[7 * adjIndex + adjPerm[current.end]] +
+                    (*ans)[7 * adjIndex + 4 +
+                        vertexSplit[adjPerm[2]][adjPerm[current.end]]] -
+                    (*ans)[7 * tetIndex + 4 +
+                        vertexSplit[tetPerm[3]][tetPerm[current.end]]];
+                row = 7 * tetIndex + tetPerm[current.end];
+                if ((*ans)[row].isInfinite()) {
+                    ans->setElement(row, expect);
+                    if (expect < min)
+                        min = expect;
+
+                    // Remember to examine the new edge end if appropriate.
+                    edge = tet->getEdge(
+                        edgeNumber[tetPerm[3]][tetPerm[current.end]]);
+                    end = tet->getEdgeMapping(
+                        edgeNumber[tetPerm[3]][tetPerm[current.end]])[0]
+                        == tetPerm[3] ? 1 : 0;
+                    if (! usedEdges[end].contains(edge)) {
+                        usedEdges[end].add(edge);
+                        examine.insert(EdgeEnd(edge, end));
+                    }
+                } else {
+                    // This coordinate has already been set.
+                    // Make sure it's the same value!
+                    if ((*ans)[row] != expect) {
+                        broken = true;
+                        break;
+                    }
+                }
+
+                adj = tet;
+                adjPerm = tetPerm;
+                adjIndex = tetIndex;
+            }
+        }
+
+        // If the matching equations were broken, set every coordinate
+        // to infinity.  Otherwise subtract min from every coordinate to
+        // make the values as small as possible.
+        for (vembit.init((*vit)->getEmbeddings());
+                ! vembit.done(); vembit++) {
+            row = 7 * triang->getTetrahedronIndex((*vembit).getTetrahedron())
+                + (*vembit).getVertex();
+            if (broken)
+                ans->setElement(row, NLargeInteger::infinity);
+            else
+                ans->setElement(row, (*ans)[row] - min);
+        }
+    }
+
+    // Note that there should be no need to remove common factors since
+    // the quad coordinates have not changed and in theory they already
+    // had gcd=1.
+    return ans;
+}
+

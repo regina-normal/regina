@@ -1,0 +1,125 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A normal surface theory calculator                           *
+ *  Computational engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2001, Ben Burton                                   *
+ *  For further details contact Ben Burton (benb@acm.org).                *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,        *
+ *  MA 02111-1307, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+/*! \file sfcombination.h
+ *  \brief Contains a normal surface filter that simply combines other
+ *  filters.
+ */
+
+#ifndef __SFCOMBINATION_H
+#ifndef __DOXYGEN
+#define __SFCOMBINATION_H
+#endif
+
+#include "config.h"
+
+#ifdef __NO_INCLUDE_PATHS
+    #include "nsurfacefilter.h"
+#else
+    #include "engine/surfaces/nsurfacefilter.h"
+#endif
+
+/**
+ * A normal surface filter that simply combines other filters.
+ * This filter will combine, using boolean \a and or \a or, all of the
+ * filters that are immediate children of this packet.  This packet may
+ * have children that are not normal surface filters; such children will
+ * simply be ignored.
+ *
+ * If there are no immediate child filters, a normal surface will be
+ * accepted if this is an \a and filter and rejected if this is an \a or
+ * filter.
+ */
+class NSurfaceFilterCombination : public NSurfaceFilter {
+    public:
+        static const int filterID;
+
+    private:
+        bool usesAnd;
+            /**< \c true if children are combined using boolean \a and, or
+                 \c false if children are combined using boolean \a or. */
+    
+    public:
+        /**
+         * Creates a new surface filter that accepts all normal surfaces.
+         * This will be an \a and filter.
+         */
+        NSurfaceFilterCombination();
+        /**
+         * Creates a new surface filter that is a clone of the given
+         * surface filter.
+         *
+         * @param cloneMe the surface filter to clone.
+         */
+        NSurfaceFilterCombination(const NSurfaceFilterCombination& cloneMe);
+
+        /**
+         * Determines whether this is an \a and or an \a or combination.
+         *
+         * @return \c true if this is an \a and combination, or \c false
+         * if this is an \a or combination.
+         */
+        bool getUsesAnd() const;
+        /**
+         * Sets whether this is an \a and or an \a or combination.
+         *
+         * @param value \c true if this is to be an \a and combination,
+         * or \c false if this is to be an \a or combination.
+         */
+        void setUsesAnd(bool value);
+        
+        virtual bool accept(NNormalSurface& surface) const;
+        virtual void writeTextLong(ostream& o) const;
+        virtual void writeFilter(NFile& out) const;
+        static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
+
+        virtual int getFilterID() const;
+        virtual NString getFilterName() const;
+};
+
+// Inline functions for NSurfaceFilterCombination
+
+inline NSurfaceFilterCombination::NSurfaceFilterCombination() : usesAnd(true) {
+}
+inline NSurfaceFilterCombination::NSurfaceFilterCombination(
+        const NSurfaceFilterCombination& cloneMe) : usesAnd(cloneMe.usesAnd) {
+}
+
+inline bool NSurfaceFilterCombination::getUsesAnd() const {
+    return usesAnd;
+}
+inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
+    usesAnd = value;
+}
+
+inline void NSurfaceFilterCombination::writeTextLong(ostream& o) const {
+    o << (usesAnd ? "AND" : "OR") << " combination normal surface filter\n";
+}
+
+#endif
+
