@@ -919,7 +919,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
 		 * assistance in achieving this goal.
          *
          * The moves used include crushing maximal forests in the
-         * triangulation 1-skeleton and using 3-2, 2-0,
+         * triangulation 1-skeleton and using 3-2, 2-0 (edge and vertex),
          * 2-1, boundary shelling and book opening moves as far as
          * possible.
 		 *
@@ -1012,7 +1012,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
         bool twoThreeMove(NFace* f, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-0 move
-         * about the given edge.
+         * about the given edge of degree 2.
          * This involves taking the two tetrahedra joined at that edge
          * and squashing them flat.
          * This can be done only if the edge is non-boundary, the two
@@ -1051,6 +1051,45 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(NEdge* e, bool check = true, bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a 2-0 move
+         * about the given vertex of degree 2.
+         * This involves taking the two tetrahedra joined at that vertex
+         * and squashing them flat.
+         * This can be done only if the vertex is non-boundary, the two
+		 * tetrahedra are distinct, the
+		 * faces opposite \c v in each tetrahedron are distinct and not
+		 * both boundary, and the two tetrahedra meet each other
+		 * on all three faces touching the vertex (as opposed to meeting
+		 * each other on one face and being glued to themselves along the
+		 * other two).
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (faces, components, etc.) will be invalid.
+         *
+         * \pre If the move is being performed and no
+         * check is being run, it must be known in advance that the move
+         * is legal.
+         * \pre The skeleton has been calculated.
+         * Skeleton calculation can be forced by querying the skeleton,
+         * such as calling getNumberOfVertices().
+         *
+         * \ifacescorba All parameters are compulsory.
+         *
+         * @param v the vertex about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool twoZeroMove(NVertex* v, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-1 move
          * about the given edge.

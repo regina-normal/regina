@@ -100,7 +100,7 @@ export EXTRA_CLASSES :=
 # TOUCH: Create a new empty file with the given name.
 
 export MAKEDEP := g++ -MM
-export COMPILE := g++ -O2 -c -Wall
+export COMPILE := g++ -O2 -c -Wall -DDEBUG
 export LINKLIB := g++ -O2 -shared
 export LINKEXEC := g++ -O2
 export DOXYGEN := doxygen

@@ -93,7 +93,10 @@ module Regina {
 
             boolean threeTwoMove(in NEdge e, in boolean chk, in boolean pfm);
             boolean twoThreeMove(in NFace f, in boolean chk, in boolean pfm);
-            boolean twoZeroMove(in NEdge e, in boolean chk, in boolean pfm);
+            boolean twoZeroMove_NEdge(in NEdge e, in boolean chk,
+				in boolean pfm);
+            boolean twoZeroMove_NVertex(in NVertex v, in boolean chk,
+				in boolean pfm);
             boolean twoOneMove(in NEdge e, in long edgeEnd,
                 in boolean chk, in boolean pfm);
             boolean openBook(in NFace f, in boolean chk, in boolean pfm);

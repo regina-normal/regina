@@ -329,7 +329,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
         return true;
 
     #ifdef DEBUG
-    cerr << "Performing 2-0 move\n";
+    cerr << "Performing 2-0 move about edge\n";
     #endif
     
     // Actually perform the move.
@@ -360,6 +360,82 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     // clearAllProperties() has been called already from
     // removeTetrahedron().
     return true;
+}
+
+bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
+	if (check) {
+		if (v->isBoundary())
+			return false;
+		if (v->getNumberOfEmbeddings() != 2)
+			return false;
+	}
+
+	NTetrahedron* tet[2];
+	int vertex[2];
+
+	NDynamicArrayIterator<NVertexEmbedding> it(v->getEmbeddings());
+	int i = 0;
+	while (! it.done()) {
+		tet[i] = (*it).getTetrahedron();
+		vertex[i] = (*it).getVertex();
+		it++;
+		i++;
+	}
+
+	if (check) {
+		if (tet[0] == tet[1])
+			return false;
+
+		NFace* face[2];
+		for (i = 0; i < 2; i++)
+			face[i] = tet[i]->getFace(vertex[i]);
+		if (face[0] == face[1])
+			return false;
+		if (face[0]->isBoundary() && face[1]->isBoundary())
+			return false;
+
+		// Check that the tetrahedra are joined along all three faces.
+		for (i = 0; i < 4; i++) {
+			if (i == vertex[0])
+				continue;
+			if (tet[0]->getAdjacentTetrahedron(i) != tet[1])
+				return false;
+		}
+	}
+	
+	if (! perform)
+		return true;
+
+	#ifdef DEBUG
+	cerr << "Performing 2-0 move about vertex\n";
+	#endif
+
+	// Actually perform the move.
+
+	// Unglue faces from the doomed tetrahedra and glue them to each
+	// other.
+	NPerm crossover;
+	if (vertex[0] == 0)
+		crossover = tet[0]->getAdjacentTetrahedronGluing(1);
+	else
+		crossover = tet[0]->getAdjacentTetrahedronGluing(0);
+	NTetrahedron* top = tet[0]->getAdjacentTetrahedron(vertex[0]);
+	NTetrahedron* bottom = tet[1]->getAdjacentTetrahedron(vertex[1]);
+	int topFace = tet[0]->getAdjacentFace(vertex[0]);
+	NPerm gluing = tet[1]->getAdjacentTetrahedronGluing(vertex[1]) *
+		crossover * top->getAdjacentTetrahedronGluing(topFace);
+	tet[0]->unjoin(vertex[0]);
+	tet[1]->unjoin(vertex[1]);
+	top->joinTo(topFace, bottom, gluing);
+
+	// Finally remove and dispose of the tetrahedra.
+	delete removeTetrahedron(tet[0]);
+	delete removeTetrahedron(tet[1]);
+
+	// Tidy up.
+	// clearAllProperties() has been called already from
+	// removeTetrahedron().
+	return true;
 }
 
 bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,

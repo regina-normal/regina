@@ -91,6 +91,9 @@ public interface NTriangulation extends NPacket {
     public boolean twoZeroMove(NEdge e);
     public boolean twoZeroMove(NEdge e, boolean check);
     public boolean twoZeroMove(NEdge e, boolean check, boolean perform);
+    public boolean twoZeroMove(NVertex v);
+    public boolean twoZeroMove(NVertex v, boolean check);
+    public boolean twoZeroMove(NVertex v, boolean check, boolean perform);
     public boolean twoOneMove(NEdge e, int edgeEnd);
     public boolean twoOneMove(NEdge e, int edgeEnd, boolean check);
     public boolean twoOneMove(NEdge e, int edgeEnd, boolean check,

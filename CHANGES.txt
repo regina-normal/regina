@@ -18,6 +18,7 @@ Regina - A Normal Surface Theory Calculator
               renamed totalTreeSize() to getTotalTreeSize().
         Class NTriangulation:
             - Added fundamental group as a new property.
+            - Added a two-zero move about a vertex.
     JAVA USER INTERFACE:
         Overall structure:
             - Moved options files to $REGINA_OPTIONS.

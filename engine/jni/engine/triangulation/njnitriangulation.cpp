@@ -427,10 +427,18 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT jboolean JNICALL
-        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_twoZeroMove
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_twoZeroMove__Lnormal_engine_triangulation_NEdge_2ZZ
         (JNIEnv *env, jobject me, jobject e, jboolean check,
         jboolean perform) {
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->twoZeroMove(
         GET_ENGINE_OBJECT(env, NEdge, e), check, perform);
+}
+
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_twoZeroMove__Lnormal_engine_triangulation_NVertex_2ZZ
+        (JNIEnv *env, jobject me, jobject v, jboolean check,
+        jboolean perform) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->twoZeroMove(
+        GET_ENGINE_OBJECT(env, NVertex, v), check, perform);
 }
 

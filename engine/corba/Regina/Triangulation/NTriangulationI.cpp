@@ -206,11 +206,17 @@ CORBA::Boolean NTriangulation_i::twoThreeMove(
     return GET_ENGINE_OBJECT(NTriangulation, this)->twoThreeMove(
         GET_ENGINE_OBJECT(NFace, f), check, perform);
 }
-CORBA::Boolean NTriangulation_i::twoZeroMove(
+CORBA::Boolean NTriangulation_i::twoZeroMove_NEdge(
         Regina::Triangulation::NEdge_ptr e,
         CORBA::Boolean check, CORBA::Boolean perform) {
     return GET_ENGINE_OBJECT(NTriangulation, this)->twoZeroMove(
         GET_ENGINE_OBJECT(NEdge, e), check, perform);
+}
+CORBA::Boolean NTriangulation_i::twoZeroMove_NVertex(
+        Regina::Triangulation::NVertex_ptr v,
+        CORBA::Boolean check, CORBA::Boolean perform) {
+    return GET_ENGINE_OBJECT(NTriangulation, this)->twoZeroMove(
+        GET_ENGINE_OBJECT(NVertex, v), check, perform);
 }
 CORBA::Boolean NTriangulation_i::twoOneMove(
         Regina::Triangulation::NEdge_ptr e, CORBA::Long edgeEnd,

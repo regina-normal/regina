@@ -120,6 +120,13 @@ public class NJNITriangulation extends NJNIPacket
         return twoZeroMove(e, check, true);
     }
     public native boolean twoZeroMove(NEdge e, boolean check, boolean perform);
+    public boolean twoZeroMove(NVertex v) {
+        return twoZeroMove(v, true, true);
+    }
+    public boolean twoZeroMove(NVertex v, boolean check) {
+        return twoZeroMove(v, check, true);
+    }
+    public native boolean twoZeroMove(NVertex v, boolean check, boolean perform);
     public boolean twoOneMove(NEdge e, int edgeEnd) {
         return twoOneMove(e, edgeEnd, true, true);
     }

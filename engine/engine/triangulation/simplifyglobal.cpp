@@ -41,6 +41,7 @@ bool NTriangulation::intelligentSimplify() {
 
 bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     EdgeIterator eit;
+	VertexIterator vit;
 	BoundaryComponentIterator bit;
     NEdge* edge;
 	NBoundaryComponent* bc;
@@ -142,6 +143,19 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 break;
             }
         }
+        if (changedNow) {
+			if (perform)
+            	continue;
+			else
+				return true;
+		}
+		for (vit.init(vertices); ! (vit.done()); vit++) {
+			if (twoZeroMove(*vit, true, perform)) {
+				changedNow = true;
+				changed = true;
+				break;
+			}
+		}
         if (changedNow) {
 			if (perform)
             	continue;

@@ -109,8 +109,11 @@ class NTriangulation_i :
         virtual CORBA::Boolean twoThreeMove(
             Regina::Triangulation::NFace_ptr f,
             CORBA::Boolean check, CORBA::Boolean perform);
-        virtual CORBA::Boolean twoZeroMove(
+        virtual CORBA::Boolean twoZeroMove_NEdge(
             Regina::Triangulation::NEdge_ptr e,
+            CORBA::Boolean check, CORBA::Boolean perform);
+        virtual CORBA::Boolean twoZeroMove_NVertex(
+            Regina::Triangulation::NVertex_ptr v,
             CORBA::Boolean check, CORBA::Boolean perform);
         virtual CORBA::Boolean twoOneMove(
             Regina::Triangulation::NEdge_ptr e, CORBA::Long edgeEnd,

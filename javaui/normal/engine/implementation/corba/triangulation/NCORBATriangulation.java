@@ -216,7 +216,18 @@ public class NCORBATriangulation extends NCORBAPacket
     }
     public boolean twoZeroMove(normal.engine.triangulation.NEdge e,
             boolean check, boolean perform) {
-        return data.twoZeroMove(((NCORBAEdge)e).data, check, perform);
+        return data.twoZeroMove_NEdge(((NCORBAEdge)e).data, check, perform);
+    }
+    public boolean twoZeroMove(normal.engine.triangulation.NVertex v) {
+        return twoZeroMove(v, true, true);
+    }
+    public boolean twoZeroMove(normal.engine.triangulation.NVertex v,
+            boolean check) {
+        return twoZeroMove(v, check, true);
+    }
+    public boolean twoZeroMove(normal.engine.triangulation.NVertex v,
+            boolean check, boolean perform) {
+        return data.twoZeroMove_NVertex(((NCORBAVertex)v).data, check, perform);
     }
     public boolean twoOneMove(normal.engine.triangulation.NEdge e, int end) {
         return twoOneMove(e, end, true, true);
