@@ -28,4 +28,6 @@ Don't forget:
     documentation in reference manual, feature set & index
     rebuild manpages
     website
+    debian packages
     tag CVS
+    mail regina-announce
