@@ -1,9 +1,127 @@
 #!/bin/sh
 
-# Put us in the base Regina directory.
-cd `dirname $0`
+# ---------- Options ----------
 
-export command="java -jar bin/regconf.jar"
+# Directory containing JAR archives.  This path may either be absolute or
+#     relative to the directory containing this script.
+pathtojar=bin
+
+# JAR containing the RegConf utility.
+regconf=regconf.jar
+
+# Comand used to run Java.
+java=java
+
+# ---------- End Options ----------
+
+# Test that the given argument is a directory.
+# On success, returns 0 and sets dir_err to the empty string.
+# On error, returns 1 and sets dir_err to an appropriate error message.
+# Usage: testdir <dir> [ -c ]
+#     -c: attempt to create the directory if it does not exist.
+function testdir() {
+	dir_err=
+	if [ ! -e "$1" ]; then
+		if [ "$2" == "-c" ]; then
+			if ! mkdir "$1"; then
+				dir_err="This directory could not be created."
+			fi
+		else
+			dir_err="This directory does not exist."
+		fi
+	elif [ ! -d "$1" ]; then
+		dir_err="This is not a directory."
+	fi
+
+	if [ -z "$dir_err" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Test that the given argument exists and is a regular file.
+# On success, returns 0 and sets file_err to the empty string.
+# On error, returns 1 and sets file_err to an appropriate error message.
+# Usage: testfile <file>
+function testfile() {
+	file_err=
+	if [ ! -e "$1" ]; then
+		file_err="This file does not exist."
+	elif [ ! -f "$1" ]; then
+		file_err="This exists but is not a regular file."
+	fi
+
+	if [ -z "$file_err" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Make the JAR path absolute and check that it's a directory.
+
+case "x$pathtojar" in
+	x )
+		pathtojar=`pwd`
+	;;
+	x/* )
+	;;
+	* )
+		pathtojar="`dirname $0`/$pathtojar"
+	;;
+esac
+
+if ! testdir "$pathtojar"; then
+	echo
+	echo "############################"
+	echo "#                          #"
+	echo "#         REGCONF          #"
+	echo "#                          #"
+	echo "#  Invalid JAR directory!  #"
+	echo "#                          #"
+	echo "############################"
+	echo
+	echo "The JAR directory is currently set to \"$pathtojar\"."
+	echo "$dir_err"
+	echo
+	echo "You can set the JAR directory manually by editing variable"
+	echo "    \"pathtojar\" at the beginning of this script ($0)."
+	echo
+	exit 1
+fi
+
+# Make sure the RegConf jar exists.
+
+if ! testfile "$pathtojar/$regconf"; then
+	echo
+	echo "##########################"
+	echo "#                        #"
+	echo "#        REGCONF         #"
+	echo "#                        #"
+	echo "#  Invalid RegConf jar!  #"
+	echo "#                        #"
+	echo "##########################"
+	echo
+	echo "I am looking for the RegConf jar \"$pathtojar/$regconf\"."
+	echo "$file_err"
+	echo
+	echo "You can set the name of the jar manually by editing variable"
+	echo "    \"regconf\" at the beginning of this script ($0)."
+	echo
+	exit 1;
+fi
+
+# Set the options directory.
+# Don't test or create it; we'll leave this up to RegConf.
+
+if [ -z "$REGINA_OPTIONS" ]; then
+	export REGINA_OPTIONS="`echo ~/.regina`"
+fi
+
+# Run the Java app.
+
+command="$java -jar $pathtojar/$regconf"
 
 if ! $command; then
 	echo
@@ -19,12 +137,11 @@ if ! $command; then
 	echo "The command I tried to run was:"
 	echo "    $command"
 	echo
-	echo "Perhaps a different command is required to run Java."
+	echo "Perhaps a different command is required to run Java on your system."
 	echo "Check that you have a Java runtime >= 1.2.2."
-	echo "Then edit the script \"regconf\" in which this command is stored."
-	echo "Edit this command at the beginning of the script, replacing"
-	echo "    \"java\" with whatever command is used to run a Java"
-	echo "    application on your system."
+	echo
+	echo "You can set the java command manually by editing variable"
+	echo "    \"java\" at the beginning of this script ($0)."
 	echo
 	exit 1
 fi
