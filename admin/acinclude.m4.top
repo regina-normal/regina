@@ -35,6 +35,26 @@ dnl
 dnl    -----------------------------------------------------------------
 
 dnl
+dnl    REGINA_ABS_DIR(DIR)
+dnl
+dnl    Sets _ABS_DIR to the given directory expressed as an absolute path.
+dnl
+AC_DEFUN(REGINA_ABS_DIR, [
+  _ABS_DIR="`cd "$1" && pwd`"
+])
+
+dnl
+dnl    REGINA_ABS_DIRNAME(PATH)
+dnl
+dnl    Sets _ABS_DIRNAME to the directory portion of the given pathname,
+dnl    expressed as an absolute path.
+dnl
+AC_DEFUN(REGINA_ABS_DIRNAME, [
+  _ABS_DIRNAME="`AS_DIRNAME([$1])`"
+  _ABS_DIRNAME="`cd "$_ABS_DIRNAME" && pwd`"
+])
+
+dnl
 dnl    REGINA_CLASSPATH_RESTORE
 dnl
 dnl    Restores $CLASSPATH to its value when REGINA_CLASSPATH_SAVE was
@@ -182,8 +202,8 @@ AC_DEFUN(REGINA_HEADER_JNI, [
 
     AC_MSG_CHECKING([for JNI headers])
     REGINA_FOLLOW_SYMLINKS([$_real_progname])
-    _JTOPDIR=`AS_DIRNAME(["$_SYMLINKS_FOLLOWED"])`
-    _JTOPDIR2=`AS_DIRNAME(["$_JTOPDIR"])`
+    _JTOPDIR="`AS_DIRNAME([$_SYMLINKS_FOLLOWED])`"
+    _JTOPDIR2="`AS_DIRNAME([$_JTOPDIR])`"
 
     _JINC=none
     for i in "$_JTOPDIR/include" "$_JTOPDIR/Headers" \
