@@ -27,7 +27,6 @@
 /* end stub */
 
 #include <cstring>
-#include "regina.h"
 
 #include "file/nresources.h"
 
