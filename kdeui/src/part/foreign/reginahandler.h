@@ -30,8 +30,8 @@
  *  \brief Allows interaction with other Regina data files.
  */
 
-#ifndef __REGINA_H
-#define __REGINA_H
+#ifndef __REGINAHANDLER_H
+#define __REGINAHANDLER_H
 
 #include "packetexporter.h"
 #include "packetimporter.h"
