@@ -25,6 +25,7 @@ KDE User Interface (optional):
     kdelibs (the core KDE libraries), version >= 3.1
 
 Python Bindings (optional):
+    python (the scripting language), version >= 2.2
     libboost_python (the Boost.Python libraries), verison >= 1.30.0
 
 Documentation (optional, only required at compile-time):
