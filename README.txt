@@ -32,6 +32,9 @@ Documentation (optional, only required at compile-time):
     doxygen (a C++ documentation system), version >= 1.2.2
     docbook-utils (includes docbook2man), version >= 0.6.9
 
+Test Suite (optional):
+    cppunit (the testing framework), version >= 1.8.0
+
 -----------------------------
 1. Regina Binary Distribution
 -----------------------------
