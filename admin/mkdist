@@ -1,0 +1,153 @@
+#!/bin/sh
+#
+# Regina - A Normal Surface Theory Calculator
+# Binary / Documentation Distribution Utility
+#
+# Copyright (c) 2002, Ben Burton
+# For further details contact Ben Burton (benb@acm.org).
+#
+# Usage: mkdist [ linux | cygwin | doc ]
+#
+# Builds a complete binary or documentation distribution archive.
+#
+# It is strongly recommended (though not required) to run "make distclean"
+# before running this script.
+#
+# Recommends: fakeroot
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+set -e
+
+# Check for fakeroot.
+if which fakeroot > /dev/null 2>&1; then
+  fakeroot="fakeroot"
+else
+  fakeroot=
+fi
+
+usage () {
+  echo "Usage: $0 [ linux | cygwin | doc ]" 1>&2
+  exit 1
+}
+
+bindist () {
+  # Read in configuration details.
+  source admin/mkdist-config
+
+  # Compile.
+  echo "mkdist: Building..."
+  make
+
+  # Install.
+  echo "mkdist: Installing..."
+  if test -e "$tmpinst"; then
+    rm -rf "$tmpinst"
+  fi
+  mkdir "$tmpinst"
+  make install DESTDIR="$tmpinst"
+
+  # Strip.
+  echo "mkdist: Stripping binaries..."
+  for i in `find "$tmpinst" -type f \
+      '(' -name "*.so" -o -name "*.a" -o -name "*.dll" -o -perm +1 ')'`; do
+    base="`basename "$i"`"
+    if strip "$i" > /dev/null 2>&1; then
+      echo "$base"
+    else
+      echo "$base (could not be stripped)"
+    fi
+  done
+  rm -rf "$tmpinst$docdir"
+
+  # Archive.
+  archbase="regina-${version}_bin_$hosttype-$1"
+  archtgz="`pwd`/$archbase.tgz"
+  archzip="`pwd`/$archbase.zip"
+  echo "mkdist: Creating archives $archbase.{tgz.zip}..."
+  ( cd "$tmpinst" && "$fakeroot" tar -zcf "$archtgz" * )
+  ( cd "$tmpinst" && "$fakeroot" zip -rqy "$archzip" * )
+
+  # Tidy up.
+  echo "mkdist: Cleaning up..."
+  rm -rf "$tmpinst"
+}
+
+docdist () {
+  # Read in configuration details.
+  source admin/mkdist-config
+
+  # Compile.
+  echo "mkdist: Building..."
+  ( cd docs && make )
+
+  # Install.
+  echo "mkdist: Installing..."
+  if test -e "$tmpinst"; then
+    rm -rf "$tmpinst"
+  fi
+  mkdir "$tmpinst"
+  ( cd docs && make install DESTDIR="$tmpinst" )
+
+  # Archive.
+  archbase="regina-${version}_doc"
+  archtgz="`pwd`/$archbase.tgz"
+  archzip="`pwd`/$archbase.zip"
+  echo "mkdist: Creating archives $archbase.{tgz,zip}..."
+  ( cd "$tmpinst$docdir" && "$fakeroot" tar -zcf "$archtgz" * )
+  ( cd "$tmpinst$docdir" && "$fakeroot" zip -rqy "$archzip" * )
+
+  # Tidy up.
+  echo "mkdist: Cleaning up..."
+  rm -rf "$tmpinst"
+}
+
+# Are we in the top-level source directory?
+
+if ! test -d admin; then
+  echo "ERROR: This script should be run from within the top-level source directory." 1>&2
+  exit 1
+fi
+
+# Check the (single) command-line argument.
+
+if ! test "$#" = 1; then
+  usage
+fi
+
+case "$1" in
+  linux )
+    ./configure CC=gcc-2.95 CXX=g++-2.95
+    bindist linux
+  ;;
+  cygwin )
+    ./configure CC=gcc-2 CXX=g++-2 --enable-static-final
+    bindist cygwin
+  ;;
+  doc )
+    if ! test -e config.status; then
+      ./configure
+    fi
+    docdist
+  ;;
+  * )
+    echo "ERROR: Invalid argument $1."
+    usage
+  ;;
+esac
+
+exit 0
+
