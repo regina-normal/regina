@@ -40,11 +40,15 @@
 #define SLEEP_SECONDS 1
 
 using regina::NBoolSet;
+using std::cin;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 void usage(const char* progName) {
-    std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " <output-file>\n\n";
-    std::cerr <<
+    cerr << "Usage:\n";
+    cerr << "    " << progName << " <output-file>\n\n";
+    cerr <<
         "You will be required to give census parameters on standard input.\n";
     exit(1);
 }
@@ -53,17 +57,17 @@ int getInt(const char* prompt, int min, int max) {
     std::string token;
     int ans;
     while (true) {
-        std::cout << prompt;
-        std::cin >> token;
+        cout << prompt;
+        cin >> token;
 
         if (token.empty()) {
-            std::cerr << "Unexpected end of standard input.\n";
+            cerr << "Unexpected end of standard input.\n";
             exit(1);
         }
 
         ans = atoi(token.c_str());
         if (ans < min || ans > max)
-            std::cout << "Only numerical values between " << min
+            cout << "Only numerical values between " << min
                 << " and " << max << " are accepted.\n";
         else
             return ans;
@@ -74,11 +78,11 @@ NBoolSet getBoolSet(const char* prompt, const char* keyDescs,
         const char keys[3]) {
     std::string token;
     while (true) {
-        std::cout << prompt << '\n' << keyDescs << ": ";
-        std::cin >> token;
+        cout << prompt << '\n' << keyDescs << ": ";
+        cin >> token;
 
         if (token.empty()) {
-            std::cerr << "Unexpected end of standard input.\n";
+            cerr << "Unexpected end of standard input.\n";
             exit(1);
         }
 
@@ -89,7 +93,7 @@ NBoolSet getBoolSet(const char* prompt, const char* keyDescs,
         if (tolower(token[0]) == tolower(keys[2]))
             return NBoolSet::sBoth;
 
-        std::cout << token << " is not an accepted response.\n";
+        cout << token << " is not an accepted response.\n";
     }
 }
 
@@ -161,26 +165,21 @@ int main(int argc, char* argv[]) {
         sleep(SLEEP_SECONDS);
 
     const regina::NProgress* progress = manager.getProgress();
-    std::cout.flush();
+    cout << endl;
     while (! manager.isFinished()) {
-        if (progress->hasChanged()) {
-            std::cout << progress->getDescription() << '\n';
-            std::cout.flush();
-        }
+        if (progress->hasChanged())
+            cout << progress->getDescription() << endl;
         sleep(SLEEP_SECONDS);
     }
-    std::cout << progress->getDescription() << '\n';
-    std::cout.flush();
+    cout << progress->getDescription() << endl;
 
     // Write the completed census to file.
     if (! regina::writeToFile(argv[1], &parent)) {
-        std::cerr << "Output file " << argv[1] << " could not be written.\n";
+        cerr << "Output file " << argv[1] << " could not be written.\n";
         return 1;
     }
 
-    std::cout << "Total triangulations: "
-        << census->getNumberOfChildren() << '\n';
-    std::cout.flush();
+    cout << "Total triangulations: " << census->getNumberOfChildren() << endl;
     return 0;
 }
 
