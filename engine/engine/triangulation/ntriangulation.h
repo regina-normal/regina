@@ -1027,15 +1027,14 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * Attempts to simplify the triangulation as intelligently as
          * possible without further input.
          *
-         * Currently this routine does nothing but call
-         * simplifyToLocalMinimum(); once a local minimum is reached
-         * it will stay there.
+         * Currently this routine merely uses simplifyToLocalMinimum()
+         * in combination with random 4-4 moves.
          *
          * \warning The specific behaviour of this routine is
          * very likely to change between releases.
          *
          * \todo \opturgent Make this faster and more effective.
-         * Include random 4-4 moves and random 2-3 moves to get out of
+         * Include book opening moves and random 2-3 moves to get out of
          * wells.  Unglue faces with three boundary edges and record the
          * corresponding change in topology.  Minimise the amount of
          * skeletal/homological calculation.
@@ -1050,9 +1049,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * triangulation; see intelligentSimplify() for further
          * assistance in achieving this goal.
          *
-         * The moves used include crushing maximal forests in the
-         * triangulation 1-skeleton and using 3-2, 2-0 (edge and vertex),
-         * 2-1 and boundary shelling moves as far as possible.
+         * The moves used include 3-2, 2-0 (edge and vertex),
+         * 2-1 and boundary shelling moves.
          *
          * Note that book opening moves (which do not reduce the number
          * of tetrahedra) are no longer used in this routine, in contrast
@@ -1068,9 +1066,10 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * simplifications, or \c false if we are only to investigate
          * whether simplifications are possible (defaults to \c true).
          * @return if \a perform is \c true, this routine returns
-         * \c true if and only if the triangulation was changed; if
-         * \a perform is \c false, this routine returns \c true if and
-         * only if any simplifications are possible.
+         * \c true if and only if the triangulation was changed to
+         * reduce the number of tetrahedra; if \a perform is \c false,
+         * this routine returns \c true if and only if it determines
+         * that it is capable of performing such a change.
          */
         bool simplifyToLocalMinimum(bool perform = true);
 
@@ -1401,6 +1400,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
+         *
+         * \warning This routine should not be used until the
+         * eligibility checks are corrected; see the bug details below.
          *
          * \todo \bugurgent The restrictions on allowing this move to take
          * place are currently wrong.  Many valid cases are ruled out
