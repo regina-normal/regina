@@ -36,7 +36,7 @@ configure-stamp:
 build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
-	$(MAKE) binjni \
+	$(MAKE) binjni binjava \
 		JNI_INCLUDES="-I/usr/lib/j2se/1.3/include -I/usr/lib/j2se/1.3/include/linux" \
 		EXTRA_CLASSES="" \
 		JAVAC="/usr/lib/j2se/1.3/bin/javac -target 1.1" \
