@@ -258,13 +258,13 @@ void ReginaMain::changeCaption(const QString& text) {
 }
 
 void ReginaMain::newToolbarConfig() {
-    applyMainWindowSettings(KGlobal::config(),
-        QString::fromLatin1("MainWindow"));
-
     // Work around a bug that messes up the newly created GUI.
     createGUI(0);
     createShellGUI(false);
     createGUI(currentPart);
+
+    applyMainWindowSettings(KGlobal::config(),
+        QString::fromLatin1("MainWindow"));
 }
 
 void ReginaMain::setupActions() {
@@ -274,7 +274,7 @@ void ReginaMain::setupActions() {
     fileOpenRecent = KStdAction::openRecent(this, SLOT(openURL(const KURL&)),
         actionCollection());
     KStdAction::close(this, SLOT(close()), actionCollection());
-    KStdAction::quit(kapp, SLOT(quit()), actionCollection());
+    KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
 
     // Toolbar and status bar:
     showToolbar = KStdAction::showToolbar(this,
