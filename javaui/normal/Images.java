@@ -96,5 +96,10 @@ public class Images {
      */
     public static final StandardImage snapPeaIcon =
         new StandardImage("normal/images/main/snappea.gif", Images.class);
+    /**
+     * An icon representing dehydration and rehydration.
+     */
+    public static final StandardImage hydrationIcon =
+        new StandardImage("normal/images/main/hydration.gif", Images.class);
 }
 

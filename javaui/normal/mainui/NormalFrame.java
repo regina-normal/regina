@@ -396,6 +396,24 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             });
             menuFileImport.add(menuFileImportSnapPea);
 
+            JMenuItem menuFileImportDehydrations =
+                new JMenuItem("Dehydrated Triangulation List",
+                Images.hydrationIcon.image());
+            menuFileImportDehydrations.setMnemonic(KeyEvent.VK_D);
+            menuFileImportDehydrations.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    TopologyPane m = getCurrentTopologyPane();
+                    if (m == null) {
+                        fileNewTopology();
+                        m = getCurrentTopologyPane();
+                        if (m == null)
+                            return;
+                    }
+                    m.importData(new DehydrationImporter(shell));
+                }
+            });
+            menuFileImport.add(menuFileImportDehydrations);
+
             JMenuItem menuFileImportScript =
                 new JMenuItem("Jython Script",
                 Images.btnScript.image());
