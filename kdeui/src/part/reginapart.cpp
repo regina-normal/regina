@@ -330,7 +330,29 @@ void ReginaPart::moveShallow() {
     if (! packet)
         return;
 
-    unimplemented();
+    if (packet->dependsOnParent()) {
+        KMessageBox::error(widget(), i18n(
+            "This packet cannot be moved away from its current parent."));
+        return;
+    }
+
+    regina::NPacket* parent = packet->getTreeParent();
+    if (! parent) {
+        KMessageBox::error(widget(), i18n(
+            "This packet is already at the highest level in the "
+            "entire tree."));
+        return;
+    }
+
+    regina::NPacket* grandparent = parent->getTreeParent();
+    if (! grandparent) {
+        KMessageBox::error(widget(), i18n(
+            "There can only be one packet at the highest level in the tree."));
+        return;
+    }
+
+    packet->makeOrphan();
+    grandparent->insertChildAfter(packet, parent);
 
     setModified(true);
 }
@@ -343,7 +365,30 @@ void ReginaPart::moveDeep() {
     if (! packet)
         return;
 
-    unimplemented();
+    if (packet->dependsOnParent()) {
+        KMessageBox::error(widget(), i18n(
+            "This packet cannot be moved away from its current parent."));
+        return;
+    }
+
+    bool down = true;
+    regina::NPacket* newParent = packet->getNextTreeSibling();
+    if (! newParent) {
+        newParent = packet->getPrevTreeSibling();
+        down = false;
+    }
+    if (! newParent) {
+        KMessageBox::error(widget(), i18n(
+            "This packet cannot be moved to a lower level because it has no "
+            "siblings that could act as its parent."));
+        return;
+    }
+
+    packet->makeOrphan();
+    if (down)
+        newParent->insertChildFirst(packet);
+    else
+        newParent->insertChildLast(packet);
 
     setModified(true);
 }
