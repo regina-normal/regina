@@ -50,7 +50,7 @@
  *
  * The internal code is a character.  The lowest two bits represent the
  * image of 0, the next lowest two bits represent the image of 1 and so
- * on.  Thus the image of <i>k</i> is .
+ * on.
  *
  * \ifacescorba Not present.
  */
@@ -482,6 +482,10 @@ inline int NPerm::imageOf(int source) const {
 
 inline bool NPerm::operator == (const NPerm& other) const {
     return (code == other.code);
+}
+
+inline bool NPerm::operator != (const NPerm& other) const {
+    return (code != other.code);
 }
 
 #endif
