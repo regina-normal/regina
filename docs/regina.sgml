@@ -39,6 +39,7 @@
  <!ENTITY cpython "<application>CPython</application>">
  <!ENTITY java "<application>Java</application>">
  <!ENTITY javahelp "<application>JavaHelp</application>">
+ <!ENTITY snappea "<application>SnapPea</application>">
 
  <!ENTITY helpabout
   "<menuchoice>
@@ -46,6 +47,7 @@
     <guimenuitem>About</guimenuitem>
    </menuchoice>">
 
+ <!ENTITY reginafeatureset SYSTEM "featureset.sgml">
  <!ENTITY reginatrouble SYSTEM "reginatrouble.sgml">
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
  <!ENTITY reginalicense SYSTEM "license.sgml">
@@ -102,6 +104,59 @@
   &reginalicense;
 
  </preface>
+
+ <chapter id="about">
+  <title>About &regina;</title>
+
+  &reginafeatureset;
+
+  <sect1 id="genealogy">
+   <title>Genealogy</title>
+
+   <graphic fileref="normalicon.gif" align="right">
+
+   <para>
+    In 1997 in Melbourne, David Letscher, Richard Rannard and Ben Burton
+    under the guidance of Hyam Rubinstein planned out a program that
+    would do normal surface theory and everything else besides.  Much
+    groundwork planning was done, epsilon code was written and then
+    things kind of faded away.  David Letscher revived the project on his
+    own and in 1999 presented <application>Normal&nbsp;1.0</application>.
+    This program performed
+    triangulation simplification and found vertex normal surfaces, was
+    written in &java; and was a proof-of-concept program that normal
+    surface theory was computationally feasible.
+   </para>
+   <para>
+    In March 1999, David and Ben sat down to write a new version
+    of the program from scratch.  The new version would have a
+    calculation engine written in C++ for speed and would have a &java;
+    GUI for portability and for (in the author's opinion) the cool things
+    that &java; provides for writing interfaces.  It would be carefully
+    designed and written with rigour and extensibility in mind, allowing
+    for the possibility of add-ons written by other people.
+   </para>
+   <para>
+    David however leads a busy life and pulled out of the project, but
+    remains to offer fabulous technical advice.  In late 2000 a
+    prerelease of the new program was ready (under an appropriate
+    definition of &quot;ready&quot;) and voila, here we are today.
+   </para>
+  </sect1>
+
+  <sect1 id="who">
+   <title>Who is Regina?</title>
+
+   <para>
+    This normal surface theory calculator has been named after Regina
+    Basman who once told me she was the most normal person I knew.  She's
+    doing a mathematics PhD, reads cool books and sometimes draws
+    people, and she likes running around rainforests in the dark.
+   </para>
+
+   <graphic fileref="basman.jpg">
+  </sect1>
+ </chapter>
 
  <!-- chapter id="gettingstarted">
   <title>Getting Started</title>
@@ -260,7 +315,7 @@
 
  &reginaman;
 
- <appendix id="changelog">
+ <appendix id="history">
   <title>Version History</title>
 
   <programlisting>
