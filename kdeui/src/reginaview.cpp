@@ -28,15 +28,13 @@
 
 #include "reginaview.h"
 
-#include <qpainter.h>
 #include <qlayout.h>
-
-#include <kurl.h>
-
-#include <ktrader.h>
+#include <qpainter.h>
 #include <klibloader.h>
 #include <kmessagebox.h>
 #include <krun.h>
+#include <ktrader.h>
+#include <kurl.h>
 
 ReginaView::ReginaView(QWidget *parent)
     : QWidget(parent),

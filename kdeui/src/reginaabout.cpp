@@ -29,10 +29,9 @@
 // Regina core includes:
 #include "regina-config.h"
 
-// Regina UI includes:
+// UI includes:
 #include "reginaabout.h"
 
-// KDE/Qt includes:
 #include <klocale.h>
 
 const char* ReginaAbout::bugAddress = PACKAGE_BUGREPORT;

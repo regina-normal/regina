@@ -26,10 +26,10 @@
 
 /* end stub */
 
-#include <kapplication.h>
-#include <dcopclient.h>
 #include <qdatastream.h>
 #include <qstring.h>
+#include <dcopclient.h>
+#include <kapplication.h>
 
 int main(int argc, char **argv)
 {
