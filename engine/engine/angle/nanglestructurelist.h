@@ -41,6 +41,7 @@
 #include "angle/nanglestructure.h"
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
+#include "utilities/nproperty.h"
 
 namespace regina {
 
@@ -69,15 +70,11 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
         std::vector<NAngleStructure*> structures;
             /**< Contains the angle structures stored in this packet. */
 
-        bool doesAllowStrict;
+        mutable NProperty<bool> doesAllowStrict;
             /**< Does the convex span of this list include a strict
              *   angle structure? */
-        bool calculatedAllowStrict;
-            /**< Have we calculated \a doesAllowStrict? */
-        bool doesAllowTaut;
+        mutable NProperty<bool> doesAllowTaut;
             /**< Does the convex span of this list include a taut structure? */
-        bool calculatedAllowTaut;
-            /**< Have we calculated \a doesAllowTaut? */
 
     public:
         /**
@@ -119,7 +116,7 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * @return \c true if and only if a strict angle structure can
          * be produced.
          */
-        bool allowsStrict();
+        bool allowsStrict() const;
         /**
          * Determines whether any convex combination of the angle
          * structures in this list is a taut structure.
@@ -128,7 +125,7 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          *
          * @return \c true if and only if a taut structure can be produced.
          */
-        bool allowsTaut();
+        bool allowsTaut() const;
 
         /**
          * Enumerates all angle structures on the given triangulation.
@@ -171,12 +168,12 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * Calculate whether the convex span of this list includes a
          * strict angle structure.
          */
-        void calculateAllowStrict();
+        void calculateAllowStrict() const;
         /**
          * Calculate whether the convex span of this list includes a
          * taut structure.
          */
-        void calculateAllowTaut();
+        void calculateAllowTaut() const;
 
         /**
          * An output iterator used to insert angle structures into an
@@ -311,16 +308,16 @@ inline const NAngleStructure* NAngleStructureList::getStructure(
     return structures[index];
 }
 
-inline bool NAngleStructureList::allowsStrict() {
-    if (! calculatedAllowStrict)
+inline bool NAngleStructureList::allowsStrict() const {
+    if (! doesAllowStrict.known())
         calculateAllowStrict();
-    return doesAllowStrict;
+    return doesAllowStrict.value();
 }
 
-inline bool NAngleStructureList::allowsTaut() {
-    if (! calculatedAllowTaut)
+inline bool NAngleStructureList::allowsTaut() const {
+    if (! doesAllowTaut.known())
         calculateAllowTaut();
-    return doesAllowTaut;
+    return doesAllowTaut.value();
 }
 
 inline NAngleStructureList* NAngleStructureList::enumerate(

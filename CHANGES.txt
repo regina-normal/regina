@@ -15,6 +15,9 @@ Current Development Version:
             - Added global comparisons isTrivial() and operator ==.
         Class NMutex:
             - Now uses inner class MutexLock for locking and unlocking.
+        Class NProperty, NPropertyBase, StoreValue, StoreConstPtr,
+                StoreManagedPtr:
+            - New classes for management of calculable object properties.
         Class NPropertyHolder:
             - Moved most of its functionality directly into NFile and
               replaced what was left with the new class NFilePropertyReader.

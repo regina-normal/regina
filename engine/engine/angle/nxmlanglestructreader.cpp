@@ -86,14 +86,15 @@ NXMLElementReader* NXMLAngleStructureReader::startSubElement(
 NXMLElementReader* NXMLAngleStructureListReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
+    bool b;
     if (subTagName == "struct")
         return new NXMLAngleStructureReader(tri);
     else if (subTagName == "allowstrict") {
-        if (valueOf(props.lookup("value"), list->doesAllowStrict))
-            list->calculatedAllowStrict = true;
+        if (valueOf(props.lookup("value"), b))
+            list->doesAllowStrict = b;
     } else if (subTagName == "allowtaut") {
-        if (valueOf(props.lookup("value"), list->doesAllowTaut))
-            list->calculatedAllowTaut = true;
+        if (valueOf(props.lookup("value"), b))
+            list->doesAllowTaut = b;
     }
     return new NXMLElementReader();
 }

@@ -43,12 +43,10 @@ namespace regina {
 
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
-NAngleStructureList::NAngleStructureList() :
-        calculatedAllowStrict(false), calculatedAllowTaut(false) {
+NAngleStructureList::NAngleStructureList() {
 }
 
-NAngleStructureList::NAngleStructureList(NTriangulation* owner) :
-        calculatedAllowStrict(false), calculatedAllowTaut(false) {
+NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
     owner->insertChildLast(this);
 
     // Form the matching equations (one per non-boundary edge plus
@@ -155,14 +153,14 @@ void NAngleStructureList::writePacket(NFile& out) const {
     // Write the properties.
     std::streampos bookmark(0);
 
-    if (calculatedAllowStrict) {
+    if (doesAllowStrict.known()) {
         bookmark = out.writePropertyHeader(PROPID_ALLOWSTRICT);
-        out.writeBool(doesAllowStrict);
+        out.writeBool(doesAllowStrict.value());
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedAllowTaut) {
+    if (doesAllowTaut.known()) {
         bookmark = out.writePropertyHeader(PROPID_ALLOWTAUT);
-        out.writeBool(doesAllowTaut);
+        out.writeBool(doesAllowTaut.value());
         out.writePropertyFooter(bookmark);
     }
 
@@ -193,10 +191,12 @@ void NAngleStructureList::writeXMLPacketData(std::ostream& out) const {
         (*it)->writeXMLData(out);
 
     // Write the properties.
-    if (calculatedAllowStrict)
-        out << "  " << xmlValueTag("allowstrict", doesAllowStrict) << '\n';
-    if (calculatedAllowTaut)
-        out << "  " << xmlValueTag("allowtaut", doesAllowTaut) << '\n';
+    if (doesAllowStrict.known())
+        out << "  " << xmlValueTag("allowstrict", doesAllowStrict.value())
+            << '\n';
+    if (doesAllowTaut.known())
+        out << "  " << xmlValueTag("allowtaut", doesAllowTaut.value())
+            << '\n';
 }
 
 NPacket* NAngleStructureList::internalClonePacket(NPacket* /* parent */)
@@ -205,32 +205,23 @@ NPacket* NAngleStructureList::internalClonePacket(NPacket* /* parent */)
     transform(structures.begin(), structures.end(),
         back_inserter(ans->structures), FuncNewClonePtr<NAngleStructure>());
 
-    if (calculatedAllowStrict) {
+    if (doesAllowStrict.known())
         ans->doesAllowStrict = doesAllowStrict;
-        ans->calculatedAllowStrict = true;
-    }
-    if (calculatedAllowTaut) {
+    if (doesAllowTaut.known())
         ans->doesAllowTaut = doesAllowTaut;
-        ans->calculatedAllowTaut = true;
-    }
 
     return ans;
 }
 
 void NAngleStructureList::readIndividualProperty(NFile& infile,
         unsigned propType) {
-    if (propType == PROPID_ALLOWSTRICT) {
+    if (propType == PROPID_ALLOWSTRICT)
         doesAllowStrict = infile.readBool();
-        calculatedAllowStrict = true;
-    } else if (propType == PROPID_ALLOWTAUT) {
+    else if (propType == PROPID_ALLOWTAUT)
         doesAllowTaut = infile.readBool();
-        calculatedAllowTaut = true;
-    }
 }
 
-void NAngleStructureList::calculateAllowStrict() {
-    calculatedAllowStrict = true;
-
+void NAngleStructureList::calculateAllowStrict() const {
     if (structures.empty()) {
         doesAllowStrict = false;
         return;
@@ -295,8 +286,7 @@ void NAngleStructureList::calculateAllowStrict() {
     delete[] fixedAngles;
 }
 
-void NAngleStructureList::calculateAllowTaut() {
-    calculatedAllowTaut = true;
+void NAngleStructureList::calculateAllowTaut() const {
     doesAllowTaut = (find_if(structures.begin(), structures.end(),
         std::mem_fun(&NAngleStructure::isTaut)) != structures.end());
 }
