@@ -207,6 +207,9 @@ fi
 REGINA_SHOULD_BUILD_INTERNAL(KDEUI)
 if test "$should_build" = "yes"; then
   AC_PATH_KDE
+else
+  # There are some tests from AC_PATH_KDE that need to be run regardless.
+  AC_CHECK_FUNCS([vsnprintf snprintf])
 fi
 
 ###########################################################
