@@ -231,13 +231,11 @@ bool ReginaPart::closeDockedPane() {
 
     // Close it.  Note that queryClose() has already done the
     // deregistration for us.
-    unplugActionList("packet_tracking_actions");
-    unplugActionList("packet_tracking_separator");
-    delete dockedPane;
-    dockedPane = 0;
+    PacketPane* closedPane = dockedPane;
+    hasUndocked(dockedPane);
 
-    dockChanged();
-
+    // At this point dockedPane is already 0.
+    delete closedPane;
     return true;
 }
 

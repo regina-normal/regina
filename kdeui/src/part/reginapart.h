@@ -87,7 +87,6 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actPaste;
         KAction* actCurrUndock;
         KAction* actCurrClose;
-
         QPtrList<KAction> separatorList;
 
     public:
@@ -106,13 +105,9 @@ class ReginaPart : public KParts::ReadWritePart {
         virtual bool closeURL();
 
         /**
-         * Create about data for this part.
+         * Basic KPart operations.
          */
         static KAboutData *createAboutData();
-
-        /**
-         * Return the instance stored in the underlying KParts::Factory.
-         */
         static KInstance* factoryInstance();
 
         /**
@@ -124,19 +119,39 @@ class ReginaPart : public KParts::ReadWritePart {
         void view(PacketPane* newPane);
 
         /**
-         * Display a newly created packet pane in the docked area.
-         * Any currently docked pane that refuses to closed will be
-         * forced out into its own floating window.
+         * Handles the incorporation of an existing packet pane into the
+         * part's dock area.  Any currently docked pane that refuses to
+         * close will be forced out into its own floating window.
+         *
+         * This is routine is always called at some point whenever a
+         * packet pane is inserted into the dock area.
+         *
+         * This routine does not handle registration of the packet pane
+         * into the list of managed panes, the clean removal of the
+         * packet pane from any preexisting container, or the
+         * configuration of the pane's dock/undock button and associated
+         * actions.
          */
         void dock(PacketPane* newPane);
 
         /**
-         * Called from a packet pane when it has left the docking area.
+         * Adjusts the part's interface components to reflect the fact
+         * that a packet pane has left the docking area.
+         *
+         * This must always be called when a packet pane is either closed
+         * or floated into its own window.
          */
         void hasUndocked(PacketPane* undockedPane);
 
         /**
-         * Called from a packet pane when it is about to definitively close.
+         * Handles the deregistration of a packet pane from the list of
+         * managed panes.
+         *
+         * This must always be called when a packet pane is about to
+         * close with certainty.
+         *
+         * Note that this routine is already called from
+         * PacketPane::queryClose() whenever it returns \c true.
          */
         void isClosing(PacketPane* closingPane);
 
@@ -165,11 +180,13 @@ class ReginaPart : public KParts::ReadWritePart {
 
         /**
          * Attempt to close the currently docked pane.
+         * The user will be prompted if necessary.
          */
         bool closeDockedPane();
 
         /**
          * Attempt to close all panes, docked or undocked.
+         * The user will be prompted if necessary.
          */
         bool closeAllPanes();
 
@@ -179,7 +196,7 @@ class ReginaPart : public KParts::ReadWritePart {
         void displayIcon(bool);
 
         /**
-         * Update settings from the main window.
+         * Set whether view() tries to dock packets by default.
          */
         void setAutoDock(bool);
 
