@@ -12,7 +12,6 @@ NLargeInteger:
     Investigate automatic conversion from long.
 
 Wrappers:
-    subcomplex
     split
     census
     surfaces
