@@ -30,6 +30,7 @@ Regina - A Normal Surface Theory Calculator
             - Added modularInverse().
     JAVA USER INTERFACE:
         Overall structure:
+            - Documentation now in docs/, not docs/normal/docs/.
             - Reads Regina options from directory $REGINA_OPTIONS_LOCAL
               and reads runtime options from system properties (which
               should be set by startup scripts).
