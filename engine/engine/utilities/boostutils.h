@@ -294,7 +294,7 @@ class noncopyable {
         /**
          * An inaccessible copy assignment operator.
          */
-        const noncopyable& operator = (const noncopyable&) {}
+        const noncopyable& operator = (const noncopyable&) { return *this; }
 };
 
 /*@}*/
