@@ -14,20 +14,8 @@
   <publishername>Available from the &regwebsite;</publishername>
  </biblioentry>
 
- <biblioentry id="bib-burton-facegraphs">
-  <abbrev>Bu2</abbrev>
-  <author>
-   <firstname>Benjamin</firstname>
-   <othername>A.</othername>
-   <surname>Burton</surname>
-  </author>
-  <title>Face pairing graphs and 3-manifold enumeration</title>
-  <edition>Preprint (math.GT/0307382)</edition>
-  <date>July 2003</date>
- </biblioentry>
-
  <biblioentry id="bib-burton-nor7">
-  <abbrev>Bu3</abbrev>
+  <abbrev>Bu2</abbrev>
   <author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -37,6 +25,21 @@
    triangulations</title>
   <edition>Preprint (math.GT/0311113)</edition>
   <date>November 2003</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-facegraphs">
+  <abbrev>Bu3</abbrev>
+  <author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author>
+  <title>Face pairing graphs and 3-manifold enumeration</title>
+  <edition>J. Knot Theory Ramifications</edition>
+  <volumenum>vol. 13</volumenum>
+  <issuenum>no. 8</issuenum>
+  <artpagenums>pp. 1057&ndash;1101</artpagenums>
+  <date>2004</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
@@ -127,8 +130,11 @@
    </author>
   </authorgroup>
   <title>0-efficient triangulations of 3-manifolds</title>
-  <edition>Preprint (math.GT/0207158)</edition>
-  <date>July 2002</date>
+  <edition>J. Differential Geom.</edition>
+  <volumenum>vol. 65</volumenum>
+  <issuenum>no. 1</issuenum>
+  <artpagenums>pp. 61&ndash;168</artpagenums>
+  <date>2003</date>
  </biblioentry>
 
  <biblioentry id="bib-layeredlensspaces">
