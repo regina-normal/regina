@@ -8,6 +8,9 @@ Regina - A Normal Surface Theory Calculator
     HIGHLIGHTS.txt in the same directory as this file.
 
 Development Version
+    OVERALL:
+        - The ./configure script now takes a decent guess at the
+          correct --prefix.
     USER INTERFACE:
         Class GridListViewItem:
             - Added to centralise support for list views with grids.

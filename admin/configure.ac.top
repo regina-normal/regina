@@ -35,6 +35,9 @@ AC_PREREQ(2.50)
 AC_CONFIG_AUX_DIR(admin)
 AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
 
+# Having a correct --prefix is critical.  Make a reasonable guess.
+AC_PREFIX_PROGRAM(meinproc)
+
 # Recommended by the KDE folks to avoid ksh/zsh problems.
 unset CDPATH
 
