@@ -91,7 +91,7 @@ binjavaui :
 binjavajni :
 	cd javaui && $(MAKE) jnijar
 binjni : binenginejni binjavaui binjavajni
-binutils :
+binutils : binenginelib
 	cd utils && $(MAKE) all
 bindocs : $(DOC_JAR)
 $(DOC_JAR) : docs
