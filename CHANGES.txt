@@ -29,7 +29,10 @@ Version 3.1  [ (under development) ]
             - Routine isIdentity() now implemented in C++ engine.
         Class NTriangulation:
             - Fixed idealToFinite() which was newly broken in Regina 3.0.
-            - Routine simplifyToLocalMinimum() now make boundary moves last.
+            - Routine simplifyToLocalMinimum() now make boundary moves last
+              and does not do book opening at all.
+            - Routine intelligentSimplify() now tries random 4-4 moves
+              and book opening moves.
         Routine reducedMod():
             - Fixed bug in the midpoint case.
         File nhashmap.h, nhashset.h:
