@@ -62,27 +62,31 @@ public class JPythonUtils {
 	 * passed as an <tt>Object</tt> to ease stability in the cases where
 	 * the python classes are not available.
 	 * @param shell the shell representing the entire program.
-	 * @return a text string to inform the user of the initialisation
-	 * that has been done; this may contain multiple lines and will end
-	 * in a final newline.
+	 * @param out the output stream to which messages should be sent.
+	 * These messages will inform the user of the initialisation that
+	 * has been done; there may be multiple lines of output, and a final
+	 * newline is guaranteed.
 	 */
-	public static String setupInterpreter(Object interpreter, Shell shell) {
+	public static void setupInterpreter(Object interpreter, Shell shell,
+			OutputStream out) {
 		PythonInterpreter realInterpreter = (PythonInterpreter)interpreter;
 		PyObject code;
 		StringBuffer error = new StringBuffer();
-		String message;
 
-		message = "Running startup commands.\n";
+		// Writer to which messages are sent.
+		PrintWriter writer = new PrintWriter(out, true);
+
+		writer.println("Running startup commands...");
 		for (int i = 0; i < startup.length; i++) {
 			code = compileCode(startup[i], error);
 			if (code == null) {
-				message = message + "Error compiling: " + startup[i] +
-					'\n' + error + '\n';
+				writer.println("Error compiling: " + startup[i]);
+				writer.println(error);
 				error = new StringBuffer();
 			} else {
 				if (! runCode(code, realInterpreter, error)) {
-					message = message + "Error running: " + startup[i] +
-						'\n' + error + '\n';
+					writer.println("Error running: " + startup[i]);
+					writer.println(error);
 					error = new StringBuffer();
 				}
 			}
@@ -90,8 +94,8 @@ public class JPythonUtils {
 
 		// Set the engine.
 		realInterpreter.set("engine", shell.getEngine());
-		message = message + "The calculation engine " +
-			"(type normal.engine.Engine) is in the variable [engine].\n";
+		writer.println("The calculation engine " +
+			"(type normal.engine.Engine) is in the variable [engine].");
 
 		// Load libraries.
 		File libFile;
@@ -101,22 +105,20 @@ public class JPythonUtils {
 			lib = (NormalOptionSet.JythonLibrary)e.nextElement();
 			if (lib.shouldUseLibrary()) {
 				libFile = new File(lib.getLibraryPath());
-				message = message + "Loading: " + libFile.getName() + '\n';
+				writer.println("Loading: " + libFile.getName());
 
 				code = compileFile(libFile, error);
 				if (code == null) {
-					message = message + error + '\n';
+					writer.println(error);
 					error = new StringBuffer();
 				} else {
 					if (! runCode(code, realInterpreter, error)) {
-						message = message + error + '\n';
+						writer.println(error);
 						error = new StringBuffer();
 					}
 				}
 			}
 		}
-
-		return message;
 	}
 
 	/**

@@ -30,6 +30,7 @@ package normal.packetui.packet;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -268,7 +269,7 @@ public class NScriptEditor extends DefaultPacketEditor {
             public void actionPerformed(ActionEvent e) {
                 finishVariableEditing();
                 if (checkVariables())
-                    runScript(showConsole.isSelected());
+                    runScript();
             }
         });
         compile.addActionListener(new ActionListener() {
@@ -444,82 +445,97 @@ public class NScriptEditor extends DefaultPacketEditor {
      * successful.
      */
     private boolean compileScript() {
-        JPythonConsoleFrame console =
-            new JPythonConsoleFrame(shell, false);
-        console.getConsole().outputLine(
-			setupInterpreter(console.getPythonInterpreter()));
+		// Create a new console that does no preprocessing whatsoever.
+		JPythonConsole realConsole = new JPythonConsole(shell) {
+			protected void preProcess() {
+			}
+		};
 
-        if (compileScript(console.getConsole()) != null)
+        JPythonConsoleFrame console =
+            new JPythonConsoleFrame(shell, false, realConsole);
+
+		// Set up the interpreter before anything is done.
+		setupInterpreter(realConsole.getPythonInterpreter(),
+			realConsole.getOutputStream());
+		realConsole.outputLine();
+
+		// Try compiling.
+        if (compileScript(realConsole) != null)
             return true;
 
-        console.startConsole("\nThe script did not compile.\n");
+		// If there was an error, start the console and present it to
+		// the user.
+        realConsole.startConsole("\nThe script did not compile.\n\n");
         Positioner.centerOnScreen(console);
         console.show();
         return false;
     }
 
     /**
-     * Runs this script, optionally bringing up a Jython console that
-     * will show the results and allow further interaction.
-     * If a compile error occurs, a Jython console will be brought up
-     * regardless.
-     *
-     * @param shouldShowConsole <tt>true</tt> if and only if a Jython
-     * console should be offered to the user.
+	 * Runs this script in a new Jython console.  The console will show
+	 * the results and allow further interaction.
      */
-    private void runScript(boolean shouldShowConsole) {
-        JPythonConsoleFrame console =
-            new JPythonConsoleFrame(shell, false);
-        console.getConsole().outputLine(
-			setupInterpreter(console.getPythonInterpreter()));
+    private void runScript() {
+		// Create a new console that runs the script as part of its
+		// preprocessing.
+		JPythonConsole realConsole = new JPythonConsole(shell) {
+			protected void preProcess() {
+				setupInterpreter(getPythonInterpreter(), getOutputStream());
+				outputLine();
 
-		String greeting = null;
-        PyObject code = compileScript(console.getConsole());
-        if (code == null) {
-            shouldShowConsole = true;
-            greeting = "\nThe script did not compile.\n";
-        } else {
-            // Try actually running the code.
-            console.getConsole().outputMessage("Running script [" +
-                packet.getPacketLabel() + "]:\n\n");
-
-			StringBuffer error = new StringBuffer();
-			if (! JPythonUtils.runCode(code, console.getPythonInterpreter(),
-					error)) {
-                shouldShowConsole = true;
-                console.getConsole().outputMessage(error.toString());
-                greeting = "\nA runtime error occurred in the script.\n";
+				// Compile the script.
+        		PyObject code = compileScript(this);
+        		if (code == null)
+					outputMessage("\nThe script did not compile.\n\n");
+        		else {
+            		// Try actually running the code.
+            		outputMessage("Running script [" +
+                		packet.getPacketLabel() + "]:\n\n");
+		
+					StringBuffer error = new StringBuffer();
+					if (! JPythonUtils.runCode(
+							code, getPythonInterpreter(), error)) {
+                		outputMessage(error.toString());
+                		outputMessage(
+							"\nA runtime error occurred in the script.\n");
+					}
+        		}
 			}
-        }
+		};
 
-        if (shouldShowConsole) {
-            console.startConsole(greeting);
-            Positioner.centerOnScreen(console);
-            console.show();
-        }
+		// Bring up this console and start it.
+        JPythonConsoleFrame console =
+            new JPythonConsoleFrame(shell, false, realConsole);
+        Positioner.centerOnScreen(console);
+        console.show();
+        console.startConsole();
     }
 
     /**
-     * Runs the standard startup commands and
-     * sets the variables to be used with this script in the given Jython
-     * interpreter.
+     * Runs the standard startup commands and sets the variables to be
+	 * used with this script in the given Jython interpreter.
      *
      * @param interpreter the Jython interpreter in which to set the
      * variables.
-	 * @return a text string to inform the user of the initialisation
-	 * that has been done; this may contain multiple lines and will end
-	 * in a final newline.
+	 * @param out the output stream to which messages should be sent.
+	 * These messages will inform the user of the initialisation that
+	 * has been done; there may be multiple lines of output, and a final
+	 * newline is guaranteed.
      */
-    private String setupInterpreter(PythonInterpreter interpreter) {
-		String message =
-			JPythonUtils.setupInterpreter(interpreter, shell);
+    private void setupInterpreter(PythonInterpreter interpreter,
+			OutputStream out) {
+		// Writer to which messages are sent.
+		PrintWriter writer = new PrintWriter(out, true);
 
+		// Basic interpreter initialisation.
+		JPythonUtils.setupInterpreter(interpreter, shell, out);
+
+		// Set script variables.
         int tot = variableNames.size();
         for (int i=0; i<tot; i++)
             interpreter.set((String)variableNames.elementAt(i),
                 ((Variable)variableValues.elementAt(i)).getValue());
-
-		return message + "Assigned values to script variables.\n";
+		writer.println("Assigning values to script variables.");
     }
 
     /**

@@ -47,11 +47,19 @@ public class JPythonConsole extends ConsolePane {
      */
     private InteractiveInterpreter jython;
 
+	/**
+	 * The shell representing the entire program.
+	 */
+	private Shell shell;
+
     /**
      * Create a new Jython console.
+	 *
+	 * @param shell the shell representing the entire program.
      */
-    public JPythonConsole() {
+    public JPythonConsole(Shell shell) {
         super();
+		this.shell = shell;
 
         setConsoleOutputAttributes(getConsoleInputAttributes());
         setConsolePromptAttributes(getConsoleInputAttributes());
@@ -75,6 +83,18 @@ public class JPythonConsole extends ConsolePane {
     public PythonInterpreter getPythonInterpreter() {
         return jython;
     }
+
+	/**
+	 * Console preprocessing routine.  This will set up the interpreter
+	 * as described in <tt>JPythonUtils.setupInterpreter()</tt>.
+	 *
+	 * @see normal.console.JPythonUtils.setupInterpreter
+	 */
+	protected void preProcess() {
+		// Set up the interpreter.
+		JPythonUtils.setupInterpreter(jython, shell, getOutputStream());
+		outputLine();
+	}
 
     protected String processInput(String line) {
         if (jython.buffer.length() > 0)

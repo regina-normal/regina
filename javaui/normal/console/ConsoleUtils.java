@@ -62,29 +62,30 @@ public class ConsoleUtils {
         // Start the interpreter.
         org.python.util.InteractiveConsole console =
             new org.python.util.InteractiveConsole();
-		System.out.print(JPythonUtils.setupInterpreter(console, shell));
+		JPythonUtils.setupInterpreter(console, shell, System.out);
         System.out.println();
         console.interact();
     }
 
 	/**
 	 * Creates a new standalone graphical Jython console.
-	 * The console will be displaying welcome messages, initialised and
-	 * ready for user interaction.
-	 * All that will remain to be done will be for the frame to be shown.
+	 * The console will be displaying appropriate welcome messages.
+	 * The frame will still need to be shown and the console
+	 * will still need to be started (through
+	 * <tt>JPythonConsoleFrame.startConsole()</tt>).
 	 *
 	 * @param shell the shell representing the entire program.
 	 * @param standalone <tt>true</tt> if and only if this frame will in
 	 * fact be the entire program, with no other GUI present.
 	 * @return the created Jython console frame.
+	 *
+	 * @see normal.console.JPythonConsoleFrame.startConsole()
 	 */
-	public static Frame createGraphicalConsole(Shell shell,
+	public static JPythonConsoleFrame createGraphicalConsole(Shell shell,
 			boolean standalone) {
 		JPythonConsoleFrame frame = new JPythonConsoleFrame(shell, standalone);
-		frame.startConsole(standaloneGreeting() + "\n\n" +
-			org.python.util.InteractiveConsole.getDefaultBanner() + "\n" +
-			JPythonUtils.setupInterpreter(frame.getPythonInterpreter(),
-				shell) + "\n");
+		frame.getConsole().outputMessage(standaloneGreeting() + "\n\n" +
+			org.python.util.InteractiveConsole.getDefaultBanner() + "\n\n");
 		return frame;
 	}
 }

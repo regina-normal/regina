@@ -76,6 +76,9 @@ public class JPythonConsoleFrame extends JFrame
      * still be started before it is offered to the user for
      * interaction; this can be done through the routine
      * <tt>startConsole()</tt>.
+	 * <p>
+	 * A new default Jython console will be created and placed inside
+	 * this frame.
      *
      * @param shell the shell representing the entire program.
      * @param standalone <tt>true</tt> if and only if this frame will
@@ -83,6 +86,25 @@ public class JPythonConsoleFrame extends JFrame
      * @see #startConsole
      */
     public JPythonConsoleFrame(Shell shell, boolean standalone) {
+		this(shell, standalone, null);
+	}
+
+    /**
+     * Creates a new Jython console frame containing the given Jython
+	 * console.  Note that the console must
+     * still be started before it is offered to the user for
+     * interaction; this can be done through the routine
+     * <tt>startConsole()</tt>.
+     *
+     * @param shell the shell representing the entire program.
+     * @param standalone <tt>true</tt> if and only if this frame will
+     * in fact be the entire program, with no other GUI present.
+	 * @param console the Jython console to place inside this frame.  If
+	 * this is <tt>null</tt>, a new default Jython console will be used.
+     * @see #startConsole
+     */
+    public JPythonConsoleFrame(Shell shell, boolean standalone,
+			JPythonConsole console) {
         super(Application.program + " Jython Console");
         this.shell = shell;
         this.standalone = standalone;
@@ -91,7 +113,10 @@ public class JPythonConsoleFrame extends JFrame
         if (frame != null && frame instanceof NormalFrame)
             ((NormalFrame)frame).ownConsole(this);
 
-        console = new JPythonConsole();
+		if (console == null)
+			this.console = new JPythonConsole(shell);
+		else
+			this.console = console;
 
         init();
 
@@ -109,9 +134,19 @@ public class JPythonConsoleFrame extends JFrame
     }
 
     /**
+     * Starts the console contained in this frame.
+     */
+    public void startConsole() {
+        console.startConsole();
+    }
+
+    /**
      * Starts the console contained in this frame with the given
      * greeting.  If the given greeting is <tt>null</tt>, no greeting
-     * will be offered to the user.
+     * will be offered to the user.  Otherwise the greeting will be
+	 * displayed <i>after</i> console preprocessing is done.  If you
+	 * want a greeting displayed before preprocessing, simply use
+	 * <tt>getConsole().outputMessage()</tt> before calling this routine.
      *
      * @param greeting the greeting to offer the user when the console
      * is started, or <tt>null</tt> if no greeting is to be offered.
