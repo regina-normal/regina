@@ -148,8 +148,8 @@
  </appendix>
 
  <!-- Final Material -->
- &taskindex;
  &bibliography;
+ &taskindex;
  &documentation.index;
 </book>
 
