@@ -62,7 +62,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     NTetrahedron* tet = base;
     NTetrahedron* next;
     int baseTop0, baseTop1, baseBottom0, baseBottom1;
-    int top0, top1, bottom0, bottom1, adjTop0, adjTop1, adjBottom0, adjBottom1;
+    int top0, top1, bottom0, bottom1;
+    int adjTop0 = 0, adjTop1 = 0, adjBottom0 = 0, adjBottom1 = 0;
     int hinge0, hinge1;
     NPerm p;
     bool ok;
