@@ -11,7 +11,7 @@ Architecture: any
 Section: math
 Depends: ${shlibs:Depends}, ${perl:Depends}
 Suggests: khelpcenter, regina-normal-doc, regina-normal-dev, snappea
-Description: Regina, the 3-manifold normal surface theory calculator
+Description: 3-manifold topology software with normal surface support
  Regina is a suite of mathematical software for 3-manifold topologists.
  It focuses upon the study of 3-manifold triangulations and includes
  support for normal surfaces and angle structures.
@@ -30,7 +30,7 @@ Architecture: any
 Section: libdevel
 Depends: regina-normal (= ${Source-Version}), libgmp3-dev, libxml2-dev, zlib1g-dev
 Suggests: regina-normal-doc
-Description: Development files for Regina normal surface theory calculator
+Description: Development files for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.
  This package provides development files for compiling the Regina
  calculation engine into other projects.  For complete API documentation,
@@ -44,7 +44,7 @@ Architecture: all
 Section: doc
 Recommends: www-browser
 Suggests: regina-normal, regina-normal-dev
-Description: Library docs for Regina normal surface theory calculator
+Description: Library docs for Regina, the 3-manifold topology software
  Regina is a suite of mathematical software for 3-manifold topologists.
  This package provides complete API documentation for the Regina calculation
  engine.  This documentation can be used with Python scripting in Regina and

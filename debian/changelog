@@ -1,6 +1,8 @@
 regina-normal (3.97-1) unstable; urgency=low
 
-  * New upstream release (third prerelease for 4.0).
+  * New upstream release (final prerelease for 4.0).
+  * Python scripting is once more incorporated into the graphical user
+    interface.
 
  -- Ben Burton <bab@debian.org>  Mon, 24 Nov 2003 19:26:47 +1100
 
