@@ -8,14 +8,14 @@ Regina - A Normal Surface Theory Calculator
     for both the calculation engine and the Java user interface, see
     CHANGES.txt in the same directory as this file.
 
-Version 3.0  [ (under development) ]
+Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
 
+    - Moved from old impenetrable binary data files to new compressed
+      XML data files.
     - The Great STL Port: calculation engine completely reworked to use
       and play well with the C++ Standard Template Library.  Also made
       more standards-compliant (i.e., compiles under gcc3) and put in
       its own namespace (regina).
-    - Moved from old impenetrable binary data files to new compressed
-      XML data files.
     - Works with splitting surface signatures.
     - Optimisations for skeletal calculations in triangulations.
     - Removed CORBA engine/interface (see CHANGES.txt for why).
