@@ -1052,13 +1052,11 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * The moves used include crushing maximal forests in the
          * triangulation 1-skeleton and using 3-2, 2-0 (edge and vertex),
-         * 2-1, boundary shelling and book opening moves as far as
-         * possible.
+         * 2-1 and boundary shelling moves as far as possible.
          *
-         * Note that if a book opening move is possible, the
-         * triangulation will \b not be considered a local minimum, even
-         * though the book opening move alone will not reduce the number of
-         * tetrahedra.
+         * Note that book opening moves (which do not reduce the number
+         * of tetrahedra) are no longer used in this routine, in contrast
+         * with earlier releases of Regina.
          *
          * \warning The specific behaviour of this routine is
          * very likely to change between releases.

@@ -26,13 +26,104 @@
 
 /* end stub */
 
+#include <cstdlib>
 #include "triangulation/ntriangulation.h"
+
+// Affects the number of random 4-4 moves attempted during simplification.
+#define COEFF_4_4 3
 
 namespace regina {
 
 bool NTriangulation::intelligentSimplify() {
-    // Not particularly intelligent.
-    return simplifyToLocalMinimum(true);
+    // Reduce to a local minimum.
+    bool changed = simplifyToLocalMinimum(true);
+
+    // Clone to work with when we might want to roll back changes.
+    NTriangulation* use;
+
+    // Variables used for selecting random 4-4 moves.
+    std::vector<std::pair<NEdge*, int> > fourFourAvailable;
+    std::pair<NEdge*, int> fourFourChoice;
+
+    unsigned long fourFourAttempts;
+    unsigned long fourFourCap;
+
+    NEdge* edge;
+    EdgeIterator eit;
+    int axis;
+
+    while (true) {
+        // --- Random 4-4 moves ---
+
+        // Clone the triangulation and start making changes that might or
+        // might not lead to a simplification.
+        // If we've already simplified then there's no need to use a
+        // separate clone since we won't need to undo further changes.
+        use = (changed ? this : new NTriangulation(*this));
+
+        // Make random 4-4 moves.
+        fourFourAttempts = fourFourCap = 0;
+        while (true) {
+            // Calculate the list of available 4-4 moves.
+            fourFourAvailable.clear();
+            // Use getEdges() to ensure the skeleton has been calculated.
+            for (eit = use->getEdges().begin(); eit != use->getEdges().end();
+                    eit++) {
+                edge = *eit;
+                for (axis = 0; axis < 2; axis++)
+                    if (use->fourFourMove(edge, axis, true, false))
+                        fourFourAvailable.push_back(std::make_pair(edge, axis));
+            }
+
+            // Increment fourFourCap if needed.
+            if (fourFourCap < COEFF_4_4 * fourFourAvailable.size())
+                fourFourCap = COEFF_4_4 * fourFourAvailable.size();
+
+            // Have we tried enough 4-4 moves?
+            if (fourFourAttempts >= fourFourCap)
+                break;
+
+            // Perform a random 4-4 move on the clone.
+            fourFourChoice = fourFourAvailable[
+                ((unsigned)rand()) % fourFourAvailable.size()];
+            // TODO: remove debug output
+            std::cerr << "attempt " << fourFourAttempts << " of "
+                << fourFourCap << '\n';
+            std::cerr << "try: " << use->getEdges().index(fourFourChoice.first)
+                << " / " << fourFourChoice.second << "\n";
+            use->fourFourMove(fourFourChoice.first, fourFourChoice.second,
+                false, true);
+
+            // See if we can simplify now.
+            if (use->simplifyToLocalMinimum(true)) {
+                // We have successfully simplified!
+                // Start all over again.
+                fourFourAttempts = fourFourCap = 0;
+            } else
+                fourFourAttempts++;
+        }
+
+        // Sync the real triangulation with the clone if appropriate.
+        if (use != this) {
+            // At this point, changed == false.
+            if (use->getNumberOfTetrahedra() < getNumberOfTetrahedra()) {
+                // The 4-4 moves were successful; accept them.
+                cloneFrom(*use);
+                changed = true;
+            }
+            delete use;
+        }
+
+        // At this point we have decided that 4-4 moves will help us no more.
+
+        // --- TODO: Open book moves ---
+
+        // If we did any book opening stuff, move back to the beginning
+        // of the loop.  Otherwise exit.
+        break;
+    }
+
+    return changed;
 }
 
 bool NTriangulation::simplifyToLocalMinimum(bool perform) {
@@ -47,8 +138,8 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     unsigned long iFace;
     std::deque<NEdgeEmbedding>::const_iterator embit, embbeginit, embendit;
 
-    bool changed = false;
-    bool changedNow = true;
+    bool changed = false;   // Has anything changed ever (for return value)?
+    bool changedNow = true; // Did we just change something (for loop control)?
     while (changedNow) {
         changedNow = false;
         if (! calculatedSkeleton) {
@@ -73,23 +164,19 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
         for (eit = edges.begin(); eit != edges.end(); eit++) {
             edge = *eit;
             if (threeTwoMove(edge, true, perform)) {
-                changedNow = true;
-                changed = true;
+                changedNow = changed = true;
                 break;
             }
             if (twoZeroMove(edge, true, perform)) {
-                changedNow = true;
-                changed = true;
+                changedNow = changed = true;
                 break;
             }
             if (twoOneMove(edge, 0, true, perform)) {
-                changedNow = true;
-                changed = true;
+                changedNow = changed = true;
                 break;
             }
             if (twoOneMove(edge, 1, true, perform)) {
-                changedNow = true;
-                changed = true;
+                changedNow = changed = true;
                 break;
             }
         }
@@ -101,8 +188,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
         }
         for (vit = vertices.begin(); vit != vertices.end(); vit++) {
             if (twoZeroMove(*vit, true, perform)) {
-                changedNow = true;
-                changed = true;
+                changedNow = changed = true;
                 break;
             }
         }
@@ -125,14 +211,19 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 for (iFace = 0; iFace < nFaces; iFace++) {
                     if (shellBoundary((*bit)->getFace(iFace)->
                             getEmbedding(0).getTetrahedron(), true, perform)) {
-                        changedNow = true;
-                        changed = true;
+                        changedNow = changed = true;
                         break;
                     }
                 }
                 if (changedNow)
                     break;
 
+                /**
+                 * Do NOT do open book moves here since they don't reduce
+                 * the triangulation per se.  We'll do this in
+                 * intelligentSimplify() instead.
+                 */
+                /*
                 // Run through edges of this boundary component looking
                 // for open book moves.
                 nEdges = (*bit)->getNumberOfEdges();
@@ -152,13 +243,14 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 }
                 if (changedNow)
                     break;
+                */
             }
-        }
-        if (changedNow) {
-            if (perform)
-                continue;
-            else
-                return true;
+            if (changedNow) {
+                if (perform)
+                    continue;
+                else
+                    return true;
+            }
         }
     }
     return changed;
