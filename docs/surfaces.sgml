@@ -1,15 +1,25 @@
+
+<!-- Regina normal surface documentation.
+     See regina.sgml for further details. -->
+
 <chapter id="surfaces">
  <title>Working with Normal Surfaces</title>
 
- <sect1>
+ <sect1 id="surfaces-creation">
   <title>Creation</title>
+
+  <para>TODO: This section still to be written.</para>
  </sect1>
 
- <sect1>
+ <sect1 id="surfaces-analysis">
   <title>Analysis</title>
+
+  <para>TODO: This section still to be written.</para>
  </sect1>
 
- <sect1>
+ <sect1 id="surfaces-filtering">
   <title>Filtering</title>
+
+  <para>TODO: This section still to be written.</para>
  </sect1>
 </chapter>

@@ -1,3 +1,7 @@
+
+<!-- Regina internal configuration documentation.
+     See regina.sgml for further details. -->
+
 <chapter id="options">
  <title>Internal Configuration</title>
  <para>
