@@ -1474,8 +1474,6 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre \a cuts1 is non-zero;
          * \pre gcd(\a cuts0, \a cuts1) = 1.
          *
-         * \todo \bug This seems to segfault on 10000 tetrahedra.
-         *
          * @param cuts0 the smallest of the three desired intersection numbers.
          * @param cuts1 the second smallest of the three desired intersection
          * numbers.
