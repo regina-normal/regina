@@ -234,11 +234,7 @@ bool ReginaMain::openURL(const QString& url) {
 }
 
 void ReginaMain::pythonConsole() {
-    KMessageBox::sorry(this, i18n("<qt>Python scripting has not yet "
-        "been reimplemented for the KDE user interface.  This should "
-        "be completed for version 4.0.<p>"
-        "In the meantime, you can still use Python scripting with Regina "
-        "though the command-line <b>regina-python</b> application.</qt>"));
+    consoles.launchPythonConsole(this);
 }
 
 void ReginaMain::close() {
@@ -342,8 +338,9 @@ void ReginaMain::setupActions() {
         actionCollection());
 
     // Tools:
-    new KAction(i18n("&Python Console"), "python_console", ALT+Key_Y, this,
-        SLOT(pythonConsole()), actionCollection(), "python_console");
+    actPython = new KAction(i18n("&Python Console"), "python_console",
+        ALT+Key_Y, this, SLOT(pythonConsole()), actionCollection(),
+        "python_console");
 
     // All done!  Build the GUI.
     createGUI(0);
@@ -530,6 +527,9 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
         // Connect up signals and slots.
         connect(this, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
             ans, SLOT(updatePreferences(const ReginaPrefSet&)));
+
+        disconnect(actPython, SIGNAL(activated()), this, SLOT(pythonConsole()));
+        connect(actPython, SIGNAL(activated()), ans, SLOT(pythonConsole()));
 
         // Perform initial setup on the part.
         emit preferencesChanged(globalPrefs);

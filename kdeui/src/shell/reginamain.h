@@ -33,12 +33,14 @@
 #ifndef __REGINAMAIN_H_
 #define __REGINAMAIN_H_
 
+#include "pythonmanager.h"
 #include "reginaiface.h"
 #include "reginaprefset.h"
 
 #include <kapplication.h>
 #include <kparts/mainwindow.h>
 
+class KAction;
 class KRecentFilesAction;
 class KToggleAction;
 class KURL;
@@ -62,6 +64,9 @@ class ReginaMain : public KParts::MainWindow,
         KParts::ReadWritePart* currentPart;
             /**< The part containing the currently opened document, or 0 if
                  no document has yet been opened. */
+        PythonManager consoles;
+            /**< The set of all currently open consoles not linked to a
+                 specific part. */
         KURL lastURL;
             /**< The URL that was last contained in this window.
                  This data member is only set when the URL is finally
@@ -80,6 +85,8 @@ class ReginaMain : public KParts::MainWindow,
             /**< Action to show/hide the toolbar. */
         // KToggleAction* showStatusbar;
             /**< Action to show/hide the status bar. */
+        KAction* actPython;
+            /**< Action to launch a new python console. */
 
         /**
          * Preferences
@@ -165,8 +172,8 @@ class ReginaMain : public KParts::MainWindow,
         bool openURL(const QString& url);
 
         /**
-         * Open a new Python console.  The console will be linked
-         * to the document in this window (if one exists).
+         * Open a new standalone Python console.  The console will not
+         * be linked to the document currently in this window (if any).
          */
         void pythonConsole();
 

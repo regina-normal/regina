@@ -360,6 +360,11 @@ void ReginaPart::newCensus() {
         "and is particularly suitable for long census calculations.</qt>"));
 }
 
+void ReginaPart::pythonConsole() {
+    consoles.launchPythonConsole(widget(), packetTree,
+        treeView->selectedPacket());
+}
+
 void ReginaPart::floatDockedPane() {
     // Delegate the entire procedure to PacketPane::floatPane().
     // Processing will return to this class when PacketPane calls

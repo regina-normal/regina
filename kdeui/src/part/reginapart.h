@@ -33,6 +33,7 @@
 #ifndef __REGINAPART_H
 #define __REGINAPART_H
 
+#include "pythonmanager.h"
 #include "reginaprefset.h"
 
 #include <kparts/part.h>
@@ -72,6 +73,7 @@ class ReginaPart : public KParts::ReadWritePart {
         PacketTreeView* treeView;
         QLabel* reginaIcon;
         QWidget* dockArea;
+        PythonManager consoles;
 
         /**
          * Packet panes
@@ -262,6 +264,11 @@ class ReginaPart : public KParts::ReadWritePart {
         void exportRegina();
         void exportReginaUncompressed();
         void exportSnapPea();
+
+        /**
+         * Python scripting routines.
+         */
+        void pythonConsole();
 
         /**
          * Float the currently docked pane.

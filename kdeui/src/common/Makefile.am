@@ -14,6 +14,7 @@ INCLUDES = $(all_includes)
 noinst_HEADERS = \
 	coordinatechooser.h \
 	coordinates.h \
+	pythonmanager.h \
 	reginaabout.h \
 	reginafilter.h \
 	reginaprefset.h
@@ -25,6 +26,7 @@ libregina_kdecommon_la_LIBADD = $(LIB_ENGINE)
 libregina_kdecommon_la_SOURCES = \
 	coordinatechooser.cpp \
 	coordinates.cpp \
+	pythonmanager.cpp \
 	reginaabout.cpp \
 	reginaprefset.cpp
 
