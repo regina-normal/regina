@@ -7,25 +7,6 @@ Program version:
     javaui/normal/Application.java (Application.version, Application.date)
     docs/regina.sgml (entities &regversion;, &regdate;)
 
-Copyright years:
-    ./LICENSE.txt (top of file)
-    ./configure.ac (top of file)
-    ./regina.{in,bat} (top of file)
-    admin/* (top of file)
-    debian/copyright (regina entry)
-    docs/LICENSE.txt (top of file)
-    docs/regina.sgml (twice in entities)
-    engine/doc-files/doc-footer.html
-    engine/engine/docs.h (General Notes page)
-    javaui/LICENSE.txt (top of file)
-    javaui/Makefile (variable DOC_BOTTOM)
-    javaui/overview.html (page heading)
-    javaui/normal/Application.java (Application.copyright)
-    scripts/* (top of file)
-    www/applet.html
-    www/index.html
-    Source file header comments (mostly generated from dist/stub.*)
-
 License details:
     LICENSE.txt (./, docs/, javaui/)
     docs/license.sgml
