@@ -217,7 +217,7 @@ dnl                 [the JNI calculation engine module])
 dnl
 AC_DEFUN(REGINA_HEADER_JNI, [
   AC_ARG_WITH(jni, AC_HELP_STRING([--with-jni=FLAGS],
-      [compiler flags for including jni.h]), [
+      [compiler flags for including jni.h (optional)]), [
     JNI_INCLUDES="$with_jni"
   ], [
     JNI_INCLUDES=
@@ -319,6 +319,8 @@ dnl    Prepends the library to $CLASSPATH if the library is found.
 dnl
 dnl    It is assumed that $CLASSPATH is stored in colon-separated *nix-style.
 dnl
+dnl    Configure argument --with-jardir is defined.
+dnl
 dnl    AC_SUBST()s the following variables:
 dnl
 dnl        CLASSPATH: The Java compiler classpath, which is modified as
@@ -328,6 +330,12 @@ dnl    Example: REGINA_LIB_JAVA(jython, [org.python.util.jython],
 dnl                 JAVAUI, [the Java user interface])
 dnl
 AC_DEFUN(REGINA_LIB_JAVA, [
+  AC_ARG_WITH(jardir, AC_HELP_STRING([--with-jardir=DIR],
+      [search additional directory DIR for external Java library jars (optional)]), [
+    _user_libdir="$with_jardir"
+  ], [
+    _user_libdir=
+  ])
   AC_MSG_CHECKING([for native $1 support])
   REGINA_TRY_COMPILE_JAVA([$JAVAC], [$2], [ $2 obj = null; ], [
     AC_MSG_RESULT([yes])
@@ -335,7 +343,7 @@ AC_DEFUN(REGINA_LIB_JAVA, [
     AC_MSG_RESULT([no])
     AC_MSG_CHECKING([for $1 jar])
     found_jar=no
-    for _libdir in "`pwd`/jar" /usr/share/java /usr/share/java/jar /usr/local/java /usr/local/java/jar /usr/local/share/java /usr/local/share/java/jar; do
+    for _libdir in "`pwd`/jar" "$_user_libdir" /usr/share/java /usr/share/java/jar /usr/local/java /usr/local/java/jar /usr/local/share/java /usr/local/share/java/jar; do
       for jar in "$_libdir/$1.jar" "$_libdir/lib$1.jar" "$_libdir/lib$1-java.jar"; do
         if test -e "$jar"; then
           REGINA_CLASSPATH_SAVE
