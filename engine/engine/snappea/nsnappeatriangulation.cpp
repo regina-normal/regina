@@ -52,9 +52,11 @@ NSnapPeaTriangulation::~NSnapPeaTriangulation() {
     ::free_triangulation(snappeaData);
 }
 
-void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
-    if (snappeaData)
-        save_triangulation(snappeaData, const_cast<char*>(filename));
+NSnapPeaTriangulation::SolutionType NSnapPeaTriangulation::solutionType()
+        const {
+    if (! snappeaData)
+        return NSnapPeaTriangulation::not_attempted;
+    return static_cast<SolutionType>(::get_complete_solution_type(snappeaData));
 }
 
 double NSnapPeaTriangulation::volume() const {
@@ -67,6 +69,11 @@ double NSnapPeaTriangulation::volume(int& precision) const {
     if (! snappeaData)
         return 0;
     return ::volume(snappeaData, &precision);
+}
+
+void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
+    if (snappeaData)
+        save_triangulation(snappeaData, const_cast<char*>(filename));
 }
 
 void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {

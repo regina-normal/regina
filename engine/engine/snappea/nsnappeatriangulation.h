@@ -60,6 +60,10 @@ class NTriangulation;
  * format.  You should always call isNull() to test whether any
  * Regina-to-SnapPea conversion was successful.
  *
+ * This class is designed to act as the sole conduit between the Regina
+ * calculation engine and the SnapPea kernel.  Regina code should not
+ * interact with the SnapPea kernel other than through this class.
+ *
  * Portions of the SnapPea kernel have been built into Regina as of
  * version 4.2.  SnapPea is copyright (c) 1991-2000 by Jeff Weeks, and is
  * distributed under the terms of the GNU General Public License.
@@ -68,6 +72,42 @@ class NTriangulation;
  * SnapPea.
  */
 class NSnapPeaTriangulation : public ShareableObject {
+    public:
+        /**
+         * Describes the different types of solution that can be found when
+         * solving for a complete hyperbolic structure.
+         *
+         * Although this enumeration is identical to SnapPea's own
+         * SolutionType, it is declared again in this class because Regina
+         * code should not in general be interacting directly with the
+         * SnapPea kernel.  Values may be freely converted between the
+         * two enumeration types by simple assignment and/or typecasting.
+         *
+         * \warning This enumeration must always be kept in sync with
+         * SnapPea's own SolutionType enumeration.
+         */
+        typedef enum {
+            not_attempted,
+                /**< A solution has not been attempted. */
+            geometric_solution,
+                /**< All tetrahedra are either positively oriented or
+                     flat, though the entire solution is not flat and
+                     no tetrahedra are degenerate. */
+            nongeometric_solution,
+                /**< The volume is positive, but some tetrahedra are
+                     negatively oriented. */
+            flat_solution,
+                /**< All tetrahedra are flat, but none have shape 0, 1 or
+                     infinity. */
+            degenerate_solution,
+                /**< At least one tetrahedron has shape 0, 1 or infinity. */
+            other_solution,
+                /**< The volume is zero or negative, but the solution is
+                     neither flat nor degenerate. */
+            no_solution
+                /**< The gluing equations could not be solved. */
+        } SolutionType;
+
     private:
         ::Triangulation* snappeaData;
             /**< The triangulation stored in SnapPea's native format. */
@@ -133,12 +173,37 @@ class NSnapPeaTriangulation : public ShareableObject {
         bool isNull() const;
 
         /**
+         * Returns the type of solution found when solving for a complete
+         * hyperbolic structure.
+         *
+         * Note that SnapPea distinguishes between a complete hyperbolic
+         * structure and a Dehn filled hyperbolic structure.  At the present
+         * time Regina does not concern itself with Dehn fillings, so only
+         * the complete solution type is offered here.
+         *
+         * @return the solution type.
+         */
+        SolutionType solutionType() const;
+
+        /**
          * Computes the volume of the underlying 3-manifold.
          *
          * @return the volume of the underlying 3-manifold, or 0 if this
          * is a null triangulation.
          */
         double volume() const;
+
+        /**
+         * Computes the volume of the underlying 3-manifold and
+         * estimates the accuracy of the answer.
+         *
+         * @param precision used to return an estimate of the number of
+         * decimal places of accuracy in the calculated volume.
+         *
+         * @return the volume of the underlying 3-manifold, or 0 if this
+         * is a null triangulation.
+         */
+        double volume(int& precision) const;
 
         /**
          * Dumps the underlying SnapPea data to standard output.
@@ -177,18 +242,6 @@ class NSnapPeaTriangulation : public ShareableObject {
          * @param filename the name of the SnapPea file to write.
          */
         void saveAsSnapPea(const char* filename) const;
-
-        /**
-         * Computes the volume of the underlying 3-manifold and
-         * estimates the accuracy of the answer.
-         *
-         * @param precision used to return an estimate of the number of
-         * decimal places of accuracy in the calculated volume.
-         *
-         * @return the volume of the underlying 3-manifold, or 0 if this
-         * is a null triangulation.
-         */
-        double volume(int& precision) const;
 
         virtual void writeTextShort(std::ostream& out) const;
 
