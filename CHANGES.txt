@@ -9,8 +9,8 @@ Regina - A Normal Surface Theory Calculator
 
 Development Version
     OVERALL:
-        - The ./configure script now takes a decent guess at the
-          correct --prefix.
+        - The ./configure script now insists upon Qt >= 3.2 and takes a
+          reasonable guess at the correct --prefix.
     USER INTERFACE:
         Class GridListViewItem:
             - Added to centralise support for list views with grids.
