@@ -32,7 +32,10 @@
 void addGlobalArray() {
     regina::python::GlobalArray<int>::wrapClass("GlobalArray_int");
     regina::python::GlobalArray2D<int>::wrapClass("GlobalArray2D_int");
+    regina::python::GlobalArray3D<int>::wrapClass("GlobalArray3D_int");
     regina::python::GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
+    regina::python::GlobalArray<const char*>::wrapClass("GlobalArray_char_string");
     regina::python::GlobalArray<regina::NPerm>::wrapClass("GlobalArray_NPerm");
+    regina::python::GlobalArray2D<regina::NPerm>::wrapClass("GlobalArray2D_NPerm");
 }
 

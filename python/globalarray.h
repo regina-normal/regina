@@ -48,6 +48,9 @@ namespace python {
 template <typename T, class ReturnValuePolicy>
 class GlobalArray2D;
 
+template <typename T, class ReturnValuePolicy>
+class GlobalArray3D;
+
 /**
  * A template class that references a constant one-dimensional C++ array.
  *
@@ -250,13 +253,15 @@ class GlobalArray2D {
 
     public:
         /**
-         * Constructs a new wrapper object for the given C++ array.
+         * Constructs a new wrapper object for the given 2-dimensional
+         * C++ array.
          *
          * \pre This class has already been wrapped in Python by calling
          * wrapClass().
          * \pre The number of rows is strictly positive.
          *
-         * @param newData the constant C++ array that is to be wrapped.
+         * @param newData the constant 2-dimensional C++ array that is to
+         * be wrapped.
          * @param newRows the number of rows in this C++ array, i.e.,
          * the first array dimension.
          * @param newCols the number of columns in this C++ array, i.e.,
@@ -268,6 +273,31 @@ class GlobalArray2D {
             BOOST_STATIC_ASSERT(newCols > 0);
             for (size_t i = 0; i < nRows; i++)
                 data[i].init(newData[i], newCols);
+        }
+
+        /**
+         * Constructs a new 2-dimensional wrapper object for the given
+         * 1-dimensional C++ array.
+         *
+         * If the Python array is to have \a r rows and \c columns, the
+         * Python element <tt>array[i][j]</tt> will correspond to the
+         * C++ element <tt>array[(i * c) + j]</tt>.
+         *
+         * \pre This class has already been wrapped in Python by calling
+         * wrapClass().
+         * \pre The numbers of rows and columns are both strictly positive.
+         *
+         * @param newData the constant 1-dimensional C++ array that is to
+         * be wrapped.
+         * @param newRows the number of rows in the corresponding
+         * 2-dimensional array, i.e., the first array dimension.
+         * @param newCols the number of columns in the corresponding
+         * 2-dimensional array, i.e., the second array dimension.
+         */
+        GlobalArray2D(const T newData[], size_t newRows, size_t newCols) :
+                data(new Row[newRows]), nRows(newRows) {
+            for (size_t i = 0; i < nRows; i++)
+                data[i].init(newData + (newCols * i), newCols);
         }
 
         /**
@@ -373,6 +403,54 @@ class GlobalArray2D {
                 .def(boost::python::self_ns::str(boost::python::self))
             ;
         }
+
+    private:
+        /**
+         * A constructor that performs no initialisation whatsoever.
+         * This array must be initialised using init() before it is used.
+         *
+         * \pre This class has already been wrapped in Python by calling
+         * wrapClass().
+         */
+        GlobalArray2D() : data(0), nRows(0) {
+        }
+
+        /**
+         * Initialises this wrapper to reference the given 2-dimensional
+         * C++ array.
+         *
+         * \pre The number of rows is strictly positive.
+         *
+         * @param newData the constant 2-dimensional C++ array that is to
+         * be wrapped.
+         * @param newRows the number of rows in this C++ array, i.e.,
+         * the first array dimension.
+         * @param newCols the number of columns in this C++ array, i.e.,
+         * the second array dimension.  This must be a compile-time constant.
+         */
+        template<size_t newCols>
+        void init(const T newData[][newCols], size_t newRows) {
+            BOOST_STATIC_ASSERT(newCols > 0);
+            data = new Row[newRows];
+            nRows = newRows;
+            for (size_t i = 0; i < nRows; i++)
+                data[i].init(newData[i], newCols);
+        }
+
+        /**
+         * Initialises this wrapper to reference the same 2-dimensional
+         * C++ array as the given wrapper.
+         *
+         * @param cloneMe the wrapper object to clone.
+         */
+        void init(const GlobalArray2D<T, ReturnValuePolicy>& cloneMe) {
+            data = new Row[cloneMe.nRows];
+            nRows = cloneMe.nRows;
+            for (size_t i = 0; i < nRows; i++)
+                data[i].init(cloneMe.data[i].data, cloneMe.cols());
+        }
+
+    friend class GlobalArray3D<T, ReturnValuePolicy>;
 };
 
 /**
@@ -386,6 +464,197 @@ class GlobalArray2D {
 template <typename T, class ReturnValuePolicy>
 std::ostream& operator << (std::ostream& out,
         const GlobalArray2D<T, ReturnValuePolicy>& arr) {
+    return arr.writeText(out);
+}
+
+/**
+ * A template class that references a constant three-dimensional C++ array.
+ *
+ * An object of this class can be passed through to Python to allow
+ * the user access to the underlying C++ array.
+ * For the Python user, the usual list operator [] can be used to access the
+ * elements of the array.  Range checking is performed on any indices that
+ * are passed.
+ *
+ * The \a ReturnValuePolicy template argument specifies the return value
+ * policy for element lookup.
+ *
+ * For each different set of template parameters, the corresponding
+ * GlobalArray3D class must be wrapped in Python before the first object of
+ * this class is constructed.  This wrapping is performed by calling
+ * wrapClass().
+ *
+ * Note that elements of this array can only be inspected, not modified.
+ *
+ * \pre The output operator &lt;&lt; is defined for type \a T.
+ */
+template <typename T, class ReturnValuePolicy = boost::python::return_by_value>
+class GlobalArray3D {
+    public:
+        typedef GlobalArray2D<T, ReturnValuePolicy> Subarray;
+            /**< A wrapper class for each two-dimensional subarray. */
+
+    private:
+        Subarray* data;
+            /**< The individual two-dimensional subarrays. */
+        size_t nSubarrays;
+            /**< The number of two-dimensional subarrays. */
+
+    public:
+        /**
+         * Constructs a new wrapper object for the given 3-dimensional
+         * C++ array.
+         *
+         * \pre This class has already been wrapped in Python by calling
+         * wrapClass().
+         * \pre The first dimension is strictly positive.
+         *
+         * @param newData the constant 3-dimensional C++ array that is to
+         * be wrapped.
+         * @param newDim1 the first array dimension of this C++ array.
+         * @param newDim2 the second array dimension of this C++ array.
+         * This must be a compile-time constant.
+         * @param newDim3 the third array dimension of this C++ array.
+         * This must be a compile-time constant.
+         */
+        template<size_t newDim2, size_t newDim3>
+        GlobalArray3D(const T newData[][newDim2][newDim3], size_t newDim1) :
+                data(new Subarray[newDim1]), nSubarrays(newDim1) {
+            BOOST_STATIC_ASSERT(newDim2 > 0);
+            BOOST_STATIC_ASSERT(newDim3 > 0);
+            for (size_t i = 0; i < newDim1; i++)
+                data[i].init(newData[i], newDim2);
+        }
+
+        /**
+         * Constructs a new wrapper object that wraps the same C++
+         * array as the given wrapper object.  Note that the same
+         * underlying C++ array is referenced, i.e., the C++ array
+         * itself is not cloned.
+         *
+         * @param cloneMe the wrapper object to clone.
+         */
+        GlobalArray3D(const GlobalArray3D<T, ReturnValuePolicy>& cloneMe) :
+                data(new Subarray[cloneMe.nSubarrays]),
+                nSubarrays(cloneMe.nSubarrays) {
+            for (size_t i = 0; i < nSubarrays; i++)
+                data[i].init(cloneMe.data[i]);
+        }
+
+        /**
+         * Class destructor.
+         *
+         * All of the internal subarray wrappers are destroyed.
+         */
+        ~GlobalArray3D() {
+            delete[] data;
+        }
+
+        /**
+         * Return the first dimension of this array.
+         *
+         * @return the first dimension.
+         */
+        size_t dim1() const {
+            return nSubarrays;
+        }
+
+        /**
+         * Return the second dimension of this array.
+         *
+         * @return the second dimension.
+         */
+        size_t dim2() const {
+            return data[0].rows();
+        }
+
+        /**
+         * Return the third dimension of this array.
+         *
+         * @return the third dimension.
+         */
+        size_t dim3() const {
+            return data[0].cols();
+        }
+
+        /**
+         * Returns the requested top-dimensional subarray of the array.
+         * If the subarray index is out of range, a Python error will
+         * be thrown.
+         *
+         * @param index the index of the requested subarray.
+         * @return the top-dimensional subarray at the given index.
+         */
+        const Subarray& getItem(size_t index) const {
+            if (index >= nSubarrays) {
+                PyErr_SetString(PyExc_IndexError,
+                    "global array index out of range");
+                boost::python::throw_error_already_set();
+            }
+            return data[index];
+        }
+
+        /**
+         * Returns the requested top-dimensional subarray of the array.
+         * If the subarray index is out of range, a Python error will
+         * be thrown.
+         *
+         * @param index the index of the requested subarray.
+         * @return the top-dimensional subarray at the given index.
+         */
+        const Subarray& operator [] (size_t index) const {
+            return getItem(index);
+        }
+
+        /**
+         * Writes a string representation of this array, including all
+         * of its elements, to the given output stream.
+         *
+         * @param out the output stream to which to write.
+         * @return a reference to \a out.
+         */
+        std::ostream& writeText(std::ostream& out) const {
+            out << "[ ";
+            for (size_t i = 0; i < nSubarrays; i++)
+                out << data[i] << ' ';
+            out << "]";
+            return out;
+        }
+
+        /**
+         * Constructs a Boost.Python wrapper for this class.
+         *
+         * This routine must be called for each set of template
+         * parameters before the first object of this class is
+         * constructed.
+         *
+         * @param className the name that will be assigned to this
+         * class in Python.
+         */
+        static void wrapClass(const char* className) {
+            boost::python::class_<GlobalArray3D<T, ReturnValuePolicy> >
+                    (className, boost::python::no_init)
+                .def("__getitem__",
+                    &GlobalArray3D<T, ReturnValuePolicy>::getItem,
+                    boost::python::return_internal_reference<>())
+                .def("__len__",
+                    &GlobalArray3D<T, ReturnValuePolicy>::dim1)
+                .def(boost::python::self_ns::str(boost::python::self))
+            ;
+        }
+};
+
+/**
+ * Writes a string representation of the given array, including all of
+ * its elements, to the given output stream.
+ *
+ * @param out the output stream to which to write.
+ * @param arr the array whose contents are to be written.
+ * @return the given output stream.
+ */
+template <typename T, class ReturnValuePolicy>
+std::ostream& operator << (std::ostream& out,
+        const GlobalArray3D<T, ReturnValuePolicy>& arr) {
     return arr.writeText(out);
 }
 
