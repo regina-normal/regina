@@ -44,10 +44,11 @@ Version 3.0.1  [ 12 October, 2002 ]
             - New routine setPerm(int, int).
         Class NTriangulation:
             - Fixed idealToFinite() which was newly broken in Regina 3.0.
-            - Routine simplifyToLocalMinimum() now make boundary moves last
-              and does not do book opening at all.
             - Routine intelligentSimplify() now tries random 4-4 moves
               and book opening moves.
+            - New routine collapseEdge().
+            - Routine simplifyToLocalMinimum() now make boundary moves last
+              and does not do book opening at all.
             - Fixed bug in 2-3, 3-2 and 4-4 moves that appears when faces of
               the old tetrahedra are glued to each other.
         Class NRay:
