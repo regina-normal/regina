@@ -274,11 +274,12 @@ public class CoordinateViewer extends DefaultPacketViewer
         /**
          * The colour to use for green text.
          */
-        private Color green = Color.green.darker().darker().darker();
+        public static final Color green =
+            Color.green.darker().darker().darker();
         /**
          * The colour to use for red text.
          */
-        private Color red = Color.red.darker().darker();
+        public static final Color red = Color.red.darker().darker();
 
         /**
          * Returns the number of rows in the table.
