@@ -82,22 +82,22 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     addAuthor("Ben Burton", 0, "bab@debian.org");
 
     // Credits:
-    addCredit("David Letscher",
-        I18N_NOOP("Code contributions and technical advice"));
-    addCredit("Jeff Weeks",
-        I18N_NOOP("Use of the SnapPea kernel and helpful discussions"));
-    addCredit("William Jaco",
-        I18N_NOOP("Supervision and many long discussions"));
-    addCredit("Hyam Rubinstein",
-        I18N_NOOP("Supervision and many long discussions"));
     addCredit("Marc Culler",
         I18N_NOOP("Helpful discussions"));
     addCredit("Dominique Devriese",
         I18N_NOOP("Red Hat / Fedora porting assistance"));
     addCredit("Nathan Dunfield",
         I18N_NOOP("Helpful discussions"));
+    addCredit("William Jaco",
+        I18N_NOOP("Supervision and many long discussions"));
+    addCredit("David Letscher",
+        I18N_NOOP("Code contributions and technical advice"));
     addCredit("Craig Macintyre",
         I18N_NOOP("Red Hat / Fedora porting assistance"));
+    addCredit("Hyam Rubinstein",
+        I18N_NOOP("Supervision and many long discussions"));
+    addCredit("Jeff Weeks",
+        I18N_NOOP("Use of the SnapPea kernel and helpful discussions"));
     addCredit("The American Institute of Mathematics",
         I18N_NOOP("Generous support"));
     addCredit("Oklahoma State University",
