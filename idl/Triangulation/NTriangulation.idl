@@ -116,6 +116,7 @@ module Regina {
             NTetrahedron insertLayeredSolidTorus(in long cuts0, in long cuts1);
             void insertLensSpace(in long p, in long q);
             void insertTriangulation(in NTriangulation source);
+            boolean insertRehydration(in string dehydration);
 
             boolean isIsomorphicTo(in NTriangulation other);
         };

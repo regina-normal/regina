@@ -295,6 +295,13 @@ JNIEXPORT void JNICALL
     GET_ENGINE_OBJECT(env, NTriangulation, me)->insertLensSpace(p, q);
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertRehydration
+        (JNIEnv *env, jobject me, jstring str) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->insertRehydration(
+        jstringToNString(env, str));
+}
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertTriangulation
         (JNIEnv *env, jobject me, jobject source) {

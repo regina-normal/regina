@@ -132,6 +132,7 @@ class NTriangulation_i :
         virtual void insertLensSpace(CORBA::Long p, CORBA::Long q);
         virtual void insertTriangulation(
             Regina::Triangulation::NTriangulation_ptr source);
+        virtual CORBA::Boolean insertRehydration(const char* dehydration);
         virtual CORBA::Boolean isIsomorphicTo(
             Regina::Triangulation::NTriangulation_ptr other);
 };

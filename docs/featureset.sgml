@@ -16,9 +16,9 @@
         Automated creation of standard triangulations
        </para></listitem>
        <listitem><para>
-        Importing
+        Reading
         <ulink url="http://thames.northnet.org/weeks/index/SnapPea.html">&snappea;</ulink>
-        triangulations
+        triangulations and dehydration strings
        </para></listitem>
        <listitem><para>
         Hand editing of individual face gluings
@@ -148,9 +148,9 @@
    <listitem><para>User Manual:
     <itemizedlist>
      <listitem><para>
-      You're reading it.  Not much, eh?  I absolutely don't have the
-      time to write a proper user manual, so if anyone's interested
-      then please mail me at &regemail; - I'd love the help!
+      Well, more or less.  You're reading it.
+      If anyone's interested in fleshing this out some more,
+      please mail me at &regemail; - I'd love the help!
      </para></listitem>
     </itemizedlist>
    </para></listitem>

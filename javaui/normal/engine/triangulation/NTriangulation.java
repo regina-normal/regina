@@ -122,6 +122,7 @@ public interface NTriangulation extends NPacket {
     public NTetrahedron insertLayeredSolidTorus(long cuts0, long cuts1);
     public void insertLensSpace(long p, long q);
     public void insertTriangulation(NTriangulation source);
+    public boolean insertRehydration(String dehydration);
     
     public boolean isIsomorphicTo(NTriangulation other);
 }

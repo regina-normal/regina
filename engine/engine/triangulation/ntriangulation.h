@@ -1417,6 +1417,27 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @param source the triangulation whose copy will be inserted.
          */
         void insertTriangulation(const NTriangulation& source);
+        /**
+         * Inserts the rehydration of the given string into this
+         * triangulation.
+         *
+         * The given string will be rehydrated into a proper triangulation.
+         * The new tetrahedra will be inserted into this triangulation
+         * in the order in which they appear in the rehydrated triangulation,
+         * and the numbering of their vertices (0-3) will not change.
+         *
+         * For a full description of the dehydrated triangulation
+         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
+         * 1999.
+         * 
+         * @param dehydration a dehydrated representation of the
+         * triangulation to insert.  Case is irrelevant; all letters
+         * will be treated as if they were lower case.
+         * @return \c true if the insertion was successful, or
+         * \c false if the given string could not be rehydrated.
+         */
+        bool insertRehydration(const NString& dehydration);
 
         /**
          * Determines if this triangulation is combinatorially

@@ -264,6 +264,9 @@ void NTriangulation_i::insertTriangulation(
     MY_ENGINE_OBJECT->insertTriangulation(
         *GET_ENGINE_OBJECT(NTriangulation, source));
 }
+CORBA::Boolean NTriangulation_i::insertRehydration(const char* dehydration) {
+    return MY_ENGINE_OBJECT->insertRehydration(dehydration);
+}
 CORBA::Boolean NTriangulation_i::isIsomorphicTo(
         Regina::Triangulation::NTriangulation_ptr other) {
     return MY_ENGINE_OBJECT->isIsomorphicTo(

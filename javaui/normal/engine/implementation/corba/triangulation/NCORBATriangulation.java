@@ -310,6 +310,9 @@ public class NCORBATriangulation extends NCORBAPacket
             normal.engine.triangulation.NTriangulation source) {
         data.insertTriangulation(((NCORBATriangulation)source).data);
     }
+    public boolean insertRehydration(String dehydration) {
+        return data.insertRehydration(dehydration);
+    }
 
     public boolean isIsomorphicTo(
             normal.engine.triangulation.NTriangulation other) {

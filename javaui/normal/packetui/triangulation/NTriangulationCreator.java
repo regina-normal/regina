@@ -32,6 +32,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.*;
 import normal.Shell;
 import normal.engine.packet.*;
 import normal.engine.triangulation.*;
@@ -49,61 +50,61 @@ import org.gjt.btools.gui.dialog.*;
 public class NTriangulationCreator extends JPanel implements PacketCreator {
     /**
      * Button representing an empty triangulation.
-     * @serial
      */
     private JRadioButton empty;
     
     /**
      * Button representing a layered triangulation.
-     * @serial
      */
     private JRadioButton layered;
     
     /**
      * Button representing a lens space.
-     * @serial
      */
     private JRadioButton lensSpace;
+
+    /**
+     * Button representing a dehydrated triangulation.
+     */
+    private JRadioButton dehydrated;
     
     /**
      * Button representing a random triangulation.
-     * @serial
      */
     private JRadioButton random;
     
     /**
      * Parameter for a layered triangulation.
-     * @serial
      */
     private JTextField layeredA;
     
     /**
      * Parameter for a layered triangulation.
-     * @serial
      */
     private JTextField layeredB;
     
     /**
      * Parameter for a layered triangulation.
-     * @serial
      */
     private JTextField layeredC;
     
     /**
      * Parameter for a lens space.
-     * @serial
      */
     private JTextField lensP;
     
     /**
      * Parameter for a lens space.
-     * @serial
      */
     private JTextField lensQ;
 
     /**
+     * Dehydrated triangulation string.
+     */
+    private JTextField dehydration;
+
+    /**
      * Number of tetrahedra for a random triangulation.
-     * @serial
      */
     private JTextField randomTetrahedra;
 
@@ -126,10 +127,12 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         empty = new JRadioButton("Empty", true);
         layered = new JRadioButton("Layered solid torus (a,b,c):");
         lensSpace = new JRadioButton("Lens space L(p,q):");
+        dehydrated = new JRadioButton("Dehydration:");
         random = new JRadioButton("Random:");
         type.add(empty);
         type.add(layered);
         type.add(lensSpace);
+        type.add(dehydrated);
         type.add(random);
         random.setEnabled(false);
         
@@ -159,6 +162,13 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         lensP.setEnabled(false);
         lensQ.setEnabled(false);
 
+        JPanel dehydrationPane = new JPanel();
+        dehydrationPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        dehydration = new JTextField(new DehydrationDocument(), "", 12);
+        dehydrationPane.add(new JLabel("String:"));
+        dehydrationPane.add(dehydration);
+        dehydration.setEnabled(false);
+
         JPanel randomPane = new JPanel();
         randomPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         randomTetrahedra = new JTextField(new NonNegativeIntegerDocument(),
@@ -183,8 +193,11 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         add(lensSpace, cButton);
         cExtra.gridy = 2;
         add(lensPane, cExtra);
-        add(random, cButton);
+        add(dehydrated, cButton);
         cExtra.gridy = 3;
+        add(dehydrationPane, cExtra);
+        add(random, cButton);
+        cExtra.gridy = 4;
         add(randomPane, cExtra);
         
         // Add selection listeners.
@@ -200,6 +213,12 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
                 boolean on = (e.getStateChange() == ItemEvent.SELECTED);
                 lensP.setEnabled(on);
                 lensQ.setEnabled(on);
+            }
+        });
+        dehydrated.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                boolean on = (e.getStateChange() == ItemEvent.SELECTED);
+                dehydration.setEnabled(on);
             }
         });
         random.addItemListener(new ItemListener() {
@@ -288,6 +307,21 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
             NTriangulation newTri = shell.getEngine().newNTriangulation();
             newTri.insertLensSpace(p, q);
             return newTri;
+        } else if (dehydrated.isSelected()) {
+            if (dehydration.getDocument().getLength() == 0) {
+                MessageBox.fgNote(parentDialog,
+                    "The dehydration string cannot be empty.");
+                return null;
+            }
+            NTriangulation newTri = shell.getEngine().newNTriangulation();
+            if (! newTri.insertRehydration(dehydration.getText())) {
+                MessageBox.fgNote(parentDialog,
+                    "The given string does not represent a dehydrated " +
+                    "triangulation.");
+                newTri.destroy();
+                return null;
+            }
+            return newTri;
         } else if (random.isSelected()) {
             return null;
         } else
@@ -327,5 +361,37 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
             b = tmp % b;
         }
         return a;
+    }
+
+    /**
+     * Document class used to enter a dehydration string into a text
+     * component.
+     * Ensures the input contains only alphabetical characters and
+     * converts them to lower case on the fly.
+     */
+    private class DehydrationDocument extends PlainDocument {
+        /**
+         * Attempts to insert a string into the document.
+         *
+         * @param offs the position at which to insert the string.
+         * @param str the string to insert.
+         * @param a the attributes to give the string.
+         * @throws BadLocationException thrown if the string may not be
+         * inserted at the requested position.
+         */
+        public void insertString(int offs, String str, AttributeSet a)
+                throws BadLocationException {
+            StringBuffer working = new StringBuffer(str);
+            for (int i = 0; i < working.length(); i++) {
+                if (Character.isUpperCase(working.charAt(i)))
+                    working.setCharAt(i, Character.toLowerCase(
+                        working.charAt(i)));
+                else if (! Character.isLowerCase(working.charAt(i))) {
+                    Toolkit.getDefaultToolkit().beep();
+                    return;
+                }
+            }
+            super.insertString(offs, working.toString(), a);
+        }
     }
 }

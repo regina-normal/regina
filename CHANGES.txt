@@ -19,6 +19,10 @@ Version 2.3.1  [ (in progress) ]
             - Added getName() and setName().
         Class NPerm:
             - Added toString().
+        Class NTriangulation:
+            - Added insertRehydration().
+        File nperm.h:
+            - Added constant arrays orderedPermsS4, orderedPermsS3.
         Routine writeSnapPea():
             - Added.
     JAVA USER INTERFACE:
@@ -44,6 +48,8 @@ Version 2.3.1  [ (in progress) ]
               the primary frame.
         normal.packetui.surfaces.CoordinateViewer:
             - Inserted editable surface name as first column.
+        normal.packetui.triangulation.TriangulationCreator:
+            - Creates triangulations from dehydration strings.
 
 Version 2.3  [ 12 December, 2001 ] - The "Farewell Stillwater" release.
     OVERALL:
