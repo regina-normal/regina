@@ -34,7 +34,8 @@
 
 typedef std::list<NGroupExpressionTerm>::iterator TermIterator;
 typedef std::list<NGroupExpressionTerm>::const_iterator TermIteratorConst;
-typedef NDynamicArrayIterator<NGroupExpression*> RelIterator;
+typedef std::vector<NGroupExpression*>::iterator RelIterator;
+typedef std::vector<NGroupExpression*>::const_iterator RelIteratorConst;
 typedef std::list<NGroupExpression*>::iterator TmpRelIterator;
 
 NGroupExpressionTerm NGroupExpressionTerm::readFromFile(NFile& in) {
@@ -228,8 +229,8 @@ void NGroupExpression::writeTextShort(ostream& out) const {
 
 NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
         nGenerators(cloneMe.nGenerators) {
-    for (RelIterator it(cloneMe.relations); ! it.done(); it++)
-        relations.addLast(new NGroupExpression(**it));
+    transform(cloneMe.relations.begin(), cloneMe.relations.end(),
+        back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }
 
 bool NGroupPresentation::intelligentSimplify() {
@@ -242,7 +243,7 @@ bool NGroupPresentation::intelligentSimplify() {
     // array at the end.
     std::list<NGroupExpression*> tmpRels;
     NGroupExpression* rel;
-    for (RelIterator it(relations); ! it.done(); it++) {
+    for (RelIterator it = relations.begin(); it != relations.end(); it++) {
         rel = *it;
         // Do an initial simplification on each relation as we go.
         if (rel->simplify(true))
@@ -365,9 +366,8 @@ bool NGroupPresentation::intelligentSimplify() {
 
     // Refill the original array if necessary.
     if (removed) {
-        relations.flush();
-        for (it = tmpRels.begin(); it != tmpRels.end(); it++)
-            relations.addLast(*it);
+        relations.clear();
+        relations.insert(relations.end(), tmpRels.begin(), tmpRels.end());
     }
 
     // Done!
@@ -424,7 +424,7 @@ NString NGroupPresentation::recogniseGroup() {
 void NGroupPresentation::writeToFile(NFile& out) const {
     out.writeULong(nGenerators);
     out.writeULong(relations.size());
-    for (RelIterator it(relations); ! it.done(); it++)
+    for (RelIteratorConst it = relations.begin(); it != relations.end(); it++)
         (*it)->writeToFile(out);
     
     // Write properties.
@@ -436,7 +436,7 @@ NGroupPresentation* NGroupPresentation::readFromFile(NFile& in) {
     ans->nGenerators = in.readULong();
     unsigned long nRels = in.readULong();
     for (unsigned long i = 0; i < nRels; i++)
-        ans->relations.addLast(NGroupExpression::readFromFile(in));
+        ans->relations.push_back(NGroupExpression::readFromFile(in));
 
     // Read properties.
     ans->readProperties(in);
@@ -460,7 +460,8 @@ void NGroupPresentation::writeTextLong(ostream& out) const {
     if (relations.size() == 0)
         out << "    (none)\n";
     else
-        for (RelIterator it(relations); ! it.done(); it++) {
+        for (RelIteratorConst it = relations.begin();
+                it != relations.end(); it++) {
             out << "    ";
             (*it)->writeTextShort(out);
             out << endl;

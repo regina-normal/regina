@@ -36,8 +36,9 @@
 #endif
 
 #include <list>
-#include "utilities/ndynamicarray.h"
+#include <vector>
 #include "property/npropertyholder.h"
+#include "utilities/nmiscutils.h"
 #include "shareableobject.h"
 
 class NFile;
@@ -399,7 +400,7 @@ class NGroupPresentation : public ShareableObject, public NPropertyHolder {
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
-        NDynamicArray<NGroupExpression*> relations;
+        std::vector<NGroupExpression*> relations;
             /**< The relations between the generators. */
     
     public:
@@ -622,7 +623,8 @@ inline NGroupPresentation::NGroupPresentation() : nGenerators(0) {
 }
 
 inline NGroupPresentation::~NGroupPresentation() {
-    relations.flushAndDelete();
+    for_each(relations.begin(), relations.end(),
+        FuncDelete<NGroupExpression>());
 }
 
 inline unsigned long NGroupPresentation::addGenerator(unsigned long num) {
@@ -630,7 +632,7 @@ inline unsigned long NGroupPresentation::addGenerator(unsigned long num) {
 }
 
 inline void NGroupPresentation::addRelation(NGroupExpression* rel) {
-    relations.addLast(rel);
+    relations.push_back(rel);
 }
 
 inline unsigned long NGroupPresentation::getNumberOfGenerators() const {
