@@ -42,7 +42,7 @@ void intersectCone(OutputIterator results,
     if (oldRaysFirst == oldRaysLast)
         return;
 
-    typedef std::iterator_traits<RayIterator>::value_type RayClassPtr;
+    typedef typename std::iterator_traits<RayIterator>::value_type RayClassPtr;
 
     std::list<RayClassPtr> pos;
     std::list<RayClassPtr> neg;
@@ -68,7 +68,7 @@ void intersectCone(OutputIterator results,
     // being added to the solution set.
     // One can prove that no ray will ever have been added to the
     // solution set twice.
-    std::list<RayClassPtr>::const_iterator posit, negit;
+    typename std::list<RayClassPtr>::const_iterator posit, negit;
     FaceIterator faceit;
     NVector<NLargeInteger>* face;
     bool adjacent, hasCommonFaces;
@@ -114,8 +114,8 @@ void intersectCone(OutputIterator results,
         RayIterator oldRaysFirst, RayIterator oldRaysLast,
         FaceIterator facesFirst, FaceIterator facesLast,
         const NMatrixInt& subspace, bool testCompatibility) {
-    typedef std::iterator_traits<RayIterator>::value_type RayClassPtr;
-    typedef remove_pointer<RayClassPtr>::type RayClass;
+    typedef typename std::iterator_traits<RayIterator>::value_type RayClassPtr;
+    typedef typename remove_pointer<RayClassPtr>::type RayClass;
 
     unsigned nEqns = subspace.rows();
     if (nEqns == 0) {
