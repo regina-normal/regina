@@ -402,18 +402,19 @@ void NNormalSurface::writeToFile(NFile& out) const {
 }
 
 #define REGISTER_FLAVOUR(id_name, class, n, a, t) \
-    case NNormalSurfaceList::id_name: vector = new class(vecLen); break;
+    if (flavour == NNormalSurfaceList::id_name) \
+        vector = new class(vecLen); \
+    else
 
 NNormalSurface* NNormalSurface::readFromFile(NFile& in, int flavour,
         NTriangulation* triangulation) {
     // Read the vector length and make a new vector.
     unsigned vecLen = in.readUInt();
     NNormalSurfaceVector* vector;
-    switch(flavour) {
-        // Bring in cases from the flavour registry.
-        #include "surfaces/flavourregistry.h"
-        default: return 0;
-    }
+
+    // Bring in cases from the flavour registry.
+    #include "surfaces/flavourregistry.h"
+        return 0; // Final else statement.
 
     // Read all non-zero vector entries.
     int vecPos = in.readInt();
