@@ -27,6 +27,7 @@ dirs_engine_engine = \
 	engine/packet \
 	engine/progress \
 	engine/property \
+	engine/split \
 	engine/subcomplex \
 	engine/surfaces \
 	engine/triangulation \
