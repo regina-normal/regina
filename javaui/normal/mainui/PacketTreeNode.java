@@ -40,8 +40,9 @@ import normal.packetui.PacketUIManager;
  * Represents a node in a visual tree that corresponds to an internal
  * packet tree.  Each such node represents an individual packet.
  * <p>
- * Nodes will display the packet label in the visual tree, as
- * returned by <tt>NPacket.getPacketLabel()</tt>.
+ * Nodes will display the packet label in the visual tree, followed by a
+ * bracketed plus sign if the packet has any associated tags; this is all
+ * arranged through routine <tt>getNodeLabel()</tt>.
  * <p>
  * Any tree that uses <tt>PacketTreeNode</tt>s should <b>only</b> use
  * <tt>PacketTreeNode</tt>s.
@@ -61,7 +62,7 @@ public class PacketTreeNode extends DefaultMutableTreeNode {
      * @param packet the packet represented by this node.
      */
     public PacketTreeNode(NPacket packet) {
-        super(packet.getPacketLabel());
+        super(getNodeLabel(packet));
         this.packet = packet;
     }
     
@@ -269,6 +270,23 @@ public class PacketTreeNode extends DefaultMutableTreeNode {
             child = child.getNextTreeSibling();
             index++;
         }
+    }
+
+    /**
+     * Returns the text label to give the node associated with the given
+     * packet.
+     *
+     * See the <tt>PacketTreeNode</tt> class notes for details on how
+     * this label is formed.
+     *
+     * @param packet the packet whose corresponding node label is requested.
+     * @return the corresponding node label.
+     */
+    public static String getNodeLabel(NPacket packet) {
+        if (packet.hasTags())
+            return packet.getPacketLabel() + " (+)";
+        else
+            return packet.getPacketLabel();
     }
 
     /**

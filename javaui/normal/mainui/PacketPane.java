@@ -30,6 +30,7 @@ package normal.mainui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Enumeration;
 import javax.swing.*;
 import javax.swing.border.*;
 import normal.Images;
@@ -137,17 +138,21 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
 
         JButton closeButton = new JButton("Close");
         JButton refreshButton = new JButton("Refresh");
+        JButton tagsButton = new JButton("Tags...");
         applyButton = new JButton("Apply");
 
         applyButton.setEnabled(false);
 
         // Set up the action panel.
-        JPanel actionPanel = new JPanel();
-        actionPanel.setLayout(new FlowLayout());
+        Box actionPanel = new Box(BoxLayout.X_AXIS);
+        actionPanel.add(Box.createRigidArea(tagsButton.getPreferredSize()));
+        actionPanel.add(Box.createHorizontalGlue());
         actionPanel.add(refreshButton);
         if (ui.isEditor())
             actionPanel.add(applyButton);
         actionPanel.add(closeButton);
+        actionPanel.add(Box.createHorizontalGlue());
+        actionPanel.add(tagsButton);
          
         // Prepare the title pane.
         JPanel titlePane = new JPanel();
@@ -180,6 +185,11 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
             public void actionPerformed(ActionEvent e) {
                 ui.packetWasChanged(ui.getPacket(), null,
                     surroundingFrame);
+            }
+        });
+        tagsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new TagEditor(topologyPane, ui.getPacket()).show();
             }
         });
         applyButton.addActionListener(new ActionListener() {
@@ -219,7 +229,18 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
      * Set the text in the packet identification label.
      */
     public void refreshLabel() {
-        packetLabel.setText(ui.getPacket().getFullName());
+        // Does the packet have any tags?
+        String tagString;
+        NPacket packet = ui.getPacket();
+        if (packet.hasTags()) {
+            Enumeration e = packet.getTags();
+            tagString = " : " + e.nextElement();
+            if (e.hasMoreElements())
+                tagString = tagString + ", ...";
+        } else
+            tagString = new String();
+
+        packetLabel.setText(packet.getFullName() + tagString);
     }
 
     /**

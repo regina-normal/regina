@@ -17,7 +17,9 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
       more standards-compliant (i.e., compiles under gcc3) and put in
       its own namespace (regina).
     - Works with splitting surface signatures.
+    - Supports arbitrary packet tags.
     - Optimisations for skeletal calculations in triangulations.
+    - Introduced various command-line utility programs.
     - Removed CORBA engine/interface (see CHANGES.txt for why).
 
 Version 2.4  [ 4 April, 2002 ]

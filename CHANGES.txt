@@ -12,12 +12,13 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
     OVERALL:
         - Moved from old impenetrable binary data files to new
           compressed XML data files.
+        - Introduced various command-line utilities (see UTILITIES below).
         - Removed CORBA engine/interface.  It was too much hassle to
           maintain, and with Regina building on more platforms it has
           lots much of its usefulness.
     ENGINE:
         Overall structure:
-            - Move entire calculation engine into namespace regina.
+            - Moved entire calculation engine into namespace regina.
             - The Great STL Port: replaced hand-rolled container classes
               with Standard Template Library classes.
             - Added XML reading/writing routines to appropriate classes.
@@ -56,6 +57,7 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
         Class NNormalSurfaceList:
             - New nested class NNormalSurfaceList::SurfaceInserter.
         Class NPacket:
+            - Added routines to support arbitrary packet tags.
             - Finally changed getPacketName() to getPacketTypeName().
             - Removed tidyReadPacket().
         Class NPerm:
@@ -96,6 +98,12 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
             - Added class ReginaBinaryExporter.
         normal.exports.ReginaExporter:
             - Added boolean compression parameter to constructor.
+        normal.mainui:
+            - Added class TagEditor.
+            - File information dialog is much more informative.
+    UTILITIES:
+        regconvert, regfiledump, regfiletype, sigcensus, tricensus:
+            - Added.
 
 Version 2.4  [ 4 April, 2002 ]
     OVERALL:

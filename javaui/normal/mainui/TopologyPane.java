@@ -1067,7 +1067,34 @@ public class TopologyPane extends FilePane {
 
         // Update the visual tree.
         PacketTreeNode node = findTreeNode(packet);
-        node.setUserObject(packet.getPacketLabel());
+        node.setUserObject(PacketTreeNode.getNodeLabel(packet));
+        treeModel.nodeChanged(node);
+    }
+
+    /**
+     * This should be called whenever the tags associated with a packet
+     * have been changed, so that all interfaces and the visual packet
+     * tree can be updated accordingly.
+     *
+     * Note that this change, unlike others covered by routines
+     * similar to this, is <i>not</i> propagated to individual packet
+     * interfaces.
+     *
+     * @param packet the packet whose tags have changed.
+     */
+    public void firePacketTagsChanged(NPacket packet) {
+        // Update the interfaces.
+        PacketPane pane;
+        Enumeration e = allPacketPanes.elements();
+        while (e.hasMoreElements()) {
+            pane = (PacketPane)e.nextElement();
+            if (packet.sameObject(pane.getPacket()))
+                pane.refreshLabel();
+        }
+
+        // Update the visual tree.
+        PacketTreeNode node = findTreeNode(packet);
+        node.setUserObject(PacketTreeNode.getNodeLabel(packet));
         treeModel.nodeChanged(node);
     }
 
@@ -1254,7 +1281,8 @@ public class TopologyPane extends FilePane {
         e = subtreeNode.depthFirstEnumeration();
         while (e.hasMoreElements()) {
             tmpNode = (PacketTreeNode)e.nextElement();
-            tmpNode.setUserObject(tmpNode.getPacket().getPacketLabel());
+            tmpNode.setUserObject(PacketTreeNode.getNodeLabel(
+                tmpNode.getPacket()));
         }
         
         Vector newNodes = new Vector();
