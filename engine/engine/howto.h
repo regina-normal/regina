@@ -56,8 +56,6 @@
  *        <tt>engine/jni</tt></li>
  *      </ul></li>
  *    <li>Java user interface sources: directory <tt>javaui</tt></li>
- *    <li>RegConf configuration utility: directory
- *    <tt>configuration</tt></li>
  *  </ul>
  *
  *  \anchor howToNewConstant
