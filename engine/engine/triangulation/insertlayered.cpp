@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "manifold/nlensspace.h"
+#include "manifold/nsfs.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -256,7 +258,47 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
 
 void NTriangulation::insertSFSOverSphere(long a1, long b1, long a2, long b2,
         long a3, long b3) {
-    // TODO: Make this somewhat more refined.
+    // Construct the SFS that we seek.
+    NSFS sfs;
+    if (a1 < 0)
+        sfs.insertFibre(-a1, -b1);
+    else
+        sfs.insertFibre(a1, b1);
+    if (a2 < 0)
+        sfs.insertFibre(-a2, -b2);
+    else
+        sfs.insertFibre(a2, b2);
+    if (a3 < 0)
+        sfs.insertFibre(-a3, -b3);
+    else
+        sfs.insertFibre(a3, b3);
+
+    sfs.reduce();
+
+    // If it's a Lens space, it's easy.
+    NLensSpace* lens = sfs.isLensSpace();
+    if (lens) {
+        insertLayeredLensSpace(lens->getP(), lens->getQ());
+        delete lens;
+        return;
+    }
+
+    // We have particularly nice triangulations for some special cases.
+    if (sfs.getFibreCount() == 3) {
+        NExceptionalFibre fibre[3];
+        for (int i = 0; i < 3; i++)
+            fibre[i] = sfs.getFibre(i);
+
+        NExceptionalFibre two(2, 1);
+        if (fibre[0] == two && fibre[1] == two &&
+                fibre[2].alpha + fibre[2].beta == 1) {
+            // (2, 1) (2, 1) (k, -k+1)
+            insertLayeredLoop(fibre[2].alpha, true);
+            return;
+        }
+    }
+
+    // Down to the default option.
     insertAugTriSolidTorus(a1, b1, a2, b2, a3, b3 - a3);
 }
 
