@@ -26,75 +26,53 @@
 
 /* end stub */
 
-#include "utilities/nmpi.h"
+#include "utilities/nbooleans.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
-using regina::NLargeInteger;
+using regina::NBoolSet;
 
-namespace {
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
-        NLargeInteger::stringValue, 0, 1);
-}
+void addNBoolSet() {
+    // Static member functions are not yet properly supported
+    // in boost.python.
+    def("NBoolSet_fromByteCode", NBoolSet::fromByteCode);
 
-void addNLargeInteger() {
-    scope s = class_<NLargeInteger>("NLargeInteger")
-        .def(init<long>())
-        .def(init<const NLargeInteger&>())
-        .def(init<const char*, optional<int> >())
-        .def("isInfinite", &NLargeInteger::isInfinite)
-        .def("longValue", &NLargeInteger::longValue)
-        .def("stringValue", &NLargeInteger::stringValue, OL_stringValue())
-        .def("swap", &NLargeInteger::swap)
+    scope s = class_<NBoolSet>("NBoolSet")
+        .def(init<bool>())
+        .def(init<const NBoolSet&>())
+        .def(init<bool, bool>())
+        .def("hasTrue", &NBoolSet::hasTrue)
+        .def("hasFalse", &NBoolSet::hasFalse)
+        .def("contains", &NBoolSet::contains)
+        .def("insertTrue", &NBoolSet::insertTrue)
+        .def("insertFalse", &NBoolSet::insertFalse)
+        .def("removeTrue", &NBoolSet::removeTrue)
+        .def("removeFalse", &NBoolSet::removeFalse)
+        .def("empty", &NBoolSet::empty)
+        .def("fill", &NBoolSet::fill)
         .def(self == self)
-        .def(self == long())
         .def(self != self)
-        .def(self != long())
         .def(self < self)
-        .def(self < long())
         .def(self > self)
-        .def(self > long())
         .def(self <= self)
-        .def(self <= long())
         .def(self >= self)
-        .def(self >= long())
-        .def(self + self)
-        .def(self + long())
-        .def(self - self)
-        .def(self - long())
-        .def(self * self)
-        .def(self * long())
-        .def(self / self)
-        .def(self / long())
-        .def("divExact", &NLargeInteger::divExact)
-        .def(self % self)
-        .def(self % long())
-        .def(- self)
-        .def(self += self)
-        .def(self += long())
-        .def(self -= self)
-        .def(self -= long())
-        .def(self *= self)
-        .def(self *= long())
-        .def(self /= self)
-        .def(self /= long())
-        .def("divByExact", &NLargeInteger::divByExact,
-            return_internal_reference<>())
-        .def(self %= self)
-        .def(self %= long())
-        .def("negate", &NLargeInteger::negate)
-        .def("raiseToPower", &NLargeInteger::raiseToPower)
-        .def("abs", &NLargeInteger::abs)
-        .def("gcd", &NLargeInteger::gcd)
-        .def("lcm", &NLargeInteger::lcm)
-        .def("gcdWithCoeffs", &NLargeInteger::gcdWithCoeffs)
+        .def(self |= self)
+        .def(self &= self)
+        .def(self ^= self)
+        .def(self | self)
+        .def(self & self)
+        .def(self ^ self)
+        .def(~ self)
+        .def("getByteCode", &NBoolSet::getByteCode)
+        .def("setByteCode", &NBoolSet::setByteCode)
         .def(self_ns::str(self))
     ;
 
     // Apparently there is no way in python to make a module attribute
     // read-only.
-    s.attr("zero") = NLargeInteger::zero;
-    s.attr("one") = NLargeInteger::one;
-    s.attr("infinity") = NLargeInteger::infinity;
+    s.attr("sNone") = NBoolSet::sNone;
+    s.attr("sTrue") = NBoolSet::sTrue;
+    s.attr("sFalse") = NBoolSet::sFalse;
+    s.attr("sBoth") = NBoolSet::sBoth;
 }
 

@@ -10,7 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 
 noinst_LTLIBRARIES = libutilities.la
 
-libutilities_la_SOURCES = nmpi.cpp
-
-noinst_HEADERS = pyutilities.h
+libutilities_la_SOURCES = nbooleans.cpp nmpi.cpp nrational.cpp pyutilities.cpp
 

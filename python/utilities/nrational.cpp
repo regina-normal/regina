@@ -26,75 +26,48 @@
 
 /* end stub */
 
-#include "utilities/nmpi.h"
+#include "utilities/nrational.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NLargeInteger;
+using regina::NRational;
 
-namespace {
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
-        NLargeInteger::stringValue, 0, 1);
-}
-
-void addNLargeInteger() {
-    scope s = class_<NLargeInteger>("NLargeInteger")
-        .def(init<long>())
+void addNRational() {
+    scope s = class_<NRational>("NRational")
+        .def(init<const NRational&>())
         .def(init<const NLargeInteger&>())
-        .def(init<const char*, optional<int> >())
-        .def("isInfinite", &NLargeInteger::isInfinite)
-        .def("longValue", &NLargeInteger::longValue)
-        .def("stringValue", &NLargeInteger::stringValue, OL_stringValue())
-        .def("swap", &NLargeInteger::swap)
-        .def(self == self)
-        .def(self == long())
-        .def(self != self)
-        .def(self != long())
-        .def(self < self)
-        .def(self < long())
-        .def(self > self)
-        .def(self > long())
-        .def(self <= self)
-        .def(self <= long())
-        .def(self >= self)
-        .def(self >= long())
-        .def(self + self)
-        .def(self + long())
-        .def(self - self)
-        .def(self - long())
+        .def(init<long>())
+        .def(init<const NLargeInteger&, const NLargeInteger&>())
+        .def(init<long, unsigned long>())
+        .def("getNumerator", &NRational::getNumerator)
+        .def("getDenominator", &NRational::getDenominator)
         .def(self * self)
-        .def(self * long())
         .def(self / self)
-        .def(self / long())
-        .def("divExact", &NLargeInteger::divExact)
-        .def(self % self)
-        .def(self % long())
+        .def(self + self)
+        .def(self - self)
         .def(- self)
+        .def("inverse", &NRational::inverse)
         .def(self += self)
-        .def(self += long())
         .def(self -= self)
-        .def(self -= long())
         .def(self *= self)
-        .def(self *= long())
         .def(self /= self)
-        .def(self /= long())
-        .def("divByExact", &NLargeInteger::divByExact,
-            return_internal_reference<>())
-        .def(self %= self)
-        .def(self %= long())
-        .def("negate", &NLargeInteger::negate)
-        .def("raiseToPower", &NLargeInteger::raiseToPower)
-        .def("abs", &NLargeInteger::abs)
-        .def("gcd", &NLargeInteger::gcd)
-        .def("lcm", &NLargeInteger::lcm)
-        .def("gcdWithCoeffs", &NLargeInteger::gcdWithCoeffs)
+        .def("negate", &NRational::negate)
+        .def("invert", &NRational::invert)
+        .def(self == self)
+        .def(self != self)
+        .def(self < self)
+        .def(self > self)
+        .def(self <= self)
+        .def(self >= self)
         .def(self_ns::str(self))
     ;
 
     // Apparently there is no way in python to make a module attribute
     // read-only.
-    s.attr("zero") = NLargeInteger::zero;
-    s.attr("one") = NLargeInteger::one;
-    s.attr("infinity") = NLargeInteger::infinity;
+    s.attr("zero") = NRational::zero;
+    s.attr("one") = NRational::one;
+    s.attr("infinity") = NRational::infinity;
+    s.attr("undefined") = NRational::undefined;
 }
 

@@ -26,7 +26,13 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-
+void addNBoolSet();
 void addNLargeInteger();
+void addNRational();
+
+void addUtilities() {
+    addNBoolSet();
+    addNLargeInteger();
+    addNRational();
+}
 

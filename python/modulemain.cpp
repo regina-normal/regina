@@ -29,7 +29,8 @@
 #include <boost/python.hpp>
 
 #include "engine.h"
-#include "utilities/pyutilities.h"
+
+void addUtilities();
 
 BOOST_PYTHON_MODULE(regina) {
     // Core engine routines:
@@ -41,7 +42,6 @@ BOOST_PYTHON_MODULE(regina) {
 
     // Components from subdirectories:
 
-    // utilities:
-    addNLargeInteger();
+    addUtilities();
 }
 
