@@ -163,7 +163,7 @@ public class Application extends Applet implements ActionListener {
      * The version string representing the oldest allowable BTools with
      * which this program can be run.
      */
-    public static final String minimumBToolsVersion = "1.0.99";
+    public static final String minimumBToolsVersion = "1.1";
 
     /**
      * Entry point for the applet.
