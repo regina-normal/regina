@@ -32,16 +32,21 @@
 #include "pythoninterpreter.h"
 
 #include <iostream>
+#include <kaction.h>
 #include <kglobalsettings.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <kmenubar.h>
+#include <kpopupmenu.h>
+#include <kstatusbar.h>
 #include <ktextedit.h>
 #include <qhbox.h>
 #include <qlabel.h>
 #include <qvbox.h>
 
-// TODO: ctrl-d, tab, keypresses upstairs, history
-// TODO: copy all, save log
+// TODO: tab, history, autoindent, processing
+// TODO: save log ; cut, copy, paste, select all
+// TODO: long processing
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         regina::NPacket* tree, regina::NPacket* selectedPacket) :
@@ -58,6 +63,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     session->setWordWrap(QTextEdit::NoWrap);
     session->setAutoFormatting(QTextEdit::AutoNone);
     session->setFont(KGlobalSettings::fixedFont());
+    session->setFocusPolicy(QWidget::NoFocus);
     box->setStretchFactor(session, 1);
 
     QHBox* inputArea = new QHBox(box);
@@ -71,6 +77,30 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     setCentralWidget(box);
     box->show();
+
+    // Set up the actions.
+    // Don't use XML files since we don't know whether we're in the shell or
+    // the part.
+    KPopupMenu* menuConsole = new KPopupMenu(this);
+    KPopupMenu* menuEdit = new KPopupMenu(this);
+
+    (new KAction(i18n("&Save Log"), "filesave", CTRL+Key_S, this,
+        SLOT(saveLog()), actionCollection(), "console_save"))->
+        plug(menuConsole);
+    menuConsole->insertSeparator();
+    (new KAction(i18n("&Close"), "fileclose", CTRL+Key_D, this, SLOT(close()),
+        actionCollection(), "console_close"))->plug(menuConsole);
+
+    KStdAction::cut(input, SLOT(cut()), actionCollection())->plug(menuEdit);
+    KStdAction::copy(input, SLOT(copy()), actionCollection())->plug(menuEdit);
+    KStdAction::paste(input, SLOT(paste()), actionCollection())->
+        plug(menuEdit);
+    menuEdit->insertSeparator();
+    KStdAction::selectAll(input, SLOT(selectAll()), actionCollection())->
+        plug(menuEdit);
+
+    menuBar()->insertItem(i18n("&Console"), menuConsole);
+    menuBar()->insertItem(i18n("&Edit"), menuEdit);
 
     // Prepare the console for use.
     if (manager)
@@ -102,6 +132,10 @@ void PythonConsole::processCommand() {
     setPromptMode(done ? PRIMARY : SECONDARY);
 }
 
+void saveLog() {
+    // TODO
+}
+
 void PythonConsole::processOutput(const std::string& data) {
     // Strip the final newline (if any) before we process the string.
     if ((! data.empty()) && *(data.rbegin()) == '\n')
@@ -118,9 +152,15 @@ void PythonConsole::init() {
 
 void PythonConsole::setPromptMode(PromptMode mode) {
     switch (mode) {
-        case PRIMARY:    prompt->setText(" >>> "); break;
-        case SECONDARY:  prompt->setText(" ... "); break;
-        case PROCESSING: prompt->setText("     "); break;
+        case PRIMARY:
+            prompt->setText(" >>> ");
+            break;
+        case SECONDARY:
+            prompt->setText(" ... ");
+            break;
+        case PROCESSING:
+            prompt->setText("     ");
+            break;
     }
 }
 

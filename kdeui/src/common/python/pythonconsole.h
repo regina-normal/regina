@@ -87,6 +87,11 @@ class PythonConsole : public KMainWindow, public PythonOutputStream {
          */
         void processCommand();
 
+        /**
+         * Save a log of the current session.
+         */
+        void saveLog();
+
     protected:
         /**
          * PythonOutputStream overrides.
