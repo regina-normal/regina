@@ -9,21 +9,21 @@
 
 # Variable assignments:
 /^[_a-zA-Z][_a-zA-Z0-9]*=/ {
-	# Determine where the '=' lies.
-	equals = index($0, "=")
-	# Extract the variable name and value.
-	name = substr($0, 1, equals - 1)
-	value = substr($0, equals + 1)
-	# Split the value into its colon-separated components.
-	total = split(value, components, ":")
-	# Expand each component using cygpath.
-	for (i in components)
-		components[i] = "`cygpath -aw \"" components[i] "\"`"
-	# Print the final export statement to feed back into the parent script.
-	printf "export %s=\"", name
-	if (i >= 1)
-		printf "%s", components[1]
-	for (i = 2; i <= total; i++)
-		printf ";%s", components[i]
-	print "\";"
+    # Determine where the '=' lies.
+    equals = index($0, "=")
+    # Extract the variable name and value.
+    name = substr($0, 1, equals - 1)
+    value = substr($0, equals + 1)
+    # Split the value into its colon-separated components.
+    total = split(value, components, ":")
+    # Expand each component using cygpath.
+    for (i in components)
+        components[i] = "`cygpath -aw \"" components[i] "\"`"
+    # Print the final export statement to feed back into the parent script.
+    printf "export %s=\"", name
+    if (i >= 1)
+        printf "%s", components[1]
+    for (i = 2; i <= total; i++)
+        printf ";%s", components[i]
+    print "\";"
 }
