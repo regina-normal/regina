@@ -30,6 +30,7 @@ package normal.engine.implementation.corba;
 
 import java.math.BigInteger;
 import normal.engine.utilities.NBoolSet;
+import normal.engine.utilities.NLargeInteger;
 import normal.engine.implementation.corba.Regina.*;
 
 /**
@@ -76,14 +77,18 @@ public class CORBAShareableObject implements normal.engine.ShareableObject {
      * returned.  Otherwise the string will be interpreted as the
      * decimal representation of a large integer and the corresponding
      * <tt>BigInteger</tt> will be returned.
+     * <p>
+     * Note that the object returned will actually be of derived class
+     * <tt>NLargeInteger</tt> to assist Jython scripting.
      *
      * @param value the string to convert.
      * @return the corresponding <tt>BigInteger</tt>.
+     * @see normal.engine.utilities.NLargeInteger
      */
     public static BigInteger stringToLarge(String value) {
         if (value.equals("inf"))
             return null;
-        return new BigInteger(value);
+        return new NLargeInteger(value);
     }
 
     /**

@@ -48,6 +48,13 @@
  * considered larger than any other integer but equal to itself.
  *
  * \ifaces Not present.
+ * \ifacesjava A class <tt>normal.engine.utilities.NLargeInteger</tt> is
+ * provided that subclasses <tt>java.math.BigInteger</tt>.  This also
+ * provides arbitrary precision integer arithmetic, but otherwise bears no
+ * relation to the engine NLargeInteger class.  It provides additional
+ * routines for operator overloads in Jython scripting, and reimplements
+ * <tt>BigInteger</tt> routines to return <tt>NLargeInteger</tt> objects
+ * where <tt>BigInteger</tt> objects would otherwise be returned.
  */
 class NLargeInteger {
     public:

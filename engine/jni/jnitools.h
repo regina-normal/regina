@@ -185,13 +185,16 @@ NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value);
  * If the C++ large integer is infinite, the Java object returned will
  * be \c null.
  *
+ * Note that the object returned will actually be of derived class
+ * <tt>normal.engine.utilities.NLargeInteger</tt>
+ * which provides improved interaction with Jython scripting.
+ *
  * \ifaces Not present.
  *
  * @param jni_env the working JNI environment.
  * @param value the C++ NLargeInteger to convert.
- * @return the corresponding Java BigInteger; this will be of type
- * <tt>java.math.BigInteger</tt>.  If \a value is infinite, \c null will
- * be returned.
+ * @return the corresponding Java BigInteger (of type
+ * <tt>normal.engine.utilities.NLargeInteger</tt>) or \c null.
  */
 jobject jBigIntegerFromLarge(JNIEnv* jni_env, const NLargeInteger& value);
         

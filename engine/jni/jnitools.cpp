@@ -81,7 +81,8 @@ jobject jBigIntegerFromLarge(JNIEnv* jni_env, const NLargeInteger& value) {
     if (value.isInfinite())
         return 0;
 
-    jclass newClass = jni_env->FindClass("java/math/BigInteger");
+    jclass newClass =
+        jni_env->FindClass("normal/engine/utilities/NLargeInteger");
     if (! newClass)
         return 0;
     

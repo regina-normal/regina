@@ -234,7 +234,10 @@
  *  corresponding parameter must be non-negative.
  *
  *  The C++ NLargeInteger class corresponds to the Java
- *  <tt>java.math.BigInteger</tt> class.
+ *  <tt>java.math.BigInteger</tt> class, although all NLargeInteger
+ *  objects returned from the engine will actually be of derived class
+ *  <tt>normal.engine.utilities.NLargeInteger</tt> which provides
+ *  improved interaction with Jython scripting.
  *
  *  If a C++ routine takes an NDoubleList argument, the corresponding
  *  Java routine should take a <tt>java.util.Enumeration</tt> of objects
