@@ -37,7 +37,7 @@
 
 NTriangulation* readSnapPea(const char* filename) {
     // Open the file.
-    ifstream in(filename, NLocalFileResource::MODE_READ);
+    std::ifstream in(filename, NLocalFileResource::sysModeRead());
     if (!in)
         return 0;
     
@@ -141,7 +141,7 @@ NTriangulation* readSnapPea(const char* filename) {
 
 bool writeSnapPea(const char* filename, NTriangulation& tri) {
     // Open the file.
-    ofstream out(filename, NLocalFileResource::MODE_WRITE);
+    std::ofstream out(filename, NLocalFileResource::sysModeWrite());
     if (!out)
         return 0;
 

@@ -32,7 +32,7 @@
 #include "file/nresources.h"
 
 bool NLocalFileResource::openRead() {
-    infile.open(fileName, MODE_READ);
+    infile.open(fileName, sysModeRead());
     if (infile.is_open()) {
         openMode = READ;
         return true;
@@ -41,7 +41,7 @@ bool NLocalFileResource::openRead() {
 }
 
 bool NLocalFileResource::openWrite() {
-    outfile.open(fileName, MODE_WRITE);
+    outfile.open(fileName, sysModeWrite());
     if (outfile.is_open()) {
         openMode = WRITE;
         return true;

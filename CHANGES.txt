@@ -23,6 +23,9 @@ Version 2.5  [ (under development) ]
             - Added for use with Standard Template Library.
         Class NGroupExpressionTerm:
             - Changed from simple ordered pair to its own full class.
+        Class NLocalFileResource:
+            - Replaced static members MODE_READ, MODE_WRITE with static
+              routines sysModeRead(), sysModeWrite().
         Class NScript:
             - Changed list of variables to a proper map and removed routines
               getVariableIndex() and removeVariableAt().

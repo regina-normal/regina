@@ -137,21 +137,6 @@ class NRandomAccessResource {
  * A random access resource that is simply a local file.
  */
 class NLocalFileResource : public NRandomAccessResource {
-    public:
-        /**
-         * Provides mode flags to pass to the system file opening
-         * routines.
-         */
-        enum systemMode {
-            #ifdef __NO_IOS_NOCREATE
-            MODE_READ = ios::in | ios::binary,
-            #else
-            MODE_READ = ios::in | ios::binary | ios::nocreate,
-            #endif
-                /**< Open the file for reading. */
-            MODE_WRITE = ios::out | ios::trunc | ios::binary
-                /**< Open the file for writing. */
-        };
     private:
         std::ifstream infile;
             /**< The file that is being read from. */
@@ -179,6 +164,19 @@ class NLocalFileResource : public NRandomAccessResource {
          */
         virtual ~NLocalFileResource();
 
+        /**
+         * Returns the system file mode for opening a binary file for reading.
+         *
+         * @return the system file mode for reading.
+         */
+        static std::ios::openmode sysModeRead();
+        /**
+         * Returns the system file mode for opening a binary file for writing.
+         *
+         * @return the system file mode for writing.
+         */
+        static std::ios::openmode sysModeWrite();
+
         virtual bool openRead();
         virtual bool openWrite();
         virtual void close();
@@ -204,6 +202,18 @@ inline NLocalFileResource::NLocalFileResource(const char* newFileName) :
 inline NLocalFileResource::~NLocalFileResource() {
     close();
     delete[] fileName;
+}
+
+inline std::ios::openmode NLocalFileResource::sysModeRead() {
+    #ifdef __NO_IOS_NOCREATE
+    return std::ios::in | std::ios::binary;
+    #else
+    return std::ios::in | std::ios::binary | std::ios::nocreate;
+    #endif
+}
+
+inline std::ios::openmode NLocalFileResource::sysModeWrite() {
+    return std::ios::out | std::ios::trunc | std::ios::binary;
 }
 
 inline NRandomAccessResource::mode NLocalFileResource::getOpenMode() const {
