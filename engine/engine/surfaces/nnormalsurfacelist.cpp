@@ -28,11 +28,13 @@
 
 #include <list>
 #include "enumerate/ndoubledescriptor.h"
+#include "file/nfile.h"
+#include "maths/nmatrixint.h"
+#include "progress/nprogressmanager.h"
+#include "progress/nprogresstypes.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
 #include "triangulation/ntriangulation.h"
-#include "maths/nmatrixint.h"
-#include "file/nfile.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -62,36 +64,57 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 #define REGISTER_FLAVOUR(id_name, cls, n, a, test) \
     case NNormalSurfaceList::id_name: \
         if (! (test)) \
-            return; \
-        if (embeddedOnly) \
+            noSurfaces = true; \
+        else if (list->embedded) \
             constraints = cls::makeEmbeddedConstraints(triang); \
         break;
 
-NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
-        int newFlavour, bool embeddedOnly) : flavour(newFlavour),
-        embedded(embeddedOnly) {
-    triang->insertChildLast(this);
+void* NNormalSurfaceList::Enumerator::run(void*) {
+    NProgressNumber* progress = 0;
+    if (manager) {
+        progress = new NProgressNumber(0, 3);
+        manager->setProgress(progress);
+    }
 
     // Perform any pre-enumeration tests and fetch any necessary
     // compatibility constraints.
     NCompConstraintSet* constraints = 0;
-    switch(flavour) {
+    bool noSurfaces = false;
+    switch(list->flavour) {
         // Import cases from the flavour registry.
         #include "surfaces/flavourregistry.h"
     }
 
+    if (noSurfaces) {
+        // There are no normal surfaces at all.
+        triang->insertChildLast(list);
+
+        if (progress) {
+            progress->setOutOf(1);
+            progress->setCompleted(1);
+            progress->setFinished();
+        }
+        return 0;
+    }
+
+    if (progress)
+        progress->incCompleted();
+
     // Form the matching equations and starting cone.
-    NMatrixInt* eqns = makeMatchingEquations(triang, newFlavour);
+    NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
 
     std::list<NNormalSurfaceVector*> originalCone;
     std::list<NVector<NLargeInteger>*> faces;
-    createNonNegativeCone(triang, newFlavour, back_inserter(originalCone),
+    createNonNegativeCone(triang, list->flavour, back_inserter(originalCone),
         back_inserter(faces));
 
+    if (progress)
+        progress->incCompleted();
+
     // Find the normal surfaces.
-    NDoubleDescriptor().enumerateVertices(SurfaceInserter(*this, triang),
+    NDoubleDescriptor().enumerateVertices(SurfaceInserter(*list, triang),
         originalCone.begin(), originalCone.end(), faces.begin(), faces.end(),
-        *eqns, constraints);
+        *eqns, constraints, progress);
 
     for_each(originalCone.begin(), originalCone.end(),
         FuncDelete<NNormalSurfaceVector>());
@@ -99,6 +122,34 @@ NNormalSurfaceList::NNormalSurfaceList(NTriangulation* triang,
         FuncDelete<NVector<NLargeInteger> >());
     delete eqns;
     delete constraints;
+
+    // All done!
+    triang->insertChildLast(list);
+
+    if (progress) {
+        progress->incCompleted();
+        progress->setFinished();
+    }
+
+    return 0;
+}
+
+NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
+        int newFlavour, bool embeddedOnly, NProgressManager* manager) {
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+    Enumerator* e = new Enumerator(ans, owner, manager);
+
+    if (manager) {
+        if (! e->start(0, true)) {
+            delete ans;
+            return 0;
+        }
+        return ans;
+    } else {
+        e->run(0);
+        delete e;
+        return ans;
+    }
 }
 
 NTriangulation* NNormalSurfaceList::getTriangulation() const {

@@ -13,6 +13,9 @@ Version 4.0  [ currently under development ]
             - Using NProperty to store calculable properties.
             - Using NTriBool instead of 1/-1/0 for orientability,
               two-sidedness and connectedness.
+        Class NNormalSurfaceList:
+            - Enumeration routine now takes an optional progress manager
+              and can run in a separate thread.
         Class NProgress:
             - Removed isCancellable() since this is not really necessary;
               an operation may simply choose not to poll for cancellation

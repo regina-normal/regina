@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "maths/nmatrixint.h"
+#include "progress/nprogressmanager.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
@@ -44,6 +45,10 @@ namespace {
             int flavour, bool embedded) {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded);
     }
+    NNormalSurfaceList* enumerate_4(regina::NTriangulation* owner,
+            int flavour, bool embedded, regina::NProgressManager* manager) {
+        return NNormalSurfaceList::enumerate(owner, flavour, embedded, manager);
+    }
 }
 
 void addNNormalSurfaceList() {
@@ -58,6 +63,8 @@ void addNNormalSurfaceList() {
         .def("enumerate", enumerate_2,
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_3,
+            return_value_policy<reference_existing_object>())
+        .def("enumerate", enumerate_4,
             return_value_policy<reference_existing_object>())
         .def("recreateMatchingEquations",
             &NNormalSurfaceList::recreateMatchingEquations,

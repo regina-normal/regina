@@ -39,14 +39,16 @@
 #include <algorithm>
 #include <vector>
 #include "packet/npacket.h"
-#include "utilities/memutils.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfaceset.h"
+#include "utilities/memutils.h"
+#include "utilities/nthread.h"
 
 namespace regina {
 
 class NTriangulation;
 class NMatrixInt;
+class NProgressManager;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
 
@@ -113,20 +115,29 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         virtual ~NNormalSurfaceList();
 
         /**
-         * Enumerates all normal surfaces in the given
+         * Enumerates all vertex normal surfaces in the given
          * triangulation using the given flavour of coordinate system.
-         * The normal surfaces will actually be calculated in
-         * this routine, so it may be slow; all vertex surfaces in the
-         * given coordinate system will be found and stored in a list.
-         * Their representations will
+         * These vertex normal surfaces will be stored in a new normal
+         * surface list.  Their representations will
          * use the smallest possible integer coordinates.
          * The option is offered to find only embedded normal surfaces
          * or to also include immersed and singular normal surfaces.
          *
-         * The normal surface list that is created will be inserted as a
-         * child of the given triangulation.  This triangulation \b must
+         * The normal surface list that is created will be inserted as the
+         * last child of the given triangulation.  This triangulation \b must
          * remain the parent of this normal surface list, and must not
          * change while this normal surface list remains in existence.
+         *
+         * If a progress manager is passed, the normal surface
+         * enumeration will take place in a new thread and this routine
+         * will return immediately.  The NProgress object assigned to
+         * this progress manager is guaranteed to be of the class
+         * NProgressNumber.
+         *
+         * If no progress manager is passed, the enumeration will run
+         * in the current thread and this routine will return only when
+         * the enumeration is complete.  Note that this enumeration can
+         * be extremely slow for larger triangulations.
          *
          * \todo \feature Allow picking up the first ``interesting'' surface
          * and bailing en route.
@@ -146,11 +157,19 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to
          * \c true.
-         * @return a newly created normal surface list containing the
-         * enumerated vertex normal surfaces.
+         * @param manager a progress manager through which progress will
+         * be reported, or 0 if no progress reporting is required.  If
+         * non-zero, \a manager must point to a progress manager for
+         * which NProgressManager::isStarted() is still \c false.
+         * @return the newly created normal surface list.  Note that if
+         * a progress manager is passed then this list may not be completely
+         * filled when this routine returns.  If a progress manager is
+         * passed and a new thread could not be started, this routine
+         * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerate(NTriangulation* owner,
-            int newFlavour, bool embeddedOnly = true);
+            int newFlavour, bool embeddedOnly = true,
+            NProgressManager* manager = 0);
 
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
@@ -159,7 +178,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
         virtual unsigned long getNumberOfSurfaces() const;
         virtual const NNormalSurface* getSurface(unsigned long index) const;
         virtual ShareableObject* getShareableObject();
-        
+
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
@@ -209,7 +228,7 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * documentation for operator=(NNormalSurface*) and
          * operator=(NNormalSurfaceVector*) for details.
          */
-        friend struct SurfaceInserter {
+        struct SurfaceInserter {
             NNormalSurfaceList* list;
                 /**< The list into which surfaces will be inserted. */
             NTriangulation* owner;
@@ -302,46 +321,48 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
 
     private:
         /**
-         * Creates a new list of normal surfaces in the given
-         * triangulation using the given flavour of coordinate system.
-         * The normal surfaces will actually be calculated in
-         * this routine, so it may be slow; all vertex surfaces in the
-         * given coordinate
-         * space will be found and stored.  Their representations will
-         * use the smallest possible integer coordinates.
-         * The option is offered to find only embedded normal surfaces
-         * or to also include immersed and singular normal surfaces.
+         * Creates an empty list of normal surfaces with the given
+         * parameters.
          *
-         * This constructor will insert this normal surface list as a
-         * child of the given triangulation.  This triangulation \b must
-         * remain the parent of this normal surface list, and must not
-         * change while this normal surface list is alive.
-         *
-         * This constructor has been made private so that external
-         * routines are forced to use the safer enumerate() interface
-         * instead.
-         *
-         * \todo \feature Allow picking up the first ``interesting'' surface
-         * and bailing en route.
-         * \todo \featurelong Determine the faces of the normal solution
-         * space.
-         * \todo \featurelong Allow either subsets of normal surface
-         * lists or allow deletion of surfaces from lists.
-         * \todo \opt Investigate obvious compressions.
-         * \todo \opt Investigate monte carlo methods.
-         *
-         * @param owner the triangulation upon which this list of normal
-         * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalSurfaceList.
+         * @param newFlavour the flavour of coordinate system to be used
+         * for filling this list; this must be one of the predefined
+         * coordinate system constants in NNormalSurfaceList.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
-         * normal surfaces are also to be produced; this defaults to
-         * \c true.
+         * normal surfaces are also to be produced.
          */
-        NNormalSurfaceList(NTriangulation* owner, int newFlavour,
-                bool embeddedOnly = true);
+        NNormalSurfaceList(int newFlavour, bool embeddedOnly);
+
+        /**
+         * A thread class that actually performs the normal surface
+         * enumeration.
+         */
+        class Enumerator : public NThread {
+            private:
+                NNormalSurfaceList* list;
+                    /**< The normal surface list to be filled. */
+                NTriangulation* triang;
+                    /**< The triangulation upon which this normal
+                         surface list will be based. */
+                NProgressManager* manager;
+
+            public:
+                /**
+                 * Creates a new enumerator thread with the given
+                 * parameters.
+                 *
+                 * @param newList the normal surface list to be filled.
+                 * @param useTriang the triangulation upon which this
+                 * normal surface list will be based.
+                 * @param useManager the progress manager to use for
+                 * progress reporting, or 0 if progress reporting is not
+                 * required.
+                 */
+                Enumerator(NNormalSurfaceList* newList,
+                    NTriangulation* useTriang, NProgressManager* useManager);
+
+                void* run(void*);
+        };
 
     friend class regina::NXMLNormalSurfaceListReader;
 };
@@ -411,11 +432,6 @@ inline NNormalSurfaceList::NNormalSurfaceList() {
 
 inline NNormalSurfaceList::~NNormalSurfaceList() {
     for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
-}
-
-inline NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
-        int newFlavour, bool embeddedOnly) {
-    return new NNormalSurfaceList(owner, newFlavour, embeddedOnly);
 }
 
 inline int NNormalSurfaceList::getFlavour() const {
@@ -501,6 +517,15 @@ inline NNormalSurfaceList::SurfaceInserter&
 inline NNormalSurfaceList::SurfaceInserter&
         NNormalSurfaceList::SurfaceInserter::operator ++(int) {
     return *this;
+}
+
+inline NNormalSurfaceList::NNormalSurfaceList(int newFlavour,
+        bool embeddedOnly) : flavour(newFlavour), embedded(embeddedOnly) {
+}
+
+inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* newList,
+        NTriangulation* useTriang, NProgressManager* useManager) :
+        list(newList), triang(useTriang), manager(useManager) {
 }
 
 } // namespace regina
