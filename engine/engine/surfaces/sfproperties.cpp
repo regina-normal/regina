@@ -109,31 +109,31 @@ void NSurfaceFilterProperties::writeProperties(NFile& out) const {
     std::streampos bookmark(0);
 
     if (eulerCharacteristic.size() > 0) {
-        bookmark = writePropertyHeader(out, PROPSF_EULER);
+        bookmark = out.writePropertyHeader(PROPSF_EULER);
         out.writeULong(eulerCharacteristic.size());
         for (std::set<NLargeInteger>::const_iterator it =
                 eulerCharacteristic.begin(); it != eulerCharacteristic.end();
                 it++)
             out.writeLarge(*it);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
 
     if (orientability != NBoolSet::sBoth) {
-        bookmark = writePropertyHeader(out, PROPSF_ORIENT);
+        bookmark = out.writePropertyHeader(PROPSF_ORIENT);
         out.writeBoolSet(orientability);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
 
     if (compactness != NBoolSet::sBoth) {
-        bookmark = writePropertyHeader(out, PROPSF_COMPACT);
+        bookmark = out.writePropertyHeader(PROPSF_COMPACT);
         out.writeBoolSet(compactness);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
 
     if (realBoundary != NBoolSet::sBoth) {
-        bookmark = writePropertyHeader(out, PROPSF_REALBDRY);
+        bookmark = out.writePropertyHeader(PROPSF_REALBDRY);
         out.writeBoolSet(realBoundary);
-        writePropertyFooter(out, bookmark);
+        out.writePropertyFooter(bookmark);
     }
 }
 

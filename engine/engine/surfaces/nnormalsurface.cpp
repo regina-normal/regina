@@ -468,7 +468,7 @@ NNormalSurface* NNormalSurface::readFromFile(NFile& in, int flavour,
     NNormalSurface* ans = new NNormalSurface(triangulation, vector);
 
     // Read in properties.
-    ans->readProperties(in);
+    in.readProperties(ans);
 
     return ans;
 }

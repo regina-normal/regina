@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <fstream>
 #include <sstream>
 
 #include "foreign/dehydration.h"
