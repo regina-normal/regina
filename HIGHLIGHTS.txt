@@ -10,7 +10,11 @@ Regina - A Normal Surface Theory Calculator
 
 Version 2.5  [ (under development) ]
 
-    - Calculation engine reworked to use C++ Standard Template Library.
+    - The Great STL Port: calculation engine completely reworked to use
+      and play well with the C++ Standard Template Library.  Also made
+      more standards-compliant (i.e., compiles under gcc3).
+    - Works with splitting surface signatures.
+    - Optimisations for skeletal calculations in triangulations.
 
 Version 2.4  [ 4 April, 2002 ]
 
