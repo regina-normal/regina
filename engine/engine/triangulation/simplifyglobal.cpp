@@ -132,11 +132,11 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     BoundaryComponentIterator bit;
     NEdge* edge;
     NBoundaryComponent* bc;
-    unsigned long nEdges;
     unsigned long nFaces;
-    unsigned long iEdge;
     unsigned long iFace;
-    std::deque<NEdgeEmbedding>::const_iterator embit, embbeginit, embendit;
+    // unsigned long nEdges;
+    // unsigned long iEdge;
+    // std::deque<NEdgeEmbedding>::const_iterator embit, embbeginit, embendit;
 
     bool changed = false;   // Has anything changed ever (for return value)?
     bool changedNow = true; // Did we just change something (for loop control)?

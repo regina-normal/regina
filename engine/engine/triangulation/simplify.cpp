@@ -704,7 +704,6 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
 }
 
 bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
-
     // Find the tetrahedra to remove.
     const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
     unsigned valence = embs.size();
@@ -719,6 +718,8 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         oldVertexPerm[oldPos] = (*it).getVertices();
         oldPos++;
     }
+
+    unsigned i, j;
     NVertex* oldVert[2];
     oldVert[0] = e->getVertex(0);
     oldVert[1] = e->getVertex(1);
@@ -739,27 +740,27 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             return false;
 
         // Make sure no tetrahedron has a top and bottom face in the boundary
-        for (int i=0; i<valence; i++)
+        for (i=0; i<valence; i++)
             if (!oldTet[i]->getAdjacentTetrahedron(oldVertexPerm[i][0]) && \
                     !oldTet[i]->getAdjacentTetrahedron(oldVertexPerm[i][1]))
                 return false;
 
         // The tetrahedra around the edge must be distinct.
-        for (int i=0; i<valence; i++)
-            for (int j=i+1; j<valence; j++)
+        for (i=0; i<valence; i++)
+            for (j=i+1; j<valence; j++)
                 if (oldTet[i] == oldTet[j])
                     return false;
 
         // The edges meeting either the north or south poles must be distinct.
         // Note this is stronger than necessary and will be weaked later.
         NEdge **oldEdge;
-        int numEdge;
+        unsigned numEdge;
         if (e->isBoundary())
             numEdge = 2*valence+2;
         else
             numEdge = 2*valence;
         oldEdge = new (NEdge *)[numEdge];
-        for (int i=0; i<valence; i++) {
+        for (i=0; i<valence; i++) {
             oldEdge[2*i] = oldTet[i]->getEdge(edgeNumber[oldVertexPerm[i][0]][oldVertexPerm[i][2]]);
             oldEdge[2*i+1] = oldTet[i]->getEdge(edgeNumber[oldVertexPerm[i][1]][oldVertexPerm[i][2]]);
         }
@@ -767,8 +768,8 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             oldEdge[2*valence] = oldTet[valence-1]->getEdge(edgeNumber[oldVertexPerm[valence-1][0]][oldVertexPerm[valence-1][3]]);
             oldEdge[2*valence+1] = oldTet[valence-1]->getEdge(edgeNumber[oldVertexPerm[valence-1][1]][oldVertexPerm[valence-1][3]]);
         }
-        for (int i=0; i<numEdge; i++)
-            for (int j=i+1; j<numEdge; j++)
+        for (i=0; i<numEdge; i++)
+            for (j=i+1; j<numEdge; j++)
                 if (oldEdge[i] == oldEdge[j])
                     return false;
 
@@ -786,7 +787,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
     NPerm topPerm, botPerm;
     NTetrahedron *top, *bot;
     int p[4];
-    for (int i=0; i<valence; i++) {
+    for (i=0; i<valence; i++) {
 
 // Totally redo!
 
@@ -795,7 +796,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         bot = oldTet[i]->getAdjacentTetrahedron(oldVertexPerm[i][1]);
         botPerm = oldTet[i]->getAdjacentTetrahedronGluing(oldVertexPerm[i][1]);
 
-        for (int j=0; j<4; j++) {
+        for (j=0; j<4; j++) {
             p[j] = topPerm.preImageOf(j);
             if (p[j] == oldVertexPerm[i][0])
                 p[j] = oldVertexPerm[i][1];
