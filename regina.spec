@@ -47,7 +47,7 @@ unset QTDIR || : ; . /etc/profile.d/qt.sh
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
-./configure --disable-debug
+./configure --disable-debug --mandir=%{_mandir}
 make
 make check
 
@@ -67,6 +67,7 @@ make install-strip DESTDIR=$RPM_BUILD_ROOT
 %doc AUTHORS.txt
 %doc CHANGES.txt
 %doc HIGHLIGHTS.txt
+%doc LICENSE.txt
 %docdir %{_docdir}/HTML/en/regina
 %docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*
@@ -75,7 +76,7 @@ make install-strip DESTDIR=$RPM_BUILD_ROOT
 %{_libdir}/kde3/*
 %{_libdir}/regina
 %{_docdir}/HTML/en/regina
-%{_datadir}/applications/*
+# %{_datadir}/applications/*
 %{_datadir}/applnk/*/*
 %{_datadir}/apps/regina
 %{_datadir}/apps/reginapart
