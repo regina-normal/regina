@@ -13,6 +13,7 @@ Current Development Version
         Overall structure:
             - Fixed minor memory leaks.
         Class NLargeInteger:
+            - Added constructor and assignment taking a const std::string&.
             - Routine stringValue() now returns a std::string, not a char*.
 
 Version 3.2  [ 22 June, 2003 ] - The post-thesis release!

@@ -144,6 +144,37 @@ class NLargeInteger {
          */
         NLargeInteger(const char* value, int base = 10, bool* valid = 0);
         /**
+         * Initialises this integer to the given value which is
+         * represented as a string of digits in a given base.
+         *
+         * If not specified, the base defaults to 10.
+         * If the given base is zero, the base will be automatically
+         * determined.  If the given string begins with \c 0x or \c 0X,
+         * the base will be assumed to be 16.  Otherwise, if the string
+         * begins with \c 0, the base will be assumed to be 8.
+         * Otherwise it will be taken as base 10.
+         *
+         * Whitespace may be present in the given string and will simply
+         * be ignored.
+         *
+         * Error detection is possible by passing a non-null boolean
+         * pointer as the third parameter to this constructor.
+         *
+         * \pre The given base is zero, or is between 2 and 36 inclusive.
+         * \pre The given string represents a finite integer
+         * in the given base, with optional whitespace added.
+         *
+         * \ifacespython The final parameter \a valid is not present.
+         *
+         * @param value the new value of this integer, represented as a string
+         * of digits in base \a base.
+         * @param base the base in which \a value is given.
+         * @param valid if this pointer is not null, the boolean referenced
+         * will be set to \c true if the entire given string was a valid
+         * large integer representation and \c false otherwise.
+         */
+        NLargeInteger(const std::string&, int base = 10, bool* valid = 0);
+        /**
          * Destroys this integer.
          */
         virtual ~NLargeInteger();
@@ -207,6 +238,21 @@ class NLargeInteger {
          * @return a reference to this integer with its new value.
          */
         NLargeInteger& operator =(const char* value);
+        /**
+         * Sets this integer to the given value which is
+         * represented as a string of digits in base 10.
+         *
+         * Whitespace may be present in the given string and will simply
+         * be ignored.
+         *
+         * \pre The given string represents an integer
+         * in base 10, with optional whitespace added.
+         *
+         * @param value the new value of this integer, represented as a string
+         * of digits in base 10.
+         * @return a reference to this integer with its new value.
+         */
+        NLargeInteger& operator =(const std::string& value);
         /**
          * Swaps the values of this and the given integer.
          *
@@ -634,6 +680,13 @@ inline NLargeInteger::NLargeInteger(const char* value, int base, bool* valid) :
     else
         mpz_init_set_str(data, value, base);
 }
+inline NLargeInteger::NLargeInteger(const std::string& value, int base,
+        bool* valid) : infinite(false) {
+    if (valid)
+        *valid = (mpz_init_set_str(data, value.c_str(), base) == 0);
+    else
+        mpz_init_set_str(data, value.c_str(), base);
+}
 inline NLargeInteger::NLargeInteger(bool, bool) : infinite(true) {
     // Private constructor.
     mpz_init(data);
@@ -662,6 +715,11 @@ inline NLargeInteger& NLargeInteger::operator =(long value) {
 inline NLargeInteger& NLargeInteger::operator =(const char* value) {
     infinite = false;
     mpz_set_str(data, value, 10);
+    return *this;
+}
+inline NLargeInteger& NLargeInteger::operator =(const std::string& value) {
+    infinite = false;
+    mpz_set_str(data, value.c_str(), 10);
     return *this;
 }
 inline void NLargeInteger::swap(NLargeInteger& other) {
