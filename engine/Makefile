@@ -145,6 +145,7 @@ nocorba :
 
 binlib : $(output_lib)
 $(output_lib) : $(obj_engine)
+	-rm $(output_lib)
 	$(LINKSTATIC) $(output_lib) $(obj_engine)
 
 prepjni : $(hdr_jni_autogen)
