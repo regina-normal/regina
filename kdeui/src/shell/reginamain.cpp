@@ -370,7 +370,7 @@ void ReginaMain::readOptions(KConfig* config) {
     config->setGroup("Census");
     QStringList censusStrings = config->readListEntry("Files");
     if (censusStrings.empty())
-        globalPrefs.useDefaultCensusFiles();
+        globalPrefs.censusFiles = ReginaPrefSet::defaultCensusFiles();
     else {
         globalPrefs.censusFiles.clear();
 

@@ -33,6 +33,7 @@
 ReginaPrefSet::ReginaPrefSet() :
         autoDock(true),
         autoFileExtension(true),
+        censusFiles(defaultCensusFiles()),
         displayIcon(true),
         displayTagsInTree(false),
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
@@ -41,19 +42,20 @@ ReginaPrefSet::ReginaPrefSet() :
         triInitialTab(Gluings),
         triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6) {
-    useDefaultCensusFiles();
 }
 
-void ReginaPrefSet::useDefaultCensusFiles() {
-    censusFiles.clear();
+ReginaFilePrefList ReginaPrefSet::defaultCensusFiles() {
+    ReginaFilePrefList ans;
 
-    censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
+    ans.push_back(ReginaFilePref(REGINA_DATADIR
         "/examples/closed-or-census.rga"));
-    censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
+    ans.push_back(ReginaFilePref(REGINA_DATADIR
         "/examples/closed-nor-census.rga"));
-    censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
+    ans.push_back(ReginaFilePref(REGINA_DATADIR
         "/examples/knot-link-census.rga"));
-    censusFiles.push_back(ReginaFilePref(REGINA_DATADIR
+    ans.push_back(ReginaFilePref(REGINA_DATADIR
         "/examples/snappea-census.rga"));
+
+    return ans;
 }
 

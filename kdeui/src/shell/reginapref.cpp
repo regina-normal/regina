@@ -27,19 +27,91 @@
 /* end stub */
 
 #include "coordinatechooser.h"
+#include "reginafilter.h"
 #include "reginamain.h"
 #include "reginapref.h"
 
 #include <kcombobox.h>
+#include <kfiledialog.h>
 #include <kiconloader.h>
 #include <klineedit.h>
+#include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qcheckbox.h>
+#include <qheader.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qpushbutton.h>
 #include <qvalidator.h>
 #include <qwhatsthis.h>
+
+namespace {
+    /**
+     * A list view item for a single ReginaFilePref.
+     */
+    class ReginaFilePrefItem : public KListViewItem {
+        private:
+            /**
+             * Pixmaps that will be loaded when we first need them.
+             * Strictly speaking we have a memory leak here, since these
+             * pixmaps are never destroyed.  However, there's only ever
+             * two of them.
+             */
+            static QPixmap* activePixmap;
+            static QPixmap* inactivePixmap;
+
+            ReginaFilePref data;
+
+        public:
+            /**
+             * There won't be many censuses overall so we just add the
+             * item to the end of the list (which requires traversing
+             * the entire list).
+             */
+            ReginaFilePrefItem(QListView* parent,
+                    const ReginaFilePref& newData) :
+                    KListViewItem(parent, parent->lastItem()), data(newData) {
+            }
+
+            const ReginaFilePref& getData() const {
+                return data;
+            }
+
+            bool activateFile() {
+                if (data.active)
+                    return false;
+
+                data.active = true;
+                repaint();
+                return true;
+            }
+
+            bool deactivateFile() {
+                if (! data.active)
+                    return false;
+
+                data.active = false;
+                repaint();
+                return true;
+            }
+
+            QString text(int) const {
+                return data.filename;
+            }
+
+            const QPixmap* pixmap(int) const {
+                // if (! activePixmap)
+                //     activePixmap = new QPixmap(SmallIcon("ok"));
+                if (! inactivePixmap)
+                    inactivePixmap = new QPixmap(SmallIcon("no"));
+                return (data.active ? activePixmap : inactivePixmap);
+            }
+    };
+
+    QPixmap* ReginaFilePrefItem::activePixmap = 0;
+    QPixmap* ReginaFilePrefItem::inactivePixmap = 0;
+}
 
 ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         KDialogBase(IconList, i18n("Regina Preferences"),
@@ -57,6 +129,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     frame = addVBoxPage(i18n("Surfaces"), i18n("Normal Surface Options"),
         BarIcon("packet_surfaces", KIcon::SizeMedium));
     surfacePrefs = new ReginaPrefSurfaces(frame);
+
+    frame = addVBoxPage(i18n("Census"), i18n("Census Options"),
+        BarIcon("view_text", KIcon::SizeMedium));
+    censusPrefs = new ReginaPrefCensus(frame);
 
     frame = addVBoxPage(i18n("Python"), i18n("Python Options"),
         BarIcon("openterm", KIcon::SizeMedium));
@@ -100,6 +176,14 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
+
+    for (ReginaFilePrefList::const_iterator it = prefSet.censusFiles.begin();
+            it != prefSet.censusFiles.end(); it++)
+        new ReginaFilePrefItem(censusPrefs->listFiles, *it);
+    censusPrefs->updateActiveCount();
+
+    // Finish off.
+    setHelp("options", "regina");
 }
 
 int ReginaPreferences::exec() {
@@ -170,6 +254,12 @@ void ReginaPreferences::slotApply() {
 
     prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
         getCurrentSystem();
+
+    prefSet.censusFiles.clear();
+    for (QListViewItem* item = censusPrefs->listFiles->firstChild();
+            item; item = item->nextSibling())
+        prefSet.censusFiles.push_back(
+            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
 
     // Save these preferences to the global configuration.
     mainWindow->setPreferences(prefSet);
@@ -297,6 +387,172 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QVBox(parent) {
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);
+}
+
+ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+
+    // Set up the active file count.
+    activeCount = new QLabel(this);
+
+    // Set up the list view.
+    listFiles = new KListView(box);
+    box->setStretchFactor(listFiles, 1);
+    listFiles->header()->hide();
+    listFiles->addColumn(QString::null);
+    listFiles->setSorting(-1);
+    listFiles->setSelectionModeExt(KListView::Extended);
+    listFiles->setItemsMovable(true);
+    QWhatsThis::add(listFiles, i18n("The list of census files to be searched "
+        "when asked to locate an arbitrary triangulation in all available "
+        "censuses.  Note that census files in this list may be deactivated, "
+        "which means that they will not be searched during a census lookup."));
+    connect(listFiles, SIGNAL(selectionChanged()), this, SLOT(updateButtons()));
+
+    // Set up the button panel.
+    QVBox* vBox = new QVBox(box);
+    vBox->setSpacing(5);
+
+    QPushButton* btnAdd = new QPushButton(SmallIconSet("insert_table_row"),
+        i18n("Add..."), vBox);
+    btnAdd->setFlat(true);
+    connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
+    QWhatsThis::add(btnAdd, i18n("Add a new census file.  "
+        "This list contains the census files that are searched when asked "
+        "to locate an arbitrary triangulation in all available censuses."));
+
+    btnRemove = new QPushButton(SmallIconSet("delete_table_row"),
+        i18n("Remove"), vBox);
+    btnRemove->setFlat(true);
+    connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
+    QWhatsThis::add(btnRemove, i18n("Remove the selected census file(s).  "
+        "This list contains the census files that are searched when asked "
+        "to locate an arbitrary triangulation in all available censuses."));
+
+    btnActivate = new QPushButton(SmallIconSet("ok"),
+        i18n("Activate"), vBox);
+    btnActivate->setFlat(true);
+    connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
+    QWhatsThis::add(btnActivate, i18n("Activate the selected census "
+        "file(s).  When asked to locate an arbitrary triangulation in all "
+        "available censuses, only the activated census files in this list "
+        "are searched."));
+
+    btnDeactivate = new QPushButton(SmallIconSet("no"),
+        i18n("Deactivate"), vBox);
+    btnDeactivate->setFlat(true);
+    connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
+    QWhatsThis::add(btnDeactivate, i18n("Deactivate the selected census "
+        "file(s).  When asked to locate an arbitrary triangulation in all "
+        "available censuses, only the activated census files in this list "
+        "are searched."));
+
+    setStretchFactor(new QWidget(vBox), 1);
+
+    QPushButton* btnDefaults = new QPushButton(i18n("Defaults"), vBox);
+    btnDefaults->setFlat(true);
+    connect(btnDefaults, SIGNAL(clicked()), this, SLOT(restoreDefaults()));
+    QWhatsThis::add(btnDefaults, i18n("Restore the default list of "
+        "census files."));
+
+    updateButtons();
+
+    // Add some space at the end.
+    setStretchFactor(new QWidget(this), 1);
+}
+
+void ReginaPrefCensus::updateActiveCount() {
+    long count = 0;
+    for (QListViewItem* item = listFiles->firstChild(); item;
+            item = item->nextSibling())
+        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().active)
+            count++;
+
+    if (count == 0)
+        activeCount->setText(i18n("No active files"));
+    else if (count == 1)
+        activeCount->setText(i18n("1 active file"));
+    else
+        activeCount->setText(i18n("%1 active files").arg(count));
+}
+
+void ReginaPrefCensus::updateButtons() {
+    bool hasSelection = ! (listFiles->selectedItems().isEmpty());
+    btnRemove->setEnabled(hasSelection);
+    btnActivate->setEnabled(hasSelection);
+    btnDeactivate->setEnabled(hasSelection);
+}
+
+void ReginaPrefCensus::add() {
+    QStringList files = KFileDialog::getOpenFileNames(QString::null,
+        FILTER_REGINA, this, i18n("Add Census File(s)"));
+    if (! files.isEmpty()) {
+        for (QStringList::const_iterator it = files.begin();
+                it != files.end(); it++)
+            new ReginaFilePrefItem(listFiles, ReginaFilePref(*it));
+        updateActiveCount();
+    }
+}
+
+void ReginaPrefCensus::remove() {
+    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    if (selection.isEmpty())
+        KMessageBox::error(this,
+            i18n("No files have been selected to remove."));
+    else {
+        for (QListViewItem* item = selection.first(); item;
+                item = selection.next())
+            delete item;
+        updateActiveCount();
+    }
+}
+
+void ReginaPrefCensus::activate() {
+    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    if (selection.isEmpty())
+        KMessageBox::error(this,
+            i18n("No files have been selected to activate."));
+    else {
+        bool done = false;
+        for (QListViewItem* item = selection.first(); item;
+                item = selection.next())
+            done |= dynamic_cast<ReginaFilePrefItem*>(item)->activateFile();
+        if (done)
+            updateActiveCount();
+        else
+            KMessageBox::sorry(this,
+                i18n("All of the selected files are already active."));
+    }
+}
+
+void ReginaPrefCensus::deactivate() {
+    QPtrList<QListViewItem> selection = listFiles->selectedItems();
+    if (selection.isEmpty())
+        KMessageBox::error(this,
+            i18n("No files have been selected to deactivate."));
+    else {
+        bool done = false;
+        for (QListViewItem* item = selection.first(); item;
+                item = selection.next())
+            done |= dynamic_cast<ReginaFilePrefItem*>(item)->deactivateFile();
+        if (done)
+            updateActiveCount();
+        else
+            KMessageBox::sorry(this,
+                i18n("All of the selected files have already been "
+                    "deactivated."));
+    }
+}
+
+void ReginaPrefCensus::restoreDefaults() {
+    ReginaFilePrefList defaults = ReginaPrefSet::defaultCensusFiles();
+
+    listFiles->clear();
+    for (ReginaFilePrefList::const_iterator it = defaults.begin();
+            it != defaults.end(); it++)
+        new ReginaFilePrefItem(listFiles, *it);
+    updateActiveCount();
 }
 
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {

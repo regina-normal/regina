@@ -106,9 +106,9 @@ struct ReginaPrefSet {
     ReginaPrefSet();
 
     /**
-     * Sets the list of census files to the default set shipped with Regina.
+     * Returns the default census files shipped with Regina.
      */
-    void useDefaultCensusFiles();
+    static ReginaFilePrefList defaultCensusFiles();
 };
 
 inline ReginaFilePref::ReginaFilePref() : active(true) {

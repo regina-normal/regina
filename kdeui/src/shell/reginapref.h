@@ -39,10 +39,13 @@
 #include <kdialogbase.h>
 
 class CoordinateChooser;
+class KListView;
 class QCheckBox;
 class QComboBox;
 class QLineEdit;
+class QPushButton;
 class ReginaMain;
+class ReginaPrefCensus;
 class ReginaPrefGeneral;
 class ReginaPrefPython;
 class ReginaPrefSurfaces;
@@ -62,6 +65,7 @@ class ReginaPreferences : public KDialogBase {
         ReginaPrefGeneral* generalPrefs;
         ReginaPrefTri* triPrefs;
         ReginaPrefSurfaces* surfacePrefs;
+        ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
 
     public:
@@ -129,6 +133,34 @@ class ReginaPrefSurfaces : public QVBox {
 
     public:
         ReginaPrefSurfaces(QWidget* parent = 0);
+
+    friend class ReginaPreferences;
+};
+
+/**
+ * The page of the Regina configuration dialog for census preferences.
+ */
+class ReginaPrefCensus : public QVBox {
+    Q_OBJECT
+
+    private:
+        QLabel* activeCount;
+        KListView* listFiles;
+        QPushButton* btnRemove;
+        QPushButton* btnActivate;
+        QPushButton* btnDeactivate;
+
+    public:
+        ReginaPrefCensus(QWidget* parent = 0);
+        void updateActiveCount();
+
+    public slots:
+        void updateButtons();
+        void add();
+        void remove();
+        void activate();
+        void deactivate();
+        void restoreDefaults();
 
     friend class ReginaPreferences;
 };
