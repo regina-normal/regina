@@ -99,6 +99,7 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     children->header()->hide();
     children->addColumn(QString::null);
     children->setSorting(-1);
+    children->setSelectionMode(QListView::NoSelection);
     refreshChildList();
     childLayout->addWidget(children, 1);
 
