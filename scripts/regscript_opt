@@ -185,6 +185,22 @@ if [ -z "$REGINA_JNIDIR" ]; then
         export REGINA_JNIDIR="$REGINA_PKGLIBDIR:/usr/lib"
     fi
 fi
+# Append /usr/lib/jni to $REGINA_JNIDIR if it's not already there.
+if [ -d "/usr/lib/jni" ]; then
+    foundlib=0
+    IFS=:
+    for i in $REGINA_JNIDIR; do
+        if [ "$i" = "/usr/lib/jni" ]; then
+            foundlib=1
+            break
+        fi
+    done
+    IFS=
+    if [ "$foundlib" = "0" ]; then
+        export REGINA_JNIDIR="$REGINA_JNIDIR:/usr/lib/jni"
+    fi
+fi
+# Look for the JNI library in each colon-separated component of $REGINA_JNIDIR.
 if [ "$OSTYPE" = "cygwin" ]; then
     jnilib="$REGINA_JNIENGINE.dll"
     cygjnilib="cyg$REGINA_JNIENGINE.dll"
@@ -192,7 +208,6 @@ else
     jnilib="lib$REGINA_JNIENGINE.so"
     cygjnilib="libcyg$REGINA_JNIENGINE.so"
 fi
-# Look for the JNI library in each colon-separated component of $REGINA_JNIDIR.
 foundlib=0
 IFS=:
 for i in $REGINA_JNIDIR; do
