@@ -85,15 +85,17 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     varTable->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,
         QSizePolicy::Expanding, SCRIPT_TABLE_WEIGHT, SCRIPT_TABLE_WEIGHT));
 
+    // --- Script Actions ---
+
     QVBox* varActions = new QVBox(varBox);
     varBox->setStretchFactor(varActions, 0);
 
     QButton* varAdd = new QPushButton(SmallIconSet("insert_table_row", 0,
-        ReginaPart::factoryInstance()), i18n("&Add"), varActions);
+        ReginaPart::factoryInstance()), i18n("&Add Var"), varActions);
     connect(varAdd, SIGNAL(clicked()), this, SLOT(addVariable()));
 
     varRemove = new QPushButton(SmallIconSet("delete_table_row", 0,
-        ReginaPart::factoryInstance()), i18n("&Remove"), varActions);
+        ReginaPart::factoryInstance()), i18n("Re&move Var"), varActions);
     varRemove->setEnabled(false);
     connect(varRemove, SIGNAL(clicked()), this,
         SLOT(removeSelectedVariables()));
@@ -102,6 +104,13 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     QWidget* stretch = new QWidget(varActions);
     varActions->setStretchFactor(stretch, 1);
+
+    QButton* pyCompile = new QPushButton(SmallIconSet("compfile", 0,
+        ReginaPart::factoryInstance()), i18n("&Compile"), varActions);
+    connect(pyCompile, SIGNAL(clicked()), this, SLOT(unimplemented()));
+    QButton* pyRun = new QPushButton(SmallIconSet("run", 0,
+        ReginaPart::factoryInstance()), i18n("&Run"), varActions);
+    connect(pyRun, SIGNAL(clicked()), this, SLOT(unimplemented()));
 
     ui->setResizeMode(varBox, QSplitter::Stretch);
 
@@ -308,6 +317,11 @@ void NScriptUI::removeSelectedVariables() {
 
 void NScriptUI::updateRemoveState() {
     varRemove->setEnabled(varTable->numSelections() > 0);
+}
+
+void NScriptUI::unimplemented() {
+    KMessageBox::sorry(ui,
+        i18n("Python compilation and execution are not yet implemented."));
 }
 
 void NScriptUI::notifyScriptChanged() {

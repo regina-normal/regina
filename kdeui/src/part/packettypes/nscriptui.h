@@ -108,6 +108,11 @@ class NScriptUI : public QObject, public PacketUI {
         void updateRemoveState();
 
         /**
+         * Handle python compilation and execution.
+         */
+        void unimplemented();
+
+        /**
          * Called whenever the script or its variables within the interface
          * changes.
          */
