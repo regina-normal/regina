@@ -396,7 +396,7 @@ QString NTriFundGroupUI::verifyGAPExec() {
                 "If you have GAP (Groups, Algorithms and Programming) "
                 "installed on your system, please go into the Regina "
                 "configuration (Triangulation section) and tell Regina "
-                "where it can find GAP.").arg(useExec));
+                "where it can find GAP.").arg(GAPExec));
             return QString::null;
         }
     }
