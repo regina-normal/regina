@@ -118,6 +118,16 @@ public abstract class Modification extends Algorithm {
                 }
             }).insert(triangulation, vector);
         triangulation.addSeparator();
+        (new Modification(shell, "Double Cover", KeyEvent.VK_D,
+            "double cover",
+            normal.engine.triangulation.NTriangulation.class) {
+                public boolean perform(NPacket packet) {
+                    ((normal.engine.triangulation.NTriangulation)packet).
+                        makeDoubleCover();
+                    return true;
+                }
+            }).insert(triangulation, vector);
+        triangulation.addSeparator();
         (new Modification(shell, "Convert from Ideal to Finite", KeyEvent.VK_I,
             "made finite",
             normal.engine.triangulation.NTriangulation.class) {

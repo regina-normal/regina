@@ -244,6 +244,9 @@ CORBA::Boolean NTriangulation_i::shellBoundary(
     return MY_ENGINE_OBJECT->shellBoundary(
         GET_ENGINE_OBJECT(NTetrahedron, t), check, perform);
 }
+void NTriangulation_i::makeDoubleCover() {
+    MY_ENGINE_OBJECT->makeDoubleCover();
+}
 CORBA::Boolean NTriangulation_i::idealToFinite(CORBA::Boolean forceDivision) {
     return MY_ENGINE_OBJECT->idealToFinite(forceDivision);
 }

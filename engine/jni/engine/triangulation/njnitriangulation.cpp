@@ -377,6 +377,12 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT void JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_makeDoubleCover
+        (JNIEnv *env, jobject me) {
+    GET_ENGINE_OBJECT(env, NTriangulation, me)->makeDoubleCover();
+}
+
+JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_newNTriangulation__
         (JNIEnv *env, jobject me) {
     ASSIGN_ENGINE_OBJECT(env, new NTriangulation(), me);

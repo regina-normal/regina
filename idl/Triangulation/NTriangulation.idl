@@ -110,6 +110,7 @@ module Regina {
             boolean shellBoundary(in NTetrahedron t, in boolean chk,
                 in boolean pfm);
 
+            void makeDoubleCover();
             boolean idealToFinite(in boolean forceDivision);
             void barycentricSubdivision();
 

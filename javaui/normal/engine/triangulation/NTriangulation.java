@@ -115,6 +115,7 @@ public interface NTriangulation extends NPacket {
     public boolean shellBoundary(NTetrahedron t, boolean check,
         boolean perform);
 
+    public void makeDoubleCover();
     public boolean idealToFinite();
     public boolean idealToFinite(boolean forceDivision);
     public void barycentricSubdivision();

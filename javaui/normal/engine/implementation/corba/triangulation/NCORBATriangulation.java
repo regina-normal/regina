@@ -288,6 +288,9 @@ public class NCORBATriangulation extends NCORBAPacket
         return data.shellBoundary(((NCORBATetrahedron)t).data, check, perform);
     }
 
+    public void makeDoubleCover() {
+        data.makeDoubleCover();
+    }
     public boolean idealToFinite() {
         return idealToFinite(false);
     }

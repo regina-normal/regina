@@ -1318,6 +1318,14 @@ class NTriangulation : public NPacket, NPropertyHolder {
                 bool check = true, bool perform = true);
 
         /**
+         * Converts this triangulation into its double cover.
+         * Each orientable component will be duplicated, and each
+         * non-orientable component will be converted into its
+         * orientable double cover.
+         */
+        void makeDoubleCover();
+
+        /**
          * Converts an ideal triangulation into a finite triangulation.
          * All ideal or non-standard vertices are truncated and thus
          * converted into

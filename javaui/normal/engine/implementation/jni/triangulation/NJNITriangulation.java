@@ -164,6 +164,7 @@ public class NJNITriangulation extends NJNIPacket
     public native boolean shellBoundary(NTetrahedron t, boolean check, 
         boolean perform);
 
+    public native void makeDoubleCover();
     public boolean idealToFinite() {
         return idealToFinite(false);
     }

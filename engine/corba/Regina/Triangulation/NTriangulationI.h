@@ -125,6 +125,7 @@ class NTriangulation_i :
         virtual CORBA::Boolean shellBoundary(
             Regina::Triangulation::NTetrahedron_ptr t,
             CORBA::Boolean check, CORBA::Boolean perform);
+        virtual void makeDoubleCover();
         virtual CORBA::Boolean idealToFinite(CORBA::Boolean forceDivision);
         virtual void barycentricSubdivision();
         virtual Regina::Triangulation::NTetrahedron_ptr

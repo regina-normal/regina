@@ -10,9 +10,10 @@ Regina - A Normal Surface Theory Calculator
 
 Version 2.3.1  [ (in progress) ]
 
-    - Works with angle structures.
-    - Exports SnapPea files.
+    - Calculates vertex angle structures.
     - Rehydrates dehydrated triangulation strings.
+    - Calculates double covers.
+    - Exports SnapPea files.
     - Individual normal surfaces may be named.
     - Filenames may be specified on the command-line.
     - Text consoles have readline/editline support.
