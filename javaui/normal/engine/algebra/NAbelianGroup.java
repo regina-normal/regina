@@ -30,9 +30,10 @@ package normal.engine.algebra;
 
 import java.math.BigInteger;
 import java.util.Enumeration;
+import normal.engine.ShareableObject;
 import normal.engine.maths.NMatrixInt;
 
-public interface NAbelianGroup {
+public interface NAbelianGroup extends ShareableObject {
     public void addRank();
     public void addRank(int extraRank);
     public void addTorsionElement(BigInteger degree);
