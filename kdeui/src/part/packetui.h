@@ -110,7 +110,7 @@ class PacketHeader : public QHBox {
  * functions.
  */
 class PacketUI {
-    private:
+    protected:
         /**
          * External components
          */
@@ -198,8 +198,12 @@ class PacketUI {
          * This routine must be called whenever changes are made in the
          * interface, and must also be called at the end of the
          * implementations of commit() and refresh().
+         *
+         * This routine should generally not be overridden by
+         * subclasses.  If it is however, any reimplementations must
+         * call the parent implementation.
          */
-        void setDirty(bool newDirty);
+        virtual void setDirty(bool newDirty);
 
     private:
         /**

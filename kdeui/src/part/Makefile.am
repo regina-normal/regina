@@ -17,6 +17,7 @@ noinst_HEADERS = \
 	packetcreator.h \
 	packetfilter.h \
 	packetmanager.h \
+	packettabui.h \
 	packettreeview.h \
 	packetui.h \
 	packetwindow.h \
@@ -37,6 +38,7 @@ libreginapart_la_SOURCES = \
 	newpackets.cpp \
 	packetchooser.cpp \
 	packetmanager.cpp \
+	packettabui.cpp \
 	packettreeview.cpp \
 	packetui.cpp \
 	packetwindow.cpp \
