@@ -8,18 +8,20 @@
 
 KDE_OPTIONS=noautodist
 
-SUBDIRS = common shell part pics toolbar toolbar-main
-
+AM_CXXFLAGS = '-DREGINA_DATADIR=$(pkgdatadir)'
 INCLUDES = $(all_includes)
 
 noinst_HEADERS = \
-	reginaabout.h \
-	reginafilter.h \
 	reginaprefset.h
 
-METASOURCES = AUTO
+lib_LTLIBRARIES = libregina-kdecommon.la
 
-EXTRA_DIST = purgeconfig
+libregina_kdecommon_la_LDFLAGS = -release @PACKAGE_VERSION@ $(all_libraries)
+libregina_kdecommon_la_LIBADD = $(LIB_ENGINE)
+libregina_kdecommon_la_SOURCES = \
+	reginaprefset.cpp
+
+METASOURCES = AUTO
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/regina.pot
