@@ -19,6 +19,6 @@ SUBDIRS = \
   scripts
 
 EXTRA_DIST = CHANGES.txt HIGHLIGHTS.txt \
-  AUTHORS.txt LICENSE.txt README.txt \
+  AUTHORS.txt INSTALL.txt LICENSE.txt README.txt \
   regina regina.bat regina.conf.sample
 
