@@ -32,14 +32,14 @@
 #include "Progress/NProgress.idl"
 
 module Regina {
-	module Progress {
-		interface NProgressManager : ShareableObject {
-			boolean isStarted();
-			boolean isFinished();
+    module Progress {
+        interface NProgressManager : ShareableObject {
+            boolean isStarted();
+            boolean isFinished();
 
-			NProgress getProgress();
-		};
-	};
+            NProgress getProgress();
+        };
+    };
 };
 
 #endif

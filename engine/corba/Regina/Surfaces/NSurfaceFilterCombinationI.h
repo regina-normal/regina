@@ -32,30 +32,30 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "sfcombination.h"
-	#include "corbatools.h"
+    #include "sfcombination.h"
+    #include "corbatools.h"
 #else
-	#include "engine/surfaces/sfcombination.h"
-	#include "corba/corbatools.h"
+    #include "engine/surfaces/sfcombination.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceFilterCombinationIDL.h"
 #include "NSurfaceFilterI.h"
 
 class NSurfaceFilterCombination_i :
-		public virtual Regina::Surfaces::_sk_NSurfaceFilterCombination,
-		public NSurfaceFilter_i {
-	protected:
-		NSurfaceFilterCombination_i(::NSurfaceFilterCombination* newCppPtr) :
-				NSurfaceFilter_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NSurfaceFilterCombination,
-			NSurfaceFilterCombination_i,
-			Regina::Surfaces::NSurfaceFilterCombination_ptr)
-		
-		virtual CORBA::Boolean getUsesAnd();
-		virtual void setUsesAnd(CORBA::Boolean value);
+        public virtual Regina::Surfaces::_sk_NSurfaceFilterCombination,
+        public NSurfaceFilter_i {
+    protected:
+        NSurfaceFilterCombination_i(::NSurfaceFilterCombination* newCppPtr) :
+                NSurfaceFilter_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NSurfaceFilterCombination,
+            NSurfaceFilterCombination_i,
+            Regina::Surfaces::NSurfaceFilterCombination_ptr)
+        
+        virtual CORBA::Boolean getUsesAnd();
+        virtual void setUsesAnd(CORBA::Boolean value);
 };
 
 #endif

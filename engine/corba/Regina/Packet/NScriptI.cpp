@@ -29,54 +29,54 @@
 #include "NScriptI.h"
 
 CORBA::Long NScript_i::getNumberOfLines() {
-	return GET_ENGINE_OBJECT(NScript, this)->getNumberOfLines();
+    return GET_ENGINE_OBJECT(NScript, this)->getNumberOfLines();
 }
 char* NScript_i::getLine(CORBA::Long index) {
-	return GET_ENGINE_OBJECT(NScript, this)->getLine(index).dupe();
+    return GET_ENGINE_OBJECT(NScript, this)->getLine(index).dupe();
 }
 void NScript_i::addFirst(const char* line) {
-	GET_ENGINE_OBJECT(NScript, this)->addFirst(line);
+    GET_ENGINE_OBJECT(NScript, this)->addFirst(line);
 }
 void NScript_i::addLast(const char* line) {
-	GET_ENGINE_OBJECT(NScript, this)->addLast(line);
+    GET_ENGINE_OBJECT(NScript, this)->addLast(line);
 }
 void NScript_i::insertAtPosition(const char* line, CORBA::Long index) {
-	GET_ENGINE_OBJECT(NScript, this)->insertAtPosition(line, index);
+    GET_ENGINE_OBJECT(NScript, this)->insertAtPosition(line, index);
 }
 void NScript_i::replaceAtPosition(const char* line, CORBA::Long index) {
-	GET_ENGINE_OBJECT(NScript, this)->replaceAtPosition(line, index);
+    GET_ENGINE_OBJECT(NScript, this)->replaceAtPosition(line, index);
 }
 void NScript_i::removeLineAt(CORBA::Long index) {
-	GET_ENGINE_OBJECT(NScript, this)->removeLineAt(index);
+    GET_ENGINE_OBJECT(NScript, this)->removeLineAt(index);
 }
 void NScript_i::removeAllLines() {
-	GET_ENGINE_OBJECT(NScript, this)->removeAllLines();
+    GET_ENGINE_OBJECT(NScript, this)->removeAllLines();
 }
 CORBA::Long NScript_i::getNumberOfVariables() {
-	return GET_ENGINE_OBJECT(NScript, this)->getNumberOfVariables();
+    return GET_ENGINE_OBJECT(NScript, this)->getNumberOfVariables();
 }
 char* NScript_i::getVariableName(CORBA::Long index) {
-	return GET_ENGINE_OBJECT(NScript, this)->getVariableName(index).dupe();
+    return GET_ENGINE_OBJECT(NScript, this)->getVariableName(index).dupe();
 }
 char* NScript_i::getVariableValue_long(CORBA::Long index) {
-	return GET_ENGINE_OBJECT(NScript, this)->getVariableValue(index).dupe();
+    return GET_ENGINE_OBJECT(NScript, this)->getVariableValue(index).dupe();
 }
 char* NScript_i::getVariableValue_string(const char* name) {
-	return GET_ENGINE_OBJECT(NScript, this)->getVariableValue(name).dupe();
+    return GET_ENGINE_OBJECT(NScript, this)->getVariableValue(name).dupe();
 }
 CORBA::Long NScript_i::getVariableIndex(const char* name) {
-	return GET_ENGINE_OBJECT(NScript, this)->getVariableIndex(name);
+    return GET_ENGINE_OBJECT(NScript, this)->getVariableIndex(name);
 }
 void NScript_i::addVariable(const char* name, const char* value) {
-	GET_ENGINE_OBJECT(NScript, this)->addVariable(name, value);
+    GET_ENGINE_OBJECT(NScript, this)->addVariable(name, value);
 }
 void NScript_i::removeVariableAt(CORBA::Long index) {
-	GET_ENGINE_OBJECT(NScript, this)->removeVariableAt(index);
+    GET_ENGINE_OBJECT(NScript, this)->removeVariableAt(index);
 }
 void NScript_i::removeVariable(const char* name) {
-	GET_ENGINE_OBJECT(NScript, this)->removeVariable(name);
+    GET_ENGINE_OBJECT(NScript, this)->removeVariable(name);
 }
 void NScript_i::removeAllVariables() {
-	GET_ENGINE_OBJECT(NScript, this)->removeAllVariables();
+    GET_ENGINE_OBJECT(NScript, this)->removeAllVariables();
 }
 

@@ -85,7 +85,7 @@ public class NJNITriangulation extends NJNIPacket
 
     public native boolean isIdeal();
     public native boolean isValid();
-	public native boolean isStandard();
+    public native boolean isStandard();
     public native boolean isClosed();
     public native boolean isOrientable();
     public native boolean isConnected();

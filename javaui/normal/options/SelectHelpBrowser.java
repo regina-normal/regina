@@ -84,7 +84,7 @@ public class SelectHelpBrowser extends JDialog implements ActionListener,
      */
     public SelectHelpBrowser(Shell shell) {
         super(shell.getPrimaryFrame(), "Help Browser");
-		this.shell = shell;
+        this.shell = shell;
         init();
         pack();
         Positioner.centerOnScreen(this);
@@ -94,7 +94,7 @@ public class SelectHelpBrowser extends JDialog implements ActionListener,
      * Initialise the interface components.
      */
     private void init() {
-		NormalOptionSet options = shell.getOptions();
+        NormalOptionSet options = shell.getOptions();
 
         useJavaHelp = new JCheckBox("Use standard JavaHelp");
         commandLabel = new JLabel("Command for browsing help:");
@@ -192,7 +192,7 @@ public class SelectHelpBrowser extends JDialog implements ActionListener,
                 }
             }
 
-			NormalOptionSet options = shell.getOptions();
+            NormalOptionSet options = shell.getOptions();
             options.setBooleanOption("HelpJavaHelp",
                 useJavaHelp.isSelected());
             options.setStringOption("HelpBrowser",

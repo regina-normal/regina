@@ -32,44 +32,44 @@ import normal.engine.implementation.corba.Regina.Progress.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBAProgress extends CORBAShareableObject
-		implements normal.engine.progress.NProgress {
-	public NProgress data;
-	public static final Class CORBAClass = NProgress.class;
-	public static final Class helperClass = NProgressHelper.class;
+        implements normal.engine.progress.NProgress {
+    public NProgress data;
+    public static final Class CORBAClass = NProgress.class;
+    public static final Class helperClass = NProgressHelper.class;
 
     protected NCORBAProgress(NProgress data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBAProgress newWrapper(NProgress source) {
-		return (source == null ? null : new NCORBAProgress(source));
-	}
+    public static NCORBAProgress newWrapper(NProgress source) {
+        return (source == null ? null : new NCORBAProgress(source));
+    }
 
-	public boolean hasChanged() {
-		return data.hasChanged();
-	}
-	public boolean isFinished() {
-		return data.isFinished();
-	}
+    public boolean hasChanged() {
+        return data.hasChanged();
+    }
+    public boolean isFinished() {
+        return data.isFinished();
+    }
 
-	public boolean isCancellable() {
-		return data.isCancellable();
-	}
-	public void cancel() {
-		data.cancel();
-	}
-	public boolean isCancelled() {
-		return data.isCancelled();
-	}
+    public boolean isCancellable() {
+        return data.isCancellable();
+    }
+    public void cancel() {
+        data.cancel();
+    }
+    public boolean isCancelled() {
+        return data.isCancelled();
+    }
 
-	public String getDescription() {
-		return data.getDescription();
-	}
-	public boolean isPercent() {
-		return data.isPercent();
-	}
-	public double getPercent() {
-		return data.getPercent();
-	}
+    public String getDescription() {
+        return data.getDescription();
+    }
+    public boolean isPercent() {
+        return data.isPercent();
+    }
+    public double getPercent() {
+        return data.getPercent();
+    }
 }

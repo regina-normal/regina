@@ -33,45 +33,45 @@ import normal.engine.implementation.corba.triangulation.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBASurfaceSubset extends CORBAShareableObject
-		implements normal.engine.surfaces.NSurfaceSubset, NCORBASurfaceSet {
-	public NSurfaceSubset data;
-	public static final Class CORBAClass = NSurfaceSubset.class;
-	public static final Class helperClass = NSurfaceSubsetHelper.class;
+        implements normal.engine.surfaces.NSurfaceSubset, NCORBASurfaceSet {
+    public NSurfaceSubset data;
+    public static final Class CORBAClass = NSurfaceSubset.class;
+    public static final Class helperClass = NSurfaceSubsetHelper.class;
 
     protected NCORBASurfaceSubset(NSurfaceSubset data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBASurfaceSubset newWrapper(
-			NSurfaceSubset source) {
-		return (source == null ? null : new NCORBASurfaceSubset(source));
-	}
+    public static NCORBASurfaceSubset newWrapper(
+            NSurfaceSubset source) {
+        return (source == null ? null : new NCORBASurfaceSubset(source));
+    }
 
-	public NSurfaceSet getNSurfaceSet() {
-		return data;
-	}
+    public NSurfaceSet getNSurfaceSet() {
+        return data;
+    }
 
-	public int getFlavour() {
-		return data.getFlavour();
-	}
-	public boolean allowsAlmostNormal() {
-		return data.allowsAlmostNormal();
-	}
-	public boolean isEmbeddedOnly() {
-		return data.isEmbeddedOnly();
-	}
-	public normal.engine.triangulation.NTriangulation getTriangulation() {
-		return NCORBATriangulation.newWrapper(data.getTriangulation());
-	}
-	public long getNumberOfSurfaces() {
-		return data.getNumberOfSurfaces();
-	}
-	public normal.engine.surfaces.NNormalSurface getSurface(long index) {
-		return NCORBANormalSurface.newWrapper(data.getSurface((int)index));
-	}
+    public int getFlavour() {
+        return data.getFlavour();
+    }
+    public boolean allowsAlmostNormal() {
+        return data.allowsAlmostNormal();
+    }
+    public boolean isEmbeddedOnly() {
+        return data.isEmbeddedOnly();
+    }
+    public normal.engine.triangulation.NTriangulation getTriangulation() {
+        return NCORBATriangulation.newWrapper(data.getTriangulation());
+    }
+    public long getNumberOfSurfaces() {
+        return data.getNumberOfSurfaces();
+    }
+    public normal.engine.surfaces.NNormalSurface getSurface(long index) {
+        return NCORBANormalSurface.newWrapper(data.getSurface((int)index));
+    }
 
-	public normal.engine.ShareableObject getShareableObject() {
-		return this;
-	}
+    public normal.engine.ShareableObject getShareableObject() {
+        return this;
+    }
 }

@@ -29,9 +29,9 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nfile.h"
+    #include "nfile.h"
 #else
-	#include "engine/file/nfile.h"
+    #include "engine/file/nfile.h"
 #endif
 
 #include "EngineI.h"
@@ -40,23 +40,23 @@
 #include "NTextI.h"
 
 Regina::Packet::NContainer_ptr Engine_i::newNContainer() {
-	return NContainer_i::newWrapper(new ::NContainer());
+    return NContainer_i::newWrapper(new ::NContainer());
 }
 Regina::Packet::NScript_ptr Engine_i::newNScript() {
-	return NScript_i::newWrapper(new ::NScript());
+    return NScript_i::newWrapper(new ::NScript());
 }
 Regina::Packet::NText_ptr Engine_i::newNText_() {
-	return NText_i::newWrapper(new ::NText());
+    return NText_i::newWrapper(new ::NText());
 }
 Regina::Packet::NText_ptr Engine_i::newNText_string(const char* text) {
-	return NText_i::newWrapper(new ::NText(text));
+    return NText_i::newWrapper(new ::NText(text));
 }
 
 Regina::Packet::NPacket_ptr Engine_i::readFromFile(const char* fileName) {
-	return NPacket_i::newWrapper(::readFromFile(fileName));
+    return NPacket_i::newWrapper(::readFromFile(fileName));
 }
 CORBA::Boolean Engine_i::writeToFile(const char* fileName,
-		Regina::Packet::NPacket_ptr packet) {
-	return ::writeToFile(fileName, GET_ENGINE_OBJECT(NPacket, packet));
+        Regina::Packet::NPacket_ptr packet) {
+    return ::writeToFile(fileName, GET_ENGINE_OBJECT(NPacket, packet));
 }
 

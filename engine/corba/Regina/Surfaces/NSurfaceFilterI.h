@@ -32,29 +32,29 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nsurfacefilter.h"
-	#include "corbatools.h"
+    #include "nsurfacefilter.h"
+    #include "corbatools.h"
 #else
-	#include "engine/surfaces/nsurfacefilter.h"
-	#include "corba/corbatools.h"
+    #include "engine/surfaces/nsurfacefilter.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceFilterIDL.h"
 #include "NPacketI.h"
 
 class NSurfaceFilter_i : public virtual Regina::Surfaces::_sk_NSurfaceFilter,
-		public NPacket_i {
-	protected:
-		NSurfaceFilter_i(::NSurfaceFilter* newCppPtr) : NPacket_i(newCppPtr) {
-		}
-	public:
-		static Regina::Surfaces::NSurfaceFilter_ptr newWrapper(
-			::NSurfaceFilter* newCppPtr);
-		
-		virtual CORBA::Boolean accept(Regina::Surfaces::NNormalSurface_ptr
-			surface);
-		virtual CORBA::Long getFilterID();
-		virtual char* getFilterName();
+        public NPacket_i {
+    protected:
+        NSurfaceFilter_i(::NSurfaceFilter* newCppPtr) : NPacket_i(newCppPtr) {
+        }
+    public:
+        static Regina::Surfaces::NSurfaceFilter_ptr newWrapper(
+            ::NSurfaceFilter* newCppPtr);
+        
+        virtual CORBA::Boolean accept(Regina::Surfaces::NNormalSurface_ptr
+            surface);
+        virtual CORBA::Long getFilterID();
+        virtual char* getFilterName();
 };
 
 #endif

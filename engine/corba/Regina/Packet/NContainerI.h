@@ -32,22 +32,22 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "ncontainer.h"
+    #include "ncontainer.h"
 #else
-	#include "engine/packet/ncontainer.h"
+    #include "engine/packet/ncontainer.h"
 #endif
 
 #include "NContainerIDL.h"
 #include "NPacketI.h"
 
 class NContainer_i : public virtual Regina::Packet::_sk_NContainer,
-		public NPacket_i {
-	protected:
-		NContainer_i(::NContainer* newCppPtr) : NPacket_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NContainer, NContainer_i,
-			Regina::Packet::NContainer_ptr)
+        public NPacket_i {
+    protected:
+        NContainer_i(::NContainer* newCppPtr) : NPacket_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NContainer, NContainer_i,
+            Regina::Packet::NContainer_ptr)
 };
 
 #endif

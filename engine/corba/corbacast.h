@@ -40,9 +40,9 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "shareableobject.h"
+    #include "shareableobject.h"
 #else
-	#include "engine/shareableobject.h"
+    #include "engine/shareableobject.h"
 #endif
 
 class ::ShareableObject;

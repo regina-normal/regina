@@ -33,49 +33,49 @@ import normal.engine.implementation.corba.packet.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBAFile extends CORBAShareableObject
-		implements normal.engine.file.NFile {
-	public NFile data;
-	public static final Class CORBAClass = NFile.class;
-	public static final Class helperClass = NFileHelper.class;
+        implements normal.engine.file.NFile {
+    public NFile data;
+    public static final Class CORBAClass = NFile.class;
+    public static final Class helperClass = NFileHelper.class;
 
     protected NCORBAFile(NFile data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBAFile newWrapper(NFile source) {
-		return (source == null ? null : new NCORBAFile(source));
-	}
+    public static NCORBAFile newWrapper(NFile source) {
+        return (source == null ? null : new NCORBAFile(source));
+    }
 
-	public boolean open(String fileName, int openMode) {
-		return data.open(fileName, openMode);
-	}
-	public void close() {
-		data.close();
-	}
+    public boolean open(String fileName, int openMode) {
+        return data.open(fileName, openMode);
+    }
+    public void close() {
+        data.close();
+    }
 
-	public int getOpenMode() {
-		return data.getOpenMode();
-	}
-	public int getMajorVersion() {
-		return data.getMajorVersion();
-	}
-	public int getMinorVersion() {
-		return data.getMinorVersion();
-	}
-	public boolean versionEarlierThan(int major, int minor) {
-		return data.versionEarlierThan(major, minor);
-	}
+    public int getOpenMode() {
+        return data.getOpenMode();
+    }
+    public int getMajorVersion() {
+        return data.getMajorVersion();
+    }
+    public int getMinorVersion() {
+        return data.getMinorVersion();
+    }
+    public boolean versionEarlierThan(int major, int minor) {
+        return data.versionEarlierThan(major, minor);
+    }
 
-	public void writePacketTree(normal.engine.packet.NPacket packet) {
-		data.writePacketTree(((NCORBAPacket)packet).data);
-	}
-	public normal.engine.packet.NPacket readPacketTree() {
-		return NCORBAPacket.newWrapper(data.readPacketTree_());
-	}
-	public normal.engine.packet.NPacket readPacketTree(
-			normal.engine.packet.NPacket parent) {
-		return NCORBAPacket.newWrapper(data.readPacketTree_NPacket(
-			((NCORBAPacket)parent).data));
-	}
+    public void writePacketTree(normal.engine.packet.NPacket packet) {
+        data.writePacketTree(((NCORBAPacket)packet).data);
+    }
+    public normal.engine.packet.NPacket readPacketTree() {
+        return NCORBAPacket.newWrapper(data.readPacketTree_());
+    }
+    public normal.engine.packet.NPacket readPacketTree(
+            normal.engine.packet.NPacket parent) {
+        return NCORBAPacket.newWrapper(data.readPacketTree_NPacket(
+            ((NCORBAPacket)parent).data));
+    }
 }

@@ -29,9 +29,9 @@
 #include "NSurfaceFilterCombinationI.h"
 
 CORBA::Boolean NSurfaceFilterCombination_i::getUsesAnd() {
-	return GET_ENGINE_OBJECT(NSurfaceFilterCombination, this)->getUsesAnd();
+    return GET_ENGINE_OBJECT(NSurfaceFilterCombination, this)->getUsesAnd();
 }
 void NSurfaceFilterCombination_i::setUsesAnd(CORBA::Boolean value) {
-	GET_ENGINE_OBJECT(NSurfaceFilterCombination, this)->setUsesAnd(value);
+    GET_ENGINE_OBJECT(NSurfaceFilterCombination, this)->setUsesAnd(value);
 }
 

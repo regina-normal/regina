@@ -32,34 +32,34 @@
 #include "NMatrixIntI.h"
 
 CORBA::Long NNormalSurfaceList_i::getFlavour() {
-	return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getFlavour();
+    return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getFlavour();
 }
 CORBA::Boolean NNormalSurfaceList_i::allowsAlmostNormal() {
-	return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->allowsAlmostNormal();
+    return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->allowsAlmostNormal();
 }
 CORBA::Boolean NNormalSurfaceList_i::isEmbeddedOnly() {
-	return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->isEmbeddedOnly();
+    return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->isEmbeddedOnly();
 }
 Regina::Triangulation::NTriangulation_ptr
-		NNormalSurfaceList_i::getTriangulation() {
-	return NTriangulation_i::newWrapper(
-		GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getTriangulation());
+        NNormalSurfaceList_i::getTriangulation() {
+    return NTriangulation_i::newWrapper(
+        GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getTriangulation());
 }
 CORBA::Long NNormalSurfaceList_i::getNumberOfSurfaces() {
-	return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getNumberOfSurfaces();
+    return GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getNumberOfSurfaces();
 }
 Regina::Surfaces::NNormalSurface_ptr NNormalSurfaceList_i::getSurface(
-		CORBA::Long index) {
-	return NNormalSurface_i::newWrapper((NNormalSurface*)
-		(GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getSurface(index)));
+        CORBA::Long index) {
+    return NNormalSurface_i::newWrapper((NNormalSurface*)
+        (GET_ENGINE_OBJECT(NNormalSurfaceList, this)->getSurface(index)));
 }
 Regina::ShareableObject_ptr NNormalSurfaceList_i::getShareableObject() {
-	return _this();
+    return _this();
 }
 
 Regina::Maths::NMatrixInt_ptr
-		NNormalSurfaceList_i::recreateMatchingEquations() {
-	return NMatrixInt_i::newWrapper(GET_ENGINE_OBJECT(NNormalSurfaceList,
-		this)->recreateMatchingEquations());
+        NNormalSurfaceList_i::recreateMatchingEquations() {
+    return NMatrixInt_i::newWrapper(GET_ENGINE_OBJECT(NNormalSurfaceList,
+        this)->recreateMatchingEquations());
 }
 

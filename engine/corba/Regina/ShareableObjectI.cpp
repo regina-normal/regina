@@ -29,19 +29,19 @@
 #include "ShareableObjectI.h"
 
 CORBA::Long ShareableObject_i::getCppPtr() {
-	return CORBAPtrToLong(cppPtr);
+    return CORBAPtrToLong(cppPtr);
 }
 CORBA::Boolean ShareableObject_i::sameObject(
-		Regina::ShareableObject_ptr other) {
-	return ((! CORBA::is_nil(other)) && other->getCppPtr() == getCppPtr());
+        Regina::ShareableObject_ptr other) {
+    return ((! CORBA::is_nil(other)) && other->getCppPtr() == getCppPtr());
 }
 void ShareableObject_i::destroy() {
-	delete cppPtr;
+    delete cppPtr;
 }
 char* ShareableObject_i::toString() {
-	return cppPtr->toString().dupe();
+    return cppPtr->toString().dupe();
 }
 char* ShareableObject_i::toStringLong() {
-	return cppPtr->toStringLong().dupe();
+    return cppPtr->toStringLong().dupe();
 }
 

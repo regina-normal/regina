@@ -32,37 +32,37 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nboundarycomponent.h"
-	#include "corbatools.h"
+    #include "nboundarycomponent.h"
+    #include "corbatools.h"
 #else
-	#include "engine/triangulation/nboundarycomponent.h"
-	#include "corba/corbatools.h"
+    #include "engine/triangulation/nboundarycomponent.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"
 
 class NBoundaryComponent_i :
-		public virtual Regina::Triangulation::_sk_NBoundaryComponent,
-		public ShareableObject_i {
-	protected:
-		NBoundaryComponent_i(::NBoundaryComponent* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NBoundaryComponent, NBoundaryComponent_i,
-			Regina::Triangulation::NBoundaryComponent_ptr)
+        public virtual Regina::Triangulation::_sk_NBoundaryComponent,
+        public ShareableObject_i {
+    protected:
+        NBoundaryComponent_i(::NBoundaryComponent* newCppPtr) :
+                ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NBoundaryComponent, NBoundaryComponent_i,
+            Regina::Triangulation::NBoundaryComponent_ptr)
 
-		virtual CORBA::Long getEulerCharacteristic();
-		virtual CORBA::Boolean isIdeal();
-		virtual CORBA::Boolean isOrientable();
-		virtual CORBA::Long getNumberOfFaces();
-		virtual CORBA::Long getNumberOfEdges();
-		virtual CORBA::Long getNumberOfVertices();
-		virtual Regina::Triangulation::NFace_ptr getFace(CORBA::Long index);
-		virtual Regina::Triangulation::NEdge_ptr getEdge(CORBA::Long index);
-		virtual Regina::Triangulation::NVertex_ptr getVertex(
-			CORBA::Long index);
+        virtual CORBA::Long getEulerCharacteristic();
+        virtual CORBA::Boolean isIdeal();
+        virtual CORBA::Boolean isOrientable();
+        virtual CORBA::Long getNumberOfFaces();
+        virtual CORBA::Long getNumberOfEdges();
+        virtual CORBA::Long getNumberOfVertices();
+        virtual Regina::Triangulation::NFace_ptr getFace(CORBA::Long index);
+        virtual Regina::Triangulation::NEdge_ptr getEdge(CORBA::Long index);
+        virtual Regina::Triangulation::NVertex_ptr getVertex(
+            CORBA::Long index);
 };
 
 #endif

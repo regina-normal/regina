@@ -32,7 +32,7 @@ import normal.engine.packet.*;
 import normal.engine.algebra.*;
 
 public interface NTriangulation extends NPacket {
-	public static final int packetType = 3;
+    public static final int packetType = 3;
 
     public long getNumberOfTetrahedra();
     public NTetrahedron getTetrahedron(long index);
@@ -70,7 +70,7 @@ public interface NTriangulation extends NPacket {
 
     public boolean isIdeal();
     public boolean isValid();
-	public boolean isStandard();
+    public boolean isStandard();
     public boolean isClosed();
     public boolean isOrientable();
     public boolean isConnected();

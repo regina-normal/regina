@@ -312,41 +312,41 @@ class NBoolSet {
          */
         NBoolSet operator ~ () const;
 
-		/**
-		 * Returns the byte code representing this boolean set.
-		 * The byte code is sufficient to reconstruct the set
-		 * and is thus a useful means for passing boolean sets to and
-		 * from the engine.
-		 *
-		 * The lowest order bit of the byte code is 1 if and only if
-		 * \c true is in the set.  The next lowest order bit is 1 if and
-		 * only if \c false is in the set.  All other bits are 0.
-		 * Thus sets NBoolSet::sNone, NBoolSet::sTrue, NBoolSet::sFalse
-		 * and NBoolSet::sBoth have byte codes 0, 1, 2 and 3 respectively.
-		 *
-		 * @return the byte code representing this set.
-		 */
-		char getByteCode() const;
-		/**
-		 * Sets this boolean set to that represented by the given byte
-		 * code.  See getByteCode() for more information on byte codes.
-		 *
-		 * \pre \a code is 0, 1, 2 or 3.
-		 *
-		 * @param code the byte code that will determine the new value
-		 * of this set.
-		 */
-		void setByteCode(char code);
-		/**
-		 * Creates a boolean set from the given byte code.
-		 * See getByteCode() for more information on byte codes.
-		 *
-		 * \pre \a code is 0, 1, 2 or 3.
-		 *
-		 * @param code the byte code from which the new set will be
-		 * created.
-		 */
-		static NBoolSet fromByteCode(char code);
+        /**
+         * Returns the byte code representing this boolean set.
+         * The byte code is sufficient to reconstruct the set
+         * and is thus a useful means for passing boolean sets to and
+         * from the engine.
+         *
+         * The lowest order bit of the byte code is 1 if and only if
+         * \c true is in the set.  The next lowest order bit is 1 if and
+         * only if \c false is in the set.  All other bits are 0.
+         * Thus sets NBoolSet::sNone, NBoolSet::sTrue, NBoolSet::sFalse
+         * and NBoolSet::sBoth have byte codes 0, 1, 2 and 3 respectively.
+         *
+         * @return the byte code representing this set.
+         */
+        char getByteCode() const;
+        /**
+         * Sets this boolean set to that represented by the given byte
+         * code.  See getByteCode() for more information on byte codes.
+         *
+         * \pre \a code is 0, 1, 2 or 3.
+         *
+         * @param code the byte code that will determine the new value
+         * of this set.
+         */
+        void setByteCode(char code);
+        /**
+         * Creates a boolean set from the given byte code.
+         * See getByteCode() for more information on byte codes.
+         *
+         * \pre \a code is 0, 1, 2 or 3.
+         *
+         * @param code the byte code from which the new set will be
+         * created.
+         */
+        static NBoolSet fromByteCode(char code);
 
     friend ostream& operator << (ostream& out, const NBoolSet& set);
 };
@@ -471,13 +471,13 @@ inline NBoolSet NBoolSet::operator ~ () const {
 }
 
 inline char NBoolSet::getByteCode() const {
-	return elements;
+    return elements;
 }
 inline void NBoolSet::setByteCode(char code) {
-	elements = code;
+    elements = code;
 }
 inline NBoolSet NBoolSet::fromByteCode(char code) {
-	return NBoolSet(code & eltTrue, code & eltFalse);
+    return NBoolSet(code & eltTrue, code & eltFalse);
 }
 
 #endif

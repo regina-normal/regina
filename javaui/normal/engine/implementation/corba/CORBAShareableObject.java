@@ -54,50 +54,50 @@ import normal.engine.implementation.corba.Regina.*;
  * @see normal.engine.implementation.jni.Sentry
  */
 public class CORBAShareableObject implements normal.engine.ShareableObject {
-	/**
-	 * The CORBA client object for the underlying engine object that we are
-	 * wrapping.
-	 */
-	public ShareableObject data;
+    /**
+     * The CORBA client object for the underlying engine object that we are
+     * wrapping.
+     */
+    public ShareableObject data;
 
-	/**
-	 * The CORBA client class corresponding to this wrapper class.
-	 */
-	public static final Class CORBAClass = ShareableObject.class;
+    /**
+     * The CORBA client class corresponding to this wrapper class.
+     */
+    public static final Class CORBAClass = ShareableObject.class;
 
-	/**
-	 * The CORBA helper class corresponding to this wrapper class.
-	 */
-	public static final Class helperClass = ShareableObjectHelper.class;
+    /**
+     * The CORBA helper class corresponding to this wrapper class.
+     */
+    public static final Class helperClass = ShareableObjectHelper.class;
 
-	/**
-	 * Converts the given string to a <tt>BigInteger</tt>.
-	 * If the given string is <tt>inf</tt>, <tt>null</tt> will be
-	 * returned.  Otherwise the string will be interpreted as the
-	 * decimal representation of a large integer and the corresponding
-	 * <tt>BigInteger</tt> will be returned.
-	 *
-	 * @param value the string to convert.
-	 * @return the corresponding <tt>BigInteger</tt>.
-	 */
-	public static BigInteger stringToLarge(String value) {
-		if (value.equals("inf"))
-			return null;
-		return new BigInteger(value);
-	}
+    /**
+     * Converts the given string to a <tt>BigInteger</tt>.
+     * If the given string is <tt>inf</tt>, <tt>null</tt> will be
+     * returned.  Otherwise the string will be interpreted as the
+     * decimal representation of a large integer and the corresponding
+     * <tt>BigInteger</tt> will be returned.
+     *
+     * @param value the string to convert.
+     * @return the corresponding <tt>BigInteger</tt>.
+     */
+    public static BigInteger stringToLarge(String value) {
+        if (value.equals("inf"))
+            return null;
+        return new BigInteger(value);
+    }
 
-	/**
-	 * Creates a new wrapper for the given object.
-	 *
-	 * @param data the CORBA client object whose corresponding engine
-	 * object we are wrapping.
-	 */
-	protected CORBAShareableObject(ShareableObject data) {
-		this.data = data;
-	}
+    /**
+     * Creates a new wrapper for the given object.
+     *
+     * @param data the CORBA client object whose corresponding engine
+     * object we are wrapping.
+     */
+    protected CORBAShareableObject(ShareableObject data) {
+        this.data = data;
+    }
 
     public boolean sameObject(normal.engine.ShareableObject object) {
-		return data.sameObject(((CORBAShareableObject)object).data);
+        return data.sameObject(((CORBAShareableObject)object).data);
     }
     public boolean equals(Object obj) {
         if (obj instanceof CORBAShareableObject)
@@ -105,44 +105,44 @@ public class CORBAShareableObject implements normal.engine.ShareableObject {
         return false;
     }
     public normal.engine.ShareableObject castAs(Class cls) {
-		try {
-			// Get the helper and CORBA classes.
-			Class realHelperClass =
-				(Class)cls.getField("helperClass").get(null);
-			Class realCORBAClass =
-				(Class)cls.getField("CORBAClass").get(null);
+        try {
+            // Get the helper and CORBA classes.
+            Class realHelperClass =
+                (Class)cls.getField("helperClass").get(null);
+            Class realCORBAClass =
+                (Class)cls.getField("CORBAClass").get(null);
 
-			// Use the helper class to narrow [data].
-			Class[] narrowArgs = { org.omg.CORBA.Object.class };
-			Object[] narrowInvokeArgs = { data };
-			Object narrowed = realHelperClass.getMethod("narrow", narrowArgs).
-				invoke(null, narrowInvokeArgs);
+            // Use the helper class to narrow [data].
+            Class[] narrowArgs = { org.omg.CORBA.Object.class };
+            Object[] narrowInvokeArgs = { data };
+            Object narrowed = realHelperClass.getMethod("narrow", narrowArgs).
+                invoke(null, narrowInvokeArgs);
 
-			// Create and return a new wrapper.
-			Class[] constrArgs = { realCORBAClass };
-			Object[] constrInvokeArgs = { narrowed };
-			return (normal.engine.ShareableObject)
-				cls.getConstructor(constrArgs).newInstance(constrInvokeArgs);
-		} catch (Throwable th) {
-			th.printStackTrace();
-			return null;
-		}
+            // Create and return a new wrapper.
+            Class[] constrArgs = { realCORBAClass };
+            Object[] constrInvokeArgs = { narrowed };
+            return (normal.engine.ShareableObject)
+                cls.getConstructor(constrArgs).newInstance(constrInvokeArgs);
+        } catch (Throwable th) {
+            th.printStackTrace();
+            return null;
+        }
     }
 
     public void destroy() {
-		data.destroy();
-	}
+        data.destroy();
+    }
 
     public void writeTextShort() {
-		System.out.println(toString());
-	}
+        System.out.println(toString());
+    }
     public void writeTextLong() {
-		System.out.println(toStringLong());
-	}
+        System.out.println(toStringLong());
+    }
     public String toString() {
-		return data._toString();
-	}
+        return data._toString();
+    }
     public String toStringLong() {
-		return data.toStringLong();
-	}
+        return data.toStringLong();
+    }
 }

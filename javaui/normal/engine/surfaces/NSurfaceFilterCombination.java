@@ -29,7 +29,7 @@
 package normal.engine.surfaces;
 
 public interface NSurfaceFilterCombination extends NSurfaceFilter {
-	public static final int filterID = 2;
+    public static final int filterID = 2;
 
     public boolean getUsesAnd();
     public void setUsesAnd(boolean value);

@@ -42,7 +42,7 @@ void NTriangulation::calculateSkeleton() {
     ideal = false;
     valid = true;
     orientable = true;
-	standard = true;
+    standard = true;
     
     calculateComponents();
         // Sets components, orientable, NComponent.orientable,
@@ -536,7 +536,7 @@ void NTriangulation::calculateVertexLinks() {
             else {
                 vertex->link = NVertex::NON_STANDARD_BDRY;
                 valid = false;
-				standard = false;
+                standard = false;
             }
         } else {
             if (vertex->linkEulerCharacteristic == 2)
@@ -547,8 +547,8 @@ void NTriangulation::calculateVertexLinks() {
                         NVertex::TORUS : NVertex::KLEIN_BOTTLE);
                 else {
                     vertex->link = NVertex::NON_STANDARD_CUSP;
-					standard = false;
-				}
+                    standard = false;
+                }
 
                 ideal = true;
                 vertex->component->ideal = true;

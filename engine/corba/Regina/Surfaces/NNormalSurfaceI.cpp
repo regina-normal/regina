@@ -30,48 +30,48 @@
 #include "NTriangulationI.h"
 
 char* NNormalSurface_i::getTriangleCoord(CORBA::Long tetIndex,
-		CORBA::Long vertex) {
-	return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
-		getTriangleCoord(tetIndex, vertex));
+        CORBA::Long vertex) {
+    return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
+        getTriangleCoord(tetIndex, vertex));
 }
 char* NNormalSurface_i::getQuadCoord(CORBA::Long tetIndex,
-		CORBA::Long quadType) {
-	return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
-		getQuadCoord(tetIndex, quadType));
+        CORBA::Long quadType) {
+    return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
+        getQuadCoord(tetIndex, quadType));
 }
 char* NNormalSurface_i::getOctCoord(CORBA::Long tetIndex,
-		CORBA::Long octType) {
-	return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
-		getOctCoord(tetIndex, octType));
+        CORBA::Long octType) {
+    return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
+        getOctCoord(tetIndex, octType));
 }
 char* NNormalSurface_i::getEdgeWeight(CORBA::Long edgeIndex) {
-	return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
-		getEdgeWeight(edgeIndex));
+    return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
+        getEdgeWeight(edgeIndex));
 }
 char* NNormalSurface_i::getFaceArcs(CORBA::Long faceIndex,
-		CORBA::Long faceVertex) {
-	return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
-		getFaceArcs(faceIndex, faceVertex));
+        CORBA::Long faceVertex) {
+    return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
+        getFaceArcs(faceIndex, faceVertex));
 }
 CORBA::Long NNormalSurface_i::getNumberOfCoords() {
-	return GET_ENGINE_OBJECT(NNormalSurface, this)->getNumberOfCoords();
+    return GET_ENGINE_OBJECT(NNormalSurface, this)->getNumberOfCoords();
 }
 Regina::Triangulation::NTriangulation_ptr
-		NNormalSurface_i::getTriangulation() {
-	return NTriangulation_i::newWrapper(
-		GET_ENGINE_OBJECT(NNormalSurface, this)->getTriangulation());
+        NNormalSurface_i::getTriangulation() {
+    return NTriangulation_i::newWrapper(
+        GET_ENGINE_OBJECT(NNormalSurface, this)->getTriangulation());
 }
 CORBA::Boolean NNormalSurface_i::isCompact() {
-	return GET_ENGINE_OBJECT(NNormalSurface, this)->isCompact();
+    return GET_ENGINE_OBJECT(NNormalSurface, this)->isCompact();
 }
 char* NNormalSurface_i::getEulerCharacteristic() {
-	return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
-		getEulerCharacteristic());
+    return stringFromLarge(GET_ENGINE_OBJECT(NNormalSurface, this)->
+        getEulerCharacteristic());
 }
 CORBA::Long NNormalSurface_i::isOrientable() {
-	return GET_ENGINE_OBJECT(NNormalSurface, this)->isOrientable();
+    return GET_ENGINE_OBJECT(NNormalSurface, this)->isOrientable();
 }
 CORBA::Boolean NNormalSurface_i::hasRealBoundary() {
-	return GET_ENGINE_OBJECT(NNormalSurface, this)->hasRealBoundary();
+    return GET_ENGINE_OBJECT(NNormalSurface, this)->hasRealBoundary();
 }
 

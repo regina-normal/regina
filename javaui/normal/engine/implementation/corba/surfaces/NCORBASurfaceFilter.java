@@ -32,38 +32,38 @@ import normal.engine.implementation.corba.Regina.Surfaces.*;
 import normal.engine.implementation.corba.packet.*;
 
 public class NCORBASurfaceFilter extends NCORBAPacket
-		implements normal.engine.surfaces.NSurfaceFilter {
-	public NSurfaceFilter data;
-	public static final Class CORBAClass = NSurfaceFilter.class;
-	public static final Class helperClass = NSurfaceFilterHelper.class;
+        implements normal.engine.surfaces.NSurfaceFilter {
+    public NSurfaceFilter data;
+    public static final Class CORBAClass = NSurfaceFilter.class;
+    public static final Class helperClass = NSurfaceFilterHelper.class;
 
     protected NCORBASurfaceFilter(NSurfaceFilter data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBASurfaceFilter newWrapper(NSurfaceFilter source) {
-		if (source == null)
-			return null;
-		switch (source.getFilterID()) {
-			case normal.engine.surfaces.NSurfaceFilterCombination.filterID:
-				return NCORBASurfaceFilterCombination.newWrapper(
-					NSurfaceFilterCombinationHelper.narrow(source));
-			case normal.engine.surfaces.NSurfaceFilterProperties.filterID:
-				return NCORBASurfaceFilterProperties.newWrapper(
-					NSurfaceFilterPropertiesHelper.narrow(source));
-		}
-		return new NCORBASurfaceFilter(source);
-	}
+    public static NCORBASurfaceFilter newWrapper(NSurfaceFilter source) {
+        if (source == null)
+            return null;
+        switch (source.getFilterID()) {
+            case normal.engine.surfaces.NSurfaceFilterCombination.filterID:
+                return NCORBASurfaceFilterCombination.newWrapper(
+                    NSurfaceFilterCombinationHelper.narrow(source));
+            case normal.engine.surfaces.NSurfaceFilterProperties.filterID:
+                return NCORBASurfaceFilterProperties.newWrapper(
+                    NSurfaceFilterPropertiesHelper.narrow(source));
+        }
+        return new NCORBASurfaceFilter(source);
+    }
 
-	public boolean accept(normal.engine.surfaces.NNormalSurface surface) {
-		return data.accept(((NCORBANormalSurface)surface).data);
-	}
+    public boolean accept(normal.engine.surfaces.NNormalSurface surface) {
+        return data.accept(((NCORBANormalSurface)surface).data);
+    }
 
-	public int getFilterID() {
-		return data.getFilterID();
-	}
-	public String getFilterName() {
-		return data.getFilterName();
-	}
+    public int getFilterID() {
+        return data.getFilterID();
+    }
+    public String getFilterName() {
+        return data.getFilterName();
+    }
 }

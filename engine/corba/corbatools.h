@@ -60,7 +60,7 @@
  * <tt>(<i>cpp_class</i>*)</tt>.
  */
 #define GET_ENGINE_OBJECT(cpp_class, corba_object) \
-	((::cpp_class*)CORBALongToPtr((corba_object)->getCppPtr()))
+    ((::cpp_class*)CORBALongToPtr((corba_object)->getCppPtr()))
 
 /**
  * \hideinitializer
@@ -88,13 +88,13 @@
  * instance, <tt>Regina::File::NFile_ptr</tt>).
  */
 #define STANDARD_NEW_WRAPPER(engine_class, wrapper_class, ptr_class) \
-	static ptr_class newWrapper(::engine_class* newCppPtr) { \
-		if (newCppPtr) \
-			return (new wrapper_class(newCppPtr))->_this(); \
-		else \
-			return _nil(); \
-	}
-		
+    static ptr_class newWrapper(::engine_class* newCppPtr) { \
+        if (newCppPtr) \
+            return (new wrapper_class(newCppPtr))->_this(); \
+        else \
+            return _nil(); \
+    }
+        
 /**
  * Converts the given string to a C++ NLargeInteger.
  *
@@ -104,9 +104,9 @@
  * @return the corresponding C++ NLargeInteger.
  */
 #ifdef __DOXYGEN
-	NLargeInteger stringToLarge(const char* value);
+    NLargeInteger stringToLarge(const char* value);
 #else
-	#define stringToLarge(value) (::NLargeInteger(value))
+    #define stringToLarge(value) (::NLargeInteger(value))
 #endif
 /**
  * Converts the given C++ NLargeInteger to a string.
@@ -119,9 +119,9 @@
  * of this string is the responsibility of the caller of this routine.
  */
 #ifdef __DOXYGEN
-	char* stringFromLarge(const NLargeInteger& value);
+    char* stringFromLarge(const NLargeInteger& value);
 #else
-	#define stringFromLarge(value) ((value).stringValue())
+    #define stringFromLarge(value) ((value).stringValue())
 #endif
         
 #endif

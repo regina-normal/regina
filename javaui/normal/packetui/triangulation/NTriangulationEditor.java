@@ -51,7 +51,7 @@ public class NTriangulationEditor extends PacketTabbedEditor {
      * Create a new interface to work with a given packet.
      *
      * @param packet the packet to be associated with this interface.
-	 * @param shell the shell representing the entire program.
+     * @param shell the shell representing the entire program.
      * @param editor <tt>true</tt> if this interface is to be an
      * editor, or <tt>false</tt> if it is to be a viewer.
      */

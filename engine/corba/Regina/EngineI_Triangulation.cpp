@@ -29,9 +29,9 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nsnappea.h"
+    #include "nsnappea.h"
 #else
-	#include "engine/imports/nsnappea.h"
+    #include "engine/imports/nsnappea.h"
 #endif
 
 #include "EngineI.h"
@@ -39,24 +39,24 @@
 #include "NTriangulationI.h"
 
 Regina::Triangulation::NTetrahedron_ptr Engine_i::newNTetrahedron_() {
-	return NTetrahedron_i::newWrapper(new ::NTetrahedron());
+    return NTetrahedron_i::newWrapper(new ::NTetrahedron());
 }
 Regina::Triangulation::NTetrahedron_ptr Engine_i::newNTetrahedron_string(
-		const char* desc) {
-	return NTetrahedron_i::newWrapper(new ::NTetrahedron(desc));
+        const char* desc) {
+    return NTetrahedron_i::newWrapper(new ::NTetrahedron(desc));
 }
 Regina::Triangulation::NTriangulation_ptr Engine_i::newNTriangulation_() {
-	return NTriangulation_i::newWrapper(new ::NTriangulation());
+    return NTriangulation_i::newWrapper(new ::NTriangulation());
 }
 Regina::Triangulation::NTriangulation_ptr
-		Engine_i::newNTriangulation_NTriangulation(
-		Regina::Triangulation::NTriangulation_ptr cloneMe) {
-	return NTriangulation_i::newWrapper(new ::NTriangulation(
-		*GET_ENGINE_OBJECT(NTriangulation, cloneMe)));
+        Engine_i::newNTriangulation_NTriangulation(
+        Regina::Triangulation::NTriangulation_ptr cloneMe) {
+    return NTriangulation_i::newWrapper(new ::NTriangulation(
+        *GET_ENGINE_OBJECT(NTriangulation, cloneMe)));
 }
 
 Regina::Triangulation::NTriangulation_ptr Engine_i::readSnapPea(
-		const char* fileName) {
-	return NTriangulation_i::newWrapper(::readSnapPea(fileName));
+        const char* fileName) {
+    return NTriangulation_i::newWrapper(::readSnapPea(fileName));
 }
 

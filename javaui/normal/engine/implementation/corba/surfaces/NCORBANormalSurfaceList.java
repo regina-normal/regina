@@ -35,49 +35,49 @@ import normal.engine.implementation.corba.triangulation.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBANormalSurfaceList extends NCORBAPacket implements
-		normal.engine.surfaces.NNormalSurfaceList, NCORBASurfaceSet {
-	public NNormalSurfaceList data;
-	public static final Class CORBAClass = NNormalSurfaceList.class;
-	public static final Class helperClass = NNormalSurfaceListHelper.class;
+        normal.engine.surfaces.NNormalSurfaceList, NCORBASurfaceSet {
+    public NNormalSurfaceList data;
+    public static final Class CORBAClass = NNormalSurfaceList.class;
+    public static final Class helperClass = NNormalSurfaceListHelper.class;
 
     protected NCORBANormalSurfaceList(NNormalSurfaceList data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBANormalSurfaceList newWrapper(
-			NNormalSurfaceList source) {
-		return (source == null ? null : new NCORBANormalSurfaceList(source));
-	}
+    public static NCORBANormalSurfaceList newWrapper(
+            NNormalSurfaceList source) {
+        return (source == null ? null : new NCORBANormalSurfaceList(source));
+    }
 
-	public NSurfaceSet getNSurfaceSet() {
-		return data;
-	}
+    public NSurfaceSet getNSurfaceSet() {
+        return data;
+    }
 
-	public int getFlavour() {
-		return data.getFlavour();
-	}
-	public boolean allowsAlmostNormal() {
-		return data.allowsAlmostNormal();
-	}
-	public boolean isEmbeddedOnly() {
-		return data.isEmbeddedOnly();
-	}
-	public normal.engine.triangulation.NTriangulation getTriangulation() {
-		return NCORBATriangulation.newWrapper(data.getTriangulation());
-	}
-	public long getNumberOfSurfaces() {
-		return data.getNumberOfSurfaces();
-	}
-	public normal.engine.surfaces.NNormalSurface getSurface(long index) {
-		return NCORBANormalSurface.newWrapper(data.getSurface((int)index));
-	}
+    public int getFlavour() {
+        return data.getFlavour();
+    }
+    public boolean allowsAlmostNormal() {
+        return data.allowsAlmostNormal();
+    }
+    public boolean isEmbeddedOnly() {
+        return data.isEmbeddedOnly();
+    }
+    public normal.engine.triangulation.NTriangulation getTriangulation() {
+        return NCORBATriangulation.newWrapper(data.getTriangulation());
+    }
+    public long getNumberOfSurfaces() {
+        return data.getNumberOfSurfaces();
+    }
+    public normal.engine.surfaces.NNormalSurface getSurface(long index) {
+        return NCORBANormalSurface.newWrapper(data.getSurface((int)index));
+    }
 
-	public normal.engine.ShareableObject getShareableObject() {
-		return this;
-	}
+    public normal.engine.ShareableObject getShareableObject() {
+        return this;
+    }
 
-	public normal.engine.maths.NMatrixInt recreateMatchingEquations() {
-		return NCORBAMatrixInt.newWrapper(data.recreateMatchingEquations());
-	}
+    public normal.engine.maths.NMatrixInt recreateMatchingEquations() {
+        return NCORBAMatrixInt.newWrapper(data.recreateMatchingEquations());
+    }
 }

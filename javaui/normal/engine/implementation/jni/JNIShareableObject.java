@@ -86,9 +86,9 @@ public abstract class JNIShareableObject implements ShareableObject {
         Object[] args = { Sentry.instance };
         try {
             Constructor c = cls.getConstructor(parameters);
-			JNIShareableObject ans = (JNIShareableObject)c.newInstance(args);
-			ans.cppPtr = this.cppPtr;
-			return ans;
+            JNIShareableObject ans = (JNIShareableObject)c.newInstance(args);
+            ans.cppPtr = this.cppPtr;
+            return ans;
         } catch (Throwable th) {
             th.printStackTrace();
             return null;

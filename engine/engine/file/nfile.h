@@ -85,26 +85,26 @@ class NFile : public ShareableObject {
         /**
          * Specifies the current state of the file.
          */
-		enum mode {
+        enum mode {
             CLOSED = 0,
                 /**< The file is closed. */
             READ = 1,
                 /**< The file is open for reading. */
             WRITE = 2
                 /**< The file is open for writing. */
-		};
-	
-	private:
-		/**
-		 * Provides mode flags to pass to the system file opening
-		 * routines.
-		 */
+        };
+    
+    private:
+        /**
+         * Provides mode flags to pass to the system file opening
+         * routines.
+         */
         enum systemMode {
-        	#ifdef __NO_IOS_NOCREATE
-           	MODE_READ = ios::in,
-        	#else
+            #ifdef __NO_IOS_NOCREATE
+               MODE_READ = ios::in,
+            #else
             MODE_READ = ios::in | ios::nocreate,
-        	#endif
+            #endif
                 /**< Open the file for reading. */
             MODE_WRITE = ios::out | ios::trunc
                 /**< Open the file for writing. */

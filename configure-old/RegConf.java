@@ -65,14 +65,14 @@ public class RegConf extends JDialog implements ActionListener {
      * The name of the general Java UI field.
      */
     private static final String javaUIName = "regina.jar";
-	/**
-	 * The name of the JNI Java UI field.
-	 */
-	private static final String javaJNIName = "regina-jni.jar";
-	/**
-	 * The name of the CORBA Java UI field.
-	 */
-	private static final String javaCORBAName = "regina-corba.jar";
+    /**
+     * The name of the JNI Java UI field.
+     */
+    private static final String javaJNIName = "regina-jni.jar";
+    /**
+     * The name of the CORBA Java UI field.
+     */
+    private static final String javaCORBAName = "regina-corba.jar";
     /**
      * The name of the documentation jar field.
      */
@@ -104,39 +104,39 @@ public class RegConf extends JDialog implements ActionListener {
      */
     private static final String extraclassesName = "Extra classes";
 
-	/**
-	 * The name of the interface field.
-	 */
-	private static final String interfaceStyleName = "Interface";
-	/**
-	 * The name of the engine style field.
-	 */
-	private static final String engineStyleName = "Engine";
-	/**
-	 * The name of the JNI engine name field.
-	 */
-	private static final String JNIEngineName = "JNI engine name";
-	/**
-	 * The name of the CORBA engine host field.
-	 */
-	private static final String CORBAHostName = "CORBA engine host";
-	/**
-	 * The name of the CORBA engine port field.
-	 */
-	private static final String CORBAPortName = "CORBA engine port";
+    /**
+     * The name of the interface field.
+     */
+    private static final String interfaceStyleName = "Interface";
+    /**
+     * The name of the engine style field.
+     */
+    private static final String engineStyleName = "Engine";
+    /**
+     * The name of the JNI engine name field.
+     */
+    private static final String JNIEngineName = "JNI engine name";
+    /**
+     * The name of the CORBA engine host field.
+     */
+    private static final String CORBAHostName = "CORBA engine host";
+    /**
+     * The name of the CORBA engine port field.
+     */
+    private static final String CORBAPortName = "CORBA engine port";
 
     /**
      * The general Java UI field.
      */
     private JTextField javaUI;
-	/**
-	 * The JNI Java UI field.
-	 */
-	private JTextField javaJNI;
-	/**
-	 * The CORBA Java UI field.
-	 */
-	private JTextField javaCORBA;
+    /**
+     * The JNI Java UI field.
+     */
+    private JTextField javaJNI;
+    /**
+     * The CORBA Java UI field.
+     */
+    private JTextField javaCORBA;
     /**
      * The documentation jar field.
      */
@@ -168,47 +168,47 @@ public class RegConf extends JDialog implements ActionListener {
      */
     private JTextField extraclasses;
 
-	/**
-	 * The interface field.
-	 */
-	private JComboBox interfaceStyle;
-	/**
-	 * The engine style field.
-	 */
-	private JComboBox engineStyle;
-	/**
-	 * The JNI engine name field.
-	 */
-	private JTextField JNIEngine;
-	/**
-	 * The CORBA engine host field.
-	 */
-	private JTextField CORBAHost;
-	/**
-	 * The CORBA engine port field.
-	 */
-	private JTextField CORBAPort;
+    /**
+     * The interface field.
+     */
+    private JComboBox interfaceStyle;
+    /**
+     * The engine style field.
+     */
+    private JComboBox engineStyle;
+    /**
+     * The JNI engine name field.
+     */
+    private JTextField JNIEngine;
+    /**
+     * The CORBA engine host field.
+     */
+    private JTextField CORBAHost;
+    /**
+     * The CORBA engine port field.
+     */
+    private JTextField CORBAPort;
 
-	/**
-	 * Are we explicitly specifying the interface field?
-	 */
-	private JCheckBox interfaceStyleUse;
-	/**
-	 * Are we explicitly specifying the engine style field?
-	 */
-	private JCheckBox engineStyleUse;
-	/**
-	 * Are we explicitly specifying the JNI engine name field?
-	 */
-	private JCheckBox JNIEngineUse;
-	/**
-	 * Are we explicitly specifying the CORBA engine host field?
-	 */
-	private JCheckBox CORBAHostUse;
-	/**
-	 * Are we explicitly specifying the CORBA engine port field?
-	 */
-	private JCheckBox CORBAPortUse;
+    /**
+     * Are we explicitly specifying the interface field?
+     */
+    private JCheckBox interfaceStyleUse;
+    /**
+     * Are we explicitly specifying the engine style field?
+     */
+    private JCheckBox engineStyleUse;
+    /**
+     * Are we explicitly specifying the JNI engine name field?
+     */
+    private JCheckBox JNIEngineUse;
+    /**
+     * Are we explicitly specifying the CORBA engine host field?
+     */
+    private JCheckBox CORBAHostUse;
+    /**
+     * Are we explicitly specifying the CORBA engine port field?
+     */
+    private JCheckBox CORBAPortUse;
 
     /**
      * The last directory used for browsing through files.
@@ -360,10 +360,10 @@ public class RegConf extends JDialog implements ActionListener {
         try {
             javaUI = new JTextField(options.getProperty("JavaUI",
                 new File("bin", "regina.jar").getCanonicalPath()), 25);
-			javaJNI = new JTextField(options.getProperty("JavaJNI",
-				new File("bin", "regina-jni.jar").getCanonicalPath()), 25);
-			javaCORBA = new JTextField(options.getProperty("JavaCORBA",
-				new File("bin", "regina-corba.jar").getCanonicalPath()), 25);
+            javaJNI = new JTextField(options.getProperty("JavaJNI",
+                new File("bin", "regina-jni.jar").getCanonicalPath()), 25);
+            javaCORBA = new JTextField(options.getProperty("JavaCORBA",
+                new File("bin", "regina-corba.jar").getCanonicalPath()), 25);
             docjar = new JTextField(options.getProperty("DocJar",
                 new File("bin", "regina-docs.jar").getCanonicalPath()), 25);
             java = new JTextField(options.getProperty("Java", "java"), 25);
@@ -382,15 +382,15 @@ public class RegConf extends JDialog implements ActionListener {
         uiPane.add(new HelpButton(
             "This is the jar containing the binary distribution",
             "of the Java UI component that interacts with the",
-			"calculation engine as an external library using JNI."), cHelp);
+            "calculation engine as an external library using JNI."), cHelp);
         uiPane.add(new JLabel(javaCORBAName + ":"), cLabel);
         uiPane.add(javaCORBA, cField);
         uiPane.add(new BrowseButton(javaCORBA, "regina-corba.jar"), cButton);
         uiPane.add(new HelpButton(
             "This is the jar containing the binary distribution",
             "of the Java UI component that interacts with the",
-			"calculation engine as an external (and possibly",
-			"remote) server application using CORBA."), cHelp);
+            "calculation engine as an external (and possibly",
+            "remote) server application using CORBA."), cHelp);
         uiPane.add(new JLabel(docjarName + ":"), cLabel);
         uiPane.add(docjar, cField);
         uiPane.add(new BrowseButton(docjar, "regina-docs.jar"), cButton);
@@ -404,21 +404,21 @@ public class RegConf extends JDialog implements ActionListener {
             "This is the command typed at the console",
             "to run a Java application."), cHelp);
 
-		// Set up the engine pane.
-		JPanel enginePane = new JPanel();
-		enginePane.setLayout(new GridBagLayout());
-		try {
+        // Set up the engine pane.
+        JPanel enginePane = new JPanel();
+        enginePane.setLayout(new GridBagLayout());
+        try {
             JNIDir = new JTextField(options.getProperty("JNIDir",
                 new File("bin").getCanonicalPath()), 25);
-		} catch (IOException exc) {
-			fileSystemError();
-		}
+        } catch (IOException exc) {
+            fileSystemError();
+        }
         enginePane.add(new JLabel(JNIDirName + ":"), cLabel);
         enginePane.add(JNIDir, cField);
         enginePane.add(new BrowseButton(JNIDir, true), cButton);
         enginePane.add(new HelpButton(
-			"(Only for accessing the calculation engine as a",
-			"shared library from the Java UI using JNI:)",
+            "(Only for accessing the calculation engine as a",
+            "shared library from the Java UI using JNI:)",
             "This is the directory housing the library that",
             "contains the Regina calculation engine."), cHelp);
 
@@ -459,82 +459,82 @@ public class RegConf extends JDialog implements ActionListener {
             "on linux/unix systems and a semicolon on windows systems).",
             "Typically nothing will be required here."), cHelp);
 
-		// Set up the options pane.
-		JPanel optPane = new JPanel();
-		optPane.setLayout(new GridBagLayout());
+        // Set up the options pane.
+        JPanel optPane = new JPanel();
+        optPane.setLayout(new GridBagLayout());
 
-		String interfaceStyleOpt = options.getProperty("Interface");
-		String engineStyleOpt = options.getProperty("Engine");
-		String JNIEngineOpt = options.getProperty("JNIEngine");
-		String CORBAHostOpt = options.getProperty("CORBAHost");
-		String CORBAPortOpt = options.getProperty("CORBAPort");
+        String interfaceStyleOpt = options.getProperty("Interface");
+        String engineStyleOpt = options.getProperty("Engine");
+        String JNIEngineOpt = options.getProperty("JNIEngine");
+        String CORBAHostOpt = options.getProperty("CORBAHost");
+        String CORBAPortOpt = options.getProperty("CORBAPort");
 
-		String[] interfaceOptions = { "Full GUI", "Graphical console only",
-			"Text-based console only" };
-		interfaceStyle = new JComboBox(interfaceOptions);
-		if (interfaceStyleOpt == null)
-			interfaceStyle.setSelectedIndex(0);
-		else if (interfaceStyleOpt.equals("console"))
-			interfaceStyle.setSelectedIndex(1);
-		else if (interfaceStyleOpt.equals("text"))
-			interfaceStyle.setSelectedIndex(2);
-		else
-			interfaceStyle.setSelectedIndex(0);
-		String[] engineOptions = { "JNI (shared library)",
-			"CORBA (server application)" };
-		engineStyle = new JComboBox(engineOptions);
-		if (engineStyleOpt == null)
-			engineStyle.setSelectedIndex(0);
-		else if (engineStyleOpt.equals("corba"))
-			engineStyle.setSelectedIndex(1);
-		else
-			engineStyle.setSelectedIndex(0);
-		JNIEngine = new JTextField(JNIEngineOpt == null ?
-			"regina-engine-jni" : JNIEngineOpt, 25);
-		CORBAHost = new JTextField(CORBAHostOpt == null ?
-			"localhost" : CORBAHostOpt, 25);
-		CORBAPort = new JTextField(CORBAPortOpt == null ?
-			"8088" : CORBAPortOpt, 25);
+        String[] interfaceOptions = { "Full GUI", "Graphical console only",
+            "Text-based console only" };
+        interfaceStyle = new JComboBox(interfaceOptions);
+        if (interfaceStyleOpt == null)
+            interfaceStyle.setSelectedIndex(0);
+        else if (interfaceStyleOpt.equals("console"))
+            interfaceStyle.setSelectedIndex(1);
+        else if (interfaceStyleOpt.equals("text"))
+            interfaceStyle.setSelectedIndex(2);
+        else
+            interfaceStyle.setSelectedIndex(0);
+        String[] engineOptions = { "JNI (shared library)",
+            "CORBA (server application)" };
+        engineStyle = new JComboBox(engineOptions);
+        if (engineStyleOpt == null)
+            engineStyle.setSelectedIndex(0);
+        else if (engineStyleOpt.equals("corba"))
+            engineStyle.setSelectedIndex(1);
+        else
+            engineStyle.setSelectedIndex(0);
+        JNIEngine = new JTextField(JNIEngineOpt == null ?
+            "regina-engine-jni" : JNIEngineOpt, 25);
+        CORBAHost = new JTextField(CORBAHostOpt == null ?
+            "localhost" : CORBAHostOpt, 25);
+        CORBAPort = new JTextField(CORBAPortOpt == null ?
+            "8088" : CORBAPortOpt, 25);
 
-		optPane.add(interfaceStyleUse = new UseBox(interfaceStyleName + ":",
-			interfaceStyle, interfaceStyleOpt != null), cLabel);
-		optPane.add(interfaceStyle, cField);
-		optPane.add(new HelpButton(
-			"This specifies which style of user interface to",
-			"use when running Regina.  The full GUI is the",
-			"standard interface.  The console interfaces offer",
-			"direct access to JPython scripting without running",
-			"the full GUI."), cButton);
-		optPane.add(engineStyleUse = new UseBox(engineStyleName + ":",
-			engineStyle, engineStyleOpt != null), cLabel);
-		optPane.add(engineStyle, cField);
-		optPane.add(new HelpButton(
-			"This specifies how to access the calculation engine.",
-			"JNI accesses the engine as a shared library.",
-			"CORBA accesses the engine as an external server",
-			"application, possibly running on a different machine."), cButton);
-		optPane.add(JNIEngineUse = new UseBox(JNIEngineName + ":",
-			JNIEngine, JNIEngineOpt != null), cLabel);
-		optPane.add(JNIEngine, cField);
-		optPane.add(new HelpButton(
-			"(Only for JNI engine access:)",
-			"This is the platform-independent name of the JNI",
-			"calculation engine library.  See `Program Options'",
-			"in the Regina documentation for further details."), cButton);
-		optPane.add(CORBAHostUse = new UseBox(CORBAHostName + ":",
-			CORBAHost, CORBAHostOpt != null), cLabel);
-		optPane.add(CORBAHost, cField);
-		optPane.add(new HelpButton(
-			"(Only for CORBA engine access:)",
-			"This is the host on which the CORBA name service",
-			"is running."), cButton);
-		optPane.add(CORBAPortUse = new UseBox(CORBAPortName + ":",
-			CORBAPort, CORBAPortOpt != null), cLabel);
-		optPane.add(CORBAPort, cField);
-		optPane.add(new HelpButton(
-			"(Only for CORBA engine access:)",
-			"This is the port on which the CORBA name service",
-			"is running."), cButton);
+        optPane.add(interfaceStyleUse = new UseBox(interfaceStyleName + ":",
+            interfaceStyle, interfaceStyleOpt != null), cLabel);
+        optPane.add(interfaceStyle, cField);
+        optPane.add(new HelpButton(
+            "This specifies which style of user interface to",
+            "use when running Regina.  The full GUI is the",
+            "standard interface.  The console interfaces offer",
+            "direct access to JPython scripting without running",
+            "the full GUI."), cButton);
+        optPane.add(engineStyleUse = new UseBox(engineStyleName + ":",
+            engineStyle, engineStyleOpt != null), cLabel);
+        optPane.add(engineStyle, cField);
+        optPane.add(new HelpButton(
+            "This specifies how to access the calculation engine.",
+            "JNI accesses the engine as a shared library.",
+            "CORBA accesses the engine as an external server",
+            "application, possibly running on a different machine."), cButton);
+        optPane.add(JNIEngineUse = new UseBox(JNIEngineName + ":",
+            JNIEngine, JNIEngineOpt != null), cLabel);
+        optPane.add(JNIEngine, cField);
+        optPane.add(new HelpButton(
+            "(Only for JNI engine access:)",
+            "This is the platform-independent name of the JNI",
+            "calculation engine library.  See `Program Options'",
+            "in the Regina documentation for further details."), cButton);
+        optPane.add(CORBAHostUse = new UseBox(CORBAHostName + ":",
+            CORBAHost, CORBAHostOpt != null), cLabel);
+        optPane.add(CORBAHost, cField);
+        optPane.add(new HelpButton(
+            "(Only for CORBA engine access:)",
+            "This is the host on which the CORBA name service",
+            "is running."), cButton);
+        optPane.add(CORBAPortUse = new UseBox(CORBAPortName + ":",
+            CORBAPort, CORBAPortOpt != null), cLabel);
+        optPane.add(CORBAPort, cField);
+        optPane.add(new HelpButton(
+            "(Only for CORBA engine access:)",
+            "This is the port on which the CORBA name service",
+            "is running."), cButton);
 
         // Set up the button pane.
         JPanel buttonPane = new JPanel();
@@ -548,9 +548,9 @@ public class RegConf extends JDialog implements ActionListener {
         getContentPane().setLayout(new BorderLayout());
         JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
         tabs.add("Interface", uiPane);
-		tabs.add("Engine", enginePane);
+        tabs.add("Engine", enginePane);
         tabs.add("Libraries", libPane);
-		tabs.add("Options", optPane);
+        tabs.add("Options", optPane);
         getContentPane().add(tabs, BorderLayout.CENTER);
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
@@ -583,31 +583,31 @@ public class RegConf extends JDialog implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         if (isEmpty(javaUIName, javaUI) || // Interface
-				badFile(javaUIName, javaUI) ||
+                badFile(javaUIName, javaUI) ||
                 isEmpty(javaName, java) ||
-				isEmpty(btoolsName, btools) || // Libraries
+                isEmpty(btoolsName, btools) || // Libraries
                 badFile(btoolsName, btools) ||
-				badToken(CORBAHostName, CORBAHost) || // Options
-				badPositiveInteger(CORBAPortName, CORBAPort))
+                badToken(CORBAHostName, CORBAHost) || // Options
+                badPositiveInteger(CORBAPortName, CORBAPort))
             return;
 
-		// Interface
-		if (! checkUnavailableFile(javaJNIName,
-				"access to the engine using JNI", javaJNI))
-			return;
-		if (! checkUnavailableFile(javaCORBAName,
-				"access to the engine using CORBA", javaCORBA))
-			return;
+        // Interface
+        if (! checkUnavailableFile(javaJNIName,
+                "access to the engine using JNI", javaJNI))
+            return;
+        if (! checkUnavailableFile(javaCORBAName,
+                "access to the engine using CORBA", javaCORBA))
+            return;
         if (! checkUnavailableFile(docjarName,
                 "the internal documentation viewer", docjar))
             return;
 
-		// Engine
-		if (! checkUnavailableDir(JNIDirName,
-				"access to the engine using JNI", JNIDir))
-			return;
+        // Engine
+        if (! checkUnavailableDir(JNIDirName,
+                "access to the engine using JNI", JNIDir))
+            return;
 
-		// Libraries
+        // Libraries
         if (! checkUnavailableFile(jpythonName,
                 "JPython scripting", jpython))
             return;
@@ -615,16 +615,16 @@ public class RegConf extends JDialog implements ActionListener {
                 "the internal help browser", javahelp))
             return;
 
-		// Options
-		if (JNIEngineUse.isSelected())
-			if (isEmpty(JNIEngineName, JNIEngine))
-				return;
-		if (CORBAHostUse.isSelected())
-			if (isEmpty(CORBAHostName, CORBAHost))
-				return;
-		if (CORBAPortUse.isSelected())
-			if (isEmpty(CORBAPortName, CORBAPort))
-				return;
+        // Options
+        if (JNIEngineUse.isSelected())
+            if (isEmpty(JNIEngineName, JNIEngine))
+                return;
+        if (CORBAHostUse.isSelected())
+            if (isEmpty(CORBAHostName, CORBAHost))
+                return;
+        if (CORBAPortUse.isSelected())
+            if (isEmpty(CORBAPortName, CORBAPort))
+                return;
 
         options.setProperty("JavaUI", javaUI.getText().trim());
         options.setProperty("JavaJNI", javaJNI.getText().trim());
@@ -639,33 +639,33 @@ public class RegConf extends JDialog implements ActionListener {
         options.setProperty("JavaHelp", javahelp.getText().trim());
         options.setProperty("ExtraClasses", extraclasses.getText().trim());
 
-		if (interfaceStyleUse.isSelected())
-			switch (interfaceStyle.getSelectedIndex()) {
-				case 1: options.setProperty("Interface", "console"); break;
-				case 2: options.setProperty("Interface", "text"); break;
-				default: options.setProperty("Interface", "gui"); break;
-			}
-		else
-			options.remove("Interface");
-		if (engineStyleUse.isSelected())
-			switch (engineStyle.getSelectedIndex()) {
-				case 1: options.setProperty("Engine", "corba"); break;
-				default: options.setProperty("Engine", "jni"); break;
-			}
-		else
-			options.remove("Engine");
-		if (JNIEngineUse.isSelected())
-			options.setProperty("JNIEngine", JNIEngine.getText().trim());
-		else
-			options.remove("JNIEngine");
-		if (CORBAHostUse.isSelected())
-			options.setProperty("CORBAHost", CORBAHost.getText().trim());
-		else
-			options.remove("CORBAHost");
-		if (CORBAPortUse.isSelected())
-			options.setProperty("CORBAPort", CORBAPort.getText().trim());
-		else
-			options.remove("CORBAPort");
+        if (interfaceStyleUse.isSelected())
+            switch (interfaceStyle.getSelectedIndex()) {
+                case 1: options.setProperty("Interface", "console"); break;
+                case 2: options.setProperty("Interface", "text"); break;
+                default: options.setProperty("Interface", "gui"); break;
+            }
+        else
+            options.remove("Interface");
+        if (engineStyleUse.isSelected())
+            switch (engineStyle.getSelectedIndex()) {
+                case 1: options.setProperty("Engine", "corba"); break;
+                default: options.setProperty("Engine", "jni"); break;
+            }
+        else
+            options.remove("Engine");
+        if (JNIEngineUse.isSelected())
+            options.setProperty("JNIEngine", JNIEngine.getText().trim());
+        else
+            options.remove("JNIEngine");
+        if (CORBAHostUse.isSelected())
+            options.setProperty("CORBAHost", CORBAHost.getText().trim());
+        else
+            options.remove("CORBAHost");
+        if (CORBAPortUse.isSelected())
+            options.setProperty("CORBAPort", CORBAPort.getText().trim());
+        else
+            options.remove("CORBAPort");
 
         try {
             FileOutputStream out = new FileOutputStream(optionsFile);
@@ -685,11 +685,11 @@ public class RegConf extends JDialog implements ActionListener {
         System.exit(0);
     }
 
-	/**
-	 * Performs an interactive emptiness check on the given text field.
-	 * If the field is empty, this routine determines whether or not the
-	 * user is happy with this situation.
-	 * Otherwise this routine simply returns successfully.
+    /**
+     * Performs an interactive emptiness check on the given text field.
+     * If the field is empty, this routine determines whether or not the
+     * user is happy with this situation.
+     * Otherwise this routine simply returns successfully.
      *
      * @param name the name of the field.
      * @param service the name of the service that will be denied if the
@@ -698,21 +698,21 @@ public class RegConf extends JDialog implements ActionListener {
      * @return <tt>true</tt> if everything is okay or if the user wishes to
      * proceed regardless, or <tt>false</tt> if everything is
      * irretrievably invalid or if the user wishes to change the situation.
-	 */
-	public boolean checkEmpty(String name, String service,
-			JTextField field) {
-		if (field.getText().trim().length() > 0)
-			return true;
-		Object[] messages = {
+     */
+    public boolean checkEmpty(String name, String service,
+            JTextField field) {
+        if (field.getText().trim().length() > 0)
+            return true;
+        Object[] messages = {
             "Field [" + name + "] is empty.",
             "This means that " + service,
             "will be unavailable.",
             "Do you wish to change this?"
-		};
+        };
         return (JOptionPane.showConfirmDialog(this, messages, "Warning",
             JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
             == JOptionPane.NO_OPTION);
-	}
+    }
 
     /**
      * Performs a complex check on the given file field.
@@ -731,10 +731,10 @@ public class RegConf extends JDialog implements ActionListener {
      */
     public boolean checkUnavailableFile(String name, String service,
             JTextField field) {
-		if (checkEmpty(name, service, field))
-			if (! badFile(name, field))
-				return true;
-		return false;
+        if (checkEmpty(name, service, field))
+            if (! badFile(name, field))
+                return true;
+        return false;
     }
 
     /**
@@ -752,19 +752,19 @@ public class RegConf extends JDialog implements ActionListener {
      * proceed regardless, or <tt>false</tt> if everything is
      * irretrievably invalid or if the user wishes to change the situation.
      */
-	public boolean checkUnavailableDir(String name, String service,
-			JTextField field) {
-		if (checkEmpty(name, service, field))
-			if (! badDir(name, field))
-				return true;
-		return false;
-	}
+    public boolean checkUnavailableDir(String name, String service,
+            JTextField field) {
+        if (checkEmpty(name, service, field))
+            if (! badDir(name, field))
+                return true;
+        return false;
+    }
 
     /**
      * Determines if the given text field containins invalid data.
      * This merely checks whether or not the given field is empty.
-	 * An empty field is considered invalid; anything else is considered
-	 * valid.
+     * An empty field is considered invalid; anything else is considered
+     * valid.
      *
      * @param name the name of the field.
      * @param field the field under examination.
@@ -780,74 +780,74 @@ public class RegConf extends JDialog implements ActionListener {
         return false;
     }
 
-	/**
-	 * Determines if the given single text token field contains invalid
-	 * data.
-	 * A field containing spaces or tabs that are not at the front or
-	 * end is considered invalid.
-	 * An empty field however is not considered invalid.
-	 *
-	 * @param name the name of the field.
-	 * @param field the field under examination.
+    /**
+     * Determines if the given single text token field contains invalid
+     * data.
+     * A field containing spaces or tabs that are not at the front or
+     * end is considered invalid.
+     * An empty field however is not considered invalid.
+     *
+     * @param name the name of the field.
+     * @param field the field under examination.
      * @return <tt>true</tt> if and only if the field contains invalid data.
      */
-	private boolean badToken(String name, JTextField field) {
-		String text = field.getText().trim();
-		if (text.length() == 0)
-			return false;
-		if (text.indexOf(' ') >= 0 || text.indexOf('\t') >= 0) {
-			JOptionPane.showMessageDialog(this,
-				"Field [" + name + "] cannot contain spaces.",
-				"Error", JOptionPane.ERROR_MESSAGE);
-			return true;
-		}
-		return false;
-	}
+    private boolean badToken(String name, JTextField field) {
+        String text = field.getText().trim();
+        if (text.length() == 0)
+            return false;
+        if (text.indexOf(' ') >= 0 || text.indexOf('\t') >= 0) {
+            JOptionPane.showMessageDialog(this,
+                "Field [" + name + "] cannot contain spaces.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * Determines if the given positive integer field contains invalid
-	 * data.  An empty field is not considered invalid.
-	 *
-	 * @param name the name of the field.
-	 * @param field the field under examination.
+    /**
+     * Determines if the given positive integer field contains invalid
+     * data.  An empty field is not considered invalid.
+     *
+     * @param name the name of the field.
+     * @param field the field under examination.
      * @return <tt>true</tt> if and only if the field contains invalid data.
      */
-	private boolean badPositiveInteger(String name, JTextField field) {
-		String text = field.getText().trim();
-		if (text.length() == 0)
-			return false;
+    private boolean badPositiveInteger(String name, JTextField field) {
+        String text = field.getText().trim();
+        if (text.length() == 0)
+            return false;
 
-		try {
-			if (Long.parseLong(text) <= 0) {
-				JOptionPane.showMessageDialog(this,
-					"Field [" + name +
-					"] does not contain a positive integer.",
-					"Error", JOptionPane.ERROR_MESSAGE);
-				return true;
-			}
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(this,
-				"Field [" + name + "] does not contain a positive integer.",
-				"Error", JOptionPane.ERROR_MESSAGE);
-			return true;
-		}
-		return false;
-	}
+        try {
+            if (Long.parseLong(text) <= 0) {
+                JOptionPane.showMessageDialog(this,
+                    "Field [" + name +
+                    "] does not contain a positive integer.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                "Field [" + name + "] does not contain a positive integer.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Determines if the given file field containins invalid data.
      * This checks whether or not the given field refers to an existing
      * file.
-	 * An empty field is not considered invalid.
+     * An empty field is not considered invalid.
      *
      * @param name the name of the field.
      * @param field the field under examination.
      * @return <tt>true</tt> if and only if the field contains invalid data.
      */
     private boolean badFile(String name, JTextField field) {
-		String text = field.getText().trim();
-		if (text.length() == 0)
-			return false;
+        String text = field.getText().trim();
+        if (text.length() == 0)
+            return false;
 
         File f = new File(text);
         if (! f.exists()) {
@@ -869,16 +869,16 @@ public class RegConf extends JDialog implements ActionListener {
      * Determines if the given directory field containins invalid data.
      * This checks whether or not the given field refers to an existing
      * directory.
-	 * An empty field is not considered invalid.
+     * An empty field is not considered invalid.
      *
      * @param name the name of the field.
      * @param field the field under examination.
      * @return <tt>true</tt> if and only if the field contains invalid data.
      */
     private boolean badDir(String name, JTextField field) {
-		String text = field.getText().trim();
-		if (text.length() == 0)
-			return false;
+        String text = field.getText().trim();
+        if (text.length() == 0)
+            return false;
 
         if (new File(field.getText().trim()).isDirectory())
             return false;
@@ -994,47 +994,47 @@ public class RegConf extends JDialog implements ActionListener {
         }
     }
 
-	/**
-	 * A check box that determines whether or not a program option is to be
-	 * explicitly specified.
-	 * The enabled state of the given program option field will be
-	 * automatically kept synchronised with the checked state of this
-	 * check box.
-	 */
-	private class UseBox extends JCheckBox implements ItemListener {
-		/**
-		 * The program option field whose enabled state will be linked
-		 * to this check box.
-		 */
-		private JComponent optionField;
+    /**
+     * A check box that determines whether or not a program option is to be
+     * explicitly specified.
+     * The enabled state of the given program option field will be
+     * automatically kept synchronised with the checked state of this
+     * check box.
+     */
+    private class UseBox extends JCheckBox implements ItemListener {
+        /**
+         * The program option field whose enabled state will be linked
+         * to this check box.
+         */
+        private JComponent optionField;
 
-		/**
-		 * Creates a new check box linked to the given program option
-		 * field.
-		 *
-		 * @param label the text to place beside this check box.
-		 * @param optionField the program option field whose enabled state
-		 * will be linked to this check box.
-		 * @param checked <tt>true</tt> if and only if the check box
-		 * should be initially checked.
-		 */
-		public UseBox(String label, JComponent optionField, boolean checked) {
-			super(label, checked);
-			this.optionField = optionField;
+        /**
+         * Creates a new check box linked to the given program option
+         * field.
+         *
+         * @param label the text to place beside this check box.
+         * @param optionField the program option field whose enabled state
+         * will be linked to this check box.
+         * @param checked <tt>true</tt> if and only if the check box
+         * should be initially checked.
+         */
+        public UseBox(String label, JComponent optionField, boolean checked) {
+            super(label, checked);
+            this.optionField = optionField;
 
-			optionField.setEnabled(checked);
-			addItemListener(this);
-		}
+            optionField.setEnabled(checked);
+            addItemListener(this);
+        }
 
-		/**
-		 * Called when the checked state of the check box has changed.
-		 *
-		 * @param e the state change event details.
-		 */
-		public void itemStateChanged(ItemEvent e) {
-			optionField.setEnabled(e.getStateChange() == e.SELECTED);
-		}
-	}
+        /**
+         * Called when the checked state of the check box has changed.
+         *
+         * @param e the state change event details.
+         */
+        public void itemStateChanged(ItemEvent e) {
+            optionField.setEnabled(e.getStateChange() == e.SELECTED);
+        }
+    }
 
     /**
      * A Button that, when pressed, allows the user to select a file or

@@ -32,12 +32,12 @@
 #include "Packet/NPacket.idl"
 
 module Regina {
-	module Packet {
-		interface NText : NPacket {
-			string getText();
-			void setText(in string newText);
-		};
-	};
+    module Packet {
+        interface NText : NPacket {
+            string getText();
+            void setText(in string newText);
+        };
+    };
 };
 
 #endif

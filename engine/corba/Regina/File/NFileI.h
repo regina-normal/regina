@@ -32,36 +32,36 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nfile.h"
-	#include "corbatools.h"
+    #include "nfile.h"
+    #include "corbatools.h"
 #else
-	#include "engine/file/nfile.h"
-	#include "corba/corbatools.h"
+    #include "engine/file/nfile.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NFileIDL.h"
 #include "ShareableObjectI.h"
 
 class NFile_i : public virtual Regina::File::_sk_NFile,
-		public ShareableObject_i {
-	protected:
-		NFile_i(::NFile* newCppPtr) : ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NFile, NFile_i, Regina::File::NFile_ptr)
+        public ShareableObject_i {
+    protected:
+        NFile_i(::NFile* newCppPtr) : ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NFile, NFile_i, Regina::File::NFile_ptr)
 
-		virtual CORBA::Boolean open(const char* fileName,
-			CORBA::Long openMode);
-		virtual void close();
-		virtual CORBA::Long getOpenMode();
-		virtual CORBA::Long getMajorVersion();
-		virtual CORBA::Long getMinorVersion();
-		virtual CORBA::Boolean versionEarlierThan(CORBA::Long major,
-			CORBA::Long minor);
-		virtual void writePacketTree(Regina::Packet::NPacket_ptr packet);
-		virtual Regina::Packet::NPacket_ptr readPacketTree_();
-		virtual Regina::Packet::NPacket_ptr readPacketTree_NPacket(
-			Regina::Packet::NPacket_ptr parent);
+        virtual CORBA::Boolean open(const char* fileName,
+            CORBA::Long openMode);
+        virtual void close();
+        virtual CORBA::Long getOpenMode();
+        virtual CORBA::Long getMajorVersion();
+        virtual CORBA::Long getMinorVersion();
+        virtual CORBA::Boolean versionEarlierThan(CORBA::Long major,
+            CORBA::Long minor);
+        virtual void writePacketTree(Regina::Packet::NPacket_ptr packet);
+        virtual Regina::Packet::NPacket_ptr readPacketTree_();
+        virtual Regina::Packet::NPacket_ptr readPacketTree_NPacket(
+            Regina::Packet::NPacket_ptr parent);
 };
 
 #endif

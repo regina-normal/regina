@@ -29,63 +29,63 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "corbafilterregistry.h"
-	#include "corbatools.h"
+    #include "corbafilterregistry.h"
+    #include "corbatools.h"
 #else
-	#include "corba/registry/corbafilterregistry.h"
-	#include "corba/corbatools.h"
+    #include "corba/registry/corbafilterregistry.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceFilterI.h"
 
 Regina::Surfaces::NSurfaceFilter_ptr NSurfaceFilter_i::newWrapper(
-		::NSurfaceFilter* newCppPtr) {
-	if (! newCppPtr)
-		return NSurfaceFilter_i::_nil();
-	
-	int type = newCppPtr->getFilterID();
+        ::NSurfaceFilter* newCppPtr) {
+    if (! newCppPtr)
+        return NSurfaceFilter_i::_nil();
+    
+    int type = newCppPtr->getFilterID();
 
-	#ifdef __MUTE_WARNINGS
-		#pragma warn -ccc
-		#pragma warn -rch
-	#endif
+    #ifdef __MUTE_WARNINGS
+        #pragma warn -ccc
+        #pragma warn -rch
+    #endif
 
-	// Check for NSurfaceFilter first so we don't recursively call
-	// NSurfaceFilter_i::newWrapper().
-	if (type == ::NSurfaceFilter::filterID)
-		return (new NSurfaceFilter_i(newCppPtr))->_this();
-	
-	// Define something for REGISTER_CORBA_FILTER to do.
-	#define REGISTER_CORBA_FILTER(cppClass, CORBAClass) \
-	else if (type == ::cppClass::filterID) \
-		return CORBAClass::newWrapper((::cppClass*)newCppPtr);
-	
-	// Import the REGISTER_CORBA_FILTER lines.
-	#define __CORBA_FILTER_REGISTRY_BODY
-	#ifdef __NO_INCLUDE_PATHS
-		#include "corbafilterregistry.h"
-	#else
-		#include "corba/registry/corbafilterregistry.h"
-	#endif
+    // Check for NSurfaceFilter first so we don't recursively call
+    // NSurfaceFilter_i::newWrapper().
+    if (type == ::NSurfaceFilter::filterID)
+        return (new NSurfaceFilter_i(newCppPtr))->_this();
+    
+    // Define something for REGISTER_CORBA_FILTER to do.
+    #define REGISTER_CORBA_FILTER(cppClass, CORBAClass) \
+    else if (type == ::cppClass::filterID) \
+        return CORBAClass::newWrapper((::cppClass*)newCppPtr);
+    
+    // Import the REGISTER_CORBA_FILTER lines.
+    #define __CORBA_FILTER_REGISTRY_BODY
+    #ifdef __NO_INCLUDE_PATHS
+        #include "corbafilterregistry.h"
+    #else
+        #include "corba/registry/corbafilterregistry.h"
+    #endif
 
-	else
-		return (new NSurfaceFilter_i(newCppPtr))->_this();
-	
-	#ifdef __MUTE_WARNINGS
-		#pragma warn .ccc
-		#pragma warn .rch
-	#endif
+    else
+        return (new NSurfaceFilter_i(newCppPtr))->_this();
+    
+    #ifdef __MUTE_WARNINGS
+        #pragma warn .ccc
+        #pragma warn .rch
+    #endif
 }
-		
+        
 CORBA::Boolean NSurfaceFilter_i::accept(Regina::Surfaces::NNormalSurface_ptr
-		surface) {
-	return GET_ENGINE_OBJECT(NSurfaceFilter, this)->accept(
-		*GET_ENGINE_OBJECT(NNormalSurface, surface));
+        surface) {
+    return GET_ENGINE_OBJECT(NSurfaceFilter, this)->accept(
+        *GET_ENGINE_OBJECT(NNormalSurface, surface));
 }
 CORBA::Long NSurfaceFilter_i::getFilterID() {
-	return GET_ENGINE_OBJECT(NSurfaceFilter, this)->getFilterID();
+    return GET_ENGINE_OBJECT(NSurfaceFilter, this)->getFilterID();
 }
 char* NSurfaceFilter_i::getFilterName() {
-	return GET_ENGINE_OBJECT(NSurfaceFilter, this)->getFilterName().dupe();
+    return GET_ENGINE_OBJECT(NSurfaceFilter, this)->getFilterName().dupe();
 }
 

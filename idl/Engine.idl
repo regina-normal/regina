@@ -45,62 +45,62 @@
 #include "Triangulation/NTriangulation.idl"
 
 module Regina {
-	interface Engine {
-		Algebra::NAbelianGroup newNAbelianGroup_();
-		Algebra::NAbelianGroup newNAbelianGroup_NAbelianGroup(
-			in Algebra::NAbelianGroup cloneMe);
+    interface Engine {
+        Algebra::NAbelianGroup newNAbelianGroup_();
+        Algebra::NAbelianGroup newNAbelianGroup_NAbelianGroup(
+            in Algebra::NAbelianGroup cloneMe);
 
-		File::NFile newNFile();
+        File::NFile newNFile();
 
-		Maths::NMatrixInt newNMatrixInt_long_long(
-			in long rows, in long columns);
-		Maths::NMatrixInt newNMatrixInt_NMatrixInt(
-			in Maths::NMatrixInt cloneMe);
+        Maths::NMatrixInt newNMatrixInt_long_long(
+            in long rows, in long columns);
+        Maths::NMatrixInt newNMatrixInt_NMatrixInt(
+            in Maths::NMatrixInt cloneMe);
 
-		Packet::NContainer newNContainer();
-		Packet::NScript newNScript();
-		Packet::NText newNText_();
-		Packet::NText newNText_string(in string newText);
+        Packet::NContainer newNContainer();
+        Packet::NScript newNScript();
+        Packet::NText newNText_();
+        Packet::NText newNText_string(in string newText);
 
-		Progress::NProgressManager newNProgressManager();
+        Progress::NProgressManager newNProgressManager();
 
-		Surfaces::NNormalSurfaceList newNNormalSurfaceList(
-			in Triangulation::NTriangulation owner,
-			in long flavour, in boolean isEmbeddedOnly);
-		Surfaces::NSurfaceFilter newNSurfaceFilter_();
-		Surfaces::NSurfaceFilter newNSurfaceFilter_NSurfaceFilter(
-			in Surfaces::NSurfaceFilter cloneMe);
-		Surfaces::NSurfaceFilterCombination newNSurfaceFilterCombination_();
-		Surfaces::NSurfaceFilterCombination
-			newNSurfaceFilterCombination_NSurfaceFilterCombination(
-			in Surfaces::NSurfaceFilterCombination cloneMe);
-		Surfaces::NSurfaceFilterProperties newNSurfaceFilterProperties_();
-		Surfaces::NSurfaceFilterProperties
-			newNSurfaceFilterProperties_NSurfaceFilterProperties(
-			in Surfaces::NSurfaceFilterProperties cloneMe);
-		Surfaces::NSurfaceSubset newNSurfaceSubset(
-			in Surfaces::NSurfaceSet set, in Surfaces::NSurfaceFilter filter);
+        Surfaces::NNormalSurfaceList newNNormalSurfaceList(
+            in Triangulation::NTriangulation owner,
+            in long flavour, in boolean isEmbeddedOnly);
+        Surfaces::NSurfaceFilter newNSurfaceFilter_();
+        Surfaces::NSurfaceFilter newNSurfaceFilter_NSurfaceFilter(
+            in Surfaces::NSurfaceFilter cloneMe);
+        Surfaces::NSurfaceFilterCombination newNSurfaceFilterCombination_();
+        Surfaces::NSurfaceFilterCombination
+            newNSurfaceFilterCombination_NSurfaceFilterCombination(
+            in Surfaces::NSurfaceFilterCombination cloneMe);
+        Surfaces::NSurfaceFilterProperties newNSurfaceFilterProperties_();
+        Surfaces::NSurfaceFilterProperties
+            newNSurfaceFilterProperties_NSurfaceFilterProperties(
+            in Surfaces::NSurfaceFilterProperties cloneMe);
+        Surfaces::NSurfaceSubset newNSurfaceSubset(
+            in Surfaces::NSurfaceSet set, in Surfaces::NSurfaceFilter filter);
 
-		Triangulation::NTetrahedron newNTetrahedron_();
-		Triangulation::NTetrahedron newNTetrahedron_string(in string desc);
-		Triangulation::NTriangulation newNTriangulation_();
-		Triangulation::NTriangulation newNTriangulation_NTriangulation(
-			in Triangulation::NTriangulation cloneMe);
+        Triangulation::NTetrahedron newNTetrahedron_();
+        Triangulation::NTetrahedron newNTetrahedron_string(in string desc);
+        Triangulation::NTriangulation newNTriangulation_();
+        Triangulation::NTriangulation newNTriangulation_NTriangulation(
+            in Triangulation::NTriangulation cloneMe);
 
-		long formCensus(in Packet::NPacket parent, in long nTetrahedra,
-			in char finiteness, in char orientability, in char boundary,
-			in long nBdryFaces, in Progress::NProgressManager manager);
-		long getVersionMajor();
-		long getVersionMinor();
-		string getVersionString();
-		Maths::NMatrixInt makeMatchingEquations(
-			in Triangulation::NTriangulation triangulation, in long flavour);
-		Packet::NPacket readFromFile(in string fileName);
-		Triangulation::NTriangulation readSnapPea(in string fileName);
-		void smithNormalForm(in Maths::NMatrixInt matrix);
-		long testEngine(in long value);
-		boolean writeToFile(in string fileName, in Packet::NPacket packet);
-	};
+        long formCensus(in Packet::NPacket parent, in long nTetrahedra,
+            in char finiteness, in char orientability, in char boundary,
+            in long nBdryFaces, in Progress::NProgressManager manager);
+        long getVersionMajor();
+        long getVersionMinor();
+        string getVersionString();
+        Maths::NMatrixInt makeMatchingEquations(
+            in Triangulation::NTriangulation triangulation, in long flavour);
+        Packet::NPacket readFromFile(in string fileName);
+        Triangulation::NTriangulation readSnapPea(in string fileName);
+        void smithNormalForm(in Maths::NMatrixInt matrix);
+        long testEngine(in long value);
+        boolean writeToFile(in string fileName, in Packet::NPacket packet);
+    };
 };
 
 #endif

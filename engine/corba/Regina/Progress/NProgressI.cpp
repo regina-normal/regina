@@ -29,27 +29,27 @@
 #include "NProgressI.h"
 
 CORBA::Boolean NProgress_i::hasChanged() {
-	return GET_ENGINE_OBJECT(NProgress, this)->hasChanged();
+    return GET_ENGINE_OBJECT(NProgress, this)->hasChanged();
 }
 CORBA::Boolean NProgress_i::isFinished() {
-	return GET_ENGINE_OBJECT(NProgress, this)->isFinished();
+    return GET_ENGINE_OBJECT(NProgress, this)->isFinished();
 }
 CORBA::Boolean NProgress_i::isCancellable() {
-	return GET_ENGINE_OBJECT(NProgress, this)->isCancellable();
+    return GET_ENGINE_OBJECT(NProgress, this)->isCancellable();
 }
 void NProgress_i::cancel() {
-	GET_ENGINE_OBJECT(NProgress, this)->cancel();
+    GET_ENGINE_OBJECT(NProgress, this)->cancel();
 }
 CORBA::Boolean NProgress_i::isCancelled() {
-	return GET_ENGINE_OBJECT(NProgress, this)->isCancelled();
+    return GET_ENGINE_OBJECT(NProgress, this)->isCancelled();
 }
 char* NProgress_i::getDescription() {
-	return GET_ENGINE_OBJECT(NProgress, this)->getDescription().dupe();
+    return GET_ENGINE_OBJECT(NProgress, this)->getDescription().dupe();
 }
 CORBA::Boolean NProgress_i::isPercent() {
-	return GET_ENGINE_OBJECT(NProgress, this)->isPercent();
+    return GET_ENGINE_OBJECT(NProgress, this)->isPercent();
 }
 CORBA::Double NProgress_i::getPercent() {
-	return GET_ENGINE_OBJECT(NProgress, this)->getPercent();
+    return GET_ENGINE_OBJECT(NProgress, this)->getPercent();
 }
 

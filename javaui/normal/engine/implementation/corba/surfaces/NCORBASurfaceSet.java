@@ -31,12 +31,12 @@ package normal.engine.implementation.corba.surfaces;
 import normal.engine.implementation.corba.Regina.Surfaces.*;
 
 public interface NCORBASurfaceSet extends normal.engine.surfaces.NSurfaceSet {
-	/**
-	 * Returns the CORBA client <tt>NSurfaceSet</tt> associated with
-	 * this engine wrapper object.
-	 *
-	 * @return the associated CORBA client <tt>NSurfaceSet</tt>.
-	 */
-	public NSurfaceSet getNSurfaceSet();
+    /**
+     * Returns the CORBA client <tt>NSurfaceSet</tt> associated with
+     * this engine wrapper object.
+     *
+     * @return the associated CORBA client <tt>NSurfaceSet</tt>.
+     */
+    public NSurfaceSet getNSurfaceSet();
 };
 

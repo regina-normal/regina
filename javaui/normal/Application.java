@@ -54,10 +54,10 @@ public class Application extends Applet implements ActionListener {
      */
     public static final String version = "2.1.1";
 
-	/**
-	 * Program date.
-	 */
-	public static final String date = "24 February 2001";
+    /**
+     * Program date.
+     */
+    public static final String date = "24 February 2001";
 
     /**
      * Copyright information.
@@ -130,10 +130,10 @@ public class Application extends Applet implements ActionListener {
      */
     public static final String optionsFile = "regina.opt";
 
-	/**
-	 * Runtime options file.
-	 */
-	public static final String runtimeOptionsFile = "runtime.opt";
+    /**
+     * Runtime options file.
+     */
+    public static final String runtimeOptionsFile = "runtime.opt";
 
     /**
      * Default data file extension.
@@ -145,91 +145,91 @@ public class Application extends Applet implements ActionListener {
      */
     public static final String helpSetLoc = "normal/docs/regina.hs";
 
-	/**
-	 * Location of the default help page.
-	 */
-	public static final String defaultHelpPage = "normal/docs/index.html";
+    /**
+     * Location of the default help page.
+     */
+    public static final String defaultHelpPage = "normal/docs/index.html";
 
-	/**
-	 * The version string representing the oldest allowable JDK with
-	 * which this program can be run.
-	 */
-	public static final String minimumJDKVersion = "1.2";
+    /**
+     * The version string representing the oldest allowable JDK with
+     * which this program can be run.
+     */
+    public static final String minimumJDKVersion = "1.2";
 
-	/**
-	 * The version string representing the oldest allowable BTools with
-	 * which this program can be run.
-	 */
-	public static final String minimumBToolsVersion = "1.0.1";
+    /**
+     * The version string representing the oldest allowable BTools with
+     * which this program can be run.
+     */
+    public static final String minimumBToolsVersion = "1.0.1";
 
-	/**
-	 * Entry point for the applet.
-	 */
-	public void init() {
-		setLayout(new FlowLayout());
+    /**
+     * Entry point for the applet.
+     */
+    public void init() {
+        setLayout(new FlowLayout());
 
-		try {
-			addComponents();
-		} catch (Throwable th) {
-			Button button = new Button("Run " + program + "...");
-			button.addActionListener(this);
-			add(button);
-		}
-	}
+        try {
+            addComponents();
+        } catch (Throwable th) {
+            Button button = new Button("Run " + program + "...");
+            button.addActionListener(this);
+            add(button);
+        }
+    }
 
-	/**
-	 * Adds components to the applet panel.
-	 */
-	private void addComponents() {
-		javax.swing.JButton button = new javax.swing.JButton(
-			"Run " + program + "...",
-			Images.mainMediumIcon.finalImage());
-		button.addActionListener(this);
-		add(button);
-	}
+    /**
+     * Adds components to the applet panel.
+     */
+    private void addComponents() {
+        javax.swing.JButton button = new javax.swing.JButton(
+            "Run " + program + "...",
+            Images.mainMediumIcon.finalImage());
+        button.addActionListener(this);
+        add(button);
+    }
 
-	/**
-	 * Returns a description of the applet.
-	 *
-	 * @return a description of the applet.
-	 */
-	public String getAppletInfo() {
-		return program + " - " + comments;
-	}
+    /**
+     * Returns a description of the applet.
+     *
+     * @return a description of the applet.
+     */
+    public String getAppletInfo() {
+        return program + " - " + comments;
+    }
 
-	/**
-	 * Returns details of the available applet parameters.
-	 *
-	 * @return applet parameter details.
-	 */
-	public String[][] getParameterInfo() {
-		String[][] info = {
-			{ "Docs", "String",
-				"the directory containing the unpacked documentation" },
-			{ "Interface", "String",
-				"the style of interface to use (currently only gui)" },
-			{ "ORBInitialHost", "String", "the CORBA name service host" },
-			{ "ORBInitialPort", "String", "the CORBA name service port" }
-		};
-		return info;
-	}
+    /**
+     * Returns details of the available applet parameters.
+     *
+     * @return applet parameter details.
+     */
+    public String[][] getParameterInfo() {
+        String[][] info = {
+            { "Docs", "String",
+                "the directory containing the unpacked documentation" },
+            { "Interface", "String",
+                "the style of interface to use (currently only gui)" },
+            { "ORBInitialHost", "String", "the CORBA name service host" },
+            { "ORBInitialPort", "String", "the CORBA name service port" }
+        };
+        return info;
+    }
 
-	/**
-	 * Called when the user presses the run button in the applet panel.
-	 *
-	 * @param e details of the button pressing event.
-	 */
-	public void actionPerformed(ActionEvent e) {
-		new AppletShell(this).run();
-	}
+    /**
+     * Called when the user presses the run button in the applet panel.
+     *
+     * @param e details of the button pressing event.
+     */
+    public void actionPerformed(ActionEvent e) {
+        new AppletShell(this).run();
+    }
 
     /**
      * Entry point for the standalone application.
-	 *
-	 * @param args the command-line arguments to the application.
+     *
+     * @param args the command-line arguments to the application.
      */
     public static void main(String[] args) {
-		new ApplicationShell(args).run();
+        new ApplicationShell(args).run();
     }
 }
 

@@ -53,11 +53,11 @@ import normal.engine.implementation.jni.triangulation.*;
  * @see normal.engine.Engine
  */
 public class JNIEngine implements Engine {
-	/**
-	 * The name of the external library containing the calculation
-	 * engine.  See the constructor documentation for further details.
-	 */
-	private String library;
+    /**
+     * The name of the external library containing the calculation
+     * engine.  See the constructor documentation for further details.
+     */
+    private String library;
 
     /**
      * Create a link to the calculation engine using JNI.
@@ -72,7 +72,7 @@ public class JNIEngine implements Engine {
      * to load.
      */
     public JNIEngine(String library) throws JNILibraryException {
-		this.library = library;
+        this.library = library;
         try {
             System.loadLibrary(library);
         } catch (Throwable th) {
@@ -92,12 +92,12 @@ public class JNIEngine implements Engine {
             " calculation engine accessed through JNI (" + library + ")";
     }
 
-	public int style() {
-		return Shell.engineJNI;
-	}
-	public String styleDescription() {
-		return "accessed through JNI (" + library + ")";
-	}
+    public int style() {
+        return Shell.engineJNI;
+    }
+    public String styleDescription() {
+        return "accessed through JNI (" + library + ")";
+    }
 
     public NAbelianGroup newNAbelianGroup() {
         return new NJNIAbelianGroup();
@@ -185,26 +185,26 @@ public class JNIEngine implements Engine {
             int nBdryFaces) {
         return _formCensus(parent, nTetrahedra, finiteness.getByteCode(),
             orientability.getByteCode(), boundary.getByteCode(), nBdryFaces,
-			null);
+            null);
     }
     public long formCensus(NPacket parent, int nTetrahedra, 
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
             int nBdryFaces, NProgressManager manager) {
-		return _formCensus(parent, nTetrahedra, finiteness.getByteCode(),
-			orientability.getByteCode(), boundary.getByteCode(),
-			nBdryFaces, manager);
-	}
+        return _formCensus(parent, nTetrahedra, finiteness.getByteCode(),
+            orientability.getByteCode(), boundary.getByteCode(),
+            nBdryFaces, manager);
+    }
     public native long _formCensus(NPacket parent, int nTetrahedra, 
             char finiteness, char orientability, char boundary,
             int nBdryFaces, NProgressManager manager);
-	public native int getVersionMajor();
-	public native int getVersionMinor();
-	public native String getVersionString();
+    public native int getVersionMajor();
+    public native int getVersionMinor();
+    public native String getVersionString();
     public native NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour);
     public native NPacket readFromFile(String fileName);
     public native NTriangulation readSnapPea(String file);
     public native void smithNormalForm(NMatrixInt matrix);
-	public native int testEngine(int value);
+    public native int testEngine(int value);
     public native boolean writeToFile(String fileName, NPacket packet);
 }

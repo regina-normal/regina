@@ -32,22 +32,22 @@
 #include "Packet/NPacket.idl"
 
 module Regina {
-	module File {
-		interface NFile : ShareableObject {
-			boolean open(in string fileName, in long openMode);
-			void close();
+    module File {
+        interface NFile : ShareableObject {
+            boolean open(in string fileName, in long openMode);
+            void close();
 
-			long getOpenMode();
-			long getMajorVersion();
-			long getMinorVersion();
-			boolean versionEarlierThan(in long major, in long minor);
+            long getOpenMode();
+            long getMajorVersion();
+            long getMinorVersion();
+            boolean versionEarlierThan(in long major, in long minor);
 
-			void writePacketTree(in Regina::Packet::NPacket packet);
-			Regina::Packet::NPacket readPacketTree_();
-			Regina::Packet::NPacket readPacketTree_NPacket(
-				in Regina::Packet::NPacket parent);
-		};
-	};
+            void writePacketTree(in Regina::Packet::NPacket packet);
+            Regina::Packet::NPacket readPacketTree_();
+            Regina::Packet::NPacket readPacketTree_NPacket(
+                in Regina::Packet::NPacket parent);
+        };
+    };
 };
 
 #endif

@@ -32,109 +32,109 @@
 #include "ShareableObject.idl"
 
 module Regina {
-	module Triangulation {
-		interface NVertex;
-		interface NEdge;
-		interface NFace;
-		interface NTetrahedron;
-		interface NComponent;
-		interface NBoundaryComponent;
+    module Triangulation {
+        interface NVertex;
+        interface NEdge;
+        interface NFace;
+        interface NTetrahedron;
+        interface NComponent;
+        interface NBoundaryComponent;
 
-		interface NVertex : ShareableObject {
-			NComponent getComponent();
-			NBoundaryComponent getBoundaryComponent();
+        interface NVertex : ShareableObject {
+            NComponent getComponent();
+            NBoundaryComponent getBoundaryComponent();
 
-			long getLink();
-			boolean isLinkClosed();
-			boolean isIdeal();
-			boolean isBoundary();
-			boolean isStandard();
-			boolean isLinkOrientable();
-			long getLinkEulerCharacteristic();
+            long getLink();
+            boolean isLinkClosed();
+            boolean isIdeal();
+            boolean isBoundary();
+            boolean isStandard();
+            boolean isLinkOrientable();
+            long getLinkEulerCharacteristic();
 
-			long getNumberOfEmbeddings();
-			void getEmbedding(out NTetrahedron tet, out long vertex,
-				in long index);
-		};
+            long getNumberOfEmbeddings();
+            void getEmbedding(out NTetrahedron tet, out long vertex,
+                in long index);
+        };
 
-		interface NEdge : ShareableObject {
-			NComponent getComponent();
-			NBoundaryComponent getBoundaryComponent();
+        interface NEdge : ShareableObject {
+            NComponent getComponent();
+            NBoundaryComponent getBoundaryComponent();
 
-			boolean isBoundary();
-			boolean isValid();
+            boolean isBoundary();
+            boolean isValid();
 
-			long getNumberOfEmbeddings();
-			void getEmbedding(out NTetrahedron tet, out long edge,
-				in long index);
-		};
+            long getNumberOfEmbeddings();
+            void getEmbedding(out NTetrahedron tet, out long edge,
+                in long index);
+        };
 
-		interface NFace : ShareableObject {
-			NComponent getComponent();
-			NBoundaryComponent getBoundaryComponent();
+        interface NFace : ShareableObject {
+            NComponent getComponent();
+            NBoundaryComponent getBoundaryComponent();
 
-			boolean isBoundary();
+            boolean isBoundary();
 
-			long getNumberOfEmbeddings();
-			void getEmbedding(out NTetrahedron tet, out long face,
-				in long index);
-		};
+            long getNumberOfEmbeddings();
+            void getEmbedding(out NTetrahedron tet, out long face,
+                in long index);
+        };
 
-		interface NTetrahedron : ShareableObject {
-			NTetrahedron getAdjacentTetrahedron(in long face);
-			char getAdjacentTetrahedronGluing(in long face);
-			long getAdjacentFace(in long face);
-			boolean hasBoundary();
+        interface NTetrahedron : ShareableObject {
+            NTetrahedron getAdjacentTetrahedron(in long face);
+            char getAdjacentTetrahedronGluing(in long face);
+            long getAdjacentFace(in long face);
+            boolean hasBoundary();
 
-			Regina::Triangulation::NComponent getComponent();
+            Regina::Triangulation::NComponent getComponent();
 
-			NVertex getVertex(in long vertex);
-			NEdge getEdge(in long edge);
-			NFace getFace(in long face);
+            NVertex getVertex(in long vertex);
+            NEdge getEdge(in long edge);
+            NFace getFace(in long face);
 
-			char getEdgeMapping(in long edge);
-			char getFaceMapping(in long face);
+            char getEdgeMapping(in long edge);
+            char getFaceMapping(in long face);
 
-			void joinTo(in long myFace, in NTetrahedron you, in char gluing);
-			NTetrahedron unjoin(in long myFace);
-			void isolate();
+            void joinTo(in long myFace, in NTetrahedron you, in char gluing);
+            NTetrahedron unjoin(in long myFace);
+            void isolate();
 
-			string getDescription();
-			void setDescription(in string description);
-		};
+            string getDescription();
+            void setDescription(in string description);
+        };
 
-		interface NComponent : ShareableObject {
-			boolean isIdeal();
-			boolean isOrientable();
-			boolean isClosed();
+        interface NComponent : ShareableObject {
+            boolean isIdeal();
+            boolean isOrientable();
+            boolean isClosed();
 
-			long getNumberOfTetrahedra();
-			long getNumberOfFaces();
-			long getNumberOfEdges();
-			long getNumberOfVertices();
-			long getNumberOfBoundaryComponents();
+            long getNumberOfTetrahedra();
+            long getNumberOfFaces();
+            long getNumberOfEdges();
+            long getNumberOfVertices();
+            long getNumberOfBoundaryComponents();
 
-			NTetrahedron getTetrahedron(in long index);
-			NFace getFace(in long index);
-			NEdge getEdge(in long index);
-			NVertex getVertex(in long index);
-			NBoundaryComponent getBoundaryComponent(in long index);
-		};
+            NTetrahedron getTetrahedron(in long index);
+            NFace getFace(in long index);
+            NEdge getEdge(in long index);
+            NVertex getVertex(in long index);
+            NBoundaryComponent getBoundaryComponent(in long index);
+        };
 
-		interface NBoundaryComponent : ShareableObject {
-			long getEulerCharacteristic();
-			boolean isIdeal();
-			boolean isOrientable();
+        interface NBoundaryComponent : ShareableObject {
+            long getEulerCharacteristic();
+            boolean isIdeal();
+            boolean isOrientable();
 
-			long getNumberOfFaces();
-			long getNumberOfEdges();
-			long getNumberOfVertices();
+            long getNumberOfFaces();
+            long getNumberOfEdges();
+            long getNumberOfVertices();
 
-			NFace getFace(in long index);
-			NEdge getEdge(in long index);
-			NVertex getVertex(in long index);
-		};
-	};
+            NFace getFace(in long index);
+            NEdge getEdge(in long index);
+            NVertex getVertex(in long index);
+        };
+    };
 };
 
 #endif

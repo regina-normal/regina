@@ -65,10 +65,10 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      */
     public static final int recentFileCount = 4;
 
-	/**
-	 * The shell representing the entire program.
-	 */
-	private Shell shell;
+    /**
+     * The shell representing the entire program.
+     */
+    private Shell shell;
     
     /**
      * The calculation engine currently being used.
@@ -157,10 +157,10 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      *
      * @param shell the shell representing the entire program.
      */
-	public NormalFrame(Shell shell) {
-		this.shell = shell;
-		this.engine = shell.getEngine();
-		this.options = shell.getOptions();
+    public NormalFrame(Shell shell) {
+        this.shell = shell;
+        this.engine = shell.getEngine();
+        this.options = shell.getOptions();
 
         init();
         reflectCurrentPacket();
@@ -683,14 +683,14 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             pane.getDirty() ? Standard16.save.image() : null);
     }
 
-	/**
-	 * Returns the shell representing the entire program.
-	 *
-	 * @return the shell representing the entire program.
-	 */
-	public Shell getShell() {
-		return shell;
-	}
+    /**
+     * Returns the shell representing the entire program.
+     *
+     * @return the shell representing the entire program.
+     */
+    public Shell getShell() {
+        return shell;
+    }
 
     /**
      * Returns the calculation engine currently in use.
@@ -955,8 +955,8 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         options.writeToFile();
 
         // Exit the program.
-		dispose();
-		shell.exit(0);
+        dispose();
+        shell.exit(0);
     }
 
     public boolean setLookAndFeel(LookAndFeelItem lookAndFeel) {
@@ -1009,7 +1009,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         console.startConsole(ConsoleUtils.consoleSetup(
             console.getPythonInterpreter(), engine) +
             "\n\nUsing JPython " + org.python.core.PySystemState.version
-			+ '\n');
+            + '\n');
         Positioner.centerOnScreen(console);
         console.show();
     }

@@ -90,8 +90,8 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
             /**< Represents edge weight coordinates for normal surfaces.
              *   This flavour is for representation only; surface
              *   vectors and lists of this flavour cannot be created. */
-		static const int FACE_ARCS = 201;
-			/**< Represents face arc coordinates for normal surfaces.
+        static const int FACE_ARCS = 201;
+            /**< Represents face arc coordinates for normal surfaces.
              *   This flavour is for representation only; surface
              *   vectors and lists of this flavour cannot be created. */
 
@@ -130,8 +130,8 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
          * lists or allow deletion of surfaces from lists.
          * \todo \opt Investigate obvious compressions.
          * \todo \opt Investigate monte carlo methods.
-		 *
-		 * \ifacescorba All parameters are compulsory.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.

@@ -124,7 +124,7 @@ public interface PacketCreator {
      * interface will take care of all these tasks.
      *
      * @param shell the shell representing the entire program, from
-	 * which the calculation engine can be accessed.
+     * which the calculation engine can be accessed.
      * @param parent the packet beneath which the new packet will be
      * placed in the packet tree structure.  This is provided for
      * reference only; whether or not the new packet is inserted is

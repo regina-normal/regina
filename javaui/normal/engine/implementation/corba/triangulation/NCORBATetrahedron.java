@@ -33,73 +33,73 @@ import normal.engine.implementation.corba.Regina.Triangulation.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBATetrahedron extends CORBAShareableObject
-		implements normal.engine.triangulation.NTetrahedron {
-	public NTetrahedron data;
-	public static final Class CORBAClass = NTetrahedron.class;
-	public static final Class helperClass = NTetrahedronHelper.class;
+        implements normal.engine.triangulation.NTetrahedron {
+    public NTetrahedron data;
+    public static final Class CORBAClass = NTetrahedron.class;
+    public static final Class helperClass = NTetrahedronHelper.class;
 
     public NCORBATetrahedron(NTetrahedron data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBATetrahedron newWrapper(NTetrahedron source) {
-		return (source == null ? null : new NCORBATetrahedron(source));
-	}
+    public static NCORBATetrahedron newWrapper(NTetrahedron source) {
+        return (source == null ? null : new NCORBATetrahedron(source));
+    }
 
-	public normal.engine.triangulation.NTetrahedron
-			getAdjacentTetrahedron(int face) {
-		return NCORBATetrahedron.newWrapper(data.getAdjacentTetrahedron(face));
-	}
-	public normal.engine.triangulation.NPerm
-			getAdjacentTetrahedronGluing(int face) {
-		return new NPerm(data.getAdjacentTetrahedronGluing(face));
-	}
-	public int getAdjacentFace(int face) {
-		return data.getAdjacentFace(face);
-	}
-	public boolean hasBoundary() {
-		return data.hasBoundary();
-	}
+    public normal.engine.triangulation.NTetrahedron
+            getAdjacentTetrahedron(int face) {
+        return NCORBATetrahedron.newWrapper(data.getAdjacentTetrahedron(face));
+    }
+    public normal.engine.triangulation.NPerm
+            getAdjacentTetrahedronGluing(int face) {
+        return new NPerm(data.getAdjacentTetrahedronGluing(face));
+    }
+    public int getAdjacentFace(int face) {
+        return data.getAdjacentFace(face);
+    }
+    public boolean hasBoundary() {
+        return data.hasBoundary();
+    }
 
-	public normal.engine.triangulation.NComponent getComponent() {
-		return NCORBAComponent.newWrapper(data.getComponent());
-	}
+    public normal.engine.triangulation.NComponent getComponent() {
+        return NCORBAComponent.newWrapper(data.getComponent());
+    }
 
-	public normal.engine.triangulation.NVertex getVertex(int vertex) {
-		return NCORBAVertex.newWrapper(data.getVertex(vertex));
-	}
-	public normal.engine.triangulation.NEdge getEdge(int edge) {
-		return NCORBAEdge.newWrapper(data.getEdge(edge));
-	}
-	public normal.engine.triangulation.NFace getFace(int face) {
-		return NCORBAFace.newWrapper(data.getFace(face));
-	}
-	
-	public normal.engine.triangulation.NPerm getEdgeMapping(int edge) {
-		return new NPerm(data.getEdgeMapping(edge));
-	}
-	public normal.engine.triangulation.NPerm getFaceMapping(int face) {
-		return new NPerm(data.getFaceMapping(face));
-	}
+    public normal.engine.triangulation.NVertex getVertex(int vertex) {
+        return NCORBAVertex.newWrapper(data.getVertex(vertex));
+    }
+    public normal.engine.triangulation.NEdge getEdge(int edge) {
+        return NCORBAEdge.newWrapper(data.getEdge(edge));
+    }
+    public normal.engine.triangulation.NFace getFace(int face) {
+        return NCORBAFace.newWrapper(data.getFace(face));
+    }
+    
+    public normal.engine.triangulation.NPerm getEdgeMapping(int edge) {
+        return new NPerm(data.getEdgeMapping(edge));
+    }
+    public normal.engine.triangulation.NPerm getFaceMapping(int face) {
+        return new NPerm(data.getFaceMapping(face));
+    }
 
-	public void joinTo(int myFace,
-			normal.engine.triangulation.NTetrahedron you,
-			normal.engine.triangulation.NPerm gluing) {
-		data.joinTo(myFace, ((NCORBATetrahedron)you).data,
-			gluing.getPermCode());
-	}
-	public normal.engine.triangulation.NTetrahedron unjoin(int myFace) {
-		return NCORBATetrahedron.newWrapper(data.unjoin(myFace));
-	}
-	public void isolate() {
-		data.isolate();
-	}
+    public void joinTo(int myFace,
+            normal.engine.triangulation.NTetrahedron you,
+            normal.engine.triangulation.NPerm gluing) {
+        data.joinTo(myFace, ((NCORBATetrahedron)you).data,
+            gluing.getPermCode());
+    }
+    public normal.engine.triangulation.NTetrahedron unjoin(int myFace) {
+        return NCORBATetrahedron.newWrapper(data.unjoin(myFace));
+    }
+    public void isolate() {
+        data.isolate();
+    }
 
-	public String getDescription() {
-		return data.getDescription();
-	}
-	public void setDescription(String description) {
-		data.setDescription(description);
-	}
+    public String getDescription() {
+        return data.getDescription();
+    }
+    public void setDescription(String description) {
+        data.setDescription(description);
+    }
 }

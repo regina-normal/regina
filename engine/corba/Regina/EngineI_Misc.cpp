@@ -30,13 +30,13 @@
 #include "regina.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "ncensus.h"
-	#include "matrixops.h"
-	#include "nnormalsurfacelist.h"
+    #include "ncensus.h"
+    #include "matrixops.h"
+    #include "nnormalsurfacelist.h"
 #else
-	#include "engine/census/ncensus.h"
-	#include "engine/maths/matrixops.h"
-	#include "engine/surfaces/nnormalsurfacelist.h"
+    #include "engine/census/ncensus.h"
+    #include "engine/maths/matrixops.h"
+    #include "engine/surfaces/nnormalsurfacelist.h"
 #endif
 
 #include "EngineI.h"
@@ -46,62 +46,62 @@
 #include "NProgressManagerI.h"
 
 Regina::Algebra::NAbelianGroup_ptr Engine_i::newNAbelianGroup_() {
-	return NAbelianGroup_i::newWrapper(new ::NAbelianGroup());
+    return NAbelianGroup_i::newWrapper(new ::NAbelianGroup());
 }
 Regina::Algebra::NAbelianGroup_ptr Engine_i::newNAbelianGroup_NAbelianGroup(
-		Regina::Algebra::NAbelianGroup_ptr cloneMe) {
-	return NAbelianGroup_i::newWrapper(new ::NAbelianGroup(
-		*GET_ENGINE_OBJECT(NAbelianGroup, cloneMe)));
+        Regina::Algebra::NAbelianGroup_ptr cloneMe) {
+    return NAbelianGroup_i::newWrapper(new ::NAbelianGroup(
+        *GET_ENGINE_OBJECT(NAbelianGroup, cloneMe)));
 }
 
 Regina::File::NFile_ptr Engine_i::newNFile() {
-	return NFile_i::newWrapper(new ::NFile());
+    return NFile_i::newWrapper(new ::NFile());
 }
 
 Regina::Maths::NMatrixInt_ptr Engine_i::newNMatrixInt_long_long(
-		CORBA::Long rows, CORBA::Long columns) {
-	return NMatrixInt_i::newWrapper(new ::NMatrixInt(rows, columns));
+        CORBA::Long rows, CORBA::Long columns) {
+    return NMatrixInt_i::newWrapper(new ::NMatrixInt(rows, columns));
 }
 Regina::Maths::NMatrixInt_ptr Engine_i::newNMatrixInt_NMatrixInt(
-		Regina::Maths::NMatrixInt_ptr cloneMe) {
-	return NMatrixInt_i::newWrapper(new ::NMatrixInt(
-		*GET_ENGINE_OBJECT(NMatrixInt, cloneMe)));
+        Regina::Maths::NMatrixInt_ptr cloneMe) {
+    return NMatrixInt_i::newWrapper(new ::NMatrixInt(
+        *GET_ENGINE_OBJECT(NMatrixInt, cloneMe)));
 }
 
 Regina::Progress::NProgressManager_ptr Engine_i::newNProgressManager() {
-	return NProgressManager_i::newWrapper(new ::NProgressManager());
+    return NProgressManager_i::newWrapper(new ::NProgressManager());
 }
 
 CORBA::Long Engine_i::formCensus(Regina::Packet::NPacket_ptr parent,
-		CORBA::Long nTetrahedra, CORBA::Char finiteness,
-		CORBA::Char orientability, CORBA::Char boundary,
-		CORBA::Long nBdryFaces,
-		Regina::Progress::NProgressManager_ptr manager) {
-	return ::formCensus(GET_ENGINE_OBJECT(NPacket, parent),
-		nTetrahedra, NBoolSet::fromByteCode(finiteness),
-		NBoolSet::fromByteCode(orientability),
-		NBoolSet::fromByteCode(boundary), nBdryFaces,
-		GET_ENGINE_OBJECT(NProgressManager, manager));
+        CORBA::Long nTetrahedra, CORBA::Char finiteness,
+        CORBA::Char orientability, CORBA::Char boundary,
+        CORBA::Long nBdryFaces,
+        Regina::Progress::NProgressManager_ptr manager) {
+    return ::formCensus(GET_ENGINE_OBJECT(NPacket, parent),
+        nTetrahedra, NBoolSet::fromByteCode(finiteness),
+        NBoolSet::fromByteCode(orientability),
+        NBoolSet::fromByteCode(boundary), nBdryFaces,
+        GET_ENGINE_OBJECT(NProgressManager, manager));
 }
 CORBA::Long Engine_i::getVersionMajor() {
-	return ENGINE_VERSION_MAJOR;
+    return ENGINE_VERSION_MAJOR;
 }
 CORBA::Long Engine_i::getVersionMinor() {
-	return ENGINE_VERSION_MINOR;
+    return ENGINE_VERSION_MINOR;
 }
 char* Engine_i::getVersionString() {
-	return NString(ENGINE_VERSION).dupe();
+    return NString(ENGINE_VERSION).dupe();
 }
 Regina::Maths::NMatrixInt_ptr Engine_i::makeMatchingEquations(
-		Regina::Triangulation::NTriangulation_ptr triangulation,
-		CORBA::Long flavour) {
-	return NMatrixInt_i::newWrapper(::makeMatchingEquations(
-		GET_ENGINE_OBJECT(NTriangulation, triangulation), flavour));
+        Regina::Triangulation::NTriangulation_ptr triangulation,
+        CORBA::Long flavour) {
+    return NMatrixInt_i::newWrapper(::makeMatchingEquations(
+        GET_ENGINE_OBJECT(NTriangulation, triangulation), flavour));
 }
 void Engine_i::smithNormalForm(Regina::Maths::NMatrixInt_ptr matrix) {
-	::smithNormalForm(*GET_ENGINE_OBJECT(NMatrixInt, matrix));
+    ::smithNormalForm(*GET_ENGINE_OBJECT(NMatrixInt, matrix));
 }
 CORBA::Long Engine_i::testEngine(CORBA::Long value) {
-	return value;
+    return value;
 }
 

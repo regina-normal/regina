@@ -53,31 +53,31 @@ public class NJNISurfaceFilterProperties extends NJNISurfaceFilter
     public native long getNumberOfECs();
     public native BigInteger getEC(long index);
     public NBoolSet getOrientability() {
-		return NBoolSet.fromByteCode(_getOrientability());
-	}
+        return NBoolSet.fromByteCode(_getOrientability());
+    }
     public native char _getOrientability();
     public NBoolSet getCompactness() {
-		return NBoolSet.fromByteCode(_getCompactness());
-	}
+        return NBoolSet.fromByteCode(_getCompactness());
+    }
     public native char _getCompactness();
     public NBoolSet getRealBoundary() {
-		return NBoolSet.fromByteCode(_getRealBoundary());
-	}
+        return NBoolSet.fromByteCode(_getRealBoundary());
+    }
     public native char _getRealBoundary();
 
     public native void addEC(BigInteger ec);
     public native void removeEC(BigInteger ec);
     public native void removeAllECs();
     public void setOrientability(NBoolSet value) {
-		_setOrientability(value.getByteCode());
-	}
+        _setOrientability(value.getByteCode());
+    }
     public native void _setOrientability(char value);
     public void setCompactness(NBoolSet value) {
-		_setCompactness(value.getByteCode());
-	}
+        _setCompactness(value.getByteCode());
+    }
     public native void _setCompactness(char value);
     public void setRealBoundary(NBoolSet value) {
-		_setRealBoundary(value.getByteCode());
-	}
+        _setRealBoundary(value.getByteCode());
+    }
     public native void _setRealBoundary(char value);
 }

@@ -32,39 +32,39 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "sfproperties.h"
-	#include "corbatools.h"
+    #include "sfproperties.h"
+    #include "corbatools.h"
 #else
-	#include "engine/surfaces/sfproperties.h"
-	#include "corba/corbatools.h"
+    #include "engine/surfaces/sfproperties.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceFilterPropertiesIDL.h"
 #include "NSurfaceFilterI.h"
 
 class NSurfaceFilterProperties_i :
-		public virtual Regina::Surfaces::_sk_NSurfaceFilterProperties,
-		public NSurfaceFilter_i {
-	protected:
-		NSurfaceFilterProperties_i(::NSurfaceFilterProperties* newCppPtr) :
-				NSurfaceFilter_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NSurfaceFilterProperties,
-			NSurfaceFilterProperties_i,
-			Regina::Surfaces::NSurfaceFilterProperties_ptr)
-		
-		virtual CORBA::Long getNumberOfECs();
-		virtual char* getEC(CORBA::Long index);
-		virtual CORBA::Char getOrientability();
-		virtual CORBA::Char getCompactness();
-		virtual CORBA::Char getRealBoundary();
-		virtual void addEC(const char* ec);
-		virtual void removeEC(const char* ec);
-		virtual void removeAllECs();
-		virtual void setOrientability(CORBA::Char value);
-		virtual void setCompactness(CORBA::Char value);
-		virtual void setRealBoundary(CORBA::Char value);
+        public virtual Regina::Surfaces::_sk_NSurfaceFilterProperties,
+        public NSurfaceFilter_i {
+    protected:
+        NSurfaceFilterProperties_i(::NSurfaceFilterProperties* newCppPtr) :
+                NSurfaceFilter_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NSurfaceFilterProperties,
+            NSurfaceFilterProperties_i,
+            Regina::Surfaces::NSurfaceFilterProperties_ptr)
+        
+        virtual CORBA::Long getNumberOfECs();
+        virtual char* getEC(CORBA::Long index);
+        virtual CORBA::Char getOrientability();
+        virtual CORBA::Char getCompactness();
+        virtual CORBA::Char getRealBoundary();
+        virtual void addEC(const char* ec);
+        virtual void removeEC(const char* ec);
+        virtual void removeAllECs();
+        virtual void setOrientability(CORBA::Char value);
+        virtual void setCompactness(CORBA::Char value);
+        virtual void setRealBoundary(CORBA::Char value);
 };
 
 #endif

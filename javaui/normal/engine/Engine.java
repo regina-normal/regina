@@ -47,21 +47,21 @@ import normal.engine.utilities.*;
  * <tt>normal.engine.implementation</tt>.
  */
 public interface Engine {
-	/**
-	 * Returns the style of engine represented by this engine object.
-	 * This will be one of the predefined engine style constants in
-	 * class <tt>normal.Shell</tt>.
-	 *
-	 * @return the style of engine.
-	 */
-	public int style();
-	/**
-	 * Returns a short description of the style of engine represented by
-	 * this engine object.
-	 *
-	 * @return a description of the style of engine.
-	 */
-	public String styleDescription();
+    /**
+     * Returns the style of engine represented by this engine object.
+     * This will be one of the predefined engine style constants in
+     * class <tt>normal.Shell</tt>.
+     *
+     * @return the style of engine.
+     */
+    public int style();
+    /**
+     * Returns a short description of the style of engine represented by
+     * this engine object.
+     *
+     * @return a description of the style of engine.
+     */
+    public String styleDescription();
 
     public NAbelianGroup newNAbelianGroup();
     public NAbelianGroup newNAbelianGroup(NAbelianGroup cloneMe);
@@ -101,15 +101,15 @@ public interface Engine {
     public long formCensus(NPacket parent, int nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, NProgressManager manager);
-	public int getVersionMajor();
-	public int getVersionMinor();
-	public String getVersionString();
+    public int getVersionMajor();
+    public int getVersionMinor();
+    public String getVersionString();
     public NMatrixInt makeMatchingEquations(NTriangulation
         triangulation, int flavour);
     public NPacket readFromFile(String fileName);
     public NTriangulation readSnapPea(String file);
     public void smithNormalForm(NMatrixInt matrix);
-	public int testEngine(int value);
+    public int testEngine(int value);
     public boolean writeToFile(String fileName, NPacket packet);
 }
 

@@ -37,8 +37,8 @@
 #include "NPacketI.h"
 
 Regina::Packet::NPacket_ptr NPacket_i::newWrapper(::NPacket* newCppPtr) {
-	if (! newCppPtr)
-		return NPacket_i::_nil();
+    if (! newCppPtr)
+        return NPacket_i::_nil();
 
     int type = newCppPtr->getPacketType();
 
@@ -47,8 +47,8 @@ Regina::Packet::NPacket_ptr NPacket_i::newWrapper(::NPacket* newCppPtr) {
         #pragma warn -rch
     #endif
 
-	if (0)
-		return 0;
+    if (0)
+        return 0;
 
     // Define something for REGISTER_CORBA_PACKET to do.
     #define REGISTER_CORBA_PACKET(cppClass, CORBAClass) \

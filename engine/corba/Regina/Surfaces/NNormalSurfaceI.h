@@ -32,39 +32,39 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nnormalsurface.h"
-	#include "corbatools.h"
+    #include "nnormalsurface.h"
+    #include "corbatools.h"
 #else
-	#include "engine/surfaces/nnormalsurface.h"
-	#include "corba/corbatools.h"
+    #include "engine/surfaces/nnormalsurface.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NNormalSurfaceIDL.h"
 #include "ShareableObjectI.h"
 
 class NNormalSurface_i : public virtual Regina::Surfaces::_sk_NNormalSurface,
-		public ShareableObject_i {
-	protected:
-		NNormalSurface_i(::NNormalSurface* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NNormalSurface, NNormalSurface_i,
-			Regina::Surfaces::NNormalSurface_ptr)
-		
-		virtual char* getTriangleCoord(CORBA::Long tetIndex,
-			CORBA::Long vertex);
-		virtual char* getQuadCoord(CORBA::Long tetIndex, CORBA::Long quadType);
-		virtual char* getOctCoord(CORBA::Long tetIndex, CORBA::Long octType);
-		virtual char* getEdgeWeight(CORBA::Long edgeIndex);
-		virtual char* getFaceArcs(CORBA::Long faceIndex,
-			CORBA::Long faceVertex);
-		virtual CORBA::Long getNumberOfCoords();
-		virtual Regina::Triangulation::NTriangulation_ptr getTriangulation();
-		virtual CORBA::Boolean isCompact();
-		virtual char* getEulerCharacteristic();
-		virtual CORBA::Long isOrientable();
-		virtual CORBA::Boolean hasRealBoundary();
+        public ShareableObject_i {
+    protected:
+        NNormalSurface_i(::NNormalSurface* newCppPtr) :
+                ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NNormalSurface, NNormalSurface_i,
+            Regina::Surfaces::NNormalSurface_ptr)
+        
+        virtual char* getTriangleCoord(CORBA::Long tetIndex,
+            CORBA::Long vertex);
+        virtual char* getQuadCoord(CORBA::Long tetIndex, CORBA::Long quadType);
+        virtual char* getOctCoord(CORBA::Long tetIndex, CORBA::Long octType);
+        virtual char* getEdgeWeight(CORBA::Long edgeIndex);
+        virtual char* getFaceArcs(CORBA::Long faceIndex,
+            CORBA::Long faceVertex);
+        virtual CORBA::Long getNumberOfCoords();
+        virtual Regina::Triangulation::NTriangulation_ptr getTriangulation();
+        virtual CORBA::Boolean isCompact();
+        virtual char* getEulerCharacteristic();
+        virtual CORBA::Long isOrientable();
+        virtual CORBA::Boolean hasRealBoundary();
 };
 
 #endif

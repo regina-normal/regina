@@ -37,10 +37,10 @@ import org.python.util.*;
  * Provides a console that is a JPython interpreter.
  */
 public class JPythonConsole extends ConsolePane {
-	/**
-	 * The system state to be used with JPython.
-	 */
-	private static PySystemState systemState;
+    /**
+     * The system state to be used with JPython.
+     */
+    private static PySystemState systemState;
 
     /**
      * The actual JPython interpreter that is used.
@@ -105,8 +105,8 @@ public class JPythonConsole extends ConsolePane {
             try {
                 systemState = new PySystemState();
             } catch (Throwable th) {
-				th.printStackTrace();
-			}
+                th.printStackTrace();
+            }
         return systemState;
     }
 }

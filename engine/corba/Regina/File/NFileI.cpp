@@ -30,37 +30,37 @@
 #include "NPacketI.h"
 
 CORBA::Boolean NFile_i::open(const char* fileName, CORBA::Long openMode) {
-	return GET_ENGINE_OBJECT(NFile, this)->open(fileName,
-		(::NFile::mode)openMode);
+    return GET_ENGINE_OBJECT(NFile, this)->open(fileName,
+        (::NFile::mode)openMode);
 }
 void NFile_i::close() {
-	GET_ENGINE_OBJECT(NFile, this)->close();
+    GET_ENGINE_OBJECT(NFile, this)->close();
 }
 CORBA::Long NFile_i::getOpenMode() {
-	return GET_ENGINE_OBJECT(NFile, this)->getOpenMode();
+    return GET_ENGINE_OBJECT(NFile, this)->getOpenMode();
 }
 CORBA::Long NFile_i::getMajorVersion() {
-	return GET_ENGINE_OBJECT(NFile, this)->getMajorVersion();
+    return GET_ENGINE_OBJECT(NFile, this)->getMajorVersion();
 }
 CORBA::Long NFile_i::getMinorVersion() {
-	return GET_ENGINE_OBJECT(NFile, this)->getMinorVersion();
+    return GET_ENGINE_OBJECT(NFile, this)->getMinorVersion();
 }
 CORBA::Boolean NFile_i::versionEarlierThan(CORBA::Long major,
-		CORBA::Long minor) {
-	return GET_ENGINE_OBJECT(NFile, this)->versionEarlierThan(
-		major, minor);
+        CORBA::Long minor) {
+    return GET_ENGINE_OBJECT(NFile, this)->versionEarlierThan(
+        major, minor);
 }
 void NFile_i::writePacketTree(Regina::Packet::NPacket_ptr packet) {
-	GET_ENGINE_OBJECT(NFile, this)->writePacketTree(
-		GET_ENGINE_OBJECT(NPacket, packet));
+    GET_ENGINE_OBJECT(NFile, this)->writePacketTree(
+        GET_ENGINE_OBJECT(NPacket, packet));
 }
 Regina::Packet::NPacket_ptr NFile_i::readPacketTree_() {
-	return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NFile, this)->
-		readPacketTree());
+    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NFile, this)->
+        readPacketTree());
 }
 Regina::Packet::NPacket_ptr NFile_i::readPacketTree_NPacket(
-		Regina::Packet::NPacket_ptr parent) {
-	return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NFile, this)->
-		readPacketTree(GET_ENGINE_OBJECT(NPacket, parent)));
+        Regina::Packet::NPacket_ptr parent) {
+    return NPacket_i::newWrapper(GET_ENGINE_OBJECT(NFile, this)->
+        readPacketTree(GET_ENGINE_OBJECT(NPacket, parent)));
 }
 

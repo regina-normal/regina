@@ -34,50 +34,50 @@
 #include "NTetrahedronI.h"
 
 CORBA::Boolean NComponent_i::isIdeal() {
-	return GET_ENGINE_OBJECT(NComponent, this)->isIdeal();
+    return GET_ENGINE_OBJECT(NComponent, this)->isIdeal();
 }
 CORBA::Boolean NComponent_i::isOrientable() {
-	return GET_ENGINE_OBJECT(NComponent, this)->isOrientable();
+    return GET_ENGINE_OBJECT(NComponent, this)->isOrientable();
 }
 CORBA::Boolean NComponent_i::isClosed() {
-	return GET_ENGINE_OBJECT(NComponent, this)->isClosed();
+    return GET_ENGINE_OBJECT(NComponent, this)->isClosed();
 }
 CORBA::Long NComponent_i::getNumberOfTetrahedra() {
-	return GET_ENGINE_OBJECT(NComponent, this)->getNumberOfTetrahedra();
+    return GET_ENGINE_OBJECT(NComponent, this)->getNumberOfTetrahedra();
 }
 CORBA::Long NComponent_i::getNumberOfFaces() {
-	return GET_ENGINE_OBJECT(NComponent, this)->getNumberOfFaces();
+    return GET_ENGINE_OBJECT(NComponent, this)->getNumberOfFaces();
 }
 CORBA::Long NComponent_i::getNumberOfEdges() {
-	return GET_ENGINE_OBJECT(NComponent, this)->getNumberOfEdges();
+    return GET_ENGINE_OBJECT(NComponent, this)->getNumberOfEdges();
 }
 CORBA::Long NComponent_i::getNumberOfVertices() {
-	return GET_ENGINE_OBJECT(NComponent, this)->getNumberOfVertices();
+    return GET_ENGINE_OBJECT(NComponent, this)->getNumberOfVertices();
 }
 CORBA::Long NComponent_i::getNumberOfBoundaryComponents() {
-	return GET_ENGINE_OBJECT(NComponent, this)->
-		getNumberOfBoundaryComponents();
+    return GET_ENGINE_OBJECT(NComponent, this)->
+        getNumberOfBoundaryComponents();
 }
 Regina::Triangulation::NTetrahedron_ptr NComponent_i::getTetrahedron(
-		CORBA::Long index) {
-	return NTetrahedron_i::newWrapper(GET_ENGINE_OBJECT(NComponent, this)->
-		getTetrahedron(index));
+        CORBA::Long index) {
+    return NTetrahedron_i::newWrapper(GET_ENGINE_OBJECT(NComponent, this)->
+        getTetrahedron(index));
 }
 Regina::Triangulation::NFace_ptr NComponent_i::getFace(CORBA::Long index) {
-	return NFace_i::newWrapper(GET_ENGINE_OBJECT(NComponent, this)->
-		getFace(index));
+    return NFace_i::newWrapper(GET_ENGINE_OBJECT(NComponent, this)->
+        getFace(index));
 }
 Regina::Triangulation::NEdge_ptr NComponent_i::getEdge(CORBA::Long index) {
-	return NEdge_i::newWrapper(GET_ENGINE_OBJECT(NComponent, this)->
-		getEdge(index));
+    return NEdge_i::newWrapper(GET_ENGINE_OBJECT(NComponent, this)->
+        getEdge(index));
 }
 Regina::Triangulation::NVertex_ptr NComponent_i::getVertex(CORBA::Long index) {
-	return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NComponent, this)->
-		getVertex(index));
+    return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NComponent, this)->
+        getVertex(index));
 }
 Regina::Triangulation::NBoundaryComponent_ptr
-		NComponent_i::getBoundaryComponent(CORBA::Long index) {
-	return NBoundaryComponent_i::newWrapper(
-		GET_ENGINE_OBJECT(NComponent, this)->getBoundaryComponent(index));
+        NComponent_i::getBoundaryComponent(CORBA::Long index) {
+    return NBoundaryComponent_i::newWrapper(
+        GET_ENGINE_OBJECT(NComponent, this)->getBoundaryComponent(index));
 }
 

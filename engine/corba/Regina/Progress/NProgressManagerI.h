@@ -32,30 +32,30 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nprogressmanager.h"
-	#include "corbatools.h"
+    #include "nprogressmanager.h"
+    #include "corbatools.h"
 #else
-	#include "engine/progress/nprogressmanager.h"
-	#include "corba/corbatools.h"
+    #include "engine/progress/nprogressmanager.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NProgressManagerIDL.h"
 #include "ShareableObjectI.h"
 
 class NProgressManager_i :
-		public virtual Regina::Progress::_sk_NProgressManager,
-		public ShareableObject_i {
-	protected:
-		NProgressManager_i(::NProgressManager* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NProgressManager, NProgressManager_i,
-			Regina::Progress::NProgressManager_ptr)
+        public virtual Regina::Progress::_sk_NProgressManager,
+        public ShareableObject_i {
+    protected:
+        NProgressManager_i(::NProgressManager* newCppPtr) :
+                ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NProgressManager, NProgressManager_i,
+            Regina::Progress::NProgressManager_ptr)
 
-		virtual CORBA::Boolean isStarted();
-		virtual CORBA::Boolean isFinished();
-		virtual Regina::Progress::NProgress_ptr getProgress();
+        virtual CORBA::Boolean isStarted();
+        virtual CORBA::Boolean isFinished();
+        virtual Regina::Progress::NProgress_ptr getProgress();
 };
 
 #endif

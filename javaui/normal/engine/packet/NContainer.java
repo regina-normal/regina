@@ -29,5 +29,5 @@
 package normal.engine.packet;
 
 public interface NContainer extends NPacket {
-	public static final int packetType = 1;
+    public static final int packetType = 1;
 }

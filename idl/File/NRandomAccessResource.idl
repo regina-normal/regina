@@ -30,18 +30,18 @@
 #define __NRANDOMACCESSRESOURCE_IDL
 
 module Regina {
-	module File {
-		interface NRandomAccessResource {
-			boolean openRead();
-			boolean openWrite();
-			void close();
-			long getMode();
-			char getChar();
-			void putChar(in char c);
-			long getPosition();
-			void setPosition(in long pos);
-		};
-	};
+    module File {
+        interface NRandomAccessResource {
+            boolean openRead();
+            boolean openWrite();
+            void close();
+            long getMode();
+            char getChar();
+            void putChar(in char c);
+            long getPosition();
+            void setPosition(in long pos);
+        };
+    };
 };
 
 #endif

@@ -88,7 +88,7 @@ JNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron__1getEdgeMapping
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NTetrahedron, me)->getEdgeMapping(index).
-		getPermCode();
+        getPermCode();
 }
 
 JNIEXPORT jobject JNICALL
@@ -103,7 +103,7 @@ JNIEXPORT jchar JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron__1getFaceMapping
         (JNIEnv *env, jobject me, jint index) {
     return GET_ENGINE_OBJECT(env, NTetrahedron, me)->getFaceMapping(index).
-		getPermCode();
+        getPermCode();
 }
 
 JNIEXPORT jobject JNICALL
@@ -130,7 +130,7 @@ JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron__1joinTo
         (JNIEnv *env, jobject me, jint myFace, jobject you, jchar gluing) {
     GET_ENGINE_OBJECT(env, NTetrahedron, me)->joinTo(myFace,
-		GET_ENGINE_OBJECT(env, NTetrahedron, you), NPerm(gluing));
+        GET_ENGINE_OBJECT(env, NTetrahedron, you), NPerm(gluing));
 }
 
 JNIEXPORT void JNICALL

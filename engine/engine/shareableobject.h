@@ -105,42 +105,42 @@ class ShareableObject {
         #ifdef __DOXYGEN
         void destroy();
         #endif
-		/**
-		 * Returns a pointer to the underlying C++ engine object that
-		 * this wrapper refers to.
-		 * The pointer will be cast as a long integer.
-		 *
-		 * \ifacescpp Not present.
-		 * \ifaces Not present outside the CORBA interface.
-		 *
-		 * @return a pointer to the underlying C++ engine object.
-		 */
-		#ifdef __DOXYGEN
-		long getCppPtr();
-		#endif
+        /**
+         * Returns a pointer to the underlying C++ engine object that
+         * this wrapper refers to.
+         * The pointer will be cast as a long integer.
+         *
+         * \ifacescpp Not present.
+         * \ifaces Not present outside the CORBA interface.
+         *
+         * @return a pointer to the underlying C++ engine object.
+         */
+        #ifdef __DOXYGEN
+        long getCppPtr();
+        #endif
         /**
          * Returns a new wrapper for this object using the given wrapper
          * class.
          * The new wrapper will wrap the same object as this wrapper,
          * but will be of the given subclass or superclass
-		 * of this wrapper's class.
+         * of this wrapper's class.
          *
          * \pre The underlying C++ engine object that is being wrapped is
          * actually of the engine class corresponding to the given
          * wrapper class \a cls.
          *
          * \ifacescpp Not present.
-		 * \ifacescorba Not present.
+         * \ifacescorba Not present.
          * \ifacesjava Parameter \a cls should be of type
          * <tt>java.lang.Class</tt>.  If the Java interface is being
-		 * used as a CORBA client, the client CORBA object
-		 * will also be appropriately narrowed but it will be
-		 * assumed that the server CORBA object
-		 * is already of the correct CORBA class.
+         * used as a CORBA client, the client CORBA object
+         * will also be appropriately narrowed but it will be
+         * assumed that the server CORBA object
+         * is already of the correct CORBA class.
          *
          * @param cls the wrapper class that the new wrapper shall be an
          * instance of; this must be an instantiatable subclass or superclass
-		 * of whichever class this wrapper is an instance of.
+         * of whichever class this wrapper is an instance of.
          * @return the new wrapper.
          */
         #ifdef __DOXYGEN
@@ -154,7 +154,7 @@ class ShareableObject {
          *
          * \ifaces The parameter \a out does not exist;
          * standard output will be used.
-		 * \ifacescorba Not present.
+         * \ifacescorba Not present.
          *
          * @param out the output stream to which to write.
          */
@@ -170,7 +170,7 @@ class ShareableObject {
          *
          * \ifaces The parameter \a out does not exist;
          * standard output will be used.
-		 * \ifacescorba Not present.
+         * \ifacescorba Not present.
          *
          * @param out the output stream to which to write.
          */

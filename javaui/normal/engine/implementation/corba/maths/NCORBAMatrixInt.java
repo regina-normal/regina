@@ -33,64 +33,64 @@ import normal.engine.implementation.corba.Regina.Maths.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBAMatrixInt extends CORBAShareableObject
-		implements normal.engine.maths.NMatrixInt {
-	public NMatrixInt data;
-	public static final Class CORBAClass = NMatrixInt.class;
-	public static final Class helperClass = NMatrixIntHelper.class;
+        implements normal.engine.maths.NMatrixInt {
+    public NMatrixInt data;
+    public static final Class CORBAClass = NMatrixInt.class;
+    public static final Class helperClass = NMatrixIntHelper.class;
 
     protected NCORBAMatrixInt(NMatrixInt data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBAMatrixInt newWrapper(NMatrixInt source) {
-		return (source == null ? null : new NCORBAMatrixInt(source));
-	}
+    public static NCORBAMatrixInt newWrapper(NMatrixInt source) {
+        return (source == null ? null : new NCORBAMatrixInt(source));
+    }
 
-	public void initialise(BigInteger value) {
-		data.initialise(value.toString());
-	}
-	public void makeIdentity() {
-		data.makeIdentity();
-	}
+    public void initialise(BigInteger value) {
+        data.initialise(value.toString());
+    }
+    public void makeIdentity() {
+        data.makeIdentity();
+    }
 
-	public int rows() {
-		return data.rows();
-	}
-	public int columns() {
-		return data.columns();
-	}
+    public int rows() {
+        return data.rows();
+    }
+    public int columns() {
+        return data.columns();
+    }
 
-	public BigInteger getEntry(int row, int column) {
-		return stringToLarge(data.getEntry(row, column));
-	}
-	public void setEntry(int row, int column, BigInteger value) {
-		data.setEntry(row, column, value.toString());
-	}
+    public BigInteger getEntry(int row, int column) {
+        return stringToLarge(data.getEntry(row, column));
+    }
+    public void setEntry(int row, int column, BigInteger value) {
+        data.setEntry(row, column, value.toString());
+    }
 
-	public void swapRows(int first, int second) {
-		data.swapRows(first, second);
-	}
-	public void swapColumns(int first, int second) {
-		data.swapColumns(first, second);
-	}
+    public void swapRows(int first, int second) {
+        data.swapRows(first, second);
+    }
+    public void swapColumns(int first, int second) {
+        data.swapColumns(first, second);
+    }
 
-	public void addRow(int source, int dest) {
-		data.addRow_long_long(source, dest);
-	}
-	public void addRow(int source, int dest, BigInteger copies) {
-		data.addRow_long_long_bigInt(source, dest, copies.toString());
-	}
-	public void addCol(int source, int dest) {
-		data.addCol_long_long(source, dest);
-	}
-	public void addCol(int source, int dest, BigInteger copies) {
-		data.addCol_long_long_bigInt(source, dest, copies.toString());
-	}
-	public void multRow(int row, BigInteger factor) {
-		data.multRow(row, factor.toString());
-	}
-	public void multCol(int column, BigInteger factor) {
-		data.multCol(column, factor.toString());
-	}
+    public void addRow(int source, int dest) {
+        data.addRow_long_long(source, dest);
+    }
+    public void addRow(int source, int dest, BigInteger copies) {
+        data.addRow_long_long_bigInt(source, dest, copies.toString());
+    }
+    public void addCol(int source, int dest) {
+        data.addCol_long_long(source, dest);
+    }
+    public void addCol(int source, int dest, BigInteger copies) {
+        data.addCol_long_long_bigInt(source, dest, copies.toString());
+    }
+    public void multRow(int row, BigInteger factor) {
+        data.multRow(row, factor.toString());
+    }
+    public void multCol(int column, BigInteger factor) {
+        data.multCol(column, factor.toString());
+    }
 }

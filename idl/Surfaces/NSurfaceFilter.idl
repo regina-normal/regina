@@ -33,14 +33,14 @@
 #include "Surfaces/NNormalSurface.idl"
 
 module Regina {
-	module Surfaces {
-		interface NSurfaceFilter : Regina::Packet::NPacket {
-			boolean accept(in NNormalSurface surface);
-			
-			long getFilterID();
-			string getFilterName();
-		};
-	};
+    module Surfaces {
+        interface NSurfaceFilter : Regina::Packet::NPacket {
+            boolean accept(in NNormalSurface surface);
+            
+            long getFilterID();
+            string getFilterName();
+        };
+    };
 };
 
 #endif

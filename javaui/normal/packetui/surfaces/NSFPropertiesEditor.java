@@ -210,7 +210,7 @@ public class NSFPropertiesEditor extends DefaultPacketEditor
                             getLongValue();
                     } catch (EmptyDocumentException exc) {
                         shell.error(
-							"No Euler characteristic is provided to add.");
+                            "No Euler characteristic is provided to add.");
                         return;
                     }
                     if (ec > 2) {

@@ -107,8 +107,8 @@ public class Coordinates {
 
             case NNormalSurfaceList.EDGE_WEIGHT:
                 return "Edge weight";
-			case NNormalSurfaceList.FACE_ARCS:
-				return "Face arcs";
+            case NNormalSurfaceList.FACE_ARCS:
+                return "Face arcs";
         }
         return null;
     }
@@ -152,9 +152,9 @@ public class Coordinates {
                     NNormalSurface.vertexSplitString[coord % 3];
             case NNormalSurfaceList.EDGE_WEIGHT:
                 return String.valueOf(coord);
-			case NNormalSurfaceList.FACE_ARCS:
-				return String.valueOf(coord / 3) + ": " +
-					String.valueOf(coord % 3);
+            case NNormalSurfaceList.FACE_ARCS:
+                return String.valueOf(coord / 3) + ": " +
+                    String.valueOf(coord % 3);
         }
         return null;
     }
@@ -200,9 +200,9 @@ public class Coordinates {
                     NNormalSurface.vertexSplitString[coord % 3];
             case NNormalSurfaceList.EDGE_WEIGHT:
                 return "Weight of edge " + String.valueOf(coord);
-			case NNormalSurfaceList.FACE_ARCS:
-				return "Arcs on face " + String.valueOf(coord / 3) +
-					" crossing face vertex " + String.valueOf(coord % 3);
+            case NNormalSurfaceList.FACE_ARCS:
+                return "Arcs on face " + String.valueOf(coord / 3) +
+                    " crossing face vertex " + String.valueOf(coord % 3);
         }
         return null;
     }
@@ -231,8 +231,8 @@ public class Coordinates {
                 return 3 * (int)triang.getNumberOfTetrahedra();
             case NNormalSurfaceList.EDGE_WEIGHT:
                 return (int)triang.getNumberOfEdges();
-			case NNormalSurfaceList.FACE_ARCS:
-				return 3 * (int)triang.getNumberOfFaces();
+            case NNormalSurfaceList.FACE_ARCS:
+                return 3 * (int)triang.getNumberOfFaces();
         }
         return 0;
     }
@@ -273,8 +273,8 @@ public class Coordinates {
                 return surface.getQuadCoord(coord / 3, coord % 3);
             case NNormalSurfaceList.EDGE_WEIGHT:
                 return surface.getEdgeWeight(coord);
-			case NNormalSurfaceList.FACE_ARCS:
-				return surface.getFaceArcs(coord / 3, coord % 3);
+            case NNormalSurfaceList.FACE_ARCS:
+                return surface.getFaceArcs(coord / 3, coord % 3);
         }
         return null;
     }

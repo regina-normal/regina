@@ -32,25 +32,25 @@ import normal.engine.implementation.corba.Regina.Packet.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBAText extends NCORBAPacket
-		implements normal.engine.packet.NText {
-	public NText data;
-	public static final Class CORBAClass = NText.class;
-	public static final Class helperClass = NTextHelper.class;
+        implements normal.engine.packet.NText {
+    public NText data;
+    public static final Class CORBAClass = NText.class;
+    public static final Class helperClass = NTextHelper.class;
 
     protected NCORBAText(NText data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBAText newWrapper(NText source) {
-		return (source == null ? null : new NCORBAText(source));
-	}
+    public static NCORBAText newWrapper(NText source) {
+        return (source == null ? null : new NCORBAText(source));
+    }
 
-	public String getText() {
-		return data.getText();
-	}
-	public void setText(String newText) {
-		data.setText(newText);
-	}
+    public String getText() {
+        return data.getText();
+    }
+    public void setText(String newText) {
+        data.setText(newText);
+    }
 }
 

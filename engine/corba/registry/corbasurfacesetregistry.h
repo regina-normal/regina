@@ -59,15 +59,15 @@
  */
 
 #ifndef __CORBA_SURFACE_SET_REGISTRY_BODY
-	#include "NNormalSurfaceListIDL.h"
-	#include "NSurfaceSubsetIDL.h"
+    #include "NNormalSurfaceListIDL.h"
+    #include "NSurfaceSubsetIDL.h"
 #else
     REGISTER_CORBA_SURFACE_SET(NNormalSurfaceList,
-		Regina::Surfaces::NNormalSurfaceList,
-		Regina::Surfaces::NNormalSurfaceList_ptr)
+        Regina::Surfaces::NNormalSurfaceList,
+        Regina::Surfaces::NNormalSurfaceList_ptr)
     REGISTER_CORBA_SURFACE_SET(NSurfaceSubset,
-		Regina::Surfaces::NSurfaceSubset,
-		Regina::Surfaces::NSurfaceSubset_ptr)
+        Regina::Surfaces::NSurfaceSubset,
+        Regina::Surfaces::NSurfaceSubset_ptr)
 #endif
 
 /*! \file corbasurfacesetregistry.h

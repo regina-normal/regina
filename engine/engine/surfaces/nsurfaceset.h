@@ -140,7 +140,7 @@ class NSurfaceSet {
          * that could arise combining virtual multiple inheritance
          * with the voluminous casting and recasting that takes place
          * when working with external interfaces.
-		 *
+         *
          * @return this object cast as a ShareableObject.
          */
         virtual ShareableObject* getShareableObject() = 0;

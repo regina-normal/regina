@@ -87,12 +87,12 @@ public class NormalOptionSet extends OptionSet {
      */
     private boolean displayIcon;
 
-	/**
-	 * Creates a new option set not associated with any file.
-	 */
-	public NormalOptionSet() {
-		super();
-	}
+    /**
+     * Creates a new option set not associated with any file.
+     */
+    public NormalOptionSet() {
+        super();
+    }
     
     /**
      * Creates a new option set based on the given file.

@@ -2,9 +2,9 @@
 Regina - A Normal Surface Theory Calculator
 
 Version 2.1.1a
-	OVERALL:
-		- Set up system for creating distributions.
-		- Final tidying up for proper release.
+    OVERALL:
+        - Set up system for creating distributions.
+        - Final tidying up for proper release.
 
 Version 2.1.1
     OVERALL:
@@ -25,8 +25,8 @@ Version 2.1.1
             - Added coordinate system FACE_ARCS; renumbered EDGE_WEIGHT.
         Class NPerm:
             - Now passed as characters to and from external interfaces.
-		Class NTriangulation:
-			- Added routine isStandard().
+        Class NTriangulation:
+            - Added routine isStandard().
     JAVA USER INTERFACE:
         Overall structure:
             - Allows running as an applet as well as an application.
@@ -38,9 +38,9 @@ Version 2.1.1
         normal.packetui.census.NCensusCreator:
             - Altered the boundary combo box strings to avoid
               misinterpretation.
-		normal.packetui.surfaces.NSurfaceFilterEditor:
-			- Fixed the bug in which changes in the filter were not
-			  always being immediately reflected in the surface list.
+        normal.packetui.surfaces.NSurfaceFilterEditor:
+            - Fixed the bug in which changes in the filter were not
+              always being immediately reflected in the surface list.
 
 Version 2.1.0
     (Initial release.)

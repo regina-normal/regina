@@ -49,13 +49,13 @@ public class Images {
      */
     public static final StandardImage btnDockDocked =
         new StandardImage("normal/images/buttons/dockDocked.gif",
-			Images.class);
+            Images.class);
     /**
      * A button representing an undocked pane.
      */
     public static final StandardImage btnDockUndocked =
         new StandardImage("normal/images/buttons/dockUndocked.gif",
-			Images.class);
+            Images.class);
 
     /**
      * The program title image.
@@ -67,10 +67,10 @@ public class Images {
      */
     public static final StandardImage mainLargeIcon =
         new StandardImage("normal/images/main/largeicon.jpg", Images.class);
-	/**
-	 * The medium program icon.
-	 */
-	public static final StandardImage mainMediumIcon =
+    /**
+     * The medium program icon.
+     */
+    public static final StandardImage mainMediumIcon =
         new StandardImage("normal/images/main/mediumicon.gif", Images.class);
     /**
      * The small program icon.

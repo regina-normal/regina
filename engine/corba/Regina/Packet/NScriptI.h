@@ -32,41 +32,41 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nscript.h"
-	#include "corbatools.h"
+    #include "nscript.h"
+    #include "corbatools.h"
 #else
-	#include "engine/packet/nscript.h"
-	#include "corba/corbatools.h"
+    #include "engine/packet/nscript.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NScriptIDL.h"
 #include "NPacketI.h"
 
 class NScript_i : public virtual Regina::Packet::_sk_NScript,
-		public NPacket_i {
-	protected:
-		NScript_i(::NScript* newCppPtr) : NPacket_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NScript, NScript_i, Regina::Packet::NScript_ptr)
+        public NPacket_i {
+    protected:
+        NScript_i(::NScript* newCppPtr) : NPacket_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NScript, NScript_i, Regina::Packet::NScript_ptr)
 
-		virtual CORBA::Long getNumberOfLines();
-		virtual char* getLine(CORBA::Long index);
-		virtual void addFirst(const char* line);
-		virtual void addLast(const char* line);
-		virtual void insertAtPosition(const char* line, CORBA::Long index);
-		virtual void replaceAtPosition(const char* line, CORBA::Long index);
-		virtual void removeLineAt(CORBA::Long index);
-		virtual void removeAllLines();
-		virtual CORBA::Long getNumberOfVariables();
-		virtual char* getVariableName(CORBA::Long index);
-		virtual char* getVariableValue_long(CORBA::Long index);
-		virtual char* getVariableValue_string(const char* name);
-		virtual CORBA::Long getVariableIndex(const char* name);
-		virtual void addVariable(const char* name, const char* value);
-		virtual void removeVariableAt(CORBA::Long index);
-		virtual void removeVariable(const char* name);
-		virtual void removeAllVariables();
+        virtual CORBA::Long getNumberOfLines();
+        virtual char* getLine(CORBA::Long index);
+        virtual void addFirst(const char* line);
+        virtual void addLast(const char* line);
+        virtual void insertAtPosition(const char* line, CORBA::Long index);
+        virtual void replaceAtPosition(const char* line, CORBA::Long index);
+        virtual void removeLineAt(CORBA::Long index);
+        virtual void removeAllLines();
+        virtual CORBA::Long getNumberOfVariables();
+        virtual char* getVariableName(CORBA::Long index);
+        virtual char* getVariableValue_long(CORBA::Long index);
+        virtual char* getVariableValue_string(const char* name);
+        virtual CORBA::Long getVariableIndex(const char* name);
+        virtual void addVariable(const char* name, const char* value);
+        virtual void removeVariableAt(CORBA::Long index);
+        virtual void removeVariable(const char* name);
+        virtual void removeAllVariables();
 };
 
 #endif

@@ -88,7 +88,7 @@ public class NSurfaceFilterEditor extends PacketInfoTabbedPane
      */
     public NSurfaceFilterEditor(NPacket packet, Shell shell, boolean editor) {
         super(packet, editor);
-		this.shell = shell;
+        this.shell = shell;
         this.surfaceSource = null;
         this.filteredSurfaces = null;
         init(packet);
@@ -177,15 +177,15 @@ public class NSurfaceFilterEditor extends PacketInfoTabbedPane
         coordinates.updateSet(filteredSurfaces);
     }
 
-	public void reflectPacket() {
-		applyFilter();
-		super.reflectPacket();
-	}
+    public void reflectPacket() {
+        applyFilter();
+        super.reflectPacket();
+    }
 
-	public void applyChanges(Engine engine) {
-		super.applyChanges(engine);
-		applyFilter();
-	}
+    public void applyChanges(Engine engine) {
+        super.applyChanges(engine);
+        applyFilter();
+    }
 
     public void packetWasChanged(NPacket packet, PacketUI ui, Frame owner) {
         super.packetWasChanged(packet, ui, owner);

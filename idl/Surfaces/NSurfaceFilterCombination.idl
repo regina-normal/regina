@@ -32,12 +32,12 @@
 #include "Surfaces/NSurfaceFilter.idl"
 
 module Regina {
-	module Surfaces {
-		interface NSurfaceFilterCombination : NSurfaceFilter {
-			boolean getUsesAnd();
-			void setUsesAnd(in boolean value);
-		};
-	};
+    module Surfaces {
+        interface NSurfaceFilterCombination : NSurfaceFilter {
+            boolean getUsesAnd();
+            void setUsesAnd(in boolean value);
+        };
+    };
 };
 
 #endif

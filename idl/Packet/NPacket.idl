@@ -32,42 +32,42 @@
 #include "ShareableObject.idl"
 
 module Regina {
-	module Packet {
-		interface NPacket : ShareableObject {
-			long getPacketType();
-			string getPacketName();
-			string getPacketLabel();
-			void setPacketLabel(in string newLabel);
-			string getFullName();
+    module Packet {
+        interface NPacket : ShareableObject {
+            long getPacketType();
+            string getPacketName();
+            string getPacketLabel();
+            void setPacketLabel(in string newLabel);
+            string getFullName();
 
-			NPacket getFirstTreeChild();
-			NPacket getLastTreeChild();
-			NPacket getPrevTreeSibling();
-			NPacket getNextTreeSibling();
-			NPacket getTreeParent();
-			NPacket getTreeMatriarch();
-			void insertChildFirst(in NPacket child);
-			void insertChildLast(in NPacket child);
-			void insertChildAfter(in NPacket newChild, in NPacket prevChild);
-			void makeOrphan();
-			void swapWithNextSibling();
+            NPacket getFirstTreeChild();
+            NPacket getLastTreeChild();
+            NPacket getPrevTreeSibling();
+            NPacket getNextTreeSibling();
+            NPacket getTreeParent();
+            NPacket getTreeMatriarch();
+            void insertChildFirst(in NPacket child);
+            void insertChildLast(in NPacket child);
+            void insertChildAfter(in NPacket newChild, in NPacket prevChild);
+            void makeOrphan();
+            void swapWithNextSibling();
 
-			NPacket nextTreePacket_();
-			NPacket firstTreePacket(in string type);
-			NPacket nextTreePacket_string(in string type);
-			NPacket findPacketLabel(in string label);
-			string makeUniqueLabel(in string base);
+            NPacket nextTreePacket_();
+            NPacket firstTreePacket(in string type);
+            NPacket nextTreePacket_string(in string type);
+            NPacket findPacketLabel(in string label);
+            string makeUniqueLabel(in string base);
 
-			long levelsDownTo(in NPacket descendant);
-			long levelsUpTo(in NPacket ancestor);
-			boolean isGrandparentOf(in NPacket descendant);
-			long totalTreeSize();
+            long levelsDownTo(in NPacket descendant);
+            long levelsUpTo(in NPacket ancestor);
+            boolean isGrandparentOf(in NPacket descendant);
+            long totalTreeSize();
 
-			boolean dependsOnParent();
-			boolean isPacketEditable();
-			NPacket clonePacket(in boolean cloneDescendants, in boolean end);
-		};
-	};
+            boolean dependsOnParent();
+            boolean isPacketEditable();
+            NPacket clonePacket(in boolean cloneDescendants, in boolean end);
+        };
+    };
 };
 
 #endif

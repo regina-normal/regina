@@ -63,9 +63,9 @@
 #else
     REGISTER_CORBA_FILTER(NSurfaceFilter, NSurfaceFilter_i)
     REGISTER_CORBA_FILTER(NSurfaceFilterProperties,
-		NSurfaceFilterProperties_i)
+        NSurfaceFilterProperties_i)
     REGISTER_CORBA_FILTER(NSurfaceFilterCombination,
-		NSurfaceFilterCombination_i)
+        NSurfaceFilterCombination_i)
 #endif
 
 /*! \file corbafilterregistry.h

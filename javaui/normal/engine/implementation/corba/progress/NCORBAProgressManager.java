@@ -32,28 +32,28 @@ import normal.engine.implementation.corba.Regina.Progress.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBAProgressManager extends CORBAShareableObject
-		implements normal.engine.progress.NProgressManager {
-	public NProgressManager data;
-	public static final Class CORBAClass = NProgressManager.class;
-	public static final Class helperClass = NProgressManagerHelper.class;
+        implements normal.engine.progress.NProgressManager {
+    public NProgressManager data;
+    public static final Class CORBAClass = NProgressManager.class;
+    public static final Class helperClass = NProgressManagerHelper.class;
 
     protected NCORBAProgressManager(NProgressManager data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBAProgressManager newWrapper(NProgressManager source) {
-		return (source == null ? null : new NCORBAProgressManager(source));
-	}
+    public static NCORBAProgressManager newWrapper(NProgressManager source) {
+        return (source == null ? null : new NCORBAProgressManager(source));
+    }
 
-	public boolean isStarted() {
-		return data.isStarted();
-	}
-	public boolean isFinished() {
-		return data.isFinished();
-	}
+    public boolean isStarted() {
+        return data.isStarted();
+    }
+    public boolean isFinished() {
+        return data.isFinished();
+    }
 
-	public normal.engine.progress.NProgress getProgress() {
-		return NCORBAProgress.newWrapper(data.getProgress());
-	}
+    public normal.engine.progress.NProgress getProgress() {
+        return NCORBAProgress.newWrapper(data.getProgress());
+    }
 }

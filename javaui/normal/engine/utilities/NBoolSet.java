@@ -148,15 +148,15 @@ public class NBoolSet {
         return new NBoolSet(! containsTrue, ! containsFalse);
     }
 
-	public char getByteCode() {
-		return (char)((containsTrue ? 1 : 0) + (containsFalse ? 2 : 0));
-	}
-	public void setByteCode(char code) {
-		containsTrue = ((code & 1) != 0);
-		containsFalse = ((code & 2) != 0);
-	}
-	public static NBoolSet fromByteCode(char code) {
-		return new NBoolSet((code & 1) != 0, (code & 2) != 0);
-	}
+    public char getByteCode() {
+        return (char)((containsTrue ? 1 : 0) + (containsFalse ? 2 : 0));
+    }
+    public void setByteCode(char code) {
+        containsTrue = ((code & 1) != 0);
+        containsFalse = ((code & 2) != 0);
+    }
+    public static NBoolSet fromByteCode(char code) {
+        return new NBoolSet((code & 1) != 0, (code & 2) != 0);
+    }
 }
 

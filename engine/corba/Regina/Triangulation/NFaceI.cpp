@@ -32,25 +32,25 @@
 #include "NTetrahedronI.h"
 
 Regina::Triangulation::NComponent_ptr NFace_i::getComponent() {
-	return NComponent_i::newWrapper(GET_ENGINE_OBJECT(NFace, this)->
-		getComponent());
+    return NComponent_i::newWrapper(GET_ENGINE_OBJECT(NFace, this)->
+        getComponent());
 }
 Regina::Triangulation::NBoundaryComponent_ptr
-		NFace_i::getBoundaryComponent() {
-	return NBoundaryComponent_i::newWrapper(GET_ENGINE_OBJECT(NFace, this)->
-		getBoundaryComponent());
+        NFace_i::getBoundaryComponent() {
+    return NBoundaryComponent_i::newWrapper(GET_ENGINE_OBJECT(NFace, this)->
+        getBoundaryComponent());
 }
 CORBA::Boolean NFace_i::isBoundary() {
-	return GET_ENGINE_OBJECT(NFace, this)->isBoundary();
+    return GET_ENGINE_OBJECT(NFace, this)->isBoundary();
 }
 CORBA::Long NFace_i::getNumberOfEmbeddings() {
-	return GET_ENGINE_OBJECT(NFace, this)->getNumberOfEmbeddings();
+    return GET_ENGINE_OBJECT(NFace, this)->getNumberOfEmbeddings();
 }
 void NFace_i::getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
-		CORBA::Long& face, CORBA::Long index) {
-	const NFaceEmbedding& emb =
-		GET_ENGINE_OBJECT(NFace, this)->getEmbedding(index);
-	tet = NTetrahedron_i::newWrapper(emb.getTetrahedron());
-	face = emb.getFace();
+        CORBA::Long& face, CORBA::Long index) {
+    const NFaceEmbedding& emb =
+        GET_ENGINE_OBJECT(NFace, this)->getEmbedding(index);
+    tet = NTetrahedron_i::newWrapper(emb.getTetrahedron());
+    face = emb.getFace();
 }
 

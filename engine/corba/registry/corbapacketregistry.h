@@ -57,12 +57,12 @@
  */
 
 #ifndef __CORBA_PACKET_REGISTRY_BODY
-	#include "NContainerI.h"
-	#include "NScriptI.h"
-	#include "NTextI.h"
-	#include "NTriangulationI.h"
-	#include "NNormalSurfaceListI.h"
-	#include "NSurfaceFilterI.h"
+    #include "NContainerI.h"
+    #include "NScriptI.h"
+    #include "NTextI.h"
+    #include "NTriangulationI.h"
+    #include "NNormalSurfaceListI.h"
+    #include "NSurfaceFilterI.h"
 #else
     REGISTER_CORBA_PACKET(NContainer, NContainer_i)
     REGISTER_CORBA_PACKET(NScript, NScript_i)

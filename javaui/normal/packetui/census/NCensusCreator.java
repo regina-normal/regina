@@ -262,7 +262,7 @@ public class NCensusCreator extends JPanel implements PacketCreator {
                 return null;
         }
         
-		Engine engine = shell.getEngine();
+        Engine engine = shell.getEngine();
         NPacket censusBase = engine.newNContainer();
         // Place the census base in the tree now so unique labels for
         // child triangulations can be assured.

@@ -32,48 +32,48 @@ import normal.engine.implementation.corba.Regina.Triangulation.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBABoundaryComponent extends CORBAShareableObject
-		implements normal.engine.triangulation.NBoundaryComponent {
-	public NBoundaryComponent data;
-	public static final Class CORBAClass = NBoundaryComponent.class;
-	public static final Class helperClass = NBoundaryComponentHelper.class;
+        implements normal.engine.triangulation.NBoundaryComponent {
+    public NBoundaryComponent data;
+    public static final Class CORBAClass = NBoundaryComponent.class;
+    public static final Class helperClass = NBoundaryComponentHelper.class;
 
     public NCORBABoundaryComponent(NBoundaryComponent data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBABoundaryComponent newWrapper(
-			NBoundaryComponent source) {
-		return (source == null ? null : new NCORBABoundaryComponent(source));
-	}
+    public static NCORBABoundaryComponent newWrapper(
+            NBoundaryComponent source) {
+        return (source == null ? null : new NCORBABoundaryComponent(source));
+    }
 
-	public long getEulerCharacteristic() {
-		return data.getEulerCharacteristic();
-	}
-	public boolean isIdeal() {
-		return data.isIdeal();
-	}
-	public boolean isOrientable() {
-		return data.isOrientable();
-	}
+    public long getEulerCharacteristic() {
+        return data.getEulerCharacteristic();
+    }
+    public boolean isIdeal() {
+        return data.isIdeal();
+    }
+    public boolean isOrientable() {
+        return data.isOrientable();
+    }
 
-	public long getNumberOfFaces() {
-		return data.getNumberOfFaces();
-	}
-	public long getNumberOfEdges() {
-		return data.getNumberOfEdges();
-	}
-	public long getNumberOfVertices() {
-		return data.getNumberOfVertices();
-	}
+    public long getNumberOfFaces() {
+        return data.getNumberOfFaces();
+    }
+    public long getNumberOfEdges() {
+        return data.getNumberOfEdges();
+    }
+    public long getNumberOfVertices() {
+        return data.getNumberOfVertices();
+    }
 
-	public normal.engine.triangulation.NFace getFace(long index) {
-		return NCORBAFace.newWrapper(data.getFace((int)index));
-	}
-	public normal.engine.triangulation.NEdge getEdge(long index) {
-		return NCORBAEdge.newWrapper(data.getEdge((int)index));
-	}
-	public normal.engine.triangulation.NVertex getVertex(long index) {
-		return NCORBAVertex.newWrapper(data.getVertex((int)index));
-	}
+    public normal.engine.triangulation.NFace getFace(long index) {
+        return NCORBAFace.newWrapper(data.getFace((int)index));
+    }
+    public normal.engine.triangulation.NEdge getEdge(long index) {
+        return NCORBAEdge.newWrapper(data.getEdge((int)index));
+    }
+    public normal.engine.triangulation.NVertex getVertex(long index) {
+        return NCORBAVertex.newWrapper(data.getVertex((int)index));
+    }
 }

@@ -33,55 +33,55 @@ import normal.engine.utilities.NBoolSet;
 import normal.engine.implementation.corba.Regina.Surfaces.*;
 
 public class NCORBASurfaceFilterProperties extends NCORBASurfaceFilter
-		implements normal.engine.surfaces.NSurfaceFilterProperties {
-	public NSurfaceFilterProperties data;
-	public static final Class CORBAClass = NSurfaceFilterProperties.class;
-	public static final Class helperClass =
-		NSurfaceFilterPropertiesHelper.class;
+        implements normal.engine.surfaces.NSurfaceFilterProperties {
+    public NSurfaceFilterProperties data;
+    public static final Class CORBAClass = NSurfaceFilterProperties.class;
+    public static final Class helperClass =
+        NSurfaceFilterPropertiesHelper.class;
 
     protected NCORBASurfaceFilterProperties(NSurfaceFilterProperties data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBASurfaceFilterProperties newWrapper(
-			NSurfaceFilterProperties source) {
-		return (source == null ? null :
-			new NCORBASurfaceFilterProperties(source));
-	}
+    public static NCORBASurfaceFilterProperties newWrapper(
+            NSurfaceFilterProperties source) {
+        return (source == null ? null :
+            new NCORBASurfaceFilterProperties(source));
+    }
 
-	public long getNumberOfECs() {
-		return data.getNumberOfECs();
-	}
-	public BigInteger getEC(long index) {
-		return stringToLarge(data.getEC((int)index));
-	}
-	public NBoolSet getOrientability() {
-		return NBoolSet.fromByteCode(data.getOrientability());
-	}
-	public NBoolSet getCompactness() {
-		return NBoolSet.fromByteCode(data.getCompactness());
-	}
-	public NBoolSet getRealBoundary() {
-		return NBoolSet.fromByteCode(data.getRealBoundary());
-	}
+    public long getNumberOfECs() {
+        return data.getNumberOfECs();
+    }
+    public BigInteger getEC(long index) {
+        return stringToLarge(data.getEC((int)index));
+    }
+    public NBoolSet getOrientability() {
+        return NBoolSet.fromByteCode(data.getOrientability());
+    }
+    public NBoolSet getCompactness() {
+        return NBoolSet.fromByteCode(data.getCompactness());
+    }
+    public NBoolSet getRealBoundary() {
+        return NBoolSet.fromByteCode(data.getRealBoundary());
+    }
 
-	public void addEC(BigInteger ec) {
-		data.addEC(ec.toString());
-	}
-	public void removeEC(BigInteger ec) {
-		data.removeEC(ec.toString());
-	}
-	public void removeAllECs() {
-		data.removeAllECs();
-	}
-	public void setOrientability(NBoolSet value) {
-		data.setOrientability(value.getByteCode());
-	}
-	public void setCompactness(NBoolSet value) {
-		data.setCompactness(value.getByteCode());
-	}
-	public void setRealBoundary(NBoolSet value) {
-		data.setRealBoundary(value.getByteCode());
-	}
+    public void addEC(BigInteger ec) {
+        data.addEC(ec.toString());
+    }
+    public void removeEC(BigInteger ec) {
+        data.removeEC(ec.toString());
+    }
+    public void removeAllECs() {
+        data.removeAllECs();
+    }
+    public void setOrientability(NBoolSet value) {
+        data.setOrientability(value.getByteCode());
+    }
+    public void setCompactness(NBoolSet value) {
+        data.setCompactness(value.getByteCode());
+    }
+    public void setRealBoundary(NBoolSet value) {
+        data.setRealBoundary(value.getByteCode());
+    }
 }

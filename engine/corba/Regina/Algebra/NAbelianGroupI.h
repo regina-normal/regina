@@ -32,40 +32,40 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nabeliangroup.h"
-	#include "corbatools.h"
+    #include "nabeliangroup.h"
+    #include "corbatools.h"
 #else
-	#include "engine/algebra/nabeliangroup.h"
-	#include "corba/corbatools.h"
+    #include "engine/algebra/nabeliangroup.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NAbelianGroupIDL.h"
 #include "ShareableObjectI.h"
 
 class NAbelianGroup_i : public virtual Regina::Algebra::_sk_NAbelianGroup,
-		public ShareableObject_i {
-	protected:
-		NAbelianGroup_i(::NAbelianGroup* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NAbelianGroup, NAbelianGroup_i,
-			Regina::Algebra::NAbelianGroup_ptr)
+        public ShareableObject_i {
+    protected:
+        NAbelianGroup_i(::NAbelianGroup* newCppPtr) :
+                ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NAbelianGroup, NAbelianGroup_i,
+            Regina::Algebra::NAbelianGroup_ptr)
 
-		virtual void addRank(CORBA::Long extraRank);
-		virtual void addTorsionElement_bigInt(const char* degree,
-			CORBA::Long mult);
-		virtual void addTorsionElement_long(CORBA::Long degree,
-			CORBA::Long mult);
-		virtual void addGroup_NMatrixInt(Regina::Maths::NMatrixInt_ptr pres);
-		virtual void addGroup_NAbelianGroup(Regina::Algebra::NAbelianGroup_ptr
-			group);
+        virtual void addRank(CORBA::Long extraRank);
+        virtual void addTorsionElement_bigInt(const char* degree,
+            CORBA::Long mult);
+        virtual void addTorsionElement_long(CORBA::Long degree,
+            CORBA::Long mult);
+        virtual void addGroup_NMatrixInt(Regina::Maths::NMatrixInt_ptr pres);
+        virtual void addGroup_NAbelianGroup(Regina::Algebra::NAbelianGroup_ptr
+            group);
 
-		virtual CORBA::Long getRank();
-		virtual CORBA::Long getTorsionRank_bigInt(const char* degree);
-		virtual CORBA::Long getTorsionRank_long(CORBA::Long degree);
-		virtual CORBA::Long getNumberOfInvariantFactors();
-		virtual char* getInvariantFactor(CORBA::Long index);
+        virtual CORBA::Long getRank();
+        virtual CORBA::Long getTorsionRank_bigInt(const char* degree);
+        virtual CORBA::Long getTorsionRank_long(CORBA::Long degree);
+        virtual CORBA::Long getNumberOfInvariantFactors();
+        virtual char* getInvariantFactor(CORBA::Long index);
 };
 
 #endif

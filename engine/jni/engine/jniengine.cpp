@@ -65,28 +65,28 @@ JNIEXPORT jlong JNICALL
         jchar flag1, jchar flag2, jchar flag3, jint nBdryFaces,
         jobject manager) {
     return formCensus(GET_ENGINE_OBJECT(env, NPacket, parent), nTets,
-		NBoolSet::fromByteCode(flag1),
-		NBoolSet::fromByteCode(flag2),
-		NBoolSet::fromByteCode(flag3),
+        NBoolSet::fromByteCode(flag1),
+        NBoolSet::fromByteCode(flag2),
+        NBoolSet::fromByteCode(flag3),
         nBdryFaces, GET_ENGINE_OBJECT(env, NProgressManager, manager));
 }
 
 JNIEXPORT jint JNICALL
 Java_normal_engine_implementation_jni_JNIEngine_getVersionMajor
-		(JNIEnv *env, jobject me) {
-	return ENGINE_VERSION_MAJOR;
+        (JNIEnv *env, jobject me) {
+    return ENGINE_VERSION_MAJOR;
 }
 
 JNIEXPORT jint JNICALL
 Java_normal_engine_implementation_jni_JNIEngine_getVersionMinor
-		(JNIEnv *env, jobject me) {
-	return ENGINE_VERSION_MINOR;
+        (JNIEnv *env, jobject me) {
+    return ENGINE_VERSION_MINOR;
 }
 
 JNIEXPORT jstring JNICALL
 Java_normal_engine_implementation_jni_JNIEngine_getVersionString
-		(JNIEnv *env, jobject me) {
-	return env->NewStringUTF(ENGINE_VERSION);
+        (JNIEnv *env, jobject me) {
+    return env->NewStringUTF(ENGINE_VERSION);
 }
 
 JNIEXPORT jobject JNICALL
@@ -123,9 +123,9 @@ JNIEXPORT void JNICALL
 }
 
 JNIEXPORT jint JNICALL
-		Java_normal_engine_implementation_jni_JNIEngine_testEngine
-		(JNIEnv*, jobject, jint value) {
-	return value;
+        Java_normal_engine_implementation_jni_JNIEngine_testEngine
+        (JNIEnv*, jobject, jint value) {
+    return value;
 }
 
 JNIEXPORT jboolean JNICALL

@@ -31,28 +31,28 @@
 #include "NTriangulationI.h"
 
 CORBA::Long NSurfaceSubset_i::getFlavour() {
-	return GET_ENGINE_OBJECT(NSurfaceSubset, this)->getFlavour();
+    return GET_ENGINE_OBJECT(NSurfaceSubset, this)->getFlavour();
 }
 CORBA::Boolean NSurfaceSubset_i::allowsAlmostNormal() {
-	return GET_ENGINE_OBJECT(NSurfaceSubset, this)->allowsAlmostNormal();
+    return GET_ENGINE_OBJECT(NSurfaceSubset, this)->allowsAlmostNormal();
 }
 CORBA::Boolean NSurfaceSubset_i::isEmbeddedOnly() {
-	return GET_ENGINE_OBJECT(NSurfaceSubset, this)->isEmbeddedOnly();
+    return GET_ENGINE_OBJECT(NSurfaceSubset, this)->isEmbeddedOnly();
 }
 Regina::Triangulation::NTriangulation_ptr
-		NSurfaceSubset_i::getTriangulation() {
-	return NTriangulation_i::newWrapper(
-		GET_ENGINE_OBJECT(NSurfaceSubset, this)->getTriangulation());
+        NSurfaceSubset_i::getTriangulation() {
+    return NTriangulation_i::newWrapper(
+        GET_ENGINE_OBJECT(NSurfaceSubset, this)->getTriangulation());
 }
 CORBA::Long NSurfaceSubset_i::getNumberOfSurfaces() {
-	return GET_ENGINE_OBJECT(NSurfaceSubset, this)->getNumberOfSurfaces();
+    return GET_ENGINE_OBJECT(NSurfaceSubset, this)->getNumberOfSurfaces();
 }
 Regina::Surfaces::NNormalSurface_ptr NSurfaceSubset_i::getSurface(
-		CORBA::Long index) {
-	return NNormalSurface_i::newWrapper((NNormalSurface*)
-		(GET_ENGINE_OBJECT(NSurfaceSubset, this)->getSurface(index)));
+        CORBA::Long index) {
+    return NNormalSurface_i::newWrapper((NNormalSurface*)
+        (GET_ENGINE_OBJECT(NSurfaceSubset, this)->getSurface(index)));
 }
 Regina::ShareableObject_ptr NSurfaceSubset_i::getShareableObject() {
-	return _this();
+    return _this();
 }
 

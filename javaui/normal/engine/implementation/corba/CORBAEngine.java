@@ -58,164 +58,164 @@ import org.omg.CORBA.*;
  * @see normal.engine.Engine
  */
 public class CORBAEngine implements Engine {
-	/**
-	 * The underlying CORBA object.
-	 */
-	private normal.engine.implementation.corba.Regina.Engine data;
-	/**
-	 * The CORBA name service host being used.
-	 */
-	private String host;
-	/**
-	 * The CORBA name service port being used.
-	 */
-	private String port;
+    /**
+     * The underlying CORBA object.
+     */
+    private normal.engine.implementation.corba.Regina.Engine data;
+    /**
+     * The CORBA name service host being used.
+     */
+    private String host;
+    /**
+     * The CORBA name service port being used.
+     */
+    private String port;
 
     /**
      * Create a link to the calculation engine using CORBA.
-	 * This routine should be called only when the program is run as a
-	 * standalone application.
+     * This routine should be called only when the program is run as a
+     * standalone application.
      * The engine should be in a server application accessible
-	 * through CORBA via a name service.
+     * through CORBA via a name service.
      *
-	 * @param args a list of command-line arguments to the application,
-	 * possibly including flags that should be passed to the ORB
-	 * initialisation.
-	 * @param host the CORBA name service host being requested.  This
-	 * information is <b>not</b> passed to the ORB initialisation; it
-	 * is for diagnostic purposes only.  This information needs to be
-	 * replicated appropriately in parameter <i>args</i>.
-	 * @param port the CORBA name service port being requested.  This
-	 * information is <b>not</b> passed to the ORB initialisation; it
-	 * is for diagnostic purposes only.  This information needs to be
-	 * replicated appropriately in parameter <i>args</i>.
+     * @param args a list of command-line arguments to the application,
+     * possibly including flags that should be passed to the ORB
+     * initialisation.
+     * @param host the CORBA name service host being requested.  This
+     * information is <b>not</b> passed to the ORB initialisation; it
+     * is for diagnostic purposes only.  This information needs to be
+     * replicated appropriately in parameter <i>args</i>.
+     * @param port the CORBA name service port being requested.  This
+     * information is <b>not</b> passed to the ORB initialisation; it
+     * is for diagnostic purposes only.  This information needs to be
+     * replicated appropriately in parameter <i>args</i>.
      * @throws CORBAException thrown when the CORBA connection could not
-	 * be initialised.
+     * be initialised.
      */
     public CORBAEngine(String[] args, String host, String port)
-			throws CORBAException {
-		this.host = host;
-		this.port = port;
-		data = null;
-		try {
-			ORB orb;
-			try {
-				orb = ORB.init(args, null);
-			} catch (Throwable th) {
-				throw new normal.engine.implementation.corba.CORBAException(
-					"The ORB could not be initialised.");
-			}
-			initEngine(orb);
-		} catch (Throwable th) {
-			if (th instanceof
-					normal.engine.implementation.corba.CORBAException)
-				throw (normal.engine.implementation.corba.CORBAException)th;
+            throws CORBAException {
+        this.host = host;
+        this.port = port;
+        data = null;
+        try {
+            ORB orb;
+            try {
+                orb = ORB.init(args, null);
+            } catch (Throwable th) {
+                throw new normal.engine.implementation.corba.CORBAException(
+                    "The ORB could not be initialised.");
+            }
+            initEngine(orb);
+        } catch (Throwable th) {
+            if (th instanceof
+                    normal.engine.implementation.corba.CORBAException)
+                throw (normal.engine.implementation.corba.CORBAException)th;
 
-			System.out.println("Could not initiate CORBA connection: " +
-				th.toString());
-			th.printStackTrace();
-			throw new normal.engine.implementation.corba.CORBAException();
-		}
-	}
+            System.out.println("Could not initiate CORBA connection: " +
+                th.toString());
+            th.printStackTrace();
+            throw new normal.engine.implementation.corba.CORBAException();
+        }
+    }
 
     /**
      * Create a link to the calculation engine using CORBA.
-	 * This routine should be called only when the program is run as an
-	 * applet on a web page.
+     * This routine should be called only when the program is run as an
+     * applet on a web page.
      * The engine should be in a server application accessible
-	 * through CORBA via a name service.
+     * through CORBA via a name service.
      *
-	 * @param applet the applet we are running, whose parameters might
-	 * contain flags that should be passed to the ORB initialisation.
-	 * @param host the CORBA name service host being requested.  This
-	 * information <b>is</b> passed to the ORB initialisation, but will
-	 * be overridden by any applet parameters.
-	 * @param port the CORBA name service port being requested.  This
-	 * information <b>is</b> passed to the ORB initialisation, but will
-	 * be overridden by any applet parameters.
+     * @param applet the applet we are running, whose parameters might
+     * contain flags that should be passed to the ORB initialisation.
+     * @param host the CORBA name service host being requested.  This
+     * information <b>is</b> passed to the ORB initialisation, but will
+     * be overridden by any applet parameters.
+     * @param port the CORBA name service port being requested.  This
+     * information <b>is</b> passed to the ORB initialisation, but will
+     * be overridden by any applet parameters.
      * @throws CORBAException thrown when the CORBA connection could not
-	 * be initialised.
+     * be initialised.
      */
-	public CORBAEngine(Applet applet, String host, String port)
-			throws CORBAException {
-		this.host = host;
-		this.port = port;
-		data = null;
-		try {
-			ORB orb;
-			try {
-				Properties prop = new Properties();
-				prop.setProperty("org.omg.CORBA.ORBInitialHost", host);
-				prop.setProperty("org.omg.CORBA.ORBInitialPort", port);
-				orb = ORB.init(applet, prop);
-			} catch (Throwable th) {
-				throw new normal.engine.implementation.corba.CORBAException(
-					"The ORB could not be initialised.");
-			}
-			initEngine(orb);
-		} catch (Throwable th) {
-			if (th instanceof
-					normal.engine.implementation.corba.CORBAException)
-				throw (normal.engine.implementation.corba.CORBAException)th;
+    public CORBAEngine(Applet applet, String host, String port)
+            throws CORBAException {
+        this.host = host;
+        this.port = port;
+        data = null;
+        try {
+            ORB orb;
+            try {
+                Properties prop = new Properties();
+                prop.setProperty("org.omg.CORBA.ORBInitialHost", host);
+                prop.setProperty("org.omg.CORBA.ORBInitialPort", port);
+                orb = ORB.init(applet, prop);
+            } catch (Throwable th) {
+                throw new normal.engine.implementation.corba.CORBAException(
+                    "The ORB could not be initialised.");
+            }
+            initEngine(orb);
+        } catch (Throwable th) {
+            if (th instanceof
+                    normal.engine.implementation.corba.CORBAException)
+                throw (normal.engine.implementation.corba.CORBAException)th;
 
-			System.out.println("Could not initiate CORBA connection: " +
-				th.toString());
-			th.printStackTrace();
-			throw new normal.engine.implementation.corba.CORBAException();
-		}
-	}
+            System.out.println("Could not initiate CORBA connection: " +
+                th.toString());
+            th.printStackTrace();
+            throw new normal.engine.implementation.corba.CORBAException();
+        }
+    }
 
-	/**
-	 * Initialises the link to the CORBA calculation engine.
-	 *
-	 * @param orb the ORB to use; it is assumed that this has already been
-	 * initialised.
+    /**
+     * Initialises the link to the CORBA calculation engine.
+     *
+     * @param orb the ORB to use; it is assumed that this has already been
+     * initialised.
      * @throws CORBAException thrown when the CORBA connection could not
-	 * be initialised.
-	 */
-	private void initEngine(ORB orb) throws CORBAException {
-		org.omg.CORBA.Object objRef;
-		try {
-			objRef = orb.resolve_initial_references("NameService");
-		} catch (Throwable th) {
-			throw new normal.engine.implementation.corba.CORBAException(
-				"The requested name service could not be found.");
-		}
+     * be initialised.
+     */
+    private void initEngine(ORB orb) throws CORBAException {
+        org.omg.CORBA.Object objRef;
+        try {
+            objRef = orb.resolve_initial_references("NameService");
+        } catch (Throwable th) {
+            throw new normal.engine.implementation.corba.CORBAException(
+                "The requested name service could not be found.");
+        }
 
-		NamingContext ncRef;
-		try {
-			ncRef = NamingContextHelper.narrow(objRef);
-		} catch (Throwable th) {
-			throw new normal.engine.implementation.corba.CORBAException(
-				"The name service could not be narrowed to " +
-				"the correct class.");
-		}
+        NamingContext ncRef;
+        try {
+            ncRef = NamingContextHelper.narrow(objRef);
+        } catch (Throwable th) {
+            throw new normal.engine.implementation.corba.CORBAException(
+                "The name service could not be narrowed to " +
+                "the correct class.");
+        }
 
-		NameComponent path[] = {
-			new NameComponent("regina", "context"),
-			new NameComponent("Engine", "object")
-		};
-		try {
-			objRef = ncRef.resolve(path);
-			if (objRef == null)
-				throw new Exception();
-		} catch (Throwable th) {
-			throw new normal.engine.implementation.corba.CORBAException(
-				"The CORBA calculation engine could not be located " +
-				"by the name service.");
-		}
+        NameComponent path[] = {
+            new NameComponent("regina", "context"),
+            new NameComponent("Engine", "object")
+        };
+        try {
+            objRef = ncRef.resolve(path);
+            if (objRef == null)
+                throw new Exception();
+        } catch (Throwable th) {
+            throw new normal.engine.implementation.corba.CORBAException(
+                "The CORBA calculation engine could not be located " +
+                "by the name service.");
+        }
 
-		try {
-			data = normal.engine.implementation.corba.Regina.EngineHelper.
-				narrow(objRef);
-			if (data == null)
-				throw new Exception();
-		} catch (Throwable th) {
-			throw new normal.engine.implementation.corba.CORBAException(
-				"The CORBA calculation engine could not be narrowed to " +
-				"the correct class.");
-		}
-	}
+        try {
+            data = normal.engine.implementation.corba.Regina.EngineHelper.
+                narrow(objRef);
+            if (data == null)
+                throw new Exception();
+        } catch (Throwable th) {
+            throw new normal.engine.implementation.corba.CORBAException(
+                "The CORBA calculation engine could not be narrowed to " +
+                "the correct class.");
+        }
+    }
 
     /**
      * Provides a polite string representation for this object.
@@ -230,105 +230,105 @@ public class CORBAEngine implements Engine {
     public int style() {
         return Shell.engineCORBA;
     }
-	public String styleDescription() {
+    public String styleDescription() {
         return "accessed through CORBA (" + host + ":" + port + ")";
     }
 
     public NAbelianGroup newNAbelianGroup() {
-		return NCORBAAbelianGroup.newWrapper(data.newNAbelianGroup_());
+        return NCORBAAbelianGroup.newWrapper(data.newNAbelianGroup_());
     }
     public NAbelianGroup newNAbelianGroup(NAbelianGroup cloneMe) {
-		return NCORBAAbelianGroup.newWrapper(
-			data.newNAbelianGroup_NAbelianGroup(
-			((NCORBAAbelianGroup)cloneMe).data));
+        return NCORBAAbelianGroup.newWrapper(
+            data.newNAbelianGroup_NAbelianGroup(
+            ((NCORBAAbelianGroup)cloneMe).data));
     }
     public NContainer newNContainer() {
-		return NCORBAContainer.newWrapper(data.newNContainer());
+        return NCORBAContainer.newWrapper(data.newNContainer());
     }
     public NFile newNFile() {
-		return NCORBAFile.newWrapper(data.newNFile());
+        return NCORBAFile.newWrapper(data.newNFile());
     }
     public NMatrixInt newNMatrixInt(int rows, int columns) {
-		return NCORBAMatrixInt.newWrapper(data.newNMatrixInt_long_long(
-			rows, columns));
+        return NCORBAMatrixInt.newWrapper(data.newNMatrixInt_long_long(
+            rows, columns));
     }
     public NMatrixInt newNMatrixInt(NMatrixInt cloneMe) {
-		return NCORBAMatrixInt.newWrapper(data.newNMatrixInt_NMatrixInt(
-			((NCORBAMatrixInt)cloneMe).data));
+        return NCORBAMatrixInt.newWrapper(data.newNMatrixInt_NMatrixInt(
+            ((NCORBAMatrixInt)cloneMe).data));
     }
     public NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner,
             int flavour) {
-		return newNNormalSurfaceList(owner, flavour, true);
+        return newNNormalSurfaceList(owner, flavour, true);
     }
     public NNormalSurfaceList newNNormalSurfaceList(NTriangulation owner,
             int flavour, boolean isEmbeddedOnly) {
-		return NCORBANormalSurfaceList.newWrapper(data.newNNormalSurfaceList(
-			((NCORBATriangulation)owner).data, flavour, isEmbeddedOnly));
+        return NCORBANormalSurfaceList.newWrapper(data.newNNormalSurfaceList(
+            ((NCORBATriangulation)owner).data, flavour, isEmbeddedOnly));
     }
     public NProgressManager newNProgressManager() {
-		return NCORBAProgressManager.newWrapper(data.newNProgressManager());
+        return NCORBAProgressManager.newWrapper(data.newNProgressManager());
     }
     public NScript newNScript() {
-		return NCORBAScript.newWrapper(data.newNScript());
+        return NCORBAScript.newWrapper(data.newNScript());
     }
     public NSurfaceFilter newNSurfaceFilter() {
-		return NCORBASurfaceFilter.newWrapper(data.newNSurfaceFilter_());
+        return NCORBASurfaceFilter.newWrapper(data.newNSurfaceFilter_());
     }
     public NSurfaceFilter newNSurfaceFilter(NSurfaceFilter cloneMe) {
-		return NCORBASurfaceFilter.newWrapper(
-			data.newNSurfaceFilter_NSurfaceFilter(
-			((NCORBASurfaceFilter)cloneMe).data));
+        return NCORBASurfaceFilter.newWrapper(
+            data.newNSurfaceFilter_NSurfaceFilter(
+            ((NCORBASurfaceFilter)cloneMe).data));
     }
     public NSurfaceFilterCombination newNSurfaceFilterCombination() {
-		return NCORBASurfaceFilterCombination.newWrapper(
-			data.newNSurfaceFilterCombination_());
+        return NCORBASurfaceFilterCombination.newWrapper(
+            data.newNSurfaceFilterCombination_());
     }
     public NSurfaceFilterCombination newNSurfaceFilterCombination(
             NSurfaceFilterCombination cloneMe) {
-		return NCORBASurfaceFilterCombination.newWrapper(
-			data.newNSurfaceFilterCombination_NSurfaceFilterCombination(
-			((NCORBASurfaceFilterCombination)cloneMe).data));
+        return NCORBASurfaceFilterCombination.newWrapper(
+            data.newNSurfaceFilterCombination_NSurfaceFilterCombination(
+            ((NCORBASurfaceFilterCombination)cloneMe).data));
     }
     public NSurfaceFilterProperties newNSurfaceFilterProperties() {
-		return NCORBASurfaceFilterProperties.newWrapper(
-			data.newNSurfaceFilterProperties_());
+        return NCORBASurfaceFilterProperties.newWrapper(
+            data.newNSurfaceFilterProperties_());
     }
     public NSurfaceFilterProperties newNSurfaceFilterProperties(
             NSurfaceFilterProperties cloneMe) {
-		return NCORBASurfaceFilterProperties.newWrapper(
-			data.newNSurfaceFilterProperties_NSurfaceFilterProperties(
-			((NCORBASurfaceFilterProperties)cloneMe).data));
+        return NCORBASurfaceFilterProperties.newWrapper(
+            data.newNSurfaceFilterProperties_NSurfaceFilterProperties(
+            ((NCORBASurfaceFilterProperties)cloneMe).data));
     }
     public NSurfaceSubset newNSurfaceSubset(NSurfaceSet set,
             NSurfaceFilter filter) {
-		return NCORBASurfaceSubset.newWrapper(data.newNSurfaceSubset(
-			((NCORBASurfaceSet)set).getNSurfaceSet(),
-			((NCORBASurfaceFilter)filter).data));
+        return NCORBASurfaceSubset.newWrapper(data.newNSurfaceSubset(
+            ((NCORBASurfaceSet)set).getNSurfaceSet(),
+            ((NCORBASurfaceFilter)filter).data));
     }
     public NTetrahedron newNTetrahedron() {
-		return NCORBATetrahedron.newWrapper(data.newNTetrahedron_());
+        return NCORBATetrahedron.newWrapper(data.newNTetrahedron_());
     }
     public NTetrahedron newNTetrahedron(String desc) {
-		return NCORBATetrahedron.newWrapper(data.newNTetrahedron_string(desc));
+        return NCORBATetrahedron.newWrapper(data.newNTetrahedron_string(desc));
     }
     public NText newNText() {
-		return NCORBAText.newWrapper(data.newNText_());
+        return NCORBAText.newWrapper(data.newNText_());
     }
     public NText newNText(String text) {
-		return NCORBAText.newWrapper(data.newNText_string(text));
+        return NCORBAText.newWrapper(data.newNText_string(text));
     }
     public NTriangulation newNTriangulation() {
-		return NCORBATriangulation.newWrapper(data.newNTriangulation_());
+        return NCORBATriangulation.newWrapper(data.newNTriangulation_());
     }
     public NTriangulation newNTriangulation(NTriangulation cloneMe) {
-		return NCORBATriangulation.newWrapper(
-			data.newNTriangulation_NTriangulation(
-			((NCORBATriangulation)cloneMe).data));
+        return NCORBATriangulation.newWrapper(
+            data.newNTriangulation_NTriangulation(
+            ((NCORBATriangulation)cloneMe).data));
     }
 
     public NTriangulation enterTextTriangulation() {
-		return null;
-	}
+        return null;
+    }
     public long formCensus(NPacket parent, int nTetrahedra,
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary) {
         return formCensus(parent, nTetrahedra, finiteness,
@@ -343,38 +343,38 @@ public class CORBAEngine implements Engine {
     public long formCensus(NPacket parent, int nTetrahedra, 
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
             int nBdryFaces, NProgressManager manager) {
-		return data.formCensus(((NCORBAPacket)parent).data, nTetrahedra,
-			finiteness.getByteCode(), orientability.getByteCode(),
-			boundary.getByteCode(), nBdryFaces,
-			((NCORBAProgressManager)manager).data);
-	}
-	public int getVersionMajor() {
-		return data.getVersionMajor();
-	}
-	public int getVersionMinor() {
-		return data.getVersionMinor();
-	}
-	public String getVersionString() {
-		return data.getVersionString();
-	}
+        return data.formCensus(((NCORBAPacket)parent).data, nTetrahedra,
+            finiteness.getByteCode(), orientability.getByteCode(),
+            boundary.getByteCode(), nBdryFaces,
+            ((NCORBAProgressManager)manager).data);
+    }
+    public int getVersionMajor() {
+        return data.getVersionMajor();
+    }
+    public int getVersionMinor() {
+        return data.getVersionMinor();
+    }
+    public String getVersionString() {
+        return data.getVersionString();
+    }
     public NMatrixInt makeMatchingEquations(NTriangulation
             triangulation, int flavour) {
-		return NCORBAMatrixInt.newWrapper(data.makeMatchingEquations(
-			((NCORBATriangulation)triangulation).data, flavour));
-	}
+        return NCORBAMatrixInt.newWrapper(data.makeMatchingEquations(
+            ((NCORBATriangulation)triangulation).data, flavour));
+    }
     public NPacket readFromFile(String fileName) {
-		return NCORBAPacket.newWrapper(data.readFromFile(fileName));
-	}
+        return NCORBAPacket.newWrapper(data.readFromFile(fileName));
+    }
     public NTriangulation readSnapPea(String file) {
-		return NCORBATriangulation.newWrapper(data.readSnapPea(file));
-	}
+        return NCORBATriangulation.newWrapper(data.readSnapPea(file));
+    }
     public void smithNormalForm(NMatrixInt matrix) {
-		data.smithNormalForm(((NCORBAMatrixInt)matrix).data);
-	}
-	public int testEngine(int value) {
-		return data.testEngine(value);
-	}
+        data.smithNormalForm(((NCORBAMatrixInt)matrix).data);
+    }
+    public int testEngine(int value) {
+        return data.testEngine(value);
+    }
     public boolean writeToFile(String fileName, NPacket packet) {
-		return data.writeToFile(fileName, ((NCORBAPacket)packet).data);
-	}
+        return data.writeToFile(fileName, ((NCORBAPacket)packet).data);
+    }
 }

@@ -32,22 +32,22 @@
 #include "Surfaces/NSurfaceFilter.idl"
 
 module Regina {
-	module Surfaces {
-		interface NSurfaceFilterProperties : NSurfaceFilter {
-			long getNumberOfECs();
-			string getEC(in long index);
-			char getOrientability();
-			char getCompactness();
-			char getRealBoundary();
+    module Surfaces {
+        interface NSurfaceFilterProperties : NSurfaceFilter {
+            long getNumberOfECs();
+            string getEC(in long index);
+            char getOrientability();
+            char getCompactness();
+            char getRealBoundary();
 
-			void addEC(in string ec);
-			void removeEC(in string ec);
-			void removeAllECs();
-			void setOrientability(in char value);
-			void setCompactness(in char value);
-			void setRealBoundary(in char value);
-		};
-	};
+            void addEC(in string ec);
+            void removeEC(in string ec);
+            void removeAllECs();
+            void setOrientability(in char value);
+            void setCompactness(in char value);
+            void setRealBoundary(in char value);
+        };
+    };
 };
 
 #endif

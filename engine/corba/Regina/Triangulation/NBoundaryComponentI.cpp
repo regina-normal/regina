@@ -32,37 +32,37 @@
 #include "NFaceI.h"
 
 CORBA::Long NBoundaryComponent_i::getEulerCharacteristic() {
-	return GET_ENGINE_OBJECT(NBoundaryComponent, this)->
-		getEulerCharacteristic();
+    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->
+        getEulerCharacteristic();
 }
 CORBA::Boolean NBoundaryComponent_i::isIdeal() {
-	return GET_ENGINE_OBJECT(NBoundaryComponent, this)->isIdeal();
+    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->isIdeal();
 }
 CORBA::Boolean NBoundaryComponent_i::isOrientable() {
-	return GET_ENGINE_OBJECT(NBoundaryComponent, this)->isOrientable();
+    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->isOrientable();
 }
 CORBA::Long NBoundaryComponent_i::getNumberOfFaces() {
-	return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfFaces();
+    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfFaces();
 }
 CORBA::Long NBoundaryComponent_i::getNumberOfEdges() {
-	return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfEdges();
+    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfEdges();
 }
 CORBA::Long NBoundaryComponent_i::getNumberOfVertices() {
-	return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfVertices();
+    return GET_ENGINE_OBJECT(NBoundaryComponent, this)->getNumberOfVertices();
 }
 Regina::Triangulation::NFace_ptr NBoundaryComponent_i::getFace(
-		CORBA::Long index) {
-	return NFace_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
-		getFace(index));
+        CORBA::Long index) {
+    return NFace_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
+        getFace(index));
 }
 Regina::Triangulation::NEdge_ptr NBoundaryComponent_i::getEdge(
-		CORBA::Long index) {
-	return NEdge_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
-		getEdge(index));
+        CORBA::Long index) {
+    return NEdge_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
+        getEdge(index));
 }
 Regina::Triangulation::NVertex_ptr NBoundaryComponent_i::getVertex(
-		CORBA::Long index) {
-	return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
-		getVertex(index));
+        CORBA::Long index) {
+    return NVertex_i::newWrapper(GET_ENGINE_OBJECT(NBoundaryComponent, this)->
+        getVertex(index));
 }
 

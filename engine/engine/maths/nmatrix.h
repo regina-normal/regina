@@ -404,7 +404,7 @@ class NMatrixRing : public NMatrix<T> {
          *
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
-		 *
+         *
          * \ifaces Not present, even if a subclass of NMatrix
          * is mirrored and its inherited routines are mirrored also.
          *

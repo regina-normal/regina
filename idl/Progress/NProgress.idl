@@ -32,20 +32,20 @@
 #include "ShareableObject.idl"
 
 module Regina {
-	module Progress {
-		interface NProgress : ShareableObject {
-			boolean hasChanged();
-			boolean isFinished();
+    module Progress {
+        interface NProgress : ShareableObject {
+            boolean hasChanged();
+            boolean isFinished();
 
-			boolean isCancellable();
-			void cancel();
-			boolean isCancelled();
+            boolean isCancellable();
+            void cancel();
+            boolean isCancelled();
 
-			string getDescription();
-			boolean isPercent();
-			double getPercent();
-		};
-	};
+            string getDescription();
+            boolean isPercent();
+            double getPercent();
+        };
+    };
 };
 
 #endif

@@ -32,33 +32,33 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nprogress.h"
-	#include "corbatools.h"
+    #include "nprogress.h"
+    #include "corbatools.h"
 #else
-	#include "engine/progress/nprogress.h"
-	#include "corba/corbatools.h"
+    #include "engine/progress/nprogress.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NProgressIDL.h"
 #include "ShareableObjectI.h"
 
 class NProgress_i : public virtual Regina::Progress::_sk_NProgress,
-		public ShareableObject_i {
-	protected:
-		NProgress_i(::NProgress* newCppPtr) : ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NProgress, NProgress_i,
-			Regina::Progress::NProgress_ptr)
+        public ShareableObject_i {
+    protected:
+        NProgress_i(::NProgress* newCppPtr) : ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NProgress, NProgress_i,
+            Regina::Progress::NProgress_ptr)
 
-		virtual CORBA::Boolean hasChanged();
-		virtual CORBA::Boolean isFinished();
-		virtual CORBA::Boolean isCancellable();
-		virtual void cancel();
-		virtual CORBA::Boolean isCancelled();
-		virtual char* getDescription();
-		virtual CORBA::Boolean isPercent();
-		virtual CORBA::Double getPercent();
+        virtual CORBA::Boolean hasChanged();
+        virtual CORBA::Boolean isFinished();
+        virtual CORBA::Boolean isCancellable();
+        virtual void cancel();
+        virtual CORBA::Boolean isCancelled();
+        virtual char* getDescription();
+        virtual CORBA::Boolean isPercent();
+        virtual CORBA::Double getPercent();
 };
 
 #endif

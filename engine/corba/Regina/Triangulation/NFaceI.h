@@ -32,31 +32,31 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nface.h"
-	#include "corbatools.h"
+    #include "nface.h"
+    #include "corbatools.h"
 #else
-	#include "engine/triangulation/nface.h"
-	#include "corba/corbatools.h"
+    #include "engine/triangulation/nface.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"
 
 class NFace_i : public virtual Regina::Triangulation::_sk_NFace,
-		public ShareableObject_i {
-	protected:
-		NFace_i(::NFace* newCppPtr) : ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NFace, NFace_i, Regina::Triangulation::NFace_ptr)
+        public ShareableObject_i {
+    protected:
+        NFace_i(::NFace* newCppPtr) : ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NFace, NFace_i, Regina::Triangulation::NFace_ptr)
 
-		virtual Regina::Triangulation::NComponent_ptr getComponent();
-		virtual Regina::Triangulation::NBoundaryComponent_ptr
-			getBoundaryComponent();
-		virtual CORBA::Boolean isBoundary();
-		virtual CORBA::Long getNumberOfEmbeddings();
-		virtual void getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
-			CORBA::Long& face, CORBA::Long index);
+        virtual Regina::Triangulation::NComponent_ptr getComponent();
+        virtual Regina::Triangulation::NBoundaryComponent_ptr
+            getBoundaryComponent();
+        virtual CORBA::Boolean isBoundary();
+        virtual CORBA::Long getNumberOfEmbeddings();
+        virtual void getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
+            CORBA::Long& face, CORBA::Long index);
 };
 
 #endif

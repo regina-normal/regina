@@ -32,10 +32,10 @@
 #include "Packet/NPacket.idl"
 
 module Regina {
-	module Packet {
-		interface NContainer : NPacket {
-		};
-	};
+    module Packet {
+        interface NContainer : NPacket {
+        };
+    };
 };
 
 #endif

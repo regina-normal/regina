@@ -244,7 +244,7 @@ public class NewPacketDialog extends JDialog implements ActionListener {
             
             // Attempt to create the packet.
             createdPacket = ui.makeNewPacket(shell, parentNode.getPacket(),
-				this);
+                this);
             if (createdPacket == null)
                 return;
                 
@@ -287,7 +287,7 @@ public class NewPacketDialog extends JDialog implements ActionListener {
      * @see normal.packetui.PacketCreator
      */
     public static NPacket newPacket(Shell shell, PacketTreeNode rootNode,
-			PacketTreeNode defaultParent, PacketCreator ui) {
+            PacketTreeNode defaultParent, PacketCreator ui) {
         // Create and display the new dialog.
         NewPacketDialog d = new NewPacketDialog(shell, rootNode,
             defaultParent, ui);

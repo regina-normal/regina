@@ -32,34 +32,34 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nsurfacesubset.h"
-	#include "corbatools.h"
+    #include "nsurfacesubset.h"
+    #include "corbatools.h"
 #else
-	#include "engine/surfaces/nsurfacesubset.h"
-	#include "corba/corbatools.h"
+    #include "engine/surfaces/nsurfacesubset.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NSurfaceSubsetIDL.h"
 #include "ShareableObjectI.h"
 
 class NSurfaceSubset_i : public virtual Regina::Surfaces::_sk_NSurfaceSubset,
-		public ShareableObject_i {
-	protected:
-		NSurfaceSubset_i(::NSurfaceSubset* newCppPtr) :
-				ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NSurfaceSubset, NSurfaceSubset_i,
-			Regina::Surfaces::NSurfaceSubset_ptr)
-		
-		virtual CORBA::Long getFlavour();
-		virtual CORBA::Boolean allowsAlmostNormal();
-		virtual CORBA::Boolean isEmbeddedOnly();
-		virtual Regina::Triangulation::NTriangulation_ptr getTriangulation();
-		virtual CORBA::Long getNumberOfSurfaces();
-		virtual Regina::Surfaces::NNormalSurface_ptr getSurface(
-			CORBA::Long index);
-		virtual Regina::ShareableObject_ptr getShareableObject();
+        public ShareableObject_i {
+    protected:
+        NSurfaceSubset_i(::NSurfaceSubset* newCppPtr) :
+                ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NSurfaceSubset, NSurfaceSubset_i,
+            Regina::Surfaces::NSurfaceSubset_ptr)
+        
+        virtual CORBA::Long getFlavour();
+        virtual CORBA::Boolean allowsAlmostNormal();
+        virtual CORBA::Boolean isEmbeddedOnly();
+        virtual Regina::Triangulation::NTriangulation_ptr getTriangulation();
+        virtual CORBA::Long getNumberOfSurfaces();
+        virtual Regina::Surfaces::NNormalSurface_ptr getSurface(
+            CORBA::Long index);
+        virtual Regina::ShareableObject_ptr getShareableObject();
 };
 
 #endif

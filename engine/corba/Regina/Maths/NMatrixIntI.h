@@ -32,43 +32,43 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nmatrixint.h"
-	#include "corbatools.h"
+    #include "nmatrixint.h"
+    #include "corbatools.h"
 #else
-	#include "engine/maths/nmatrixint.h"
-	#include "corba/corbatools.h"
+    #include "engine/maths/nmatrixint.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NMatrixIntIDL.h"
 #include "ShareableObjectI.h"
 
 class NMatrixInt_i : public virtual Regina::Maths::_sk_NMatrixInt,
-		public ShareableObject_i {
-	protected:
-		NMatrixInt_i(::NMatrixInt* newCppPtr) : ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NMatrixInt, NMatrixInt_i,
-			Regina::Maths::NMatrixInt_ptr)
+        public ShareableObject_i {
+    protected:
+        NMatrixInt_i(::NMatrixInt* newCppPtr) : ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NMatrixInt, NMatrixInt_i,
+            Regina::Maths::NMatrixInt_ptr)
 
-		virtual void initialise(const char* value);
-		virtual void makeIdentity();
-		virtual CORBA::Long rows();
-		virtual CORBA::Long columns();
-		virtual char* getEntry(CORBA::Long row, CORBA::Long column);
-		virtual void setEntry(CORBA::Long row, CORBA::Long column,
-			const char* value);
+        virtual void initialise(const char* value);
+        virtual void makeIdentity();
+        virtual CORBA::Long rows();
+        virtual CORBA::Long columns();
+        virtual char* getEntry(CORBA::Long row, CORBA::Long column);
+        virtual void setEntry(CORBA::Long row, CORBA::Long column,
+            const char* value);
 
-		virtual void swapRows(CORBA::Long first, CORBA::Long second);
-		virtual void swapColumns(CORBA::Long first, CORBA::Long second);
-		virtual void addRow_long_long(CORBA::Long source, CORBA::Long dest);
-		virtual void addRow_long_long_bigInt(CORBA::Long source,
-			CORBA::Long dest, const char* copies);
-		virtual void addCol_long_long(CORBA::Long source, CORBA::Long dest);
-		virtual void addCol_long_long_bigInt(CORBA::Long source,
-			CORBA::Long dest, const char* copies);
-		virtual void multRow(CORBA::Long row, const char* factor);
-		virtual void multCol(CORBA::Long col, const char* factor);
+        virtual void swapRows(CORBA::Long first, CORBA::Long second);
+        virtual void swapColumns(CORBA::Long first, CORBA::Long second);
+        virtual void addRow_long_long(CORBA::Long source, CORBA::Long dest);
+        virtual void addRow_long_long_bigInt(CORBA::Long source,
+            CORBA::Long dest, const char* copies);
+        virtual void addCol_long_long(CORBA::Long source, CORBA::Long dest);
+        virtual void addCol_long_long_bigInt(CORBA::Long source,
+            CORBA::Long dest, const char* copies);
+        virtual void multRow(CORBA::Long row, const char* factor);
+        virtual void multCol(CORBA::Long col, const char* factor);
 };
 
 #endif

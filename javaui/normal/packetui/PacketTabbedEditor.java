@@ -68,22 +68,22 @@ public abstract class PacketTabbedEditor extends PacketInfoTabbedPane {
      */
     private JPanel panel;
 
-	/**
-	 * The shell representing the entire program.
-	 */
-	private Shell shell;
+    /**
+     * The shell representing the entire program.
+     */
+    private Shell shell;
 
     /**
      * Create a new interface to work with a given packet.
      *
      * @param packet the packet to be associated with this interface.
-	 * @param shell the shell representing the entire program.
+     * @param shell the shell representing the entire program.
      * @param editor <tt>true</tt> if this interface is to be used for
      * editing, or <tt>false</tt> if it is for viewing only.
      */
     public PacketTabbedEditor(NPacket packet, Shell shell, boolean editor) {
         super(packet, editor);
-		this.shell = shell;
+        this.shell = shell;
         init();
     }
 
@@ -108,14 +108,14 @@ public abstract class PacketTabbedEditor extends PacketInfoTabbedPane {
         return panel;
     }
 
-	/**
-	 * Returns the shell representing the entire program.
-	 *
-	 * @return the shell representing the entire program.
-	 */
-	public Shell getShell() {
-		return shell;
-	}
+    /**
+     * Returns the shell representing the entire program.
+     *
+     * @return the shell representing the entire program.
+     */
+    public Shell getShell() {
+        return shell;
+    }
 
     /**
      * Determine a suitable header for this viewer based upon the
@@ -135,10 +135,10 @@ public abstract class PacketTabbedEditor extends PacketInfoTabbedPane {
      * This routine should consist only of calls to
      * <tt>addUI()</tt> and will be used to fill the tabbed pane
      * during the initialisation of this viewer.
-	 * <p>
-	 * <b>Warning:</b> This routine will be called from the
-	 * <tt>PacketTabbedEditor</tt> constructor, so subclass data members
-	 * may not have been initialised.
+     * <p>
+     * <b>Warning:</b> This routine will be called from the
+     * <tt>PacketTabbedEditor</tt> constructor, so subclass data members
+     * may not have been initialised.
      *
      * @see normal.packetui.PacketInfoTabbedPane#addUI
      */

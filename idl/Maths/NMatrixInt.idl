@@ -32,30 +32,30 @@
 #include "ShareableObject.idl"
 
 module Regina {
-	module Maths {
-		interface NMatrixInt : ShareableObject {
-			void initialise(in string value);
-			void makeIdentity();
+    module Maths {
+        interface NMatrixInt : ShareableObject {
+            void initialise(in string value);
+            void makeIdentity();
 
-			long rows();
-			long columns();
+            long rows();
+            long columns();
 
-			string getEntry(in long row, in long column);
-			void setEntry(in long row, in long column, in string value);
-			
-			void swapRows(in long first, in long second);
-			void swapColumns(in long first, in long second);
+            string getEntry(in long row, in long column);
+            void setEntry(in long row, in long column, in string value);
+            
+            void swapRows(in long first, in long second);
+            void swapColumns(in long first, in long second);
 
-			void addRow_long_long(in long source, in long dest);
-			void addRow_long_long_bigInt(in long source, in long dest,
-				in string copies);
-			void addCol_long_long(in long source, in long dest);
-			void addCol_long_long_bigInt(in long source, in long dest,
-				in string copies);
-			void multRow(in long row, in string factor);
-			void multCol(in long row, in string factor);
-		};
-	};
+            void addRow_long_long(in long source, in long dest);
+            void addRow_long_long_bigInt(in long source, in long dest,
+                in string copies);
+            void addCol_long_long(in long source, in long dest);
+            void addCol_long_long_bigInt(in long source, in long dest,
+                in string copies);
+            void multRow(in long row, in string factor);
+            void multCol(in long row, in string factor);
+        };
+    };
 };
 
 #endif

@@ -100,7 +100,7 @@ public class ImportFilePane extends JPanel implements ActionListener {
         chooser.setDialogTitle("Import from...");
         chooser.setSelectedFile(new File(fileName.getText()));
         if (chooser.showOpenDialog(shell.getPrimaryFrame()) ==
-				chooser.APPROVE_OPTION)
+                chooser.APPROVE_OPTION)
             fileName.setText(chooser.getSelectedFile().getAbsolutePath());
     }
 }

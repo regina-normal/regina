@@ -68,11 +68,11 @@ public class JPythonConsoleFrame extends JFrame {
      */
     public JPythonConsoleFrame(Shell shell, boolean standalone) {
         super(Application.program + " JPython Console");
-		this.shell = shell;
+        this.shell = shell;
         this.standalone = standalone;
     
-		Frame frame = shell.getPrimaryFrame();
-		if (frame != null && frame instanceof NormalFrame)
+        Frame frame = shell.getPrimaryFrame();
+        if (frame != null && frame instanceof NormalFrame)
             ((NormalFrame)frame).ownConsole(this);
 
         console = new JPythonConsole();
@@ -81,7 +81,7 @@ public class JPythonConsoleFrame extends JFrame {
 
         // Set the size of the window according to what is found in the
         // option set.
-		NormalOptionSet options = shell.getOptions();
+        NormalOptionSet options = shell.getOptions();
         int width = options.getIntOption("PreferredJPythonWidth");
         int height = options.getIntOption("PreferredJPythonHeight");
         if (width <= 0)
@@ -185,13 +185,13 @@ public class JPythonConsoleFrame extends JFrame {
      * appropriate.
      */
     public void closeConsole() {
-		Frame frame = shell.getPrimaryFrame();
-		if (frame != null && frame instanceof NormalFrame)
+        Frame frame = shell.getPrimaryFrame();
+        if (frame != null && frame instanceof NormalFrame)
             ((NormalFrame)frame).disownConsole(this);
 
         // Save the preferred console window size.
         Dimension size = getSize();
-		NormalOptionSet options = shell.getOptions();
+        NormalOptionSet options = shell.getOptions();
         options.setIntOption("PreferredJPythonWidth", size.width);
         options.setIntOption("PreferredJPythonHeight", size.height);
         options.writeToFile();

@@ -32,37 +32,37 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nnormalsurfacelist.h"
-	#include "corbatools.h"
+    #include "nnormalsurfacelist.h"
+    #include "corbatools.h"
 #else
-	#include "engine/surfaces/nnormalsurfacelist.h"
-	#include "corba/corbatools.h"
+    #include "engine/surfaces/nnormalsurfacelist.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NNormalSurfaceListIDL.h"
 #include "NPacketI.h"
 
 class NNormalSurfaceList_i :
-		public virtual Regina::Surfaces::_sk_NNormalSurfaceList,
-		public NPacket_i {
-	protected:
-		NNormalSurfaceList_i(::NNormalSurfaceList* newCppPtr) :
-				NPacket_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NNormalSurfaceList, NNormalSurfaceList_i,
-			Regina::Surfaces::NNormalSurfaceList_ptr)
-		
-		virtual CORBA::Long getFlavour();
-		virtual CORBA::Boolean allowsAlmostNormal();
-		virtual CORBA::Boolean isEmbeddedOnly();
-		virtual Regina::Triangulation::NTriangulation_ptr getTriangulation();
-		virtual CORBA::Long getNumberOfSurfaces();
-		virtual Regina::Surfaces::NNormalSurface_ptr getSurface(
-			CORBA::Long index);
-		virtual Regina::ShareableObject_ptr getShareableObject();
+        public virtual Regina::Surfaces::_sk_NNormalSurfaceList,
+        public NPacket_i {
+    protected:
+        NNormalSurfaceList_i(::NNormalSurfaceList* newCppPtr) :
+                NPacket_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NNormalSurfaceList, NNormalSurfaceList_i,
+            Regina::Surfaces::NNormalSurfaceList_ptr)
+        
+        virtual CORBA::Long getFlavour();
+        virtual CORBA::Boolean allowsAlmostNormal();
+        virtual CORBA::Boolean isEmbeddedOnly();
+        virtual Regina::Triangulation::NTriangulation_ptr getTriangulation();
+        virtual CORBA::Long getNumberOfSurfaces();
+        virtual Regina::Surfaces::NNormalSurface_ptr getSurface(
+            CORBA::Long index);
+        virtual Regina::ShareableObject_ptr getShareableObject();
 
-		virtual Regina::Maths::NMatrixInt_ptr recreateMatchingEquations();
+        virtual Regina::Maths::NMatrixInt_ptr recreateMatchingEquations();
 };
 
 #endif

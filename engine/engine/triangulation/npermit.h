@@ -52,35 +52,35 @@ class NPermItS4 {
         int permIndex;
 
     public:
-		/**
-		 * Creates a new iterator pointing at the first permutation.
-		 */
+        /**
+         * Creates a new iterator pointing at the first permutation.
+         */
         NPermItS4();
-		/**
-		 * Points this iterator at the first permutation.
-		 */
+        /**
+         * Points this iterator at the first permutation.
+         */
         void init();
-		/**
-		 * Points this iterator at the next permutation after the one it
-		 * is currently pointing to.
-		 *
-		 * \pre This iterator is not past-the-end.
-		 */
+        /**
+         * Points this iterator at the next permutation after the one it
+         * is currently pointing to.
+         *
+         * \pre This iterator is not past-the-end.
+         */
         void operator ++ (int);
-		/**
-		 * Returns the permutation at which this iterator is pointing.
-		 *
-		 * \pre This iterator is not past-the-end.
-		 *
-		 * @return the permutation at which this iterator is pointing.
-		 */
+        /**
+         * Returns the permutation at which this iterator is pointing.
+         *
+         * \pre This iterator is not past-the-end.
+         *
+         * @return the permutation at which this iterator is pointing.
+         */
         const NPerm& operator * () const;
-		/**
-		 * Determines if this iterator is past-the-end (has run through
-		 * all possible permutations).
-		 *
-		 * @return \c true if and only if this iterator is past-the-end.
-		 */
+        /**
+         * Determines if this iterator is past-the-end (has run through
+         * all possible permutations).
+         *
+         * @return \c true if and only if this iterator is past-the-end.
+         */
         bool done() const;
 };
 

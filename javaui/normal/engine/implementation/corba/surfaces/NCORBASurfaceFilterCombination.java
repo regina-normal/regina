@@ -31,27 +31,27 @@ package normal.engine.implementation.corba.surfaces;
 import normal.engine.implementation.corba.Regina.Surfaces.*;
 
 public class NCORBASurfaceFilterCombination extends NCORBASurfaceFilter
-		implements normal.engine.surfaces.NSurfaceFilterCombination {
-	public NSurfaceFilterCombination data;
-	public static final Class CORBAClass = NSurfaceFilterCombination.class;
-	public static final Class helperClass =
-		NSurfaceFilterCombinationHelper.class;
+        implements normal.engine.surfaces.NSurfaceFilterCombination {
+    public NSurfaceFilterCombination data;
+    public static final Class CORBAClass = NSurfaceFilterCombination.class;
+    public static final Class helperClass =
+        NSurfaceFilterCombinationHelper.class;
 
     protected NCORBASurfaceFilterCombination(NSurfaceFilterCombination data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBASurfaceFilterCombination newWrapper(
-			NSurfaceFilterCombination source) {
-		return (source == null ? null :
-			new NCORBASurfaceFilterCombination(source));
-	}
+    public static NCORBASurfaceFilterCombination newWrapper(
+            NSurfaceFilterCombination source) {
+        return (source == null ? null :
+            new NCORBASurfaceFilterCombination(source));
+    }
 
-	public boolean getUsesAnd() {
-		return data.getUsesAnd();
-	}
-	public void setUsesAnd(boolean value) {
-		data.setUsesAnd(value);
-	}
+    public boolean getUsesAnd() {
+        return data.getUsesAnd();
+    }
+    public void setUsesAnd(boolean value) {
+        data.setUsesAnd(value);
+    }
 }

@@ -60,81 +60,81 @@ class NTriangulation;
  * \ifacescpp Not present.
  */
 class Engine {
-	public:
-		NAbelianGroup* newNAbelianGroup();
-			/**< Calls the corresponding constructor. */
-		NAbelianGroup* newNAbelianGroup(const NAbelianGroup& cloneMe);
-			/**< Calls the corresponding constructor. */
-		NContainer* newNContainer();
-			/**< Calls the corresponding constructor. */
-		NFile* newNFile();
-			/**< Calls the corresponding constructor. */
-		NMatrixInt* newNMatrixInt(int rows, int columns);
-			/**< Calls the corresponding constructor. */
-		NMatrixInt* newNMatrixInt(const NMatrixInt& cloneMe);
-			/**< Calls the corresponding constructor. */
-		NNormalSurfaceList* newNNormalSurfaceList(NTriangulation* owner,
-				int flavour, bool isEmbeddedOnly = true);
-			/**< Calls the corresponding constructor. */
-		NProgressManager* newNProgressManager();
-			/**< Calls the corresponding constructor. */
-		NScript* newNScript();
-			/**< Calls the corresponding constructor. */
-		NSurfaceFilter* newNSurfaceFilter();
-			/**< Calls the corresponding constructor. */
-		NSurfaceFilter* newNSurfaceFilter(const NSurfaceFilter& cloneMe);
-			/**< Calls the corresponding constructor. */
-		NSurfaceFilterCombination* newNSurfaceFilterCombination();
-			/**< Calls the corresponding constructor. */
-		NSurfaceFilterCombination* newNSurfaceFilterCombination(
-				const NSurfaceFilterCombination& cloneMe);
-			/**< Calls the corresponding constructor. */
-		NSurfaceFilterProperties* newNSurfaceFilterProperties();
-			/**< Calls the corresponding constructor. */
-		NSurfaceFilterProperties* newNSurfaceFilterProperties(
-				const NSurfaceFilterProperties& cloneMe);
-			/**< Calls the corresponding constructor. */
-		NSurfaceSubset* newNSurfaceSubset(const NSurfaceSet& set,
-				const NSurfaceFilter& filter);
-			/**< Calls the corresponding constructor. */
-		NTetrahedron* newNTetrahedron();
-			/**< Calls the corresponding constructor. */
-		NTetrahedron* newNTetrahedron(const char* desc);
-			/**< Calls the corresponding constructor. */
-		NText* newNText();
-			/**< Calls the corresponding constructor. */
-		NText* newNText(const char* text);
-			/**< Calls the corresponding constructor. */
-		NTriangulation* newNTriangulation();
-			/**< Calls the corresponding constructor. */
-		NTriangulation* newNTriangulation(const NTriangulation& cloneMe);
-			/**< Calls the corresponding constructor. */
+    public:
+        NAbelianGroup* newNAbelianGroup();
+            /**< Calls the corresponding constructor. */
+        NAbelianGroup* newNAbelianGroup(const NAbelianGroup& cloneMe);
+            /**< Calls the corresponding constructor. */
+        NContainer* newNContainer();
+            /**< Calls the corresponding constructor. */
+        NFile* newNFile();
+            /**< Calls the corresponding constructor. */
+        NMatrixInt* newNMatrixInt(int rows, int columns);
+            /**< Calls the corresponding constructor. */
+        NMatrixInt* newNMatrixInt(const NMatrixInt& cloneMe);
+            /**< Calls the corresponding constructor. */
+        NNormalSurfaceList* newNNormalSurfaceList(NTriangulation* owner,
+                int flavour, bool isEmbeddedOnly = true);
+            /**< Calls the corresponding constructor. */
+        NProgressManager* newNProgressManager();
+            /**< Calls the corresponding constructor. */
+        NScript* newNScript();
+            /**< Calls the corresponding constructor. */
+        NSurfaceFilter* newNSurfaceFilter();
+            /**< Calls the corresponding constructor. */
+        NSurfaceFilter* newNSurfaceFilter(const NSurfaceFilter& cloneMe);
+            /**< Calls the corresponding constructor. */
+        NSurfaceFilterCombination* newNSurfaceFilterCombination();
+            /**< Calls the corresponding constructor. */
+        NSurfaceFilterCombination* newNSurfaceFilterCombination(
+                const NSurfaceFilterCombination& cloneMe);
+            /**< Calls the corresponding constructor. */
+        NSurfaceFilterProperties* newNSurfaceFilterProperties();
+            /**< Calls the corresponding constructor. */
+        NSurfaceFilterProperties* newNSurfaceFilterProperties(
+                const NSurfaceFilterProperties& cloneMe);
+            /**< Calls the corresponding constructor. */
+        NSurfaceSubset* newNSurfaceSubset(const NSurfaceSet& set,
+                const NSurfaceFilter& filter);
+            /**< Calls the corresponding constructor. */
+        NTetrahedron* newNTetrahedron();
+            /**< Calls the corresponding constructor. */
+        NTetrahedron* newNTetrahedron(const char* desc);
+            /**< Calls the corresponding constructor. */
+        NText* newNText();
+            /**< Calls the corresponding constructor. */
+        NText* newNText(const char* text);
+            /**< Calls the corresponding constructor. */
+        NTriangulation* newNTriangulation();
+            /**< Calls the corresponding constructor. */
+        NTriangulation* newNTriangulation(const NTriangulation& cloneMe);
+            /**< Calls the corresponding constructor. */
 
-		NTriangulation* enterTextTriangulation();
-			/**< Calls NTriangulation::enterTextTriangulation(). */
-		long formCensus(NPacket* parent, int nTetrahedra,
-				NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
-				int nBdryFaces = -1, NProgressManager* manager = 0);
-			/**< Calls ::formCensus(). */
-		int getVersionMajor();
-			/**< Calls ::getVersionMajor(). */
-		int getVersionMinor();
-			/**< Calls ::getVersionMinor(). */
-		NString getVersionString();
-			/**< Calls ::getVersionString(). */
-		NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
-				int flavour);
-			/**< Calls ::makeMatchingEquations(). */
-		NPacket* readFromFile(const char* fileName);
-			/**< Calls ::readFromFile(). */
-		NTriangulation* readSnapPea(const char* fileName);
-			/**< Calls ::readSnapPea(). */
-		void smithNormalForm(NMatrixInt* matrix);
-			/**< Calls ::smithNormalForm(). */
-		int testEngine(int value);
-			/**< Calls ::testEngine(). */
-		bool writeToFile(const char* fileName, NPacket* packet);
-			/**< Calls ::writeToFile(). */
+        NTriangulation* enterTextTriangulation();
+            /**< Calls NTriangulation::enterTextTriangulation(). */
+        long formCensus(NPacket* parent, int nTetrahedra,
+                NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
+                int nBdryFaces = -1, NProgressManager* manager = 0);
+            /**< Calls ::formCensus(). */
+        int getVersionMajor();
+            /**< Calls ::getVersionMajor(). */
+        int getVersionMinor();
+            /**< Calls ::getVersionMinor(). */
+        NString getVersionString();
+            /**< Calls ::getVersionString(). */
+        NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
+                int flavour);
+            /**< Calls ::makeMatchingEquations(). */
+        NPacket* readFromFile(const char* fileName);
+            /**< Calls ::readFromFile(). */
+        NTriangulation* readSnapPea(const char* fileName);
+            /**< Calls ::readSnapPea(). */
+        void smithNormalForm(NMatrixInt* matrix);
+            /**< Calls ::smithNormalForm(). */
+        int testEngine(int value);
+            /**< Calls ::testEngine(). */
+        bool writeToFile(const char* fileName, NPacket* packet);
+            /**< Calls ::writeToFile(). */
 };
 
 /**

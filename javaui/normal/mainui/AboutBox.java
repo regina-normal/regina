@@ -60,10 +60,10 @@ public class AboutBox extends JDialog implements ActionListener {
      */
     private JLabel iconLabel = new JLabel();
 
-	/**
-	 * The shell representing the entire program.
-	 */
-	private Shell shell;
+    /**
+     * The shell representing the entire program.
+     */
+    private Shell shell;
 
     /**
      * Create a new About box.
@@ -72,7 +72,7 @@ public class AboutBox extends JDialog implements ActionListener {
      */
     public AboutBox(Shell shell) {
         super(shell.getPrimaryFrame(), "About", true);
-		this.shell = shell;
+        this.shell = shell;
         diagnostics();
         init();
         pack();
@@ -169,7 +169,7 @@ public class AboutBox extends JDialog implements ActionListener {
     private TextDisplayRegion titleRegion() {
         TextDisplayRegion ans = new TextDisplayRegion();
         ans.insertLine(Application.program + ' ' + Application.version
-			+ " (" + Application.date + ')');
+            + " (" + Application.date + ')');
         ans.insertMessage(Application.comments, maxLineLength);
         ans.insertMessage(Application.copyright, maxLineLength);
         ans.setMaximumSize(ans.getPreferredSize());
@@ -230,13 +230,13 @@ public class AboutBox extends JDialog implements ActionListener {
     private TextDisplayRegion infoRegion() {
         TextDisplayRegion ans = new TextDisplayRegion();
 
-		ans.insertLine("Engine " + shell.getEngine().getVersionString());
-		ans.insertLine("- " + shell.getEngine().styleDescription());
-		String jdkVersion = btools.Version.javaVersion();
-		if (jdkVersion == null)
-			ans.insertLine("JDK unknown");
-		else
-        	ans.insertLine("JDK " + jdkVersion);
+        ans.insertLine("Engine " + shell.getEngine().getVersionString());
+        ans.insertLine("- " + shell.getEngine().styleDescription());
+        String jdkVersion = btools.Version.javaVersion();
+        if (jdkVersion == null)
+            ans.insertLine("JDK unknown");
+        else
+            ans.insertLine("JDK " + jdkVersion);
         ans.insertLine("BTools " + btools.Version.btoolsVersion);
         ans.insertLine("JPython " + jpythonVersion);
         if (shell.hasFoundJavaHelp()) {

@@ -29,7 +29,7 @@
 package normal.engine.packet;
 
 public interface NScript extends NPacket {
-	public static final int packetType = 7;
+    public static final int packetType = 7;
 
     public long getNumberOfLines();
     public String getLine(long index);

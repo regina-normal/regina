@@ -63,9 +63,9 @@ public class NPerm {
             mapping[i] = i;
             
     }
-	public NPerm(char newCode) {
-		setPermCode(newCode);
-	}
+    public NPerm(char newCode) {
+        setPermCode(newCode);
+    }
     public NPerm(int i, int j) {
         this();
         mapping[i] = j;
@@ -100,18 +100,18 @@ public class NPerm {
             mapping[3], 3);
     }
 
-	public char getPermCode() {
-		return (char)(mapping[0] +
-			(mapping[1] << 2) +
-			(mapping[2] << 4) +
-			(mapping[3] << 6));
-	}
-	public void setPermCode(char newCode) {
-		mapping[0] = newCode & 3;
-		mapping[1] = (newCode >> 2) & 3;
-		mapping[2] = (newCode >> 4) & 3;
-		mapping[3] = (newCode >> 6) & 3;
-	}
+    public char getPermCode() {
+        return (char)(mapping[0] +
+            (mapping[1] << 2) +
+            (mapping[2] << 4) +
+            (mapping[3] << 6));
+    }
+    public void setPermCode(char newCode) {
+        mapping[0] = newCode & 3;
+        mapping[1] = (newCode >> 2) & 3;
+        mapping[2] = (newCode >> 4) & 3;
+        mapping[3] = (newCode >> 6) & 3;
+    }
     
     public int imageOf(int a) {
         return mapping[a];

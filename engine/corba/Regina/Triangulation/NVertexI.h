@@ -32,38 +32,38 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "nvertex.h"
-	#include "corbatools.h"
+    #include "nvertex.h"
+    #include "corbatools.h"
 #else
-	#include "engine/triangulation/nvertex.h"
-	#include "corba/corbatools.h"
+    #include "engine/triangulation/nvertex.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NTetrahedronIDL.h"
 #include "ShareableObjectI.h"
 
 class NVertex_i : public virtual Regina::Triangulation::_sk_NVertex,
-		public ShareableObject_i {
-	protected:
-		NVertex_i(::NVertex* newCppPtr) : ShareableObject_i(newCppPtr) {
-		}
-	public:
-		STANDARD_NEW_WRAPPER(NVertex, NVertex_i,
-			Regina::Triangulation::NVertex_ptr)
+        public ShareableObject_i {
+    protected:
+        NVertex_i(::NVertex* newCppPtr) : ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER(NVertex, NVertex_i,
+            Regina::Triangulation::NVertex_ptr)
 
-		virtual Regina::Triangulation::NComponent_ptr getComponent();
-		virtual Regina::Triangulation::NBoundaryComponent_ptr
-			getBoundaryComponent();
-		virtual CORBA::Long getLink();
-		virtual CORBA::Boolean isLinkClosed();
-		virtual CORBA::Boolean isIdeal();
-		virtual CORBA::Boolean isBoundary();
-		virtual CORBA::Boolean isStandard();
-		virtual CORBA::Boolean isLinkOrientable();
-		virtual CORBA::Long getLinkEulerCharacteristic();
-		virtual CORBA::Long getNumberOfEmbeddings();
-		virtual void getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
-			CORBA::Long& vertex, CORBA::Long index);
+        virtual Regina::Triangulation::NComponent_ptr getComponent();
+        virtual Regina::Triangulation::NBoundaryComponent_ptr
+            getBoundaryComponent();
+        virtual CORBA::Long getLink();
+        virtual CORBA::Boolean isLinkClosed();
+        virtual CORBA::Boolean isIdeal();
+        virtual CORBA::Boolean isBoundary();
+        virtual CORBA::Boolean isStandard();
+        virtual CORBA::Boolean isLinkOrientable();
+        virtual CORBA::Long getLinkEulerCharacteristic();
+        virtual CORBA::Long getNumberOfEmbeddings();
+        virtual void getEmbedding(Regina::Triangulation::NTetrahedron_ptr& tet,
+            CORBA::Long& vertex, CORBA::Long index);
 };
 
 #endif

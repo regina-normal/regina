@@ -32,58 +32,58 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "npacket.h"
-	#include "corbatools.h"
+    #include "npacket.h"
+    #include "corbatools.h"
 #else
-	#include "engine/packet/npacket.h"
-	#include "corba/corbatools.h"
+    #include "engine/packet/npacket.h"
+    #include "corba/corbatools.h"
 #endif
 
 #include "NPacketIDL.h"
 #include "ShareableObjectI.h"
 
 class NPacket_i : public virtual Regina::Packet::_sk_NPacket,
-		public ShareableObject_i {
-	protected:
-		NPacket_i(::NPacket* newCppPtr) : ShareableObject_i(newCppPtr) {
-		}
-	public:
-		static Regina::Packet::NPacket_ptr newWrapper(::NPacket* newCppPtr);
+        public ShareableObject_i {
+    protected:
+        NPacket_i(::NPacket* newCppPtr) : ShareableObject_i(newCppPtr) {
+        }
+    public:
+        static Regina::Packet::NPacket_ptr newWrapper(::NPacket* newCppPtr);
 
-		virtual CORBA::Long getPacketType();
-		virtual char* getPacketName();
-		virtual char* getPacketLabel();
-		virtual void setPacketLabel(const char* newLabel);
-		virtual char* getFullName();
-		virtual Regina::Packet::NPacket_ptr getFirstTreeChild();
-		virtual Regina::Packet::NPacket_ptr getLastTreeChild();
-		virtual Regina::Packet::NPacket_ptr getPrevTreeSibling();
-		virtual Regina::Packet::NPacket_ptr getNextTreeSibling();
-		virtual Regina::Packet::NPacket_ptr getTreeParent();
-		virtual Regina::Packet::NPacket_ptr getTreeMatriarch();
-		virtual void insertChildFirst(Regina::Packet::NPacket_ptr child);
-		virtual void insertChildLast(Regina::Packet::NPacket_ptr child);
-		virtual void insertChildAfter(Regina::Packet::NPacket_ptr newChild,
-			Regina::Packet::NPacket_ptr prevChild);
-		virtual void makeOrphan();
-		virtual void swapWithNextSibling();
-		virtual Regina::Packet::NPacket_ptr nextTreePacket_();
-		virtual Regina::Packet::NPacket_ptr firstTreePacket(const char* type);
-		virtual Regina::Packet::NPacket_ptr nextTreePacket_string(
-			const char* type);
-		virtual Regina::Packet::NPacket_ptr findPacketLabel(const char* type);
-		virtual char* makeUniqueLabel(const char* base);
-		virtual CORBA::Long levelsDownTo(
-			Regina::Packet::NPacket_ptr descendant);
-		virtual CORBA::Long levelsUpTo(
-			Regina::Packet::NPacket_ptr ancestor);
-		virtual CORBA::Boolean isGrandparentOf(
-			Regina::Packet::NPacket_ptr descendant);
-		virtual CORBA::Long totalTreeSize();
-		virtual CORBA::Boolean dependsOnParent();
-		virtual CORBA::Boolean isPacketEditable();
-		virtual Regina::Packet::NPacket_ptr clonePacket(
-			CORBA::Boolean cloneDescendants, CORBA::Boolean end);
+        virtual CORBA::Long getPacketType();
+        virtual char* getPacketName();
+        virtual char* getPacketLabel();
+        virtual void setPacketLabel(const char* newLabel);
+        virtual char* getFullName();
+        virtual Regina::Packet::NPacket_ptr getFirstTreeChild();
+        virtual Regina::Packet::NPacket_ptr getLastTreeChild();
+        virtual Regina::Packet::NPacket_ptr getPrevTreeSibling();
+        virtual Regina::Packet::NPacket_ptr getNextTreeSibling();
+        virtual Regina::Packet::NPacket_ptr getTreeParent();
+        virtual Regina::Packet::NPacket_ptr getTreeMatriarch();
+        virtual void insertChildFirst(Regina::Packet::NPacket_ptr child);
+        virtual void insertChildLast(Regina::Packet::NPacket_ptr child);
+        virtual void insertChildAfter(Regina::Packet::NPacket_ptr newChild,
+            Regina::Packet::NPacket_ptr prevChild);
+        virtual void makeOrphan();
+        virtual void swapWithNextSibling();
+        virtual Regina::Packet::NPacket_ptr nextTreePacket_();
+        virtual Regina::Packet::NPacket_ptr firstTreePacket(const char* type);
+        virtual Regina::Packet::NPacket_ptr nextTreePacket_string(
+            const char* type);
+        virtual Regina::Packet::NPacket_ptr findPacketLabel(const char* type);
+        virtual char* makeUniqueLabel(const char* base);
+        virtual CORBA::Long levelsDownTo(
+            Regina::Packet::NPacket_ptr descendant);
+        virtual CORBA::Long levelsUpTo(
+            Regina::Packet::NPacket_ptr ancestor);
+        virtual CORBA::Boolean isGrandparentOf(
+            Regina::Packet::NPacket_ptr descendant);
+        virtual CORBA::Long totalTreeSize();
+        virtual CORBA::Boolean dependsOnParent();
+        virtual CORBA::Boolean isPacketEditable();
+        virtual Regina::Packet::NPacket_ptr clonePacket(
+            CORBA::Boolean cloneDescendants, CORBA::Boolean end);
 };
 
 #endif

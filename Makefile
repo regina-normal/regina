@@ -58,7 +58,7 @@ helprun :
 .PHONY : help helpgeneral helpbin helpdocs helpprep helprun \
 	binengine binenginejni binenginecorba \
 	binjava binjavaui binjavajni binjavacorba \
-	binconf bindocs bin \
+	binjni bincorba binconf bindocs bin \
 	docsengine docsjava docs \
 	prepengine prepenginejni prepenginecorba prepjava prepjavacorba \
 		prepcorba prepjni prepcleancorba prepcleanjni prepclean prep \
@@ -78,6 +78,8 @@ binjavajni :
 	cd javaui && $(MAKE) jnijar
 binjavacorba :
 	cd javaui && $(MAKE) corbajar
+binjni : binenginejni binjavaui binjavajni
+bincorba : binenginecorba binjavaui binjavacorba
 binconf :
 	cd $(CONF_DIR) && $(MAKE) jar
 bindocs : $(DOC_JAR)

@@ -32,41 +32,41 @@ import normal.engine.implementation.corba.Regina.Triangulation.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBAFace extends CORBAShareableObject
-		implements normal.engine.triangulation.NFace {
-	public NFace data;
-	public static final Class CORBAClass = NFace.class;
-	public static final Class helperClass = NFaceHelper.class;
+        implements normal.engine.triangulation.NFace {
+    public NFace data;
+    public static final Class CORBAClass = NFace.class;
+    public static final Class helperClass = NFaceHelper.class;
 
     public NCORBAFace(NFace data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBAFace newWrapper(NFace source) {
-		return (source == null ? null : new NCORBAFace(source));
-	}
+    public static NCORBAFace newWrapper(NFace source) {
+        return (source == null ? null : new NCORBAFace(source));
+    }
 
-	public normal.engine.triangulation.NComponent getComponent() {
-		return NCORBAComponent.newWrapper(data.getComponent());
-	}
-	public normal.engine.triangulation.NBoundaryComponent
-			getBoundaryComponent() {
-		return NCORBABoundaryComponent.newWrapper(data.getBoundaryComponent());
-	}
+    public normal.engine.triangulation.NComponent getComponent() {
+        return NCORBAComponent.newWrapper(data.getComponent());
+    }
+    public normal.engine.triangulation.NBoundaryComponent
+            getBoundaryComponent() {
+        return NCORBABoundaryComponent.newWrapper(data.getBoundaryComponent());
+    }
 
-	public boolean isBoundary() {
-		return data.isBoundary();
-	}
+    public boolean isBoundary() {
+        return data.isBoundary();
+    }
 
-	public int getNumberOfEmbeddings() {
-		return data.getNumberOfEmbeddings();
-	}
-	public normal.engine.triangulation.NFaceEmbedding
-			getEmbedding(int index) {
-		NTetrahedronHolder tet = new NTetrahedronHolder();
-		org.omg.CORBA.IntHolder face = new org.omg.CORBA.IntHolder();
-		data.getEmbedding(tet, face, index);
-		return new normal.engine.triangulation.NFaceEmbedding(
-			NCORBATetrahedron.newWrapper(tet.value), face.value);
-	}
+    public int getNumberOfEmbeddings() {
+        return data.getNumberOfEmbeddings();
+    }
+    public normal.engine.triangulation.NFaceEmbedding
+            getEmbedding(int index) {
+        NTetrahedronHolder tet = new NTetrahedronHolder();
+        org.omg.CORBA.IntHolder face = new org.omg.CORBA.IntHolder();
+        data.getEmbedding(tet, face, index);
+        return new normal.engine.triangulation.NFaceEmbedding(
+            NCORBATetrahedron.newWrapper(tet.value), face.value);
+    }
 }

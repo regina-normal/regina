@@ -32,31 +32,31 @@
 #include "config.h"
 
 #ifdef __NO_INCLUDE_PATHS
-	#include "shareableobject.h"
-	#include "corbacast.h"
+    #include "shareableobject.h"
+    #include "corbacast.h"
 #else
-	#include "engine/shareableobject.h"
-	#include "corba/corbacast.h"
+    #include "engine/shareableobject.h"
+    #include "corba/corbacast.h"
 #endif
 
 #include "ShareableObjectIDL.h"
 
 class ShareableObject_i : public virtual Regina::_sk_ShareableObject {
-	private:
-		::ShareableObject* cppPtr;
+    private:
+        ::ShareableObject* cppPtr;
 
-	public:
-		ShareableObject_i(::ShareableObject* newCppPtr) : cppPtr(newCppPtr) {
-			_obj_is_ready(_boa());
-		}
-		virtual ~ShareableObject_i() {
-		}
+    public:
+        ShareableObject_i(::ShareableObject* newCppPtr) : cppPtr(newCppPtr) {
+            _obj_is_ready(_boa());
+        }
+        virtual ~ShareableObject_i() {
+        }
 
-		virtual CORBA::Long getCppPtr();
-		virtual CORBA::Boolean sameObject(Regina::ShareableObject_ptr other);
-		virtual void destroy();
-		virtual char* toString();
-		virtual char* toStringLong();
+        virtual CORBA::Long getCppPtr();
+        virtual CORBA::Boolean sameObject(Regina::ShareableObject_ptr other);
+        virtual void destroy();
+        virtual char* toString();
+        virtual char* toStringLong();
 };
 
 #endif

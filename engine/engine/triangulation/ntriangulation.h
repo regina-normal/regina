@@ -142,8 +142,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
             /**< Is the triangulation valid? */
         bool ideal;
             /**< Is the triangulation ideal? */
-		bool standard;
-			/**< Is the triangulation standard? */
+        bool standard;
+            /**< Is the triangulation standard? */
         bool orientable;
             /**< Is the triangulation orientable? */
 
@@ -204,16 +204,16 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * and information will be read from the given input stream.
          *
          * \ifaces This routine is a member of class Engine.
-		 * It takes no parameters; \a in and \a out are always assumed
-		 * to be standard input and standard output respectively.
+         * It takes no parameters; \a in and \a out are always assumed
+         * to be standard input and standard output respectively.
          * If the engine is being accessed through CORBA, this routine
-		 * returns <tt>null</tt>.
-		 * \ifacescorba Not present.
+         * returns <tt>null</tt>.
+         * \ifacescorba Not present.
          *
          * @param in the input stream from which text will be read.
          * @param out the output stream to which prompts will be
          * written.
-		 * @return the triangulation entered in by the user.
+         * @return the triangulation entered in by the user.
          */
         static NTriangulation* enterTextTriangulation(istream& in,
                 ostream& out);
@@ -750,15 +750,15 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @return \c true if and only if this triangulation is ideal.
          */
         bool isIdeal();
-		/**
-		 * Determines if this triangulation is standard.
-		 * This is the case if and only if every vertex is standard.
-		 * See NVertex::isStandard() for further details.
-		 *
-		 * @return \c true if and only if this triangulation is
-		 * standard.
-		 */
-		bool isStandard();
+        /**
+         * Determines if this triangulation is standard.
+         * This is the case if and only if every vertex is standard.
+         * See NVertex::isStandard() for further details.
+         *
+         * @return \c true if and only if this triangulation is
+         * standard.
+         */
+        bool isStandard();
         /**
          * Determines if this triangulation has any boundary faces.
          *
@@ -905,8 +905,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-		 *
-		 * \ifacescorba All parameters are compulsory.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -938,8 +938,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-		 *
-		 * \ifacescorba All parameters are compulsory.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param f the face about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -979,8 +979,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-		 *
-		 * \ifacescorba All parameters are compulsory.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1026,8 +1026,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-		 *
-		 * \ifacescorba All parameters are compulsory.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param e the edge about which to perform the move.
          * @param edgeEnd the end of the edge \e opposite that at
@@ -1070,8 +1070,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-		 *
-		 * \ifacescorba All parameters are compulsory.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param f the face about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1107,8 +1107,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * \pre The skeleton has been calculated.
          * Skeleton calculation can be forced by querying the skeleton,
          * such as calling getNumberOfVertices().
-		 *
-		 * \ifacescorba All parameters are compulsory.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param t the tetrahedron upon which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1141,8 +1141,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * \todo \optlong Have this routine only use as many tetrahedra
          * as are necessary, leaving finite vertices alone.
-		 *
-		 * \ifacescorba All parameters are compulsory.
+         *
+         * \ifacescorba All parameters are compulsory.
          *
          * @param forceDivision specifies what to do if the triangulation
          * has no ideal or non-standard vertices.
@@ -1504,9 +1504,9 @@ inline bool NTriangulation::isIdeal() {
 }
 
 inline bool NTriangulation::isStandard() {
-	if (! calculatedSkeleton)
-		calculateSkeleton();
-	return standard;
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return standard;
 }
 
 inline bool NTriangulation::hasBoundaryFaces() {

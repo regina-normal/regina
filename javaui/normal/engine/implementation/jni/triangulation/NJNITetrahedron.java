@@ -49,8 +49,8 @@ public class NJNITetrahedron extends JNIShareableObject
     
     public native NTetrahedron getAdjacentTetrahedron(int face);
     public NPerm getAdjacentTetrahedronGluing(int face) {
-		return new NPerm(_getAdjacentTetrahedronGluing(face));
-	}
+        return new NPerm(_getAdjacentTetrahedronGluing(face));
+    }
     public native char _getAdjacentTetrahedronGluing(int face);
     public native int getAdjacentFace(int face);
     public native boolean hasBoundary();
@@ -62,17 +62,17 @@ public class NJNITetrahedron extends JNIShareableObject
     public native NFace getFace(int face);
 
     public NPerm getEdgeMapping(int edge) {
-		return new NPerm(_getEdgeMapping(edge));
-	}
+        return new NPerm(_getEdgeMapping(edge));
+    }
     public native char _getEdgeMapping(int edge);
     public NPerm getFaceMapping(int face) {
-		return new NPerm(_getFaceMapping(face));
-	}
+        return new NPerm(_getFaceMapping(face));
+    }
     public native char _getFaceMapping(int face);
 
     public void joinTo(int myFace, NTetrahedron you, NPerm gluing) {
-		_joinTo(myFace, you, gluing.getPermCode());
-	}
+        _joinTo(myFace, you, gluing.getPermCode());
+    }
     public native void _joinTo(int myFace, NTetrahedron you, char gluing);
     public native NTetrahedron unjoin(int myFace);
     public native void isolate();

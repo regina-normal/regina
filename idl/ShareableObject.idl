@@ -30,14 +30,14 @@
 #define __SHAREABLEOBJECT_IDL
 
 module Regina {
-	interface ShareableObject {
-		long getCppPtr();
+    interface ShareableObject {
+        long getCppPtr();
 
-		boolean sameObject(in ShareableObject other);
-		void destroy();
-		string toString();
-		string toStringLong();
-	};
+        boolean sameObject(in ShareableObject other);
+        void destroy();
+        string toString();
+        string toStringLong();
+    };
 };
 
 #endif

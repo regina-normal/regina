@@ -32,18 +32,18 @@ import normal.engine.implementation.corba.Regina.Packet.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBAContainer extends NCORBAPacket
-		implements normal.engine.packet.NContainer {
-	public NContainer data;
-	public static final Class CORBAClass = NContainer.class;
-	public static final Class helperClass = NContainerHelper.class;
+        implements normal.engine.packet.NContainer {
+    public NContainer data;
+    public static final Class CORBAClass = NContainer.class;
+    public static final Class helperClass = NContainerHelper.class;
 
     protected NCORBAContainer(NContainer data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBAContainer newWrapper(NContainer source) {
-		return (source == null ? null : new NCORBAContainer(source));
-	}
+    public static NCORBAContainer newWrapper(NContainer source) {
+        return (source == null ? null : new NCORBAContainer(source));
+    }
 }
 

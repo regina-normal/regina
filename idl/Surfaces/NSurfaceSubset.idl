@@ -33,10 +33,10 @@
 #include "Surfaces/NSurfaceSet.idl"
 
 module Regina {
-	module Surfaces {
-		interface NSurfaceSubset : ShareableObject, NSurfaceSet {
-		};
-	};
+    module Surfaces {
+        interface NSurfaceSubset : ShareableObject, NSurfaceSet {
+        };
+    };
 };
 
 #endif

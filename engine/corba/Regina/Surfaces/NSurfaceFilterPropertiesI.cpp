@@ -29,45 +29,45 @@
 #include "NSurfaceFilterPropertiesI.h"
 
 CORBA::Long NSurfaceFilterProperties_i::getNumberOfECs() {
-	return GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->getNumberOfECs();
+    return GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->getNumberOfECs();
 }
 char* NSurfaceFilterProperties_i::getEC(CORBA::Long index) {
-	return stringFromLarge(GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
-		getEC(index));
+    return stringFromLarge(GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
+        getEC(index));
 }
 CORBA::Char NSurfaceFilterProperties_i::getOrientability() {
-	return GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
-		getOrientability().getByteCode();
+    return GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
+        getOrientability().getByteCode();
 }
 CORBA::Char NSurfaceFilterProperties_i::getCompactness() {
-	return GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
-		getCompactness().getByteCode();
+    return GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
+        getCompactness().getByteCode();
 }
 CORBA::Char NSurfaceFilterProperties_i::getRealBoundary() {
-	return GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
-		getRealBoundary().getByteCode();
+    return GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
+        getRealBoundary().getByteCode();
 }
 void NSurfaceFilterProperties_i::addEC(const char* ec) {
-	GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->addEC(
-		stringToLarge(ec));
+    GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->addEC(
+        stringToLarge(ec));
 }
 void NSurfaceFilterProperties_i::removeEC(const char* ec) {
-	GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->removeEC(
-		stringToLarge(ec));
+    GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->removeEC(
+        stringToLarge(ec));
 }
 void NSurfaceFilterProperties_i::removeAllECs() {
-	GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->removeAllECs();
+    GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->removeAllECs();
 }
 void NSurfaceFilterProperties_i::setOrientability(CORBA::Char value) {
-	GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
-		setOrientability(NBoolSet::fromByteCode(value));
+    GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
+        setOrientability(NBoolSet::fromByteCode(value));
 }
 void NSurfaceFilterProperties_i::setCompactness(CORBA::Char value) {
-	GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
-		setCompactness(NBoolSet::fromByteCode(value));
+    GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
+        setCompactness(NBoolSet::fromByteCode(value));
 }
 void NSurfaceFilterProperties_i::setRealBoundary(CORBA::Char value) {
-	GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
-		setRealBoundary(NBoolSet::fromByteCode(value));
+    GET_ENGINE_OBJECT(NSurfaceFilterProperties, this)->
+        setRealBoundary(NBoolSet::fromByteCode(value));
 }
 

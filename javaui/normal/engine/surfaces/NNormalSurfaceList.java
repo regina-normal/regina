@@ -32,7 +32,7 @@ import normal.engine.packet.NPacket;
 import normal.engine.maths.NMatrixInt;
 
 public interface NNormalSurfaceList extends NPacket, NSurfaceSet {
-	public static final int packetType = 6;
+    public static final int packetType = 6;
 
     public static final int STANDARD = 0;
     public static final int AN_STANDARD = 100;

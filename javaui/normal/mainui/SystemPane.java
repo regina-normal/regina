@@ -279,7 +279,7 @@ public class SystemPane extends JPanel {
      */
     public SystemPane(Shell shell, NPacket rootPacket) {
         super();
-		this.shell = shell;
+        this.shell = shell;
         this.rootPacket = rootPacket;
         this.displayIcon = shell.getOptions().getDisplayIcon();
         
@@ -625,23 +625,23 @@ public class SystemPane extends JPanel {
         this.fileName = fileName;
     }
 
-	/**
-	 * Returns the shell representing the entire program.
-	 *
-	 * @return the shell representing the entire program.
-	 */
-	public Shell getShell() {
-		return shell;
-	}
+    /**
+     * Returns the shell representing the entire program.
+     *
+     * @return the shell representing the entire program.
+     */
+    public Shell getShell() {
+        return shell;
+    }
 
     /**
      * Returns the <tt>NormalFrame</tt> containing this system pane.
      *
      * @param the enclosing <tt>NormalFrame</tt>, or <tt>null</tt> if
-	 * there is no such frame.
+     * there is no such frame.
      */
     public NormalFrame getNormalFrame() {
-		return shell.getNormalFrame();
+        return shell.getNormalFrame();
     }
 
     /**
@@ -653,14 +653,14 @@ public class SystemPane extends JPanel {
         return shell.getEngine();
     }
 
-	/**
-	 * Returns the current user options for the program.
-	 *
-	 * @return the current user options.
-	 */
-	public NormalOptionSet getOptions() {
-		return shell.getOptions();
-	}
+    /**
+     * Returns the current user options for the program.
+     *
+     * @return the current user options.
+     */
+    public NormalOptionSet getOptions() {
+        return shell.getOptions();
+    }
 
     /**
      * Return the packet at the root of the working packet tree.
@@ -1399,7 +1399,7 @@ public class SystemPane extends JPanel {
 
         // Open a dialog to obtain a new name for the packet.
         String result = InputBox.getInput(shell.getPrimaryFrame(),
-			"Rename packet", packet.getPacketLabel());
+            "Rename packet", packet.getPacketLabel());
         if (result == null)
             return;
         result = result.trim();

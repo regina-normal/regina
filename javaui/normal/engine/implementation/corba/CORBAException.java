@@ -35,20 +35,20 @@ package normal.engine.implementation.corba;
 public class CORBAException extends Exception {
     /**
      * Create a new exception because a CORBA connection could not be
-	 * initialised.
+     * initialised.
      */
     public CORBAException() {
         super("Specific details of the error are not available.");
     }
 
-	/**
-	 * Create a new exception because a CORBA connection could not be
-	 * initialised.
-	 *
-	 * @param message a message giving details of the error that
-	 * occurred.
-	 */
-	public CORBAException(String message) {
-		super(message);
-	}
+    /**
+     * Create a new exception because a CORBA connection could not be
+     * initialised.
+     *
+     * @param message a message giving details of the error that
+     * occurred.
+     */
+    public CORBAException(String message) {
+        super(message);
+    }
 }

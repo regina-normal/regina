@@ -113,7 +113,7 @@ public class NScriptEditor extends DefaultPacketEditor {
      * Create a new interface to edit a given packet.
      *
      * @param packet the packet to be associated with this interface.
-	 * @param shell the shell representing the entire program.
+     * @param shell the shell representing the entire program.
      * @param editor <tt>true</tt> if this interface is to be used
      * for editing, or <tt>false</tt> if it is for viewing only.
      */

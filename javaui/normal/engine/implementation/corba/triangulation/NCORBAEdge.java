@@ -32,44 +32,44 @@ import normal.engine.implementation.corba.Regina.Triangulation.*;
 import normal.engine.implementation.corba.*;
 
 public class NCORBAEdge extends CORBAShareableObject
-		implements normal.engine.triangulation.NEdge {
-	public NEdge data;
-	public static final Class CORBAClass = NEdge.class;
-	public static final Class helperClass = NEdgeHelper.class;
+        implements normal.engine.triangulation.NEdge {
+    public NEdge data;
+    public static final Class CORBAClass = NEdge.class;
+    public static final Class helperClass = NEdgeHelper.class;
 
     public NCORBAEdge(NEdge data) {
-		super(data);
-		this.data = data;
+        super(data);
+        this.data = data;
     }
 
-	public static NCORBAEdge newWrapper(NEdge source) {
-		return (source == null ? null : new NCORBAEdge(source));
-	}
+    public static NCORBAEdge newWrapper(NEdge source) {
+        return (source == null ? null : new NCORBAEdge(source));
+    }
 
-	public normal.engine.triangulation.NComponent getComponent() {
-		return NCORBAComponent.newWrapper(data.getComponent());
-	}
-	public normal.engine.triangulation.NBoundaryComponent
-			getBoundaryComponent() {
-		return NCORBABoundaryComponent.newWrapper(data.getBoundaryComponent());
-	}
+    public normal.engine.triangulation.NComponent getComponent() {
+        return NCORBAComponent.newWrapper(data.getComponent());
+    }
+    public normal.engine.triangulation.NBoundaryComponent
+            getBoundaryComponent() {
+        return NCORBABoundaryComponent.newWrapper(data.getBoundaryComponent());
+    }
 
-	public boolean isBoundary() {
-		return data.isBoundary();
-	}
-	public boolean isValid() {
-		return data.isValid();
-	}
+    public boolean isBoundary() {
+        return data.isBoundary();
+    }
+    public boolean isValid() {
+        return data.isValid();
+    }
 
-	public long getNumberOfEmbeddings() {
-		return data.getNumberOfEmbeddings();
-	}
-	public normal.engine.triangulation.NEdgeEmbedding
-			getEmbedding(long index) {
-		NTetrahedronHolder tet = new NTetrahedronHolder();
-		org.omg.CORBA.IntHolder edge = new org.omg.CORBA.IntHolder();
-		data.getEmbedding(tet, edge, (int)index);
-		return new normal.engine.triangulation.NEdgeEmbedding(
-			NCORBATetrahedron.newWrapper(tet.value), edge.value);
-	}
+    public long getNumberOfEmbeddings() {
+        return data.getNumberOfEmbeddings();
+    }
+    public normal.engine.triangulation.NEdgeEmbedding
+            getEmbedding(long index) {
+        NTetrahedronHolder tet = new NTetrahedronHolder();
+        org.omg.CORBA.IntHolder edge = new org.omg.CORBA.IntHolder();
+        data.getEmbedding(tet, edge, (int)index);
+        return new normal.engine.triangulation.NEdgeEmbedding(
+            NCORBATetrahedron.newWrapper(tet.value), edge.value);
+    }
 }

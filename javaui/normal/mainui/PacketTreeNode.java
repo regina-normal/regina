@@ -141,10 +141,10 @@ public class PacketTreeNode extends DefaultMutableTreeNode {
      * and inserts new <tt>PacketTreeNode</tt> wrappers into
      * the given tree for all descendant packets that are not already
      * wrapped as such.
-	 * <p>
-	 * As of Regina 2.1.1, this routine has been improved from quadratic
-	 * time to linear time.
-	 * <p>
+     * <p>
+     * As of Regina 2.1.1, this routine has been improved from quadratic
+     * time to linear time.
+     * <p>
      * <b>Precondition:</b> This tree node already belongs to the given
      * tree.
      *
@@ -156,25 +156,25 @@ public class PacketTreeNode extends DefaultMutableTreeNode {
      */
     public void insertUnwrappedDescendants(DefaultTreeModel model,
             Vector newNodes) {
-		// Make a list of all packets needing to be wrapped.
-		Vector mustWrap = new Vector();
-		NPacket child = packet.getFirstTreeChild();
-		while (child != null) {
-			if (findChildNode(child) == null)
-				mustWrap.addElement(child);
-			child = child.getNextTreeSibling();
-		}
-		
-		// Wrap these packets.
-		PacketTreeNode childNode;
-		Enumeration e = mustWrap.elements();
-		while (e.hasMoreElements()) {
-			childNode = new PacketTreeNode((NPacket)e.nextElement());
-			model.insertNodeInto(childNode, this, getChildCount());
-			if (newNodes != null)
-				newNodes.addElement(childNode);
-			childNode.insertUnwrappedDescendants(model, newNodes);
-		}
+        // Make a list of all packets needing to be wrapped.
+        Vector mustWrap = new Vector();
+        NPacket child = packet.getFirstTreeChild();
+        while (child != null) {
+            if (findChildNode(child) == null)
+                mustWrap.addElement(child);
+            child = child.getNextTreeSibling();
+        }
+        
+        // Wrap these packets.
+        PacketTreeNode childNode;
+        Enumeration e = mustWrap.elements();
+        while (e.hasMoreElements()) {
+            childNode = new PacketTreeNode((NPacket)e.nextElement());
+            model.insertNodeInto(childNode, this, getChildCount());
+            if (newNodes != null)
+                newNodes.addElement(childNode);
+            childNode.insertUnwrappedDescendants(model, newNodes);
+        }
     }
 
     /**

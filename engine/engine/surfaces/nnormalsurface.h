@@ -576,8 +576,8 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          * 
          * \ifaces The paramater \a out does not exist, and is
          * taken to be standard output.  If the engine is being accessed
-		 * through CORBA, this routine does nothing.
-		 * \ifacescorba Not present.
+         * through CORBA, this routine does nothing.
+         * \ifacescorba Not present.
          *
          * @param out the output stream to which to write.
          */
@@ -652,30 +652,30 @@ class NNormalSurface : public ShareableObject, public NPropertyHolder {
          */
         bool hasRealBoundary();
 
-		/**
-		 * Cuts the associated triangulation along this surface and
-		 * returns a newly created resulting triangulation.
-		 * The original triangulation is not changed.
-		 *
-		 * \warning The number of tetrahedra in the new triangulation
-		 * can be very large ((6<i>D</i>+5<i>T</i> as an upper bound,
-		 * where <i>D</i> is the number of normal discs in the surface).
-		 * \warning This routine currently <b>does nothing</b>; the code
-		 * is still being written.
-		 *
-		 * \pre This normal surface is compact.
-		 * \pre This normal surface contains no octahedral discs.
-		 *
-		 * \todo \feature Implement this routine.
-		 *
-		 * \ifaces Not present and will not be present until this
-		 * routine is implemented.
-		 *
-		 * @return a pointer to the newly allocated resulting
-		 * triangulation.
-		 * @author David Letscher
-		 */
-		NTriangulation* cutAlong();
+        /**
+         * Cuts the associated triangulation along this surface and
+         * returns a newly created resulting triangulation.
+         * The original triangulation is not changed.
+         *
+         * \warning The number of tetrahedra in the new triangulation
+         * can be very large ((6<i>D</i>+5<i>T</i> as an upper bound,
+         * where <i>D</i> is the number of normal discs in the surface).
+         * \warning This routine currently <b>does nothing</b>; the code
+         * is still being written.
+         *
+         * \pre This normal surface is compact.
+         * \pre This normal surface contains no octahedral discs.
+         *
+         * \todo \feature Implement this routine.
+         *
+         * \ifaces Not present and will not be present until this
+         * routine is implemented.
+         *
+         * @return a pointer to the newly allocated resulting
+         * triangulation.
+         * @author David Letscher
+         */
+        NTriangulation* cutAlong();
 
     protected:
         virtual void readIndividualProperty(NFile& infile,

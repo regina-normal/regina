@@ -102,15 +102,15 @@
 //#endif
 
 #ifdef __DOXYGEN
-	// Don't comment out anything from this list; the C++ compiler will
-	// ignore this section anyway.  It exists purely so doxygen will not
-	// get confused by missing macro definitions when generating engine
-	// documentation.
-	#define __NO_INCLUDE_PATHS
-	#define __NO_IOS_NOCREATE
-	#define __BINARY_IO
-	#define __MUTE_WARNINGS
-	#define __NO_RAW_CASTING
+    // Don't comment out anything from this list; the C++ compiler will
+    // ignore this section anyway.  It exists purely so doxygen will not
+    // get confused by missing macro definitions when generating engine
+    // documentation.
+    #define __NO_INCLUDE_PATHS
+    #define __NO_IOS_NOCREATE
+    #define __BINARY_IO
+    #define __MUTE_WARNINGS
+    #define __NO_RAW_CASTING
 #endif
 
 #endif

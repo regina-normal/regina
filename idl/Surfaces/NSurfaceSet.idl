@@ -34,18 +34,18 @@
 #include "Triangulation/NTriangulation.idl"
 
 module Regina {
-	module Surfaces {
-		interface NSurfaceSet {
-			long getFlavour();
-			boolean allowsAlmostNormal();
-			boolean isEmbeddedOnly();
-			Regina::Triangulation::NTriangulation getTriangulation();
-			long getNumberOfSurfaces();
-			NNormalSurface getSurface(in long index);
+    module Surfaces {
+        interface NSurfaceSet {
+            long getFlavour();
+            boolean allowsAlmostNormal();
+            boolean isEmbeddedOnly();
+            Regina::Triangulation::NTriangulation getTriangulation();
+            long getNumberOfSurfaces();
+            NNormalSurface getSurface(in long index);
 
-			Regina::ShareableObject getShareableObject();
-		};
-	};
+            Regina::ShareableObject getShareableObject();
+        };
+    };
 };
 
 #endif

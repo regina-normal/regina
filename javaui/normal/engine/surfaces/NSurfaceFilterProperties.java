@@ -32,7 +32,7 @@ import normal.engine.utilities.NBoolSet;
 import java.math.BigInteger;
 
 public interface NSurfaceFilterProperties extends NSurfaceFilter {
-	public static final int filterID = 1;
+    public static final int filterID = 1;
 
     public long getNumberOfECs();
     public BigInteger getEC(long index);

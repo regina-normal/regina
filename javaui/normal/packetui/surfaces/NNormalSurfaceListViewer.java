@@ -44,7 +44,7 @@ public class NNormalSurfaceListViewer extends PacketTabbedEditor {
      * Create a new interface to work with a given packet.
      *
      * @param packet the packet to be associated with this interface.
-	 * @param shell the shell representing the entire program.
+     * @param shell the shell representing the entire program.
      */
     public NNormalSurfaceListViewer(NPacket packet, Shell shell) {
         super(packet, shell, false);

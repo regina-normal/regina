@@ -42,64 +42,64 @@ public class PacketUIManager {
      * Icon to be used for unknown packet types.
      */
     public static ImageIcon unknownIcon =
-		StandardImage.makeImageIcon("normal/images/packet/unknown.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/unknown.gif",
+            PacketUIManager.class);
         
     /**
      * Icon to be used for container.
      */
     public static ImageIcon containerIcon =
-		StandardImage.makeImageIcon("normal/images/packet/container.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/container.gif",
+            PacketUIManager.class);
         
     /**
      * Icon to be used for text packets.
      */
     public static ImageIcon textIcon =
-		StandardImage.makeImageIcon("normal/images/packet/text.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/text.gif",
+            PacketUIManager.class);
 
     /**
      * Icon to be used for triangulations.
      */
     public static ImageIcon triangulationIcon =
-		StandardImage.makeImageIcon("normal/images/packet/triangulation.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/triangulation.gif",
+            PacketUIManager.class);
 
     /**
      * Icon to be used for surface lists.
      */
     public static ImageIcon surfaceListIcon =
-		StandardImage.makeImageIcon("normal/images/packet/surface.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/surface.gif",
+            PacketUIManager.class);
 
     /**
      * Icon to be used for scripts.
      */
     public static ImageIcon scriptIcon =
-		StandardImage.makeImageIcon("normal/images/packet/script.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/script.gif",
+            PacketUIManager.class);
 
     /**
      * Icon to be used for filters.
      */
     public static ImageIcon filterIcon =
-		StandardImage.makeImageIcon("normal/images/packet/filter.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/filter.gif",
+            PacketUIManager.class);
 
     /**
      * Icon to be used for filters by properties.
      */
     public static ImageIcon filterPropertiesIcon =
-		StandardImage.makeImageIcon("normal/images/packet/filterprop.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/filterprop.gif",
+            PacketUIManager.class);
 
     /**
      * Icon to be used for combination filters.
      */
     public static ImageIcon filterCombinationIcon =
-		StandardImage.makeImageIcon("normal/images/packet/filtercomb.gif",
-			PacketUIManager.class);
+        StandardImage.makeImageIcon("normal/images/packet/filtercomb.gif",
+            PacketUIManager.class);
 
     /**
      * Return an icon with which to represent a specific packet.
@@ -128,7 +128,7 @@ public class PacketUIManager {
         if (packet instanceof normal.engine.surfaces.NSurfaceFilterCombination)
             return filterCombinationIcon;
 
-		// It's a surface filter but we don't know what kind.
+        // It's a surface filter but we don't know what kind.
         if (packet instanceof normal.engine.surfaces.NSurfaceFilter)
             return filterIcon;
         

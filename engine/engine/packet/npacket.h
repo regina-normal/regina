@@ -485,7 +485,7 @@ class NPacket : public ShareableObject {
          * \pre This packet is the matriarch of the entire tree.
          *
          * \ifacescpp Not present.
-		 * \ifaces Not present outside the Java interface.
+         * \ifaces Not present outside the Java interface.
          * \ifacesjava A <tt>java.util.Map</tt> will be returned.
          *
          * @return a dictionary that allows packets to be looked
@@ -500,7 +500,7 @@ class NPacket : public ShareableObject {
          * included.
          *
          * \ifacescpp Not present.
-		 * \ifaces Not present outside the Java interface.
+         * \ifaces Not present outside the Java interface.
          * \ifacesjava A <tt>java.util.List</tt> will be returned.
          *  
          * @return a list of all this packet's immediate children.
@@ -537,7 +537,7 @@ class NPacket : public ShareableObject {
          * will be created and 0 will be returned.
          *
          * \ifaces This routine is named \a clonePacket.
-		 * \ifacescorba All parameters are compulsory.
+         * \ifacescorba All parameters are compulsory.
          *
          * @param cloneDescendants \c true if the descendants of this
          * packet should also be cloned and inserted as descendants of

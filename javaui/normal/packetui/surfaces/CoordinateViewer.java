@@ -249,32 +249,32 @@ public class CoordinateViewer extends DefaultPacketViewer
         for (int i=0; i<model.getColumnCount(); i++) {
             col = table.getColumnModel().getColumn(i);
             col.setPreferredWidth(70);
-			renderer = col.getHeaderRenderer();
-			if (renderer == null) {
-				DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
-					public Component getTableCellRendererComponent(
-							JTable table, Object value, boolean isSelected,
-							boolean hasFocus, int row, int col) {
-						Component ans = super.getTableCellRendererComponent(
-							table, value, isSelected, hasFocus, row, col);
-						if (ans instanceof JComponent) {
-							((JComponent)ans).setBorder(UIManager.getBorder(
-								"TableHeader.cellBorder"));
-						}
-						return ans;
-					}
-				};
-				JTableHeader header = table.getTableHeader();
-				r.setHorizontalAlignment(SwingConstants.CENTER);
-				r.setForeground(header.getForeground());
-				r.setBackground(header.getBackground());
-				r.setFont(header.getFont());
-				col.setHeaderRenderer(r);
-				renderer = r;
-			}
-			if (renderer instanceof DefaultTableCellRenderer)
-				((DefaultTableCellRenderer)renderer).
-					setToolTipText(model.getColumnToolTip(i));
+            renderer = col.getHeaderRenderer();
+            if (renderer == null) {
+                DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
+                    public Component getTableCellRendererComponent(
+                            JTable table, Object value, boolean isSelected,
+                            boolean hasFocus, int row, int col) {
+                        Component ans = super.getTableCellRendererComponent(
+                            table, value, isSelected, hasFocus, row, col);
+                        if (ans instanceof JComponent) {
+                            ((JComponent)ans).setBorder(UIManager.getBorder(
+                                "TableHeader.cellBorder"));
+                        }
+                        return ans;
+                    }
+                };
+                JTableHeader header = table.getTableHeader();
+                r.setHorizontalAlignment(SwingConstants.CENTER);
+                r.setForeground(header.getForeground());
+                r.setBackground(header.getBackground());
+                r.setFont(header.getFont());
+                col.setHeaderRenderer(r);
+                renderer = r;
+            }
+            if (renderer instanceof DefaultTableCellRenderer)
+                ((DefaultTableCellRenderer)renderer).
+                    setToolTipText(model.getColumnToolTip(i));
         }
     }
 
