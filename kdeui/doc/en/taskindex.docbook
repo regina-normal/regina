@@ -621,6 +621,8 @@
   <primaryie>scripting</primaryie>
   <secondaryie><link linkend="python-python">accessing &regina; objects,
    classes and methods</link></secondaryie>
+  <secondaryie><link linkend="trouble-python-sigerror"><exceptionname>Boost.Python.ArgumentError</exceptionname>,
+   resolving</link></secondaryie>
   <secondaryie><link linkend="python-caveats">caveats and
    traps</link></secondaryie>
   <secondaryie><link linkend="man-regina-python">command-line scripting

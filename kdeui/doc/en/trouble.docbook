@@ -363,6 +363,39 @@ checking host system type... i686-pc-linux-gnu
      </para>
     </answer>
    </qandaentry>
+
+   <qandaentry id="trouble-python-sigerror">
+    <question><para>
+     While calling a &python; function I receive a
+     <exceptionname>Boost.Python.ArgumentError</exceptionname> with the message
+     &quot;Python argument types did not match C++ signature&quot;.  I'm
+     fairly sure I'm passing the right arguments.
+    </para></question>
+    <answer>
+     <para>
+      You may have run into the same unusual ownership issue with
+      &boost-python; discussed in the
+      <link linkend="trouble-python-typeerror">previous question</link>.
+      Again, if you have been rearranging the packet tree
+      using <function>NPacket.insertChildFirst()</function>,
+      <function>NPacket.insertChildLast()</function> or
+      <function>NPacket.insertChildAfter()</function> then this is
+      particularly likely.
+     </para>
+     <para>
+      See the <link linkend="python-ownership">&python; caveats</link>
+      documentation for a description of this problem and how to
+      work around it.
+     </para>
+     <para>
+      On the other hand, it may just be that you are calling the
+      function incorrectly.  You might wish to check the
+      <link linkend="python-docs">calculation engine documentation</link>,
+      which describes all of the available function calls and what
+      arguments they should take.
+     </para>
+    </answer>
+   </qandaentry>
   </qandadiv>
 
   <qandadiv><title>Miscellaneous</title>

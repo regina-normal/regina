@@ -173,18 +173,26 @@
     object is transferred away from the &python; console, the old
     reference to that object becomes no longer valid.  In the above example,
     further attempts to use the object <varname>p</varname> will result
-    in a <exceptionname>TypeError</exceptionname>.  In this case the value of
-    <varname>p</varname> can be easily restored by calling
-    <literal>p = other.getLastTreeChild()</literal>, though now the
-    console treats <varname>p</varname> as a reference to some external
-    object that it has no responsibility for.
+    in an ugly &python; error.  Depending on your system configuration,
+    this might be either a <exceptionname>TypeError</exceptionname>
+    or a <exceptionname>Boost.Python.ArgumentError</exceptionname>.
    </para>
    <para>
-    In practice the only cases in which this causes problems are with
+    Either way, in the example above the value of
+    <varname>p</varname> can be easily restored by calling
+    <literal>p = other.getLastTreeChild()</literal>.  After doing this,
+    the console now treats <varname>p</varname> as a reference to some
+    external object that it has no direct responsibility over (which is indeed
+    what you want, since <varname>other</varname> is now looking after it).
+   </para>
+   <para>
+    In practice the only cases in which this problem arises are with
     the tree insertion routines listed above and one or two others
     (such as <function>NGroupPresentation.addRelation()</function>).
-    An example of the behaviour described above can be seen in the
-    following extract from a &python; session.
+   </para>
+   <para>
+    An example of the <exceptionname>TypeError</exceptionname> described
+    above can be seen in the following extract from a &python; session.
    </para>
    <programlisting>
 &gt;&gt;&gt; c = regina.NContainer()
@@ -197,6 +205,29 @@ Container
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in ?
 TypeError: bad argument type for built-in operation
+&gt;&gt;&gt; t = c.getLastTreeChild()
+&gt;&gt;&gt; print t
+Triangulation with 0 tetrahedra.
+&gt;&gt;&gt;
+</programlisting>
+   <para>
+    The following example shows the same set of commands run on a system
+    that issues a <exceptionname>Boost.Python.ArgumentError</exceptionname>
+    instead.
+   </para>
+<programlisting>
+&gt;&gt;&gt; c = regina.NContainer()
+&gt;&gt;&gt; t = regina.NTriangulation()
+&gt;&gt;&gt; c.insertChildLast(t)
+&gt;&gt;&gt; print c
+Container
+&gt;&gt;&gt; print t
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in ?
+Boost.Python.ArgumentError: Python argument types in
+    ShareableObject.__str__(NTriangulation)
+did not match C++ signature:
+    __str__(regina::ShareableObject {lvalue})
 &gt;&gt;&gt; t = c.getLastTreeChild()
 &gt;&gt;&gt; print t
 Triangulation with 0 tetrahedra.
