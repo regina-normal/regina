@@ -192,6 +192,13 @@
    actually compiles under &jython;.  The library code will only be
    compiled; it will not be run.
   </para>
+
+  <tip><para>
+   A set of prepackaged &jython; libraries that might be of use is
+   provided with the &regina; distribution.  You should find these
+   libraries in the directory
+   <filename><replaceable>REGINA_HOME</replaceable>/pylib</filename>.
+  </para></tip>
  </sect1>
 
  <sect1 id="options-plaf">
