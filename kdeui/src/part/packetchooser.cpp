@@ -110,15 +110,18 @@ void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
         // Make sure the call to removeItem() comes last since it could
         // trigger a refreshContents().
         long destroyIndex = it - packets.begin();
-        bool destroyCurrent = (destroyIndex == currentItem());
+        long currentIndex = currentItem();
 
         packets.erase(it);
-        if (destroyCurrent) {
+        if (destroyIndex == currentIndex) {
             // We know count() > 0 since currentItem() exists.
             setCurrentItem(0);
 
             // If the item to destroy *is* 0, this should just fall through
             // to whatever's next when we remove it from the chooser.
+        } else if (destroyIndex < currentIndex) {
+            // The selected item has moved up the list.
+            setCurrentItem(currentIndex - 1);
         }
 
         removeItem(destroyIndex);
