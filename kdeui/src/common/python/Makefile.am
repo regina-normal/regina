@@ -8,6 +8,7 @@
 
 KDE_OPTIONS=noautodist
 
+AM_CXXFLAGS = '-DREGINA_PYLIBDIR="$(pkglibdir)/python"'
 INCLUDES = $(all_includes) @BOOST_PYTHON_INCLUDES@
 
 noinst_LTLIBRARIES = libregina-kdepython.la

@@ -241,21 +241,43 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     }
 }
 
-void PythonInterpreter::importRegina() {
-    // TODO
+bool PythonInterpreter::importRegina() {
+    PyEval_RestoreThread(state);
+
+    // Adjust the python path.
+    PyObject* path = PySys_GetObject("path"); // Borrowed reference.
+    if (path) {
+        PyObject* regModuleDir = PyString_FromString(REGINA_PYLIBDIR);
+        PyList_Append(path, regModuleDir);
+        Py_DECREF(regModuleDir);
+    }
+
+    // Import the module.
+    PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+    if (regModule) {
+        PyDict_SetItemString(mainNamespace, "regina", regModule);
+        Py_DECREF(regModule);
+    }
+
+    state = PyEval_SaveThread();
+    return (regModule != 0);
 }
 
-void PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
+bool PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
     PyEval_RestoreThread(state);
 
     boost::python::reference_existing_object::
         apply<regina::NPacket*>::type conv;
+    PyObject* pyValue = conv(value);
 
-    PyObject* nameStr = PyString_FromString(name); // New ref.
-    PyDict_SetItem(mainNamespace, nameStr, conv(value));
-    Py_DECREF(nameStr);
+    if (pyValue) {
+        PyObject* nameStr = PyString_FromString(name); // New ref.
+        PyDict_SetItem(mainNamespace, nameStr, conv(value));
+        Py_DECREF(nameStr);
+    }
 
     state = PyEval_SaveThread();
+    return (pyValue != 0);
 }
 
 bool PythonInterpreter::isEmptyCommand(const std::string& command) {

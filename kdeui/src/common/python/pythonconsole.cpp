@@ -26,7 +26,8 @@
 
 /* end stub */
 
-// UI includes:
+#include "regina-config.h"
+
 #include "../pythonmanager.h"
 #include "pythonconsole.h"
 #include "pythoninterpreter.h"
@@ -37,6 +38,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmenubar.h>
+#include <kmessagebox.h>
 #include <kpopupmenu.h>
 #include <kstatusbar.h>
 #include <ktextedit.h>
@@ -152,8 +154,17 @@ void PythonConsole::processOutput(const std::string& data) {
 }
 
 void PythonConsole::init() {
-    interpreter->importRegina();
-    interpreter->executeLine("print regina.welcome()");
+    if (! interpreter->importRegina()) {
+        KMessageBox::error(this, i18n("<qt>The Python module <i>regina</i> "
+            "could not be loaded.  None of Regina's functions will "
+            "be available during this Python session.<p>"
+            "The module should be installed as the file "
+            "<tt>%1/regina.so</tt>.  Please write to %2 if you require "
+            "further assistance.</qt>")
+            .arg(REGINA_PYLIBDIR).arg(PACKAGE_BUGREPORT));
+        addOutput(i18n("Unable to load module \"regina\"."));
+    } else
+        interpreter->executeLine("print regina.welcome()");
 
     // TODO: More startup tasks.
 

@@ -94,9 +94,11 @@ class PythonInterpreter {
 
         /**
          * Configuration of the subinterpreter.
+         * Each of these routines returns \c true on success and
+         * \c false on failure.
          */
-        void importRegina();
-        void setVar(const char* name, regina::NPacket* value);
+        bool importRegina();
+        bool setVar(const char* name, regina::NPacket* value);
 
     private:
         /**
