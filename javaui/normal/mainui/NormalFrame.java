@@ -124,12 +124,6 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
     private ActionListener recentFileActionListener;
 
     /**
-     * List of open Jython consoles that are not attached to any
-	 * particular file.
-     */
-    private Vector consoles = new Vector();
-
-    /**
      * The object used to view help through the JavaHelp system if
      * appropriate.
      */
@@ -970,39 +964,6 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         return true;
     }
 
-	// -----------------------
-	//    CONSOLE OWNERSHIP
-	// -----------------------
-
-    /**
-     * Causes this frame to take ownership of the given Jython console.
-     * The console will have its look and feel updated with this frame
-     * and will be closed with this frame.
-     *
-     * @param console the console to take ownership of; this should be
-     * of class <tt>normal.console.JPythonConsoleFrame</tt>, but it is
-     * passed as a <tt>JFrame</tt> to avoid problems if Jython is not
-     * available.
-	 * @see #disownConsole
-     */
-    public void ownConsole(JFrame console) {
-        consoles.addElement(console);
-    }
-
-    /**
-     * Causes this frame to relinquish ownership of the given Jython
-     * console.
-     * <p>
-     * <b>Prerequisite:</b> The frame currently has ownership of the
-     * given console as given by <tt>ownConsole()</tt>.
-     *
-     * @param console the console to relinquish ownership of.
-     * @see #ownConsole
-     */
-    public void disownConsole(JFrame console) {
-        consoles.removeElement(console);
-    }
-        
 	// -------------
 	//    ACTIONS
 	// -------------
@@ -1190,8 +1151,16 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         }
 
         // Close each open Jython console.
-        while (! consoles.isEmpty())
-            ((JPythonConsoleFrame)consoles.elementAt(0)).closeConsole();
+		JPythonConsoleFrame console;
+        while (shell.hasOpenConsoles()) {
+			console = shell.getConsole();
+			if (console.getConsole().isProcessing()) {
+				shell.error(
+					"One of the Jython consoles is still processsing input.");
+				return;
+			} else
+				console.closeConsole();
+		}
         
         // Save preferred screen positions to file.
         // The writeToFile will also write the divider location, which is set
@@ -1224,7 +1193,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         for (int i=0; i<tot; i++)
             ((FilePane)fileTabs.getComponentAt(i)).updateLookAndFeel();
 
-        Enumeration e = consoles.elements();
+        Enumeration e = shell.getConsoles();
         while (e.hasMoreElements())
             lookAndFeel.updateLookAndFeel((JFrame)e.nextElement());
 

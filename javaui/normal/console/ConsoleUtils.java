@@ -84,7 +84,8 @@ public class ConsoleUtils {
 	 */
 	public static JPythonConsoleFrame createGraphicalConsole(Shell shell,
 			boolean standalone) {
-		JPythonConsoleFrame frame = new JPythonConsoleFrame(shell, standalone);
+		JPythonConsoleFrame frame = new JPythonConsoleFrame(shell, null,
+			standalone);
 		frame.getConsole().outputMessage(standaloneGreeting() + "\n\n" +
 			org.python.util.InteractiveConsole.getDefaultBanner() + "\n\n");
 		return frame;

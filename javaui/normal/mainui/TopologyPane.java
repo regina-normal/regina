@@ -40,6 +40,7 @@ import org.gjt.btools.gui.component.*;
 import org.gjt.btools.gui.dialog.*;
 import org.gjt.btools.image.*;
 import normal.*;
+import normal.console.JPythonConsoleFrame;
 import normal.engine.*;
 import normal.engine.packet.*;
 import normal.engine.file.NFile;
@@ -672,11 +673,36 @@ public class TopologyPane extends FilePane {
     public boolean canClose() {
 		if (! super.canClose())
 			return false;
+
+		// Check for unconfirmed edit panes.
         if (unconfirmedEditPanes())
             if (! getShell().confirm("Some edit panes currently in use " +
                     "contain changes that have not yet been applied.  Are " +
                     "you sure you wish to abandon these changes?"))
                 return false;
+
+		// Close all Jython consoles spawned from this system.
+		Vector myConsoles = new Vector();
+		JPythonConsoleFrame console;
+		Enumeration e = getShell().getConsoles();
+		while (e.hasMoreElements()) {
+			console = (JPythonConsoleFrame)e.nextElement();
+			if (rootPacket.sameObject(console.getRootPacket()))
+				myConsoles.addElement(console);
+		}
+
+		e = myConsoles.elements();
+		while (e.hasMoreElements()) {
+			console = (JPythonConsoleFrame)e.nextElement();
+			if (console.getConsole().isProcessing()) {
+				getShell().error("One of the Jython consoles linked " +
+					"to this file is still processing input.");
+				return false;
+			}
+			console.closeConsole();
+		}
+
+		// We can close!
         return true;
     }
 

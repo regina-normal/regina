@@ -29,6 +29,7 @@
 package normal.console;
 
 import normal.*;
+import normal.engine.packet.NPacket;
 import normal.mainui.NormalFrame;
 import normal.options.NormalOptionSet;
 import java.awt.*;
@@ -62,6 +63,11 @@ public class JPythonConsoleFrame extends JFrame
     private JPythonConsole console;
 
 	/**
+	 * The root of the packet tree upon which this console is operating.
+	 */
+	private NPacket rootPacket;
+
+	/**
 	 * The break processing menu item.
 	 */
 	private JMenuItem menuConsoleBreak;
@@ -81,12 +87,16 @@ public class JPythonConsoleFrame extends JFrame
 	 * this frame.
      *
      * @param shell the shell representing the entire program.
+	 * @param rootPacket the root of the packet tree upon which this
+	 * console is operating, or <tt>null</tt> if there is no such
+	 * particular packet tree.
      * @param standalone <tt>true</tt> if and only if this frame will
      * in fact be the entire program, with no other GUI present.
      * @see #startConsole
      */
-    public JPythonConsoleFrame(Shell shell, boolean standalone) {
-		this(shell, standalone, null);
+    public JPythonConsoleFrame(Shell shell, NPacket rootPacket,
+			boolean standalone) {
+		this(shell, rootPacket, standalone, null);
 	}
 
     /**
@@ -97,22 +107,22 @@ public class JPythonConsoleFrame extends JFrame
      * <tt>startConsole()</tt>.
      *
      * @param shell the shell representing the entire program.
+	 * @param rootPacket the root of the packet tree upon which this
+	 * console is operating, or <tt>null</tt> if there is no such
+	 * particular packet tree.
      * @param standalone <tt>true</tt> if and only if this frame will
      * in fact be the entire program, with no other GUI present.
 	 * @param console the Jython console to place inside this frame.  If
 	 * this is <tt>null</tt>, a new default Jython console will be used.
      * @see #startConsole
      */
-    public JPythonConsoleFrame(Shell shell, boolean standalone,
-			JPythonConsole console) {
+    public JPythonConsoleFrame(Shell shell, NPacket rootPacket,
+			boolean standalone, JPythonConsole console) {
         super(Application.program + " Jython Console");
         this.shell = shell;
+		this.rootPacket = rootPacket;
         this.standalone = standalone;
     
-        Frame frame = shell.getPrimaryFrame();
-        if (frame != null && frame instanceof NormalFrame)
-            ((NormalFrame)frame).ownConsole(this);
-
 		if (console == null)
 			this.console = new JPythonConsole(shell);
 		else
@@ -131,6 +141,9 @@ public class JPythonConsoleFrame extends JFrame
             height = 450;
         setSize(new Dimension(width, height));
         setIconImage(Images.btnConsole.image().getImage());
+
+		// Add this console to the list of all open consoles.
+		shell.registerConsole(this);
     }
 
     /**
@@ -284,6 +297,18 @@ public class JPythonConsoleFrame extends JFrame
         return console.getPythonInterpreter();
     }
 
+	/**
+	 * Returns the root of the packet tree upon which this console is
+	 * operating.
+	 *
+	 * @return the root of the packet tree upon which this console is
+	 * operating, or <tt>null</tt> if there is no such particular
+	 * packet tree.
+	 */
+	public NPacket getRootPacket() {
+		return rootPacket;
+	}
+
     /**
      * Closes the console window and exits the application if
      * appropriate.
@@ -294,9 +319,7 @@ public class JPythonConsoleFrame extends JFrame
 			return;
 		}
 
-        Frame frame = shell.getPrimaryFrame();
-        if (frame != null && frame instanceof NormalFrame)
-            ((NormalFrame)frame).disownConsole(this);
+		shell.unregisterConsole(this);
 
         // Save the preferred console window size.
         Dimension size = getSize();

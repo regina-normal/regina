@@ -35,12 +35,15 @@ Regina - A Normal Surface Theory Calculator
             - Fixed tooltips in tables.
         normal.Application:
             - Moved fileExtension member into normal.mainui.FilePane subclasses.
+        normal.Shell:
+            - Added a registry of all open Jython consoles.
         normal.algorithm:
             - Added class ElementaryMove.
         normal.console:
             - Major rearrangements; new class JPythonUtils now does most of
               the Jython work.
         normal.console.JPythonConsoleFrame:
+            - Stores the root of the associated packet tree.
             - Allows saving the contents of the console to a file.
         normal.engine.implementation.corba.CORBAEngine:
             - Better error handling.
@@ -52,9 +55,11 @@ Regina - A Normal Surface Theory Calculator
         normal.mainui.LibraryPane:
             - New class; allows editing of Jython libraries.
         normal.mainui.NormalFrame:
+            - Moved console ownership routines into normal.Shell.
             - More appropriate enabling/disabling of menu items and buttons.
             - Edit menu hooks into current working file.
         normal.mainui.TopologyPane:
+            - Closing a file closes all associated consoles.
             - Fixed the bug where double clicking on a tree item opens
               it three times.
             - Fixed bugs in the various fire... routines.

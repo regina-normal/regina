@@ -57,25 +57,21 @@ import org.python.util.*;
 public class NScriptEditor extends DefaultPacketEditor {
     /**
      * The packet associated with this interface.
-     * @serial
      */
     private NScript packet;
     
     /**
      * The shell representing the entire program.
-     * @serial
      */
     private Shell shell;
 
     /**
      * The text region containing the packet's data.
-     * @serial
      */
     private JTextArea text;
 
     /**
      * The document used by the text region.
-     * @serial
      */
     private PlainDocument doc;
 
@@ -451,8 +447,8 @@ public class NScriptEditor extends DefaultPacketEditor {
 			}
 		};
 
-        JPythonConsoleFrame console =
-            new JPythonConsoleFrame(shell, false, realConsole);
+        JPythonConsoleFrame console = new JPythonConsoleFrame(
+			shell, packet.getTreeMatriarch(), false, realConsole);
 
 		// Set up the interpreter before anything is done.
 		setupInterpreter(realConsole.getPythonInterpreter(),
@@ -504,8 +500,8 @@ public class NScriptEditor extends DefaultPacketEditor {
 		};
 
 		// Bring up this console and start it.
-        JPythonConsoleFrame console =
-            new JPythonConsoleFrame(shell, false, realConsole);
+        JPythonConsoleFrame console = new JPythonConsoleFrame(
+			shell, packet.getTreeMatriarch(), false, realConsole);
         Positioner.centerOnScreen(console);
         console.show();
         console.startConsole();

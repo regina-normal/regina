@@ -32,7 +32,7 @@ import java.applet.Applet;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
-import java.util.Properties;
+import java.util.*;
 import javax.swing.*;
 import normal.console.*;
 import normal.engine.Engine;
@@ -108,6 +108,11 @@ public abstract class Shell {
      */
     private Frame primaryFrame = null;
 
+	/**
+	 * A list of open Jython consoles.
+	 */
+	private Vector openConsoles = new Vector();
+
     /**
      * Have we successfully located the Jython classes?
      */
@@ -167,6 +172,64 @@ public abstract class Shell {
         }
 
 		return optionsDir;
+	}
+
+	/**
+	 * Adds the given console to the list of all open Jython consoles.
+	 * This should only be called from within the
+	 * <tt>JPythonConsoleFrame</tt> constructor.
+	 *
+	 * @param console the console to add; this should not currently be
+	 * in the list.
+	 *
+	 * @see #unregisterConsole
+	 */
+	public void registerConsole(JPythonConsoleFrame console) {
+		openConsoles.addElement(console);
+	}
+
+	/**
+	 * Removes the given console from the list of all open Jython consoles.
+	 * This should only be called from within
+	 * <tt>JPythonConsoleFrame.closeConsole()</tt>.
+	 *
+	 * @param console the console to remove; this should currently
+	 * belong to the list.
+	 *
+	 * @see #registerConsole
+	 */
+	public void unregisterConsole(JPythonConsoleFrame console) {
+		openConsoles.removeElement(console);
+	}
+
+	/**
+	 * Are there currently any open Jython consoles?
+	 *
+	 * @return <tt>true</tt> if and only if there is at least one open
+	 * console.
+	 */
+	public boolean hasOpenConsoles() {
+		return ! openConsoles.isEmpty();
+	}
+
+	/**
+	 * Returns the list of all open Jython consoles.
+	 *
+	 * @return the list of all open consoles.
+	 */
+	public Enumeration getConsoles() {
+		return openConsoles.elements();
+	}
+
+	/**
+	 * Returns one of the currently open Jython consoles.
+	 *
+	 * @return an open Jython console, or <tt>null</tt> if there are no
+	 * open consoles.
+	 */
+	public JPythonConsoleFrame getConsole() {
+		return (openConsoles.isEmpty() ? null :
+			(JPythonConsoleFrame)openConsoles.elementAt(0));
 	}
 
     /**
