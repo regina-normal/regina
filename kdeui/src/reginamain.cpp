@@ -179,17 +179,46 @@ void ReginaMain::openURL(const KURL& url) {
         return;
     }
 
-    // TODO: Check the mimetype of the file, and either open it with an
-    // appropriate part or apologise.
+    // Semi-intelligently try to work out what type of file we're
+    // trying to open.  We'll look first at the extension (since we assume
+    // no Regina mimetype is registered) and then look at the mimetype.
+    //
+    // Type codes:
+    //   'r' : Regina data file
+    //   'p' : Python library
+    //   0 : Unknown
+    //
+    // TODO: Move the default extension to the same header as the one
+    // containing the filename filters.
 
-    // Remember what kind of part we were after so we can tell the user
-    // if we couldn't find one.
-    QString partDesc;
+    char type = 0;
+    QString name;
 
-    if (true) {
-        // Python file (text/x-python):
-        currentPart = newTextEditorPart();
+    // Variable name will initially contain the mimetype name, but if
+    // the mimetype is not suitable it will be changed to the mimetype
+    // comment so we can display it to the user.
+    if (url.fileName().right(4).lower() == ".rga")
+        type = 'r';
+    else {
+        // Try to guess it from the mimetype.
+        KMimeType::Ptr mimetype = KMimeType::findByURL(url);
+        name = mimetype->name();
+        if (name == "text/xml" || name == "application/x-gzip" ||
+                name == "application/octet-stream")
+            type = 'r';
+        else if (name.startsWith("text/"))
+            type = 'p';
+        else
+            name = mimetype->comment();
     }
+
+    if (type == 'r')
+        currentPart = newTopologyPart();
+    else if (type == 'p')
+        currentPart = newTextEditorPart();
+    else
+        KMessageBox::sorry(this, QString(i18n(
+            "I do not know how to open files of type %1.")).arg(name));
 
     if (! currentPart)
         return;
