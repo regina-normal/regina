@@ -25,7 +25,7 @@ KDE User Interface (optional):
     kdelibs (the core KDE libraries), version >= 3.1
 
 Python Bindings (optional):
-    libboost-python (the Boost.Python libraries), verison >= 1.30.0
+    libboost_python (the Boost.Python libraries), verison >= 1.30.0
 
 Documentation (optional, only required at compile-time):
     doxygen (a C++ documentation system), version >= 1.2.2
