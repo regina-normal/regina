@@ -13,5 +13,8 @@
 		sub(/[ \t]*$/,"")
 		$0 = $0 "\""
 	}
-	print "export " $0 ";"
+	# Extract the variable name.
+	pos=match($0,/[_a-zA-Z][_a-zA-Z0-9]*/)
+	name=substr($0,RSTART,RLENGTH)
+	print "if [ -z \"$" name "\" ]; then export " $0 "; fi;"
 }

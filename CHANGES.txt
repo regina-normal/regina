@@ -11,6 +11,8 @@ Regina - A Normal Surface Theory Calculator
 Version 3.1  [ (under development) ]
     OVERALL:
         - Added calculation engine test suite.
+        - Environment variables now take precedence over configuration
+          files when running the startup script.
         - Build process now uses standard autoconf/automake structure.
     ENGINE:
         Class NCensus:

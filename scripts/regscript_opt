@@ -79,19 +79,6 @@ fi
 
 # ---------- Read options files ----------
 
-# Read the global runtime options file.
-if [ ! -z "$REGINA_OPTIONS_GLOBAL" ]; then
-	options="$REGINA_OPTIONS_GLOBAL/$runtime_options"
-	if [ -f "$options" ]; then
-		optioncmds=`awk -f "$REGINA_HOME/scripts/regscript_readopts" "$options"`
-		eval $optioncmds;
-	elif [ -e "$options" ]; then
-		warn "Warning: Options file [$options] is not a regular file."
-	else
-		warn "Warning: No global runtime options file [$options]."
-	fi
-fi
-
 # Read the local runtime options file.
 if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
 	options="$REGINA_OPTIONS_LOCAL/$runtime_options"
@@ -102,6 +89,19 @@ if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
 		warn "Warning: Options file [$options] is not a regular file."
 	else
 		warn "Warning: No local runtime options file [$options]."
+	fi
+fi
+
+# Read the global runtime options file.
+if [ ! -z "$REGINA_OPTIONS_GLOBAL" ]; then
+	options="$REGINA_OPTIONS_GLOBAL/$runtime_options"
+	if [ -f "$options" ]; then
+		optioncmds=`awk -f "$REGINA_HOME/scripts/regscript_readopts" "$options"`
+		eval $optioncmds;
+	elif [ -e "$options" ]; then
+		warn "Warning: Options file [$options] is not a regular file."
+	else
+		warn "Warning: No global runtime options file [$options]."
 	fi
 fi
 
@@ -208,7 +208,7 @@ if [ -z "$REGINA_JARDIR" ]; then
 fi
 if [ ! -e "$REGINA_JARDIR/regina.jar" ]; then
 	error "Error: The Regina jar directory could not be found."
-	error "       Set \$REGINA_JAR to the directory containing regina.jar"
+	error "       Set \$REGINA_JARDIR to the directory containing regina.jar"
 	error "       and try again."
 	exit 1
 fi

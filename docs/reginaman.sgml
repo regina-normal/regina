@@ -243,6 +243,11 @@
       further details.
      </para></listitem>
      <listitem><para>
+      Environment variables.  For instance, you might have environment
+      variable <envar>REGINA_ENGINE</envar> with the value
+      <literal>jni</literal>.
+     </para></listitem>
+     <listitem><para>
       The local configuration file:
       <filename>~/.regina/regina.conf</filename>
      </para></listitem>
@@ -251,11 +256,6 @@
       <filename>/etc/regina/regina.conf</filename> (or
       <filename><replaceable>REGINA_HOME</replaceable>/regina.conf</filename>
       if directory <filename>/etc/regina</filename> does not exist)
-     </para></listitem>
-     <listitem><para>
-      Environment variables.  For instance, you might have environment
-      variable <envar>REGINA_ENGINE</envar> with the value
-      <literal>jni</literal>.
      </para></listitem>
     </itemizedlist>
    </para>
