@@ -39,7 +39,7 @@ using regina::NTetrahedron;
 using regina::NTriangulation;
 
 // Some of the larger triangulations we will hard-code here.
-int closedHypOrAdjTet[9][4] = {
+unsigned closedHypOrAdjTet[9][4] = {
     {6, 8, 2, 8},
     {6, 8, 3, 7},
     {7, 0, 3, 4},
@@ -51,7 +51,7 @@ int closedHypOrAdjTet[9][4] = {
     {1, 0, 5, 0}
 };
 
-int closedHypOrAdjPerm[9][4][4] = {
+unsigned closedHypOrAdjPerm[9][4][4] = {
     { {0,1,3,2}, {3,1,2,0}, {0,2,1,3}, {0,2,1,3} },
     { {3,1,2,0}, {1,0,2,3}, {3,2,0,1}, {2,3,1,0} },
     { {2,0,3,1}, {0,2,1,3}, {0,1,3,2}, {3,1,2,0} },
@@ -63,7 +63,7 @@ int closedHypOrAdjPerm[9][4][4] = {
     { {1,0,2,3}, {3,1,2,0}, {0,2,1,3}, {0,2,1,3} }
 };
 
-int closedHypNorAdjTet[11][4] = {
+unsigned closedHypNorAdjTet[11][4] = {
     {8, 2, 8, 2},
     {5, 3, 2, 9},
     {1, 4, 0, 0},
@@ -77,7 +77,7 @@ int closedHypNorAdjTet[11][4] = {
     {9, 4, 4, 9}
 };
 
-int closedHypNorAdjPerm[11][4][4] = {
+unsigned closedHypNorAdjPerm[11][4][4] = {
     { {1,3,2,0}, {0,3,2,1}, {2,1,0,3}, {3,1,0,2} },
     { {3,0,1,2}, {3,1,0,2}, {2,1,0,3}, {1,0,3,2} },
     { {2,1,0,3}, {3,1,2,0}, {2,1,3,0}, {0,3,2,1} },
@@ -96,6 +96,8 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(incompatible);
     CPPUNIT_TEST(volume);
+    CPPUNIT_TEST(flat);
+    CPPUNIT_TEST(degenerate);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -126,8 +128,11 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
         /**
          * Triangulations of 3-manifolds whose reported volume should be zero.
+         *
+         * These were found through an exhaustive census of small ideal
+         * triangulations (they do not appear in SnapPea's hyperbolic census).
          */
-        // TODO
+        NTriangulation flatOr, flatNor, degenerateOr, degenerateNor;
 
         /**
          * Triangulations that SnapPea should refuse to deal with.
@@ -153,6 +158,30 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                  vertices all have 2-sphere links. */
 
     public:
+        void buildTriangulation(NTriangulation& tri, unsigned nTet,
+                unsigned adjTet[][4], unsigned adjPerm[][4][4]) {
+            // Build a triangulation from a hard-coded array of adjacent
+            // tetrahedra and tetrahedron gluings.
+            NTetrahedron** tet = new NTetrahedron*[nTet];
+
+            unsigned i, j;
+            NPerm p;
+
+            for (i = 0; i < nTet; i++)
+                tet[i] = new NTetrahedron();
+            for (i = 0; i < nTet; i++)
+                for (j = 0; j < 4; j++)
+                    if (! tet[i]->getAdjacentTetrahedron(j)) {
+                        p = NPerm(adjPerm[i][j][0], adjPerm[i][j][1],
+                             adjPerm[i][j][2], adjPerm[i][j][3]);
+                        tet[i]->joinTo(j, tet[adjTet[i][j]], p);
+                    }
+            for (i = 0; i < nTet; i++)
+                tri.addTetrahedron(tet[i]);
+
+            delete[] tet;
+        }
+
         void setUp() {
             // Keep the kernel quiet.  It interferes with the test
             // suite's running progress messages.
@@ -175,8 +204,46 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             n4_9_2.insertRehydration("ebdbcdddcemre");
             n4_1_2_1.insertRehydration("eahbcdddjxxxj");
 
-            cuspedTorus.insertLayeredSolidTorus(1, 2);
-            cuspedTorus.cuspBoundary();
+            buildTriangulation(closedHypOr, 9, closedHypOrAdjTet,
+                closedHypOrAdjPerm);
+            buildTriangulation(closedHypNor, 11, closedHypNorAdjTet,
+                closedHypNorAdjPerm);
+
+            t = new NTetrahedron();
+            s = new NTetrahedron();
+            t->joinTo(0, s, NPerm(0,1,2,3));
+            t->joinTo(1, s, NPerm(0,1,2,3));
+            t->joinTo(2, s, NPerm(1,3,2,0));
+            t->joinTo(3, s, NPerm(1,2,0,3));
+            flatOr.addTetrahedron(t);
+            flatOr.addTetrahedron(s);
+
+            t = new NTetrahedron();
+            s = new NTetrahedron();
+            t->joinTo(0, s, NPerm(0,1,2,3));
+            t->joinTo(1, s, NPerm(2,1,0,3));
+            t->joinTo(2, s, NPerm(1,3,2,0));
+            t->joinTo(3, s, NPerm(2,1,0,3));
+            flatNor.addTetrahedron(t);
+            flatNor.addTetrahedron(s);
+
+            t = new NTetrahedron();
+            s = new NTetrahedron();
+            t->joinTo(0, t, NPerm(1,0,2,3));
+            t->joinTo(2, s, NPerm(1,2,0,3));
+            t->joinTo(3, s, NPerm(0,2,3,1));
+            s->joinTo(2, s, NPerm(1,2,3,0));
+            degenerateOr.addTetrahedron(t);
+            degenerateOr.addTetrahedron(s);
+
+            t = new NTetrahedron();
+            s = new NTetrahedron();
+            t->joinTo(0, t, NPerm(1,0,2,3));
+            t->joinTo(2, s, NPerm(1,2,0,3));
+            t->joinTo(3, s, NPerm(0,3,2,1));
+            s->joinTo(2, s, NPerm(0,2,3,1));
+            degenerateNor.addTetrahedron(t);
+            degenerateNor.addTetrahedron(s);
 
             lst123.insertLayeredSolidTorus(1, 2);
             m2_1_m2_1.insertRehydration("cabbbbaei");
@@ -209,46 +276,13 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             genusFourNonOrCusp.addTetrahedron(t);
             genusFourNonOrCusp.addTetrahedron(s);
 
+            cuspedTorus.insertLayeredSolidTorus(1, 2);
+            cuspedTorus.cuspBoundary();
+
             t = new NTetrahedron();
             t->joinTo(0, t, NPerm(1,0,3,2));
             t->joinTo(2, t, NPerm(1,0,3,2));
             edgeInvalid.addTetrahedron(t);
-
-            NTetrahedron** tet;
-            NPerm p;
-            int i, j;
-
-            tet = new NTetrahedron*[9];
-            for (i = 0; i < 9; i++)
-                tet[i] = new NTetrahedron();
-            for (i = 0; i < 9; i++)
-                for (j = 0; j < 4; j++)
-                    if (! tet[i]->getAdjacentTetrahedron(j)) {
-                        p = NPerm(closedHypOrAdjPerm[i][j][0],
-                             closedHypOrAdjPerm[i][j][1],
-                             closedHypOrAdjPerm[i][j][2],
-                             closedHypOrAdjPerm[i][j][3]);
-                        tet[i]->joinTo(j, tet[closedHypOrAdjTet[i][j]], p);
-                    }
-            for (i = 0; i < 9; i++)
-                closedHypOr.addTetrahedron(tet[i]);
-            delete[] tet;
-
-            tet = new NTetrahedron*[11];
-            for (i = 0; i < 11; i++)
-                tet[i] = new NTetrahedron();
-            for (i = 0; i < 11; i++)
-                for (j = 0; j < 4; j++)
-                    if (! tet[i]->getAdjacentTetrahedron(j)) {
-                        p = NPerm(closedHypNorAdjPerm[i][j][0],
-                             closedHypNorAdjPerm[i][j][1],
-                             closedHypNorAdjPerm[i][j][2],
-                             closedHypNorAdjPerm[i][j][3]);
-                        tet[i]->joinTo(j, tet[closedHypNorAdjTet[i][j]], p);
-                    }
-            for (i = 0; i < 11; i++)
-                closedHypNor.addTetrahedron(tet[i]);
-            delete[] tet;
         }
 
         void tearDown() {
@@ -439,6 +473,121 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             // testVolume(closedHypOr, "or_0.94270736", 0.94270736, 7);
             // testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
+        }
+
+        void testFlat(NTriangulation& tri, const char* triName,
+                unsigned places) {
+            // Verify that the triangulation has a flat solution and the
+            // volume is zero to the given number of decimal places.
+            // Places are counted after the decimal point in standard
+            // (non-scientific) notation.
+            NSnapPeaTriangulation s(tri);
+            {
+                std::ostringstream msg;
+                msg << triName <<
+                    " could not be represented in SnapPea format.";
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), ! s.isNull());
+            }
+
+            {
+                std::ostringstream msg;
+                msg << triName << " has a solution type that is not flat.";
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), s.solutionType() ==
+                    NSnapPeaTriangulation::flat_solution);
+            }
+
+            int precision;
+            double foundVol = s.volume(precision);
+            {
+                std::ostringstream msg;
+                msg << triName << " has a volume with a precision of "
+                    << precision << " places, which is less than the desired "
+                    << places << " places.";
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(),
+                    precision >= static_cast<int>(places));
+            }
+
+            double epsilon = 0.5;
+            for (unsigned i = 0; i < places; i++)
+                epsilon /= 10;
+
+            {
+                std::ostringstream msg;
+                msg << triName << " should have a volume of zero, not "
+                    << std::setprecision(
+                        precision + static_cast<int>(ceil(log10(foundVol))))
+                    << foundVol << '.';
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(),
+                    foundVol <= epsilon && foundVol >= -epsilon);
+            }
+        }
+
+        void flat() {
+            testFlat(flatOr, "The orientable flat triangulation", 9);
+            testFlat(flatNor, "The non-orientable flat triangulation", 9);
+        }
+
+        void testDegenerate(NTriangulation& tri, const char* triName,
+                unsigned places) {
+            // Verify that the triangulation has a degenerate solution
+            // and the volume is zero to the given number of decimal places.
+            // Places are counted after the decimal point in standard
+            // (non-scientific) notation.
+            NSnapPeaTriangulation s(tri);
+            {
+                std::ostringstream msg;
+                msg << triName <<
+                    " could not be represented in SnapPea format.";
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), ! s.isNull());
+            }
+
+            {
+                std::ostringstream msg;
+                msg << triName <<
+                    " has a solution type that is not degenerate.";
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), s.solutionType() ==
+                    NSnapPeaTriangulation::degenerate_solution);
+            }
+
+            int precision;
+            double foundVol = s.volume(precision);
+            {
+                std::ostringstream msg;
+                msg << triName << " has a volume with a precision of "
+                    << precision << " places, which is less than the desired "
+                    << places << " places.";
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(),
+                    precision >= static_cast<int>(places));
+            }
+
+            double epsilon = 0.5;
+            for (unsigned i = 0; i < places; i++)
+                epsilon /= 10;
+
+            {
+                std::ostringstream msg;
+                msg << triName << " should have a volume of zero, not "
+                    << std::setprecision(
+                        precision + static_cast<int>(ceil(log10(foundVol))))
+                    << foundVol << '.';
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(),
+                    foundVol <= epsilon && foundVol >= -epsilon);
+            }
+        }
+
+        void degenerate() {
+            testDegenerate(degenerateOr,
+                "The orientable degenerate triangulation", 9);
+            testDegenerate(degenerateNor,
+                "The non-orientable degenerate triangulation", 9);
         }
 };
 
