@@ -58,6 +58,9 @@
 #define __BOOSTUTILS_H
 #endif
 
+namespace regina {
+namespace boost {
+
 /**
  * A template class used to remove the indirection from a pointer type.
  *
@@ -191,6 +194,8 @@ template <class T>
 inline reference_wrapper<T const> const cref(T const& t) {
     return reference_wrapper<T const>(t);
 }
+
+} } // namespace regina::boost
 
 #endif
 

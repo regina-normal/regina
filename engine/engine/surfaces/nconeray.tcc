@@ -115,7 +115,7 @@ void intersectCone(OutputIterator results,
         FaceIterator facesFirst, FaceIterator facesLast,
         const NMatrixInt& subspace, bool testCompatibility) {
     typedef typename std::iterator_traits<RayIterator>::value_type RayClassPtr;
-    typedef typename remove_pointer<RayClassPtr>::type RayClass;
+    typedef typename regina::boost::remove_pointer<RayClassPtr>::type RayClass;
 
     unsigned nEqns = subspace.rows();
     if (nEqns == 0) {
