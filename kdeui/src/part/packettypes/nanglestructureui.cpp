@@ -42,6 +42,10 @@
 #include <qvbox.h>
 
 #define DEFAULT_ANGLE_COLUMN_WIDTH 40
+#define ANGLE_STATS_PADDING 5
+
+// TODO: Work out how to centre column headers.
+// TODO: Work out how to have all columns resized when one is resized.
 
 using regina::NAngleStructureList;
 using regina::NPacket;
@@ -52,11 +56,18 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     ui = new QVBox();
 
     // Set up the statistics label.
+    QWidget* statsUpper = new QWidget(ui);
+    statsUpper->setMinimumHeight(ANGLE_STATS_PADDING);
+
     stats = new QLabel(ui);
     stats->setAlignment(Qt::AlignCenter);
 
+    QWidget* statsLower = new QWidget(ui);
+    statsLower->setMinimumHeight(ANGLE_STATS_PADDING);
+
     // Set up the table of angles.
     table = new KListView(ui);
+    table->setAllColumnsShowFocus(true);
     ui->setStretchFactor(table, 1);
 
     table->addColumn(i18n("Type"), DEFAULT_ANGLE_COLUMN_WIDTH);
