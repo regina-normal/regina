@@ -29,22 +29,6 @@
 #include <algorithm>
 #include "split/nsigisomorphism.h"
 
-/*
-struct ShorterCycle {
-    const NSignature& sig;
-    const NSigPartialIsomorphism& iso;
-
-    ShorterCycle(const NSignature& newSig,
-            const NSigPartialIsomorphism& newIso) : sig(newSig), iso(newIso) {
-    }
-    bool operator() (unsigned cycle1, unsigned cycle2) const {
-        return (NSignature::cycleCmp(sig, cycle1, iso.cycleStart[cycle1],
-            iso.dir, iso.labelImage, sig, cycle2, iso.cycleStart[cycle2],
-            iso.dir, iso.labelImage) < 0);
-    }
-};
-*/
-
 NSigPartialIsomorphism::NSigPartialIsomorphism(
         const NSigPartialIsomorphism& iso) : nLabels(iso.nLabels),
         nCycles(iso.nCycles),
