@@ -9,6 +9,6 @@
 # This directory contains general icons for Regina.
 
 picsdir = $(kde_datadir)/reginapart/pics
-pics_DATA = reginatrans.png stars.png
+pics_DATA = patience.png reginatrans.png stars.png
 
 KDE_ICON = regina

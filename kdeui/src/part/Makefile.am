@@ -26,6 +26,7 @@ noinst_HEADERS = \
 	packettreeview.h \
 	packetui.h \
 	packetwindow.h \
+	patiencedialog.h \
 	progressdialogs.h \
 	reginapart.h
 
@@ -51,6 +52,7 @@ libreginapart_la_SOURCES = \
 	packettreeview.cpp \
 	packetui.cpp \
 	packetwindow.cpp \
+	patiencedialog.cpp \
 	progressdialogs.cpp \
 	reginapart.cpp \
 	treenav.cpp
