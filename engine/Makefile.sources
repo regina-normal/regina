@@ -18,7 +18,6 @@
 # All locations must be relative to this directory.
 
 dirs_engine_engine = \
-	engine \
 	engine/algebra \
 	engine/census \
 	engine/file \
@@ -31,7 +30,7 @@ dirs_engine_engine = \
 	engine/surfaces \
 	engine/triangulation \
 	engine/utilities \
-	.
+	engine
 
 dirs_engine_jni = \
 	jni/registry \
