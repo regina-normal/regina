@@ -9,7 +9,6 @@
 EXTRA_DIST = \
   engine \
   general \
-  javaui \
   kdeui \
   testsuite
 
