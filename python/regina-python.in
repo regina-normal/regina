@@ -86,22 +86,31 @@ if [ ! -f "$REGINA_HOME/scripts/regscript_opt" ]; then
   exit 1
 fi
 
-# --- Check command-line verbosity. ---
+# --- Check command-line options. ---
 
 for i; do
-  if [ "$i" = "--verbose" -o "$i" = "-v" ]; then
-    export REGINA_VERBOSITY=2
-  elif [ "$i" = "--quiet" -o "$i" = "-q" ]; then
-    export REGINA_VERBOSITY=0
-  fi
+  case "$i" in
+    --verbose | -v )
+      export REGINA_VERBOSITY=2
+      ;;
+    --quiet | -q )
+      export REGINA_VERBOSITY=0
+      ;;
+    * )
+      error "Error: Unknown option $i."
+      exit 1
+      ;;
+  esac
 done
 
-# Use default if nothing is specified.
+# --- Decide upon a verbosity level. ---
+
+# Use default verbosity if nothing is specified.
 if [ -z "$REGINA_VERBOSITY" ]; then
     export REGINA_VERBOSITY="$default_verbosity"
 fi
 
-# Check it's an appropriate value.
+# Check that the verbosity is an appropriate value.
 case "$REGINA_VERBOSITY" in
     [012] )
     ;;
