@@ -103,6 +103,11 @@ public class CoordinateViewer extends DefaultPacketViewer
     private final static String flavourLabelText = "Coordinate System:";
 
     /**
+     * The button used to crush a normal surface.
+     */
+    private JButton crushBtn;
+
+    /**
      * Are we currently editing this packet elsewhere within the overall
      * packet interface that contains this one?
      */
@@ -134,6 +139,9 @@ public class CoordinateViewer extends DefaultPacketViewer
         this.isEditingElsewhere = false;
         this.updatingFlavours = false;
         init();
+
+        // Set the initial states of the action buttons.
+        updateActionButtons();
     }
 
     /**
@@ -156,15 +164,14 @@ public class CoordinateViewer extends DefaultPacketViewer
         flavourPanel.add(Box.createHorizontalGlue());
 
         // Add action buttons for normal surfaces.
-        if (set.isEmbeddedOnly() && (! set.allowsAlmostNormal())) {
-            JButton crush = new JButton("Crush");
-            crush.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    crush();
-                }
-            });
-            flavourPanel.add(crush);
-        }
+        crushBtn = new JButton("Crush");
+        crushBtn.setEnabled(false);
+        crushBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                crush();
+            }
+        });
+        flavourPanel.add(crushBtn);
 
         setLayout(new BorderLayout());
         add(new PaddedPane(flavourPanel, 3, 12, 3, 3), BorderLayout.NORTH);
@@ -183,6 +190,8 @@ public class CoordinateViewer extends DefaultPacketViewer
 
         updateFlavours();
         reflectFlavour();
+
+        updateActionButtons();
     }
 
     public void editingElsewhere() {
@@ -214,6 +223,8 @@ public class CoordinateViewer extends DefaultPacketViewer
 
         updateFlavours();
         reflectFlavour();
+
+        updateActionButtons();
     }
 
     /**
@@ -282,6 +293,19 @@ public class CoordinateViewer extends DefaultPacketViewer
             col.setHeaderValue(new FancyData(model.getColumnName(i),
                 model.getColumnToolTip(i)));
         }
+    }
+
+    /**
+     * Updates the action buttons to reflect the currently
+     * selected surface set and flavour of coordinate system.
+     */
+    private void updateActionButtons() {
+        if (set == null)
+            crushBtn.setEnabled(false);
+        else if (set.isEmbeddedOnly() && (! set.allowsAlmostNormal()))
+            crushBtn.setEnabled(true);
+        else
+            crushBtn.setEnabled(false);
     }
 
     /**

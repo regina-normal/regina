@@ -38,7 +38,6 @@ Main Window:
 
 Menus:
 -	Provide NTriangulation::isIsomorphicTo().
--	Provide NTriangulation::cutAlongSurface() once it is written.
 
 Normal Surfaces:
  	For matching equations and normal surface coordinates, resizing one
