@@ -39,7 +39,7 @@
 /**
  * Contains the entire Regina calculation engine.
  *
- * \todo \proburgent Hunt for default copy constructors that are being called.
+ * \todo \prob Derive from regina::boost::noncopyable where appropriate.
  * \todo \featurelong Enhance the test suite for the calculation engine.
  */
 namespace regina {
