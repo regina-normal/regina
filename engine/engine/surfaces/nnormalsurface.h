@@ -40,6 +40,7 @@
 #include "file/nfilepropertyreader.h"
 #include "maths/nray.h"
 #include "triangulation/nperm.h"
+#include "utilities/nproperty.h"
 
 namespace regina {
 
@@ -548,7 +549,6 @@ class NNormalSurfaceVector : public NRay {
  * for non-compact surfaces.
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
- * \todo \tidy Use NProperty for calculable properties.
  * \todo \tidy Use a new tristate class for true/false/unknown properties.
  */
 class NNormalSurface : public ShareableObject, public NFilePropertyReader {
@@ -562,44 +562,25 @@ class NNormalSurface : public ShareableObject, public NFilePropertyReader {
         std::string name;
             /**< An optional name associated with this surface. */
 
-        mutable NLargeInteger eulerChar;
+        mutable NProperty<NLargeInteger> eulerChar;
             /**< The Euler characteristic of this surface. */
-        mutable bool calculatedEulerChar;
-            /**< Have we calculated the Euler characteristic? */
-        mutable int orientable;
+        mutable NProperty<int> orientable;
             /**< Is this surface orientable?
                  1 is true, -1 is false and 0 is undetermined. */
-        mutable bool calculatedOrientable;
-            /**< Have we calculated the orientability of this surface
-                 (or the indeterminibility thereof)? */
-        mutable int twoSided;
+        mutable NProperty<int> twoSided;
             /**< Is this surface two-sided?
                  1 is true, -1 is false and 0 is undetermined. */
-        mutable bool calculatedTwoSided;
-            /**< Have we calculated the two-sidedness of this surface
-                 (or the indeterminibility thereof)? */
-        mutable int connected;
+        mutable NProperty<int> connected;
             /**< Is this surface connected? */
-        mutable bool calculatedConnected;
-            /**< Have we calculated the connectedness of this surface
-                 (or the indeterminibility thereof)? */
-        mutable bool realBoundary;
+        mutable NProperty<bool> realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
              *   any boundary faces)? */
-        mutable bool calculatedRealBoundary;
-            /**< Have we calculated whether this surface has real
-             *   boundary? */
-        mutable bool compact;
+        mutable NProperty<bool> compact;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
-        mutable bool calculatedCompact;
-            /**< Have we calculated whether this surface is compact? */
-        mutable bool canCrush;
+        mutable NProperty<bool> canCrush;
             /**< Can this surface be crushed without unintended
                  topological side-effects? */
-        mutable bool calculatedCanCrush;
-            /**< Have we calculated whether this surface can be safely
-                 crushed? */
 
     public:
         /**
@@ -1157,41 +1138,39 @@ inline void NNormalSurface::writeRawVector(std::ostream& out) const {
 }
 
 inline bool NNormalSurface::isCompact() const {
-    if (! calculatedCompact) {
+    if (! compact.known())
         compact = vector->isCompact(triangulation);
-        calculatedCompact = true;
-    }
-    return compact;
+    return compact.value();
 }
 
 inline NLargeInteger NNormalSurface::getEulerCharacteristic() const {
-    if (! calculatedEulerChar)
+    if (! eulerChar.known())
         calculateEulerCharacteristic();
-    return eulerChar;
+    return eulerChar.value();
 }
 
 inline int NNormalSurface::isOrientable() const {
-    if (! calculatedOrientable)
+    if (! orientable.known())
         calculateOrientable();
-    return orientable;
+    return orientable.value();
 }
 
 inline int NNormalSurface::isTwoSided() const {
-    if (! calculatedTwoSided)
+    if (! twoSided.known())
         calculateOrientable();
-    return twoSided;
+    return twoSided.value();
 }
 
 inline int NNormalSurface::isConnected() const {
-    if (! calculatedConnected)
+    if (! connected.known())
         calculateOrientable();
-    return connected;
+    return connected.value();
 }
 
 inline bool NNormalSurface::hasRealBoundary() const {
-    if (! calculatedRealBoundary)
+    if (! realBoundary.known())
         calculateRealBoundary();
-    return realBoundary;
+    return realBoundary.value();
 }
 
 inline bool NNormalSurface::isVertexLinking() const {
@@ -1216,9 +1195,9 @@ inline NLargeInteger NNormalSurface::isCentral() const {
 }
 
 inline bool NNormalSurface::knownCanCrush() const {
-    if (! calculatedCanCrush)
+    if (! canCrush.known())
         calculateKnownCanCrush();
-    return (calculatedCanCrush && canCrush);
+    return (canCrush.known() && canCrush.value());
 }
 
 } // namespace regina

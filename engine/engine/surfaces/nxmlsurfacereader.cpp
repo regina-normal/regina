@@ -91,26 +91,33 @@ NXMLElementReader* NXMLNormalSurfaceReader::startSubElement(
         return new NXMLElementReader();
 
     if (subTagName == "euler") {
-        if (valueOf(props.lookup("value"), surface->eulerChar))
-            surface->calculatedEulerChar = true;
+        NLargeInteger val;
+        if (valueOf(props.lookup("value"), val))
+            surface->eulerChar = val;
     } else if (subTagName == "orbl") {
-        if (valueOf(props.lookup("value"), surface->orientable))
-            surface->calculatedOrientable = true;
+        int val;
+        if (valueOf(props.lookup("value"), val))
+            surface->orientable = val;
     } else if (subTagName == "twosided") {
-        if (valueOf(props.lookup("value"), surface->twoSided))
-            surface->calculatedTwoSided = true;
+        int val;
+        if (valueOf(props.lookup("value"), val))
+            surface->twoSided = val;
     } else if (subTagName == "connected") {
-        if (valueOf(props.lookup("value"), surface->connected))
-            surface->calculatedConnected = true;
+        int val;
+        if (valueOf(props.lookup("value"), val))
+            surface->connected = val;
     } else if (subTagName == "realbdry") {
-        if (valueOf(props.lookup("value"), surface->realBoundary))
-            surface->calculatedRealBoundary = true;
+        bool val;
+        if (valueOf(props.lookup("value"), val))
+            surface->realBoundary = val;
     } else if (subTagName == "compact") {
-        if (valueOf(props.lookup("value"), surface->compact))
-            surface->calculatedCompact = true;
+        bool val;
+        if (valueOf(props.lookup("value"), val))
+            surface->compact = val;
     } else if (subTagName == "cancrush") {
-        if (valueOf(props.lookup("value"), surface->canCrush))
-            surface->calculatedCanCrush = true;
+        bool val;
+        if (valueOf(props.lookup("value"), val))
+            surface->canCrush = val;
     }
     return new NXMLElementReader();
 }

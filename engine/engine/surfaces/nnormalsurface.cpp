@@ -103,67 +103,34 @@ const NPerm __octDiscArcs[24] = {
 NNormalSurface* NNormalSurface::clone() const {
     NNormalSurface* ans = new NNormalSurface(triangulation,
         dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
-    if (calculatedEulerChar) {
-        ans->eulerChar = eulerChar;
-        ans->calculatedEulerChar = true;
-    }
-    if (calculatedOrientable) {
-        ans->orientable = orientable;
-        ans->calculatedOrientable = true;
-    }
-    if (calculatedTwoSided) {
-        ans->twoSided = twoSided;
-        ans->calculatedTwoSided = true;
-    }
-    if (calculatedConnected) {
-        ans->connected = connected;
-        ans->calculatedConnected = true;
-    }
-    if (calculatedRealBoundary) {
-        ans->realBoundary = realBoundary;
-        ans->calculatedRealBoundary = true;
-    }
-    if (calculatedCompact) {
-        ans->compact = compact;
-        ans->calculatedCompact = true;
-    }
-    if (calculatedCanCrush) {
-        ans->canCrush = canCrush;
-        ans->calculatedCanCrush = true;
-    }
+
+    ans->eulerChar = eulerChar;
+    ans->orientable = orientable;
+    ans->twoSided = twoSided;
+    ans->connected = connected;
+    ans->realBoundary = realBoundary;
+    ans->compact = compact;
+    ans->canCrush = canCrush;
+
     return ans;
 }
 
 void NNormalSurface::readIndividualProperty(NFile& infile,
         unsigned propType) {
-    if (propType == PROPID_EULERCHARACTERISTIC) {
+    if (propType == PROPID_EULERCHARACTERISTIC)
         eulerChar = infile.readLarge();
-        calculatedEulerChar = true;
-    }
-    else if (propType == PROPID_ORIENTABILITY) {
+    else if (propType == PROPID_ORIENTABILITY)
         orientable = infile.readInt();
-        calculatedOrientable = true;
-    }
-    else if (propType == PROPID_TWOSIDEDNESS) {
+    else if (propType == PROPID_TWOSIDEDNESS)
         twoSided = infile.readInt();
-        calculatedTwoSided = true;
-    }
-    else if (propType == PROPID_CONNECTEDNESS) {
+    else if (propType == PROPID_CONNECTEDNESS)
         connected = infile.readInt();
-        calculatedConnected = true;
-    }
-    else if (propType == PROPID_REALBOUNDARY) {
+    else if (propType == PROPID_REALBOUNDARY)
         realBoundary = infile.readBool();
-        calculatedRealBoundary = true;
-    }
-    else if (propType == PROPID_COMPACT) {
+    else if (propType == PROPID_COMPACT)
         compact = infile.readBool();
-        calculatedCompact = true;
-    }
-    else if (propType == PROPID_CANCRUSH) {
+    else if (propType == PROPID_CANCRUSH)
         canCrush = infile.readBool();
-        calculatedCanCrush = true;
-    }
     else if (propType == PROPID_SURFACENAME)
         name = infile.readString();
 }
@@ -171,14 +138,7 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
 NNormalSurface::NNormalSurface(NTriangulation* triang,
         NNormalSurfaceVector* newVector) :
         vector(newVector),
-        triangulation(triang),
-        calculatedEulerChar(false),
-        calculatedOrientable(false),
-        calculatedTwoSided(false),
-        calculatedConnected(false),
-        calculatedRealBoundary(false),
-        calculatedCompact(false),
-        calculatedCanCrush(false) {
+        triangulation(triang) {
 }
 
 void NNormalSurface::writeTextShort(std::ostream& out) const {
@@ -286,41 +246,40 @@ NLargeInteger NNormalSurfaceVector::isCentral(NTriangulation* triang) const {
 void NNormalSurface::calculateEulerCharacteristic() const {
     unsigned long index, tot;
     int type;
-    eulerChar = NLargeInteger::zero;
+    NLargeInteger ans = NLargeInteger::zero;
 
     // Add vertices.
     tot = triangulation->getNumberOfEdges();
     for (index = 0; index < tot; index++)
-        eulerChar += getEdgeWeight(index);
+        ans += getEdgeWeight(index);
 
     // Subtract edges.
     tot = triangulation->getNumberOfFaces();
     for (index = 0; index < tot; index++)
         for (type = 0; type < 3; type++)
-            eulerChar -= getFaceArcs(index, type);
-    
+            ans -= getFaceArcs(index, type);
+
     // Add faces.
     tot = triangulation->getNumberOfTetrahedra();
     for (index = 0; index < tot; index++) {
         for (type=0; type<4; type++)
-            eulerChar += getTriangleCoord(index, type);
+            ans += getTriangleCoord(index, type);
         for (type=0; type<3; type++)
-            eulerChar += getQuadCoord(index, type);
+            ans += getQuadCoord(index, type);
         for (type=0; type<3; type++)
-            eulerChar += getOctCoord(index, type);
+            ans += getOctCoord(index, type);
     }
 
     // Done!
-    calculatedEulerChar = true;
+    eulerChar = ans;
 }
 
 void NNormalSurface::calculateRealBoundary() const {
     if (triangulation->isClosed()) {
         realBoundary = false;
-        calculatedRealBoundary = true;
         return;
     }
-    
+
     unsigned long index;
     unsigned long tot = triangulation->getNumberOfTetrahedra();
     NTetrahedron* tet;
@@ -333,14 +292,12 @@ void NNormalSurface::calculateRealBoundary() const {
             for (type=0; type<3; type++) {
                 if (getQuadCoord(index, type) > 0) {
                     realBoundary = true;
-                    calculatedRealBoundary = true;
                     return;
                 }
             }
             for (type=0; type<3; type++) {
                 if (getOctCoord(index, type) > 0) {
                     realBoundary = true;
-                    calculatedRealBoundary = true;
                     return;
                 }
             }
@@ -353,7 +310,6 @@ void NNormalSurface::calculateRealBoundary() const {
                             continue;
                         if (tet->getAdjacentTetrahedron(face) == 0) {
                             realBoundary = true;
-                            calculatedRealBoundary = true;
                             return;
                         }
                     }
@@ -361,7 +317,6 @@ void NNormalSurface::calculateRealBoundary() const {
         }
     }
     realBoundary = false;
-    calculatedRealBoundary = true;
 }
 
 void NNormalSurface::writeXMLData(std::ostream& out) const {
@@ -382,20 +337,20 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
     }
 
     // Write properties.
-    if (calculatedEulerChar)
-        out << "\n\t" << xmlValueTag("euler", eulerChar);
-    if (calculatedOrientable)
-        out << "\n\t" << xmlValueTag("orbl", orientable);
-    if (calculatedTwoSided)
-        out << "\n\t" << xmlValueTag("twosided", twoSided);
-    if (calculatedConnected)
-        out << "\n\t" << xmlValueTag("connected", connected);
-    if (calculatedRealBoundary)
-        out << "\n\t" << xmlValueTag("realbdry", realBoundary);
-    if (calculatedCompact)
-        out << "\n\t" << xmlValueTag("compact", compact);
-    if (calculatedCanCrush)
-        out << "\n\t" << xmlValueTag("cancrush", canCrush);
+    if (eulerChar.known())
+        out << "\n\t" << xmlValueTag("euler", eulerChar.value());
+    if (orientable.known())
+        out << "\n\t" << xmlValueTag("orbl", orientable.value());
+    if (twoSided.known())
+        out << "\n\t" << xmlValueTag("twosided", twoSided.value());
+    if (connected.known())
+        out << "\n\t" << xmlValueTag("connected", connected.value());
+    if (realBoundary.known())
+        out << "\n\t" << xmlValueTag("realbdry", realBoundary.value());
+    if (compact.known())
+        out << "\n\t" << xmlValueTag("compact", compact.value());
+    if (canCrush.known())
+        out << "\n\t" << xmlValueTag("cancrush", canCrush.value());
 
     // Write the closing tag.
     out << " </surface>\n";
@@ -416,7 +371,7 @@ void NNormalSurface::writeToFile(NFile& out) const {
         }
     }
     out.writeInt(-1);
-    
+
     // Write properties.
     std::streampos bookmark(0);
 
@@ -424,39 +379,39 @@ void NNormalSurface::writeToFile(NFile& out) const {
     out.writeString(name);
     out.writePropertyFooter(bookmark);
 
-    if (calculatedEulerChar) {
+    if (eulerChar.known()) {
         bookmark = out.writePropertyHeader(PROPID_EULERCHARACTERISTIC);
-        out.writeLarge(eulerChar);
+        out.writeLarge(eulerChar.value());
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedOrientable) {
+    if (orientable.known()) {
         bookmark = out.writePropertyHeader(PROPID_ORIENTABILITY);
-        out.writeInt(orientable);
+        out.writeInt(orientable.value());
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedTwoSided) {
+    if (twoSided.known()) {
         bookmark = out.writePropertyHeader(PROPID_TWOSIDEDNESS);
-        out.writeInt(twoSided);
+        out.writeInt(twoSided.value());
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedConnected) {
+    if (connected.known()) {
         bookmark = out.writePropertyHeader(PROPID_CONNECTEDNESS);
-        out.writeInt(connected);
+        out.writeInt(connected.value());
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedRealBoundary) {
+    if (realBoundary.known()) {
         bookmark = out.writePropertyHeader(PROPID_REALBOUNDARY);
-        out.writeBool(realBoundary);
+        out.writeBool(realBoundary.value());
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedCompact) {
+    if (compact.known()) {
         bookmark = out.writePropertyHeader(PROPID_COMPACT);
-        out.writeBool(compact);
+        out.writeBool(compact.value());
         out.writePropertyFooter(bookmark);
     }
-    if (calculatedCanCrush) {
+    if (canCrush.known()) {
         bookmark = out.writePropertyHeader(PROPID_CANCRUSH);
-        out.writeBool(canCrush);
+        out.writeBool(canCrush.value());
         out.writePropertyFooter(bookmark);
     }
 

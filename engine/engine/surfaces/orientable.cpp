@@ -65,19 +65,19 @@ void NNormalSurface::calculateOrientable() const {
         orientable = 0;
         twoSided = 0;
         connected = 0;
-        calculatedOrientable = false;
-        calculatedTwoSided = false;
-        calculatedConnected = false;
+        orientable.clear();
+        twoSided.clear();
+        connected.clear();
         return;
     }
 
     // TODO: First check that there aren't too many discs!
 
     // All right.  Off we go.
-    calculatedOrientable = false;
-    calculatedTwoSided = false;
-    calculatedConnected = false;
-    
+    orientable.clear();
+    twoSided.clear();
+    connected.clear();
+
     NDiscSetSurfaceData<OrientData> orients(*this);
         // Stores the orientation of each disc.
     std::queue<NDiscSpec> discQueue;
@@ -112,10 +112,8 @@ void NNormalSurface::calculateOrientable() const {
                 discQueue.push(*it);
                 if (noComponents)
                     noComponents = false;
-                else {
+                else
                     connected = -1;
-                    calculatedConnected = true;
-                }
             }
             it++;
         }
@@ -156,7 +154,7 @@ void NNormalSurface::calculateOrientable() const {
             // There is actually a disc glued along this arc.
             // Determine the desired properties of the adjacent disc.
 
-            if (! calculatedOrientable) {
+            if (! orientable.known()) {
                 myOrient = discOrientationFollowsEdge(use.type,
                     arc[i][0], arc[i][1], arc[i][2]);
                 yourOrient = discOrientationFollowsEdge(adjDisc->type,
@@ -166,7 +164,7 @@ void NNormalSurface::calculateOrientable() const {
             } else
                 sameOrient = true;
 
-            if (! calculatedTwoSided) {
+            if (! twoSided.known()) {
                 mySides = numberDiscsAwayFromVertex(use.type, arc[i][0]);
                 yourSides = numberDiscsAwayFromVertex(
                     adjDisc->type, adjArc[0]);
@@ -184,42 +182,33 @@ void NNormalSurface::calculateOrientable() const {
                     orients.data(use).sides : -orients.data(use).sides);
                 discQueue.push(*adjDisc);
             } else {
-                if (! calculatedOrientable) {
+                if (! orientable.known()) {
                     if (sameOrient) {
                         if (orients.data(*adjDisc).orient !=
-                                orients.data(use).orient) {
+                                orients.data(use).orient)
                             orientable = -1;
-                            calculatedOrientable = true;
-                        }
                     } else {
                         if (orients.data(*adjDisc).orient ==
-                                orients.data(use).orient) {
+                                orients.data(use).orient)
                             orientable = -1;
-                            calculatedOrientable = true;
-                        }
                     }
                 }
-                if (! calculatedTwoSided) {
+                if (! twoSided.known()) {
                     if (sameSides) {
                         if (orients.data(*adjDisc).sides !=
-                                orients.data(use).sides) {
+                                orients.data(use).sides)
                             twoSided = -1;
-                            calculatedTwoSided = true;
-                        }
                     } else {
                         if (orients.data(*adjDisc).sides ==
-                                orients.data(use).sides) {
+                                orients.data(use).sides)
                             twoSided = -1;
-                            calculatedTwoSided = true;
-                        }
                     }
                 }
             }
 
             // Tidy up.
             delete adjDisc;
-            if (calculatedOrientable && calculatedTwoSided &&
-                    calculatedConnected)
+            if (orientable.known() && twoSided.known() && connected.known())
                 return;
         }
     }
@@ -227,18 +216,12 @@ void NNormalSurface::calculateOrientable() const {
     // We made it through!  Any properties that weren't proven false
     // must be true.
 
-    if (! calculatedOrientable) {
+    if (! orientable.known())
         orientable = 1;
-        calculatedOrientable = true;
-    }
-    if (! calculatedTwoSided) {
+    if (! twoSided.known())
         twoSided = 1;
-        calculatedTwoSided = true;
-    }
-    if (! calculatedConnected) {
+    if (! connected.known())
         connected = 1;
-        calculatedConnected = true;
-    }
 }
 
 } // namespace regina

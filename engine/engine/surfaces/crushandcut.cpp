@@ -118,7 +118,7 @@ NTriangulation* NNormalSurface::crush() const {
 }
 
 void NNormalSurface::calculateKnownCanCrush() const {
-    if (calculatedCanCrush)
+    if (canCrush.known())
         return;
 
     // TODO: actually implement this routine.
@@ -171,10 +171,8 @@ void NNormalSurface::calculateKnownCanCrush() const {
     }
 
     // Did we find a cycle of prisms?
-    if (! foundCycle) {
-        calculatedCanCrush = true;
+    if (! foundCycle)
         canCrush = true;
-    }
 
     delete[] quads;
     delete[] seenPrism;
