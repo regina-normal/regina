@@ -49,7 +49,7 @@
    </para>
    <para>
     &regina; includes a complete reference for the calculation engine,
-    which describes in detail the objects, class and methods available
+    which describes in detail the objects, classes and methods available
     when writing &python; scripts.  This documentation is generally
     installed in a location similar to
     <filename>/usr/local/share/regina/engine-docs/</filename>, although this

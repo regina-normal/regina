@@ -34,6 +34,7 @@
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY java "<application>Java</application>">
+  <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY pi "<literal>Pi</literal>">
   <!ENTITY python "<application>Python</application>">
   <!ENTITY snappea "<application>SnapPea</application>">
@@ -42,6 +43,7 @@
   <!ENTITY theta "<replaceable>t</replaceable>">
   <!ENTITY todo "TODO">
   <!ENTITY twopi "<literal>2*Pi</literal>">
+  <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY xml "<acronym>XML</acronym>">
 
   <!ENTITY reginaabout SYSTEM "about.docbook">

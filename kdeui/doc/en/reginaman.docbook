@@ -15,26 +15,23 @@
   </para>
  </partintro>
 
- <!-- Startup Script -->
+ <!-- KDE Startup Script -->
 
  <refentry id="man-regina-kde">
   <refmeta>
-   <refentrytitle>regina</refentrytitle>
+   <refentrytitle>regina-kde</refentrytitle>
    <manvolnum>1</manvolnum>
   </refmeta>
 
   <refnamediv>
-   <refname>regina</refname>
-   <refpurpose>&regina; startup script</refpurpose>
+   <refname>regina-kde</refname>
+   <refpurpose>&regina; &kde; user interface</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
    <cmdsynopsis>
-    <command>regina</command>
-    <group>
-     <arg><option>-q, --quiet</option></arg>
-     <arg><option>-v, --verbose</option></arg>
-    </group>
+    <command>regina-kde</command>
+    <arg><replaceable>generic-options</replaceable></arg>
     <arg rep="repeat"><replaceable>file</replaceable></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
@@ -43,31 +40,92 @@
    <title>Description</title>
    &regabstract;
    <para>
-    Users should start &regina; by running the
-    <command>regina</command> startup script in the binary
-    installation directory (such as <filename>/usr/bin</filename>
-    or <filename>/usr/local/bin</filename>).
+    This command starts the full &kde; user interface, and is the usual
+    way of starting &regina;.  Any files specified on the command-line
+    will be opened on startup.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <para>
+    All of the available options are generic Qt or &kde; options, and
+    are not described here.  For a full summary of these options, run
+    <userinput>regina-kde --help</userinput>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-python">regina-python</link>.
    </para>
    <para>
-    &regina; may be run directly out of its source tree without being
-    properly installed; this is done by running the <command>regina</command>
-    startup script in the top-level source directory.  Default locations
+    Full user documentation is available through the &khelpcenter;.
+    You can also enter the &url; <userinput>help:/regina/</userinput>
+    directly into &konqueror; or you can run
+    <userinput>khelpcenter help:/regina/</userinput> from the command-line.
+   </para>
+   <para>
+    If the &khelpcenter; is not installed then you can read the
+    documentation in &html; format directly from the &regwebsite;.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; &regemail;
+    with help from others; see the documentation for full details.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Python Command-Line Interface -->
+
+ <refentry id="man-regina-python">
+  <refmeta>
+   <refentrytitle>regina-python</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina-python</refname>
+   <refpurpose>&regina; command-line &python; interface</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regina-python</command>
+    <group>
+     <arg><option>-q, --quiet</option></arg>
+     <arg><option>-v, --verbose</option></arg>
+    </group>
+    <arg>
+     <replaceable>script</replaceable>
+     <arg><replaceable>script-args</replaceable></arg>
+    </arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   &regabstract;
+   <para>
+    This command starts an interactive &python; session for
+    &regina;.  This will be a command-line &python; session;
+    the graphical user interface will not be loaded.
+    All of the objects, clases and methods from the &regina; calculation
+    engine will be made available to the user in the module
+    <parameter>regina</parameter>, which will be imported on startup.
+    <!-- TODO: Talk about loading libraries. -->
+   </para>
+   <para>
+    Note that this &python; interface may be run directly out of its
+    source tree without being properly installed.  Default locations
     for various &regina; components will be transparently modified to
     look inside the source tree.
    </para>
-   <para>
-    Any files specified on the command-line will be opened on startup.
-   </para>
-   <warning><para>
-    When passing command-line arguments, avoid using characters that have
-    a special meaning to <filename>bash</filename>
-    (such as quotes, brackets, backslashes and
-    the like).  You should <emphasis>only</emphasis> use the arguments
-    described below.  Using special characters in command-line arguments
-    can have unpredictable results, and may in the worst case result in
-    data loss (although I've tried to make the scripts foolproof enough
-    to prevent this).
-   </para></warning>
   </refsect1>
 
   <refsect1>
@@ -82,7 +140,7 @@
        for errors.
       </para>
       <para>
-       This is equivalent to setting configuration option
+       This is equivalent to setting the environment variable
        <parameter>REGINA_VERBOSITY</parameter>=<literal>0</literal>.
       </para>
      </listitem>
@@ -96,8 +154,25 @@
        information will be output.
       </para>
       <para>
-       This is equivalent to setting configuration option
+       This is equivalent to setting the environment variable
        <parameter>REGINA_VERBOSITY</parameter>=<literal>2</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><replaceable>script</replaceable>
+      <replaceable>script-args</replaceable></term>
+     <listitem>
+      <para>
+       Run the given &python; script with the given arguments.
+       One the script has been run, the user will be returned to the
+       command-line, i.e., there will be no interactive &python;
+       interpreter.
+      </para>
+      <para>
+       The script may assume that the module <parameter>regina</parameter>
+       has been imported.
+       <!-- TODO: Talk about automatically loading libraries -->
       </para>
      </listitem>
     </varlistentry>
@@ -107,121 +182,23 @@
   <refsect1>
    <title>Environment Variables</title>
    <para>
-    All of the options described in the
-    configuration reference can
-    be set as environment variables.  Of particular interest are
-    <envar>REGINA_OPTIONS_GLOBAL</envar> and
-    <envar>REGINA_OPTIONS_LOCAL</envar> which specify the directories
-    containing the configuration files.
-   </para>
-  </refsect1>
-
-  <refsect1>
-   <title>See Also</title>
-   <para>
-    <link linkend="man-regina-python">regina-python</link>.
-   </para>
-  </refsect1>
-
-  <refsect1>
-   <title>Author</title>
-   <para>
-    &regina; was written by &regauthorplain; with help from others;
-    see the documentation for full details.
-    You can contact me at &regemail;.
-   </para>
-  </refsect1>
- </refentry>
-
- <!-- Python Command-Line Interface -->
-
- <refentry id="man-regina-python">
-  <refmeta>
-   <refentrytitle>regina.conf</refentrytitle>
-   <manvolnum>5</manvolnum>
-  </refmeta>
-
-  <refnamediv>
-   <refname>regina.conf</refname>
-   <refpurpose>&regina; configuration</refpurpose>
-  </refnamediv>
-
-  <refsect1>
-   <title>Description</title>
-   <para>
-    When running &regina; using the standard startup script, you can
-    configure its behaviour in many ways.  The configuration consists of
-    a number of options, each of which may be given a value.
-   </para>
-   <para>
-    The methods by which you may set these options are (in decreasing
-    order of priority):
-    <itemizedlist>
-     <listitem><para>
-      Command-line options to the startup script.  See the
-      <link linkend="man-regina-kde">startup script reference</link> for
-      further details.
-     </para></listitem>
-     <listitem><para>
-      Environment variables.  For instance, you might have environment
-      variable <envar>REGINA_ENGINE</envar> with the value
-      <literal>jni</literal>.
-     </para></listitem>
-     <listitem><para>
-      The local configuration file:
-      <filename>~/.regina/regina.conf</filename>
-     </para></listitem>
-     <listitem><para>
-      The global configuration file:
-      <filename>/etc/regina/regina.conf</filename> (or
-      <filename><replaceable>REGINA_HOME</replaceable>/regina.conf</filename>
-      if directory <filename>/etc/regina</filename> does not exist)
-     </para></listitem>
-    </itemizedlist>
-   </para>
-   <para>
-    Any option set by a method lower in this list will be
-    overridden by the same option set higher in the list (for instance,
-    a command-line option will override a setting in the local
-    configuration file).
-   </para>
-   <para>
-    On some systems the global configuration file is installed as
-    <filename>/etc/regina-normal/regina.conf</filename> so as not to
-    conflict with the <application>Regina</application>
-    <acronym>REXX</acronym> interpreter.
-   </para>
-   <para>
-    The local and global configuration files should each contain
-    lines of the form:
+    The following environment variables influence the behaviour of
+    this program.  Each of these variables can also be set in the local
+    configuration file <filename>~/.reginapython</filename> using a line
+    of the form:
     <screen>
     <replaceable>option</replaceable>=<replaceable>value</replaceable>
     </screen>
-    Blank lines or lines beginning with a hash (<literal>#</literal>)
-    are ignored.
+    Environment variables will take precedence over values read from
+    this configuration file.
    </para>
-   <para>
-    Environment variables <envar>REGINA_OPTIONS_GLOBAL</envar> and
-    <envar>REGINA_OPTIONS_LOCAL</envar> can be used to change the
-    location of the global and local configuration files; see the
-    Options section below for details.
-   </para>
-  </refsect1>
-
-  <refsect1>
-   <title>Options</title>
-   <para>The configuration options that can be set are as follows.</para>
    <variablelist>
     <varlistentry>
      <term><parameter>REGINA_VERBOSITY</parameter>
       (default = <literal>1</literal>)</term>
      <listitem>
       <para>
-       The verbosity level for the startup script.
-       For this option only, a setting in the configuration file(s) will
-       clobber the command-line options <option>-q</option>,
-       <option>--quiet</option>, <option>-v</option> and
-       <option>--verbose</option>.
+       The verbosity level to use.
        </para>
        <para>
        Recognised values are:
@@ -286,41 +263,6 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term><parameter>REGINA_OPTIONS_GLOBAL</parameter>
-      (default = <filename>/etc/regina</filename>, but see below)</term>
-     <listitem>
-      <para>
-       The directory containing the global configuration file.
-      </para>
-      <para>
-       Clearly this option cannot be set in the configuration files!
-      </para>
-      <para>
-       This defaults to <filename>/etc/regina</filename>, or
-       <filename><replaceable>REGINA_HOME</replaceable></filename> if
-       directory <filename>/etc/regina</filename> does not exist.
-      </para>
-      <para>
-       On some systems this defaults to
-       <filename>/etc/regina-normal</filename> so as not to
-       conflict with the <application>Regina</application>
-       <acronym>REXX</acronym> interpreter.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><parameter>REGINA_OPTIONS_LOCAL</parameter>
-      (default = <filename>~/.regina</filename>)</term>
-     <listitem>
-      <para>
-       The directory containing the local configuration file.
-      </para>
-      <para>
-       Clearly this option cannot be set in the configuration files!
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
      <term><parameter>REGINA_PYTHON</parameter></term>
      <listitem>
       <para>
@@ -339,16 +281,22 @@
    <para>
     <link linkend="man-regina-kde">regina-kde</link>.
    </para>
+   <para>
+    The calculation engine documentation should also be
+    installed, describing in detail all of the &regina;
+    objects, classes and methods that are available.  This is generally
+    installed in <filename>/usr/local/share/regina/engine-docs/</filename>
+    or <filename>/usr/share/regina/engine-docs/</filename>, though your
+    distribution may differ.
+   </para>
   </refsect1>
 
   <refsect1>
    <title>Author</title>
    <para>
-    &regina; was written by &regauthorplain; with help from others;
-    see the documentation for full details.
-    You can contact me at &regemail;.
+    &regina; was written by &regauthorplain; &regemail;
+    with help from others; see the documentation for full details.
    </para>
   </refsect1>
  </refentry>
-
 </reference>

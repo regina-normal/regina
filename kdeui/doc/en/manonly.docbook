@@ -1,5 +1,5 @@
 
-<!-- This index file is used by docbook2man to generate man pages
+<!-- This alternate index file is used by docbook2man to generate man pages
      without the need to parse the entire reference manual. -->
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
@@ -13,8 +13,15 @@
      theory. It allows 3-manifolds to be created and manipulated and their
      properties of interest to be determined.
     </para>">
+  <!ENTITY regwebsite
+   "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
 
+  <!ENTITY html "<acronym>HTML</acronym>">
+  <!ENTITY kde "<application><acronym>KDE</acronym></application>">
+  <!ENTITY khelpcenter "<application>&kde; Help Centre</application>">
+  <!ENTITY konqueror "<application>Konqueror</application>">
   <!ENTITY python "<application>Python</application>">
+  <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY xml "<acronym>XML</acronym>">
 
   <!ENTITY reginaman SYSTEM "reginaman.docbook">
