@@ -354,6 +354,12 @@ void ReginaPart::moveShallow() {
     packet->makeOrphan();
     grandparent->insertChildAfter(packet, parent);
 
+    PacketTreeItem* item = treeView->find(packet);
+    if (item) {
+        treeView->setSelected(item, true);
+        treeView->ensureItemVisible(item);
+    }
+
     setModified(true);
 }
 
@@ -389,6 +395,12 @@ void ReginaPart::moveDeep() {
         newParent->insertChildFirst(packet);
     else
         newParent->insertChildLast(packet);
+
+    PacketTreeItem* item = treeView->find(packet);
+    if (item) {
+        treeView->setSelected(item, true);
+        treeView->ensureItemVisible(item);
+    }
 
     setModified(true);
 }

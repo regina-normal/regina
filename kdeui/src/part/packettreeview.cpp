@@ -223,6 +223,27 @@ void PacketTreeView::fill(NPacket* topPacket) {
     (new PacketTreeItem(this, topPacket))->fill();
 }
 
+PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
+    if (! packet)
+        return 0;
+
+    // Start at the root of the tree and work down.
+    regina::NPacket* current;
+    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(firstChild());
+    while (item) {
+        current = item->getPacket();
+
+        if (current == packet)
+            return item;
+        else if (current && current->isGrandparentOf(packet))
+            item = dynamic_cast<PacketTreeItem*>(item->firstChild());
+        else
+            item = dynamic_cast<PacketTreeItem*>(item->nextSibling());
+    }
+
+    return 0;
+}
+
 void PacketTreeView::packetView(QListViewItem* packet) {
     if (packet)
         part->packetView(dynamic_cast<PacketTreeItem*>(packet)->getPacket());

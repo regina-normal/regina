@@ -142,6 +142,12 @@ class PacketTreeView : public KListView {
          */
         void fill(regina::NPacket* topPacket);
 
+        /**
+         * Finds the item corresponding to the given packet, or 0 if no
+         * such item could be found.
+         */
+        PacketTreeItem* find(regina::NPacket* packet);
+
     public slots:
         /**
          * View or edit the packet corresponding to the given list item.
