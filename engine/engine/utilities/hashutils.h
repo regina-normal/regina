@@ -83,7 +83,7 @@ struct HashPointer {
      */
     size_t operator() (const void* p) const {
         // Cast the pointer directly to a size_t.
-        return *((size_t*)((void*)&p));
+        return reinterpret_cast<size_t>(p);
     }
 };
 

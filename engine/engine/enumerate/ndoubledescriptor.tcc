@@ -128,7 +128,7 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
     for (it = oldRaysFirst; it != oldRaysLast; it++) {
         dot = hyperplane * (**it);
         if (dot == NRay::zero)
-            *results++ = (RayClassPtr)(*it)->clone();
+            *results++ = dynamic_cast<RayClassPtr>((*it)->clone());
         else if (dot < NRay::zero)
             neg.push_back(make_pair(*it, rayFaceIt));
         else
@@ -188,8 +188,8 @@ void NDoubleDescriptor::enumerateVertices(OutputIterator results,
             // corresponding intersection with the hyperplane in the
             // results set.
             if (adjacent)
-                *results++ = (RayClassPtr)intersect(*(*posit).first,
-                    *(*negit).first, hyperplane);
+                *results++ = dynamic_cast<RayClassPtr>(intersect(
+                    *(*posit).first, *(*negit).first, hyperplane));
         }
 }
 

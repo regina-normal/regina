@@ -121,6 +121,10 @@ NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
         FuncDelete<NVector<NLargeInteger> >());
 }
 
+NTriangulation* NAngleStructureList::getTriangulation() const {
+    return dynamic_cast<NTriangulation*>(getTreeParent());
+}
+
 void NAngleStructureList::writeTextShort(std::ostream& o) const {
     o << structures.size() << " vertex angle structure";
     if (structures.size() != 1)
@@ -168,7 +172,7 @@ NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
     unsigned long nStructures = in.readULong();
     for (unsigned long i=0; i<nStructures; i++)
         ans->structures.push_back(NAngleStructure::readFromFile(in,
-            (NTriangulation*)parent));
+            dynamic_cast<NTriangulation*>(parent)));
 
     // Read the properties.
     ans->readProperties(in);

@@ -183,7 +183,8 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::getFaceArcs(
         unsigned long faceIndex, int faceVertex,
         NTriangulation* triang) const {
     if (! mirror)
-        ((NNormalSurfaceVectorMirrored*)this)->mirror = makeMirror(triang);
+        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+            makeMirror(triang);
         // Cast as non-const so the mirror can be created.
     return mirror->getFaceArcs(faceIndex, faceVertex, triang);
 }

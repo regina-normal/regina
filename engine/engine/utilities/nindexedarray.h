@@ -488,7 +488,8 @@ class NIndexedArray {
             typename IndexMap::const_iterator hashIt;
             for (hashIt = indices.begin(); hashIt != indices.end(); hashIt++) {
                 index = (*hashIt).second;
-                if (index < 0 || index >= (difference_type)objects.size()) {
+                if (index < 0 || index >=
+                        static_cast<difference_type>(objects.size())) {
                     if (! silent) {
                         std::cerr << "ERR: Invalid value in dictionary.\n";
                         std::cerr <<
@@ -545,7 +546,7 @@ class NIndexedArray {
             }
 
             // Finally check the reported size.
-            if (index != (difference_type)size()) {
+            if (index != static_cast<difference_type>(size())) {
                 if (! silent) {
                     std::cerr << "ERR: Reported array size is incorrect.\n";
                     std::cerr << "Reported size: " << size() << '\n';

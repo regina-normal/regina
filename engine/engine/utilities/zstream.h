@@ -364,7 +364,7 @@ inline int ZBuffer::uflow() {
 }
 
 inline std::streamsize ZBuffer::xsputn(const char* s, std::streamsize n) {
-    return gzwrite(file, (const voidp)s, n);
+    return gzwrite(file, static_cast<const voidp>(s), n);
 }
 
 inline int ZBuffer::pbackfail(int c) {

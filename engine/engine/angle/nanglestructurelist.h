@@ -282,10 +282,6 @@ inline NAngleStructureList::~NAngleStructureList() {
         FuncDelete<NAngleStructure>());
 }
 
-inline NTriangulation* NAngleStructureList::getTriangulation() const {
-    return (NTriangulation*)getTreeParent();
-}
-
 inline unsigned long NAngleStructureList::getNumberOfStructures() const {
     return structures.size();
 }

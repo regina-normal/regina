@@ -1708,7 +1708,7 @@ inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
 
 inline unsigned long NTriangulation::getTetrahedronIndex(
         const NTetrahedron* tet) const {
-    return tetrahedra.index((NTetrahedron*)tet);
+    return tetrahedra.index(const_cast<NTetrahedron*>(tet));
 }
 
 inline void NTriangulation::addTetrahedron(NTetrahedron* t) {
@@ -1853,32 +1853,33 @@ inline unsigned long NTriangulation::getComponentIndex(
         const NComponent* component) {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return components.index((NComponent*)component);
+    return components.index(const_cast<NComponent*>(component));
 }
 
 inline unsigned long NTriangulation::getBoundaryComponentIndex(
         const NBoundaryComponent* boundaryComponent) {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return boundaryComponents.index((NBoundaryComponent*)boundaryComponent);
+    return boundaryComponents.index(
+        const_cast<NBoundaryComponent*>(boundaryComponent));
 }
 
 inline unsigned long NTriangulation::getVertexIndex(const NVertex* vertex) {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return vertices.index((NVertex*)vertex);
+    return vertices.index(const_cast<NVertex*>(vertex));
 }
 
 inline unsigned long NTriangulation::getEdgeIndex(const NEdge* edge) {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return edges.index((NEdge*)edge);
+    return edges.index(const_cast<NEdge*>(edge));
 }
 
 inline unsigned long NTriangulation::getFaceIndex(const NFace* face) {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return faces.index((NFace*)face);
+    return faces.index(const_cast<NFace*>(face));
 }
 
 inline bool NTriangulation::isValid() {

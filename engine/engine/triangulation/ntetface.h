@@ -209,14 +209,15 @@ inline NTetFace::NTetFace(int newTet, int newFace) : tet(newTet),
 }
 
 inline bool NTetFace::isBoundary(unsigned nTetrahedra) const {
-    return (tet == (int)nTetrahedra && face == 0);
+    return (tet == static_cast<int>(nTetrahedra) && face == 0);
 }
 inline bool NTetFace::isBeforeStart() const {
     return (tet < 0);
 }
 inline bool NTetFace::isPastEnd(unsigned nTetrahedra, bool boundaryAlso)
         const {
-    return (tet == (int)nTetrahedra && (boundaryAlso || face > 0));
+    return (tet == static_cast<int>(nTetrahedra) &&
+        (boundaryAlso || face > 0));
 }
 
 inline void NTetFace::setFirst() {

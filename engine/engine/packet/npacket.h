@@ -1059,7 +1059,7 @@ inline void NPacket::removeAllTags() {
 
 inline const std::set<std::string>& NPacket::getTags() const {
     if (! tags)
-        ((NPacket*)this)->tags = new std::set<std::string>();
+        const_cast<NPacket*>(this)->tags = new std::set<std::string>();
     return *tags;
 }
 

@@ -608,11 +608,11 @@ inline NBoolSet NFile::readBoolSet() {
 }
 
 inline std::streampos NFile::getPosition() {
-    return (std::streampos)resource->getPosition();
+    return static_cast<std::streampos>(resource->getPosition());
 }
 
 inline void NFile::setPosition(std::streampos pos) {
-    resource->setPosition((long)pos);
+    resource->setPosition(static_cast<long>(pos));
 }
 
 } // namespace regina

@@ -195,7 +195,7 @@ class NVector {
          * @return the dot product of this and the given vector.
          */
         virtual T operator * (const NVector<T>& other) const {
-            T ans((long)0);
+            T ans(0L);
             unsigned tot = size();
             T term;
             for (unsigned i=0; i<tot; i++) {
@@ -218,7 +218,7 @@ class NVector {
          * @return the norm of this vector.
          */
         virtual T norm() const {
-            T ans((long)0);
+            T ans(0L);
             unsigned tot = size();
             T term;
             for (unsigned i=0; i<tot; i++) {
@@ -236,7 +236,7 @@ class NVector {
          * @return the sum of the elements of this vector.
          */
         virtual T elementSum() const {
-            T ans((long)0);
+            T ans(0L);
             unsigned tot = size();
             for (unsigned i=0; i<tot; i++)
                 ans += (*this)[i];
@@ -314,19 +314,19 @@ std::ostream& operator << (std::ostream& out, const NVector<T>& vector) {
 }
 
 template <class T>
-T NVector<T>::zero((long)0);
+T NVector<T>::zero(0L);
     /**< Zero in the underlying number system.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
 template <class T>
-T NVector<T>::one((long)1);
+T NVector<T>::one(1L);
     /**< One in the underlying number system.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
 template <class T>
-T NVector<T>::minusOne((long)-1);
+T NVector<T>::minusOne(-1L);
     /**< Negative one in the underlying number system.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be

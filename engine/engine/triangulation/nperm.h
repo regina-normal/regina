@@ -536,17 +536,17 @@ inline NPerm::NPerm(unsigned char newCode) : code(newCode) {
 
 inline NPerm::NPerm(int a, int b) {
     code = 228;
-    code += (short) ( (a << (2*b)) - (b << (2*b)) );
-    code += (short) ( (b << (2*a)) - (a << (2*a)) );
+    code += static_cast<short>((a << (2*b)) - (b << (2*b)));
+    code += static_cast<short>((b << (2*a)) - (a << (2*a)));
 }
 
 inline NPerm::NPerm(int a, int b, int c, int d) {
-    code = (short) ( (d << 6) + (c << 4) + (b << 2) + a);
+    code = static_cast<short>((d << 6) + (c << 4) + (b << 2) + a);
 }
 
 inline NPerm::NPerm(int a0, int a1, int b0, int b1,
         int c0, int c1, int d0, int d1) {
-    code = (unsigned char)(
+    code = static_cast<unsigned char>(
         (a1 << (2*a0)) +
         (b1 << (2*b0)) +
         (c1 << (2*c0)) +
@@ -558,12 +558,12 @@ inline NPerm::NPerm(const NPerm& cloneMe) : code(cloneMe.code) {
 
 inline void NPerm::setPerm(int a, int b) {
     code = 228;
-    code += (short) ( (a << (2*b)) - (b << (2*b)) );
-    code += (short) ( (b << (2*a)) - (a << (2*a)) );
+    code += static_cast<short>((a << (2*b)) - (b << (2*b)));
+    code += static_cast<short>((b << (2*a)) - (a << (2*a)));
 }
 
 inline void NPerm::setPerm(int a, int b, int c, int d) {
-    code = (unsigned char) ( (d << 6) + (c << 4) + (b << 2) + a);
+    code = static_cast<unsigned char>((d << 6) + (c << 4) + (b << 2) + a);
 }
 
 inline void NPerm::setPermCode(unsigned char newCode) {
@@ -580,7 +580,7 @@ inline NPerm NPerm::operator *(const NPerm& q) const {
 
 inline NPerm NPerm::inverse() const {
     // Specify the inverse by its internal code.
-    return NPerm((unsigned char)(
+    return NPerm(static_cast<unsigned char>(
         (1 << (2*imageOf(1))) +
         (2 << (2*imageOf(2))) +
         (3 << (2*imageOf(3)))));

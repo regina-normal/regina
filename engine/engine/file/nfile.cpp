@@ -138,7 +138,7 @@ void NFile::writeLong(long val) {
 
 void NFile::writeUInt(unsigned val) {
     for (int i=0; i<NFILE_SIZE_INT; i++) {
-        resource->putChar((unsigned char)val);
+        resource->putChar(static_cast<unsigned char>(val));
         val >>= 8;
     }
 }
@@ -146,23 +146,23 @@ void NFile::writeUInt(unsigned val) {
 void NFile::writeULong(unsigned long val) {
     int size = NFILE_SIZE_LONG;
     for (int i=0; i<size; i++) {
-        resource->putChar((unsigned char)val);
+        resource->putChar(static_cast<unsigned char>(val));
         val >>= 8;
     }
 }
 
 int NFile::readInt() {
     if (resource->getChar() == 0)
-        return (int)readUInt();
+        return static_cast<int>(readUInt());
     else
-        return -((int)readUInt());
+        return -static_cast<int>(readUInt());
 }
 
 long NFile::readLong() {
     if (resource->getChar() == 0)
-        return (long)readULong();
+        return static_cast<long>(readULong());
     else
-        return -((long)readULong());
+        return -static_cast<long>(readULong());
 }
 
 unsigned int NFile::readUInt() {
@@ -313,7 +313,7 @@ std::streampos NFile::readPos()
 void NFile::writePos(std::streampos realVal) {
     std::streamoff val(realVal);
     for (int i=0; i<NFILE_SIZE_FILEPOS; i++) {
-        resource->putChar((unsigned char)val);
+        resource->putChar(static_cast<unsigned char>(val));
         val >>= 8;
     }
 }

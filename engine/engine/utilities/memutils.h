@@ -161,7 +161,7 @@ struct FuncNewClonePtr {
      * @return the newly created clone.
      */
     T* operator() (const T* ptr) const {
-        return (T*)(ptr->clone());
+        return dynamic_cast<T*>(ptr->clone());
     }
 };
 

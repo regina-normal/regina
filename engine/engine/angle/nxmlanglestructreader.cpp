@@ -103,12 +103,14 @@ void NXMLAngleStructureListReader::endContentSubElement(
         NXMLElementReader* subReader) {
     if (subTagName == "struct")
         if (NAngleStructure* s =
-                ((NXMLAngleStructureReader*)subReader)->getStructure())
+                dynamic_cast<NXMLAngleStructureReader*>(subReader)->
+                getStructure())
             list->structures.push_back(s);
 }
 
 NXMLPacketReader* NAngleStructureList::getXMLReader(NPacket* parent) {
-    return new NXMLAngleStructureListReader((NTriangulation*)parent);
+    return new NXMLAngleStructureListReader(
+        dynamic_cast<NTriangulation*>(parent));
 }
 
 } // namespace regina

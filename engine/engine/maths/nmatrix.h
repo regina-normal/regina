@@ -434,13 +434,13 @@ class NMatrixRing : public NMatrix<T> {
 };
 
 template <class T>
-T NMatrixRing<T>::zero((long)0);
+T NMatrixRing<T>::zero(0L);
     /**< Zero in the underlying ring.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
 template <class T>
-T NMatrixRing<T>::one((long)1);
+T NMatrixRing<T>::one(1L);
     /**< One (the multiplicative identity) in the underlying ring.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be

@@ -143,8 +143,8 @@ void NXMLGroupPresentationReader::endSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (group)
         if (subTagName == "reln") {
-            NGroupExpression* exp = ((NExpressionReader*)subReader)->
-                getExpression();
+            NGroupExpression* exp =
+                dynamic_cast<NExpressionReader*>(subReader)->getExpression();
             if (exp)
                 group->addRelation(exp);
         }
