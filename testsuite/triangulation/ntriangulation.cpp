@@ -54,13 +54,17 @@ class NTriangulationTest : public CppUnit::TestFixture {
     private:
         // Closed orientable:
         NTriangulation lens8_3;
-            /**< The lens space L(8,3). */
+            /**< The layered lens space L(8,3). */
         NTriangulation lens8_3_large;
             /**< The lens space L(8,3) with a non-minimal triangulation . */
+        NTriangulation lens7_1_loop;
+            /**< An untwisted layered loop representing L(7,1). */
         NTriangulation rp3rp3;
             /**< The connected sum RP^3 # RP^3. */
         NTriangulation q32xz3;
             /**< The orbit manifold S^3 / Q_32 x Z_3. */
+        NTriangulation q28;
+            /**< A twisted layered loop representing S^3 / Q_28. */
 
         // Closed orientable, very large:
         NTriangulation lens100_1;
@@ -106,6 +110,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             lens8_3.insertLayeredLensSpace(8, 3);
             lens100_1.insertLayeredLensSpace(100, 1);
             lst3_4_7.insertLayeredSolidTorus(3, 4);
+            q28.insertLayeredLoop(7, true);
+            lens7_1_loop.insertLayeredLoop(7, false);
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
@@ -163,12 +169,16 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void validity() {
+            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not valid.",
+                lens7_1_loop.isValid());
             CPPUNIT_ASSERT_MESSAGE("L(8,3) is not valid.",
                 lens8_3.isValid());
             CPPUNIT_ASSERT_MESSAGE("Large L(8,3) is not valid.",
                 lens8_3_large.isValid());
             CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 is not valid.",
                 rp3rp3.isValid());
+            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not valid.",
+                q28.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not valid.",
                 q32xz3.isValid());
             CPPUNIT_ASSERT_MESSAGE("L(100,1) is not valid.",
@@ -187,12 +197,16 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void orientability() {
+            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not orientable.",
+                lens7_1_loop.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("L(8,3) is not orientable.",
                 lens8_3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("Large L(8,3) is not orientable.",
                 lens8_3_large.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 is not orientable.",
                 rp3rp3.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not orientable.",
+                q28.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not orientable.",
                 q32xz3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("L(100,1) is not orientable.",
@@ -211,12 +225,17 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void boundaryComponents() {
+            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) "
+                "has boundary components.",
+                lens7_1_loop.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("L(8,3) has boundary components.",
                 lens8_3.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("Large L(8,3) has boundary components.",
                 lens8_3_large.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 has boundary components.",
                 rp3rp3.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 has boundary components.",
+                q28.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 has boundary components.",
                 q32xz3.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("L(100,1) has boundary components.",
@@ -306,12 +325,16 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void homologyH1() {
+            verifyGroup(lens7_1_loop.getHomologyH1(),
+                "H1(Loop L(7,1))", 0, 7);
             verifyGroup(lens8_3.getHomologyH1(),
                 "H1(L(8,3))", 0, 8);
             verifyGroup(lens8_3_large.getHomologyH1(),
                 "H1(Large L(8,3))", 0, 8);
             verifyGroup(rp3rp3.getHomologyH1(),
                 "H1(RP^3 # RP^3)", 0, 2, 2);
+            verifyGroup(q28.getHomologyH1(),
+                "H1(S^3 / Q_28)", 0, 4);
             verifyGroup(q32xz3.getHomologyH1(),
                 "H1(S^3 / Q_32 x Z_3)", 0, 2, 6);
             verifyGroup(lens100_1.getHomologyH1(),
@@ -329,12 +352,16 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void homologyH1Bdry() {
+            verifyGroup(lens7_1_loop.getHomologyH1Bdry(),
+                "Boundary H1(Loop L(7,1))", 0);
             verifyGroup(lens8_3.getHomologyH1Bdry(),
                 "Boundary H1(L(8,3))", 0);
             verifyGroup(lens8_3_large.getHomologyH1Bdry(),
                 "Boundary H1(Large L(8,3))", 0);
             verifyGroup(rp3rp3.getHomologyH1Bdry(),
                 "Boundary H1(RP^3 # RP^3)", 0);
+            verifyGroup(q28.getHomologyH1Bdry(),
+                "Boundary H1(S^3 / Q_28)", 0);
             verifyGroup(q32xz3.getHomologyH1Bdry(),
                 "Boundary H1(S^3 / Q_32 x Z_3)", 0);
             verifyGroup(lens100_1.getHomologyH1Bdry(),
@@ -352,6 +379,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         void zeroEfficiency() {
+            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is 0-efficient.",
+                ! lens7_1_loop.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("L(8,3) is not 0-efficient.",
                 lens8_3.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("Large L(8,3) is 0-efficient.",
@@ -360,6 +389,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 is 0-efficient.",
                 ! rp3rp3.isZeroEfficient());
                 // Contains a pair of one-sided projective planes.
+            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not 0-efficient.",
+                q28.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not 0-efficient.",
                 q32xz3.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) is 0-efficient.",
