@@ -42,7 +42,9 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(basicChecks);
     CPPUNIT_TEST(constructors);
     CPPUNIT_TEST(swap);
+    CPPUNIT_TEST(resizes);
     CPPUNIT_TEST(queries);
+    CPPUNIT_TEST(comparisons);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -254,12 +256,18 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
             Array clone(array);
             validate(clone, "new clone");
             compare(array, clone, arrayName, "new clone");
+            arrayAssert(arrayName,
+                "Equality test (==) gave false negative for clone.",
+                array == clone);
 
             Array copy(smallMultiArray);
             copy.push_back(value);
             copy = array;
             validate(copy, "assigned copy");
             compare(array, copy, arrayName, "assigned copy");
+            arrayAssert(arrayName,
+                "Equality test (==) gave false negative for copy.",
+                array == copy);
         }
 
         void constructors() {
@@ -304,11 +312,94 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
 
         void erasures() {
             // TODO: pop_back, erase elt, erase chunk, erase all copies
-            // TODO: clear
+        }
+
+        void grow(const Array& multi, const Array& unique,
+                const char* multiName, const char* uniqueName) const {
+            Array cloneDefault(unique);
+            Array cloneSpecific(unique);
+            cloneDefault.resize(multi.size());
+            cloneSpecific.resize(multi.size(), value);
+            validate(cloneDefault,
+                "expanded unique clone with default values");
+            validate(cloneSpecific,
+                "expanded unique clone with specific values");
+
+            arrayAssert(uniqueName,
+                "Default expanded clone returns incorrect size.",
+                multi.size() == cloneDefault.size());
+            arrayAssert(uniqueName,
+                "Specific expanded clone returns incorrect size.",
+                multi.size() == cloneSpecific.size());
+
+            Array::const_iterator itDefault = cloneDefault.begin();
+            Array::const_iterator itSpecific = cloneSpecific.begin();
+            Array::size_type pos = 0;
+            Array::value_type expected;
+            while (itDefault != cloneDefault.end() &&
+                    itSpecific != cloneSpecific.end()) {
+                expected = expectedElement(unique, pos);
+                if (expected) {
+                    arrayAssert(uniqueName,
+                        "Incorrect old element in default expanded clone.",
+                        *itDefault == expected);
+                    arrayAssert(uniqueName,
+                        "Incorrect old element in specific expanded clone.",
+                        *itSpecific == expected);
+                } else {
+                    arrayAssert(uniqueName,
+                        "Incorrect new element in specific expanded clone.",
+                        *itSpecific == value);
+                }
+                pos++;
+                itDefault++;
+                itSpecific++;
+            }
+            arrayAssert(uniqueName,
+                "Default and specific expanded clones have different sizes.",
+                itDefault == cloneDefault.end() &&
+                itSpecific == cloneSpecific.end());
+            arrayAssert(uniqueName,
+                "Default and specific expanded clones have incorrect sizes.",
+                pos == multi.size());
+            
+            arrayAssert(multiName,
+                "Test == with default expanded clone gives false positive.",
+                ! (multi == cloneDefault));
+            arrayAssert(multiName,
+                "Test == with specific expanded clone gives false positive.",
+                ! (multi == cloneSpecific));
+            arrayAssert(uniqueName,
+                "Default and specific expanded clones test equal (==).",
+                ! (cloneDefault == cloneSpecific));
+        }
+
+        void shrink(const Array& multi, const Array& unique,
+                const char* uniqueName) const {
+            Array clone(multi);
+            clone.resize(unique.size());
+            validate(clone, "shrunken multi clone");
+            arrayAssert(uniqueName,
+                "Shrunken multi clone returns incorrect size.",
+                clone.size() == unique.size());
+            compare(clone, unique, "shrunken multi clone", uniqueName);
+
+            clone.clear();
+            validate(clone, "emptied multi clone");
+            arrayAssert(uniqueName,
+                "Emptied multi clone returns incorrect size.",
+                (clone.size() == 0) && clone.empty());
+            compare(clone, emptyArray, "emptied multi clone", "emptyArray");
         }
 
         void resizes() {
-            // TODO: grow, shrink
+            grow(largeMultiArray, largeUniqueArray,
+                "largeMultiArray", "largeUniqueArray");
+            grow(smallMultiArray, smallUniqueArray,
+                "smallMultiArray", "smallUniqueArray");
+
+            shrink(largeMultiArray, largeUniqueArray, "largeUniqueArray");
+            shrink(smallMultiArray, smallUniqueArray, "smallUniqueArray");
         }
 
         void queries(const Array& array, const char* arrayName) const {
@@ -336,6 +427,33 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
             queries(smallUniqueArray, "smallUniqueArray");
             queries(smallMultiArray, "smallMultiArray");
             queries(emptyArray, "emptyArray");
+        }
+
+        void comparisons() {
+            // Note that we test == for false negatives during the
+            // constructor tests.
+
+            CPPUNIT_ASSERT_MESSAGE(
+                "Test largeUniqueArray == largeMultiArray gave false positive.",
+                ! (largeUniqueArray == largeMultiArray));
+            CPPUNIT_ASSERT_MESSAGE(
+                "Test smallUniqueArray == smallMultiArray gave false positive.",
+                ! (smallUniqueArray == smallMultiArray));
+            CPPUNIT_ASSERT_MESSAGE(
+                "Test largeUniqueArray < largeMultiArray gave false negative.",
+                largeUniqueArray < largeMultiArray);
+            CPPUNIT_ASSERT_MESSAGE(
+                "Test smallUniqueArray < smallMultiArray gave false negative.",
+                smallUniqueArray < smallMultiArray);
+            CPPUNIT_ASSERT_MESSAGE(
+                "Test largeMultiArray < largeUniqueArray gave false positive.",
+                ! (largeMultiArray < largeUniqueArray));
+            CPPUNIT_ASSERT_MESSAGE(
+                "Test smallMultiArray < smallUniqueArray gave false positive.",
+                ! (smallMultiArray < smallUniqueArray));
+            CPPUNIT_ASSERT_MESSAGE(
+                "Test smallMultiArray < largeUniqueArray gave false negative.",
+                smallMultiArray < largeUniqueArray);
         }
 };
 
