@@ -51,13 +51,13 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        int nExtra;
+        unsigned nExtra;
             /**< Slightly larger than the number of unique elements we
                  will be using in our large arrays. */
-        int nLarge;
+        unsigned nLarge;
             /**< The number of unique elements we will be using in
                  our large arrays. */
-        int nSmall;
+        unsigned nSmall;
             /**< The number of unique elements we will be using in
                  our small arrays. */
         int* value;
@@ -88,7 +88,7 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            int i;
+            unsigned i;
 
             nExtra = 1010;
             nLarge = 1000;
@@ -178,7 +178,7 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
                 Array::size_type index) const {
             const Array* address = &array;
 
-            int nUse;
+            unsigned nUse;
             if (address == &smallUniqueArray || address == &smallMultiArray)
                 nUse = nSmall;
             else if (address == &largeUniqueArray ||
@@ -545,7 +545,7 @@ class NIndexedArrayTest : public CppUnit::TestFixture {
                 index = array.index(*it);
                 arrayAssert(arrayName,
                     "Returned out-of-bounds index from array element search.",
-                    index >= 0 && index < array.size());
+                    index >= 0 && index < (Array::difference_type)array.size());
                 arrayAssert(arrayName,
                     "Returned incorrect index from array element search.",
                     array[index] == *it);
