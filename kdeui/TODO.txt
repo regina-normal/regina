@@ -22,6 +22,11 @@ Containers:
     - Update container viewers whenever their subtrees change, not just when
         their immediate children change
 
+Docs:
+    + Include a walk-through
+    * Mention exactly where sample-misc.rga should be found
+    + More sample python sessions
+
 Icons:
     - Softer tree for filter_comb.png
     - Icons for separate New actions
