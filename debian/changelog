@@ -4,7 +4,7 @@ regina-normal (3.1-1) unstable; urgency=low
   * Completely new build structure.
   * Removed mime entry.
 
- -- Ben Burton <benb@acm.org>  Thu, 17 Oct 2002 08:01:08 +1000
+ -- Ben Burton <benb@acm.org>  Fri, 18 Oct 2002 08:44:27 +1000
 
 regina-normal (3.0-1) unstable; urgency=low
 
