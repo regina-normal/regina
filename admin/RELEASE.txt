@@ -3,6 +3,7 @@ Below are locations of strings that may need changing for a new release.
 All locations are relative to the primary source directory.
 
 Program version:
+    CHANGES.txt, HIGHLIGHTS.txt (version, date)
     admin/configure.ac.top (AC_INIT, AM_INIT_AUTOMAKE)
     debian/changelog (version, date)
     docs/regina.sgml (entities &regversion;, &regdate;)
