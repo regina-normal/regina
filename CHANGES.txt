@@ -33,6 +33,8 @@ Version 3.0.1  [ 12 October, 2002 ]
               have 0.0% CPU time on some systems.
         Class NIndexedArray:
             - Added routine validate().
+        Class NKnot:
+            - New (but incomplete) knot/link class.
         Class NLensSpace, NSFS:
             - Added getCommonName().
         Class NNormalSurfaceVector:
@@ -54,14 +56,22 @@ Version 3.0.1  [ 12 October, 2002 ]
             - Added negate().
         Class NVertexEnumerator, NDoubleDescriptor:
             - Added.
+        Routine getVersionString(), getVersionMajor(), getVersionMinor(),
+                testEngine():
+            - Moved to engine.h and added to the C++ calculation engine.
         Routine reducedMod():
             - Fixed bug in the midpoint case.
+        File nfile.h:
+            - New file format constants to replace the constants removed
+              with regina.h.
         File nhashmap.h, nhashset.h:
             - Added to deal with differing STL extension installations.
         File nknownmanifold.h:
             - Added global 3-manifold recognition routines.
         File nperm.h:
             - New arrays allPermsS2Inv, allPermsS3Inv, allPermsS4Inv.
+        File regina.h:
+            - Removed along with the constants it defined.
     JAVA USER INTERFACE:
         normal.console.JPythonPacketConsole:
             - Optionally creates an additional Jython variable for direct
