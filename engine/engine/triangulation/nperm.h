@@ -220,6 +220,19 @@ class NPerm {
         bool operator == (const NPerm& other) const;
 
         /**
+         * Determines if this differs from the given permutation.
+         * This is true if and only if the two permutations have
+         * different images for at least one of 0, 1, 2 or 3.
+         *
+         * \ifaces Not present.
+         *
+         * @param other the permutation with which to compare this.
+         * @return \c true if and only if this and the given permutation
+         * differ.
+         */
+        bool operator != (const NPerm& other) const;
+
+        /**
          * Lexicographically compares the images of (0,1,2,3) under this
          * and the given permutation.
          *
