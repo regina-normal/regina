@@ -1,6 +1,7 @@
 regina-normal (4.1-1) unstable; urgency=low
 
   * New upstream release.
+  * Built against KDE 3.2.
 
  -- Ben Burton <bab@debian.org>  Sun,  7 Mar 2004 14:37:16 +1100
 
