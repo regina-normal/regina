@@ -122,6 +122,9 @@ class NConeRay : public NVectorDense<NLargeInteger> {
  * ray is guaranteed to be a positive multiple of a convex combination of
  * the two original rays.
  *
+ * The resulting ray is guaranteed to be of the same subclass of
+ * NConeRay as argument \a neg.
+ *
  * \pre The two given cone rays are adjacent, that is
  * there is a cone 2-face to which they both belong.
  * \pre The two given cone rays lie on opposite sides of
@@ -161,7 +164,8 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
  * perpendicular to it.
  *
  * The resulting extremal rays are guaranteed not to contain any
- * duplicates or redundancies.
+ * duplicates or redundancies.  They are guaranteed to be of the same
+ * subclass of NConeRay as the initial extremal rays.
  *
  * If \a testCompatibility is set to \c true, only "valid" extremal rays
  * as defined by NConeRay::isCompatibleWith() will be found.
@@ -227,7 +231,8 @@ void intersectCone(OutputIterator results,
  * perpendicular to it.
  *
  * The resulting list of extremal rays is guaranteed not to contain any
- * duplicates or redundancies.
+ * duplicates or redundancies.  They are guaranteed to be of the same
+ * subclass of NConeRay as the initial extremal rays.
  *
  * If \a testCompatibility is set to \c true, only "valid" extremal rays
  * as defined by NConeRay::isCompatibleWith() will be found.
