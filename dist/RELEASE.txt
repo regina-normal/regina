@@ -10,7 +10,7 @@ All locations are relative to the primary source directory.
 
 Program version:
     dist/Makefile
-    engine/regina.h (#define ENGINE_VERSION, ENGINE_VERSION_MAJOR,
+    engine/engine/regina.h (#define ENGINE_VERSION, ENGINE_VERSION_MAJOR,
         ENGINE_VERSION_MINOR)
     javaui/normal/Application.java (Application.version, Application.date)
 
