@@ -60,8 +60,6 @@ Version 3.0  [ (under development) ]
               routine addVariable() now returns bool.
         Class NSignature, NSigCensus, NSigPartialIsomorphism:
             - Added.
-        Class NString:
-            - Added C++ string copy constructor.
         Class NTriangulation:
             - Added insertSplittingSurface().
             - Uses NIndexedArrays for skeletal elements for fast index lookup.
