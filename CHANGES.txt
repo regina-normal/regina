@@ -27,6 +27,8 @@ Regina - A Normal Surface Theory Calculator
         Overall structure:
             - Loading/saving local files is now possible even through CORBA!
             - Incorporated engine enhancements listed above.
+        normal.mainui.TopologyPane:
+            - Fixed bug where icon was sometimes not displayed.
         normal.packetui.triangulation.CompositionViewer:
             - Displays more detailed information.
 

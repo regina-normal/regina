@@ -376,10 +376,11 @@ public class TopologyPane extends FilePane {
         iconLabel.setHorizontalAlignment(JLabel.CENTER);
         iconLabel.setBorder(BorderFactory.createLoweredBevelBorder());
         icon = new PaddedPane(iconLabel, 3, false);
+        if (! getOptions().getDisplayIcon())
+            icon.setVisible(false);
         navigationPanel.setLayout(new BorderLayout());
         navigationPanel.add(packetPanel, BorderLayout.CENTER);
-        if (getOptions().getDisplayIcon())
-            navigationPanel.add(icon, BorderLayout.SOUTH);
+        navigationPanel.add(icon, BorderLayout.SOUTH);
         
         // Build and insert the split panel.
         workingArea.setLayout(new BorderLayout());
