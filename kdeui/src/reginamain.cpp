@@ -104,11 +104,12 @@ void ReginaMain::dropEvent(QDropEvent *event) {
 
 void ReginaMain::saveProperties(KConfig *config) {
     // Argument config represents the session managed config file.
-    // TODO: Get this working.
     if (currentPart) {
-        QString url = currentPart->url().url();
-        if (url != QString::null)
-            config->writeEntry("lastURL", url);
+        KURL url = currentPart->url();
+        if (url.isEmpty())
+            url = lastURL;
+        if (! url.isEmpty())
+            config->writeEntry("lastURL", url.url());
     }
 }
 
@@ -120,7 +121,11 @@ void ReginaMain::readProperties(KConfig *config) {
 }
 
 bool ReginaMain::queryClose() {
-    return (currentPart ? currentPart->closeURL() : true);
+    if (currentPart) {
+        lastURL = currentPart->url();
+        return currentPart->closeURL();
+    } else
+        return true;
 }
 
 bool ReginaMain::queryExit() {

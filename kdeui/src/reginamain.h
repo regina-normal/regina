@@ -60,6 +60,10 @@ class ReginaMain : public KParts::MainWindow {
         KParts::ReadWritePart* currentPart;
             /**< The part containing the currently opened document, or 0 if
                  no document has yet been opened. */
+        KURL lastURL;
+            /**< The URL that was last contained in this window.
+                 This data member is only set when the URL is finally
+                 closed in the underlying part. */
 
         /**
          * Actions
