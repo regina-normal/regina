@@ -155,10 +155,13 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         NTriSolidTorus* core;
         NPerm annulusMap[3];
         // Check every possible choice of vertex roles in tetrahedron 0.
-        // Note that we do twice the checks we need to since (a,b,c,d)
-        // gives an equivalent core to (b,a,d,c).
+        // Note that (a,b,c,d) gives an equivalent core to (d,c,b,a).
         int i, j;
         for (i = 0; i < 24; i++) {
+            // Make sure we don't check each possible core twice.
+            if (allPermsS4[i][0] > allPermsS4[i][3])
+                continue;
+
             core = NTriSolidTorus::isTriSolidTorus(base, allPermsS4[i]);
             if (core) {
                 // Check that the annuli are being glued to themselves.
@@ -184,11 +187,11 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             case 0:
                                 ans->edgeGroupRoles[j] = NPerm(2, 0, 1, 3);
                                 break;
-                            case 1:
-                                ans->edgeGroupRoles[j] = NPerm(0, 1, 2, 3);
+                            case 2:
+                                ans->edgeGroupRoles[j] = NPerm(1, 2, 0, 3);
                                 break;
                             case 3:
-                                ans->edgeGroupRoles[j] = NPerm(1, 2, 0, 3);
+                                ans->edgeGroupRoles[j] = NPerm(0, 1, 2, 3);
                                 break;
                         }
                     }
@@ -245,7 +248,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         unsigned long chainLen;
         for (i = 0; i < 24; i++) {
             p = allPermsS4[i];
-            if (p[0] > p[1])
+            if (p[0] > p[3])
                 continue;
             core = NTriSolidTorus::isTriSolidTorus(tet, p);
             if (! core)
@@ -268,11 +271,11 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                         case 0:
                             ans->edgeGroupRoles[torusAnnulus] = NPerm(2,0,1,3);
                             break;
-                        case 1:
-                            ans->edgeGroupRoles[torusAnnulus] = NPerm(0,1,2,3);
+                        case 2:
+                            ans->edgeGroupRoles[torusAnnulus] = NPerm(1,2,0,3);
                             break;
                         case 3:
-                            ans->edgeGroupRoles[torusAnnulus] = NPerm(1,2,0,3);
+                            ans->edgeGroupRoles[torusAnnulus] = NPerm(0,1,2,3);
                             break;
                     }
                     ans->chainIndex = chainLen;
@@ -304,7 +307,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             // Test the chain at both ends (bottom / top).
             for (j = 0; j < 2; j++) {
                 core = NTriSolidTorus::isTriSolidTorus(chain.getBottom(),
-                    chain.getBottomVertexRoles() * NPerm(2, 1, 3, 0));
+                    chain.getBottomVertexRoles() * NPerm(2, 3, 0, 1));
                 if (core) {
                     // Test that everything is put together properly.
                     top = chain.getTop();
@@ -315,10 +318,10 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             (top->getAdjacentTetrahedron(topRoles[3]) ==
                                 core->getTetrahedron(2)) &&
                             (top->getAdjacentTetrahedronGluing(topRoles[0]) *
-                                topRoles * NPerm(1, 3, 0, 2) ==
+                                topRoles * NPerm(1, 0, 2, 3) ==
                                 core->getVertexRoles(1)) &&
                             (top->getAdjacentTetrahedronGluing(topRoles[3]) *
-                                topRoles * NPerm(0, 2, 1, 3) ==
+                                topRoles * NPerm(0, 1, 3, 2) ==
                                 core->getVertexRoles(2)) &&
                             core->isAnnulusSelfIdentified(0, &annulusPerm)) {
                         // We have the entire structure!
@@ -328,11 +331,11 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             case 0:
                                 ans->edgeGroupRoles[0] = NPerm(2, 0, 1, 3);
                                 break;
-                            case 1:
-                                ans->edgeGroupRoles[0] = NPerm(0, 1, 2, 3);
+                            case 2:
+                                ans->edgeGroupRoles[0] = NPerm(1, 2, 0, 3);
                                 break;
                             case 3:
-                                ans->edgeGroupRoles[0] = NPerm(1, 2, 0, 3);
+                                ans->edgeGroupRoles[0] = NPerm(0, 1, 2, 3);
                                 break;
                         }
                         ans->chainIndex = chain.getIndex() - 1;
@@ -383,12 +386,13 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     int topFace = layered[0]->getTopFace(0);
     NTetrahedron* coreTet = top[0]->getAdjacentTetrahedron(topFace);
 
-    // We will declare that this face hooks onto vertex roles 0, 1 and 2
+    // We will declare that this face hooks onto vertex roles 0, 1 and 3
     // of the first core tetrahedron.  Thus the vertex roles permutation
-    // should map 0, 1 and 2 (in some order) to all vertices except for
+    // should map 0, 1 and 3 (in some order) to all vertices except for
     // topCoreFace.
     int topCoreFace = top[0]->getAdjacentFace(topFace);
-    NPerm swap(3, topCoreFace);
+    NPerm swap3Top(3, topCoreFace);
+    NPerm swap23(2, 3);
     NTriSolidTorus* core;
     NTetrahedron* coreTets[3];
     NPerm coreVertexRoles[3];
@@ -398,7 +402,8 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     int torusAnnulus;
     NPerm q;
     for (int p = 0; p < 6; p++) {
-        core = NTriSolidTorus::isTriSolidTorus(coreTet, swap * allPermsS3[p]);
+        core = NTriSolidTorus::isTriSolidTorus(coreTet,
+            swap3Top * allPermsS3[p] * swap23);
         if (core) {
             // We have a potential core.
             // Now all that remains is to ensure that the layered solid
@@ -428,36 +433,36 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                     switch (q[0]) {
                         case 0:
                             edgeGroupRoles[j] = NPerm(2, 0, 1, 3); break;
-                        case 1:
-                            edgeGroupRoles[j] = NPerm(0, 1, 2, 3); break;
-                        case 3:
+                        case 2:
                             edgeGroupRoles[j] = NPerm(1, 2, 0, 3); break;
+                        case 3:
+                            edgeGroupRoles[j] = NPerm(0, 1, 2, 3); break;
                     }
                 } else {
                     // There should be a layered solid torus glued in here.
                     for (whichLayered[j] = 0; whichLayered[j] < nLayered;
                             whichLayered[j]++)
                         if (coreTets[(j+1)%3]->getAdjacentTetrahedron(
-                                coreVertexRoles[(j+1)%3][3]) ==
+                                coreVertexRoles[(j+1)%3][2]) ==
                                 top[whichLayered[j]] &&
                                 coreTets[(j+2)%3]->getAdjacentTetrahedron(
-                                coreVertexRoles[(j+2)%3][2]) ==
+                                coreVertexRoles[(j+2)%3][1]) ==
                                 top[whichLayered[j]]) {
                             // Annulus j is glued to torus whichLayered[j].
                             q = coreTets[(j+1)%3]->
                                 getAdjacentTetrahedronGluing(
-                                coreVertexRoles[(j+1)%3][3]) *
+                                coreVertexRoles[(j+1)%3][2]) *
                                 coreVertexRoles[(j+1)%3];
                             // q maps vertex roles in core tetrahedron j+1 to
                             // vertices of the top tetrahedron in
                             // layered[whichLayered[j]].
                             edgeGroupRoles[j] = NPerm(
                                 layered[whichLayered[j]]->getTopEdgeGroup(
+                                    edgeNumber[q[0]][q[3]]),
+                                layered[whichLayered[j]]->getTopEdgeGroup(
                                     edgeNumber[q[0]][q[1]]),
                                 layered[whichLayered[j]]->getTopEdgeGroup(
-                                    edgeNumber[q[0]][q[2]]),
-                                layered[whichLayered[j]]->getTopEdgeGroup(
-                                    edgeNumber[q[1]][q[2]]),
+                                    edgeNumber[q[1]][q[3]]),
                                 3);
                             usedLayered++;
                             break;

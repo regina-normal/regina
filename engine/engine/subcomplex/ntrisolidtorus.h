@@ -85,9 +85,9 @@ class NTriSolidTorus : public ShareableObject {
         NPerm vertexRoles[3];
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
                  permutation p chosen so that the axis edge for that
-                 tetrahedron runs from vertex p[0] to p[1] and the
-                 major edge opposite that axis edge runs from vertex p[2]
-                 to p[3]. */
+                 tetrahedron runs from vertex p[0] to p[3] and the
+                 major edge opposite that axis edge runs from vertex p[1]
+                 to p[2]. */
 
     public:
         /**
@@ -118,18 +118,18 @@ class NTriSolidTorus : public ShareableObject {
          * of the requested tetrahedron plays in the solid torus.
          * The permutation returned (call this <tt>p</tt>) maps 0, 1, 2 and
          * 3 to the four vertices of tetrahedron \a index so that the edge
-         * from <tt>p[0]</tt> to <tt>p[1]</tt> is an oriented axis
-         * edge, and the path from vertices <tt>p[0]</tt> to <tt>p[2]</tt>
-         * to <tt>p[3]</tt> to <tt>p[1]</tt> follows the three oriented
+         * from <tt>p[0]</tt> to <tt>p[3]</tt> is an oriented axis
+         * edge, and the path from vertices <tt>p[0]</tt> to <tt>p[1]</tt>
+         * to <tt>p[2]</tt> to <tt>p[3]</tt> follows the three oriented
          * major edges.  In particular, the major edge for annulus
-         * \a index will run from vertices <tt>p[2]</tt> to <tt>p[3]</tt>.
-         * Edges <tt>p[0]</tt> to <tt>p[3]</tt> and <tt>p[2]</tt> to
-         * <tt>p[1]</tt> will both be oriented minor edges.
+         * \a index will run from vertices <tt>p[1]</tt> to <tt>p[2]</tt>.
+         * Edges <tt>p[0]</tt> to <tt>p[2]</tt> and <tt>p[1]</tt> to
+         * <tt>p[3]</tt> will both be oriented minor edges.
          *
-         * Note that annulus <tt>index+1</tt> uses face <tt>p[2]</tt> of
+         * Note that annulus <tt>index+1</tt> uses face <tt>p[1]</tt> of
          * the requested tetrahedron and annulus <tt>index+2</tt> uses
-         * face <tt>p[3]</tt> of the requested tetrahedron.  Both annuli
-         * use the axis edge <tt>p[0]</tt> to <tt>p[1]</tt>, and each
+         * face <tt>p[2]</tt> of the requested tetrahedron.  Both annuli
+         * use the axis edge <tt>p[0]</tt> to <tt>p[3]</tt>, and each
          * annulus uses one other major edge and one other minor edge so
          * that (according to homology) the axis edge equals the major
          * edge plus the minor edge.

@@ -276,7 +276,7 @@ public class CompositionViewer extends DefaultPacketViewer
         for (i = 0; i < (n - 2); i++)
             for (j = 0; j < 24; j++) {
                 p = NPerm.allPermsS4[(int)j];
-                if (p.imageOf(0) > p.imageOf(1))
+                if (p.imageOf(0) > p.imageOf(3))
                     continue;
                 tri = engine.isTriSolidTorus(
                     triangulation.getTetrahedron(i), p);
@@ -306,30 +306,30 @@ public class CompositionViewer extends DefaultPacketViewer
                     category.add(instance);
 
                     instance.add(new DefaultMutableTreeNode("Axis edges: " +
-                        edgeString(tetIndex[0], roles[0], 0, 1) + ", " +
-                        edgeString(tetIndex[1], roles[1], 0, 1) + ", " +
-                        edgeString(tetIndex[2], roles[2], 0, 1)));
-                    instance.add(new DefaultMutableTreeNode("Major edge: " +
-                        edgeString(tetIndex[0], roles[0], 2, 3) + " = " +
-                        edgeString(tetIndex[1], roles[1], 0, 2) + " = " +
-                        edgeString(tetIndex[2], roles[2], 3, 1)));
-                    instance.add(new DefaultMutableTreeNode("Major edge: " +
-                        edgeString(tetIndex[1], roles[1], 2, 3) + " = " +
-                        edgeString(tetIndex[2], roles[2], 0, 2) + " = " +
-                        edgeString(tetIndex[0], roles[0], 3, 1)));
-                    instance.add(new DefaultMutableTreeNode("Major edge: " +
-                        edgeString(tetIndex[2], roles[2], 2, 3) + " = " +
-                        edgeString(tetIndex[0], roles[0], 0, 2) + " = " +
-                        edgeString(tetIndex[1], roles[1], 3, 1)));
-                    instance.add(new DefaultMutableTreeNode("Minor edge: " +
-                        edgeString(tetIndex[1], roles[1], 2, 1) + " = " +
+                        edgeString(tetIndex[0], roles[0], 0, 3) + ", " +
+                        edgeString(tetIndex[1], roles[1], 0, 3) + ", " +
                         edgeString(tetIndex[2], roles[2], 0, 3)));
+                    instance.add(new DefaultMutableTreeNode("Major edge: " +
+                        edgeString(tetIndex[0], roles[0], 1, 2) + " = " +
+                        edgeString(tetIndex[1], roles[1], 0, 1) + " = " +
+                        edgeString(tetIndex[2], roles[2], 2, 3)));
+                    instance.add(new DefaultMutableTreeNode("Major edge: " +
+                        edgeString(tetIndex[1], roles[1], 1, 2) + " = " +
+                        edgeString(tetIndex[2], roles[2], 0, 1) + " = " +
+                        edgeString(tetIndex[0], roles[0], 2, 3)));
+                    instance.add(new DefaultMutableTreeNode("Major edge: " +
+                        edgeString(tetIndex[2], roles[2], 1, 2) + " = " +
+                        edgeString(tetIndex[0], roles[0], 0, 1) + " = " +
+                        edgeString(tetIndex[1], roles[1], 2, 3)));
                     instance.add(new DefaultMutableTreeNode("Minor edge: " +
-                        edgeString(tetIndex[2], roles[2], 2, 1) + " = " +
-                        edgeString(tetIndex[0], roles[0], 0, 3)));
+                        edgeString(tetIndex[1], roles[1], 1, 3) + " = " +
+                        edgeString(tetIndex[2], roles[2], 0, 2)));
                     instance.add(new DefaultMutableTreeNode("Minor edge: " +
-                        edgeString(tetIndex[0], roles[0], 2, 1) + " = " +
-                        edgeString(tetIndex[1], roles[1], 0, 3)));
+                        edgeString(tetIndex[2], roles[2], 1, 3) + " = " +
+                        edgeString(tetIndex[0], roles[0], 0, 2)));
+                    instance.add(new DefaultMutableTreeNode("Minor edge: " +
+                        edgeString(tetIndex[0], roles[0], 1, 3) + " = " +
+                        edgeString(tetIndex[1], roles[1], 0, 2)));
 
                     tri.destroy();
                 }
