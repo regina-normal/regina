@@ -37,10 +37,12 @@
 #include <kdialogbase.h>
 
 class QCheckBox;
+class QComboBox;
+class QLineEdit;
 class ReginaMain;
-class ReginaPrefDisplay;
-class ReginaPrefFile;
+class ReginaPrefGeneral;
 class ReginaPrefPython;
+class ReginaPrefTri;
 
 /**
  * The Regina configuration dialog.
@@ -51,8 +53,8 @@ class ReginaPreferences : public KDialogBase {
     private:
         ReginaMain* mainWindow;
 
-        ReginaPrefDisplay* displayPrefs;
-        ReginaPrefFile* filePrefs;
+        ReginaPrefGeneral* generalPrefs;
+        ReginaPrefTri* triPrefs;
         ReginaPrefPython* pythonPrefs;
 
     public:
@@ -71,32 +73,35 @@ class ReginaPreferences : public KDialogBase {
 };
 
 /**
- * The page of the Regina configuration dialog for display preferences.
+ * The page of the Regina configuration dialog for general preferences.
  */
-class ReginaPrefDisplay : public QVBox {
+class ReginaPrefGeneral : public QVBox {
     Q_OBJECT
 
     private:
         QCheckBox* cbAutoDock;
+        QCheckBox* cbAutoFileExtension;
         QCheckBox* cbDisplayIcon;
 
     public:
-        ReginaPrefDisplay(QWidget* parent = 0);
+        ReginaPrefGeneral(QWidget* parent = 0);
 
     friend class ReginaPreferences;
 };
 
 /**
- * The page of the Regina configuration dialog for file preferences.
+ * The page of the Regina configuration dialog for triangulation
+ * preferences.
  */
-class ReginaPrefFile : public QVBox {
+class ReginaPrefTri : public QVBox {
     Q_OBJECT
 
     private:
-        QCheckBox* cbAutoFileExtension;
+        QLineEdit* editSurfacePropsThreshold;
+        QComboBox* comboEditMode;
 
     public:
-        ReginaPrefFile(QWidget* parent = 0);
+        ReginaPrefTri(QWidget* parent = 0);
 
     friend class ReginaPreferences;
 };

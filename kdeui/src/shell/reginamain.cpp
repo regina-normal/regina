@@ -103,6 +103,22 @@ void ReginaMain::setAutoDock(bool value) {
         emit changedAutoDock(value);
 }
 
+void ReginaMain::setTriEditMode(TriEditMode mode) {
+    TriEditMode oldMode = triEditMode;
+    triEditMode = mode;
+
+    if (oldMode != mode)
+        emit changedTriEditMode(mode);
+}
+
+void ReginaMain::setTriSurfacePropsThreshold(unsigned value) {
+    unsigned oldValue = triSurfacePropsThreshold;
+    triSurfacePropsThreshold = value;
+
+    if (oldValue != value)
+        emit changedTriSurfacePropsThreshold(value);
+}
+
 void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
     // Accept uri drops only.
     event->accept(QUriDrag::canDecode(event));
@@ -372,13 +388,18 @@ void ReginaMain::addRecentFile() {
 void ReginaMain::readOptions(KConfig* config) {
     // Read in new preferences.
     config->setGroup("Display");
-    setAutoDock(config->readBoolEntry("Packet docking", true));
-    setDisplayIcon(config->readBoolEntry("Display icon", true));
+    setAutoDock(config->readBoolEntry("PacketDocking", true));
+    setDisplayIcon(config->readBoolEntry("DisplayIcon", true));
 
     config->setGroup("File");
-    setAutoFileExtension(config->readBoolEntry("Automatic extension", true));
-
+    setAutoFileExtension(config->readBoolEntry("AutomaticExtension", true));
     fileOpenRecent->loadEntries(config);
+
+    config->setGroup("Triangulation");
+    setTriEditMode(config->readEntry("EditMode", "Dialog") == "DirectEdit" ?
+        DirectEdit : Dialog);
+    setTriSurfacePropsThreshold(config->readUnsignedNumEntry(
+        "SurfacePropsThreshold", 6));
 }
 
 void ReginaMain::saveOptions() {
@@ -386,13 +407,17 @@ void ReginaMain::saveOptions() {
 
     // Save the current set of preferences.
     config->setGroup("Display");
-    config->writeEntry("Packet docking", autoDock);
-    config->writeEntry("Display icon", displayIcon);
+    config->writeEntry("PacketDocking", autoDock);
+    config->writeEntry("DisplayIcon", displayIcon);
 
     config->setGroup("File");
-    config->writeEntry("Automatic extension", autoFileExtension);
-
+    config->writeEntry("AutomaticExtension", autoFileExtension);
     fileOpenRecent->saveEntries(config);
+
+    config->setGroup("Triangulation");
+    config->writeEntry("EditMode",
+        triEditMode == DirectEdit ? "DirectEdit" : "Dialog");
+    config->writeEntry("SurfacePropsThreshold", triSurfacePropsThreshold);
 
     config->sync();
 

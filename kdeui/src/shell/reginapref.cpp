@@ -29,34 +29,43 @@
 #include "reginamain.h"
 #include "reginapref.h"
 
+#include <kcombobox.h>
 #include <kiconloader.h>
+#include <klineedit.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qvalidator.h>
 #include <qwhatsthis.h>
 
 ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         KDialogBase(IconList, i18n("Regina Preferences"),
         Help|Ok|Apply|Cancel, Ok), mainWindow(parent) {
     // Construct the individual preferences pages.
-    QVBox* frame = addVBoxPage(i18n("Display"), i18n("Display Options"),
-        BarIcon("viewmag", KIcon::SizeMedium));
-    displayPrefs = new ReginaPrefDisplay(frame);
+    QVBox* frame = addVBoxPage(i18n("General"), i18n("General Options"),
+        BarIcon("regina", KIcon::SizeMedium));
+    generalPrefs = new ReginaPrefGeneral(frame);
 
-    frame = addVBoxPage(i18n("File"), i18n("File Options"),
-        BarIcon("fileopen", KIcon::SizeMedium));
-    filePrefs = new ReginaPrefFile(frame);
+    frame = addVBoxPage(i18n("Triangulation"), i18n("Triangulation Options"),
+        BarIcon("packet_triangulation", KIcon::SizeMedium));
+    triPrefs = new ReginaPrefTri(frame);
 
     frame = addVBoxPage(i18n("Python"), i18n("Python Options"),
         BarIcon("source_py", KIcon::SizeMedium));
     pythonPrefs = new ReginaPrefPython(frame);
 
     // Read the current preferences from the main window.
-    displayPrefs->cbAutoDock->setChecked(mainWindow->getAutoDock());
-    displayPrefs->cbDisplayIcon->setChecked(mainWindow->getDisplayIcon());
-    filePrefs->cbAutoFileExtension->setChecked(
+    generalPrefs->cbAutoDock->setChecked(mainWindow->getAutoDock());
+    generalPrefs->cbAutoFileExtension->setChecked(
         mainWindow->getAutoFileExtension());
+    generalPrefs->cbDisplayIcon->setChecked(mainWindow->getDisplayIcon());
+
+    triPrefs->comboEditMode->setCurrentItem(
+        mainWindow->getTriEditMode() == ReginaMain::DirectEdit ? 0 : 1);
+    triPrefs->editSurfacePropsThreshold->setText(
+        QString::number(mainWindow->getTriSurfacePropsThreshold()));
 }
 
 int ReginaPreferences::exec() {
@@ -69,19 +78,41 @@ int ReginaPreferences::exec() {
 
 void ReginaPreferences::slotApply() {
     // Propagate changes to the main window.
-    mainWindow->setAutoDock(displayPrefs->cbAutoDock->isChecked());
-    mainWindow->setDisplayIcon(displayPrefs->cbDisplayIcon->isChecked());
+    mainWindow->setAutoDock(generalPrefs->cbAutoDock->isChecked());
+    mainWindow->setDisplayIcon(generalPrefs->cbDisplayIcon->isChecked());
     mainWindow->setAutoFileExtension(
-        filePrefs->cbAutoFileExtension->isChecked());
+        generalPrefs->cbAutoFileExtension->isChecked());
+
+    mainWindow->setTriEditMode(
+        triPrefs->comboEditMode->currentItem() == 0 ?
+        ReginaMain::DirectEdit : ReginaMain::Dialog);
+
+    bool ok;
+    unsigned uintVal =
+        triPrefs->editSurfacePropsThreshold->text().toUInt(&ok);
+    if (ok)
+        mainWindow->setTriSurfacePropsThreshold(uintVal);
+    else {
+        KMessageBox::error(triPrefs, i18n("The surface calculation "
+            "threshold must be a non-negative integer.  "
+            "This is the maximum number of tetrahedra for which normal "
+            "surface properties will be calculated automatically."));
+        triPrefs->editSurfacePropsThreshold->setText(
+            QString::number(mainWindow->getTriSurfacePropsThreshold()));
+    }
 
     // Save these preferences to the global configuration.
     mainWindow->saveOptions();
 }
 
-ReginaPrefDisplay::ReginaPrefDisplay(QWidget* parent) : QVBox(parent) {
+ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QVBox(parent) {
     cbAutoDock = new QCheckBox(i18n("Automatic packet docking"), this);
     QWhatsThis::add(cbAutoDock, i18n("Try to dock new packet viewers into "
         "the main window instead of opening them in new windows."));
+
+    cbAutoFileExtension = new QCheckBox(i18n("Automatic file extension"), this);
+    QWhatsThis::add(cbAutoFileExtension, i18n("Append the default extension "
+        "to filenames when saving if no extension is already given."));
 
     cbDisplayIcon = new QCheckBox(i18n("Display icon"), this);
     QWhatsThis::add(cbDisplayIcon, i18n("Display the large Regina icon "
@@ -91,10 +122,37 @@ ReginaPrefDisplay::ReginaPrefDisplay(QWidget* parent) : QVBox(parent) {
     setStretchFactor(new QWidget(this), 1);
 }
 
-ReginaPrefFile::ReginaPrefFile(QWidget* parent) : QVBox(parent) {
-    cbAutoFileExtension = new QCheckBox(i18n("Automatic File Extension"), this);
-    QWhatsThis::add(cbAutoFileExtension, i18n("Append the default extension "
-        "to filenames when saving if no extension is already given."));
+ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QVBox(parent) {
+    setSpacing(5);
+
+    // Set up the edit mode.
+    // Note that any change of order in the combo box must be reflected
+    // in the ReginaPreferences methods as well.
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+
+    QLabel* label = new QLabel(i18n("Edit mode:"), box);
+    comboEditMode = new KComboBox(box);
+    comboEditMode->insertItem(SmallIcon("editclear"), i18n("Direct edit"));
+    comboEditMode->insertItem(SmallIcon("view_text"), i18n("Pop-up dialog"));
+    QString msg = i18n("Specifies the way in which face gluings are edited.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(comboEditMode, msg);
+
+    // Set up the surface properties threshold.
+    box = new QHBox(this);
+    box->setSpacing(5);
+
+    label = new QLabel(i18n("Surface calculation threshold:"), box);
+    editSurfacePropsThreshold = new KLineEdit(box);
+    editSurfacePropsThreshold->setMaxLength(
+         3 /* ridiculously high number of digits */);
+    editSurfacePropsThreshold->setValidator(new QIntValidator(0,
+         999 /* ridiculously high */, box));
+    msg = i18n("The maximum number of tetrahedra for which normal "
+        "surface properties will be calculated automatically.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(editSurfacePropsThreshold, msg);
 
     // Add some space at the end.
     setStretchFactor(new QWidget(this), 1);

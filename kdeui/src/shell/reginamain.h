@@ -54,6 +54,12 @@ class ReginaMain : public KParts::MainWindow,
         virtual public ReginaMainInterface {
     Q_OBJECT
 
+    public:
+        /**
+         * Possible triangulation gluing edit modes.
+         */
+        enum TriEditMode { DirectEdit, Dialog };
+
     private:
         /**
          * Components
@@ -90,6 +96,12 @@ class ReginaMain : public KParts::MainWindow,
             /**< Should filenames be given an automatic extension? */
         bool displayIcon;
             /**< Should we display the pretty Regina icon? */
+        TriEditMode triEditMode;
+            /**< The default mode for editing triangulations. */
+        unsigned triSurfacePropsThreshold;
+            /**< The maximum number of tetrahedra for which
+                 surface-related properties of triangulations will be
+                 automatically calculated. */
 
     public:
         /**
@@ -104,6 +116,8 @@ class ReginaMain : public KParts::MainWindow,
         bool getAutoDock() const;
         bool getAutoFileExtension() const;
         bool getDisplayIcon() const;
+        TriEditMode getTriEditMode() const;
+        unsigned getTriSurfacePropsThreshold() const;
 
         /**
          * Set global preferences for Regina.  These routines update the
@@ -113,6 +127,8 @@ class ReginaMain : public KParts::MainWindow,
         void setAutoDock(bool);
         void setAutoFileExtension(bool);
         void setDisplayIcon(bool);
+        void setTriEditMode(TriEditMode);
+        void setTriSurfacePropsThreshold(unsigned);
 
         /**
          * Force this main window to reread the user's configuration
@@ -148,16 +164,12 @@ class ReginaMain : public KParts::MainWindow,
 
     signals:
         /**
-         * Emitted when the 'auto dock' property for this main window is
-         * changed.
+         * Emitted when various global properties are changed.
          */
         void changedAutoDock(bool);
-
-        /**
-         * Emitted when the 'display icon' property for this main
-         * window is changed.
-         */
         void changedDisplayIcon(bool);
+        void changedTriEditMode(TriEditMode);
+        void changedTriSurfacePropsThreshold(unsigned);
 
     public slots:
         /**
@@ -269,6 +281,14 @@ inline bool ReginaMain::getAutoFileExtension() const {
 
 inline bool ReginaMain::getDisplayIcon() const {
     return displayIcon;
+}
+
+inline ReginaMain::TriEditMode ReginaMain::getTriEditMode() const {
+    return triEditMode;
+}
+
+inline unsigned ReginaMain::getTriSurfacePropsThreshold() const {
+    return triSurfacePropsThreshold;
 }
 
 inline void ReginaMain::setAutoFileExtension(bool value) {
