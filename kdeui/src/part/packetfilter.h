@@ -91,7 +91,7 @@ class SingleTypeFilter : public PacketFilter {
          * PacketFilter overrides.
          */
         virtual bool accept(regina::NPacket* packet) {
-            return (getPacketType() == T::packetType);
+            return (packet->getPacketType() == T::packetType);
         }
 };
 
