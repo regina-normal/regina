@@ -174,6 +174,12 @@ CORBA::Boolean NTriangulation_i::isConnected() {
 CORBA::Boolean NTriangulation_i::hasBoundaryFaces() {
     return MY_ENGINE_OBJECT->hasBoundaryFaces();
 }
+CORBA::Boolean NTriangulation_i::isZeroEfficient() {
+    return MY_ENGINE_OBJECT->isZeroEfficient();
+}
+CORBA::Boolean NTriangulation_i::hasCentralSurface() {
+    return MY_ENGINE_OBJECT->hasCentralSurface();
+}
 CORBA::Boolean NTriangulation_i::crushMaximalForest() {
     return MY_ENGINE_OBJECT->crushMaximalForest();
 }

@@ -26,52 +26,44 @@
 
 /* end stub */
 
-#include "NVertexI.h"
-#include "NEdgeI.h"
-#include "NFaceI.h"
-#include "NComponentI.h"
-#include "NBoundaryComponentI.h"
-#include "NTetrahedronI.h"
+#ifndef __NLAYEREDCHAINI_H
+#define __NLAYEREDCHAINI_H
 
-Regina::Triangulation::NComponent_ptr NFace_i::getComponent() {
-    return NComponent_i::newWrapper(MY_ENGINE_OBJECT->getComponent());
-}
-Regina::Triangulation::NBoundaryComponent_ptr
-        NFace_i::getBoundaryComponent() {
-    return NBoundaryComponent_i::newWrapper(MY_ENGINE_OBJECT->
-        getBoundaryComponent());
-}
-Regina::Triangulation::NVertex_ptr NFace_i::getVertex(CORBA::Long index) {
-    return NVertex_i::newWrapper(MY_ENGINE_OBJECT->getVertex((int)index));
-}
-Regina::Triangulation::NEdge_ptr NFace_i::getEdge(CORBA::Long index) {
-    return NEdge_i::newWrapper(MY_ENGINE_OBJECT->getEdge(index));
-}
-CORBA::Char NFace_i::getEdgeMapping(CORBA::Long index) {
-    return MY_ENGINE_OBJECT->getEdgeMapping(index).getPermCode();
-}
-CORBA::Boolean NFace_i::isBoundary() {
-    return MY_ENGINE_OBJECT->isBoundary();
-}
-CORBA::Long NFace_i::getType() {
-    return MY_ENGINE_OBJECT->getType();
-}
-CORBA::Long NFace_i::getSubtype() {
-    return MY_ENGINE_OBJECT->getSubtype();
-}
-CORBA::Boolean NFace_i::isMobiusBand() {
-    return MY_ENGINE_OBJECT->isMobiusBand();
-}
-CORBA::Boolean NFace_i::isCone() {
-    return MY_ENGINE_OBJECT->isCone();
-}
-CORBA::Long NFace_i::getNumberOfEmbeddings() {
-    return MY_ENGINE_OBJECT->getNumberOfEmbeddings();
-}
-void NFace_i::getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
-        CORBA::Long& face, CORBA::Long index) {
-    const NFaceEmbedding& emb = MY_ENGINE_OBJECT->getEmbedding(index);
-    tet = NTetrahedron_i::newWrapper(emb.getTetrahedron());
-    face = emb.getFace();
-}
+#include "config.h"
+
+#ifdef __NO_INCLUDE_PATHS
+    #include "nlayeredchain.h"
+#else
+    #include "engine/subcomplex/nlayeredchain.h"
+#endif
+
+#include "NLayeredChainIDL.h"
+#include "ShareableObjectI.h"
+
+class NLayeredChain_i :
+        public virtual POA_Regina::Subcomplex::NLayeredChain,
+        public ShareableObject_i {
+    STANDARD_ENGINE_TYPEDEFS(NLayeredChain_i, NLayeredChain,
+        Regina::Subcomplex::NLayeredChain)
+
+    protected:
+        NLayeredChain_i(::NLayeredChain* newCppPtr) :
+                ShareableObject_i(newCppPtr) {
+        }
+    public:
+        STANDARD_NEW_WRAPPER
+
+        virtual Regina::Triangulation::NTetrahedron_ptr getBottom();
+        virtual Regina::Triangulation::NTetrahedron_ptr getTop();
+        virtual CORBA::Long getIndex();
+        virtual CORBA::Char getBottomVertexRoles();
+        virtual CORBA::Char getTopVertexRoles();
+        virtual CORBA::Boolean extendAbove();
+        virtual CORBA::Boolean extendBelow();
+        virtual CORBA::Boolean extendMaximal();
+        virtual void reverse();
+        virtual void invert();
+};
+
+#endif
 

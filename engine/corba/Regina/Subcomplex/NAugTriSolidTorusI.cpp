@@ -46,6 +46,15 @@ Regina::Subcomplex::NLayeredSolidTorus_ptr NAugTriSolidTorus_i::getAugTorus(
 CORBA::Char NAugTriSolidTorus_i::getEdgeGroupRoles(CORBA::Long annulus) {
     return MY_ENGINE_OBJECT->getEdgeGroupRoles(annulus).getPermCode();
 }
+CORBA::Long NAugTriSolidTorus_i::getChainLength() {
+    return MY_ENGINE_OBJECT->getChainLength();
+}
+CORBA::Long NAugTriSolidTorus_i::getTorusAnnulus() {
+    return MY_ENGINE_OBJECT->getTorusAnnulus();
+}
+CORBA::Boolean NAugTriSolidTorus_i::hasLayeredChain() {
+    return MY_ENGINE_OBJECT->hasLayeredChain();
+}
 Regina::Subcomplex::NSFS_ptr NAugTriSolidTorus_i::getSeifertStructure() {
     return NSFS_i::newWrapper((NSFS*)&MY_ENGINE_OBJECT->getSeifertStructure());
 }

@@ -69,7 +69,16 @@ CORBA::Long NNormalSurface_i::isOrientable() {
 CORBA::Long NNormalSurface_i::isTwoSided() {
     return MY_ENGINE_OBJECT->isTwoSided();
 }
+CORBA::Long NNormalSurface_i::isConnected() {
+    return MY_ENGINE_OBJECT->isConnected();
+}
 CORBA::Boolean NNormalSurface_i::hasRealBoundary() {
     return MY_ENGINE_OBJECT->hasRealBoundary();
+}
+CORBA::Boolean NNormalSurface_i::isVertexLinking() {
+    return MY_ENGINE_OBJECT->isVertexLinking();
+}
+CORBA::Boolean NNormalSurface_i::isCentral() {
+    return MY_ENGINE_OBJECT->isCentral();
 }
 

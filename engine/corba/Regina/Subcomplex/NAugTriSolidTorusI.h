@@ -58,6 +58,9 @@ class NAugTriSolidTorus_i :
         virtual Regina::Subcomplex::NLayeredSolidTorus_ptr getAugTorus(
                 CORBA::Long annulus);
         virtual CORBA::Char getEdgeGroupRoles(CORBA::Long annulus);
+        virtual CORBA::Long getChainLength();
+        virtual CORBA::Long getTorusAnnulus();
+        virtual CORBA::Boolean hasLayeredChain();
         virtual Regina::Subcomplex::NSFS_ptr getSeifertStructure();
 };
 

@@ -57,6 +57,10 @@ class NFace_i : public virtual POA_Regina::Triangulation::NFace,
         virtual Regina::Triangulation::NEdge_ptr getEdge(CORBA::Long index);
         virtual CORBA::Char getEdgeMapping(CORBA::Long index);
         virtual CORBA::Boolean isBoundary();
+        virtual CORBA::Long getType();
+        virtual CORBA::Long getSubtype();
+        virtual CORBA::Boolean isMobiusBand();
+        virtual CORBA::Boolean isCone();
         virtual CORBA::Long getNumberOfEmbeddings();
         virtual void getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
             CORBA::Long& face, CORBA::Long index);

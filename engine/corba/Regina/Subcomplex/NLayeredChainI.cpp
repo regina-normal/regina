@@ -26,52 +26,37 @@
 
 /* end stub */
 
-#include "NVertexI.h"
-#include "NEdgeI.h"
-#include "NFaceI.h"
-#include "NComponentI.h"
-#include "NBoundaryComponentI.h"
+#include "NLayeredChainI.h"
 #include "NTetrahedronI.h"
 
-Regina::Triangulation::NComponent_ptr NFace_i::getComponent() {
-    return NComponent_i::newWrapper(MY_ENGINE_OBJECT->getComponent());
+Regina::Triangulation::NTetrahedron_ptr NLayeredChain_i::getBottom() {
+    return NTetrahedron_i::newWrapper(MY_ENGINE_OBJECT->getBottom());
 }
-Regina::Triangulation::NBoundaryComponent_ptr
-        NFace_i::getBoundaryComponent() {
-    return NBoundaryComponent_i::newWrapper(MY_ENGINE_OBJECT->
-        getBoundaryComponent());
+Regina::Triangulation::NTetrahedron_ptr NLayeredChain_i::getTop() {
+    return NTetrahedron_i::newWrapper(MY_ENGINE_OBJECT->getTop());
 }
-Regina::Triangulation::NVertex_ptr NFace_i::getVertex(CORBA::Long index) {
-    return NVertex_i::newWrapper(MY_ENGINE_OBJECT->getVertex((int)index));
+CORBA::Long NLayeredChain_i::getIndex() {
+    return MY_ENGINE_OBJECT->getIndex();
 }
-Regina::Triangulation::NEdge_ptr NFace_i::getEdge(CORBA::Long index) {
-    return NEdge_i::newWrapper(MY_ENGINE_OBJECT->getEdge(index));
+CORBA::Char NLayeredChain_i::getBottomVertexRoles() {
+    return MY_ENGINE_OBJECT->getBottomVertexRoles().getPermCode();
 }
-CORBA::Char NFace_i::getEdgeMapping(CORBA::Long index) {
-    return MY_ENGINE_OBJECT->getEdgeMapping(index).getPermCode();
+CORBA::Char NLayeredChain_i::getTopVertexRoles() {
+    return MY_ENGINE_OBJECT->getTopVertexRoles().getPermCode();
 }
-CORBA::Boolean NFace_i::isBoundary() {
-    return MY_ENGINE_OBJECT->isBoundary();
+CORBA::Boolean NLayeredChain_i::extendAbove() {
+    return MY_ENGINE_OBJECT->extendAbove();
 }
-CORBA::Long NFace_i::getType() {
-    return MY_ENGINE_OBJECT->getType();
+CORBA::Boolean NLayeredChain_i::extendBelow() {
+    return MY_ENGINE_OBJECT->extendBelow();
 }
-CORBA::Long NFace_i::getSubtype() {
-    return MY_ENGINE_OBJECT->getSubtype();
+CORBA::Boolean NLayeredChain_i::extendMaximal() {
+    return MY_ENGINE_OBJECT->extendMaximal();
 }
-CORBA::Boolean NFace_i::isMobiusBand() {
-    return MY_ENGINE_OBJECT->isMobiusBand();
+void NLayeredChain_i::reverse() {
+    MY_ENGINE_OBJECT->reverse();
 }
-CORBA::Boolean NFace_i::isCone() {
-    return MY_ENGINE_OBJECT->isCone();
-}
-CORBA::Long NFace_i::getNumberOfEmbeddings() {
-    return MY_ENGINE_OBJECT->getNumberOfEmbeddings();
-}
-void NFace_i::getEmbedding(Regina::Triangulation::NTetrahedron_out tet,
-        CORBA::Long& face, CORBA::Long index) {
-    const NFaceEmbedding& emb = MY_ENGINE_OBJECT->getEmbedding(index);
-    tet = NTetrahedron_i::newWrapper(emb.getTetrahedron());
-    face = emb.getFace();
+void NLayeredChain_i::invert() {
+    MY_ENGINE_OBJECT->invert();
 }
 
