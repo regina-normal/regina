@@ -19,6 +19,7 @@ noinst_HEADERS = \
 	nscriptvaritems.h \
 	nsurfacefiltercomb.h \
 	nsurfacefiltercreator.h \
+	nsurfacefilterprop.h \
 	ntextui.h
 
 libpackettypes_la_SOURCES = \
@@ -30,6 +31,7 @@ libpackettypes_la_SOURCES = \
 	nscriptvaritems.cpp \
 	nsurfacefiltercomb.cpp \
 	nsurfacefiltercreator.cpp \
+	nsurfacefilterprop.cpp \
 	ntextui.cpp
 
 METASOURCES = AUTO

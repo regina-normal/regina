@@ -37,6 +37,7 @@
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nscriptui.h"
 #include "packettypes/nsurfacefiltercomb.h"
+#include "packettypes/nsurfacefilterprop.h"
 #include "packettypes/ntextui.h"
 
 #include <kiconloader.h>
@@ -124,7 +125,9 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
                 enclosingPane, allowReadWrite);
         if (((NSurfaceFilter*)packet)->getFilterID() ==
                 NSurfaceFilterProperties::filterID)
-            return new DefaultPacketUI(packet, enclosingPane);
+            return new NSurfaceFilterPropUI(
+                dynamic_cast<NSurfaceFilterProperties*>(packet),
+                enclosingPane, allowReadWrite);
         return new DefaultPacketUI(packet, enclosingPane);
     }
     if (packet->getPacketType() == NText::packetType) {
