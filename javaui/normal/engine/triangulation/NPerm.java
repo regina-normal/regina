@@ -56,6 +56,15 @@ public class NPerm {
         new NPerm(0,1,2,3), new NPerm(1,0,2,3)
     };
 
+    /**
+     * Object representing <tt>true</tt> for use with Jython.
+     */
+    public static final Object TRUE = new Integer(1);
+    /**
+     * Object representing <tt>false</tt> for use with Jython.
+     */
+    public static final Object FALSE = new Integer(0);
+
     private int[] mapping = new int[4];
     
     public NPerm() {
@@ -197,6 +206,48 @@ public class NPerm {
     }
     static public String edgeDescription(int edge) {
         return edgeDescription(edgeOrdering(edge));
+    }
+
+    /**
+     * Jython operator overload.
+     */
+    public Object __len__() {
+        return new Integer(4);
+    }
+    /**
+     * Jython operator overload.
+     */
+    public Object __getitem__(Object obj) {
+        if (! (obj instanceof Number))
+            return null;
+        int index = ((Number)obj).intValue();
+        if (index < 0 || index >= 4)
+            throw new IndexOutOfBoundsException();
+        return new Integer(mapping[index]);
+    }
+    /**
+     * Jython operator overload.
+     */
+    public Object __mul__(Object obj) {
+        if (obj instanceof NPerm)
+            return composeWith((NPerm)obj);
+        return null;
+    }
+    /**
+     * Jython operator overload.
+     */
+    public Object __eq__(Object obj) {
+        if (obj instanceof NPerm)
+            return (compareWith((NPerm)obj) == 0 ? TRUE : FALSE);
+        return null;
+    }
+    /**
+     * Jython operator overload.
+     */
+    public Object __ne__(Object obj) {
+        if (obj instanceof NPerm)
+            return (compareWith((NPerm)obj) != 0 ? TRUE : FALSE);
+        return null;
     }
 }
 

@@ -179,6 +179,7 @@ class NPerm {
          * <tt>(p*q)[x] == p[q[x]]</tt>.
          *
          * \ifaces This routine is called \a composeWith.
+         * \ifacesjython Provided as an operator overload.
          *
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
@@ -205,6 +206,7 @@ class NPerm {
          * permutation.
          *
          * \ifaces This routine is called \a imageOf.
+         * \ifacesjython Provided as an operator overload.
          *
          * @param source the integer whose image we wish to find.  This
          * should be between 0 and 3 inclusive.
@@ -228,6 +230,7 @@ class NPerm {
          * images for 0, 1, 2 and 3.
          *
          * \ifaces Not present.
+         * \ifacesjython Provided as an operator overload.
          *
          * @param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
@@ -241,6 +244,7 @@ class NPerm {
          * different images for at least one of 0, 1, 2 or 3.
          *
          * \ifaces Not present.
+         * \ifacesjython Provided as an operator overload.
          *
          * @param other the permutation with which to compare this.
          * @return \c true if and only if this and the given permutation
