@@ -121,7 +121,7 @@ fi
 
 # Run the Java app.
 
-command="$java -jar $pathtojar/$regconf"
+command="$java \"-DREGINA_OPTIONS=$REGINA_OPTIONS\" -jar \"$pathtojar/$regconf\""
 
 if ! $command; then
 	echo
