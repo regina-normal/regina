@@ -11,24 +11,29 @@ Regina - A Normal Surface Theory Calculator
 Version 3.97  [ 24 November, 2003 ] - Third prerelease for version 4.0.
 
     Features:
+        - Python scripting is once more incorporated into the graphical
+          user interface, as it was in the old days of Java.  It can be
+          accessed through the Tools menu or through script packets.
+          Note that synchronisation between python and the GUI is much
+          better than it was in versions 3.2 and below.
         - Implemented census lookup for triangulations, using the
           censuses shipped with Regina as the default set.
         - Added recognition for trivial non-orientable triangulations.
-        - Identifies central normal surfaces.
+        - Added recognition for central normal surfaces.
         - Can flatten a layered solid torus to a Mobius band (currently
           available only through the Python interface).
-        - Configuration options added for the initially visible triangulation
-          tabs, the default normal surface coordinate system, data files to
-          search during census lookup and active Python libraries.
+        - Many more configuration options are available.
+        - Added a Python caveats section to the reference manual.
     Optimisations:
         - More optimisations for non-orientable census creation using
-          new face pairing graph results (see math.GT/0307382 v2).
+          new face pairing graph results (see math.GT/0307382:v2).
     Bug Fixes:
-        - Fixed problems with word wrapping and line endings in the
+        - Fixed some problems with word wrapping and line endings in the
           embedded text editor.
-        - Fixed a bug in updating tetrahedron labels when a tetrahedron
+        - Fixed a bug in the updating of tetrahedron labels when a tetrahedron
           is removed from a triangulation.
-        - Fixed some of the autoconf tests which were broken on some systems.
+        - Fixed some of the compile-time ./configure tests which were broken
+          on some systems (in particular some redhat-based systems).
 
 Version 3.96  [ 31 October, 2003 ] - Second prerelease for version 4.0.
 
