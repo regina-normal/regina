@@ -26,11 +26,11 @@
 
 /* end stub */
 
+#include <deque>
 #include "surfaces/nsquad.h"
 #include "surfaces/nsstandard.h"
 #include "utilities/nrational.h"
 #include "utilities/nset.h"
-#include "utilities/nqueue.h"
 #include "maths/nmatrixint.h"
 #include "maths/nmatrixfield.h"
 #include "maths/nvectorunit.h"
@@ -157,7 +157,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     NLargeInteger min;
         // The minimum coordinate that has been assigned about this
         // vertex.
-    NQueue<EdgeEnd> examine;
+    std::deque<EdgeEnd> examine;
     bool broken;
         // Are the matching equations broken about this edge end?
     int end;
@@ -174,7 +174,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     for (NTriangulation::VertexIterator vit(triang->getVertices());
             ! vit.done(); vit++) {
         usedEdges[0].flush(); usedEdges[1].flush();
-        examine.flush();
+        examine.clear();
         broken = false;
 
         // Pick some triangular disc and set it to zero.
@@ -195,7 +195,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
                 edgeNumber[vemb.getVertex()][i])[0] == i ? 1 : 0;
             if (! usedEdges[end].contains(edge)) {
                 usedEdges[end].add(edge);
-                examine.insert(EdgeEnd(edge, end));
+                examine.push_back(EdgeEnd(edge, end));
             }
         }
 
@@ -204,7 +204,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         // a coordinate, add the corresponding nearby edge ends to the
         // list of edge ends to examine.
         while ((! broken) && (! examine.empty())) {
-            current = examine.remove();
+            current = examine.front();
+            examine.pop_front();
 
             // Run around this edge end.
             // We know there is a pre-chosen coordinate somewhere; run
@@ -247,7 +248,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
                     == tetPerm[2] ? 1 : 0;
                 if (! usedEdges[end].contains(edge)) {
                     usedEdges[end].add(edge);
-                    examine.insert(EdgeEnd(edge, end));
+                    examine.push_back(EdgeEnd(edge, end));
                 }
 
                 adj = tet;
@@ -289,7 +290,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
                         == tetPerm[3] ? 1 : 0;
                     if (! usedEdges[end].contains(edge)) {
                         usedEdges[end].add(edge);
-                        examine.insert(EdgeEnd(edge, end));
+                        examine.push_back(EdgeEnd(edge, end));
                     }
                 } else {
                     // This coordinate has already been set.

@@ -26,8 +26,8 @@
 
 /* end stub */
 
+#include <queue>
 #include "triangulation/ntriangulation.h"
-#include "utilities/nqueue.h"
 
 void NTriangulation::makeDoubleCover() {
     unsigned long sheetSize = tetrahedra.size();
@@ -53,7 +53,7 @@ void NTriangulation::makeDoubleCover() {
 
     // Run through the upper sheet and recreate the gluings as we
     // propagate tetrahedron orientations through components.
-    NQueue<unsigned long> queue;
+    std::queue<unsigned long> tetQueue;
         /**< Tetrahedra whose orientation must be propagated. */
     int face;
     unsigned long upperTet;
@@ -68,10 +68,11 @@ void NTriangulation::makeDoubleCover() {
             // Completely recreate the gluings for this component.
             upper[i]->orientation = 1;
             tetrahedra[i]->orientation = -1;
-            queue.insert(i);
+            tetQueue.push(i);
 
-            while (! queue.empty()) {
-                upperTet = queue.remove();
+            while (! tetQueue.empty()) {
+                upperTet = tetQueue.front();
+                tetQueue.pop();
                 lowerTet = tetrahedra[upperTet];
 
                 for (face = 0; face < 4; face++) {
@@ -99,7 +100,7 @@ void NTriangulation::makeDoubleCover() {
                         lowerAdj->orientation = lowerAdjOrientation;
                         upper[upperAdj]->orientation = -lowerAdjOrientation;
                         upper[upperTet]->joinTo(face, upper[upperAdj], gluing);
-                        queue.insert(upperAdj);
+                        tetQueue.push(upperAdj);
                     } else if (lowerAdj->orientation == lowerAdjOrientation) {
                         // The adjacent tetrahedron already has the
                         // correct orientation.

@@ -26,8 +26,8 @@
 
 /* end stub */
 
+#include <queue>
 #include "surfaces/ndisc.h"
-#include "utilities/nqueue.h"
 
 /**
  * Stores orientation and sides A/B for a normal disc.
@@ -76,7 +76,7 @@ void NNormalSurface::calculateOrientable() {
     
     NDiscSetSurfaceData<OrientData> orients(*this);
         // Stores the orientation of each disc.
-    NQueue<NDiscSpec> queue;
+    std::queue<NDiscSpec> discQueue;
         // A queue of discs whose orientations must be propagated.
     NDiscSpecIterator it(orients);
         // Runs through the discs whose orientations might not have yet
@@ -101,11 +101,11 @@ void NNormalSurface::calculateOrientable() {
     while (true) {
         // If there's no discs to propagate from, choose the next
         // unoriented one.
-        while (queue.empty() && (! it.done())) {
+        while (discQueue.empty() && (! it.done())) {
             if (orients.data(*it).orient == 0) {
                 orients.data(*it).orient = 1;
                 orients.data(*it).sides = 1;
-                queue.insert(*it);
+                discQueue.push(*it);
                 if (noComponents)
                     noComponents = false;
                 else {
@@ -115,12 +115,13 @@ void NNormalSurface::calculateOrientable() {
             }
             it++;
         }
-        if (queue.empty())
+        if (discQueue.empty())
             break;
 
         // At the head of the queue is the next already-oriented disc
         // whose orientation must be propagated.
-        use = queue.remove();
+        use = discQueue.front();
+        discQueue.pop();
 
         // Determine along which arcs we may glue other discs.
         if (use.type < 4) {
@@ -177,7 +178,7 @@ void NNormalSurface::calculateOrientable() {
                     orients.data(use).orient : -orients.data(use).orient);
                 orients.data(*adjDisc).sides = (sameSides ?
                     orients.data(use).sides : -orients.data(use).sides);
-                queue.insert(*adjDisc);
+                discQueue.push(*adjDisc);
             } else {
                 if (! calculatedOrientable) {
                     if (sameOrient) {
