@@ -55,6 +55,33 @@ AC_DEFUN(REGINA_ABS_DIRNAME, [
 ])
 
 dnl
+dnl    REGINA_CHECK_COMPILER_FLAG(FLAG, [ACTION-IF-OK], [ACTION-IF-NOT-OK])
+dnl
+dnl    Modified from KDE_CHECK_COMPILER_FLAG which is
+dnl    copyright (c) Janos Farkas and Stephan Kulow and licensed under
+dnl    the LGPL.
+dnl
+dnl    Tests to see whether the current compiler supports the given flag.
+dnl    The leading - should not be supplied.
+dnl
+dnl    Example: REGINA_CHECK_COMPILER_FLAG(Wall, [CXXFLAGS="$CXXFLAGS -Wall"])
+dnl
+AC_DEFUN(REGINA_CHECK_COMPILER_FLAG, [
+  AC_MSG_CHECKING([whether $CXX supports -$1])
+  save_CXXFLAGS="$CXXFLAGS"
+  CXXFLAGS="$CXXFLAGS -$1"
+  AC_TRY_COMPILE([], [return 0;], [
+    AC_MSG_RESULT([yes])
+    CXXFLAGS="$save_CXXFLAGS"
+    ifelse([$2], , :, [$2])
+  ], [
+    AC_MSG_RESULT([no])
+    CXXFLAGS="$save_CXXFLAGS"
+    ifelse([$3], , :, [$3])
+  ])
+])
+
+dnl
 dnl    REGINA_CLASSPATH_CONVERT(VARIABLE)
 dnl
 dnl    Converts classpath variable <VARIABLE> to Windows format
