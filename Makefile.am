@@ -74,8 +74,9 @@ jnihdr-clean :
 	cd javaui && $(MAKE) jni-clean
 
 valgrind:
-	cd testsuite && $(MAKE) regtestsuite
-	valgrind --skin=memcheck --leak-check=yes testsuite/.libs/regtestsuite
+	## Run the test suite so that libtool regenerates lt-regtestsuite.
+	cd testsuite && $(MAKE) check
+	valgrind --skin=memcheck --leak-check=yes testsuite/.libs/lt-regtestsuite
 
 help :
 	@cat Makefile-help
