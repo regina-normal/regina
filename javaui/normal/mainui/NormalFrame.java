@@ -722,6 +722,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         JMenu menuOptions = new JMenu("Options");
         menuOptions.setMnemonic(KeyEvent.VK_O);
 
+        /* (Wait until we've actually implemented census searching)
         if (shell.mayUIAccessFiles()) {
             JMenuItem menuOptionsCensusData =
                 new JMenuItem("Census Data Files...");
@@ -733,6 +734,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
             });
             menuOptions.add(menuOptionsCensusData);
         }
+        */
 
         JMenu menuOptionsDisplay = new JMenu("Display");
         menuOptionsDisplay.setMnemonic(KeyEvent.VK_D);
