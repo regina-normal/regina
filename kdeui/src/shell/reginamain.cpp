@@ -416,6 +416,8 @@ void ReginaMain::setupActions() {
 void ReginaMain::fillExamples() {
     fileOpenExample->addURL("sample-misc.rga",
         i18n("Introductory Examples"));
+    fileOpenExample->addURL("closed-hyp-census.rga",
+        i18n("Closed Hyperbolic Census"));
     fileOpenExample->addURL("closed-or-census.rga",
         i18n("Closed Orientable Census"));
     fileOpenExample->addURL("closed-nor-census.rga",
