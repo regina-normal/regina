@@ -548,7 +548,7 @@ void NTriGluingsUI::finiteToIdeal() {
     if (! tri->hasBoundaryFaces())
         KMessageBox::error(ui, i18n(
             "This triangulation has no real boundary components to "
-            "convert into cusps."));
+            "convert into ideal vertices."));
     else
         tri->finiteToIdeal();
 }
