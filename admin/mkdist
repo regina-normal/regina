@@ -128,7 +128,7 @@ fi
 
 case "$1" in
   linux )
-    ./configure CC=gcc-2.95 CXX=g++-2.95
+    ./configure
     bindist linux
   ;;
   cygwin )
