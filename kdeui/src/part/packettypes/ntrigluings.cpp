@@ -30,6 +30,7 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "eltmovedialog.h"
 #include "nfacegluingitems.h"
 #include "ntrigluings.h"
 #include "../reginapart.h"
@@ -379,7 +380,9 @@ void NTriGluingsUI::idealToFinite() {
 }
 
 void NTriGluingsUI::elementaryMove() {
-    // TODO: Elementary move
+    enclosingPane->commit();
+    EltMoveDialog dlg(ui, tri);
+    dlg.exec();
 }
 
 void NTriGluingsUI::doubleCover() {

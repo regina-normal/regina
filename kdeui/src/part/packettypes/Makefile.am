@@ -13,6 +13,7 @@ noinst_LTLIBRARIES = libpackettypes.la
 noinst_HEADERS = \
 	coordinatechooser.h \
 	coordinates.h \
+	eltmovedialog.h \
 	nanglestructurecreator.h \
 	nanglestructureitem.h \
 	nanglestructureui.h \
@@ -43,6 +44,7 @@ noinst_HEADERS = \
 libpackettypes_la_SOURCES = \
 	coordinatechooser.cpp \
 	coordinates.cpp \
+	eltmovedialog.cpp \
 	nanglestructurecreator.cpp \
 	nanglestructureitem.cpp \
 	nanglestructureui.cpp \
