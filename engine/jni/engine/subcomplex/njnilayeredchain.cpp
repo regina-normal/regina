@@ -94,6 +94,12 @@ JNIEXPORT jchar JNICALL
 }
 
 JNIEXPORT void JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_invert
+        (JNIEnv *env, jobject me) {
+    GET_ENGINE_OBJECT(env, NLayeredChain, me)->invert();
+}
+
+JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_newNJNILayeredChain
         (JNIEnv* env, jobject me, jobject tet, jchar roles) {
     ASSIGN_ENGINE_OBJECT(env, new NLayeredChain(
@@ -105,5 +111,11 @@ JNIEXPORT void JNICALL
         (JNIEnv* env, jobject me, jobject you) {
     ASSIGN_ENGINE_OBJECT(env, new NLayeredChain(
         *GET_ENGINE_OBJECT(env, NLayeredChain, you)), me);
+}
+
+JNIEXPORT void JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredChain_reverse
+        (JNIEnv *env, jobject me) {
+    GET_ENGINE_OBJECT(env, NLayeredChain, me)->reverse();
 }
 

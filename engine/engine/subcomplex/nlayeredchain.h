@@ -207,6 +207,34 @@ class NLayeredChain : public ShareableObject {
          */
         bool extendMaximal();
 
+        /**
+         * Reverses this layered chain so the top tetrahedron becomes
+         * the bottom and vice versa.  The upper and lower hinges will
+         * remain the upper and lower hinges respectively.
+         *
+         * Note that this operation will cause the hinge edges to point
+         * in the opposite direction around the solid torus formed by
+         * this layered chain.
+         *
+         * Note that only the representation of the chain is altered;
+         * the underlying triangulation is not changed.
+         */
+        void reverse();
+
+        /**
+         * Inverts this layered chain so the upper hinge becomes the
+         * lower and vice versa.  The top and bottom tetrahedra will
+         * remain the top and bottom tetrahedra respectively.
+         *
+         * Note that this operation will cause the hinge edges to point
+         * in the opposite direction around the solid torus formed by
+         * this layered chain.
+         *
+         * Note that only the representation of the chain is altered;
+         * the underlying triangulation is not changed.
+         */
+        void invert();
+
         void writeTextShort(ostream& out) const;
 };
 

@@ -40,7 +40,7 @@
 
 bool NLayeredChain::extendAbove() {
     NTetrahedron* adj = top->getAdjacentTetrahedron(topVertexRoles[0]);
-    if (adj == bottom || adj == top)
+    if (adj == bottom || adj == top || adj == 0)
         return false;
     if (adj != top->getAdjacentTetrahedron(topVertexRoles[3]))
         return false;
@@ -61,7 +61,7 @@ bool NLayeredChain::extendAbove() {
 
 bool NLayeredChain::extendBelow() {
     NTetrahedron* adj = bottom->getAdjacentTetrahedron(bottomVertexRoles[1]);
-    if (adj == bottom || adj == top)
+    if (adj == bottom || adj == top || adj == 0)
         return false;
     if (adj != bottom->getAdjacentTetrahedron(bottomVertexRoles[2]))
         return false;
@@ -87,5 +87,20 @@ bool NLayeredChain::extendMaximal() {
     while (extendBelow())
         changed = true;
     return changed;
+}
+
+void NLayeredChain::reverse() {
+    NTetrahedron* tmp = top;
+    top = bottom;
+    bottom = tmp;
+
+    NPerm pTmp = topVertexRoles * NPerm(1, 0, 3, 2);
+    topVertexRoles = bottomVertexRoles * NPerm(1, 0, 3, 2);
+    bottomVertexRoles = pTmp;
+}
+
+void NLayeredChain::invert() {
+    topVertexRoles = topVertexRoles * NPerm(3, 2, 1, 0);
+    bottomVertexRoles = bottomVertexRoles * NPerm(3, 2, 1, 0);
 }
 

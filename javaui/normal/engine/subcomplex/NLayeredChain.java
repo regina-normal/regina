@@ -40,5 +40,7 @@ public interface NLayeredChain extends ShareableObject {
     public boolean extendAbove();
     public boolean extendBelow();
     public boolean extendMaximal();
+    public void reverse();
+    public void invert();
 }
 

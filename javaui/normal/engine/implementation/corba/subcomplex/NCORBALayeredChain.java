@@ -72,4 +72,10 @@ public class NCORBALayeredChain extends CORBAShareableObject
     public boolean extendMaximal() {
         return data.extendMaximal();
     }
+    public void reverse() {
+        data.reverse();
+    }
+    public void invert() {
+        data.invert();
+    }
 }

@@ -63,4 +63,6 @@ public class NJNILayeredChain extends JNIShareableObject
     public native boolean extendAbove();
     public native boolean extendBelow();
     public native boolean extendMaximal();
+    public native void reverse();
+    public native void invert();
 }
