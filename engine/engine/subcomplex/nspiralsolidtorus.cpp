@@ -29,7 +29,6 @@
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/ndoublelist.h"
-#include "utilities/nset.h"
 
 NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(nTet);
@@ -137,11 +136,11 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
 
     NDoubleList<NTetrahedron*> tets;
     NDoubleList<NPerm> roles;
-    NPointerSet<NTetrahedron> usedTets;
+    std::hash_set<NTetrahedron*, HashPointer> usedTets;
 
     tets.addLast(tet);
     roles.addLast(useVertexRoles);
-    usedTets.add(tet);
+    usedTets.insert(tet);
 
     NTetrahedron* adjTet;
     NPerm adjRoles;
@@ -166,7 +165,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
             break;
         }
 
-        if (usedTets.contains(adjTet))
+        if (usedTets.count(adjTet))
             return 0;
 
         // Move on to the next tetrahedron.
@@ -175,7 +174,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
 
         tets.addLast(tet);
         roles.addLast(useVertexRoles);
-        usedTets.add(tet);
+        usedTets.insert(tet);
     }
 
     // We've found a spiralled solid torus.

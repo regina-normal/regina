@@ -30,7 +30,6 @@
 #include "surfaces/nsquad.h"
 #include "surfaces/nsstandard.h"
 #include "utilities/nrational.h"
-#include "utilities/nset.h"
 #include "maths/nmatrixint.h"
 #include "maths/nmatrixfield.h"
 #include "maths/nvectorunit.h"
@@ -151,7 +150,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.
-    NPointerSet<NEdge> usedEdges[2];
+    std::hash_set<NEdge*, HashPointer> usedEdges[2];
         // usedEdges[i] contains the edges for which we have already
         // examined end i.
     NLargeInteger min;
@@ -173,7 +172,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     NLargeInteger expect;
     for (NTriangulation::VertexIterator vit(triang->getVertices());
             ! vit.done(); vit++) {
-        usedEdges[0].flush(); usedEdges[1].flush();
+        usedEdges[0].clear(); usedEdges[1].clear();
         examine.clear();
         broken = false;
 
@@ -193,10 +192,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
                 edgeNumber[vemb.getVertex()][i]);
             end = vemb.getTetrahedron()->getEdgeMapping(
                 edgeNumber[vemb.getVertex()][i])[0] == i ? 1 : 0;
-            if (! usedEdges[end].contains(edge)) {
-                usedEdges[end].add(edge);
+            if (usedEdges[end].insert(edge).second)
                 examine.push_back(EdgeEnd(edge, end));
-            }
         }
 
         // Cycle through edge ends until we are finished or until the
@@ -246,10 +243,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
                 end = tet->getEdgeMapping(
                     edgeNumber[tetPerm[2]][tetPerm[current.end]])[0]
                     == tetPerm[2] ? 1 : 0;
-                if (! usedEdges[end].contains(edge)) {
-                    usedEdges[end].add(edge);
+                if (usedEdges[end].insert(edge).second)
                     examine.push_back(EdgeEnd(edge, end));
-                }
 
                 adj = tet;
                 adjPerm = tetPerm;
@@ -288,10 +283,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
                     end = tet->getEdgeMapping(
                         edgeNumber[tetPerm[3]][tetPerm[current.end]])[0]
                         == tetPerm[3] ? 1 : 0;
-                    if (! usedEdges[end].contains(edge)) {
-                        usedEdges[end].add(edge);
+                    if (usedEdges[end].insert(edge).second)
                         examine.push_back(EdgeEnd(edge, end));
-                    }
                 } else {
                     // This coordinate has already been set.
                     // Make sure it's the same value!

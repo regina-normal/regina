@@ -45,7 +45,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
     // Calculate the first homology.
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    NPointerSet<NFace> forest;
+    std::hash_set<NFace*, HashPointer> forest;
     maximalForestInDualSkeleton(forest);
     
     // Build a presentation matrix.
@@ -70,7 +70,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() {
     while (! fit.done()) {
         if ((*fit)->isBoundary())
             genIndex[fit.getArrayIndex()] = -1;
-        else if (forest.contains(*fit))
+        else if (forest.count(*fit))
             genIndex[fit.getArrayIndex()] = -1;
         else {
             genIndex[fit.getArrayIndex()] = i;
@@ -133,7 +133,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() {
 
     // Find a maximal forest in the 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    NPointerSet<NEdge> forest;
+    std::hash_set<NEdge*, HashPointer> forest;
     maximalForestInSkeleton(forest, false);
 
     // Build a presentation matrix.
@@ -169,7 +169,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() {
     while (! eit.done()) {
         if ((*eit)->isBoundary())
             genIndex[eit.getArrayIndex()] = -1;
-        else if (forest.contains(*eit))
+        else if (forest.count(*eit))
             genIndex[eit.getArrayIndex()] = -1;
         else {
             genIndex[eit.getArrayIndex()] = i;

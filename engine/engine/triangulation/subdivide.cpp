@@ -206,14 +206,14 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // Remove the tetrahedra that meet any of the non-standard or
     // ideal vertices.
     // First we make a list of the tetrahedra.
-    NPointerSet<NTetrahedron> tetList;
+    std::hash_set<NTetrahedron*, HashPointer> tetList;
     VertexIterator vIter(getVertices());
     while (!vIter.done()) {
         if ((*vIter)->isIdeal() || ! (*vIter)->isStandard()) {
             NDynamicArrayIterator<NVertexEmbedding>
                 embIter((*vIter)->getEmbeddings());
             while (!embIter.done()) {
-                tetList.add((*embIter).getTetrahedron());
+                tetList.insert((*embIter).getTetrahedron());
                 embIter++;
             }
         }
@@ -221,13 +221,11 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     }
     
     // Now remove the tetrahedra.
-    NPointerSetIterator<NTetrahedron> tetIter(tetList);
-    while (!tetIter.done()) {
-        delete removeTetrahedron(*tetIter);
-        tetIter++;
-    }
+    // For each tetrahedron, remove it and delete it.
+    for_each(tetList.begin(), tetList.end(),
+        compose1(FuncDelete<NTetrahedron>(),
+        bind1st(mem_fun(&NTriangulation::removeTetrahedron), this)));
 
     gluingsHaveChanged();
-    
     return true;
 }

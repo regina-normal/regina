@@ -28,13 +28,14 @@
 
 #include "triangulation/ntriangulation.h"
 
-void NTriangulation::maximalForestInBoundary(NPointerSet<NEdge>& edgeSet,
-        NPointerSet<NVertex>& vertexSet) {
+void NTriangulation::maximalForestInBoundary(
+        std::hash_set<NEdge*, HashPointer>& edgeSet,
+        std::hash_set<NVertex*, HashPointer>& vertexSet) {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
-    vertexSet.flush();
-    edgeSet.flush();
+    vertexSet.clear();
+    edgeSet.clear();
     BoundaryComponentIterator bit(boundaryComponents);
     NBoundaryComponent* bc;
     while (! bit.done()) {
@@ -47,8 +48,9 @@ void NTriangulation::maximalForestInBoundary(NPointerSet<NEdge>& edgeSet,
 }
 
 void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
-        NPointerSet<NEdge>& edgeSet, NPointerSet<NVertex>& vertexSet) {
-    vertexSet.add(from);
+        std::hash_set<NEdge*, HashPointer>& edgeSet,
+        std::hash_set<NVertex*, HashPointer>& vertexSet) {
+    vertexSet.insert(from);
 
     NDynamicArrayIterator<NVertexEmbedding> it(from->getEmbeddings());
     NTetrahedron* tet;
@@ -66,8 +68,8 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
             if (! (edge->isBoundary()))
                 continue;
             otherVertex = tet->getVertex(yourVertex);
-            if (! vertexSet.contains(otherVertex)) {
-                edgeSet.add(edge);
+            if (! vertexSet.count(otherVertex)) {
+                edgeSet.insert(edge);
                 stretchBoundaryForestFromVertex(otherVertex, edgeSet,
                     vertexSet);
             }
@@ -76,16 +78,16 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
     }
 }
 
-void NTriangulation::maximalForestInSkeleton(NPointerSet<NEdge>& edgeSet,
-        bool canJoinBoundaries) {
+void NTriangulation::maximalForestInSkeleton(
+        std::hash_set<NEdge*, HashPointer>& edgeSet, bool canJoinBoundaries) {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
-    NPointerSet<NVertex> vertexSet;
-    NPointerSet<NVertex> thisBranch;
+    std::hash_set<NVertex*, HashPointer> vertexSet;
+    std::hash_set<NVertex*, HashPointer> thisBranch;
 
     if (canJoinBoundaries)
-        edgeSet.flush();
+        edgeSet.clear();
     else
         maximalForestInBoundary(edgeSet, vertexSet);
 
@@ -94,23 +96,24 @@ void NTriangulation::maximalForestInSkeleton(NPointerSet<NEdge>& edgeSet,
 
     while (! vit.done()) {
         vertex = *vit;
-        if (! (vertexSet.contains(vertex))) {
+        if (! (vertexSet.count(vertex))) {
             stretchForestFromVertex(vertex, edgeSet, vertexSet, thisBranch);
-            thisBranch.flush();
+            thisBranch.clear();
         }
         vit++;
     }
 }
 
 bool NTriangulation::stretchForestFromVertex(NVertex* from,
-        NPointerSet<NEdge>& edgeSet, NPointerSet<NVertex>& vertexSet,
-        NPointerSet<NVertex>& thisStretch) {
+        std::hash_set<NEdge*, HashPointer>& edgeSet,
+        std::hash_set<NVertex*, HashPointer>& vertexSet,
+        std::hash_set<NVertex*, HashPointer>& thisStretch) {
     // Moves out from the vertex until we hit a vertex that has already
     //     been visited; then stops.
     // Returns true if we make such a link.
     // PRE: Such a link has not already been made.
-    vertexSet.add(from);
-    thisStretch.add(from);
+    vertexSet.insert(from);
+    thisStretch.insert(from);
 
     NDynamicArrayIterator<NVertexEmbedding> it(from->getEmbeddings());
     NTetrahedron* tet;
@@ -125,10 +128,10 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
             if (vertex == yourVertex)
                 continue;
             otherVertex = tet->getVertex(yourVertex);
-            if (thisStretch.contains(otherVertex))
+            if (thisStretch.count(otherVertex))
                 continue;
-            madeLink = vertexSet.contains(otherVertex);
-            edgeSet.add(tet->getEdge(edgeNumber[vertex][yourVertex]));
+            madeLink = vertexSet.count(otherVertex);
+            edgeSet.insert(tet->getEdge(edgeNumber[vertex][yourVertex]));
             if (! madeLink)
                 madeLink =
                     stretchForestFromVertex(otherVertex, edgeSet, vertexSet,
@@ -143,12 +146,12 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
 
 bool NTriangulation::crushMaximalForest() {
     // First obtain a maximal forest in the 1-skeleton.
-    NPointerSet<NEdge> cEdges;
+    std::hash_set<NEdge*, HashPointer> cEdges;
     maximalForestInSkeleton(cEdges, false);
 
     /* --- DEBUGGING OUTPUT ---
     {
-        NPointerSet<NFace> dual;
+        std::hash_set<NFace*, HashPointer> dual;
         maximalForestInDualSkeleton(dual);
         cerr << "Dual Faces: " << dual.size() << '\n';
         NPointerSetIterator<NFace> it(dual);
@@ -170,7 +173,7 @@ bool NTriangulation::crushMaximalForest() {
     }
     ------------------------*/
 
-    NPointerSet<NTetrahedron> cTetrahedra;
+    std::hash_set<NTetrahedron*, HashPointer> cTetrahedra;
 
     // Extend this list of collapsings to faces.
     NTetrahedron* tet;
@@ -188,7 +191,7 @@ bool NTriangulation::crushMaximalForest() {
                 for (edge = 0; edge < 6; edge++) {
                     if (edgeStart[edge] == face || edgeEnd[edge] == face)
                         continue;
-                    if (cEdges.contains(tet->getEdge(edge)))
+                    if (cEdges.count(tet->getEdge(edge)))
                         nLost++;
                 }
                 // Changed > 1 below to == 2 since we're not storing
@@ -197,7 +200,7 @@ bool NTriangulation::crushMaximalForest() {
                     for (edge = 0; edge < 6; edge++) {
                         if (edgeStart[edge] == face || edgeEnd[edge] == face)
                             continue;
-                        cEdges.add(tet->getEdge(edge));
+                        cEdges.insert(tet->getEdge(edge));
                     }
                     changed = true;
                 }
@@ -212,15 +215,15 @@ bool NTriangulation::crushMaximalForest() {
     while (! tit.done()) {
         tet = *tit;
         for (edge = 0; edge < 6; edge++)
-            if (cEdges.contains(tet->getEdge(edge))) {
-                cTetrahedra.add(tet);
+            if (cEdges.count(tet->getEdge(edge))) {
+                cTetrahedra.insert(tet);
                 break;
             }
         tit++;
     }
 
     // Are we going to change anything?
-    if (cTetrahedra.size() == 0)
+    if (cTetrahedra.empty())
         return false;
 
     // Prepare to measure the change in topology.
@@ -240,12 +243,12 @@ bool NTriangulation::crushMaximalForest() {
     tit.init(tetrahedra);
     while (! tit.done()) {
         tet = *tit;
-        if (! cTetrahedra.contains(tet))
+        if (! cTetrahedra.count(tet))
             for (face = 0; face < 4; face++) {
                 adjTet = tet->getAdjacentTetrahedron(face);
                 if (adjTet == 0)
                     continue;
-                if (! cTetrahedra.contains(adjTet))
+                if (! cTetrahedra.count(adjTet))
                     continue;
                 adjPerm = tet->getAdjacentTetrahedronGluing(face);
                 adjFace = adjPerm[face];
@@ -254,7 +257,7 @@ bool NTriangulation::crushMaximalForest() {
                     for (edgeFrom = 0; edgeFrom < 4; edgeFrom++) {
                         if (edgeFrom == adjFace)
                             continue;
-                        if (! (cEdges.contains(adjTet->
+                        if (! (cEdges.count(adjTet->
                                 getEdge(edgeNumber[adjFace][edgeFrom]))))
                             continue;
                         break;
@@ -272,7 +275,7 @@ bool NTriangulation::crushMaximalForest() {
                     adjFace = adjPerm[face];
                     adjTet = tmpTet;
 
-                    if (! (cTetrahedra.contains(adjTet))) {
+                    if (! (cTetrahedra.count(adjTet))) {
                         // Glue the original face to this safe
                         // tetrahedron.
                         tet->unjoin(face);
@@ -286,11 +289,11 @@ bool NTriangulation::crushMaximalForest() {
     }
 
     // Remove the squished tetrahedra.
-    NPointerSetIterator<NTetrahedron> cit(cTetrahedra);
-    while (! cit.done()) {
-        delete tetrahedra.remove(*cit);
-        cit++;
-    }
+    // For each tetrahedron, remove it and delete it.
+    // TODO: Convert the following loop to a for_each() call.
+    for (hash_set<NTetrahedron*, HashPointer>::iterator tetIt =
+            cTetrahedra.begin(); tetIt != cTetrahedra.end(); tetIt++)
+        delete tetrahedra.remove(*tetIt);
 
     // Tidy up.
     gluingsHaveChanged();
@@ -309,33 +312,35 @@ bool NTriangulation::crushMaximalForest() {
     return true;
 }
 
-void NTriangulation::maximalForestInDualSkeleton(NPointerSet<NFace>& faceSet) {
+void NTriangulation::maximalForestInDualSkeleton(
+        std::hash_set<NFace*, HashPointer>& faceSet) {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    faceSet.flush();
+    faceSet.clear();
 
-    NPointerSet<NTetrahedron> visited;
+    std::hash_set<NTetrahedron*, HashPointer> visited;
     TetrahedronIterator it(tetrahedra);
     NTetrahedron* tet;
 
     while (! it.done()) {
         tet = *it;
-        if (! (visited.contains(tet)))
+        if (! (visited.count(tet)))
             stretchDualForestFromTet(tet, faceSet, visited);
         it++;
     }
 }
 
 void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
-        NPointerSet<NFace>& faceSet, NPointerSet<NTetrahedron>& visited) {
-    visited.add(tet);
+        std::hash_set<NFace*, HashPointer>& faceSet,
+        std::hash_set<NTetrahedron*, HashPointer>& visited) {
+    visited.insert(tet);
 
     NTetrahedron* adjTet;
     for (int face = 0; face < 4; face++) {
         adjTet = tet->getAdjacentTetrahedron(face);
         if (adjTet)
-            if (! (visited.contains(adjTet))) {
-                faceSet.add(tet->getFace(face));
+            if (! (visited.count(adjTet))) {
+                faceSet.insert(tet->getFace(face));
                 stretchDualForestFromTet(adjTet, faceSet, visited);
             }
     }

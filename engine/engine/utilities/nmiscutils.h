@@ -27,7 +27,8 @@
 /* end stub */
 
 /*! \file nmiscutils.h
- *  \brief Provides small miscellaneous utility classes.
+ *  \brief Provides miscellaneous utility classes including helper
+ *  classes for use with the Standard Template Library.
  */
 
 #ifndef __NMISCUTILS_H
@@ -35,79 +36,57 @@
 #define __NMISCUTILS_H
 #endif
 
+#include <stdlib.h>
+
 /**
- * An ordered pair of elements of two given (possibly different) types.
+ * An adaptable unary function used to deallocate objects.
+ * This class is for use with the Standard Template Library.
  *
- * \pre Types S and T both provide copy constructors.
+ * Note that the template argument need not be a pointer class.  If the
+ * template argument is <tt>T</tt>, this unary function will accept (and
+ * call \c delete upon) \e pointers to <tt>T</tt>.
  *
  * \ifaces Not present.
  */
-template <class S, class T>
-struct NOrderedPair {
-    S first;
-        /**< First element of the ordered pair. */
-    T second;
-        /**< Second element of the ordered pair. */
+template <class T>
+struct FuncDelete {
+    typedef T* argument_type;
+        /**< The argument type for this unary function. */
+    typedef void result_type;
+        /**< The return type for this unary function. */
 
     /**
-     * Creates a new ordered pair whose elements are built from default
-     * constructors.
+     * Calls \c delete upon the given pointer.
      *
-     * \pre Types S and T both provide default constructors.
+     * @param ptr the pointer whose data should be deleted.
      */
-    NOrderedPair() {
+    void operator() (T* ptr) const {
+        delete ptr;
     }
+};
+
+/**
+ * A hash function used to calculate hash values for arbitrary pointers.
+ * This class is for use with the Standard Template Library.
+ *
+ * The only guarantee provided by this hash function is that two
+ * pointers representing the same memory location will return the same
+ * hash value.  Two pointers pointing to identical data in two different
+ * memory locations might very well return two different hash values.
+ *
+ * \ifaces Not present.
+ */
+struct HashPointer {
     /**
-     * Creates a new ordered pair containing the given values.
+     * Returns a hash value for the given pointer.  See the general
+     * class notes for further details.
      *
-     * @param newFirst the value to use for the first element of the
-     * ordered pair.
-     * @param newSecond the value to use for the second element of the
-     * ordered pair.
+     * @param p the pointer whose hash value should be calculated.
+     * @return the corresponding hash value.
      */
-    NOrderedPair(const S& newFirst, const T& newSecond) :
-            first(newFirst), second(newSecond) {
-    }
-    /**
-     * Creates a new ordered pair containing the same values as the
-     * given ordered pair.
-     *
-     * @param cloneMe the ordered pair to clone.
-     */
-    NOrderedPair(const NOrderedPair& cloneMe) : first(cloneMe.first),
-            second(cloneMe.second) {
-    }
-    /**
-     * Assigns the values of the elements in the given ordered pair to
-     * the elements of this ordered pair.
-     *
-     * \pre Types S and T both provide assignment operators.
-     *
-     * @param other the pairs whose value will be assigned to this pair.
-     */
-    NOrderedPair<S,T>& operator = (const NOrderedPair<S,T>& other) {
-        first = other.first;
-        second = other.second;
-        return *this;
-    }
-    /**
-     * Determines if this pair is strictly less than the given pair
-     * according to lexicographical ordering.  The first elements of the
-     * pairs are compared, and if these are equal the second elements
-     * are compared instead.
-     *
-     * \pre Types S and T both provide operators <tt>\<</tt>.
-     *
-     * @param other the pair with which this will be compared.
-     * @return \c true if and only if this pair is strictly less than
-     * the given pair.
-     */
-    bool operator < (const NOrderedPair<S,T>& other) {
-        if (first < other.first)
-            return true;
-        if (other.first < first)
-            return false;
-        return (second < other.second);
+    size_t operator() (const void* p) const {
+        // Cast the pointer directly to a size_t.
+        return *((size_t*)((void*)&p));
     }
 };
 

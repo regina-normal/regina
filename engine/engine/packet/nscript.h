@@ -35,15 +35,15 @@
 #define __NSCRIPT_H
 #endif
 
+#include <utility>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
 #include "utilities/ndynamicarray.h"
-#include "utilities/nmiscutils.h"
 
 /**
  * An ordered pair of strings.
  */
-typedef NOrderedPair<NString, NString> NStringPair;
+typedef std::pair<NString, NString> NStringPair;
 
 /**
  * A packet representing a script that can be run.

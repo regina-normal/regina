@@ -35,10 +35,11 @@
 #define __NTRIANGULATION_H
 #endif
 
+#include <hash_set>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
 #include "utilities/ndynamicarray.h"
-#include "utilities/nset.h"
+#include "utilities/nmiscutils.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/nface.h"
 #include "triangulation/nedge.h"
@@ -881,8 +882,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @param vertexSet the set to be emptied and into which the
          * vertices of the maximal forest will be placed.
          */
-        void maximalForestInBoundary(NPointerSet<NEdge>& edgeSet,
-                NPointerSet<NVertex>& vertexSet);
+        void maximalForestInBoundary(
+                std::hash_set<NEdge*, HashPointer>& edgeSet,
+                std::hash_set<NVertex*, HashPointer>& vertexSet);
         /**
          * Produces a maximal forest in the triangulation's 1-skeleton.
          * The given set will be emptied and will have the edges of the
@@ -907,7 +909,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * boundary components are allowed to be joined by the maximal
          * forest.
          */
-        void maximalForestInSkeleton(NPointerSet<NEdge>& edgeSet,
+        void maximalForestInSkeleton(
+                std::hash_set<NEdge*, HashPointer>& edgeSet,
                 bool canJoinBoundaries = true);
         /**
          * Produces a maximal forest in the triangulation's dual
@@ -923,7 +926,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @param faceSet the set to be emptied and into which the faces
          * representing the maximal forest will be placed.
          */
-        void maximalForestInDualSkeleton(NPointerSet<NFace>& faceSet);
+        void maximalForestInDualSkeleton(
+                std::hash_set<NFace*, HashPointer>& faceSet);
         /**
          * Attempts to reduce the number of vertices by crushing a
          * maximal forest in the 1-skeleton.
@@ -1567,14 +1571,17 @@ class NTriangulation : public NPacket, NPropertyHolder {
         void calculateSurfaceProperties();
 
         void stretchBoundaryForestFromVertex(NVertex*,
-                NPointerSet<NEdge>&, NPointerSet<NVertex>&);
+                std::hash_set<NEdge*, HashPointer>&,
+                std::hash_set<NVertex*, HashPointer>&);
             /**< Internal to maximalForestInBoundary(). */
         bool stretchForestFromVertex(NVertex*,
-                NPointerSet<NEdge>&, NPointerSet<NVertex>&,
-                NPointerSet<NVertex>&);
+                std::hash_set<NEdge*, HashPointer>&,
+                std::hash_set<NVertex*, HashPointer>&,
+                std::hash_set<NVertex*, HashPointer>&);
             /**< Internal to maximalForestInSkeleton(). */
         void stretchDualForestFromTet(NTetrahedron*,
-                NPointerSet<NFace>&, NPointerSet<NTetrahedron>&);
+                std::hash_set<NFace*, HashPointer>&,
+                std::hash_set<NTetrahedron*, HashPointer>&);
             /**< Internal to maximalForestInDualSkeleton(). */
 };
 

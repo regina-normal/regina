@@ -27,7 +27,6 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
-#include "utilities/nset.h"
 
 // Mapping from vertices (0,1,2) of each external face of a new tetrahedron
 //     to the vertices of this new tetrahedron in a 3-2 move.
@@ -61,15 +60,13 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     // Find the unwanted tetrahedra.
     NTetrahedron* oldTet[3];
     NPerm oldVertexPerm[3];
-    NPointerSet<NTetrahedron> oldTets;
+    std::hash_set<NTetrahedron*, HashPointer> oldTets;
     int oldPos = 0;
     for (NDynamicArrayIterator<NEdgeEmbedding> it(embs); ! it.done(); it++) {
         oldTet[oldPos] =(*it).getTetrahedron();
-        if (check) {
-            if (oldTets.contains(oldTet[oldPos]))
+        if (check)
+            if (! oldTets.insert(oldTet[oldPos]).second)
                 return false;
-            oldTets.add(oldTet[oldPos]);
-        }
         oldVertexPerm[oldPos] = (*it).getVertices();
         oldPos++;
     }
@@ -281,15 +278,13 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
 
     // Find the unwanted tetrahedra.
     NTetrahedron* oldTet[4];
-    NPointerSet<NTetrahedron> oldTets;
+    std::hash_set<NTetrahedron*, HashPointer> oldTets;
     int oldPos = 0;
     for (NDynamicArrayIterator<NEdgeEmbedding> it(embs); ! it.done(); it++) {
         oldTet[oldPos] =(*it).getTetrahedron();
-        if (check) {
-            if (oldTets.contains(oldTet[oldPos]))
+        if (check)
+            if (! oldTets.insert(oldTet[oldPos]).second)
                 return false;
-            oldTets.add(oldTet[oldPos]);
-        }
         oldPos++;
     }
     

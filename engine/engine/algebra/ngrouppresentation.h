@@ -35,9 +35,9 @@
 #define __NGROUPPRESENTATION_H
 #endif
 
+#include <utility>
 #include "utilities/ndoublelist.h"
 #include "utilities/ndynamicarray.h"
-#include "utilities/nmiscutils.h"
 #include "property/npropertyholder.h"
 #include "shareableobject.h"
 
@@ -51,7 +51,7 @@ class NFile;
  *
  * \ifaces Not present.
  */
-typedef NOrderedPair<unsigned long, long> NGroupExpressionTerm;
+typedef std::pair<unsigned long, long> NGroupExpressionTerm;
 
 /**
  * Represents an expression involving generators from a group presentation.
