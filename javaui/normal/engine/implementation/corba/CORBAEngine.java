@@ -193,31 +193,83 @@ public class CORBAEngine implements Engine {
                 "the correct class.");
         }
 
-        NameComponent path[] = {
-            new NameComponent("regina", "context"),
-            new NameComponent("Engine", "object")
-        };
         try {
-            objRef = ncRef.resolve(path);
-            if (objRef == null)
+			NameComponent path[] = { new NameComponent("regina", "context") };
+            if ((objRef = ncRef.resolve(path)) == null)
                 throw new Exception();
+			if ((ncRef = NamingContextHelper.narrow(objRef)) == null)
+				throw new Exception();
         } catch (Throwable th) {
+			dumpBindings(ncRef, 100);
             throw new normal.engine.implementation.corba.CORBAException(
-                "The CORBA calculation engine could not be located " +
+                "The Regina naming context could not be located " +
                 "by the name service.");
         }
 
+		String msg = null;
         try {
-            data = normal.engine.implementation.corba.Regina.EngineHelper.
-                narrow(objRef);
-            if (data == null)
+        	NameComponent path[] = { new NameComponent("Engine", "object") };
+            if ((objRef = ncRef.resolve(path)) == null) {
+				msg = "The engine does not exist within the Regina naming " +
+					"context.";
                 throw new Exception();
+			}
+			if (objRef._non_existent()) {
+				msg = "The engine exists in the Regina naming context but " +
+					"not on the server.";
+				throw new Exception();
+			}
+            if ((data = normal.engine.implementation.corba.Regina.EngineHelper.
+                	narrow(objRef)) == null) {
+				msg = "The engine was located on the server but could not " +
+					"be narrowed to the correct class.";
+                throw new Exception();
+			}
         } catch (Throwable th) {
-            throw new normal.engine.implementation.corba.CORBAException(
-                "The CORBA calculation engine could not be narrowed to " +
-                "the correct class.");
+			if (msg == null) {
+				dumpBindings(ncRef, 100);
+				System.out.println(th.toString());
+            	throw new normal.engine.implementation.corba.CORBAException(
+                	"An unknown problem occurred whilst retrieving the " +
+					"engine via the name service; details have been " +
+					"written to standard output.");
+			} else
+            	throw new normal.engine.implementation.corba.CORBAException(
+					msg);
         }
     }
+
+	/**
+	 * Dumps the bindings in the given naming context to standard output.
+	 *
+	 * @param ncRef the naming context to examine.
+	 * @param max the maximum number of bindings to dump.
+	 */
+	private void dumpBindings(NamingContext ncRef, int max) {
+		BindingListHolder bl = new BindingListHolder();
+		BindingIteratorHolder bi = new BindingIteratorHolder();
+
+		System.out.println("NamingContext bindings:");
+
+		ncRef.list(max, bl, bi);
+
+		int i, j;
+		Binding binding;
+		NameComponent nc;
+		for (i = 0; i < bl.value.length; i++) {
+			binding = bl.value[i];
+			for (j = 0; j < binding.binding_name.length; j++) {
+				nc = binding.binding_name[j];
+				if (j > 0)
+					System.out.print(" / ");
+				System.out.print(nc.id + " : " + nc.kind);
+			}
+			System.out.println();
+		}
+
+		System.out.println("-- displayed " + String.valueOf(bl.value.length)
+			+ " binding(s).");
+	}
 
     /**
      * Provides a polite string representation for this object.
