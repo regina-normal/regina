@@ -79,7 +79,7 @@ typedef void (*UseGluingPerms)(const NGluingPerms*, void*);
  * face has a corresponding gluing permutation (and the matched face has
  * the inverse gluing permutation).
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NGluingPerms {
     private:

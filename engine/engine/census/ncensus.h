@@ -75,9 +75,6 @@ typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
  * offered.
  *
  * \testpart
- *
- * \ifaces Not present, although static routine formCensus() is available
- * as a member of class Engine.
  */
 class NCensus {
     public:
@@ -172,9 +169,8 @@ class NCensus {
          * the calculation will run in the current thread and this
          * routine will only return once the census is complete.
          *
-         * \ifaces This routine is a member of class Engine.
-         * Parameters \a whichPurge, \a sieve and \a sieveArgs are not present
-         * (and will be treated as 0).
+         * \ifacespython Parameters \a sieve, \a sieveArgs and \a manager
+         * are not present (and will be treated as 0).
          *
          * @param parent the packet beneath which members of the census will
          * be placed.
@@ -292,7 +288,8 @@ class NCensus {
          * by NFacePairing::isCanonical().  Note that all face pairings
          * constructed by NFacePairing::findAllPairings() are of this form.
          *
-         * \ifaces Not present.
+         * \ifacespython Parameters \a sieve and \a sieveArgs
+         * are not present (and will be treated as 0).
          *
          * @param pairing the tetrahedron face pairing that
          * triangulations in this partial census must be modelled by.
@@ -352,6 +349,9 @@ class NCensus {
          * faces are all internal; if the given triangulation has
          * boundary faces then this routine will simply return \c true.
          *
+         * \ifacespython Parameter \a ignore is not present (and will
+         * be treated as 0).
+         *
          * @param tri the triangulation to examine.
          * @param ignore a parameter that is ignored.
          * @return \c false if the given triangulation is known to be
@@ -403,9 +403,8 @@ class NCensus {
          *
          * \todo \bugurgent This routine currently does nothing!
          *
-         * \ifaces This routine is a member of class Engine.
-         * Parameters \a sieve and \a sieveArgs are not present
-         * (and will be treated as 0).
+         * \ifacespython Parameters \a sieve, \a sieveArgs and \a manager
+         * are not present (and will be treated as 0).
          *
          * @param parent the packet beneath which the completions that
          * are constructed will be placed.

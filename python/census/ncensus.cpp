@@ -26,11 +26,50 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
+#include "census/ncensus.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
+using namespace boost::python;
+using regina::NCensus;
+
+namespace {
+    unsigned long formCensus(regina::NPacket* p, unsigned n,
+            regina::NBoolSet fin, regina::NBoolSet orb, regina::NBoolSet bdr,
+            int bf, int wp) {
+        return NCensus::formCensus(p, n, fin, orb, bdr, bf, wp);
+    }
+    unsigned long formPartialCensus(const regina::NFacePairing* fp,
+            regina::NPacket* p, regina::NBoolSet fin, regina::NBoolSet orb,
+            int wp) {
+        return NCensus::formPartialCensus(fp, p, fin, orb, wp);
+    }
+    bool mightBeMinimal(regina::NTriangulation* t) {
+        return NCensus::mightBeMinimal(t, 0);
+    }
+    unsigned long findAllCompletions(regina::NPacket* p,
+            regina::NTriangulation* b, regina::NBoolSet fin,
+            regina::NBoolSet orb) {
+        return NCensus::findAllCompletions(p, b, fin, orb);
+    }
+}
+
+void addNCensus() {
+    scope s = class_<NCensus, std::auto_ptr<NCensus>,
+            boost::noncopyable>("NCensus", no_init)
+        .def("formCensus", formCensus)
+        .def("formPartialCensus", formPartialCensus)
+        .def("mightBeMinimal", mightBeMinimal)
+        .def("findAllCompletions", findAllCompletions)
+        .staticmethod("formCensus")
+        .staticmethod("formPartialCensus")
+        .staticmethod("mightBeMinimal")
+        .staticmethod("findAllCompletions")
+    ;
+
+    s.attr("PURGE_NON_MINIMAL") = NCensus::PURGE_NON_MINIMAL;
+    s.attr("PURGE_NON_PRIME") = NCensus::PURGE_NON_PRIME;
+    s.attr("PURGE_NON_MINIMAL_PRIME") = NCensus::PURGE_NON_MINIMAL_PRIME;
+    s.attr("PURGE_P2_REDUCIBLE") = NCensus::PURGE_P2_REDUCIBLE;
 }
 

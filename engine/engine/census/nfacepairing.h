@@ -94,8 +94,6 @@ typedef void (*UseFacePairing)(const NFacePairing*, const NFacePairingIsoList*,
  * be specified; they are not a part of this structure.
  *
  * \testpart
- *
- * \ifaces Not present.
  */
 class NFacePairing : public NThread {
     private:
@@ -243,6 +241,8 @@ class NFacePairing : public NThread {
          * series of matched face pairs.
          * \pre This face pairing is in canonical form as described by
          * isCanonical().
+         *
+         * \ifacespython Not present.
          *
          * @param list the list into which the newly created automorphisms
          * will be placed.
@@ -418,6 +418,8 @@ class NFacePairing : public NThread {
          * separate thread.  At most one copy of this routine should be
          * running at any given time for a particular NFacePairing instance.
          *
+         * \ifacespython Not present.
+         *
          * @param param a structure containing the parameters that were
          * passed to findAllPairings().
          * @return the value 0.
@@ -454,6 +456,8 @@ class NFacePairing : public NThread {
          * with tetrahedron 0 to produce a smaller representation of the same
          * pairing.
          * \todo \feature Allow cancellation of face pairing generation.
+         *
+         * \ifacespython Not present.
          *
          * @param nTetrahedra the number of tetrahedra whose faces should
          * be (potentially) matched.

@@ -11,5 +11,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libcensus.la
 
-libcensus_la_SOURCES = pycensus.cpp
+libcensus_la_SOURCES = ncensus.cpp nfacepairing.cpp pycensus.cpp
 
