@@ -81,7 +81,7 @@ public interface NTriangulation extends NPacket {
     boolean knowsZeroEfficient();
     boolean hasSplittingSurface();
     boolean knowsSplittingSurface();
-     
+
     boolean crushMaximalForest();
     boolean intelligentSimplify();
     boolean simplifyToLocalMinimum();
@@ -121,9 +121,10 @@ public interface NTriangulation extends NPacket {
     void barycentricSubdivision();
 
     NTetrahedron insertLayeredSolidTorus(long cuts0, long cuts1);
-    void insertLensSpace(long p, long q);
+    void insertLayeredLensSpace(long p, long q);
+    void insertLayeredLoop(long length, boolean twisted);
     void insertTriangulation(NTriangulation source);
     boolean insertRehydration(String dehydration);
-    
+
     boolean isIsomorphicTo(NTriangulation other);
 }

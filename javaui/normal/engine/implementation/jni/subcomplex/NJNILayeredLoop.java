@@ -39,6 +39,7 @@ public class NJNILayeredLoop extends JNIShareableObject
     }
     
     public native NLayeredLoop cloneMe();
+    public native long getLength();
     public native long getIndex();
     public native boolean isTwisted();
     public native NEdge getHinge(int which);

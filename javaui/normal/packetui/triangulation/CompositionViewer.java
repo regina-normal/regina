@@ -182,8 +182,8 @@ public class CompositionViewer extends DefaultPacketViewer
 
                 twisted = loop.isTwisted();
                 instance.add(new DefaultMutableTreeNode((twisted ?
-                    "Twisted" : "Not twisted") + ", index " +
-                    String.valueOf(loop.getIndex())));
+                    "Twisted" : "Not twisted") + ", length " +
+                    String.valueOf(loop.getLength())));
                 if (twisted)
                     instance.add(new DefaultMutableTreeNode("Hinge: edge " +
                         String.valueOf(triangulation.getEdgeIndex(

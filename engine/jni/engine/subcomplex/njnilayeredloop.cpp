@@ -42,6 +42,12 @@ REGJNIEXPORT jobject JNICALL
 }
 
 REGJNIEXPORT jlong JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_getLength
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NLayeredLoop, me)->getLength();
+}
+
+REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_getIndex
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NLayeredLoop, me)->getIndex();

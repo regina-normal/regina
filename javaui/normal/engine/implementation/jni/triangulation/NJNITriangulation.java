@@ -180,7 +180,8 @@ public class NJNITriangulation extends NJNIPacket
     public native void barycentricSubdivision();
 
     public native NTetrahedron insertLayeredSolidTorus(long cuts0, long cuts1);
-    public native void insertLensSpace(long p, long q);
+    public native void insertLayeredLensSpace(long p, long q);
+    public native void insertLayeredLoop(long length, boolean twisted);
     public native void insertTriangulation(NTriangulation source);
     public native boolean insertRehydration(String dehydration);
 

@@ -80,7 +80,7 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
     return newTet;
 }
 
-void NTriangulation::insertLensSpace(unsigned long p, unsigned long q) {
+void NTriangulation::insertLayeredLensSpace(unsigned long p, unsigned long q) {
     NTetrahedron* chain;
     if (p == 0) {
         chain = insertLayeredSolidTorus(1, 1);
@@ -106,6 +106,39 @@ void NTriangulation::insertLensSpace(unsigned long p, unsigned long q) {
             chain = insertLayeredSolidTorus(q, p - 2 * q);
             chain->joinTo(3, chain, NPerm(3, 0, 1, 2));
         }
+    }
+    gluingsHaveChanged();
+}
+
+void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
+    if (length == 0)
+        return;
+
+    // Insert a layered chain of the given length.
+    // We should probably split this out into a separate routine.
+    NTetrahedron* base;
+    NTetrahedron* curr;
+    NTetrahedron* next;
+
+    base = new NTetrahedron();
+    addTetrahedron(base);
+    curr = base;
+
+    for (unsigned long i = 1; i < length; i++) {
+        next = new NTetrahedron();
+        curr->joinTo(0, next, NPerm(1, 0, 2, 3));
+        curr->joinTo(3, next, NPerm(0, 1, 3, 2));
+        addTetrahedron(next);
+        curr = next;
+    }
+
+    // Join the two ends of the layered chain.
+    if (twisted) {
+        curr->joinTo(0, base, NPerm(2, 3, 1, 0));
+        curr->joinTo(3, base, NPerm(3, 2, 0, 1));
+    } else {
+        curr->joinTo(0, base, NPerm(1, 0, 2, 3));
+        curr->joinTo(3, base, NPerm(0, 1, 3, 2));
     }
     gluingsHaveChanged();
 }

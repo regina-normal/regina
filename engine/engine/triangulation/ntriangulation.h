@@ -1479,11 +1479,13 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * @param cuts1 the second smallest of the three desired intersection
          * numbers.
          * @return the tetrahedron containing the boundary torus.
+         *
+         * @see NLayeredSolidTorus
          */
         NTetrahedron* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);
         /**
-         * Inserts a new lens space L(p,q) into the triangulation.
+         * Inserts a new layered lens space L(p,q) into the triangulation.
          * The lens space will be created by gluing together two layered
          * solid tori in a way that uses the fewest possible tetrahedra.
          *
@@ -1495,8 +1497,26 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * @param p a parameter of the desired lens space.
          * @param q a parameter of the desired lens space.
+         *
+         * @see NLayeredLensSpace
          */
-        void insertLensSpace(unsigned long p, unsigned long q);
+        void insertLayeredLensSpace(unsigned long p, unsigned long q);
+        /**
+         * Inserts a layered loop of the given length into this triangulation.
+         * Layered loops are described in more detail in the NLayeredLoop
+         * class notes.
+         *
+         * The new tetrahedra will be inserted at the end of the list of
+         * tetrahedra in the triangulation.
+         *
+         * @param length the length of the new layered loop; this must
+         * be strictly positive.
+         * @param twisted \c true if the new layered loop should be twisted,
+         * or \c false if it should be untwisted.
+         *
+         * @see NLayeredLoop
+         */
+        void insertLayeredLoop(unsigned long length, bool twisted);
         /**
          * Inserts a copy of the given triangulation into this
          * triangulation.

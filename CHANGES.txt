@@ -36,6 +36,8 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
               edges identified with themselves in reverse.
             - Added pruning using low-degree edges in the non-orientable
               P2-irreducible case.
+        Class NLayeredLoop:
+            - Renamed getIndex() to getLength().
         Class NLayeredSolidTorus:
             - Fixed a bug in isLayeredSolidTorusBase() that generated
               false positives in ideal triangulations.
@@ -59,6 +61,11 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
               implemented in the C++ calculation engine.
             - Fixed a bug in which getHomologyH1Bdry() gave incorrect
               answers if the skeleton had not already been calculated.
+            - Renamed insertLensSpace() to insertLayeredLensSpace().
+            - New routine insertLayeredLoop().
+    JAVA USER INTERFACE:
+        Overall structure:
+            - Incorporated engine enhancements listed above.
     UTILITIES:
         regconcat:
             - New utility for combining several data files.

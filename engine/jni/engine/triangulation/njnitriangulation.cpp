@@ -292,9 +292,16 @@ REGJNIEXPORT jobject JNICALL
 }
 
 REGJNIEXPORT void JNICALL
-        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertLensSpace
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertLayeredLensSpace
         (JNIEnv *env, jobject me, jlong p, jlong q) {
-    GET_ENGINE_OBJECT(env, NTriangulation, me)->insertLensSpace(p, q);
+    GET_ENGINE_OBJECT(env, NTriangulation, me)->insertLayeredLensSpace(p, q);
+}
+
+REGJNIEXPORT void JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_insertLayeredLoop
+        (JNIEnv *env, jobject me, jlong length, jboolean twisted) {
+    GET_ENGINE_OBJECT(env, NTriangulation, me)->insertLayeredLoop(
+        length, twisted);
 }
 
 REGJNIEXPORT jboolean JNICALL

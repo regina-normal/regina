@@ -55,14 +55,19 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
     private JRadioButton empty;
     
     /**
-     * Button representing a layered triangulation.
+     * Button representing a layered solid torus.
      */
     private JRadioButton layered;
     
     /**
-     * Button representing a lens space.
+     * Button representing a layered lens space.
      */
     private JRadioButton lensSpace;
+
+    /**
+     * Button representing a layered loop.
+     */
+    private JRadioButton layeredLoop;
 
     /**
      * Button representing a dehydrated triangulation.
@@ -106,6 +111,16 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
     private JTextField lensQ;
 
     /**
+     * Parameter for a layered loop.
+     */
+    private JTextField loopLength;
+
+    /**
+     * Parameter for a layered loop.
+     */
+    private JCheckBox loopTwisted;
+
+    /**
      * Dehydrated triangulation string.
      */
     private JTextField dehydration;
@@ -138,13 +153,15 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         ButtonGroup type = new ButtonGroup();
         empty = new JRadioButton("Empty", true);
         layered = new JRadioButton("Layered solid torus (a,b,c):");
-        lensSpace = new JRadioButton("Lens space L(p,q):");
+        lensSpace = new JRadioButton("Layered lens space L(p,q):");
+        layeredLoop = new JRadioButton("Layered loop:");
         dehydrated = new JRadioButton("Dehydration:");
         splittingSurface = new JRadioButton("Splitting surface:");
         random = new JRadioButton("Random:");
         type.add(empty);
         type.add(layered);
         type.add(lensSpace);
+        type.add(layeredLoop);
         type.add(dehydrated);
         type.add(splittingSurface);
         type.add(random);
@@ -175,6 +192,18 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         lensPane.add(lensQ);
         lensP.setEnabled(false);
         lensQ.setEnabled(false);
+
+        JPanel loopPane = new JPanel();
+        loopPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        loopLength = new JTextField(new NonNegativeIntegerDocument(), "", 3);
+        loopTwisted = new JCheckBox();
+        loopTwisted.setSelected(true);
+        loopPane.add(new JLabel("Length:"));
+        loopPane.add(loopLength);
+        loopPane.add(new JLabel("Twisted:"));
+        loopPane.add(loopTwisted);
+        loopLength.setEnabled(false);
+        loopTwisted.setEnabled(false);
 
         JPanel dehydrationPane = new JPanel();
         dehydrationPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
@@ -214,14 +243,17 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
         add(lensSpace, cButton);
         cExtra.gridy = 2;
         add(lensPane, cExtra);
-        add(dehydrated, cButton);
+        add(layeredLoop, cButton);
         cExtra.gridy = 3;
+        add(loopPane, cExtra);
+        add(dehydrated, cButton);
+        cExtra.gridy = 4;
         add(dehydrationPane, cExtra);
         add(splittingSurface, cButton);
-        cExtra.gridy = 4;
+        cExtra.gridy = 5;
         add(splittingSurfacePane, cExtra);
         add(random, cButton);
-        cExtra.gridy = 5;
+        cExtra.gridy = 6;
         add(randomPane, cExtra);
         
         // Add selection listeners.
@@ -237,6 +269,13 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
                 boolean on = (e.getStateChange() == ItemEvent.SELECTED);
                 lensP.setEnabled(on);
                 lensQ.setEnabled(on);
+            }
+        });
+        layeredLoop.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                boolean on = (e.getStateChange() == ItemEvent.SELECTED);
+                loopLength.setEnabled(on);
+                loopTwisted.setEnabled(on);
             }
         });
         dehydrated.addItemListener(new ItemListener() {
@@ -337,7 +376,21 @@ public class NTriangulationCreator extends JPanel implements PacketCreator {
                 return null;
             }
             NTriangulation newTri = shell.getEngine().newNTriangulation();
-            newTri.insertLensSpace(p, q);
+            newTri.insertLayeredLensSpace(p, q);
+            return newTri;
+        } else if (layeredLoop.isSelected()) {
+            long length = ((NonNegativeIntegerDocument)
+                loopLength.getDocument()).getLongValue();
+            boolean twisted = loopTwisted.isSelected();
+
+            if (length == 0) {
+                MessageBox.fgNote(parentDialog,
+                    "The length of the layered loop must be " +
+                    "strictly positive.");
+                return null;
+            }
+            NTriangulation newTri = shell.getEngine().newNTriangulation();
+            newTri.insertLayeredLoop(length, twisted);
             return newTri;
         } else if (dehydrated.isSelected()) {
             if (dehydration.getDocument().getLength() == 0) {
