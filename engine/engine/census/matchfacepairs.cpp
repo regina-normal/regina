@@ -250,7 +250,9 @@ void NCensus::matchFacePairs() {
         }
     }
 
-    progress->setMessage("Finished.");
-    progress->setFinished();
+    if (progress) {
+        progress->setMessage("Finished.");
+        progress->setFinished();
+    }
 }
 
