@@ -1,11 +1,11 @@
-?package(regina-normal):needs=X11\
-  section=Apps/Math\
+?package(regina-normal):needs="X11"\
+  section="Apps/Math"\
   title="Regina"\
   command="/usr/bin/regina-kde"\
-  kderemove=1 \
+  kderemove="1" \
   icon="/usr/share/pixmaps/regina-normal.xpm"
-?package(regina-normal):needs=text\
-  section=Apps/Math\
+?package(regina-normal):needs="text"\
+  section="Apps/Math"\
   title="Regina Python Session"\
   command="/usr/bin/regina-python"\
   icon="/usr/share/pixmaps/regina-normal.xpm"
