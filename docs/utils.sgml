@@ -1,0 +1,403 @@
+
+<!-- Regina command-line utilities documentation.
+     See regina.sgml for further details. -->
+
+<reference id="utils">
+ <title>Command-Line Utilities</title>
+
+ <!-- File Converter -->
+
+ <refentry id="man-regconvert">
+  <refmeta>
+   <refentrytitle>regconvert</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regconvert</refname>
+   <refpurpose>Convert between different &regina; file formats</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regconvert</command>
+    <group>
+     <arg><option>-x</option></arg>
+     <arg><option>-u</option></arg>
+     <arg><option>-b</option></arg>
+    </group>
+    <arg choice=req><replaceable>old-file</replaceable></arg>
+    <arg><replaceable>new-file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Between &regina; versions 2.4 and 3.0, the data files changed from
+    using an impenetrable and undocumented binary format to using
+    (optionally compressed) XML.
+   </para>
+   <para>
+    This utility simply converts back and forth between these different
+    file formats.
+   </para>
+   <para>
+    Argument <replaceable>old-file</replaceable> should be the file to
+    read and convert; argument <replaceable>new-file</replaceable> should
+    be the name of the new converted file to write.  These two filenames
+    may be the same, in which case the old file will be replaced with the new.
+   </para>
+   <para>
+    If argument <replaceable>new-file</replaceable> is missing, the new
+    file will be written to standard output; this forces output to be
+    uncompressed XML (see option <option>-u</option>).
+   </para>
+   <warning><para>
+    When writing an old-style binary file, some information might be
+    lost.  Specifically, only information that is understood by the
+    &regina;&nbsp;2.4 calculation engine will be written.
+   </para></warning>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-x</option> (default)</term>
+     <listitem>
+      <para>Convert to compressed XML.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-u</option></term>
+     <listitem>
+      <para>Convert to plain (uncompressed) XML.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-b</option></term>
+     <listitem>
+      <para>Convert to the old-style binary format.</para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regfiletype">regfiletype</link>,
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems).
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- File Dumper -->
+
+ <refentry id="man-regfiledump">
+  <refmeta>
+   <refentrytitle>regfiledump</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regfiledump</refname>
+   <refpurpose>Dump the contents of a &regina; data file</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regfiledump</command>
+    <group>
+     <arg><option>-f</option></arg>
+     <arg><option>-l</option></arg>
+     <arg><option>-n</option></arg>
+    </group>
+    <arg><option>-c</option></arg>
+    <arg choice=req><replaceable>file</replaceable></arg>
+    <arg rep=repeat><replaceable>packet-label</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility dumps the contents of the given &regina; data file to
+    standard output in a human-readable format.
+   </para>
+   <para>
+    If a list of packet labels is given on the command-line, only those
+    packets listed will be output.  Otherwise all packets in the given
+    file will be output.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-f</option> (default)</term>
+     <listitem>
+      <para>
+       Output full packet details.  Output for each packet will cover
+       several lines, beginning with basic packet details (such as label
+       and type) followed by the packet's long description.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-l</option></term>
+     <listitem>
+      <para>
+       Output a list of packet labels and types only, one packet per line.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-n</option></term>
+     <listitem>
+      <para>
+       Don't output any packets at all; this option forces a packet
+       count (see option <option>-c</option>).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-c</option></term>
+     <listitem>
+      <para>Finish output with a count of all packets in the given file.</para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems).
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- File Identifier -->
+
+ <refentry id="man-regfiletype">
+  <refmeta>
+   <refentrytitle>regfiletype</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regfiletype</refname>
+   <refpurpose>Identify the formats of &regina; data files</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regfiletype</command>
+    <arg choice=req rep=repeat><replaceable>file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Between &regina; versions 2.4 and 3.0, the data files changed from
+    using an impenetrable and undocumented binary format to using
+    (optionally compressed) XML.
+   </para>
+   <para>
+    This utility simply determines which of these formats a given
+    &regina; data file is in.
+   </para>
+   <para>
+    Multiple files may be given on the command-line; the details of each
+    file format will be written to standard output.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regconvert">regconvert</link>,
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems).
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Signature Census -->
+
+ <refentry id="man-sigcensus">
+  <refmeta>
+   <refentrytitle>sigcensus</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>sigcensus</refname>
+   <refpurpose>Form a census of splitting surface signatures</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>sigcensus</command>
+    <arg choice=req><replaceable>order</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Forms a census of all splitting surface signatures of the given
+    order (the <firstterm>order</firstterm> is the number of quads in
+    the resulting splitting surface).
+   </para>
+   <para>
+    The signatures will be written to standard output, one per
+    line, followed by a count of the total number of signatures found.
+   </para>
+   <para>
+    Each signature will be output precisely once up to equivalence.
+    Signatures are considered equivalent if they are related by some
+    combination of:
+    <itemizedlist>
+     <listitem>
+      <para>relabelling symbols;</para>
+     </listitem>
+     <listitem>
+      <para>rotating an individual cycle;</para>
+     </listitem>
+     <listitem>
+      <para>inverting an individual cycle (i.e., reversing the cycle and
+       changing the case of each symbol in the cycle);</para>
+     </listitem>
+     <listitem>
+      <para>reversing all cycles without changing the case of any
+       symbols.</para>
+     </listitem>
+    </itemizedlist>
+   </para>
+   <warning><para>
+    Currently upper-case symbols in signatures are not supported; this
+    program will only output signatures whose symbols are all lower-case.
+    Hopefully this deficiency will be removed in future versions.
+   </para></warning>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-tricensus">tricensus</link>,
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems).
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Triangulation Census -->
+
+ <refentry id="man-tricensus">
+  <refmeta>
+   <refentrytitle>tricensus</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>tricensus</refname>
+   <refpurpose>Form a census of 3-manifold triangulations</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>tricensus</command>
+    <arg choice=req><replaceable>output-file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Forms a census of all 3-manifold triangulations satisfying a
+    particular set of conditions.  You will be required to give these
+    conditions on standard input (you will be prompted for them on
+    standard output).
+   </para>
+   <para>
+    As the census progresses, the state of progress will be written (slowly)
+    to standard output.  Once the census is complete, the census itself will
+    be saved to the given file.
+   </para>
+   <para>
+    Each triangulation will be output precisely once up to combinatorial
+    isomorphism.  Invalid triangulations (triangulations with edges
+    identified to themselves in reverse or boundary vertices whose links
+    are not discs) will not be output at all.
+   </para>
+   <warning><para>
+    A census with even a relatively small number of tetrahedra can
+    take an incredibly long time to run and chew up massive amounts of
+    memory.  It is recommended that you try very small censuses to begin
+    with (such as 2, 3 or 4 tetrahedra) and work upwards to establish the
+    limits relative to your machine.
+   </para></warning>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-sigcensus">sigcensus</link>,
+    <link linkend="man-regina">regina</link>
+     (<link linkend="man-regina">regina-normal</link> on some systems).
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; with help from others;
+    see the documentation for full details.
+    You can contact me at &regemail;.
+   </para>
+  </refsect1>
+ </refentry>
+</reference>

@@ -71,6 +71,7 @@
  <!ENTITY reginajython SYSTEM "jython.sgml">
  <!ENTITY reginaoptions SYSTEM "options.sgml">
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
+ <!ENTITY reginautils SYSTEM "utils.sgml">
  <!ENTITY reginatrouble SYSTEM "trouble.sgml">
  <!ENTITY reginachangeshighlights SYSTEM "../HIGHLIGHTS.txt">
  <!ENTITY reginachangesdetails SYSTEM "../CHANGES.txt">
@@ -299,6 +300,7 @@
  </chapter>
 
  &reginaman;
+ &reginautils;
 
  &reginatrouble;
 
