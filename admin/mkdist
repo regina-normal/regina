@@ -68,7 +68,7 @@ bindist () {
     fi
   done
   rm -rf "$tmpinst$pkgdocdir"
-  rm -f "$tmpinst$pkgjardir/$package-docs*.jar"
+  rm -f "$tmpinst$pkgjardir/$package"-docs*.jar
 
   # Archive.
   archbase="regina-${version}_bin_$hosttype-$1"
