@@ -44,7 +44,10 @@
 #include <ktoolbar.h>
 #include <qclipboard.h>
 #include <qlabel.h>
-#include <qtextedit.h>
+#include <ktexteditor/document.h>
+#include <ktexteditor/selectioninterface.h>
+#include <ktexteditor/view.h>
+#include <ktexteditor/undointerface.h>
 
 #define CLIPBOARD_HAS_TEXT \
     (! (KApplication::kApplication()->clipboard()-> \
@@ -76,24 +79,29 @@ void PacketHeader::refresh() {
     title->setText(packet->getFullName().c_str());
 }
 
-DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
-        PacketPane* newEnclosingPane) : PacketReadOnlyUI(newEnclosingPane),
-        packet(newPacket) {
-    label = new QLabel(i18n(
-        "Packets of type %1\nare not yet supported.").arg(
-        packet->getPacketTypeName().c_str()), 0);
+ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
+        PacketPane* newEnclosingPane, const QString& errorMessage) :
+        PacketReadOnlyUI(newEnclosingPane), packet(newPacket) {
+    label = new QLabel(errorMessage, 0);
     label->setAlignment(Qt::AlignCenter);
 }
 
-regina::NPacket* DefaultPacketUI::getPacket() {
+regina::NPacket* ErrorPacketUI::getPacket() {
     return packet;
 }
 
-QWidget* DefaultPacketUI::getInterface() {
+QWidget* ErrorPacketUI::getInterface() {
     return label;
 }
 
-void DefaultPacketUI::refresh() {
+void ErrorPacketUI::refresh() {
+}
+
+DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
+        PacketPane* newEnclosingPane) :
+        ErrorPacketUI(newPacket, newEnclosingPane,
+        i18n("Packets of type %1\nare not yet supported.").arg(
+        newPacket->getPacketTypeName().c_str())) {
 }
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
@@ -149,17 +157,21 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     // Register ourselves to listen for various events.
     newPacket->listen(this);
 
-    QTextEdit* edit = mainUI->getTextComponent();
+    KTextEditor::Document* edit = mainUI->getTextComponent();
     if (edit) {
-        // Listening on copyAvailable() will tell us when selections are
+        // Listening on selectionChanged() will tell us when selections are
         // made and unmade.
-        connect(edit, SIGNAL(copyAvailable(bool)),
-            this, SLOT(updateCutPasteActions()));
+        connect(edit, SIGNAL(selectionChanged()),
+            this, SLOT(updateClipboardActions()));
         // Also watch when the clipboard becomes available.
         connect(KApplication::kApplication()->clipboard(),
-            SIGNAL(dataChanged()), this, SLOT(updateCutPasteActions()));
-        // Finally we call updateCutPasteActions() ourselves when the
+            SIGNAL(dataChanged()), this, SLOT(updateClipboardActions()));
+        // Finally we call updateClipboardActions() ourselves when the
         // part's read-write status changes.
+
+        // Do a similar thing for the undo/redo actions.
+        connect(edit, SIGNAL(undoChanged()),
+            this, SLOT(updateUndoActions()));
     }
 }
 
@@ -190,7 +202,8 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
     readWrite = allowReadWrite;
 
     mainUI->setReadWrite(allowReadWrite);
-    updateCutPasteActions();
+    updateClipboardActions();
+    updateUndoActions();
     emit readWriteStatusChanged(readWrite);
 
     return true;
@@ -213,7 +226,7 @@ bool PacketPane::queryClose() {
 }
 
 void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
-    QTextEdit* edit = mainUI->getTextComponent();
+    KTextEditor::Document* edit = mainUI->getTextComponent();
     if (! edit) {
         if (act)
             act->setEnabled(false);
@@ -231,30 +244,30 @@ void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
     if (act) {
         switch (op) {
             case editCut :
-                act->setEnabled(edit->hasSelectedText() &&
-                    ! edit->isReadOnly());
-                connect(act, SIGNAL(activated()), edit, SLOT(cut()));
+                act->setEnabled(KTextEditor::selectionInterface(edit)->
+                    hasSelection() && edit->isReadWrite());
+                connect(act, SIGNAL(activated()),
+                    edit->views().first(), SLOT(cut()));
                 break;
             case editCopy :
-                act->setEnabled(edit->hasSelectedText());
-                connect(edit, SIGNAL(copyAvailable(bool)),
-                    act, SLOT(setEnabled(bool)));
-                connect(act, SIGNAL(activated()), edit, SLOT(copy()));
+                act->setEnabled(KTextEditor::selectionInterface(edit)->
+                    hasSelection());
+                connect(act, SIGNAL(activated()),
+                    edit->views().first(), SLOT(copy()));
                 break;
             case editPaste :
-                act->setEnabled(CLIPBOARD_HAS_TEXT && ! edit->isReadOnly());
-                connect(act, SIGNAL(activated()), edit, SLOT(paste()));
+                act->setEnabled(CLIPBOARD_HAS_TEXT && edit->isReadWrite());
+                connect(act, SIGNAL(activated()),
+                    edit->views().first(), SLOT(paste()));
                 break;
             case editUndo :
-                act->setEnabled(edit->isUndoAvailable());
-                connect(edit, SIGNAL(undoAvailable(bool)),
-                    act, SLOT(setEnabled(bool)));
+                act->setEnabled(KTextEditor::undoInterface(edit)->undoCount()
+                    && edit->isReadWrite());
                 connect(act, SIGNAL(activated()), edit, SLOT(undo()));
                 break;
             case editRedo :
-                act->setEnabled(edit->isRedoAvailable());
-                connect(edit, SIGNAL(redoAvailable(bool)),
-                    act, SLOT(setEnabled(bool)));
+                act->setEnabled(KTextEditor::undoInterface(edit)->redoCount()
+                    && edit->isReadWrite());
                 connect(act, SIGNAL(activated()), edit, SLOT(redo()));
                 break;
         }
@@ -267,7 +280,7 @@ void PacketPane::deregisterEditOperation(KAction* act, EditOperation op) {
 
     act->setEnabled(false);
 
-    QTextEdit* edit = mainUI->getTextComponent();
+    KTextEditor::Document* edit = mainUI->getTextComponent();
     if (! edit)
         return;
 
@@ -281,24 +294,21 @@ void PacketPane::deregisterEditOperation(KAction* act, EditOperation op) {
 
     switch (op) {
         case editCut :
-            disconnect(act, SIGNAL(activated()), edit, SLOT(cut()));
+            disconnect(act, SIGNAL(activated()),
+                edit->views().first(), SLOT(cut()));
             break;
         case editCopy :
-            disconnect(edit, SIGNAL(copyAvailable(bool)),
-                act, SLOT(setEnabled(bool)));
-            disconnect(act, SIGNAL(activated()), edit, SLOT(copy()));
+            disconnect(act, SIGNAL(activated()),
+                edit->views().first(), SLOT(copy()));
             break;
         case editPaste :
-            disconnect(act, SIGNAL(activated()), edit, SLOT(paste()));
+            disconnect(act, SIGNAL(activated()),
+                edit->views().first(), SLOT(paste()));
             break;
         case editUndo :
-            disconnect(edit, SIGNAL(undoAvailable(bool)),
-                act, SLOT(setEnabled(bool)));
             disconnect(act, SIGNAL(activated()), edit, SLOT(undo()));
             break;
         case editRedo :
-            disconnect(edit, SIGNAL(redoAvailable(bool)),
-                act, SLOT(setEnabled(bool)));
             disconnect(act, SIGNAL(activated()), edit, SLOT(redo()));
             break;
     }
@@ -408,13 +418,29 @@ void PacketPane::floatPane() {
     frame->show();
 }
 
-void PacketPane::updateCutPasteActions() {
-    QTextEdit* edit = mainUI->getTextComponent();
+void PacketPane::updateClipboardActions() {
+    KTextEditor::Document* edit = mainUI->getTextComponent();
     if (edit) {
         if (extCut)
-            extCut->setEnabled(edit->hasSelectedText() && ! edit->isReadOnly());
+            extCut->setEnabled(KTextEditor::selectionInterface(edit)->
+                hasSelection() && edit->isReadWrite());
+        if (extCopy)
+            extCopy->setEnabled(KTextEditor::selectionInterface(edit)->
+                hasSelection());
         if (extPaste)
-            extPaste->setEnabled(CLIPBOARD_HAS_TEXT && ! edit->isReadOnly());
+            extPaste->setEnabled(CLIPBOARD_HAS_TEXT && edit->isReadWrite());
+    }
+}
+
+void PacketPane::updateUndoActions() {
+    KTextEditor::Document* edit = mainUI->getTextComponent();
+    if (edit) {
+        if (extUndo)
+            extUndo->setEnabled(KTextEditor::undoInterface(edit)->undoCount()
+                && edit->isReadWrite());
+        if (extRedo)
+            extRedo->setEnabled(KTextEditor::undoInterface(edit)->redoCount()
+                && edit->isReadWrite());
     }
 }
 

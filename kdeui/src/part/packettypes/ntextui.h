@@ -35,7 +35,10 @@
 
 #include "../packetui.h"
 
-class QTextEdit;
+namespace KTextEditor {
+    class EditInterface;
+    class View;
+};
 
 namespace regina {
     class NPacket;
@@ -57,7 +60,9 @@ class NTextUI : public QObject, public PacketUI {
         /**
          * Internal components
          */
-        QTextEdit* editor;
+        KTextEditor::Document* document;
+        KTextEditor::EditInterface* editInterface;
+        KTextEditor::View* view;
 
         /**
          * Properties
@@ -66,17 +71,18 @@ class NTextUI : public QObject, public PacketUI {
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
         NTextUI(regina::NText* packet, PacketPane* newEnclosingPane,
-            bool readWrite);
+                KTextEditor::Document* doc, bool readWrite);
+        ~NTextUI();
 
         /**
          * PacketUI overrides.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        QTextEdit* getTextComponent();
+        KTextEditor::Document* getTextComponent();
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);

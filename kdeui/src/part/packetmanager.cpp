@@ -37,6 +37,10 @@
 #include "packettypes/ntextui.h"
 
 #include <kiconloader.h>
+#include <klibloader.h>
+#include <klocale.h>
+#include <ktexteditor/document.h>
+#include <ktrader.h>
 
 using namespace regina;
 
@@ -95,9 +99,34 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NContainer::packetType)
         return new NContainerUI(dynamic_cast<NContainer*>(packet),
             enclosingPane);
-    if (packet->getPacketType() == NText::packetType)
-        return new NTextUI(dynamic_cast<NText*>(packet), enclosingPane,
-            allowReadWrite);
+    if (packet->getPacketType() == NText::packetType) {
+        KTextEditor::Document* doc = createDocument();
+        if (doc) {
+            doc->setReadWrite(allowReadWrite);
+            return new NTextUI(dynamic_cast<NText*>(packet), enclosingPane,
+                doc, allowReadWrite);
+        } else
+            return new ErrorPacketUI(packet, enclosingPane,
+                i18n("An appropriate text editor component could not "
+                "be found."));
+    }
     return new DefaultPacketUI(packet, enclosingPane);
+}
+
+KTextEditor::Document* PacketManager::createDocument() {
+    KTextEditor::Document* ans = 0;
+
+    KTrader::OfferList offers = KTrader::self()->query("KTextEditor/Document");
+    if (offers.count() >= 1) {
+        KService::Ptr service = *offers.begin();
+        KLibFactory* libFactory = KLibLoader::self()->
+            factory(service->library());
+        if (libFactory)
+            ans = dynamic_cast<KTextEditor::Document*>(libFactory->
+                create(0 /* parent */, service->name(),
+                "KTextEditor::Document"));
+    }
+
+    return ans;
 }
 

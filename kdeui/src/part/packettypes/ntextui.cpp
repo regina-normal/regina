@@ -33,17 +33,32 @@
 #include "ntextui.h"
 
 #include <qtextedit.h>
+#include <ktexteditor/document.h>
+#include <ktexteditor/editinterface.h>
+#include <ktexteditor/undointerface.h>
+#include <ktexteditor/view.h>
 
 using regina::NPacket;
 using regina::NText;
 
-NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane, bool readWrite) :
-        PacketUI(enclosingPane), text(packet), isCommitting(false) {
-    editor = new QTextEdit(packet->getText().c_str());
-    editor->setTextFormat(Qt::PlainText);
-    editor->setReadOnly(! readWrite);
+NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
+        KTextEditor::Document* doc, bool readWrite) :
+        PacketUI(enclosingPane), text(packet), document(doc),
+        isCommitting(false) {
+    document->setReadWrite(readWrite);
 
-    connect(editor, SIGNAL(textChanged()), this, SLOT(notifyTextChanged()));
+    editInterface = KTextEditor::editInterface(document);
+    editInterface->setText(packet->getText().c_str());
+    KTextEditor::undoInterface(document)->clearUndo();
+
+    view = doc->createView(0);
+
+    connect(document, SIGNAL(textChanged()),
+        this, SLOT(notifyTextChanged()));
+}
+
+NTextUI::~NTextUI() {
+    delete document;
 }
 
 NPacket* NTextUI::getPacket() {
@@ -51,28 +66,28 @@ NPacket* NTextUI::getPacket() {
 }
 
 QWidget* NTextUI::getInterface() {
-    return editor;
+    return view;
 }
 
-QTextEdit* NTextUI::getTextComponent() {
-    return editor;
+KTextEditor::Document* NTextUI::getTextComponent() {
+    return document;
 }
 
 void NTextUI::commit() {
     isCommitting = true;
-    text->setText(editor->text());
+    text->setText(editInterface->text());
     isCommitting = false;
 
     setDirty(false);
 }
 
 void NTextUI::refresh() {
-    editor->setText(text->getText().c_str());
+    editInterface->setText(text->getText().c_str());
     setDirty(false);
 }
 
 void NTextUI::setReadWrite(bool readWrite) {
-    editor->setReadOnly(! readWrite);
+    document->setReadWrite(readWrite);
 }
 
 void NTextUI::notifyTextChanged() {

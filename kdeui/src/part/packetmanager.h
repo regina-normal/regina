@@ -39,6 +39,10 @@
 class PacketPane;
 class PacketUI;
 
+namespace KTextEditor {
+    class Document;
+};
+
 namespace regina {
     class NPacket;
 };
@@ -76,6 +80,12 @@ class PacketManager {
          */
         static PacketUI* createUI(regina::NPacket* packet,
             PacketPane* enclosingPane, bool allowReadWrite);
+
+    private:
+        /**
+         * Create a new KTextEditor::Document through a KTrader query.
+         */
+        static KTextEditor::Document* createDocument();
 };
 
 #endif

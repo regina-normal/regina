@@ -35,7 +35,6 @@
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kstdaction.h>
-#include <qtextedit.h>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         KMainWindow(parent, "Packet#"), heldPane(newPane) {

@@ -41,7 +41,6 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qsplitter.h>
-#include <qtextedit.h>
 #include <qvbox.h>
 #include <kaction.h>
 #include <kfiledialog.h>

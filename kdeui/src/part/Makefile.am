@@ -25,7 +25,7 @@ noinst_HEADERS = \
 kde_module_LTLIBRARIES = libreginapart.la
 
 libreginapart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
-libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) \
+libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) -lktexteditor \
 	foreign/libforeign.la \
 	packettypes/libpackettypes.la
 libreginapart_la_SOURCES = \

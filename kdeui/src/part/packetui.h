@@ -42,9 +42,13 @@ class KAction;
 class KMainWindow;
 class PacketPane;
 class QLabel;
-class QTextEdit;
 class QToolButton;
 class ReginaPart;
+
+namespace KTextEditor {
+    class Document;
+    class View;
+}
 
 namespace regina {
     class NPacket;
@@ -141,7 +145,7 @@ class PacketUI {
          *
          * The default implementation of this routine simply returns 0.
          */
-        virtual QTextEdit* getTextComponent();
+        virtual KTextEditor::Document* getTextComponent();
 
         /**
          * Store any changes currently made in this interface in the
@@ -214,11 +218,9 @@ class PacketReadOnlyUI : public PacketUI {
 };
 
 /**
- * A packet interface that should be used for unknown packet types.
- * A simple message is displayed indicating that the packet cannot be
- * viewed.
+ * A packet interface that simply displays a given error message.
  */
-class DefaultPacketUI : public PacketReadOnlyUI {
+class ErrorPacketUI : public PacketReadOnlyUI {
     private:
         regina::NPacket* packet;
         QLabel* label;
@@ -227,8 +229,8 @@ class DefaultPacketUI : public PacketReadOnlyUI {
         /**
          * Constructor.
          */
-        DefaultPacketUI(regina::NPacket* newPacket,
-            PacketPane* newEnclosingPane);
+        ErrorPacketUI(regina::NPacket* newPacket,
+            PacketPane* newEnclosingPane, const QString& errorMessage);
 
         /**
          * Implementations of PacketUI virtual functions.
@@ -236,6 +238,20 @@ class DefaultPacketUI : public PacketReadOnlyUI {
         virtual regina::NPacket* getPacket();
         virtual QWidget* getInterface();
         virtual void refresh();
+};
+
+/**
+ * A packet interface that should be used for unknown packet types.
+ * A simple message is displayed indicating that the packet cannot be
+ * viewed.
+ */
+class DefaultPacketUI : public ErrorPacketUI {
+    public:
+        /**
+         * Constructor.
+         */
+        DefaultPacketUI(regina::NPacket* newPacket,
+            PacketPane* newEnclosingPane);
 };
 
 /**
@@ -481,10 +497,11 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         void floatPane();
 
         /**
-         * Updates the enabled status of any registered cut or paste
-         * actions.  This slot is for internal use.
+         * Updates the enabled statuses of various registered editor
+         * actions.  These slots are for internal use.
          */
-        void updateCutPasteActions();
+        void updateClipboardActions();
+        void updateUndoActions();
 };
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
@@ -494,7 +511,7 @@ inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
 inline PacketUI::~PacketUI() {
 }
 
-inline QTextEdit* PacketUI::getTextComponent() {
+inline KTextEditor::Document* PacketUI::getTextComponent() {
     return 0;
 }
 
