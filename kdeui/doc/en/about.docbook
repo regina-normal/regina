@@ -42,7 +42,7 @@
     </imageobject>
    </inlinemediaobject>
    In 1997 in Melbourne, David Letscher, Richard Rannard and Ben Burton
-   under the guidance of Hyam Rubinstein planned out a program that
+   under the guidance of J.&nbsp;Hyam Rubinstein planned out a program that
    would do normal surface theory and everything else besides.  Much
    groundwork planning was done, epsilon code was written and then
    things kind of faded away.  David Letscher revived the project on his
@@ -62,9 +62,9 @@
   </para>
   <para>
    David however leads a busy life and pulled out of the project in
-   late 2000, but remained to offer excellent technical advice.  In late
-   2000 a prerelease of the new program was ready (under an appropriate
-   definition of "ready") and &regina; 2.0 was uploaded to the web.
+   late 2000, but remained to offer technical advice.  In late 2000 a
+   prerelease of the new program was ready and &regina; 2.0 was
+   uploaded to the web.
   </para>
   <para>
    Since then &regina; has undergone several major structural changes.
