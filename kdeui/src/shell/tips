@@ -6,7 +6,7 @@ Each piece of information stored in a topology data file is called a
 triangulations, normal surface lists, text items and more.
 <p>
 Packets are arranged in a tree (displayed on the left hand side of the
-main window), so each packet may &lquot;contain&rquot; several other
+main window), so each packet may &quot;contain&quot; several other
 packets.  This allows you to store large amounts of data in an organised
 fashion.
 </html>
@@ -14,11 +14,106 @@ fashion.
 <tip category="Regina">
 <html>
 <p>
-Each time a packet is opened in the main window, the <i>Docked
-Packet</i> menu is filled with actions appropriate to the packet type.
+Changes that you make to a packet (such as a triangulation, a text
+packet, a script, etc.) do not take effect until you commit them.
 <p>
-For instance, when a triangulation is opened, the <i>Docked Packet</i>
-menu contains actions such as barycentric subdivision and connected sum
-decomposition.
+To commit your changes, press the <i>Commit</i> button at the bottom of
+the packet editor.  If you close the packet editor or press the
+<i>Discard</i> button, any changes since the last commit will be
+discarded (you will be warned before this happens).
+<p>
+Note that some actions automatically your changes for you (examples
+include several triangulation actions such as simplification, subdivision
+and connected sum decomposition).
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+Regina comes with a full reference manual, including an index of common
+tasks.  You can read it by selecting <i>Regina Handbook</i> from
+the <i>Help</i> menu, or by typing <tt>help:/regina</tt> directly into
+Konqueror.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+Regina ships with a number of sample files that give you an overview
+of what Regina can do.  These are generally installed in
+<tt>/usr/local/share/regina/examples</tt>,
+<tt>/usr/share/regina/examples</tt>, or a similar path (this depends on
+your distribution and how Regina was compiled).
+<p>
+The file <tt>sample-misc.rga</tt> is an excellent starting point.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+If you want to remember which tetrahedron plays what role within a
+triangulation, you can name them.
+<p>
+In the <i>Gluings</i> tab of the triangulation editor, double click
+in the <i>Tetrahedron</i> column and start typing to give a tetrahedron
+a name.  Regina will still assign it a tetrahedron number as usual.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+If you find it difficult searching through lists of normal surfaces,
+you can create a <i>surface filter</i>.  A surface filter lets you
+restrict a list of surfaces so you only see surfaces with particular
+properties (for instance, all closed orientable surfaces with Euler
+characteristic 0).
+<p>
+To create a new surface filter, select <i>New Filter</i> from the
+<i>Packet Tree</i> menu.  In the dialog that appears, select <i>Filter
+by properties</i> and then enter in your particular constraints.
+</html>
+</tip>
+<tip>
+<html>
+<p>
+Once a triangulation has a normal surface list or an angle structure
+list beneath it, the triangulation cannot be changed (since changing
+the triangulation would invalidate the normal surfaces and angle
+structures).
+<p>
+If you wish to edit such a triangulation, try cloning it through the
+<i>Packet Tree</i> menu.  The clone will not have any children beneath
+it and may be edited freely.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+If you want to mark a particular normal surface in a list so that
+you can find it later, you can give it a name.
+<p>
+Simply double click in the empty <i>Name</i> field in the table and
+start typing.  Don't forget to commit your changes!
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+You can combine several surface filters using AND or OR.
+This is done using <i>combination filters</i>.
+<p>
+Select <i>New Filter</i> from the <i>Packet Tree</i> menu, and in
+the dialog that appears select <i>Combination (and/or) filter</i>.
+This filter will then effectively combine all of the filters immediately
+beneath it in the packet tree.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+Regina ships with several command-line utilities for manipulating data
+files and running long census calculations.  See the
+<i>Specialised Utilities</i> section of the reference manual for
+details.
 </html>
 </tip>
