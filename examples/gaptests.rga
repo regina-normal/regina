@@ -3,6 +3,13 @@
 <packet label="GAP simplification tests"
 	type="Container" typeid="1"
 	parent="">
+<packet label="Description"
+	type="Text" typeid="2"
+	parent="GAP simplification tests">
+  <text>This file contains a number of examples suitable for testing the
+simplification of fundamental groups using GAP (Groups, Algorithms
+and Programming).</text>
+</packet> <!-- Description (Text) -->
 <packet label="S3 : abcde.abcfg.d.e.f.g"
 	type="Triangulation" typeid="3"
 	parent="GAP simplification tests">
@@ -893,12 +900,5 @@
 </group>
   </fundgroup>
 </packet> <!-- Solid Torus (expanded) (Triangulation) -->
-<packet label="Description"
-	type="Text" typeid="2"
-	parent="GAP simplification tests">
-  <text>This file contains a number of examples suitable for testing the
-simplification of fundamental groups using GAP (Groups, Algorithms
-and Programming).</text>
-</packet> <!-- Description (Text) -->
 </packet> <!-- GAP simplification tests (Container) -->
 </reginadata>
