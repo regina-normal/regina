@@ -3,11 +3,14 @@ Summary: 3-manifold topology software with normal surface support
 Version: 4.1.2
 Release: 1.%{_vendor}
 License: GPL
-Group: Applications/Utilities
+Group: Applications/Math
 Source: http://prdownloads.sourceforge.net/regina/%{name}-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
+
+Requires: kdelibs
+Requires: kdebase
 
 BuildRequires: boost-devel
 # BuildRequires: cppunit
@@ -38,22 +41,50 @@ census creation and normal surface enumeration.  It offers embedded
 Python scripting giving full access to the calculation engine.
 
 %prep
-rm -rf $RPM_BUILD_ROOT
 %setup -n %{name}-%{version}
-CFLAGS="" CXXFLAGS="" ./configure --disable-debug
 
 %build
+FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
+export CFLAGS="$FLAGS"
+export CXXFLAGS="$FLAGS"
+./configure --disable-debug
 make
+make check
 
 %install
+rm -rf $RPM_BUILD_ROOT
 make install-strip DESTDIR=$RPM_BUILD_ROOT
 
-cd 
-find . -type d | sed '1,2d;s,^\.,\%attr(-\,root\,root) \%dir ,' > /%{name}-master.list
-find . -type f -o -type l | sed 's|^\.||' >> $RPM_BUILD_DIR/%{name}-master.list
+%post -p /sbin/ldconfig
 
-%clean
-rm -rf $RPM_BUILD_DIR/%{name}-%{version}
-rm -rf $RPM_BUILD_DIR/-master.list
+%postun -p /sbin/ldconfig
 
-%files -f $RPM_BUILD_DIR/%{name}-master.list
+# %clean
+# rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%doc AUTHORS.txt
+%doc CHANGES.txt
+%doc HIGHLIGHTS.txt
+%docdir %{_docdir}/HTML/en/regina
+%docdir %{_datadir}/regina/engine-docs
+%{_bindir}/*
+%{_includedir}/regina
+%{_libdir}/*
+%{_libdir}/kde3/*
+%{_libdir}/regina
+%{_docdir}/HTML/en/regina
+%{_datadir}/applications/*
+%{_datadir}/applnk/*/*
+%{_datadir}/apps/regina
+%{_datadir}/apps/reginapart
+%{_datadir}/icons/*/*/*/*
+%{_datadir}/man/*/*
+%{_datadir}/mimelnk/*/*
+%{_datadir}/regina
+%{_datadir}/services/*
+
+%changelog
+* Fri 11 Jun 2004 Ben Burton <bab@debian.org> 4.1.2
+- Initial packaging using Fedora Core 2.
