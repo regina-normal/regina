@@ -1,0 +1,76 @@
+.TH REGINA-ENGINE-CONFIG 1 "December 2, 2004"
+.SH NAME
+regina-engine-config - get information about the installed version of Regina
+.SH SYNOPSIS
+.B regina-engine-config
+[\fB\-\-prefix\fP[=\fIDIR\fP]]
+[\fB\-\-exec\-prefix\fP[=\fIDIR\fP]]
+[\fB\-\-version\fP]
+[\fB\-\-libs\fP]
+[\fB\-\-cflags\fP]
+.SH DESCRIPTION
+.PP
+\fIregina-engine-config\fP is used to determine which compiler and
+linker flags should be used with programs that wish to incorporate the
+mathematical engine of Regina.  This engine is provided by the library
+\fIlibregina-engine.so\fP.
+.PP
+Regina is a topological calculator with a bent towards normal surface
+theory.  It allows 3-manifolds to be created and manipulated and their
+properties of interest to be determined.
+.SH OPTIONS
+\fIregina-engine-config\fP accepts the following options.
+.TP
+\fB\-\-prefix\fP=\fIDIR\fP
+If specified, use DIR instead of the installation prefix that Regina
+was built with when computing the output for the \-\-cflags and
+\-\-libs options. This option is also used for the exec prefix
+if \-\-exec\-prefix is not specified.  This option must be specified
+before any \-\-libs or \-\-cflags options.
+If no DIR is specified then the current installation prefix will be
+written to standard output.
+.TP
+\fB\-\-exec\-prefix\fP=\fIDIR\fP
+If specified, use DIR instead of the installation exec prefix that
+Regina was built with when computing the output for the \-\-cflags
+and \-\-libs options.  This option must be specified before any
+\-\-libs or \-\-cflags options.
+If no DIR is specified then the current installation exec prefix will be
+written to standard output.
+.TP
+.B \-\-version
+Print the currently installed version of Regina.
+.TP
+.B \-\-libs
+Print the linker flags that are necessary to link a program against
+the Regina calculation engine.
+.TP
+.B \-\-cflags
+Print the compiler flags that are necessary to compile a program that
+uses the Regina calculation engine.
+.SH SEE ALSO
+Regina includes a detailed reference manual, which may be accessed
+through the KDE Help Centre or through Regina's help menu.
+.PP
+Supporting data along with further information can be found at
+\fIhttp://regina.sourceforge.net/\fP .
+.SH AUTHOR
+Regina was written by Ben Burton <bab@debian.org> with help from others,
+and is licensed under the GNU General Public License.
+See the reference manual for full details.
+.PP
+This script regina-engine-config and its manual page were modified from
+\fIgtk-config\fP, which contains the following notice:
+.PP
+.RS
+Copyright \(co  1998 Owen Taylor
+.PP
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation.
+.RE
+.PP
+Note that the permission statement above applies only to regina-engine-config,
+and not to Regina as a whole.

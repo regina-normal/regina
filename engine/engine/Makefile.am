@@ -64,7 +64,9 @@ libregina_engine_la_LIBADD = \
 libregina_engine_noinst_la_SOURCES = engine.cpp shareableobject.cpp
 libregina_engine_noinst_la_LIBADD = $(libregina_engine_la_LIBADD)
 
-EXTRA_DIST = regina-engine-config.in
+man_MANS = regina-engine-config.1
+
+EXTRA_DIST = regina-engine-config.in $(man_MANS)
 
 ## ----------------------- Custom targets ----------------------------
 
