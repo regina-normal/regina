@@ -279,8 +279,8 @@ bool NGroupPresentation::intelligentSimplify() {
     stdhash::hash_map<unsigned long, long> exponents;
     stdhash::hash_map<unsigned long, long>::iterator expIt;
     NGroupExpression* expansion;
-    unsigned long gen1, gen2;
-    long exp1a, exp1b, exp2a, exp2b, expSubst;
+    unsigned long gen1, gen2, genRemove;
+    long exp1a, exp1b, exp2a, exp2b;
 
     bool doMoreSubsts = true;
     while (doMoreSubsts) {
@@ -356,7 +356,7 @@ bool NGroupPresentation::intelligentSimplify() {
             doMoreSubsts = true;
         }
 
-        // Look for pairs of two-generator relations that imply gi == gj.
+        // Look for pairs of two-generator relations that imply gi == gj^k.
         // As soon as we find such a pair we perform the substitution
         // and break from the loop.
         for (it = tmpRels.begin();
@@ -386,30 +386,39 @@ bool NGroupPresentation::intelligentSimplify() {
 
                 // We have two relations of the form
                 // (x^a y^b == 1), (x^c y^d == 1).
-                if ((exp1b == -exp1a + 1 && exp2b == -exp2a - 1) ||
-                        (exp1b == -exp1a - 1 && exp2b == -exp2a + 1) ||
-                        (exp1b == exp1a - 1 && exp2b == exp2a + 1) ||
-                        (exp1b == exp1a + 1 && exp2b == exp2a - 1)) {
-                    // We may conclude that x == y.
-                    expSubst = 1;
-                } else if ((exp1b == -exp1a + 1 && exp2b == -exp2a + 1) ||
-                        (exp1b == -exp1a - 1 && exp2b == -exp2a - 1) ||
-                        (exp1b == exp1a + 1 && exp2b == exp2a + 1) ||
-                        (exp1b == exp1a - 1 && exp2b == exp2a - 1)) {
-                    // We may conclude that x == y^-1.
-                    expSubst = -1;
+                NGroupExpression expansion;
+                if (exp1b == exp1a + 1) {
+                    genRemove = gen1;
+                    expansion.addTermLast(gen2, exp2a - exp2b);
+                } else if (exp1b == exp1a - 1) {
+                    genRemove = gen1;
+                    expansion.addTermLast(gen2, -exp2a + exp2b);
+                } else if (exp1b == -exp1a + 1) {
+                    genRemove = gen1;
+                    expansion.addTermLast(gen2, -exp2a - exp2b);
+                } else if (exp1b == -exp1a - 1) {
+                    genRemove = gen1;
+                    expansion.addTermLast(gen2, exp2a + exp2b);
+                } else if (exp2b == exp2a + 1) {
+                    genRemove = gen2;
+                    expansion.addTermLast(gen1, exp1a - exp1b);
+                } else if (exp2b == exp2a - 1) {
+                    genRemove = gen2;
+                    expansion.addTermLast(gen1, -exp1a + exp1b);
+                } else if (exp2b == -exp2a + 1) {
+                    genRemove = gen2;
+                    expansion.addTermLast(gen1, -exp1a - exp1b);
+                } else if (exp2b == -exp2a - 1) {
+                    genRemove = gen2;
+                    expansion.addTermLast(gen1, exp1a + exp1b);
                 } else
                     continue;
 
-                // We can now replace gen2 with gen1^expSubst.
-                NGroupExpression expansion;
-                expansion.addTermLast(gen1, expSubst);
-
-                // Do the substitution.
+                // We can now substitute out genRemove.
                 it3 = tmpRels.begin();
                 while (it3 != tmpRels.end())
                     if (it3 != it2) {
-                        (*it3)->substitute(gen2, expansion, true);
+                        (*it3)->substitute(genRemove, expansion, true);
                         if ((*it3)->getNumberOfTerms() == 0) {
                             delete *it3;
                             it3 = tmpRels.erase(it3);
@@ -419,7 +428,7 @@ bool NGroupPresentation::intelligentSimplify() {
                         it3++;
 
                 // Note that we are removing a generator.
-                genMap[gen2] = -1;
+                genMap[genRemove] = -1;
                 nGenerators--;
 
                 // Remove the now useless relation, tidy up and break
