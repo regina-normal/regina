@@ -16,5 +16,3 @@ libcensus_la_SOURCES = ncensus.cpp nfacepairing.cpp ngluingperms.cpp
 
 censusinclude_HEADERS = ncensus.h nfacepairing.h ngluingperms.h
 
-EXTRA_DIST = results.txt
-

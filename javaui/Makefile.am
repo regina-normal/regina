@@ -65,6 +65,6 @@ jni-clean :
 
 ## ----------------------- Normal Makefile.am stuff ------------------
 
-EXTRA_DIST = JNI.txt LICENSE.txt README.txt REQUIRES.txt TODO.txt \
+EXTRA_DIST = LICENSE.txt README.txt REQUIRES.txt TODO.txt \
   findtext overview.html
 
