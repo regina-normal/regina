@@ -50,7 +50,7 @@ namespace regina {
 /**
  * An XML packet reader that reads a single container.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLContainerReader : public NXMLPacketReader {
     private:
@@ -69,7 +69,7 @@ class NXMLContainerReader : public NXMLPacketReader {
 /**
  * An XML packet reader that reads a single script.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLScriptReader : public NXMLPacketReader {
     private:
@@ -93,7 +93,7 @@ class NXMLScriptReader : public NXMLPacketReader {
 /**
  * An XML packet reader that reads a single text packet.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLTextReader : public NXMLPacketReader {
     private:

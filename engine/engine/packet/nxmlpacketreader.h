@@ -70,7 +70,7 @@ class NPacket;
  * NXMLPacketReader::abort() which will destroy whatever new packets
  * have already been created.
  *
- * \ifaces Not present.
+ * \ifacespython Not present.
  */
 class NXMLPacketReader : public NXMLElementReader {
     private:

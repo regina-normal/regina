@@ -133,7 +133,7 @@ class NPacket : public ShareableObject {
          * Note that NPacket is an abstract class and cannot be
          * instantiated directly.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param parent the parent beneath which to insert this packet,
          * or 0 if this packet is to be the matriarch of a new tree.
@@ -345,9 +345,7 @@ class NPacket : public ShareableObject {
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * \ifacesjava This routine returns a <tt>java.util.Enumeration</tt>.
-         * The packet tags <i>must not</i> be changed while this
-         * enumeration is still in use.
+         * \ifacespython This routine returns a python list of strings.
          *
          * @return the set of all tags associated with this packet.
          */
@@ -506,6 +504,10 @@ class NPacket : public ShareableObject {
          *
          * \pre The given child has no parent packet.
          *
+         * \ifacespython Since this packet takes ownership of the given
+         * child packet, the python object containing the given child
+         * packet becomes a null object and should no longer be used.
+         *
          * @param child the child to insert.
          */
         void insertChildFirst(NPacket* child);
@@ -516,6 +518,10 @@ class NPacket : public ShareableObject {
          * This routine takes small constant time.
          *
          * \pre The given child has no parent packet.
+         *
+         * \ifacespython Since this packet takes ownership of the given
+         * child packet, the python object containing the given child
+         * packet becomes a null object and should no longer be used.
          *
          * @param child the child to insert.
          */
@@ -530,6 +536,10 @@ class NPacket : public ShareableObject {
          * \pre Parameter \a newChild has no parent packet.
          * \pre Parameter \a prevChild is already a child of this
          * packet.
+         *
+         * \ifacespython Since this packet takes ownership of the given
+         * child packet, the python object containing the given child
+         * packet becomes a null object and should no longer be used.
          *
          * @param newChild the child to insert.
          * @param prevChild the preexisting child of this packet after
@@ -698,38 +708,6 @@ class NPacket : public ShareableObject {
          */
         /*@{*/
 
-        /**
-         * Returns a dictionary for the entire packet tree in
-         * which you can look up a packet label and have the
-         * corresponding packet object returned.
-         *
-         * \pre This packet is the matriarch of the entire tree.
-         *
-         * \ifacescpp Not present.
-         * \ifaces Not present outside the Java interface.
-         * \ifacesjava A <tt>java.util.Map</tt> will be returned.
-         *
-         * @return a dictionary that allows packets to be looked
-         * up by their labels.
-         */
-        #ifdef __DOXYGEN
-        Dictionary makeTreeDict();
-        #endif
-        /**
-         * Returns a list of all the immediate children of this
-         * packet.  Descendants further down the packet tree are not
-         * included.
-         *
-         * \ifacescpp Not present.
-         * \ifaces Not present outside the Java interface.
-         * \ifacesjava A <tt>java.util.List</tt> will be returned.
-         *  
-         * @return a list of all this packet's immediate children.
-         */
-        #ifdef __DOXYGEN
-        List makeChildList();
-        #endif
-
         /*@}*/
         /**
          * (end: Java Interface Tools)
@@ -780,8 +758,6 @@ class NPacket : public ShareableObject {
          * If this packet has no parent in the tree structure, no clone
          * will be created and 0 will be returned.
          *
-         * \ifaces This routine is named \a clonePacket.
-         *
          * @param cloneDescendants \c true if the descendants of this
          * packet should also be cloned and inserted as descendants of
          * the new packet.  If this is passed as \c false (the default),
@@ -819,7 +795,7 @@ class NPacket : public ShareableObject {
          *
          * \pre This packet does not depend upon its parent.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -843,7 +819,7 @@ class NPacket : public ShareableObject {
          * \pre The given file is open for writing and satisfies the
          * assumptions listed above.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param out the file to be written to.
          */
@@ -876,7 +852,7 @@ class NPacket : public ShareableObject {
          * must be declared and implemented for every packet subclass that
          * will be instantiated.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param parent the packet which will become the new packet's
          * parent in the tree structure, or 0 if the new packet is to be
@@ -932,7 +908,7 @@ class NPacket : public ShareableObject {
          * \pre The given file is open for reading and
          * all above conditions have been satisfied.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present.
          *
          * @param in the file from which to read the packet.
          * @param parent the packet which will become the new packet's
