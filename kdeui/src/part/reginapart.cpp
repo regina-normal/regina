@@ -306,7 +306,7 @@ void ReginaPart::subtreeRefresh() {
         return;
     }
 
-    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(item);
+    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(rawItem);
     item->refreshSubtree();
 
     // Refresh any relevant packet panes.
