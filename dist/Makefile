@@ -57,8 +57,8 @@ DOC_HTML_DIR = docs
 
 empty_src_dirs = bin $(DOC_HTML_DIR)/engine $(DOC_HTML_DIR)/javaui
 debian_src_mask = changelog control copyright *.README.Debian *.doc-base \
-	*.conf *.docs *.examples *.files *.init *.links *.menu *.overrides *.sh \
-	rules cvs.patch README.Packaging
+	*.conf *.docs *.examples *.files *.init *.links *.menu *.mime \
+	*.overrides *.sh rules cvs.patch README.Packaging
 dist_mask = Makefile* *.txt *.cpp insertstubreplace replacetabs stub*
 
 engine_dirs = $(dirs_engine_engine) $(dirs_engine_jni) $(dirs_engine_corba)
