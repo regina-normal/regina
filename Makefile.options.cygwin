@@ -44,6 +44,10 @@ export DOC_JAR := bin/regina-docs.jar
 # EXTRA_INCLUDES: Flag to include any other necessary files.
 #
 # CORBA_LIBRARIES: Flag to link in the C++ CORBA libraries.
+#                  Note that linking with -lomniGK_alone will cause the
+#                  engine to allow only connections from localhost,
+#                  whereas linking with -lomniGK_stub will cause the
+#                  engine to allow connections from any machine.
 # EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
 #         for the calculation engine, such as gmp and pthread.
 
@@ -52,7 +56,8 @@ export JNI_INCLUDES := -I/cygdrive/c/jdk1.3.1/include \
 export CORBA_INCLUDES := -D__x86__
 export EXTRA_INCLUDES :=
 
-export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
+export CORBA_LIBRARIES := -lomniORB3 -lomniGK_stub
+# export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
 export EXTRA_LIBRARIES := -lgmp -lstdc++
 
 # Specify here the character that separates components on the classpath.
