@@ -56,9 +56,9 @@
    angle structures</link></secondaryie>
   <secondaryie><link linkend="angles-viewstructurecoords">individual
    angles</link></secondaryie>
-  <secondaryie><link linkend="angles-viewstructureprops">strict,
+  <secondaryie><link linkend="angles-propstrict">strict,
    testing</link></secondaryie>
-  <secondaryie><link linkend="angles-viewstructureprops">taut,
+  <secondaryie><link linkend="angles-proptaut">taut,
    testing</link></secondaryie>
  </indexentry>
 
@@ -85,7 +85,7 @@
   <primaryie>boundary</primaryie>
   <secondaryie><link linkend="surfaces-boundary">of a normal
    surface</link></secondaryie>
-  <secondaryie><link linkend="tri-propbdry">of a normal
+  <secondaryie><link linkend="tri-propbdry">of a
    triangulation</link></secondaryie>
  </indexentry>
 
@@ -113,10 +113,10 @@
   <primaryie>census</primaryie>
   <secondaryie><link linkend="man-sigcensus">creating a census of splitting
    surface signatures</link></secondaryie>
-  <secondaryie><link linkend="tri-census-creation">creating a census of
-   triangulations (&gui;)</link></secondaryie>
   <secondaryie><link linkend="man-tricensus">creating a census of
    triangulations (command-line)</link></secondaryie>
+  <secondaryie><link linkend="tri-census-creation">creating a census of
+   triangulations (&gui;)</link></secondaryie>
   <secondaryie><link linkend="man-tricensus-manager">distributing census
    creation across several machines</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
@@ -258,8 +258,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>deleting</primaryie>
-  <secondaryie><link linkend="packet-delete">packets</link></secondaryie>
+  <primaryie><link linkend="packet-delete">deleting packets</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -373,7 +372,7 @@
 
  <indexentry>
   <primaryie>filtering normal surface lists</primaryie>
-  <seeie>(see surface filters</seeie>
+  <seeie>(see surface filters)</seeie>
  </indexentry>
 
  <indexentry>
@@ -424,7 +423,7 @@
   <primaryie>importing triangulations</primaryie>
   <secondaryie><link linkend="tri-import-dehydrationlist">from
    dehydration lists</link></secondaryie>
-  <secondaryie><link linkend="tri-import-snappea">from
+  <secondaryie><link linkend="tri-import-regina">from
    &regina; data files</link></secondaryie>
   <secondaryie><link linkend="tri-import-snappea">from
    &snappea;</link></secondaryie>
@@ -461,7 +460,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="options-python">libraries,
+  <primaryie><link linkend="python-libraries">libraries,
    &python;</link></primaryie>
  </indexentry>
 
@@ -486,10 +485,10 @@
  <indexentry>
   <primaryie>naming</primaryie>
   <secondaryie><link linkend="packet-rename">packets</link></secondaryie>
-  <secondaryie><link linkend="tri-editgluings">tetrahedra in a
-   triangulation</link></secondaryie>
   <secondaryie><link linkend="surfaces-propname">surfaces in a
    surface list</link></secondaryie>
+  <secondaryie><link linkend="tri-editgluings">tetrahedra in a
+   triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -515,7 +514,7 @@
    surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-propcentral">recognising
    central surfaces</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propcentral">recognising
+  <secondaryie><link linkend="surfaces-proplink">recognising
    edge/vertex links</link></secondaryie>
   <secondaryie><link linkend="surfaces-propsplitting">recognising
    splitting surfaces</link></secondaryie>
@@ -633,7 +632,7 @@
    &gui;</link></secondaryie>
   <secondaryie><link linkend="python-ownership">ownership of
    objects</link></secondaryie>
-  <secondaryie><link linkend="options-python">&python;
+  <secondaryie><link linkend="python-libraries">&python;
    libraries</link></secondaryie>
   <secondaryie><link linkend="packet-script">script
    packets</link></secondaryie>
@@ -648,8 +647,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-sfs3">Seifert fibred space,
-   creation</link></primaryie>
+  <primaryie><link linkend="tri-sfs3">&sfslong;, creation</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -708,7 +706,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="angles-viewstructureprops">strict angle
+  <primaryie><link linkend="angles-propstrict">strict angle
    structures</link></primaryie>
  </indexentry>
 
@@ -744,7 +742,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="angles-viewstructureprops">taut angle
+  <primaryie><link linkend="angles-proptaut">taut angle
    structures</link></primaryie>
  </indexentry>
 
@@ -776,15 +774,15 @@
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-subdivision">barycentric
    subdivision</link></secondaryie>
+  <secondaryie><link linkend="tri-compbdrycomp">boundary components,
+   viewing</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">boundary,
    testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton">boundary components,
-   viewing</link></secondaryie>
   <secondaryie><link linkend="tri-composition-composition">combinatorial
    composition</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-component">component
    decomposition</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton">components,
+  <secondaryie><link linkend="tri-compbdrycomp">components,
    viewing</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-connsum">connected
    sum decomposition</link></secondaryie>

@@ -158,14 +158,14 @@
        will be displayed for any particular angle structure.
        The following types are currently recognised.
        <glosslist>
-        <glossentry>
+        <glossentry id="angles-propstrict">
          <glossterm>Strict</glossterm>
          <glossdef><para>
           Indicates a strict angle structure (none of its angles are
           equal to 0 or &pi;).
          </para></glossdef>
         </glossentry>
-        <glossentry>
+        <glossentry id="angles-proptaut">
          <glossterm>Taut</glossterm>
          <glossdef><para>
           Indicates a taut angle structure (all of its angles are

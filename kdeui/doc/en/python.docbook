@@ -84,8 +84,8 @@
     access to everything contained within it).
     You may also assume that all configured libraries have been loaded.
     These &python; libraries can be configured through the
-    <link linkend="options-python">&python; options</link> page or can be added
-    by hand to the file &regina-libs; (which is described in detail in the
+    <link linkend="python-libraries">&python; options</link> page or can be
+    added by hand to the file &regina-libs; (which is described in detail in the
     <link linkend="man-regina-python"><command>regina-python</command></link>
     reference).
    </para>

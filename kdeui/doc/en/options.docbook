@@ -186,43 +186,48 @@
     </para></glossdef>
    </glossentry>
   </glosslist>
-  <para>
-   In addition, the &python; options page allows the configuration of
-   <firstterm>&python; libraries</firstterm>.  These are files containing
-   &python; code that is run at the beginning of every &python;
-   session, including every time a &python; console is opened,
-   every time a script packet is run and every time the program
-   <link linkend="man-regina-python"><command>regina-python</command></link>
-   is started.
-   See the <link linkend="python-overview">&python; scripting
-   overview</link> for general information regarding &python; sessions.
-  </para>
-  <para>
-   The list of currently active libraries is stored in the file
-   &regina-libs;, which should be a plain text file
-   containing one library filename per line.  Blank lines and lines
-   beginning with a hash (#) are ignored.
-  </para>
-  <para>
-   The &python; options page offers a convenient way of managing
-   the &regina-libs; file.  Libraries can be added and removed through
-   this page and currently active libraries can be temporarily disabled.
-  </para>
-  <!-- TODO: Put this in once it's reimplemented.
-  <para>
-   Each library also has a <guibutton>Compile</guibutton> button beside
-   it.  Pressing this button will test whether or not the library
-   actually compiles under &python;.  The library code will only be
-   compiled; it will not be run.
-  </para>
-  -->
-  <tip><para>
-   A set of prepackaged &python; libraries that might be of use is
-   provided with the &regina; distribution.  These libraries are
-   generally installed in
-   <filename>/usr/local/share/regina/pylib</filename> or
-   <filename>/usr/share/regina/pylib</filename>, though this may differ
-   with your distribution.
-  </para></tip>
+
+  <sect2 id="python-libraries">
+   <title>&python; Libraries</title>
+
+   <para>
+    In addition, the &python; options page allows the configuration of
+    <firstterm>&python; libraries</firstterm>.  These are files containing
+    &python; code that is run at the beginning of every &python;
+    session, including every time a &python; console is opened,
+    every time a script packet is run and every time the program
+    <link linkend="man-regina-python"><command>regina-python</command></link>
+    is started.
+    See the <link linkend="python-overview">&python; scripting
+    overview</link> for general information regarding &python; sessions.
+   </para>
+   <para>
+    The list of currently active libraries is stored in the file
+    &regina-libs;, which should be a plain text file
+    containing one library filename per line.  Blank lines and lines
+    beginning with a hash (#) are ignored.
+   </para>
+   <para>
+    The &python; options page offers a convenient way of managing
+    the &regina-libs; file.  Libraries can be added and removed through
+    this page and currently active libraries can be temporarily disabled.
+   </para>
+   <!-- TODO: Put this in once it's reimplemented.
+   <para>
+    Each library also has a <guibutton>Compile</guibutton> button beside
+    it.  Pressing this button will test whether or not the library
+    actually compiles under &python;.  The library code will only be
+    compiled; it will not be run.
+   </para>
+   -->
+   <tip><para>
+    A set of prepackaged &python; libraries that might be of use is
+    provided with the &regina; distribution.  These libraries are
+    generally installed in
+    <filename>/usr/local/share/regina/pylib</filename> or
+    <filename>/usr/share/regina/pylib</filename>, though this may differ
+    with your distribution.
+   </para></tip>
+  </sect2>
  </sect1>
 </chapter>

@@ -1249,9 +1249,9 @@
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Double Cover</guimenuitem>
     </menuchoice>
-    menu item will convert a triangulation to its double cover.  Each
-    orientable component will be duplicated, and each non-orientable
-    component will be converted to its orientable double cover.
+    menu item will convert a triangulation to a double cover.  Each
+    non-orientable component will be converted to an orientable double
+    cover, and each orientable component will simply be duplicated.
    </para>
   </sect2>
 

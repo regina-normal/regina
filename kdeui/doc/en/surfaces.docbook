@@ -89,18 +89,18 @@
      <glossterm>Coordinate system</glossterm>
      <glossdef>
       <para>
-       Here you must select the coordinate system in which the normal
-       surface vectors will be created.
+       Here you must select the coordinate system in which the vertex
+       normal surfaces will be enumerated.
       </para>
       <para>
-       Whether or not almost normal surfaces are created (in addition to
-       just normal surfaces) will depend upon this choice of
-       coordinate system.
-       Currently almost normal surfaces are only created when using
+       Whether or not almost normal surfaces are enumerated (in addition to
+       just normal surfaces) will depend upon this choice of coordinate system.
+       Currently almost normal surfaces are only enumerated when using
        standard almost normal coordinates.
       </para>
       <para>
-       Note that this coordinate system refers only to creation; you will
+       Note that this coordinate system refers only to the initial
+       enumeration; you will
        be able to view these normal surfaces in a variety of different
        coordinate systems later on.
       </para>
