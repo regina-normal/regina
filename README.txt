@@ -31,7 +31,6 @@ Python Bindings (optional):
 
 Documentation (optional, only required at compile-time):
     doxygen (a C++ documentation system), version >= 1.2.2
-    docbook-utils (includes docbook2man), version >= 0.6.9
 
 Test Suite (optional):
     cppunit (the testing framework), version >= 1.8.0
@@ -98,7 +97,6 @@ built, a reason will be given earlier in the "./configure" output.
     checking whether to build command-line utilities... yes
     checking whether to build the test suite... yes
     checking whether to build calculation engine docs... yes
-    checking whether to build man pages... yes
     configure: creating ./config.status
     config.status: creating Makefile
     config.status: creating admin/Makefile

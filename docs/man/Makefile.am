@@ -19,11 +19,22 @@ man_MANS = \
   regina-kde.1 \
   regina-python.1
 
-SUFFIXES = .1 .2 .3 .4 .5 .6 .7 .8
+EXTRA_DIST = $(man_MANS)
 
-%.1 %.2 %.3 %.4 %.5 %.6 %.7 %.8 :
+# Only regenerate manpages if you're the maintainer and you have a
+# working docbook2man.
+if MAINTAINER_MODE
+if HAVE_DOCBOOK2MAN
+man_docbook = \
+  ../../kdeui/doc/en/manonly.docbook \
+  ../../kdeui/doc/en/reginaman.docbook \
+  ../../kdeui/doc/en/utils.docbook
+
+$(man_MANS) : $(man_docbook)
 	cd ../../kdeui/doc/en && @DOCBOOK2MAN@ -o ../../../docs/man manonly.docbook
+endif
+endif
 
 mostlyclean-local :
-	rm -f *.[1-8] manpage.*
+	rm -f manpage.links manpage.refs
 
