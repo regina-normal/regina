@@ -1,6 +1,6 @@
 (Applet):
--	Provide instructions on the applet page for upgrading browser version
 -	Include Java plug-in support
+-	Get this working on more browsers.
 
 CORBA:
 	Local (client-side) file I/O
