@@ -32,5 +32,5 @@ misc_doc_mask = *.hs *.jhm *.txt *.gif *.jpg *.png *.sgml *.dsl \
 	images/packet/*.gif images/packet/*.png \
 	images/shots/*.jpg images/shots/*.png
 gen_doc_mask = *.html *.1 *.5 *.7 \
-	engine/*.gif engine/*.html engine/*.css engine/*.dot \
+	engine/*.gif engine/*.png engine/*.html engine/*.css engine/*.dot \
 	javaui/normal javaui/package-list javaui/*.html javaui/*.css
