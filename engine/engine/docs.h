@@ -197,6 +197,10 @@
  *
  *  See the \ref InterfaceNotes page for other situations in which
  *  names or parameters of routines are routinely altered.
+ *
+ *  \todo \bugurgent Non-standard host/port for the CORBA engine is
+ *  completely broken as of the omniORB3 port!
+ *  \todo \bug Audit CORBA classes for use of \c _ptr instead of \c _var.
  */
 
 /*! \page JavaNotes Java User Interface
