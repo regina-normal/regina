@@ -8,10 +8,12 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
+Version 3.2  [ 25 June, 2003 ] - The post-thesis release!
     OVERALL:
         - Added file format documentation to reference manual.
-        - Enhancements to the calculation engine test suite.
+        - Calculation engine test suite is much enhanced.
+        - Closed orientable and non-orientable censuses added to the list
+          of example files.
         - PhD thesis submitted on 30 May, 2003!
     ENGINE:
         Overall structure:
@@ -66,15 +68,15 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
             - Operators ++ and -- are now implemented in all forms
               (++x, x++, --x, x--) and all have return values.
         Class NTriangulation:
-            - Interface-only skeletal query routines are now also
-              implemented in the C++ calculation engine.
-            - Fixed a bug in which getHomologyH1Bdry() gave incorrect
-              answers if the skeleton had not already been calculated.
-            - Renamed insertLensSpace() to insertLayeredLensSpace().
             - New routine insertLayeredLoop().
             - 0-efficiency testing is done in quad space where possible.
+            - Fixed a bug in which getHomologyH1Bdry() gave incorrect
+              answers if the skeleton had not already been calculated.
             - New boundary queries hasTwoSphereBoundaryComponents() and
               hasNegativeIdealBoundaryComponents().
+            - Renamed insertLensSpace() to insertLayeredLensSpace().
+            - Interface-only skeletal query routines are now also
+              implemented in the C++ calculation engine.
         Routine prior(), next():
             - Copied from the Boost C++ libraries for easy access to
               prior and following iterators.
@@ -86,7 +88,7 @@ Version 3.2  [ 28 June, 2003 ] - The post-thesis release!
             - New utility for combining several data files.
         tricensus:
             - New option --minprimep2 for P2-irreducibility.
-            - Explicitly verifies that any face pairings supplied on
+            - Explicitly verifies that all face pairings supplied on
               standard input are in canonical form.
 
 Version 3.1  [ 18 October, 2002 ]

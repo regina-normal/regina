@@ -8,6 +8,25 @@ Regina - A Normal Surface Theory Calculator
     for both the calculation engine and the Java user interface, see
     CHANGES.txt in the same directory as this file.
 
+Version 3.2  [ 25 June, 2003 ] - The post-thesis release!
+
+    Features:
+        - Layered loops can be automatically constructed.
+        - Much better recognition of common names for Seifert fibred spaces.
+        - New utility regconcat for merging data files.
+    Optimisations:
+        - Significant performance increase for census generation, especially
+          in the non-orientable case, due to the use of results regarding
+          face pairing graphs.
+        - Significant performance increase for 0-efficiency calculation,
+          obtained by using quad space where possible.
+    Miscellaneous:
+        - Added closed orientable and non-orientable censuses to
+          example files.
+        - File format is fully documented in the reference manual.
+        - Calculation engine test suite much enhanced.
+        - PhD thesis submitted on 30 May, 2003!
+
 Version 3.1  [ 18 October, 2002 ]
 
     - Massive optimisation of census code.
