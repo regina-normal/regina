@@ -20,6 +20,7 @@ Version 4.2  [ under development ]
         Class NSnapPeaTriangulation:
             - Added to give Regina triangulations access to the SnapPea kernel.
         Class NTriangulation:
+            - New routine cuspBoundary() for extending a triangulation.
             - Fixed vertex link calculations, which were previously
               incorrect if a triangulation contained invalid edges.
     TEST SUITE:

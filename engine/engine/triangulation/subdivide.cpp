@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include <vector>
+
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 #include "utilities/stlutils.h"
@@ -233,6 +235,78 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
         std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this)));
 
     gluingsHaveChanged();
+    return true;
+}
+
+bool NTriangulation::cuspBoundary() {
+    if (! hasBoundaryFaces())
+        return false;
+
+    // Get a list of all boundary faces.
+    std::vector<NFace*> boundaryFaces;
+
+    BoundaryComponentIterator bit;
+    unsigned long nFaces;
+    unsigned long i;
+    for (bit = boundaryComponents.begin(); bit != boundaryComponents.end();
+            bit++) {
+        nFaces = (*bit)->getNumberOfFaces();
+        for (i = 0; i < nFaces; i++)
+            boundaryFaces.push_back((*bit)->getFace(i));
+    }
+
+    // There should be at least one boundary face.  But just in case.
+    if (boundaryFaces.empty())
+        return false;
+
+    // Here's where we start changing things.
+    ChangeEventBlock block(this);
+
+    nFaces = boundaryFaces.size();
+    NTetrahedron** newTet = new NTetrahedron*[nFaces];
+
+    // Create the new tetrahedra and join them to the boundary faces.
+    for (i = 0; i < nFaces; i++) {
+        newTet[i] = new NTetrahedron();
+
+        NFaceEmbedding emb = boundaryFaces[i]->getEmbedding(0);
+        newTet[i]->joinTo(3, emb.getTetrahedron(), emb.getVertices());
+    }
+
+    // Now join the new tetrahedra to each other.
+    NEdge* edge;
+    NTetrahedron* t1;
+    NTetrahedron* t2;
+    NPerm t1Face;
+    NPerm t2Face;
+    for (bit = boundaryComponents.begin(); bit != boundaryComponents.end();
+            bit++)
+        for (i = 0; i < (*bit)->getNumberOfEdges(); i++) {
+            edge = (*bit)->getEdge(i);
+
+            // This must be a valid boundary edge.
+            // Find the boundary faces at either end.
+            NEdgeEmbedding e1 = edge->getEmbeddings().front();
+            NEdgeEmbedding e2 = edge->getEmbeddings().back();
+
+            t1 = e1.getTetrahedron()->getAdjacentTetrahedron(
+                e1.getVertices()[3]);
+            t2 = e2.getTetrahedron()->getAdjacentTetrahedron(
+                e2.getVertices()[2]);
+
+            t1Face = e1.getTetrahedron()->getAdjacentTetrahedronGluing(
+                e1.getVertices()[3]) * e1.getVertices();
+            t2Face = e2.getTetrahedron()->getAdjacentTetrahedronGluing(
+                e2.getVertices()[2]) * e2.getVertices() * NPerm(2, 3);
+
+            t1->joinTo(t1Face[2], t2, t2Face * t1Face.inverse());
+        }
+
+    // Finally add the new tetrahedra into the triangulation.
+    for (i = 0; i < nFaces; i++)
+        addTetrahedron(newTet[i]);
+
+    delete[] newTet;
     return true;
 }
 

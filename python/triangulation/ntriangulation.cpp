@@ -242,6 +242,7 @@ void addNTriangulation() {
         .def("makeDoubleCover", &NTriangulation::makeDoubleCover)
         .def("idealToFinite", &NTriangulation::idealToFinite,
             OL_idealToFinite())
+        .def("cuspBoundary", &NTriangulation::cuspBoundary)
         .def("barycentricSubdivision", &NTriangulation::barycentricSubdivision)
         .def("insertLayeredSolidTorus",
             &NTriangulation::insertLayeredSolidTorus,
