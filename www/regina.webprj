@@ -1,21 +1,23 @@
-<!DOCTYPE webproject ><webproject>
- <project preview="" type="Local" name="Regina" >
-  <upload/>
-  <author>Ben Burton</author>
-  <email>bab@debian.org</email>
-  <item url="shots/all-mini.jpg" />
-  <item url="shots/all.jpg" />
-  <item url="shots/census-mini.jpg" />
-  <item url="shots/census.jpg" />
-  <item url="shots/tri-mini.jpg" />
-  <item url="shots/tri.jpg" />
-  <item url="applet.html" />
-  <item url="ben.jpg" />
-  <item url="index.html" />
-  <item url="return.gif" />
-  <item url="title.jpg" />
-  <item url="sysreq.html" />
-  <item url="cygwin.html" />
-  <item url="docbook.html" />
- </project>
+<!DOCTYPE webproject>
+<webproject>
+<project preview="" type="Local" name="Regina" >
+<upload/>
+<author>Ben Burton</author>
+<email>bab@debian.org</email>
+<item url="shots/all-mini.jpg" />
+<item url="shots/all.jpg" />
+<item url="shots/census-mini.jpg" />
+<item url="shots/census.jpg" />
+<item url="shots/tri-mini.jpg" />
+<item url="shots/tri.jpg" />
+<item url="ben.jpg" />
+<item url="index.html" />
+<item url="return.gif" />
+<item url="title.jpg" />
+<item url="sysreq.html" />
+<item url="cygwin.html" />
+<item url="docbook.html" />
+<templates>templates/</templates>
+<toolbars>toolbars/</toolbars>
+</project>
 </webproject>
