@@ -265,7 +265,7 @@ JNIEXPORT jboolean JNICALL
 }
 
 JNIEXPORT jboolean JNICALL
-        Java_normal_engine_implementation_jni_JNIEngine_writeXMLFile__Ljava_lang_String_2Lnormal_engine_packet_NPacket_2Z
+        Java_normal_engine_implementation_jni_JNIEngine_writeXMLFile
         (JNIEnv *env, jobject me, jstring file, jobject tree, jboolean comp) {
     const char* textChars = env->GetStringUTFChars(file, 0);
     bool ans = writeXMLFile(textChars, GET_ENGINE_OBJECT(env, NPacket, tree),
