@@ -13,7 +13,8 @@ EXTRA_DIST = \
   acinclude.m4.top cppunit.m4.ext libtool.m4.ext pthread.m4.ext \
   configure.ac.bot configure.ac.top \
   config.guess config.sub install-sh ltmain.sh missing mkinstalldirs \
-  ac_gen am_update insertstub mkdist mkdist-config.in mksums replacetabs
+  ac_gen am_update distcheck insertstub mkdist mkdist-config.in mksums \
+  replacetabs
 
 ## ----------------------- Custom targets ----------------------------
 

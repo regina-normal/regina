@@ -1,0 +1,164 @@
+#!/bin/bash
+#
+# Regina - A Normal Surface Theory Calculator
+# Source Distribution Verification
+#
+# Copyright (c) 2003, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: distcheck <dist-tarball>
+#
+# Verifies that a tarball formed using "make dist" contains all the
+# files it should.  This script outputs a list of files contained in
+# the CVS source tree that are missing from the tarball.
+#
+# Files that are not necessary for inclusion in the tarball (such as
+# auto-generated files or the Regina website) are not included in this
+# output.
+#
+# This script must be run from either the admin/ directory within the
+# CVS tree or the top-level source directory within the CVS tree.
+#
+# Requires: diff, find, grep, mktemp, sed, sort, tar
+# Example: mksums "Regina distribution files" *.tgz
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+set -e
+
+# Command-line sanity check.
+if [ "$#" != 1 ]; then
+  echo "Usage: distcheck <dist-tarball>"
+  exit 1
+fi
+
+# Locate the top of the CVS source tree.
+if [ ! -d CVS ]; then
+  echo "This script must be run from within the CVS source tree."
+  exit 1
+fi
+
+if [ -d admin -a -f regina.in -a -f HIGHLIGHTS.txt ]; then
+  cvstree=.
+elif [ -d ../admin -a -f ../regina.in -a -f ../HIGHLIGHTS.txt ]; then
+  cvstree=..
+else
+  echo "This script must be run from either the admin/ directory or"
+  echo "the top-level source directory within the CVS tree."
+  exit 1
+fi
+
+# Prepare the two temporary file lists.
+cvslist="`mktemp -t cvslist.XXXXXXXXXX`" || cvslist=
+distlist="`mktemp -t distlist.XXXXXXXXXX`" || distlist=
+if [ -z "$cvslist" -o -z "$distlist" ]; then
+  echo "Error creating temporary files."
+  exit 1
+fi
+
+# Make a list of files in the distribution tarball.
+echo "Analysing distribution tarball..."
+
+if [ ! -f "$1" ]; then
+  echo "The distribution tarball $1 does not exist or is not a regular file."
+  exit 1
+fi
+
+case "$1" in
+  *.tar.gz )
+    taropts=-ztf
+    ;;
+  *.tgz )
+    taropts=-ztf
+    ;;
+  *.tar.bz2 )
+    taropts=-jtf
+    ;;
+  *.tar )
+    taropts=-tf
+    ;;
+  * )
+    echo "The distribution tarball $1 is not of the correct type."
+    exit 1
+    ;;
+esac
+
+if ! tar "$taropts" "$1" | sed -e 's%^[^/]*/%%' -e 's%/$%%' | \
+    sort > "$distlist"; then
+  echo "The contents of the distribution tarball $1 could not be listed."
+  exit 1
+fi
+
+# Make a list of files in the CVS tree.
+echo "Analysing CVS tree..."
+
+if ! find "$cvstree" | sed -e 's%^[^/]*/%%' | \
+    grep -v '^\.$' | \
+    grep -v '^\.\.$' | \
+    grep -v 'CVS$' | \
+    grep -v 'CVS/' | \
+    grep -v 'Makefile$' | \
+    grep -v '\.[157]$' | \
+    grep -v '\.class$' | \
+    grep -v '\.cvsignore$' | \
+    grep -v '\.deps$' | \
+    grep -v '\.deps/' | \
+    grep -v '\.la$' | \
+    grep -v '\.libs$' | \
+    grep -v '\.libs/' | \
+    grep -v '\.lo$' | \
+    grep -v '\.o$' | \
+    grep -v 'incl\.png$' | \
+    grep -v 'graph\.png$' | \
+    grep -v '^admin/mkdist-config$' | \
+    grep -v '^autom4te.cache' | \
+    grep -v '^config.log$' | \
+    grep -v '^config.status$' | \
+    grep -v '^debian' | \
+    grep -v '^docs/.*\.html$' | \
+    grep -v '^docs/.*\.jar$' | \
+    grep -v '^docs/engine/doxygen' | \
+    grep -v '^docs/engine/graph_legend' | \
+    grep -v '^docs/javaui/normal' | \
+    grep -v '^docs/javaui/.*\.css$' | \
+    grep -v '^docs/javaui/package-list$' | \
+    grep -v '^docs/man/manpage\.' | \
+    grep -v '^engine/doc-files/docs\.conf$' | \
+    grep -v '^engine/engine/regina-config\.h$' | \
+    grep -v '^engine/engine/stamp-h' | \
+    grep -v '^javaui/.*\.jar$' | \
+    grep -v '^kdeui' | \
+    grep -v '^libtool$' | \
+    grep -v '^metrics' | \
+    grep -v '^regina$' | \
+    grep -v '^regina.*\.tar\.bz2$' | \
+    grep -v '^regina.*\.tar\.gz$' | \
+    grep -v '^regina.*\.zip$' | \
+    grep -v '^stuff' | \
+    grep -v '^test$' | \
+    grep -v '^test/' | \
+    grep -v '^utils/[a-z]\+$' | \
+    grep -v '^www' | \
+    sort > "$cvslist" ; then
+  echo "The contents of the CVS tree could not be listed."
+  exit 1
+fi
+
+# Output the differences.
+diff -B "$cvslist" "$distlist" | grep -v '^[0-9]'
+
+# Clean up.
+rm "$cvslist" "$distlist"
