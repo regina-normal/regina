@@ -98,7 +98,9 @@ class NTriHomologyUI : public PacketViewerTab {
 /**
  * A triangulation page for viewing the fundamental group.
  */
-class NTriFundGroupUI : public PacketViewerTab {
+class NTriFundGroupUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -128,6 +130,12 @@ class NTriFundGroupUI : public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+    public slots:
+        /**
+         * Group simplification actions.
+         */
+        void simplifyGAP();
 };
 
 /**

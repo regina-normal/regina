@@ -275,6 +275,21 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
 
     wideFundPresArea->addStretch(1);
     layout->addStretch(1);
+    layout->addSpacing(5);
+
+    QBoxLayout* btnArea = new QHBoxLayout(layout);
+    btnArea->addStretch(1);
+    QPushButton* btnGAP = new QPushButton(SmallIconSet("wizard"),
+        i18n("Simplify using GAP"), ui);
+    QToolTip::add(btnGAP, i18n("Simplify the group presentation using "
+        "GAP (Groups, Algorithms and Programming)"));
+    QWhatsThis::add(btnGAP, i18n("<qt>Simplify the presentation of the "
+        "fundamental group using the program GAP (Groups, Algorithms and "
+        "Programming).<p>Note that GAP will need to be installed separately "
+        "on your system.</qt>"));
+    connect(btnGAP, SIGNAL(clicked()), this, SLOT(simplifyGAP()));
+    btnArea->addWidget(btnGAP);
+    btnArea->addStretch(1);
 }
 
 regina::NPacket* NTriFundGroupUI::getPacket() {
@@ -341,6 +356,10 @@ void NTriFundGroupUI::editingElsewhere() {
     fundRelCount->hide();
     fundRels->clear();
     fundRels->hide();
+}
+
+void NTriFundGroupUI::simplifyGAP() {
+    KMessageBox::sorry(ui, i18n("GAP simplification is not yet implemented."));
 }
 
 NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
