@@ -83,6 +83,10 @@ ReginaPart::~ReginaPart() {
     for (PacketPane* p = panes.first(); p; p = panes.next())
         delete p;
 
+    // Delete the visual tree before the underlying packets so that
+    // we don't get a flood of change events.
+    delete treeView;
+
     // Finish cleaning up.
     if (packetTree)
         delete packetTree;
