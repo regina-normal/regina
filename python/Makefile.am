@@ -8,7 +8,7 @@
 
 INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 
-SUBDIRS = algebra file maths packet utilities
+SUBDIRS = algebra file maths packet progress utilities
 
 pkgpythonlibdir = $(pkglibdir)/python
 
@@ -21,6 +21,7 @@ regina_la_LIBADD = @LIB_ENGINE@ @BOOST_PYTHON_LIBS@ \
   file/libfile.la \
   maths/libmaths.la \
   packet/libpacket.la \
+  progress/libprogress.la \
   utilities/libutilities.la
 
 EXTRA_DIST = regina-python.in

@@ -26,56 +26,20 @@
 
 /* end stub */
 
+#include "progress/nprogressmanager.h"
 #include <boost/python.hpp>
 
-#include "engine.h"
-#include "shareableobject.h"
+using namespace boost::python;
+using regina::NProgress;
+using regina::NProgressManager;
 
-void addAlgebra();
-void addFile();
-void addMaths();
-void addPacket();
-void addProgress();
-void addUtilities();
-
-using regina::ShareableObject;
-
-namespace {
-    void shareableWriteTextShort(const ShareableObject& obj) {
-        obj.writeTextShort(std::cout);
-    }
-
-    void shareableWriteTextLong(const ShareableObject& obj) {
-        obj.writeTextLong(std::cout);
-    }
-}
-
-BOOST_PYTHON_MODULE(regina) {
-    // Core engine routines:
-
-    boost::python::def("getVersionString", regina::getVersionString);
-    boost::python::def("getVersionMajor", regina::getVersionMajor);
-    boost::python::def("getVersionMinor", regina::getVersionMinor);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // ShareableObject class:
-
-    boost::python::class_<ShareableObject, boost::noncopyable>
-            ("ShareableObject", boost::python::no_init)
-        .def("writeTextShort", &shareableWriteTextShort)
-        .def("writeTextLong", &shareableWriteTextLong)
-        .def("toString", &ShareableObject::toString)
-        .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
+void addNProgressManager() {
+    class_<NProgressManager, bases<regina::ShareableObject>,
+            std::auto_ptr<NProgressManager> >("NProgressManager")
+        .def("isStarted", &NProgressManager::isStarted)
+        .def("isFinished", &NProgressManager::isFinished)
+        .def("getProgress", &NProgressManager::getProgress,
+            return_internal_reference<>())
     ;
-
-    // Components from subdirectories (in approximate dependency order):
-
-    addUtilities();
-    addProgress();
-    addMaths();
-    addAlgebra();
-    addPacket();
-    addFile();
 }
 
