@@ -38,8 +38,10 @@
 #include <jni.h>
 
 namespace regina {
-    class ShareableObject;
-}
+
+class ShareableObject;
+
+namespace jni {
 
 #ifndef __USE_RAW_CASTING
     /**
@@ -115,6 +117,8 @@ namespace regina {
      */
     #define javaPtrToLong(p) ((jlong)((regina::ShareableObject*)(p)))
 #endif
+
+} } // namespace regina::jni
 
 #endif
 

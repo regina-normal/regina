@@ -32,6 +32,7 @@
 #include "engine/split/NJNISignature.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_split_NJNISignature_getOrder

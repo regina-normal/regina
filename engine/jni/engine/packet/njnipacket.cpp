@@ -32,6 +32,7 @@
 #include "engine/packet/NJNIPacket.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIPacket_addTag

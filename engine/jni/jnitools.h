@@ -42,6 +42,13 @@
 #include "shareableobject.h"
 #include "utilities/nmpi.h"
 
+namespace regina {
+
+/**
+ * Various classes and routines to aid JNI interaction between Java and C++.
+ */
+namespace jni {
+
 /**
  * Specifies the field of a Java wrapper object that will contain the
  * C++ pointer to the underlying object in the engine.
@@ -204,6 +211,8 @@ jobject jBigIntegerFromLarge(JNIEnv* jni_env,
 inline jstring jstringFromCString(JNIEnv* jni_env, const std::string& str) {
     return jni_env->NewStringUTF(str.c_str());
 }
+
+} } // namespace regina::jni
         
 #endif
 

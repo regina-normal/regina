@@ -32,6 +32,7 @@
 #include "engine/angle/NJNIAngleStructure.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_getAngleDen

@@ -28,6 +28,9 @@
 
 #include "javacast.h"
 
+namespace regina {
+namespace jni {
+
 #ifndef __USE_RAW_CASTING
     regina::ShareableObject* javaLongToPtr(jlong i) {
         void* addr = &i;
@@ -39,4 +42,6 @@
         return *((jlong*)addr);
     }
 #endif
+
+} } // namespace regina::jni
 

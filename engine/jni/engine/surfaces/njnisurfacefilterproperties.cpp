@@ -31,6 +31,7 @@
 #include "engine/surfaces/NJNISurfaceFilterProperties.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilterProperties_addEC

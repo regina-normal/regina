@@ -31,6 +31,7 @@
 #include "engine/file/NJNIFileInfo.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFileInfo_getPathname

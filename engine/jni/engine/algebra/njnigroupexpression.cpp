@@ -31,6 +31,7 @@
 #include "engine/algebra/NJNIGroupExpression.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_addTermFirst

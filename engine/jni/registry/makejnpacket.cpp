@@ -32,6 +32,9 @@
 #include "registry/javapacketregistry.h"
 #include "registry/javafilterregistry.h"
 
+namespace regina {
+namespace jni {
+
 jobject makeJNPacket(JNIEnv *env, regina::NPacket* packet) {
     if (! packet)
         return 0;
@@ -74,4 +77,6 @@ jobject makeJNPacket(JNIEnv *env, regina::NPacket* packet) {
     // Make the new Java wrapper.
     return CREATE_WRAPPER_OBJECT(env, packet, classPath.c_str());
 }
+
+} } // namespace regina::jni
 

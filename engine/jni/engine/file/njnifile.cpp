@@ -32,6 +32,7 @@
 #include "engine/file/NJNIFile.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_file_NJNIFile_close

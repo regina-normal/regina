@@ -46,8 +46,10 @@
     "normal/engine/implementation/jni/packet/NJNIPacket"
 
 namespace regina {
-    class NPacket;
-}
+
+class NPacket;
+
+namespace jni {
 
 /**
  * Takes a C++ packet and creates a new Java object of the correct class
@@ -69,6 +71,8 @@ namespace regina {
  * @return a newly created Java wrapper object, or 0 if \a packet was 0.
  */
 jobject makeJNPacket(JNIEnv *env, regina::NPacket* packet);
+
+} } // namespace regina::jni
 
 #endif
 

@@ -31,6 +31,7 @@
 #include "engine/packet/NJNIText.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_getText

@@ -33,6 +33,7 @@
 #include "engine/subcomplex/NJNIPillowTwoSphere.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_cloneMe

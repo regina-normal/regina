@@ -31,6 +31,7 @@
 #include "engine/JNIShareableObject.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_destroy

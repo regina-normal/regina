@@ -35,6 +35,7 @@
 #include "engine/triangulation/NJNIComponent.h"
 
 using namespace regina;
+using namespace regina::jni;
 
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIComponent_getBoundaryComponent

@@ -28,6 +28,9 @@
 
 #include "jnitools.h"
 
+namespace regina {
+namespace jni {
+
 jobject CREATE_WRAPPER_OBJECT(JNIEnv* jni_env,
         regina::ShareableObject* cpp_object, const char* java_class) {
     if (! cpp_object)
@@ -88,4 +91,6 @@ jobject jBigIntegerFromLarge(JNIEnv* jni_env,
     delete[] decimal;
     return ans;
 }
+
+} } // namespace regina::jni
 
