@@ -30,6 +30,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
+#include "algebra/ngrouppresentation.h"
 #include "maths/approx.h"
 #include "maths/numbertheory.h"
 #include "split/nsignature.h"
@@ -37,6 +38,7 @@
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NAbelianGroup;
+using regina::NGroupPresentation;
 using regina::NPerm;
 using regina::NSignature;
 using regina::NTetrahedron;
@@ -50,6 +52,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(homologyH1Bdry);
+    CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(propertyUpdates);
@@ -473,6 +476,60 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Boundary H1(solid Klein bottle)", 1, 2);
             verifyGroup(gieseking.getHomologyH1Bdry(),
                 "Boundary H1(Gieseking manifold)", 1, 2);
+        }
+
+        void verifyFundGroup(const NGroupPresentation& g,
+                const std::string& grpName, const std::string& expected) {
+            std::string actual = g.recogniseGroup();
+            if (actual.empty())
+                actual = "unknown";
+
+            // Construct the error message.
+            std::ostringstream msg;
+            msg << grpName << " is " << actual << ", not " << expected << '.';
+
+            // Check the group.
+            if (expected != actual)
+                CPPUNIT_FAIL(msg.str());
+        }
+
+        void fundGroup() {
+            verifyFundGroup(empty.getFundamentalGroup(),
+                "Fund(empty triangulation)", "0");
+            verifyFundGroup(singleTet.getFundamentalGroup(),
+                "Fund(single tetrahedron)", "0");
+            verifyFundGroup(s3.getFundamentalGroup(),
+                "Fund(S^3)", "0");
+            verifyFundGroup(s2xs1.getFundamentalGroup(),
+                "Fund(S^2 x S^1)", "Z");
+            verifyFundGroup(rp3.getFundamentalGroup(),
+                "Fund(RP^3)", "Z_2");
+            verifyFundGroup(lens3_1.getFundamentalGroup(),
+                "Fund(L(3,1))", "Z_3");
+            verifyFundGroup(lens7_1_loop.getFundamentalGroup(),
+                "Fund(Loop L(7,1))", "Z_7");
+            verifyFundGroup(lens8_3.getFundamentalGroup(),
+                "Fund(L(8,3))", "Z_8");
+            verifyFundGroup(lens8_3_large.getFundamentalGroup(),
+                "Fund(Large L(8,3))", "Z_8");
+            //verifyFundGroup(rp3rp3.getFundamentalGroup(),
+            //    "Fund(RP^3 # RP^3)", 0, 2, 2);
+            //verifyFundGroup(q28.getFundamentalGroup(),
+            //    "Fund(S^3 / Q_28)", 0, 4);
+            //verifyFundGroup(q32xz3.getFundamentalGroup(),
+            //    "Fund(S^3 / Q_32 x Z_3)", 0, 2, 6);
+            verifyFundGroup(lens100_1.getFundamentalGroup(),
+                "Fund(L(100,1))", "Z_100");
+            verifyFundGroup(lst3_4_7.getFundamentalGroup(),
+                "Fund(LST(3,4,7))", "Z");
+            //verifyFundGroup(figure8.getFundamentalGroup(),
+            //    "Fund(figure eight knot complement)", 1);
+            //verifyFundGroup(rp2xs1.getFundamentalGroup(),
+            //    "Fund(RP^2 x S^1)", 1, 2);
+            verifyFundGroup(solidKB.getFundamentalGroup(),
+                "Fund(solid Klein bottle)", "Z");
+            //verifyFundGroup(gieseking.getFundamentalGroup(),
+            //    "Fund(Gieseking manifold)", 1);
         }
 
         void zeroEfficiency() {
