@@ -108,6 +108,8 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
         normal.mainui:
             - Added class TagEditor.
             - File information dialog is much more informative.
+        normal.mainui.PacketPane:
+            - Renamed getUI() to getPacketUI() to avoid clashing with j2sdk1.4.
     UTILITIES:
         regconvert, regfiledump, regfiletype, sigcensus, tricensus:
             - Added.

@@ -903,7 +903,7 @@ public class TopologyPane extends FilePane {
         workingArea.add(pane, BorderLayout.CENTER);
         workingArea.validate();
         workingPane = pane;
-        setWorkingTextComponent(pane.getUI().getPrimaryTextComponent());
+        setWorkingTextComponent(pane.getPacketUI().getPrimaryTextComponent());
         return true;
     }
     
@@ -1007,7 +1007,7 @@ public class TopologyPane extends FilePane {
         Enumeration e = allPacketPanes.elements();
         while (e.hasMoreElements()) {
             pane = (PacketPane)e.nextElement();
-            if (pane.getUI().hasChanges())
+            if (pane.getPacketUI().hasChanges())
                 return true;
         }
         return false;
@@ -1031,7 +1031,8 @@ public class TopologyPane extends FilePane {
         Enumeration e = allPacketPanes.elements();
         while (e.hasMoreElements()) {
             pane = (PacketPane)e.nextElement();
-            pane.getUI().packetWasChanged(packet, ui, pane.getParentFrame());
+            pane.getPacketUI().packetWasChanged(packet, ui,
+                pane.getParentFrame());
         }
     }
 
@@ -1056,7 +1057,8 @@ public class TopologyPane extends FilePane {
         Enumeration e = allPacketPanes.elements();
         while (e.hasMoreElements()) {
             pane = (PacketPane)e.nextElement();
-            pane.getUI().packetWasRenamed(packet, ui, pane.getParentFrame());
+            pane.getPacketUI().packetWasRenamed(packet, ui,
+                pane.getParentFrame());
             if (packet.sameObject(pane.getPacket())) {
                 pane.refreshLabel();
                 Frame f = pane.getSurroundingFrame();
@@ -1130,7 +1132,7 @@ public class TopologyPane extends FilePane {
             if (subtree.isGrandparentOf(pane.getPacket()))
                 dieplease.add(pane);
             else
-                pane.getUI().subtreeToBeDeleted(subtree, ui,
+                pane.getPacketUI().subtreeToBeDeleted(subtree, ui,
                     pane.getParentFrame());
         }
         e = dieplease.elements();
@@ -1175,7 +1177,7 @@ public class TopologyPane extends FilePane {
         Enumeration e = allPacketPanes.elements();
         while (e.hasMoreElements()) {
             pane = (PacketPane)e.nextElement();
-            pane.getUI().subtreeWasDeleted(parent, ui,
+            pane.getPacketUI().subtreeWasDeleted(parent, ui,
                 pane.getParentFrame());
         }
     }
@@ -1208,7 +1210,8 @@ public class TopologyPane extends FilePane {
         Enumeration e = allPacketPanes.elements();
         while (e.hasMoreElements()) {
             pane = (PacketPane)e.nextElement();
-            pane.getUI().subtreeWasInserted(subtree, ui, pane.getParentFrame());
+            pane.getPacketUI().subtreeWasInserted(subtree, ui,
+                pane.getParentFrame());
         }
 
         // Update the visual tree.
@@ -1270,7 +1273,7 @@ public class TopologyPane extends FilePane {
                    if (f != null)
                        f.setTitle(pane.getPacket().getFullName());
             }
-            pane.getUI().subtreeHasChanged(subtree, ui,
+            pane.getPacketUI().subtreeHasChanged(subtree, ui,
                 pane.getParentFrame());
         }
 

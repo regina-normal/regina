@@ -43,7 +43,7 @@ import org.gjt.btools.image.*;
  * A pane in which the user can interact with a packet.
  * This will generally contain a <tt>PacketUI</tt> which will be
  * responsible for the actual interaction; this can be accessed
- * through the method <tt>getUI()</tt>.
+ * through the method <tt>getPacketUI()</tt>.
  * This pane will also display packet identification details and give
  * the user some buttons for standard actions.
  * <p>
@@ -249,7 +249,7 @@ public class PacketPane extends JPanel implements UIHasChangesListener {
      *
      * @return the associated <tt>PacketUI</tt> interface.
      */
-    public PacketUI getUI() {
+    public PacketUI getPacketUI() {
         return ui;
     }
 
