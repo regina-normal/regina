@@ -201,6 +201,10 @@
  *
  *  \todo \bug Audit CORBA classes for use of \c _ptr instead of \c _var.
  *  \todo \feature Clarify error messages in CORBA server and client.
+ *  \todo \opturgent Improve the speed of CORBA file I/O!
+ *  \todo \bugurgent Ensure a failed file open/save does not crash the
+ *  CORBA engine.
+ *  \todo \bugurgent Disable snappea imports in the CORBA engine!
  */
 
 /*! \page JavaNotes Java User Interface
