@@ -96,5 +96,8 @@ void addNLargeInteger() {
     s.attr("zero") = NLargeInteger::zero;
     s.attr("one") = NLargeInteger::one;
     s.attr("infinity") = NLargeInteger::infinity;
+
+    boost::python::implicitly_convertible<long, NLargeInteger>();
+    boost::python::implicitly_convertible<std::string, NLargeInteger>();
 }
 

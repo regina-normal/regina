@@ -69,5 +69,9 @@ void addNRational() {
     s.attr("one") = NRational::one;
     s.attr("infinity") = NRational::infinity;
     s.attr("undefined") = NRational::undefined;
+
+    boost::python::implicitly_convertible<NLargeInteger, NRational>();
+    boost::python::implicitly_convertible<long, NRational>();
+
 }
 

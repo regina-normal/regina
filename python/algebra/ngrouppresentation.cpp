@@ -53,13 +53,11 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addGenerator,
         NGroupPresentation::addGenerator, 0, 1);
 
-    boost::python::list* getTerms_list(const NGroupExpression& e) {
-        boost::python::list* ans = new boost::python::list();
-
+    object getTerms_list(const NGroupExpression& e) {
+        boost::python::list ans;
         for (std::list<NGroupExpressionTerm>::const_iterator it =
                 e.getTerms().begin(); it != e.getTerms().end(); it++)
-            ans->append(*it);
-
+            ans.append(*it);
         return ans;
     }
 
@@ -86,8 +84,7 @@ void addNGroupPresentation() {
             std::auto_ptr<NGroupExpression> >
             ("NGroupExpression")
         .def(init<const NGroupExpression&>())
-        .def("getTerms", getTerms_list,
-            return_value_policy<manage_new_object>())
+        .def("getTerms", getTerms_list)
         .def("getNumberOfTerms", &NGroupExpression::getNumberOfTerms)
         .def("getTerm", getTerm_non_const, return_internal_reference<>())
         .def("getGenerator", &NGroupExpression::getGenerator)
