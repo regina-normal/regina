@@ -19,7 +19,7 @@
 
 scripts = regconf regina
 conf_src_mask = configure/M* configure/*.java configure/*.txt
-misc_src_mask = Makefile* *.txt
+misc_src_mask = Makefile* *.txt docs/*.txt
 misc_bin_mask = *.txt
-misc_doc_mask = *.html *.hs *.jhm *.txt *.jpg
+misc_doc_mask = *.html *.hs *.jhm *.txt *.jpg *.xml
 

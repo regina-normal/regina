@@ -56,5 +56,6 @@ dirs_engine_corba = \
 	corba/Regina/Triangulation \
 	corba
 
-engine_misc_src_mask = Makefile* findtext doc-files/* *.txt
+engine_misc_src_mask = Makefile* findtext doc-files/* *.txt \
+	engine/census/results.txt
 
