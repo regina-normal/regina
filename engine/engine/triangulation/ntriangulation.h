@@ -35,6 +35,7 @@
 #define __NTRIANGULATION_H
 #endif
 
+#include <memory>
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
 #include "utilities/hashset.h"
@@ -51,6 +52,7 @@
 namespace regina {
 
 class NGroupPresentation;
+class NIsomorphism;
 class NXMLPacketReader;
 class NXMLTriangulationReader;
 
@@ -609,18 +611,70 @@ class NTriangulation : public NPacket, NPropertyHolder {
 
         /**
          * Determines if this triangulation is combinatorially
-         * isomorphic to the given triangulation (this is the same as
-         * simplicially homeomorphic).
+         * isomorphic to the given triangulation.
+         *
+         * Specifically, this routine determines if there is a
+         * one-to-one and onto boundary complete combinatorial
+         * isomorphism from this triangulation to \a other.  Boundary
+         * complete isomorphisms are described in detail in the
+         * NIsomorphism class notes.
+         *
+         * In particular, note that this triangulation and \a other must
+         * contain the same number of tetrahedra for such an isomorphism
+         * to exist.
          *
          * \todo \opt Improve the complexity by choosing a tetrahedron
          * mapping from each component and following gluings to
          * determine the others.
          *
+         * If a boundary complete isomorphism is found, the details of
+         * this isomorphism are returned.  The isomorphism is newly
+         * constructed, and so to assist with memory management is
+         * returned as a std::auto_ptr.  Thus, to test whether an
+         * isomorphism exists without having to explicitly deal with the
+         * isomorphism itself, you can call
+         * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
+         * created isomorphism (if it exists) will be automatically
+         * destroyed.
+         *
          * @param other the triangulation to compare with this one.
-         * @return \c true if and only if this and the given
-         * triangulation are combinatorially isomorphic.
+         * @return details of the isomorphism if the two triangulations
+         * are combinatorially isomorphic, or a null pointer otherwise.
          */
-        bool isIsomorphicTo(NTriangulation& other);
+        std::auto_ptr<NIsomorphism> isIsomorphicTo(const NTriangulation& other)
+            const;
+
+        /**
+         * Determines if an isomorphic copy of this triangulation is
+         * contained within the given triangulation, possibly as a
+         * subcomplex of some larger component (or components).
+         *
+         * Specifically, this routine determines if there is a boundary
+         * incomplete combinatorial isomorphism from this triangulation
+         * to \a other.  Boundary incomplete isomorphisms are described
+         * in detail in the NIsomorphism class notes.
+         *
+         * In particular, note that boundary faces of this triangulation
+         * need not correspond to boundary faces of \a other, and that
+         * \a other can contain more tetrahedra than this triangulation.
+         *
+         * If a boundary incomplete isomorphism is found, the details of
+         * this isomorphism are returned.  The isomorphism is newly
+         * constructed, and so to assist with memory management is
+         * returned as a std::auto_ptr.  Thus, to test whether an
+         * isomorphism exists without having to explicitly deal with the
+         * isomorphism itself, you can call
+         * <tt>if (isContainedIn(other).get())</tt> and the newly
+         * created isomorphism (if it exists) will be automatically
+         * destroyed.
+         *
+         * @param other the triangulation in which to search for an
+         * isomorphic copy of this triangulation.
+         * @return details of the isomorphism if such a copy is found,
+         * or a null pointer otherwise.
+         */
+        std::auto_ptr<NIsomorphism> isContainedIn(const NTriangulation& other)
+            const;
 
         /**
          * Determines if this triangulation contains any two-sphere

@@ -30,9 +30,19 @@
 
 namespace regina {
 
+void NIsomorphism::writeTextShort(std::ostream& out) const {
+    out << "Isomorphism between triangulations";
+}
+
+void NIsomorphism::writeTextLong(std::ostream& out) const {
+    for (unsigned i = 0; i < nTetrahedra; i++)
+        out << i << " -> " << tetImage(i) << " (" << facePerm(i) << ")\n";
+}
+
 NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :
-        NIsomorphism(cloneMe.getNumberOfTetrahedra()),
-        mFacePerm(new NPerm[cloneMe.getNumberOfTetrahedra()]) {
+        NIsomorphism(cloneMe.getSourceTetrahedra()),
+        mFacePerm(cloneMe.getSourceTetrahedra()> 0 ?
+            new NPerm[cloneMe.getSourceTetrahedra()] : 0) {
     for (unsigned i = 0; i < nTetrahedra; i++) {
         mTetImage[i] = cloneMe.tetImage(i);
         mFacePerm[i] = cloneMe.facePerm(i);
@@ -41,7 +51,8 @@ NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :
 
 NIsomorphismIndexed::NIsomorphismIndexed(const NIsomorphismIndexed& cloneMe) :
         NIsomorphism(cloneMe.nTetrahedra),
-        mIndex(new int[cloneMe.nTetrahedra]) {
+        mIndex(cloneMe.nTetrahedra > 0 ?
+            new int[cloneMe.nTetrahedra] : 0) {
     for (unsigned i = 0; i < nTetrahedra; i++) {
         mTetImage[i] = cloneMe.mTetImage[i];
         mIndex[i] = cloneMe.mIndex[i];

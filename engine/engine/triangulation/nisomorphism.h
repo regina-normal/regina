@@ -27,8 +27,7 @@
 /* end stub */
 
 /*! \file nisomorphism.h
- *  \brief Utilities for dealing with combinatorial isomorphisms of
- *  triangulations.
+ *  \brief Deals with combinatorial isomorphisms of triangulations.
  */
 
 #ifndef __NISOMORPHISM_H
@@ -36,6 +35,7 @@
 #define __NISOMORPHISM_H
 #endif
 
+#include "shareableobject.h"
 #include "triangulation/nperm.h"
 #include "triangulation/ntetface.h"
 
@@ -47,87 +47,121 @@ namespace regina {
  */
 
 /**
- * Represents a combinatorial isomorphism of a triangulation.
- * This class cannot be directly instantiated; the individual subclasses
- * correspond to different methods of storing the face permutation
- * associated with each tetrahedron.
+ * Represents a combinatorial isomorphism from one triangulation into
+ * another.
  *
- * \ifacespython Not present.
+ * A combinatorial isomorphism from triangulation T to triangulation U
+ * is a one-to-one map f from the individual tetrahedron faces of T to
+ * the individual tetrahedron faces of U for which the following
+ * conditions hold:
+ *
+ *   - if faces x and y belong to the same tetrahedron of T then
+ *     faces f(x) and f(y) belong to the same tetrahedron of U;
+ *   - if faces x and y are identified in T then faces f(x) and f(y)
+ *     are identified in U.
+ *
+ * Isomorphisms can be <i>boundary complete</i> or
+ * <i>boundary incomplete</i>.  A boundary complete isomorphism
+ * satisfies the additional condition:
+ *
+ *   - if face x is a boundary face of T then face f(x) is a boundary
+ *     face of U.
+ *
+ * A boundary complete isomorphism thus indicates that a copy of
+ * triangulation T is present as an entire component (or components) of U,
+ * whereas a boundary incomplete isomorphism represents an embedding of a
+ * copy of triangulation T as a subcomplex of some possibly larger component
+ * (or components) of U.
+ *
+ * Note that in all cases triangulation U may contain more tetrahedra
+ * than triangulation T.
+ *
+ * This class cannot be directly instantiated; the individual subclasses
+ * correspond to different methods of storing the face permutations
+ * associated with each tetrahedron.
  */
-class NIsomorphism {
+class NIsomorphism : public ShareableObject {
     protected:
         unsigned nTetrahedra;
-            /**< The number of tetrahedra in the associated triangulation. */
+            /**< The number of tetrahedra in the source triangulation. */
         int* mTetImage;
-            /**< The tetrahedron that each tetrahedron maps to. */
-    
+            /**< The tetrahedron of the destination triangulation that
+                 each tetrahedron of the source triangulation maps to. */
+
     public:
-        /**
-         * Creates a new isomorphism with no initialisation.
-         *
-         * @param newNTetrahedra the number of tetrahedra in the associated
-         * triangulation; this must be at least 1.
-         */
-        NIsomorphism(unsigned newNTetrahedra);
         /**
          * Destroys this isomorphism.
          */
         virtual ~NIsomorphism();
 
         /**
-         * Returns the number of tetrahedra in the triangulation
-         * associated with this isomorphism.
+         * Returns the number of tetrahedra in the source triangulation
+         * associated with this isomorphism.  Note that this is always
+         * less than or equal to the number of tetrahedra in the
+         * destination triangulation.
          *
-         * @return the number of tetrahedra.
+         * @return the number of tetrahedra in the source triangulation.
          */
-        unsigned getNumberOfTetrahedra() const;
+        unsigned getSourceTetrahedra() const;
 
         /**
-         * Determines the image of the given tetrahedron under the
-         * isomorphism.
+         * Determines the image of the given source tetrahedron under
+         * this isomorphism.
          *
-         * @param tet the index of the given tetrahedron; this must be
-         * between 0 and <tt>getNumberOfTetrahedra()-1</tt> inclusive.
-         * @return a reference to the index of the tetrahedron that
-         * the given tetrahedron maps to.
+         * @param tet the index of the source tetrahedron; this must be
+         * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @return a reference to the index of the destination tetrahedron
+         * that the source tetrahedron maps to.
          */
-        int& tetImage(unsigned tet);
+        int& tetImage(unsigned sourceTet);
         /**
-         * Determines the image of the given tetrahedron under the
-         * isomorphism.
+         * Determines the image of the given source tetrahedron under
+         * this isomorphism.
          *
-         * @param tet the index of the given tetrahedron; this must be
-         * between 0 and <tt>getNumberOfTetrahedra()-1</tt> inclusive.
-         * @return a reference to the index of the tetrahedron that
-         * the given tetrahedron maps to.
+         * @param tet the index of the source tetrahedron; this must be
+         * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @return the index of the destination tetrahedron
+         * that the source tetrahedron maps to.
          */
-        const int& tetImage(unsigned tet) const;
+        int tetImage(unsigned sourceTet) const;
         /**
          * Determines the permutation that is applied to the four faces
-         * of the given tetrahedron under this isomorphism.
-         * Face \a i of tetrahedron \a tet will be mapped to face
-         * <tt>facePerm(tet)[i]</tt> of tetrahedron
-         * <tt>tetImage(tet)</tt>.
+         * of the given source tetrahedron under this isomorphism.
+         * Face \a i of source tetrahedron \a sourceTet will be mapped to
+         * face <tt>facePerm(sourceTet)[i]</tt> of tetrahedron
+         * <tt>tetImage(sourceTet)</tt>.
          *
-         * @param tet the index of the tetrahedron containing the
-         * original four faces; this must be between 0 and
-         * <tt>getNumberOfTetrahedra()-1</tt> inclusive.
-         * @return a reference to the permutation applied to the
-         * four faces of the given tetrahedron.
+         * @param sourceTet the index of the source tetrahedron containing
+         * the original four faces; this must be between 0 and
+         * <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @return the permutation applied to the four faces of the
+         * source tetrahedron.
          */
-        virtual const NPerm& facePerm(unsigned tet) const = 0;
+        virtual NPerm facePerm(unsigned tet) const = 0;
         /**
-         * Determines the image of the given specific tetrahedron face
-         * under the isomorphism.  Note that a value only is returned; this
+         * Determines the image of the given source tetrahedron face
+         * under this isomorphism.  Note that a value only is returned; this
          * routine cannot be used to alter the isomorphism.
          *
-         * @param source the given specific tetrahedron face; this must
-         * be one of the four faces of one of the getNumberOfTetrahedra()
-         * tetrahedra in the associated triangulation.
-         * @return the image of the given tetrahedron face under the
+         * @param source the given source tetrahedron face; this must
+         * be one of the four faces of one of the getSourceTetrahedra()
+         * tetrahedra in the source triangulation.
+         * @return the image of the source tetrahedron face under this
          * isomorphism.
          */
         NTetFace operator [] (const NTetFace& source) const;
+
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+
+    protected:
+        /**
+         * Creates a new isomorphism with no initialisation.
+         *
+         * @param newSourceTetrahedra the number of tetrahedra in the source
+         * triangulation; this may be zero.
+         */
+        NIsomorphism(unsigned newSourceTetrahedra);
 };
 
 /**
@@ -135,22 +169,26 @@ class NIsomorphism {
  * There is direct write-access to the individual face permutations, but
  * no simple method of iterating through possible face permutations.
  *
+ * See the NIsomorphism class notes for further details on the types of
+ * isomorphism that can be represented.
+ *
  * \ifacespython Not present.
  */
 class NIsomorphismDirect : public NIsomorphism {
     private:
         NPerm* mFacePerm;
             /**< The permutation applied to the four faces of each
-             *   source tetrahedron. */
-    
+                 source tetrahedron. */
+
     public:
         /**
          * Creates a new isomorphism with no initialisation.
          *
-         * @param newNTetrahedra the number of tetrahedra in the associated
-         * triangulation; this must be at least 1.
+         * @param newSourceTetrahedra the number of tetrahedra in the source
+         * triangulation associated with this isomorphism; this may be
+         * zero.
          */
-        NIsomorphismDirect(unsigned newNTetrahedra);
+        NIsomorphismDirect(unsigned newSourceTetrahedra);
         /**
          * Creates a new isomorphism identical to the given isomorphism.
          *
@@ -164,33 +202,22 @@ class NIsomorphismDirect : public NIsomorphism {
         virtual ~NIsomorphismDirect();
 
         /**
-         * Determines the permutation that is applied to the four faces
-         * of the given tetrahedron under this isomorphism.
-         * Face \a i of tetrahedron \a tet will be mapped to face
-         * <tt>facePerm(tet)[i]</tt> of tetrahedron
-         * <tt>tetImage(tet)</tt>.
+         * Returns a read-write reference to the permutation that is
+         * applied to the four faces of the given source tetrahedron
+         * under this isomorphism.
+         * Face \a i of source tetrahedron \a sourceTet will be mapped to
+         * face <tt>facePerm(sourceTet)[i]</tt> of tetrahedron
+         * <tt>tetImage(sourceTet)</tt>.
          *
-         * @param tet the index of the tetrahedron containing the
-         * original four faces; this must be between 0 and
-         * <tt>getNumberOfTetrahedra()-1</tt> inclusive.
-         * @return a reference to the permutation applied to the
-         * four faces of the given tetrahedron.
+         * @param sourceTet the index of the source tetrahedron containing
+         * the original four faces; this must be between 0 and
+         * <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @return a read-write reference to the permutation applied to the
+         * four faces of the source tetrahedron.
          */
-        NPerm& facePerm(unsigned tet);
-        /**
-         * Determines the permutation that is applied to the four faces
-         * of the given tetrahedron under this isomorphism.
-         * Face \a i of tetrahedron \a tet will be mapped to face
-         * <tt>facePerm(tet)[i]</tt> of tetrahedron
-         * <tt>tetImage(tet)</tt>.
-         *
-         * @param tet the index of the tetrahedron containing the
-         * original four faces; this must be between 0 and
-         * <tt>getNumberOfTetrahedra()-1</tt> inclusive.
-         * @return a reference to the permutation applied to the
-         * four faces of the given tetrahedron.
-         */
-        virtual const NPerm& facePerm(unsigned tet) const;
+        NPerm& facePerm(unsigned sourceTet);
+
+        virtual NPerm facePerm(unsigned sourceTet) const;
 };
 
 /**
@@ -199,23 +226,27 @@ class NIsomorphismDirect : public NIsomorphism {
  * It is easy to iterate through possible face permutations, but there
  * is no direct write-access to the permutations themselves.
  *
+ * See the NIsomorphism class notes for further details on the types of
+ * isomorphism that can be represented.
+ *
  * \ifacespython Not present.
  */
 class NIsomorphismIndexed : public NIsomorphism {
     private:
         int* mIndex;
             /**< The index into the ::allPermsS4 array representing the
-             *   permutation applied to the four faces of each source
-             *   tetrahedron. */
+                 permutation applied to the four faces of each source
+                 tetrahedron. */
 
     public:
         /**
          * Creates a new isomorphism with no initialisation.
          *
-         * @param newNTetrahedra the number of tetrahedra in the
-         * associated triangulation; this must be at least 1.
+         * @param newSourceTetrahedra the number of tetrahedra in the
+         * source triangulation associated with this isomorphism; this
+         * may be zero.
          */
-        NIsomorphismIndexed(unsigned newNTetrahedra);
+        NIsomorphismIndexed(unsigned newSourceTetrahedra);
         /**
          * Creates a new isomorphism identical to the given isomorphism.
          *
@@ -228,71 +259,62 @@ class NIsomorphismIndexed : public NIsomorphism {
          */
         virtual ~NIsomorphismIndexed();
 
+        virtual NPerm facePerm(unsigned tet) const;
+
         /**
-         * Determines the permutation that is applied to the four faces
-         * of the given tetrahedron under this isomorphism.
-         * Face \a i of tetrahedron \a tet will be mapped to face
-         * <tt>facePerm(tet)[i]</tt> of tetrahedron
-         * <tt>tetImage(tet)</tt>.
-         *
-         * @param tet the index of the tetrahedron containing the
-         * original four faces; this must be between 0 and
-         * <tt>getNumberOfTetrahedra()-1</tt> inclusive.
-         * @return a reference to the permutation applied to the
-         * four faces of the given tetrahedron.
-         */
-        virtual const NPerm& facePerm(unsigned tet) const;
-        /**
-         * Determines the index into the array ::allPermsS4 that points to
+         * Returns a read-write reference to the index into
+         * array ::allPermsS4 that points to
          * the permutation that is applied to the four faces of the
-         * given tetrahedron under this isomorphism.
-         * Face \a i of tetrahedron \a tet will be mapped to face
-         * <tt>allPermsS4[facePermIndex(tet)][i]</tt> of tetrahedron
-         * <tt>tetImage(tet)</tt>.
+         * given source tetrahedron under this isomorphism.
+         * Face \a i of tetrahedron \a sourceTet will be mapped to face
+         * <tt>allPermsS4[facePermIndex(sourceTet)][i]</tt> of tetrahedron
+         * <tt>tetImage(sourceTet)</tt>.
          *
-         * @param tet the index of the tetrahedron containing the
-         * original four faces; this must be between 0 and
-         * <tt>getNumberOfTetrahedra()-1</tt> inclusive.
-         * @return a reference to the corresponding array index.
+         * @param sourceTet the index of the source tetrahedron containing
+         * the original four faces; this must be between 0 and
+         * <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @return a read-write reference to the corresponding array index.
          */
-        int& facePermIndex(unsigned tet);
+        int& facePermIndex(unsigned sourceTet);
         /**
-         * Determines the index into the array ::allPermsS4 that points to
+         * Returns the index into the array ::allPermsS4 that points to
          * the permutation that is applied to the four faces of the
-         * given tetrahedron under this isomorphism.
-         * Face \a i of tetrahedron \a tet will be mapped to face
-         * <tt>allPermsS4[facePermIndex(tet)][i]</tt> of tetrahedron
-         * <tt>tetImage(tet)</tt>.
+         * given source tetrahedron under this isomorphism.
+         * Face \a i of tetrahedron \a sourceTet will be mapped to face
+         * <tt>allPermsS4[facePermIndex(sourceTet)][i]</tt> of tetrahedron
+         * <tt>tetImage(sourceTet)</tt>.
          *
-         * @param tet the index of the tetrahedron containing the
-         * original four faces; this must be between 0 and
-         * <tt>getNumberOfTetrahedra()-1</tt> inclusive.
-         * @return a reference to the corresponding array index.
+         * @param sourceTet the index of the source tetrahedron containing
+         * the original four faces; this must be between 0 and
+         * <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * @return the corresponding array index.
          */
-        const int& facePermIndex(unsigned tet) const;
+        int facePermIndex(unsigned sourceTet) const;
 };
 
 /*@}*/
 
 // Inline functions for NIsomorphism
 
-inline NIsomorphism::NIsomorphism(unsigned newNTetrahedra) :
-        nTetrahedra(newNTetrahedra),
-        mTetImage(new int[newNTetrahedra]) {
+inline NIsomorphism::NIsomorphism(unsigned newSourceTetrahedra) :
+        nTetrahedra(newSourceTetrahedra),
+        mTetImage(newSourceTetrahedra > 0 ?
+            new int[newSourceTetrahedra] : 0) {
 }
 inline NIsomorphism::~NIsomorphism() {
-    delete[] mTetImage;
+    if (mTetImage)
+        delete[] mTetImage;
 }
 
-inline unsigned NIsomorphism::getNumberOfTetrahedra() const {
+inline unsigned NIsomorphism::getSourceTetrahedra() const {
     return nTetrahedra;
 }
 
-inline int& NIsomorphism::tetImage(unsigned tet) {
-    return mTetImage[tet];
+inline int& NIsomorphism::tetImage(unsigned sourceTet) {
+    return mTetImage[sourceTet];
 }
-inline const int& NIsomorphism::tetImage(unsigned tet) const {
-    return mTetImage[tet];
+inline int NIsomorphism::tetImage(unsigned sourceTet) const {
+    return mTetImage[sourceTet];
 }
 inline NTetFace NIsomorphism::operator [] (const NTetFace& source) const {
     return NTetFace(mTetImage[source.tet], facePerm(source.tet)[source.face]);
@@ -300,37 +322,43 @@ inline NTetFace NIsomorphism::operator [] (const NTetFace& source) const {
 
 // Inline functions for NIsomorphismDirect
 
-inline NIsomorphismDirect::NIsomorphismDirect(unsigned newNTetrahedra) :
-        NIsomorphism(newNTetrahedra), mFacePerm(new NPerm[newNTetrahedra]) {
+inline NIsomorphismDirect::NIsomorphismDirect(unsigned newSourceTetrahedra) :
+        NIsomorphism(newSourceTetrahedra),
+        mFacePerm(newSourceTetrahedra > 0 ?
+            new NPerm[newSourceTetrahedra] : 0) {
 }
 inline NIsomorphismDirect::~NIsomorphismDirect() {
-    delete[] mFacePerm;
+    if (mFacePerm)
+        delete[] mFacePerm;
 }
 
-inline NPerm& NIsomorphismDirect::facePerm(unsigned tet) {
-    return mFacePerm[tet];
+inline NPerm& NIsomorphismDirect::facePerm(unsigned sourceTet) {
+    return mFacePerm[sourceTet];
 }
-inline const NPerm& NIsomorphismDirect::facePerm(unsigned tet) const {
-    return mFacePerm[tet];
+inline NPerm NIsomorphismDirect::facePerm(unsigned sourceTet) const {
+    return mFacePerm[sourceTet];
 }
 
 // Inline functions for NIsomorphismIndexed
 
-inline NIsomorphismIndexed::NIsomorphismIndexed(unsigned newNTetrahedra) :
-        NIsomorphism(newNTetrahedra), mIndex(new int[newNTetrahedra]) {
+inline NIsomorphismIndexed::NIsomorphismIndexed(unsigned newSourceTetrahedra) :
+        NIsomorphism(newSourceTetrahedra),
+        mIndex(newSourceTetrahedra > 0 ?
+            new int[newSourceTetrahedra] : 0) {
 }
 inline NIsomorphismIndexed::~NIsomorphismIndexed() {
-    delete[] mIndex;
+    if (mIndex)
+        delete[] mIndex;
 }
 
-inline const NPerm& NIsomorphismIndexed::facePerm(unsigned tet) const {
-    return allPermsS4[mIndex[tet]];
+inline NPerm NIsomorphismIndexed::facePerm(unsigned sourceTet) const {
+    return allPermsS4[mIndex[sourceTet]];
 }
-inline int& NIsomorphismIndexed::facePermIndex(unsigned tet) {
-    return mIndex[tet];
+inline int& NIsomorphismIndexed::facePermIndex(unsigned sourceTet) {
+    return mIndex[sourceTet];
 }
-inline const int& NIsomorphismIndexed::facePermIndex(unsigned tet) const {
-    return mIndex[tet];
+inline int NIsomorphismIndexed::facePermIndex(unsigned sourceTet) const {
+    return mIndex[sourceTet];
 }
 
 } // namespace regina

@@ -26,29 +26,30 @@
 
 /* end stub */
 
-void addNBoundaryComponent();
-void addNComponent();
-void addNEdge();
-void addNFace();
-void addNFacePair();
-void addNIsomorphism();
-void addNPerm();
-void addNTetFace();
-void addNTetrahedron();
-void addNTriangulation();
-void addNVertex();
+#include "triangulation/nisomorphism.h"
+#include <boost/python.hpp>
 
-void addTriangulation() {
-    addNBoundaryComponent();
-    addNComponent();
-    addNEdge();
-    addNFace();
-    addNFacePair();
-    addNIsomorphism();
-    addNPerm();
-    addNTetFace();
-    addNTetrahedron();
-    addNTriangulation();
-    addNVertex();
+using namespace boost::python;
+using regina::NIsomorphism;
+
+namespace {
+    int (NIsomorphism::*tetImage_const)(unsigned) const =
+        &NIsomorphism::tetImage;
+
+    regina::NTetFace getItem(const NIsomorphism& iso,
+            const regina::NTetFace& f) {
+        return iso[f];
+    }
+}
+
+void addNIsomorphism() {
+    class_<NIsomorphism, bases<regina::ShareableObject>,
+            std::auto_ptr<NIsomorphism>, boost::noncopyable>
+            ("NIsomorphism", no_init)
+        .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
+        .def("tetImage", tetImage_const)
+        .def("facePerm", &NIsomorphism::facePerm)
+        .def("__getitem__", getItem)
+    ;
 }
 

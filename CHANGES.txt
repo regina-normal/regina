@@ -21,8 +21,17 @@ Current Development Version
             - Fixed bug in isCanonical().
         Class NGluingPerms:
             - Further optimisations for non-orientable census generation.
+        Class NGroupPresentation:
+            - Slightly improved group recognition.
         Class NHandlebody:
             - Added as a new 3-manifold class.
+        Class NIsomorphism:
+            - Allows an isomorphism with 0 tetrahedra.
+            - Now derives from ShareableObject.
+            - Supports boundary incomplete isomorphisms as well as
+              complete isomorphisms.
+            - Changed return types of const lookup routines from
+              const T& to just T.
         Class NL31Pillow:
             - New class for identifying particular L(3,1) triangulations.
         Class NLargeInteger:
@@ -66,6 +75,10 @@ Current Development Version
             - Renamed isTriSolidTorus() to formsTriSolidTorus().
         Class NTriangulation:
             - New routine turaevViro().
+            - Changed isIsomorphicTo() to return an entire isomorphism,
+              not just whether an isomorphism exists.
+            - New routine isContainedIn() to test for boundary
+              incomplete isomorphisms.
         Routine isKnownSFS():
             - Removed in favour of
               NStandardTriangulation::isStandardTriangulation().

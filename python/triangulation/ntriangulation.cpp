@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "algebra/ngrouppresentation.h"
+#include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
@@ -68,6 +69,16 @@ namespace {
             std::auto_ptr<regina::NTetrahedron> tet) {
         tri.addTetrahedron(tet.get());
         tet.release();
+    }
+
+    regina::NIsomorphism* isIsomorphicTo_ptr(NTriangulation& t,
+            NTriangulation& s) {
+        return t.isIsomorphicTo(s).release();
+    }
+
+    regina::NIsomorphism* isContainedIn_ptr(NTriangulation& t,
+            NTriangulation& s) {
+        return t.isContainedIn(s).release();
     }
 
     boost::python::list getTetrahedra_list(NTriangulation& t) {
@@ -163,7 +174,10 @@ void addNTriangulation() {
         .def("getVertexIndex", &NTriangulation::getVertexIndex)
         .def("getEdgeIndex", &NTriangulation::getEdgeIndex)
         .def("getFaceIndex", &NTriangulation::getFaceIndex)
-        .def("isIsomorphicTo", &NTriangulation::isIsomorphicTo)
+        .def("isIsomorphicTo", isIsomorphicTo_ptr,
+            return_value_policy<manage_new_object>())
+        .def("isContainedIn", isContainedIn_ptr,
+            return_value_policy<manage_new_object>())
         .def("hasTwoSphereBoundaryComponents",
             &NTriangulation::hasTwoSphereBoundaryComponents)
         .def("hasNegativeIdealBoundaryComponents",
