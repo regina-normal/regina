@@ -71,6 +71,29 @@ public abstract class Modification extends Algorithm {
     }
 
     /**
+     * Creates a new modification with the given specifications.
+     * This modification object will also be registered as an action
+     * listener for itself.
+     *
+     * @param shell the shell representing the entire program.
+     * @param menuLabel the text to display in the menu item
+     * corresponding to this modification.
+	 * @param mnemonic the keyboard mnemonic to associate with the
+	 * corresponding menu item.
+     * @param packetPostLabel the text to add to the end of a packet
+     * label if the packet is cloned to perform this modification; this
+     * text should not begin with any spaces.
+     * @param packetClass the subclass of <tt>NPacket</tt> upon which we
+     * are allowed to perform this modification.
+     * @see normal.engine.packet.NPacket
+     */
+    public Modification(Shell shell, String menuLabel, int mnemonic,
+            String packetPostLabel, Class packetClass) {
+        super(shell, menuLabel, mnemonic, packetPostLabel,
+            new SingleClass(packetClass), true);
+    }
+
+    /**
      * Fills the given menu and vector with modifications.
      * Each modification placed in the given menu structure will also be placed
      * in the given vector.
@@ -84,7 +107,8 @@ public abstract class Modification extends Algorithm {
     public static void makeMenu(Shell shell, JMenu menu, Vector vector) {
         JMenu triangulation = new JMenu("Triangulation");
 		triangulation.setMnemonic(KeyEvent.VK_T);
-        (new Modification(shell, "Intelligent Simplify", "simplified",
+        (new Modification(shell, "Intelligent Simplify", KeyEvent.VK_S,
+			"simplified",
             normal.engine.triangulation.NTriangulation.class) {
                 public boolean perform(NPacket packet) {
                     return
@@ -92,14 +116,16 @@ public abstract class Modification extends Algorithm {
                         intelligentSimplify();
                 }
             }).insert(triangulation, vector);
-        (new Modification(shell, "Convert from Ideal to Finite", "made finite",
+        (new Modification(shell, "Convert from Ideal to Finite", KeyEvent.VK_I,
+			"made finite",
             normal.engine.triangulation.NTriangulation.class) {
                 public boolean perform(NPacket packet) {
                     return ((normal.engine.triangulation.NTriangulation)packet).
                         idealToFinite();
                 }
             }).insert(triangulation, vector);
-        (new Modification(shell, "Barycentric Subdivision", "subdivided",
+        (new Modification(shell, "Barycentric Subdivision", KeyEvent.VK_B,
+			"subdivided",
             normal.engine.triangulation.NTriangulation.class) {
                 public boolean perform(NPacket packet) {
                     ((normal.engine.triangulation.NTriangulation)packet).

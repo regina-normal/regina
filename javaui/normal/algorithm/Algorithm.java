@@ -115,6 +115,38 @@ public abstract class Algorithm extends JMenuItem implements ActionListener {
     }
 
     /**
+     * Creates a new algorithm with the given specifications.
+     * This algorithm object will also be registered as an action
+     * listener for itself.
+     *
+     * @param shell the shell representing the entire program.
+     * @param menuLabel the text to display in the menu item
+     * corresponding to this algorithm.
+	 * @param mnemonic the keyboard mnemonic to associate with the
+	 * corresponding menu item.
+     * @param packetPostLabel the text to add to the end of a packet
+     * label if the packet is cloned to perform this algorithm; this
+     * text should not begin with any spaces.
+     * @param filter specifies which packets we are allowed to perform
+     * this algorithm upon.
+     * @param mightEdit <tt>true</tt> if and only if there is a chance
+     * that this algorithm will alter the contents of the packet upon
+     * which it is performed.
+     * @see normal.engine.packet.NPacket
+     */
+    public Algorithm(Shell shell, String menuLabel, int mnemonic,
+            String packetPostLabel, PacketFilter filter, boolean mightEdit) {
+        super(menuLabel);
+        this.shell = shell;
+        this.filter = filter;
+        this.mightEdit = mightEdit;
+        this.name = menuLabel;
+        this.packetPostLabel = packetPostLabel;
+		setMnemonic(mnemonic);
+        addActionListener(this);
+    }
+
+    /**
      * Called when an algorithm menu item is selected.
      * Brings up a dialog to run the appropriate algorithm
      * and then refreshes the display if necessary.
