@@ -550,6 +550,15 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
         menuPacketNewSurfaceFilter.addActionListener(newListener);
         menuPacketNew.add(menuPacketNewSurfaceFilter);
 
+        JMenuItem menuPacketNewAngleStructureList =
+            new JMenuItem("Angle Structure Solutions",
+            PacketUIManager.angleStructureIcon);
+        menuPacketNewAngleStructureList.setMnemonic(KeyEvent.VK_A);
+        menuPacketNewAngleStructureList.setAccelerator(KeyStroke.getKeyStroke(
+            KeyEvent.VK_A, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
+        menuPacketNewAngleStructureList.addActionListener(newListener);
+        menuPacketNew.add(menuPacketNewAngleStructureList);
+
         JMenuItem menuPacketNewScript = new JMenuItem("Script",
             PacketUIManager.scriptIcon);
         menuPacketNewScript.setMnemonic(KeyEvent.VK_S);

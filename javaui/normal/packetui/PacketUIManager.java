@@ -103,6 +103,13 @@ public class PacketUIManager {
             PacketUIManager.class);
 
     /**
+     * Icon to be used for angle structure lists.
+     */
+    public static ImageIcon angleStructureIcon =
+        StandardImage.makeImageIcon("normal/images/packet/angle.gif",
+            PacketUIManager.class);
+
+    /**
      * Return an icon with which to represent a specific packet.
      * The icon returned will be the most appropriate
      * for the given packet.
@@ -128,6 +135,8 @@ public class PacketUIManager {
             return filterPropertiesIcon;
         if (packet instanceof normal.engine.surfaces.NSurfaceFilterCombination)
             return filterCombinationIcon;
+        if (packet instanceof normal.engine.angle.NAngleStructureList)
+            return angleStructureIcon;
 
         // It's a surface filter but we don't know what kind.
         if (packet instanceof normal.engine.surfaces.NSurfaceFilter)
@@ -176,6 +185,9 @@ public class PacketUIManager {
         if (packet instanceof normal.engine.surfaces.NSurfaceFilter)
             return new normal.packetui.surfaces.NSurfaceFilterEditor(
                 packet, shell, topPane, mayEdit);
+        if (packet instanceof normal.engine.angle.NAngleStructureList)
+            return new normal.packetui.angle.NAngleStructureListViewer(
+                packet, shell);
         
         // No suitable viewer was found.
         return new UnknownPacketViewer(packet);
@@ -209,6 +221,8 @@ public class PacketUIManager {
             return new normal.packetui.surfaces.NSurfaceFilterCreator();
         if (command.equals("Script"))
             return new normal.packetui.packet.NScriptCreator();
+        if (command.equals("Angle Structure Solutions"))
+            return new normal.packetui.angle.NAngleStructureListCreator();
             
         // No suitable PacketCreator could be found.
         return null;

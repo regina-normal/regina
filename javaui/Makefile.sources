@@ -41,6 +41,7 @@ packages_ui = \
 	normal.mainui \
 	normal.options \
 	normal.packetfilter \
+	normal.packetui.angle \
 	normal.packetui.census \
 	normal.packetui.packet \
 	normal.packetui.surfaces \
