@@ -43,6 +43,7 @@
 
 namespace regina {
 
+class NFacePair;
 class NFacePairing;
 
 /**
@@ -259,6 +260,110 @@ class NFacePairing : public NThread {
         static NFacePairing* fromTextRep(const std::string& rep);
 
         /**
+         * Determines whether this face pairing is closed.
+         * A closed face pairing has no unmatched faces.
+         */
+        bool isClosed() const;
+
+        /**
+         * Determines whether this face pairing contains a triple edge.
+         * A triple edge is where two different tetrahedra are joined
+         * along three of their faces.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * triple edge.
+         */
+        bool hasTripleEdge() const;
+
+        /**
+         * Follows a chain as far as possible from the given point.
+         *
+         * A chain is the underlying face pairing for a layered solid
+         * torus; specifically it involves one tetrahedron joined to
+         * itself, the remaining two faces joined to a second
+         * tetrahedron, the remaining two faces of the second
+         * tetrahedron joined to a third and so on.  A chain can involve
+         * as few as one tetrahedron or as many as we like.  Note that
+         * the final two faces of the final tetrahedron remain
+         * unaccounted for by this structure.
+         *
+         * This routine begins with two faces of a given tetrahedron,
+         * described by parameters \a tet and \a face.
+         * If these two faces are both joined to some different
+         * tetrahedron, parameter \a tet will be changed to this new
+         * tetrahedron and parameter \a faces will be changed to the
+         * remaining faces of this new tetrahedron (i.e., the two faces
+         * that were not joined to the original faces of the original
+         * tetrahedron).
+         *
+         * This procedure is repeated as far as possible until either
+         * the two faces in question join to two different tetrahedra,
+         * the two faces join to each other, or at least one of the
+         * two faces is unmatched.
+         *
+         * Thus, given one end of a chain, this procedure can be used to
+         * follow the face pairings through to the other end of the chain.
+         *
+         * \warning You must be sure when calling this routine that you
+         * are actually inside a chain!  If the face pairing forms a
+         * large loop with each tetrahedron joined by two faces to the
+         * next, this routine will cycle around the loop forever and
+         * never return.
+         *
+         * @param tet the index in the underlying triangulation of the
+         * tetrahedron to begin at.  This parameter will be modified
+         * directly by this routine as a way of returning the results.
+         * @param faces the pair of face numbers in the given
+         * tetrahedron at which we begin.  This parameter will also be
+         * modified directly by this routine as a way of returning results.
+         */
+        void followChain(unsigned& tet, NFacePair& faces) const;
+
+        /**
+         * Determines whether this face pairing contains a broken
+         * double chain.
+         *
+         * A chain is the underlying face pairing for a layered solid
+         * torus, and is described in detail in the documentation for
+         * followChain().
+         *
+         * A double chain consists of two chains (using distinct sets of
+         * tetrahedra) joined together along one face.  The remaining
+         * two faces (one from each chain) that were unaccounted for by
+         * the individual chains remain unaccounted for by this double
+         * chain.
+         *
+         * A broken double chain is one in which these final two
+         * unaccounted faces (one from each individual chain) are not
+         * joined together.  Note that an unbroken double chain is the
+         * underlying face pairing for a layered lens space.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * broken double chain.
+         */
+        bool hasBrokenDoubleChain() const;
+
+        /**
+         * Determines whether this face pairing contains a chain with a
+         * double handle.
+         *
+         * A chain is the underlying face pairing for a layered solid
+         * torus, and is described in detail in the documentation for
+         * followChain().
+         *
+         * A chain with a double handle begins with a chain.  The two
+         * faces that are unaccounted for by this chain must be joined
+         * to two different tetrahedra, and these two tetrahedra must be
+         * joined to each other along two faces.  The remaining two
+         * faces of these two tetrahedra remain unaccounted for by this
+         * structure.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * chain with a double handle.
+         */
+        bool hasChainWithDoubleHandle() const;
+
+        /**
          * Internal to findAllPairings().  This routine should never be
          * called directly.
          *
@@ -430,6 +535,46 @@ class NFacePairing : public NThread {
          * canonical form.
          */
         bool isCanonical(NFacePairingIsoList& list) const;
+
+        /**
+         * Internal to hasBrokenDoubleChain().  This routine assumes
+         * that the give face of the given tetrahedron is glued to this
+         * same tetrahedron, and attempts to find a broken double chain
+         * for which this tetrahedron is at the end of one of the chains
+         * therein.
+         *
+         * \pre The given face of the given tetrahedron is paired with
+         * another face of the same tetrahedron under this face pairing.
+         *
+         * @param tet the index in the triangulation of the given
+         * tetrahedron.
+         * @param face the number of the given face in the tetrahedron;
+         * this must be between 0 and 3 inclusive.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * broken double chain as described above.
+         */
+        bool hasBrokenDoubleChain(unsigned tet, unsigned face) const;
+
+        /**
+         * Internal to hasChainWithDoubleHandle().  This routine assumes
+         * that the give face of the given tetrahedron is glued to this
+         * same tetrahedron, and attempts to find a chain with a double
+         * handle for which this tetrahedron is at the end of the chain
+         * contained therein.
+         *
+         * \pre The given face of the given tetrahedron is paired with
+         * another face of the same tetrahedron under this face pairing.
+         *
+         * @param tet the index in the triangulation of the given
+         * tetrahedron.
+         * @param face the number of the given face in the tetrahedron;
+         * this must be between 0 and 3 inclusive.
+         *
+         * @return \c true if and only if this face pairing contains a
+         * chain with a double handle as described above.
+         */
+        bool hasChainWithDoubleHandle(unsigned tet, unsigned face) const;
 };
 
 /*@}*/

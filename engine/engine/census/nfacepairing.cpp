@@ -30,6 +30,7 @@
 #include <sstream>
 #include <vector>
 #include "census/nfacepairing.h"
+#include "triangulation/nfacepair.h"
 #include "triangulation/npermit.h"
 #include "utilities/memutils.h"
 #include "utilities/stringutils.h"
@@ -135,6 +136,181 @@ NFacePairing* NFacePairing::fromTextRep(const std::string& rep) {
 
     // All is well.
     return ans;
+}
+
+bool NFacePairing::isClosed() const {
+    for (NTetFace f(0, 0); ! f.isPastEnd(nTetrahedra, true); f++)
+        if (isUnmatched(f))
+            return false;
+    return true;
+}
+
+bool NFacePairing::hasTripleEdge() const {
+    unsigned equal, i, j;
+    for (unsigned tet = 0; tet < nTetrahedra; tet++) {
+        // Is there a triple edge coming from this tetrahedron?
+        equal = 0;
+        for (i = 0; i < 4; i++)
+            if ((! isUnmatched(tet, i)) && dest(tet, i).tet > (int)tet) {
+                // This face joins to a real face of a later tetrahedron.
+                for (j = i + 1; j < 4; j++)
+                    if (dest(tet, i).tet == dest(tet, j).tet)
+                        equal++;
+            }
+
+        // Did we find at least three pairs (i,j) joining to the same
+        // real later tetrahedron?  A little case analysis shows that the
+        // only way we can achieve this is through a triple edge.
+        if (equal >= 3)
+            return true;
+    }
+    return false;
+}
+
+void NFacePairing::followChain(unsigned& tet, NFacePair& faces) const {
+    NTetFace dest1, dest2;
+    while (true) {
+        // Does the first face lead to a real tetrahedron?
+        if (isUnmatched(tet, faces.lower()))
+            return;
+
+        // Does the second face lead to the same tetrahedron as the first?
+        dest1 = dest(tet, faces.lower());
+        dest2 = dest(tet, faces.upper());
+        if (dest1.tet != dest2.tet)
+            return;
+
+        // Do the two faces lead to a *different* tetrahedron?
+        if (dest1.tet == (int)tet)
+            return;
+
+        // Follow the chain along.
+        tet = dest1.tet;
+        faces = NFacePair(dest1.face, dest2.face).complement();
+    }
+}
+
+bool NFacePairing::hasBrokenDoubleChain() const {
+    // Search for the tail of the first chain.
+    unsigned baseTet;
+    unsigned baseFace;
+    for (baseTet = 0; baseTet < nTetrahedra - 1; baseTet++)
+        for (baseFace = 0; baseFace < 3; baseFace++)
+            if (dest(baseTet, baseFace).tet == (int)baseTet) {
+                // Here's a face that matches to the same tetrahedron.
+                if (hasBrokenDoubleChain(baseTet, baseFace))
+                    return true;
+
+                // There's no sense in looking for more
+                // self-identifications in this tetrahedron, since if
+                // there's another (different) one it must be a
+                // one-tetrahedron component (and so not a double chain).
+                break;
+            }
+
+    // Nothing found.  Boring.
+    return false;
+}
+
+bool NFacePairing::hasBrokenDoubleChain(unsigned baseTet,
+        unsigned baseFace) const {
+    // Follow the chain along and see how far we get.
+    NFacePair bdryFaces =
+        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+    unsigned bdryTet = baseTet;
+    followChain(bdryTet, bdryFaces);
+
+    // Here's where we must diverge and move into the second chain.
+
+    // We cannot glue the working pair of faces to each other.
+    if (dest(bdryTet, bdryFaces.lower()).tet == (int)bdryTet)
+        return false;
+
+    // Try each possible direction away from the working faces into the
+    // second chain.
+    NFacePair chainFaces;
+    unsigned chainTet;
+    NTetFace destFace;
+    unsigned ignoreFace;
+    int i;
+    for (i = 0; i < 2; i++) {
+        destFace = dest(bdryTet,
+            i == 0 ? bdryFaces.lower() : bdryFaces.upper());
+        if (destFace.isBoundary(nTetrahedra))
+            continue;
+
+        for (ignoreFace = 0; ignoreFace < 4; ignoreFace++) {
+            if (destFace.face == (int)ignoreFace)
+                continue;
+            // Try to follow the chain along from tetrahedron
+            // destFace.tet, using the two faces that are *not*
+            // destFace.face or ignoreFace.
+            chainTet = destFace.tet;
+            chainFaces = NFacePair(destFace.face, ignoreFace).complement();
+            followChain(chainTet, chainFaces);
+
+            // Did we reach the bottom of a second chain?
+            if (dest(chainTet, chainFaces.lower()).tet == (int)chainTet)
+                return true;
+        }
+    }
+
+    // Nup.  Nothing found.
+    return false;
+}
+
+bool NFacePairing::hasChainWithDoubleHandle() const {
+    // Search for the tail of the chain.
+    unsigned baseTet;
+    unsigned baseFace;
+    for (baseTet = 0; baseTet < nTetrahedra; baseTet++)
+        for (baseFace = 0; baseFace < 3; baseFace++)
+            if (dest(baseTet, baseFace).tet == (int)baseTet) {
+                // Here's a face that matches to the same tetrahedron.
+                if (hasChainWithDoubleHandle(baseTet, baseFace))
+                    return true;
+
+                // There's no sense in looking for more
+                // self-identifications in this tetrahedron, since if
+                // there's another (different) one it must be a
+                // one-tetrahedron component (and so not a chain with a
+                // double handle).
+                break;
+            }
+
+    // Nothing found.  Boring.
+    return false;
+}
+
+bool NFacePairing::hasChainWithDoubleHandle(unsigned baseTet,
+        unsigned baseFace) const {
+    // Follow the chain along and see how far we get.
+    NFacePair bdryFaces =
+        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+    unsigned bdryTet = baseTet;
+    followChain(bdryTet, bdryFaces);
+
+    // Here's where we must diverge and create the double handle.
+    NTetFace dest1 = dest(bdryTet, bdryFaces.lower());
+    NTetFace dest2 = dest(bdryTet, bdryFaces.upper());
+
+    // These two faces must be joined to two distinct tetrahedra.
+    if (dest1.tet == dest2.tet)
+        return false;
+
+    // They also cannot be boundary.
+    if (dest1.isBoundary(nTetrahedra) || dest2.isBoundary(nTetrahedra))
+        return false;
+
+    // Since they're joined to two distinct tetrahedra, they cannot be
+    // joined to each other.  So we can start hunting for the double handle.
+    int handle = 0;
+    for (int i = 0; i < 4; i++)
+        if (dest(dest1.tet, i).tet == dest2.tet)
+            handle++;
+
+    // Did we find our double handle?
+    return (handle >= 2);
 }
 
 bool NFacePairing::findAllPairings(unsigned nTetrahedra,

@@ -16,6 +16,12 @@ Version 3.2  [ (under development) ]
             - Using unsigned chars for byte codes.
         Class NFacePair:
             - New class for working with pairs of face numbers.
+        Class NFacePairing:
+            - Added hasTripleEdge(), hasBrokenDoubleChain(),
+              hasChainWithDoubleHandle() and associated routines.
+        Class NGluingPerms:
+            - Uses new NFacePairing routines to identify certain
+              situations in which no solutions are possible.
         Class NNormalSurface:
             - Added knownCanCrush().
         Class NPerm:
