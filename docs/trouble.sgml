@@ -82,24 +82,17 @@
     </para>
     <para>
      <link linkend="man-regina.conf">Check your configuration</link>
-     to ensure that you have the locations of both these jars correct
-     (starting &regina; with the <option>--verbose</option> option will
-     show you where it is currently looking for these jars).
-     Alternatively, use the
-     <menuchoice>
-      <guimenu>Options</guimenu>
-      <guimenuitem>Help Browser</guimenuitem>
-     </menuchoice>
-     menu item to select your favourite web browser instead of &javahelp;.
-     If you do this you will need the documentation fully unpacked
-     somewhere on your system, but neither <filename>jh.jar</filename> or
-     <filename>regina-docs.jar</filename> will be required.
+     to ensure that you have the locations of both these jars correct.
+     Starting &regina; with the <option>--verbose</option> option will
+     show you where it is currently looking for these jars.
     </para>
-    <tip><para>
-     Selecting your favourite web browser to browse help is actually
-     recommended, since &javahelp; (as of the time of writing this
-     document) does not render pages very well at all.
-    </para></tip>
+    <para>
+     Alternatively you can use your favourite web browser instead of
+     &javahelp;, in which case neither <filename>jh.jar</filename> nor
+     <filename>regina-docs.jar</filename> will be required.  See the
+     <link linkend="options-help">help browser options reference</link>
+     for details.
+    </para>
     <para>
      And if you are reading this in the help system provided with the
      program and sense some logical flow issues arising, be assured that

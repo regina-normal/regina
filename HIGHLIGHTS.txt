@@ -17,6 +17,7 @@ Version 2.3.1  [ (in progress) ]
     - More keyboard accelerators.
     - Added SnapPea census to examples.
     - Option REGINA_OPTIONS_GLOBAL is guessed more intelligently.
+    - Much enhanced documentation.
     
 Version 2.3  [ 12 December, 2001 ] - The "Farewell Stillwater" release.
 

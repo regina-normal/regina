@@ -36,17 +36,21 @@
 
  <!ENTITY jni "<acronym>JNI</acronym>">
  <!ENTITY corba "<acronym>CORBA</acronym>">
+ <!ENTITY gui "<acronym>GUI</acronym>">
+ <!ENTITY html "<acronym>HTML</acronym>">
+ <!ENTITY url "<acronym>URL</acronym>">
  <!ENTITY linux "<productname>GNU/Linux</productname>">
  <!ENTITY debian "<productname>Debian</productname>">
  <!ENTITY cygwin "<productname>Cygwin</productname>">
  <!ENTITY windows "<productname>Windows</productname>">
+ <!ENTITY sourceforge "<productname>SourceForge</productname>">
+ <!ENTITY javasoft "<productname>JavaSoft</productname>">
  <!ENTITY btools "<application>BTools</application>">
  <!ENTITY jython "<application>Jython</application>">
  <!ENTITY cpython "<application>CPython</application>">
  <!ENTITY java "<application>Java</application>">
  <!ENTITY javahelp "<application>JavaHelp</application>">
  <!ENTITY snappea "<application>SnapPea</application>">
- <!ENTITY sourceforge "<productname>SourceForge</productname>">
  <!ENTITY gnu "<acronym>GNU</acronym>">
  <!ENTITY bsd "<acronym>BSD</acronym>">
  <!ENTITY readline "<application>&gnu; readline</application>">
@@ -63,6 +67,7 @@
  <!ENTITY reginatutorial SYSTEM "tutorial.sgml">
  <!ENTITY reginapacket SYSTEM "packet.sgml">
  <!ENTITY reginajython SYSTEM "jython.sgml">
+ <!ENTITY reginaoptions SYSTEM "options.sgml">
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
  <!ENTITY reginatrouble SYSTEM "trouble.sgml">
  <!ENTITY reginachangeshighlights SYSTEM "../HIGHLIGHTS.txt">
@@ -181,6 +186,8 @@
  &reginapacket;
 
  &reginajython;
+
+ &reginaoptions;
 
  <chapter id="sourceforge">
   <title>Bug Tracking and Mailing Lists</title>
