@@ -63,25 +63,18 @@ class NXMLPacketReader;
  *
  * <b>When deriving classes from NPacket:</b>
  * <ul>
- *   <li>Follow the instructions on the \ref HowTo page for adding a
- *     new packet type.</li>
- *   <li>Virtual functions getPacketType() and getPacketTypeName() should
+ *   <li>The file packetregistry.h must be updated to reflect the new
+ *     packet type.</li>
+ *   <li>Virtual functions getPacketType() and getPacketTypeName() must
  *     be declared but not implemented.  The registry utilities
  *     will take care of their implementations.</li>
- *   <li><tt>public static const int packetType</tt> should be declared.
+ *   <li><tt>public static const int packetType</tt> must be declared.
  *     The registry utilities will take care of assigning it a value.</li>
- *   <li>All abstract functions should be implemented.</li>
+ *   <li>All abstract functions must be implemented.</li>
  *   <li>A public function
  *     <tt>static NXMLPacketReader* getXMLReader(NPacket* parent)</tt>
- *     should be declared and implemented.  See the notes for getXMLReader()
+ *     must be declared and implemented.  See the notes for getXMLReader()
  *     for further details.</li>
- *   <li>A public function
- *     <tt>static ChildClass* readPacket(NFile&, NPacket* parent)</tt>
- *     should be declared and implemented, where \c ChildClass is the name
- *     of the derived class.  An example for NTriangulation is
- *     <tt>static NTriangulation* readPacket(NFile&, NPacket* parent)</tt>.
- *     New packet types should simply return 0 from this routine since it
- *     reads from the now obsolete old-style binary file format.</li>
  *   <li>Whenever the contents of the packet are changed, the protected
  *     routine fireChangedEvent() must be called to notify listeners of
  *     the change.</li>

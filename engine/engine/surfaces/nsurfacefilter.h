@@ -57,29 +57,24 @@ class NXMLFilterReader;
  *
  * <b>When deriving classes from NSurfaceFilter:</b>
  * <ul>
- *   <li>Follow the instructions on the \ref HowTo page for
- *   adding a new type of normal surface filter.</li>
- *   <li>A copy constructor <tt>class(const class& cloneMe)</tt> should
+ *   <li>The file filterregistry.h must be updated to reflect the new
+ *   filter type.</li>
+ *   <li>A copy constructor <tt>class(const class& cloneMe)</tt> must
  *   be declared and implemented.  You may assume that parameter
  *   \a cloneMe is of the same class as that whose constructor you are
  *   writing.</li>
  *   <li>Virtual functions accept(), writeTextLong() and
- *   writeXMLFilterData() should be overridden.</li>
- *   <li>Static function getXMLFilterReader() should be declared and
+ *   writeXMLFilterData() must be overridden.</li>
+ *   <li>Static function getXMLFilterReader() must be declared and
  *   implemented as described in the documentation below.</li>
- *   <li>Static function readFilter() should be declared and implemented as
- *   described in the documentation below.  New filter types should
- *   simply return 0 from this routine since it reads from the now
- *   obsolete old-style binary file format.</li>
  *   <li>Virtual functions getFilterID() and getFilterName()
- *   should be redeclared but not reimplemented.
+ *   must be redeclared but not reimplemented.
  *   The registry utilities will take care of their implementation.</li>
- *   <li><tt>public static const int filterID</tt> should be declared.
+ *   <li><tt>public static const int filterID</tt> must be declared.
  *   The registry utilities will take care of assigning it a value.</li>
  * </ul>
  *
- * \todo \feature Implement property \a lastAppliedTo, which necessitates an
- * about-to-die event notification system in NPacket.
+ * \todo \feature Implement property \a lastAppliedTo.
  */
 class NSurfaceFilter : public NPacket, public NPropertyHolder {
     public:

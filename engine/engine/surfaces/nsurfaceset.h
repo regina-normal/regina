@@ -57,13 +57,6 @@ class ShareableObject;
  * surfaces; no surfaces may be added to or removed from the set.
  * Surfaces in the set may however be modified.
  *
- * <b>When deriving classes from NSurfaceSet:</b>
- * <ul>
- *   <li>Follow the instructions on the \ref HowTo page for
- *   adding a new type of normal surface set.</li>
- *   <li>All abstract functions should be implemented.</li>
- * </ul>
- *
  * \pre No surfaces will ever be added to or removed from this set after
  * its creation.
  *

@@ -194,14 +194,17 @@ class NCompConstraintSet;
  *
  * <b>When deriving classes from NNormalSurfaceVector:</b>
  * <ul>
- *   <li>Follow the instructions on the \ref HowTo page for
- *   adding a new normal surface coordinate system.</li>
+ *   <li>A unique constant (static const int) must be added to the class
+ *   NNormalSurfaceList to represent the new flavour of coordinate
+ *   system.</li>
+ *   <li>The file flavourregistry.h must be updated to reflect the new
+ *   flavour of coordinate system.</li>
  *   <li>Constructors <tt>class(unsigned length)</tt> and
- *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> should be
+ *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
  *   <li>Virtual functions <tt>NVector<NLargeInteger>* clone() const</tt> and
- *   <tt>bool allowsAlmostNormal() const</tt> should be declared but not
+ *   <tt>bool allowsAlmostNormal() const</tt> must be declared but not
  *   implemented.  The registry utilities will take care of their
  *   implementations.</li>
  *   <li>All abstract functions must be implemented.</li>
