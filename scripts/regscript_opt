@@ -42,7 +42,12 @@ fi
 # --- Local options directory ---
 
 # Use default if nothing is specified.
-default_options_local="`echo ~/.regina`"
+# Make sure we work around old shells that don't understand ~.
+if [ ! -z "$HOME" ]; then
+	default_options_local="`echo "$HOME/.regina"`"
+else
+	default_options_local="`echo ~/.regina`"
+fi
 if [ -z "$REGINA_OPTIONS_LOCAL" ]; then
 	export REGINA_OPTIONS_LOCAL="$default_options_local"
 fi
