@@ -89,7 +89,7 @@ public class NormalFrame extends JFrame implements LookAndFeelSetter {
      */
     static private ExtensionFilenameFilter filenameFilter =
         new ExtensionFilenameFilter(normal.Application.fileExtension,
-        normal.Application.program + " Data Files (" +
+        normal.Application.program + " Data Files (*" +
 		normal.Application.fileExtension + ")");
     
     /**
