@@ -544,6 +544,8 @@ class NNormalSurfaceVector : public NRay {
  * for non-compact surfaces.
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
+ * \todo \tidy Use NProperty for calculable properties.
+ * \todo \tidy Use a new tristate class for true/false/unknown properties.
  */
 class NNormalSurface : public ShareableObject, public NFilePropertyReader {
     protected:
