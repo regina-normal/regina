@@ -146,7 +146,8 @@ $(DOC_SAMPLE) : $(hdr_engine) $(DOC_CONF)
 
 clean :
 	-rm $(dirs_engine_all:=/*.o) $(dirs_engine_all:=/*.d)
-	-rm -rf $(DOC_DIR)/*
+	-rm -rf $(DOC_DIR)/*.gif $(DOC_DIR)/*.html \
+		$(DOC_DIR)/*.css $(DOC_DIR)/*.dot
 	-rm exports.def
 
 # ------------------------- Dependencies ----------------------------------
