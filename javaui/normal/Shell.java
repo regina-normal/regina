@@ -380,11 +380,17 @@ public abstract class Shell {
      */
     public abstract boolean shouldShowSplashScreen();
     /**
-     * Do we have access to the local filesystem?
+     * May the user interface access the local filesystem on its own?
      *
-     * @return <tt>true</tt> if and only if we have local file access.
+     * @return <tt>true</tt> if and only if the UI has local file access.
      */
-    public abstract boolean mayAccessFiles();
+    public abstract boolean mayUIAccessFiles();
+    /**
+     * May the user interface ask the engine to access the local filesystem?
+     *
+     * @return <tt>true</tt> if and only if the engine has local file access.
+     */
+    public abstract boolean mayEngineAccessFiles();
     /**
      * Are we even allowed to try to locate the Jython classes?
      *
