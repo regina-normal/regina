@@ -52,7 +52,7 @@ public class Application extends Applet implements ActionListener {
     /**
      * Program version.
      */
-    public static final String version = "3.2";
+    public static final String version = "3.3";
 
     /**
      * Program date.

@@ -30,11 +30,11 @@ dnl
 #
 ###########################################################
 
-AC_INIT(Regina, [3.2], [regina-user@lists.sourceforge.net], regina)
+AC_INIT(Regina, [3.3], [regina-user@lists.sourceforge.net], regina)
 AC_PREREQ(2.50)
 AC_CONFIG_AUX_DIR(admin)
 AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
-AM_INIT_AUTOMAKE(regina, [3.2])
+AM_INIT_AUTOMAKE(regina, [3.3])
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(engine/engine/regina-config.h)
 
