@@ -31,6 +31,7 @@ dnl
 ###########################################################
 
 AC_INIT(Regina, [3.0.1], [regina-user@lists.sourceforge.net], regina)
+AC_CONFIG_AUX_DIR(admin)
 AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
 AM_INIT_AUTOMAKE(regina, [3.0.1])
 AM_CONFIG_HEADER(config.h)
@@ -47,12 +48,16 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_CXXCPP
 AC_PROG_CPP
+
+# Set the default language to C++ for subsequent tests.
+AC_LANG(C++)
+
 AM_PROG_LIBTOOL
+AC_LIBTOOL_CXX
+LIBTOOL="$LIBTOOL --silent"
+
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
-
-# Sets the default language to C++ for subsequent tests.
-AC_LANG(C++)
 
 ###########################################################
 #
@@ -80,7 +85,7 @@ AC_ARG_VAR(DOT, [Dot command for drawing directed graphs])
 AC_CHECK_PROGS(DOT, dot, none)
 if test "$DOT" = "none"; then
   AC_SUBST(HAVE_DOT, NO)
-  AC_SUBST(DOT, "\$(top_srcdir)/missing dot")
+  AC_SUBST(DOT, "\$(top_srcdir)/admin/missing dot")
   REGINA_WARN_MISSING(dot, [graphs in the engine documentation])
 else
   AC_SUBST(HAVE_DOT, YES)

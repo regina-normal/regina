@@ -1,8 +1,6 @@
 Regina Administrative Utilities
 -------------------------------
 
-This directory contains various adminstrative utilities, most for use
-with source trees checked out directly from CVS.
-
-Only Regina developers should need to use these utilities.
+This directory contains various adminstrative utilities.  In ordinary
+situations, none of these utilities should need to be run directly.
 

@@ -7,8 +7,6 @@
 ##  Running "make -f Makefile.cvs" will rebuild the files required to use
 ##  the standard "./configure", "make" build process.
 ##
-##  This file should not be included in the usual source distribution.
-##
 
 all :
 	@if ! test -d CVS; then \
@@ -22,7 +20,7 @@ all :
 		echo "Try checking out the source tree from CVS again."; \
 		false; \
 	fi
-	/bin/sh admin/ac_gen.sh
+	admin/ac_gen
 	aclocal
 	autoheader
 	autoconf
