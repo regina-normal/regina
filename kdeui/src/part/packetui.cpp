@@ -218,12 +218,12 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 
 bool PacketPane::queryClose() {
     if ((! emergencyClosure) && dirty) {
-        if (KMessageBox::warningContinueCancel(this, i18n(
+        if (KMessageBox::warningYesNo(this, i18n(
                 "This packet contains changes that have not yet been "
                 "committed.  Are you sure you wish to close this packet "
                 "anyway and discard these changes?"),
                 mainUI->getPacket()->getPacketLabel().c_str()) ==
-                KMessageBox::Cancel)
+                KMessageBox::No)
             return false;
     }
 
