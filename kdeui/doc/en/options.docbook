@@ -90,47 +90,47 @@
   </glosslist>
  </sect1>
 
- <!-- TODO
- <sect1 id="options-libraries">
-  <title>&python; Library Options</title>
+ <sect1 id="options-python">
+  <title>&python; Options</title>
 
   <para>
-   <firstterm>Jython libraries</firstterm> are files containing
-   &python; code to run at the beginning of every &python;
+   <firstterm>&python; libraries</firstterm> are files containing
+   &python; code that can be run at the beginning of every &python;
    session, including every time a &python; console is opened and
-   every time a script packet is run.  See the
-   <link linkend="python-overview">&python; scripting overview</link>
-   for further details.
+   every time a script packet is run.
   </para>
-
   <para>
-   The
-   <menuchoice>
-    <guimenu>Options</guimenu>
-    <guisubmenu>Jython Libraries</guisubmenu>
-   </menuchoice>
-   menu item brings up a list of &python; libraries that &regina; currently
-   knows about.  Beside each library is a checkbox labelled
-   <guilabel>Use</guilabel>.  Only the libraries whose
-   <guilabel>Use</guilabel> boxes are checked will be loaded at the
-   beginning of each &python; session.  Thus by unchecking its
-   <guilabel>Use</guilabel> box you can disable a library but still have
-   &regina; remember its location.
+   The list of currently active libraries is stored in the file
+   &regina-libs;, which should be a plain text file
+   containing one library filename per line.  Blank lines and lines
+   beginning with a hash (#) are ignored.
+  </para>
+  <para>
+   The &python; options page merely offers a convenient way of managing
+   the &regina-libs; file.  Libraries can be added and removed and
+   currently active libraries can be temporarily disabled.
+  </para>
+  <para>
+   See the <link linkend="python-overview">&python; scripting
+   overview</link> for general information regarding &python; scripting.
   </para>
 
+  <!-- TODO: Put this in once it's reimplemented.
   <para>
    Each library also has a <guibutton>Compile</guibutton> button beside
    it.  Pressing this button will test whether or not the library
    actually compiles under &python;.  The library code will only be
    compiled; it will not be run.
   </para>
+  -->
 
   <tip><para>
    A set of prepackaged &python; libraries that might be of use is
-   provided with the &regina; distribution.  You should find these
-   libraries in the directory
-   <filename><replaceable>REGINA_HOME</replaceable>/pylib</filename>.
+   provided with the &regina; distribution.  These libraries are
+   generally installed in
+   <filename>/usr/local/share/regina/pylib</filename> or
+   <filename>/usr/share/regina/pylib</filename>, though this may differ
+   with your distribution.
   </para></tip>
  </sect1>
- -->
 </chapter>

@@ -30,6 +30,7 @@
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
   <!ENTITY regenginedocs
    "<link linkend='python-python'>calculation engine documentation</link>">
+  <!ENTITY regina-libs "<filename>~/.regina-libs</filename>">
 
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY gui "<acronym>GUI</acronym>">

@@ -51,8 +51,8 @@
     &regina; includes a complete reference for the calculation engine,
     which describes in detail the objects, classes and methods available
     when writing &python; scripts.  This documentation is generally
-    installed in a location similar to
-    <filename>/usr/local/share/regina/engine-docs/</filename>, although this
+    installed in <filename>/usr/local/share/regina/engine-docs/</filename>
+    or <filename>/usr/share/regina/engine-docs/</filename>, although this
     may differ with your distribution or installation.  The
     documentation installation path can be changed by passing special
     options to <userinput>./configure</userinput> when building &regina;
@@ -60,14 +60,14 @@
    </para>
    <para>
     Wherever &regina; gives you access to &python;, you may assume that the
-    <parameter>regina</parameter>
-    module has been imported (thus giving you access to
-    everything contained within it).
-    <!-- TODO
-    You may also assume that all requested libraries have been loaded (see the
-    <link linkend="options-libraries">&python; library options</link> for
-    details).
-    -->
+    <parameter>regina</parameter> module has been imported (thus giving you
+    access to everything contained within it).
+    You may also assume that any requested libraries have been loaded.
+    The libraries that should be loaded can be configured through the
+    <link linkend="options-python">&python; options</link> or can be added
+    by hand to the file &regina-libs;, which is described in detail in the
+    <link linkend="man-regina-python"><command>regina-python</command></link>
+    reference.
    </para>
    <para>
     Upon starting a &python; session certain variables might already be

@@ -113,16 +113,33 @@
    &regabstract;
    <para>
     This command starts an interactive &python; session for
-    &regina;.  This will be a command-line &python; session;
-    the graphical user interface will not be loaded.
+    &regina;.  This will be a command-line &python; session, with direct
+    text input/output and no graphical user interface.
     All of the objects, clases and methods from the &regina; calculation
     engine will be made available to the user in the module
     <parameter>regina</parameter>, which will be imported on startup.
-    <!-- TODO: Talk about loading libraries. -->
    </para>
    <para>
-    Note that this &python; interface may be run directly out of its
-    source tree without being properly installed.  Default locations
+    Before the session begins, a number of libraries may be loaded.
+    Libraries are simply files containing &python; code to be run at the
+    beginning of each &python; session.  The list of libraries to load
+    will be read from the text file &regina-libs;, which should contain one
+    library filename per line.  Blank lines and lines beginning with a
+    hash (#) will be ignored.  Note that the list of currently active
+    libraries can also be configured through the &kde; user interface
+    on the &python; options page.
+   </para>
+   <para>
+    Instead of starting an interactive &python; session, a python script
+    can be passed (with arguments if desired).  In this case the script
+    will be run, again with the <parameter>regina</parameter> module
+    imported and libraries loaded beforehand.  Once the script has
+    finished the user will be returned to the command-line, i.e., there
+    will be no subsequent &python; interaction.
+   </para>
+   <para>
+    Note that <command>regina-python</command> may be run directly out
+    of its source tree without being properly installed.  Default locations
     for various &regina; components will be transparently modified to
     look inside the source tree.
    </para>
@@ -137,7 +154,7 @@
      <listitem>
       <para>
        Start in quiet mode.  No output will be produced except
-       for errors.
+       for serious errors.  In particular, warnings will be suppressed.
       </para>
       <para>
        This is equivalent to setting the environment variable
@@ -150,29 +167,12 @@
      <term><option>--verbose</option></term>
      <listitem>
       <para>
-       Start in verbose mode.  Lots of diagnostic
+       Start in verbose mode.  Additional diagnostic
        information will be output.
       </para>
       <para>
        This is equivalent to setting the environment variable
        <parameter>REGINA_VERBOSITY</parameter>=<literal>2</literal>.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><replaceable>script</replaceable>
-      <replaceable>script-args</replaceable></term>
-     <listitem>
-      <para>
-       Run the given &python; script with the given arguments.
-       One the script has been run, the user will be returned to the
-       command-line, i.e., there will be no interactive &python;
-       interpreter.
-      </para>
-      <para>
-       The script may assume that the module <parameter>regina</parameter>
-       has been imported.
-       <!-- TODO: Talk about automatically loading libraries -->
       </para>
      </listitem>
     </varlistentry>
@@ -184,44 +184,57 @@
    <para>
     The following environment variables influence the behaviour of
     this program.  Each of these variables can also be set in the local
-    configuration file <filename>~/.reginapython</filename> using a line
-    of the form:
-    <screen>
-    <replaceable>option</replaceable>=<replaceable>value</replaceable>
-    </screen>
+    configuration file <filename>~/.regina-python</filename> using a line
+    of the form
+    <replaceable>option</replaceable>=<replaceable>value</replaceable>.
     Environment variables will take precedence over values read from
     this configuration file.
    </para>
    <variablelist>
     <varlistentry>
-     <term><parameter>REGINA_VERBOSITY</parameter>
-      (default = <literal>1</literal>)</term>
+     <term><parameter>REGINA_VERBOSITY</parameter></term>
      <listitem>
       <para>
-       The verbosity level to use.
-       </para>
-       <para>
+       Specifies how much output should be generated.
        Recognised values are:
        <variablelist>
         <varlistentry>
          <term><literal>0</literal></term>
          <listitem><para>
-          Display errors only (quiet).
+          Display errors only; this is equivalent to passing the option
+          <option>--quiet</option>.
          </para></listitem>
         </varlistentry>
         <varlistentry>
          <term><literal>1</literal></term>
          <listitem><para>
-          Display errors and warnings.
+          Display errors and warnings; this is the default.
          </para></listitem>
         </varlistentry>
         <varlistentry>
          <term><literal>2</literal></term>
          <listitem><para>
-          Display errors, warnings and diagnostic output (verbose).
+          Display errors, warnings and diagnostic output; this is
+          equivalent to passing the option <option>--verbose</option>.
          </para></listitem>
         </varlistentry>
        </variablelist>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_PYTHON</parameter></term>
+     <listitem>
+      <para>
+       The command used to start the &python; interpreter.  If the command
+       <command>python</command> can be found on the path then this option
+       defaults to the full path of that command
+       (such as <command>/usr/bin/python</command>).
+      </para>
+      <para>
+       Note that this must be the same version of &python; that &regina;
+       was compiled against.  Otherwise the
+       <parameter>regina</parameter> module will be unable to be loaded.
       </para>
      </listitem>
     </varlistentry>
@@ -237,40 +250,54 @@
        If &regina; is being run directly out of the source tree, this
        defaults to the top-level source directory.  If &regina; is being
        run from a proper installation, this defaults to the corresponding
-       installation directory.  In normal situations you should never need
-       to set this option yourself.
+       installation directory.
+      </para>
+      <para>
+       In normal situations you should never need to set this option yourself.
       </para>
       <warning>
        <para>
-        Note that the default <parameter>REGINA_HOME</parameter>
-        when running from a proper installation is actually hard-wired into
-        the startup script.  This hard-wiring takes place at compile time,
-        since the final installation path must be passed to
-        <command>configure</command> using option <option>--prefix</option>
-        before &regina; is built (see <filename>INSTALL.txt</filename> in
-        the source distribution for details).
-       </para>
-       <para>
+        When running from a proper installation,
+        the default <parameter>REGINA_HOME</parameter> is actually
+        hard-wired into the startup script (it is derived at
+        compile-time from the options passed to
+        <userinput>./configure</userinput>).
         This means that if &regina; is installed into one directory using
-        <command>make install</command> and then moved to another directory
+        <userinput>make install</userinput> and then moved to another directory
         by hand, the default <parameter>REGINA_HOME</parameter> will be
         incorrect.
        </para>
       </warning>
-      <para>
-       This option cannot be set in the configuration files.
-      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term><parameter>REGINA_PYTHON</parameter></term>
+     <term><parameter>REGINA_PYLIBDIR</parameter></term>
      <listitem>
       <para>
-       The command used to start the &python; interpreter.  If the command
-       <command>python</command> can be found on the path then this option
-       defaults to the full path of that command
-       (such as <command>/usr/bin/python</command>).
+       The directory containing the &python; module
+       <filename>regina.so</filename>.
       </para>
+      <para>
+       If &regina; is being run directly out of the source tree, this
+       defaults to a directory within this source tree.  If &regina; is being
+       run from a proper installation, this defaults to the corresponding
+       installation directory.
+      </para>
+      <para>
+       In normal situations you should never need to set this option yourself.
+      </para>
+      <warning>
+       <para>
+        Like <parameter>REGINA_HOME</parameter>,
+        when running from a proper installation
+        the default <parameter>REGINA_PYLIBDIR</parameter> is
+        hard-wired into the startup script.
+        This means that if &regina; is installed into one directory using
+        <userinput>make install</userinput> and then moved to another directory
+        by hand, the default <parameter>REGINA_PYLIBDIR</parameter> will be
+        incorrect.
+       </para>
+      </warning>
      </listitem>
     </varlistentry>
    </variablelist>

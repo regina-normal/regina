@@ -15,6 +15,7 @@
     </para>">
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
+  <!ENTITY regina-libs "<filename>~/.regina-libs</filename>">
 
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY kde "<application><acronym>KDE</acronym></application>">
