@@ -489,15 +489,11 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * components will be deleted and replaced with new
          * ones.  Thus this object should be considered temporary only.
          *
-         * \ifacescpp Not present.
-         *
          * @param index the index of the desired component, ranging from 0
          * to getNumberOfComponents()-1 inclusive.
          * @return the requested component.
          */
-        #ifdef __DOXYGEN
         NComponent* getComponent(unsigned long index);
-        #endif
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -505,16 +501,12 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * boundary components will be deleted and replaced with new
          * ones.  Thus this object should be considered temporary only.
          *
-         * \ifacescpp Not present.
-         *
          * @param index the index of the desired boundary
          * component, ranging from 0
          * to getNumberOfBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
-        #ifdef __DOXYGEN
         NBoundaryComponent* getBoundaryComponent(unsigned long index);
-        #endif
         /**
          * Returns the requested triangulation vertex.
          *
@@ -522,15 +514,11 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * vertices will be deleted and replaced with new
          * ones.  Thus this object should be considered temporary only.
          *
-         * \ifacescpp Not present.
-         *
          * @param index the index of the desired vertex, ranging from 0
          * to getNumberOfVertices()-1 inclusive.
          * @return the requested vertex.
          */
-        #ifdef __DOXYGEN
         NVertex* getVertex(unsigned long index);
-        #endif
         /**
          * Returns the requested triangulation edge.
          *
@@ -538,15 +526,11 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * edges will be deleted and replaced with new
          * ones.  Thus this object should be considered temporary only.
          *
-         * \ifacescpp Not present.
-         *
          * @param index the index of the desired edge, ranging from 0
          * to getNumberOfEdges()-1 inclusive.
          * @return the requested edge.
          */
-        #ifdef __DOXYGEN
         NEdge* getEdge(unsigned long index);
-        #endif
         /**
          * Returns the requested triangulation face.
          *
@@ -554,37 +538,27 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * faces will be deleted and replaced with new
          * ones.  Thus this object should be considered temporary only.
          *
-         * \ifacescpp Not present.
-         *
          * @param index the index of the desired face, ranging from 0
          * to getNumberOfFaces()-1 inclusive.
          * @return the requested face.
          */
-        #ifdef __DOXYGEN
         NFace* getFace(unsigned long index);
-        #endif
         /**
          * Returns the index of the given component in the triangulation.
          *
          * \pre The given component belongs to this triangulation.
-         *
-         * \ifacescpp Not present.
          *
          * @param component specifies which component to find in the
          * triangulation.
          * @return the index of the specified component, where 0 is the first
          * component, 1 is the second and so on.
          */
-        #ifdef __DOXYGEN
         unsigned long getComponentIndex(const NComponent* component);
-        #endif
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
          *
          * \pre The given boundary component belongs to this triangulation.
-         *
-         * \ifacescpp Not present.
          *
          * @param bc specifies which boundary component to find in the
          * triangulation.
@@ -592,54 +566,40 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * where 0 is the first boundary component,
          * 1 is the second and so on.
          */
-        #ifdef __DOXYGEN
         unsigned long getBoundaryComponentIndex(const NBoundaryComponent* bc);
-        #endif
         /**
          * Returns the index of the given vertex in the triangulation.
          *
          * \pre The given vertex belongs to this triangulation.
-         *
-         * \ifacescpp Not present.
          *
          * @param vertex specifies which vertex to find in the
          * triangulation.
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
-        #ifdef __DOXYGEN
         unsigned long getVertexIndex(const NVertex* vertex);
-        #endif
         /**
          * Returns the index of the given edge in the triangulation.
          *
          * \pre The given edge belongs to this triangulation.
-         *
-         * \ifacescpp Not present.
          *
          * @param edge specifies which edge to find in the
          * triangulation.
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
-        #ifdef __DOXYGEN
         unsigned long getEdgeIndex(const NEdge* edge);
-        #endif
         /**
          * Returns the index of the given face in the triangulation.
          *
          * \pre The given face belongs to this triangulation.
-         *
-         * \ifacescpp Not present.
          *
          * @param face specifies which face to find in the
          * triangulation.
          * @return the index of the specified face, where 0 is the first
          * face, 1 is the second and so on.
          */
-        #ifdef __DOXYGEN
         unsigned long getFaceIndex(const NFace* face);
-        #endif
 
         /**
          * Determines if this triangulation is combinatorially
@@ -1853,6 +1813,69 @@ inline const NIndexedArray<NFace*, HashPointer>& NTriangulation::getFaces() {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces;
+}
+
+inline NComponent* NTriangulation::getComponent(unsigned long index) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return components[index];
+}
+
+inline NBoundaryComponent* NTriangulation::getBoundaryComponent(
+        unsigned long index) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return boundaryComponents[index];
+}
+
+inline NVertex* NTriangulation::getVertex(unsigned long index) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return vertices[index];
+}
+
+inline NEdge* NTriangulation::getEdge(unsigned long index) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return edges[index];
+}
+
+inline NFace* NTriangulation::getFace(unsigned long index) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return faces[index];
+}
+
+inline unsigned long NTriangulation::getComponentIndex(
+        const NComponent* component) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return components.index((NComponent*)component);
+}
+
+inline unsigned long NTriangulation::getBoundaryComponentIndex(
+        const NBoundaryComponent* boundaryComponent) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return boundaryComponents.index((NBoundaryComponent*)boundaryComponent);
+}
+
+inline unsigned long NTriangulation::getVertexIndex(const NVertex* vertex) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return vertices.index((NVertex*)vertex);
+}
+
+inline unsigned long NTriangulation::getEdgeIndex(const NEdge* edge) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return edges.index((NEdge*)edge);
+}
+
+inline unsigned long NTriangulation::getFaceIndex(const NFace* face) {
+    if (! calculatedSkeleton)
+        calculateSkeleton();
+    return faces.index((NFace*)face);
 }
 
 inline bool NTriangulation::isValid() {

@@ -8,6 +8,12 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Version 3.2  [ (under development) ]
+    ENGINE:
+        Class NTriangulation:
+            - Interface-only skeletal query routines are now also
+              implemented in the C++ calculation engine.
+
 Version 3.1  [ 18 October, 2002 ]
     OVERALL:
         - Added calculation engine test suite.

@@ -65,46 +65,46 @@ REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getBoundaryComponent
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
-        GET_ENGINE_OBJECT(env, NTriangulation, me)->
-        getBoundaryComponents()[index],
+        GET_ENGINE_OBJECT(env, NTriangulation, me)->getBoundaryComponent(index),
         "normal/engine/implementation/jni/triangulation/NJNIBoundaryComponent");
 }
 
 REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getBoundaryComponentIndex
         (JNIEnv *env, jobject me, jobject tet) {
-    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getBoundaryComponents().
-        index(GET_ENGINE_OBJECT(env, NBoundaryComponent, tet));
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->
+        getBoundaryComponentIndex(
+        GET_ENGINE_OBJECT(env, NBoundaryComponent, tet));
 }
 
 REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getComponent
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
-        GET_ENGINE_OBJECT(env, NTriangulation, me)->getComponents()[index],
+        GET_ENGINE_OBJECT(env, NTriangulation, me)->getComponent(index),
         "normal/engine/implementation/jni/triangulation/NJNIComponent");
 }
 
 REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getComponentIndex
         (JNIEnv *env, jobject me, jobject tet) {
-    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getComponents().
-        index(GET_ENGINE_OBJECT(env, NComponent, tet));
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getComponentIndex(
+        GET_ENGINE_OBJECT(env, NComponent, tet));
 }
 
 REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getEdge
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
-        GET_ENGINE_OBJECT(env, NTriangulation, me)->getEdges()[index],
+        GET_ENGINE_OBJECT(env, NTriangulation, me)->getEdge(index),
         "normal/engine/implementation/jni/triangulation/NJNIEdge");
 }
 
 REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getEdgeIndex
         (JNIEnv *env, jobject me, jobject tet) {
-    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getEdges().
-        index(GET_ENGINE_OBJECT(env, NEdge, tet));
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getEdgeIndex(
+        GET_ENGINE_OBJECT(env, NEdge, tet));
 }
 
 REGJNIEXPORT jlong JNICALL
@@ -117,15 +117,15 @@ REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFace
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
-        GET_ENGINE_OBJECT(env, NTriangulation, me)->getFaces()[index],
+        GET_ENGINE_OBJECT(env, NTriangulation, me)->getFace(index),
         "normal/engine/implementation/jni/triangulation/NJNIFace");
 }
 
 REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getFaceIndex
         (JNIEnv *env, jobject me, jobject tet) {
-    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getFaces().
-        index(GET_ENGINE_OBJECT(env, NFace, tet));
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getFaceIndex(
+        GET_ENGINE_OBJECT(env, NFace, tet));
 }
 
 REGJNIEXPORT jobject JNICALL
@@ -247,15 +247,15 @@ REGJNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getVertex
         (JNIEnv *env, jobject me, jlong index) {
     return CREATE_WRAPPER_OBJECT(env,
-        GET_ENGINE_OBJECT(env, NTriangulation, me)->getVertices()[index],
+        GET_ENGINE_OBJECT(env, NTriangulation, me)->getVertex(index),
         "normal/engine/implementation/jni/triangulation/NJNIVertex");
 }
 
 REGJNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getVertexIndex
         (JNIEnv *env, jobject me, jobject tet) {
-    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getVertices().
-        index(GET_ENGINE_OBJECT(env, NVertex, tet));
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->getVertexIndex(
+        GET_ENGINE_OBJECT(env, NVertex, tet));
 }
 
 REGJNIEXPORT void JNICALL
