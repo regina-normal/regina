@@ -25,7 +25,7 @@
     <guimenu>Tools</guimenu> menu (or the corresponding toolbar button),
     or you can create a new
     <link linkend="packet-script">script packet</link>.  Script packets have
-    the advantage that they work seamlessly with other packets in the
+    the advantage that they can work seamlessly with many other packets in the
     same file (through the use of script variables), and script packets will
     also be saved with the file for later reuse.
    </para>

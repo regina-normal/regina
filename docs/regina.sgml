@@ -27,7 +27,7 @@
     towards normal surface theory.  It allows 3-manifolds to be created,
     manipulated and their properties of interest determined.
    </para>">
- <!ENTITY regversion "3.0.1">
+ <!ENTITY regversion "3.1">
  <!ENTITY regdate "12 October 2002">
 
  <!ENTITY copyrightyears "1999-2002">

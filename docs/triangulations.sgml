@@ -849,13 +849,13 @@
    <title>Global Simplification</title>
 
    <para>
-    Currently only a fairly basic routine is available for simplifying a
-    triangulation as far as possible without manual intervention.
-    Selecting the
+    Currently a relatively straightforward routine is available for
+    simplifying a triangulation as far as possible without manual
+    intervention.  Selecting the
     <menuchoice>
      <guimenu>Modify</guimenu>
      <guisubmenu>Triangulation</guisubmenu>
-     <guimenuitem>Basic Simplify</guimenuitem>
+     <guimenuitem>Intelligent Simplify</guimenuitem>
     </menuchoice>
     menu item will use <link linkend="tri-elementarymove">elementary
     moves</link> to reduce the triangulation to a local minimum number
@@ -863,9 +863,11 @@
     <emphasis>the</emphasis> minimum number of tetrahedra required.
    </para>
    <para>
-    This simplification routine will
-    <emphasis>not</emphasis> use intelligent techniques like trying random
-    4-4 moves to get out of the local minimum.  It's on the &todo; list.
+    As well as performing immediate reductions, this routine tries
+    random 4-4 moves if it cannot reduce the triangulation directly.
+    It does not yet try increasing the size of the triangulation (such
+    as through 2-3 moves) to escape a local minimum well in which it
+    might be stuck; this is on the &todo; list.
    </para>
   </sect2>
 
