@@ -28,12 +28,14 @@ libreginapart_la_LIBADD = $(LIB_ENGINE) $(LIB_KPARTS) \
 libreginapart_la_SOURCES = \
 	actionspart.cpp \
 	flatbutton.cpp \
+	newpackets.cpp \
 	packetchooser.cpp \
 	packetmanager.cpp \
 	packettreeview.cpp \
 	packetui.cpp \
 	packetwindow.cpp \
-	reginapart.cpp
+	reginapart.cpp \
+	treenav.cpp
 
 partdesktopdir   = $(kde_servicesdir)
 partdesktop_DATA = reginapart.desktop

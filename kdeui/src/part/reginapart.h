@@ -217,6 +217,17 @@ class ReginaPart : public KParts::ReadWritePart {
         void moveBottom();
 
         /**
+         * New packet routines.
+         */
+        void newAngleStructures();
+        void newContainer();
+        void newFilter();
+        void newNormalSurfaces();
+        void newScript();
+        void newText();
+        void newTriangulation();
+
+        /**
          * Float the currently docked pane.
          */
         void floatDockedPane();

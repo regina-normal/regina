@@ -127,39 +127,39 @@ void ReginaPart::setupActions() {
 
     // New packets:
     act = new KAction(i18n("New &Angle Structure List"), "packet_angles",
-        ALT+Key_A, this, SLOT(unimplemented()), actionCollection(),
+        ALT+Key_A, this, SLOT(newAngleStructures()), actionCollection(),
         "tree_angles");
     act->setToolTip(i18n("New angle structure list"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New &Container"), "packet_container", ALT+Key_C,
-        this, SLOT(unimplemented()), actionCollection(), "tree_container");
+        this, SLOT(newContainer()), actionCollection(), "tree_container");
     act->setToolTip(i18n("New container"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New &Filter"), "packet_filter", ALT+Key_F,
-        this, SLOT(unimplemented()), actionCollection(), "tree_filter");
+        this, SLOT(newFilter()), actionCollection(), "tree_filter");
     act->setToolTip(i18n("New surface filter"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New &Normal Surface List"), "packet_surfaces",
-        ALT+Key_N, this, SLOT(unimplemented()), actionCollection(),
+        ALT+Key_N, this, SLOT(newNormalSurfaces()), actionCollection(),
         "tree_surfaces");
     act->setToolTip(i18n("New normal surface list"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New &Script"), "packet_script", ALT+Key_S,
-        this, SLOT(unimplemented()), actionCollection(), "tree_script");
+        this, SLOT(newScript()), actionCollection(), "tree_script");
     act->setToolTip(i18n("New script packet"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New Te&xt"), "packet_text", ALT+Key_X,
-        this, SLOT(unimplemented()), actionCollection(), "tree_text");
+        this, SLOT(newText()), actionCollection(), "tree_text");
     act->setToolTip(i18n("New text packet"));
     treeGeneralEditActions.append(act);
 
     act = new KAction(i18n("New &Triangulation"), "packet_triangulation",
-        ALT+Key_T, this, SLOT(unimplemented()), actionCollection(),
+        ALT+Key_T, this, SLOT(newTriangulation()), actionCollection(),
         "tree_triangulation");
     act->setToolTip(i18n("New triangulation"));
     treeGeneralEditActions.append(act);
