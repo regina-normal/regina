@@ -12,9 +12,6 @@ engine documentation.
 CORBA:
 	Local (client-side) imports and exports
 
-Debian:
-	Support both earlier and later j2sdk1.3.
-
 Everywhere:
 	Disable X-closing for all windows and dialogs except for main window
 		(necessary to ensure progress dialogs cannot be closed).

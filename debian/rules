@@ -1,6 +1,4 @@
 #!/usr/bin/make -f
-# Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -29,7 +27,32 @@ INSTALL_FILE = install -p -o root -g root -m 644
 INSTALL_BIN = install -p -o root -g root -m 755
 INSTALL_SCRIPT = install -p -o root -g root -m 755
 
-JAR = /usr/lib/j2se/1.3/bin/jar
+# Set java options according to which flavour of j2sdk1.3 is present.
+
+ifeq ($(shell /bin/sh debian/whichsdk.sh),old)
+  JAR="/usr/lib/j2sdk1.3/bin/jar"
+  JAVADEFS = \
+    JAR=$(JAR) \
+    JAVAC="/usr/lib/j2sdk1.3/bin/javac -target 1.1" \
+    JAVAH="/usr/lib/j2sdk1.3/bin/javah -jni" \
+    JAVADOC="/usr/lib/j2sdk1.3/bin/javadoc -J-Xmx64m" \
+    JNI_INCLUDES="-I/usr/lib/j2sdk1.3/include -I/usr/lib/j2sdk1.3/include/linux" \
+    IDLTOJAVACLIENT="/usr/lib/j2sdk1.3/bin/idlj"
+else
+  JAR="/usr/lib/j2se/1.3/bin/jar"
+  JAVADEFS = \
+    JAR=$(JAR) \
+    JAVAC="/usr/lib/j2se/1.3/bin/javac -target 1.1" \
+    JAVAH="/usr/lib/j2se/1.3/bin/javah -jni" \
+    JAVADOC="/usr/lib/j2se/1.3/bin/javadoc -J-Xmx64m" \
+    JNI_INCLUDES="-I/usr/lib/j2se/1.3/include -I/usr/lib/j2se/1.3/include/linux" \
+    IDLTOJAVACLIENT="/usr/lib/j2se/1.3/bin/idlj"
+endif
+
+JAVALIBS = \
+  BTOOLS="/usr/share/java/libbtools-java.jar" \
+  JYTHON="/usr/share/java/jython.jar" \
+  EXTRA_CLASSES=""
 
 configure: configure-stamp
 configure-stamp:
@@ -40,21 +63,8 @@ configure-stamp:
 build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
-	$(MAKE) bin \
-		JNI_INCLUDES="-I/usr/lib/j2se/1.3/include -I/usr/lib/j2se/1.3/include/linux" \
-		BTOOLS="/usr/share/java/libbtools-java.jar" \
-		JYTHON="/usr/share/java/jython.jar" \
-		EXTRA_CLASSES="" \
-		JAVAC="/usr/lib/j2se/1.3/bin/javac -target 1.1" \
-		JAR="$(JAR)" \
-		JAVAH="/usr/lib/j2se/1.3/bin/javah -jni" \
-		IDLTOJAVACLIENT="/usr/lib/j2se/1.3/bin/idlj"
-	$(MAKE) bindocs \
-		BTOOLS="/usr/share/java/libbtools-java.jar" \
-		JYTHON="/usr/share/java/jython.jar" \
-		EXTRA_CLASSES="" \
-		JAVADOC="/usr/lib/j2se/1.3/bin/javadoc -J-Xmx64m" \
-		JAR="$(JAR)"
+	$(MAKE) bin $(JAVADEFS) $(JAVALIBS)
+	$(MAKE) bindocs $(JAVADEFS) $(JAVALIBS)
 	touch build-stamp
 
 clean:

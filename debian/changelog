@@ -1,3 +1,9 @@
+regina-normal (2.3-2) unstable; urgency=low
+
+  * Support both old and new versions of j2se1.3.
+
+ -- Ben Burton <benb@acm.org>  Tue, 29 Jan 2002 01:24:34 +1100
+
 regina-normal (2.3-1.2) unstable; urgency=low
 
   * And put regina-normal-dev back again now 2.3 is in the archives.
