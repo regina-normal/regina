@@ -45,7 +45,7 @@ for i in "$REGINA_JARDIR"/*.jar; do
 	reginaclasses="$reginaclasses$cps$i";
 done
 
-export CLASSPATH="$reginaclasses$cps$REGINA_BTOOLS$cps$REGINA_JYTHON$cps$REGINA_JAVAHELP$cps$REGINA_EXTRACLASSES$cps$CLASSPATH"
+export CLASSPATH="$reginaclasses$cps$REGINA_BTOOLS$cps$REGINA_JYTHON$cps$REGINA_JAVAHELP$cps$REGINA_EXTRA_CLASSES$cps$CLASSPATH"
 
 # --- Set the Java defines. ---
 
