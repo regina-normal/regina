@@ -228,7 +228,10 @@ class NDoubleList {
             else
                 firstElement = e;
 
-            it.listPosition++;
+			// Cast it as non-const so we can change the stored list
+			// index.  Note however that we are still pointing at the
+			// same object.
+            ((Iterator&)it).listPosition++;
 
             // Increment the list size.
             nElements++;
@@ -587,6 +590,19 @@ class NDoubleListIterator {
                 // If the unsigned listPosition is trying to become -1,
                 // this is okay because the iterator will be past-the-end.
         }
+		/**
+		 * Points this iterator to whatever the given iterator is
+		 * pointing to.
+		 *
+		 * @param cloneMe the iterator whose value will be assigned to
+		 * this iterator.
+		 */
+		NDoubleListIterator<T>& operator=(
+				const NDoubleListIterator<T>& cloneMe) {
+			current = cloneMe.current;
+			listPosition = cloneMe.listPosition;
+			return *this;
+		}
         /**
          * Points this iterator at the next list element, or makes it
          * past-the-end if there is no next element.

@@ -661,6 +661,21 @@ class NDynamicArrayIterator
             array = &basis;
             currArrayIndex = basis.size() - 1;
         }
+		/**
+		 * Points this iterator to whatever the given iterator is
+		 * pointing to.
+		 *
+		 * @param cloneMe the iterator whose value will be assigned to
+		 * this iterator.
+		 */
+		NDynamicArrayIterator<T>& operator=(
+				const NDynamicArrayIterator<T>& cloneMe) {
+			array = cloneMe.array;
+			currChunk = cloneMe.currChunk;
+			currIndex = cloneMe.currIndex;
+			currArrayIndex = cloneMe.currArrayIndex;
+			return *this;
+		}
         /**
          * Points this iterator at the next array element, or makes it
          * past-the-end if there is no next element.
