@@ -717,6 +717,8 @@ dnl        __NO_NAMESPACE_ALIASES: 1 if namespace std cannot be alised,
 dnl                                0 otherwise.
 dnl
 AC_DEFUN(REGINA_TYPE_HASH_SET, [
+  AC_LANG_PUSH(C++)
+
   # Search for the hash_set header.
   HASH_SET_HEADER=
   AC_CHECK_HEADERS([ext/hash_set hash_set], [
@@ -762,6 +764,8 @@ AC_DEFUN(REGINA_TYPE_HASH_SET, [
   fi
   AC_DEFINE_UNQUOTED(__NO_NAMESPACE_ALIASES, [$NO_NAMESPACE_ALIASES],
     [Define to 1 if namespace std cannot be aliased.])
+
+  AC_LANG_POP(C++)
 ])
 
 dnl
