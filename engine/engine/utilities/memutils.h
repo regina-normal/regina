@@ -26,17 +26,15 @@
 
 /* end stub */
 
-/*! \file nmiscutils.h
- *  \brief Provides miscellaneous utility classes including helper
- *  classes for use with the Standard Template Library.
+/*! \file memutils.h
+ *  \brief Provides object creation and deletion functions for use with
+ *  the Standard Template Library.
  */
 
-#ifndef __NMISCUTILS_H
+#ifndef __MEMUTILS_H
 #ifndef __DOXYGEN
-#define __NMISCUTILS_H
+#define __MEMUTILS_H
 #endif
-
-#include <cstdlib>
 
 /**
  * An adaptable generator used to create objects using default constructors.
@@ -184,31 +182,6 @@ struct FuncDelete {
      */
     void operator() (T* ptr) const {
         delete ptr;
-    }
-};
-
-/**
- * A hash function used to calculate hash values for arbitrary pointers.
- * This class is for use with the Standard Template Library.
- *
- * The only guarantee provided by this hash function is that two
- * pointers representing the same memory location will return the same
- * hash value.  Two pointers pointing to identical data in two different
- * memory locations might very well return two different hash values.
- *
- * \ifaces Not present.
- */
-struct HashPointer {
-    /**
-     * Returns a hash value for the given pointer.  See the general
-     * class notes for further details.
-     *
-     * @param p the pointer whose hash value should be calculated.
-     * @return the corresponding hash value.
-     */
-    size_t operator() (const void* p) const {
-        // Cast the pointer directly to a size_t.
-        return *((size_t*)((void*)&p));
     }
 };
 
