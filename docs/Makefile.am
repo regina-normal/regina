@@ -19,6 +19,17 @@ sample_rtf = regina.rtf
 sample_tex = regina.tex
 sample_pdf = regina.pdf
 
+sample_engine = engine/index.html
+sample_javaui = javaui/index.html
+
+sample_all_refs = $(sample_html) $(sample_engine) $(sample_javaui)
+ext_all_refs = css dot dsl gif hs html jhm jpg png txt
+
+doc_jar = regina-@PACKAGE_VERSION@-docs.jar
+doc_link = regina-docs.jar
+
+doc_build_dir = doc-jar-tmp
+
 ## ----------------------- Sources -----------------------------------
 
 sgml_sources = regina.dsl \
@@ -39,10 +50,16 @@ sgml_sources = regina.dsl \
 
 ## ----------------------- Custom targets ----------------------------
 
-.PHONY : html man tex pdf rtf \
+.PHONY : html man tex pdf rtf jar \
   all-local clean-local
 
-all-local : @REGINA_BUILD_DOCSHTML@ @REGINA_BUILD_DOCSMAN@
+all-local : @REGINA_BUILD_DOCSHTML@ @REGINA_BUILD_DOCSMAN@ \
+  @REGINA_BUILD_DOCSJAR@
+
+$(sample_engine) :
+	cd engine && $(MAKE)
+$(sample_javaui) :
+	cd javaui && $(MAKE)
 
 html : $(sample_html)
 $(sample_html) : $(sgml_sources)
@@ -66,11 +83,29 @@ rtf : $(sample_rtf)
 $(sample_rtf) : $(sgml_sources)
 	@JADE@ -t rtf -d $(sgml_dsl)\#print $(sgml_index)
 
-clean-local :
+jar : $(doc_jar) $(doc_link)
+$(doc_jar) : $(sample_all_refs)
+	rm -rf $(doc_build_dir)
+	mkdir $(doc_build_dir)
+	for ext in $(ext_all_refs); do \
+		for i in `find . -name "*.$$ext"`; do \
+			_destdir="$(doc_build_dir)/normal/docs/`dirname "$$i"`"; \
+			$(mkinstalldirs) "$$_destdir"; \
+			$(INSTALL_DATA) $$i "$$_destdir"; \
+		done; \
+	done
+	cd $(doc_build_dir) && @JAR@ -cf ../$(doc_jar) normal/docs
+	rm -rf $(doc_build_dir)
+$(doc_link) : $(doc_jar)
+	rm -f $(doc_link)
+	@LN_S@ $(doc_jar) $(doc_link)
+
+mostlyclean-local :
 	rm -f *.html
 	rm -f *.[1-8] manpage.*
 	rm -f *.tex *.aux *.dvi *.out *.log
 	rm -f *.pdf *.rtf
+	rm -f *.jar
 
 ## ----------------------- Normal Makefile.am stuff ------------------
 
