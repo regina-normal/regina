@@ -100,6 +100,7 @@ typedef void (*UseSignature)(const NSignature&, const NSigIsoList&, void *);
  * was passed to this routine.
  * @param useArgs the pointer to pass as the final parameter for the
  * function \a use which will be called upon each signature found.
+ * @return the total number of non-equivalent signatures that were found.
  */
 unsigned long formSigCensus(unsigned order, UseSignature use,
     void* useArgs = 0);
