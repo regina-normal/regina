@@ -246,6 +246,10 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
 
     fundName = new QLabel(ui);
     fundName->setAlignment(Qt::AlignCenter);
+    QWhatsThis::add(fundName, i18n("The common name of the fundamental "
+        "group, if it can be recognised.  Note that if even a relatively "
+        "straightforward group is given a nasty presentation, there is "
+        "no guarantee that it will be recognised."));
     layout->addWidget(fundName);
 
     layout->addSpacing(5);
@@ -255,14 +259,20 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
 
     QBoxLayout* fundPresArea = new QVBoxLayout(wideFundPresArea);
     fundGens = new QLabel(ui);
+    QWhatsThis::add(fundGens, i18n("The generators in a presentation "
+        "of the fundamental group of this triangulation"));
     fundPresArea->addWidget(fundGens);
     fundRelCount = new QLabel(ui);
+    QWhatsThis::add(fundRelCount, i18n("The number of relations in a "
+        "presentation of the fundamental group of this triangulation"));
     fundPresArea->addWidget(fundRelCount);
     fundRels = new KListView(ui);
     fundRels->header()->hide();
     fundRels->addColumn(QString::null);
     fundRels->setSorting(-1);
     fundRels->setSelectionMode(QListView::NoSelection);
+    QWhatsThis::add(fundRels, i18n("The entire list of relations in a "
+        "presentation of the fundamental group of this triangulation"));
     fundPresArea->addWidget(fundRels, 1);
 
     wideFundPresArea->addStretch(1);
@@ -368,6 +378,12 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
 
     calculate = new QPushButton(SmallIconSet("exec"), i18n("Calculate"), ui);
     // calculate->setFlat(true);
+    QWhatsThis::add(calculate, i18n("<qt>Calculate the Turaev-Viro invariant "
+        "for the (r, root) parameters in the nearby text box.  The result "
+        "will be added to the list below.<p>"
+        "<b>Warning:</b> This calculation can be quite slow for large "
+        "values of <i>r</i>, since the processing time grows exponentially "
+        "with <i>r</i>.</qt>"));
     connect(calculate, SIGNAL(clicked()), this, SLOT(calculateInvariant()));
     paramsArea->addWidget(calculate);
 
@@ -387,6 +403,10 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     invariants->setColumnAlignment(1, Qt::AlignLeft);
     invariants->setColumnAlignment(2, Qt::AlignLeft);
     invariants->setResizeMode(QListView::AllColumns);
+    QWhatsThis::add(invariants, i18n("A list of all Turaev-Viro invariants "
+        "that have been calculated so far for this triangulation.  To "
+        "calculate a new invariant, enter the (r, root) parameters into the "
+        "text box above and press <i>Calculate</i>."));
     invArea->addWidget(invariants, 1);
 
     invArea->addStretch(1);

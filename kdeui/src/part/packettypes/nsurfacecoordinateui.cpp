@@ -48,6 +48,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qstyle.h>
+#include <qwhatsthis.h>
 
 #define DEFAULT_COORDINATE_COLUMN_WIDTH 40
 
@@ -73,22 +74,35 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     hdrLayout->setSpacing(5);
 
     // Set up the coordinate selector.
-    hdrLayout->addWidget(new QLabel(i18n("Display coordinates:"), ui));
+    QLabel* label = new QLabel(i18n("Display coordinates:"), ui)
+    hdrLayout->addWidget(label);
     coords = new CoordinateChooser(ui);
     coords->insertAllViewers(surfaces);
     coords->setCurrentSystem(surfaces->getFlavour());
     connect(coords, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
     hdrLayout->addWidget(coords);
+    QString msg = i18n("Allows you to view these normal surfaces in a "
+        "different coordinate system.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(coords, msg);
 
     hdrLayout->addStretch(1);
 
     // Set up the filter selector.
-    hdrLayout->addWidget(new QLabel(i18n("Apply filter:"), ui));
+    label = new QLabel(i18n("Apply filter:"), ui);
+    hdrLayout->addWidget(label);
     filter = new PacketChooser(surfaces->getTreeMatriarch(),
         new SingleTypeFilter<regina::NSurfaceFilter>(), true, 0, ui);
     filter->setAutoUpdate(true);
     connect(filter, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
     hdrLayout->addWidget(filter);
+    msg = i18n("<qt>Allows you to filter this list so that only normal "
+        "surfaces satisfying particular properties are displayed.<p>"
+        "To use this feature you need a separate surface filter.  You "
+        "can create new surface filters through the <i>Packet Tree</i> "
+        "menu.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(filter, msg);
 
     uiLayout->addSpacing(5);
 
@@ -105,6 +119,15 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "surface_crush");
     actCrush->setToolTip(i18n("Crush the selected surface to a point"));
     actCrush->setEnabled(false);
+    actCrush->setWhatsThis(i18n("<qt>Crushes the selected surface to a point "
+        "within the surrounding triangulation.  This triangulation will not "
+        "be changed; instead a new crushed triangulation will be created.<p>"
+        "<b>Warning:</b> This routine simply removes all tetrahedra "
+        "containing quadrilateral discs and rejoins the others "
+        "appropriately.  In some circumstances this might change the "
+        "topology of the underlying 3-manifold beyond just slicing along "
+        "the surface and shrinking the resulting boundary/boundaries "
+        "to points.</qt>"));
     surfaceActionList.append(actCrush);
 
     // Tidy up.

@@ -40,6 +40,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
+#include <qwhatsthis.h>
 
 namespace {
     const int ID_AND = 0;
@@ -60,15 +61,26 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     // Set up the boolean type options.
     QBoxLayout* typeLayout = new QHBoxLayout(layout);
     typeLayout->addStretch(1);
-    typeLayout->addWidget(new QLabel(i18n("Combine using:"), ui));
+
+    QLabel* label = new QLabel(i18n("Combine using:"), ui);
+    QWhatsThis::add(label, i18n("Specifies whether this combination "
+        "filter will combine its children using boolean AND or using "
+        "boolean OR."));
+    typeLayout->addWidget(label);
     typeLayout->addSpacing(10);
 
     QBoxLayout* typeOptionLayout = new QVBoxLayout(typeLayout);
     typeAnd = new QRadioButton(i18n("AND"), ui);
     typeAnd->setEnabled(readWrite);
+    QWhatsThis::add(typeAnd, i18n("Combine the children of this filter "
+        "using boolean AND.  A surface will pass this filter only when "
+        "it passes every one of the child filters."));
     typeOptionLayout->addWidget(typeAnd);
     typeOr = new QRadioButton(i18n("OR"), ui);
     typeOr->setEnabled(readWrite);
+    QWhatsThis::add(typeOr, i18n("Combine the children of this filter "
+        "using boolean OR.  A surface will pass this filter only when "
+        "it passes at least one of the child filters."));
     typeOptionLayout->addWidget(typeOr);
 
     typeLayout->addStretch(1);
@@ -81,8 +93,6 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     layout->addStretch(1);
 
     // Set up the list of child filters.
-    QLabel* label;
-
     QBoxLayout* wideChildLayout = new QHBoxLayout(layout);
     layout->setStretchFactor(wideChildLayout, 3);
 
@@ -102,6 +112,17 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     children->setSelectionMode(QListView::NoSelection);
     refreshChildList();
     childLayout->addWidget(children, 1);
+
+    QString msg = i18n("<qt>Shows the child filters that this combination "
+        "filter will combine, i.e., all of the filters immediately beneath "
+        "this filter in the packet tree.<p>"
+        "If you wish to add a filter to this list, you need to add it "
+        "beneath this combination filter in the packet tree.  If you wish "
+        "to remove a filter from this list, you need to move it elsewhere "
+        "in the packet tree (see the <i>Packet Tree / Move</i> menu for "
+        "how to do this).");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(children, msg);
 
     wideChildLayout->addStretch(1);
 

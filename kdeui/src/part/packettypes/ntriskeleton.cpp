@@ -38,6 +38,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qwhatsthis.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -58,50 +59,100 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
     grid->setColSpacing(10, 10);
     grid->setColStretch(12, 1);
 
-    grid->addWidget(new QLabel(i18n("Vertices:"), ui), 0, 1);
-    grid->addWidget(new QLabel(i18n("Edges:"), ui), 1, 1);
-    grid->addWidget(new QLabel(i18n("Faces:"), ui), 2, 1);
-    grid->addWidget(new QLabel(i18n("Components:"), ui), 0, 7);
-    grid->addWidget(new QLabel(i18n("Bdry Components:"), ui), 1, 7);
-    grid->addWidget(new QLabel(i18n("Tetrahedra:"), ui), 2, 7);
+    QLabel* label;
+    QPushButton* btn;
+    QString msg;
 
+    label = new QLabel(i18n("Vertices:"), ui);
+    grid->addWidget(label, 0, 1);
     nVertices = new QLabel(ui);
     nVertices->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nVertices, 0, 3);
+    msg = i18n("The total number of vertices in this triangulation.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(nVertices, msg);
+
+    label = new QLabel(i18n("Edges:"), ui);
+    grid->addWidget(label, 1, 1);
     nEdges = new QLabel(ui);
     nEdges ->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nEdges, 1, 3);
+    msg = i18n("The total number of edges in this triangulation.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(nEdges, msg);
+
+    label = new QLabel(i18n("Faces:"), ui);
+    grid->addWidget(label, 2, 1);
     nFaces = new QLabel(ui);
     nFaces->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nFaces, 2, 3);
+    msg = i18n("The total number of faces in this triangulation.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(nFaces, msg);
+
+    label = new QLabel(i18n("Components:"), ui);
+    grid->addWidget(label, 0, 7);
     nComps = new QLabel(ui);
     nComps->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nComps, 0, 9);
+    msg = i18n("The total number of disconnected components in this "
+        "triangulation.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(nComps, msg);
+
+    label = new QLabel(i18n("Bdry Components:"), ui);
+    grid->addWidget(label, 1, 7);
     nBdryComps = new QLabel(ui);
     nBdryComps->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nBdryComps, 1, 9);
+    msg = i18n("The total number of boundary components in this "
+        "triangulation.  Boundary components can either be ideal vertices "
+        "or collections of adjacent boundary faces.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(nBdryComps, msg);
+
+    label = new QLabel(i18n("Tetrahedra:"), ui);
+    grid->addWidget(label, 2, 7);
     nTets = new QLabel(ui);
     nTets->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nTets, 2, 9);
+    msg = i18n("The total number of tetrahedra in this triangulation.");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(nTets, msg);
 
-    QPushButton* btn;
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
     // btn->setFlat(true);
+    QWhatsThis::add(btn, i18n("View details of this triangulation's "
+        "individual vertices."));
     connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
     grid->addWidget(btn, 0, 5);
+
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    QWhatsThis::add(btn, i18n("View details of this triangulation's "
+        "individual edges."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
     grid->addWidget(btn, 1, 5);
+
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    QWhatsThis::add(btn, i18n("View details of this triangulation's "
+        "individual faces."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewFaces()));
     grid->addWidget(btn, 2, 5);
+
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    QWhatsThis::add(btn, i18n("View details of this triangulation's "
+        "individual components."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
     grid->addWidget(btn, 0, 11);
+
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
+    QWhatsThis::add(btn, i18n("View details of this triangulation's "
+        "individual boundary components.  Note that boundary components "
+        "can either be ideal vertices of collections of adjacent "
+        "boundary faces."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewBoundaryComponents()));
     grid->addWidget(btn, 1, 11);

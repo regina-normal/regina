@@ -38,6 +38,7 @@
 #include <klocale.h>
 #include <qlabel.h>
 #include <qvbox.h>
+#include <qwhatsthis.h>
 
 using regina::NPacket;
 using regina::NNormalSurface;
@@ -68,6 +69,10 @@ NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
     header = new QLabel(0);
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
+    QWhatsThis::add(header, i18n("Displays the parameters of the "
+        "vertex enumeration that created this list of surfaces, including "
+        "the specific coordinate system that was used.  Also displays "
+        "the total number of surfaces in this list."));
 
     ui = header;
 }

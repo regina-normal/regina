@@ -37,6 +37,7 @@
 
 #include <klistview.h>
 #include <qheader.h>
+#include <qwhatsthis.h>
 
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
@@ -50,6 +51,16 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     table->setAllColumnsShowFocus(true);
     table->setSorting(-1);
     table->setSelectionMode(QListView::NoSelection);
+    QWhatsThis::add(table, i18n("<qt>Displays the normal surface matching "
+        "equations that were used in the vertex enumeration when this "
+        "list was created.<p>"
+        "Each row represents a single equation.  Each equation involves "
+        "setting a linear combination of normal surface coordinates to "
+        "zero.  The columns of this table represent the different "
+        "coordinates, and the entries in each row are the coefficients "
+        "in each linear combination.<p>"
+        "For details of what each coordinate represents, hover the mouse "
+        "over the column header (or refer to the reference manual).</qt>"));
 
     // Don't bother creating columns until we first create a set of
     // matching equations.

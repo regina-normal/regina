@@ -42,6 +42,7 @@
 #include <ktoolbar.h>
 #include <qlabel.h>
 #include <qvbox.h>
+#include <qwhatsthis.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -112,6 +113,8 @@ NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
     header = new QLabel(ui);
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
+    QWhatsThis::add(header, i18n("Displays a few basic properties of the "
+        "triangulation, such as boundary and orientability."));
 }
 
 regina::NPacket* NTriHeaderUI::getPacket() {

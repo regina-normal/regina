@@ -38,6 +38,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qwhatsthis.h>
 
 #define THREE_SPHERE_AUTO_CALC_ADJUSTMENT 2
 
@@ -65,30 +66,65 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->setColSpacing(4, 5); // Horizontal gap
     grid->setColStretch(6, 1);
 
+    QString msg;
+
     label = new QLabel(i18n("Zero-efficient?"), ui);
     grid->addWidget(label, 0, 1);
-    label = new QLabel(i18n("Splitting surface?"), ui);
-    grid->addWidget(label, 1, 1);
-    label = new QLabel(i18n("3-sphere?"), ui);
-    grid->addWidget(label, 2, 1);
-
     zeroEff = new QLabel(ui);
     grid->addWidget(zeroEff, 0, 3);
+    msg = i18n("<qt>Is this a 0-efficient triangulation?  "
+        "A <i>0-efficient triangulation</i> is one whose only normal "
+        "spheres or discs are vertex links, and which has no 2-sphere "
+        "boundary components.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(zeroEff, msg);
+
+    label = new QLabel(i18n("Splitting surface?"), ui);
+    grid->addWidget(label, 1, 1);
     splitting = new QLabel(ui);
     grid->addWidget(splitting, 1, 3);
+    msg = i18n("<qt>Does this triangulation contain a splitting surface?  "
+        "A <i>splitting surface</i> is a normal surface containing precisely "
+        "one quadrilateral per tetrahedron and no other normal (or "
+        "almost normal) discs.</qt>");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(splitting, msg);
+
+    label = new QLabel(i18n("3-sphere?"), ui);
+    grid->addWidget(label, 2, 1);
     threeSphere = new QLabel(ui);
     grid->addWidget(threeSphere, 2, 3);
+    msg = i18n("Is this a triangulation of the 3-sphere?");
+    QWhatsThis::add(label, msg);
+    QWhatsThis::add(threeSphere, msg);
 
     btnZeroEff = new QPushButton(SmallIconSet("run", 0,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
+    QWhatsThis::add(btnZeroEff, i18n("<qt>Calculate whether this "
+        "triangulation is 0-efficient.<p>"
+        "<b>Warning:</b> This calculation can be quite slow for larger "
+        "triangulations (which is why 0-efficiency is not always "
+        "calculated automatically).</qt>"));
     grid->addWidget(btnZeroEff, 0, 5);
     connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
+
     btnSplitting = new QPushButton(SmallIconSet("run", 0,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
+    QWhatsThis::add(btnSplitting, i18n("<qt>Calculate whether this "
+        "triangulation contains a splitting surface.<p>"
+        "<b>Warning:</b> This calculation can be quite slow for larger "
+        "triangulations (which is why the existence of a splitting "
+        "surface is not always determined automatically).</qt>"));
     grid->addWidget(btnSplitting, 1, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
+
     btnThreeSphere = new QPushButton(SmallIconSet("run", 0,
         ReginaPart::factoryInstance()), i18n("Calculate"), ui);
+    QWhatsThis::add(btnThreeSphere, i18n("<qt>Calculate whether this "
+        "is a triangulation of a 3-sphere.<p>"
+        "<b>Warning:</b> This calculation is occasionally quite slow for "
+        "larger triangulations (which is why 3-sphere recognition is not "
+        "always run automatically).</qt>"));
     grid->addWidget(btnThreeSphere, 2, 5);
     connect(btnThreeSphere, SIGNAL(clicked()), this,
         SLOT(calculateThreeSphere()));
