@@ -94,13 +94,15 @@ class NProgress : public ShareableObject, protected NMutex {
             /**< May this operation be cancelled? */
         bool cancelled;
             /**< Has this operation been cancelled? */
-        
+
     public:
         /**
          * Performs basic initialisation.
          * Note that the internal mutex is not locked during construction.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present; NProgress objects should only be
+         * created within calculation engine routines whose progress is
+         * being watched.
          *
          * @param newCancellable \c true if and only if this operation
          * allows itself to be cancelled by an external interface.
@@ -150,7 +152,9 @@ class NProgress : public ShareableObject, protected NMutex {
          * if it cancels itself in response to a request by an external
          * interface (see cancel()).
          *
-         * \ifaces Not present.
+         * \ifacespython Not present; this should only be called from
+         * within the calculation engine routine whose progress is being
+         * watched.
          */
         void setFinished();
 
@@ -259,6 +263,9 @@ class NProgress : public ShareableObject, protected NMutex {
  * A progress report that immediately claims it is finished.
  * There is no need to call setFinished(); this will be done
  * automatically by the constructor.
+ *
+ * \ifacespython Not present; all progress classes communicate with
+ * external interfaces through the NProgress interface.
  */
 class NProgressFinished : public NProgress {
     public:

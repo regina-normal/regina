@@ -48,7 +48,8 @@ namespace regina {
  * A progress report in which the current state of progress is stored as a
  * string message.
  *
- * \ifaces Not present.
+ * \ifacespython Not present; all progress classes communicate with
+ * external interfaces through the NProgress interface.
  */
 class NProgressMessage : public NProgress {
     private:
@@ -112,7 +113,8 @@ class NProgressMessage : public NProgress {
  * a number of items completed.
  * The expected total number of items can be optionally specified.
  *
- * \ifaces Not present.
+ * \ifacespython Not present; all progress classes communicate with
+ * external interfaces through the NProgress interface.
  */
 class NProgressNumber : public NProgress {
     private:

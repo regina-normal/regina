@@ -147,7 +147,9 @@ class NProgressManager : public ShareableObject {
          *
          * \pre setProgress() has not already been called.
          *
-         * \ifaces Not present.
+         * \ifacespython Not present; this routine should only be called
+         * from within calculation engine routines whose progress is
+         * being watched.
          *
          * @param newProgress the NProgress that this manager will manage.
          */
