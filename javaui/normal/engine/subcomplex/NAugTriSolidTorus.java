@@ -32,11 +32,16 @@ import normal.engine.*;
 import normal.engine.triangulation.NPerm;
 
 public interface NAugTriSolidTorus extends ShareableObject {
+    int CHAIN_NONE = 0;
+    int CHAIN_MAJOR = 1;
+    int CHAIN_AXIS = 2;
+
     NAugTriSolidTorus cloneMe();
     NTriSolidTorus getCore();
     NLayeredSolidTorus getAugTorus(int annulus);
     NPerm getEdgeGroupRoles(int annulus);
     long getChainLength();
+    int getChainType();
     int getTorusAnnulus();
     boolean hasLayeredChain();
     NSFS getSeifertStructure();

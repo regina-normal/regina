@@ -90,6 +90,46 @@ unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     return chain.getIndex() - 1;
 }
 
+unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
+    int right = (otherAnnulus + 1) % 3;
+    int left = (otherAnnulus + 2) % 3;
+    NTetrahedron* adj = tet[right]->getAdjacentTetrahedron(
+        vertexRoles[right][1]);
+    if (adj != tet[otherAnnulus]->getAdjacentTetrahedron(
+            vertexRoles[otherAnnulus][2]))
+        return 0;
+    if (adj == tet[0] || adj == tet[1] || adj == tet[2] || adj == 0)
+        return 0;
+    NPerm roles = tet[right]->getAdjacentTetrahedronGluing(
+        vertexRoles[right][1]) * vertexRoles[right] * NPerm(2, 1, 0, 3);
+    if (roles != tet[otherAnnulus]->getAdjacentTetrahedronGluing(
+            vertexRoles[otherAnnulus][2]) * vertexRoles[otherAnnulus] *
+            NPerm(0, 3, 2, 1))
+        return 0;
+
+    // We've successfully identified the first tetrahedron of the
+    // layered chain.
+    NLayeredChain chain(adj, roles);
+    chain.extendMaximal();
+    NTetrahedron* top = chain.getTop();
+    NPerm topRoles(chain.getTopVertexRoles());
+
+    if (top->getAdjacentTetrahedron(topRoles[3]) != tet[left])
+        return 0;
+    if (top->getAdjacentTetrahedron(topRoles[0]) != tet[otherAnnulus])
+        return 0;
+    if (topRoles != tet[left]->getAdjacentTetrahedronGluing(
+            vertexRoles[left][2]) * vertexRoles[left] * NPerm(3, 0, 1, 2))
+        return 0;
+    if (topRoles != tet[otherAnnulus]->getAdjacentTetrahedronGluing(
+            vertexRoles[otherAnnulus][1]) * vertexRoles[otherAnnulus] *
+            NPerm(1, 2, 3, 0))
+        return 0;
+
+    // Success!
+    return chain.getIndex();
+}
+
 NTriSolidTorus* NTriSolidTorus::isTriSolidTorus(NTetrahedron* tet,
         NPerm useVertexRoles) {
     NTriSolidTorus* ans = new NTriSolidTorus();

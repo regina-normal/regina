@@ -78,6 +78,12 @@ REGJNIEXPORT jlong JNICALL
 }
 
 REGJNIEXPORT jint JNICALL
+        Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getChainType
+        (JNIEnv *env, jobject me) {
+    return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getChainType();
+}
+
+REGJNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_getTorusAnnulus
         (JNIEnv *env, jobject me) {
     return GET_ENGINE_OBJECT(env, NAugTriSolidTorus, me)->getTorusAnnulus();

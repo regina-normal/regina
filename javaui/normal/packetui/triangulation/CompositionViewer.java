@@ -182,12 +182,42 @@ public class CompositionViewer extends DefaultPacketViewer
             }
         }
 
+        // Look for layered chain pairs.
+        category = null;
+        NLayeredChainPair pair;
+        NSFS sfs;
+        NLensSpace lensSpace;
+        n = triangulation.getNumberOfComponents();
+        for (i = 0; i < n; i++) {
+            pair = engine.isLayeredChainPair(triangulation.getComponent(i));
+            if (pair != null) {
+                if (category == null) {
+                    category = new DefaultMutableTreeNode(
+                        "Layered Chain Pairs");
+                    rootNode.add(category);
+                }
+                sfs = pair.getSeifertStructure();
+                instance = new DefaultMutableTreeNode(sfs.toString());
+                category.add(instance);
+                lensSpace = sfs.isLensSpace();
+                if (lensSpace != null) {
+                    instance.add(new DefaultMutableTreeNode("Reduces to " +
+                        lensSpace.toString()));
+                    lensSpace.destroy();
+                }
+                instance.add(new DefaultMutableTreeNode("Component " +
+                    String.valueOf(i)));
+                instance.add(new DefaultMutableTreeNode("Chain lengths " +
+                    String.valueOf(pair.getChain(0).getIndex()) + ", " +
+                    String.valueOf(pair.getChain(1).getIndex())));
+                pair.destroy();
+            }
+        }
+
         // Look for augmented triangular solid tori.
         category = null;
         NAugTriSolidTorus aug;
         NTriSolidTorus tri;
-        NSFS sfs;
-        NLensSpace lensSpace;
         n = triangulation.getNumberOfComponents();
         for (i = 0; i < n; i++) {
             aug = engine.isAugTriSolidTorus(triangulation.getComponent(i));
@@ -216,10 +246,18 @@ public class CompositionViewer extends DefaultPacketViewer
                     tri.getTetrahedron(1))) + ", " +
                     String.valueOf(triangulation.getTetrahedronIndex(
                     tri.getTetrahedron(2)))));
-                if (aug.hasLayeredChain())
+                if (aug.hasLayeredChain()) {
+                    String chainType;
+                    if (aug.getChainType() == aug.CHAIN_MAJOR)
+                        chainType = " (major)";
+                    else if (aug.getChainType() == aug.CHAIN_AXIS)
+                        chainType = " (axis)";
+                    else
+                        chainType = " (unknown)";
                     instance.add(new DefaultMutableTreeNode(
-                        "Attached: layered chain + layered solid torus"));
-                else
+                        "Attached: layered chain" + chainType +
+                        " + layered solid torus"));
+                } else
                     instance.add(new DefaultMutableTreeNode(
                         "Attached: 3 layered solid tori"));
                 aug.destroy();

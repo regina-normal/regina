@@ -41,6 +41,8 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
             - Added for use with Standard Template Library.
         Class NAngleStructureList:
             - New nested class NAngleStructureList::StructureInserter.
+        Class NAugTriSolidTorus, NTriSolidTorus:
+            - Supports multiple ways of attaching layered chains.
         Class NFileInfo:
             - Added.
         Class NGroupExpressionTerm:
@@ -52,6 +54,8 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
         Class NLargeInteger:
             - Added third error-detection parameter to constructor
               NLargeInteger(const char*, int).
+        Class NLayeredChainPair:
+            - Added.
         Class NLensSpace:
             - Fixed bug causing reductions to be sometimes non-optimal
               (although still correct) - see modularInverse() notes below.
@@ -93,7 +97,7 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
               caused modularInverse() to sometimes give wrong answers.
         Routine readFileMagic(), readXMLFile(), writeXMLFile():
             - Added.
-        Routine xmlEncodeSpecialChars(), xmlValueTag():
+        Routine xmlEncodeComment(), xmlEncodeSpecialChars(), xmlValueTag():
             - Added.
     JAVA USER INTERFACE:
         Overall structure:

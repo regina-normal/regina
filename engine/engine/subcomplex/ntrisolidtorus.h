@@ -173,6 +173,10 @@ class NTriSolidTorus : public ShareableObject {
          * Determines whether the two given annuli are linked in a
          * particular fashion by a layered chain.
          *
+         * In this scenario, both of the given annuli meet one face of
+         * the top tetrahedron and one face of the bottom tetrahedron of
+         * the layered chain.
+         *
          * To be identified by this routine, the layered chain
          * (described by NLayeredChain) must be attached as follows.
          * The two directed major edges of the two annuli should
@@ -197,6 +201,41 @@ class NTriSolidTorus : public ShareableObject {
          * two annuli are linked as described, or 0 otherwise.
          */
         unsigned long areAnnuliLinkedMajor(int otherAnnulus) const;
+
+        /**
+         * Determines whether the two given annuli are linked in a
+         * particular fashion by a layered chain.
+         *
+         * In this scenario, one of the given annuli meets both faces of
+         * the top tetrahedron and the other annulus meets both faces of the
+         * bottom tetrahedron of the layered chain.
+         *
+         * To be identified by this routine, the layered chain
+         * (described by NLayeredChain) must be attached as follows.
+         * We shall refer to the two hinge edges of the layered chain as
+         * \e first and \e second.
+         *
+         * The two diagonals of the layered chain (between the two top
+         * faces and between the two bottom faces) should correspond to
+         * the two directed major edges of the two annuli, with the major
+         * edges both pointing from top hinge edge to bottom hinge edge.
+         * The other boundary edges of the layered chain that are not
+         * hinge edges should correspond to the two directed minor edges
+         * of the two annuli, with the minor edges both pointing from
+         * bottom hinge edge to top hinge edge.  The hinge edges
+         * themselves should correspond to the axis edges of the
+         * triangular solid torus (this correspondence is determined by
+         * the previous identifications; the axis edge between the two
+         * annuli will be identified to both of the others in reverse).
+         *
+         * \ifaces Not present.
+         *
+         * @param otherAnnulus the annulus on the solid torus boundary
+         * \a not to be examined; this must be 0, 1 or 2.
+         * @return the number of tetrahedra in the layered chain if the
+         * two annuli are linked as described, or 0 otherwise.
+         */
+        unsigned long areAnnuliLinkedAxis(int otherAnnulus) const;
 
         /**
          * Determines if the given tetrahedron forms part of a

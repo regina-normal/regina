@@ -51,6 +51,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
         ans->edgeGroupRoles[i] = edgeGroupRoles[i];
     }
     ans->chainIndex = chainIndex;
+    ans->chainType = chainType;
     ans->torusAnnulus = torusAnnulus;
     ans->seifertStructure = seifertStructure;
     return ans;
@@ -63,9 +64,9 @@ void NAugTriSolidTorus::writeTextShort(std::ostream& out) const {
 }
 
 void NAugTriSolidTorus::findExceptionalFibres() {
-    if (chainIndex > 0) {
+    if (chainType == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
-        seifertStructure.insertFibre(NExceptionalFibre(2,1));
+        seifertStructure.insertFibre(NExceptionalFibre(2, 1));
         seifertStructure.insertFibre(NExceptionalFibre(chainIndex + 1, 1));
 
         long q, r;
@@ -96,9 +97,43 @@ void NAugTriSolidTorus::findExceptionalFibres() {
             q = -q;
         }
         seifertStructure.insertFibre(NExceptionalFibre(r, q));
+    } else if (chainType == CHAIN_AXIS) {
+        // Layered solid torus + layered chain.
+        seifertStructure.insertFibre(NExceptionalFibre(2, 1));
+        seifertStructure.insertFibre(NExceptionalFibre(2, -1));
+
+        long q, r;
+        if (edgeGroupRoles[torusAnnulus][2] == 2) {
+            if (augTorus[torusAnnulus]) {
+                r = augTorus[torusAnnulus]->getMeridinalCuts(
+                    edgeGroupRoles[torusAnnulus][0]);
+                q = augTorus[torusAnnulus]->getMeridinalCuts(
+                    edgeGroupRoles[torusAnnulus][1]);
+            } else {
+                r = 1;
+                q = 1;
+            }
+        } else {
+            if (augTorus[torusAnnulus]) {
+                r = augTorus[torusAnnulus]->getMeridinalCuts(
+                    edgeGroupRoles[torusAnnulus][0]);
+                q = -augTorus[torusAnnulus]->getMeridinalCuts(
+                    edgeGroupRoles[torusAnnulus][1]);
+            } else {
+                r = (edgeGroupRoles[torusAnnulus][0] == 2 ? 2 : 1);
+                q = -(edgeGroupRoles[torusAnnulus][1] == 2 ? 2 : 1);
+            }
+        }
+        long alpha = q - chainIndex * r;
+        long beta = -r;
+        if (alpha < 0) {
+            alpha = -alpha;
+            beta = -beta;
+        }
+        seifertStructure.insertFibre(NExceptionalFibre(alpha, beta));
     } else {
         // Three layered solid tori.
-        seifertStructure.insertFibre(NExceptionalFibre(1,1));
+        seifertStructure.insertFibre(NExceptionalFibre(1, 1));
 
         long alpha, beta;
         for (int i = 0; i < 3; i++) {
@@ -189,6 +224,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                     }
 
                     ans->chainIndex = 0;
+                    ans->chainType = CHAIN_NONE;
                     ans->torusAnnulus = -1;
 
                     ans->findExceptionalFibres();
@@ -252,8 +288,15 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                 if (core->isAnnulusSelfIdentified(torusAnnulus, &annulusPerm)) {
                     // Look now for a layered chain.
                     // If we don't find it, the entire core must be wrong.
-                    chainLen = core->areAnnuliLinkedMajor(torusAnnulus);
-                    if (chainLen + 3 != nTet)
+                    int chainType = CHAIN_NONE;
+                    
+                    if ((chainLen = core->areAnnuliLinkedMajor(torusAnnulus)))
+                        chainType = CHAIN_MAJOR;
+                    else if ((chainLen =
+                            core->areAnnuliLinkedAxis(torusAnnulus)))
+                        chainType = CHAIN_AXIS;
+
+                    if (chainType == CHAIN_NONE || chainLen + 3 != nTet)
                         break;
 
                     // We have the entire structure!
@@ -271,6 +314,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             break;
                     }
                     ans->chainIndex = chainLen;
+                    ans->chainType = chainType;
                     ans->torusAnnulus = torusAnnulus;
 
                     ans->findExceptionalFibres();
@@ -283,61 +327,134 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
 
         // Wasn't the core.  Must have been the chain.
         NTetrahedron* top;
+        NTetrahedron* bottom;
         NPerm topRoles;
+        NPerm bottomRoles;
         int j;
+        int chainType;
         for (i = 0; i < 6; i++) {
             p = allPermsS3[i];
             NLayeredChain chain(tet, p);
             chain.extendMaximal();
 
             // Note that the chain will run into one of the core tetrahedra.
-            if (chain.getIndex() + 2 != nTet)
+            if (chain.getIndex() + 2 == nTet)
+                chainType = CHAIN_MAJOR;
+            else if (chain.getIndex() + 3 == nTet)
+                chainType = CHAIN_AXIS;
+            else
                 continue;
 
             // Look for the corresponding core.
             // The identified annulus on the core will have to be annulus 0.
             // Test the chain at both ends (bottom / top).
             for (j = 0; j < 2; j++) {
-                core = NTriSolidTorus::isTriSolidTorus(chain.getBottom(),
-                    chain.getBottomVertexRoles() * NPerm(2, 3, 0, 1));
-                if (core) {
-                    // Test that everything is put together properly.
-                    top = chain.getTop();
-                    topRoles = chain.getTopVertexRoles();
+                if (chainType == CHAIN_MAJOR) {
+                    core = NTriSolidTorus::isTriSolidTorus(chain.getBottom(),
+                        chain.getBottomVertexRoles() * NPerm(2, 3, 0, 1));
+                    if (core) {
+                        // Test that everything is put together properly.
+                        top = chain.getTop();
+                        topRoles = chain.getTopVertexRoles();
 
-                    if ((top->getAdjacentTetrahedron(topRoles[0]) ==
-                                core->getTetrahedron(1)) &&
-                            (top->getAdjacentTetrahedron(topRoles[3]) ==
-                                core->getTetrahedron(2)) &&
-                            (top->getAdjacentTetrahedronGluing(topRoles[0]) *
-                                topRoles * NPerm(1, 0, 2, 3) ==
-                                core->getVertexRoles(1)) &&
-                            (top->getAdjacentTetrahedronGluing(topRoles[3]) *
-                                topRoles * NPerm(0, 1, 3, 2) ==
-                                core->getVertexRoles(2)) &&
-                            core->isAnnulusSelfIdentified(0, &annulusPerm)) {
-                        // We have the entire structure!
-                        NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-                        ans->core = core;
-                        switch (annulusPerm[0]) {
-                            case 0:
-                                ans->edgeGroupRoles[0] = NPerm(2, 0, 1, 3);
-                                break;
-                            case 2:
-                                ans->edgeGroupRoles[0] = NPerm(1, 2, 0, 3);
-                                break;
-                            case 3:
-                                ans->edgeGroupRoles[0] = NPerm(0, 1, 2, 3);
-                                break;
-                        }
-                        ans->chainIndex = chain.getIndex() - 1;
-                        ans->torusAnnulus = 0;
+                        if ((top->getAdjacentTetrahedron(topRoles[0]) ==
+                                    core->getTetrahedron(1)) &&
+                                (top->getAdjacentTetrahedron(topRoles[3]) ==
+                                    core->getTetrahedron(2)) &&
+                                (top->getAdjacentTetrahedronGluing(topRoles[0])
+                                    * topRoles * NPerm(1, 0, 2, 3) ==
+                                    core->getVertexRoles(1)) &&
+                                (top->getAdjacentTetrahedronGluing(topRoles[3])
+                                    * topRoles * NPerm(0, 1, 3, 2) ==
+                                    core->getVertexRoles(2)) &&
+                                core->isAnnulusSelfIdentified(
+                                    0, &annulusPerm)) {
+                            // We have the entire structure!
+                            NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+                            ans->core = core;
+                            switch (annulusPerm[0]) {
+                                case 0:
+                                    ans->edgeGroupRoles[0] = NPerm(2, 0, 1, 3);
+                                    break;
+                                case 2:
+                                    ans->edgeGroupRoles[0] = NPerm(1, 2, 0, 3);
+                                    break;
+                                case 3:
+                                    ans->edgeGroupRoles[0] = NPerm(0, 1, 2, 3);
+                                    break;
+                            }
+                            ans->chainIndex = chain.getIndex() - 1;
+                            ans->chainType = chainType;
+                            ans->torusAnnulus = 0;
         
-                        ans->findExceptionalFibres();
-                        return ans;
-                    }
+                            ans->findExceptionalFibres();
+                            return ans;
+                        }
 
-                    delete core;
+                        delete core;
+                    }
+                } else if (chainType == CHAIN_AXIS) {
+                    bottom = chain.getBottom();
+                    bottomRoles = chain.getBottomVertexRoles();
+
+                    NTetrahedron* startCore = bottom->getAdjacentTetrahedron(
+                        bottomRoles[2]);
+
+                    if (startCore)
+                        core = NTriSolidTorus::isTriSolidTorus(startCore,
+                            bottom->getAdjacentTetrahedronGluing(
+                                bottomRoles[2]) *
+                            bottomRoles * NPerm(0, 3, 2, 1));
+                    else
+                        core = 0;
+
+                    if (core) {
+                        // Test that everything is put together properly.
+                        top = chain.getTop();
+                        topRoles = chain.getTopVertexRoles();
+
+                        if ((bottom->getAdjacentTetrahedron(bottomRoles[1]) ==
+                                    core->getTetrahedron(1)) &&
+                                (top->getAdjacentTetrahedron(topRoles[0]) ==
+                                    core->getTetrahedron(0)) &&
+                                (top->getAdjacentTetrahedron(topRoles[3]) ==
+                                    core->getTetrahedron(2)) &&
+                                (bottom->getAdjacentTetrahedronGluing(
+                                        bottomRoles[1])
+                                    * bottomRoles * NPerm(2, 1, 0, 3) ==
+                                    core->getVertexRoles(1)) &&
+                                (top->getAdjacentTetrahedronGluing(topRoles[0])
+                                    * topRoles * NPerm(3, 0, 1, 2) ==
+                                    core->getVertexRoles(0)) &&
+                                (top->getAdjacentTetrahedronGluing(topRoles[3])
+                                    * topRoles * NPerm(1, 2, 3, 0) ==
+                                    core->getVertexRoles(2)) &&
+                                core->isAnnulusSelfIdentified(
+                                    0, &annulusPerm)) {
+                            // We have the entire structure!
+                            NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+                            ans->core = core;
+                            switch (annulusPerm[0]) {
+                                case 0:
+                                    ans->edgeGroupRoles[0] = NPerm(2, 0, 1, 3);
+                                    break;
+                                case 2:
+                                    ans->edgeGroupRoles[0] = NPerm(1, 2, 0, 3);
+                                    break;
+                                case 3:
+                                    ans->edgeGroupRoles[0] = NPerm(0, 1, 2, 3);
+                                    break;
+                            }
+                            ans->chainIndex = chain.getIndex();
+                            ans->chainType = chainType;
+                            ans->torusAnnulus = 0;
+        
+                            ans->findExceptionalFibres();
+                            return ans;
+                        }
+
+                        delete core;
+                    }
                 }
 
                 // If we just tested the bottom, prepare to test the top.
@@ -488,9 +605,16 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             if (needChain) {
                 // We found our one layered solid torus.  The other two
                 // boundary annuli *must* be linked via a layered chain.
-                unsigned long chainLen =
-                    core->areAnnuliLinkedMajor(torusAnnulus);
-                if (usedTets + chainLen + 3 != nTet) {
+                int chainType = CHAIN_NONE;
+                unsigned long chainLen;
+
+                if ((chainLen = core->areAnnuliLinkedMajor(torusAnnulus)))
+                    chainType = CHAIN_MAJOR;
+                else if ((chainLen = core->areAnnuliLinkedAxis(torusAnnulus)))
+                    chainType = CHAIN_AXIS;
+
+                if (chainType == CHAIN_NONE ||
+                        usedTets + chainLen + 3 != nTet) {
                     delete core;
                     continue;
                 }
@@ -505,6 +629,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                     }
                 }
                 ans->chainIndex = chainLen;
+                ans->chainType = chainType;
                 ans->torusAnnulus = torusAnnulus;
 
                 ans->findExceptionalFibres();
@@ -520,6 +645,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                         ans->augTorus[j] = layered[whichLayered[j]];
                 }
                 ans->chainIndex = 0;
+                ans->chainType = CHAIN_NONE;
                 ans->torusAnnulus = -1;
 
                 ans->findExceptionalFibres();

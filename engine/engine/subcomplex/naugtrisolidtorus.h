@@ -58,7 +58,9 @@ class NComponent;
  *
  *   - To one of these annuli, glue a layered solid torus as described
  *     above.  Join the other two annuli with a layered chain
- *     in the manner described by NTriSolidTorus::areAnnuliLinkedMajor().
+ *     in either the manner described by
+ *     NTriSolidTorus::areAnnuliLinkedMajor() or the manner described by
+ *     NTriSolidTorus::areAnnuliLinkedAxis().
  *
  * It will be assumed that all layered solid tori other than the
  * degenerate (2,1,1) will have (3,2,1) layered solid tori at their
@@ -71,6 +73,19 @@ class NComponent;
  * fibred space over the 2-sphere with at most three exceptional fibres.
  */
 class NAugTriSolidTorus : public ShareableObject {
+    public:
+        static const int CHAIN_NONE = 0;
+            /**< Indicates that this augmented triangular solid torus
+                 contains no layered chain. */
+        static const int CHAIN_MAJOR = 1;
+            /**< Indicates that this augmented triangular solid torus
+                 contains a layered chain attached as described by
+                 NTriSolidTorus::areAnnuliLinkedMajor(). */
+        static const int CHAIN_AXIS = 2;
+            /**< Indicates that this augmented triangular solid torus
+                 contains a layered chain attached as described by
+                 NTriSolidTorus::areAnnuliLinkedAxis(). */
+
     private:
         NTriSolidTorus* core;
             /**< The triangular solid torus at the core of this
@@ -90,6 +105,9 @@ class NAugTriSolidTorus : public ShareableObject {
         unsigned long chainIndex;
             /**< The number of tetrahedra in the layered chain if
                  present, or 0 if there is no layered chain. */
+        int chainType;
+            /**< The way in which the layered chain is attached, or
+                 \a CHAIN_NONE if there is no layered chain. */
         int torusAnnulus;
             /**< The annulus to which the single layered solid torus is
                  attached (if there is a layered chain), or -1 if there is
@@ -168,6 +186,17 @@ class NAugTriSolidTorus : public ShareableObject {
         unsigned long getChainLength() const;
 
         /**
+         * Returns the way in which a layered chain links
+         * two of the boundary annuli of the core triangular solid torus.
+         * This will be one of the chain type constants defined in this
+         * class.
+         *
+         * @return the type of layered chain, or \a CHAIN_NONE
+         * if there is no layered chain linking two boundary annuli.
+         */
+        int getChainType() const;
+
+        /**
          * Returns the single boundary annulus of the core triangular
          * solid torus to which a layered solid torus is attached.  This
          * routine is only meaningful if the other two annuli are linked
@@ -232,7 +261,8 @@ class NAugTriSolidTorus : public ShareableObject {
 
 // Inline functions for NAugTriSolidTorus
 
-inline NAugTriSolidTorus::NAugTriSolidTorus() : core(0) {
+inline NAugTriSolidTorus::NAugTriSolidTorus() : core(0),
+        chainType(CHAIN_NONE) {
     augTorus[0] = augTorus[1] = augTorus[2] = 0;
 }
 
@@ -248,6 +278,9 @@ inline NPerm NAugTriSolidTorus::getEdgeGroupRoles(int annulus) const {
 }
 inline unsigned long NAugTriSolidTorus::getChainLength() const {
     return chainIndex;
+}
+inline int NAugTriSolidTorus::getChainType() const {
+    return chainType;
 }
 inline int NAugTriSolidTorus::getTorusAnnulus() const {
     return torusAnnulus;
