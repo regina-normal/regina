@@ -26,7 +26,8 @@
 
 /* end stub */
 
-#include "triangulation/knot.h"
+#include "knot/nknot.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
@@ -35,7 +36,7 @@ NKnot::NKnot() {
     numComponents = 0;
 }
 
-NKnot::NKnot(String s) {
+NKnot::NKnot(const std::string& s) {
     valid = true;
     numComponents = 1;
     
