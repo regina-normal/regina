@@ -35,10 +35,18 @@ Regina - A Normal Surface Theory Calculator
             - Added routine discOrientationFollowsEdge().
         File nnormalsurface.h:
             - Added arrays triDiscArcs, quadDiscArcs, octDiscArcs.
+        Routine readSnapPea():
+            - Sets the new packet label to the SnapPea manifold name.
     JAVA USER INTERFACE:
         Overall structure:
             - Loading/saving local files is now possible even through CORBA!
             - Incorporated engine enhancements listed above.
+        normal.imports:
+            - Redesigned import architecture; replaced old class
+              ImportFilePane with new class Importer.
+            - Imported packets now have appropriate packet labels (such
+              as their names in the imported files).
+            - The file dialog is now brought up before anything else is done.
         normal.mainui.TopologyPane:
             - Fixed bug where icon was sometimes not displayed.
         normal.packetui.triangulation.CompositionViewer:

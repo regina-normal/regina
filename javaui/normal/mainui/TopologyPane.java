@@ -1303,16 +1303,19 @@ public class TopologyPane extends FilePane {
 
     /**
      * Allow the user to import a packet from a file in a foreign format.
-     * A dialog will be created to collect user input, and the new
-     * packet will be placed in both the visual and
-     * underlying native trees.
+     * User input will be collected, and the new packet will be placed
+     * in both the visual and underlying native trees.
      *
      * @param importer specifies the mechanics of importing from a
      * particular file format.
      * @see normal.packetui.PacketCreator
      */
-    void importData(PacketCreator importer) {
-        // Collect user input and create the new packet.
+    void importData(Importer importer) {
+        // Try importing the data before we do anything.
+        if (! importer.importData())
+            return;
+
+        // Collect further user input and incorporate the new data.
         NPacket packet = NewPacketDialog.newPacket(getShell(),
             rootNode, getSelectedNode(), importer);
         if (packet != null) {

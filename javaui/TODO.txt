@@ -11,9 +11,7 @@ Everywhere:
 -	Allow customisation of types in drop-down boxes
 
 File I/O:
-	Import brings up file dialog first.
 	Import Regina files.
-	SnapPea import uses names from SnapPea.
 
 Help:
 	Write manual! - include context sensitive help, searching and index.
