@@ -5,6 +5,18 @@
 <reference id="utils">
  <title>Command-Line Utilities</title>
 
+ <partintro>
+  <para>
+   The usual &regina; startup script is documented in the earlier
+   reference chapter on <link linkend="man-regina">startup options
+   and configuration</link>.
+  </para>
+  <para>
+   This reference chapter documents the other various command-line
+   utilities that are provided with &regina;.
+  </para>
+ </partintro>
+
  <!-- File Converter -->
 
  <refentry id="man-regconvert">
@@ -36,7 +48,7 @@
    <para>
     Between &regina; versions 2.4 and 3.0, the data files changed from
     using an impenetrable and undocumented binary format to using
-    (optionally compressed) XML.
+    (optionally compressed) &xml;.
    </para>
    <para>
     This utility simply converts back and forth between these different
@@ -51,7 +63,7 @@
    <para>
     If argument <replaceable>new-file</replaceable> is missing, the new
     file will be written to standard output; this forces output to be
-    uncompressed XML (see option <option>-u</option>).
+    uncompressed &xml; (see option <option>-u</option>).
    </para>
    <warning><para>
     When writing an old-style binary file, some information might be
@@ -66,13 +78,13 @@
     <varlistentry>
      <term><option>-x</option> (default)</term>
      <listitem>
-      <para>Convert to compressed XML.</para>
+      <para>Convert to compressed &xml;.</para>
      </listitem>
     </varlistentry>
     <varlistentry>
      <term><option>-u</option></term>
      <listitem>
-      <para>Convert to plain (uncompressed) XML.</para>
+      <para>Convert to plain (uncompressed) &xml;.</para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -225,7 +237,7 @@
    <para>
     Between &regina; versions 2.4 and 3.0, the data files changed from
     using an impenetrable and undocumented binary format to using
-    (optionally compressed) XML.
+    (optionally compressed) &xml;.
    </para>
    <para>
     This utility simply determines which of these formats a given

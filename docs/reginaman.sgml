@@ -3,7 +3,19 @@
      See regina.sgml for further details. -->
 
 <reference id="manpages">
- <title>Options and Configuration</title>
+ <title>Startup Options and Configuration</title>
+
+ <partintro>
+  <para>
+   This reference chapter documents the usual &regina; startup script, as
+   well as various methods of configurating your &regina; installation.
+  </para>
+  <para>
+   For documentation on the other various command-line utilities that
+   are provided with &regina;, see the later reference chapter on
+   <link linkend="utils">command-line utilities</link>.
+  </para>
+ </partintro>
 
  <!-- Startup Script -->
 

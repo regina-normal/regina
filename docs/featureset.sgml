@@ -137,7 +137,7 @@
       along with topological structures in a single file
      </para></listitem>
      <listitem><para>
-      Data saved as compressed XML (since &regina;&nbsp;3.0)
+      Data saved as compressed &xml; (since &regina;&nbsp;3.0)
      </para></listitem>
     </itemizedlist>
    </para></listitem>
