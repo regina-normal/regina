@@ -1,5 +1,6 @@
 *.debhelper
 *.substvars
+debiandirs
 files
 regina-normal
 regina-normal-dev
