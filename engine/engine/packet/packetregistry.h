@@ -71,6 +71,7 @@
     #include "surfaces/nnormalsurfacelist.h"
     #include "packet/nscript.h"
     #include "surfaces/nsurfacefilter.h"
+    #include "angle/nanglestructurelist.h"
 #else
     REGISTER_PACKET(NContainer, 1, "Container")
     REGISTER_PACKET(NText, 2, "Text")
@@ -78,6 +79,7 @@
     REGISTER_PACKET(NNormalSurfaceList, 6, "Normal Surface List")
     REGISTER_PACKET(NScript, 7, "Script")
     REGISTER_PACKET(NSurfaceFilter, 8, "Surface Filter")
+    REGISTER_PACKET(NAngleStructureList, 9, "Angle Structure List")
 #endif
 
 /*! \file packetregistry.h

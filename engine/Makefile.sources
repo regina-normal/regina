@@ -19,6 +19,7 @@
 
 dirs_engine_engine = \
 	engine/algebra \
+	engine/angle \
 	engine/census \
 	engine/file \
 	engine/foreign \
