@@ -15,6 +15,19 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>angle structures</primaryie>
+  <secondaryie><link linkend="angles">definition</link></secondaryie>
+  <secondaryie><link linkend="angles-creation">enumerating vertex
+   angle structures</link></secondaryie>
+  <secondaryie><link linkend="angles-viewstructurecoords">individual
+   angles</link></secondaryie>
+  <secondaryie><link linkend="angles-viewstructureprops">strict,
+   testing</link></secondaryie>
+  <secondaryie><link linkend="angles-viewstructureprops">taut,
+   testing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="options-python">auto-indent</link></primaryie>
  </indexentry>
 
@@ -100,12 +113,27 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="angles-creation">enumerating vertex angle
+   structures</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-creation">enumerating vertex normal
+   surfaces</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="troubleshooting">errors, fixing</link></primaryie>
  </indexentry>
 
  <indexentry>
   <primaryie>examples</primaryie>
   <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
+  <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="featureset">feature set</link></primaryie>
  </indexentry>
 
  <indexentry id="idx-files">
@@ -120,6 +148,7 @@
    file</link></secondaryie>
   <secondaryie><link linkend="man-regfiletype">identifying file
    types</link></secondaryie>
+  <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
   <secondaryie><link linkend="dataformat">specification of file
    format</link></secondaryie>
  </indexentry>
@@ -156,6 +185,8 @@
   <primaryie>normal surfaces</primaryie>
   <secondaryie><link linkend="options-surfaces">configuration of
    default coordinate system</link></secondaryie>
+  <secondaryie><link linkend="surfaces-creation">enumerating vertex
+   normal surfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -232,6 +263,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="angles-viewstructureprops">strict angle
+   structures</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>surfaces, normal</primaryie>
   <seeie>(see normal surfaces)</seeie>
  </indexentry>
@@ -246,6 +282,11 @@
 
  <indexentry>
   <primaryie><link linkend="troubleshooting">troubleshooting</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="angles-viewstructureprops">taut angle
+   structures</link></primaryie>
  </indexentry>
 
  <indexentry id="idx-user-interface">
