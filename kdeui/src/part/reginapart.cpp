@@ -98,7 +98,7 @@ void ReginaPart::setReadWrite(bool rw) {
     for (PacketPane* p = panes.first(); p; p = panes.next())
         p->setReadWrite(rw);
 
-    // TODO: Update r/w status for console actions.
+    // Update status for edit actions.
     updateTreeEditActions();
 
     // Finally call the parent implementation.
