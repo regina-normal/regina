@@ -28,9 +28,11 @@
 
 #include <algorithm>
 #include <sstream>
+#include <vector>
 #include "census/nfacepairing.h"
 #include "triangulation/npermit.h"
 #include "utilities/memutils.h"
+#include "utilities/stringutils.h"
 
 namespace regina {
 
@@ -63,6 +65,76 @@ std::string NFacePairing::toString() const {
         ans << dest(f).tet << ':' << dest(f).face;
     }
     return ans.str();
+}
+
+std::string NFacePairing::toTextRep() const {
+    std::ostringstream ans;
+
+    for (NTetFace f(0, 0); ! f.isPastEnd(nTetrahedra, true); f++) {
+        if (f.tet || f.face)
+            ans << ' ';
+        ans << dest(f).tet << ' ' << dest(f).face;
+    }
+
+    return ans.str();
+}
+
+NFacePairing* NFacePairing::fromTextRep(const std::string& rep) {
+    std::vector<std::string> tokens;
+    unsigned nTokens = basicTokenise(back_inserter(tokens), rep);
+
+    if (nTokens == 0 || nTokens % 8 != 0)
+        return 0;
+
+    long nTet = nTokens / 8;
+    NFacePairing* ans = new NFacePairing(nTet);
+
+    // Read the raw values.
+    // Check the range of each value while we're at it.
+    long val;
+    for (long i = 0; i < nTet * 4; i++) {
+        if (! valueOf(tokens[2 * i], val)) {
+            delete ans;
+            return 0;
+        }
+        if (val < 0 || val > nTet) {
+            delete ans;
+            return 0;
+        }
+        ans->pairs[i].tet = val;
+
+        if (! valueOf(tokens[2 * i + 1], val)) {
+            delete ans;
+            return 0;
+        }
+        if (val < 0 || val >= 4) {
+            delete ans;
+            return 0;
+        }
+        ans->pairs[i].face = val;
+    }
+
+    // Run a sanity check.
+    NTetFace destFace;
+    bool broken = false;
+    for (NTetFace f(0, 0); ! f.isPastEnd(nTet, true); f++) {
+        destFace = ans->dest(f);
+        if (destFace.tet == nTet && destFace.face != 0)
+            broken = true;
+        else if (destFace.tet < nTet && ! (ans->dest(destFace) == f))
+            broken = true;
+        else
+            continue;
+        break;
+    }
+
+    if (broken) {
+        delete ans;
+        return 0;
+    }
+
+    // All is well.
+    return ans;
 }
 
 bool NFacePairing::findAllPairings(unsigned nTetrahedra,

@@ -190,11 +190,75 @@ class NFacePairing : public NThread {
         bool isUnmatched(unsigned tet, unsigned face) const;
 
         /**
+         * Fills the given list with the set of all combinatorial
+         * automorphisms of this face pairing.
+         *
+         * An automorphism is a relabelling of the tetrahedra and/or a
+         * renumbering of the four faces of each tetrahedron resulting
+         * in precisely the same face pairing.
+         *
+         * The automorphisms placed in the given list will be newly
+         * created; it is the responsibility of the caller of this
+         * routine to deallocate them.
+         *
+         * \pre The given list is empty.
+         * \pre This face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre Within any single tetrahedron in this face pairing, the
+         * face partners appear in increasing order for faces 0, 1, 2 and 3.
+         * Partners are ordered first by tetrahedron number and then by
+         * face number within that tetrahedron.  An unmatched face must
+         * appear after all matched faces within any particular tetrahedron.
+         * \pre In this face pairing, each tetrahedron aside from the first
+         * has some face paired with a face in an earlier tetrahedron.
+         *
+         * @param list the list into which the newly created automorphisms
+         * will be placed.
+         */
+        void findAutomorphisms(NFacePairingIsoList& list) const;
+
+        /**
          * Returns a human-readable representation of this face pairing.
+         *
+         * The string returned will contain no newlines.
          *
          * @return a string representation of this pairing.
          */
         std::string toString() const;
+
+        /**
+         * Returns a text-based representation of this face pairing that can be
+         * used to reconstruct the face pairing.  This reconstruction is
+         * done through routine fromTextRep().
+         *
+         * The text produced is not particularly readable; for a
+         * human-readable text representation, see routine toString()
+         * instead.
+         *
+         * The string returned will contain no newlines.
+         *
+         * @return a text-based representation of this face pairing.
+         */
+        std::string toTextRep() const;
+
+        /**
+         * Reconstructs a face pairing from a text-based representation.
+         * This text-based representation must be in the format produced
+         * by routine toTextRep().
+         *
+         * The face pairing returned will be newly constructed; it is the
+         * responsibility of the caller of this routine to deallocate it.
+         *
+         * \pre The face pairing to be reconstructed involves at least
+         * one tetrahedron.
+         *
+         * @param rep a text-based representation of a face pairing, as
+         * produced by routine toTextRep().
+         * @return the corresponding newly constructed face pairing, or
+         * \c null if the given text-based representation was invalid.
+         */
+        static NFacePairing* fromTextRep(const std::string& rep);
 
         /**
          * Internal to findAllPairings().  This routine should never be
@@ -405,6 +469,10 @@ inline bool NFacePairing::noDest(const NTetFace& source) const {
 inline bool NFacePairing::noDest(unsigned tet, unsigned face) const {
     NTetFace& f = pairs[4 * tet + face];
     return (f.tet == (int)tet && f.face == (int)face);
+}
+
+inline void NFacePairing::findAutomorphisms(NFacePairingIsoList& list) const {
+    isCanonical(list);
 }
 
 } // namespace regina
