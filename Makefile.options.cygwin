@@ -1,0 +1,122 @@
+
+# These variables should be edited to reflect the current system.
+
+# Specify here the location of the CORBA naming service to use
+# when the calculation engine is accessed as a CORBA server application.
+
+export ORBInitialHost := localhost
+export ORBInitialPort := 8088
+
+# Specify here the desired locations of files to be built.
+# All directory paths should be relative to this directory.
+#
+# ENGINE_JNI: The complete C++ calculation engine, to be accessed as a
+#         shared library from the Java UI using JNI.
+# ENGINE_CORBA: The complete C++ calculation engine, to be accessed as a
+#         server application using CORBA.
+#
+# JAVA_UI: The jar containing the general Java user interface,
+#         without any specific engine interaction components.
+# JAVA_JNI: The jar containing the Java UI component that interacts with
+#         the calculation engine as an external library using JNI.
+# JAVA_CORBA: The jar containing the Java UI component that interacts with
+#         the calculation engine as an external (and possibly remote)
+#         server application using CORBA.
+#
+# REG_CONF: The jar containing the RegConf configuration utility.
+# DOC_JAR: The complete documentation jar for use with the internal
+#         help browser.
+ 
+export ENGINE_JNI := bin/regina-engine-jni.dll
+export ENGINE_CORBA := bin/regina-engine-corba.exe
+
+export JAVA_UI := bin/regina.jar
+export JAVA_JNI := bin/regina-jni.jar
+export JAVA_CORBA := bin/regina-corba.jar
+
+export REG_CONF := bin/regconf.jar
+export DOC_JAR := bin/regina-docs.jar
+
+# Specify here any compiler or linker flags required to include external
+# headers, libraries or other files.
+# All directory paths should be absolute.
+#
+# JNI_INCLUDES: Flag to include the C++ JNI include files such as jni.h.
+# CORBA_INCLUDES: Flag to include the C++ CORBA include files.
+# EXTRA_INCLUDES: Flag to include any other necessary files.
+#
+# CORBA_LIBRARIES: Flag to link in the C++ CORBA libraries.
+# EXTRA_LIBRARIES: Flag to link in any other libraries that are necessary
+#         for the calculation engine, such as gmp and pthread.
+
+export JNI_INCLUDES := -I/win/jdk1.3/include \
+	-I/win/jdk1.3/include/win32
+export CORBA_INCLUDES := -D__x86__
+export EXTRA_INCLUDES :=
+
+export CORBA_LIBRARIES := -lomniORB3 -lomniGK_alone
+export EXTRA_LIBRARIES := -lgmp -lstdc++
+
+# Specify here the character that separates components on the classpath.
+# This will for instance be : under linux/unix and ; under windows.
+
+export CLASSPATH_SEP := ;
+
+# Specify here components of the Java classpath.
+# All directory paths should be absolute.
+#
+# BTOOLS: Location of btools.jar (containing the BTools utility classes).
+# JPYTHON: Location of jython.jar (containing the Jython classes).
+# JAVAHELP: Location of jh.jar (containing the JavaHelp classes).
+# EXTRA_CLASSES: Locations of any other necessary classes, separated by
+#       the classpath separator as described above.
+
+export BTOOLS := c:\cygwin\usr\local\java\jar\btools.jar
+export JPYTHON := c:\cygwin\usr\local\java\jar\jython.jar
+export JAVAHELP := c:\cygwin\usr\local\java\jar\jh.jar
+export EXTRA_CLASSES :=
+
+# Specify here the commands with options for running various tools.
+#
+# MAKEDEP: Make header dependency files.
+# COMPILE: Compile C++ code into object files.
+# LINKLIB: Compile object files into a shared library.
+# LINKEXEC: Compile object files into an executable.
+# DOXYGEN: Generate documentation from C++ sources using doxygen.
+# JAVAC: Compile Java code into class files.
+# JAR: Operate with Java jar archives.
+# JAVA: Execute a Java class.
+# JDB: Execute a Java class in the debugger.
+# JAVAH: Generate JNI include files from compiled Java code.
+# JAVADOC: Generate documentation from Java sources.
+# IDLTOCPPSERVER: Generate skeleton C++ CORBA server sources from IDL files.
+# IDLTOJAVACLIENT: Generate skeleton Java CORBA client sources from IDL files.
+# ARCHIVE: Build an archive using $(ARCHIVE) <archive file> <files to include>
+# CAT: Write the contents of a file to standard output
+# COPY: Copy one file to another.
+# ECHO: Write the command line arguments to standard output
+# GREP: Search for a pattern in a file
+# SED: Run sed, the stream editor.
+# TOUCH: Create a new empty file with the given name.
+
+export MAKEDEP := g++ -MM
+export COMPILE := g++ -O2 -c -Wall "-D__int64=long long"
+export LINKLIB := dllwrap -static --output-def exports.def --add-stdcall-alias
+export LINKEXEC := g++ -O2
+export DOXYGEN := doxygen
+export JAVAC := javac -target 1.1
+export JAR := jar
+export JAVA := java -Xmx64m
+export JDB := jdb -Xmx64m -Djava.compiler=NONE
+export JAVAH := javah
+export JAVADOC := javadoc -J-Xmx64m
+export IDLTOCPPSERVER := omniidl -bcxx -Wbh=IDL.h -Wbs=SK.cpp
+export IDLTOJAVACLIENT := idlj
+export ARCHIVE := tar --ignore-failed-read -zcf
+export CAT := cat
+export COPY := cp
+export ECHO := echo
+export GREP := grep
+export SED := sed
+export TOUCH := touch
+
