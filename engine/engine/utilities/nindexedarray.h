@@ -37,6 +37,7 @@
 
 #include <vector>
 #include <hash_map>
+#include "utilities/hashutils.h"
 
 /**
  * A dynamically resizable array of objects of type T with fast random
@@ -64,13 +65,14 @@
  * a hash function (with argument type <tt>Data</tt>) according to the
  * Standard Template Library.
  */
-template <class Data, class HashFcn = std::hash<Data>,
+template <class Data, class HashFcn = stdhash::hash<Data>,
     class EqualTo = std::equal_to<Data> >
 class NIndexedArray {
     private:
         typedef std::vector<Data> ObjectArray;
             /**< The type used for the internal array of objects. */
-        typedef std::hash_multimap<Data, typename ObjectArray::difference_type,
+        typedef stdhash::hash_multimap<Data,
+                typename ObjectArray::difference_type,
                 HashFcn, EqualTo> IndexMap;
             /**< The type used for the internal object-to-index dictionary. */
         ObjectArray objects;

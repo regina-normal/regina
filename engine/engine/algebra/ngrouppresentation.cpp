@@ -31,6 +31,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "file/nfile.h"
 #include "maths/numbertheory.h"
+#include "utilities/hashutils.h"
 
 typedef std::list<NGroupExpressionTerm>::iterator TermIterator;
 typedef std::list<NGroupExpressionTerm>::const_iterator TermIteratorConst;
@@ -261,8 +262,8 @@ bool NGroupPresentation::intelligentSimplify() {
 
     // Run through and look for substitutions we can make.
     // This currently isn't magnificently optimised.
-    std::hash_map<unsigned long, long> exponents;
-    std::hash_map<unsigned long, long>::iterator expIt;
+    stdhash::hash_map<unsigned long, long> exponents;
+    stdhash::hash_map<unsigned long, long>::iterator expIt;
     NGroupExpression* expansion;
     bool doMoreSubsts = true;
     while (doMoreSubsts) {

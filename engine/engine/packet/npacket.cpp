@@ -313,7 +313,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
         tree[1] = 0;
     }
 
-    std::hash_set<std::string, HashString> labels;
+    stdhash::hash_set<std::string, HashString> labels;
 
     int whichTree;
     NPacket* p;

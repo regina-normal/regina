@@ -29,8 +29,8 @@
 #include "triangulation/ntriangulation.h"
 
 void NTriangulation::maximalForestInBoundary(
-        std::hash_set<NEdge*, HashPointer>& edgeSet,
-        std::hash_set<NVertex*, HashPointer>& vertexSet) {
+        stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
+        stdhash::hash_set<NVertex*, HashPointer>& vertexSet) {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
@@ -43,8 +43,8 @@ void NTriangulation::maximalForestInBoundary(
 }
 
 void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
-        std::hash_set<NEdge*, HashPointer>& edgeSet,
-        std::hash_set<NVertex*, HashPointer>& vertexSet) {
+        stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
+        stdhash::hash_set<NVertex*, HashPointer>& vertexSet) {
     vertexSet.insert(from);
 
     std::vector<NVertexEmbedding>::const_iterator it =
@@ -75,12 +75,13 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
 }
 
 void NTriangulation::maximalForestInSkeleton(
-        std::hash_set<NEdge*, HashPointer>& edgeSet, bool canJoinBoundaries) {
+        stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
+        bool canJoinBoundaries) {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
-    std::hash_set<NVertex*, HashPointer> vertexSet;
-    std::hash_set<NVertex*, HashPointer> thisBranch;
+    stdhash::hash_set<NVertex*, HashPointer> vertexSet;
+    stdhash::hash_set<NVertex*, HashPointer> thisBranch;
 
     if (canJoinBoundaries)
         edgeSet.clear();
@@ -95,9 +96,9 @@ void NTriangulation::maximalForestInSkeleton(
 }
 
 bool NTriangulation::stretchForestFromVertex(NVertex* from,
-        std::hash_set<NEdge*, HashPointer>& edgeSet,
-        std::hash_set<NVertex*, HashPointer>& vertexSet,
-        std::hash_set<NVertex*, HashPointer>& thisStretch) {
+        stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
+        stdhash::hash_set<NVertex*, HashPointer>& vertexSet,
+        stdhash::hash_set<NVertex*, HashPointer>& thisStretch) {
     // Moves out from the vertex until we hit a vertex that has already
     //     been visited; then stops.
     // Returns true if we make such a link.
@@ -137,12 +138,12 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
 
 bool NTriangulation::crushMaximalForest() {
     // First obtain a maximal forest in the 1-skeleton.
-    std::hash_set<NEdge*, HashPointer> cEdges;
+    stdhash::hash_set<NEdge*, HashPointer> cEdges;
     maximalForestInSkeleton(cEdges, false);
 
     /* --- DEBUGGING OUTPUT ---
     {
-        std::hash_set<NFace*, HashPointer> dual;
+        stdhash::hash_set<NFace*, HashPointer> dual;
         maximalForestInDualSkeleton(dual);
         cerr << "Dual Faces: " << dual.size() << '\n';
         NPointerSetIterator<NFace> it(dual);
@@ -164,7 +165,7 @@ bool NTriangulation::crushMaximalForest() {
     }
     ------------------------*/
 
-    std::hash_set<NTetrahedron*, HashPointer> cTetrahedra;
+    stdhash::hash_set<NTetrahedron*, HashPointer> cTetrahedra;
 
     // Extend this list of collapsings to faces.
     NTetrahedron* tet;
@@ -274,7 +275,7 @@ bool NTriangulation::crushMaximalForest() {
 
     // Remove the squished tetrahedra.
     // For each tetrahedron, remove it and delete it.
-    for (std::hash_set<NTetrahedron*, HashPointer>::iterator tetIt =
+    for (stdhash::hash_set<NTetrahedron*, HashPointer>::iterator tetIt =
             cTetrahedra.begin(); tetIt != cTetrahedra.end(); tetIt++) {
         tetrahedra.erase(*tetIt);
         delete *tetIt;
@@ -298,12 +299,12 @@ bool NTriangulation::crushMaximalForest() {
 }
 
 void NTriangulation::maximalForestInDualSkeleton(
-        std::hash_set<NFace*, HashPointer>& faceSet) {
+        stdhash::hash_set<NFace*, HashPointer>& faceSet) {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
     faceSet.clear();
-    std::hash_set<NTetrahedron*, HashPointer> visited;
+    stdhash::hash_set<NTetrahedron*, HashPointer> visited;
     for (TetrahedronIterator it = tetrahedra.begin(); it != tetrahedra.end();
             it++)
         if (! (visited.count(*it)))
@@ -311,8 +312,8 @@ void NTriangulation::maximalForestInDualSkeleton(
 }
 
 void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
-        std::hash_set<NFace*, HashPointer>& faceSet,
-        std::hash_set<NTetrahedron*, HashPointer>& visited) {
+        stdhash::hash_set<NFace*, HashPointer>& faceSet,
+        stdhash::hash_set<NTetrahedron*, HashPointer>& visited) {
     visited.insert(tet);
 
     NTetrahedron* adjTet;

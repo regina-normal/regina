@@ -39,6 +39,16 @@
 #include <hash_set>
 
 /**
+ * The namespace containing <tt>hash_set</tt>, <tt>hash_map</tt> and
+ * other associated Standard Template Library extension classes.
+ */
+#ifdef __HASH_NAMESPACE
+    namespace stdhash = __HASH_NAMESPACE;
+#else
+    namespace stdhash = std;
+#endif
+
+/**
  * A hash function used to calculate hash values for arbitrary pointers.
  * This class is for use with the Standard Template Library.
  *
@@ -71,7 +81,7 @@ struct HashPointer {
  */
 struct HashString {
     private:
-        static std::hash<const char*> hashFcn;
+        static stdhash::hash<const char*> hashFcn;
             /**< The real hash function used to perform calculations. */
 
     public:

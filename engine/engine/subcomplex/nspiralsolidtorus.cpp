@@ -136,7 +136,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
 
     std::list<NTetrahedron*> tets;
     std::list<NPerm> roles;
-    std::hash_set<NTetrahedron*, HashPointer> usedTets;
+    stdhash::hash_set<NTetrahedron*, HashPointer> usedTets;
 
     tets.push_back(tet);
     roles.push_back(useVertexRoles);

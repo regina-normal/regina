@@ -132,7 +132,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.
-    std::hash_set<NEdge*, HashPointer> usedEdges[2];
+    stdhash::hash_set<NEdge*, HashPointer> usedEdges[2];
         // usedEdges[i] contains the edges for which we have already
         // examined end i.
     NLargeInteger min;

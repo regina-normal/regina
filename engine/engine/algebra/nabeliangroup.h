@@ -311,7 +311,7 @@ inline void NAbelianGroup::addRank(unsigned extraRank) {
 }
 
 inline void NAbelianGroup::addTorsionElement(unsigned long degree,
-        unsigned mult = 1) {
+        unsigned mult) {
     addTorsionElement(NLargeInteger(degree), mult);
 }
 

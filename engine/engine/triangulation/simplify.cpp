@@ -60,7 +60,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     // Find the unwanted tetrahedra.
     NTetrahedron* oldTet[3];
     NPerm oldVertexPerm[3];
-    std::hash_set<NTetrahedron*, HashPointer> oldTets;
+    stdhash::hash_set<NTetrahedron*, HashPointer> oldTets;
     int oldPos = 0;
     for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
             it != embs.end(); it++) {
@@ -279,7 +279,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
 
     // Find the unwanted tetrahedra.
     NTetrahedron* oldTet[4];
-    std::hash_set<NTetrahedron*, HashPointer> oldTets;
+    stdhash::hash_set<NTetrahedron*, HashPointer> oldTets;
     int oldPos = 0;
     for (std::deque<NEdgeEmbedding>::const_iterator it = embs.begin();
             it != embs.end(); it++) {

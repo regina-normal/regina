@@ -886,8 +886,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * vertices of the maximal forest will be placed.
          */
         void maximalForestInBoundary(
-                std::hash_set<NEdge*, HashPointer>& edgeSet,
-                std::hash_set<NVertex*, HashPointer>& vertexSet);
+                stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
+                stdhash::hash_set<NVertex*, HashPointer>& vertexSet);
         /**
          * Produces a maximal forest in the triangulation's 1-skeleton.
          * The given set will be emptied and will have the edges of the
@@ -913,7 +913,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * forest.
          */
         void maximalForestInSkeleton(
-                std::hash_set<NEdge*, HashPointer>& edgeSet,
+                stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
                 bool canJoinBoundaries = true);
         /**
          * Produces a maximal forest in the triangulation's dual
@@ -930,7 +930,7 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * representing the maximal forest will be placed.
          */
         void maximalForestInDualSkeleton(
-                std::hash_set<NFace*, HashPointer>& faceSet);
+                stdhash::hash_set<NFace*, HashPointer>& faceSet);
         /**
          * Attempts to reduce the number of vertices by crushing a
          * maximal forest in the 1-skeleton.
@@ -1592,17 +1592,17 @@ class NTriangulation : public NPacket, NPropertyHolder {
         void calculateSurfaceProperties();
 
         void stretchBoundaryForestFromVertex(NVertex*,
-                std::hash_set<NEdge*, HashPointer>&,
-                std::hash_set<NVertex*, HashPointer>&);
+                stdhash::hash_set<NEdge*, HashPointer>&,
+                stdhash::hash_set<NVertex*, HashPointer>&);
             /**< Internal to maximalForestInBoundary(). */
         bool stretchForestFromVertex(NVertex*,
-                std::hash_set<NEdge*, HashPointer>&,
-                std::hash_set<NVertex*, HashPointer>&,
-                std::hash_set<NVertex*, HashPointer>&);
+                stdhash::hash_set<NEdge*, HashPointer>&,
+                stdhash::hash_set<NVertex*, HashPointer>&,
+                stdhash::hash_set<NVertex*, HashPointer>&);
             /**< Internal to maximalForestInSkeleton(). */
         void stretchDualForestFromTet(NTetrahedron*,
-                std::hash_set<NFace*, HashPointer>&,
-                std::hash_set<NTetrahedron*, HashPointer>&);
+                stdhash::hash_set<NFace*, HashPointer>&,
+                stdhash::hash_set<NTetrahedron*, HashPointer>&);
             /**< Internal to maximalForestInDualSkeleton(). */
 };
 

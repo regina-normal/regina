@@ -207,7 +207,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     // Remove the tetrahedra that meet any of the non-standard or
     // ideal vertices.
     // First we make a list of the tetrahedra.
-    std::hash_set<NTetrahedron*, HashPointer> tetList;
+    stdhash::hash_set<NTetrahedron*, HashPointer> tetList;
     std::vector<NVertexEmbedding>::const_iterator vembit;
     for (VertexIterator vIter = vertices.begin();
             vIter != vertices.end(); vIter++)
