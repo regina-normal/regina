@@ -855,6 +855,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * discs are vertex linking, and if it has no 2-sphere boundary
          * components.
          *
+         * \todo \opturgent Run this test in quad space!
+         *
          * @return \c true if and only if this triangulation is
          * 0-efficient.
          */
