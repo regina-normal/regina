@@ -12,7 +12,7 @@ iconsdir = $(pkgdatadir)/icons
 
 icons_DATA = README.txt \
   regina-lo.xpm \
-  regina.gif regina.ico regina.png regina.xpm \
+  regina.gif regina.png regina.xpm \
   reginalarge.jpg \
   reginatiny-lo.xpm \
   reginatiny.gif reginatiny.ico reginatiny.png reginatiny.xpm
