@@ -902,6 +902,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * simplifyToLocalMinimum(); once a local minimum is reached
          * it will stay there.
          *
+         * \warning The specific behaviour of this routine is
+         * very likely to change between releases.
+         *
          * \todo \opturgent Make this faster and more effective.
          * Include random 4-4 moves and random 2-3 moves to get out of
          * wells.  Unglue faces with three boundary edges and record the
@@ -927,6 +930,9 @@ class NTriangulation : public NPacket, NPropertyHolder {
          * triangulation will \b not be considered a local minimum, even
          * though the book opening move alone will not reduce the number of
          * tetrahedra.
+         *
+         * \warning The specific behaviour of this routine is
+         * very likely to change between releases.
          *
          * \ifacescorba All parameters are compulsory.
          *
