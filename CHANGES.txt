@@ -33,6 +33,8 @@ Version 4.0  [ currently under development ]
             - New lookup routine getNumericState().
         Class NTriBool:
             - Added for representing three-way booleans.
+        Class NVectorMatrix, NVectorUnit:
+            - Modification routines throw exceptions if called.
     USER INTERFACE:
         Class NAngleStructureCreator:
             - Displays progress and allows cancellation.

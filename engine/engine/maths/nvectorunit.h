@@ -46,13 +46,20 @@ namespace regina {
  */
 
 /**
+ * An exception thrown when a unit vector is modified.  See the
+ * NVectorUnit class notes for why this should never happen.
+ */
+class NVectorUnit_Illegal_Modification {
+};
+
+/**
  * A unit vector of type T.  A unit vector has every coordinate
  * set to 0 except for a single coordinate which is 1.
  *
  * A unit vector takes almost no storage space and provides very fast
- * operations.  It should <b>never</b> be modified!  The modification
+ * operations.  It should \e never be modified!  The modification
  * routines (such as <tt>=</tt>, <tt>+=</tt> and so on)
- * do <b>nothing</b>, since a modified
+ * throw exceptions, since a modified
  * unit vector will probably no longer be a unit vector.  It is
  * recommended to declare any unit vector as \c const for a safeguard.
  *
@@ -64,8 +71,6 @@ namespace regina {
  * corresponding coordinate of the other vector.
  *
  * \pre See the preconditions for NVector<T>.
- *
- * \todo \feature Throw an exception if modification routines are called.
  *
  * \ifacespython Not present.
  */
@@ -107,20 +112,26 @@ class NVectorUnit : public NVector<T> {
                 return zero;
         }
         virtual void setElement(unsigned, const T&) {
+            throw NVectorUnit_Illegal_Modification();
         }
 
         virtual void operator = (const NVector<T>&) {
+            throw NVectorUnit_Illegal_Modification();
         }
         virtual void operator += (const NVector<T>&) {
+            throw NVectorUnit_Illegal_Modification();
         }
         virtual void operator -= (const NVector<T>&) {
+            throw NVectorUnit_Illegal_Modification();
         }
         virtual void operator *= (const T&) {
+            throw NVectorUnit_Illegal_Modification();
         }
         virtual T operator * (const NVector<T>& other) const {
             return other[direction];
         }
         virtual void negate() {
+            throw NVectorUnit_Illegal_Modification();
         }
         virtual T norm() const {
             return one;
@@ -129,8 +140,10 @@ class NVectorUnit : public NVector<T> {
             return one;
         }
         virtual void addCopies(const NVector<T>&, const T&) {
+            throw NVectorUnit_Illegal_Modification();
         }
         virtual void subtractCopies(const NVector<T>&, const T&) {
+            throw NVectorUnit_Illegal_Modification();
         }
 };
 

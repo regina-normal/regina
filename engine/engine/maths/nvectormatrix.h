@@ -47,11 +47,18 @@ namespace regina {
  */
 
 /**
+ * An exception thrown when a matrix row or column vector is modified.
+ * See the NVectorMatrix class notes for why this should never happen.
+ */
+class NVectorMatrix_Illegal_Modification {
+};
+
+/**
  * A vector that corresponds to a row or column of a matrix.
  * Such a vector takes up essentially no storage space, since it merely looks
  * up values in the matrix it references.  Because of this, it should
- * <b>never</b> be modified!  The modification routines (such as
- * <tt>=</tt>, <tt>+=</tt> and so on) do <b>nothing</b>.
+ * \e never be modified!  The modification routines (such as
+ * <tt>=</tt>, <tt>+=</tt> and so on) throw an exception when called.
  * It is recommended to declare any matrix vector as \c const for
  * a safeguard.
  *
@@ -63,8 +70,6 @@ namespace regina {
  * return a new NVectorDense instead of a new NVectorMatrix.
  *
  * \pre See the preconditions for NVector<T>.
- *
- * \todo \feature Throw an exception if modification routines are called.
  *
  * \ifacespython Not present.
  */
@@ -98,20 +103,28 @@ class NVectorMatrix : public NVector<T> {
             return new NVectorDense<T>(*this);
         }
         virtual void setElement(unsigned, const T&) {
+            throw NVectorMatrix_Illegal_Modification();
         }
         virtual void operator = (const NVector<T>&) {
+            throw NVectorMatrix_Illegal_Modification();
         }
         virtual void operator += (const NVector<T>&) {
+            throw NVectorMatrix_Illegal_Modification();
         }
         virtual void operator -= (const NVector<T>&) {
+            throw NVectorMatrix_Illegal_Modification();
         }
         virtual void operator *= (const T&) {
+            throw NVectorMatrix_Illegal_Modification();
         }
         virtual void negate() {
+            throw NVectorMatrix_Illegal_Modification();
         }
         virtual void addCopies(const NVector<T>&, const T&) {
+            throw NVectorMatrix_Illegal_Modification();
         }
         virtual void subtractCopies(const NVector<T>&, const T&) {
+            throw NVectorMatrix_Illegal_Modification();
         }
 };
 
