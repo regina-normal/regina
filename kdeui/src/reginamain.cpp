@@ -259,10 +259,13 @@ void ReginaMain::fileOpen() {
 }
 
 void ReginaMain::optionsShowToolbar() {
+    QPtrListIterator<KToolBar> bar = toolBarIterator();
     if (showToolbar->isChecked())
-        toolBar()->show();
+        for ( ; *bar; ++bar)
+            (*bar)->show();
     else
-        toolBar()->hide();
+        for ( ; *bar; ++bar)
+            (*bar)->hide();
 }
 
 void ReginaMain::optionsShowStatusbar() {
@@ -335,7 +338,7 @@ void ReginaMain::setupActions() {
         actionCollection());
 
     // Tools:
-    new KAction(i18n("&Python Console"), "source_py", ALT+Key_Y, this,
+    new KAction(i18n("&Python Console"), "python_console", ALT+Key_Y, this,
         SLOT(pythonConsole()), actionCollection(), "python_console");
 
     // All done!  Build the GUI.
