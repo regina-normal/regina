@@ -1815,10 +1815,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * The three pairs of parameters (<i>a</i>,<i>b</i>) do not need
          * to be normalised, i.e., the parameters can be positive or
          * negative and <i>b</i> may lie outside the range [0..<i>a</i>).
-         * Additional twists should be incorporated into the existing
-         * parameters, i.e., an extra <i>k</i> twists may be added by
-         * changing an (<i>a</i>,<i>b</i>) pair to an
-         * (<i>a</i>,<i>b</i>+<i>ka</i>) pair.  For Seifert fibred
+         * There is no separate twisting parameter; each additional
+         * twist can be incorporated into the existing parameters
+         * by replacing some (<i>a</i>,<i>b</i>) pair with
+         * (<i>a</i>,<i>a</i>+<i>b</i>).  For Seifert fibred
          * spaces with less than three exceptional fibres, some or all
          * of the parameter pairs may be (1,<i>k</i>) or even (1,0).
          *
