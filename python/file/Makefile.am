@@ -10,5 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 
 noinst_LTLIBRARIES = libfile.la
 
-libfile_la_SOURCES = nxmlfile.cpp pyfile.cpp
+libfile_la_SOURCES = nfileinfo.cpp nxmlfile.cpp pyfile.cpp
 

@@ -26,11 +26,32 @@
 
 /* end stub */
 
-void addNFileInfo();
-void addNXMLFile();
+#include "file/nfileinfo.h"
+#include <boost/python.hpp>
 
-void addFile() {
-    addNFileInfo();
-    addNXMLFile();
+using namespace boost::python;
+using regina::NFileInfo;
+
+void addNFileInfo() {
+    scope s = class_<NFileInfo, boost::noncopyable,
+            bases<regina::ShareableObject> > ("NFileInfo", no_init)
+        .def("getPathname", &NFileInfo::getPathname,
+            return_value_policy<return_by_value>())
+        .def("getType", &NFileInfo::getType)
+        .def("getTypeDescription", &NFileInfo::getTypeDescription,
+            return_value_policy<return_by_value>())
+        .def("getEngine", &NFileInfo::getEngine,
+            return_value_policy<return_by_value>())
+        .def("isCompressed", &NFileInfo::isCompressed)
+        .def("isInvalid", &NFileInfo::isInvalid)
+        .def("NFileInfo_identify", &NFileInfo::identify,
+            return_value_policy<manage_new_object>())
+        .staticmethod("NFileInfo_identify")
+    ;
+
+    // Apparently there is no way in python to make a module attribute
+    // read-only.
+    s.attr("TYPE_BINARY") = NFileInfo::TYPE_BINARY;
+    s.attr("TYPE_XML") = NFileInfo::TYPE_XML;
 }
 
