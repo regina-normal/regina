@@ -36,7 +36,8 @@
 namespace QtCompat {
 
     /**
-     * Taken from Qt 3.2.3 with minor modifiations.
+     * Taken from Qt 3.2.3 with some modifiations, and licensed under
+     * the GPL accordingly.
      */
     void adjustColumn(QListView* view, int col) {
         QHeader* hdr = view->header();
