@@ -2,11 +2,11 @@
 <!-- Regina normal surface documentation.
      See regina.sgml for further details. -->
 
-<chapter id="surfaces">
- <title>Working with Normal Surfaces (INCOMPLETE)</title>
+<chapter id="angles">
+ <title>Working with Angle Structures (INCOMPLETE)</title>
 
  <para>
-  Documentation for normal surface analysis is still to be written.
+  Documentation for angle structure analysis is still to be written.
  </para>
 
  <para>

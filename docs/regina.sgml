@@ -68,6 +68,7 @@
  <!ENTITY reginapacket SYSTEM "packet.sgml">
  <!ENTITY reginatriangulations SYSTEM "triangulations.sgml">
  <!ENTITY reginasurfaces SYSTEM "surfaces.sgml">
+ <!ENTITY reginaangles SYSTEM "angles.sgml">
  <!ENTITY reginajython SYSTEM "jython.sgml">
  <!ENTITY reginaoptions SYSTEM "options.sgml">
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
@@ -204,6 +205,8 @@
  &reginatriangulations;
 
  &reginasurfaces;
+
+ &reginaangles;
 
  &reginajython;
 
