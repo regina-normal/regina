@@ -1,0 +1,173 @@
+#!/usr/bin/perl -w
+#
+# Regina - A Normal Surface Theory Calculator
+# Manage a triangulation census distributed amongst several machines
+#
+# Copyright (c) 2002, Ben Burton
+# For further details contact Ben Burton (benb@acm.org).
+#
+# Usage: tricensus-manager [ <tricensus-options> ] <pairs-file-prefix>
+#
+# See the manpage or reference manual for full usage instructions.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+
+use Fcntl ':flock';
+use strict;
+
+sub usage {
+    print STDERR "Usage: $0 [ <tricensus-options> ] <pairs-file-prefix>\n";
+    exit(1);
+}
+
+# --- Parse the command-line options. ---
+
+if (! @ARGV) {
+    usage;
+}
+
+my $prefix = pop @ARGV;
+my @tricensusArgs = @ARGV;
+
+if ($prefix =~ /^-/) {
+    print STDERR "Invalid pairs file prefix: $prefix\n";
+    usage;
+}
+
+foreach my $arg (@tricensusArgs) {
+    if ((($arg !~ /^-/) and ($arg !~ /^\d+$/)) or ($arg =~ /\'/)) {
+        print STDERR "Invalid tricensus argument: $arg\n";
+        usage;
+    }
+}
+
+# --- Find the full list of pairs files to work on. ---
+
+if (($prefix =~ /\*/) or ($prefix =~ /\?/)) {
+    print STDERR "The pairs file prefix [$prefix] " .
+        "should not contain wildcards.\n";
+    usage;
+}
+
+my @pairsFiles = <$prefix*.pairs>;
+if (! @pairsFiles) {
+    print STDERR "No pairs files could be found beginning with $prefix.\n";
+    usage;
+}
+
+# --- Establish which real tricensus to run. ---
+
+chomp (my $tricensusDir = `dirname "$0"`);
+my $tricensus = $tricensusDir . '/tricensus';
+if (! -e $tricensus) {
+    print STDERR "Cannot find tricensus utility [$tricensus].\n";
+    exit(1);
+}
+
+# --- Work through the files one by one. ---
+
+my $base;
+my $time;
+my $progress;
+my $output;
+
+my $command;
+my @commandArgs;
+my $errMsg;
+
+my @startTimes;
+my @endTimes;
+my $userTime;
+my $sysTime;
+
+# Switch on autoflush for stdout.
+$| = 1;
+
+# Establish our machine name.
+my $hostname;
+$hostname = `hostname` or $hostname = 'unknown';
+chomp $hostname;
+
+my $retVal = 0;
+foreach my $pairs (@pairsFiles) {
+    print "Trying $pairs ... ";
+
+    $base = $pairs;
+    $base =~ s/\.pairs$//;
+    $time = $base . '.time';
+    $progress = $base . '.progress';
+    $output = $base . '.rga';
+
+    if (-e $time) {
+        print "skipped.\n";
+        next;
+    }
+
+    if (! (open(TAKEN, '>>', $time) and flock(TAKEN, LOCK_EX | LOCK_NB))) {
+        close TAKEN;
+        print "skipped.\n";
+        next;
+    }
+
+    # Take this pairs file!
+    print 'taken and processing ... ';
+
+    # Make a note of who's taken the process.
+    print TAKEN "Taken by " . $hostname . ", PID " . $$ . ".\n";
+
+    # Prepare the command-line.
+    @commandArgs = @tricensusArgs;
+    push @commandArgs, $output;
+    $command = "'$tricensus' -P '" . join("' '", @commandArgs) .
+        "' < '$pairs' > '$progress'";
+
+    # Execute this piece of the census!
+    $errMsg = '';
+
+    print TAKEN "Started at " . localtime() . ".\n";
+    @startTimes = times;
+
+    if (system($command) != 0) {
+        $errMsg = "ERROR: Command failed: $command\n";
+    } else {
+        @endTimes = times;
+        $userTime = $endTimes[2] - $startTimes[2];
+        $sysTime = $endTimes[3] - $endTimes[3];
+
+        print TAKEN "Completed at " . localtime() . ".\n";
+        print TAKEN "User time (s): $userTime\n";
+        print TAKEN "System time (s): $sysTime\n";
+    }
+
+    # Did we have troubles with the child process?
+    if ($errMsg) {
+        print "error.\n";
+        print STDERR $errMsg;
+        print TAKEN $errMsg;
+        $retVal = 1;
+    }
+
+    # Tidy up.
+    print "done.\n" unless $errMsg;
+    flock(TAKEN, LOCK_UN);
+    close TAKEN;
+}
+
+# --- Return whether or not we encountered any problems. ---
+
+exit($retVal);
+

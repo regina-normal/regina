@@ -89,6 +89,8 @@ Version 3.1  [ 12 October, 2002 ]
         tricensus:
             - Completely redesigned interface (now command-line based).
             - Supports splitting a census into pieces.
+        tricensus-manager:
+            - New utility for distributing a census amongst several machines.
 
 Version 3.0  [ 28 June, 2002 ] - The "XML, about bloody time" release.
     OVERALL:
