@@ -120,23 +120,21 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     for (i=0; i<32*numOldTet; i++)
         newTet[i] = new NTetrahedron();
 
-    int tip[numOldTet][4];
-    int interior[numOldTet][4];
-    int edge[numOldTet][4][4];
-    int vertex[numOldTet][4][4];
+    int tip[4];
+    int interior[4];
+    int edge[4][4];
+    int vertex[4][4];
 
-    l = 0;
-    for (i=0; i<numOldTet; i++) {
-        for (j=0; j<4; j++) {
-            tip[i][j] = l++;
-            interior[i][j] = l++;
+    int nDiv = 0;
+    for (j=0; j<4; j++) {
+        tip[j] = nDiv++;
+        interior[j] = nDiv++;
 
-            for (k=0; k<4; k++)
-                if (j != k) {
-                    edge[i][j][k] = l++;
-                    vertex[i][j][k] = l++;
-                }
-        }
+        for (k=0; k<4; k++)
+            if (j != k) {
+                edge[j][k] = nDiv++;
+                vertex[j][k] = nDiv++;
+            }
     }
 
     // First glue all of the tetrahedra inside the same
@@ -144,14 +142,15 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     for (i=0; i<numOldTet; i++) {
         // Glue the tip tetrahedra to the others.
         for (j=0; j<4; j++)
-            newTet[tip[i][j]]->joinTo(j, newTet[interior[i][j]], NPerm());
+            newTet[tip[j] + i * nDiv]->joinTo(j,
+                newTet[interior[j] + i * nDiv], NPerm());
 
         // Glue the interior tetrahedra to the others.
         for (j=0; j<4; j++) {
             for (k=0; k<4; k++)
                 if (j != k) {
-                    newTet[interior[i][j]]->joinTo(k,
-                        newTet[vertex[i][k][j]], NPerm());
+                    newTet[interior[j] + i * nDiv]->joinTo(k,
+                        newTet[vertex[k][j] + i * nDiv], NPerm());
                 }
         }
 
@@ -159,13 +158,13 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
         for (j=0; j<4; j++)
             for (k=0; k<4; k++)
                 if (j != k) {
-                    newTet[edge[i][j][k]]->joinTo(j,
-                        newTet[edge[i][k][j]], NPerm(j,k));
+                    newTet[edge[j][k] + i * nDiv]->joinTo(j,
+                        newTet[edge[k][j] + i * nDiv], NPerm(j,k));
 
                     for (l=0; l<4; l++)
                         if ( (l != j) && (l != k) )
-                            newTet[edge[i][j][k]]->joinTo(l,
-                                newTet[vertex[i][j][l]], NPerm(k,l));
+                            newTet[edge[j][k] + i * nDiv]->joinTo(l,
+                                newTet[vertex[j][l] + i * nDiv], NPerm(k,l));
                 }
     }
 
@@ -183,20 +182,20 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
                  // First deal with the tip tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
-                          newTet[tip[i][k]]->joinTo(j,
-                              newTet[tip[oppTet][p[k]]], p);
+                          newTet[tip[k] + i * nDiv]->joinTo(j,
+                              newTet[tip[p[k]] + oppTet * nDiv], p);
 
                  // Next the edge tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
-                         newTet[edge[i][j][k]]->joinTo(k,
-                             newTet[edge[oppTet][p[j]][p[k]]], p);
+                         newTet[edge[j][k] + i * nDiv]->joinTo(k,
+                             newTet[edge[p[j]][p[k]] + oppTet * nDiv], p);
 
                  // Finally, the vertex tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
-                         newTet[vertex[i][j][k]]->joinTo(k,
-                             newTet[vertex[oppTet][p[j]][p[k]]], p);
+                         newTet[vertex[j][k] + i * nDiv]->joinTo(k,
+                             newTet[vertex[p[j]][p[k]] + oppTet * nDiv], p);
 
             }
     }
