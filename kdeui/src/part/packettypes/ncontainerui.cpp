@@ -75,7 +75,7 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     layout->addWidget(descendants, 1, 2, Qt::AlignRight);
 
-    interface->setStretchFactor(new QWidget(interface), 2);
+    interface->setStretchFactor(new QWidget(interface), 1);
 
     refresh();
 
