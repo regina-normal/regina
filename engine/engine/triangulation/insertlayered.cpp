@@ -174,7 +174,7 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
     for (i = 0; i < 3; i++) {
         if (i == 0) axis = a1; else if (i == 1) axis = a2; else axis = a3;
         if (i == 0) major = b1; else if (i == 1) major = b2; else major = b3;
-        minor = -(a1 + a2);
+        minor = -(axis + major);
 
         absAxis = (axis < 0 ? -axis : axis);
         absMajor = (major < 0 ? -major : major);
