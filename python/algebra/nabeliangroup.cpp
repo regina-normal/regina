@@ -105,6 +105,8 @@ void addNAbelianGroup() {
             &NAbelianGroup::getNumberOfInvariantFactors)
         .def("getInvariantFactor", &NAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
+        .def("isTrivial", &NAbelianGroup::isTrivial)
+        .def(self == self)
     ;
 }
 

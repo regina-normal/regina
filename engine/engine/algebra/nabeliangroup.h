@@ -72,7 +72,7 @@ class NAbelianGroup : public ShareableObject {
         std::multiset<NLargeInteger> invariantFactors;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
              *   described in the NAbelianGroup notes. */
-    
+
     public:
         /**
          * Creates a new trivial group.
@@ -88,7 +88,7 @@ class NAbelianGroup : public ShareableObject {
          * Destroys the group.
          */
         virtual ~NAbelianGroup();
-        
+
         /**
          * Increments the rank of the group by the given non-negative
          * integer.
@@ -240,6 +240,21 @@ class NAbelianGroup : public ShareableObject {
         const NLargeInteger& getInvariantFactor(unsigned long index) const;
 
         /**
+         * Determines whether this is the trivial (zero) group.
+         *
+         * @return \c true if and only if this is the trivial group.
+         */
+        bool isTrivial() const;
+        /**
+         * Determines whether this and the given abelian group are
+         * isomorphic.
+         *
+         * @param other the group with which this should be compared.
+         * @return \c true if and only if the two groups are isomorphic.
+         */
+        bool operator == (const NAbelianGroup& other) const;
+
+        /**
          * Writes a chunk of XML containing this abelian group.
          *
          * \ifacespython Not present.
@@ -342,6 +357,14 @@ inline unsigned NAbelianGroup::getTorsionRank(unsigned long degree) const {
 
 inline unsigned long NAbelianGroup::getNumberOfInvariantFactors() const {
     return invariantFactors.size();
+}
+
+inline bool NAbelianGroup::isTrivial() const {
+    return (rank == 0 && invariantFactors.empty());
+}
+
+inline bool NAbelianGroup::operator == (const NAbelianGroup& other) const {
+    return (rank == other.rank && invariantFactors == other.invariantFactors);
 }
 
 } // namespace regina
