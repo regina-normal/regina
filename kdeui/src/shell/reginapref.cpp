@@ -455,7 +455,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
 
     QPushButton* btnAdd = new QPushButton(SmallIconSet("insert_table_row"),
         i18n("Add..."), vBox);
-    btnAdd->setFlat(true);
+    // btnAdd->setFlat(true);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
     QWhatsThis::add(btnAdd, i18n("Add a new census file.  "
         "This list contains the census files that are searched when asked "
@@ -463,7 +463,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
 
     btnRemove = new QPushButton(SmallIconSet("delete_table_row"),
         i18n("Remove"), vBox);
-    btnRemove->setFlat(true);
+    // btnRemove->setFlat(true);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
     QWhatsThis::add(btnRemove, i18n("Remove the selected census file(s).  "
         "This list contains the census files that are searched when asked "
@@ -471,7 +471,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
 
     btnActivate = new QPushButton(SmallIconSet("ok"),
         i18n("Activate"), vBox);
-    btnActivate->setFlat(true);
+    // btnActivate->setFlat(true);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
     QWhatsThis::add(btnActivate, i18n("Activate the selected census "
         "file(s).  When asked to locate an arbitrary triangulation in all "
@@ -480,7 +480,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
 
     btnDeactivate = new QPushButton(SmallIconSet("no"),
         i18n("Deactivate"), vBox);
-    btnDeactivate->setFlat(true);
+    // btnDeactivate->setFlat(true);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
     QWhatsThis::add(btnDeactivate, i18n("Deactivate the selected census "
         "file(s).  When asked to locate an arbitrary triangulation in all "
@@ -490,7 +490,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QVBox(parent) {
     setStretchFactor(new QWidget(vBox), 1);
 
     QPushButton* btnDefaults = new QPushButton(i18n("Defaults"), vBox);
-    btnDefaults->setFlat(true);
+    // btnDefaults->setFlat(true);
     connect(btnDefaults, SIGNAL(clicked()), this, SLOT(restoreDefaults()));
     QWhatsThis::add(btnDefaults, i18n("Restore the default list of "
         "census files."));
@@ -676,7 +676,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
 
     QPushButton* btnAdd = new QPushButton(SmallIconSet("insert_table_row"),
         i18n("Add..."), vBox);
-    btnAdd->setFlat(true);
+    // btnAdd->setFlat(true);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
     QWhatsThis::add(btnAdd, i18n("Add a new Python library.  "
         "This list contains the Python libraries to be loaded at "
@@ -684,7 +684,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
 
     btnRemove = new QPushButton(SmallIconSet("delete_table_row"),
         i18n("Remove"), vBox);
-    btnRemove->setFlat(true);
+    // btnRemove->setFlat(true);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
     QWhatsThis::add(btnRemove, i18n("Remove the selected Python libraries.  "
         "This list contains the Python libraries to be loaded at "
@@ -692,7 +692,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
 
     btnActivate = new QPushButton(SmallIconSet("ok"),
         i18n("Activate"), vBox);
-    btnActivate->setFlat(true);
+    // btnActivate->setFlat(true);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
     QWhatsThis::add(btnActivate, i18n("Activate the selected Python "
         "libraries.  When a new Python session is started, only the active "
@@ -700,7 +700,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QVBox(parent) {
 
     btnDeactivate = new QPushButton(SmallIconSet("no"),
         i18n("Deactivate"), vBox);
-    btnDeactivate->setFlat(true);
+    // btnDeactivate->setFlat(true);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
     QWhatsThis::add(btnDeactivate, i18n("Deactivate the selected Python "
         "libraries.  When a new Python session is started, only the active "

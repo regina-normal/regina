@@ -364,7 +364,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     paramsArea->addWidget(params);
 
     calculate = new QPushButton(SmallIconSet("exec"), i18n("Calculate"), ui);
-    calculate->setFlat(true);
+    // calculate->setFlat(true);
     connect(calculate, SIGNAL(clicked()), this, SLOT(calculateInvariant()));
     paramsArea->addWidget(calculate);
 

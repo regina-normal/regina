@@ -86,23 +86,23 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
 
     QPushButton* btn;
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
-    btn->setFlat(true);
+    // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
     grid->addWidget(btn, 0, 5);
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
-    btn->setFlat(true);
+    // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
     grid->addWidget(btn, 1, 5);
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
-    btn->setFlat(true);
+    // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewFaces()));
     grid->addWidget(btn, 2, 5);
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
-    btn->setFlat(true);
+    // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
     grid->addWidget(btn, 0, 11);
     btn = new QPushButton(SmallIconSet("viewmag"), i18n("View..."), ui);
-    btn->setFlat(true);
+    // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewBoundaryComponents()));
     grid->addWidget(btn, 1, 11);
 

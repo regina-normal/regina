@@ -94,7 +94,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     leftIsoArea->addWidget(isoResult);
 
     isoView = new QPushButton(SmallIconSet("viewmag"), i18n("Details..."), ui);
-    isoView->setFlat(true);
+    // isoView->setFlat(true);
     connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
     wideIsoArea->addWidget(isoView);
     wideIsoArea->addSpacing(5);
