@@ -69,6 +69,30 @@
      </para>
     </answer>
    </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     While working with a &python; object I receive a
+     <exceptionname>TypeError</exceptionname> with the message
+     &quot;bad argument type for built-in operation&quot;.
+     I know the object is valid since I've used it earlier without problems.
+    </para></question>
+    <answer>
+     <para>
+      You may have run into an unusual &boost-python; issue regarding
+      ownership semantics.  If you have been rearranging the packet tree
+      using <function>NPacket.insertChildFirst()</function>,
+      <function>NPacket.insertChildLast()</function> or
+      <function>NPacket.insertChildAfter()</function> then this is
+      particularly likely.
+     </para>
+     <para>
+      See the <link linkend="python-ownership">&python; caveats</link>
+      documentation for a description of this problem and how to
+      work around it.
+     </para>
+    </answer>
+   </qandaentry>
   <!--/qandadiv-->
 
   <!--qandadiv><title>Miscellaneous</title-->

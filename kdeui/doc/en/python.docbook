@@ -101,17 +101,23 @@
     <link linkend="man-regina-python"><command>regina-python</command></link>
     reference).
    </para>
-   <warning><para>
-    Probably the easiest way to crash the program is to bring up
-    a &python; console and do something untoward.  &python; scripting
-    offers very low-level control over the engine, but also comes with the
-    associated dangers.  The general idea is that &python; gives you
-    direct access to the mathematical core of the software and the user
-    interface has no way of knowing what you are tinkering with.  Thus you
-    should tread gently.
-   </para></warning>
   </sect2>
+ </sect1>
 
+ <sect1 id="python-caveats">
+  <title>Caveats</title>
+
+  <para>
+   &python; scripting offers direct access to the mathematical core of the
+   software, and as such requires a little care &ndash; in general
+   the user interface has no way of knowing what you are tinkering with.
+   Probably the easiest way to crash the program is to bring up
+   a &python; console and do something untoward.
+   Thus you should tread gently.
+  </para>
+  <para>
+   The following issues in particular are worth being aware of.
+  </para>
   <sect2 id="python-gui">
    <title>Cooperating with the &gui;</title>
    <para>
@@ -129,6 +135,64 @@
      <guimenuitem>Clone Packet</guimenuitem>
     </menuchoice>); the clone then should be editable.
    </para>
+  </sect2>
+
+  <sect2 id="python-ownership">
+   <title>Ownership Concerns</title>
+
+   <para>
+    A small handful of routines have unusual ownership semantics, in
+    that one or more arguments to these routines transfer ownership of
+    themselves to some other object.  The most prominent examples are the
+    tree insertion routines
+    <function>NPacket.insertChildFirst()</function>,
+    <function>NPacket.insertChildLast()</function> and
+    <function>NPacket.insertChildAfter()</function>.
+   </para>
+   <para>
+    As an example, suppose that <varname>p</varname> is a new
+    packet created within a &python; console.  In this case the console
+    itself owns <varname>p</varname>, and when the console is
+    destroyed <varname>p</varname> will be destroyed along with
+    it.  However, if <varname>p</varname> is inserted as a child
+    of some other packet using <literal>other.insertChildLast(p)</literal>,
+    ownership of <varname>p</varname> is transferred to its new
+    parent <varname>other</varname>.
+   </para>
+   <para>
+    Due to a constraint of &boost-python;, whenever ownership of an
+    object is transferred away from the &python; console, the old
+    reference to that object becomes no longer valid.  In the above example,
+    further attempts to use the object <varname>p</varname> will result
+    in a <exceptionname>TypeError</exceptionname>.  In this case the value of
+    <varname>p</varname> can be easily restored by calling
+    <literal>p = other.getLastTreeChild()</literal>, though now the
+    console treats <varname>p</varname> as a reference to some external
+    object that it has no responsibility for.
+   </para>
+   <para>
+    In practice the only cases in which this causes problems are with
+    the tree insertion routines listed above and one or two others
+    (such as <function>NGroupPresentation.addRelation()</function>).
+    An example of the behaviour described above can be seen in the
+    following extract from a &python; session.
+   </para>
+   <programlisting>
+&gt;&gt;&gt; c = regina.NContainer()
+&gt;&gt;&gt; t = regina.NTriangulation()
+&gt;&gt;&gt; c.insertChildLast(t)
+&gt;&gt;&gt; print c
+Container
+&gt;&gt;&gt; print t
+
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in ?
+TypeError: bad argument type for built-in operation
+&gt;&gt;&gt; t = c.getLastTreeChild()
+&gt;&gt;&gt; print t
+Triangulation with 0 tetrahedra.
+&gt;&gt;&gt;
+</programlisting>
   </sect2>
  </sect1>
 
