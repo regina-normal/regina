@@ -88,7 +88,7 @@ public class JPythonConsole extends ConsolePane {
 	 * Console preprocessing routine.  This will set up the interpreter
 	 * as described in <tt>JPythonUtils.setupInterpreter()</tt>.
 	 *
-	 * @see normal.console.JPythonUtils.setupInterpreter
+	 * @see normal.console.JPythonUtils#setupInterpreter
 	 */
 	protected void preProcess() {
 		// Set up the interpreter.

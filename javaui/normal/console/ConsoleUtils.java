@@ -79,7 +79,8 @@ public class ConsoleUtils {
 	 * fact be the entire program, with no other GUI present.
 	 * @return the created Jython console frame.
 	 *
-	 * @see normal.console.JPythonConsoleFrame.startConsole()
+	 * @see normal.console.JPythonConsoleFrame#startConsole()
+	 * @see normal.console.JPythonConsoleFrame#startConsole(java.lang.String)
 	 */
 	public static JPythonConsoleFrame createGraphicalConsole(Shell shell,
 			boolean standalone) {
