@@ -72,25 +72,22 @@ of features</a>.
 
 <h3><a name="screenshots">Screenshots</a></h3>
 
-A few screenshots are available (all from release 2.1.1a, but they still
-give a reasonable image of how the program looks).
+A few screenshots are available, all from release 3.1.
 Click on an image to see a full scale version.
 <p>
-<a href="shots/all.jpg"><img src="shots/all-mini.jpg"
+<a href="shots/misc.jpg"><img src="shots/misc-mini.jpg"
     vspace=5 align=middle border=0
-    alt="Screenshot thumbnail"></a> Illustrates a variety of features
-    including built-in scripting
+    alt="Screenshot thumbnail"></a> Normal surfaces, angle structures,
+    structural analysis and algebraic properties
 <p>
-<a href="shots/tri.jpg"><img src="shots/tri-mini.jpg"
+<a href="shots/skeleton.jpg"><img src="shots/skeleton-mini.jpg"
     vspace=5 align=middle border=0
-    alt="Screenshot thumbnail"></a> Obtaining normal surfaces and
-    other information from a triangulation
+    alt="Screenshot thumbnail"></a> Skeletal information and other
+    triangulation properties
 <p>
-<a href="shots/census.jpg"><img src="shots/census-mini.jpg"
+<a href="shots/scripting.jpg"><img src="shots/scripting-mini.jpg"
     vspace=5 align=middle border=0
-    alt="Screenshot thumbnail"></a> Forming a census
-<p>
-Thanks to Murray Keir for the gorgeous sunset in the background.
+    alt="Screenshot thumbnail"></a> In-built Jython scripting
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
@@ -124,10 +121,16 @@ page</a>.  Regina needs several other pieces of software installed before it wil
             <tt><b>regina-<i>version</i>_bin_i686-cygwin.tgz</b></tt>.
         </ul>
 
-        <li>Unpack the archive from your root directory.  The
-        individual files will be installed beneath
-        <tt><b>/usr/local/</b></tt> (this prefix is already prepended to
-        each file in the binary archive).
+        <li>Unpack this archive in your root directory:
+        <ul>
+            <li><tt>cd /</tt></li>
+            <li><tt>tar -zxf path/to/regina-<i>version</i>_bin_<i>machine</i>.tgz</tt></li>
+        </ul>
+        where <tt>path/to</tt> is changed to reflect where you saved the
+        archive and <tt><i>version</i></tt> and <tt><i>machine</i></tt>
+        are changed to reflect the name of the archive.
+        The individual files will be installed beneath
+        <tt><b>/usr/local/</b></tt>.
 
         <li>Instructions for running Regina can be found in
         <tt><b>/usr/local/share/regina/README.txt</b></tt>.
