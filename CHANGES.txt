@@ -9,7 +9,6 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.1.2  [ 14 June, 2004 ]
     OVERALL:
-        - Added a suggested way of citing Regina.
         - Updated configure scripts so that the python interface builds
           out of the box on a larger number of platforms (specifically Red Hat
           and Fedora Core are now supported).  Many thanks to Craig Macintyre
@@ -17,11 +16,12 @@ Version 4.1.2  [ 14 June, 2004 ]
         - More updates to the troubleshooting section; overhauled the
           README.txt and website to hopefully make everything clearer
           and the important information easier to find.
+        - Added a suggested form for citing Regina.
         - Updated INSTALL.txt to reflect current --prefix guessing.
     ENGINE:
         Class NTriangulation:
-            - New routine simplifyFundamentalGroup() to all external
-              bodies (such as GAP) to simplify group presentations.
+            - Added simplifiedFundamentalGroup() to allow external bodies
+              such as GAP to simplify group presentations.
     USER INTERFACE:
         - Allow users to simplify fundamental groups using GAP.
         - Added "Education" to the categories for the desktop file, since

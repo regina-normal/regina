@@ -8,11 +8,22 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.1.2  [ 13 June, 2004 ]
+Version 4.1.2  [ 14 June, 2004 ]
 
+    Features:
+        - Allows fundamental groups to be further simplified using GAP
+          (Groups, Algorithms and Programming).
+    Documentation:
+        - Expansion of the troubleshooting section, especially with
+          regard to building Regina from source.
+        - Overhauled the website and README.txt for greater clarity.
+        - Included a suggested form for citing Regina.
     Bug Fixes:
         - Better support out of the box for more platforms, specifically
-          including Red Hat and Fedora Core.
+          including Red Hat and Fedora Core (many thanks to Craig
+          Macintyre for his patience and assistance with this).
+        - Fixed compile error when building against an STL-enabled Qt.
+        - More KDE 3.2 compatibility updates.
 
 Version 4.1.1  [ 24 April, 2004 ]
 
