@@ -60,6 +60,9 @@ class GAPRunner : public KDialogBase {
          * The running GAP process:
          */
         KProcIO* proc;
+        QString partialLine;
+        QString nextInput;
+        int stage;
         bool cancelled;
 
         /**
@@ -97,6 +100,12 @@ class GAPRunner : public KDialogBase {
 
     private:
         /**
+         * Handle I/O to and from GAP.
+         */
+        void processPrompt();
+        void processOutput(const QString& line);
+
+        /**
          * Display an error to the user and cancel the operation.
          */
         void error(const QString& msg);
@@ -105,7 +114,8 @@ class GAPRunner : public KDialogBase {
         /**
          * Process notifications.
          */
-        void procExited();
+        void readReady();
+        void processExited();
 };
 
 inline std::auto_ptr<regina::NGroupPresentation> GAPRunner::simplifiedGroup() {
