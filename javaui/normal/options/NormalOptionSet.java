@@ -106,7 +106,7 @@ public class NormalOptionSet extends OptionSet {
     /**
      * A particular cached option.
      */
-    private Vector jythonLibraries = new Vector();
+    private Vector jythonLibraries;
 
     /**
      * Creates a new option set not associated with any file.
@@ -144,6 +144,13 @@ public class NormalOptionSet extends OptionSet {
             throws IOException {
         super(optionFile, normalComment, forceLoad);
     }
+
+    /**
+     * Extra initialisation to perform before the options are read from file.
+     */
+    protected void init() {
+        jythonLibraries = new Vector();
+    }
     
     /**
      * Attempt to read this option set from file.
@@ -160,7 +167,6 @@ public class NormalOptionSet extends OptionSet {
         autoDock = getBooleanOption(optionAutoDock, defaultAutoDock);
         displayIcon = getBooleanOption(optionDisplayIcon, defaultDisplayIcon);
 
-        jythonLibraries = new Vector();
         int nLibs = getIntOption(optionJythonLibCount, 0);
         for (int i = 0; i < nLibs; i++)
             jythonLibraries.addElement(new JythonLibrary(
