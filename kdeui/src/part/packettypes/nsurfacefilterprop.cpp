@@ -66,8 +66,8 @@ namespace {
 }
 
 NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
-        PacketPane* enclosingPane, bool readWrite) : PacketUI(enclosingPane),
-        filter(packet), allowReadWrite(readWrite) {
+        PacketPane* enclosingPane) : PacketUI(enclosingPane),
+        filter(packet), allowReadWrite(enclosingPane->isReadWrite()) {
     ui = new QWidget();
     QWhatsThis::add(ui, i18n("Specify on this page which properties "
         "a normal surface must satisfy in order to be displayed by this "

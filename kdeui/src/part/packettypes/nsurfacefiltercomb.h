@@ -73,7 +73,7 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
          * Constructor and destructor.
          */
         NSurfaceFilterCombUI(regina::NSurfaceFilterCombination* packet,
-                PacketPane* newEnclosingPane, bool readWrite);
+                PacketPane* newEnclosingPane);
         ~NSurfaceFilterCombUI();
 
         /**

@@ -45,13 +45,15 @@ using regina::NPacket;
 using regina::NText;
 
 NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
-        KTextEditor::Document* doc, bool readWrite) :
+        KTextEditor::Document* doc) :
         PacketUI(enclosingPane), text(packet), document(doc) {
     // Create a view (which must be parented) before we do anything else.
     // Otherwise the Vim component crashes.
     view = document->createView(enclosingPane);
+    if (strcmp(document->className(), "Vim::Document") == 0)
+        enclosingPane->setDirtinessBroken();
 
-    document->setReadWrite(readWrite);
+    document->setReadWrite(enclosingPane->isReadWrite());
     KTextEditor::wordWrapInterface(document)->setWordWrap(true);
 
     editInterface = KTextEditor::editInterface(document);

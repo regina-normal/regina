@@ -51,8 +51,9 @@ using regina::NPacket;
 using regina::NSurfaceFilterCombination;
 
 NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
-        PacketPane* enclosingPane, bool readWrite) : PacketUI(enclosingPane),
-        filter(packet) {
+        PacketPane* enclosingPane) : PacketUI(enclosingPane), filter(packet) {
+    bool readWrite = enclosingPane->isReadWrite();
+
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 

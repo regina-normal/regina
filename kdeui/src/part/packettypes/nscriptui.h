@@ -84,7 +84,7 @@ class NScriptUI : public QObject, public PacketUI {
          * Constructor and destructor.
          */
         NScriptUI(regina::NScript* packet, PacketPane* newEnclosingPane,
-                KTextEditor::Document* doc, bool readWrite);
+                KTextEditor::Document* doc);
         ~NScriptUI();
 
         /**

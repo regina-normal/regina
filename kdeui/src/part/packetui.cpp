@@ -121,9 +121,40 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent, const char* name) : QVBox(parent, name),
-        part(newPart), frame(0), dirty(false), readWrite(false),
+        part(newPart), frame(0), dirty(false), dirtinessBroken(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
         extCut(0), extCopy(0), extPaste(0), extUndo(0), extRedo(0) {
+    // Should we allow both read and write?
+    readWrite = part->isReadWrite() && newPacket->isPacketEditable();
+
+    // Create the actions first, since PacketManager::createUI()
+    // might want to modify them.
+    actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0 /* shortcut */,
+        this, SLOT(commit()), (KActionCollection*)0, "packet_editor_commit");
+    actCommit->setEnabled(false);
+    actCommit->setToolTip(i18n("Commit changes to this packet"));
+    actCommit->setWhatsThis(i18n("Commit any changes you have made inside "
+        "this packet viewer.  Changes you make will have no effect elsewhere "
+        "until they are committed."));
+    actRefresh = new KAction(i18n("&Refresh"), "reload", 0 /* shortcut */,
+        this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
+    actRefresh->setToolTip(i18n("Discard any changes and refresh this "
+        "packet viewer"));
+    actRefresh->setWhatsThis(i18n("Refresh this viewer to show the most "
+        "recent state of the packet.  Any changes you mave made inside this "
+        "viewer that have not been committed will be discarded."));
+    actDockUndock = new KAction(i18n("Un&dock"), "attach", 0,
+        this, SLOT(floatPane()), (KActionCollection*)0, "packet_editor_dock");
+    actDockUndock->setToolTip(i18n("Dock / undock this packet viewer"));
+    actDockUndock->setWhatsThis(i18n("Dock or undock this packet viewer.  "
+        "A docked viewer sits within the main window, to the right of "
+        "the packet tree.  An undocked viewer floats in its own window."));
+    actClose = new KAction(i18n("&Close"), "fileclose", 0,
+        this, SLOT(close()), (KActionCollection*)0, "packet_editor_close");
+    actClose->setToolTip(i18n("Close this packet viewer"));
+    actClose->setWhatsThis(i18n("Close this packet viewer.  Any changes "
+        "that have not been committed will be discarded."));
+
     // Set up the header and dock/undock button.
     QHBox* headerBox = new QHBox(this);
 
@@ -152,32 +183,6 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     setStretchFactor(mainUIWidget, 1);
 
     // Set up the footer buttons and other actions.
-    actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0 /* shortcut */,
-        this, SLOT(commit()), (KActionCollection*)0, "packet_editor_commit");
-    actCommit->setEnabled(false);
-    actCommit->setToolTip(i18n("Commit changes to this packet"));
-    actCommit->setWhatsThis(i18n("Commit any changes you have made inside "
-        "this packet viewer.  Changes you make will have no effect elsewhere "
-        "until they are committed."));
-    actRefresh = new KAction(i18n("&Refresh"), "reload", 0 /* shortcut */,
-        this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
-    actRefresh->setToolTip(i18n("Discard any changes and refresh this "
-        "packet viewer"));
-    actRefresh->setWhatsThis(i18n("Refresh this viewer to show the most "
-        "recent state of the packet.  Any changes you mave made inside this "
-        "viewer that have not been committed will be discarded."));
-    actDockUndock = new KAction(i18n("Un&dock"), "attach", 0,
-        this, SLOT(floatPane()), (KActionCollection*)0, "packet_editor_dock");
-    actDockUndock->setToolTip(i18n("Dock / undock this packet viewer"));
-    actDockUndock->setWhatsThis(i18n("Dock or undock this packet viewer.  "
-        "A docked viewer sits within the main window, to the right of "
-        "the packet tree.  An undocked viewer floats in its own window."));
-    actClose = new KAction(i18n("&Close"), "fileclose", 0,
-        this, SLOT(close()), (KActionCollection*)0, "packet_editor_close");
-    actClose->setToolTip(i18n("Close this packet viewer"));
-    actClose->setWhatsThis(i18n("Close this packet viewer.  Any changes "
-        "that have not been committed will be discarded."));
-
     KToolBar* footer = new KToolBar(this, "packetEditorBar", false, false);
     footer->setFullSize(true);
     footer->setIconText(KToolBar::IconTextRight);
@@ -237,7 +242,7 @@ PacketPane::~PacketPane() {
 }
 
 void PacketPane::setDirty(bool newDirty) {
-    if (dirty == newDirty)
+    if (dirtinessBroken || dirty == newDirty)
         return;
 
     dirty = newDirty;
@@ -245,6 +250,15 @@ void PacketPane::setDirty(bool newDirty) {
     actCommit->setEnabled(dirty);
     actRefresh->setText(dirty ? i18n("&Discard") : i18n("&Refresh"));
     actRefresh->setIcon(dirty ? "button_cancel" : "reload");
+}
+
+void PacketPane::setDirtinessBroken() {
+    dirtinessBroken = true;
+    dirty = readWrite;
+
+    actCommit->setEnabled(dirty);
+    actRefresh->setText(dirty ? i18n("&Discard / Refresh") : i18n("&Refresh"));
+    actRefresh->setIcon("reload");
 }
 
 bool PacketPane::setReadWrite(bool allowReadWrite) {
@@ -261,6 +275,11 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
     mainUI->setReadWrite(allowReadWrite);
     updateClipboardActions();
     updateUndoActions();
+    if (dirtinessBroken) {
+        // Update the UI according to the new value of readWrite.
+        setDirtinessBroken();
+    }
+
     emit readWriteStatusChanged(readWrite);
 
     return true;
@@ -268,10 +287,14 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 
 bool PacketPane::queryClose() {
     if ((! emergencyClosure) && dirty) {
-        if (KMessageBox::warningContinueCancel(this, i18n(
-                "This packet contains changes that have not yet been "
-                "committed.  Are you sure you wish to close this packet "
-                "now and discard these changes?"),
+        QString msg = (dirtinessBroken ?
+            i18n("This packet might contain changes that have not yet been "
+                 "committed.  Are you sure you wish to close this packet "
+                 "now and discard these changes?") :
+            i18n("This packet contains changes that have not yet been "
+                 "committed.  Are you sure you wish to close this packet "
+                 "now and discard these changes?"));
+        if (KMessageBox::warningContinueCancel(this, msg,
                 mainUI->getPacket()->getPacketLabel().c_str(),
                 KStdGuiItem::close()) == KMessageBox::Cancel)
             return false;
@@ -378,16 +401,23 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
 
     header->refresh();
 
-    if (dirty)
-        if (KMessageBox::warningYesNo(this, i18n(
-                "This packet has been changed from within a script or "
-                "another interface.  However, this interface contains "
-                "changes that have not yet been committed.  Do you wish "
-                "to refresh this interface to reflect the changes "
-                "that have been made elsewhere?"),
+    if (dirty) {
+        QString msg = (dirtinessBroken ?
+            i18n("This packet has been changed from within a script or "
+                 "another interface.  However, this interface might contain "
+                 "changes that have not yet been committed.  Do you wish "
+                 "to refresh this interface to reflect the changes "
+                 "that have been made elsewhere?") :
+            i18n("This packet has been changed from within a script or "
+                 "another interface.  However, this interface contains "
+                 "changes that have not yet been committed.  Do you wish "
+                 "to refresh this interface to reflect the changes "
+                 "that have been made elsewhere?"));
+        if (KMessageBox::warningYesNo(this, msg,
                 mainUI->getPacket()->getPacketLabel().c_str()) ==
                 KMessageBox::No)
             return;
+    }
 
     mainUI->refresh();
     setDirty(false); // Just in case somebody forgot.
@@ -404,13 +434,19 @@ void PacketPane::packetToBeDestroyed(regina::NPacket*) {
 void PacketPane::refresh() {
     header->refresh();
 
-    if ((! emergencyRefresh) && dirty)
-        if (KMessageBox::warningContinueCancel(this, i18n(
-                "This packet contains changes that have not yet been "
-                "committed.  Are you sure you wish to discard these changes?"),
+    if ((! emergencyRefresh) && dirty) {
+        QString msg = (dirtinessBroken ?
+            i18n("This packet might contain changes that have not yet been "
+                 "committed.  Are you sure you wish to discard these "
+                 "changes?") :
+            i18n("This packet contains changes that have not yet been "
+                 "committed.  Are you sure you wish to discard these "
+                 "changes?"));
+        if (KMessageBox::warningContinueCancel(this, msg,
                 mainUI->getPacket()->getPacketLabel().c_str(),
                 KStdGuiItem::discard()) != KMessageBox::Continue)
             return;
+    }
 
     emergencyRefresh = false;
     mainUI->refresh();

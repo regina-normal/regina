@@ -48,13 +48,13 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
-        PacketPane* newEnclosingPane, bool readWrite) :
+        PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane) {
     ReginaPart* part = newEnclosingPane->getPart();
 
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
     gluings = new NTriGluingsUI(packet, this,
-        part->getPreferences(), readWrite);
+        part->getPreferences(), newEnclosingPane->isReadWrite());
     algebra = new NTriAlgebraUI(packet, this, part->getPreferences());
     surfaces = new NTriSurfacesUI(packet, this,
         part->getPreferences().triSurfacePropsThreshold);

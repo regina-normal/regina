@@ -59,7 +59,7 @@ class NNormalSurfaceUI : public PacketTabbedUI {
          * Constructor.
          */
         NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
-            PacketPane* newEnclosingPane, bool readWrite);
+            PacketPane* newEnclosingPane);
 
         /**
          * PacketUI overrides.

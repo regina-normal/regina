@@ -62,8 +62,10 @@ using regina::NPacket;
 using regina::NScript;
 
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
-        KTextEditor::Document* doc, bool readWrite) :
+        KTextEditor::Document* doc) :
         PacketUI(enclosingPane), script(packet), document(doc) {
+    bool readWrite = enclosingPane->isReadWrite();
+
     ui = new QVBox(enclosingPane);
 
     // --- Action Toolbar ---
@@ -106,6 +108,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     // Otherwise the Vim component crashes.
     view = document->createView(splitter);
     editInterface = KTextEditor::editInterface(document);
+    if (strcmp(document->className(), "Vim::Document") == 0)
+        enclosingPane->setDirtinessBroken();
 
     // Prepare the components.
     document->setReadWrite(readWrite);

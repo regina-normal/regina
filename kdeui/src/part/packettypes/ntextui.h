@@ -69,7 +69,7 @@ class NTextUI : public QObject, public PacketUI {
          * Constructor and destructor.
          */
         NTextUI(regina::NText* packet, PacketPane* newEnclosingPane,
-                KTextEditor::Document* doc, bool readWrite);
+                KTextEditor::Document* doc);
         ~NTextUI();
 
         /**

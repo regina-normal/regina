@@ -103,9 +103,6 @@ QPixmap PacketManager::iconBar(NPacket* packet) {
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
         PacketPane* enclosingPane) {
-    ReginaPart* part = enclosingPane->getPart();
-    bool readWrite = part->isReadWrite() && packet->isPacketEditable();
-
     if (packet->getPacketType() == NAngleStructureList::packetType)
         return new NAngleStructureUI(dynamic_cast<NAngleStructureList*>(packet),
             enclosingPane);
@@ -114,12 +111,12 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             enclosingPane);
     if (packet->getPacketType() == NNormalSurfaceList::packetType)
         return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
-            enclosingPane, readWrite);
+            enclosingPane);
     if (packet->getPacketType() == NScript::packetType) {
         KTextEditor::Document* doc = createDocument();
         if (doc)
-            return new NScriptUI(dynamic_cast<NScript*>(packet), enclosingPane,
-                doc, readWrite);
+            return new NScriptUI(dynamic_cast<NScript*>(packet),
+                enclosingPane, doc);
         else
             return new ErrorPacketUI(packet, enclosingPane,
                 i18n("An appropriate text editor component could not "
@@ -130,19 +127,19 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
                 NSurfaceFilterCombination::filterID)
             return new NSurfaceFilterCombUI(
                 dynamic_cast<NSurfaceFilterCombination*>(packet),
-                enclosingPane, readWrite);
+                enclosingPane);
         if (((NSurfaceFilter*)packet)->getFilterID() ==
                 NSurfaceFilterProperties::filterID)
             return new NSurfaceFilterPropUI(
                 dynamic_cast<NSurfaceFilterProperties*>(packet),
-                enclosingPane, readWrite);
+                enclosingPane);
         return new DefaultPacketUI(packet, enclosingPane);
     }
     if (packet->getPacketType() == NText::packetType) {
         KTextEditor::Document* doc = createDocument();
         if (doc)
-            return new NTextUI(dynamic_cast<NText*>(packet), enclosingPane,
-                doc, readWrite);
+            return new NTextUI(dynamic_cast<NText*>(packet),
+                enclosingPane, doc);
         else
             return new ErrorPacketUI(packet, enclosingPane,
                 i18n("An appropriate text editor component\n"
@@ -150,7 +147,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     }
     if (packet->getPacketType() == NTriangulation::packetType)
         return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
-            enclosingPane, readWrite);
+            enclosingPane);
     return new DefaultPacketUI(packet, enclosingPane);
 }
 

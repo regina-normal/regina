@@ -85,7 +85,7 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
          * Constructor and destructor.
          */
         NSurfaceFilterPropUI(regina::NSurfaceFilterProperties* packet,
-                PacketPane* newEnclosingPane, bool readWrite);
+                PacketPane* newEnclosingPane);
 
         /**
          * PacketUI overrides.
