@@ -129,7 +129,7 @@ public class Application extends Applet implements ActionListener {
 	 * System property dictating in which directory options files are
 	 * stored.
 	 */
-	public static final String optionsDirProperty = "REGINA_OPTIONS";
+	public static final String optionsDirProperty = "REGINA_OPTIONS_LOCAL";
 
 	/**
 	 * Directory to use for options files if system property

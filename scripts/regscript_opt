@@ -1,0 +1,213 @@
+#!/bin/sh
+# Script include file for regina.
+# Reads runtime options and sets reasonable defaults.
+
+# Begin guard
+if [ "$read_regscript_opt" != 1 ]; then
+read_regscript_opt=1
+
+# Read includes.
+. "`dirname "$0"`/scripts/regscript_misc"
+
+# ---------- Constants ----------
+
+# File in each options directory containing runtime options.
+runtime_options=runtime.opt
+
+# ---------- Find options directories ----------
+
+# --- Global options directory ---
+
+# Use default if nothing is specified.
+default_options_global=/etc/regina
+if [ -z "$REGINA_OPTIONS_GLOBAL" ]; then
+	export REGINA_OPTIONS_GLOBAL="$default_options_global"
+fi
+
+# Use nothing if it's not a directory.
+if [ ! -z "$REGINA_OPTIONS_GLOBAL" ]; then
+	if [ ! -d "$REGINA_OPTIONS_GLOBAL" ]; then
+		warn "Warning: $REGINA_OPTIONS_GLOBAL is not a directory."
+		export REGINA_OPTIONS_GLOBAL=
+	fi
+fi
+
+# Warn the user if we have no global options directory.
+if [ -z "$REGINA_OPTIONS_GLOBAL" ]; then
+	warn "Warning: No global options directory."
+else
+	info "-- Global options directory (REGINA_OPTIONS_GLOBAL): $REGINA_OPTIONS_GLOBAL"
+fi
+
+# --- Local options directory ---
+
+# Use default if nothing is specified.
+default_options_local="`echo ~/.regina`"
+if [ -z "$REGINA_OPTIONS_LOCAL" ]; then
+	export REGINA_OPTIONS_LOCAL="$default_options_local"
+fi
+
+# If it does exist, use nothing if it's not a directory.
+# If it doesn't exist, try to create it.
+if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
+	if [ ! -e "$REGINA_OPTIONS_LOCAL" ]; then
+		if ! mkdir "$REGINA_OPTIONS_LOCAL"; then
+			warn "Warning: $REGINA_OPTIONS_LOCAL could not be created."
+			export REGINA_OPTIONS_LOCAL=
+		fi
+	elif [ ! -d "$REGINA_OPTIONS_LOCAL" ]; then
+		warn "Warning: $REGINA_OPTIONS_LOCAL is not a directory."
+		export REGINA_OPTIONS_LOCAL=
+	fi
+fi
+
+# Warn the user if we have no local options directory.
+if [ -z "$REGINA_OPTIONS_LOCAL" ]; then
+	warn "Warning: No local options directory."
+else
+	info "-- Local options directory (REGINA_OPTIONS_LOCAL): $REGINA_OPTIONS_LOCAL"
+fi
+
+# ---------- Read options files ----------
+
+# Read the global runtime options file.
+if [ ! -z "$REGINA_OPTIONS_GLOBAL" ]; then
+	options="$REGINA_OPTIONS_GLOBAL/$runtime_options"
+	if [ -f "$options" ]; then
+		optioncmds=`awk -f "$REGINA_HOME/scripts/regscript_readopts" "$options"`
+		eval $optioncmds;
+	elif [ -e "$options" ]; then
+		warn "Warning: Options file [$options] is not a regular file."
+	else
+		warn "Warning: No global runtime options file [$options]."
+	fi
+fi
+
+# Read the local runtime options file.
+if [ ! -z "$REGINA_OPTIONS_LOCAL" ]; then
+	options="$REGINA_OPTIONS_LOCAL/$runtime_options"
+	if [ -f "$options" ]; then
+		optioncmds=`awk -f "$REGINA_HOME/scripts/regscript_readopts" "$options"`
+		eval $optioncmds;
+	elif [ -e "$options" ]; then
+		warn "Warning: Options file [$options] is not a regular file."
+	else
+		warn "Warning: No local runtime options file [$options]."
+	fi
+fi
+
+# ---------- Set reasonable defaults ----------
+
+if [ -z "$REGINA_BTOOLS" ]; then
+	export REGINA_BTOOLS="$REGINA_HOME/lib/btools.jar"
+	if [ ! -e "$REGINA_BTOOLS" ]; then
+		error "Error: The BTools library could not be found."
+		error "       Set \$REGINA_BTOOLS to the location of btools.jar"
+		error "       and try again."
+		exit 1
+	fi
+fi
+
+if [ -z "$REGINA_JYTHON" ]; then
+	export REGINA_JYTHON="$REGINA_HOME/lib/jython.jar"
+	if [ ! -e "$REGINA_JYTHON" ]; then
+		warn "Warning: The Jython library could not be found."
+		warn "         Scripting will not be available."
+		warn "         To fix this, set \$REGINA_JYTHON to the location"
+		warn "         of jython.jar and try again."
+	fi
+fi
+
+if [ -z "$REGINA_JAVAHELP" ]; then
+	export REGINA_JAVAHELP="$REGINA_HOME/lib/jh.jar"
+	if [ ! -e "$REGINA_JAVAHELP" ]; then
+		warn "Warning: The JavaHelp library could not be found."
+		warn "         The built-in help browser will not be available."
+		warn "         To fix this, set \$REGINA_JAVAHELP to the location"
+		warn "         of jh.jar and try again."
+	fi
+fi
+
+if [ -z "$REGINA_JAVA" ]; then
+	# Take the Java runtime from the path.
+	export REGINA_JAVA=`which java`
+	if [ -z "$REGINA_JAVA" ]; then
+		error "Error: A Java runtime could not be found."
+		error "       Set \$REGINA_JAVA to a Java runtime (such as /usr/bin/java)"
+		error "       and try again."
+		exit 1
+	fi
+fi
+
+if [ -z "$REGINA_JNIDIR" ]; then
+	export REGINA_JNIDIR="$REGINA_HOME/bin"
+	if [ ! -e "$REGINA_JNIDIR/libregina-engine-jni.so" ]; then
+		warn "Warning: The JNI library directory could not be found."
+		warn "         The JNI calculation engine will not be available."
+		warn "         To fix this, set \$REGINA_JNIDIR to the directory"
+		warn "         containing libregina-engine-jni.so and try again."
+	fi
+fi
+
+if [ -z "$REGINA_JARDIR" ]; then
+	export REGINA_JARDIR="$REGINA_HOME/bin"
+	if [ ! -e "$REGINA_JARDIR/regina.jar" ]; then
+		error "Error: The Regina jar directory could not be found."
+		error "       Set \$REGINA_JAR to the directory containing regina.jar"
+		error "       and try again."
+		exit 1
+	fi
+fi
+
+# ---------- Check optional variables for validity ----------
+
+if [ ! -z "$REGINA_ENGINE" ]; then
+	if ! testvalue "$REGINA_ENGINE" REGINA_ENGINE jni corba; then
+		export REGINA_ENGINE=""
+	fi
+fi
+
+if [ ! -z "$REGINA_INTERFACE" ]; then
+	if ! testvalue "$REGINA_INTERFACE" REGINA_INTERFACE gui console text; then
+		export REGINA_INTERFACE=""
+	fi
+fi
+
+# ---------- Output current options ----------
+
+info ""
+info "----- Configuration options -----"
+info "-- BTools classes (REGINA_BTOOLS): $REGINA_BTOOLS"
+info "-- Jython classes (REGINA_JYTHON): $REGINA_JYTHON"
+info "-- JavaHelp classes (REGINA_JAVAHELP): $REGINA_JAVAHELP"
+info "-- Extra classes (REGINA_EXTRA_CLASSES): $REGINA_EXTRA_CLASSES"
+info "-- Java runtime (REGINA_JAVA): $REGINA_JAVA"
+info "-- JNI library directory (REGINA_JNIDIR): $REGINA_JNIDIR"
+info "-- Regina jar directory (REGINA_JARDIR): $REGINA_JARDIR"
+info ""
+info "----- Startup options -----"
+info "-- Computational engine (REGINA_ENGINE): $REGINA_ENGINE"
+info "-- User interface (REGINA_INTERFACE): $REGINA_INTERFACE"
+info "-- JNI engine name (REGINA_JNIENGINE): $REGINA_JNIENGINE"
+info "-- CORBA host (REGINA_CORBAHOST): $REGINA_CORBAHOST"
+info "-- CORBA port (REGINA_CORBAPORT): $REGINA_CORBAPORT"
+info ""
+
+# ---------- Export current options ----------
+
+export REGINA_BTOOLS
+export REGINA_JYTHON
+export REGINA_JAVAHELP
+export REGINA_EXTRA_CLASSES
+export REGINA_JAVA
+export REGINA_JNIDIR
+export REGINA_JARDIR
+export REGINA_ENGINE
+export REGINA_INTERFACE
+export REGINA_JNIENGINE
+export REGINA_CORBAHOST
+export REGINA_CORBAPORT
+
+# End guard
+fi
+

@@ -1,0 +1,104 @@
+#!/bin/sh
+# Script include file for regina.
+# Provides miscellaneous functions and variables.
+
+# Begin guard
+if [ "$read_regscript_misc" != 1 ]; then
+read_regscript_misc=1
+
+# ---------- Constants ----------
+
+# Classpath separator.
+# This should be ":" under linux/unix environments and ";" under windows.
+cps=":"
+
+# Address to which questions should be emailed.
+support="Ben Burton <benb@acm.org>"
+
+# ---------- Functions ----------
+
+# Send the given error message to stderr.
+# Usage: error <message>
+error () {
+	echo "$1" > /dev/stderr
+}
+
+# Send the given warning message to stderr if $REGINA_VERBOSITY >= 1.
+# Usage: warn <message>
+warn () {
+	if [ 1 -le "$REGINA_VERBOSITY" ]; then
+		echo "$1" > /dev/stderr
+	fi
+}
+
+# Send the given information message to stderr if $REGINA_VERBOSITY >= 2.
+# Usage: info <message>
+info () {
+	if [ 2 -le "$REGINA_VERBOSITY" ]; then
+		echo "$1" > /dev/stderr
+	fi
+}
+
+# Test whether the given variable has one of the given values.
+# Usage: testvalue <value> <variable_name> <value1> [ <value2> ... ]
+# Return: 0 if the variable has one of the given values, 1 otherwise.
+testvalue () {
+	value="$1"
+	variable_name="$2"
+	list=""
+	shift 2
+	for v do
+		if [ "$value" = "$v" ]; then
+			return 0
+		fi
+		list="$list \"$v\""
+	done
+	warn "Warning: Variable \$$variable_name was set to \"$value\"."
+	warn "         It must be one of:$list"
+	return 1
+}
+
+# ---------- Environment Variable Defaults ----------
+
+# --- Verbosity ---
+
+# Use default if nothing is specified.
+default_verbosity=1
+if [ -z "$REGINA_VERBOSITY" ]; then
+	export REGINA_VERBOSITY=1
+fi
+
+# Check it's an appropriate value.
+case "$REGINA_VERBOSITY" in
+	[012] )
+	;;
+	* )
+		error "Error: \$REGINA_VERBOSITY should be 0, 1 or 2."
+		error "       (0 = errors, 1 = errors/warnings, 2 = everything)"
+		exit 1
+	;;
+esac
+
+# --- Regina home directory ---
+
+# Derive it if nothing is specified.
+if [ -z "$REGINA_HOME" ]; then
+	export REGINA_HOME="`dirname "$0"`"
+fi
+
+# Check it's an appropriate value.
+if [ ! -f "$REGINA_HOME/regina" ]; then
+	error "Error: \$REGINA_HOME should be set to the base Regina directory."
+	error "       This is the directory containing the \"regina\" startup script."
+	exit 1
+fi
+
+# ---------- Export current variables ----------
+
+info "-- Verbosity level (REGINA_VERBOSITY): $REGINA_VERBOSITY"
+info "-- Regina home directory (REGINA_HOME): $REGINA_HOME"
+export REGINA_VERBOSITY
+export REGINA_HOME
+
+# End guard
+fi

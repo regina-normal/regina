@@ -3,7 +3,6 @@ Regina - A normal surface theory calculator
 
 BINARY DISTRIBUTION:
 
-    - To configure, type "regconf".
     - To run, type "regina".
 
 SOURCE DISTRIBUTION:

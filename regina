@@ -1,161 +1,73 @@
-#!/bin/bash
+#!/bin/sh
+# Script to start regina.
+set -e
 
-# ---------- Options ----------
+# --- Check command-line options. ---
 
-# Classpath separator.
-# This should be ":" under linux/unix environments and ";" under windows.
-cps=":"
-
-# File in the options directory containing runtime options.
-options=runtime.opt
-
-# Script used to run the RegConf utility.
-regconf=regconf
-
-# ---------- End Options ----------
-
-# Test that the given argument is a directory.
-# On success, returns 0 and sets dir_err to the empty string.
-# On error, returns 1 and sets dir_err to an appropriate error message.
-# Usage: testdir <dir> [ -c ]
-#     -c: attempt to create the directory if it does not exist.
-function testdir() {
-	dir_err=
-	if [ ! -e "$1" ]; then
-		if [ "$2" == "-c" ]; then
-			if ! mkdir "$1"; then
-				dir_err="This directory could not be created."
-			fi
-		else
-			dir_err="This directory does not exist."
-		fi
-	elif [ ! -d "$1" ]; then
-		dir_err="This is not a directory."
+for i; do
+	if [ "$i" = "--verbose" -o "$i" = "-v" ]; then
+		export REGINA_VERBOSITY=2
+	elif [ "$i" = "--quiet" -o "$i" = "-q" ]; then
+		export REGINA_VERBOSITY=0
 	fi
+done
 
-	if [ -z "$dir_err" ]; then
-		return 0
-	else
-		return 1
-	fi
+# --- Read runtime options. ---
+
+. "`dirname "$0"`/scripts/regscript_opt"
+
+# --- Set the classpath. ---
+
+reginaclasses=""
+for i in "$REGINA_JARDIR"/*.jar; do
+	reginaclasses="$reginaclasses:$i";
+done
+
+export CLASSPATH="$reginaclasses:$REGINA_BTOOLS:$REGINA_JYTHON:$REGINA_JAVAHELP:$REGINA_EXTRACLASSES:$CLASSPATH"
+
+# --- Set the Java defines. ---
+
+addjavadef () {
+	eval "javadefs=\"\$javadefs \\\"-D$1=\$$1\\\"\""
 }
+use_java_defs="REGINA_ENGINE REGINA_INTERFACE REGINA_JNIENGINE REGINA_CORBAHOST REGINA_CORBAPORT"
 
-# Test that the given argument exists and is a regular file.
-# On success, returns 0 and sets file_err to the empty string.
-# On error, returns 1 and sets file_err to an appropriate error message.
-# Usage: testfile <file>
-function testfile() {
-	file_err=
-	if [ ! -e "$1" ]; then
-		file_err="This file does not exist."
-	elif [ ! -f "$1" ]; then
-		file_err="This exists but is not a regular file."
+javadefs="\"-Djava.library.path=$REGINA_JNIDIR\""
+addjavadef "REGINA_OPTIONS_LOCAL"
+for i in $use_java_defs; do
+	if eval "[ ! -z \"\$$i\" ]"; then
+		addjavadef $i
 	fi
+done
 
-	if [ -z "$file_err" ]; then
-		return 0
-	else
-		return 1
-	fi
-}
+# --- Run the application. ---
 
-# Set the options directory.
+command="$REGINA_JAVA $javadefs normal.Application $@"
 
-if [ -z "$REGINA_OPTIONS" ]; then
-	export REGINA_OPTIONS="`echo ~/.regina`"
-fi
+info "Command: $command"
+info "Classpath: $CLASSPATH"
 
-# Set the full path to the runtime options file.
-
-case "$REGINA_OPTIONS" in
-	*/ )
-		options="$REGINA_OPTIONS$options"
-	;;
-	* )
-		options="$REGINA_OPTIONS/$options"
-	;;
-esac
-
-# Check that there is a runtime options file.
-if [ ! -e "$options" ]; then
-	echo
-	echo "######################################"
-	echo "#                                    #"
-	echo "#               REGINA               #"
-	echo "#                                    #"
-	echo "#  Runtime options cannot be found!  #"
-	echo "#                                    #"
-	echo "######################################"
-	echo
-	echo "There is no runtime options file $options."
-	echo "You should run the RegConf configuration utility \"$regconf\","
-	echo "    found in the same directory as this script (`dirname "$0"`)."
-	echo "I will try to do this now."
-	echo
-	if "`dirname "$0"`/$regconf"; then
-		echo
-		echo "Now that you have set the runtime options, try running this" \
-			"program again."
-		echo
-	fi
+if ! eval $command; then
+	error
+	error "################################"
+	error "#                              #"
+	error "#            REGINA            #"
+	error "#                              #"
+	error "#  Could not run application!  #"
+	error "#                              #"
+	error "################################"
+	error
+	error "An error occurred whilst trying to run the application.  Use:"
+	error
+	error "    $0 --verbose"
+	error
+	error "to see more diagnostic output such as the runtime options"
+	error "that are being used.  You may wish to verify that these"
+	error "options are correct and edit the runtime options file(s)"
+	error "if appropriate."
+	error
+	error "If you still can't run the application, mail $support"
+	error "for assistance."
+	error
 	exit 1
-elif [ ! -f "$options" ]; then
-	echo
-	echo "###################################"
-	echo "#                                 #"
-	echo "#             REGINA              #"
-	echo "#                                 #"
-	echo "#  Invalid runtime options file!  #"
-	echo "#                                 #"
-	echo "###################################"
-	echo
-	echo "The runtime options file is currently set to \"$options\"."
-	echo "This exists but is not a regular file."
-	echo
-	echo "Try deleting or renaming it, and then run this program again."
-	echo
-	exit 1
-else
-	# Read in the runtime options file.
-	. "$options"
-
-	# Run the application.
-	command="$Java \"-Djava.library.path=$JNIDir\" \"-DREGINA_OPTIONS=$REGINA_OPTIONS\" -cp \"$JavaUI$cps$JavaJNI$cps$JavaCORBA$cps$DocJar$cps$BTools$cps$JPython$cps$JavaHelp$cps$ExtraClasses\" normal.Application $@"
-
-	if ! eval $command; then
-		echo
-		echo "################################"
-		echo "#                              #"
-		echo "#            REGINA            #"
-		echo "#                              #"
-		echo "#  Could not run application!  #"
-		echo "#                              #"
-		echo "################################"
-		echo
-		echo "An error occurred whilst trying to run the application."
-		echo "The command used was:"
-		echo "    $command"
-		echo
-		echo "The runtime options are set as follows:"
-		echo
-		echo "    Location of regina.jar: $JavaUI"
-		echo "    Location of regina-jni.jar: $JavaJNI"
-		echo "    Location of regina-corba.jar: $JavaCORBA"
-		echo "    Location of regina-docs.jar: $DocJar"
-		echo "    Java command: $Java"
-		echo
-		echo "    Engine directory: $JNIDir"
-		echo
-		echo "    Location of btools.jar: $BTools"
-		echo "    Location of jython.jar: $JPython"
-		echo "    Location of jh.jar: $JavaHelp"
-		echo "    Extra classes: $ExtraClasses"
-		echo
-		echo "Check that these options are correct and if necessary run the"
-		echo "RegConf configuration utility \"$regconf\", found in the same"
-		echo "directory as this script (`dirname "$0"`)."
-		echo
-		exit 1
-	fi
 fi
-

@@ -1,0 +1,17 @@
+# Awk script to read program options and output them as export
+# statements that can be slurped into a shell script.
+
+# Variable assignments:
+/^[ \t]*[_a-zA-Z][_a-zA-Z0-9]*[ \t]*=/ {
+	# Remove whitespace before the declaration.
+	sub(/[ \t]*/,"")
+	# Remove whitespace around the equals.
+	sub(/[ \t]*=[ \t]*/,"=")
+	# Put quotes around whatever comes after the equals.
+	if ($0 !~ /^[_a-zA-Z][_a-zA-Z0-9]*="/) {
+		sub(/=/,"=\"")
+		sub(/[ \t]*$/,"")
+		$0 = $0 "\""
+	}
+	print "export " $0 ";"
+}
