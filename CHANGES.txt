@@ -53,6 +53,9 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
               routines sysModeRead(), sysModeWrite().
         Class NNormalSurfaceList:
             - New nested class NNormalSurfaceList::SurfaceInserter.
+        Class NPacket:
+            - Finally changed getPacketName() to getPacketTypeName().
+            - Removed tidyReadPacket().
         Class NPerm:
             - Added isPermCode().
         Class NScript:
@@ -63,7 +66,6 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
         Class NSignature, NSigCensus, NSigPartialIsomorphism:
             - Added.
         Class NTriangulation:
-            - Added insertSplittingSurface().
             - Uses NIndexedArrays for skeletal elements for fast index lookup.
         Class NXMLCallback, NXMLElementReader, NXMLPacketReader and subclasses:
             - Added.
@@ -90,6 +92,8 @@ Version 3.0  [ (under development) ] - The "XML, about bloody time" release.
               using gcc3.
         normal.exports:
             - Added class ReginaBinaryExporter.
+        normal.exports.ReginaExporter:
+            - Added boolean compression parameter to constructor.
 
 Version 2.4  [ 4 April, 2002 ]
     OVERALL:

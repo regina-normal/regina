@@ -92,7 +92,7 @@ class NText : public NPacket {
         void setText(const char* newText);
 
         virtual int getPacketType() const;
-        virtual std::string getPacketName() const;
+        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;

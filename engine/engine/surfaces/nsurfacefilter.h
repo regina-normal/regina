@@ -207,7 +207,7 @@ class NSurfaceFilter : public NPacket, public NPropertyHolder {
         static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getPacketType() const;
-        virtual std::string getPacketName() const;
+        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual void writePacket(NFile& out) const;

@@ -77,7 +77,7 @@ void dumpPacketHeader(std::ostream& out, NPacket* p) {
     out << separator << '\n';
     out << "*\n";
     out << "* Label: " << p->getPacketLabel() << '\n';
-    out << "* Type: " << p->getPacketName() << '\n';
+    out << "* Type: " << p->getPacketTypeName() << '\n';
     out << "* Parent: " << (p->getTreeParent() ?
         p->getTreeParent()->getPacketLabel() : "(none)") << '\n';
     out << "*\n";

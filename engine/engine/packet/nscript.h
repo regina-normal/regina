@@ -194,7 +194,7 @@ class NScript : public NPacket, public NPropertyHolder {
         void removeAllVariables();
 
         virtual int getPacketType() const;
-        virtual std::string getPacketName() const;
+        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;

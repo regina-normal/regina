@@ -38,7 +38,7 @@ public class NJNIPacket extends JNIShareableObject implements NPacket {
     }
 
     public native int getPacketType();
-    public native String getPacketName();
+    public native String getPacketTypeName();
     public native String getPacketLabel();
     public native void setPacketLabel(String newLabel);
     public native String getFullName();

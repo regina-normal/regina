@@ -56,7 +56,7 @@ class NContainer : public NPacket {
         NContainer();
 
         virtual int getPacketType() const;
-        virtual std::string getPacketName() const;
+        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);

@@ -156,13 +156,13 @@ const NPacket* NPacket::nextTreePacket() const {
 }
 
 NPacket* NPacket::firstTreePacket(const std::string& type) {
-    if (getPacketName() == type)
+    if (getPacketTypeName() == type)
         return this;
     return nextTreePacket(type);
 }
 
 const NPacket* NPacket::firstTreePacket(const std::string& type) const {
-    if (getPacketName() == type)
+    if (getPacketTypeName() == type)
         return this;
     return nextTreePacket(type);
 }
@@ -170,7 +170,7 @@ const NPacket* NPacket::firstTreePacket(const std::string& type) const {
 NPacket* NPacket::nextTreePacket(const std::string& type) {
     NPacket* ans = nextTreePacket();
     while (ans) {
-        if (ans->getPacketName() == type)
+        if (ans->getPacketTypeName() == type)
             return ans;
         ans = ans->nextTreePacket();
     }
@@ -180,7 +180,7 @@ NPacket* NPacket::nextTreePacket(const std::string& type) {
 const NPacket* NPacket::nextTreePacket(const std::string& type) const {
     const NPacket* ans = nextTreePacket();
     while (ans) {
-        if (ans->getPacketName() == type)
+        if (ans->getPacketTypeName() == type)
             return ans;
         ans = ans->nextTreePacket();
     }
@@ -363,7 +363,7 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
 
     // Write the packet opening tag including packet label and type.
     out << "<packet label=\"" << xmlEncodeSpecialChars(packetLabel) << "\"\n";
-    out << "\ttype=\"" << getPacketName() << "\" typeid=\""
+    out << "\ttype=\"" << getPacketTypeName() << "\" typeid=\""
         << getPacketType() << "\"\n";
     out << "\tparent=\"";
     if (treeParent)
@@ -379,7 +379,7 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
 
     // Write the packet closing tag.
     out << "</packet> <!-- " << xmlEncodeSpecialChars(packetLabel)
-        << " (" << getPacketName() << ") -->\n";
+        << " (" << getPacketTypeName() << ") -->\n";
 }
 
 } // namespace regina

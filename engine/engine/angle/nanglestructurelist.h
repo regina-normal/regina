@@ -134,7 +134,7 @@ class NAngleStructureList : public NPacket, public NPropertyHolder {
         bool allowsTaut();
 
         virtual int getPacketType() const;
-        virtual std::string getPacketName() const;
+        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);

@@ -33,7 +33,7 @@ import java.util.*;
 
 public interface NPacket extends ShareableObject {
     public int getPacketType();
-    public String getPacketName();
+    public String getPacketTypeName();
     public String getPacketLabel();
     public void setPacketLabel(String newLabel);
     public String getFullName();

@@ -153,7 +153,7 @@ class NNormalSurfaceList : public NPacket, public NPropertyHolder,
         virtual ShareableObject* getShareableObject();
         
         virtual int getPacketType() const;
-        virtual std::string getPacketName() const;
+        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);

@@ -108,10 +108,10 @@ JNIEXPORT jstring JNICALL
 }
 
 JNIEXPORT jstring JNICALL
-        Java_normal_engine_implementation_jni_packet_NJNIPacket_getPacketName
+        Java_normal_engine_implementation_jni_packet_NJNIPacket_getPacketTypeName
         (JNIEnv *env, jobject me) {
     return jstringFromCString(env,
-        GET_ENGINE_OBJECT(env, NPacket, me)->getPacketName());
+        GET_ENGINE_OBJECT(env, NPacket, me)->getPacketTypeName());
 }
 
 JNIEXPORT jint JNICALL
