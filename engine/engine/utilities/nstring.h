@@ -461,7 +461,7 @@ __STL_BEGIN_NAMESPACE
          */
         size_t operator() (const NString& s) const {
             return s.hashValue();
-        };
+        }
     };
 __STL_END_NAMESPACE
 
