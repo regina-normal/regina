@@ -91,14 +91,15 @@
  * @param jni_env the working JNI environment, of type <tt>(JNIEnv*)</tt>.
  * @param cpp_class the C++ class of the underlying C++ object.
  * @param java_object the Java wrapper to be examined, of type
- * <tt>jobject</tt>.
+ * <tt>jobject</tt>.  This may be \c null.
  * @return the C++ object wrapped by the given Java wrapper, of type
  * <tt>(<i>cpp_class</i>*)</tt>.
  */
 #define GET_ENGINE_OBJECT(jni_env, cpp_class, java_object) \
+    ((java_object) == 0 ? ((cpp_class*)0) : \
     ((cpp_class*)javaLongToPtr((jni_env)->GetLongField(java_object, \
     (jni_env)->GetFieldID((jni_env)->GetObjectClass(java_object), \
-    CPP_PTR_FIELD, "J"))))
+    CPP_PTR_FIELD, "J")))))
 
 /**
  * \hideinitializer
