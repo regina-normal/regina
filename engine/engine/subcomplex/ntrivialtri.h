@@ -54,6 +54,11 @@ namespace regina {
 class NTrivialTri : public NStandardTriangulation {
     public:
         /**
+         * Represents the two-tetrahedron four-vertex triangulation of
+         * the 3-sphere.
+         */
+        static const int SPHERE_4_VERTEX;
+        /**
          * Represents the two-tetrahedron triangulation N(2) of the
          * twisted 2-sphere bundle over the circle.
          */

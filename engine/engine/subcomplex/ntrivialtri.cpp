@@ -28,6 +28,7 @@
 
 #include <algorithm>
 #include "algebra/nabeliangroup.h"
+#include "manifold/nlensspace.h"
 #include "manifold/nsimplesurfacebundle.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
@@ -39,6 +40,7 @@ namespace regina {
 const int NTrivialTri::N2 = 200;
 const int NTrivialTri::N3_1 = 301;
 const int NTrivialTri::N3_2 = 302;
+const int NTrivialTri::SPHERE_4_VERTEX = 5000;
 
 NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
     // Since the triangulations are so small we can use census results
@@ -65,8 +67,17 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
     // Test for the specific triangulations that we know about.
 
     if (comp->getNumberOfTetrahedra() == 2) {
-        if (! comp->isOrientable())
+        if (comp->isOrientable()) {
+            if (comp->getNumberOfVertices() == 4) {
+                // There's only one closed valid two-tetrahedron
+                // four-vertex orientable triangulation.
+                return new NTrivialTri(SPHERE_4_VERTEX);
+            }
+        } else {
+            // There's only one closed valid two-tetrahedron non-orientable
+            // triangulation.
             return new NTrivialTri(N2);
+        }
         return 0;
     }
 
@@ -101,7 +112,9 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
 }
 
 NManifold* NTrivialTri::getManifold() const {
-    if (type == N2)
+    if (type == SPHERE_4_VERTEX)
+        return new NLensSpace(1, 0);
+    else if (type == N2)
         return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1_TWISTED);
     else if (type == N3_1 || type == N3_2)
         return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::RP2xS1);
@@ -110,14 +123,19 @@ NManifold* NTrivialTri::getManifold() const {
 
 NAbelianGroup* NTrivialTri::getHomologyH1() const {
     NAbelianGroup* ans = new NAbelianGroup();
-    ans->addRank();
-    if (type == N3_1 || type == N3_2)
+    if (type == N2)
+        ans->addRank();
+    else if (type == N3_1 || type == N3_2) {
+        ans->addRank();
         ans->addTorsionElement(2);
+    }
     return ans;
 }
 
 inline std::ostream& NTrivialTri::writeName(std::ostream& out) const {
-    if (type == N2)
+    if (type == SPHERE_4_VERTEX)
+        out << "S3 (4-vtx)";
+    else if (type == N2)
         out << "N(2)";
     else if (type == N3_1)
         out << "N(3,1)";
@@ -126,7 +144,9 @@ inline std::ostream& NTrivialTri::writeName(std::ostream& out) const {
     return out;
 }
 inline std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
-    if (type == N2)
+    if (type == SPHERE_4_VERTEX)
+        out << "$S^3_{v=4}$";
+    else if (type == N2)
         out << "$N_{2}$";
     else if (type == N3_1)
         out << "$N_{3,1}$";
@@ -135,7 +155,9 @@ inline std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
     return out;
 }
 inline void NTrivialTri::writeTextLong(std::ostream& out) const {
-    if (type == N2)
+    if (type == SPHERE_4_VERTEX)
+        out << "Two-tetrahedron four-vertex 3-sphere";
+    else if (type == N2)
         out << "Non-orientable triangulation N(2)";
     else if (type == N3_1)
         out << "Non-orientable triangulation N(3,1)";
