@@ -52,6 +52,9 @@
 #include <kmessagebox.h>
 #include <kparts/genericfactory.h>
 
+// TODO: Allow the page size to be configured.
+#define TREE_PAGE_SIZE 10
+
 typedef KParts::GenericFactory<ReginaPart> ReginaPartFactory;
 K_EXPORT_COMPONENT_FACTORY(libreginapart, ReginaPartFactory);
 
@@ -468,7 +471,7 @@ void ReginaPart::movePageUp() {
         return;
     }
 
-    packet->moveUp(2);
+    packet->moveUp(TREE_PAGE_SIZE);
     setModified(true);
 }
 
@@ -491,7 +494,7 @@ void ReginaPart::movePageDown() {
         return;
     }
 
-    packet->moveDown(2);
+    packet->moveDown(TREE_PAGE_SIZE);
     setModified(true);
 }
 
