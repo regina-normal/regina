@@ -152,8 +152,15 @@ void ReginaPart::dock(PacketPane* newPane) {
 
     newPane->reparent(dockArea, QPoint(0, 0));
     dockedPane = newPane;
+
+    const QPtrList<KAction>& typeActions(newPane->getPacketTypeActions());
+    if (! typeActions.isEmpty()) {
+        plugActionList("packet_type_actions", typeActions);
+        plugActionList("packet_type_separator", separatorList);
+    }
     plugActionList("packet_tracking_actions", newPane->getTrackingActions());
     plugActionList("packet_tracking_separator", separatorList);
+
     newPane->show();
 
     if (newPane->hasTextComponent()) {
@@ -181,6 +188,8 @@ void ReginaPart::hasUndocked(PacketPane* undockedPane) {
     }
 
     if (dockedPane == undockedPane) {
+        unplugActionList("packet_type_actions");
+        unplugActionList("packet_type_separator");
         unplugActionList("packet_tracking_actions");
         unplugActionList("packet_tracking_separator");
         dockedPane = 0;

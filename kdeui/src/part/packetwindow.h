@@ -34,6 +34,7 @@
 #define __PACKETWINDOW_H
 
 #include <kmainwindow.h>
+#include <qptrlist.h>
 
 class KAction;
 class PacketPane;
@@ -50,6 +51,8 @@ class PacketWindow : public KMainWindow {
     private:
         PacketPane* heldPane;
             /**< The packet pane held within this frame. */
+        QPtrList<KAction> separatorList;
+            /**< A single separator for plugging into the UI. */
 
     private:
         /**

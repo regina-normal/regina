@@ -148,6 +148,17 @@ class PacketUI {
         virtual KTextEditor::Document* getTextComponent();
 
         /**
+         * Return a list of actions specific to the particular type of
+         * packet handled by this PacketUI subclass.  Such actions might
+         * (for instance) query or manipulate packets of a particular
+         * type.
+         *
+         * The default implementation of this routine simply returns an
+         * empty list.
+         */
+        virtual const QPtrList<KAction>& getPacketTypeActions();
+
+        /**
          * Store any changes currently made in this interface in the
          * underlying packet.
          *
@@ -189,6 +200,12 @@ class PacketUI {
          * implementations of commit() and refresh().
          */
         void setDirty(bool newDirty);
+
+    private:
+        /**
+         * An empty action list.
+         */
+        static QPtrList<KAction> noActions;
 };
 
 /**
@@ -329,6 +346,8 @@ class PacketPane : public QVBox, public regina::NPacketListener {
         regina::NPacket* getPacket();
         bool hasTextComponent();
         const QPtrList<KAction>& getTrackingActions();
+        const QPtrList<KAction>& getPacketTypeActions();
+
 
         /**
          * Does this packet pane contain any changes that have not yet
@@ -515,6 +534,10 @@ inline KTextEditor::Document* PacketUI::getTextComponent() {
     return 0;
 }
 
+inline const QPtrList<KAction>& PacketUI::getPacketTypeActions() {
+    return noActions;
+}
+
 inline void PacketUI::setDirty(bool newDirty) {
     enclosingPane->setDirty(newDirty);
 }
@@ -548,6 +571,10 @@ inline bool PacketPane::isReadWrite() {
 
 inline const QPtrList<KAction>& PacketPane::getTrackingActions() {
     return trackingActions;
+}
+
+inline const QPtrList<KAction>& PacketPane::getPacketTypeActions() {
+    return mainUI->getPacketTypeActions();
 }
 
 #endif

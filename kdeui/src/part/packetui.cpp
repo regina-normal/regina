@@ -64,6 +64,8 @@ namespace {
              item ID. */
 }
 
+QPtrList<KAction> PacketUI::noActions;
+
 PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
         const char* name) : QHBox(parent, name), packet(pkt) {
     icon = new QLabel(this);

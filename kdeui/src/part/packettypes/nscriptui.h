@@ -76,6 +76,7 @@ class NScriptUI : public QObject, public PacketUI {
          */
         KAction* actRemove;
         KActionCollection* scriptActions;
+        QPtrList<KAction> scriptActionList;
 
         /**
          * Properties
@@ -96,6 +97,7 @@ class NScriptUI : public QObject, public PacketUI {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         KTextEditor::Document* getTextComponent();
+        const QPtrList<KAction>& getPacketTypeActions();
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);

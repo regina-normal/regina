@@ -113,12 +113,14 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     scriptActions = new KActionCollection(0, 0, 0,
         ReginaPart::factoryInstance());
+    scriptActionList.setAutoDelete(true);
 
     KAction* actAdd = new KAction(i18n("&Add Var"), "insert_table_row",
         0 /* shortcut */, this, SLOT(addVariable()), scriptActions,
         "script_add_var");
     actAdd->setToolTip(i18n("Add a new script variable"));
     actAdd->plug(actionBar);
+    scriptActionList.append(actAdd);
 
     actRemove = new KAction(i18n("Re&move Var"), "delete_table_row",
         0 /* shortcut */, this, SLOT(removeSelectedVariables()),
@@ -129,20 +131,24 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     connect(varTable, SIGNAL(selectionChanged()), this,
         SLOT(updateRemoveState()));
     actRemove->plug(actionBar);
+    scriptActionList.append(actRemove);
 
     actionBar->insertLineSeparator();
+    scriptActionList.append(new KActionSeparator());
 
     KAction* actCompile = new KAction(i18n("&Compile"), "compfile",
         0 /* shortcut */, this, SLOT(unimplemented()), scriptActions,
         "script_compile");
     actCompile->setToolTip(i18n("Compile the python script"));
     actCompile->plug(actionBar);
+    scriptActionList.append(actCompile);
 
     KAction* actRun = new KAction(i18n("&Run"), "run", 0 /* shortcut */,
         this, SLOT(unimplemented()), scriptActions,
         "script_run");
     actRun->setToolTip(i18n("Execute the python script"));
     actRun->plug(actionBar);
+    scriptActionList.append(actRun);
 
     // --- Finalising ---
 
@@ -175,8 +181,12 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 }
 
 NScriptUI::~NScriptUI() {
-    delete document;
+    // Make sure the actions, including separators, are all deleted.
+    scriptActionList.clear();
+
+    // Clean up.
     delete scriptActions;
+    delete document;
 }
 
 NPacket* NScriptUI::getPacket() {
@@ -189,6 +199,10 @@ QWidget* NScriptUI::getInterface() {
 
 KTextEditor::Document* NScriptUI::getTextComponent() {
     return document;
+}
+
+const QPtrList<KAction>& NScriptUI::getPacketTypeActions() {
+    return scriptActionList;
 }
 
 void NScriptUI::commit() {

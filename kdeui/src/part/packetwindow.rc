@@ -6,6 +6,8 @@
     <Action name="viewer_close"/>
   </Menu>
   <Menu name="packet" noMerge="1"><text>&amp;Packet</text>
+    <ActionList name="packet_type_actions"/>
+    <ActionList name="packet_type_separator"/>
     <ActionList name="packet_tracking_actions"/>
   </Menu>
 </MenuBar>

@@ -63,7 +63,16 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         newPane->registerEditOperation(redo, PacketPane::editRedo);
     }
 
+    separatorList.append(new KActionSeparator());
+    separatorList.setAutoDelete(true);
+
     createGUI("packetwindow.rc", false);
+
+    const QPtrList<KAction>& typeActions(newPane->getPacketTypeActions());
+    if (! typeActions.isEmpty()) {
+        plugActionList("packet_type_actions", typeActions);
+        plugActionList("packet_type_separator", separatorList);
+    }
     plugActionList("packet_tracking_actions", newPane->getTrackingActions());
 
     // Set up the widgets.
