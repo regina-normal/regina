@@ -1,11 +1,5 @@
 <?xml version="1.0" ?>
 <bibliography id="bibliography">
- <para>
-  This bibliography only describes documents referred to within the
-  reference manual and is not intended as a list of
-  acknowledgements or contributers.  For such a list, see the
-  <link linkend="acknowledgements">acknowledgements page</link> instead.
- </para>
 
  <biblioentry id="bib-burton-phd">
   <abbrev>Bu1</abbrev>
@@ -69,8 +63,8 @@
   <edition>Math. Comp.</edition>
   <volumenum>vol. 68</volumenum>
   <issuenum>no. 225</issuenum>
-  <date>1999</date>
   <artpagenums>pp. 321&ndash;332</artpagenums>
+  <date>1999</date>
  </biblioentry>
 
  <biblioentry id="bib-haken-homeomorphism">
@@ -82,9 +76,9 @@
   <title>&Uuml;ber das Hom&ouml;omorphieproblem der
    3-Mannigfaltigkeiten. I</title>
   <edition>Math. Z.</edition>
-  <volumenum>80</volumenum>
-  <date>1962</date>
+  <volumenum>vol. 80</volumenum>
   <artpagenums>pp. 89&ndash;120</artpagenums>
+  <date>1962</date>
  </biblioentry>
 
  <biblioentry id="bib-0-efficiency">
@@ -113,9 +107,9 @@
   </author>
   <title>Taut ideal triangulations of 3-manifolds</title>
   <edition>Geom. Topol.</edition>
-  <volumenum>4</volumenum>
-  <date>2000</date>
+  <volumenum>vol. 4</volumenum>
   <artpagenums>pp. 369&ndash;395 (electronic)</artpagenums>
+  <date>2000</date>
  </biblioentry>
 
  <biblioentry id="bib-lackenby-anglestruct">
@@ -126,10 +120,44 @@
   </author>
   <title>Word hyperbolic Dehn surgery</title>
   <edition>Invent. Math.</edition>
-  <volumenum>140</volumenum>
-  <issuenum>2</issuenum>
-  <date>2000</date>
+  <volumenum>vol. 140</volumenum>
+  <issuenum>no. 2</issuenum>
   <artpagenums>pp. 243&ndash;282</artpagenums>
+  <date>2000</date>
+ </biblioentry>
+
+ <biblioentry id="bib-italian9">
+  <abbrev>MP</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Bruno</firstname>
+    <surname>Martelli</surname>
+   </author>
+   <author>
+    <firstname>Carlo</firstname>
+    <surname>Petronio</surname>
+   </author>
+  </authorgroup>
+  <title>Three-manifolds having complexity at most 9</title>
+  <edition>Experiment. Math.</edition>
+  <volumenum>vol. 10</volumenum>
+  <issuenum>no. 2</issuenum>
+  <artpagenums>pp. 207&ndash;236</artpagenums>
+  <date>2001</date>
+ </biblioentry>
+
+ <biblioentry id="bib-matveev6">
+  <abbrev>Ma</abbrev>
+  <author>
+   <firstname>Sergei</firstname>
+   <othername>V.</othername>
+   <surname>Matveev</surname>
+  </author>
+  <title>Tables of 3-manifolds up to complexity 6</title>
+  <edition>Max-Planck-Institut f&uuml;r Mathematik Preprint Series</edition>
+  <volumenum>vol. 67</volumenum>
+  <date>1998</date>
+  <publishername>Available from <ulink url="http://www.mpim-bonn.mpg.de/html/preprints/preprints.html"/></publishername>
  </biblioentry>
 
  <biblioentry id="bib-rivin-structures">
@@ -141,10 +169,10 @@
   <title>Euclidean structures on simplicial surfaces and hyperbolic
    volume</title>
   <edition>Ann. of Math. (2)</edition>
-  <volumenum>139</volumenum>
+  <volumenum>vol. 139</volumenum>
   <issuenum>no. 3</issuenum>
-  <date>1994</date>
   <artpagenums>pp. 553&ndash;580</artpagenums>
+  <date>1994</date>
  </biblioentry>
 
  <biblioentry id="bib-rivin-combopt">
@@ -158,6 +186,39 @@
   <date>July 1999</date>
  </biblioentry>
 
+ <biblioentry id="bib-rubin-3sphere1">
+  <abbrev>Ru1</abbrev>
+  <author>
+   <firstname>J.</firstname>
+   <othername>Hyam</othername>
+   <surname>Rubinstein</surname>
+  </author>
+  <title>An algorithm to recognize the 3-sphere</title>
+  <edition>Proceedings of the International Congress of Mathematicians
+   (Z&uuml;rich, 1994)</edition>
+  <volumenum>vol. 1</volumenum>
+  <artpagenums>pp. 601&ndash;611</artpagenums>
+  <publishername>Birkh&auml;user</publishername>
+  <address>Basel</address>
+  <date>1995</date>
+ </biblioentry>
+
+ <biblioentry id="bib-rubin-3sphere2">
+  <abbrev>Ru2</abbrev>
+  <author>
+   <firstname>J.</firstname>
+   <othername>Hyam</othername>
+   <surname>Rubinstein</surname>
+  </author>
+  <title>Polyhedral minimal surfaces, Heegaard splittings and
+   decision problems for 3-dimensional manifolds</title>
+  <edition>Geometric Topology (Athens, GA, 1993)</edition>
+  <volumenum>vol. 2 of AMS/IP Stud. Adv. Math.</volumenum>
+  <artpagenums>pp. 1&ndash;20</artpagenums>
+  <publishername>Amer. Math. Soc.</publishername>
+  <address>Providence, RI</address>
+  <date>1997</date>
+ </biblioentry>
 
  <biblioentry id="bib-tillus-spun">
   <abbrev>Ti</abbrev>
@@ -183,8 +244,8 @@
   <edition>Pacific J. Math.</edition>
   <volumenum>vol. 183</volumenum>
   <issuenum>no. 2</issuenum>
-  <date>1998</date>
   <artpagenums>pp. 359&ndash;374</artpagenums>
+  <date>1998</date>
  </biblioentry>
 
  <biblioentry id="bib-turaevviro">
@@ -206,7 +267,8 @@
   <edition>Topology</edition>
   <volumenum>vol. 31</volumenum>
   <issuenum>no. 4</issuenum>
-  <date>1992</date>
   <artpagenums>pp. 865&ndash;902</artpagenums>
+  <date>1992</date>
  </biblioentry>
+
 </bibliography>
