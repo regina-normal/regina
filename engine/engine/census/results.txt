@@ -1,5 +1,5 @@
 
-Census counts for 1,2,3 tetrahedra:
+Census counts for 1,2,3 tetrahedra allowing only torus/KB cusps:
 
 All connected triangulations:
 5 37 342
