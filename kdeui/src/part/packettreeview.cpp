@@ -103,11 +103,6 @@ void PacketTreeItem::refreshSubtree() {
     QListViewItem* prev = 0;
     QListViewItem* other;
     while (p) {
-        if (item)
-            std::cerr << "Match: " << p->getPacketLabel() << " vs "
-                << item->getPacket()->getPacketLabel() << '\n';
-        else
-            std::cerr << "Match: " << p->getPacketLabel() << " vs None\n";
         if (! item) {
             // We've already run out of child nodes.  Add a new one.
             if (prev)
@@ -170,8 +165,6 @@ void PacketTreeItem::refreshSubtree() {
 
     // Were there any child nodes left over?
     while (item) {
-        std::cerr << "Match: None vs "
-            << item->getPacket()->getPacketLabel() << '\n';
         other = item;
         item = (PacketTreeItem*)(item->nextSibling());
         delete other;
