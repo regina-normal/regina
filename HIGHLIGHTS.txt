@@ -12,7 +12,8 @@ Version 2.5  [ (under development) ]
 
     - The Great STL Port: calculation engine completely reworked to use
       and play well with the C++ Standard Template Library.  Also made
-      more standards-compliant (i.e., compiles under gcc3).
+      more standards-compliant (i.e., compiles under gcc3) and put in
+      its own namespace (regina).
     - Works with splitting surface signatures.
     - Optimisations for skeletal calculations in triangulations.
     - Removed CORBA engine/interface (see CHANGES.txt for why).

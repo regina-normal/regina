@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNILensSpace.h"
 
+using namespace regina;
+
 JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILensSpace_getP
         (JNIEnv *env, jobject me) {

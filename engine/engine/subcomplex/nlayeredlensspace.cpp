@@ -32,6 +32,8 @@
 #include "subcomplex/nlayeredlensspace.h"
 #include "maths/numbertheory.h"
 
+namespace regina {
+
 NLayeredLensSpace* NLayeredLensSpace::clone() const {
     NLayeredLensSpace* ans = new NLayeredLensSpace();
     ans->torus = torus->clone();
@@ -132,3 +134,5 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
     }
     return 0;
 }
+
+} // namespace regina

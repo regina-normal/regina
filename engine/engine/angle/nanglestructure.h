@@ -40,6 +40,8 @@
 #include "utilities/nrational.h"
 #include "surfaces/nconeray.h"
 
+namespace regina {
+
 class NTriangulation;
 
 /**
@@ -272,6 +274,8 @@ inline bool NAngleStructure::isTaut() {
         calculateType();
     return ((flags & flagTaut) != 0);
 }
+
+} // namespace regina
 
 #endif
 

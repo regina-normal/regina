@@ -29,6 +29,8 @@
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/ndisc.h"
 
+namespace regina {
+
 std::ostream& operator << (std::ostream& out, const NDiscSpec& spec) {
     out << '(' << spec.tetIndex << ", " << spec.type << ", "
         << spec.number << ')';
@@ -193,4 +195,6 @@ void NDiscSpecIterator::makeValid() {
         }
     }
 }
+
+} // namespace regina
 

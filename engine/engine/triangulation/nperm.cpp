@@ -28,6 +28,8 @@
 
 #include "triangulation/nperm.h"
 
+namespace regina {
+
 const NPerm allPermsS4[24] = {
     NPerm(0,1,2,3), NPerm(0,1,3,2), NPerm(0,2,3,1), NPerm(0,2,1,3),
     NPerm(0,3,1,2), NPerm(0,3,2,1), NPerm(1,0,3,2), NPerm(1,0,2,3),
@@ -122,4 +124,6 @@ NPerm edgeOrdering(int edge) {
     }
     return NPerm();
 }
+
+} // namespace regina
 

@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/progress/NJNIProgressManager.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgressManager_getProgress
         (JNIEnv *env, jobject me) {

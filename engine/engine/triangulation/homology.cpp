@@ -32,6 +32,8 @@
 #include "triangulation/ntriangulation.h"
 #include "maths/nmatrixint.h"
 
+namespace regina {
+
 const NAbelianGroup& NTriangulation::getHomologyH1() {
     if (calculatedH1)
         return *H1;
@@ -277,4 +279,6 @@ const NAbelianGroup& NTriangulation::getHomologyH2() {
     calculatedH2 = true;
     return *H2;
 }
+
+} // namespace regina
 

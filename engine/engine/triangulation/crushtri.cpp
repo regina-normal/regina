@@ -28,6 +28,8 @@
 
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 void NTriangulation::maximalForestInBoundary(
         stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
         stdhash::hash_set<NVertex*, HashPointer>& vertexSet) {
@@ -326,4 +328,6 @@ void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
             }
     }
 }
+
+} // namespace regina
 

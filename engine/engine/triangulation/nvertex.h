@@ -38,6 +38,8 @@
 #include <vector>
 #include "shareableobject.h"
 
+namespace regina {
+
 class NTetrahedron;
 class NComponent;
 class NBoundaryComponent;
@@ -366,6 +368,8 @@ inline NTetrahedron* NVertexEmbedding::getTetrahedron() const {
 inline int NVertexEmbedding::getVertex() const {
     return vertex;
 }
+
+} // namespace regina
 
 #endif
 

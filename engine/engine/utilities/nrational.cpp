@@ -28,6 +28,8 @@
 
 #include "utilities/nrational.h"
 
+namespace regina {
+
 const NRational NRational::zero;
 const NRational NRational::one(1);
 const NRational NRational::infinity(1, 0);
@@ -264,4 +266,6 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
         out << rat.getNumerator() << '/' << rat.getDenominator();
     return out;
 }
+
+} // namespace regina
 

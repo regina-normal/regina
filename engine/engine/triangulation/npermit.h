@@ -37,6 +37,8 @@
 
 #include "triangulation/nperm.h"
 
+namespace regina {
+
 /**
  * An iterator class that runs through all 24 permutations of four
  * elements.
@@ -96,6 +98,8 @@ const NPerm& NPermItS4::operator * () const {
 bool NPermItS4::done() const {
     return (permIndex >= 24);
 }
+
+} // namespace regina
 
 #endif
 

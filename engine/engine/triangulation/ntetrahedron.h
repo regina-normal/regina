@@ -38,6 +38,8 @@
 #include "shareableobject.h"
 #include "triangulation/nperm.h"
 
+namespace regina {
+
 class NFace;
 class NEdge;
 class NVertex;
@@ -426,6 +428,8 @@ inline void NTetrahedron::writeTextShort(std::ostream& out) const {
     if (description.length() > 0)
         out << " " << description;
 }
+
+} // namespace regina
 
 #endif
 

@@ -29,6 +29,8 @@
 #include "subcomplex/nlensspace.h"
 #include "maths/numbertheory.h"
 
+namespace regina {
+
 void NLensSpace::reduce() {
     if (p == 0) {
         q = 1;
@@ -51,4 +53,6 @@ void NLensSpace::reduce() {
     if (inv < q)
         q = inv;
 }
+
+} // namespace regina
 

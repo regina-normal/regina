@@ -37,6 +37,8 @@
 
 #include <string>
 
+namespace regina {
+
 class NTriangulation;
 
 /**
@@ -95,6 +97,8 @@ std::string stringToToken(const char* str);
  * @return the corresponding token.
  */
 std::string stringToToken(const std::string& str);
+
+} // namespace regina
 
 #endif
 

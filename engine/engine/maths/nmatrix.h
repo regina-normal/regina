@@ -35,6 +35,8 @@
 #define __NMATRIX_H
 #endif
 
+namespace regina {
+
 /**
  * Represents a matrix of elements of the given type T.
  *
@@ -438,6 +440,8 @@ T NMatrixRing<T>::one((long)1);
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
+
+} // namespace regina
 
 #endif
 

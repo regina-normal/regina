@@ -31,6 +31,9 @@
 
 #define MAXORDER 20
 
+using regina::NSignature;
+using regina::NSigIsoList;
+
 void usage(const char* progName) {
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " <order>\n";

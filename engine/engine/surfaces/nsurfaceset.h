@@ -37,6 +37,8 @@
 
 #include <iostream>
 
+namespace regina {
+
 class NNormalSurface;
 class NTriangulation;
 class ShareableObject;
@@ -155,6 +157,8 @@ class NSurfaceSet {
          */
         void writeAllSurfaces(std::ostream& out) const;
 };
+
+} // namespace regina
 
 #endif
 

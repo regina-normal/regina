@@ -40,6 +40,8 @@
 #include "property/npropertyholder.h"
 #include "triangulation/nperm.h"
 
+namespace regina {
+
 /**
  * Lists which vertex splits split which pairs of vertices.
  * There are three vertex splits, numbered 0,1,2.  Each vertex
@@ -1022,6 +1024,8 @@ inline bool NNormalSurface::isVertexLinking() const {
 inline bool NNormalSurface::isSplitting() const {
     return vector->isSplitting(triangulation);
 }
+
+} // namespace regina
         
 #endif
 

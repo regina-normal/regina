@@ -37,6 +37,8 @@
 
 #include <iostream>
 
+namespace regina {
+
 /**
  * A vector of elements from a given ring T.
  * Various mathematical vector operations are available.
@@ -320,6 +322,8 @@ T NVector<T>::minusOne((long)-1);
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
+
+} // namespace regina
 
 #endif
 

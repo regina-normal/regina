@@ -29,6 +29,8 @@
 #include <sstream>
 #include "shareableobject.h"
 
+namespace regina {
+
 std::string ShareableObject::toString() const {
     std::ostringstream out;
     writeTextShort(out);
@@ -40,4 +42,6 @@ std::string ShareableObject::toStringLong() const {
     writeTextLong(out);
     return out.str();
 }
+
+} // namespace regina
 

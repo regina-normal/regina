@@ -38,6 +38,8 @@
 #include <vector>
 #include "shareableobject.h"
 
+namespace regina {
+
 class NTetrahedron;
 class NFace;
 class NEdge;
@@ -275,6 +277,8 @@ inline bool NComponent::isClosed() const {
 inline void NComponent::writeTextShort(std::ostream& out) const {
     out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
 }
+
+} // namespace regina
 
 #endif
 

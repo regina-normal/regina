@@ -42,6 +42,8 @@
 #include "utilities/memutils.h"
 #include "shareableobject.h"
 
+namespace regina {
+
 class NFile;
 
 /**
@@ -657,6 +659,8 @@ inline void NGroupPresentation::readIndividualProperty(NFile&, unsigned) {
 
 inline void NGroupPresentation::initialiseAllProperties() {
 }
+
+} // namespace regina
 
 #endif
 

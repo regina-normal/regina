@@ -29,6 +29,8 @@
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nsnappedball.h"
 
+namespace regina {
+
 NSnappedBall* NSnappedBall::clone() const {
     NSnappedBall* ans = new NSnappedBall();
     ans->tet = tet;
@@ -54,4 +56,6 @@ NSnappedBall* NSnappedBall::isSnappedBall(NTetrahedron* tet) {
 
     return 0;
 }
+
+} // namespace regina
 

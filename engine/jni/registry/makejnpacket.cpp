@@ -32,23 +32,23 @@
 #include "registry/javapacketregistry.h"
 #include "registry/javafilterregistry.h"
 
-jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
+jobject makeJNPacket(JNIEnv *env, regina::NPacket* packet) {
     if (! packet)
         return 0;
 
     int type = packet->getPacketType();
     std::string classPath;
 
-    if (type == NSurfaceFilter::packetType) {
+    if (type == regina::NSurfaceFilter::packetType) {
         // Pull out the individual cases for different filter types.
-        int id = ((NSurfaceFilter*)packet)->getFilterID();
+        int id = ((regina::NSurfaceFilter*)packet)->getFilterID();
 
         if (0)
             return 0;
 
         // Define something for REGISTER_JAVA_FILTER to do.
         #define REGISTER_JAVA_FILTER(cppClass, javaClass) \
-        else if (id == cppClass::filterID) \
+        else if (id == regina::cppClass::filterID) \
             classPath = javaClass;
 
         // Import the REGISTER_JAVA_FILTER lines.
@@ -61,7 +61,7 @@ jobject makeJNPacket(JNIEnv *env, NPacket* packet) {
 
     // Define something for REGISTER_JAVA_PACKET to do.
     #define REGISTER_JAVA_PACKET(cppClass, javaClass) \
-    else if (type == cppClass::packetType) \
+    else if (type == regina::cppClass::packetType) \
         classPath = javaClass;
 
     // Import the REGISTER_JAVA_PACKET lines.

@@ -31,6 +31,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNISnappedBall.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedBall_cloneMe
         (JNIEnv *env, jobject me) {

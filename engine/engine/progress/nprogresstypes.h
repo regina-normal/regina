@@ -37,6 +37,8 @@
 
 #include "progress/nprogress.h"
 
+namespace regina {
+
 /**
  * A progress report in which the current state of progress is stored as a
  * string message.
@@ -260,6 +262,8 @@ inline double NProgressNumber::internalGetPercent() const {
     mutexUnlock();
     return ans;
 }
+
+} // namespace regina
 
 #endif
 

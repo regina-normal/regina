@@ -35,6 +35,8 @@
 #include "foreign/nsnappea.h"
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 NTriangulation* readSnapPea(const char* filename) {
     // Open the file.
     std::ifstream in(filename, NLocalFileResource::sysModeRead());
@@ -208,3 +210,5 @@ std::string stringToToken(const std::string& str) {
             *it = '_';
     return ans;
 }
+
+} // namespace regina

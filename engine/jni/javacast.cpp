@@ -29,12 +29,12 @@
 #include "javacast.h"
 
 #ifndef __USE_RAW_CASTING
-    ShareableObject* javaLongToPtr(jlong i) {
+    regina::ShareableObject* javaLongToPtr(jlong i) {
         void* addr = &i;
-        return *((ShareableObject**)addr);
+        return *((regina::ShareableObject**)addr);
     }
 
-    jlong javaPtrToLong(ShareableObject* p) {
+    jlong javaPtrToLong(regina::ShareableObject* p) {
         void* addr = &p;
         return *((jlong*)addr);
     }

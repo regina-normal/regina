@@ -29,6 +29,8 @@
 #include "triangulation/nedge.h"
 #include "triangulation/nface.h"
 
+namespace regina {
+
 const int NFace::TRIANGLE = 1;
 const int NFace::SCARF = 2;
 const int NFace::PARACHUTE = 3;
@@ -113,4 +115,6 @@ NPerm NFace::getEdgeMapping(int edge) const {
     return NPerm(facePerm.preImageOf(edgePerm[0]),
         facePerm.preImageOf(edgePerm[1]), edge, 3);
 }
+
+} // namespace regina
 

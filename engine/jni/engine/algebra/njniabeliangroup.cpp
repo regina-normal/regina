@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/algebra/NJNIAbelianGroup.h"
 
+using namespace regina;
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIAbelianGroup_addGroup__Lnormal_engine_algebra_NAbelianGroup_2
         (JNIEnv* env, jobject me, jobject group) {

@@ -31,6 +31,8 @@
 #include "progress/nprogresstypes.h"
 #include "utilities/memutils.h"
 
+namespace regina {
+
 void NCensus::matchFacePairs() {
     // Generate a list of joins (without permutations).
     // Only the lexicographically smallest in an isomorphism class is
@@ -255,4 +257,6 @@ void NCensus::matchFacePairs() {
         progress->setFinished();
     }
 }
+
+} // namespace regina
 

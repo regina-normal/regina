@@ -28,6 +28,8 @@
 
 #include "triangulation/ntetrahedron.h"
 
+namespace regina {
+
 NTetrahedron::NTetrahedron() {
     int i;
     for (i=0; i<4; i++)
@@ -68,4 +70,6 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm gluing) {
     you->tetrahedra[yourFace] = this;
     you->tetrahedronPerm[yourFace] = gluing.inverse();
 }
+
+} // namespace regina
 

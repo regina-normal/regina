@@ -37,6 +37,8 @@
 
 #include "utilities/nmpi.h"
 
+namespace regina {
+
 /**
  * Represents an arbitrary precision rational number.
  * Calculations with NRational objects will be exact.
@@ -385,5 +387,7 @@ inline bool NRational::operator >= (const NRational& compare) const {
 inline bool NRational::operator != (const NRational& compare) const {
     return ! (*this == compare);
 }
+
+} // namespace regina
 
 #endif

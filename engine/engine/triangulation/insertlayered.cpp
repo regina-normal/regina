@@ -28,6 +28,8 @@
 
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 NTetrahedron* NTriangulation::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
     unsigned long cuts2 = cuts0 + cuts1;
@@ -107,4 +109,6 @@ void NTriangulation::insertLensSpace(unsigned long p, unsigned long q) {
     }
     gluingsHaveChanged();
 }
+
+} // namespace regina
 

@@ -28,6 +28,8 @@
 
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 bool NTriangulation::intelligentSimplify() {
     // Not particularly intelligent.
     return simplifyToLocalMinimum(true);
@@ -161,4 +163,6 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     }
     return changed;
 }
+
+} // namespace regina
 

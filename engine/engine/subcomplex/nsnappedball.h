@@ -37,6 +37,8 @@
 
 #include "triangulation/nedge.h"
 
+namespace regina {
+
 class NTetrahedron;
 
 /**
@@ -151,6 +153,8 @@ inline int NSnappedBall::getInternalEdge() const {
 inline void NSnappedBall::writeTextShort(std::ostream& out) const {
     out << "Snapped 3-ball";
 }
+
+} // namespace regina
 
 #endif
 

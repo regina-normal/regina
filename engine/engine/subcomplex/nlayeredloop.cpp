@@ -31,6 +31,8 @@
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayeredloop.h"
 
+namespace regina {
+
 NLayeredLoop* NLayeredLoop::clone() const {
     NLayeredLoop* ans = new NLayeredLoop();
     ans->index = index;
@@ -177,4 +179,6 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     // Nothing found.
     return 0;
 }
+
+} // namespace regina
 

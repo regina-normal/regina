@@ -39,6 +39,8 @@
 #include "triangulation/nperm.h"
 #include "triangulation/ntetrahedron.h"
 
+namespace regina {
+
 class NComponent;
 class NBoundaryComponent;
 
@@ -384,6 +386,8 @@ inline int NFaceEmbedding::getFace() const {
 inline NPerm NFaceEmbedding::getVertices() const {
     return tetrahedron->getFaceMapping(face);
 }
+
+} // namespace regina
 
 #endif
 

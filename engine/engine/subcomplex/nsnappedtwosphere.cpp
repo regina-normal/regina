@@ -30,6 +30,8 @@
 #include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nsnappedball.h"
 
+namespace regina {
+
 NSnappedTwoSphere* NSnappedTwoSphere::clone() const {
     NSnappedTwoSphere* ans = new NSnappedTwoSphere();
     ans->ball[0] = ball[0]->clone();
@@ -80,4 +82,6 @@ NTriangulation* NSnappedTwoSphere::getReducedTriangulation(
         const NTriangulation* original) const {
     return 0;
 }
+
+} // namespace regina
 

@@ -30,6 +30,8 @@
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(nTet);
     for (unsigned long i = 0; i < nTet; i++) {
@@ -183,4 +185,6 @@ NSpiralSolidTorus* NSpiralSolidTorus::isSpiralSolidTorus(NTetrahedron* tet,
     copy(roles.begin(), roles.end(), ans->vertexRoles);
     return ans;
 }
+
+} // namespace regina
 

@@ -42,6 +42,8 @@
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nisomorphism.h"
 
+namespace regina {
+
 class NProgressManager;
 class NProgressMessage;
 
@@ -397,6 +399,8 @@ inline bool NCensus::noDest(int tet, int face) {
 inline bool NCensus::isCanonical() {
     return isCanonicalInternal(0, NTetFace(0, 0));
 }
+
+} // namespace regina
 
 #endif
 

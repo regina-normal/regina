@@ -31,6 +31,8 @@
 #include "maths/nvectormatrix.h"
 #include "maths/nmatrixint.h"
 
+namespace regina {
+
 void NConeRay::scaleDown() {
     NLargeInteger gcd; // Initialised to 0.
     unsigned i;
@@ -60,4 +62,6 @@ NConeRay* intersectLine(const NConeRay& pos, const NConeRay& neg,
 
     return ans;
 }
+
+} // namespace regina
 

@@ -29,6 +29,8 @@
 #include <map>
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
     if (! calculatedSkeleton)
         calculateSkeleton();
@@ -263,4 +265,6 @@ bool NTriangulation::isIsomorphicTo(NTriangulation& other) {
     delete[] used;
     return false;
 }
+
+} // namespace regina
 

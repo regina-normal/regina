@@ -38,6 +38,8 @@
 #include "shareableobject.h"
 #include "triangulation/nperm.h"
 
+namespace regina {
+
 class NTetrahedron;
 
 /**
@@ -265,6 +267,8 @@ inline NPerm NLayeredChain::getTopVertexRoles() const {
 inline void NLayeredChain::writeTextShort(std::ostream& out) const {
     out << "Layered chain of index " << index;
 }
+
+} // namespace regina
 
 #endif
 

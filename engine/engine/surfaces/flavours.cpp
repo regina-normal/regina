@@ -28,6 +28,8 @@
 
 #include "surfaces/flavourregistry.h"
 
+namespace regina {
+
 #define __FLAVOUR_REGISTRY_BODY
 
 // Bring in routines from the flavour registry.
@@ -41,4 +43,6 @@
     }
 
 #include "surfaces/flavourregistry.h"
+
+} // namespace regina
 

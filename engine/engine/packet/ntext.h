@@ -37,6 +37,8 @@
 
 #include "packet/npacket.h"
 
+namespace regina {
+
 /**
  * A packet representing a text string.
  */
@@ -138,6 +140,8 @@ inline bool NText::dependsOnParent() const {
 inline NPacket* NText::internalClonePacket(NPacket*) const {
     return new NText(text);
 }
+
+} // namespace regina
 
 #endif
 

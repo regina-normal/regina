@@ -40,6 +40,8 @@
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nsfs.h"
 
+namespace regina {
+
 class NComponent;
 
 /**
@@ -256,6 +258,8 @@ inline bool NAugTriSolidTorus::hasLayeredChain() const {
 inline const NSFS& NAugTriSolidTorus::getSeifertStructure() const {
     return seifertStructure;
 }
+
+} // namespace regina
 
 #endif
 

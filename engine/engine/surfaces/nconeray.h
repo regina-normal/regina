@@ -39,6 +39,8 @@
 #include "utilities/nmpi.h"
 #include "maths/nvectordense.h"
 
+namespace regina {
+
 class NMatrixInt;
 
 /**
@@ -313,6 +315,8 @@ inline NVector<NLargeInteger>* NConeRay::clone() const {
 inline bool NConeRay::isCompatibleWith(const NConeRay&) const {
     return true;
 }
+
+} // namespace regina
 
 // Template definitions
 

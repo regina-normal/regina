@@ -35,6 +35,8 @@
 #include "utilities/hashutils.h"
 #include "utilities/stlutils.h"
 
+namespace regina {
+
 typedef std::list<NGroupExpressionTerm>::iterator TermIterator;
 typedef std::list<NGroupExpressionTerm>::const_iterator TermIteratorConst;
 typedef std::vector<NGroupExpression*>::iterator RelIterator;
@@ -456,4 +458,6 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
             out << std::endl;
         }
 }
+
+} // namespace regina
 

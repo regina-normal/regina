@@ -39,6 +39,8 @@
 #include "shareableobject.h"
 #include "surfaces/nsurfaceset.h"
 
+namespace regina {
+
 class NSurfaceFilter;
 
 /**
@@ -126,6 +128,8 @@ inline void NSurfaceSubset::writeTextShort(std::ostream& out) const {
 inline void NSurfaceSubset::writeTextLong(std::ostream& out) const {
     writeAllSurfaces(out);
 }
+
+} // namespace regina
 
 #endif
 

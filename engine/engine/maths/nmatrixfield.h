@@ -37,6 +37,8 @@
 
 #include "maths/nmatrix.h"
 
+namespace regina {
+
 /**
  * Represents a matrix of elements from a given field T.
  *
@@ -165,6 +167,8 @@ class NMatrixField : public NMatrixRing<T> {
             return ans;
         }
 };
+
+} // namespace regina
 
 #endif
 

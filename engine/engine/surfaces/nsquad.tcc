@@ -30,6 +30,8 @@
 
 #include "maths/nvectorunit.h"
 
+namespace regina {
+
 template <class RayOutputIterator, class FaceOutputIterator>
 void NNormalSurfaceVectorQuad::createNonNegativeCone(
         NTriangulation* triangulation,
@@ -46,4 +48,6 @@ void NNormalSurfaceVectorQuad::createNonNegativeCone(
         *faces++ = new NVectorUnit<NLargeInteger>(nCoords, i);
     }
 }
+
+} // namespace regina
 

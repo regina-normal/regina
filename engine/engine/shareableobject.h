@@ -39,6 +39,8 @@
 #include <iostream>
 #include <string>
 
+namespace regina {
+
 /**
  * Facilitates mirroring objects in the underlying C++ calculation
  * engine using the various wrapper classes provided in the various
@@ -179,5 +181,7 @@ inline void ShareableObject::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << '\n';
 }
+
+} // namespace regina
 
 #endif

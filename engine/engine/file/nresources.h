@@ -37,6 +37,8 @@
 
 #include <fstream>
 
+namespace regina {
+
 /**
  * Provides a standard random access interface for file-like resources.
  *
@@ -226,5 +228,7 @@ inline char NLocalFileResource::getChar() {
 inline void NLocalFileResource::putChar(char c) {
     outfile.put(c);
 }
+
+} // namespace regina
 
 #endif

@@ -38,6 +38,8 @@
 #include <gmp.h>
 #include <iostream>
 
+namespace regina {
+
 /**
  * Represents an arbitrary precision integer.
  * Calculations will be exact no matter how large the integers become.
@@ -836,6 +838,8 @@ inline NLargeInteger NLargeInteger::lcm(const NLargeInteger& other) const {
     ans.divByExact(gcd(other));
     return ans;
 }
+
+} // namespace regina
 
 #endif
 

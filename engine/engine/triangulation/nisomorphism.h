@@ -39,6 +39,8 @@
 #include "triangulation/nperm.h"
 #include "triangulation/ntetface.h"
 
+namespace regina {
+
 /**
  * Represents a combinatorial isomorphism of a triangulation.
  * This class cannot be directly instantiated; the individual subclasses
@@ -323,6 +325,8 @@ inline int& NIsomorphismIndexed::facePermIndex(unsigned tet) {
 inline const int& NIsomorphismIndexed::facePermIndex(unsigned tet) const {
     return mIndex[tet];
 }
+
+} // namespace regina
 
 #endif
 

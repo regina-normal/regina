@@ -41,6 +41,8 @@
 #include "utilities/nbooleans.h"
 #include "utilities/nmpi.h"
 
+namespace regina {
+
 /**
  * A normal surface filter that filters by basic properties of the normal
  * surface.
@@ -260,6 +262,8 @@ inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
 
 inline void NSurfaceFilterProperties::writeFilter(NFile&) const {
 }
+
+} // namespace regina
 
 #endif
 

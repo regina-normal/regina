@@ -32,6 +32,8 @@
 #define TYPE_AND 1
 #define TYPE_OR 2
 
+namespace regina {
+
 bool NSurfaceFilterCombination::accept(NNormalSurface& surface) const {
     if (usesAnd) {
         // Combine all child filters using AND.
@@ -64,4 +66,6 @@ NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
     ans->usesAnd = (in.readInt() == TYPE_AND);
     return ans;
 }
+
+} // namespace regina
 

@@ -28,6 +28,8 @@
 
 #include "utilities/stringutils.h"
 
+namespace regina {
+
 char* duplicate(const std::string& str) {
     char* ans = new char[str.length() + 1];
 
@@ -38,3 +40,5 @@ char* duplicate(const std::string& str) {
 
     return ans;
 }
+
+} // namespace regina

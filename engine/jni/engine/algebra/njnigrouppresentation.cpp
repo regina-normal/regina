@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/algebra/NJNIGroupPresentation.h"
 
+using namespace regina;
+
 JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupPresentation_addGenerator
         (JNIEnv *env, jobject me, jlong num) {

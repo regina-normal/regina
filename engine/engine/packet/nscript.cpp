@@ -32,6 +32,8 @@
 
 #define PROP_VARIABLE 1
 
+namespace regina {
+
 namespace {
     const std::string emptyString;
 }
@@ -119,4 +121,6 @@ void NScript::readIndividualProperty(NFile& infile, unsigned propType) {
         variables.insert(std::make_pair(infile.readString(),
             infile.readString()));
 }
+
+} // namespace regina
 

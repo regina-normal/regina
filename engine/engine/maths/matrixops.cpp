@@ -29,6 +29,8 @@
 #include "maths/matrixops.h"
 #include "maths/numbertheory.h"
 
+namespace regina {
+
 void smithNormalForm(NMatrixInt& matrix) {
     unsigned long currStage = 0;
     unsigned long nonEmptyRows = matrix.rows();
@@ -146,4 +148,6 @@ void smithNormalForm(NMatrixInt& matrix) {
         currStage++;
     }
 }
+
+} // namespace regina
 

@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/JNIShareableObject.h"
 
+using namespace regina;
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_JNIShareableObject_destroy
         (JNIEnv *env, jobject me) {

@@ -28,7 +28,11 @@
 
 #include "packet/ncontainer.h"
 
+namespace regina {
+
 NContainer* NContainer::readPacket(NFile&, NPacket*) {
     return new NContainer;
 }
+
+} // namespace regina
 

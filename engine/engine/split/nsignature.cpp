@@ -29,6 +29,8 @@
 #include <algorithm>
 #include "split/nsignature.h"
 
+namespace regina {
+
 NSignature::NSignature(const NSignature& sig) : order(sig.order),
         label(new unsigned[2 * sig.order]), labelInv(new bool[2 * sig.order]),
         nCycles(sig.nCycles), cycleStart(new unsigned[sig.nCycles + 1]),
@@ -108,4 +110,6 @@ void NSignature::writeCycles(std::ostream& out, const std::string& cycleOpen,
 
     out << cycleClose;
 }
+
+} // namespace regina
 

@@ -40,6 +40,8 @@
 
 #include "shareableobject.h"
 
+namespace regina {
+
 class NFile;
 
 /**
@@ -754,6 +756,8 @@ inline unsigned long NPacket::getNumberOfDescendants() const {
 
 inline void NPacket::tidyReadPacket() {
 }
+
+} // namespace regina
 
 #endif
 

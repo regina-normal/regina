@@ -30,6 +30,8 @@
 #include "progress/nprogressmanager.h"
 #include "progress/nprogresstypes.h"
 
+namespace regina {
+
 unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, NProgressManager* manager) {
@@ -119,4 +121,6 @@ void* NCensus::run(void*) {
     matchFacePairs();
     return 0;
 }
+
+} // namespace regina
 

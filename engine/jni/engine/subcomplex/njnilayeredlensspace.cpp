@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNILayeredLensSpace.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLensSpace_cloneMe
         (JNIEnv *env, jobject me) {

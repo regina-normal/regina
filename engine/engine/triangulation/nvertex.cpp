@@ -28,6 +28,8 @@
 
 #include "triangulation/nvertex.h"
 
+namespace regina {
+
 const int NVertex::SPHERE = 1;
 const int NVertex::DISC = 2;
 const int NVertex::TORUS = 3;
@@ -46,3 +48,5 @@ void NVertex::writeTextShort(std::ostream& out) const {
     }
     out << "vertex of degree " << getNumberOfEmbeddings();
 }
+
+} // namespace regina

@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/progress/NJNIProgress.h"
 
+using namespace regina;
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_progress_NJNIProgress_cancel
         (JNIEnv *env, jobject me) {

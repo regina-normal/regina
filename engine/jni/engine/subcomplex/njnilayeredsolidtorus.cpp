@@ -31,6 +31,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNILayeredSolidTorus.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredSolidTorus_cloneMe
         (JNIEnv *env, jobject me) {

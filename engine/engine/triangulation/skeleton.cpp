@@ -30,6 +30,8 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/nrational.h"
 
+namespace regina {
+
 void NTriangulation::calculateSkeleton() {
     ideal = false;
     valid = true;
@@ -549,3 +551,5 @@ void NTriangulation::calculateVertexLinks() {
         }
     }
 }
+
+} // namespace regina

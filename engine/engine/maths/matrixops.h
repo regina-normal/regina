@@ -39,6 +39,8 @@
 
 #include "maths/nmatrixint.h"
 
+namespace regina {
+
 /**
  * Transforms the given integer matrix into Smith normal form.
  * Note that the given matrix need not be square and need not be of full
@@ -55,6 +57,8 @@
  * @param matrix the matrix to transform.
  */
 void smithNormalForm(NMatrixInt& matrix);
+
+} // namespace regina
 
 #endif
 

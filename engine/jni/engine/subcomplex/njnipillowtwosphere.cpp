@@ -32,6 +32,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNIPillowTwoSphere.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIPillowTwoSphere_cloneMe
         (JNIEnv *env, jobject me) {

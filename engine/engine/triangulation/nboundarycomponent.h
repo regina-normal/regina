@@ -39,6 +39,8 @@
 #include "shareableobject.h"
 #include "triangulation/nvertex.h"
 
+namespace regina {
+
 class NTetrahedron;
 class NFace;
 class NEdge;
@@ -247,6 +249,8 @@ inline bool NBoundaryComponent::isOrientable() const {
 inline void NBoundaryComponent::writeTextShort(std::ostream& out) const {
     out << (isIdeal() ? "Ideal " : "Finite ") << "boundary component";
 }
+
+} // namespace regina
 
 #endif
 

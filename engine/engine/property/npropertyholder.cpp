@@ -29,6 +29,8 @@
 #include "property/npropertyholder.h"
 #include "file/nfile.h"
 
+namespace regina {
+
 void NPropertyHolder::readProperties(NFile& infile) {
     unsigned propType = infile.readUInt();
     while (propType) {
@@ -58,4 +60,6 @@ void NPropertyHolder::writePropertyFooter(NFile& outfile,
 void NPropertyHolder::writeAllPropertiesFooter(NFile& outfile) const {
     outfile.writeUInt(0);
 }
+
+} // namespace regina
 

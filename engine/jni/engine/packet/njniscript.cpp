@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/packet/NJNIScript.h"
 
+using namespace regina;
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIScript_addFirst
         (JNIEnv *env, jobject me, jstring str) {

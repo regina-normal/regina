@@ -28,6 +28,8 @@
 
 #include "packet/packetregistry.h"
 
+namespace regina {
+
 // Define a task for each REGISTER_PACKET to perform.
 #define REGISTER_PACKET(class, type, name)     \
     int class::getPacketType() const {         \
@@ -41,3 +43,5 @@
 // Import all the REGISTER_PACKET lines.
 #define __PACKET_REGISTRY_BODY
 #include "packet/packetregistry.h"
+
+} // namespace regina

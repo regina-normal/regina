@@ -37,6 +37,8 @@
 
 #include "surfaces/nsmirrored.h"
 
+namespace regina {
+
 class NMatrixInt;
 
 /**
@@ -98,6 +100,8 @@ inline NLargeInteger NNormalSurfaceVectorQuad::getOctCoord(
         unsigned long, int, NTriangulation*) const {
     return zero;
 }
+
+} // namespace regina
 
 // Template definitions
 

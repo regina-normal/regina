@@ -31,6 +31,8 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
+namespace regina {
+
 namespace {
     NPerm exitFace(bool firstOccurrence, bool lowerCase) {
         if (firstOccurrence) {
@@ -160,4 +162,6 @@ bool NTriangulation::insertSplittingSurface(const std::string& sig) {
     delete[] occurrence;
     return true;
 }
+
+} // namespace regina
 

@@ -39,6 +39,8 @@
 #include "shareableobject.h"
 #include "triangulation/nperm.h"
 
+namespace regina {
+
 class NFace;
 class NTriangulation;
 
@@ -163,6 +165,8 @@ inline NPerm NPillowTwoSphere::getFaceMapping() const {
 inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";
 }
+
+} // namespace regina
 
 #endif
 

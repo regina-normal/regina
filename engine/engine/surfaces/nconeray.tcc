@@ -34,6 +34,8 @@
 #include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 
+namespace regina {
+
 template <class OutputIterator, class RayIterator, class FaceIterator>
 void intersectCone(OutputIterator results,
         RayIterator oldRaysFirst, RayIterator oldRaysLast,
@@ -154,4 +156,6 @@ void intersectCone(OutputIterator results,
     // We're done!
     copy(list[workingList].begin(), list[workingList].end(), results);
 }
+
+} // namespace regina
 

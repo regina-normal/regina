@@ -36,6 +36,8 @@
 #define __MEMUTILS_H
 #endif
 
+namespace regina {
+
 /**
  * An adaptable generator used to create objects using default constructors.
  * This class is for use with the Standard Template Library.
@@ -184,6 +186,8 @@ struct FuncDelete {
         delete ptr;
     }
 };
+
+} // namespace regina
 
 #endif
 

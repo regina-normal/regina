@@ -30,6 +30,8 @@
 
 #include <iostream>
 
+namespace regina {
+
 const char NBoolSet::eltTrue = 1;
 const char NBoolSet::eltFalse = 2;
 const NBoolSet NBoolSet::sNone;
@@ -48,4 +50,6 @@ std::ostream& operator << (std::ostream& out, const NBoolSet& set) {
         out << "{ true, false }";
     return out;
 }
+
+} // namespace regina
 

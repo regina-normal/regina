@@ -28,6 +28,8 @@
 
 #include "surfaces/filterregistry.h"
 
+namespace regina {
+
 #define __FILTER_REGISTRY_BODY
 
 // Bring in routines from the filter registry.
@@ -42,4 +44,6 @@
     }
 
 #include "surfaces/filterregistry.h"
+
+} // namespace regina
 

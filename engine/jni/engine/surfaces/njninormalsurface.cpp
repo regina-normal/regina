@@ -31,6 +31,8 @@
 #include "jnitools.h"
 #include "engine/surfaces/NJNINormalSurface.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurface_crush
         (JNIEnv *env, jobject me) {

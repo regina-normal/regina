@@ -42,6 +42,8 @@
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
 
+namespace regina {
+
 /**
  * A packet representing a collection of angle structures on a triangulation.
  * Such a packet must always be a child packet of the triangulation on
@@ -345,6 +347,8 @@ inline NAngleStructureList::StructureInserter&
         NAngleStructureList::StructureInserter::operator ++(int) {
     return *this;
 }
+
+} // namespace regina
 
 #endif
 

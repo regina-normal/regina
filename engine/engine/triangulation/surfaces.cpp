@@ -29,6 +29,8 @@
 #include "triangulation/ntriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 
+namespace regina {
+
 void NTriangulation::calculateSurfaceProperties() {
     // Check for 2-sphere boundary components.
     if (! calculatedZeroEfficient)
@@ -100,4 +102,6 @@ void NTriangulation::calculateSurfaceProperties() {
     // Clean up.
     surfaces.makeOrphan();
 }
+
+} // namespace regina
 

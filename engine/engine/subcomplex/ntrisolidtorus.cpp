@@ -30,6 +30,8 @@
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
 
+namespace regina {
+
 NTriSolidTorus* NTriSolidTorus::clone() const {
     NTriSolidTorus* ans = new NTriSolidTorus();
     for (int i = 0; i < 3; i++) {
@@ -128,4 +130,6 @@ NTriSolidTorus* NTriSolidTorus::isTriSolidTorus(NTetrahedron* tet,
     // We have the desired structure!
     return ans;
 }
+
+} // namespace regina
 

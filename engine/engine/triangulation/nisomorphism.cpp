@@ -28,6 +28,8 @@
 
 #include "triangulation/nisomorphism.h"
 
+namespace regina {
+
 NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :
         NIsomorphism(cloneMe.getNumberOfTetrahedra()),
         mFacePerm(new NPerm[cloneMe.getNumberOfTetrahedra()]) {
@@ -45,4 +47,6 @@ NIsomorphismIndexed::NIsomorphismIndexed(const NIsomorphismIndexed& cloneMe) :
         mIndex[i] = cloneMe.mIndex[i];
     }
 }
+
+} // namespace regina
 

@@ -28,6 +28,8 @@
 
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 namespace {
     // Mapping from vertices (0,1,2) of each external face of a new tetrahedron
     //     to the vertices of this new tetrahedron in a 3-2 move.
@@ -668,3 +670,5 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
     removeTetrahedron(t);
     return true;
 }
+
+} // namespace regina

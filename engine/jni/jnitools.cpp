@@ -28,8 +28,8 @@
 
 #include "jnitools.h"
 
-jobject CREATE_WRAPPER_OBJECT(JNIEnv* jni_env, ShareableObject* cpp_object,
-        const char* java_class) {
+jobject CREATE_WRAPPER_OBJECT(JNIEnv* jni_env,
+        regina::ShareableObject* cpp_object, const char* java_class) {
     if (! cpp_object)
         return 0;
 
@@ -60,14 +60,15 @@ std::string jstringToCString(JNIEnv* jni_env, jstring str) {
     return ans;
 }
 
-NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value) {
+regina::NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value) {
     jclass c = jni_env->GetObjectClass(value);
     jmethodID m = jni_env->GetMethodID(c, "toString", "()Ljava/lang/String;");
     return jstringToCString(jni_env,
         (jstring)jni_env->CallObjectMethod(value, m)).c_str();
 }
 
-jobject jBigIntegerFromLarge(JNIEnv* jni_env, const NLargeInteger& value) {
+jobject jBigIntegerFromLarge(JNIEnv* jni_env,
+        const regina::NLargeInteger& value) {
     if (value.isInfinite())
         return 0;
 

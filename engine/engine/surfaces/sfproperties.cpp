@@ -35,6 +35,8 @@
 #define PROPID_COMPACT 1003
 #define PROPID_REALBDRY 1004
 
+namespace regina {
+
 NLargeInteger NSurfaceFilterProperties::getEC(unsigned long index) const {
     std::set<NLargeInteger>::const_iterator it = eulerCharacteristic.begin();
     advance(it, index);
@@ -145,4 +147,6 @@ void NSurfaceFilterProperties::readIndividualProperty(NFile& in,
             realBoundary = in.readBoolSet(); break;
     }
 }
+
+} // namespace regina
 

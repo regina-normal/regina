@@ -37,6 +37,8 @@
 
 #include "shareableobject.h"
 
+namespace regina {
+
 class NTetrahedron;
 
 /**
@@ -332,6 +334,8 @@ inline void NLayeredSolidTorus::writeTextShort(std::ostream& out) const {
     out << "( " << meridinalCuts[0] << ", " << meridinalCuts[1] << ", "
         << meridinalCuts[2] << " ) layered solid torus";
 }
+
+} // namespace regina
 
 #endif
 

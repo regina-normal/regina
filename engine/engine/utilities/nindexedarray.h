@@ -39,6 +39,8 @@
 #include <hash_map>
 #include "utilities/hashutils.h"
 
+namespace regina {
+
 /**
  * A dynamically resizable array of objects of type T with fast random
  * access and fast object-to-index lookup.  The fast object-to-index
@@ -493,5 +495,7 @@ inline bool operator < (const NIndexedArray<Data, HashFcn, EqualTo>& array1,
     return lexicograhical_compare(array1.begin(), array1,end(),
         array2.begin(), array2.end());
 }
+
+} // namespace regina
 
 #endif

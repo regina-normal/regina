@@ -30,6 +30,8 @@
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayeredchain.h"
 
+namespace regina {
+
 bool NLayeredChain::extendAbove() {
     NTetrahedron* adj = top->getAdjacentTetrahedron(topVertexRoles[0]);
     if (adj == bottom || adj == top || adj == 0)
@@ -95,4 +97,6 @@ void NLayeredChain::invert() {
     topVertexRoles = topVertexRoles * NPerm(3, 2, 1, 0);
     bottomVertexRoles = bottomVertexRoles * NPerm(3, 2, 1, 0);
 }
+
+} // namespace regina
 

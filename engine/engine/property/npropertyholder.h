@@ -37,6 +37,8 @@
 
 #include <fstream>
 
+namespace regina {
+
 class NFile;
 
 /**
@@ -231,6 +233,8 @@ inline NPropertyHolder::~NPropertyHolder() {
 inline void NPropertyHolder::clearAllProperties() {
     initialiseAllProperties();
 }
+
+} // namespace regina
 
 #endif
 

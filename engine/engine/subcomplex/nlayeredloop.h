@@ -37,6 +37,8 @@
 
 #include "shareableobject.h"
 
+namespace regina {
+
 class NComponent;
 class NEdge;
 
@@ -156,6 +158,8 @@ inline void NLayeredLoop::writeTextShort(std::ostream& out) const {
     out << "Layered loop (" << (hinge[1] ? "not twisted" : "twisted") <<
         ") of index " << index;
 }
+
+} // namespace regina
 
 #endif
 

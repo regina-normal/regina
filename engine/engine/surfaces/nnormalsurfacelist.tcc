@@ -30,6 +30,8 @@
 
 #include "surfaces/flavourregistry.h"
 
+namespace regina {
+
 #define __FLAVOUR_REGISTRY_BODY
 #define REGISTER_FLAVOUR(id_name, class, n, a, t) \
     case NNormalSurfaceList::id_name: \
@@ -46,4 +48,6 @@ void createNonNegativeCone(NTriangulation* triangulation, int flavour,
 
 #undef REGISTER_FLAVOUR
 #undef __FLAVOUR_REGISTRY_BODY
+
+} // namespace regina
 

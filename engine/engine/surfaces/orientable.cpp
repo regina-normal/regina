@@ -29,6 +29,8 @@
 #include <queue>
 #include "surfaces/ndisc.h"
 
+namespace regina {
+
 namespace {
     /**
      * Stores orientation and sides A/B for a normal disc.
@@ -238,4 +240,6 @@ void NNormalSurface::calculateOrientable() {
         calculatedConnected = true;
     }
 }
+
+} // namespace regina
 

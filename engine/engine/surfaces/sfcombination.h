@@ -38,6 +38,8 @@
 
 #include "surfaces/nsurfacefilter.h"
 
+namespace regina {
+
 /**
  * A normal surface filter that simply combines other filters.
  * This filter will combine, using boolean \a and or \a or, all of the
@@ -114,6 +116,8 @@ inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
 inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {
     o << (usesAnd ? "AND" : "OR") << " combination normal surface filter\n";
 }
+
+} // namespace regina
 
 #endif
 

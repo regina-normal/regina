@@ -29,6 +29,8 @@
 #include "surfaces/nsurfacesubset.h"
 #include "surfaces/nsurfacefilter.h"
 
+namespace regina {
+
 NSurfaceSubset::NSurfaceSubset(const NSurfaceSet& set,
         const NSurfaceFilter& filter) : source(set) {
     unsigned long n = set.getNumberOfSurfaces();
@@ -39,4 +41,6 @@ NSurfaceSubset::NSurfaceSubset(const NSurfaceSet& set,
             surfaces.push_back(s);
     }
 }
+
+} // namespace regina
 

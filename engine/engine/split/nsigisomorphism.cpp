@@ -29,6 +29,8 @@
 #include <algorithm>
 #include "split/nsigisomorphism.h"
 
+namespace regina {
+
 NSigPartialIsomorphism::NSigPartialIsomorphism(
         const NSigPartialIsomorphism& iso) : nLabels(iso.nLabels),
         nCycles(iso.nCycles),
@@ -133,4 +135,6 @@ int NSigPartialIsomorphism::compareWith(const NSignature& sig,
 
     return 0;
 }
+
+} // namespace regina
 

@@ -39,6 +39,8 @@
 #include "utilities/nmpi.h"
 #include "shareableobject.h"
 
+namespace regina {
+
 class NFile;
 class NMatrixInt;
 
@@ -318,6 +320,8 @@ inline unsigned NAbelianGroup::getTorsionRank(unsigned long degree) const {
 inline unsigned long NAbelianGroup::getNumberOfInvariantFactors() const {
     return invariantFactors.size();
 }
+
+} // namespace regina
 
 #endif
 

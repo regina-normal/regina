@@ -38,6 +38,8 @@
 
 #include "split/nsignature.h"
 
+namespace regina {
+
 class NSigPartialIsomorphism {
     private:
         unsigned nLabels;
@@ -103,6 +105,8 @@ inline bool NSigPartialIsomorphism::ShorterCycle::operator ()
         iso.dir, iso.labelImage, sig, cycle2, iso.cycleStart[cycle2],
         iso.dir, iso.labelImage) < 0);
 }
+
+} // namespace regina
 
 #endif
 

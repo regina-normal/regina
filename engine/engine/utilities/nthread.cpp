@@ -28,6 +28,8 @@
 
 #include "utilities/nthread.h"
 
+namespace regina {
+
 namespace {
     struct NThreadRuntimeArgs {
         NThread* thread;
@@ -70,4 +72,6 @@ bool NThread::start(void* (*routine)(void*), void* args, NThreadID* id) {
         return (pthread_create(&tmpID, 0, routine, args) == 0);
     }
 }
+
+} // namespace regina
 

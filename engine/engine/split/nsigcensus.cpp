@@ -30,6 +30,8 @@
 #include "split/nsigcensus.h"
 #include "utilities/memutils.h"
 
+namespace regina {
+
 unsigned long formSigCensus(unsigned order, UseSignature use, void* useArgs) {
     NSigCensus census(order, use, useArgs);
     census.run(0);
@@ -234,4 +236,6 @@ void NSigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
     if (newCycleGroup)
         sig.nCycleGroups--;
 }
+
+} // namespace regina
 

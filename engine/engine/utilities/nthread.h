@@ -38,6 +38,8 @@
 #include <pthread.h>
 #include <sched.h>
 
+namespace regina {
+
 /**
  * A mutual exclusion device (mutex) used to ensure that different
  * threads do not interfere when working with the same data.
@@ -190,6 +192,8 @@ inline NThread::~NThread() {
 inline void NThread::yield() {
     sched_yield();
 }
+
+} // namespace regina
 
 #endif
 

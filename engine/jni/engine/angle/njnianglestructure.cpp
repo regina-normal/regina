@@ -31,6 +31,8 @@
 #include "jnitools.h"
 #include "engine/angle/NJNIAngleStructure.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructure_getAngleDen
         (JNIEnv *env, jobject me, jlong tet, jint edges) {

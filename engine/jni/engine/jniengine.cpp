@@ -45,6 +45,8 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "maths/matrixops.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_JNIEngine_enterTextTriangulation
         (JNIEnv *env, jobject) {

@@ -38,6 +38,8 @@
 #include <list>
 #include "shareableobject.h"
 
+namespace regina {
+
 class NLensSpace;
 
 /**
@@ -382,6 +384,8 @@ inline bool NSFS::isOrbitOrientable() const {
 inline unsigned long NSFS::getOrbitPunctures() const {
     return orbitPunctures;
 }
+
+} // namespace regina
 
 #endif
 

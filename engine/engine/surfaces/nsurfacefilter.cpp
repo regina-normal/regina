@@ -31,6 +31,8 @@
 #include "surfaces/filterregistry.h"
 #include "file/nfile.h"
 
+namespace regina {
+
 #define __FILTER_REGISTRY_BODY
 
 NSurfaceFilter* NSurfaceFilter::readFilter(NFile&, NPacket*) {
@@ -77,4 +79,6 @@ NPacket* NSurfaceFilter::internalClonePacket(NPacket* parent) const {
         default: return new NSurfaceFilter();
     }
 }
+
+} // namespace regina
 

@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/packet/NJNIText.h"
 
+using namespace regina;
+
 JNIEXPORT jstring JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIText_getText
         (JNIEnv *env, jobject me) {

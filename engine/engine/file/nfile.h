@@ -40,6 +40,8 @@
 #include "utilities/nmpi.h"
 #include "utilities/nbooleans.h"
 
+namespace regina {
+
 class NPacket;
 
 /**
@@ -575,6 +577,8 @@ inline std::streampos NFile::getPosition() {
 inline void NFile::setPosition(std::streampos pos) {
     resource->setPosition((long)pos);
 }
+
+} // namespace regina
 
 #endif
 

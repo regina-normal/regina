@@ -31,6 +31,8 @@
 #include "subcomplex/nsfs.h"
 #include "subcomplex/nlensspace.h"
 
+namespace regina {
+
 typedef std::list<NExceptionalFibre>::iterator FibreIterator;
 typedef std::list<NExceptionalFibre>::const_iterator FibreIteratorConst;
 
@@ -254,3 +256,5 @@ NExceptionalFibre NSFS::getModifiedFinalFibre() const {
     ans.beta += (k * ans.alpha);
     return ans;
 }
+
+} // namespace regina

@@ -38,6 +38,8 @@
 
 #include "subcomplex/nsnappedball.h"
 
+namespace regina {
+
 class NTetrahedron;
 class NTriangulation;
 class NSnappedBall;
@@ -170,6 +172,8 @@ inline NSnappedBall* NSnappedTwoSphere::getSnappedBall(int index) const {
 inline void NSnappedTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Snapped 2-sphere";
 }
+
+} // namespace regina
 
 #endif
 

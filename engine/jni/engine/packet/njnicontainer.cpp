@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/packet/NJNIContainer.h"
 
+using namespace regina;
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_packet_NJNIContainer_newNContainer
         (JNIEnv *env, jobject me) {

@@ -30,6 +30,8 @@
 #include "maths/matrixops.h"
 #include "file/nfile.h"
 
+namespace regina {
+
 const NLargeInteger& NAbelianGroup::getInvariantFactor(
         unsigned long index) const {
     std::multiset<NLargeInteger>::const_iterator it = invariantFactors.begin();
@@ -254,4 +256,6 @@ NAbelianGroup* NAbelianGroup::readFromFile(NFile& in) {
             in.readLarge());
     return ans;
 }
+
+} // namespace regina
 

@@ -30,6 +30,8 @@
 #include "utilities/memutils.h"
 #include "utilities/stlutils.h"
 
+namespace regina {
+
 namespace {
     // The indices of the new tetrahedra
     int tetIndex[4][4][4] = {
@@ -227,3 +229,5 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     gluingsHaveChanged();
     return true;
 }
+
+} // namespace regina

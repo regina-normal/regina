@@ -40,6 +40,8 @@
 #include "triangulation/nperm.h"
 #include "triangulation/ntetrahedron.h"
 
+namespace regina {
+
 class NComponent;
 class NBoundaryComponent;
 
@@ -360,6 +362,8 @@ inline int NEdgeEmbedding::getEdge() const {
 inline NPerm NEdgeEmbedding::getVertices() const {
     return tetrahedron->getEdgeMapping(edge);
 }
+
+} // namespace regina
 
 #endif
 

@@ -31,6 +31,8 @@
 #include "maths/numbertheory.h"
 #include "utilities/stlutils.h"
 
+namespace regina {
+
 long reducedMod(long k, long modBase) {
     long ans = k % modBase;
     if (ans < 0) {
@@ -186,4 +188,6 @@ void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes) {
         current += 2;
     }
 }
+
+} // namespace regina
 

@@ -31,6 +31,8 @@
 #include "jnitools.h"
 #include "engine/angle/NJNIAngleStructureList.h"
 
+using namespace regina;
+
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_angle_NJNIAngleStructureList_allowsStrict
         (JNIEnv* env, jobject me) {

@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/algebra/NJNIGroupExpression.h"
 
+using namespace regina;
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_algebra_NJNIGroupExpression_addTermFirst
         (JNIEnv *env, jobject me, jlong gen, jlong exp) {

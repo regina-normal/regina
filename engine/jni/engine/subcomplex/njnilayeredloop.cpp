@@ -31,6 +31,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNILayeredLoop.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNILayeredLoop_cloneMe
         (JNIEnv *env, jobject me) {

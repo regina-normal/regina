@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/surfaces/NJNISurfaceFilter.h"
 
+using namespace regina;
+
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceFilter_accept
         (JNIEnv *env, jobject me, jobject you) {

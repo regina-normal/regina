@@ -45,6 +45,8 @@
 #define PROPID_ZEROEFFICIENT 201
 #define PROPID_SPLITTINGSURFACE 202
 
+namespace regina {
+
 void NTriangulation::clearAllProperties() {
     if (calculatedSkeleton)
         deleteSkeleton();
@@ -518,4 +520,6 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
     }
     gluingsHaveChanged();
 }
+
+} // namespace regina
 

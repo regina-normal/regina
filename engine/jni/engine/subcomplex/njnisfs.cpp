@@ -31,6 +31,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNISFS.h"
 
+using namespace regina;
+
 JNIEXPORT jlong JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISFS_getAlpha
         (JNIEnv *env, jobject me, jlong which) {

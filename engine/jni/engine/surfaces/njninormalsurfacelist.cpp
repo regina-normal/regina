@@ -32,6 +32,8 @@
 #include "jnitools.h"
 #include "engine/surfaces/NJNINormalSurfaceList.h"
 
+using namespace regina;
+
 JNIEXPORT jboolean JNICALL
         Java_normal_engine_implementation_jni_surfaces_NJNINormalSurfaceList_allowsAlmostNormal
         (JNIEnv* env, jobject me) {

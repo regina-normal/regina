@@ -32,6 +32,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNISnappedTwoSphere.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNISnappedTwoSphere_cloneMe
         (JNIEnv *env, jobject me) {

@@ -37,6 +37,8 @@
 
 #include <string>
 
+namespace regina {
+
 /**
  * Creates a new C string that is a duplicate of the given C++ string.
  *
@@ -47,6 +49,8 @@
  * @return the new duplicate C string.
  */
 char* duplicate(const std::string& str);
+
+} // namespace regina
 
 #endif
 

@@ -38,6 +38,8 @@
 #include "shareableobject.h"
 #include "triangulation/nperm.h"
 
+namespace regina {
+
 class NTetrahedron;
 class NTriangulation;
 
@@ -261,6 +263,8 @@ inline NPerm NSpiralSolidTorus::getVertexRoles(unsigned long index) const {
 inline void NSpiralSolidTorus::writeTextShort(std::ostream& out) const {
     out << nTet << "-tetrahedron spiralled solid torus";
 }
+
+} // namespace regina
 
 #endif
 

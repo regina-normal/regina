@@ -37,14 +37,16 @@
 
 #include <jni.h>
 
-class ShareableObject;
+namespace regina {
+    class ShareableObject;
+}
 
 #ifndef __USE_RAW_CASTING
     /**
      * Casts the given Java long as a C++ pointer.
      * This is used when storing a C++ pointer as a long member of a
      * Java object.  The returned value is recast as a
-     * (ShareableObject*).
+     * (regina::ShareableObject*).
      *
      * These routines <b>must</b> be used when moving between C++ pointers
      * and Java longs!  They resolve serious complications caused by multiple
@@ -55,12 +57,12 @@ class ShareableObject;
      * @param i the original Java long.
      * @return the corresponding C++ pointer.
      */
-    ShareableObject* javaLongToPtr(jlong i);
+    regina::ShareableObject* javaLongToPtr(jlong i);
     /**
      * Casts the given C++ pointer as a Java long.
      * This is used when storing a C++ pointer as a long member of a
      * Java object.  The pointer will be recast as a
-     * (ShareableObject*) before conversion.
+     * (regina::ShareableObject*) before conversion.
      *
      * These routines <b>must</b> be used when moving between C++ pointers
      * and Java longs!  They resolve serious complications caused by multiple
@@ -69,10 +71,10 @@ class ShareableObject;
      * \ifaces Not present.
      *
      * @param p the original C++ pointer; this must be of or derived
-     * from type (ShareableObject*).
+     * from type (regina::ShareableObject*).
      * @return the corresponding Java long.
      */
-    jlong javaPtrToLong(ShareableObject* p);
+    jlong javaPtrToLong(regina::ShareableObject* p);
 #else
     /**
      * \hideinitializer
@@ -80,7 +82,7 @@ class ShareableObject;
      * Casts the given Java long as a C++ pointer.
      * This is used when storing a C++ pointer as a long member of a
      * Java object.  The returned value is recast as a
-     * (ShareableObject*).
+     * (regina::ShareableObject*).
      *
      * These routines <b>must</b> be used when moving between C++ pointers
      * and Java longs!  They resolve serious complications caused by multiple
@@ -90,16 +92,16 @@ class ShareableObject;
      *
      * @param i the original Java long.
      * @return the corresponding C++ pointer; this will be of type
-     * (ShareableObject*).
+     * (regina::ShareableObject*).
      */
-    #define javaLongToPtr(i) ((ShareableObject*)((void*)(i)))
+    #define javaLongToPtr(i) ((regina::ShareableObject*)((void*)(i)))
     /**
      * \hideinitializer
      *
      * Casts the given C++ pointer as a Java long.
      * This is used when storing a C++ pointer as a long member of a
      * Java object.  The pointer will be recast as a
-     * (ShareableObject*) before conversion.
+     * (regina::ShareableObject*) before conversion.
      *
      * These routines <b>must</b> be used when moving between C++ pointers
      * and Java longs!  They resolve serious complications caused by multiple
@@ -108,10 +110,10 @@ class ShareableObject;
      * \ifaces Not present.
      *
      * @param p the original C++ pointer; this must be of or derived
-     * from type (ShareableObject*).
+     * from type (regina::ShareableObject*).
      * @return the corresponding Java long.
      */
-    #define javaPtrToLong(p) ((jlong)((ShareableObject*)(p)))
+    #define javaPtrToLong(p) ((jlong)((regina::ShareableObject*)(p)))
 #endif
 
 #endif

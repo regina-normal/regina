@@ -38,6 +38,8 @@
 #include <list>
 #include "utilities/nmpi.h"
 
+namespace regina {
+
 /**
  * Reduces \a k modulo \a modBase to give the smallest possible
  * absolute value.  For instance, <tt>reducedMod(10,4) = 4</tt> but
@@ -147,6 +149,8 @@ void factorise(unsigned long n, std::list<unsigned long>& factors);
  * @param primes the list into which the primes will be inserted.
  */
 void primesUpTo(const NLargeInteger& roof, std::list<NLargeInteger>& primes);
+
+} // namespace regina
 
 #endif
 

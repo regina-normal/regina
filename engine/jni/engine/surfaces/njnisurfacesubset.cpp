@@ -35,6 +35,8 @@
 
 #define __JAVA_SURFACE_SET_REGISTRY_BODY
 
+using namespace regina;
+
 JNIEXPORT jboolean JNICALL 
         Java_normal_engine_implementation_jni_surfaces_NJNISurfaceSubset_allowsAlmostNormal
         (JNIEnv *env, jobject me) {

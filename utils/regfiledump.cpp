@@ -30,6 +30,8 @@
 #include "packet/npacket.h"
 #include <cstdlib>
 
+using regina::NPacket;
+
 void usage(const char* progName) {
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " <file> [ <packet-label> ... ]\n";
@@ -71,7 +73,7 @@ int main(int argc, char* argv[]) {
     if (argc == 1)
         usage(argv[0]);
 
-    NPacket* tree = readFromFile(argv[1]);
+    NPacket* tree = regina::readFromFile(argv[1]);
     if (! tree) {
         std::cerr << "File " << argv[1] << " could not be read.\n";
         return 1;

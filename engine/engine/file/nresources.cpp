@@ -31,6 +31,8 @@
 
 #include "file/nresources.h"
 
+namespace regina {
+
 bool NLocalFileResource::openRead() {
     infile.open(fileName, sysModeRead());
     if (infile.is_open()) {
@@ -70,4 +72,6 @@ void NLocalFileResource::setPosition(long pos) {
     else
         outfile.seekp(pos);
 }
+
+} // namespace regina
 

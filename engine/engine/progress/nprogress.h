@@ -39,6 +39,8 @@
 #include "shareableobject.h"
 #include "utilities/nthread.h"
 
+namespace regina {
+
 /**
  * An object through which external interfaces can obtain progress
  * reports when running long calculations.
@@ -340,6 +342,8 @@ inline std::string NProgressFinished::internalGetDescription() const {
 inline double NProgressFinished::internalGetPercent() const {
     return 100;
 }
+
+} // namespace regina
 
 #endif
 

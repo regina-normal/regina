@@ -45,7 +45,9 @@
 #define DEFAULT_PACKET_CLASS \
     "normal/engine/implementation/jni/packet/NJNIPacket"
 
-class NPacket;
+namespace regina {
+    class NPacket;
+}
 
 /**
  * Takes a C++ packet and creates a new Java object of the correct class
@@ -66,7 +68,7 @@ class NPacket;
  * @param packet the C++ packet to wrap in a java object.
  * @return a newly created Java wrapper object, or 0 if \a packet was 0.
  */
-jobject makeJNPacket(JNIEnv *env, NPacket* packet);
+jobject makeJNPacket(JNIEnv *env, regina::NPacket* packet);
 
 #endif
 

@@ -37,6 +37,8 @@
 
 #include "subcomplex/nlayeredsolidtorus.h"
 
+namespace regina {
+
 class NComponent;
 
 /**
@@ -175,6 +177,8 @@ inline bool NLayeredLensSpace::isTwisted() const {
 inline void NLayeredLensSpace::writeTextShort(std::ostream& out) const {
     out << "L( " << p << ", " << q << " ) layered lens space";
 }
+
+} // namespace regina
 
 #endif
 

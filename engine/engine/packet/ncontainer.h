@@ -38,6 +38,8 @@
 
 #include "packet/npacket.h"
 
+namespace regina {
+
 /**
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
@@ -82,6 +84,8 @@ inline bool NContainer::dependsOnParent() const {
 inline NPacket* NContainer::internalClonePacket(NPacket*) const {
     return new NContainer();
 }
+
+} // namespace regina
 
 #endif
 

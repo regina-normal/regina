@@ -34,6 +34,8 @@
  *  \todo \bugurgent Hunt for linear time std::list.size().
  */
 
+namespace regina {
+
 class NAbelianGroup;
 class NAngleStructureList;
 class NAugTriSolidTorus;
@@ -249,5 +251,7 @@ std::string getVersionString();
 #ifdef __DOXYGEN
 int testEngine(int value);
 #endif
+
+} // namespace regina
 
 #endif

@@ -41,6 +41,8 @@
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
 
+namespace regina {
+
 /**
  * A packet representing a script that can be run.
  * Accessor methods for a script work a line at a time.
@@ -263,6 +265,8 @@ inline void NScript::writeTextShort(std::ostream& o) const {
 inline bool NScript::dependsOnParent() const {
     return false;
 }
+
+} // namespace regina
 
 #endif
 

@@ -35,6 +35,8 @@
 #include "maths/nvectorunit.h"
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 bool NNormalSurfaceVectorQuad::isCompatibleWith(const NConeRay& other) const {
     unsigned base = 0;
     int quad;
@@ -307,4 +309,6 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     // had gcd=1.
     return ans;
 }
+
+} // namespace regina
 

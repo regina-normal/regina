@@ -32,6 +32,8 @@
 #include "jnitools.h"
 #include "engine/triangulation/NJNITriangulation.h"
 
+using namespace regina;
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_addTetrahedron
         (JNIEnv *env, jobject me, jobject newTet) {

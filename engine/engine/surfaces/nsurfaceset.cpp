@@ -29,6 +29,8 @@
 #include "surfaces/nsurfaceset.h"
 #include "surfaces/nnormalsurface.h"
 
+namespace regina {
+
 void NSurfaceSet::writeAllSurfaces(std::ostream& out) const {
     unsigned long n = getNumberOfSurfaces();
     out << "Number of surfaces is " << n << '\n';
@@ -37,4 +39,6 @@ void NSurfaceSet::writeAllSurfaces(std::ostream& out) const {
         out << '\n';
     }
 }
+
+} // namespace regina
 

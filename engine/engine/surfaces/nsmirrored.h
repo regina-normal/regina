@@ -38,6 +38,8 @@
 
 #include "surfaces/nnormalsurface.h"
 
+namespace regina {
+
 /**
  * A normal surface vector that is mirrored in another coordinate system
  * to avoid frequent lengthy calculations.  When it is difficult to
@@ -178,6 +180,8 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::getFaceArcs(
         // Cast as non-const so the mirror can be created.
     return mirror->getFaceArcs(faceIndex, faceVertex, triang);
 }
+
+} // namespace regina
 
 #endif
 

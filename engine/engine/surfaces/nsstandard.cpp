@@ -32,6 +32,8 @@
 #include "maths/nvectorunit.h"
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 bool NNormalSurfaceVectorStandard::isCompatibleWith(
         const NConeRay& other) const {
     unsigned base = 4;
@@ -131,4 +133,6 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
     }
     return ans;
 }
+
+} // namespace regina
 

@@ -30,6 +30,8 @@
 #include "triangulation/nedge.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 
+namespace regina {
+
 NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
     NLayeredSolidTorus* ans = new NLayeredSolidTorus();
     int i,j;
@@ -236,3 +238,5 @@ void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
             [adjPerm[edgeEnd[topEdge[sourceGroup][pos]]]];
     }
 }
+
+} // namespace regina

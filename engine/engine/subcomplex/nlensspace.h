@@ -37,6 +37,8 @@
 
 #include "shareableobject.h"
 
+namespace regina {
+
 /**
  * Represents a general Lens space.
  */
@@ -129,6 +131,8 @@ inline bool NLensSpace::operator == (const NLensSpace& compare) const {
 inline void NLensSpace::writeTextShort(std::ostream& out) const {
     out << "L(" << p << ',' << q << ')';
 }
+
+} // namespace regina
 
 #endif
 

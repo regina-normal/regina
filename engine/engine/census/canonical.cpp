@@ -30,6 +30,8 @@
 #include "progress/nprogresstypes.h"
 #include "utilities/memutils.h"
 
+namespace regina {
+
 bool NCensus::isCanonicalInternal(int whichTet, const NTetFace& equalUpTo) {
     if (whichTet == (int)nTetrahedra) {
         allAutomorphisms.push_back(new NIsomorphismIndexed(automorphism));
@@ -108,4 +110,6 @@ int NCensus::cmpWithPreImage(unsigned compareTets, NTetFace& equalUpTo) {
 
     return 0;
 }
+
+} // namespace regina
 

@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/maths/NJNIMatrixInt.h"
 
+using namespace regina;
+
 JNIEXPORT void JNICALL
         Java_normal_engine_implementation_jni_maths_NJNIMatrixInt_addCol__II
         (JNIEnv *env, jobject me, jint source, jint dest) {

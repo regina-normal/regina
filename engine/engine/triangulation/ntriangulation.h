@@ -48,6 +48,8 @@
 #include "triangulation/nboundarycomponent.h"
 #include "algebra/nabeliangroup.h"
 
+namespace regina {
+
 class NGroupPresentation;
 
 /**
@@ -1798,6 +1800,8 @@ inline unsigned long NTriangulation::getHomologyH2Z2() {
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << tetrahedra.size() << " tetrahedra.";
 }
+
+} // namespace regina
 
 #endif
 

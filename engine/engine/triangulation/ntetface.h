@@ -36,6 +36,8 @@
 #define __NTETFACE_H
 #endif
 
+namespace regina {
+
 /**
  * A lightweight class used to refer to a particular face of a
  * particular tetrahedron.  Only the tetrahedron index and face number
@@ -248,6 +250,8 @@ inline bool NTetFace::operator < (const NTetFace& other) const {
 inline bool NTetFace::operator <= (const NTetFace& other) const {
     return (tet < other.tet || (tet == other.tet && face <= other.face));
 }
+
+} // namespace regina
 
 #endif
 

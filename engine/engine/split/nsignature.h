@@ -37,6 +37,8 @@
 
 #include "shareableobject.h"
 
+namespace regina {
+
 class NTriangulation;
 
 class NSignature {
@@ -95,6 +97,8 @@ inline NSignature::~NSignature() {
 inline void NSignature::writeTextShort(std::ostream& out) const {
     writeCycles(out, "(", ")", "");
 }
+
+} // namespace regina
 
 #endif
 

@@ -29,6 +29,8 @@
 #include "triangulation/ntriangulation.h"
 #include "algebra/ngrouppresentation.h"
 
+namespace regina {
+
 const NGroupPresentation& NTriangulation::getFundamentalGroup() {
     if (calculatedFundamentalGroup)
         return *fundamentalGroup;
@@ -100,4 +102,6 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() {
     calculatedFundamentalGroup = true;
     return *fundamentalGroup;
 }
+
+} // namespace regina
 

@@ -39,6 +39,8 @@
 #include "maths/nvectordense.h"
 #include "maths/nmatrix.h"
 
+namespace regina {
+
 /**
  * A vector that corresponds to a row or column of a matrix.
  * Such a vector takes up essentially no storage space, since it merely looks
@@ -168,6 +170,8 @@ class NVectorMatrixCol : public NVectorMatrix<T> {
             return source.entry(index, rowCol);
         }
 };
+
+} // namespace regina
 
 #endif
 

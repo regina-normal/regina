@@ -61,7 +61,7 @@
  *
  * @param jni_env the working JNI environment, of type <tt>(JNIEnv*)</tt>.
  * @param cpp_object the underlying C++ object to be wrapped, of type
- * <tt>(ShareableObject*)</tt>.
+ * <tt>(regina::ShareableObject*)</tt>.
  * @param java_object the Java wrapper object to be modified, of type
  * <tt>jobject</tt>.
  */
@@ -145,8 +145,8 @@
  * instead of dots after package names.
  * @return the newly created Java wrapper object.
  */
-jobject CREATE_WRAPPER_OBJECT(JNIEnv* jni_env, ShareableObject* cpp_object,
-    const char* java_class);
+jobject CREATE_WRAPPER_OBJECT(JNIEnv* jni_env,
+    regina::ShareableObject* cpp_object, const char* java_class);
 
 /**
  * Converts the given Java string to a C++ string.
@@ -170,18 +170,18 @@ std::string jstringToCString(JNIEnv* jni_env, jstring str);
 jstring jstringFromCString(JNIEnv* jni_env, const std::string& str);
 
 /**
- * Converts the given Java BigInteger to a C++ NLargeInteger.
+ * Converts the given Java BigInteger to a C++ regina::NLargeInteger.
  *
  * \ifaces Not present.
  *
  * @param jni_env the working JNI environment.
  * @param value the Java BigInteger to convert; this must be of type
  * <tt>java.math.BigInteger</tt>.
- * @return the corresponding C++ NLargeInteger.
+ * @return the corresponding C++ regina::NLargeInteger.
  */
-NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value);
+regina::NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value);
 /**
- * Converts the given C++ NLargeInteger to a Java BigInteger.
+ * Converts the given C++ regina::NLargeInteger to a Java BigInteger.
  * If the C++ large integer is infinite, the Java object returned will
  * be \c null.
  *
@@ -192,11 +192,12 @@ NLargeInteger jBigIntegerToLarge(JNIEnv* jni_env, jobject value);
  * \ifaces Not present.
  *
  * @param jni_env the working JNI environment.
- * @param value the C++ NLargeInteger to convert.
+ * @param value the C++ regina::NLargeInteger to convert.
  * @return the corresponding Java BigInteger (of type
  * <tt>normal.engine.utilities.NLargeInteger</tt>) or \c null.
  */
-jobject jBigIntegerFromLarge(JNIEnv* jni_env, const NLargeInteger& value);
+jobject jBigIntegerFromLarge(JNIEnv* jni_env,
+    const regina::NLargeInteger& value);
 
 // Inline global functions
 

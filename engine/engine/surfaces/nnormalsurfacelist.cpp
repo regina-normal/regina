@@ -32,6 +32,8 @@
 #include "maths/nmatrixint.h"
 #include "file/nfile.h"
 
+namespace regina {
+
 #define __FLAVOUR_REGISTRY_BODY
 
 const int NNormalSurfaceList::STANDARD = 0;
@@ -196,4 +198,6 @@ void NNormalSurfaceList::initialiseAllProperties() {
 void NNormalSurfaceList::readIndividualProperty(NFile& infile,
         unsigned propType) {
 }
+
+} // namespace regina
 

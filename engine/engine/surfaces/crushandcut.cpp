@@ -29,6 +29,8 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 NTriangulation* NNormalSurface::cutAlong() {
     // TODO: Actually write this routine.
     return new NTriangulation();
@@ -112,4 +114,6 @@ NTriangulation* NNormalSurface::crush() {
     delete[] quads;
     return ans;
 }
+
+} // namespace regina
 

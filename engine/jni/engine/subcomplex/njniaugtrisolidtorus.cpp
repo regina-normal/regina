@@ -30,6 +30,8 @@
 #include "jnitools.h"
 #include "engine/subcomplex/NJNIAugTriSolidTorus.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_subcomplex_NJNIAugTriSolidTorus_cloneMe
         (JNIEnv *env, jobject me) {

@@ -29,6 +29,8 @@
 #include "triangulation/nface.h"
 #include "subcomplex/npillowtwosphere.h"
 
+namespace regina {
+
 NPillowTwoSphere* NPillowTwoSphere::clone() const {
     NPillowTwoSphere* ans = new NPillowTwoSphere();
     ans->face[0] = face[0];
@@ -89,4 +91,6 @@ NTriangulation* NPillowTwoSphere::getReducedTriangulation(
         const NTriangulation* original) const {
     return 0;
 }
+
+} // namespace regina
 

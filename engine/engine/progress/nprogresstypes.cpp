@@ -30,6 +30,8 @@
 
 #include <sstream>
 
+namespace regina {
+
 std::string NProgressNumber::internalGetDescription() const {
     std::ostringstream out;
 
@@ -41,4 +43,6 @@ std::string NProgressNumber::internalGetDescription() const {
 
     return out.str();
 }
+
+} // namespace regina
 

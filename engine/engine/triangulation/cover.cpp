@@ -29,6 +29,8 @@
 #include <queue>
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 void NTriangulation::makeDoubleCover() {
     unsigned long sheetSize = tetrahedra.size();
     if (sheetSize == 0)
@@ -125,4 +127,6 @@ void NTriangulation::makeDoubleCover() {
     delete[] upper;
     clearAllProperties();
 }
+
+} // namespace regina
 

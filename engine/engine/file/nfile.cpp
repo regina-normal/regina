@@ -35,6 +35,8 @@
 #define TREE_CHILD 'c'
 #define TREE_NO_MORE_CHILDREN 'n'
 
+namespace regina {
+
 NPacket* readFromFile(const char* fileName) {
     NFile f;
     if (f.open(fileName, NRandomAccessResource::READ)) {
@@ -335,4 +337,6 @@ void NFile::writeTextShort(std::ostream& out) const {
             out << "writing";
     }
 }
+
+} // namespace regina
 

@@ -44,6 +44,8 @@
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfaceset.h"
 
+namespace regina {
+
 class NTriangulation;
 class NMatrixInt;
 
@@ -445,6 +447,8 @@ inline NNormalSurfaceList::SurfaceInserter&
         NNormalSurfaceList::SurfaceInserter::operator ++(int) {
     return *this;
 }
+
+} // namespace regina
 
 // Template definitions
 

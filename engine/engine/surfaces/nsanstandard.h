@@ -38,6 +38,8 @@
 
 #include "surfaces/nnormalsurface.h"
 
+namespace regina {
+
 class NMatrixInt;
 
 /**
@@ -117,6 +119,8 @@ inline NLargeInteger NNormalSurfaceVectorANStandard::getOctCoord(
         unsigned long tetIndex, int octType, NTriangulation*) const {
     return (*this)[10 * tetIndex + 7 + octType];
 }
+
+} // namespace regina
 
 // Template definitions
 

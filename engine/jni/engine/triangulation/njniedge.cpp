@@ -34,6 +34,8 @@
 #include "jnitools.h"
 #include "engine/triangulation/NJNIEdge.h"
 
+using namespace regina;
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNIEdge_getBoundaryComponent
         (JNIEnv *env, jobject me) {

@@ -38,6 +38,8 @@
 
 #include "progress/nprogress.h"
 
+namespace regina {
+
 /**
  * Manages the sharing of an NProgress object between reading and
  * writing threads.
@@ -175,6 +177,8 @@ inline void NProgressManager::setProgress(NProgress* newProgress) {
 inline void NProgressManager::writeTextShort(std::ostream& out) const {
     out << "[Progress Manager]";
 }
+
+} // namespace regina
 
 #endif
 

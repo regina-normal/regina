@@ -37,6 +37,8 @@
 #define PROPID_ALLOWSTRICT 1
 #define PROPID_ALLOWTAUT 2
 
+namespace regina {
+
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
 NAngleStructureList::NAngleStructureList(NTriangulation* owner) {
@@ -276,4 +278,6 @@ void NAngleStructureList::calculateAllowTaut() {
     doesAllowTaut = (find_if(structures.begin(), structures.end(),
         std::mem_fun(&NAngleStructure::isTaut)) != structures.end());
 }
+
+} // namespace regina
 

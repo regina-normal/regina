@@ -38,6 +38,8 @@
 #include "maths/nvector.h"
 #include "maths/nvectordense.h"
 
+namespace regina {
+
 /**
  * A unit vector of type T.  A unit vector has every coordinate
  * set to 0 except for a single coordinate which is 1.
@@ -124,6 +126,8 @@ class NVectorUnit : public NVector<T> {
                 const T& multiple) {
         }
 };
+
+} // namespace regina
 
 #endif
 

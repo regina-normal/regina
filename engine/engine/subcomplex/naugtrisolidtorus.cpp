@@ -32,6 +32,8 @@
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
 
+namespace regina {
+
 NAugTriSolidTorus::~NAugTriSolidTorus() {
     if (core)
         delete core;
@@ -531,3 +533,5 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         delete layered[i];
     return 0;
 }
+
+} // namespace regina

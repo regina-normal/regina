@@ -39,6 +39,8 @@
 #include "split/nsignature.h"
 #include "split/nsigisomorphism.h"
 
+namespace regina {
+
 typedef std::list<NSigPartialIsomorphism*> NSigIsoList;
 typedef void (*UseSignature)(const NSignature&, const NSigIsoList&, void *);
 
@@ -111,6 +113,8 @@ inline NSigCensus::~NSigCensus() {
     delete[] used;
     delete[] automorph;
 }
+
+} // namespace regina
 
 #endif
 

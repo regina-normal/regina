@@ -38,6 +38,8 @@
 #include "packet/npacket.h"
 #include "property/npropertyholder.h"
 
+namespace regina {
+
 class NNormalSurface;
 class NNormalSurfaceList;
 
@@ -243,6 +245,8 @@ inline bool NSurfaceFilter::dependsOnParent() const {
 
 inline void NSurfaceFilter::initialiseAllProperties() {
 }
+
+} // namespace regina
 
 #endif
 

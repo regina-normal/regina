@@ -15,6 +15,7 @@ Version 2.5  [ (under development) ]
           lots much of its usefulness.
     ENGINE:
         Overall structure:
+            - Move entire calculation engine into namespace regina.
             - The Great STL Port: replaced hand-rolled container classes
               with Standard Template Library classes.
             - Replaced strstreams with stringstreams.

@@ -31,6 +31,8 @@
 #include "packet/npacket.h"
 #include "utilities/hashutils.h"
 
+namespace regina {
+
 NPacket::~NPacket() {
     NPacket* tmp;
     while(firstTreeChild) {
@@ -339,4 +341,6 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
 
     return changed;
 }
+
+} // namespace regina
 

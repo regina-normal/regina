@@ -56,6 +56,8 @@
     #endif
 #endif
 
+namespace regina {
+
 /**
  * A hash function used to calculate hash values for arbitrary pointers.
  * This class is for use with the Standard Template Library.
@@ -103,6 +105,8 @@ struct HashString {
             return hashFcn(str.c_str());
         }
 };
+
+} // namespace regina
 
 #endif
 

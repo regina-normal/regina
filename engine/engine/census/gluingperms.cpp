@@ -30,6 +30,8 @@
 #include "census/ncensus.h"
 #include "progress/nprogresstypes.h"
 
+namespace regina {
+
 void NCensus::selectGluingPerms() {
     NTetFace face(0, 0);
     if (dest(face).isBoundary(nTetrahedra)) {
@@ -179,4 +181,6 @@ int NCensus::cmpPermsWithPreImage(const NIsomorphism& automorph) {
     }
     return 0;
 }
+
+} // namespace regina
 

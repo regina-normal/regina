@@ -37,6 +37,8 @@
 
 #include <string>
 
+namespace regina {
+
 /**
  * Represents a permutation of {0,1,2,3}.
  * Such permutations are used in specifying how simplices are glued together.
@@ -539,6 +541,8 @@ inline bool NPerm::operator == (const NPerm& other) const {
 inline bool NPerm::operator != (const NPerm& other) const {
     return (code != other.code);
 }
+
+} // namespace regina
 
 #endif
 

@@ -39,6 +39,8 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 
+namespace regina {
+
 /**
  * Specifies a single normal disc in a normal surface.
  *
@@ -730,6 +732,8 @@ inline const NDiscSpec& NDiscSpecIterator::operator *() const {
 inline bool NDiscSpecIterator::done() const {
     return (current.tetIndex == internalDiscSet->nTets());
 }
+
+} // namespace regina
 
 #endif
 

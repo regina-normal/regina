@@ -29,6 +29,8 @@
 #include "packet/ntext.h"
 #include "file/nfile.h"
 
+namespace regina {
+
 void NText::writePacket(NFile& out) const {
     out.writeString(text);
 }
@@ -36,4 +38,6 @@ void NText::writePacket(NFile& out) const {
 NText* NText::readPacket(NFile& in, NPacket*) {
     return new NText(in.readString());
 }
+
+} // namespace regina
 

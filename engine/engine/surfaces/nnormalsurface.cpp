@@ -44,6 +44,8 @@
 #define PROPID_CONNECTEDNESS 9
 #define PROPID_SURFACENAME 100
 
+namespace regina {
+
 const int vertexSplit[4][4] = {
     { -1, 0, 1, 2 },
     {  0,-1, 2, 1 },
@@ -431,4 +433,6 @@ NNormalSurface* NNormalSurface::readFromFile(NFile& in, int flavour,
 
     return ans;
 }
+
+} // namespace regina
 

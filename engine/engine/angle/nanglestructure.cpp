@@ -33,6 +33,8 @@
 // Property IDs:
 #define PROPID_FLAGS 1
 
+namespace regina {
+
 const unsigned long NAngleStructure::flagStrict = 1;
 const unsigned long NAngleStructure::flagTaut = 2;
 const unsigned long NAngleStructure::flagCalculatedType = 4;
@@ -173,4 +175,6 @@ void NAngleStructure::calculateType() {
 
     flags |= flagCalculatedType;
 }
+
+} // namespace regina
 

@@ -28,6 +28,8 @@
 
 #include "utilities/nmpi.h"
 
+namespace regina {
+
 const NLargeInteger NLargeInteger::zero;
 const NLargeInteger NLargeInteger::one(1);
 const NLargeInteger NLargeInteger::infinity(true, true);
@@ -140,4 +142,6 @@ std::ostream& operator << (std::ostream& out, const NLargeInteger& large) {
     }
     return out;
 }
+
+} // namespace regina
 

@@ -31,6 +31,8 @@
 #include "jnitools.h"
 #include "engine/triangulation/NJNITetrahedron.h"
 
+using namespace regina;
+
 JNIEXPORT jint JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITetrahedron_getAdjacentFace
         (JNIEnv *env, jobject me, jint face) {

@@ -37,6 +37,8 @@
 
 #include <iostream>
 
+namespace regina {
+
 /**
  * A set of booleans.  Note that there are only four possible such sets.
  * NBoolSet objects are small enough to pass about by value instead of
@@ -477,6 +479,8 @@ inline void NBoolSet::setByteCode(char code) {
 inline NBoolSet NBoolSet::fromByteCode(char code) {
     return NBoolSet(code & eltTrue, code & eltFalse);
 }
+
+} // namespace regina
 
 #endif
 

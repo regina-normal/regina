@@ -40,6 +40,8 @@
  */
 #define LETTER(x) (char((x) + 'a'))
 
+namespace regina {
+
 bool NTriangulation::insertRehydration(const std::string& dehydration) {
     unsigned len = dehydration.length();
 
@@ -185,4 +187,6 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
 
     return (! broken);
 }
+
+} // namespace regina
 
