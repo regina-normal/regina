@@ -45,6 +45,17 @@
 #include <eval.h>
 #include <sysmodule.h>
 
+// Cater for the fact that Py_CompileString has changed behaviour
+// between Python 2.2 and Python 2.3.
+#if PY_VERSION_HEX >= 0x02030000
+    static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
+    #define PY_COMPILE_SINGLE(cmd) \
+        (Py_CompileStringFlags(cmd, "<console>", Py_single_input, &pyCompFlags))
+#else
+    #define PY_COMPILE_SINGLE(cmd) \
+        (Py_CompileString(cmd, "<console>", Py_single_input))
+#endif
+
 /**
  * WARNING: We never call Py_Finalize().
  *
@@ -145,7 +156,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     PyEval_RestoreThread(state);
 
     // Attempt to compile the command with no additional newlines.
-    PyObject* code = Py_CompileString(cmdBuffer, "<console>", Py_single_input);
+    PyObject* code = PY_COMPILE_SINGLE(cmdBuffer);
     if (code) {
         // Run the code!
         PyObject* ans = PyEval_EvalCode((PyCodeObject*)code,
@@ -170,7 +181,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     cmdBuffer[fullCommand.length()] = '\n';
     cmdBuffer[fullCommand.length() + 1] = 0;
 
-    code = Py_CompileString(cmdBuffer, "<console>", Py_single_input);
+    code = PY_COMPILE_SINGLE(cmdBuffer);
     if (code) {
         // We're waiting on more code.
         Py_DECREF(code);
@@ -191,7 +202,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     cmdBuffer[fullCommand.length() + 1] = '\n';
     cmdBuffer[fullCommand.length() + 2] = 0;
 
-    code = Py_CompileString(cmdBuffer, "<console>", Py_single_input);
+    code = PY_COMPILE_SINGLE(cmdBuffer);
     if (code) {
         // We're waiting on more code.
         Py_DECREF(code);
