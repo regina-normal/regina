@@ -35,7 +35,7 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-nor7">
-  <abbrev>Bu2</abbrev>
+  <abbrev>Bu3</abbrev>
   <author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
@@ -45,7 +45,7 @@
    triangulations</title>
   <edition>Preprint</edition>
   <issuenum><literal>math.GT/0311113</literal></issuenum>
-  <date>July 2003</date>
+  <date>November 2003</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
