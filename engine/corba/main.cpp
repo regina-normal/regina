@@ -107,6 +107,8 @@ ArgSet::ArgSet(int initArgC, char* initArgV[]) {
     // Prepare to create the new argument array.
     argc = initArgC + (host ? 0 : 2) + (port ? 0 : 2);
     argv = new (char*)[argc];
+    for (i = 0; i < argc; i++)
+        argv[i] = 0;
 
     // Copy in the initial arguments.
     for (i = 0; i < initArgC; i++)
