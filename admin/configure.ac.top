@@ -30,11 +30,24 @@ dnl
 #
 ###########################################################
 
-AC_INIT(Regina, [3.3], [regina-user@lists.sourceforge.net], regina)
+AC_INIT(Regina, [4.0], [regina-user@lists.sourceforge.net], regina)
 AC_PREREQ(2.50)
 AC_CONFIG_AUX_DIR(admin)
 AC_CONFIG_SRCDIR(engine/engine/triangulation/ntriangulation.cpp)
-AM_INIT_AUTOMAKE(regina, [3.3])
+
+# Recommended by the KDE folks to avoid ksh/zsh problems.
+unset CDPATH
+
+# This will run AC_CANONICAL_{BUILD,HOST,TARGET}, all of which replace
+# AC_CANONICAL_SYSTEM, according to the autoconf docs.
+AC_CANONICAL_TARGET
+
+# Transform program names.
+AC_ARG_PROGRAM
+
+# The KDE folks say that we should not do the automake initialisation
+# until this point.
+AM_INIT_AUTOMAKE(regina, [4.0])
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(engine/engine/regina-config.h)
 
@@ -47,18 +60,16 @@ fi
 # Extract major and minor package version numbers.
 REGINA_PACKAGE_VERSIONS
 
-AC_CANONICAL_HOST
-
 ###########################################################
 #
 # Check for C/C++ tools.
 #
 ###########################################################
 
-AC_PROG_CXX
-AC_PROG_CC
-AC_PROG_CXXCPP
-AC_PROG_CPP
+AC_CHECK_COMPILERS
+KDE_PROG_LIBTOOL
+LIBTOOL="$LIBTOOL --silent"
+AM_KDE_WITH_NLS
 
 # Set the default language to C++ for subsequent tests.
 AC_LANG(C++)
@@ -81,10 +92,6 @@ AC_CHECK_TYPE([long long], , [
   REGINA_ERR_MISSING([Type (long long)], [the calculation engine])
 ])
 
-AM_PROG_LIBTOOL
-AC_LIBTOOL_CXX
-LIBTOOL="$LIBTOOL --silent"
-
 AC_CHECK_PROGS(_UTIL_FIND, [find], none)
 if test "$_UTIL_FIND" = "none"; then
   REGINA_ERR_MISSING([The find utility], [the build system])
@@ -96,6 +103,31 @@ AC_PROG_LN_S
 
 ###########################################################
 #
+# Check for compiler characteristics.
+#
+###########################################################
+
+# Check for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_SIZE_T
+AC_CHECK_TYPES(__int64)
+
+# Check for library functions.
+AC_FUNC_ERROR_AT_LINE
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([strtol strtoul])
+
+# Other custom checks.
+REGINA_CXX_PARTIAL_SPECIALISATION
+REGINA_TYPE_HASH_SET
+REGINA_VAR_IOS_NOCREATE
+REGINA_LD_ADD_STDCALL_ALIAS
+AC_CHECK_KDEMAXPATHLEN
+
+###########################################################
+#
 # Determine which components the user is disabling.
 #
 ###########################################################
@@ -104,6 +136,12 @@ AC_ARG_ENABLE(javaui, AC_HELP_STRING([--enable-javaui],
     [build the Java user interface [[default=yes]]]), [
   if test "$enableval" = "no"; then
     REGINA_DO_NOT_COMPILE([JAVAUI DOCSJAVAUI DOCSJAR ENGINEJNI JNIHDR])
+  fi
+])
+AC_ARG_ENABLE(kdeui, AC_HELP_STRING([--enable-kdeui],
+    [build the KDE user interface [[default=yes]]]), [
+  if test "$enableval" = "no"; then
+    REGINA_DO_NOT_COMPILE([KDEUI])
   fi
 ])
 AC_ARG_ENABLE(docs, AC_HELP_STRING([--enable-docs],
@@ -208,6 +246,11 @@ AM_PATH_CPPUNIT([1.8.0], , [
   REGINA_DO_NOT_COMPILE(TESTSUITE)
 ])
 
+REGINA_SHOULD_BUILD_INTERNAL(KDEUI)
+if test "$should_build" = "yes"; then
+  AC_PATH_KDE
+fi
+
 REGINA_SHOULD_BUILD_INTERNAL(JAVAUI)
 if test "$should_build" = "yes"; then
   REGINA_LIB_JAVA(btools, [org.gjt.btools.Version],
@@ -272,29 +315,6 @@ AC_SUBST(LIB_ENGINE)
 
 ###########################################################
 #
-# Check for compiler characteristics.
-#
-###########################################################
-
-# Check for typedefs, structures, and compiler characteristics.
-AC_C_CONST
-AC_C_INLINE
-AC_TYPE_SIZE_T
-AC_CHECK_TYPES(__int64)
-
-# Check for library functions.
-AC_FUNC_ERROR_AT_LINE
-AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([strtol strtoul])
-
-# Other custom checks.
-REGINA_CXX_PARTIAL_SPECIALISATION
-REGINA_TYPE_HASH_SET
-REGINA_VAR_IOS_NOCREATE
-REGINA_LD_ADD_STDCALL_ALIAS
-
-###########################################################
-#
 # Host-specific files to install.
 #
 ###########################################################
@@ -314,6 +334,7 @@ AC_SUBST(REGINA_BATCH)
 
 REGINA_SHOULD_BUILD(ENGINE, engine, [the calculation engine library])
 REGINA_SHOULD_BUILD(ENGINEJNI, jni, [the JNI calculation engine module])
+REGINA_SHOULD_BUILD(KDEUI, kdeui, [the KDE user interface])
 REGINA_SHOULD_BUILD(JAVAUI, javaui, [the Java user interface])
 REGINA_SHOULD_BUILD(UTILS, utils, [command-line utilities])
 REGINA_SHOULD_BUILD(TESTSUITE, testsuite, [the test suite])
