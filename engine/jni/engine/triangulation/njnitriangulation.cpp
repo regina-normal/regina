@@ -60,6 +60,14 @@ JNIEXPORT jboolean JNICALL
     return GET_ENGINE_OBJECT(env, NTriangulation, me)->crushMaximalForest();
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_fourFourMove
+        (JNIEnv *env, jobject me, jint newAxis, jobject e, jboolean check,
+        jboolean perform) {
+    return GET_ENGINE_OBJECT(env, NTriangulation, me)->fourFourMove(
+        GET_ENGINE_OBJECT(env, NEdge, e), newAxis, check, perform);
+}
+
 JNIEXPORT jobject JNICALL
         Java_normal_engine_implementation_jni_triangulation_NJNITriangulation_getBoundaryComponent
         (JNIEnv *env, jobject me, jlong index) {

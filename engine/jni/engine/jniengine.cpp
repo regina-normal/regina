@@ -38,6 +38,7 @@
     #include "nfile.h"
     #include "ncensus.h"
     #include "nlayeredlensspace.h"
+    #include "nlayeredloop.h"
     #include "npillowtwosphere.h"
     #include "nsnappedtwosphere.h"
     #include "nnormalsurfacelist.h"
@@ -51,6 +52,7 @@
     #include "engine/file/nfile.h"
     #include "engine/census/ncensus.h"
     #include "engine/subcomplex/nlayeredlensspace.h"
+    #include "engine/subcomplex/nlayeredloop.h"
     #include "engine/subcomplex/npillowtwosphere.h"
     #include "engine/subcomplex/nsnappedtwosphere.h"
     #include "engine/surfaces/nnormalsurfacelist.h"
@@ -132,6 +134,15 @@ JNIEXPORT jobject JNICALL
         NLayeredLensSpace::isLayeredLensSpace(
         GET_ENGINE_OBJECT(env, NComponent, you)),
         "normal/engine/implementation/jni/subcomplex/NJNILayeredLensSpace");
+}
+
+JNIEXPORT jobject JNICALL
+        Java_normal_engine_implementation_jni_JNIEngine_isLayeredLoop
+        (JNIEnv *env, jobject me, jobject you) {
+    return CREATE_WRAPPER_OBJECT(env,
+        NLayeredLoop::isLayeredLoop(
+        GET_ENGINE_OBJECT(env, NComponent, you)),
+        "normal/engine/implementation/jni/subcomplex/NJNILayeredLoop");
 }
 
 JNIEXPORT jobject JNICALL

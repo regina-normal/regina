@@ -116,6 +116,7 @@ public interface Engine {
     public int getVersionMinor();
     public String getVersionString();
     public NLayeredLensSpace isLayeredLensSpace(NComponent comp);
+    public NLayeredLoop isLayeredLoop(NComponent comp);
     public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet);
     public NSnappedBall isSnappedBall(NTetrahedron tet);
     public NMatrixInt makeMatchingEquations(NTriangulation

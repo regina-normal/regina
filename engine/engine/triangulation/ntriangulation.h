@@ -92,6 +92,8 @@ class NGroupPresentation;
  * \todo \feature Implement 4-4 moves.
  * \todo \feature Add set of cusps and three corresponding get functions.
  * \todo \feature Make 0-efficient.
+ * \todo \feature Insert a SFS with 3 exceptional fibres.
+ * \todo \feature Insert a layered loop of index n.
  * \todo \featurelong Am I a sphere?
  * \todo \featurelong Is the triangulation Haken?
  * \todo \featurelong What is the Heegaard genus?
@@ -1017,6 +1019,52 @@ class NTriangulation : public NPacket, NPropertyHolder {
          */
         bool twoThreeMove(NFace* f, bool check = true, bool perform = true);
         /**
+         * Checks the eligibility of and/or performs a 4-4 move
+         * about the given edge.
+         * This involves replacing the four tetrahedra joined at that
+         * edge with four tetrahedra joined along a different edge.
+         * Consider the octahedron made up of the four original
+         * tetrahedra; this has three internal axes.  The initial four
+         * tetrahedra meet along the given edge which forms one of these
+         * axes; the new tetrahedra will meet along a different axis.
+         * This move can be done iff the edge is non-boundary and the four
+         * tetrahedra are distinct.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (faces, components, etc.) will be invalid.
+         *
+         * \pre If the move is being performed and no
+         * check is being run, it must be known in advance that the move
+         * is legal.
+         * \pre The skeleton has been calculated.
+         * Skeleton calculation can be forced by querying the skeleton,
+         * such as calling getNumberOfVertices().
+         *
+         * \ifacescorba All parameters are compulsory.
+         *
+         * @param e the edge about which to perform the move.
+         * @param newAxis Specifies which axis of the octahedron the new
+         * tetrahedra should meet along; this should be 0 or 1.
+         * Consider the four original tetrahedra in the order described
+         * by NEdge::getEmbeddings(); call these tetrahedra 0, 1, 2 and
+         * 3.  If \a newAxis is 0, the new axis will separate tetrahedra
+         * 0 and 1 from 2 and 3.  If \a newAxis is 1, the new axis will
+         * separate tetrahedra 1 and 2 from 3 and 0.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool fourFourMove(NEdge* e, int newAxis, bool check = true,
+                bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a 2-0 move
          * about the given edge of degree 2.
          * This involves taking the two tetrahedra joined at that edge
@@ -1306,6 +1354,8 @@ class NTriangulation : public NPacket, NPropertyHolder {
          *
          * \pre \a p \> \a q \>= 0;
          * \pre gcd(\a p, \a q) = 1.
+         *
+         * \todo Do this using the fewest possible tetrahedra.
          *
          * @param p a parameter of the desired lens space.
          * @param q a parameter of the desired lens space.

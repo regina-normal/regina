@@ -4,8 +4,16 @@ Regina - A Normal Surface Theory Calculator
     OVERALL:
         - Makefile.options variables IDLTOJAVACLIENT and IDLTOCPPSERVER
           became IDLTOJAVA and IDLTOCPP with slightly more generic meanings.
+    ENGINE:
+        Overall structure:
+            - Introduced macro MY_ENGINE_OBJECT for CORBA wrapper classes.
+            - Macros GET_ENGINE_OBJECT no longer crash when null is passed.
+        Class NLayeredLoop:
+            - New class.
     JAVA USER INTERFACE:
-        - Loading/saving local files is now possible even through CORBA!
+        Overall structure:
+            - Loading/saving local files is now possible even through CORBA!
+            - Incorporated engine enhancements listed above.
 
 Version 2.2  [ 7 October, 2001 ]
     OVERALL:

@@ -61,7 +61,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary())
             return false;
-        if (embs.size() !=  3)
+        if (embs.size() != 3)
             return false;
     }
 
@@ -271,6 +271,120 @@ bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
     newTet[1]->joinTo(2, newTet[2], internalPerm);
     newTet[2]->joinTo(2, newTet[0], internalPerm);
 
+    // Tidy up.
+    clearAllProperties();
+    return true;
+}
+
+bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
+        bool perform) {
+    const NDynamicArray<NEdgeEmbedding>& embs = e->getEmbeddings();
+    if (check) {
+        if (e->isBoundary())
+            return false;
+        if (embs.size() != 4)
+            return false;
+    }
+
+    // Find the unwanted tetrahedra.
+    NTetrahedron* oldTet[4];
+    NPerm oldVertexPerm[4];
+    NPointerSet<NTetrahedron> oldTets;
+    int oldPos = 0;
+    for (NDynamicArrayIterator<NEdgeEmbedding> it(embs); ! it.done(); it++) {
+        oldTet[oldPos] =(*it).getTetrahedron();
+        if (check) {
+            if (oldTets.contains(oldTet[oldPos]))
+                return false;
+            oldTets.add(oldTet[oldPos]);
+        }
+        oldVertexPerm[oldPos] = (*it).getVertices();
+        oldPos++;
+    }
+    
+    if (! perform)
+        return true;
+
+    #ifdef DEBUG
+    cerr << "Performing 4-4 move\n";
+    #endif
+    
+    // Perform the move.
+    int oldPos2, newPos, newPos2, newFace;
+    
+    // Allocate the new tetrahedra.
+    NTetrahedron* newTet[4];
+    for (newPos = 0; newPos < 2; newPos++)
+        newTet[newPos] = new NTetrahedron();
+
+    // Find the gluings from (0,1,2) of the new tetrahedron faces
+    // to the vertices of the old tetrahedra.
+    NPerm gluings[4][2];
+    for (newFace = 0; newFace < 2; newFace++)
+        for (newPos = 0; newPos < 4; newPos++)
+            gluings[newPos][newFace] = oldVertexPerm[oldPos] *
+                twoThreeVertices[newFace];
+
+    // Find the tetrahedra to which the old tetrahedron faces are glued,
+    // store the gluings from (0,1,2) of the new tetrahedron faces to the
+    // vertices of these adjacent tetrahedra, and unjoin the tetrahedra.
+    NTetrahedron* adjTet[4][2];
+    int adjFace;
+    int oldFace;
+    
+    for (oldPos = 0; oldPos < 3; oldPos++)
+        for (newPos = 0; newPos < 2; newPos++) {
+            oldFace = gluings[newPos][oldPos][3];
+            adjTet[newPos][oldPos] =
+                oldTet[oldPos]->getAdjacentTetrahedron(oldFace);
+            if (adjTet[newPos][oldPos]) {
+                for (oldPos2 = 0; oldPos2 < 3; oldPos2++) {
+                    if (adjTet[newPos][oldPos] == oldTet[oldPos2]) {
+                        adjFace = oldTet[oldPos]->getAdjacentFace(oldFace);
+                        for (newPos2 = 0; newPos2 < 2; newPos2++)
+                            if (gluings[newPos2][oldPos2][3] == adjFace) {
+                                // Face oldFace of oldTet[oldPos] is glued to
+                                // face adjFace of oldTet[oldPos2] and should be
+                                // glued to face oldPos2 of newTet[newPos2].
+                                adjTet[newPos][oldPos] = newTet[newPos2];
+                                gluings[newPos][oldPos] =
+                                    threeTwoVertices[oldPos2]
+                                    * gluings[newPos2][oldPos2].inverse()
+                                    * oldTet[oldPos]->
+                                        getAdjacentTetrahedronGluing(oldFace)
+                                    * gluings[newPos][oldPos];
+                                break;
+                            }
+                        break;
+                    }
+                }
+                if (oldPos2 >= 3)
+                    gluings[newPos][oldPos] =
+                        oldTet[oldPos]->getAdjacentTetrahedronGluing(oldFace)
+                        * gluings[newPos][oldPos];
+                oldTet[oldPos]->unjoin(oldFace);
+            }
+        }
+        
+    // Remove the old tetrahedra from the triangulation.
+    for (oldPos = 0; oldPos < 4; oldPos++)
+        delete removeTetrahedron(oldTet[oldPos]);
+        
+    // Insert the new tetrahedra into the triangulation.
+    for (newPos = 0; newPos < 4; newPos++)
+        addTetrahedron(newTet[newPos]);
+
+    // Glue the faces of the new tetrahedra.
+    for (newFace = 0; newFace < 2; newFace++)
+        for (newPos = 0; newPos < 4; newPos++)
+            if (adjTet[newPos][newFace])
+                newTet[newPos]->joinTo(newFace, adjTet[newPos][newFace],
+                    gluings[newPos][newFace] *
+                    twoThreeVertices[newFace].inverse());
+    NPerm internalPerm = NPerm(0,1,3,2);
+    for (newPos = 0; newPos < 4; newPos++)
+        newTet[newPos]->joinTo(2, newTet[(newPos + 1) % 4], internalPerm);
+    
     // Tidy up.
     clearAllProperties();
     return true;

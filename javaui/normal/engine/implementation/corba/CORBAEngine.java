@@ -457,6 +457,10 @@ public class CORBAEngine implements Engine {
         return NCORBALayeredLensSpace.newWrapper(
             data.isLayeredLensSpace(((NCORBAComponent)comp).data));
     }
+    public NLayeredLoop isLayeredLoop(NComponent comp) {
+        return NCORBALayeredLoop.newWrapper(
+            data.isLayeredLoop(((NCORBAComponent)comp).data));
+    }
     public NLayeredSolidTorus isLayeredSolidTorusBase(NTetrahedron tet) {
         return NCORBALayeredSolidTorus.newWrapper(
             data.isLayeredSolidTorusBase(((NCORBATetrahedron)tet).data));

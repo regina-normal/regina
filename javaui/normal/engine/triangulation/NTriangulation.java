@@ -88,6 +88,10 @@ public interface NTriangulation extends NPacket {
     public boolean twoThreeMove(NFace f);
     public boolean twoThreeMove(NFace f, boolean check);
     public boolean twoThreeMove(NFace f, boolean check, boolean perform);
+    public boolean fourFourMove(NEdge e, int newAxis);
+    public boolean fourFourMove(NEdge e, int newAxis, boolean check);
+    public boolean fourFourMove(NEdge e, int newAxis, boolean check,
+        boolean perform);
     public boolean twoZeroMove(NEdge e);
     public boolean twoZeroMove(NEdge e, boolean check);
     public boolean twoZeroMove(NEdge e, boolean check, boolean perform);

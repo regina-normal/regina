@@ -37,6 +37,7 @@ class NFile;
 class NGroupExpression;
 class NGroupPresentation;
 class NLayeredLensSpace;
+class NLayeredLoop;
 class NLayeredSolidTorus;
 class NMatrixInt;
 class NNormalSurfaceList;
@@ -145,6 +146,8 @@ class Engine {
             /**< Calls ::getVersionString(). */
         NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
             /**< Calls NLayeredLensSpace::isLayeredLensSpace(). */
+        NLayeredLoop* isLayeredLoop(const NComponent* comp);
+            /**< Calls NLayeredLoop::isLayeredLoop(). */
         NLayeredSolidTorus* isLayeredSolidTorusBase(NTetrahedron* tet);
             /**< Calls NLayeredSolidTorus::isLayeredSolidTorusBase(). */
         NSnappedBall* isSnappedBall(NTetrahedron* tet);

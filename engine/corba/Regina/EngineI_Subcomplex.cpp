@@ -31,6 +31,7 @@
 
 #include "EngineI.h"
 #include "NLayeredLensSpaceI.h"
+#include "NLayeredLoopI.h"
 #include "NLayeredSolidTorusI.h"
 #include "NPillowTwoSphereI.h"
 #include "NSnappedBallI.h"
@@ -67,6 +68,12 @@ Regina::Subcomplex::NLayeredLensSpace_ptr Engine_i::isLayeredLensSpace(
         Regina::Triangulation::NComponent_ptr comp) {
     return NLayeredLensSpace_i::newWrapper(
         ::NLayeredLensSpace::isLayeredLensSpace(
+        GET_ENGINE_OBJECT(NComponent, comp)));
+}
+Regina::Subcomplex::NLayeredLoop_ptr Engine_i::isLayeredLoop(
+        Regina::Triangulation::NComponent_ptr comp) {
+    return NLayeredLoop_i::newWrapper(
+        ::NLayeredLoop::isLayeredLoop(
         GET_ENGINE_OBJECT(NComponent, comp)));
 }
 Regina::Subcomplex::NLayeredSolidTorus_ptr Engine_i::isLayeredSolidTorusBase(

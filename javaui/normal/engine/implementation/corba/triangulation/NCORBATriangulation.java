@@ -207,6 +207,18 @@ public class NCORBATriangulation extends NCORBAPacket
             boolean check, boolean perform) {
         return data.twoThreeMove(((NCORBAFace)f).data, check, perform);
     }
+    public boolean fourFourMove(normal.engine.triangulation.NEdge e,
+            int newAxis) {
+        return fourFourMove(e, newAxis, true, true);
+    }
+    public boolean fourFourMove(normal.engine.triangulation.NEdge e,
+            int newAxis, boolean check) {
+        return fourFourMove(e, newAxis, check, true);
+    }
+    public boolean fourFourMove(normal.engine.triangulation.NEdge e,
+            int newAxis, boolean check, boolean perform) {
+        return data.fourFourMove(((NCORBAEdge)e).data, newAxis, check, perform);
+    }
     public boolean twoZeroMove(normal.engine.triangulation.NEdge e) {
         return twoZeroMove(e, true, true);
     }

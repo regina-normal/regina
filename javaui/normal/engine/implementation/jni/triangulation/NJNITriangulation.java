@@ -113,6 +113,14 @@ public class NJNITriangulation extends NJNIPacket
         return twoThreeMove(f, check, true);
     }
     public native boolean twoThreeMove(NFace f, boolean check, boolean perform);
+    public boolean fourFourMove(NEdge e, int newAxis) {
+        return fourFourMove(e, newAxis, true, true);
+    }
+    public boolean fourFourMove(NEdge e, int newAxis, boolean check) {
+        return fourFourMove(e, newAxis, check, true);
+    }
+    public native boolean fourFourMove(NEdge e, int newAxis, boolean check,
+            boolean perform);
     public boolean twoZeroMove(NEdge e) {
         return twoZeroMove(e, true, true);
     }

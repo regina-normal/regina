@@ -147,6 +147,39 @@ public class CompositionViewer extends DefaultPacketViewer
             }
         }
 
+        // Look for layered loops.
+        category = null;
+        NLayeredLoop loop;
+        boolean twisted;
+        n = triangulation.getNumberOfComponents();
+        for (i = 0; i < n; i++) {
+            loop = engine.isLayeredLoop(triangulation.getComponent(i));
+            if (loop != null) {
+                if (category == null) {
+                    category = new DefaultMutableTreeNode("Layered Loops");
+                    rootNode.add(category);
+                }
+                twisted = loop.isTwisted();
+                instance = new DefaultMutableTreeNode((twisted ?
+                    "Twisted" : "Not twisted") + ", index " +
+                    String.valueOf(loop.getIndex()));
+                category.add(instance);
+                instance.add(new DefaultMutableTreeNode("Component " +
+                    String.valueOf(i)));
+                if (twisted)
+                    instance.add(new DefaultMutableTreeNode("Hinge: edge " +
+                        String.valueOf(triangulation.getEdgeIndex(
+                        loop.getHinge(0)))));
+                else
+                    instance.add(new DefaultMutableTreeNode("Hinges: edges " +
+                        String.valueOf(triangulation.getEdgeIndex(
+                        loop.getHinge(0))) + ", " +
+                        String.valueOf(triangulation.getEdgeIndex(
+                        loop.getHinge(1)))));
+                loop.destroy();
+            }
+        }
+
         // Look for layered solid tori.
         category = null;
         n = triangulation.getNumberOfTetrahedra();

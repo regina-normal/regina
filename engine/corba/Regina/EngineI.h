@@ -126,6 +126,8 @@ class Engine_i : public virtual POA_Regina::Engine,
         virtual char* getVersionString();
         virtual Regina::Subcomplex::NLayeredLensSpace_ptr
             isLayeredLensSpace(Regina::Triangulation::NComponent_ptr comp);
+        virtual Regina::Subcomplex::NLayeredLoop_ptr
+            isLayeredLoop(Regina::Triangulation::NComponent_ptr comp);
         virtual Regina::Subcomplex::NLayeredSolidTorus_ptr
             isLayeredSolidTorusBase(Regina::Triangulation::NTetrahedron_ptr tet);
         virtual Regina::Subcomplex::NSnappedBall_ptr
