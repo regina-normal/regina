@@ -1,6 +1,6 @@
 (Applet):
-*	Provide instructions on the applet page for upgrading browser version
-*	Include Java plug-in support
+-	Provide instructions on the applet page for upgrading browser version
+-	Include Java plug-in support
 
 CORBA:
 	Local (client-side) file I/O
@@ -8,7 +8,7 @@ CORBA:
 Everywhere:
 	Disable X-closing for all windows and dialogs except for main window
 		(necessary to ensure progress dialogs cannot be closed).
-*	Allow customisation of types in drop-down boxes
+-	Allow customisation of types in drop-down boxes
 *	New launcher program/script for windows
 *	Handle missing runtime.opt
 
@@ -21,12 +21,12 @@ Help:
 	Write manual! - include context sensitive help, searching and index.
 
 Jython:
-	Intermediate output in console (problem runs back to jython here)
+	Allow breaking processing in console
 	Check to see whether user libraries are text files
 	Syntax highlighting for script editor
 	Import/export scripts as text files
 	Autoindent in script editor
-	Associate each console window with a file and close it with that file
+*	Associate each console window with a file and close it with that file
 	Compile and run open libraries.
 
 Main Window:
@@ -35,8 +35,9 @@ Main Window:
 	Use actions in NormalFrame and SystemPane.
 
 Menus:
-*	Provide NTriangulation::isIsomorphicTo().
+-	Provide NTriangulation::isIsomorphicTo().
 	Provide NTriangulation::cutAlongSurface() once it is written.
+*	Provide elementary moves.
 
 Normal Surfaces:
 -	For matching equations and normal surface coordinates, resizing one
