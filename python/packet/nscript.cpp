@@ -26,20 +26,46 @@
 
 /* end stub */
 
-#include "packet/ncontainer.h"
+#include "packet/nscript.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
-using regina::NContainer;
+using regina::NScript;
 
-void addNContainer() {
-    scope s = class_<NContainer, bases<regina::NPacket>,
-            std::auto_ptr<NContainer> >("NContainer")
+namespace {
+    const std::string& (NScript::*getVariableValue_long)(unsigned long)
+        const = &NScript::getVariableValue;
+    const std::string& (NScript::*getVariableValue_string)(const std::string&)
+        const = &NScript::getVariableValue;
+}
+
+void addNScript() {
+    scope s = class_<NScript, bases<regina::NPacket>,
+            std::auto_ptr<NScript> >("NScript")
+        .def("getNumberOfLines", &NScript::getNumberOfLines)
+        .def("getLine", &NScript::getLine,
+            return_value_policy<return_by_value>())
+        .def("addFirst", &NScript::addFirst)
+        .def("addLast", &NScript::addLast)
+        .def("insertAtPosition", &NScript::insertAtPosition)
+        .def("replaceAtPosition", &NScript::replaceAtPosition)
+        .def("removeLineAt", &NScript::removeLineAt)
+        .def("removeAllLines", &NScript::removeAllLines)
+        .def("getNumberOfVariables", &NScript::getNumberOfVariables)
+        .def("getVariableName", &NScript::getVariableName,
+            return_value_policy<return_by_value>())
+        .def("getVariableValue", getVariableValue_long,
+            return_value_policy<return_by_value>())
+        .def("getVariableValue", getVariableValue_string,
+            return_value_policy<return_by_value>())
+        .def("addVariable", &NScript::addVariable)
+        .def("removeVariable", &NScript::removeVariable)
+        .def("removeAllVariables", &NScript::removeAllVariables)
     ;
 
-    s.attr("packetType") = NContainer::packetType;
+    s.attr("packetType") = NScript::packetType;
 
-    implicitly_convertible<std::auto_ptr<NContainer>,
+    implicitly_convertible<std::auto_ptr<NScript>,
         std::auto_ptr<regina::NPacket> >();
 }
 

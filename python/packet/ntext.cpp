@@ -32,11 +32,14 @@
 using namespace boost::python;
 using regina::NText;
 
-void (NText::*setText_string)(const std::string&) = &NText::setText;
-void (NText::*setText_chars)(const char*) = &NText::setText;
+namespace {
+    void (NText::*setText_string)(const std::string&) = &NText::setText;
+    void (NText::*setText_chars)(const char*) = &NText::setText;
+}
 
 void addNText() {
-    scope s = class_<NText, bases<regina::NPacket> >("NText")
+    scope s = class_<NText, bases<regina::NPacket>,
+            std::auto_ptr<NText> >("NText")
         .def(init<const std::string&>())
         .def(init<const char*>())
         .def("getText", &NText::getText,
@@ -46,5 +49,8 @@ void addNText() {
     ;
 
     s.attr("packetType") = NText::packetType;
+
+    implicitly_convertible<std::auto_ptr<NText>,
+        std::auto_ptr<regina::NPacket> >();
 }
 

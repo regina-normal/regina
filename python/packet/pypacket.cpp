@@ -28,11 +28,13 @@
 
 void addNContainer();
 void addNPacket();
+void addNScript();
 void addNText();
 
 void addPacket() {
     addNPacket();
     addNContainer();
+    addNScript();
     addNText();
 }
 

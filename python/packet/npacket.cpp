@@ -33,13 +33,47 @@ using namespace boost::python;
 using regina::NPacket;
 
 namespace {
+    NPacket* (NPacket::*firstTreePacket_non_const)(const std::string&) =
+        &NPacket::firstTreePacket;
+    NPacket* (NPacket::*nextTreePacket_non_const)(const std::string&) =
+        &NPacket::firstTreePacket;
+    NPacket* (NPacket::*findPacketLabel_non_const)(const std::string&) =
+        &NPacket::firstTreePacket;
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nextTreePacket,
+        NPacket::nextTreePacket, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_clone,
         NPacket::clone, 0, 2);
+
+    void insertChildFirst_own(NPacket& parent, std::auto_ptr<NPacket> child) {
+        parent.insertChildFirst(child.get());
+        child.release();
+    }
+    void insertChildLast_own(NPacket& parent, std::auto_ptr<NPacket> child) {
+        parent.insertChildLast(child.get());
+        child.release();
+    }
+    void insertChildAfter_own(NPacket& parent, std::auto_ptr<NPacket> child,
+            NPacket* prevChild) {
+        parent.insertChildAfter(child.get(), prevChild);
+        child.release();
+    }
+
+    boost::python::list getTags_list(const NPacket* p) {
+        const std::set<std::string>& tags = p->getTags();
+        std::set<std::string>::const_iterator it;
+
+        boost::python::list ans;
+        for (it = tags.begin(); it != tags.end(); it++)
+            ans.append(*it);
+        return ans;
+    }
 }
 
 void addNPacket() {
     class_<NPacket, boost::noncopyable,
-            bases<regina::ShareableObject> >("NPacket", no_init)
+            bases<regina::ShareableObject>,
+            std::auto_ptr<NPacket> >("NPacket", no_init)
         .def("getPacketType", &NPacket::getPacketType)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
         .def("getPacketLabel", &NPacket::getPacketLabel,
@@ -53,7 +87,7 @@ void addNPacket() {
         .def("addTag", &NPacket::addTag)
         .def("removeTag", &NPacket::removeTag)
         .def("removeAllTags", &NPacket::removeAllTags)
-        // .def("getTags", &NPacket::getTags)
+        .def("getTags", getTags_list)
         .def("getTreeParent", &NPacket::getTreeParent,
             return_value_policy<reference_existing_object>())
         .def("getFirstTreeChild", &NPacket::getFirstTreeChild,
@@ -72,15 +106,21 @@ void addNPacket() {
         .def("getNumberOfChildren", &NPacket::getNumberOfChildren)
         .def("getNumberOfDescendants", &NPacket::getNumberOfDescendants)
         .def("getTotalTreeSize", &NPacket::getTotalTreeSize)
-        .def("insertChildFirst", &NPacket::insertChildFirst)
-        .def("insertChildLast", &NPacket::insertChildLast)
-        .def("insertChildAfter", &NPacket::insertChildAfter)
+        .def("insertChildFirst", insertChildFirst_own)
+        .def("insertChildLast", insertChildLast_own)
+        .def("insertChildAfter", insertChildAfter_own)
         .def("makeOrphan", &NPacket::makeOrphan)
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
+        .def("nextTreePacket", nextTreePacket_non_const, OL_nextTreePacket()
+            [return_value_policy<reference_existing_object>()])
+        .def("firstTreePacket", firstTreePacket_non_const,
+            return_value_policy<reference_existing_object>())
+        .def("findPacketLabel", findPacketLabel_non_const,
+            return_value_policy<reference_existing_object>())
         .def("dependsOnParent", &NPacket::dependsOnParent)
         .def("isPacketEditable", &NPacket::isPacketEditable)
-        // .def("clone", &NPacket::clone, OL_clone(),
-            // return_value_policy<reference_existing_object>())
+        .def("clone", &NPacket::clone, OL_clone()[
+            return_value_policy<reference_existing_object>()])
     ;
 }
 

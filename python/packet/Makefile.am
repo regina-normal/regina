@@ -10,5 +10,5 @@ INCLUDES = @ENGINE_INCLUDES@ @BOOST_PYTHON_INCLUDES@
 
 noinst_LTLIBRARIES = libpacket.la
 
-libpacket_la_SOURCES = ncontainer.cpp npacket.cpp ntext.cpp pypacket.cpp
+libpacket_la_SOURCES = ncontainer.cpp npacket.cpp nscript.cpp ntext.cpp pypacket.cpp
 
