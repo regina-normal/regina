@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 4.0  [ currently under development ]
+Version 4.0  [ 20 December, 2003 ]
     ENGINE:
         Class NAngleStructureList:
             - Enumeration routine now takes an optional progress manager
@@ -43,9 +43,9 @@ Version 4.0  [ currently under development ]
         Class NNormalSurfaceCreator:
             - Displays progress and allows cancellation.
         Class ProgressDialogNumeric:
-            - Added for displaying progress from regina::NProgressNumber.
+            - Added for displaying progress using regina::NProgressNumber.
         Class PythonConsole:
-            - Added Help menu for assistance with Python scripting.
+            - Added Help menu for displaying scripting documentation.
         Class ReginaMain:
             - Added Python reference to Help menu.
         Class PythonManager:

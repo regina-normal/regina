@@ -8,14 +8,17 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.0  [ currently under development ]
+Version 4.0  [ 20 December, 2003 ]
 
     Features:
         - Normal surface and angle structure enumeration now display
           progress dialogs and can be cancelled partway through.
         - A Python reference (i.e., the documentation for the underlying
-          calculation engine) is available through the Help menu.
+          calculation engine) is now available through the Help menu.
+        - Improved simplification of group presentations.
         - More clean-ups in the underlying mathematical code.
+        - Python users should note that some normal surface properties
+          now return an NTriBool instead of 1/-1/0 for true/false/unknown.
 
 Version 3.97  [ 24 November, 2003 ] - Final prerelease for version 4.0.
 
