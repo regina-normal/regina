@@ -60,9 +60,29 @@ namespace xml {
 
 /**
  * Represents a hashed map from property names to property values.
+ *
+ * \ifaces Not present.
  */
-typedef stdhash::hash_map<std::string, std::string, HashString>
-    XMLPropertyDict;
+class XMLPropertyDict : public stdhash::hash_map<std::string,
+        std::string, HashString> {
+    public:
+        /**
+         * Create a new hashed map.
+         */
+        XMLPropertyDict();
+
+        /**
+         * Return a value for the given key, even if the key does not
+         * exist in the hashed map.
+         *
+         * @param key the key to look up.
+         * @param defaultVal the value to return if the key does not exist.
+         * @return the value associated with the given key, or parameter
+         * \a default if the key does not exist in the hashed map.
+         */
+        const std::string& lookup(const std::string& key,
+            const std::string& defaultVal) const;
+};
 
 /**
  * Provides the callbacks for an XMLParser.  The various routines in
@@ -95,7 +115,7 @@ class XMLParserCallback {
          * @param p a hashed dictionary of all the properties of the tag.
          */
         virtual void start_element(const std::string& n,
-            const XMLPropertyDict& p);
+            const regina::xml::XMLPropertyDict& p);
         /**
          * Called when an element's closing tag is encountered.
          * This is called immediately after start_element() if the
@@ -256,8 +276,6 @@ class XMLParser {
  * changed.
  * @return the converted string with special characters replaced by
  * XML entities.
- *
- * @author Ben Burton
  */
 std::string xmlEncodeSpecialChars(const std::string& original);
 
@@ -275,8 +293,6 @@ std::string xmlEncodeSpecialChars(const std::string& original);
  * @param tagName the name of the XML tag to create.
  * @param value the value to assign to the <i>value</i> property of the tag.
  * @return the corresponding XML tag.
- *
- * @author Ben Burton
  */
 template <class T>
 inline std::string xmlValueTag(const std::string& tagName, const T& value) {
@@ -304,6 +320,17 @@ inline std::string xmlValueTag(const std::string& tagName, const T& value) {
     }
 #endif
 
+// Inline functions for XMLPropertyDict
+
+inline XMLPropertyDict::XMLPropertyDict() {
+}
+
+inline const std::string& XMLPropertyDict::lookup(const std::string& key,
+        const std::string& defaultVal) const {
+    const_iterator it = find(key);
+    return (it == end() ? defaultVal : (*it).second);
+}
+
 // Inline functions for XMLParserCallback
 
 inline void XMLParserCallback::start_document() {
@@ -311,7 +338,7 @@ inline void XMLParserCallback::start_document() {
 inline void XMLParserCallback::end_document() {
 }
 inline void XMLParserCallback::start_element(const std::string&,
-        const XMLPropertyDict&) {
+        const regina::xml::XMLPropertyDict&) {
 }
 inline void XMLParserCallback::end_element(const std::string&) {
 }
