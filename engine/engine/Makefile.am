@@ -57,7 +57,7 @@ libregina_engine_la_LIBADD = \
   utilities/libutilities.la \
   @ENGINE_LIBS@
 
-libregina_engine_noinst_la_SOURCES = $(libregina_engine_la_SOURCES)
+libregina_engine_noinst_la_SOURCES = engine.cpp shareableobject.cpp
 libregina_engine_noinst_la_LIBADD = $(libregina_engine_la_LIBADD)
 
 ## ----------------------- Custom targets ----------------------------
