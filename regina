@@ -62,7 +62,7 @@ export CLASSPATH="$reginaclasses$cps$REGINA_BTOOLS$cps$REGINA_JYTHON$cps$REGINA_
 addjavadef () {
 	eval "javadefs=\"\$javadefs \\\"-D$1=\$$1\\\"\""
 }
-use_java_defs="REGINA_ENGINE REGINA_INTERFACE REGINA_JNIENGINE REGINA_CORBAHOST REGINA_CORBAPORT"
+use_java_defs="REGINA_ENGINE REGINA_INTERFACE REGINA_JNIENGINE"
 
 javadefs="\"-Djava.library.path=$REGINA_JNIDIR\""
 if [ ! -z "$REGINA_CACHEDIR" ]; then
