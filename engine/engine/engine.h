@@ -31,7 +31,6 @@
  *  an external link to the calculation engine.
  *
  *  \todo \bugurgent Hunt for default copy constructors that are being called.
- *  \todo \bugurgent Hunt for linear time std::list.size().
  */
 
 /**
@@ -55,6 +54,7 @@ class NMatrixInt;
 class NNormalSurfaceList;
 class NProgressManager;
 class NScript;
+class NSignature;
 class NSnappedBall;
 class NSnappedTwoSphere;
 class NSpiralSolidTorus;
@@ -195,6 +195,8 @@ class Engine {
         NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
                 int flavour);
             /**< Calls ::makeMatchingEquations(). */
+        NSignature* parseSignature(const std::string& sig);
+            /**< Calls NSignature::parse(). */
         NPacket* readFileMagic(const std::string& fileName);
             /**< Calls ::readFileMagic(). */
         NPacket* readFromFile(const char* fileName);

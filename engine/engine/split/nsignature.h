@@ -39,40 +39,218 @@
 
 namespace regina {
 
+class NSigCensus;
+class NSigPartialIsomorphism;
 class NTriangulation;
 
-class NSignature {
+/**
+ * Represents a signature of a splitting surface in a closed 3-manifold
+ * triangulation.
+ *
+ * A <i>splitting surface</i> is (for these purposes) a compact normal surface
+ * consisting of precisely one quad per tetrahedron and no other normal
+ * (or almost normal) discs.
+ *
+ * A <i>signature</i> of order <i>n</i> is a string consisting of 2<i>n</i>
+ * letters arranged into cycles, where <i>n</i> is the number of quads in the
+ * splitting surface.  From a signature, the corresponding splitting
+ * surface and then the entire 3-manifold triangulation can be recreated.
+ *
+ * A signature of order <i>n</i> uses the first <i>n</i> letters of the
+ * alphabet, each precisely twice.  Case is important; the meaning of a
+ * letter changes according to whether it appears in upper-case or
+ * lower-case.
+ *
+ * Each letter represents an individual quadrilateral (the two
+ * occurrences of the letter representing the quadrilateral's two sides).
+ * Each cycle represents a chain of quadrilaterals joined together in the
+ * splitting surface.  The case of a letter represents in which direction
+ * a quadrilateral is traversed within a cycle.
+ *
+ * Cycles are arranged into <i>cycle groups</i>, where a cycle group
+ * consists of a series of consecutive cycles all of the same length.
+ *
+ * An example of a signature is <tt>(abc)(a)(b)(c)</tt>.  This signature
+ * is of order 3 and contains two cycle groups, the first being
+ * <tt>(abc)</tt> and the second being <tt>(a)(b)(c)</tt>.
+ *
+ * A signature cannot represent a splitting surface with more than 26
+ * quadrilaterals.
+ *
+ * For further details on splitting surface signatures, consult
+ * Ben Burton's PhD thesis.
+ *
+ * \todo Remove redundant private data members.
+ */
+class NSignature : public ShareableObject {
     private:
         unsigned order;
+            /**< The number of quads in this splitting surface. */
         unsigned* label;
+            /**< The 2<i>n</i> letters making up this signature from
+                 start to finish; letters A,B,... are represented by
+                 integers 0,1,... . */
         bool* labelInv;
+            /**< <tt>labelInv[i]</tt> stores the case of the letter
+                 corresponding to <tt>label[i]</tt>.  In this case
+                 \c false represents lower-case and \c true represents
+                 upper-case. */
         unsigned nCycles;
-        unsigned* cycleStart; // Insist on sentinels.
+            /**< The number of cycles in this signature. */
+        unsigned* cycleStart;
+            /**< The starting position of each cycle; an additional
+                 element is appended to the end of this array storing
+                 the length of the entire signature. */
         unsigned* cycleLen;
+            /**< The length of each cycle. */
         unsigned nCycleGroups;
-        unsigned* cycleGroupStart; // Insist on sentinels.
+            /**< The number of cycle groups in this signature. */
+        unsigned* cycleGroupStart;
+            /**< The starting cycle for each cycle group; an additional
+                 element is appended to the end of this array storing
+                 the total number of cycles. */
 
     public:
+        /**
+         * Creates a new signature that is a clone of the given signature.
+         *
+         * @param sig the signature to clone.
+         */
         NSignature(const NSignature& sig);
+        /**
+         * Destroys this signature.
+         */
         virtual ~NSignature();
 
-        static NSignature* parse(const std::string& sig); // Cannot be empty.
+        /**
+         * Returns the order of this signature.  The order is the number
+         * of quads in the corresponding splitting surface.
+         *
+         * @return the order of this signature.
+         */
+        unsigned getOrder() const;
+
+        /**
+         * Parses the given signature string.
+         *
+         * Punctuation characters in the given string will be interpreted
+         * as separating cycles.  All whitespace will be ignored.
+         * 
+         * Examples of valid signatures are <tt>"(ab)(bC)(Ca)"</tt> and
+         * <tt>"AAb-bc-C"</tt>.
+         *
+         * \pre The given string contains at least one letter.
+         *
+         * \ifaces This routine is a member of class Engine and is called
+         * Engine::parseSignature().
+         * 
+         * @param sig a string representation of a splitting surface
+         * signature.
+         * @return a corresponding newly created signature, or 0 if the
+         * given string was invalid.
+         */
+        static NSignature* parse(const std::string& sig);
+        /**
+         * Returns a newly created 3-manifold triangulation corresponding to
+         * this splitting surface signature.
+         *
+         * @return the corresponding triangulation.
+         */
         NTriangulation* triangulate() const;
 
+        /**
+         * Lexicographically compares the results of transformations upon
+         * two given cycles.  Even if transformations are specified, the
+         * underlying signatures will not be changed.
+         *
+         * This comparison is \e not case-sensitive.
+         *
+         * \pre The two specified cycles have the same length.
+         *
+         * \ifaces Not present.
+         *
+         * @param sig1 the signature containing the first cycle to examine.
+         * @param cycle1 specifies which cycle to examine in signature
+         * \a sig1.  This must be less than the total number of cycles in
+         * \a sig1.
+         * @param start1 allows the first cycle to be transformed by
+         * rotation; this parameter is the new starting position of the first
+         * cycle.  This must be between 0 and
+         * <tt>sig1.getCycleLength(cycle1)-1</tt> inclusive.
+         * @param dir1 allows the first cycle to be transformed by
+         * reversal; this parameter must be positive to use an unreversed
+         * cycle or negative to use a reversed cycle.
+         * @param relabel1 allows the first cycle to be transformed by
+         * relabelling; this parameter must be an array of size at least
+         * <tt>sig1.getOrder()</tt> mapping old labels 0,1,...
+         * (representing letters A,B,...) to new labels (which must also be
+         * 0,1,..., possibly in a different order).  This parameter may
+         * be 0 if no relabelling is to be used.
+         *
+         * @param sig2 the signature containing the second cycle to examine.
+         * @param cycle2 specifies which cycle to examine in signature
+         * \a sig2.  This must be less than the total number of cycles in
+         * \a sig2.
+         * @param start2 allows the second cycle to be transformed by
+         * rotation; this parameter is the new starting position of the
+         * second cycle.  This must be between 0 and
+         * <tt>sig2.getCycleLength(cycle2)-1</tt> inclusive.
+         * @param dir2 allows the second cycle to be transformed by
+         * reversal; this parameter must be positive to use an unreversed
+         * cycle or negative to use a reversed cycle.
+         * @param relabel2 allows the second cycle to be transformed by
+         * relabelling; this parameter must be an array of size at least
+         * <tt>sig2.getOrder()</tt> mapping old labels 0,1,...
+         * (representing letters A,B,...) to new labels (which must also be
+         * 0,1,..., possibly in a different order).  This parameter may
+         * be 0 if no relabelling is to be used.
+         *
+         * @return -1, 1 or 0 if the transformed first cycle is
+         * lexicographically less than, greater than or equal to the
+         * transformed second cycle respectively.
+         */
         static int cycleCmp(const NSignature& sig1, unsigned cycle1,
             unsigned start1, int dir1, unsigned* relabel1,
             const NSignature& sig2, unsigned cycle2, unsigned start2,
             int dir2, unsigned* relabel2);
 
+        /**
+         * Writes a string representation of this signature to the given
+         * output stream.
+         *
+         * \ifaces Not present, but routine ShareableObject()::toString()
+         * will return such a string representation.
+         *
+         * @param out the output stream to which to write.
+         * @param cycleOpen the text to write at the beginning of a cycle
+         * (such as <tt>"("</tt>).
+         * @param cycleClose the text to write at the end of a cycle
+         * (such as <tt>")"</tt>).
+         * @param cycleJoin the text to write between two cycles.
+         */
         void writeCycles(std::ostream& out, const std::string& cycleOpen,
             const std::string& cycleClose, const std::string& cycleJoin) const;
+
         virtual void writeTextShort(std::ostream& out) const;
 
     private:
-        NSignature(unsigned newOrder); // Requires newOrder > 0.
+        /**
+         * Creates a new signature of the given order.  All internal
+         * arrays will be created but not initialised.
+         *
+         * The first elements of the \a cycleStart and \a cycleGroupStart
+         * arrays will be set to 0.
+         *
+         * The newly created signature can be used as a partial
+         * signature containing no cycles.
+         *
+         * @param newOrder the order of the new signature; this must be
+         * strictly positive.
+         */
+        NSignature(unsigned newOrder);
 
-    friend class NSigPartialIsomorphism;
-    friend class NSigCensus;
+    friend class regina::NSigPartialIsomorphism;
+    friend class regina::NSigCensus;
 };
 
 // Inline functions for NSignature
@@ -92,6 +270,10 @@ inline NSignature::~NSignature() {
     delete[] cycleStart;
     delete[] cycleLen;
     delete[] cycleGroupStart;
+}
+
+inline unsigned NSignature::getOrder() const {
+    return order;
 }
 
 inline void NSignature::writeTextShort(std::ostream& out) const {

@@ -41,38 +41,91 @@
 
 namespace regina {
 
+/**
+ * A list of partial isomorphisms on splitting surface signatures.
+ */
 typedef std::list<NSigPartialIsomorphism*> NSigIsoList;
+
+/**
+ * A routine used to do arbitrary processing upon a splitting surface
+ * signature and its automorphisms.  Such routines are used to process
+ * signatures found when running a signature census.
+ *
+ * The first parameter passed should be a splitting surface signature.
+ * The second parameter should be a list of all automorphisms of this signature.
+ * The third parameter may contain arbitrary data as passed to
+ * formSigCensus().
+ */
 typedef void (*UseSignature)(const NSignature&, const NSigIsoList&, void *);
 
 /**
- * Constraints:
+ * Forms a census of all splitting surface signatures of the given order.
+ * The order of a signature is the number of quads in the corresponding
+ * splitting surface.
  *
- * - Signatures are considered equivalent if they are related by:
- *   \- Relabelling;
- *   \- Rotating individual cycles;
- *   \- Inverting individual cycles;
- *   \- Reversing *all* cycles.
+ * Each signature will be produced precisely once up to equivalence.
+ * Signatures are considered equivalent if they are related by some
+ * combination of:
+ * - relabelling symbols;
+ * - rotating an individual cycle;
+ * - inverting an individual cycle (i.e., reversing the cycle and
+ *   changing the case of each symbol in the cycle);
+ * - reversing all cycles without changing the case of any symbols.
  *
- * - Cycles ordered by decreasing length.
- * - Cycles must have >= 50% lower case.
- * - Within this, sigs ordered lexicographically: a < A < ... < z < Z.
- *   \- Thus first occurrences of letters must be in ascending order.
+ * Each signature produced will have its cycles ordered by decreasing
+ * length.  Each cycle will have at least half of its symbols lower-case.
+ *
+ * For each signature that is generated, routine \a use (as passed to this
+ * function) will be called with that signature and its automorphisms as
+ * arguments.
+ *
+ * \warning Currently upper-case symbols in signatures are not supported
+ * by this routine; only signatures whose symbols are all lower-case will
+ * be produced.
+ *
+ * \todo \feature Add support for symbols of differing case.
+ *
+ * \ifaces Not present.
+ *
+ * @param order the order of signatures to generate.
+ * @param use the function to call upon each signature that is found.
+ * The first parameter passed to this function will be a splitting
+ * surface signature.  The second parameter will be a list of all its
+ * automorphisms.  The third parameter will be parameter \a useArgs as
+ * was passed to this routine.
+ * @param useArgs the pointer to pass as the final parameter for the
+ * function \a use which will be called upon each signature found.
  */
-
 unsigned long formSigCensus(unsigned order, UseSignature use,
     void* useArgs = 0);
 
+/**
+ * A utility class used by formSigCensus().  Other routines should never
+ * refer to this class directly.  It is used to store temporary
+ * information when forming the census.
+ *
+ * \ifaces Not present.
+ */
 class NSigCensus {
     private:
         NSignature sig;
+            /**< The signature being constructed. */
         unsigned nextLabel;
+            /**< The first symbol that has not yet been used. */
         unsigned* used;
+            /**< The number of times each symbol has been used so far. */
         NSigIsoList* automorph;
+            /**< List <tt>automorph[k]</tt> represents all automorphisms
+                 of the first \a k cycle groups of the partially formed
+                 signature. */
 
         UseSignature use;
+            /**< The argument passed to formSigCensus(). */
         void* useArgs;
+            /**< The argument passed to formSigCensus(). */
 
         unsigned long totalFound;
+            /**< The total number of signatures found so far. */
 
     public:
         /**
@@ -91,14 +144,51 @@ class NSigCensus {
         void* run(void* param);
 
     private:
+        /**
+         * Creates a new structure to form a signature census.
+         * All parameters not explained are taken directly from
+         * formSigCensus().
+         *
+         * \pre order is at least 1.
+         */
         NSigCensus(unsigned order, UseSignature newUse, void* newUseArgs);
-            // Order must be > 0.
 
+        /**
+         * Empty the list <tt>automorph[sig.nCycleGroups]</tt> and
+         * destroy the corresponding partial isomorphisms.
+         */
         void clearTopAutomorphisms();
+
+        /**
+         * Extend the automorphisms in list
+         * <tt>automorph[sig.nCycleGroups - 1]</tt> to form the
+         * automorphisms in list <tt>automorph[sig.nCycleGroups]</tt>.
+         *
+         * If in the processing of extending these automorphisms it is
+         * discovered that the partial signature <tt>sig</tt> is not in
+         * canonical form, \c false will be returned and the contents of
+         * list <tt>automorph[sig.nCycleGroups]</tt> will be undefined.
+         *
+         * @return \c true if and only if it was confirmed during
+         * processing that the partial signature <tt>sig</tt> is in
+         * canonical form.
+         */
         bool extendAutomorphisms();
+
+        /**
+         * Extends the partial signature created so far to add a new
+         * cycle.
+         *
+         * @param cycleLen the length of the new cycle to add.
+         * @param newCycleGroup \c true if and only if the new cycle
+         * begins a new cycle group.
+         * @param startPos the position within the list of symbols
+         * that make up the signature at which the new cycle will begin.
+         */
         void tryCycle(unsigned cycleLen, bool newCycleGroup, unsigned startPos);
 
-    friend unsigned long formSigCensus(unsigned, UseSignature, void*);
+    friend unsigned long formSigCensus(unsigned order, UseSignature use,
+        void* useArgs);
 };
 
 // Inline functions for NSigCensus
