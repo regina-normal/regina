@@ -20,10 +20,11 @@ SUFFIXES = .1 .2 .3 .4 .5 .6 .7 .8
 
 %.1 %.2 %.3 %.4 %.5 %.6 %.7 %.8 :
 	cd .. && @DOCBOOK2MAN@ -o man regina.sgml
+	rm -f *.5reg
 	if [ "x@PACKAGE@" != "xregina" ]; then \
 		mv regina.1 @PACKAGE@.1; \
 	fi
 
 mostlyclean-local :
-	rm -f *.[1-8] manpage.*
+	rm -f *.[1-8] *.5reg manpage.*
 

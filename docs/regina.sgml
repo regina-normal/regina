@@ -39,6 +39,7 @@
  <!ENTITY gui "<acronym>GUI</acronym>">
  <!ENTITY html "<acronym>HTML</acronym>">
  <!ENTITY url "<acronym>URL</acronym>">
+ <!ENTITY xml "<acronym>XML</acronym>">
  <!ENTITY linux "<productname>GNU/Linux</productname>">
  <!ENTITY debian "<productname>Debian</productname>">
  <!ENTITY cygwin "<productname>Cygwin</productname>">
@@ -76,6 +77,7 @@
  <!ENTITY reginaoptions SYSTEM "options.sgml">
  <!ENTITY reginaman SYSTEM "reginaman.sgml">
  <!ENTITY reginautils SYSTEM "utils.sgml">
+ <!ENTITY dataformat SYSTEM "dataformat/dataformat.sgml">
  <!ENTITY trouble SYSTEM "trouble.sgml">
  <!ENTITY changeshighlights SYSTEM "../HIGHLIGHTS.txt">
  <!ENTITY changesdetails SYSTEM "../CHANGES.txt">
@@ -83,6 +85,11 @@
 
  <!ENTITY sessiontriangulation SYSTEM "../examples/triangulation.session">
  <!ENTITY sessiontree SYSTEM "../examples/tree.session">
+
+ <!-- Source entities declared outside this file. -->
+
+ <!ENTITY % dataformat-entities SYSTEM "dataformat/dataformat.ent">
+ %dataformat-entities;
 ]>
 
 <book>
@@ -317,6 +324,7 @@
 
  &reginaman;
  &reginautils;
+ &dataformat;
 
  &trouble;
 

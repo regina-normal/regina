@@ -1,0 +1,31 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<reference id="dataformat">
+ <title>Data File Format</title>
+
+ <partintro>
+  <para>
+   Since &regina; version 3.0, data files are now saved in an optionally
+   compressed &xml; format.  If a data file is compressed, it can be piped
+   through <command>gunzip</command> to recover the plain text &xml;.
+  </para>
+  <para>
+   This reference chapter documents the various &xml; elements that form
+   a &regina; data file and how they are used.  The top-level element
+   for a data file is &xml-reginadata;.
+  </para>
+ </partintro>
+
+ &data-line;
+ &data-packet;
+ &data-packet-container;
+ &data-packet-script;
+ &data-packet-text;
+ &data-reginadata;
+ &data-tag;
+ &data-text;
+ &data-var;
+
+</reference>

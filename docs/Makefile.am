@@ -7,7 +7,7 @@
 ##
 
 SUBDIRS = @REGINA_BUILD_DOCSENGINE@ @REGINA_BUILD_DOCSJAVAUI@ \
-  @REGINA_BUILD_DOCSMAN@ images
+  @REGINA_BUILD_DOCSMAN@ dataformat images
 
 ## ----------------------- Variables ---------------------------------
 
