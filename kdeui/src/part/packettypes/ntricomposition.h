@@ -35,6 +35,8 @@
 
 #include "../packettabui.h"
 
+class QListView;
+
 namespace regina {
     class NPacket;
     class NTriangulation;
@@ -54,6 +56,7 @@ class NTriCompositionUI : public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QListView* details;
 
     public:
         /**

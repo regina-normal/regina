@@ -32,16 +32,23 @@
 // UI includes:
 #include "ntricomposition.h"
 
+#include <klistview.h>
 #include <klocale.h>
-#include <qlabel.h>
+#include <qheader.h>
 
 using regina::NPacket;
 using regina::NTriangulation;
 
 NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI) {
-    // TODO
-    ui = new QLabel(QString("COMPOSITION"), 0);
+    details = new KListView();
+    details->header()->hide();
+    details->addColumn(QString::null);
+    details->setSorting(-1);
+    details->setSelectionMode(QListView::NoSelection);
+
+    // For now make the composition tree the entire UI.
+    ui = details;
 }
 
 regina::NPacket* NTriCompositionUI::getPacket() {
@@ -53,11 +60,22 @@ QWidget* NTriCompositionUI::getInterface() {
 }
 
 void NTriCompositionUI::refresh() {
-    std::cerr << "Composition refresh\n";
-    // TODO
+    details->clear();
+
+    // TODO: Fill composition details.
+
+    // Tidy up.
+    if (details->childCount() == 0)
+        new KListViewItem(details, i18n("Nothing recognised"));
+
+    details->setRootIsDecorated(
+        details->childCount() > 1 ||
+        details->firstChild()->childCount() > 0);
 }
 
 void NTriCompositionUI::editingElsewhere() {
-    // TODO
+    details->clear();
+    new KListViewItem(details, i18n("Editing..."));
+    details->setRootIsDecorated(false);
 }
 
