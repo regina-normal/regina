@@ -161,6 +161,11 @@
     </glossdef>
    </glossentry>
   </glosslist>
+  <para>
+   If you are having problems viewing help from within &regina;,
+   the <link linkend="trouble-config">troubleshooting</link> section
+   offers some ideas as to what might be wrong.
+  </para>
  </sect1>
 
  <sect1 id="options-libraries">
@@ -181,7 +186,7 @@
     <guimenu>Options</guimenu>
     <guisubmenu>Jython Libraries</guisubmenu>
    </menuchoice>
-   menu item opens a list of &jython; libraries that &regina; currently
+   menu item brings up a list of &jython; libraries that &regina; currently
    knows about.  Beside each library is a checkbox labelled
    <guilabel>Use</guilabel>.  Only the libraries whose
    <guilabel>Use</guilabel> boxes are checked will be loaded at the

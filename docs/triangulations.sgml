@@ -98,8 +98,41 @@
      <literal>dadbcccaqhx</literal> containing enough information to
      recreate the triangulation.  Dehydration strings appear in
      census papers such as the
-     <link linkend="bib-cuspedcensus">hyperbolic cusped census</link>,
-     in which the dehydration format is explicitly described.
+     <link linkend="bib-cuspedcensus">hyperbolic cusped census</link>
+     (see the <link linkend="bibliography">bibliography</link>), in which
+     the dehydration format is explicitly described.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-new-splitting">
+    <title>Splitting Surface</title>
+
+    <para>
+     This will create the triangulation containing the given splitting
+     surface.
+    </para>
+    <para>
+     A <firstterm>splitting surface</firstterm> is a compact normal
+     surface consisting of precisely one quadrilateral per tetrahedron
+     and no other normal (or almost normal) discs.
+    </para>
+    <para>
+     A <firstterm>splitting surface signature</firstterm> is a string of
+     letters arranged into cycles that represent the quadrilateral
+     structure of a splitting surface.  From this string of letters the
+     splitting surface and then the enclosing triangulation can be
+     reconstructed.
+    </para>
+    <para>
+     When entering a splitting surface signature, any block of
+     punctuation will be assumed to separate cycles of letters.  All
+     whitespace will be ignored.  Examples of valid signatures
+     are <literal>(ab)(bC)(Ca)</literal> and <literal>AAb-bc-C</literal>.
+    </para>
+    <para>
+     The precise format of splitting surface signatures is described
+     in <link linkend="bib-bensthesis">Ben Burton's PhD thesis</link>
+     (see the <link linkend="bibliography">bibliography</link>).
     </para>
    </sect3>
   </sect2>
@@ -299,7 +332,7 @@
     </para>
     <para>
      The second column (labelled <guilabel>Type</guilabel>) describes
-     properties of each vertex, edge or face in the form of zero or more
+     properties of each vertex, edge or face using zero or more
      of the property labels described below.  Note that an object might
      have no interesting properties at all.
     </para>
@@ -311,18 +344,18 @@
      The final column lists precisely which vertices
      of which tetrahedra form the vertex, edge or face (recall that the
      four vertices of an individual tetrahedron are numbered 0, 1, 2 and
-     3).  An example using an edge is
+     3).  An example for an edge is
      <literal>1(20), 4(12), 2(21)</literal> which shows that
      the edge is the result of identifying edge 20 of tetrahedron 1,
      edge 12 of tetrahedron 4 and edge 21 of tetrahedron 2 (where edge
-     21 for instance is the edge joining vertex 2 with vertex 1 of that
-     tetrahedron).
+     21 is the edge joining vertex 2 with vertex 1 of that tetrahedron
+     and so on).
      The order of vertices is important; this example also shows that
      vertex 2 of tetrahedron 1, vertex 1 of tetrahedron 4 and vertex 2
      of tetrahedron 2 all represent the same end of the edge.
     </para>
     <para>
-     In the case of edges, the order in which the tetrahedra are
+     In the specific case of edges, the order in which the tetrahedra are
      presented in this column is also important.  Tetrahedra are presented
      in the order in which they are seen when following around the edge link.
     </para>
@@ -679,8 +712,8 @@
     Tetrahedra can be optionally named to help
     keep track of their roles within a triangulation.  To change the
     name of a tetrahedron, click on the row header for that tetrahedron (this
-    is the cell on the left hand side of the grid containing the tetrahedron
-    number).  The new name can be typed directly into the cell.
+    is the cell containing the tetrahedron number on the left hand side of
+    the grid).  The new name can be typed directly into the cell.
    </para>
   </sect2>
 

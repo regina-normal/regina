@@ -393,7 +393,7 @@
       <para>
        The location of the &jython; library.  &jython; is optional, but
        is needed if you wish to <link linkend="jython-overview">write and run
-       scripts</link>.
+       scripts</link> from within &regina;.
       </para>
      </listitem>
     </varlistentry>

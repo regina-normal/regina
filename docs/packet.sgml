@@ -206,7 +206,7 @@
     <para>
      A <firstterm>property filter</firstterm> extracts all normal
      surfaces with the requested orientability, compactness, boundary
-     and/or Euler characteristic.
+     and/or Euler characteristic(s).
     </para>
     <para>
      <mediaobject>

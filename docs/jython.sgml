@@ -22,7 +22,7 @@
    <para>
     Scripting is available in &regina; through two means.  You can
     either bring up a &jython; console through the
-    <guimenu>Tools</guimenu> menu or the corresponding toolbar button,
+    <guimenu>Tools</guimenu> menu (or the corresponding toolbar button),
     or you can create a new
     <link linkend="packet-script">script packet</link>.  Script packets have the
     advantage that you can work with other packets in the same file
@@ -37,14 +37,14 @@
     All scripts are run in &jython;.  &jython; is an interpreted
     language that is almost identical to standard
     python (&cpython;) with a few exceptions that are probably insignificant in
-    this arena.  See <ulink url="http://www.jython.org">www.jython.org</ulink>
+    this arena.  See <ulink url="http://www.jython.org/">www.jython.org</ulink>
     for more details. 
    </para>
    <para>
     When using &jython;, &java; objects, classes and methods can be directly
     accessed as if they were &jython; objects, classes and methods.  The
     <link linkend="autodocs">engine documentation</link> describes in
-    detail the classes that form the engine, packets and other objects
+    detail the classes that form the packets and other objects
     that can be manipulated in the program.
    </para>
    <para>

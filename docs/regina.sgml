@@ -164,8 +164,7 @@
     In March 1999, David and Ben sat down to write a new version
     of the program from scratch.  The new version would have a
     calculation engine written in C++ for speed and would have a &java;
-    GUI for portability and for (in the author's opinion) the cool things
-    that &java; provides for writing interfaces.  It would be carefully
+    GUI for portability.  It would be carefully
     designed and written with rigour and extensibility in mind, allowing
     for the possibility of add-ons written by other people.
    </para>

@@ -6,80 +6,116 @@
  <title>Troubleshooting</title>
 
  <qandaset>
-  <qandaentry>
-   <question><para>
-    I cannot start the program at all.  I simply get a message box
-    displaying an error concerning the calculation engine.
-   </para></question>
-   <answer>
-    <para>
-     &regina; is split into two components; the &java; user interface (which
-     the user interacts with directly) and the C++ calculation engine
-     (which does all the actual mathematical work).  There is currently
-     only one method by which these two components can communicate.
-    </para>
-    <glosslist>
-     <glossentry>
-      <glossterm>&jni;</glossterm>
-      <glossdef><para>
-       The calculation engine is a shared library, found on the
-       filesystem of the machine on which you are running the user
-       interface.  The user interface loads this shared library and calls
-       its routines directly.  This method is the default when &regina; is run
-       as a standalone application.
-       </para><para>
-       If you are using this method,
-       <link linkend="man-regina.conf">check your configuration</link>
-       to ensure that the &jni; engine directory option is set correctly.
-      </para></glossdef>
-     </glossentry>
-    </glosslist>
-    <tip><para>
-     If you are running &regina; as a standalone application, using the
-     <option>--verbose</option> option will show you the current configuration
-     being used.
-    </para></tip>
-   </answer>
-  </qandaentry>
+  <qandadiv id="trouble-config"><title>Startup and Configuration</title>
+   <qandaentry>
+    <question><para>
+     I cannot start the program at all.  I simply get a message box
+     displaying an error concerning the calculation engine.
+    </para></question>
+    <answer>
+     <para>
+      &regina; is split into two components; the &java; user interface (which
+      the user interacts with directly) and the C++ calculation engine
+      (which does all the actual mathematical work).  There is currently
+      only one method by which these two components can communicate.
+     </para>
+     <glosslist>
+      <glossentry>
+       <glossterm>&jni;</glossterm>
+       <glossdef><para>
+        The calculation engine is a shared library, found on the
+        filesystem of the machine on which you are running the user
+        interface.  The user interface loads this shared library and calls
+        its routines directly.  This method is the default when &regina; is run
+        as a standalone application.
+        </para><para>
+        If you are using this method,
+        <link linkend="man-regina.conf">check your configuration</link>
+        to ensure that the &jni; engine directory option is set correctly.
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+     <tip><para>
+      If you are running &regina; as a standalone application, using the
+      <option>--verbose</option> option will show you the current configuration
+      being used.
+     </para></tip>
+    </answer>
+   </qandaentry>
 
-  <qandaentry>
-   <question><para>
-    I ask for help but I am told that &javahelp; and/or the documentation
-    jar cannot be found.
-   </para></question>
-   <answer>
-    <para>
-     The default method for browsing the online documentation uses
-     &javahelp; (an embedded &java; help browser).  &javahelp; is
-     contained in the file <filename>jh.jar</filename> and the
-     documentation itself is found in the file
-     <filename>regina-docs.jar</filename>.  One of
-     these two jar files could not be found on your system (look in the
-     &helpabout; box for further details regarding what can and cannot be
-     found on your system).
-    </para>
-    <para>
-     <link linkend="man-regina.conf">Check your configuration</link>
-     to ensure that you have the locations of both these jars correct.
-     Starting &regina; with the <option>--verbose</option> option will
-     show you where it is currently looking for these jars.
-    </para>
-    <para>
-     Alternatively you can use your favourite web browser instead of
-     &javahelp;, in which case neither <filename>jh.jar</filename> nor
-     <filename>regina-docs.jar</filename> will be required.  See the
-     <link linkend="options-help">help browser options reference</link>
-     for details.
-    </para>
-    <para>
-     And if you are reading this in the help system provided with the
-     program and sense some logical flow issues arising, be assured that
-     although it took me some time to realise this myself, this page is
-     also on the &regina; website and thus all is not for naught!
-    </para>
-   </answer>
-  </qandaentry>
+   <qandaentry>
+    <question><para>
+     I ask for help but I am told that &javahelp; and/or the documentation
+     jar cannot be found.
+    </para></question>
+    <answer>
+     <para>
+      The default method for browsing the online documentation uses
+      &javahelp; (an embedded &java; help browser).  &javahelp; is
+      contained in the file <filename>jh.jar</filename> and the
+      documentation itself is found in the file
+      <filename>regina-docs.jar</filename>.  One of
+      these two jar files could not be found on your system (look in the
+      &helpabout; box for further details regarding what can and cannot be
+      found on your system).
+     </para>
+     <para>
+      <link linkend="man-regina.conf">Check your configuration</link>
+      to ensure that you have the locations of both these jars correct.
+      Starting &regina; with the <option>--verbose</option> option will
+      show you where it is currently looking for these jars.
+     </para>
+     <para>
+      Alternatively you can use your favourite web browser instead of
+      &javahelp;, in which case neither <filename>jh.jar</filename> nor
+      <filename>regina-docs.jar</filename> will be required.  See the
+      <link linkend="options-help">help browser options reference</link>
+      for details.
+     </para>
+     <para>
+      And if you are reading this in the help system provided with the
+      program and sense some logical flow issues arising, be assured that
+      although it took me some time to realise this myself, this page is
+      also on the &regina; website and thus all is not for naught!
+     </para>
+    </answer>
+   </qandaentry>
 
+   <qandaentry>
+    <question><para>
+     My external help browser cannot find the documentation, even though
+     it's correctly unpacked on my system.
+    </para></question>
+    <answer>
+     <para>
+      As described in the <link linkend="options-help">help browser
+      options reference</link>, &regina; can be configured to view help
+      through an external web browser.  To do this you need to tell
+      &regina; where the documentation has been unpacked; this is done
+      through the help browser options dialog available from the
+      <menuchoice>
+       <guimenu>Options</guimenu>
+       <guimenuitem>Help Browser</guimenuitem>
+      </menuchoice>
+      menu item.
+     </para>
+     <para>
+      If you are running &regina; on &windows; under &cygwin;, you can
+      run into problems if you enter a &cygwin; path (such as
+      <filename>/usr/local/regina/docs</filename>) for the
+      documentation location.
+      In this situation, the external browser will probably not be
+      running under &cygwin; and so will probably not understand &cygwin;
+      paths.  You will need to enter the documentation path in &windows;
+      format instead (such as
+      <filename>c:\cygwin\usr\local\regina\docs</filename>).
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
+  <!-- Comment this out since the CORBA engine (required by the applet)
+       has been removed.
   <qandaentry>
    <question><para>
     There are no menu items or buttons to load or save files.
@@ -102,76 +138,83 @@
     </para>
    </answer>
   </qandaentry>
+  -->
 
-  <qandaentry>
-   <question><para>
-    The <guimenuitem>Jython Console</guimenuitem>
-    buttons/menu items are disabled.  So are the
-    <guibutton>Run</guibutton> and <guibutton>Compile</guibutton>
-    buttons in the script editor.
-   </para></question>
-   <answer>
-    <para>
-     This implies that the &jython; classes could not be found.
-     <link linkend="man-regina.conf">Check your configuration</link>
-     to ensure that you have the location of <filename>jython.jar</filename>
-     correct.
-     If you start &regina; with the <option>--verbose</option> option, you
-     will see where it is currently looking for <filename>jython.jar</filename>.
-    </para>
-   </answer>
-  </qandaentry>
- 
-  <qandaentry>
-   <question><para>
-    I cannot edit such-and-such-a packet.  I can view it but I can't change
-    anything and there's no <guibutton>Apply</guibutton> button.
-    Or there is an <guibutton>Apply</guibutton> button but it complains
-    if I try to press it.
-   </para></question>
-   <answer>
-    <para>
-     If a packet has children that need it to remain constant, it will
-     become uneditable.  An example is a triangulation that has a normal
-     surface list child packet.  The normal surface list stores coordinates
-     based upon the triangulation that created it, so the triangulation
-     must remain constant or else the coordinates will become invalid.
-    </para>
-    <para>
-     In such a situation you can try cloning the packet without cloning its
-     descendants
-     (<menuchoice>
-      <guimenu>Packet</guimenu>
-      <guisubmenu>Clone</guisubmenu>
-      <guimenuitem>Exclude Descendants</guimenuitem>
-     </menuchoice>).  The clone will have no children to worry if it changes
-     and so it should be editable.  Alternatively you could delete the child
-     packet that is refusing to allow its parent to change.
-    </para>
-   </answer>
-  </qandaentry>
+  <qandadiv><title>Working With Packets</title>
+   <qandaentry>
+    <question><para>
+     I cannot edit such-and-such-a packet.  I can view it but I can't change
+     anything and there's no <guibutton>Apply</guibutton> button.
+     Or there is an <guibutton>Apply</guibutton> button but it complains
+     if I try to press it.
+    </para></question>
+    <answer>
+     <para>
+      If a packet has children that need that packet to remain constant, it will
+      become uneditable.  An example is a triangulation that has a normal
+      surface list child packet.  The normal surface list stores coordinates
+      based upon the triangulation that created it, so the triangulation
+      must remain constant or else the coordinates will become invalid.
+     </para>
+     <para>
+      In such a situation you can try cloning the packet without cloning its
+      descendants
+      (<menuchoice>
+       <guimenu>Packet</guimenu>
+       <guisubmenu>Clone</guisubmenu>
+       <guimenuitem>Exclude Descendants</guimenuitem>
+      </menuchoice>).  The clone will have no children to worry about
+      and so should be editable.  Alternatively you could delete the child
+      packet that is refusing to allow its parent to change.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
 
-  <qandaentry>
-   <question><para>
-    Something else beyond this rather wanting list of suggestions has gone
-    wrong.  Perhaps something crashed.  Maybe the program gave the wrong
-    answer.  Or it could be just a little too slow.
-   </para></question>
-   <answer>
-    <para>
-     Please! - mail me at &regemail; and let me know.  Or even better,
-     use the <link linkend="sourceforge">&sourceforge; services</link>
-     such as the bug tracking system and mailing lists so that the
-     problem you report is publicly archived.
-    </para>
-    <para>
-     This program is permanently in development.  There is a very
-     long todo list, and chances are your problem is on it.  And
-     then again chances are it's not.  So please let me know so I
-     am sure to know what needs to be fixed/improved.
-    </para>
-   </answer>
-  </qandaentry>
+  <qandadiv><title>&jython; Scripting</title>
+   <qandaentry>
+    <question><para>
+     The <guimenuitem>Jython Console</guimenuitem>
+     buttons/menu items are disabled.  So are the
+     <guibutton>Run</guibutton> and <guibutton>Compile</guibutton>
+     buttons in the script editor.
+    </para></question>
+    <answer>
+     <para>
+      This implies that the &jython; classes could not be found.
+      <link linkend="man-regina.conf">Check your configuration</link>
+      to ensure that you have the location of <filename>jython.jar</filename>
+      correct.
+      If you start &regina; with the <option>--verbose</option> option, you
+      will see where it is currently looking for <filename>jython.jar</filename>.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
+  <qandadiv><title>Miscellaneous</title>
+   <qandaentry>
+    <question><para>
+     Something else beyond this rather wanting list of suggestions has gone
+     wrong.  Perhaps something crashed.  Maybe the program gave the wrong
+     answer.  Or it could be just a little too slow.
+    </para></question>
+    <answer>
+     <para>
+      Please! - mail me at &regemail; and let me know.  Or even better,
+      use the <link linkend="sourceforge">&sourceforge; services</link>
+      such as the bug tracking system and mailing lists so that the
+      problem you report is publicly archived.
+     </para>
+     <para>
+      This program is permanently in development.  There is a very
+      long todo list, and chances are your problem is on it.  And
+      then again chances are it's not.  So please let me know so I
+      am sure to know what needs to be fixed/improved.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
  </qandaset>
 </appendix>
 

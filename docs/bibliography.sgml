@@ -35,4 +35,13 @@
   <date>January 1999</date>
   <artpagenums>Pages 321-332</artpagenums>
  </biblioentry>
+
+ <biblioentry id="bib-bensthesis">
+  <title>PhD Thesis (pending)</title>
+  <author>
+   <firstname>Benjamin</firstname>
+   <surname>Burton</surname>
+  </author>
+  <date>August 2002</date>
+ </biblioentry>
 </bibliography>
