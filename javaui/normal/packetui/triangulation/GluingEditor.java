@@ -52,25 +52,21 @@ public class GluingEditor extends DefaultPacketEditor
         implements PacketInfoUI, TableModelListener {
     /**
      * The packet associated with this interface.
-     * @serial
      */
     private NTriangulation packet;
     
     /**
      * The table displaying triangulation data.
-     * @serial
      */
     private JTable table;
     
     /**
      * The model representing data to display in the table.
-     * @serial
      */
     private TriangulationTableModel tableModel;
 
     /**
      * The shell representing the entire program.
-     * @serial
      */
     private Shell shell;
 
