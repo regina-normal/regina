@@ -365,7 +365,8 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
     NTetFace* preImage = new NTetFace[nTetrahedra * 4];
         /**< The inverse of this automorphism. */
 
-    for (unsigned i = 0; i < nTetrahedra * 4; i++) {
+    unsigned i;
+    for (i = 0; i < nTetrahedra * 4; i++) {
         image[i].setBeforeStart();
         preImage[i].setBeforeStart();
     }
@@ -379,6 +380,7 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
     NTetFace trying;
     NTetFace fImg, fPre;
     bool stepDown;
+    int tet, face;
     for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(nTetrahedra, true);
             preImage[0]++) {
         // Note that we know firstFace is not unmatched.
@@ -418,13 +420,18 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
             // before trying.  We're currently looking at the last
             // attempted candidate for the preimage of trying.
 
+            // Note that if preimage face A is glued to preimage face B
+            // and the image of A is earlier than the image of B, then
+            // the image of A will be selected whereas the image of B
+            // will be automatically derived.
+
             stepDown = false;
             NTetFace& pre = preImage[trying.tet * 4 + trying.face];
 
             if (trying.isPastEnd(nTetrahedra, true)) {
                 // We have a complete automorphism!
                 list.push_back(new NIsomorphismDirect(nTetrahedra));
-                // TODO
+                // TODO: make a real automorphism.
                 stepDown = true;
             } else {
                 // Move to the next candidate.
@@ -446,11 +453,22 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
                     // has not already been set.
                     // If the preimage is unmatched and trying isn't,
                     // we'll also skip it.
+                    // If trying is unmatched and the preimage isn't,
+                    // we're not in canonical form.
                     for ( ; pre.face < 4; pre.face++) {
                         if (! image[pre.tet * 4 + pre.face].isBeforeStart())
                             continue;
                         if ((! isUnmatched(trying)) && isUnmatched(pre))
                             continue;
+                        if (isUnmatched(trying) && (! isUnmatched(pre))) {
+                            // We're not in canonical form.
+                            for_each(list.begin(), list.end(),
+                                FuncDelete<NIsomorphismDirect>());
+                            list.clear();
+                            delete[] image;
+                            delete[] preImage;
+                            return false;
+                        }
                         break;
                     }
                     while (pre.face < 4 &&
@@ -465,22 +483,58 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
 
             if (! stepDown) {
                 // We found a candidate.
-                // We also know that if trying is matched then the
-                // preimage is also matched.
+                // We also know that trying is unmatched iff the preimage
+                // is unmatched.
                 image[pre.tet* 4 + pre.face] = trying;
-                if (! isUnmatched(trying)) {
-                    fImg = dest(trying);
+                if (! isUnmatched(pre)) {
                     fPre = dest(pre);
-                    preImage[fImg.tet * 4 + fImg.face] = fPre;
-                    image[fPre.tet * 4 + fPre.face] = fImg;
+                    if (image[fPre.tet * 4 + fPre.face].isBeforeStart()) {
+                        // The image of fPre (the partner of the preimage
+                        // face) can be determined at this point.
+                        // Specifically, it should go into the next
+                        // available slot.
+
+                        // Do we already know which tetrahedron we should
+                        // be looking into?
+                        for (i = 0; i < 4; i++)
+                            if (! image[fPre.tet * 4 + i].isBeforeStart()) {
+                                // Here's the tetrahedron!
+                                // Find the first available face.
+                                tet = image[fPre.tet * 4 + i].tet;
+                                for (face = 0; ! preImage[tet * 4 + face].
+                                        isBeforeStart(); face++)
+                                    ;
+                                image[fPre.tet * 4 + fPre.face].tet = tet;
+                                image[fPre.tet * 4 + fPre.face].face = face;
+                                break;
+                            }
+                        if (i == 4) {
+                            // We need to map to a new tetrahedron.
+                            // Find the first available tetrahedron.
+                            for (tet = trying.tet + 1;
+                                    ! preImage[tet * 4].isBeforeStart(); tet++)
+                                ;
+                            image[fPre.tet * 4 + fPre.face].tet = tet;
+                            image[fPre.tet * 4 + fPre.face].face = 0;
+                        }
+
+                        // Set the corresponding preimage.
+                        fImg = image[fPre.tet * 4 + fPre.face];
+                        preImage[fImg.tet * 4 + fImg.face] = fPre;
+                    }
                 }
 
                 // Do a lexicographical comparison and shunt trying up
                 // if need be.
                 do {
-                    fPre = dest(preImage[trying.tet * 4 + trying.face]);
-                    fPre = image[fPre.tet * 4 + fPre.face];
                     fImg = dest(trying);
+                    fPre = dest(preImage[trying.tet * 4 + trying.face]);
+                    if (! fPre.isBoundary(nTetrahedra))
+                        fPre = image[fPre.tet * 4 + fPre.face];
+
+                    // Currently trying is glued to fImg.
+                    // After applying our isomorphism, trying will be
+                    // glued to fPre.
 
                     if (fImg < fPre) {
                         // This isomorphism will lead to a
@@ -500,22 +554,34 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
                     // What we have so far is consistent with an automorphism.
                     trying++;
                 } while (! (stepDown || trying.isPastEnd(nTetrahedra, true) ||
-                        trying < dest(trying)));
+                        preImage[trying.tet * 4 + trying.face].isBeforeStart()));
             }
 
             if (stepDown) {
                 // We're shunting trying back down.
-                for (trying--; dest(trying) < trying; trying--)
-                    ;
+                trying--;
+                while (true) {
+                    fPre = preImage[trying.tet * 4 + trying.face];
+                    if (! isUnmatched(fPre)) {
+                        fPre = dest(fPre);
+                        if (image[fPre.tet * 4 + fPre.face] < trying) {
+                            // This preimage/image was automatically
+                            // derived.
+                            trying--;
+                            continue;
+                        }
+                    }
+                    break;
+                }
 
                 // Note that this resetting of faces that follows will
                 // also take place when trying makes it all the way back
                 // down to firstFace.
                 fPre = preImage[trying.tet * 4 + trying.face];
                 image[fPre.tet * 4 + fPre.face].setBeforeStart();
-                if (! isUnmatched(trying)) {
-                    fImg = dest(trying);
+                if (! isUnmatched(fPre)) {
                     fPre = dest(fPre);
+                    fImg = image[fPre.tet * 4 + fPre.face];
                     preImage[fImg.tet * 4 + fImg.face].setBeforeStart();
                     image[fPre.tet * 4 + fPre.face].setBeforeStart();
                 }
