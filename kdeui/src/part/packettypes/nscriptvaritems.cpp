@@ -39,6 +39,7 @@
 #include <qlineedit.h>
 #include <qregexp.h>
 #include <qtable.h>
+#include <qvalidator.h>
 
 using regina::NPacket;
 
@@ -57,6 +58,7 @@ ScriptVarNameItem::ScriptVarNameItem(QTable* table, const QString& name) :
 QWidget* ScriptVarNameItem::createEditor() const {
     QLineEdit* editor = new QLineEdit(text(), table()->viewport());
     editor->setFrame(false);
+    editor->setValidator(new QRegExpValidator(rePythonIdentifier, editor));
     editor->selectAll();
     return editor;
 }
