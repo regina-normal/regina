@@ -60,6 +60,8 @@ Current Development Version
             - Made the enumerating constructor private and added the
               public replacement enumerate().
         Class NPacket, NPacketListener:
+            - The NPacket destructor now orphans the packet if this has
+              not already been done.
             - Added event listening for packets, including new class
               NPacketListener and new routines NPacket::listen(),
               NPacket::isListening() and NPacket::unlisten().

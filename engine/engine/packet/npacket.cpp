@@ -37,12 +37,14 @@
 namespace regina {
 
 NPacket::~NPacket() {
-    NPacket* tmp;
-    while(firstTreeChild) {
-        tmp = firstTreeChild;
-        firstTreeChild = firstTreeChild->nextTreeSibling;
-        delete tmp;
-    }
+    // Destroy all descendants.
+    // Note that the NPacket destructor now orphans the packet as well.
+    while(firstTreeChild)
+        delete firstTreeChild;
+
+    // Orphan this packet if necessary.
+    if (treeParent)
+        makeOrphan();
 
     // Fire a packet event and unregister all listeners.
     if (listeners.get()) {
@@ -153,6 +155,9 @@ void NPacket::insertChildAfter(NPacket* newChild, NPacket* prevChild) {
 }
 
 void NPacket::makeOrphan() {
+    if (! treeParent)
+        return;
+
     if (treeParent->firstTreeChild == this)
         treeParent->firstTreeChild = nextTreeSibling;
     else
@@ -180,7 +185,7 @@ void NPacket::swapWithNextSibling() {
         prevTreeSibling->nextTreeSibling = nextTreeSibling;
     else
         treeParent->firstTreeChild = nextTreeSibling;
-    
+
     if (nextTreeSibling->nextTreeSibling)
         nextTreeSibling->nextTreeSibling->prevTreeSibling = this;
     else

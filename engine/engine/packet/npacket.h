@@ -153,8 +153,8 @@ class NPacket : public ShareableObject {
         NPacket(NPacket* parent = 0);
 
         /**
-         * Destructor that also deallocates all descendants of this
-         * packet.
+         * Destructor that also orphans this packet and destroys
+         * all of its descendants.
          */
         virtual ~NPacket();
 
