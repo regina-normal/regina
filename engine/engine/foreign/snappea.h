@@ -26,13 +26,13 @@
 
 /* end stub */
 
-/*! \file nsnappea.h
+/*! \file snappea.h
  *  \brief Allows reading and writing SnapPea files.
  */
 
-#ifndef __NSNAPPEA_H
+#ifndef __SNAPPEA_H
 #ifndef __DOXYGEN
-#define __NSNAPPEA_H
+#define __SNAPPEA_H
 #endif
 
 #include <string>

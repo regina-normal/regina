@@ -12,7 +12,7 @@ foreignincludedir = $(pkgincludedir)/foreign
 
 noinst_LTLIBRARIES = libforeign.la
 
-libforeign_la_SOURCES = nsnappea.cpp
+libforeign_la_SOURCES = snappea.cpp
 
-foreigninclude_HEADERS = nsnappea.h
+foreigninclude_HEADERS = snappea.h
 

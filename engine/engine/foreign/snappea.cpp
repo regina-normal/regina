@@ -32,7 +32,7 @@
 #include <iomanip>
 
 #include "file/nresources.h"
-#include "foreign/nsnappea.h"
+#include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -42,7 +42,7 @@ NTriangulation* readSnapPea(const char* filename) {
     std::ifstream in(filename, NLocalFileResource::sysModeRead());
     if (!in)
         return 0;
-    
+
     // Check that this is a SnapPea triangulation.
     if (in.peek() != '%')
         return 0;
@@ -55,7 +55,7 @@ NTriangulation* readSnapPea(const char* filename) {
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         return 0;
-    
+
     // Read in junk.
     std::string tempStr;
     double tempDbl;
@@ -68,7 +68,7 @@ NTriangulation* readSnapPea(const char* filename) {
         in >> tempDbl;     // Chern-Simmon is known
 
     unsigned i,j,k;
-        
+
     // Read in cusp details and ignore them.
     unsigned numOrientCusps, numNonOrientCusps;
     in >> numOrientCusps >> numNonOrientCusps;
@@ -77,17 +77,17 @@ NTriangulation* readSnapPea(const char* filename) {
         in >> tempStr;             // Cusp type
         in >> tempDbl >> tempDbl;  // Filling information
     }
-    
+
     // Create the new tetrahedra.
     unsigned numTet;
     in >> numTet;
     NTetrahedron **tet = new NTetrahedron*[numTet];
     for (i=0; i<numTet; i++)
         tet[i] = new NTetrahedron();
-        
+
     int g[4];
     int p[4][4];
-    
+
     for (i=0; i<numTet; i++) {
         // Test the state of the input stream.
         if (! in.good()) {
@@ -96,11 +96,11 @@ NTriangulation* readSnapPea(const char* filename) {
             delete[] tet;
             return 0;
         }
-        
+
         // Read in adjacent tetrahedra.
         for (j=0; j<4; j++)
             in >> g[j];
-        
+
         // Read in gluing permutations.
         for (j=0; j<4; j++) {
             in >> tempStr;
@@ -117,12 +117,12 @@ NTriangulation* readSnapPea(const char* filename) {
                         return 0;
                 }
         }
-        
+
         // Perform the gluings.
         for (j=0; j<4; j++)
             tet[i]->joinTo(j, tet[g[j]],
                 NPerm(p[j][0], p[j][1], p[j][2], p[j][3]));
-        
+
         // Read in junk.
         for (j=0; j<4; j++)
             in >> tempStr;
@@ -131,11 +131,11 @@ NTriangulation* readSnapPea(const char* filename) {
         for (j=0; j<2; j++)
             in >> tempStr;
     }
-    
+
     // Build the acutal triangulation.
     NTriangulation* triang = new NTriangulation();
     triang->setPacketLabel(name);
-    for (i=0; i<numTet; i++)        
+    for (i=0; i<numTet; i++)
         triang->addTetrahedron(tet[i]);
     delete[] tet;
     return triang;
