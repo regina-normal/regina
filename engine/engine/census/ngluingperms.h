@@ -350,7 +350,7 @@ class NGluingPerms {
          * This routine in fact performs the same processing as
          * findAllPerms() but is non-static.  Routine findAllPerms() does
          * nothing but call this routine (or one of its replacements
-         * such as findAllPermsClosedOrPrimeMin()) upon a newly created (and
+         * such as findAllPermsClosedPrimeMin()) upon a newly created (and
          * uninitialised) gluing permutation set.
          *
          * All parameters are as described for findAllPerms().
@@ -366,18 +366,21 @@ class NGluingPerms {
          * Internal to findAllPerms().
          *
          * This routine is a replacement for findAllPermsInternal()
-         * in the case in which only closed orientable prime minimal
+         * in the case in which only closed prime minimal P2-irreducible
          * triangulations are required and the given face pairing
-         * has order at least three.  An entirely different (and
-         * significantly optimised) algorithm is used.
+         * has order at least three.
+         *
+         * An entirely different (and significantly optimised) algorithm
+         * is used, which takes advantage of a number of results
+         * regarding the underlying face pairing graph.
          *
          * All parameters are as described for findAllPerms().
          *
          * \pre As described for findAllPerms().
          */
-        void findAllPermsClosedOrPrimeMin(const NFacePairing* newPairing,
-            const NFacePairingIsoList* autos, UseGluingPerms use,
-            void* useArgs = 0);
+        void findAllPermsClosedPrimeMin(const NFacePairing* newPairing,
+            const NFacePairingIsoList* autos, bool orientableOnly,
+            UseGluingPerms use, void* useArgs = 0);
 
         /**
          * Determines whether the permutations already constructed model

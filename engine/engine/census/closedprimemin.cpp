@@ -35,10 +35,11 @@
 
 namespace regina {
 
-void NGluingPerms::findAllPermsClosedOrPrimeMin(const NFacePairing* pairing,
-        const NFacePairingIsoList* autos, UseGluingPerms use, void* useArgs) {
+void NGluingPerms::findAllPermsClosedPrimeMin(const NFacePairing* pairing,
+        const NFacePairingIsoList* autos, bool orientableOnly,
+        UseGluingPerms use, void* useArgs) {
     // Preconditions:
-    //     Only closed orientable prime minimal triangulations are required.
+    //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
 
     // ---------- Tests for trivial solutions ----------
@@ -46,11 +47,12 @@ void NGluingPerms::findAllPermsClosedOrPrimeMin(const NFacePairing* pairing,
     // Begin by testing for face pairings that can never lead to such a
     // triangulation.
 
-    if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain()
-            || pairing->hasOneEndedChainWithDoubleHandle()) {
-        use(0, useArgs);
-        return;
-    }
+    if (orientableOnly)
+        if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain()
+                || pairing->hasOneEndedChainWithDoubleHandle()) {
+            use(0, useArgs);
+            return;
+        }
 
     // ---------- Selecting an ordering of faces ----------
 

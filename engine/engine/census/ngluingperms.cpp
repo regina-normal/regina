@@ -96,12 +96,15 @@ void NGluingPerms::findAllPerms(const NFacePairing* pairing,
 
     // Call an optimised internal generation routine if possible.
     if (pairing->getNumberOfTetrahedra() >= 3) {
-        if (orientableOnly && finiteOnly && pairing->isClosed() &&
+        if (finiteOnly && pairing->isClosed() &&
                 (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
-                (whichPurge & NCensus::PURGE_NON_PRIME)) {
-            // Closed orientable prime minimal triangulations with >= 3
+                (whichPurge & NCensus::PURGE_NON_PRIME) &&
+                (orientableOnly ||
+                    (whichPurge & NCensus::PURGE_P2_REDUCIBLE))) {
+            // Closed prime minimal P2-irreducible triangulations with >= 3
             // tetrahedra.
-            perms.findAllPermsClosedOrPrimeMin(pairing, autos, use, useArgs);
+            perms.findAllPermsClosedPrimeMin(pairing, autos, orientableOnly,
+                use, useArgs);
             return;
         }
     }
