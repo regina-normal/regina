@@ -55,8 +55,6 @@ Python:
 Scripts:
     - Make a script dirty when its variables are changed externally
         through renaming or deletion
-    - Packet choosers with very large files seem to cause real problems
-        (e.g., variable table for snappea census)
 
 Toolbars:
     - Work out how to get decent action names in the configure toolbar dialog
