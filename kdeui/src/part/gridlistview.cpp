@@ -28,6 +28,7 @@
 
 #include "gridlistview.h"
 
+#include <qglobal.h>
 #include <qpainter.h>
 #include <qstyle.h>
 
@@ -46,8 +47,15 @@ void GridListViewItem::paintCell(QPainter* p, const QColorGroup& cg,
     KListViewItem::paintCell(p, cg, column, width, align);
 
     // Draw a box around the cell.
+#if QT_VERSION < 0x030200
+    // Style hint SH_Table_GridLineColor is not supported in Qt 3.1 or
+    // earlier (I believe).
+    // Use its default implementation directly.
+    p->setPen((QRgb)listView()->colorGroup().mid().rgb());
+#else
     p->setPen((QRgb)listView()->style().styleHint(
         QStyle::SH_Table_GridLineColor, listView()));
+#endif
     p->drawLine(0, height() - 1, width - 1, height() - 1);
     p->lineTo(width - 1, 0);
 }

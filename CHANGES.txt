@@ -11,6 +11,7 @@ Development Version
     USER INTERFACE:
         Class GridListViewItem:
             - Added to centralise support for list views with grids.
+            - Fixed a compile error with Qt versions 3.1 and earlier.
 
 Version 4.0  [ 20 December, 2003 ]
     ENGINE:
