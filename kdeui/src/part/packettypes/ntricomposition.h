@@ -58,6 +58,8 @@ class NTriCompositionUI : public PacketViewerTab {
          */
         QWidget* ui;
         QListView* details;
+        QListViewItem* components;
+        QListViewItem* lastComponent;
 
     public:
         /**
@@ -78,7 +80,8 @@ class NTriCompositionUI : public PacketViewerTab {
         /**
          * Add new items to the list view.
          */
-        QListViewItem* addSection(const QString& text);
+        QListViewItem* addTopLevelSection(const QString& text);
+        QListViewItem* addComponentSection(const QString& text);
 
         /**
          * Fill the list view with information.
@@ -93,6 +96,12 @@ class NTriCompositionUI : public PacketViewerTab {
         void findSnappedBalls();
         void findSnappedSpheres();
         void findSpiralSolidTori();
+
+        /**
+         * Return string representations of tetrahedron edges.
+         */
+        static QString edgeString(unsigned long tetIndex, int edge1,
+            int edge2);
 };
 
 #endif

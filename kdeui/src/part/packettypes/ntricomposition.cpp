@@ -28,6 +28,7 @@
 
 // Regina core includes:
 #include "manifold/nmanifold.h"
+#include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
@@ -44,7 +45,7 @@ using regina::NTriangulation;
 
 NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        tri(packet) {
+        tri(packet), components(0), lastComponent(0) {
     details = new KListView();
     details->header()->hide();
     details->addColumn(QString::null);
@@ -70,15 +71,17 @@ void NTriCompositionUI::refresh() {
     std::auto_ptr<regina::NStandardTriangulation> standardTri(
         regina::NStandardTriangulation::isStandardTriangulation(tri));
     if (standardTri.get()) {
-        addSection(i18n("Triangulation: ") + standardTri->getName().c_str());
+        addTopLevelSection(
+            i18n("Triangulation: ") + standardTri->getName().c_str());
 
         std::auto_ptr<regina::NManifold> manifold(standardTri->getManifold());
         if (manifold.get())
-            addSection(i18n("3-manifold: ") + manifold->getName().c_str());
+            addTopLevelSection(
+                i18n("3-manifold: ") + manifold->getName().c_str());
         else
-            addSection(i18n("3-manifold not recognised"));
+            addTopLevelSection(i18n("3-manifold not recognised"));
     } else
-        addSection(i18n("Triangulation not recognised"));
+        addTopLevelSection(i18n("Triangulation not recognised"));
 
     // Look for complete closed triangulations.
     findAugTriSolidTori();
@@ -96,10 +99,16 @@ void NTriCompositionUI::refresh() {
     findPillowSpheres();
     findSnappedSpheres();
 
-    // Tidy up.
-    details->setRootIsDecorated(
-        details->childCount() > 1 ||
-        details->firstChild()->childCount() > 0);
+    // Expand so that two levels of children are visible.
+    bool foundInnerChildren = false;
+    for (QListViewItem* topChild = details->firstChild(); topChild;
+            topChild = topChild->nextSibling())
+        if (topChild->firstChild()) {
+            topChild->setOpen(true);
+            foundInnerChildren = true;
+        }
+
+    details->setRootIsDecorated(foundInnerChildren);
 }
 
 void NTriCompositionUI::editingElsewhere() {
@@ -108,11 +117,23 @@ void NTriCompositionUI::editingElsewhere() {
     details->setRootIsDecorated(false);
 }
 
-QListViewItem* NTriCompositionUI::addSection(const QString& text) {
+QListViewItem* NTriCompositionUI::addTopLevelSection(const QString& text) {
     if (details->lastItem())
         return new KListViewItem(details, details->lastItem(), text);
     else
         return new KListViewItem(details, text);
+}
+
+QListViewItem* NTriCompositionUI::addComponentSection(const QString& text) {
+    if (! components)
+        components = addTopLevelSection(i18n("Components"));
+
+    if (lastComponent)
+        lastComponent = new KListViewItem(components, lastComponent, text);
+    else
+        lastComponent = new KListViewItem(components, text);
+
+    return lastComponent;
 }
 
 void NTriCompositionUI::findAugTriSolidTori() {
@@ -132,7 +153,51 @@ void NTriCompositionUI::findLayeredLoops() {
 }
 
 void NTriCompositionUI::findLayeredSolidTori() {
-    // TODO
+    unsigned long nTets = tri->getNumberOfTetrahedra();
+
+    QListViewItem* section = 0;
+    QListViewItem* id = 0;
+    QListViewItem* details = 0;
+
+    regina::NLayeredSolidTorus* torus;
+    unsigned long topIndex;
+    for (unsigned long i = 0; i < nTets; i++) {
+        torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(
+            tri->getTetrahedron(i));
+        if (torus) {
+            QString type = QString::number(torus->getMeridinalCuts(0)) + '-' +
+                QString::number(torus->getMeridinalCuts(1)) + '-' +
+                QString::number(torus->getMeridinalCuts(2));
+
+            if (section)
+                id = new KListViewItem(section, id, type);
+            else {
+                section = addComponentSection(i18n("Layered Solid Tori"));
+                id = new KListViewItem(section, type);
+            }
+
+            details = new KListViewItem(id, i18n("Base: tet %1").arg(
+                tri->getTetrahedronIndex(torus->getBase())));
+            topIndex = tri->getTetrahedronIndex(torus->getTopLevel());
+            details = new KListViewItem(id, details, i18n("Top level: tet %1").
+                arg(topIndex));
+
+            details = new KListViewItem(id, details, i18n(
+                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(0)).
+                arg(edgeString(topIndex, torus->getTopEdge(0, 0),
+                    torus->getTopEdge(0, 1))));
+            details = new KListViewItem(id, details, i18n(
+                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(1)).
+                arg(edgeString(topIndex, torus->getTopEdge(1, 0),
+                    torus->getTopEdge(1, 1))));
+            details = new KListViewItem(id, details, i18n(
+                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(2)).
+                arg(edgeString(topIndex, torus->getTopEdge(2, 0),
+                    torus->getTopEdge(2, 1))));
+
+            delete torus;
+        }
+    }
 }
 
 void NTriCompositionUI::findPillowSpheres() {
@@ -153,5 +218,19 @@ void NTriCompositionUI::findSnappedSpheres() {
 
 void NTriCompositionUI::findSpiralSolidTori() {
     // TODO
+}
+
+QString NTriCompositionUI::edgeString(unsigned long tetIndex,
+        int edge1, int edge2) {
+    if (edge1 < 0)
+        return i18n("None");
+    else if (edge2 < 0)
+        return QString("%1 (%2%3)").arg(tetIndex).
+            arg(regina::edgeStart[edge1]).arg(regina::edgeEnd[edge1]);
+    else
+        return QString("%1 (%2%3) = %4 (%5%6)").arg(tetIndex).
+            arg(regina::edgeStart[edge1]).arg(regina::edgeEnd[edge1]).
+            arg(tetIndex).
+            arg(regina::edgeStart[edge2]).arg(regina::edgeEnd[edge2]);
 }
 
