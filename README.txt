@@ -20,19 +20,14 @@ BINARY DISTRIBUTION:
 
 SOURCE DISTRIBUTION:
 
-    - Before compiling, copy one of the template Makefile.options.* files
-      to Makefile.options and edit it to reflect your system.
+    - Regina has been reorganised to use the standard "./configure",
+      "make" build procedure.  See INSTALL.txt for details.
 
-    - To compile so you have a basic working runtime, type "make bin".
-
-    - To build the documentation, type "make bindocs".  The documentation
-      will be generated and placed in docs/.  A complete documentation
-      jar will also be placed in bin/.
-
-    - For other make options, type "make help".
-
-    Be sure to examine Makefile.options to ensure that the configuration
-    matches your system.
+    - For the impatient, the short summary for building Regina is as
+      follows.  INSTALL.txt contains details for customising this process.
+        prompt$ ./configure    (determines features of your system)
+        prompt$ make           (builds Regina)
+        prompt$ make install   (installs Regina)
 
 Ben Burton <benb@acm.org>
 http://regina.sourceforge.net/
