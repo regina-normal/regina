@@ -15,10 +15,10 @@ SUFFIXES = .java .class
 %.class : %.java
 	CLASSPATH="$(USE_CLASSPATH)" @JAVAC@ $<
 
-java_sources =
+java_sources = Implementation.java
 
 # Note that $(java_classes) does _not_ include inner classes.
-java_classes =
+java_classes = Implementation.class
 
 all-local : $(java_classes)
 
