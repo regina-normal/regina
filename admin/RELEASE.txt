@@ -8,7 +8,7 @@ Program version:
     debian/changelog (version, date)
     docs/regina.sgml (entities &regversion;, &regdate;)
     javaui/normal/Application.java (Application.version, Application.date)
-    www/index.html (last updated)
+    www/index.html (last updated, current version)
 
 License details:
     LICENSE.txt (./, docs/, javaui/)
