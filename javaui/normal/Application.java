@@ -166,7 +166,7 @@ public class Application extends Applet implements ActionListener {
      * The version string representing the oldest allowable JDK with
      * which this program can be run.
      */
-    public static final String minimumJDKVersion = "1.2";
+    public static final String minimumJDKVersion = "1.3";
 
     /**
      * The version string representing the oldest allowable BTools with

@@ -392,12 +392,12 @@ public abstract class Shell {
                 if (jdkVersion != null)
                     if (jdkVersion.compareTo(
                             Application.minimumJDKVersion) < 0) {
-                        error("Your web browser is using Java version " +
+                        error("You are using Java version " +
                             jdkVersion + ", which is too old to run "
                             + Application.program + ".  At least version " +
                             Application.minimumJDKVersion +
                             " is required.  Please download a newer" +
-                            " version of your web browser.");
+                            " version of Java (or of your web browser).");
                         exit(1);
                         return;
                     }
