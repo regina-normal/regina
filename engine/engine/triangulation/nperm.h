@@ -295,9 +295,7 @@ class NPerm {
          * @return \c true if and only if this is the identity
          * permutation.
          */
-        #ifdef __DOXYGEN
         bool isIdentity() const;
-        #endif
 
         /**
          * Returns a string representation of this permutation.
@@ -584,6 +582,10 @@ inline int NPerm::preImageOf(int image) const {
 
 inline int NPerm::imageOf(int source) const {
     return (code >> (2*source)) & 3;
+}
+
+inline bool NPerm::isIdentity() const {
+    return (code == (char)228);
 }
 
 inline bool NPerm::operator == (const NPerm& other) const {

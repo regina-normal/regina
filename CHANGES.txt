@@ -17,6 +17,9 @@ Version 3.1  [ (under development) ]
             - Added support for splitting a census into pieces.
         Class NFacePairing, NGluingPerms:
             - Added to bear the brunt of census generation.
+            - Massive optimisations throughout census code.
+        Class NPerm:
+            - Routine isIdentity() now implemented in C++ engine.
         Class NTriangulation:
             - Fixed idealToFinite() which was newly broken in Regina 3.0.
             - Routine simplifyToLocalMinimum() now make boundary moves last.
