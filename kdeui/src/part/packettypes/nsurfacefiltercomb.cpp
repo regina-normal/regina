@@ -40,7 +40,6 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qradiobutton.h>
-#include <qvbox.h>
 
 namespace {
     const int ID_AND = 0;
@@ -190,3 +189,4 @@ void NSurfaceFilterCombUI::refreshChildList() {
         }
 }
 
+#include "nsurfacefiltercomb.moc"
