@@ -28,25 +28,27 @@
 
 #include "triangulation/ntriangulation.h"
 
-// Mapping from vertices (0,1,2) of each external face of a new tetrahedron
-//     to the vertices of this new tetrahedron in a 3-2 move.
-// Each new tetrahedron has its vertices numbered so that the corresponding
-//     face embedding permutation for the internal face is the identity.
-// Also, threeTwoVertices[i] refers to face i of the new tetrahedron for
-//     each i.
-const NPerm threeTwoVertices[3] = {
-    NPerm(3,1,2,0), NPerm(3,2,0,1), NPerm(3,0,1,2)
-};
+namespace {
+    // Mapping from vertices (0,1,2) of each external face of a new tetrahedron
+    //     to the vertices of this new tetrahedron in a 3-2 move.
+    // Each new tetrahedron has its vertices numbered so that the corresponding
+    //     face embedding permutation for the internal face is the identity.
+    // Also, threeTwoVertices[i] refers to face i of the new tetrahedron for
+    //     each i.
+    const NPerm threeTwoVertices[3] = {
+        NPerm(3,1,2,0), NPerm(3,2,0,1), NPerm(3,0,1,2)
+    };
 
-// Mapping from vertices (0,1,2) of each external face of a new tetrahedron
-//     to the vertices of this new tetrahedron in a 2-3 move.
-// Each new tetrahedron has its vertices numbered so that the corresponding
-//     edge embedding permutation for the internal edge is the identity.
-// Also, twoThreeVertices[i] refers to face i of the new tetrahedron for
-//     each i.
-const NPerm twoThreeVertices[2] = {
-    NPerm(1,2,3,0), NPerm(0,2,3,1)
-};
+    // Mapping from vertices (0,1,2) of each external face of a new tetrahedron
+    //     to the vertices of this new tetrahedron in a 2-3 move.
+    // Each new tetrahedron has its vertices numbered so that the corresponding
+    //     edge embedding permutation for the internal edge is the identity.
+    // Also, twoThreeVertices[i] refers to face i of the new tetrahedron for
+    //     each i.
+    const NPerm twoThreeVertices[2] = {
+        NPerm(1,2,3,0), NPerm(0,2,3,1)
+    };
+}
 
 bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();

@@ -26,12 +26,15 @@
 
 /* end stub */
 
+#include <iterator>
 #include "packet/nscript.h"
 #include "file/nfile.h"
 
 #define PROP_VARIABLE 1
 
-static const std::string emptyString;
+namespace {
+    const std::string emptyString;
+}
 
 const std::string& NScript::getVariableName(unsigned long index) const {
     std::map<std::string, std::string>::const_iterator it = variables.begin();

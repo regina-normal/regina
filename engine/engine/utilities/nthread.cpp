@@ -28,30 +28,32 @@
 
 #include "utilities/nthread.h"
 
-struct NThreadRuntimeArgs {
-    NThread* thread;
-    void* args;
-    bool deleteAfterwards;
+namespace {
+    struct NThreadRuntimeArgs {
+        NThread* thread;
+        void* args;
+        bool deleteAfterwards;
 
-    NThreadRuntimeArgs(NThread* newThread, void* newArgs,
-            bool newDeleteAfterwards) : thread(newThread), args(newArgs),
-            deleteAfterwards(newDeleteAfterwards) {
+        NThreadRuntimeArgs(NThread* newThread, void* newArgs,
+                bool newDeleteAfterwards) : thread(newThread), args(newArgs),
+                deleteAfterwards(newDeleteAfterwards) {
+        }
+    };
+
+    void* NThreadRuntime(void* runtimeArgs) {
+        // Get the arguments.
+        NThread* thread = ((NThreadRuntimeArgs*)runtimeArgs)->thread;
+        void* args = ((NThreadRuntimeArgs*)runtimeArgs)->args;
+        bool deleteAfterwards = ((NThreadRuntimeArgs*)runtimeArgs)->
+            deleteAfterwards;
+        delete (NThreadRuntimeArgs*)runtimeArgs;
+
+        // Do the work.
+        void* ans = thread->run(args);
+        if (deleteAfterwards)
+            delete thread;
+        return ans;
     }
-};
-
-void* NThreadRuntime(void* runtimeArgs) {
-    // Get the arguments.
-    NThread* thread = ((NThreadRuntimeArgs*)runtimeArgs)->thread;
-    void* args = ((NThreadRuntimeArgs*)runtimeArgs)->args;
-    bool deleteAfterwards = ((NThreadRuntimeArgs*)runtimeArgs)->
-        deleteAfterwards;
-    delete (NThreadRuntimeArgs*)runtimeArgs;
-
-    // Do the work.
-    void* ans = thread->run(args);
-    if (deleteAfterwards)
-        delete thread;
-    return ans;
 }
 
 bool NThread::start(void* args, bool deleteAfterwards) {

@@ -31,17 +31,19 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
-static NPerm exitFace(bool firstOccurrence, bool lowerCase) {
-    if (firstOccurrence) {
-        if (lowerCase)
-            return NPerm(2,3,1,0);
-        else
-            return NPerm(2,3,0,1);
-    } else {
-        if (lowerCase)
-            return NPerm(0,1,3,2);
-        else
-            return NPerm(0,1,2,3);
+namespace {
+    NPerm exitFace(bool firstOccurrence, bool lowerCase) {
+        if (firstOccurrence) {
+            if (lowerCase)
+                return NPerm(2,3,1,0);
+            else
+                return NPerm(2,3,0,1);
+        } else {
+            if (lowerCase)
+                return NPerm(0,1,3,2);
+            else
+                return NPerm(0,1,2,3);
+        }
     }
 }
 

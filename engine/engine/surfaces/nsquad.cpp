@@ -93,22 +93,25 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
     return ans;
 }
 
-/**
- * A structure representing a particular end of an edge.
- */
-struct EdgeEnd {
-    NEdge* edge;
-        /**< The edge under consideration. */
-    int end;
-        /**< The end of the edge under consideration; this is 0 or 1. */
+namespace {
+    /**
+     * A structure representing a particular end of an edge.
+     */
+    struct EdgeEnd {
+        NEdge* edge;
+            /**< The edge under consideration. */
+        int end;
+            /**< The end of the edge under consideration; this is 0 or 1. */
 
-    EdgeEnd() {}
-    EdgeEnd(NEdge* newEdge, int newEnd) : edge(newEdge), end(newEnd) {}
-    EdgeEnd(const EdgeEnd& cloneMe) : edge(cloneMe.edge), end(cloneMe.end) {}
-    void operator = (const EdgeEnd& cloneMe) {
-        edge = cloneMe.edge; end = cloneMe.end;
-    }
-};
+        EdgeEnd() {}
+        EdgeEnd(NEdge* newEdge, int newEnd) : edge(newEdge), end(newEnd) {}
+        EdgeEnd(const EdgeEnd& cloneMe) : edge(cloneMe.edge),
+                end(cloneMe.end) {}
+        void operator = (const EdgeEnd& cloneMe) {
+            edge = cloneMe.edge; end = cloneMe.end;
+        }
+    };
+}
 
 NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         NTriangulation* triang) const {

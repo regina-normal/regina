@@ -138,13 +138,15 @@ void NTriangulation::calculateVertices() {
     }
 }
 
-struct VertexState {
-    NTetrahedron* tet;
-    int vertex;
+namespace {
+    struct VertexState {
+        NTetrahedron* tet;
+        int vertex;
     
-    VertexState(NTetrahedron* newTet, int newVertex) :
-            tet(newTet), vertex(newVertex) {}
-};
+        VertexState(NTetrahedron* newTet, int newVertex) :
+                tet(newTet), vertex(newVertex) {}
+    };
+}
 
 void NTriangulation::labelVertex(NTetrahedron* firstTet, int firstVertex,
         NVertex* label, int firstOrientation) {
@@ -230,14 +232,16 @@ void NTriangulation::calculateEdges() {
     }
 }
 
-struct EdgeState {
-    NTetrahedron* tet;
-    int edge;
-    int whichEndOfList;
+namespace {
+    struct EdgeState {
+        NTetrahedron* tet;
+        int edge;
+        int whichEndOfList;
     
-    EdgeState(NTetrahedron* newTet, int newEdge, int newEnd) :
-            tet(newTet), edge(newEdge), whichEndOfList(newEnd) {}
-};
+        EdgeState(NTetrahedron* newTet, int newEdge, int newEnd) :
+                tet(newTet), edge(newEdge), whichEndOfList(newEnd) {}
+    };
+}
 
 void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
         NEdge* label, const NPerm& firstTetVertices) {

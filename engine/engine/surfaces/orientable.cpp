@@ -29,27 +29,29 @@
 #include <queue>
 #include "surfaces/ndisc.h"
 
-/**
- * Stores orientation and sides A/B for a normal disc.
- */
-struct OrientData {
-    int orient;
-        /**< Specifies the orientation of the disc.
-             1 represents with the natural boundary orientation.
-             -1 represents against the natural boundary orientation.
-             0 means orientation is not yet determined. */
-    int sides;
-        /**< Specifies which sides of the disc are sides A/B.
-             If sides is 1, discs are numbered from side A to B.
-             If sides is -1, discs are numbered from side B to A.
-             A value of 0 means sides are not yet determined. */
-
+namespace {
     /**
-     * Create a new structure with all values initialised to 0.
+     * Stores orientation and sides A/B for a normal disc.
      */
-    OrientData() : orient(0), sides(0) {
-    }
-};
+    struct OrientData {
+        int orient;
+            /**< Specifies the orientation of the disc.
+                 1 represents with the natural boundary orientation.
+                 -1 represents against the natural boundary orientation.
+                 0 means orientation is not yet determined. */
+        int sides;
+            /**< Specifies which sides of the disc are sides A/B.
+                 If sides is 1, discs are numbered from side A to B.
+                 If sides is -1, discs are numbered from side B to A.
+                 A value of 0 means sides are not yet determined. */
+
+        /**
+         * Create a new structure with all values initialised to 0.
+         */
+        OrientData() : orient(0), sides(0) {
+        }
+    };
+}
 
 void NNormalSurface::calculateOrientable() {
     // This is going to be ghastly.
