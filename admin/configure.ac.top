@@ -171,12 +171,10 @@ REGINA_LIB_REQUIRED(m, log10, [the calculation engine])
 REGINA_HEADER_REQUIRED(gmp.h, [the calculation engine])
 REGINA_LIB_REQUIRED(gmp, __gmpz_init, [the calculation engine])
 
-ACX_PTHREAD([
-  LIBS="$PTHREAD_LIBS $LIBS"
-  CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-], [
+KDE_CHECK_THREADING
+if test "$kde_use_threading" != "yes"; then
   REGINA_ERR_MISSING([POSIX pthread support], [the calculation engine])
-])
+fi
 
 # The libxml2 check seems to need to be done under C, not C++.
 AC_LANG_PUSH(C)

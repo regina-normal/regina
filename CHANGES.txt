@@ -10,6 +10,8 @@ Regina - A Normal Surface Theory Calculator
 Version 3.97  [ 21 November, 2003 ] - Third prerelease for version 4.0.
     OVERALL:
         - Ships with the 7-tetrahedron closed non-orientable census.
+        - Build configuration uses different tests for pthread, since the
+          old tests were broken on some systems.
     ENGINE:
         Class NEdge, NVertex:
             - Added getDegree() as an alias for getNumberOfEmbeddings().
