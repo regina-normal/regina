@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "reginaabout.h"
+#include "../reginaabout.h"
 #include "reginamain.h"
 
 #include <dcopclient.h>

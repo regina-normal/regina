@@ -26,11 +26,11 @@
 
 /* end stub */
 
-#include "reginaabout.h"
-#include "reginafilter.h"
+#include "../reginaabout.h"
+#include "../reginafilter.h"
 #include "reginamain.h"
-#include "reginapart.h"
 #include "reginapref.h"
+#include "../part/reginapart.h"
 
 #include <qdragobject.h>
 #include <qvbox.h>

@@ -1,0 +1,10 @@
+*_skel.cpp
+*.kidl
+*.lo
+*.moc
+.deps
+.libs
+Makefile
+Makefile.in
+regina-kde
+regina_client
