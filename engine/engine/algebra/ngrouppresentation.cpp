@@ -411,11 +411,26 @@ std::string NGroupPresentation::recogniseGroup() {
             out << 0;
         else
             out << "Z_" << d;
-    } else if (nRels == 0)
-        out << "Free group on " << nGenerators << " generators";
-    else if  (nGenerators == 2 && nRels == 2) {
-        // See if it's the quaternions.
-        
+    } else if (nRels == 0) {
+        out << "Free (" << nGenerators << " generators)";
+    } else if (nGenerators == 2 && nRels == 1) {
+        // See if it's the abelian Z + Z.
+        rel = relations[0];
+        rel->simplify(true);
+
+        // Look for a relation (x y x^-1 y^-1).
+        if (rel->getNumberOfTerms() == 4) {
+            if (rel->getGenerator(0) == rel->getGenerator(2) &&
+                    rel->getGenerator(1) == rel->getGenerator(3) &&
+                    rel->getGenerator(0) != rel->getGenerator(1) &&
+                    abs(rel->getExponent(0)) == 1 &&
+                    abs(rel->getExponent(1)) == 1 &&
+                    rel->getExponent(0) + rel->getExponent(2) == 0 &&
+                    rel->getExponent(1) + rel->getExponent(3) == 0)
+                out << "Z + Z (abelian)";
+        }
+    } else if (nGenerators == 2 && nRels == 2) {
+        // TODO: See if it's the quaternions.
     } else {
         // nGenerators >= 2 and nRels >= 2.
         // Don't have anything intelligent to say at this point.
