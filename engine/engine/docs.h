@@ -193,9 +193,9 @@
  *  See the \ref InterfaceNotes page for other situations in which
  *  names or parameters of routines are routinely altered.
  *
- *  Note that when working with scripts and the JPython console, Java
+ *  Note that when working with scripts and the Jython console, Java
  *  objects, classes and methods can be directly accessed as if they
- *  were JPython objects, classes and methods.
+ *  were Jython objects, classes and methods.
  *
  *  \todo \featurelong Have \a checkjni utility that checks consistency
  *  between <tt>.h</tt> and <tt>.cpp</tt> java wrapper files.
