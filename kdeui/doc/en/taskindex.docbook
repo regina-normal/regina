@@ -495,31 +495,33 @@
   <primaryie>normal surfaces</primaryie>
   <secondaryie><link linkend="surfaces-viewsurfaceprops">basic
    properties</link></secondaryie>
-  <secondaryie><link linkend="options-surfaces">configuration of
-   default coordinate system</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propcentral">central
+   surfaces, recognising</link></secondaryie>
+  <secondaryie><link linkend="options-surfaces">coordinate
+   systems, configuring default</link></secondaryie>
+  <secondaryie><link linkend="surfaces-viewsurfacecoords">coordinate
+   systems, different systems explained</link></secondaryie>
+  <secondaryie><link linkend="surfaces-viewsurfacecoords">coordinate
+   systems, viewing in different systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-crush">crushing a
    surface</link></secondaryie>
   <secondaryie><link linkend="surfaces-cut">cutting along a
    surface</link></secondaryie>
   <secondaryie><link linkend="surfaces">definition</link></secondaryie>
+  <secondaryie><link linkend="surfaces-proplink">edge links,
+   recognising</link></secondaryie>
   <secondaryie><link linkend="surfaces-creation">enumerating vertex
    normal surfaces</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfacecoords">explanation
-   of different coordinate systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-filtering">filtering surface
    lists</link></secondaryie>
   <secondaryie><link linkend="surfaces-viewmatching">matching
    equations</link></secondaryie>
   <secondaryie><link linkend="surfaces-propname">naming
    surfaces in a list</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propcentral">recognising
-   central surfaces</link></secondaryie>
-  <secondaryie><link linkend="surfaces-proplink">recognising
-   edge/vertex links</link></secondaryie>
-  <secondaryie><link linkend="surfaces-propsplitting">recognising
-   splitting surfaces</link></secondaryie>
-  <secondaryie><link linkend="surfaces-viewsurfacecoords">viewing in a
-   different coordinate system</link></secondaryie>
+  <secondaryie><link linkend="surfaces-propsplitting">splitting surfaces,
+   recognising</link></secondaryie>
+  <secondaryie><link linkend="surfaces-proplink">vertex links,
+   recognising</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -810,7 +812,7 @@
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
   <secondaryie><link linkend="tri-cover">orientable double
    cover</link></secondaryie>
-  <secondaryie><link linkend="tri-censuslookup">search for a
+  <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation in the available censuses</link></secondaryie>
   <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton">skeleton,
