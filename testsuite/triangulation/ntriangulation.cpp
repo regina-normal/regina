@@ -42,7 +42,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(orientability);
+    CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(homologyH1);
+    CPPUNIT_TEST(homologyH1Bdry);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -154,33 +156,92 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 ! gieseking.isOrientable());
         }
 
-        bool verifyGroup(const NAbelianGroup& g, unsigned rank,
-                unsigned long torsionDegree) {
-            if (g.getRank() != rank)
-                return false;
+        void boundaryComponents() {
+            CPPUNIT_ASSERT_MESSAGE("L(8,3) has boundary components.",
+                lens8_3.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("L(100,1) has boundary components.",
+                lens100_1.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) has no boundary components.",
+                lst3_4_7.getNumberOfBoundaryComponents() > 0);
+            CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
+                "has no boundary components.",
+                figure8.getNumberOfBoundaryComponents() > 0);
+            CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 has boundary components.",
+                rp2xs1.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle "
+                "has no boundary components.",
+                solidKB.getNumberOfBoundaryComponents() > 0);
+            CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold "
+                "has no boundary components.",
+                gieseking.getNumberOfBoundaryComponents() > 0);
 
-            if (torsionDegree == 1)
-                return (g.getNumberOfInvariantFactors() == 0);
+            // TODO: Test the individual boundary components.
+            // TODO: Check that nobody has too many boundary components.
+        }
+
+        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+                unsigned rank, unsigned long torsionDegree) {
+            // Construct the error message.
+            std::ostringstream msg;
+            msg << grpName << " is " << g.toString() << ", not ";
+            if (rank == 0 && torsionDegree <= 1)
+                msg << "0";
+            else if (rank == 0)
+                msg << "Z_" << torsionDegree;
+            else if (torsionDegree <= 1)
+                msg << rank << " Z";
             else
-                return (g.getNumberOfInvariantFactors() == 1 &&
-                    g.getInvariantFactor(0) == torsionDegree);
+                msg << rank << " Z + Z_" << torsionDegree;
+            msg << '.';
+
+            // Check the group.
+            if (g.getRank() != rank)
+                CPPUNIT_FAIL(msg.str());
+            else {
+                // Ranks match.
+                if (torsionDegree <= 1) {
+                    if (g.getNumberOfInvariantFactors() != 0)
+                        CPPUNIT_FAIL(msg.str());
+                } else {
+                    if (g.getNumberOfInvariantFactors() != 1 ||
+                            g.getInvariantFactor(0) != torsionDegree)
+                        CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void homologyH1() {
-            CPPUNIT_ASSERT_MESSAGE("H1(L(8,3)) is not Z_8.",
-                verifyGroup(lens8_3.getHomologyH1(), 0, 8));
-            CPPUNIT_ASSERT_MESSAGE("H1(L(100,1)) is not Z_100.",
-                verifyGroup(lens100_1.getHomologyH1(), 0, 100));
-            CPPUNIT_ASSERT_MESSAGE("H1(LST(3,4,7)) is not Z.",
-                verifyGroup(lst3_4_7.getHomologyH1(), 1, 1));
-            CPPUNIT_ASSERT_MESSAGE("H1(figure eight knot complement) is not Z.",
-                verifyGroup(figure8.getHomologyH1(), 1, 1));
-            CPPUNIT_ASSERT_MESSAGE("H1(RP^2 x S^1) is not Z + Z_2.",
-                verifyGroup(rp2xs1.getHomologyH1(), 1, 2));
-            CPPUNIT_ASSERT_MESSAGE("H1(solid Klein bottle) is not Z.",
-                verifyGroup(solidKB.getHomologyH1(), 1, 1));
-            CPPUNIT_ASSERT_MESSAGE("H1(Gieseking manifold) is not Z.",
-                verifyGroup(gieseking.getHomologyH1(), 1, 1));
+            verifyGroup(lens8_3.getHomologyH1(),
+                "H1(L(8,3))", 0, 8);
+            verifyGroup(lens100_1.getHomologyH1(),
+                "H1(L(100,1))", 0, 100);
+            verifyGroup(lst3_4_7.getHomologyH1(),
+                "H1(LST(3,4,7))", 1, 0);
+            verifyGroup(figure8.getHomologyH1(),
+                "H1(figure eight knot complement)", 1, 1);
+            verifyGroup(rp2xs1.getHomologyH1(),
+                "H1(RP^2 x S^1)", 1, 2);
+            verifyGroup(solidKB.getHomologyH1(),
+                "H1(solid Klein bottle)", 1, 0);
+            verifyGroup(gieseking.getHomologyH1(),
+                "H1(Gieseking manifold)", 1, 0);
+        }
+
+        void homologyH1Bdry() {
+            verifyGroup(lens8_3.getHomologyH1Bdry(),
+                "Boundary H1(L(8,3))", 0, 0);
+            verifyGroup(lens100_1.getHomologyH1Bdry(),
+                "Boundary H1(L(100,1))", 0, 0);
+            verifyGroup(lst3_4_7.getHomologyH1Bdry(),
+                "Boundary H1(LST(3,4,7))", 2, 0);
+            verifyGroup(figure8.getHomologyH1Bdry(),
+                "Boundary H1(figure eight knot complement)", 2, 0);
+            verifyGroup(rp2xs1.getHomologyH1Bdry(),
+                "Boundary H1(RP^2 x S^1)", 0, 0);
+            verifyGroup(solidKB.getHomologyH1Bdry(),
+                "Boundary H1(solid Klein bottle)", 1, 2);
+            verifyGroup(gieseking.getHomologyH1Bdry(),
+                "Boundary H1(Gieseking manifold)", 1, 2);
         }
 };
 
