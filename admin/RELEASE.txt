@@ -9,6 +9,7 @@ Program version:
     kdeui/doc/en/index.docbook (&regversion;, &regdate;, date, releaseinfo)
     kdeui/src/common/reginaabout.cpp (regReleased)
     kdeui/src/{shell,part}/*.rc (kpartgui version)
+    rpmspec/*.spec (version, changelog)
     www/index.html (last updated, current version)
 
 License details:
@@ -29,6 +30,6 @@ Don't forget:
     rebuild manpages
     website
     debian packages (include cvs.diff)
-    fedora packages (include vendor)
+    fedora/mandrake/suse packages
     tag CVS
     mail regina-announce
