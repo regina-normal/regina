@@ -29,12 +29,14 @@ case "$1" in
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	start-stop-daemon --stop --quiet --exec $DAEMON --user nobody --oknodo
+	start-stop-daemon --stop --quiet --exec $DAEMON --user nobody --oknodo \
+	  > /dev/null 2>&1
 	echo "$NAME."
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
-	start-stop-daemon --stop --quiet --exec $DAEMON --user nobody --oknodo
+	start-stop-daemon --stop --quiet --exec $DAEMON --user nobody --oknodo \
+	  > /dev/null 2>&1
 	sleep 1
 	if [ "$start_server" = "1" ]; then
 	  start-stop-daemon --start --quiet --chuid nobody --background \
