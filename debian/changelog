@@ -3,7 +3,7 @@ regina-normal (2.4-1) unstable; urgency=low
   * New upstream release.
   * Added mime entry.
 
- -- Ben Burton <benb@acm.org>
+ -- Ben Burton <benb@acm.org>  Thu,  4 Apr 2002 11:43:48 +1000
 
 regina-normal (2.3-2) unstable; urgency=low
 

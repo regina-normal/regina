@@ -8,8 +8,9 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
-Version 2.3.1  [ (in progress) ]
+Version 2.4  [ 4 April, 2002 ]
     OVERALL:
+        - Much enhanced documentation.
         - Added SnapPea census and knot/link census to examples.
         - Added functionality changelog (HIGHLIGHTS.txt).
         - Added prepackaged Jython library directory.

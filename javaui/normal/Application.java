@@ -57,7 +57,7 @@ public class Application extends Applet implements ActionListener {
     /**
      * Program date.
      */
-    public static final String date = "16 February 2002";
+    public static final String date = "4 April 2002";
 
     /**
      * Copyright information.
