@@ -34,7 +34,7 @@ import normal.engine.*;
 import normal.engine.packet.NPacket;
 import normal.mainui.PacketTreeNode;
 import normal.packetfilter.*;
-import btools.utilities.NullObject;
+import org.gjt.btools.utilities.NullObject;
 
 /**
  * A combo box through which a user can select a packet.

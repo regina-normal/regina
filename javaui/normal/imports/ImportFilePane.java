@@ -35,7 +35,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import normal.Shell;
 import normal.options.NormalOptionSet;
-import btools.gui.*;
+import org.gjt.btools.gui.*;
 
 /**
  * A pane in which the user can select a file from which to import data.

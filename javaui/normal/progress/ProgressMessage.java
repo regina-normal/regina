@@ -30,7 +30,7 @@ package normal.progress;
 
 import java.awt.Component;
 import normal.engine.progress.NProgress;                                        
-import btools.gui.component.TextDisplayRegion;
+import org.gjt.btools.gui.component.TextDisplayRegion;
 
 /**
  * A progress component that shows the state of progress as a string

@@ -37,8 +37,8 @@ import javax.swing.*;
 import normal.engine.Engine;
 import normal.mainui.NormalFrame;
 import normal.options.NormalOptionSet;
-import btools.gui.Positioner;
-import btools.gui.lookandfeel.LookAndFeelItem;
+import org.gjt.btools.gui.Positioner;
+import org.gjt.btools.gui.lookandfeel.LookAndFeelItem;
 
 /**
  * Contains the primary program execution routine <tt>run()</tt>.
@@ -390,11 +390,11 @@ public abstract class Shell {
         {
             boolean btoolsOK = true;
             try {
-                if (btools.Version.btoolsVersion.compareTo(
+                if (org.gjt.btools.Version.btoolsVersion.compareTo(
                         Application.minimumBToolsVersion) < 0)
                     btoolsOK = false;
 
-                String jdkVersion = btools.Version.javaVersion();
+                String jdkVersion = org.gjt.btools.Version.javaVersion();
                 if (jdkVersion != null)
                     if (jdkVersion.compareTo(
                             Application.minimumJDKVersion) < 0) {
@@ -414,7 +414,7 @@ public abstract class Shell {
 
             if (! btoolsOK) {
                 error("You are using BTools version " +
-                    btools.Version.btoolsVersion +
+                    org.gjt.btools.Version.btoolsVersion +
                     ", which is too old to run " + Application.program +
                     ".  At least version " +
                     Application.minimumBToolsVersion +

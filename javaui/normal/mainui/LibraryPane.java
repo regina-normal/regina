@@ -34,9 +34,9 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
-import btools.ext.*;
-import btools.gui.component.*;
-import btools.gui.dialog.*;
+import org.gjt.btools.ext.*;
+import org.gjt.btools.gui.component.*;
+import org.gjt.btools.gui.dialog.*;
 import normal.*;
 import normal.console.*;
 

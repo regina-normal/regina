@@ -31,7 +31,7 @@ package normal.packetui;
 import java.awt.*;
 import javax.swing.*;
 import normal.engine.packet.NPacket;
-import btools.utilities.NullObject;
+import org.gjt.btools.utilities.NullObject;
 
 /**
  * A renderer for packets that can be used in lists.

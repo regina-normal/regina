@@ -37,7 +37,7 @@ import normal.engine.triangulation.*;
 import normal.engine.surfaces.*;
 import normal.packetui.*;
 import normal.packetfilter.*;
-import btools.gui.dialog.*;
+import org.gjt.btools.gui.dialog.*;
 
 /**
  * An interface through which a user can create a new normal surface

@@ -40,8 +40,8 @@ import normal.engine.packet.*;
 import normal.engine.surfaces.*;
 import normal.engine.utilities.*;
 import normal.packetui.*;
-import btools.ext.*;
-import btools.gui.component.*;
+import org.gjt.btools.ext.*;
+import org.gjt.btools.gui.component.*;
 
 /**
  * An interface through which a user can view or edit a surface filter.

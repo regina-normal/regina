@@ -36,8 +36,8 @@ import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.text.Keymap;
-import btools.gui.component.EditMenu;
-import btools.image.*;
+import org.gjt.btools.gui.component.EditMenu;
+import org.gjt.btools.image.*;
 import org.python.util.PythonInterpreter;
 
 /**

@@ -35,7 +35,7 @@ import javax.swing.event.*;
 import javax.swing.text.JTextComponent;
 import normal.engine.Engine;
 import normal.engine.packet.NPacket;
-import btools.gui.dialog.MessageBox;
+import org.gjt.btools.gui.dialog.MessageBox;
 
 /**
  * A tabbed pane consisting entirely of <tt>PacketInfoUI</tt> tabs.

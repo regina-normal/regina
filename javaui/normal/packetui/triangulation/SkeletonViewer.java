@@ -38,8 +38,8 @@ import javax.swing.table.*;
 import normal.engine.packet.NPacket;
 import normal.engine.triangulation.*;
 import normal.packetui.*;
-import btools.gui.*;
-import btools.gui.component.*;
+import org.gjt.btools.gui.*;
+import org.gjt.btools.gui.component.*;
 
 /**
  * An interface through which a user can view the skeleton

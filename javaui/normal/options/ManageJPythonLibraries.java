@@ -36,10 +36,10 @@ import javax.swing.*;
 import javax.swing.table.*;
 import normal.Shell;
 import normal.console.JPythonUtils;
-import btools.ext.ExtensionFilenameFilter;
-import btools.gui.Positioner;
-import btools.gui.component.*;
-import btools.gui.dialog.*;
+import org.gjt.btools.ext.ExtensionFilenameFilter;
+import org.gjt.btools.gui.Positioner;
+import org.gjt.btools.gui.component.*;
+import org.gjt.btools.gui.dialog.*;
 
 /**
  * A modal dialog allowing the Jython libraries to be configured by the user.

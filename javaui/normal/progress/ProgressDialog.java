@@ -32,7 +32,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import normal.engine.progress.*;
-import btools.gui.*;
+import org.gjt.btools.gui.*;
 
 /**
  * A dialog that displays the current state of progress of a long

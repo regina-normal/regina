@@ -37,8 +37,8 @@ import normal.Shell;
 import normal.engine.packet.*;
 import normal.mainui.*;
 import normal.packetfilter.*;
-import btools.gui.*;
-import btools.gui.component.*;
+import org.gjt.btools.gui.*;
+import org.gjt.btools.gui.component.*;
 
 /**
  * An algorithm that the user can perform on a packet.

@@ -35,8 +35,8 @@ import javax.swing.border.*;
 import normal.Images;
 import normal.engine.packet.*;
 import normal.packetui.*;
-import btools.gui.dialog.*;
-import btools.image.*;
+import org.gjt.btools.gui.dialog.*;
+import org.gjt.btools.image.*;
 
 /**
  * A pane in which the user can interact with a packet.

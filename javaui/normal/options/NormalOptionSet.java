@@ -30,7 +30,7 @@ package normal.options;
 
 import java.io.*;
 import java.util.Vector;
-import btools.utilities.OptionSet;
+import org.gjt.btools.utilities.OptionSet;
 
 /**
  * Provides an option set with a cache of frequently used options for

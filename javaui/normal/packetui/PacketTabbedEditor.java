@@ -33,7 +33,7 @@ import javax.swing.*;
 import normal.Shell;
 import normal.engine.packet.*;
 import normal.packetui.*;
-import btools.gui.component.*;
+import org.gjt.btools.gui.component.*;
 
 /**
  * A packet viewer or editor containing a header and a tabbed pane of

@@ -38,7 +38,7 @@ import normal.engine.*;
 import normal.engine.packet.*;
 import normal.engine.triangulation.*;
 import normal.packetui.*;
-import btools.gui.dialog.*;
+import org.gjt.btools.gui.dialog.*;
 
 /**
  * An interface through which a user can view or edit gluings of

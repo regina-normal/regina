@@ -37,7 +37,7 @@ import normal.engine.packet.*;
 import normal.engine.surfaces.*;
 import normal.packetui.*;
 import normal.packetfilter.*;
-import btools.gui.component.*;
+import org.gjt.btools.gui.component.*;
 
 /**
  * An interface through which a user can view or edit a normal surface

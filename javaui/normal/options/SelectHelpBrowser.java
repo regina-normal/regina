@@ -33,8 +33,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import normal.Shell;
-import btools.gui.Positioner;
-import btools.gui.component.PaddedPane;
+import org.gjt.btools.gui.Positioner;
+import org.gjt.btools.gui.component.PaddedPane;
 
 /**
  * A modal dialog allowing the help browser to be selected by the user.

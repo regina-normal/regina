@@ -41,8 +41,8 @@ import normal.mainui.*;
 import normal.packetfilter.*;
 import normal.packetui.*;
 import normal.progress.*;
-import btools.ext.*;
-import btools.gui.dialog.*;
+import org.gjt.btools.ext.*;
+import org.gjt.btools.gui.dialog.*;
 
 /**
  * An interface through which the user can create a census of

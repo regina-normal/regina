@@ -34,8 +34,8 @@ import java.net.*;
 import java.util.Properties;
 import normal.engine.Engine;
 import normal.options.NormalOptionSet;
-import btools.gui.dialog.MessageBox;
-import btools.utilities.ResourceUtils;
+import org.gjt.btools.gui.dialog.MessageBox;
+import org.gjt.btools.utilities.ResourceUtils;
 
 /**
  * The program shell to use when the program is run as an applet.

@@ -37,8 +37,8 @@ import normal.engine.packet.*;
 import normal.engine.triangulation.*;
 import normal.packetfilter.*;
 import normal.packetui.*;
-import btools.ext.*;
-import btools.gui.dialog.*;
+import org.gjt.btools.ext.*;
+import org.gjt.btools.gui.dialog.*;
 
 /**
  * An interface through which a user can create a new triangulation.

@@ -34,7 +34,7 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import normal.engine.Engine;
 import normal.engine.packet.NPacket;
-import btools.gui.dialog.*;
+import org.gjt.btools.gui.dialog.*;
 
 /**
  * A skeleton <tt>PacketUI</tt> that is capable of both viewing and

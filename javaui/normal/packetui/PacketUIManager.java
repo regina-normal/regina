@@ -31,7 +31,7 @@ package normal.packetui;
 import javax.swing.*;
 import normal.Shell;
 import normal.engine.packet.NPacket;
-import btools.image.StandardImage;
+import org.gjt.btools.image.StandardImage;
 
 /**
  * Creates new interfaces in which the type of interface is determined

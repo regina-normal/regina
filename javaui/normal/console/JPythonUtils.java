@@ -48,7 +48,7 @@ public class JPythonUtils {
 	 */
 	public static final String[] startup = {
 		"import java", "from java.lang import *",
-		"import normal", "import btools"
+		"import normal", "import org.gjt.btools"
 	};
 
 	/**

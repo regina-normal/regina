@@ -37,7 +37,7 @@ import normal.engine.surfaces.*;
 import normal.engine.triangulation.NTriangulation;
 import normal.engine.maths.*;
 import normal.packetui.*;
-import btools.gui.component.*;
+import org.gjt.btools.gui.component.*;
 
 /**
  * An interface through which the user can view the matching equations

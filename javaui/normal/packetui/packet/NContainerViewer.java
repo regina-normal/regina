@@ -33,7 +33,7 @@ import javax.swing.*;
 import normal.Images;
 import normal.engine.packet.*;
 import normal.packetui.*;
-import btools.gui.component.*;
+import org.gjt.btools.gui.component.*;
 
 /**
  * An interface through which a user can view a container.

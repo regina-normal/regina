@@ -28,7 +28,7 @@
 
 package normal;
 
-import btools.image.StandardImage;
+import org.gjt.btools.image.StandardImage;
 
 /**
  * A repository of various images.

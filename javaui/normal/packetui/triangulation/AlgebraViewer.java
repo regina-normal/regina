@@ -35,7 +35,7 @@ import normal.engine.algebra.*;
 import normal.engine.packet.NPacket;
 import normal.engine.triangulation.*;
 import normal.packetui.*;
-import btools.gui.component.PaddedPane;
+import org.gjt.btools.gui.component.PaddedPane;
 
 /**
  * An interface through which a user can view the algebraic details

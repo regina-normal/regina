@@ -187,7 +187,7 @@ public class TriangulationTableModel extends AbstractTableModel {
         int tet, face;
         TetrahedronModel model;
         
-        btools.utilities.Sorter.sort(rowsToDelete);
+        org.gjt.btools.utilities.Sorter.sort(rowsToDelete);
         for (int i = rowsToDelete.length - 1; i >= 0; i--) {
             tet = rowsToDelete[i];
             // Isolate the tetrahedron before removing it.

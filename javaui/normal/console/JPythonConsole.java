@@ -29,7 +29,7 @@
 package normal.console;
 
 import normal.*;
-import btools.gui.component.*;
+import org.gjt.btools.gui.component.*;
 import org.python.core.*;
 import org.python.util.*;
 

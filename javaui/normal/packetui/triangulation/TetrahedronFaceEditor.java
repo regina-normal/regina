@@ -37,8 +37,8 @@ import javax.swing.table.*;
 import javax.swing.text.*;
 import normal.Shell;
 import normal.engine.triangulation.*;
-import btools.gui.*;
-import btools.gui.dialog.*;
+import org.gjt.btools.gui.*;
+import org.gjt.btools.gui.dialog.*;
 
 /**
  * Used to edit cells containing face gluings for tetrahedra.
