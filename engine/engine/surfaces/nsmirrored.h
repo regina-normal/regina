@@ -64,7 +64,7 @@
  * setValue(); this will require documentation changes in both this
  * class and in NNormalSurfaceVector.
  *
- * \pre Not present.
+ * \ifaces Not present.
  */
 class NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
     private:
@@ -85,6 +85,13 @@ class NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          * @param cloneMe the vector to clone.
          */
         NNormalSurfaceVectorMirrored(const NVector<NLargeInteger>& cloneMe);
+        /**
+         * Creates a new vector that is a clone of the given vector.
+         *
+         * @param cloneMe the vector to clone.
+         */
+        NNormalSurfaceVectorMirrored(const NNormalSurfaceVectorMirrored&
+            cloneMe);
         /**
          * Destroys this vector and its mirror if appropriate.
          */
@@ -124,6 +131,10 @@ inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
 }
 inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
         const NVector<NLargeInteger>& cloneMe) :
+        NNormalSurfaceVector(cloneMe), mirror(0) {
+}
+inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
+        const NNormalSurfaceVectorMirrored& cloneMe) :
         NNormalSurfaceVector(cloneMe), mirror(0) {
 }
 inline NNormalSurfaceVectorMirrored::~NNormalSurfaceVectorMirrored() {

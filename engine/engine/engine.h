@@ -29,6 +29,8 @@
 /*! \file engine.h
  *  \brief Contains documentation for the Engine class, which represents
  *  an external link to the calculation engine.
+ *
+ *  \todo \bugurgent Hunt for default copy constructors that are being called.
  */
 
 class NAbelianGroup;
