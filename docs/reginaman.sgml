@@ -43,18 +43,28 @@
    <title>Description</title>
    &regabstract;
    <para>
-    On some systems &regina; is installed as
-    <filename>/usr/bin/regina-normal</filename> so as not to conflict
+    On some systems this startup script is installed under the name
+    <command>regina-normal</command> so as not to conflict
     with the <application>Regina</application> <acronym>REXX</acronym>
     interpreter.
    </para>
    <para>
     &linux; users should start &regina; by running the
-    <filename>regina</filename> startup script in the main
-    &regina; directory.  &windows; users may either start a
-    &cygwin; <filename>bash</filename> shell and run this same
-    startup script, or may run <filename>regina.bat</filename>
-    from their usual &windows; environment.
+    <command>regina</command> startup script in the binary
+    installation directory (such as <filename>/usr/bin</filename>
+    or <filename>/usr/local/bin</filename>).
+    &windows; users may either start a &cygwin; <command>bash</command>
+    shell and run this same startup script, or may run
+    <command>regina.bat</command> from their usual &windows; environment.
+   </para>
+   <para>
+    &regina; may be run directly out of its source tree without being
+    properly installed; this is done by running the <command>regina</command>
+    startup script in the top-level source directory.  Default locations
+    for various &regina; components will be transparently modified to
+    look inside the source tree; see the
+    <link linkend="man-regina.conf">configuration reference</link>
+    for details.
    </para>
    <para>
     Any files specified on the command-line will be opened on startup.
@@ -332,13 +342,37 @@
      <term><parameter>REGINA_HOME</parameter></term>
      <listitem>
       <para>
-       The directory in which &regina; is installed.  This should be the
-       directory containing the &regina; startup script, the
-       <filename>scripts/</filename> subdirectory and so on.
-       This defaults to the directory containing the startup script that
-       was run.
+       The directory in which &regina; data files are installed.  This
+       should be the directory containing the <filename>scripts/</filename>
+       subdirectory, the <filename>icons/</filename> subdirectory and so on.
       </para>
-      <para>This option cannot be set in the configuration files.</para>
+      <para>
+       If &regina; is being run directly out of the source tree, this
+       defaults to the top-level source directory.  If &regina; is being
+       run from a proper installation, this defaults to the corresponding
+       installation directory.  In normal situations you should never need
+       to set this option yourself.
+      </para>
+      <warning>
+       <para>
+        Note that the default <parameter>REGINA_HOME</parameter>
+        when running from a proper installation is actually hard-wired into
+        the startup script.  This hard-wiring takes place at compile time,
+        since the final installation path must be passed to
+        <command>configure</command> using option <option>--prefix</option>
+        before &regina; is built (see <filename>INSTALL.txt</filename> in
+        the source distribution for details).
+       </para>
+       <para>
+        This means that if &regina; is installed into one directory using
+        <command>make install</command> and then moved to another directory
+        by hand, the default <parameter>REGINA_HOME</parameter> will be
+        incorrect.
+       </para>
+      </warning>
+      <para>
+       This option cannot be set in the configuration files.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -378,7 +412,7 @@
     </varlistentry>
     <varlistentry>
      <term><parameter>REGINA_BTOOLS</parameter> (default =
-      <filename><replaceable>REGINA_HOME</replaceable>/lib/btools.jar</filename>)</term>
+      <filename><replaceable>REGINA_HOME</replaceable>/jar/btools.jar</filename>)</term>
      <listitem>
       <para>
        The location of the &btools; library.  &btools; is a set of
@@ -388,7 +422,7 @@
     </varlistentry>
     <varlistentry>
      <term><parameter>REGINA_JYTHON</parameter> (default =
-      <filename><replaceable>REGINA_HOME</replaceable>/lib/jython.jar</filename>)</term>
+      <filename><replaceable>REGINA_HOME</replaceable>/jar/jython.jar</filename>)</term>
      <listitem>
       <para>
        The location of the &jython; library.  &jython; is optional, but
@@ -399,7 +433,7 @@
     </varlistentry>
     <varlistentry>
      <term><parameter>REGINA_JAVAHELP</parameter> (default =
-      <filename><replaceable>REGINA_HOME</replaceable>/lib/jh.jar</filename>)</term>
+      <filename><replaceable>REGINA_HOME</replaceable>/jar/jh.jar</filename>)</term>
      <listitem>
       <para>
        The location of the &javahelp; library.  &javahelp; is optional,
@@ -438,7 +472,7 @@
     </varlistentry>
     <varlistentry id="REGINA-JNIDIR">
      <term><parameter>REGINA_JNIDIR</parameter> (default =
-      <filename><replaceable>REGINA_HOME</replaceable>/bin:/usr/lib</filename>)</term>
+      <filename><replaceable>REGINA_HOME</replaceable>/../../lib/regina:/usr/lib</filename>)</term>
      <listitem>
       <para>
        A colon-separated list of directories containing &jni; libraries.
@@ -458,17 +492,35 @@
        Note that option <parameter>REGINA_JNIDIR</parameter> should only
        provide a list of directories, not actual library names.
       </para>
+      <para>
+       On some systems this defaults to
+       <filename><replaceable>REGINA_HOME</replaceable>/../../lib/regina-normal:/usr/lib</filename>
+       so as not to conflict with the <application>Regina</application>
+       <acronym>REXX</acronym> interpreter.
+      </para>
+      <para>
+       If &regina; is being run directly out of the source tree, this
+       defaults to
+       <filename><replaceable>REGINA_HOME</replaceable>/engine/jni/.libs:/usr/lib</filename>
+       instead.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
      <term><parameter>REGINA_JARDIR</parameter> (default =
-      <filename><replaceable>REGINA_HOME</replaceable>/bin</filename>)</term>
+      <filename><replaceable>REGINA_HOME</replaceable>/jar</filename>)</term>
      <listitem>
       <para>
        The directory containing the &regina; user interface jars.
        This directory should contain <filename>regina.jar</filename> as
        well as other optional jars such as
        <filename>regina-docs.jar</filename>.
+      </para>
+      <para>
+       If &regina; is being run directly out of the source tree, this
+       defaults to
+       <filename><replaceable>REGINA_HOME</replaceable>/javaui</filename>
+       instead.
       </para>
      </listitem>
     </varlistentry>
