@@ -35,6 +35,8 @@
 #define __NPERM_H
 #endif
 
+#include "utilities/nstring.h"
+
 /**
  * Represents a permutation of {0,1,2,3}.
  * Such permutations are used in specifying how simplices are glued together.
@@ -279,14 +281,13 @@ class NPerm {
 
         /**
          * Returns a string representation of this permutation.
-         *
-         * \ifacescpp Not present.
+         * The representation will consist of four adjacent digits
+         * representing the images of 0, 1, 2 and 3 respectively.  An
+         * example of a string representation is <tt>1302</tt>.
          *
          * @return a string representation of this permutation.
          */
-        #ifdef __DOXYGEN
         NString toString() const;
-        #endif
 
     private:
         /**

@@ -67,6 +67,15 @@ int NPerm::compareWith(const NPerm& other) const {
     return 0;
 }
 
+NString NPerm::toString() const {
+    char ans[5];
+    for (int i = 0; i < 4; i++)
+        ans[i] = '0' + imageOf(i);
+    ans[4] = 0;
+
+    return NString(ans);
+}
+
 NPerm faceOrdering(int face) {
     switch(face) {
         case 0:
