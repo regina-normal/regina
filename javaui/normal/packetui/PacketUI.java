@@ -29,6 +29,7 @@
 package normal.packetui;
 
 import java.awt.*;
+import javax.swing.text.JTextComponent;
 import normal.engine.Engine;
 import normal.engine.packet.NPacket;
 
@@ -105,6 +106,15 @@ public interface PacketUI {
      * @return the component providing the actual interface.
      */
     public Component getInterface();
+
+	/**
+	 * Returns the primary text component in this interface.
+	 * This component will be hooked up to edit menus and the like.
+	 *
+	 * @return the primary text component, or <tt>null</tt> if there is
+	 * no such component.
+	 */
+	public JTextComponent getPrimaryTextComponent();
     
     /**
      * Update the component to reflect the underlying packet in the engine

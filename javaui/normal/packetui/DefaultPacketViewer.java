@@ -30,6 +30,7 @@ package normal.packetui;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import normal.engine.Engine;
 import normal.engine.packet.NPacket;
 
@@ -61,6 +62,10 @@ public abstract class DefaultPacketViewer extends JPanel
     public Component getInterface() {
         return this;
     }
+
+	public JTextComponent getPrimaryTextComponent() {
+		return null;
+	}
 
     public abstract void reflectPacket();
 

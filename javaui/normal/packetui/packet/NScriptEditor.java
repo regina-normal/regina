@@ -128,6 +128,10 @@ public class NScriptEditor extends DefaultPacketEditor {
         return packet;
     }
 
+	public JTextComponent getPrimaryTextComponent() {
+		return text;
+	}
+
     /**
      * Create the interface's interface elements.
      *

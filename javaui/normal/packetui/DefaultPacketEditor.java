@@ -31,6 +31,7 @@ package normal.packetui;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import normal.engine.Engine;
 import normal.engine.packet.NPacket;
 import btools.gui.dialog.*;
@@ -104,6 +105,10 @@ public abstract class DefaultPacketEditor extends JPanel implements PacketUI {
     public Component getInterface() {
         return this;
     }
+
+	public JTextComponent getPrimaryTextComponent() {
+		return null;
+	}
 
     public abstract void reflectPacket();
 

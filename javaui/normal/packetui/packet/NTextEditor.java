@@ -31,6 +31,7 @@ package normal.packetui.packet;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.JTextComponent;
 import normal.engine.*;
 import normal.engine.packet.*;
 import normal.packetui.*;
@@ -66,6 +67,10 @@ public class NTextEditor extends DefaultPacketEditor {
         this.packet = (NText)packet;
         init(editor);
     }
+
+	public JTextComponent getPrimaryTextComponent() {
+		return text;
+	}
 
     public NPacket getPacket() {
         return packet;
