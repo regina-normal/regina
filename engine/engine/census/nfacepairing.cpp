@@ -195,9 +195,6 @@ void* NFacePairing::run(void* param) {
     while (true) {
         // TODO: Check for cancellation,
 
-        // Play nicely with the other children.
-        yield();
-
         // INVARIANT: Face trying needs to be joined to something.
         // dest(trying) represents the last tried destination for the
         // join, and there is no reciprocal join from dest(trying) back
@@ -455,9 +452,6 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
     int tet, face;
     for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(nTetrahedra, true);
             preImage[0]++) {
-        // Play nicely with the other children.
-        yield();
-
         // Note that we know firstFace is not unmatched.
         if (isUnmatched(preImage[0]))
             continue;
@@ -499,9 +493,6 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
             // and the image of A is earlier than the image of B, then
             // the image of A will be selected whereas the image of B
             // will be automatically derived.
-
-            // Play nicely with the other children.
-            yield();
 
             stepDown = false;
             NTetFace& pre = preImage[trying.tet * 4 + trying.face];

@@ -120,9 +120,6 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
     while (! face.isBeforeStart()) {
         // TODO: Check for cancellation.
 
-        // Play nicely with the other children.
-        NThread::yield();
-
         // When moving to the next permutation, be sure to preserve the
         // orientation of the permutation if necessary.
         if ((! orientableOnly) || pairing->dest(face).face == 0)
@@ -176,9 +173,6 @@ void NGluingPerms::findAllPermsInternal(const NFacePairing* pairing,
             canonical = true;
             for (it = autos->begin(); it != autos->end(); it++) {
                 // TODO: Check for cancellation.
-
-                // Play nicely with the other children.
-                NThread::yield();
 
                 if (cmpPermsWithPreImage(pairing, **it) > 0) {
                     canonical = false;

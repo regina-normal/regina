@@ -29,6 +29,8 @@ Version 3.0.1  [ 12 October, 2002 ]
         Class NFacePairing, NGluingPerms:
             - Added to bear the brunt of census generation.
             - Massive optimisations throughout census code.
+            - Removed all thread yields, which were causing processes to
+              have 0.0% CPU time on some systems.
         Class NIndexedArray:
             - Added routine validate().
         Class NLensSpace, NSFS:
