@@ -1,3 +1,11 @@
+regina-normal (2.2.0-cvs-1) unstable; urgency=low
+
+  * New CVS snapshot.
+  * Depends and build-depends on newer versions of omniorb(-dev).
+  * Updated to conform to new java policy.
+
+ -- Ben Burton <benb@acm.org>  Sat, 24 Nov 2001 23:14:59 -0600
+
 regina-normal (2.2-1) unstable; urgency=low
 
   * Initial Release (closes: Bug#114151).
