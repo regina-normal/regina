@@ -383,6 +383,9 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
     int tet, face;
     for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(nTetrahedra, true);
             preImage[0]++) {
+        // Play nicely with the other children.
+        yield();
+
         // Note that we know firstFace is not unmatched.
         if (isUnmatched(preImage[0]))
             continue;
@@ -424,6 +427,9 @@ bool NFacePairing::isCanonical(NFacePairingIsoList& list) const {
             // and the image of A is earlier than the image of B, then
             // the image of A will be selected whereas the image of B
             // will be automatically derived.
+
+            // Play nicely with the other children.
+            yield();
 
             stepDown = false;
             NTetFace& pre = preImage[trying.tet * 4 + trying.face];
