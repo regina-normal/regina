@@ -27,8 +27,8 @@
     towards normal surface theory.  It allows 3-manifolds to be created,
     manipulated and their properties of interest determined.
    </para>">
- <!ENTITY regversion "3.1">
- <!ENTITY regdate "18 October 2002">
+ <!ENTITY regversion "3.2">
+ <!ENTITY regdate "25 June 2003">
 
  <!ENTITY copyrightyears "1999-2003">
  <!ENTITY copyrightholder "Ben Burton">
@@ -65,6 +65,7 @@
    </menuchoice>">
  <!ENTITY pi "<literal>Pi</literal>">
  <!ENTITY twopi "<literal>2*Pi</literal>">
+ <!ENTITY sss "S<superscript>3</superscript>">
 
  <!ENTITY reginalicense SYSTEM "license.sgml">
  <!ENTITY reginafeatureset SYSTEM "featureset.sgml">

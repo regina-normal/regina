@@ -86,6 +86,57 @@
     </para>
    </sect3>
 
+   <sect3 id="tri-new-loop">
+    <title>Layered Loop</title>
+
+    <para>
+     This will create a layered loop of a given length.  This length
+     must be provided before the triangulation can be created.  It must
+     also be specified whether the layered loop should be twisted or
+     untwisted.
+    </para>
+    <para>
+     A <firstterm>layered loop</firstterm> of length
+     <replaceable>n</replaceable> is formed by layering
+     <replaceable>n</replaceable> tetrahedra one upon another to form a
+     closed loop of tetrahedra.
+    </para>
+    <para>
+     For each tetrahedron we select two top faces, two bottom faces and
+     two hinge edges, so that the top faces are adjacent, the bottom
+     faces are adjacent, the hinge edges are opposite and each hinge
+     meets both a top and a bottom face.  The tetrahedron can thus be
+     thought of as a fattened square with the top and bottom faces above
+     and below the square respectively, and the hinges as the top and
+     bottom edges of the square.  The left and right edges of the square
+     are identified to form an annulus.
+    </para>
+    <para>
+     For each <replaceable>i</replaceable>, the bottom faces of tetrahedron
+     <replaceable>i</replaceable>+1 are layered upon the top faces
+     of tetrahedron <replaceable>i</replaceable>.  In particular we
+     layer upon the identified left and right edges of the square formed
+     by tetrahedron <replaceable>i</replaceable>.
+    </para>
+    <para>
+     To close the loop, the bottom faces of the first tetrahedron are
+     similarly layered upon the top faces of the last tetrahedron.  In
+     an untwisted layered loop, this final layering
+     is done directly; in a twisted layered loop
+     the faces are rotated by 180 degrees before this final layering is
+     performed.
+    </para>
+    <para>
+     Note that a twisted layered loop of length
+     <replaceable>n</replaceable> forms a one-vertex triangulation of
+     the orbit manifold
+     &sss;/Q<subscript>4<replaceable>n</replaceable></subscript>, and an
+     untwisted layered loop of length <replaceable>n</replaceable> forms
+     a two-vertex triangulation of the lens space
+     L(<replaceable>n</replaceable>,1).
+    </para>
+   </sect3>
+
    <sect3 id="tri-new-dehydration">
     <title>Dehydration</title>
 

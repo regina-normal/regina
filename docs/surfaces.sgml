@@ -410,6 +410,25 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
+      <glossterm>Crush</glossterm>
+      <glossdef>
+       <para>
+        This column signifies whether the program can deduce that the
+        surface can be crushed to a point in the underlying triangulation
+        with no unintended topological side-effects.
+        Unintended side-effects include any topological changes other than
+        the pure topological effects of cutting along this surface and
+        then identifying the new boundary surface(s) to points.
+       </para>
+       <para>
+        Note that this column will only ever contain
+        <literal>Yes</literal> or <literal>Unknown</literal>, according
+        to whether the surface can with certainty be crushed or whether
+        the program cannot deduce this result on its own.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
       <glossterm>Type</glossterm>
       <glossdef><para>
        If a normal surface is recognised as playing a particular role in
