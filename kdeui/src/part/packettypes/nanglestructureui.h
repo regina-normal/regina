@@ -52,6 +52,8 @@ namespace regina {
  * A packet interface for viewing angle structure lists.
  */
 class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -65,6 +67,11 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         QLabel* stats;
         QListView* table;
         AngleHeaderToolTip* headerTips;
+
+        /**
+         * Status of any ongoing actions.
+         */
+        bool currentlyAutoResizing;
 
     public:
         /**
@@ -80,6 +87,9 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+
+    public slots:
+        void columnResized(int section, int oldSize, int newSize);
 };
 
 /**

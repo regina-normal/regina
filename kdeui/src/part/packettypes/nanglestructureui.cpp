@@ -45,14 +45,13 @@
 #define ANGLE_STATS_PADDING 5
 
 // TODO: Work out how to centre column headers.
-// TODO: Work out how to have all columns resized when one is resized.
 
 using regina::NAngleStructureList;
 using regina::NPacket;
 
 NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
-        structures(packet) {
+        structures(packet), currentlyAutoResizing(false) {
     ui = new QVBox();
 
     // Set up the statistics label.
@@ -85,6 +84,8 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     for (int i = 0; i < table->columns(); i++)
         table->adjustColumn(i);
     headerTips = new AngleHeaderToolTip(table->header());
+    connect(table->header(), SIGNAL(sizeChange(int, int, int)),
+        this, SLOT(columnResized(int, int, int)));
 }
 
 NAngleStructureUI::~NAngleStructureUI() {
@@ -133,6 +134,18 @@ void NAngleStructureUI::refresh() {
     setDirty(false);
 }
 
+void NAngleStructureUI::columnResized(int section, int, int newSize) {
+    if (currentlyAutoResizing || section == 0)
+        return;
+
+    // An angle column has been resized.
+    // Resize all angle columns.
+    currentlyAutoResizing = true;
+    for (int i = 1; i < table->columns(); i++)
+        table->setColumnWidth(i, newSize);
+    currentlyAutoResizing = false;
+}
+
 AngleHeaderToolTip::AngleHeaderToolTip(QHeader *header,
         QToolTipGroup *group) : QToolTip(header, group) {
 }
@@ -150,4 +163,6 @@ void AngleHeaderToolTip::maybeTip(const QPoint& p) {
 
     tip(header->sectionRect(section), tipString);
 }
+
+#include "nanglestructureui.moc"
 
