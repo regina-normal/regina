@@ -84,7 +84,9 @@ class PacketChooser : public KComboBox, public regina::NPacketListener {
                  entries in the packet chooser. */
 
         bool onAutoUpdate;
-            /**< Are listening for changes to the packet tree? */
+            /**< Are we listening for changes to the packet tree? */
+        bool isUpdating;
+            /**< Are we currently in the middle of an update? */
 
     public:
         /**
@@ -145,8 +147,8 @@ class PacketChooser : public KComboBox, public regina::NPacketListener {
 
     public slots:
         /**
-         * Empties and refills this chooser according to the current
-         * state of the packet tree.
+         * Updates this chooser to reflect to the current state of the
+         * packet tree.
          *
          * The current selection will be preserved if possible.
          *

@@ -43,14 +43,14 @@ using regina::NPacket;
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         QWidget* parent, const char* name) :
         KComboBox(parent, name), subtree(newSubtree), filter(0),
-        onAutoUpdate(false) {
+        onAutoUpdate(false), isUpdating(false) {
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, QWidget* parent, const char* name) :
         KComboBox(parent, name), subtree(newSubtree), filter(newFilter),
-        onAutoUpdate(false) {
+        onAutoUpdate(false), isUpdating(false) {
     fill(false, 0);
 }
 
@@ -58,7 +58,7 @@ PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, bool allowNone,
         regina::NPacket* initialSelection, QWidget* parent, const char* name) :
         KComboBox(parent, name), subtree(newSubtree), filter(newFilter),
-        onAutoUpdate(false) {
+        onAutoUpdate(false), isUpdating(false) {
     fill(allowNone, initialSelection);
 }
 
@@ -93,9 +93,12 @@ void PacketChooser::packetWasRenamed(regina::NPacket* renamed) {
     std::vector<regina::NPacket*>::iterator it = std::find(
         packets.begin(), packets.end(), renamed);
 
-    if (it != packets.end())
+    if (it != packets.end()) {
+        // This may trigger a refreshContents(), but that's okay since
+        // we're at the end of the routine.
         changeItem(PacketManager::iconSmall(renamed),
             renamed->getPacketLabel().c_str(), it - packets.begin());
+    }
 }
 
 void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
@@ -104,14 +107,21 @@ void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
         packets.begin(), packets.end(), toDestroy);
 
     if (it != packets.end()) {
+        // Make sure the call to removeItem() comes last since it could
+        // trigger a refreshContents().
         long destroyIndex = it - packets.begin();
         bool destroyCurrent = (destroyIndex == currentItem());
 
-        removeItem(destroyIndex);
-        if (destroyCurrent && count() > 0)
+        packets.erase(it);
+        if (destroyCurrent) {
+            // We know count() > 0 since currentItem() exists.
             setCurrentItem(0);
 
-        packets.erase(it);
+            // If the item to destroy *is* 0, this should just fall through
+            // to whatever's next when we remove it from the chooser.
+        }
+
+        removeItem(destroyIndex);
 
         // Don't bother unlistening; this will happen in the packet
         // destructor anyway.
@@ -119,6 +129,10 @@ void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
 }
 
 void PacketChooser::refreshContents() {
+    if (isUpdating)
+        return;
+    isUpdating = true;
+
     // Remember how it used to look.
     NPacket* remember = selectedPacket();
     bool allowNone = ((! packets.empty()) && (! packets[0]));
@@ -134,6 +148,8 @@ void PacketChooser::refreshContents() {
 
     // Fill it again.
     fill(allowNone, remember);
+
+    isUpdating = false;
 }
 
 void PacketChooser::fill(bool allowNone, NPacket* select) {
