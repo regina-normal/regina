@@ -245,4 +245,7 @@
  *
  *  \todo \featurelong Have \a checkjni utility that checks consistency
  *  between <tt>.h</tt> and <tt>.cpp</tt> java wrapper files.
+ *  \todo \feature Provide a cowardly/hamstrung mode for the CORBA server
+ *  that refuses to do anything too complex.
+ *  \todo \feature Provide logging for the CORBA server.
  */
