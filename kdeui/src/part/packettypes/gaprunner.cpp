@@ -71,6 +71,11 @@ QRegExp reValAckFPGroup("^<fp group o[fn] ");
 QRegExp reValAckSimplify("^\\[");
 QRegExp reValRelator("^f[0-9]+");
 
+/**
+ * Miscellaneous regular expressions.
+ */
+QRegExp reWhitespace("\\s");
+
 const char* GAP_PROMPT = "gap> ";
 
 GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
@@ -329,7 +334,12 @@ QString GAPRunner::origGroupReln(const regina::NGroupExpression& reln) {
 }
 
 regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
-    QStringList terms = QStringList::split(QChar('*'), reln, true);
+    // Newer versions of GAP seem to include spaces where you don't
+    // really want them.  Just remove the whitespace completely.
+    QString relnLocal = reln;
+    relnLocal.remove(reWhitespace);
+
+    QStringList terms = QStringList::split(QChar('*'), relnLocal, true);
     if (terms.isEmpty()) {
         error(i18n("GAP produced empty output where a group relator "
             "was expected."));
@@ -347,8 +357,7 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
     unsigned long gen;
     long exp;
     for (QStringList::iterator it = terms.begin(); it != terms.end(); it++) {
-        term = (*it).stripWhiteSpace();
-        if (! reGAPTerm.exactMatch(term)) {
+        if (! reGAPTerm.exactMatch(*it)) {
             error(i18n("GAP produced the following group relator, which could "
                 "not be understood:<p><tt>%1</tt>").arg(escape(reln)));
             return 0;

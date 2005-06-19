@@ -55,6 +55,8 @@ Version 4.2  [ under development ]
           calculations (such as surface enumeration) run in a separate thread.
         - Worked around a Qt bug that caused a crash when pressing a key in
           a table of normal surfaces or matching equations.
+        - Fixed a bug in which GAP output was unparseable due to GAP
+          inserting spaces where Regina was not expecting them.
     TEST SUITE:
         - Added tests for SnapPea calculations.
         - Further additions to the triangulation tests, in particular
