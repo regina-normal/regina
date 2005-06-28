@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <cctype>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -43,7 +44,13 @@
 #define TAG_REQUEST_PAIRING 11
 #define TAG_RESULT 12
 
+// Size constraints:
 #define MAX_PAIRING_REP_LEN 500
+
+// Time constants:
+#define MIN_SEC 60
+#define HOUR_SEC 60 * MIN_SEC
+#define DAY_SEC 24 * HOUR_SEC
 
 // Census parameters.
 regina::NBoolSet
@@ -375,9 +382,68 @@ void slaveBail(const std::string& error) {
 }
 
 /**
+ * Slave helper routine.
+ *
+ * Appends final time information to the pair-specific timer file.
+ */
+void slaveTimerStop(clock_t cpuTimeAtStart) {
+    // Find the total used CPU time.
+    long seconds = (clock() - cpuTimeAtStart) / CLOCKS_PER_SEC;
+
+    // Append everything to the timer file.
+    std::string timeFile = pairStub + ".time";
+    std::ofstream out(timeFile.c_str(), std::ios::app);
+    if (out) {
+        time_t t = time(0);
+        out << "Finished on " << asctime(localtime(&t)) << std::endl;
+
+        out << "Total time (s): " << seconds << '\n';
+        out << "      which is: ";
+
+        bool started = false;
+        if (seconds >= DAY_SEC) {
+            out << (seconds / DAY_SEC) << " days ";
+            seconds = seconds % DAY_SEC;
+            started = true;
+        }
+        if (started || seconds >= HOUR_SEC) {
+            out << (seconds / HOUR_SEC) << " hrs ";
+            seconds = seconds % HOUR_SEC;
+            started = true;
+        }
+        if (started || seconds >= MIN_SEC) {
+            out << (seconds / MIN_SEC) << " min ";
+            seconds = seconds % MIN_SEC;
+            started = true;
+        }
+        out << seconds << " sec" << std::endl;
+    }
+}
+
+/**
+ * Slave helper routine.
+ *
+ * Initialises the pairing-specific timer file with the start time,
+ * and returns the CPU time currently used by the slave.
+ */
+clock_t slaveTimerStart(int whichSlave, const char* pairing) {
+    time_t t = time(0);
+
+    std::string timeFile = pairStub + ".time";
+    std::ofstream out(timeFile.c_str());
+    if (out) {
+        out << "Processing pairing:\n" << pairing << "\n\n";
+        out << "Taken by slave #" << whichSlave << " on "
+            << asctime(localtime(&t));
+    }
+
+    return clock();
+}
+
+/**
  * Main routine for a slave (ranks 1..size).
  */
-int mainSlave() {
+int mainSlave(int whichSlave) {
     // MPI message passing:
     MPI_Status status;
     char pairingRep[MAX_PAIRING_REP_LEN + 1];
@@ -386,8 +452,9 @@ int mainSlave() {
     int whichPurge;
     long ans;
 
-    // Files that we will want to write to:
-    std::string outFile, timeFile;
+    // Miscellaneous helper variables:
+    std::string outFile;
+    clock_t cpuTime;
 
     // Keep fetching and processing pairings until there are no more.
     while (true) {
@@ -411,7 +478,6 @@ int mainSlave() {
         }
 
         outFile = pairStub + ".rga";
-        timeFile = pairStub + ".time";
 
         // Parse the face pairing.
         regina::NFacePairing* pairing =
@@ -426,7 +492,6 @@ int mainSlave() {
         }
 
         // Run the partial census.
-        // TODO: Time file.
         regina::NPacket* parent = slaveSkeletonTree(pairing);
 
         if (minimalPrimeP2)
@@ -439,11 +504,15 @@ int mainSlave() {
         else
             whichPurge = 0;
 
+        cpuTime = slaveTimerStart(whichSlave, pairingRep);
+
         ans = regina::NCensus::formPartialCensus(pairing,
             parent->getLastTreeChild(),
             finiteness, orientability, whichPurge,
             ((minimal || minimalPrime || minimalPrimeP2) ?
             regina::NCensus::mightBeMinimal : 0), 0);
+
+        slaveTimerStop(cpuTime);
 
         // Write the completed census to file.
         if (regina::writeXMLFile(outFile.c_str(), parent))
@@ -487,7 +556,7 @@ int main(int argc, char* argv[]) {
                 retVal = mainController(size - 1);
         } else {
             // We're one of many slaves.
-            retVal = mainSlave();
+            retVal = mainSlave(rank);
         }
     }
 
