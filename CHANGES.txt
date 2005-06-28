@@ -57,6 +57,9 @@ Version 4.2  [ under development ]
           a table of normal surfaces or matching equations.
         - Fixed a bug in which GAP output was unparseable due to GAP
           inserting spaces where Regina was not expecting them.
+    UTILITIES:
+        tricensus-mpi:
+            - New census manager for use on MPI-enabled clusters.
     TEST SUITE:
         - Added tests for SnapPea calculations.
         - Further additions to the triangulation tests, in particular
