@@ -225,7 +225,7 @@ int main(int argc, const char* argv[]) {
         std::cerr << "Options -o/--orientable and -n/--nonorientable "
             << "cannot be used together.\n";
         broken = true;
-    } else if (argBdry && argNoBdry) {
+    } else if (argFinite && argIdeal) {
         std::cerr << "Options -f/--finite and -d/--ideal "
             << "cannot be used together.\n";
         broken = true;
