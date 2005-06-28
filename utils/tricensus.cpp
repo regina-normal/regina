@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Form a census of splitting surface signatures of given order          *
+ *  Form a census of triangulations that satisfy given properties         *
  *                                                                        *
  *  Copyright (c) 1999-2005, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
