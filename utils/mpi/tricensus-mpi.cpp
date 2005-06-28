@@ -79,7 +79,7 @@ std::string pairStub;
  *
  * Parse command-line arguments for census and filename options.
  */
-int parseCmdLine(int argc, const char* argv[]) {
+int parseCmdLine(int argc, const char* argv[], bool isController) {
     // Set up the command-line arguments.
     int argOr = 0;
     int argNor = 0;
@@ -110,9 +110,11 @@ int parseCmdLine(int argc, const char* argv[]) {
     // Parse the command-line arguments.
     int rc = poptGetNextOpt(optCon);
     if (rc != -1) {
-        std::cerr << poptBadOption(optCon, POPT_BADOPTION_NOALIAS)
-            << ": " << poptStrerror(rc) << "\n\n";
-        poptPrintHelp(optCon, stderr, 0);
+        if (isController) {
+            std::cerr << poptBadOption(optCon, POPT_BADOPTION_NOALIAS)
+                << ": " << poptStrerror(rc) << "\n\n";
+            poptPrintHelp(optCon, stderr, 0);
+        }
         poptFreeContext(optCon);
         return 1;
     }
@@ -122,14 +124,18 @@ int parseCmdLine(int argc, const char* argv[]) {
         pairsFile = otherOpts[0];
         outputStub = otherOpts[1];
         if (otherOpts[2]) {
-            std::cerr << "Too many arguments.\n\n";
-            poptPrintHelp(optCon, stderr, 0);
+            if (isController) {
+                std::cerr << "Too many arguments.\n\n";
+                poptPrintHelp(optCon, stderr, 0);
+            }
             poptFreeContext(optCon);
             return 1;
         }
     } else {
-        std::cerr << "Not enough arguments.\n\n";
-        poptPrintHelp(optCon, stderr, 0);
+        if (isController) {
+            std::cerr << "Not enough arguments.\n\n";
+            poptPrintHelp(optCon, stderr, 0);
+        }
         poptFreeContext(optCon);
         return 1;
     }
@@ -137,20 +143,25 @@ int parseCmdLine(int argc, const char* argv[]) {
     // Run a sanity check on the command-line arguments.
     bool broken = false;
     if (pairsFile.empty()) {
-        std::cerr << "A pairs file must be specified.\n";
+        if (isController)
+            std::cerr << "A pairs file must be specified.\n";
         broken = true;
     } else if (outputStub.empty()) {
-        std::cerr << "An output filename stub must be specified.\n";
+        if (isController)
+            std::cerr << "An output filename stub must be specified.\n";
         broken = true;
     } else if (argOr && argNor) {
-        std::cerr << "Options -o/--orientable and -n/--nonorientable "
-            << "cannot be used together.\n";
+        if (isController)
+            std::cerr << "Options -o/--orientable and -n/--nonorientable "
+                << "cannot be used together.\n";
         broken = true;
     }
 
     if (broken) {
-        std::cerr << '\n';
-        poptPrintHelp(optCon, stderr, 0);
+        if (isController) {
+            std::cerr << '\n';
+            poptPrintHelp(optCon, stderr, 0);
+        }
         poptFreeContext(optCon);
         return 1;
     }
@@ -536,12 +547,15 @@ int mainSlave(int whichSlave) {
 int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);
 
-    int retVal = parseCmdLine(argc, (const char**)argv);
-    if (retVal == 0) {
-        // Which processor are we?
-        int rank;
-        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    // Which processor are we?
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+    // Extract census options.
+    int retVal = parseCmdLine(argc, (const char**)argv, (rank == 0));
+
+    if (retVal == 0) {
+        // No breakage yet.  Controller or slave?
         if (rank == 0) {
             // We're the controller.
             // How many processors in total?
