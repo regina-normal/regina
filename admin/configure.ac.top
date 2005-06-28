@@ -139,6 +139,12 @@ AC_ARG_ENABLE(python, AC_HELP_STRING([--disable-python],
     REGINA_DO_NOT_COMPILE([PYTHON])
   fi
 ])
+AC_ARG_ENABLE(mpi, AC_HELP_STRING([--disable-mpi],
+    [do not build any Regina MPI-enabled utilities]), [
+  if test "$enableval" = "no"; then
+    REGINA_DO_NOT_COMPILE([MPI])
+  fi
+])
 AC_ARG_ENABLE(docs, AC_HELP_STRING([--disable-docs],
     [do not build the Regina API documentation]), [
   if test "$enableval" = "no"; then
@@ -208,8 +214,8 @@ AC_LANG_POP(C)
 #
 ###########################################################
 
-REGINA_HEADER_OPTIONAL(popt.h, UTILS, [command-line utilities])
-REGINA_LIB_OPTIONAL(popt, poptGetContext, UTILS_LIBS, UTILS,
+REGINA_HEADER_OPTIONAL(popt.h, [UTILS MPI], [command-line utilities])
+REGINA_LIB_OPTIONAL(popt, poptGetContext, UTILS_LIBS, [UTILS MPI],
   [command-line utilities])
 
 AM_PATH_CPPUNIT([1.8.0], , [
@@ -233,6 +239,14 @@ else
 
   # There are also some conditionals that must be defined.
   AM_CONDITIONAL(include_ARTS, false)
+fi
+
+REGINA_SHOULD_BUILD_INTERNAL(MPI)
+if test "$should_build" = "yes"; then
+  ACX_MPI([], [
+    REGINA_WARN_MISSING([MPI development environment], [MPI-enabled utilities])
+    REGINA_DO_NOT_COMPILE(MPI)
+  ])
 fi
 
 ###########################################################
@@ -318,6 +332,7 @@ REGINA_SHOULD_BUILD(ENGINE, engine, [the calculation engine library])
 REGINA_SHOULD_BUILD(KDEUI, kdeui, [the KDE user interface])
 REGINA_SHOULD_BUILD(PYTHON, python, [the Python interface])
 REGINA_SHOULD_BUILD(UTILS, utils, [command-line utilities])
+REGINA_SHOULD_BUILD(MPI, mpi, [MPI-enabled utilities])
 REGINA_SHOULD_BUILD(TESTSUITE, testsuite, [the test suite])
 REGINA_SHOULD_BUILD(DOCSENGINE, engine, [calculation engine docs])
 
