@@ -12,8 +12,8 @@ SUBDIRS = stubs
 
 EXTRA_DIST = \
   README.txt RELEASE.txt \
-  acinclude.m4.top as-ac-expand.m4.ext cppunit.m4.ext kde.m4.ext \
-  libtool.m4.ext configure.ac.bot configure.ac.top \
+  acinclude.m4.top acx_mpi.m4.ext as-ac-expand.m4.ext cppunit.m4.ext \
+  kde.m4.ext libtool.m4.ext configure.ac.bot configure.ac.top \
   Doxyfile.am Doxyfile.global Makefile.common am_edit \
   bcheck.pl conf.change.pl config.guess config.pl config.sub \
   cvs-clean.pl cvs.sh debianrules deps.am detect-autoconf.sh \

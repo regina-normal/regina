@@ -16,6 +16,7 @@ man_MANS = \
   sigcensus.1 \
   tricensus.1 \
   tricensus-manager.1 \
+  tricensus-mpi.1 \
   regina-kde.1 \
   regina-python.1
 
