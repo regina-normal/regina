@@ -315,12 +315,43 @@ dnl    Example: REGINA_LIB_BOOST_PYTHON(PYTHON, [the Python interface])
 dnl
 AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
   AC_LANG_PUSH(C++)
+
+  AC_ARG_WITH(python-version, AC_HELP_STRING([--with-python-version=VER],
+      [build against the given python version (e.g., 2.3)]), [
+    pyversionlist=none
+    if test "x$withval" != "xno"; then
+      if test "x$withval" != "x"; then
+        pyversionlist="python$withval python"
+      fi
+    fi
+  ], [
+    pyversionlist=none
+  ])
+  if test "x$pyversionlist" = "xnone"; then
+    pyversionlist="python python2.4 python2.3 python2.2"
+  fi
+
+  AC_ARG_WITH(boost-suffix, AC_HELP_STRING([--with-boost-suffix=SUFFIX],
+      [link against the boost libraries with the given suffix (e.g., gcc-mt-1_32)]), [
+    boostliblist=none
+    if test "x$withval" != "xno"; then
+      if test "x$withval" != "x"; then
+        boostliblist="boost_python-$withval boost_python"
+      fi
+    fi
+  ], [
+    boostliblist=none
+  ])
+  if test "x$boostliblist" = "xnone"; then
+    boostliblist="boost_python boost_python-gcc-mt-1_32 boost_python-gcc-mt-1_31"
+  fi
+
   AC_CHECK_HEADERS([boost/shared_ptr.hpp], [
     __regina_py_save_cxxflags="$CXXFLAGS"
     __regina_py_save_ldflags="$LDFLAGS"
     __regina_py_save_libs="$LIBS"
     __regina_py_ok=0
-    for pyver in python python2.3 python2.2; do
+    for pyver in $pyversionlist; do
       for incdir in "/usr/include/$pyver" "/usr/local/include/$pyver" \
           "/usr/$pyver/include" "/usr/local/$pyver/include" \
           "$prefix/include/$pyver" "$prefix/$pyver/include"; do
@@ -344,8 +375,8 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
           ], [
             AC_MSG_RESULT([yes])
 
-            # Check for -lpython and -lboost_python.
-            for pylib in "$pyver" python python2.3 python2.2; do
+            # Check for -lpython.
+            for pylib in "$pyver" $pyversionlist; do
               for pylibdir in /usr/lib /usr/local/lib \
                   "/usr/lib/$pyver/config" "/usr/local/lib/$pyver/config"; do
                 for extralibs in "" "-lpthread -lm -lutil -ldl"; do
@@ -354,25 +385,40 @@ AC_DEFUN([REGINA_LIB_BOOST_PYTHON], [
                   else
                     extralibsmsg=" with $extralibs"
                   fi
-                  AC_MSG_CHECKING([for libboost_python and lib$pylib in $pylibdir$extralibsmsg])
+                  AC_MSG_CHECKING([for lib$pylib in $pylibdir$extralibsmsg])
                   LDFLAGS="$__regina_py_save_ldflags -L$pylibdir"
-                  LIBS="-lboost_python -l$pylib $extralibs"
+                  LIBS="-l$pylib $extralibs"
                   AC_TRY_LINK([
-                    #include <boost/python.hpp>
-                    const char* greet() { return "Hello world!"; }
-                    BOOST_PYTHON_MODULE(hello) {
-                      boost::python::def("greet", greet);
-                    }
+                    #include <Python.h>
                   ], [
                     Py_Initialize(); Py_Finalize();
                   ], [
                     AC_MSG_RESULT([yes])
 
-                    # And we're done!
-                    BOOST_PYTHON_INCLUDES="-I$incdir"
-                    BOOST_PYTHON_LIBS="-lboost_python -l$pylib $extralibs"
-                    BOOST_PYTHON_LDFLAGS="-L$pylibdir"
-                    __regina_py_ok=1
+                    # Finally check for -lboost_python.
+                    for boostlib in $boostliblist; do
+                      AC_MSG_CHECKING([for lib$boostlib])
+                      LIBS="-l$boostlib -l$pylib $extralibs"
+                      AC_TRY_LINK([
+                        #include <boost/python.hpp>
+                        const char* greet() { return "Hello world!"; }
+                        BOOST_PYTHON_MODULE(hello) {
+                          boost::python::def("greet", greet);
+                        }
+                      ], [
+                        Py_Initialize(); Py_Finalize();
+                      ], [
+                        AC_MSG_RESULT([yes])
+                        # And we're done!
+                        BOOST_PYTHON_INCLUDES="-I$incdir"
+                        BOOST_PYTHON_LIBS="-l$boostlib -l$pylib $extralibs"
+                        BOOST_PYTHON_LDFLAGS="-L$pylibdir"
+                        __regina_py_ok=1
+                      ], [
+                        AC_MSG_RESULT([no])
+                      ])
+                      if test "$__regina_py_ok" = "1"; then break; fi
+                    done
                   ], [
                     AC_MSG_RESULT([no])
                   ])

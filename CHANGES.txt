@@ -13,6 +13,8 @@ Version 4.2  [ under development ]
         - Updated libtool to version 1.5a.
         - Verify in the configure script that shared libraries are
           enabled where needed (i.e., in the KDE and Python interfaces).
+        - Better magic in the configure script for finding the correct
+          boost.python libraries.
     ENGINE:
         Overall structure:
             - Included portions of the SnapPea kernel (thanks again to
