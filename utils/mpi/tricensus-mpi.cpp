@@ -427,7 +427,7 @@ void slaveTimerStop(clock_t cpuTimeAtStart) {
             seconds = seconds % MIN_SEC;
             started = true;
         }
-        out << seconds << " sec" << std::endl;
+        out << seconds << " sec\n" << std::endl;
     }
 }
 
