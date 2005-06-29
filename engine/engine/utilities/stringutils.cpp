@@ -48,7 +48,7 @@ char* duplicate(const std::string& str) {
 bool startsWith(const std::string& str, const std::string& prefix) {
     if (str.length() < prefix.length())
         return false;
-    return (str.compare(0, prefix.length(), prefix) == 0);
+    return (str.substr(0, prefix.length()).compare(prefix) == 0);
 }
 
 std::string stripWhitespace(const std::string& str) {
