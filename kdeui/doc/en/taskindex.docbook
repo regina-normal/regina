@@ -117,8 +117,10 @@
    triangulations (command-line)</link></secondaryie>
   <secondaryie><link linkend="tri-census-creation">creating a census of
    triangulations (&gui;)</link></secondaryie>
+  <secondaryie><link linkend="man-tricensus-mpi">distributing census
+   creation across several machines (&mpi;)</link></secondaryie>
   <secondaryie><link linkend="man-tricensus-manager">distributing census
-   creation across several machines</link></secondaryie>
+   creation across several machines (plain)</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation in the available censuses</link></secondaryie>
   <secondaryie><link linkend="options-census">searching for a

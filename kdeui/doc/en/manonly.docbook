@@ -21,6 +21,8 @@
   <!ENTITY kde "<application><acronym>KDE</acronym></application>">
   <!ENTITY khelpcenter "<application>&kde; Help Centre</application>">
   <!ENTITY konqueror "<application>Konqueror</application>">
+  <!ENTITY mpi "<acronym>MPI</acronym>">
+  <!ENTITY mpich "<application>MPICH</application>">
   <!ENTITY python "<application>Python</application>">
   <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY xml "<acronym>XML</acronym>">

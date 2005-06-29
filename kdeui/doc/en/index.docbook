@@ -52,6 +52,8 @@
   <!ENTITY java "<application>Java</application>">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY linux "<productname><acronym>GNU</acronym>/Linux</productname>">
+  <!ENTITY mpi "<acronym>MPI</acronym>">
+  <!ENTITY mpich "<application>MPICH</application>">
   <!ENTITY pi "<literal>Pi</literal>">
   <!ENTITY ppirr
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">

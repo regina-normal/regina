@@ -340,9 +340,11 @@
     satisfying a variety of different constraints.  The best way of
     doing this is through the command-line tool
     <link linkend="man-tricensus"><command>tricensus</command></link>.
-    For very long calculations the tool
+    For very long calculations, the tools
     <link linkend="man-tricensus-manager"><command>tricensus-manager</command></link>
-    can be used to distribute the processing amongst a number of
+    and/or
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+    may be used to distribute the computation amongst a number of
     different processors.
    </para>
    <para>

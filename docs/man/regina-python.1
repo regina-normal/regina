@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGINA-PYTHON" "1" "22 July 2004" "" "Main Applications"
+.TH "REGINA-PYTHON" "1" "29 June 2005" "" "Main Applications"
 
 .SH NAME
 regina-python \- Regina command-line Python interface
@@ -18,7 +18,7 @@ theory. It allows 3-manifolds to be created and manipulated and their
 properties of interest to be determined.
 .PP
 This command starts an interactive \fBPython\fR session for
-\fBRegina\fR.  This will be a command-line \fBPython\fR session, with direct
+\fBRegina\fR\&.  This will be a command-line \fBPython\fR session, with direct
 text input/output and no graphical user interface.
 All of the objects, clases and methods from the \fBRegina\fR calculation
 engine will be made available to the user in the module
@@ -53,7 +53,7 @@ Start in quiet mode.  No output will be produced except
 for serious errors.  In particular, warnings will be suppressed.
 
 This is equivalent to setting the environment variable
-\fIREGINA_VERBOSITY\fR=0.
+\fIREGINA_VERBOSITY\fR=0\&.
 .TP
 \fB-v\fR
 .TP
@@ -62,14 +62,14 @@ Start in verbose mode.  Additional diagnostic
 information will be output.
 
 This is equivalent to setting the environment variable
-\fIREGINA_VERBOSITY\fR=2.
+\fIREGINA_VERBOSITY\fR=2\&.
 .SH "ENVIRONMENT VARIABLES"
 .PP
 The following environment variables influence the behaviour of
 this program.  Each of these variables can also be set in the local
 configuration file \fI~/.regina-python\fR using a line
 of the form
-\fIoption\fR=\fIvalue\fR.
+\fIoption\fR=\fIvalue\fR\&.
 Environment variables will take precedence over values read from
 this configuration file.
 .TP
@@ -80,14 +80,14 @@ Recognised values are:
 .TP
 \fB0\fR
 Display errors only; this is equivalent to passing the option
-\fB--quiet\fR.
+\fB--quiet\fR\&.
 .TP
 \fB1\fR
 Display errors and warnings; this is the default.
 .TP
 \fB2\fR
 Display errors, warnings and diagnostic output; this is
-equivalent to passing the option \fB--verbose\fR.
+equivalent to passing the option \fB--verbose\fR\&.
 .RE
 .TP
 \fB\fIREGINA_PYTHON\fB\fR
@@ -118,7 +118,7 @@ When running from a proper installation,
 the default \fIREGINA_HOME\fR is actually
 hard-wired into the startup script (it is derived at
 compile-time from the options passed to
-\fB./configure\fR).
+\fB\&./configure\fR).
 This means that if \fBRegina\fR is installed into one directory using
 \fBmake install\fR and then moved to another directory
 by hand, the default \fIREGINA_HOME\fR will be
@@ -127,7 +127,7 @@ incorrect.
 .TP
 \fB\fIREGINA_PYLIBDIR\fB\fR
 The directory containing the \fBPython\fR module
-\fIregina.so\fR.
+\fIregina.so\fR\&.
 
 If \fBRegina\fR is being run directly out of the source tree, this
 defaults to a directory within this source tree.  If \fBRegina\fR is being
@@ -149,7 +149,7 @@ incorrect.
 .RE
 .SH "SEE ALSO"
 .PP
-regina-kde.
+regina-kde\&.
 .PP
 The calculation engine documentation should also be
 installed, describing in detail all of the \fBRegina\fR
