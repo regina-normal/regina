@@ -137,6 +137,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>code</primaryie>
+  <seeie>(see libraries)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-composition-composition">combinatorial
    composition</link></primaryie>
  </indexentry>
@@ -159,8 +164,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="trouble-compile">compile errors,
-   fixing</link></primaryie>
+  <primaryie>compiling</primaryie>
+  <secondaryie><link linkend="compiling">compiling &regina; into other
+   code</link></secondaryie>
+  <secondaryie><link linkend="trouble-compile">fixing compile errors
+   when building &regina;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -471,8 +479,10 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="python-libraries">libraries,
-   &python;</link></primaryie>
+  <primaryie>libraries</primaryie>
+  <secondaryie><link linkend="python-libraries">&python;</link></secondaryie>
+  <secondaryie><link linkend="compiling">&regina;, compiling into
+   other code</link></secondaryie>
  </indexentry>
 
  <indexentry>

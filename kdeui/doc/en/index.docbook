@@ -48,6 +48,7 @@
    (Groups, Algorithms and Programming)</application>">
   <!ENTITY gaplongurl "<ulink
    url='http://www.gap-system.org/'>&gaplong;</ulink>">
+  <!ENTITY gnu "<acronym>GNU</acronym>">
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY java "<application>Java</application>">
   <!ENTITY html "<acronym>HTML</acronym>">
@@ -85,6 +86,7 @@
   <!ENTITY reginaangles SYSTEM "angles.docbook">
   <!ENTITY reginapython SYSTEM "python.docbook">
   <!ENTITY reginaoptions SYSTEM "options.docbook">
+  <!ENTITY reginacompiling SYSTEM "compiling.docbook">
   <!ENTITY reginatrouble SYSTEM "trouble.docbook">
   <!ENTITY reginaservices SYSTEM "services.docbook">
   <!ENTITY reginacredits SYSTEM "credits.docbook">
@@ -147,6 +149,7 @@
  &reginaangles;
  &reginapython;
  &reginaoptions;
+ &reginacompiling;
  &reginatrouble;
  &reginaservices;
  &reginacredits;

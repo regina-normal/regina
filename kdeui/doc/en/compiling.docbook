@@ -1,0 +1,147 @@
+<chapter id="compiling">
+ <title>Using Regina in Other Code</title>
+ <para>
+  The mathematical core of &regina; is available as a shared library.
+  This means that you can write your own &cpp; applications that make
+  use of &regina;'s functionality, much like they might use any other
+  mathematical library.  The remainder of this chapter provides
+  technical details on configuring the build environment to
+  make this possible.
+ </para>
+ <para>
+  Please note that &regina; is released under the &gnu; General Public
+  License, which places restrictions on how you may use it in other
+  software.  These restrictions are intended to
+  promote the availablility of mathematical software that is free to
+  use, modify and redistribute.  For further information, please read the
+  <link linkend="licenses">full license details</link> or
+  <link linkend="services">write and ask</link> if you have any specific
+  questions.
+ </para>
+
+ <sect1>
+  <title>Installing the Development Files</title>
+  <para>
+   If you have built &regina; yourself, the &cpp; headers and development
+   libraries should already be installed by default.  If you have
+   downloaded a prebuilt package, have a look to see if you have a directory
+   <filename>/usr/include/regina/</filename> or
+   <filename>/usr/include/regina-normal/</filename>.
+   This directory should include a few top-level headers such as
+   <filename>engine.h</filename> and <filename>shareableobject.h</filename>,
+   as well as many subdirectories each filled with their own header files.
+  </para>
+  <para>
+   If you are missing these headers, you may need to download a separate
+   binary package (some distributions don't include development files by
+   default since many users don't need them).  This separate package
+   probably has a name like <literal>regina-normal-dev</literal> or
+   <literal>regina-normal-devel</literal>.
+  </para>
+  <para>
+   If all else fails, you are of course welcome to
+   <link linkend="services">write and ask for assistance</link>.
+  </para>
+  <sect2>
+   <title>Other Required Software</title>
+   <para>
+    Since &regina; makes use of other external libraries, you may
+    find that you also need development files for these other libraries
+    installed.  Libraries whose development files you will need include
+    the following (all of which should be available with your &linux;
+    distribution).
+    <variablelist>
+     <varlistentry>
+      <term>zlib compression library
+       (<firstterm>libz</firstterm>)</term>
+      <listitem><para>
+       Known package names include
+       <literal>zlib1g-dev</literal>,
+       <literal>zlib1-devel</literal> and <literal>zlib-devel</literal>.
+       Original sources available from
+       <ulink url="http://www.gzip.org/zlib/"/>.
+      </para></listitem>
+     </varlistentry>
+     <varlistentry>
+      <term>&gnu; multiprecision arithmetic library
+       (<firstterm>libgmp</firstterm>)</term>
+      <listitem><para>
+       Known package names include
+       <literal>libgmp3-dev</literal>,
+       <literal>libgmp3-devel</literal>,
+       <literal>gmp-devel</literal> and <literal>gmp</literal>.
+       Original sources available from
+       <ulink url="ftp://ftp.gnu.org/gnu/gmp/"/>.
+      </para></listitem>
+     </varlistentry>
+     <varlistentry>
+      <term><acronym>GNOME</acronym> &xml; library
+       (<firstterm>libxml2</firstterm>)</term>
+      <listitem><para>
+       Known package names include
+       <literal>libxml2-dev</literal> and <literal>libxml2-devel</literal>.
+       Original sources available from
+       <ulink url="ftp://ftp.gnome.org/pub/gnome/sources/libxml2/"/>.
+      </para></listitem>
+     </varlistentry>
+    </variablelist>
+   </para>
+   <para>
+    You should install these additional development files using prebuilt
+    packages if at all possible.  They are available with almost all
+    &linux; distributions, and so there should be no need to visit the
+    individual websites listed above.
+   </para>
+  </sect2>
+ </sect1>
+
+ <sect1>
+  <title>Compiler and Linker Flags</title>
+  <para>
+   &regina; offers itself as a &cpp; library.  This means that if you
+   are programming in some other language, your language must be able to
+   talk with external &cpp; components.  We assume here that your code is
+   written in &cpp; (which of course means that this is not a problem).
+  </para>
+  <para>
+   Included with the development files is a small program called
+   <command>regina-engine-config</command>.  This program helps you to
+   decide which compiler flags are required when building your program
+   against the &regina; core libraries.
+  </para>
+  <para>
+   To find which additional compilation flags are required, you can run
+   <userinput>regina-engine-config --cflags</userinput>.  This is mainly
+   used to ensure that &regina;'s include files can be found.
+  </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-engine-config --cflags</userinput>
+    -I/usr/include -I/usr/include/libxml2
+    <prompt>example$</prompt>
+</screen>
+  <para>
+   For additional linker flags, you can run
+   <userinput>regina-engine-config --libs</userinput>.  These flags
+   ensure that your code links against &regina; and any other required
+   libraries.
+  </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-engine-config --libs</userinput>
+    -L/usr/lib -lregina-engine -lgmp -lm -lz
+    <prompt>example$</prompt>
+</screen>
+  <para>
+   The output of these commands may differ from machine to machine.
+   Thus you should not use the example output listed above, but instead
+   you should run the commands yourself.
+  </para>
+  <para>
+   Note that these compiler and linker flags are tailored to the
+   <productname>&gnu; &cpp; Compiler</productname>
+   (<application>g++</application>).  If you are using a
+   compiler with a significantly different style of command-line usage,
+   you may need to adjust the output of these commands accordingly.
+  </para>
+ </sect1>
+</chapter>
+

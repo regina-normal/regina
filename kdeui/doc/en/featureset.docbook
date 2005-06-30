@@ -357,6 +357,11 @@
    &python; scripting language described above.
    A variety of specialised utility programs are also available.
   </para>
+  <para>
+   The mathematical core of &regina; is provided as a &cpp; library,
+   which means that programmers are able to access these mathematical
+   routines directly from within their own code.
+  </para>
  </sect2>
 
  <sect2 id="features-docs">
