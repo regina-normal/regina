@@ -1236,6 +1236,41 @@
    </para></tip>
   </sect2>
 
+  <sect2 id="tri-extension">
+   <title>Extensions</title>
+
+   <para>
+    Sometimes one wishes to extend a triangulation beyond its boundary,
+    such as thickening the boundary, stretching it or adding new
+    topological components.
+   </para>
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Make Ideal</guimenuitem>
+    </menuchoice>
+    menu item performs one such task.  When this menu item is selected,
+    all real boundary components of the triangulation are converted into
+    ideal boundary components.
+   </para>
+   <para>
+    Specifically, each boundary component that is formed from two or
+    more boundary faces is converted into a single ideal vertex.  This
+    is done by gluing a tetrahedron to each boundary face, and then
+    gluing these tetrahedra together to mirror the ways in
+    which the boundary faces are joined.  The new vertices opposite
+    the boundary faces then become identified as a single ideal vertex.
+   </para>
+   <para>
+    One side-effect of this operation is that any spherical boundary
+    components become filled in with balls (since the new vertex
+    will have a spherical link, i.e., it will become an ordinary
+    internal vertex).  If the triangulation has no boundary faces (i.e.,
+    no real boundary components) then this operation does nothing.
+   </para>
+  </sect2>
+
   <sect2 id="tri-make0eff">
    <title>0-Efficiency</title>
 

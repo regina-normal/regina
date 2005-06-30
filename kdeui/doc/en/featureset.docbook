@@ -139,6 +139,10 @@
       (vertices whose links are neither 2-spheres nor discs);
      </para></listitem>
      <listitem><para>
+      Extension of the boundary to convert real boundary components into
+      ideal vertices;
+     </para></listitem>
+     <listitem><para>
       Conversion of a non-orientable triangulation to an orientable
       double cover;
      </para></listitem>

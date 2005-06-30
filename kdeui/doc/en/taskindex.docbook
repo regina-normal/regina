@@ -83,6 +83,8 @@
 
  <indexentry>
   <primaryie>boundary</primaryie>
+  <secondaryie><link linkend="tri-extension">extension from real to
+   ideal</link></secondaryie>
   <secondaryie><link linkend="surfaces-boundary">of a normal
    surface</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">of a
@@ -345,6 +347,12 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>extension</primaryie>
+  <secondaryie><link linkend="tri-extension">of a triangulation
+   boundary</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>face arc normal coordinates</primaryie>
   <seeie>(see coordinate systems)</seeie>
  </indexentry>
@@ -388,6 +396,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>finite boundary</primaryie>
+  <seeie>(see boundary)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="troubleshooting">frequently asked
    questions</link></primaryie>
  </indexentry>
@@ -416,10 +429,11 @@
 
  <indexentry>
   <primaryie>ideal vertices</primaryie>
+  <secondaryie><link linkend="tri-extension">creating from real boundary
+   components</link></secondaryie>
+  <secondaryie><link linkend="tri-propideal">testing for</link></secondaryie>
   <secondaryie><link linkend="tri-subdivision">truncating / converting
    to real boundary</link></secondaryie>
-  <secondaryie><link linkend="tri-propideal">testing
-   for</link></secondaryie>
   <secondaryie><link linkend="tri-vertextype">viewing</link></secondaryie>
  </indexentry>
 
@@ -806,6 +820,8 @@
    subdivision</link></secondaryie>
   <secondaryie><link linkend="tri-compbdrycomp">boundary components,
    viewing</link></secondaryie>
+  <secondaryie><link linkend="tri-extension">boundary,
+   converting real to ideal</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">boundary,
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-composition-composition">combinatorial
@@ -829,10 +845,12 @@
    group</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homology">homology
    groups</link></secondaryie>
-  <secondaryie><link linkend="tri-subdivision">ideal vertices,
-   truncation (ideal to finite)</link></secondaryie>
+  <secondaryie><link linkend="tri-extension">ideal vertices,
+   creation</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">ideal vertices,
    testing for</link></secondaryie>
+  <secondaryie><link linkend="tri-subdivision">ideal vertices,
+   truncation</link></secondaryie>
   <secondaryie><link linkend="tri-imported">importing from
    external files</link></secondaryie>
   <secondaryie><link linkend="tri-composition-isomorphism">isomorphism
