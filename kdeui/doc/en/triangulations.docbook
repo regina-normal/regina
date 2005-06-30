@@ -1187,7 +1187,7 @@
     The
     <menuchoice>
      <guimenu>Triangulation</guimenu>
-     <guimenuitem>Ideal to Finite</guimenuitem>
+     <guimenuitem>Truncate Ideal Vertices</guimenuitem>
     </menuchoice>
     menu item will convert the triangulation currently being viewed to
     a finite triangulation (one with no ideal vertices).  This is done by
@@ -1197,6 +1197,13 @@
     converted to a real boundary component (one made from boundary faces
     of tetrahedra).
    </para>
+   <note><para>
+    The <guimenuitem>Truncate Ideal Vertices</guimenuitem> operation
+    was called <guimenuitem>Ideal to Finite</guimenuitem> in previous
+    versions of &regina;.  It was renamed to avoid confusion since
+    operations are now available in both ideal-to-finite and
+    finite-to-ideal directions.
+   </para></note>
   </sect2>
 
   <sect2 id="tri-simplification">

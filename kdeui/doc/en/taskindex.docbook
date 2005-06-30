@@ -416,7 +416,7 @@
 
  <indexentry>
   <primaryie>ideal vertices</primaryie>
-  <secondaryie><link linkend="tri-subdivision">converting
+  <secondaryie><link linkend="tri-subdivision">truncating / converting
    to real boundary</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">testing
    for</link></secondaryie>
@@ -829,8 +829,8 @@
    group</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homology">homology
    groups</link></secondaryie>
-  <secondaryie><link linkend="tri-subdivision">ideal to finite,
-   conversion</link></secondaryie>
+  <secondaryie><link linkend="tri-subdivision">ideal vertices,
+   truncation (ideal to finite)</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">ideal vertices,
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-imported">importing from
@@ -858,6 +858,11 @@
 
  <indexentry>
   <primaryie><link linkend="troubleshooting">troubleshooting</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-subdivision">truncation of ideal
+   vertices</link></primaryie>
  </indexentry>
 
  <indexentry>
