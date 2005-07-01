@@ -140,7 +140,7 @@ NTriangulationCreator::NTriangulationCreator() {
     hArea->setStretchFactor(lensParams, 1);
     details->addWidget(hArea, TRI_LAYERED_LENS_SPACE);
 
-    type->insertItem(i18n("Seifert fibred space over 3-sphere"));
+    type->insertItem(i18n("Seifert fibred space over 2-sphere"));
     hArea = new QHBox();
     hArea->setSpacing(5);
     expln = i18n("<qt>The parameters "
