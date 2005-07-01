@@ -67,9 +67,9 @@
  *
  *  <h3>SnapPea Kernel</h3>
  *
- *  Since version 4.2 (December 2004), Regina includes portions of the
+ *  Since version 4.2 (July 2005), Regina includes portions of the
  *  SnapPea kernel which it uses for certain geometric calculations.
- *  SnapPea is copyright &copy; 1991-2000 by Jeff Weeks, who has graciously
+ *  SnapPea is copyright &copy; 1991-2005 by Jeff Weeks, who has graciously
  *  given permission for it to be distributed under the terms of the
  *  GNU General Public License as described above.
  *

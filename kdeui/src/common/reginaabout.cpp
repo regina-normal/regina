@@ -74,9 +74,9 @@ const char* ReginaAbout::regLicense =
     "with this program; if not, write to the Free Software Foundation, Inc.,\n"
     "59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n\n"
     "SNAPPEA KERNEL:\n\n"
-    "Since version 4.2 (December 2004), Regina includes portions of the\n"
+    "Since version 4.2 (July 2005), Regina includes portions of the\n"
     "SnapPea kernel which it uses for certain geometric calculations.\n"
-    "SnapPea is copyright (c) 1991-2000 by Jeff Weeks, who has graciously\n"
+    "SnapPea is copyright (c) 1991-2005 by Jeff Weeks, who has graciously\n"
     "given permission for it to be distributed under the terms of the GNU\n"
     "General Public License as described above.\n";
 

@@ -65,8 +65,8 @@ class NTriangulation;
  * interact with the SnapPea kernel other than through this class.
  *
  * Portions of the SnapPea kernel have been built into Regina as of
- * version 4.2.  SnapPea is copyright (c) 1991-2000 by Jeff Weeks, and is
- * distributed under the terms of the GNU General Public License.
+ * version 4.2 (July 2005).  SnapPea is copyright (c) 1991-2005 by Jeff Weeks,
+ * and is distributed under the terms of the GNU General Public License.
  *
  * See http://www.geometrygames.org/SnapPea/ for further information on
  * SnapPea.

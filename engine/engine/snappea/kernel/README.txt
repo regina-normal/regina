@@ -3,7 +3,7 @@ SnapPea Kernel
 
 This directory contains portions of the SnapPea kernel, version 3.0d3.
 
-SnapPea is copyright (c) 1991-2000 by Jeff Weeks, who has graciously
+SnapPea is copyright (c) 1991-2005 by Jeff Weeks, who has graciously
 given permission for it to be distributed under the terms of the
 GNU General Public License.  The full text of this license can be found
 in the file LICENSE.txt in Regina's top-level source directory.
