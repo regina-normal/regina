@@ -319,7 +319,7 @@ AC_SUBST(LIB_ENGINE)
 ###########################################################
 
 # Make a set of compilation flags without debugging symbols.
-CXXFLAGS_NODEBUG="`echo "$CXXFLAGS" | sed s/-g//`"
+CXXFLAGS_NODEBUG="`echo "$CXXFLAGS" | sed 's/-g[[0-9]]\? //'`"
 AC_SUBST(CXXFLAGS_NODEBUG)
 
 ###########################################################
