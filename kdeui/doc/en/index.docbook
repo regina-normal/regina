@@ -63,6 +63,7 @@
   <!ENTITY rhel "<productname>Red Hat Enterprise</productname>">
   <!ENTITY rhfedora "<productname>Red Hat</productname> /
    <productname>Fedora</productname>">
+  <!ENTITY SFSLong "Seifert Fibred Space">
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">

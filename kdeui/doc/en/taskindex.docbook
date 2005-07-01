@@ -344,6 +344,7 @@
   <primaryie>examples</primaryie>
   <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
+  <secondaryie><link linkend="tri-new-example">triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -845,6 +846,8 @@
    string, rehydrating</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
+  <secondaryie><link linkend="tri-new-example">examples,
+   creating</link></secondaryie>
   <secondaryie><link linkend="tri-facetype">faces,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-fundgroup">fundamental

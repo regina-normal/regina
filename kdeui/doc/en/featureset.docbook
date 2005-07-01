@@ -55,7 +55,10 @@
      <listitem><para>
       Importing triangulations saved from
       <ulink url="http://www.geometrygames.org/SnapPea/">&snappea;</ulink>
-      (the hyperbolic 3-manifold software written by Jeffrey Weeks).
+      (the hyperbolic 3-manifold software written by Jeffrey Weeks);
+     </para></listitem>
+     <listitem><para>
+      Automatic construction of several ready-made example triangulations.
      </para></listitem>
      </itemizedlist>
     </para>

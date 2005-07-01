@@ -66,13 +66,13 @@
    </sect3>
 
    <sect3 id="tri-sfs3">
-    <title>&sfslong;s</title>
+    <title>&SFSLong;</title>
 
     <para>
      This will create an orientable &sfslong; over the 2-sphere with at
      most three exceptional fibres.  &regina; will choose the simplest
-     construction based upon the given &sfslong; parameters.  Examples of
-     constructions that are used include
+     construction that it knows based upon the given &sfslong; parameters.
+     Examples of constructions that are used include
      <link linkend="tri-new-lens">layered lens spaces</link>,
      <link linkend="tri-new-loop">layered loops</link> and
      <link linkend="tri-new-aug">augmented &trists;</link>,
@@ -244,6 +244,18 @@
      in Burton's PhD thesis
      <xref linkend="bib-burton-phd"/>, which is available from the
      &regwebsite;.
+    </para>
+   </sect3>
+
+   <sect3 id="tri-new-example">
+    <title>Example Triangulation</title>
+
+    <para>
+     The <guilabel>New Triangulation</guilabel> dialog includes a small
+     selection of ready-made example triangulations that can be created
+     on the fly.
+     Simply select a 3-manifold from the list provided and the
+     corresponding triangulation will be created for you.
     </para>
    </sect3>
   </sect2>
