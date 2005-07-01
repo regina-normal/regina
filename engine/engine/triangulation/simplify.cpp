@@ -421,12 +421,22 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     for (i=0; i<2; i++) {
         top = tet[0]->getAdjacentTetrahedron(perm[0][i]);
         bottom = tet[1]->getAdjacentTetrahedron(perm[1][i]);
-        topFace = tet[0]->getAdjacentFace(perm[0][i]);
-        gluing = tet[1]->getAdjacentTetrahedronGluing(perm[1][i]) *
-            crossover * top->getAdjacentTetrahedronGluing(topFace);
-        tet[0]->unjoin(perm[0][i]);
-        tet[1]->unjoin(perm[1][i]);
-        top->joinTo(topFace, bottom, gluing);
+
+        if (! top) {
+            // Bottom face becomes boundary.
+            tet[1]->unjoin(perm[1][i]);
+        } else if (! bottom) {
+            // Top face becomes boundary.
+            tet[0]->unjoin(perm[0][i]);
+        } else {
+            // Bottom and top faces join.
+            topFace = tet[0]->getAdjacentFace(perm[0][i]);
+            gluing = tet[1]->getAdjacentTetrahedronGluing(perm[1][i]) *
+                crossover * top->getAdjacentTetrahedronGluing(topFace);
+            tet[0]->unjoin(perm[0][i]);
+            tet[1]->unjoin(perm[1][i]);
+            top->joinTo(topFace, bottom, gluing);
+        }
     }
 
     // Finally remove and dispose of the tetrahedra.

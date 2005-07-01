@@ -44,6 +44,8 @@ Version 4.2  [ under development ]
               make it easier to hard-code triangulations in source code.
             - Fixed vertex link calculations, which were previously
               incorrect if a triangulation contained invalid edges.
+            - Fixed bug in twoZeroMove() which caused a crash in some cases
+              involving triangulations with boundary.
         Class NTrivialTri:
             - Added recognition of one-tetrahedron balls.
     USER INTERFACE:
