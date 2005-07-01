@@ -22,6 +22,15 @@ License details:
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
 
+SnapPea copyright:
+    LICENSE.txt
+    engine/engine/docs.h
+    engine/engine/snappea/kernel/README.txt
+    engine/engine/snappea/nsnappeatriangulation.h
+    kdeui/doc/en/credits.docbook
+    kdeui/src/common/reginaabout.cpp
+    www/index.html
+
 Acknowledgements:
     kdeui/doc/en/credits.docbook
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
