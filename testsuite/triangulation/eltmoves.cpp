@@ -30,22 +30,40 @@
 #include <memory>
 #include <cppunit/extensions/HelperMacros.h>
 #include "manifold/nsimplesurfacebundle.h"
+#include "triangulation/nedge.h"
+#include "triangulation/nperm.h"
+#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nexampletriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
+using regina::NEdge;
+using regina::NPerm;
 using regina::NSimpleSurfaceBundle;
+using regina::NTetrahedron;
 using regina::NTriangulation;
 
 class ElementaryMovesTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ElementaryMovesTest);
 
-    CPPUNIT_TEST(twoZeroEdge);
+    CPPUNIT_TEST(twoZeroEdgeResult);
+    CPPUNIT_TEST(twoZeroEdgeInvalid);
 
     CPPUNIT_TEST_SUITE_END();
 
+    private:
+        // Tetrahedra 0 and 1 joined along faces 0 and 1 using the
+        // identity permutation.
+        NTriangulation base;
+
     public:
         void setUp() {
+            NTetrahedron* r = new NTetrahedron();
+            NTetrahedron* s = new NTetrahedron();
+            r->joinTo(0, s, NPerm());
+            r->joinTo(1, s, NPerm());
+            base.addTetrahedron(r);
+            base.addTetrahedron(s);
         }
 
         void tearDown() {
@@ -64,14 +82,23 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
         void verify20EdgeInvalid(NTriangulation* tri,
                 const std::string& caseName) {
-            for (long e = 0; e < tri->getNumberOfEdges(); e++)
+            bool found = false;
+            NEdge* edge;
+            for (unsigned long e = 0; e < tri->getNumberOfEdges(); e++) {
+                edge = tri->getEdge(e);
+                if (edge->getDegree() == 2 && ! edge->isBoundary())
+                    found = true;
                 CPPUNIT_ASSERT_MESSAGE(
                     "An illegal 2-0 edge move was allowed for the " +
                     caseName + " case",
                     ! tri->twoZeroMove(tri->getEdge(e)));
+            }
+            CPPUNIT_ASSERT_MESSAGE(
+                "No degree two edge was found for the " + caseName + " case.",
+                found);
         }
 
-        void twoZeroEdge() {
+        void twoZeroEdgeResult() {
             {
                 // A one-bdry-face case that Regina 4.1 used to crash on.
                 const int adjOrig[5][4] = {
@@ -111,6 +138,36 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             }
 
             {
+                // One face boundary, two more joined in a loop.
+                NTriangulation t;
+                t.insertTriangulation(base);
+                NTetrahedron* tet = t.getTetrahedron(0);
+                tet->joinTo(2, tet, NPerm(2, 3));
+                NTetrahedron* tet2 = new NTetrahedron();
+                t.getTetrahedron(1)->joinTo(2, tet2, NPerm());
+                t.addTetrahedron(tet2);
+
+                // Force a recalculation of the skeleton, since
+                // NTetrahedron routines such as getEdge() are oblivious
+                // to the encompassing triangulation.  There has got to
+                // be a better way.
+                t.getNumberOfEdges();
+
+                NEdge* e = tet->getEdge(regina::edgeNumber[0][1]);
+                CPPUNIT_ASSERT_MESSAGE(
+                    "Case boundary-loop-tet is malformed.",
+                    (! e->isBoundary()) && e->getDegree() == 1 &&
+                        t.isOrientable());
+
+                NTriangulation ball;
+                ball.addTetrahedron(new NTetrahedron());
+
+                verify20Edge(&t, 3, &ball, "boundary-loop-tet");
+            }
+        }
+
+        void twoZeroEdgeInvalid() {
+            {
                 // All four faces joined together in a simple loop.
                 NTriangulation* s2xs1 =
                     NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1)
@@ -126,6 +183,110 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     .construct();
                 verify20EdgeInvalid(s2xs1Twisted, "crossed-loop");
                 delete s2xs1Twisted;
+            }
+
+            {
+                // All four faces internal, but the two equatorial edges
+                // both boundary.
+                NTriangulation t;
+                t.insertTriangulation(base);
+                NTetrahedron* p = new NTetrahedron();
+                NTetrahedron* q = new NTetrahedron();
+                NTetrahedron* r = new NTetrahedron();
+                NTetrahedron* s = new NTetrahedron();
+                t.getTetrahedron(0)->joinTo(2, p, NPerm());
+                t.getTetrahedron(0)->joinTo(3, q, NPerm());
+                t.getTetrahedron(1)->joinTo(2, r, NPerm());
+                t.getTetrahedron(1)->joinTo(3, s, NPerm());
+                t.addTetrahedron(p);
+                t.addTetrahedron(q);
+                t.addTetrahedron(r);
+                t.addTetrahedron(s);
+
+                verify20EdgeInvalid(&t, "boundary-edges");
+            }
+
+            {
+                // All four faces internal, and the two equatorial edges
+                // internal but identified (sphere).
+                NTriangulation t;
+                t.insertTriangulation(base);
+                NTetrahedron* p = new NTetrahedron();
+                NTetrahedron* q = new NTetrahedron();
+                NTetrahedron* r = new NTetrahedron();
+                NTetrahedron* s = new NTetrahedron();
+                t.getTetrahedron(0)->joinTo(2, p, NPerm());
+                t.getTetrahedron(0)->joinTo(3, q, NPerm());
+                t.getTetrahedron(1)->joinTo(2, r, NPerm());
+                t.getTetrahedron(1)->joinTo(3, s, NPerm());
+                p->joinTo(3, r, NPerm());
+                q->joinTo(2, s, NPerm());
+                t.addTetrahedron(p);
+                t.addTetrahedron(q);
+                t.addTetrahedron(r);
+                t.addTetrahedron(s);
+
+                NEdge* e = t.getTetrahedron(0)->getEdge(
+                    regina::edgeNumber[0][1]);
+                CPPUNIT_ASSERT_MESSAGE(
+                    "Case identified-edges-S2 is malformed.",
+                    (! e->isBoundary()) && e->getDegree() == 6 &&
+                        t.isOrientable());
+
+                verify20EdgeInvalid(&t, "identified-edges-S2");
+            }
+
+            {
+                // All four faces internal, and the two equatorial edges
+                // internal but identified (RP2).
+                NTriangulation t;
+                t.insertTriangulation(base);
+                NTetrahedron* p = new NTetrahedron();
+                NTetrahedron* q = new NTetrahedron();
+                NTetrahedron* r = new NTetrahedron();
+                NTetrahedron* s = new NTetrahedron();
+                t.getTetrahedron(0)->joinTo(2, p, NPerm());
+                t.getTetrahedron(0)->joinTo(3, q, NPerm());
+                t.getTetrahedron(1)->joinTo(2, r, NPerm());
+                t.getTetrahedron(1)->joinTo(3, s, NPerm());
+                p->joinTo(3, r, NPerm(0, 1));
+                q->joinTo(2, s, NPerm(0, 1));
+                t.addTetrahedron(p);
+                t.addTetrahedron(q);
+                t.addTetrahedron(r);
+                t.addTetrahedron(s);
+
+                NEdge* e = t.getTetrahedron(0)->getEdge(
+                    regina::edgeNumber[0][1]);
+                CPPUNIT_ASSERT_MESSAGE(
+                    "Case identified-edges-RP2 is malformed.",
+                    (! e->isBoundary()) && e->getDegree() == 6 &&
+                        ! t.isOrientable());
+
+                verify20EdgeInvalid(&t, "identified-edges-RP2");
+            }
+
+            {
+                // Two faces boundary, the other joined in a loop.
+                NTriangulation t;
+                t.insertTriangulation(base);
+                NTetrahedron* tet = t.getTetrahedron(0);
+                tet->joinTo(2, tet, NPerm(2, 3));
+                t.gluingsHaveChanged();
+
+                // Force a recalculation of the skeleton, since
+                // NTetrahedron routines such as getEdge() are oblivious
+                // to the encompassing triangulation.  There has got to
+                // be a better way (TODO).
+                t.getNumberOfEdges();
+
+                NEdge* e = tet->getEdge(regina::edgeNumber[0][1]);
+                CPPUNIT_ASSERT_MESSAGE(
+                    "Case boundary-loop-boundary is malformed.",
+                    (! e->isBoundary()) && e->getDegree() == 1 &&
+                        t.isOrientable());
+
+                verify20EdgeInvalid(&t, "boundary-loop-boundary");
             }
         }
 };
