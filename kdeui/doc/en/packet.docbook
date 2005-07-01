@@ -406,6 +406,20 @@
      removed of such child-related constraints, and you will be able to
      edit this new clone instead.
     </para>
+    <para>
+     Packets that cannot be edited because of child constraints
+     (such as triangulations that contain normal surface lists)
+     will be marked with a small padlock in the packet tree.  This
+     can be seen for the figure eight knot complement in the
+     illustration below.
+    </para>
+    <screenshot>
+     <mediaobject>
+      <imageobject>
+       <imagedata fileref="padlock.png"/>
+      </imageobject>
+     </mediaobject>
+    </screenshot>
    </sect3>
   </sect2>
 

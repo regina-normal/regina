@@ -614,6 +614,12 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>padlock</primaryie>
+  <secondaryie><link linkend="packet-uneditable">in the packet
+   tree</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>&python; scripting</primaryie>
   <seeie>(see scripting)</seeie>
  </indexentry>

@@ -53,6 +53,10 @@
    such a triangulation, try cloning the packet (excluding descendants so
    the normal surfaces are not cloned as well) and edit the clone instead.
   </para>
+  <para>
+   Triangulations containing normal surface lists are marked with a small
+   padlock in the packet tree to remind you that they cannot be edited.
+  </para>
  </note>
 
  <sect1 id="surfaces-creation">
