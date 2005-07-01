@@ -53,6 +53,10 @@
 #include "triangulation/ncomponent.h"
 #include "triangulation/nboundarycomponent.h"
 
+// The following headers are necessary so that std::auto_ptr can invoke
+// destructors where necessary.
+#include "triangulation/nisomorphism.h"
+
 namespace regina {
 
 class NGroupPresentation;
