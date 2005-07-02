@@ -1,6 +1,8 @@
 regina-normal (4.2-1) unstable; urgency=low
 
   * New upstream release.
+  * Note that regina-normal now includes MPI support.  These packages are
+    built against the MPICH implementation of MPI.
 
  -- Ben Burton <bab@debian.org>  Mon, 17 Jan 2005 01:26:01 +1100
 

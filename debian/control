@@ -3,14 +3,14 @@ Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
 Build-Depends: libcppunit-dev, debhelper (>> 4.0.0), doxygen, kdelibs4-dev (>= 4:3.2.0), libboost-python-dev (>= 1.32.0), libgmp3-dev, libmpich1.0-dev, libpopt-dev, libxml2-dev, zlib1g-dev
-Build-Conflicts: regina-normal-dev (<< 4.1.3-0), regina-normal-dev (>= 4.1.4-0)
+Build-Conflicts: regina-normal-dev (<< 4.2-0), regina-normal-dev (>= 4.2.1-0)
 Standards-Version: 3.6.1
 
 Package: regina-normal
 Architecture: any
 Section: math
 Depends: ${shlibs:Depends}, ${perl:Depends}
-Suggests: gap, khelpcenter, konqueror, regina-normal-doc, regina-normal-dev, snappea
+Suggests: gap, khelpcenter, konqueror, mpich-bin, regina-normal-doc, regina-normal-dev, snappea
 Description: 3-manifold topology software with normal surface support
  Regina is a suite of mathematical software for 3-manifold topologists.
  It focuses upon the study of 3-manifold triangulations and includes
