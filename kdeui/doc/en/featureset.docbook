@@ -91,7 +91,10 @@
       types of normal surface, such as 0-efficiency <xref
       linkend="bib-0-efficiency"/>
       and the existence of splitting surfaces
-      (described <link linkend="features-splitting">below</link>).
+      (described <link linkend="features-splitting">below</link>);
+     </para></listitem>
+     <listitem><para>
+      Geometric properties, courtesy of the &snappea; kernel.
      </para></listitem>
     </itemizedlist>
    </para>

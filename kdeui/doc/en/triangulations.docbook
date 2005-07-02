@@ -987,7 +987,7 @@
    <title>&snappea; Calculations</title>
 
    <para>
-    &snappea; is an excellent piece of software written by Jeff Weeks
+    &snappea; is an excellent piece of software written by Jeffrey Weeks
     with a strong focus on hyperbolic 3-manifolds.  For further
     information on &snappea;, please visit its website at
     <ulink url="http://www.geometrygames.org/SnapPea/"/>.
@@ -1016,7 +1016,7 @@
      least one reason why.
     </para>
    </sect3>
-   <sect3>
+   <sect3 id="tri-snappea-info">
     <title>Available Information</title>
     <para>
      When the <guilabel>&snappea;</guilabel> tab is selected, the

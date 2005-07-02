@@ -434,6 +434,13 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>hyperbolic</primaryie>
+  <secondaryie><link linkend="tri-snappea-info">solution
+   type</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea-info">volume</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>ideal vertices</primaryie>
   <secondaryie><link linkend="tri-extension">creating from real boundary
    components</link></secondaryie>
@@ -733,8 +740,14 @@
 
  <indexentry>
   <primaryie>&snappea;</primaryie>
+  <secondaryie><link linkend="tri-snappea">calculations</link></secondaryie>
   <secondaryie><link linkend="tri-import-snappea">importing
    from</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>solution type</primaryie>
+  <seeie>(see hyperbolic solution type)</seeie>
  </indexentry>
 
  <indexentry id="idx-splitting-surfaces">
@@ -859,6 +872,8 @@
    group</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homology">homology
    groups</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea-info">hyperbolic solution
+   type</link></secondaryie>
   <secondaryie><link linkend="tri-extension">ideal vertices,
    creation</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">ideal vertices,
@@ -886,6 +901,7 @@
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
    invariants</link></secondaryie>
   <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
+  <secondaryie><link linkend="tri-snappea-info">volume</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -949,6 +965,11 @@
 
  <indexentry>
   <primaryie><link linkend="packet-view">viewing packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>volume</primaryie>
+  <seeie>(see hyperbolic volume)</seeie>
  </indexentry>
 
  <indexentry>
