@@ -4,9 +4,22 @@
   The mathematical core of &regina; is available as a shared library.
   This means that you can write your own &cpp; applications that make
   use of &regina;'s functionality, much like they might use any other
-  mathematical library.  The remainder of this chapter provides
+  mathematical library.  The main part of this chapter provides
   technical details on configuring the build environment to
   make this possible.
+ </para>
+ <para>
+  &regina;'s &cpp; library documentation is the same as the &python;
+  scripting reference, since the &python; interface aims to wrap this
+  library as transparently as possible.
+  You may view it through
+  <menuchoice>
+   <guimenu>Help</guimenu>
+   <guimenuitem>Python Reference</guimenuitem>
+  </menuchoice>
+  in the menu, or alternatively see the
+  <link linkend="python-docs">section on &python; scripting</link>
+  for other forms of access.
  </para>
  <para>
   Please note that &regina; is released under the &gnu; General Public

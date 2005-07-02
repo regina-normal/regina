@@ -28,7 +28,7 @@
   <sect2 id="licenses-snappea">
    <title>SnapPea Kernel</title>
    <para>
-    Since version 4.2 (July 2005), &regina; includes portions of the
+    Since version &snappeaintro;, &regina; includes portions of the
     &snappea; kernel which it uses for certain geometric calculations.
     &snappea; is copyright &copy; 1991&ndash;2005 by Jeff Weeks, who has
     graciously given permission for it to be distributed under the

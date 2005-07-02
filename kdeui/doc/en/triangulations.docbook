@@ -983,6 +983,116 @@
    </para>
   </sect2>
 
+  <sect2 id="tri-snappea">
+   <title>&snappea; Calculations</title>
+
+   <para>
+    &snappea; is an excellent piece of software written by Jeff Weeks
+    with a strong focus on hyperbolic 3-manifolds.  For further
+    information on &snappea;, please visit its website at
+    <ulink url="http://www.geometrygames.org/SnapPea/"/>.
+   </para>
+   <para>
+    Since version &snappeaintro;, portions of the &snappea; kernel
+    have been built into &regina;.  As a result, more information about
+    the geometries of triangulations and their underlying 3-manifolds is
+    available.  This information is presented in the
+    <guilabel>&snappea;</guilabel> tab in the triangulation viewer.
+   </para>
+   <sect3>
+    <title>Triangulation Constraints</title>
+    <para>
+     &snappea; calculations are not available for all
+     triangulations.  In fact, a triangulation must satisfy several
+     constraints before &regina; will even try to pass it to &snappea;
+     for processing.  This is a conservative decision on &regina;'s part,
+     and in no way reflects a bug in &snappea;'s code.
+    </para>
+    <para>
+     Amongst other constraints, a triangulation must have no boundary
+     faces and every vertex must have a torus or Klein bottle link.
+     If &snappea; calculations are not available, the
+     <guilabel>&snappea;</guilabel> tab will include a note giving at
+     least one reason why.
+    </para>
+   </sect3>
+   <sect3>
+    <title>Available Information</title>
+    <para>
+     When the <guilabel>&snappea;</guilabel> tab is selected, the
+     &snappea; kernel attempts to solve for a complete hyperbolic
+     structure.  The following results are then presented.
+     <glosslist>
+      <glossentry>
+       <glossterm>Solution Type</glossterm>
+       <glossdef><para>
+        This summarises the type of solution that was found.
+        Possible solution types are as follows.
+        <glosslist>
+         <glossentry>
+          <glossterm>Tetrahedra positively oriented</glossterm>
+          <glossdef><para>
+           All tetrahedra are either positively oriented or flat, though the
+           entire solution is not flat and no tetrahedra are degenerate.
+          </para></glossdef>
+         </glossentry>
+         <glossentry>
+          <glossterm>Contains negatively oriented tetrahedra</glossterm>
+          <glossdef><para>
+           The volume is positive, but some tetrahedra are negatively oriented.
+          </para></glossdef>
+         </glossentry>
+         <glossentry>
+          <glossterm>All tetrahedra flat</glossterm>
+          <glossdef><para>
+           All tetrahedra are flat, but none have shape 0, 1 or infinity.
+          </para></glossdef>
+         </glossentry>
+         <glossentry>
+          <glossterm>Contains degenerate tetrahedra</glossterm>
+          <glossdef><para>
+           At least one tetrahedron has shape 0, 1 or infinity.
+          </para></glossdef>
+         </glossentry>
+         <glossentry>
+          <glossterm>Unrecognised solution type</glossterm>
+          <glossdef><para>
+           The volume is zero or negative, but the solution is
+           neither flat nor degenerate.
+          </para></glossdef>
+         </glossentry>
+         <glossentry>
+          <glossterm>No solution found</glossterm>
+          <glossdef><para>
+           The gluing equations could not be solved.
+          </para></glossdef>
+         </glossentry>
+        </glosslist>
+       </para>
+       <para>
+        Note that the details above are available by selecting
+        <menuchoice>
+         <guimenu>Help</guimenu>
+         <guimenuitem>What's This?</guimenuitem>
+        </menuchoice>
+        from the menu and clicking on the particular solution type
+        being displayed.
+       </para></glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Volume</glossterm>
+       <glossdef><para>
+        This lists the volume of the underlying 3-manifold, along with the
+        estimated number of decimal places of accuracy.  Note that the
+        accuracy measure is an estimate only (based on the differences
+        between terms in Newton's method).
+       </para></glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+  </sect2>
+
   <sect2 id="tri-censuslookup">
    <title>Census Lookup</title>
 

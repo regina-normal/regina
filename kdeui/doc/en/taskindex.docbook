@@ -63,6 +63,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>&api; documentation</primaryie>
+  <seeie>(see documentation)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-new-aug">augmented triangular solid
    torus, creation</link></primaryie>
  </indexentry>
