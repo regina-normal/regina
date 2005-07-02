@@ -82,10 +82,13 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     validGrid->setColStretch(4, 1);
 
     QString msg;
+    int align = Qt::AlignTop | Qt::AlignAuto | Qt::ExpandTabs;
 
     solutionTypeLabel = new QLabel(i18n("Solution type:"), dataValid);
+    solutionTypeLabel->setAlignment(align);
     validGrid->addWidget(solutionTypeLabel, 0, 1);
     solutionType = new QLabel(dataValid);
+    solutionType->setAlignment(align);
     validGrid->addWidget(solutionType, 0, 3);
     solutionTypeExplnBase = i18n("The type of solution that was found "
         "when solving for a complete hyperbolic structure.");
@@ -93,8 +96,10 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     QWhatsThis::add(solutionType, solutionTypeExplnBase);
 
     label = new QLabel(i18n("Volume:"), dataValid);
+    label->setAlignment(align);
     validGrid->addWidget(label, 1, 1);
     volume = new QLabel(dataValid);
+    volume->setAlignment(align);
     validGrid->addWidget(volume, 1, 3);
     msg = i18n("The volume of the underlying 3-manifold.  The estimated "
         "number of decimal places of accuracy is also shown.");
