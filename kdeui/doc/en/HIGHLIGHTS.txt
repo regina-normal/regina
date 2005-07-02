@@ -8,7 +8,33 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.2  [ under development ]
+Version 4.2  [ 7 July, 2005 ]
+
+    Features:
+        - Includes portions of the SnapPea kernel!  Thanks again to
+          Jeff Weeks.  SnapPea calculations appear in the "SnapPea" tab
+          in the triangulation viewer.
+        - Several example triangulations added to the "New
+          Triangulation" dialog.
+        - Triangulations can be exported to C++ source code.
+        - New MPI-enabled census generation tool for use on clusters
+          (tricensus-mpi).
+        - New regina-engine-config scripts makes it easier to build
+          Regina's mathematical core into your own applications.
+    Improvements:
+        - Build scripts improved to work out-of-the-box in more diverse
+          build environments.
+        - Renamed "Ideal to Finite" to "Truncate Ideal Vertices".
+        - Uneditable packets now show a padlock in the visual packet tree.
+        - Better recognition of small triangulations, including some
+          very small SnapPea census triangulations.
+    Bug Fixes:
+        - Fixed bug in which output from newer versions of GAP could not
+          be understood.
+        - Fixed a couple of crashes (keypress in a table of normal
+          surfaces; 2-0 edge move involving boundary).
+        - Fixed vertex link calculations, which were previously
+          incorrect if a triangulation contained invalid edges.
 
 Version 4.1.3  [ 25 July, 2004 ]
 
