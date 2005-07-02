@@ -11,22 +11,21 @@ Version 4.2  [ 7 July, 2005 ]
 
     ENGINE:
         Overall structure:
-            - Included portions of the SnapPea kernel (thanks again to
-              Jeff Weeks).
+            - Included portions of the SnapPea kernel!  Thanks again to
+              Jeff Weeks for his support.
             - Added a regina-engine-config script to make it easier to
-              build Regina into other applications.
+              build Regina's calculation engine into other applications.
         Class NExampleTriangulation:
             - Added to facilitate construction of several different
-              sample triangulations.
+              ready-made sample triangulations.
         Class NFacePairing:
             - New routine hasWedgedDoubleEndedChain.
         Class NLayeredSolidTorus:
             - New routine isLayeredSolidTorus for classifying an entire
               triangulation component.
         Class NPacketListener:
-            - Added an extra boolean argument to childWasRemoved() to
-              indicate the situation in which the parent is also being
-              destroyed.
+            - Added an extra boolean argument to childWasRemoved() to indicate
+              the situation in which the parent is also being destroyed.
         Class NSnapPeaCensusManifold, NSnapPeaCensusTri:
             - Added to aid recognition of very small SnapPea census
               triangulations.
@@ -67,7 +66,7 @@ Version 4.2  [ 7 July, 2005 ]
         - Updated libtool to version 1.5a.  Hopefully this will make
           things better for Darwin/Fink.
         - Verify in the configure script that shared libraries are
-          enabled where needed (i.e., in the KDE and Python interfaces).
+          enabled where necessary (i.e., in the KDE and Python interfaces).
         - Better magic in the configure script for finding the correct
           boost.python libraries.
         - Fixed a bug in the configure script whereby -g stripping was
