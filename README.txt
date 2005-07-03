@@ -86,6 +86,7 @@ built, a reason will be given earlier in the "./configure" output.
     checking whether to build the KDE user interface... yes
     checking whether to build the Python interface... no
     checking whether to build command-line utilities... yes
+    checking whether to build MPI-enabled utilities... yes
     checking whether to build the test suite... yes
     checking whether to build calculation engine docs... yes
     configure: creating ./config.status
