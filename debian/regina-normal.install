@@ -6,7 +6,7 @@ usr/lib/kde3/libreginapart.so
 usr/lib/kde3/libreginapart.la
 usr/lib/regina-normal/python/regina.so
 usr/lib/regina-normal/python/regina.la
-usr/share/applnk
+usr/share/applications
 usr/share/apps/regina
 usr/share/apps/reginapart
 usr/share/doc/kde/HTML

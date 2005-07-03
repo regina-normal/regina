@@ -233,6 +233,7 @@ if test "$should_build" = "yes"; then
   KDE_USE_QT(3.2, [>= Qt 3.2], [QT_VERSION >= 0x030200])
   AC_PATH_KDE
   REGINA_CHECK_KDE_MODULEDIR
+  REGINA_CHECK_KDE_VERSION
 else
   # There are some tests from AC_PATH_KDE that need to be run regardless.
   AC_CHECK_FUNCS([vsnprintf snprintf])

@@ -29,8 +29,7 @@ regina_kde_SOURCES = \
 	reginapref.cpp \
 	reginaiface.skel
 
-shelldesktopdir   = $(kde_appsdir)/Applications
-shelldesktop_DATA = regina.desktop
+xdg_apps_DATA = regina.desktop
 
 shelldatadir = $(kde_datadir)/regina
 shelldata_DATA = reginamain.rc tips

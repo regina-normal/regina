@@ -65,7 +65,9 @@ Version 4.2  [ 7 July, 2005 ]
     BUILD ENVIRONMENT:
         - Updated libtool to version 1.5a.  Hopefully this will make
           things better for Darwin/Fink.
-        - Verify in the configure script that shared libraries are
+        - Requires KDE >= 3.2, so that the XDG applications directory can
+          be used for the desktop file.
+        - Verifies in the configure script that shared libraries are
           enabled where necessary (i.e., in the KDE and Python interfaces).
         - Better magic in the configure script for finding the correct
           boost.python libraries.

@@ -134,6 +134,36 @@ END
 ])
 
 dnl
+dnl    REGINA_CHECK_KDE_VERSION
+dnl
+dnl    Ensures that Regina is building against a new enough version of KDE.
+dnl    If the current KDE version is too old, this routine generates a fatal
+dnl    error.
+dnl
+dnl    Example: REGINA_CHECK_KDE_VERSION
+dnl
+AC_DEFUN([REGINA_CHECK_KDE_VERSION], [
+  AC_MSG_CHECKING([for KDE newer than 3.1.90])
+  AC_LANG_PUSH(C++)
+  regina_save_cxxflags="$CXXFLAGS"
+  CXXFLAGS="$CXXFLAGS $all_includes"
+  AC_TRY_COMPILE([
+    #include <kdeversion.h>
+  ], [
+    #if ! (KDE_IS_VERSION(3, 1, 90))
+    #error KDE_VERSION_TOO_OLD
+    #endif
+  ], [
+    AC_MSG_RESULT([yes])
+  ], [
+    AC_MSG_RESULT([no])
+    AC_MSG_ERROR([KDE version >= 3.1.90 is required.  Your version appears to be too old.])
+  ])
+  CXXFLAGS="$regina_save_cxxflags"
+  AC_LANG_POP(C++)
+])
+
+dnl
 dnl    REGINA_CXX_PARTIAL_SPECIALISATION
 dnl
 dnl    Ensures that the C++ compiler supports partial specialisation.

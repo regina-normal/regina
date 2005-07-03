@@ -25,7 +25,8 @@ BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: gmp-devel
-BuildRequires: kdelibs-devel
+BuildRequires: kdelibs-devel >= 3.2
+BuildRequires: lam
 BuildRequires: libselinux-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
@@ -89,8 +90,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/regina/python/regina.la
 %{_libdir}/regina/python/regina.so
 %{_docdir}/HTML/en/regina
-# %{_datadir}/applications/*
-%{_datadir}/applnk/*/*
+%{_datadir}/applications/kde/*
 %{_datadir}/apps/regina
 %{_datadir}/apps/reginapart
 %{_datadir}/icons/*/*/*/*
@@ -100,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/*
 
 %changelog
-* Sat Dec 4 2004 Ben Burton <bab@debian.org> 4.2
+* Thu Jul 7 2005 Ben Burton <bab@debian.org> 4.2
 - New upstream release.
 
 * Sun Jul 25 2004 Ben Burton <bab@debian.org> 4.1.3
