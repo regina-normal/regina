@@ -23,15 +23,16 @@ BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: libboost1-devel
-BuildRequires: libcppunit1.8-devel
+BuildRequires: libcppunit2-devel
 BuildRequires: libgmp3-devel
 BuildRequires: libkdecore4-devel
 BuildRequires: libmpich1-devel
-BuildRequires: libpython2.3-devel
+BuildRequires: libpython2.4-devel
 BuildRequires: libqt3-devel >= 3.2
 BuildRequires: libselinux1-devel
-BuildRequires: libstdc++5-devel
+BuildRequires: libstdc++6-devel
 BuildRequires: libxml2-devel
+BuildRequires: mpic++
 BuildRequires: popt-devel
 BuildRequires: zlib1-devel
 
