@@ -55,6 +55,13 @@ install: build
 	# Main install.
 	$(MAKE) install DESTDIR=`pwd`/$(tmp)
 
+	# Make sure MPI support was enabled.
+	if ! test -e $(tmp)/usr/bin/tricensus-mpi; then \
+	  echo "ERROR: MPI utilities were not built and installed."; \
+	  echo "       Check your configure options."; \
+	  /bin/false; \
+	fi
+
 	# Split into separate binary packages.
 	dh_install --sourcedir=debian/tmp --list-missing
 

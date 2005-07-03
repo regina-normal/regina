@@ -21,8 +21,8 @@ calculation engine into your own projects, you will probably want the
 calculation engine API documentation.  This is provided in the separate
 package regina-normal-doc.
 
-Headers and other development files required for building the Regina
+Headers and other development files required for building Regina's C++
 calculation engine into your own projects are provided by the package
 regina-normal-dev.
 
- -- Ben Burton <bab@debian.org>, Fri, 10 Oct 2003 20:46:12 +1000
+ -- Ben Burton <bab@debian.org>, Sun,  3 Jul 2005 18:35:25 +1000
