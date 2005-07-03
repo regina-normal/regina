@@ -15,11 +15,12 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdelibs3
 Requires: kdebase3
-# Requires: python
+Requires: mpich
+Requires: python
 Conflicts: regina
 
-# BuildRequires: boost
-# BuildRequires: boost-devel
+BuildRequires: boost
+BuildRequires: boost-devel
 BuildRequires: cppunit
 BuildRequires: cppunit-devel
 BuildRequires: doxygen
@@ -27,12 +28,14 @@ BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: gmp
-BuildRequires: kdelibs3-devel
+BuildRequires: kdelibs3-devel >= 3.2
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
+BuildRequires: mpich
+BuildRequires: mpich-devel
 BuildRequires: popt
 BuildRequires: popt-devel
-# BuildRequires: python-devel
+BuildRequires: python-devel
 BuildRequires: qt3-devel >= 3.2
 BuildRequires: zlib-devel
 
@@ -52,12 +55,6 @@ Highlights of Regina include triangulation analysis and simplification,
 census creation and normal surface enumeration.  It offers embedded
 Python scripting giving full access to the calculation engine.
 
-Note that Python scripting has been disabled in this package because of
-problems with SuSE 9.1's C++ compiler.  It appears that SuSE has modified
-their C++ compiler in a way that inadvertently breaks any code using
-Boost.Python.  Hopefully these problems will be fixed in future SuSE
-releases, at which point Regina scripting for SuSE will be re-enabled.
-
 %prep
 %setup -n regina-%{version}
 
@@ -65,7 +62,7 @@ releases, at which point Regina scripting for SuSE will be re-enabled.
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
-./configure --disable-debug --includedir=%{_includedir} --mandir=%{_mandir} --disable-python
+./configure --disable-debug --includedir=%{_includedir} --mandir=%{_mandir}
 make
 make check
 
@@ -78,7 +75,7 @@ make install-strip DESTDIR=$RPM_BUILD_ROOT
 ln -s /opt/kde3/share/regina $RPM_BUILD_ROOT/usr/share/regina
 
 # Delete some huge and unnecessary static libraries.
-# rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/libreginapart.a
 
 %post -p /sbin/ldconfig
@@ -102,11 +99,10 @@ rm -rf $RPM_BUILD_ROOT
 # Make sure we don't ship unwanted static libs by accident.
 %{_libdir}/kde3/libreginapart.la
 %{_libdir}/kde3/libreginapart.so
-# %{_libdir}/regina/python/regina.la
-# %{_libdir}/regina/python/regina.so
+%{_libdir}/regina/python/regina.la
+%{_libdir}/regina/python/regina.so
 %{_docdir}/HTML/en/regina
-# %{_datadir}/applications/*
-%{_datadir}/applnk/*/*
+%{_datadir}/applications/kde/*
 %{_datadir}/apps/regina
 %{_datadir}/apps/reginapart
 %{_datadir}/icons/*/*/*/*
@@ -118,8 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/regina
 
 %changelog
-* Sat Dec 4 2004 Ben Burton <bab@debian.org> 4.2
+* Thu Jul 7 2005 Ben Burton <bab@debian.org> 4.2
 - New upstream release.
+- Reenabled Python scripting for SuSE >= 9.2.
 
 * Sun Jul 25 2004 Ben Burton <bab@debian.org> 4.1.3
 - New upstream release.

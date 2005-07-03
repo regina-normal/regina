@@ -15,6 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdelibs
 Requires: kdebase
+Requires: lam
 Requires: python
 Conflicts: regina
 

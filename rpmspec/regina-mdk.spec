@@ -14,20 +14,22 @@ Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdebase-progs
-# Requires: python
+Requires: mpich
+Requires: python
 Conflicts: regina
 
 BuildRequires: doxygen
 BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: glibc-devel
-# BuildRequires: libboost1-devel
+BuildRequires: libboost1-devel
 BuildRequires: libcppunit1.8-devel
 BuildRequires: libgmp3-devel
 BuildRequires: libkdecore4-devel
-# BuildRequires: libpython2.3-devel
+BuildRequires: libmpich1-devel
+BuildRequires: libpython2.3-devel
 BuildRequires: libqt3-devel >= 3.2
-# BuildRequires: libselinux1-devel
+BuildRequires: libselinux1-devel
 BuildRequires: libstdc++5-devel
 BuildRequires: libxml2-devel
 BuildRequires: popt-devel
@@ -44,11 +46,6 @@ Highlights of Regina include triangulation analysis and simplification,
 census creation and normal surface enumeration.  It offers embedded
 Python scripting giving full access to the calculation engine.
 
-Note that Python scripting has been disabled in this package because of
-problems with Mandrake 10.0's Boost.Python packaging.  These problems
-have been acknowledged and will be fixed for future Mandrake releases,
-at which point Regina scripting for Mandrake will be re-enabled.
-
 %prep
 %setup -n regina-%{version}
 
@@ -57,7 +54,7 @@ unset QTDIR || : ; . /etc/profile.d/qtdir3.sh
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
-./configure --disable-debug --mandir=%{_mandir} --disable-python
+./configure --disable-debug --mandir=%{_mandir}
 make
 make check
 
@@ -66,7 +63,7 @@ rm -rf $RPM_BUILD_ROOT
 make install-strip DESTDIR=$RPM_BUILD_ROOT
 
 # Delete some huge and unnecessary static libraries.
-# rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/regina/python/regina.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/libreginapart.a
 
 # Create the Mandrake menu file.
@@ -109,11 +106,10 @@ rm -rf $RPM_BUILD_ROOT
 # Make sure we don't ship unwanted static libs by accident.
 %{_libdir}/kde3/libreginapart.la
 %{_libdir}/kde3/libreginapart.so
-# %{_libdir}/regina/python/regina.la
-# %{_libdir}/regina/python/regina.so
+%{_libdir}/regina/python/regina.la
+%{_libdir}/regina/python/regina.so
 %{_docdir}/HTML/en/regina
-# %{_datadir}/applications/*
-%{_datadir}/applnk/*/*
+%{_datadir}/applications/kde/*
 %{_datadir}/apps/regina
 %{_datadir}/apps/reginapart
 %{_datadir}/icons/*/*/*/*
@@ -128,8 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/%{name}.png
 
 %changelog
-* Sat Dec 4 2004 Ben Burton <bab@debian.org> 4.2
+* Thu Jul 7 2005 Ben Burton <bab@debian.org> 4.2
 - New upstream release.
+- Reenabled Python scripting for Mandrake >= 10.1.
 
 * Sun Jul 25 2004 Ben Burton <bab@debian.org> 4.1.3
 - New upstream release.
