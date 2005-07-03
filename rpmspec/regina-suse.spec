@@ -15,7 +15,6 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdelibs3
 Requires: kdebase3
-Requires: mpich
 Requires: python
 Conflicts: regina
 

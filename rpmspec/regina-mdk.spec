@@ -14,7 +14,6 @@ Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
 Requires: kdebase-progs
-Requires: mpich
 Requires: python
 Conflicts: regina
 
