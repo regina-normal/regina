@@ -153,10 +153,10 @@ class NVectorMatrixRow : public NVectorMatrix<T> {
                 NVectorMatrix<T>(matrix, whichRow) {
         }
         virtual unsigned size() const {
-            return source.columns();
+            return this->source.columns();
         }
         virtual const T& operator[](unsigned index) const {
-            return source.entry(rowCol, index);
+            return this->source.entry(this->rowCol, index);
         }
 };
 
@@ -185,10 +185,10 @@ class NVectorMatrixCol : public NVectorMatrix<T> {
                 NVectorMatrix<T>(matrix, whichCol) {
         }
         virtual unsigned size() const {
-            return source.rows();
+            return this->source.rows();
         }
         virtual const T& operator[](unsigned index) const {
-            return source.entry(index, rowCol);
+            return this->source.entry(index, this->rowCol);
         }
 };
 

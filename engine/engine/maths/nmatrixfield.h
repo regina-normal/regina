@@ -94,8 +94,8 @@ class NMatrixField : public NMatrixRing<T> {
          * @param factor the factor by which to divide the given row.
          */
         void divRow(unsigned long row, T factor) {
-            for (unsigned long i = 0; i < nCols; i++)
-                data[row][i] /= factor;
+            for (unsigned long i = 0; i < this->nCols; i++)
+                this->data[row][i] /= factor;
         }
         /**
          * Divides the given column by the given factor.
@@ -109,8 +109,8 @@ class NMatrixField : public NMatrixRing<T> {
          * @param factor the factor by which to divide the given column.
          */
         void divCol(unsigned long column, T factor) {
-            for (unsigned long i = 0; i < nRows; i++)
-                data[i][column] /= factor;
+            for (unsigned long i = 0; i < this->nRows; i++)
+                this->data[i][column] /= factor;
         }
 
         /**
@@ -127,19 +127,20 @@ class NMatrixField : public NMatrixRing<T> {
          * M will be a square matrix of size rows().
          */
         NMatrixField<T>* diagonaliseRow() {
-            NMatrixField<T>* ans = new NMatrixField(nRows, nRows);
+            NMatrixField<T>* ans = new NMatrixField(this->nRows, this->nRows);
             ans->makeIdentity();
 
             unsigned long doneRow = 0;
             unsigned long doneCol = 0;
 
             unsigned long row;
-            while (doneCol < nCols && doneRow < nRows) {
+            while (doneCol < this->nCols && doneRow < this->nRows) {
                 // Is there a non-zero value in this column?
                 row = doneRow;
-                while (row < nRows && data[row][doneCol] == zero)
+                while (row < this->nRows &&
+                        this->data[row][doneCol] == NMatrixRing<T>::zero)
                     row++;
-                if (row == nRows) {
+                if (row == this->nRows) {
                     // All zeroes in this column.
                     doneCol++;
                     continue;
@@ -147,22 +148,22 @@ class NMatrixField : public NMatrixRing<T> {
                 // Move the non-zero to the top.
                 if (row != doneRow) {
                     ans->swapRows(row, doneRow);
-                    swapRows(row, doneRow);
+                    NMatrixRing<T>::swapRows(row, doneRow);
                 }
 
                 // Make the non-zero entry one.
-                if (! (data[doneRow][doneCol] == one)) {
-                    ans->divRow(doneRow, data[doneRow][doneCol]);
-                    divRow(doneRow, data[doneRow][doneCol]);
+                if (! (this->data[doneRow][doneCol] == NMatrixRing<T>::one)) {
+                    ans->divRow(doneRow, this->data[doneRow][doneCol]);
+                    divRow(doneRow, this->data[doneRow][doneCol]);
                 }
 
                 // Make every other entry in this column zero.
-                for (row = 0; row < nRows; row++) {
+                for (row = 0; row < this->nRows; row++) {
                     if (row == doneRow)
                         continue;
-                    if (! (data[row][doneCol] == zero)) {
-                        ans->addRow(doneRow, row, -data[row][doneCol]);
-                        addRow(doneRow, row, -data[row][doneCol]);
+                    if (! (this->data[row][doneCol] == NMatrixRing<T>::zero)) {
+                        ans->addRow(doneRow, row, -(this->data[row][doneCol]));
+                        addRow(doneRow, row, -(this->data[row][doneCol]));
                     }
                 }
 

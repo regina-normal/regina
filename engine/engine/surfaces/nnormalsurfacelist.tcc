@@ -34,16 +34,15 @@ namespace regina {
 
 #define __FLAVOUR_REGISTRY_BODY
 #define REGISTER_FLAVOUR(id_name, class, n, a, t) \
-    case NNormalSurfaceList::id_name: \
-        class::createNonNegativeCone(triangulation, rays, faces); break;
+    else if (flavour == NNormalSurfaceList::id_name) \
+        class::createNonNegativeCone(triangulation, rays, faces);
 
 template <class RayOutputIterator, class FaceOutputIterator>
 void createNonNegativeCone(NTriangulation* triangulation, int flavour,
         RayOutputIterator rays, FaceOutputIterator faces) {
-    switch(flavour) {
-        // Import cases from the flavour registry.
-        #include "surfaces/flavourregistry.h"
-    }
+    if (0) {}
+    // Import cases from the flavour registry.
+    #include "surfaces/flavourregistry.h"
 }
 
 #undef REGISTER_FLAVOUR

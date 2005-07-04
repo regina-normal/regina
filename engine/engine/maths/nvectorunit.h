@@ -98,8 +98,9 @@ class NVectorUnit : public NVector<T> {
                 vectorSize(newVectorSize), direction(coordinate) {
         }
         virtual NVector<T>* clone() const {
-            NVector<T>* ans = new NVectorDense<T>(vectorSize, zero);
-            ans->setElement(direction, one);
+            NVector<T>* ans = new NVectorDense<T>(vectorSize,
+                NVector<T>::zero);
+            ans->setElement(direction, NVector<T>::one);
             return ans;
         }
         virtual unsigned size() const {
@@ -107,9 +108,9 @@ class NVectorUnit : public NVector<T> {
         }
         virtual const T& operator[](unsigned index) const {
             if (index == direction)
-                return one;
+                return NVector<T>::one;
             else
-                return zero;
+                return NVector<T>::zero;
         }
         virtual void setElement(unsigned, const T&) {
             throw NVectorUnit_Illegal_Modification();
@@ -134,10 +135,10 @@ class NVectorUnit : public NVector<T> {
             throw NVectorUnit_Illegal_Modification();
         }
         virtual T norm() const {
-            return one;
+            return NVector<T>::one;
         }
         virtual T elementSum() const {
-            return one;
+            return NVector<T>::one;
         }
         virtual void addCopies(const NVector<T>&, const T&) {
             throw NVectorUnit_Illegal_Modification();

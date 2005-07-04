@@ -44,6 +44,35 @@ namespace regina {
  * @{
  */
 
+template <class T>
+class NVector;
+
+// The operator << template needs to be defined before NVector itself.
+// Otherwise the friend declaration inside the NVector class does not
+// compile under gcc4.
+
+/**
+ * Writes the given vector to the given output stream.
+ * The vector will be written on a single line with elements separated
+ * by a single space.  No newline will be written.
+ *
+ * \ifacespython Not present.
+ *
+ * @param out the output stream to which to write.
+ * @param vector the vector to write.
+ * @return a reference to \a out.
+ */
+template <class T>
+std::ostream& operator << (std::ostream& out, const NVector<T>& vector) {
+    unsigned size = vector.size();
+    if (size == 0)
+        return out;
+    out << vector[0];
+    for (unsigned i=1; i<size; i++)
+        out << ' ' << vector[i];
+    return out;
+}
+
 /**
  * A vector of elements from a given ring T.
  * Various mathematical vector operations are available.
@@ -292,28 +321,6 @@ class NVector {
     friend std::ostream& operator << <> (std::ostream& out,
         const NVector<T>& vector);
 };
-
-/**
- * Writes the given vector to the given output stream.
- * The vector will be written on a single line with elements separated
- * by a single space.  No newline will be written.
- *
- * \ifacespython Not present.
- *
- * @param out the output stream to which to write.
- * @param vector the vector to write.
- * @return a reference to \a out.
- */
-template <class T>
-std::ostream& operator << (std::ostream& out, const NVector<T>& vector) {
-    unsigned size = vector.size();
-    if (size == 0)
-        return out;
-    out << vector[0];
-    for (unsigned i=1; i<size; i++)
-        out << ' ' << vector[i];
-    return out;
-}
 
 template <class T>
 T NVector<T>::zero(0L);

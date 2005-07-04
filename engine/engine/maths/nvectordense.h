@@ -139,7 +139,7 @@ class NVectorDense : public NVector<T> {
                 elements[i] -= other[i];
         }
         virtual void operator *= (const T& factor) {
-            if (factor == one)
+            if (factor == NVector<T>::one)
                 return;
             for (unsigned i=0; i<vectorSize; i++)
                 elements[i] *= factor;
@@ -150,13 +150,13 @@ class NVectorDense : public NVector<T> {
         }
         virtual void addCopies(const NVector<T>& other,
                 const T& multiple) {
-            if (multiple == zero)
+            if (multiple == NVector<T>::zero)
                 return;
-            if (multiple == one) {
+            if (multiple == NVector<T>::one) {
                 (*this) += other;
                 return;
             }
-            if (multiple == minusOne) {
+            if (multiple == NVector<T>::minusOne) {
                 (*this) -= other;
                 return;
             }
@@ -169,13 +169,13 @@ class NVectorDense : public NVector<T> {
         }
         virtual void subtractCopies(const NVector<T>& other,
                 const T& multiple) {
-            if (multiple == zero)
+            if (multiple == NVector<T>::zero)
                 return;
-            if (multiple == one) {
+            if (multiple == NVector<T>::one) {
                 (*this) -= other;
                 return;
             }
-            if (multiple == minusOne) {
+            if (multiple == NVector<T>::minusOne) {
                 (*this) += other;
                 return;
             }

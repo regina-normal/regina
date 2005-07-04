@@ -284,8 +284,8 @@ class NMatrixRing : public NMatrix<T> {
          */
         void makeIdentity() {
             initialise(zero);
-            for (unsigned long i = 0; i < nRows && i < nCols; i++)
-                data[i][i] = one;
+            for (unsigned long i = 0; i < this->nRows && i < this->nCols; i++)
+                this->data[i][i] = one;
         }
 
         /**
@@ -298,8 +298,8 @@ class NMatrixRing : public NMatrix<T> {
          * @param dest the row that will be added to.
          */
         void addRow(unsigned long source, unsigned long dest) {
-            for (unsigned long i = 0; i < nCols; i++)
-                data[dest][i] += data[source][i];
+            for (unsigned long i = 0; i < this->nCols; i++)
+                this->data[dest][i] += this->data[source][i];
         }
         /**
          * Adds the given number of copies of the given source row to
@@ -318,8 +318,8 @@ class NMatrixRing : public NMatrix<T> {
          */
         void addRow(unsigned long source, unsigned long dest,
                 T copies) {
-            for (unsigned long i = 0; i < nCols; i++)
-                data[dest][i] += copies * data[source][i];
+            for (unsigned long i = 0; i < this->nCols; i++)
+                this->data[dest][i] += copies * this->data[source][i];
         }
         /**
          * Adds the given source column to the given destination column.
@@ -331,8 +331,8 @@ class NMatrixRing : public NMatrix<T> {
          * @param dest the column that will be added to.
          */
         void addCol(unsigned long source, unsigned long dest) {
-            for (unsigned long i = 0; i < nRows; i++)
-                data[i][dest] += data[i][source];
+            for (unsigned long i = 0; i < this->nRows; i++)
+                this->data[i][dest] += this->data[i][source];
         }
         /**
          * Adds the given number of copies of the given source column to
@@ -351,8 +351,8 @@ class NMatrixRing : public NMatrix<T> {
          */
         void addCol(unsigned long source, unsigned long dest,
                 T copies) {
-            for (unsigned long i = 0; i < nRows; i++)
-                data[i][dest] += copies * data[i][source];
+            for (unsigned long i = 0; i < this->nRows; i++)
+                this->data[i][dest] += copies * this->data[i][source];
         }
         /**
          * Multiplies the given row by the given factor.
@@ -366,8 +366,8 @@ class NMatrixRing : public NMatrix<T> {
          * @param factor the factor by which to multiply the given row.
          */
         void multRow(unsigned long row, T factor) {
-            for (unsigned long i = 0; i < nCols; i++)
-                data[row][i] *= factor;
+            for (unsigned long i = 0; i < this->nCols; i++)
+                this->data[row][i] *= factor;
         }
         /**
          * Multiplies the given column by the given factor.
@@ -381,8 +381,8 @@ class NMatrixRing : public NMatrix<T> {
          * @param factor the factor by which to multiply the given column.
          */
         void multCol(unsigned long column, T factor) {
-            for (unsigned long i = 0; i < nRows; i++)
-                data[i][column] *= factor;
+            for (unsigned long i = 0; i < this->nRows; i++)
+                this->data[i][column] *= factor;
         }
 
         /**
@@ -399,14 +399,14 @@ class NMatrixRing : public NMatrix<T> {
          * <tt>this * other</tt>.
          */
         NMatrixRing<T>* operator * (const NMatrixRing<T>& other) const {
-            NMatrixRing<T>* ans = new NMatrixRing<T>(nRows, other.nCols);
+            NMatrixRing<T>* ans = new NMatrixRing<T>(this->nRows, other.nCols);
             unsigned long row, col, k;
-            for (row = 0; row < nRows; row++)
+            for (row = 0; row < this->nRows; row++)
                 for (col = 0; col < other.nCols; col++) {
                     ans->data[row][col] = zero;
-                    for (k = 0; k < nCols; k++)
+                    for (k = 0; k < this->nCols; k++)
                         ans->data[row][col] +=
-                            (data[row][k] * other.data[k][col]);
+                            (this->data[row][k] * other.data[k][col]);
                 }
             return ans;
         }
