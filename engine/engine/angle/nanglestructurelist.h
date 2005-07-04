@@ -37,6 +37,7 @@
 #endif
 
 #include <algorithm>
+#include <iterator>
 #include <vector>
 #include "angle/nanglestructure.h"
 #include "packet/npacket.h"
@@ -207,7 +208,8 @@ class NAngleStructureList : public NPacket, public NFilePropertyReader {
          * iterator.  In the latter case, a surrounding NAngleStructure
          * will be automatically created.
          */
-        struct StructureInserter {
+        struct StructureInserter : public std::iterator<
+                std::output_iterator_tag, void, void, void, void> {
             NAngleStructureList* list;
                 /**< The list into which angle structures will be inserted. */
             NTriangulation* owner;

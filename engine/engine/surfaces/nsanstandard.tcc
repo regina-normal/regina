@@ -29,6 +29,7 @@
 /* To be included from nsanstandard.h. */
 
 #include "maths/nvectorunit.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

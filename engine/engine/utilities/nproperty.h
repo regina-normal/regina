@@ -258,7 +258,7 @@ class NProperty :
          * @return the current value of this property.
          */
         QueryType value() const {
-            return value_;
+            return Storage<T>::value_;
         }
 
         /**
@@ -271,10 +271,10 @@ class NProperty :
         QueryType operator = (InitType newValue) {
             Storage<T>::clear();
 
-            value_ = newValue;
+            Storage<T>::value_ = newValue;
             known_ = true;
 
-            return value_;
+            return Storage<T>::value_;
         }
 
         /**
@@ -295,7 +295,7 @@ class NProperty :
             // the value shouldn't be copied directly (e.g., with
             // StoreManagedPtr) then we'll get a compile error.
             if (newValue.known_)
-                value_ = newValue.value();
+                Storage<T>::value_ = newValue.value();
             known_ = newValue.known_;
 
             return *this;

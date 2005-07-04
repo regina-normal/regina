@@ -37,6 +37,7 @@
 #endif
 
 #include <algorithm>
+#include <iterator>
 #include <vector>
 #include "packet/npacket.h"
 #include "surfaces/nnormalsurface.h"
@@ -230,7 +231,8 @@ class NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * documentation for operator=(NNormalSurface*) and
          * operator=(NNormalSurfaceVector*) for details.
          */
-        struct SurfaceInserter {
+        struct SurfaceInserter : public std::iterator<
+                std::output_iterator_tag, void, void, void, void> {
             NNormalSurfaceList* list;
                 /**< The list into which surfaces will be inserted. */
             NTriangulation* owner;

@@ -195,7 +195,7 @@ class NSigPartialIsomorphism {
          * It is irrelevant which cycle is mapped to appear before the other
          * in the sequence of cycles belonging to the image signature.
          */
-        friend struct ShorterCycle {
+        struct ShorterCycle {
             const NSignature& sig;
                 /**< The signature containing the cycles to examine. */
             const NSigPartialIsomorphism& iso;
@@ -232,6 +232,7 @@ class NSigPartialIsomorphism {
             bool operator () (unsigned cycle1, unsigned cycle2) const;
         };
 
+    friend struct NSigPartialIsomorphism::ShorterCycle;
     friend class regina::NSigCensus;
 };
 
