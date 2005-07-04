@@ -9,9 +9,9 @@ Passing Interface), which makes them well suited for use on clusters:
 These utilities have been built against the MPICH implementation of MPI.
 This means that they must be run under the MPICH runtime environment
 (and not LAM).  The MPICH runtime environment can be found in the
-package mpich-bin.
+package "mpich-bin".
 
-If you have no need for MPI, Regina also ships with non-MPI alternatives to
-the above utilities.
+If you have no need for MPI, Regina also ships with non-MPI alternatives
+to the above utilities.
 
  -- Ben Burton <bab@debian.org>, Sun,  3 Jul 2005 18:35:25 +1000
