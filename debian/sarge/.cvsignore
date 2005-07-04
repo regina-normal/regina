@@ -1,0 +1,9 @@
+*.debhelper
+*.substvars
+debiandirs
+files
+regina-normal
+regina-normal-dev
+regina-normal-doc
+regina-normal-server
+tmp

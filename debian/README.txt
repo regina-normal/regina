@@ -1,7 +1,8 @@
 Regina Debian Directory
 -----------------------
 
-This directory contains files specific to Debian packaging.
+This directory subtree contains files specific to Debian packaging.
+The different subdirectories are for use with different Debian releases.
 
 Only the Debian packager(s) for Regina should need to use this directory.
 

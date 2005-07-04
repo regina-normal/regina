@@ -1,0 +1,14 @@
+Document: regina
+Title: Regina Calculation Engine API
+Author: Ben Burton <bab@debian.org>
+Abstract: Regina is a suite of mathematical software for 3-manifold
+ topologists.  This manual provides thorough API documentation for the
+ Regina calculation engine.  It is useful for users wishing to use Python
+ scripting with Regina, or wishing to build the C++ calculation engine
+ into their own projects.
+Section: Apps/Math
+
+Format: HTML
+Index: /usr/share/doc/regina-normal-doc/index.html
+Files: /usr/share/doc/regina-normal-doc/*.html
+
