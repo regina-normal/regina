@@ -1,4 +1,5 @@
 # Known to work for:
+# - Fedora Core 3
 # - Fedora Core 4
 
 Name: regina-normal
@@ -28,6 +29,7 @@ BuildRequires: glibc-devel
 BuildRequires: gmp-devel
 BuildRequires: kdelibs-devel >= 3.2
 BuildRequires: lam
+BuildRequires: libaio-devel
 BuildRequires: libselinux-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
