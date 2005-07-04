@@ -10,7 +10,7 @@ License: GPL
 Group: Applications/Engineering
 Source: http://prdownloads.sourceforge.net/regina/regina-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
-Patch: regina-normal-lam.patch
+Patch: regina-lam.patch
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
