@@ -10,6 +10,7 @@ License: GPL
 Group: Applications/Engineering
 Source: http://prdownloads.sourceforge.net/regina/regina-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
+Patch: regina-normal-lam.patch
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
@@ -48,6 +49,7 @@ Python scripting giving full access to the calculation engine.
 
 %prep
 %setup -n regina-%{version}
+%patch
 
 %build
 unset QTDIR || : ; . /etc/profile.d/qt.sh
@@ -79,6 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc CHANGES.txt
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
+%doc README.MPI
 %docdir %{_docdir}/HTML/en/regina
 %docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*

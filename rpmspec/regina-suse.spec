@@ -10,6 +10,7 @@ License: GPL
 Group: Applications/Engineering
 Source: http://prdownloads.sourceforge.net/regina/regina-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
+Patch: regina-normal-mpich.patch
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
@@ -56,6 +57,7 @@ Python scripting giving full access to the calculation engine.
 
 %prep
 %setup -n regina-%{version}
+%patch
 
 %build
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
@@ -90,6 +92,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc CHANGES.txt
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
+%doc README.MPI
 %docdir %{_docdir}/HTML/en/regina
 %docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*
