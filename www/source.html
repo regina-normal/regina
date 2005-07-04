@@ -143,13 +143,17 @@ need to install the package <i>libjpeg-devel</i>.
     <td>doxygen (DEB)<br>doxygen (RPM)<br>
     <a href="http://www.stack.nl/~dimitri/doxygen/">http://www.stack.nl/~dimitri/doxygen/</a>
     </td></tr>
-<tr><td class="optfirst">MPI development environment (e.g., MPICH or LAM)</td>
-    <td class="opt">MPI-enabled utilities</td>
-    <td>&nbsp;</td>
+<tr><td class="optfirst" rowspan=2>MPI development environment
+    (e.g., MPICH or LAM)</td>
+    <td class="opt" rowspan=2>MPI-enabled utilities</td>
+    <td rowspan=2>&nbsp;</td>
     <td>libmpich1.0-dev &amp; mpich-bin (DEB)<br>
-    lam4-dev &amp; lam-runtime (DEB)<br>
+    (mpich-devel / libmpich1-devel) &amp; mpich (RPM)<br>
     <a href="http://www.mcs.anl.gov/mpi/mpich/">http://www.mcs.anl.gov/mpi/mpich/</a>
-    (MPICH)<br>
+    (MPICH)
+    </td></tr>
+<tr><td>lam4-dev &amp; lam-runtime (DEB)<br>
+    (lam / lam-devel / liblam7-devel) &amp; (lam / lam-runtime) (RPM)<br>
     <a href="http://www.lam-mpi.org/">http://www.lam-mpi.org/</a> (LAM)
     </td></tr>
 <tr><td class="optfirst">CppUnit</td>
