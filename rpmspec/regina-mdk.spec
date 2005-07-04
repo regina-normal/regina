@@ -127,6 +127,8 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Jul 7 2005 Ben Burton <bab@debian.org> 4.2
 - New upstream release.
 - Reenabled Python scripting for Mandrake >= 10.1.
+- Note that regina-normal now includes MPI support.  These packages are
+  built against the MPICH implementation of MPI.
 
 * Sun Jul 25 2004 Ben Burton <bab@debian.org> 4.1.3
 - New upstream release.
