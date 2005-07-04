@@ -36,7 +36,7 @@ using regina::NProgressManager;
 void addNProgressManager() {
     class_<NProgressManager, bases<regina::ShareableObject>,
             std::auto_ptr<NProgressManager>,
-            boost::noncopyable>("NProgressManager")
+            boost::noncopyable>("NProgressManager", init<>())
         .def("isStarted", &NProgressManager::isStarted)
         .def("isFinished", &NProgressManager::isFinished)
         .def("getProgress", &NProgressManager::getProgress,

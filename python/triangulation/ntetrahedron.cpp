@@ -39,7 +39,8 @@ using regina::NTetrahedron;
 
 void addNTetrahedron() {
     class_<NTetrahedron, bases<regina::ShareableObject>,
-            std::auto_ptr<NTetrahedron>, boost::noncopyable>("NTetrahedron")
+            std::auto_ptr<NTetrahedron>, boost::noncopyable>(
+            "NTetrahedron", init<>())
         .def(init<const std::string&>())
         .def("getDescription", &NTetrahedron::getDescription,
             return_value_policy<return_by_value>())
