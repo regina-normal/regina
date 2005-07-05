@@ -27,7 +27,7 @@ BuildRequires: libcppunit2-devel
 BuildRequires: libgmp3-devel
 BuildRequires: libkdecore4-devel
 BuildRequires: libmpich1-devel
-BuildRequires: libpython2.4-devel
+BuildRequires: libpython2.3-devel
 BuildRequires: libqt3-devel >= 3.2
 BuildRequires: libselinux1-devel
 BuildRequires: libstdc++6-devel
