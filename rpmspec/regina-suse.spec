@@ -1,5 +1,5 @@
 # Known to work for:
-# - SuSE 9.1
+# - SuSE 9.2
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -10,7 +10,7 @@ License: GPL
 Group: Applications/Engineering
 Source: http://prdownloads.sourceforge.net/regina/regina-%{version}.tar.gz
 URL: http://regina.sourceforge.net/
-Patch: regina-mpich.patch
+Patch: regina-mpich_ch-p4.patch
 Packager: Ben Burton <bab@debian.org>
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
@@ -29,6 +29,7 @@ BuildRequires: gcc-c++
 BuildRequires: glibc-devel
 BuildRequires: gmp
 BuildRequires: kdelibs3-devel >= 3.2
+BuildRequires: libjpeg-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libxml2-devel
 BuildRequires: mpich
@@ -63,7 +64,7 @@ Python scripting giving full access to the calculation engine.
 FLAGS="$RPM_OPT_FLAGS -DNDEBUG -DNO_DEBUG"
 export CFLAGS="$FLAGS"
 export CXXFLAGS="$FLAGS"
-./configure --disable-debug --includedir=%{_includedir} --mandir=%{_mandir}
+./configure --disable-debug --includedir=%{_includedir} --mandir=%{_mandir} MPICXX=/opt/mpich/ch-p4/bin/mpicxx
 make
 make check
 
@@ -120,7 +121,7 @@ rm -rf $RPM_BUILD_ROOT
 - New upstream release.
 - Reenabled Python scripting for SuSE >= 9.2.
 - Note that regina-normal now includes MPI support.  These packages are
-  built against the MPICH implementation of MPI.
+  built against the MPICH implementation of MPI with the ch-p4 device.
 
 * Sun Jul 25 2004 Ben Burton <bab@debian.org> 4.1.3
 - New upstream release.
