@@ -1,5 +1,5 @@
 # Known to work for:
-# - Mandrake 10.2
+# - Mandrake 10.2 (LE 2005)
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
