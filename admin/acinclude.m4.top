@@ -65,8 +65,8 @@ dnl
 dnl    REGINA_CHECK_KDE_MODULEDIR
 dnl
 dnl    Runs a sanity check on the current $kde_moduledir.  In addition
-dnl    the current $prefix and $kde_moduledir are expanded to full paths
-dnl    and displayed to the user.
+dnl    the current $prefix, $kde_libs_prefix and $kde_moduledir are expanded
+dnl    to full paths and displayed to the user.
 dnl
 dnl    If the $kde_moduledir does not look like it indeed contains
 dnl    KDE modules, this routine generates an error with a detailed
@@ -86,10 +86,12 @@ AC_DEFUN([REGINA_CHECK_KDE_MODULEDIR], [
     fi
   ])
 
-  # Run a sanity check on the prefix.
+  # Run a sanity check on the prefixes.
   AS_AC_EXPAND(__expanded_prefix, [\$prefix])
+  AS_AC_EXPAND(__expanded_kde_libs_prefix, [\$kde_libs_prefix])
   AS_AC_EXPAND(__expanded_kde_moduledir, [\$kde_moduledir])
   AC_MSG_NOTICE([using prefix $__expanded_prefix])
+  AC_MSG_NOTICE([using kde_libs_prefix $__expanded_kde_libs_prefix])
   AC_MSG_NOTICE([using kde_moduledir $__expanded_kde_moduledir])
 
   AC_MSG_CHECKING([for a sensible \$kde_moduledir])
