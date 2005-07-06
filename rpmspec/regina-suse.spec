@@ -1,5 +1,6 @@
 # Known to work for:
 # - SuSE 9.2
+# - SuSE 9.3
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
@@ -43,7 +44,7 @@ BuildRequires: zlib-devel
 Prereq: /sbin/ldconfig
 
 %define _prefix /opt/kde3
-%define _docdir /opt/kde3/share/doc
+%define _kdedocdir /opt/kde3/share/doc
 %define _includedir /usr/include
 %define _mandir /usr/share/man
 
@@ -94,7 +95,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc HIGHLIGHTS.txt
 %doc LICENSE.txt
 %doc README.MPI
-%docdir %{_docdir}/HTML/en/regina
+%docdir %{_kdedocdir}/HTML/en/regina
 %docdir %{_datadir}/regina/engine-docs
 %{_bindir}/*
 %{_includedir}/regina
@@ -104,7 +105,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/libreginapart.so
 %{_libdir}/regina/python/regina.la
 %{_libdir}/regina/python/regina.so
-%{_docdir}/HTML/en/regina
+%{_kdedocdir}/HTML/en/regina
 %{_datadir}/applications/kde/*
 %{_datadir}/apps/regina
 %{_datadir}/apps/reginapart
