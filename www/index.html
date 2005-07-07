@@ -139,16 +139,13 @@ download site</a> (the few exceptions are noted below).  All of the
 packages are named <tt>regina-normal</tt> to avoid conflicting with the
 <a href="http://regina-rexx.sourceforge.net/">other Regina</a>.
 <ul>
-    <li><b>Debian (sarge and above)</b> &ndash; download packages from the
-    <a href="http://packages.debian.org/regina-normal">usual Debian
-    servers</a> (not the Regina download site).</li>
-    <li><b>Fedora Core 2</b></li>
-    <li><b>Mandrake 10.0</b> &ndash; scripting is disabled due to a
-    known bug in Mandrake's packages for Boost.Python.</li>
-    <li><b>SuSE 9.1</b> &ndash; scripting is disabled due to a known bug
-    in SuSE's modified C++ compiler.  Furthermore, because of a bug
-    in the original SuSE <tt>popt</tt> packages, you may need to run YaST
-    online updates and upgrade your <tt>popt</tt> to a fixed version.</li>
+    <li><b>Debian (sarge and above)</b> &ndash; packages are kept elsewhere;
+    see the <i>README.debian</i> files on the download site for details.</li>
+    <li><b>Fedora Core 3 and 4</b></li>
+    <li><b>Mandrake 10.1 and Mandriva 10.2 (Limited Edition 2005)</b></li>
+    <li><b>SuSE 9.2 and 9.3</b> &ndash; the API documentation is
+    broken on SuSE 9.3 because their doxygen is buggy, but you can always
+    <a href="engine-docs/modules.html">read the API documentation here</a>.</li>
 </ul>
 For other platforms or distributions, Regina is available in source form
 only.  These sources are available from the
@@ -163,6 +160,12 @@ see if your problem is discussed there.  You are of course also welcome
 to write to either myself or the users' mailing list
 <a href="mailto:regina-user@lists.sourceforge.net"><i>regina-user@lists.sourceforge.net</i></a>
 for assistance.
+<p>
+<b>Packaging help requested:</b> Is the download page missing your
+distribution (e.g., Slackware, Darwin/Fink) or your hardware
+(e.g., AMD64, PowerPC?)  If so, and if you're willing to help out with
+packaging, please <a href="packaging.html">visit this page</a>!  It may
+be as easy as rebuilding an RPM on your machine.
 <p>
 <i><a href="#contents">(Back to contents...)</a></i>
 
