@@ -32,7 +32,7 @@
   questions.
  </para>
 
- <sect1>
+ <sect1 id="compiling-devfiles">
   <title>Installing the Development Files</title>
   <para>
    If you have built &regina; yourself, the &cpp; headers and development
@@ -55,7 +55,7 @@
    If all else fails, you are of course welcome to
    <link linkend="services">write and ask for assistance</link>.
   </para>
-  <sect2>
+  <sect2 id="compiling-devfiles-other">
    <title>Other Required Software</title>
    <para>
     Since &regina; makes use of other external libraries, you may
@@ -108,7 +108,7 @@
   </sect2>
  </sect1>
 
- <sect1>
+ <sect1 id="compiling-flags">
   <title>Compiler and Linker Flags</title>
   <para>
    &regina; offers itself as a &cpp; library.  This means that if you
