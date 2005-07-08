@@ -270,7 +270,7 @@
 
  <indexentry>
   <primaryie>dehydrated triangulations</primaryie>
-  <secondaryie><link linkend="tri-import-dehydrationlist">importing
+  <secondaryie><link linkend="import-dehydrationlist">importing
    a list of dehydration strings</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">rehydrating from
    a dehydration string</link></secondaryie>
@@ -389,7 +389,7 @@
    file</link></secondaryie>
   <secondaryie><link linkend="man-regfiletype">identifying file
    types</link></secondaryie>
-  <secondaryie><link linkend="tri-imported">importing
+  <secondaryie><link linkend="foreign-import">importing
    data</link></secondaryie>
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
   <secondaryie><link linkend="dataformat">specification of file
@@ -467,11 +467,11 @@
 
  <indexentry>
   <primaryie>importing triangulations</primaryie>
-  <secondaryie><link linkend="tri-import-dehydrationlist">from
+  <secondaryie><link linkend="import-dehydrationlist">from
    dehydration lists</link></secondaryie>
-  <secondaryie><link linkend="tri-import-regina">from
+  <secondaryie><link linkend="import-regina">from
    &regina; data files</link></secondaryie>
-  <secondaryie><link linkend="tri-import-snappea">from
+  <secondaryie><link linkend="import-snappea">from
    &snappea;</link></secondaryie>
  </indexentry>
 
@@ -741,7 +741,7 @@
  <indexentry>
   <primaryie>&snappea;</primaryie>
   <secondaryie><link linkend="tri-snappea">calculations</link></secondaryie>
-  <secondaryie><link linkend="tri-import-snappea">importing
+  <secondaryie><link linkend="import-snappea">importing
    from</link></secondaryie>
  </indexentry>
 
@@ -880,7 +880,7 @@
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-subdivision">ideal vertices,
    truncation</link></secondaryie>
-  <secondaryie><link linkend="tri-imported">importing from
+  <secondaryie><link linkend="foreign-import">importing from
    external files</link></secondaryie>
   <secondaryie><link linkend="tri-composition-isomorphism">isomorphism
    and subcomplex testing</link></secondaryie>

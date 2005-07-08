@@ -1,0 +1,288 @@
+<chapter id="foreign">
+ <title>Importing and Exporting Data</title>
+
+ <para>
+  By default, &regina; reads and writes data files using compressed
+  &xml; (these are the usual <filename>.rga</filename> data files).
+  However, &regina; is also able to read from and write to a variety
+  of alternative file formats, as described in the following sections.
+ </para>
+
+ <sect1 id="foreign-import">
+  <title>Importing</title>
+
+  <para>
+   An <firstterm>import</firstterm> means that data is read from a
+   foreign file format and inserted into the current working packet
+   tree.  All imports are done through the
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guisubmenu>Import</guisubmenu>
+   </menuchoice>
+   menu.  Each item in this menu represents a different file format.
+  </para>
+  <note><para>
+   You must already have a working data file open before you can perform
+   an import.  This is because the imported data must be inserted into
+   an existing packet tree.
+  </para></note>
+  <para>
+   To import data from a foreign file format, you must choose the
+   corresponding menu item in the
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guisubmenu>Import</guisubmenu>
+   </menuchoice>
+   menu.  The following steps will then occur.
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     You will be asked to select a specific data file to import.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     You will be asked how this new data should be inserted into the
+     current packet tree.  The imported data will appear as a new packet
+     (or perhaps as a new subtree).  In particular, you will be asked the
+     following.
+    </para>
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Import beneath:</guilabel></glossterm>
+      <glossdef>
+       <para>
+        You must select a parent packet in the current working packet
+        tree.  The imported data will be inserted beneath this parent
+        packet.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Label:</guilabel></glossterm>
+      <glossdef>
+       <para>
+        You must choose a label for the new packet containing the
+        imported data.  The import dialog may offer a reasonable suggestion
+        based on the contents of the imported data file.
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
+   </listitem>
+  </itemizedlist>
+  <para>
+   &regina; is able to import data from files of the following types:
+  </para>
+
+  <sect2 id="import-regina">
+   <title>&regina; Data File</title>
+
+   <para>
+    The contents of a native &regina; data file can be imported.  In
+    this case, the packet tree from the imported file will be
+    inserted into the packet tree of the current working file.
+   </para>
+   <para>
+    Importing a &regina; data file is therefore a convenient way of
+    merging two data files into one.  See also the
+    <link linkend="man-regconcat"><command>regconcat</command></link>
+    utility for a way of doing this from the command-line.
+   </para>
+  </sect2>
+
+  <sect2 id="import-snappea">
+   <title>&snappea; Triangulation</title>
+
+   <para>
+    A triangulation obtained from &snappea; can be imported.
+    &snappeaurl; is the excellent software by Jeffrey Weeks for studying
+    hyperbolic 3-manifolds, and is also discussed in the section on
+    <link linkend="tri-snappea">&snappea; calculations</link>.
+   </para>
+   <para>
+    The file should be a plain text file in &snappea;'s triangulation
+    format; an example is shown below.
+   </para>
+   <programlisting>
+    % Triangulation
+    m002
+    geometric_solution  2.02988321
+    nonorientable_manifold
+    CS_unknown
+
+    0 2
+        Klein   0.000000000000   0.000000000000
+        Klein   0.000000000000   0.000000000000
+
+    2
+       1    1    1    1
+     0132 3120 2130 3102
+       0    1    0    0
+      0  0  0  0  0  0  1 -1  0  0  0  0  1 -1  0  0
+      0  1 -1  0  0  0  0  0 -1  0  0  1  0  0  0  0
+      0  0  1 -1 -1  0  1  0  1  0  0 -1 -1  1  0  0
+      0  0  1 -1 -1  0  1  0  1  0  0 -1 -1  1  0  0
+      0.500000000000   0.866025403784
+
+       0    0    0    0
+     0132 3120 2130 3102
+       0    1    0    0
+      0  1 -1  0  0  0  0  0 -1  0  0  1  0  0  0  0
+      0  0  0  0  0  0  1 -1  0  0  0  0  1 -1  0  0
+      0 -1  1  0  1  0  0 -1  1  0  0 -1 -1  0  1  0
+      0 -1  1  0  1  0  0 -1  1  0  0 -1 -1  0  1  0
+      0.500000000000   0.866025403784
+   </programlisting>
+  </sect2>
+
+  <sect2 id="import-dehydrationlist">
+   <title>Dehydrated Triangulation List</title>
+
+   <para>
+    A list of dehydrated triangulation strings can be imported.
+    A <firstterm>dehydration string</firstterm> is a set of letters such as
+    <literal>dadbcccaqhx</literal> containing enough information to
+    recreate the triangulation.  Dehydration strings appear in
+    census papers such as the hyperbolic cusped census of
+    Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>,
+    in which the dehydration format is explicitly described.
+   </para>
+   <para>
+    The list should be stored in a plain text file with one triangulation
+    per line.  Each line may contain an arbitrary amount of data, but the
+    first word of each line should be the dehydrated triangulation
+    string.  A sample file is shown below.
+   </para>
+   <programlisting>
+    dafbcccaadl   N3,1   Z/3 + Z
+    dadcbccdjkd   N3,2   Z
+    dadbcccbbcv   N3,3   Z
+    dadbcccccdm   N3,4   Z
+    dadbcccaqhx   N3,5   Z/2 + Z/2 + Z
+   </programlisting>
+   <para>
+    When importing a dehydrated triangulation list, each individual
+    triangulation will be rehydrated and inserted beneath a common
+    container packet, which will then be inserted into the current
+    packet tree.  If you just wish to rehydrate a single triangulation
+    string (not many), it may be simpler to use the
+    <link linkend="tri-new-dehydration">New Triangulation</link> dialog
+    instead.
+   </para>
+  </sect2>
+
+  <sect2 id="import-pyscript">
+   <title>&python; Script</title>
+
+   <para>
+    An arbitrary &python; script can be imported, in which case it will
+    be inserted into the working packet tree as a new script packet.
+   </para>
+   <para>
+    Recall that a script packet may have associated variables that
+    reference other packets in the packet tree.  If the
+    imported &python; file begins with a specially formatted comment block,
+    it can direct &regina; to include certain variables in the new script
+    packet (and also suggest a default label for the new script packet).
+   </para>
+   <para>
+    An example of such a comment block is shown below.
+   </para>
+   <programlisting>
+    ### Regina Script: Homology Summary
+    ###
+    ### Variable tri: Triangulations
+    ###
+    ### Begin Script
+
+    # See the reference manual for more elaborate sample Python
+    # sessions.
+
+    # Output the homology of each triangulation.
+    t = tri.getFirstTreeChild()
+    while t != None:
+        print t.getPacketLabel() + ":", t.getHomologyH1()
+        t = t.getNextTreeSibling()
+   </programlisting>
+   <para>
+    The comment block must appear at the very beginning
+    of the file, with each line beginning with three hashes
+    (<literal>###</literal>).  A suggested packet label is indicated
+    with a line of the form
+    <literal>###&nbsp;Regina&nbsp;Script:&nbsp;<replaceable>label</replaceable></literal>.
+    Each variable is listed in a line of the form
+    <literal>###&nbsp;Variable&nbsp;<replaceable>name</replaceable>:&nbsp;<replaceable>value</replaceable></literal>,
+    where <replaceable>name</replaceable> is the name of the script
+    variable and <replaceable>value</replaceable> is the label of the
+    packet that it should represent.
+   </para>
+   <para>
+    Note that this comment block will not appear in the code section of
+    the new script packet.  That is, &regina; will read in the suggested
+    packet label, make the requested variable assignments and then throw
+    the entire comment block away.
+   </para>
+   <note><para>
+    When <link linkend="export-pyscript">exporting a script
+    packet</link> to a &python; file, a comment block such as this will
+    be automatically added.
+   </para></note>
+  </sect2>
+ </sect1>
+
+ <sect1 id="foreign-export">
+  <title>Exporting</title>
+
+  <para>
+   An <firstterm>export</firstterm> means that data from the current
+   working packet tree is written to a foreign file format.  Generally
+   only some of the data from the working tree is exported (e.g., a
+   single packet or perhaps a subtree).  All exports are done through the
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guisubmenu>Export</guisubmenu>
+   </menuchoice>
+   menu, with each item in this menu representing a different file format.
+  </para>
+  <para>
+   &regina; is able to export data to the following file formats:
+  </para>
+
+  <sect2 id="export-rga">
+   <title>&regina; Data File</title>
+
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="export-rga-plain">
+   <title>&regina; Data File (Uncompressed)</title>
+
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="export-snappea">
+   <title>&snappea; Triangulation</title>
+
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="export-cpp">
+   <title>&cpp; Source</title>
+
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="export-pyscript">
+   <title>&python; Script</title>
+
+   <para>
+   </para>
+  </sect2>
+ </sect1>
+</chapter>

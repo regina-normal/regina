@@ -270,78 +270,9 @@
      <guimenu>File</guimenu>
      <guisubmenu>Import</guisubmenu>
     </menuchoice>
-    menu; the individual file formats are described below.
+    menu.  For details, see the chapter on
+    <link linkend="foreign-import">importing and exporting data</link>.
    </para>
-
-   <sect3 id="tri-import-regina">
-    <title>&regina; Data File</title>
-
-    <para>
-     The contents of a native &regina; data file can be imported.  In
-     this case, the packet tree from the imported file will be
-     inserted into the packet tree of the current working file.
-    </para>
-   </sect3>
-
-   <sect3 id="tri-import-snappea">
-    <title>&snappea; Triangulation</title>
-
-    <para>
-     A triangulation obtained from &snappea; can be imported.
-     The file should be a text file in &snappea;'s triangulation format;
-     an example is shown below.
-    </para>
-    <programlisting>
-    % Triangulation
-    m002
-    geometric_solution  2.02988321
-    nonorientable_manifold
-    CS_unknown
-
-    0 2
-        Klein   0.000000000000   0.000000000000
-        Klein   0.000000000000   0.000000000000
-
-    2
-       1    1    1    1
-     0132 3120 2130 3102
-       0    1    0    0
-      0  0  0  0  0  0  1 -1  0  0  0  0  1 -1  0  0
-      0  1 -1  0  0  0  0  0 -1  0  0  1  0  0  0  0
-      0  0  1 -1 -1  0  1  0  1  0  0 -1 -1  1  0  0
-      0  0  1 -1 -1  0  1  0  1  0  0 -1 -1  1  0  0
-      0.500000000000   0.866025403784
-
-       0    0    0    0
-     0132 3120 2130 3102
-       0    1    0    0
-      0  1 -1  0  0  0  0  0 -1  0  0  1  0  0  0  0
-      0  0  0  0  0  0  1 -1  0  0  0  0  1 -1  0  0
-      0 -1  1  0  1  0  0 -1  1  0  0 -1 -1  0  1  0
-      0 -1  1  0  1  0  0 -1  1  0  0 -1 -1  0  1  0
-      0.500000000000   0.866025403784
-    </programlisting>
-   </sect3>
-
-   <sect3 id="tri-import-dehydrationlist">
-    <title>Dehydrated Triangulation List</title>
-
-    <para>
-     A list of <link linkend="tri-new-dehydration">dehydrated
-     triangulation strings</link> can be imported.
-     The list should be stored in a text file with one triangulation per
-     line.  Each line may contain an arbitrary amount of data, but the
-     first word of each line should be the dehydrated triangulation
-     string.  A sample file is shown below.
-    </para>
-    <programlisting>
-    dafbcccaadl   N3,1   Z/3 + Z
-    dadcbccdjkd   N3,2   Z
-    dadbcccbbcv   N3,3   Z
-    dadbcccccdm   N3,4   Z
-    dadbcccaqhx   N3,5   Z/2 + Z/2 + Z
-    </programlisting>
-   </sect3>
   </sect2>
 
   <sect2 id="tri-census-creation">
@@ -989,8 +920,7 @@
    <para>
     &snappea; is an excellent piece of software written by Jeffrey Weeks
     with a strong focus on hyperbolic 3-manifolds.  For further
-    information on &snappea;, please visit its website at
-    <ulink url="http://www.geometrygames.org/SnapPea/"/>.
+    information on &snappea;, please visit its website at &snappeaurlraw;.
    </para>
    <para>
     Since version &snappeaintro;, portions of the &snappea; kernel

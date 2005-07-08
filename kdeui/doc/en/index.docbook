@@ -68,6 +68,9 @@
   <!ENTITY SFSLong "Seifert Fibred Space">
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
+  <!ENTITY snappeaurl "<ulink
+   url='http://www.geometrygames.org/SnapPea/'>&snappea;</ulink>">
+  <!ENTITY snappeaurlraw "<ulink url='http://www.geometrygames.org/SnapPea/'/>">
   <!ENTITY sourceforge "<productname>SourceForge</productname>">
   <!ENTITY sss "S<superscript>3</superscript>">
   <!ENTITY sysreq
@@ -87,6 +90,7 @@
   <!ENTITY reginatriangulations SYSTEM "triangulations.docbook">
   <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
   <!ENTITY reginaangles SYSTEM "angles.docbook">
+  <!ENTITY reginaforeign SYSTEM "foreign.docbook">
   <!ENTITY reginapython SYSTEM "python.docbook">
   <!ENTITY reginaoptions SYSTEM "options.docbook">
   <!ENTITY reginacompiling SYSTEM "compiling.docbook">
@@ -150,6 +154,7 @@
  &reginatriangulations;
  &reginasurfaces;
  &reginaangles;
+ &reginaforeign;
  &reginapython;
  &reginaoptions;
  &reginacompiling;

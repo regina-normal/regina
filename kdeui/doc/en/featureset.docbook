@@ -53,8 +53,7 @@
       by Callahan, Hildebrand and Weeks <xref linkend="bib-cuspedcensus"/>);
      </para></listitem>
      <listitem><para>
-      Importing triangulations saved from
-      <ulink url="http://www.geometrygames.org/SnapPea/">&snappea;</ulink>
+      Importing triangulations saved from &snappeaurl;
       (the hyperbolic 3-manifold software written by Jeffrey Weeks);
      </para></listitem>
      <listitem><para>
