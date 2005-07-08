@@ -87,7 +87,7 @@ regina_engine_libs="-lregina-engine @LIBS@"
 
 if test "$echo_cflags" = "yes"; then
 	includes="@ENGINE_EXTERNAL_INCLUDES@"
-	includes="-I@includedir@ $includes"
+	includes="-I@includedir@/@PACKAGE@ -I@includedir@ $includes"
 	echo $includes
 fi
 

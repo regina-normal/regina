@@ -7,6 +7,13 @@ Regina - A Normal Surface Theory Calculator
     For general highlights of the changes between releases, see
     HIGHLIGHTS.txt in the same directory as this file.
 
+Version 4.3  [ under development ]
+
+    ENGINE:
+        Overall structure:
+            - Fixed "regina-engine-config --cflags", which wrote includes
+              for Regina's dependencies but not for Regina itself (sigh).
+
 Version 4.2  [ 7 July, 2005 ]
 
     ENGINE:
