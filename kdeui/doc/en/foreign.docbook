@@ -238,7 +238,7 @@
   <para>
    An <firstterm>export</firstterm> means that data from the current
    working packet tree is written to a foreign file format.  Generally
-   only some of the data from the working tree is exported (e.g., a
+   only some of the data from the current tree is exported (e.g., a
    single packet or perhaps a subtree).  All exports are done through the
    <menuchoice>
     <guimenu>File</guimenu>
@@ -247,6 +247,41 @@
    menu, with each item in this menu representing a different file format.
   </para>
   <para>
+   To export a single packet or a subtree, first select the appropriate file
+   format from the
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guisubmenu>Export</guisubmenu>
+   </menuchoice>
+   menu.  The following steps will then occur.
+  </para>
+  <itemizedlist>
+   <listitem>
+    <para>
+     You will be asked which packet to export.
+    </para>
+    <para>
+     Whether you are exporting a single packet or an entire subtree
+     depends upon the chosen file format.  For example,
+     when exporting to a &snappea; triangulation file you use just a single
+     packet, whereas when exporting to a &regina; data file you write the
+     chosen packet along with all of its descendants.
+    </para>
+    <para>
+     The selection of packets to choose from may be restricted
+     according to the chosen export type.  For instance, when exporting
+     to a &snappea; triangulation file you may only choose from the
+     triangulation packets, and when exporting to a &python; file you
+     may only choose from the script packets.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     You will be asked to choose a filename for the exported data.
+    </para>
+   </listitem>
+  </itemizedlist>
+  <para>
    &regina; is able to export data to the following file formats:
   </para>
 
@@ -254,6 +289,15 @@
    <title>&regina; Data File</title>
 
    <para>
+    This is &regina;'s native file format, in which data is saved as
+    compressed &xml;.  The advantage of exporting to a &regina; data
+    file is that you can choose to export only a subtree of the current
+    working file.  This is therefore a convenient way of extracting a
+    small portion of a larger data file.
+   </para>
+   <para>
+    The packet that is selected for export will become the root of the
+    new packet tree.  All of its descendants will be exported also.
    </para>
   </sect2>
 
@@ -261,13 +305,48 @@
    <title>&regina; Data File (Uncompressed)</title>
 
    <para>
+    This export is identical to the
+    <link linkend="export-rga">&regina; data file</link> described
+    above, except that the &xml; output is not compressed.  This means
+    that the exported data is a plain text file that can be viewed in an
+    ordinary text editor.  If you are brave, you can even edit the
+    &xml; yourself; see the <link linkend="dataformat">file format
+    reference</link> at the end of this manual.
    </para>
+   <para>
+    Note that &regina; can happily load both compressed and uncompressed
+    &xml; data files.  That is, the exported data file can be opened in the
+    usual way through the
+    <menuchoice>
+     <guimenu>File</guimenu>
+     <guimenuitem>Open</guimenuitem>
+    </menuchoice>
+    menu item.
+   </para>
+   <para>
+    Instead of using the export feature, an alternative
+    way of viewing the &xml; content of a native (compressed)
+    data file is to pipe it through <command>gunzip</command>:
+   </para>
+<screen>
+    <prompt>example$</prompt> <userinput>cat file.rga | gunzip</userinput>
+</screen>
   </sect2>
 
   <sect2 id="export-snappea">
    <title>&snappea; Triangulation</title>
 
    <para>
+    This allows a single triangulation to be exported to &snappea;'s
+    native triangulation file format.  This is a plain text format,
+    described in more detail in the earlier section on
+    <link linkend="import-snappea">&snappea; imports</link>.
+   </para>
+   <para>
+    Note that a triangulation must satisfy certain constraints before it
+    can be exported as a &snappea; triangulation file.  For example, it
+    cannot be an <link linkend="tri-propvalid">invalid triangulation</link>,
+    and it may not have any boundary faces.
    </para>
   </sect2>
 
@@ -275,6 +354,17 @@
    <title>&cpp; Source</title>
 
    <para>
+    This allows a single triangulation to be exported as &cpp; source
+    code.  The exported source code uses classes and routines from
+    &regina;'s calculation engine.  When run, this code will reconstruct
+    the original triangulation.
+   </para>
+   <para>
+    Exporting as &cpp; is useful if you wish to hard-code a
+    triangulation in your own &cpp; code for further manipulation and/or
+    experimentation.  For further information, there is a separate
+    chapter on <link linkend="compiling">including the &regina;
+    calculation engine in your own code</link>.
    </para>
   </sect2>
 
@@ -282,6 +372,11 @@
    <title>&python; Script</title>
 
    <para>
+    This allows a single script packet to be exported as a regular &python;
+    script file.  A special comment block will be added to the beginning
+    of this script file describing the packet label and the script
+    variables.  This special comment block is described in more detail in the
+    earlier section on <link linkend="import-pyscript">&python; imports</link>.
    </para>
   </sect2>
  </sect1>
