@@ -14,6 +14,7 @@ General:
     - Enhance the DCOP interface
     * Upgrade admin/ (specifically libtool) for darwin/fink support
     - Don't build static libs for the kpart and python module
+    - Allow exports to python source
 
 Census:
     - Implement GUI census creation
@@ -25,6 +26,7 @@ Containers:
 
 Docs:
     + Include a walk-through
+    - Include a menu-by-menu index of features/tasks
 
 Icons:
     - Softer tree for filter_comb.png
