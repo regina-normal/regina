@@ -9,10 +9,17 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.3  [ under development ]
 
+    OVERALL:
+        - Added a chapter on imports and exports to the reference manual.
     ENGINE:
         Overall structure:
             - Fixed "regina-engine-config --cflags", which wrote includes
               for Regina's dependencies but not for Regina itself (sigh).
+        Routine writeSnapPea():
+            - Add a precondition that triangulation has no boundary faces.
+    USER INTERFACE:
+        - Refuse to export a triangulation to SnapPea format if it
+          has boundary faces.
 
 Version 4.2  [ 7 July, 2005 ]
 
