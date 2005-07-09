@@ -76,7 +76,8 @@ NTriangulation* readSnapPea(const char *filename);
  * The manifold name written in the file will be derived from the packet
  * label.
  *
- * \pre The given triangulation is not invalid.
+ * \pre The given triangulation is not invalid, and does not contain any
+ * boundary faces.
  *
  * @param filename the name of the SnapPea file to which to write.
  * @param tri the triangulation to write to the SnapPea file.

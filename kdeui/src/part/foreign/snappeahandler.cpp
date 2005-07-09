@@ -60,6 +60,12 @@ bool SnapPeaHandler::exportData(regina::NPacket* data,
             "because it is not a valid triangulation."));
         return false;
     }
+    if (tri->hasBoundaryFaces()) {
+        KMessageBox::error(parentWidget, i18n(
+            "This triangulation cannot be exported to SnapPea format "
+            "because it has one or more boundary faces."));
+        return false;
+    }
     if (! regina::writeSnapPea(fileName.ascii(), *tri)) {
         KMessageBox::error(parentWidget, i18n(
             "This triangulation could not be exported.  An unknown error, "
