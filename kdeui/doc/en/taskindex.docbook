@@ -111,6 +111,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>&cpp; source</primaryie>
+  <seeie>(see source code)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>calculation engine</primaryie>
   <secondaryie><link linkend="python">accessing</link></secondaryie>
   <secondaryie><link linkend="python-docs">documentation</link></secondaryie>
@@ -353,6 +358,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="foreign-export">exporting
+   data</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>extension</primaryie>
   <secondaryie><link linkend="tri-extension">of a triangulation
    boundary</link></secondaryie>
@@ -387,6 +397,8 @@
    formats</link></secondaryie>
   <secondaryie><link linkend="man-regfiledump">dumping contents of a
    file</link></secondaryie>
+  <secondaryie><link linkend="foreign-export">exporting
+   data</link></secondaryie>
   <secondaryie><link linkend="man-regfiletype">identifying file
    types</link></secondaryie>
   <secondaryie><link linkend="foreign-import">importing
@@ -466,13 +478,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>importing triangulations</primaryie>
-  <secondaryie><link linkend="import-dehydrationlist">from
-   dehydration lists</link></secondaryie>
-  <secondaryie><link linkend="import-regina">from
-   &regina; data files</link></secondaryie>
-  <secondaryie><link linkend="import-snappea">from
-   &snappea;</link></secondaryie>
+  <primaryie><link linkend="foreign-import">importing
+   data</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -653,6 +660,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>rehydrating triangulations</primaryie>
+  <seeie>(see dehydrated triangulations)</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>removing</primaryie>
   <seeie>(see deleting)</seeie>
  </indexentry>
@@ -686,6 +698,10 @@
    objects, classes and methods</link></secondaryie>
   <secondaryie><link linkend="trouble-python-disabled">enabling</link></secondaryie>
   <secondaryie><link linkend="sessions">examples</link></secondaryie>
+  <secondaryie><link linkend="export-pyscript">exporting
+   &python; scripts</link></secondaryie>
+  <secondaryie><link linkend="import-pyscript">importing
+   &python; scripts</link></secondaryie>
   <secondaryie><link linkend="python-invoking">invoking in the
    &gui;</link></secondaryie>
   <secondaryie><link linkend="python-ownership">ownership of
@@ -741,6 +757,7 @@
  <indexentry>
   <primaryie>&snappea;</primaryie>
   <secondaryie><link linkend="tri-snappea">calculations</link></secondaryie>
+  <secondaryie><link linkend="export-snappea">exporting to</link></secondaryie>
   <secondaryie><link linkend="import-snappea">importing
    from</link></secondaryie>
  </indexentry>
@@ -748,6 +765,16 @@
  <indexentry>
   <primaryie>solution type</primaryie>
   <seeie>(see hyperbolic solution type)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>source code</primaryie>
+  <secondaryie><link linkend="compiling">combining with the &regina;
+   calculation engine</link></secondaryie>
+  <secondaryie><link linkend="export-cpp">exporting triangulations to
+   &cpp;</link></secondaryie>
+  <secondaryie><link linkend="python">&python;
+   scripting</link></secondaryie>
  </indexentry>
 
  <indexentry id="idx-splitting-surfaces">
@@ -866,6 +893,8 @@
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
    creating</link></secondaryie>
+  <secondaryie><link linkend="foreign-export">exporting to
+   external files</link></secondaryie>
   <secondaryie><link linkend="tri-facetype">faces,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-fundgroup">fundamental
