@@ -133,7 +133,7 @@ void NCensus::foundFacePairing(const NFacePairing* pairing,
     }
 }
 
-void NCensus::foundGluingPerms(const NGluingPerms* perms, void* census) {
+void NCensus::foundGluingPerms(const NGluingPermSearcher* perms, void* census) {
     if (perms) {
         // We've found another permutation set.
         // Triangulate and see what we've got.

@@ -42,6 +42,7 @@
 namespace regina {
 
 class NGluingPerms;
+class NGluingPermSearcher;
 class NPacket;
 class NProgressManager;
 class NProgressMessage;
@@ -482,11 +483,17 @@ class NCensus {
          * found.  This routine generates the corresponding triangulation
          * and decides whether it really belongs in the census.
          *
+         * \pre The given set of gluing permutations is complete, i.e.,
+         * it is not just a partially-complete search state.  Partial
+         * searches are formed by calling NGluingPermSearcher::runSearch()
+         * with a non-negative depth argument.
+         *
          * @param perms the gluing permutation set that has been found.
          * @param census the census currently being generated;
          * this must really be of class NCensus.
          */
-        static void foundGluingPerms(const NGluingPerms* perms, void* census);
+        static void foundGluingPerms(const NGluingPermSearcher* perms,
+            void* census);
 };
 
 /*@}*/

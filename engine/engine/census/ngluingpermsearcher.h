@@ -45,20 +45,24 @@ namespace regina {
  * @{
  */
 
+class NGluingPermSearcher;
+
 /**
  * A routine used to do arbitrary processing upon a particular set of
  * gluing permutations.  Such routines are used to process permutation
  * sets found when running NGluingPermSearcher::findAllPerms().
  *
- * The first parameter passed should be a set of gluing permutations
- * (this should not be deallocated by this routine).
- * The second parameter may contain arbitrary data as passed to
- * NGluingPerms::findAllPerms().
+ * The first parameter passed will be a set of gluing permutations
+ * (in fact it will be of the subclass NGluingPermSearcher in order to
+ * support partial searches as well as full searches).  This set of
+ * gluing permutations must not be deallocated by this routine, since it
+ * may be used again by the caller.  The second parameter may contain
+ * arbitrary data as passed to NGluingPerms::findAllPerms().
  *
  * Note that the first parameter passed might be \c null to signal that
  * gluing permutation generation has finished.
  */
-typedef void (*UseGluingPerms)(const NGluingPerms*, void*);
+typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
 
 /**
  * A utility class for searching through all possible gluing permutation
@@ -107,6 +111,10 @@ class NGluingPermSearcher : public NGluingPerms {
             /**< Additional user-supplied data to be passed as the second
                  argument to the \a use_ routine. */
 
+        bool started;
+            /**< Has the search started yet?  This helps distinguish
+                 between a new search and the resumption of a partially
+                 completed search. */
         int* orientation;
             /**< Keeps track of the orientation of each tetrahedron in the
                  underlying triangulation.  Orientation is positive/negative,
@@ -115,6 +123,11 @@ class NGluingPermSearcher : public NGluingPerms {
                  +/-1, and in some algorithms the orientation counts
                  forwards or backwards from 0 according to how many
                  times the orientation has been set or verified. */
+
+    private:
+        NTetFace currFace;
+            /**< The face that we are currently examining at this stage
+                 of the search. */
 
     public:
         /**
@@ -201,21 +214,53 @@ class NGluingPermSearcher : public NGluingPerms {
          * once up to equivalence, where equivalence is defined by the
          * given set of automorphisms of the given face pairing.
          *
-         * For each permutation set that is generated, routine \a use (as
-         * passed to this function) will be called with that permutation
-         * set as an argument.
+         * For each permutation set that is generated, routine \a use_ (as
+         * passed to the class constructor) will be called with that
+         * permutation set as an argument.
          *
          * Once the generation of permutation sets has finished, routine
-         * \a use will be called once more, this time with \c null as its
+         * \a use_ will be called once more, this time with \c null as its
          * first (permutation set) argument.
          *
          * Subclasses corresponding to more specialised search criteria
          * should override this routine to use a better optimised algorithm
          * where possible.
          *
+         * It is possible to run only a partial search, branching to a
+         * given depth but no further.  In this case, rather than
+         * producing complete gluing permutation sets, the search will
+         * produce a series of partially-complete NGluingPermSearcher
+         * objects.  These partial searches may then be restarted by
+         * calling runSearch() once more (usually after being frozen or
+         * passed on to a different processor).  If necessary, the \a use_
+         * routine may call completePermSet() to distinguish between
+         * a complete set of gluing permutations and a partial search state.
+         *
+         * Note that a restarted search will never drop below its
+         * initial depth.  That is, calling runSearch() with a fixed
+         * depth can be used to subdivide the overall search space into
+         * many branches, and then calling runSearch() on each resulting
+         * partial search will complete each of these branches without overlap.
+         *
          * \todo \feature Allow cancellation of permutation set generation.
+         *
+         * @param maxDepth the depth of the partial search to run, or a
+         * negative number if a full search should be run (the default).
          */
-        virtual void runSearch();
+        virtual void runSearch(long maxDepth = -1);
+
+        /**
+         * Determines whether this search manager holds a complete
+         * gluing permutation set or just a partially completed search
+         * state.
+         *
+         * This may assist the \a use_ routine when running partial
+         * depth-based searches.  See runSearch() for further details.
+         *
+         * @return \c true if a complete gluing permutation set is held,
+         * or \c false otherwise.
+         */
+        virtual bool completePermSet() const;
 
         /**
          * The main entry routine for running a search for all gluing
@@ -351,6 +396,11 @@ class NGluingPermSearcher : public NGluingPerms {
  * and takes advantage of a number of results regarding the underlying
  * face pairing graph.
  *
+ * Note that additional unwanted triangulations (e.g., non-prime or
+ * non-minimal triangulations) may still be produced by this search.
+ * However, significantly fewer unwanted triangulations will be produced
+ * when using this class instead of NGluingPermSearcher.
+ *
  * \ifacespython Not present.
  */
 class NClosedPrimeMinSearcher : public NGluingPermSearcher {
@@ -419,14 +469,60 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  permutations for this face that correspond to the two
                  possible permutations for the previous face.  */
 
+        int orderElt;
+            /**< Marks which element of order[] we are currently examining
+                 at this stage of the search. */
+
     public:
+        /**
+         * Creates a new search manager for use when (i) only closed prime
+         * minimal P2-irreducible triangulations are required, and (ii) the
+         * given face pairing has order at least three.  Note that other
+         * unwanted triangulations may still be produced (e.g.,
+         * non-prime or non-minimal triangulations), but there will be
+         * far fewer of these than when using the NGluingPermSearcher
+         * class directly.
+         *
+         * For details on how a search manager is used, see the
+         * NGluingPermSearcher documentation.  Note in particular that
+         * this class will be automatically used by
+         * NGluingPermSearcher::findAllPerms() if possible, so there is
+         * often no need for an end user to instantiate this class
+         * directly.
+         *
+         * All constructor arguments are the same as for the
+         * NGluingPermSearcher constructor, though some arguments (such as
+         * \a finiteOnly and \a whichPurge) are not needed here since they
+         * are already implied by the specialised search context.
+         *
+         * \pre The given face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
+         * \pre The given face pairing has no boundary faces and has at
+         * least three tetrahedra.
+         */
         NClosedPrimeMinSearcher(const NFacePairing* pairing,
                 const NFacePairingIsoList* autos,
                 bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+        /**
+         * Destroys this search manager and all supporting data
+         * structures.
+         */
         virtual ~NClosedPrimeMinSearcher();
-        virtual void runSearch();
+
+        // Overridden methods:
+        virtual void runSearch(long maxDepth = -1);
+        virtual bool completePermSet() const;
 
     private:
+        /**
+         * Initialises the internal arrays (specifically those relating
+         * to face orderings and properties of chains) to accurately
+         * reflect the underlying face pairing.
+         */
         void initOrder();
 };
 
@@ -440,6 +536,10 @@ inline NGluingPermSearcher::~NGluingPermSearcher() {
         delete const_cast<NFacePairingIsoList*>(autos_);
 }
 
+inline bool NGluingPermSearcher::completePermSet() const {
+    return (currFace.tet == static_cast<int>(pairing->getNumberOfTetrahedra()));
+}
+
 // Inline functions for NClosedPrimeMinSearcher
 
 inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
@@ -447,6 +547,10 @@ inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
     delete[] orderType;
     if (chainPermIndices)
         delete[] chainPermIndices;
+}
+
+inline bool NClosedPrimeMinSearcher::completePermSet() const {
+    return (orderElt == static_cast<int>(pairing->getNumberOfTetrahedra()) * 2);
 }
 
 } // namespace regina

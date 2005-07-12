@@ -18,6 +18,8 @@ Version 4.3  [ under development ]
         Class NGluingPerms, NGluingPermSearcher, NClosedPrimeMinSearcher:
             - Moved gluing permutation search routines into new classes
               NGluingPermSearcher and NClosedPrimeMinSearcher.
+            - Supports partial depth-based searches (by passing a
+              non-negative depth parameter to the new runSearch() routine).
         Routine writeSnapPea():
             - Add a precondition that triangulation has no boundary faces.
     USER INTERFACE:

@@ -42,6 +42,7 @@ NGluingPermSearcher::NGluingPermSearcher(
         NGluingPerms(pairing), autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         whichPurge_(whichPurge), use_(use), useArgs_(useArgs),
+        started(false),
         orientation(new int[pairing->getNumberOfTetrahedra()]) {
     // Generate the list of face pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
@@ -50,7 +51,7 @@ NGluingPermSearcher::NGluingPermSearcher(
         pairing->findAutomorphisms(const_cast<NFacePairingIsoList&>(*autos));
     }
 
-    // Initialise the search.
+    // Initialise arrays.
     unsigned nTetrahedra = getNumberOfTetrahedra();
 
     std::fill(orientation, orientation + nTetrahedra, 0);
@@ -80,100 +81,129 @@ void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
         whichPurge, use, useArgs).runSearch();
 }
 
-void NGluingPermSearcher::runSearch() {
+void NGluingPermSearcher::runSearch(long maxDepth) {
     // In this generation algorithm, each orientation is simply +/-1.
 
     unsigned nTetrahedra = getNumberOfTetrahedra();
-
-    // Do we in fact have no permutation at all to choose?
-    if (pairing->dest(0, 0).isBoundary(nTetrahedra)) {
-        use_(this, useArgs_);
-        use_(0, useArgs_);
-        return;
+    if (maxDepth < 0) {
+        // Larger than we will ever see (and in fact grossly so).
+        maxDepth = nTetrahedra * 4 + 1;
     }
 
-    NTetFace face(0, 0);
-    orientation[0] = 1;
-    while (! face.isBeforeStart()) {
+    if (! started) {
+        // Search initialisation.
+        started = true;
+
+        // Do we in fact have no permutation at all to choose?
+        if (maxDepth == 0 || pairing->dest(0, 0).isBoundary(nTetrahedra)) {
+            use_(this, useArgs_);
+            use_(0, useArgs_);
+            return;
+        }
+
+        currFace.setFirst();
+        orientation[0] = 1;
+    }
+
+    long depth = 0;
+    while (depth >= 0) {
         // TODO: Check for cancellation.
 
         // When moving to the next permutation, be sure to preserve the
         // orientation of the permutation if necessary.
-        if ((! orientableOnly_) || pairing->dest(face).face == 0)
-            permIndex(face)++;
+        if ((! orientableOnly_) || pairing->dest(currFace).face == 0)
+            permIndex(currFace)++;
         else
-            permIndex(face) += 2;
+            permIndex(currFace) += 2;
 
-        if (permIndex(face) >= 6) {
+        if (permIndex(currFace) >= 6) {
             // Out of ideas for this face.
             // Head back down to the previous face.
-            permIndex(face) = -1;
-            face--;
-            while ((! face.isBeforeStart()) && (pairing->isUnmatched(face) ||
-                    pairing->dest(face) < face)) {
-                permIndex(face) = -1;
-                face--;
+            permIndex(currFace) = -1;
+            currFace--;
+            while ((! currFace.isBeforeStart()) &&
+                    (pairing->isUnmatched(currFace) ||
+                        pairing->dest(currFace) < currFace)) {
+                permIndex(currFace) = -1;
+                currFace--;
             }
+            depth--;
             continue;
         }
 
         // We are sitting on a new permutation to try.
 
         // Is this going to lead to an unwanted triangulation?
-        if (mayPurge(face))
+        if (mayPurge(currFace))
             continue;
         if (! orientableOnly_)
-            if (badEdgeLink(face))
+            if (badEdgeLink(currFace))
                 continue;
 
         // Fix the orientation if appropriate.
-        if (pairing->dest(face).face == 0) {
+        if (pairing->dest(currFace).face == 0) {
             // It's the first time we've hit this tetrahedron.
-            if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
-                    (pairing->dest(face).face == 3 ? 0 : 1)) % 2 == 0)
-                orientation[pairing->dest(face).tet] = -orientation[face.tet];
+            if ((permIndex(currFace) + (currFace.face == 3 ? 0 : 1) +
+                    (pairing->dest(currFace).face == 3 ? 0 : 1)) % 2 == 0)
+                orientation[pairing->dest(currFace).tet] =
+                    -orientation[currFace.tet];
             else
-                orientation[pairing->dest(face).tet] = orientation[face.tet];
+                orientation[pairing->dest(currFace).tet] =
+                    orientation[currFace.tet];
         }
 
         // Move on to the next face.
-        for (face++; face.tet < static_cast<int>(nTetrahedra); face++) {
-            if (pairing->isUnmatched(face))
+        for (currFace++; currFace.tet < static_cast<int>(nTetrahedra);
+                currFace++) {
+            if (pairing->isUnmatched(currFace))
                 continue;
-            if (face < pairing->dest(face))
+            if (currFace < pairing->dest(currFace))
                 break;
 
             // We've already decided on this gluing permutation; don't
             // forget to store the corresponding inverse permutation.
-            permIndex(face) = allPermsS3Inv[permIndex(pairing->dest(face))];
+            permIndex(currFace) =
+                allPermsS3Inv[permIndex(pairing->dest(currFace))];
         }
+        depth++;
 
         // If we're at the end, try the solution and step back.
-        if (face.tet == static_cast<int>(nTetrahedra)) {
-            // Run through the automorphisms and check whether our
-            // permutations are in canonical form.
-            if (isCanonical())
+        if (depth == maxDepth ||
+                currFace.tet == static_cast<int>(nTetrahedra)) {
+            // We've gone as far as we need to.
+            if (currFace.tet == static_cast<int>(nTetrahedra)) {
+                // We in fact have an entire triangulation.
+                // Run through the automorphisms and check whether our
+                // permutations are in canonical form.
+                if (isCanonical())
+                    use_(this, useArgs_);
+            } else {
+                // No triangulation, just hit the max depth.
                 use_(this, useArgs_);
+            }
 
             // Back to the previous face.
-            face--;
-            while ((! face.isBeforeStart()) && (pairing->isUnmatched(face) ||
-                    pairing->dest(face) < face)) {
-                permIndex(face) = -1;
-                face--;
+            currFace--;
+            while ((! currFace.isBeforeStart()) &&
+                    (pairing->isUnmatched(currFace) ||
+                        pairing->dest(currFace) < currFace)) {
+                permIndex(currFace) = -1;
+                currFace--;
             }
-        } else if (orientableOnly_ && pairing->dest(face).face > 0) {
+            depth--;
+        } else if (orientableOnly_ && pairing->dest(currFace).face > 0) {
             // Be sure to get the orientation right.
-            if (orientation[face.tet] == orientation[pairing->dest(face).tet])
-                permIndex(face) = 1;
+            if (orientation[currFace.tet] ==
+                    orientation[pairing->dest(currFace).tet])
+                permIndex(currFace) = 1;
             else
-                permIndex(face) = 0;
+                permIndex(currFace) = 0;
 
-            if ((face.face == 3 ? 0 : 1) +
-                    (pairing->dest(face).face == 3 ? 0 : 1) == 1)
-                permIndex(face) = (permIndex(face) + 1) % 2;
+            if ((currFace.face == 3 ? 0 : 1) +
+                    (pairing->dest(currFace).face == 3 ? 0 : 1) == 1)
+                permIndex(currFace) = (permIndex(currFace) + 1) % 2;
 
-            permIndex(face) -= 2;
+            permIndex(currFace) -= 2;
         }
     }
 

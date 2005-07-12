@@ -279,20 +279,32 @@ void NClosedPrimeMinSearcher::initOrder() {
     }
 }
 
-void NClosedPrimeMinSearcher::runSearch() {
+void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     // Preconditions:
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
 
-    // ---------- Tests for trivial solutions ----------
+    unsigned nTets = getNumberOfTetrahedra();
+    if (maxDepth < 0) {
+        // Larger than we will ever see (and in fact grossly so).
+        maxDepth = nTets * 4 + 1;
+    }
 
-    // Begin by testing for face pairings that can never lead to such a
-    // triangulation.
+    if (! started) {
+        // Search initialisation.
+        started = true;
 
-    if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain() ||
-            pairing->hasOneEndedChainWithDoubleHandle()) {
-        use_(0, useArgs_);
-        return;
+        // Begin by testing for face pairings that can never lead to such a
+        // triangulation.
+        if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain() ||
+                pairing->hasOneEndedChainWithDoubleHandle()) {
+            use_(0, useArgs_);
+            return;
+        }
+
+        orderElt = 0;
+        if (nChainEdges < nTets * 2)
+            orientation[order[nChainEdges].tet] = 1;
     }
 
     // ---------- Selecting the individual gluing permutations ----------
@@ -311,15 +323,14 @@ void NClosedPrimeMinSearcher::runSearch() {
     // We won't bother assigning orientations to the tetrahedra internal
     // to the one-ended chains.
 
-    unsigned nTets = getNumberOfTetrahedra();
-    int orderElt = 0;
-    if (nChainEdges < nTets * 2)
-        orientation[order[nChainEdges].tet] = 1;
+    int minOrder = orderElt;
+    int maxOrder = orderElt + maxDepth;
+
     NTetFace face, adj;
     NFacePair faces;
     NPerm trial1, trial2;
     bool generic;
-    while (orderElt >= 0) {
+    while (orderElt >= minOrder) {
         face = order[orderElt];
         adj = (*pairing)[face];
 
@@ -421,11 +432,18 @@ void NClosedPrimeMinSearcher::runSearch() {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == static_cast<int>(nTets) * 2) {
-            // Run through the automorphisms and check whether our
-            // permutations are in canonical form.
-            if (isCanonical())
+        if (orderElt == maxOrder || orderElt == static_cast<int>(nTets) * 2) {
+            // We've gone as far as we need to.
+            if (orderElt == static_cast<int>(nTets) * 2) {
+                // We in fact have an entire triangulation.
+                // Run through the automorphisms and check whether our
+                // permutations are in canonical form.
+                if (isCanonical())
+                    use_(this, useArgs_);
+            } else {
+                // No triangulation, just hit the max depth.
                 use_(this, useArgs_);
+            }
 
             // Back to the previous face.
             orderElt--;
