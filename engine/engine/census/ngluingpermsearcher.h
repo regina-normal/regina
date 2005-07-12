@@ -288,6 +288,9 @@ class NGluingPermSearcher : public NGluingPerms {
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
+        // Overridden methods:
+        virtual void dumpData(std::ostream& out) const;
+
     protected:
         /**
          * Compares the current set of gluing permutations with its
@@ -514,6 +517,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         virtual ~NClosedPrimeMinSearcher();
 
         // Overridden methods:
+        virtual void dumpData(std::ostream& out) const;
         virtual void runSearch(long maxDepth = -1);
         virtual bool completePermSet() const;
 

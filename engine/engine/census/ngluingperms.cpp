@@ -76,5 +76,18 @@ int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
     return (std::find(allPermsS3, allPermsS3 + 6, permS3) - allPermsS3);
 }
 
+void NGluingPerms::dumpData(std::ostream& out) const {
+    out << pairing->toTextRep() << std::endl;
+
+    unsigned tet, face;
+    for (tet = 0; tet < getNumberOfTetrahedra(); tet++)
+        for (face = 0; face < 4; face++) {
+            if (tet || face)
+                out << ' ';
+            out << permIndex(tet, face);
+        }
+    out << std::endl;
+}
+
 } // namespace regina
 

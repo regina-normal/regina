@@ -157,6 +157,24 @@ class NGluingPerms {
          */
         NTriangulation* triangulate() const;
 
+        /**
+         * Dumps all internal data in a plain text format to the given
+         * output stream.  This object can be recreated from this text
+         * data by calling the input stream constructor for this class.
+         *
+         * This routine may be useful for transferring objects from
+         * one processor to another.
+         *
+         * Note that subclass data is written after superclass data, so
+         * it is safe to dump data from a subclass and then recreate a
+         * new superclass object from that data (though subclass-specific
+         * information will of course be lost).
+         *
+         * @param out the output stream to which the data should be
+         * written.
+         */
+        virtual void dumpData(std::ostream& out) const;
+
     protected:
         /**
          * Creates a new permutation set.  All internal arrays will be

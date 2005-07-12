@@ -472,5 +472,31 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
+void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
+    NGluingPermSearcher::dumpData(out);
+
+    unsigned nTets = getNumberOfTetrahedra();
+    unsigned i;
+
+    for (i = 0; i < 2 * nTets; i++) {
+        if (i)
+            out << ' ';
+        out << order[i].tet << ' ' << order[i].face << ' ' << orderType[i];
+    }
+    out << std::endl;
+
+    out << nChainEdges << std::endl;
+    if (nChainEdges) {
+        for (i = 0; i < 2 * nChainEdges; i++) {
+            if (i)
+                out << ' ';
+            out << chainPermIndices[i];
+        }
+        out << std::endl;
+    }
+
+    out << orderElt << std::endl;
+}
+
 } // namespace regina
 

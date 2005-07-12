@@ -211,6 +211,24 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
+void NGluingPermSearcher::dumpData(std::ostream& out) const {
+    NGluingPerms::dumpData(out);
+
+    out << (orientableOnly_ ? 'o' : '.');
+    out << (finiteOnly_ ? 'f' : '.');
+    out << (started ? 's' : '.');
+    out << ' ' << whichPurge_ << std::endl;
+
+    for (unsigned t = 0; t < pairing->getNumberOfTetrahedra(); t++) {
+        if (t)
+            out << ' ';
+        out << orientation[t];
+    }
+    out << std::endl;
+
+    out << currFace.tet << ' ' << currFace.face << std::endl;
+}
+
 bool NGluingPermSearcher::isCanonical() const {
     NTetFace face, faceDest, faceImage;
     int order;
