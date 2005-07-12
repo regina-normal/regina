@@ -15,6 +15,9 @@ Version 4.3  [ under development ]
         Overall structure:
             - Fixed "regina-engine-config --cflags", which wrote includes
               for Regina's dependencies but not for Regina itself (sigh).
+        Class NGluingPerms, NGluingPermSearcher, NClosedPrimeMinSearcher:
+            - Moved gluing permutation search routines into new classes
+              NGluingPermSearcher and NClosedPrimeMinSearcher.
         Routine writeSnapPea():
             - Add a precondition that triangulation has no boundary faces.
     USER INTERFACE:

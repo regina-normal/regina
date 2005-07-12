@@ -29,7 +29,7 @@
 #include <algorithm>
 #include <sstream>
 #include "census/ncensus.h"
-#include "census/ngluingperms.h"
+#include "census/ngluingpermsearcher.h"
 #include "progress/nprogressmanager.h"
 #include "progress/nprogresstypes.h"
 #include "triangulation/ntriangulation.h"
@@ -92,7 +92,7 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
     // Select the individual gluing permutations.
     NCensus census(parent, finiteness, orientability, whichPurge,
         sieve, sieveArgs, 0);
-    NGluingPerms::findAllPerms(pairing, &autos,
+    NGluingPermSearcher::findAllPerms(pairing, &autos,
         ! census.orientability.hasFalse(), ! census.finiteness.hasFalse(),
         census.whichPurge, NCensus::foundGluingPerms, &census);
 
@@ -119,7 +119,7 @@ void NCensus::foundFacePairing(const NFacePairing* pairing,
             realCensus->progress->setMessage(pairing->toString());
 
         // Select the individual gluing permutations.
-        NGluingPerms::findAllPerms(pairing, autos,
+        NGluingPermSearcher::findAllPerms(pairing, autos,
             ! realCensus->orientability.hasFalse(),
             ! realCensus->finiteness.hasFalse(),
             realCensus->whichPurge, NCensus::foundGluingPerms, census);

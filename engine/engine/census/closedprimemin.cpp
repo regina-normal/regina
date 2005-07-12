@@ -28,7 +28,7 @@
 
 #include <sstream>
 #include "census/ncensus.h"
-#include "census/ngluingperms.h"
+#include "census/ngluingpermsearcher.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/boostutils.h"
@@ -36,23 +36,27 @@
 
 namespace regina {
 
-void NGluingPerms::findAllPermsClosedPrimeMin(
+const unsigned NClosedPrimeMinSearcher::EDGE_CHAIN_END = 1;
+const unsigned NClosedPrimeMinSearcher::EDGE_CHAIN_INTERNAL_FIRST = 2;
+const unsigned NClosedPrimeMinSearcher::EDGE_CHAIN_INTERNAL_SECOND = 3;
+const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_FIRST = 4;
+const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_SECOND = 5;
+const unsigned NClosedPrimeMinSearcher::EDGE_MISC = 6;
+
+NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, bool orientableOnly,
-        UseGluingPerms use, void* useArgs) {
+        UseGluingPerms use, void* useArgs) :
+        NGluingPermSearcher(pairing, autos, orientableOnly,
+            true /* finiteOnly */,
+            NCensus::PURGE_NON_MINIMAL_PRIME | NCensus::PURGE_P2_REDUCIBLE,
+            use, useArgs) {
+    initOrder();
+}
+
+void NClosedPrimeMinSearcher::initOrder() {
     // Preconditions:
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
-
-    // ---------- Tests for trivial solutions ----------
-
-    // Begin by testing for face pairings that can never lead to such a
-    // triangulation.
-
-    if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain() ||
-            pairing->hasOneEndedChainWithDoubleHandle()) {
-        use(0, useArgs);
-        return;
-    }
 
     // ---------- Selecting an ordering of faces ----------
 
@@ -70,70 +74,12 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
 
     unsigned nTets = getNumberOfTetrahedra();
 
-    /**
-     * The order in which gluing permutations are assigned to faces is
-     * order[0], order[1], ..., order[2n-1].  Note that each element of
-     * this array corresponds to a single edge of the underlying face
-     * pairing graph, which in turn represents a tetrahedron face and
-     * its image under the given face pairing.
-     *
-     * The specific tetrahedron face stored in this array for each edge
-     * of the underlying face pairing graph will be the smaller of the
-     * two identified tetrahedron faces.
-     */
-    NTetFace* order = new NTetFace[nTets * 2];
+    order = new NTetFace[nTets * 2];
+    orderType = new unsigned[nTets * 2];
 
-    /**
-     * For each edge in the face pairing graph stored in the order[]
-     * array, a corresponding category for this edge is stored in the
-     * orderType[] array.  Categories are described by the EDGE_...
-     * constants defined below.
-     */
-    unsigned* orderType = new unsigned[nTets * 2];
-
-    /**
-     * Have we placed a tetrahedron face or its partner in the order[]
-     * array yet?
-     */
     bool* orderAssigned = new bool[nTets * 4];
-
-    /**
-     * The end of a one-ended chain.
-     */
-    static const unsigned EDGE_CHAIN_END = 1;
-
-    /**
-     * The first edge of a double edge within a one-ended chain.
-     * The corresponding element of order[] stores the face closest to
-     * the loop at the end of this chain.
-     */
-    static const unsigned EDGE_CHAIN_INTERNAL_FIRST = 2;
-
-    /**
-     * The second edge of a double edge within a one-ended chain.
-     * The corresponding element of order[] stores the face closest to
-     * the loop at the end of this chain.
-     */
-    static const unsigned EDGE_CHAIN_INTERNAL_SECOND = 3;
-
-    /**
-     * The first edge of a miscellaneous double edge.
-     * The corresponding element of order[] stores the face belonging to
-     * the lower numbered tetrahedron.
-     */
-    static const unsigned EDGE_DOUBLE_FIRST = 4;
-
-    /**
-     * The second edge of a miscellaneous double edge.
-     * The corresponding element of order[] stores the face belonging to
-     * the lower numbered tetrahedron.
-     */
-    static const unsigned EDGE_DOUBLE_SECOND = 5;
-
-    /**
-     * A miscellaneous edge in the face pairing graph.
-     */
-    static const unsigned EDGE_MISC = 6;
+        /**< Have we placed a tetrahedron face or its partner in the
+             order[] array yet? */
 
     // Hunt for structures within the face pairing graph.
 
@@ -218,8 +164,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
 
     // Record the number of edges in the face pairing graph
     // belonging to one-ended chains.
-
-    unsigned nChainEdges = orderDone;
+    nChainEdges = orderDone;
 
     // Run through the remaining faces.
     for (face.setFirst(); ! face.isPastEnd(nTets, true); face++)
@@ -240,22 +185,18 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
             orderAssigned[adj.tet * 4 + adj.face] = true;
         }
 
+    // All done for the order[] array.  Tidy up.
+    delete[] orderAssigned;
+
     // ---------- Calculating the possible gluing permutations ----------
 
     // For each face in the order[] array of type EDGE_CHAIN_END or
     // EDGE_CHAIN_INTERNAL_FIRST, we calculate the two gluing permutations
     // that must be tried.
     //
-    // For each face of type EDGE_CHAIN_INTERNAL_SECOND, the gluing
-    // permutation can be derived from the permutation chosen for the
-    // previous face (of type EDGE_CHAIN_INTERNAL_FIRST); in this case we
-    // calculate the two permutations for this face that correspond to
-    // the two possible permutations for the previous face.
-    //
     // For the remaining faces we try all possible permutations.
 
-    int* chainPermIndices = (nChainEdges == 0 ? 0 :
-        new int[nChainEdges * 2]);
+    chainPermIndices = (nChainEdges == 0 ? 0 : new int[nChainEdges * 2]);
 
     NFacePair facesAdj, comp, compAdj;
     NPerm trial1, trial2;
@@ -336,6 +277,23 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
             }
         }
     }
+}
+
+void NClosedPrimeMinSearcher::runSearch() {
+    // Preconditions:
+    //     Only closed prime minimal P2-irreducible triangulations are needed.
+    //     The given face pairing is closed with order >= 3.
+
+    // ---------- Tests for trivial solutions ----------
+
+    // Begin by testing for face pairings that can never lead to such a
+    // triangulation.
+
+    if (pairing->hasTripleEdge() || pairing->hasBrokenDoubleEndedChain() ||
+            pairing->hasOneEndedChainWithDoubleHandle()) {
+        use_(0, useArgs_);
+        return;
+    }
 
     // ---------- Selecting the individual gluing permutations ----------
 
@@ -349,19 +307,18 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
     // order[nChainEdges].tet), face 0 of this tetrahedron is not
     // involved in a one-ended chain.
 
-    // Initialise the internal arrays.
-    //
     // In this generation algorithm, each orientation is simply +/-1.
     // We won't bother assigning orientations to the tetrahedra internal
     // to the one-ended chains.
-    std::fill(orientation, orientation + nTets, 0);
-    std::fill(permIndices, permIndices + nTets * 4, -1);
 
+    unsigned nTets = getNumberOfTetrahedra();
     int orderElt = 0;
     if (nChainEdges < nTets * 2)
         orientation[order[nChainEdges].tet] = 1;
-    bool canonical, generic;
-    std::list<NIsomorphismDirect*>::const_iterator it;
+    NTetFace face, adj;
+    NFacePair faces;
+    NPerm trial1, trial2;
+    bool generic;
     while (orderElt >= 0) {
         face = order[orderElt];
         adj = (*pairing)[face];
@@ -397,7 +354,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
 
             // Be sure to preserve the orientation of the permutation if
             // necessary.
-            if ((! orientableOnly) || pairing->dest(face).face == 0)
+            if ((! orientableOnly_) || pairing->dest(face).face == 0)
                 permIndex(face)++;
             else
                 permIndex(face) += 2;
@@ -418,8 +375,8 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         // Is this going to lead to an unwanted triangulation?
         if (lowDegreeEdge(face, true, true))
             continue;
-        if (! orientableOnly)
-            if (badEdgeLink(face, true))
+        if (! orientableOnly_)
+            if (badEdgeLink(face))
                 continue;
 
         if (orderType[orderElt] == EDGE_DOUBLE_SECOND) {
@@ -451,7 +408,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         }
 
         // Fix the orientation if appropriate.
-        if (generic && adj.face == 0 && orientableOnly) {
+        if (generic && adj.face == 0 && orientableOnly_) {
             // It's the first time we've hit this tetrahedron.
             if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
                     (adj.face == 3 ? 0 : 1)) % 2 == 0)
@@ -467,18 +424,8 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
         if (orderElt == static_cast<int>(nTets) * 2) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
-            canonical = true;
-            for (it = autos->begin(); it != autos->end(); it++) {
-                // TODO: Check for cancellation.
-
-                if (cmpPermsWithPreImage(**it) > 0) {
-                    canonical = false;
-                    break;
-                }
-            }
-
-            if (canonical)
-                use(this, useArgs);
+            if (isCanonical())
+                use_(this, useArgs_);
 
             // Back to the previous face.
             orderElt--;
@@ -486,7 +433,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly && pairing->dest(face).face > 0) {
+            if (orientableOnly_ && pairing->dest(face).face > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
                 adj = (*pairing)[face];
                 if (orientation[face.tet] == orientation[adj.tet])
@@ -504,13 +451,7 @@ void NGluingPerms::findAllPermsClosedPrimeMin(
 
     // And the search is over.
 
-    delete[] order;
-    delete[] orderType;
-    delete[] orderAssigned;
-    if (chainPermIndices)
-        delete[] chainPermIndices;
-
-    use(0, useArgs);
+    use_(0, useArgs_);
 }
 
 } // namespace regina
