@@ -432,22 +432,18 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == maxOrder || orderElt == static_cast<int>(nTets) * 2) {
-            // We've gone as far as we need to.
-            if (orderElt == static_cast<int>(nTets) * 2) {
-                // We in fact have an entire triangulation.
-                // Run through the automorphisms and check whether our
-                // permutations are in canonical form.
-                if (isCanonical())
-                    use_(this, useArgs_);
-            } else {
-                // No triangulation, just hit the max depth.
+        if (orderElt == static_cast<int>(nTets) * 2) {
+            // We in fact have an entire triangulation.
+            // Run through the automorphisms and check whether our
+            // permutations are in canonical form.
+            if (isCanonical())
                 use_(this, useArgs_);
-            }
 
             // Back to the previous face.
             orderElt--;
         } else {
+            // Not a full triangulation; just one level deeper.
+
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
@@ -463,6 +459,17 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                     permIndex(face) = (permIndex(face) + 1) % 2;
 
                 permIndex(face) -= 2;
+            }
+
+            if (orderElt == maxOrder) {
+                // We haven't found an entire triangulation, but we've
+                // gone as far as we need to.
+                // Process it, then step back.
+                use_(this, useArgs_);
+
+                // Back to the previous face.
+                permIndex(face) = -1;
+                orderElt--;
             }
         }
     }
