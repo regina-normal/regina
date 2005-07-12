@@ -81,6 +81,10 @@ class NGluingPerms {
                  yet been selected (e.g., if this permutation set is still
                  under construction) then this index is -1. */
 
+        bool inputError_;
+            /**< Has an error occurred during construction from an
+                 input stream? */
+
     public:
         /**
          * Creates a new set of gluing permutations that is a clone of
@@ -91,9 +95,42 @@ class NGluingPerms {
         NGluingPerms(const NGluingPerms& cloneMe);
 
         /**
+         * Reads a new set of gluing permutations from the given input
+         * stream.  This routine reads data in the format written by
+         * dumpData().
+         *
+         * If the data found in the input stream is invalid or
+         * incorrectly formatted, the routine inputError() will return
+         * \c true but the contents of this object will be otherwise
+         * undefined.
+         *
+         * \warning The data format is liable to change between
+         * Regina releases.  Data in this format should be used on a
+         * short-term temporary basis only.
+         *
+         * @param in the input stream from which to read.
+         */
+        NGluingPerms(std::istream& in);
+
+        /**
          * Deallocates any memory used by this structure.
          */
         virtual ~NGluingPerms();
+
+        /**
+         * Was an error found during construction from an input stream?
+         *
+         * This routine returns \c true if an input stream constructor was
+         * used to create this object but the data in the input stream
+         * was invalid or incorrectly formatted.
+         *
+         * If a different constructor was called (i.e., no input stream
+         * was used), then this routine will always return \c false.
+         *
+         * @return \c true if an error occurred during construction from
+         * an input stream, or \c false otherwise.
+         */
+        bool inputError() const;
 
         /**
          * Returns the total number of tetrahedra under consideration.
@@ -169,6 +206,10 @@ class NGluingPerms {
          * it is safe to dump data from a subclass and then recreate a
          * new superclass object from that data (though subclass-specific
          * information will of course be lost).
+         *
+         * \warning The data format is liable to change between
+         * Regina releases.  Data in this format should be used on a
+         * short-term temporary basis only.
          *
          * @param out the output stream to which the data should be
          * written.
@@ -378,11 +419,16 @@ class NGluingPerms {
 
 inline NGluingPerms::NGluingPerms(const NFacePairing* newPairing) :
         pairing(newPairing),
-        permIndices(new int[newPairing->getNumberOfTetrahedra() * 4]) {
+        permIndices(new int[newPairing->getNumberOfTetrahedra() * 4]),
+        inputError_(false) {
 }
 
 inline NGluingPerms::~NGluingPerms() {
     delete[] permIndices;
+}
+
+inline bool NGluingPerms::inputError() const {
+    return inputError_;
 }
 
 inline unsigned NGluingPerms::getNumberOfTetrahedra() const {

@@ -199,6 +199,27 @@ class NGluingPermSearcher : public NGluingPerms {
                 UseGluingPerms use, void* useArgs = 0);
 
         /**
+         * Initialises a new search manager based on data read from the
+         * given input stream.  This may be a new search or a partially
+         * completed search.  This routine reads data in the format written
+         * by dumpData().
+         *
+         * If the data found in the input stream is invalid or incorrectly
+         * formatted, the routine inputError() will return \c true but
+         * the contents of this object will be otherwise undefined.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param in the input stream from which to read.
+         * @param use as for the main NGluingPermSearcher constructor.
+         * @param useArgs as for the main NGluingPermSearcher constructor.
+         */
+        NGluingPermSearcher(std::istream& in,
+            UseGluingPerms use, void* useArgs = 0);
+
+        /**
          * Destroys this search manager and all supporting data
          * structures.
          */
@@ -510,6 +531,29 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         NClosedPrimeMinSearcher(const NFacePairing* pairing,
                 const NFacePairingIsoList* autos,
                 bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Initialises a new search manager based on data read from the
+         * given input stream.  This may be a new search or a partially
+         * completed search.  This routine reads data in the format written
+         * by dumpData().
+         *
+         * If the data found in the input stream is invalid or incorrectly
+         * formatted, the routine inputError() will return \c true but
+         * the contents of this object will be otherwise undefined.
+         *
+         * The arguments \a use and \a useArgs are the same as for the
+         * NGluingPermSearcher constructor.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param in the input stream from which to read.
+         */
+        NClosedPrimeMinSearcher(std::istream& in,
+            UseGluingPerms use, void* useArgs = 0);
+
         /**
          * Destroys this search manager and all supporting data
          * structures.

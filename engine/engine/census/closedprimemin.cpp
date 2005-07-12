@@ -473,6 +473,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 }
 
 void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
+    // Assuming nTets < 100, estimated worst case (42 * nTets + 20) bytes total.
+    // Don't quote me on this.
     NGluingPermSearcher::dumpData(out);
 
     unsigned nTets = getNumberOfTetrahedra();
@@ -496,6 +498,49 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
     }
 
     out << orderElt << std::endl;
+}
+
+NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
+        UseGluingPerms use, void* useArgs) :
+        NGluingPermSearcher(in, use, useArgs),
+        order(0), orderType(0), nChainEdges(0), chainPermIndices(0),
+        orderElt(0) {
+    if (inputError_)
+        return;
+
+    unsigned nTets = getNumberOfTetrahedra();
+    unsigned i;
+
+    order = new NTetFace[2 * nTets];
+    orderType = new unsigned[nTets * 2];
+    for (i = 0; i < 2 * nTets; i++) {
+        in >> order[i].tet >> order[i].face >> orderType[i];
+        if (order[i].tet >= static_cast<int>(nTets) || order[i].tet < 0 ||
+                order[i].face >= 4 || order[i].face < 0) {
+            inputError_ = true; return;
+        }
+    }
+
+    in >> nChainEdges;
+    /* Unnecessary since nChainEdges is unsigned.
+    if (nChainEdges < 0) {
+        inputError_ = true; return;
+    } */
+    if (nChainEdges) {
+        chainPermIndices = new int[nChainEdges * 2];
+        for (i = 0; i < 2 * nChainEdges; i++) {
+            in >> chainPermIndices[i];
+            if (chainPermIndices[i] < 0 || chainPermIndices[i] >= 6) {
+                inputError_ = true; return;
+            }
+        }
+    }
+
+    in >> orderElt;
+
+    // Did we hit an unexpected EOF?
+    if (in.eof())
+        inputError_ = true;
 }
 
 } // namespace regina

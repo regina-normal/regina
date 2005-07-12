@@ -33,7 +33,7 @@
 namespace regina {
 
 NGluingPerms::NGluingPerms(const NGluingPerms& cloneMe) :
-        pairing(cloneMe.pairing) {
+        pairing(cloneMe.pairing), inputError_(false) {
     unsigned nTet = cloneMe.getNumberOfTetrahedra();
 
     permIndices = new int[nTet * 4];
@@ -77,6 +77,8 @@ int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
 }
 
 void NGluingPerms::dumpData(std::ostream& out) const {
+    // Assuming nTets < 100, estimated worst case (17 * nTets) bytes total.
+    // Don't quote me on this.
     out << pairing->toTextRep() << std::endl;
 
     unsigned tet, face;
@@ -87,6 +89,39 @@ void NGluingPerms::dumpData(std::ostream& out) const {
             out << permIndex(tet, face);
         }
     out << std::endl;
+}
+
+NGluingPerms::NGluingPerms(std::istream& in) :
+        pairing(0), permIndices(0), inputError_(false) {
+    // Remember that we can safely abort before allocating arrays, since C++
+    // delete tests for nullness.
+    std::string line;
+
+    std::getline(in, line);
+    pairing = NFacePairing::fromTextRep(line);
+    if (! pairing) {
+        inputError_ = true; return;
+    }
+
+    unsigned nTets = pairing->getNumberOfTetrahedra();
+    if (nTets == 0) {
+        inputError_ = true; return;
+    }
+
+    permIndices = new int[nTets * 4];
+
+    unsigned tet, face;
+    for (tet = 0; tet < nTets; tet++)
+        for (face = 0; face < 4; face++) {
+            in >> permIndex(tet, face);
+            if (permIndex(tet, face) >= 6 || permIndex(tet, face) < -1) {
+                inputError_ = true; return;
+            }
+        }
+
+    // Did we hit an unexpected EOF?
+    if (in.eof())
+        inputError_ = true;
 }
 
 } // namespace regina

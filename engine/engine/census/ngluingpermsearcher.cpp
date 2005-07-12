@@ -212,6 +212,8 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
 }
 
 void NGluingPermSearcher::dumpData(std::ostream& out) const {
+    // Assuming nTets < 100, estimated worst case (20 * nTets + 12) bytes total.
+    // Don't quote me on this.
     NGluingPerms::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
@@ -227,6 +229,62 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 
     out << currFace.tet << ' ' << currFace.face << std::endl;
+}
+
+NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
+        UseGluingPerms use, void* useArgs) :
+        NGluingPerms(in), autos_(0), autosNew(false),
+        use_(use), useArgs_(useArgs), orientation(0) {
+    if (inputError_)
+        return;
+
+    // Recontruct the face pairing automorphisms.
+    const_cast<NFacePairingIsoList*>(autos_) = new NFacePairingIsoList();
+    pairing->findAutomorphisms(const_cast<NFacePairingIsoList&>(*autos_));
+    autosNew = true;
+
+    // Keep reading.
+    char c;
+
+    in >> c;
+    if (c == 'o')
+        orientableOnly_ = true;
+    else if (c == '.')
+        orientableOnly_ = false;
+    else {
+        inputError_ = true; return;
+    }
+
+    in >> c;
+    if (c == 'f')
+        finiteOnly_ = true;
+    else if (c == '.')
+        finiteOnly_ = false;
+    else {
+        inputError_ = true; return;
+    }
+
+    in >> c;
+    if (c == 's')
+        started = true;
+    else if (c == '.')
+        started = false;
+    else {
+        inputError_ = true; return;
+    }
+
+    in >> whichPurge_;
+
+    unsigned nTets = pairing->getNumberOfTetrahedra();
+    orientation = new int[nTets];
+    for (unsigned t = 0; t < nTets; t++)
+        in >> orientation[t];
+
+    in >> currFace.tet >> currFace.face;
+
+    // Did we hit an unexpected EOF?
+    if (in.eof())
+        inputError_ = true;
 }
 
 bool NGluingPermSearcher::isCanonical() const {
