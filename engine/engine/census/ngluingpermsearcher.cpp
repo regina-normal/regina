@@ -43,7 +43,8 @@ NGluingPermSearcher::NGluingPermSearcher(
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         whichPurge_(whichPurge), use_(use), useArgs_(useArgs),
         started(false),
-        orientation(new int[pairing->getNumberOfTetrahedra()]) {
+        orientation(new int[pairing->getNumberOfTetrahedra()]),
+        currFace(0, 0) {
     // Generate the list of face pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autos_ == 0) {
@@ -248,7 +249,7 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
 NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
         UseGluingPerms use, void* useArgs) :
         NGluingPerms(in), autos_(0), autosNew(false),
-        use_(use), useArgs_(useArgs), orientation(0) {
+        use_(use), useArgs_(useArgs), orientation(0), currFace(0, 0) {
     if (inputError_)
         return;
 
