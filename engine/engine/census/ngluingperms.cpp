@@ -29,6 +29,7 @@
 #include <algorithm>
 #include "census/ngluingperms.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/stringutils.h"
 
 namespace regina {
 
@@ -77,10 +78,13 @@ int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
 }
 
 void NGluingPerms::dumpData(std::ostream& out) const {
-    // Assuming nTets < 100, estimated worst case (17 * nTets) bytes total.
+    // Assuming nTets < 100, estimated worst case (32 * nTets) bytes total.
     // Don't quote me on this.
+
+    // (5 * 4 * nTets bytes)
     out << pairing->toTextRep() << std::endl;
 
+    // (3 * 4 * nTets bytes)
     unsigned tet, face;
     for (tet = 0; tet < getNumberOfTetrahedra(); tet++)
         for (face = 0; face < 4; face++) {
@@ -97,7 +101,17 @@ NGluingPerms::NGluingPerms(std::istream& in) :
     // delete tests for nullness.
     std::string line;
 
-    std::getline(in, line);
+    // Skip initial whitespace to find the face pairing.
+    while (true) {
+        std::getline(in, line);
+        if (in.eof()) {
+            inputError_ = true; return;
+        }
+        line = regina::stripWhitespace(line);
+        if (line.length() > 0)
+            break;
+    }
+
     pairing = NFacePairing::fromTextRep(line);
     if (! pairing) {
         inputError_ = true; return;
@@ -114,9 +128,8 @@ NGluingPerms::NGluingPerms(std::istream& in) :
     for (tet = 0; tet < nTets; tet++)
         for (face = 0; face < 4; face++) {
             in >> permIndex(tet, face);
-            if (permIndex(tet, face) >= 6 || permIndex(tet, face) < -1) {
-                inputError_ = true; return;
-            }
+            // Don't test the range of permIndex(tet, face) since the
+            // gluing permutation set could still be under construction.
         }
 
     // Did we hit an unexpected EOF?

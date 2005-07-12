@@ -168,19 +168,12 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         depth++;
 
         // If we're at the end, try the solution and step back.
-        if (depth == maxDepth ||
-                currFace.tet == static_cast<int>(nTetrahedra)) {
-            // We've gone as far as we need to.
-            if (currFace.tet == static_cast<int>(nTetrahedra)) {
-                // We in fact have an entire triangulation.
-                // Run through the automorphisms and check whether our
-                // permutations are in canonical form.
-                if (isCanonical())
-                    use_(this, useArgs_);
-            } else {
-                // No triangulation, just hit the max depth.
+        if (currFace.tet == static_cast<int>(nTetrahedra)) {
+            // We in fact have an entire triangulation.
+            // Run through the automorphisms and check whether our
+            // permutations are in canonical form.
+            if (isCanonical())
                 use_(this, useArgs_);
-            }
 
             // Back to the previous face.
             currFace--;
@@ -191,19 +184,40 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
                 currFace--;
             }
             depth--;
-        } else if (orientableOnly_ && pairing->dest(currFace).face > 0) {
-            // Be sure to get the orientation right.
-            if (orientation[currFace.tet] ==
-                    orientation[pairing->dest(currFace).tet])
-                permIndex(currFace) = 1;
-            else
-                permIndex(currFace) = 0;
+        } else {
+            // Not a full triangulation; just one level deeper.
+            if (orientableOnly_ && pairing->dest(currFace).face > 0) {
+                // Be sure to get the orientation right.
+                if (orientation[currFace.tet] ==
+                        orientation[pairing->dest(currFace).tet])
+                    permIndex(currFace) = 1;
+                else
+                    permIndex(currFace) = 0;
 
-            if ((currFace.face == 3 ? 0 : 1) +
-                    (pairing->dest(currFace).face == 3 ? 0 : 1) == 1)
-                permIndex(currFace) = (permIndex(currFace) + 1) % 2;
+                if ((currFace.face == 3 ? 0 : 1) +
+                        (pairing->dest(currFace).face == 3 ? 0 : 1) == 1)
+                    permIndex(currFace) = (permIndex(currFace) + 1) % 2;
 
-            permIndex(currFace) -= 2;
+                permIndex(currFace) -= 2;
+            }
+
+            if (depth == maxDepth) {
+                // We haven't found an entire triangulation, but we've
+                // gone as far as we need to.
+                // Process it, then step back.
+                use_(this, useArgs_);
+
+                // Back to the previous face.
+                permIndex(currFace) = -1;
+                currFace--;
+                while ((! currFace.isBeforeStart()) &&
+                        (pairing->isUnmatched(currFace) ||
+                            pairing->dest(currFace) < currFace)) {
+                    permIndex(currFace) = -1;
+                    currFace--;
+                }
+                depth--;
+            }
         }
     }
 
@@ -212,7 +226,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
 }
 
 void NGluingPermSearcher::dumpData(std::ostream& out) const {
-    // Assuming nTets < 100, estimated worst case (20 * nTets + 12) bytes total.
+    // Assuming nTets < 100, estimated worst case (35 * nTets + 12) bytes total.
     // Don't quote me on this.
     NGluingPerms::dumpData(out);
 

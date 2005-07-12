@@ -473,7 +473,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 }
 
 void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
-    // Assuming nTets < 100, estimated worst case (42 * nTets + 20) bytes total.
+    // Assuming nTets < 100, estimated worst case (57 * nTets + 20) bytes total.
     // Don't quote me on this.
     NGluingPermSearcher::dumpData(out);
 
