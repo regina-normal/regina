@@ -350,8 +350,7 @@ class NCensus {
          * faces are all internal; if the given triangulation has
          * boundary faces then this routine will simply return \c true.
          *
-         * \ifacespython Parameter \a ignore is not present (and will
-         * be treated as 0).
+         * \ifacespython Parameter \a ignore is not present.
          *
          * @param tri the triangulation to examine.
          * @param ignore a parameter that is ignored.
@@ -359,7 +358,7 @@ class NCensus {
          * non-minimal, or \c true if minimality of the given
          * triangulation has not been determined.
          */
-        static bool mightBeMinimal(NTriangulation* tri, void* ignore);
+        static bool mightBeMinimal(NTriangulation* tri, void* ignore = 0);
 
         /**
          * Fills the given packet with all completions of the given base
