@@ -35,6 +35,8 @@
 
 namespace regina {
 
+const char NGluingPermSearcher::dataTag_ = 'g';
+
 NGluingPermSearcher::NGluingPermSearcher(
         const NFacePairing* pairing, const NFacePairingIsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
@@ -71,11 +73,11 @@ NGluingPermSearcher::~NGluingPermSearcher() {
     }
 }
 
-void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
-        const NFacePairingIsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
-
-    // Call an optimised internal generation routine if possible.
+NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
+        const NFacePairing* pairing, const NFacePairingIsoList* autos,
+        bool orientableOnly, bool finiteOnly, int whichPurge,
+        UseGluingPerms use, void* useArgs) {
+    // Use an optimised algorithm if possible.
     if (pairing->getNumberOfTetrahedra() >= 3) {
         if (finiteOnly && pairing->isClosed() &&
                 (whichPurge & NCensus::PURGE_NON_MINIMAL) &&
@@ -84,14 +86,22 @@ void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
                     (whichPurge & NCensus::PURGE_P2_REDUCIBLE))) {
             // Closed prime minimal P2-irreducible triangulations with >= 3
             // tetrahedra.
-            NClosedPrimeMinSearcher(pairing, autos, orientableOnly,
-                use, useArgs).runSearch();
-            return;
+            return new NClosedPrimeMinSearcher(pairing, autos, orientableOnly,
+                use, useArgs);
         }
     }
 
-    NGluingPermSearcher(pairing, autos, orientableOnly, finiteOnly,
-        whichPurge, use, useArgs).runSearch();
+    return new NGluingPermSearcher(pairing, autos, orientableOnly, finiteOnly,
+        whichPurge, use, useArgs);
+}
+
+void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
+        const NFacePairingIsoList* autos, bool orientableOnly,
+        bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
+    NGluingPermSearcher* searcher = bestSearcher(pairing, autos,
+        orientableOnly, finiteOnly, whichPurge, use, useArgs);
+    searcher->runSearch();
+    delete searcher;
 }
 
 void NGluingPermSearcher::runSearch(long maxDepth) {
@@ -236,6 +246,35 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
 
     // And the search is over.
     use_(0, useArgs_);
+}
+
+void NGluingPermSearcher::dumpTaggedData(std::ostream& out) const {
+    out << dataTag() << std::endl;
+    dumpData(out);
+}
+
+NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
+        UseGluingPerms use, void* useArgs) {
+    // Read the class marker.
+    char c;
+    in >> c;
+    if (in.eof())
+        return 0;
+
+    NGluingPermSearcher* ans;
+    if (c == NGluingPermSearcher::dataTag_)
+        ans = new NGluingPermSearcher(in, use, useArgs);
+    else if (c == NClosedPrimeMin::dataTag_)
+        ans = new NClosedPrimeMinSearcher(in, use, useArgs);
+    else
+        return 0;
+
+    if (ans->inputError()) {
+        delete ans;
+        return 0;
+    }
+
+    return ans;
 }
 
 void NGluingPermSearcher::dumpData(std::ostream& out) const {

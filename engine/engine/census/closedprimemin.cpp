@@ -43,6 +43,8 @@ const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_FIRST = 4;
 const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_SECOND = 5;
 const unsigned NClosedPrimeMinSearcher::EDGE_MISC = 6;
 
+const char NClosedPrimeMinSearcher::dataTag_ = 'c';
+
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, bool orientableOnly,
         UseGluingPerms use, void* useArgs) :

@@ -56,8 +56,9 @@ class NGluingPermSearcher;
  * (in fact it will be of the subclass NGluingPermSearcher in order to
  * support partial searches as well as full searches).  This set of
  * gluing permutations must not be deallocated by this routine, since it
- * may be used again by the caller.  The second parameter may contain
- * arbitrary data as passed to NGluingPerms::findAllPerms().
+ * may be used again later by the caller.  The second parameter may contain
+ * arbitrary data as passed to either NGluingPerms::findAllPerms() or
+ * the NGluingPermSearcher class constructor.
  *
  * Note that the first parameter passed might be \c null to signal that
  * gluing permutation generation has finished.
@@ -75,9 +76,12 @@ typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
  * The simplest way of performing a search through all possible gluing
  * permutations is by calling the static method findAllPerms().  This will
  * examine the search parameters and ensure that the best possible algorithm
- * is used.  Alternatively, a specific algorithm can be forced by explicitly
- * constructing an object of the corresponding class and calling runSearch()
- * directly.
+ * is used.  For finer control over the program flow, the static method
+ * bestSearcher() can be used to create a search manager of the most
+ * suitable class and then runSearch() can be called on this object directly.
+ * For absolute control, a specific algorithm can be forced by explicitly
+ * constructing an object of the corresponding class (and again
+ * calling runSearch() on that object directly).
  *
  * Note that this class derives from NGluingPerms.  The search will
  * involve building and repeatedly modifying the inherited NGluingPerms
@@ -86,6 +90,11 @@ typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
  * \ifacespython Not present.
  */
 class NGluingPermSearcher : public NGluingPerms {
+    protected:
+        static const char dataTag_;
+            /**< A character used to identify this class when reading
+                 and writing tagged data in text format. */
+
     protected:
         const NFacePairingIsoList* autos_;
             /**< The set of isomorphisms that define equivalence of
@@ -154,6 +163,14 @@ class NGluingPermSearcher : public NGluingPerms {
          * that every permutation set whose corresonding triangulation does
          * \e not satisfy the \a whichPurge constraints will be generated.
          *
+         * Similarly, even if \a finiteOnly is set to \c true, some
+         * non-finite triangulations might still slip through the net
+         * (since the full vertex links are not always constructed).
+         * However, like \a whichPurge, setting \a finiteOnly to \c true
+         * allow the census algorithm to take shortcuts and therefore
+         * run faster.  The resulting triangulations may be tested for
+         * finiteness (and other properties) by calling triangulate().
+         *
          * \pre The given face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
@@ -174,8 +191,10 @@ class NGluingPermSearcher : public NGluingPerms {
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
          * @param finiteOnly \c true if only gluing permutations
-         * corresponding to finite triangulations should be
-         * generated, or \c false if no such restriction should be imposed.
+         * corresponding to finite triangulations are required, or
+         * \c false if there is no such requirement.  Note that
+         * regardless of this value, some non-finite triangulations
+         * might still be produced; see the notes above for details.
          * @param whichPurge specifies which permutation sets we may
          * avoid constructing (see the function notes above for details).
          * This should be a bitwise OR of purge constants from class NCensus,
@@ -201,8 +220,11 @@ class NGluingPermSearcher : public NGluingPerms {
         /**
          * Initialises a new search manager based on data read from the
          * given input stream.  This may be a new search or a partially
-         * completed search.  This routine reads data in the format written
-         * by dumpData().
+         * completed search.
+         *
+         * This routine reads data in the format written by dumpData().
+         * If you wish to read data whose precise class is unknown,
+         * consider using dumpTaggedData() and readTaggedData() instead.
          *
          * If the data found in the input stream is invalid or incorrectly
          * formatted, the routine inputError() will return \c true but
@@ -284,6 +306,24 @@ class NGluingPermSearcher : public NGluingPerms {
         virtual bool completePermSet() const;
 
         /**
+         * Dumps all internal data in a plain text format, along with a
+         * marker to signify which precise class the data belongs to.
+         * This routine can be used with readTaggedData() to transport
+         * objects from place to place whose precise class is unknown.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param out the output stream to which the data should be
+         * written.
+         */
+        void dumpTaggedData(std::ostream& out) const;
+
+        // Overridden methods:
+        virtual void dumpData(std::ostream& out) const;
+
+        /**
          * The main entry routine for running a search for all gluing
          * permutation sets that complement a given face pairing.
          *
@@ -309,8 +349,67 @@ class NGluingPermSearcher : public NGluingPerms {
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
-        // Overridden methods:
-        virtual void dumpData(std::ostream& out) const;
+        /**
+         * Constructs a search manager of the best possible class for the
+         * given search parameters.  Different subclasses of
+         * NGluingPermSearcher provide optimised search algorithms for
+         * different types of search.
+         *
+         * Calling this routine and then calling runSearch() on the
+         * result has the same effect as the all-in-one routine
+         * findAllPerms().  Unless you have specialised requirements
+         * (such as partial searching), you are probably better calling
+         * findAllPerms() instead.
+         *
+         * The resulting object is newly created, and must be destroyed
+         * by the caller of this routine.
+         *
+         * See the NGluingPermSearcher constructor for documentation on
+         * the arguments to this routine.
+         *
+         * \pre The given face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
+         *
+         * @return the newly created search manager.
+         */
+        static NGluingPermSearcher* bestSearcher(const NFacePairing* pairing,
+                const NFacePairingIsoList* autos,
+                bool orientableOnly, bool finiteOnly, int whichPurge,
+                UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Creates a new search manager based on tagged data read from
+         * the given input stream.  This may be a new search or a
+         * partially completed search.
+         *
+         * The tagged data should be in the format written by
+         * dumpTaggedData().  The precise class of the search manager
+         * will be determined from the tagged data, and does not need to
+         * be known in advance.  This is in contrast to dumpData() and
+         * the input stream constructors, where the class of the data being
+         * read must be known at compile time.
+         *
+         * If the data found in the input stream is invalid or
+         * incorrectly formatted, a null pointer will be returned.
+         * Otherwise a newly constructed search manager will be returned,
+         * and it is the responsibility of the caller of this routine to
+         * destroy it after use.
+         *
+         * The arguments \a use and \a useArgs are the smae as for the
+         * NGluingPermSearcher constructor.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param in the input stream from which to read.
+         */
+        static NGluingPermSearcher* readTaggedData(std::istream& in,
+                UseGluingPerms use, void* useArgs = 0);
 
     protected:
         /**
@@ -407,6 +506,14 @@ class NGluingPermSearcher : public NGluingPerms {
          * results are inconclusive.
          */
         bool mayPurge(const NTetFace& face) const;
+
+        /**
+         * Returns the character used to identify this class when
+         * storing tagged data in text format.
+         *
+         * @return the class tag.
+         */
+        virtual char dataTag() const;
 };
 
 /**
@@ -454,6 +561,11 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  tetrahedron. */
         static const unsigned EDGE_MISC;
             /**< Represents a miscellaneous edge in a face pairing graph. */
+
+    protected:
+        static const char dataTag_;
+            /**< A character used to identify this class when reading
+                 and writing tagged data in text format. */
 
     private:
         NTetFace* order;
@@ -535,8 +647,11 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         /**
          * Initialises a new search manager based on data read from the
          * given input stream.  This may be a new search or a partially
-         * completed search.  This routine reads data in the format written
-         * by dumpData().
+         * completed search.
+         *
+         * This routine reads data in the format written by dumpData().
+         * If you wish to read data whose precise class is unknown,
+         * consider using dumpTaggedData() and readTaggedData() instead.
          *
          * If the data found in the input stream is invalid or incorrectly
          * formatted, the routine inputError() will return \c true but
@@ -565,6 +680,10 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         virtual void runSearch(long maxDepth = -1);
         virtual bool completePermSet() const;
 
+    protected:
+        // Overridden methods:
+        virtual char dataTag() const;
+
     private:
         /**
          * Initialises the internal arrays (specifically those relating
@@ -582,6 +701,10 @@ inline bool NGluingPermSearcher::completePermSet() const {
     return (currFace.tet == static_cast<int>(pairing->getNumberOfTetrahedra()));
 }
 
+inline char NGluingPermSearcher::dataTag() const {
+    return NGluingPermSearcher::dataTag_;
+}
+
 // Inline functions for NClosedPrimeMinSearcher
 
 inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
@@ -593,6 +716,10 @@ inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
 
 inline bool NClosedPrimeMinSearcher::completePermSet() const {
     return (orderElt == static_cast<int>(pairing->getNumberOfTetrahedra()) * 2);
+}
+
+inline char NClosedPrimeMinSearcher::dataTag() const {
+    return NClosedPrimeMinSearcher::dataTag_;
 }
 
 } // namespace regina
