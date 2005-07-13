@@ -49,9 +49,9 @@ NGluingPermSearcher::NGluingPermSearcher(
         currFace(0, 0) {
     // Generate the list of face pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
-    if (autos_ == 0) {
+    if (autosNew == 0) {
         const_cast<NFacePairingIsoList*>(autos_) = new NFacePairingIsoList();
-        pairing->findAutomorphisms(const_cast<NFacePairingIsoList&>(*autos));
+        pairing->findAutomorphisms(const_cast<NFacePairingIsoList&>(*autos_));
     }
 
     // Initialise arrays.
