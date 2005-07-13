@@ -90,7 +90,7 @@ typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
  * \ifacespython Not present.
  */
 class NGluingPermSearcher : public NGluingPerms {
-    protected:
+    public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
@@ -562,7 +562,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         static const unsigned EDGE_MISC;
             /**< Represents a miscellaneous edge in a face pairing graph. */
 
-    protected:
+    public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */

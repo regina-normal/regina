@@ -264,7 +264,7 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
     NGluingPermSearcher* ans;
     if (c == NGluingPermSearcher::dataTag_)
         ans = new NGluingPermSearcher(in, use, useArgs);
-    else if (c == NClosedPrimeMin::dataTag_)
+    else if (c == NClosedPrimeMinSearcher::dataTag_)
         ans = new NClosedPrimeMinSearcher(in, use, useArgs);
     else
         return 0;
