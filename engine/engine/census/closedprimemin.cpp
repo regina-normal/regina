@@ -309,6 +309,14 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             orientation[order[nChainEdges].tet] = 1;
     }
 
+    // Is it a partial search that has already finished?
+    if (orderElt == static_cast<int>(nTets) * 2) {
+        if (isCanonical())
+            use_(this, useArgs_);
+        use_(0, useArgs_);
+        return;
+    }
+
     // ---------- Selecting the individual gluing permutations ----------
 
     // Observe that in a canonical face pairing, one-ended chains always

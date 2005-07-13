@@ -128,6 +128,14 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         orientation[0] = 1;
     }
 
+    // Is it a partial search that has already finished?
+    if (currFace.tet == static_cast<int>(nTetrahedra)) {
+        if (isCanonical())
+            use_(this, useArgs_);
+        use_(0, useArgs_);
+        return;
+    }
+
     long depth = 0;
     while (depth >= 0) {
         // TODO: Check for cancellation.
