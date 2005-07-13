@@ -16,6 +16,7 @@ Version 4.3  [ under development ]
             - Fixed "regina-engine-config --cflags", which wrote includes
               for Regina's dependencies but not for Regina itself (sigh).
         Class NGluingPerms, NGluingPermSearcher, NClosedPrimeMinSearcher:
+            - Significant overhaul.
             - Moved gluing permutation search routines into new classes
               NGluingPermSearcher and NClosedPrimeMinSearcher.
             - Supports partial depth-based searches (by passing a
@@ -25,6 +26,13 @@ Version 4.3  [ under development ]
     USER INTERFACE:
         - Refuse to export a triangulation to SnapPea format if it
           has boundary faces.
+    UTILITIES:
+        tricensus-mpi:
+            - Significant overhaul.
+            - Now supports finer-grained subsearches via --depth.
+            - Better logging.
+            - Only writes .rga data files for cases in which at least
+              one triangulation was found.
 
 Version 4.2  [ 7 July, 2005 ]
 
