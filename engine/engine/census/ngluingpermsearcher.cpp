@@ -59,6 +59,18 @@ NGluingPermSearcher::NGluingPermSearcher(
     std::fill(permIndices, permIndices + nTetrahedra * 4, -1);
 }
 
+NGluingPermSearcher::~NGluingPermSearcher() {
+    delete[] orientation;
+    if (autosNew) {
+        // We made them, so we'd better remove the const again and
+        // delete them.
+        NFacePairingIsoList* autos = const_cast<NFacePairingIsoList*>(autos_);
+        std::for_each(autos->begin(), autos->end(),
+            FuncDelete<NIsomorphismDirect>());
+        delete autos;
+    }
+}
+
 void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, bool orientableOnly,
         bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {

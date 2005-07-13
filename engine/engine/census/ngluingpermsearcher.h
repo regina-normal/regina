@@ -578,12 +578,6 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
 
 // Inline functions for NGluingPermSearcher
 
-inline NGluingPermSearcher::~NGluingPermSearcher() {
-    delete[] orientation;
-    if (autosNew)
-        delete const_cast<NFacePairingIsoList*>(autos_);
-}
-
 inline bool NGluingPermSearcher::completePermSet() const {
     return (currFace.tet == static_cast<int>(pairing->getNumberOfTetrahedra()));
 }
