@@ -172,7 +172,7 @@ void NCensus::foundGluingPerms(const NGluingPermSearcher* perms, void* census) {
 bool NCensus::mightBeMinimal(NTriangulation* tri, void*) {
     if (! tri->hasBoundaryFaces()) {
         // No boundary faces.
-        
+
         // Tests specific to closed finite orientable triangulations:
         if (tri->isOrientable() && (! tri->isIdeal())) {
             // Check for too many vertices.
