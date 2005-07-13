@@ -273,7 +273,7 @@ std::string ctrlNextPairing(std::istream& input) {
  *
  * Return the next slave available for processing work.
  */
-int ctrlWaitForSlave(bool runningSlavesOnly) {
+int ctrlWaitForSlave(bool runningSlavesOnly = false) {
     if ((! runningSlavesOnly) && (nRunningSlaves < nSlaves)) {
         // We can use a slave that hasn't been started yet.
         // It's probably number (nRunningSlaves + 1).
@@ -342,12 +342,12 @@ int ctrlWaitForSlave(bool runningSlavesOnly) {
 /**
  * Controller helper routine.
  *
- * Send the given face pairing to the given slave for processing.
+ * Send the given face pairing to the next available slave for processing.
  */
-void ctrlFarmPairingToSlave(int slave, const std::string& pairingRep) {
-    taskID[0]++;
-    taskID[1] = -1;
+void ctrlFarmPairing(const std::string& pairingRep) {
     taskID[2] = pairingRep.length();
+
+    int slave = ctrlWaitForSlave();
 
     nRunningSlaves++;
     ctrlLogStamp() << "Farmed pairing " << taskID[0]
@@ -360,6 +360,42 @@ void ctrlFarmPairingToSlave(int slave, const std::string& pairingRep) {
     MPI_Send(taskID, 3, MPI_LONG, slave, TAG_REQUEST_TASK, MPI_COMM_WORLD);
     MPI_Send(const_cast<char*>(pairingRep.c_str()), taskID[2] + 1, MPI_CHAR,
         slave, TAG_REQUEST_PAIRING, MPI_COMM_WORLD);
+}
+
+/**
+ * Controller helper routine.
+ *
+ * Send the given partial search to the next available slave for processing.
+ */
+void ctrlFarmPartialSearch(const regina::NGluingPermSearcher* search, void*) {
+    if (! search) {
+        // That's it for this face pairing.
+        ctrlLogStamp() << "Pairing " << taskID[0] << ": Farmed "
+            << taskID[1] << " subsearch(es) in total." << std::endl;
+        return;
+    }
+
+    // We have a real subsearch.
+    taskID[1]++;
+
+    std::ostringstream searchRep;
+    search->dumpTaggedData(searchRep);
+
+    taskID[2] = searchRep.str().length();
+
+    int slave = ctrlWaitForSlave();
+
+    nRunningSlaves++;
+    ctrlLogStamp() << "Farmed subsearch " << taskID[0] << '-' << taskID[1]
+        << " --> slave " << slave << " ..." << std::endl;
+
+    slaveTask[slave].pairing = taskID[0];
+    slaveTask[slave].subtask = taskID[1];
+    slaveTask[slave].start = time(0);
+
+    MPI_Send(taskID, 3, MPI_LONG, slave, TAG_REQUEST_TASK, MPI_COMM_WORLD);
+    MPI_Send(const_cast<char*>(searchRep.str().c_str()), taskID[2] + 1,
+        MPI_CHAR, slave, TAG_REQUEST_SUBSEARCH, MPI_COMM_WORLD);
 }
 
 /**
@@ -403,12 +439,44 @@ int mainController() {
     nRunningSlaves = 0;
     totTri = 0;
 
+    std::string pairingRep;
     if (depth > 0) {
-        // TODO
+        // Generate the face pairings and prepare subsearches.
+        regina::NFacePairing* pairing;
+        regina::NGluingPermSearcher* searcher;
+        while (! (pairingRep = ctrlNextPairing(input)).empty()) {
+            taskID[0]++;
+            taskID[1] = 0;
+
+            pairing = regina::NFacePairing::fromTextRep(pairingRep);
+            if (! pairing) {
+                ctrlLogStamp() << "ERROR: Pairing " << taskID[0]
+                    << " is invalid: " << pairingRep << std::endl;
+                controllerError = true;
+                continue;
+            }
+            if (! pairing->isCanonical()) {
+                ctrlLogStamp() << "ERROR: Pairing " << taskID[0]
+                    << " is not canonical: " << pairingRep << std::endl;
+                controllerError = true;
+                continue;
+            }
+
+            searcher = regina::NGluingPermSearcher::bestSearcher(
+                pairing, 0 /* autos */,
+                ! orientability.hasFalse(), ! finiteness.hasFalse(),
+                whichPurge, ctrlFarmPartialSearch);
+            searcher->runSearch(depth);
+            delete searcher;
+        }
     } else {
-        std::string pairingRep;
-        while (! (pairingRep = ctrlNextPairing(input)).empty())
-            ctrlFarmPairingToSlave(ctrlWaitForSlave(false), pairingRep);
+        // Just farm out the face pairing strings.
+        while (! (pairingRep = ctrlNextPairing(input)).empty()) {
+            taskID[0]++;
+            taskID[1] = -1;
+
+            ctrlFarmPairing(pairingRep);
+        }
     }
 
     // Kill off any slaves that aren't working, since there are no more
