@@ -61,6 +61,7 @@ int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int whichPurge = 0;
 long depth = 0;
+int dryRun = 0;
 
 // Filenames read from the command line.
 std::string outputStub;
@@ -110,12 +111,18 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         { "minimal", 'm', POPT_ARG_NONE, &minimal, 0,
             "Ignore obviously non-minimal triangulations.", 0 },
         { "minprime", 'M', POPT_ARG_NONE, &minimalPrime, 0,
-            "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
+            "Ignore obviously non-minimal, non-prime and/or disc-reducible "
+            "triangulations.", 0 },
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
-            "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", 0 },
+            "Ignore obviously non-minimal, non-prime, disc-reducible and/or "
+            "P2-reducible triangulations.", 0 },
         { "depth", 'D', POPT_ARG_LONG, &depth, 0,
             "Split each face pairing into subsearches at the given depth.",
             "<depth>" },
+        { "dryrun", 'x', POPT_ARG_NONE, &dryRun, 0,
+            "Have slaves ignore each task and simply report zero "
+            "triangulations instead.  This allows a quick overview of the "
+            "search space.", 0 },
         POPT_AUTOHELP
         { 0, 0, 0, 0, 0, 0, 0 }
     };
@@ -737,7 +744,8 @@ void slaveProcessPartialSearch() {
 
     // Run the partial census.
     nSolns = 0;
-    search->runSearch();
+    if (! dryRun)
+        search->runSearch();
 
     if (nSolns > 0) {
         // Write the completed census to file.
@@ -796,9 +804,10 @@ void slaveProcessPairing() {
     parent->insertChildLast(dest);
 
     nSolns = 0;
-    regina::NGluingPermSearcher::findAllPerms(pairing, 0,
-        ! orientability.hasFalse(), ! finiteness.hasFalse(), whichPurge,
-        slaveFoundGluingPerms, dest);
+    if (! dryRun)
+        regina::NGluingPermSearcher::findAllPerms(pairing, 0,
+            ! orientability.hasFalse(), ! finiteness.hasFalse(), whichPurge,
+            slaveFoundGluingPerms, dest);
 
     if (nSolns > 0) {
         // Write the completed census to file.
