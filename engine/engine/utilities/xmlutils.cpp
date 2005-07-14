@@ -166,7 +166,7 @@ std::string xmlEncodeSpecialChars(const std::string& original) {
     xmlChar* ans = ::xmlEncodeSpecialChars(0,
         (const xmlChar*)(original.c_str()));
     std::string ansStr((const char*)ans);
-    delete[] ans;
+    xmlFree(ans);
     return ansStr;
 }
 
@@ -182,7 +182,7 @@ std::string xmlEncodeComment(const std::string& original) {
 
     // Tidy up and return.
     std::string ansStr((const char*)ans);
-    delete[] ans;
+    xmlFree(ans);
     return ansStr;
 }
 
