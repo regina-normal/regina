@@ -49,8 +49,8 @@
 
 // Time constants:
 #define MIN_SEC 60
-#define HOUR_SEC 60 * MIN_SEC
-#define DAY_SEC 24 * HOUR_SEC
+#define HOUR_SEC (60 * MIN_SEC)
+#define DAY_SEC (24 * HOUR_SEC)
 
 // Census parameters.
 regina::NBoolSet
