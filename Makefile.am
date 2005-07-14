@@ -52,7 +52,7 @@ man :
 valgrind:
 	## Run the test suite so that libtool regenerates lt-regtestsuite.
 	cd testsuite && $(MAKE) check
-	valgrind --skin=memcheck --leak-check=yes testsuite/.libs/lt-regtestsuite
+	valgrind --tool=memcheck --leak-check=yes testsuite/.libs/lt-regtestsuite
 
 help :
 	@cat Makefile-help
