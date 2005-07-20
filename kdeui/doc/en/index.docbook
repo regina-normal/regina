@@ -3,7 +3,7 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "4.2">
+  <!ENTITY regversion "4.2.1">
   <!ENTITY regdate "7 July 2005">
   <!ENTITY regauthorplain "Ben Burton">
   <!ENTITY snappeaintro "4.2 (July 2005)">
@@ -130,7 +130,7 @@
   <legalnotice>&underGPL;</legalnotice>
 
   <date>2005-07-07</date>
-  <releaseinfo>4.2</releaseinfo>
+  <releaseinfo>4.2.1</releaseinfo>
 
   <abstract>
    &regabstract;
