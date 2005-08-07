@@ -56,7 +56,7 @@ void runMatches(NPacket* tree1, NPacket* tree2) {
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
                 if (p2->getPacketType() == NTriangulation::packetType)
                     if (static_cast<NTriangulation*>(p1)->isIsomorphicTo(
-                            static_cast<NTriangulation*>(p2)).get()) {
+                            * static_cast<NTriangulation*>(p2)).get()) {
                         std::cout << "    " << p1->getPacketLabel()
                             << "  ==  " << p2->getPacketLabel() << std::endl;
                         nMatches++;
@@ -85,7 +85,7 @@ void runNonMatches(const std::string& file1, NPacket* tree1,
             for (p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
                 if (p2->getPacketType() == NTriangulation::packetType)
                     if (static_cast<NTriangulation*>(p1)->isIsomorphicTo(
-                            static_cast<NTriangulation*>(p2)).get())
+                            * static_cast<NTriangulation*>(p2)).get())
                         matched = true;
             if (! matched) {
                 std::cout << "    " << p1->getPacketLabel() << std::endl;
