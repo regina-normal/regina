@@ -14,7 +14,7 @@ INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@
 
 bin_SCRIPTS = tricensus-manager
-bin_PROGRAMS = regconcat regconvert regfiledump regfiletype sigcensus tricensus
+bin_PROGRAMS = regconcat regconvert regfiledump regfiletype sigcensus tricensus trisetcmp
 
 regconcat_SOURCES = regconcat.cpp
 
@@ -27,6 +27,8 @@ regfiletype_SOURCES = regfiletype.cpp
 sigcensus_SOURCES = sigcensus.cpp
 
 tricensus_SOURCES = tricensus.cpp
+
+trisetcmp_SOURCES = trisetcmp.cpp
 
 EXTRA_DIST = README.txt tricensus-manager
 
