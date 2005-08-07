@@ -38,7 +38,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -m | -n ] <file1> <file2>\n";
+    std::cerr << "    " << progName << " [ -m | -n ] <file1.rga> <file2.rga>\n";
     std::cerr << std::endl;
     std::cerr << "    -m : List matches, i.e., triangulations contained in both files (default)\n";
     std::cerr << "    -n : List non-matches, i.e., triangulations in one file but not the other\n";
