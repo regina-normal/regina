@@ -73,6 +73,8 @@ for i in `find . -name Makefile.am | sort | sed -e 's#^./##;s#\.am$##'`; do
     ;;
     test/* )
     ;;
+    utils/local/* )
+    ;;
     utils/snappea/* )
     ;;
     * )
