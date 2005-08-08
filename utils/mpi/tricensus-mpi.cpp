@@ -500,11 +500,11 @@ int mainController() {
 
     // All done!
     input.close();
-    ctrlLogStamp() << "Done:" << std::endl;
+    ctrlLogStamp() << "Done: " << taskID[0] << " pairing(s) read" << std::endl;
+    ctrlLogStamp() << "Done: " << totTri
+        << " triangulation(s) found" << std::endl;
     if (controllerError)
-        logger << "  - ONE OR MORE ERRORS OCCURRED!" << std::endl;
-    logger << "  - " << taskID[0] << " pairing(s) read" << std::endl;
-    logger << "  - " << totTri << " triangulation(s) found" << std::endl;
+        ctrlLogStamp() << "Done: ONE OR MORE ERRORS OCCURRED!" << std::endl;
     logger.close();
     return 0;
 }
