@@ -12,9 +12,10 @@ CXX = @MPICXX@
 INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@ @MPILIBS@
 
+bin_SCRIPTS = tricensus-mpi-status
 bin_PROGRAMS = tricensus-mpi
 
 tricensus_mpi_SOURCES = tricensus-mpi.cpp
 
-EXTRA_DIST = README.txt
+EXTRA_DIST = README.txt tricensus-mpi-status
 

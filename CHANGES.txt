@@ -34,6 +34,9 @@ Version 4.2.1  [ under development ]
             - Only writes .rga data files for cases in which at least
               one triangulation was found.
             - New option --dryrun for a quick overview of the search space.
+        tricensus-mpi-status:
+            - New tool for parsing tricensus-mpi logs.  Currently only
+              logs generated with a --depth option are supported.
         trisetcmp:
             - New utility for comparing two different sets of triangulations.
 
