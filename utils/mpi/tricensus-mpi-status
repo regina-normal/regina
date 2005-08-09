@@ -250,10 +250,10 @@ while (<LOG>) {
 }
 
 my $nDonePairings = 0;
+my $hashRef;
 for (my $i = 1; $i <= $nPairings; $i++) {
     print "Pairing $i: ";
 
-    # TODO: Verify size of %pairingDoneHash is %pairingSize - %pairingDone.
     if ($pairingStatus{$i} == -1) {
         print "running";
     } elsif ($pairingStatus{$i} == -2) {
@@ -272,6 +272,13 @@ for (my $i = 1; $i <= $nPairings; $i++) {
 
     print ", $pairingTris{$i} found" unless $pairingStatus{$i} == -1;
     print "\n";
+
+    # More sanity checking.
+    if ($pairingStatus{$i} > 0) {
+        $hashRef = $pairingProcHash{$i};
+        (scalar keys %$hashRef) == $pairingSize{$i} - $pairingDone{$i} or
+            bail("Mismatched count of current subsearches for pairing $i.");
+    }
 }
 
 if ($donePairings and $doneTris) {
