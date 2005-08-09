@@ -115,7 +115,7 @@ while (<LOG>) {
     chomp;
     s/^([A-Za-z0-9:\. ]{19} \d\d\d\d)  // and $lastDate = $1;
 
-    if (/^Farmed pairing (\d+) -->/) {
+    if (/^Farmed pairing (\d+) -->/ or /^#(\d+): -->/) {
         $searchType > 0 and
             bail("Both subsearch and pairing-at-once search styles are used.");
         $searchType = -1;
@@ -166,7 +166,7 @@ while (<LOG>) {
             $ref = $pairingProcHash{$1};
             $$ref{$2} = 1;
         }
-    } elsif (/^Task \[(\d+) .+ (\d+) found/) {
+    } elsif (/^Task \[(\d+) .+ (\d+) found/ or /^#(\d+): (\d+) triangulation/) {
         $searchType > 0 and
             bail("Both subsearch and pairing-at-once search styles are used.");
         $searchType = -1;
