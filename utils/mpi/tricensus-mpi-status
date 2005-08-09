@@ -28,8 +28,6 @@
 
 use strict;
 
-# TODO: Support non-depth log format.
-
 # Display basic usage information.
 #
 sub usage {
@@ -67,26 +65,35 @@ my $nPairings = 0;
 #   Total number of triangulations found.
 my $nTris = 0;
 
+# searchType:
+#   0     : not yet known
+#   -1    : one pairing at a time
+#   +1    : pairings split into subsearches
+my $searchType = 0;
+
 # pairingStatus:
 #   undef : no such pairing
-#   0     : pairing processed on its own
-#   -1    : pairing split into subsearches, splitting still continuing
-#   +1    : pairing split into subsearches, final # subsearches is known
+#   -1    : pairing processed on its own, still running
+#   -2    : pairing processed on its own, finished
+#   +1    : pairing split into subsearches, splitting still continuing
+#   +2    : pairing split into subsearches, final # subsearches is known
 my %pairingStatus = ();
 
 # pairingSize:
 #   undef : no such pairing
-#   0     : pairing processed on its own
-#   >0    : # subsearches currently farmed out
+#   -1    : pairing processed on its own
+#   >=0   : # subsearches currently farmed out
 my %pairingSize = ();
 
 # pairingDone:
-#   Total number of subsearches finished for each face pairing.
+#   undef : no such pairing
+#   -1    : pairing processed on its own
+#   >=0   : # subsearches finished
 my %pairingDone = ();
 
 # pairingProcHash:
 #   Lists of precise subsearches that are currently being processed for
-#   each face pairing.
+#   each face pairing (only relevant if subsearches are used).
 my %pairingProcHash = ();
 
 # pairingTris:
@@ -108,7 +115,26 @@ while (<LOG>) {
     chomp;
     s/^([A-Za-z0-9:\. ]{19} \d\d\d\d)  // and $lastDate = $1;
 
-    if (/^Farmed subsearch (\d+)-(\d+) /) {
+    if (/^Farmed pairing (\d+) -->/) {
+        $searchType > 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = -1;
+
+        exists $pairingStatus{$1} and
+            bail("Irregularity in farming order (pairing $1).");
+        $1 == $nPairings + 1 or
+            bail("Irregularity in farming order (pairing $1).");
+
+        $pairingStatus{$1} = -1;
+        $pairingSize{$1} = -1;
+        $pairingDone{$1} = -1;
+        $pairingTris{$1} = 0;
+        $nPairings++;
+    } elsif (/^Farmed subsearch (\d+)-(\d+) /) {
+        $searchType < 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = 1;
+
         if (! exists $pairingStatus{$1}) {
             # First time we've seen this face pairing.
 
@@ -117,7 +143,7 @@ while (<LOG>) {
             $2 == 1 or
                 bail("Irregularity in subsearch order ($1-$2).");
 
-            $pairingStatus{$1} = -1;
+            $pairingStatus{$1} = 1;
             $pairingSize{$1} = 1;
             $pairingDone{$1} = 0;
             $pairingProcHash{$1} = { $2 => 1 };
@@ -131,16 +157,41 @@ while (<LOG>) {
                 bail("Irregularity in farming order ($1-$2).");
             $2 == $pairingSize{$1} + 1 or
                 bail("Irregularity in subsearch order ($1-$2).");
-            $pairingStatus{$1} == -1 or
+            $pairingStatus{$1} > 0 or
+                bail("Subsearch farmed for standalone pairing ($1-$2).");
+            $pairingStatus{$1} == 1 or
                 bail("Subsearch farmed after pairing finalised ($1-$2).");
 
             $pairingSize{$1}++;
             $ref = $pairingProcHash{$1};
             $$ref{$2} = 1;
         }
+    } elsif (/^Task \[(\d+) .+ (\d+) found/) {
+        $searchType > 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = -1;
+
+        exists $pairingStatus{$1} or
+            bail("Results received for previously unseen pairing ($1).");
+        $pairingStatus{$1} < 0 or
+            bail("Results received for non-standalone pairing ($1).");
+        $pairingStatus{$1} == -1 or
+            bail("Results received after pairing finished ($1).");
+        $pairingTris{$1} and
+            bail("Unexpected triangulations already stored for pairing ($1).");
+
+        $pairingStatus{$1} = -2;
+        $pairingTris{$1} = $2;
+        $nTris += $2;
     } elsif (/^Task \[(\d+)-(\d+) .+ (\d+) found/) {
+        $searchType < 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = 1;
+
         exists $pairingStatus{$1} or
             bail("Subsearch received for previously unseen pairing ($1-$2).");
+        $pairingStatus{$1} > 0 or
+            bail("Subsearch received for standalone pairing ($1-$2).");
         $ref = $pairingProcHash{$1};
         # print join(' ', keys(%$ref))."\n";
         exists $$ref{$2} or
@@ -151,6 +202,10 @@ while (<LOG>) {
         $pairingTris{$1} += $3;
         $nTris += $3;
     } elsif (/^Pairing (\d+): Farmed (\d+) subsearch/) {
+        $searchType < 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = 1;
+
         if (! exists $pairingStatus{$1}) {
             # First time we've seen this pairing.  There must have been
             # no subsearches.
@@ -162,13 +217,15 @@ while (<LOG>) {
             $pairingProcHash{$1} = { };
             $pairingTris{$1} = 0;
             $nPairings++;
-        } elsif ($pairingStatus{$1} != -1) {
+        } elsif ($pairingStatus{$1} < 0) {
+            bail("Final subsearch count received for standalone pairing ($1).");
+        } elsif ($pairingStatus{$1} != 1) {
             bail("Pairing $1 finalised more than once.");
         }
         $pairingSize{$1} == $2 or
             bail("Mismatched subsearch count for pairing $1.");
 
-        $pairingStatus{$1} = 1;
+        $pairingStatus{$1} = 2;
     } elsif (/^Slave \d+ stopped/) {
         # Winding to a close.  Ignore this line.
     } elsif (/^(Done:|\s+-) (\d+) pairing.* read$/) {
@@ -195,16 +252,26 @@ while (<LOG>) {
 my $nDonePairings = 0;
 for (my $i = 1; $i <= $nPairings; $i++) {
     print "Pairing $i: ";
-    # TODO: Verify that the size of %pairingDoneHash is %pairingSize - %pairingDone.
-    if ($pairingStatus{$i} == 1 and $pairingDone{$i} == $pairingSize{$i}) {
-        print "all $pairingSize{$i} done";
+
+    # TODO: Verify size of %pairingDoneHash is %pairingSize - %pairingDone.
+    if ($pairingStatus{$i} == -1) {
+        print "running";
+    } elsif ($pairingStatus{$i} == -2) {
+        print "done";
         $nDonePairings++;
     } elsif ($pairingStatus{$i} == 1) {
+        print "$pairingDone{$i} / ($pairingSize{$i} + ...) done";
+    } elsif ($pairingStatus{$i} == 2 and $pairingDone{$i} == $pairingSize{$i}) {
+        print "all $pairingSize{$i} done";
+        $nDonePairings++;
+    } elsif ($pairingStatus{$i} == 2) {
         print "$pairingDone{$i} / $pairingSize{$i} done";
     } else {
-        print "$pairingDone{$i} / ($pairingSize{$i} + ...) done";
+        bail("Unknown status for pairing $i.");
     }
-    print ", $pairingTris{$i} found\n";
+
+    print ", $pairingTris{$i} found" unless $pairingStatus{$i} == -1;
+    print "\n";
 }
 
 if ($donePairings and $doneTris) {
