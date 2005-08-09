@@ -26,6 +26,7 @@
 # MA 02111-1307, USA.
 #
 
+use File::stat;
 use strict;
 
 # Display basic usage information.
@@ -291,7 +292,17 @@ if ($donePairings and $doneTris) {
     ($donePairings or $doneTris) and bail('Final tallies incomplete.');
 
     print "Census still running";
-    print ($lastDate ? ", last activity: $lastDate" : '.');
+    if ($lastDate) {
+        print ", last activity: $lastDate";
+    } else {
+        # See when the log was last modified.
+        my $st = stat($logFile);
+        if ($st) {
+            print ", log last updated: " . scalar localtime $st->mtime;
+        } else {
+            print ", no update time available.";
+        }
+    }
     print "\n";
 }
 
