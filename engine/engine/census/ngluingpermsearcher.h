@@ -563,6 +563,14 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
             /**< Represents a miscellaneous edge in a face pairing graph. */
 
     private:
+        static const char VLINK_CLOSED = 1;
+            /**< Signifies that a vertex link has been closed off (i.e.,
+                 the link has no remaining boundary edges). */
+        static const char VLINK_NON_ORBL = 2;
+            /**< Signifies that a vertex link has been made
+                 non-orientable. */
+
+    private:
         /**
          * A structure used to track equivalence classes of tetrahedron
          * vertices as the gluing permutation is constructed.  Two
@@ -591,6 +599,21 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                      maintained correctly for the root of the corresponding
                      object tree; other objects in the tree will have
                      older values to facilitate backtracking. */
+            char twistUp;
+                /**< The identification of this object and its parent in
+                     the tree corresponds to a gluing of two triangles in the
+                     vertex link.  Each of these triangles in the vertex link
+                     can be labelled with its own vertices 0, 1 and 2 and
+                     thereby be assigned a clockwise or anticlockwise
+                     orientation.
+
+                     The parameter \a twistUp is 0 if these two triangles
+                     in the vertex link are joined in a way that preserves
+                     orientation, or 1 if the gluing does not preserve
+                     orientation.
+
+                     If this object has no parent, the value of \a twistUp
+                     is undefined. */
             bool hadEqualRank;
                 /**< Did this tree have rank equal to its parent
                      immediately before it was grafted beneath its parent?
@@ -800,10 +823,17 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          *
          * See the TetVertexState class for details.
          *
-         * @return \c true if some vertex link was closed off by this
-         * merge, or \c false otherwise.
+         * This routine returns a bitwise (OR) combination of the
+         * VLINK_... flags defined earlier in this class.  These
+         * flags describe what happened to the vertex links during
+         * this particular merge.  In particular, they note when a
+         * vertex link is closed off or is made non-orientable.
+         *
+         * @return a combination of VLINK_... flags describing how
+         * the vertex links were changed, or 0 if none of the changes
+         * described by these flags were observed.
          */
-        bool mergeVertexClasses();
+        int mergeVertexClasses();
 
         /**
          * Split the classes of tetrahedron vertices to mirror the
@@ -829,7 +859,7 @@ inline char NGluingPermSearcher::dataTag() const {
 // Inline functions for NClosedPrimeMinSearcher
 
 inline NClosedPrimeMinSearcher::TetVertexState::TetVertexState() :
-        parent(-1), rank(0), bdry(3), hadEqualRank(false) {
+        parent(-1), rank(0), bdry(3), twistUp(0), hadEqualRank(false) {
 }
 
 inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {

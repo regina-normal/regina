@@ -47,18 +47,25 @@ const char NClosedPrimeMinSearcher::dataTag_ = 'c';
 
 void NClosedPrimeMinSearcher::TetVertexState::dumpData(std::ostream& out)
         const {
-    // Assuming nTets < 100, estimated worst case 13 bytes total.
+    // Be careful with twistUp, which is a char but which should be
+    // written as an int.
     out << parent << ' ' << rank << ' ' << bdry << ' '
-        << (hadEqualRank ? 1 : 0);
+        << (twistUp ? 1 : 0) << ' ' << (hadEqualRank ? 1 : 0);
 }
 
 bool NClosedPrimeMinSearcher::TetVertexState::readData(std::istream& in,
         unsigned long size) {
     in >> parent >> rank >> bdry;
 
-    int tmp;
-    in >> tmp;
-    hadEqualRank = tmp;
+    // twistUp is a char, but we need to read it as an int.
+    int twist;
+    in >> twist;
+    twistUp = twist;
+
+    // hadEqualRank is a bool, but we need to read it as an int.
+    int rank;
+    in >> rank;
+    hadEqualRank = rank;
 
     if (parent < -1 || parent >= static_cast<long>(size))
         return false;
@@ -66,7 +73,9 @@ bool NClosedPrimeMinSearcher::TetVertexState::readData(std::istream& in,
         return false;
     if (bdry > 3 * size)
         return false;
-    if (tmp != 1 && tmp != 0)
+    if (twist != 1 && twist != 0)
+        return false;
+    if (rank != 1 && rank != 0)
         return false;
 
     return true;
@@ -374,6 +383,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     NFacePair faces;
     NPerm trial1, trial2;
     bool generic;
+    int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
         adj = (*pairing)[face];
@@ -468,7 +478,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         }
 
         // Merge vertex links and run corresponding tests.
-        if (mergeVertexClasses()) {
+        mergeResult = mergeVertexClasses();
+        if (mergeResult & VLINK_CLOSED) {
             // We closed off a vertex link, which means we will end up
             // with more than one vertex (unless this was our very last
             // gluing).
@@ -476,6 +487,11 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 splitVertexClasses();
                 continue;
             }
+        }
+        if (mergeResult & VLINK_NON_ORBL) {
+            // We made the vertex link non-orientable.  Stop now.
+            splitVertexClasses();
+            continue;
         }
         if (nVertexClasses > 1 + 3 * (nTets * 2 - orderElt - 1)) {
             // We have (2n - orderElt - 1) more gluings to choose.
@@ -687,52 +703,69 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
         inputError_ = true;
 }
 
-bool NClosedPrimeMinSearcher::mergeVertexClasses() {
+int NClosedPrimeMinSearcher::mergeVertexClasses() {
     // Merge all three vertex pairs for the current face.
     NTetFace face = order[orderElt];
     NTetFace adj = (*pairing)[face];
 
-    bool closedVertex = false;
+    int retVal = 0;
 
     int v, w;
     unsigned vIdx, wIdx, orderIdx;
     int vRep, wRep;
+    NPerm p;
+    char parentTwists, hasTwist;
     for (v = 0; v < 4; v++) {
         if (v == face.face)
             continue;
 
-        w = gluingPerm(face)[v];
+        p = gluingPerm(face);
+        w = p[v];
         vIdx = v + 4 * face.tet;
         wIdx = w + 4 * adj.tet;
         orderIdx = v + 4 * orderElt;
 
+        // Are the natural 012 representations of the two faces joined
+        // with reversed orientations?
+        // Here we combine the sign of permutation p with the mappings
+        // from 012 to the native tetrahedron vertices, i.e., v <-> 3 and
+        // w <-> 3.
+        hasTwist = (p.sign() < 0 ? 0 : 1);
+        if ((v == 3 && w != 3) || (v != 3 && w == 3))
+            hasTwist ^= 1;
+
+        parentTwists = 0;
         for (vRep = vIdx; vertexState[vRep].parent >= 0;
                 vRep = vertexState[vRep].parent)
-            ;
+            parentTwists ^= vertexState[vRep].twistUp;
         for (wRep = wIdx; vertexState[wRep].parent >= 0;
                 wRep = vertexState[wRep].parent)
-            ;
+            parentTwists ^= vertexState[wRep].twistUp;
 
         if (vRep == wRep) {
             vertexState[vRep].bdry -= 2;
             if (vertexState[vRep].bdry == 0)
-                closedVertex = true;
+                retVal |= VLINK_CLOSED;
+            if (hasTwist ^ parentTwists)
+                retVal |= VLINK_NON_ORBL;
 
             vertexStateChanged[orderIdx] = -1;
         } else {
             if (vertexState[vRep].rank < vertexState[wRep].rank) {
                 // Join vRep beneath wRep.
                 vertexState[vRep].parent = wRep;
+                vertexState[vRep].twistUp = hasTwist ^ parentTwists;
 
                 vertexState[wRep].bdry = vertexState[wRep].bdry +
                     vertexState[vRep].bdry - 2;
                 if (vertexState[wRep].bdry == 0)
-                    closedVertex = true;
+                    retVal |= VLINK_CLOSED;
 
                 vertexStateChanged[orderIdx] = vRep;
             } else {
                 // Join wRep beneath vRep.
                 vertexState[wRep].parent = vRep;
+                vertexState[wRep].twistUp = hasTwist ^ parentTwists;
                 if (vertexState[vRep].rank == vertexState[wRep].rank) {
                     vertexState[vRep].rank++;
                     vertexState[wRep].hadEqualRank = true;
@@ -741,7 +774,7 @@ bool NClosedPrimeMinSearcher::mergeVertexClasses() {
                 vertexState[vRep].bdry = vertexState[vRep].bdry +
                     vertexState[wRep].bdry - 2;
                 if (vertexState[vRep].bdry == 0)
-                    closedVertex = true;
+                    retVal |= VLINK_CLOSED;
 
                 vertexStateChanged[orderIdx] = wRep;
             }
@@ -750,7 +783,7 @@ bool NClosedPrimeMinSearcher::mergeVertexClasses() {
         }
     }
 
-    return closedVertex;
+    return retVal;
 }
 
 void NClosedPrimeMinSearcher::splitVertexClasses() {
