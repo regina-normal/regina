@@ -562,6 +562,87 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
         static const unsigned EDGE_MISC;
             /**< Represents a miscellaneous edge in a face pairing graph. */
 
+    private:
+        /**
+         * A structure used to track equivalence classes of tetrahedron
+         * vertices as the gluing permutation is constructed.  Two
+         * vertices are considered equivalent if they are identified
+         * within the triangulation.
+         *
+         * Tetrahedron vertices are indexed linearly by tetrahedron and
+         * then vertex number.  Specifically, vertex v (0..3) of
+         * tetrahedron t (0..nTets-1) has index 4t+v.
+         *
+         * Each equivalence class of vertices corresponds to a tree of
+         * TetVertexState objects.
+         */
+        struct TetVertexState {
+            int parent;
+                /**< The index of the parent object in the current tree,
+                     or -1 if this object is the root of the tree. */
+            unsigned rank;
+                /**< The depth of the subtree beneath this object (where
+                     a leaf node has depth zero). */
+            unsigned bdry;
+                /**< The number of boundary edges in the vertex link for
+                     this equivalence class of vertices.  Any face whose
+                     gluing permutation has not yet been decided is
+                     treated as a boundary face.  This value is only
+                     maintained correctly for the root of the corresponding
+                     object tree; other objects in the tree will have
+                     older values to facilitate backtracking. */
+            bool hadEqualRank;
+                /**< Did this tree have rank equal to its parent
+                     immediately before it was grafted beneath its parent?
+                     This information is used to maintain the ranks correctly
+                     when grafting operations are undone.  If this object is
+                     still the root of its tree, this value is set to false. */
+
+            /**
+             * Constructor for a standalone tetrahedron vertex in an
+             * equivalence class all of its own.  Note that the vertex
+             * link will be a single triangle with three boundary edges.
+             */
+            TetVertexState();
+
+            /**
+             * Dumps all internal data in a plain text format to the
+             * given output stream.  This state can be recreated from
+             * this text data by calling readData().
+             *
+             * This routine may be useful for transferring objects from
+             * one processor to another.
+             *
+             * \warning The data format is liable to change between Regina
+             * releases.  Data in this format should be used on a short-term
+             * temporary basis only.
+             *
+             * @param out the output stream to which the data should be
+             * written.
+             */
+            void dumpData(std::ostream& out) const;
+
+            /**
+             * Fills this state with data read from the given input stream.
+             * This routine reads data in the format written by dumpData().
+             *
+             * \warning The data format is liable to change between Regina
+             * releases.  Data in this format should be used on a short-term
+             * temporary basis only.
+             *
+             * This routine does test for bad input data, but it
+             * does \e not test for end-of-file.
+             *
+             * @param in the input stream from which to read.
+             * @param size the total number of vertex states under
+             * consideration (this must be four times the number of
+             * tetrahedra).
+             * @return \c false if any errors were encountered during
+             * reading, or \c true otherwise.
+             */
+            bool readData(std::istream& in, unsigned long size);
+        };
+
     public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
@@ -604,6 +685,27 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  EDGE_CHAIN_INTERNAL_FIRST).  In this case we store the two
                  permutations for this face that correspond to the two
                  possible permutations for the previous face.  */
+
+        unsigned nVertexClasses;
+            /**< The number of equivalence classes of identified
+                 tetrahedron vertices. */
+        TetVertexState* vertexState;
+            /**< Used for tracking equivalence classes of identified
+                 tetrahedron vertices.  See the TetVertexState description
+                 for details.  This array has size 4n, where vertex v of
+                 tetrahedron t has index 4t+v. */
+        int* vertexStateChanged;
+            /**< Tracks the way in which the vertexState[] array has been
+                 updated over time.  This array has size 8n, where element
+                 4i+v describes how the gluing for order[i] affects vertex v
+                 of the corresponding tetrahedron (thus a quarter of this
+                 array will remain unused, since only three vertices are
+                 affected for each gluing).
+
+                 If this identification of vertices results in the tree
+                 with root vertexState[p] being grafted beneath the tree
+                 with root vertexState[q], this array will store the value p.
+                 Otherwise it will store the value -1. */
 
         int orderElt;
             /**< Marks which element of order[] we are currently examining
@@ -691,6 +793,25 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * reflect the underlying face pairing.
          */
         void initOrder();
+
+        /**
+         * Merge the classes of tetrahedron vertices as required by the
+         * new gluing made at stage \a orderElt of the search.
+         *
+         * See the TetVertexState class for details.
+         *
+         * @return \c true if some vertex link was closed off by this
+         * merge, or \c false otherwise.
+         */
+        bool mergeVertexClasses();
+
+        /**
+         * Split the classes of tetrahedron vertices to mirror the
+         * undoing of the gluing at stage \a orderElt of the search.
+         *
+         * See the TetVertexState class for details.
+         */
+        void splitVertexClasses();
 };
 
 /*@}*/
@@ -706,6 +827,10 @@ inline char NGluingPermSearcher::dataTag() const {
 }
 
 // Inline functions for NClosedPrimeMinSearcher
+
+inline NClosedPrimeMinSearcher::TetVertexState::TetVertexState() :
+        parent(-1), rank(0), bdry(3), hadEqualRank(false) {
+}
 
 inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
     delete[] order;

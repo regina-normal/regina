@@ -45,6 +45,33 @@ const unsigned NClosedPrimeMinSearcher::EDGE_MISC = 6;
 
 const char NClosedPrimeMinSearcher::dataTag_ = 'c';
 
+void NClosedPrimeMinSearcher::TetVertexState::dumpData(std::ostream& out)
+        const {
+    // Assuming nTets < 100, estimated worst case 13 bytes total.
+    out << parent << ' ' << rank << ' ' << bdry << ' '
+        << (hadEqualRank ? 1 : 0);
+}
+
+bool NClosedPrimeMinSearcher::TetVertexState::readData(std::istream& in,
+        unsigned long size) {
+    in >> parent >> rank >> bdry;
+
+    int tmp;
+    in >> tmp;
+    hadEqualRank = tmp;
+
+    if (parent < -1 || parent >= static_cast<long>(size))
+        return false;
+    if (rank >= size)
+        return false;
+    if (bdry > 3 * size)
+        return false;
+    if (tmp != 1 && tmp != 0)
+        return false;
+
+    return true;
+}
+
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
         const NFacePairingIsoList* autos, bool orientableOnly,
         UseGluingPerms use, void* useArgs) :
@@ -279,6 +306,13 @@ void NClosedPrimeMinSearcher::initOrder() {
             }
         }
     }
+
+    // ---------- Prepare to track vertex equivalence classes ----------
+
+    nVertexClasses = nTets * 4;
+    vertexState = new TetVertexState[nTets * 4];
+    vertexStateChanged = new int[nTets * 8];
+    std::fill(vertexStateChanged, vertexStateChanged + nTets * 8, -1);
 }
 
 void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
@@ -387,6 +421,11 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             permIndex(face) = -1;
             permIndex(adj) = -1;
             orderElt--;
+
+            // Pull apart vertex links at the previous level.
+            if (orderElt >= minOrder)
+                splitVertexClasses();
+
             continue;
         }
 
@@ -428,6 +467,25 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 continue;
         }
 
+        // Merge vertex links and run corresponding tests.
+        if (mergeVertexClasses()) {
+            // We closed off a vertex link, which means we will end up
+            // with more than one vertex (unless this was our very last
+            // gluing).
+            if (orderElt + 1 < static_cast<int>(nTets) * 2) {
+                splitVertexClasses();
+                continue;
+            }
+        }
+        if (nVertexClasses > 1 + 3 * (nTets * 2 - orderElt - 1)) {
+            // We have (2n - orderElt - 1) more gluings to choose.
+            // Since each merge can reduce the number of vertex classes
+            // by at most 3, there is no way we can end up with just one
+            // vertex at the end.
+            splitVertexClasses();
+            continue;
+        }
+
         // Fix the orientation if appropriate.
         if (generic && adj.face == 0 && orientableOnly_) {
             // It's the first time we've hit this tetrahedron.
@@ -451,6 +509,10 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
             // Back to the previous face.
             orderElt--;
+
+            // Pull apart vertex links at the previous level.
+            if (orderElt >= minOrder)
+                splitVertexClasses();
         } else {
             // Not a full triangulation; just one level deeper.
 
@@ -480,18 +542,50 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
                 // Back to the previous face.
                 permIndex(face) = -1;
                 orderElt--;
+
+                // Pull apart vertex links at the previous level.
+                if (orderElt >= minOrder)
+                    splitVertexClasses();
             }
         }
     }
 
     // And the search is over.
 
+    // Some extra sanity checking.
+    if (minOrder == 0) {
+        // Our vertex classes had better be 4n standalone vertices.
+        if (nVertexClasses != 4 * nTets)
+            std::cerr << "ERROR: nVertexClasses == "
+                << nVertexClasses << " at end of search!" << std::endl;
+        for (unsigned i = 0; i < nTets * 4; i++) {
+            if (vertexState[i].parent != -1)
+                std::cerr << "ERROR: vertexState[" << i << "].parent == "
+                    << vertexState[i].parent << " at end of search!"
+                    << std::endl;
+            if (vertexState[i].rank != 0)
+                std::cerr << "ERROR: vertexState[" << i << "].rank == "
+                    << vertexState[i].rank << " at end of search!" << std::endl;
+            if (vertexState[i].bdry != 3)
+                std::cerr << "ERROR: vertexState[" << i << "].bdry == "
+                    << vertexState[i].bdry << " at end of search!" << std::endl;
+            if (vertexState[i].hadEqualRank)
+                std::cerr << "ERROR: vertexState[" << i << "].hadEqualRank == "
+                    "true at end of search!" << std::endl;
+        }
+        for (unsigned i = 0; i < nTets * 8; i++)
+            if (vertexStateChanged[i] != -1)
+                std::cerr << "ERROR: vertexStateChanged[" << i << "] == "
+                    << vertexStateChanged[i] << " at end of search!"
+                    << std::endl;
+    }
+
     use_(0, useArgs_);
 }
 
 void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
-    // Assuming nTets < 100, estimated worst case (57 * nTets + 20) bytes total.
-    // Don't quote me on this.
+    // Assuming nTets < 100, estimated worst case (145 * nTets + 24) bytes
+    // total.  Don't quote me on this.
     NGluingPermSearcher::dumpData(out);
 
     unsigned nTets = getNumberOfTetrahedra();
@@ -515,12 +609,25 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
     }
 
     out << orderElt << std::endl;
+
+    out << nVertexClasses << std::endl;
+    for (i = 0; i < 4 * nTets; i++) {
+        vertexState[i].dumpData(out);
+        out << std::endl;
+    }
+    for (i = 0; i < 8 * nTets; i++) {
+        if (i)
+            out << ' ';
+        out << vertexStateChanged[i];
+    }
+    out << std::endl;
 }
 
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
         UseGluingPerms use, void* useArgs) :
         NGluingPermSearcher(in, use, useArgs),
         order(0), orderType(0), nChainEdges(0), chainPermIndices(0),
+        nVertexClasses(0), vertexState(0), vertexStateChanged(0),
         orderElt(0) {
     if (inputError_)
         return;
@@ -555,9 +662,134 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
 
     in >> orderElt;
 
+    in >> nVertexClasses;
+    if (nVertexClasses > 4 * nTets) {
+        inputError_ = true; return;
+    }
+
+    vertexState = new TetVertexState[4 * nTets];
+    for (i = 0; i < 4 * nTets; i++)
+        if (! vertexState[i].readData(in, 4 * nTets)) {
+            inputError_ = true; return;
+        }
+
+    vertexStateChanged = new int[8 * nTets];
+    for (i = 0; i < 8 * nTets; i++) {
+        in >> vertexStateChanged[i];
+        if (vertexStateChanged[i] < -1 ||
+                 vertexStateChanged[i] >= 4 * static_cast<int>(nTets)) {
+            inputError_ = true; return;
+        }
+    }
+
     // Did we hit an unexpected EOF?
     if (in.eof())
         inputError_ = true;
+}
+
+bool NClosedPrimeMinSearcher::mergeVertexClasses() {
+    // Merge all three vertex pairs for the current face.
+    NTetFace face = order[orderElt];
+    NTetFace adj = (*pairing)[face];
+
+    bool closedVertex = false;
+
+    int v, w;
+    unsigned vIdx, wIdx, orderIdx;
+    int vRep, wRep;
+    for (v = 0; v < 4; v++) {
+        if (v == face.face)
+            continue;
+
+        w = gluingPerm(face)[v];
+        vIdx = v + 4 * face.tet;
+        wIdx = w + 4 * adj.tet;
+        orderIdx = v + 4 * orderElt;
+
+        for (vRep = vIdx; vertexState[vRep].parent >= 0;
+                vRep = vertexState[vRep].parent)
+            ;
+        for (wRep = wIdx; vertexState[wRep].parent >= 0;
+                wRep = vertexState[wRep].parent)
+            ;
+
+        if (vRep == wRep) {
+            vertexState[vRep].bdry -= 2;
+            if (vertexState[vRep].bdry == 0)
+                closedVertex = true;
+
+            vertexStateChanged[orderIdx] = -1;
+        } else {
+            if (vertexState[vRep].rank < vertexState[wRep].rank) {
+                // Join vRep beneath wRep.
+                vertexState[vRep].parent = wRep;
+
+                vertexState[wRep].bdry = vertexState[wRep].bdry +
+                    vertexState[vRep].bdry - 2;
+                if (vertexState[wRep].bdry == 0)
+                    closedVertex = true;
+
+                vertexStateChanged[orderIdx] = vRep;
+            } else {
+                // Join wRep beneath vRep.
+                vertexState[wRep].parent = vRep;
+                if (vertexState[vRep].rank == vertexState[wRep].rank) {
+                    vertexState[vRep].rank++;
+                    vertexState[wRep].hadEqualRank = true;
+                }
+
+                vertexState[vRep].bdry = vertexState[vRep].bdry +
+                    vertexState[wRep].bdry - 2;
+                if (vertexState[vRep].bdry == 0)
+                    closedVertex = true;
+
+                vertexStateChanged[orderIdx] = wRep;
+            }
+
+            nVertexClasses--;
+        }
+    }
+
+    return closedVertex;
+}
+
+void NClosedPrimeMinSearcher::splitVertexClasses() {
+    // Split all three vertex pairs for the current face.
+    NTetFace face = order[orderElt];
+
+    int v;
+    unsigned vIdx, orderIdx;
+    int rep, subRep;
+    // Do everything in reverse.  This includes the loop over vertices.
+    for (v = 3; v >= 0; v--) {
+        if (v == face.face)
+            continue;
+
+        vIdx = v + 4 * face.tet;
+        orderIdx = v + 4 * orderElt;
+
+        if (vertexStateChanged[orderIdx] < 0) {
+            for (rep = vIdx; vertexState[rep].parent >= 0;
+                    rep = vertexState[rep].parent)
+                ;
+            vertexState[rep].bdry += 2;
+        } else {
+            subRep = vertexStateChanged[orderIdx];
+            rep = vertexState[subRep].parent;
+
+            vertexState[subRep].parent = -1;
+            if (vertexState[subRep].hadEqualRank) {
+                vertexState[subRep].hadEqualRank = false;
+                vertexState[rep].rank--;
+            }
+
+            vertexState[rep].bdry = vertexState[rep].bdry + 2 -
+                vertexState[subRep].bdry;
+
+            vertexStateChanged[orderIdx] = -1;
+            nVertexClasses++;
+        }
+    }
 }
 
 } // namespace regina

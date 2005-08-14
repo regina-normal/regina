@@ -21,6 +21,8 @@ Version 4.2.1  [ under development ]
               NGluingPermSearcher and NClosedPrimeMinSearcher.
             - Supports partial depth-based searches (by passing a
               non-negative depth parameter to the new runSearch() routine).
+            - Tracks vertex links to prune more braches of the search
+              tree where possible.
         Routine writeSnapPea():
             - Add a precondition that triangulation has no boundary faces.
     USER INTERFACE:
