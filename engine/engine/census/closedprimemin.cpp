@@ -623,6 +623,20 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 #endif
 #endif
 
+        // In the following code we use several results from
+        // "Face pairing graphs and 3-manifold enumeration", B. A. Burton,
+        // J. Knot Theory Ramifications 13 (2004).
+        //
+        // These include:
+        //
+        // - We cannot have an edge of degree <= 2, or an edge of degree 3
+        //   meeting three distinct tetrahedra (section 2.1);
+        // - We must have exactly one vertex (lemma 2.6);
+        // - We cannot have a face with two edges identified to form a
+        //   cone (lemma 2.8);
+        // - We cannot have a face with all three edges identified to
+        //   form an L(3,1) spine (lemma 2.5).
+
 #ifndef NO_VERTEX_LINK_PRUNING
         // Merge vertex links and run corresponding tests.
         mergeResult = mergeVertexClasses();
