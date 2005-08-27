@@ -563,14 +563,35 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
             /**< Represents a miscellaneous edge in a face pairing graph. */
 
     private:
-        static const char VLINK_CLOSED = 1;
+#ifndef NO_VERTEX_LINK_PRUNING
+        static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
                  the link has no remaining boundary edges). */
-        static const char VLINK_NON_ORBL = 2;
+        static const char VLINK_NON_ORBL;
             /**< Signifies that a vertex link has been made
                  non-orientable. */
+#endif
+
+#ifndef NO_EDGE_CLASS_PRUNING
+        static const char ECLASS_TWISTED;
+            /**< Signifies that an edge has been identified with itself
+                 in reverse. */
+        static const char ECLASS_LOWDEG;
+            /**< Signifies that a set of tetrahedron edges have been
+                 identified to form an internal edge of low degree
+                 (degree 1 or 2 of any type, or degree 3 with three
+                 distinct tetrahedra). */
+        static const char ECLASS_CONE;
+            /**< Signifies that two edges of a face have been identified
+                 to form a cone (with no constraints on any additional
+                 identifications that might be taking place). */
+        static const char ECLASS_L31;
+            /**< Signifies that all three edges of a face have been
+                 identified to form an L(3,1) spine. */
+#endif
 
     private:
+#ifndef NO_VERTEX_LINK_PRUNING
         /**
          * A structure used to track equivalence classes of tetrahedron
          * vertices as the gluing permutation is constructed.  Two
@@ -657,14 +678,116 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
              * does \e not test for end-of-file.
              *
              * @param in the input stream from which to read.
-             * @param size the total number of vertex states under
+             * @param nStates the total number of vertex states under
              * consideration (this must be four times the number of
              * tetrahedra).
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
-            bool readData(std::istream& in, unsigned long size);
+            bool readData(std::istream& in, unsigned long nStates);
         };
+#endif
+
+#ifndef NO_EDGE_CLASS_PRUNING
+        /**
+         * A structure used to track equivalence classes of tetrahedron
+         * edges as the gluing permutation is constructed.  Two edges
+         * are considered equivalent if they are identified within the
+         * triangulation.
+         *
+         * Tetrahedron edges are indexed linearly by tetrahedron and
+         * then edge number.  Specifically, edge e (0..5) of
+         * tetrahedron t (0..nTets-1) has index 6t+e.
+         *
+         * Each equivalence class of edges corresponds to a tree of
+         * TetEdgeState objects.
+         */
+        struct TetEdgeState {
+            int parent;
+                /**< The index of the parent object in the current tree,
+                     or -1 if this object is the root of the tree. */
+            unsigned rank;
+                /**< The depth of the subtree beneath this object (where
+                     a leaf node has depth zero). */
+            unsigned size;
+                /**< The total number of objects in the subtree descending
+                     from this object (where this object is counted also). */
+            bool bounded;
+                /**< Does this equivalence class of tetrahedron edges
+                     represent a boundary edge?
+
+                     If this equivalence class describes a complete loop
+                     of tetrahedron edges then the value of \a bounded
+                     is \c false.  If this equivalence class describes a
+                     string of tetrahedron edges with two endpoints, the
+                     value of \a bounded is \c true.  Here we treat any
+                     face whose gluing permutation has not yet been
+                     decided as a boundary face.
+
+                     This value is only maintained correctly for the root
+                     of the corresponding object tree; other objects in
+                     the tree will have older values to facilitate
+                     backtracking. */
+            char twistUp;
+                /**< Each tetrahedron edge can be assigned an
+                     orientation pointing from the lower numbered
+                     tetrahedron vertex to the higher.
+
+                     The parameter \a twistUp is 0 if the identification of
+                     this object and its parent in the tree preserves this
+                     orientation, or 1 if it does not.  If this object has
+                     no parent, the value of \a twistUp is undefined. */
+            bool hadEqualRank;
+                /**< Did this tree have rank equal to its parent
+                     immediately before it was grafted beneath its parent?
+                     This information is used to maintain the ranks correctly
+                     when grafting operations are undone.  If this object is
+                     still the root of its tree, this value is set to false. */
+
+            /**
+             * Constructor for a standalone tetrahedron edge in an
+             * equivalence class all of its own.
+             */
+            TetEdgeState();
+
+            /**
+             * Dumps all internal data in a plain text format to the
+             * given output stream.  This state can be recreated from
+             * this text data by calling readData().
+             *
+             * This routine may be useful for transferring objects from
+             * one processor to another.
+             *
+             * \warning The data format is liable to change between Regina
+             * releases.  Data in this format should be used on a short-term
+             * temporary basis only.
+             *
+             * @param out the output stream to which the data should be
+             * written.
+             */
+            void dumpData(std::ostream& out) const;
+
+            /**
+             * Fills this state with data read from the given input stream.
+             * This routine reads data in the format written by dumpData().
+             *
+             * \warning The data format is liable to change between Regina
+             * releases.  Data in this format should be used on a short-term
+             * temporary basis only.
+             *
+             * This routine does test for bad input data, but it
+             * does \e not test for end-of-file.
+             *
+             * @param in the input stream from which to read.
+             * @param nStates the total number of edge states under
+             * consideration (this must be six times the number of
+             * tetrahedra).
+             * @return \c false if any errors were encountered during
+             * reading, or \c true otherwise.
+             */
+            bool readData(std::istream& in, unsigned long nStates);
+        };
+#endif
 
     public:
         static const char dataTag_;
@@ -709,6 +832,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  permutations for this face that correspond to the two
                  possible permutations for the previous face.  */
 
+#ifndef NO_VERTEX_LINK_PRUNING
         unsigned nVertexClasses;
             /**< The number of equivalence classes of identified
                  tetrahedron vertices. */
@@ -729,6 +853,31 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
                  with root vertexState[p] being grafted beneath the tree
                  with root vertexState[q], this array will store the value p.
                  Otherwise it will store the value -1. */
+#endif
+
+#ifndef NO_EDGE_CLASS_PRUNING
+        unsigned nEdgeClasses;
+            /**< The number of equivalence classes of identified
+                 tetrahedron edges. */
+        TetEdgeState* edgeState;
+            /**< Used for tracking equivalence classes of identified
+                 tetrahedron edges.  See the TetEdgeState description
+                 for details.  This array has size 6n, where edge e of
+                 tetrahedron t has index 6t+e. */
+        int* edgeStateChanged;
+            /**< Tracks the way in which the edgeState[] array has been
+                 updated over time.  This array has size 8n.  Suppose the
+                 gluing for order[i] affects face f of tetrahedron t.  Then
+                 element 4i+v of this array describes how the gluing for
+                 order[i] affects the edge of tetrahedron t opposite vertices
+                 f and v (note that a quarter of this array will remain
+                 unused, since f and v are never equal).
+
+                 If this identification of edges results in the tree
+                 with root edgeState[p] being grafted beneath the tree
+                 with root edgeState[q], this array will store the value p.
+                 Otherwise it will store the value -1. */
+#endif
 
         int orderElt;
             /**< Marks which element of order[] we are currently examining
@@ -817,6 +966,7 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          */
         void initOrder();
 
+#ifndef NO_VERTEX_LINK_PRUNING
         /**
          * Merge the classes of tetrahedron vertices as required by the
          * new gluing made at stage \a orderElt of the search.
@@ -834,7 +984,30 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * described by these flags were observed.
          */
         int mergeVertexClasses();
+#endif
 
+#ifndef NO_EDGE_CLASS_PRUNING
+        /**
+         * Merge the classes of tetrahedron edges as required by the
+         * new gluing made at stage \a orderElt of the search.
+         *
+         * See the TetEdgeState class for details.
+         *
+         * This routine returns a bitwise (OR) combination of the
+         * ECLASS_... flags defined earlier in this class.  These
+         * flags describe what happened to the edge classes during
+         * this particular merge.  In particular, they note when edge
+         * identifications form a structure that cannot possibly appear
+         * in a closed prime minimal P2-irreducible triangulation.
+         *
+         * @return a combination of ECLASS_... flags describing how
+         * the edge links were changed, or 0 if none of the changes
+         * described by these flags were observed.
+         */
+        int mergeEdgeClasses();
+#endif
+
+#ifndef NO_VERTEX_LINK_PRUNING
         /**
          * Split the classes of tetrahedron vertices to mirror the
          * undoing of the gluing at stage \a orderElt of the search.
@@ -842,6 +1015,17 @@ class NClosedPrimeMinSearcher : public NGluingPermSearcher {
          * See the TetVertexState class for details.
          */
         void splitVertexClasses();
+#endif
+
+#ifndef NO_EDGE_CLASS_PRUNING
+        /**
+         * Split the classes of tetrahedron edges to mirror the undoing
+         * of the gluing at stage \a orderElt of the search.
+         *
+         * See the TetEdgeState class for details.
+         */
+        void splitEdgeClasses();
+#endif
 };
 
 /*@}*/
@@ -858,9 +1042,18 @@ inline char NGluingPermSearcher::dataTag() const {
 
 // Inline functions for NClosedPrimeMinSearcher
 
+#ifndef NO_VERTEX_LINK_PRUNING
 inline NClosedPrimeMinSearcher::TetVertexState::TetVertexState() :
         parent(-1), rank(0), bdry(3), twistUp(0), hadEqualRank(false) {
 }
+#endif
+
+#ifndef NO_EDGE_CLASS_PRUNING
+inline NClosedPrimeMinSearcher::TetEdgeState::TetEdgeState() :
+        parent(-1), rank(0), size(1), bounded(true), twistUp(0),
+        hadEqualRank(false) {
+}
+#endif
 
 inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
     delete[] order;
