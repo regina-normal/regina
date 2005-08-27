@@ -123,7 +123,7 @@ bool NClosedPrimeMinSearcher::TetVertexState::readData(std::istream& in,
 #endif
 
 #ifndef NO_EDGE_CLASS_PRUNING
-void NClosedPrimeMinSearcher::TetEdgeState::dumpData(std::ostream& out) {
+void NClosedPrimeMinSearcher::TetEdgeState::dumpData(std::ostream& out) const {
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
     out << parent << ' ' << rank << ' ' << size << ' '
