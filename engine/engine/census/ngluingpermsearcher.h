@@ -38,6 +38,54 @@
 
 #include "census/ngluingperms.h"
 
+/**
+ * Algorithm Constraints
+ * ---------------------
+ *
+ * The census algorithm for NClosedPrimeMinSearcher can be deliberately
+ * slowed down by defining one or more of the following symbols:
+ *
+ *   NO_VERTEX_LINK_PRUNING
+ *
+ *     Do not track vertex links as triangulations are constructed.
+ *     This means that triangulations are not pruned when non-orientable
+ *     vertex links are created.
+ *
+ *     Implies NO_VERTEX_COUNT_PRUNING.
+ *
+ *   NO_VERTEX_COUNT_PRUNING
+ *
+ *     Do not prune when it becomes clear that we will not end up with a
+ *     one-vertex triangulation.
+ *
+ *   NO_EDGE_CLASS_PRUNING
+ *
+ *     Do not track classes of identified edges as triangulations are
+ *     constructed.  Triangulations will still be pruned on low degree
+ *     and invalid edges, but this pruning may be slower.
+ *
+ *     Implies NO_EDGE_COUNT_PRUNING, NO_CONE_PRUNING and NO_L31_PRUNING.
+ *
+ *   NO_EDGE_COUNT_PRUNING
+ *
+ *     Do not prune when it becomes clear that we will end up with too
+ *     few or too many edges.
+ *
+ *   NO_CONE_PRUNING
+ *
+ *     Do not prune when it becomes clear that we will end up with a
+ *     face with two edges identified to form a cone.
+ *
+ *   NO_L31_PRUNING
+ *
+ *     Do not prune when it becomes clear that we will end up with a
+ *     face with all three edges identified to form an L(3,1) spine.
+ *
+ * The relevant symbol(s) should be defined here at the top of this
+ * header (or in the global CXXFLAGS options if you are happy to rebuild
+ * all of regina).
+ */
+
 namespace regina {
 
 /**
