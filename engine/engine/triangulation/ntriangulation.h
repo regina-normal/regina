@@ -628,6 +628,33 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
         unsigned long getFaceIndex(const NFace* face) const;
 
         /**
+         * Determines if this triangulation contains any two-sphere
+         * boundary components.
+         *
+         * @return \c true if and only if there is at least one
+         * two-sphere boundary component.
+         */
+        bool hasTwoSphereBoundaryComponents() const;
+        /**
+         * Determines if this triangulation contains any ideal boundary
+         * components with negative Euler characteristic.
+         *
+         * @return \c true if and only if there is at least one such
+         * boundary component.
+         */
+        bool hasNegativeIdealBoundaryComponents() const;
+
+        /*@}*/
+        /**
+         * (end: Skeletal Queries)
+         */
+
+        /**
+         * \name Isomorphism Testing
+         */
+        /*@{*/
+
+        /**
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
@@ -686,6 +713,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * created isomorphism (if it exists) will be automatically
          * destroyed.
          *
+         * If more than one such isomorphism exists, only one will be
+         * returned.  For a routine that returns all such isomorphisms,
+         * see findAllSubcomplexesIn().
+         *
          * @param other the triangulation in which to search for an
          * isomorphic copy of this triangulation.
          * @return details of the isomorphism if such a copy is found,
@@ -695,25 +726,35 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
             const;
 
         /**
-         * Determines if this triangulation contains any two-sphere
-         * boundary components.
+         * Finds all ways in which an isomorphic copy of this triangulation
+         * is contained within the given triangulation, possibly as a
+         * subcomplex of some larger component (or components).
          *
-         * @return \c true if and only if there is at least one
-         * two-sphere boundary component.
-         */
-        bool hasTwoSphereBoundaryComponents() const;
-        /**
-         * Determines if this triangulation contains any ideal boundary
-         * components with negative Euler characteristic.
+         * This routine behaves identically to isContainedIn(), except
+         * that instead of returning just one isomorphism (which may be
+         * boundary incomplete and need not be onto), all such isomorphisms
+         * are returned.
          *
-         * @return \c true if and only if there is at least one such
-         * boundary component.
+         * See the isContainedIn() notes for additional information.
+         *
+         * The isomorphisms that are found will be inserted into the
+         * given list.  These isomorphisms will be newly created, and
+         * the caller of this routine is responsible for destroying
+         * them.  The given list will not be emptied before the new
+         * isomorphisms are inserted.
+         *
+         * @param other the triangulation in which to search for
+         * isomorphic copies of this triangulation.
+         * @param results the list in which any isomorphisms found will
+         * be stored.
+         * @return the number of isomorphisms that were found.
          */
-        bool hasNegativeIdealBoundaryComponents() const;
+        unsigned long findAllSubcomplexesIn(const NTriangulation& other,
+                std::list<NIsomorphism*>& results) const;
 
         /*@}*/
         /**
-         * (end: Skeletal Queries)
+         * (end: Isomorphism Testing)
          */
 
         /**
@@ -2199,6 +2240,75 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * its boundary components.
          */
         void calculateBoundaryProperties() const;
+
+        /**
+         * Determines if an isomorphic copy of this triangulation is
+         * contained within the given triangulation.
+         *
+         * If the argument \a completeIsomorphism is \c true, the
+         * isomorphism must be onto and boundary complete.
+         * That is, this triangulation must be combinatorially
+         * isomorphic to the given triangulation.
+         *
+         * If the argument \a completeIsomorphism is \c false, the
+         * isomorphism may be boundary incomplete and may or may not be
+         * onto.  That is, this triangulation must appear as a
+         * subcomplex of the given triangulation, possibly with some
+         * original boundary faces joined to new tetrahedra.
+         *
+         * See the NIsomorphism class notes for further details
+         * regarding boundary complete and boundary incomplete
+         * isomorphisms.
+         *
+         * The isomorphisms found, if any, will be appended to the
+         * list \a results.  This list will not be emptied before
+         * calculations begin.  All isomorphisms will be newly created,
+         * and the caller of this routine is responsible for destroying
+         * them.
+         *
+         * If \a firstOnly is passed as \c true, only the first
+         * isomorphism found (if any) will be returned, after which the
+         * routine will return immediately.  Otherwise all isomorphisms
+         * will be returned.
+         *
+         * @param other the triangulation in which to search for an
+         * isomorphic copy of this triangulation.
+         * @param results the list in which any isomorphisms found will
+         * be stored.
+         * @param completeIsomorphism \c true if isomorphisms must be
+         * onto and boundary complete, or \c false if neither of these
+         * restrictions should be imposed.
+         * @param firstOnly \c true if only one isomorphism should be
+         * returned (if any), or \c false if all isomorphisms should be
+         * returned.
+         * @return the total number of isomorphisms found.
+         */
+        unsigned long NTriangulation::findIsomorphisms(
+                const NTriangulation& other, std::list<NIsomorphism*>& results,
+                bool completeIsomorphism, bool firstOnly) const;
+
+        /**
+         * Internal to findIsomorphisms().
+         *
+         * Examines properties of the given tetrahedra to find any
+         * immediate evidence that \a src may not map to \a dest in a
+         * boundary complete isomorphism (in which the vertices of \a src
+         * are mapped to the vertices of \a dest according to the
+         * permutation \a p).
+         *
+         * In particular, properties such as edge degrees and vertex links
+         * are examined.
+         *
+         * @param src the first of the two tetrahedra to examine.
+         * @param dest the second of the two tetrahedra to examine.
+         * @param p the permutation under which the vertices of \a src
+         * must map to the vertices of \a dest.
+         * @return \c true if no immediate incompatibilities between the
+         * tetrahedra were found, or \c false if properties of the
+         * tetrahedra were found that differ between \a src and \a dest.
+         */
+        static bool compatibleTets(NTetrahedron* src, NTetrahedron* dest,
+                NPerm p);
 
         /**
          * Calculates all properties that can be deduced from an

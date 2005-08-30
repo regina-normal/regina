@@ -31,270 +31,168 @@
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
-#define NO_ISOMORPHISM (std::auto_ptr<NIsomorphism>(0))
-
 namespace regina {
 
 std::auto_ptr<NIsomorphism> NTriangulation::isIsomorphicTo(
         const NTriangulation& other) const {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
-    if (! other.calculatedSkeleton)
-        other.calculateSkeleton();
-
-    if (tetrahedra.size() != other.tetrahedra.size())
-        return NO_ISOMORPHISM;
-    if (tetrahedra.empty())
-        return std::auto_ptr<NIsomorphism>(new NIsomorphismDirect(0));
-    if (faces.size() != other.faces.size())
-        return NO_ISOMORPHISM;
-    if (edges.size() != other.edges.size())
-        return NO_ISOMORPHISM;
-    if (vertices.size() != other.vertices.size())
-        return NO_ISOMORPHISM;
-    if (components.size() != other.components.size())
-        return NO_ISOMORPHISM;
-    if (boundaryComponents.size() != other.boundaryComponents.size())
-        return NO_ISOMORPHISM;
-    if (orientable ^ other.orientable)
-        return NO_ISOMORPHISM;
-
-    std::map<unsigned long, unsigned long> map1;
-    std::map<unsigned long, unsigned long> map2;
-    std::map<unsigned long, unsigned long>::iterator mapIt;
-
-    {
-        EdgeIterator it;
-        for (it = edges.begin(); it != edges.end(); it++) {
-            // Find this degree, or insert it with frequency 0 if it's
-            // not already present.
-            mapIt = map1.insert(
-                std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
-            (*mapIt).second++;
-        }
-        for (it = other.edges.begin(); it != other.edges.end(); it++) {
-            mapIt = map2.insert(
-                std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
-            (*mapIt).second++;
-        }
-        if (! (map1 == map2))
-            return NO_ISOMORPHISM;
-        map1.clear();
-        map2.clear();
-    }
-    {
-        VertexIterator it;
-        for (it = vertices.begin(); it != vertices.end(); it++) {
-            mapIt = map1.insert(
-                std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
-            (*mapIt).second++;
-        }
-        for (it = other.vertices.begin(); it != other.vertices.end(); it++) {
-            mapIt = map2.insert(
-                std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
-            (*mapIt).second++;
-        }
-        if (! (map1 == map2))
-            return NO_ISOMORPHISM;
-        map1.clear();
-        map2.clear();
-    }
-    {
-        ComponentIterator it;
-        for (it = components.begin(); it != components.end(); it++) {
-            mapIt = map1.insert(
-                std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
-            (*mapIt).second++;
-        }
-        for (it = other.components.begin();
-                it != other.components.end(); it++) {
-            mapIt = map2.insert(
-                std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
-            (*mapIt).second++;
-        }
-        if (! (map1 == map2))
-            return NO_ISOMORPHISM;
-        map1.clear();
-        map2.clear();
-    }
-    {
-        BoundaryComponentIterator it;
-        for (it = boundaryComponents.begin();
-                it != boundaryComponents.end(); it++) {
-            mapIt = map1.insert(
-                std::make_pair((*it)->getNumberOfFaces(), 0)).first;
-            (*mapIt).second++;
-        }
-        for (it = other.boundaryComponents.begin();
-                it != other.boundaryComponents.end(); it++) {
-            mapIt = map2.insert(
-                std::make_pair((*it)->getNumberOfFaces(), 0)).first;
-            (*mapIt).second++;
-        }
-        if (! (map1 == map2))
-            return NO_ISOMORPHISM;
-        map1.clear();
-        map2.clear();
-    }
-
-    // Try to make an exact matching.
-    unsigned long nTetrahedra = tetrahedra.size();
-    std::auto_ptr<NIsomorphismIndexed> iso(
-        new NIsomorphismIndexed(nTetrahedra));
-    bool* used = new bool[nTetrahedra];
-    for (unsigned long i=0; i<nTetrahedra; i++) {
-        used[i] = false;
-        iso->tetImage(i) = 0;
-        iso->facePermIndex(i) = 0;
-    }
-
-    bool canJoin;
-    int edge, vertex, face;
-    long tetIndex;
-    NPerm tetPerm, adjPerm;
-    NTetrahedron* myNbr;
-    NTetrahedron* yourNbr;
-    long mustMatch = 0;
-    used[0] = true;
-    while (1) {
-        if (iso->facePermIndex(mustMatch) == 24) {
-            iso->facePermIndex(mustMatch) = 0;
-            used[iso->tetImage(mustMatch)] = false;
-            iso->tetImage(mustMatch)++;
-            while (iso->tetImage(mustMatch) < static_cast<long>(nTetrahedra))
-                if (used[iso->tetImage(mustMatch)])
-                    iso->tetImage(mustMatch)++;
-                else
-                    break;
-            if (iso->tetImage(mustMatch) == static_cast<long>(nTetrahedra)) {
-                iso->tetImage(mustMatch) = 0;
-                if (mustMatch == 0)
-                    break;
-                mustMatch--;
-                iso->facePermIndex(mustMatch)++;
-                continue;
-            } else {
-                used[iso->tetImage(mustMatch)] = true;
-            }
-        }
-
-        // Try to join mustMatch with iso->tetImage(mustMatch) according to
-        // permutation iso->facePermIndex(mustMatch).
-
-        canJoin = true;
-        tetPerm = allPermsS4[iso->facePermIndex(mustMatch)];
-
-        for (edge = 0; edge < 6; edge++) {
-            if (tetrahedra[mustMatch]->getEdge(edge)
-                    ->getNumberOfEmbeddings() !=
-                    other.tetrahedra[iso->tetImage(mustMatch)]
-                    ->getEdge(edgeNumber[tetPerm[edgeStart[edge]]]
-                    [tetPerm[edgeEnd[edge]]])
-                    ->getNumberOfEmbeddings()) {
-                canJoin = false;
-                break;
-            }
-        }
-
-        if (canJoin) {
-            for (vertex = 0; vertex < 4; vertex++) {
-                if (tetrahedra[mustMatch]->getVertex(vertex)
-                        ->getNumberOfEmbeddings() !=
-                        other.tetrahedra[iso->tetImage(mustMatch)]
-                        ->getVertex(tetPerm[vertex])
-                        ->getNumberOfEmbeddings()) {
-                    canJoin = false;
-                    break;
-                }
-                if (tetrahedra[mustMatch]->getVertex(vertex)
-                        ->getLink() !=
-                        other.tetrahedra[iso->tetImage(mustMatch)]
-                        ->getVertex(tetPerm[vertex])
-                        ->getLink()) {
-                    canJoin = false;
-                    break;
-                }
-            }
-        }
-
-        if (canJoin) {
-            for (face = 0; face < 4; face++) {
-                myNbr = tetrahedra[mustMatch]->
-                    getAdjacentTetrahedron(face);
-                yourNbr = other.tetrahedra[iso->tetImage(mustMatch)]->
-                    getAdjacentTetrahedron(tetPerm[face]);
-                if ((myNbr && (! yourNbr)) || (yourNbr && (! myNbr))) {
-                    // One of the triangulations has a boundary face here
-                    // and the other does not!
-                    canJoin = false;
-                    break;
-                }
-                if (myNbr) {
-                    // Both tetrahedra have adjacent tetrahedra; check
-                    // these map to each other also.
-                    tetIndex = tetrahedra.index(myNbr);
-                    if (tetIndex <= mustMatch) {
-                        adjPerm = allPermsS4[iso->facePermIndex(tetIndex)];
-                        if (yourNbr !=
-                                other.tetrahedra[iso->tetImage(tetIndex)]) {
-                            canJoin = false;
-                            break;
-                        }
-                        if (! ((adjPerm * tetrahedra[mustMatch]->
-                                getAdjacentTetrahedronGluing(face)) ==
-                                (other.tetrahedra[iso->tetImage(mustMatch)]->
-                                getAdjacentTetrahedronGluing(tetPerm[face]) *
-                                tetPerm))) {
-                            canJoin = false;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (canJoin) {
-            mustMatch++;
-            if (mustMatch == static_cast<long>(nTetrahedra)) {
-                delete[] used;
-                // Explicitly do the base class conversion since
-                // otherwise we seem to get compile errors. *sigh*
-                return std::auto_ptr<NIsomorphism>(iso);
-            }
-            used[iso->tetImage(mustMatch)] = true;
-        } else
-            iso->facePermIndex(mustMatch)++;
-    }
-
-    delete[] used;
-    return NO_ISOMORPHISM;
+    std::list<NIsomorphism*> results;
+    if (findIsomorphisms(other, results, true, true))
+        return std::auto_ptr<NIsomorphism>(results.front());
+    else
+        return std::auto_ptr<NIsomorphism>(0);
 }
 
 std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
         const NTriangulation& other) const {
-    // Basic property checks.  Unfortunately, since the isomorphism need
-    // not be boundary complete we can't test that many properties.
+    std::list<NIsomorphism*> results;
+    if (findIsomorphisms(other, results, false, true))
+        return std::auto_ptr<NIsomorphism>(results.front());
+    else
+        return std::auto_ptr<NIsomorphism>(0);
+}
+
+unsigned long NTriangulation::findAllSubcomplexesIn(
+        const NTriangulation& other, std::list<NIsomorphism*>& results) const {
+    return findIsomorphisms(other, results, false, false);
+}
+
+unsigned long NTriangulation::findIsomorphisms(
+        const NTriangulation& other, std::list<NIsomorphism*>& results,
+        bool completeIsomorphism, bool firstOnly) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     if (! other.calculatedSkeleton)
         other.calculateSkeleton();
 
-    if (tetrahedra.size() > other.tetrahedra.size())
-        return NO_ISOMORPHISM;
-    if (tetrahedra.empty())
-        return std::auto_ptr<NIsomorphism>(new NIsomorphismDirect(0));
-    if ((! orientable) && other.orientable)
-        return NO_ISOMORPHISM;
+    // Deal with the empty triangulation first.
+    if (tetrahedra.empty()) {
+        if (completeIsomorphism && ! other.tetrahedra.empty())
+            return 0;
+        results.push_back(new NIsomorphismDirect(0));
+        return 1;
+    }
+
+    // Basic property checks.  Unfortunately, if we allow boundary
+    // incomplete isomorphisms then we can't test that many properties.
+    if (completeIsomorphism) {
+        // Must be boundary complete, 1-to-1 and onto.
+        // That is, combinatorially the two triangulations must be
+        // identical.
+        if (tetrahedra.size() != other.tetrahedra.size())
+            return 0;
+        if (faces.size() != other.faces.size())
+            return 0;
+        if (edges.size() != other.edges.size())
+            return 0;
+        if (vertices.size() != other.vertices.size())
+            return 0;
+        if (components.size() != other.components.size())
+            return 0;
+        if (boundaryComponents.size() != other.boundaryComponents.size())
+            return 0;
+        if (orientable ^ other.orientable)
+            return 0;
+
+        // Test degree sequences and the like.
+        std::map<unsigned long, unsigned long> map1;
+        std::map<unsigned long, unsigned long> map2;
+        std::map<unsigned long, unsigned long>::iterator mapIt;
+
+        {
+            EdgeIterator it;
+            for (it = edges.begin(); it != edges.end(); it++) {
+                // Find this degree, or insert it with frequency 0 if it's
+                // not already present.
+                mapIt = map1.insert(
+                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                (*mapIt).second++;
+            }
+            for (it = other.edges.begin(); it != other.edges.end(); it++) {
+                mapIt = map2.insert(
+                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                (*mapIt).second++;
+            }
+            if (! (map1 == map2))
+                return 0;
+            map1.clear();
+            map2.clear();
+        }
+        {
+            VertexIterator it;
+            for (it = vertices.begin(); it != vertices.end(); it++) {
+                mapIt = map1.insert(
+                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                (*mapIt).second++;
+            }
+            for (it = other.vertices.begin();
+                    it != other.vertices.end(); it++) {
+                mapIt = map2.insert(
+                    std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
+                (*mapIt).second++;
+            }
+            if (! (map1 == map2))
+                return 0;
+            map1.clear();
+            map2.clear();
+        }
+        {
+            ComponentIterator it;
+            for (it = components.begin(); it != components.end(); it++) {
+                mapIt = map1.insert(
+                    std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
+                (*mapIt).second++;
+            }
+            for (it = other.components.begin();
+                    it != other.components.end(); it++) {
+                mapIt = map2.insert(
+                    std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
+                (*mapIt).second++;
+            }
+            if (! (map1 == map2))
+                return 0;
+            map1.clear();
+            map2.clear();
+        }
+        {
+            BoundaryComponentIterator it;
+            for (it = boundaryComponents.begin();
+                    it != boundaryComponents.end(); it++) {
+                mapIt = map1.insert(
+                    std::make_pair((*it)->getNumberOfFaces(), 0)).first;
+                (*mapIt).second++;
+            }
+            for (it = other.boundaryComponents.begin();
+                    it != other.boundaryComponents.end(); it++) {
+                mapIt = map2.insert(
+                    std::make_pair((*it)->getNumberOfFaces(), 0)).first;
+                (*mapIt).second++;
+            }
+            if (! (map1 == map2))
+                return 0;
+            map1.clear();
+            map2.clear();
+        }
+    } else {
+        // May be boundary incomplete, and need not be onto.
+        // Not much we can test for unfortunately.
+        if (tetrahedra.size() > other.tetrahedra.size())
+            return 0;
+        if ((! orientable) && other.orientable)
+            return 0;
+    }
 
     // Start searching for the isomorphism.
+    // From the tests above, we are guaranteed that both triangulations
+    // have at least one tetrahedron.
+    unsigned long nResults = 0;
     unsigned long nTetrahedra = tetrahedra.size();
     unsigned long nDestTetrahedra = other.tetrahedra.size();
     unsigned long nComponents = components.size();
     unsigned i;
 
-    std::auto_ptr<NIsomorphismDirect> iso(new NIsomorphismDirect(nTetrahedra));
+    NIsomorphismDirect iso(nTetrahedra);
     for (i = 0; i < nTetrahedra; i++)
-        iso->tetImage(i) = -1;
+        iso.tetImage(i) = -1;
 
     // Which source component does each destination component correspond to?
     long* whichComp = new long[nDestTetrahedra];
@@ -313,6 +211,7 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
     std::queue<long> toProcess;
 
     // Temporary variables.
+    unsigned long compSize;
     NTetrahedron* tet;
     NTetrahedron* adj;
     NTetrahedron* destTet;
@@ -325,35 +224,84 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
 
     long comp = 0;
     while (comp >= 0) {
+        // Continue trying to find a mapping for the current component.
+        // The next mapping to try is the one that starts with
+        // startTet[comp] and startPerm[comp].
         if (comp == static_cast<long>(nComponents)) {
             // We have an isomorphism!!!
-            delete[] whichComp;
-            delete[] startTet;
-            delete[] startPerm;
-            return std::auto_ptr<NIsomorphism>(iso);
+            results.push_back(new NIsomorphismDirect(
+                static_cast<NIsomorphism&>(iso)));
+
+            if (firstOnly) {
+                delete[] whichComp;
+                delete[] startTet;
+                delete[] startPerm;
+                return 1;
+            } else
+                nResults++;
+
+            // Back down to the previous component, and clear the
+            // mapping for that previous component so we can make way
+            // for a new one.
+            // Since nComponents > 0, we are guaranteed that comp > 0 also.
+            comp--;
+
+            for (i = 0; i < nTetrahedra; i++)
+                if (iso.tetImage(i) >= 0 &&
+                        whichComp[iso.tetImage(i)] == comp) {
+                    whichComp[iso.tetImage(i)] = -1;
+                    iso.tetImage(i) = -1;
+                }
+            startPerm[comp]++;
+
+            continue;
         }
+
+        // Sort out the results of any previous startPerm++.
         if (startPerm[comp] == 24) {
             // Move on to the next destination tetrahedron.
             startTet[comp]++;
             startPerm[comp] = 0;
         }
-        // Make sure we're looking at an unused destination tetrahedron.
-        while (startTet[comp] < nDestTetrahedra &&
-                whichComp[startTet[comp]] >= 0)
-            startTet[comp]++;
+
+        // Be sure we're looking at a tetrahedron we can use.
+        compSize = components[comp]->getNumberOfTetrahedra();
+        if (completeIsomorphism) {
+            // Conditions:
+            // 1) The destination tetrahedron is unused.
+            // 2) The component sizes match precisely.
+            while (startTet[comp] < nDestTetrahedra &&
+                    (whichComp[startTet[comp]] >= 0 ||
+                     other.tetrahedra[startTet[comp]]->getComponent()->
+                     getNumberOfTetrahedra() != compSize))
+                startTet[comp]++;
+        } else {
+            // Conditions:
+            // 1) The destination tetrahedron is unused.
+            // 2) The destination component is at least as large as
+            // the source component.
+            while (startTet[comp] < nDestTetrahedra &&
+                    (whichComp[startTet[comp]] >= 0 ||
+                     other.tetrahedra[startTet[comp]]->getComponent()->
+                     getNumberOfTetrahedra() < compSize))
+                startTet[comp]++;
+        }
+
+        // Have we run out of possibilities?
         if (startTet[comp] == nDestTetrahedra) {
-            // We can't fill this component.
-            // Move back to the previous component.
+            // No more possibilities for filling this component.
+            // Move back to the previous component, and clear the
+            // mapping for that previous component.
             startTet[comp] = 0;
             startPerm[comp] = 0;
 
             comp--;
             if (comp >= 0) {
                 for (i = 0; i < nTetrahedra; i++)
-                    if (iso->tetImage(i) >= 0 &&
-                            whichComp[iso->tetImage(i)] == comp) {
-                        whichComp[iso->tetImage(i)] = -1;
-                        iso->tetImage(i) = -1;
+                    if (iso.tetImage(i) >= 0 &&
+                            whichComp[iso.tetImage(i)] == comp) {
+                        whichComp[iso.tetImage(i)] = -1;
+                        iso.tetImage(i) = -1;
                     }
                 startPerm[comp]++;
             }
@@ -363,11 +311,14 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
 
         // Try to fill the image of this component based on the selected
         // image of its first source tetrahedron.
+        // Note that there is only one way of doing this (as seen by
+        // following adjacent tetrahedron gluings).  It either works or
+        // it doesn't.
         tetIndex = getTetrahedronIndex(components[comp]->getTetrahedron(0));
 
         whichComp[startTet[comp]] = comp;
-        iso->tetImage(tetIndex) = startTet[comp];
-        iso->facePerm(tetIndex) = allPermsS4[startPerm[comp]];
+        iso.tetImage(tetIndex) = startTet[comp];
+        iso.facePerm(tetIndex) = allPermsS4[startPerm[comp]];
         toProcess.push(tetIndex);
 
         broken = false;
@@ -375,9 +326,17 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
             tetIndex = toProcess.front();
             toProcess.pop();
             tet = tetrahedra[tetIndex];
-            tetPerm = iso->facePerm(tetIndex);
-            destTetIndex = iso->tetImage(tetIndex);
+            tetPerm = iso.facePerm(tetIndex);
+            destTetIndex = iso.tetImage(tetIndex);
             destTet = other.tetrahedra[destTetIndex];
+
+            // If we are after a complete isomorphism, we might as well
+            // test whether the edge and vertex degrees match.
+            if (completeIsomorphism && ! compatibleTets(tet, destTet,
+                    tetPerm)) {
+                broken = true;
+                break;
+            }
 
             for (face = 0; face < 4; face++) {
                 adj = tet->getAdjacentTetrahedron(face);
@@ -397,12 +356,12 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
                         tetPerm *
                         tet->getAdjacentTetrahedronGluing(face).inverse();
 
-                    if (iso->tetImage(adjIndex) >= 0) {
+                    if (iso.tetImage(adjIndex) >= 0) {
                         // We've already decided upon an image for this
                         // source tetrahedron.  Does it match?
                         if (static_cast<long>(destAdjIndex) !=
-                                iso->tetImage(adjIndex) ||
-                                adjPerm != iso->facePerm(adjIndex)) {
+                                iso.tetImage(adjIndex) ||
+                                adjPerm != iso.facePerm(adjIndex)) {
                             broken = true;
                             break;
                         }
@@ -416,9 +375,18 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
                         // We haven't seen either the source or the
                         // destination tetrahedron.
                         whichComp[destAdjIndex] = comp;
-                        iso->tetImage(adjIndex) = destAdjIndex;
-                        iso->facePerm(adjIndex) = adjPerm;
+                        iso.tetImage(adjIndex) = destAdjIndex;
+                        iso.facePerm(adjIndex) = adjPerm;
                         toProcess.push(adjIndex);
+                    }
+                } else if (completeIsomorphism) {
+                    // There is no adjacent source tetrahedron, and we
+                    // are after a boundary complete isomorphism.
+                    // There had better be no adjacent destination
+                    // tetrahedron also.
+                    if (destTet->getAdjacentTetrahedron(tetPerm[face])) {
+                        broken = true;
+                        break;
                     }
                 }
             }
@@ -437,21 +405,42 @@ std::auto_ptr<NIsomorphism> NTriangulation::isContainedIn(
                 toProcess.pop();
 
             for (i = 0; i < nTetrahedra; i++)
-                if (iso->tetImage(i) >= 0 &&
-                        whichComp[iso->tetImage(i)] == comp) {
-                    whichComp[iso->tetImage(i)] = -1;
-                    iso->tetImage(i) = -1;
+                if (iso.tetImage(i) >= 0 &&
+                        whichComp[iso.tetImage(i)] == comp) {
+                    whichComp[iso.tetImage(i)] = -1;
+                    iso.tetImage(i) = -1;
                 }
 
             startPerm[comp]++;
         }
     }
 
-    // We ran out of options.
+    // All out of options.
     delete[] whichComp;
     delete[] startTet;
     delete[] startPerm;
-    return NO_ISOMORPHISM;
+    return nResults;
+}
+
+bool NTriangulation::compatibleTets(NTetrahedron* src, NTetrahedron* dest,
+        NPerm p) {
+    for (int edge = 0; edge < 6; edge++) {
+        if (src->getEdge(edge)->getNumberOfEmbeddings() !=
+                dest->getEdge(edgeNumber[p[edgeStart[edge]]][p[edgeEnd[edge]]])
+                ->getNumberOfEmbeddings())
+            return false;
+    }
+
+    for (int vertex = 0; vertex < 4; vertex++) {
+        if (src->getVertex(vertex)->getNumberOfEmbeddings() !=
+                dest->getVertex(p[vertex])->getNumberOfEmbeddings())
+            return false;
+        if (src->getVertex(vertex)->getLink() !=
+                dest->getVertex(p[vertex])->getLink())
+            return false;
+    }
+
+    return true;
 }
 
 } // namespace regina

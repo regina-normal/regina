@@ -26,6 +26,15 @@ Version 4.2.1  [ under development ]
               where possible.  This includes pruning on non-orientable
               vertex links, too many or too few vertices or edges, low
               degree or invalid edges, conical faces and L(3,1) spines.
+        Class NIsomorphism:
+            - New routine random() for generating random isomorphisms.
+            - New routine apply() for permuting the tetrahedra and
+              vertices/faces of an existing triangulation.
+        Class NTriangulation:
+            - Combined isomorphism and subcomplex testing routines into
+              a single all-in-one routine to avoid excessive code reuse.
+            - New routine findAllSubcomplexesIn() for subcomplex testing
+              in which all matches (not just the first) should be returned.
         Routine writeSnapPea():
             - Add a precondition that triangulation has no boundary faces.
     USER INTERFACE:

@@ -26,7 +26,10 @@
 
 /* end stub */
 
+#include <algorithm>
+#include <cstdlib>
 #include "triangulation/nisomorphism.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
@@ -37,6 +40,74 @@ void NIsomorphism::writeTextShort(std::ostream& out) const {
 void NIsomorphism::writeTextLong(std::ostream& out) const {
     for (unsigned i = 0; i < nTetrahedra; i++)
         out << i << " -> " << tetImage(i) << " (" << facePerm(i) << ")\n";
+}
+
+bool NIsomorphism::isIdentity() const {
+    for (unsigned t = 0; t < nTetrahedra; t++) {
+        if (mTetImage[t] != static_cast<int>(t))
+            return false;
+        if (! facePerm(t).isIdentity())
+            return false;
+    }
+    return true;
+}
+
+NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
+    if (original->getNumberOfTetrahedra() != nTetrahedra)
+        return 0;
+
+    if (nTetrahedra == 0)
+        return new NTriangulation();
+
+    NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
+    unsigned long t;
+    int f;
+
+    for (t = 0; t < nTetrahedra; t++)
+        tet[t] = new NTetrahedron();
+
+    // From here on in, if something goes wrong we goto bail.
+    const NTetrahedron *myTet, *adjTet;
+    unsigned long adjTetIndex;
+    NPerm gluingPerm;
+    for (t = 0; t < nTetrahedra; t++) {
+        myTet = original->getTetrahedron(t);
+        for (f = 0; f < 4; f++)
+            if ((adjTet = myTet->getAdjacentTetrahedron(f))) {
+                // We have an adjacent tetrahedron.
+                adjTetIndex = original->getTetrahedronIndex(adjTet);
+                gluingPerm = myTet->getAdjacentTetrahedronGluing(f);
+
+                // Make the gluing from one side only.
+                if (adjTetIndex > t || (adjTetIndex == t &&
+                        gluingPerm[f] > f))
+                    tet[tetImage(t)]->joinTo(facePerm(t)[f],
+                        tet[tetImage(adjTetIndex)],
+                        facePerm(adjTetIndex) * gluingPerm *
+                            facePerm(t).inverse());
+            }
+    }
+
+    NTriangulation* ans = new NTriangulation();
+    for (t = 0; t < nTetrahedra; t++)
+        ans->addTetrahedron(tet[t]);
+    return ans;
+}
+
+NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {
+    NIsomorphismDirect* ans = new NIsomorphismDirect(nTetrahedra);
+
+    // Randomly choose the destination tetrahedra.
+    unsigned i;
+    for (i = 0; i < nTetrahedra; i++)
+        ans->mTetImage[i] = i;
+    std::random_shuffle(ans->mTetImage, ans->mTetImage + nTetrahedra);
+
+    // Randomly choose the individual permutations.
+    for (i = 0; i < nTetrahedra; i++)
+        ans->facePerm(i) = allPermsS4[rand() % 24];
+
+    return ans;
 }
 
 NIsomorphismDirect::NIsomorphismDirect(const NIsomorphism& cloneMe) :

@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "triangulation/nisomorphism.h"
+#include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;
@@ -50,6 +51,12 @@ void addNIsomorphism() {
         .def("tetImage", tetImage_const)
         .def("facePerm", &NIsomorphism::facePerm)
         .def("__getitem__", iso_getItem)
+        .def("isIdentity", &NIsomorphism::isIdentity)
+        .def("apply", &NIsomorphism::apply,
+            return_value_policy<manage_new_object>())
+        .def("random", &NIsomorphism::random,
+            return_value_policy<manage_new_object>())
+        .staticmethod("random")
     ;
 }
 

@@ -41,6 +41,8 @@
 
 namespace regina {
 
+class NTriangulation;
+
 /**
  * \weakgroup triangulation
  * @{
@@ -79,6 +81,8 @@ namespace regina {
  * This class cannot be directly instantiated; the individual subclasses
  * correspond to different methods of storing the face permutations
  * associated with each tetrahedron.
+ *
+ * \todo \feature Composition of isomorphisms.
  */
 class NIsomorphism : public ShareableObject {
     protected:
@@ -151,8 +155,80 @@ class NIsomorphism : public ShareableObject {
          */
         NTetFace operator [] (const NTetFace& source) const;
 
+        /**
+         * Determines whether or not this is an identity isomorphism.
+         *
+         * In an identity isomorphism, each tetrahedron image is itself,
+         * and within each tetrahedron the face/vertex permutation is
+         * the identity on (0,1,2,3).
+         *
+         * @return \c true if this is an identity isomorphism, or
+         * \c false otherwise.
+         */
+        bool isIdentity() const;
+
+        /**
+         * Applies this isomorphism to the given triangulation.
+         *
+         * The given triangulation (call this T) is not modified in any way.
+         * A new triangulation (call this S) is returned, so that this
+         * isomorphism represents a one-to-one, onto and boundary complete
+         * isomorphism from T to S.  That is, T and S are combinatorially
+         * identical triangulations, and this isomorphism describes the
+         * corresponding mapping between tetrahedra and tetrahedron faces.
+         *
+         * The resulting triangulation S is newly created, and must be
+         * destroyed by the caller of this routine.
+         *
+         * There are several preconditions to this routine.  This
+         * routine does a small amount of sanity checking (and returns 0
+         * if an error is detected), but it certainly does not check the
+         * entire set of preconditions.  It is up to the caller of this
+         * routine to verify that all of the following preconditions are
+         * met.
+         *
+         * \pre The number of tetrahedra in the given triangulation is
+         * precisely the number returned by getSourceTetrahedra() for
+         * this isomorphism.
+         * \pre This is a valid isomorphism (i.e., it has been properly
+         * initialised, so that all tetrahedron images are non-negative
+         * and distinct, and all face permutations are real permutations
+         * of (0,1,2,3).
+         * \item Each tetrahedron image for this isomorphism lies
+         * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive
+         * (i.e., this isomorphism does not represent a mapping from a
+         * smaller triangulation into a larger triangulation).
+         *
+         * @param original the triangulation to which this isomorphism
+         * should be applied.
+         * @return the resulting new triangulation, or 0 if a problem
+         * was encountered (i.e., an unmet precondition was noticed).
+         */
+        NTriangulation* apply(const NTriangulation* original) const;
+
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+
+        /**
+         * Returns a random isomorphism for the given number of
+         * tetrahedra.  This isomorphism will reorder tetrahedra
+         * 0 to <tt>nTetrahedra-1</tt> in a random fashion, and for
+         * each tetrahedron a random permutation of its four vertices
+         * will be selected.
+         *
+         * The isomorphism returned is newly constructed, and must be
+         * destroyed by the caller of this routine.
+         *
+         * Note that both the STL random number generator and the
+         * standard C function rand() are used in this routine.  All
+         * possible isomorphisms for the given number of tetrahedra are
+         * equally likely.
+         *
+         * @param nTetrahedra the number of tetrahedra that the new
+         * isomorphism should operate upon.
+         * @return the newly constructed random isomorphism.
+         */
+        static NIsomorphism* random(unsigned nTetrahedra);
 
     protected:
         /**
