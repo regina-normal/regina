@@ -743,6 +743,8 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * them.  The given list will not be emptied before the new
          * isomorphisms are inserted.
          *
+         * \ifacespython Not present.
+         *
          * @param other the triangulation in which to search for
          * isomorphic copies of this triangulation.
          * @param results the list in which any isomorphisms found will
