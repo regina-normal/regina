@@ -32,6 +32,7 @@
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
+#include "subcomplex/npluggedibundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "subcomplex/ntrivialtri.h"
@@ -80,7 +81,18 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         NTriangulation* tri) {
     if (tri->getNumberOfComponents() != 1)
         return 0;
-    return isStandardTriangulation(tri->getComponent(0));
+
+    // Do what we can through components.
+    NStandardTriangulation* ans;
+    if ((ans = isStandardTriangulation(tri->getComponent(0))))
+        return ans;
+
+    // Run tests that require entire triangulations.
+    if ((ans = NPluggedIBundle::isPluggedIBundle(tri)))
+        return ans;
+
+    // Nup.
+    return 0;
 }
 
 } // namespace regina

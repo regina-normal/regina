@@ -26,41 +26,41 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNPillowTwoSphere();
-void addNPluggedIBundle();
-void addNPlugTriSolidTorus();
-void addNSnapPeaCensusTri();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTriSolidTorus();
-void addNTrivialTri();
+#include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/npluggedibundle.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNPillowTwoSphere();
-    addNPluggedIBundle();
-    addNPlugTriSolidTorus();
-    addNSnapPeaCensusTri();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTriSolidTorus();
-    addNTrivialTri();
+using namespace boost::python;
+using regina::NPluggedIBundle;
+using regina::NPluggedIBundleCore;
+
+void addNPluggedIBundle() {
+    class_<NPluggedIBundle, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<NPluggedIBundle>, boost::noncopyable>
+            ("NPluggedIBundle", no_init)
+        .def("clone", &NPluggedIBundle::clone,
+            return_value_policy<manage_new_object>())
+        .def("getPlug", &NPluggedIBundle::getPlug,
+            return_value_policy<reference_existing_object>())
+        .def("isPluggedIBundle", &NPluggedIBundle::isPluggedIBundle,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isPluggedIBundle")
+    ;
+
+    implicitly_convertible<std::auto_ptr<NPluggedIBundle>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope s = class_<NPluggedIBundleCore, boost::noncopyable>
+            ("NPluggedIBundleCore", no_init);
+
+    s.attr("T_6_1") = NPluggedIBundleCore::T_6_1;
+    s.attr("T_6_2") = NPluggedIBundleCore::T_6_2;
+    s.attr("T_6_3") = NPluggedIBundleCore::T_6_3;
+    s.attr("T_6_4") = NPluggedIBundleCore::T_6_4;
+    s.attr("T_5_1") = NPluggedIBundleCore::T_5_1;
+    s.attr("T_5_2") = NPluggedIBundleCore::T_5_2;
+    s.attr("T_5_3") = NPluggedIBundleCore::T_5_3;
+    s.attr("T_5_4") = NPluggedIBundleCore::T_5_4;
 }
 
