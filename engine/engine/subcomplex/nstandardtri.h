@@ -174,6 +174,11 @@ class NStandardTriangulation : public ShareableObject {
          * boundary faces, i.e., the component cannot have any further
          * identifications of these boundary faces with each other.
          *
+         * Note that the triangulation-based routine
+         * isStandardTriangulation(NTriangulation*) may recognise more
+         * triangulations than this routine, since passing an entire
+         * triangulation allows access to more information.
+         *
          * @param component the triangulation component under examination.
          * @return the details of the standard triangulation if the
          * given component is recognised, or 0 otherwise.
@@ -190,6 +195,11 @@ class NStandardTriangulation : public ShareableObject {
          * then the given triangulation must have the same corresponding
          * boundary faces, i.e., the triangulation cannot have any further
          * identifications of these boundary faces with each other.
+         *
+         * This routine may recognise more triangulations than the
+         * component-based isStandardTriangulation(NComponent*),
+         * since passing an entire triangulation allows access to
+         * more information.
          *
          * @param tri the triangulation under examination.
          * @return the details of the standard triangualation if the
