@@ -2,7 +2,18 @@ regina-normal (4.2.1-0) unstable; urgency=low
 
   * Work in progress.
 
- -- Ben Burton <bab@debian.org>  Wed, 20 Jul 2005 18:19:48 +1000
+ -- Ben Burton <bab@debian.org>  Mon, 29 Aug 2005 01:06:11 +1000
+
+regina-normal (4.2-2) unstable; urgency=low
+
+  * Uploaded for the g++-4 / KDE 3.4 transition.  Build-depends and shlibs
+    files adjusted accordingly.
+  * Fixed incorrect include directory in "regina-engine-config --cflags".
+  * Fixed incorrect path to API docs in doc-base file.
+  * Updated FSF address in the copyright file.
+  * Bumped standards-version to 3.6.2.1 (no changes required).
+
+ -- Ben Burton <bab@debian.org>  Mon, 29 Aug 2005 01:06:11 +1000
 
 regina-normal (4.2-1) unstable; urgency=low
 
