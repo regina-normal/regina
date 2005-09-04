@@ -2,7 +2,14 @@ regina-normal (4.2.1-0) unstable; urgency=low
 
   * Work in progress.
 
- -- Ben Burton <bab@debian.org>  Mon, 29 Aug 2005 01:06:11 +1000
+ -- Ben Burton <bab@debian.org>  Sun,  4 Sep 2005 10:58:17 +1000
+
+regina-normal (4.2-3) unstable; urgency=low
+
+  * Rebuilt against libfam-dev instead of libgamin-dev.
+  * Removed obsolete kderemove tag from the debian menu entry.
+
+ -- Ben Burton <bab@debian.org>  Sun,  4 Sep 2005 10:58:17 +1000
 
 regina-normal (4.2-2) unstable; urgency=low
 

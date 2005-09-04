@@ -2,7 +2,6 @@
   section="Apps/Math"\
   title="Regina"\
   command="/usr/bin/regina-kde"\
-  kderemove="1" \
   icon="/usr/share/pixmaps/regina-normal.xpm"
 ?package(regina-normal):needs="text"\
   section="Apps/Math"\

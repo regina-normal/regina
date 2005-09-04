@@ -2,8 +2,5 @@
 regina-normal: script-not-executable ./usr/share/regina-normal/scripts/runscript.py
 regina-normal: unusual-interpreter ./usr/share/regina-normal/scripts/runscript.py #!/bin/false
 
-# KDE menu items.
-regina-normal: menu-item-contains-unknown-tag kderemove /usr/share/menu/regina-normal:6
-
 # Regina does not provide a standalone library package.
 regina-normal: package-name-doesnt-match-sonames libregina-engine-4.2 libregina-kdecommon-4.2
