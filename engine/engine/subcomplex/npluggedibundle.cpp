@@ -317,7 +317,6 @@ NPluggedIBundle* NPluggedIBundle::hunt(NTriangulation* tri,
     NLayeredSolidTorus* lst[2];
     NPerm p, canon[2], roles[2];
     NFacePair faces, tmpFaces;
-    NTetrahedron* currTet;
     int i, j;
     bool broken;
     std::list<NIsomorphism*>::const_iterator it;
@@ -375,62 +374,15 @@ NPluggedIBundle* NPluggedIBundle::hunt(NTriangulation* tri,
                 break;
             } else if (adj[i][0] == adj[i][1]) {
                 // We're heading outside the core, and both adj[i][*]
-                // faces point to the same tetrahedron.  Could be a real
+                // faces point to the same tetrahedron.  Hunt for a real
                 // attached LST.
-
-                // Follow this tetrahedron and see how far we get.  Note
-                // that we will have to stop eventually, since the
-                // underlying face pairing graph is not a cycle of
-                // double edges.
-                currTet = adj[i][0];
-                faces = NFacePair(adjPerm[i][0][top[i][0].face],
+                lst[i] = NLayeredSolidTorus::formsLayeredSolidTorusTop
+                    (adj[i][0], adjPerm[i][0][top[i][0].face],
                     adjPerm[i][1][top[i][1].face]);
-
-                while (true) {
-                    // INV: We have just stepped into [faces] for the
-                    // new tetrahedron [currTet].
-                    faces = faces.complement();
-
-                    if (currTet->getAdjacentTetrahedron(faces.lower()) !=
-                            currTet->getAdjacentTetrahedron(faces.upper())) {
-                        // We diverge to two different places.  Bummer.
-                        broken = true;
-                        break;
-                    }
-
-                    if (currTet->getAdjacentTetrahedron(faces.lower()) ==
-                            currTet) {
-                        // Could be the top of our LST.
-                        break;
-                    }
-
-                    // Follow through to the next tetrahedron.
-                    // We already know the triangulation is closed, but
-                    // just in case:
-                    if (! currTet->getAdjacentTetrahedron(faces.lower())) {
-                        broken = true;
-                        break;
-                    }
-
-                    tmpFaces = faces;
-                    faces = NFacePair(currTet->getAdjacentFace(faces.lower()),
-                        currTet->getAdjacentFace(faces.upper()));
-                    currTet = currTet->getAdjacentTetrahedron(tmpFaces.lower());
-                }
-
-                if (broken)
+                if (! lst[i])
                     break;
 
-                // We're at what could be the top of our LST.
-                // Follow it down.
-                lst[i] = NLayeredSolidTorus::formsLayeredSolidTorusBase
-                    (currTet);
-                if ((! lst[i]) || lst[i]->getTopLevel() != adj[i][0]) {
-                    broken = true;
-                    break;
-                }
-
-                // We have an LST and it stops at the right place.
+                // We have an LST.
                 // All that's left is to ensure that the gluings match
                 // up properly.
                 // The following permutations map canonical 012

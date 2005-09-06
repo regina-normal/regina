@@ -288,6 +288,36 @@ class NLayeredSolidTorus : public NStandardTriangulation {
             NTetrahedron* tet);
 
         /**
+         * Determines if the given tetrahedron forms the top level
+         * tetrahedron of a layered solid torus, with the two given
+         * faces of this tetrahedron representing the boundary of the
+         * layered solid torus.
+         *
+         * Note that the two given faces need not be boundary faces in the
+         * overall triangulation.  That is, the layered solid torus may be
+         * a subcomplex of some larger triangulation.  For example, the
+         * two given faces may be joined to some other tetrahedra outside
+         * the layered solid torus or they may be joined to each other.
+         * In fact, they may even extend this smaller layered solid torus
+         * to a larger layered solid torus.
+         *
+         * @param tet the tetrahedron to examine as a potential top
+         * level of a layered solid torus.
+         * @param topFace1 the face number of the given tetrahedron that
+         * should represent the first boundary face of the layered solid
+         * torus.  This should be between 0 and 3 inclusive.
+         * @param topFace2 the face number of the given tetrahedron that
+         * should represent the second boundary face of the layered solid
+         * torus.  This should be between 0 and 3 inclusive, and should
+         * not be equal to \a topFace1.
+         * @return a newly created structure containing details of the
+         * layered solid torus, or \c null if the given tetrahedron with
+         * its two faces do not form the top level of a layered solid torus.
+         */
+        static NLayeredSolidTorus* formsLayeredSolidTorusTop(
+            NTetrahedron* tet, unsigned topFace1, unsigned topFace2);
+
+        /**
          * Determines if the given triangulation component forms a
          * layered solid torus in its entirity.
          *

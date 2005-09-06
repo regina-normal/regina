@@ -30,6 +30,9 @@ Version 4.2.1  [ under development ]
             - New routine random() for generating random isomorphisms.
             - New routine apply() for permuting the tetrahedra and
               vertices/faces of an existing triangulation.
+        Class NLayeredSolidTorus:
+            - New routine formsLayeredSolidTorusTop() for finding an LST
+              from the top end instead of the bottom.
         Class NPluggedIBundle:
             - Added for recognition of small closed non-orientable
               3-manifolds.

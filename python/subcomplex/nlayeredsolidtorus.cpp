@@ -58,9 +58,13 @@ void addNLayeredSolidTorus() {
         .def("formsLayeredSolidTorusBase",
             &NLayeredSolidTorus::formsLayeredSolidTorusBase,
             return_value_policy<manage_new_object>())
+        .def("formsLayeredSolidTorusTop",
+            &NLayeredSolidTorus::formsLayeredSolidTorusTop,
+            return_value_policy<manage_new_object>())
         .def("isLayeredSolidTorus", &NLayeredSolidTorus::isLayeredSolidTorus,
             return_value_policy<manage_new_object>())
         .staticmethod("formsLayeredSolidTorusBase")
+        .staticmethod("formsLayeredSolidTorusTop")
         .staticmethod("isLayeredSolidTorus")
     ;
 

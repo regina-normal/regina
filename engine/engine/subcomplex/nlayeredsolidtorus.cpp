@@ -241,6 +241,284 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
     return ans;
 }
 
+NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
+        NTetrahedron* tet, unsigned topFace1, unsigned topFace2) {
+    NTetrahedron* top = tet;
+    NTetrahedron* next;
+    NPerm cross1, cross2;
+    NPerm canon1, canon2;
+    NFacePair pair = NFacePair(topFace1, topFace2).complement();
+    NPerm vRoles(pair.upper(), topFace1, topFace2, pair.lower());
+    NPerm topRoles(vRoles);
+    NPerm nextRoles;
+    long w = 1, x = 0, y = 0, z = 1;
+    long w_, x_, y_, z_;
+    int rotation;
+    unsigned long nTets = 1;
+
+    NPerm rot180(3, 2, 1, 0);
+
+    while (true) {
+        // INVARIANT:
+        //
+        // We are currently looking at tetrahedron tet.
+        // The faces of tet closest to the top of the layered solid
+        // torus are vRoles[1] and vRoles[2].  The faces we have not yet
+        // looked at are vRoles[0] and vRoles[3].
+        //
+        // Denote directed edges a = vRoles[01], b = vRoles[02], and
+        // similarly let p = topRoles[01], q = topRoles[02] (where topRoles
+        // was the original permutation vRoles for the original top-level
+        // tetrahedron top).  Then these edges are related as follows:
+        //
+        //     p == w.a + x.b
+        //     q == y.a + z.b
+        //
+        // The count nTets reflects the number of tetrahedra seen so
+        // far, including this one.
+
+        // Verify that both new faces go to the same tetrahedron (which
+        // exists).
+        next = tet->getAdjacentTetrahedron(vRoles[0]);
+        if (! next)
+            return 0;
+        if (next != tet->getAdjacentTetrahedron(vRoles[3]))
+            return 0;
+
+        // Are we folding over?
+        cross1 = tet->getAdjacentTetrahedronGluing(vRoles[0]);
+        cross2 = tet->getAdjacentTetrahedronGluing(vRoles[3]);
+        if (next == tet && cross1[vRoles[0]] == vRoles[3]) {
+            // Could be.  Certainly faces vRoles[0,3] are joined to
+            // each other.  This is our final iteration -- either it
+            // works or it doesn't.
+
+            // Find the permutation that maps canonical vertices 123 to 012.
+            canon1 = vRoles.inverse() * cross1 * vRoles;
+
+            // Run through the three orientation-preserving permutations.
+            // Note that canon1[0] == 3.
+            if (canon1 == NPerm(3, 1, 2, 0)) {
+                // Tetrahedron is folded shut over edge vRoles[12].
+                // This does not give an LST(3,2,1) base, so we are not
+                // interested.
+                return 0;
+            } else if (canon1 == NPerm(3, 0, 1, 2)) {
+                rotation = 1;
+                // a, b have weights 1, 2.
+            } else if (canon1 == NPerm(3, 2, 0, 1)) {
+                rotation = 2;
+                // a, b have weights 2, 1.
+            } else {
+                // We have an orientation-reversing permutation.
+                return 0;
+            }
+
+            // We got one!
+            NLayeredSolidTorus* ans = new NLayeredSolidTorus();
+            ans->nTetrahedra = nTets;
+
+            ans->base = tet;
+            ans->baseFace[0] = vRoles[3]; // Face vRoles[012]
+            ans->baseFace[1] = vRoles[0]; // Face vRoles[123]
+            ans->baseEdge[0] = edgeNumber[vRoles[0]][vRoles[3]];
+            if (rotation == 1) {
+                ans->baseEdge[1] = edgeNumber[vRoles[0]][vRoles[2]];
+                ans->baseEdge[2] = edgeNumber[vRoles[1]][vRoles[3]];
+
+                ans->baseEdge[3] = edgeNumber[vRoles[0]][vRoles[1]];
+                ans->baseEdge[4] = edgeNumber[vRoles[1]][vRoles[2]];
+                ans->baseEdge[5] = edgeNumber[vRoles[2]][vRoles[3]];
+            } else {
+                ans->baseEdge[1] = edgeNumber[vRoles[0]][vRoles[1]];
+                ans->baseEdge[2] = edgeNumber[vRoles[2]][vRoles[3]];
+
+                ans->baseEdge[3] = edgeNumber[vRoles[0]][vRoles[2]];
+                ans->baseEdge[4] = edgeNumber[vRoles[2]][vRoles[1]];
+                ans->baseEdge[5] = edgeNumber[vRoles[1]][vRoles[3]];
+            }
+            ans->baseEdgeGroup[ans->baseEdge[0]] = 1;
+            ans->baseEdgeGroup[ans->baseEdge[1]] = 2;
+            ans->baseEdgeGroup[ans->baseEdge[2]] = 2;
+            ans->baseEdgeGroup[ans->baseEdge[3]] = 3;
+            ans->baseEdgeGroup[ans->baseEdge[4]] = 3;
+            ans->baseEdgeGroup[ans->baseEdge[5]] = 3;
+
+            long cuts01, cuts13, cuts30;
+            if (rotation == 1) {
+                // (a,b) == (1,2).
+                cuts01 = w + 2 * x;  // w.a + x.b
+                cuts13 = y + 2 * z;  // y.a + z.b
+            } else {
+                // (a,b) == (2,1).
+                cuts01 = 2 * w + x;  // w.a + x.b
+                cuts13 = 2 * y + z;  // y.a + z.b
+            }
+            cuts30 = - cuts01 - cuts13;
+
+            if (cuts01 < 0) cuts01 = -cuts01;
+            if (cuts13 < 0) cuts13 = -cuts13;
+            if (cuts30 < 0) cuts30 = -cuts30;
+
+            ans->topLevel = top;
+            ans->topFace[0] = vRoles[2]; // Face vRoles[013]
+            ans->topFace[1] = vRoles[1]; // Face vRoles[023]
+
+            // Run through all six possible orderings.
+            int group01, group13, group30;
+            if (cuts01 <= cuts13) {
+                // 01 13
+                if (cuts13 <= cuts30) {
+                    // 01 13 30
+                    group01 = 0; group13 = 1; group30 = 2;
+                } else if (cuts30 <= cuts01) {
+                    // 30 01 13
+                    group30 = 0; group01 = 1; group13 = 2;
+                } else {
+                    // 01 30 13
+                    group01 = 0; group30 = 1; group13 = 2;
+                }
+            } else {
+                // 13 01
+                if (cuts30 <= cuts13) {
+                    // 30 13 01
+                    group30 = 0; group13 = 1; group01 = 2;
+                } else if (cuts01 <= cuts30) {
+                    // 13 01 30
+                    group13 = 0; group01 = 1; group30 = 2;
+                } else {
+                    // 13 30 01
+                    group13 = 0; group30 = 1; group01 = 2;
+                }
+            }
+            ans->meridinalCuts[group01] = cuts01;
+            ans->meridinalCuts[group13] = cuts13;
+            ans->meridinalCuts[group30] = cuts30;
+            ans->topEdge[group01][0] = edgeNumber[vRoles[0]][vRoles[1]];
+            ans->topEdge[group01][1] = edgeNumber[vRoles[2]][vRoles[3]];
+            ans->topEdge[group13][0] = edgeNumber[vRoles[1]][vRoles[3]];
+            ans->topEdge[group13][1] = edgeNumber[vRoles[0]][vRoles[2]];
+            ans->topEdge[group30][0] = edgeNumber[vRoles[3]][vRoles[0]];
+            ans->topEdge[group30][1] = -1;
+            ans->topEdgeGroup[edgeNumber[vRoles[0]][vRoles[1]]] = group01;
+            ans->topEdgeGroup[edgeNumber[vRoles[2]][vRoles[3]]] = group01;
+            ans->topEdgeGroup[edgeNumber[vRoles[1]][vRoles[3]]] = group13;
+            ans->topEdgeGroup[edgeNumber[vRoles[0]][vRoles[2]]] = group13;
+            ans->topEdgeGroup[edgeNumber[vRoles[3]][vRoles[0]]] = group30;
+            ans->topEdgeGroup[edgeNumber[vRoles[1]][vRoles[2]]] = -1;
+
+            // All done!
+            return ans;
+        }
+
+        // We're looking for an entirely new tetrahedron.
+        // Make sure we're not looping back in a cycle or anything kinky.
+        if (next == tet || next == top)
+            return 0;
+
+        // Set up nextRoles so that faces tet/vRoles[0,3] are joined to
+        // faces next/nextRoles[1,2] respectively.
+        pair = NFacePair(cross1[vRoles[0]], cross2[vRoles[3]]).complement();
+        nextRoles = NPerm(pair.upper(), cross1[vRoles[0]], cross2[vRoles[3]],
+            pair.lower());
+
+        // Find the mapping between the canonical 0123 as described by
+        // vRoles and the canonical 0123 as described by nextRoles.
+        // There are two such mappings, for the gluings on faces
+        // vRoles[0,3] respectively.
+        canon1 = nextRoles.inverse() * cross1 * vRoles;
+        canon2 = nextRoles.inverse() * cross2 * vRoles;
+
+        // Make sure it's actually a layering, i.e., canon1 and canon2 are
+        // compatible.
+        if (rot180 * canon1 * rot180 != canon2)
+            return 0;
+
+        // Update the matrix [ a,b | c,d ].
+        // It seems sanest to take cases based on the six possible
+        // permutations.  Use canon2, which starts at face 3 (012).
+        // Note that canon2[3] == 2.
+        // Old a, b : 01, 02.
+        // New a, b : 01, 13.
+        if (canon2 == NPerm(0, 1, 3, 2)) {
+            // 012 -> 013.
+            // old a = a
+            // old b = a+b
+            // p = w.(old_a) + x.(old_b) = (w+x).a + x.b
+            // q = y.(old_a) + z.(old_b) = (y+z).a + z.b
+            w_ = w + x;
+            x_ = x;
+            y_ = y + z;
+            z_ = z;
+        } else if (canon2 == NPerm(0, 3, 1, 2)) {
+            // 012 -> 031.
+            // old a = a+b
+            // old b = a
+            // p = w.(old_a) + x.(old_b) = (w+x).a + w.b
+            // q = y.(old_a) + z.(old_b) = (y+z).a + y.b
+            w_ = w + x;
+            x_ = w;
+            y_ = y + z;
+            z_ = y;
+        } else if (canon2 == NPerm(1, 0, 3, 2)) {
+            // 012 -> 103.
+            // old a = -a
+            // old b = b
+            // p = w.(old_a) + x.(old_b) = -w.a + x.b
+            // q = y.(old_a) + z.(old_b) = -y.a + z.b
+            w_ = -w;
+            x_ = x;
+            y_ = -y;
+            z_ = z;
+        } else if (canon2 == NPerm(1, 3, 0, 2)) {
+            // 012 -> 130.
+            // old a = b
+            // old b = -a
+            // p = w.(old_a) + x.(old_b) = -x.a + w.b
+            // q = y.(old_a) + z.(old_b) = -z.a + y.b
+            w_ = -x;
+            x_ = w;
+            y_ = -z;
+            z_ = y;
+        } else if (canon2 == NPerm(3, 0, 1, 2)) {
+            // 012 -> 301.
+            // old a = -(a+b)
+            // old b = -b
+            // p = w.(old_a) + x.(old_b) = -w.a - (w+x).b
+            // q = y.(old_a) + z.(old_b) = -y.a - (y+z).b
+            w_ = -w;
+            x_ = -w - x;
+            y_ = -y;
+            z_ = -y - z;
+        } else if (canon2 == NPerm(3, 1, 0, 2)) {
+            // 012 -> 310.
+            // old a = -b
+            // old b = -(a+b)
+            // p = w.(old_a) + x.(old_b) = -x.a - (w+x).b
+            // q = y.(old_a) + z.(old_b) = -z.a - (y+z).b
+            w_ = -x;
+            x_ = -w - x;
+            y_ = -z;
+            z_ = -y - z;
+        } else {
+            // Impossible.  We should never get to this point.
+            std::cerr << "ERROR: Bad permutation canon2." << std::endl;
+            return 0;
+        }
+
+        w = w_; x = x_; y = y_; z = z_;
+
+        // Adjust the other variables in preparation for the next loop
+        // iteration.
+        tet = next;
+        vRoles = nextRoles;
+        nTets++;
+    }
+
+    // The loop has no break so we should never get here, but what the hell.
+    return 0;
+}
+
 NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     // Start with some basic property checks.
     if (! comp->isOrientable())
