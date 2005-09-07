@@ -33,7 +33,7 @@ Version 4.2.1  [ under development ]
         Class NLayeredSolidTorus:
             - New routine formsLayeredSolidTorusTop() for finding an LST
               from the top end instead of the bottom.
-        Class NPluggedIBundle:
+        Class NPluggedIBundle, NPluggedIBundleCore, NTorusPlug:
             - Added for recognition of small closed non-orientable
               3-manifolds.
         Class NTriangulation:

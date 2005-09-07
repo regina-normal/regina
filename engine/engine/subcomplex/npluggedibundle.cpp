@@ -27,28 +27,24 @@
 /* end stub */
 
 #include "subcomplex/npluggedibundle.h"
-#include "subcomplex/nlayeredsolidtorus.h"
-#include "triangulation/nfacepair.h"
+#include "subcomplex/ntorusplug.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntetface.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
+const int NPluggedIBundleCore::T_3_1 = 301;
+const int NPluggedIBundleCore::T_3_2 = 302;
 const int NPluggedIBundleCore::T_5_1 = 501;
-const int NPluggedIBundleCore::T_5_2 = 502;
-const int NPluggedIBundleCore::T_5_3 = 503;
-const int NPluggedIBundleCore::T_5_4 = 504;
 const int NPluggedIBundleCore::T_6_1 = 601;
 const int NPluggedIBundleCore::T_6_2 = 602;
 const int NPluggedIBundleCore::T_6_3 = 603;
 const int NPluggedIBundleCore::T_6_4 = 604;
 
 namespace {
+    const NPluggedIBundleCore core_T_3_1(NPluggedIBundleCore::T_3_1);
+    const NPluggedIBundleCore core_T_3_2(NPluggedIBundleCore::T_3_2);
     const NPluggedIBundleCore core_T_5_1(NPluggedIBundleCore::T_5_1);
-    const NPluggedIBundleCore core_T_5_2(NPluggedIBundleCore::T_5_2);
-    const NPluggedIBundleCore core_T_5_3(NPluggedIBundleCore::T_5_3);
-    const NPluggedIBundleCore core_T_5_4(NPluggedIBundleCore::T_5_4);
     const NPluggedIBundleCore core_T_6_1(NPluggedIBundleCore::T_6_1);
     const NPluggedIBundleCore core_T_6_2(NPluggedIBundleCore::T_6_2);
     const NPluggedIBundleCore core_T_6_3(NPluggedIBundleCore::T_6_3);
@@ -57,7 +53,41 @@ namespace {
 
 NPluggedIBundleCore::NPluggedIBundleCore(int whichCoreType) :
         coreType(whichCoreType) {
-    if (coreType == T_6_1) {
+    if (coreType == T_3_1) {
+        const int adj[3][4] = {
+            { 1, 2, 2, -1},
+            { 0, 2, 2, -1},
+            { 1, 0, 1, 0}
+        };
+
+        const int glu[3][4][4] = {
+            { { 0, 2, 1, 3 }, { 3, 1, 2, 0 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } },
+            { { 0, 2, 1, 3 }, { 2, 0, 3, 1 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
+            { { 1, 3, 0, 2 }, { 3, 1, 2, 0 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } }
+        };
+
+        core.insertConstruction(3, adj, glu);
+
+        topTet[0][0] = 0; topTet[0][1] = 1;
+        // topVertices consists entirely of identity permutations.
+    } else if (coreType == T_3_2) {
+        const int adj[3][4] = {
+            { 2, 2, 1, -1},
+            { 2, 2, 0, -1},
+            { 1, 0, 1, 0}
+        };
+
+        const int glu[3][4][4] = {
+            { { 3, 2, 1, 0 }, { 0, 1, 3, 2 }, { 1, 0, 2, 3 }, { 0, 0, 0, 0 } },
+            { { 0, 1, 2, 3 }, { 3, 2, 0, 1 }, { 1, 0, 2, 3 }, { 0, 0, 0, 0 } },
+            { { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 2, 3, 1, 0 }, { 3, 2, 1, 0 } }
+        };
+
+        core.insertConstruction(3, adj, glu);
+
+        topTet[0][0] = 0; topTet[0][1] = 1;
+        // topVertices consists entirely of identity permutations.
+    } else if (coreType == T_6_1) {
         const int adj[6][4] = {
             { 1, 5, 3, -1},
             { 0, 5, 4, -1},
@@ -172,100 +202,15 @@ NPluggedIBundleCore::NPluggedIBundleCore(int whichCoreType) :
 
         topTet[0][0] = 1; topTet[0][1] = 0; topTet[1][0] = 0; topTet[1][1] = 2;
         topVertices[1][0] = NPerm(2, 3);
-    } else if (coreType == T_5_2) {
-        const int adj[6][4] = {
-            { 2, 1, -1, -1},
-            { 2, 0, 3, -1},
-            { 0, 1, 4, -1},
-            { 4, 5, 5, 1},
-            { 3, 5, 5, 2},
-            { 4, 3, 4, 3}
-        };
-
-        const int glu[6][4][4] = {
-            { { 0, 2, 3, 1 }, { 2, 1, 0, 3 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } },
-            { { 1, 3, 2, 0 }, { 2, 1, 0, 3 }, { 0, 1, 3, 2 }, { 0, 0, 0, 0 } },
-            { { 0, 3, 1, 2 }, { 3, 0, 2, 1 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } },
-            { { 0, 2, 1, 3 }, { 3, 1, 2, 0 }, { 1, 0, 3, 2 }, { 0, 1, 3, 2 } },
-            { { 0, 2, 1, 3 }, { 2, 0, 3, 1 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } },
-            { { 1, 3, 0, 2 }, { 3, 1, 2, 0 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } }
-        };
-
-        core.insertConstruction(6, adj, glu);
-
-        topTet[0][0] = 1; topTet[0][1] = 0; topTet[1][0] = 0; topTet[1][1] = 2;
-        topVertices[1][0] = NPerm(2, 3);
-    } else if (coreType == T_5_3) {
-        const int adj[6][4] = {
-            { 1, 2, -1, -1},
-            { 0, 2, 3, -1},
-            { 0, 1, 4, -1},
-            { 4, 5, 5, 1},
-            { 3, 5, 5, 2},
-            { 4, 3, 4, 3}
-        };
-
-        const int glu[6][4][4] = {
-            { { 0, 2, 1, 3 }, { 2, 0, 3, 1 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } },
-            { { 0, 2, 1, 3 }, { 3, 1, 2, 0 }, { 0, 1, 3, 2 }, { 0, 0, 0, 0 } },
-            { { 1, 3, 0, 2 }, { 3, 1, 2, 0 }, { 0, 1, 3, 2 }, { 0, 0, 0, 0 } },
-            { { 0, 2, 1, 3 }, { 3, 1, 2, 0 }, { 1, 0, 3, 2 }, { 0, 1, 3, 2 } },
-            { { 0, 2, 1, 3 }, { 2, 0, 3, 1 }, { 0, 1, 2, 3 }, { 0, 1, 3, 2 } },
-            { { 1, 3, 0, 2 }, { 3, 1, 2, 0 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } }
-        };
-
-        core.insertConstruction(6, adj, glu);
-
-        topTet[0][0] = 1; topTet[0][1] = 0; topTet[1][0] = 0; topTet[1][1] = 2;
-        topVertices[1][0] = NPerm(1, 0, 3, 2);
-    } else if (coreType == T_5_4) {
-        const int adj[6][4] = {
-            { 1, 2, -1, -1},
-            { 0, 2, 3, -1},
-            { 1, 0, 4, -1},
-            { 5, 5, 4, 1},
-            { 5, 5, 3, 2},
-            { 3, 4, 3, 4}
-        };
-
-        const int glu[6][4][4] = {
-            { { 0, 2, 1, 3 }, { 2, 1, 3, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } },
-            { { 0, 2, 1, 3 }, { 3, 0, 2, 1 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } },
-            { { 1, 3, 2, 0 }, { 3, 1, 0, 2 }, { 0, 1, 3, 2 }, { 0, 0, 0, 0 } },
-            { { 0, 1, 2, 3 }, { 3, 2, 0, 1 }, { 1, 0, 2, 3 }, { 1, 0, 3, 2 } },
-            { { 3, 2, 1, 0 }, { 0, 1, 3, 2 }, { 1, 0, 2, 3 }, { 0, 1, 3, 2 } },
-            { { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 2, 3, 1, 0 }, { 3, 2, 1, 0 } }
-        };
-
-        core.insertConstruction(6, adj, glu);
-
-        topTet[0][0] = 1; topTet[0][1] = 0; topTet[1][0] = 0; topTet[1][1] = 2;
-        topVertices[1][0] = NPerm(2, 3);
     }
 }
 
 NPluggedIBundle::~NPluggedIBundle() {
-    if (core)
-        delete core;
+    delete core;
     if (plug[0])
         delete plug[0];
     if (plug[1])
         delete plug[1];
-}
-
-NPluggedIBundle* NPluggedIBundle::clone() const {
-    NPluggedIBundle* ans = new NPluggedIBundle();
-
-    ans->core = new NIsomorphismDirect(*core);
-    ans->coreType = coreType;
-
-    for (int i = 0; i < 2; i++) {
-        if (plug[i])
-            ans->plug[i] = plug[i]->clone();
-        ans->edgeGroupRoles[i] = edgeGroupRoles[i];
-    }
-
-    return ans;
 }
 
 NPluggedIBundle* NPluggedIBundle::isPluggedIBundle(NTriangulation* tri) {
@@ -284,6 +229,12 @@ NPluggedIBundle* NPluggedIBundle::isPluggedIBundle(NTriangulation* tri) {
 
     // Hunt for the core thin I-bundle.
     NPluggedIBundle* ans;
+    if ((ans = hunt(tri, core_T_3_1)))
+        return ans;
+    if ((ans = hunt(tri, core_T_3_2)))
+        return ans;
+    if ((ans = hunt(tri, core_T_5_1)))
+        return ans;
     if ((ans = hunt(tri, core_T_6_1)))
         return ans;
     if ((ans = hunt(tri, core_T_6_2)))
@@ -292,14 +243,6 @@ NPluggedIBundle* NPluggedIBundle::isPluggedIBundle(NTriangulation* tri) {
         return ans;
     if ((ans = hunt(tri, core_T_6_4)))
         return ans;
-    if ((ans = hunt(tri, core_T_5_1)))
-        return ans;
-    if ((ans = hunt(tri, core_T_5_2)))
-        return ans;
-    if ((ans = hunt(tri, core_T_5_3)))
-        return ans;
-    if ((ans = hunt(tri, core_T_5_4)))
-        return ans;
 
     return 0;
 }
@@ -307,141 +250,50 @@ NPluggedIBundle* NPluggedIBundle::isPluggedIBundle(NTriangulation* tri) {
 NPluggedIBundle* NPluggedIBundle::hunt(NTriangulation* tri,
         const NPluggedIBundleCore& core) {
     std::list<NIsomorphism*> isos;
-    unsigned long found = core.core.findAllSubcomplexesIn(*tri, isos);
-    if (! found)
+    if (! core.core.findAllSubcomplexesIn(*tri, isos))
         return 0;
 
-    NTetFace top[2][2];
-    NTetrahedron* adj[2][2];
-    NPerm adjPerm[2][2];
-    NLayeredSolidTorus* lst[2];
-    NPerm p, canon[2], roles[2];
-    NFacePair faces, tmpFaces;
-    int i, j;
-    bool broken;
-    std::list<NIsomorphism*>::const_iterator it;
-    for (it = isos.begin(); it != isos.end(); it++) {
-        // Look for the layered solid tori.
-        lst[0] = lst[1] = 0;
-        broken = false;
-
-        for (i = 0; i < 2; i++)
-            for (j = 0; j < 2; j++) {
-                top[i][j].tet = (*it)->tetImage(core.topTet[i][j]);
-                top[i][j].face = (*it)->facePerm(core.topTet[i][j])
-                    [core.topVertices[i][j][3]];
-                adj[i][j] = tri->getTetrahedron(top[i][j].tet)->
-                    getAdjacentTetrahedron(top[i][j].face);
-                adjPerm[i][j] = tri->getTetrahedron(top[i][j].tet)->
-                    getAdjacentTetrahedronGluing(top[i][j].face);
-            }
-
-        for (i = 0; i < 2; i++) {
-            if (adj[i][0] == tri->getTetrahedron(top[i][1].tet)) {
-                // Our only hope is for a degenerate LST.
-                if (adjPerm[i][0][top[i][0].face] == top[i][1].face) {
-                    // It glues to the right face.  We still have a chance.
-                    // Find the permutation describing how the canonical 012
-                    // representations of the two faces are identified.
-                    p = core.topVertices[i][1].inverse() *
-                        (*it)->facePerm(core.topTet[i][1]).inverse() *
-                        adjPerm[i][0] *
-                        (*it)->facePerm(core.topTet[i][0]) *
-                        core.topVertices[i][0];
-                    if (p == NPerm(0, 2, 1, 3)) {
-                        // Boundary of the Mobius strip is a diagonal edge.
-                        roles[i] = NPerm(0, 1, 2, 3);
-                    } else if (p == NPerm(2, 1, 0, 3)) {
-                        // Boundary of the Mobius strip is a horizontal edge.
-                        roles[i] = NPerm(1, 2, 0, 3);
-                    } else if (p == NPerm(1, 0, 2, 3)) {
-                        // Boundary of the Mobius strip is a vertical edge.
-                        roles[i] = NPerm(2, 0, 1, 3);
-                    } else {
-                        // Not the right kind of permutation.
-                        broken = true;
-                        break;
-                    }
-                } else {
-                    broken = true;
-                    break;
-                }
-            } else if (adj[i][0] == tri->getTetrahedron(top[1 - i][0].tet) ||
-                       adj[i][0] == tri->getTetrahedron(top[1 - i][1].tet)) {
-                // We're folding back into the core, and it's not a
-                // degenerate LST.  Nothing good can come of this.
-                broken = true;
-                break;
-            } else if (adj[i][0] == adj[i][1]) {
-                // We're heading outside the core, and both adj[i][*]
-                // faces point to the same tetrahedron.  Hunt for a real
-                // attached LST.
-                lst[i] = NLayeredSolidTorus::formsLayeredSolidTorusTop
-                    (adj[i][0], adjPerm[i][0][top[i][0].face],
-                    adjPerm[i][1][top[i][1].face]);
-                if (! lst[i])
-                    break;
-
-                // We have an LST.
-                // All that's left is to ensure that the gluings match
-                // up properly.
-                // The following permutations map canonical 012
-                // representations of the core boundary faces to the
-                // vertices of the top level LST tetrahedron.
-                canon[0] = adjPerm[i][0] *
-                    (*it)->facePerm(core.topTet[i][0]) *
-                    core.topVertices[i][0];
-                canon[1] = adjPerm[i][1] *
-                    (*it)->facePerm(core.topTet[i][1]) *
-                    core.topVertices[i][1];
-
-                roles[i] = NPerm(
-                    lst[i]->getTopEdgeGroup(
-                        edgeNumber[canon[0][0]][canon[0][1]]),
-                    lst[i]->getTopEdgeGroup(
-                        edgeNumber[canon[0][0]][canon[0][2]]),
-                    lst[i]->getTopEdgeGroup(
-                        edgeNumber[canon[0][1]][canon[0][2]]),
-                    3);
-
-                if (roles[i][0] == lst[i]->getTopEdgeGroup(
-                            edgeNumber[canon[1][0]][canon[1][1]]) &&
-                        roles[i][1] == lst[i]->getTopEdgeGroup(
-                            edgeNumber[canon[1][0]][canon[1][2]]) &&
-                        roles[i][2] == lst[i]->getTopEdgeGroup(
-                            edgeNumber[canon[1][1]][canon[1][2]])) {
-                    // It's a layering!  W00t.  All done.
-                } else {
-                    // Not a layering.
-                    broken = true;
-                    break;
-                }
-            } else {
-                // No hope.
-                broken = true;
-                break;
-            }
-        }
-
-        if (broken) {
-            if (lst[0])
-                delete lst[0];
-            if (lst[1])
-                delete lst[1];
-
+    // Run through each isomorphism and look for the corresponding plugs.
+    NTorusPlug* plug[2];
+    for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
+            it != isos.end(); it++) {
+        plug[0] = NTorusPlug::isPlugged(
+            tri->getTetrahedron((*it)->tetImage(core.topTet[0][0])),
+            (*it)->facePerm(core.topTet[0][0]) * core.topVertices[0][0],
+            tri->getTetrahedron((*it)->tetImage(core.topTet[0][1])),
+            (*it)->facePerm(core.topTet[0][1]) * core.topVertices[0][1]);
+        if (! plug[0]) {
             // Delete this isomorphism; we won't need it any more.
             delete *it;
             continue;
         }
 
-        // Found one!
+        // Do we need a second plug?
+        if (core.coreType == NPluggedIBundleCore::T_3_1 ||
+                core.coreType == NPluggedIBundleCore::T_3_2) {
+            // No second plug.
+            plug[1] = 0;
+        } else {
+            plug[1] = NTorusPlug::isPlugged(
+                tri->getTetrahedron((*it)->tetImage(core.topTet[1][0])),
+                (*it)->facePerm(core.topTet[1][0]) * core.topVertices[1][0],
+                tri->getTetrahedron((*it)->tetImage(core.topTet[1][1])),
+                (*it)->facePerm(core.topTet[1][1]) * core.topVertices[1][1]);
+            if (! plug[1]) {
+                delete plug[0];
+
+                // Delete this isomorphism; we won't need it any more.
+                delete *it;
+                continue;
+            }
+        }
+
+        // All good!
         NPluggedIBundle* ans = new NPluggedIBundle();
         ans->core = *it;
         ans->coreType = core.coreType;
-        ans->plug[0] = lst[0];
-        ans->plug[1] = lst[1];
-        ans->edgeGroupRoles[0] = roles[0];
-        ans->edgeGroupRoles[1] = roles[1];
+        ans->plug[0] = plug[0];
+        ans->plug[1] = plug[1];
 
         // Delete the remaining isomorphisms that we never even
         // looked at.
@@ -459,64 +311,42 @@ std::ostream& NPluggedIBundle::writeCommonName(std::ostream& out,
         bool tex) const {
     if (tex) {
         switch(coreType) {
-            case NPluggedIBundleCore::T_6_1: out << "$H_{\\tilde{T}_6^1"; break;
-            case NPluggedIBundleCore::T_6_2: out << "$H_{\\tilde{T}_6^2"; break;
-            case NPluggedIBundleCore::T_6_3: out << "$H_{\\tilde{T}_6^3"; break;
-            case NPluggedIBundleCore::T_6_4: out << "$H_{\\tilde{T}_6^4"; break;
-            case NPluggedIBundleCore::T_5_1: out << "$K_{\\tilde{T}_5^1"; break;
-            case NPluggedIBundleCore::T_5_2: out << "$K_{\\tilde{T}_5^2"; break;
-            case NPluggedIBundleCore::T_5_3: out << "$K_{\\tilde{T}_5^3"; break;
-            case NPluggedIBundleCore::T_5_4: out << "$K_{\\tilde{T}_5^4"; break;
+            case NPluggedIBundleCore::T_3_1: out << "$G_{\\tilde{T}_3^1"; break;
+            case NPluggedIBundleCore::T_3_2: out << "$G_{\\tilde{T}_3^2"; break;
+            case NPluggedIBundleCore::T_6_1: out << "$G_{\\tilde{T}_6^1"; break;
+            case NPluggedIBundleCore::T_6_2: out << "$G_{\\tilde{T}_6^2"; break;
+            case NPluggedIBundleCore::T_6_3: out << "$G_{\\tilde{T}_6^3"; break;
+            case NPluggedIBundleCore::T_6_4: out << "$G_{\\tilde{T}_6^4"; break;
+            case NPluggedIBundleCore::T_5_1: out << "$G_{\\tilde{T}_5^1"; break;
         }
     } else {
         switch(coreType) {
-            case NPluggedIBundleCore::T_6_1: out << "H(T~6^1"; break;
-            case NPluggedIBundleCore::T_6_2: out << "H(T~6^2"; break;
-            case NPluggedIBundleCore::T_6_3: out << "H(T~6^3"; break;
-            case NPluggedIBundleCore::T_6_4: out << "H(T~6^4"; break;
-            case NPluggedIBundleCore::T_5_1: out << "K(T~5^1"; break;
-            case NPluggedIBundleCore::T_5_2: out << "K(T~5^2"; break;
-            case NPluggedIBundleCore::T_5_3: out << "K(T~5^3"; break;
-            case NPluggedIBundleCore::T_5_4: out << "K(T~5^4"; break;
+            case NPluggedIBundleCore::T_3_1: out << "G(T~3^1"; break;
+            case NPluggedIBundleCore::T_3_2: out << "G(T~3^2"; break;
+            case NPluggedIBundleCore::T_6_1: out << "G(T~6^1"; break;
+            case NPluggedIBundleCore::T_6_2: out << "G(T~6^2"; break;
+            case NPluggedIBundleCore::T_6_3: out << "G(T~6^3"; break;
+            case NPluggedIBundleCore::T_6_4: out << "G(T~6^4"; break;
+            case NPluggedIBundleCore::T_5_1: out << "G(T~5^1"; break;
         }
     }
 
     // TODO: Normalise parameters.
-    long horiz[2], vert[2];
+    // TODO: Also omit parameters where possible.
+    // TODO: Also deal gracefully with missing plugs.
     for (int i = 0; i < 2; i++) {
-        // Calculate vert[i] and horiz[i], and ensure that
-        // vert[i] is non-negative.
+        out << " | ";
         if (plug[i]) {
-            vert[i] = plug[i]->getMeridinalCuts(edgeGroupRoles[i][0]);
-            horiz[i] = plug[i]->getMeridinalCuts(edgeGroupRoles[i][1]);
-            if (edgeGroupRoles[i][2] != 2)
-                horiz[i] = -horiz[i];
-        } else {
-            // We have a degenerate LST, i.e., a Mobius band.
-            if (edgeGroupRoles[i][0] == 2) {
-                // Group 2 is glued to a vertical edge.
-                vert[i] = 2;
-                horiz[i] = -1;
-            } else if (edgeGroupRoles[i][1] == 2) {
-                // Group 2 is glued to a horizontal edge.
-                vert[i] = 1;
-                horiz[i] = -2;
-            } else {
-                // Group 2 is glued to a diagonal edge.
-                vert[i] = horiz[i] = 1;
-            }
-        }
-    }
+            if (tex)
+                plug[i]->writeTeXName(out);
+            else
+                plug[i]->writeName(out);
+        } else
+            out << "---";
 
-    if (! (vert[1] == 2 && horiz[1] == -1)) {
-        // Both sets of parameters must be output.
-        out << " | " << vert[0] << ',' << horiz[0];
-        out << " | " << vert[1] << ',' << horiz[1];
-    } else {
-        // The second set of parameters may be omitted.
-        // Perhaps the first also.
-        if (! (vert[0] == 2 && horiz[0] == -1))
-            out << " | " << vert[0] << ',' << horiz[0];
+        if (coreType == NPluggedIBundleCore::T_3_1 ||
+                coreType == NPluggedIBundleCore::T_3_2)
+            break;
     }
 
     return out << (tex ? "}$" : ")");
@@ -531,20 +361,7 @@ std::ostream& NPluggedIBundle::writeTeXName(std::ostream& out) const {
 }
 
 void NPluggedIBundle::writeTextLong(std::ostream& out) const {
-    out << "Plugged ";
-    switch (coreType) {
-        case NPluggedIBundleCore::T_5_1:
-        case NPluggedIBundleCore::T_5_2:
-        case NPluggedIBundleCore::T_5_3:
-        case NPluggedIBundleCore::T_5_4:
-            out << "thick"; break;
-        case NPluggedIBundleCore::T_6_1:
-        case NPluggedIBundleCore::T_6_2:
-        case NPluggedIBundleCore::T_6_3:
-        case NPluggedIBundleCore::T_6_4:
-            out << "thin"; break;
-    }
-    out << " I-bundle: ";
+    out << "Plugged I-bundle: ";
     writeName(out);
 }
 
