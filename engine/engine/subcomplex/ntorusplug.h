@@ -184,6 +184,44 @@ class NTorusPlugDouble : public NTorusPlug {
             NTetrahedron* internalBdry2, NPerm internalVetices2);
 };
 
+class NTorusPlugReflector : public NTorusPlug {
+    /**
+     * Adding a (1,1) twist gives an isomorphic triangulation.
+     */
+    public:
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+
+        static NTorusPlug* isPlugged(
+            NTetrahedron* externalBdry1, NPerm externalVertices1,
+            NTetrahedron* externalBdry2, NPerm externalVertices2);
+
+    private:
+        NTorusPlugReflector(
+            NTetrahedron* internalBdry1, NPerm internalVertices1,
+            NTetrahedron* internalBdry2, NPerm internalVetices2);
+};
+
+class NTorusPlugCrosscap : public NTorusPlug {
+    private:
+        bool twist;
+            /**< Are we dropping it in with an extra (1,1) twist? */
+
+    public:
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+
+        static NTorusPlug* isPlugged(
+            NTetrahedron* externalBdry1, NPerm externalVertices1,
+            NTetrahedron* externalBdry2, NPerm externalVertices2);
+
+    private:
+        NTorusPlugCrosscap(NTetrahedron* internalBdry1, NPerm internalVertices1,
+            NTetrahedron* internalBdry2, NPerm internalVetices2);
+};
+
 /*@}*/
 
 // Inline functions for NTorusPlug
@@ -233,6 +271,24 @@ inline NTorusPlugDouble::NTorusPlugDouble(
         NTorusPlug(internalBdry1, internalVertices1,
             internalBdry2, internalVertices2) {
     plug[0] = plug[1] = 0;
+}
+
+// Inline functions for NTorusPlugReflector
+
+inline NTorusPlugReflector::NTorusPlugReflector(
+        NTetrahedron* internalBdry1, NPerm internalVertices1,
+        NTetrahedron* internalBdry2, NPerm internalVertices2) :
+        NTorusPlug(internalBdry1, internalVertices1,
+            internalBdry2, internalVertices2) {
+}
+
+// Inline functions for NTorusPlugCrosscap
+
+inline NTorusPlugCrosscap::NTorusPlugCrosscap(
+        NTetrahedron* internalBdry1, NPerm internalVertices1,
+        NTetrahedron* internalBdry2, NPerm internalVertices2) :
+        NTorusPlug(internalBdry1, internalVertices1,
+            internalBdry2, internalVertices2) {
 }
 
 } // namespace regina
