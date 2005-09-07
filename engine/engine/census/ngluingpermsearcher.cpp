@@ -50,7 +50,8 @@ NGluingPermSearcher::NGluingPermSearcher(
     // Generate the list of face pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew) {
-        const_cast<NFacePairingIsoList*>(autos_) = new NFacePairingIsoList();
+        const_cast<NGluingPermSearcher*>(this)->autos_ =
+            new NFacePairingIsoList();
         pairing->findAutomorphisms(const_cast<NFacePairingIsoList&>(*autos_));
     }
 
@@ -313,7 +314,7 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
         return;
 
     // Recontruct the face pairing automorphisms.
-    const_cast<NFacePairingIsoList*>(autos_) = new NFacePairingIsoList();
+    const_cast<NGluingPermSearcher*>(this)->autos_ = new NFacePairingIsoList();
     pairing->findAutomorphisms(const_cast<NFacePairingIsoList&>(*autos_));
     autosNew = true;
 
