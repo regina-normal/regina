@@ -3,4 +3,5 @@
 Makefile
 Makefile.in
 censuscat
+equiv
 identify

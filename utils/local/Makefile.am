@@ -11,9 +11,10 @@ KDE_OPTIONS=noautodist
 INCLUDES = @ENGINE_INCLUDES@
 LDADD = @LIB_ENGINE@ @UTILS_LIBS@
 
-noinst_PROGRAMS = censuscat identify
+noinst_PROGRAMS = censuscat equiv identify
 
 censuscat_SOURCES = censuscat.cpp
+equiv_SOURCES = equiv.cpp
 identify_SOURCES = identify.cpp
 
 EXTRA_DIST = README.txt
