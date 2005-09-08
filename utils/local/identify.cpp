@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Combine a set of data files as a first draft for a census             *
+ *  Attempt to recognise the combinatorial structures of triangulations   *
  *                                                                        *
  *  Copyright (c) 2005, Ben Burton                                        *
  *  For further details contact Ben Burton (bab@debian.org).              *
