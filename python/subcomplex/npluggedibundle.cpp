@@ -28,6 +28,7 @@
 
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/npluggedibundle.h"
+#include "subcomplex/ntorusplug.h"
 #include "triangulation/ntriangulation.h"
 #include <boost/python.hpp>
 
@@ -39,8 +40,6 @@ void addNPluggedIBundle() {
     class_<NPluggedIBundle, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NPluggedIBundle>, boost::noncopyable>
             ("NPluggedIBundle", no_init)
-        .def("clone", &NPluggedIBundle::clone,
-            return_value_policy<manage_new_object>())
         .def("getPlug", &NPluggedIBundle::getPlug,
             return_value_policy<reference_existing_object>())
         .def("isPluggedIBundle", &NPluggedIBundle::isPluggedIBundle,
@@ -54,13 +53,12 @@ void addNPluggedIBundle() {
     scope s = class_<NPluggedIBundleCore, boost::noncopyable>
             ("NPluggedIBundleCore", no_init);
 
+    s.attr("T_3_1") = NPluggedIBundleCore::T_3_1;
+    s.attr("T_3_2") = NPluggedIBundleCore::T_3_2;
+    s.attr("T_5_1") = NPluggedIBundleCore::T_5_1;
     s.attr("T_6_1") = NPluggedIBundleCore::T_6_1;
     s.attr("T_6_2") = NPluggedIBundleCore::T_6_2;
     s.attr("T_6_3") = NPluggedIBundleCore::T_6_3;
     s.attr("T_6_4") = NPluggedIBundleCore::T_6_4;
-    s.attr("T_5_1") = NPluggedIBundleCore::T_5_1;
-    s.attr("T_5_2") = NPluggedIBundleCore::T_5_2;
-    s.attr("T_5_3") = NPluggedIBundleCore::T_5_3;
-    s.attr("T_5_4") = NPluggedIBundleCore::T_5_4;
 }
 

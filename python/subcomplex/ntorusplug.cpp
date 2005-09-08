@@ -26,43 +26,29 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNPillowTwoSphere();
-void addNPluggedIBundle();
-void addNPlugTriSolidTorus();
-void addNSnapPeaCensusTri();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTorusPlug();
-void addNTriSolidTorus();
-void addNTrivialTri();
+#include "subcomplex/ntorusplug.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNPillowTwoSphere();
-    addNPluggedIBundle();
-    addNPlugTriSolidTorus();
-    addNSnapPeaCensusTri();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTorusPlug();
-    addNTriSolidTorus();
-    addNTrivialTri();
+using namespace boost::python;
+using regina::NPerm;
+using regina::NTetrahedron;
+using regina::NTorusPlug;
+
+namespace {
+    NTorusPlug* (*isPlugged_public)(NTetrahedron*, NPerm,
+        NTetrahedron*, NPerm) = &NTorusPlug::isPlugged;
+}
+
+void addNTorusPlug() {
+    class_<NTorusPlug, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<NTorusPlug>, boost::noncopyable>
+            ("NTorusPlug", no_init)
+        .def("isPlugged", isPlugged_public,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isPlugged")
+    ;
+
+    implicitly_convertible<std::auto_ptr<NTorusPlug>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

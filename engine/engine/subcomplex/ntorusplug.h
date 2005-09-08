@@ -48,6 +48,9 @@ class NLayeredSolidTorus;
  * @{
  */
 
+/**
+ * Not mirrored in python.
+ */
 struct NTemporaryFibre {
     long alpha, beta;
 
@@ -66,6 +69,8 @@ struct NTemporaryFibre {
  * Input: Pass faces A, B with 012 -> vertices mappings.
  * Output: Get fibre parameters where main fibres are parallel
  * to 01 and base orbifold runs parallel to 02.
+ *
+ * Only the base class NTorusPlug is mirrored in python.
  */
 class NTorusPlug : public NStandardTriangulation {
     protected:
@@ -75,6 +80,9 @@ class NTorusPlug : public NStandardTriangulation {
     public:
         virtual ~NTorusPlug();
 
+        /**
+         * Not mirrored in python.
+         */
         virtual NTemporaryFibre plugFibre() const;
             /**< Return 0,0 if it's not a single fibre. */
 

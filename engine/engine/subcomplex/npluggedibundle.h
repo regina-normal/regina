@@ -49,6 +49,9 @@ class NTorusPlug;
  * @{
  */
 
+/**
+ * Only the class constants are mirrored in python.
+ */
 struct NPluggedIBundleCore : public boost::noncopyable {
     static const int T_3_1;
     static const int T_3_2;
