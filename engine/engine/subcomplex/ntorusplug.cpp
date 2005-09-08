@@ -536,15 +536,16 @@ NTorusPlug* NTorusPlugReflector::isPlugged(
 }
 
 std::ostream& NTorusPlugCrosscap::writeName(std::ostream& out) const {
-    return out << "x";
+    return out << (twist ? "c'" : "c");
 }
 
 std::ostream& NTorusPlugCrosscap::writeTeXName(std::ostream& out) const {
-    return out << "x";
+    return out << (twist ? "c'" : "c");
 }
 
 void NTorusPlugCrosscap::writeTextLong(std::ostream& out) const {
-    out << "Crosscap plug";
+    out << "Crosscap plug: ";
+    writeName(out);
 }
 
 NTorusPlug* NTorusPlugCrosscap::isPlugged(
