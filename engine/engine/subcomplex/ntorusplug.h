@@ -213,6 +213,9 @@ class NTorusPlugReflector : public NTorusPlug {
 
 class NTorusPlugCrosscap : public NTorusPlug {
     private:
+        bool reversing;
+            /**< Do we reverse fibres as we reverse orientation in the
+                 base orbifold? */
         bool twist;
             /**< Are we dropping it in with an extra (1,1) twist? */
 

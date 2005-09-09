@@ -536,11 +536,17 @@ NTorusPlug* NTorusPlugReflector::isPlugged(
 }
 
 std::ostream& NTorusPlugCrosscap::writeName(std::ostream& out) const {
-    return out << (twist ? "c'" : "c");
+    if (reversing)
+        return out << (twist ? "c^'" : "c^");
+    else
+        return out << (twist ? "c'" : "c");
 }
 
 std::ostream& NTorusPlugCrosscap::writeTeXName(std::ostream& out) const {
-    return out << (twist ? "c'" : "c");
+    if (reversing)
+        return out << (twist ? "c^\\wedge'" : "c^\\wedge");
+    else
+        return out << (twist ? "c'" : "c");
 }
 
 void NTorusPlugCrosscap::writeTextLong(std::ostream& out) const {
@@ -573,7 +579,6 @@ NTorusPlug* NTorusPlugCrosscap::isPlugged(
             internalVertices2 ==
             internalBdry1->getAdjacentTetrahedronGluing(internalVertices1[0]) *
             internalVertices1 * NPerm(1, 2)) {
-        // Without an extra (1,1) twist.
 
         // Look for the final tetrahedron.
         NTetrahedron* final = internalBdry1->getAdjacentTetrahedron(
@@ -591,27 +596,40 @@ NTorusPlug* NTorusPlugCrosscap::isPlugged(
         // And verify that the gluings are consistent.
         NPerm cross = internalBdry1->getAdjacentTetrahedronGluing(
             internalVertices1[1]) * internalVertices1;
-        if (cross != internalBdry1->getAdjacentTetrahedronGluing(
-                internalVertices1[2]) * internalVertices1 * NPerm(2, 0, 3, 1))
-            return 0;
         if (cross != internalBdry2->getAdjacentTetrahedronGluing(
                 internalVertices2[1]) * internalVertices2 * NPerm(2, 3, 0, 1))
             return 0;
-        if (cross != internalBdry2->getAdjacentTetrahedronGluing(
-                internalVertices2[2]) * internalVertices2 * NPerm(3, 1, 2, 0))
-            return 0;
 
-        // All good!
-        NTorusPlugCrosscap* ans = new NTorusPlugCrosscap(
-            internalBdry1, internalVertices1, internalBdry2, internalVertices2);
-        ans->twist = false;
-        return ans;
+        if (cross == internalBdry1->getAdjacentTetrahedronGluing(
+                    internalVertices1[2]) * internalVertices1 *
+                    NPerm(2, 0, 3, 1) &&
+                cross == internalBdry2->getAdjacentTetrahedronGluing(
+                    internalVertices2[2]) * internalVertices2 *
+                    NPerm(3, 1, 2, 0)) {
+            NTorusPlugCrosscap* ans = new NTorusPlugCrosscap(
+                internalBdry1, internalVertices1,
+                internalBdry2, internalVertices2);
+            ans->reversing = false;
+            ans->twist = true;
+            return ans;
+        } else if (cross == internalBdry1->getAdjacentTetrahedronGluing(
+                    internalVertices1[2]) * internalVertices1 *
+                    NPerm(2, 1, 3, 0) &&
+                cross == internalBdry2->getAdjacentTetrahedronGluing(
+                    internalVertices2[2]) * internalVertices2 *
+                    NPerm(3, 0, 2, 1)) {
+            NTorusPlugCrosscap* ans = new NTorusPlugCrosscap(
+                internalBdry1, internalVertices1,
+                internalBdry2, internalVertices2);
+            ans->reversing = true;
+            ans->twist = false;
+            return ans;
+        }
     } else if (internalBdry1->getAdjacentTetrahedron(internalVertices1[1]) ==
             internalBdry2 &&
             internalVertices2 ==
             internalBdry1->getAdjacentTetrahedronGluing(internalVertices1[1]) *
             internalVertices1 * NPerm(0, 2)) {
-        // With an extra (1,1) twist.
 
         // Look for the final tetrahedron.
         NTetrahedron* final = internalBdry1->getAdjacentTetrahedron(
@@ -629,21 +647,35 @@ NTorusPlug* NTorusPlugCrosscap::isPlugged(
         // And verify that the gluings are consistent.
         NPerm cross = internalBdry1->getAdjacentTetrahedronGluing(
             internalVertices1[0]) * internalVertices1;
-        if (cross != internalBdry1->getAdjacentTetrahedronGluing(
-                internalVertices1[2]) * internalVertices1 * NPerm(1, 2, 3, 0))
-            return 0;
         if (cross != internalBdry2->getAdjacentTetrahedronGluing(
                 internalVertices2[0]) * internalVertices2 * NPerm(3, 2, 1, 0))
             return 0;
-        if (cross != internalBdry2->getAdjacentTetrahedronGluing(
-                internalVertices2[2]) * internalVertices2 * NPerm(0, 3, 2, 1))
-            return 0;
 
-        // All good!
-        NTorusPlugCrosscap* ans = new NTorusPlugCrosscap(
-            internalBdry1, internalVertices1, internalBdry2, internalVertices2);
-        ans->twist = true;
-        return ans;
+        if (cross == internalBdry1->getAdjacentTetrahedronGluing(
+                    internalVertices1[2]) * internalVertices1 *
+                    NPerm(1, 2, 3, 0) &&
+                cross == internalBdry2->getAdjacentTetrahedronGluing(
+                    internalVertices2[2]) * internalVertices2 *
+                    NPerm(0, 3, 2, 1)) {
+            NTorusPlugCrosscap* ans = new NTorusPlugCrosscap(
+                internalBdry1, internalVertices1,
+                internalBdry2, internalVertices2);
+            ans->reversing = false;
+            ans->twist = false;
+            return ans;
+        } else if (cross == internalBdry1->getAdjacentTetrahedronGluing(
+                    internalVertices1[2]) * internalVertices1 *
+                    NPerm(0, 2, 3, 1) &&
+                cross == internalBdry2->getAdjacentTetrahedronGluing(
+                    internalVertices2[2]) * internalVertices2 *
+                    NPerm(1, 3, 2, 0)) {
+            NTorusPlugCrosscap* ans = new NTorusPlugCrosscap(
+                internalBdry1, internalVertices1,
+                internalBdry2, internalVertices2);
+            ans->reversing = true;
+            ans->twist = true;
+            return ans;
+        }
     }
 
     // Nothing found.
