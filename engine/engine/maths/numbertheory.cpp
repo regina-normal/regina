@@ -152,6 +152,11 @@ namespace {
 }
 
 void factorise(unsigned long n, std::list<unsigned long>& factors) {
+    // n > 0 is a precondition, but the effects are too unpleasant if
+    // it's broken (infinite memory consumption).
+    if (n == 0)
+        return;
+
     // First take out all factors of 2.
     while (n % 2 == 0) {
         n = n / 2;
