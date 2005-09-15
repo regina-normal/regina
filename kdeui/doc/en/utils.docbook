@@ -816,8 +816,7 @@
 
   <refnamediv>
    <refname>tricensus-manager</refname>
-   <refpurpose>Distribute a triangulation census amongst several
-    machines</refpurpose>
+   <refpurpose>Distribute a triangulation census amongst several machines</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -1112,8 +1111,7 @@
 
   <refnamediv>
    <refname>tricensus-mpi</refname>
-   <refpurpose>Distribute a triangulation census amongst several
-    machines using &mpi;</refpurpose>
+   <refpurpose>Distribute a triangulation census amongst several machines using &mpi;</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -1318,6 +1316,90 @@
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus">tricensus</link>,
     <link linkend="man-tricensus-manager">tricensus-manager</link>,
+    <link linkend="man-regina-kde">regina-kde</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &regina; was written by &regauthorplain; &regemail; with help from others;
+    see the documentation for full details.
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Isomorphism Tester -->
+
+ <refentry id="man-trisetcmp">
+  <refmeta>
+   <refentrytitle>trisetcmp</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>trisetcmp</refname>
+   <refpurpose>Compare triangulations between two &regina; data files</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>trisetcmp</command>
+    <group>
+     <arg><option>-m</option></arg>
+     <arg><option>-n</option></arg>
+    </group>
+    <arg choice="req"><replaceable>file1</replaceable></arg>
+    <arg choice="req"><replaceable>file2</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility compares all triangulations in the first file against
+    all triangulations in the second file.  Specifically, it looks to
+    see which triangulations from <replaceable>file1</replaceable> are
+    isomorphic to which triangulations from
+    <replaceable>file2</replaceable>.
+   </para>
+   <para>
+    The two given files must be &regina; data files.
+    A full list of matches (or a full list of non-matches if
+    <option>-n</option> is passed) is written to standard output.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-m</option> (default)</term>
+     <listitem>
+      <para>
+       Output matches only.  All isomorphic matches between
+       triangulations in <replaceable>file1</replaceable>
+       and triangulations in <replaceable>file2</replaceable>
+       will be listed.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-n</option></term>
+     <listitem>
+      <para>
+       Output non-matches only.  All triangulations from
+       <replaceable>file1</replaceable> with no isomorphic match in
+       <replaceable>file2</replaceable> will be listed, and vice versa.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
     <link linkend="man-regina-kde">regina-kde</link>.
    </para>
   </refsect1>

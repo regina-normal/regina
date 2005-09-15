@@ -393,6 +393,8 @@
    extension</link></secondaryie>
   <secondaryie><link linkend="man-regconcat">combining data
    files</link></secondaryie>
+  <secondaryie><link linkend="man-trisetcmp">comparing triangulations
+   between data files</link></secondaryie>
   <secondaryie><link linkend="man-regconvert">conversion between file
    formats</link></secondaryie>
   <secondaryie><link linkend="man-regfiledump">dumping contents of a
@@ -490,6 +492,14 @@
  <indexentry>
   <primaryie>invalid</primaryie>
   <seeie>(see valid)</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>isomorphism testing</primaryie>
+  <secondaryie><link linkend="tri-composition-isomorphism">between
+   individual triangulations</link></secondaryie>
+  <secondaryie><link linkend="man-trisetcmp">between
+   sets of triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
