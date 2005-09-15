@@ -57,6 +57,7 @@ Version 4.2.1  [ 18 September, 2005 ]
             - New routine random() for generating random isomorphisms.
             - New routine apply() for permuting the tetrahedra and
               vertices/faces of an existing triangulation.
+            - New routine isIdentity() for testing for identity isomorphisms.
         Routine writeSnapPea():
             - Add a precondition that the triangulation has no boundary faces.
     USER INTERFACE:

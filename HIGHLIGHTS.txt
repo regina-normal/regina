@@ -15,8 +15,7 @@ Version 4.2.1  [ 18 September, 2005 ]
     Improvements:
         - Documented imports and exports in the reference manual.
         - Expanded the closed non-orientable census to eight tetrahedra.
-        - Added additional isomorphism routines to the calculation
-          engine.
+        - Added additional isomorphism routines to the calculation engine.
     Bug Fixes:
         - Fixed "regina-engine-config --cflags", which wrote includes
           for Regina's dependencies but not for Regina itself (sigh).
