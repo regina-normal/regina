@@ -9,13 +9,7 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.2.1  [ under development ]
 
-    OVERALL:
-        - Added a chapter on imports and exports to the reference manual.
-        - Expanded the closed non-orientable census to eight tetrahedra.
     ENGINE:
-        Overall structure:
-            - Fixed "regina-engine-config --cflags", which wrote includes
-              for Regina's dependencies but not for Regina itself (sigh).
         Class NGluingPerms, NGluingPermSearcher, NClosedPrimeMinSearcher:
             - Significant overhaul.
             - Moved gluing permutation search routines into new classes
@@ -27,10 +21,6 @@ Version 4.2.1  [ under development ]
               where possible.  This includes pruning on non-orientable
               vertex links, too many or too few vertices or edges, low
               degree or invalid edges, conical faces and L(3,1) spines.
-        Class NIsomorphism:
-            - New routine random() for generating random isomorphisms.
-            - New routine apply() for permuting the tetrahedra and
-              vertices/faces of an existing triangulation.
         Class NLayeredSolidTorus:
             - New routine formsLayeredSolidTorusTop() for finding an LST
               from the top end instead of the bottom.
@@ -42,11 +32,6 @@ Version 4.2.1  [ under development ]
               a single all-in-one routine to avoid excessive code reuse.
             - New routine findAllSubcomplexesIn() for subcomplex testing
               in which all matches (not just the first) should be returned.
-        Routine writeSnapPea():
-            - Add a precondition that triangulation has no boundary faces.
-    USER INTERFACE:
-        - Refuse to export a triangulation to SnapPea format if it
-          has boundary faces.
     UTILITIES:
         tricensus-mpi:
             - Significant overhaul.
@@ -58,6 +43,26 @@ Version 4.2.1  [ under development ]
         tricensus-mpi-status:
             - New tool for parsing tricensus-mpi logs.  Currently only
               logs generated with a --depth option are supported.
+
+Version 4.2.1  [ 18 September, 2005 ]
+
+    OVERALL:
+        - Added a chapter on imports and exports to the reference manual.
+        - Expanded the closed non-orientable census to eight tetrahedra.
+    ENGINE:
+        Overall structure:
+            - Fixed "regina-engine-config --cflags", which wrote includes
+              for Regina's dependencies but not for Regina itself (sigh).
+        Class NIsomorphism:
+            - New routine random() for generating random isomorphisms.
+            - New routine apply() for permuting the tetrahedra and
+              vertices/faces of an existing triangulation.
+        Routine writeSnapPea():
+            - Add a precondition that the triangulation has no boundary faces.
+    USER INTERFACE:
+        - Refuse to export a triangulation to SnapPea format if it
+          has boundary faces.
+    UTILITIES:
         trisetcmp:
             - New utility for comparing two different sets of triangulations.
 

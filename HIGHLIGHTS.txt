@@ -8,7 +8,20 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
-Version 4.2.1  [ under development ]
+Version 4.2.1  [ 18 September, 2005 ]
+
+    Features:
+        - New utility trisetcmp for comparing sets of triangulations.
+    Improvements:
+        - Documented imports and exports in the reference manual.
+        - Expanded the closed non-orientable census to eight tetrahedra.
+        - Added additional isomorphism routines to the calculation
+          engine.
+    Bug Fixes:
+        - Fixed "regina-engine-config --cflags", which wrote includes
+          for Regina's dependencies but not for Regina itself (sigh).
+        - Refuse to export a triangulation to SnapPea format if it has
+          boundary faces.
 
 Version 4.2  [ 7 July, 2005 ]
 
