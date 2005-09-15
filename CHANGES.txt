@@ -11,6 +11,7 @@ Version 4.2.1  [ under development ]
 
     OVERALL:
         - Added a chapter on imports and exports to the reference manual.
+        - Expanded the closed non-orientable census to eight tetrahedra.
     ENGINE:
         Overall structure:
             - Fixed "regina-engine-config --cflags", which wrote includes
