@@ -8,6 +8,8 @@ Regina - A Normal Surface Theory Calculator
     for the calculation engine, see CHANGES.txt in the same directory
     as this file.
 
+Version 4.2.2  [ under development ]
+
 Version 4.2.1  [ 18 September, 2005 ]
 
     Features:
