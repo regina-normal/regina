@@ -4,7 +4,7 @@
 
 Name: regina-normal
 Summary: 3-manifold topology software with normal surface support
-Version: 4.2
+Version: 4.2.1
 Release: 1.%{_vendor}
 License: GPL
 # I wish there were a more sane group (like Applications/Mathematics).
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/*
 
 %changelog
+* Sun Sep 18 2005 Ben Burton <bab@debian.org> 4.2.1
+- New upstream release.
+
 * Thu Jul 7 2005 Ben Burton <bab@debian.org> 4.2
 - New upstream release.
 - Note that regina-normal now includes MPI support.  These packages are
