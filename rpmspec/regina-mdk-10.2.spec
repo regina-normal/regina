@@ -110,7 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 # Make sure we don't catch the multiarch_bin directory.
 %{_bindir}/reg*
 %{_bindir}/sigcensus
-%{_bindir}/tricensus*
+%{_bindir}/tri*
 %{_includedir}/regina
 %{_libdir}/libregina*
 # Make sure we don't ship unwanted static libs by accident.
