@@ -1,0 +1,26 @@
+Notes for building RPM-based packages
+-------------------------------------
+
+This list of notes is simply to help the author build and test
+RPM-based packages for Regina without forgetting anything.
+
+Preparing, building and installing:
+
+  - Check ~/.rpmmacros
+  - Clean out ~/rpm
+  - Uninstall (rpm -e regina-normal)
+  - Build (rpmbuild -ba <spec-file>)
+  - Install (rpm -Uvh <rpm-file>)
+
+Manual checks:
+
+  - KDE user interface:
+      - menu entry
+      - open sample file
+      - snappea calculations
+      - GUI scripting
+      - reference manual and engine docs
+  - regina-python
+  - documentation files including README.MPI
+  - manually make check on fedora
+
