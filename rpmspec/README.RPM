@@ -24,3 +24,7 @@ Manual checks:
   - documentation files including README.MPI
   - manually make check on fedora
 
+If you are interested in helping package Regina for one or more
+distributions, please contact the author at the address below.
+
+ -- Ben Burton <bab@debian.org>, Sat, 17 Sep 2005 00:30:01 +1000
