@@ -3,7 +3,7 @@ Section: math
 Priority: extra
 Maintainer: Ben Burton <bab@debian.org>
 Build-Depends: libcppunit-dev (>= 1.10.2-4), debhelper (>> 4.0.0), doxygen, kdelibs4-dev (>= 4:3.4.2-1), libboost-python-dev (>= 1.33.0), libgmp3-dev (>= 4.1.4-10), libmpich1.0-dev (>= 1.2.7-1), libpopt-dev, libxml2-dev, zlib1g-dev
-Build-Conflicts: regina-normal-dev (<< 4.2-0), regina-normal-dev (>= 4.2.1-0)
+Build-Conflicts: regina-normal-dev (<< 4.2.1-0), regina-normal-dev (>= 4.2.2-0)
 Standards-Version: 3.6.2.1
 
 Package: regina-normal
