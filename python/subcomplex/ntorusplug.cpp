@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "subcomplex/ntorusplug.h"
+#include "triangulation/ntetrahedron.h"
 #include <boost/python.hpp>
 
 using namespace boost::python;

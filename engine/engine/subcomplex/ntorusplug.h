@@ -42,6 +42,7 @@
 namespace regina {
 
 class NLayeredSolidTorus;
+class NTetrahedron;
 
 /**
  * \weakgroup subcomplex
