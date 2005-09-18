@@ -72,7 +72,7 @@ const char* ReginaAbout::regLicense =
     "Public License for more details.\n\n"
     "You should have received a copy of the GNU General Public License along\n"
     "with this program; if not, write to the Free Software Foundation, Inc.,\n"
-    "59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n\n"
+    "51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.\n\n"
     "SNAPPEA KERNEL:\n\n"
     "Since version 4.2 (July 2005), Regina includes portions of the\n"
     "SnapPea kernel which it uses for certain geometric calculations.\n"
