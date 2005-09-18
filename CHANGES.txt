@@ -9,6 +9,8 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.2.2  [ under development ]
 
+    OVERALL:
+        - Updated postal address for the Free Software Foundation.
     ENGINE:
         Class NGluingPerms, NGluingPermSearcher, NClosedPrimeMinSearcher:
             - Significant overhaul.
