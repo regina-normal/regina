@@ -313,7 +313,7 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * tetrahedron is not contained in the triangulation, a negative
          * number is returned.
          */
-        unsigned long getTetrahedronIndex(const NTetrahedron* tet) const;
+        long getTetrahedronIndex(const NTetrahedron* tet) const;
         /**
          * Inserts the given tetrahedron into the triangulation.
          * No face gluings anywhere will be examined or altered.
@@ -576,9 +576,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @param component specifies which component to find in the
          * triangulation.
          * @return the index of the specified component, where 0 is the first
-         * component, 1 is the second and so on.
+         * component, 1 is the second and so on.  If the given component
+         * is not part of this triangulation, a negative number is returned.
          */
-        unsigned long getComponentIndex(const NComponent* component) const;
+        long getComponentIndex(const NComponent* component) const;
         /**
          * Returns the index of the given boundary component
          * in the triangulation.
@@ -589,10 +590,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * triangulation.
          * @return the index of the specified boundary component,
          * where 0 is the first boundary component,
-         * 1 is the second and so on.
+         * 1 is the second and so on.  If the given boundary component
+         * is not part of this triangulation, a negative number is returned.
          */
-        unsigned long getBoundaryComponentIndex(
-            const NBoundaryComponent* bc) const;
+        long getBoundaryComponentIndex(const NBoundaryComponent* bc) const;
         /**
          * Returns the index of the given vertex in the triangulation.
          *
@@ -601,9 +602,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @param vertex specifies which vertex to find in the
          * triangulation.
          * @return the index of the specified vertex, where 0 is the first
-         * vertex, 1 is the second and so on.
+         * vertex, 1 is the second and so on.  If the given vertex
+         * is not part of this triangulation, a negative number is returned.
          */
-        unsigned long getVertexIndex(const NVertex* vertex) const;
+        long getVertexIndex(const NVertex* vertex) const;
         /**
          * Returns the index of the given edge in the triangulation.
          *
@@ -612,9 +614,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @param edge specifies which edge to find in the
          * triangulation.
          * @return the index of the specified edge, where 0 is the first
-         * edge, 1 is the second and so on.
+         * edge, 1 is the second and so on.  If the given edge
+         * is not part of this triangulation, a negative number is returned.
          */
-        unsigned long getEdgeIndex(const NEdge* edge) const;
+        long getEdgeIndex(const NEdge* edge) const;
         /**
          * Returns the index of the given face in the triangulation.
          *
@@ -623,9 +626,10 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * @param face specifies which face to find in the
          * triangulation.
          * @return the index of the specified face, where 0 is the first
-         * face, 1 is the second and so on.
+         * face, 1 is the second and so on.  If the given face
+         * is not part of this triangulation, a negative number is returned.
          */
-        unsigned long getFaceIndex(const NFace* face) const;
+        long getFaceIndex(const NFace* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -2382,7 +2386,7 @@ inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
     return tetrahedra[index];
 }
 
-inline unsigned long NTriangulation::getTetrahedronIndex(
+inline long NTriangulation::getTetrahedronIndex(
         const NTetrahedron* tet) const {
     return tetrahedra.index(const_cast<NTetrahedron*>(tet));
 }
@@ -2526,14 +2530,14 @@ inline NFace* NTriangulation::getFace(unsigned long index) const {
     return faces[index];
 }
 
-inline unsigned long NTriangulation::getComponentIndex(
+inline long NTriangulation::getComponentIndex(
         const NComponent* component) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return components.index(const_cast<NComponent*>(component));
 }
 
-inline unsigned long NTriangulation::getBoundaryComponentIndex(
+inline long NTriangulation::getBoundaryComponentIndex(
         const NBoundaryComponent* boundaryComponent) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
@@ -2541,20 +2545,19 @@ inline unsigned long NTriangulation::getBoundaryComponentIndex(
         const_cast<NBoundaryComponent*>(boundaryComponent));
 }
 
-inline unsigned long NTriangulation::getVertexIndex(const NVertex* vertex)
-        const {
+inline long NTriangulation::getVertexIndex(const NVertex* vertex) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return vertices.index(const_cast<NVertex*>(vertex));
 }
 
-inline unsigned long NTriangulation::getEdgeIndex(const NEdge* edge) const {
+inline long NTriangulation::getEdgeIndex(const NEdge* edge) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return edges.index(const_cast<NEdge*>(edge));
 }
 
-inline unsigned long NTriangulation::getFaceIndex(const NFace* face) const {
+inline long NTriangulation::getFaceIndex(const NFace* face) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces.index(const_cast<NFace*>(face));

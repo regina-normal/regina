@@ -32,6 +32,11 @@ Version 4.2.2  [ under development ]
               a single all-in-one routine to avoid excessive code reuse.
             - New routine findAllSubcomplexesIn() for subcomplex testing
               in which all matches (not just the first) should be returned.
+            - Routines getTetrahedronIndex(), getComponentIndex(),
+              getBoundaryComponentIndex(), getFaceIndex(), getEdgeIndex()
+              and getVertexIndex() all returned signed instead of unsigned
+              longs, so that -1 can be returned if the object could not
+              be found.
     UTILITIES:
         tricensus-mpi:
             - Significant overhaul.
