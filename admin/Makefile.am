@@ -33,6 +33,8 @@ stubs :
 		`find ../python -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
 	./insertstub stubs/testsuite \
 		`find ../testsuite -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
+	./insertstub stubs/general \
+		`find ../icons/povray -name "*.pov"`
 
 tabs :
 	./replacetabs `find .. -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
