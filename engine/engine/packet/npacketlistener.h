@@ -154,9 +154,9 @@ class NPacketListener {
          *
          * @param packet the packet being listened to.
          * @param child the child packet that was removed.
-         * @param set to \c true if the parent packet is in fact being
-         * destroyed, and the child was simply removed as part of the
-         * standard subtree destruction.
+         * @param inParentDestructor set to \c true if the parent packet
+         * is in fact being destroyed, and the child was simply removed
+         * as part of the standard subtree destruction.
          */
         virtual void childWasRemoved(NPacket* packet, NPacket* child,
             bool inParentDestructor);

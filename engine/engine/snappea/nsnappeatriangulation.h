@@ -222,8 +222,6 @@ class NSnapPeaTriangulation : public ShareableObject {
          * If this triangulation does not contain any valid SnapPea
          * data, this routine will do nothing.  See isNull() for further
          * details.
-         *
-         * @param filename the name of the SnapPea file to write.
          */
         void dump() const;
 

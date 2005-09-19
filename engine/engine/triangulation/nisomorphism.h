@@ -194,7 +194,7 @@ class NIsomorphism : public ShareableObject {
          * initialised, so that all tetrahedron images are non-negative
          * and distinct, and all face permutations are real permutations
          * of (0,1,2,3).
-         * \item Each tetrahedron image for this isomorphism lies
+         * \pre Each tetrahedron image for this isomorphism lies
          * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive
          * (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
