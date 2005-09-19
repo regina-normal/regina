@@ -82,11 +82,6 @@ AM_KDE_WITH_NLS
 # Set the default language to C++ for subsequent tests.
 AC_LANG(C++)
 
-# Before we go further, make sure we have (long long).
-AC_CHECK_TYPE([long long], , [
-  REGINA_ERR_MISSING([Type (long long)], [the calculation engine])
-])
-
 AC_CHECK_PROGS(_UTIL_FIND, [find], none)
 if test "$_UTIL_FIND" = "none"; then
   REGINA_ERR_MISSING([The find utility], [the build system])
