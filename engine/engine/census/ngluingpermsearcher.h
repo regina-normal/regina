@@ -38,6 +38,7 @@
 
 #include "census/ngluingperms.h"
 
+#ifndef __DOXYGEN
 /**
  * Algorithm Constraints
  * ---------------------
@@ -85,6 +86,7 @@
  * header (or in the global CXXFLAGS options if you are happy to rebuild
  * all of regina).
  */
+#endif
 
 namespace regina {
 

@@ -30,7 +30,7 @@
  *  \brief Contains miscellaneous documentation.
  */
 
-/*! \page GeneralNotes General Notes
+/*! \mainpage
  *
  *  <center><b>
  *  Regina<br>
