@@ -49,6 +49,11 @@ namespace regina {
 class PacketImporter {
     public:
         /**
+         * Default destructor that does nothing.
+         */
+        virtual ~PacketImporter();
+
+        /**
          * Import a packet tree from the given file.
          *
          * If the import is unsuccessful, this routine should display
@@ -62,5 +67,8 @@ class PacketImporter {
         virtual regina::NPacket* import(const QString& fileName,
             QWidget* parentWidget) const = 0;
 };
+
+inline PacketImporter::~PacketImporter() {
+}
 
 #endif

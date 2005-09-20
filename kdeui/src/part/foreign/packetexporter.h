@@ -50,6 +50,11 @@ namespace regina {
 class PacketExporter {
     public:
         /**
+         * Default destructor that does nothing.
+         */
+        virtual ~PacketExporter();
+
+        /**
          * Returns a newly created packet filter describing which
          * packets can be exported by this subclass of PacketExporter.
          *
@@ -70,5 +75,8 @@ class PacketExporter {
         virtual bool exportData(regina::NPacket* data,
             const QString& fileName, QWidget* parentWidget) const = 0;
 };
+
+inline PacketExporter::~PacketExporter() {
+}
 
 #endif
