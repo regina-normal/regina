@@ -66,6 +66,11 @@ class ShareableObject;
 class NSurfaceSet {
     public:
         /**
+         * Default destructor that does nothing.
+         */
+        virtual ~NSurfaceSet();
+
+        /**
          * Returns the flavour of coordinate system being used by the
          * surfaces stored in this set.  This will be one of the
          * predefined coordinate system constants in NNormalSurfaceList.
@@ -151,6 +156,11 @@ class NSurfaceSet {
 };
 
 /*@}*/
+
+// Inline functions for NSurfaceSet
+
+inline NSurfaceSet::~NSurfaceSet() {
+}
 
 } // namespace regina
 

@@ -253,7 +253,7 @@ NTorusPlugDouble::~NTorusPlugDouble() {
         delete plug[1];
 }
 
-void NTorusPlugDouble::insertPlugFibres(std::list<NTemporaryFibre>& results)
+void NTorusPlugDouble::insertPlugFibres(std::list<NTemporaryFibre>&)
         const {
     // TODO
 }

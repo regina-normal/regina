@@ -47,8 +47,8 @@
 #include <kaction.h>
 #include <kfiledialog.h>
 #include <kiconloader.h>
+#include <kinputdialog.h>
 #include <kinstance.h>
-#include <klineeditdlg.h>
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
@@ -297,7 +297,7 @@ void ReginaPart::packetRename() {
     bool ok;
     QString suggest = packet->getPacketLabel().c_str();
     while (true) {
-        QString newLabel = KLineEditDlg::getText(i18n("Rename Packet"),
+        QString newLabel = KInputDialog::getText(i18n("Rename Packet"),
             i18n("New label:"), suggest, &ok).stripWhiteSpace();
         if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
             return;

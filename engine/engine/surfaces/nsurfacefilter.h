@@ -284,7 +284,7 @@ class NSurfaceFilter : public NPacket, public NFilePropertyReader {
 
 inline NSurfaceFilter::NSurfaceFilter() {
 }
-inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter& cloneMe) :
+inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter&) :
         NPacket(), NFilePropertyReader() {
 }
 inline NSurfaceFilter::~NSurfaceFilter() {

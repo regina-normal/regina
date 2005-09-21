@@ -71,6 +71,11 @@ class NFile;
 class NFilePropertyReader {
     public:
         /**
+         * Default destructor that does nothing.
+         */
+        virtual ~NFilePropertyReader();
+
+        /**
          * Reads an individual property from an old-style binary file.
          * The property type and bookmarking details should not
          * read; merely the contents of the property that are written
@@ -96,8 +101,12 @@ class NFilePropertyReader {
             unsigned propType) = 0;
 };
 
-
 /*@}*/
+
+// Inline functions for NFilePropertyReader
+
+inline NFilePropertyReader::~NFilePropertyReader() {
+}
 
 } // namespace regina
 

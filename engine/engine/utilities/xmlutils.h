@@ -106,6 +106,11 @@ class XMLPropertyDict : public stdhash::hash_map<std::string,
 class XMLParserCallback {
     public:
         /**
+         * Default destructor that does nothing.
+         */
+        virtual ~XMLParserCallback();
+
+        /**
          * Called at the start of the document.
          */
         virtual void start_document();
@@ -356,6 +361,8 @@ inline const std::string& XMLPropertyDict::lookup(const std::string& key,
 
 // Inline functions for XMLParserCallback
 
+inline XMLParserCallback::~XMLParserCallback() {
+}
 inline void XMLParserCallback::start_document() {
 }
 inline void XMLParserCallback::end_document() {
