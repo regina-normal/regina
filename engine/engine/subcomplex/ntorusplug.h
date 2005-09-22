@@ -42,6 +42,7 @@
 namespace regina {
 
 class NLayeredSolidTorus;
+class NSFSpace;
 class NTetrahedron;
 
 /**
@@ -86,6 +87,7 @@ class NTorusPlug : public NStandardTriangulation {
          */
         virtual NTemporaryFibre plugFibre() const;
             /**< Return 0,0 if it's not a single fibre. */
+        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const = 0;
 
         static NTorusPlug* isPlugged(
             NTetrahedron* externalBdry1, NPerm externalVertices1,
@@ -123,6 +125,8 @@ class NTorusPlugMobius : public NTorusPlug {
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
+
         static NTorusPlug* isPlugged(
             NTetrahedron* externalBdry1, NPerm externalVertices1,
             NTetrahedron* externalBdry2, NPerm externalVertices2);
@@ -151,6 +155,8 @@ class NTorusPlugLST : public NTorusPlug {
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
 
         static NTorusPlug* isPlugged(
             NTetrahedron* externalBdry1, NPerm externalVertices1,
@@ -183,6 +189,8 @@ class NTorusPlugDouble : public NTorusPlug {
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
+
         static NTorusPlug* isPlugged(
             NTetrahedron* externalBdry1, NPerm externalVertices1,
             NTetrahedron* externalBdry2, NPerm externalVertices2,
@@ -201,6 +209,8 @@ class NTorusPlugReflector : public NTorusPlug {
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
 
         static NTorusPlug* isPlugged(
             NTetrahedron* externalBdry1, NPerm externalVertices1,
@@ -224,6 +234,8 @@ class NTorusPlugCrosscap : public NTorusPlug {
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
 
         static NTorusPlug* isPlugged(
             NTetrahedron* externalBdry1, NPerm externalVertices1,

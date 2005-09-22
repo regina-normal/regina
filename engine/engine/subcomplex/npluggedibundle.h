@@ -89,6 +89,7 @@ class NPluggedIBundle : public NStandardTriangulation {
 
         static NPluggedIBundle* isPluggedIBundle(NTriangulation* tri);
 
+        NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

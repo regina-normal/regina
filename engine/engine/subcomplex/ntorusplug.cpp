@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "manifold/nsfs.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/ntorusplug.h"
 #include "triangulation/nedge.h"
@@ -120,6 +121,19 @@ void NTorusPlugMobius::writeTextLong(std::ostream& out) const {
     writeName(out);
 }
 
+void NTorusPlugMobius::adjustSFS(NSFSpace& sfs, bool reflect) const {
+    int p, q;
+    if (orientation == 0) {
+        p = q = 1;
+    } else if (orientation == 1) {
+        p = 1; q = -2;
+    } else {
+        p = 2; q = -1;
+    }
+
+    sfs.insertFibre(p, reflect ? -q : q);
+}
+
 NTorusPlug* NTorusPlugMobius::isPlugged(
         NTetrahedron* externalBdry1, NPerm externalVertices1,
         NTetrahedron* externalBdry2, NPerm externalVertices2) {
@@ -194,6 +208,15 @@ std::ostream& NTorusPlugLST::writeTeXName(std::ostream& out) const {
 void NTorusPlugLST::writeTextLong(std::ostream& out) const {
     out << "LST torus plug: ";
     writeName(out);
+}
+
+void NTorusPlugLST::adjustSFS(NSFSpace& sfs, bool reflect) const {
+    long cuts0 = lst->getMeridinalCuts(roles[0]);
+    long cuts1 = lst->getMeridinalCuts(roles[1]);
+    if (roles[2] != 2)
+        cuts1 = -cuts1;
+
+    sfs.insertFibre(cuts0, reflect ? -cuts1 : cuts1);
 }
 
 NTorusPlug* NTorusPlugLST::isPlugged(
@@ -283,6 +306,11 @@ std::ostream& NTorusPlugDouble::writeTeXName(std::ostream& out) const {
 void NTorusPlugDouble::writeTextLong(std::ostream& out) const {
     out << "Double adaptor torus plug: ";
     writeName(out);
+}
+
+void NTorusPlugDouble::adjustSFS(NSFSpace& sfs, bool reflect) const {
+    plug[0]->adjustSFS(sfs, reflect);
+    plug[1]->adjustSFS(sfs, layering == 2 ? reflect : (! reflect));
 }
 
 NTorusPlug* NTorusPlugDouble::isPlugged(
@@ -478,6 +506,10 @@ void NTorusPlugReflector::writeTextLong(std::ostream& out) const {
     out << "Reflector boundary plug";
 }
 
+void NTorusPlugReflector::adjustSFS(NSFSpace& sfs, bool) const {
+    sfs.addReflector();
+}
+
 NTorusPlug* NTorusPlugReflector::isPlugged(
         NTetrahedron* externalBdry1, NPerm externalVertices1,
         NTetrahedron* externalBdry2, NPerm externalVertices2) {
@@ -552,6 +584,12 @@ std::ostream& NTorusPlugCrosscap::writeTeXName(std::ostream& out) const {
 void NTorusPlugCrosscap::writeTextLong(std::ostream& out) const {
     out << "Crosscap plug: ";
     writeName(out);
+}
+
+void NTorusPlugCrosscap::adjustSFS(NSFSpace& sfs, bool) const {
+    sfs.addCrosscap(reversing);
+    if (twist)
+        sfs.insertFibre(1, 1);
 }
 
 NTorusPlug* NTorusPlugCrosscap::isPlugged(

@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "manifold/nsfs.h"
 #include "subcomplex/npluggedibundle.h"
 #include "subcomplex/ntorusplug.h"
 #include "triangulation/nisomorphism.h"
@@ -305,6 +306,24 @@ NPluggedIBundle* NPluggedIBundle::hunt(NTriangulation* tri,
 
     // Nothing found.
     return 0;
+}
+
+NManifold* NPluggedIBundle::getManifold() const {
+    NSFSpace* ans;
+    if (coreType == NPluggedIBundleCore::T_3_2 ||
+            coreType == NPluggedIBundleCore::T_6_4) {
+        ans = new NSFSpace(NSFSpace::o1, 0, 0, 1);
+    } else {
+        ans = new NSFSpace(NSFSpace::n1, 1, 0, 0);
+        ans->insertFibre(1, 1);
+    }
+
+    if (plug[0])
+        plug[0]->adjustSFS(*ans, coreType == NPluggedIBundleCore::T_6_2);
+    if (plug[1])
+        plug[1]->adjustSFS(*ans, false);
+
+    return ans;
 }
 
 std::ostream& NPluggedIBundle::writeCommonName(std::ostream& out,
