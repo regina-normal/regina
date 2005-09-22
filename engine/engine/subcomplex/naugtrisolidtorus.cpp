@@ -65,7 +65,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
 }
 
 NManifold* NAugTriSolidTorus::getManifold() const {
-    NSFS* ans = new NSFS();
+    NSFSpace* ans = new NSFSpace();
     if (chainType == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
         ans->insertFibre(2, 1);

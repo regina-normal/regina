@@ -50,7 +50,7 @@ NManifold* NLayeredLoop::getManifold() const {
         return new NLensSpace(length, 1);
     } else {
         // Twisted.
-        NSFS* ans = new NSFS();
+        NSFSpace* ans = new NSFSpace();
         ans->insertFibre(2, -1);
         ans->insertFibre(2, 1);
         ans->insertFibre(length, 1);

@@ -259,7 +259,7 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
 void NTriangulation::insertSFSOverSphere(long a1, long b1, long a2, long b2,
         long a3, long b3) {
     // Construct the SFS that we seek.
-    NSFS sfs;
+    NSFSpace sfs;
     if (a1 < 0)
         sfs.insertFibre(-a1, -b1);
     else

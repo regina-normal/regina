@@ -30,6 +30,11 @@ Version 4.3  [ under development ]
         Class NPluggedIBundle, NPluggedIBundleCore, NTorusPlug:
             - Added for recognition of small closed non-orientable
               3-manifolds.
+        Class NSFS, NSFSpace, NExceptionalFibre, NSFSFibre:
+            - Complete overhaul of the Seifert fibred space classes.
+              Now more general, supporting both orientable and
+              non-orientable 3-manifolds as well as base orbifolds with
+              reflector boundary components.
         Class NTriangulation:
             - Combined isomorphism and subcomplex testing routines into
               a single all-in-one routine to avoid excessive code reuse.

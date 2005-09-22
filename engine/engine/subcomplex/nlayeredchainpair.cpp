@@ -184,7 +184,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
 }
 
 NManifold* NLayeredChainPair::getManifold() const {
-    NSFS* ans = new NSFS();
+    NSFSpace* ans = new NSFSpace();
 
     ans->insertFibre(2, -1);
     ans->insertFibre(chain[0]->getIndex() + 1, 1);
