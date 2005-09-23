@@ -36,6 +36,9 @@
  * A final data file is written as XML to stdout, providing a separate
  * container of triangulations for each homology group.
  *
+ * Orientable triangulations that are not 0-efficient can be dropped by
+ * passing -0.
+ *
  * A standard tri-quad normal surface list can be optionally generated
  * for each triangulation by passing -s.
  */
@@ -57,6 +60,7 @@ unsigned totTris = 0;
 unsigned totKept = 0;
 
 bool makeSurfaces = false;
+bool checkZeroEff = false;
 NContainer* all;
 
 typedef std::map<std::string, NPacket*> HomologyMap;
@@ -117,10 +121,16 @@ void process(const char* filename) {
             nTris++;
 
             t = static_cast<NTriangulation*>(p);
-            if (! t->intelligentSimplify()) {
-                nGood++;
-                insertTri(*t);
-            }
+
+            if (t->intelligentSimplify())
+                continue;
+
+            if (checkZeroEff && t->isOrientable() && ! t->isZeroEfficient())
+                continue;
+
+            // Looks okay.  Use it.
+            nGood++;
+            insertTri(*t);
         }
 
     delete tree;
@@ -149,7 +159,9 @@ int main(int argc, char* argv[]) {
         if (optChar == '-') {
             i++;
             break;
-        } else if (optChar == 's')
+        } else if (optChar == '0')
+            checkZeroEff = true;
+        else if (optChar == 's')
             makeSurfaces = true;
         else
             usage(argv[0], std::string("Invalid option: ") + argv[i]);
