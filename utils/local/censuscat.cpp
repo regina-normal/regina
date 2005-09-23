@@ -36,8 +36,8 @@
  * A final data file is written as XML to stdout, providing a separate
  * container of triangulations for each homology group.
  *
- * Orientable triangulations that are not 0-efficient can be dropped by
- * passing -0.
+ * Orientable triangulations with >= 3 tetrahedra that are not 0-efficient
+ * can be dropped by passing -0.
  *
  * A standard tri-quad normal surface list can be optionally generated
  * for each triangulation by passing -s.
@@ -125,7 +125,8 @@ void process(const char* filename) {
             if (t->intelligentSimplify())
                 continue;
 
-            if (checkZeroEff && t->isOrientable() && ! t->isZeroEfficient())
+            if (checkZeroEff && t->isOrientable() &&
+                    t->getNumberOfTetrahedra() >= 3 && ! t->isZeroEfficient())
                 continue;
 
             // Looks okay.  Use it.
