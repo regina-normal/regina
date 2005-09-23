@@ -361,8 +361,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             if (cuts30 < 0) cuts30 = -cuts30;
 
             ans->topLevel = top;
-            ans->topFace[0] = vRoles[2]; // Face vRoles[013]
-            ans->topFace[1] = vRoles[1]; // Face vRoles[023]
+            ans->topFace[0] = topRoles[2]; // Face topRoles[013]
+            ans->topFace[1] = topRoles[1]; // Face topRoles[023]
 
             // Run through all six possible orderings.
             int group01, group13, group30;
@@ -394,18 +394,18 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             ans->meridinalCuts[group01] = cuts01;
             ans->meridinalCuts[group13] = cuts13;
             ans->meridinalCuts[group30] = cuts30;
-            ans->topEdge[group01][0] = edgeNumber[vRoles[0]][vRoles[1]];
-            ans->topEdge[group01][1] = edgeNumber[vRoles[2]][vRoles[3]];
-            ans->topEdge[group13][0] = edgeNumber[vRoles[1]][vRoles[3]];
-            ans->topEdge[group13][1] = edgeNumber[vRoles[0]][vRoles[2]];
-            ans->topEdge[group30][0] = edgeNumber[vRoles[3]][vRoles[0]];
+            ans->topEdge[group01][0] = edgeNumber[topRoles[0]][topRoles[1]];
+            ans->topEdge[group01][1] = edgeNumber[topRoles[2]][topRoles[3]];
+            ans->topEdge[group13][0] = edgeNumber[topRoles[1]][topRoles[3]];
+            ans->topEdge[group13][1] = edgeNumber[topRoles[0]][topRoles[2]];
+            ans->topEdge[group30][0] = edgeNumber[topRoles[3]][topRoles[0]];
             ans->topEdge[group30][1] = -1;
-            ans->topEdgeGroup[edgeNumber[vRoles[0]][vRoles[1]]] = group01;
-            ans->topEdgeGroup[edgeNumber[vRoles[2]][vRoles[3]]] = group01;
-            ans->topEdgeGroup[edgeNumber[vRoles[1]][vRoles[3]]] = group13;
-            ans->topEdgeGroup[edgeNumber[vRoles[0]][vRoles[2]]] = group13;
-            ans->topEdgeGroup[edgeNumber[vRoles[3]][vRoles[0]]] = group30;
-            ans->topEdgeGroup[edgeNumber[vRoles[1]][vRoles[2]]] = -1;
+            ans->topEdgeGroup[edgeNumber[topRoles[0]][topRoles[1]]] = group01;
+            ans->topEdgeGroup[edgeNumber[topRoles[2]][topRoles[3]]] = group01;
+            ans->topEdgeGroup[edgeNumber[topRoles[1]][topRoles[3]]] = group13;
+            ans->topEdgeGroup[edgeNumber[topRoles[0]][topRoles[2]]] = group13;
+            ans->topEdgeGroup[edgeNumber[topRoles[3]][topRoles[0]]] = group30;
+            ans->topEdgeGroup[edgeNumber[topRoles[1]][topRoles[2]]] = -1;
 
             // All done!
             return ans;
