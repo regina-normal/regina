@@ -323,6 +323,7 @@ NManifold* NPluggedIBundle::getManifold() const {
     if (plug[1])
         plug[1]->adjustSFS(*ans, false);
 
+    ans->reduce();
     return ans;
 }
 

@@ -282,6 +282,16 @@ void NSFSpace::reduce() {
                 } else
                     it++;
             }
+
+            // Was there anything left over?  If so, pair it with the
+            // final fibre (which will get larger, not smaller).
+            if (it2 != fibres.end()) {
+                negateFibreDown(it2);
+
+                // No need to resort the final fibre, since it gets
+                // larger anyway.
+                fibres.back().beta = fibres.back().alpha - fibres.back().beta;
+            }
         }
     } else if (baseReflectors) {
         // Individual fibres cannot be negated, but we have reflector
@@ -294,6 +304,8 @@ void NSFSpace::reduce() {
         // Don't count (2,1) fibres, they don't get changed anyway.
         for (it = fibres.begin(); it != fibres.end() && it->alpha == 2; it++)
             ;
+        // Remember where we really started.
+        it2 = it;
         for ( ; it != fibres.end(); it++) {
             if (it->beta * 2 > it->alpha)
                 nLarge++;
@@ -303,6 +315,9 @@ void NSFSpace::reduce() {
 
         // So.  Was it worth it?
         if (nLarge > nSmall)
+            negateAllFibres();
+        else if (nLarge == nSmall && it2 != fibres.end() &&
+                it2->beta * 2 > it2->alpha)
             negateAllFibres();
     } else {
         // Individual fibres cannot be negated, no reflector boundaries.
