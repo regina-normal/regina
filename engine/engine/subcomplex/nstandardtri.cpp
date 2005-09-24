@@ -32,6 +32,7 @@
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
+#include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/npluggedibundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
@@ -89,6 +90,8 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
 
     // Run tests that require entire triangulations.
     if ((ans = NPluggedIBundle::isPluggedIBundle(tri)))
+        return ans;
+    if ((ans = NLayeredTorusBundle::isLayeredTorusBundle(tri)))
         return ans;
 
     // Nup.

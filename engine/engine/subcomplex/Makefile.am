@@ -14,7 +14,7 @@ subcomplexincludedir = $(pkgincludedir)/subcomplex
 
 noinst_LTLIBRARIES = libsubcomplex.la
 
-libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nl31pillow.cpp nlayeredchain.cpp nlayeredchainpair.cpp nlayeredlensspace.cpp nlayeredloop.cpp nlayeredsolidtorus.cpp nlayering.cpp npillowtwosphere.cpp npluggedibundle.cpp nplugtrisolidtorus.cpp nsnappeacensustri.cpp nsnappedball.cpp nsnappedtwosphere.cpp nspiralsolidtorus.cpp nstandardtri.cpp ntorusplug.cpp ntrisolidtorus.cpp ntrivialtri.cpp
+libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nl31pillow.cpp nlayeredchain.cpp nlayeredchainpair.cpp nlayeredlensspace.cpp nlayeredloop.cpp nlayeredsolidtorus.cpp nlayeredsurfacebundle.cpp nlayering.cpp npillowtwosphere.cpp npluggedibundle.cpp nplugtrisolidtorus.cpp nsnappeacensustri.cpp nsnappedball.cpp nsnappedtwosphere.cpp nspiralsolidtorus.cpp nstandardtri.cpp ntorusplug.cpp ntrisolidtorus.cpp ntrivialtri.cpp
 
-subcomplexinclude_HEADERS = naugtrisolidtorus.h nl31pillow.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h nlayering.h npillowtwosphere.h npluggedibundle.h nplugtrisolidtorus.h nsnappeacensustri.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntorusplug.h ntrisolidtorus.h ntrivialtri.h
+subcomplexinclude_HEADERS = naugtrisolidtorus.h nl31pillow.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h nlayeredsurfacebundle.h nlayering.h npillowtwosphere.h npluggedibundle.h nplugtrisolidtorus.h nsnappeacensustri.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntorusplug.h ntrisolidtorus.h ntrivialtri.h
 
