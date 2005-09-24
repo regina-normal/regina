@@ -197,8 +197,9 @@ class NPerm {
          *
          * @param cloneMe the permutation whose value will be assigned
          * to this permutation.
+         * @return a reference to this permutation.
          */
-        void operator = (const NPerm& cloneMe);
+        NPerm& operator = (const NPerm& cloneMe);
 
         /**
          * Returns the composition of this permutation with the given
@@ -525,8 +526,9 @@ inline void NPerm::setPermCode(unsigned char newCode) {
     code = newCode;
 }
 
-inline void NPerm::operator = (const NPerm& cloneMe) {
+inline NPerm& NPerm::operator = (const NPerm& cloneMe) {
     code = cloneMe.code;
+    return *this;
 }
 
 inline NPerm NPerm::operator *(const NPerm& q) const {
