@@ -27,8 +27,6 @@
 /* end stub */
 
 void addNSnapPeaTriangulation();
-void addNSFS();
-void addNSimpleSurfaceBundle();
 
 void addSnapPea() {
     addNSnapPeaTriangulation();
