@@ -161,9 +161,9 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
 
     // Find the mapping from the upper vertex roles to the boundary
     // vertex roles.  Verify that this mapping is consistent for both faces.
-    NPerm cross = newBdryRoles[0] * upperBdry0->
+    NPerm cross = newBdryRoles[0].inverse() * upperBdry0->
         getAdjacentTetrahedronGluing(upperRoles0[3]) * upperRoles0;
-    if (cross != newBdryRoles[1] * upperBdry0->
+    if (cross != newBdryRoles[1].inverse() * upperBdry1->
             getAdjacentTetrahedronGluing(upperRoles1[3]) * upperRoles1)
         return false;
 
