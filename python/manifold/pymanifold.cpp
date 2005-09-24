@@ -29,7 +29,7 @@
 void addNHandlebody();
 void addNManifold();
 void addNLensSpace();
-void addNSFS();
+void addNSFSpace();
 void addNSimpleSurfaceBundle();
 void addNSnapPeaCensusManifold();
 
@@ -37,7 +37,7 @@ void addManifold() {
     addNManifold();
     addNHandlebody();
     addNLensSpace();
-    addNSFS();
+    addNSFSpace();
     addNSimpleSurfaceBundle();
     addNSnapPeaCensusManifold();
 }
