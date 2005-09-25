@@ -32,15 +32,13 @@
 namespace regina {
 
 NLayering::NLayering(NTetrahedron* oldBdry0, NPerm oldRoles0,
-        NTetrahedron* oldBdry1, NPerm oldRoles1) : size(0) {
+        NTetrahedron* oldBdry1, NPerm oldRoles1) : size(0),
+        reln(1, 0, 0, 1) {
     oldBdryTet[0] = newBdryTet[0] = oldBdry0;
     oldBdryTet[1] = newBdryTet[1] = oldBdry1;
 
     oldBdryRoles[0] = newBdryRoles[0] = oldRoles0;
     oldBdryRoles[1] = newBdryRoles[1] = oldRoles1;
-
-    reln[0][0] = reln[1][1] = 1;
-    reln[0][1] = reln[1][0] = 0;
 }
 
 bool NLayering::extendOne() {
@@ -125,7 +123,7 @@ unsigned long NLayering::extend() {
 }
 
 bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
-        NTetrahedron* upperBdry1, NPerm upperRoles1, long upperReln[2][2])
+        NTetrahedron* upperBdry1, NPerm upperRoles1, NMatrix2& upperReln)
         const {
     // We can cut half our cases by assuming that upperBdry0 meets with
     // newBdryTet[0] and that upperBdry1 meets with newBdryTet[1].
@@ -171,55 +169,33 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
     // relationship matrix correct.
     if (cross == NPerm(0, 1, 2, 3)) {
         // It's the identity.
-        upperReln[0][0] = reln[0][0];
-        upperReln[0][1] = reln[0][1];
-        upperReln[1][0] = reln[1][0];
-        upperReln[1][1] = reln[1][1];
+        upperReln = reln;
     } else if (cross == NPerm(0, 2, 1, 3)) {
         // new a = + old b
         // new b = + old a
-        upperReln[0][0] = reln[1][0];
-        upperReln[0][1] = reln[1][1];
-        upperReln[1][0] = reln[0][0];
-        upperReln[1][1] = reln[0][1];
+        upperReln = NMatrix2(0, 1, 1, 0) * reln;
     } else if (cross == NPerm(1, 0, 2, 3)) {
         // new a = - old a
         // new b = - old a + old b
-        upperReln[0][0] = - reln[0][0];
-        upperReln[0][1] = - reln[0][1];
-        upperReln[1][0] = - reln[0][0] + reln[1][0];
-        upperReln[1][1] = - reln[0][1] + reln[1][1];
+        upperReln = NMatrix2(-1, 0, -1, 1) * reln;
     } else if (cross == NPerm(1, 2, 0, 3)) {
         // new a = - old a + old b
         // new b = - old a
-        upperReln[0][0] = - reln[0][0] + reln[1][0];
-        upperReln[0][1] = - reln[0][1] + reln[1][1];
-        upperReln[1][0] = - reln[0][0];
-        upperReln[1][1] = - reln[0][1];
+        upperReln = NMatrix2(-1, 1, -1, 0) * reln;
     } else if (cross == NPerm(2, 0, 1, 3)) {
         // new a = - old b
         // new b = + old a - old b
-        upperReln[0][0] = - reln[1][0];
-        upperReln[0][1] = - reln[1][1];
-        upperReln[1][0] = reln[0][0] - reln[1][0];
-        upperReln[1][1] = reln[0][1] - reln[1][1];
+        upperReln = NMatrix2(0, -1, 1, -1) * reln;
     } else if (cross == NPerm(2, 1, 0, 3)) {
         // new a = + old a - old b
         // new b = - old b
-        upperReln[0][0] = reln[0][0] - reln[1][0];
-        upperReln[0][1] = reln[0][1] - reln[1][1];
-        upperReln[1][0] = - reln[1][0];
-        upperReln[1][1] = - reln[1][1];
+        upperReln = NMatrix2(1, -1, 0, -1) * reln;
     }
 
     // Don't forget to account for the 180 degree rotation if it
     // happened.
-    if (rot180) {
-        upperReln[0][0] = -upperReln[0][0];
-        upperReln[0][1] = -upperReln[0][1];
-        upperReln[1][0] = -upperReln[1][0];
-        upperReln[1][1] = -upperReln[1][1];
-    }
+    if (rot180)
+        upperReln.negate();
 
     return true;
 }

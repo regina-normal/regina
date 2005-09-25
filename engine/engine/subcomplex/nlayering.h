@@ -37,6 +37,7 @@
 
 #include "triangulation/nperm.h"
 #include "utilities/boostutils.h"
+#include "utilities/nmatrix2.h"
 
 namespace regina {
 
@@ -71,7 +72,7 @@ class NLayering : public boost::noncopyable {
         NTetrahedron* newBdryTet[2];
         NPerm newBdryRoles[2];
 
-        long reln[2][2];
+        NMatrix2 reln;
             /**< Guarantee that determinant is 1. */
 
     public:
@@ -90,7 +91,7 @@ class NLayering : public boost::noncopyable {
 
         bool matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
             NTetrahedron* upperBdry1, NPerm upperRoles1,
-            long upperReln[2][2]) const;
+            NMatrix2& upperReln) const;
 };
 
 /*@}*/

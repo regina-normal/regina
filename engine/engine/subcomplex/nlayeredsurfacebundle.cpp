@@ -106,7 +106,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         return 0;
 
     // Run through each isomorphism and look for the corresponding layering.
-    long matchReln[2][2];
+    NMatrix2 matchReln;
     for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
         // Apply the layering to the lower boundary and see if it
@@ -163,7 +163,7 @@ std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,
         }
     } else {
         switch(coreType) {
-            case NTxICore::T_6_2: out << "G(T6^2"; break;
+            case NTxICore::T_6_2: out << "B(T6^2"; break;
         }
     }
 
