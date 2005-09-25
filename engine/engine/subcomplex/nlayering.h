@@ -96,9 +96,14 @@ class NTetrahedron;
  * contains the modified boundary curves.  If no tetrahedra are layered
  * at all then the old and new boundaries will be identical.
  *
- * To search for a layering upon a particular pair of faces within a
- * triangulation, construct a trivial (zero-tetrahedron) layering upon
- * these faces using the NLayering constructor and then call extend().
+ * This class is used to search for layerings as follows.  The
+ * constructor is called with a particular pair of faces that will form
+ * the old boundary (note that these are generally \e not boundary faces
+ * in the triangulation, since we are searching for layerings that have
+ * been placed upon them).  This forms a trivial (zero-tetrahedron)
+ * layering.  The routines extend() or extendOne() are then called to see
+ * how many additional tetrahedra have been layered upon this pair of faces
+ * according to the rules above.
  */
 class NLayering : public boost::noncopyable {
     private:
@@ -130,22 +135,139 @@ class NLayering : public boost::noncopyable {
                  of this matrix is 1. */
 
     public:
+        /**
+         * Creates a new trivial (zero-tetrahedron) layering upon the
+         * given boundary.
+         *
+         * The boundary is described by two tetrahedra and two
+         * permutations as explained in the class notes.  Note that the
+         * given tetrahedra need not be boundary faces in the triangulation
+         * (and if search routines such as extend() are called then they
+         * almost certainly should not be).
+         *
+         * @param bdry0 the tetrahedron providing the first face of the
+         * boundary.
+         * @param roles0 the permutation describing how this first face is
+         * formed from three vertices of tetrahedron \a bdry0, as
+         * described in the class notes.
+         * @param bdry1 the tetrahedron providing the second face of the
+         * boundary.
+         * @param roles1 the permutation describing how this second face is
+         * formed from three vertices of tetrahedron \a bdry1.
+         */
         NLayering(NTetrahedron* bdry0, NPerm roles0, NTetrahedron* bdry1,
             NPerm roles1);
 
+        /**
+         * Returns the number of individual tetrahedra that have been
+         * layered onto the original boundary, according to the data
+         * stored in this structure.
+         *
+         * This begins at zero when the class constructor is called, and
+         * it increases if the routines extend() or extendOne() find that
+         * additional layerings have taken place.
+         *
+         * @return the number of layered tetrahedra.
+         */
         unsigned long getSize() const;
 
+        /**
+         * Returns the tetrahedra that provide the old boundary faces.
+         * These belong to the original boundary before any layerings
+         * take place.
+         *
+         * See the NLayering class notes for details on how a torus
+         * boundary is formed from two tetrahedra and two permutations.
+         *
+         * @param which specifies which tetrahedron to return; this must
+         * be either 0 or 1.
+         * @return the requested tetrahedron of the old boundary.
+         */
         NTetrahedron* getOldBoundaryTet(unsigned which) const;
+        /**
+         * Returns the permutations that describe the old boundary faces.
+         * These refer to the original boundary before any layerings
+         * take place.
+         *
+         * See the NLayering class notes for details on how a torus
+         * boundary is formed from two tetrahedra and two permutations.
+         *
+         * @param which specifies which permutation to return; this must
+         * be either 0 or 1.
+         * @return the requested permutation describing the old boundary.
+         */
         NPerm getOldBoundaryRoles(unsigned which) const;
+        /**
+         * Returns the tetrahedra that provide the new boundary faces.
+         * These belong to the final boundary after layerings have been
+         * performed.
+         *
+         * See the NLayering class notes for details on how a torus
+         * boundary is formed from two tetrahedra and two permutations.
+         *
+         * @param which specifies which tetrahedron to return; this must
+         * be either 0 or 1.
+         * @return the requested tetrahedron of the new boundary.
+         */
         NTetrahedron* getNewBoundaryTet(unsigned which) const;
+        /**
+         * Returns the permutations that describe the new boundary faces.
+         * These refer to the final boundary after layerings have been
+         * performed.
+         *
+         * See the NLayering class notes for details on how a torus
+         * boundary is formed from two tetrahedra and two permutations.
+         *
+         * @param which specifies which permutation to return; this must
+         * be either 0 or 1.
+         * @return the requested permutation describing the new boundary.
+         */
         NPerm getNewBoundaryRoles(unsigned which) const;
 
+        /**
+         * Examines whether a single additional tetrahedron has been
+         * layered upon the current new boundary.
+         *
+         * The new boundary faces are assumed to form a torus as
+         * described in the class notes (this is not verified, and there
+         * are degenerate cases where this will likely be false).  This
+         * defines three possible ways in which an additional tetrahedron
+         * may be layered (over the three boundary edges respectively).
+         *
+         * If it is found that an additional tetrahedron does exist and
+         * has been joined to the new boundary in one of these three
+         * possible ways, this structure is extended to incorporate the
+         * additional tetrahedron.  The size will grow by one, and the
+         * new boundary will become the remaining two faces of this
+         * additional tetrahedron.
+         * 
+         * @return \c true if a tetrahedron was found as described above
+         * and this structure was extended accordingly, or \c false otherwise.
+         */
         bool extendOne();
         /**
-         * Some stuff.
+         * Examines whether one or more additional tetrahedra have been
+         * layered upon the current new boundary.
+         *
+         * Specifically, this routine calls extendOne() as many times as
+         * possible.  If \a k additional layerings are discovered as a
+         * result, the size of this structure will have grown by \a k
+         * and the new boundary will be changed to describe the
+         * remaining two faces of the \a kth layered tetrahedron.
+         *
+         * It is guaranteed that, once this routine is finished, the new
+         * boundary will not have any additional tetrahedron layered
+         * upon it.  That is, if extendOne() were called again then it
+         * would return \c false.
+         *
+         * @return the number of additional layered tetrahedra that were
+         * discovered.
          */
         unsigned long extend();
 
+        /**
+         * TODO
+         */
         bool matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
             NTetrahedron* upperBdry1, NPerm upperRoles1,
             NMatrix2& upperReln) const;
