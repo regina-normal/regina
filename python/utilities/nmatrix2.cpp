@@ -41,6 +41,7 @@ void addNMatrix2() {
         .def(self + self)
         .def(self - self)
         .def(- self)
+        .def("transpose", &NMatrix2::transpose)
         .def("inverse", &NMatrix2::inverse)
         .def(self += self)
         .def(self -= self)

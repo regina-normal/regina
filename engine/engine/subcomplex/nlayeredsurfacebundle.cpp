@@ -67,21 +67,8 @@ NTxICore::NTxICore(type whichCoreType) : coreType(whichCoreType) {
 
         // The bdryRoles permutations are all identities.
 
-        bdryReln[0][0][0] = 0;  bdryReln[0][0][1] = 1;
-        bdryReln[0][1][0] = -1; bdryReln[0][1][1] = 0;
-        bdryReln[1][0][0] = 0;  bdryReln[1][0][1] = 1;
-        bdryReln[1][1][0] = 1;  bdryReln[1][1][1] = 0;
-    }
-
-    // Before we finish, calculate the inverse boundary relation matrix.
-    bool reflect;
-    for (int i = 0; i < 2; i++) {
-        reflect = (bdryReln[i][0][0] * bdryReln[i][1][1] -
-            bdryReln[i][0][1] * bdryReln[i][1][0] == -1);
-        bdryInv[i][0][0] = (reflect ? bdryReln[i][1][1] : - bdryReln[i][1][1]);
-        bdryInv[i][1][1] = (reflect ? bdryReln[i][0][0] : - bdryReln[i][0][0]);
-        bdryInv[i][0][1] = (reflect ? - bdryReln[i][0][1] : bdryReln[i][0][1]);
-        bdryInv[i][1][0] = (reflect ? - bdryReln[i][1][0] : bdryReln[i][1][0]);
+        bdryReln[0] = NMatrix2(0, 1, -1, 0);
+        bdryReln[1] = NMatrix2(0, 1, 1, 0);
     }
 }
 
@@ -146,32 +133,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         NLayeredTorusBundle* ans = new NLayeredTorusBundle();
         ans->core = *it;
         ans->coreType = core.coreType;
-
-        // Express the upper alpha/beta generators in terms of the lower
-        // boundary roles 01/02.
-        long tmp[2][2];
-
-        tmp[0][0] = core.bdryReln[0][0][0] * matchReln[0][0] +
-            core.bdryReln[0][0][1] * matchReln[1][0];
-        tmp[0][1] = core.bdryReln[0][0][0] * matchReln[0][1] +
-            core.bdryReln[0][0][1] * matchReln[1][1];
-
-        tmp[1][0] = core.bdryReln[0][1][0] * matchReln[0][0] +
-            core.bdryReln[0][1][1] * matchReln[1][0];
-        tmp[1][1] = core.bdryReln[0][1][0] * matchReln[0][1] +
-            core.bdryReln[0][1][1] * matchReln[1][1];
-
-        // Now express the upper alpha/beta generators in terms of the
-        // lower alpha/beta generators.
-        ans->reln[0][0] = tmp[0][0] * core.bdryInv[1][0][0] +
-            tmp[0][1] * core.bdryInv[1][1][0];
-        ans->reln[0][1] = tmp[0][0] * core.bdryInv[1][0][1] +
-            tmp[0][1] * core.bdryInv[1][1][1];
-
-        ans->reln[1][0] = tmp[1][0] * core.bdryInv[1][0][0] +
-            tmp[1][1] * core.bdryInv[1][1][0];
-        ans->reln[1][1] = tmp[1][0] * core.bdryInv[1][0][1] +
-            tmp[1][1] * core.bdryInv[1][1][1];
+        ans->reln = core.bdryReln[0] * matchReln * core.bdryReln[1].inverse();
 
         // Delete the remaining isomorphisms that we never even
         // looked at.
@@ -187,8 +149,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
 
 NManifold* NLayeredTorusBundle::getManifold() const {
     switch (coreType) {
-        case NTxICore::T_6_2: return new NTorusBundle(
-            reln[0][0], reln[1][0], reln[0][1], reln[1][1]);
+        case NTxICore::T_6_2: return new NTorusBundle(reln.transpose());
     }
 
     return 0;

@@ -38,6 +38,7 @@
 #include <memory>
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/nmatrix2.h"
 
 namespace regina {
 
@@ -61,11 +62,9 @@ struct NTxICore : public boost::noncopyable {
     NPerm bdryRoles[2][2];
         /**< Upper boundary is [0][], lower boundary is [1][]. */
 
-    long bdryReln[2][2][2];
+    NMatrix2 bdryReln[2];
         /**< Express bdry[i] alpha/beta in terms of roles 01/02. */
         /**< Must have determinant +/- 1. */
-    long bdryInv[2][2][2];
-        /**< Express bdry[i] roles 01/02 in terms of alpha/beta. */
 
     NTxICore(type whichCoreType);
 };
@@ -75,7 +74,7 @@ class NLayeredTorusBundle : public NStandardTriangulation {
         NIsomorphism* core;
             /**< Non-zero. */
         NTxICore::type coreType;
-        long reln[2][2];
+        NMatrix2 reln;
             /**< Expresses upper bdry generators in terms of lower. */
 
     public:

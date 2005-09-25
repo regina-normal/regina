@@ -178,6 +178,13 @@ class NMatrix2 {
          */
         NMatrix2 operator - () const;
         /**
+         * Returns the transpose of this matrix.
+         * This matrix is not changed.
+         *
+         * @return the transpose of this matrix.
+         */
+        NMatrix2 transpose() const;
+        /**
          * Calculates the inverse of this matrix.
          * This matrix is not changed.
          *
@@ -360,6 +367,10 @@ inline NMatrix2 NMatrix2::operator - (const NMatrix2& other) const {
 
 inline NMatrix2 NMatrix2::operator - () const {
     return NMatrix2(-data[0][0], -data[0][1], -data[1][0], -data[1][1]);
+}
+
+inline NMatrix2 NMatrix2::transpose() const {
+    return NMatrix2(data[0][0], data[1][0], data[0][1], data[1][1]);
 }
 
 inline NMatrix2& NMatrix2::operator += (const NMatrix2& other) {
