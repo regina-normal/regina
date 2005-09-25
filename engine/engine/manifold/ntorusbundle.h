@@ -50,13 +50,18 @@ namespace regina {
  * product of the torus and the interval, with the two torus boundaries
  * identified according to some specified monodromy.
  *
- * The monodromy is described by a 2-by-2 matrix \a m as follows.
+ * The monodromy is described by a 2-by-2 matrix \a M as follows.
  * Let \a a and \a b be generating curves of the upper torus boundary,
  * and let \a p and \a q be the corresponding curves on the lower torus
  * boundary (so that \a a and \a p are parallel and \a b and \a q are
- * parallel).  Then we identify the torus boundaries so that
- * <tt>a = p^m[0][0] * q^m[1][0]</tt> and
- * <tt>b = p^m[0][1] * q^m[1][1]</tt>.
+ * parallel).  Then we identify the torus boundaries so that, in
+ * additive terms:
+ *
+ * <pre>
+ *     [a]       [p]
+ *     [ ] = M * [ ]
+ *     [b]       [q]
+ * </pre>
  *
  * All optional NManifold routines except for construct() are implemented
  * for this class.
@@ -92,7 +97,14 @@ class NTorusBundle : public NManifold {
         /**
          * Creates a new torus bundle over the circle using the given
          * monodromy.  The four elements of the monodromy matrix are
-         * passed separately.
+         * passed separately.  They combine to give the full monodromy
+         * matrix \a M as follows:
+         *
+         * <pre>
+         *           [ mon00  mon01 ]
+         *     M  =  [              ]
+         *           [ mon10  mon11 ]
+         * </pre>
          *
          * \pre The monodromy matrix formed from the given parameters
          * has determinant +1 or -1.

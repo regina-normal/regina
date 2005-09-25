@@ -36,8 +36,8 @@ NAbelianGroup* NTorusBundle::getHomologyH1() const {
     NMatrixInt relns(2, 2);
 
     relns.entry(0, 0) = monodromy[0][0] - 1;
-    relns.entry(0, 1) = monodromy[1][0];
-    relns.entry(1, 0) = monodromy[0][1];
+    relns.entry(0, 1) = monodromy[0][1];
+    relns.entry(1, 0) = monodromy[1][0];
     relns.entry(1, 1) = monodromy[1][1] - 1;
 
     NAbelianGroup* ans = new NAbelianGroup();
