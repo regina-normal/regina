@@ -36,6 +36,7 @@ namespace regina {
 
 namespace {
     const NTxICore core_T_6_2(NTxICore::T_6_2);
+    const NTxICore core_T_7(NTxICore::T_7);
 }
 
 NTxICore::NTxICore(type whichCoreType) : coreType(whichCoreType) {
@@ -69,11 +70,51 @@ NTxICore::NTxICore(type whichCoreType) : coreType(whichCoreType) {
 
         bdryReln[0] = NMatrix2(0, 1, -1, 0);
         bdryReln[1] = NMatrix2(0, 1, 1, 0);
+        parallelReln = NMatrix2(1, 0, 0, 1);
+
+        namePlain = "T6^2";
+        nameTeX = "T_6^2";
+    } else if (coreType == T_7) {
+        const int adj[7][4] = {
+            { 1, 3, 2, -1},
+            { 0, 4, 2, -1},
+            { 5, 4, 1, 0},
+            { 4, 0, 5, 6},
+            { 3, 1, 6, 2},
+            { 6, 2, 3, -1},
+            { 5, 4, 3, -1}
+        };
+
+        const int glu[7][4][4] = {
+            { { 0, 2, 1, 3 }, { 2, 1, 3, 0 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } },
+            { { 0, 2, 1, 3 }, { 3, 1, 2, 0 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
+            { { 1, 3, 2, 0 }, { 2, 3, 0, 1 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } },
+            { { 0, 1, 2, 3 }, { 3, 1, 0, 2 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } },
+            { { 0, 1, 2, 3 }, { 3, 1, 2, 0 }, { 0, 2, 1, 3 }, { 2, 3, 0, 1 } },
+            { { 0, 2, 1, 3 }, { 3, 0, 2, 1 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
+            { { 0, 2, 1, 3 }, { 0, 2, 1, 3 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } }
+        };
+
+        core.insertConstruction(7, adj, glu);
+
+        bdryTet[0][0] = 0;
+        bdryTet[0][1] = 1;
+        bdryTet[1][0] = 5;
+        bdryTet[1][1] = 6;
+
+        // The bdryRoles permutations are all identities.
+
+        bdryReln[0] = NMatrix2(0, 1, 1, 0);
+        bdryReln[1] = NMatrix2(0, 1, -1, 0);
+        parallelReln = NMatrix2(1, 0, 1, 1);
+
+        namePlain = "T7";
+        nameTeX = "T_7";
     }
 }
 
 NLayeredTorusBundle::~NLayeredTorusBundle() {
-    delete core;
+    delete coreIso;
 }
 
 NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
@@ -94,6 +135,8 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
     // Hunt for the core thin torus bundle.
     NLayeredTorusBundle* ans;
     if ((ans = hunt(tri, core_T_6_2)))
+        return ans;
+    if ((ans = hunt(tri, core_T_7)))
         return ans;
 
     return 0;
@@ -130,9 +173,8 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         }
 
         // It's a match!
-        NLayeredTorusBundle* ans = new NLayeredTorusBundle();
-        ans->core = *it;
-        ans->coreType = core.coreType;
+        NLayeredTorusBundle* ans = new NLayeredTorusBundle(core);
+        ans->coreIso = *it;
         ans->reln = core.bdryReln[0] * matchReln * core.bdryReln[1].inverse();
 
         // Delete the remaining isomorphisms that we never even
@@ -148,24 +190,15 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
 }
 
 NManifold* NLayeredTorusBundle::getManifold() const {
-    switch (coreType) {
-        case NTxICore::T_6_2: return new NTorusBundle(reln.transpose());
-    }
-
-    return 0;
+    return new NTorusBundle(core.parallelReln * reln);
 }
 
 std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,
         bool tex) const {
-    if (tex) {
-        switch(coreType) {
-            case NTxICore::T_6_2: out << "B_{T_6^2"; break;
-        }
-    } else {
-        switch(coreType) {
-            case NTxICore::T_6_2: out << "B(T6^2"; break;
-        }
-    }
+    if (tex)
+        out << "B_{" << core.nameTeX;
+    else
+        out << "B(" << core.namePlain;
 
     out << " | " << reln[0][0] << ',' << reln[0][1];
     out << " | " << reln[1][0] << ',' << reln[1][1];

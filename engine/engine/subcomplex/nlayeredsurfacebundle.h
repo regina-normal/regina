@@ -42,9 +42,6 @@
 
 namespace regina {
 
-class NIsomorphism;
-class NTorusPlug;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -54,7 +51,7 @@ class NTorusPlug;
  * Only the class constants are mirrored in python.
  */
 struct NTxICore : public boost::noncopyable {
-    enum type { T_6_2 };
+    enum type { T_6_2, T_7 };
 
     type coreType;
     NTriangulation core;
@@ -65,17 +62,22 @@ struct NTxICore : public boost::noncopyable {
     NMatrix2 bdryReln[2];
         /**< Express bdry[i] alpha/beta in terms of roles 01/02. */
         /**< Must have determinant +/- 1. */
+    NMatrix2 parallelReln;
+        /**< Express lower alpha/beta in terms of upper. */
+
+    std::string namePlain;
+    std::string nameTeX;
 
     NTxICore(type whichCoreType);
 };
 
 class NLayeredTorusBundle : public NStandardTriangulation {
     private:
-        NIsomorphism* core;
+        const NTxICore& core;
+        NIsomorphism* coreIso;
             /**< Non-zero. */
-        NTxICore::type coreType;
         NMatrix2 reln;
-            /**< Expresses upper bdry generators in terms of lower. */
+            /**< Expresses upper alpha/beta in terms of lower. */
 
     public:
         /**
@@ -96,7 +98,7 @@ class NLayeredTorusBundle : public NStandardTriangulation {
          * Creates a new structure with all subcomponent pointers
          * initialised to \c null.
          */
-        NLayeredTorusBundle();
+        NLayeredTorusBundle(const NTxICore& whichCore);
 
         /**
          * Contains code common to both writeName() and writeTeXName().
@@ -116,7 +118,8 @@ class NLayeredTorusBundle : public NStandardTriangulation {
 
 // Inline functions for NLayeredTorusBundle
 
-inline NLayeredTorusBundle::NLayeredTorusBundle() : core(0) {
+inline NLayeredTorusBundle::NLayeredTorusBundle(const NTxICore& whichCore) :
+        core(whichCore), coreIso(0) {
 }
 
 inline std::ostream& NLayeredTorusBundle::writeName(std::ostream& out) const {
