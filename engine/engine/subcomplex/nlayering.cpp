@@ -31,14 +31,13 @@
 
 namespace regina {
 
-NLayering::NLayering(NTetrahedron* oldBdry0, NPerm oldRoles0,
-        NTetrahedron* oldBdry1, NPerm oldRoles1) : size(0),
-        reln(1, 0, 0, 1) {
-    oldBdryTet[0] = newBdryTet[0] = oldBdry0;
-    oldBdryTet[1] = newBdryTet[1] = oldBdry1;
+NLayering::NLayering(NTetrahedron* bdry0, NPerm roles0, NTetrahedron* bdry1,
+        NPerm roles1) : size(0), reln(1, 0, 0, 1) {
+    oldBdryTet[0] = newBdryTet[0] = bdry0;
+    oldBdryTet[1] = newBdryTet[1] = bdry1;
 
-    oldBdryRoles[0] = newBdryRoles[0] = oldRoles0;
-    oldBdryRoles[1] = newBdryRoles[1] = oldRoles1;
+    oldBdryRoles[0] = newBdryRoles[0] = roles0;
+    oldBdryRoles[1] = newBdryRoles[1] = roles1;
 }
 
 bool NLayering::extendOne() {
