@@ -35,6 +35,10 @@
  * the underlying 3-manifold if possible).  If not, the word UNKNOWN is
  * output instead.
  *
+ * Whenever the underlying 3-manifold is recognised and the expected
+ * homology group can be computed, this is compared with the observed
+ * homology group to ensure that they are isomorphic.
+ *
  * If the option -c is passed, the labels of all container packets are
  * also output as they appear in the packet tree.  This may be useful for
  * dividing the output into sections.
@@ -42,6 +46,7 @@
  * All output is written to standard output.
  */
 
+#include <algebra/nabeliangroup.h>
 #include <file/nxmlfile.h>
 #include <manifold/nmanifold.h>
 #include <packet/ncontainer.h>
@@ -56,6 +61,7 @@ using namespace regina;
 unsigned totTris = 0;
 unsigned trisOk = 0;
 unsigned mfdsOk = 0;
+unsigned homBad = 0;
 
 bool outputContainers = false;
 NPacket* tree;
@@ -88,6 +94,18 @@ void process(NTriangulation* t) {
         if (m) {
             std::cout << "  ==  " << m->getName();
             mfdsOk++;
+
+            NAbelianGroup* h1 = m->getHomologyH1();
+            if (h1) {
+                if (! (*h1 == t->getHomologyH1())) {
+                    std::cout << "  ...  HOMOLOGY ERROR: "
+                        << h1->toString() << " != "
+                        << t->getHomologyH1().toString();
+                    homBad++;
+                }
+
+                delete h1;
+            }
 
             delete m;
         }
@@ -149,6 +167,7 @@ int main(int argc, char* argv[]) {
     std::cerr << "    Triangulations read:       " << totTris << std::endl;
     std::cerr << "    Triangulations recognised: " << trisOk << std::endl;
     std::cerr << "    3-manifolds recognised:    " << mfdsOk << std::endl;
+    std::cerr << "    Homology errors:           " << homBad << std::endl;
 
     return 0;
 }
