@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "manifold/ntorusbundle.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/nlayering.h"
 #include "triangulation/nisomorphism.h"
@@ -185,7 +186,11 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
 }
 
 NManifold* NLayeredTorusBundle::getManifold() const {
-    // TODO: getManifold()
+    switch (coreType) {
+        case NTxICore::T_6_2: return new NTorusBundle(
+            reln[0][0], reln[1][0], reln[0][1], reln[1][1]);
+    }
+
     return 0;
 }
 

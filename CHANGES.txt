@@ -39,6 +39,8 @@ Version 4.3  [ under development ]
               Now more general, supporting both orientable and
               non-orientable 3-manifolds as well as base orbifolds with
               reflector boundary components.
+        Class NTorusBundle:
+            - New class of 3-manifolds.
         Class NTriangulation:
             - Combined isomorphism and subcomplex testing routines into
               a single all-in-one routine to avoid excessive code reuse.
