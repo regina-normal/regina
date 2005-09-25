@@ -26,17 +26,34 @@
 
 /* end stub */
 
-void addNBoolSet();
-void addNLargeInteger();
-void addNMatrix2();
-void addNRational();
-void addNTriBool();
+#include "utilities/nmatrix2.h"
+#include <boost/python.hpp>
 
-void addUtilities() {
-    addNBoolSet();
-    addNLargeInteger();
-    addNMatrix2();
-    addNRational();
-    addNTriBool();
+using namespace boost::python;
+using regina::NMatrix2;
+
+void addNMatrix2() {
+    class_<NMatrix2>("NMatrix2")
+        .def(init<const NMatrix2&>())
+        .def(init<long, long, long, long>())
+        .def(self * self)
+        .def(self * long())
+        .def(self + self)
+        .def(self - self)
+        .def(- self)
+        .def("inverse", &NMatrix2::inverse)
+        .def(self += self)
+        .def(self -= self)
+        .def(self *= self)
+        .def(self *= long())
+        .def("negate", &NMatrix2::negate)
+        .def("invert", &NMatrix2::invert)
+        .def(self == self)
+        .def(self != self)
+        .def("determinant", &NMatrix2::determinant)
+        .def("isIdentity", &NMatrix2::isIdentity)
+        .def("isZero", &NMatrix2::isZero)
+        .def(self_ns::str(self))
+    ;
 }
 

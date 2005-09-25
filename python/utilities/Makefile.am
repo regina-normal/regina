@@ -13,5 +13,5 @@ CXXFLAGS = @CXXFLAGS_NODEBUG@
 
 noinst_LTLIBRARIES = libutilities.la
 
-libutilities_la_SOURCES = nbooleans.cpp nmpi.cpp nrational.cpp pyutilities.cpp
+libutilities_la_SOURCES = nbooleans.cpp nmatrix2.cpp nmpi.cpp nrational.cpp pyutilities.cpp
 
