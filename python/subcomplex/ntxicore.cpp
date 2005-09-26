@@ -26,45 +26,53 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNPillowTwoSphere();
-void addNPluggedIBundle();
-void addNPlugTriSolidTorus();
-void addNSnapPeaCensusTri();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTorusPlug();
-void addNTriSolidTorus();
-void addNTrivialTri();
-void addNTxICore();
+#include "subcomplex/ntxicore.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNPillowTwoSphere();
-    addNPluggedIBundle();
-    addNPlugTriSolidTorus();
-    addNSnapPeaCensusTri();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTorusPlug();
-    addNTriSolidTorus();
-    addNTrivialTri();
-    addNTxICore();
+using namespace boost::python;
+using regina::NTxICore;
+using regina::NTxIDiagonalCore;
+using regina::NTxIParallelCore;
+
+namespace {
+    void writeName_stdio(const NTxICore& c) {
+        c.writeName(std::cout);
+    }
+    void writeTeXName_stdio(const NTxICore& c) {
+        c.writeTeXName(std::cout);
+    }
+}
+
+void addNTxICore() {
+    class_<NTxICore, bases<regina::ShareableObject>,
+            std::auto_ptr<NTxICore>, boost::noncopyable>("NTxICore", no_init)
+        .def("core", &NTxICore::core,
+            return_internal_reference<>())
+        .def("bdryTet", &NTxICore::bdryTet)
+        .def("bdryRoles", &NTxICore::bdryRoles)
+        .def("bdryReln", &NTxICore::bdryReln,
+            return_internal_reference<>())
+        .def("parallelReln", &NTxICore::parallelReln,
+            return_internal_reference<>())
+        .def("writeName", writeName_stdio)
+        .def("writeTeXName", writeTeXName_stdio)
+    ;
+
+    class_<NTxIDiagonalCore, bases<regina::NTxICore>,
+            std::auto_ptr<NTxIDiagonalCore>, boost::noncopyable>
+            ("NTxIDiagonalCore", init<unsigned long, unsigned long>())
+        .def("size", &NTxIDiagonalCore::size)
+        .def("k", &NTxIDiagonalCore::k)
+    ;
+
+    class_<NTxIParallelCore, bases<regina::NTxICore>,
+            std::auto_ptr<NTxIParallelCore>, boost::noncopyable>
+            ("NTxIParallelCore")
+    ;
+
+    implicitly_convertible<std::auto_ptr<NTxIDiagonalCore>,
+        std::auto_ptr<regina::NTxICore> >();
+    implicitly_convertible<std::auto_ptr<NTxIParallelCore>,
+        std::auto_ptr<regina::NTxICore> >();
 }
 

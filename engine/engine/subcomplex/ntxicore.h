@@ -64,6 +64,9 @@ class NTxICore : public ShareableObject {
         const NMatrix2& bdryReln(unsigned whichBdry) const;
         const NMatrix2& parallelReln() const;
 
+        /**
+         * Wrappers dump to cout.
+         */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
@@ -80,6 +83,9 @@ class NTxIDiagonalCore : public NTxICore {
 
     public:
         NTxIDiagonalCore(unsigned long newSize, unsigned long newK);
+
+        unsigned long size() const;
+        unsigned long k() const;
 
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -126,6 +132,14 @@ inline void NTxICore::writeTextShort(std::ostream& out) const {
 }
 
 // Inline functions for NTxIDiagonalCore
+
+inline unsigned long NTxIDiagonalCore::size() const {
+    return size_;
+}
+
+inline unsigned long NTxIDiagonalCore::k() const {
+    return k_;
+}
 
 inline std::ostream& NTxIDiagonalCore::writeName(std::ostream& out) const {
     return out << 'T' << size_ << ':' << k_;
