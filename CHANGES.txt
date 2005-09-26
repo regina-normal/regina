@@ -24,6 +24,9 @@ Version 4.3  [ under development ]
               where possible.  This includes pruning on non-orientable
               vertex links, too many or too few vertices or edges, low
               degree or invalid edges, conical faces and L(3,1) spines.
+        Class NLayering:
+            - New routine to help follow through layerings of tetrahedra
+              within a triangulation.
         Class NLayeredSolidTorus:
             - New routine formsLayeredSolidTorusTop() for finding an LST
               from the top end instead of the bottom.
