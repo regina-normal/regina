@@ -64,24 +64,24 @@ class NTetrahedron;
  *
  * <pre>
  *     *--->>--*
- *     |0  1 / |
- *     |    / 2|
+ *     |0  2 / |
+ *     |    / 1|
  *     v   /   v
- *     |2 /    |
- *     | / 1  0|
+ *     |1 /    |
+ *     | / 2  0|
  *     *--->>--*
  * </pre>
  *
- * In particular, if the two tetrahedra are \a t1 and \a t2 and the two
- * corresponding permutations are \a p1 and \a p2, then:
- * - the torus boundary is formed from faces \a p1[3] and \a p2[3] of
- *   tetrahedra \a t1 and \a t2 respectively;
- * - edges \a p1[0]-\a p1[1] and \a p2[1]-\a p2[0] of tetrahedra
- *   \a t1 and \a t2 respectively are identified;
- * - edges \a p1[1]-\a p1[2] and \a p2[2]-\a p2[1] of tetrahedra
- *   \a t1 and \a t2 respectively are identified;
- * - edges \a p1[2]-\a p1[0] and \a p2[0]-\a p2[2] of tetrahedra
- *   \a t1 and \a t2 respectively are identified.
+ * In particular, if the two tetrahedra are \a t0 and \a t1 and the two
+ * corresponding permutations are \a p0 and \a p1, then:
+ * - the torus boundary is formed from faces \a p0[3] and \a p1[3] of
+ *   tetrahedra \a t0 and \a t1 respectively;
+ * - edges \a p0[0]-\a p0[1] and \a p1[1]-\a p1[0] of tetrahedra
+ *   \a t0 and \a t1 respectively are identified;
+ * - edges \a p0[1]-\a p0[2] and \a p1[2]-\a p1[1] of tetrahedra
+ *   \a t0 and \a t1 respectively are identified;
+ * - edges \a p0[2]-\a p0[0] and \a p1[0]-\a p1[2] of tetrahedra
+ *   \a t0 and \a t1 respectively are identified.
  *
  * Note that we do not actually require these faces to form a torus, and
  * this is never verifed by any of the routines in this class.  What
@@ -266,7 +266,84 @@ class NLayering : public boost::noncopyable {
         unsigned long extend();
 
         /**
-         * TODO
+         * Determines whether the new torus boundary of this structure
+         * is identified with the given torus boundary.  In other words,
+         * this routine determines whether the new torus boundary of
+         * this structure and the given torus boundary represent
+         * opposite sides of the same two faces.
+         *
+         * The two boundaries must be identified according to some
+         * homeomorphism of the torus.  Note that there are 12 different
+         * ways in which this can be done (two choices for which
+         * tetrahedron face joins with which, and then six possible
+         * rotations and reflections).
+         *
+         * As with the other routines in this class, this routine does
+         * not verify that either boundary in fact forms a torus.
+         * Instead, it uses this assumption to define the rules of what
+         * identifications are allowable.
+         *
+         * If there is a match, the given matrix \a upperReln will be
+         * modified to describe how the edges of the given boundary
+         * relate to the edges of the old boundary torus.  Note that
+         * this relationship depends on how the intermediate tetrahedra
+         * are layered (and in fact the purpose of a layering is often to
+         * produce such a non-trivial relationship).
+         *
+         * Specifically, let \a t0 and \a p0 be the first tetrahedron and
+         * permutation of the old boundary (as returned by
+         * getOldBoundaryTet(0) and getOldBoundaryRoles(0)), and let
+         * \a x and \a y be the directed edges \a p0[0]-\a p0[1] and
+         * \a p0[0]-\a p0[2] of tetrahedron \a t0 respectively (these
+         * are the leftmost and uppermost edges of the diagram below).
+         * Likewise, let \a u and \a q be the first tetrahedron and
+         * permutation of the given boundary (as passed by parameters
+         * \a upperBdry0 and \a upperRoles0), and let
+         * \a a and \a b be the directed edges \a q[0]-\a q[1] and
+         * \a q[0]-\a q[2] of tetrahedron \a u respectively.
+         *
+         * <pre>
+         *     *--->>--*
+         *     |0  2 / |
+         *     |    / 1|
+         *     v   /   v
+         *     |1 /    |
+         *     | / 2  0|
+         *     *--->>--*
+         * </pre>
+         *
+         * Assuming both boundaries are tori, edges \a x and \a y are
+         * generators of the original torus boundary and edges \a a and
+         * \a b are generators of the given torus boundary.  Using
+         * additive notation, the matrix \a upperReln is modified so
+         * that
+         *
+         * <pre>
+         *     [a]                 [x]
+         *     [ ]  =  upperReln * [ ] .
+         *     [b]                 [y]
+         * </pre>
+         *
+         * In other words, the modified \a upperReln matrix expresses
+         * the generator curves of the given boundary in terms of the
+         * generator curves of the old boundary.
+         *
+         * If no match is found, the matrix \a upperReln is not touched.
+         *
+         * @param upperBdry0 the tetrahedron providing the first face of
+         * the given boundary.
+         * @param upperRoles0 the permutation describing how this
+         * first face is formed from three vertices of tetrahedron
+         * upperBdry0, as described in the class notes.
+         * @param upperBdry1 the tetrahedron providing the second face of
+         * the given boundary.
+         * @param upperRoles1 the permutation describing how this second
+         * face is formed from three vertices of tetrahedron upperBdry1.
+         * @param upperReln the matrix that is changed to reflect the
+         * relationship between the old boundary of this structure and
+         * the given boundary.
+         * @return \c true if the given boundary is found to matche the
+         * new boundary of this structure, or \c false otherwise.
          */
         bool matchesTop(NTetrahedron* upperBdry0, NPerm upperRoles0,
             NTetrahedron* upperBdry1, NPerm upperRoles1,
