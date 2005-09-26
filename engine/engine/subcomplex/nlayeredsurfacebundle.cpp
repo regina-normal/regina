@@ -103,28 +103,29 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
             (*it)->facePerm(core.bdryTet(1,1)) * core.bdryRoles(1,1));
         layering.extend();
 
-        if (! layering.matchesTop(
+        if (layering.matchesTop(
                 tri->getTetrahedron((*it)->tetImage(core.bdryTet(0,0))),
                 (*it)->facePerm(core.bdryTet(0,0)) * core.bdryRoles(0,0),
                 tri->getTetrahedron((*it)->tetImage(core.bdryTet(0,1))),
                 (*it)->facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
-            // Delete this isomorphism; we won't need it any more.
-            delete *it;
-            continue;
+            // It's a match!
+            NLayeredTorusBundle* ans = new NLayeredTorusBundle(core);
+            ans->coreIso = *it;
+            ans->reln = core.bdryReln(0) * matchReln *
+                core.bdryReln(1).inverse();
+
+            // Delete the remaining isomorphisms that we never even
+            // looked at.
+            for (it++; it != isos.end(); it++)
+                delete *it;
+
+            return ans;
         }
 
-        // It's a match!
-        NLayeredTorusBundle* ans = new NLayeredTorusBundle(core);
-        ans->coreIso = *it;
-        ans->reln = core.bdryReln(0) * matchReln * core.bdryReln(1).inverse();
-
-        // Delete the remaining isomorphisms that we never even
-        // looked at.
-        for (it++; it != isos.end(); it++)
-            delete *it;
-
-        return ans;
+        // No match.  Delete this isomorphism; we won't need it any more.
+        delete *it;
+        continue;
     }
 
     // Nothing found.
