@@ -30,7 +30,7 @@ Version 4.3  [ under development ]
         Class NLayeredSolidTorus:
             - New routine formsLayeredSolidTorusTop() for finding an LST
               from the top end instead of the bottom.
-        Class NLayeredTorusBundle, NTxICore, NTxIDiagonalCore:
+        Class NLayeredTorusBundle, NTxICore, NTxIDiagonalCore, NTxIParallelCore:
             - Added for recognition of layered surface bundles.
         Class NMatrix2:
             - New specialised class for working with 2x2 integer matrices.

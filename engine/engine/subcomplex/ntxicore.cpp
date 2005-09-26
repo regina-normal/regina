@@ -98,4 +98,41 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
     delete[] t;
 }
 
+NTxIParallelCore::NTxIParallelCore() {
+    // We'll build the actual triangulation last.  Meanwhile, fill in
+    // the remaining bits and pieces.
+    bdryTet_[0][0] = 0;
+    bdryTet_[0][1] = 1;
+    bdryTet_[0][2] = 4;
+    bdryTet_[0][3] = 5;
+
+    // All bdryRoles permutations are identities.
+    // No need to change them here.
+
+    bdryReln_[0] = bdryReln_[1] = parallelReln_ = NMatrix2(1, 0, 0, 1);
+
+    // Off we go!
+    // Just hard-code it.  It's only one triangulation, and it's highly
+    // symmetric.
+    unsigned i;
+    NTetrahedron** t = new NTetrahedron*[6];
+    for (i = 0; i < 6; i++)
+        t[i] = new NTetrahedron;
+
+    t[0]->joinTo(0, t[1], NPerm(1, 2));
+    t[4]->joinTo(0, t[5], NPerm(1, 2));
+    t[1]->joinTo(2, t[2], NPerm());
+    t[5]->joinTo(2, t[3], NPerm());
+    t[0]->joinTo(2, t[2], NPerm(1, 0, 3, 2));
+    t[4]->joinTo(2, t[3], NPerm(1, 0, 3, 2));
+    t[1]->joinTo(1, t[3], NPerm(2, 0, 3, 1));
+    t[5]->joinTo(1, t[2], NPerm(2, 0, 3, 1));
+    t[0]->joinTo(1, t[3], NPerm(0, 3));
+    t[4]->joinTo(1, t[2], NPerm(0, 3));
+
+    for (i = 0; i < 6; i++)
+        core_.addTetrahedron(t[i]);
+    delete[] t;
+}
+
 } // namespace regina

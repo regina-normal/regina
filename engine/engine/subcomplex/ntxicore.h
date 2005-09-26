@@ -85,6 +85,14 @@ class NTxIDiagonalCore : public NTxICore {
         std::ostream& writeTeXName(std::ostream& out) const;
 };
 
+class NTxIParallelCore : public NTxICore {
+    public:
+        NTxIParallelCore();
+
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+};
+
 /*@}*/
 
 // Inline functions for NTxICore
@@ -125,6 +133,14 @@ inline std::ostream& NTxIDiagonalCore::writeName(std::ostream& out) const {
 
 inline std::ostream& NTxIDiagonalCore::writeTeXName(std::ostream& out) const {
     return out << "T_{" << size_ << ':' << k_ << '}';
+}
+
+inline std::ostream& NTxIParallelCore::writeName(std::ostream& out) const {
+    return out << "T6*";
+}
+
+inline std::ostream& NTxIParallelCore::writeTeXName(std::ostream& out) const {
+    return out << "T_{6\\ast}";
 }
 
 } // namespace regina
