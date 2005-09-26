@@ -29,88 +29,19 @@
 #include "manifold/ntorusbundle.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/nlayering.h"
+#include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
 namespace {
-    const NTxICore core_T_6_2(NTxICore::T_6_2);
-    const NTxICore core_T_7(NTxICore::T_7);
-}
-
-NTxICore::NTxICore(type whichCoreType) : coreType(whichCoreType) {
-    if (coreType == T_6_2) {
-        const int adj[6][4] = {
-            { 1, 3, 2, -1},
-            { 0, 3, 2, -1},
-            { 4, 5, 1, 0},
-            { 1, 0, 4, 5},
-            { 5, 2, 3, -1},
-            { 4, 2, 3, -1}
-        };
-
-        const int glu[6][4][4] = {
-            { { 0, 2, 1, 3 }, { 2, 1, 3, 0 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } },
-            { { 0, 2, 1, 3 }, { 3, 0, 2, 1 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
-            { { 1, 3, 2, 0 }, { 3, 1, 0, 2 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } },
-            { { 1, 3, 2, 0 }, { 3, 1, 0, 2 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } },
-            { { 0, 2, 1, 3 }, { 3, 0, 2, 1 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
-            { { 0, 2, 1, 3 }, { 2, 1, 3, 0 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } }
-        };
-
-        core.insertConstruction(6, adj, glu);
-
-        bdryTet[0][0] = 0;
-        bdryTet[0][1] = 1;
-        bdryTet[1][0] = 4;
-        bdryTet[1][1] = 5;
-
-        // The bdryRoles permutations are all identities.
-
-        bdryReln[0] = NMatrix2(0, 1, -1, 0);
-        bdryReln[1] = NMatrix2(0, 1, 1, 0);
-        parallelReln = NMatrix2(1, 0, 0, 1);
-
-        namePlain = "T6^2";
-        nameTeX = "T_6^2";
-    } else if (coreType == T_7) {
-        const int adj[7][4] = {
-            { 1, 3, 2, -1},
-            { 0, 4, 2, -1},
-            { 5, 4, 1, 0},
-            { 4, 0, 5, 6},
-            { 3, 1, 6, 2},
-            { 6, 2, 3, -1},
-            { 5, 4, 3, -1}
-        };
-
-        const int glu[7][4][4] = {
-            { { 0, 2, 1, 3 }, { 2, 1, 3, 0 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } },
-            { { 0, 2, 1, 3 }, { 3, 1, 2, 0 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
-            { { 1, 3, 2, 0 }, { 2, 3, 0, 1 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } },
-            { { 0, 1, 2, 3 }, { 3, 1, 0, 2 }, { 0, 1, 2, 3 }, { 1, 0, 3, 2 } },
-            { { 0, 1, 2, 3 }, { 3, 1, 2, 0 }, { 0, 2, 1, 3 }, { 2, 3, 0, 1 } },
-            { { 0, 2, 1, 3 }, { 3, 0, 2, 1 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
-            { { 0, 2, 1, 3 }, { 0, 2, 1, 3 }, { 1, 0, 3, 2 }, { 0, 0, 0, 0 } }
-        };
-
-        core.insertConstruction(7, adj, glu);
-
-        bdryTet[0][0] = 0;
-        bdryTet[0][1] = 1;
-        bdryTet[1][0] = 5;
-        bdryTet[1][1] = 6;
-
-        // The bdryRoles permutations are all identities.
-
-        bdryReln[0] = NMatrix2(0, 1, 1, 0);
-        bdryReln[1] = NMatrix2(0, 1, -1, 0);
-        parallelReln = NMatrix2(1, 0, 1, 1);
-
-        namePlain = "T7";
-        nameTeX = "T_7";
-    }
+    const NTxIDiagonalCore core_T_6_1(6, 1);
+    const NTxIDiagonalCore core_T_7_1(7, 1);
+    const NTxIDiagonalCore core_T_8_1(8, 1);
+    const NTxIDiagonalCore core_T_8_2(8, 2);
+    const NTxIDiagonalCore core_T_9_1(9, 1);
+    const NTxIDiagonalCore core_T_9_2(9, 2);
 }
 
 NLayeredTorusBundle::~NLayeredTorusBundle() {
@@ -134,9 +65,17 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
 
     // Hunt for the core thin torus bundle.
     NLayeredTorusBundle* ans;
-    if ((ans = hunt(tri, core_T_6_2)))
+    if ((ans = hunt(tri, core_T_6_1)))
         return ans;
-    if ((ans = hunt(tri, core_T_7)))
+    if ((ans = hunt(tri, core_T_7_1)))
+        return ans;
+    if ((ans = hunt(tri, core_T_8_1)))
+        return ans;
+    if ((ans = hunt(tri, core_T_8_2)))
+        return ans;
+    if ((ans = hunt(tri, core_T_9_1)))
+        return ans;
+    if ((ans = hunt(tri, core_T_9_2)))
         return ans;
 
     return 0;
@@ -145,7 +84,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
 NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         const NTxICore& core) {
     std::list<NIsomorphism*> isos;
-    if (! core.core.findAllSubcomplexesIn(*tri, isos))
+    if (! core.core().findAllSubcomplexesIn(*tri, isos))
         return 0;
 
     // Run through each isomorphism and look for the corresponding layering.
@@ -155,17 +94,17 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         // Apply the layering to the lower boundary and see if it
         // matches nicely with the upper.
         NLayering layering(
-            tri->getTetrahedron((*it)->tetImage(core.bdryTet[1][0])),
-            (*it)->facePerm(core.bdryTet[1][0]) * core.bdryRoles[1][0],
-            tri->getTetrahedron((*it)->tetImage(core.bdryTet[1][1])),
-            (*it)->facePerm(core.bdryTet[1][1]) * core.bdryRoles[1][1]);
+            tri->getTetrahedron((*it)->tetImage(core.bdryTet(1,0))),
+            (*it)->facePerm(core.bdryTet(1,0)) * core.bdryRoles(1,0),
+            tri->getTetrahedron((*it)->tetImage(core.bdryTet(1,1))),
+            (*it)->facePerm(core.bdryTet(1,1)) * core.bdryRoles(1,1));
         layering.extend();
 
         if (! layering.matchesTop(
-                tri->getTetrahedron((*it)->tetImage(core.bdryTet[0][0])),
-                (*it)->facePerm(core.bdryTet[0][0]) * core.bdryRoles[0][0],
-                tri->getTetrahedron((*it)->tetImage(core.bdryTet[0][1])),
-                (*it)->facePerm(core.bdryTet[0][1]) * core.bdryRoles[0][1],
+                tri->getTetrahedron((*it)->tetImage(core.bdryTet(0,0))),
+                (*it)->facePerm(core.bdryTet(0,0)) * core.bdryRoles(0,0),
+                tri->getTetrahedron((*it)->tetImage(core.bdryTet(0,1))),
+                (*it)->facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
             // Delete this isomorphism; we won't need it any more.
             delete *it;
@@ -175,7 +114,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         // It's a match!
         NLayeredTorusBundle* ans = new NLayeredTorusBundle(core);
         ans->coreIso = *it;
-        ans->reln = core.bdryReln[0] * matchReln * core.bdryReln[1].inverse();
+        ans->reln = core.bdryReln(0) * matchReln * core.bdryReln(1).inverse();
 
         // Delete the remaining isomorphisms that we never even
         // looked at.
@@ -190,15 +129,18 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
 }
 
 NManifold* NLayeredTorusBundle::getManifold() const {
-    return new NTorusBundle(core.parallelReln * reln);
+    return new NTorusBundle(core.parallelReln() * reln);
 }
 
 std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,
         bool tex) const {
-    if (tex)
-        out << "B_{" << core.nameTeX;
-    else
-        out << "B(" << core.namePlain;
+    if (tex) {
+        out << "B_{";
+        core.writeTeXName(out);
+    } else {
+        out << "B(";
+        core.writeName(out);
+    }
 
     out << " | " << reln[0][0] << ',' << reln[0][1];
     out << " | " << reln[1][0] << ',' << reln[1][1];

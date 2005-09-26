@@ -26,87 +26,105 @@
 
 /* end stub */
 
-/*! \file nlayeredsurfacebundle.h
+/*! \file ntxicore.h
  *  \brief Deals with layered surface bundle triangulations.
  */
 
-#ifndef __NLAYEREDSURFACEBUNDLE_H
+#ifndef __NTXICORE_H
 #ifndef __DOXYGEN
-#define __NLAYEREDSURFACEBUNDLE_H
+#define __NTXICORE_H
 #endif
 
-#include <memory>
-#include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nmatrix2.h"
 
 namespace regina {
-
-class NTxICore;
 
 /**
  * \weakgroup subcomplex
  * @{
  */
 
-class NLayeredTorusBundle : public NStandardTriangulation {
-    private:
-        const NTxICore& core;
-        NIsomorphism* coreIso;
-            /**< Non-zero. */
-        NMatrix2 reln;
-            /**< Expresses upper alpha/beta in terms of lower. */
+class NTxICore : public ShareableObject {
+    protected:
+        NTriangulation core_;
+        unsigned bdryTet_[2][2];
+        NPerm bdryRoles_[2][2];
+            /**< Upper boundary is [0][], lower boundary is [1][]. */
+        NMatrix2 bdryReln_[2];
+            /**< Express bdry[i] alpha/beta in terms of roles 01/02. */
+            /**< Must have determinant +/- 1. */
+        NMatrix2 parallelReln_;
+            /**< Express lower alpha/beta in terms of upper. */
 
     public:
-        /**
-         * Destroys this layered torus bundle; note that the corresponding
-         * isomorphism will also be destroyed.
-         */
-        virtual ~NLayeredTorusBundle();
+        const NTriangulation& core() const;
+        unsigned bdryTet(unsigned whichBdry, unsigned whichTet) const;
+        NPerm bdryRoles(unsigned whichBdry, unsigned whichTet) const;
+        const NMatrix2& bdryReln(unsigned whichBdry) const;
+        const NMatrix2& parallelReln() const;
 
-        static NLayeredTorusBundle* isLayeredTorusBundle(NTriangulation* tri);
+        virtual std::ostream& writeName(std::ostream& out) const = 0;
+        virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
-        NManifold* getManifold() const;
+        void writeTextShort(std::ostream& out) const;
+
+    protected:
+        NTxICore();
+};
+
+class NTxIDiagonalCore : public NTxICore {
+    private:
+        unsigned long size_;
+        unsigned long k_;
+
+    public:
+        NTxIDiagonalCore(unsigned long newSize, unsigned long newK);
+
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
-    private:
-        /**
-         * Creates a new structure with all subcomponent pointers
-         * initialised to \c null.
-         */
-        NLayeredTorusBundle(const NTxICore& whichCore);
-
-        /**
-         * Contains code common to both writeName() and writeTeXName().
-         *
-         * @param out the output stream to which to write.
-         * @param tex \c true if this routine is called from
-         * writeTeXName() or \c false if it is called from writeName().
-         * @return a reference to \a out.
-         */
-        std::ostream& writeCommonName(std::ostream& out, bool tex) const;
-
-        static NLayeredTorusBundle* hunt(NTriangulation* tri,
-            const NTxICore& core);
 };
 
 /*@}*/
 
-// Inline functions for NLayeredTorusBundle
+// Inline functions for NTxICore
 
-inline NLayeredTorusBundle::NLayeredTorusBundle(const NTxICore& whichCore) :
-        core(whichCore), coreIso(0) {
+inline NTxICore::NTxICore() {
 }
 
-inline std::ostream& NLayeredTorusBundle::writeName(std::ostream& out) const {
-    return writeCommonName(out, false);
+inline const NTriangulation& NTxICore::core() const {
+    return core_;
 }
 
-inline std::ostream& NLayeredTorusBundle::writeTeXName(std::ostream& out)
-        const {
-    return writeCommonName(out, true);
+inline unsigned NTxICore::bdryTet(unsigned whichBdry, unsigned whichTet) const {
+    return bdryTet_[whichBdry][whichTet];
+}
+
+inline NPerm NTxICore::bdryRoles(unsigned whichBdry, unsigned whichTet) const {
+    return bdryRoles_[whichBdry][whichTet];
+}
+
+inline const NMatrix2& NTxICore::bdryReln(unsigned whichBdry) const {
+    return bdryReln_[whichBdry];
+}
+
+inline const NMatrix2& NTxICore::parallelReln() const {
+    return parallelReln_;
+}
+
+inline void NTxICore::writeTextShort(std::ostream& out) const {
+    out << "TxI core: ";
+    writeName(out);
+}
+
+// Inline functions for NTxIDiagonalCore
+
+inline std::ostream& NTxIDiagonalCore::writeName(std::ostream& out) const {
+    return out << 'T' << size_ << ':' << k_;
+}
+
+inline std::ostream& NTxIDiagonalCore::writeTeXName(std::ostream& out) const {
+    return out << "T_{" << size_ << ':' << k_ << '}';
 }
 
 } // namespace regina
