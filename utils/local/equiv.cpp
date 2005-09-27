@@ -142,7 +142,13 @@ void sameSize(NTriangulation* t) {
         nNew++;
     }
 
-    equivs.insert(found);
+    // Yes, it's a set and so the insert should just fail if it's
+    // already present.  But this is leading to a small memory leak on
+    // my machine which, when multiplied by the _very_ large number of
+    // times this is called, has rather unpleasant effects (such as
+    // exhausting all swap space).  So let's keep the test here for now.
+    if (! equivs.count(found))
+        equivs.insert(found);
 }
 
 /**
