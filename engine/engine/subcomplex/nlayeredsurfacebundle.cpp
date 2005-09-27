@@ -142,7 +142,15 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
 }
 
 NManifold* NLayeredTorusBundle::getManifold() const {
+    // Note that this one-liner appears again in getHomologyH1(), where
+    // we use the underlying NTorusBundle for homology calculations.
     return new NTorusBundle(core_.parallelReln() * reln_);
+}
+
+NAbelianGroup* NLayeredTorusBundle::getHomologyH1() const {
+    // It's implemented in NTorusBundle, so ride on that for now.
+    // We'll implement it directly here in good time.
+    return NTorusBundle(core_.parallelReln() * reln_).getHomologyH1();
 }
 
 std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,

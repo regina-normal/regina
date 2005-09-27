@@ -50,7 +50,28 @@ class NTxICore;
  */
 
 /**
- * TODO
+ * Describes a layered torus bundle.  This is a triangulation of a
+ * torus bundle over the circle formed as follows.
+ *
+ * We begin with a thin I-bundle over the torus, i.e,. a triangulation
+ * of the product <tt>T x I</tt> that is only one tetrahedron thick.
+ * This is referred to as the \a core, and is described by an object
+ * of type NTxICore.
+ *
+ * We then identify the upper and lower torus boundaries of this core
+ * according to some homeomorphism of the torus.  This may be impossible
+ * due to incompatible boundary edges, and so we allow a layering of
+ * tetrahedra over one of the boundari tori in order to adjust the
+ * boundary edges accordingly.  Layerings are described in more detail
+ * in the NLayering class.
+ *
+ * Given the parameters of the core <tt>T x I</tt> and the specific
+ * layering, the monodromy for this torus bundle over the circle can be
+ * calculated.  The getManifold() routine returns details of the
+ * corresponding 3-manifold.
+ *
+ * All optional NStandardTriangulation routines are implemented for this
+ * class.
  */
 class NLayeredTorusBundle : public NStandardTriangulation {
     private:
@@ -93,14 +114,87 @@ class NLayeredTorusBundle : public NStandardTriangulation {
         const NTxICore& core() const;
 
         /**
-         * TODO
+         * Returns the isomorphism describing how the core <tt>T x I</tt>
+         * appears as a subcomplex of this layered surface bundle.
+         *
+         * As described in the core() notes, the core <tt>T x I</tt>
+         * triangulation returned by NTxICore::core() appears within this
+         * layered surface bundle, but not necessarily with the same
+         * tetrahedron or vertex numbers.
+         *
+         * This routine returns an isomorphism that maps the tetrahedra
+         * and vertices of the core <tt>T x I</tt> triangulation (as
+         * returned by NLayeredSurfaceBundle::core().core()) to the
+         * tetrahedra and vertices of this overall layered surface bundle.
+         *
+         * The isomorphism that is returned belongs to this object, and
+         * should not be modified or destroyed.
+         *
+         * @return the isomorphism from the core <tt>T x I</tt> to this
+         * layered surface bundle.
          */
         const NIsomorphism* coreIso() const;
 
         /**
-         * TODO.
+         * Returns a 2-by-2 matrix describing how the layering of
+         * tetrahedra relates curves on the two torus boundaries of the
+         * core <tt>T x I</tt>.
          *
-         * Expresses upper alpha/beta in terms of lower.
+         * The NTxICore class documentation describes generating \a alpha
+         * and \a beta curves on the two torus boundaries of the core
+         * <tt>T x I</tt> (which are referred to as the \e upper and
+         * \e lower boundaries).  The two boundary tori are parallel in
+         * two directions: through the core, and through the layering.
+         * It is desirable to know the parallel relationship between
+         * the two sets of boundary curves in each direction.
+         *
+         * The relationship through the core is already described by
+         * NTxICore::parallelReln().  This routine describes the
+         * relationship through the layering.
+         *
+         * Let \a a_u and \a b_u be the \a alpha and \a beta curves on
+         * the upper boundary torus, and let \a a_l and \a b_l be the
+         * \a alpha and \a beta curves on the lower boundary torus.
+         * Suppose that the upper \a alpha is parallel to
+         * \a w.\a a_l + \a x.\a b_l, and that the upper \a beta is
+         * parallel to \a y.\a a_l + \a z.\a b_l.  Then the matrix
+         * returned will be
+         *
+         * <pre>
+         *     [ w  x ]
+         *     [      ] .
+         *     [ y  z ]
+         * </pre>
+         *
+         * In other words,
+         *
+         * <pre>
+         *     [ a_u ]                      [ a_l ]
+         *     [     ]  =  layeringReln() * [     ] .
+         *     [ b_u ]                      [ b_l ]
+         * </pre>
+         *
+         * It can be observed that this matrix expresses the upper
+         * boundary curves in terms of the lower, whereas
+         * NTxICore::parallelReln() expresses the lower boundary curves
+         * in terms of the upper.  This means that the monodromy
+         * describing the overall torus bundle over the circle can be
+         * calculated as
+         * <pre>
+         *     M  =  layeringReln() * core().parallelReln()
+         * </pre>
+         * or alternatively using the similar matrix
+         * <pre>
+         *     M'  =  core().parallelReln() * layeringReln() .
+         * </pre>
+         *
+         * Note that in the degenerate case where there is no layering at
+         * all, this matrix is still perfectly well defined; in this
+         * case it describes a direct identification between the upper
+         * and lower boundary tori.
+         *
+         * @return the relationship through the layering between the
+         * upper and lower boundary curves of the core <tt>T x I</tt>.
          */
         const NMatrix2& layeringReln() const;
 
@@ -115,6 +209,7 @@ class NLayeredTorusBundle : public NStandardTriangulation {
         static NLayeredTorusBundle* isLayeredTorusBundle(NTriangulation* tri);
 
         NManifold* getManifold() const;
+        NAbelianGroup* getHomologyH1() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
