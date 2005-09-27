@@ -26,47 +26,30 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNLayeredSurfaceBundle();
-void addNPillowTwoSphere();
-void addNPluggedIBundle();
-void addNPlugTriSolidTorus();
-void addNSnapPeaCensusTri();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTorusPlug();
-void addNTriSolidTorus();
-void addNTrivialTri();
-void addNTxICore();
+#include "subcomplex/nlayeredsurfacebundle.h"
+#include "subcomplex/ntxicore.h"
+#include "triangulation/nisomorphism.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNLayeredSurfaceBundle();
-    addNPillowTwoSphere();
-    addNPluggedIBundle();
-    addNPlugTriSolidTorus();
-    addNSnapPeaCensusTri();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTorusPlug();
-    addNTriSolidTorus();
-    addNTrivialTri();
-    addNTxICore();
+using namespace boost::python;
+using regina::NLayeredTorusBundle;
+
+void addNLayeredSurfaceBundle() {
+    class_<NLayeredTorusBundle, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<NLayeredTorusBundle>, boost::noncopyable>
+            ("NLayeredTorusBundle", no_init)
+        .def("core", &NLayeredTorusBundle::core,
+            return_value_policy<reference_existing_object>())
+        .def("coreIso", &NLayeredTorusBundle::coreIso,
+            return_value_policy<reference_existing_object>())
+        .def("layeringReln", &NLayeredTorusBundle::layeringReln,
+            return_value_policy<reference_existing_object>())
+        .def("isLayeredTorusBundle", &NLayeredTorusBundle::isLayeredTorusBundle,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isLayeredTorusBundle")
+    ;
+
+    implicitly_convertible<std::auto_ptr<NLayeredTorusBundle>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 
