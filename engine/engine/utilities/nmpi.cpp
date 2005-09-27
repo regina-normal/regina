@@ -141,7 +141,7 @@ std::ostream& operator << (std::ostream& out, const NLargeInteger& large) {
     else {
         char* str = mpz_get_str(0, 10, large.data);
         out << str;
-        delete[] str;
+        free(str);
     }
     return out;
 }
