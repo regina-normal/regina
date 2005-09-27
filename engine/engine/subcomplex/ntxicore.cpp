@@ -36,8 +36,8 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
     // the remaining bits and pieces.
     bdryTet_[0][0] = 0;
     bdryTet_[0][1] = 1;
-    bdryTet_[0][2] = size_ - 2;
-    bdryTet_[0][3] = size_ - 1;
+    bdryTet_[1][0] = size_ - 2;
+    bdryTet_[1][1] = size_ - 1;
 
     // All bdryRoles permutations are identities.
     // No need to change them here.
@@ -103,8 +103,8 @@ NTxIParallelCore::NTxIParallelCore() {
     // the remaining bits and pieces.
     bdryTet_[0][0] = 0;
     bdryTet_[0][1] = 1;
-    bdryTet_[0][2] = 4;
-    bdryTet_[0][3] = 5;
+    bdryTet_[1][0] = 4;
+    bdryTet_[1][1] = 5;
 
     // All bdryRoles permutations are identities.
     // No need to change them here.
