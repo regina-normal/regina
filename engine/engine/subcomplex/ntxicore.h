@@ -293,13 +293,13 @@ class NTxICore : public ShareableObject {
  * quadrilaterals \a q1, ..., \a q(\a n-5) descending diagonally beneath
  * them as illustrated in the diagram below.
  *
- * TODO: Diagram.
+ * \image html diaginit.png
  *
  * We then distort quadrilateral \a qk and attach two more triangles
  * \a w0 and \a w1 to its side (these will eventually provide the lower
  * torus boundary).  This is illustrated in the following diagram.
  *
- * TODO: Diagram.
+ * \image html diagdistort.png
  *
  * This central torus wraps from left to right (so the lower left edges
  * of most quadrilaterals \a qi are identified with the upper right
@@ -315,13 +315,12 @@ class NTxICore : public ShareableObject {
  * coned out from triangles \a w0 and \a w1.  The directions of the
  * corresponding \a alpha and \a beta curves are illustrated below.
  *
- * TODO: Diagram.
+ * \image html diagbdry.png
  *
  * For illustration, the example below shows the central surface in the
  * case (\a n, \a k) = (9, 2).
  *
- * TODO: Diagram.
- * TODO: Proofread!
+ * \image html diag92.png
  */
 class NTxIDiagonalCore : public NTxICore {
     private:
