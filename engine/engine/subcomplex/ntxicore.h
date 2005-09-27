@@ -266,7 +266,62 @@ class NTxICore : public ShareableObject {
 };
 
 /**
- * TODO
+ * One of a family of thin <tt>T x I</tt> triangulations that typically
+ * appear at the centres of layered torus bundles.  Different
+ * triangulations in this family use different numbers of tetrahedra,
+ * with the larger triangulations producing more complicated
+ * relationships between the upper and lower boundary curves.
+ *
+ * Members of this family are parameterised by their size (the number of
+ * tetrahedra) and an additional integer \a k, where
+ * 1 <= \a k <= \a size - 5.  Note that this means we must have
+ * \a size >= 6.  The member of this family of size \a n with additional
+ * parameter \a k is labelled <tt>T_n:k</tt>.
+ *
+ * It is worth noting that <tt>T_n:k</tt> is isomorphic to
+ * <tt>T_n:(n-4-k)</tt>, so in reality there are only [(\a n-4)/2]
+ * different triangulations for a given size (rounded down).
+ *
+ * A triangulation of this family is most easily defined in terms of its
+ * central torus.  Central surfaces are described in detail in
+ * "Structures of small closed non-orientable 3-manifold triangulations"
+ * (Burton 2003, math.GT/0311113); in particular, see the section on
+ * thin I-bundles.
+ *
+ * The central torus begins with two triangles \a u0 and \a u1 (which
+ * eventually provide the upper torus boundary), with a chain of
+ * quadrilaterals \a q1, ..., \a q(\a n-5) descending diagonally beneath
+ * them as illustrated in the diagram below.
+ *
+ * TODO: Diagram.
+ *
+ * We then distort quadrilateral \a qk and attach two more triangles
+ * \a w0 and \a w1 to its side (these will eventually provide the lower
+ * torus boundary).  This is illustrated in the following diagram.
+ *
+ * TODO: Diagram.
+ *
+ * This central torus wraps from left to right (so the lower left edges
+ * of most quadrilaterals \a qi are identified with the upper right
+ * edges of \a q(\a i-1), and the left edge of \a qk is identified with
+ * the right edge of \a w1).  As an exception, the two uppermost edges are
+ * identified with the two lowermost edges in a parallel fashion (so the
+ * upper edge of \a u1 is identified with the lower right edge of \a q1,
+ * and the adjacent edges at right angles to these are also identified).
+ *
+ * The four triangles correspond to the four tetrahedra in the
+ * triangulation that provide the boundary faces.  The upper boundary is
+ * coned out from triangles \a u0 and \a u1, and the lower boundary is
+ * coned out from triangles \a w0 and \a w1.  The directions of the
+ * corresponding \a alpha and \a beta curves are illustrated below.
+ *
+ * TODO: Diagram.
+ *
+ * For illustration, the example below shows the central surface in the
+ * case (\a n, \a k) = (9, 2).
+ *
+ * TODO: Diagram.
+ * TODO: Proofread!
  */
 class NTxIDiagonalCore : public NTxICore {
     private:
@@ -274,23 +329,35 @@ class NTxIDiagonalCore : public NTxICore {
             /**< The number of tetrahedra in this <tt>T x I</tt>
                  triangulation. */
         unsigned long k_;
-            /**< TODO */
+            /**< The additional parameter \a k as described in the
+                 class notes. */
 
     public:
         /**
-         * TODO
+         * Creates a new <tt>T x I</tt> triangulation with the given
+         * parameters.
          *
-         * Note that \a newK must be between 0 and \a size - 5 inclusive,
-         * and that \a size must be at least 6.
+         * @param newSize the number of tetrahedra in this
+         * triangulation.  This must be at least 6.
+         * @param newK the additional parameter \a k as described in the
+         * class notes.  This must be between 1 and (\a newSize - 5)
+         * inclusive.
          */
         NTxIDiagonalCore(unsigned long newSize, unsigned long newK);
 
         /**
-         * TODO
+         * Returns the total number of tetrahedra in this <tt>T x I</tt>
+         * triangulation.
+         *
+         * @return the total number of tetrahedra.
          */
         unsigned long size() const;
+
         /**
-         * TODO
+         * Returns the additional parameter \a k as described in the
+         * class notes.
+         *
+         * @return the additional parameter \a k.
          */
         unsigned long k() const;
 
