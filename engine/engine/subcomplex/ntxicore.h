@@ -131,19 +131,62 @@ class NTxICore : public ShareableObject {
          */
         unsigned bdryTet(unsigned whichBdry, unsigned whichFace) const;
         /**
-         * TODO.
+         * Describes which tetrahedron vertices play which roles in the
+         * upper and lower boundary faces.
+         *
+         * Each boundary torus contains two faces, whose vertices can be
+         * numbered 0, 1 and 2 according to the following diagram.  This
+         * diagram is completely symmetric, in that edges 1-2 are no
+         * more special than edges 0-2 or 0-1.  The important
+         * observations are that edges 1-2 and 2-1 of each face are
+         * identified, edges 0-2 and 2-0 of each face are identified and
+         * edges 0-1 and 1-0 of each face are identified.
+         *
+         * <pre>
+         *           *--->>--*
+         *           |0  2 / |
+         *    First  |    / 1|  Second
+         *    face   v   /   v   face
+         *           |1 /    |
+         *           | / 2  0|
+         *           *--->>--*
+         * </pre>
+         *
+         * This routine returns a permutation that maps these integers
+         * 0,1,2 to real tetrahedron vertices.  Let \a t be the
+         * tetrahedron returned by bdryTet(\a whichBdry, \a whichFace)
+         * and let \a p be the permutation returned by
+         * bdryRoles(\a whichBdry, \a whichFace).  Then vertices
+         * \a p[0], \a p[1] and \a p[2] of tetrahedron \a t correspond to
+         * the markings 0, 1 and 2 respectively in the diagram above (and
+         * therefore the boundary face is face \a p[3] of the tetrahedron).
+         *
+         * The arguments to this routine affect whether we examine the
+         * upper or lower boundary and whether we examine the first or
+         * second face of this boundary 
          *
          * @param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
          * @param whichFace 0 if the first boundary face should be
          * examined, or 1 if the second boundary face should be examined.
+         * @return the permutation mapping roles 0, 1 and 2 in the
+         * diagram above to real tetrahedron vertex numbers.
          */
         NPerm bdryRoles(unsigned whichBdry, unsigned whichFace) const;
         /**
          * Returns a 2-by-2 matrix describing the \a alpha and \a beta curves
          * on a torus boundary in terms of specific tetrahedron edges.
          *
-         * TODO.
+         * Consider the first face of the given boundary.  Let
+         * \a t be the tetrahedron returned by bdryTet(\a whichBdry, 0) and
+         * let \a p be the permutation returned by bdryRoles(\a whichBdry, 0).
+         *
+         * Let \a edge01 be the directed edge from vertex \a p[0] to \a p[1]
+         * of tetrahedron \a t, and let \a edge02 be the directed edge from
+         * vertex \a p[0] to \a p[2] of tetrahedron \a t.  Then the
+         * matrix returned by this routine describes how the directed
+         * edges \a edge01 and \a edge02 relate to the \a alpha and \a beta
+         * curves on the given boundary.  Specifically:
          *
          * <pre>
          *     [ alpha ]                  [ edge01 ]
@@ -228,7 +271,8 @@ class NTxICore : public ShareableObject {
 class NTxIDiagonalCore : public NTxICore {
     private:
         unsigned long size_;
-            /**< TODO */
+            /**< The number of tetrahedra in this <tt>T x I</tt>
+                 triangulation. */
         unsigned long k_;
             /**< TODO */
 
@@ -236,7 +280,8 @@ class NTxIDiagonalCore : public NTxICore {
         /**
          * TODO
          *
-         * Note that \a newK must be between 0 and \a size - 5 inclusive.
+         * Note that \a newK must be between 0 and \a size - 5 inclusive,
+         * and that \a size must be at least 6.
          */
         NTxIDiagonalCore(unsigned long newSize, unsigned long newK);
 

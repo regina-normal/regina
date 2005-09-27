@@ -46,7 +46,7 @@ namespace {
 }
 
 NLayeredTorusBundle::~NLayeredTorusBundle() {
-    delete coreIso;
+    delete coreIso_;
 }
 
 NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
@@ -111,8 +111,8 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
                 matchReln)) {
             // It's a match!
             NLayeredTorusBundle* ans = new NLayeredTorusBundle(core);
-            ans->coreIso = *it;
-            ans->reln = core.bdryReln(0) * matchReln *
+            ans->coreIso_ = *it;
+            ans->reln_ = core.bdryReln(0) * matchReln *
                 core.bdryReln(1).inverse();
 
             // Delete the remaining isomorphisms that we never even
@@ -133,21 +133,21 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
 }
 
 NManifold* NLayeredTorusBundle::getManifold() const {
-    return new NTorusBundle(core.parallelReln() * reln);
+    return new NTorusBundle(core_.parallelReln() * reln_);
 }
 
 std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,
         bool tex) const {
     if (tex) {
         out << "B_{";
-        core.writeTeXName(out);
+        core_.writeTeXName(out);
     } else {
         out << "B(";
-        core.writeName(out);
+        core_.writeName(out);
     }
 
-    out << " | " << reln[0][0] << ',' << reln[0][1];
-    out << " | " << reln[1][0] << ',' << reln[1][1];
+    out << " | " << reln_[0][0] << ',' << reln_[0][1];
+    out << " | " << reln_[1][0] << ',' << reln_[1][1];
 
     return out << (tex ? "}" : ")");
 }
