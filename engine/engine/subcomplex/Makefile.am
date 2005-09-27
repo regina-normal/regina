@@ -23,3 +23,4 @@ EXTRA_FILES = \
 	diagbdry.eps diagbdry.fig diagbdry.png
 	diagdistort.eps diagdistort.fig diagdistort.png
 	diaginit.eps diaginit.fig diaginit.png
+	parallel.eps parallel.fig parallel.png

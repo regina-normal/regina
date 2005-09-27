@@ -374,10 +374,24 @@ class NTxIDiagonalCore : public NTxICore {
  * (NTxICore triangulations are not seen below six tetrahedra).  It is
  * referred to as <tt>T_6^1</tt> in the paper "Structures of small closed
  * non-orientable 3-manifold triangulations" (Burton 2003, math.GT/0311113).
+ * In Regina it is given the name <tt>T_6*</tt>, to avoid confusion with
+ * the different NTxIDiagonalCore triangulation <tt>T_6:1</tt>.
  *
  * The triangulations of the upper and lower boundary tori are completely
  * parallel (and in particular, the upper and lower \a alpha curves are
  * parallel, as are the upper and lower \a beta curves).
+ *
+ * For reference, the central torus of this triangulation is depicted below.
+ * The left and right sides of the diagram are identified, as are the
+ * top and bottom.  The four triangles \a u0, \a u1, \a w0 and \a w1
+ * provide the boundary faces of the overall triangulation, with the upper
+ * boundary coned out from triangles \a u0 and \a u1 and the lower boundary
+ * coned out from triangles \a w0 and \a w1.  In each boundary, \a u0 or
+ * \a w0 gives the first boundary face and \a u1 or \a w1 gives the second.
+ * The directions of the corresponding \a alpha and \a beta curves are
+ * are also included.
+ *
+ * \image html parallel.png
  */
 class NTxIParallelCore : public NTxICore {
     public:
