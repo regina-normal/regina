@@ -301,24 +301,26 @@ class NTxICore : public ShareableObject {
  *
  * \image html diagdistort.png
  *
- * This central torus wraps from left to right (so the lower left edges
- * of most quadrilaterals \a qi are identified with the upper right
+ * The entire central torus wraps from left to right (so the lower left
+ * edges of most quadrilaterals \a qi are identified with the upper right
  * edges of \a q(\a i-1), and the left edge of \a qk is identified with
  * the right edge of \a w1).  As an exception, the two uppermost edges are
  * identified with the two lowermost edges in a parallel fashion (so the
- * upper edge of \a u1 is identified with the lower right edge of \a q1,
+ * upper left edge of \a u1 is identified with the lower right edge of \a q1,
  * and the adjacent edges at right angles to these are also identified).
  *
- * The four triangles correspond to the four tetrahedra in the
- * triangulation that provide the boundary faces.  The upper boundary is
- * coned out from triangles \a u0 and \a u1, and the lower boundary is
- * coned out from triangles \a w0 and \a w1.  The directions of the
- * corresponding \a alpha and \a beta curves are illustrated below.
+ * The four triangles in the central torus correspond to the four tetrahedra
+ * in the triangulation that provide the boundary faces.  The upper boundary
+ * is coned out from triangles \a u0 and \a u1, and the lower boundary is
+ * coned out from triangles \a w0 and \a w1.  In each boundary, \a u0 or
+ * \a w0 gives the first boundary face and \a u1 or \a w1 gives the second.
+ * The directions of the corresponding \a alpha and \a beta curves are
+ * illustrated below.
  *
  * \image html diagbdry.png
  *
- * For illustration, the example below shows the central surface in the
- * case (\a n, \a k) = (9, 2).
+ * As a final illustration, the example below shows the central surface in
+ * the case (\a n, \a k) = (9, 2).
  *
  * \image html diag92.png
  */
