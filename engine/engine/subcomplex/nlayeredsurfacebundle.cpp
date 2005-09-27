@@ -42,6 +42,9 @@ namespace {
     const NTxIDiagonalCore core_T_8_2(8, 2);
     const NTxIDiagonalCore core_T_9_1(9, 1);
     const NTxIDiagonalCore core_T_9_2(9, 2);
+    const NTxIDiagonalCore core_T_10_1(10, 1);
+    const NTxIDiagonalCore core_T_10_2(10, 2);
+    const NTxIDiagonalCore core_T_10_3(10, 3);
     const NTxIParallelCore core_T_p;
 }
 
@@ -77,6 +80,12 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
     if ((ans = hunt(tri, core_T_9_1)))
         return ans;
     if ((ans = hunt(tri, core_T_9_2)))
+        return ans;
+    if ((ans = hunt(tri, core_T_10_1)))
+        return ans;
+    if ((ans = hunt(tri, core_T_10_2)))
+        return ans;
+    if ((ans = hunt(tri, core_T_10_3)))
         return ans;
     if ((ans = hunt(tri, core_T_p)))
         return ans;
