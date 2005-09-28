@@ -257,6 +257,7 @@ class NTxICore : public ShareableObject {
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     protected:
         /**
@@ -433,6 +434,10 @@ inline const NMatrix2& NTxICore::parallelReln() const {
 }
 
 inline void NTxICore::writeTextShort(std::ostream& out) const {
+    writeName(out);
+}
+
+inline void NTxICore::writeTextLong(std::ostream& out) const {
     out << "TxI core: ";
     writeName(out);
 }
