@@ -76,6 +76,18 @@ class NSFSPlug;
  * first and second faces respectively.  Then the tetrahedron vertices...
  *
  * TODO: Finish this description.
+ *
+ * In the reflected case, we have:
+ *
+ * <pre>
+ *            *--->---*
+ *            | \ 2  0|
+ *     First  |1 \    |  Second
+ *     face   |   \   |   face
+ *            |    \ 1|
+ *            |0  2 \ |
+ *            *--->---*
+ * </pre>
  */
 struct NSFSAnnulus {
     NTetrahedron* tet[2];
@@ -103,12 +115,20 @@ struct NSFSAnnulus {
             const NIsomorphism* iso, NTriangulation* newTri) const;
 };
 
+/**
+ * Sockets must appear in order around the boundary of the piece.
+ *
+ * <pre>
+ * |0/1| |0/1| |0\1| |0/1| ...
+ *             (ref)
+ * </pre>
+ */
 class NSFSSocketHolder {
     protected:
         unsigned nSockets_;
         NSFSAnnulus* socket_;
         bool *socketOrient_;
-            /**< True for non-reflected, false for reflected. */
+            /**< True for ordinary, false for reflected. */
         NSFSPlug** plug_;
             /** Guaranteed non-zero. */
 

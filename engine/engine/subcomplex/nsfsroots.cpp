@@ -161,34 +161,34 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec) :
                 right[i].roles[1] = NPerm(1, 2, 3, 0);
                 break;
             case '\\':
-                right[i].tet[0] = t[3 * i];
-                right[i].tet[1] = t[3 * i + 2];
-                right[i].roles[0] = NPerm(0, 3, 1, 2);
-                right[i].roles[1] = NPerm(1, 0, 3, 2);
-                left[i].tet[0] = t[3 * i + 1];
+                left[i].tet[0] = t[3 * i];
                 left[i].tet[1] = t[3 * i + 2];
                 left[i].roles[0] = NPerm(1, 3, 0, 2);
-                left[i].roles[1] = NPerm(1, 2, 3, 0);
+                left[i].roles[1] = NPerm(3, 0, 1, 2);
+                right[i].tet[0] = t[3 * i + 1];
+                right[i].tet[1] = t[3 * i + 2];
+                right[i].roles[0] = NPerm(0, 3, 1, 2);
+                right[i].roles[1] = NPerm(3, 2, 1, 0);
                 break;
             case 'J':
-                left[i].tet[1] = t[3 * i];
                 left[i].tet[0] = t[3 * i + 2];
-                left[i].roles[1] = NPerm(1, 3, 0, 2);
+                left[i].tet[1] = t[3 * i];
                 left[i].roles[0] = NPerm(3, 0, 1, 2);
-                right[i].tet[1] = t[3 * i + 1];
+                left[i].roles[1] = NPerm(1, 3, 0, 2);
                 right[i].tet[0] = t[3 * i + 2];
-                right[i].roles[1] = NPerm(0, 3, 1, 2);
+                right[i].tet[1] = t[3 * i + 1];
                 right[i].roles[0] = NPerm(3, 2, 1, 0);
+                right[i].roles[1] = NPerm(0, 3, 1, 2);
                 break;
             case 'L':
-                right[i].tet[1] = t[3 * i];
-                right[i].tet[0] = t[3 * i + 2];
-                right[i].roles[1] = NPerm(1, 3, 0, 2);
-                right[i].roles[0] = NPerm(3, 0, 1, 2);
-                left[i].tet[1] = t[3 * i + 1];
                 left[i].tet[0] = t[3 * i + 2];
+                left[i].tet[1] = t[3 * i];
+                left[i].roles[0] = NPerm(1, 0, 3, 2);
                 left[i].roles[1] = NPerm(0, 3, 1, 2);
-                left[i].roles[0] = NPerm(3, 2, 1, 0);
+                right[i].tet[0] = t[3 * i + 2];
+                right[i].tet[1] = t[3 * i + 1];
+                right[i].roles[0] = NPerm(1, 2, 3, 0);
+                right[i].roles[1] = NPerm(1, 3, 0, 2);
                 break;
             default:
                 std::cerr << "ERROR: Bad NSFSRootMobiusChain specification.  "
@@ -214,11 +214,23 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec) :
 
     // All socket roles are identity permutations.
 
-    for (i = 0; i < nSockets_; i++) {
-        socket_[i].tet[0] = t[3 * i];
-        socket_[i].tet[1] = t[3 * i + 1];
-        socketOrient_[i] = (spec[i] == '/' || spec[i] == '\\');
-    }
+    // Make sure we go through the sockets in order as they appear
+    // around the boundary.
+    unsigned s = 0;
+    for (i = 0; i < nSockets_; i++)
+        if (spec[i] == '/' || spec[i] == '\\') {
+            socket_[s].tet[0] = t[3 * i];
+            socket_[s].tet[1] = t[3 * i + 1];
+            socketOrient_[s] = (s == '/');
+            s++;
+        }
+    for (i = 0; i < nSockets_; i++)
+        if (spec[i] == 'L' || spec[i] == 'J') {
+            socket_[s].tet[0] = t[3 * i];
+            socket_[s].tet[1] = t[3 * i + 1];
+            socketOrient_[s] = (s == 'J');
+            s++;
+        }
 
     delete[] t;
     delete[] left;

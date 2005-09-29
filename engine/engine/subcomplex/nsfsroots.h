@@ -71,10 +71,7 @@ namespace regina {
  *        +-+
  * </pre>
  *
- * These are attached from left to right to give sockets 0..(n-1).  Note
- * that this means socket i might not be adjacent to socket (i+1).
- *
- * Socket i has faces from tetrahedra 3i, 3i+1.
+ * These are attached from left to right.
  */
 class NSFSRootMobiusChain : public NSFSRoot {
     private:
