@@ -337,19 +337,26 @@ NSFSPlug* NSFSPlugCrosscap::isPlugged(const NSFSAnnulus& socket) {
 }
 
 void NSFSPlugDouble::adjustSFS(NSFSpace& sfs, bool reflect) const {
-    plug_[0]->adjustSFS(sfs, reflect);
-    plug_[1]->adjustSFS(sfs, reflect);
+    adjustSFSOnSockets(sfs, reflect);
 }
 
 std::ostream& NSFSPlugDouble::writeName(std::ostream& out) const {
     out << "d(";
+    if (skewed_[0])
+        out << 'x';
     plug_[0]->writeName(out) << ", ";
+    if (skewed_[1])
+        out << 'x';
     return plug_[1]->writeName(out) << ')';
 }
 
 std::ostream& NSFSPlugDouble::writeTeXName(std::ostream& out) const {
     out << "d(";
+    if (skewed_[0])
+        out << "\\times";
     plug_[0]->writeTeXName(out) << ", ";
+    if (skewed_[1])
+        out << "\\times";
     return plug_[1]->writeTeXName(out) << ')';
 }
 

@@ -134,6 +134,8 @@ class NSFSSocketHolder {
             /**< True for ordinary, false for reflected. */
         NSFSPlug** plug_;
             /** Guaranteed non-zero. */
+        bool* skewed_;
+            /**< Meaningless without a plug. */
 
     public:
         NSFSSocketHolder(const NSFSSocketHolder& cloneMe);
@@ -162,6 +164,7 @@ class NSFSSocketHolder {
         const NSFSAnnulus& socket(unsigned which) const;
         bool socketOrient(unsigned which) const;
         const NSFSPlug* plug(unsigned which) const;
+        bool plugSkewed(unsigned which) const;
 
         /**
          * Returns true if and only if all plugs were filled in.
@@ -169,6 +172,8 @@ class NSFSSocketHolder {
         bool isFullyPlugged(bool bailOnFailure = true);
         bool isFullyPlugged(std::list<NTetrahedron*>& avoidTets,
             bool bailOnFailure = true);
+
+        void adjustSFSOnSockets(NSFSpace& sfs, bool reflect) const;
 
     protected:
         /**
@@ -340,7 +345,8 @@ inline NSFSSocketHolder& NSFSSocketHolder::operator = (
 
 inline NSFSSocketHolder::NSFSSocketHolder(unsigned numSockets) :
         nSockets_(numSockets), socket_(new NSFSAnnulus[numSockets]),
-        socketOrient_(new bool[numSockets]), plug_(new NSFSPlug*[numSockets]) {
+        socketOrient_(new bool[numSockets]), plug_(new NSFSPlug*[numSockets]),
+        skewed_(new bool[numSockets]) {
     for (unsigned i = 0; i < numSockets; i++)
         plug_[i] = 0;
 }
@@ -349,6 +355,7 @@ inline NSFSSocketHolder::~NSFSSocketHolder() {
     delete[] socket_;
     delete[] socketOrient_;
     delete[] plug_;
+    delete[] skewed_;
 }
 
 inline void NSFSSocketHolder::destroyPlugs() {
@@ -371,6 +378,10 @@ inline bool NSFSSocketHolder::socketOrient(unsigned which) const {
 
 inline const NSFSPlug* NSFSSocketHolder::plug(unsigned which) const {
     return plug_[which];
+}
+
+inline bool NSFSSocketHolder::plugSkewed(unsigned which) const {
+    return skewed_[which];
 }
 
 // Inline functions for NSFSPlug

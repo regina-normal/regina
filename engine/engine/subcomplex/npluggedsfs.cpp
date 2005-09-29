@@ -65,17 +65,20 @@ NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& cloneMe) :
         nSockets_(cloneMe.nSockets_),
         socket_(new NSFSAnnulus[cloneMe.nSockets_]),
         socketOrient_(new bool[cloneMe.nSockets_]),
-        plug_(new NSFSPlug*[cloneMe.nSockets_]) {
+        plug_(new NSFSPlug*[cloneMe.nSockets_]),
+        skewed_(new bool[cloneMe.nSockets_]) {
     for (unsigned i = 0; i < nSockets_; i++) {
         socket_[i] = cloneMe.socket_[i];
         socketOrient_[i] = cloneMe.socketOrient_[i];
         plug_[i] = cloneMe.plug_[i];
+        skewed_[i] = cloneMe.skewed_[i];
     }
 }
 
 NSFSSocketHolder::NSFSSocketHolder(const NSFSAnnulus& socket0) :
         nSockets_(1), socket_(new NSFSAnnulus[1]),
-        socketOrient_(new bool[1]), plug_(new NSFSPlug*[1]) {
+        socketOrient_(new bool[1]), plug_(new NSFSPlug*[1]),
+        skewed_(new bool[1]) {
     socket_[0] = socket0;
     socketOrient_[0] = true;
     plug_[0] = 0;
@@ -84,7 +87,8 @@ NSFSSocketHolder::NSFSSocketHolder(const NSFSAnnulus& socket0) :
 NSFSSocketHolder::NSFSSocketHolder(const NSFSAnnulus& socket0,
         const NSFSAnnulus& socket1) :
         nSockets_(2), socket_(new NSFSAnnulus[2]),
-        socketOrient_(new bool[2]), plug_(new NSFSPlug*[2]) {
+        socketOrient_(new bool[2]), plug_(new NSFSPlug*[2]),
+        skewed_(new bool[2]) {
     socket_[0] = socket0;
     socketOrient_[0] = true;
     plug_[0] = 0;
@@ -100,7 +104,8 @@ NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& preImage,
         nSockets_(preImage.nSockets_),
         socket_(new NSFSAnnulus[preImage.nSockets_]),
         socketOrient_(new bool[preImage.nSockets_]),
-        plug_(new NSFSPlug*[preImage.nSockets_]) {
+        plug_(new NSFSPlug*[preImage.nSockets_]),
+        skewed_(new bool[preImage.nSockets_]) {
     for (unsigned s = 0; s < nSockets_; s++) {
         socket_[s] = preImage.socket_[s].image(preImageTri, iso, useTri);
         socketOrient_[s] = preImage.socketOrient_[s];
@@ -108,16 +113,29 @@ NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& preImage,
     }
 }
 
+// TODO: Merge these two routines.
 bool NSFSSocketHolder::isFullyPlugged(bool bailOnFailure) {
     bool ok = true;
-    for (unsigned s = 0; s < nSockets_; s++)
-        if (! (plug_[s] = NSFSPlug::isPlugged(socket_[s]))) {
-            // A socket couldn't be filled in.
-            if (bailOnFailure)
-                return false;
-            else
-                ok = false;
+    for (unsigned s = 0; s < nSockets_; s++) {
+        if ((plug_[s] = NSFSPlug::isPlugged(socket_[s]))) {
+            skewed_[s] = false;
+            continue;
         }
+
+        NSFSAnnulus adj(socket_[s].tet[0], socket_[s].roles[0] * NPerm(0, 1),
+            socket_[s].tet[1], socket_[s].roles[1] * NPerm(0, 1));
+
+        if ((plug_[s] = NSFSPlug::isPlugged(adj))) {
+            skewed_[s] = true;
+            continue;
+        }
+
+        // A socket couldn't be filled in.
+        if (bailOnFailure)
+            return false;
+        else
+            ok = false;
+    }
 
     return ok;
 }
@@ -125,16 +143,56 @@ bool NSFSSocketHolder::isFullyPlugged(bool bailOnFailure) {
 bool NSFSSocketHolder::isFullyPlugged(
         std::list<NTetrahedron*>& avoidTets, bool bailOnFailure) {
     bool ok = true;
-    for (unsigned s = 0; s < nSockets_; s++)
-        if (! (plug_[s] = NSFSPlug::isPlugged(socket_[s], avoidTets))) {
-            // A socket couldn't be filled in.
-            if (bailOnFailure)
-                return false;
-            else
-                ok = false;
+    for (unsigned s = 0; s < nSockets_; s++) {
+        if ((plug_[s] = NSFSPlug::isPlugged(socket_[s], avoidTets))) {
+            skewed_[s] = false;
+            continue;
         }
 
+        NSFSAnnulus adj(socket_[s].tet[0], socket_[s].roles[0] * NPerm(0, 1),
+            socket_[s].tet[1], socket_[s].roles[1] * NPerm(0, 1));
+
+        if ((plug_[s] = NSFSPlug::isPlugged(adj, avoidTets))) {
+            skewed_[s] = true;
+            continue;
+        }
+
+        // A socket couldn't be filled in.
+        if (bailOnFailure)
+            return false;
+        else
+            ok = false;
+    }
+
     return ok;
+}
+
+void NSFSSocketHolder::adjustSFSOnSockets(NSFSpace& sfs, bool reflect) const {
+    long skew = 0;
+    bool reflectThis;
+    for (unsigned i = 0; i < nSockets_; i++) {
+        // TODO: What to do with missing plugs?
+        if (! plug_[i])
+            continue;
+
+        reflectThis = ! socketOrient_[i];
+        if (reflect)
+            reflectThis = ! reflectThis;
+        if (skewed_[i])
+            reflectThis = ! reflectThis;
+
+        plug_[i]->adjustSFS(sfs, reflectThis);
+
+        if (skewed_[i]) {
+            if (socketOrient_[i])
+                skew++;
+            else
+                skew--;
+        }
+    }
+
+    // A skew on a socket is equivalent to an additional (1,-1) fibre.
+    sfs.insertFibre(1, - skew);
 }
 
 bool NSFSPlug::isBad(NTetrahedron* t,
@@ -185,9 +243,7 @@ NSFSTree* NSFSTree::hunt(NTriangulation* tri, const NSFSRoot& root) {
 
 NManifold* NSFSTree::getManifold() const {
     NSFSpace* ans = root_.createSFS();
-
-    for (unsigned i = 0; i < nSockets_; i++)
-        plug_[i]->adjustSFS(*ans, ! socketOrient_[i]);
+    adjustSFSOnSockets(*ans, false);
 
     ans->reduce();
     return ans;
@@ -204,6 +260,8 @@ std::ostream& NSFSTree::writeCommonName(std::ostream& out, bool tex) const {
     // TODO: Normalise parameters?
     for (unsigned i = 0; i < nSockets_; i++) {
         out << " | ";
+        if (skewed_[i])
+            out << (tex ? "\\times" : "x");
         if (tex)
             plug_[i]->writeTeXName(out);
         else

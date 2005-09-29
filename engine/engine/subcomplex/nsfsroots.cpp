@@ -44,6 +44,7 @@ namespace {
     NSFSRootReflectorChain rootRef2(2);
     NSFSRootReflectorChain rootRef3(3);
     NSFSRootT_5_1 rootT_5_1;
+    NSFSRootTriPrism rootPrism;
 }
 
 NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
@@ -81,6 +82,8 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
     if ((ans = hunt(tri, rootRef3)))
         return ans;
     if ((ans = hunt(tri, rootT_5_1)))
+        return ans;
+    if ((ans = hunt(tri, rootPrism)))
         return ans;
 
     return 0;
@@ -307,6 +310,49 @@ std::ostream& NSFSRootReflectorChain::writeTeXName(std::ostream& out) const {
 void NSFSRootReflectorChain::writeTextLong(std::ostream& out) const {
     out << "SFS root reflector chain: ";
     writeName(out);
+}
+
+NSFSRootTriPrism::NSFSRootTriPrism() : NSFSRoot(3) {
+    NTetrahedron* a = new NTetrahedron();
+    NTetrahedron* b = new NTetrahedron();
+    NTetrahedron* c = new NTetrahedron();
+
+    a->joinTo(0, b, NPerm(0, 2, 3, 1));
+    b->joinTo(1, c, NPerm(3, 0, 2, 1));
+    c->joinTo(1, a, NPerm(2, 1, 0, 3));
+
+    root_.addTetrahedron(a);
+    root_.addTetrahedron(b);
+    root_.addTetrahedron(c);
+
+    socket_[0].tet[0] = a;
+    socket_[0].roles[0] = NPerm(2, 3);
+    socket_[0].tet[1] = b;
+    socketOrient_[0] = true;
+    socket_[1].tet[0] = b;
+    socket_[1].roles[0] = NPerm(1, 0, 3, 2);
+    socket_[1].tet[1] = c;
+    socket_[1].roles[1] = NPerm(2, 3);
+    socketOrient_[1] = true;
+    socket_[2].tet[0] = c;
+    socket_[2].tet[1] = a;
+    socketOrient_[2] = false;
+}
+
+NSFSpace* NSFSRootTriPrism::createSFS() const {
+    return new NSFSpace(NSFSpace::o1, 0, 0, 0);
+}
+
+std::ostream& NSFSRootTriPrism::writeName(std::ostream& out) const {
+    return out << "Tri";
+}
+
+std::ostream& NSFSRootTriPrism::writeTeXName(std::ostream& out) const {
+    return out << "\\Delta";
+}
+
+void NSFSRootTriPrism::writeTextLong(std::ostream& out) const {
+    out << "SFS root triangular prism";
 }
 
 } // namespace regina
