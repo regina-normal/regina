@@ -26,12 +26,23 @@
 
 /* end stub */
 
+#include <cstring>
 #include "manifold/nsfs.h"
 #include "subcomplex/nsfsroots.h"
 
 namespace regina {
 
 namespace {
+    NSFSRootMobiusChain rootMob1("/");
+    NSFSRootMobiusChain rootMob2("//");
+    NSFSRootMobiusChain rootMob3("/\\");
+    NSFSRootMobiusChain rootMob4("///");
+    NSFSRootMobiusChain rootMob5("//\\");
+    NSFSRootMobiusChain rootMob6("/J/");
+    NSFSRootMobiusChain rootMob7("/L/");
+    NSFSRootReflectorChain rootRef1(1);
+    NSFSRootReflectorChain rootRef2(2);
+    NSFSRootReflectorChain rootRef3(3);
     NSFSRootT_5_1 rootT_5_1;
 }
 
@@ -49,6 +60,26 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
     // Hunt for the root.
     // TODO: Run through the list.
     NSFSTree* ans;
+    if ((ans = hunt(tri, rootMob1)))
+        return ans;
+    if ((ans = hunt(tri, rootMob2)))
+        return ans;
+    if ((ans = hunt(tri, rootMob3)))
+        return ans;
+    if ((ans = hunt(tri, rootMob4)))
+        return ans;
+    if ((ans = hunt(tri, rootMob5)))
+        return ans;
+    if ((ans = hunt(tri, rootMob6)))
+        return ans;
+    if ((ans = hunt(tri, rootMob7)))
+        return ans;
+    if ((ans = hunt(tri, rootRef1)))
+        return ans;
+    if ((ans = hunt(tri, rootRef2)))
+        return ans;
+    if ((ans = hunt(tri, rootRef3)))
+        return ans;
     if ((ans = hunt(tri, rootT_5_1)))
         return ans;
 
@@ -99,6 +130,171 @@ std::ostream& NSFSRootT_5_1::writeName(std::ostream& out) const {
 
 std::ostream& NSFSRootT_5_1::writeTeXName(std::ostream& out) const {
     return out << "\\tilde{T}_5^1";
+}
+
+NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec) :
+        NSFSRoot(strlen(spec)) {
+    spec_ = strdup(spec);
+
+    NTetrahedron** t = new NTetrahedron*[nSockets_ * 3];
+    unsigned i;
+    for (i = 0; i < nSockets_ * 3; i++)
+        t[i] = new NTetrahedron();
+
+    NSFSAnnulus* left = new NSFSAnnulus[nSockets_];
+    NSFSAnnulus* right = new NSFSAnnulus[nSockets_];
+
+    for (i = 0; i < nSockets_; i++) {
+        t[3 * i]->joinTo(0, t[3 * i + 1], NPerm(1, 2));
+        t[3 * i]->joinTo(1, t[3 * i + 2], NPerm(1, 3));
+        t[3 * i + 1]->joinTo(1, t[3 * i + 2], NPerm(0, 2));
+
+        switch (spec[i]) {
+            case '/':
+                left[i].tet[0] = t[3 * i];
+                left[i].tet[1] = t[3 * i + 2];
+                left[i].roles[0] = NPerm(0, 3, 1, 2);
+                left[i].roles[1] = NPerm(1, 0, 3, 2);
+                right[i].tet[0] = t[3 * i + 1];
+                right[i].tet[1] = t[3 * i + 2];
+                right[i].roles[0] = NPerm(1, 3, 0, 2);
+                right[i].roles[1] = NPerm(1, 2, 3, 0);
+                break;
+            case '\\':
+                right[i].tet[0] = t[3 * i];
+                right[i].tet[1] = t[3 * i + 2];
+                right[i].roles[0] = NPerm(0, 3, 1, 2);
+                right[i].roles[1] = NPerm(1, 0, 3, 2);
+                left[i].tet[0] = t[3 * i + 1];
+                left[i].tet[1] = t[3 * i + 2];
+                left[i].roles[0] = NPerm(1, 3, 0, 2);
+                left[i].roles[1] = NPerm(1, 2, 3, 0);
+                break;
+            case 'J':
+                left[i].tet[1] = t[3 * i];
+                left[i].tet[0] = t[3 * i + 2];
+                left[i].roles[1] = NPerm(1, 3, 0, 2);
+                left[i].roles[0] = NPerm(3, 0, 1, 2);
+                right[i].tet[1] = t[3 * i + 1];
+                right[i].tet[0] = t[3 * i + 2];
+                right[i].roles[1] = NPerm(0, 3, 1, 2);
+                right[i].roles[0] = NPerm(3, 2, 1, 0);
+                break;
+            case 'L':
+                right[i].tet[1] = t[3 * i];
+                right[i].tet[0] = t[3 * i + 2];
+                right[i].roles[1] = NPerm(1, 3, 0, 2);
+                right[i].roles[0] = NPerm(3, 0, 1, 2);
+                left[i].tet[1] = t[3 * i + 1];
+                left[i].tet[0] = t[3 * i + 2];
+                left[i].roles[1] = NPerm(0, 3, 1, 2);
+                left[i].roles[0] = NPerm(3, 2, 1, 0);
+                break;
+            default:
+                std::cerr << "ERROR: Bad NSFSRootMobiusChain specification.  "
+                    "Expect a crash any time now." << std::endl;
+        }
+    }
+
+    for (i = 0; i < nSockets_ - 1; i++) {
+        right[i].tet[0]->joinTo(right[i].roles[0][3], left[i + 1].tet[0],
+            left[i + 1].roles[0] * right[i].roles[0].inverse());
+        right[i].tet[1]->joinTo(right[i].roles[1][3], left[i + 1].tet[1],
+            left[i + 1].roles[1] * right[i].roles[1].inverse());
+    }
+    right[nSockets_ - 1].tet[0]->joinTo(right[nSockets_ - 1].roles[0][3],
+        left[0].tet[1], left[0].roles[1] * NPerm(0, 2) *
+        right[nSockets_ - 1].roles[0].inverse());
+    right[nSockets_ - 1].tet[1]->joinTo(right[nSockets_ - 1].roles[1][3],
+        left[0].tet[0], left[0].roles[0] * NPerm(0, 2) *
+        right[nSockets_ - 1].roles[1].inverse());
+
+    for (i = 0; i < nSockets_ * 3; i++)
+        root_.addTetrahedron(t[i]);
+
+    // All socket roles are identity permutations.
+
+    for (i = 0; i < nSockets_; i++) {
+        socket_[i].tet[0] = t[3 * i];
+        socket_[i].tet[1] = t[3 * i + 1];
+        socketOrient_[i] = (spec[i] == '/' || spec[i] == '\\');
+    }
+
+    delete[] t;
+    delete[] left;
+    delete[] right;
+}
+
+NSFSRootMobiusChain::~NSFSRootMobiusChain() {
+    free(spec_);
+}
+
+NSFSpace* NSFSRootMobiusChain::createSFS() const {
+    NSFSpace* ans = new NSFSpace(NSFSpace::n1, 1, 0, 0);
+    ans->insertFibre(1, 1);
+    return ans;
+}
+
+std::ostream& NSFSRootMobiusChain::writeName(std::ostream& out) const {
+    return out << "M(" << spec_ << ')';
+}
+
+std::ostream& NSFSRootMobiusChain::writeTeXName(std::ostream& out) const {
+    return out << "M_\\mathtt{" << spec_ << '}';
+}
+
+void NSFSRootMobiusChain::writeTextLong(std::ostream& out) const {
+    out << "SFS root Mobius chain: ";
+    writeName(out);
+}
+
+NSFSRootReflectorChain::NSFSRootReflectorChain(unsigned length) :
+        NSFSRoot(length) {
+    NTetrahedron** t = new NTetrahedron*[length * 3];
+    unsigned i;
+    for (i = 0; i < length * 3; i++)
+        t[i] = new NTetrahedron();
+
+    for (i = 0; i < length; i++) {
+        t[3 * i]->joinTo(0, t[3 * i + 2], NPerm(0, 1, 2, 3));
+        t[3 * i + 1]->joinTo(0, t[3 * i + 2], NPerm(3, 2, 1, 0));
+        t[3 * i]->joinTo(1, t[3 * i + 2], NPerm(3, 2, 0, 1));
+        t[3 * i + 1]->joinTo(1, t[3 * i + 2], NPerm(0, 1, 3, 2));
+    }
+
+    for (i = 0; i < length - 1; i++)
+        t[3 * i + 1]->joinTo(2, t[3 * i + 3], NPerm(0, 1));
+    t[3 * length - 2]->joinTo(2, t[0], NPerm(0, 1));
+
+    for (i = 0; i < length * 3; i++)
+        root_.addTetrahedron(t[i]);
+
+    // All socket roles are identity permutations.
+
+    for (i = 0; i < length; i++) {
+        socket_[i].tet[0] = t[3 * i];
+        socket_[i].tet[1] = t[3 * i + 1];
+        socketOrient_[i] = true;
+    }
+
+    delete[] t;
+}
+
+NSFSpace* NSFSRootReflectorChain::createSFS() const {
+    return new NSFSpace(NSFSpace::o1, 0, 0, 1);
+}
+
+std::ostream& NSFSRootReflectorChain::writeName(std::ostream& out) const {
+    return out << 'R' << length();
+}
+
+std::ostream& NSFSRootReflectorChain::writeTeXName(std::ostream& out) const {
+    return out << "R_{" << length() << '}';
+}
+
+void NSFSRootReflectorChain::writeTextLong(std::ostream& out) const {
+    out << "SFS root reflector chain: ";
+    writeName(out);
 }
 
 } // namespace regina

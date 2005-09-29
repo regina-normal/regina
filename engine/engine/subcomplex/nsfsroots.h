@@ -44,6 +44,84 @@ namespace regina {
  * @{
  */
 
+/**
+ * <pre>
+ *        +-+
+ *       0|/|1
+ *     /: +-+
+ *        | |
+ *        +-+
+ *
+ *        +-+
+ *       0|\|1
+ *     \: +-+
+ *        | |
+ *        +-+
+ *
+ *        +-+
+ *        | |
+ *     J: +-+
+ *       0|/|1
+ *        +-+
+ *
+ *        +-+
+ *        | |
+ *     L: +-+
+ *       0|\|1
+ *        +-+
+ * </pre>
+ *
+ * These are attached from left to right to give sockets 0..(n-1).  Note
+ * that this means socket i might not be adjacent to socket (i+1).
+ *
+ * Socket i has faces from tetrahedra 3i, 3i+1.
+ */
+class NSFSRootMobiusChain : public NSFSRoot {
+    private:
+        char* spec_;
+
+    public:
+        NSFSRootMobiusChain(const char* spec);
+        ~NSFSRootMobiusChain();
+
+        const char* spec() const;
+
+        NSFSpace* createSFS() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+};
+
+/**
+ * <pre>
+ *            *--->---*
+ *            |0  2 / |
+ *     First  |    / 1|  Second
+ *     face   |   /   |   face
+ *            |1 /    |
+ *            | / 2  0|
+ *            *--->---*
+ *
+ *     [ socket 0 ] [ socket 1 ] [ socket 2 ] ...
+ * </pre>
+ *
+ * Socket i has faces from tetrahedra 3i, 3i+1.
+ */
+class NSFSRootReflectorChain : public NSFSRoot {
+    public:
+        NSFSRootReflectorChain(unsigned length);
+
+        unsigned length() const;
+
+        NSFSpace* createSFS() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+};
+
+/**
+ * TODO: Remake this triangulation, this time with documentation.
+ */
 class NSFSRootT_5_1 : public NSFSRoot {
     public:
         NSFSRootT_5_1();
@@ -53,7 +131,18 @@ class NSFSRootT_5_1 : public NSFSRoot {
         std::ostream& writeTeXName(std::ostream& out) const;
 };
 
+// Inline functions for NSFSRootMobiusChain
+
+const char* NSFSRootMobiusChain::spec() const {
+    return spec_;
+}
+
+// Inline functions for NSFSRootReflectorChain
+
+unsigned NSFSRootReflectorChain::length() const {
+    return nSockets_;
+}
+
 } // namespace regina
 
 #endif
-
