@@ -96,7 +96,7 @@ class NSFSPlugLST : public NSFSPlug {
 // Inline functions for NSFSPlugMobius
 
 inline NSFSPlugMobius::NSFSPlugMobius(const NSFSAnnulus& toSocket,
-        int useOrient) : NSFSPlug(toSocket), orient(useOrient) {
+        int useOrient) : NSFSPlug(toSocket), orientation(useOrient) {
 }
 
 // Inline functions for NSFSPlugLST

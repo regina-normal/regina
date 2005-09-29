@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "manifold/nsfs.h"
 #include "subcomplex/npluggedsfs.h"
 #include "triangulation/nisomorphism.h"
 
@@ -50,7 +51,7 @@ void NSFSAnnulus::switchSides() {
 }
 
 void NSFSAnnulus::transform(const NTriangulation* originalTri,
-        const NIsomorphism* iso, const NTriangulation* newTri) {
+        const NIsomorphism* iso, NTriangulation* newTri) {
     unsigned which;
     unsigned long tetID;
     for (which = 0; which < 2; which++) {
@@ -62,7 +63,7 @@ void NSFSAnnulus::transform(const NTriangulation* originalTri,
 
 NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& cloneMe) :
         nSockets_(cloneMe.nSockets_),
-        socket_(new NAnnulusBoundary[cloneMe.nSockets_]),
+        socket_(new NSFSAnnulus[cloneMe.nSockets_]),
         socketOrient_(new bool[cloneMe.nSockets_]),
         plug_(new NSFSPlug*[cloneMe.nSockets_]) {
     for (unsigned i = 0; i < nSockets_; i++) {
@@ -74,12 +75,11 @@ NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& cloneMe) :
 
 NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& preImage,
         const NTriangulation* preImageTri, const NIsomorphism* iso,
-        const NTriangulation* useTri) :
+        NTriangulation* useTri) :
         nSockets_(preImage.nSockets_),
-        socket_(new NAnnulusBoundary[preImage.nSockets_]),
+        socket_(new NSFSAnnulus[preImage.nSockets_]),
         socketOrient_(new bool[preImage.nSockets_]),
         plug_(new NSFSPlug*[preImage.nSockets_]) {
-    unsigned s, f;
     for (unsigned s = 0; s < nSockets_; s++) {
         socket_[s] = preImage.socket_[s].image(preImageTri, iso, useTri);
         socketOrient_[s] = preImage.socketOrient_[s];
@@ -102,7 +102,7 @@ bool NSFSSocketHolder::isFullyPlugged(bool bailOnFailure) {
 }
 
 NSFSTree::~NSFSTree() {
-    delete rootIso;
+    delete rootIso_;
 
     for (unsigned i = 0; i < nSockets_; i++)
         delete plug_[i];
@@ -116,8 +116,8 @@ NSFSTree* NSFSTree::hunt(NTriangulation* tri, const NSFSRoot& root) {
     // Run through each isomorphism and look for the corresponding plugs.
     for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
-        NSFSSocketHolder sockets(root, root.root(), *it, tri);
-        if (! sockets.isFullyPlugged()) {
+        NSFSSocketHolder sockets(root, &root.root(), *it, tri);
+        if (! sockets.isFullyPlugged(true)) {
             // Delete this isomorphism; we won't need it any more.
             delete *it;
             continue;
@@ -141,7 +141,7 @@ NManifold* NSFSTree::getManifold() const {
     NSFSpace* ans = root_.createSFS();
 
     for (unsigned i = 0; i < nSockets_; i++)
-        plug_[i]->adjustSFS(*ans, ! socketOrient_[s]);
+        plug_[i]->adjustSFS(*ans, ! socketOrient_[i]);
 
     ans->reduce();
     return ans;
@@ -149,7 +149,11 @@ NManifold* NSFSTree::getManifold() const {
 
 std::ostream& NSFSTree::writeCommonName(std::ostream& out, bool tex) const {
     out << (tex ? "F_{" : "F(");
-    root_.writeCommonName(out, tex);
+
+    if (tex)
+        root_.writeTeXName(out);
+    else
+        root_.writeName(out);
 
     // TODO: Normalise parameters?
     for (unsigned i = 0; i < nSockets_; i++) {

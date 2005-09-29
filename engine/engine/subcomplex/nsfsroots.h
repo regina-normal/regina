@@ -35,7 +35,7 @@
 #define __NSFSROOTS_H
 #endif
 
-#include "subcomplex/nsfsroot.h"
+#include "subcomplex/npluggedsfs.h"
 
 namespace regina {
 
@@ -48,7 +48,7 @@ class NSFSRootT_5_1 : public NSFSRoot {
     public:
         NSFSRootT_5_1();
 
-        NSFSSpace* createSFS();
+        NSFSpace* createSFS() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 };

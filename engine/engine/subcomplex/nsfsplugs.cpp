@@ -28,7 +28,7 @@
 
 #include "manifold/nsfs.h"
 #include "subcomplex/nlayeredsolidtorus.h"
-#include "subcomplex/ntorusplug.h"
+#include "subcomplex/nsfsplugs.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntetrahedron.h"
@@ -48,7 +48,7 @@ NSFSPlug* NSFSPlug::isPlugged(const NSFSAnnulus& socket) {
 }
 
 NSFSPlug* NSFSPlug::isPlugged(const NSFSAnnulus& socket,
-        std::list<NTetrahedron*>& avoidTets) {
+        std::list<NTetrahedron*>& /* avoidTets */) {
     // TODO: Flesh out.
     NSFSPlug* ans;
 

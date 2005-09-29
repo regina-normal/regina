@@ -42,6 +42,9 @@
 
 namespace regina {
 
+class NSFSpace;
+class NSFSPlug;
+
 /**
  * \weakgroup subcomplex
  * @{
@@ -95,15 +98,15 @@ struct NSFSAnnulus {
     NSFSAnnulus otherSide() const;
 
     void transform(const NTriangulation* originalTri,
-            const NIsomorphism* iso, const NTriangulation* newTri);
+            const NIsomorphism* iso, NTriangulation* newTri);
     NSFSAnnulus image(const NTriangulation* originalTri,
-            const NIsomorphism* iso, const NTriangulation* newTri) const;
+            const NIsomorphism* iso, NTriangulation* newTri) const;
 };
 
 class NSFSSocketHolder {
     protected:
         unsigned nSockets_;
-        const NAnnulusBoundary* socket_;
+        NSFSAnnulus* socket_;
         bool *socketOrient_;
             /**< True for non-reflected, false for reflected. */
         NSFSPlug** plug_;
@@ -118,7 +121,7 @@ class NSFSSocketHolder {
          */
         NSFSSocketHolder(const NSFSSocketHolder& preImage,
                 const NTriangulation* preImageTri, const NIsomorphism* iso,
-                const NTriangulation* useTri);
+                NTriangulation* useTri);
 
         /**
          * Does \e not destroy plugs.  Just the arrays.
@@ -126,7 +129,7 @@ class NSFSSocketHolder {
         virtual ~NSFSSocketHolder();
 
         unsigned numberOfSockets() const;
-        const NAnnulusBoundary& socket(unsigned which) const;
+        const NSFSAnnulus& socket(unsigned which) const;
         bool socketOrient(unsigned which) const;
         const NSFSPlug* plug(unsigned which) const;
 
@@ -155,13 +158,13 @@ class NSFSSocketHolder {
 
 class NSFSPlug : public ShareableObject {
     protected:
-        NAnnulusBoundary toSocket_;
+        NSFSAnnulus toSocket_;
 
     public:
         /**
          * My side of the socket.
          */
-        const NAnnulusBoundary& toSocket() const;
+        const NSFSAnnulus& toSocket() const;
 
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const = 0;
 
@@ -176,17 +179,17 @@ class NSFSPlug : public ShareableObject {
             std::list<NTetrahedron*>& avoidTets);
 
     protected:
-        NSFSPlug(const NAnnulusBoundary& toSocket);
+        NSFSPlug(const NSFSAnnulus& toSocket);
 };
 
-class NSFSRoot : public ShareableObject, NSFSSocketHolder {
+class NSFSRoot : public ShareableObject, public NSFSSocketHolder {
     protected:
         NTriangulation root_;
 
     public:
         const NTriangulation& root() const;
 
-        virtual NSFSSpace* createSFS() const = 0;
+        virtual NSFSpace* createSFS() const = 0;
 
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
@@ -201,7 +204,7 @@ class NSFSRoot : public ShareableObject, NSFSSocketHolder {
 /**
  * No plugs can be zero.
  */
-class NSFSTree : public NStandardTriangulation, NSFSSocketHolder {
+class NSFSTree : public NStandardTriangulation, public NSFSSocketHolder {
     private:
         const NSFSRoot& root_;
         NIsomorphism* rootIso_;
@@ -214,7 +217,7 @@ class NSFSTree : public NStandardTriangulation, NSFSSocketHolder {
         ~NSFSTree();
 
         const NSFSRoot& root() const;
-        const NIsomorphism* rootIso(); const
+        const NIsomorphism* rootIso() const;
 
         static NSFSTree* isSFSTree(NTriangulation* tri);
 
@@ -262,15 +265,20 @@ inline NSFSAnnulus::NSFSAnnulus(NTetrahedron* t0, NPerm r0,
 inline NSFSAnnulus& NSFSAnnulus::operator = (const NSFSAnnulus& cloneMe) {
     tet[0] = cloneMe.tet[0]; tet[1] = cloneMe.tet[1];
     roles[0] = cloneMe.roles[0]; roles[1] = cloneMe.roles[1];
+    return *this;
 }
 
 inline NSFSAnnulus NSFSAnnulus::otherSide() const {
-    return NSFSAnnulus(*this).switchSides();
+    NSFSAnnulus a(*this);
+    a.switchSides();
+    return a;
 }
 
 inline NSFSAnnulus NSFSAnnulus::image(const NTriangulation* originalTri,
-        const NIsomorphism* iso, const NTriangulation* newTri) const {
-    return NSFSAnnulus(*this).transform(originalTri, iso, newTri);
+        const NIsomorphism* iso, NTriangulation* newTri) const {
+    NSFSAnnulus a(*this);
+    a.transform(originalTri, iso, newTri);
+    return a;
 }
 
 // Inline functions for NSFSSocketHolder
@@ -278,10 +286,11 @@ inline NSFSAnnulus NSFSAnnulus::image(const NTriangulation* originalTri,
 inline NSFSSocketHolder& NSFSSocketHolder::operator = (
         const NSFSSocketHolder&) {
     // Vacuous inaccessible assignment operator.
+    return *this;
 }
 
 inline NSFSSocketHolder::NSFSSocketHolder(unsigned numSockets) :
-        nSockets_(numSockets), socket_(new NAnnulusBoundary[numsockets]),
+        nSockets_(numSockets), socket_(new NSFSAnnulus[numSockets]),
         socketOrient_(new bool[numSockets]), plug_(new NSFSPlug*[numSockets]) {
     for (unsigned i = 0; i < numSockets; i++)
         plug_[i] = 0;
@@ -297,7 +306,7 @@ inline unsigned NSFSSocketHolder::numberOfSockets() const {
     return nSockets_;
 }
 
-inline const NAnnulusBoundary& NSFSSocketHolder::socket(unsigned which) const {
+inline const NSFSAnnulus& NSFSSocketHolder::socket(unsigned which) const {
     return socket_[which];
 }
 
@@ -311,11 +320,11 @@ inline const NSFSPlug* NSFSSocketHolder::plug(unsigned which) const {
 
 // Inline functions for NSFSPlug
 
-inline NSFSPlug::NSFSPlug(const NAnnulusBoundary& toSocket) :
+inline NSFSPlug::NSFSPlug(const NSFSAnnulus& toSocket) :
         toSocket_(toSocket) {
 }
 
-inline const NAnnulusBoundary& NSFSPlug::toSocket() const {
+inline const NSFSAnnulus& NSFSPlug::toSocket() const {
     return toSocket_;
 }
 

@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "manifold/nsfs.h"
-#include "subcomplex/npluggedsfs.h"
+#include "subcomplex/nsfsroots.h"
 
 namespace regina {
 
@@ -76,19 +76,19 @@ NSFSRootT_5_1::NSFSRootT_5_1() : NSFSRoot(2) {
 
     root_.insertConstruction(6, adj, glu);
 
-    socket_[0]->tet[0] = root_.getTetrahedron(1);
-    socket_[0]->tet[1] = root_.getTetrahedron(0);
-    socket_[1]->tet[0] = root_.getTetrahedron(0);
-    socket_[1]->tet[1] = root_.getTetrahedron(2);
+    socket_[0].tet[0] = root_.getTetrahedron(1);
+    socket_[0].tet[1] = root_.getTetrahedron(0);
+    socket_[1].tet[0] = root_.getTetrahedron(0);
+    socket_[1].tet[1] = root_.getTetrahedron(2);
 
-    socket_[1]->roles[0] = NPerm(2, 3);
+    socket_[1].roles[0] = NPerm(2, 3);
 
     socketOrient_[0] = false;
     socketOrient_[1] = true;
 }
 
-NSFSSpace* NSFSRootT_5_1::createSFS() {
-    NSFSpace* ans = NSFSpace(NSFSpace::n1, 1, 0, 0);
+NSFSpace* NSFSRootT_5_1::createSFS() const {
+    NSFSpace* ans = new NSFSpace(NSFSpace::n1, 1, 0, 0);
     ans->insertFibre(1, 1);
     return ans;
 }
