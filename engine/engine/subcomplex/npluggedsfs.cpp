@@ -73,6 +73,27 @@ NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& cloneMe) :
     }
 }
 
+NSFSSocketHolder::NSFSSocketHolder(const NSFSAnnulus& socket0) :
+        nSockets_(1), socket_(new NSFSAnnulus[1]),
+        socketOrient_(new bool[1]), plug_(new NSFSPlug*[1]) {
+    socket_[0] = socket0;
+    socketOrient_[0] = true;
+    plug_[0] = 0;
+}
+
+NSFSSocketHolder::NSFSSocketHolder(const NSFSAnnulus& socket0,
+        const NSFSAnnulus& socket1) :
+        nSockets_(2), socket_(new NSFSAnnulus[2]),
+        socketOrient_(new bool[2]), plug_(new NSFSPlug*[2]) {
+    socket_[0] = socket0;
+    socketOrient_[0] = true;
+    plug_[0] = 0;
+
+    socket_[1] = socket1;
+    socketOrient_[1] = true;
+    plug_[1] = 0;
+}
+
 NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& preImage,
         const NTriangulation* preImageTri, const NIsomorphism* iso,
         NTriangulation* useTri) :
@@ -91,6 +112,21 @@ bool NSFSSocketHolder::isFullyPlugged(bool bailOnFailure) {
     bool ok = true;
     for (unsigned s = 0; s < nSockets_; s++)
         if (! (plug_[s] = NSFSPlug::isPlugged(socket_[s]))) {
+            // A socket couldn't be filled in.
+            if (bailOnFailure)
+                return false;
+            else
+                ok = false;
+        }
+
+    return ok;
+}
+
+bool NSFSSocketHolder::isFullyPlugged(
+        std::list<NTetrahedron*>& avoidTets, bool bailOnFailure) {
+    bool ok = true;
+    for (unsigned s = 0; s < nSockets_; s++)
+        if (! (plug_[s] = NSFSPlug::isPlugged(socket_[s], avoidTets))) {
             // A socket couldn't be filled in.
             if (bailOnFailure)
                 return false;
@@ -126,7 +162,7 @@ NSFSTree* NSFSTree::hunt(NTriangulation* tri, const NSFSRoot& root) {
     for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
         NSFSSocketHolder sockets(root, &root.root(), *it, tri);
-        if (! sockets.isFullyPlugged(true)) {
+        if (! sockets.isFullyPlugged()) {
             // Delete this isomorphism; we won't need it any more.
             delete *it;
             continue;

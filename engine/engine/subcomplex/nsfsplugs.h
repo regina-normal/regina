@@ -126,11 +126,10 @@ class NSFSPlugCrosscap : public NSFSPlug {
         NSFSPlugCrosscap(const NSFSAnnulus& toSocket, bool reversing);
 };
 
-class NSFSPlugDouble : public NSFSPlug {
-    private:
-        NSFSPlug* plug_[2];
-            /**< Must be non-null. */
-
+/**
+ * Both plugs must be non-null.
+ */
+class NSFSPlugDouble : public NSFSPlug, public NSFSSocketHolder {
     public:
         ~NSFSPlugDouble();
 
@@ -142,8 +141,8 @@ class NSFSPlugDouble : public NSFSPlug {
             std::list<NTetrahedron*>& avoidTets);
 
     private:
-        NSFSPlugDouble(const NSFSAnnulus& toSocket, NSFSPlug* plug0,
-                NSFSPlug* plug1);
+        NSFSPlugDouble(const NSFSAnnulus& toSocket,
+                const NSFSSocketHolder& plugs);
 };
 
 /*@}*/
@@ -176,12 +175,12 @@ inline NSFSPlugCrosscap::NSFSPlugCrosscap(const NSFSAnnulus& toSocket,
 // Inline functions for NSFSPlugDouble
 
 inline NSFSPlugDouble::NSFSPlugDouble(const NSFSAnnulus& toSocket,
-        NSFSPlug* plug0, NSFSPlug* plug1) : NSFSPlug(toSocket) {
-    plug_[0] = plug0;
-    plug_[1] = plug1;
+        const NSFSSocketHolder& plugs) : NSFSPlug(toSocket),
+        NSFSSocketHolder(plugs) {
 }
 
 inline NSFSPlugDouble::~NSFSPlugDouble() {
+    // Since NSFSSocketHolder doesn't delete the plugs, we do this here.
     delete plug_[0];
     delete plug_[1];
 }

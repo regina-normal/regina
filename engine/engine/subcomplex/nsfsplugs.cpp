@@ -394,31 +394,24 @@ NSFSPlug* NSFSPlugDouble::isPlugged(const NSFSAnnulus& socket,
         final, finalRoles * NPerm(0, 3, 1, 2));
     NSFSAnnulus right(final, finalRoles * NPerm(3, 0, 2, 1),
         internal.tet[1], internal.roles[1] * NPerm(2, 3));
+    NSFSSocketHolder plugs(left, right);
 
-    NSFSPlug* plug0 = 0;
-    NSFSPlug* plug1 = 0;
-
-    plug0 = NSFSPlug::isPlugged(left, avoidTets);
-    if (plug0)
-        plug1 = NSFSPlug::isPlugged(right, avoidTets);
+    bool ok = plugs.isFullyPlugged(avoidTets);
 
     avoidTets.pop_back();
     avoidTets.pop_back();
     avoidTets.pop_back();
 
-    if (plug0 && plug1) {
+    if (ok) {
         // Complete!
-        return new NSFSPlugDouble(internal, plug0, plug1);
+        return new NSFSPlugDouble(internal, plugs);
     } else {
         // Couldn't fill in the plugs.
-        if (plug0)
-            delete plug0;
-        if (plug1)
-            delete plug1;
+        plugs.destroyPlugs();
         return 0;
     }
 }
 
-// TODO: Incorporate diagonals, use NSFSSocketHolder for NSFSPlugDouble.
+// TODO: Incorporate diagonals.
 
 } // namespace regina

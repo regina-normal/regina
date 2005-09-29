@@ -138,6 +138,12 @@ class NSFSSocketHolder {
     public:
         NSFSSocketHolder(const NSFSSocketHolder& cloneMe);
 
+        // Some small case constructors.
+        // Everything is initialised, with orientation to true and plugs to 0.
+        NSFSSocketHolder(const NSFSAnnulus& socket0);
+        NSFSSocketHolder(const NSFSAnnulus& socket0,
+            const NSFSAnnulus& socket1);
+
         /**
          * Takes everything else through the isomorphism, but set all
          * plugs to zero.
@@ -150,6 +156,7 @@ class NSFSSocketHolder {
          * Does \e not destroy plugs.  Just the arrays.
          */
         virtual ~NSFSSocketHolder();
+        void destroyPlugs();
 
         unsigned numberOfSockets() const;
         const NSFSAnnulus& socket(unsigned which) const;
@@ -159,7 +166,9 @@ class NSFSSocketHolder {
         /**
          * Returns true if and only if all plugs were filled in.
          */
-        bool isFullyPlugged(bool bailOnFailure);
+        bool isFullyPlugged(bool bailOnFailure = true);
+        bool isFullyPlugged(std::list<NTetrahedron*>& avoidTets,
+            bool bailOnFailure = true);
 
     protected:
         /**
@@ -340,6 +349,12 @@ inline NSFSSocketHolder::~NSFSSocketHolder() {
     delete[] socket_;
     delete[] socketOrient_;
     delete[] plug_;
+}
+
+inline void NSFSSocketHolder::destroyPlugs() {
+    for (unsigned i = 0; i < nSockets_; i++)
+        if (plug_[i])
+            delete plug_[i];
 }
 
 inline unsigned NSFSSocketHolder::numberOfSockets() const {
