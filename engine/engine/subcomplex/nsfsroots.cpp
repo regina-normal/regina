@@ -168,6 +168,18 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec, bool orbl) :
     NSFSAnnulus* left = new NSFSAnnulus[nSockets_];
     NSFSAnnulus* right = new NSFSAnnulus[nSockets_];
 
+    /**
+     * Left and right sides are annuli of the form:
+     *
+     *         *--->---*
+     *         |0  2 / |
+     *         |    / 1|
+     *  Front  |   /   |  Back
+     *         |1 /    |
+     *         | / 2  0|
+     *         *--->---*
+     */
+
     for (i = 0; i < nSockets_; i++) {
         t[3 * i]->joinTo(0, t[3 * i + 1], NPerm(1, 2));
         t[3 * i]->joinTo(1, t[3 * i + 2], NPerm(1, 3));
@@ -177,42 +189,42 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec, bool orbl) :
             case '/':
                 left[i].tet[0] = t[3 * i];
                 left[i].tet[1] = t[3 * i + 2];
-                left[i].roles[0] = NPerm(0, 3, 1, 2);
-                left[i].roles[1] = NPerm(1, 0, 3, 2);
+                left[i].roles[0] = NPerm(0, 1, 3, 2);
+                left[i].roles[1] = NPerm(1, 3, 0, 2);
                 right[i].tet[0] = t[3 * i + 1];
                 right[i].tet[1] = t[3 * i + 2];
-                right[i].roles[0] = NPerm(1, 3, 0, 2);
-                right[i].roles[1] = NPerm(1, 2, 3, 0);
+                right[i].roles[0] = NPerm(1, 0, 3, 2);
+                right[i].roles[1] = NPerm(1, 3, 2, 0);
                 break;
             case '\\':
                 left[i].tet[0] = t[3 * i];
                 left[i].tet[1] = t[3 * i + 2];
-                left[i].roles[0] = NPerm(1, 3, 0, 2);
-                left[i].roles[1] = NPerm(3, 0, 1, 2);
+                left[i].roles[0] = NPerm(1, 0, 3, 2);
+                left[i].roles[1] = NPerm(3, 1, 0, 2);
                 right[i].tet[0] = t[3 * i + 1];
                 right[i].tet[1] = t[3 * i + 2];
-                right[i].roles[0] = NPerm(0, 3, 1, 2);
-                right[i].roles[1] = NPerm(3, 2, 1, 0);
+                right[i].roles[0] = NPerm(0, 1, 3, 2);
+                right[i].roles[1] = NPerm(3, 1, 2, 0);
                 break;
             case 'J':
                 left[i].tet[0] = t[3 * i + 2];
                 left[i].tet[1] = t[3 * i];
-                left[i].roles[0] = NPerm(3, 0, 1, 2);
-                left[i].roles[1] = NPerm(1, 3, 0, 2);
+                left[i].roles[0] = NPerm(3, 1, 0, 2);
+                left[i].roles[1] = NPerm(1, 0, 3, 2);
                 right[i].tet[0] = t[3 * i + 2];
                 right[i].tet[1] = t[3 * i + 1];
-                right[i].roles[0] = NPerm(3, 2, 1, 0);
-                right[i].roles[1] = NPerm(0, 3, 1, 2);
+                right[i].roles[0] = NPerm(3, 1, 2, 0);
+                right[i].roles[1] = NPerm(0, 1, 3, 2);
                 break;
             case 'L':
                 left[i].tet[0] = t[3 * i + 2];
                 left[i].tet[1] = t[3 * i];
-                left[i].roles[0] = NPerm(1, 0, 3, 2);
-                left[i].roles[1] = NPerm(0, 3, 1, 2);
+                left[i].roles[0] = NPerm(1, 3, 0, 2);
+                left[i].roles[1] = NPerm(0, 1, 3, 2);
                 right[i].tet[0] = t[3 * i + 2];
                 right[i].tet[1] = t[3 * i + 1];
-                right[i].roles[0] = NPerm(1, 2, 3, 0);
-                right[i].roles[1] = NPerm(1, 3, 0, 2);
+                right[i].roles[0] = NPerm(1, 3, 2, 0);
+                right[i].roles[1] = NPerm(1, 0, 3, 2);
                 break;
             default:
                 std::cerr << "ERROR: Bad NSFSRootMobiusChain specification.  "
@@ -235,10 +247,10 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec, bool orbl) :
             right[nSockets_ - 1].roles[1].inverse());
     } else {
         right[nSockets_ - 1].tet[0]->joinTo(right[nSockets_ - 1].roles[0][3],
-            left[0].tet[1], left[0].roles[1] * NPerm(0, 2) *
+            left[0].tet[1], left[0].roles[1] * NPerm(0, 1) *
             right[nSockets_ - 1].roles[0].inverse());
         right[nSockets_ - 1].tet[1]->joinTo(right[nSockets_ - 1].roles[1][3],
-            left[0].tet[0], left[0].roles[0] * NPerm(0, 2) *
+            left[0].tet[0], left[0].roles[0] * NPerm(0, 1) *
             right[nSockets_ - 1].roles[1].inverse());
     }
 
