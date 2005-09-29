@@ -72,13 +72,19 @@ namespace regina {
  * </pre>
  *
  * These are attached from left to right.
+ *
+ * Finally, the top right edge is attached to the bottom left, and vice
+ * versa.
  */
 class NSFSRootMobiusChain : public NSFSRoot {
     private:
         char* spec_;
+        bool or_;
+            /**< Is the 3-manifold orientable (i.e., the central surface
+                 is a Klein bottle)? */
 
     public:
-        NSFSRootMobiusChain(const char* spec);
+        NSFSRootMobiusChain(const char* spec, bool orbl);
         ~NSFSRootMobiusChain();
 
         const char* spec() const;

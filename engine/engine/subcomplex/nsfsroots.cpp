@@ -33,18 +33,25 @@
 namespace regina {
 
 namespace {
-    NSFSRootMobiusChain rootMob1("/");
-    NSFSRootMobiusChain rootMob2("//");
-    NSFSRootMobiusChain rootMob3("/\\");
-    NSFSRootMobiusChain rootMob4("///");
-    NSFSRootMobiusChain rootMob5("//\\");
-    NSFSRootMobiusChain rootMob6("/J/");
-    NSFSRootMobiusChain rootMob7("/L/");
+    NSFSRootMobiusChain rootMobNor1("/", false);
+    NSFSRootMobiusChain rootMobNor2("//", false);
+    NSFSRootMobiusChain rootMobNor3("/\\", false);
+    NSFSRootMobiusChain rootMobNor4("///", false);
+    NSFSRootMobiusChain rootMobNor5("//\\", false);
+    NSFSRootMobiusChain rootMobNor6("/J/", false);
+    NSFSRootMobiusChain rootMobNor7("/L/", false);
     NSFSRootReflectorChain rootRef1(1);
     NSFSRootReflectorChain rootRef2(2);
     NSFSRootReflectorChain rootRef3(3);
     NSFSRootT_5_1 rootT_5_1;
     NSFSRootTriPrism rootPrism;
+    NSFSRootMobiusChain rootMobOr1("/", true);
+    NSFSRootMobiusChain rootMobOr2("//", true);
+    NSFSRootMobiusChain rootMobOr3("/\\", true);
+    NSFSRootMobiusChain rootMobOr4("///", true);
+    NSFSRootMobiusChain rootMobOr5("//\\", true);
+    NSFSRootMobiusChain rootMobOr6("/J/", true);
+    NSFSRootMobiusChain rootMobOr7("/L/", true);
 }
 
 NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
@@ -61,19 +68,19 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
     // Hunt for the root.
     // TODO: Run through the list.
     NSFSTree* ans;
-    if ((ans = hunt(tri, rootMob1)))
+    if ((ans = hunt(tri, rootMobNor1)))
         return ans;
-    if ((ans = hunt(tri, rootMob2)))
+    if ((ans = hunt(tri, rootMobNor2)))
         return ans;
-    if ((ans = hunt(tri, rootMob3)))
+    if ((ans = hunt(tri, rootMobNor3)))
         return ans;
-    if ((ans = hunt(tri, rootMob4)))
+    if ((ans = hunt(tri, rootMobNor4)))
         return ans;
-    if ((ans = hunt(tri, rootMob5)))
+    if ((ans = hunt(tri, rootMobNor5)))
         return ans;
-    if ((ans = hunt(tri, rootMob6)))
+    if ((ans = hunt(tri, rootMobNor6)))
         return ans;
-    if ((ans = hunt(tri, rootMob7)))
+    if ((ans = hunt(tri, rootMobNor7)))
         return ans;
     if ((ans = hunt(tri, rootRef1)))
         return ans;
@@ -84,6 +91,20 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
     if ((ans = hunt(tri, rootT_5_1)))
         return ans;
     if ((ans = hunt(tri, rootPrism)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr1)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr2)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr3)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr4)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr5)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr6)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr7)))
         return ans;
 
     return 0;
@@ -135,8 +156,8 @@ std::ostream& NSFSRootT_5_1::writeTeXName(std::ostream& out) const {
     return out << "\\tilde{T}_5^1";
 }
 
-NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec) :
-        NSFSRoot(strlen(spec)) {
+NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec, bool orbl) :
+        NSFSRoot(strlen(spec)), or_(orbl) {
     spec_ = strdup(spec);
 
     NTetrahedron** t = new NTetrahedron*[nSockets_ * 3];
@@ -205,12 +226,21 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec) :
         right[i].tet[1]->joinTo(right[i].roles[1][3], left[i + 1].tet[1],
             left[i + 1].roles[1] * right[i].roles[1].inverse());
     }
-    right[nSockets_ - 1].tet[0]->joinTo(right[nSockets_ - 1].roles[0][3],
-        left[0].tet[1], left[0].roles[1] * NPerm(0, 2) *
-        right[nSockets_ - 1].roles[0].inverse());
-    right[nSockets_ - 1].tet[1]->joinTo(right[nSockets_ - 1].roles[1][3],
-        left[0].tet[0], left[0].roles[0] * NPerm(0, 2) *
-        right[nSockets_ - 1].roles[1].inverse());
+    if (or_) {
+        right[nSockets_ - 1].tet[0]->joinTo(right[nSockets_ - 1].roles[0][3],
+            left[0].tet[1], left[0].roles[1] *
+            right[nSockets_ - 1].roles[0].inverse());
+        right[nSockets_ - 1].tet[1]->joinTo(right[nSockets_ - 1].roles[1][3],
+            left[0].tet[0], left[0].roles[0] *
+            right[nSockets_ - 1].roles[1].inverse());
+    } else {
+        right[nSockets_ - 1].tet[0]->joinTo(right[nSockets_ - 1].roles[0][3],
+            left[0].tet[1], left[0].roles[1] * NPerm(0, 2) *
+            right[nSockets_ - 1].roles[0].inverse());
+        right[nSockets_ - 1].tet[1]->joinTo(right[nSockets_ - 1].roles[1][3],
+            left[0].tet[0], left[0].roles[0] * NPerm(0, 2) *
+            right[nSockets_ - 1].roles[1].inverse());
+    }
 
     for (i = 0; i < nSockets_ * 3; i++)
         root_.addTetrahedron(t[i]);
@@ -224,14 +254,17 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec) :
         if (spec[i] == '/' || spec[i] == '\\') {
             socket_[s].tet[0] = t[3 * i];
             socket_[s].tet[1] = t[3 * i + 1];
-            socketOrient_[s] = (s == '/');
+            socketOrient_[s] = (spec[i] == '/');
             s++;
         }
     for (i = 0; i < nSockets_; i++)
         if (spec[i] == 'L' || spec[i] == 'J') {
             socket_[s].tet[0] = t[3 * i];
             socket_[s].tet[1] = t[3 * i + 1];
-            socketOrient_[s] = (s == 'J');
+            if (or_)
+                socketOrient_[s] = (spec[i] == 'L');
+            else
+                socketOrient_[s] = (spec[i] == 'J');
             s++;
         }
 
@@ -245,17 +278,27 @@ NSFSRootMobiusChain::~NSFSRootMobiusChain() {
 }
 
 NSFSpace* NSFSRootMobiusChain::createSFS() const {
-    NSFSpace* ans = new NSFSpace(NSFSpace::n1, 1, 0, 0);
-    ans->insertFibre(1, 1);
-    return ans;
+    if (or_) {
+        return new NSFSpace(NSFSpace::n2, 1, 0, 0);
+    } else {
+        NSFSpace* ans = new NSFSpace(NSFSpace::n1, 1, 0, 0);
+        ans->insertFibre(1, 1);
+        return ans;
+    }
 }
 
 std::ostream& NSFSRootMobiusChain::writeName(std::ostream& out) const {
-    return out << "M(" << spec_ << ')';
+    if (or_)
+        return out << "M~(" << spec_ << ')';
+    else
+        return out << "M(" << spec_ << ')';
 }
 
 std::ostream& NSFSRootMobiusChain::writeTeXName(std::ostream& out) const {
-    return out << "M_\\mathtt{" << spec_ << '}';
+    if (or_)
+        return out << "\\tilde{M}_\\mathtt{" << spec_ << '}';
+    else
+        return out << "M_\\mathtt{" << spec_ << '}';
 }
 
 void NSFSRootMobiusChain::writeTextLong(std::ostream& out) const {
