@@ -101,6 +101,15 @@ bool NSFSSocketHolder::isFullyPlugged(bool bailOnFailure) {
     return ok;
 }
 
+bool NSFSPlug::isBad(NTetrahedron* t,
+                const std::list<NTetrahedron*>& avoidTets) {
+    std::list<NTetrahedron*>::const_iterator it;
+    for (it = avoidTets.begin(); it != avoidTets.end(); it++)
+        if (*it == t)
+            return true;
+    return false;
+}
+
 NSFSTree::~NSFSTree() {
     delete rootIso_;
 

@@ -98,6 +98,9 @@ struct NSFSAnnulus {
     NSFSAnnulus(NTetrahedron* t0, NPerm r0, NTetrahedron* t1, NPerm r1);
     NSFSAnnulus& operator = (const NSFSAnnulus& cloneMe);
 
+    bool operator == (const NSFSAnnulus& other) const;
+    bool operator != (const NSFSAnnulus& other) const;
+
     bool meetsBoundary() const;
 
     /**
@@ -195,11 +198,18 @@ class NSFSPlug : public ShareableObject {
         void writeTextLong(std::ostream& out) const;
 
         static NSFSPlug* isPlugged(const NSFSAnnulus& socket);
+        /**
+         * avoidTets is the tetrahedra we've already been through, plus
+         * the original external boundary tetrahedra.
+         */
         static NSFSPlug* isPlugged(const NSFSAnnulus& socket,
             std::list<NTetrahedron*>& avoidTets);
 
     protected:
         NSFSPlug(const NSFSAnnulus& toSocket);
+
+        static bool isBad(NTetrahedron* t,
+                const std::list<NTetrahedron*>& avoidTets);
 };
 
 class NSFSRoot : public ShareableObject, public NSFSSocketHolder {
@@ -286,6 +296,16 @@ inline NSFSAnnulus& NSFSAnnulus::operator = (const NSFSAnnulus& cloneMe) {
     tet[0] = cloneMe.tet[0]; tet[1] = cloneMe.tet[1];
     roles[0] = cloneMe.roles[0]; roles[1] = cloneMe.roles[1];
     return *this;
+}
+
+inline bool NSFSAnnulus::operator == (const NSFSAnnulus& other) const {
+    return (tet[0] == other.tet[0] && tet[1] == other.tet[1] &&
+            roles[0] == other.roles[0] && roles[1] == other.roles[1]);
+}
+
+inline bool NSFSAnnulus::operator != (const NSFSAnnulus& other) const {
+    return (tet[0] != other.tet[0] || tet[1] != other.tet[1] ||
+            roles[0] != other.roles[0] || roles[1] != other.roles[1]);
 }
 
 inline NSFSAnnulus NSFSAnnulus::otherSide() const {

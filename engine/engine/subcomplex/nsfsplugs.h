@@ -48,6 +48,9 @@ class NTetrahedron;
  * @{
  */
 
+/**
+ * TODO: Not checked properly.
+ */
 class NSFSPlugMobius : public NSFSPlug {
     private:
         int orientation;
@@ -66,6 +69,9 @@ class NSFSPlugMobius : public NSFSPlug {
         NSFSPlugMobius(const NSFSAnnulus& toSocket, int useOrient);
 };
 
+/**
+ * TODO: Not checked properly.
+ */
 class NSFSPlugLST : public NSFSPlug {
     private:
         NLayeredSolidTorus* lst;
@@ -91,6 +97,55 @@ class NSFSPlugLST : public NSFSPlug {
             NPerm useRoles);
 };
 
+class NSFSPlugReflector : public NSFSPlug {
+    public:
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+
+        static NSFSPlug* isPlugged(const NSFSAnnulus& socket);
+
+    private:
+        NSFSPlugReflector(const NSFSAnnulus& toSocket);
+};
+
+class NSFSPlugCrosscap : public NSFSPlug {
+    private:
+        bool reversing_;
+            /** Do we reverse fibres as we reverse orientation in the
+                base orbifold? */
+
+    public:
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+
+        static NSFSPlug* isPlugged(const NSFSAnnulus& socket);
+
+    private:
+        NSFSPlugCrosscap(const NSFSAnnulus& toSocket, bool reversing);
+};
+
+class NSFSPlugDouble : public NSFSPlug {
+    private:
+        NSFSPlug* plug_[2];
+            /**< Must be non-null. */
+
+    public:
+        ~NSFSPlugDouble();
+
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+
+        static NSFSPlug* isPlugged(const NSFSAnnulus& socket,
+            std::list<NTetrahedron*>& avoidTets);
+
+    private:
+        NSFSPlugDouble(const NSFSAnnulus& toSocket, NSFSPlug* plug0,
+                NSFSPlug* plug1);
+};
+
 /*@}*/
 
 // Inline functions for NSFSPlugMobius
@@ -104,6 +159,31 @@ inline NSFSPlugMobius::NSFSPlugMobius(const NSFSAnnulus& toSocket,
 inline NSFSPlugLST::NSFSPlugLST(const NSFSAnnulus& toSocket,
         NLayeredSolidTorus* useLST, NPerm useRoles) :
         NSFSPlug(toSocket), lst(useLST), roles(useRoles) {
+}
+
+// Inline functions for NSFSPlugReflector
+
+inline NSFSPlugReflector::NSFSPlugReflector(const NSFSAnnulus& toSocket) :
+        NSFSPlug(toSocket) {
+}
+
+// Inline functions for NSFSPlugCrosscap
+
+inline NSFSPlugCrosscap::NSFSPlugCrosscap(const NSFSAnnulus& toSocket,
+        bool reversing) : NSFSPlug(toSocket), reversing_(reversing) {
+}
+
+// Inline functions for NSFSPlugDouble
+
+inline NSFSPlugDouble::NSFSPlugDouble(const NSFSAnnulus& toSocket,
+        NSFSPlug* plug0, NSFSPlug* plug1) : NSFSPlug(toSocket) {
+    plug_[0] = plug0;
+    plug_[1] = plug1;
+}
+
+inline NSFSPlugDouble::~NSFSPlugDouble() {
+    delete plug_[0];
+    delete plug_[1];
 }
 
 } // namespace regina
