@@ -36,7 +36,7 @@
 #define __NPLUGGEDSFS_H
 #endif
 
-#include <memory>
+#include <list>
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
@@ -105,6 +105,7 @@ class NSFSSocketHolder {
         unsigned nSockets_;
         const NAnnulusBoundary* socket_;
         bool *socketOrient_;
+            /**< True for non-reflected, false for reflected. */
         NSFSPlug** plug_;
             /** Guaranteed non-zero. */
 
@@ -132,7 +133,7 @@ class NSFSSocketHolder {
         /**
          * Returns true if and only if all plugs were filled in.
          */
-        bool isFullyPlugged();
+        bool isFullyPlugged(bool bailOnFailure);
 
     protected:
         /**
@@ -169,6 +170,13 @@ class NSFSPlug : public ShareableObject {
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+
+        static NSFSPlug* isPlugged(const NSFSAnnulus& socket);
+        static NSFSPlug* isPlugged(const NSFSAnnulus& socket,
+            std::list<NTetrahedron*>& avoidTets);
+
+    protected:
+        NSFSPlug(const NAnnulusBoundary& toSocket);
 };
 
 class NSFSRoot : public ShareableObject, NSFSSocketHolder {
@@ -178,7 +186,7 @@ class NSFSRoot : public ShareableObject, NSFSSocketHolder {
     public:
         const NTriangulation& root() const;
 
-        virtual void NSFSSpace* createSFS() const = 0;
+        virtual NSFSSpace* createSFS() const = 0;
 
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
@@ -302,6 +310,10 @@ inline const NSFSPlug* NSFSSocketHolder::plug(unsigned which) const {
 }
 
 // Inline functions for NSFSPlug
+
+inline NSFSPlug::NSFSPlug(const NAnnulusBoundary& toSocket) :
+        toSocket_(toSocket) {
+}
 
 inline const NAnnulusBoundary& NSFSPlug::toSocket() const {
     return toSocket_;

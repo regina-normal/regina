@@ -26,7 +26,6 @@
 
 /* end stub */
 
-#include "manifold/nsfs.h"
 #include "subcomplex/npluggedsfs.h"
 #include "triangulation/nisomorphism.h"
 
@@ -86,6 +85,20 @@ NSFSSocketHolder::NSFSSocketHolder(const NSFSSocketHolder& preImage,
         socketOrient_[s] = preImage.socketOrient_[s];
         plug_[s] = 0;
     }
+}
+
+bool NSFSSocketHolder::isFullyPlugged(bool bailOnFailure) {
+    bool ok = true;
+    for (unsigned s = 0; s < nSockets_; s++)
+        if (! (plug_[s] = NSFSPlug::isPlugged(socket_[s]))) {
+            // A socket couldn't be filled in.
+            if (bailOnFailure)
+                return false;
+            else
+                ok = false;
+        }
+
+    return ok;
 }
 
 NSFSTree::~NSFSTree() {
