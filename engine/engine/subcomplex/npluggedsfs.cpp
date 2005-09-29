@@ -124,13 +124,14 @@ NSFSTree* NSFSTree::hunt(NTriangulation* tri, const NSFSRoot& root) {
         }
 
         // All good!
+        NSFSTree* ans = new NSFSTree(root, *it, sockets);
 
         // Before we return, delete the remaining isomorphisms that we
         // never even looked at.
         for (it++; it != isos.end(); it++)
             delete *it;
 
-        return new NSFSTree(root, *it, sockets);
+        return ans;
     }
 
     // Nothing found.
