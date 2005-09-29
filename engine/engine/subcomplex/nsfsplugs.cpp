@@ -128,7 +128,7 @@ std::ostream& NSFSPlugLST::writeName(std::ostream& out) const {
     if (roles[2] != 2)
         cuts1 = -cuts1;
 
-    return out << "t(" << cuts0 << ", " << cuts1 << ')';
+    return out << "t(" << cuts0 << ',' << cuts1 << ')';
 }
 
 std::ostream& NSFSPlugLST::writeTeXName(std::ostream& out) const {
@@ -137,7 +137,7 @@ std::ostream& NSFSPlugLST::writeTeXName(std::ostream& out) const {
     if (roles[2] != 2)
         cuts1 = -cuts1;
 
-    return out << "t(" << cuts0 << ", " << cuts1 << ')';
+    return out << "t(" << cuts0 << ',' << cuts1 << ')';
 }
 
 NSFSPlug* NSFSPlugLST::isPlugged(const NSFSAnnulus& socket) {
