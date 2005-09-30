@@ -419,6 +419,4 @@ NSFSPlug* NSFSPlugDouble::isPlugged(const NSFSAnnulus& socket,
     }
 }
 
-// TODO: Incorporate diagonals.
-
 } // namespace regina
