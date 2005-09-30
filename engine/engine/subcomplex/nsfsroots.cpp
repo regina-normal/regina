@@ -32,39 +32,41 @@
 
 namespace regina {
 
-namespace {
-    NSFSRootMobiusChain rootMobNor1("/", false);
-    NSFSRootMobiusChain rootMobNor2("//", false);
-    NSFSRootMobiusChain rootMobNor3("/\\", false);
-    NSFSRootMobiusChain rootMobNor4("Z", false);
-    NSFSRootMobiusChain rootMobNor5("X", false);
-    NSFSRootMobiusChain rootMobNor6("///", false);
-    NSFSRootMobiusChain rootMobNor7("//\\", false);
-    NSFSRootMobiusChain rootMobNor8("/\\/", false);
-    NSFSRootMobiusChain rootMobNor9("/J/", false);
-    NSFSRootMobiusChain rootMobNor10("/L/", false);
-    NSFSRootMobiusChain rootMobNor11("Z/", false);
-    NSFSRootMobiusChain rootMobNor12("Z\\", false);
-    NSFSRootMobiusChain rootMobNor13("X/", false);
-    NSFSRootMobiusChain rootMobNor14("X\\", false);
-    NSFSRootMobiusChain rootMobOr1("/", true);
-    NSFSRootMobiusChain rootMobOr2("//", true);
-    NSFSRootMobiusChain rootMobOr3("/\\", true);
-    NSFSRootMobiusChain rootMobOr4("Z", true);
-    NSFSRootMobiusChain rootMobOr5("X", true);
-    NSFSRootMobiusChain rootMobOr6("///", true);
-    NSFSRootMobiusChain rootMobOr7("//\\", true);
-    NSFSRootMobiusChain rootMobOr8("/\\/", true);
-    NSFSRootMobiusChain rootMobOr9("/J/", true);
-    NSFSRootMobiusChain rootMobOr10("/L/", true);
-    NSFSRootMobiusChain rootMobOr11("Z/", true);
-    NSFSRootMobiusChain rootMobOr12("X/", true);
-    NSFSRootMobiusChain rootMobOr13("X\\", true);
-    NSFSRootReflectorChain rootRef1(1);
-    NSFSRootReflectorChain rootRef2(2);
-    NSFSRootReflectorChain rootRef3(3);
-    NSFSRootTriPrism rootPrism;
-    NSFSRootCube rootCube;
+NSFSRootSet NSFSTree::allRoots;
+
+void NSFSTree::initRoots() {
+    allRoots.insert(new NSFSRootMobiusChain ("/", false));
+    allRoots.insert(new NSFSRootMobiusChain("//", false));
+    allRoots.insert(new NSFSRootMobiusChain("/\\", false));
+    allRoots.insert(new NSFSRootMobiusChain("Z", false));
+    allRoots.insert(new NSFSRootMobiusChain("X", false));
+    allRoots.insert(new NSFSRootMobiusChain("///", false));
+    allRoots.insert(new NSFSRootMobiusChain("//\\", false));
+    allRoots.insert(new NSFSRootMobiusChain("/\\/", false));
+    allRoots.insert(new NSFSRootMobiusChain("/J/", false));
+    allRoots.insert(new NSFSRootMobiusChain("/L/", false));
+    allRoots.insert(new NSFSRootMobiusChain("Z/", false));
+    allRoots.insert(new NSFSRootMobiusChain("Z\\", false));
+    allRoots.insert(new NSFSRootMobiusChain("X/", false));
+    allRoots.insert(new NSFSRootMobiusChain("X\\", false));
+    allRoots.insert(new NSFSRootMobiusChain("/", true));
+    allRoots.insert(new NSFSRootMobiusChain("//", true));
+    allRoots.insert(new NSFSRootMobiusChain("/\\", true));
+    allRoots.insert(new NSFSRootMobiusChain("Z", true));
+    allRoots.insert(new NSFSRootMobiusChain("X", true));
+    allRoots.insert(new NSFSRootMobiusChain("///", true));
+    allRoots.insert(new NSFSRootMobiusChain("//\\", true));
+    allRoots.insert(new NSFSRootMobiusChain("/\\/", true));
+    allRoots.insert(new NSFSRootMobiusChain("/J/", true));
+    allRoots.insert(new NSFSRootMobiusChain("/L/", true));
+    allRoots.insert(new NSFSRootMobiusChain("Z/", true));
+    allRoots.insert(new NSFSRootMobiusChain("X/", true));
+    allRoots.insert(new NSFSRootMobiusChain("X\\", true));
+    allRoots.insert(new NSFSRootReflectorChain(1));
+    allRoots.insert(new NSFSRootReflectorChain(2));
+    allRoots.insert(new NSFSRootReflectorChain(3));
+    allRoots.insert(new NSFSRootTriPrism);
+    allRoots.insert(new NSFSRootCube);
 }
 
 NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
@@ -78,74 +80,18 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
 
     // Our triangulation is closed with one vertex and one component.
 
-    // Hunt for the root.
-    // TODO: Run through the list.
-    NSFSTree* ans;
-    if ((ans = hunt(tri, rootMobNor1)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor2)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor3)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor4)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor5)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor6)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor7)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor8)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor9)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor10)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor11)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor12)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor13)))
-        return ans;
-    if ((ans = hunt(tri, rootMobNor14)))
-        return ans;
-    if ((ans = hunt(tri, rootRef1)))
-        return ans;
-    if ((ans = hunt(tri, rootRef2)))
-        return ans;
-    if ((ans = hunt(tri, rootRef3)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr1)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr2)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr3)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr4)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr5)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr6)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr7)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr8)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr9)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr10)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr11)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr12)))
-        return ans;
-    if ((ans = hunt(tri, rootMobOr13)))
-        return ans;
-    if ((ans = hunt(tri, rootPrism)))
-        return ans;
-    if ((ans = hunt(tri, rootCube)))
-        return ans;
+    // Set up the global list of roots the first time this routine is called.
+    if (allRoots.empty())
+        initRoots();
 
+    // Hunt for the root.
+    NSFSTree* ans;
+    for (NSFSRootSet::iterator it = allRoots.begin();
+            it != allRoots.end(); it++)
+        if ((ans = hunt(tri, **it)))
+            return ans;
+
+    // Nothing found.
     return 0;
 }
 

@@ -245,6 +245,24 @@ class NSFSRoot : public ShareableObject, public NSFSSocketHolder {
         NSFSRoot(unsigned numSockets);
 };
 
+class NSFSRootSet : public boost::noncopyable {
+    public:
+        typedef std::list<NSFSRoot*>::const_iterator iterator;
+
+    private:
+        std::list<NSFSRoot*> items;
+
+    public:
+        NSFSRootSet();
+        ~NSFSRootSet();
+
+        bool empty() const;
+        void insert(NSFSRoot* root);
+
+        iterator begin() const;
+        iterator end() const;
+};
+
 /**
  * No plugs can be zero.
  */
@@ -253,6 +271,8 @@ class NSFSTree : public NStandardTriangulation, public NSFSSocketHolder {
         const NSFSRoot& root_;
         NIsomorphism* rootIso_;
             /** Must be non-zero. */
+
+        static NSFSRootSet allRoots;
 
     public:
         /**
@@ -285,6 +305,8 @@ class NSFSTree : public NStandardTriangulation, public NSFSSocketHolder {
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 
         static NSFSTree* hunt(NTriangulation* tri, const NSFSRoot& root);
+
+        static void initRoots();
 };
 
 /*@}*/
@@ -419,6 +441,33 @@ inline void NSFSRoot::writeTextLong(std::ostream& out) const {
 }
 
 inline NSFSRoot::NSFSRoot(unsigned numSockets) : NSFSSocketHolder(numSockets) {
+}
+
+// Inline functions for NSFSRootSet
+
+inline NSFSRootSet::NSFSRootSet() {
+}
+
+inline NSFSRootSet::~NSFSRootSet() {
+    for (std::list<NSFSRoot*>::iterator it = items.begin(); it!= items.end();
+            it++)
+        delete *it;
+}
+
+inline bool NSFSRootSet::empty() const {
+    return items.empty();
+}
+
+inline void NSFSRootSet::insert(NSFSRoot* root) {
+    items.push_back(root);
+}
+
+inline NSFSRootSet::iterator NSFSRootSet::begin() const {
+    return items.begin();
+}
+
+inline NSFSRootSet::iterator NSFSRootSet::end() const {
+    return items.end();
 }
 
 // Inline functions for NSFSTree

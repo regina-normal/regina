@@ -212,6 +212,12 @@ NSFSTree::~NSFSTree() {
 }
 
 NSFSTree* NSFSTree::hunt(NTriangulation* tri, const NSFSRoot& root) {
+    // Get trivialities out of the way before we start creating large
+    // data structures.
+    if (tri->isOrientable() && ! root.root().isOrientable())
+        return 0;
+
+    // Find all isomorphisms of the root within the given triangulation.
     std::list<NIsomorphism*> isos;
     if (! root.root().findAllSubcomplexesIn(*tri, isos))
         return 0;
