@@ -161,6 +161,16 @@ class NSFSRootTriPrism : public NSFSRoot {
         void writeTextLong(std::ostream& out) const;
 };
 
+class NSFSRootCube : public NSFSRoot {
+    public:
+        NSFSRootCube();
+
+        NSFSpace* createSFS() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+};
+
 // Inline functions for NSFSRootMobiusChain
 
 const char* NSFSRootMobiusChain::spec() const {

@@ -48,6 +48,8 @@ class NTetrahedron;
  * @{
  */
 
+// TODO: Add a triple adaptor (cube).
+
 /**
  * TODO: Not checked properly.
  */
