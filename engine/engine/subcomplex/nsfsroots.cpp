@@ -38,8 +38,9 @@ namespace {
     NSFSRootMobiusChain rootMobNor3("/\\", false);
     NSFSRootMobiusChain rootMobNor4("///", false);
     NSFSRootMobiusChain rootMobNor5("//\\", false);
-    NSFSRootMobiusChain rootMobNor6("/J/", false);
-    NSFSRootMobiusChain rootMobNor7("/L/", false);
+    NSFSRootMobiusChain rootMobNor6("/\\/", false);
+    NSFSRootMobiusChain rootMobNor7("/J/", false);
+    NSFSRootMobiusChain rootMobNor8("/L/", false);
     NSFSRootReflectorChain rootRef1(1);
     NSFSRootReflectorChain rootRef2(2);
     NSFSRootReflectorChain rootRef3(3);
@@ -50,8 +51,9 @@ namespace {
     NSFSRootMobiusChain rootMobOr3("/\\", true);
     NSFSRootMobiusChain rootMobOr4("///", true);
     NSFSRootMobiusChain rootMobOr5("//\\", true);
-    NSFSRootMobiusChain rootMobOr6("/J/", true);
-    NSFSRootMobiusChain rootMobOr7("/L/", true);
+    NSFSRootMobiusChain rootMobOr6("/\\/", true);
+    NSFSRootMobiusChain rootMobOr7("/J/", true);
+    NSFSRootMobiusChain rootMobOr8("/L/", true);
 }
 
 NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
@@ -82,6 +84,8 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
         return ans;
     if ((ans = hunt(tri, rootMobNor7)))
         return ans;
+    if ((ans = hunt(tri, rootMobNor8)))
+        return ans;
     if ((ans = hunt(tri, rootRef1)))
         return ans;
     if ((ans = hunt(tri, rootRef2)))
@@ -105,6 +109,8 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
     if ((ans = hunt(tri, rootMobOr6)))
         return ans;
     if ((ans = hunt(tri, rootMobOr7)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr8)))
         return ans;
 
     return 0;
