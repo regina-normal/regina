@@ -99,6 +99,11 @@ std::ostream& NSFSPlugMobius::writeTeXName(std::ostream& out) const {
     return out << "m(" << orientation << ')';
 }
 
+void NSFSPlugMobius::writeTextLong(std::ostream& out) const {
+    out << "Mobius torus plug: ";
+    writeName(out);
+}
+
 NSFSPlug* NSFSPlugMobius::isPlugged(const NSFSAnnulus& socket) {
     if (socket.meetsBoundary())
         return 0;
@@ -158,6 +163,11 @@ std::ostream& NSFSPlugLST::writeTeXName(std::ostream& out) const {
     return out << "t(" << cuts0 << ',' << cuts1 << ')';
 }
 
+void NSFSPlugLST::writeTextLong(std::ostream& out) const {
+    out << "LST torus plug: ";
+    writeName(out);
+}
+
 NSFSPlug* NSFSPlugLST::isPlugged(const NSFSAnnulus& socket) {
     if (socket.meetsBoundary())
         return 0;
@@ -206,6 +216,11 @@ std::ostream& NSFSPlugReflector::writeName(std::ostream& out) const {
 
 std::ostream& NSFSPlugReflector::writeTeXName(std::ostream& out) const {
     return out << 'r';
+}
+
+void NSFSPlugReflector::writeTextLong(std::ostream& out) const {
+    out << "Reflector boundary plug: ";
+    writeName(out);
 }
 
 NSFSPlug* NSFSPlugReflector::isPlugged(const NSFSAnnulus& socket) {
@@ -260,6 +275,11 @@ std::ostream& NSFSPlugCrosscap::writeName(std::ostream& out) const {
 
 std::ostream& NSFSPlugCrosscap::writeTeXName(std::ostream& out) const {
     return out << (reversing_ ? "c^\\wedge" : "c");
+}
+
+void NSFSPlugCrosscap::writeTextLong(std::ostream& out) const {
+    out << "Crosscap plug: ";
+    writeName(out);
 }
 
 NSFSPlug* NSFSPlugCrosscap::isPlugged(const NSFSAnnulus& socket) {
@@ -358,6 +378,11 @@ std::ostream& NSFSPlugDouble::writeTeXName(std::ostream& out) const {
     if (skewed_[1])
         out << "\\times";
     return plug_[1]->writeTeXName(out) << ')';
+}
+
+void NSFSPlugDouble::writeTextLong(std::ostream& out) const {
+    out << "Double adaptor plug: ";
+    writeName(out);
 }
 
 NSFSPlug* NSFSPlugDouble::isPlugged(const NSFSAnnulus& socket,

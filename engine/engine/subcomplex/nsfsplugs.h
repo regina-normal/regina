@@ -63,7 +63,7 @@ class NSFSPlugMobius : public NSFSPlug {
         void adjustSFS(NSFSpace& sfs, bool reflect) const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
-        // TODO: Add writeTextLong() implementations again.
+        void writeTextLong(std::ostream& out) const;
 
         static NSFSPlug* isPlugged(const NSFSAnnulus& socket);
 
@@ -91,6 +91,7 @@ class NSFSPlugLST : public NSFSPlug {
         void adjustSFS(NSFSpace& sfs, bool reflect) const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
         static NSFSPlug* isPlugged(const NSFSAnnulus& socket);
 
@@ -104,6 +105,7 @@ class NSFSPlugReflector : public NSFSPlug {
         void adjustSFS(NSFSpace& sfs, bool reflect) const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
         static NSFSPlug* isPlugged(const NSFSAnnulus& socket);
 
@@ -121,6 +123,7 @@ class NSFSPlugCrosscap : public NSFSPlug {
         void adjustSFS(NSFSpace& sfs, bool reflect) const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
         static NSFSPlug* isPlugged(const NSFSAnnulus& socket);
 
@@ -138,6 +141,7 @@ class NSFSPlugDouble : public NSFSPlug, public NSFSSocketHolder {
         void adjustSFS(NSFSpace& sfs, bool reflect) const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
         static NSFSPlug* isPlugged(const NSFSAnnulus& socket,
             std::list<NTetrahedron*>& avoidTets);
