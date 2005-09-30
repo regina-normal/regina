@@ -171,6 +171,20 @@ class NSFSRootCube : public NSFSRoot {
         void writeTextLong(std::ostream& out) const;
 };
 
+/**
+ * A quick hack while we wait to implement non-tree classes.
+ * This lets us identify spaces whose base orbifolds have o2 handles.
+ */
+class NSFSTo2 : public NSFSRoot {
+    public:
+        NSFSTo2();
+
+        NSFSpace* createSFS() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+};
+
 // Inline functions for NSFSRootMobiusChain
 
 const char* NSFSRootMobiusChain::spec() const {

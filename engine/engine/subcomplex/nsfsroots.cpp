@@ -67,6 +67,7 @@ void NSFSTree::initRoots() {
     allRoots.insert(new NSFSRootReflectorChain(3));
     allRoots.insert(new NSFSRootTriPrism);
     allRoots.insert(new NSFSRootCube);
+    allRoots.insert(new NSFSTo2);
 }
 
 NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
@@ -568,6 +569,57 @@ std::ostream& NSFSRootCube::writeTeXName(std::ostream& out) const {
 
 void NSFSRootCube::writeTextLong(std::ostream& out) const {
     out << "SFS root cube";
+}
+
+NSFSTo2::NSFSTo2() : NSFSRoot(1) {
+    // Created in Regina and exported to C++.
+    const int adj[9][4] = {
+        { 7, 1, 2, -1},
+        { 8, 0, 4, 2},
+        { 0, -1, 5, 1},
+        { 7, 4, 5, 8},
+        { 6, 3, 1, 5},
+        { 3, 6, 2, 4},
+        { 8, 5, 7, 4},
+        { 0, 8, 6, 3},
+        { 1, 7, 3, 6}
+    };
+
+    const int glu[9][4][4] = {
+        { { 0, 1, 2, 3 }, { 0, 1, 2, 3 }, { 3, 2, 0, 1 }, { 0, 0, 0, 0 } },
+        { { 0, 1, 2, 3 }, { 0, 1, 2, 3 }, { 0, 1, 2, 3 }, { 0, 1, 2, 3 } },
+        { { 2, 3, 1, 0 }, { 0, 0, 0, 0 }, { 0, 1, 2, 3 }, { 0, 1, 2, 3 } },
+        { { 3, 2, 1, 0 }, { 0, 1, 2, 3 }, { 3, 2, 0, 1 }, { 0, 1, 3, 2 } },
+        { { 3, 2, 1, 0 }, { 0, 1, 2, 3 }, { 0, 1, 2, 3 }, { 0, 1, 2, 3 } },
+        { { 2, 3, 1, 0 }, { 0, 1, 3, 2 }, { 0, 1, 2, 3 }, { 0, 1, 2, 3 } },
+        { { 3, 2, 0, 1 }, { 0, 1, 3, 2 }, { 0, 1, 2, 3 }, { 3, 2, 1, 0 } },
+        { { 0, 1, 2, 3 }, { 0, 1, 2, 3 }, { 0, 1, 2, 3 }, { 3, 2, 1, 0 } },
+        { { 0, 1, 2, 3 }, { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 2, 3, 1, 0 } }
+    };
+
+    root_.insertConstruction(9, adj, glu);
+
+    socket_[0].tet[0] = root_.getTetrahedron(0);
+    socket_[0].tet[1] = root_.getTetrahedron(2);
+    socket_[0].roles[0] = NPerm(1, 2, 0, 3);
+    socket_[0].roles[1] = NPerm(3, 0, 2, 1);
+    socketOrient_[0] = true;
+}
+
+NSFSpace* NSFSTo2::createSFS() const {
+    return new NSFSpace(NSFSpace::o2, 1, 0, 0);
+}
+
+std::ostream& NSFSTo2::writeName(std::ostream& out) const {
+    return out << "To2";
+}
+
+std::ostream& NSFSTo2::writeTeXName(std::ostream& out) const {
+    return out << "To2";
+}
+
+void NSFSTo2::writeTextLong(std::ostream& out) const {
+    out << "SFS T/o2 hack";
 }
 
 } // namespace regina
