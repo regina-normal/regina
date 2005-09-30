@@ -119,6 +119,9 @@ class NSFSRootMobiusChain : public NSFSRoot {
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+
+    private:
+        static unsigned countSockets(const char* spec);
 };
 
 /**
@@ -146,18 +149,6 @@ class NSFSRootReflectorChain : public NSFSRoot {
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
-};
-
-/**
- * TODO: Remake this triangulation, this time with documentation.
- */
-class NSFSRootT_5_1 : public NSFSRoot {
-    public:
-        NSFSRootT_5_1();
-
-        NSFSpace* createSFS() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
 };
 
 class NSFSRootTriPrism : public NSFSRoot {

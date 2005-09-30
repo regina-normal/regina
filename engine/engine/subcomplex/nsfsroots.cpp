@@ -36,24 +36,34 @@ namespace {
     NSFSRootMobiusChain rootMobNor1("/", false);
     NSFSRootMobiusChain rootMobNor2("//", false);
     NSFSRootMobiusChain rootMobNor3("/\\", false);
-    NSFSRootMobiusChain rootMobNor4("///", false);
-    NSFSRootMobiusChain rootMobNor5("//\\", false);
-    NSFSRootMobiusChain rootMobNor6("/\\/", false);
-    NSFSRootMobiusChain rootMobNor7("/J/", false);
-    NSFSRootMobiusChain rootMobNor8("/L/", false);
-    NSFSRootReflectorChain rootRef1(1);
-    NSFSRootReflectorChain rootRef2(2);
-    NSFSRootReflectorChain rootRef3(3);
-    NSFSRootT_5_1 rootT_5_1;
-    NSFSRootTriPrism rootPrism;
+    NSFSRootMobiusChain rootMobNor4("Z", false);
+    NSFSRootMobiusChain rootMobNor5("X", false);
+    NSFSRootMobiusChain rootMobNor6("///", false);
+    NSFSRootMobiusChain rootMobNor7("//\\", false);
+    NSFSRootMobiusChain rootMobNor8("/\\/", false);
+    NSFSRootMobiusChain rootMobNor9("/J/", false);
+    NSFSRootMobiusChain rootMobNor10("/L/", false);
+    NSFSRootMobiusChain rootMobNor11("Z/", false);
+    NSFSRootMobiusChain rootMobNor12("Z\\", false);
+    NSFSRootMobiusChain rootMobNor13("X/", false);
+    NSFSRootMobiusChain rootMobNor14("X\\", false);
     NSFSRootMobiusChain rootMobOr1("/", true);
     NSFSRootMobiusChain rootMobOr2("//", true);
     NSFSRootMobiusChain rootMobOr3("/\\", true);
-    NSFSRootMobiusChain rootMobOr4("///", true);
-    NSFSRootMobiusChain rootMobOr5("//\\", true);
-    NSFSRootMobiusChain rootMobOr6("/\\/", true);
-    NSFSRootMobiusChain rootMobOr7("/J/", true);
-    NSFSRootMobiusChain rootMobOr8("/L/", true);
+    NSFSRootMobiusChain rootMobOr4("Z", true);
+    NSFSRootMobiusChain rootMobOr5("X", true);
+    NSFSRootMobiusChain rootMobOr6("///", true);
+    NSFSRootMobiusChain rootMobOr7("//\\", true);
+    NSFSRootMobiusChain rootMobOr8("/\\/", true);
+    NSFSRootMobiusChain rootMobOr9("/J/", true);
+    NSFSRootMobiusChain rootMobOr10("/L/", true);
+    NSFSRootMobiusChain rootMobOr11("Z/", true);
+    NSFSRootMobiusChain rootMobOr12("X/", true);
+    NSFSRootMobiusChain rootMobOr13("X\\", true);
+    NSFSRootReflectorChain rootRef1(1);
+    NSFSRootReflectorChain rootRef2(2);
+    NSFSRootReflectorChain rootRef3(3);
+    NSFSRootTriPrism rootPrism;
 }
 
 NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
@@ -86,13 +96,23 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
         return ans;
     if ((ans = hunt(tri, rootMobNor8)))
         return ans;
+    if ((ans = hunt(tri, rootMobNor9)))
+        return ans;
+    if ((ans = hunt(tri, rootMobNor10)))
+        return ans;
+    if ((ans = hunt(tri, rootMobNor11)))
+        return ans;
+    if ((ans = hunt(tri, rootMobNor12)))
+        return ans;
+    if ((ans = hunt(tri, rootMobNor13)))
+        return ans;
+    if ((ans = hunt(tri, rootMobNor14)))
+        return ans;
     if ((ans = hunt(tri, rootRef1)))
         return ans;
     if ((ans = hunt(tri, rootRef2)))
         return ans;
     if ((ans = hunt(tri, rootRef3)))
-        return ans;
-    if ((ans = hunt(tri, rootT_5_1)))
         return ans;
     if ((ans = hunt(tri, rootPrism)))
         return ans;
@@ -112,58 +132,22 @@ NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
         return ans;
     if ((ans = hunt(tri, rootMobOr8)))
         return ans;
+    if ((ans = hunt(tri, rootMobOr9)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr10)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr11)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr12)))
+        return ans;
+    if ((ans = hunt(tri, rootMobOr13)))
+        return ans;
 
     return 0;
 }
 
-NSFSRootT_5_1::NSFSRootT_5_1() : NSFSRoot(2) {
-    const int adj[6][4] = {
-        { 3, 4, -1, -1},
-        { 3, 4, 5, -1},
-        { 3, 4, 5, -1},
-        { 2, 1, 5, 0},
-        { 2, 1, 5, 0},
-        { 4, 3, 2, 1}
-    };
-
-    const int glu[6][4][4] = {
-        { { 3, 2, 0, 1 }, { 2, 3, 0, 1 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } },
-        { { 1, 0, 2, 3 }, { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 0, 0, 0 } },
-        { { 0, 1, 2, 3 }, { 1, 0, 2, 3 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
-        { { 0, 1, 2, 3 }, { 1, 0, 2, 3 }, { 3, 2, 1, 0 }, { 2, 3, 1, 0 } },
-        { { 1, 0, 2, 3 }, { 0, 1, 2, 3 }, { 3, 2, 0, 1 }, { 2, 3, 0, 1 } },
-        { { 2, 3, 1, 0 }, { 3, 2, 1, 0 }, { 0, 1, 2, 3 }, { 0, 1, 3, 2 } }
-    };
-
-    root_.insertConstruction(6, adj, glu);
-
-    socket_[0].tet[0] = root_.getTetrahedron(1);
-    socket_[0].tet[1] = root_.getTetrahedron(0);
-    socket_[1].tet[0] = root_.getTetrahedron(0);
-    socket_[1].tet[1] = root_.getTetrahedron(2);
-
-    socket_[1].roles[0] = NPerm(2, 3);
-
-    socketOrient_[0] = false;
-    socketOrient_[1] = true;
-}
-
-NSFSpace* NSFSRootT_5_1::createSFS() const {
-    NSFSpace* ans = new NSFSpace(NSFSpace::n1, 1, 0, 0);
-    ans->insertFibre(1, 1);
-    return ans;
-}
-
-std::ostream& NSFSRootT_5_1::writeName(std::ostream& out) const {
-    return out << "T~5^1";
-}
-
-std::ostream& NSFSRootT_5_1::writeTeXName(std::ostream& out) const {
-    return out << "\\tilde{T}_5^1";
-}
-
 NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec, bool orbl) :
-        NSFSRoot(strlen(spec)), or_(orbl) {
+        NSFSRoot(countSockets(spec)), or_(orbl) {
     spec_ = strdup(spec);
 
     NTetrahedron** t = new NTetrahedron*[nSockets_ * 3];
@@ -171,8 +155,9 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec, bool orbl) :
     for (i = 0; i < nSockets_ * 3; i++)
         t[i] = new NTetrahedron();
 
-    NSFSAnnulus* left = new NSFSAnnulus[nSockets_];
-    NSFSAnnulus* right = new NSFSAnnulus[nSockets_];
+    unsigned chunks = strlen(spec);
+    NSFSAnnulus* left = new NSFSAnnulus[chunks];
+    NSFSAnnulus* right = new NSFSAnnulus[chunks];
 
     /**
      * Left and right sides are annuli of the form:
@@ -186,51 +171,122 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec, bool orbl) :
      *         *--->---*
      */
 
-    for (i = 0; i < nSockets_; i++) {
-        t[3 * i]->joinTo(0, t[3 * i + 1], NPerm(1, 2));
-        t[3 * i]->joinTo(1, t[3 * i + 2], NPerm(1, 3));
-        t[3 * i + 1]->joinTo(1, t[3 * i + 2], NPerm(0, 2));
-
+    unsigned pos = 0;
+    for (i = 0; i < chunks; i++) {
         switch (spec[i]) {
             case '/':
-                left[i].tet[0] = t[3 * i];
-                left[i].tet[1] = t[3 * i + 2];
-                left[i].roles[0] = NPerm(0, 1, 3, 2);
-                left[i].roles[1] = NPerm(1, 3, 0, 2);
-                right[i].tet[0] = t[3 * i + 1];
-                right[i].tet[1] = t[3 * i + 2];
-                right[i].roles[0] = NPerm(1, 0, 3, 2);
-                right[i].roles[1] = NPerm(1, 3, 2, 0);
-                break;
             case '\\':
-                left[i].tet[0] = t[3 * i];
-                left[i].tet[1] = t[3 * i + 2];
-                left[i].roles[0] = NPerm(1, 0, 3, 2);
-                left[i].roles[1] = NPerm(3, 1, 0, 2);
-                right[i].tet[0] = t[3 * i + 1];
-                right[i].tet[1] = t[3 * i + 2];
-                right[i].roles[0] = NPerm(0, 1, 3, 2);
-                right[i].roles[1] = NPerm(3, 1, 2, 0);
+                t[pos]->joinTo(0, t[pos + 1], NPerm(1, 2));
+                t[pos]->joinTo(1, t[pos + 2], NPerm(1, 3));
+                t[pos + 1]->joinTo(1, t[pos + 2], NPerm(0, 2));
+
+                left[i].tet[0] = t[pos];
+                left[i].tet[1] = t[pos + 2];
+                right[i].tet[0] = t[pos + 1];
+                right[i].tet[1] = t[pos + 2];
+                if (spec[i] == '/') {
+                    left[i].roles[0] = NPerm(0, 1, 3, 2);
+                    left[i].roles[1] = NPerm(1, 3, 0, 2);
+                    right[i].roles[0] = NPerm(1, 0, 3, 2);
+                    right[i].roles[1] = NPerm(1, 3, 2, 0);
+                } else {
+                    left[i].roles[0] = NPerm(1, 0, 3, 2);
+                    left[i].roles[1] = NPerm(3, 1, 0, 2);
+                    right[i].roles[0] = NPerm(0, 1, 3, 2);
+                    right[i].roles[1] = NPerm(3, 1, 2, 0);
+                }
+
+                pos += 3;
                 break;
             case 'J':
-                left[i].tet[0] = t[3 * i + 2];
-                left[i].tet[1] = t[3 * i];
-                left[i].roles[0] = NPerm(3, 1, 0, 2);
-                left[i].roles[1] = NPerm(1, 0, 3, 2);
-                right[i].tet[0] = t[3 * i + 2];
-                right[i].tet[1] = t[3 * i + 1];
-                right[i].roles[0] = NPerm(3, 1, 2, 0);
-                right[i].roles[1] = NPerm(0, 1, 3, 2);
-                break;
             case 'L':
-                left[i].tet[0] = t[3 * i + 2];
-                left[i].tet[1] = t[3 * i];
-                left[i].roles[0] = NPerm(1, 3, 0, 2);
-                left[i].roles[1] = NPerm(0, 1, 3, 2);
-                right[i].tet[0] = t[3 * i + 2];
-                right[i].tet[1] = t[3 * i + 1];
-                right[i].roles[0] = NPerm(1, 3, 2, 0);
-                right[i].roles[1] = NPerm(1, 0, 3, 2);
+                t[pos]->joinTo(0, t[pos + 1], NPerm(1, 2));
+                t[pos]->joinTo(1, t[pos + 2], NPerm(1, 3));
+                t[pos + 1]->joinTo(1, t[pos + 2], NPerm(0, 2));
+
+                left[i].tet[0] = t[pos + 2];
+                left[i].tet[1] = t[pos];
+                right[i].tet[0] = t[pos + 2];
+                right[i].tet[1] = t[pos + 1];
+                if (spec[i] == 'J') {
+                    left[i].roles[0] = NPerm(3, 1, 0, 2);
+                    left[i].roles[1] = NPerm(1, 0, 3, 2);
+                    right[i].roles[0] = NPerm(3, 1, 2, 0);
+                    right[i].roles[1] = NPerm(0, 1, 3, 2);
+                } else {
+                    left[i].roles[0] = NPerm(1, 3, 0, 2);
+                    left[i].roles[1] = NPerm(0, 1, 3, 2);
+                    right[i].roles[0] = NPerm(1, 3, 2, 0);
+                    right[i].roles[1] = NPerm(1, 0, 3, 2);
+                }
+
+                pos += 3;
+                break;
+            case 'Z':
+            case 'S':
+                t[pos]->joinTo(0, t[pos + 2], NPerm(0, 3));
+                t[pos + 2]->joinTo(0, t[pos + 1], NPerm(1, 2));
+                t[pos + 1]->joinTo(2, t[pos], NPerm(0, 1));
+                t[pos + 3]->joinTo(0, t[pos + 5], NPerm(0, 3));
+                t[pos + 5]->joinTo(0, t[pos + 4], NPerm(1, 2));
+                t[pos + 4]->joinTo(2, t[pos + 3], NPerm(0, 1));
+                t[pos]->joinTo(1, t[pos + 5], NPerm(0, 2, 3, 1));
+                t[pos + 2]->joinTo(1, t[pos + 4], NPerm(2, 1, 3, 0));
+                t[pos + 3]->joinTo(1, t[pos + 2], NPerm(0, 2, 3, 1));
+                t[pos + 5]->joinTo(1, t[pos + 1], NPerm(2, 1, 3, 0));
+
+                left[i].tet[0] = t[pos];
+                left[i].tet[1] = t[pos + 3];
+                right[i].tet[0] = t[pos + 1];
+                right[i].tet[1] = t[pos + 4];
+                if (spec[i] == 'Z') {
+                    left[i].roles[0] = NPerm(2, 3);
+                    left[i].roles[1] = NPerm(1, 0, 3, 2);
+                    right[i].roles[0] = NPerm(1, 0, 3, 2);
+                    right[i].roles[1] = NPerm(2, 3);
+                } else {
+                    left[i].roles[0] = NPerm(1, 0, 3, 2);
+                    left[i].roles[1] = NPerm(2, 3);
+                    right[i].roles[0] = NPerm(2, 3);
+                    right[i].roles[1] = NPerm(1, 0, 3, 2);
+                }
+
+                pos += 6;
+                break;
+            case 'X':
+            case 'x':
+                t[pos]->joinTo(1, t[pos + 3], NPerm());
+                t[pos + 3]->joinTo(0, t[pos + 2], NPerm(0, 1));
+                t[pos + 2]->joinTo(0, t[pos + 4], NPerm());
+                t[pos + 4]->joinTo(1, t[pos], NPerm(0, 1));
+                t[pos + 3]->joinTo(2, t[pos + 5], NPerm());
+                t[pos + 4]->joinTo(2, t[pos + 5], NPerm(2, 3));
+                t[pos]->joinTo(2, t[pos + 2], NPerm());
+                t[pos + 5]->joinTo(0, t[pos + 5], NPerm(0, 1));
+                t[pos + 4]->joinTo(3, t[pos + 1], NPerm(2, 3, 1, 0));
+                t[pos + 3]->joinTo(3, t[pos + 1], NPerm(2, 3, 0, 1));
+
+                if (spec[i] == 'X') {
+                    left[i].tet[0] = t[pos];
+                    left[i].tet[1] = t[pos + 5];
+                    right[i].tet[0] = t[pos + 2];
+                    right[i].tet[1] = t[pos + 5];
+                    left[i].roles[0] = NPerm(2, 3);
+                    left[i].roles[1] = NPerm(3, 2, 0, 1);
+                    right[i].roles[0] = NPerm(2, 3);
+                    right[i].roles[1] = NPerm(3, 2, 1, 0);
+                } else {
+                    left[i].tet[0] = t[pos + 5];
+                    left[i].tet[1] = t[pos];
+                    right[i].tet[0] = t[pos + 5];
+                    right[i].tet[1] = t[pos + 2];
+                    left[i].roles[0] = NPerm(2, 3, 0, 1);
+                    left[i].roles[1] = NPerm(1, 0, 3, 2);
+                    right[i].roles[0] = NPerm(2, 3, 1, 0);
+                    right[i].roles[1] = NPerm(1, 0, 3, 2);
+                }
+
+                pos += 6;
                 break;
             default:
                 std::cerr << "ERROR: Bad NSFSRootMobiusChain specification.  "
@@ -238,52 +294,115 @@ NSFSRootMobiusChain::NSFSRootMobiusChain(const char* spec, bool orbl) :
         }
     }
 
-    for (i = 0; i < nSockets_ - 1; i++) {
+    for (i = 0; i < chunks - 1; i++) {
         right[i].tet[0]->joinTo(right[i].roles[0][3], left[i + 1].tet[0],
             left[i + 1].roles[0] * right[i].roles[0].inverse());
         right[i].tet[1]->joinTo(right[i].roles[1][3], left[i + 1].tet[1],
             left[i + 1].roles[1] * right[i].roles[1].inverse());
     }
     if (or_) {
-        right[nSockets_ - 1].tet[0]->joinTo(right[nSockets_ - 1].roles[0][3],
+        right[chunks - 1].tet[0]->joinTo(right[chunks - 1].roles[0][3],
             left[0].tet[1], left[0].roles[1] *
-            right[nSockets_ - 1].roles[0].inverse());
-        right[nSockets_ - 1].tet[1]->joinTo(right[nSockets_ - 1].roles[1][3],
+            right[chunks - 1].roles[0].inverse());
+        right[chunks - 1].tet[1]->joinTo(right[chunks - 1].roles[1][3],
             left[0].tet[0], left[0].roles[0] *
-            right[nSockets_ - 1].roles[1].inverse());
+            right[chunks - 1].roles[1].inverse());
     } else {
-        right[nSockets_ - 1].tet[0]->joinTo(right[nSockets_ - 1].roles[0][3],
+        right[chunks - 1].tet[0]->joinTo(right[chunks - 1].roles[0][3],
             left[0].tet[1], left[0].roles[1] * NPerm(0, 1) *
-            right[nSockets_ - 1].roles[0].inverse());
-        right[nSockets_ - 1].tet[1]->joinTo(right[nSockets_ - 1].roles[1][3],
+            right[chunks - 1].roles[0].inverse());
+        right[chunks - 1].tet[1]->joinTo(right[chunks - 1].roles[1][3],
             left[0].tet[0], left[0].roles[0] * NPerm(0, 1) *
-            right[nSockets_ - 1].roles[1].inverse());
+            right[chunks - 1].roles[1].inverse());
     }
 
     for (i = 0; i < nSockets_ * 3; i++)
         root_.addTetrahedron(t[i]);
 
-    // All socket roles are identity permutations.
+    // Almost all socket roles are identity permutations.
 
     // Make sure we go through the sockets in order as they appear
     // around the boundary.
     unsigned s = 0;
-    for (i = 0; i < nSockets_; i++)
-        if (spec[i] == '/' || spec[i] == '\\') {
-            socket_[s].tet[0] = t[3 * i];
-            socket_[s].tet[1] = t[3 * i + 1];
-            socketOrient_[s] = (spec[i] == '/');
-            s++;
+    for (pos = 0, i = 0; i < chunks; i++)
+        switch(spec[i]) {
+            case '/':
+            case '\\':
+                socket_[s].tet[0] = t[pos];
+                socket_[s].tet[1] = t[pos + 1];
+                socketOrient_[s] = (spec[i] == '/');
+                s++;
+                pos += 3;
+                break;
+            case 'J':
+            case 'L':
+                pos += 3;
+                break;
+            case 'Z':
+            case 'S':
+                socket_[s].tet[0] = t[pos];
+                socket_[s].tet[1] = t[pos + 1];
+                socketOrient_[s] = (spec[i] == 'Z');
+                s++;
+                pos += 6;
+                break;
+            case 'X':
+                socket_[s].tet[0] = t[pos];
+                socket_[s].tet[1] = t[pos + 1];
+                socket_[s + 1].tet[0] = t[pos + 1];
+                socket_[s + 1].tet[1] = t[pos + 2];
+                socket_[s + 1].roles[0] = NPerm(2, 3);
+                socketOrient_[s] = true;
+                socketOrient_[s + 1] = false;
+                s += 2;
+                pos += 6;
+                break;
+            case 'x':
+                pos += 6;
+                break;
         }
-    for (i = 0; i < nSockets_; i++)
-        if (spec[i] == 'L' || spec[i] == 'J') {
-            socket_[s].tet[0] = t[3 * i];
-            socket_[s].tet[1] = t[3 * i + 1];
-            if (or_)
-                socketOrient_[s] = (spec[i] == 'L');
-            else
-                socketOrient_[s] = (spec[i] == 'J');
-            s++;
+    for (pos = 0, i = 0; i < chunks; i++)
+        switch(spec[i]) {
+            case '/':
+            case '\\':
+                pos += 3;
+                break;
+            case 'J':
+            case 'L':
+                socket_[s].tet[0] = t[pos];
+                socket_[s].tet[1] = t[pos + 1];
+                if (or_)
+                    socketOrient_[s] = (spec[i] == 'L');
+                else
+                    socketOrient_[s] = (spec[i] == 'J');
+                s++;
+                pos += 3;
+                break;
+            case 'Z':
+            case 'S':
+                socket_[s].tet[0] = t[pos + 3];
+                socket_[s].tet[1] = t[pos + 4];
+                if (or_)
+                    socketOrient_[s] = (spec[i] == 'S');
+                else
+                    socketOrient_[s] = (spec[i] == 'Z');
+                s++;
+                pos += 6;
+                break;
+            case 'X':
+                pos += 6;
+                break;
+            case 'x':
+                socket_[s].tet[0] = t[pos];
+                socket_[s].tet[1] = t[pos + 1];
+                socket_[s + 1].tet[0] = t[pos + 1];
+                socket_[s + 1].tet[1] = t[pos + 2];
+                socket_[s + 1].roles[0] = NPerm(2, 3);
+                socketOrient_[s] = ! or_;
+                socketOrient_[s + 1] = ! socketOrient_[s];
+                s += 2;
+                pos += 6;
+                break;
         }
 
     delete[] t;
@@ -322,6 +441,27 @@ std::ostream& NSFSRootMobiusChain::writeTeXName(std::ostream& out) const {
 void NSFSRootMobiusChain::writeTextLong(std::ostream& out) const {
     out << "SFS root Mobius chain: ";
     writeName(out);
+}
+
+unsigned NSFSRootMobiusChain::countSockets(const char* spec) {
+    unsigned ans = 0;
+    for (; *spec; spec++) {
+        switch(*spec) {
+            case '/':
+            case '\\':
+            case 'J':
+            case 'L':
+                ans++; break;
+            case 'Z':
+            case 'S':
+            case 'X':
+            case 'x':
+                ans += 2; break;
+
+            // Default is to ignore invalid characters.
+        }
+    }
+    return ans;
 }
 
 NSFSRootReflectorChain::NSFSRootReflectorChain(unsigned length) :
