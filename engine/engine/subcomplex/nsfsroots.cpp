@@ -68,6 +68,7 @@ void NSFSTree::initRoots() {
     allRoots.insert(new NSFSRootTriPrism);
     allRoots.insert(new NSFSRootCube);
     allRoots.insert(new NSFSTo2);
+    allRoots.insert(new NSFSA2Refo2);
 }
 
 NSFSTree* NSFSTree::isSFSTree(NTriangulation* tri) {
@@ -620,6 +621,56 @@ std::ostream& NSFSTo2::writeTeXName(std::ostream& out) const {
 
 void NSFSTo2::writeTextLong(std::ostream& out) const {
     out << "SFS T/o2 hack";
+}
+
+NSFSA2Refo2::NSFSA2Refo2() : NSFSRoot(1) {
+    // Created in Regina and exported to C++.
+    const int adj[9][4] = {
+        { 2, 1, 3, -1},
+        { 2, 0, 8, -1},
+        { 0, 6, 5, 1},
+        { 4, 4, 0, 5},
+        { 3, 5, 5, 3},
+        { 2, 3, 4, 4},
+        { 2, 8, 7, 7},
+        { 8, 6, 8, 6},
+        { 7, 7, 6, 1}
+    };
+
+    const int glu[9][4][4] = {
+        { { 0, 1, 2, 3 }, { 2, 1, 0, 3 }, { 0, 1, 2, 3 }, { 0, 0, 0, 0 } },
+        { { 3, 2, 1, 0 }, { 2, 1, 0, 3 }, { 0, 1, 3, 2 }, { 0, 0, 0, 0 } },
+        { { 0, 1, 2, 3 }, { 2, 0, 1, 3 }, { 2, 1, 0, 3 }, { 3, 2, 1, 0 } },
+        { { 0, 1, 2, 3 }, { 2, 3, 1, 0 }, { 0, 1, 2, 3 }, { 2, 3, 0, 1 } },
+        { { 0, 1, 2, 3 }, { 2, 3, 1, 0 }, { 0, 1, 2, 3 }, { 3, 2, 0, 1 } },
+        { { 2, 1, 0, 3 }, { 2, 3, 0, 1 }, { 0, 1, 2, 3 }, { 3, 2, 0, 1 } },
+        { { 1, 2, 0, 3 }, { 3, 2, 1, 0 }, { 2, 3, 1, 0 }, { 0, 1, 2, 3 } },
+        { { 0, 1, 2, 3 }, { 3, 2, 0, 1 }, { 2, 3, 1, 0 }, { 0, 1, 2, 3 } },
+        { { 0, 1, 2, 3 }, { 3, 2, 0, 1 }, { 3, 2, 1, 0 }, { 0, 1, 3, 2 } }
+    };
+
+    root_.insertConstruction(9, adj, glu);
+
+    socket_[0].tet[0] = root_.getTetrahedron(0);
+    socket_[0].tet[1] = root_.getTetrahedron(1);
+    // All socket roles are identity permutations.
+    socketOrient_[0] = true;
+}
+
+NSFSpace* NSFSA2Refo2::createSFS() const {
+    return new NSFSpace(NSFSpace::o2, 0, 0, 2);
+}
+
+std::ostream& NSFSA2Refo2::writeName(std::ostream& out) const {
+    return out << "A=/o2";
+}
+
+std::ostream& NSFSA2Refo2::writeTeXName(std::ostream& out) const {
+    return out << "A=/o2";
+}
+
+void NSFSA2Refo2::writeTextLong(std::ostream& out) const {
+    out << "SFS A=/o2 hack";
 }
 
 } // namespace regina

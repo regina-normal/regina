@@ -185,6 +185,19 @@ class NSFSTo2 : public NSFSRoot {
         void writeTextLong(std::ostream& out) const;
 };
 
+/**
+ * Another quick hack.  This one gives us A=/o2 bases.
+ */
+class NSFSA2Refo2 : public NSFSRoot {
+    public:
+        NSFSA2Refo2();
+
+        NSFSpace* createSFS() const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+};
+
 // Inline functions for NSFSRootMobiusChain
 
 const char* NSFSRootMobiusChain::spec() const {
