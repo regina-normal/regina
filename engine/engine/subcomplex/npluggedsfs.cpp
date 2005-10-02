@@ -192,7 +192,7 @@ void NSFSSocketHolder::adjustSFSOnSockets(NSFSpace& sfs, bool reflect) const {
     }
 
     // A skew on a socket is equivalent to an additional (1,-1) fibre.
-    sfs.insertFibre(1, - skew);
+    sfs.insertFibre(1, reflect ? skew : - skew);
 }
 
 bool NSFSPlug::isBad(NTetrahedron* t,
