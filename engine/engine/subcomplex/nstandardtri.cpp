@@ -33,6 +33,7 @@
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
+#include "subcomplex/nnongeotorusbundle.h"
 #include "subcomplex/npluggedsfs.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
@@ -92,6 +93,8 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     if ((ans = NSFSTree::isSFSTree(tri)))
         return ans;
     if ((ans = NLayeredTorusBundle::isLayeredTorusBundle(tri)))
+        return ans;
+    if ((ans = NNonGeoTorusBundle::isNonGeoTorusBundle(tri)))
         return ans;
 
     // Nup.
