@@ -132,6 +132,26 @@ class NSFSPlugCrosscap : public NSFSPlug {
 };
 
 /**
+ * Plug must be non-null.
+ */
+class NSFSPlugVerticalLayer : public NSFSPlug, public NSFSSocketHolder {
+    public:
+        ~NSFSPlugVerticalLayer();
+
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        std::ostream& writeName(std::ostream& out) const;
+        std::ostream& writeTeXName(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
+
+        static NSFSPlug* isPlugged(const NSFSAnnulus& socket,
+            std::list<NTetrahedron*>& avoidTets);
+
+    private:
+        NSFSPlugVerticalLayer(const NSFSAnnulus& toSocket,
+                const NSFSSocketHolder& plug);
+};
+
+/**
  * Both plugs must be non-null.
  */
 class NSFSPlugDouble : public NSFSPlug, public NSFSSocketHolder {
@@ -176,6 +196,18 @@ inline NSFSPlugReflector::NSFSPlugReflector(const NSFSAnnulus& toSocket) :
 
 inline NSFSPlugCrosscap::NSFSPlugCrosscap(const NSFSAnnulus& toSocket,
         bool reversing) : NSFSPlug(toSocket), reversing_(reversing) {
+}
+
+// Inline functions for NSFSPlugVerticalLayer
+
+inline NSFSPlugVerticalLayer::NSFSPlugVerticalLayer(
+        const NSFSAnnulus& toSocket, const NSFSSocketHolder& plug) :
+        NSFSPlug(toSocket), NSFSSocketHolder(plug) {
+}
+
+inline NSFSPlugVerticalLayer::~NSFSPlugVerticalLayer() {
+    // Since NSFSSocketHolder doesn't delete the plug, we do this here.
+    delete plug_[0];
 }
 
 // Inline functions for NSFSPlugDouble

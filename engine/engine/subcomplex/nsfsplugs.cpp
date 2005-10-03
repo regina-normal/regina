@@ -53,6 +53,8 @@ NSFSPlug* NSFSPlug::isPlugged(const NSFSAnnulus& socket) {
     avoidTets.push_back(socket.tet[0]);
     avoidTets.push_back(socket.tet[1]);
 
+    if ((ans = NSFSPlugVerticalLayer::isPlugged(socket, avoidTets)))
+        return ans;
     if ((ans = NSFSPlugDouble::isPlugged(socket, avoidTets)))
         return ans;
 
@@ -72,6 +74,8 @@ NSFSPlug* NSFSPlug::isPlugged(const NSFSAnnulus& socket,
     if ((ans = NSFSPlugCrosscap::isPlugged(socket)))
         return ans;
 
+    if ((ans = NSFSPlugVerticalLayer::isPlugged(socket, avoidTets)))
+        return ans;
     if ((ans = NSFSPlugDouble::isPlugged(socket, avoidTets)))
         return ans;
 
@@ -440,6 +444,74 @@ NSFSPlug* NSFSPlugDouble::isPlugged(const NSFSAnnulus& socket,
     } else {
         // Couldn't fill in the plugs.
         plugs.destroyPlugs();
+        return 0;
+    }
+}
+
+void NSFSPlugVerticalLayer::adjustSFS(NSFSpace& sfs, bool reflect) const {
+    adjustSFSOnSockets(sfs, reflect);
+    sfs.insertFibre(1, reflect ? 1 : -1);
+}
+
+std::ostream& NSFSPlugVerticalLayer::writeName(std::ostream& out) const {
+    out << "v(";
+    if (skewed_[0])
+        out << 'x';
+    return plug_[0]->writeName(out) << ')';
+}
+
+std::ostream& NSFSPlugVerticalLayer::writeTeXName(std::ostream& out) const {
+    out << "v(";
+    if (skewed_[0])
+        out << "\\times";
+    return plug_[0]->writeTeXName(out) << ')';
+}
+
+void NSFSPlugVerticalLayer::writeTextLong(std::ostream& out) const {
+    out << "Vertical layer plug: ";
+    writeName(out);
+}
+
+NSFSPlug* NSFSPlugVerticalLayer::isPlugged(const NSFSAnnulus& socket,
+        std::list<NTetrahedron*>& avoidTets) {
+    if (socket.meetsBoundary())
+        return 0;
+    NSFSAnnulus internal = socket.otherSide();
+
+    // Do we have a single new tetrahedron?
+    if (internal.tet[0] != internal.tet[1])
+        return 0;
+    if (internal.tet[0] == socket.tet[0] ||
+            internal.tet[0] == socket.tet[1])
+        return 0;
+
+    if (isBad(internal.tet[0], avoidTets))
+        return 0;
+
+    // Do we have a layering over the horizontal edge?
+    // Don't worry about layering over the diagonal edge; this will be
+    // picked up elsewhere via skew.
+    NPerm cross0 = internal.roles[0] * NPerm(2, 3);
+    if (cross0 != internal.roles[1] * NPerm(2, 3, 1, 0))
+        return 0;
+
+    // So far so good!  Now look for the new plug.
+    avoidTets.push_back(internal.tet[0]);
+
+    NSFSAnnulus bdry(internal.tet[0], cross0,
+        internal.tet[0], cross0 * NPerm(3, 2, 1, 0));
+    NSFSSocketHolder plug(bdry);
+
+    bool ok = plug.isFullyPlugged(avoidTets);
+
+    avoidTets.pop_back();
+
+    if (ok) {
+        // Complete!
+        return new NSFSPlugVerticalLayer(internal, plug);
+    } else {
+        // Couldn't fill in the plug.
+        plug.destroyPlugs();
         return 0;
     }
 }
