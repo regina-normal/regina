@@ -67,6 +67,8 @@ Version 4.3  [ under development ]
         tricensus-mpi-status:
             - New tool for parsing tricensus-mpi logs.  Currently only
               logs generated with a --depth option are supported.
+        trisetcmp:
+            - Allow subcomplex testing as well as isomorphism testing.
 
 Version 4.2.1  [ 18 September, 2005 ]
 

@@ -33,15 +33,26 @@
 using regina::NPacket;
 using regina::NTriangulation;
 
+bool subcomplexTesting = false;
+
+bool compare(NTriangulation* t1, NTriangulation* t2) {
+    if (subcomplexTesting)
+        return t1->isContainedIn(*t2).get();
+    else
+        return t1->isIsomorphicTo(*t2).get();
+}
+
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -m | -n ] <file1.rga> <file2.rga>\n";
+    std::cerr << "    " << progName << " [ -m | -n ] [ -s ] <file1.rga> <file2.rga>\n";
     std::cerr << std::endl;
     std::cerr << "    -m : List matches, i.e., triangulations contained in both files (default)\n";
     std::cerr << "    -n : List non-matches, i.e., triangulations in one file but not the other\n";
+    std::cerr << "    -s : Allow triangulations from file1.rga to be subcomplexes of\n"
+                 "         triangulations from file2.rga\n";
     exit(1);
 }
 
@@ -55,8 +66,8 @@ void runMatches(NPacket* tree1, NPacket* tree2) {
         if (p1->getPacketType() == NTriangulation::packetType)
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
                 if (p2->getPacketType() == NTriangulation::packetType)
-                    if (static_cast<NTriangulation*>(p1)->isIsomorphicTo(
-                            * static_cast<NTriangulation*>(p2)).get()) {
+                    if (compare(static_cast<NTriangulation*>(p1),
+                            static_cast<NTriangulation*>(p2))) {
                         std::cout << "    " << p1->getPacketLabel()
                             << "  ==  " << p2->getPacketLabel() << std::endl;
                         nMatches++;
@@ -84,8 +95,8 @@ void runNonMatches(const std::string& file1, NPacket* tree1,
             matched = false;
             for (p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
                 if (p2->getPacketType() == NTriangulation::packetType)
-                    if (static_cast<NTriangulation*>(p1)->isIsomorphicTo(
-                            * static_cast<NTriangulation*>(p2)).get())
+                    if (compare(static_cast<NTriangulation*>(p1),
+                            static_cast<NTriangulation*>(p2)))
                         matched = true;
             if (! matched) {
                 std::cout << "    " << p1->getPacketLabel() << std::endl;
@@ -123,6 +134,8 @@ int main(int argc, char* argv[]) {
                 listMatches = true;
             else if (optChar == 'n')
                 listNonMatches = true;
+            else if (optChar == 's')
+                subcomplexTesting = true;
             else if (optChar == '-')
                 noMoreOpts = true;
             else
@@ -174,8 +187,10 @@ int main(int argc, char* argv[]) {
         runMatches(tree1, tree2);
     else {
         runNonMatches(file1, tree1, file2, tree2);
-        std::cout << std::endl << "--------------------\n" << std::endl;
-        runNonMatches(file2, tree2, file1, tree1);
+        if (! subcomplexTesting) {
+            std::cout << std::endl << "--------------------\n" << std::endl;
+            runNonMatches(file2, tree2, file1, tree1);
+        }
     }
 
     // All done.
