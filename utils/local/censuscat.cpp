@@ -71,8 +71,10 @@ void usage(const char* progName, const std::string& error = std::string()) {
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -s ] <file.rga> [ <file.rga> ... ]\n";
+    std::cerr << "    " << progName << " [ -0 ] [ -s ] <file.rga> [ <file.rga> ... ]\n";
     std::cerr << std::endl;
+    std::cerr << "    -0 : Drop orientable triangulations with >= 3 tetrahedra that are\n";
+    std::cerr << "         not 0-efficient\n";
     std::cerr << "    -s : Enumerate standard tri-quad normal surfaces for each triangulation\n";
     std::cerr << std::endl;
     std::cerr << "Resulting XML file is written to standard output.\n";
