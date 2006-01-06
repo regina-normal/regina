@@ -202,6 +202,12 @@ class NSnapPeaTriangulation : public ShareableObject {
          * @param precision used to return an estimate of the number of
          * decimal places of accuracy in the calculated volume.
          *
+         * \ifacespython The \a precision argument is not present.
+         * Instead, two routines are offered.  The routine \a volume()
+         * takes no arguments and returns the volume only, whereas the
+         * routine \a volumeWithPrecision() takes no arguments and
+         * returns a (\a volume, \a precision) tuple.
+         *
          * @return the volume of the underlying 3-manifold, or 0 if this
          * is a null triangulation.
          */

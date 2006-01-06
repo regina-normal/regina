@@ -37,8 +37,12 @@ using regina::NTriangulation;
 namespace {
     double (NSnapPeaTriangulation::*volume_void)() const =
         &NSnapPeaTriangulation::volume;
-    double (NSnapPeaTriangulation::*volume_precision)(int&) const =
-        &NSnapPeaTriangulation::volume;
+
+    boost::python::tuple volume_precision(const NSnapPeaTriangulation& t) {
+        int precision;
+        double volume = t.volume(precision);
+        return make_tuple(volume, precision);
+    }
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_enableKernelMessages,
         NSnapPeaTriangulation::enableKernelMessages, 0, 1);
@@ -52,7 +56,7 @@ void addNSnapPeaTriangulation() {
         .def("isNull", &NSnapPeaTriangulation::isNull)
         .def("solutionType", &NSnapPeaTriangulation::solutionType)
         .def("volume", volume_void)
-        .def("volume", volume_precision)
+        .def("volumeWithPrecision", volume_precision)
         .def("dump", &NSnapPeaTriangulation::dump)
         .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
         .def("kernelMessagesEnabled",

@@ -56,6 +56,10 @@ Version 4.3  [ under development ]
               and getVertexIndex() all returned signed instead of unsigned
               longs, so that -1 can be returned if the object could not
               be found.
+    PYTHON:
+        Class NSnapPeaTriangulation:
+            - Offers the additional zero-argument routine volumeWithPrecision()
+              as a way of returning the precision of the volume calculation.
     UTILITIES:
         tricensus-mpi:
             - Significant overhaul.
