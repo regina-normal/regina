@@ -405,6 +405,40 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             // testVolume(closedHypNor, "nor_2.02988321", 2.02988121, 7);
         }
 
+        void testZeroVolume(const char* triName, double foundVol,
+                int usePrecision) {
+            // Test whether the given volume is zero to the given number
+            // of decimal places.  If the number of decimal places is
+            // negative, zero places will be used instead.
+
+            if (usePrecision < 0)
+                usePrecision = 0;
+
+            // The trouble here is that we need to take a log to
+            // calculate the output precision for the volume.  If the
+            // volume _is_ zero however, we can't do this.  So we test
+            // first, and only construct the error message if the test
+            // fails.
+            double epsilon = 0.5;
+            for (int i = 0; i < usePrecision; i++)
+                epsilon /= 10;
+
+            if (foundVol <= epsilon && foundVol >= -epsilon)
+                return;
+
+            // FAILURE!  Build the error message and die.
+            int showPrecision =
+                usePrecision + static_cast<int>(ceil(log10(fabs(foundVol))));
+            if (showPrecision < 3)
+                showPrecision = 3;
+
+            std::ostringstream msg;
+            msg << triName << " should have a volume of zero, not "
+                << std::setprecision(showPrecision) << foundVol << '.';
+
+            CPPUNIT_FAIL(msg.str());
+        }
+
         void testFlat(NTriangulation& tri, const char* triName,
                 unsigned places) {
             // Verify that the triangulation has a flat solution and the
@@ -440,20 +474,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                     precision >= static_cast<int>(places));
             }
 
-            double epsilon = 0.5;
-            for (unsigned i = 0; i < places; i++)
-                epsilon /= 10;
-
-            {
-                std::ostringstream msg;
-                msg << triName << " should have a volume of zero, not "
-                    << std::setprecision(
-                        precision + static_cast<int>(ceil(log10(foundVol))))
-                    << foundVol << '.';
-
-                CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    foundVol <= epsilon && foundVol >= -epsilon);
-            }
+            testZeroVolume(triName, foundVol, precision);
         }
 
         void flat() {
@@ -496,25 +517,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             if (precision > maxPlaces)
                 precision = maxPlaces;
 
-            double epsilon = 0.5;
-            for (int i = 0; i < precision; i++)
-                epsilon /= 10;
-
-            // If the volume _is_ zero, we can't take a log.
-            // Therefore we can't construct the error message until
-            // we know there's actually an error.
-            if (foundVol > epsilon || foundVol < -epsilon) {
-                int showPrecision =
-                    precision + static_cast<int>(ceil(log10(fabs(foundVol))));
-                if (showPrecision < 3)
-                    showPrecision = 3;
-
-                std::ostringstream msg;
-                msg << triName << " should have a volume of zero, not "
-                    << std::setprecision(showPrecision) << foundVol << '.';
-
-                CPPUNIT_FAIL(msg.str());
-            }
+            testZeroVolume(triName, foundVol, precision);
         }
 
         void degenerate() {
