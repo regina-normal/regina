@@ -500,15 +500,20 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             for (int i = 0; i < precision; i++)
                 epsilon /= 10;
 
-            {
+            // If the volume _is_ zero, we can't take a log.
+            // Therefore we can't construct the error message until
+            // we know there's actually an error.
+            if (foundVol > epsilon || foundVol < -epsilon) {
+                int showPrecision =
+                    precision + static_cast<int>(ceil(log10(fabs(foundVol))));
+                if (showPrecision < 3)
+                    showPrecision = 3;
+
                 std::ostringstream msg;
                 msg << triName << " should have a volume of zero, not "
-                    << std::setprecision(
-                        precision + static_cast<int>(ceil(log10(foundVol))))
-                    << foundVol << '.';
+                    << std::setprecision(showPrecision) << foundVol << '.';
 
-                CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    foundVol <= epsilon && foundVol >= -epsilon);
+                CPPUNIT_FAIL(msg.str());
             }
         }
 
