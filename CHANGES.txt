@@ -69,6 +69,10 @@ Version 4.3  [ under development ]
               logs generated with a --depth option are supported.
         trisetcmp:
             - Allow subcomplex testing as well as isomorphism testing.
+    TEST SUITE:
+        - Don't enforce precision limits for degenerate snappea volume
+          testing, to allow for flexibility in floating point behaviours
+          of different chipsets.
 
 Version 4.2.1  [ 18 September, 2005 ]
 
