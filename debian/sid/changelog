@@ -1,9 +1,12 @@
 regina-normal (4.2.1-2) unstable; urgency=low
 
-  * Updated to libtool 1.5.22.  This should support Debian GNU/k*BSD,
-    and should also streamline package dependencies (closes: #343965).
+  * Updated to debian's patched libtool 1.5.22.  This should support
+    Debian GNU/k*BSD, and should also streamline package dependencies
+    (closes: #343965).
   * Build-depends on automake1.9 since we now need to rerun autoconf,
     automake and friends.
+  * Applied the debian/KDE disable_no_undefine patch to admin/kde.m4.ext,
+    which is needed because of the libtool update.
   * Made the NSnapPeaTriangulation tests more flexible for degenerate
     triangulations, to allow for different floating point behaviour under
     different chipsets (closes: #326790).
