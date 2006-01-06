@@ -26,6 +26,17 @@ debian/debiandirs: admin/debianrules
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
+
+	# Update to debian's patched libtool.
+	cp debian/libtool/* admin
+	admin/ac_gen
+	aclocal
+	autoheader
+	autoconf
+	automake
+	perl -w admin/am_edit
+
+	# Back to the standard configure.
 	chmod a+x configure
 	./configure --disable-maintainer-mode PKGNAME=regina-normal \
 	  --includedir=/usr/include $(configkde) --includedir=/usr/include
