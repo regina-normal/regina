@@ -461,12 +461,14 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             testFlat(flatNor, "The non-orientable flat triangulation", 9);
         }
 
-        void testDegenerate(NTriangulation& tri, const char* triName) {
+        void testDegenerate(NTriangulation& tri, const char* triName,
+                int maxPlaces) {
             // Verify that the triangulation has a degenerate solution
             // and the volume is zero.  The volume is tested to whatever
-            // precision is reported, but the precision itself has no
-            // limit imposed -- this allows flexibility for different
-            // floating point behaviours of different chipsets.
+            // precision is reported (up to a maximum of maxPlaces),
+            // but the precision itself has no lower limit imposed -- this
+            // allows flexibility for different floating point behaviours of
+            // different chipsets.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
             NSnapPeaTriangulation s(tri);
@@ -490,6 +492,10 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             int precision;
             double foundVol = s.volume(precision);
 
+            // Dumb down the precision to our given maximum.
+            if (precision > maxPlaces)
+                precision = maxPlaces;
+
             double epsilon = 0.5;
             for (int i = 0; i < precision; i++)
                 epsilon /= 10;
@@ -508,9 +514,9 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
         void degenerate() {
             testDegenerate(degenerateOr,
-                "The orientable degenerate triangulation");
+                "The orientable degenerate triangulation", 9);
             testDegenerate(degenerateNor,
-                "The non-orientable degenerate triangulation");
+                "The non-orientable degenerate triangulation", 9);
         }
 };
 
