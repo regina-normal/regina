@@ -688,11 +688,11 @@ std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
         }
 
         if (chainType == CHAIN_MAJOR)
-            out << (tex ? "$J_{" : "J(");
+            out << (tex ? "J_{" : "J(");
         else
-            out << (tex ? "$X_{" : "X(");
+            out << (tex ? "X_{" : "X(");
         return out << chainIndex << " | " << params[roles[0]] << ','
-            << params[roles[1]] << (tex ? "}$" : ")");
+            << params[roles[1]] << (tex ? '}' : ')');
     } else {
         // We have three layered solid tori.
         std::pair<long, long> allParams[3];
@@ -724,13 +724,13 @@ std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
         }
         sort(allParams, allParams + nAllParams);
 
-        out << (tex ? "$A_{" : "A(");
+        out << (tex ? "A_{" : "A(");
         for (i = 0; i < nAllParams; i++) {
             if (i > 0)
                 out << " | ";
             out << allParams[i].first << ',' << allParams[i].second;
         }
-        return out << (tex ? "}$" : ")");
+        return out << (tex ? '}' : ')');
     }
 }
 

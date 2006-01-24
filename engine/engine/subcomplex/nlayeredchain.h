@@ -286,7 +286,7 @@ inline std::ostream& NLayeredChain::writeName(std::ostream& out) const {
     return out << "Chain(" << index << ')';
 }
 inline std::ostream& NLayeredChain::writeTeXName(std::ostream& out) const {
-    return out << "$\\mathit{Chain}(" << index << ")$";
+    return out << "\\mathit{Chain}(" << index << ')';
 }
 inline void NLayeredChain::writeTextLong(std::ostream& out) const {
     out << "Layered chain of index " << index;

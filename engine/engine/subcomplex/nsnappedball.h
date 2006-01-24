@@ -170,7 +170,7 @@ inline std::ostream& NSnappedBall::writeName(std::ostream& out) const {
     return out << "Snap";
 }
 inline std::ostream& NSnappedBall::writeTeXName(std::ostream& out) const {
-    return out << "$\\mathit{Snap}$";
+    return out << "\\mathit{Snap}";
 }
 inline void NSnappedBall::writeTextLong(std::ostream& out) const {
     out << "Snapped 3-ball";

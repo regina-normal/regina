@@ -180,7 +180,7 @@ inline std::ostream& NLayeredLoop::writeName(std::ostream& out) const {
     return out << (hinge[1] ? "C(" : "C~(") << length << ')';
 }
 inline std::ostream& NLayeredLoop::writeTeXName(std::ostream& out) const {
-    return out << (hinge[1] ? "$C_{" : "$\\tilde{C}_{") << length << "}$";
+    return out << (hinge[1] ? "C_{" : "\\tilde{C}_{") << length << '}';
 }
 inline void NLayeredLoop::writeTextLong(std::ostream& out) const {
     out << "Layered loop (" << (hinge[1] ? "not twisted" : "twisted") <<

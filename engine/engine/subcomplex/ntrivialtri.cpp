@@ -161,7 +161,7 @@ NAbelianGroup* NTrivialTri::getHomologyH1() const {
     return ans;
 }
 
-inline std::ostream& NTrivialTri::writeName(std::ostream& out) const {
+std::ostream& NTrivialTri::writeName(std::ostream& out) const {
     if (type == SPHERE_4_VERTEX)
         out << "S3 (4-vtx)";
     else if (type == BALL_3_VERTEX)
@@ -176,22 +176,22 @@ inline std::ostream& NTrivialTri::writeName(std::ostream& out) const {
         out << "N(3,2)";
     return out;
 }
-inline std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
+std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
     if (type == SPHERE_4_VERTEX)
-        out << "$S^3_{v=4}$";
+        out << "S^3_{v=4}";
     else if (type == BALL_3_VERTEX)
-        out << "$B^3_{v=3}$";
+        out << "B^3_{v=3}";
     else if (type == BALL_4_VERTEX)
-        out << "$B^3_{v=4}$";
+        out << "B^3_{v=4}";
     else if (type == N2)
-        out << "$N_{2}$";
+        out << "N_{2}";
     else if (type == N3_1)
-        out << "$N_{3,1}$";
+        out << "N_{3,1}";
     else if (type == N3_2)
-        out << "$N_{3,2}$";
+        out << "N_{3,2}";
     return out;
 }
-inline void NTrivialTri::writeTextLong(std::ostream& out) const {
+void NTrivialTri::writeTextLong(std::ostream& out) const {
     if (type == SPHERE_4_VERTEX)
         out << "Two-tetrahedron four-vertex 3-sphere";
     else if (type == BALL_3_VERTEX)

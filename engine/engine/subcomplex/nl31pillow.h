@@ -148,7 +148,7 @@ inline std::ostream& NL31Pillow::writeName(std::ostream& out) const {
     return out << "L'(3,1)";
 }
 inline std::ostream& NL31Pillow::writeTeXName(std::ostream& out) const {
-    return out << "$L'_{3,1}$";
+    return out << "L'_{3,1}";
 }
 inline void NL31Pillow::writeTextLong(std::ostream& out) const {
     out << "Triangular pillow lens space L(3,1)";

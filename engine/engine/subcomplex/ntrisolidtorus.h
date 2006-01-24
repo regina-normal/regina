@@ -293,7 +293,7 @@ inline std::ostream& NTriSolidTorus::writeName(std::ostream& out) const {
     return out << "TST";
 }
 inline std::ostream& NTriSolidTorus::writeTeXName(std::ostream& out) const {
-    return out << "$\\mathop{\\rm TST}$";
+    return out << "\\mathop{\\rm TST}";
 }
 inline void NTriSolidTorus::writeTextLong(std::ostream& out) const {
     out << "3-tetrahedron triangular solid torus";

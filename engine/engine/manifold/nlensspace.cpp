@@ -85,13 +85,13 @@ std::ostream& NLensSpace::writeName(std::ostream& out) const {
 
 std::ostream& NLensSpace::writeTeXName(std::ostream& out) const {
     if (p == 0)
-        out << "$S^2 \\times S^1$";
+        out << "S^2 \\times S^1";
     else if (p == 1)
-        out << "$S^3$";
+        out << "S^3";
     else if (p == 2 && q == 1)
-        out << "$\\mathbb{R}P^3$";
+        out << "\\mathbb{R}P^3";
     else
-        out << "$L(" << p << ',' << q << ")$";
+        out << "L(" << p << ',' << q << ')';
     return out;
 }
 

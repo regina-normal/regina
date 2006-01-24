@@ -165,15 +165,15 @@ std::ostream& NLayeredLensSpace::writeName(std::ostream& out) const {
 
 std::ostream& NLayeredLensSpace::writeTeXName(std::ostream& out) const {
     if (p == 3 && q == 1) {
-        out << "$L_{3,1}";
+        out << "L_{3,1}";
         if (torus->getNumberOfTetrahedra() != 2)
-            return out << '$';
+            return out;
         else if (isSnapped())
-            return out << "^{(1)}$";
+            return out << "^{(1)}";
         else
-            return out << "^{(2)}$";
+            return out << "^{(2)}";
     } else
-        return out << "$L_{" << p << ',' << q << "}$";
+        return out << "L_{" << p << ',' << q << '}';
 }
 
 } // namespace regina

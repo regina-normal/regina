@@ -221,7 +221,7 @@ std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {
 }
 
 std::ostream& NSnapPeaCensusTri::writeTeXName(std::ostream& out) const {
-    out << '$' << section << "_{";
+    out << section << "_{";
 
     // Pad the index with leading zeroes.
     // All sections are written with three-digit indices, except for
@@ -232,7 +232,7 @@ std::ostream& NSnapPeaCensusTri::writeTeXName(std::ostream& out) const {
         out << '0';
     if (index < 10)
         out << '0';
-    out << index << "}$";
+    out << index << '}';
 
     return out;
 }

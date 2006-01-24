@@ -279,7 +279,7 @@ inline std::ostream& NSpiralSolidTorus::writeName(std::ostream& out) const {
     return out << "Spiral(" << nTet << ')';
 }
 inline std::ostream& NSpiralSolidTorus::writeTeXName(std::ostream& out) const {
-    return out << "$\\mathit{Spiral}(" << nTet << ")$";
+    return out << "\\mathit{Spiral}(" << nTet << ')';
 }
 inline void NSpiralSolidTorus::writeTextLong(std::ostream& out) const {
     out << nTet << "-tetrahedron spiralled solid torus";

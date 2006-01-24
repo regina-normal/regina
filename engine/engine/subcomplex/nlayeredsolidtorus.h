@@ -416,8 +416,8 @@ inline std::ostream& NLayeredSolidTorus::writeName(std::ostream& out) const {
         << meridinalCuts[2] << ')';
 }
 inline std::ostream& NLayeredSolidTorus::writeTeXName(std::ostream& out) const {
-    return out << "$\\mathop{\\rm LST}(" << meridinalCuts[0] << ','
-        << meridinalCuts[1] << ',' << meridinalCuts[2] << ")$";
+    return out << "\\mathop{\\rm LST}(" << meridinalCuts[0] << ','
+        << meridinalCuts[1] << ',' << meridinalCuts[2] << ')';
 }
 inline void NLayeredSolidTorus::writeTextLong(std::ostream& out) const {
     out << "( " << meridinalCuts[0] << ", " << meridinalCuts[1] << ", "

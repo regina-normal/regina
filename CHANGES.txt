@@ -32,6 +32,8 @@ Version 4.3  [ under development ]
               from the top end instead of the bottom.
         Class NLayeredTorusBundle, NTxICore, NTxIDiagonalCore, NTxIParallelCore:
             - Added for recognition of layered surface bundles.
+        Class NManifold:
+            - Routine writeTeXName() no longer provides wrapping dollar signs.
         Class NMatrix2:
             - New specialised class for working with 2x2 integer matrices.
         Class NPerm:
@@ -44,6 +46,8 @@ Version 4.3  [ under development ]
               Now more general, supporting both orientable and
               non-orientable 3-manifolds as well as base orbifolds with
               reflector boundary components.
+        Class NStandardTri:
+            - Routine writeTeXName() no longer provides wrapping dollar signs.
         Class NTorusBundle:
             - New class of 3-manifolds.
         Class NTriangulation:

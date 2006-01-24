@@ -57,17 +57,17 @@ std::ostream& NHandlebody::writeName(std::ostream& out) const {
 
 std::ostream& NHandlebody::writeTeXName(std::ostream& out) const {
     if (nHandles == 0)
-        out << "$B^3$";
+        out << "B^3";
     else if (nHandles == 1) {
         if (orientable)
-            out << "$B^2 \\times S^1$";
+            out << "B^2 \\times S^1";
         else
-            out << "$B^2 \\twisted S^1$";
+            out << "B^2 \\twisted S^1";
     } else {
         if (orientable)
-            out << "$\\mathit{Handle-Or}(" << nHandles << ")$";
+            out << "\\mathit{Handle-Or}(" << nHandles << ')';
         else
-            out << "$\\mathit{Handle-Nor}(" << nHandles << ")$";
+            out << "\\mathit{Handle-Nor}(" << nHandles << ')';
     }
     return out;
 }

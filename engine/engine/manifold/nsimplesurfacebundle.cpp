@@ -94,11 +94,11 @@ std::ostream& NSimpleSurfaceBundle::writeName(std::ostream& out) const {
 
 std::ostream& NSimpleSurfaceBundle::writeTeXName(std::ostream& out) const {
     if (type == S2xS1)
-        out << "$S^2 \\times S^1$";
+        out << "S^2 \\times S^1";
     else if (type == S2xS1_TWISTED)
-        out << "$S^2 \\twisted S^1$";
+        out << "S^2 \\twisted S^1";
     else if (type == RP2xS1)
-        out << "$\\mathbb{R}P^2 \\times S^1$";
+        out << "\\mathbb{R}P^2 \\times S^1";
     return out;
 }
 

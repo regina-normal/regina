@@ -98,15 +98,15 @@ std::ostream& NPlugTriSolidTorus::writeTeXName(std::ostream& out) const {
         }
     std::sort(params, params + nParams);
 
-    out << (equatorType == EQUATOR_MAJOR ? "$P_{" : "$P'_{");
+    out << (equatorType == EQUATOR_MAJOR ? "P_{" : "P'_{");
     if (nParams == 0)
-        return out << "0}$";
+        return out << "0}";
     for (i = 0; i < nParams; i++) {
         if (i > 0)
             out << ',';
         out << params[i];
     }
-    return out << "}$";
+    return out << '}';
 }
 
 void NPlugTriSolidTorus::writeTextLong(std::ostream& out) const {

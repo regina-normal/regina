@@ -82,7 +82,11 @@ class NStandardTriangulation : public ShareableObject {
         std::string getName() const;
         /**
          * Returns the name of this specific triangulation in TeX
-         * format.  Leading and trailing dollar signs will be included.
+         * format.  No leading or trailing dollar signs will be included.
+         *
+         * \warning The behaviour of this routine has changed as of
+         * Regina 4.3; in earlier versions, leading and trailing dollar
+         * signs were provided.
          *
          * @return the name of this triangulation in TeX format.
          */
@@ -150,8 +154,12 @@ class NStandardTriangulation : public ShareableObject {
         virtual std::ostream& writeName(std::ostream& out) const = 0;
         /**
          * Writes the name of this triangulation in TeX format
-         * to the given output stream.  Leading and trailing dollar
+         * to the given output stream.  No leading or trailing dollar
          * signs will be included.
+         *
+         * \warning The behaviour of this routine has changed as of
+         * Regina 4.3; in earlier versions, leading and trailing dollar
+         * signs were provided.
          *
          * \ifacespython The parameter \a out does not exist; standard
          * output will be used.

@@ -146,8 +146,8 @@ inline std::ostream& NLayeredChainPair::writeName(std::ostream& out) const {
         << chain[0]->getIndex() << ',' << chain[1]->getIndex() << ')';
 }
 inline std::ostream& NLayeredChainPair::writeTeXName(std::ostream& out) const {
-    return out << "$C_{"
-        << chain[0]->getIndex() << ',' << chain[1]->getIndex() << "}$";
+    return out << "C_{"
+        << chain[0]->getIndex() << ',' << chain[1]->getIndex() << '}';
 }
 inline void NLayeredChainPair::writeTextLong(std::ostream& out) const {
     out << "Layered chain pair (chain lengths "
