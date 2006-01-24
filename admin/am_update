@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Makefile.am Update Utility
 #
-# Copyright (c) 2002-2005, Ben Burton
+# Copyright (c) 2002-2006, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: am_update [ <directory-tree> | path/to/single/Makefile.am ] ...

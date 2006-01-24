@@ -104,7 +104,7 @@
    <emphasis>Regina: Normal Surface and 3-Manifold Topology
     Software,</emphasis>
    <literal>http://regina.sourceforge.net/</literal>,
-   1999&ndash;2005.
+   1999&ndash;2006.
   </para></blockquote>
   <para>
    A &bibtex; entry for this reference is included below.
@@ -115,7 +115,7 @@
     title = {Regina: Normal Surface and 3-Manifold Topology Software},
     howpublished = {{\tt http://\allowbreak regina.\allowbreak
         sourceforge.\allowbreak net/}},
-    year = {1999--2005}
+    year = {1999--2006}
 }
 </programlisting>
  </sect1>

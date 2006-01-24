@@ -38,7 +38,7 @@
 
 const QString ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
-const QString ReginaAbout::regCopyright("Copyright (c) 1999-2005, Ben Burton");
+const QString ReginaAbout::regCopyright("Copyright (c) 1999-2006, Ben Burton");
 
 const QString ReginaAbout::regDataExt(".rga");
 
@@ -55,7 +55,7 @@ const QString ReginaAbout::regVersion(PACKAGE_VERSION);
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const char* ReginaAbout::regLicense =
-    "Copyright (c) 1999-2005, Ben Burton\n\n"
+    "Copyright (c) 1999-2006, Ben Burton\n\n"
     "This program is distributed under the terms of the GPL v2.\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
