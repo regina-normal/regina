@@ -81,6 +81,7 @@ Version 4.3  [ under development ]
         - Don't enforce precision limits for degenerate snappea volume
           testing, to allow for flexibility in floating point behaviours
           of different chipsets.
+        - Added tests for NIsomorphism.
 
 Version 4.2.1  [ 18 September, 2005 ]
 

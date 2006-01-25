@@ -120,6 +120,7 @@ bool runAllTests() {
     addNTriangulation(runner);
     addConnectedSumDecomp(runner);
     addElementaryMoves(runner);
+    addNIsomorphism(runner);
 
     // Surfaces:
     addNNormalSurfaceList(runner);

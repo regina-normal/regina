@@ -82,6 +82,8 @@ class NTriangulation;
  * correspond to different methods of storing the face permutations
  * associated with each tetrahedron.
  *
+ * \testpart
+ *
  * \todo \feature Composition of isomorphisms.
  */
 class NIsomorphism : public ShareableObject {
