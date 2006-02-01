@@ -66,6 +66,9 @@ namespace regina {
  * begin() and end() are defined, which return forward iterators that
  * can be used to run through the list contents.
  *
+ * Note that \a T is the expensive object type, not a pointer type to such
+ * an object.
+ *
  * \ifacespython Not present.
  */
 template <typename T>
@@ -75,7 +78,7 @@ class NListOnCall : public regina::boost::noncopyable {
          * An iterator over this list.  This operates as a forward
          * iterator in a manner consistent with the standard C++ library.
          */
-        typedef std::list<T*>::const_iterator iterator;
+        typedef typename std::list<T*>::const_iterator iterator;
 
     private:
         std::list<T*> items;
@@ -95,8 +98,8 @@ class NListOnCall : public regina::boost::noncopyable {
         /**
          * Destroys this list and all of the items it contains.
          */
-        ~NListOnCall() {
-            for (std::list<T*>::iterator it = items.begin();
+        virtual ~NListOnCall() {
+            for (typename std::list<T*>::iterator it = items.begin();
                     it != items.end(); it++)
                 delete *it;
         }
