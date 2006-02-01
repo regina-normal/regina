@@ -114,7 +114,7 @@ class NSatLST : public NSatBlock {
  * details regarding "major" and "minor".
  */
 class NSatTriPrism : public NSatBlock {
-    private:
+    protected:
         bool major_;
             /**< Is this prism of major type or of minor type? */
 
@@ -138,7 +138,7 @@ class NSatTriPrism : public NSatBlock {
         static NSatTriPrism* isBlockTriPrism(const NSatAnnulus& annulus,
             TetList& avoidTets);
 
-    private:
+    protected:
         /**
          * Constructs a partially initialised block.  The boundary
          * annuli will remain uninitialised, and must be initialised
@@ -149,6 +149,7 @@ class NSatTriPrism : public NSatBlock {
          */
         NSatTriPrism(bool major);
 
+    private:
         /**
          * Implements a special case of isBlockTriPrism() to search for
          * a block of major type.  See isBlockTriPrism() for further details.
