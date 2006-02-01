@@ -1,0 +1,162 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2006, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+/*! \file nlistoncall.h
+ *  \brief Provides lists of expensive objects that are only created
+ *  when required.
+ */
+
+#ifndef __NLISTONCALL_H
+#ifndef __DOXYGEN
+#define __NLISTONCALL_H
+#endif
+
+#include "utilities/boostutils.h"
+#include <list>
+
+namespace regina {
+
+/**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
+ * Offers a hard-coded list of expensive objects that should only be
+ * created if they are required.  An example might include a large
+ * hard-coded list of triangulations (which are expensive to construct)
+ * that will only be required in special scenarios, and not in everyday
+ * use of the software.
+ *
+ * A particular hard-coded list should be defined by a subclass of
+ * NListOnCall.  The list should be filled within the pure virtual
+ * routine initialise(), which must be overridden.
+ *
+ * A static list of this type is relatively cheap to create.  The list
+ * will not actually be filled (and the expensive objects will not be
+ * created) until the first time the list is traversed.  Specifically,
+ * the list will be filled on the first call to begin().
+ *
+ * Only an extremely simple form of list traversal is offered:  Routines
+ * begin() and end() are defined, which return forward iterators that
+ * can be used to run through the list contents.
+ *
+ * \ifacespython Not present.
+ */
+template <typename T>
+class NListOnCall : public regina::boost::noncopyable {
+    public:
+        /**
+         * An iterator over this list.  This operates as a forward
+         * iterator in a manner consistent with the standard C++ library.
+         */
+        typedef std::list<T*>::const_iterator iterator;
+
+    private:
+        std::list<T*> items;
+            /**< The internal list of items. */
+        bool initialised;
+            /**< Has the list been filled yet? */
+
+    public:
+        /**
+         * Creates a new list structure.  The list will not be filled
+         * with items; this does not happen until the first time that
+         * begin() is called.
+         */
+        NListOnCall() : initialised(false) {
+        }
+
+        /**
+         * Destroys this list and all of the items it contains.
+         */
+        ~NListOnCall() {
+            for (std::list<T*>::iterator it = items.begin();
+                    it != items.end(); it++)
+                delete *it;
+        }
+
+        /**
+         * Returns an iterator pointing to the first item in this list.
+         *
+         * If the list has not yet been filled with items, this will
+         * take place now.  Thus the first call to begin() will be
+         * expensive, but subsequent calls will be extremely cheap.
+         *
+         * @return an iterator pointing to the first item.
+         */
+        iterator begin() const {
+            if (! initialised) {
+                initialise();
+                initialised = true;
+            }
+
+            return items.begin();
+        }
+        /**
+         * Returns an iterator pointing past the end of this list (i.e.,
+         * just after the last item).
+         *
+         * @return a past-the-end iterator.
+         */
+        iterator end() const {
+            return items.end();
+        }
+
+    protected:
+        /**
+         * Adds the given item to the end of this list.  This routine should
+         * only ever be called from within a subclass implementation of
+         * initialise().
+         *
+         * The given item will be owned by this list, and will be
+         * destroyed when this list is destroyed.
+         *
+         * @param item the new item to insert.
+         */
+        void insert(T* item) {
+            items.push_back(item);
+        }
+
+        /**
+         * Fills this list with items.  The particular set of items to
+         * use will typically depend on the particular subclass of
+         * NListOnCall that is being defined.
+         *
+         * This routine will be run the first time that begin() is
+         * called on each list, and will not be run again.
+         */
+        virtual void initialise() = 0;
+};
+
+/*@}*/
+
+} // namespace regina
+
+#endif
+

@@ -32,6 +32,8 @@ Version 4.3  [ under development ]
               from the top end instead of the bottom.
         Class NLayeredTorusBundle, NTxICore, NTxIDiagonalCore, NTxIParallelCore:
             - Added for recognition of layered surface bundles.
+        Class NListOnCall:
+            - New class for expensive and rarely used hard-coded lists.
         Class NManifold:
             - Routine writeTeXName() no longer provides wrapping dollar signs.
         Class NMatrix2:
