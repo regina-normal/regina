@@ -90,9 +90,24 @@ class NTriangulation;
  *            *--->---*
  * </pre>
  *
- * Note that the labelling of the tetrahedra and their vertices
+ * Note also that the labelling of the tetrahedra and their vertices
  * establishes an orientation on the vertical fibres, as well as a
  * left-to-right direction across the annulus.
+ *
+ * For convenience we refer to edges \a roles[][0-1] as \e vertical,
+ * edges \a roles[][0-2] as \e horizontal, and edge \a roles[][1-2] as
+ * \e diagonal.  This is illustrated in the following diagrams.
+ *
+ * <pre>
+ *         V  Horizontal       V   Diagonal
+ *         e  *--->---*        e  *--->---*
+ *         r  |   g / |        r  |H\ 2  1|
+ *         t  |  a / 1|        t  | o\    |
+ *         i  | i /   |        i  |  r\   |
+ *         c  |D /    |        c  |   i\ 0|
+ *         a  | / 2  0|        a  |    z\ |
+ *         l  *--->---*        l  *--->---*
+ * </pre>
  */
 struct NSatAnnulus {
     NTetrahedron* tet[2];

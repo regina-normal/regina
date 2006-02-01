@@ -62,13 +62,6 @@ bool NSatBlock::isBad(NTetrahedron* t, const TetList& list) {
 NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
     NSatBlock* ans;
 
-    // Check the two tetrahedra from the given annulus before
-    // proceeding, to save time later.
-    if (isBad(annulus.tet[0]))
-        return 0;
-    if (annulus.tet[1] != annulus.tet[0] && isBad(annulus.tet[1]))
-        return 0;
-
     // Run through the types of blocks that we know about.
     if ((ans = NSatLST::isBlockLST(annulus, avoidTets)))
         return ans;

@@ -78,9 +78,11 @@ class NTriangulation;
  * Each saturated block corresponds to a piece of the base orbifold of the
  * larger Seifert fibred space.  For the purpose of connecting the base
  * orbifold together, we assume that the boundary of this particular
- * piece runs horizontally in the diagram above.  Insisting on such a
- * boundary may lead to (1,\a k) twists in the middle; these are
- * accounted for by the virtual adjustSFS() routine.
+ * piece runs horizontally in the diagram above (specifically following
+ * the horizontal edges of the boundary annuli, as described in the
+ * NSatAnnulus class notes).  Insisting on such a boundary may lead to
+ * (1,\a k) twists within the block; these are accounted for by the
+ * virtual adjustSFS() routine.
  *
  * Saturated blocks are generally joined to one another (or themselves)
  * along their boundary annuli.  For this purpose, each saturated block
@@ -156,8 +158,8 @@ class NSatBlock : public ShareableObject {
          * added.
          *
          * Regarding the signs of exceptional fibres:  Consider a
-         * saturated block containing a solid torus whose meridinal
-         * curve runs \a p times around the boundary in order through
+         * saturated block containing a solid torus whose meridinal curve
+         * runs \a p times horizontally around the boundary in order through
          * annuli 0,1,... and follows the fibres \a q times from bottom
          * to top (as depicted in the diagram in the NSatBlock class
          * notes).  Then this saturated block adds a positive (\a p, \a q)
