@@ -41,8 +41,8 @@ Version 4.3  [ under development ]
         Class NPluggedIBundle, NPluggedIBundleCore, NTorusPlug:
             - Added for recognition of small closed non-orientable
               3-manifolds.
-        Class NSatAnnulus:
-            - New class for describing Seifert fibred spaces built from
+        Class NSatAnnulus, NSatBlock:
+            - New classes for describing Seifert fibred spaces built from
               saturated blocks.
         Class NSFS, NSFSpace, NExceptionalFibre, NSFSFibre:
             - Complete overhaul of the Seifert fibred space classes.
