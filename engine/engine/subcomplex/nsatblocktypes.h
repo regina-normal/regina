@@ -73,7 +73,7 @@ class NSatMobius : public NSatBlock {
 
     public:
         /**
-         * Returns a clone of the given block structure.
+         * Constructs a clone of the given block structure.
          *
          * @param cloneMe the block structure to clone.
          */
@@ -162,7 +162,7 @@ class NSatLST : public NSatBlock {
 
     public:
         /**
-         * Returns a clone of the given block structure.
+         * Constructs a clone of the given block structure.
          *
          * @param cloneMe the block structure to clone.
          */
@@ -255,7 +255,7 @@ class NSatTriPrism : public NSatBlock {
 
     public:
         /**
-         * Returns a clone of the given block structure.
+         * Constructs a clone of the given block structure.
          *
          * @param cloneMe the block structure to clone.
          */
@@ -332,13 +332,71 @@ class NSatTriPrism : public NSatBlock {
             TetList& avoidTets);
 };
 
-/*
+/**
+ * A saturated block that is a six-tetrahedron cube.
+ *
+ * There are several ways of triangulating a cube with six tetrahedra;
+ * the specific method used here is illustrated in the diagram below.
+ * Note that none of the four tetrahedra that meet the boundary annuli
+ * touch each other, and that each of these four boundary tetrahedra
+ * meet both central tetrahedra.  Note also that (unlike other
+ * triangulations) this cube cannot be split vertically into two
+ * triangular prisms.
+ *
+ * \image html cube.png
+ */
 class NSatCube : public NSatBlock {
+    public:
+        /**
+         * Constructs a clone of the given block structure.
+         *
+         * @param cloneMe the block structure to clone.
+         */
+        NSatCube(const NSatTriPrism& cloneMe);
+
+        virtual NSatBlock* clone() const;
+        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (cube).  This routine is a specific case
+         * of NSatBlock::isBlock(); see that routine for further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static NSatCube* isBlockCube(const NSatAnnulus& annulus,
+            TetList& avoidTets);
+
+        /**
+         * Inserts a new copy of a cube block into the given triangulation,
+         * and returns the corresponding block structure.
+         *
+         * The given triangulation will not be emptied before the new
+         * tetrahedra are inserted.
+         *
+         * @param tri the triangulation into which the new block should
+         * be inserted.
+         * @return structural details of the newly inserted block.
+         */
+        static NSatCube* insertBlock(NTriangulation& tri);
+
+    protected:
+        /**
+         * Constructs an uninitialised block.  The boundary annuli
+         * must be initialised before this block can be used.
+         */
+        NSatCube();
 };
 
+/* TODO: New block types.
 class NSatReflector : public NSatBlock {
 };
-
 class NSatLayering : public NSatBlock {
 };
 */
@@ -408,6 +466,22 @@ inline NSatBlock* NSatTriPrism::clone() const {
 
 inline void NSatTriPrism::writeTextShort(std::ostream& out) const {
     out << "Saturated triangular prism";
+}
+
+// Inline functions for NSatCube
+
+inline NSatCube::NSatCube(const NSatCube& cloneMe) : NSatBlock(cloneMe) {
+}
+
+inline NSatCube::NSatCube() : NSatBlock(4) {
+}
+
+inline NSatBlock* NSatCube::clone() const {
+    return new NSatCube(*this);
+}
+
+inline void NSatCube::writeTextShort(std::ostream& out) const {
+    out << "Saturated cube";
 }
 
 } // namespace regina

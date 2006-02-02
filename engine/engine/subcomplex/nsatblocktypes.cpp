@@ -329,5 +329,18 @@ NSatTriPrism* NSatTriPrism::insertBlock(NTriangulation& tri, bool major) {
     return ans;
 }
 
+void NSatCube::adjustSFS(NSFSpace& sfs, bool reflect) const {
+    sfs.insertFibre(1, reflect ? -2 : 2);
+}
+
+NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
+        TetList& avoidTets) {
+    // TODO
+}
+
+NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
+    // TODO
+}
+
 } // namespace regina
 
