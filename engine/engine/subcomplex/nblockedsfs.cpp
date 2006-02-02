@@ -94,6 +94,7 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     NSatBlockStarterSet::iterator it;
     std::list<NIsomorphism*> isos;
     std::list<NIsomorphism*>::iterator isoIt;
+    NSatBlock* starter;
     for (it = NSatBlockStarterSet::begin(); it != NSatBlockStarterSet::end();
             it++) {
         // Look for this particular starting block.
@@ -109,7 +110,9 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
         // Run through each isomorhpism in the list and see if it leads
         // somewhere useful.
         for (isoIt = isos.begin(); isoIt != isos.end(); isoIt++) {
-            // TODO
+            starter = (*it)->block().clone();
+            // TODO: starter->transform(), etc
+            // TODO: delete starter, don't forget to delete isomorphisms also
         }
 
         // Make sure the list is empty again for the next time around.
