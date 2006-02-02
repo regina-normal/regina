@@ -83,6 +83,7 @@ struct NSatBlockStarter {
     NTriangulation triangulation;
     NSatBlock* block;
 
+    NSatBlockStarter();
     ~NSatBlockStarter();
 };
 
@@ -110,8 +111,12 @@ NBlockedSFS::NBlockedSFS() {
 
 // Inline functions for NSatBlockStarter
 
+inline NSatBlockStarter::NSatBlockStarter() : block(0) {
+}
+
 inline NSatBlockStarter::~NSatBlockStarter() {
-    delete block;
+    if (block)
+        delete block;
 }
 
 // Inline functions for NSatBlockStarterSet
