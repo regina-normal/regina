@@ -57,6 +57,15 @@ void NSatLST::adjustSFS(NSFSpace& sfs, bool reflect) const {
     sfs.insertFibre(cutsVert, reflect ? -cutsHoriz : cutsHoriz);
 }
 
+void NSatLST::transform(const NTriangulation* originalTri,
+        const NIsomorphism* iso, NTriangulation* newTri) {
+    // Start with the parent implementation.
+    NSatBlock::transform(originalTri, iso, newTri);
+
+    // Transform the layered solid torus also.
+    lst_->transform(originalTri, iso, newTri);
+}
+
 NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     // Do we move to a common usable tetrahedron?
 

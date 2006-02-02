@@ -82,7 +82,8 @@ class NSatLST : public NSatBlock {
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
-        // TODO: transform()
+        virtual void transform(const NTriangulation* originalTri,
+            const NIsomorphism* iso, NTriangulation* newTri);
         virtual void writeTextShort(std::ostream& out) const;
 
         /**
