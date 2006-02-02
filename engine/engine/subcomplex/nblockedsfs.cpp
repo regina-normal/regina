@@ -89,12 +89,15 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     if (tri->getNumberOfComponents() > 1)
         return 0;
 
-    // Our triangulation is closed with one component.
+    // Our triangulation is closed and connected.
     // Hunt for a starting block.
+    unsigned long i;
     NSatBlockStarterSet::iterator it;
     std::list<NIsomorphism*> isos;
     std::list<NIsomorphism*>::iterator isoIt;
+    NSatBlock::TetList avoidTets;
     NSatBlock* starter;
+    NBlockedSFS* ans;
     for (it = NSatBlockStarterSet::begin(); it != NSatBlockStarterSet::end();
             it++) {
         // Look for this particular starting block.
@@ -107,12 +110,39 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
         if (! (*it)->triangulation.findAllSubcomplexesIn(*tri, isos))
             continue;
 
-        // Run through each isomorhpism in the list and see if it leads
+        // Run through each isomorphism in the list and see if it leads
         // somewhere useful.
+        //
+        // All of the isomorphisms in this list _must_ be destroyed at
+        // some point before we loop back to the next starter block.
         for (isoIt = isos.begin(); isoIt != isos.end(); isoIt++) {
             starter = (*it)->block->clone();
-            // TODO: starter->transform(), etc
-            // TODO: delete starter, don't forget to delete isomorphisms also
+            starter->transform(&(*it)->triangulation, *isoIt, tri);
+
+            // Create an initial blacklist of tetrahedra consisting of
+            // those in the isomorphic image of the initial starting
+            // block.
+            for (i = 0; i < (*it)->triangulation.getNumberOfTetrahedra(); i++)
+                avoidTets.push_back(tri->getTetrahedron((*isoIt)->tetImage(i)));
+
+            // See if we can flesh out the entire triangulation from the
+            // starter block.
+            if (! (ans = hunt(tri, starter, avoidTets))) {
+                // Clean up our temporary structures, and also destroy the
+                // isomorphism that didn't work.
+                avoidTets.clear();
+                delete starter;
+                delete *isoIt;
+                continue;
+            }
+
+            // We got one!
+            // Before we return, delete the remaining isomorphisms that
+            // we never even looked at.
+            for (isoIt++; isoIt != isos.end(); isoIt++)
+                delete *isoIt;
+
+            return ans;
         }
 
         // Make sure the list is empty again for the next time around.

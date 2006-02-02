@@ -77,6 +77,12 @@ class NBlockedSFS : public NStandardTriangulation {
 
     private:
         NBlockedSFS();
+
+        /**
+         * \pre tri is a closed and connected triangulation.
+         */
+        static NBlockedSFS* hunt(NTriangulation* tri, NSatBlock* starter,
+            NSatBlock::TetList& avoidTets);
 };
 
 struct NSatBlockStarter {
