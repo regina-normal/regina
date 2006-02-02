@@ -46,7 +46,7 @@ NSatBlock::NSatBlock(const NSatBlock& cloneMe) : ShareableObject(),
     }
 }
 
-void NSatBlock::transformBoundary(const NTriangulation* originalTri,
+void NSatBlock::transform(const NTriangulation* originalTri,
         const NIsomorphism* iso, NTriangulation* newTri) {
     for (unsigned i = 0; i < nAnnuli_; i++)
         annulus_[i].transform(originalTri, iso, newTri);

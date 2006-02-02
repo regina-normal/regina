@@ -37,8 +37,9 @@
 #endif
 
 #include <vector>
-#include "subcomplex/nsatblockinst.h"
+#include "subcomplex/nsatblock.h"
 #include "subcomplex/nstandardtri.h"
+#include "triangulation/ntriangulation.h"
 #include "utilities/nlistoncall.h"
 
 namespace regina {
@@ -78,7 +79,14 @@ class NBlockedSFS : public NStandardTriangulation {
         NBlockedSFS();
 };
 
-class NSatBlockStarterSet : public NListOnCall<NSatBlockInstance> {
+struct NSatBlockStarter {
+    NTriangulation triangulation;
+    NSatBlock* block;
+
+    ~NSatBlockStarter();
+};
+
+class NSatBlockStarterSet : public NListOnCall<NSatBlockStarter> {
     private:
         static const NSatBlockStarterSet blocks;
 
@@ -98,6 +106,12 @@ class NSatBlockStarterSet : public NListOnCall<NSatBlockInstance> {
 // Inline functions for NBlockedSFS
 
 NBlockedSFS::NBlockedSFS() {
+}
+
+// Inline functions for NSatBlockStarter
+
+inline NSatBlockStarter::~NSatBlockStarter() {
+    delete block;
 }
 
 // Inline functions for NSatBlockStarterSet

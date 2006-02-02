@@ -28,7 +28,7 @@
 
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfs.h"
-#include "subcomplex/nsatblockinst.h"
+#include "subcomplex/nsatblocktypes.h"
 
 namespace regina {
 
@@ -99,18 +99,18 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
             it++) {
         // Look for this particular starting block.
         // Get trivialities out of the way first.
-        if (tri->isOrientable() && ! (*it)->triangulation().isOrientable())
+        if (tri->isOrientable() && ! (*it)->triangulation.isOrientable())
             continue;
 
         // Find all isomorphisms of the starter block within the given
         // triangulation.
-        if (! (*it)->triangulation().findAllSubcomplexesIn(*tri, isos))
+        if (! (*it)->triangulation.findAllSubcomplexesIn(*tri, isos))
             continue;
 
         // Run through each isomorhpism in the list and see if it leads
         // somewhere useful.
         for (isoIt = isos.begin(); isoIt != isos.end(); isoIt++) {
-            starter = (*it)->block().clone();
+            starter = (*it)->block->clone();
             // TODO: starter->transform(), etc
             // TODO: delete starter, don't forget to delete isomorphisms also
         }
@@ -125,7 +125,9 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
 
 void NSatBlockStarterSet::initialise() {
     // TODO: More types of starter block!
-    insert(new NSatTriPrismInstance(true));
+    NSatBlockStarter* triPrism = new NSatBlockStarter;
+    triPrism->block = NSatTriPrism::insertBlock(triPrism->triangulation, true);
+    insert(triPrism);
 }
 
 } // namespace regina

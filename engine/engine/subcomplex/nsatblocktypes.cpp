@@ -32,6 +32,7 @@
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include <cstdlib> // For exit().
 
 namespace regina {
@@ -223,6 +224,43 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
     avoidTets.push_back(annulus.tet[0]);
     avoidTets.push_back(annulus.tet[1]);
     avoidTets.push_back(adj);
+
+    return ans;
+}
+
+NSatTriPrism* NSatTriPrism::insertBlock(NTriangulation& tri, bool major) {
+    NTetrahedron* a = new NTetrahedron();
+    NTetrahedron* b = new NTetrahedron();
+    NTetrahedron* c = new NTetrahedron();
+    a->joinTo(1, c, NPerm(2, 0, 3, 1));
+    b->joinTo(1, a, NPerm(2, 0, 3, 1));
+    c->joinTo(1, b, NPerm(2, 0, 3, 1));
+    tri.addTetrahedron(a);
+    tri.addTetrahedron(b);
+    tri.addTetrahedron(c);
+
+    NSatTriPrism* ans = new NSatTriPrism(major);
+
+    const NPerm id;
+    const NPerm pairSwap(1, 0, 3, 2);
+    ans->annulus_[0].tet[0] = a;
+    ans->annulus_[0].tet[1] = b;
+    ans->annulus_[0].roles[0] = id;
+    ans->annulus_[0].roles[1] = pairSwap;
+    ans->annulus_[1].tet[0] = b;
+    ans->annulus_[1].tet[1] = c;
+    ans->annulus_[1].roles[0] = id;
+    ans->annulus_[1].roles[1] = pairSwap;
+    ans->annulus_[2].tet[0] = c;
+    ans->annulus_[2].tet[1] = a;
+    ans->annulus_[2].roles[0] = id;
+    ans->annulus_[2].roles[1] = pairSwap;
+
+    if (! major) {
+        ans->annulus_[0].reflectVertical();
+        ans->annulus_[1].reflectVertical();
+        ans->annulus_[2].reflectVertical();
+    }
 
     return ans;
 }

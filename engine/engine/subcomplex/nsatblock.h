@@ -92,6 +92,12 @@ class NTriangulation;
  * other (and vice versa); they may also be \e reflected, meaning that the
  * adjacent annulus has its fibres reversed (i.e., the adjacent annulus has
  * undergone an up-to-down reflection).
+ *
+ * \warning In addition to mandatory overrides such as clone() and
+ * adjustSFS(), some subclasses will need to override the virtual
+ * routine transform() in order to correctly adjust additional
+ * triangulation-specific information stored in the subclass.  See the
+ * transform() documentation for further details.
  */
 class NSatBlock : public ShareableObject {
     protected:
@@ -146,19 +152,11 @@ class NSatBlock : public ShareableObject {
 
         /**
          * Returns a newly created clone of this saturated block structure.
+         * A clone of the correct subclass of NSatBlock will be returned.
+         * For this reason, each subclass of NSatBlock must implement this
+         * routine.
          *
-         * Since each subclass of NSatBlock corresponds to a different
-         * type of saturated block, this routine will return a clone of
-         * the correct subclass accordingly.
-         *
-         * However, this routine is guaranteed to replicate the block
-         * structure only.  For classes that provide additional material
-         * such as real triangulations (see NSatTriPrismInstance for
-         * example), only the block structure will be cloned (so, for
-         * instance, NSatTriPrismInstance::clone() will simply return an
-         * NSatTriPrism).
-         *
-         * Each subclass of NSatBlock must override this routine.
+         * @return a new clone of this block.
          */
         virtual NSatBlock* clone() const = 0;
 
@@ -188,6 +186,40 @@ class NSatBlock : public ShareableObject {
          * \c false if it should be inserted directly.
          */
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const = 0;
+
+        /**
+         * Adjusts the structure of this block according to the given
+         * isomorphism between triangulations.  Any triangulation-specific
+         * information will be transformed accordingly (for instance, the
+         * routine NSatAnnulus::transform() will be called for each
+         * boundary annulus).
+         *
+         * Information regarding adjacent blocks will \e not be changed.
+         * Only structural information for this particular block will be
+         * updated.
+         *
+         * The given isomorphism must describe a mapping from \a originalTri
+         * to \a newTri, and this block must currently refer to tetrahedra in
+         * \a originalTri.  After this routine is called the block will
+         * instead refer to the corresponding tetrahedra in \a newTri (with
+         * changes in vertex/face numbering also accounted for).
+         *
+         * \pre This block currently refers to tetrahedra in \a originalTri,
+         * and \a iso describes a mapping from \a originalTri to \a newTri.
+         *
+         * \warning Any subclasses of NSatBlock that store additional
+         * triangulation-specific information will need to override this
+         * routine.  When doing so, be sure to call NSatBlock::transform()
+         * so that the generic changes defined here will still take place.
+         *
+         * @param originalTri the triangulation currently used by this
+         * saturated block.
+         * @param iso the mapping from \a originalTri to \a newTri.
+         * @param newTri the triangulation to be used by the updated
+         * block structure.
+         */
+        virtual void transform(const NTriangulation* originalTri,
+                const NIsomorphism* iso, NTriangulation* newTri);
 
         /**
          * Determines whether the given annulus is in fact a boundary
@@ -231,26 +263,6 @@ class NSatBlock : public ShareableObject {
          * block; this must be strictly positive.
          */
         NSatBlock(unsigned nAnnuli);
-
-        /**
-         * Adjusts the boundary annuli of this block according to the
-         * given isomorphism between triangulations.  Specifically, the
-         * routine NSatAnnulus::transform() will be called for each
-         * boundary annulus.
-         *
-         * See NSatAnnulus::transform() for further details.
-         *
-         * \pre Each boundary annulus refers to tetrahedra in \a originalTri,
-         * and \a iso describes a mapping from \a originalTri to \a newTri.
-         *
-         * @param originalTri the triangulation currently used by this
-         * saturated block.
-         * @param iso the mapping from \a originalTri to \a newTri.
-         * @param newTri the triangulation to be used by the updated
-         * boundary annuli.
-         */
-        void transformBoundary(const NTriangulation* originalTri,
-            const NIsomorphism* iso, NTriangulation* newTri);
 
         /**
          * Determines whether the given tetrahedron is contained within the

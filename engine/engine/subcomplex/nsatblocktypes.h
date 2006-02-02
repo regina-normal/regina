@@ -82,6 +82,7 @@ class NSatLST : public NSatBlock {
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        // TODO: transform()
         virtual void writeTextShort(std::ostream& out) const;
 
         /**
@@ -157,6 +158,21 @@ class NSatTriPrism : public NSatBlock {
          */
         static NSatTriPrism* isBlockTriPrism(const NSatAnnulus& annulus,
             TetList& avoidTets);
+
+        /**
+         * Inserts a new copy of a triangular prism block into the given
+         * triangulation, and returns the corresponding block structure.
+         *
+         * The given triangulation will not be emptied before the new
+         * tetrahedra are inserted.
+         *
+         * @param tri the triangulation into which the new block should
+         * be inserted.
+         * @param \c true if a block of major type should be inserted,
+         * or \c false if a block of minor type should be inserted.
+         * @return structural details of the newly inserted block.
+         */
+        static NSatTriPrism* insertBlock(NTriangulation& tri, bool major);
 
     protected:
         /**
