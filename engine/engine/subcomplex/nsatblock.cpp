@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "subcomplex/nsatblocktypes.h"
+#include "subcomplex/nsatblock.h"
 
 namespace regina {
 
@@ -57,21 +57,6 @@ bool NSatBlock::isBad(NTetrahedron* t, const TetList& list) {
         if (*it == t)
             return true;
     return false;
-}
-
-NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
-    NSatBlock* ans;
-
-    // Run through the types of blocks that we know about.
-    if ((ans = NSatMobius::isBlockMobius(annulus, avoidTets)))
-        return ans;
-    if ((ans = NSatLST::isBlockLST(annulus, avoidTets)))
-        return ans;
-    if ((ans = NSatTriPrism::isBlockTriPrism(annulus, avoidTets)))
-        return ans;
-
-    // Nothing was found.
-    return 0;
 }
 
 } // namespace regina

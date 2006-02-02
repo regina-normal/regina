@@ -37,6 +37,21 @@
 
 namespace regina {
 
+NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
+    NSatBlock* ans;
+
+    // Run through the types of blocks that we know about.
+    if ((ans = NSatMobius::isBlockMobius(annulus, avoidTets)))
+        return ans;
+    if ((ans = NSatLST::isBlockLST(annulus, avoidTets)))
+        return ans;
+    if ((ans = NSatTriPrism::isBlockTriPrism(annulus, avoidTets)))
+        return ans;
+
+    // Nothing was found.
+    return 0;
+}
+
 void NSatMobius::adjustSFS(NSFSpace& sfs, bool reflect) const {
     if (position_ == 0) {
         // Diagonal:
