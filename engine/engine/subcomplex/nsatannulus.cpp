@@ -50,6 +50,57 @@ void NSatAnnulus::switchSides() {
     }
 }
 
+bool NSatAnnulus::isAdjacent(const NSatAnnulus& other, bool* refVert,
+        bool* refHoriz) const {
+    if (other.meetsBoundary())
+        return false;
+
+    // See what is actually attached to the given annulus.
+    NSatAnnulus opposite(other);
+    opposite.switchSides();
+
+    if (opposite.tet[0] == tet[0] && opposite.tet[1] == tet[1]) {
+        // Could be a match without horizontal reflection.
+
+        if (opposite.roles[0] == roles[0] && opposite.roles[1] == roles[1]) {
+            // Perfect match.
+            if (refVert) *refVert = false;
+            if (refHoriz) *refHoriz = false;
+            return true;
+        }
+
+        if (opposite.roles[0] == roles[0] * NPerm(0, 1) &&
+                opposite.roles[1] == roles[1] * NPerm(0, 1)) {
+            // Match with vertical reflection.
+            if (refVert) *refVert = true;
+            if (refHoriz) *refHoriz = false;
+            return true;
+        }
+    }
+
+    if (opposite.tet[0] == tet[1] && opposite.tet[1] == tet[0]) {
+        // Could be a match with horizontal reflection.
+
+        if (opposite.roles[0] == roles[1] * NPerm(0, 1) &&
+                opposite.roles[1] == roles[0] * NPerm(0, 1)) {
+            // Match with horizontal reflection.
+            if (refVert) *refVert = false;
+            if (refHoriz) *refHoriz = true;
+            return true;
+        }
+
+        if (opposite.roles[0] == roles[1] && opposite.roles[1] == roles[0]) {
+            // Match with both reflections.
+            if (refVert) *refVert = true;
+            if (refHoriz) *refHoriz = true;
+            return true;
+        }
+    }
+
+    // No match.
+    return false;
+}
+
 void NSatAnnulus::transform(const NTriangulation* originalTri,
         const NIsomorphism* iso, NTriangulation* newTri) {
     unsigned which;

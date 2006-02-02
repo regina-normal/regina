@@ -236,6 +236,12 @@ struct NSatAnnulus {
     NSatAnnulus horizontalReflection() const;
 
     /**
+     * TODO
+     */
+    bool isAdjacent(const NSatAnnulus& other, bool* refVert, bool* refHoriz)
+        const;
+
+    /**
      * Adjusts this annulus representation according to the given
      * isomorphism between triangulations.
      *
