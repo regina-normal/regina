@@ -37,6 +37,46 @@
 
 namespace regina {
 
+void NSatMobius::adjustSFS(NSFSpace& sfs, bool reflect) const {
+    if (position_ == 0) {
+        // Diagonal:
+        sfs.insertFibre(1, reflect ? 1 : -1);
+    } else if (position_ == 1) {
+        // Horizontal:
+        sfs.insertFibre(1, reflect ? -2 : 2);
+    } else {
+        // Vertical:
+        sfs.insertFibre(2, reflect ? -1 : 1);
+    }
+}
+
+NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
+    // The two tetrahedra must be joined together along the annulus faces.
+
+    if (annulus.tet[0]->getAdjacentTetrahedron(annulus.roles[0][3]) !=
+            annulus.tet[1])
+        return 0;
+
+    NPerm annulusGluing = annulus.roles[1].inverse() *
+        annulus.tet[0]->getAdjacentTetrahedronGluing(annulus.roles[0][3]) *
+        annulus.roles[0];
+
+    if (annulusGluing[3] != 3)
+        return 0;
+
+    // The faces are glued together.  Is it one of the allowable
+    // (orientable) permutations?
+    if (annulusGluing == NPerm(0, 1))
+        return new NSatMobius(2); // Vertical
+    if (annulusGluing == NPerm(0, 2))
+        return new NSatMobius(1); // Horizontal
+    if (annulusGluing == NPerm(1, 2))
+        return new NSatMobius(0); // Diagonal
+
+    // Nope.  It must be a non-orientable permutation.
+    return 0;
+}
+
 NSatLST::NSatLST(const NSatLST& cloneMe) : NSatBlock(cloneMe),
         lst_(cloneMe.lst_->clone()), roles_(cloneMe.roles_) {
 }

@@ -48,6 +48,98 @@ class NLayeredSolidTorus;
  */
 
 /**
+ * A degenerate zero-tetrahedron saturated block that corresponds to
+ * attaching a Mobius band to a single annulus boundary.
+ *
+ * This is a degenerate case of the layered solid torus (see the class
+ * NSatLST), where instead of joining a solid torus to an annulus
+ * boundary we join a Mobius band.  The Mobius band can be thought of as
+ * a zero-tetrahedron solid torus with two boundary faces, which in fact
+ * are opposite sides of the same face.  By attaching a zero-tetrahedron
+ * Mobius band to an annulus boundary, we are effectively joining the
+ * two faces of the annulus together.
+ *
+ * The meridinal disc of this zero-tetrahedron solid torus meets the
+ * three edges of the annulus in 1, 1 and 2 places, so it is in fact
+ * a degenerate (1,1,2) layered solid torus.  Note that the weight 2 edge
+ * is the boundary edge of the Mobius strip.
+ */
+class NSatMobius : public NSatBlock {
+    private:
+        int position_;
+            /**< Describes how the Mobius band is attached to the
+                 boundary annulus.  This can take the value 0, 1 or 2.
+                 See the position() documentation for further details. */
+
+    public:
+        /**
+         * Returns a clone of the given block structure.
+         *
+         * @param cloneMe the block structure to clone.
+         */
+        NSatMobius(const NSatMobius& cloneMe);
+
+        /**
+         * Describes how the Mobius band is attached to the
+         * boundary annulus.
+         *
+         * The class notes discuss the weight two edge of the Mobius band
+         * (or equivalently the boundary edge of the Mobius band).  The
+         * return value of this routine indicates which edge of the
+         * boundary annulus this weight two edge is joined to.
+         *
+         * In the NSatAnnulus class notes, the three edges of the
+         * annulus are denoted vertical, horizontal and boundary, and
+         * the vertices of each face are given markings 0, 1 and 2.
+         *
+         * The return value of this routine takes the value 0, 1 or 2 as
+         * follows:
+         * - 0 means that the weight two edge is joined to the diagonal
+         *   edge of the annulus (markings 1 and 2);
+         * - 1 means that the weight two edge is joined to the horizontal
+         *   edge of the annulus (markings 0 and 2);
+         * - 2 means that the weight two edge is joined to the vertical
+         *   edge of the annulus (markings 0 and 1).
+         *
+         * @return the value 0, 1 or 2 as described above.
+         */
+        int position() const;
+
+        virtual NSatBlock* clone() const;
+        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (Mobius band).  This routine is
+         * a specific case of NSatBlock::isBlock(); see that routine for
+         * further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static NSatMobius* isBlockMobius(const NSatAnnulus& annulus,
+            TetList& avoidTets);
+
+    private:
+        /**
+         * Constructs a partially initialised block.  The boundary
+         * annulus will remain uninitialised, and must be initialised
+         * before this block can be used.
+         *
+         * @param position indicates which edge of the boundary annulus
+         * meets the weight two edge of the Mobius strip, as described in
+         * the position() member function documentation.  This value
+         * must be 0, 1 or 2.
+         */
+        NSatMobius(int position);
+};
+
+/**
  * A saturated block that is a layered solid torus.  See the
  * NLayeredSolidTorus class for details.
  *
@@ -79,6 +171,35 @@ class NSatLST : public NSatBlock {
          * Destroys this structure and its internal components.
          */
         ~NSatLST();
+
+        /**
+         * Returns details of the layered solid torus that this block
+         * represents.
+         *
+         * @return details of the layered solid torus.
+         */
+        const NLayeredSolidTorus* lst() const;
+        /**
+         * Describes how the layered solid torus is attached to the
+         * boundary annulus.
+         *
+         * The NLayeredSolidTorus class notes describe top-level edge
+         * groups 0, 1 and 2 for a layered solid torus.  On the other
+         * hand, the NSatAnnulus class notes define vertical, horizontal
+         * and diagonal edges on the boundary annulus.
+         *
+         * Suppose that the permutation returned by this routine is \a r.
+         * This indicates that:
+         * - edge group \a r[0] is attached to the vertical annulus edges;
+         * - edge group \a r[1] is attached to the horizontal annulus edges;
+         * - edge group \a r[2] is attached to the diagonal annulus edges.
+         *
+         * The image \a r[3] will always be 3.
+         *
+         * @return a description of how the layered solid torus is
+         * attached to the boundary annulus.
+         */
+        NPerm roles() const;
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
@@ -139,6 +260,15 @@ class NSatTriPrism : public NSatBlock {
          * @param cloneMe the block structure to clone.
          */
         NSatTriPrism(const NSatTriPrism& cloneMe);
+
+        /**
+         * Is this prism of major type or minor type?  See the class
+         * notes for further details.
+         *
+         * @return \c true if this prism is of major type, or \c false
+         * if it is of minor type.
+         */
+        bool major() const;
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
@@ -203,9 +333,6 @@ class NSatTriPrism : public NSatBlock {
 };
 
 /*
-class NSatMobius : public NSatBlock {
-};
-
 class NSatCube : public NSatBlock {
 };
 
@@ -218,10 +345,40 @@ class NSatLayering : public NSatBlock {
 
 /*@}*/
 
+// Inline functions for NSatMobius
+
+inline NSatMobius::NSatMobius(const NSatMobius& cloneMe) : NSatBlock(cloneMe),
+        position_(cloneMe.position_) {
+}
+
+inline NSatMobius::NSatMobius(int position) : NSatBlock(1),
+        position_(position) {
+}
+
+inline int NSatMobius::position() const {
+    return position_;
+}
+
+inline NSatBlock* NSatMobius::clone() const {
+    return new NSatMobius(*this);
+}
+
+inline void NSatMobius::writeTextShort(std::ostream& out) const {
+    out << "Saturated Mobius band";
+}
+
 // Inline functions for NSatLST
 
 inline NSatLST::NSatLST(NLayeredSolidTorus* lst, NPerm roles) : NSatBlock(1),
         lst_(lst), roles_(roles) {
+}
+
+inline const NLayeredSolidTorus* NSatLST::lst() const {
+    return lst_;
+}
+
+inline NPerm NSatLST::roles() const {
+    return roles_;
 }
 
 inline NSatBlock* NSatLST::clone() const {
@@ -239,6 +396,10 @@ inline NSatTriPrism::NSatTriPrism(const NSatTriPrism& cloneMe) :
 }
 
 inline NSatTriPrism::NSatTriPrism(bool major) : NSatBlock(3), major_(major) {
+}
+
+inline bool NSatTriPrism::major() const {
+    return major_;
 }
 
 inline NSatBlock* NSatTriPrism::clone() const {
