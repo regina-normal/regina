@@ -65,6 +65,7 @@ NManifold* NBlockedSFS::getManifold() const {
         it->block->adjustSFS(*ans, reflect);
     }
 
+    ans->reduce();
     return ans;
 }
 
@@ -172,6 +173,8 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
             if (currBlock->hasAdjacentBlock(ann))
                 continue;
 
+            // Note that we can happily jump to the other side because
+            // we know the triangulation is closed.
             if (! (adjBlock = NSatBlock::isBlock(
                     currBlock->annulus(ann).otherSide(), avoidTets))) {
                 // Wapow, no adjacent block.
