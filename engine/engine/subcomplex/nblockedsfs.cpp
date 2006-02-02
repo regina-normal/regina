@@ -160,14 +160,14 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
     BlockSet blocksFound;
     blocksFound.push_back(NSatBlockSpec(starter, false, false));
 
-    std::stack<NSatBlock*> waiting;
-    waiting.push(starter);
-
     unsigned ann;
+    NSatBlockSpec currBlockSpec;
     NSatBlock* currBlock;
     NSatBlock* adjBlock;
-    while (! waiting.empty()) {
-        currBlock = waiting.top();
+
+    for (unsigned long pos = 0; pos < blocksFound.size(); pos++) {
+        currBlockSpec = blocksFound[pos];
+        currBlock = currBlockSpec.block;
         for (ann = 0; ann < currBlock->nAnnuli(); ann++) {
             if (currBlock->hasAdjacentBlock(ann))
                 continue;
@@ -185,12 +185,12 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
                 return 0;
             }
 
+            // Note that, since the annuli are not horizontally
+            // reflected, the blocks themselves will be.
             currBlock->setAdjacent(ann, adjBlock, 0, false, false);
-            blocksFound.push_back(NSatBlockSpec(adjBlock, false, false));
-            waiting.push(adjBlock);
+            blocksFound.push_back(NSatBlockSpec(adjBlock, false,
+                ! currBlockSpec.refHoriz));
         }
-
-        waiting.pop();
     }
 
     // We joined everything together!

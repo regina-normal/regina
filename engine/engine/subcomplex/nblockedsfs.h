@@ -54,6 +54,7 @@ struct NSatBlockSpec {
     bool refVert;
     bool refHoriz;
 
+    NSatBlockSpec();
     NSatBlockSpec(NSatBlock* useBlock, bool useRefVert, bool useRefHoriz);
 };
 
@@ -113,6 +114,9 @@ class NSatBlockStarterSet : public NListOnCall<NSatBlockStarter> {
 /*@}*/
 
 // Inline functions for NSatBlockSpec
+
+inline NSatBlockSpec::NSatBlockSpec() {
+}
 
 inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
         bool useRefHoriz) : block(useBlock), refVert(useRefVert),
