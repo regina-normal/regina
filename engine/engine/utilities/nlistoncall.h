@@ -115,8 +115,8 @@ class NListOnCall : public regina::boost::noncopyable {
          */
         iterator begin() const {
             if (! initialised) {
-                const_cast<NListOnCall<T> >(this)->initialise();
-                const_cast<NListOnCall<T> >(this)->initialised = true;
+                const_cast<NListOnCall<T>*>(this)->initialise();
+                const_cast<NListOnCall<T>*>(this)->initialised = true;
             }
 
             return items.begin();
