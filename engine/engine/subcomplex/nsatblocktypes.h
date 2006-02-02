@@ -336,14 +336,16 @@ class NSatTriPrism : public NSatBlock {
  * A saturated block that is a six-tetrahedron cube.
  *
  * There are several ways of triangulating a cube with six tetrahedra;
- * the specific method used here is illustrated in the diagram below.
+ * the specific method used here is illustrated in the diagram below
+ * (where the top face of the cube is identified with the bottom).
+ *
+ * \image html cube.png
+ *
  * Note that none of the four tetrahedra that meet the boundary annuli
  * touch each other, and that each of these four boundary tetrahedra
  * meet both central tetrahedra.  Note also that (unlike other
  * triangulations) this cube cannot be split vertically into two
  * triangular prisms.
- *
- * \image html cube.png
  */
 class NSatCube : public NSatBlock {
     public:
@@ -352,7 +354,7 @@ class NSatCube : public NSatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        NSatCube(const NSatTriPrism& cloneMe);
+        NSatCube(const NSatCube& cloneMe);
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;

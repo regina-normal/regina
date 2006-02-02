@@ -336,10 +336,55 @@ void NSatCube::adjustSFS(NSFSpace& sfs, bool reflect) const {
 NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
         TetList& avoidTets) {
     // TODO
+    return 0;
 }
 
 NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
-    // TODO
+    NTetrahedron* bdry0 = new NTetrahedron();
+    NTetrahedron* bdry1 = new NTetrahedron();
+    NTetrahedron* bdry2 = new NTetrahedron();
+    NTetrahedron* bdry3 = new NTetrahedron();
+    NTetrahedron* central0 = new NTetrahedron();
+    NTetrahedron* central1 = new NTetrahedron();
+
+    const NPerm id;
+    bdry0->joinTo(1, central0, id);
+    bdry0->joinTo(0, central1, NPerm(0, 1));
+    bdry1->joinTo(2, central0, NPerm(2, 1, 3, 0));
+    bdry1->joinTo(0, central1, NPerm(0, 3));
+    bdry2->joinTo(0, central0, id);
+    bdry2->joinTo(1, central1, NPerm(0, 1));
+    bdry3->joinTo(3, central0, NPerm(0, 3, 1, 2));
+    bdry3->joinTo(1, central1, NPerm(1, 2));
+
+    tri.addTetrahedron(bdry0);
+    tri.addTetrahedron(bdry1);
+    tri.addTetrahedron(bdry2);
+    tri.addTetrahedron(bdry3);
+    tri.addTetrahedron(central0);
+    tri.addTetrahedron(central1);
+
+    NSatCube* ans = new NSatCube();
+
+    ans->annulus_[0].tet[0] = bdry0;
+    ans->annulus_[0].tet[1] = bdry1;
+    ans->annulus_[1].tet[0] = bdry1;
+    ans->annulus_[1].tet[1] = bdry2;
+    ans->annulus_[2].tet[0] = bdry2;
+    ans->annulus_[2].tet[1] = bdry3;
+    ans->annulus_[3].tet[0] = bdry3;
+    ans->annulus_[3].tet[1] = bdry0;
+
+    ans->annulus_[0].roles[0] = NPerm(0, 1);
+    ans->annulus_[0].roles[1] = NPerm(2, 0, 3, 1);
+    ans->annulus_[1].roles[0] = NPerm(1, 2);
+    ans->annulus_[1].roles[1] = NPerm(0, 1);
+    ans->annulus_[2].roles[0] = NPerm(2, 3);
+    ans->annulus_[2].roles[1] = NPerm(0, 3);
+    ans->annulus_[3].roles[0] = NPerm(1, 3, 0, 2);
+    ans->annulus_[3].roles[1] = NPerm(2, 3);
+
+    return ans;
 }
 
 } // namespace regina

@@ -35,6 +35,19 @@ namespace regina {
 
 const NSatBlockStarterSet NSatBlockStarterSet::blocks;
 
+void NSatBlockStarterSet::initialise() {
+    // TODO: More types of starter block!
+    NSatBlockStarter* starter;
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatTriPrism::insertBlock(starter->triangulation, true);
+    insert(starter);
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatCube::insertBlock(starter->triangulation);
+    insert(starter);
+}
+
 NBlockedSFS::~NBlockedSFS() {
     for (BlockSet::iterator it = blocks.begin(); it != blocks.end(); it++)
         delete it->block;
@@ -209,13 +222,6 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
     ans->twistsMatchOrientation = true;
 
     return ans;
-}
-
-void NSatBlockStarterSet::initialise() {
-    // TODO: More types of starter block!
-    NSatBlockStarter* triPrism = new NSatBlockStarter;
-    triPrism->block = NSatTriPrism::insertBlock(triPrism->triangulation, true);
-    insert(triPrism);
 }
 
 } // namespace regina
