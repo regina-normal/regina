@@ -67,6 +67,7 @@ class NBlockedSFS : public NStandardTriangulation {
         bool baseOrbl;
         bool hasTwist;
         bool twistsMatchOrientation;
+        long shiftedAnnuli;
 
     public:
         ~NBlockedSFS();

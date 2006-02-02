@@ -89,6 +89,9 @@ NManifold* NBlockedSFS::getManifold() const {
         it->block->adjustSFS(*ans, reflect);
     }
 
+    if (shiftedAnnuli)
+        ans->insertFibre(1, shiftedAnnuli);
+
     ans->reduce();
     return ans;
 }
@@ -195,6 +198,7 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
     bool hasTwist = false;
     bool twistsMatchOrientation = true;
     bool currTwisted, currNor;
+    long shiftedAnnuli = 0;
 
     for (unsigned long pos = 0; pos < blocksFound.size(); pos++) {
         currBlockSpec = blocksFound[pos];
@@ -239,6 +243,16 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
                             hasTwist = true;
                         if (regXor(currNor, currTwisted))
                             twistsMatchOrientation = false;
+
+                        // See if we need to add a (1,-1) shift before
+                        // the annuli can be identified.
+                        if (regXor(adjHoriz, adjVert)) {
+                            if (regXor(currBlockSpec.refHoriz,
+                                    currBlockSpec.refVert))
+                                shiftedAnnuli++;
+                            else
+                                shiftedAnnuli--;
+                        }
 
                         break;
                     }
@@ -288,6 +302,7 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
     ans->baseOrbl = baseOrbl;
     ans->hasTwist = hasTwist;
     ans->twistsMatchOrientation = twistsMatchOrientation;
+    ans->shiftedAnnuli = shiftedAnnuli;
 
     return ans;
 }
