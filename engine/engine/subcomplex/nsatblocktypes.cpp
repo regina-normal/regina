@@ -81,15 +81,25 @@ NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
 
     // The faces are glued together.  Is it one of the allowable
     // (orientable) permutations?
-    if (annulusGluing == NPerm(0, 1))
-        return new NSatMobius(2); // Vertical
-    if (annulusGluing == NPerm(0, 2))
-        return new NSatMobius(1); // Horizontal
-    if (annulusGluing == NPerm(1, 2))
-        return new NSatMobius(0); // Diagonal
 
-    // Nope.  It must be a non-orientable permutation.
-    return 0;
+    int position = -1;
+    if (annulusGluing == NPerm(0, 1))
+        position = 2; // Vertical
+    else if (annulusGluing == NPerm(0, 2))
+        position = 1; // Horizontal
+    else if (annulusGluing == NPerm(1, 2))
+        position = 0; // Diagonal
+
+    if (position < 0) {
+        // Nope.  It must be a non-orientable permutation.
+        return 0;
+    }
+
+    // Got it!
+
+    NSatMobius* ans = new NSatMobius(position);
+    ans->annulus_[0] = annulus;
+    return ans;
 }
 
 NSatLST::NSatLST(const NSatLST& cloneMe) : NSatBlock(cloneMe),
