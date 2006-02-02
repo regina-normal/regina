@@ -145,6 +145,24 @@ class NSatBlock : public ShareableObject {
         ~NSatBlock();
 
         /**
+         * Returns a newly created clone of this saturated block structure.
+         *
+         * Since each subclass of NSatBlock corresponds to a different
+         * type of saturated block, this routine will return a clone of
+         * the correct subclass accordingly.
+         *
+         * However, this routine is guaranteed to replicate the block
+         * structure only.  For classes that provide additional material
+         * such as real triangulations (see NSatTriPrismInstance for
+         * example), only the block structure will be cloned (so, for
+         * instance, NSatTriPrismInstance::clone() will simply return an
+         * NSatTriPrism).
+         *
+         * Each subclass of NSatBlock must override this routine.
+         */
+        virtual NSatBlock* clone() const = 0;
+
+        /**
          * Adjusts the given Seifert fibred space to insert the contents
          * of this saturated block.  In particular, the space should be
          * adjusted as though an ordinary solid torus (base orbifold a
