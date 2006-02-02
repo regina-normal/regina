@@ -162,6 +162,58 @@ class NSatBlock : public ShareableObject {
         virtual NSatBlock* clone() const = 0;
 
         /**
+         * Returns the number of annuli on the boundary of this
+         * saturated block.
+         *
+         * @return the number of boundary annuli.
+         */
+        unsigned nAnnuli() const;
+
+        /**
+         * Returns details of the requested annulus on the boundary of
+         * this saturated block.  Annuli are numbered from 0 to
+         * nAnnuli()-1 as described in the class notes.
+         *
+         * @param which indicates which boundary annulus is requested;
+         * this must be between 0 and nAnnuli()-1 inclusive.
+         * @return a reference to the requested boundary annulus.
+         */
+        const NSatAnnulus& annulus(unsigned which) const;
+
+        /**
+         * Returns whether there is another saturated block listed as
+         * being adjacent to the given boundary annulus of this block.
+         *
+         * @param which indicates which boundary annulus of this block
+         * should be examined; this must be between 0 and nAnnuli()-1
+         * inclusive.
+         * @return \c true if the given boundary annulus has an adjacent
+         * block listed, or \c false otherwise.
+         */
+        bool hasAdjacentBlock(unsigned whichAnnulus) const;
+
+        /**
+         * Lists the given saturated block as being adjacent to the
+         * given boundary annulus of this block.  Both block structures
+         * (this and the given block) will be updated.
+         *
+         * @param which indicates which boundary annulus of this block
+         * has the new adjacency; this must be between 0 and nAnnuli()-1
+         * inclusive.
+         * @param adjBlock the other saturated block that is adjacent to
+         * this.
+         * @param adjAnnulus indicates which boundary annulus of the
+         * adjacent block meets the given boundary annulus of this block;
+         * this must be between 0 and adjBlock->nAnnuli()-1 inclusive.
+         * @param adjReversed indicates whether the new adjacency is
+         * reversed (see the class notes for details).
+         * @param adjReflected indicates whether the new adjacency is
+         * reflected (see the class notes for details).
+         */
+        void setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
+                unsigned adjAnnulus, bool adjReversed, bool adjReflected);
+
+        /**
          * Adjusts the given Seifert fibred space to insert the contents
          * of this saturated block.  In particular, the space should be
          * adjusted as though an ordinary solid torus (base orbifold a
@@ -241,6 +293,10 @@ class NSatBlock : public ShareableObject {
          * If a block is found on the other hand, all of the tetrahedra
          * within this block will be added to the given list.
          *
+         * In the event that a block is found, it is guaranteed that the
+         * given annulus will be listed as annulus number 0 in the block
+         * structure, without any horizontal or vertical reflection.
+         *
          * @param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
          * @param avoidTets the list of tetrahedra that should not be
@@ -297,6 +353,31 @@ inline NSatBlock::~NSatBlock() {
     delete[] adjAnnulus_;
     delete[] adjReversed_;
     delete[] adjReflected_;
+}
+
+inline unsigned NSatBlock::nAnnuli() const {
+    return nAnnuli_;
+}
+
+inline const NSatAnnulus& NSatBlock::annulus(unsigned which) const {
+    return annulus_[which];
+}
+
+inline bool NSatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
+    return (adjBlock_[whichAnnulus] != 0);
+}
+
+inline void NSatBlock::setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
+        unsigned adjAnnulus, bool adjReversed, bool adjReflected) {
+    adjBlock_[whichAnnulus] = adjBlock;
+    adjAnnulus_[whichAnnulus] = adjAnnulus;
+    adjReversed_[whichAnnulus] = adjReversed;
+    adjReflected_[whichAnnulus] = adjReflected;
+
+    adjBlock->adjBlock_[adjAnnulus] = this;
+    adjBlock->adjAnnulus_[adjAnnulus] = whichAnnulus;
+    adjBlock->adjReversed_[adjAnnulus] = adjReversed;
+    adjBlock->adjReflected_[adjAnnulus] = adjReflected;
 }
 
 } // namespace regina
