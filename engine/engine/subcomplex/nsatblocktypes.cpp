@@ -335,7 +335,7 @@ void NSatCube::adjustSFS(NSFSpace& sfs, bool reflect) const {
 
 NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
         TetList& avoidTets) {
-    // TODO
+    // TODO: Implement cube recognition.
     return 0;
 }
 
