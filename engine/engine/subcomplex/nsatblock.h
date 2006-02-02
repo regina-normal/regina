@@ -100,11 +100,12 @@ class NTriangulation;
  * transform() documentation for further details.
  */
 class NSatBlock : public ShareableObject {
-    protected:
+    public:
         typedef std::list<NTetrahedron*> TetList;
             /**< The data structure used to store a list of tetrahedra
                  that should not be examined by isBlock(). */
 
+    protected:
         unsigned nAnnuli_;
             /**< The number of boundary annuli. */
         NSatAnnulus* annulus_;
