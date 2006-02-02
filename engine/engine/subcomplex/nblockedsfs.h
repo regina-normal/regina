@@ -53,6 +53,8 @@ struct NSatBlockSpec {
     NSatBlock* block;
     bool refVert;
     bool refHoriz;
+
+    NSatBlockSpec(NSatBlock* useBlock, bool useRefVert, bool useRefHoriz);
 };
 
 class NBlockedSFS : public NStandardTriangulation {
@@ -81,7 +83,7 @@ class NBlockedSFS : public NStandardTriangulation {
         /**
          * \pre tri is a closed and connected triangulation.
          */
-        static NBlockedSFS* hunt(NTriangulation* tri, NSatBlock* starter,
+        static NBlockedSFS* hunt(NSatBlock* starter,
             NSatBlock::TetList& avoidTets);
 };
 
@@ -110,9 +112,16 @@ class NSatBlockStarterSet : public NListOnCall<NSatBlockStarter> {
 
 /*@}*/
 
+// Inline functions for NSatBlockSpec
+
+inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
+        bool useRefHoriz) : block(useBlock), refVert(useRefVert),
+        refHoriz(useRefHoriz) {
+}
+
 // Inline functions for NBlockedSFS
 
-NBlockedSFS::NBlockedSFS() {
+inline NBlockedSFS::NBlockedSFS() {
 }
 
 // Inline functions for NSatBlockStarter
@@ -131,11 +140,11 @@ inline NSatBlockStarterSet::NSatBlockStarterSet() {
 }
 
 inline NSatBlockStarterSet::iterator NSatBlockStarterSet::begin() {
-    return blocks.begin();
+    return blocks.NListOnCall<NSatBlockStarter>::begin();
 }
 
 inline NSatBlockStarterSet::iterator NSatBlockStarterSet::end() {
-    return blocks.end();
+    return blocks.NListOnCall<NSatBlockStarter>::end();
 }
 
 } // namespace regina

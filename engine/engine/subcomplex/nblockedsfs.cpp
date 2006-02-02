@@ -29,6 +29,7 @@
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nsatblocktypes.h"
+#include <stack>
 
 namespace regina {
 
@@ -127,7 +128,7 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
 
             // See if we can flesh out the entire triangulation from the
             // starter block.
-            if (! (ans = hunt(tri, starter, avoidTets))) {
+            if (! (ans = hunt(starter, avoidTets))) {
                 // Clean up our temporary structures, and also destroy the
                 // isomorphism that didn't work.
                 avoidTets.clear();
@@ -151,6 +152,60 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
 
     // Nothing found.
     return 0;
+}
+
+NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
+        NSatBlock::TetList& avoidTets) {
+    // TODO: Make this do what we really actually want it to do.
+    BlockSet blocksFound;
+    blocksFound.push_back(NSatBlockSpec(starter, false, false));
+
+    std::stack<NSatBlock*> waiting;
+    waiting.push(starter);
+
+    unsigned ann;
+    NSatBlock* currBlock;
+    NSatBlock* adjBlock;
+    while (! waiting.empty()) {
+        currBlock = waiting.top();
+        for (ann = 0; ann < currBlock->nAnnuli(); ann++) {
+            if (currBlock->hasAdjacentBlock(ann))
+                continue;
+
+            if (! (adjBlock = NSatBlock::isBlock(
+                    currBlock->annulus(ann).otherSide(), avoidTets))) {
+                // Wapow, no adjacent block.
+                // Destroy any new blocks that we added (but not starter),
+                // and bail.
+                for (BlockSet::iterator it = blocksFound.begin();
+                        it != blocksFound.end(); it++)
+                    if (it->block != starter)
+                        delete it->block;
+
+                return 0;
+            }
+
+            currBlock->setAdjacent(ann, adjBlock, 0, false, false);
+            blocksFound.push_back(NSatBlockSpec(adjBlock, false, false));
+            waiting.push(adjBlock);
+        }
+
+        waiting.pop();
+    }
+
+    // We joined everything together!
+    // Since it's known to be a connected closed triangulation, this
+    // must be all!
+
+    // TODO: Nasty hack for the case where it's just a tree.
+    NBlockedSFS* ans = new NBlockedSFS();
+    ans->blocks = blocksFound;
+    ans->baseEuler = 2;
+    ans->baseOrbl = true;
+    ans->hasTwist = false;
+    ans->twistsMatchOrientation = true;
+
+    return ans;
 }
 
 void NSatBlockStarterSet::initialise() {
