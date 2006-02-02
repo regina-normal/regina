@@ -59,6 +59,54 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
     return ans;
 }
 
+void NLayeredSolidTorus::transform(const NTriangulation* originalTri,
+        const NIsomorphism* iso, NTriangulation* newTri) {
+    unsigned i, j;
+    unsigned long baseTetID = originalTri->getTetrahedronIndex(base);
+    unsigned long topTetID = originalTri->getTetrahedronIndex(topLevel);
+
+    // Data members nTetrahedra and meridinalCuts remain unchanged.
+
+    // Transform edge numbers (note that -1s can also be present for topEdge[]):
+    for (i = 0; i < 6; i++)
+        baseEdge[i] = edgeNumber
+            [iso->facePerm(baseTetID)[edgeStart[baseEdge[i]]]]
+            [iso->facePerm(baseTetID)[edgeEnd[baseEdge[i]]]];
+
+    for (i = 0; i < 3; i++)
+        for (j = 0; j < 2; j++) {
+            if (topEdge[i][j] < 0)
+                continue;
+
+            topEdge[i][j] = edgeNumber
+                [iso->facePerm(topTetID)[edgeStart[topEdge[i][j]]]]
+                [iso->facePerm(topTetID)[edgeEnd[topEdge[i][j]]]];
+        }
+
+    // Inverse arrays for edge numbers:
+    for (i = 0; i < 6; i++)
+        baseEdgeGroup[baseEdge[i]] = (i == 0 ? 1 : i < 3 ? 2 : 3);
+
+    unsigned missingEdge = 0 + 1 + 2 + 3 + 4 + 5;
+    for (i = 0; i < 3; i++)
+        for (j = 0; j < 2; j++)
+            if (topEdge[i][j] != -1) {
+                topEdgeGroup[topEdge[i][j]] = i;
+                missingEdge -= topEdge[i][j];
+            }
+    topEdgeGroup[missingEdge] = -1;
+
+    // Transform face numbers:
+    for (i = 0; i < 2; i++) {
+        baseFace[i] = iso->facePerm(baseTetID)[baseFace[i]];
+        topFace[i] = iso->facePerm(topTetID)[topFace[i]];
+    }
+
+    // Transform tetrahedra:
+    base = newTri->getTetrahedron(iso->tetImage(baseTetID));
+    topLevel = newTri->getTetrahedron(iso->tetImage(topTetID));
+}
+
 NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
         NTetrahedron* tet) {
     int baseFace1;

@@ -30,6 +30,7 @@ Version 4.3  [ under development ]
         Class NLayeredSolidTorus:
             - New routine formsLayeredSolidTorusTop() for finding an LST
               from the top end instead of the bottom.
+            - New routine transform() for following through an isomorphism.
         Class NLayeredTorusBundle, NTxICore, NTxIDiagonalCore, NTxIParallelCore:
             - Added for recognition of layered surface bundles.
         Class NListOnCall:

@@ -39,7 +39,9 @@
 
 namespace regina {
 
+class NIsomorphism;
 class NTetrahedron;
+class NTriangulation;
 
 /**
  * \weakgroup subcomplex
@@ -268,6 +270,30 @@ class NLayeredSolidTorus : public NStandardTriangulation {
          */
         NTriangulation* flatten(const NTriangulation* original,
                 int mobiusBandBdry) const;
+
+        /**
+         * Adjusts the details of this layered solid torus according to
+         * the given isomorphism between triangulations.
+         *
+         * The given isomorphism must describe a mapping from \a originalTri
+         * to \a newTri, and this layered solid torus must currently
+         * refer to tetrahedra in \a originalTri.  After this routine is
+         * called this structure will instead refer to the corresponding
+         * tetrahedra in \a newTri (with changes in vertex/face
+         * numbering also accounted for).
+         *
+         * \pre This layered solid torus currently refers to tetrahedra
+         * in \a originalTri, and \a iso describes a mapping from
+         * \a originalTri to \a newTri.
+         *
+         * @param originalTri the triangulation currently referenced by this
+         * layered solid torus.
+         * @param iso the mapping from \a originalTri to \a newTri.
+         * @param newTri the triangulation to be referenced by the updated
+         * layered solid torus.
+         */
+        void transform(const NTriangulation* originalTri,
+                const NIsomorphism* iso, NTriangulation* newTri);
 
         /**
          * Determines if the given tetrahedron forms the base of a
