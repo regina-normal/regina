@@ -36,6 +36,14 @@
 
 namespace regina {
 
+NSatLST::NSatLST(const NSatLST& cloneMe) : NSatBlock(cloneMe),
+        lst_(cloneMe.lst_->clone()), roles_(cloneMe.roles_) {
+}
+
+NSatLST::~NSatLST() {
+    delete lst_;
+}
+
 void NSatLST::adjustSFS(NSFSpace& sfs, bool reflect) const {
     long cutsVert = lst_->getMeridinalCuts(roles_[0]);
     long cutsHoriz = lst_->getMeridinalCuts(roles_[1]);

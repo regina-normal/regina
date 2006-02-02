@@ -69,6 +69,18 @@ class NSatLST : public NSatBlock {
                  the annulus respectively. */
 
     public:
+        /**
+         * Returns a clone of the given block structure.
+         *
+         * @param cloneMe the block structure to clone.
+         */
+        NSatLST(const NSatLST& cloneMe);
+        /**
+         * Destroys this structure and its internal components.
+         */
+        ~NSatLST();
+
+        virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
 
@@ -119,6 +131,14 @@ class NSatTriPrism : public NSatBlock {
             /**< Is this prism of major type or of minor type? */
 
     public:
+        /**
+         * Returns a clone of the given block structure.
+         *
+         * @param cloneMe the block structure to clone.
+         */
+        NSatTriPrism(const NSatTriPrism& cloneMe);
+
+        virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
 
@@ -187,13 +207,25 @@ inline NSatLST::NSatLST(NLayeredSolidTorus* lst, NPerm roles) : NSatBlock(1),
         lst_(lst), roles_(roles) {
 }
 
+inline NSatBlock* NSatLST::clone() const {
+    return new NSatLST(*this);
+}
+
 inline void NSatLST::writeTextShort(std::ostream& out) const {
     out << "Saturated layered solid torus";
 }
 
 // Inline functions for NSatTriPrism
 
+inline NSatTriPrism::NSatTriPrism(const NSatTriPrism& cloneMe) :
+        NSatBlock(cloneMe), major_(cloneMe.major_) {
+}
+
 inline NSatTriPrism::NSatTriPrism(bool major) : NSatBlock(3), major_(major) {
+}
+
+inline NSatBlock* NSatTriPrism::clone() const {
+    return new NSatTriPrism(*this);
 }
 
 inline void NSatTriPrism::writeTextShort(std::ostream& out) const {
