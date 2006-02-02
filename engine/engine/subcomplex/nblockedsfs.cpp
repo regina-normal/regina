@@ -33,6 +33,17 @@
 
 namespace regina {
 
+namespace {
+    /**
+     * An anonymous inline boolean xor.  I'm always afraid to use ^ with
+     * bool, since I'm never sure if this bitwise operator will do the
+     * right thing on all platforms.
+     */
+    inline bool regXor(bool a, bool b) {
+        return ((a && ! b) || (b && ! a));
+    }
+}
+
 const NSatBlockStarterSet NSatBlockStarterSet::blocks;
 
 void NSatBlockStarterSet::initialise() {
@@ -170,14 +181,20 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
 
 NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
         NSatBlock::TetList& avoidTets) {
-    // TODO: Make this do what we really actually want it to do.
     BlockSet blocksFound;
     blocksFound.push_back(NSatBlockSpec(starter, false, false));
 
-    unsigned ann;
+    unsigned ann, adjAnn;
+    unsigned long adjPos;
+    bool adjVert, adjHoriz;
     NSatBlockSpec currBlockSpec;
     NSatBlock* currBlock;
     NSatBlock* adjBlock;
+
+    bool baseOrbl = true;
+    bool hasTwist = false;
+    bool twistsMatchOrientation = true;
+    bool currTwisted, currNor;
 
     for (unsigned long pos = 0; pos < blocksFound.size(); pos++) {
         currBlockSpec = blocksFound[pos];
@@ -190,7 +207,56 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
             // we know the triangulation is closed.
             if (! (adjBlock = NSatBlock::isBlock(
                     currBlock->annulus(ann).otherSide(), avoidTets))) {
-                // Wapow, no adjacent block.
+                // No adjacent block.
+                // Perhaps it's joined to something we've already seen?
+                // Only search forwards from this annulus.
+                if (ann + 1 < currBlock->nAnnuli()) {
+                    adjPos = pos;
+                    adjAnn = ann + 1;
+                } else {
+                    adjPos = pos + 1;
+                    adjAnn = 0;
+                }
+                while (adjPos < blocksFound.size()) {
+                    adjBlock = blocksFound[adjPos].block;
+                    if ((! adjBlock->hasAdjacentBlock(adjAnn)) &&
+                            currBlock->annulus(ann).isAdjacent(
+                            adjBlock->annulus(adjAnn), &adjVert, &adjHoriz)) {
+                        // They match!
+                        currBlock->setAdjacent(ann, adjBlock, adjAnn,
+                            adjHoriz, adjVert);
+
+                        // See what kinds of inconsistencies this
+                        // rejoining has caused.
+                        currNor = regXor(regXor(currBlockSpec.refHoriz,
+                            blocksFound[adjPos].refHoriz), ! adjHoriz);
+                        currTwisted = regXor(regXor(currBlockSpec.refVert,
+                            blocksFound[adjPos].refVert), adjVert);
+
+                        if (currNor)
+                            baseOrbl = false;
+                        if (currTwisted)
+                            hasTwist = true;
+                        if (regXor(currNor, currTwisted))
+                            twistsMatchOrientation = false;
+
+                        break;
+                    }
+
+                    if (adjAnn + 1 < adjBlock->nAnnuli())
+                        adjAnn++;
+                    else {
+                        adjPos++;
+                        adjAnn = 0;
+                    }
+                }
+
+                if (adjPos < blocksFound.size())
+                    continue;
+
+                // We couldn't match the annulus to anything.
+                // Guess it's all over.
+
                 // Destroy any new blocks that we added (but not starter),
                 // and bail.
                 for (BlockSet::iterator it = blocksFound.begin();
@@ -200,6 +266,8 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
 
                 return 0;
             }
+
+            // We found a new adjacent block that we haven't seen before.
 
             // Note that, since the annuli are not horizontally
             // reflected, the blocks themselves will be.
@@ -213,13 +281,13 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
     // Since it's known to be a connected closed triangulation, this
     // must be all!
 
-    // TODO: Nasty hack for the case where it's just a tree.
     NBlockedSFS* ans = new NBlockedSFS();
     ans->blocks = blocksFound;
-    ans->baseEuler = 2;
-    ans->baseOrbl = true;
-    ans->hasTwist = false;
-    ans->twistsMatchOrientation = true;
+    ans->baseEuler = (baseOrbl ? 2 : 1);
+        /* TODO: Work out the Euler characteristic! */
+    ans->baseOrbl = baseOrbl;
+    ans->hasTwist = hasTwist;
+    ans->twistsMatchOrientation = twistsMatchOrientation;
 
     return ans;
 }
