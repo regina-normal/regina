@@ -236,7 +236,37 @@ struct NSatAnnulus {
     NSatAnnulus horizontalReflection() const;
 
     /**
-     * TODO
+     * Determines whether this and the given annulus are adjacent,
+     * possibly modulo vertical or horizontal reflections.  That is,
+     * this routine determines whether this and the given structure
+     * represent opposite sides of the same saturated annulus.
+     * See switchSides() for details on what "opposite sides" means in
+     * this context, and see reflectVertical() and reflectHorizontal()
+     * for descriptions of the various types of reflection.
+     *
+     * Information regarding reflections is returned via the two boolean
+     * pointers \a refVert and \a refHoriz.  If the two annuli are
+     * identically opposite each other as described by switchSides(),
+     * both booleans will be set to \c false.  If the two annuli are
+     * identically opposite after one undergoes a vertical and/or
+     * horizontal reflection, then the booleans \a refVert and/or
+     * \a refHoriz will be set to \c true accordingly.
+     *
+     * @param other the annulus to compare with this.
+     * @param refVert returns information on whether the annuli are
+     * adjacent modulo a vertical reflection.  This is set to \c true
+     * if a vertical reflection is required and \c false if it is not.
+     * If no adjacency was found at all, this boolean is not touched.
+     * A null pointer may be passed, in which case this information will
+     * not be returned at all.
+     * @param refHoriz returns information on whether the annuli are
+     * adjacent modulo a horizontal reflection.  This is set to \c true
+     * if a horizontal reflection is required and \c false if it is not.
+     * If no adjacency was found at all, this boolean is not touched.
+     * A null pointer may be passed, in which case this information will
+     * not be returned at all.
+     * @return \c true if some adjacency was found (either with or
+     * without reflections), or \c false if no adjacency was found at all.
      */
     bool isAdjacent(const NSatAnnulus& other, bool* refVert, bool* refHoriz)
         const;
