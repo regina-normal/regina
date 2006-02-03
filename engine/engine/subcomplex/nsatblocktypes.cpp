@@ -307,6 +307,8 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
         annulus.tet[0]->getAdjacentTetrahedronGluing(annulus.roles[0][1]) *
         annulus.roles[0] * NPerm(0, 3);
 
+    if (annulus.tet[1]->getAdjacentTetrahedron(annulus.roles[1][1]) != adj)
+        return 0;
     if (annulus.tet[1]->getAdjacentTetrahedronGluing(annulus.roles[1][1]) *
             annulus.roles[1] * NPerm(1, 3, 0, 2) != adjRoles)
         return 0;
@@ -434,7 +436,67 @@ void NSatReflectorStrip::adjustSFS(NSFSpace& sfs, bool) const {
 
 NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
         const NSatAnnulus& annulus, TetList& avoidTets) {
-    // TODO: Implement reflector strip recognition.
+    // Hunt for the initial segment of the reflector strip that lies
+    // behind the given annulus.
+
+    if (annulus.tet[0] == annulus.tet[1])
+        return 0;
+    if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
+        return 0;
+
+    NTetrahedron* middle = annulus.tet[0]->getAdjacentTetrahedron(
+        annulus.roles[0][0]);
+    if (middle == 0 || middle == annulus.tet[0] || middle == annulus.tet[1])
+        return 0;
+    if (isBad(middle, avoidTets))
+        return 0;
+    NPerm middleRoles = annulus.tet[0]->getAdjacentTetrahedronGluing(
+        annulus.roles[0][0]) * annulus.roles[0] * NPerm(3, 1, 0, 2);
+
+    if (middle != annulus.tet[0]->getAdjacentTetrahedron(
+            annulus.roles[0][1]))
+        return 0;
+    if (middle != annulus.tet[1]->getAdjacentTetrahedron(
+            annulus.roles[1][0]))
+        return 0;
+    if (middle != annulus.tet[1]->getAdjacentTetrahedron(
+            annulus.roles[1][1]))
+        return 0;
+    if (middleRoles != annulus.tet[0]->getAdjacentTetrahedronGluing(
+            annulus.roles[0][1]) * annulus.roles[0] * NPerm(1, 3))
+        return 0;
+    if (middleRoles != annulus.tet[1]->getAdjacentTetrahedronGluing(
+            annulus.roles[1][0]) * annulus.roles[1] * NPerm(0, 2, 3, 1))
+        return 0;
+    if (middleRoles != annulus.tet[1]->getAdjacentTetrahedronGluing(
+            annulus.roles[1][1]) * annulus.roles[1] * NPerm(0, 2))
+        return 0;
+
+    // We've found the initial segment.
+    // Do we just have a segment of length one?
+    if (annulus.tet[0]->getAdjacentTetrahedron(annulus.roles[0][2]) ==
+            annulus.tet[1]) {
+        // It's either length one or nothing.
+        if (annulus.roles[1] != annulus.tet[0]->getAdjacentTetrahedronGluing(
+                annulus.roles[0][2]) * annulus.roles[0] * NPerm(0, 1))
+            return 0;
+
+        // Got it!
+        NSatReflectorStrip* ans = new NSatReflectorStrip(1);
+        ans->annulus_[0] = annulus;
+
+        avoidTets.push_back(annulus.tet[0]);
+        avoidTets.push_back(annulus.tet[1]);
+        avoidTets.push_back(middle);
+
+        return ans;
+    }
+
+    // If anything, we have a segment of length >= 2.  Start following
+    // it around.
+
+
+    // TODO: Finish implementing reflector strip recognition.
     return 0;
 }
 
