@@ -396,10 +396,67 @@ class NSatCube : public NSatBlock {
         NSatCube();
 };
 
-/* TODO: New block types.
-class NSatReflector : public NSatBlock {
-};
+/**
+ * TODO
+ */
 class NSatLayering : public NSatBlock {
+    private:
+        bool overHorizontal_;
+            /**< Do we layer over the horizontal annulus edge, or the
+                 diagonal annulus edge? */
+
+    public:
+        /**
+         * Constructs a clone of the given block structure.
+         *
+         * @param cloneMe the block structure to clone.
+         */
+        NSatLayering(const NSatLayering& cloneMe);
+
+        /**
+         * Does this describe a layering over the horizontal edge of the
+         * boundary annulus, or a layering over the diagonal edge?
+         *
+         * See the NSatAnnulus class notes for definitions of horizontal
+         * and diagonal in this context.
+         */
+        bool overHorizontal() const;
+
+        virtual NSatBlock* clone() const;
+        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (single layering).  This routine is
+         * a specific case of NSatBlock::isBlock(); see that routine for
+         * further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static NSatLayering* isBlockLayering(const NSatAnnulus& annulus,
+            TetList& avoidTets);
+
+    protected:
+        /**
+         * Constructs a partially initialised block.  The boundary
+         * annuli will remain uninitialised, and must be initialised
+         * before this block can be used.
+         *
+         * @param overHorizontal \c true if this block describes a
+         * layering over the horizontal edge of the boundary annulus, or
+         * \c false if it describes a layering over the diagonal edge.
+         */
+        NSatLayering(bool overHorizontal);
+};
+
+/* TODO: New block type.
+class NSatReflector : public NSatBlock {
 };
 */
 
@@ -484,6 +541,28 @@ inline NSatBlock* NSatCube::clone() const {
 
 inline void NSatCube::writeTextShort(std::ostream& out) const {
     out << "Saturated cube";
+}
+
+// Inline functions for NSatLayering
+
+inline NSatLayering::NSatLayering(const NSatLayering& cloneMe) :
+        NSatBlock(cloneMe), overHorizontal_(cloneMe.overHorizontal_) {
+}
+
+inline NSatLayering::NSatLayering(bool overHorizontal) :
+        NSatBlock(2), overHorizontal_(overHorizontal) {
+}
+
+inline bool NSatLayering::overHorizontal() const {
+    return overHorizontal_;
+}
+
+inline NSatBlock* NSatLayering::clone() const {
+    return new NSatLayering(*this);
+}
+
+inline void NSatLayering::writeTextShort(std::ostream& out) const {
+    out << "Saturated single layering";
 }
 
 } // namespace regina

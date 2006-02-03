@@ -48,6 +48,13 @@ NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
     if ((ans = NSatTriPrism::isBlockTriPrism(annulus, avoidTets)))
         return ans;
 
+    // As a last attempt, try a single layering.  We don't have to worry
+    // about the degeneracy, since we'll never get a loop of these
+    // things (since that would form a disconnected component, and we
+    // never use one as a starting block).
+    if ((ans = NSatLayering::isBlockLayering(annulus, avoidTets)))
+        return ans;
+
     // Nothing was found.
     return 0;
 }
@@ -395,6 +402,53 @@ NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
     ans->annulus_[3].roles[1] = NPerm(2, 3);
 
     return ans;
+}
+
+void NSatLayering::adjustSFS(NSFSpace& sfs, bool reflect) const {
+    if (overHorizontal_)
+        sfs.insertFibre(1, reflect ? -2 : 2);
+
+    // Over the diagonal, there is no change at all.
+}
+
+NSatLayering* NSatLayering::isBlockLayering(const NSatAnnulus& annulus,
+        TetList& avoidTets) {
+    // Must be a common usable tetrahedron.
+    if (annulus.tet[0] != annulus.tet[1])
+        return 0;
+    if (isBad(annulus.tet[0], avoidTets))
+        return 0;
+
+    // Is it a layering over the horizontal edge?
+    if (annulus.roles[0][0] == annulus.roles[1][2] &&
+            annulus.roles[0][2] == annulus.roles[1][0]) {
+        avoidTets.push_back(annulus.tet[0]);
+
+        NSatLayering* ans = new NSatLayering(true);
+        ans->annulus_[0] = annulus;
+        ans->annulus_[1].tet[0] = ans->annulus_[1].tet[1] = annulus.tet[0];
+        ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm(1, 0, 3, 2);
+        ans->annulus_[1].roles[1] = annulus.roles[0] * NPerm(1, 0, 3, 2);
+
+        return ans;
+    }
+
+    // Is it a layering over the diagonal edge?
+    if (annulus.roles[0][1] == annulus.roles[1][2] &&
+            annulus.roles[0][2] == annulus.roles[1][1]) {
+        avoidTets.push_back(annulus.tet[0]);
+
+        NSatLayering* ans = new NSatLayering(false);
+        ans->annulus_[0] = annulus;
+        ans->annulus_[1].tet[0] = ans->annulus_[1].tet[1] = annulus.tet[0];
+        ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm(1, 0, 3, 2);
+        ans->annulus_[1].roles[1] = annulus.roles[0] * NPerm(1, 0, 3, 2);
+
+        return ans;
+    }
+
+    // No layering.
+    return 0;
 }
 
 } // namespace regina
