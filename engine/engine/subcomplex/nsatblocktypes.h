@@ -398,7 +398,6 @@ class NSatCube : public NSatBlock {
 
 /**
  * TODO: Document NSatReflectorStrip
- * TODO: Support twisted strips
  */
 class NSatReflectorStrip : public NSatBlock {
     public:
@@ -439,20 +438,26 @@ class NSatReflectorStrip : public NSatBlock {
          * be inserted.
          * @param length the length of the new reflector strip, i.e.,
          * the number of boundary annuli; this must be strictly positive.
+         * @param twisted \c true if the new reflector strip should be twisted
+         * (causing its ring of boundary annuli to be twisted also), or
+         * \c false if the new strip should not be twisted.
          * @return structural details of the newly inserted block.
          */
         static NSatReflectorStrip* insertBlock(NTriangulation& tri,
-            unsigned length);
+            unsigned length, bool twisted);
 
     protected:
         /**
-         * Constructs an uninitialised block of the given length.  The
-         * boundary annuli must be initialised before this block can be used.
+         * Constructs a partially initialised block of the given length.
+         * The boundary annuli will remain uninitialised, and must be
+         * initialised before this block can be used.
          *
          * @param length the length of the new reflector strip, i.e.,
          * the number of boundary annuli; this must be strictly positive.
+         * @param twisted \c true if the strip should be twisted (giving
+         * a twisted ring of boundary annuli), or \c false if not.
          */
-        NSatReflectorStrip(unsigned length);
+        NSatReflectorStrip(unsigned length, bool twisted);
 };
 
 /**
@@ -620,8 +625,8 @@ inline NSatReflectorStrip::NSatReflectorStrip(
         const NSatReflectorStrip& cloneMe) : NSatBlock(cloneMe) {
 }
 
-inline NSatReflectorStrip::NSatReflectorStrip(unsigned length) :
-        NSatBlock(length) {
+inline NSatReflectorStrip::NSatReflectorStrip(unsigned length, bool twisted) :
+        NSatBlock(length, twisted) {
 }
 
 inline NSatBlock* NSatReflectorStrip::clone() const {

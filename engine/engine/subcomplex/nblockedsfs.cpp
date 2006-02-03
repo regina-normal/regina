@@ -65,19 +65,43 @@ void NSatBlockStarterSet::initialise() {
 
     // Try various reflector strips of small length.
     starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation, 1);
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
+        1, false);
     insert(starter);
 
     starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation, 2);
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
+        1, true);
     insert(starter);
 
     starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation, 3);
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
+        2, false);
     insert(starter);
 
     starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation, 4);
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
+        2, true);
+    insert(starter);
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
+        3, false);
+    insert(starter);
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
+        3, true);
+    insert(starter);
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
+        4, false);
+    insert(starter);
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
+        4, true);
     insert(starter);
 }
 

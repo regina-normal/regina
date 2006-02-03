@@ -477,19 +477,33 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     if (annulus.tet[0]->getAdjacentTetrahedron(annulus.roles[0][2]) ==
             annulus.tet[1]) {
         // It's either length one or nothing.
-        if (annulus.roles[1] != annulus.tet[0]->getAdjacentTetrahedronGluing(
-                annulus.roles[0][2]) * annulus.roles[0] * NPerm(0, 1))
-            return 0;
+        if (annulus.roles[1] == annulus.tet[0]->getAdjacentTetrahedronGluing(
+                annulus.roles[0][2]) * annulus.roles[0] * NPerm(0, 1)) {
+            // Got one that's untwisted.
+            NSatReflectorStrip* ans = new NSatReflectorStrip(1, false);
+            ans->annulus_[0] = annulus;
 
-        // Got it!
-        NSatReflectorStrip* ans = new NSatReflectorStrip(1);
-        ans->annulus_[0] = annulus;
+            avoidTets.push_back(annulus.tet[0]);
+            avoidTets.push_back(annulus.tet[1]);
+            avoidTets.push_back(middle);
 
-        avoidTets.push_back(annulus.tet[0]);
-        avoidTets.push_back(annulus.tet[1]);
-        avoidTets.push_back(middle);
+            return ans;
+        }
 
-        return ans;
+        if (annulus.roles[1] == annulus.tet[0]->getAdjacentTetrahedronGluing(
+                annulus.roles[0][2]) * annulus.roles[0]) {
+            // Got one that's twisted.
+            NSatReflectorStrip* ans = new NSatReflectorStrip(1, true);
+            ans->annulus_[0] = annulus;
+
+            avoidTets.push_back(annulus.tet[0]);
+            avoidTets.push_back(annulus.tet[1]);
+            avoidTets.push_back(middle);
+
+            return ans;
+        }
+        // Nup.  Nothing.
+        return 0;
     }
 
     // If anything, we have a segment of length >= 2.  Start following
@@ -501,8 +515,8 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
 }
 
 NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
-        unsigned length) {
-    NSatReflectorStrip* ans = new NSatReflectorStrip(length);
+        unsigned length, bool twisted) {
+    NSatReflectorStrip* ans = new NSatReflectorStrip(length, twisted);
 
     const NPerm id;
     NTetrahedron *upper, *lower, *middle;
@@ -535,7 +549,10 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
         ans->annulus_[i].roles[1] = id;
     }
 
-    firstLeft->joinTo(2, prevRight, NPerm(0, 1));
+    if (twisted)
+        firstLeft->joinTo(2, prevRight, id);
+    else
+        firstLeft->joinTo(2, prevRight, NPerm(0, 1));
 
     return ans;
 }
