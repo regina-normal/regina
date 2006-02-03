@@ -67,6 +67,10 @@ class NBlockedSFS : public NStandardTriangulation {
         bool baseOrbl;
         bool hasTwist;
         bool twistsMatchOrientation;
+            /**< True if no twists, or if twists correspond precisely to
+             * orientation-reversing paths.  Note that reflector
+             * boundaries are orientation-reversing but do not introduce
+             * twists (thus their existence makes this false). */
         long shiftedAnnuli;
 
     public:
