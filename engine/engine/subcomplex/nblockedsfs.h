@@ -87,6 +87,11 @@ class NBlockedSFS : public NStandardTriangulation {
          */
         static NBlockedSFS* hunt(NSatBlock* starter,
             NSatBlock::TetList& avoidTets);
+
+        /**
+         * \pre We have a closed and connected triangulation.
+         */
+        void calculateBaseEuler();
 };
 
 struct NSatBlockStarter {

@@ -29,6 +29,9 @@
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nsatblocktypes.h"
+#include "triangulation/nedge.h"
+#include "triangulation/ntetrahedron.h"
+#include <set>
 #include <stack>
 
 namespace regina {
@@ -297,14 +300,37 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
 
     NBlockedSFS* ans = new NBlockedSFS();
     ans->blocks = blocksFound;
-    ans->baseEuler = (baseOrbl ? 2 : 1);
-        /* TODO: Work out the Euler characteristic! */
     ans->baseOrbl = baseOrbl;
     ans->hasTwist = hasTwist;
     ans->twistsMatchOrientation = twistsMatchOrientation;
     ans->shiftedAnnuli = shiftedAnnuli;
+    ans->calculateBaseEuler();
 
     return ans;
+}
+
+void NBlockedSFS::calculateBaseEuler() {
+    BlockSet::const_iterator it;
+
+    long faces = blocks.size();
+
+    long edges = 0;
+    for (it = blocks.begin(); it != blocks.end(); it++)
+        edges += it->block->nAnnuli();
+    edges /= 2;
+
+    std::set<NEdge*> baseVertices;
+    unsigned ann;
+    NSatAnnulus annData;
+    for (it = blocks.begin(); it != blocks.end(); it++)
+        for (ann = 0; ann < it->block->nAnnuli(); ann++) {
+            annData = it->block->annulus(ann);
+            baseVertices.insert(annData.tet[0]->getEdge(
+                edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
+        }
+    long vertices = baseVertices.size();
+
+    baseEuler = vertices - edges + faces;
 }
 
 } // namespace regina
