@@ -35,14 +35,14 @@ NSatBlock::NSatBlock(const NSatBlock& cloneMe) : ShareableObject(),
         annulus_(new NSatAnnulus[cloneMe.nAnnuli_]),
         adjBlock_(new NSatBlock*[cloneMe.nAnnuli_]),
         adjAnnulus_(new unsigned[cloneMe.nAnnuli_]),
-        adjReversed_(new bool[cloneMe.nAnnuli_]),
-        adjReflected_(new bool[cloneMe.nAnnuli_]) {
+        adjReflected_(new bool[cloneMe.nAnnuli_]),
+        adjBackwards_(new bool[cloneMe.nAnnuli_]) {
     for (unsigned i = 0; i < nAnnuli_; i++) {
         annulus_[i] = cloneMe.annulus_[i];
         adjBlock_[i] = cloneMe.adjBlock_[i];
         adjAnnulus_[i] = cloneMe.adjAnnulus_[i];
-        adjReversed_[i] = cloneMe.adjReversed_[i];
         adjReflected_[i] = cloneMe.adjReflected_[i];
+        adjBackwards_[i] = cloneMe.adjBackwards_[i];
     }
 }
 

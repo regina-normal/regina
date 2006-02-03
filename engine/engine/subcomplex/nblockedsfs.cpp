@@ -231,7 +231,7 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
                             adjBlock->annulus(adjAnn), &adjVert, &adjHoriz)) {
                         // They match!
                         currBlock->setAdjacent(ann, adjBlock, adjAnn,
-                            adjHoriz, adjVert);
+                            adjVert, adjHoriz);
 
                         // See what kinds of inconsistencies this
                         // rejoining has caused.

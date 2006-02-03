@@ -87,11 +87,11 @@ class NTriangulation;
  * Saturated blocks are generally joined to one another (or themselves)
  * along their boundary annuli.  For this purpose, each saturated block
  * contains a list of which annulus of this block is adjacent to which
- * annulus of which other block.  Adjacencies may be \e reversed, meaning
- * that the first face of one annulus is joined to the second face of the
- * other (and vice versa); they may also be \e reflected, meaning that the
- * adjacent annulus has its fibres reversed (i.e., the adjacent annulus has
- * undergone an up-to-down reflection).
+ * annulus of which other block.  Adjacencies may be \e reflected, meaning
+ * that the adjacent annulus has its fibres reversed (i.e., the adjacent
+ * annulus has undergone an up-to-down reflection); they may also be
+ * \e backwards, meaning that the first face of one annulus is joined to
+ * the second face of the other (and vice versa).
  *
  * \warning In addition to mandatory overrides such as clone() and
  * adjustSFS(), some subclasses will need to override the virtual
@@ -121,14 +121,14 @@ class NSatBlock : public ShareableObject {
                  saturated block is joined to each boundary annulus of this
                  block.  Values may be undefined if the corresponding
                  entries in the \a adjBlock array is null. */
-        bool* adjReversed_;
-            /**< Describes whether the adjacency for each boundary
-                 annulus is reversed (see the class notes above).
-                 Values may be undefined if the corresponding
-                 entries in the \a adjBlock array is null. */
         bool* adjReflected_;
             /**< Describes whether the adjacency for each boundary
                  annulus is reflected (see the class notes above).
+                 Values may be undefined if the corresponding
+                 entries in the \a adjBlock array is null. */
+        bool* adjBackwards_;
+            /**< Describes whether the adjacency for each boundary
+                 annulus is backwards (see the class notes above).
                  Values may be undefined if the corresponding
                  entries in the \a adjBlock array is null. */
 
@@ -205,13 +205,13 @@ class NSatBlock : public ShareableObject {
          * @param adjAnnulus indicates which boundary annulus of the
          * adjacent block meets the given boundary annulus of this block;
          * this must be between 0 and adjBlock->nAnnuli()-1 inclusive.
-         * @param adjReversed indicates whether the new adjacency is
-         * reversed (see the class notes for details).
          * @param adjReflected indicates whether the new adjacency is
          * reflected (see the class notes for details).
+         * @param adjBackwards indicates whether the new adjacency is
+         * backwards (see the class notes for details).
          */
         void setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
-                unsigned adjAnnulus, bool adjReversed, bool adjReflected);
+                unsigned adjAnnulus, bool adjReflected, bool adjBackwards);
 
         /**
          * Adjusts the given Seifert fibred space to insert the contents
@@ -342,7 +342,7 @@ class NSatBlock : public ShareableObject {
 inline NSatBlock::NSatBlock(unsigned nAnnuli) :
         nAnnuli_(nAnnuli), annulus_(new NSatAnnulus[nAnnuli]),
         adjBlock_(new NSatBlock*[nAnnuli]), adjAnnulus_(new unsigned[nAnnuli]),
-        adjReversed_(new bool[nAnnuli]), adjReflected_(new bool[nAnnuli]) {
+        adjReflected_(new bool[nAnnuli]), adjBackwards_(new bool[nAnnuli]) {
     for (unsigned i = 0; i < nAnnuli; i++)
         adjBlock_[i] = 0;
 }
@@ -351,8 +351,8 @@ inline NSatBlock::~NSatBlock() {
     delete[] annulus_;
     delete[] adjBlock_;
     delete[] adjAnnulus_;
-    delete[] adjReversed_;
     delete[] adjReflected_;
+    delete[] adjBackwards_;
 }
 
 inline unsigned NSatBlock::nAnnuli() const {
@@ -368,16 +368,16 @@ inline bool NSatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
 }
 
 inline void NSatBlock::setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
-        unsigned adjAnnulus, bool adjReversed, bool adjReflected) {
+        unsigned adjAnnulus, bool adjReflected, bool adjBackwards) {
     adjBlock_[whichAnnulus] = adjBlock;
     adjAnnulus_[whichAnnulus] = adjAnnulus;
-    adjReversed_[whichAnnulus] = adjReversed;
     adjReflected_[whichAnnulus] = adjReflected;
+    adjBackwards_[whichAnnulus] = adjBackwards;
 
     adjBlock->adjBlock_[adjAnnulus] = this;
     adjBlock->adjAnnulus_[adjAnnulus] = whichAnnulus;
-    adjBlock->adjReversed_[adjAnnulus] = adjReversed;
     adjBlock->adjReflected_[adjAnnulus] = adjReflected;
+    adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
 }
 
 } // namespace regina
