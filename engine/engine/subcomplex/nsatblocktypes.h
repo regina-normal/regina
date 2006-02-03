@@ -397,7 +397,31 @@ class NSatCube : public NSatBlock {
 };
 
 /**
- * TODO
+ * A degenerate saturated block that is a single tetrahedron wrapped
+ * around so that two opposite edges touch.  This forms a degenerate
+ * one-tetrahedron solid torus that is pinched along a single meridinal
+ * curve.
+ *
+ * The four faces of this tetrahedron form two boundary annuli, and the
+ * tetrahedron is effectively layered onto each boundary annulus.  See
+ * the NLayering class notes for more discussion on layerings in general.
+ *
+ * Although this block is degenerate (the fibres are all pinched
+ * together where the opposite edges of the tetrahedron meet), it can be
+ * used without problems as long as the entire Seifert fibred space is
+ * not formed from degenerate blocks.  In other words, using such blocks
+ * is fine as long as they eventually meet a real (non-degenerate) block,
+ * which will give room for the fibres to separate so that they are no
+ * longer pinched together.
+ *
+ * The NSatAnnulus class notes describe horizontal and diagonal edges of
+ * a saturated annulus.  This block may be one of two types, according
+ * to how the tetrahedron is layered onto the boundary annuli.  Either
+ * the tetrahedron can be layered over the horizontal edge of each
+ * annulus (with the fibres pinched together between the two diagonal
+ * edges), or the tetrahedron can be layered over the diagonal edge of
+ * each annulus (with the fibres pinched together between the two
+ * horizontal edges).
  */
 class NSatLayering : public NSatBlock {
     private:
