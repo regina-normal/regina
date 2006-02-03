@@ -557,11 +557,6 @@ inline NSatBlock* NSatMobius::clone() const {
     return new NSatMobius(*this);
 }
 
-inline void NSatMobius::writeTextShort(std::ostream& out) const {
-    // TODO: Which position?
-    out << "Saturated Mobius band";
-}
-
 // Inline functions for NSatLST
 
 inline NSatLST::NSatLST(NLayeredSolidTorus* lst, NPerm roles) : NSatBlock(1),
@@ -578,11 +573,6 @@ inline NPerm NSatLST::roles() const {
 
 inline NSatBlock* NSatLST::clone() const {
     return new NSatLST(*this);
-}
-
-inline void NSatLST::writeTextShort(std::ostream& out) const {
-    // TODO: Give parameters
-    out << "Saturated layered solid torus";
 }
 
 // Inline functions for NSatTriPrism

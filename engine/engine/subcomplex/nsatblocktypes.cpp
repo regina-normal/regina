@@ -76,6 +76,19 @@ void NSatMobius::adjustSFS(NSFSpace& sfs, bool reflect) const {
     }
 }
 
+void NSatMobius::writeTextShort(std::ostream& out) const {
+    out << "Saturated Mobius band, boundary on ";
+    if (position_ == 0)
+        out << "diagonal";
+    else if (position_ == 1)
+        out << "horizontal";
+    else if (position_ == 2)
+        out << "vertical";
+    else
+        out << "invalid";
+    out << " edge";
+}
+
 NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
     // The two tetrahedra must be joined together along the annulus faces.
 
@@ -131,6 +144,13 @@ void NSatLST::adjustSFS(NSFSpace& sfs, bool reflect) const {
     }
 
     sfs.insertFibre(cutsVert, reflect ? -cutsHoriz : cutsHoriz);
+}
+
+void NSatLST::writeTextShort(std::ostream& out) const {
+    out << "Saturated ("
+        << lst_->getMeridinalCuts(0) << ", "
+        << lst_->getMeridinalCuts(1) << ", "
+        << lst_->getMeridinalCuts(2) << ") layered solid torus";
 }
 
 void NSatLST::transform(const NTriangulation* originalTri,
