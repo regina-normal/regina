@@ -34,6 +34,9 @@
 #include <set>
 #include <stack>
 
+// TODO: Look for twisted boundaries on blocks; add the relevant twists
+// and reflectors to the 3-manifold.
+
 namespace regina {
 
 namespace {

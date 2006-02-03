@@ -58,7 +58,8 @@ class NTriangulation;
  * block is a connected set of tetrahedra built from a subset of fibres
  * (no fibres may enter or exit the boundary of the block).  In addition,
  * the boundary of this block must be a ring of saturated annuli, as
- * described by the NSatAnnulus class.
+ * described by the NSatAnnulus class.  Aside from this ring of saturated
+ * annuli, there may be no other boundary faces within the block.
  *
  * The boundary annuli are numbered consecutively as illustrated below,
  * where the markings 0 and 1 within the triangles represent the first
@@ -240,7 +241,8 @@ class NSatBlock : public ShareableObject {
          * of this saturated block.  In particular, the space should be
          * adjusted as though an ordinary solid torus (base orbifold a
          * disc, no twists or exceptional fibres) had been replaced by
-         * this block.
+         * this block.  This description does not make sense for blocks
+         * with twisted boundary; the twisted case is discussed below.
          *
          * If the argument \a reflect is \c true, it should be assumed
          * that this saturated block is being reflected before being
@@ -256,7 +258,23 @@ class NSatBlock : public ShareableObject {
          * notes).  Then this saturated block adds a positive (\a p, \a q)
          * fibre to the underlying Seifert fibred space.
          *
-         * TODO: What to do for the twisted boundary case?!
+         * If the ring of saturated annuli bounding this block is
+         * twisted then the situation becomes more complex.  It can be
+         * proven that such a block must contain a reflector boundary
+         * in the base orbifold (use Z_2 homology with fibre-reversing
+         * paths to show that the base orbifold must contain another
+         * boundary component, and then recall that real boundaries are
+         * not allowed inside blocks).
+         *
+         * In this twisted boundary case, it should be assumed that the
+         * reflector boundary and the fibre-reversing path around the
+         * boundary annuli are already stored in the given Seifert
+         * fibred space.  This routine should make any further changes
+         * that are required (there may well be none).  That is, the
+         * space should be adjusted as though a trivial Seifert fibred
+         * space over the annulus with one reflector boundary had been
+         * replaced by this block.  In particular, this routine should
+         * \e not add the reflector boundary itself.
          *
          * @param sfs the Seifert fibred space to adjust.
          * @param reflect \c true if this block is to be reflected, or

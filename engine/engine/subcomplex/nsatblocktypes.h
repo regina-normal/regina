@@ -398,6 +398,7 @@ class NSatCube : public NSatBlock {
 
 /**
  * TODO: Document NSatReflectorStrip
+ * TODO: Support twisted strips
  */
 class NSatReflectorStrip : public NSatBlock {
     public:
