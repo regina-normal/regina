@@ -33,6 +33,7 @@ namespace regina {
 NSatBlock::NSatBlock(const NSatBlock& cloneMe) : ShareableObject(),
         nAnnuli_(cloneMe.nAnnuli_),
         annulus_(new NSatAnnulus[cloneMe.nAnnuli_]),
+        twistedBoundary_(cloneMe.twistedBoundary_),
         adjBlock_(new NSatBlock*[cloneMe.nAnnuli_]),
         adjAnnulus_(new unsigned[cloneMe.nAnnuli_]),
         adjReflected_(new bool[cloneMe.nAnnuli_]),

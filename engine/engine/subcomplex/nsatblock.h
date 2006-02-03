@@ -75,6 +75,13 @@ class NTriangulation;
  * Annulus #  ...  n-2 n-1  0   1   2   3   ...
  * </pre>
  *
+ * The ring of boundary annuli may optionally be twisted, so that together
+ * the annuli form a long Mobius band.  In this case, for the purposes of
+ * labelling and marking annuli, the twist occurs between annuli n-1 and 0.
+ * Be careful when dealing with blocks with twisted boundaries, since
+ * with twists it is possible to identify an edge with itself in reverse
+ * (thus producing something that is not a 3-manifold triangulation).
+ *
  * Each saturated block corresponds to a piece of the base orbifold of the
  * larger Seifert fibred space.  For the purpose of connecting the base
  * orbifold together, we assume that the boundary of this particular
@@ -111,6 +118,9 @@ class NSatBlock : public ShareableObject {
         NSatAnnulus* annulus_;
             /**< Details of each boundary annulus, as seen from the
                  inside of this saturated block. */
+        bool twistedBoundary_;
+            /**< Is the ring of boundary annuli twisted to form a Mobius
+                 band? */
 
         NSatBlock** adjBlock_;
             /**< The saturated block joined to each boundary annulus;
@@ -181,6 +191,18 @@ class NSatBlock : public ShareableObject {
         const NSatAnnulus& annulus(unsigned which) const;
 
         /**
+         * Is the ring of boundary annuli twisted to form a long Mobius
+         * strip?
+         *
+         * Recall from the class notes that the twist occurs between
+         * boundary annuli nAnnuli()-1 and 0.
+         *
+         * @return \c true if the ring of boundary annuli is twisted, or
+         * \c false if not.
+         */
+        bool twistedBoundary() const;
+
+        /**
          * Returns whether there is another saturated block listed as
          * being adjacent to the given boundary annulus of this block.
          *
@@ -233,6 +255,8 @@ class NSatBlock : public ShareableObject {
          * to top (as depicted in the diagram in the NSatBlock class
          * notes).  Then this saturated block adds a positive (\a p, \a q)
          * fibre to the underlying Seifert fibred space.
+         *
+         * TODO: What to do for the twisted boundary case?!
          *
          * @param sfs the Seifert fibred space to adjust.
          * @param reflect \c true if this block is to be reflected, or
@@ -318,8 +342,11 @@ class NSatBlock : public ShareableObject {
          *
          * @param nAnnuli the number of annuli on the boundary of this
          * block; this must be strictly positive.
+         * @param twistedBoundary \c true if the ring of boundary annuli
+         * is twisted to form a long Mobius band, or \c false (the default)
+         * if it is not.
          */
-        NSatBlock(unsigned nAnnuli);
+        NSatBlock(unsigned nAnnuli, bool twistedBoundary = false);
 
         /**
          * Determines whether the given tetrahedron is contained within the
@@ -339,10 +366,14 @@ class NSatBlock : public ShareableObject {
 
 // Inline functions for NSatBlock
 
-inline NSatBlock::NSatBlock(unsigned nAnnuli) :
-        nAnnuli_(nAnnuli), annulus_(new NSatAnnulus[nAnnuli]),
-        adjBlock_(new NSatBlock*[nAnnuli]), adjAnnulus_(new unsigned[nAnnuli]),
-        adjReflected_(new bool[nAnnuli]), adjBackwards_(new bool[nAnnuli]) {
+inline NSatBlock::NSatBlock(unsigned nAnnuli, bool twistedBoundary) :
+        nAnnuli_(nAnnuli),
+        annulus_(new NSatAnnulus[nAnnuli]),
+        twistedBoundary_(twistedBoundary),
+        adjBlock_(new NSatBlock*[nAnnuli]),
+        adjAnnulus_(new unsigned[nAnnuli]),
+        adjReflected_(new bool[nAnnuli]),
+        adjBackwards_(new bool[nAnnuli]) {
     for (unsigned i = 0; i < nAnnuli; i++)
         adjBlock_[i] = 0;
 }
@@ -361,6 +392,10 @@ inline unsigned NSatBlock::nAnnuli() const {
 
 inline const NSatAnnulus& NSatBlock::annulus(unsigned which) const {
     return annulus_[which];
+}
+
+inline bool NSatBlock::twistedBoundary() const {
+    return twistedBoundary_;
 }
 
 inline bool NSatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
