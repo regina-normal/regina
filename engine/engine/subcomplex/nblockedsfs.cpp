@@ -34,9 +34,6 @@
 #include <set>
 #include <stack>
 
-// TODO: Look for twisted boundaries on blocks; add the relevant twists
-// and reflectors to the 3-manifold.
-
 namespace regina {
 
 namespace {
@@ -123,7 +120,7 @@ NManifold* NBlockedSFS::getManifold() const {
 
     NSFSpace* ans = new NSFSpace(baseClass,
         (baseOrbl ? (2 - baseEuler) / 2 : (2 - baseEuler)),
-        0 /* punctures */, 0 /* reflectors */);
+        0 /* punctures */, extraReflectors);
 
     bool reflect;
     for (BlockSet::const_iterator it = blocks.begin(); it != blocks.end();
@@ -257,10 +254,20 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
     bool twistsMatchOrientation = true;
     bool currTwisted, currNor;
     long shiftedAnnuli = 0;
+    unsigned long extraReflectors = 0;
 
     for (unsigned long pos = 0; pos < blocksFound.size(); pos++) {
         currBlockSpec = blocksFound[pos];
         currBlock = currBlockSpec.block;
+
+        // Note whether the block has twisted boundary.
+        if (currBlock->twistedBoundary()) {
+            hasTwist = true;
+            twistsMatchOrientation = false;
+            extraReflectors++;
+        }
+
+        // Run through each boundary annulus for this block.
         for (ann = 0; ann < currBlock->nAnnuli(); ann++) {
             if (currBlock->hasAdjacentBlock(ann))
                 continue;
@@ -359,6 +366,7 @@ NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
     ans->hasTwist = hasTwist;
     ans->twistsMatchOrientation = twistsMatchOrientation;
     ans->shiftedAnnuli = shiftedAnnuli;
+    ans->extraReflectors = extraReflectors;
     ans->calculateBaseEuler();
 
     return ans;

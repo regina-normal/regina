@@ -431,7 +431,8 @@ NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
 }
 
 void NSatReflectorStrip::adjustSFS(NSFSpace& sfs, bool) const {
-    sfs.addReflector();
+    if (! twistedBoundary_)
+        sfs.addReflector();
 }
 
 NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(

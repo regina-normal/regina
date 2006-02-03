@@ -72,6 +72,7 @@ class NBlockedSFS : public NStandardTriangulation {
              * boundaries are orientation-reversing but do not introduce
              * twists (thus their existence makes this false). */
         long shiftedAnnuli;
+        unsigned long extraReflectors;
 
     public:
         ~NBlockedSFS();
