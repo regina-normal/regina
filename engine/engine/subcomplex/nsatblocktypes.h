@@ -249,7 +249,7 @@ class NSatLST : public NSatBlock {
  * details regarding "major" and "minor".
  */
 class NSatTriPrism : public NSatBlock {
-    protected:
+    private:
         bool major_;
             /**< Is this prism of major type or of minor type? */
 
@@ -397,6 +397,64 @@ class NSatCube : public NSatBlock {
 };
 
 /**
+ * TODO
+ */
+class NSatReflectorStrip : public NSatBlock {
+    public:
+        /**
+         * Constructs a clone of the given block structure.
+         *
+         * @param cloneMe the block structure to clone.
+         */
+        NSatReflectorStrip(const NSatReflectorStrip& cloneMe);
+
+        virtual NSatBlock* clone() const;
+        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Determines whether the given annulus is a boundary annulus for
+         * a block of this type (reflector strip).  This routine is a specific
+         * case of NSatBlock::isBlock(); see that routine for further details.
+         *
+         * @param annulus the proposed boundary annulus that should form
+         * part of the new saturated block.
+         * @param avoidTets the list of tetrahedra that should not be
+         * considered, and to which any new tetrahedra will be added.
+         * @return details of the saturated block if one was found, or
+         * \c null if none was found.
+         */
+        static NSatReflectorStrip* isBlockReflectorStrip(
+            const NSatAnnulus& annulus, TetList& avoidTets);
+
+        /**
+         * Inserts a new reflector strip into the given triangulation,
+         * and returns the corresponding block structure.
+         *
+         * The given triangulation will not be emptied before the new
+         * tetrahedra are inserted.
+         *
+         * @param tri the triangulation into which the new block should
+         * be inserted.
+         * @param length the length of the new reflector strip, i.e.,
+         * the number of boundary annuli; this must be strictly positive.
+         * @return structural details of the newly inserted block.
+         */
+        static NSatReflectorStrip* insertBlock(NTriangulation& tri,
+            unsigned length);
+
+    protected:
+        /**
+         * Constructs an uninitialised block of the given length.  The
+         * boundary annuli must be initialised before this block can be used.
+         *
+         * @param length the length of the new reflector strip, i.e.,
+         * the number of boundary annuli; this must be strictly positive.
+         */
+        NSatReflectorStrip(unsigned length);
+};
+
+/**
  * A degenerate saturated block that is a single tetrahedron wrapped
  * around so that two opposite edges touch.  This forms a degenerate
  * one-tetrahedron solid torus that is pinched along a single meridinal
@@ -479,11 +537,6 @@ class NSatLayering : public NSatBlock {
         NSatLayering(bool overHorizontal);
 };
 
-/* TODO: New block type.
-class NSatReflector : public NSatBlock {
-};
-*/
-
 /*@}*/
 
 // Inline functions for NSatMobius
@@ -505,6 +558,7 @@ inline NSatBlock* NSatMobius::clone() const {
 }
 
 inline void NSatMobius::writeTextShort(std::ostream& out) const {
+    // TODO: Which position?
     out << "Saturated Mobius band";
 }
 
@@ -527,6 +581,7 @@ inline NSatBlock* NSatLST::clone() const {
 }
 
 inline void NSatLST::writeTextShort(std::ostream& out) const {
+    // TODO: Give parameters
     out << "Saturated layered solid torus";
 }
 
@@ -548,7 +603,8 @@ inline NSatBlock* NSatTriPrism::clone() const {
 }
 
 inline void NSatTriPrism::writeTextShort(std::ostream& out) const {
-    out << "Saturated triangular prism";
+    out << "Saturated triangular prism of "
+        << (major_ ? "major" : "minor") << " type";
 }
 
 // Inline functions for NSatCube
@@ -565,6 +621,24 @@ inline NSatBlock* NSatCube::clone() const {
 
 inline void NSatCube::writeTextShort(std::ostream& out) const {
     out << "Saturated cube";
+}
+
+// Inline functions for NSatReflectorStrip
+
+inline NSatReflectorStrip::NSatReflectorStrip(
+        const NSatReflectorStrip& cloneMe) : NSatBlock(cloneMe) {
+}
+
+inline NSatReflectorStrip::NSatReflectorStrip(unsigned length) :
+        NSatBlock(length) {
+}
+
+inline NSatBlock* NSatReflectorStrip::clone() const {
+    return new NSatReflectorStrip(*this);
+}
+
+inline void NSatReflectorStrip::writeTextShort(std::ostream& out) const {
+    out << "Saturated reflector strip of length " << nAnnuli();
 }
 
 // Inline functions for NSatLayering
@@ -586,7 +660,8 @@ inline NSatBlock* NSatLayering::clone() const {
 }
 
 inline void NSatLayering::writeTextShort(std::ostream& out) const {
-    out << "Saturated single layering";
+    out << "Saturated single layering over "
+        << (overHorizontal_ ? "horizontal" : "diagonal") << " edge";
 }
 
 } // namespace regina

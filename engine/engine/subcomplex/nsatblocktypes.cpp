@@ -47,6 +47,10 @@ NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
         return ans;
     if ((ans = NSatTriPrism::isBlockTriPrism(annulus, avoidTets)))
         return ans;
+    if ((ans = NSatCube::isBlockCube(annulus, avoidTets)))
+        return ans;
+    if ((ans = NSatReflectorStrip::isBlockReflectorStrip(annulus, avoidTets)))
+        return ans;
 
     // As a last attempt, try a single layering.  We don't have to worry
     // about the degeneracy, since we'll never get a loop of these
@@ -400,6 +404,56 @@ NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
     ans->annulus_[2].roles[1] = NPerm(0, 3);
     ans->annulus_[3].roles[0] = NPerm(1, 3, 0, 2);
     ans->annulus_[3].roles[1] = NPerm(2, 3);
+
+    return ans;
+}
+
+void NSatReflectorStrip::adjustSFS(NSFSpace& sfs, bool) const {
+    sfs.addReflector();
+}
+
+NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
+        const NSatAnnulus& annulus, TetList& avoidTets) {
+    // TODO: Implement reflector strip recognition.
+    return 0;
+}
+
+NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
+        unsigned length) {
+    NSatReflectorStrip* ans = new NSatReflectorStrip(length);
+
+    const NPerm id;
+    NTetrahedron *upper, *lower, *middle;
+    NTetrahedron *prevRight = 0, *firstLeft = 0;
+    for (unsigned i = 0; i < length; i++) {
+        // Create the three tetrahedra behind boundary annulus #i.
+        upper = new NTetrahedron();
+        lower = new NTetrahedron();
+        middle = new NTetrahedron();
+
+        upper->joinTo(0, middle, NPerm(2, 1, 3, 0));
+        lower->joinTo(0, middle, NPerm(0, 3, 1, 2));
+        upper->joinTo(1, middle, NPerm(1, 3));
+        lower->joinTo(1, middle, NPerm(0, 2));
+
+        if (i == 0)
+            firstLeft = upper;
+        else
+            upper->joinTo(2, prevRight, NPerm(0, 1));
+
+        prevRight = lower;
+
+        tri.addTetrahedron(upper);
+        tri.addTetrahedron(lower);
+        tri.addTetrahedron(middle);
+
+        ans->annulus_[i].tet[0] = upper;
+        ans->annulus_[i].tet[1] = lower;
+        ans->annulus_[i].roles[0] = id;
+        ans->annulus_[i].roles[1] = id;
+    }
+
+    firstLeft->joinTo(2, prevRight, NPerm(0, 1));
 
     return ans;
 }

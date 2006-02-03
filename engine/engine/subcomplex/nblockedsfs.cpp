@@ -50,7 +50,6 @@ namespace {
 const NSatBlockStarterSet NSatBlockStarterSet::blocks;
 
 void NSatBlockStarterSet::initialise() {
-    // TODO: More types of starter block!
     NSatBlockStarter* starter;
 
     starter = new NSatBlockStarter;
@@ -59,6 +58,23 @@ void NSatBlockStarterSet::initialise() {
 
     starter = new NSatBlockStarter;
     starter->block = NSatCube::insertBlock(starter->triangulation);
+    insert(starter);
+
+    // Try various reflector strips of small length.
+    starter = new NSatBlockStarter;
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation, 1);
+    insert(starter);
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation, 2);
+    insert(starter);
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation, 3);
+    insert(starter);
+
+    starter = new NSatBlockStarter;
+    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation, 4);
     insert(starter);
 }
 
@@ -135,6 +151,9 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
         // Look for this particular starting block.
         // Get trivialities out of the way first.
         if (tri->isOrientable() && ! (*it)->triangulation.isOrientable())
+            continue;
+        if (tri->getNumberOfTetrahedra() <
+                (*it)->triangulation.getNumberOfTetrahedra())
             continue;
 
         // Find all isomorphisms of the starter block within the given
