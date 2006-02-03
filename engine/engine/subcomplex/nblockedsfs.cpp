@@ -94,10 +94,8 @@ NManifold* NBlockedSFS::getManifold() const {
         baseClass = NSFSpace::n1;
     else if (twistsMatchOrientation)
         baseClass = NSFSpace::n2;
-    else {
-        // TODO: Distinguish between n3 and n4!
+    else
         baseClass = NSFSpace::n3;
-    }
 
     NSFSpace* ans = new NSFSpace(baseClass,
         (baseOrbl ? (2 - baseEuler) / 2 : (2 - baseEuler)),
@@ -113,6 +111,17 @@ NManifold* NBlockedSFS::getManifold() const {
 
     if (shiftedAnnuli)
         ans->insertFibre(1, shiftedAnnuli);
+
+    // TODO: At the moment we cannot distinguish between n3 and n4.
+    // If there is a possibility that we have n4 on our hands then
+    // return 0.  Better no answer than a wrong answer. :/
+    if ((ans->getBaseGenus() >= 3) &&
+            (ans->getBaseClass() == NSFSpace::n3 ||
+             ans->getBaseClass() == NSFSpace::n4)) {
+        // Sigh.  All that work.
+        delete ans;
+        return 0;
+    }
 
     ans->reduce();
     return ans;
