@@ -397,7 +397,7 @@ class NSatCube : public NSatBlock {
 };
 
 /**
- * TODO
+ * TODO: Document NSatReflectorStrip
  */
 class NSatReflectorStrip : public NSatBlock {
     public:
