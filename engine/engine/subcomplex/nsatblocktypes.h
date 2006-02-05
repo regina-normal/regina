@@ -397,7 +397,30 @@ class NSatCube : public NSatBlock {
 };
 
 /**
- * TODO: Document NSatReflectorStrip
+ * A saturated block that is a reflector strip.
+ *
+ * A reflector strip is a ring of triangular prisms arranged end-to-end,
+ * as illustrated in the diagram below.  The top rectangle of each prism
+ * is identified with the bottom in an orientation-reversing fashion
+ * (the back edge moves to the front and vice versa), and the prisms
+ * are joined in a loop from left to right.  The Seifert fibres run
+ * vertically in the diagram, with each saturated boundary annulus shaded
+ * at the rear of each prism.
+ *
+ * \image html reflector.png
+ *
+ * The effect of a reflector strip is to create a reflector boundary in
+ * the base orbifold of the surrounding Seifert fibred space.  Each prism
+ * provides a segment of this reflector boundary.
+ *
+ * A reflector strip may have arbitrary length, and it may also include
+ * a twist as the ring of prisms wraps back around to meet itself.  Note
+ * that a twisted reflector strip will have a twisted ring of boundary
+ * annuli, as described by NSatBlock::twistedBoundary().
+ *
+ * The \e length of a reflector strip is defined to be the number of
+ * prisms that are joined together, or equivalently the number of
+ * saturated annuli on the boundary.
  */
 class NSatReflectorStrip : public NSatBlock {
     public:
