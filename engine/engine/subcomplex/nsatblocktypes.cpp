@@ -378,8 +378,99 @@ void NSatCube::adjustSFS(NSFSpace& sfs, bool reflect) const {
 
 NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
         TetList& avoidTets) {
-    // TODO: Implement cube recognition.
-    return 0;
+    if (annulus.tet[0] == annulus.tet[1])
+        return 0;
+    if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
+        return 0;
+
+    NTetrahedron* central0 = annulus.tet[0]->getAdjacentTetrahedron(
+        annulus.roles[0][0]);
+    NTetrahedron* central1 = annulus.tet[0]->getAdjacentTetrahedron(
+        annulus.roles[0][1]);
+
+    if (central0 == 0 || central0 == annulus.tet[0] ||
+            central0 == annulus.tet[1] || isBad(central0, avoidTets))
+        return 0;
+    if (central1 == 0 || central1 == annulus.tet[0] ||
+            central1 == annulus.tet[1] || central1 == central0 ||
+            isBad(central0, avoidTets))
+        return 0;
+
+    NPerm roles0 = annulus.tet[0]->getAdjacentTetrahedronGluing(
+        annulus.roles[0][0]) * annulus.roles[0];
+    NPerm roles1 = annulus.tet[0]->getAdjacentTetrahedronGluing(
+        annulus.roles[0][1]) * annulus.roles[0];
+
+    // We've got the two central tetrahedra.  Now look for the remaining
+    // three boundary tetrahedra.
+
+    if (annulus.tet[1]->getAdjacentTetrahedron(annulus.roles[1][0]) !=
+            central0)
+        return 0;
+    if (annulus.tet[1]->getAdjacentTetrahedron(annulus.roles[1][1]) !=
+            central1)
+        return 0;
+    if (annulus.tet[1]->getAdjacentTetrahedronGluing(annulus.roles[1][0]) *
+            annulus.roles[1] * NPerm(3, 2, 1, 0) != roles0)
+        return 0;
+    if (annulus.tet[1]->getAdjacentTetrahedronGluing(annulus.roles[1][1]) *
+            annulus.roles[1] * NPerm(2, 3, 0, 1) != roles1)
+        return 0;
+
+    // We've got the two tetrahedra from the annulus boundary completely
+    // sorted out.  Just the two new boundary tetrahedra to go.
+
+    NTetrahedron* bdry2 = central0->getAdjacentTetrahedron(roles0[1]);
+    NPerm roles2 = central0->getAdjacentTetrahedronGluing(roles0[1]) * roles0;
+
+    NTetrahedron* bdry3 = central0->getAdjacentTetrahedron(roles0[2]);
+    NPerm roles3 = central0->getAdjacentTetrahedronGluing(roles0[2]) * roles0;
+
+    if (bdry2 == 0 || bdry2 == annulus.tet[0] || bdry2 == annulus.tet[1] ||
+            bdry2 == central0 || bdry2 == central1 ||
+            isBad(bdry2, avoidTets))
+        return 0;
+    if (bdry3 == 0 || bdry3 == annulus.tet[0] || bdry3 == annulus.tet[1] ||
+            bdry3 == central0 || bdry3 == central1 || bdry3 == bdry2 ||
+            isBad(bdry3, avoidTets))
+        return 0;
+    if (central1->getAdjacentTetrahedron(roles1[0]) != bdry2)
+        return 0;
+    if (central1->getAdjacentTetrahedron(roles1[2]) != bdry3)
+        return 0;
+    if (central1->getAdjacentTetrahedronGluing(roles1[0]) * roles1 != roles2)
+        return 0;
+    if (central1->getAdjacentTetrahedronGluing(roles1[2]) * roles1 *
+            NPerm(1, 0, 3, 2) != roles3)
+        return 0;
+
+    // All looking good!
+
+    NSatCube* ans = new NSatCube();
+
+    const NPerm id;
+    ans->annulus_[0] = annulus;
+    ans->annulus_[1].tet[0] = annulus.tet[1];
+    ans->annulus_[1].tet[1] = bdry2;
+    ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm(1, 0, 3, 2);
+    ans->annulus_[1].roles[1] = roles2;
+    ans->annulus_[2].tet[0] = bdry2;
+    ans->annulus_[2].tet[1] = bdry3;
+    ans->annulus_[2].roles[0] = roles2 * NPerm(1, 0, 3, 2);
+    ans->annulus_[2].roles[1] = roles3 * NPerm(2, 3, 0, 1);
+    ans->annulus_[3].tet[0] = bdry3;
+    ans->annulus_[3].tet[1] = annulus.tet[0];
+    ans->annulus_[3].roles[0] = roles3 * NPerm(3, 2, 1, 0);
+    ans->annulus_[3].roles[1] = annulus.roles[0] * NPerm(1, 0, 3, 2);
+
+    avoidTets.push_back(annulus.tet[0]);
+    avoidTets.push_back(annulus.tet[1]);
+    avoidTets.push_back(bdry2);
+    avoidTets.push_back(bdry3);
+    avoidTets.push_back(central0);
+    avoidTets.push_back(central1);
+
+    return ans;
 }
 
 NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
