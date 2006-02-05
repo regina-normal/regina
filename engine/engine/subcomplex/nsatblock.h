@@ -370,14 +370,116 @@ class NSatBlock : public ShareableObject {
          * Determines whether the given tetrahedron is contained within the
          * given list.
          *
-         * This is intended as a helper routine for isBlock(), in the
-         * event that the data structure TetList should change.
+         * This is intended as a helper routine for isBlock() and
+         * related routines.
          *
          * @param t the tetrahedron to search for.
          * @param list the list in which to search.
          * @return \c true if and only if the given tetrahedron was found.
          */
         static bool isBad(NTetrahedron* t, const TetList& list);
+        /**
+         * Determines whether the given tetrahedron is contained within
+         * either of the given lists.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.
+         *
+         * @param t the tetrahedron to search for.
+         * @param list1 the first list in which to search.
+         * @param list2 the second list in which to search.
+         * @return \c true if and only if the given tetrahedron was found
+         * in one of the given lists.
+         */
+        static bool isBad(NTetrahedron* t, const TetList& list1,
+            const TetList& list2);
+
+        /**
+         * Determines whether the given tetrahedron pointer is null.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * The name notUnique() may seem strang for what is essentially
+         * a nullity test; in fact this routine is offered as a
+         * degenerate case of other variants of notUnique() that take
+         * more tetrahedra as arguments.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @return \c true if \a test is null, or \c false otherwise.
+         */
+        static bool notUnique(NTetrahedron* test);
+        /**
+         * Determines whether the given tetrahedron pointer is null
+         * or equal to another from the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @param other1 another tetrahedron that will be compared with \a test.
+         * @return \c true if \a test is null or equal to \a other1,
+         * or \c false otherwise.
+         */
+        static bool notUnique(NTetrahedron* test, NTetrahedron* other1);
+        /**
+         * Determines whether the given tetrahedron pointer is null
+         * or equal to another from the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @param other1 another tetrahedron that will be compared with \a test.
+         * @param other2 another tetrahedron that will be compared with \a test.
+         * @return \c true if \a test is null or equal to \a other1 or
+         * \a other2, or \c false otherwise.
+         */
+        static bool notUnique(NTetrahedron* test, NTetrahedron* other1,
+            NTetrahedron* other2);
+        /**
+         * Determines whether the given tetrahedron pointer is null
+         * or equal to another from the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @param other1 another tetrahedron that will be compared with \a test.
+         * @param other2 another tetrahedron that will be compared with \a test.
+         * @param other3 another tetrahedron that will be compared with \a test.
+         * @return \c true if \a test is null or equal to \a other1,
+         * \a other2 or \a other3, or \c false otherwise.
+         */
+        static bool notUnique(NTetrahedron* test, NTetrahedron* other1,
+            NTetrahedron* other2, NTetrahedron* other3);
+        /**
+         * Determines whether the given tetrahedron pointer is null
+         * or equal to another from the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @param other1 another tetrahedron that will be compared with \a test.
+         * @param other2 another tetrahedron that will be compared with \a test.
+         * @param other3 another tetrahedron that will be compared with \a test.
+         * @param other4 another tetrahedron that will be compared with \a test.
+         * @return \c true if \a test is null or equal to \a other1,
+         * \a other2, \a other3 or \a other4, or \c false otherwise.
+         */
+        static bool notUnique(NTetrahedron* test, NTetrahedron* other1,
+            NTetrahedron* other2, NTetrahedron* other3, NTetrahedron* other4);
 };
 
 /*@}*/
@@ -431,6 +533,30 @@ inline void NSatBlock::setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
     adjBlock->adjAnnulus_[adjAnnulus] = whichAnnulus;
     adjBlock->adjReflected_[adjAnnulus] = adjReflected;
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
+}
+
+inline bool NSatBlock::notUnique(NTetrahedron* test) {
+    return (test == 0);
+}
+
+inline bool NSatBlock::notUnique(NTetrahedron* test, NTetrahedron* other1) {
+    return (test == 0 || test == other1);
+}
+
+inline bool NSatBlock::notUnique(NTetrahedron* test, NTetrahedron* other1,
+        NTetrahedron* other2) {
+    return (test == 0 || test == other1 || test == other2);
+}
+
+inline bool NSatBlock::notUnique(NTetrahedron* test, NTetrahedron* other1,
+        NTetrahedron* other2, NTetrahedron* other3) {
+    return (test == 0 || test == other1 || test == other2 || test == other3);
+}
+
+inline bool NSatBlock::notUnique(NTetrahedron* test, NTetrahedron* other1,
+        NTetrahedron* other2, NTetrahedron* other3, NTetrahedron* other4) {
+    return (test == 0 || test == other1 || test == other2 || test == other3 ||
+        test == other4);
 }
 
 } // namespace regina

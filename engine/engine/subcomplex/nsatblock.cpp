@@ -60,5 +60,19 @@ bool NSatBlock::isBad(NTetrahedron* t, const TetList& list) {
     return false;
 }
 
+bool NSatBlock::isBad(NTetrahedron* t, const TetList& list1,
+        const TetList& list2) {
+    TetList::const_iterator it;
+
+    for (it = list1.begin(); it != list1.end(); it++)
+        if (*it == t)
+            return true;
+    for (it = list2.begin(); it != list2.end(); it++)
+        if (*it == t)
+            return true;
+
+    return false;
+}
+
 } // namespace regina
 
