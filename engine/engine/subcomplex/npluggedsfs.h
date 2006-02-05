@@ -283,8 +283,6 @@ class NSFSTree : public NStandardTriangulation, public NSFSSocketHolder {
         const NSFSRoot& root() const;
         const NIsomorphism* rootIso() const;
 
-        static NSFSTree* isSFSTree(NTriangulation* tri);
-
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -305,8 +303,6 @@ class NSFSTree : public NStandardTriangulation, public NSFSSocketHolder {
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 
         static NSFSTree* hunt(NTriangulation* tri, const NSFSRoot& root);
-
-        static void initRoots();
 };
 
 /*@}*/

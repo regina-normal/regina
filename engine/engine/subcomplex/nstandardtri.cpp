@@ -28,13 +28,13 @@
 
 #include <sstream>
 #include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nl31pillow.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/nnongeotorusbundle.h"
-#include "subcomplex/npluggedsfs.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "subcomplex/ntrivialtri.h"
@@ -90,7 +90,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
 
     // Run tests that require entire triangulations.
-    if ((ans = NSFSTree::isSFSTree(tri)))
+    if ((ans = NBlockedSFS::isBlockedSFS(tri)))
         return ans;
     if ((ans = NLayeredTorusBundle::isLayeredTorusBundle(tri)))
         return ans;

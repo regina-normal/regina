@@ -14,9 +14,9 @@ subcomplexincludedir = $(pkgincludedir)/subcomplex
 
 noinst_LTLIBRARIES = libsubcomplex.la
 
-libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nblockedsfs.cpp nl31pillow.cpp nlayeredchain.cpp nlayeredchainpair.cpp nlayeredlensspace.cpp nlayeredloop.cpp nlayeredsolidtorus.cpp nlayeredsurfacebundle.cpp nlayering.cpp nnongeotorusbundle.cpp npillowtwosphere.cpp npluggedsfs.cpp nplugtrisolidtorus.cpp nsatannulus.cpp nsatblock.cpp nsatblocktypes.cpp nsfsplugs.cpp nsfsroots.cpp nsnappeacensustri.cpp nsnappedball.cpp nsnappedtwosphere.cpp nspiralsolidtorus.cpp nstandardtri.cpp ntrisolidtorus.cpp ntrivialtri.cpp ntxicore.cpp
+libsubcomplex_la_SOURCES = naugtrisolidtorus.cpp nblockedsfs.cpp nl31pillow.cpp nlayeredchain.cpp nlayeredchainpair.cpp nlayeredlensspace.cpp nlayeredloop.cpp nlayeredsolidtorus.cpp nlayeredsurfacebundle.cpp nlayering.cpp nnongeotorusbundle.cpp npillowtwosphere.cpp npluggedsfs.cpp nplugtrisolidtorus.cpp nsatannulus.cpp nsatblock.cpp nsatblocktypes.cpp nsfsplugs.cpp nsnappeacensustri.cpp nsnappedball.cpp nsnappedtwosphere.cpp nspiralsolidtorus.cpp nstandardtri.cpp ntrisolidtorus.cpp ntrivialtri.cpp ntxicore.cpp
 
-subcomplexinclude_HEADERS = naugtrisolidtorus.h nblockedsfs.h nl31pillow.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h nlayeredsurfacebundle.h nlayering.h nnongeotorusbundle.h npillowtwosphere.h npluggedsfs.h nplugtrisolidtorus.h nsatannulus.h nsatblock.h nsatblocktypes.h nsfsplugs.h nsfsroots.h nsnappeacensustri.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntrisolidtorus.h ntrivialtri.h ntxicore.h
+subcomplexinclude_HEADERS = naugtrisolidtorus.h nblockedsfs.h nl31pillow.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h nlayeredsurfacebundle.h nlayering.h nnongeotorusbundle.h npillowtwosphere.h npluggedsfs.h nplugtrisolidtorus.h nsatannulus.h nsatblock.h nsatblocktypes.h nsfsplugs.h nsnappeacensustri.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntrisolidtorus.h ntrivialtri.h ntxicore.h
 
 EXTRA_FILES = \
 	diag92.eps diag92.fig diag92.png
