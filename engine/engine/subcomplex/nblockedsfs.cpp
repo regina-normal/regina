@@ -170,6 +170,12 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     if (tri->getNumberOfComponents() > 1)
         return 0;
 
+    // Watch out for twisted block boundaries that are incompatible with
+    // neighbouring blocks!  These will result in edges joined to
+    // themselves in reverse.
+    if (! tri->isValid())
+        return 0;
+
     // Our triangulation is closed and connected.
     // Hunt for a starting block.
     unsigned long i;
