@@ -33,7 +33,9 @@
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
+#include <algorithm>
 #include <cstdlib> // For exit().
+#include <iterator>
 
 namespace regina {
 
@@ -538,12 +540,11 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
 
     NTetrahedron* middle = annulus.tet[0]->getAdjacentTetrahedron(
         annulus.roles[0][0]);
-    if (middle == 0 || middle == annulus.tet[0] || middle == annulus.tet[1])
-        return 0;
-    if (isBad(middle, avoidTets))
-        return 0;
     NPerm middleRoles = annulus.tet[0]->getAdjacentTetrahedronGluing(
         annulus.roles[0][0]) * annulus.roles[0] * NPerm(3, 1, 0, 2);
+
+    if (notUnique(middle, annulus.tet[0], annulus.tet[1]) ||
+            isBad(middle, avoidTets))
 
     if (middle != annulus.tet[0]->getAdjacentTetrahedron(
             annulus.roles[0][1]))
@@ -576,8 +577,8 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             ans->annulus_[0] = annulus;
 
             avoidTets.push_back(annulus.tet[0]);
-            avoidTets.push_back(annulus.tet[1]);
             avoidTets.push_back(middle);
+            avoidTets.push_back(annulus.tet[1]);
 
             return ans;
         }
@@ -589,8 +590,8 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             ans->annulus_[0] = annulus;
 
             avoidTets.push_back(annulus.tet[0]);
-            avoidTets.push_back(annulus.tet[1]);
             avoidTets.push_back(middle);
+            avoidTets.push_back(annulus.tet[1]);
 
             return ans;
         }
@@ -601,8 +602,107 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     // If anything, we have a segment of length >= 2.  Start following
     // it around.
 
+    // Make a list storing the tetrahedra from left to right around the
+    // boundary ring.
+    TetList foundSoFar;
+    foundSoFar.push_back(annulus.tet[0]);
+    foundSoFar.push_back(middle);
+    foundSoFar.push_back(annulus.tet[1]);
 
-    // TODO: Finish implementing reflector strip recognition.
+    // Also make a list of tetrahedron vertex roles for the two
+    // tetrahedra in each segment that meet the boundary annuli.
+    std::list<NPerm> rolesSoFar;
+    rolesSoFar.push_back(annulus.roles[0]);
+    rolesSoFar.push_back(annulus.roles[1]);
+
+    unsigned length = 1;
+    bool twisted = false;
+
+    NTetrahedron *nextLeft, *nextMiddle, *nextRight;
+    NPerm nextLeftRoles, nextMiddleRoles, nextRightRoles;
+
+    while (1) {
+        // Run off the right hand side looking for the next tetrahedron.
+        nextLeft = foundSoFar.back()->getAdjacentTetrahedron(
+            rolesSoFar.back()[2]);
+        nextLeftRoles = foundSoFar.back()->getAdjacentTetrahedronGluing(
+            rolesSoFar.back()[2]) * rolesSoFar.back() * NPerm(0, 1);
+
+        if (nextLeft == annulus.tet[0]) {
+            // The right _might_ have completed!
+            if (nextLeftRoles == annulus.roles[0]) {
+                // All good!  An untwisted strip.
+            } else if (nextLeftRoles == annulus.roles[0] * NPerm(0, 1)) {
+                // A complete twisted strip.
+                twisted = true;
+            } else {
+                // Nothing.
+                return 0;
+            }
+
+            NSatReflectorStrip* ans = new NSatReflectorStrip(length, twisted);
+
+            std::copy(foundSoFar.begin(), foundSoFar.end(),
+                std::back_inserter(avoidTets));
+
+            TetList::iterator tit = foundSoFar.begin();
+            std::list<NPerm>::const_iterator pit = rolesSoFar.begin();
+            for (unsigned i = 0; i < length; i++) {
+                ans->annulus_[i].tet[0] = *tit++;
+                tit++; // Skip the middle tetrahedron from each block.
+                ans->annulus_[i].tet[1] = *tit++;
+
+                ans->annulus_[i].roles[0] = *pit++;
+                ans->annulus_[i].roles[1] = *pit++;
+            }
+
+            return ans;
+        }
+
+        // Look for a new adjacent block.
+        if (notUnique(nextLeft) || isBad(nextLeft, avoidTets, foundSoFar))
+            return 0;
+
+        nextMiddle = nextLeft->getAdjacentTetrahedron(nextLeftRoles[0]);
+        nextMiddleRoles = nextLeft->getAdjacentTetrahedronGluing(
+            nextLeftRoles[0]) * nextLeftRoles * NPerm(3, 1, 0, 2);
+
+        if (notUnique(nextMiddle, nextLeft) ||
+                isBad(nextMiddle, avoidTets, foundSoFar))
+            return 0;
+
+        if (nextMiddle != nextLeft->getAdjacentTetrahedron(nextLeftRoles[1]))
+            return 0;
+        if (nextMiddleRoles != nextLeft->getAdjacentTetrahedronGluing(
+                nextLeftRoles[1]) * nextLeftRoles * NPerm(1, 3))
+            return 0;
+
+        nextRight = nextMiddle->getAdjacentTetrahedron(nextMiddleRoles[0]);
+        nextRightRoles = nextMiddle->getAdjacentTetrahedronGluing(
+            nextMiddleRoles[0]) * nextMiddleRoles * NPerm(0, 3, 1, 2);
+
+        if (notUnique(nextRight, nextLeft, nextMiddle) ||
+                isBad(nextRight, avoidTets, foundSoFar))
+            return 0;
+
+        if (nextRight != nextMiddle->getAdjacentTetrahedron(nextMiddleRoles[1]))
+            return 0;
+        if (nextRightRoles != nextMiddle->getAdjacentTetrahedronGluing(
+                nextMiddleRoles[1]) * nextMiddleRoles * NPerm(0, 2))
+            return 0;
+
+        // Yup, we have a new block.
+        foundSoFar.push_back(nextLeft);
+        foundSoFar.push_back(nextMiddle);
+        foundSoFar.push_back(nextRight);
+
+        rolesSoFar.push_back(nextLeftRoles);
+        rolesSoFar.push_back(nextRightRoles);
+
+        length++;
+    }
+
+    // We should never get out of the loop this way.
     return 0;
 }
 
