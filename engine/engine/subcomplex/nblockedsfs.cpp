@@ -96,7 +96,7 @@ void NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
                 // extending it from here, but we have no chance of
                 // filling the entire triangulation.
                 if (stopIfBounded)
-                    goto stopExpanding;
+                    return;
                 continue;
             }
 
@@ -184,15 +184,12 @@ void NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
 
             // We couldn't match the annulus to anything.
             if (stopIfBounded)
-                goto stopExpanding;
+                return;
         }
     }
 
-    stopExpanding:
-
     // Well, we got as far as we got.
     // TODO: Recalculate base Euler characteristic?
-    ;
 }
 
 NBlockedSFS::~NBlockedSFS() {

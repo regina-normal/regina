@@ -88,6 +88,8 @@ class NSatRegion : public ShareableObject {
          * stopIfBounded: true means we stop expanding as soon as we
          * find a boundary annulus that has some adjacent tetrahedron
          * (even if just on one face) but no corresponding adjacent block.
+         * When we stop the structure will be in an inconsistent state;
+         * it is assumed that it will be tossed away completely.
          *
          * \pre Any block adjacencies are in this list.
          */
