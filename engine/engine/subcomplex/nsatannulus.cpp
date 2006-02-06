@@ -32,12 +32,13 @@
 
 namespace regina {
 
-bool NSatAnnulus::meetsBoundary() const {
+unsigned NSatAnnulus::meetsBoundary() const {
+    unsigned ans = 0;
     if (! tet[0]->getAdjacentTetrahedron(roles[0][3]))
-        return true;
+        ans++;
     if (! tet[1]->getAdjacentTetrahedron(roles[1][3]))
-        return true;
-    return false;
+        ans++;
+    return ans;
 }
 
 void NSatAnnulus::switchSides() {

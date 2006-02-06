@@ -169,13 +169,17 @@ struct NSatAnnulus {
     bool operator != (const NSatAnnulus& other) const;
 
     /**
-     * Determines whether some face of this annulus lies on the boundary
-     * of the triangulations.
+     * Determines how many faces of this annulus lie on the boundary
+     * of the triangulation.
      *
-     * @return \c true if one or both faces of this annulus are boundary
-     * faces of the triangulation, or \c false if both faces are internal.
+     * Note that this routine can also be used as a boolean function
+     * to determine whether any faces of the annulus lie on the
+     * triangulation boundary.
+     *
+     * @return the number of faces of this annulus that lie on the boundary
+     * of the triangulation; this will be 0, 1 or 2.
      */
-    bool meetsBoundary() const;
+    unsigned meetsBoundary() const;
 
     /**
      * Converts this into a representation of the same annulus from the
@@ -187,7 +191,7 @@ struct NSatAnnulus {
      * along the annulus itself).
      *
      * \pre Neither face of this annulus is a boundary face of the
-     * triangulations.  See meetsBoundary() for details.
+     * triangulation.
      */
     void switchSides();
     /**
@@ -196,7 +200,7 @@ struct NSatAnnulus {
      * details.
      *
      * \pre Neither face of this annulus is a boundary face of the
-     * triangulations.  See meetsBoundary() for details.
+     * triangulation.
      *
      * @return a new representation of this annulus from the other side.
      */
