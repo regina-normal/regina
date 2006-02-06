@@ -444,6 +444,19 @@ class NSFSpace : public NManifold {
          */
         void addPuncture();
         /**
+         * Inserts several new punctures into the base orbifold.
+         *
+         * Each puncture insertion is equivalent to removing a disc from
+         * the base orbifold (or a trivially fibred solid torus from the
+         * overall 3-manifold).
+         *
+         * The exceptional fibres and the obstruction constant \a b are
+         * not modified by this routine.
+         *
+         * @param nPunctures the number of new punctures to insert.
+         */
+        void addPuncture(unsigned long nPunctures);
+        /**
          * Adds a new reflector boundary component to the base orbifold.
          *
          * This is equivalent to removing a disc from the base orbifold
@@ -457,6 +470,23 @@ class NSFSpace : public NManifold {
          * not modified by this routine.
          */
         void addReflector();
+        /**
+         * Adds several new reflector boundary components to the base orbifold.
+         *
+         * Each addition of a reflector boundary component is equivalent to
+         * removing a disc from the base orbifold and replacing it with an
+         * annulus with one reflector boundary.
+         *
+         * It has the effect of removing a trivially fibred solid torus
+         * from the overall 3-manifold and replacing it with an
+         * appropriately fibred twisted I-bundle over the torus.
+         *
+         * The exceptional fibres and the obstruction constant \a b are
+         * not modified by this routine.
+         *
+         * @param nReflectors the number of new reflector boundaries to add.
+         */
+        void addReflector(unsigned long nReflectors);
 
         /**
          * Adds the given fibre to this Seifert fibred space.
@@ -685,8 +715,16 @@ inline void NSFSpace::addPuncture() {
     basePunctures++;
 }
 
+inline void NSFSpace::addPuncture(unsigned long nPunctures) {
+    basePunctures += nPunctures;
+}
+
 inline void NSFSpace::addReflector() {
     baseReflectors++;
+}
+
+inline void NSFSpace::addReflector(unsigned long nReflectors) {
+    baseReflectors += nReflectors;
 }
 
 inline void NSFSpace::insertFibre(const NSFSFibre& fibre) {

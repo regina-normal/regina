@@ -39,6 +39,11 @@ namespace {
     void (NSFSpace::*insertFibre_fibre)(const NSFSFibre&) =
         &NSFSpace::insertFibre;
     void (NSFSpace::*insertFibre_longs)(long, long) = &NSFSpace::insertFibre;
+    void (NSFSpace::*addPuncture_void)() = &NSFSpace::addPuncture;
+    void (NSFSpace::*addPuncture_ulong)(unsigned long) = &NSFSpace::addPuncture;
+    void (NSFSpace::*addReflector_void)() = &NSFSpace::addReflector;
+    void (NSFSpace::*addReflector_ulong)(unsigned long) =
+        &NSFSpace::addReflector;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addHandle, addHandle, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addCrosscap, addCrosscap, 0, 1);
@@ -70,8 +75,10 @@ void addNSFSpace() {
         .def("getObstruction", &NSFSpace::getObstruction)
         .def("addHandle", &NSFSpace::addHandle, OL_addHandle())
         .def("addCrosscap", &NSFSpace::addHandle, OL_addCrosscap())
-        .def("addPuncture", &NSFSpace::addPuncture)
-        .def("addReflector", &NSFSpace::addReflector)
+        .def("addPuncture", addPuncture_void)
+        .def("addPuncture", addPuncture_ulong)
+        .def("addReflector", addReflector_void)
+        .def("addReflector", addReflector_ulong)
         .def("insertFibre", insertFibre_fibre)
         .def("insertFibre", insertFibre_longs)
         .def("reduce", &NSFSpace::reduce)
