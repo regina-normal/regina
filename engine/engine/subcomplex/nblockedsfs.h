@@ -56,6 +56,47 @@ struct NSatBlockSpec {
     NSatBlockSpec(NSatBlock* useBlock, bool useRefVert, bool useRefHoriz);
 };
 
+/**
+ * TODO
+ *
+ * For example, might correspond to one component of the JSJ
+ * decomposition.
+ */
+class NSatRegion : public ShareableObject {
+    private:
+        typedef std::vector<NSatBlockSpec> BlockSet;
+
+        BlockSet blocks_;
+        long baseEuler_;
+        bool baseOrbl_;
+        bool hasTwist_;
+        bool twistsMatchOrientation_;
+            /**< True if no twists, or if twists correspond precisely to
+             * orientation-reversing paths.  Note that reflector
+             * boundaries are orientation-reversing but do not introduce
+             * twists (thus their existence makes this false). */
+        long shiftedAnnuli_;
+        unsigned long extraReflectors_;
+
+    public:
+        /**
+         * \pre No adjacencies for the given block.
+         */
+        NSatRegion(NSatBlock* starter);
+
+        /**
+         * stopIfBounded: true means we stop expanding as soon as we
+         * find a boundary annulus that has some adjacent tetrahedron
+         * (even if just on one face) but no corresponding adjacent block.
+         *
+         * \pre Any block adjacencies are in this list.
+         */
+        void expand(NSatBlock::TetList& avoidTets, bool stopIfBounded);
+};
+
+/**
+ * Big big TODO.
+ */
 class NBlockedSFS : public NStandardTriangulation {
     private:
         typedef std::vector<NSatBlockSpec> BlockSet;

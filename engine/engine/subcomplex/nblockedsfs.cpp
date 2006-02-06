@@ -47,6 +47,154 @@ namespace {
     }
 }
 
+NSatRegion::NSatRegion(NSatBlock* starter) :
+        baseEuler_(1),
+        baseOrbl_(true),
+        hasTwist_(false),
+        twistsMatchOrientation_(true),
+        shiftedAnnuli_(0),
+        extraReflectors_(0) {
+    blocks_.push_back(NSatBlockSpec(starter, false, false));
+
+    if (starter->twistedBoundary()) {
+        hasTwist_ = true;
+        twistsMatchOrientation_ = false;
+        extraReflectors_ = 1;
+    }
+}
+
+void NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
+    NSatBlockSpec currBlockSpec;
+    NSatBlock *currBlock, *adjBlock;
+    unsigned ann, adjAnn;
+    unsigned long adjPos;
+    bool adjVert, adjHoriz;
+    bool currTwisted, currNor;
+    unsigned annBdryFaces;
+
+    // Try to push past the boundary annuli of all blocks present and future.
+    // We rely on a vector data type for BlockSet here, since this
+    // will keep the loop doing exactly what it should do even if new
+    // blocks are added and blockFound.size() increases.
+    for (unsigned long pos = 0; pos < blocks_.size(); pos++) {
+        currBlockSpec = blocks_[pos];
+        currBlock = currBlockSpec.block;
+
+        // Run through each boundary annulus for this block.
+        for (ann = 0; ann < currBlock->nAnnuli(); ann++) {
+            if (currBlock->hasAdjacentBlock(ann))
+                continue;
+
+            // Do we have one or two boundary faces?
+            annBdryFaces = currBlock->annulus(ann).meetsBoundary();
+            if (annBdryFaces == 2) {
+                // The annulus lies completely on the triangulation
+                // boundary.  Just skip it.
+                continue;
+            } else if (annBdryFaces == 1) {
+                // The annulus lies half on the boundary.  No chance of
+                // extending it from here, but we have no chance of
+                // filling the entire triangulation.
+                if (stopIfBounded)
+                    goto stopExpanding;
+                continue;
+            }
+
+            // We can happily jump to the other side, since we know
+            // there are tetrahedra present.
+            // Is there a new block there?
+            if ((adjBlock = NSatBlock::isBlock(
+                    currBlock->annulus(ann).otherSide(), avoidTets))) {
+                // We found a new adjacent block that we haven't seen before.
+
+                // Note that, since the annuli are not horizontally
+                // reflected, the blocks themselves will be.
+                currBlock->setAdjacent(ann, adjBlock, 0, false, false);
+                blocks_.push_back(NSatBlockSpec(adjBlock, false,
+                    ! currBlockSpec.refHoriz));
+
+                // Note whether the new block has twisted boundary.
+                if (adjBlock->twistedBoundary()) {
+                    hasTwist_ = true;
+                    twistsMatchOrientation_ = false;
+                    extraReflectors_++;
+                }
+
+                // On to the next annulus!
+                continue;
+            }
+
+            // No adjacent block.
+            // Perhaps it's joined to something we've already seen?
+            // Only search forwards from this annulus.
+            if (ann + 1 < currBlock->nAnnuli()) {
+                adjPos = pos;
+                adjAnn = ann + 1;
+            } else {
+                adjPos = pos + 1;
+                adjAnn = 0;
+            }
+            while (adjPos < blocks_.size()) {
+                adjBlock = blocks_[adjPos].block;
+                if ((! adjBlock->hasAdjacentBlock(adjAnn)) &&
+                        currBlock->annulus(ann).isAdjacent(
+                        adjBlock->annulus(adjAnn), &adjVert, &adjHoriz)) {
+                    // They match!
+                    currBlock->setAdjacent(ann, adjBlock, adjAnn,
+                        adjVert, adjHoriz);
+
+                    // See what kinds of inconsistencies this
+                    // rejoining has caused.
+                    currNor = regXor(regXor(currBlockSpec.refHoriz,
+                        blocks_[adjPos].refHoriz), ! adjHoriz);
+                    currTwisted = regXor(regXor(currBlockSpec.refVert,
+                        blocks_[adjPos].refVert), adjVert);
+
+                    if (currNor)
+                        baseOrbl_ = false;
+                    if (currTwisted)
+                        hasTwist_ = true;
+                    if (regXor(currNor, currTwisted))
+                        twistsMatchOrientation_ = false;
+
+                    // See if we need to add a (1,-1) shift before
+                    // the annuli can be identified.
+                    if (regXor(adjHoriz, adjVert)) {
+                        if (regXor(currBlockSpec.refHoriz,
+                                currBlockSpec.refVert))
+                            shiftedAnnuli_++;
+                        else
+                            shiftedAnnuli_--;
+                    }
+
+                    break;
+                }
+
+                if (adjAnn + 1 < adjBlock->nAnnuli())
+                    adjAnn++;
+                else {
+                    adjPos++;
+                    adjAnn = 0;
+                }
+            }
+
+            // If we found a match, we're done.  Move on to the next annulus.
+            if (adjPos < blocks_.size())
+                continue;
+
+            // We couldn't match the annulus to anything.
+            if (stopIfBounded)
+                goto stopExpanding;
+        }
+    }
+
+    stopExpanding:
+
+    // Well, we got as far as we got.
+    // TODO: Recalculate base Euler characteristic?
+    ;
+}
+
 NBlockedSFS::~NBlockedSFS() {
     for (BlockSet::iterator it = blocks.begin(); it != blocks.end(); it++)
         delete it->block;
@@ -153,7 +301,7 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
             // those in the isomorphic image of the initial starting
             // block.
             for (i = 0; i < (*it)->triangulation().getNumberOfTetrahedra(); i++)
-                avoidTets.push_back(tri->getTetrahedron((*isoIt)->tetImage(i)));
+                avoidTets.insert(tri->getTetrahedron((*isoIt)->tetImage(i)));
 
             // See if we can flesh out the entire triangulation from the
             // starter block.
