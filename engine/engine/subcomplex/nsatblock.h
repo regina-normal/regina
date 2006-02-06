@@ -38,7 +38,7 @@
 
 #include "shareableobject.h"
 #include "subcomplex/nsatannulus.h"
-#include <list>
+#include <set>
 
 namespace regina {
 
@@ -109,7 +109,7 @@ class NTriangulation;
  */
 class NSatBlock : public ShareableObject {
     public:
-        typedef std::list<NTetrahedron*> TetList;
+        typedef std::set<NTetrahedron*> TetList;
             /**< The data structure used to store a list of tetrahedra
                  that should not be examined by isBlock(). */
 
@@ -380,19 +380,28 @@ class NSatBlock : public ShareableObject {
         static bool isBad(NTetrahedron* t, const TetList& list);
         /**
          * Determines whether the given tetrahedron is contained within
-         * either of the given lists.
+         * the given list.
          *
          * This is intended as a helper routine for isBlock() and
-         * related routines.
+         * related routines.  It is a generic routine for working with
+         * arbitrary list types.
+         *
+         * \pre Forward iterators of type <tt>List::const_iterator</tt>
+         * that span the given list can be obtained by calling
+         * <tt>list.begin()</tt> and <tt>list.end()</tt>.
          *
          * @param t the tetrahedron to search for.
-         * @param list1 the first list in which to search.
-         * @param list2 the second list in which to search.
-         * @return \c true if and only if the given tetrahedron was found
-         * in one of the given lists.
+         * @param list the list in which to search.
+         * @return \c true if and only if the given tetrahedron was found.
          */
-        static bool isBad(NTetrahedron* t, const TetList& list1,
-            const TetList& list2);
+        template <class List>
+        static bool isBad(NTetrahedron* t, const List& list) {
+            for (typename List::const_iterator it = list.begin();
+                    it != list.end(); ++it)
+                if (*it == t)
+                    return true;
+            return false;
+        }
 
         /**
          * Determines whether the given tetrahedron pointer is null.

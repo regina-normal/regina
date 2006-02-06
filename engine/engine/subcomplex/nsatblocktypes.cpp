@@ -36,6 +36,7 @@
 #include <algorithm>
 #include <cstdlib> // For exit().
 #include <iterator>
+#include <list>
 
 namespace regina {
 
@@ -204,47 +205,49 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     if (lst->getMeridinalCuts(lstRoles[0]) == 0)
         return 0;
 
-    // Verify that all of the tetrahedra are usable, and add them to the
-    // list if they are.
+    // Make two runs through the full set of tetrahedra.
+    // The first run verifies that each tetrahedron is usable.
+    // The second run inserts the tetrahedra into avoidTets.
     NTetrahedron* current = annulus.tet[0];
+    NFacePair currPair = centralEdge;
     NFacePair nextPair;
-    avoidTets.push_back(current);
-    unsigned long addedTets = 1;
-    while (addedTets < lst->getNumberOfTetrahedra()) {
+    while (current != lst->getBase()) {
         // INV: The current tetrahedron is usable.
-        // INV: We have checked addedTets tetrahedra thus far.
-        // INV: The next two faces to push through are in centralEdge.
+        // INV: The next two faces to push through are in currPair.
 
-        // Start by pushing through to the next tetrahedron.
+        // Push through to the next tetrahedron.
         nextPair = NFacePair(
-            current->getAdjacentFace(centralEdge.upper()),
-            current->getAdjacentFace(centralEdge.lower())
+            current->getAdjacentFace(currPair.upper()),
+            current->getAdjacentFace(currPair.lower())
             ).complement();
-        current = current->getAdjacentTetrahedron(centralEdge.upper());
-        centralEdge = nextPair;
+        current = current->getAdjacentTetrahedron(currPair.upper());
+        currPair = nextPair;
 
         // Make sure this next tetrahedron is usable.
-        if (isBad(current, avoidTets)) {
-            // No!  Run back and pull off all the tetrahedra we've added
-            // so far, and then bail.
-            for ( ; addedTets > 0; addedTets--)
-                avoidTets.pop_back();
+        if (isBad(current, avoidTets))
             return 0;
-        }
-
-        avoidTets.push_back(current);
-        addedTets++;
-    }
-    // We had better be at the bottom of the LST by now.
-    if (current->getAdjacentTetrahedron(centralEdge.upper()) != current) {
-        // THIS SHOULD NEVER HAPPEN!
-        std::cerr <<
-            "ERROR: Failure in the NSatLST tetrahedron usability test.\n";
-        std::cerr.flush();
-        exit(0);
     }
 
     // All good!
+    current = annulus.tet[0];
+    currPair = centralEdge;
+    avoidTets.insert(current);
+    while (current != lst->getBase()) {
+        // INV: All tetrahedra up to and including current have been added.
+        // INV: The next two faces to push through are in currPair.
+
+        // Push through to the next tetrahedron.
+        nextPair = NFacePair(
+            current->getAdjacentFace(currPair.upper()),
+            current->getAdjacentFace(currPair.lower())
+            ).complement();
+        current = current->getAdjacentTetrahedron(currPair.upper());
+        currPair = nextPair;
+
+        // Add this next tetrahedron to the list.
+        avoidTets.insert(current);
+    }
+
     NSatLST* ans = new NSatLST(lst, lstRoles);
     ans->annulus_[0] = annulus;
     return ans;
@@ -330,9 +333,9 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
     ans->annulus_[2].roles[0] = adjRoles * pairSwap;
     ans->annulus_[2].roles[1] = annulus.roles[0] * pairSwap;
 
-    avoidTets.push_back(annulus.tet[0]);
-    avoidTets.push_back(annulus.tet[1]);
-    avoidTets.push_back(adj);
+    avoidTets.insert(annulus.tet[0]);
+    avoidTets.insert(annulus.tet[1]);
+    avoidTets.insert(adj);
 
     return ans;
 }
@@ -465,12 +468,12 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
     ans->annulus_[3].roles[0] = roles3 * NPerm(3, 2, 1, 0);
     ans->annulus_[3].roles[1] = annulus.roles[0] * NPerm(1, 0, 3, 2);
 
-    avoidTets.push_back(annulus.tet[0]);
-    avoidTets.push_back(annulus.tet[1]);
-    avoidTets.push_back(bdry2);
-    avoidTets.push_back(bdry3);
-    avoidTets.push_back(central0);
-    avoidTets.push_back(central1);
+    avoidTets.insert(annulus.tet[0]);
+    avoidTets.insert(annulus.tet[1]);
+    avoidTets.insert(bdry2);
+    avoidTets.insert(bdry3);
+    avoidTets.insert(central0);
+    avoidTets.insert(central1);
 
     return ans;
 }
@@ -576,9 +579,9 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             NSatReflectorStrip* ans = new NSatReflectorStrip(1, false);
             ans->annulus_[0] = annulus;
 
-            avoidTets.push_back(annulus.tet[0]);
-            avoidTets.push_back(middle);
-            avoidTets.push_back(annulus.tet[1]);
+            avoidTets.insert(annulus.tet[0]);
+            avoidTets.insert(middle);
+            avoidTets.insert(annulus.tet[1]);
 
             return ans;
         }
@@ -589,9 +592,9 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             NSatReflectorStrip* ans = new NSatReflectorStrip(1, true);
             ans->annulus_[0] = annulus;
 
-            avoidTets.push_back(annulus.tet[0]);
-            avoidTets.push_back(middle);
-            avoidTets.push_back(annulus.tet[1]);
+            avoidTets.insert(annulus.tet[0]);
+            avoidTets.insert(middle);
+            avoidTets.insert(annulus.tet[1]);
 
             return ans;
         }
@@ -603,8 +606,9 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     // it around.
 
     // Make a list storing the tetrahedra from left to right around the
-    // boundary ring.
-    TetList foundSoFar;
+    // boundary ring.  We must use a list and not a set, since we will
+    // rely on the tetrahedra being stored in a particular order.
+    std::list<NTetrahedron*> foundSoFar;
     foundSoFar.push_back(annulus.tet[0]);
     foundSoFar.push_back(middle);
     foundSoFar.push_back(annulus.tet[1]);
@@ -643,9 +647,9 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             NSatReflectorStrip* ans = new NSatReflectorStrip(length, twisted);
 
             std::copy(foundSoFar.begin(), foundSoFar.end(),
-                std::back_inserter(avoidTets));
+                std::inserter(avoidTets, avoidTets.begin()));
 
-            TetList::iterator tit = foundSoFar.begin();
+            std::list<NTetrahedron*>::const_iterator tit = foundSoFar.begin();
             std::list<NPerm>::const_iterator pit = rolesSoFar.begin();
             for (unsigned i = 0; i < length; i++) {
                 ans->annulus_[i].tet[0] = *tit++;
@@ -660,7 +664,8 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
         }
 
         // Look for a new adjacent block.
-        if (notUnique(nextLeft) || isBad(nextLeft, avoidTets, foundSoFar))
+        if (notUnique(nextLeft) ||
+                isBad(nextLeft, avoidTets) || isBad(nextLeft, foundSoFar))
             return 0;
 
         nextMiddle = nextLeft->getAdjacentTetrahedron(nextLeftRoles[0]);
@@ -668,7 +673,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             nextLeftRoles[0]) * nextLeftRoles * NPerm(3, 1, 0, 2);
 
         if (notUnique(nextMiddle, nextLeft) ||
-                isBad(nextMiddle, avoidTets, foundSoFar))
+                isBad(nextMiddle, avoidTets) || isBad(nextMiddle, foundSoFar))
             return 0;
 
         if (nextMiddle != nextLeft->getAdjacentTetrahedron(nextLeftRoles[1]))
@@ -682,7 +687,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             nextMiddleRoles[0]) * nextMiddleRoles * NPerm(0, 3, 1, 2);
 
         if (notUnique(nextRight, nextLeft, nextMiddle) ||
-                isBad(nextRight, avoidTets, foundSoFar))
+                isBad(nextRight, avoidTets) || isBad(nextRight, foundSoFar))
             return 0;
 
         if (nextRight != nextMiddle->getAdjacentTetrahedron(nextMiddleRoles[1]))
@@ -767,7 +772,7 @@ NSatLayering* NSatLayering::isBlockLayering(const NSatAnnulus& annulus,
     // Is it a layering over the horizontal edge?
     if (annulus.roles[0][0] == annulus.roles[1][2] &&
             annulus.roles[0][2] == annulus.roles[1][0]) {
-        avoidTets.push_back(annulus.tet[0]);
+        avoidTets.insert(annulus.tet[0]);
 
         NSatLayering* ans = new NSatLayering(true);
         ans->annulus_[0] = annulus;
@@ -781,7 +786,7 @@ NSatLayering* NSatLayering::isBlockLayering(const NSatAnnulus& annulus,
     // Is it a layering over the diagonal edge?
     if (annulus.roles[0][1] == annulus.roles[1][2] &&
             annulus.roles[0][2] == annulus.roles[1][1]) {
-        avoidTets.push_back(annulus.tet[0]);
+        avoidTets.insert(annulus.tet[0]);
 
         NSatLayering* ans = new NSatLayering(false);
         ans->annulus_[0] = annulus;
