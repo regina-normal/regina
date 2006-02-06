@@ -109,21 +109,71 @@ class NSatBlockStarter : regina::boost::noncopyable {
     friend class NSatBlockStarterSet;
 };
 
+/**
+ * Represents a set of starter blocks that can be used for identifying
+ * triangulations of Seifert fibred spaces.
+ *
+ * This class provides a list of saturated blocks that can be used as
+ * starting points for recognising triangulations; see the
+ * NSatBlockStarter class notes for details.
+ *
+ * More importantly, this list is global and hard-coded.  The only
+ * access to the list is through the static routines begin() and end().
+ *
+ * Creating the list of starter blocks is expensive, and so this is not
+ * done until the first time that begin() is called.  This way, if the list
+ * is never used then the work is never done.  As a consequence however,
+ * you must be sure to call begin() before calling end() (which is the
+ * usual way in which iterator loops are structured in code).
+ *
+ * Be aware that this list makes no claims to be exhaustive; it is
+ * expected to grow as future versions of Regina are released.
+ */
 class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
     public:
+        /**
+         * An iterator over the starter blocks in this list.  This operates
+         * as a forward iterator in a manner consistent with the standard C++
+         * library.
+         */
         typedef NListOnCall<NSatBlockStarter>::iterator iterator;
 
     private:
         static const NSatBlockStarterSet blocks;
+            /**< The hard-coded list of starter blocks. */
 
     public:
+        /**
+         * Returns an iterator pointing to the first block in the
+         * hard-coded list.
+         *
+         * The very first time this routine is called, the list will be
+         * filled with items (and as such the call will be expensive).
+         * Every subsequent call will be very cheap.
+         *
+         * @return an iterator pointing to the first starter block.
+         */
         static iterator begin();
+
+        /**
+         * Returns an iterator pointing past the end of the hard-coded list
+         * (i.e., just after the last item).
+         *
+         * \pre The begin() routine has been called at least once.
+         *
+         * @return a past-the-end iterator.
+         */
         static iterator end();
 
     protected:
         void initialise();
 
     private:
+        /**
+         * Creates a new list of starter blocks.  This routine is
+         * private since the only list that should exist is the global
+         * hard-coded list.
+         */
         NSatBlockStarterSet();
 };
 
