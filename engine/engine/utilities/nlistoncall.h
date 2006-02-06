@@ -132,6 +132,9 @@ class NListOnCall : public regina::boost::noncopyable {
          * Returns an iterator pointing past the end of this list (i.e.,
          * just after the last item).
          *
+         * \pre The begin() routine has been called at least once
+         * (otherwise the list will not yet have been filled).
+         *
          * @return a past-the-end iterator.
          */
         iterator end() const {
