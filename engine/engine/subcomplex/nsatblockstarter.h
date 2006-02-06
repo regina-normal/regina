@@ -26,19 +26,19 @@
 
 /* end stub */
 
-/*! \file nblockedsfs.h
- *  \brief Provides Seifert fibred spaces that are triangulated using
- *  saturated blocks.
+/*! \file nsatblockstarter.h
+ *  \brief Provides a hard-coded list of saturated blocks to use as starting
+ *  points for recognising larger Seifert fibred spaces.
  */
 
-#ifndef __NBLOCKEDSFS_H
+#ifndef __NSATBLOCKSTARTER_H
 #ifndef __DOXYGEN
-#define __NBLOCKEDSFS_H
+#define __NSATBLOCKSTARTER_H
 #endif
 
-#include <vector>
 #include "subcomplex/nsatblock.h"
-#include "subcomplex/nstandardtri.h"
+#include "triangulation/ntriangulation.h"
+#include "utilities/nlistoncall.h"
 
 namespace regina {
 
@@ -47,71 +47,52 @@ namespace regina {
  * @{
  */
 
-struct NSatBlockSpec {
+struct NSatBlockStarter {
+    NTriangulation triangulation;
     NSatBlock* block;
-    bool refVert;
-    bool refHoriz;
 
-    NSatBlockSpec();
-    NSatBlockSpec(NSatBlock* useBlock, bool useRefVert, bool useRefHoriz);
+    NSatBlockStarter();
+    ~NSatBlockStarter();
 };
 
-class NBlockedSFS : public NStandardTriangulation {
+class NSatBlockStarterSet : public NListOnCall<NSatBlockStarter> {
     private:
-        typedef std::vector<NSatBlockSpec> BlockSet;
-
-        BlockSet blocks;
-        long baseEuler;
-        bool baseOrbl;
-        bool hasTwist;
-        bool twistsMatchOrientation;
-            /**< True if no twists, or if twists correspond precisely to
-             * orientation-reversing paths.  Note that reflector
-             * boundaries are orientation-reversing but do not introduce
-             * twists (thus their existence makes this false). */
-        long shiftedAnnuli;
-        unsigned long extraReflectors;
+        static const NSatBlockStarterSet blocks;
 
     public:
-        ~NBlockedSFS();
+        static iterator begin();
+        static iterator end();
 
-        NManifold* getManifold() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
-        static NBlockedSFS* isBlockedSFS(NTriangulation* tri);
+    protected:
+        void initialise();
 
     private:
-        NBlockedSFS();
-
-        /**
-         * \pre tri is a closed and connected triangulation.
-         */
-        static NBlockedSFS* hunt(NSatBlock* starter,
-            NSatBlock::TetList& avoidTets);
-
-        /**
-         * \pre We have a closed and connected triangulation.
-         */
-        void calculateBaseEuler();
+        NSatBlockStarterSet();
 };
 
 /*@}*/
 
-// Inline functions for NSatBlockSpec
+// Inline functions for NSatBlockStarter
 
-inline NSatBlockSpec::NSatBlockSpec() {
+inline NSatBlockStarter::NSatBlockStarter() : block(0) {
 }
 
-inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
-        bool useRefHoriz) : block(useBlock), refVert(useRefVert),
-        refHoriz(useRefHoriz) {
+inline NSatBlockStarter::~NSatBlockStarter() {
+    if (block)
+        delete block;
 }
 
-// Inline functions for NBlockedSFS
+// Inline functions for NSatBlockStarterSet
 
-inline NBlockedSFS::NBlockedSFS() {
+inline NSatBlockStarterSet::NSatBlockStarterSet() {
+}
+
+inline NSatBlockStarterSet::iterator NSatBlockStarterSet::begin() {
+    return blocks.NListOnCall<NSatBlockStarter>::begin();
+}
+
+inline NSatBlockStarterSet::iterator NSatBlockStarterSet::end() {
+    return blocks.NListOnCall<NSatBlockStarter>::end();
 }
 
 } // namespace regina

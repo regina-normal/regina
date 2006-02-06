@@ -28,7 +28,7 @@
 
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfs.h"
-#include "subcomplex/nsatblocktypes.h"
+#include "subcomplex/nsatblockstarter.h"
 #include "triangulation/nedge.h"
 #include "triangulation/ntetrahedron.h"
 #include <set>
@@ -45,61 +45,6 @@ namespace {
     inline bool regXor(bool a, bool b) {
         return ((a && ! b) || (b && ! a));
     }
-}
-
-const NSatBlockStarterSet NSatBlockStarterSet::blocks;
-
-void NSatBlockStarterSet::initialise() {
-    NSatBlockStarter* starter;
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatTriPrism::insertBlock(starter->triangulation, true);
-    insert(starter);
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatCube::insertBlock(starter->triangulation);
-    insert(starter);
-
-    // Try various reflector strips of small length.
-    starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
-        1, false);
-    insert(starter);
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
-        1, true);
-    insert(starter);
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
-        2, false);
-    insert(starter);
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
-        2, true);
-    insert(starter);
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
-        3, false);
-    insert(starter);
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
-        3, true);
-    insert(starter);
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
-        4, false);
-    insert(starter);
-
-    starter = new NSatBlockStarter;
-    starter->block = NSatReflectorStrip::insertBlock(starter->triangulation,
-        4, true);
-    insert(starter);
 }
 
 NBlockedSFS::~NBlockedSFS() {
