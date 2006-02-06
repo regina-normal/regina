@@ -47,12 +47,21 @@ namespace regina {
  * @{
  */
 
-struct NSatBlockStarter {
-    NTriangulation triangulation;
-    NSatBlock* block;
+class NSatBlockStarter : regina::boost::noncopyable {
+    private:
+        NTriangulation triangulation_;
+        NSatBlock* block_;
 
-    NSatBlockStarter();
-    ~NSatBlockStarter();
+    public:
+        ~NSatBlockStarter();
+
+        const NTriangulation& triangulation() const;
+        const NSatBlock* block() const;
+
+    private:
+        NSatBlockStarter();
+
+    friend class NSatBlockStarterSet;
 };
 
 class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
@@ -77,12 +86,20 @@ class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
 
 // Inline functions for NSatBlockStarter
 
-inline NSatBlockStarter::NSatBlockStarter() : block(0) {
+inline NSatBlockStarter::NSatBlockStarter() : block_(0) {
 }
 
 inline NSatBlockStarter::~NSatBlockStarter() {
-    if (block)
-        delete block;
+    if (block_)
+        delete block_;
+}
+
+inline const NTriangulation& NSatBlockStarter::triangulation() const {
+    return triangulation_;
+}
+
+inline const NSatBlock* NSatBlockStarter::block() const {
+    return block_;
 }
 
 // Inline functions for NSatBlockStarterSet

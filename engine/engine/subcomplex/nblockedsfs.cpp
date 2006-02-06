@@ -134,15 +134,15 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
             it++) {
         // Look for this particular starting block.
         // Get trivialities out of the way first.
-        if (tri->isOrientable() && ! (*it)->triangulation.isOrientable())
+        if (tri->isOrientable() && ! (*it)->triangulation().isOrientable())
             continue;
         if (tri->getNumberOfTetrahedra() <
-                (*it)->triangulation.getNumberOfTetrahedra())
+                (*it)->triangulation().getNumberOfTetrahedra())
             continue;
 
         // Find all isomorphisms of the starter block within the given
         // triangulation.
-        if (! (*it)->triangulation.findAllSubcomplexesIn(*tri, isos))
+        if (! (*it)->triangulation().findAllSubcomplexesIn(*tri, isos))
             continue;
 
         // Run through each isomorphism in the list and see if it leads
@@ -151,13 +151,13 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
         // All of the isomorphisms in this list _must_ be destroyed at
         // some point before we loop back to the next starter block.
         for (isoIt = isos.begin(); isoIt != isos.end(); isoIt++) {
-            starter = (*it)->block->clone();
-            starter->transform(&(*it)->triangulation, *isoIt, tri);
+            starter = (*it)->block()->clone();
+            starter->transform(&(*it)->triangulation(), *isoIt, tri);
 
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting
             // block.
-            for (i = 0; i < (*it)->triangulation.getNumberOfTetrahedra(); i++)
+            for (i = 0; i < (*it)->triangulation().getNumberOfTetrahedra(); i++)
                 avoidTets.push_back(tri->getTetrahedron((*isoIt)->tetImage(i)));
 
             // See if we can flesh out the entire triangulation from the
