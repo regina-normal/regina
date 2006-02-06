@@ -165,11 +165,6 @@ inline bool NSatRegion::twistsMatchOrientation() const {
     return twistsMatchOrientation_;
 }
 
-inline void NSatRegion::writeTextShort(std::ostream& out) const {
-    // TODO: Plural
-    out << "Saturated region with " << blocks_.size() << " block(s)";
-}
-
 // Inline functions for NBlockedSFS
 
 inline NBlockedSFS::NBlockedSFS(NSatRegion* region) : region_(region) {

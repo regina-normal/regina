@@ -260,6 +260,12 @@ void NSatRegion::calculateBaseEuler() {
     baseEuler_ = faces - edgesBdry - (edgesInternalDoubled / 2) + vertices;
 }
 
+void NSatRegion::writeTextShort(std::ostream& out) const {
+    unsigned long size = blocks_.size();
+    out << "Saturated region with " << size <<
+        (size == 1 ? " block" : " blocks");
+}
+
 NManifold* NBlockedSFS::getManifold() const {
     NSFSpace::classType baseClass;
     if (region_->baseOrientable())
