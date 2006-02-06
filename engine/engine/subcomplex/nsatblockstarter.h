@@ -55,7 +55,10 @@ struct NSatBlockStarter {
     ~NSatBlockStarter();
 };
 
-class NSatBlockStarterSet : public NListOnCall<NSatBlockStarter> {
+class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
+    public:
+        typedef NListOnCall<NSatBlockStarter>::iterator iterator;
+
     private:
         static const NSatBlockStarterSet blocks;
 
