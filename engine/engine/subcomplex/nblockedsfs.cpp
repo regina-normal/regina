@@ -67,13 +67,8 @@ NManifold* NBlockedSFS::getManifold() const {
         (baseOrbl ? (2 - baseEuler) / 2 : (2 - baseEuler)),
         0 /* punctures */, extraReflectors);
 
-    bool reflect;
-    for (BlockSet::const_iterator it = blocks.begin(); it != blocks.end();
-            it++) {
-        reflect = (it->refVert && ! it->refHoriz) ||
-            (it->refHoriz && ! it->refVert);
-        it->block->adjustSFS(*ans, reflect);
-    }
+    for (BlockSet::const_iterator it = blocks.begin(); it != blocks.end(); it++)
+        it->block->adjustSFS(*ans, regXor(it->refVert, it->refHoriz));
 
     if (shiftedAnnuli)
         ans->insertFibre(1, shiftedAnnuli);
