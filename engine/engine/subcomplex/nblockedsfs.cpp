@@ -63,7 +63,24 @@ NSatRegion::NSatRegion(NSatBlock* starter) :
     }
 }
 
-void NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
+NSatRegion::~NSatRegion() {
+    for (BlockSet::iterator it = blocks_.begin(); it != blocks_.end(); it++)
+        delete it->block;
+}
+
+void NSatRegion::adjustSFS(NSFSpace& sfs, bool reflect) const {
+    sfs.addReflector(extraReflectors_);
+
+    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
+            it++)
+        it->block->adjustSFS(sfs, regXor(reflect,
+            regXor(it->refVert, it->refHoriz)));
+
+    if (shiftedAnnuli_)
+        sfs.insertFibre(1, shiftedAnnuli_);
+}
+
+bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
     NSatBlockSpec currBlockSpec;
     NSatBlock *currBlock, *adjBlock;
     unsigned ann, adjAnn;
@@ -96,7 +113,7 @@ void NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
                 // extending it from here, but we have no chance of
                 // filling the entire triangulation.
                 if (stopIfBounded)
-                    return;
+                    return false;
                 continue;
             }
 
@@ -184,39 +201,84 @@ void NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
 
             // We couldn't match the annulus to anything.
             if (stopIfBounded)
-                return;
+                return false;
         }
     }
 
     // Well, we got as far as we got.
-    // TODO: Recalculate base Euler characteristic?
+    calculateBaseEuler();
+    return true;
 }
 
-NBlockedSFS::~NBlockedSFS() {
-    for (BlockSet::iterator it = blocks.begin(); it != blocks.end(); it++)
-        delete it->block;
+void NSatRegion::calculateBaseEuler() {
+    BlockSet::const_iterator it;
+    unsigned ann;
+
+    long faces = blocks_.size();
+
+    long edgesBdry = 0;
+    long edgesInternalDoubled = 0;
+
+    for (it = blocks_.begin(); it != blocks_.end(); it++)
+        for (ann = 0; ann < it->block->nAnnuli(); ann++)
+            if (it->block->hasAdjacentBlock(ann))
+                edgesInternalDoubled++;
+            else
+                edgesBdry++;
+
+    // When counting vertices, don't just count unique edges in the
+    // triangulation -- we could run into strife with edge identifications
+    // outside the region.  Count the boundary vertices separately (this
+    // is easy, since it's the same as the number of boundary edges).
+
+    std::set<NEdge*> baseVerticesAll;
+    std::set<NEdge*> baseVerticesBdry;
+    NSatAnnulus annData;
+
+    for (it = blocks_.begin(); it != blocks_.end(); it++)
+        for (ann = 0; ann < it->block->nAnnuli(); ann++) {
+            annData = it->block->annulus(ann);
+            baseVerticesAll.insert(annData.tet[0]->getEdge(
+                edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
+
+            if (! it->block->hasAdjacentBlock(ann)) {
+                baseVerticesBdry.insert(annData.tet[0]->getEdge(
+                    edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
+                baseVerticesBdry.insert(annData.tet[1]->getEdge(
+                    edgeNumber[annData.roles[1][0]][annData.roles[1][1]]));
+            }
+        }
+
+    // To summarise what was said above: the internal vertices are
+    // guaranteed to give distinct elements in the baseVertices sets,
+    // but the boundary vertices are not.  Thus we calculate internal
+    // vertices via the sets, but boundary vertices via edgesBdry instead.
+
+    long vertices = baseVerticesAll.size() - baseVerticesBdry.size()
+        + edgesBdry;
+
+    baseEuler_ = faces - edgesBdry - (edgesInternalDoubled / 2) + vertices;
 }
 
 NManifold* NBlockedSFS::getManifold() const {
     NSFSpace::classType baseClass;
-    if (baseOrbl)
-        baseClass = (hasTwist ? NSFSpace::o2 : NSFSpace::o1);
-    else if (! hasTwist)
+    if (region_->baseOrientable())
+        baseClass = (region_->hasTwist() ? NSFSpace::o2 : NSFSpace::o1);
+    else if (! region_->hasTwist())
         baseClass = NSFSpace::n1;
-    else if (twistsMatchOrientation)
+    else if (region_->twistsMatchOrientation())
         baseClass = NSFSpace::n2;
-    else
+    else {
+        // It could be n3 or n4; if we work out later that we can't tell
+        // them apart, we'll return 0.
         baseClass = NSFSpace::n3;
+    }
 
     NSFSpace* ans = new NSFSpace(baseClass,
-        (baseOrbl ? (2 - baseEuler) / 2 : (2 - baseEuler)),
-        0 /* punctures */, extraReflectors);
+        (region_->baseOrientable() ? (2 - region_->baseEuler()) / 2 :
+            (2 - region_->baseEuler())), 0, 0);
 
-    for (BlockSet::const_iterator it = blocks.begin(); it != blocks.end(); it++)
-        it->block->adjustSFS(*ans, regXor(it->refVert, it->refHoriz));
-
-    if (shiftedAnnuli)
-        ans->insertFibre(1, shiftedAnnuli);
+    region_->adjustSFS(*ans, false);
 
     // TODO: At the moment we cannot distinguish between n3 and n4.
     // If there is a possibility that we have n4 on our hands then
@@ -269,7 +331,7 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     std::list<NIsomorphism*>::iterator isoIt;
     NSatBlock::TetList avoidTets;
     NSatBlock* starter;
-    NBlockedSFS* ans;
+    NSatRegion* region;
     for (it = NSatBlockStarterSet::begin(); it != NSatBlockStarterSet::end();
             it++) {
         // Look for this particular starting block.
@@ -302,22 +364,25 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
 
             // See if we can flesh out the entire triangulation from the
             // starter block.
-            if (! (ans = hunt(starter, avoidTets))) {
+            region = new NSatRegion(starter);
+            if (! region->expand(avoidTets, true)) {
                 // Clean up our temporary structures, and also destroy the
                 // isomorphism that didn't work.
                 avoidTets.clear();
-                delete starter;
+                delete region;
                 delete *isoIt;
                 continue;
             }
 
-            // We got one!
+            // Since expand() worked and the triangulation is known to
+            // be closed and connected, we've got one!
+
             // Before we return, delete the remaining isomorphisms that
             // we never even looked at.
             for (isoIt++; isoIt != isos.end(); isoIt++)
                 delete *isoIt;
 
-            return ans;
+            return new NBlockedSFS(region);
         }
 
         // Make sure the list is empty again for the next time around.
@@ -326,165 +391,6 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
 
     // Nothing found.
     return 0;
-}
-
-NBlockedSFS* NBlockedSFS::hunt(NSatBlock* starter,
-        NSatBlock::TetList& avoidTets) {
-    BlockSet blocksFound;
-    blocksFound.push_back(NSatBlockSpec(starter, false, false));
-
-    unsigned ann, adjAnn;
-    unsigned long adjPos;
-    bool adjVert, adjHoriz;
-    NSatBlockSpec currBlockSpec;
-    NSatBlock* currBlock;
-    NSatBlock* adjBlock;
-
-    bool baseOrbl = true;
-    bool hasTwist = false;
-    bool twistsMatchOrientation = true;
-    bool currTwisted, currNor;
-    long shiftedAnnuli = 0;
-    unsigned long extraReflectors = 0;
-
-    for (unsigned long pos = 0; pos < blocksFound.size(); pos++) {
-        currBlockSpec = blocksFound[pos];
-        currBlock = currBlockSpec.block;
-
-        // Note whether the block has twisted boundary.
-        if (currBlock->twistedBoundary()) {
-            hasTwist = true;
-            twistsMatchOrientation = false;
-            extraReflectors++;
-        }
-
-        // Run through each boundary annulus for this block.
-        for (ann = 0; ann < currBlock->nAnnuli(); ann++) {
-            if (currBlock->hasAdjacentBlock(ann))
-                continue;
-
-            // Note that we can happily jump to the other side because
-            // we know the triangulation is closed.
-            if (! (adjBlock = NSatBlock::isBlock(
-                    currBlock->annulus(ann).otherSide(), avoidTets))) {
-                // No adjacent block.
-                // Perhaps it's joined to something we've already seen?
-                // Only search forwards from this annulus.
-                if (ann + 1 < currBlock->nAnnuli()) {
-                    adjPos = pos;
-                    adjAnn = ann + 1;
-                } else {
-                    adjPos = pos + 1;
-                    adjAnn = 0;
-                }
-                while (adjPos < blocksFound.size()) {
-                    adjBlock = blocksFound[adjPos].block;
-                    if ((! adjBlock->hasAdjacentBlock(adjAnn)) &&
-                            currBlock->annulus(ann).isAdjacent(
-                            adjBlock->annulus(adjAnn), &adjVert, &adjHoriz)) {
-                        // They match!
-                        currBlock->setAdjacent(ann, adjBlock, adjAnn,
-                            adjVert, adjHoriz);
-
-                        // See what kinds of inconsistencies this
-                        // rejoining has caused.
-                        currNor = regXor(regXor(currBlockSpec.refHoriz,
-                            blocksFound[adjPos].refHoriz), ! adjHoriz);
-                        currTwisted = regXor(regXor(currBlockSpec.refVert,
-                            blocksFound[adjPos].refVert), adjVert);
-
-                        if (currNor)
-                            baseOrbl = false;
-                        if (currTwisted)
-                            hasTwist = true;
-                        if (regXor(currNor, currTwisted))
-                            twistsMatchOrientation = false;
-
-                        // See if we need to add a (1,-1) shift before
-                        // the annuli can be identified.
-                        if (regXor(adjHoriz, adjVert)) {
-                            if (regXor(currBlockSpec.refHoriz,
-                                    currBlockSpec.refVert))
-                                shiftedAnnuli++;
-                            else
-                                shiftedAnnuli--;
-                        }
-
-                        break;
-                    }
-
-                    if (adjAnn + 1 < adjBlock->nAnnuli())
-                        adjAnn++;
-                    else {
-                        adjPos++;
-                        adjAnn = 0;
-                    }
-                }
-
-                if (adjPos < blocksFound.size())
-                    continue;
-
-                // We couldn't match the annulus to anything.
-                // Guess it's all over.
-
-                // Destroy any new blocks that we added (but not starter),
-                // and bail.
-                for (BlockSet::iterator it = blocksFound.begin();
-                        it != blocksFound.end(); it++)
-                    if (it->block != starter)
-                        delete it->block;
-
-                return 0;
-            }
-
-            // We found a new adjacent block that we haven't seen before.
-
-            // Note that, since the annuli are not horizontally
-            // reflected, the blocks themselves will be.
-            currBlock->setAdjacent(ann, adjBlock, 0, false, false);
-            blocksFound.push_back(NSatBlockSpec(adjBlock, false,
-                ! currBlockSpec.refHoriz));
-        }
-    }
-
-    // We joined everything together!
-    // Since it's known to be a connected closed triangulation, this
-    // must be all!
-
-    NBlockedSFS* ans = new NBlockedSFS();
-    ans->blocks = blocksFound;
-    ans->baseOrbl = baseOrbl;
-    ans->hasTwist = hasTwist;
-    ans->twistsMatchOrientation = twistsMatchOrientation;
-    ans->shiftedAnnuli = shiftedAnnuli;
-    ans->extraReflectors = extraReflectors;
-    ans->calculateBaseEuler();
-
-    return ans;
-}
-
-void NBlockedSFS::calculateBaseEuler() {
-    BlockSet::const_iterator it;
-
-    long faces = blocks.size();
-
-    long edges = 0;
-    for (it = blocks.begin(); it != blocks.end(); it++)
-        edges += it->block->nAnnuli();
-    edges /= 2;
-
-    std::set<NEdge*> baseVertices;
-    unsigned ann;
-    NSatAnnulus annData;
-    for (it = blocks.begin(); it != blocks.end(); it++)
-        for (ann = 0; ann < it->block->nAnnuli(); ann++) {
-            annData = it->block->annulus(ann);
-            baseVertices.insert(annData.tet[0]->getEdge(
-                edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
-        }
-    long vertices = baseVertices.size();
-
-    baseEuler = vertices - edges + faces;
 }
 
 } // namespace regina

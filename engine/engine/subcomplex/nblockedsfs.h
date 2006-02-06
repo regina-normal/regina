@@ -85,6 +85,18 @@ class NSatRegion : public ShareableObject {
         NSatRegion(NSatBlock* starter);
 
         /**
+         * Destroys internal blocks also.
+         */
+        virtual ~NSatRegion();
+
+        long baseEuler() const;
+        bool baseOrientable() const;
+        bool hasTwist() const;
+        bool twistsMatchOrientation() const;
+
+        void adjustSFS(NSFSpace& sfs, bool reflect) const;
+
+        /**
          * stopIfBounded: true means we stop expanding as soon as we
          * find a boundary annulus that has some adjacent tetrahedron
          * (even if just on one face) but no corresponding adjacent block.
@@ -92,8 +104,14 @@ class NSatRegion : public ShareableObject {
          * it is assumed that it will be tossed away completely.
          *
          * \pre Any block adjacencies are in this list.
+         *
+         * Returns false iff we passed stopIfBounded but it failed.
          */
-        void expand(NSatBlock::TetList& avoidTets, bool stopIfBounded);
+        bool expand(NSatBlock::TetList& avoidTets, bool stopIfBounded);
+
+        void calculateBaseEuler();
+
+        void writeTextShort(std::ostream& out) const;
 };
 
 /**
@@ -101,19 +119,7 @@ class NSatRegion : public ShareableObject {
  */
 class NBlockedSFS : public NStandardTriangulation {
     private:
-        typedef std::vector<NSatBlockSpec> BlockSet;
-
-        BlockSet blocks;
-        long baseEuler;
-        bool baseOrbl;
-        bool hasTwist;
-        bool twistsMatchOrientation;
-            /**< True if no twists, or if twists correspond precisely to
-             * orientation-reversing paths.  Note that reflector
-             * boundaries are orientation-reversing but do not introduce
-             * twists (thus their existence makes this false). */
-        long shiftedAnnuli;
-        unsigned long extraReflectors;
+        NSatRegion* region_;
 
     public:
         ~NBlockedSFS();
@@ -126,18 +132,7 @@ class NBlockedSFS : public NStandardTriangulation {
         static NBlockedSFS* isBlockedSFS(NTriangulation* tri);
 
     private:
-        NBlockedSFS();
-
-        /**
-         * \pre tri is a closed and connected triangulation.
-         */
-        static NBlockedSFS* hunt(NSatBlock* starter,
-            NSatBlock::TetList& avoidTets);
-
-        /**
-         * \pre We have a closed and connected triangulation.
-         */
-        void calculateBaseEuler();
+        NBlockedSFS(NSatRegion* region);
 };
 
 /*@}*/
@@ -152,9 +147,37 @@ inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
         refHoriz(useRefHoriz) {
 }
 
+// Inline functions for NSatRegion
+
+inline long NSatRegion::baseEuler() const {
+    return baseEuler_;
+}
+
+inline bool NSatRegion::baseOrientable() const {
+    return baseOrbl_;
+}
+
+inline bool NSatRegion::hasTwist() const {
+    return hasTwist_;
+}
+
+inline bool NSatRegion::twistsMatchOrientation() const {
+    return twistsMatchOrientation_;
+}
+
+inline void NSatRegion::writeTextShort(std::ostream& out) const {
+    // TODO: Plural
+    out << "Saturated region with " << blocks_.size() << " block(s)";
+}
+
 // Inline functions for NBlockedSFS
 
-inline NBlockedSFS::NBlockedSFS() {
+inline NBlockedSFS::NBlockedSFS(NSatRegion* region) : region_(region) {
+}
+
+inline NBlockedSFS::~NBlockedSFS() {
+    if (region_)
+        delete region_;
 }
 
 } // namespace regina
