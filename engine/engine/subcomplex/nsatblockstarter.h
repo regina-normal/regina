@@ -47,18 +47,63 @@ namespace regina {
  * @{
  */
 
+/**
+ * Contains a triangulation of a saturated block along with the
+ * accompanying saturated block description.  Different objects of this
+ * class will correspond to different types of saturated block.
+ *
+ * This is a support class for NSatBlockStarterSet, and as such it is a
+ * read-only class to the rest of the world.
+ *
+ * This class is well-suited for subcomplex testing: if the
+ * triangulation here is found to be a subcomplex of some larger
+ * triangulation (see NTriangulation::isContainedIn()), then the
+ * corresponding isomorphism can be used to copy this block structure
+ * and transform it to describe the corresponding block in the larger
+ * triangulation.
+ *
+ * As such, one of the core uses of this class is as a starting point
+ * for identifying triangulations that are formed by joining saturated
+ * blocks together along their boundary annuli.  See the NBlockedSFS
+ * class for details.
+ */
 class NSatBlockStarter : regina::boost::noncopyable {
     private:
         NTriangulation triangulation_;
+            /**< The triangulation of the saturated block. */
         NSatBlock* block_;
+            /**< Structural details of the saturated block. */
 
     public:
+        /**
+         * Destroys both the internal triangulation and block structure.
+         */
         ~NSatBlockStarter();
 
+        /**
+         * Returns a reference to the triangulation of the saturated
+         * block.
+         *
+         * @return the block triangulation.
+         */
         const NTriangulation& triangulation() const;
+
+        /**
+         * Returns details that describe the structure of the saturated
+         * block.
+         *
+         * @return the block structure.
+         */
         const NSatBlock* block() const;
 
     private:
+        /**
+         * Creates a new starter block.  The triangulation will be empty
+         * and the block pointer set to null.
+         *
+         * The triangulation must be fleshed out and the block structure
+         * created before this object can be used.
+         */
         NSatBlockStarter();
 
     friend class NSatBlockStarterSet;
