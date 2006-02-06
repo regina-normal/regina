@@ -66,6 +66,12 @@ namespace regina {
  * begin() and end() are defined, which return forward iterators that
  * can be used to run through the list contents.
  *
+ * Lists of this type are designed to be constant.  Aside from the initial
+ * list population in the initialise() routine and the final list destruction
+ * (in which all of the stored objects will also be destroyed), the list and
+ * its objects should never be changed.  Because of this, the iterator type
+ * returns only constant pointers to list objects.
+ *
  * Note that \a T is the expensive object type, not a pointer type to such
  * an object.
  *
@@ -77,11 +83,13 @@ class NListOnCall : public regina::boost::noncopyable {
         /**
          * An iterator over this list.  This operates as a forward
          * iterator in a manner consistent with the standard C++ library.
+         * It does not allow either the list or its individual objects
+         * to be changed.
          */
-        typedef typename std::list<T*>::const_iterator iterator;
+        typedef typename std::list<const T*>::const_iterator iterator;
 
     private:
-        std::list<T*> items;
+        std::list<const T*> items;
             /**< The internal list of items. */
         bool initialised;
             /**< Has the list been filled yet? */
@@ -99,9 +107,8 @@ class NListOnCall : public regina::boost::noncopyable {
          * Destroys this list and all of the items it contains.
          */
         virtual ~NListOnCall() {
-            for (typename std::list<T*>::iterator it = items.begin();
-                    it != items.end(); it++)
-                delete *it;
+            for (iterator it = items.begin(); it != items.end(); it++)
+                delete const_cast<T*>(*it);
         }
 
         /**
