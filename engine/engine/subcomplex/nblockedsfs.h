@@ -36,86 +36,19 @@
 #define __NBLOCKEDSFS_H
 #endif
 
-#include <vector>
-#include "subcomplex/nsatblock.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {
+
+class NSatRegion;
 
 /**
  * \weakgroup subcomplex
  * @{
  */
 
-struct NSatBlockSpec {
-    NSatBlock* block;
-    bool refVert;
-    bool refHoriz;
-
-    NSatBlockSpec();
-    NSatBlockSpec(NSatBlock* useBlock, bool useRefVert, bool useRefHoriz);
-};
-
 /**
- * TODO
- *
- * For example, might correspond to one component of the JSJ
- * decomposition.
- */
-class NSatRegion : public ShareableObject {
-    private:
-        typedef std::vector<NSatBlockSpec> BlockSet;
-
-        BlockSet blocks_;
-        long baseEuler_;
-        bool baseOrbl_;
-        bool hasTwist_;
-        bool twistsMatchOrientation_;
-            /**< True if no twists, or if twists correspond precisely to
-             * orientation-reversing paths.  Note that reflector
-             * boundaries are orientation-reversing but do not introduce
-             * twists (thus their existence makes this false). */
-        long shiftedAnnuli_;
-        unsigned long extraReflectors_;
-
-    public:
-        /**
-         * \pre No adjacencies for the given block.
-         */
-        NSatRegion(NSatBlock* starter);
-
-        /**
-         * Destroys internal blocks also.
-         */
-        virtual ~NSatRegion();
-
-        long baseEuler() const;
-        bool baseOrientable() const;
-        bool hasTwist() const;
-        bool twistsMatchOrientation() const;
-
-        void adjustSFS(NSFSpace& sfs, bool reflect) const;
-
-        /**
-         * stopIfBounded: true means we stop expanding as soon as we
-         * find a boundary annulus that has some adjacent tetrahedron
-         * (even if just on one face) but no corresponding adjacent block.
-         * When we stop the structure will be in an inconsistent state;
-         * it is assumed that it will be tossed away completely.
-         *
-         * \pre Any block adjacencies are in this list.
-         *
-         * Returns false iff we passed stopIfBounded but it failed.
-         */
-        bool expand(NSatBlock::TetList& avoidTets, bool stopIfBounded);
-
-        void calculateBaseEuler();
-
-        void writeTextShort(std::ostream& out) const;
-};
-
-/**
- * Big big TODO.
+ * TODO.
  */
 class NBlockedSFS : public NStandardTriangulation {
     private:
@@ -137,42 +70,9 @@ class NBlockedSFS : public NStandardTriangulation {
 
 /*@}*/
 
-// Inline functions for NSatBlockSpec
-
-inline NSatBlockSpec::NSatBlockSpec() {
-}
-
-inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
-        bool useRefHoriz) : block(useBlock), refVert(useRefVert),
-        refHoriz(useRefHoriz) {
-}
-
-// Inline functions for NSatRegion
-
-inline long NSatRegion::baseEuler() const {
-    return baseEuler_;
-}
-
-inline bool NSatRegion::baseOrientable() const {
-    return baseOrbl_;
-}
-
-inline bool NSatRegion::hasTwist() const {
-    return hasTwist_;
-}
-
-inline bool NSatRegion::twistsMatchOrientation() const {
-    return twistsMatchOrientation_;
-}
-
 // Inline functions for NBlockedSFS
 
 inline NBlockedSFS::NBlockedSFS(NSatRegion* region) : region_(region) {
-}
-
-inline NBlockedSFS::~NBlockedSFS() {
-    if (region_)
-        delete region_;
 }
 
 } // namespace regina
