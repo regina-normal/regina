@@ -52,7 +52,8 @@ NSatRegion::NSatRegion(NSatBlock* starter) :
         hasTwist_(false),
         twistsMatchOrientation_(true),
         shiftedAnnuli_(0),
-        extraReflectors_(0) {
+        extraReflectors_(0),
+        nBdryAnnuli_(starter->nAnnuli()) {
     blocks_.push_back(NSatBlockSpec(starter, false, false));
 
     if (starter->twistedBoundary()) {
@@ -65,6 +66,23 @@ NSatRegion::NSatRegion(NSatBlock* starter) :
 NSatRegion::~NSatRegion() {
     for (BlockSet::iterator it = blocks_.begin(); it != blocks_.end(); it++)
         delete it->block;
+}
+
+const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which) const {
+    unsigned ann;
+    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
+            it++)
+        for (ann = 0; ann < it->block->nAnnuli(); ann++)
+            if (! it->block->hasAdjacentBlock(ann)) {
+                if (which == 0)
+                    return it->block->annulus(ann);
+
+                which--;
+            }
+
+    // Given the precondition, we should never reach this point.
+    // TODO: Return junk.
+    return NSatAnnulus();
 }
 
 void NSatRegion::adjustSFS(NSFSpace& sfs, bool reflect) const {
@@ -128,6 +146,7 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
                 currBlock->setAdjacent(ann, adjBlock, 0, false, false);
                 blocks_.push_back(NSatBlockSpec(adjBlock, false,
                     ! currBlockSpec.refHoriz));
+                nBdryAnnuli_ = nBdryAnnuli_ + adjBlock->nAnnuli() - 2;
 
                 // Note whether the new block has twisted boundary.
                 if (adjBlock->twistedBoundary()) {
@@ -158,6 +177,7 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
                     // They match!
                     currBlock->setAdjacent(ann, adjBlock, adjAnn,
                         adjVert, adjHoriz);
+                    nBdryAnnuli_ -= 2;
 
                     // See what kinds of inconsistencies this
                     // rejoining has caused.
