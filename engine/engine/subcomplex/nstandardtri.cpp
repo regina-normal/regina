@@ -29,6 +29,7 @@
 #include <sstream>
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nblockedsfs.h"
+#include "subcomplex/nblockedsfspair.h"
 #include "subcomplex/nl31pillow.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
@@ -95,6 +96,10 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     if ((ans = NLayeredTorusBundle::isLayeredTorusBundle(tri)))
         return ans;
     if ((ans = NNonGeoTorusBundle::isNonGeoTorusBundle(tri)))
+        return ans;
+
+    // Save non-geometric triangulations until last.
+    if ((ans = NBlockedSFSPair::isBlockedSFSPair(tri)))
         return ans;
 
     // Nup.
