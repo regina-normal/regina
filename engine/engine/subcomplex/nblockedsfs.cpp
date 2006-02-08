@@ -33,6 +33,25 @@
 
 namespace regina {
 
+/**
+ * TODO: Document this class.
+ */
+class NBlockedSFSSearcher : public NSatBlockStarterSearcher {
+    private:
+        NSatRegion* region_;
+
+    public:
+        NBlockedSFSSearcher() : region_(0) {
+        }
+
+        NSatRegion* region() {
+            return region_;
+        }
+
+    protected:
+        bool useStarterBlock(NSatBlock* starter);
+};
+
 NBlockedSFS::~NBlockedSFS() {
     if (region_)
         delete region_;
@@ -101,74 +120,42 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     if (! tri->isValid())
         return 0;
 
-    // Our triangulation is closed and connected.
     // Hunt for a starting block.
-    unsigned long i;
-    NSatBlockStarterSet::iterator it;
-    std::list<NIsomorphism*> isos;
-    std::list<NIsomorphism*>::iterator isoIt;
-    NSatBlock::TetList avoidTets;
-    NSatBlock* starter;
-    NSatRegion* region;
-    for (it = NSatBlockStarterSet::begin(); it != NSatBlockStarterSet::end();
-            it++) {
-        // Look for this particular starting block.
-        // Get trivialities out of the way first.
-        if (tri->isOrientable() && ! (*it)->triangulation().isOrientable())
-            continue;
-        if (tri->getNumberOfTetrahedra() <
-                (*it)->triangulation().getNumberOfTetrahedra())
-            continue;
+    NBlockedSFSSearcher searcher;
+    searcher.findStarterBlocks(tri);
 
-        // Find all isomorphisms of the starter block within the given
-        // triangulation.
-        if (! (*it)->triangulation().findAllSubcomplexesIn(*tri, isos))
-            continue;
-
-        // Run through each isomorphism in the list and see if it leads
-        // somewhere useful.
-        //
-        // All of the isomorphisms in this list _must_ be destroyed at
-        // some point before we loop back to the next starter block.
-        for (isoIt = isos.begin(); isoIt != isos.end(); isoIt++) {
-            starter = (*it)->block()->clone();
-            starter->transform(&(*it)->triangulation(), *isoIt, tri);
-
-            // Create an initial blacklist of tetrahedra consisting of
-            // those in the isomorphic image of the initial starting
-            // block.
-            for (i = 0; i < (*it)->triangulation().getNumberOfTetrahedra(); i++)
-                avoidTets.insert(tri->getTetrahedron((*isoIt)->tetImage(i)));
-
-            // See if we can flesh out the entire triangulation from the
-            // starter block.
-            region = new NSatRegion(starter);
-            if (! region->expand(avoidTets, true)) {
-                // Clean up our temporary structures, and also destroy the
-                // isomorphism that didn't work.
-                avoidTets.clear();
-                delete region;
-                delete *isoIt;
-                continue;
-            }
-
-            // Since expand() worked and the triangulation is known to
-            // be closed and connected, we've got one!
-
-            // Before we return, delete the remaining isomorphisms that
-            // we never even looked at.
-            for (isoIt++; isoIt != isos.end(); isoIt++)
-                delete *isoIt;
-
-            return new NBlockedSFS(region);
-        }
-
-        // Make sure the list is empty again for the next time around.
-        isos.clear();
+    // Any luck?
+    if (searcher.region()) {
+        // The region expansion worked, and the triangulation is known
+        // to be closed and connected.
+        // This means we've got one!
+        return new NBlockedSFS(searcher.region());
     }
 
-    // Nothing found.
+    // Nope.
     return 0;
+}
+
+bool NBlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
+    // The region pointer should be null, but just in case...
+    if (region_) {
+        delete starter;
+        return false;
+    }
+
+    // See if we can flesh out an entire triangulation component from
+    // the starter block.  At this point the region will own the given
+    // starter block.
+    region_ = new NSatRegion(starter);
+    if (! region_->expand(avoidTets, true)) {
+        // Nup.  Destroy the temporary structures and keep searching.
+        delete region_;
+        region_ = 0;
+        return true;
+    }
+
+    // Got one!  Stop the search.
+    return false;
 }
 
 } // namespace regina
