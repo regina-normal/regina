@@ -105,7 +105,7 @@ struct NSatBlockSpec {
 };
 
 /**
- * TODO
+ * TODO: Document NSatRegion.
  *
  * For example, might correspond to one component of the JSJ
  * decomposition.
