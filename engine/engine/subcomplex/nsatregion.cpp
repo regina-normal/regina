@@ -85,6 +85,25 @@ const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which) const {
     return NSatAnnulus();
 }
 
+void NSatRegion::boundaryAnnulus(unsigned long which,
+        NSatBlock*& block, unsigned& annulus) const {
+    unsigned ann;
+    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
+            it++)
+        for (ann = 0; ann < it->block->nAnnuli(); ann++)
+            if (! it->block->hasAdjacentBlock(ann)) {
+                if (which == 0) {
+                    block = it->block;
+                    annulus = ann;
+                    return;
+                }
+
+                which--;
+            }
+
+    // Given the precondition, we should never reach this point.
+}
+
 void NSatRegion::adjustSFS(NSFSpace& sfs, bool reflect) const {
     sfs.addReflector(extraReflectors_);
 

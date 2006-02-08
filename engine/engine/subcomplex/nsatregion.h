@@ -149,6 +149,8 @@ class NSatRegion : public ShareableObject {
          * TODO:  This one is quit slow, since we search as we go.
          */
         const NSatAnnulus& boundaryAnnulus(unsigned long which) const;
+        void boundaryAnnulus(unsigned long which,
+            NSatBlock*& block, unsigned& annulus) const;
 
         void adjustSFS(NSFSpace& sfs, bool reflect) const;
 
@@ -158,6 +160,8 @@ class NSatRegion : public ShareableObject {
          * (even if just on one face) but no corresponding adjacent block.
          * When we stop the structure will be in an inconsistent state;
          * it is assumed that it will be tossed away completely.
+         *
+         * Point out that this doesn't check for invalid edges.
          *
          * \pre Any block adjacencies are in this list.
          *
