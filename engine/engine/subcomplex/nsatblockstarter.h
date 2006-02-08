@@ -63,9 +63,10 @@ namespace regina {
  * triangulation.
  *
  * As such, one of the core uses of this class is as a starting point
- * for identifying triangulations that are formed by joining saturated
- * blocks together along their boundary annuli.  See the NBlockedSFS
- * class for details.
+ * for identifying regions within triangulations that are formed by
+ * joining saturated blocks together along their boundary annuli.  See
+ * the routines NSatBlockStarterSearcher::findStarterBlocks() and
+ * NSatRegion::expand() for implementations of this.
  */
 class NSatBlockStarter : regina::boost::noncopyable {
     private:
@@ -177,6 +178,30 @@ class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
         NSatBlockStarterSet();
 };
 
+/**
+ * TODO: Document NSatBlockStarterSearcher.
+ */
+class NSatBlockStarterSearcher {
+    protected:
+        NSatBlock::TetList avoidTets;
+
+    public:
+        virtual ~NSatBlockStarterSearcher();
+
+        /**
+         * Will clean up avoidTets at beginning and end.
+         */
+        void findStarterBlocks(NTriangulation* tri);
+
+    protected:
+        /**
+         * Return value is whether to continue the search.
+         *
+         * This routine must take ownership of starter.
+         */
+        virtual bool useStarterBlock(NSatBlock* starter) = 0;
+};
+
 /*@}*/
 
 // Inline functions for NSatBlockStarter
@@ -208,6 +233,11 @@ inline NSatBlockStarterSet::iterator NSatBlockStarterSet::begin() {
 
 inline NSatBlockStarterSet::iterator NSatBlockStarterSet::end() {
     return blocks.NListOnCall<NSatBlockStarter>::end();
+}
+
+// Inline functions for NSatBlockStarterSearcher
+
+inline NSatBlockStarterSearcher::~NSatBlockStarterSearcher() {
 }
 
 } // namespace regina
