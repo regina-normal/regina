@@ -137,10 +137,26 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         return true;
     }
 
-    NSatAnnulus bdry = region_[0]->boundaryAnnulus(0);
+    // Insist on this boundary being untwisted.
+    NSatBlock* bdryBlock;
+    unsigned bdryAnnulus;
+    region_[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus);
+
+    NSatBlock* tmpBlock;
+    unsigned tmpAnnulus;
+    bool tmpVert, tmpHoriz;
+    bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
+        tmpVert, tmpHoriz);
+    if (tmpVert) {
+        delete region_[0];
+        region_[0] = 0;
+        return true;
+    }
 
     // Try expanding it with vertical fibres running both horizontally
     // and diagonally.
+    NSatAnnulus bdry = bdryBlock->annulus(bdryAnnulus);
+
     if (bdry.meetsBoundary()) {
         delete region_[0];
         region_[0] = 0;

@@ -149,23 +149,19 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
 
     bdryBlock[0]->nextBoundaryAnnulus(bdryAnnulus[0], tmpBlock, tmpAnnulus,
         tmpVert, tmpHoriz);
-    if (tmpBlock != bdryBlock[0]) {
+    if (tmpVert || tmpBlock != bdryBlock[0]) {
         delete region_;
         region_ = 0;
         return true;
     }
-    // TODO: Remove these tests, but keep tmpVert.
-    if (tmpVert || tmpHoriz) std::cerr << "******** LOOP ERROR ************\n";
 
     bdryBlock[1]->nextBoundaryAnnulus(bdryAnnulus[1], tmpBlock, tmpAnnulus,
         tmpVert, tmpHoriz);
-    if (tmpBlock != bdryBlock[1]) {
+    if (tmpVert || tmpBlock != bdryBlock[1]) {
         delete region_;
         region_ = 0;
         return true;
     }
-    // TODO: Remove these tests, but keep tmpVert.
-    if (tmpVert || tmpHoriz) std::cerr << "******** LOOP ERROR ************\n";
 
     // See whether the two boundary annuli are joined.
     NSatAnnulus bdry0 = bdryBlock[0]->annulus(bdryAnnulus[0]);
