@@ -34,6 +34,7 @@
 #include "subcomplex/nlayeredlensspace.h"
 #include "subcomplex/nlayeredloop.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
+#include "subcomplex/nngblockedsfsloop.h"
 #include "subcomplex/nngblockedsfspair.h"
 #include "subcomplex/nnongeotorusbundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
@@ -95,11 +96,13 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
     if ((ans = NLayeredTorusBundle::isLayeredTorusBundle(tri)))
         return ans;
-    if ((ans = NNonGeoTorusBundle::isNonGeoTorusBundle(tri)))
-        return ans;
 
     // Save non-geometric triangulations until last.
+    if ((ans = NNGBlockedSFSLoop::isNGBlockedSFSLoop(tri)))
+        return ans;
     if ((ans = NNGBlockedSFSPair::isNGBlockedSFSPair(tri)))
+        return ans;
+    if ((ans = NNonGeoTorusBundle::isNonGeoTorusBundle(tri)))
         return ans;
 
     // Nup.

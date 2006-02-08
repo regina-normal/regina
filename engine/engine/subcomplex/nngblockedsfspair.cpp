@@ -91,9 +91,13 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
     if (tri->getNumberOfComponents() > 1)
         return 0;
 
+    // TODO: Check on this.
     // Watch out for twisted block boundaries that are incompatible with
-    // neighbouring blocks!  These will result in edges joined to
-    // themselves in reverse.
+    // neighbouring blocks!  Also watch for the boundary between blocks
+    // being an annulus on one side and a Klein bottle on the other (or
+    // two incompatible Klein bottles for that matter).
+    //
+    // These will result in edges joined to themselves in reverse.
     if (! tri->isValid())
         return 0;
 
