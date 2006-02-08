@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "subcomplex/nblockedsfspair.h"
+#include "subcomplex/nngblockedsfspair.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
 
@@ -35,13 +35,13 @@ namespace regina {
 /**
  * TODO: Document this class.
  */
-class NBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
+class NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
     private:
         NSatRegion* region_[2];
         bool horizontal_;
 
     public:
-        NBlockedSFSPairSearcher() {
+        NNGBlockedSFSPairSearcher() {
             region_[0] = region_[1] = 0;
         }
 
@@ -57,34 +57,34 @@ class NBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
         bool useStarterBlock(NSatBlock* starter);
 };
 
-NBlockedSFSPair::~NBlockedSFSPair() {
+NNGBlockedSFSPair::~NNGBlockedSFSPair() {
     if (region_[0])
         delete region_[0];
     if (region_[1])
         delete region_[1];
 }
 
-NManifold* NBlockedSFSPair::getManifold() const {
+NManifold* NNGBlockedSFSPair::getManifold() const {
     // TODO, later
     return 0;
 }
 
-std::ostream& NBlockedSFSPair::writeName(std::ostream& out) const {
+std::ostream& NNGBlockedSFSPair::writeName(std::ostream& out) const {
     // TODO, later
     return out << "Blocked SFS Pair";
 }
 
-std::ostream& NBlockedSFSPair::writeTeXName(std::ostream& out) const {
+std::ostream& NNGBlockedSFSPair::writeTeXName(std::ostream& out) const {
     // TODO, later
     return out << "Blocked SFS Pair";
 }
 
-void NBlockedSFSPair::writeTextLong(std::ostream& out) const {
+void NNGBlockedSFSPair::writeTextLong(std::ostream& out) const {
     // TODO, later
     out << "Blocked SFS Pair";
 }
 
-NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(NTriangulation* tri) {
+NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
@@ -98,7 +98,7 @@ NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(NTriangulation* tri) {
         return 0;
 
     // Hunt for a starting block.
-    NBlockedSFSPairSearcher searcher;
+    NNGBlockedSFSPairSearcher searcher;
     searcher.findStarterBlocks(tri);
 
     // Any luck?
@@ -106,7 +106,7 @@ NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(NTriangulation* tri) {
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new NBlockedSFSPair(searcher.region(0), searcher.region(1),
+        return new NNGBlockedSFSPair(searcher.region(0), searcher.region(1),
             searcher.horizontal());
     }
 
@@ -114,7 +114,7 @@ NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(NTriangulation* tri) {
     return 0;
 }
 
-bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
+bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointers should be null, but just in case...
     if (region_[0] || region_[1]) {
         delete starter;

@@ -26,14 +26,14 @@
 
 /* end stub */
 
-/*! \file nblockedsfspair.h
+/*! \file nngblockedsfspair.h
  *  \brief Deals with non-geometric pairs of Seifert fibred spaces joined
  *  along a single annulus.
  */
 
-#ifndef __NBLOCKEDSFSPAIR_H
+#ifndef __NNGBLOCKEDSFSPAIR_H
 #ifndef __DOXYGEN
-#define __NBLOCKEDSFSPAIR_H
+#define __NNGBLOCKEDSFSPAIR_H
 #endif
 
 #include "subcomplex/nstandardtri.h"
@@ -50,32 +50,32 @@ class NSatRegion;
 /**
  * TODO.
  */
-class NBlockedSFSPair : public NStandardTriangulation {
+class NNGBlockedSFSPair : public NStandardTriangulation {
     private:
         NSatRegion* region_[2];
         bool horizontal_;
             /**< Do we match vertical to horizontal, or to diagonal? */
 
     public:
-        ~NBlockedSFSPair();
+        ~NNGBlockedSFSPair();
 
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
-        static NBlockedSFSPair* isBlockedSFSPair(NTriangulation* tri);
+        static NNGBlockedSFSPair* isNGBlockedSFSPair(NTriangulation* tri);
 
     private:
-        NBlockedSFSPair(NSatRegion* region0, NSatRegion* region1,
+        NNGBlockedSFSPair(NSatRegion* region0, NSatRegion* region1,
             bool horizontal);
 };
 
 /*@}*/
 
-// Inline functions for NBlockedSFSPair
+// Inline functions for NNGBlockedSFSPair
 
-inline NBlockedSFSPair::NBlockedSFSPair(NSatRegion* region0,
+inline NNGBlockedSFSPair::NNGBlockedSFSPair(NSatRegion* region0,
         NSatRegion* region1, bool horizontal) : horizontal_(horizontal) {
     region_[0] = region0;
     region_[1] = region1;
