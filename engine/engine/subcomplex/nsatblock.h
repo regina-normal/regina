@@ -317,6 +317,37 @@ class NSatBlock : public ShareableObject {
                 const NIsomorphism* iso, NTriangulation* newTri);
 
         /**
+         * Finds the next boundary annulus around from this, treating
+         * all adjacent blocks as part of a single large saturated region.
+         *
+         * Suppose that all blocks are merged together according to
+         * adjacent boundary annuli, forming a large saturated structure.
+         * The remaining annuli that do not have adjacent blocks will
+         * group together to form several large boundary rings.  Note that
+         * each boundary ring might involve annuli from several
+         * different blocks, and might or might not have a twist (thus
+         * creating a large Klein bottle instead of a large torus).
+         *
+         * This routine traces around such a boundary ring.  It is
+         * assumed that annulus \a thisAnnulus of this block forms part
+         * of a boundary ring (i.e., it has no adjacent block).  This
+         * routine returns the next annulus around from this in the
+         * large boundary ring, in the direction following around from
+         * the second face of the annulus.  This next annulus might
+         * belong to another block, or it might even be this annulus
+         * itself.
+         *
+         * TODO: Talk about reflections.
+         *
+         * \pre Annulus \a thisAnnulus of this block has no block
+         * adjacent to it.
+         *
+         * TODO: Describe arguments.
+         */
+        void nextBoundaryAnnulus(unsigned thisAnnulus, NSatBlock*& nextBlock,
+                unsigned& nextAnnulus, bool& refVert, bool& refHoriz);
+
+        /**
          * Determines whether the given annulus is in fact a boundary
          * annulus for a recognised type of saturated block.  The
          * annulus should be represented from the inside of the proposed

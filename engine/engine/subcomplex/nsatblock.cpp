@@ -53,6 +53,40 @@ void NSatBlock::transform(const NTriangulation* originalTri,
         annulus_[i].transform(originalTri, iso, newTri);
 }
 
+void NSatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
+        NSatBlock*& nextBlock, unsigned& nextAnnulus, bool& refVert,
+        bool& refHoriz) {
+    // Don't worry about testing the precondition (this annulus has no
+    // adjacency) -- things won't break even if it's false.
+
+    nextBlock = this;
+    nextAnnulus = (thisAnnulus + 1 == nAnnuli_ ? 0 : thisAnnulus + 1);
+    refVert = refHoriz = false;
+
+    unsigned tmp;
+    while (nextBlock->hasAdjacentBlock(nextAnnulus)) {
+        // Push through to the next block...
+        if (nextBlock->adjReflected_[nextAnnulus])
+            refVert = ! refVert;
+        if (! nextBlock->adjBackwards_[nextAnnulus])
+            refHoriz = ! refHoriz;
+
+        tmp = nextBlock->adjAnnulus_[nextAnnulus];
+        nextBlock = nextBlock->adjBlock_[nextAnnulus];
+        nextAnnulus = tmp;
+
+        if (refHoriz) {
+            // ... and step to the previous annulus around.
+            nextAnnulus = (nextAnnulus == 0 ? nextBlock->nAnnuli_ - 1 :
+                nextAnnulus - 1);
+        } else {
+            // ... and step to the next annulus around.
+            nextAnnulus = (nextAnnulus + 1 == nextBlock->nAnnuli_ ? 0 :
+                nextAnnulus + 1);
+        }
+    }
+}
+
 bool NSatBlock::isBad(NTetrahedron* t, const TetList& list) {
     if (list.find(t) != list.end())
         return true;
