@@ -56,6 +56,8 @@ class NSatRegion;
 class NNGBlockedSFSLoop : public NStandardTriangulation {
     private:
         NSatRegion* region_;
+        bool bdryRefVert_[2];
+        bool bdryRefHoriz_[2];
         bool swapFaces_;
         NPerm facePerm_;
             /**< Maps 0/1/2 markings of the region's first boundary annulus
@@ -72,7 +74,10 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
         static NNGBlockedSFSLoop* isNGBlockedSFSLoop(NTriangulation* tri);
 
     private:
-        NNGBlockedSFSLoop(NSatRegion* region, bool swapFaces, NPerm facePerm);
+        NNGBlockedSFSLoop(NSatRegion* region,
+            bool bdryRefVert0, bool bdryRefHoriz0,
+            bool bdryRefVert1, bool bdryRefHoriz1,
+            bool swapFaces, NPerm facePerm);
 };
 
 /*@}*/
@@ -80,8 +85,14 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
 // Inline functions for NNGBlockedSFSLoop
 
 inline NNGBlockedSFSLoop::NNGBlockedSFSLoop(NSatRegion* region,
+        bool bdryRefVert0, bool bdryRefHoriz0,
+        bool bdryRefVert1, bool bdryRefHoriz1,
         bool swapFaces, NPerm facePerm) :
         region_(region), swapFaces_(swapFaces), facePerm_(facePerm) {
+    bdryRefVert_[0] = bdryRefVert0;
+    bdryRefVert_[1] = bdryRefVert1;
+    bdryRefHoriz_[0] = bdryRefHoriz0;
+    bdryRefHoriz_[1] = bdryRefHoriz1;
 }
 
 } // namespace regina

@@ -40,6 +40,8 @@ namespace regina {
 class NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
     private:
         NSatRegion* region_;
+        bool bdryRefVert_[2];
+        bool bdryRefHoriz_[2];
         bool swapFaces_;
         NPerm facePerm_;
 
@@ -50,6 +52,14 @@ class NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
 
         NSatRegion* region() {
             return region_;
+        }
+
+        bool bdryRefVert(unsigned which) const {
+            return bdryRefVert_[which];
+        }
+
+        bool bdryRefHoriz(unsigned which) const {
+            return bdryRefHoriz_[which];
         }
 
         bool swapFaces() const {
@@ -113,8 +123,10 @@ NNGBlockedSFSLoop* NNGBlockedSFSLoop::isNGBlockedSFSLoop(NTriangulation* tri) {
         // The expansion and self-adjacency worked, and the triangulation
         // is known to be closed and connected.
         // This means we've got one!
-        return new NNGBlockedSFSLoop(searcher.region(), searcher.swapFaces(),
-            searcher.facePerm());
+        return new NNGBlockedSFSLoop(searcher.region(),
+            searcher.bdryRefVert(0), searcher.bdryRefHoriz(0),
+            searcher.bdryRefVert(1), searcher.bdryRefHoriz(1),
+            searcher.swapFaces(), searcher.facePerm());
     }
 
     // Nope.
@@ -142,11 +154,10 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
 
     NSatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
-    bool bdryVert, bdryHoriz; // TODO: Use these!
     region_->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
-        bdryVert, bdryHoriz);
+        bdryRefVert_[0], bdryRefHoriz_[0]);
     region_->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
-        bdryVert, bdryHoriz);
+        bdryRefVert_[1], bdryRefHoriz_[1]);
 
     NSatBlock* tmpBlock;
     unsigned tmpAnnulus;
