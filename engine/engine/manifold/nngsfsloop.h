@@ -157,6 +157,13 @@ class NNGSFSLoop : public NManifold {
 
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
+
+    private:
+        /**
+         * Uses (1,1) twists and/or inversion to make the presentation
+         * of this space more aesthetically pleasing.
+         */
+        void reduce();
 };
 
 /*@}*/
@@ -166,10 +173,12 @@ class NNGSFSLoop : public NManifold {
 inline NNGSFSLoop::NNGSFSLoop(NSFSpace* sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
+    reduce();
 }
 
 inline NNGSFSLoop::NNGSFSLoop(NSFSpace* sfs, const NMatrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
+    reduce();
 }
 
 inline const NSFSpace& NNGSFSLoop::sfs() const {
