@@ -48,38 +48,93 @@ class NSFSpace;
  */
 
 /**
- * TODO: Document NNGSFSPair!
+ * Represents a closed non-geometric 3-manifold formed by joining
+ * two bounded Seifert fibred spaces along a common torus.
+ *
+ * Each Seifert fibred space must have just one boundary component,
+ * corresponding to a puncture in the base orbifold (with no
+ * fibre-reversing twist as one travels around this boundary).
+ *
+ * The way in which the two spaces are joined is specified by a 2-by-2
+ * matrix \a M.  This matrix expresses the locations of the fibres and
+ * base orbifold of the second Seifert fibred space in terms of the first.
+ *
+ * More specifically, suppose that \a f0 and \a o0 are generators of the
+ * common torus, where \a f0 represents a directed fibre in the first
+ * Seifert fibred space and \a o0 represents the oriented boundary of
+ * the corresponding base orbifold.  Likewise, let \a f1 and \a o1 be
+ * generators of the common torus representing a directed fibre and
+ * the base orbifold of the second Seifert fibred space.  Then the curves
+ * \a f0, \a o0, \a f1 and \a o1 are related as follows:
  *
  * <pre>
- *     [ f1 ]       [ f0 ]
- *     [    ] = M * [    ]
- *     [ o1 ]       [ o0 ]
+ *     [f1]       [f0]
+ *     [  ] = M * [  ]
+ *     [o1]       [o0]
  * </pre>
  *
- * Note that getHomologyH1() is not implemented.
+ * The optional NManifold routines getHomologyH1() and construct() are
+ * not implemented for this class.
  */
 class NNGSFSPair : public NManifold {
     private:
         NSFSpace* sfs_[2];
+            /**< The two bounded Seifert fibred spaces that are joined
+                 together. */
         NMatrix2 matchingReln_;
-            /**< Second (f, -o) in terms of the first (f, o). */
+            /**< The matrix describing how the two spaces are joined;
+                 see the class notes for details. */
 
     public:
         /**
-         * Creates a new trivial pair.  Each space will be a trivial
-         * solid torus, and the matching relation will be the identity matrix.
+         * Creates a new non-geometric pair of Seifert fibred spaces.
+         * The two bounded Seifert fibred spaces and the four elements
+         * of the 2-by-2 matching matrix are all passed separately.
+         * The elements of the matching matrix combine to give the full
+         * matrix \a M as follows:
          *
-         * \pre Each SFS is non-null and has a single puncture.
+         * <pre>
+         *           [ mat00  mat01 ]
+         *     M  =  [              ]
+         *           [ mat10  mat11 ]
+         * </pre>
+         *
+         * \pre Each Seifert fibred space has a single torus boundary,
+         * corresponding to a single puncture in the base orbifold.
+         * \pre The given matching matrix has determinant +1 or -1.
+         *
+         * @param sfs0 the first Seifert fibred space.
+         * @param sfs1 the second Seifert fibred space.
+         * @param mat00 the (0,0) element of the matching matrix.
+         * @param mat01 the (0,1) element of the matching matrix.
+         * @param mat10 the (1,0) element of the matching matrix.
+         * @param mat11 the (1,1) element of the matching matrix.
          */
         NNGSFSPair(NSFSpace* sfs0, NSFSpace* sfs1, long mat00, long mat01,
             long mat10, long mat11);
+        /**
+         * Destroys this structure along with the component Seifert
+         * fibred spaces and the matching matrix.
+         */
         ~NNGSFSPair();
 
+        /**
+         * Returns a reference to one of the two bounded Seifert fibred
+         * spaces that are joined together.
+         *
+         * @param which 0 if the first Seifert fibred space is to be
+         * returned, or 1 if the second space is to be returned.
+         * @return a reference to the requested Seifert fibred space.
+         */
         const NSFSpace& sfs(unsigned which) const;
-        NSFSpace& sfs(unsigned which);
-
+        /**
+         * Returns a reference to the 2-by-2 matrix describing how the
+         * two Seifert fibred spaces are joined together.  See the class
+         * notes for details on precisely how this matrix is represented.
+         *
+         * @return a reference to the matching matrix.
+         */
         const NMatrix2& matchingReln() const;
-        NMatrix2& matchingReln();
 
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -100,15 +155,7 @@ inline const NSFSpace& NNGSFSPair::sfs(unsigned which) const {
     return *sfs_[which];
 }
 
-inline NSFSpace& NNGSFSPair::sfs(unsigned which) {
-    return *sfs_[which];
-}
-
 inline const NMatrix2& NNGSFSPair::matchingReln() const {
-    return matchingReln_;
-}
-
-inline NMatrix2& NNGSFSPair::matchingReln() {
     return matchingReln_;
 }
 
