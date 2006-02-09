@@ -116,6 +116,23 @@ class NNGSFSLoop : public NManifold {
         NNGSFSLoop(NSFSpace* sfs, long mat00, long mat01,
             long mat10, long mat11);
         /**
+         * Creates a new non-geometric self-identified Seifert fibred space.
+         * The bounded Seifert fibred space and the entire 2-by-2 matching
+         * matrix are each passed separately.
+         *
+         * Note that the new object will take ownership of the given
+         * Seifert fibred space, and when this object is destroyed the
+         * Seifert fibred space will be destroyed also.
+         *
+         * \pre The given Seifert fibred space has precisely two torus
+         * boundaries, corresponding to two punctures in the base orbifold.
+         * \pre The given matching matrix has determinant +1 or -1.
+         *
+         * @param sfs the bounded Seifert fibred space.
+         * @param matchingReln the 2-by-2 matching matrix.
+         */
+        NNGSFSLoop(NSFSpace* sfs, const NMatrix2& matchingReln);
+        /**
          * Destroys this structure along with the bounded Seifert
          * fibred space and the matching matrix.
          */
@@ -149,6 +166,10 @@ class NNGSFSLoop : public NManifold {
 inline NNGSFSLoop::NNGSFSLoop(NSFSpace* sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
+}
+
+inline NNGSFSLoop::NNGSFSLoop(NSFSpace* sfs, const NMatrix2& matchingReln) :
+        sfs_(sfs), matchingReln_(matchingReln) {
 }
 
 inline const NSFSpace& NNGSFSLoop::sfs() const {
