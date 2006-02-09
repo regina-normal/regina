@@ -150,7 +150,8 @@ class NSatRegion : public ShareableObject {
          */
         const NSatAnnulus& boundaryAnnulus(unsigned long which) const;
         void boundaryAnnulus(unsigned long which,
-            NSatBlock*& block, unsigned& annulus) const;
+            NSatBlock*& block, unsigned& annulus,
+            bool& blockRefVert, bool& blockRefHoriz) const;
 
         void adjustSFS(NSFSpace& sfs, bool reflect) const;
 

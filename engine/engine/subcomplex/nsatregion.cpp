@@ -86,7 +86,8 @@ const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which) const {
 }
 
 void NSatRegion::boundaryAnnulus(unsigned long which,
-        NSatBlock*& block, unsigned& annulus) const {
+        NSatBlock*& block, unsigned& annulus,
+        bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
     for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
             it++)
@@ -95,6 +96,8 @@ void NSatRegion::boundaryAnnulus(unsigned long which,
                 if (which == 0) {
                     block = it->block;
                     annulus = ann;
+                    blockRefVert = it->refVert;
+                    blockRefHoriz = it->refHoriz;
                     return;
                 }
 

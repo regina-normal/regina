@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "manifold/nngsfsloop.h"
+#include "manifold/nsfs.h"
 #include "subcomplex/nngblockedsfsloop.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
@@ -140,8 +142,11 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
 
     NSatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
-    region_->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0]);
-    region_->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1]);
+    bool bdryVert, bdryHoriz; // TODO: Use these!
+    region_->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
+        bdryVert, bdryHoriz);
+    region_->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
+        bdryVert, bdryHoriz);
 
     NSatBlock* tmpBlock;
     unsigned tmpAnnulus;
