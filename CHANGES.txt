@@ -39,8 +39,8 @@ Version 4.3  [ under development ]
             - Routine writeTeXName() no longer provides wrapping dollar signs.
         Class NMatrix2:
             - New specialised class for working with 2x2 integer matrices.
-        Class NNGSFSPair:
-            - New family of non-geometric 3-manifolds.
+        Class NNGSFSLoop, NNGSFSPair:
+            - New families of non-geometric 3-manifolds.
         Class NPerm:
             - The assignment operator now returns a reference instead of void.
         Class NPluggedIBundle, NPluggedIBundleCore, NTorusPlug:

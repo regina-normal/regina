@@ -14,7 +14,7 @@ manifoldincludedir = $(pkgincludedir)/manifold
 
 noinst_LTLIBRARIES = libmanifold.la
 
-libmanifold_la_SOURCES = nhandlebody.cpp nlensspace.cpp nmanifold.cpp nngsfspair.cpp nsfs.cpp nsimplesurfacebundle.cpp nsnappeacensusmfd.cpp ntorusbundle.cpp
+libmanifold_la_SOURCES = nhandlebody.cpp nlensspace.cpp nmanifold.cpp nngsfsloop.cpp nngsfspair.cpp nsfs.cpp nsimplesurfacebundle.cpp nsnappeacensusmfd.cpp ntorusbundle.cpp
 
-manifoldinclude_HEADERS = nhandlebody.h nlensspace.h nmanifold.h nngsfspair.h nsfs.h nsimplesurfacebundle.h nsnappeacensusmfd.h ntorusbundle.h
+manifoldinclude_HEADERS = nhandlebody.h nlensspace.h nmanifold.h nngsfsloop.h nngsfspair.h nsfs.h nsimplesurfacebundle.h nsnappeacensusmfd.h ntorusbundle.h
 
