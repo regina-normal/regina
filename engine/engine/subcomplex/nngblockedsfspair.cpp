@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "manifold/nngsfspair.h"
+#include "manifold/nsfs.h"
 #include "subcomplex/nngblockedsfspair.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
@@ -39,6 +41,7 @@ class NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
     private:
         NSatRegion* region_[2];
         bool horizontal_;
+        bool firstRegionReflected_;
 
     public:
         NNGBlockedSFSPairSearcher() {
@@ -53,6 +56,10 @@ class NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
             return horizontal_;
         }
 
+        bool firstRegionReflected() {
+            return firstRegionReflected_;
+        }
+
     protected:
         bool useStarterBlock(NSatBlock* starter);
 };
@@ -65,8 +72,74 @@ NNGBlockedSFSPair::~NNGBlockedSFSPair() {
 }
 
 NManifold* NNGBlockedSFSPair::getManifold() const {
-    // TODO, later
-    return 0;
+    NSFSpace::classType baseClass;
+
+    // As with NBlockedSFS, we might not be able to distinguish between
+    // n3 and n4.  Just call them both n3 for now, and if we discover
+    // there might have been an n4 then we call it off and return 0.
+
+    if (region_[0]->baseOrientable())
+        baseClass = (region_[0]->hasTwist() ? NSFSpace::o2 : NSFSpace::o1);
+    else if (! region_[0]->hasTwist())
+        baseClass = NSFSpace::n1;
+    else if (region_[0]->twistsMatchOrientation())
+        baseClass = NSFSpace::n2;
+    else
+        baseClass = NSFSpace::n3;
+
+    NSFSpace* sfs0 = new NSFSpace(baseClass,
+        (region_[0]->baseOrientable() ? (1 - region_[0]->baseEuler()) / 2 :
+            (1 - region_[0]->baseEuler())), 1, 0);
+
+    region_[0]->adjustSFS(*sfs0, firstRegionReflected_);
+
+    if (region_[1]->baseOrientable())
+        baseClass = (region_[1]->hasTwist() ? NSFSpace::o2 : NSFSpace::o1);
+    else if (! region_[1]->hasTwist())
+        baseClass = NSFSpace::n1;
+    else if (region_[1]->twistsMatchOrientation())
+        baseClass = NSFSpace::n2;
+    else
+        baseClass = NSFSpace::n3;
+
+    NSFSpace* sfs1 = new NSFSpace(baseClass,
+        (region_[1]->baseOrientable() ? (1 - region_[1]->baseEuler()) / 2 :
+            (1 - region_[1]->baseEuler())), 1, 0);
+
+    region_[1]->adjustSFS(*sfs1, false);
+
+    // Come back to this tricksy problem with n3 vs n4.
+    if (    ((sfs0->getBaseGenus() >= 3) &&
+             (sfs0->getBaseClass() == NSFSpace::n3 ||
+              sfs0->getBaseClass() == NSFSpace::n4)) ||
+            ((sfs1->getBaseGenus() >= 3) &&
+             (sfs1->getBaseClass() == NSFSpace::n3 ||
+              sfs1->getBaseClass() == NSFSpace::n4))) {
+        delete sfs0;
+        delete sfs1;
+        return 0;
+    }
+
+    // Reduce the Seifert fibred space representations and finish up.
+    sfs0->reduce(false);
+    sfs1->reduce(false);
+
+    // Since both matching matrices are self-inverse, we can happily
+    // switch the two Seifert fibred spaces without changing the overall
+    // manifold.
+    if (*sfs1 < *sfs0) {
+        NSFSpace* tmp = sfs0;
+        sfs0 = sfs1;
+        sfs1 = tmp;
+    }
+
+    NNGSFSPair* ans;
+    if (horizontal_)
+        ans = new NNGSFSPair(sfs0, sfs1, 0, 1, 1, 0);
+    else
+        ans = new NNGSFSPair(sfs0, sfs1, 1, 1, 0, -1);
+
+    return ans;
 }
 
 std::ostream& NNGBlockedSFSPair::writeName(std::ostream& out) const {
@@ -111,7 +184,7 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
         // to be closed and connected.
         // This means we've got one!
         return new NNGBlockedSFSPair(searcher.region(0), searcher.region(1),
-            searcher.horizontal());
+            searcher.horizontal(), searcher.firstRegionReflected());
     }
 
     // Nope.
@@ -140,7 +213,12 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     // Insist on this boundary being untwisted.
     NSatBlock* bdryBlock;
     unsigned bdryAnnulus;
-    region_[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus);
+    bool bdryVert, bdryHoriz;
+    region_[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus,
+        bdryVert, bdryHoriz);
+
+    firstRegionReflected_ =
+        ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
 
     NSatBlock* tmpBlock;
     unsigned tmpAnnulus;
@@ -181,6 +259,7 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
 
         if (region_[1]->numberOfBoundaryAnnuli() == 1) {
             // This is it!  Stop searching.
+            horizontal_ = true;
             return false;
         }
 
@@ -198,6 +277,7 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
             // This is it!  Stop searching.
             // Switch the tetrahedron lists before we go.
             avoidTets = avoidTets2;
+            horizontal_ = false;
             return false;
         }
 

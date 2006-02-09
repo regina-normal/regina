@@ -55,6 +55,7 @@ class NNGBlockedSFSPair : public NStandardTriangulation {
         NSatRegion* region_[2];
         bool horizontal_;
             /**< Do we match vertical to horizontal, or to diagonal? */
+        bool firstRegionReflected_;
 
     public:
         ~NNGBlockedSFSPair();
@@ -68,7 +69,7 @@ class NNGBlockedSFSPair : public NStandardTriangulation {
 
     private:
         NNGBlockedSFSPair(NSatRegion* region0, NSatRegion* region1,
-            bool horizontal);
+            bool horizontal, bool firstRegionReflected);
 };
 
 /*@}*/
@@ -76,7 +77,8 @@ class NNGBlockedSFSPair : public NStandardTriangulation {
 // Inline functions for NNGBlockedSFSPair
 
 inline NNGBlockedSFSPair::NNGBlockedSFSPair(NSatRegion* region0,
-        NSatRegion* region1, bool horizontal) : horizontal_(horizontal) {
+        NSatRegion* region1, bool horizontal, bool firstRegionReflected) :
+        horizontal_(horizontal), firstRegionReflected_(firstRegionReflected) {
     region_[0] = region0;
     region_[1] = region1;
 }
