@@ -97,7 +97,7 @@ NManifold* NNGBlockedSFSLoop::getManifold() const {
 
     NSFSpace* sfs = new NSFSpace(baseClass,
         (region_->baseOrientable() ? (- region_->baseEuler()) / 2 :
-            (- region_[0]->baseEuler())), 2, 0);
+            (- region_->baseEuler())), 2, 0);
 
     region_->adjustSFS(*sfs, false);
 
@@ -121,40 +121,41 @@ NManifold* NNGBlockedSFSLoop::getManifold() const {
         bdryRefHoriz_[1] ? -1 : 1);
 
     // Now we have the twelve cases of how the two sets of annulus
-    // curves are mapped.  TODO: Finish
+    // curves are mapped.
     NMatrix2 ann0ToAnn1;
     if (swapFaces_) {
         // First and second faces are swapped.
         if      (facePerm_ == NPerm(0, 1, 2, 3))
             ann0ToAnn1 = NMatrix2(-1, 0, 0, -1);
         else if (facePerm_ == NPerm(1, 2, 0, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(0, -1, 1, 1);
         else if (facePerm_ == NPerm(2, 0, 1, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(1, 1, -1, 0);
         else if (facePerm_ == NPerm(0, 2, 1, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(0, 1, 1, 0);
         else if (facePerm_ == NPerm(1, 0, 2, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(1, 0, -1, -1);
         else if (facePerm_ == NPerm(2, 1, 0, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(-1, -1, 0, 1);
     } else {
         // First and second faces are not swapped.
         if      (facePerm_ == NPerm(0, 1, 2, 3))
             ann0ToAnn1 = NMatrix2(1, 0, 0, 1);
         else if (facePerm_ == NPerm(1, 2, 0, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(0, 1, -1, -1);
         else if (facePerm_ == NPerm(2, 0, 1, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(-1, -1, 1, 0);
         else if (facePerm_ == NPerm(0, 2, 1, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(0, -1, -1, 0);
         else if (facePerm_ == NPerm(1, 0, 2, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(-1, 0, 1, 1);
         else if (facePerm_ == NPerm(2, 1, 0, 3))
-            ann0ToAnn1 = NMatrix2();
+            ann0ToAnn1 = NMatrix2(1, 1, 0, -1);
     }
 
     // Remember that curves1ToAnnulus is self-inverse.
-    return NNGSFSLoop(sfs, curves1ToAnnulus * ann0ToAnn1 * curves0ToAnnulus);
+    return new NNGSFSLoop(sfs,
+        curves1ToAnnulus * ann0ToAnn1 * curves0ToAnnulus);
 }
 
 std::ostream& NNGBlockedSFSLoop::writeName(std::ostream& out) const {
