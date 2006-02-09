@@ -99,6 +99,10 @@ class NNGSFSPair : public NManifold {
          *           [ mat10  mat11 ]
          * </pre>
          *
+         * Note that the new object will take ownership of the two given
+         * Seifert fibred spaces, and when this object is destroyed the
+         * Seifert fibred spaces will be destroyed also.
+         *
          * \pre Each Seifert fibred space has a single torus boundary,
          * corresponding to a single puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
