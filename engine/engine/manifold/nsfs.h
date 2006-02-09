@@ -534,11 +534,23 @@ class NSFSpace : public NManifold {
          * simpler form if possible, without changing the underlying
          * fibration.
          *
-         * \warning This operation may involve taking a mirror image of
-         * the entire 3-manifold, so inserting additional fibres or
-         * altering the base orbifold afterwards may give unexpected results.
+         * In some cases the parameters of the Seifert fibred space may
+         * be simplified by taking a mirror image of the entire 3-manifold.
+         * The argument \a mayReflect signifies whether this is allowed.
+         *
+         * This routine will not change the curves made by the fibres
+         * and the base orbifold on any boundary components (i.e.,
+         * boundaries caused by punctures in the base orbifold).
+         *
+         * \warning If \a mayReflect is \c true then the entire 3-manifold
+         * might be replaced with its mirror image, in which case any
+         * subsequent modifications (such as inserting additional fibres
+         * or altering the base orbifold) may give unexpected results.
+         *
+         * @param mayReflect \c true if we are allowed to take a mirror
+         * image of the entire 3-manifold, or \c false if we are not.
          */
-        void reduce();
+        void reduce(bool mayReflect = true);
 
         /**
          * Determines if this Seifert fibred space is a Lens space.

@@ -191,7 +191,7 @@ void NSFSpace::insertFibre(long alpha, long beta) {
     // We're done!
 }
 
-void NSFSpace::reduce() {
+void NSFSpace::reduce(bool mayReflect) {
     FibreIterator it, it2;
 
     // Can we negate an exceptional fibre by following an
@@ -231,7 +231,7 @@ void NSFSpace::reduce() {
     if (! nFibres) {
         // Not much more we can do.
         // Just reflect if it helps.
-        if (b < 0)
+        if (mayReflect && b < 0)
             b = -b;
         return;
     }
@@ -299,32 +299,35 @@ void NSFSpace::reduce() {
         // We still have the option of simultaneously replacing all (p,q)
         // with (p,-q) == (1,-1) (p,p-q) == (p,p-q) if it's worth it.
 
-        unsigned long nLarge = 0;
-        unsigned long nSmall = 0;
-        // Don't count (2,1) fibres, they don't get changed anyway.
-        for (it = fibres.begin(); it != fibres.end() && it->alpha == 2; it++)
-            ;
-        // Remember where we really started.
-        it2 = it;
-        for ( ; it != fibres.end(); it++) {
-            if (it->beta * 2 > it->alpha)
-                nLarge++;
-            else
-                nSmall++;
-        }
+        if (mayReflect) {
+            unsigned long nLarge = 0;
+            unsigned long nSmall = 0;
+            // Don't count (2,1) fibres, they don't get changed anyway.
+            for (it = fibres.begin(); it != fibres.end() && it->alpha == 2;
+                    it++)
+                ;
+            // Remember where we really started.
+            it2 = it;
+            for ( ; it != fibres.end(); it++) {
+                if (it->beta * 2 > it->alpha)
+                    nLarge++;
+                else
+                    nSmall++;
+            }
 
-        // So.  Was it worth it?
-        if (nLarge > nSmall)
-            negateAllFibres();
-        else if (nLarge == nSmall && it2 != fibres.end() &&
-                it2->beta * 2 > it2->alpha)
-            negateAllFibres();
+            // So.  Was it worth it?
+            if (nLarge > nSmall)
+                negateAllFibres();
+            else if (nLarge == nSmall && it2 != fibres.end() &&
+                    it2->beta * 2 > it2->alpha)
+                negateAllFibres();
+        }
     } else {
         // Individual fibres cannot be negated, no reflector boundaries.
         // The best we can do is just reflect everything if b is far enough
         // negative.
 
-        if (b < (-b - static_cast<long>(nFibres))) {
+        if (mayReflect && b < (-b - static_cast<long>(nFibres))) {
             b = -b - static_cast<long>(nFibres);
             negateAllFibres();
         }
