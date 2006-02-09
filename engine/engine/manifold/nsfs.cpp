@@ -461,6 +461,46 @@ NLensSpace* NSFSpace::isLensSpace() const {
     return 0;
 }
 
+bool NSFSpace::operator < (const NSFSpace& compare) const {
+    if (baseGenus < compare.baseGenus)
+        return true;
+    if (baseGenus > compare.baseGenus)
+        return false;
+
+    if (baseReflectors < compare.baseReflectors)
+        return true;
+    if (baseReflectors > compare.baseReflectors)
+        return false;
+
+    if (basePunctures < compare.basePunctures)
+        return true;
+    if (basePunctures > compare.basePunctures)
+        return false;
+
+    if (baseClass < compare.baseClass)
+        return true;
+    if (baseClass > compare.baseClass)
+        return false;
+
+    if (nFibres < compare.nFibres)
+        return true;
+    if (nFibres > compare.nFibres)
+        return false;
+
+    if (fibres < compare.fibres)
+        return true;
+    if (compare.fibres < fibres)
+        return false;
+
+    if (b < compare.b)
+        return true;
+    if (b > compare.b)
+        return false;
+
+    // Exactly the same!
+    return false;
+}
+
 NTriangulation* NSFSpace::construct() const {
     // Things that we don't deal with just yet.
     if (basePunctures || baseReflectors)

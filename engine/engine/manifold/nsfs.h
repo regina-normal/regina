@@ -184,23 +184,23 @@ class NSFSpace : public NManifold {
          * as described in the class notes above.
          */
         enum classType {
-            o1,
+            o1 = 101,
                 /**< Indicates that the base surface is orientable, and that
                      none of its generators give fibre-reversing paths. */
-            o2,
+            o2 = 102,
                 /**< Indicates that the base surface is orientable, and that
                      all of its generators give fibre-reversing paths. */
-            n1,
+            n1 = 201,
                 /**< Indicates that the base surface is non-orientable, and
                      that none of its generators give fibre-reversing paths. */
-            n2,
+            n2 = 202,
                 /**< Indicates that the base surface is non-orientable, and
                      that all of its generators give fibre-reversing paths. */
-            n3,
+            n3 = 203,
                 /**< Indicates that the base surface is non-orientable, that it
                      has non-orientable genus at least two, and that precisely
                      one of its generators give a fibre-reversing path. */
-            n4
+            n4 = 204
                 /**< Indicates that the base surface is non-orientable, that it
                      has non-orientable genus at least three, and that precisely
                      two of its generators give fibre-reversing paths. */
@@ -563,6 +563,26 @@ class NSFSpace : public NManifold {
          * space, or \c null if this is not a Lens space.
          */
         NLensSpace* isLensSpace() const;
+
+        /**
+         * Determines in a fairly ad-hoc fashion whether this representation
+         * of this space is "smaller" than the given representation of the
+         * given space.
+         *
+         * The ordering imposed on Seifert fibred space representations
+         * has no good mathematical grounding, and is subject to change
+         * in future versions of Regina.  It also depends upon the
+         * particular representation, so that different representations
+         * of the same space may be ordered differently.
+         *
+         * All that this routine really offers is a well-defined way of
+         * ordering Seifert fibred space representations.
+         *
+         * @param compare the representation with which this will be compared.
+         * @return \c true if and only if this is "smaller" than the given
+         * Seifert fibred space representation.
+         */
+        bool operator < (const NSFSpace& compare) const;
 
         NTriangulation* construct() const;
         NAbelianGroup* getHomologyH1() const;
