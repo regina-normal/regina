@@ -28,7 +28,7 @@
 
 /*! \file nngtorusbundle.h
  *  \brief Deals with triangulations of non-geometric torus bundles with
- *  exceptional fibres.
+ *  exceptional fibres.  TODO
  */
 
 #ifndef __NNGTORUSBUNDLE_H
@@ -50,6 +50,9 @@ class NTxICore;
  * @{
  */
 
+/**
+ * TODO: Document NNGPluggedTorusBundle!
+ */
 class NNGPluggedTorusBundle : public NStandardTriangulation {
     private:
         const NTxICore& core_;
