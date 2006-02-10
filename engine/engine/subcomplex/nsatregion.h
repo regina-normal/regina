@@ -147,6 +147,8 @@ class NSatRegion : public ShareableObject {
         unsigned long numberOfBoundaryAnnuli() const;
         /**
          * TODO:  This one is quit slow, since we search as we go.
+         *
+         * Guarantee to return annuli in block/ann order.
          */
         const NSatAnnulus& boundaryAnnulus(unsigned long which) const;
         void boundaryAnnulus(unsigned long which,
@@ -163,6 +165,9 @@ class NSatRegion : public ShareableObject {
          * it is assumed that it will be tossed away completely.
          *
          * Point out that this doesn't check for invalid edges.
+         *
+         * Guarantee that new blocks will be pushed to the end of the
+         * list (i.e., their indices won't change).
          *
          * \pre Any block adjacencies are in this list.
          *
