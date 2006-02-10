@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "manifold/nngsfsloop.h"
+#include "manifold/nsfs.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/nngpluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
@@ -54,8 +56,37 @@ NNGPluggedTorusBundle::~NNGPluggedTorusBundle() {
 }
 
 NManifold* NNGPluggedTorusBundle::getManifold() const {
-    // TODO
-    return 0;
+    NSFSpace::classType baseClass;
+
+    // As with NBlockedSFS, we might not be able to distinguish between
+    // n3 and n4.  Just call it n3 for now, and if we discover it might
+    // have been n4 instead then we call it off and return 0.
+
+    if (plug_->baseOrientable())
+        baseClass = (plug_->hasTwist() ? NSFSpace::o2 : NSFSpace::o1);
+    else if (! plug_->hasTwist())
+        baseClass = NSFSpace::n1;
+    else if (plug_->twistsMatchOrientation())
+        baseClass = NSFSpace::n2;
+    else
+        baseClass = NSFSpace::n3;
+
+    NSFSpace* sfs = new NSFSpace(baseClass,
+        (plug_->baseOrientable() ? (- plug_->baseEuler()) / 2 :
+            (- plug_->baseEuler())), 2, 0);
+
+    plug_->adjustSFS(*sfs, false);
+
+    if ((sfs->getBaseGenus() >= 3) &&
+            (sfs->getBaseClass() == NSFSpace::n3 ||
+             sfs->getBaseClass() == NSFSpace::n4)) {
+        delete sfs;
+        return 0;
+    }
+
+    sfs->reduce(false);
+
+    return new NNGSFSLoop(sfs, fibreReln_);
 }
 
 std::ostream& NNGPluggedTorusBundle::writeName(std::ostream& out) const {
@@ -121,12 +152,13 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
     if (! core.core().findAllSubcomplexesIn(*triang, isos))
         return 0;
 
-    int i;
-    NPerm upperLayerToAnnulus, upperBdryToLower;
+    int plugPos;
+    NPerm annulusToUpperLayer, upperBdryToLower;
     NSatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
     NSatBlock::TetList avoidTets;
     NSatBlock* starter;
     NSatRegion* region;
+    bool bdryRefVert, bdryRefHoriz;
     bool swapFaces;
 
     // Run through each isomorphism and look for the corresponding layering.
@@ -164,18 +196,19 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
         lowerAnnulus.roles[1] = layerLower.getNewBoundaryRoles(1);
 
         // Look for the SFS plug.
-        for (i = 0; i < 3; i++) {
+        for (plugPos = 0; plugPos < 3; plugPos++) {
             // Construct the permutation from 0/1/2 markings on the
-            // first boundary face above the layering to the 0/1/2
-            // markings of the first saturated annulus boundary.
-            upperLayerToAnnulus = NPerm(i, (i + 1) % 3, (i + 2) % 3, 3);
+            // first saturated annulus boundary to 0/1/2 markings on the
+            // first boundary face above the layering.
+            annulusToUpperLayer = NPerm(plugPos, (plugPos + 1) % 3,
+                (plugPos + 2) % 3, 3);
 
             upperAnnulus.tet[0] = layerUpper.getNewBoundaryTet(0);
             upperAnnulus.tet[1] = layerUpper.getNewBoundaryTet(1);
             upperAnnulus.roles[0] = layerUpper.getNewBoundaryRoles(0)
-                * upperLayerToAnnulus.inverse();
+                * annulusToUpperLayer;
             upperAnnulus.roles[1] = layerUpper.getNewBoundaryRoles(1)
-                * upperLayerToAnnulus.inverse();
+                * annulusToUpperLayer;
 
             // Recall that we already know the triangulation to be closed.
             upperAnnulus.switchSides();
@@ -206,48 +239,129 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
 
             // From the NSatRegion specifications we know that the first
             // boundary annulus will be upperAnnulus.  Find the second.
-            bdryAnnulus = region->boundaryAnnulus(1);
+            bdryAnnulus = region->boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
 
             // Hope like hell that this meets up with the lower layering
             // boundary.
             bdryAnnulus.switchSides();
+            swapFaces = false;
             if (bdryAnnulus.tet[0] == lowerAnnulus.tet[0] &&
                     bdryAnnulus.tet[1] == lowerAnnulus.tet[1] &&
                     bdryAnnulus.roles[0][3] == lowerAnnulus.roles[0][3] &&
-                    bdryAnnulus.roles[1][3] == lowerAnnulus.roles[1][1]) {
+                    bdryAnnulus.roles[1][3] == lowerAnnulus.roles[1][3]) {
                 // Construct the mapping of 0/1/2 markings from the
                 // upper boundary annulus to the lower.
                 upperBdryToLower = lowerAnnulus.roles[0].inverse() *
                     bdryAnnulus.roles[0];
                 if (upperBdryToLower != lowerAnnulus.roles[1].inverse() *
-                    bdryAnnulus.roles[1]) {
+                        bdryAnnulus.roles[1]) {
                     delete region;
                     continue;
                 }
 
                 // Yup!
-                swapFaces = false;
+                // swapFaces = false; (done above)
             } else if (bdryAnnulus.tet[0] == lowerAnnulus.tet[1] &&
                     bdryAnnulus.tet[1] == lowerAnnulus.tet[0] &&
                     bdryAnnulus.roles[0][3] == lowerAnnulus.roles[1][3] &&
-                    bdryAnnulus.roles[1][3] == lowerAnnulus.roles[0][1]) {
+                    bdryAnnulus.roles[1][3] == lowerAnnulus.roles[0][3]) {
                 // Construct the mapping of 0/1/2 markings from the
                 // upper boundary annulus to the lower.
                 upperBdryToLower = lowerAnnulus.roles[0].inverse() *
                     bdryAnnulus.roles[1];
                 if (upperBdryToLower != lowerAnnulus.roles[1].inverse() *
-                    bdryAnnulus.roles[0]) {
+                        bdryAnnulus.roles[0]) {
                     delete region;
                     continue;
                 }
 
                 // Yup!
                 swapFaces = true;
+            } else {
+                // Nothing.
+                delete region;
+                continue;
             }
 
             // All good!
+            // Better work out what we've got here.
+
+            // Mapping from fibre/base curves (f0, o0) to upperAnnulus
+            // edges (first face: 01, first face: 02).
+            NMatrix2 curvesToUpperAnnulus(-1, 0, 0, 1);
+
+            // Mapping from upperAnnulus edges (first: 01, first: 02) to
+            // upper layering boundary roles (first: 01, first: 02).
+            NMatrix2 upperAnnulusToUpperLayer;
+            if (plugPos == 0)
+                upperAnnulusToUpperLayer = NMatrix2(1, 0, 0, 1);
+            else if (plugPos == 1)
+                upperAnnulusToUpperLayer = NMatrix2(0, -1, 1, -1);
+            else
+                upperAnnulusToUpperLayer = NMatrix2(-1, 1, -1, 0);
+
+            // Mapping from upper layering boundary roles
+            // (first: 01, first: 02) to the core boundary 0 roles
+            // (first: 01, first: 02) is layerUpper.boundaryReln().inverse().
+
+            // Mapping from core boundary 0 roles (first: 01, first: 02) to
+            // core boundary 0 (alpha, beta) is core.bdryReln(0).
+
+            // Mapping from core boundary 0 (alpha, beta) to core boundary 1
+            // (alpha, beta) is core.parallelReln().
+
+            // Mapping from core boundary 1 (alpha, beta) to core boundary 1
+            // roles (first: 01, first: 02) is core.bdryReln(1).inverse().
+
+            // Mapping from core boundary 1 roles (first: 01, first: 02) to
+            // lower layering boundary roles (first: 01, first: 02) is
+            // layerLower.boundaryReln().
+
+            // Mapping from lower layering boundary roles (first: 01, first: 02)
+            // to lower annulus boundary roles (first: 01, first: 02) is the
+            // identity.
+
+            // SO: Here comes the mapping from fibre/base curves (f0, o0)
+            // to lower annulus boundary roles (first: 01, first: 02):
+            NMatrix2 curvesToLowerAnnulus =
+                layerLower.boundaryReln() *
+                core.bdryReln(1).inverse() *
+                core.parallelReln() *
+                core.bdryReln(0) *
+                layerUpper.boundaryReln().inverse() *
+                upperAnnulusToUpperLayer *
+                curvesToUpperAnnulus;
+
+            // Now let's work out the mapping from fibre/base curves (f1, o1)
+            // to bdryAnnulus roles (first: 01, first: 02).  This is
+            // rather simpler.
+            NMatrix2 curvesToBdryAnnulus(bdryRefVert ? 1 : -1, 0, 0,
+                bdryRefHoriz ? -1 : 1);
+
+            // We're close folks.  All that's left is to observe how the
+            // two annuli are joined together, as described by the
+            // boolean swapFaces and the permutation upperBdryToLower.
+
+            NMatrix2 upperRolesToLower;
+            if (     upperBdryToLower == NPerm(0, 1, 2, 3))
+                upperRolesToLower = NMatrix2(1, 0, 0, 1);
+            else if (upperBdryToLower == NPerm(1, 2, 0, 3))
+                upperRolesToLower = NMatrix2(0, -1, 1, -1);
+            else if (upperBdryToLower == NPerm(2, 0, 1, 3))
+                upperRolesToLower = NMatrix2(-1, 1, -1, 0);
+            else if (upperBdryToLower == NPerm(0, 2, 1, 3))
+                upperRolesToLower = NMatrix2(0, 1, 1, 0);
+            else if (upperBdryToLower == NPerm(1, 0, 2, 3))
+                upperRolesToLower = NMatrix2(-1, 0, -1, 1);
+            else if (upperBdryToLower == NPerm(2, 1, 0, 3))
+                upperRolesToLower = NMatrix2(1, -1, 0, -1);
+
+            if (swapFaces)
+                upperRolesToLower.negate();
+
             NNGPluggedTorusBundle* ans = new NNGPluggedTorusBundle(core, *it,
-                region);
+                region, curvesToLowerAnnulus.inverse() * upperRolesToLower *
+                curvesToBdryAnnulus);
 
             // Before we head home, delete the remaining isomorphisms
             // that we never looked at.

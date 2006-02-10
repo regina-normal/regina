@@ -56,6 +56,8 @@ class NNGPluggedTorusBundle : public NStandardTriangulation {
         NIsomorphism* coreIso_;
         NSatRegion* plug_;
 
+        NMatrix2 fibreReln_;
+
     public:
         ~NNGPluggedTorusBundle();
 
@@ -69,7 +71,7 @@ class NNGPluggedTorusBundle : public NStandardTriangulation {
 
     private:
         NNGPluggedTorusBundle(const NTxICore& core, NIsomorphism* coreIso,
-            NSatRegion* plug);
+            NSatRegion* plug, const NMatrix2& fibreReln);
 
         static NNGPluggedTorusBundle* hunt(NTriangulation* tri,
             const NTxICore& core);
@@ -80,8 +82,8 @@ class NNGPluggedTorusBundle : public NStandardTriangulation {
 // Inline functions for NNGPluggedTorusBundle
 
 inline NNGPluggedTorusBundle::NNGPluggedTorusBundle(const NTxICore& core,
-        NIsomorphism* coreIso, NSatRegion* plug) :
-        core_(core), coreIso_(coreIso), plug_(plug) {
+        NIsomorphism* coreIso, NSatRegion* plug, const NMatrix2& fibreReln) :
+        core_(core), coreIso_(coreIso), plug_(plug), fibreReln_(fibreReln) {
 }
 
 } // namespace regina
