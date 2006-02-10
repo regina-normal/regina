@@ -31,6 +31,47 @@
 
 namespace regina {
 
+namespace {
+    // A routine for deciding whether one matrix presentation is
+    // "simpler" than another.  This is a purely arbitrary aesthetic
+    // judgement.
+    bool simpler(const NMatrix2& m1, const NMatrix2& m2) {
+        long maxAbs1 = 0, maxAbs2 = 0;
+        unsigned nZeroes1 = 0, nZeroes2 = 0;
+
+        int i, j;
+        for (i = 0; i < 2; i++)
+            for (j = 0; j < 2; j++) {
+                if (m1[i][j] > maxAbs1)
+                    maxAbs1 = m1[i][j];
+                if (m1[i][j] < -maxAbs1)
+                    maxAbs1 = -m1[i][j];
+                if (m2[i][j] > maxAbs2)
+                    maxAbs2 = m2[i][j];
+                if (m2[i][j] < -maxAbs2)
+                    maxAbs2 = -m2[i][j];
+
+                if (m1[i][j] == 0)
+                    nZeroes1++;
+                if (m2[i][j] == 0)
+                    nZeroes2++;
+            }
+
+        if (maxAbs1 < maxAbs2)
+            return true;
+        if (maxAbs1 > maxAbs2)
+            return false;
+
+        if (nZeroes1 > nZeroes2)
+            return true;
+        if (nZeroes1 < nZeroes2)
+            return false;
+
+        // Shrug.
+        return false;
+    }
+}
+
 NNGSFSPair::~NNGSFSPair() {
     delete sfs_[0];
     delete sfs_[1];
@@ -132,7 +173,31 @@ void NNGSFSPair::reduce() {
                 matchingReln_ = NMatrix2(0, -1, 1, 1) * matchingReln_;
         }
 
+    // Consider replacing each space with its reflection.
+    // Note that we have b=0 for both SFSs at this stage.
+    NMatrix2 ref0 = matchingReln_ *
+        NMatrix2(-1, 0, sfs_[0]->getFibreCount(), 1);
+    NMatrix2 ref1 = NMatrix2(1, 0, -sfs_[1]->getFibreCount(), -1) *
+        matchingReln_;
+    NMatrix2 ref01 = NMatrix2(1, 0, -sfs_[1]->getFibreCount(), -1) *
+        matchingReln_ * NMatrix2(-1, 0, sfs_[0]->getFibreCount(), 1);
+
+    if (simpler(ref0, matchingReln_) && simpler(ref0, ref1) &&
+            simpler(ref0, ref01)) {
+        matchingReln_ = ref0;
+        sfs_[0]->complementAllFibres();
+    } else if (simpler(ref1, matchingReln_) && simpler(ref1, ref01)) {
+        matchingReln_ = ref1;
+        sfs_[1]->complementAllFibres();
+    } else if (simpler(ref01, matchingReln_)) {
+        matchingReln_ = ref01;
+        sfs_[0]->complementAllFibres();
+        sfs_[1]->complementAllFibres();
+    }
+
     // TODO: More reductions!
+    // We can probably exploit twist identities such as (1,2) = (1,0) in
+    // certain non-orientable cases.
 }
 
 } // namespace regina
