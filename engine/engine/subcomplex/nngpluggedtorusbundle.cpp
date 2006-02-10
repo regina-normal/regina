@@ -117,20 +117,19 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::isNGPluggedTorusBundle(
 
 NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
         const NTxICore& core) {
-    // TODO TODO TODO
-    return 0;
-    /**
     std::list<NIsomorphism*> isos;
     if (! core.core().findAllSubcomplexesIn(*triang, isos))
         return 0;
 
+    int i;
+    NPerm upperLayerToAnnulus, upperBdryToLower;
+    NSatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
+    NSatBlock::TetList avoidTets;
+    NSatBlock* starter;
+    NSatRegion* region;
+    bool swapFaces;
+
     // Run through each isomorphism and look for the corresponding layering.
-    NMatrix2 layerRelnUpper, layerRelnLower;
-    NPermItS4 pit;
-    std::auto_ptr<NTriSolidTorus> tri;
-    std::auto_ptr<NSFSPlug> plug;
-    NTetrahedron* t;
-    NPerm p;
     for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
         // Apply layerings to the upper and lower boundaries.
@@ -150,7 +149,7 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
 
         // Count tetrahedra to ensure that the layerings haven't crossed.
         // In fact, we should have at least three spare tetrahedra for
-        // housing the exceptional fibre.
+        // housing a non-trivial plug.
         if (layerLower.getSize() + layerUpper.getSize() +
                 core.core().getNumberOfTetrahedra() + 3 >
                 triang->getNumberOfTetrahedra()) {
@@ -159,67 +158,99 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
             continue;
         }
 
-        // Remember: from isNonGeoTorusBundle() we know that the
-        // triangulation has no boundary faces.
+        lowerAnnulus.tet[0] = layerLower.getNewBoundaryTet(0);
+        lowerAnnulus.tet[1] = layerLower.getNewBoundaryTet(1);
+        lowerAnnulus.roles[0] = layerLower.getNewBoundaryRoles(0);
+        lowerAnnulus.roles[1] = layerLower.getNewBoundaryRoles(1);
 
-        // Look for the triangular solid torus at the centre.
-        for (pit.init(); ! pit.done(); pit++) {
-            // Examine *pit as a potential map from the (0,1,2,3) roles
-            // on the triangular solid torus to the (0,1,2) torus boundary.
+        // Look for the SFS plug.
+        for (i = 0; i < 3; i++) {
+            // Construct the permutation from 0/1/2 markings on the
+            // first boundary face above the layering to the 0/1/2
+            // markings of the first saturated annulus boundary.
+            upperLayerToAnnulus = NPerm(i, (i + 1) % 3, (i + 2) % 3, 3);
 
-            // Make sure the torus boundary contains an axis edge.
-            if ((*pit)[0] == 3 || (*pit)[3] == 3)
+            upperAnnulus.tet[0] = layerUpper.getNewBoundaryTet(0);
+            upperAnnulus.tet[1] = layerUpper.getNewBoundaryTet(1);
+            upperAnnulus.roles[0] = layerUpper.getNewBoundaryRoles(0)
+                * upperLayerToAnnulus.inverse();
+            upperAnnulus.roles[1] = layerUpper.getNewBoundaryRoles(1)
+                * upperLayerToAnnulus.inverse();
+
+            // Recall that we already know the triangulation to be closed.
+            upperAnnulus.switchSides();
+
+            // Construct the list of tetrahedra to avoid when searching for
+            // the plug.  Don't worry about all the internal tetrahedra
+            // within the layerings or the core; as long as we've got the
+            // boundary tetrahedra we'll be fine.
+            avoidTets.clear();
+            avoidTets.insert(layerUpper.getNewBoundaryTet(0));
+            avoidTets.insert(layerUpper.getNewBoundaryTet(1));
+            avoidTets.insert(layerLower.getNewBoundaryTet(0));
+            avoidTets.insert(layerLower.getNewBoundaryTet(1));
+
+            starter = NSatBlock::isBlock(upperAnnulus, avoidTets);
+            if (! starter)
                 continue;
 
-            t = layerUpper.getNewBoundaryTet(0);
-            p = layerUpper.getNewBoundaryRoles(0);
-            tri.reset(NTriSolidTorus::formsTriSolidTorus(
-                t->getAdjacentTetrahedron(p[3]),
-                t->getAdjacentTetrahedronGluing(p[3]) * p * (*pit)));
-            if (! tri.get())
-                continue;
+            // We have a starter block.  Make a region out of it, and
+            // ensure that region has precisely two boundary annuli.
+            region = new NSatRegion(starter);
+            region->expand(avoidTets, false);
 
-            // See if the triangular solid torus matches completely on
-            // both sides.
-            // To NLayering::matchesTop(), we present axis edges as 01 and
-            // major edges as 02.
-            if (! layerUpper.matchesTop(
-                    tri->getTetrahedron(0),
-                    tri->getVertexRoles(0) * NPerm(0, 3, 1, 2),
-                    tri->getTetrahedron(1),
-                    tri->getVertexRoles(1) * NPerm(3, 0, 2, 1),
-                    layerRelnUpper))
+            if (region->numberOfBoundaryAnnuli() != 2) {
+                delete region;
                 continue;
-            if (! layerLower.matchesTop(
-                    tri->getTetrahedron(1),
-                    tri->getVertexRoles(1) * NPerm(0, 3, 1, 2),
-                    tri->getTetrahedron(2),
-                    tri->getVertexRoles(2) * NPerm(3, 0, 2, 1),
-                    layerRelnLower))
-                continue;
+            }
 
-            // Looking good.  Finally, hunt for the plug.
-            // For the annulus boundary, 01 is an axis edge and 02 is a
-            // minor edge.
-            NSFSAnnulus plugBdry(
-                tri->getTetrahedron(0),
-                tri->getVertexRoles(0) * NPerm(0, 3, 2, 1),
-                tri->getTetrahedron(2),
-                tri->getVertexRoles(2) * NPerm(3, 0, 1, 2));
+            // From the NSatRegion specifications we know that the first
+            // boundary annulus will be upperAnnulus.  Find the second.
+            bdryAnnulus = region->boundaryAnnulus(1);
 
-            // TODO: Check diagonals?
-            plug.reset(NSFSPlug::isPlugged(plugBdry));
-            if (! plug.get())
-                continue;
+            // Hope like hell that this meets up with the lower layering
+            // boundary.
+            bdryAnnulus.switchSides();
+            if (bdryAnnulus.tet[0] == lowerAnnulus.tet[0] &&
+                    bdryAnnulus.tet[1] == lowerAnnulus.tet[1] &&
+                    bdryAnnulus.roles[0][3] == lowerAnnulus.roles[0][3] &&
+                    bdryAnnulus.roles[1][3] == lowerAnnulus.roles[1][1]) {
+                // Construct the mapping of 0/1/2 markings from the
+                // upper boundary annulus to the lower.
+                upperBdryToLower = lowerAnnulus.roles[0].inverse() *
+                    bdryAnnulus.roles[0];
+                if (upperBdryToLower != lowerAnnulus.roles[1].inverse() *
+                    bdryAnnulus.roles[1]) {
+                    delete region;
+                    continue;
+                }
 
-            // We have it, folks!
+                // Yup!
+                swapFaces = false;
+            } else if (bdryAnnulus.tet[0] == lowerAnnulus.tet[1] &&
+                    bdryAnnulus.tet[1] == lowerAnnulus.tet[0] &&
+                    bdryAnnulus.roles[0][3] == lowerAnnulus.roles[1][3] &&
+                    bdryAnnulus.roles[1][3] == lowerAnnulus.roles[0][1]) {
+                // Construct the mapping of 0/1/2 markings from the
+                // upper boundary annulus to the lower.
+                upperBdryToLower = lowerAnnulus.roles[0].inverse() *
+                    bdryAnnulus.roles[1];
+                if (upperBdryToLower != lowerAnnulus.roles[1].inverse() *
+                    bdryAnnulus.roles[0]) {
+                    delete region;
+                    continue;
+                }
+
+                // Yup!
+                swapFaces = true;
+            }
+
+            // All good!
             NNGPluggedTorusBundle* ans = new NNGPluggedTorusBundle(core, *it,
-                plug.release(),
-                layerRelnUpper * core.bdryReln(0).inverse(),
-                layerRelnLower * core.bdryReln(1).inverse());
+                region);
 
-            // Delete the remaining isomorphisms that we never even
-            // looked at.
+            // Before we head home, delete the remaining isomorphisms
+            // that we never looked at.
             for (it++; it != isos.end(); it++)
                 delete *it;
 
@@ -233,7 +264,6 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
 
     // Nothing found.
     return 0;
-    */
 }
 
 } // namespace regina
