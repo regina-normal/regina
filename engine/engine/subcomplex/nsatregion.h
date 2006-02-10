@@ -151,6 +151,8 @@ class NSatRegion : public ShareableObject {
          * Guarantee to return annuli in block/ann order.
          */
         const NSatAnnulus& boundaryAnnulus(unsigned long which) const;
+        const NSatAnnulus& boundaryAnnulus(unsigned long which,
+            bool& blockRefVert, bool& blockRefHoriz) const;
         void boundaryAnnulus(unsigned long which,
             NSatBlock*& block, unsigned& annulus,
             bool& blockRefVert, bool& blockRefHoriz) const;

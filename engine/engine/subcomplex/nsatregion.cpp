@@ -85,6 +85,27 @@ const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which) const {
     return NSatAnnulus();
 }
 
+const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
+        bool& blockRefVert, bool& blockRefHoriz) const {
+    unsigned ann;
+    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
+            it++)
+        for (ann = 0; ann < it->block->nAnnuli(); ann++)
+            if (! it->block->hasAdjacentBlock(ann)) {
+                if (which == 0) {
+                    blockRefVert = it->refVert;
+                    blockRefHoriz = it->refHoriz;
+                    return it->block->annulus(ann);
+                }
+
+                which--;
+            }
+
+    // Given the precondition, we should never reach this point.
+    // TODO: Return junk.
+    return NSatAnnulus();
+}
+
 void NSatRegion::boundaryAnnulus(unsigned long which,
         NSatBlock*& block, unsigned& annulus,
         bool& blockRefVert, bool& blockRefHoriz) const {
