@@ -47,8 +47,8 @@ Version 4.3  [ under development ]
             - Added for recognition of small closed non-orientable
               3-manifolds.
         Class NSatAnnulus, NSatBlock, NSatRegion, NBlockedSFS,
-                  NNGBlockedSFSLoop, NNGBlockedSFSPair, plus subclasses and
-                  other support structures:
+                  NNGBlockedSFSLoop, NNGBlockedSFSPair, NNGPluggedTorusBundle,
+                  plus subclasses and other support structures:
             - New classes for describing Seifert fibred spaces built from
               saturated blocks.
         Class NSFS, NSFSpace, NExceptionalFibre, NSFSFibre:
