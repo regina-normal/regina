@@ -284,9 +284,9 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
         return false;
     }
 
-    if (bdry1.tet[0] == bdry0.tet[0] && bdry1.tet[1] == bdry0.tet[1] &&
-            bdry1.roles[0][3] == bdry0.roles[0][3] &&
-            bdry1.roles[1][3] == bdry0.roles[1][3]) {
+    if (bdry1.tet[0] == bdry0.tet[1] && bdry1.tet[1] == bdry0.tet[0] &&
+            bdry1.roles[0][3] == bdry0.roles[1][3] &&
+            bdry1.roles[1][3] == bdry0.roles[0][3]) {
         // Could be one with first/second faces switched.
 
         // Construct the mapping of 0/1/2 markings from the first
