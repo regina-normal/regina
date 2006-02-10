@@ -317,10 +317,10 @@ void NSFSpace::reduce(bool mayReflect) {
 
             // So.  Was it worth it?
             if (nLarge > nSmall)
-                negateAllFibres();
+                complementAllFibres();
             else if (nLarge == nSmall && it2 != fibres.end() &&
                     it2->beta * 2 > it2->alpha)
-                negateAllFibres();
+                complementAllFibres();
         }
     } else {
         // Individual fibres cannot be negated, no reflector boundaries.
@@ -329,7 +329,7 @@ void NSFSpace::reduce(bool mayReflect) {
 
         if (mayReflect && b < (-b - static_cast<long>(nFibres))) {
             b = -b - static_cast<long>(nFibres);
-            negateAllFibres();
+            complementAllFibres();
         }
     }
 }
@@ -366,7 +366,7 @@ std::list<NSFSFibre>::iterator NSFSpace::negateFibreDown(
     return next;
 }
 
-void NSFSpace::negateAllFibres() {
+void NSFSpace::complementAllFibres() {
     FibreIterator it, it2, next;
     for (it = fibres.begin(); it != fibres.end(); it++)
         it->beta = it->alpha - it->beta;

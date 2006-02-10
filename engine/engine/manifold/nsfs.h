@@ -530,6 +530,13 @@ class NSFSpace : public NManifold {
         void insertFibre(long alpha, long beta);
 
         /**
+         * Replaces each exceptional fibre of the form (\a alpha, \a beta)
+         * with a fibre of the form (\a alpha, \a alpha - \a beta).
+         * The obstruction constant \a b is not touched.
+         */
+        void complementAllFibres();
+
+        /**
          * Reduces the parameters of this Seifert fibred space to a
          * simpler form if possible, without changing the underlying
          * fibration.
@@ -609,16 +616,6 @@ class NSFSpace : public NManifold {
          */
         std::list<NSFSFibre>::iterator negateFibreDown(
             std::list<NSFSFibre>::iterator it);
-        /**
-         * Replaces each exceptional fibre of the form (\a alpha, \a beta)
-         * with a fibre of the form (\a alpha, \a alpha - \a beta).
-         * The obstruction constant \a b is not touched.
-         *
-         * This routine ensures that the list of exceptional fibres
-         * remains in sorted order (assuming it was sorted beforehand).
-         */
-        void negateAllFibres();
-
         /**
          * Internal to writeCommonBase().
          *
