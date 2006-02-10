@@ -37,7 +37,6 @@
 #include "subcomplex/nngblockedsfsloop.h"
 #include "subcomplex/nngblockedsfspair.h"
 #include "subcomplex/nngpluggedtorusbundle.h"
-#include "subcomplex/nnongeotorusbundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "subcomplex/ntrivialtri.h"
@@ -104,8 +103,6 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     if ((ans = NNGBlockedSFSPair::isNGBlockedSFSPair(tri)))
         return ans;
     if ((ans = NNGPluggedTorusBundle::isNGPluggedTorusBundle(tri)))
-        return ans;
-    if ((ans = NNonGeoTorusBundle::isNonGeoTorusBundle(tri)))
         return ans;
 
     // Nup.
