@@ -142,6 +142,13 @@ class NNGSFSPair : public NManifold {
 
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
+
+    private:
+        /**
+         * Uses (1,1) twists, reflections and other techniques to make
+         * the presentation of this space more aesthetically pleasing.
+         */
+        void reduce();
 };
 
 /*@}*/
@@ -153,6 +160,8 @@ inline NNGSFSPair::NNGSFSPair(NSFSpace* sfs0, NSFSpace* sfs1,
         matchingReln_(mat00, mat01, mat10, mat11) {
     sfs_[0] = sfs0;
     sfs_[1] = sfs1;
+
+    reduce();
 }
 
 inline const NSFSpace& NNGSFSPair::sfs(unsigned which) const {
