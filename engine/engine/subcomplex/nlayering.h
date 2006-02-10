@@ -131,8 +131,9 @@ class NLayering : public boost::noncopyable {
                  \a reln expresses the new \a roles[0-1] curve in terms of
                  the old \a roles[0-1] and \a roles[0-2] curves, and the
                  second row expresses the new \a roles[0-2] curve in a
-                 similar fashion.  It is guaranteed that the determinant
-                 of this matrix is 1. */
+                 similar fashion (here we always talk in terms of the
+                 first tetrahedron for each boundary).  It is guaranteed
+                 that the determinant of this matrix is 1. */
 
     public:
         /**
@@ -223,6 +224,56 @@ class NLayering : public boost::noncopyable {
          * @return the requested permutation describing the new boundary.
          */
         NPerm getNewBoundaryRoles(unsigned which) const;
+
+        /**
+         * Returns a 2-by-2 matrix describing the relationship between
+         * curves on the old and new boundary tori.  Note that this
+         * relationship will often be non-trivial, since one of the
+         * key reasons for layering is to modify boundary curves.
+         *
+         * Let \a t and \a p be the first tetrahedron and
+         * permutation of the old boundary (as returned by
+         * getOldBoundaryTet(0) and getOldBoundaryRoles(0)), and let
+         * \a old_x and \a old_y be the directed edges \a p[0]-\a p[1]
+         * and \a p[0]-\a p[2] respectively of tetrahedron \a t (these
+         * are the leftmost and uppermost edges of the diagram below).
+         * Likewise, let \a s and \a q be the first tetrahedron and
+         * permutation of the new boundary (as returned by
+         * getNewBoundaryTet(0) and getNewBoundaryRoles(0)), and let
+         * \a new_x and \a new_y be the directed edges \a q[0]-\a q[1]
+         * and \a q[0]-\a q[2] respectively of tetrahedron \a s.
+         *
+         * <pre>
+         *     *--->>--*
+         *     |0  2 / |
+         *     |    / 1|
+         *     v   /   v
+         *     |1 /    |
+         *     | / 2  0|
+         *     *--->>--*
+         * </pre>
+         *
+         * Assuming both boundaries are tori, edges \a old_x and \a old_y are
+         * generators of the old boundary torus and edges \a new_x and
+         * \a new_y are generators of the new boundary torus.  Suppose
+         * that this routine returns the matrix \a M.  This signifies
+         * that, using additive notation:
+         *
+         * <pre>
+         *     [new_x]         [old_x]
+         *     [     ]  =  M * [     ] .
+         *     [new_y]         [old_y]
+         * </pre>
+         *
+         * In other words, the matrix that is returned expresses the
+         * generator curves of the new boundary in terms of the
+         * generator curves of the old boundary.
+         *
+         * Note that the determinant of this matrix will always be 1.
+         *
+         * @return the matrix relating the old and new boundary curves.
+         */
+        const NMatrix2& boundaryReln() const;
 
         /**
          * Examines whether a single additional tetrahedron has been
@@ -372,6 +423,10 @@ inline NTetrahedron* NLayering::getNewBoundaryTet(unsigned which) const {
 
 inline NPerm NLayering::getNewBoundaryRoles(unsigned which) const {
     return newBdryRoles[which];
+}
+
+inline const NMatrix2& NLayering::boundaryReln() const {
+    return reln;
 }
 
 } // namespace regina
