@@ -92,8 +92,13 @@ void process(NTriangulation* t) {
 
         NManifold* m = s->getManifold();
         if (m) {
-            std::cout << "  ==  " << m->getName();
+            std::string manifold = m->getName();
+            std::cout << "  ==  " << manifold;
             mfdsOk++;
+
+            std::string structure = m->getStructure();
+            if ((! structure.empty()) && (structure != manifold))
+                std::cout << "  ==  " << structure;
 
             NAbelianGroup* h1 = m->getHomologyH1();
             if (h1) {
