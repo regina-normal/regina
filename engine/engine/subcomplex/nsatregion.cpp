@@ -137,7 +137,7 @@ void NSatRegion::adjustSFS(NSFSpace& sfs, bool reflect) const {
             regXor(it->refVert, it->refHoriz)));
 
     if (shiftedAnnuli_)
-        sfs.insertFibre(1, shiftedAnnuli_);
+        sfs.insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
 }
 
 bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
