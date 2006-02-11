@@ -320,29 +320,70 @@ class NSatBlock : public ShareableObject {
          * Finds the next boundary annulus around from this, treating
          * all adjacent blocks as part of a single large saturated region.
          *
-         * Suppose that all blocks are merged together according to
-         * adjacent boundary annuli, forming a large saturated structure.
+         * Suppose that all saturated blocks are merged together according
+         * to adjacent boundary annuli, forming larger saturated structures.
          * The remaining annuli that do not have adjacent blocks will
          * group together to form several large boundary rings.  Note that
          * each boundary ring might involve annuli from several
          * different blocks, and might or might not have a twist (thus
-         * creating a large Klein bottle instead of a large torus).
+         * forming a large Klein bottle instead of a large torus).
          *
          * This routine traces around such a boundary ring.  It is
          * assumed that annulus \a thisAnnulus of this block forms part
          * of a boundary ring (i.e., it has no adjacent block).  This
-         * routine returns the next annulus around from this in the
-         * large boundary ring, in the direction following around from
-         * the second face of the annulus.  This next annulus might
-         * belong to another block, or it might even be this annulus
-         * itself.
+         * routine will then return the next annulus around from this in
+         * the large boundary ring (in the direction following from
+         * the second face of this annulus).  This next annulus might
+         * belong to another block, or it might even be this original
+         * annulus again.
          *
-         * TODO: Talk about reflections.
+         * The next annulus itself is not returned, but rather a reference
+         * as to how it appears within its enclosing saturated block.
+         * Specifically, a block and corresponding annulus number will be
+         * returned in the arguments \a nextBlock and \a nextAnnulus
+         * respectively.
+         *
+         * It is possible that the next annulus as it appears within the
+         * returned block is oriented differently from how it appears
+         * within this large boundary ring.  For this reason, two
+         * booleans are returned also.  The argument \a refVert will
+         * describe whether the annulus is reflected vertically as it
+         * appears within the large boundary ring (i.e., the first and
+         * second faces remain the same but the fibre direction is
+         * reversed).  Similarly, the argument \a refHoriz will describe
+         * whether the annulus is reflected horizontally as it appears
+         * within the large boundary ring (i.e., first and second faces
+         * are switched but the fibre direction is unchanged).
+         *
+         * It is possible that both a horizontal and vertical reflection
+         * take place.  Note that any kind of reflection will also
+         * affect the locations of the 0/1/2 markings as described in
+         * the NSatAnnulus class notes.
+         *
+         * Finally, note that if the large boundary ring is twisted
+         * (i.e., it forms a Klein bottle), then following the entire
+         * boundary ring around using this routine will bring you back to
+         * the starting annulus but with the \a refVert flag set.
          *
          * \pre Annulus \a thisAnnulus of this block has no block
          * adjacent to it.
          *
-         * TODO: Describe arguments.
+         * @param thisAnnulus describes which original boundary annulus of
+         * this block to examine; this must be between 0 and nAnnuli()-1
+         * inclusive.
+         * @param nextBlock a reference used to return the block
+         * containing the next boundary annulus around from \a thisAnnulus.
+         * @param nextAnnulus a reference used to return the specific
+         * annulus number within \a nextBlock of the next annulus
+         * around; this will be between 0 and \a nextBlock->nAnnuli()-1
+         * inclusive, and the corresponding annulus will have no block
+         * adjacent to it.
+         * @param refVert a reference used to return \c true if the next
+         * annulus around is vertically reflected, or \c false if not;
+         * see above for details.
+         * @param refHoriz a reference used to return \c true if the next
+         * annulus around is horizontally reflected, or \c false if not;
+         * see above for details.
          */
         void nextBoundaryAnnulus(unsigned thisAnnulus, NSatBlock*& nextBlock,
                 unsigned& nextAnnulus, bool& refVert, bool& refHoriz);
