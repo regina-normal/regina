@@ -24,6 +24,8 @@ Version 4.3  [ under development ]
               where possible.  This includes pruning on non-orientable
               vertex links, too many or too few vertices or edges, low
               degree or invalid edges, conical faces and L(3,1) spines.
+        Class NKnot:
+            - Removed this unwritten placeholder class.
         Class NLayering:
             - New class to help follow through layerings of tetrahedra
               within a triangulation.
