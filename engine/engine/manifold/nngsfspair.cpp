@@ -115,10 +115,7 @@ void NNGSFSPair::reduce() {
      *    negating row 1, though again note that this negates the
      *    determinant of the matrix.
      *
-     * 6. If we wish to swap the two spaces (rotating the entire setup
-     *    by 180 degrees):
-     *      - If det(M) = -1, we just invert M.
-     *      - If det(M) = +1, we invert M and then negate the off-diagonal.
+     * 6. If we wish to swap the two spaces, we invert M.
      */
 
     // Massage the obstruction constant for each SFS.
@@ -171,6 +168,16 @@ void NNGSFSPair::reduce() {
                 matchingReln_ = matchingReln_ * NMatrix2(1, 1, -1, 0);
             else
                 matchingReln_ = NMatrix2(0, -1, 1, 1) * matchingReln_;
+
+            // If we reordered the SFSs in a displeasing way, switch
+            // them and change the matrix accordingly.
+            if (*sfs_[1] < *sfs_[0]) {
+                NSFSpace* tmp = sfs_[0];
+                sfs_[0] = sfs_[1];
+                sfs_[1] = tmp;
+
+                matchingReln_.invert();
+            }
         }
 
     // Consider replacing each space with its reflection.
