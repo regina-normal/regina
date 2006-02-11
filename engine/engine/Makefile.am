@@ -17,7 +17,6 @@ SUBDIRS = \
   enumerate \
   file \
   foreign \
-  knot \
   manifold \
   maths \
   packet \
@@ -48,7 +47,6 @@ libregina_engine_la_LIBADD = \
   census/libcensus.la \
   file/libfile.la \
   foreign/libforeign.la \
-  knot/libknot.la \
   manifold/libmanifold.la \
   maths/libmaths.la \
   packet/libpacket.la \
