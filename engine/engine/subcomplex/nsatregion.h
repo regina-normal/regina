@@ -105,45 +105,145 @@ struct NSatBlockSpec {
 };
 
 /**
- * TODO: Document NSatRegion.
+ * A large saturated region in a Seifert fibred space formed by joining
+ * together saturated blocks.
  *
- * For example, might correspond to one component of the JSJ
- * decomposition.
+ * Like a saturated block (described in the class NSatBlock), a
+ * saturated region is a connected set of tetrahedra built from a subset
+ * of fibres.  Unlike a saturated block however, a saturated region has
+ * no constraints on its boundary - it may have several boundary
+ * components or it may have none.  For instance, a saturated region
+ * might be an entire closed Seifert fibred space, or it might describe
+ * a Seifert fibred component of a JSJ decomposition.
+ *
+ * A saturated region is formed from a collection of saturated blocks by
+ * joining the boundary annuli of these blocks together in pairs.  The
+ * joins must be made so that the fibres are consistent, though it is
+ * allowable to reverse the directions of the fibres.  There is no problem
+ * with joining two boundary annuli from the same block to each other.
+ *
+ * Any boundary annulus of a block that is not joined to some other
+ * boundary annulus of a block becomes a boundary annulus of the entire
+ * region.  In this way, each boundary component of the region (if there
+ * are any at all) is formed from a ring of boundary annuli, in the same
+ * way that the boundary of a block is.  Note that the routine
+ * NSatBlock::nextBoundaryAnnulus() can be used to trace around a region
+ * boundary.  Like block boundaries, the boundary of a saturated region
+ * need not be part of the boundary of the larger triangulation (i.e.,
+ * there may be adjacent tetrahedra that are not recognised as part of
+ * this saturated structure).
+ *
+ * The NSatRegion class stores a list of its constituent blocks, but it
+ * does not directly store which block boundary annuli are joined to
+ * which.  This adjacency information is stored within the blocks
+ * themselves; see the notes regarding adjacency in the NSatBlock class
+ * description.
+ *
+ * Blocks cannot be added to a region by hand.  The way a region is
+ * constructed is by locating some initial block within a triangulation
+ * and passing this to the NSatRegion constructor, and then by calling
+ * expand() to locate adjacent blocks and expand the region as far as
+ * possible.  For locating initial blocks, the class
+ * NSatBlockStarterSearcher may be of use.
+ *
+ * \warning It is crucial that the adjacency information stored in the
+ * blocks is consistent with the region containing them.  All this
+ * requires is that the blocks are not manipulated externally (e.g.,
+ * NSatBlock::setAdjacent() is not called on any of the blocks), but
+ * instead all adjacency information is managed by this class.  Routines
+ * such as expand() which may add more blocks to the region will update
+ * the block adjacencies accordingly.
  */
 class NSatRegion : public ShareableObject {
     private:
         typedef std::vector<NSatBlockSpec> BlockSet;
+            /**< The data structure used to store the list of
+                 constituent blocks. */
 
         BlockSet blocks_;
+            /**< The set of blocks from which this region is formed,
+                 along with details of how they are oriented within this
+                 larger region. */
         long baseEuler_;
+            /**< The Euler characteristic of the base orbifold if we
+                 assume that each block contributes a trivial disc to
+                 the base orbifold. */
         bool baseOrbl_;
+            /**< Denotes whether the base orbifold is orientable if we
+                 assume that each block contributes a trivial disc to
+                 the base orbifold. */
         bool hasTwist_;
+            /**< Denotes whether we can find a fibre-reversing path that does
+                 not step inside the interior of any constituent blocks. */
         bool twistsMatchOrientation_;
-            /**< True if no twists, or if twists correspond precisely to
-             * orientation-reversing paths.  Note that reflector
-             * boundaries are orientation-reversing but do not introduce
-             * twists (thus their existence makes this false). */
+            /**< Denotes whether set of fibre-reversing paths corresponds
+                 precisely to the set of orientation-reversing paths on the
+                 base orbifold, where we do not allow paths that step inside
+                 the interior of any constituent blocks. */
         long shiftedAnnuli_;
+            /**< The number of additional (1,1) twists added to the underlying
+                 Seifert fibred space due to blocks being sheared up or down
+                 as they are joined together.  This typically happens when
+                 the triangulations of two boundary annuli are not compatible
+                 when joined (e.g., they provide opposite diagonal edges) */
         unsigned long extraReflectors_;
+            /**< The number of constituent blocks with twisted boundary.
+                 Each such block provides a new reflector boundary to the
+                 base orbifold; see NSatBlock::adjustSFS() for details. */
 
         unsigned long nBdryAnnuli_;
+            /**< The number of saturated annuli forming the boundary
+                 components (if any) of this region. */
 
     public:
         /**
-         * \pre No adjacencies for the given block.
+         * Constructs a new region containing just the given block.
+         * All boundary annuli of the given block will become boundary
+         * annuli of this region.  It is guaranteed that this block will
+         * be stored in the region without any kind of reflection (see
+         * NSatBlockSpec for details).
+         *
+         * Typically a region is initialised using this constructor, and
+         * then grown using the expand() routine.  For help in finding
+         * an initial starter block, see the NSatBlockStarterSearcher class.
+         *
+         * This region will claim ownership of the given block, and upon
+         * destruction it will destroy this block also.
+         *
+         * \pre The given block has no adjacencies listed.  That is,
+         * for every boundary annulus of the given block,
+         * NSatBlock::hasAdjacentBlock() returns \c false.
+         *
+         * @param starter the single block that this region will describe.
          */
         NSatRegion(NSatBlock* starter);
 
         /**
-         * Destroys internal blocks also.
+         * Destroys this structure and all of its internal data,
+         * including the individual blocks that make up this region.
          */
         virtual ~NSatRegion();
 
+        /**
+         * TODO
+         */
         long baseEuler() const;
+        /**
+         * TODO
+         */
         bool baseOrientable() const;
+        /**
+         * TODO
+         */
         bool hasTwist() const;
+        /**
+         * TODO
+         */
         bool twistsMatchOrientation() const;
 
+        /**
+         * TODO
+         */
         unsigned long numberOfBoundaryAnnuli() const;
         /**
          * TODO:  This one is quit slow, since we search as we go.
@@ -160,6 +260,8 @@ class NSatRegion : public ShareableObject {
         void adjustSFS(NSFSpace& sfs, bool reflect) const;
 
         /**
+         * TODO: Document expand().
+         *
          * stopIfBounded: true means we stop expanding as soon as we
          * find a boundary annulus that has some adjacent tetrahedron
          * (even if just on one face) but no corresponding adjacent block.
@@ -177,9 +279,20 @@ class NSatRegion : public ShareableObject {
          */
         bool expand(NSatBlock::TetList& avoidTets, bool stopIfBounded = false);
 
-        void calculateBaseEuler();
-
         void writeTextShort(std::ostream& out) const;
+
+    private:
+        /**
+         * Runs through the region structure and recalculates the
+         * \a baseEuler_ data member.
+         *
+         * No assumptions are made about whether edges of the boundary
+         * annuli become identified due to features outside the region.
+         * That is, this routine is safe to call even when this region
+         * is joined to some other not-yet-understood sections of the
+         * triangulation.
+         */
+        void calculateBaseEuler();
 };
 
 /*@}*/
