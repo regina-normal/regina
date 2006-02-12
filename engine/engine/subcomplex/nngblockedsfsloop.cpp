@@ -218,7 +218,7 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     // precisely two disjoint boundary annuli remaining.
     // Note that the starter block will now be owned by region_.
     region_ = new NSatRegion(starter);
-    region_->expand(avoidTets);
+    region_->expand(usedTets);
 
     if (region_->numberOfBoundaryAnnuli() != 2) {
         delete region_;

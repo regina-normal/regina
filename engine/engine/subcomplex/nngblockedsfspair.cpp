@@ -202,7 +202,7 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     // just one boundary annulus remaining.
     // Note that the starter block will now be owned by region_[0].
     region_[0] = new NSatRegion(starter);
-    region_[0]->expand(avoidTets);
+    region_[0]->expand(usedTets);
 
     if (region_[0]->numberOfBoundaryAnnuli() != 1) {
         delete region_[0];
@@ -248,14 +248,14 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         bdry.tet[1], bdry.roles[1] * NPerm(0, 2));
 
     // I fear we shall need to back up the tetrahedron list.  Sigh.
-    NSatBlock::TetList avoidTets2 = avoidTets;
+    NSatBlock::TetList usedTets2 = usedTets;
 
     NSatBlock* otherStarter;
 
     // Try horizontal:
-    if ((otherStarter = NSatBlock::isBlock(otherSideHoriz, avoidTets))) {
+    if ((otherStarter = NSatBlock::isBlock(otherSideHoriz, usedTets))) {
         region_[1] = new NSatRegion(otherStarter);
-        region_[1]->expand(avoidTets);
+        region_[1]->expand(usedTets);
 
         if (region_[1]->numberOfBoundaryAnnuli() == 1) {
             // This is it!  Stop searching.
@@ -269,14 +269,14 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     }
 
     // Try diagonal:
-    if ((otherStarter = NSatBlock::isBlock(otherSideDiag, avoidTets2))) {
+    if ((otherStarter = NSatBlock::isBlock(otherSideDiag, usedTets2))) {
         region_[1] = new NSatRegion(otherStarter);
-        region_[1]->expand(avoidTets2);
+        region_[1]->expand(usedTets2);
 
         if (region_[1]->numberOfBoundaryAnnuli() == 1) {
             // This is it!  Stop searching.
             // Switch the tetrahedron lists before we go.
-            avoidTets = avoidTets2;
+            usedTets = usedTets2;
             horizontal_ = false;
             return false;
         }

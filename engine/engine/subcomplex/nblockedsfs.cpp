@@ -147,7 +147,7 @@ bool NBlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
     // the starter block.  At this point the region will own the given
     // starter block.
     region_ = new NSatRegion(starter);
-    if (! region_->expand(avoidTets, true)) {
+    if (! region_->expand(usedTets, true)) {
         // Nup.  Destroy the temporary structures and keep searching.
         delete region_;
         region_ = 0;

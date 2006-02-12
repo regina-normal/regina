@@ -87,9 +87,9 @@ void NSatBlockStarterSet::initialise() {
 }
 
 void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
-    // Clean up avoidTets if required.
-    if (! avoidTets.empty())
-        avoidTets.clear();
+    // Clean up usedTets if required.
+    if (! usedTets.empty())
+        usedTets.clear();
 
     // Hunt for a starting block.
     unsigned long i;
@@ -124,7 +124,7 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.
             for (i = 0; i < (*it)->triangulation().getNumberOfTetrahedra(); i++)
-                avoidTets.insert(tri->getTetrahedron((*isoIt)->tetImage(i)));
+                usedTets.insert(tri->getTetrahedron((*isoIt)->tetImage(i)));
 
             // And process!
             // Note that useStarterBlock() passes ownership of the starter
@@ -133,7 +133,7 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
                 // The search ends now.
                 // Don't forget to destroy the remaining isomorphisms
                 // that we never looked at.
-                avoidTets.clear();
+                usedTets.clear();
 
                 for (isoIt++; isoIt != isos.end(); isoIt++)
                     delete *isoIt;
@@ -143,7 +143,7 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
 
             // Keep on searching.
             // Destroy this isomorphism and make things ready for the next one.
-            avoidTets.clear();
+            usedTets.clear();
             delete *isoIt;
         }
 
