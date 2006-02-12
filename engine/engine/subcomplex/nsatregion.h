@@ -225,24 +225,10 @@ class NSatRegion : public ShareableObject {
         virtual ~NSatRegion();
 
         /**
-         * TODO
-         */
-        long baseEuler() const;
-        /**
-         * TODO
-         */
-        bool baseOrientable() const;
-        /**
-         * TODO
-         */
-        bool hasTwist() const;
-        /**
-         * TODO
-         */
-        bool twistsMatchOrientation() const;
-
-        /**
-         * TODO
+         * Returns the number of saturated annuli that together form the
+         * boundary components of this region.
+         *
+         * @return the number of boundary annuli.
          */
         unsigned long numberOfBoundaryAnnuli() const;
         /**
@@ -257,6 +243,9 @@ class NSatRegion : public ShareableObject {
             NSatBlock*& block, unsigned& annulus,
             bool& blockRefVert, bool& blockRefHoriz) const;
 
+        /**
+         * TODO: Document createSFS().
+         */
         NSFSpace* createSFS(long nBoundaries, bool reflect) const;
 
         /**
@@ -308,22 +297,6 @@ inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
 }
 
 // Inline functions for NSatRegion
-
-inline long NSatRegion::baseEuler() const {
-    return baseEuler_;
-}
-
-inline bool NSatRegion::baseOrientable() const {
-    return baseOrbl_;
-}
-
-inline bool NSatRegion::hasTwist() const {
-    return hasTwist_;
-}
-
-inline bool NSatRegion::twistsMatchOrientation() const {
-    return twistsMatchOrientation_;
-}
 
 inline unsigned long NSatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
