@@ -72,51 +72,13 @@ NNGBlockedSFSPair::~NNGBlockedSFSPair() {
 }
 
 NManifold* NNGBlockedSFSPair::getManifold() const {
-    NSFSpace::classType baseClass;
+    NSFSpace* sfs0 = region_[0]->createSFS(1, firstRegionReflected_);
+    if (! sfs0)
+        return 0;
 
-    // As with NBlockedSFS, we might not be able to distinguish between
-    // n3 and n4.  Just call them both n3 for now, and if we discover
-    // there might have been an n4 then we call it off and return 0.
-
-    if (region_[0]->baseOrientable())
-        baseClass = (region_[0]->hasTwist() ? NSFSpace::o2 : NSFSpace::o1);
-    else if (! region_[0]->hasTwist())
-        baseClass = NSFSpace::n1;
-    else if (region_[0]->twistsMatchOrientation())
-        baseClass = NSFSpace::n2;
-    else
-        baseClass = NSFSpace::n3;
-
-    NSFSpace* sfs0 = new NSFSpace(baseClass,
-        (region_[0]->baseOrientable() ? (1 - region_[0]->baseEuler()) / 2 :
-            (1 - region_[0]->baseEuler())), 1, 0);
-
-    region_[0]->adjustSFS(*sfs0, firstRegionReflected_);
-
-    if (region_[1]->baseOrientable())
-        baseClass = (region_[1]->hasTwist() ? NSFSpace::o2 : NSFSpace::o1);
-    else if (! region_[1]->hasTwist())
-        baseClass = NSFSpace::n1;
-    else if (region_[1]->twistsMatchOrientation())
-        baseClass = NSFSpace::n2;
-    else
-        baseClass = NSFSpace::n3;
-
-    NSFSpace* sfs1 = new NSFSpace(baseClass,
-        (region_[1]->baseOrientable() ? (1 - region_[1]->baseEuler()) / 2 :
-            (1 - region_[1]->baseEuler())), 1, 0);
-
-    region_[1]->adjustSFS(*sfs1, false);
-
-    // Come back to this tricksy problem with n3 vs n4.
-    if (    ((sfs0->getBaseGenus() >= 3) &&
-             (sfs0->getBaseClass() == NSFSpace::n3 ||
-              sfs0->getBaseClass() == NSFSpace::n4)) ||
-            ((sfs1->getBaseGenus() >= 3) &&
-             (sfs1->getBaseClass() == NSFSpace::n3 ||
-              sfs1->getBaseClass() == NSFSpace::n4))) {
+    NSFSpace* sfs1 = region_[1]->createSFS(1, false);
+    if (! sfs1) {
         delete sfs0;
-        delete sfs1;
         return 0;
     }
 

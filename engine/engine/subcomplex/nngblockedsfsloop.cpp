@@ -80,33 +80,9 @@ NNGBlockedSFSLoop::~NNGBlockedSFSLoop() {
 }
 
 NManifold* NNGBlockedSFSLoop::getManifold() const {
-    NSFSpace::classType baseClass;
-
-    // As with NBlockedSFS, we might not be able to distinguish between
-    // n3 and n4.  Just call it n3 for now, and if we discover it might
-    // have been n4 instead then we call it off and return 0.
-
-    if (region_->baseOrientable())
-        baseClass = (region_->hasTwist() ? NSFSpace::o2 : NSFSpace::o1);
-    else if (! region_->hasTwist())
-        baseClass = NSFSpace::n1;
-    else if (region_->twistsMatchOrientation())
-        baseClass = NSFSpace::n2;
-    else
-        baseClass = NSFSpace::n3;
-
-    NSFSpace* sfs = new NSFSpace(baseClass,
-        (region_->baseOrientable() ? (- region_->baseEuler()) / 2 :
-            (- region_->baseEuler())), 2, 0);
-
-    region_->adjustSFS(*sfs, false);
-
-    if ((sfs->getBaseGenus() >= 3) &&
-            (sfs->getBaseClass() == NSFSpace::n3 ||
-             sfs->getBaseClass() == NSFSpace::n4)) {
-        delete sfs;
+    NSFSpace* sfs = region_->createSFS(2, false);
+    if (! sfs)
         return 0;
-    }
 
     sfs->reduce(false);
 

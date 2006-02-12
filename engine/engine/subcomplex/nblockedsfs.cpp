@@ -58,35 +58,9 @@ NBlockedSFS::~NBlockedSFS() {
 }
 
 NManifold* NBlockedSFS::getManifold() const {
-    NSFSpace::classType baseClass;
-    if (region_->baseOrientable())
-        baseClass = (region_->hasTwist() ? NSFSpace::o2 : NSFSpace::o1);
-    else if (! region_->hasTwist())
-        baseClass = NSFSpace::n1;
-    else if (region_->twistsMatchOrientation())
-        baseClass = NSFSpace::n2;
-    else {
-        // It could be n3 or n4; if we work out later that we can't tell
-        // them apart, we'll return 0.
-        baseClass = NSFSpace::n3;
-    }
-
-    NSFSpace* ans = new NSFSpace(baseClass,
-        (region_->baseOrientable() ? (2 - region_->baseEuler()) / 2 :
-            (2 - region_->baseEuler())), 0, 0);
-
-    region_->adjustSFS(*ans, false);
-
-    // TODO: At the moment we cannot distinguish between n3 and n4.
-    // If there is a possibility that we have n4 on our hands then
-    // return 0.  Better no answer than a wrong answer. :/
-    if ((ans->getBaseGenus() >= 3) &&
-            (ans->getBaseClass() == NSFSpace::n3 ||
-             ans->getBaseClass() == NSFSpace::n4)) {
-        // Sigh.  All that work.
-        delete ans;
+    NSFSpace* ans = region_->createSFS(0, false);
+    if (! ans)
         return 0;
-    }
 
     ans->reduce();
     return ans;

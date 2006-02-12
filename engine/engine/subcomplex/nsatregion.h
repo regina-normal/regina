@@ -257,7 +257,7 @@ class NSatRegion : public ShareableObject {
             NSatBlock*& block, unsigned& annulus,
             bool& blockRefVert, bool& blockRefHoriz) const;
 
-        void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        NSFSpace* createSFS(long nBoundaries, bool reflect) const;
 
         /**
          * TODO: Document expand().

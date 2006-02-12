@@ -128,16 +128,48 @@ void NSatRegion::boundaryAnnulus(unsigned long which,
     // Given the precondition, we should never reach this point.
 }
 
-void NSatRegion::adjustSFS(NSFSpace& sfs, bool reflect) const {
-    sfs.addReflector(extraReflectors_);
+NSFSpace* NSatRegion::createSFS(long nBoundaries, bool reflect) const {
+    NSFSpace::classType baseClass;
+
+    // We might not be able to distinguish between n3 and n4.  Just call
+    // it n3 for now, and if we discover it might have been n4 instead
+    // then we call it off and return 0.
+
+    if (baseOrbl_)
+        baseClass = (hasTwist_ ? NSFSpace::o2 : NSFSpace::o1);
+    else if (! hasTwist_)
+        baseClass = NSFSpace::n1;
+    else if (twistsMatchOrientation_)
+        baseClass = NSFSpace::n2;
+    else {
+        // Could be either n3 or n4.
+        baseClass = NSFSpace::n3;
+    }
+
+    NSFSpace* sfs = new NSFSpace(baseClass,
+        (baseOrbl_ ? (2 - nBoundaries - baseEuler_) / 2 :
+            (2 - nBoundaries - baseEuler_)), nBoundaries, 0);
+
+    sfs->addReflector(extraReflectors_);
 
     for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
             it++)
-        it->block->adjustSFS(sfs, regXor(reflect,
+        it->block->adjustSFS(*sfs, regXor(reflect,
             regXor(it->refVert, it->refHoriz)));
 
     if (shiftedAnnuli_)
-        sfs.insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
+        sfs->insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
+
+    if ((sfs->getBaseGenus() >= 3) &&
+            (sfs->getBaseClass() == NSFSpace::n3 ||
+             sfs->getBaseClass() == NSFSpace::n4)) {
+        // Could still be either n3 or n4.
+        // Shrug, give up.
+        delete sfs;
+        return 0;
+    }
+
+    return sfs;
 }
 
 bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
