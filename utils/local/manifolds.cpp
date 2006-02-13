@@ -40,6 +40,10 @@
  * triangulations are recognised, the word UNKNOWN is output alongside
  * the container instead.
  *
+ * If the option -d is passed, more detailed names will be given to
+ * 3-manifolds (e.g., simpler quotient spaces will be named according to
+ * their full Seifert structures).
+ *
  * All output is written to standard output.
  */
 
@@ -57,6 +61,7 @@ using namespace regina;
 unsigned totMfds = 0;
 unsigned totMfdsOk = 0;
 
+bool detailedNames = false;
 NPacket* tree;
 
 void usage(const char* progName, const std::string& error = std::string()) {
@@ -64,7 +69,9 @@ void usage(const char* progName, const std::string& error = std::string()) {
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " <file.rga>\n";
+    std::cerr << "    " << progName << " [ -d ] <file.rga>\n";
+    std::cerr << std::endl;
+    std::cerr << "    -d : Use more detailed 3-manifold names\n";
     std::cerr << std::endl;
     std::cerr << "Resulting data is written to standard output.\n";
     std::cerr << "Statistics and diagnostic messages are written to standard error.\n";
@@ -76,6 +83,7 @@ void process(NContainer* c) {
 
     NStandardTriangulation* std;
     NManifold* mfd;
+    std::string name, structure;
     for (NPacket* child = c->getFirstTreeChild(); child;
             child = child->getNextTreeSibling()) {
         if (child->getPacketType() != NTriangulation::packetType)
@@ -94,7 +102,14 @@ void process(NContainer* c) {
             continue;
         }
 
-        std::cout << c->getPacketLabel() << "  ->>  " << mfd->getName() << '\n';
+        name = mfd->getName();
+        if (detailedNames) {
+            structure = mfd->getStructure();
+            if ((! structure.empty()) && (structure != name))
+                name = structure;
+        }
+
+        std::cout << c->getPacketLabel() << "  ->>  " << name << '\n';
         totMfds++;
         totMfdsOk++;
 
@@ -125,7 +140,9 @@ int main(int argc, char* argv[]) {
         if (optChar == '-') {
             i++;
             break;
-        } else
+        } else if (optChar == 'd')
+            detailedNames = true;
+        else
             usage(argv[0], std::string("Invalid option: ") + argv[i]);
     }
 
