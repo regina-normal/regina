@@ -35,7 +35,7 @@
 namespace regina {
 
 /**
- * TODO: Document this class.
+ * TODO: Document NNGBlockedSFSLoopSearcher.
  */
 class NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
     private:
