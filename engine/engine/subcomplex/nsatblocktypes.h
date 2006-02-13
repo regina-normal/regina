@@ -566,6 +566,28 @@ class NSatLayering : public NSatBlock {
         NSatLayering(bool overHorizontal);
 };
 
+/**
+ * TODO: Document NSatNoOp.
+ */
+class NSatNoOp : public NSatBlock {
+    public:
+        /**
+         * TODO: Document this constructor.  Require that the annulus
+         * have two proper sides.
+         */
+        NSatNoOp(const NSatAnnulus& bdryAnnulus0);
+        /**
+         * Constructs a clone of the given degenerate block structure.
+         *
+         * @param cloneMe the block structure to clone.
+         */
+        NSatNoOp(const NSatNoOp& cloneMe);
+
+        virtual NSatBlock* clone() const;
+        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void writeTextShort(std::ostream& out) const;
+};
+
 /*@}*/
 
 // Inline functions for NSatMobius
@@ -681,6 +703,19 @@ inline NSatBlock* NSatLayering::clone() const {
 inline void NSatLayering::writeTextShort(std::ostream& out) const {
     out << "Saturated single layering over "
         << (overHorizontal_ ? "horizontal" : "diagonal") << " edge";
+}
+
+// Inline functions for NSatNoOp
+
+inline NSatNoOp::NSatNoOp(const NSatNoOp& cloneMe) : NSatBlock(cloneMe) {
+}
+
+inline NSatBlock* NSatNoOp::clone() const {
+    return new NSatNoOp(*this);
+}
+
+inline void NSatNoOp::writeTextShort(std::ostream& out) const {
+    out << "Saturated no-op annulus";
 }
 
 } // namespace regina
