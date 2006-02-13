@@ -394,19 +394,30 @@ class NSatRegion : public ShareableObject {
          * blocks, and will also hunt for new adjacencies between
          * existing blocks.
          *
+         * The first argument to this routine is the tetrahedron list
+         * \a avoidTets.  This is a list of tetrahedra that will not be
+         * considered when examining potential new blocks.  This list
+         * will be modified by this routine; in particular, it will be
+         * expanded to include all tetrahedra for any new blocks that
+         * are found.  Before calling this routine it should contain
+         * tetrahedra for blocks already in this region, as discussed in
+         * the preconditions below.
          *
-         * 
+         * It may be that you are searching for a region that fills an entire
+         * triangulation component (i.e., every boundary annulus of the
+         * region in fact forms part of the boundary of the triangulation).
+         * In this case you may pass the optional argument
+         * \a stopIfIncomplete as \c true.  This means that if this routine
+         * ever discovers an annulus that is not part of the
+         * triangulation boundary and that it cannot match with some
+         * adjacent block, it will exit immediately and return \c false.
+         * Note that the region structure will be incomplete and/or
+         * inconsistent if this happens; in this case the unfinished
+         * region should be destroyed completely and never used.
          *
-         * TODO: Document expand().
-         *
-         * stopIfBounded: true means we stop expanding as soon as we
-         * find a boundary annulus that has some adjacent tetrahedron
-         * (even if just on one face) but no corresponding adjacent block.
-         * When we stop the structure will be in an inconsistent state;
-         * it is assumed that it will be tossed away completely.
-         *
-         * Guarantee that new blocks will be pushed to the end of the
-         * list (i.e., their indices won't change).
+         * For internal purposes, it should be noted that any new blocks
+         * that are discovered will be added to the end of the internal
+         * block list (thus the indices of existing blocks will not change).
          *
          * \warning When joining blocks together, it is possible to
          * create invalid edges (e.g., by joining a one-annulus
@@ -415,11 +426,30 @@ class NSatRegion : public ShareableObject {
          * recommended that you run NTriangulation::isValid() before
          * calling this routine.
          *
-         * \pre TODO Any block adjacencies are in this list.
+         * \pre If any blocks already belonging to this region have
+         * adjacencies listed in their NSatBlock structures, then these
+         * adjacent blocks belong to this region also.  This precondition
+         * is easily satisfied if you let the NSatRegion constructor
+         * and expand() do all of the adjacency handling, as described
+         * in the class notes.
+         * \pre The list \a avoidTets includes all tetrahedra on the
+         * boundaries of any blocks already contained in this region.
          *
-         * Returns false iff we passed stopIfBounded but it failed.
+         * @param avoidTets a list of tetrahedra that should not be
+         * considered for new blocks, as discussed above.  Note that
+         * this list may be modified by this routine.
+         * @param stopIfIncomplete \c true if you are filling an entire
+         * triangulation component with this region and you wish this
+         * routine to exit early if this is not possible, or \c false
+         * (the default) if you simply wish to expand this region as far
+         * as you can.  See above for further discussion.
+         * @return \c false if the optional argument \a stopIfIncomplete
+         * was passed as \c true but expansion did not fill the entire
+         * triangulation component as described above, or \c true in all
+         * other cases.
          */
-        bool expand(NSatBlock::TetList& avoidTets, bool stopIfBounded = false);
+        bool expand(NSatBlock::TetList& avoidTets,
+            bool stopIfIncomplete = false);
 
         void writeTextShort(std::ostream& out) const;
 

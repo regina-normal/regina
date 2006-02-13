@@ -155,7 +155,7 @@ NSFSpace* NSatRegion::createSFS(long nBoundaries, bool reflect) const {
     return sfs;
 }
 
-bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
+bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     NSatBlockSpec currBlockSpec;
     NSatBlock *currBlock, *adjBlock;
     unsigned ann, adjAnn;
@@ -187,7 +187,7 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
                 // The annulus lies half on the boundary.  No chance of
                 // extending it from here, but we have no chance of
                 // filling the entire triangulation.
-                if (stopIfBounded)
+                if (stopIfIncomplete)
                     return false;
                 continue;
             }
@@ -277,7 +277,7 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfBounded) {
                 continue;
 
             // We couldn't match the annulus to anything.
-            if (stopIfBounded)
+            if (stopIfIncomplete)
                 return false;
         }
     }
