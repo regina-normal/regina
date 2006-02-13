@@ -451,9 +451,35 @@ class NSatRegion : public ShareableObject {
         bool expand(NSatBlock::TetList& avoidTets,
             bool stopIfIncomplete = false);
 
+        /**
+         * Writes details of the composition of this region to the given
+         * output stream.
+         *
+         * The output will consist of several lines.  The first line
+         * will contain the title string (passed as a separate argument
+         * to this routine), followed by a colon.  Following this will be
+         * a number of lines describing the individual blocks that make
+         * up this region and the various adjacencies between them.
+         *
+         * @param out the output stream to which to write.
+         * @param title the name of this region, to be written on the
+         * first line of output.
+         */
+        void writeDetail(std::ostream& out, const std::string& title) const;
+
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
+        /**
+         * Returns the index of the given block within the internal
+         * block list.
+         *
+         * @return the index of the given block, or -1 if the block is
+         * not part of this region.
+         */
+        long blockIndex(const NSatBlock* block) const;
+
         /**
          * Runs through the region structure and recalculates the
          * \a baseEuler_ data member.
@@ -483,6 +509,10 @@ inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
 
 inline unsigned long NSatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
+}
+
+inline void NSatRegion::writeTextLong(std::ostream& out) const {
+    writeDetail(out, "Saturated region");
 }
 
 } // namespace regina

@@ -216,6 +216,66 @@ class NSatBlock : public ShareableObject {
         bool hasAdjacentBlock(unsigned whichAnnulus) const;
 
         /**
+         * Returns the saturated block listed as being adjacent to the
+         * given boundary annulus of this block.
+         *
+         * @param which indicates which boundary annulus of this block
+         * should be examined; this must be between 0 and nAnnuli()-1
+         * inclusive.
+         * @return the other block adjacent along this annulus, or 0
+         * if there is no adjacent block listed.
+         */
+        NSatBlock* adjacentBlock(unsigned whichAnnulus) const;
+
+        /**
+         * Returns which specific annulus of the adjacent block is
+         * listed as being adjacent to the given boundary annulus of
+         * this block.
+         *
+         * \pre The given annulus of this block actually has an adjacent
+         * block listed.
+         *
+         * @param which indicates which boundary annulus of this block
+         * should be examined; this must be between 0 and nAnnuli()-1
+         * inclusive.
+         * @return the corresponding annulus number on the other block
+         * that is adjacent along this annulus.
+         */
+        unsigned adjacentAnnulus(unsigned whichAnnulus) const;
+
+        /**
+         * Returns whether the adjacency along the given boundary annulus
+         * of this block is reflected.  See the class notes for a
+         * discussion of reflected adjacencies.
+         *
+         * \pre The given annulus of this block actually has an adjacent
+         * block listed.
+         *
+         * @param which indicates which boundary annulus of this block
+         * should be examined; this must be between 0 and nAnnuli()-1
+         * inclusive.
+         * @return \c true if the corresponding adjacency is reflected,
+         * or \c false if it is not.
+         */
+        bool adjacentReflected(unsigned whichAnnulus) const;
+
+        /**
+         * Returns whether the adjacency along the given boundary annulus
+         * of this block is backwards.  See the class notes for a
+         * discussion of backwards adjacencies.
+         *
+         * \pre The given annulus of this block actually has an adjacent
+         * block listed.
+         *
+         * @param which indicates which boundary annulus of this block
+         * should be examined; this must be between 0 and nAnnuli()-1
+         * inclusive.
+         * @return \c true if the corresponding adjacency is backwards,
+         * or \c false if it is not.
+         */
+        bool adjacentBackwards(unsigned whichAnnulus) const;
+
+        /**
          * Lists the given saturated block as being adjacent to the
          * given boundary annulus of this block.  Both block structures
          * (this and the given block) will be updated.
@@ -601,6 +661,22 @@ inline bool NSatBlock::twistedBoundary() const {
 
 inline bool NSatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
     return (adjBlock_[whichAnnulus] != 0);
+}
+
+inline NSatBlock* NSatBlock::adjacentBlock(unsigned whichAnnulus) const {
+    return adjBlock_[whichAnnulus];
+}
+
+inline unsigned NSatBlock::adjacentAnnulus(unsigned whichAnnulus) const {
+    return adjAnnulus_[whichAnnulus];
+}
+
+inline bool NSatBlock::adjacentReflected(unsigned whichAnnulus) const {
+    return adjReflected_[whichAnnulus];
+}
+
+inline bool NSatBlock::adjacentBackwards(unsigned whichAnnulus) const {
+    return adjBackwards_[whichAnnulus];
 }
 
 inline void NSatBlock::setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,

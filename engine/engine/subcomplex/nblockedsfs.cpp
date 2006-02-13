@@ -77,8 +77,7 @@ std::ostream& NBlockedSFS::writeTeXName(std::ostream& out) const {
 }
 
 void NBlockedSFS::writeTextLong(std::ostream& out) const {
-    // TODO, later
-    out << "Blocked SFS";
+    region_->writeDetail(out, "Blocked SFS");
 }
 
 NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {

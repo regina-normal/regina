@@ -287,6 +287,17 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     return true;
 }
 
+long NSatRegion::blockIndex(const NSatBlock* block) const {
+    BlockSet::const_iterator it;
+    unsigned long id;
+
+    for (id = 0, it = blocks_.begin(); it != blocks_.end(); it++, id++)
+        if (block == it->block)
+            return id;
+
+    return -1;
+}
+
 void NSatRegion::calculateBaseEuler() {
     BlockSet::const_iterator it;
     unsigned ann;
@@ -335,6 +346,57 @@ void NSatRegion::calculateBaseEuler() {
         + edgesBdry;
 
     baseEuler_ = faces - edgesBdry - (edgesInternalDoubled / 2) + vertices;
+}
+
+void NSatRegion::writeDetail(std::ostream& out, const std::string& title)
+        const {
+    out << title << ":\n";
+
+    BlockSet::const_iterator it;
+    unsigned long id, nAnnuli, ann;
+    bool ref, back;
+
+    out << "  Blocks:\n";
+    for (id = 0, it = blocks_.begin(); it != blocks_.end(); it++, id++) {
+        out << "    " << id << ". ";
+        it->block->writeTextShort(out);
+        nAnnuli = it->block->nAnnuli();
+        out << " (" << nAnnuli << (nAnnuli == 1 ? " annulus" : " annuli");
+        if (it->refVert || it->refHoriz) {
+            out << ", ";
+            if (it->refVert && it->refHoriz)
+                out << "vert./horiz.";
+            else if (it->refVert)
+                out << "vert.";
+            else
+                out << "horiz.";
+            out << " reflection";
+        }
+        out << ")\n";
+    }
+
+    out << "  Adjacencies:\n";
+    for (id = 0, it = blocks_.begin(); it != blocks_.end(); it++, id++)
+        for (ann = 0; ann < it->block->nAnnuli(); ann++) {
+            out << "    " << id << '/' << ann << " --> ";
+            if (! it->block->hasAdjacentBlock(ann))
+                out << "bdry";
+            else {
+                out << blockIndex(it->block->adjacentBlock(ann)) << '/'
+                    << it->block->adjacentAnnulus(ann);
+                ref = it->block->adjacentReflected(ann);
+                back = it->block->adjacentBackwards(ann);
+                if (ref || back) {
+                    if (ref && back)
+                        out << " (reflected, backwards)";
+                    else if (ref)
+                        out << " (reflected)";
+                    else
+                        out << " (backwards)";
+                }
+            }
+            out << "\n";
+        }
 }
 
 void NSatRegion::writeTextShort(std::ostream& out) const {
