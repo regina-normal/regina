@@ -240,6 +240,24 @@ struct NSatAnnulus {
     NSatAnnulus horizontalReflection() const;
 
     /**
+     * Rotates the representation of this annulus by 180 degrees.
+     * This has the effect of switching the first and second faces and
+     * also reversing the direction of the vertical fibres.
+     *
+     * Calling this routine is equivalent to calling reflectVertical() and
+     * then reflectHorizontal().
+     */
+    void rotateHalfTurn();
+    /**
+     * Returns a 180 degree rotated representation of this annulus.
+     * This structure will not be changed.  See rotateHalfTurn() for
+     * further details.
+     *
+     * @return a new 180 degree rotation of this annulus.
+     */
+    NSatAnnulus halfTurnRotation() const;
+
+    /**
      * Determines whether this and the given annulus are adjacent,
      * possibly modulo vertical or horizontal reflections.  That is,
      * this routine determines whether this and the given structure
@@ -376,6 +394,20 @@ inline void NSatAnnulus::reflectHorizontal() {
 inline NSatAnnulus NSatAnnulus::horizontalReflection() const {
     return NSatAnnulus(tet[1], roles[1] * NPerm(0, 1),
                        tet[0], roles[0] * NPerm(0, 1));
+}
+
+inline void NSatAnnulus::rotateHalfTurn() {
+    NTetrahedron* t = tet[0];
+    tet[0] = tet[1];
+    tet[1] = t;
+
+    NPerm r = roles[0];
+    roles[0] = roles[1];
+    roles[1] = r;
+}
+
+inline NSatAnnulus NSatAnnulus::halfTurnRotation() const {
+    return NSatAnnulus(tet[1], roles[1], tet[0], roles[0]);
 }
 
 inline NSatAnnulus NSatAnnulus::image(const NTriangulation* originalTri,
