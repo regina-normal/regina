@@ -249,6 +249,14 @@ class NSatRegion : public ShareableObject {
         NSFSpace* createSFS(long nBoundaries, bool reflect) const;
 
         /**
+         * Expands this region as far as possible within the overall
+         * triangulation.  This routine will hunt for new saturated
+         * blocks, and will also hunt for new adjacencies between
+         * existing blocks.
+         *
+         *
+         * 
+         *
          * TODO: Document expand().
          *
          * stopIfBounded: true means we stop expanding as soon as we
@@ -257,12 +265,17 @@ class NSatRegion : public ShareableObject {
          * When we stop the structure will be in an inconsistent state;
          * it is assumed that it will be tossed away completely.
          *
-         * Point out that this doesn't check for invalid edges.
-         *
          * Guarantee that new blocks will be pushed to the end of the
          * list (i.e., their indices won't change).
          *
-         * \pre Any block adjacencies are in this list.
+         * \warning When joining blocks together, it is possible to
+         * create invalid edges (e.g., by joining a one-annulus
+         * untwisted boundary to a one-annulus twisted boundary).
+         * This routine does \e not check for such conditions.  It is
+         * recommended that you run NTriangulation::isValid() before
+         * calling this routine.
+         *
+         * \pre TODO Any block adjacencies are in this list.
          *
          * Returns false iff we passed stopIfBounded but it failed.
          */
