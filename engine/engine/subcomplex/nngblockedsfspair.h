@@ -58,6 +58,9 @@ class NNGBlockedSFSPair : public NStandardTriangulation {
         bool firstRegionReflected_;
 
     public:
+        /**
+         * Destroys this structure and its constituent components.
+         */
         ~NNGBlockedSFSPair();
 
         NManifold* getManifold() const;

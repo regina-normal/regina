@@ -64,6 +64,9 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
                  to the second. */
 
     public:
+        /**
+         * Destroys this structure and its constituent components.
+         */
         ~NNGBlockedSFSLoop();
 
         NManifold* getManifold() const;

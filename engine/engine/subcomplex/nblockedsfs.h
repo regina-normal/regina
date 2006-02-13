@@ -48,13 +48,24 @@ class NSatRegion;
  */
 
 /**
+ * Describes a closed 3-manifold triangulation that is formed from a single
+ * closed saturated region.  A saturated region is in turn formed from
+ * saturated blocks by identifying their boundary annuli in pairs; see
+ * the NSatRegion class for details.
+ *
+ * 
  * TODO.
  */
 class NBlockedSFS : public NStandardTriangulation {
     private:
         NSatRegion* region_;
+            /**< The single saturated region that describes this entire
+                 triangulation. */
 
     public:
+        /**
+         * Destroys this structure and its constituent components.
+         */
         ~NBlockedSFS();
 
         NManifold* getManifold() const;

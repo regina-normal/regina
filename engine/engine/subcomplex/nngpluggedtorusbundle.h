@@ -62,6 +62,12 @@ class NNGPluggedTorusBundle : public NStandardTriangulation {
         NMatrix2 fibreReln_;
 
     public:
+        /**
+         * Destroys this structure and its constituent components.
+         *
+         * As an exception, the core <tt>T x I</tt> triangulation is not
+         * destroyed; it is assumed that this is referenced from elsewhere.
+         */
         ~NNGPluggedTorusBundle();
 
         NManifold* getManifold() const;
