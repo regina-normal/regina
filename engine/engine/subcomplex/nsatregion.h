@@ -292,7 +292,50 @@ class NSatRegion : public ShareableObject {
         const NSatAnnulus& boundaryAnnulus(unsigned long which,
             bool& blockRefVert, bool& blockRefHoriz) const;
         /**
-         * TODO
+         * Returns fine details of the requested saturated annulus on
+         * the boundary of this region.
+         *
+         * The argument \a which specifies which one of these
+         * annuli should be returned.  See the
+         * boundaryAnnulus(unsigned long, bool&, bool&) documentation
+         * for details on how the boundary annuli are numbered.
+         *
+         * Various details of the requested boundary annulus are
+         * returned in the various arguments, as described below.
+         *
+         * Be aware that the block containing the requested annulus
+         * might be reflected horizontally and/or vertically within the
+         * overall region, as discussed in the NSatBlockSpec class notes.
+         * This will affect how the annulus is positioned as
+         * part of the overall region boundary (e.g., the annulus might
+         * be positioned upside-down in the overall region boundary,
+         * or it might be positioned with its second face appearing before
+         * its first face as one walks around the boundary).  The two
+         * boolean arguments \a blockRefVert and \a blockRefHoriz will
+         * be modified to indicate if and how the block is reflected.
+         *
+         * \warning This routine is quite slow, since it currently scans
+         * through every annulus of every saturated block.  Use it
+         * sparingly!
+         *
+         * @param which specifies which boundary annulus of this region
+         * to return; this must be between 0 and numberOfBoundaryAnnuli()-1
+         * inclusive.
+         * @param block used to return the particular saturated block
+         * containing the requested annulus.
+         * @param annulus used to return which annulus number in the
+         * returned block is the requested annulus; this will be between
+         * 0 and block->nAnnuli() inclusive.
+         * @param blockRefVert used to return whether the block
+         * containing the requested annulus is vertically reflected
+         * within this region (see NSatBlockSpec for details).  This
+         * will be set to \c true if the block is vertically reflected,
+         * or \c false if not.
+         * @param blockRefHoriz used to return whether the block
+         * containing the requested annulus is horizontally reflected
+         * within this region (see NSatBlockSpec for details).  This
+         * will be set to \c true if the block is horizontally reflected,
+         * or \c false if not.
          */
         void boundaryAnnulus(unsigned long which,
             NSatBlock*& block, unsigned& annulus,
