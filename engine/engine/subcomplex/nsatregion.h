@@ -153,6 +153,10 @@ struct NSatBlockSpec {
  * instead all adjacency information is managed by this class.  Routines
  * such as expand() which may add more blocks to the region will update
  * the block adjacencies accordingly.
+ *
+ * \todo Have this class track the boundary components properly, with
+ * annuli grouped and oriented according to the region boundaries (as
+ * opposed to individual block boundaries).
  */
 class NSatRegion : public ShareableObject {
     private:
@@ -232,13 +236,64 @@ class NSatRegion : public ShareableObject {
          */
         unsigned long numberOfBoundaryAnnuli() const;
         /**
-         * TODO:  This one is quit slow, since we search as we go.
+         * Returns the requested saturated annulus on the boundary of
+         * this region.
          *
-         * Guarantee to return annuli in block/ann order.
+         * The saturated annuli that together form the boundary
+         * components of this region are numbered from 0 to
+         * numberOfBoundaryAnnuli()-1 inclusive.  The argument \a which
+         * specifies which one of these annuli should be returned.
+         *
+         * Currently the annuli are numbered lexicographically by
+         * block and then by annulus number within the block, although
+         * this ordering is subject to change in future versions of Regina.
+         * In particular, the annuli are \e not necessarily numbered in
+         * order around the region boundaries, and each region boundary
+         * component might not even be given a consecutive range of numbers.
+         *
+         * It is guaranteed however that, if the starter block passed to
+         * the NSatRegion constructor provides any boundary annuli for
+         * the overall region, then the first such annulus in the starter
+         * block will be numbered 0 here.
+         *
+         * The structure returned will be the annulus precisely as it
+         * appears within its particular saturated block.  As discussed
+         * in the NSatBlockSpec class notes, the block might be
+         * reflected horizontally and/or vertically within the overall
+         * region, which will affect how the annulus is positioned as
+         * part of the overall region boundary (e.g., the annulus might
+         * be positioned upside-down in the overall region boundary,
+         * or it might be positioned with its second face appearing before
+         * its first face as one walks around the boundary).  To account
+         * for this, the two boolean arguments \a blockRefVert and
+         * \a blockRefHoriz will be modified to indicate if and how the
+         * block is reflected.
+         *
+         * \warning This routine is quite slow, since it currently scans
+         * through every annulus of every saturated block.  Use it
+         * sparingly!
+         *
+         * @param which specifies which boundary annulus of this region
+         * to return; this must be between 0 and numberOfBoundaryAnnuli()-1
+         * inclusive.
+         * @param blockRefVert used to return whether the block
+         * containing the requested annulus is vertically reflected
+         * within this region (see NSatBlockSpec for details).  This
+         * will be set to \c true if the block is vertically reflected,
+         * or \c false if not.
+         * @param blockRefHoriz used to return whether the block
+         * containing the requested annulus is horizontally reflected
+         * within this region (see NSatBlockSpec for details).  This
+         * will be set to \c true if the block is horizontally reflected,
+         * or \c false if not.
+         * @return details of the requested boundary annulus, precisely
+         * as it appears within its particular saturated block.
          */
-        const NSatAnnulus& boundaryAnnulus(unsigned long which) const;
         const NSatAnnulus& boundaryAnnulus(unsigned long which,
             bool& blockRefVert, bool& blockRefHoriz) const;
+        /**
+         * TODO
+         */
         void boundaryAnnulus(unsigned long which,
             NSatBlock*& block, unsigned& annulus,
             bool& blockRefVert, bool& blockRefHoriz) const;
