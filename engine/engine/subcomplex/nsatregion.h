@@ -299,7 +299,49 @@ class NSatRegion : public ShareableObject {
             bool& blockRefVert, bool& blockRefHoriz) const;
 
         /**
-         * TODO: Document createSFS().
+         * Returns details of the Seifert fibred space represented by
+         * this region.
+         *
+         * In order to correctly construct the Seifert fibred space,
+         * this routine must know how many boundary components this
+         * region has (as each boundary component will become a puncture
+         * in the base orbifold).  Since the NSatRegion class does not
+         * yet have sophisticated boundary tracking, the caller of this
+         * routine must provide this information in the argument
+         * \a nBoundaries.  Be aware that this argument may be removed
+         * in future versions of Regina.
+         *
+         * Each boundary component will be formed from a ring of
+         * saturated annuli, which together form a torus (note that
+         * Klein bottles are disallowed here; see the preconditions below).
+         * The NSatBlock class notes describe how a curve representing the
+         * base orbifold runs through each saturated annulus about a single
+         * block; the curves representing the base orbifold on the
+         * overall region boundaries are formed by piecing together
+         * the relevant pieces of such curves on individual blocks.
+         * In other words, the curves on the region boundaries that
+         * represent the base orbifold cut through each annulus parallel
+         * to the edges joining markings 0 and 2 (see the NSatAnnulus
+         * notes for a discussion of markings).
+         *
+         * If the argument \a reflect is \c true, the Seifert fibred
+         * space will be created as though the entire region had been
+         * reflected.  In particular, each twist or exceptional fibre
+         * will be negated before being added to the Seifert structure.
+         *
+         * \pre The argument \a nBoundaries is indeed the number of
+         * boundary components of this region (or equivalently, the
+         * number of punctures in the base orbifold).
+         * \pre None of the boundary components of this region are
+         * twisted loops of saturated annuli.  In other words, each
+         * boundary component forms a torus, not a Klein bottle.
+         *
+         * @param nBoundaries the number of boundary components of this
+         * saturated region.
+         * @param reflect \c true if this region is to be reflected
+         * as the Seifert fibred space is created, or \c false if not.
+         * @return the newly created structure of the underlying Seifert
+         * fibred space.
          */
         NSFSpace* createSFS(long nBoundaries, bool reflect) const;
 
