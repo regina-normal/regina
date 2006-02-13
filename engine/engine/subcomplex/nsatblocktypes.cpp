@@ -801,15 +801,5 @@ NSatLayering* NSatLayering::isBlockLayering(const NSatAnnulus& annulus,
     return 0;
 }
 
-NSatNoOp::NSatNoOp(const NSatAnnulus& bdryAnnulus0) : NSatBlock(2) {
-    annulus_[0] = bdryAnnulus0;
-    annulus_[1] = bdryAnnulus0.otherSide();
-    annulus_[1].reflectHorizontal();
-}
-
-void NSatNoOp::adjustSFS(NSFSpace& sfs, bool reflect) const {
-    sfs.insertFibre(1, reflect ? -1 : 1);
-}
-
 } // namespace regina
 
