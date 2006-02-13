@@ -115,8 +115,11 @@ std::ostream& NNGBlockedSFSPair::writeTeXName(std::ostream& out) const {
 }
 
 void NNGBlockedSFSPair::writeTextLong(std::ostream& out) const {
-    // TODO, later
-    out << "Blocked SFS Pair";
+    out << "Blocked SFS pair (vertical <--> "
+        << (horizontal_ ? "horizontal" : "diagonal") << ")\n";
+
+    region_[0]->writeDetail(out, "First region");
+    region_[1]->writeDetail(out, "Second region");
 }
 
 NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
@@ -126,7 +129,6 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
     if (tri->getNumberOfComponents() > 1)
         return 0;
 
-    // TODO: Check on this.
     // Watch out for twisted block boundaries that are incompatible with
     // neighbouring blocks!  Also watch for the boundary between blocks
     // being an annulus on one side and a Klein bottle on the other (or
