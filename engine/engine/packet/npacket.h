@@ -671,6 +671,17 @@ class NPacket : public ShareableObject {
          */
         void moveToLast();
 
+        /**
+         * Sorts the immediate children of this packet according to
+         * their packet labels.  Note that this routine is not
+         * recursive (for instance, grandchildren will not be sorted
+         * within each child packet).
+         *
+         * This routine takes quadratic time in the number of
+         * immediate children (and it's slow quadratic at that).
+         */
+        void sortChildren();
+
         /*@}*/
         /**
          * (end: Tree Manipulation)

@@ -119,6 +119,7 @@ void addNPacket() {
         .def("moveDown", &NPacket::moveDown, OL_moveDown())
         .def("moveToFirst", &NPacket::moveToFirst)
         .def("moveToLast", &NPacket::moveToLast)
+        .def("sortChildren", &NPacket::sortChildren)
         .def("nextTreePacket", nextTreePacket_non_const, OL_nextTreePacket()
             [return_value_policy<reference_existing_object>()])
         .def("firstTreePacket", firstTreePacket_non_const,

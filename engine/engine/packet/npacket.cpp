@@ -322,6 +322,60 @@ void NPacket::moveToLast() {
     }
 }
 
+void NPacket::sortChildren() {
+    // Run through the packets from largest to smallest, moving each to
+    // the beginning of the child list in turn.
+    NPacket* endpoint = 0;
+    NPacket* current;
+    NPacket* largest;
+
+    while (1) {
+        // Put current at the beginning of the clump of yet-unsorted children.
+        if (! endpoint)
+            current = firstTreeChild;
+        else
+            current = endpoint->nextTreeSibling;
+        if (! current)
+            break;
+
+        // Find the largest amongst the yet-unsorted children.
+        largest = current;
+        current = current->nextTreeSibling;
+        while (current) {
+            if (current->getPacketLabel() > largest->getPacketLabel())
+                largest = current;
+            current = current->nextTreeSibling;
+        }
+
+        // Move current to the front of the list.
+        if (firstTreeChild != current) {
+            // We know that current has a previous sibling.
+            current->prevTreeSibling->nextTreeSibling =
+                current->nextTreeSibling;
+
+            if (current->nextTreeSibling)
+                current->nextTreeSibling->prevTreeSibling =
+                    current->prevTreeSibling;
+            else
+                lastTreeChild = current->prevTreeSibling;
+
+            firstTreeChild->prevTreeSibling = current;
+            current->nextTreeSibling = firstTreeChild;
+            current->prevTreeSibling = 0;
+            firstTreeChild = current;
+        }
+
+        if (! endpoint)
+            endpoint = current;
+    }
+
+    // Fire a packet event.
+    if (listeners.get())
+        for (std::set<NPacketListener*>::const_iterator it = listeners->begin();
+                it != listeners->end(); it++)
+            (*it)->childrenWereReordered(this);
+}
+
 void NPacket::swapWithNextSibling() {
     if (! nextTreeSibling)
         return;

@@ -43,6 +43,8 @@ Version 4.3  [ under development ]
             - New specialised class for working with 2x2 integer matrices.
         Class NNGSFSLoop, NNGSFSPair:
             - New families of non-geometric 3-manifolds.
+        Class NPacket:
+            - New routine sortChildren().
         Class NPerm:
             - The assignment operator now returns a reference instead of void.
         Class NPluggedIBundle, NPluggedIBundleCore, NTorusPlug:
