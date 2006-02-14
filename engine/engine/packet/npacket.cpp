@@ -347,26 +347,26 @@ void NPacket::sortChildren() {
             current = current->nextTreeSibling;
         }
 
-        // Move current to the front of the list.
-        if (firstTreeChild != current) {
-            // We know that current has a previous sibling.
-            current->prevTreeSibling->nextTreeSibling =
-                current->nextTreeSibling;
+        // Move the largest to the front of the list.
+        if (firstTreeChild != largest) {
+            // We know that largest has a previous sibling.
+            largest->prevTreeSibling->nextTreeSibling =
+                largest->nextTreeSibling;
 
-            if (current->nextTreeSibling)
-                current->nextTreeSibling->prevTreeSibling =
-                    current->prevTreeSibling;
+            if (largest->nextTreeSibling)
+                largest->nextTreeSibling->prevTreeSibling =
+                    largest->prevTreeSibling;
             else
-                lastTreeChild = current->prevTreeSibling;
+                lastTreeChild = largest->prevTreeSibling;
 
-            firstTreeChild->prevTreeSibling = current;
-            current->nextTreeSibling = firstTreeChild;
-            current->prevTreeSibling = 0;
-            firstTreeChild = current;
+            firstTreeChild->prevTreeSibling = largest;
+            largest->nextTreeSibling = firstTreeChild;
+            largest->prevTreeSibling = 0;
+            firstTreeChild = largest;
         }
 
         if (! endpoint)
-            endpoint = current;
+            endpoint = largest;
     }
 
     // Fire a packet event.
