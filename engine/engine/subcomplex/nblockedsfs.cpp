@@ -63,6 +63,40 @@ NManifold* NBlockedSFS::getManifold() const {
         return 0;
 
     ans->reduce();
+
+    // If we have SFS(RP2/n2) with one exceptional fibre, rewrite it as
+    // SFS(S2) with three exceptional fibres.
+
+    if (ans->getBaseClass() == NSFSpace::n2 &&
+            ans->getBaseGenus() == 1 &&
+            (! ans->isBaseOrientable()) &&
+            ans->getBasePunctures() == 0 &&
+            ans->getBaseReflectors() == 0 &&
+            ans->getFibreCount() <= 1) {
+        NSFSpace* altAns = new NSFSpace(NSFSpace::o1, 0, 0, 0);
+        altAns->insertFibre(2, 1);
+        altAns->insertFibre(2, -1);
+
+        NSFSFibre rp2Fibre;
+        if (ans->getFibreCount() == 0) {
+            rp2Fibre.alpha = 1;
+            rp2Fibre.beta = ans->getObstruction();
+        } else {
+            rp2Fibre = ans->getFibre(0);
+            rp2Fibre.beta += rp2Fibre.alpha * ans->getObstruction();
+        }
+
+        // Make sure we're not going to try inserting (0,k).
+        if (rp2Fibre.beta != 0) {
+            altAns->insertFibre(rp2Fibre.beta, rp2Fibre.alpha);
+            altAns->reduce();
+
+            delete ans;
+            return altAns;
+        } else
+            delete altAns;
+    }
+
     return ans;
 }
 
