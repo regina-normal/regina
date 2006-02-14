@@ -44,6 +44,10 @@
  * 3-manifolds (e.g., simpler quotient spaces will be named according to
  * their full Seifert structures).
  *
+ * If the option -r is passed, container packets will be renamed
+ * according to the newly discovered 3-manifold names and the original
+ * file will be overwritten with this new data.
+ *
  * All output is written to standard output.
  */
 
@@ -60,8 +64,10 @@ using namespace regina;
 
 unsigned totMfds = 0;
 unsigned totMfdsOk = 0;
+unsigned totMfdsRenamed = 0;
 
 bool detailedNames = false;
+bool renameMfds = false;
 NPacket* tree;
 
 void usage(const char* progName, const std::string& error = std::string()) {
@@ -69,9 +75,10 @@ void usage(const char* progName, const std::string& error = std::string()) {
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -d ] <file.rga>\n";
+    std::cerr << "    " << progName << " [ -d ] [ -r ] <file.rga>\n";
     std::cerr << std::endl;
     std::cerr << "    -d : Use more detailed 3-manifold names\n";
+    std::cerr << "    -r : Rename container packets and overwrite file\n";
     std::cerr << std::endl;
     std::cerr << "Resulting data is written to standard output.\n";
     std::cerr << "Statistics and diagnostic messages are written to standard error.\n";
@@ -113,6 +120,12 @@ void process(NContainer* c) {
         totMfds++;
         totMfdsOk++;
 
+        if (renameMfds)
+            if (c->getPacketLabel() != name) {
+                c->setPacketLabel(name);
+                totMfdsRenamed++;
+            }
+
         delete std;
         delete mfd;
         return;
@@ -142,6 +155,8 @@ int main(int argc, char* argv[]) {
             break;
         } else if (optChar == 'd')
             detailedNames = true;
+        else if (optChar == 'r')
+            renameMfds = true;
         else
             usage(argv[0], std::string("Invalid option: ") + argv[i]);
     }
@@ -162,6 +177,38 @@ int main(int argc, char* argv[]) {
         if (p->getPacketType() == NContainer::packetType && p != tree)
             process(static_cast<NContainer*>(p));
 
+    // Save the data file if required.
+    if (renameMfds) {
+        tree->makeUniqueLabels(0);
+
+        std::cerr << std::endl;
+        if (totMfdsRenamed == 0)
+            std::cerr << "No 3-manifolds were renamed; not saving data.\n";
+        else {
+            std::cerr << totMfdsRenamed
+                << (totMfdsRenamed == 1 ? " manifold" : " manifolds")
+                << " will be renamed.\n";
+            std::cerr << "WARNING: The data file " << argv[i]
+                << " will be overwritten.\n";
+            std::cerr << "Proceed? (y/n) ";
+
+            std::string line;
+            getline(std::cin, line);
+            while (line != "y" && line != "n") {
+                std::cerr << "Please answer y or n.  Proceed? (y/n) ";
+                getline(std::cin, line);
+            }
+
+            if (line != "y") {
+                std::cerr << "Not saving data file.\n";
+                renameMfds = false;
+            } else if (writeXMLFile(argv[i], tree))
+                std::cerr << "Data saved to " << argv[i] << ".\n";
+            else
+                std::cerr << "ERROR: The data file could not be saved.\n";
+        }
+    }
+
     // Write statistics and clean up.
     delete tree;
 
@@ -169,6 +216,9 @@ int main(int argc, char* argv[]) {
     std::cerr << "Final statistics:" << std::endl;
     std::cerr << "    3-manifolds examined:   " << totMfds << std::endl;
     std::cerr << "    3-manifolds recognised: " << totMfdsOk << std::endl;
+    if (renameMfds)
+        std::cerr << "    3-manifolds renamed:    " << totMfdsRenamed
+            << std::endl;
 
     return 0;
 }
