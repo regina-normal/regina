@@ -251,14 +251,14 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
                     if (regXor(currNor, currTwisted))
                         twistsMatchOrientation_ = false;
 
-                    // See if we need to add a (1,-1) shift before
+                    // See if we need to add a (1,1) shift before
                     // the annuli can be identified.
                     if (regXor(adjHoriz, adjVert)) {
                         if (regXor(currBlockSpec.refHoriz,
                                 currBlockSpec.refVert))
-                            shiftedAnnuli_++;
-                        else
                             shiftedAnnuli_--;
+                        else
+                            shiftedAnnuli_++;
                     }
 
                     break;
