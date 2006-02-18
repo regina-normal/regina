@@ -137,7 +137,7 @@ NSFSpace* NSatRegion::createSFS(long nBoundaries, bool reflect) const {
 
     for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
             it++)
-        it->block->adjustSFS(*sfs, regXor(reflect,
+        it->block->adjustSFS(*sfs, ! regXor(reflect,
             regXor(it->refVert, it->refHoriz)));
 
     if (shiftedAnnuli_)

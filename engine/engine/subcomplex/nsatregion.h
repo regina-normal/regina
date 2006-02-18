@@ -357,15 +357,23 @@ class NSatRegion : public ShareableObject {
          * Each boundary component will be formed from a ring of
          * saturated annuli, which together form a torus (note that
          * Klein bottles are disallowed here; see the preconditions below).
-         * The NSatBlock class notes describe how a curve representing the
-         * base orbifold runs through each saturated annulus about a single
-         * block; the curves representing the base orbifold on the
-         * overall region boundaries are formed by piecing together
-         * the relevant pieces of such curves on individual blocks.
-         * In other words, the curves on the region boundaries that
-         * represent the base orbifold cut through each annulus parallel
-         * to the edges joining markings 0 and 2 (see the NSatAnnulus
-         * notes for a discussion of markings).
+         * The oriented curves representing the fibres and base orbifold
+         * on each boundary (see \ref sfsnotation) are as follows.
+         *
+         * - Consider the 0/1/2 markings on the first and second faces
+         *   of each saturated annulus, as described in the NSatAnnulus
+         *   class notes.
+         * - The fibres are represented by the oriented edge joining
+         *   markings 1 and 0 on the first face (or 0 and 1 on the
+         *   second face).  This is reversed if the block containing the
+         *   boundary annulus is vertically reflected.
+         * - The curve representing the base orbifold run along the
+         *   oriented edge joining markings 0 and 2 on the first face
+         *   (or 2 and 0 on the second face).  This is reversed if the
+         *   block containing the boundary annulus is horizontally
+         *   reflected.
+         * - See the NSatBlockSpec overview for descriptions of
+         *   horizontal and vertical reflection.
          *
          * If the argument \a reflect is \c true, the Seifert fibred
          * space will be created as though the entire region had been
