@@ -57,8 +57,8 @@ void NNGSFSLoop::reduce() {
      * rotating the space a half-turn to switch the two boundary tori).
      *
      * 2. If we add a (1,1) twist to the SFS we can compensate by either:
-     *    - setting row 2 -> row 2 - row 1, or
-     *    - setting col 1 -> col 1 + col 2.
+     *    - setting row 2 -> row 2 + row 1, or
+     *    - setting col 1 -> col 1 - col 2.
      */
 
     // Note that twisting will never change the (0,1) entry of the
@@ -72,8 +72,8 @@ void NNGSFSLoop::reduce() {
     long b = sfs_->getObstruction();
     if (b != 0) {
         sfs_->insertFibre(1, -b);
-        matchingReln_[0][0] -= b * matchingReln_[0][1];
-        matchingReln_[1][0] -= b * matchingReln_[1][1];
+        matchingReln_[0][0] += b * matchingReln_[0][1];
+        matchingReln_[1][0] += b * matchingReln_[1][1];
     }
 
     // Use (1,1) / (1,-1) pairs to make the top-left element of the

@@ -99,10 +99,10 @@ void NNGSFSPair::reduce() {
      * Things to observe:
      *
      * 1. If we add a (1,1) twist to sfs_[0] we can compensate by setting
-     *    col 1 -> col 1 + col 2.
+     *    col 1 -> col 1 - col 2.
      *
      * 2. If we add a (1,1) twist to sfs_[1] we can compensate by setting
-     *    row 2 -> row 2 - row 1.
+     *    row 2 -> row 2 + row 1.
      *
      * 3. We can negate the entire matrix without problems (this
      *    corresponds to rotating one space by 180 degrees).
@@ -124,15 +124,15 @@ void NNGSFSPair::reduce() {
     b = sfs_[0]->getObstruction();
     if (b != 0) {
         sfs_[0]->insertFibre(1, -b);
-        matchingReln_[0][0] -= b * matchingReln_[0][1];
-        matchingReln_[1][0] -= b * matchingReln_[1][1];
+        matchingReln_[0][0] += b * matchingReln_[0][1];
+        matchingReln_[1][0] += b * matchingReln_[1][1];
     }
 
     b = sfs_[1]->getObstruction();
     if (b != 0) {
         sfs_[1]->insertFibre(1, -b);
-        matchingReln_[1][0] += b * matchingReln_[0][0];
-        matchingReln_[1][1] += b * matchingReln_[0][1];
+        matchingReln_[1][0] -= b * matchingReln_[0][0];
+        matchingReln_[1][1] -= b * matchingReln_[0][1];
     }
 
     /**
@@ -143,11 +143,11 @@ void NNGSFSPair::reduce() {
      *
      * In fact we will use D:(2,1)(2,1) instead, which means:
      *
-     * M_basis = [  1 1 ] D_basis;
-     *           [ -1 0 ]
+     * M_basis = [  0 1 ] [  1 0 ] D_basis = [ -1 1 ] D_basis;
+     *           [ -1 0 ] [ -1 1 ]           [ -1 0 ]
      *
-     * D_basis = [ 0 -1 ] M_basis.
-     *           [ 1  1 ]
+     * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
+     *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
      */
 
     for (int i = 0; i < 2; i++)
@@ -165,9 +165,9 @@ void NNGSFSPair::reduce() {
             sfs_[i]->insertFibre(2, 1);
 
             if (i == 0)
-                matchingReln_ = matchingReln_ * NMatrix2(1, 1, -1, 0);
+                matchingReln_ = matchingReln_ * NMatrix2(-1, 1, -1, 0);
             else
-                matchingReln_ = NMatrix2(0, -1, 1, 1) * matchingReln_;
+                matchingReln_ = NMatrix2(0, -1, 1, -1) * matchingReln_;
 
             // If we reordered the SFSs in a displeasing way, switch
             // them and change the matrix accordingly.
@@ -183,11 +183,11 @@ void NNGSFSPair::reduce() {
     // Consider replacing each space with its reflection.
     // Note that we have b=0 for both SFSs at this stage.
     NMatrix2 ref0 = matchingReln_ *
-        NMatrix2(-1, 0, sfs_[0]->getFibreCount(), 1);
-    NMatrix2 ref1 = NMatrix2(1, 0, -sfs_[1]->getFibreCount(), -1) *
+        NMatrix2(1, 0, sfs_[0]->getFibreCount(), -1);
+    NMatrix2 ref1 = NMatrix2(1, 0, sfs_[1]->getFibreCount(), -1) *
         matchingReln_;
-    NMatrix2 ref01 = NMatrix2(1, 0, -sfs_[1]->getFibreCount(), -1) *
-        matchingReln_ * NMatrix2(-1, 0, sfs_[0]->getFibreCount(), 1);
+    NMatrix2 ref01 = NMatrix2(1, 0, sfs_[1]->getFibreCount(), -1) *
+        matchingReln_ * NMatrix2(1, 0, sfs_[0]->getFibreCount(), -1);
 
     if (simpler(ref0, matchingReln_) && simpler(ref0, ref1) &&
             simpler(ref0, ref01)) {
