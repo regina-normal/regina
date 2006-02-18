@@ -61,14 +61,7 @@ void NNGSFSLoop::reduce() {
      *    - setting col 1 -> col 1 - col 2.
      */
 
-    // Note that twisting will never change the (0,1) entry of the
-    // matrix.  It therefore seems useful to fix this first.  If the
-    // matrix has determinant +1 then we have some control over this.
-    long det = matchingReln_.determinant();
-    if (det == 1 && matchingReln_[0][1] < 0)
-        matchingReln_.invert();
-
-    // Massage the obstruction constant for the SFS.
+    // Bring the SFS obstruction constant back to zero.
     long b = sfs_->getObstruction();
     if (b != 0) {
         sfs_->insertFibre(1, -b);
@@ -76,26 +69,90 @@ void NNGSFSLoop::reduce() {
         matchingReln_[1][0] += b * matchingReln_[1][1];
     }
 
+    reduceBasis(matchingReln_);
+
+    // See if we can do any better by reflecting the entire space
+    // and adding (1,1) twists to bring the obstruction constant back
+    // up to zero again.
+    NMatrix2 compMatch =
+        NMatrix2(1, 0, sfs_->getFibreCount(), 1) *
+        NMatrix2(1, 0, 0, -1) *
+        matchingReln_ *
+        NMatrix2(1, 0, 0, -1);
+    if (compMatch.determinant() == 1 && compMatch[0][1] < 0)
+        compMatch.invert();
+    reduceBasis(compMatch);
+
+    if (simpler(compMatch, matchingReln_)) {
+        // Do it.
+        matchingReln_ = compMatch;
+        sfs_->complementAllFibres();
+    }
+}
+
+void NNGSFSLoop::reduceBasis(NMatrix2& reln) {
+    // Note that twisting will never change the (0,1) entry of the
+    // matrix.  It therefore seems useful to fix this first.  If the
+    // matrix has determinant +1 then we have some control over this.
+    if (reln.determinant() == 1 && reln[0][1] < 0)
+        reln.invert();
+
     // Use (1,1) / (1,-1) pairs to make the top-left element of the
     // matrix zero, if we can.
-    if (matchingReln_[0][1] != 0) {
-        long nOps = matchingReln_[0][0] / matchingReln_[0][1];
+    if (reln[0][1] != 0) {
+        long nOps = reln[0][0] / reln[0][1];
         if (nOps > 0) {
             for (long i = 0; i < nOps; i++) {
-                matchingReln_[0][0] -= matchingReln_[0][1];
-                matchingReln_[1][0] -= matchingReln_[1][1];
-                matchingReln_[1][0] -= matchingReln_[0][0];
-                matchingReln_[1][1] -= matchingReln_[0][1];
+                reln[0][0] -= reln[0][1];
+                reln[1][0] -= reln[1][1];
+                reln[1][0] -= reln[0][0];
+                reln[1][1] -= reln[0][1];
             }
         } else if (nOps < 0) {
             for (long i = 0; i > nOps; i--) {
-                matchingReln_[0][0] += matchingReln_[0][1];
-                matchingReln_[1][0] += matchingReln_[1][1];
-                matchingReln_[1][0] += matchingReln_[0][0];
-                matchingReln_[1][1] += matchingReln_[0][1];
+                reln[0][0] += reln[0][1];
+                reln[1][0] += reln[1][1];
+                reln[1][0] += reln[0][0];
+                reln[1][1] += reln[0][1];
             }
         }
     }
+}
+
+bool NNGSFSLoop::simpler(const NMatrix2& m1, const NMatrix2& m2) {
+    long maxAbs1 = 0, maxAbs2 = 0;
+    unsigned nZeroes1 = 0, nZeroes2 = 0;
+
+    int i, j;
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++) {
+            if (m1[i][j] > maxAbs1)
+                maxAbs1 = m1[i][j];
+            if (m1[i][j] < -maxAbs1)
+                maxAbs1 = -m1[i][j];
+            if (m2[i][j] > maxAbs2)
+                maxAbs2 = m2[i][j];
+            if (m2[i][j] < -maxAbs2)
+                maxAbs2 = -m2[i][j];
+
+            if (m1[i][j] == 0)
+                nZeroes1++;
+            if (m2[i][j] == 0)
+                nZeroes2++;
+        }
+
+    if (maxAbs1 < maxAbs2)
+        return true;
+    if (maxAbs1 > maxAbs2)
+        return false;
+
+    if (nZeroes1 > nZeroes2)
+        return true;
+    if (nZeroes1 < nZeroes2)
+        return false;
+
+    // Shrug.
+    return false;
 }
 
 } // namespace regina

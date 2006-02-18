@@ -160,10 +160,35 @@ class NNGSFSLoop : public NManifold {
 
     private:
         /**
-         * Uses (1,1) twists and/or inversion to make the presentation
-         * of this space more aesthetically pleasing.
+         * Uses (1,1) twists, inversion and/or reflection to make the
+         * presentation of this space more aesthetically pleasing.
          */
         void reduce();
+
+        /**
+         * Uses (1,1) twists to make the given matching matrix more
+         * aesthetically pleasing.
+         *
+         * This routine is for internal use by reduce().
+         *
+         * @param reln the matching matrix to simplify.
+         */
+        static void reduceBasis(NMatrix2& reln);
+
+        /**
+         * Decides whether the first given matrix is more aesthetically
+         * pleasing than the second.  This judgement is somewhat
+         * arbitrary and is subject to change in future versions of Regina.
+         *
+         * This routine is for internal use by reduce().
+         *
+         * @param m1 the first matrix to examine.
+         * @param m2 the second matrix to examine.
+         * @return \c true if \a m1 is declared to be more pleasing than
+         * \a m2, or \c false if \a m2 is more pleasing or a decision
+         * could not be reached.
+         */
+        static bool simpler(const NMatrix2& m1, const NMatrix2& m2);
 };
 
 /*@}*/
