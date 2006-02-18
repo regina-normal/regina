@@ -149,6 +149,25 @@ class NNGSFSPair : public NManifold {
          * the presentation of this space more aesthetically pleasing.
          */
         void reduce();
+
+        /**
+         * Decides whether the first given matrix is more aesthetically
+         * pleasing than the second.  This judgement is somewhat
+         * arbitrary and is subject to change in future versions of Regina.
+         *
+         * This routine is for internal use by reduce().
+         *
+         * \warning This routine might behave differently from similar
+         * routines in other classes (as a result of differing aesthetic
+         * requirements).
+         *
+         * @param m1 the first matrix to examine.
+         * @param m2 the second matrix to examine.
+         * @return \c true if \a m1 is declared to be more pleasing than
+         * \a m2, or \c false if \a m2 is more pleasing or a decision
+         * could not be reached.
+         */
+        static bool simpler(const NMatrix2& m1, const NMatrix2& m2);
 };
 
 /*@}*/

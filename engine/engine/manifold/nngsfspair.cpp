@@ -31,47 +31,6 @@
 
 namespace regina {
 
-namespace {
-    // A routine for deciding whether one matrix presentation is
-    // "simpler" than another.  This is a purely arbitrary aesthetic
-    // judgement.
-    bool simpler(const NMatrix2& m1, const NMatrix2& m2) {
-        long maxAbs1 = 0, maxAbs2 = 0;
-        unsigned nZeroes1 = 0, nZeroes2 = 0;
-
-        int i, j;
-        for (i = 0; i < 2; i++)
-            for (j = 0; j < 2; j++) {
-                if (m1[i][j] > maxAbs1)
-                    maxAbs1 = m1[i][j];
-                if (m1[i][j] < -maxAbs1)
-                    maxAbs1 = -m1[i][j];
-                if (m2[i][j] > maxAbs2)
-                    maxAbs2 = m2[i][j];
-                if (m2[i][j] < -maxAbs2)
-                    maxAbs2 = -m2[i][j];
-
-                if (m1[i][j] == 0)
-                    nZeroes1++;
-                if (m2[i][j] == 0)
-                    nZeroes2++;
-            }
-
-        if (maxAbs1 < maxAbs2)
-            return true;
-        if (maxAbs1 > maxAbs2)
-            return false;
-
-        if (nZeroes1 > nZeroes2)
-            return true;
-        if (nZeroes1 < nZeroes2)
-            return false;
-
-        // Shrug.
-        return false;
-    }
-}
-
 NNGSFSPair::~NNGSFSPair() {
     delete sfs_[0];
     delete sfs_[1];
@@ -205,6 +164,42 @@ void NNGSFSPair::reduce() {
     // TODO: More reductions!
     // We can probably exploit twist identities such as (1,2) = (1,0) in
     // certain non-orientable cases.
+}
+
+bool NNGSFSPair::simpler(const NMatrix2& m1, const NMatrix2& m2) {
+    long maxAbs1 = 0, maxAbs2 = 0;
+    unsigned nZeroes1 = 0, nZeroes2 = 0;
+
+    int i, j;
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++) {
+            if (m1[i][j] > maxAbs1)
+                maxAbs1 = m1[i][j];
+            if (m1[i][j] < -maxAbs1)
+                maxAbs1 = -m1[i][j];
+            if (m2[i][j] > maxAbs2)
+                maxAbs2 = m2[i][j];
+            if (m2[i][j] < -maxAbs2)
+                maxAbs2 = -m2[i][j];
+
+            if (m1[i][j] == 0)
+                nZeroes1++;
+            if (m2[i][j] == 0)
+                nZeroes2++;
+        }
+
+    if (maxAbs1 < maxAbs2)
+        return true;
+    if (maxAbs1 > maxAbs2)
+        return false;
+
+    if (nZeroes1 > nZeroes2)
+        return true;
+    if (nZeroes1 < nZeroes2)
+        return false;
+
+    // Shrug.
+    return false;
 }
 
 } // namespace regina

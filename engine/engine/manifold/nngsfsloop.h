@@ -182,6 +182,10 @@ class NNGSFSLoop : public NManifold {
          *
          * This routine is for internal use by reduce().
          *
+         * \warning This routine might behave differently from similar
+         * routines in other classes (as a result of differing aesthetic
+         * requirements).
+         *
          * @param m1 the first matrix to examine.
          * @param m2 the second matrix to examine.
          * @return \c true if \a m1 is declared to be more pleasing than
