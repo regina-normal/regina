@@ -151,6 +151,38 @@ class NNGSFSPair : public NManifold {
         void reduce();
 
         /**
+         * Uses 180 degree rotation and/or individual space reflections
+         * to make the given matching matrix more aesthetically pleasing.
+         *
+         * This routine is for internal use by reduce().
+         *
+         * \pre Both Seifert fibred spaces must have obstruction
+         * constant zero.
+         *
+         * @param reln the matching matrix to simplify.
+         * @param fibres0 the number of exceptional fibres in the space
+         * \a sfs_[0].
+         * @param fibres1 the number of exceptional fibres in the space
+         * \a sfs_[1].
+         * @param ref0 used to return \c true if space \a sfs_[0] was
+         * reflected, or \c false if not.
+         * @param ref1 used to return \c true if space \a sfs_[1] was
+         * reflected, or \c false if not.
+         */
+        static void reduceReflect(NMatrix2& reln, unsigned long fibres0,
+            unsigned long fibres1, bool& ref0, bool& ref1);
+
+        /**
+         * Uses 180 degree rotation to make the given matching matrix
+         * more aesthetically pleasing.
+         *
+         * This routine is for internal use by reduce().
+         *
+         * @param reln the matching matrix to simplify.
+         */
+        static void reduceSign(NMatrix2& reln);
+
+        /**
          * Decides whether the first given matrix is more aesthetically
          * pleasing than the second.  This judgement is somewhat
          * arbitrary and is subject to change in future versions of Regina.

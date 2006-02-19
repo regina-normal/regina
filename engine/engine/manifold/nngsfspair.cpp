@@ -77,7 +77,7 @@ void NNGSFSPair::reduce() {
      * 6. If we wish to swap the two spaces, we invert M.
      */
 
-    // Massage the obstruction constant for each SFS.
+    // Bring the obstruction constant for each SFS down to zero.
     long b;
 
     b = sfs_[0]->getObstruction();
@@ -140,30 +140,73 @@ void NNGSFSPair::reduce() {
         }
 
     // Consider replacing each space with its reflection.
-    // Note that we have b=0 for both SFSs at this stage.
-    NMatrix2 ref0 = matchingReln_ *
-        NMatrix2(1, 0, sfs_[0]->getFibreCount(), -1);
-    NMatrix2 ref1 = NMatrix2(1, 0, sfs_[1]->getFibreCount(), -1) *
-        matchingReln_;
-    NMatrix2 ref01 = NMatrix2(1, 0, sfs_[1]->getFibreCount(), -1) *
-        matchingReln_ * NMatrix2(1, 0, sfs_[0]->getFibreCount(), -1);
+    bool ref0, ref1;
+    reduceReflect(matchingReln_, sfs_[0]->getFibreCount(),
+        sfs_[1]->getFibreCount(), ref0, ref1);
 
-    if (simpler(ref0, matchingReln_) && simpler(ref0, ref1) &&
-            simpler(ref0, ref01)) {
-        matchingReln_ = ref0;
+    if (ref0)
         sfs_[0]->complementAllFibres();
-    } else if (simpler(ref1, matchingReln_) && simpler(ref1, ref01)) {
-        matchingReln_ = ref1;
+    if (ref1)
         sfs_[1]->complementAllFibres();
-    } else if (simpler(ref01, matchingReln_)) {
-        matchingReln_ = ref01;
-        sfs_[0]->complementAllFibres();
-        sfs_[1]->complementAllFibres();
-    }
 
     // TODO: More reductions!
     // We can probably exploit twist identities such as (1,2) = (1,0) in
     // certain non-orientable cases.
+}
+
+void NNGSFSPair::reduceReflect(NMatrix2& reln, unsigned long fibres0,
+        unsigned long fibres1, bool& ref0, bool& ref1) {
+    // Consider replacing each space with its reflection.
+    // Note that we have b=0 for both SFSs at this stage.
+    NMatrix2 r0 = reln * NMatrix2(1, 0, fibres0, -1);
+    NMatrix2 r1 = NMatrix2(1, 0, fibres1, -1) * reln;
+    NMatrix2 r01 = NMatrix2(1, 0, fibres1, -1) * reln *
+        NMatrix2(1, 0, fibres0, -1);
+
+    reduceSign(reln);
+    reduceSign(r0);
+    reduceSign(r1);
+    reduceSign(r01);
+
+    if (simpler(r0, reln) && simpler(r0, r1) && simpler(r0, r01)) {
+        reln = r0;
+        ref0 = true;
+        ref1 = false;
+    } else if (simpler(r1, reln) && simpler(r1, r01)) {
+        reln = r1;
+        ref0 = false;
+        ref1 = true;
+    } else if (simpler(r01, reln)) {
+        reln = r01;
+        ref0 = true;
+        ref1 = true;
+    } else {
+        ref0 = false;
+        ref1 = false;
+    }
+}
+
+void NNGSFSPair::reduceSign(NMatrix2& reln) {
+    // Make the first non-zero entry positive.
+    int i, j;
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++) {
+            if (reln[i][j] > 0)
+                return;
+
+            if (reln[i][j] < 0) {
+                // Negate everything (180 degree rotation along the join)
+                // and return.
+
+                for (i = 0; i < 2; i++)
+                    for (j = 0; j < 2; j++)
+                        reln[i][j] = - reln[i][j];
+                return;
+            }
+        }
+
+    // The matrix is entirely zero (which, incidentally, should never
+    // happen).  Do nothing.
 }
 
 bool NNGSFSPair::simpler(const NMatrix2& m1, const NMatrix2& m2) {
@@ -198,7 +241,15 @@ bool NNGSFSPair::simpler(const NMatrix2& m1, const NMatrix2& m2) {
     if (nZeroes1 < nZeroes2)
         return false;
 
-    // Shrug.
+    // Go lexicograhpic.
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++)
+            if (m1[i][j] < m2[i][j])
+                return true;
+            else if (m1[i][j] > m2[i][j])
+                return false;
+
+    // They're the same.
     return false;
 }
 
