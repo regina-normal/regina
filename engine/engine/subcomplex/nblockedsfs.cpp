@@ -34,19 +34,20 @@
 namespace regina {
 
 /**
- * TODO: Document NBlockedSFSSearcher.
+ * A subclass of NSatBlockStartSearcher that, upon finding a starter
+ * saturated block, attempts to flesh this out to an entire closed
+ * saturated region.
  */
-class NBlockedSFSSearcher : public NSatBlockStarterSearcher {
-    private:
-        NSatRegion* region_;
+struct NBlockedSFSSearcher : public NSatBlockStarterSearcher {
+    NSatRegion* region;
+        /**< The closed saturated region if one has been found, or 0
+             if we are still searching. */
 
-    public:
-        NBlockedSFSSearcher() : region_(0) {
-        }
-
-        NSatRegion* region() {
-            return region_;
-        }
+    /**
+     * Creates a new searcher whose \a region pointer is null.
+     */
+    NBlockedSFSSearcher() : region(0) {
+    }
 
     protected:
         bool useStarterBlock(NSatBlock* starter);
@@ -132,11 +133,11 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     searcher.findStarterBlocks(tri);
 
     // Any luck?
-    if (searcher.region()) {
+    if (searcher.region) {
         // The region expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new NBlockedSFS(searcher.region());
+        return new NBlockedSFS(searcher.region);
     }
 
     // Nope.
@@ -145,7 +146,7 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
 
 bool NBlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointer should be null, but just in case...
-    if (region_) {
+    if (region) {
         delete starter;
         return false;
     }
@@ -153,11 +154,11 @@ bool NBlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
     // See if we can flesh out an entire triangulation component from
     // the starter block.  At this point the region will own the given
     // starter block.
-    region_ = new NSatRegion(starter);
-    if (! region_->expand(usedTets, true)) {
+    region = new NSatRegion(starter);
+    if (! region->expand(usedTets, true)) {
         // Nup.  Destroy the temporary structures and keep searching.
-        delete region_;
-        region_ = 0;
+        delete region;
+        region = 0;
         return true;
     }
 

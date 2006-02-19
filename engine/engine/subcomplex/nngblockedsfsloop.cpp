@@ -35,40 +35,45 @@
 namespace regina {
 
 /**
- * TODO: Document NNGBlockedSFSLoopSearcher.
+ * A subclass of NSatBlockStarterSearcher that, upon finding a starter
+ * block, attempts to flesh this out to an entire saturated region with
+ * two identified torus boundaries, as described by the NNGBlockedSFSLoop
+ * class.
+ *
+ * Wherever the member documentation refers to boundary annulus #0 and #1,
+ * this corresponds to region->boundaryAnnulus(0, ...) and
+ * region->boundaryAnnulus(1, ...) respectively.
  */
-class NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
-    private:
-        NSatRegion* region_;
-        bool bdryRefVert_[2];
-        bool bdryRefHoriz_[2];
-        bool swapFaces_;
-        NPerm facePerm_;
+struct NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
+    NSatRegion* region;
+        /**< The bounded saturated region, if the entire NNGBlockedSFSLoop
+             structure has been successfully found; otherwise, 0 if we are
+             still searching. */
+    bool bdryRefVert[2];
+        /**< Indicates for each boundary of the region whether the
+             corresponding saturated block is vertically reflected within
+             the region.  See NSatBlockSpec for details. */
+    bool bdryRefHoriz[2];
+        /**< Indicates for each boundary of the region whether the
+             corresponding saturated block is horizontally reflected within
+             the region.  See NSatBlockSpec for details. */
+    bool swapFaces;
+        /**< Contains details of how the two boundary annuli are identified.
+             This is set to \c true if the first face of boundary annulus #0
+             is identified with the second face of boundary annulus #1 (and
+             vice versa), or \c false if the two first faces are joined
+             together and the two second faces are joined together. */
+    NPerm facePerm;
+        /**< Contains details of how the two boundary annuli are identified.
+             This permutation shows how the identification maps markings
+             0/1/2 on boundary annulus #0 to markings 0/1/2 on boundary
+             annulus #1. */
 
-    public:
-        NNGBlockedSFSLoopSearcher() {
-            region_ = 0;
-        }
-
-        NSatRegion* region() {
-            return region_;
-        }
-
-        bool bdryRefVert(unsigned which) const {
-            return bdryRefVert_[which];
-        }
-
-        bool bdryRefHoriz(unsigned which) const {
-            return bdryRefHoriz_[which];
-        }
-
-        bool swapFaces() const {
-            return swapFaces_;
-        }
-
-        NPerm facePerm() const {
-            return facePerm_;
-        }
+    /**
+     * Creates a new searcher whose \a region pointer is null.
+     */
+    NNGBlockedSFSLoopSearcher() : region(0) {
+    }
 
     protected:
         bool useStarterBlock(NSatBlock* starter);
@@ -169,14 +174,14 @@ NNGBlockedSFSLoop* NNGBlockedSFSLoop::isNGBlockedSFSLoop(NTriangulation* tri) {
     searcher.findStarterBlocks(tri);
 
     // Any luck?
-    if (searcher.region()) {
+    if (searcher.region) {
         // The expansion and self-adjacency worked, and the triangulation
         // is known to be closed and connected.
         // This means we've got one!
-        return new NNGBlockedSFSLoop(searcher.region(),
-            searcher.bdryRefVert(0), searcher.bdryRefHoriz(0),
-            searcher.bdryRefVert(1), searcher.bdryRefHoriz(1),
-            searcher.swapFaces(), searcher.facePerm());
+        return new NNGBlockedSFSLoop(searcher.region,
+            searcher.bdryRefVert[0], searcher.bdryRefHoriz[0],
+            searcher.bdryRefVert[1], searcher.bdryRefHoriz[1],
+            searcher.swapFaces, searcher.facePerm);
     }
 
     // Nope.
@@ -185,29 +190,29 @@ NNGBlockedSFSLoop* NNGBlockedSFSLoop::isNGBlockedSFSLoop(NTriangulation* tri) {
 
 bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointer should be null, but just in case...
-    if (region_) {
+    if (region) {
         delete starter;
         return false;
     }
 
     // Flesh out the triangulation as far as we can.  We're aiming for
     // precisely two disjoint boundary annuli remaining.
-    // Note that the starter block will now be owned by region_.
-    region_ = new NSatRegion(starter);
-    region_->expand(usedTets);
+    // Note that the starter block will now be owned by region.
+    region = new NSatRegion(starter);
+    region->expand(usedTets);
 
-    if (region_->numberOfBoundaryAnnuli() != 2) {
-        delete region_;
-        region_ = 0;
+    if (region->numberOfBoundaryAnnuli() != 2) {
+        delete region;
+        region = 0;
         return true;
     }
 
     NSatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
-    region_->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
-        bdryRefVert_[0], bdryRefHoriz_[0]);
-    region_->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
-        bdryRefVert_[1], bdryRefHoriz_[1]);
+    region->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
+        bdryRefVert[0], bdryRefHoriz[0]);
+    region->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
+        bdryRefVert[1], bdryRefHoriz[1]);
 
     NSatBlock* tmpBlock;
     unsigned tmpAnnulus;
@@ -216,16 +221,16 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     bdryBlock[0]->nextBoundaryAnnulus(bdryAnnulus[0], tmpBlock, tmpAnnulus,
         tmpVert, tmpHoriz);
     if (tmpVert || tmpBlock != bdryBlock[0]) {
-        delete region_;
-        region_ = 0;
+        delete region;
+        region = 0;
         return true;
     }
 
     bdryBlock[1]->nextBoundaryAnnulus(bdryAnnulus[1], tmpBlock, tmpAnnulus,
         tmpVert, tmpHoriz);
     if (tmpVert || tmpBlock != bdryBlock[1]) {
-        delete region_;
-        region_ = 0;
+        delete region;
+        region = 0;
         return true;
     }
 
@@ -234,8 +239,8 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     NSatAnnulus bdry1 = bdryBlock[1]->annulus(bdryAnnulus[1]);
 
     if (bdry0.meetsBoundary() || bdry1.meetsBoundary()) {
-        delete region_;
-        region_ = 0;
+        delete region;
+        region = 0;
         return true;
     }
 
@@ -248,15 +253,15 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
 
         // Construct the mapping of 0/1/2 markings from the first
         // annulus to the second.
-        facePerm_ = bdry1.roles[0].inverse() * bdry0.roles[0];
-        if (facePerm_ != bdry1.roles[1].inverse() * bdry0.roles[1]) {
-            delete region_;
-            region_ = 0;
+        facePerm = bdry1.roles[0].inverse() * bdry0.roles[0];
+        if (facePerm != bdry1.roles[1].inverse() * bdry0.roles[1]) {
+            delete region;
+            region = 0;
             return true;
         }
 
         // This is it!  Stop searching.
-        swapFaces_ = false;
+        swapFaces = false;
         return false;
     }
 
@@ -267,21 +272,21 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
 
         // Construct the mapping of 0/1/2 markings from the first
         // annulus to the second.
-        facePerm_ = bdry1.roles[1].inverse() * bdry0.roles[0];
-        if (facePerm_ != bdry1.roles[0].inverse() * bdry0.roles[1]) {
-            delete region_;
-            region_ = 0;
+        facePerm = bdry1.roles[1].inverse() * bdry0.roles[0];
+        if (facePerm != bdry1.roles[0].inverse() * bdry0.roles[1]) {
+            delete region;
+            region = 0;
             return true;
         }
 
         // This is it!  Stop searching.
-        swapFaces_ = true;
+        swapFaces = true;
         return false;
     }
 
     // Nah, it's nothing.
-    delete region_;
-    region_ = 0;
+    delete region;
+    region = 0;
     return true;
 }
 
