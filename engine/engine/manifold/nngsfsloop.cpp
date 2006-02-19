@@ -79,8 +79,6 @@ void NNGSFSLoop::reduce() {
         NMatrix2(1, 0, 0, -1) *
         matchingReln_ *
         NMatrix2(1, 0, 0, -1);
-    if (compMatch.determinant() == 1 && compMatch[0][1] < 0)
-        compMatch.invert();
     reduceBasis(compMatch);
 
     if (simpler(compMatch, matchingReln_)) {
