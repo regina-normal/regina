@@ -149,7 +149,15 @@ bool NNGSFSLoop::simpler(const NMatrix2& m1, const NMatrix2& m2) {
     if (nZeroes1 < nZeroes2)
         return false;
 
-    // Shrug.
+    // Down to lexicographical order.
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++)
+            if (m1[i][j] < m2[i][j])
+                return true;
+            else if (m1[i][j] > m2[i][j])
+                return false;
+
+    // They're identical.
     return false;
 }
 
