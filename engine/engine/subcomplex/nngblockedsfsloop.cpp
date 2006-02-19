@@ -140,17 +140,17 @@ NManifold* NNGBlockedSFSLoop::getManifold() const {
 }
 
 std::ostream& NNGBlockedSFSLoop::writeName(std::ostream& out) const {
-    // TODO, later
+    // TODO: output
     return out << "Blocked SFS Loop";
 }
 
 std::ostream& NNGBlockedSFSLoop::writeTeXName(std::ostream& out) const {
-    // TODO, later
+    // TODO: output (tex)
     return out << "Blocked SFS Loop";
 }
 
 void NNGBlockedSFSLoop::writeTextLong(std::ostream& out) const {
-    // TODO, later
+    // TODO: output (detailed)
     out << "Blocked SFS Loop";
 }
 

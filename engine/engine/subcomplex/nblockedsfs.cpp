@@ -102,12 +102,12 @@ NManifold* NBlockedSFS::getManifold() const {
 }
 
 std::ostream& NBlockedSFS::writeName(std::ostream& out) const {
-    // TODO, later
+    // TODO: output
     return out << "Blocked SFS";
 }
 
 std::ostream& NBlockedSFS::writeTeXName(std::ostream& out) const {
-    // TODO, later
+    // TODO: output (tex)
     return out << "Blocked SFS";
 }
 

@@ -91,12 +91,12 @@ NManifold* NNGBlockedSFSPair::getManifold() const {
 }
 
 std::ostream& NNGBlockedSFSPair::writeName(std::ostream& out) const {
-    // TODO, later
+    // TODO: output
     return out << "Blocked SFS Pair";
 }
 
 std::ostream& NNGBlockedSFSPair::writeTeXName(std::ostream& out) const {
-    // TODO, later
+    // TODO: output (tex)
     return out << "Blocked SFS Pair";
 }
 
