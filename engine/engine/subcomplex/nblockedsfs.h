@@ -48,13 +48,19 @@ class NSatRegion;
  */
 
 /**
- * Describes a closed 3-manifold triangulation that is formed from a single
- * closed saturated region.  A saturated region is in turn formed from
- * saturated blocks by identifying their boundary annuli in pairs; see
- * the NSatRegion class for details.
+ * Represents a blocked Seifert fibred space.  This is a particular type of
+ * triangulation of a closed Seifert fibred space, where this triangulation
+ * is formed from a single closed saturated region.  A saturated region is
+ * in turn formed from saturated blocks by identifying their boundary annuli
+ * in pairs; see the NSatRegion class for details.
  *
- * 
- * TODO.
+ * Note that the routines writeName() and writeTeXName() do \e not
+ * offer enough information to uniquely identify the triangulation,
+ * since this essentially requires a 2-dimensional assembling of
+ * saturated blocks.  For full detail, writeTextLong() may be used instead.
+ *
+ * The optional NStandardTriangulation routine getManifold() is
+ * implemented for this class, but getHomologyH1() is not.
  */
 class NBlockedSFS : public NStandardTriangulation {
     private:
@@ -73,9 +79,25 @@ class NBlockedSFS : public NStandardTriangulation {
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Determines if the given triangulation is a blocked Seifert
+         * fibred space.
+         *
+         * @param tri the triangulation to examine.
+         * @return a newly created structure containing details of the
+         * blocked Seifert fibred space, or \c null if the given
+         * triangulation is not a blocked Seifert fibred space.
+         */
         static NBlockedSFS* isBlockedSFS(NTriangulation* tri);
 
     private:
+        /**
+         * Constructs a new blocked Seifert fibred space, as described by
+         * the given saturated region.  The new object will take ownership
+         * of the given region.
+         *
+         * @param region the region describing this entire triangulation.
+         */
         NBlockedSFS(NSatRegion* region);
 };
 
