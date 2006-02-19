@@ -37,28 +37,14 @@ namespace regina {
 /**
  * TODO: Document NNGBlockedSFSPairSearcher.
  */
-class NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
-    private:
-        NSatRegion* region_[2];
-        bool horizontal_;
-        bool firstRegionReflected_;
+struct NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
+    NSatRegion* region[2];
+    bool horizontal;
+    bool firstRegionReflected;
 
-    public:
-        NNGBlockedSFSPairSearcher() {
-            region_[0] = region_[1] = 0;
-        }
-
-        NSatRegion* region(unsigned which) {
-            return region_[which];
-        }
-
-        bool horizontal() {
-            return horizontal_;
-        }
-
-        bool firstRegionReflected() {
-            return firstRegionReflected_;
-        }
+    NNGBlockedSFSPairSearcher() {
+        region[0] = region[1] = 0;
+    }
 
     protected:
         bool useStarterBlock(NSatBlock* starter);
@@ -143,12 +129,12 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
     searcher.findStarterBlocks(tri);
 
     // Any luck?
-    if (searcher.region(0)) {
+    if (searcher.region[0]) {
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new NNGBlockedSFSPair(searcher.region(0), searcher.region(1),
-            searcher.horizontal(), searcher.firstRegionReflected());
+        return new NNGBlockedSFSPair(searcher.region[0], searcher.region[1],
+            searcher.horizontal, searcher.firstRegionReflected);
     }
 
     // Nope.
@@ -157,20 +143,20 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
 
 bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointers should be null, but just in case...
-    if (region_[0] || region_[1]) {
+    if (region[0] || region[1]) {
         delete starter;
         return false;
     }
 
     // Flesh out the triangulation as far as we can.  We're aiming for
     // just one boundary annulus remaining.
-    // Note that the starter block will now be owned by region_[0].
-    region_[0] = new NSatRegion(starter);
-    region_[0]->expand(usedTets);
+    // Note that the starter block will now be owned by region[0].
+    region[0] = new NSatRegion(starter);
+    region[0]->expand(usedTets);
 
-    if (region_[0]->numberOfBoundaryAnnuli() != 1) {
-        delete region_[0];
-        region_[0] = 0;
+    if (region[0]->numberOfBoundaryAnnuli() != 1) {
+        delete region[0];
+        region[0] = 0;
         return true;
     }
 
@@ -178,10 +164,10 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     NSatBlock* bdryBlock;
     unsigned bdryAnnulus;
     bool bdryVert, bdryHoriz;
-    region_[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus,
+    region[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus,
         bdryVert, bdryHoriz);
 
-    firstRegionReflected_ =
+    firstRegionReflected =
         ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
 
     NSatBlock* tmpBlock;
@@ -190,8 +176,8 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
         tmpVert, tmpHoriz);
     if (tmpVert) {
-        delete region_[0];
-        region_[0] = 0;
+        delete region[0];
+        region[0] = 0;
         return true;
     }
 
@@ -200,8 +186,8 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     NSatAnnulus bdry = bdryBlock->annulus(bdryAnnulus);
 
     if (bdry.meetsBoundary()) {
-        delete region_[0];
-        region_[0] = 0;
+        delete region[0];
+        region[0] = 0;
         return true;
     }
 
@@ -218,41 +204,41 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
 
     // Try horizontal:
     if ((otherStarter = NSatBlock::isBlock(otherSideHoriz, usedTets))) {
-        region_[1] = new NSatRegion(otherStarter);
-        region_[1]->expand(usedTets);
+        region[1] = new NSatRegion(otherStarter);
+        region[1]->expand(usedTets);
 
-        if (region_[1]->numberOfBoundaryAnnuli() == 1) {
+        if (region[1]->numberOfBoundaryAnnuli() == 1) {
             // This is it!  Stop searching.
-            horizontal_ = true;
+            horizontal = true;
             return false;
         }
 
         // Nup, this one didn't work.
-        delete region_[1];
-        region_[1] = 0;
+        delete region[1];
+        region[1] = 0;
     }
 
     // Try diagonal:
     if ((otherStarter = NSatBlock::isBlock(otherSideDiag, usedTets2))) {
-        region_[1] = new NSatRegion(otherStarter);
-        region_[1]->expand(usedTets2);
+        region[1] = new NSatRegion(otherStarter);
+        region[1]->expand(usedTets2);
 
-        if (region_[1]->numberOfBoundaryAnnuli() == 1) {
+        if (region[1]->numberOfBoundaryAnnuli() == 1) {
             // This is it!  Stop searching.
             // Switch the tetrahedron lists before we go.
             usedTets = usedTets2;
-            horizontal_ = false;
+            horizontal = false;
             return false;
         }
 
         // Nup, not this one either.
-        delete region_[1];
-        region_[1] = 0;
+        delete region[1];
+        region[1] = 0;
     }
 
     // Nothing works.
-    delete region_[0];
-    region_[0] = 0;
+    delete region[0];
+    region[0] = 0;
     return true;
 }
 
