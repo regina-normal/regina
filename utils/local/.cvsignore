@@ -3,7 +3,9 @@
 Makefile
 Makefile.in
 censuscat
+distinguish
 equiv
 identify
 manifolds
+mpconvert
 volume
