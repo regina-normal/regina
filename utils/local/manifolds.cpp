@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Attempt to recognise the combinatorial structures of triangulations   *
+ *  Attempt to recognise the underlying 3-manifolds in a census           *
  *                                                                        *
  *  Copyright (c) 2005-2006, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
