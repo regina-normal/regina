@@ -36,12 +36,25 @@
 namespace regina {
 
 /**
- * TODO: Document NNGBlockedSFSPairSearcher.
+ * A subclass of NSatBlockStarterSearcher that, upon finding a starter
+ * block, attempts to flesh this out to a pair of saturated regions
+ * joined along their single torus boundaries, as desribed by the
+ * NNGBlockedSFSPair class.
  */
 struct NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region[2];
+        /**< The two bounded saturated regions that are joined together,
+             if the entire NNGBlockedSFSPair structure has been successfully
+             found; otherwise, two null pointers if we are still searching. */
     NMatrix2 matchingReln;
+        /**< The matrix describing how the region boundaries are joined
+             together.  This matrix expresses the fibre/base curves on the
+             second region boundary in terms of the fibre/base curves on
+             the first, as described by NNGSFSPair::matchingReln(). */
 
+    /**
+     * Creates a new searcher whose \a region pointers are both null.
+     */
     NNGBlockedSFSPairSearcher() {
         region[0] = region[1] = 0;
     }
