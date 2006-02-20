@@ -50,11 +50,14 @@ class NSatRegion;
 /**
  * Represents a blocked non-geometric pair of Seifert fibred spaces.
  * This is a particular type of triangulation, formed from two saturated
- * regions whose torus boundaries are identified.  For more detail on
- * saturated regions and their constituent saturated blocks, see the
- * NSatRegion class.
+ * regions whose torus boundaries are identified.  An optional layering
+ * may be placed between the two torus boundaries to allow a more
+ * interesting relationship between the boundary curves of each region.
+ * For more detail on saturated regions and their constituent saturated
+ * blocks, see the NSatRegion class; for more detail on layerings, see
+ * the NLayering class.
  *
- * Each of these saturated regions must have precisely one boundary
+ * Each of the two saturated regions must have precisely one boundary
  * component formed from just one saturated annulus, and this boundary may
  * not be twisted (i.e., it must be a torus, not a Klein bottle).  The
  * way in which the boundaries from each region are identified is
@@ -73,6 +76,10 @@ class NSatRegion;
  *     [  ] = M * [  ]
  *     [o1]       [o0]
  * </pre>
+ *
+ * If a layering is present between the two boundaries, then the
+ * boundary curves are not identified directly.  In this case, the matrix
+ * \a M shows how the layering relates the curves on each region boundary.
  *
  * Note that the routines writeName() and writeTeXName() do \e not
  * offer enough information to uniquely identify the triangulation,
