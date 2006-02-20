@@ -117,6 +117,25 @@ class NNGSFSPair : public NManifold {
         NNGSFSPair(NSFSpace* sfs0, NSFSpace* sfs1, long mat00, long mat01,
             long mat10, long mat11);
         /**
+         * Creates a new non-geometric pair of Seifert fibred spaces.
+         * The two bounded Seifert fibred spaces and the entire 2-by-2
+         * matching matrix are each passed separately.
+         *
+         * Note that the new object will take ownership of the two given
+         * Seifert fibred spaces, and when this object is destroyed the
+         * Seifert fibred spaces will be destroyed also.
+         *
+         * \pre Each Seifert fibred space has a single torus boundary,
+         * corresponding to a single puncture in the base orbifold.
+         * \pre The given matching matrix has determinant +1 or -1.
+         *
+         * @param sfs0 the first Seifert fibred space.
+         * @param sfs1 the second Seifert fibred space.
+         * @param matchingReln the 2-by-2 matching matrix.
+         */
+        NNGSFSPair(NSFSpace* sfs0, NSFSpace* sfs1,
+            const NMatrix2& matchingReln);
+        /**
          * Destroys this structure along with the component Seifert
          * fibred spaces and the matching matrix.
          */
@@ -209,6 +228,14 @@ class NNGSFSPair : public NManifold {
 inline NNGSFSPair::NNGSFSPair(NSFSpace* sfs0, NSFSpace* sfs1,
         long mat00, long mat01, long mat10, long mat11) :
         matchingReln_(mat00, mat01, mat10, mat11) {
+    sfs_[0] = sfs0;
+    sfs_[1] = sfs1;
+
+    reduce();
+}
+
+inline NNGSFSPair::NNGSFSPair(NSFSpace* sfs0, NSFSpace* sfs1,
+        const NMatrix2& matchingReln) : matchingReln_(matchingReln) {
     sfs_[0] = sfs0;
     sfs_[1] = sfs1;
 
