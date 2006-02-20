@@ -73,6 +73,9 @@ class NSFSpace;
  *     [o1]       [o0]
  * </pre>
  *
+ * See the page on \ref sfsnotation for details on some of the
+ * terminology used above.
+ *
  * The optional NManifold routines getHomologyH1() and construct() are
  * not implemented for this class.
  */

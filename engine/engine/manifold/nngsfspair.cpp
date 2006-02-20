@@ -152,6 +152,7 @@ void NNGSFSPair::reduce() {
     // TODO: More reductions!
     // We can probably exploit twist identities such as (1,2) = (1,0) in
     // certain non-orientable cases.
+    // TODO: Also consider swapping spaces.
 }
 
 void NNGSFSPair::reduceReflect(NMatrix2& reln, unsigned long fibres0,
