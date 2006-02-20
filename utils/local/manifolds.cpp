@@ -267,8 +267,9 @@ bool process(NContainer* c) {
                 name = structure;
         }
 
+        // Hold the newline until we know whether we've been renamed.
         if (! sortMfds)
-            std::cout << c->getPacketLabel() << "  ->>  " << name << '\n';
+            std::cout << c->getPacketLabel() << "  ->>  " << name;
         totMfds++;
         totMfdsOk++;
 
@@ -276,7 +277,16 @@ bool process(NContainer* c) {
             if (c->getPacketLabel() != name) {
                 c->setPacketLabel(name);
                 totMfdsRenamed++;
+
+                if (sortMfds)
+                    std::cout << "RENAMED: " << c->getPacketLabel() <<
+                        "  ->>  " << name << '\n';
+                else
+                    std::cout << "  (RENAMED)";
             }
+
+        if (! sortMfds)
+            std::cout << '\n';
 
         if (sortMfds)
             children.push_back(ManifoldSpec(c, true, mfd));
