@@ -53,9 +53,8 @@ class NSatRegion;
 class NNGBlockedSFSPair : public NStandardTriangulation {
     private:
         NSatRegion* region_[2];
-        bool horizontal_;
-            /**< Do we match vertical to horizontal, or to diagonal? */
-        bool firstRegionReflected_;
+        NMatrix2 matchingReln_;
+            /**< Second space fibre/orbifold in terms of the first. */
 
     public:
         /**
@@ -72,7 +71,7 @@ class NNGBlockedSFSPair : public NStandardTriangulation {
 
     private:
         NNGBlockedSFSPair(NSatRegion* region0, NSatRegion* region1,
-            bool horizontal, bool firstRegionReflected);
+            const NMatrix2& matchingReln);
 };
 
 /*@}*/
@@ -80,8 +79,8 @@ class NNGBlockedSFSPair : public NStandardTriangulation {
 // Inline functions for NNGBlockedSFSPair
 
 inline NNGBlockedSFSPair::NNGBlockedSFSPair(NSatRegion* region0,
-        NSatRegion* region1, bool horizontal, bool firstRegionReflected) :
-        horizontal_(horizontal), firstRegionReflected_(firstRegionReflected) {
+        NSatRegion* region1, const NMatrix2& matchingReln) :
+        matchingReln_(matchingReln) {
     region_[0] = region0;
     region_[1] = region1;
 }

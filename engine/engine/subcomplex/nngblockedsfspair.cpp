@@ -28,6 +28,7 @@
 
 #include "manifold/nngsfspair.h"
 #include "manifold/nsfs.h"
+#include "subcomplex/nlayering.h"
 #include "subcomplex/nngblockedsfspair.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
@@ -39,8 +40,7 @@ namespace regina {
  */
 struct NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region[2];
-    bool horizontal;
-    bool firstRegionReflected;
+    NMatrix2 matchingReln;
 
     NNGBlockedSFSPairSearcher() {
         region[0] = region[1] = 0;
@@ -58,7 +58,7 @@ NNGBlockedSFSPair::~NNGBlockedSFSPair() {
 }
 
 NManifold* NNGBlockedSFSPair::getManifold() const {
-    NSFSpace* sfs0 = region_[0]->createSFS(1, firstRegionReflected_);
+    NSFSpace* sfs0 = region_[0]->createSFS(1, false);
     if (! sfs0)
         return 0;
 
@@ -72,22 +72,10 @@ NManifold* NNGBlockedSFSPair::getManifold() const {
     sfs0->reduce(false);
     sfs1->reduce(false);
 
-    // Since both matching matrices are self-inverse, we can happily
-    // switch the two Seifert fibred spaces without changing the overall
-    // manifold.
-    if (*sfs1 < *sfs0) {
-        NSFSpace* tmp = sfs0;
-        sfs0 = sfs1;
-        sfs1 = tmp;
-    }
-
-    NNGSFSPair* ans;
-    if (horizontal_)
-        ans = new NNGSFSPair(sfs0, sfs1, 0, 1, 1, 0);
+    if (*sfs1 < *sfs0)
+        return new NNGSFSPair(sfs1, sfs0, matchingReln_.inverse());
     else
-        ans = new NNGSFSPair(sfs0, sfs1, 1, 1, 0, -1);
-
-    return ans;
+        return new NNGSFSPair(sfs0, sfs1, matchingReln_);
 }
 
 std::ostream& NNGBlockedSFSPair::writeName(std::ostream& out) const {
@@ -101,8 +89,8 @@ std::ostream& NNGBlockedSFSPair::writeTeXName(std::ostream& out) const {
 }
 
 void NNGBlockedSFSPair::writeTextLong(std::ostream& out) const {
-    out << "Blocked SFS pair (vertical <--> "
-        << (horizontal_ ? "horizontal" : "diagonal") << ")\n";
+    // TODO: output (detail)
+    out << "Blocked SFS pair, matching relation " << matchingReln_ << "\n";
 
     region_[0]->writeDetail(out, "First region");
     region_[1]->writeDetail(out, "Second region");
@@ -134,7 +122,7 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
         // to be closed and connected.
         // This means we've got one!
         return new NNGBlockedSFSPair(searcher.region[0], searcher.region[1],
-            searcher.horizontal, searcher.firstRegionReflected);
+            searcher.matchingReln);
     }
 
     // Nope.
@@ -167,7 +155,7 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     region[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus,
         bdryVert, bdryHoriz);
 
-    firstRegionReflected =
+    bool firstRegionReflected =
         ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
 
     NSatBlock* tmpBlock;
@@ -181,62 +169,92 @@ bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         return true;
     }
 
-    // Try expanding it with vertical fibres running both horizontally
-    // and diagonally.
     NSatAnnulus bdry = bdryBlock->annulus(bdryAnnulus);
 
-    if (bdry.meetsBoundary()) {
+    // We have a boundary annulus for the first region.
+
+    // Hunt for a layering.
+    NLayering layering(bdry.tet[0], bdry.roles[0], bdry.tet[1], bdry.roles[1]);
+    layering.extend();
+
+    // Relation from fibre/orbifold to layering first face markings 01/02:
+    NMatrix2 curves0ToLayering = layering.boundaryReln() *
+        NMatrix2(-1, 0, 0, firstRegionReflected ? -1 : 1);
+
+    // We make the shell of an other-side boundary annulus; we will fill
+    // in the precise vertex role permutations later on.
+    NSatAnnulus otherSide(layering.getNewBoundaryTet(0), NPerm(),
+        layering.getNewBoundaryTet(1), NPerm());
+
+    if (otherSide.meetsBoundary()) {
         delete region[0];
         region[0] = 0;
         return true;
     }
 
-    bdry.switchSides();
-    NSatAnnulus otherSideHoriz(bdry.tet[1], bdry.roles[1] * NPerm(1, 2),
-        bdry.tet[0], bdry.roles[0] * NPerm(1, 2));
-    NSatAnnulus otherSideDiag(bdry.tet[0], bdry.roles[0] * NPerm(0, 2),
-        bdry.tet[1], bdry.roles[1] * NPerm(0, 2));
+    // Mapping from (layering first face markings 01/02) to
+    // (other side annulus first face markings 01/02).  Like the other
+    // side vertex roles, this mapping will be filled in later.
+    NMatrix2 layeringToAnnulus1;
 
-    // I fear we shall need to back up the tetrahedron list.  Sigh.
-    NSatBlock::TetList usedTets2 = usedTets;
-
+    // Try the three possible orientations for fibres on the other side.
     NSatBlock* otherStarter;
+    for (int plugPos = 0; plugPos < 3; plugPos++) {
+        // Construct the boundary annulus for the second region.
+        // Refresh the tetrahedra as well as the vertex roles, since
+        // it may have switched sides since our last run through the loop.
+        otherSide.tet[0] = layering.getNewBoundaryTet(0);
+        otherSide.tet[1] = layering.getNewBoundaryTet(1);
 
-    // Try horizontal:
-    if ((otherStarter = NSatBlock::isBlock(otherSideHoriz, usedTets))) {
-        region[1] = new NSatRegion(otherStarter);
-        region[1]->expand(usedTets);
-
-        if (region[1]->numberOfBoundaryAnnuli() == 1) {
-            // This is it!  Stop searching.
-            horizontal = true;
-            return false;
+        if (plugPos == 0) {
+            otherSide.roles[0] = layering.getNewBoundaryRoles(0);
+            otherSide.roles[1] = layering.getNewBoundaryRoles(1);
+            layeringToAnnulus1 = NMatrix2(1, 0, 0, 1);
+        } else if (plugPos == 1) {
+            otherSide.roles[0] = layering.getNewBoundaryRoles(0) *
+                NPerm(1, 2, 0, 3);
+            otherSide.roles[1] = layering.getNewBoundaryRoles(1) *
+                NPerm(1, 2, 0, 3);
+            layeringToAnnulus1 = NMatrix2(-1, 1, -1, 0);
+        } else {
+            otherSide.roles[0] = layering.getNewBoundaryRoles(0) *
+                NPerm(2, 0, 1, 3);
+            otherSide.roles[1] = layering.getNewBoundaryRoles(1) *
+                NPerm(2, 0, 1, 3);
+            layeringToAnnulus1 = NMatrix2(0, -1, 1, -1);
         }
 
-        // Nup, this one didn't work.
-        delete region[1];
-        region[1] = 0;
-    }
+        // Clear out the used tetrahedron list.  Everything before the new
+        // layering boundary is self-contained, so we won't run into it
+        // again on the other side.  We'll just re-insert the layering
+        // boundary tetrahedra.
+        usedTets.clear();
+        usedTets.insert(layering.getNewBoundaryTet(0));
+        usedTets.insert(layering.getNewBoundaryTet(1));
 
-    // Try diagonal:
-    if ((otherStarter = NSatBlock::isBlock(otherSideDiag, usedTets2))) {
-        region[1] = new NSatRegion(otherStarter);
-        region[1]->expand(usedTets2);
+        // See if we can flesh the other side out to an entire region.
+        otherSide.switchSides();
 
-        if (region[1]->numberOfBoundaryAnnuli() == 1) {
-            // This is it!  Stop searching.
-            // Switch the tetrahedron lists before we go.
-            usedTets = usedTets2;
-            horizontal = false;
-            return false;
+        if ((otherStarter = NSatBlock::isBlock(otherSide, usedTets))) {
+            region[1] = new NSatRegion(otherStarter);
+            region[1]->expand(usedTets);
+
+            if (region[1]->numberOfBoundaryAnnuli() == 1) {
+                // This is it!  Stop searching.
+                // Do a final conversion from annulus first face markings
+                // 01/02 and exit.
+                matchingReln = NMatrix2(-1, 0, 0, 1) * layeringToAnnulus1 *
+                    curves0ToLayering;
+                return false;
+            }
+
+            // Nup, this one didn't work.
+            delete region[1];
+            region[1] = 0;
         }
-
-        // Nup, not this one either.
-        delete region[1];
-        region[1] = 0;
     }
 
-    // Nothing works.
+    // Sigh, nothing works.
     delete region[0];
     region[0] = 0;
     return true;
