@@ -218,9 +218,13 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     unsigned tmpAnnulus;
     bool tmpVert, tmpHoriz;
 
+    // Asking for the boundary annuli to be disjoint is probably a bit
+    // much, since we should be able to get away with a two-annulus
+    // boundary with one annulus joined to the other.
+    // Nevertheless, it's safer so we'll do it for now.  TODO.
     bdryBlock[0]->nextBoundaryAnnulus(bdryAnnulus[0], tmpBlock, tmpAnnulus,
         tmpVert, tmpHoriz);
-    if (tmpVert || tmpBlock != bdryBlock[0]) {
+    if (tmpVert || tmpBlock != bdryBlock[0] || tmpAnnulus != bdryAnnulus[0]) {
         delete region;
         region = 0;
         return true;
@@ -228,7 +232,7 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
 
     bdryBlock[1]->nextBoundaryAnnulus(bdryAnnulus[1], tmpBlock, tmpAnnulus,
         tmpVert, tmpHoriz);
-    if (tmpVert || tmpBlock != bdryBlock[1]) {
+    if (tmpVert || tmpBlock != bdryBlock[1] || tmpAnnulus != bdryAnnulus[1]) {
         delete region;
         region = 0;
         return true;
