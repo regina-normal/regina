@@ -89,8 +89,7 @@ void NNGSFSTriple::reduce() {
      *    negating row 1 of matching relation i, though again note that
      *    this negates the determinant of the matrix.
      *
-     * 6. If we wish to swap the order of spaces spaces, we invert and
-     *    swap both matrices.
+     * 6. If we wish to swap the order of spaces, we swap both matrices.
      */
 
     // Bring the obstruction constant for each SFS down to zero.
