@@ -18,6 +18,15 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
 
+ifeq ($(shell dpkg-architecture -qDEB_BUILD_ARCH),ia64)
+	# MPI utilities fail to link under ia64.
+	NO_MPI = 1
+	configmpi = --disable-mpi
+else
+	NO_MPI = 0
+	configmpi =
+endif
+
 -include debian/debiandirs
 
 debian/debiandirs: admin/debianrules
@@ -39,7 +48,8 @@ configure-stamp:
 	# Back to the standard configure.
 	chmod a+x configure
 	./configure --disable-maintainer-mode PKGNAME=regina-normal \
-	  --includedir=/usr/include $(configkde) --includedir=/usr/include
+	  --includedir=/usr/include $(configkde) $(configmpi) \
+	  --includedir=/usr/include
 	touch configure-stamp
 
 build: configure-stamp build-stamp
@@ -66,12 +76,17 @@ install: build
 	# Main install.
 	$(MAKE) install DESTDIR=`pwd`/$(tmp)
 
+ifneq ($(NO_MPI),1)
 	# Make sure MPI support was enabled.
 	if ! test -e $(tmp)/usr/bin/tricensus-mpi; then \
 	  echo "ERROR: MPI utilities were not built and installed."; \
 	  echo "       Check your configure options."; \
 	  /bin/false; \
 	fi
+else
+	# Remove unnecessary MPI files.
+	rm -f debian/regina-normal/usr/share/doc/README.MPI
+endif
 
 	# Split into separate binary packages.
 	dh_install --sourcedir=debian/tmp --list-missing
