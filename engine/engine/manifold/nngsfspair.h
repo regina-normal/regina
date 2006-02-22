@@ -76,8 +76,10 @@ class NSFSpace;
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional NManifold routines getHomologyH1() and construct() are
- * not implemented for this class.
+ * The optional NManifold routine getHomologyH1() is implemented for
+ * cases where neither Seifert fibred space has any fibre-reversing
+ * twists or reflector boundary components.  The optional routine
+ * construct() is not implemented.
  */
 class NNGSFSPair : public NManifold {
     private:
@@ -162,6 +164,7 @@ class NNGSFSPair : public NManifold {
          */
         const NMatrix2& matchingReln() const;
 
+        NAbelianGroup* getHomologyH1() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 

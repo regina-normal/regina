@@ -45,6 +45,10 @@ NAbelianGroup* NNGSFSLoop::getHomologyH1() const {
     if (sfs_->getBaseReflectors() > 0)
         return 0;
 
+    // Just for safety (this should always be true anyway):
+    if (sfs_->getBasePunctures() != 2)
+        return 0;
+
     // Construct a matrix.
     // Generators: fibre, base curves, base boundaries, exceptional
     //             fibre boundaries, obstruction boundary, plus one for
@@ -59,7 +63,7 @@ NAbelianGroup* NNGSFSLoop::getHomologyH1() const {
 
     unsigned long i, f;
     // The relation for the base orbifold:
-    for (i = 1 + genus; i < 1 + genus + punc + fibres; i++)
+    for (i = 1 + genus; i < 1 + genus + punc + fibres + 1; i++)
         m.entry(0, i) = 1;
     if (! sfs_->isBaseOrientable())
         for (i = 1; i < 1 + genus; i++)

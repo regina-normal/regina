@@ -26,14 +26,100 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
 #include "manifold/nngsfspair.h"
 #include "manifold/nsfs.h"
+#include "maths/nmatrixint.h"
 
 namespace regina {
 
 NNGSFSPair::~NNGSFSPair() {
     delete sfs_[0];
     delete sfs_[1];
+}
+
+NAbelianGroup* NNGSFSPair::getHomologyH1() const {
+    // Is it a case we can deal with?
+    if (sfs_[0]->getBaseClass() != NSFSpace::o1 &&
+            sfs_[0]->getBaseClass() != NSFSpace::n1)
+        return 0;
+    if (sfs_[0]->getBaseReflectors() > 0)
+        return 0;
+    if (sfs_[1]->getBaseClass() != NSFSpace::o1 &&
+            sfs_[1]->getBaseClass() != NSFSpace::n1)
+        return 0;
+    if (sfs_[1]->getBaseReflectors() > 0)
+        return 0;
+
+    // Just for safety (this should always be true anyway):
+    if (sfs_[0]->getBasePunctures() != 1)
+        return 0;
+    if (sfs_[1]->getBasePunctures() != 1)
+        return 0;
+
+    // Construct a matrix.
+    // Generators: fibre 0, base curves 0, base boundary 0,
+    //             exceptional fibre boundaries 0, obstruction 0,
+    //             fibre 1, base curves 1, base boundary 1,
+    //             exceptional fibre boundaries 1, obstruction 1.
+    // Relations: base curve relation 0, exceptional fibre relations 0,
+    //            obstruction relation 0,
+    //            base curve relation 1, exceptional fibre relations 1,
+    //            obstruction relation 1,
+    //            joining of boundaries.
+    unsigned long genus0 = sfs_[0]->getBaseGenus();
+    unsigned long fibres0 = sfs_[0]->getFibreCount();
+    unsigned long all0 = 3 + genus0 + fibres0;
+    unsigned long genus1 = sfs_[1]->getBaseGenus();
+    unsigned long fibres1 = sfs_[1]->getFibreCount();
+
+    NMatrixInt m(fibres0 + fibres1 + 6,
+        genus0 + fibres0 + genus1 + fibres1 + 6);
+
+    unsigned long i, f;
+    // The relation for each base orbifold:
+    for (i = 1 + genus0; i < 1 + genus0 + 1 + fibres0 + 1; i++)
+        m.entry(0, i) = 1;
+    if (! sfs_[0]->isBaseOrientable())
+        for (i = 1; i < 1 + genus0; i++)
+            m.entry(0, i) = 2;
+
+    for (i = 1 + genus1; i < 1 + genus1 + 1 + fibres1 + 1; i++)
+        m.entry(1, all0 + i) = 1;
+    if (! sfs_[1]->isBaseOrientable())
+        for (i = 1; i < 1 + genus1; i++)
+            m.entry(1, all0 + i) = 2;
+
+    // A relation for each exceptional fibre and obstruction constant:
+    NSFSFibre fibre;
+
+    for (f = 0; f < fibres0; f++) {
+        fibre = sfs_[0]->getFibre(f);
+        m.entry(2 + f, 1 + genus0 + 1 + f) = fibre.alpha;
+        m.entry(2 + f, 0) = fibre.beta;
+    }
+    m.entry(2 + fibres0, 1 + genus0 + 1 + fibres0) = 1;
+    m.entry(2 + fibres0, 0) = sfs_[0]->getObstruction();
+
+    for (f = 0; f < fibres1; f++) {
+        fibre = sfs_[1]->getFibre(f);
+        m.entry(3 + fibres0 + f, all0 + 1 + genus1 + 1 + f) = fibre.alpha;
+        m.entry(3 + fibres0 + f, all0) = fibre.beta;
+    }
+    m.entry(3 + fibres0 + fibres1, all0 + 1 + genus1 + 1 + fibres1) = 1;
+    m.entry(3 + fibres0 + fibres1, all0) = sfs_[1]->getObstruction();
+
+    // Two relations for the joining of boundaries:
+    m.entry(4 + fibres0 + fibres1, all0) = -1;
+    m.entry(4 + fibres0 + fibres1, 0) = matchingReln_[0][0];
+    m.entry(4 + fibres0 + fibres1, 1 + genus0) = matchingReln_[0][1];
+    m.entry(5 + fibres0 + fibres1, all0 + 1 + genus1) = -1;
+    m.entry(5 + fibres0 + fibres1, 0) = matchingReln_[1][0];
+    m.entry(5 + fibres0 + fibres1, 1 + genus0) = matchingReln_[1][1];
+
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addGroup(m);
+    return ans;
 }
 
 std::ostream& NNGSFSPair::writeName(std::ostream& out) const {
