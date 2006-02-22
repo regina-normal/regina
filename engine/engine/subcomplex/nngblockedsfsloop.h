@@ -51,6 +51,9 @@ class NSatRegion;
 /**
  * TODO: Document NNGBlockedSFSLoop.
  *
+ * TODO: When documenting this one, don't forget to talk about the two
+ * possibilities for the two boundary annuli.
+ *
  * Only deal with annuli for now.
  */
 class NNGBlockedSFSLoop : public NStandardTriangulation {
