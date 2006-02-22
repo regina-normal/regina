@@ -294,6 +294,22 @@ struct NSatAnnulus {
         const;
 
     /**
+     * Determines whether this annulus has its boundaries identified to
+     * form an embedded two-sided torus within the surrounding triangulation.
+     *
+     * It will be verified that:
+     * - the two faces of this annulus are joined along all three pairs
+     *   of edges to form a torus;
+     * - the three edges of this torus remain distinct (i.e., different edges
+     *   of the torus do not become identified within the larger triangulation);
+     * - this torus is two-sided within the surrounding triangulation.
+     *
+     * @return \c true if this annulus forms an embedded two-sided torus as
+     * described above, or \c false if it does not.
+     */
+    bool isTwoSidedTorus() const;
+
+    /**
      * Adjusts this annulus representation according to the given
      * isomorphism between triangulations.
      *

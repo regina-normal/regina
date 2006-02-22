@@ -196,7 +196,7 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     }
 
     // Flesh out the triangulation as far as we can.  We're aiming for
-    // precisely two disjoint boundary annuli remaining.
+    // precisely two boundary annuli remaining.
     // Note that the starter block will now be owned by region.
     region = new NSatRegion(starter);
     region->expand(usedTets);
@@ -214,34 +214,23 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     region->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
         bdryRefVert[1], bdryRefHoriz[1]);
 
-    NSatBlock* tmpBlock;
-    unsigned tmpAnnulus;
-    bool tmpVert, tmpHoriz;
+    // We either want two disjoint one-annulus boundaries, or else a single
+    // two-annulus boundary that is pinched to turn each annulus into a
+    // two-sided torus.  The following test will handle all cases.  We
+    // don't worry about the degenerate case of fibres mapping to fibres
+    // through the layering in the pinched case, since this will fail
+    // our test anyway (either boundaries do not form tori, or they are
+    // not two-sided).
+    NSatAnnulus bdry0 = bdryBlock[0]->annulus(bdryAnnulus[0]);
+    NSatAnnulus bdry1 = bdryBlock[1]->annulus(bdryAnnulus[1]);
 
-    // Asking for the boundary annuli to be disjoint is probably a bit
-    // much, since we should be able to get away with a two-annulus
-    // boundary with one annulus joined to the other.
-    // Nevertheless, it's safer so we'll do it for now.  TODO.
-    bdryBlock[0]->nextBoundaryAnnulus(bdryAnnulus[0], tmpBlock, tmpAnnulus,
-        tmpVert, tmpHoriz);
-    if (tmpVert || tmpBlock != bdryBlock[0] || tmpAnnulus != bdryAnnulus[0]) {
-        delete region;
-        region = 0;
-        return true;
-    }
-
-    bdryBlock[1]->nextBoundaryAnnulus(bdryAnnulus[1], tmpBlock, tmpAnnulus,
-        tmpVert, tmpHoriz);
-    if (tmpVert || tmpBlock != bdryBlock[1] || tmpAnnulus != bdryAnnulus[1]) {
+    if (! (bdry0.isTwoSidedTorus() && bdry1.isTwoSidedTorus())) {
         delete region;
         region = 0;
         return true;
     }
 
     // See whether the two boundary annuli are joined.
-    NSatAnnulus bdry0 = bdryBlock[0]->annulus(bdryAnnulus[0]);
-    NSatAnnulus bdry1 = bdryBlock[1]->annulus(bdryAnnulus[1]);
-
     if (bdry0.meetsBoundary() || bdry1.meetsBoundary()) {
         delete region;
         region = 0;

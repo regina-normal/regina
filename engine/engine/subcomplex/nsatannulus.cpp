@@ -27,7 +27,9 @@
 /* end stub */
 
 #include "subcomplex/nsatannulus.h"
+#include "triangulation/nedge.h"
 #include "triangulation/nisomorphism.h"
+#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -100,6 +102,55 @@ bool NSatAnnulus::isAdjacent(const NSatAnnulus& other, bool* refVert,
 
     // No match.
     return false;
+}
+
+bool NSatAnnulus::isTwoSidedTorus() const {
+    // Check that the edges are identified in opposite pairs and that we
+    // have no duplicates.
+    NEdge* e01 = tet[0]->getEdge(edgeNumber[roles[0][0]][roles[0][1]]);
+    NEdge* e02 = tet[0]->getEdge(edgeNumber[roles[0][0]][roles[0][2]]);
+    NEdge* e12 = tet[0]->getEdge(edgeNumber[roles[0][1]][roles[0][2]]);
+
+    if (e01 != tet[1]->getEdge(edgeNumber[roles[1][0]][roles[1][1]]))
+        return false;
+    if (e02 != tet[1]->getEdge(edgeNumber[roles[1][0]][roles[1][2]]))
+        return false;
+    if (e12 != tet[1]->getEdge(edgeNumber[roles[1][1]][roles[1][2]]))
+        return false;
+
+    if (e01 == e02 || e02 == e12 || e12 == e01)
+        return false;
+
+    // Verify that edges are consistently oriented, and that the
+    // orientations of the edge links indicate a two-sided torus.
+    NPerm map0, map1;
+    int a, b, x, y;
+    for (int i = 0; i < 3; i++) {
+        // Examine edges corresponding to annulus markings a & b.
+        // We also set x & y as the complement of {a,b} in {0,1,2,3}.
+        switch (i) {
+            case 0: a = 0; b = 1; x = 2; y = 3; break;
+            case 1: a = 0; b = 2; x = 1; y = 3; break;
+            case 2: a = 1; b = 2; x = 0; y = 3; break;
+        }
+
+        // Get mappings from tetrahedron edge roles to annulus vertex roles.
+        map0 = roles[0].inverse() * tet[0]->getEdgeMapping(
+            edgeNumber[roles[0][a]][roles[0][b]]);
+        map1 = roles[1].inverse() * tet[1]->getEdgeMapping(
+            edgeNumber[roles[1][a]][roles[1][b]]);
+
+        // We should have {a,b} -> {a,b} and {x,y} -> {x,y} for each map.
+
+        // Make sure that the two annulus edges are oriented in the same way
+        // (i.e., (a,b) <-> (b,a)), and that the edge link runs in opposite
+        // directions through the annulus on each side (i.e., (x,y) <-> (y,x)).
+        if (map0 != NPerm(a, b) * NPerm(x, y) * map1)
+            return false;
+    }
+
+    // No unpleasantries.
+    return true;
 }
 
 void NSatAnnulus::transform(const NTriangulation* originalTri,
