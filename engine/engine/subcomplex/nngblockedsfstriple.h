@@ -113,7 +113,7 @@ class NSatRegion;
  *     [o1]        [o']
  * </pre>
  *
- * If a layering is present between two boundaries, then the corresponding
+ * If a layering is present between two regions, then the corresponding
  * boundary curves are not identified directly.  In this case, the relevant
  * matrix \a M or \a M' shows how the layering relates the curves on each
  * region boundary.
