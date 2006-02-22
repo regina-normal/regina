@@ -123,7 +123,7 @@ class NNGSFSTriple : public NManifold {
                  two boundary tori that meets both end spaces. */
         NMatrix2 matchingReln_[2];
             /**< The matrices describing how the various spaces are joined.
-                 In particular, matrix \a matrixReln_[i] describes how
+                 In particular, matrix \a matchingReln_[i] describes how
                  the central space is joined to end space \a i.  See the
                  class notes for further details. */
 
