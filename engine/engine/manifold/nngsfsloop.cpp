@@ -26,13 +26,68 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
 #include "manifold/nngsfsloop.h"
 #include "manifold/nsfs.h"
+#include "maths/nmatrixint.h"
 
 namespace regina {
 
 NNGSFSLoop::~NNGSFSLoop() {
     delete sfs_;
+}
+
+NAbelianGroup* NNGSFSLoop::getHomologyH1() const {
+    // Is it a case we can deal with?
+    if (sfs_->getBaseClass() != NSFSpace::o1 &&
+            sfs_->getBaseClass() != NSFSpace::n1)
+        return 0;
+    if (sfs_->getBaseReflectors() > 0)
+        return 0;
+
+    // Construct a matrix.
+    // Generators: fibre, base curves, base boundaries, exceptional
+    //             fibre boundaries, obstruction boundary, plus one for
+    //             the loop created by the joining of boundaries.
+    // Relations: base curve relation, exception fibre relations,
+    //            obstruction relation, joining boundaries.
+    unsigned long genus = sfs_->getBaseGenus();
+    unsigned long punc = sfs_->getBasePunctures();
+    unsigned long fibres = sfs_->getFibreCount();
+
+    NMatrixInt m(fibres + 4, genus + punc + fibres + 3);
+
+    unsigned long i, f;
+    // The relation for the base orbifold:
+    for (i = 1 + genus; i < 1 + genus + punc + fibres; i++)
+        m.entry(0, i) = 1;
+    if (! sfs_->isBaseOrientable())
+        for (i = 1; i < 1 + genus; i++)
+            m.entry(0, i) = 2;
+
+    // A relation for each exceptional fibre:
+    NSFSFibre fibre;
+    for (f = 0; f < fibres; f++) {
+        fibre = sfs_->getFibre(f);
+        m.entry(f + 1, 1 + genus + punc + f) = fibre.alpha;
+        m.entry(f + 1, 0) = fibre.beta;
+    }
+
+    // A relation for the obstruction constant:
+    m.entry(1 + fibres, 1 + genus + punc + fibres) = 1;
+    m.entry(1 + fibres, 0) = sfs_->getObstruction();
+
+    // Two relations for the joining of boundaries:
+    m.entry(2 + fibres, 0) = -1;
+    m.entry(2 + fibres, 0) += matchingReln_[0][0];
+    m.entry(2 + fibres, 2 + genus) = matchingReln_[0][1];
+    m.entry(3 + fibres, 1 + genus) = -1;
+    m.entry(3 + fibres, 0) = matchingReln_[1][0];
+    m.entry(3 + fibres, 2 + genus) = matchingReln_[1][1];
+
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addGroup(m);
+    return ans;
 }
 
 std::ostream& NNGSFSLoop::writeName(std::ostream& out) const {
