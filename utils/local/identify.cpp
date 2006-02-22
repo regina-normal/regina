@@ -62,6 +62,7 @@ unsigned totTris = 0;
 unsigned trisOk = 0;
 unsigned mfdsOk = 0;
 unsigned homBad = 0;
+unsigned homChecked = 0;
 
 bool outputContainers = false;
 NPacket* tree;
@@ -102,6 +103,7 @@ void process(NTriangulation* t) {
 
             NAbelianGroup* h1 = m->getHomologyH1();
             if (h1) {
+                homChecked++;
                 if (! (*h1 == t->getHomologyH1())) {
                     std::cout << "  ...  HOMOLOGY ERROR: "
                         << h1->toString() << " != "
@@ -172,6 +174,7 @@ int main(int argc, char* argv[]) {
     std::cerr << "    Triangulations read:       " << totTris << std::endl;
     std::cerr << "    Triangulations recognised: " << trisOk << std::endl;
     std::cerr << "    3-manifolds recognised:    " << mfdsOk << std::endl;
+    std::cerr << "    Homology groups checked:   " << homChecked << std::endl;
     std::cerr << "    Homology errors:           " << homBad << std::endl;
 
     return 0;
