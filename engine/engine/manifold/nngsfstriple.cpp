@@ -82,8 +82,8 @@ void NNGSFSTriple::reduce() {
      *    corresponds to rotating some spaces by 180 degrees).
      *
      * 4. If we negate all fibres in centre_ we can compensate by
-     *    negating col 1 of one of the matching relations, though note
-     *    that this negates the determinant of the matrix.
+     *    negating col 1 of both matching relations, though note
+     *    that this negates the determinant of each matrix.
      *
      * 5. If we negate all fibres in end_[i] we can compensate by
      *    negating row 1 of matching relation i, though again note that
@@ -148,10 +148,34 @@ void NNGSFSTriple::reduce() {
             matchingReln_[i] = NMatrix2(0, -1, 1, -1) * matchingReln_[i];
         }
 
-    reduceSign(matchingReln_[0]);
-    reduceSign(matchingReln_[1]);
+    bool ref;
+
+    reduceReflectEnd(matchingReln_[0], end_[0]->getFibreCount(), ref);
+    if (ref)
+        end_[0]->complementAllFibres();
+
+    reduceReflectEnd(matchingReln_[1], end_[1]->getFibreCount(), ref);
+    if (ref)
+        end_[1]->complementAllFibres();
 
     // TODO: More reductions!  More reductions!
+}
+
+void NNGSFSTriple::reduceReflectEnd(NMatrix2& reln, unsigned long fibres,
+        bool& ref) {
+    // Consider replacing the end space with its reflection.
+    // Note that we have b=0 for all spaces at this stage.
+    NMatrix2 alt = NMatrix2(1, 0, fibres, -1) * reln;
+
+    reduceSign(reln);
+    reduceSign(alt);
+
+    if (simpler(alt, reln)) {
+        reln = alt;
+        ref = true;
+    } else {
+        ref = false;
+    }
 }
 
 void NNGSFSTriple::reduceSign(NMatrix2& reln) {

@@ -210,6 +210,21 @@ class NNGSFSTriple : public NManifold {
         void reduce();
 
         /**
+         * Uses 180 degree rotation and/or reflection of an end space
+         * to make the given matching matrix more aesthetically pleasing.
+         *
+         * This routine is for internal use by reduce().
+         *
+         * @param reln the matching matrix to simplify.
+         * @param fibres the number of exceptional fibres in the
+         * corresponding end space.
+         * @param ref used to return \c true if the end space was
+         * reflected, or \c false if not.
+         */
+        static void reduceReflectEnd(NMatrix2& reln, unsigned long fibres,
+            bool& ref);
+
+        /**
          * Uses 180 degree rotation to make the given matching matrix
          * more aesthetically pleasing.
          *
