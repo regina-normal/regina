@@ -48,40 +48,75 @@ class NSatRegion;
  */
 
 /**
- * TODO: Fix all documentation for this class!
+ * Represents a blocked non-geometric sequence of three Seifert fibred
+ * spaces.  This is a particular type of triangulation, formed from three
+ * saturated regions whose various torus boundaries are identified as
+ * described below.  Optional layerings may be placed between torus
+ * boundaries to allow for more interesting relationships between the
+ * respective boundary curves of each region.  For more detail on
+ * saturated regions and their constituent saturated blocks, see the
+ * NSatRegion class; for more detail on layerings, see the NLayering class.
  *
- * Represents a blocked non-geometric pair of Seifert fibred spaces.
- * This is a particular type of triangulation, formed from two saturated
- * regions whose torus boundaries are identified.  An optional layering
- * may be placed between the two torus boundaries to allow a more
- * interesting relationship between the boundary curves of each region.
- * For more detail on saturated regions and their constituent saturated
- * blocks, see the NSatRegion class; for more detail on layerings, see
- * the NLayering class.
- *
- * Each of the two saturated regions must have precisely one boundary
- * component formed from just one saturated annulus, and this boundary may
- * not be twisted (i.e., it must be a torus, not a Klein bottle).  The
- * way in which the boundaries from each region are identified is
- * specified by a 2-by-2 matrix \a M, which expresses curves
- * representing the fibres and base orbifold of the second region in
- * terms of the first (see the page on \ref sfsnotation for terminology).
- *
- * More specifically, suppose that \a f0 and \a o0 are directed curves on
- * the first region boundary and \a f1 and \a o1 are directed curves on the
- * second region boundary, where \a f0 and \a f1 represent the fibres of
- * each region and \a o0 and \a o1 represent the base orbifolds.  Then
- * the boundaries are joined according to the following relation:
+ * The three saturated regions must be joined together as illustrated
+ * below.  Each large box represents a saturated region, and the small
+ * tunnels show where the region boundaries are joined (possibly via
+ * layerings).
  *
  * <pre>
- *     [f1]       [f0]
- *     [  ] = M * [  ]
- *     [o1]       [o0]
+ *     /----------------\   /------------------\   /----------------\
+ *     |                |   |                  |   |                |
+ *     |  End region 0   ---   Central region   ---   End region 1  |
+ *     |                 ---                    ---                 |
+ *     |                |   |                  |   |                |
+ *     \----------------/   \------------------/   \----------------/
  * </pre>
  *
- * If a layering is present between the two boundaries, then the
- * boundary curves are not identified directly.  In this case, the matrix
- * \a M shows how the layering relates the curves on each region boundary.
+ * Each of the end regions must have precisely one boundary component
+ * formed from just one saturated annulus.  The central region may have
+ * two boundary components formed from one saturated annulus each.
+ * Alternatively, it may have one boundary formed from two saturated
+ * annuli, where this boundary is pinched together so that each annulus
+ * becomes a two-sided torus joined to one of the end regions.  None of
+ * the boundary components (or the two-sided tori discussed above) may
+ * be twisted (i.e., they must be tori, not Klein bottles).
+ *
+ * The ways in which the various region boundaries are identified are
+ * specified by 2-by-2 matrices, which express curves representing the
+ * fibres and base orbifold of each end region in terms of the central
+ * region (see the page on \ref sfsnotation for terminology).
+ *
+ * Specifically, consider the matrix \a M that describes the joining of
+ * the central region and the first end region (marked in the diagram
+ * above as end region 0).  Suppose that \a f and \a o are directed
+ * curves on the central region boundary and \a f0 and \a o0 are directed
+ * curves on the first end region boundary, where \a f and \a f0 represent
+ * the fibres of each region and \a o and \a o0 represent the base orbifolds.
+ * Then the boundaries are joined according to the following relation:
+ *
+ * <pre>
+ *     [f0]       [f ]
+ *     [  ] = M * [  ]
+ *     [o0]       [o ]
+ * </pre>
+ *
+ * Likewise, let \a M' be the matrix describing how the central region
+ * and the second end region (marked in the diagram as end region 1) are
+ * joined.  Let \a f' and \a o' be directed curves on the other central
+ * region boundary and \a f1 and \a o1 be directed curves on the second
+ * end region boundary, where \a f' and \a f1 represent fibres and
+ * \a o and \a o1 represent the base orbifolds.  Then the boundaries are
+ * joined according to the relation:
+ *
+ * <pre>
+ *     [f1]        [f']
+ *     [  ] = M' * [  ]
+ *     [o1]        [o']
+ * </pre>
+ *
+ * If a layering is present between two boundaries, then the corresponding
+ * boundary curves are not identified directly.  In this case, the relevant
+ * matrix \a M or \a M' shows how the layering relates the curves on each
+ * region boundary.
  *
  * Note that the routines writeName() and writeTeXName() do \e not
  * offer enough information to uniquely identify the triangulation,
@@ -94,11 +129,17 @@ class NSatRegion;
 class NNGBlockedSFSTriple : public NStandardTriangulation {
     private:
         NSatRegion* end_[2];
-            /**< The two saturated regions whose boundaries are joined. */
+            /**< The two end regions, i.e., the saturated regions with
+                 just one boundary annulus. */
         NSatRegion* centre_;
+            /**< The central region, i.e., the saturated region with two
+                 boundary annuli that meets both end regions. */
         NMatrix2 matchingReln_[2];
-            /**< Specifies how the two region boundaries are joined, as
-                 described in the class notes above. */
+            /**< Specifies how the various region boundaries are joined
+                 (possibly via layerings), as described in the class notes
+                 above.  In particular, \a matchingReln_[i] describes how
+                 end region \a i is joined to the central region.  See the
+                 class notes for further details. */
 
     public:
         /**
@@ -112,27 +153,32 @@ class NNGBlockedSFSTriple : public NStandardTriangulation {
         void writeTextLong(std::ostream& out) const;
 
         /**
-         * Determines if the given triangulation is a blocked pair of
-         * Seifert fibred spaces, as described by this class.
+         * Determines if the given triangulation is a blocked sequence of
+         * three Seifert fibred spaces, as described in the class notes
+         * above.
          *
          * @param tri the triangulation to examine.
          * @return a newly created structure containing details of the
-         * blocked pair, or \c null if the given triangulation is not of
+         * blocked triple, or \c null if the given triangulation is not of
          * this form.
          */
         static NNGBlockedSFSTriple* isNGBlockedSFSTriple(NTriangulation* tri);
 
     private:
         /**
-         * Constructs a new blocked pair of Seifert fibred spaces, as
-         * described by the given saturated regions and matching
-         * relation.  The new object will take ownership of each of the
-         * regions passed.
+         * Constructs a new blocked sequence of three Seifert fibred spaces,
+         * as described by the given saturated regions and matching relations.
+         * The new object will take ownership of each of the regions passed.
          *
-         * @param region0 the first saturated region.
-         * @param region1 the second saturated region.
-         * @param matchingReln describes how the first and second region
-         * boundaries are joined, as detailed in the class notes above.
+         * See the class notes above for details of terminology used here.
+         *
+         * @param end0 the first end region.
+         * @param centre the central region.
+         * @param end1 the second end region.
+         * @param matchingReln0 describes how the first end region is
+         * joined to the central region.
+         * @param matchingReln1 describes how the second end region is
+         * joined to the central region.
          */
         NNGBlockedSFSTriple(NSatRegion* end0, NSatRegion* centre,
             NSatRegion* end1, const NMatrix2& matchingReln0,
