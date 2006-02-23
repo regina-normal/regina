@@ -140,15 +140,24 @@ std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  * non-orientable.  Punctures and reflector boundaries in the base orbifold
  * are supported.
  *
- * The Seifert fibred space can be placed into one of the six classes
+ * A Seifert fibred space whose base orbifold has no punctures or
+ * reflector boundaries can be placed into one of the six classes
  * \c o1, \c o2, \c n1, \c n2, \c n3 and \c n4, as detailed on page 88
  * of "Seifert Manifolds", Peter Orlik, Springer-Verlag, 1972.
- * Consider the simplified "base surface", which is the closed surface
- * obtained by replacing all punctures and reflector boundaries in the
- * base orbifold with ordinary discs (this corresponds to replacing the
- * relevant sections of the 3-manifold with trivially fibred solid tori).
  * These classes describe whether this base surface is orientable, as well
  * as how many of its generators give fibre-reversing paths in the 3-manifold.
+ *
+ * In the case where the base orbifold has punctures and/or reflector
+ * boundaries, we use the five simplified classes \c bo1, \c bo2, \c bn1,
+ * \c bn2 and \c bn3.  These classes are not standard terminology (i.e.,
+ * they have been created explicitly for Regina), and generally they do not
+ * provide enough information to uniquely identify the 3-manifold.  They do
+ * however identify whether or not the base orbifold is orientable,
+ * and whether or not it contains any fibre-reversing paths.
+ *
+ * When describing punctures and reflector boundaries, a \e twisted
+ * boundary is one that gives a fibre-reversing path, and an \e untwisted
+ * boundary is one around which the direction of fibres is preserved.
  *
  * Exceptional fibres are sorted first by \a alpha (the index) and then
  * by \a beta.  The obstruction constant \a b is stored separately,
@@ -179,55 +188,98 @@ std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
 class NSFSpace : public NManifold {
     public:
         /**
-         * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3 and \c n4
-         * as described in the class notes above.
+         * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3, \c n4
+         * for base orbifolds without boundaries, plus five classes
+         * \c bo1, \c b02, \c bn1, \c bn2, \c bn3 for base orbifolds
+         * with boundaries.
          */
         enum classType {
             o1 = 101,
-                /**< Indicates that the base surface is orientable, and that
-                     none of its generators give fibre-reversing paths. */
+                /**< Indicates that the base orbifold is orientable with
+                     no punctures or reflector boundaries, and that none
+                     of its generators give fibre-reversing paths. */
             o2 = 102,
-                /**< Indicates that the base surface is orientable, and that
-                     all of its generators give fibre-reversing paths. */
+                /**< Indicates that the base orbifold is orientable with
+                     no punctures or reflector boundaries, and that all
+                     of its generators give fibre-reversing paths. */
             n1 = 201,
-                /**< Indicates that the base surface is non-orientable, and
-                     that none of its generators give fibre-reversing paths. */
+                /**< Indicates that the base orbifold is non-orientable with
+                     no punctures or reflector boundaries, and that none
+                     of its generators give fibre-reversing paths. */
             n2 = 202,
-                /**< Indicates that the base surface is non-orientable, and
-                     that all of its generators give fibre-reversing paths. */
+                /**< Indicates that the base orbifold is non-orientable with
+                     no punctures or reflector boundaries, and that all of
+                     its generators give fibre-reversing paths. */
             n3 = 203,
-                /**< Indicates that the base surface is non-orientable, that it
-                     has non-orientable genus at least two, and that precisely
-                     one of its generators give a fibre-reversing path. */
-            n4 = 204
-                /**< Indicates that the base surface is non-orientable, that it
-                     has non-orientable genus at least three, and that precisely
+                /**< Indicates that the base orbifold is non-orientable with
+                     no punctures or reflector boundaries, that it has
+                     non-orientable genus at least two, and that precisely
+                     one of its generators gives a fibre-reversing path. */
+            n4 = 204,
+                /**< Indicates that the base orbifold is non-orientable with
+                     no punctures or reflector boundaries, that it has
+                     non-orientable genus at least three, and that precisely
                      two of its generators give fibre-reversing paths. */
+
+            bo1 = 301,
+                /**< Indicates that the base orbifold contains punctures
+                     and/or reflector boundaries, that it is orientable,
+                     and that it contains no fibre-reversing paths. */
+            bo2 = 302,
+                /**< Indicates that the base orbifold contains punctures
+                     and/or reflector boundaries, that it is orientable,
+                     and that it contains at least one fibre-reversing path. */
+            bn1 = 401,
+                /**< Indicates that the base orbifold contains punctures
+                     and/or reflector boundaries, that it is non-orientable,
+                     and that it contains no fibre-reversing paths. */
+            bn2 = 402,
+                /**< Indicates that the base orbifold contains punctures
+                     and/or reflector boundaries, that it is non-orientable,
+                     and that its fibre-reversing paths correspond precisely
+                     to its orientation-reversing paths. */
+            bn3 = 403
+                /**< Indicates that the base orbifold contains punctures
+                     and/or reflector boundaries, that it is non-orientable,
+                     that it contains at least one fibre-reversing path,
+                     and that its fibre-reversing paths do not correspond
+                     precisely to its orientation-reversing paths. */
         };
     private:
-        classType baseClass;
-            /**< Indicates which of the six classes above this space
-                 belongs to. */
-        unsigned long baseGenus;
+        classType class_;
+            /**< Indicates which of the classes above this space belongs to. */
+        unsigned long genus_;
             /**< The genus of the base orbifold.  For non-orientable
                  base orbifolds this is the non-orientable genus. */
-        unsigned long basePunctures;
-            /**< The number of punctures in the base orbifold.  That is,
-                 the number of ordinary boundary components.  Reflector
-                 boundary components should not be counted here. */
-        unsigned long baseReflectors;
+        unsigned long punctures_;
+            /**< The number of punctures in the base orbifold whose
+                 boundaries are fibre-preserving.  This only counts
+                 ordinary boundary components, not reflector boundary
+                 components. */
+        unsigned long puncturesTwisted_;
+            /**< The number of punctures in the base orbifold whose
+                 boundaries are fibre-reversing.  This only counts
+                 ordinary boundary components, not reflector boundary
+                 components. */
+        unsigned long reflectors_;
             /**< The number of reflector boundary components in the
-                 base orbifold.  These are in addition to the regular
-                 boundary components described by \a basePunctures. */
+                 base orbifold whose boundaries are fibre-preserving.
+                 These are in addition to the regular boundary components
+                 described by \a punctures_. */
+        unsigned long reflectorsTwisted_;
+            /**< The number of reflector boundary components in the
+                 base orbifold whose boundaries are fibre-reversing.
+                 These are in addition to the regular boundary components
+                 described by \a puncturesTwisted_. */
 
-        std::list<NSFSFibre> fibres;
+        std::list<NSFSFibre> fibres_;
             /**< The exceptional fibres.  This list will be sorted, and will
                  only contain fibres for which \a alpha and \a beta are
                  coprime and <tt>0 <= beta < alpha > 1</tt>. */
-        unsigned long nFibres;
-            /**< The size of the \a fibres list, used to avoid calling
-                 the linear time fibres.size(). */
-        long b;
+        unsigned long nFibres_;
+            /**< The size of the \a fibres_ list, used to avoid calling
+                 the linear time fibres_.size(). */
+        long b_;
             /**< The obstruction parameter \a b, which corresponds to an
                  additional (1,b) fibre. */
 
@@ -241,29 +293,42 @@ class NSFSpace : public NManifold {
          * Creates a new Seifert fibred space of the given class with the
          * given base orbifold and no exceptional fibres.
          *
-         * @param newBaseClass indicates whether the base surface is
-         * orientable, as well as how many of its generators give
-         * fibre-reversing paths in the 3-manifold.  This ignores
-         * punctures and reflector boundary components of the base
-         * orbifold.  See the NSFSpace class notes and the classType
-         * enumeration notes for details.
-         * @param newBaseGenus the genus of the base orbifold (the
+         * TODO: Put back default arguments of 0.
+         *
+         * \pre If there are no punctures or reflector boundary components,
+         * then \a useClass is one of the six classes \c o1, \c o2, \c n1,
+         * \c n2, \c n3 or \c n4.  Likewise, if there are punctures and/or
+         * reflector boundary components, then \a useClass is one of the
+         * five classes \c bo1, \c bo2, \c bn1, \c bn2 or \c bn3.
+         * \pre If there are any twisted punctures or reflector boundary
+         * components, then \a useClass is either \c bo2 or \c bn3.
+         *
+         * @param useClass indicates whether the base orbifold is closed
+         * and/or orientable, and gives information about fibre-reversing
+         * paths in the 3-manifold.  See the NSFSpace class notes and the
+         * classType enumeration notes for details.
+         * @param genus the genus of the base orbifold (the
          * number of tori or projective planes that it contains).
          * Note that for non-orientable base surfaces, this is the
          * non-orientable genus.
-         * @param newBasePunctures the number of ordinary boundary
-         * components of the base orbifold.  All of these must give rise
-         * to real 3-manifold boundaries, i.e., reflector boundary
-         * components should not be counted here.
-         * @param newBaseReflectors the number of reflector boundary
+         * @param punctures the number of untwisted ordinary boundary
+         * components of the base orbifold.  Here "ordinary" means that
+         * the puncture gives rise to a real 3-manifold boundary (i.e.,
+         * this is not a reflector boundary of the base orbifold).
+         * @param puncturesTwisted the number of twisted ordinary boundary
+         * components of the base orbifold.  Here "ordinary" means that
+         * the puncture gives rise to a real 3-manifold boundary (i.e.,
+         * this is not a reflector boundary of the base orbifold).
+         * @param reflectors the number of untwisted reflector boundary
          * components of the base orbifold.  These are in addition to
-         * the ordinary boundary components described by \a
-         * newBasePunctures (i.e, they are not modifying these ordinary
-         * boundary components).
+         * the ordinary boundary components described by \a punctures.
+         * @param reflectorsTwisted the number of twisted reflector boundary
+         * components of the base orbifold.  These are in addition to
+         * the ordinary boundary components described by \a puncturesTwisted.
          */
-        NSFSpace(classType newBaseClass, unsigned long newBaseGenus,
-            unsigned long newBasePunctures = 0,
-            unsigned long newBaseReflectors = 0);
+        NSFSpace(classType useClass, unsigned long genus,
+            unsigned long punctures, unsigned long puncturesTwisted,
+            unsigned long reflectors, unsigned long reflectorsTwisted);
         /**
          * Creates a new Seifert fibred space that is a clone of
          * the given space.
@@ -285,29 +350,25 @@ class NSFSpace : public NManifold {
         void operator = (const NSFSpace& cloneMe);
 
         /**
-         * Returns which of the six classes \a o1, \a o2, \a n1, \a n2,
-         * \a n3 or \a n4 this Seifert fibred space belongs to.
-         *
-         * The specific class indicates whether or not the base surface
-         * is orientable, as well as how many of its generators give
-         * fibre-reversing paths in the 3-manifold.  Note that punctures
-         * and reflector boundary components in the base orbifold are
-         * ignored here.
+         * Returns which of the eleven predefined classes this space
+         * belongs to.  The specific class indicates whether the
+         * base orbifold has punctures and/or reflector boundaries,
+         * whether the base orbifold is orientable, and gives information
+         * on fibre-reversing paths.
          *
          * The class can be (indirectly) modified by calling
-         * addHandle() or addCrosscap().
+         * addHandle(), addCrosscap(), addPuncture() or addReflector().
          *
-         * For more information on the six classes, see the NSFSpace
-         * class notes or the classType enumeration notes.
+         * For more information on the eleven predefined classes, see the
+         * NSFSpace class notes or the classType enumeration notes.
          *
          * @return the particular class to which this space belongs.
-         * @see addHandle(), addCrosscap()
          */
-        classType getBaseClass() const;
+        classType baseClass() const;
         /**
-         * Returns the genus of the base surface.  As with the base
-         * class, all punctures and reflector boundaries in the base
-         * orbifold are ignored (i.e., are replaced with ordinary
+         * Returns the genus of the base orbifold.  All punctures and
+         * reflector boundaries in the base orbifold are ignored (i.e.,
+         * they are treated as though they had been replaced with ordinary
          * filled discs).
          *
          * The genus is the number of tori or projective planes that the
@@ -315,9 +376,8 @@ class NSFSpace : public NManifold {
          * surface is non-orientable then this is the non-orientable genus.
          *
          * @return the genus of the base orbifold.
-         * @see addHandle(), addCrosscap()
          */
-        unsigned long getBaseGenus() const;
+        unsigned long baseGenus() const;
         /**
          * Returns whether or not the base surface is orientable.
          * Reflector boundary components of the base orbifold are not
@@ -327,30 +387,94 @@ class NSFSpace : public NManifold {
          * modified by calling addCrosscap().
          *
          * @return \c true if and only if the base surface is orientable.
-         * @see addCrosscap()
          */
-        bool isBaseOrientable() const;
+        bool baseOrientable() const;
         /**
-         * Returns the number of ordinary boundary components of the
-         * base orbifold.  In other words, this routine returns the
-         * number of punctures in the base orbifold.
+         * Returns whether or not this space contains any fibre-reversing
+         * paths.
          *
-         * Reflector boundary components are not counted here; only the
-         * ordinary boundary components that give rise to real 3-manifold
-         * boundaries are included.
-         *
-         * @return the number of ordinary boundary components.
-         * @see addPuncture()
+         * @return \c true if and only if a fibre-reversing path exists.
          */
-        unsigned long getBasePunctures() const;
+        bool fibreReversing() const;
+        /**
+         * Returns whether or not we can negate an exceptional fibre by
+         * passing it around the interior of the base orbifold.  That is,
+         * this routine determines whether a (\a p, \a q) exceptional
+         * fibre can become a (\a p, -\a q) exceptional fibre simply by
+         * sliding it around.
+         *
+         * This is possible if either
+         * - the base orbifold has an orientation-reversing loop that
+         *   does not reverse fibres in the 3-manifold, or
+         * - the base orbifold has an orientation-preserving loop that
+         *   does reverse fibres in the 3-manifold.
+         *
+         * Note that reflector boundary components, whilst making the
+         * overall 3-manifold non-orientable, have no bearing on the
+         * outcome of this routine.
+         *
+         * @return \c true if and only an exceptional fibre can be
+         * reflected as described above.
+         */
+        bool fibreNegating() const;
+        /**
+         * Returns the total number of punctures in the base orbifold.
+         * In other words, this routine returns the total number of real
+         * torus or Klein bottle boundary components in the overall
+         * 3-manifold.
+         *
+         * Note that reflector boundaries on the base orbifold are \e not
+         * counted here; only the ordinary boundary components that give rise
+         * to real 3-manifold boundaries are included.
+         *
+         * Both untwisted and twisted punctures (giving rise to torus
+         * and Klein bottle boundaries respectively in the 3-manifold)
+         * are counted by this routine.
+         *
+         * @return the total number of punctures.
+         */
+        unsigned long punctures() const;
+        /**
+         * Returns the number of punctures of the given type in the base
+         * orbifold.  In other words, this routine returns the number of
+         * real boundary components of the given type in the overall
+         * 3-manifold.
+         *
+         * This routine either counts only twisted punctures (which give
+         * rise to Klein bottle boundaries), or only untwisted punctures
+         * (which give rise to torus boundaries).
+         *
+         * Either way, reflector boundaries on the base orbifold are
+         * \e not counted here; only ordinary boundary components that
+         * give rise to real 3-manifold boundaries are considered.
+         *
+         * @param twisted \c true if only twisted punctures should be
+         * counted (those that give fibre-reversing paths and Klein
+         * bottle boundaries), or \c false if only untwisted punctures
+         * should be counted (those that are fibre-preserving and give
+         * torus boundaries).
+         * @return the number of punctures of the given type.
+         */
+        unsigned long punctures(bool twisted) const;
+        /**
+         * Returns the total number of reflector boundary components of the
+         * base orbifold.  This includes both twisted and untwisted
+         * reflector boundaries.
+         *
+         * @return the total number of reflector boundary components.
+         */
+        unsigned long reflectors() const;
         /**
          * Returns the number of reflector boundary components of the
-         * base orbifold.
+         * given type in the base orbifold.  This either counts only twisted
+         * reflector boundaries, or only untwisted reflector boundaries.
          *
-         * @return the number of reflector boundary components.
-         * @see addReflector()
+         * @param twisted \c true if only twisted reflector boundaries
+         * should be counted (those that give fibre-reversing paths), or
+         * \c false if only untwisted reflector boundaries should be counted.
+         * @return the number of reflector boundaries of the given type.
          */
-        unsigned long getBaseReflectors() const;
+        unsigned long reflectors(bool twisted) const;
 
         /**
          * Returns the number of exceptional fibres in this Seifert fibred
@@ -361,7 +485,7 @@ class NSFSpace : public NManifold {
          *
          * @return the number of exceptional fibres.
          */
-        unsigned long getFibreCount() const;
+        unsigned long fibreCount() const;
         /**
          * Returns the requested exceptional fibre.  Fibres are stored
          * in sorted order by \a alpha (the index) and then by \a beta.
@@ -374,7 +498,7 @@ class NSFSpace : public NManifold {
          * 0 and getFibreCount()-1 inclusive.
          * @return the requested fibre.
          */
-        NSFSFibre getFibre(unsigned long which) const;
+        NSFSFibre fibre(unsigned long which) const;
 
         /**
          * Returns the obstruction constant \a b for this Seifert fibred
@@ -388,9 +512,8 @@ class NSFSpace : public NManifold {
          * fibre must be stored in standard form (0 <= \a beta < \a alpha).
          *
          * @return the obstruction constant \a b.
-         * @see insertFibre()
          */
-        long getObstruction() const;
+        long obstruction() const;
 
         /**
          * Inserts a new handle into the base orbifold.
@@ -400,8 +523,8 @@ class NSFSpace : public NManifold {
          * removing a disc from the base orbifold and replacing it with
          * a punctured torus.
          *
-         * Note that this operation may alter which of the six classes
-         * this Seifert fibred space belongs to.
+         * Note that this operation may alter which of the classes
+         * described by classType this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -420,8 +543,8 @@ class NSFSpace : public NManifold {
          * removing a disc from the base orbifold and replacing it with
          * a Mobius band.
          *
-         * Note that this operation may alter which of the six classes
-         * this Seifert fibred space belongs to.
+         * Note that this operation may alter which of the classes
+         * described by classType this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -433,59 +556,49 @@ class NSFSpace : public NManifold {
          */
         void addCrosscap(bool fibreReversing = false);
         /**
-         * Inserts a new puncture into the base orbifold.
-         *
-         * This is equivalent to removing a disc from the base orbifold
-         * (or a trivially fibred solid torus from the overall 3-manifold).
-         *
-         * The exceptional fibres and the obstruction constant \a b are
-         * not modified by this routine.
-         */
-        void addPuncture();
-        /**
-         * Inserts several new punctures into the base orbifold.
+         * Inserts one or more new punctures into the base orbifold.
+         * The punctures may be twisted or untwisted.
          *
          * Each puncture insertion is equivalent to removing a disc from
-         * the base orbifold (or a trivially fibred solid torus from the
-         * overall 3-manifold).
+         * the base orbifold.  In the untwisted case this results in a
+         * new torus boundary for the 3-manifold, and in the twisted
+         * case it results in a new Klein bottle boundary.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
+         * TODO: Default twisted = false.
+         *
+         * @param twisted \c true if the new punctures should be twisted
+         * (i.e., their boundaries should be fibre-reversing), or \c false
+         * if the new punctures should be untwisted.
          * @param nPunctures the number of new punctures to insert.
          */
-        void addPuncture(unsigned long nPunctures);
+        void addPuncture(bool twisted, unsigned long nPunctures = 1);
         /**
-         * Adds a new reflector boundary component to the base orbifold.
-         *
-         * This is equivalent to removing a disc from the base orbifold
-         * and replacing it with an annulus with one reflector boundary.
-         *
-         * It has the effect of removing a trivially fibred solid torus
-         * from the overall 3-manifold and replacing it with an
-         * appropriately fibred twisted I-bundle over the torus.
-         *
-         * The exceptional fibres and the obstruction constant \a b are
-         * not modified by this routine.
-         */
-        void addReflector();
-        /**
-         * Adds several new reflector boundary components to the base orbifold.
+         * Adds one or more new reflector boundary components to the base
+         * orbifold.  The new reflector boundaries may be twisted or
+         * untwisted.
          *
          * Each addition of a reflector boundary component is equivalent to
          * removing a disc from the base orbifold and replacing it with an
          * annulus with one reflector boundary.
          *
-         * It has the effect of removing a trivially fibred solid torus
-         * from the overall 3-manifold and replacing it with an
-         * appropriately fibred twisted I-bundle over the torus.
+         * In the untwisted case, it has the effect of removing a trivially
+         * fibred solid torus from the overall 3-manifold and replacing it
+         * with an appropriately fibred twisted I-bundle over the torus.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
+         * TODO: Default twisted = false.
+         *
+         * @param twisted \c true if the new reflector boundaries should be
+         * twisted (i.e., the boundaries should be fibre-reversing), or
+         * \c false if the new reflector boundaries should be untwisted.
          * @param nReflectors the number of new reflector boundaries to add.
          */
-        void addReflector(unsigned long nReflectors);
+        void addReflector(bool twisted, unsigned long nReflectors = 1);
 
         /**
          * Adds the given fibre to this Seifert fibred space.
@@ -689,70 +802,76 @@ inline bool NSFSFibre::operator < (const NSFSFibre& compare)
 
 // Inline functions for NSFSpace
 
-inline NSFSpace::NSFSpace() : baseClass(o1), baseGenus(0),
-        basePunctures(0), baseReflectors(0), nFibres(0), b(0) {
+inline NSFSpace::NSFSpace() : class_(o1), genus_(0),
+        punctures_(0), puncturesTwisted_(0),
+        reflectors_(0), reflectorsTwisted_(0),
+        nFibres_(0), b_(0) {
 }
 
-inline NSFSpace::NSFSpace(NSFSpace::classType newBaseClass,
-        unsigned long newBaseGenus, unsigned long newBasePunctures,
-        unsigned long newBaseReflectors) :
-        baseClass(newBaseClass), baseGenus(newBaseGenus),
-        basePunctures(newBasePunctures), baseReflectors(newBaseReflectors),
-        nFibres(0), b(0) {
+inline NSFSpace::NSFSpace(NSFSpace::classType useClass, unsigned long genus,
+        unsigned long punctures, unsigned long puncturesTwisted,
+        unsigned long reflectors, unsigned long reflectorsTwisted) :
+        class_(useClass), genus_(genus),
+        punctures_(punctures), puncturesTwisted_(puncturesTwisted),
+        reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
+        nFibres_(0), b_(0) {
 }
 
 inline NSFSpace::NSFSpace(const NSFSpace& cloneMe) : NManifold(),
-        baseClass(cloneMe.baseClass), baseGenus(cloneMe.baseGenus),
-        basePunctures(cloneMe.basePunctures),
-        baseReflectors(cloneMe.baseReflectors),
-        fibres(cloneMe.fibres), nFibres(cloneMe.nFibres), b(cloneMe.b) {
+        class_(cloneMe.class_), genus_(cloneMe.genus_),
+        punctures_(cloneMe.punctures_),
+        puncturesTwisted_(cloneMe.puncturesTwisted_),
+        reflectors_(cloneMe.reflectors_),
+        reflectorsTwisted_(cloneMe.reflectorsTwisted_),
+        fibres_(cloneMe.fibres_), nFibres_(cloneMe.nFibres_),
+        b_(cloneMe.b_) {
 }
 
 inline NSFSpace::~NSFSpace() {
 }
 
-inline NSFSpace::classType NSFSpace::getBaseClass() const {
-    return baseClass;
+inline NSFSpace::classType NSFSpace::baseClass() const {
+    return class_;
 }
 
-inline unsigned long NSFSpace::getBaseGenus() const {
-    return baseGenus;
+inline unsigned long NSFSpace::baseGenus() const {
+    return genus_;
 }
 
-inline bool NSFSpace::isBaseOrientable() const {
-    return (baseClass == o1 || baseClass == o2);
+inline bool NSFSpace::baseOrientable() const {
+    return (class_ == o1 || class_ == o2 || class_ == bo1 || class_ == bo2);
 }
 
-inline unsigned long NSFSpace::getBasePunctures() const {
-    return basePunctures;
+inline bool NSFSpace::fibreReversing() const {
+    return ! (class_ == o1 || class_ == n1 || class_ == bo1 || class_ == bn1);
 }
 
-inline unsigned long NSFSpace::getBaseReflectors() const {
-    return baseReflectors;
+inline bool NSFSpace::fibreNegating() const {
+    return ! (class_ == o1 || class_ == n2 || class_ == bo1 || class_ == bn2);
 }
 
-inline unsigned long NSFSpace::getFibreCount() const {
-    return nFibres;
+inline unsigned long NSFSpace::punctures() const {
+    return punctures_ + puncturesTwisted_;
 }
 
-inline long NSFSpace::getObstruction() const {
-    return b;
+inline unsigned long NSFSpace::punctures(bool twisted) const {
+    return (twisted ? puncturesTwisted_ : punctures_);
 }
 
-inline void NSFSpace::addPuncture() {
-    basePunctures++;
+inline unsigned long NSFSpace::reflectors() const {
+    return reflectors_ + reflectorsTwisted_;
 }
 
-inline void NSFSpace::addPuncture(unsigned long nPunctures) {
-    basePunctures += nPunctures;
+inline unsigned long NSFSpace::reflectors(bool twisted) const {
+    return (twisted ? reflectorsTwisted_ : reflectors_);
 }
 
-inline void NSFSpace::addReflector() {
-    baseReflectors++;
+inline unsigned long NSFSpace::fibreCount() const {
+    return nFibres_;
 }
 
-inline void NSFSpace::addReflector(unsigned long nReflectors) {
-    baseReflectors += nReflectors;
+inline long NSFSpace::obstruction() const {
+    return b_;
 }
 
 inline void NSFSpace::insertFibre(const NSFSFibre& fibre) {

@@ -57,17 +57,19 @@ std::ostream& operator << (std::ostream& out, const NSFSFibre& f) {
 }
 
 void NSFSpace::operator = (const NSFSpace& cloneMe) {
-    baseClass = cloneMe.baseClass;
-    baseGenus = cloneMe.baseGenus;
-    basePunctures = cloneMe.basePunctures;
-    baseReflectors = cloneMe.baseReflectors;
-    fibres = cloneMe.fibres;
-    nFibres = cloneMe.nFibres;
-    b = cloneMe.b;
+    class_ = cloneMe.class_;
+    genus_ = cloneMe.genus_;
+    punctures_ = cloneMe.punctures_;
+    puncturesTwisted_ = cloneMe.puncturesTwisted_;
+    reflectors_ = cloneMe.reflectors_;
+    reflectorsTwisted_ = cloneMe.reflectorsTwisted_;
+    fibres_ = cloneMe.fibres_;
+    nFibres_ = cloneMe.nFibres_;
+    b_ = cloneMe.b_;
 }
 
-NSFSFibre NSFSpace::getFibre(unsigned long which) const {
-    FibreIteratorConst pos = fibres.begin();
+NSFSFibre NSFSpace::fibre(unsigned long which) const {
+    FibreIteratorConst pos = fibres_.begin();
     advance(pos, which);
     return *pos;
 }
@@ -84,13 +86,18 @@ void NSFSpace::addHandle(bool fibreReversing) {
     // generators respectively).  See Orlik [1972], p89 for details.
     if (fibreReversing) {
         // Fibre-reversing.
-        switch (baseClass) {
+        switch (class_) {
             case o1:
-                baseClass = o2; break;
+                class_ = o2; break;
             case n1:
-                baseClass = (baseGenus % 2 == 0 ? n4 : n3); break;
+                class_ = (genus_ % 2 == 0 ? n4 : n3); break;
             case n2:
-                baseClass = n4; break;
+                class_ = n4; break;
+            case bo1:
+                class_ = bo2; break;
+            case bn1:
+            case bn2:
+                class_ = bn3; break;
             default:
                 // No change.
                 break;
@@ -101,51 +108,61 @@ void NSFSpace::addHandle(bool fibreReversing) {
     }
 
     // Finally increment the genus (either orientable or non-orientable).
-    if (baseClass == o1 || baseClass == o2)
-        baseGenus++;
+    if (baseOrientable())
+        genus_++;
     else
-        baseGenus += 2;
+        genus_ += 2;
 }
 
 void NSFSpace::addCrosscap(bool fibreReversing) {
     // We're making the base orbifold non-orientable.
     // Convert orientable genus to non-orientable genus if required.
-    if (baseClass == o1 || baseClass == o2)
-        baseGenus *= 2;
+    if (baseOrientable())
+        genus_ *= 2;
 
     // Now fix the class.
     // The transitions between classes have been worked out on paper
     // case by case (in particular, following how the generators of the
-    // handle relate to the new crosscap generators in the non-orientable
-    // case).
+    // original handles relate to the reformulated crosscap generators in
+    // the orientable case).
     // Recall also that in the orientable case we can convert +/- to -/-,
     // and in the non-orientable case we can convert +/+/+/- to +/-/-/-
     // (where + and - correspond to fibre-preserving and fibre-reversing
     // generators respectively).  See Orlik [1972], p89 for details.
     if (fibreReversing) {
         // Fibre-reversing.
-        switch(baseClass) {
+        switch(class_) {
             case o1:
-                baseClass = n2; break;
+                class_ = n2; break;
             case o2:
-                baseClass = n4; break;
+                class_ = n4; break;
             case n1:
-                baseClass = (baseGenus % 2 == 0 ? n4 : n3); break;
+                class_ = (genus_ % 2 == 0 ? n4 : n3); break;
+            case bo1:
+                class_ = bn2; break;
+            case bo2:
+            case bn1:
+                class_ = bn3; break;
             default:
                 // No change.
                 break;
         }
     } else {
         // Fibre-preserving.
-        switch(baseClass) {
+        switch(class_) {
             case o1:
-                baseClass = n1; break;
+                class_ = n1; break;
             case o2:
             case n2:
             case n4:
-                baseClass = n3; break;
+                class_ = n3; break;
             case n3:
-                baseClass = n4; break;
+                class_ = n4; break;
+            case bo1:
+                class_ = bn1; break;
+            case bo2:
+            case bn2:
+                class_ = bn3; break;
             default:
                 // No change.
                 break;
@@ -154,7 +171,67 @@ void NSFSpace::addCrosscap(bool fibreReversing) {
 
     // Finally increment the genus.
     // We always have non-orientable genus here.
-    baseGenus++;
+    genus_++;
+}
+
+void NSFSpace::addPuncture(bool twisted, unsigned long nPunctures) {
+    if (twisted) {
+        puncturesTwisted_ += nPunctures;
+
+        if (baseOrientable())
+            class_ = bo2;
+        else
+            class_ = bn3;
+    } else {
+        punctures_ += nPunctures;
+
+        switch(class_) {
+            case o1:
+                class_ = bo1; break;
+            case o2:
+                class_ = bo2; break;
+            case n1:
+                class_ = bn1; break;
+            case n2:
+                class_ = bn2; break;
+            case n3:
+            case n4:
+                class_ = bn3; break;
+            default:
+                // No change.
+                break;
+        }
+    }
+}
+
+void NSFSpace::addReflector(bool twisted, unsigned long nReflectors) {
+    if (twisted) {
+        reflectorsTwisted_ += nReflectors;
+
+        if (baseOrientable())
+            class_ = bo2;
+        else
+            class_ = bn3;
+    } else {
+        reflectors_ += nReflectors;
+
+        switch(class_) {
+            case o1:
+                class_ = bo1; break;
+            case o2:
+                class_ = bo2; break;
+            case n1:
+                class_ = bn1; break;
+            case n2:
+                class_ = bn2; break;
+            case n3:
+            case n4:
+                class_ = bn3; break;
+            default:
+                // No change.
+                break;
+        }
+    }
 }
 
 void NSFSpace::insertFibre(long alpha, long beta) {
@@ -171,22 +248,22 @@ void NSFSpace::insertFibre(long alpha, long beta) {
 
     // Is it a regular fibre?
     if (alpha == 1) {
-        b += beta;
+        b_ += beta;
         return;
     }
 
     // Put the fibre in standard form.
-    b += (beta / alpha);
+    b_ += (beta / alpha);
     beta = beta % alpha;
     if (beta < 0) {
         beta += alpha;
-        b--;
+        b_--;
     }
 
     // Now we have 0 <= beta < alpha and alpha >= 2.
-    nFibres++;
+    nFibres_++;
     NSFSFibre f(alpha, beta);
-    fibres.insert(lower_bound(fibres.begin(), fibres.end(), f), f);
+    fibres_.insert(lower_bound(fibres_.begin(), fibres_.end(), f), f);
 
     // We're done!
 }
@@ -194,62 +271,58 @@ void NSFSpace::insertFibre(long alpha, long beta) {
 void NSFSpace::reduce(bool mayReflect) {
     FibreIterator it, it2;
 
-    // Can we negate an exceptional fibre by following an
-    // orientation-reversing curve in the 3-manifold?
-    bool negatable = (baseClass != o1 && baseClass != n2);
-
     // If the SFS is non-orientable, we can get rid of b completely and
     // convert most (if not all) exceptional fibres to beta <= alpha / 2.
-    if (baseReflectors) {
+    if (reflectors_ || reflectorsTwisted_) {
         // (1,1) == (1,0).
-        b = 0;
-    } else if (negatable && b) {
+        b_ = 0;
+    } else if (fibreNegating() && b_) {
         // (p,q) == (p,-q), and so (1,2) == (1,0).
-        b = b % 2;
-        if (b && nFibres) {
+        b_ = b_ % 2;
+        if (b_ && nFibres_) {
             // We have b == +/-1.
             // Merge this into the first exceptional fibre instead.
             // Instead of modifying the fibre directly, delete and reinsert
             // so that sorted order is maintained.
-            NSFSFibre f(fibres.front().alpha,
-                fibres.front().alpha - fibres.front().beta);
-            fibres.pop_front();
+            NSFSFibre f(fibres_.front().alpha,
+                fibres_.front().alpha - fibres_.front().beta);
+            fibres_.pop_front();
 
             // Rather than doing a binary search, just hunt from the
             // front (since we haven't changed alpha, so the fibre will
             // generally stay near the front).
-            it = fibres.begin();
-            while (it != fibres.end() && (*it) < f)
+            it = fibres_.begin();
+            while (it != fibres_.end() && (*it) < f)
                 it++;
-            fibres.insert(it, f);
+            fibres_.insert(it, f);
 
-            b = 0;
+            b_ = 0;
         }
     }
 
     // Completely finish off the case with no exceptional fibres.
-    if (! nFibres) {
+    if (! nFibres_) {
         // Not much more we can do.
         // Just reflect if it helps.
-        if (mayReflect && b < 0)
-            b = -b;
+        if (mayReflect && b_ < 0)
+            b_ = -b_;
         return;
     }
 
     // FACT: There is at least one fibre.
     // Normalise them as best we can.
 
-    if (negatable) {
+    if (fibreNegating()) {
         // (p,q) == (p,-q) == (1,1) (p,p-q) == (1,-1) (p,p-q).
         // We can therefore reduce fibres with large beta in pairs.
         // Except for the following cases, where we can simply reduce
         // all of them.
-        if (baseReflectors || fibres.front().alpha == 2) {
+        if (reflectors_ || reflectorsTwisted_ || fibres_.front().alpha == 2) {
             // (1,1) == (1,0) if we have reflectors, and
             // (1,1) (2,1) == (1,2) (2,-1) == (2,1) if we have some alpha = 2.
             // So we can reduce _all_ fibres with large beta.
-            it = fibres.begin();
-            while (it != fibres.end())
+            it = fibres_.begin();
+            while (it != fibres_.end())
                 if (it->beta * 2 > it->alpha)
                     it = negateFibreDown(it);
                 else
@@ -259,13 +332,13 @@ void NSFSpace::reduce(bool mayReflect) {
 
             // A place to store the first of a pair while we look for
             // the second:
-            it2 = fibres.end();
+            it2 = fibres_.end();
 
-            it = fibres.begin();
-            while (it != fibres.end()) {
+            it = fibres_.begin();
+            while (it != fibres_.end()) {
                 if (it->beta * 2 > it->alpha) {
                     // This one's worth reducing.
-                    if (it2 == fibres.end()) {
+                    if (it2 == fibres_.end()) {
                         // First in a pair.
                         // Remember it and move on.
                         it2 = it++;
@@ -277,7 +350,7 @@ void NSFSpace::reduce(bool mayReflect) {
                         negateFibreDown(it2);
                         it = negateFibreDown(it);
 
-                        it2 = fibres.end();
+                        it2 = fibres_.end();
                     }
                 } else
                     it++;
@@ -285,15 +358,16 @@ void NSFSpace::reduce(bool mayReflect) {
 
             // Was there anything left over?  If so, pair it with the
             // final fibre (which will get larger, not smaller).
-            if (it2 != fibres.end()) {
+            if (it2 != fibres_.end()) {
                 negateFibreDown(it2);
 
                 // No need to resort the final fibre, since it gets
                 // larger anyway.
-                fibres.back().beta = fibres.back().alpha - fibres.back().beta;
+                fibres_.back().beta = fibres_.back().alpha -
+                    fibres_.back().beta;
             }
         }
-    } else if (baseReflectors) {
+    } else if (reflectors_ || reflectorsTwisted_) {
         // Individual fibres cannot be negated, but we have reflector
         // boundaries.
         // We still have the option of simultaneously replacing all (p,q)
@@ -303,12 +377,12 @@ void NSFSpace::reduce(bool mayReflect) {
             unsigned long nLarge = 0;
             unsigned long nSmall = 0;
             // Don't count (2,1) fibres, they don't get changed anyway.
-            for (it = fibres.begin(); it != fibres.end() && it->alpha == 2;
+            for (it = fibres_.begin(); it != fibres_.end() && it->alpha == 2;
                     it++)
                 ;
             // Remember where we really started.
             it2 = it;
-            for ( ; it != fibres.end(); it++) {
+            for ( ; it != fibres_.end(); it++) {
                 if (it->beta * 2 > it->alpha)
                     nLarge++;
                 else
@@ -318,7 +392,7 @@ void NSFSpace::reduce(bool mayReflect) {
             // So.  Was it worth it?
             if (nLarge > nSmall)
                 complementAllFibres();
-            else if (nLarge == nSmall && it2 != fibres.end() &&
+            else if (nLarge == nSmall && it2 != fibres_.end() &&
                     it2->beta * 2 > it2->alpha)
                 complementAllFibres();
         }
@@ -327,8 +401,8 @@ void NSFSpace::reduce(bool mayReflect) {
         // The best we can do is just reflect everything if b is far enough
         // negative.
 
-        if (mayReflect && b < (-b - static_cast<long>(nFibres))) {
-            b = -b - static_cast<long>(nFibres);
+        if (mayReflect && b_ < (-b_ - static_cast<long>(nFibres_))) {
+            b_ = -b_ - static_cast<long>(nFibres_);
             complementAllFibres();
         }
     }
@@ -345,40 +419,40 @@ std::list<NSFSFibre>::iterator NSFSpace::negateFibreDown(
     next++;
 
     // Delete the old iterator.
-    fibres.erase(it);
+    fibres_.erase(it);
 
     // Insert the new.  Treat front insertion specially, so we don't
     // find ourselves doing an it-- past the beginning.
-    if (fibres.empty() || f < fibres.front()) {
-        fibres.push_front(f);
+    if (fibres_.empty() || f < fibres_.front()) {
+        fibres_.push_front(f);
         return next;
     }
 
     // It's not a front insertion.  Find the insertion place.
     // Note that this loop is guaranteed at least one iteration.
-    for (it = next; it == fibres.end() || f < *it; it--)
+    for (it = next; it == fibres_.end() || f < *it; it--)
         ;
 
     // We have the first instance of *it <= f.
     // This means the insertion should take place immediately after it.
     it++;
-    fibres.insert(it, f);
+    fibres_.insert(it, f);
     return next;
 }
 
 void NSFSpace::complementAllFibres() {
     FibreIterator it, it2, next;
-    for (it = fibres.begin(); it != fibres.end(); it++)
+    for (it = fibres_.begin(); it != fibres_.end(); it++)
         it->beta = it->alpha - it->beta;
 
     // Ensure that the array remains in sorted order.
     // Each portion of the array with fixed index must be reversed.
     NSFSFibre tmpFibre;
-    it = fibres.begin();
-    while (it != fibres.end()) {
+    it = fibres_.begin();
+    while (it != fibres_.end()) {
         // INV: it points to the next block to be reversed.
         it2 = it;
-        for (it2++; it2 != fibres.end() && (*it2).alpha == (*it).alpha; it2++)
+        for (it2++; it2 != fibres_.end() && (*it2).alpha == (*it).alpha; it2++)
             ;
 
         // Now it2 points to the first element of the following block.
@@ -405,27 +479,27 @@ void NSFSpace::complementAllFibres() {
 }
 
 NLensSpace* NSFSpace::isLensSpace() const {
-    if (basePunctures || baseReflectors) {
+    if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_) {
         // Not a chance.
         return 0;
     }
 
-    if (baseGenus == 0 && baseClass == o1) {
+    if (genus_ == 0 && class_ == o1) {
         // Base orbifold is the sphere.
-        if (fibres.empty())
-            return new NLensSpace(b >= 0 ? b : -b, 1);
-        else if (nFibres == 1) {
-            long q = fibres.front().alpha;
-            long p = fibres.front().beta + (b * q);
+        if (fibres_.empty())
+            return new NLensSpace(b_ >= 0 ? b_ : -b_, 1);
+        else if (nFibres_ == 1) {
+            long q = fibres_.front().alpha;
+            long p = fibres_.front().beta + (b_ * q);
 
             // We have SFS [S2 : (q,p)].
             return new NLensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
-        } else if (nFibres == 2) {
+        } else if (nFibres_ == 2) {
             // Precisely two fibres.
-            long q = fibres.back().alpha;
-            long p = fibres.back().beta + (b * q);
-            long x = fibres.front().alpha;
-            long y = fibres.front().beta;
+            long q = fibres_.back().alpha;
+            long p = fibres_.back().beta + (b_ * q);
+            long x = fibres_.front().alpha;
+            long y = fibres_.front().beta;
 
             // INV: We have SFS [S2 : (x,y) (q,p)] with 0 <= y < x.
             while (y > 0) {
@@ -443,12 +517,12 @@ NLensSpace* NSFSpace::isLensSpace() const {
 
         // Not a lens space.
         return 0;
-    } else if (baseGenus == 1 && baseClass == n2) {
+    } else if (genus_ == 1 && class_ == n2) {
         // Base orbifold is the projective plane.
-        if (nFibres == 1) {
+        if (nFibres_ == 1) {
             // We have precisely one exceptional fibre.
-            long a = fibres.front().alpha;
-            long n = b * a + fibres.front().beta;
+            long a = fibres_.front().alpha;
+            long n = b_ * a + fibres_.front().beta;
 
             if (n == 1 || n == -1)
                 return new NLensSpace(4 * a, 2 * a - 1);
@@ -462,39 +536,53 @@ NLensSpace* NSFSpace::isLensSpace() const {
 }
 
 bool NSFSpace::operator < (const NSFSpace& compare) const {
-    if (baseGenus < compare.baseGenus)
+    if (genus_ < compare.genus_)
         return true;
-    if (baseGenus > compare.baseGenus)
+    if (genus_ > compare.genus_)
         return false;
 
-    if (baseReflectors < compare.baseReflectors)
+    if (reflectors_ + reflectorsTwisted_ <
+            compare.reflectors_ + compare.reflectorsTwisted_)
         return true;
-    if (baseReflectors > compare.baseReflectors)
+    if (reflectors_ + reflectorsTwisted_ >
+            compare.reflectors_ + compare.reflectorsTwisted_)
         return false;
 
-    if (basePunctures < compare.basePunctures)
+    if (reflectors_ < compare.reflectors_)
         return true;
-    if (basePunctures > compare.basePunctures)
+    if (reflectors_ > compare.reflectors_)
         return false;
 
-    if (baseClass < compare.baseClass)
+    if (punctures_ + puncturesTwisted_ <
+            compare.punctures_ + compare.puncturesTwisted_)
         return true;
-    if (baseClass > compare.baseClass)
+    if (punctures_ + puncturesTwisted_ >
+            compare.punctures_ + compare.puncturesTwisted_)
         return false;
 
-    if (nFibres < compare.nFibres)
+    if (punctures_ < compare.punctures_)
         return true;
-    if (nFibres > compare.nFibres)
+    if (punctures_ > compare.punctures_)
         return false;
 
-    if (fibres < compare.fibres)
+    if (class_ < compare.class_)
         return true;
-    if (compare.fibres < fibres)
+    if (class_ > compare.class_)
         return false;
 
-    if (b < compare.b)
+    if (nFibres_ < compare.nFibres_)
         return true;
-    if (b > compare.b)
+    if (nFibres_ > compare.nFibres_)
+        return false;
+
+    if (fibres_ < compare.fibres_)
+        return true;
+    if (compare.fibres_ < fibres_)
+        return false;
+
+    if (b_ < compare.b_)
+        return true;
+    if (b_ > compare.b_)
         return false;
 
     // Exactly the same!
@@ -503,7 +591,7 @@ bool NSFSpace::operator < (const NSFSpace& compare) const {
 
 NTriangulation* NSFSpace::construct() const {
     // Things that we don't deal with just yet.
-    if (basePunctures || baseReflectors)
+    if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
         return 0;
 
     // We already know how to construct lens spaces.
@@ -515,23 +603,23 @@ NTriangulation* NSFSpace::construct() const {
     }
 
     // Currently we work over the 2-sphere only.
-    if (baseGenus != 0 || baseClass != o1)
+    if (genus_ != 0 || class_ != o1)
         return 0;
 
     // Pull off the number of fibres we're capable of dealing with.
     // At this moment this is three.
-    if (nFibres > 3)
+    if (nFibres_ > 3)
         return 0;
 
     NSFSFibre fibre[3];
-    std::copy(fibres.begin(), fibres.end(), fibre);
+    std::copy(fibres_.begin(), fibres_.end(), fibre);
 
     // Since we're working over the 2-sphere and we've already dealt
     // with lens spaces, we must in fact have precisely three
     // exceptional fibres.
 
     // Some parameters allow particularly nice triangulations.
-    if (b == -1 && fibre[0] == two && fibre[1] == two && fibre[2].beta == 1) {
+    if (b_ == -1 && fibre[0] == two && fibre[1] == two && fibre[2].beta == 1) {
         // (2, 1) (2, 1) (a, -a+1)
         NTriangulation* ans = new NTriangulation();
         ans->insertLayeredLoop(fibre[2].alpha, true);
@@ -542,12 +630,12 @@ NTriangulation* NSFSpace::construct() const {
     NTriangulation* ans = new NTriangulation();
     ans->insertAugTriSolidTorus(fibre[0].alpha, fibre[0].beta,
         fibre[1].alpha, fibre[1].beta, fibre[2].alpha,
-        fibre[2].beta + (b - 1) * fibre[2].alpha);
+        fibre[2].beta + (b_ - 1) * fibre[2].alpha);
     return ans;
 }
 
 NAbelianGroup* NSFSpace::getHomologyH1() const {
-    if (basePunctures) {
+    if (punctures_ || puncturesTwisted_) {
         // Not just now.
         return 0;
     }
@@ -557,8 +645,10 @@ NAbelianGroup* NSFSpace::getHomologyH1() const {
     // p91 of Orlik [1972].  Each reflector gives additional generators
     // y and z, for which y acts as a boundary component and z^2 = fibre.
     NAbelianGroup* ans = new NAbelianGroup();
+    unsigned long nRef = reflectors_ + reflectorsTwisted_;
+    bool twisted = fibreReversing();
 
-    if (baseClass == o1 || baseClass == o2) {
+    if (baseOrientable()) {
         // Orientable base surface.
         // Generators: a_1, b_1, ..., a_g, b_g, q_1, q_2, ..., q_r, h,
         //             y_1, z_1, ..., y_t, z_t (for reflectors)
@@ -566,38 +656,41 @@ NAbelianGroup* NSFSpace::getHomologyH1() const {
         //     q_j^alpha_j h^beta_j = 1
         //     z_j^2 = h
         //     q_1 ... q_r y_1 ... y_t = h^b
-        //     h^2 = 1 (only for class o2)
+        //     h^2 = 1 (if twisted), or h = 1 (if twisted reflectors)
         //
         // We ignore a_i and b_i, and just add extra rank 2g at the end.
         // Generators in the matrix are q_1, ..., q_r, h, z_1, ..., z_t,
         //                              y_1, ..., y_t.
-        NMatrixInt pres(nFibres + baseReflectors + (baseClass == o1 ? 1 : 2),
-            nFibres + 1 + 2 * baseReflectors);
+        NMatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
+            nFibres_ + 1 + 2 * nRef);
 
         unsigned long which = 0;
-        for (FibreIteratorConst it = fibres.begin(); it != fibres.end(); it++) {
-            pres.entry(nFibres + baseReflectors, which) = 1;
+        for (FibreIteratorConst it = fibres_.begin(); it != fibres_.end();
+                it++) {
+            pres.entry(nFibres_ + nRef, which) = 1;
 
-            pres.entry(which, nFibres) = it->beta;
+            pres.entry(which, nFibres_) = it->beta;
             pres.entry(which, which) = it->alpha;
 
             which++;
         }
 
         unsigned long ref;
-        for (ref = 0; ref < baseReflectors; ref++) {
-            pres.entry(nFibres + ref, nFibres) = -1;
-            pres.entry(nFibres + ref, nFibres + 1 + ref) = 2;
-            pres.entry(nFibres + baseReflectors,
-                nFibres + 1 + baseReflectors + ref) = 1;
+        for (ref = 0; ref < nRef; ref++) {
+            pres.entry(nFibres_ + ref, nFibres_) = -1;
+            pres.entry(nFibres_ + ref, nFibres_ + 1 + ref) = 2;
+            pres.entry(nFibres_ + nRef, nFibres_ + 1 + nRef + ref) = 1;
         }
 
-        pres.entry(nFibres + baseReflectors, nFibres) = -b;
-        if (baseClass == o2)
-            pres.entry(nFibres + baseReflectors + 1, nFibres) = 2;
+        pres.entry(nFibres_ + nRef, nFibres_) = -b_;
+
+        if (reflectorsTwisted_)
+            pres.entry(nFibres_ + nRef + 1, nFibres_) = 1;
+        else if (twisted)
+            pres.entry(nFibres_ + nRef + 1, nFibres_) = 2;
 
         ans->addGroup(pres);
-        ans->addRank(2 * baseGenus);
+        ans->addRank(2 * genus_);
     } else {
         // Non-orientable base surface.
         // Generators: v_1, v_2, ..., v_g, q_1, q_2, ..., q_r, h,
@@ -606,37 +699,39 @@ NAbelianGroup* NSFSpace::getHomologyH1() const {
         //     q_j^alpha_j h^beta_j = 1
         //     z_j^2 = h
         //     q_1 ... q_r v_1^2 ... v_g^2 y_1 ... y_t = h^b
-        //     h^2 = 1 (only for classes n2, n3, n4)
+        //     h^2 = 1 (if twisted), or h = 1 (if twisted reflectors)
         //
         // Generators in the matrix are q_1, ..., q_r, v_1, ..., v_g, h,
         //                              z_1, ..., z_t, y_1, ..., y_t.
-        NMatrixInt pres(nFibres + baseReflectors + (baseClass == n1 ? 1 : 2),
-            nFibres + baseGenus + 1 + 2 * baseReflectors);
+        NMatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
+            nFibres_ + genus_ + 1 + 2 * nRef);
 
         unsigned long which = 0;
-        for (FibreIteratorConst it = fibres.begin(); it != fibres.end(); it++) {
-            pres.entry(nFibres + baseReflectors, which) = 1;
+        for (FibreIteratorConst it = fibres_.begin(); it != fibres_.end();
+                it++) {
+            pres.entry(nFibres_ + nRef, which) = 1;
 
-            pres.entry(which, nFibres + baseGenus) = it->beta;
+            pres.entry(which, nFibres_ + genus_) = it->beta;
             pres.entry(which, which) = it->alpha;
 
             which++;
         }
 
         unsigned long ref;
-        for (ref = 0; ref < baseReflectors; ref++) {
-            pres.entry(nFibres + ref, nFibres + baseGenus) = -1;
-            pres.entry(nFibres + ref, nFibres + baseGenus + 1 + ref) = 2;
-            pres.entry(nFibres + baseReflectors, nFibres + baseGenus + 1 +
-                baseReflectors + ref) = 1;
+        for (ref = 0; ref < nRef; ref++) {
+            pres.entry(nFibres_ + ref, nFibres_ + genus_) = -1;
+            pres.entry(nFibres_ + ref, nFibres_ + genus_ + 1 + ref) = 2;
+            pres.entry(nFibres_ + nRef, nFibres_ + genus_ + 1 + nRef + ref) = 1;
         }
 
-        for (which = 0; which < baseGenus; which++)
-            pres.entry(nFibres + baseReflectors, nFibres + which) = 2;
-        pres.entry(nFibres + baseReflectors, nFibres + baseGenus) = -b;
+        for (which = 0; which < genus_; which++)
+            pres.entry(nFibres_ + nRef, nFibres_ + which) = 2;
+        pres.entry(nFibres_ + nRef, nFibres_ + genus_) = -b_;
 
-        if (baseClass != n1)
-            pres.entry(nFibres + baseReflectors + 1, nFibres + baseGenus) = 2;
+        if (reflectorsTwisted_)
+            pres.entry(nFibres_ + nRef + 1, nFibres_ + genus_) = 1;
+        else if (twisted)
+            pres.entry(nFibres_ + nRef + 1, nFibres_ + genus_) = 2;
 
         ans->addGroup(pres);
     }
@@ -659,85 +754,90 @@ std::ostream& NSFSpace::writeCommonBase(std::ostream& out, bool tex) const {
     // IMPORTANT: We do not allow spaces with > 2 reflector boundary
     // components to be named.  Otherwise this messes up the reflector
     // boundary output.
-    unsigned long bdries = basePunctures + baseReflectors;
+    unsigned long totRef = reflectors_ + reflectorsTwisted_;
+    unsigned long totBdries = totRef + punctures_ + puncturesTwisted_;
 
-    if (baseClass == o1 || baseClass == o2) {
+    if (baseOrientable()) {
         // Orientable base surface.
-        if (baseGenus == 0 && bdries == 0) {
+        if (genus_ == 0 && totBdries == 0) {
             out << (tex ? "S^2" : "S2");
             named = true;
-        } else if (baseGenus == 0 && bdries == 1) {
-            if (baseReflectors && tex)
+        } else if (genus_ == 0 && totBdries == 1) {
+            if (totRef && tex)
                 out << "\\overline{";
 
             out << 'D';
 
-            if (baseReflectors)
+            if (totRef)
                 out << (tex ? '}' : '_');
 
             named = true;
-        } else if (baseGenus == 0 && bdries == 2) {
-            if (baseReflectors == 1 && tex)
+        } else if (genus_ == 0 && totBdries == 2) {
+            if (totRef == 1 && tex)
                 out << "\\overline{";
-            else if (baseReflectors == 2 && tex)
+            else if (totRef == 2 && tex)
                 out << "\\overline{\\overline{";
 
             out << 'A';
 
-            if (baseReflectors == 1)
+            if (totRef == 1)
                 out << (tex ? '}' : '_');
-            else if (baseReflectors == 2)
+            else if (totRef == 2)
                 out << (tex ? "}}" : "=");
 
             named = true;
-        } else if (baseGenus == 1 && bdries == 0) {
+        } else if (genus_ == 1 && totBdries == 0) {
             out << (tex ? "T^2" : "T");
             named = true;
         }
     } else {
         // Non-orientable base surface.
-        if (baseGenus == 1 && bdries == 0) {
+        if (genus_ == 1 && totBdries == 0) {
             out << (tex ? "\\mathbb{R}P^2" : "RP2");
             named = true;
-        } else if (baseGenus == 1 && bdries == 1) {
-            if (baseReflectors && tex)
+        } else if (genus_ == 1 && totBdries == 1) {
+            if (totRef && tex)
                 out << "\\overline{";
 
             out << 'M';
 
-            if (baseReflectors)
+            if (totRef)
                 out << (tex ? '}' : '_');
 
             named = true;
-        } else if (baseGenus == 2 && bdries == 0) {
+        } else if (genus_ == 2 && totBdries == 0) {
             out << (tex ? "K^2" : "KB");
             named = true;
         }
     }
 
     if (! named) {
-        if (baseClass == o1 || baseClass == o2)
+        if (baseOrientable())
             out << (tex ? "\\mathrm{Or},\\ " : "Or, ")
-                << "g=" << baseGenus;
+                << "g=" << genus_;
         else
             out << (tex ? "\\mathrm{Non-or},\\ " : "Non-or, ")
-                << "g=" << baseGenus;
+                << "g=" << genus_;
 
-        // TODO: Should we make it clear that these are ordinary boundary
-        // components, and that reflector boundaries are not included?
-        writeBaseExtraCount(out, basePunctures, "puncture", tex);
+        if (punctures_)
+            writeBaseExtraCount(out, punctures_, "puncture", tex);
+        if (puncturesTwisted_)
+            writeBaseExtraCount(out, puncturesTwisted_,
+                "twisted puncture", tex);
+        if (reflectors_)
+            writeBaseExtraCount(out, reflectors_, "reflector", tex);
+        if (reflectorsTwisted_)
+            writeBaseExtraCount(out, reflectorsTwisted_,
+                "twisted reflector", tex);
     }
 
-    if (baseReflectors && ! named)
-        writeBaseExtraCount(out, baseReflectors, "reflector", tex);
-
-    if (baseClass == o2)
+    if (class_ == o2 || class_ == bo2)
         out << (tex ? "/o_2" : "/o2");
-    else if (baseClass == n2)
+    else if (class_ == n2 || class_ == bn2)
         out << (tex ? "/n_2" : "/n2");
-    else if (baseClass == n3)
+    else if (class_ == n3 || class_ == bn3)
         out << (tex ? "/n_3" : "/n3");
-    else if (baseClass == n4)
+    else if (class_ == n4)
         out << (tex ? "/n_4" : "/n4");
 
     return out;
@@ -745,14 +845,16 @@ std::ostream& NSFSpace::writeCommonBase(std::ostream& out, bool tex) const {
 
 std::ostream& NSFSpace::writeCommonStructure(std::ostream& out, bool tex)
         const {
-    if (b == 0 && fibres.empty()) {
+    if (b_ == 0 && fibres_.empty()) {
         // We have a straightforward product (possibly twisted).
         writeCommonBase(out, tex);
 
-        if (baseClass == o1 || baseClass == n1)
-            return out << (tex ? " \\times S^1" : " x S1");
-        else
+        // The o1/o2/n1/n2/etc specification has already been written in
+        // writeCommonBase().  Just do the pretty x S1 and get out.
+        if (fibreReversing())
             return out << (tex ? " \\twisted S^1" : " x~ S1");
+        else
+            return out << (tex ? " \\times S^1" : " x S1");
     }
 
     // We have at least one fibre, even if it's only (1,b).
@@ -762,16 +864,16 @@ std::ostream& NSFSpace::writeCommonStructure(std::ostream& out, bool tex)
     writeCommonBase(out, tex);
 
     out << ':';
-    if (fibres.empty()) {
+    if (fibres_.empty()) {
         // We have b non-zero.
-        out << ' ' << NSFSFibre(1, b);
+        out << ' ' << NSFSFibre(1, b_);
     } else {
         out << ' ';
-        copy(fibres.begin(), --fibres.end(),
+        copy(fibres_.begin(), --fibres_.end(),
             std::ostream_iterator<NSFSFibre>(out, " "));
 
-        NSFSFibre final = fibres.back();
-        final.beta += final.alpha * b;
+        NSFSFibre final = fibres_.back();
+        final.beta += final.alpha * b_;
         out << final;
     }
 
@@ -779,7 +881,17 @@ std::ostream& NSFSpace::writeCommonStructure(std::ostream& out, bool tex)
 }
 
 std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
-    // Lens spaces.
+    // Things we don't deal with just yet.
+    if (fibreNegating())
+        return writeStructure(out);
+    if (reflectors_ || reflectorsTwisted_ || punctures_ || puncturesTwisted_)
+        return writeStructure(out);
+
+    // We're looking at an orientable SFS (with either orientable or
+    // non-orientable base orbifold), where the base orbifold has no
+    // punctures or reflector boundaries.
+
+    // Take out the lens spaces first.
     NLensSpace* lens = isLensSpace();
     if (lens) {
         if (tex)
@@ -790,22 +902,13 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
         return out;
     }
 
-    // Things we don't deal with just yet.
-    if (baseClass != o1 && baseClass != n2)
-        return writeStructure(out);
-    if (baseReflectors || basePunctures)
-        return writeStructure(out);
-
-    // FACT: We have an orientable 3-manifold whose base orbifold has no
-    // punctures or reflector boundary components.
-
     // Pull off the number of fibres we're capable of dealing with.
     // At this moment this is four.
-    if (nFibres > 4)
+    if (nFibres_ > 4)
         return writeStructure(out);
 
     NSFSFibre fibre[4];
-    std::copy(fibres.begin(), fibres.end(), fibre);
+    std::copy(fibres_.begin(), fibres_.end(), fibre);
 
     // Note that with three fibres our reduced form will always have
     // b >= -1.
@@ -813,14 +916,14 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // TODO: The four non-orientable flat manifolds are on Orlik p140.
 
     // SFS over the 2-sphere:
-    if (baseGenus == 0 && baseClass == o1) {
-        if (nFibres == 4 && fibre[0] == two && fibre[1] == two &&
-                fibre[2] == two && fibre[3] == two && b == -2) {
+    if (genus_ == 0 && class_ == o1) {
+        if (nFibres_ == 4 && fibre[0] == two && fibre[1] == two &&
+                fibre[2] == two && fibre[3] == two && b_ == -2) {
             // [ S2 : (2,1), (2,1), (2,-1), (2,-1) ]
             // Orlik, p138, case M2.
             return out << (tex ? "K^2/n2 \\twisted S^1" : "KB/n2 x~ S1");
-        } else if (nFibres == 3 && fibre[0] == two &&
-                gcd(fibre[2].alpha, fibre[2].beta) == 1 && b >= -1) {
+        } else if (nFibres_ == 3 && fibre[0] == two &&
+                gcd(fibre[2].alpha, fibre[2].beta) == 1 && b_ >= -1) {
             // [ S2 : (2,1), (...), (...) ]
 
             if (fibre[1] == two) {
@@ -828,7 +931,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 // Orlik, p112, case (ii).
 
                 long a = fibre[2].alpha;
-                long m = fibre[2].beta + a * (b + 1);
+                long m = fibre[2].beta + a * (b_ + 1);
 
                 // Note that a,m >= 0.
 
@@ -879,7 +982,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 if (a == 3) {
                     // [ S2 : (2,1), (3,x), (3,y) ]
                     // Orlik, p112, case (iii).
-                    long m = 6 * b + 3 + 2 * (fibre[1].beta + fibre[2].beta);
+                    long m = 6 * b_ + 3 + 2 * (fibre[1].beta + fibre[2].beta);
                     // Note that m >= 1.
 
                     if (m % 2 != 0 && m % 3 != 0) {
@@ -919,7 +1022,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 } else if (a == 4) {
                     // [ S2 : (2,1), (3,x), (4,y) ]
                     // Orlik, p112, case (iv).
-                    long m = 12 * b + 6 + 4 * fibre[1].beta +
+                    long m = 12 * b_ + 6 + 4 * fibre[1].beta +
                         3 * fibre[2].beta;
                     // Note that m >= 1.
 
@@ -936,7 +1039,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 } else if (a == 5) {
                     // [ S2 : (2,1), (3,x), (5,y) ]
                     // Orlik, p112, case (v).
-                    long m = 30 * b + 15 + 10 * fibre[1].beta +
+                    long m = 30 * b_ + 15 + 10 * fibre[1].beta +
                         6 * fibre[2].beta;
                     // Note that m >= 1.
 
@@ -951,7 +1054,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
 
                     return out;
                 } else if (a == 6 && fibre[1].beta == 1 &&
-                        fibre[2].beta == 1 && b == -1) {
+                        fibre[2].beta == 1 && b_ == -1) {
                     // [ S2 : (2,1), (3,1), (6,-5) ].
                     // Orlik, p138, case M5.
                     if (tex)
@@ -959,7 +1062,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
                     else
                         return out << "T x I / [ 1,1 | -1,0 ]";
                 }
-            } else if (fibre[1] == four && fibre[2] == four && b == -1) {
+            } else if (fibre[1] == four && fibre[2] == four && b_ == -1) {
                 // [ S2 : (2,1), (4,1), (4,-3) ].
                 // Orlik, p138, case M4.
                 if (tex)
@@ -967,8 +1070,8 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 else
                     return out << "T x I / [ 0,-1 | 1,0 ]";
             }
-        } else if (nFibres == 3 && fibre[0] == three && fibre[1] == three
-                && fibre[2] == three && b == -1) {
+        } else if (nFibres_ == 3 && fibre[0] == three && fibre[1] == three
+                && fibre[2] == three && b_ == -1) {
             // [ S2 : (3,1), (3,1), (3,-2) ]
             // Orlik, p138, case M3.
             if (tex)
@@ -979,10 +1082,10 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
     }
 
     // SFS over the real projective plane:
-    if (baseGenus == 1 && baseClass == n2) {
-        if (nFibres == 0) {
+    if (genus_ == 1 && class_ == n2) {
+        if (nFibres_ == 0) {
             // No exceptional fibres.
-            if (b == 0) {
+            if (b_ == 0) {
                 // [ RP2 ]
                 // Orlik, p113, remark.
                 return out << (tex ? "\\mathbb{R}P^3 \\# \\mathbb{R}P^3" :
@@ -992,10 +1095,10 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 // Is this Orlik, p112, case (vi)?  What is this?
                 // ans << "S3/Q" << (4 * (b > 0 ? b : -b));
             }
-        } else if (nFibres == 1 && fibre[0].alpha > 1) {
+        } else if (nFibres_ == 1 && fibre[0].alpha > 1) {
             // Just one exceptional fibre.
             long a = fibre[0].alpha;
-            long n = b * a + fibre[0].beta;
+            long n = b_ * a + fibre[0].beta;
             if (n < 0)
                 n = -n;
 
