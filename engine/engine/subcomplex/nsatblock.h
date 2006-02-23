@@ -318,22 +318,22 @@ class NSatBlock : public ShareableObject {
          * notes).  Then this saturated block adds a positive (\a p, \a q)
          * fibre to the underlying Seifert fibred space.
          *
-         * If the ring of saturated annuli bounding this block is
-         * twisted then the situation becomes more complex.  It can be
-         * proven that such a block must contain a reflector boundary
+         * If the ring of saturated annuli bounding this block is twisted
+         * then the situation becomes more complex.  It can be proven
+         * that such a block must contain a twisted reflector boundary
          * in the base orbifold (use Z_2 homology with fibre-reversing
          * paths to show that the base orbifold must contain another
-         * boundary component, and then recall that real boundaries are
-         * not allowed inside blocks).
+         * twisted boundary component, and then recall that real boundaries
+         * are not allowed inside blocks).
          *
          * In this twisted boundary case, it should be assumed that the
-         * reflector boundary and the fibre-reversing path around the
-         * boundary annuli are already stored in the given Seifert
+         * twisted reflector boundary is already stored in the given Seifert
          * fibred space.  This routine should make any further changes
          * that are required (there may well be none).  That is, the
          * space should be adjusted as though a trivial Seifert fibred
-         * space over the annulus with one reflector boundary had been
-         * replaced by this block.  In particular, this routine should
+         * space over the annulus with one twisted reflector boundary (and
+         * one twisted puncture corresponding to the block boundary) had
+         * been replaced by this block.  In particular, this routine should
          * \e not add the reflector boundary itself.
          *
          * @param sfs the Seifert fibred space to adjust.

@@ -52,14 +52,14 @@ NSatRegion::NSatRegion(NSatBlock* starter) :
         hasTwist_(false),
         twistsMatchOrientation_(true),
         shiftedAnnuli_(0),
-        extraReflectors_(0),
+        twistedBlocks_(0),
         nBdryAnnuli_(starter->nAnnuli()) {
     blocks_.push_back(NSatBlockSpec(starter, false, false));
 
     if (starter->twistedBoundary()) {
         hasTwist_ = true;
         twistsMatchOrientation_ = false;
-        extraReflectors_ = 1;
+        twistedBlocks_ = 1;
     }
 }
 
@@ -114,26 +114,34 @@ void NSatRegion::boundaryAnnulus(unsigned long which,
 NSFSpace* NSatRegion::createSFS(long nBoundaries, bool reflect) const {
     NSFSpace::classType baseClass;
 
-    // We might not be able to distinguish between n3 and n4.  Just call
-    // it n3 for now, and if we discover it might have been n4 instead
-    // then we call it off and return 0.
-
-    if (baseOrbl_)
-        baseClass = (hasTwist_ ? NSFSpace::o2 : NSFSpace::o1);
-    else if (! hasTwist_)
-        baseClass = NSFSpace::n1;
+    bool bdry = (nBoundaries || twistedBlocks_);
+    if (baseOrbl_) {
+        if (hasTwist_)
+            baseClass = (bdry ? NSFSpace::bo2 : NSFSpace::o2);
+        else
+            baseClass = (bdry ? NSFSpace::bo1 : NSFSpace::o1);
+    } else if (! hasTwist_)
+        baseClass = (bdry ? NSFSpace::bn1 : NSFSpace::n1);
     else if (twistsMatchOrientation_)
-        baseClass = NSFSpace::n2;
+        baseClass = (bdry ? NSFSpace::bn2 : NSFSpace::n2);
     else {
-        // Could be either n3 or n4.
-        baseClass = NSFSpace::n3;
+        // In the no-boundary case, we might not be able to distinguish
+        // between n3 and n4.  Just call it n3 for now, and if we discover
+        // it might have been n4 instead then we call it off and return 0.
+        baseClass = (bdry ? NSFSpace::bn3 : NSFSpace::n3);
     }
 
-    NSFSpace* sfs = new NSFSpace(baseClass,
-        (baseOrbl_ ? (2 - nBoundaries - baseEuler_) / 2 :
-            (2 - nBoundaries - baseEuler_)), nBoundaries, 0);
+    // Recall that baseEuler_ assumes that each block contributes a plain
+    // old disc to the base orbifold (and, in particular, it ignores any
+    // reflector boundaries arising from twistedBlocks_).  This lets us
+    // calculate genus just by looking at baseEuler_, orientability and
+    // the number of punctures.
 
-    sfs->addReflector(extraReflectors_);
+    NSFSpace* sfs = new NSFSpace(baseClass,
+        (baseOrbl_ ?  (2 - nBoundaries - baseEuler_) / 2 :
+            (2 - nBoundaries - baseEuler_)),
+        nBoundaries /* punctures */, 0 /* twisted */,
+        0 /* reflectors */, twistedBlocks_ /* twisted */);
 
     for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
             it++)
@@ -143,9 +151,9 @@ NSFSpace* NSatRegion::createSFS(long nBoundaries, bool reflect) const {
     if (shiftedAnnuli_)
         sfs->insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
 
-    if ((sfs->getBaseGenus() >= 3) &&
-            (sfs->getBaseClass() == NSFSpace::n3 ||
-             sfs->getBaseClass() == NSFSpace::n4)) {
+    if ((sfs->baseGenus() >= 3) &&
+            (sfs->baseClass() == NSFSpace::n3 ||
+             sfs->baseClass() == NSFSpace::n4)) {
         // Could still be either n3 or n4.
         // Shrug, give up.
         delete sfs;
@@ -210,7 +218,7 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
                 if (adjBlock->twistedBoundary()) {
                     hasTwist_ = true;
                     twistsMatchOrientation_ = false;
-                    extraReflectors_++;
+                    twistedBlocks_++;
                 }
 
                 // On to the next annulus!

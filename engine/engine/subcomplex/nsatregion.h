@@ -190,10 +190,11 @@ class NSatRegion : public ShareableObject {
                  as they are joined together.  This typically happens when
                  the triangulations of two boundary annuli are not compatible
                  when joined (e.g., they provide opposite diagonal edges) */
-        unsigned long extraReflectors_;
+        unsigned long twistedBlocks_;
             /**< The number of constituent blocks with twisted boundary.
-                 Each such block provides a new reflector boundary to the
-                 base orbifold; see NSatBlock::adjustSFS() for details. */
+                 Each such block provides an additional twisted reflector
+                 boundary to the base orbifold; see NSatBlock::adjustSFS()
+                 for details. */
 
         unsigned long nBdryAnnuli_;
             /**< The number of saturated annuli forming the boundary
