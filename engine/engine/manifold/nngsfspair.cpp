@@ -40,21 +40,15 @@ NNGSFSPair::~NNGSFSPair() {
 
 NAbelianGroup* NNGSFSPair::getHomologyH1() const {
     // Is it a case we can deal with?
-    if (sfs_[0]->getBaseClass() != NSFSpace::o1 &&
-            sfs_[0]->getBaseClass() != NSFSpace::n1)
+    if (sfs_[0]->fibreReversing() || sfs_[1]->fibreReversing())
         return 0;
-    if (sfs_[0]->getBaseReflectors() > 0)
-        return 0;
-    if (sfs_[1]->getBaseClass() != NSFSpace::o1 &&
-            sfs_[1]->getBaseClass() != NSFSpace::n1)
-        return 0;
-    if (sfs_[1]->getBaseReflectors() > 0)
+    if (sfs_[0]->reflectors() > 0 || sfs_[1]->reflectors() > 0)
         return 0;
 
     // Just for safety (this should always be true anyway):
-    if (sfs_[0]->getBasePunctures() != 1)
+    if (sfs_[0]->punctures(false) != 1 || sfs_[0]->punctures(true) != 0)
         return 0;
-    if (sfs_[1]->getBasePunctures() != 1)
+    if (sfs_[1]->punctures(false) != 1 || sfs_[1]->punctures(true) != 0)
         return 0;
 
     // Construct a matrix.
@@ -67,11 +61,11 @@ NAbelianGroup* NNGSFSPair::getHomologyH1() const {
     //            base curve relation 1, exceptional fibre relations 1,
     //            obstruction relation 1,
     //            joining of boundaries.
-    unsigned long genus0 = sfs_[0]->getBaseGenus();
-    unsigned long fibres0 = sfs_[0]->getFibreCount();
+    unsigned long genus0 = sfs_[0]->baseGenus();
+    unsigned long fibres0 = sfs_[0]->fibreCount();
     unsigned long all0 = 3 + genus0 + fibres0;
-    unsigned long genus1 = sfs_[1]->getBaseGenus();
-    unsigned long fibres1 = sfs_[1]->getFibreCount();
+    unsigned long genus1 = sfs_[1]->baseGenus();
+    unsigned long fibres1 = sfs_[1]->fibreCount();
 
     NMatrixInt m(fibres0 + fibres1 + 6,
         genus0 + fibres0 + genus1 + fibres1 + 6);
@@ -80,13 +74,13 @@ NAbelianGroup* NNGSFSPair::getHomologyH1() const {
     // The relation for each base orbifold:
     for (i = 1 + genus0; i < 1 + genus0 + 1 + fibres0 + 1; i++)
         m.entry(0, i) = 1;
-    if (! sfs_[0]->isBaseOrientable())
+    if (! sfs_[0]->baseOrientable())
         for (i = 1; i < 1 + genus0; i++)
             m.entry(0, i) = 2;
 
     for (i = 1 + genus1; i < 1 + genus1 + 1 + fibres1 + 1; i++)
         m.entry(1, all0 + i) = 1;
-    if (! sfs_[1]->isBaseOrientable())
+    if (! sfs_[1]->baseOrientable())
         for (i = 1; i < 1 + genus1; i++)
             m.entry(1, all0 + i) = 2;
 
@@ -94,20 +88,20 @@ NAbelianGroup* NNGSFSPair::getHomologyH1() const {
     NSFSFibre fibre;
 
     for (f = 0; f < fibres0; f++) {
-        fibre = sfs_[0]->getFibre(f);
+        fibre = sfs_[0]->fibre(f);
         m.entry(2 + f, 1 + genus0 + 1 + f) = fibre.alpha;
         m.entry(2 + f, 0) = fibre.beta;
     }
     m.entry(2 + fibres0, 1 + genus0 + 1 + fibres0) = 1;
-    m.entry(2 + fibres0, 0) = sfs_[0]->getObstruction();
+    m.entry(2 + fibres0, 0) = sfs_[0]->obstruction();
 
     for (f = 0; f < fibres1; f++) {
-        fibre = sfs_[1]->getFibre(f);
+        fibre = sfs_[1]->fibre(f);
         m.entry(3 + fibres0 + f, all0 + 1 + genus1 + 1 + f) = fibre.alpha;
         m.entry(3 + fibres0 + f, all0) = fibre.beta;
     }
     m.entry(3 + fibres0 + fibres1, all0 + 1 + genus1 + 1 + fibres1) = 1;
-    m.entry(3 + fibres0 + fibres1, all0) = sfs_[1]->getObstruction();
+    m.entry(3 + fibres0 + fibres1, all0) = sfs_[1]->obstruction();
 
     // Two relations for the joining of boundaries:
     m.entry(4 + fibres0 + fibres1, all0) = -1;
@@ -166,14 +160,14 @@ void NNGSFSPair::reduce() {
     // Bring the obstruction constant for each SFS down to zero.
     long b;
 
-    b = sfs_[0]->getObstruction();
+    b = sfs_[0]->obstruction();
     if (b != 0) {
         sfs_[0]->insertFibre(1, -b);
         matchingReln_[0][0] += b * matchingReln_[0][1];
         matchingReln_[1][0] += b * matchingReln_[1][1];
     }
 
-    b = sfs_[1]->getObstruction();
+    b = sfs_[1]->obstruction();
     if (b != 0) {
         sfs_[1]->insertFibre(1, -b);
         matchingReln_[1][0] -= b * matchingReln_[0][0];
@@ -196,16 +190,19 @@ void NNGSFSPair::reduce() {
      */
 
     for (int i = 0; i < 2; i++)
-        if (sfs_[i]->getBaseClass() == NSFSpace::n2 &&
-                sfs_[i]->getBaseGenus() == 1 &&
-                (! sfs_[i]->isBaseOrientable()) &&
-                sfs_[i]->getBasePunctures() == 1 &&
-                sfs_[i]->getBaseReflectors() == 0 &&
-                sfs_[i]->getFibreCount() == 0 &&
-                sfs_[i]->getObstruction() == 0) {
+        if (sfs_[i]->baseClass() == NSFSpace::bn2 &&
+                sfs_[i]->baseGenus() == 1 &&
+                (! sfs_[i]->baseOrientable()) &&
+                sfs_[i]->punctures(false) == 1 &&
+                sfs_[i]->punctures(true) == 0 &&
+                sfs_[i]->reflectors() == 0 &&
+                sfs_[i]->fibreCount() == 0 &&
+                sfs_[i]->obstruction() == 0) {
             delete sfs_[i];
 
-            sfs_[i] = new NSFSpace(NSFSpace::o1, 0, 1, 0);
+            sfs_[i] = new NSFSpace(NSFSpace::bo1, 0 /* genus */,
+                1 /* punctures */, 0 /* twisted */,
+                0 /* reflectors */, 0 /* twisted */);
             sfs_[i]->insertFibre(2, 1);
             sfs_[i]->insertFibre(2, 1);
 
@@ -227,8 +224,8 @@ void NNGSFSPair::reduce() {
 
     // Consider replacing each space with its reflection.
     bool ref0, ref1;
-    reduceReflect(matchingReln_, sfs_[0]->getFibreCount(),
-        sfs_[1]->getFibreCount(), ref0, ref1);
+    reduceReflect(matchingReln_, sfs_[0]->fibreCount(),
+        sfs_[1]->fibreCount(), ref0, ref1);
 
     if (ref0)
         sfs_[0]->complementAllFibres();

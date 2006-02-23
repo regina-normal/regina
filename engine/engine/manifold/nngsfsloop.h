@@ -109,7 +109,8 @@ class NNGSFSLoop : public NManifold {
          * Seifert fibred space will be destroyed also.
          *
          * \pre The given Seifert fibred space has precisely two torus
-         * boundaries, corresponding to two punctures in the base orbifold.
+         * boundaries, corresponding to two untwisted punctures in the
+         * base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
          * @param sfs the bounded Seifert fibred space.

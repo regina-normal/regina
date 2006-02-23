@@ -95,21 +95,21 @@ void NNGSFSTriple::reduce() {
     // Bring the obstruction constant for each SFS down to zero.
     long b;
 
-    b = end_[0]->getObstruction();
+    b = end_[0]->obstruction();
     if (b != 0) {
         end_[0]->insertFibre(1, -b);
         matchingReln_[0][1][0] -= b * matchingReln_[0][0][0];
         matchingReln_[0][1][1] -= b * matchingReln_[0][0][1];
     }
 
-    b = end_[1]->getObstruction();
+    b = end_[1]->obstruction();
     if (b != 0) {
         end_[1]->insertFibre(1, -b);
         matchingReln_[1][1][0] -= b * matchingReln_[1][0][0];
         matchingReln_[1][1][1] -= b * matchingReln_[1][0][1];
     }
 
-    b = centre_->getObstruction();
+    b = centre_->obstruction();
     if (b != 0) {
         centre_->insertFibre(1, -b);
         matchingReln_[0][0][0] += b * matchingReln_[0][0][1];
@@ -132,16 +132,19 @@ void NNGSFSTriple::reduce() {
      */
 
     for (int i = 0; i < 2; i++)
-        if (end_[i]->getBaseClass() == NSFSpace::n2 &&
-                end_[i]->getBaseGenus() == 1 &&
-                (! end_[i]->isBaseOrientable()) &&
-                end_[i]->getBasePunctures() == 1 &&
-                end_[i]->getBaseReflectors() == 0 &&
-                end_[i]->getFibreCount() == 0 &&
-                end_[i]->getObstruction() == 0) {
+        if (end_[i]->baseClass() == NSFSpace::bn2 &&
+                end_[i]->baseGenus() == 1 &&
+                (! end_[i]->baseOrientable()) &&
+                end_[i]->punctures(false) == 1 &&
+                end_[i]->punctures(true) == 0 &&
+                end_[i]->reflectors() == 0 &&
+                end_[i]->fibreCount() == 0 &&
+                end_[i]->obstruction() == 0) {
             delete end_[i];
 
-            end_[i] = new NSFSpace(NSFSpace::o1, 0, 1, 0);
+            end_[i] = new NSFSpace(NSFSpace::bo1, 0 /* genus */,
+                1 /* punctures */, 0 /* twisted */,
+                0 /* reflectors */, 0 /* twisted */);
             end_[i]->insertFibre(2, 1);
             end_[i]->insertFibre(2, 1);
 
@@ -150,11 +153,11 @@ void NNGSFSTriple::reduce() {
 
     bool ref;
 
-    reduceReflectEnd(matchingReln_[0], end_[0]->getFibreCount(), ref);
+    reduceReflectEnd(matchingReln_[0], end_[0]->fibreCount(), ref);
     if (ref)
         end_[0]->complementAllFibres();
 
-    reduceReflectEnd(matchingReln_[1], end_[1]->getFibreCount(), ref);
+    reduceReflectEnd(matchingReln_[1], end_[1]->fibreCount(), ref);
     if (ref)
         end_[1]->complementAllFibres();
 

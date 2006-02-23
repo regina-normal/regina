@@ -139,9 +139,10 @@ class NNGSFSTriple : public NManifold {
          * Seifert fibred spaces will be destroyed also.
          *
          * \pre Spaces \a end0 and \a end1 each have a single torus
-         * boundary, corresponding to a single puncture in the base orbifold.
+         * boundary, corresponding to a single untwisted puncture in the
+         * base orbifold.
          * \pre Space \a centre has two disjoint torus boundaries,
-         * corresponding to two punctures in the base orbifold.
+         * corresponding to two untwisted punctures in the base orbifold.
          * \pre Each of the given matrices has determinant +1 or -1.
          *
          * @param end0 the first end space, as described in the class notes.

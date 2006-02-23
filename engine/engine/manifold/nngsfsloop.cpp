@@ -39,47 +39,45 @@ NNGSFSLoop::~NNGSFSLoop() {
 
 NAbelianGroup* NNGSFSLoop::getHomologyH1() const {
     // Is it a case we can deal with?
-    if (sfs_->getBaseClass() != NSFSpace::o1 &&
-            sfs_->getBaseClass() != NSFSpace::n1)
+    if (sfs_->fibreReversing())
         return 0;
-    if (sfs_->getBaseReflectors() > 0)
+    if (sfs_->reflectors() > 0)
         return 0;
 
     // Just for safety (this should always be true anyway):
-    if (sfs_->getBasePunctures() != 2)
+    if (sfs_->punctures(false) != 2 || sfs_->punctures(true) != 0)
         return 0;
 
     // Construct a matrix.
-    // Generators: fibre, base curves, base boundaries, exceptional
+    // Generators: fibre, base curves, two base boundaries, exceptional
     //             fibre boundaries, obstruction boundary, plus one for
     //             the loop created by the joining of boundaries.
     // Relations: base curve relation, exception fibre relations,
     //            obstruction relation, joining boundaries.
-    unsigned long genus = sfs_->getBaseGenus();
-    unsigned long punc = sfs_->getBasePunctures();
-    unsigned long fibres = sfs_->getFibreCount();
+    unsigned long genus = sfs_->baseGenus();
+    unsigned long fibres = sfs_->fibreCount();
 
-    NMatrixInt m(fibres + 4, genus + punc + fibres + 3);
+    NMatrixInt m(fibres + 4, genus + fibres + 5);
 
     unsigned long i, f;
     // The relation for the base orbifold:
-    for (i = 1 + genus; i < 1 + genus + punc + fibres + 1; i++)
+    for (i = 1 + genus; i < 1 + genus + 2 + fibres + 1; i++)
         m.entry(0, i) = 1;
-    if (! sfs_->isBaseOrientable())
+    if (! sfs_->baseOrientable())
         for (i = 1; i < 1 + genus; i++)
             m.entry(0, i) = 2;
 
     // A relation for each exceptional fibre:
     NSFSFibre fibre;
     for (f = 0; f < fibres; f++) {
-        fibre = sfs_->getFibre(f);
-        m.entry(f + 1, 1 + genus + punc + f) = fibre.alpha;
+        fibre = sfs_->fibre(f);
+        m.entry(f + 1, 1 + genus + 2 + f) = fibre.alpha;
         m.entry(f + 1, 0) = fibre.beta;
     }
 
     // A relation for the obstruction constant:
-    m.entry(1 + fibres, 1 + genus + punc + fibres) = 1;
-    m.entry(1 + fibres, 0) = sfs_->getObstruction();
+    m.entry(1 + fibres, 1 + genus + 2 + fibres) = 1;
+    m.entry(1 + fibres, 0) = sfs_->obstruction();
 
     // Two relations for the joining of boundaries:
     m.entry(2 + fibres, 0) = -1;
@@ -121,7 +119,7 @@ void NNGSFSLoop::reduce() {
      */
 
     // Bring the SFS obstruction constant back to zero.
-    long b = sfs_->getObstruction();
+    long b = sfs_->obstruction();
     if (b != 0) {
         sfs_->insertFibre(1, -b);
         matchingReln_[0][0] += b * matchingReln_[0][1];
@@ -134,7 +132,7 @@ void NNGSFSLoop::reduce() {
     // and adding (1,1) twists to bring the obstruction constant back
     // up to zero again.
     NMatrix2 compMatch =
-        NMatrix2(1, 0, sfs_->getFibreCount(), 1) *
+        NMatrix2(1, 0, sfs_->fibreCount(), 1) *
         NMatrix2(1, 0, 0, -1) *
         matchingReln_ *
         NMatrix2(1, 0, 0, -1);

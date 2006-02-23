@@ -109,7 +109,7 @@ class NNGSFSPair : public NManifold {
          * Seifert fibred spaces will be destroyed also.
          *
          * \pre Each Seifert fibred space has a single torus boundary,
-         * corresponding to a single puncture in the base orbifold.
+         * corresponding to a single untwisted puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
          * @param sfs0 the first Seifert fibred space.
@@ -131,7 +131,7 @@ class NNGSFSPair : public NManifold {
          * Seifert fibred spaces will be destroyed also.
          *
          * \pre Each Seifert fibred space has a single torus boundary,
-         * corresponding to a single puncture in the base orbifold.
+         * corresponding to a single untwisted puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
          * @param sfs0 the first Seifert fibred space.
