@@ -547,30 +547,36 @@ NTriangulation* NSFSpace::construct() const {
 }
 
 NAbelianGroup* NSFSpace::getHomologyH1() const {
-    if (basePunctures || baseReflectors) {
+    if (basePunctures) {
         // Not just now.
         return 0;
     }
 
     // Construct the presentation of the fundamental group and
-    // abelianise.  The presentation is given on p91 of Orlik [1972].
+    // abelianise.  The presentation without reflectors is given on
+    // p91 of Orlik [1972].  Each reflector gives additional generators
+    // y and z, for which y acts as a boundary component and z^2 = fibre.
     NAbelianGroup* ans = new NAbelianGroup();
 
     if (baseClass == o1 || baseClass == o2) {
         // Orientable base surface.
-        // Generators: a_1, b_1, ..., a_g, b_g, q_1, q_2, ..., q_r, h
+        // Generators: a_1, b_1, ..., a_g, b_g, q_1, q_2, ..., q_r, h,
+        //             y_1, z_1, ..., y_t, z_t (for reflectors)
         // Relations:
         //     q_j^alpha_j h^beta_j = 1
-        //     q_1 ... q_r = h^b
+        //     z_j^2 = h
+        //     q_1 ... q_r y_1 ... y_t = h^b
         //     h^2 = 1 (only for class o2)
         //
         // We ignore a_i and b_i, and just add extra rank 2g at the end.
-        // Generators in the matrix are q_1, ..., q_r, h.
-        NMatrixInt pres(nFibres + (baseClass == o1 ? 1 : 2), nFibres + 1);
+        // Generators in the matrix are q_1, ..., q_r, h, z_1, ..., z_t,
+        //                              y_1, ..., y_t.
+        NMatrixInt pres(nFibres + baseReflectors + (baseClass == o1 ? 1 : 2),
+            nFibres + 1 + 2 * baseReflectors);
 
         unsigned long which = 0;
         for (FibreIteratorConst it = fibres.begin(); it != fibres.end(); it++) {
-            pres.entry(nFibres, which) = 1;
+            pres.entry(nFibres + baseReflectors, which) = 1;
 
             pres.entry(which, nFibres) = it->beta;
             pres.entry(which, which) = it->alpha;
@@ -578,27 +584,38 @@ NAbelianGroup* NSFSpace::getHomologyH1() const {
             which++;
         }
 
-        pres.entry(nFibres, nFibres) = -b;
+        unsigned long ref;
+        for (ref = 0; ref < baseReflectors; ref++) {
+            pres.entry(nFibres + ref, nFibres) = -1;
+            pres.entry(nFibres + ref, nFibres + 1 + ref) = 2;
+            pres.entry(nFibres + baseReflectors,
+                nFibres + 1 + baseReflectors + ref) = 1;
+        }
+
+        pres.entry(nFibres + baseReflectors, nFibres) = -b;
         if (baseClass == o2)
-            pres.entry(nFibres + 1, nFibres) = 2;
+            pres.entry(nFibres + baseReflectors + 1, nFibres) = 2;
 
         ans->addGroup(pres);
         ans->addRank(2 * baseGenus);
     } else {
         // Non-orientable base surface.
-        // Generators: v_1, v_2, ..., v_g, q_1, q_2, ..., q_r, h
+        // Generators: v_1, v_2, ..., v_g, q_1, q_2, ..., q_r, h,
+        //             y_1, z_1, ..., y_t, z_t (for reflectors)
         // Relations:
         //     q_j^alpha_j h^beta_j = 1
-        //     q_1 ... q_r v_1^2 ... v_g^2 = h^b
+        //     z_j^2 = h
+        //     q_1 ... q_r v_1^2 ... v_g^2 y_1 ... y_t = h^b
         //     h^2 = 1 (only for classes n2, n3, n4)
         //
-        // Generators in the matrix are q_1, ..., q_r, v_1, ..., v_g, h.
-        NMatrixInt pres(nFibres + (baseClass == n1 ? 1 : 2),
-            nFibres + baseGenus + 1);
+        // Generators in the matrix are q_1, ..., q_r, v_1, ..., v_g, h,
+        //                              z_1, ..., z_t, y_1, ..., y_t.
+        NMatrixInt pres(nFibres + baseReflectors + (baseClass == n1 ? 1 : 2),
+            nFibres + baseGenus + 1 + 2 * baseReflectors);
 
         unsigned long which = 0;
         for (FibreIteratorConst it = fibres.begin(); it != fibres.end(); it++) {
-            pres.entry(nFibres, which) = 1;
+            pres.entry(nFibres + baseReflectors, which) = 1;
 
             pres.entry(which, nFibres + baseGenus) = it->beta;
             pres.entry(which, which) = it->alpha;
@@ -606,12 +623,20 @@ NAbelianGroup* NSFSpace::getHomologyH1() const {
             which++;
         }
 
+        unsigned long ref;
+        for (ref = 0; ref < baseReflectors; ref++) {
+            pres.entry(nFibres + ref, nFibres + baseGenus) = -1;
+            pres.entry(nFibres + ref, nFibres + baseGenus + 1 + ref) = 2;
+            pres.entry(nFibres + baseReflectors, nFibres + baseGenus + 1 +
+                baseReflectors + ref) = 1;
+        }
+
         for (which = 0; which < baseGenus; which++)
-            pres.entry(nFibres, nFibres + which) = 2;
-        pres.entry(nFibres, nFibres + baseGenus) = -b;
+            pres.entry(nFibres + baseReflectors, nFibres + which) = 2;
+        pres.entry(nFibres + baseReflectors, nFibres + baseGenus) = -b;
 
         if (baseClass != n1)
-            pres.entry(nFibres + 1, nFibres + baseGenus) = 2;
+            pres.entry(nFibres + baseReflectors + 1, nFibres + baseGenus) = 2;
 
         ans->addGroup(pres);
     }

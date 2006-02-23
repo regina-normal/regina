@@ -160,10 +160,9 @@ std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  *
  * The NManifold routines getHomologyH1() and construct() are only
  * implemented in some cases.  The getHomologyH1() routine is
- * implemented if and only if the base orbifold has no punctures or
- * reflector boundary components.  The construct() routine is
- * implemented only for lens spaces and Seifert fibred spaces over the
- * 2-sphere with three exceptional fibres.
+ * implemented if and only if the base orbifold has no punctures.
+ * The construct() routine is implemented only for lens spaces and
+ * Seifert fibred spaces over the 2-sphere with three exceptional fibres.
  *
  * \warning In Regina 4.2.1 and earlier, this class was named NSFS.
  * The new NSFSpace class was introduced with Regina 4.3, and has changed
