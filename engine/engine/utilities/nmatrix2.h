@@ -118,8 +118,6 @@ class NMatrix2 {
          * accessed as <tt>myMatrix[r][c]</tt> (where \a r and \a c are
          * each 0 or 1).
          *
-         * \ifacespython Not present.
-         *
          * @param row the index of the requested row; this must be 0 or 1.
          * @return a two-integer array containing the elements of the
          * requested row.

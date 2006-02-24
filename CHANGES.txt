@@ -42,7 +42,7 @@ Version 4.3  [ under development ]
         Class NManifold:
             - Routine writeTeXName() no longer provides wrapping dollar signs.
         Class NMatrix2:
-            - New specialised class for working with 2x2 integer matrices.
+            - New specialised class for working with 2-by-2 integer matrices.
         Class NNGSFSLoop, NNGSFSPair, NNGSFSTriple:
             - New families of non-geometric 3-manifolds.
         Class NPacket:
