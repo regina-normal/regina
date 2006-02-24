@@ -36,17 +36,21 @@ using regina::NSFSFibre;
 using regina::NSFSpace;
 
 namespace {
+    unsigned long (NSFSpace::*punctures_void)() const = &NSFSpace::punctures;
+    unsigned long (NSFSpace::*punctures_bool)(bool) const =
+        &NSFSpace::punctures;
+    unsigned long (NSFSpace::*reflectors_void)() const = &NSFSpace::reflectors;
+    unsigned long (NSFSpace::*reflectors_bool)(bool) const =
+        &NSFSpace::reflectors;
     void (NSFSpace::*insertFibre_fibre)(const NSFSFibre&) =
         &NSFSpace::insertFibre;
     void (NSFSpace::*insertFibre_longs)(long, long) = &NSFSpace::insertFibre;
-    void (NSFSpace::*addPuncture_void)() = &NSFSpace::addPuncture;
-    void (NSFSpace::*addPuncture_ulong)(unsigned long) = &NSFSpace::addPuncture;
-    void (NSFSpace::*addReflector_void)() = &NSFSpace::addReflector;
-    void (NSFSpace::*addReflector_ulong)(unsigned long) =
-        &NSFSpace::addReflector;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addHandle, addHandle, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addCrosscap, addCrosscap, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addPuncture, addPuncture, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addReflector, addReflector, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_reduce, reduce, 0, 1);
 }
 
 void addNSFSpace() {
@@ -63,27 +67,32 @@ void addNSFSpace() {
     scope s = class_<NSFSpace, bases<regina::NManifold>,
             std::auto_ptr<NSFSpace> >("NSFSpace")
         .def(init<NSFSpace::classType, unsigned long,
-            optional<unsigned long, unsigned long> >())
+            optional<unsigned long, unsigned long,
+            unsigned long, unsigned long> >())
         .def(init<const NSFSpace&>())
-        .def("getBaseClass", &NSFSpace::getBaseClass)
-        .def("getBaseGenus", &NSFSpace::getBaseGenus)
-        .def("isBaseOrientable", &NSFSpace::isBaseOrientable)
-        .def("getBasePunctures", &NSFSpace::getBasePunctures)
-        .def("getBaseReflectors", &NSFSpace::getBaseReflectors)
-        .def("getFibreCount", &NSFSpace::getFibreCount)
-        .def("getFibre", &NSFSpace::getFibre)
-        .def("getObstruction", &NSFSpace::getObstruction)
+        .def("baseClass", &NSFSpace::baseClass)
+        .def("baseGenus", &NSFSpace::baseGenus)
+        .def("baseOrientable", &NSFSpace::baseOrientable)
+        .def("fibreReversing", &NSFSpace::fibreReversing)
+        .def("fibreNegating", &NSFSpace::fibreNegating)
+        .def("punctures", punctures_void)
+        .def("punctures", punctures_bool)
+        .def("reflectors", reflectors_void)
+        .def("reflectors", reflectors_bool)
+        .def("fibreCount", &NSFSpace::fibreCount)
+        .def("fibre", &NSFSpace::fibre)
+        .def("obstruction", &NSFSpace::obstruction)
         .def("addHandle", &NSFSpace::addHandle, OL_addHandle())
-        .def("addCrosscap", &NSFSpace::addHandle, OL_addCrosscap())
-        .def("addPuncture", addPuncture_void)
-        .def("addPuncture", addPuncture_ulong)
-        .def("addReflector", addReflector_void)
-        .def("addReflector", addReflector_ulong)
+        .def("addCrosscap", &NSFSpace::addCrosscap, OL_addCrosscap())
+        .def("addPuncture", &NSFSpace::addPuncture, OL_addPuncture())
+        .def("addReflector", &NSFSpace::addReflector, OL_addReflector())
         .def("insertFibre", insertFibre_fibre)
         .def("insertFibre", insertFibre_longs)
-        .def("reduce", &NSFSpace::reduce)
+        .def("complementAllFibres", &NSFSpace::complementAllFibres)
+        .def("reduce", &NSFSpace::reduce, OL_reduce())
         .def("isLensSpace", &NSFSpace::isLensSpace,
             return_value_policy<manage_new_object>())
+        .def(self < self)
     ;
 
     enum_<NSFSpace::classType>("classType")
@@ -93,6 +102,11 @@ void addNSFSpace() {
         .value("n2", NSFSpace::n2)
         .value("n3", NSFSpace::n3)
         .value("n4", NSFSpace::n4)
+        .value("bo1", NSFSpace::bo1)
+        .value("bo2", NSFSpace::bo2)
+        .value("bn1", NSFSpace::bn1)
+        .value("bn2", NSFSpace::bn2)
+        .value("bn3", NSFSpace::bn3)
         ;
 
     implicitly_convertible<std::auto_ptr<NSFSpace>,
