@@ -293,8 +293,6 @@ class NSFSpace : public NManifold {
          * Creates a new Seifert fibred space of the given class with the
          * given base orbifold and no exceptional fibres.
          *
-         * TODO: Put back default arguments of 0.
-         *
          * \pre If there are no punctures or reflector boundary components,
          * then \a useClass is one of the six classes \c o1, \c o2, \c n1,
          * \c n2, \c n3 or \c n4.  Likewise, if there are punctures and/or
@@ -327,8 +325,8 @@ class NSFSpace : public NManifold {
          * the ordinary boundary components described by \a puncturesTwisted.
          */
         NSFSpace(classType useClass, unsigned long genus,
-            unsigned long punctures, unsigned long puncturesTwisted,
-            unsigned long reflectors, unsigned long reflectorsTwisted);
+            unsigned long punctures = 0, unsigned long puncturesTwisted = 0,
+            unsigned long reflectors = 0, unsigned long reflectorsTwisted = 0);
         /**
          * Creates a new Seifert fibred space that is a clone of
          * the given space.
@@ -567,14 +565,12 @@ class NSFSpace : public NManifold {
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
-         * TODO: Default twisted = false.
-         *
          * @param twisted \c true if the new punctures should be twisted
          * (i.e., their boundaries should be fibre-reversing), or \c false
          * if the new punctures should be untwisted.
          * @param nPunctures the number of new punctures to insert.
          */
-        void addPuncture(bool twisted, unsigned long nPunctures = 1);
+        void addPuncture(bool twisted = false, unsigned long nPunctures = 1);
         /**
          * Adds one or more new reflector boundary components to the base
          * orbifold.  The new reflector boundaries may be twisted or
@@ -591,14 +587,12 @@ class NSFSpace : public NManifold {
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
-         * TODO: Default twisted = false.
-         *
          * @param twisted \c true if the new reflector boundaries should be
          * twisted (i.e., the boundaries should be fibre-reversing), or
          * \c false if the new reflector boundaries should be untwisted.
          * @param nReflectors the number of new reflector boundaries to add.
          */
-        void addReflector(bool twisted, unsigned long nReflectors = 1);
+        void addReflector(bool twisted = false, unsigned long nReflectors = 1);
 
         /**
          * Adds the given fibre to this Seifert fibred space.
