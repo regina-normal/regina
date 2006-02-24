@@ -110,6 +110,8 @@ void process(NTriangulation* t) {
 }
 
 int main(int argc, char* argv[]) {
+    NSnapPeaTriangulation::disableKernelMessages();
+
     // Command-line parsing.
     char optChar;
     int i;
