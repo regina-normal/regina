@@ -83,6 +83,8 @@ Version 4.3  [ under development ]
     USER INTERFACE:
         - Added a configuration option that allows the SnapPea kernel to
           work with closed triangulations.
+        - Fixed extremely slow updates in the Composition tab for very
+          large data files.
     PYTHON:
         Class NSnapPeaTriangulation:
             - Offers the additional zero-argument routine volumeWithPrecision()

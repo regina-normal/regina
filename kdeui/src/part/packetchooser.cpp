@@ -153,8 +153,7 @@ void PacketChooser::refreshContents() {
     if (onAutoUpdate)
         unregisterFromAllPackets();
 
-    while (count())
-        removeItem(count() - 1);
+    clear();
     packets.clear();
 
     // Fill it again.
@@ -199,6 +198,12 @@ bool PacketChooser::verify() {
 
     // Now match the packets up one by one.
     while (it != packets.end() || p != 0) {
+        // Are we ignoring this packet?
+        if (p && filter && ! filter->accept(p)) {
+            p = p->nextTreePacket();
+            continue;
+        }
+
         // Out of packets?
         if (it == packets.end())
             return false;
