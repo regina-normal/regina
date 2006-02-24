@@ -159,40 +159,8 @@ bool ManifoldSpec::operator < (const ManifoldSpec& other) const {
         return true;
     if (sfs2 && ! sfs1)
         return false;
-    if (sfs1 && sfs2) {
-        long genus1 = (sfs1->isBaseOrientable() ? sfs1->getBaseGenus() * 2 :
-            sfs1->getBaseGenus());
-        long genus2 = (sfs2->isBaseOrientable() ? sfs2->getBaseGenus() * 2 :
-            sfs2->getBaseGenus());
-        if (genus1 < genus2) return true;
-        if (genus2 < genus1) return false;
-
-        if (sfs1->getBaseReflectors() < sfs2->getBaseReflectors()) return true;
-        if (sfs2->getBaseReflectors() < sfs1->getBaseReflectors()) return false;
-
-        if (sfs1->getBasePunctures() < sfs2->getBasePunctures()) return true;
-        if (sfs2->getBasePunctures() < sfs1->getBasePunctures()) return false;
-
-        if (sfs2->isBaseOrientable() && ! sfs1->isBaseOrientable())
-            return true;
-        if (sfs1->isBaseOrientable() && ! sfs2->isBaseOrientable())
-            return false;
-
-        if (sfs1->getBaseClass() < sfs2->getBaseClass()) return true;
-        if (sfs2->getBaseClass() < sfs1->getBaseClass()) return false;
-
-        if (sfs1->getFibreCount() < sfs2->getFibreCount()) return true;
-        if (sfs2->getFibreCount() < sfs1->getFibreCount()) return false;
-
-        unsigned long n = sfs1->getFibreCount();
-        for (unsigned long i = 0; i < n; i++) {
-            if (sfs1->getFibre(i) < sfs2->getFibre(i)) return true;
-            if (sfs2->getFibre(i) < sfs1->getFibre(i)) return false;
-        }
-
-        if (sfs1->getObstruction() < sfs2->getObstruction()) return true;
-        if (sfs2->getObstruction() < sfs1->getObstruction()) return false;
-    }
+    if (sfs1 && sfs2)
+        return (*sfs1 < *sfs2);
 
     // Now for torus bundles.
     NTorusBundle* bundle1 = dynamic_cast<NTorusBundle*>(manifold);
