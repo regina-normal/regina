@@ -67,28 +67,29 @@ NAbelianGroup* NNGSFSPair::getHomologyH1() const {
     unsigned long fibres1 = sfs_[1]->fibreCount();
     unsigned long ref1 = sfs_[1]->reflectors();
 
+    // If we have an orientable base space, we get two curves per genus.
+    // The easiest thing to do is just to double each genus now.
+    if (sfs_[0]->baseOrientable())
+        genus0 *= 2;
+    if (sfs_[1]->baseOrientable())
+        genus1 *= 2;
+
     NMatrixInt m(fibres0 + fibres1 + ref0 + ref1 + 8,
         genus0 + fibres0 + 2 * ref0 + genus1 + fibres1 + 2 * ref1 + 6);
 
     unsigned long i, f;
     // The relation for each base orbifold:
-    for (i = 1 + genus0; i < 1 + genus0 + 1 + fibres0 + 1; i++)
-        m.entry(0, i) = 1;
-    for (i = 1 + genus0 + 1 + fibres0 + 1;
-            i < 1 + genus0 + 1 + fibres0 + 1 + ref0; i++)
+    for (i = 1 + genus0; i < 1 + genus0 + 1 + fibres0 + 1 + ref0; i++)
         m.entry(0, i) = 1;
     if (! sfs_[0]->baseOrientable())
         for (i = 1; i < 1 + genus0; i++)
             m.entry(0, i) = 2;
 
-    for (i = 1 + genus1; i < 1 + genus1 + 1 + fibres1 + 1; i++)
+    for (i = 1 + genus1; i < 1 + genus1 + 1 + fibres1 + 1 + ref1; i++)
         m.entry(1, all0 + i) = 1;
     if (! sfs_[1]->baseOrientable())
         for (i = 1; i < 1 + genus1; i++)
             m.entry(1, all0 + i) = 2;
-    for (i = 1 + genus1 + 1 + fibres1 + 1;
-            i < 1 + genus1 + 1 + fibres1 + 1 + ref1; i++)
-        m.entry(1, all0 + i) = 1;
 
     // A relation for each exceptional fibre and obstruction constant:
     NSFSFibre fibre;

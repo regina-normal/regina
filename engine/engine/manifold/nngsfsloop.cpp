@@ -38,30 +38,32 @@ NNGSFSLoop::~NNGSFSLoop() {
 }
 
 NAbelianGroup* NNGSFSLoop::getHomologyH1() const {
-    // Is it a case we can deal with?
-    if (sfs_->fibreReversing())
-        return 0;
-    if (sfs_->reflectors() > 0)
-        return 0;
-
     // Just for safety (this should always be true anyway):
     if (sfs_->punctures(false) != 2 || sfs_->punctures(true) != 0)
         return 0;
 
     // Construct a matrix.
     // Generators: fibre, base curves, two base boundaries, exceptional
-    //             fibre boundaries, obstruction boundary, plus one for
-    //             the loop created by the joining of boundaries.
+    //             fibre boundaries, obstruction boundary,
+    //             reflector boundaries, reflector half-fibres, plus one
+    //             for the loop created by the joining of boundaries.
     // Relations: base curve relation, exception fibre relations,
-    //            obstruction relation, joining boundaries.
+    //            obstruction relation, reflector relations,
+    //            fibre constraint, joining boundaries.
     unsigned long genus = sfs_->baseGenus();
     unsigned long fibres = sfs_->fibreCount();
+    unsigned long ref = sfs_->reflectors();
 
-    NMatrixInt m(fibres + 4, genus + fibres + 5);
+    // If we have an orientable base space, we get two curves per genus.
+    // The easiest thing to do is just to double the genus now.
+    if (sfs_->baseOrientable())
+        genus *= 2;
+
+    NMatrixInt m(fibres + ref + 5, genus + fibres + 2 * ref + 5);
 
     unsigned long i, f;
     // The relation for the base orbifold:
-    for (i = 1 + genus; i < 1 + genus + 2 + fibres + 1; i++)
+    for (i = 1 + genus; i < 1 + genus + 2 + fibres + 1 + ref; i++)
         m.entry(0, i) = 1;
     if (! sfs_->baseOrientable())
         for (i = 1; i < 1 + genus; i++)
@@ -79,13 +81,27 @@ NAbelianGroup* NNGSFSLoop::getHomologyH1() const {
     m.entry(1 + fibres, 1 + genus + 2 + fibres) = 1;
     m.entry(1 + fibres, 0) = sfs_->obstruction();
 
+    // A relation for each reflector boundary:
+    for (i = 0; i < ref; i++) {
+        m.entry(2 + fibres + i, 0) = -1;
+        m.entry(2 + fibres + i, 1 + genus + 2 + fibres + 1 + ref + i) = 2;
+    }
+
+    // A relation constraining the fibre.  This relationship only
+    // appears in some cases; otherwise we will just have a (harmless)
+    // zero row in the matrix.
+    if (sfs_->reflectors(true))
+        m.entry(2 + fibres + ref, 0) = 1;
+    else if (sfs_->fibreReversing())
+        m.entry(2 + fibres + ref, 0) = 2;
+
     // Two relations for the joining of boundaries:
-    m.entry(2 + fibres, 0) = -1;
-    m.entry(2 + fibres, 0) += matchingReln_[0][0];
-    m.entry(2 + fibres, 2 + genus) = matchingReln_[0][1];
-    m.entry(3 + fibres, 1 + genus) = -1;
-    m.entry(3 + fibres, 0) = matchingReln_[1][0];
-    m.entry(3 + fibres, 2 + genus) = matchingReln_[1][1];
+    m.entry(3 + fibres + ref, 0) = -1;
+    m.entry(3 + fibres + ref, 0) += matchingReln_[0][0];
+    m.entry(3 + fibres + ref, 2 + genus) = matchingReln_[0][1];
+    m.entry(4 + fibres + ref, 1 + genus) = -1;
+    m.entry(4 + fibres + ref, 0) = matchingReln_[1][0];
+    m.entry(4 + fibres + ref, 2 + genus) = matchingReln_[1][1];
 
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addGroup(m);

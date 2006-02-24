@@ -77,10 +77,8 @@ class NSFSpace;
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional NManifold routine getHomologyH1() is implemented for
- * cases where the Seifert fibred space includes no fibre-reversing
- * twists and no reflector boundary components.  The optional routine
- * construct() is not implemented.
+ * The optional NManifold routine getHomologyH1() is implemented, but
+ * the optional routine construct() is not.
  */
 class NNGSFSLoop : public NManifold {
     private:
