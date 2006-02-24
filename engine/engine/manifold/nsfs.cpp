@@ -536,9 +536,15 @@ NLensSpace* NSFSpace::isLensSpace() const {
 }
 
 bool NSFSpace::operator < (const NSFSpace& compare) const {
-    if (genus_ < compare.genus_)
+    // Double the genus if it's orientable, so that we can line up tori
+    // with Klein bottles, etc.
+    unsigned long adjGenus1 = (baseOrientable() ? genus_ * 2 : genus_);
+    unsigned long adjGenus2 = (compare.baseOrientable() ?
+        compare.genus_ * 2 : compare.genus_);
+
+    if (adjGenus1 < adjGenus2)
         return true;
-    if (genus_ > compare.genus_)
+    if (adjGenus1 > adjGenus2)
         return false;
 
     if (reflectors_ + reflectorsTwisted_ <
@@ -548,9 +554,9 @@ bool NSFSpace::operator < (const NSFSpace& compare) const {
             compare.reflectors_ + compare.reflectorsTwisted_)
         return false;
 
-    if (reflectors_ < compare.reflectors_)
+    if (reflectorsTwisted_ < compare.reflectorsTwisted_)
         return true;
-    if (reflectors_ > compare.reflectors_)
+    if (reflectorsTwisted_ > compare.reflectorsTwisted_)
         return false;
 
     if (punctures_ + puncturesTwisted_ <
@@ -560,11 +566,13 @@ bool NSFSpace::operator < (const NSFSpace& compare) const {
             compare.punctures_ + compare.puncturesTwisted_)
         return false;
 
-    if (punctures_ < compare.punctures_)
+    if (puncturesTwisted_ < compare.puncturesTwisted_)
         return true;
-    if (punctures_ > compare.punctures_)
+    if (puncturesTwisted_ > compare.puncturesTwisted_)
         return false;
 
+    // Comparing class will catch orientability also (placing orientable
+    // before non-orientable).
     if (class_ < compare.class_)
         return true;
     if (class_ > compare.class_)
