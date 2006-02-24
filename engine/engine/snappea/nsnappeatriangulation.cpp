@@ -44,8 +44,9 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
         snappeaData = 0;
 }
 
-NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri) {
-    snappeaData = reginaToSnapPea(tri);
+NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
+        bool allowClosed) {
+    snappeaData = reginaToSnapPea(tri, allowClosed);
 }
 
 NSnapPeaTriangulation::~NSnapPeaTriangulation() {
@@ -86,7 +87,7 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
 }
 
 ::Triangulation* NSnapPeaTriangulation::reginaToSnapPea(
-        const NTriangulation& tri) {
+        const NTriangulation& tri, bool allowClosed) {
     // Make sure SnapPea is likely to be comfortable with it.
     if (tri.getNumberOfTetrahedra() == 0)
         return 0;
@@ -98,10 +99,18 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
         return 0;
     if (! tri.isStandard())
         return 0;
-    if (! tri.isIdeal())
-        return 0;
-    if (tri.getNumberOfBoundaryComponents() < tri.getNumberOfVertices())
-        return 0;
+    if (tri.isIdeal()) {
+        // If it's ideal, make sure every vertex is ideal.
+        if (tri.getNumberOfBoundaryComponents() < tri.getNumberOfVertices())
+            return 0;
+    } else {
+        // No boundary faces, not ideal.. must be closed.
+        if (! allowClosed)
+            return 0;
+        // If closed is okay, at least make sure it's one-vertex.
+        if (1 != tri.getNumberOfVertices())
+            return 0;
+    }
     if (tri.getNumberOfTetrahedra() >= INT_MAX)
         return 0;
 

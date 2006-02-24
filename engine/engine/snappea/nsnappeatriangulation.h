@@ -147,12 +147,27 @@ class NSnapPeaTriangulation : public ShareableObject {
          * You should always test isNull() to determine whether the
          * conversion was successful.
          *
+         * SnapPea is designed primarily to work with ideal
+         * triangulations only.  Passing closed triangulations can
+         * occasionally cause the SnapPea kernel to raise a fatal error,
+         * which in turn will crash the entire program.  Thus by default,
+         * closed triangulations are never converted (a null SnapPea
+         * triangulation will be created instead).  See the optional
+         * argument \a allowClosed for how to change this behaviour.
+         *
          * Note also that the tetrahedron and vertex numbers might be changed
          * in the new SnapPea triangulation.
          *
+         * \warning Passing \a allowClosed as \c true can occasionally
+         * cause the program to crash!  See the notes above for details.
+         *
          * @param tri the Regina triangulation to clone.
+         * @param allowClosed \c true if closed triangulations should be
+         * considered, or \c false if all closed triangulations should give
+         * null SnapPea data (the default).  See above for details.
          */
-        NSnapPeaTriangulation(const NTriangulation& tri);
+        NSnapPeaTriangulation(const NTriangulation& tri,
+            bool allowClosed = false);
 
         /**
          * Destroys this triangulation.  All internal SnapPea data will
@@ -299,12 +314,21 @@ class NSnapPeaTriangulation : public ShareableObject {
          * converted into SnapPea triangulations.  If the conversion is
          * unsuccessful, 0 will be returned.
          *
+         * \warning Passing \a allowClosed as \c true can occasionally
+         * cause the program to crash!  This is because SnapPea is
+         * primarily designed to work with ideal triangulations only.  See
+         * the NSnapPeaTriangulation constructor notes for further details.
+         *
          * @param tri the Regina triangulation to clone.
+         * @param allowClosed \c true if closed triangulations should be
+         * considered, or \c false if all closed triangulations should
+         * return null.  See the NSnapPeaTriangulation constructor notes
+         * for details.
          * @return a corresponding SnapPea structure, or 0 if the
          * conversion was unsuccessful.
          */
         static ::Triangulation* NSnapPeaTriangulation::reginaToSnapPea(
-            const NTriangulation& tri);
+            const NTriangulation& tri, bool allowClosed);
 };
 
 /*@}*/

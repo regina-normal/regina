@@ -63,6 +63,9 @@ Version 4.3  [ under development ]
               Now more general, supporting both orientable and
               non-orientable 3-manifolds as well as base orbifolds with
               reflector boundary components.
+        Class NSnapPeaTriangulation:
+            - Added a boolean argument to the constructor that allows the
+              SnapPea kernel to work with closed triangulations.
         Class NStandardTri:
             - Routine writeTeXName() no longer provides wrapping dollar signs.
         Class NTorusBundle:
@@ -77,6 +80,9 @@ Version 4.3  [ under development ]
               and getVertexIndex() all returned signed instead of unsigned
               longs, so that -1 can be returned if the object could not
               be found.
+    USER INTERFACE:
+        - Added a configuration option that allows the SnapPea kernel to
+          work with closed triangulations.
     PYTHON:
         Class NSnapPeaTriangulation:
             - Offers the additional zero-argument routine volumeWithPrecision()

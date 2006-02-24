@@ -31,6 +31,7 @@
  *
  * Each triangulation is run through the SnapPea kernel to see whether a
  * volume can be calculated.  The volume and solution type are output.
+ * Closed triangulations are supported.
  *
  * If the option -c is passed, the labels of all container packets are
  * also output as they appear in the packet tree.  This may be useful for
@@ -74,7 +75,7 @@ void process(NTriangulation* t) {
     std::cout << t->getPacketLabel() << "  -->  ";
     totTris++;
 
-    NSnapPeaTriangulation s(*t);
+    NSnapPeaTriangulation s(*t, true);
     if (s.isNull()) {
         std::cout << "UNUSABLE";
         totUnusable++;
