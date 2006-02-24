@@ -59,6 +59,8 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     algebra = new NTriAlgebraUI(packet, this, part->getPreferences());
     surfaces = new NTriSurfacesUI(packet, this,
         part->getPreferences().triSurfacePropsThreshold);
+    snapPea = new NTriSnapPeaUI(packet, this,
+        part->getPreferences().snapPeaClosed);
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -70,7 +72,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     addTab(algebra, i18n("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), i18n("&Composition"));
     addTab(surfaces, i18n("Sur&faces"));
-    addTab(new NTriSnapPeaUI(packet, this), i18n("Snap&Pea"));
+    addTab(snapPea, i18n("Snap&Pea"));
 
     connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
         this, SLOT(updatePreferences(const ReginaPrefSet&)));
@@ -104,6 +106,7 @@ void NTriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
     gluings->updatePreferences(newPrefs);
     algebra->updatePreferences(newPrefs);
     surfaces->setAutoCalcThreshold(newPrefs.triSurfacePropsThreshold);
+    snapPea->setAllowClosed(newPrefs.snapPeaClosed);
 }
 
 NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,

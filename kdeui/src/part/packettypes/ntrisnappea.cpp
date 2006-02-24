@@ -47,8 +47,9 @@ using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
 
 NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0) {
+        PacketTabbedUI* useParentUI, bool newAllowClosed) :
+        PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0),
+        allowClosed(newAllowClosed) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
@@ -69,7 +70,7 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     QBoxLayout* nullLayout = new QVBoxLayout(dataNull, 5 /* margin */,
         0 /* spacing */);
 
-    unavailable = new NoSnapPea(reginaTri, dataNull, 0, true);
+    unavailable = new NoSnapPea(reginaTri, allowClosed, dataNull, 0, true);
     unavailable->setAlignment(Qt::AlignCenter);
     nullLayout->addWidget(unavailable);
 
@@ -129,11 +130,11 @@ void NTriSnapPeaUI::refresh() {
     if (snappeaTri)
         delete snappeaTri;
 
-    snappeaTri = new NSnapPeaTriangulation(*reginaTri);
+    snappeaTri = new NSnapPeaTriangulation(*reginaTri, allowClosed);
 
     if (snappeaTri->isNull()) {
         data->raiseWidget(dataNull);
-        unavailable->refresh();
+        unavailable->refresh(allowClosed);
     } else {
         data->raiseWidget(dataValid);
 

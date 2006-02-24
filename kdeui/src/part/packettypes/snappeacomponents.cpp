@@ -34,14 +34,14 @@
 
 #include <klocale.h>
 
-NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, QWidget* parent,
-        const char* name, bool delayedRefresh) : QLabel(parent, name),
-        tri(useTri) {
+NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, bool allowClosed,
+        QWidget* parent, const char* name, bool delayedRefresh) :
+        QLabel(parent, name), tri(useTri) {
     if (! delayedRefresh)
-        refresh();
+        refresh(allowClosed);
 }
 
-void NoSnapPea::refresh() {
+void NoSnapPea::refresh(bool allowClosed) {
     QString msg = i18n("<qt><p>SnapPea calculations are not available "
         "for this triangulation.</p><p>");
 
@@ -57,12 +57,16 @@ void NoSnapPea::refresh() {
         msg += i18n("This is because the triangulation contains non-standard "
             "vertices (vertices whose links are not spheres, tori or Klein "
             "bottles).");
-    else if (! tri->isIdeal())
+    else if ((! tri->isIdeal()) && (! allowClosed))
         msg += i18n("This is because the triangulation does not contain any "
             "ideal vertices.");
-    else if (tri->getNumberOfBoundaryComponents() < tri->getNumberOfVertices())
+    else if (tri->isIdeal() &&
+            tri->getNumberOfBoundaryComponents() < tri->getNumberOfVertices())
         msg += i18n("This is because the triangulation contains a mix of "
             "finite and ideal vertices.");
+    else if ((! tri->isIdeal()) && 1 != tri->getNumberOfVertices())
+        msg += i18n("This is because the triangulation is closed but has "
+            "more than one vertex.");
     else if (tri->getNumberOfTetrahedra() >= INT_MAX)
         msg += i18n("This is because the triangulation has too many "
             "tetrahedra.");

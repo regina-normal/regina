@@ -65,14 +65,24 @@ class NoSnapPea : public QLabel {
          * This allows for a delayed analysis of the underlying
          * triangulation (as may be desirable in a tabbed packet UI, for
          * instance).
+         *
+         * The argument \a allowClosed is passed directly to refresh(); see
+         * the refresh() documentation for an explanation of what it means.
          */
-        NoSnapPea(regina::NTriangulation* useTri, QWidget* parent = 0,
-            const char* name = 0, bool delayedRefresh = false);
+        NoSnapPea(regina::NTriangulation* useTri, bool allowClosed,
+            QWidget* parent = 0, const char* name = 0,
+            bool delayedRefresh = false);
 
         /**
-         * Update the explanation in case the triangulation has changed.
+         * Updates the explanation in case the triangulation has changed.
+         *
+         * The argument \a allowClosed specifies whether or not
+         * closed triangulations may be used with SnapPea.  More
+         * precisely, if \a allowClosed is \c true then closedness
+         * will not be offered as an excuse, whereas if \a allowClosed
+         * is \c false then it may be.
          */
-        void refresh();
+        void refresh(bool allowClosed);
 };
 
 #endif
