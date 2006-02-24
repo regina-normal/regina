@@ -102,6 +102,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
 
 inline void NTriSurfacesUI::setAutoCalcThreshold(unsigned newThreshold) {
     autoCalcThreshold = newThreshold;
+    refresh();
 }
 
 #endif
