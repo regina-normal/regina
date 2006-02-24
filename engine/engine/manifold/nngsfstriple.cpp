@@ -26,8 +26,10 @@
 
 /* end stub */
 
+#include "algebra/nabeliangroup.h"
 #include "manifold/nngsfstriple.h"
 #include "manifold/nsfs.h"
+#include "maths/nmatrixint.h"
 
 namespace regina {
 
@@ -35,6 +37,138 @@ NNGSFSTriple::~NNGSFSTriple() {
     delete end_[0];
     delete end_[1];
     delete centre_;
+}
+
+NAbelianGroup* NNGSFSTriple::getHomologyH1() const {
+    // Just for safety (this should always be true anyway):
+    if (end_[0]->punctures(false) != 1 || end_[0]->punctures(true) != 0)
+        return 0;
+    if (end_[1]->punctures(false) != 1 || end_[1]->punctures(true) != 0)
+        return 0;
+    if (centre_->punctures(false) != 2 || centre_->punctures(true) != 0)
+        return 0;
+
+    // Construct a matrix.
+    // Generators:
+    //     - Spaces are ordered centre, end 0, end 1.
+    //     - For each space, generators are:
+    //           - fibre
+    //           - base curves
+    //           - base boundary
+    //           - exceptional fibre boundaries
+    //           - obstruction
+    //           - reflector boundaries
+    //           - reflector half-fibres
+    // Relations:
+    //     - For each space:
+    //           - base curve relation
+    //           - exceptional fibre relations
+    //           - obstruction relation
+    //           - reflector relations
+    //           - fibre constraint
+    //     - Plus two boundary joinings.
+    NSFSpace* sfs[3];
+    unsigned long genus[3], punc[3], fibres[3], ref[3], gens[3];
+    unsigned long start[3];
+
+    sfs[0] = centre_;
+    sfs[1] = end_[0];
+    sfs[2] = end_[1];
+
+    punc[0] = 2;
+    punc[1] = 1;
+    punc[2] = 1;
+
+    int s;
+    for (s = 0; s < 3; s++) {
+        genus[s] = sfs[s]->baseGenus();
+        fibres[s] = sfs[s]->fibreCount();
+        ref[s] = sfs[s]->reflectors();
+
+        // If we have an orientable base space, we get two curves per genus.
+        // The easiest thing seems to be to just double the genus now.
+        if (sfs[s]->baseOrientable())
+            genus[s] *= 2;
+
+        gens[s] = 1 + genus[s] + punc[s] + fibres[s] + 1 + ref[s] + ref[s];
+    }
+
+    start[0] = 0;
+    start[1] = gens[0];
+    start[2] = gens[0] + gens[1];
+
+    NMatrixInt m(fibres[0] + fibres[1] + fibres[2] +
+        ref[0] + ref[1] + ref[2] + 13, gens[0] + gens[1] + gens[2]);
+
+    unsigned long i, f;
+    NSFSFibre fibre;
+    unsigned long reln = 0;
+
+    // Relations internal to each space:
+    for (s = 0; s < 3; s++) {
+        // The relation for the base orbifold:
+        for (i = 1 + genus[s];
+                i < 1 + genus[s] + punc[s] + fibres[s] + 1 + ref[s]; i++)
+            m.entry(reln, start[s] + i) = 1;
+        if (! sfs[s]->baseOrientable())
+            for (i = 1; i < 1 + genus[s]; i++)
+                m.entry(reln, start[s] + i) = 2;
+        reln++;
+
+        // A relation for each exception fibre:
+        for (f = 0; f < fibres[s]; f++) {
+            fibre = sfs[s]->fibre(f);
+            m.entry(reln, start[s] + 1 + genus[s] + punc[s] + f) = fibre.alpha;
+            m.entry(reln, start[s]) = fibre.beta;
+            reln++;
+        }
+
+        // The obstruction constant:
+        m.entry(reln, start[s] + 1 + genus[s] + punc[s] + fibres[s]) = 1;
+        m.entry(reln, start[s]) = sfs[s]->obstruction();
+        reln++;
+
+        // A relation for each reflector boundary:
+        for (i = 0; i < ref[s]; i++) {
+            m.entry(reln, start[s]) = -1;
+            m.entry(reln, start[s] + 1 + genus[s] + punc[s] + fibres[s] +
+                1 + ref[s] + i) = 2;
+            reln++;
+        }
+
+        // A relation constraining the fibre.  This relation only
+        // appears in some cases; otherwise we will just have a
+        // (harmless) zero row in the matrix.
+        if (sfs[s]->reflectors(true))
+            m.entry(reln, start[s]) = 1;
+        else if (sfs[s]->fibreReversing())
+            m.entry(reln, start[s]) = 2;
+        reln++;
+    }
+
+    // Joining of boundaries:
+    m.entry(reln, start[1]) = -1;
+    m.entry(reln, 0) = matchingReln_[0][0][0];
+    m.entry(reln, 1 + genus[0]) = matchingReln_[0][0][1];
+    reln++;
+    m.entry(reln, start[1] + 1 + genus[1]) = -1;
+    m.entry(reln, 0) = matchingReln_[0][1][0];
+    m.entry(reln, 1 + genus[0]) = matchingReln_[0][1][1];
+    reln++;
+
+    m.entry(reln, start[2]) = -1;
+    m.entry(reln, 0) = matchingReln_[1][0][0];
+    m.entry(reln, 1 + genus[0] + 1) = matchingReln_[1][0][1];
+    reln++;
+    m.entry(reln, start[2] + 1 + genus[2]) = -1;
+    m.entry(reln, 0) = matchingReln_[1][1][0];
+    m.entry(reln, 1 + genus[0] + 1) = matchingReln_[1][1][1];
+    reln++;
+
+    // Phew.
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addGroup(m);
+    return ans;
 }
 
 std::ostream& NNGSFSTriple::writeName(std::ostream& out) const {

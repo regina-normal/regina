@@ -110,8 +110,8 @@ class NSFSpace;
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional NManifold routines getHomologyH1() and construct() are
- * not implemented for this class.
+ * The optional NManifold routine getHomologyH1() is implemented, but
+ * the optional routine construct() is not.
  *
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
@@ -204,6 +204,7 @@ class NNGSFSTriple : public NManifold {
          */
         const NMatrix2& matchingReln(unsigned which) const;
 
+        NAbelianGroup* getHomologyH1() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 
