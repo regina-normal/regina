@@ -152,6 +152,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         BarIcon("openterm", KIcon::SizeMedium));
     pythonPrefs = new ReginaPrefPython(frame);
 
+    frame = addVBoxPage(i18n("SnapPea"), i18n("SnapPea Options"),
+        BarIcon("snappea", KIcon::SizeMedium));
+    snapPeaPrefs = new ReginaPrefSnapPea(frame);
+
     // Read the current preferences from the main window.
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
     generalPrefs->cbAutoFileExtension->setChecked(prefSet.autoFileExtension);
@@ -213,6 +217,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             it != prefSet.pythonLibraries.end(); it++)
         new ReginaFilePrefItem(pythonPrefs->listFiles, *it);
     pythonPrefs->updateActiveCount();
+
+    snapPeaPrefs->cbClosed->setChecked(prefSet.snapPeaClosed);
 
     // Finish off.
     setHelp("options", "regina");
@@ -356,6 +362,8 @@ void ReginaPreferences::slotApply() {
             item; item = item->nextSibling())
         prefSet.pythonLibraries.push_back(
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
+
+    prefSet.snapPeaClosed = snapPeaPrefs->cbClosed->isChecked();
 
     // Save these preferences to the global configuration.
     mainWindow->setPreferences(prefSet);
@@ -889,6 +897,36 @@ void ReginaPrefPython::deactivate() {
                 i18n("All of the selected libraries have already been "
                     "deactivated."));
     }
+}
+
+ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QVBox(parent) {
+    cbClosed = new QCheckBox(i18n("Allow closed triangulations"), this);
+    QWhatsThis::add(cbClosed, i18n("<qt>Allow the SnapPea kernel to work with "
+        "closed triangulations.  By default it is only allowed to work with "
+        "ideal triangulations.<p>"
+        "<b>Warning:</b> SnapPea is primarily designed to work with ideal "
+        "triangulations only.  Allowing closed triangulations may "
+        "occasionally cause the SnapPea kernel to raise a fatal error "
+        "and crash Regina completely.  You might lose unsaved work "
+        "as a result.</qt>"));
+
+    QHBox* box = new QHBox(this);
+    box->setSpacing(5);
+    QLabel* label;
+
+    box->setStretchFactor(label = new QLabel(i18n(
+        "<qt><b>Warning:</b></qt>"), box), 0);
+    label->setAlignment(Qt::AlignAuto | AlignTop);
+
+    box->setStretchFactor(new QLabel(i18n(
+        "<qt>SnapPea is primarily designed "
+        "to work with ideal triangulations only!  Allowing it to work "
+        "with closed triangulations may occasionally cause the "
+        "SnapPea kernel to raise a fatal error, and you may lose "
+        "unsaved work as a result.</qt>"), box), 1);
+
+    // Add some space at the end.
+    setStretchFactor(new QWidget(this), 1);
 }
 
 ReginaEditorChooser::ReginaEditorChooser(QWidget* /* ignored */) :

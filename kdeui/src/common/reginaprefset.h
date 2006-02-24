@@ -89,6 +89,9 @@ struct ReginaPrefSet {
              python console. */
     bool pythonWordWrap;
         /**< Should python consoles be word wrapped? */
+    bool snapPeaClosed;
+        /**< Do we allow the SnapPea kernel to work with closed (non-ideal)
+             triangulations, even though it's dangerous? */
     int surfacesCreationCoords;
         /**< The default coordinate system for normal surface creation. */
     unsigned treeJumpSize;

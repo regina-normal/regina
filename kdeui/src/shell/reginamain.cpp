@@ -489,6 +489,9 @@ void ReginaMain::readOptions(KConfig* config) {
         "SpacesPerTab", 4);
     globalPrefs.pythonWordWrap = config->readBoolEntry("WordWrap", false);
 
+    config->setGroup("SnapPea");
+    globalPrefs.snapPeaClosed = config->readBoolEntry("AllowClosed", false);
+
     config->setGroup("Surfaces");
     globalPrefs.surfacesCreationCoords = config->readNumEntry(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
@@ -566,6 +569,9 @@ void ReginaMain::saveOptions() {
     config->writeEntry("AutoIndent", globalPrefs.pythonAutoIndent);
     config->writeEntry("SpacesPerTab", globalPrefs.pythonSpacesPerTab);
     config->writeEntry("WordWrap", globalPrefs.pythonWordWrap);
+
+    config->setGroup("SnapPea");
+    config->writeEntry("AllowClosed", globalPrefs.snapPeaClosed);
 
     config->setGroup("Surfaces");
     config->writeEntry("CreationCoordinates",

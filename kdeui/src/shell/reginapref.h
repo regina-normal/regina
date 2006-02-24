@@ -48,6 +48,7 @@ class ReginaMain;
 class ReginaPrefCensus;
 class ReginaPrefGeneral;
 class ReginaPrefPython;
+class ReginaPrefSnapPea;
 class ReginaPrefSurfaces;
 class ReginaPrefTri;
 
@@ -71,6 +72,7 @@ class ReginaPreferences : public KDialogBase {
         ReginaPrefSurfaces* surfacePrefs;
         ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
+        ReginaPrefSnapPea* snapPeaPrefs;
 
     public:
         ReginaPreferences(ReginaMain* parent);
@@ -201,6 +203,22 @@ class ReginaPrefPython : public QVBox {
         void deactivate();
 
     public:
+    friend class ReginaPreferences;
+};
+
+/**
+ * The page of the Regina configuration dialog that controls interaction
+ * with the SnapPea kernel.
+ */
+class ReginaPrefSnapPea : public QVBox {
+    Q_OBJECT
+
+    private:
+        QCheckBox* cbClosed;
+
+    public:
+        ReginaPrefSnapPea(QWidget* parent = 0);
+
     friend class ReginaPreferences;
 };
 
