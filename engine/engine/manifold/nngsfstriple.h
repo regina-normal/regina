@@ -112,6 +112,10 @@ class NSFSpace;
  *
  * The optional NManifold routines getHomologyH1() and construct() are
  * not implemented for this class.
+ *
+ * \todo \opt Speed up homology calculations involving orientable base
+ * spaces by adding rank afterwards, instead of adding generators for
+ * genus into the presentation matrix.
  */
 class NNGSFSTriple : public NManifold {
     private:

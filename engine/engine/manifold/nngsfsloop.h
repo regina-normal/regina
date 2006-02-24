@@ -79,6 +79,10 @@ class NSFSpace;
  *
  * The optional NManifold routine getHomologyH1() is implemented, but
  * the optional routine construct() is not.
+ *
+ * \todo \opt Speed up homology calculations involving orientable base
+ * spaces by adding rank afterwards, instead of adding generators for
+ * genus into the presentation matrix.
  */
 class NNGSFSLoop : public NManifold {
     private:
