@@ -129,13 +129,12 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
         return 0;
 
     int plugPos;
-    NPerm annulusToUpperLayer, upperBdryToLower;
+    NPerm annulusToUpperLayer;
     NSatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
     NSatBlock::TetList avoidTets;
     NSatBlock* starter;
     NSatRegion* region;
     bool bdryRefVert, bdryRefHoriz;
-    bool swapFaces;
 
     // Run through each isomorphism and look for the corresponding layering.
     for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
@@ -219,42 +218,8 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
 
             // Hope like hell that this meets up with the lower layering
             // boundary.
-            bdryAnnulus.switchSides();
-            swapFaces = false;
-            if (bdryAnnulus.tet[0] == lowerAnnulus.tet[0] &&
-                    bdryAnnulus.tet[1] == lowerAnnulus.tet[1] &&
-                    bdryAnnulus.roles[0][3] == lowerAnnulus.roles[0][3] &&
-                    bdryAnnulus.roles[1][3] == lowerAnnulus.roles[1][3]) {
-                // Construct the mapping of 0/1/2 markings from the
-                // upper boundary annulus to the lower.
-                upperBdryToLower = lowerAnnulus.roles[0].inverse() *
-                    bdryAnnulus.roles[0];
-                if (upperBdryToLower != lowerAnnulus.roles[1].inverse() *
-                        bdryAnnulus.roles[1]) {
-                    delete region;
-                    continue;
-                }
-
-                // Yup!
-                // swapFaces = false; (done above)
-            } else if (bdryAnnulus.tet[0] == lowerAnnulus.tet[1] &&
-                    bdryAnnulus.tet[1] == lowerAnnulus.tet[0] &&
-                    bdryAnnulus.roles[0][3] == lowerAnnulus.roles[1][3] &&
-                    bdryAnnulus.roles[1][3] == lowerAnnulus.roles[0][3]) {
-                // Construct the mapping of 0/1/2 markings from the
-                // upper boundary annulus to the lower.
-                upperBdryToLower = lowerAnnulus.roles[0].inverse() *
-                    bdryAnnulus.roles[1];
-                if (upperBdryToLower != lowerAnnulus.roles[1].inverse() *
-                        bdryAnnulus.roles[0]) {
-                    delete region;
-                    continue;
-                }
-
-                // Yup!
-                swapFaces = true;
-            } else {
-                // Nothing.
+            NMatrix2 upperRolesToLower;
+            if (! lowerAnnulus.isJoined(bdryAnnulus, upperRolesToLower)) {
                 delete region;
                 continue;
             }
@@ -314,27 +279,8 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
             NMatrix2 curvesToBdryAnnulus(bdryRefVert ? 1 : -1, 0, 0,
                 bdryRefHoriz ? -1 : 1);
 
-            // We're close folks.  All that's left is to observe how the
-            // two annuli are joined together, as described by the
-            // boolean swapFaces and the permutation upperBdryToLower.
-
-            NMatrix2 upperRolesToLower;
-            if (     upperBdryToLower == NPerm(0, 1, 2, 3))
-                upperRolesToLower = NMatrix2(1, 0, 0, 1);
-            else if (upperBdryToLower == NPerm(1, 2, 0, 3))
-                upperRolesToLower = NMatrix2(0, -1, 1, -1);
-            else if (upperBdryToLower == NPerm(2, 0, 1, 3))
-                upperRolesToLower = NMatrix2(-1, 1, -1, 0);
-            else if (upperBdryToLower == NPerm(0, 2, 1, 3))
-                upperRolesToLower = NMatrix2(0, 1, 1, 0);
-            else if (upperBdryToLower == NPerm(1, 0, 2, 3))
-                upperRolesToLower = NMatrix2(-1, 0, -1, 1);
-            else if (upperBdryToLower == NPerm(2, 1, 0, 3))
-                upperRolesToLower = NMatrix2(1, -1, 0, -1);
-
-            if (swapFaces)
-                upperRolesToLower.negate();
-
+            // Finally, we already know how the two annuli are joined
+            // together -- we worked this out earlier as upperRolesToLower.
             NNGPluggedTorusBundle* ans = new NNGPluggedTorusBundle(core, *it,
                 region, curvesToLowerAnnulus.inverse() * upperRolesToLower *
                 curvesToBdryAnnulus);
