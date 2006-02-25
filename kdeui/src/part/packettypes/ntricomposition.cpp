@@ -219,6 +219,7 @@ void NTriCompositionUI::packetToBeDestroyed(regina::NPacket*) {
     // Our current isomorphism test triangulation is about to be
     // destroyed.
     isoTest->setCurrentItem(0); // (i.e., None)
+    comparingTri = 0; // Don't unlisten, the packet destructor will do that.
     updateIsoPanel();
 }
 
