@@ -59,9 +59,10 @@
  */
 
 #include <file/nxmlfile.h>
+#include <manifold/ngraphloop.h>
+#include <manifold/ngraphpair.h>
+#include <manifold/ngraphtriple.h>
 #include <manifold/nlensspace.h>
-#include <manifold/nngsfsloop.h>
-#include <manifold/nngsfspair.h>
 #include <manifold/nsfs.h>
 #include <manifold/ntorusbundle.h>
 #include <packet/ncontainer.h>
@@ -176,11 +177,11 @@ bool ManifoldSpec::operator < (const ManifoldSpec& other) const {
         return manifold->getName() < other.manifold->getName();
     }
 
-    // Finally non-geometric stuff (SFS pairs and loops).
+    // Finally non-geometric stuff (SFS pairs, triples and loops).
     // In all of these cases sort by name for want of something more
     // sophisticated (TODO).
-    NNGSFSPair* pair1 = dynamic_cast<NNGSFSPair*>(manifold);
-    NNGSFSPair* pair2 = dynamic_cast<NNGSFSPair*>(other.manifold);
+    NGraphPair* pair1 = dynamic_cast<NGraphPair*>(manifold);
+    NGraphPair* pair2 = dynamic_cast<NGraphPair*>(other.manifold);
     if (pair1 && ! pair2)
         return true;
     if (pair2 && ! pair1)
@@ -188,8 +189,17 @@ bool ManifoldSpec::operator < (const ManifoldSpec& other) const {
     if (pair1 && pair2)
         return manifold->getName() < other.manifold->getName();
 
-    NNGSFSLoop* loop1 = dynamic_cast<NNGSFSLoop*>(manifold);
-    NNGSFSLoop* loop2 = dynamic_cast<NNGSFSLoop*>(other.manifold);
+    NGraphTriple* triple1 = dynamic_cast<NGraphTriple*>(manifold);
+    NGraphTriple* triple2 = dynamic_cast<NGraphTriple*>(other.manifold);
+    if (triple1 && ! triple2)
+        return true;
+    if (triple2 && ! triple1)
+        return false;
+    if (triple1 && triple2)
+        return manifold->getName() < other.manifold->getName();
+
+    NGraphLoop* loop1 = dynamic_cast<NGraphLoop*>(manifold);
+    NGraphLoop* loop2 = dynamic_cast<NGraphLoop*>(other.manifold);
     if (loop1 && ! loop2)
         return true;
     if (loop2 && ! loop1)
