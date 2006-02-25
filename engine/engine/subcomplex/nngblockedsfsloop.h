@@ -27,8 +27,8 @@
 /* end stub */
 
 /*! \file nngblockedsfsloop.h
- *  \brief Deals with non-geometric spaces formed by joining a single
- *  saturated region to itself along an annulus.
+ *  \brief Supports self-identified Seifert fibred spaces that are
+ *  triangulated using saturated blocks.
  */
 
 #ifndef __NNGBLOCKEDSFSLOOP_H

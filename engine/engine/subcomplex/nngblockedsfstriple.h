@@ -27,8 +27,8 @@
 /* end stub */
 
 /*! \file nngblockedsfstriple.h
- *  \brief Deals with non-geometric triangulations formed from three
- *  saturated regions joined along boundary tori.
+ *  \brief Supports joined sequences of three Seifert fibred spaces that
+ *  are triangulated using saturated blocks.
  */
 
 #ifndef __NNGBLOCKEDSFSTRIPLE_H
@@ -48,11 +48,12 @@ class NSatRegion;
  */
 
 /**
- * Represents a blocked non-geometric sequence of three Seifert fibred
- * spaces.  This is a particular type of triangulation, formed from three
- * saturated regions whose various torus boundaries are identified as
- * described below.  Optional layerings may be placed between torus
- * boundaries to allow for more interesting relationships between the
+ * Represents a blocked sequence of three Seifert fibred spaces joined
+ * along connecting tori.  This is a particular type of triangulation
+ * of a graph manifold, formed from three saturated regions whose
+ * various torus boundaries are identified as described below.
+ * Optional layerings may be placed between torus boundaries to
+ * allow for more interesting relationships between the
  * respective boundary curves of each region.  For more detail on
  * saturated regions and their constituent saturated blocks, see the
  * NSatRegion class; for more detail on layerings, see the NLayering class.

@@ -67,17 +67,17 @@ NManifold* NNGPluggedTorusBundle::getManifold() const {
 
 std::ostream& NNGPluggedTorusBundle::writeName(std::ostream& out) const {
     // TODO: output
-    return out << "Non-geometric plugged torus bundle";
+    return out << "Plugged torus bundle";
 }
 
 std::ostream& NNGPluggedTorusBundle::writeTeXName(std::ostream& out) const {
     // TODO: output (tex)
-    return out << "Non-geometric plugged torus bundle";
+    return out << "Plugged torus bundle";
 }
 
 void NNGPluggedTorusBundle::writeTextLong(std::ostream& out) const {
     // TODO: output (detailed)
-    out << "Non-geometric plugged torus bundle";
+    out << "Plugged torus bundle";
 }
 
 NNGPluggedTorusBundle* NNGPluggedTorusBundle::isNGPluggedTorusBundle(

@@ -27,8 +27,8 @@
 /* end stub */
 
 /*! \file nngblockedsfspair.h
- *  \brief Deals with non-geometric pairs of Seifert fibred spaces joined
- *  along a single annulus.
+ *  \brief Supports joined pairs of Seifert fibred spaces that are
+ *  triangulated using saturated blocks.
  */
 
 #ifndef __NNGBLOCKEDSFSPAIR_H
@@ -48,14 +48,14 @@ class NSatRegion;
  */
 
 /**
- * Represents a blocked non-geometric pair of Seifert fibred spaces.
- * This is a particular type of triangulation, formed from two saturated
- * regions whose torus boundaries are identified.  An optional layering
- * may be placed between the two torus boundaries to allow a more
- * interesting relationship between the boundary curves of each region.
- * For more detail on saturated regions and their constituent saturated
- * blocks, see the NSatRegion class; for more detail on layerings, see
- * the NLayering class.
+ * Represents a blocked pair of Seifert fibred spaces joined along a single
+ * connecting torus.  This is a particular type of triangulation of a graph
+ * manifold, formed from two saturated regions whose torus boundaries are
+ * identified.  An optional layering may be placed between the two torus
+ * boundaries to allow a more interesting relationship between the boundary
+ * curves of each region.  For more detail on saturated regions and their
+ * constituent saturated blocks, see the NSatRegion class; for more detail
+ * on layerings, see the NLayering class.
  *
  * Each of the two saturated regions must have precisely one boundary
  * component formed from just one saturated annulus, and this boundary may

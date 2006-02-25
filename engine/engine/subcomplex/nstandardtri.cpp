@@ -98,7 +98,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     if ((ans = NLayeredTorusBundle::isLayeredTorusBundle(tri)))
         return ans;
 
-    // Save non-geometric triangulations until last.
+    // Save non-geometric graph manifolds until last.
     if ((ans = NNGBlockedSFSLoop::isNGBlockedSFSLoop(tri)))
         return ans;
     if ((ans = NNGBlockedSFSPair::isNGBlockedSFSPair(tri)))
