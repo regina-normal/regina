@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file nblockedsfs.h
- *  \brief Supports Seifert fibred spaces that are triangulated using
+ *  \brief Supports closed Seifert fibred spaces that are triangulated using
  *  saturated blocks.
  */
 
