@@ -44,7 +44,7 @@ Version 4.3  [ under development ]
         Class NMatrix2:
             - New specialised class for working with 2-by-2 integer matrices.
         Class NNGSFSLoop, NNGSFSPair, NNGSFSTriple:
-            - New families of non-geometric 3-manifolds.
+            - New families of graph manifolds.
         Class NPacket:
             - New routine sortChildren().
         Class NPerm:

@@ -27,7 +27,8 @@
 /* end stub */
 
 /*! \file nngsfstriple.h
- *  \brief Deals with non-geometric sequences of three Seifert fibred spaces.
+ *  \brief Deals with graph manifolds formed from sequences of three Seifert
+ *  fibred spaces.
  */
 
 #ifndef __NNGSFSTRIPLE_H
@@ -48,7 +49,7 @@ class NSFSpace;
  */
 
 /**
- * Represents a closed non-geometric 3-manifold formed by joining
+ * Represents a closed graph manifold formed by joining
  * three bounded Seifert fibred spaces along their torus boundaries.
  *
  * There must be one Seifert fibred space at either end, each with a
@@ -133,7 +134,7 @@ class NNGSFSTriple : public NManifold {
 
     public:
         /**
-         * Creates a new non-geometric manifold from three bounded
+         * Creates a new graph manifold from three bounded
          * Seifert fibred spaces, as described in the class notes.
          * The three Seifert fibred spaces and both 2-by-2 matching
          * matrices are passed separately.

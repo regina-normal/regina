@@ -27,8 +27,8 @@
 /* end stub */
 
 /*! \file nngsfsloop.h
- *  \brief Deals with Seifert fibred spaces that are joined to
- *  themselves in a non-geometric fashion.
+ *  \brief Deals with graph manifolds formed from self-identified Seifert
+ *  fibred spaces.
  */
 
 #ifndef __NNGSFSLOOP_H
@@ -49,7 +49,7 @@ class NSFSpace;
  */
 
 /**
- * Represents a closed non-geometric 3-manifold formed by joining a
+ * Represents a closed graph manifold formed by joining a
  * single bounded Seifert fibred space to itself along a torus.
  *
  * The Seifert fibred space must have two boundary components, each a
@@ -94,9 +94,9 @@ class NNGSFSLoop : public NManifold {
 
     public:
         /**
-         * Creates a new non-geometric self-identified Seifert fibred space.
-         * The bounded Seifert fibred space and the four elements of the
-         * 2-by-2 matching matrix are all passed separately.  The elements
+         * Creates a new graph manifold as a self-identified Seifert fibred
+         * space.  The bounded Seifert fibred space and the four elements of
+         * the 2-by-2 matching matrix are all passed separately.  The elements
          * of the matching matrix combine to give the full matrix \a M as
          * follows:
          *
@@ -124,9 +124,9 @@ class NNGSFSLoop : public NManifold {
         NNGSFSLoop(NSFSpace* sfs, long mat00, long mat01,
             long mat10, long mat11);
         /**
-         * Creates a new non-geometric self-identified Seifert fibred space.
-         * The bounded Seifert fibred space and the entire 2-by-2 matching
-         * matrix are each passed separately.
+         * Creates a new graph manifold as a self-identified Seifert fibred
+         * space.  The bounded Seifert fibred space and the entire 2-by-2
+         * matching matrix are each passed separately.
          *
          * Note that the new object will take ownership of the given
          * Seifert fibred space, and when this object is destroyed the

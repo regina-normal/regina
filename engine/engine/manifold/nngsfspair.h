@@ -27,7 +27,8 @@
 /* end stub */
 
 /*! \file nngsfspair.h
- *  \brief Deals with non-geometric pairs of Seifert fibred spaces.
+ *  \brief Deals with graph manifolds formed from pairs of Seifert fibred
+ *  spaces.
  */
 
 #ifndef __NNGSFSPAIR_H
@@ -48,7 +49,7 @@ class NSFSpace;
  */
 
 /**
- * Represents a closed non-geometric 3-manifold formed by joining
+ * Represents a closed graph manifold formed by joining
  * two bounded Seifert fibred spaces along a common torus.
  *
  * Each Seifert fibred space must have just one boundary component,
@@ -94,9 +95,9 @@ class NNGSFSPair : public NManifold {
 
     public:
         /**
-         * Creates a new non-geometric pair of Seifert fibred spaces.
-         * The two bounded Seifert fibred spaces and the four elements
-         * of the 2-by-2 matching matrix are all passed separately.
+         * Creates a new graph manifold as a pair of joined Seifert fibred
+         * spaces.  The two bounded Seifert fibred spaces and the four
+         * elements of the 2-by-2 matching matrix are all passed separately.
          * The elements of the matching matrix combine to give the full
          * matrix \a M as follows:
          *
@@ -124,9 +125,9 @@ class NNGSFSPair : public NManifold {
         NNGSFSPair(NSFSpace* sfs0, NSFSpace* sfs1, long mat00, long mat01,
             long mat10, long mat11);
         /**
-         * Creates a new non-geometric pair of Seifert fibred spaces.
-         * The two bounded Seifert fibred spaces and the entire 2-by-2
-         * matching matrix are each passed separately.
+         * Creates a new graph manifold as a pair of joined Seifert fibred
+         * spaces.  The two bounded Seifert fibred spaces and the entire
+         * 2-by-2 matching matrix are each passed separately.
          *
          * Note that the new object will take ownership of the two given
          * Seifert fibred spaces, and when this object is destroyed the
