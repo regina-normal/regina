@@ -147,6 +147,50 @@ class NNGBlockedSFSTriple : public NStandardTriangulation {
          */
         ~NNGBlockedSFSTriple();
 
+        /**
+         * Returns details of the requested end region, as described in
+         * the class notes above.  The end regions are the two saturated
+         * regions with one boundary annulus each, which are both joined
+         * to the central region.
+         *
+         * @param which 0 if the first end region should be returned
+         * (marked as end region 0 in the class notes), or 1 if the
+         * second end region should be returned (marked as end region 1
+         * in the class notes).
+         * @return details of the requested end region.
+         */
+        const NSatRegion& end(int which) const;
+
+        /**
+         * Returns details of the central saturated region, as described
+         * in the class notes above.  This is the saturated region with
+         * two boundary annuli, each of which is joined to one of the
+         * end regions.
+         *
+         * @return details of the central region.
+         */
+        const NSatRegion& centre() const;
+
+        /**
+         * Returns the matrix describing how the given end region is
+         * joined to the central region.  Note that if a layering is
+         * placed between the two respective region boundaries, then
+         * any changes to the boundary relationships caused by the
+         * layering are included in this matrix.
+         *
+         * See the class notes above for precise information on how each
+         * matrix is presented.
+         *
+         * @param which 0 if the matrix returned should describe how the
+         * central region is joined to the first end region (marked end
+         * region 0 in the class notes), or 1 if the matrix returned
+         * should describe how the central region is joined to the
+         * second end region (marked end region 1 in the class notes).
+         * @return the matrix describing how the requested region
+         * boundaries are joined.
+         */
+        const NMatrix2& matchingReln(int which) const;
+
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -197,6 +241,18 @@ inline NNGBlockedSFSTriple::NNGBlockedSFSTriple(NSatRegion* end0,
     end_[1] = end1;
     matchingReln_[0] = matchingReln0;
     matchingReln_[1] = matchingReln1;
+}
+
+inline const NSatRegion& NNGBlockedSFSTriple::end(int which) const {
+    return *end_[which];
+}
+
+inline const NSatRegion& NNGBlockedSFSTriple::centre() const {
+    return *centre_;
+}
+
+inline const NMatrix2& NNGBlockedSFSTriple::matchingReln(int which) const {
+    return matchingReln_[which];
 }
 
 } // namespace regina

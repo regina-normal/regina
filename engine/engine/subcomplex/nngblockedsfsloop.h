@@ -72,6 +72,8 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
          */
         ~NNGBlockedSFSLoop();
 
+        const NSatRegion& region() const;
+
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -99,6 +101,10 @@ inline NNGBlockedSFSLoop::NNGBlockedSFSLoop(NSatRegion* region,
     bdryRefVert_[1] = bdryRefVert1;
     bdryRefHoriz_[0] = bdryRefHoriz0;
     bdryRefHoriz_[1] = bdryRefHoriz1;
+}
+
+inline const NSatRegion& NNGBlockedSFSLoop::region() const {
+    return *region_;
 }
 
 } // namespace regina

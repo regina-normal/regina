@@ -70,6 +70,11 @@ class NNGPluggedTorusBundle : public NStandardTriangulation {
          */
         ~NNGPluggedTorusBundle();
 
+        const NTxICore& core() const;
+        const NIsomorphism& coreIso() const;
+        const NSatRegion& plug() const;
+        const NMatrix2& fibreReln() const;
+
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -93,6 +98,22 @@ class NNGPluggedTorusBundle : public NStandardTriangulation {
 inline NNGPluggedTorusBundle::NNGPluggedTorusBundle(const NTxICore& core,
         NIsomorphism* coreIso, NSatRegion* plug, const NMatrix2& fibreReln) :
         core_(core), coreIso_(coreIso), plug_(plug), fibreReln_(fibreReln) {
+}
+
+inline const NTxICore& NNGPluggedTorusBundle::core() const {
+    return core_;
+}
+
+inline const NIsomorphism& NNGPluggedTorusBundle::coreIso() const {
+    return *coreIso_;
+}
+
+inline const NSatRegion& NNGPluggedTorusBundle::plug() const {
+    return *plug_;
+}
+
+inline const NMatrix2& NNGPluggedTorusBundle::fibreReln() const {
+    return fibreReln_;
 }
 
 } // namespace regina

@@ -103,6 +103,32 @@ class NNGBlockedSFSPair : public NStandardTriangulation {
          */
         ~NNGBlockedSFSPair();
 
+        /**
+         * Returns details of one of the two bounded saturated regions that
+         * form this triangulation.  See the class notes above for further
+         * information.
+         *
+         * @param which 0 if the first region should be returned, or
+         * 1 if the second region should be returned.
+         * @return details of the requested saturated region.
+         */
+        const NSatRegion& region(int which) const;
+
+        /**
+         * Returns the matrix describing how the two saturated region
+         * boundaries are joined.  Note that if a layering is placed
+         * between the two region boundaries, then any changes to the
+         * boundary relationships caused by the layering are included
+         * in this matrix.
+         *
+         * See the class notes above for precise information on how this
+         * matrix is presented.
+         *
+         * @return the matrix describing how the region boundaries are
+         * joined.
+         */
+        const NMatrix2& matchingReln() const;
+
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -144,6 +170,14 @@ inline NNGBlockedSFSPair::NNGBlockedSFSPair(NSatRegion* region0,
         matchingReln_(matchingReln) {
     region_[0] = region0;
     region_[1] = region1;
+}
+
+inline const NSatRegion& NNGBlockedSFSPair::region(int which) const {
+    return *region_[which];
+}
+
+inline const NMatrix2& NNGBlockedSFSPair::matchingReln() const {
+    return matchingReln_;
 }
 
 } // namespace regina

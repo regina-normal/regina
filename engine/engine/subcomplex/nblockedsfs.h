@@ -74,6 +74,14 @@ class NBlockedSFS : public NStandardTriangulation {
          */
         ~NBlockedSFS();
 
+        /**
+         * Returns details of the single closed saturated region that
+         * fills this triangulation.
+         *
+         * @return the single saturated region.
+         */
+        const NSatRegion& region() const;
+
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -106,6 +114,10 @@ class NBlockedSFS : public NStandardTriangulation {
 // Inline functions for NBlockedSFS
 
 inline NBlockedSFS::NBlockedSFS(NSatRegion* region) : region_(region) {
+}
+
+inline const NSatRegion& NBlockedSFS::region() const {
+    return *region_;
 }
 
 } // namespace regina
