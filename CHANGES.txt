@@ -26,6 +26,8 @@ Version 4.3  [ under development ]
               where possible.  This includes pruning on non-orientable
               vertex links, too many or too few vertices or edges, low
               degree or invalid edges, conical faces and L(3,1) spines.
+        Class NGraphLoop, NGraphPair, NGraphTriple:
+            - New families of graph manifolds.
         Class NKnot:
             - Removed this unwritten placeholder class.
         Class NLayering:
@@ -43,8 +45,6 @@ Version 4.3  [ under development ]
             - Routine writeTeXName() no longer provides wrapping dollar signs.
         Class NMatrix2:
             - New specialised class for working with 2-by-2 integer matrices.
-        Class NNGSFSLoop, NNGSFSPair, NNGSFSTriple:
-            - New families of graph manifolds.
         Class NPacket:
             - New routine sortChildren().
         Class NPerm:
@@ -53,11 +53,11 @@ Version 4.3  [ under development ]
             - Added for recognition of small closed non-orientable
               3-manifolds.
         Class NSatAnnulus, NSatBlock, NSatRegion, NBlockedSFS,
-                  NNGBlockedSFSLoop, NNGBlockedSFSPair, NNGBlockedSFSTriple,
-                  NNGPluggedTorusBundle, plus subclasses and other support
+                  NBlockedSFSLoop, NBlockedSFSPair, NBlockedSFSTriple,
+                  NPluggedTorusBundle, plus subclasses and other support
                   structures:
-            - New classes for describing Seifert fibred spaces built from
-              saturated blocks.
+            - New classes for describing Seifert fibred spaces and other
+              graph manifolds built from saturated blocks.
         Class NSFS, NSFSpace, NExceptionalFibre, NSFSFibre:
             - Complete overhaul of the Seifert fibred space classes.
               Now more general, supporting both orientable and
