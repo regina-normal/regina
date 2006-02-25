@@ -26,14 +26,14 @@
 
 /* end stub */
 
-/*! \file nngblockedsfsloop.h
- *  \brief Supports self-identified Seifert fibred spaces that are
- *  triangulated using saturated blocks.
+/*! \file nngtorusbundle.h
+ *  \brief Deals with triangulations of non-geometric torus bundles with
+ *  exceptional fibres.  TODO
  */
 
-#ifndef __NNGBLOCKEDSFSLOOP_H
+#ifndef __NPLUGGEDTORUSBUNDLE_H
 #ifndef __DOXYGEN
-#define __NNGBLOCKEDSFSLOOP_H
+#define __NPLUGGEDTORUSBUNDLE_H
 #endif
 
 #include "subcomplex/nstandardtri.h"
@@ -41,7 +41,9 @@
 
 namespace regina {
 
+class NIsomorphism;
 class NSatRegion;
+class NTxICore;
 
 /**
  * \weakgroup subcomplex
@@ -49,53 +51,69 @@ class NSatRegion;
  */
 
 /**
- * TODO: Document NNGBlockedSFSLoop.
- *
- * TODO: When documenting this one, don't forget to talk about the two
- * possibilities for the two boundary annuli.
- *
- * Only deal with annuli for now.
+ * TODO: Document NNGPluggedTorusBundle!
  */
-class NNGBlockedSFSLoop : public NStandardTriangulation {
+class NNGPluggedTorusBundle : public NStandardTriangulation {
     private:
-        NSatRegion* region_;
-        NMatrix2 matchingReln_;
+        const NTxICore& core_;
+        NIsomorphism* coreIso_;
+        NSatRegion* plug_;
+
+        NMatrix2 fibreReln_;
 
     public:
         /**
          * Destroys this structure and its constituent components.
+         *
+         * As an exception, the core <tt>T x I</tt> triangulation is not
+         * destroyed; it is assumed that this is referenced from elsewhere.
          */
-        ~NNGBlockedSFSLoop();
+        ~NNGPluggedTorusBundle();
 
-        const NSatRegion& region() const;
-        const NMatrix2& matchingReln() const;
+        const NTxICore& core() const;
+        const NIsomorphism& coreIso() const;
+        const NSatRegion& plug() const;
+        const NMatrix2& fibreReln() const;
 
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
-        static NNGBlockedSFSLoop* isNGBlockedSFSLoop(NTriangulation* tri);
+        static NNGPluggedTorusBundle* isNGPluggedTorusBundle
+            (NTriangulation* tri);
 
     private:
-        NNGBlockedSFSLoop(NSatRegion* region, const NMatrix2& matchingReln);
+        NNGPluggedTorusBundle(const NTxICore& core, NIsomorphism* coreIso,
+            NSatRegion* plug, const NMatrix2& fibreReln);
+
+        static NNGPluggedTorusBundle* hunt(NTriangulation* tri,
+            const NTxICore& core);
 };
 
 /*@}*/
 
-// Inline functions for NNGBlockedSFSLoop
+// Inline functions for NNGPluggedTorusBundle
 
-inline NNGBlockedSFSLoop::NNGBlockedSFSLoop(NSatRegion* region,
-        const NMatrix2& matchingReln) :
-        region_(region), matchingReln_(matchingReln) {
+inline NNGPluggedTorusBundle::NNGPluggedTorusBundle(const NTxICore& core,
+        NIsomorphism* coreIso, NSatRegion* plug, const NMatrix2& fibreReln) :
+        core_(core), coreIso_(coreIso), plug_(plug), fibreReln_(fibreReln) {
 }
 
-inline const NSatRegion& NNGBlockedSFSLoop::region() const {
-    return *region_;
+inline const NTxICore& NNGPluggedTorusBundle::core() const {
+    return core_;
 }
 
-inline const NMatrix2& NNGBlockedSFSLoop::matchingReln() const {
-    return matchingReln_;
+inline const NIsomorphism& NNGPluggedTorusBundle::coreIso() const {
+    return *coreIso_;
+}
+
+inline const NSatRegion& NNGPluggedTorusBundle::plug() const {
+    return *plug_;
+}
+
+inline const NMatrix2& NNGPluggedTorusBundle::fibreReln() const {
+    return fibreReln_;
 }
 
 } // namespace regina

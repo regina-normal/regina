@@ -26,10 +26,10 @@
 
 /* end stub */
 
-#include "manifold/nngsfsloop.h"
+#include "manifold/ngraphloop.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/nlayering.h"
-#include "subcomplex/nngpluggedtorusbundle.h"
+#include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
@@ -62,7 +62,7 @@ NManifold* NNGPluggedTorusBundle::getManifold() const {
 
     sfs->reduce(false);
 
-    return new NNGSFSLoop(sfs, fibreReln_);
+    return new NGraphLoop(sfs, fibreReln_);
 }
 
 std::ostream& NNGPluggedTorusBundle::writeName(std::ostream& out) const {

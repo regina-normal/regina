@@ -26,14 +26,14 @@
 
 /* end stub */
 
-/*! \file nngblockedsfspair.h
+/*! \file nblockedsfspair.h
  *  \brief Supports joined pairs of Seifert fibred spaces that are
  *  triangulated using saturated blocks.
  */
 
-#ifndef __NNGBLOCKEDSFSPAIR_H
+#ifndef __NBLOCKEDSFSPAIR_H
 #ifndef __DOXYGEN
-#define __NNGBLOCKEDSFSPAIR_H
+#define __NBLOCKEDSFSPAIR_H
 #endif
 
 #include "subcomplex/nstandardtri.h"

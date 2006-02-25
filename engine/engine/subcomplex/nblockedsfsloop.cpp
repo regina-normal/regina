@@ -26,10 +26,10 @@
 
 /* end stub */
 
-#include "manifold/nngsfsloop.h"
+#include "manifold/ngraphloop.h"
 #include "manifold/nsfs.h"
+#include "subcomplex/nblockedsfsloop.h"
 #include "subcomplex/nlayering.h"
-#include "subcomplex/nngblockedsfsloop.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
 
@@ -51,7 +51,7 @@ struct NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
              saturated region are joined together.  This matrix expresses
              the fibre/base curves on one boundary annulus in terms of the
              fibre/base curves on the other, as described by
-             NNGSFSLoop::matchingReln(). */
+             NGraphLoop::matchingReln(). */
 
     /**
      * Creates a new searcher whose \a region pointer is null.
@@ -75,7 +75,7 @@ NManifold* NNGBlockedSFSLoop::getManifold() const {
 
     sfs->reduce(false);
 
-    return new NNGSFSLoop(sfs, matchingReln_);
+    return new NGraphLoop(sfs, matchingReln_);
 }
 
 std::ostream& NNGBlockedSFSLoop::writeName(std::ostream& out) const {

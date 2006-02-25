@@ -26,14 +26,14 @@
 
 /* end stub */
 
-/*! \file nngblockedsfstriple.h
+/*! \file nblockedsfstriple.h
  *  \brief Supports joined sequences of three Seifert fibred spaces that
  *  are triangulated using saturated blocks.
  */
 
-#ifndef __NNGBLOCKEDSFSTRIPLE_H
+#ifndef __NBLOCKEDSFSTRIPLE_H
 #ifndef __DOXYGEN
-#define __NNGBLOCKEDSFSTRIPLE_H
+#define __NBLOCKEDSFSTRIPLE_H
 #endif
 
 #include "subcomplex/nstandardtri.h"

@@ -26,10 +26,10 @@
 
 /* end stub */
 
-#include "manifold/nngsfspair.h"
+#include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"
+#include "subcomplex/nblockedsfspair.h"
 #include "subcomplex/nlayering.h"
-#include "subcomplex/nngblockedsfspair.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
 
@@ -50,7 +50,7 @@ struct NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
         /**< The matrix describing how the region boundaries are joined
              together.  This matrix expresses the fibre/base curves on the
              second region boundary in terms of the fibre/base curves on
-             the first, as described by NNGSFSPair::matchingReln(). */
+             the first, as described by NGraphPair::matchingReln(). */
 
     /**
      * Creates a new searcher whose \a region pointers are both null.
@@ -86,9 +86,9 @@ NManifold* NNGBlockedSFSPair::getManifold() const {
     sfs1->reduce(false);
 
     if (*sfs1 < *sfs0)
-        return new NNGSFSPair(sfs1, sfs0, matchingReln_.inverse());
+        return new NGraphPair(sfs1, sfs0, matchingReln_.inverse());
     else
-        return new NNGSFSPair(sfs0, sfs1, matchingReln_);
+        return new NGraphPair(sfs0, sfs1, matchingReln_);
 }
 
 std::ostream& NNGBlockedSFSPair::writeName(std::ostream& out) const {

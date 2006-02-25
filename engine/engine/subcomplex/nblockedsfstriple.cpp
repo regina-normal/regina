@@ -26,10 +26,10 @@
 
 /* end stub */
 
-#include "manifold/nngsfstriple.h"
+#include "manifold/ngraphtriple.h"
 #include "manifold/nsfs.h"
+#include "subcomplex/nblockedsfstriple.h"
 #include "subcomplex/nlayering.h"
-#include "subcomplex/nngblockedsfstriple.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
 #include <memory>
@@ -105,7 +105,7 @@ NManifold* NNGBlockedSFSTriple::getManifold() const {
     end1->reduce(false);
     hub->reduce(false);
 
-    return new NNGSFSTriple(end0, hub, end1,
+    return new NGraphTriple(end0, hub, end1,
         matchingReln_[0], matchingReln_[1]);
 }
 
