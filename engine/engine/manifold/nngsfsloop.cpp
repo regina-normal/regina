@@ -30,6 +30,7 @@
 #include "manifold/nngsfsloop.h"
 #include "manifold/nsfs.h"
 #include "maths/nmatrixint.h"
+#include <cstdlib> // For labs().
 
 namespace regina {
 
@@ -142,7 +143,7 @@ void NNGSFSLoop::reduce() {
         matchingReln_[1][0] += b * matchingReln_[1][1];
     }
 
-    reduceBasis(matchingReln_);
+    reduce(matchingReln_);
 
     // See if we can do any better by reflecting the entire space
     // and adding (1,1) twists to bring the obstruction constant back
@@ -152,7 +153,7 @@ void NNGSFSLoop::reduce() {
         NMatrix2(1, 0, 0, -1) *
         matchingReln_ *
         NMatrix2(1, 0, 0, -1);
-    reduceBasis(compMatch);
+    reduce(compMatch);
 
     if (simpler(compMatch, matchingReln_)) {
         // Do it.
@@ -161,32 +162,44 @@ void NNGSFSLoop::reduce() {
     }
 }
 
-void NNGSFSLoop::reduceBasis(NMatrix2& reln) {
-    // Note that twisting will never change the (0,1) entry of the
-    // matrix.  It therefore seems useful to fix this first.  If the
-    // matrix has determinant +1 then we have some control over this.
-    if (reln.determinant() == 1 && reln[0][1] < 0)
-        reln.invert();
+void NNGSFSLoop::reduce(NMatrix2& reln) {
+    // Reduce both the original and the inverse, and see who comes out
+    // on top.
+    reduceBasis(reln);
 
+    NMatrix2 inv = reln.inverse();
+    reduceBasis(inv);
+
+    if (simpler(inv, reln))
+        reln = inv;
+}
+
+void NNGSFSLoop::reduceBasis(NMatrix2& reln) {
     // Use (1,1) / (1,-1) pairs to make the top-left element of the
-    // matrix zero, if we can.
-    if (reln[0][1] != 0) {
-        long nOps = reln[0][0] / reln[0][1];
-        if (nOps > 0) {
+    // matrix as close to zero as possible.
+    if (reln[0][1] != 0 && reln[0][0] != 0) {
+        long nOps = (labs(reln[0][0]) + ((labs(reln[0][1]) - 1) / 2)) /
+            labs(reln[0][1]);
+        if ((reln[0][0] > 0 && reln[0][1] > 0) ||
+                (reln[0][0] < 0 && reln[0][1] < 0)) {
+            // Same signs.
             for (long i = 0; i < nOps; i++) {
                 reln[0][0] -= reln[0][1];
                 reln[1][0] -= reln[1][1];
                 reln[1][0] -= reln[0][0];
                 reln[1][1] -= reln[0][1];
             }
-        } else if (nOps < 0) {
-            for (long i = 0; i > nOps; i--) {
+        } else {
+            // Opposite signs.
+            for (long i = 0; i < nOps; i++) {
                 reln[0][0] += reln[0][1];
                 reln[1][0] += reln[1][1];
                 reln[1][0] += reln[0][0];
                 reln[1][1] += reln[0][1];
             }
         }
+    } else {
+        // TODO: We can still do something here.
     }
 }
 

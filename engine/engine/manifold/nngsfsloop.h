@@ -175,6 +175,16 @@ class NNGSFSLoop : public NManifold {
         void reduce();
 
         /**
+         * Uses (1,1) twists and/or inversion to make the given matching
+         * matrix more aesthetically pleasing.
+         *
+         * This routine is for internal use by reduce().
+         *
+         * @param reln the matching matrix to simplify.
+         */
+        static void reduce(NMatrix2& reln);
+
+        /**
          * Uses (1,1) twists to make the given matching matrix more
          * aesthetically pleasing.
          *
