@@ -40,6 +40,7 @@
 namespace regina {
 
 class NIsomorphism;
+class NMatrix2;
 class NTetrahedron;
 class NTriangulation;
 
@@ -261,7 +262,8 @@ struct NSatAnnulus {
      * Determines whether this and the given annulus are adjacent,
      * possibly modulo vertical or horizontal reflections.  That is,
      * this routine determines whether this and the given structure
-     * represent opposite sides of the same saturated annulus.
+     * represent opposite sides of the same saturated annulus, where the
+     * fibres for both structures are consistent (though possibly reversed).
      * See switchSides() for details on what "opposite sides" means in
      * this context, and see reflectVertical() and reflectHorizontal()
      * for descriptions of the various types of reflection.
@@ -273,6 +275,12 @@ struct NSatAnnulus {
      * identically opposite after one undergoes a vertical and/or
      * horizontal reflection, then the booleans \a refVert and/or
      * \a refHoriz will be set to \c true accordingly.
+     *
+     * The critical difference between this routine and isJoined() is
+     * that this routine insists that the fibres on each annulus be
+     * consistent.  This routine is thus suitable for examining joins
+     * between different sections of the same Seifert fibred space,
+     * for example.
      *
      * @param other the annulus to compare with this.
      * @param refVert returns information on whether the annuli are
@@ -292,6 +300,50 @@ struct NSatAnnulus {
      */
     bool isAdjacent(const NSatAnnulus& other, bool* refVert, bool* refHoriz)
         const;
+
+    /**
+     * Determines whether this and the given annulus are joined in some
+     * form, even if the fibres on each annulus are not consistent.
+     *
+     * This routine treats each annulus as though its boundaries are
+     * identified to form a torus (though it does not actually test
+     * whether this is true).  It then examines whether this and the
+     * given annulus represent opposite sides of the same torus.
+     * More specifically, it tests whether both annuli are formed from
+     * the same pair of faces, and whether the mapping of 0/1/2 markings
+     * from one annulus to the other is the same for each face.  Note that
+     * the faces are allowed to be switched (i.e., the first face of one
+     * annulus may be the second face of the other).
+     *
+     * The critical difference between this routine and isAdjacent() is
+     * that this routine allows the fibres on each annulus to be
+     * inconsistent.  This routine is thus suitable for examining joins
+     * between different Seifert fibred blocks in a graph manifold, for
+     * example.
+     *
+     * If the two annuli are joined, the precise relationship between
+     * the curves on each annulus will be returned in the matrix
+     * \a matching.  Specifically, let \a x and \a y be the oriented
+     * curves running from markings 0-1 and 0-2 respectively on the
+     * first face of this annulus.  Likewise, let \a x' and \a y' run
+     * from markings 0-1 and 0-2 respectively on the first face of the
+     * annulus \a other.  Then the joining between the two annuli can
+     * be expressed as follows:
+     *
+     * <pre>
+     *     [x ]                [x']
+     *     [  ]  =  matching * [  ].
+     *     [y ]                [y']
+     * </pre>
+     *
+     * @param other the annulus to compare with this.
+     * @param matching returns details on how the curves on each annulus
+     * are related.  If the this and the given annulus are not joined,
+     * then this matrix is not touched.
+     * @return \c true if this and the given annulus are found to be
+     * joined, or \c false if they are not.
+     */
+    bool isJoined(const NSatAnnulus& other, NMatrix2& matching) const;
 
     /**
      * Determines whether this annulus has its boundaries identified to

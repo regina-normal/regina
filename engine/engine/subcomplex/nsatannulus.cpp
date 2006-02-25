@@ -31,6 +31,7 @@
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/nmatrix2.h"
 
 namespace regina {
 
@@ -102,6 +103,57 @@ bool NSatAnnulus::isAdjacent(const NSatAnnulus& other, bool* refVert,
 
     // No match.
     return false;
+}
+
+bool NSatAnnulus::isJoined(const NSatAnnulus& other, NMatrix2& matching) const {
+    if (other.meetsBoundary())
+        return false;
+
+    // See what is actually attached to the given annulus.
+    NSatAnnulus opposite(other);
+    opposite.switchSides();
+
+    bool swapFaces;
+    NPerm roleMap; // Maps this 0/1/2 roles -> opposite 0/1/2 roles.
+    if (opposite.tet[0] == tet[0] &&
+            opposite.tet[1] == tet[1] &&
+            opposite.roles[0][3] == roles[0][3] &&
+            opposite.roles[1][3] == roles[1][3]) {
+        swapFaces = false;
+
+        roleMap = opposite.roles[0].inverse() * roles[0];
+        if (roleMap != opposite.roles[1].inverse() * roles[1])
+            return false;
+    } else if (opposite.tet[0] == tet[1] &&
+            opposite.tet[1] == tet[0] &&
+            opposite.roles[0][3] == roles[1][3] &&
+            opposite.roles[1][3] == roles[0][3]) {
+        swapFaces = true;
+
+        roleMap = opposite.roles[1].inverse() * roles[0];
+        if (roleMap != opposite.roles[0].inverse() * roles[1])
+            return false;
+    } else
+        return false;
+
+    // It's a match.  We just need to work out the matching matrix.
+    if        (roleMap == NPerm(0, 1, 2, 3)) {
+        matching = NMatrix2(1, 0, 0, 1);
+    } else if (roleMap == NPerm(1, 2, 0, 3)) {
+        matching = NMatrix2(-1, 1, -1, 0);
+    } else if (roleMap == NPerm(2, 0, 1, 3)) {
+        matching = NMatrix2(0, -1, 1, -1);
+    } else if (roleMap == NPerm(0, 2, 1, 3)) {
+        matching = NMatrix2(0, 1, 1, 0);
+    } else if (roleMap == NPerm(2, 1, 0, 3)) {
+        matching = NMatrix2(1, -1, 0, -1);
+    } else if (roleMap == NPerm(1, 0, 2, 3)) {
+        matching = NMatrix2(-1, 0, -1, 1);
+    }
+    if (swapFaces)
+        matching.negate();
+
+    return true;
 }
 
 bool NSatAnnulus::isTwoSidedTorus() const {
