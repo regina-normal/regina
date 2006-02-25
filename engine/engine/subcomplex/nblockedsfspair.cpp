@@ -39,12 +39,12 @@ namespace regina {
  * A subclass of NSatBlockStarterSearcher that, upon finding a starter
  * block, attempts to flesh this out to a pair of saturated regions
  * joined along their single torus boundaries, as desribed by the
- * NNGBlockedSFSPair class.
+ * NBlockedSFSPair class.
  */
-struct NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
+struct NBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region[2];
         /**< The two bounded saturated regions that are joined together,
-             if the entire NNGBlockedSFSPair structure has been successfully
+             if the entire NBlockedSFSPair structure has been successfully
              found; otherwise, two null pointers if we are still searching. */
     NMatrix2 matchingReln;
         /**< The matrix describing how the region boundaries are joined
@@ -55,7 +55,7 @@ struct NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
     /**
      * Creates a new searcher whose \a region pointers are both null.
      */
-    NNGBlockedSFSPairSearcher() {
+    NBlockedSFSPairSearcher() {
         region[0] = region[1] = 0;
     }
 
@@ -63,14 +63,14 @@ struct NNGBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
         bool useStarterBlock(NSatBlock* starter);
 };
 
-NNGBlockedSFSPair::~NNGBlockedSFSPair() {
+NBlockedSFSPair::~NBlockedSFSPair() {
     if (region_[0])
         delete region_[0];
     if (region_[1])
         delete region_[1];
 }
 
-NManifold* NNGBlockedSFSPair::getManifold() const {
+NManifold* NBlockedSFSPair::getManifold() const {
     NSFSpace* sfs0 = region_[0]->createSFS(1, false);
     if (! sfs0)
         return 0;
@@ -91,17 +91,17 @@ NManifold* NNGBlockedSFSPair::getManifold() const {
         return new NGraphPair(sfs0, sfs1, matchingReln_);
 }
 
-std::ostream& NNGBlockedSFSPair::writeName(std::ostream& out) const {
+std::ostream& NBlockedSFSPair::writeName(std::ostream& out) const {
     // TODO: output
     return out << "Blocked SFS Pair";
 }
 
-std::ostream& NNGBlockedSFSPair::writeTeXName(std::ostream& out) const {
+std::ostream& NBlockedSFSPair::writeTeXName(std::ostream& out) const {
     // TODO: output (tex)
     return out << "Blocked SFS Pair";
 }
 
-void NNGBlockedSFSPair::writeTextLong(std::ostream& out) const {
+void NBlockedSFSPair::writeTextLong(std::ostream& out) const {
     // TODO: output (detail)
     out << "Blocked SFS pair, matching relation " << matchingReln_ << "\n";
 
@@ -109,7 +109,7 @@ void NNGBlockedSFSPair::writeTextLong(std::ostream& out) const {
     region_[1]->writeDetail(out, "Second region");
 }
 
-NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
+NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(NTriangulation* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
@@ -126,7 +126,7 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
         return 0;
 
     // Hunt for a starting block.
-    NNGBlockedSFSPairSearcher searcher;
+    NBlockedSFSPairSearcher searcher;
     searcher.findStarterBlocks(tri);
 
     // Any luck?
@@ -134,7 +134,7 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new NNGBlockedSFSPair(searcher.region[0], searcher.region[1],
+        return new NBlockedSFSPair(searcher.region[0], searcher.region[1],
             searcher.matchingReln);
     }
 
@@ -142,7 +142,7 @@ NNGBlockedSFSPair* NNGBlockedSFSPair::isNGBlockedSFSPair(NTriangulation* tri) {
     return 0;
 }
 
-bool NNGBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
+bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointers should be null, but just in case...
     if (region[0] || region[1]) {
         delete starter;

@@ -51,9 +51,9 @@ class NTxICore;
  */
 
 /**
- * TODO: Document NNGPluggedTorusBundle!
+ * TODO: Document NPluggedTorusBundle!
  */
-class NNGPluggedTorusBundle : public NStandardTriangulation {
+class NPluggedTorusBundle : public NStandardTriangulation {
     private:
         const NTxICore& core_;
         NIsomorphism* coreIso_;
@@ -68,7 +68,7 @@ class NNGPluggedTorusBundle : public NStandardTriangulation {
          * As an exception, the core <tt>T x I</tt> triangulation is not
          * destroyed; it is assumed that this is referenced from elsewhere.
          */
-        ~NNGPluggedTorusBundle();
+        ~NPluggedTorusBundle();
 
         const NTxICore& core() const;
         const NIsomorphism& coreIso() const;
@@ -80,39 +80,39 @@ class NNGPluggedTorusBundle : public NStandardTriangulation {
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
-        static NNGPluggedTorusBundle* isNGPluggedTorusBundle
+        static NPluggedTorusBundle* isPluggedTorusBundle
             (NTriangulation* tri);
 
     private:
-        NNGPluggedTorusBundle(const NTxICore& core, NIsomorphism* coreIso,
+        NPluggedTorusBundle(const NTxICore& core, NIsomorphism* coreIso,
             NSatRegion* plug, const NMatrix2& fibreReln);
 
-        static NNGPluggedTorusBundle* hunt(NTriangulation* tri,
+        static NPluggedTorusBundle* hunt(NTriangulation* tri,
             const NTxICore& core);
 };
 
 /*@}*/
 
-// Inline functions for NNGPluggedTorusBundle
+// Inline functions for NPluggedTorusBundle
 
-inline NNGPluggedTorusBundle::NNGPluggedTorusBundle(const NTxICore& core,
+inline NPluggedTorusBundle::NPluggedTorusBundle(const NTxICore& core,
         NIsomorphism* coreIso, NSatRegion* plug, const NMatrix2& fibreReln) :
         core_(core), coreIso_(coreIso), plug_(plug), fibreReln_(fibreReln) {
 }
 
-inline const NTxICore& NNGPluggedTorusBundle::core() const {
+inline const NTxICore& NPluggedTorusBundle::core() const {
     return core_;
 }
 
-inline const NIsomorphism& NNGPluggedTorusBundle::coreIso() const {
+inline const NIsomorphism& NPluggedTorusBundle::coreIso() const {
     return *coreIso_;
 }
 
-inline const NSatRegion& NNGPluggedTorusBundle::plug() const {
+inline const NSatRegion& NPluggedTorusBundle::plug() const {
     return *plug_;
 }
 
-inline const NMatrix2& NNGPluggedTorusBundle::fibreReln() const {
+inline const NMatrix2& NPluggedTorusBundle::fibreReln() const {
     return fibreReln_;
 }
 

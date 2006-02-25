@@ -40,18 +40,18 @@ namespace regina {
  * A subclass of NSatBlockStarterSearcher that, upon finding a starter
  * block, attempts to flesh this out to a group of three saturated regions
  * joined along their torus boundaries, as desribed by the
- * NNGBlockedSFSTriple class.
+ * NBlockedSFSTriple class.
  *
  * The starter block will be assumed to belong to the central region (not
  * one of the end regions).
  */
-struct NNGBlockedSFSTripleSearcher : public NSatBlockStarterSearcher {
+struct NBlockedSFSTripleSearcher : public NSatBlockStarterSearcher {
     NSatRegion* end[2];
-        /**< The two end regions of the NNGBlockedSFSTriple structure,
+        /**< The two end regions of the NBlockedSFSTriple structure,
              if such a structure has been successfully found; otherwise,
              two null pointers if we are still searching. */
     NSatRegion* centre;
-        /**< The central region of the NNGBlockedSFSTriple structure,
+        /**< The central region of the NBlockedSFSTriple structure,
              if such a structure has been successfully found; otherwise,
              a null pointer if we are still searching. */
     NMatrix2 matchingReln[2];
@@ -59,13 +59,13 @@ struct NNGBlockedSFSTripleSearcher : public NSatBlockStarterSearcher {
              joined together.  Here matrix \a matchingReln[i] expresses the
              fibre/base curves on region \a end[i] in terms of the fibre/base
              curves on the corresponding central region boundary.  See
-             NNGBlockedSFSTriple::matchingReln() for further details. */
+             NBlockedSFSTriple::matchingReln() for further details. */
 
     /**
      * Creates a new searcher whose \a end and \a centre region pointers
      * are all null.
      */
-    NNGBlockedSFSTripleSearcher() {
+    NBlockedSFSTripleSearcher() {
         end[0] = end[1] = centre = 0;
     }
 
@@ -73,7 +73,7 @@ struct NNGBlockedSFSTripleSearcher : public NSatBlockStarterSearcher {
         bool useStarterBlock(NSatBlock* starter);
 };
 
-NNGBlockedSFSTriple::~NNGBlockedSFSTriple() {
+NBlockedSFSTriple::~NBlockedSFSTriple() {
     if (end_[0])
         delete end_[0];
     if (end_[1])
@@ -82,7 +82,7 @@ NNGBlockedSFSTriple::~NNGBlockedSFSTriple() {
         delete centre_;
 }
 
-NManifold* NNGBlockedSFSTriple::getManifold() const {
+NManifold* NBlockedSFSTriple::getManifold() const {
     NSFSpace* end0 = end_[0]->createSFS(1, false);
     if (! end0)
         return 0;
@@ -109,17 +109,17 @@ NManifold* NNGBlockedSFSTriple::getManifold() const {
         matchingReln_[0], matchingReln_[1]);
 }
 
-std::ostream& NNGBlockedSFSTriple::writeName(std::ostream& out) const {
+std::ostream& NBlockedSFSTriple::writeName(std::ostream& out) const {
     // TODO: output
     return out << "Blocked SFS Triple";
 }
 
-std::ostream& NNGBlockedSFSTriple::writeTeXName(std::ostream& out) const {
+std::ostream& NBlockedSFSTriple::writeTeXName(std::ostream& out) const {
     // TODO: output (tex)
     return out << "Blocked SFS Triple";
 }
 
-void NNGBlockedSFSTriple::writeTextLong(std::ostream& out) const {
+void NBlockedSFSTriple::writeTextLong(std::ostream& out) const {
     // TODO: output (detail)
     out << "Blocked SFS triple, matching relations " << matchingReln_[0]
         << " ,   " << matchingReln_[1] << "\n";
@@ -129,7 +129,7 @@ void NNGBlockedSFSTriple::writeTextLong(std::ostream& out) const {
     centre_->writeDetail(out, "Central region");
 }
 
-NNGBlockedSFSTriple* NNGBlockedSFSTriple::isNGBlockedSFSTriple(
+NBlockedSFSTriple* NBlockedSFSTriple::isBlockedSFSTriple(
         NTriangulation* tri) {
     // Basic property checks.
     if (! tri->isClosed())
@@ -147,7 +147,7 @@ NNGBlockedSFSTriple* NNGBlockedSFSTriple::isNGBlockedSFSTriple(
         return 0;
 
     // Hunt for a starting block.
-    NNGBlockedSFSTripleSearcher searcher;
+    NBlockedSFSTripleSearcher searcher;
     searcher.findStarterBlocks(tri);
 
     // Any luck?
@@ -155,7 +155,7 @@ NNGBlockedSFSTriple* NNGBlockedSFSTriple::isNGBlockedSFSTriple(
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new NNGBlockedSFSTriple(searcher.end[0], searcher.centre,
+        return new NBlockedSFSTriple(searcher.end[0], searcher.centre,
             searcher.end[1], searcher.matchingReln[0],
             searcher.matchingReln[1]);
     }
@@ -164,7 +164,7 @@ NNGBlockedSFSTriple* NNGBlockedSFSTriple::isNGBlockedSFSTriple(
     return 0;
 }
 
-bool NNGBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
+bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointers should be null, but just in case...
     if (end[0] || end[1] || centre) {
         delete starter;

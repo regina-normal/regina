@@ -50,12 +50,12 @@ namespace {
     const NTxIParallelCore core_T_p;
 }
 
-NNGPluggedTorusBundle::~NNGPluggedTorusBundle() {
+NPluggedTorusBundle::~NPluggedTorusBundle() {
     delete coreIso_;
     delete plug_;
 }
 
-NManifold* NNGPluggedTorusBundle::getManifold() const {
+NManifold* NPluggedTorusBundle::getManifold() const {
     NSFSpace* sfs = plug_->createSFS(2, false);
     if (! sfs)
         return 0;
@@ -65,22 +65,22 @@ NManifold* NNGPluggedTorusBundle::getManifold() const {
     return new NGraphLoop(sfs, fibreReln_);
 }
 
-std::ostream& NNGPluggedTorusBundle::writeName(std::ostream& out) const {
+std::ostream& NPluggedTorusBundle::writeName(std::ostream& out) const {
     // TODO: output
     return out << "Plugged torus bundle";
 }
 
-std::ostream& NNGPluggedTorusBundle::writeTeXName(std::ostream& out) const {
+std::ostream& NPluggedTorusBundle::writeTeXName(std::ostream& out) const {
     // TODO: output (tex)
     return out << "Plugged torus bundle";
 }
 
-void NNGPluggedTorusBundle::writeTextLong(std::ostream& out) const {
+void NPluggedTorusBundle::writeTextLong(std::ostream& out) const {
     // TODO: output (detailed)
     out << "Plugged torus bundle";
 }
 
-NNGPluggedTorusBundle* NNGPluggedTorusBundle::isNGPluggedTorusBundle(
+NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
         NTriangulation* tri) {
     // Basic property checks.
     if (! tri->isClosed())
@@ -97,7 +97,7 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::isNGPluggedTorusBundle(
     // nine tetrahedra.
 
     // Hunt for the core thin torus bundle.
-    NNGPluggedTorusBundle* ans;
+    NPluggedTorusBundle* ans;
     if ((ans = hunt(tri, core_T_6_1)))
         return ans;
     if ((ans = hunt(tri, core_T_7_1)))
@@ -122,7 +122,7 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::isNGPluggedTorusBundle(
     return 0;
 }
 
-NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
+NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
         const NTxICore& core) {
     std::list<NIsomorphism*> isos;
     if (! core.core().findAllSubcomplexesIn(*triang, isos))
@@ -281,7 +281,7 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
 
             // Finally, we already know how the two annuli are joined
             // together -- we worked this out earlier as upperRolesToLower.
-            NNGPluggedTorusBundle* ans = new NNGPluggedTorusBundle(core, *it,
+            NPluggedTorusBundle* ans = new NPluggedTorusBundle(core, *it,
                 region, curvesToLowerAnnulus.inverse() * upperRolesToLower *
                 curvesToBdryAnnulus);
 

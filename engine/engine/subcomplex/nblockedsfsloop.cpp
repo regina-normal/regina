@@ -38,12 +38,12 @@ namespace regina {
 /**
  * A subclass of NSatBlockStarterSearcher that, upon finding a starter
  * block, attempts to flesh this out to an entire saturated region with
- * two identified torus boundaries, as described by the NNGBlockedSFSLoop
+ * two identified torus boundaries, as described by the NBlockedSFSLoop
  * class.
  */
-struct NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
+struct NBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region;
-        /**< The bounded saturated region, if the entire NNGBlockedSFSLoop
+        /**< The bounded saturated region, if the entire NBlockedSFSLoop
              structure has been successfully found; otherwise, 0 if we are
              still searching. */
     NMatrix2 matchingReln;
@@ -56,19 +56,19 @@ struct NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
     /**
      * Creates a new searcher whose \a region pointer is null.
      */
-    NNGBlockedSFSLoopSearcher() : region(0) {
+    NBlockedSFSLoopSearcher() : region(0) {
     }
 
     protected:
         bool useStarterBlock(NSatBlock* starter);
 };
 
-NNGBlockedSFSLoop::~NNGBlockedSFSLoop() {
+NBlockedSFSLoop::~NBlockedSFSLoop() {
     if (region_)
         delete region_;
 }
 
-NManifold* NNGBlockedSFSLoop::getManifold() const {
+NManifold* NBlockedSFSLoop::getManifold() const {
     NSFSpace* sfs = region_->createSFS(2, false);
     if (! sfs)
         return 0;
@@ -78,22 +78,22 @@ NManifold* NNGBlockedSFSLoop::getManifold() const {
     return new NGraphLoop(sfs, matchingReln_);
 }
 
-std::ostream& NNGBlockedSFSLoop::writeName(std::ostream& out) const {
+std::ostream& NBlockedSFSLoop::writeName(std::ostream& out) const {
     // TODO: output
     return out << "Blocked SFS Loop";
 }
 
-std::ostream& NNGBlockedSFSLoop::writeTeXName(std::ostream& out) const {
+std::ostream& NBlockedSFSLoop::writeTeXName(std::ostream& out) const {
     // TODO: output (tex)
     return out << "Blocked SFS Loop";
 }
 
-void NNGBlockedSFSLoop::writeTextLong(std::ostream& out) const {
+void NBlockedSFSLoop::writeTextLong(std::ostream& out) const {
     // TODO: output (detailed)
     out << "Blocked SFS Loop";
 }
 
-NNGBlockedSFSLoop* NNGBlockedSFSLoop::isNGBlockedSFSLoop(NTriangulation* tri) {
+NBlockedSFSLoop* NBlockedSFSLoop::isBlockedSFSLoop(NTriangulation* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
@@ -108,7 +108,7 @@ NNGBlockedSFSLoop* NNGBlockedSFSLoop::isNGBlockedSFSLoop(NTriangulation* tri) {
         return 0;
 
     // Hunt for a starting block.
-    NNGBlockedSFSLoopSearcher searcher;
+    NBlockedSFSLoopSearcher searcher;
     searcher.findStarterBlocks(tri);
 
     // Any luck?
@@ -116,14 +116,14 @@ NNGBlockedSFSLoop* NNGBlockedSFSLoop::isNGBlockedSFSLoop(NTriangulation* tri) {
         // The expansion and self-adjacency worked, and the triangulation
         // is known to be closed and connected.
         // This means we've got one!
-        return new NNGBlockedSFSLoop(searcher.region, searcher.matchingReln);
+        return new NBlockedSFSLoop(searcher.region, searcher.matchingReln);
     }
 
     // Nope.
     return 0;
 }
 
-bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
+bool NBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointer should be null, but just in case...
     if (region) {
         delete starter;

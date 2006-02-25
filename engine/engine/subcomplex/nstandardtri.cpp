@@ -99,13 +99,13 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
 
     // Save non-geometric graph manifolds until last.
-    if ((ans = NNGBlockedSFSLoop::isNGBlockedSFSLoop(tri)))
+    if ((ans = NBlockedSFSLoop::isBlockedSFSLoop(tri)))
         return ans;
-    if ((ans = NNGBlockedSFSPair::isNGBlockedSFSPair(tri)))
+    if ((ans = NBlockedSFSPair::isBlockedSFSPair(tri)))
         return ans;
-    if ((ans = NNGBlockedSFSTriple::isNGBlockedSFSTriple(tri)))
+    if ((ans = NBlockedSFSTriple::isBlockedSFSTriple(tri)))
         return ans;
-    if ((ans = NNGPluggedTorusBundle::isNGPluggedTorusBundle(tri)))
+    if ((ans = NPluggedTorusBundle::isPluggedTorusBundle(tri)))
         return ans;
 
     // Nup.

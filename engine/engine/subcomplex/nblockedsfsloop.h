@@ -49,14 +49,14 @@ class NSatRegion;
  */
 
 /**
- * TODO: Document NNGBlockedSFSLoop.
+ * TODO: Document NBlockedSFSLoop.
  *
  * TODO: When documenting this one, don't forget to talk about the two
  * possibilities for the two boundary annuli.
  *
  * Only deal with annuli for now.
  */
-class NNGBlockedSFSLoop : public NStandardTriangulation {
+class NBlockedSFSLoop : public NStandardTriangulation {
     private:
         NSatRegion* region_;
         NMatrix2 matchingReln_;
@@ -65,7 +65,7 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
         /**
          * Destroys this structure and its constituent components.
          */
-        ~NNGBlockedSFSLoop();
+        ~NBlockedSFSLoop();
 
         const NSatRegion& region() const;
         const NMatrix2& matchingReln() const;
@@ -75,26 +75,26 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
-        static NNGBlockedSFSLoop* isNGBlockedSFSLoop(NTriangulation* tri);
+        static NBlockedSFSLoop* isBlockedSFSLoop(NTriangulation* tri);
 
     private:
-        NNGBlockedSFSLoop(NSatRegion* region, const NMatrix2& matchingReln);
+        NBlockedSFSLoop(NSatRegion* region, const NMatrix2& matchingReln);
 };
 
 /*@}*/
 
-// Inline functions for NNGBlockedSFSLoop
+// Inline functions for NBlockedSFSLoop
 
-inline NNGBlockedSFSLoop::NNGBlockedSFSLoop(NSatRegion* region,
+inline NBlockedSFSLoop::NBlockedSFSLoop(NSatRegion* region,
         const NMatrix2& matchingReln) :
         region_(region), matchingReln_(matchingReln) {
 }
 
-inline const NSatRegion& NNGBlockedSFSLoop::region() const {
+inline const NSatRegion& NBlockedSFSLoop::region() const {
     return *region_;
 }
 
-inline const NMatrix2& NNGBlockedSFSLoop::matchingReln() const {
+inline const NMatrix2& NBlockedSFSLoop::matchingReln() const {
     return matchingReln_;
 }
 
