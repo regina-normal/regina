@@ -217,7 +217,7 @@ NNGPluggedTorusBundle* NNGPluggedTorusBundle::hunt(NTriangulation* triang,
             bdryAnnulus = region->boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
 
             // Hope like hell that this meets up with the lower layering
-            // boundary.
+            // boundary.  Note that this will force it to be a torus also.
             NMatrix2 upperRolesToLower;
             if (! lowerAnnulus.isJoined(bdryAnnulus, upperRolesToLower)) {
                 delete region;
