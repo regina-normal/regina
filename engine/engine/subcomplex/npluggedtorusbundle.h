@@ -26,9 +26,9 @@
 
 /* end stub */
 
-/*! \file nngtorusbundle.h
- *  \brief Deals with triangulations of non-geometric torus bundles with
- *  exceptional fibres.  TODO
+/*! \file npluggedtorusbundle.h
+ *  \brief Deals with triangulations of torus bundles joined with
+ *  blocked Seifert fibred spaces.  TODO
  */
 
 #ifndef __NPLUGGEDTORUSBUNDLE_H
