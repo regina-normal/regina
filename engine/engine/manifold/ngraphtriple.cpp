@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "algebra/nabeliangroup.h"
-#include "manifold/nngsfstriple.h"
+#include "manifold/ngraphtriple.h"
 #include "manifold/nsfs.h"
 #include "maths/nmatrixint.h"
 

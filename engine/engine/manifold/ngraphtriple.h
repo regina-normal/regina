@@ -26,14 +26,14 @@
 
 /* end stub */
 
-/*! \file nngsfstriple.h
+/*! \file ngraphtriple.h
  *  \brief Deals with graph manifolds formed from sequences of three Seifert
  *  fibred spaces.
  */
 
-#ifndef __NGraphTRIPLE_H
+#ifndef __NGRAPHTRIPLE_H
 #ifndef __DOXYGEN
-#define __NGraphTRIPLE_H
+#define __NGRAPHTRIPLE_H
 #endif
 
 #include "manifold/nmanifold.h"

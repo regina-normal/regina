@@ -26,14 +26,14 @@
 
 /* end stub */
 
-/*! \file nngsfspair.h
- *  \brief Deals with graph manifolds formed from pairs of Seifert fibred
- *  spaces.
+/*! \file ngraphloop.h
+ *  \brief Deals with graph manifolds formed from self-identified Seifert
+ *  fibred spaces.
  */
 
-#ifndef __NGraphPAIR_H
+#ifndef __NGRAPHLOOP_H
 #ifndef __DOXYGEN
-#define __NGraphPAIR_H
+#define __NGRAPHLOOP_H
 #endif
 
 #include "manifold/nmanifold.h"
@@ -49,24 +49,24 @@ class NSFSpace;
  */
 
 /**
- * Represents a closed graph manifold formed by joining
- * two bounded Seifert fibred spaces along a common torus.
+ * Represents a closed graph manifold formed by joining a
+ * single bounded Seifert fibred space to itself along a torus.
  *
- * Each Seifert fibred space must have just one boundary component,
- * corresponding to a puncture in the base orbifold (with no
- * fibre-reversing twist as one travels around this boundary).
+ * The Seifert fibred space must have two boundary components, each a
+ * torus corresponding to a puncture in the base orbifold (with no
+ * fibre-reversing twist as one travels around the boundary).
  *
- * The way in which the two spaces are joined is specified by a 2-by-2
- * matrix \a M.  This matrix expresses the locations of the fibres and
- * base orbifold of the second Seifert fibred space in terms of the first.
+ * The way in which the two torus boundaries are joined together is specified
+ * by a 2-by-2 matrix \a M.  This matrix relates the locations of the fibres
+ * and base orbifold on the two boundary tori.
  *
  * More specifically, suppose that \a f0 and \a o0 are generators of the
- * common torus, where \a f0 represents a directed fibre in the first
+ * first boundary torus, where \a f0 represents a directed fibre in the
  * Seifert fibred space and \a o0 represents the oriented boundary of
- * the corresponding base orbifold.  Likewise, let \a f1 and \a o1 be
- * generators of the common torus representing a directed fibre and
- * the base orbifold of the second Seifert fibred space.  Then the curves
- * \a f0, \a o0, \a f1 and \a o1 are related as follows:
+ * the base orbifold.  Likewise, let \a f1 and \a o1 be generators of the
+ * second boundary torus representing a directed fibre and the oriented
+ * boundary of the base orbifold.  Then the tori are joined together so
+ * that the curves \a f0, \a o0, \a f1 and \a o1 become related as follows:
  *
  * <pre>
  *     [f1]       [f0]
@@ -84,22 +84,21 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class NGraphPair : public NManifold {
+class NGraphLoop : public NManifold {
     private:
-        NSFSpace* sfs_[2];
-            /**< The two bounded Seifert fibred spaces that are joined
-                 together. */
+        NSFSpace* sfs_;
+            /**< The bounded Seifert fibred space that is joined to itself. */
         NMatrix2 matchingReln_;
-            /**< The matrix describing how the two spaces are joined;
+            /**< The matrix describing how the two boundary tori are joined;
                  see the class notes for details. */
 
     public:
         /**
-         * Creates a new graph manifold as a pair of joined Seifert fibred
-         * spaces.  The two bounded Seifert fibred spaces and the four
-         * elements of the 2-by-2 matching matrix are all passed separately.
-         * The elements of the matching matrix combine to give the full
-         * matrix \a M as follows:
+         * Creates a new graph manifold as a self-identified Seifert fibred
+         * space.  The bounded Seifert fibred space and the four elements of
+         * the 2-by-2 matching matrix are all passed separately.  The elements
+         * of the matching matrix combine to give the full matrix \a M as
+         * follows:
          *
          * <pre>
          *           [ mat00  mat01 ]
@@ -107,61 +106,58 @@ class NGraphPair : public NManifold {
          *           [ mat10  mat11 ]
          * </pre>
          *
-         * Note that the new object will take ownership of the two given
-         * Seifert fibred spaces, and when this object is destroyed the
-         * Seifert fibred spaces will be destroyed also.
+         * Note that the new object will take ownership of the given
+         * Seifert fibred space, and when this object is destroyed the
+         * Seifert fibred space will be destroyed also.
          *
-         * \pre Each Seifert fibred space has a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold.
+         * \pre The given Seifert fibred space has precisely two torus
+         * boundaries, corresponding to two untwisted punctures in the
+         * base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
+         * @param sfs the bounded Seifert fibred space.
          * @param mat00 the (0,0) element of the matching matrix.
          * @param mat01 the (0,1) element of the matching matrix.
          * @param mat10 the (1,0) element of the matching matrix.
          * @param mat11 the (1,1) element of the matching matrix.
          */
-        NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1, long mat00, long mat01,
+        NGraphLoop(NSFSpace* sfs, long mat00, long mat01,
             long mat10, long mat11);
         /**
-         * Creates a new graph manifold as a pair of joined Seifert fibred
-         * spaces.  The two bounded Seifert fibred spaces and the entire
-         * 2-by-2 matching matrix are each passed separately.
+         * Creates a new graph manifold as a self-identified Seifert fibred
+         * space.  The bounded Seifert fibred space and the entire 2-by-2
+         * matching matrix are each passed separately.
          *
-         * Note that the new object will take ownership of the two given
-         * Seifert fibred spaces, and when this object is destroyed the
-         * Seifert fibred spaces will be destroyed also.
+         * Note that the new object will take ownership of the given
+         * Seifert fibred space, and when this object is destroyed the
+         * Seifert fibred space will be destroyed also.
          *
-         * \pre Each Seifert fibred space has a single torus boundary,
-         * corresponding to a single untwisted puncture in the base orbifold.
+         * \pre The given Seifert fibred space has precisely two torus
+         * boundaries, corresponding to two punctures in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * @param sfs0 the first Seifert fibred space.
-         * @param sfs1 the second Seifert fibred space.
+         * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
-            const NMatrix2& matchingReln);
+        NGraphLoop(NSFSpace* sfs, const NMatrix2& matchingReln);
         /**
-         * Destroys this structure along with the component Seifert
-         * fibred spaces and the matching matrix.
+         * Destroys this structure along with the bounded Seifert
+         * fibred space and the matching matrix.
          */
-        ~NGraphPair();
+        ~NGraphLoop();
 
         /**
-         * Returns a reference to one of the two bounded Seifert fibred
-         * spaces that are joined together.
+         * Returns a reference to the bounded Seifert fibred space that
+         * is joined to itself.
          *
-         * @param which 0 if the first Seifert fibred space is to be
-         * returned, or 1 if the second space is to be returned.
-         * @return a reference to the requested Seifert fibred space.
+         * @return a reference to the bounded Seifert fibred space.
          */
-        const NSFSpace& sfs(unsigned which) const;
+        const NSFSpace& sfs() const;
         /**
          * Returns a reference to the 2-by-2 matrix describing how the
-         * two Seifert fibred spaces are joined together.  See the class
-         * notes for details on precisely how this matrix is represented.
+         * two boundary tori of the Seifert fibred space are joined together.
+         * See the class notes for details on precisely how this matrix is
+         * represented.
          *
          * @return a reference to the matching matrix.
          */
@@ -173,42 +169,30 @@ class NGraphPair : public NManifold {
 
     private:
         /**
-         * Uses (1,1) twists, reflections and other techniques to make
-         * the presentation of this space more aesthetically pleasing.
+         * Uses (1,1) twists, inversion and/or reflection to make the
+         * presentation of this space more aesthetically pleasing.
          */
         void reduce();
 
         /**
-         * Uses 180 degree rotation and/or individual space reflections
-         * to make the given matching matrix more aesthetically pleasing.
+         * Uses (1,1) twists and/or inversion to make the given matching
+         * matrix more aesthetically pleasing.
          *
          * This routine is for internal use by reduce().
          *
-         * \pre Both Seifert fibred spaces must have obstruction
-         * constant zero.
-         *
          * @param reln the matching matrix to simplify.
-         * @param fibres0 the number of exceptional fibres in the space
-         * \a sfs_[0].
-         * @param fibres1 the number of exceptional fibres in the space
-         * \a sfs_[1].
-         * @param ref0 used to return \c true if space \a sfs_[0] was
-         * reflected, or \c false if not.
-         * @param ref1 used to return \c true if space \a sfs_[1] was
-         * reflected, or \c false if not.
          */
-        static void reduceReflect(NMatrix2& reln, unsigned long fibres0,
-            unsigned long fibres1, bool& ref0, bool& ref1);
+        static void reduce(NMatrix2& reln);
 
         /**
-         * Uses 180 degree rotation to make the given matching matrix
-         * more aesthetically pleasing.
+         * Uses (1,1) twists to make the given matching matrix more
+         * aesthetically pleasing.
          *
          * This routine is for internal use by reduce().
          *
          * @param reln the matching matrix to simplify.
          */
-        static void reduceSign(NMatrix2& reln);
+        static void reduceBasis(NMatrix2& reln);
 
         /**
          * Decides whether the first given matrix is more aesthetically
@@ -232,30 +216,24 @@ class NGraphPair : public NManifold {
 
 /*@}*/
 
-// Inline functions for NGraphPair
+// Inline functions for NGraphLoop
 
-inline NGraphPair::NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
+inline NGraphLoop::NGraphLoop(NSFSpace* sfs,
         long mat00, long mat01, long mat10, long mat11) :
-        matchingReln_(mat00, mat01, mat10, mat11) {
-    sfs_[0] = sfs0;
-    sfs_[1] = sfs1;
-
+        sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
     reduce();
 }
 
-inline NGraphPair::NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
-        const NMatrix2& matchingReln) : matchingReln_(matchingReln) {
-    sfs_[0] = sfs0;
-    sfs_[1] = sfs1;
-
+inline NGraphLoop::NGraphLoop(NSFSpace* sfs, const NMatrix2& matchingReln) :
+        sfs_(sfs), matchingReln_(matchingReln) {
     reduce();
 }
 
-inline const NSFSpace& NGraphPair::sfs(unsigned which) const {
-    return *sfs_[which];
+inline const NSFSpace& NGraphLoop::sfs() const {
+    return *sfs_;
 }
 
-inline const NMatrix2& NGraphPair::matchingReln() const {
+inline const NMatrix2& NGraphLoop::matchingReln() const {
     return matchingReln_;
 }
 

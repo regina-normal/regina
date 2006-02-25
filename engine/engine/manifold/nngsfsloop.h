@@ -31,9 +31,9 @@
  *  fibred spaces.
  */
 
-#ifndef __NNGSFSLOOP_H
+#ifndef __NGraphLOOP_H
 #ifndef __DOXYGEN
-#define __NNGSFSLOOP_H
+#define __NGraphLOOP_H
 #endif
 
 #include "manifold/nmanifold.h"
@@ -84,7 +84,7 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class NNGSFSLoop : public NManifold {
+class NGraphLoop : public NManifold {
     private:
         NSFSpace* sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */
@@ -121,7 +121,7 @@ class NNGSFSLoop : public NManifold {
          * @param mat10 the (1,0) element of the matching matrix.
          * @param mat11 the (1,1) element of the matching matrix.
          */
-        NNGSFSLoop(NSFSpace* sfs, long mat00, long mat01,
+        NGraphLoop(NSFSpace* sfs, long mat00, long mat01,
             long mat10, long mat11);
         /**
          * Creates a new graph manifold as a self-identified Seifert fibred
@@ -139,12 +139,12 @@ class NNGSFSLoop : public NManifold {
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        NNGSFSLoop(NSFSpace* sfs, const NMatrix2& matchingReln);
+        NGraphLoop(NSFSpace* sfs, const NMatrix2& matchingReln);
         /**
          * Destroys this structure along with the bounded Seifert
          * fibred space and the matching matrix.
          */
-        ~NNGSFSLoop();
+        ~NGraphLoop();
 
         /**
          * Returns a reference to the bounded Seifert fibred space that
@@ -216,24 +216,24 @@ class NNGSFSLoop : public NManifold {
 
 /*@}*/
 
-// Inline functions for NNGSFSLoop
+// Inline functions for NGraphLoop
 
-inline NNGSFSLoop::NNGSFSLoop(NSFSpace* sfs,
+inline NGraphLoop::NGraphLoop(NSFSpace* sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
     reduce();
 }
 
-inline NNGSFSLoop::NNGSFSLoop(NSFSpace* sfs, const NMatrix2& matchingReln) :
+inline NGraphLoop::NGraphLoop(NSFSpace* sfs, const NMatrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
     reduce();
 }
 
-inline const NSFSpace& NNGSFSLoop::sfs() const {
+inline const NSFSpace& NGraphLoop::sfs() const {
     return *sfs_;
 }
 
-inline const NMatrix2& NNGSFSLoop::matchingReln() const {
+inline const NMatrix2& NGraphLoop::matchingReln() const {
     return matchingReln_;
 }
 

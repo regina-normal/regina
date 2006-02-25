@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "algebra/nabeliangroup.h"
-#include "manifold/nngsfsloop.h"
+#include "manifold/ngraphloop.h"
 #include "manifold/nsfs.h"
 #include "maths/nmatrixint.h"
 #include <cstdlib> // For labs().

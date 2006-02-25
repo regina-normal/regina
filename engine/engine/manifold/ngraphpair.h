@@ -26,14 +26,14 @@
 
 /* end stub */
 
-/*! \file nngsfspair.h
+/*! \file ngraphpair.h
  *  \brief Deals with graph manifolds formed from pairs of Seifert fibred
  *  spaces.
  */
 
-#ifndef __NGraphPAIR_H
+#ifndef __NGRAPHPAIR_H
 #ifndef __DOXYGEN
-#define __NGraphPAIR_H
+#define __NGRAPHPAIR_H
 #endif
 
 #include "manifold/nmanifold.h"
