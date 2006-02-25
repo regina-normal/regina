@@ -37,7 +37,7 @@
 #endif
 
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/nperm.h"
+#include "utilities/nmatrix2.h"
 
 namespace regina {
 
@@ -59,12 +59,7 @@ class NSatRegion;
 class NNGBlockedSFSLoop : public NStandardTriangulation {
     private:
         NSatRegion* region_;
-        bool bdryRefVert_[2];
-        bool bdryRefHoriz_[2];
-        bool swapFaces_;
-        NPerm facePerm_;
-            /**< Maps 0/1/2 markings of the region's first boundary annulus
-                 to the second. */
+        NMatrix2 matchingReln_;
 
     public:
         /**
@@ -73,6 +68,7 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
         ~NNGBlockedSFSLoop();
 
         const NSatRegion& region() const;
+        const NMatrix2& matchingReln() const;
 
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
@@ -82,10 +78,7 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
         static NNGBlockedSFSLoop* isNGBlockedSFSLoop(NTriangulation* tri);
 
     private:
-        NNGBlockedSFSLoop(NSatRegion* region,
-            bool bdryRefVert0, bool bdryRefHoriz0,
-            bool bdryRefVert1, bool bdryRefHoriz1,
-            bool swapFaces, NPerm facePerm);
+        NNGBlockedSFSLoop(NSatRegion* region, const NMatrix2& matchingReln);
 };
 
 /*@}*/
@@ -93,18 +86,16 @@ class NNGBlockedSFSLoop : public NStandardTriangulation {
 // Inline functions for NNGBlockedSFSLoop
 
 inline NNGBlockedSFSLoop::NNGBlockedSFSLoop(NSatRegion* region,
-        bool bdryRefVert0, bool bdryRefHoriz0,
-        bool bdryRefVert1, bool bdryRefHoriz1,
-        bool swapFaces, NPerm facePerm) :
-        region_(region), swapFaces_(swapFaces), facePerm_(facePerm) {
-    bdryRefVert_[0] = bdryRefVert0;
-    bdryRefVert_[1] = bdryRefVert1;
-    bdryRefHoriz_[0] = bdryRefHoriz0;
-    bdryRefHoriz_[1] = bdryRefHoriz1;
+        const NMatrix2& matchingReln) :
+        region_(region), matchingReln_(matchingReln) {
 }
 
 inline const NSatRegion& NNGBlockedSFSLoop::region() const {
     return *region_;
+}
+
+inline const NMatrix2& NNGBlockedSFSLoop::matchingReln() const {
+    return matchingReln_;
 }
 
 } // namespace regina

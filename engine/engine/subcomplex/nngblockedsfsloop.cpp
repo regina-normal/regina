@@ -28,6 +28,7 @@
 
 #include "manifold/nngsfsloop.h"
 #include "manifold/nsfs.h"
+#include "subcomplex/nlayering.h"
 #include "subcomplex/nngblockedsfsloop.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
@@ -39,35 +40,18 @@ namespace regina {
  * block, attempts to flesh this out to an entire saturated region with
  * two identified torus boundaries, as described by the NNGBlockedSFSLoop
  * class.
- *
- * Wherever the member documentation refers to boundary annulus #0 and #1,
- * this corresponds to region->boundaryAnnulus(0, ...) and
- * region->boundaryAnnulus(1, ...) respectively.
  */
 struct NNGBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region;
         /**< The bounded saturated region, if the entire NNGBlockedSFSLoop
              structure has been successfully found; otherwise, 0 if we are
              still searching. */
-    bool bdryRefVert[2];
-        /**< Indicates for each boundary of the region whether the
-             corresponding saturated block is vertically reflected within
-             the region.  See NSatBlockSpec for details. */
-    bool bdryRefHoriz[2];
-        /**< Indicates for each boundary of the region whether the
-             corresponding saturated block is horizontally reflected within
-             the region.  See NSatBlockSpec for details. */
-    bool swapFaces;
-        /**< Contains details of how the two boundary annuli are identified.
-             This is set to \c true if the first face of boundary annulus #0
-             is identified with the second face of boundary annulus #1 (and
-             vice versa), or \c false if the two first faces are joined
-             together and the two second faces are joined together. */
-    NPerm facePerm;
-        /**< Contains details of how the two boundary annuli are identified.
-             This permutation shows how the identification maps markings
-             0/1/2 on boundary annulus #0 to markings 0/1/2 on boundary
-             annulus #1. */
+    NMatrix2 matchingReln;
+        /**< The matrix describing how the two boundary annuli of the
+             saturated region are joined together.  This matrix expresses
+             the fibre/base curves on one boundary annulus in terms of the
+             fibre/base curves on the other, as described by
+             NNGSFSLoop::matchingReln(). */
 
     /**
      * Creates a new searcher whose \a region pointer is null.
@@ -91,52 +75,7 @@ NManifold* NNGBlockedSFSLoop::getManifold() const {
 
     sfs->reduce(false);
 
-    // Prepare the matching matrix.
-
-    // First find mappings from the fibre/base curves (fi, oi) to
-    // annulus #i edges (first face: 10, first face: 02).
-    // Note that each of these matrices is self-inverse.
-    NMatrix2 curves0ToAnnulus(bdryRefVert_[0] ? -1 : 1, 0, 0,
-        bdryRefHoriz_[0] ? -1 : 1);
-    NMatrix2 curves1ToAnnulus(bdryRefVert_[1] ? -1 : 1, 0, 0,
-        bdryRefHoriz_[1] ? -1 : 1);
-
-    // Now we have the twelve cases of how the two sets of annulus
-    // curves are mapped.
-    NMatrix2 ann0ToAnn1;
-    if (swapFaces_) {
-        // First and second faces are swapped.
-        if      (facePerm_ == NPerm(0, 1, 2, 3))
-            ann0ToAnn1 = NMatrix2(-1, 0, 0, -1);
-        else if (facePerm_ == NPerm(1, 2, 0, 3))
-            ann0ToAnn1 = NMatrix2(0, -1, 1, 1);
-        else if (facePerm_ == NPerm(2, 0, 1, 3))
-            ann0ToAnn1 = NMatrix2(1, 1, -1, 0);
-        else if (facePerm_ == NPerm(0, 2, 1, 3))
-            ann0ToAnn1 = NMatrix2(0, 1, 1, 0);
-        else if (facePerm_ == NPerm(1, 0, 2, 3))
-            ann0ToAnn1 = NMatrix2(1, 0, -1, -1);
-        else if (facePerm_ == NPerm(2, 1, 0, 3))
-            ann0ToAnn1 = NMatrix2(-1, -1, 0, 1);
-    } else {
-        // First and second faces are not swapped.
-        if      (facePerm_ == NPerm(0, 1, 2, 3))
-            ann0ToAnn1 = NMatrix2(1, 0, 0, 1);
-        else if (facePerm_ == NPerm(1, 2, 0, 3))
-            ann0ToAnn1 = NMatrix2(0, 1, -1, -1);
-        else if (facePerm_ == NPerm(2, 0, 1, 3))
-            ann0ToAnn1 = NMatrix2(-1, -1, 1, 0);
-        else if (facePerm_ == NPerm(0, 2, 1, 3))
-            ann0ToAnn1 = NMatrix2(0, -1, -1, 0);
-        else if (facePerm_ == NPerm(1, 0, 2, 3))
-            ann0ToAnn1 = NMatrix2(-1, 0, 1, 1);
-        else if (facePerm_ == NPerm(2, 1, 0, 3))
-            ann0ToAnn1 = NMatrix2(1, 1, 0, -1);
-    }
-
-    // Remember that curves1ToAnnulus is self-inverse.
-    return new NNGSFSLoop(sfs,
-        curves1ToAnnulus * ann0ToAnn1 * curves0ToAnnulus);
+    return new NNGSFSLoop(sfs, matchingReln_);
 }
 
 std::ostream& NNGBlockedSFSLoop::writeName(std::ostream& out) const {
@@ -161,11 +100,10 @@ NNGBlockedSFSLoop* NNGBlockedSFSLoop::isNGBlockedSFSLoop(NTriangulation* tri) {
     if (tri->getNumberOfComponents() > 1)
         return 0;
 
-    // TODO: Check on this.
     // Watch out for twisted block boundaries that are incompatible with
-    // neighbouring blocks!  Also watch for annuli being joined to Klein
-    // bottles and the like.  Any of these issues will result in edges
-    // joined to themselves in reverse.
+    // neighbouring blocks!  Also watch for saturated tori being joined
+    // to saturated Klein bottles.  Any of these issues will result in
+    // edges joined to themselves in reverse.
     if (! tri->isValid())
         return 0;
 
@@ -178,10 +116,7 @@ NNGBlockedSFSLoop* NNGBlockedSFSLoop::isNGBlockedSFSLoop(NTriangulation* tri) {
         // The expansion and self-adjacency worked, and the triangulation
         // is known to be closed and connected.
         // This means we've got one!
-        return new NNGBlockedSFSLoop(searcher.region,
-            searcher.bdryRefVert[0], searcher.bdryRefHoriz[0],
-            searcher.bdryRefVert[1], searcher.bdryRefHoriz[1],
-            searcher.swapFaces, searcher.facePerm);
+        return new NNGBlockedSFSLoop(searcher.region, searcher.matchingReln);
     }
 
     // Nope.
@@ -209,14 +144,15 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
 
     NSatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
+    bool bdryRefVert[2], bdryRefHoriz[2];
     region->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],
         bdryRefVert[0], bdryRefHoriz[0]);
     region->boundaryAnnulus(1, bdryBlock[1], bdryAnnulus[1],
         bdryRefVert[1], bdryRefHoriz[1]);
 
-    // We either want two disjoint one-annulus boundaries, or else a single
-    // two-annulus boundary that is pinched to turn each annulus into a
-    // two-sided torus.  The following test will handle all cases.  We
+    // We either want two disjoint one-annulus torus boundaries, or else a
+    // single two-annulus boundary that is pinched to turn each annulus into
+    // a two-sided torus.  The following test will handle all cases.  We
     // don't worry about the degenerate case of fibres mapping to fibres
     // through the layering in the pinched case, since this will fail
     // our test anyway (either boundaries do not form tori, or they are
@@ -230,57 +166,62 @@ bool NNGBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
         return true;
     }
 
-    // See whether the two boundary annuli are joined.
-    if (bdry0.meetsBoundary() || bdry1.meetsBoundary()) {
-        delete region;
-        region = 0;
-        return true;
-    }
+    // Look for a layering on the first boundary annulus.
+    // Extend the layering one tetrahedron at a time, to make sure we
+    // don't loop back onto ourselves.
+    NLayering layering(bdry0.tet[0], bdry0.roles[0],
+        bdry0.tet[1], bdry0.roles[1]);
 
-    bdry1.switchSides();
+    NSatAnnulus layerTop;
+    NMatrix2 layerToBdry1;
+    while (true) {
+        layerTop.tet[0] = layering.getNewBoundaryTet(0);
+        layerTop.tet[1] = layering.getNewBoundaryTet(1);
+        layerTop.roles[0] = layering.getNewBoundaryRoles(0);
+        layerTop.roles[1] = layering.getNewBoundaryRoles(1);
 
-    if (bdry1.tet[0] == bdry0.tet[0] && bdry1.tet[1] == bdry0.tet[1] &&
-            bdry1.roles[0][3] == bdry0.roles[0][3] &&
-            bdry1.roles[1][3] == bdry0.roles[1][3]) {
-        // Could be one with first/second faces identified in the same order.
+        // Have we reached the second boundary?
+        if (bdry1.isJoined(layerTop, layerToBdry1))
+            break;
 
-        // Construct the mapping of 0/1/2 markings from the first
-        // annulus to the second.
-        facePerm = bdry1.roles[0].inverse() * bdry0.roles[0];
-        if (facePerm != bdry1.roles[1].inverse() * bdry0.roles[1]) {
+        // We haven't joined up yet.  Either extend or die.
+        if (! layering.extendOne()) {
+            // The layering dried up and we didn't make it.
             delete region;
             region = 0;
             return true;
         }
 
-        // This is it!  Stop searching.
-        swapFaces = false;
-        return false;
-    }
-
-    if (bdry1.tet[0] == bdry0.tet[1] && bdry1.tet[1] == bdry0.tet[0] &&
-            bdry1.roles[0][3] == bdry0.roles[1][3] &&
-            bdry1.roles[1][3] == bdry0.roles[0][3]) {
-        // Could be one with first/second faces switched.
-
-        // Construct the mapping of 0/1/2 markings from the first
-        // annulus to the second.
-        facePerm = bdry1.roles[1].inverse() * bdry0.roles[0];
-        if (facePerm != bdry1.roles[0].inverse() * bdry0.roles[1]) {
+        if (usedTets.find(layering.getNewBoundaryTet(0)) !=
+                usedTets.end() ||
+                usedTets.find(layering.getNewBoundaryTet(1)) !=
+                usedTets.end()) {
+            // Gone too far -- we've looped back upon ourselves.
             delete region;
             region = 0;
             return true;
         }
 
-        // This is it!  Stop searching.
-        swapFaces = true;
-        return false;
+        usedTets.insert(layering.getNewBoundaryTet(0));
+        usedTets.insert(layering.getNewBoundaryTet(1));
     }
 
-    // Nah, it's nothing.
-    delete region;
-    region = 0;
-    return true;
+    // This is it!  Build the matching matrix and stop searching.
+
+    // First find mappings from the fibre/base curves (fi, oi) to
+    // annulus #i edges (first face: 01, first face: 02).
+    // Note that each of these matrices is self-inverse.
+    NMatrix2 curves0ToAnnulus0(bdryRefVert[0] ? 1 : -1, 0, 0,
+        bdryRefHoriz[0] ? -1 : 1);
+    NMatrix2 curves1ToAnnulus1(bdryRefVert[1] ? 1 : -1, 0, 0,
+        bdryRefHoriz[1] ? -1 : 1);
+
+    // Put it all together.
+    // Remember that curves1ToAnnulus1 is self-inverse.
+    matchingReln = curves1ToAnnulus1 * layerToBdry1 *
+        layering.boundaryReln() * curves0ToAnnulus0;
+
+    return false;
 }
 
 } // namespace regina
