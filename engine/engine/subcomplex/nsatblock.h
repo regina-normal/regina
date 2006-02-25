@@ -207,7 +207,7 @@ class NSatBlock : public ShareableObject {
          * Returns whether there is another saturated block listed as
          * being adjacent to the given boundary annulus of this block.
          *
-         * @param which indicates which boundary annulus of this block
+         * @param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and nAnnuli()-1
          * inclusive.
          * @return \c true if the given boundary annulus has an adjacent
@@ -219,7 +219,7 @@ class NSatBlock : public ShareableObject {
          * Returns the saturated block listed as being adjacent to the
          * given boundary annulus of this block.
          *
-         * @param which indicates which boundary annulus of this block
+         * @param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and nAnnuli()-1
          * inclusive.
          * @return the other block adjacent along this annulus, or 0
@@ -235,7 +235,7 @@ class NSatBlock : public ShareableObject {
          * \pre The given annulus of this block actually has an adjacent
          * block listed.
          *
-         * @param which indicates which boundary annulus of this block
+         * @param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and nAnnuli()-1
          * inclusive.
          * @return the corresponding annulus number on the other block
@@ -251,7 +251,7 @@ class NSatBlock : public ShareableObject {
          * \pre The given annulus of this block actually has an adjacent
          * block listed.
          *
-         * @param which indicates which boundary annulus of this block
+         * @param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and nAnnuli()-1
          * inclusive.
          * @return \c true if the corresponding adjacency is reflected,
@@ -267,7 +267,7 @@ class NSatBlock : public ShareableObject {
          * \pre The given annulus of this block actually has an adjacent
          * block listed.
          *
-         * @param which indicates which boundary annulus of this block
+         * @param whichAnnulus indicates which boundary annulus of this block
          * should be examined; this must be between 0 and nAnnuli()-1
          * inclusive.
          * @return \c true if the corresponding adjacency is backwards,
@@ -280,7 +280,7 @@ class NSatBlock : public ShareableObject {
          * given boundary annulus of this block.  Both block structures
          * (this and the given block) will be updated.
          *
-         * @param which indicates which boundary annulus of this block
+         * @param whichAnnulus indicates which boundary annulus of this block
          * has the new adjacency; this must be between 0 and nAnnuli()-1
          * inclusive.
          * @param adjBlock the other saturated block that is adjacent to

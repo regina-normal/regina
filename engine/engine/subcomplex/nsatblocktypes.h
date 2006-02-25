@@ -299,7 +299,7 @@ class NSatTriPrism : public NSatBlock {
          *
          * @param tri the triangulation into which the new block should
          * be inserted.
-         * @param \c true if a block of major type should be inserted,
+         * @param major \c true if a block of major type should be inserted,
          * or \c false if a block of minor type should be inserted.
          * @return structural details of the newly inserted block.
          */

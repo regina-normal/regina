@@ -223,7 +223,7 @@ class NMatrix2 {
          * Multiplies this by the given scalar.
          * This matrix is changed to reflect the result.
          *
-         * @param other the scalar by which this should be multiplied.
+         * @param scalar the scalar by which this should be multiplied.
          * @return a reference to this matrix with its new value.
          */
         NMatrix2& operator *= (long scalar);
