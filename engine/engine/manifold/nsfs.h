@@ -636,6 +636,24 @@ class NSFSpace : public NManifold {
         void insertFibre(long alpha, long beta);
 
         /**
+         * Replaces this space with its mirror image.  Specifically, all
+         * exceptional fibres and the obstruction constant \a b will be
+         * negated.  Note that the obstruction constant will generally
+         * undergo further change as the exceptional fibres are
+         * standardised into the usual 0 <= \a beta < \a alpha form.
+         *
+         * This routine will not change the curves made by the fibres
+         * and the base orbifold on any boundary components (i.e.,
+         * boundaries caused by punctures in the base orbifold), with
+         * the exception that each base curve will be reflected.
+         *
+         * \warning The space is \e not reduced after reflecting.
+         * It may be that the space can be further simplified
+         * (especially in the case of non-orientable manifolds).
+         */
+        void reflect();
+
+        /**
          * Replaces each exceptional fibre of the form (\a alpha, \a beta)
          * with a fibre of the form (\a alpha, \a alpha - \a beta).
          * The obstruction constant \a b is not touched.
@@ -870,6 +888,11 @@ inline long NSFSpace::obstruction() const {
 
 inline void NSFSpace::insertFibre(const NSFSFibre& fibre) {
     insertFibre(fibre.alpha, fibre.beta);
+}
+
+inline void NSFSpace::reflect() {
+    complementAllFibres();
+    b_ = -b_ - static_cast<long>(nFibres_);
 }
 
 inline std::ostream& NSFSpace::writeName(std::ostream& out) const {

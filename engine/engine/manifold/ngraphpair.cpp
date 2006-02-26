@@ -223,8 +223,8 @@ void NGraphPair::reduce() {
      * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
      *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
      */
-
-    for (int i = 0; i < 2; i++)
+    int i;
+    for (i = 0; i < 2; i++)
         if (sfs_[i]->baseClass() == NSFSpace::bn2 &&
                 sfs_[i]->baseGenus() == 1 &&
                 (! sfs_[i]->baseOrientable()) &&
@@ -245,63 +245,145 @@ void NGraphPair::reduce() {
                 matchingReln_ = matchingReln_ * NMatrix2(-1, 1, -1, 0);
             else
                 matchingReln_ = NMatrix2(0, -1, 1, -1) * matchingReln_;
-
-            // If we reordered the SFSs in a displeasing way, switch
-            // them and change the matrix accordingly.
-            if (*sfs_[1] < *sfs_[0]) {
-                NSFSpace* tmp = sfs_[0];
-                sfs_[0] = sfs_[1];
-                sfs_[1] = tmp;
-
-                matchingReln_.invert();
-            }
         }
 
-    // Consider replacing each space with its reflection.
-    bool ref0, ref1;
-    reduceReflect(matchingReln_, sfs_[0]->fibreCount(),
-        sfs_[1]->fibreCount(), ref0, ref1);
+    // See whether each space is best reflected or left alone (or whether
+    // it doesn't matter).
+    bool mayReflect[2];
+    NSFSpace* tmpSFS;
+    for (i = 0; i < 2; i++) {
+        mayReflect[i] = false;
 
-    if (ref0)
-        sfs_[0]->complementAllFibres();
-    if (ref1)
-        sfs_[1]->complementAllFibres();
+        tmpSFS = new NSFSpace(*sfs_[i]);
+        tmpSFS->reflect();
+        tmpSFS->reduce(false);
+        b = tmpSFS->obstruction();
+        tmpSFS->insertFibre(1, -b);
+
+        if (*tmpSFS < *sfs_[i]) {
+            // We are best reflecting.
+            delete sfs_[i];
+            sfs_[i] = tmpSFS;
+
+            // Adjust the matrix accordingly.
+            if (i == 0) {
+                matchingReln_[0][0] = -matchingReln_[0][0]
+                    + b * matchingReln_[0][1];
+                matchingReln_[1][0] = -matchingReln_[1][0]
+                    + b * matchingReln_[1][1];
+            } else {
+                matchingReln_[1][0] = -matchingReln_[1][0]
+                    - b * matchingReln_[0][0];
+                matchingReln_[1][1] = -matchingReln_[1][1]
+                    - b * matchingReln_[0][1];
+            }
+        } else if (*sfs_[i] < *tmpSFS) {
+            // We're best not reflecting.
+            delete tmpSFS;
+        } else {
+            // It doesn't matter.
+            mayReflect[i] = true;
+            delete tmpSFS;
+        }
+    }
+
+    // See whether we're better swapping the two spaces or leaving them
+    // alone (or whether it doesn't matter).
+    bool maySwap = false;
+    if (*sfs_[1] < *sfs_[0]) {
+        // Swap them.
+        tmpSFS = sfs_[0];
+        sfs_[0] = sfs_[1];
+        sfs_[1] = tmpSFS;
+
+        bool tmpRef = mayReflect[0];
+        mayReflect[0] = mayReflect[1];
+        mayReflect[1] = tmpRef;
+
+        matchingReln_.invert();
+    } else if (*sfs_[0] < *sfs_[1]) {
+        // Don't swap them.
+    } else {
+        // It doesn't matter.
+        maySwap = true;
+    }
+
+    // Consider replacing each space with its reflection.
+    reduceReflect(matchingReln_, sfs_[0]->fibreCount(),
+        sfs_[1]->fibreCount(), mayReflect[0], mayReflect[1]);
+
+    // Consider swapping spaces.
+    if (maySwap) {
+        NMatrix2 altReln = matchingReln_.inverse();
+
+        reduceReflect(altReln, sfs_[1]->fibreCount(),
+            sfs_[0]->fibreCount(), mayReflect[1], mayReflect[0]);
+
+        if (simpler(altReln, matchingReln_)) {
+            // Swap the spaces.
+            // No need to physically swap the spaces, since maySwap is
+            // only true when the spaces are identical.
+            // Just update the matrix.
+            matchingReln_ = altReln;
+        }
+    }
 
     // TODO: More reductions!
     // We can probably exploit twist identities such as (1,2) = (1,0) in
     // certain non-orientable cases.
-    // TODO: Also consider swapping spaces.
 }
 
 void NGraphPair::reduceReflect(NMatrix2& reln, unsigned long fibres0,
-        unsigned long fibres1, bool& ref0, bool& ref1) {
+        unsigned long fibres1, bool mayRef0, bool mayRef1) {
+    // Rotation can be done always.
+    reduceSign(reln);
+
     // Consider replacing each space with its reflection.
     // Note that we have b=0 for both SFSs at this stage.
+
+    if ((! mayRef0) && (! mayRef1)) {
+        // No reflections allowed at all.
+        return;
+    }
+
+    if (mayRef0 && ! mayRef1) {
+        // We may only reflect space 0.
+        NMatrix2 r0 = reln * NMatrix2(1, 0, fibres0, -1);
+        reduceSign(r0);
+
+        if (simpler(r0, reln))
+            reln = r0;
+
+        return;
+    }
+
+    if (mayRef1 && ! mayRef0) {
+        // We may only reflect space 1.
+        NMatrix2 r1 = NMatrix2(1, 0, fibres1, -1) * reln;
+        reduceSign(r1);
+
+        if (simpler(r1, reln))
+            reln = r1;
+
+        return;
+    }
+
+    // We may reflect either space.
     NMatrix2 r0 = reln * NMatrix2(1, 0, fibres0, -1);
     NMatrix2 r1 = NMatrix2(1, 0, fibres1, -1) * reln;
     NMatrix2 r01 = NMatrix2(1, 0, fibres1, -1) * reln *
         NMatrix2(1, 0, fibres0, -1);
 
-    reduceSign(reln);
     reduceSign(r0);
     reduceSign(r1);
     reduceSign(r01);
 
     if (simpler(r0, reln) && simpler(r0, r1) && simpler(r0, r01)) {
         reln = r0;
-        ref0 = true;
-        ref1 = false;
     } else if (simpler(r1, reln) && simpler(r1, r01)) {
         reln = r1;
-        ref0 = false;
-        ref1 = true;
     } else if (simpler(r01, reln)) {
         reln = r01;
-        ref0 = true;
-        ref1 = true;
-    } else {
-        ref0 = false;
-        ref1 = false;
     }
 }
 

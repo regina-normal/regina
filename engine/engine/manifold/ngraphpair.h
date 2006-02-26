@@ -192,13 +192,13 @@ class NGraphPair : public NManifold {
          * \a sfs_[0].
          * @param fibres1 the number of exceptional fibres in the space
          * \a sfs_[1].
-         * @param ref0 used to return \c true if space \a sfs_[0] was
-         * reflected, or \c false if not.
-         * @param ref1 used to return \c true if space \a sfs_[1] was
-         * reflected, or \c false if not.
+         * @param mayRef0 \c true if the space \a sfs_[0] may be reflected,
+         * or \c false if this is not allowed.
+         * @param mayRef1 \c true if the space \a sfs_[1] may be reflected,
+         * or \c false if this is not allowed.
          */
         static void reduceReflect(NMatrix2& reln, unsigned long fibres0,
-            unsigned long fibres1, bool& ref0, bool& ref1);
+            unsigned long fibres1, bool mayRef0, bool mayRef1);
 
         /**
          * Uses 180 degree rotation to make the given matching matrix
