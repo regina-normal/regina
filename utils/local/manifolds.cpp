@@ -56,9 +56,15 @@
  * 3-manifold.  The method of ordering 3-manifolds is subject to change;
  * currently it bears some resemblance to the ordering used by Martelli
  * and Petronio in their tables of closed orientable 3-manifolds.
+ *
+ * If the option -w is passed, a raw list of manifolds and homology
+ * groups (where they can be calculated) will be output.  Each manifold
+ * that cannot be recognised will be written on its own line as "UNKNOWN".
+ * This option may not be used with any of the other options listed above.
  */
 
 #include <file/nxmlfile.h>
+#include <algebra/nabeliangroup.h>
 #include <manifold/ngraphloop.h>
 #include <manifold/ngraphpair.h>
 #include <manifold/ngraphtriple.h>
@@ -84,6 +90,7 @@ bool detailedNames = false;
 bool renameMfds = false;
 bool sortMfds = false;
 bool saveChanges = false;
+bool rawList = false;
 NPacket* tree;
 
 struct ManifoldSpec {
@@ -108,12 +115,13 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName <<
-        " [ -d ] [ -o ] [ -r ] [ -s ] <file.rga>\n";
+        " [ -d ] [ -o ] [ -r ] [ -s ] [ -w ] <file.rga>\n";
     std::cerr << std::endl;
     std::cerr << "    -d : Use more detailed 3-manifold names\n";
     std::cerr << "    -o : Save changes to the original file\n";
     std::cerr << "    -r : Rename container packets according to 3-manifold\n";
     std::cerr << "    -s : Sort container packets by 3-manifold\n";
+    std::cerr << "    -w : Dump a raw list of manifolds and homology groups\n";
     std::cerr << std::endl;
     std::cerr << "Resulting data is written to standard output.\n";
     std::cerr << "Statistics and diagnostic messages are written to standard error.\n";
@@ -246,7 +254,15 @@ bool process(NContainer* c) {
         }
 
         // Hold the newline until we know whether we've been renamed.
-        if (! sortMfds)
+        if (rawList) {
+            std::cout << name;
+
+            NAbelianGroup* h1 = mfd->getHomologyH1();
+            if (h1) {
+                std::cout << ", H1 = " << h1->toString();
+                delete h1;
+            }
+        } else if (! sortMfds)
             std::cout << c->getPacketLabel() << "  ->>  " << name;
         totMfds++;
         totMfdsOk++;
@@ -276,7 +292,9 @@ bool process(NContainer* c) {
     }
 
     if (foundTri) {
-        if (! sortMfds)
+        if (rawList)
+            std::cout << "UNKNOWN\n";
+        else if (! sortMfds)
             std::cout << c->getPacketLabel() << "  ->>  UNKNOWN\n";
         totMfds++;
     }
@@ -311,9 +329,14 @@ int main(int argc, char* argv[]) {
             renameMfds = true;
         else if (optChar == 's')
             sortMfds = true;
+        else if (optChar == 'w')
+            rawList = true;
         else
             usage(argv[0], std::string("Invalid option: ") + argv[i]);
     }
+
+    if (rawList && (detailedNames || saveChanges || renameMfds || sortMfds))
+        usage(argv[0], "Option -w may not be used with any other options.");
 
     // argv[i] is the first filename.
     if (i != argc - 1)
