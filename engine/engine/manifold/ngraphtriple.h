@@ -217,19 +217,45 @@ class NGraphTriple : public NManifold {
         void reduce();
 
         /**
-         * Uses 180 degree rotation and/or reflection of an end space
-         * to make the given matching matrix more aesthetically pleasing.
+         * Uses 180 degree rotation and/or reflection of individual spaces
+         * to make the given pair of matching matrices more aesthetically
+         * pleasing.
          *
          * This routine is for internal use by reduce().
          *
-         * @param reln the matching matrix to simplify.
-         * @param fibres the number of exceptional fibres in the
-         * corresponding end space.
-         * @param ref used to return \c true if the end space was
-         * reflected, or \c false if not.
+         * \pre All Seifert fibred spaces must have obstruction constant
+         * zero.
+         *
+         * @param reln0 the first matching matrix in the pair to simplify.
+         * @param reln1 the second matching matrix in the pair to simplify.
+         * @param fibres0 the number of exceptional fibres in the
+         * corresponding first end space.
+         * @param fibresCentre the number of exceptional fibres in the
+         * corresponding central space.
+         * @param fibres1 the number of exceptional fibres in the
+         * corresponding second end space.
+         * @param mayRef0 \c true if the first end space may be reflected,
+         * or \c false if this is not allowed.
+         * @param mayRefCentre \c true if the central space may be reflected,
+         * or \c false if this is not allowed.
+         * @param mayRef1 \c true if the second end space may be reflected,
+         * or \c false if this is not allowed.
          */
-        static void reduceReflectEnd(NMatrix2& reln, unsigned long fibres,
-            bool& ref);
+        static void reduceReflect(NMatrix2& reln0, NMatrix2& reln1,
+            unsigned long fibres0, unsigned long fibresCentre,
+            unsigned long fibres1, bool mayRef0, bool mayRefCentre,
+            bool mayRef1);
+
+        /**
+         * Uses 180 degree rotation and/or (1,1) twists to make the
+         * given pair of matching matrices more aesthetically pleasing.
+         *
+         * This routine is for internal use by reduce().
+         *
+         * @param reln0 the first matching matrix in the pair to simplify.
+         * @param reln1 the second matching matrix in the pair to simplify.
+         */
+        static void reduceBasis(NMatrix2& reln0, NMatrix2& reln1);
 
         /**
          * Uses 180 degree rotation to make the given matching matrix
@@ -242,9 +268,10 @@ class NGraphTriple : public NManifold {
         static void reduceSign(NMatrix2& reln);
 
         /**
-         * Decides whether the first given matrix is more aesthetically
-         * pleasing than the second.  This judgement is somewhat
-         * arbitrary and is subject to change in future versions of Regina.
+         * Decides whether the first given pair of matrices is more
+         * aesthetically pleasing than the second pair.  This judgement is
+         * somewhat arbitrary and is subject to change in future versions
+         * of Regina.
          *
          * This routine is for internal use by reduce().
          *
@@ -252,13 +279,17 @@ class NGraphTriple : public NManifold {
          * routines in other classes (as a result of differing aesthetic
          * requirements).
          *
-         * @param m1 the first matrix to examine.
-         * @param m2 the second matrix to examine.
-         * @return \c true if \a m1 is declared to be more pleasing than
-         * \a m2, or \c false if \a m2 is more pleasing or a decision
-         * could not be reached.
+         * @param pair0first the first matrix of the first pair to examine.
+         * @param pair0second the second matrix of the first pair to examine.
+         * @param pair1first the first matrix of the second pair to examine.
+         * @param pair1second the second matrix of the second pair to examine.
+         * @return \c true if the first pair is declared to be more pleasing
+         * than the second pair, or \c false if the second pair is more
+         * pleasing or a decision could not be reached.
          */
-        static bool simpler(const NMatrix2& m1, const NMatrix2& m2);
+        static bool simpler(
+            const NMatrix2& pair0first, const NMatrix2& pair0second,
+            const NMatrix2& pair1first, const NMatrix2& pair1second);
 };
 
 /*@}*/

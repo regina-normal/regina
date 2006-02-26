@@ -264,8 +264,8 @@ void NGraphTriple::reduce() {
      * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
      *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
      */
-
-    for (int i = 0; i < 2; i++)
+    int i;
+    for (i = 0; i < 2; i++)
         if (end_[i]->baseClass() == NSFSpace::bn2 &&
                 end_[i]->baseGenus() == 1 &&
                 (! end_[i]->baseOrientable()) &&
@@ -285,34 +285,198 @@ void NGraphTriple::reduce() {
             matchingReln_[i] = NMatrix2(0, -1, 1, -1) * matchingReln_[i];
         }
 
-    bool ref;
+    // See whether each space is best reflected or left alone (or
+    // whether it doesn't matter).
+    bool mayRefEnd[2];
+    NSFSpace* tmpSFS;
+    for (i = 0; i < 2; i++) {
+        mayRefEnd[i] = false;
 
-    reduceReflectEnd(matchingReln_[0], end_[0]->fibreCount(), ref);
-    if (ref)
-        end_[0]->complementAllFibres();
+        tmpSFS = new NSFSpace(*end_[i]);
+        tmpSFS->reflect();
+        tmpSFS->reduce(false);
+        b = tmpSFS->obstruction();
+        tmpSFS->insertFibre(1, -b);
 
-    reduceReflectEnd(matchingReln_[1], end_[1]->fibreCount(), ref);
-    if (ref)
-        end_[1]->complementAllFibres();
+        if (*tmpSFS < *end_[i]) {
+            // Best to reflect.
+            delete end_[i];
+            end_[i] = tmpSFS;
 
-    // TODO: More reductions!  More reductions!
+            matchingReln_[i][1][0] = -matchingReln_[i][1][0]
+                - b * matchingReln_[i][0][0];
+            matchingReln_[i][1][1] = -matchingReln_[i][1][1]
+                - b * matchingReln_[i][0][1];
+        } else if (*end_[i] < *tmpSFS) {
+            // Best not to reflect.
+            delete tmpSFS;
+        } else {
+            // Doesn't matter.
+            mayRefEnd[i] = true;
+            delete tmpSFS;
+        }
+    }
+
+    bool mayRefCentre = false;
+    tmpSFS = new NSFSpace(*centre_);
+    tmpSFS->reflect();
+    tmpSFS->reduce(false);
+    b = tmpSFS->obstruction();
+    tmpSFS->insertFibre(1, -b);
+
+    if (*tmpSFS < *centre_) {
+        // Best to reflect.
+        delete centre_;
+        centre_ = tmpSFS;
+
+        matchingReln_[0][0][0] = -matchingReln_[0][0][0]
+            + b * matchingReln_[0][0][1];
+        matchingReln_[0][1][0] = -matchingReln_[0][1][0]
+            + b * matchingReln_[0][1][1];
+        matchingReln_[1][0][0] = -matchingReln_[1][0][0];
+        matchingReln_[1][1][0] = -matchingReln_[1][1][0];
+    } else if (*centre_ < *tmpSFS) {
+        // Best not to reflect.
+        delete tmpSFS;
+    } else {
+        // Doesn't matter.
+        mayRefCentre = true;
+        delete tmpSFS;
+    }
+
+    // See whether we're better swapping the two end spaces or leaving them
+    // alone (or whether it doesn't matter).
+    bool maySwap = false;
+    if (*end_[1] < *end_[0]) {
+        // Swap them.
+        tmpSFS = end_[0];
+        end_[0] = end_[1];
+        end_[1] = tmpSFS;
+
+        bool tmpRef = mayRefEnd[0];
+        mayRefEnd[0] = mayRefEnd[1];
+        mayRefEnd[1] = tmpRef;
+
+        NMatrix2 tmpReln = matchingReln_[0];
+        matchingReln_[0] = matchingReln_[1];
+        matchingReln_[1] = tmpReln;
+    } else if (*end_[0] < *end_[1]) {
+        // Don't swap them.
+    } else {
+        // Doesn't matter.
+        maySwap = true;
+    }
+
+    // Consider replacing each space with its reflection.
+    reduceReflect(matchingReln_[0], matchingReln_[1],
+        end_[0]->fibreCount(), centre_->fibreCount(), end_[1]->fibreCount(),
+        mayRefEnd[0], mayRefCentre, mayRefEnd[1]);
+
+    // Consider swapping end spaces.
+    if (maySwap) {
+        NMatrix2 altReln0 = matchingReln_[1];
+        NMatrix2 altReln1 = matchingReln_[0];
+
+        reduceReflect(altReln0, altReln1,
+            end_[1]->fibreCount(), centre_->fibreCount(), end_[0]->fibreCount(),
+            mayRefEnd[1], mayRefCentre, mayRefEnd[0]);
+
+        if (simpler(altReln0, altReln1, matchingReln_[0], matchingReln_[1])) {
+            matchingReln_[0] = altReln0;
+            matchingReln_[1] = altReln1;
+        }
+    }
+
+    // TODO: More reductions!
 }
 
-void NGraphTriple::reduceReflectEnd(NMatrix2& reln, unsigned long fibres,
-        bool& ref) {
-    // Consider replacing the end space with its reflection.
-    // Note that we have b=0 for all spaces at this stage.
-    NMatrix2 alt = NMatrix2(1, 0, fibres, -1) * reln;
+void NGraphTriple::reduceReflect(NMatrix2& reln0, NMatrix2& reln1,
+        unsigned long fibres0, unsigned long fibresCentre,
+        unsigned long fibres1, bool mayRef0, bool mayRefCentre, bool mayRef1) {
+    // Rotation can be done always.
+    reduceBasis(reln0, reln1);
 
-    reduceSign(reln);
-    reduceSign(alt);
+    if (! (mayRef0 || mayRef1 || mayRefCentre))
+        return;
 
-    if (simpler(alt, reln)) {
-        reln = alt;
-        ref = true;
-    } else {
-        ref = false;
+    NMatrix2 best0 = reln0;
+    NMatrix2 best1 = reln1;
+
+    NMatrix2 alt0, alt1;
+    int do0, doCentre, do1;
+    for (do0 = 0; do0 <= (mayRef0 ? 1 : 0); do0++)
+        for (do1 = 0; do1 <= (mayRef1 ? 1 : 0); do1++)
+            for (doCentre = 0; doCentre <= (mayRefCentre ? 1 : 0); doCentre++) {
+                if (! (do0 || do1 || doCentre))
+                    continue;
+
+                alt0 = reln0;
+                alt1 = reln1;
+
+                if (do0)
+                    alt0 = NMatrix2(1, 0, fibres0, -1) * alt0;
+                if (do1)
+                    alt1 = NMatrix2(1, 0, fibres1, -1) * alt1;
+                if (doCentre) {
+                    alt0 = alt0 * NMatrix2(1, 0, fibresCentre, -1);
+                    alt1 = alt1 * NMatrix2(1, 0, 0, -1);
+                }
+
+                reduceBasis(alt0, alt1);
+                if (simpler(alt0, alt1, best0, best1)) {
+                    best0 = alt0;
+                    best1 = alt1;
+                }
+            }
+
+    reln0 = best0;
+    reln1 = best1;
+}
+
+void NGraphTriple::reduceBasis(NMatrix2& reln0, NMatrix2& reln1) {
+    /**
+     * The operation we allow here is to add a (1,1) / (1,-1) pair of
+     * twists to centre_, which means:
+     *
+     *     col 1 -> col 1 + col 2 in one of the matching relations;
+     *     col 1 -> col 1 - col 2 in the other.
+     */
+
+    // Start by making the first entry in each column 2 positive (for
+    // consistency).
+    if (reln0[0][1] < 0 || (reln0[0][1] == 0 && reln0[1][1] < 0))
+        reln0.negate();
+    if (reln1[0][1] < 0 || (reln1[0][1] == 0 && reln1[1][1] < 0))
+        reln1.negate();
+
+    // Go for the local minimum.
+    // TODO: We can certainly do better than this (both in terms of being
+    // faster [use division] and simpler matrices coming out the end).
+    NMatrix2 alt0, alt1;
+    while (true) {
+        alt0 = reln0 * NMatrix2(1, 0, 1, 1);
+        alt1 = reln1 * NMatrix2(1, 0, -1, 1);
+        if (simpler(alt0, alt1, reln0, reln1)) {
+            reln0 = alt0;
+            reln1 = alt1;
+            continue;
+        }
+
+        alt0 = reln0 * NMatrix2(1, 0, -1, 1);
+        alt1 = reln1 * NMatrix2(1, 0, 1, 1);
+        if (simpler(alt0, alt1, reln0, reln1)) {
+            reln0 = alt0;
+            reln1 = alt1;
+            continue;
+        }
+
+        // We're at a local minimum.  Call it enough for now.
+        break;
     }
+
+    // Final tidying up.
+    reduceSign(reln0);
+    reduceSign(reln1);
 }
 
 void NGraphTriple::reduceSign(NMatrix2& reln) {
@@ -338,44 +502,64 @@ void NGraphTriple::reduceSign(NMatrix2& reln) {
     // happen).  Do nothing.
 }
 
-bool NGraphTriple::simpler(const NMatrix2& m1, const NMatrix2& m2) {
-    long maxAbs1 = 0, maxAbs2 = 0;
-    unsigned nZeroes1 = 0, nZeroes2 = 0;
+bool NGraphTriple::simpler(
+        const NMatrix2& pair0first, const NMatrix2& pair0second,
+        const NMatrix2& pair1first, const NMatrix2& pair1second) {
+    long maxAbs0 = 0, maxAbs1 = 0;
+    unsigned nZeroes0 = 0, nZeroes1 = 0;
 
     int i, j;
     for (i = 0; i < 2; i++)
         for (j = 0; j < 2; j++) {
-            if (m1[i][j] > maxAbs1)
-                maxAbs1 = m1[i][j];
-            if (m1[i][j] < -maxAbs1)
-                maxAbs1 = -m1[i][j];
-            if (m2[i][j] > maxAbs2)
-                maxAbs2 = m2[i][j];
-            if (m2[i][j] < -maxAbs2)
-                maxAbs2 = -m2[i][j];
+            if (pair0first[i][j] > maxAbs0)
+                maxAbs0 = pair0first[i][j];
+            if (pair0first[i][j] < -maxAbs0)
+                maxAbs0 = -pair0first[i][j];
+            if (pair0second[i][j] > maxAbs0)
+                maxAbs0 = pair0second[i][j];
+            if (pair0second[i][j] < -maxAbs0)
+                maxAbs0 = -pair0second[i][j];
+            if (pair1first[i][j] > maxAbs1)
+                maxAbs1 = pair1first[i][j];
+            if (pair1first[i][j] < -maxAbs1)
+                maxAbs1 = -pair1first[i][j];
+            if (pair1second[i][j] > maxAbs1)
+                maxAbs1 = pair1second[i][j];
+            if (pair1second[i][j] < -maxAbs1)
+                maxAbs1 = -pair1second[i][j];
 
-            if (m1[i][j] == 0)
+            if (pair0first[i][j] == 0)
+                nZeroes0++;
+            if (pair0second[i][j] == 0)
+                nZeroes0++;
+            if (pair1first[i][j] == 0)
                 nZeroes1++;
-            if (m2[i][j] == 0)
-                nZeroes2++;
+            if (pair1second[i][j] == 0)
+                nZeroes1++;
         }
 
-    if (maxAbs1 < maxAbs2)
+    if (maxAbs0 < maxAbs1)
         return true;
-    if (maxAbs1 > maxAbs2)
+    if (maxAbs0 > maxAbs1)
         return false;
 
-    if (nZeroes1 > nZeroes2)
+    if (nZeroes0 > nZeroes1)
         return true;
-    if (nZeroes1 < nZeroes2)
+    if (nZeroes0 < nZeroes1)
         return false;
 
     // Go lexicograhpic.
     for (i = 0; i < 2; i++)
         for (j = 0; j < 2; j++)
-            if (m1[i][j] < m2[i][j])
+            if (pair0first[i][j] < pair1first[i][j])
                 return true;
-            else if (m1[i][j] > m2[i][j])
+            else if (pair0first[i][j] > pair1first[i][j])
+                return false;
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++)
+            if (pair0second[i][j] < pair1second[i][j])
+                return true;
+            else if (pair0second[i][j] > pair1second[i][j])
                 return false;
 
     // They're the same.
