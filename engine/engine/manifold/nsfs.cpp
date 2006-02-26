@@ -401,9 +401,25 @@ void NSFSpace::reduce(bool mayReflect) {
         // The best we can do is just reflect everything if b is far enough
         // negative.
 
-        if (mayReflect && b_ < (-b_ - static_cast<long>(nFibres_))) {
-            b_ = -b_ - static_cast<long>(nFibres_);
-            complementAllFibres();
+        if (mayReflect) {
+            if (b_ < (-b_ - static_cast<long>(nFibres_))) {
+                b_ = -b_ - static_cast<long>(nFibres_);
+                complementAllFibres();
+            } else if (b_ == (-b_ - static_cast<long>(nFibres_))) {
+                // Reflecting won't change b, but it will complement all
+                // fibres.  See whether this is worthwhile.
+                bool shouldReflect = false;
+                for (it = fibres_.begin(); it != fibres_.end(); it++)
+                    if (it->beta * 2 > it->alpha) {
+                        shouldReflect = true;
+                        break;
+                    } else if (it->beta * 2 < it->alpha) {
+                        break;
+                    }
+
+                if (shouldReflect)
+                    complementAllFibres();
+            }
         }
     }
 }
