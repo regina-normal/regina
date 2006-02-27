@@ -551,6 +551,30 @@ NLensSpace* NSFSpace::isLensSpace() const {
     return 0;
 }
 
+bool NSFSpace::operator == (const NSFSpace& compare) const {
+    if (class_ != compare.class_)
+        return false;
+    if (genus_ != compare.genus_)
+        return false;
+    if (punctures_ != compare.punctures_)
+        return false;
+    if (puncturesTwisted_ != compare.puncturesTwisted_)
+        return false;
+    if (reflectors_ != compare.reflectors_)
+        return false;
+    if (reflectorsTwisted_ != compare.reflectorsTwisted_)
+        return false;
+    if (nFibres_ != compare.nFibres_)
+        return false;
+    if (! (fibres_ == compare.fibres_))
+        return false;
+    if (b_ != compare.b_)
+        return false;
+
+    // Exactly the same!
+    return true;
+}
+
 bool NSFSpace::operator < (const NSFSpace& compare) const {
     // Double the genus if it's orientable, so that we can line up tori
     // with Klein bottles, etc.

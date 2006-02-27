@@ -92,6 +92,7 @@ void addNSFSpace() {
         .def("reduce", &NSFSpace::reduce, OL_reduce())
         .def("isLensSpace", &NSFSpace::isLensSpace,
             return_value_policy<manage_new_object>())
+        .def(self == self)
         .def(self < self)
     ;
 

@@ -696,6 +696,21 @@ class NSFSpace : public NManifold {
         NLensSpace* isLensSpace() const;
 
         /**
+         * Determines whether this and the given structure contain
+         * precisely the same representations of precisely the same
+         * Seifert fibred spaces.
+         *
+         * Note that this routine examines the particular representation of
+         * the Seifert fibred space.  Different Seifert parameters that give
+         * the same 3-manifold will be regarded as not equal by this routine.
+         *
+         * @param compare the representation with which this will be compared.
+         * @return \c true if and only if this and the given Seifert
+         * fibred space representations are identical.
+         */
+        bool operator == (const NSFSpace& compare) const;
+
+        /**
          * Determines in a fairly ad-hoc fashion whether this representation
          * of this space is "smaller" than the given representation of the
          * given space.
