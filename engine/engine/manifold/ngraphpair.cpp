@@ -225,7 +225,7 @@ void NGraphPair::reduce() {
      * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
      *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
      */
-    int i;
+    unsigned i, j;
     for (i = 0; i < 2; i++)
         if (sfs_[i]->baseClass() == NSFSpace::bn2 &&
                 sfs_[i]->baseGenus() == 1 &&
@@ -249,171 +249,112 @@ void NGraphPair::reduce() {
                 matchingReln_ = NMatrix2(0, -1, 1, -1) * matchingReln_;
         }
 
-    // See whether each space is best reflected or left alone (or whether
-    // it doesn't matter).
-    bool mayReflect[2];
-    long adjObstruct[2];
-    NSFSpace* tmpSFS;
+    // Try all possible variants of reflection and space swapping.
+    // Note that candidate 0 for each space _must_ be the original.
+    unsigned nCandidates[2];
+    NSFSpace* candidate[2][2];
+    NMatrix2 origToCandidate[2][2];
+
     for (i = 0; i < 2; i++) {
-        mayReflect[i] = false;
+        candidate[i][0] = sfs_[i];
+        origToCandidate[i][0] = NMatrix2(1, 0, 0, 1);
 
-        tmpSFS = new NSFSpace(*sfs_[i]);
-        tmpSFS->reflect();
-        tmpSFS->reduce(false);
-        adjObstruct[i] = -tmpSFS->obstruction();
-        tmpSFS->insertFibre(1, adjObstruct[i]);
+        candidate[i][1] = new NSFSpace(*sfs_[i]);
+        candidate[i][1]->reflect();
+        candidate[i][1]->reduce(false);
+        b = candidate[i][1]->obstruction();
+        candidate[i][1]->insertFibre(1, -b);
+        origToCandidate[i][1] = NMatrix2(1, 0, -b, -1);
 
-        if (*tmpSFS < *sfs_[i]) {
-            // We are best reflecting.
-            delete sfs_[i];
-            sfs_[i] = tmpSFS;
+        nCandidates[i] = 2;
+    }
 
-            // Adjust the matrix accordingly.
-            if (i == 0) {
-                matchingReln_[0][0] = -matchingReln_[0][0]
-                    - adjObstruct[i] * matchingReln_[0][1];
-                matchingReln_[1][0] = -matchingReln_[1][0]
-                    - adjObstruct[i] * matchingReln_[1][1];
-            } else {
-                matchingReln_[1][0] = -matchingReln_[1][0]
-                    + adjObstruct[i] * matchingReln_[0][0];
-                matchingReln_[1][1] = -matchingReln_[1][1]
-                    + adjObstruct[i] * matchingReln_[0][1];
+    NSFSpace* use0 = 0;
+    NSFSpace* use1 = 0;
+    NMatrix2 useReln;
+
+    NMatrix2 tryReln;
+    for (i = 0; i < nCandidates[0]; i++)
+        for (j = 0; j < nCandidates[1]; j++) {
+            // Insist on the leftmost space being at least as simple as
+            // the rightmost.
+
+            // See if the (i,j) combination is better than what we've
+            // seen so far.
+            tryReln = origToCandidate[1][j] * matchingReln_ *
+                origToCandidate[0][i].inverse();
+            reduceSign(tryReln);
+
+            // Try without space swapping.
+            if (! (*candidate[1][j] < *candidate[0][i])) {
+                if ((! use0) || simpler(tryReln, useReln)) {
+                    use0 = candidate[0][i];
+                    use1 = candidate[1][j];
+                    useReln = tryReln;
+                } else if (! simpler(useReln, tryReln)) {
+                    // The matrix is the same as our best.  Compare spaces.
+                    if (*candidate[0][i] < *use0 ||
+                            (*candidate[0][i] == *use0 &&
+                            *candidate[1][j] < *use1)) {
+                        use0 = candidate[0][i];
+                        use1 = candidate[1][j];
+                        useReln = tryReln;
+                    }
+                }
             }
-        } else if (*sfs_[i] < *tmpSFS) {
-            // We're best not reflecting.
-            delete tmpSFS;
-        } else {
-            // It doesn't matter.
-            mayReflect[i] = true;
-            delete tmpSFS;
+
+            // Now try with space swapping.
+            if (! (*candidate[0][i] < *candidate[1][j])) {
+                tryReln = tryReln.inverse();
+                reduceSign(tryReln);
+
+                if ((! use0) || simpler(tryReln, useReln)) {
+                    use0 = candidate[1][j];
+                    use1 = candidate[0][i];
+                    useReln = tryReln;
+                } else if (! simpler(useReln, tryReln)) {
+                    // The matrix is the same as our best.  Compare spaces.
+                    if (*candidate[1][j] < *use0 ||
+                            (*candidate[1][j] == *use0 &&
+                            *candidate[0][i] < *use1)) {
+                        use0 = candidate[1][j];
+                        use1 = candidate[0][i];
+                        useReln = tryReln;
+                    }
+                }
+            }
         }
+
+    // This should never happen, but just in case... let's not crash.
+    if (! (use0 && use1)) {
+        use0 = sfs_[0];
+        use1 = sfs_[1];
+        useReln = matchingReln_;
     }
 
-    // See whether we're better swapping the two spaces or leaving them
-    // alone (or whether it doesn't matter).
-    bool maySwap = false;
-    if (*sfs_[1] < *sfs_[0]) {
-        // Swap them.
-        tmpSFS = sfs_[0];
-        sfs_[0] = sfs_[1];
-        sfs_[1] = tmpSFS;
+    // Use what we found.
+    sfs_[0] = use0;
+    sfs_[1] = use1;
+    matchingReln_ = useReln;
 
-        bool tmpRef = mayReflect[0];
-        mayReflect[0] = mayReflect[1];
-        mayReflect[1] = tmpRef;
-
-        long tmpObstruct = adjObstruct[0];
-        adjObstruct[0] = adjObstruct[1];
-        adjObstruct[1] = tmpObstruct;
-
-        matchingReln_.invert();
-    } else if (*sfs_[0] < *sfs_[1]) {
-        // Don't swap them.
-    } else {
-        // It doesn't matter.
-        maySwap = true;
-    }
-
-    // Consider replacing each space with its reflection.
-    reduceReflect(matchingReln_, mayReflect[0], mayReflect[1],
-        adjObstruct[0], adjObstruct[1]);
-
-    // Consider swapping spaces.
-    if (maySwap) {
-        NMatrix2 altReln = matchingReln_.inverse();
-
-        reduceReflect(altReln, mayReflect[1], mayReflect[0],
-            adjObstruct[1], adjObstruct[0]);
-
-        if (simpler(altReln, matchingReln_)) {
-            // Swap the spaces.
-            // No need to physically swap the spaces, since maySwap is
-            // only true when the spaces are identical.
-            // Just update the matrix.
-            matchingReln_ = altReln;
-        }
-    }
+    // And what we don't use, delete.
+    // Note that the comparisons below are pointer comparisons, not
+    // NSFSpace comparisons.
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < nCandidates[i]; j++)
+            if (candidate[i][j] != use0 && candidate[i][j] != use1)
+                delete candidate[i][j];
 
     // TODO: More reductions!
     // We can probably exploit twist identities such as (1,2) = (1,0) in
     // certain non-orientable cases.
 }
 
-void NGraphPair::reduceReflect(NMatrix2& reln, bool mayRef0, bool mayRef1,
-        long adjObstruct0, long adjObstruct1) {
-    // Rotation can be done always.
-    reduceSign(reln);
-
-    // Consider replacing each space with its reflection.
-
-    if ((! mayRef0) && (! mayRef1)) {
-        // No reflections allowed at all.
-        return;
-    }
-
-    if (mayRef0 && ! mayRef1) {
-        // We may only reflect space 0.
-        NMatrix2 r0 = reln * NMatrix2(1, 0, adjObstruct0, -1);
-        reduceSign(r0);
-
-        if (simpler(r0, reln))
-            reln = r0;
-
-        return;
-    }
-
-    if (mayRef1 && ! mayRef0) {
-        // We may only reflect space 1.
-        NMatrix2 r1 = NMatrix2(1, 0, adjObstruct1, -1) * reln;
-        reduceSign(r1);
-
-        if (simpler(r1, reln))
-            reln = r1;
-
-        return;
-    }
-
-    // We may reflect either space.
-    NMatrix2 r0 = reln * NMatrix2(1, 0, adjObstruct0, -1);
-    NMatrix2 r1 = NMatrix2(1, 0, adjObstruct1, -1) * reln;
-    NMatrix2 r01 = NMatrix2(1, 0, adjObstruct1, -1) * reln *
-        NMatrix2(1, 0, adjObstruct0, -1);
-
-    reduceSign(r0);
-    reduceSign(r1);
-    reduceSign(r01);
-
-    if (simpler(r0, reln) && simpler(r0, r1) && simpler(r0, r01)) {
-        reln = r0;
-    } else if (simpler(r1, reln) && simpler(r1, r01)) {
-        reln = r1;
-    } else if (simpler(r01, reln)) {
-        reln = r01;
-    }
-}
-
 void NGraphPair::reduceSign(NMatrix2& reln) {
-    // Make the first non-zero entry positive.
-    int i, j;
-    for (i = 0; i < 2; i++)
-        for (j = 0; j < 2; j++) {
-            if (reln[i][j] > 0)
-                return;
-
-            if (reln[i][j] < 0) {
-                // Negate everything (180 degree rotation along the join)
-                // and return.
-
-                for (i = 0; i < 2; i++)
-                    for (j = 0; j < 2; j++)
-                        reln[i][j] = - reln[i][j];
-                return;
-            }
-        }
-
-    // The matrix is entirely zero (which, incidentally, should never
-    // happen).  Do nothing.
+    // All we can do is negate the entire matrix (180 degree rotation
+    // along the join).
+    if (simpler(- reln, reln))
+        reln.negate();
 }
 
 bool NGraphPair::simpler(const NMatrix2& m1, const NMatrix2& m2) {
