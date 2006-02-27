@@ -26,14 +26,14 @@
 
 /* end stub */
 
-/*! \file nsfsalt.h
+/*! \file nsfsaltset.h
  *  \brief Assists with providing different representations of the same
  *  Seifert fibred space.
  */
 
-#ifndef __NSFSALT_H
+#ifndef __NSFSALTSET_H
 #ifndef __DOXYGEN
-#define __NSFSALT_H
+#define __NSFSALTSET_H
 #endif
 
 #include "utilities/nmatrix2.h"
