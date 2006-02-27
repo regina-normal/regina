@@ -252,8 +252,8 @@ void NGraphPair::reduce() {
     // Try all possible variants of reflection and space swapping.
     // Note that candidate 0 for each space _must_ be the original.
     unsigned nCandidates[2];
-    NSFSpace* candidate[2][2];
-    NMatrix2 origToCandidate[2][2];
+    NSFSpace* candidate[2][4];
+    NMatrix2 origToCandidate[2][4];
 
     for (i = 0; i < 2; i++) {
         candidate[i][0] = sfs_[i];
@@ -267,6 +267,32 @@ void NGraphPair::reduce() {
         origToCandidate[i][1] = NMatrix2(1, 0, -b, -1);
 
         nCandidates[i] = 2;
+
+        // Can we negate all fibres without reflecting?
+        // Note that (1,2) == (1,0) in this case, so this is only
+        // interesting if we have an odd number of exceptional fibres.
+        if (sfs_[i]->fibreNegating() && (sfs_[i]->fibreCount() % 2 != 0)) {
+            // Do it by adding a single (1,1).  The subsequent reduce() will
+            // negate fibres to bring the obstruction constant back down to
+            // zero, giving the desired effect.
+            candidate[i][2] = new NSFSpace(*sfs_[i]);
+            candidate[i][2]->insertFibre(1, 1);
+            candidate[i][2]->reduce(false);
+            b = candidate[i][2]->obstruction();
+            candidate[i][2]->insertFibre(1, -b);
+            origToCandidate[i][2] = NMatrix2(1, 0, -b + 1, 1);
+
+            // And reflect also.
+            candidate[i][3] = new NSFSpace(*sfs_[i]);
+            candidate[i][3]->insertFibre(1, 1);
+            candidate[i][3]->reflect();
+            candidate[i][3]->reduce(false);
+            b = candidate[i][3]->obstruction();
+            candidate[i][3]->insertFibre(1, -b);
+            origToCandidate[i][3] = NMatrix2(1, 0, -b - 1, -1);
+
+            nCandidates[i] = 4;
+        }
     }
 
     NSFSpace* use0 = 0;
@@ -345,9 +371,8 @@ void NGraphPair::reduce() {
             if (candidate[i][j] != use0 && candidate[i][j] != use1)
                 delete candidate[i][j];
 
-    // TODO: More reductions!
-    // We can probably exploit twist identities such as (1,2) = (1,0) in
-    // certain non-orientable cases.
+    // TODO: Exploit the (1,2) = (1,0) and (1,1) = (1,0) relations in
+    // the relevant non-orientable cases.
 }
 
 void NGraphPair::reduceSign(NMatrix2& reln) {
