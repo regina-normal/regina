@@ -52,7 +52,7 @@ class NSatRegion;
  * connecting torus.  This is a particular type of triangulation of a graph
  * manifold, formed from two saturated regions whose torus boundaries are
  * identified.  An optional layering may be placed between the two torus
- * boundaries to allow a more interesting relationship between the boundary
+ * boundaries to allow for a more interesting relationship between the boundary
  * curves of each region.  For more detail on saturated regions and their
  * constituent saturated blocks, see the NSatRegion class; for more detail
  * on layerings, see the NLayering class.
