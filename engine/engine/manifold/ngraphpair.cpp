@@ -29,6 +29,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"
+#include "manifold/nsfsaltset.h"
 #include "maths/nmatrixint.h"
 
 namespace regina {
@@ -191,160 +192,66 @@ void NGraphPair::reduce() {
      *
      * 6. If we wish to swap the two spaces, we invert M.
      */
-    sfs_[0]->reduce(false);
-    sfs_[1]->reduce(false);
 
-    // Bring the obstruction constant for each SFS down to zero.
-    long b;
+    // Simplify each space and build a list of possible reflections and
+    // other representations that we wish to experiment with using.
+    NSFSAltSet alt0(sfs_[0]);
+    NSFSAltSet alt1(sfs_[1]);
 
-    b = sfs_[0]->obstruction();
-    if (b != 0) {
-        sfs_[0]->insertFibre(1, -b);
-        matchingReln_[0][0] += b * matchingReln_[0][1];
-        matchingReln_[1][0] += b * matchingReln_[1][1];
-    }
+    delete sfs_[0];
+    delete sfs_[1];
 
-    b = sfs_[1]->obstruction();
-    if (b != 0) {
-        sfs_[1]->insertFibre(1, -b);
-        matchingReln_[1][0] -= b * matchingReln_[0][0];
-        matchingReln_[1][1] -= b * matchingReln_[0][1];
-    }
-
-    /**
-     * If one of the spaces is M/n2, we can replace it with D:(2,1)(2,-1)
-     * with fibre and orbifold curves switched.  To preserve the
-     * determinant of the matching matrix we will actually use a [0,1,-1,0]
-     * switch instead of a [0,1,1,0] switch.
-     *
-     * In fact we will use D:(2,1)(2,1) instead, which means:
-     *
-     * M_basis = [  0 1 ] [  1 0 ] D_basis = [ -1 1 ] D_basis;
-     *           [ -1 0 ] [ -1 1 ]           [ -1 0 ]
-     *
-     * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
-     *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
-     */
-    unsigned i, j;
-    for (i = 0; i < 2; i++)
-        if (sfs_[i]->baseClass() == NSFSpace::bn2 &&
-                sfs_[i]->baseGenus() == 1 &&
-                (! sfs_[i]->baseOrientable()) &&
-                sfs_[i]->punctures(false) == 1 &&
-                sfs_[i]->punctures(true) == 0 &&
-                sfs_[i]->reflectors() == 0 &&
-                sfs_[i]->fibreCount() == 0 &&
-                sfs_[i]->obstruction() == 0) {
-            delete sfs_[i];
-
-            sfs_[i] = new NSFSpace(NSFSpace::bo1, 0 /* genus */,
-                1 /* punctures */, 0 /* twisted */,
-                0 /* reflectors */, 0 /* twisted */);
-            sfs_[i]->insertFibre(2, 1);
-            sfs_[i]->insertFibre(2, 1);
-
-            if (i == 0)
-                matchingReln_ = matchingReln_ * NMatrix2(-1, 1, -1, 0);
-            else
-                matchingReln_ = NMatrix2(0, -1, 1, -1) * matchingReln_;
-        }
-
-    // Try all possible variants of reflection and space swapping.
-    // Note that candidate 0 for each space _must_ be the original.
-    unsigned nCandidates[2];
-    NSFSpace* candidate[2][4];
-    NMatrix2 origToCandidate[2][4];
-
-    for (i = 0; i < 2; i++) {
-        candidate[i][0] = sfs_[i];
-        origToCandidate[i][0] = NMatrix2(1, 0, 0, 1);
-
-        candidate[i][1] = new NSFSpace(*sfs_[i]);
-        candidate[i][1]->reflect();
-        candidate[i][1]->reduce(false);
-        b = candidate[i][1]->obstruction();
-        candidate[i][1]->insertFibre(1, -b);
-        origToCandidate[i][1] = NMatrix2(1, 0, -b, -1);
-
-        nCandidates[i] = 2;
-
-        // Can we negate all fibres without reflecting?
-        // Note that (1,2) == (1,0) in this case, so this is only
-        // interesting if we have an odd number of exceptional fibres.
-        if (sfs_[i]->fibreNegating() && (sfs_[i]->fibreCount() % 2 != 0)) {
-            // Do it by adding a single (1,1).  The subsequent reduce() will
-            // negate fibres to bring the obstruction constant back down to
-            // zero, giving the desired effect.
-            candidate[i][2] = new NSFSpace(*sfs_[i]);
-            candidate[i][2]->insertFibre(1, 1);
-            candidate[i][2]->reduce(false);
-            b = candidate[i][2]->obstruction();
-            candidate[i][2]->insertFibre(1, -b);
-            origToCandidate[i][2] = NMatrix2(1, 0, -b + 1, 1);
-
-            // And reflect also.
-            candidate[i][3] = new NSFSpace(*sfs_[i]);
-            candidate[i][3]->insertFibre(1, 1);
-            candidate[i][3]->reflect();
-            candidate[i][3]->reduce(false);
-            b = candidate[i][3]->obstruction();
-            candidate[i][3]->insertFibre(1, -b);
-            origToCandidate[i][3] = NMatrix2(1, 0, -b - 1, -1);
-
-            nCandidates[i] = 4;
-        }
-    }
-
+    // Decide which of these possible representations gives the nicest
+    // matching relation.
     NSFSpace* use0 = 0;
     NSFSpace* use1 = 0;
     NMatrix2 useReln;
 
     NMatrix2 tryReln;
-    for (i = 0; i < nCandidates[0]; i++)
-        for (j = 0; j < nCandidates[1]; j++) {
+    unsigned i, j;
+    for (i = 0; i < alt0.size(); i++)
+        for (j = 0; j < alt1.size(); j++) {
             // Insist on the leftmost space being at least as simple as
             // the rightmost.
 
             // See if the (i,j) combination is better than what we've
             // seen so far.
-            tryReln = origToCandidate[1][j] * matchingReln_ *
-                origToCandidate[0][i].inverse();
+            tryReln = alt1.conversion(j) * matchingReln_ *
+                alt0.conversion(i).inverse();
             reduceSign(tryReln);
 
             // Try without space swapping.
-            if (! (*candidate[1][j] < *candidate[0][i])) {
+            if (! (*alt1[j] < *alt0[i])) {
                 if ((! use0) || simpler(tryReln, useReln)) {
-                    use0 = candidate[0][i];
-                    use1 = candidate[1][j];
+                    use0 = alt0[i];
+                    use1 = alt1[j];
                     useReln = tryReln;
                 } else if (! simpler(useReln, tryReln)) {
                     // The matrix is the same as our best.  Compare spaces.
-                    if (*candidate[0][i] < *use0 ||
-                            (*candidate[0][i] == *use0 &&
-                            *candidate[1][j] < *use1)) {
-                        use0 = candidate[0][i];
-                        use1 = candidate[1][j];
+                    if (*alt0[i] < *use0 ||
+                            (*alt0[i] == *use0 && *alt1[j] < *use1)) {
+                        use0 = alt0[i];
+                        use1 = alt1[j];
                         useReln = tryReln;
                     }
                 }
             }
 
             // Now try with space swapping.
-            if (! (*candidate[0][i] < *candidate[1][j])) {
+            if (! (*alt0[i] < *alt1[j])) {
                 tryReln = tryReln.inverse();
                 reduceSign(tryReln);
 
                 if ((! use0) || simpler(tryReln, useReln)) {
-                    use0 = candidate[1][j];
-                    use1 = candidate[0][i];
+                    use0 = alt1[j];
+                    use1 = alt0[i];
                     useReln = tryReln;
                 } else if (! simpler(useReln, tryReln)) {
                     // The matrix is the same as our best.  Compare spaces.
-                    if (*candidate[1][j] < *use0 ||
-                            (*candidate[1][j] == *use0 &&
-                            *candidate[0][i] < *use1)) {
-                        use0 = candidate[1][j];
-                        use1 = candidate[0][i];
+                    if (*alt1[j] < *use0 ||
+                            (*alt1[j] == *use0 && *alt0[i] < *use1)) {
+                        use0 = alt1[j];
+                        use1 = alt0[i];
                         useReln = tryReln;
                     }
                 }
@@ -353,9 +260,12 @@ void NGraphPair::reduce() {
 
     // This should never happen, but just in case... let's not crash.
     if (! (use0 && use1)) {
-        use0 = sfs_[0];
-        use1 = sfs_[1];
-        useReln = matchingReln_;
+        use0 = alt0[0];
+        use1 = alt1[0];
+
+        useReln = alt1.conversion(0) * matchingReln_ *
+            alt0.conversion(0).inverse();
+        reduceSign(useReln);
     }
 
     // Use what we found.
@@ -364,12 +274,8 @@ void NGraphPair::reduce() {
     matchingReln_ = useReln;
 
     // And what we don't use, delete.
-    // Note that the comparisons below are pointer comparisons, not
-    // NSFSpace comparisons.
-    for (i = 0; i < 2; i++)
-        for (j = 0; j < nCandidates[i]; j++)
-            if (candidate[i][j] != use0 && candidate[i][j] != use1)
-                delete candidate[i][j];
+    alt0.deleteAll(use0, use1);
+    alt1.deleteAll(use0, use1);
 
     // TODO: Exploit the (1,2) = (1,0) and (1,1) = (1,0) relations in
     // the relevant non-orientable cases.

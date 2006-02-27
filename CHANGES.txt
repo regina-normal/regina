@@ -62,6 +62,9 @@ Version 4.3  [ under development ]
               Now more general, supporting both orientable and
               non-orientable 3-manifolds as well as base orbifolds with
               reflector boundary components.
+        Class NSFSAlt:
+            - New class for finding different simple representations of
+              the same bounded Seifert fibred space.
         Class NSnapPeaTriangulation:
             - Added a boolean argument to the constructor that allows the
               SnapPea kernel to work with closed triangulations.
