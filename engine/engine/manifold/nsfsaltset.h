@@ -56,6 +56,7 @@ class NSFSAltSet {
         NSFSpace* data_[4];
         NMatrix2 conversion_[4];
             /** Original to alternative. */
+        bool reflected_[4];
 
     public:
         NSFSAltSet(NSFSpace* sfs);
@@ -67,6 +68,7 @@ class NSFSAltSet {
         unsigned size() const;
         NSFSpace* operator [] (unsigned which) const;
         const NMatrix2& conversion(unsigned which) const;
+        bool reflected(unsigned which) const;
 };
 
 /*@}*/
@@ -83,6 +85,10 @@ inline NSFSpace* NSFSAltSet::operator [] (unsigned which) const {
 
 inline const NMatrix2& NSFSAltSet::conversion(unsigned which) const {
     return conversion_[which];
+}
+
+inline bool NSFSAltSet::reflected(unsigned which) const {
+    return reflected_[which];
 }
 
 } // namespace regina
