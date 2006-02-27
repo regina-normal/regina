@@ -225,6 +225,9 @@ void NGraphTriple::reduce() {
      *
      * 6. If we wish to swap the order of spaces, we swap both matrices.
      */
+    end_[0]->reduce(false);
+    end_[1]->reduce(false);
+    centre_->reduce(false);
 
     // Bring the obstruction constant for each SFS down to zero.
     long b;
@@ -288,6 +291,7 @@ void NGraphTriple::reduce() {
     // See whether each space is best reflected or left alone (or
     // whether it doesn't matter).
     bool mayRefEnd[2];
+    long adjObstruct[2];
     NSFSpace* tmpSFS;
     for (i = 0; i < 2; i++) {
         mayRefEnd[i] = false;
@@ -295,8 +299,8 @@ void NGraphTriple::reduce() {
         tmpSFS = new NSFSpace(*end_[i]);
         tmpSFS->reflect();
         tmpSFS->reduce(false);
-        b = tmpSFS->obstruction();
-        tmpSFS->insertFibre(1, -b);
+        adjObstruct[i] = -tmpSFS->obstruction();
+        tmpSFS->insertFibre(1, adjObstruct[i]);
 
         if (*tmpSFS < *end_[i]) {
             // Best to reflect.
@@ -304,9 +308,9 @@ void NGraphTriple::reduce() {
             end_[i] = tmpSFS;
 
             matchingReln_[i][1][0] = -matchingReln_[i][1][0]
-                - b * matchingReln_[i][0][0];
+                + adjObstruct[i] * matchingReln_[i][0][0];
             matchingReln_[i][1][1] = -matchingReln_[i][1][1]
-                - b * matchingReln_[i][0][1];
+                + adjObstruct[i] * matchingReln_[i][0][1];
         } else if (*end_[i] < *tmpSFS) {
             // Best not to reflect.
             delete tmpSFS;
@@ -318,11 +322,12 @@ void NGraphTriple::reduce() {
     }
 
     bool mayRefCentre = false;
+    long adjObstructCentre;
     tmpSFS = new NSFSpace(*centre_);
     tmpSFS->reflect();
     tmpSFS->reduce(false);
-    b = tmpSFS->obstruction();
-    tmpSFS->insertFibre(1, -b);
+    adjObstructCentre = -tmpSFS->obstruction();
+    tmpSFS->insertFibre(1, adjObstructCentre);
 
     if (*tmpSFS < *centre_) {
         // Best to reflect.
@@ -330,9 +335,9 @@ void NGraphTriple::reduce() {
         centre_ = tmpSFS;
 
         matchingReln_[0][0][0] = -matchingReln_[0][0][0]
-            + b * matchingReln_[0][0][1];
+            - adjObstructCentre * matchingReln_[0][0][1];
         matchingReln_[0][1][0] = -matchingReln_[0][1][0]
-            + b * matchingReln_[0][1][1];
+            - adjObstructCentre * matchingReln_[0][1][1];
         matchingReln_[1][0][0] = -matchingReln_[1][0][0];
         matchingReln_[1][1][0] = -matchingReln_[1][1][0];
     } else if (*centre_ < *tmpSFS) {
@@ -357,6 +362,10 @@ void NGraphTriple::reduce() {
         mayRefEnd[0] = mayRefEnd[1];
         mayRefEnd[1] = tmpRef;
 
+        long tmpObstruct = adjObstruct[0];
+        adjObstruct[0] = adjObstruct[1];
+        adjObstruct[1] = tmpObstruct;
+
         NMatrix2 tmpReln = matchingReln_[0];
         matchingReln_[0] = matchingReln_[1];
         matchingReln_[1] = tmpReln;
@@ -369,8 +378,8 @@ void NGraphTriple::reduce() {
 
     // Consider replacing each space with its reflection.
     reduceReflect(matchingReln_[0], matchingReln_[1],
-        end_[0]->fibreCount(), centre_->fibreCount(), end_[1]->fibreCount(),
-        mayRefEnd[0], mayRefCentre, mayRefEnd[1]);
+        mayRefEnd[0], mayRefCentre, mayRefEnd[1],
+        adjObstruct[0], adjObstructCentre, adjObstruct[1]);
 
     // Consider swapping end spaces.
     if (maySwap) {
@@ -378,8 +387,8 @@ void NGraphTriple::reduce() {
         NMatrix2 altReln1 = matchingReln_[0];
 
         reduceReflect(altReln0, altReln1,
-            end_[1]->fibreCount(), centre_->fibreCount(), end_[0]->fibreCount(),
-            mayRefEnd[1], mayRefCentre, mayRefEnd[0]);
+            mayRefEnd[1], mayRefCentre, mayRefEnd[0],
+            adjObstruct[1], adjObstructCentre, adjObstruct[0]);
 
         if (simpler(altReln0, altReln1, matchingReln_[0], matchingReln_[1])) {
             matchingReln_[0] = altReln0;
@@ -391,8 +400,8 @@ void NGraphTriple::reduce() {
 }
 
 void NGraphTriple::reduceReflect(NMatrix2& reln0, NMatrix2& reln1,
-        unsigned long fibres0, unsigned long fibresCentre,
-        unsigned long fibres1, bool mayRef0, bool mayRefCentre, bool mayRef1) {
+        bool mayRef0, bool mayRefCentre, bool mayRef1,
+        long adjObstruct0, long adjObstructCentre, long adjObstruct1) {
     // Rotation can be done always.
     reduceBasis(reln0, reln1);
 
@@ -414,11 +423,11 @@ void NGraphTriple::reduceReflect(NMatrix2& reln0, NMatrix2& reln1,
                 alt1 = reln1;
 
                 if (do0)
-                    alt0 = NMatrix2(1, 0, fibres0, -1) * alt0;
+                    alt0 = NMatrix2(1, 0, adjObstruct0, -1) * alt0;
                 if (do1)
-                    alt1 = NMatrix2(1, 0, fibres1, -1) * alt1;
+                    alt1 = NMatrix2(1, 0, adjObstruct1, -1) * alt1;
                 if (doCentre) {
-                    alt0 = alt0 * NMatrix2(1, 0, fibresCentre, -1);
+                    alt0 = alt0 * NMatrix2(1, 0, adjObstructCentre, -1);
                     alt1 = alt1 * NMatrix2(1, 0, 0, -1);
                 }
 
@@ -507,6 +516,7 @@ bool NGraphTriple::simpler(
         const NMatrix2& pair1first, const NMatrix2& pair1second) {
     long maxAbs0 = 0, maxAbs1 = 0;
     unsigned nZeroes0 = 0, nZeroes1 = 0;
+    unsigned nNeg0 = 0, nNeg1 = 0;
 
     int i, j;
     for (i = 0; i < 2; i++)
@@ -530,12 +540,20 @@ bool NGraphTriple::simpler(
 
             if (pair0first[i][j] == 0)
                 nZeroes0++;
+            else if (pair0first[i][j] < 0)
+                nNeg0++;
             if (pair0second[i][j] == 0)
                 nZeroes0++;
+            else if (pair0second[i][j] < 0)
+                nNeg0++;
             if (pair1first[i][j] == 0)
                 nZeroes1++;
+            else if (pair1first[i][j] < 0)
+                nNeg1++;
             if (pair1second[i][j] == 0)
                 nZeroes1++;
+            else if (pair1second[i][j] < 0)
+                nNeg1++;
         }
 
     if (maxAbs0 < maxAbs1)
@@ -546,6 +564,11 @@ bool NGraphTriple::simpler(
     if (nZeroes0 > nZeroes1)
         return true;
     if (nZeroes0 < nZeroes1)
+        return false;
+
+    if (nNeg0 < nNeg1)
+        return true;
+    if (nNeg0 > nNeg1)
         return false;
 
     // Go lexicograhpic.

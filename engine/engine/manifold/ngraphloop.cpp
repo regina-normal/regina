@@ -134,6 +134,7 @@ void NGraphLoop::reduce() {
      *    - setting row 2 -> row 2 + row 1, or
      *    - setting col 1 -> col 1 - col 2.
      */
+    sfs_->reduce(false);
 
     // Bring the SFS obstruction constant back to zero.
     long b = sfs_->obstruction();
@@ -148,6 +149,8 @@ void NGraphLoop::reduce() {
     // See if we can do any better by reflecting the entire space
     // and adding (1,1) twists to bring the obstruction constant back
     // up to zero again.
+    // TODO: For non-orientable manifolds, reflect()/reduce() may yield
+    // better results.
     NMatrix2 compMatch =
         NMatrix2(1, 0, sfs_->fibreCount(), 1) *
         NMatrix2(1, 0, 0, -1) *
@@ -198,6 +201,30 @@ void NGraphLoop::reduceBasis(NMatrix2& reln) {
                 reln[1][1] += reln[0][1];
             }
         }
+
+        // If abs(0,0) is half abs(0,1) then we might do better with yet
+        // another operation.  Check with simpler() in this case.
+        if (labs(reln[0][0]) * 2 == labs(reln[0][1])) {
+            NMatrix2 alt = reln;
+
+            if ((alt[0][0] > 0 && alt[0][1] > 0) ||
+                    (alt[0][0] < 0 && alt[0][1] < 0)) {
+                // Same signs.
+                alt[0][0] -= alt[0][1];
+                alt[1][0] -= alt[1][1];
+                alt[1][0] -= alt[0][0];
+                alt[1][1] -= alt[0][1];
+            } else {
+                // Opposite signs.
+                alt[0][0] += alt[0][1];
+                alt[1][0] += alt[1][1];
+                alt[1][0] += alt[0][0];
+                alt[1][1] += alt[0][1];
+            }
+
+            if (simpler(alt, reln))
+                reln = alt;
+        }
     } else {
         // TODO: We can still do something here.
     }
@@ -206,6 +233,7 @@ void NGraphLoop::reduceBasis(NMatrix2& reln) {
 bool NGraphLoop::simpler(const NMatrix2& m1, const NMatrix2& m2) {
     long maxAbs1 = 0, maxAbs2 = 0;
     unsigned nZeroes1 = 0, nZeroes2 = 0;
+    unsigned nNeg1 = 0, nNeg2 = 0;
 
     int i, j;
     for (i = 0; i < 2; i++)
@@ -221,8 +249,12 @@ bool NGraphLoop::simpler(const NMatrix2& m1, const NMatrix2& m2) {
 
             if (m1[i][j] == 0)
                 nZeroes1++;
+            else if (m1[i][j] < 0)
+                nNeg1++;
             if (m2[i][j] == 0)
                 nZeroes2++;
+            else if (m2[i][j] < 0)
+                nNeg2++;
         }
 
     if (maxAbs1 < maxAbs2)
@@ -233,6 +265,11 @@ bool NGraphLoop::simpler(const NMatrix2& m1, const NMatrix2& m2) {
     if (nZeroes1 > nZeroes2)
         return true;
     if (nZeroes1 < nZeroes2)
+        return false;
+
+    if (nNeg1 < nNeg2)
+        return true;
+    if (nNeg1 > nNeg2)
         return false;
 
     // Down to lexicographical order.

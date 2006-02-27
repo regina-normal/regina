@@ -191,6 +191,8 @@ void NGraphPair::reduce() {
      *
      * 6. If we wish to swap the two spaces, we invert M.
      */
+    sfs_[0]->reduce(false);
+    sfs_[1]->reduce(false);
 
     // Bring the obstruction constant for each SFS down to zero.
     long b;
@@ -250,6 +252,7 @@ void NGraphPair::reduce() {
     // See whether each space is best reflected or left alone (or whether
     // it doesn't matter).
     bool mayReflect[2];
+    long adjObstruct[2];
     NSFSpace* tmpSFS;
     for (i = 0; i < 2; i++) {
         mayReflect[i] = false;
@@ -257,8 +260,8 @@ void NGraphPair::reduce() {
         tmpSFS = new NSFSpace(*sfs_[i]);
         tmpSFS->reflect();
         tmpSFS->reduce(false);
-        b = tmpSFS->obstruction();
-        tmpSFS->insertFibre(1, -b);
+        adjObstruct[i] = -tmpSFS->obstruction();
+        tmpSFS->insertFibre(1, adjObstruct[i]);
 
         if (*tmpSFS < *sfs_[i]) {
             // We are best reflecting.
@@ -268,14 +271,14 @@ void NGraphPair::reduce() {
             // Adjust the matrix accordingly.
             if (i == 0) {
                 matchingReln_[0][0] = -matchingReln_[0][0]
-                    + b * matchingReln_[0][1];
+                    - adjObstruct[i] * matchingReln_[0][1];
                 matchingReln_[1][0] = -matchingReln_[1][0]
-                    + b * matchingReln_[1][1];
+                    - adjObstruct[i] * matchingReln_[1][1];
             } else {
                 matchingReln_[1][0] = -matchingReln_[1][0]
-                    - b * matchingReln_[0][0];
+                    + adjObstruct[i] * matchingReln_[0][0];
                 matchingReln_[1][1] = -matchingReln_[1][1]
-                    - b * matchingReln_[0][1];
+                    + adjObstruct[i] * matchingReln_[0][1];
             }
         } else if (*sfs_[i] < *tmpSFS) {
             // We're best not reflecting.
@@ -300,6 +303,10 @@ void NGraphPair::reduce() {
         mayReflect[0] = mayReflect[1];
         mayReflect[1] = tmpRef;
 
+        long tmpObstruct = adjObstruct[0];
+        adjObstruct[0] = adjObstruct[1];
+        adjObstruct[1] = tmpObstruct;
+
         matchingReln_.invert();
     } else if (*sfs_[0] < *sfs_[1]) {
         // Don't swap them.
@@ -309,15 +316,15 @@ void NGraphPair::reduce() {
     }
 
     // Consider replacing each space with its reflection.
-    reduceReflect(matchingReln_, sfs_[0]->fibreCount(),
-        sfs_[1]->fibreCount(), mayReflect[0], mayReflect[1]);
+    reduceReflect(matchingReln_, mayReflect[0], mayReflect[1],
+        adjObstruct[0], adjObstruct[1]);
 
     // Consider swapping spaces.
     if (maySwap) {
         NMatrix2 altReln = matchingReln_.inverse();
 
-        reduceReflect(altReln, sfs_[1]->fibreCount(),
-            sfs_[0]->fibreCount(), mayReflect[1], mayReflect[0]);
+        reduceReflect(altReln, mayReflect[1], mayReflect[0],
+            adjObstruct[1], adjObstruct[0]);
 
         if (simpler(altReln, matchingReln_)) {
             // Swap the spaces.
@@ -333,13 +340,12 @@ void NGraphPair::reduce() {
     // certain non-orientable cases.
 }
 
-void NGraphPair::reduceReflect(NMatrix2& reln, unsigned long fibres0,
-        unsigned long fibres1, bool mayRef0, bool mayRef1) {
+void NGraphPair::reduceReflect(NMatrix2& reln, bool mayRef0, bool mayRef1,
+        long adjObstruct0, long adjObstruct1) {
     // Rotation can be done always.
     reduceSign(reln);
 
     // Consider replacing each space with its reflection.
-    // Note that we have b=0 for both SFSs at this stage.
 
     if ((! mayRef0) && (! mayRef1)) {
         // No reflections allowed at all.
@@ -348,7 +354,7 @@ void NGraphPair::reduceReflect(NMatrix2& reln, unsigned long fibres0,
 
     if (mayRef0 && ! mayRef1) {
         // We may only reflect space 0.
-        NMatrix2 r0 = reln * NMatrix2(1, 0, fibres0, -1);
+        NMatrix2 r0 = reln * NMatrix2(1, 0, adjObstruct0, -1);
         reduceSign(r0);
 
         if (simpler(r0, reln))
@@ -359,7 +365,7 @@ void NGraphPair::reduceReflect(NMatrix2& reln, unsigned long fibres0,
 
     if (mayRef1 && ! mayRef0) {
         // We may only reflect space 1.
-        NMatrix2 r1 = NMatrix2(1, 0, fibres1, -1) * reln;
+        NMatrix2 r1 = NMatrix2(1, 0, adjObstruct1, -1) * reln;
         reduceSign(r1);
 
         if (simpler(r1, reln))
@@ -369,10 +375,10 @@ void NGraphPair::reduceReflect(NMatrix2& reln, unsigned long fibres0,
     }
 
     // We may reflect either space.
-    NMatrix2 r0 = reln * NMatrix2(1, 0, fibres0, -1);
-    NMatrix2 r1 = NMatrix2(1, 0, fibres1, -1) * reln;
-    NMatrix2 r01 = NMatrix2(1, 0, fibres1, -1) * reln *
-        NMatrix2(1, 0, fibres0, -1);
+    NMatrix2 r0 = reln * NMatrix2(1, 0, adjObstruct0, -1);
+    NMatrix2 r1 = NMatrix2(1, 0, adjObstruct1, -1) * reln;
+    NMatrix2 r01 = NMatrix2(1, 0, adjObstruct1, -1) * reln *
+        NMatrix2(1, 0, adjObstruct0, -1);
 
     reduceSign(r0);
     reduceSign(r1);
@@ -413,6 +419,7 @@ void NGraphPair::reduceSign(NMatrix2& reln) {
 bool NGraphPair::simpler(const NMatrix2& m1, const NMatrix2& m2) {
     long maxAbs1 = 0, maxAbs2 = 0;
     unsigned nZeroes1 = 0, nZeroes2 = 0;
+    unsigned nNeg1 = 0, nNeg2 = 0;
 
     int i, j;
     for (i = 0; i < 2; i++)
@@ -428,8 +435,12 @@ bool NGraphPair::simpler(const NMatrix2& m1, const NMatrix2& m2) {
 
             if (m1[i][j] == 0)
                 nZeroes1++;
+            else if (m1[i][j] < 0)
+                nNeg1++;
             if (m2[i][j] == 0)
                 nZeroes2++;
+            else if (m2[i][j] < 0)
+                nNeg2++;
         }
 
     if (maxAbs1 < maxAbs2)
@@ -440,6 +451,11 @@ bool NGraphPair::simpler(const NMatrix2& m1, const NMatrix2& m2) {
     if (nZeroes1 > nZeroes2)
         return true;
     if (nZeroes1 < nZeroes2)
+        return false;
+
+    if (nNeg1 < nNeg2)
+        return true;
+    if (nNeg1 > nNeg2)
         return false;
 
     // Go lexicograhpic.

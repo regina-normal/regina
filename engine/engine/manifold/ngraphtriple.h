@@ -223,28 +223,39 @@ class NGraphTriple : public NManifold {
          *
          * This routine is for internal use by reduce().
          *
-         * \pre All Seifert fibred spaces must have obstruction constant
-         * zero.
+         * The arguments \a mayRef0, \a mayRefCentre and \a mayRef1
+         * specify whether individual spaces may or may not be reflected.
+         *
+         * \pre If we are allowing a space to be reflected (as specified
+         * by the arguments \a mayRef0, \a mayRefCentre and \a mayRef1),
+         * then the reflection must be identical in presentation to the
+         * original space, with the possible exxception of a different
+         * obstruction constant.
          *
          * @param reln0 the first matching matrix in the pair to simplify.
          * @param reln1 the second matching matrix in the pair to simplify.
-         * @param fibres0 the number of exceptional fibres in the
-         * corresponding first end space.
-         * @param fibresCentre the number of exceptional fibres in the
-         * corresponding central space.
-         * @param fibres1 the number of exceptional fibres in the
-         * corresponding second end space.
          * @param mayRef0 \c true if the first end space may be reflected,
          * or \c false if this is not allowed.
          * @param mayRefCentre \c true if the central space may be reflected,
          * or \c false if this is not allowed.
          * @param mayRef1 \c true if the second end space may be reflected,
          * or \c false if this is not allowed.
+         * @param adjObstruct0 the amount that must be added to the
+         * obstruction constant of the reflected first end space
+         * to make its presentation identical to the original.  If
+         * \a mayRef0 is passed as \c false, this argument is ignored.
+         * @param adjObstructCentre the amount that must be added to the
+         * obstruction constant of the reflected central space
+         * to make its presentation identical to the original.  If
+         * \a mayRefCentre is passed as \c false, this argument is ignored.
+         * @param adjObstruct1 the amount that must be added to the
+         * obstruction constant of the reflected second end space
+         * to make its presentation identical to the original.  If
+         * \a mayRef1 is passed as \c false, this argument is ignored.
          */
         static void reduceReflect(NMatrix2& reln0, NMatrix2& reln1,
-            unsigned long fibres0, unsigned long fibresCentre,
-            unsigned long fibres1, bool mayRef0, bool mayRefCentre,
-            bool mayRef1);
+            bool mayRef0, bool mayRefCentre, bool mayRef1,
+            long adjObstruct0, long adjObstructCentre, long adjObstruct1);
 
         /**
          * Uses 180 degree rotation and/or (1,1) twists to make the

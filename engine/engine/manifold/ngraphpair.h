@@ -184,21 +184,30 @@ class NGraphPair : public NManifold {
          *
          * This routine is for internal use by reduce().
          *
-         * \pre Both Seifert fibred spaces must have obstruction
-         * constant zero.
+         * The arguments \a mayRef0 and \a mayRef1 specify whether
+         * individual spaces may or may not be reflected.
+         *
+         * \pre If we are allowing a space to be reflected (as specified
+         * by the arguments \a mayRef0 and \a mayRef1), then the reflection
+         * must be identical in presentation to the original space, with the
+         * possible exception of a different obstruction constant.
          *
          * @param reln the matching matrix to simplify.
-         * @param fibres0 the number of exceptional fibres in the space
-         * \a sfs_[0].
-         * @param fibres1 the number of exceptional fibres in the space
-         * \a sfs_[1].
          * @param mayRef0 \c true if the space \a sfs_[0] may be reflected,
          * or \c false if this is not allowed.
          * @param mayRef1 \c true if the space \a sfs_[1] may be reflected,
          * or \c false if this is not allowed.
+         * @param adjObstruct0 the amount that must be added to the
+         * obstruction constant of the reflected \a sfs_[0] to make its
+         * presentation identical to the original \a sfs_[0].  If
+         * \a mayRef0 is passed as \c false, this argument is ignored.
+         * @param adjObstruct1 the amount that must be added to the
+         * obstruction constant of the reflected \a sfs_[1] to make its
+         * presentation identical to the original \a sfs_[1].  If
+         * \a mayRef1 is passed as \c false, this argument is ignored.
          */
-        static void reduceReflect(NMatrix2& reln, unsigned long fibres0,
-            unsigned long fibres1, bool mayRef0, bool mayRef1);
+        static void reduceReflect(NMatrix2& reln, bool mayRef0, bool mayRef1,
+            long adjObstruct0, long adjObstruct1);
 
         /**
          * Uses 180 degree rotation to make the given matching matrix
