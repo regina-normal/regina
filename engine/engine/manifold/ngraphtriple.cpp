@@ -29,6 +29,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/ngraphtriple.h"
 #include "manifold/nsfs.h"
+#include "manifold/nsfsaltset.h"
 #include "maths/nmatrixint.h"
 
 namespace regina {
@@ -225,221 +226,131 @@ void NGraphTriple::reduce() {
      *
      * 6. If we wish to swap the order of spaces, we swap both matrices.
      */
-    end_[0]->reduce(false);
-    end_[1]->reduce(false);
-    centre_->reduce(false);
 
-    // Bring the obstruction constant for each SFS down to zero.
-    long b;
+    // Simplify each space and build a list of possible reflections and
+    // other representations that we wish to experiment with using.
+    NSFSAltSet alt0(end_[0]);
+    NSFSAltSet alt1(end_[1]);
+    NSFSAltSet altCentre(centre_);
 
-    b = end_[0]->obstruction();
-    if (b != 0) {
-        end_[0]->insertFibre(1, -b);
-        matchingReln_[0][1][0] -= b * matchingReln_[0][0][0];
-        matchingReln_[0][1][1] -= b * matchingReln_[0][0][1];
-    }
+    delete end_[0];
+    delete end_[1];
+    delete centre_;
 
-    b = end_[1]->obstruction();
-    if (b != 0) {
-        end_[1]->insertFibre(1, -b);
-        matchingReln_[1][1][0] -= b * matchingReln_[1][0][0];
-        matchingReln_[1][1][1] -= b * matchingReln_[1][0][1];
-    }
+    // Decide which of these possible representations gives the nicest
+    // matching relations.
+    NSFSpace* use0 = 0;
+    NSFSpace* use1 = 0;
+    NSFSpace* useCentre = 0;
+    NMatrix2 useReln[2];
 
-    b = centre_->obstruction();
-    if (b != 0) {
-        centre_->insertFibre(1, -b);
-        matchingReln_[0][0][0] += b * matchingReln_[0][0][1];
-        matchingReln_[0][1][0] += b * matchingReln_[0][1][1];
-    }
+    NMatrix2 tryReln[2], tmpReln;
+    unsigned i0, i1, c;
 
-    /**
-     * If one of the end spaces is M/n2, we can replace it with D:(2,1)(2,-1)
-     * with fibre and orbifold curves switched.  To preserve the
-     * determinant of the matching matrix we will actually use a [0,1,-1,0]
-     * switch instead of a [0,1,1,0] switch.
-     *
-     * In fact we will use D:(2,1)(2,1) instead, which means:
-     *
-     * M_basis = [  0 1 ] [  1 0 ] D_basis = [ -1 1 ] D_basis;
-     *           [ -1 0 ] [ -1 1 ]           [ -1 0 ]
-     *
-     * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
-     *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
-     */
-    int i;
-    for (i = 0; i < 2; i++)
-        if (end_[i]->baseClass() == NSFSpace::bn2 &&
-                end_[i]->baseGenus() == 1 &&
-                (! end_[i]->baseOrientable()) &&
-                end_[i]->punctures(false) == 1 &&
-                end_[i]->punctures(true) == 0 &&
-                end_[i]->reflectors() == 0 &&
-                end_[i]->fibreCount() == 0 &&
-                end_[i]->obstruction() == 0) {
-            delete end_[i];
+    for (i0 = 0; i0 < alt0.size(); i0++)
+        for (i1 = 0; i1 < alt1.size(); i1++)
+            for (c = 0; c < altCentre.size(); c++) {
+                // See if (i0, i1, c) gives us a combination better than
+                // anything we've seen so far.
+                tryReln[0] = alt0.conversion(i0) * matchingReln_[0] *
+                    altCentre.conversion(c).inverse();
 
-            end_[i] = new NSFSpace(NSFSpace::bo1, 0 /* genus */,
-                1 /* punctures */, 0 /* twisted */,
-                0 /* reflectors */, 0 /* twisted */);
-            end_[i]->insertFibre(2, 1);
-            end_[i]->insertFibre(2, 1);
+                if (altCentre.reflected(c))
+                    tryReln[1] = alt1.conversion(i1) * matchingReln_[1] *
+                        NMatrix2(1, 0, 0, -1);
+                else
+                    tryReln[1] = alt1.conversion(i1) * matchingReln_[1];
 
-            matchingReln_[i] = NMatrix2(0, -1, 1, -1) * matchingReln_[i];
-        }
+                reduceBasis(tryReln[0], tryReln[1]);
 
-    // See whether each space is best reflected or left alone (or
-    // whether it doesn't matter).
-    bool mayRefEnd[2];
-    long adjObstruct[2];
-    NSFSpace* tmpSFS;
-    for (i = 0; i < 2; i++) {
-        mayRefEnd[i] = false;
+                // Insist on the first end space being at least as
+                // simple as the second.
 
-        tmpSFS = new NSFSpace(*end_[i]);
-        tmpSFS->reflect();
-        tmpSFS->reduce(false);
-        adjObstruct[i] = -tmpSFS->obstruction();
-        tmpSFS->insertFibre(1, adjObstruct[i]);
-
-        if (*tmpSFS < *end_[i]) {
-            // Best to reflect.
-            delete end_[i];
-            end_[i] = tmpSFS;
-
-            matchingReln_[i][1][0] = -matchingReln_[i][1][0]
-                + adjObstruct[i] * matchingReln_[i][0][0];
-            matchingReln_[i][1][1] = -matchingReln_[i][1][1]
-                + adjObstruct[i] * matchingReln_[i][0][1];
-        } else if (*end_[i] < *tmpSFS) {
-            // Best not to reflect.
-            delete tmpSFS;
-        } else {
-            // Doesn't matter.
-            mayRefEnd[i] = true;
-            delete tmpSFS;
-        }
-    }
-
-    bool mayRefCentre = false;
-    long adjObstructCentre;
-    tmpSFS = new NSFSpace(*centre_);
-    tmpSFS->reflect();
-    tmpSFS->reduce(false);
-    adjObstructCentre = -tmpSFS->obstruction();
-    tmpSFS->insertFibre(1, adjObstructCentre);
-
-    if (*tmpSFS < *centre_) {
-        // Best to reflect.
-        delete centre_;
-        centre_ = tmpSFS;
-
-        matchingReln_[0][0][0] = -matchingReln_[0][0][0]
-            - adjObstructCentre * matchingReln_[0][0][1];
-        matchingReln_[0][1][0] = -matchingReln_[0][1][0]
-            - adjObstructCentre * matchingReln_[0][1][1];
-        matchingReln_[1][0][0] = -matchingReln_[1][0][0];
-        matchingReln_[1][1][0] = -matchingReln_[1][1][0];
-    } else if (*centre_ < *tmpSFS) {
-        // Best not to reflect.
-        delete tmpSFS;
-    } else {
-        // Doesn't matter.
-        mayRefCentre = true;
-        delete tmpSFS;
-    }
-
-    // See whether we're better swapping the two end spaces or leaving them
-    // alone (or whether it doesn't matter).
-    bool maySwap = false;
-    if (*end_[1] < *end_[0]) {
-        // Swap them.
-        tmpSFS = end_[0];
-        end_[0] = end_[1];
-        end_[1] = tmpSFS;
-
-        bool tmpRef = mayRefEnd[0];
-        mayRefEnd[0] = mayRefEnd[1];
-        mayRefEnd[1] = tmpRef;
-
-        long tmpObstruct = adjObstruct[0];
-        adjObstruct[0] = adjObstruct[1];
-        adjObstruct[1] = tmpObstruct;
-
-        NMatrix2 tmpReln = matchingReln_[0];
-        matchingReln_[0] = matchingReln_[1];
-        matchingReln_[1] = tmpReln;
-    } else if (*end_[0] < *end_[1]) {
-        // Don't swap them.
-    } else {
-        // Doesn't matter.
-        maySwap = true;
-    }
-
-    // Consider replacing each space with its reflection.
-    reduceReflect(matchingReln_[0], matchingReln_[1],
-        mayRefEnd[0], mayRefCentre, mayRefEnd[1],
-        adjObstruct[0], adjObstructCentre, adjObstruct[1]);
-
-    // Consider swapping end spaces.
-    if (maySwap) {
-        NMatrix2 altReln0 = matchingReln_[1];
-        NMatrix2 altReln1 = matchingReln_[0];
-
-        reduceReflect(altReln0, altReln1,
-            mayRefEnd[1], mayRefCentre, mayRefEnd[0],
-            adjObstruct[1], adjObstructCentre, adjObstruct[0]);
-
-        if (simpler(altReln0, altReln1, matchingReln_[0], matchingReln_[1])) {
-            matchingReln_[0] = altReln0;
-            matchingReln_[1] = altReln1;
-        }
-    }
-
-    // TODO: More reductions!
-}
-
-void NGraphTriple::reduceReflect(NMatrix2& reln0, NMatrix2& reln1,
-        bool mayRef0, bool mayRefCentre, bool mayRef1,
-        long adjObstruct0, long adjObstructCentre, long adjObstruct1) {
-    // Rotation can be done always.
-    reduceBasis(reln0, reln1);
-
-    if (! (mayRef0 || mayRef1 || mayRefCentre))
-        return;
-
-    NMatrix2 best0 = reln0;
-    NMatrix2 best1 = reln1;
-
-    NMatrix2 alt0, alt1;
-    int do0, doCentre, do1;
-    for (do0 = 0; do0 <= (mayRef0 ? 1 : 0); do0++)
-        for (do1 = 0; do1 <= (mayRef1 ? 1 : 0); do1++)
-            for (doCentre = 0; doCentre <= (mayRefCentre ? 1 : 0); doCentre++) {
-                if (! (do0 || do1 || doCentre))
-                    continue;
-
-                alt0 = reln0;
-                alt1 = reln1;
-
-                if (do0)
-                    alt0 = NMatrix2(1, 0, adjObstruct0, -1) * alt0;
-                if (do1)
-                    alt1 = NMatrix2(1, 0, adjObstruct1, -1) * alt1;
-                if (doCentre) {
-                    alt0 = alt0 * NMatrix2(1, 0, adjObstructCentre, -1);
-                    alt1 = alt1 * NMatrix2(1, 0, 0, -1);
+                // First try without end space swapping.
+                if (! (*alt1[i1] < *alt0[i0])) {
+                    if ((! use0) || simpler(tryReln[0], tryReln[1],
+                            useReln[0], useReln[1])) {
+                        use0 = alt0[i0];
+                        use1 = alt1[i1];
+                        useCentre = altCentre[c];
+                        useReln[0] = tryReln[0];
+                        useReln[1] = tryReln[1];
+                    } else if (! simpler(useReln[0], useReln[1],
+                            tryReln[0], tryReln[1])) {
+                        // The matrices are the same as our best.
+                        // Compare spaces.
+                        if (*altCentre[c] < *useCentre ||
+                                (*altCentre[c] == *useCentre &&
+                                    *alt0[i0] < *use0) ||
+                                (*altCentre[c] == *useCentre &&
+                                    *alt0[i0] == *use0 &&
+                                    *alt1[i1] < *use1)) {
+                            use0 = alt0[i0];
+                            use1 = alt1[i1];
+                            useCentre = altCentre[c];
+                            useReln[0] = tryReln[0];
+                            useReln[1] = tryReln[1];
+                        }
+                    }
                 }
 
-                reduceBasis(alt0, alt1);
-                if (simpler(alt0, alt1, best0, best1)) {
-                    best0 = alt0;
-                    best1 = alt1;
+                // Now try with end space swapping.
+                if (! (*alt0[i0] < *alt1[i1])) {
+                    reduceBasis(tryReln[1], tryReln[0]);
+
+                    if ((! use0) || simpler(tryReln[1], tryReln[0],
+                            useReln[0], useReln[1])) {
+                        use0 = alt1[i1];
+                        use1 = alt0[i0];
+                        useCentre = altCentre[c];
+                        useReln[0] = tryReln[1];
+                        useReln[1] = tryReln[0];
+                    } else if (! simpler(useReln[0], useReln[1],
+                            tryReln[1], tryReln[0])) {
+                        // The matrices are the same as our best.
+                        // Compare spaces.
+                        if (*altCentre[c] < *useCentre ||
+                                (*altCentre[c] == *useCentre &&
+                                    *alt1[i1] < *use0) ||
+                                (*altCentre[c] == *useCentre &&
+                                    *alt1[i1] == *use0 &&
+                                    *alt0[i0] < *use1)) {
+                            use0 = alt1[i1];
+                            use1 = alt0[i0];
+                            useCentre = altCentre[c];
+                            useReln[0] = tryReln[1];
+                            useReln[1] = tryReln[0];
+                        }
+                    }
                 }
             }
 
-    reln0 = best0;
-    reln1 = best1;
+    // This should never happen, but just in case... let's not crash.
+    if (! (use0 && use1 && useCentre)) {
+        use0 = alt0[0];
+        use1 = alt1[0];
+        useCentre = altCentre[0];
+
+        useReln[0] = alt0.conversion(0) * matchingReln_[0] *
+            altCentre.conversion(0).inverse();
+        useReln[1] = alt1.conversion(0) * matchingReln_[1] *
+            altCentre.conversion(0).inverse();
+        reduceBasis(useReln[0], useReln[1]);
+    }
+
+    // Use what we found.
+    end_[0] = use0;
+    end_[1] = use1;
+    centre_ = useCentre;
+    matchingReln_[0] = useReln[0];
+    matchingReln_[1] = useReln[1];
+
+    // And what we don't use, delete.
+    alt0.deleteAll(use0, use1);
+    alt1.deleteAll(use0, use1);
+    altCentre.deleteAll(useCentre);
+
+    // TODO: More reductions!
 }
 
 void NGraphTriple::reduceBasis(NMatrix2& reln0, NMatrix2& reln1) {
