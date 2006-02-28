@@ -582,23 +582,7 @@ bool NSFSpace::operator < (const NSFSpace& compare) const {
     unsigned long adjGenus2 = (compare.baseOrientable() ?
         compare.genus_ * 2 : compare.genus_);
 
-    if (adjGenus1 < adjGenus2)
-        return true;
-    if (adjGenus1 > adjGenus2)
-        return false;
-
-    if (reflectors_ + reflectorsTwisted_ <
-            compare.reflectors_ + compare.reflectorsTwisted_)
-        return true;
-    if (reflectors_ + reflectorsTwisted_ >
-            compare.reflectors_ + compare.reflectorsTwisted_)
-        return false;
-
-    if (reflectorsTwisted_ < compare.reflectorsTwisted_)
-        return true;
-    if (reflectorsTwisted_ > compare.reflectorsTwisted_)
-        return false;
-
+    // Too many punctures is worse than anything.
     if (punctures_ + puncturesTwisted_ <
             compare.punctures_ + compare.puncturesTwisted_)
         return true;
@@ -606,16 +590,41 @@ bool NSFSpace::operator < (const NSFSpace& compare) const {
             compare.punctures_ + compare.puncturesTwisted_)
         return false;
 
-    if (puncturesTwisted_ < compare.puncturesTwisted_)
+    // After this, order by a combination of genus and reflectors to
+    // group closed spaces with approximately the same complexity.
+    if (adjGenus1 + reflectors_ + reflectorsTwisted_ <
+            adjGenus2 + compare.reflectors_ + compare.reflectorsTwisted_)
         return true;
-    if (puncturesTwisted_ > compare.puncturesTwisted_)
+    if (adjGenus1 + reflectors_ + reflectorsTwisted_ >
+            adjGenus2 + compare.reflectors_ + compare.reflectorsTwisted_)
         return false;
+
+    // Within this genus + reflectors combination, reflectors are worse.
+    if (reflectors_ + reflectorsTwisted_ <
+            compare.reflectors_ + compare.reflectorsTwisted_)
+        return true;
+    if (reflectors_ + reflectorsTwisted_ >
+            compare.reflectors_ + compare.reflectorsTwisted_)
+        return false;
+
+    // If we reach this point, we must have adjGenus1 == adjGenus2.
+    // Down to more mundane comparisons.
 
     // Comparing class will catch orientability also (placing orientable
     // before non-orientable).
     if (class_ < compare.class_)
         return true;
     if (class_ > compare.class_)
+        return false;
+
+    if (reflectorsTwisted_ < compare.reflectorsTwisted_)
+        return true;
+    if (reflectorsTwisted_ > compare.reflectorsTwisted_)
+        return false;
+
+    if (puncturesTwisted_ < compare.puncturesTwisted_)
+        return true;
+    if (puncturesTwisted_ > compare.puncturesTwisted_)
         return false;
 
     if (nFibres_ < compare.nFibres_)
