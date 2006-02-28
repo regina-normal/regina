@@ -40,6 +40,30 @@ NGraphTriple::~NGraphTriple() {
     delete centre_;
 }
 
+bool NGraphTriple::operator < (const NGraphTriple& compare) const {
+    if (*centre_ < *compare.centre_)
+        return true;
+    if (*compare.centre_ < *centre_)
+        return false;
+
+    if (*end_[0] < *compare.end_[0])
+        return true;
+    if (*compare.end_[0] < *end_[0])
+        return false;
+
+    if (*end_[1] < *compare.end_[1])
+        return true;
+    if (*compare.end_[1] < *end_[1])
+        return false;
+
+    if (simpler(matchingReln_[0], compare.matchingReln_[0]))
+        return true;
+    if (simpler(compare.matchingReln_[0], matchingReln_[0]))
+        return false;
+
+    return simpler(matchingReln_[1], compare.matchingReln_[1]);
+}
+
 NAbelianGroup* NGraphTriple::getHomologyH1() const {
     // Just for safety (this should always be true anyway):
     if (end_[0]->punctures(false) != 1 || end_[0]->punctures(true) != 0)

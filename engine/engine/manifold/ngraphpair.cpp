@@ -39,6 +39,20 @@ NGraphPair::~NGraphPair() {
     delete sfs_[1];
 }
 
+bool NGraphPair::operator < (const NGraphPair& compare) const {
+    if (*sfs_[0] < *compare.sfs_[0])
+        return true;
+    if (*compare.sfs_[0] < *sfs_[0])
+        return false;
+
+    if (*sfs_[1] < *compare.sfs_[1])
+        return true;
+    if (*compare.sfs_[1] < *sfs_[1])
+        return false;
+
+    return simpler(matchingReln_, compare.matchingReln_);
+}
+
 NAbelianGroup* NGraphPair::getHomologyH1() const {
     // Just for safety (this should always be true anyway):
     if (sfs_[0]->punctures(false) != 1 || sfs_[0]->punctures(true) != 0)

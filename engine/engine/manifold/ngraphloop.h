@@ -163,6 +163,26 @@ class NGraphLoop : public NManifold {
          */
         const NMatrix2& matchingReln() const;
 
+        /**
+         * Determines in a fairly ad-hoc fashion whether this
+         * representation of this space is "smaller" than the given
+         * representation of the given space.
+         *
+         * The ordering imposed on graph manifolds is purely aesthetic
+         * on the part of the author, and is subject to change in future
+         * versions of Regina.  It also depends upon the particular
+         * representation, so that different representations of the same
+         * space may be ordered differently.
+         *
+         * All that this routine really offers is a well-defined way of
+         * ordering graph manifold representations.
+         *
+         * @param compare the representation with which this will be compared.
+         * @return \c true if and only if this is "smaller" than the
+         * given graph manifold representation.
+         */
+        bool operator < (const NGraphLoop& compare) const;
+
         NAbelianGroup* getHomologyH1() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

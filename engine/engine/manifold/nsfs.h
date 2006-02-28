@@ -716,8 +716,8 @@ class NSFSpace : public NManifold {
          * given space.
          *
          * The ordering imposed on Seifert fibred space representations
-         * has no good mathematical grounding, and is subject to change
-         * in future versions of Regina.  It also depends upon the
+         * is purely aesthetic on the part of the author, and is subject to
+         * change in future versions of Regina.  It also depends upon the
          * particular representation, so that different representations
          * of the same space may be ordered differently.
          *

@@ -38,6 +38,15 @@ NGraphLoop::~NGraphLoop() {
     delete sfs_;
 }
 
+bool NGraphLoop::operator < (const NGraphLoop& compare) const {
+    if (*sfs_ < *compare.sfs_)
+        return true;
+    if (*compare.sfs_ < *sfs_)
+        return false;
+
+    return simpler(matchingReln_, compare.matchingReln_);
+}
+
 NAbelianGroup* NGraphLoop::getHomologyH1() const {
     // Just for safety (this should always be true anyway):
     if (sfs_->punctures(false) != 2 || sfs_->punctures(true) != 0)
