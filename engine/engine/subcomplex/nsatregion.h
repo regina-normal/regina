@@ -230,6 +230,25 @@ class NSatRegion : public ShareableObject {
         virtual ~NSatRegion();
 
         /**
+         * Returns the number of saturated blocks that come together
+         * to form this saturated region.
+         */
+        unsigned long numberOfBlocks() const;
+        /**
+         * Returns details of the requested saturated block within this
+         * region.  The information will returned will include
+         * structural information for the block, along with details of
+         * how the block is aligned (e.g., reflected vertically or
+         * horizontally) within the larger region.
+         *
+         * @param which indicates which of the constituent blocks should
+         * be returned; this must be between 0 and numberOfBlocks()-1
+         * inclusive.
+         * @return details of the requested saturated block.
+         */
+        const NSatBlockSpec& block(unsigned long which) const;
+
+        /**
          * Returns the number of saturated annuli that together form the
          * boundary components of this region.
          *
@@ -515,6 +534,14 @@ inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
 }
 
 // Inline functions for NSatRegion
+
+inline unsigned long NSatRegion::numberOfBlocks() const {
+    return blocks_.size();
+}
+
+inline const NSatBlockSpec& NSatRegion::block(unsigned long which) const {
+    return blocks_[which];
+}
 
 inline unsigned long NSatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
