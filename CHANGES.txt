@@ -43,6 +43,7 @@ Version 4.3  [ under development ]
             - New class for expensive and rarely used hard-coded lists.
         Class NManifold:
             - Routine writeTeXName() no longer provides wrapping dollar signs.
+            - New operator < for ordering manifolds deterministically.
         Class NMatrix2:
             - New specialised class for working with 2-by-2 integer matrices.
         Class NPacket:

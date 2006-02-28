@@ -65,12 +65,7 @@
 
 #include <file/nxmlfile.h>
 #include <algebra/nabeliangroup.h>
-#include <manifold/ngraphloop.h>
-#include <manifold/ngraphpair.h>
-#include <manifold/ngraphtriple.h>
-#include <manifold/nlensspace.h>
-#include <manifold/nsfs.h>
-#include <manifold/ntorusbundle.h>
+#include <manifold/nmanifold.h>
 #include <packet/ncontainer.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/ntriangulation.h>
@@ -146,77 +141,7 @@ bool ManifoldSpec::operator < (const ManifoldSpec& other) const {
         return true;
 
     // Both structures have a triangulation and a manifold.
-
-    // Lens spaces go first.
-    NLensSpace* lens1 = dynamic_cast<NLensSpace*>(manifold);
-    NLensSpace* lens2 = dynamic_cast<NLensSpace*>(other.manifold);
-
-    if (lens1 && ! lens2)
-        return true;
-    if (lens2 && ! lens1)
-        return false;
-    if (lens1 && lens2) {
-        return (lens1->getP() < lens2->getP() ||
-            (lens1->getP() == lens2->getP() && lens1->getQ() < lens2->getQ()));
-    }
-
-    // Next go through Seifert fibred spaces.
-    NSFSpace* sfs1 = dynamic_cast<NSFSpace*>(manifold);
-    NSFSpace* sfs2 = dynamic_cast<NSFSpace*>(other.manifold);
-
-    if (sfs1 && ! sfs2)
-        return true;
-    if (sfs2 && ! sfs1)
-        return false;
-    if (sfs1 && sfs2)
-        return (*sfs1 < *sfs2);
-
-    // Now for torus bundles.
-    NTorusBundle* bundle1 = dynamic_cast<NTorusBundle*>(manifold);
-    NTorusBundle* bundle2 = dynamic_cast<NTorusBundle*>(other.manifold);
-
-    if (bundle1 && ! bundle2)
-        return true;
-    if (bundle2 && ! bundle1)
-        return false;
-    if (bundle1 && bundle2) {
-        // Just sort by name here, since bundle parameters will probably
-        // need to be made canonical anyway.
-        return manifold->getName() < other.manifold->getName();
-    }
-
-    // Finally non-geometric stuff (SFS pairs, triples and loops).
-    // In all of these cases sort by name for want of something more
-    // sophisticated (TODO).
-    NGraphPair* pair1 = dynamic_cast<NGraphPair*>(manifold);
-    NGraphPair* pair2 = dynamic_cast<NGraphPair*>(other.manifold);
-    if (pair1 && ! pair2)
-        return true;
-    if (pair2 && ! pair1)
-        return false;
-    if (pair1 && pair2)
-        return manifold->getName() < other.manifold->getName();
-
-    NGraphTriple* triple1 = dynamic_cast<NGraphTriple*>(manifold);
-    NGraphTriple* triple2 = dynamic_cast<NGraphTriple*>(other.manifold);
-    if (triple1 && ! triple2)
-        return true;
-    if (triple2 && ! triple1)
-        return false;
-    if (triple1 && triple2)
-        return manifold->getName() < other.manifold->getName();
-
-    NGraphLoop* loop1 = dynamic_cast<NGraphLoop*>(manifold);
-    NGraphLoop* loop2 = dynamic_cast<NGraphLoop*>(other.manifold);
-    if (loop1 && ! loop2)
-        return true;
-    if (loop2 && ! loop1)
-        return false;
-    if (loop1 && loop2)
-        return manifold->getName() < other.manifold->getName();
-
-    // No idea.  Use the dictionary.
-    return manifold->getName() < other.manifold->getName();
+    return (*manifold < *other.manifold);
 }
 
 /**

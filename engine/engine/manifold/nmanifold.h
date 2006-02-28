@@ -130,6 +130,34 @@ class NManifold : public ShareableObject {
         virtual NAbelianGroup* getHomologyH1() const;
 
         /**
+         * Determines in a fairly ad-hoc fashion whether this representation
+         * of this 3-manifold is "smaller" than the given representation
+         * of the given 3-manifold.
+         *
+         * The ordering imposed on 3-manifolds is purely aesthetic on
+         * the part of the author, and is subject to change in future
+         * versions of Regina.
+         *
+         * The ordering also depends on the particular representation of
+         * the 3-manifold that is used.  As an example, different
+         * representations of the same Seifert fibred space might well
+         * be ordered differently.
+         *
+         * All that this routine really offers is a well-defined way of
+         * ordering 3-manifold representations.
+         *
+         * \warning Currently this routine is only implemented in full for
+         * closed 3-manifolds.  For most classes of bounded 3-manifolds,
+         * this routine simply compares the strings returned by getName().
+         *
+         * @param compare the 3-manifold representation with which this
+         * will be compared.
+         * @return \c true if and only if this is "smaller" than the
+         * given 3-manifold representation.
+         */
+        bool operator < (const NManifold& compare) const;
+
+        /**
          * Writes the common name of this 3-manifold as a
          * human-readable string to the given output stream.
          *
