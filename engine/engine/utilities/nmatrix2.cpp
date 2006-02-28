@@ -73,5 +73,136 @@ bool NMatrix2::invert() {
         return false;
 }
 
+bool simpler(const NMatrix2& m1, const NMatrix2& m2) {
+    long maxAbs1 = 0, maxAbs2 = 0;
+    unsigned nZeroes1 = 0, nZeroes2 = 0;
+    unsigned nNeg1 = 0, nNeg2 = 0;
+
+    int i, j;
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++) {
+            if (m1[i][j] > maxAbs1)
+                maxAbs1 = m1[i][j];
+            if (m1[i][j] < -maxAbs1)
+                maxAbs1 = -m1[i][j];
+            if (m2[i][j] > maxAbs2)
+                maxAbs2 = m2[i][j];
+            if (m2[i][j] < -maxAbs2)
+                maxAbs2 = -m2[i][j];
+
+            if (m1[i][j] == 0)
+                nZeroes1++;
+            else if (m1[i][j] < 0)
+                nNeg1++;
+            if (m2[i][j] == 0)
+                nZeroes2++;
+            else if (m2[i][j] < 0)
+                nNeg2++;
+        }
+
+    if (maxAbs1 < maxAbs2)
+        return true;
+    if (maxAbs1 > maxAbs2)
+        return false;
+
+    if (nZeroes1 > nZeroes2)
+        return true;
+    if (nZeroes1 < nZeroes2)
+        return false;
+
+    if (nNeg1 < nNeg2)
+        return true;
+    if (nNeg1 > nNeg2)
+        return false;
+
+    // Go lexicograhpic.
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++)
+            if (m1[i][j] < m2[i][j])
+                return true;
+            else if (m1[i][j] > m2[i][j])
+                return false;
+
+    // They're the same.
+    return false;
+}
+
+bool simpler(const NMatrix2& pair1first, const NMatrix2& pair1second,
+        const NMatrix2& pair2first, const NMatrix2& pair2second) {
+    long maxAbs0 = 0, maxAbs1 = 0;
+    unsigned nZeroes0 = 0, nZeroes1 = 0;
+    unsigned nNeg0 = 0, nNeg1 = 0;
+
+    int i, j;
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++) {
+            if (pair1first[i][j] > maxAbs0)
+                maxAbs0 = pair1first[i][j];
+            if (pair1first[i][j] < -maxAbs0)
+                maxAbs0 = -pair1first[i][j];
+            if (pair1second[i][j] > maxAbs0)
+                maxAbs0 = pair1second[i][j];
+            if (pair1second[i][j] < -maxAbs0)
+                maxAbs0 = -pair1second[i][j];
+            if (pair2first[i][j] > maxAbs1)
+                maxAbs1 = pair2first[i][j];
+            if (pair2first[i][j] < -maxAbs1)
+                maxAbs1 = -pair2first[i][j];
+            if (pair2second[i][j] > maxAbs1)
+                maxAbs1 = pair2second[i][j];
+            if (pair2second[i][j] < -maxAbs1)
+                maxAbs1 = -pair2second[i][j];
+
+            if (pair1first[i][j] == 0)
+                nZeroes0++;
+            else if (pair1first[i][j] < 0)
+                nNeg0++;
+            if (pair1second[i][j] == 0)
+                nZeroes0++;
+            else if (pair1second[i][j] < 0)
+                nNeg0++;
+            if (pair2first[i][j] == 0)
+                nZeroes1++;
+            else if (pair2first[i][j] < 0)
+                nNeg1++;
+            if (pair2second[i][j] == 0)
+                nZeroes1++;
+            else if (pair2second[i][j] < 0)
+                nNeg1++;
+        }
+
+    if (maxAbs0 < maxAbs1)
+        return true;
+    if (maxAbs0 > maxAbs1)
+        return false;
+
+    if (nZeroes0 > nZeroes1)
+        return true;
+    if (nZeroes0 < nZeroes1)
+        return false;
+
+    if (nNeg0 < nNeg1)
+        return true;
+    if (nNeg0 > nNeg1)
+        return false;
+
+    // Go lexicograhpic.
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++)
+            if (pair1first[i][j] < pair2first[i][j])
+                return true;
+            else if (pair1first[i][j] > pair2first[i][j])
+                return false;
+    for (i = 0; i < 2; i++)
+        for (j = 0; j < 2; j++)
+            if (pair1second[i][j] < pair2second[i][j])
+                return true;
+            else if (pair1second[i][j] > pair2second[i][j])
+                return false;
+
+    // They're the same.
+    return false;
+}
+
 } // namespace regina
 

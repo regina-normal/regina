@@ -230,59 +230,5 @@ void NGraphLoop::reduceBasis(NMatrix2& reln) {
     }
 }
 
-bool NGraphLoop::simpler(const NMatrix2& m1, const NMatrix2& m2) {
-    long maxAbs1 = 0, maxAbs2 = 0;
-    unsigned nZeroes1 = 0, nZeroes2 = 0;
-    unsigned nNeg1 = 0, nNeg2 = 0;
-
-    int i, j;
-    for (i = 0; i < 2; i++)
-        for (j = 0; j < 2; j++) {
-            if (m1[i][j] > maxAbs1)
-                maxAbs1 = m1[i][j];
-            if (m1[i][j] < -maxAbs1)
-                maxAbs1 = -m1[i][j];
-            if (m2[i][j] > maxAbs2)
-                maxAbs2 = m2[i][j];
-            if (m2[i][j] < -maxAbs2)
-                maxAbs2 = -m2[i][j];
-
-            if (m1[i][j] == 0)
-                nZeroes1++;
-            else if (m1[i][j] < 0)
-                nNeg1++;
-            if (m2[i][j] == 0)
-                nZeroes2++;
-            else if (m2[i][j] < 0)
-                nNeg2++;
-        }
-
-    if (maxAbs1 < maxAbs2)
-        return true;
-    if (maxAbs1 > maxAbs2)
-        return false;
-
-    if (nZeroes1 > nZeroes2)
-        return true;
-    if (nZeroes1 < nZeroes2)
-        return false;
-
-    if (nNeg1 < nNeg2)
-        return true;
-    if (nNeg1 > nNeg2)
-        return false;
-
-    // Down to lexicographical order.
-    for (i = 0; i < 2; i++)
-        for (j = 0; j < 2; j++)
-            if (m1[i][j] < m2[i][j])
-                return true;
-            else if (m1[i][j] > m2[i][j])
-                return false;
-
-    // They're identical.
-    return false;
-}
-
 } // namespace regina
 

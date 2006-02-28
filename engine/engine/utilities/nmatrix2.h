@@ -294,6 +294,40 @@ class NMatrix2 {
  */
 std::ostream& operator << (std::ostream& out, const NMatrix2& mat);
 
+/**
+ * Determines whether the first given matrix is more aesthetically
+ * pleasing than the second.  The way in which this judgement is made
+ * is purely aesthetic on the part of the author, and is subject to
+ * change in future versions of Regina.
+ *
+ * @param m1 the first matrix to examine.
+ * @param m2 the second matrix to examine.
+ * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
+ * or \c false if either the matrices are equal or \a m2 is more
+ * pleasing than \a m1.
+ */
+bool simpler(const NMatrix2& m1, const NMatrix2& m2);
+
+/**
+ * Determines whether the first given pair of matrices is more aesthetically
+ * pleasing than the second pair.  The way in which this judgement is made
+ * is purely aesthetic on the part of the author, and is subject to
+ * change in future versions of Regina.
+ *
+ * Note that pairs are ordered, so the pair (\a M, \a N) may be more
+ * (or perhaps less) pleasing than the pair (\a N, \M).
+ *
+ * @param pair1first the first matrix of the first pair to examine.
+ * @param pair1second the second matrix of the first pair to examine.
+ * @param pair2first the first matrix of the second pair to examine.
+ * @param pair2second the second matrix of the second pair to examine.
+ * @return \c true if the first pair is deemed to be more pleasing than
+ * the second pair, or \c false if either the ordered pairs are equal or
+ * the second pair is more pleasing than the first.
+ */
+bool simpler(const NMatrix2& pair1first, const NMatrix2& pair1second,
+        const NMatrix2& pair2first, const NMatrix2& pair2second);
+
 /*@}*/
 
 // Inline functions for NMatrix2

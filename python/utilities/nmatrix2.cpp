@@ -90,6 +90,12 @@ using namespace boost::python;
 using regina::NMatrix2;
 using regina::NMatrix2Row;
 
+namespace {
+    bool (*simpler1)(const NMatrix2&, const NMatrix2&) = &regina::simpler;
+    bool (*simpler2)(const NMatrix2&, const NMatrix2&,
+        const NMatrix2&, const NMatrix2&) = &regina::simpler;
+}
+
 void addNMatrix2() {
     class_<NMatrix2Row>("NMatrix2Row", ::boost::python::no_init)
         .def("__getitem__", &NMatrix2Row::getItem)
@@ -124,5 +130,8 @@ void addNMatrix2() {
         .def("isZero", &NMatrix2::isZero)
         .def(self_ns::str(self))
     ;
+
+    def("simpler", simpler1);
+    def("simpler", simpler2);
 }
 

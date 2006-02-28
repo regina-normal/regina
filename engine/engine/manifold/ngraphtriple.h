@@ -236,30 +236,6 @@ class NGraphTriple : public NManifold {
          * @param reln the matching matrix to simplify.
          */
         static void reduceSign(NMatrix2& reln);
-
-        /**
-         * Decides whether the first given pair of matrices is more
-         * aesthetically pleasing than the second pair.  This judgement is
-         * somewhat arbitrary and is subject to change in future versions
-         * of Regina.
-         *
-         * This routine is for internal use by reduce().
-         *
-         * \warning This routine might behave differently from similar
-         * routines in other classes (as a result of differing aesthetic
-         * requirements).
-         *
-         * @param pair0first the first matrix of the first pair to examine.
-         * @param pair0second the second matrix of the first pair to examine.
-         * @param pair1first the first matrix of the second pair to examine.
-         * @param pair1second the second matrix of the second pair to examine.
-         * @return \c true if the first pair is declared to be more pleasing
-         * than the second pair, or \c false if the second pair is more
-         * pleasing or a decision could not be reached.
-         */
-        static bool simpler(
-            const NMatrix2& pair0first, const NMatrix2& pair0second,
-            const NMatrix2& pair1first, const NMatrix2& pair1second);
 };
 
 /*@}*/
