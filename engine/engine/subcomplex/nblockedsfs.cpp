@@ -72,8 +72,9 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
     const NSatCube* cube;
     const NSatReflectorStrip* ref;
     const NSatTriPrism* tri;
+    const NSatTriPrism* triAdj;
     unsigned adjAnn;
-    unsigned long i;
+    unsigned long i, j;
     for (i = 0; i < n; i++) {
         block = region_->block(i).block;
 
@@ -149,6 +150,52 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
                     ref->adjacentBlock(1), true);
             } else
                 return false;
+        }
+
+        tri = dynamic_cast<const NSatTriPrism*>(block);
+        if (tri) {
+            for (j = 0; j < 3; j++)
+                if (tri->adjacentBlock(j) == tri &&
+                        tri->adjacentAnnulus(j) == ((j + 1) % 3)) {
+                    if (tri->adjacentReflected(j) || tri->adjacentBackwards(j))
+                        return false;
+
+                    triAdj = dynamic_cast<const NSatTriPrism*>(
+                        tri->adjacentBlock((j + 2) % 3));
+                    if (! triAdj)
+                        return false;
+
+                    bool consistent = true;
+                    if (tri->major())
+                        consistent = ! consistent;
+                    if (triAdj->major())
+                        consistent = ! consistent;
+                    if (tri->adjacentReflected((j + 2) % 3))
+                        consistent = ! consistent;
+                    if (tri->adjacentBackwards((j + 2) % 3))
+                        consistent = ! consistent;
+
+                    adjAnn = tri->adjacentAnnulus((j + 2) % 3);
+                    if (consistent) {
+                        if (triAdj->major())
+                            return findPluggedTori(false, 2, name,
+                                triAdj->adjacentBlock((adjAnn + 1) % 3), false,
+                                triAdj->adjacentBlock((adjAnn + 2) % 3), true);
+                        else
+                            return findPluggedTori(false, 2, name,
+                                triAdj->adjacentBlock((adjAnn + 2) % 3), true,
+                                triAdj->adjacentBlock((adjAnn + 1) % 3), false);
+                    } else {
+                        if (triAdj->major())
+                            return findPluggedTori(false, 3, name,
+                                triAdj->adjacentBlock((adjAnn + 2) % 3), true,
+                                triAdj->adjacentBlock((adjAnn + 1) % 3), true);
+                        else
+                            return findPluggedTori(false, 3, name,
+                                triAdj->adjacentBlock((adjAnn + 1) % 3), false,
+                                triAdj->adjacentBlock((adjAnn + 2) % 3), false);
+                    }
+                }
         }
     }
 
@@ -324,7 +371,8 @@ bool NBlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
         return false;
 
     // Do a little normalisation.
-    if (thin && (id == 3 || id == 4)) {
+    if ((thin && (id == 3 || id == 4)) || ((! thin) && id == 1)) {
+        // Complementing does nothing.
         if (p0 > 0 && p1 > 0 && q0 < 0 && q1 < 0 && q0 > -p0 && q1 > -p1 &&
                 2 * q0 <= -p0 && 2 * q1 <= -p1) {
             q0 = -p0 - q0;
@@ -334,9 +382,16 @@ bool NBlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
 
     if (labs(p1) > labs(p0)) {
         long tmp;
-        if (thin) {
+        if (thin || ((! thin) && (id == 1 || id ==3))) {
+            // Swapping does nothing.
             tmp = p0; p0 = p1; p1 = tmp;
             tmp = q0; q0 = q1; q1 = tmp;
+        } else if (id == 2 || id == 4) {
+            // If we swap then we also complement.
+            tmp = p0; p0 = p1; p1 = tmp;
+            tmp = q0; q0 = q1; q1 = tmp;
+            q0 = -p0 - q0;
+            q1 = -p1 - q1;
         }
     }
 
