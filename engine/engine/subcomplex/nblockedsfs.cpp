@@ -37,6 +37,16 @@
 
 namespace regina {
 
+namespace {
+    /**
+     * An anonymous inline boolean xor.  Experiences with plain C have
+     * spoiled me for life from using equality/xor operators with bools.
+     */
+    inline bool regXor(bool a, bool b) {
+        return ((a && ! b) || (b && !a));
+    }
+}
+
 /**
  * A subclass of NSatBlockStartSearcher that, upon finding a starter
  * saturated block, attempts to flesh this out to an entire closed
@@ -75,6 +85,8 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
     const NSatTriPrism* triAdj;
     unsigned adjAnn;
     unsigned long i, j;
+    int delta, deltaAdj;
+    bool consistent;
     for (i = 0; i < n; i++) {
         block = region_->block(i).block;
 
@@ -154,7 +166,8 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
 
         tri = dynamic_cast<const NSatTriPrism*>(block);
         if (tri) {
-            for (j = 0; j < 3; j++)
+            for (j = 0; j < 3; j++) {
+                // Try the thick case...
                 if (tri->adjacentBlock(j) == tri &&
                         tri->adjacentAnnulus(j) == ((j + 1) % 3)) {
                     if (tri->adjacentReflected(j) || tri->adjacentBackwards(j))
@@ -165,7 +178,8 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
                     if (! triAdj)
                         return false;
 
-                    bool consistent = true;
+                    // Do we have major to major and minor to minor?
+                    consistent = true;
                     if (tri->major())
                         consistent = ! consistent;
                     if (triAdj->major())
@@ -196,6 +210,54 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
                                 triAdj->adjacentBlock((adjAnn + 2) % 3), false);
                     }
                 }
+
+                // ... and try the thin case.
+                if (! (triAdj = dynamic_cast<const NSatTriPrism*>(
+                        tri->adjacentBlock(j))))
+                    continue;
+
+                // Do we have major to major and minor to minor?
+                consistent = true;
+                if (tri->major())
+                    consistent = ! consistent;
+                if (triAdj->major())
+                    consistent = ! consistent;
+                if (tri->adjacentReflected(j))
+                    consistent = ! consistent;
+                if (tri->adjacentBackwards(j))
+                    consistent = ! consistent;
+
+                adjAnn = tri->adjacentAnnulus(j);
+
+                for (delta = 1; delta <= 2; delta++)
+                    if (tri->adjacentBlock((j + delta) % 3) == triAdj) {
+                        if (regXor(tri->adjacentReflected(j),
+                                tri->adjacentReflected((j + delta) % 3)))
+                            return false;
+                        if (! regXor(tri->adjacentBackwards(j),
+                                tri->adjacentBackwards((j + delta) % 3)))
+                            return false;
+
+                        // We have our Mobius strip!
+                        // Make sure we come at it via the correct joining.
+                        deltaAdj = (tri->adjacentBackwards(j) ?
+                            3 - delta : delta);
+                        if (tri->adjacentAnnulus((j + delta) % 3) !=
+                                (adjAnn + deltaAdj) % 3) {
+                            // It's not the way we want to see it, but
+                            // we'll come at it from the correct joining later.
+                            continue;
+                        }
+
+                        // Our LSTs need to be measured against the
+                        // major edges in all cases here.
+                        return findPluggedTori(true, consistent ? 2 : 1, name,
+                            tri->adjacentBlock((j + 2 * delta) % 3),
+                                tri->major(),
+                            triAdj->adjacentBlock((adjAnn + 2 * deltaAdj) % 3),
+                                triAdj->major());
+                    }
+            }
         }
     }
 
