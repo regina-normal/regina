@@ -40,6 +40,7 @@
 
 namespace regina {
 
+class NSatBlock;
 class NSatRegion;
 
 /**
@@ -82,6 +83,22 @@ class NBlockedSFS : public NStandardTriangulation {
          */
         const NSatRegion& region() const;
 
+        /**
+         * Determines whether this triangulation is a plugged thin
+         * I-bundle or a plugged thick I-bundle.  These structures are
+         * described in "Structures of small closed non-orientable
+         * 3-manifold triangulations", Benjamin A. Burton, to appear in
+         * J. Knot Theory Ramifications (accepted Feb 2006) and available
+         * meanwhile as math.GT/0311113.
+         *
+         * @param name used to return the name of the plugged thin/thick
+         * I-bundle, if the triangulation is of this form.  If the
+         * triangulation is not of this form, this string is not touched.
+         * @return \c true if this triangulation is indeed a plugged thin
+         * I-bundle or a plugged thick I-bundle.
+         */
+        bool isPluggedIBundle(std::string& name) const;
+
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -107,6 +124,63 @@ class NBlockedSFS : public NStandardTriangulation {
          * @param region the region describing this entire triangulation.
          */
         NBlockedSFS(NSatRegion* region);
+
+        /**
+         * Attempts to identify the solid torus plugs in a plugged thin
+         * I-bundle or a plugged thick I-bundle.  This routine is
+         * internal to isPluggedIBundle().
+         *
+         * It is assumed that the plugged thin/thick I-bundle has been
+         * completely identified, with the exception of the two solid
+         * torus plugs.  Corresponding parameters describing the
+         * core I-bundle must be passed, along with two blocks that
+         * should correspond to the two plugs.
+         *
+         * If the two blocks are indeed solid torus plugs (either layered
+         * solid tori or Mobius bands), the full name of the plugged
+         * thin/thick I-bundle will be filled in and \c true will be
+         * returned.  Note that this name may be normalised or otherwise
+         * modified to return a simpler set of parameters for the same
+         * triangulation.  If either block is not a solid torus plug then
+         * \c false will be returned.
+         *
+         * @param thin \c true if the overall structure being identified
+         * is a plugged thin I-bundle, or \c false if it is a plugged
+         * thick I-bundle.
+         * @param id identifies the particular thin/thick twisted
+         * I-bundle into which the solid tori are plugged.  This must be
+         * 1, 2, 3 or 4, to distinguish between the four thin twisted
+         * I-bundles or the four thick twisted I-bundles described in
+         * the paper "Structures of small closed non-orientable
+         * 3-manifold triangulations" (see isPluggedIBundle for details).
+         * @param name used to return the full parameterised name of this
+         * triangulation.  If the two given blocks are not solid torus
+         * plugs, this string is not touched.
+         * @param torus0 the block that should provide the solid torus plug
+         * corresponding to the first pair of integers in the plugged
+         * thin/thick I-bundle parameters.
+         * @param horiz0 \c true if the first pair of integers in the
+         * plugged thin/thick I-bundle parameters should measure the
+         * number of times the meridinal curve cuts the vertical and
+         * horizontal edges of the adjacent block (not the block
+         * \a torus0, but its neighbour), or \c false if the vertical
+         * and diagonal edges should be used instead.
+         * @param torus1 the block that should provide the solid torus plug
+         * corresponding to the second pair of integers in the plugged
+         * thin/thick I-bundle parameters.
+         * @param horiz1 \c true if the second pair of integers in the
+         * plugged thin/thick I-bundle parameters should measure the
+         * number of times the meridinal curve cuts the vertical and
+         * horizontal edges of the adjacent block (not the block
+         * \a torus1, but its neighbour), or \c false if the vertical
+         * and diagonal edges should be used instead.
+         * @return \c true if the two given blocks are both solid torus
+         * plugs (either layered solid tori or Mobius bands), or \c false
+         * otherwise.
+         */
+        static bool findPluggedTori(bool thin, int id, std::string& name,
+            const NSatBlock* torus0, bool horiz0,
+            const NSatBlock* torus1, bool horiz1);
 };
 
 /*@}*/
