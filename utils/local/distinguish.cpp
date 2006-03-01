@@ -82,7 +82,9 @@ struct InvData {
     double tv7_3;
     double tv7_4;
     double tv7_5;
-    // double tv8_3;
+    double tv8_3;
+    double tv9_4;
+    double tv10_3;
 
     InvData(NTriangulation* tri) : manifold(0) {
         h1 = tri->getHomologyH1().toString();
@@ -97,7 +99,9 @@ struct InvData {
         tv7_3 = tri->turaevViro(7, 3);
         tv7_4 = tri->turaevViro(7, 4);
         tv7_5 = tri->turaevViro(7, 5);
-        // tv8_3 = tri->turaevViro(8, 3);
+        tv8_3 = tri->turaevViro(8, 3);
+        tv9_4 = tri->turaevViro(9, 4);
+        tv10_3 = tri->turaevViro(10, 3);
     }
 
     bool mayBeEqual(const InvData& other) const {
@@ -113,7 +117,9 @@ struct InvData {
         if (! close(tv7_3, other.tv7_3)) return false;
         if (! close(tv7_4, other.tv7_4)) return false;
         if (! close(tv7_5, other.tv7_5)) return false;
-        // if (! close(tv8_3, other.tv8_3)) return false;
+        if (! close(tv8_3, other.tv8_3)) return false;
+        if (! close(tv9_4, other.tv9_4)) return false;
+        if (! close(tv10_3, other.tv10_3)) return false;
 
         return true;
     }
@@ -143,8 +149,12 @@ struct InvData {
         if (tv7_4 > other.tv7_4) return true;
         if (tv7_5 < other.tv7_5) return false;
         if (tv7_5 > other.tv7_5) return true;
-        // if (tv8_3 < other.tv8_3) return false;
-        // if (tv8_3 > other.tv8_3) return true;
+        if (tv8_3 < other.tv8_3) return false;
+        if (tv8_3 > other.tv8_3) return true;
+        if (tv9_4 < other.tv9_4) return false;
+        if (tv9_4 > other.tv9_4) return true;
+        if (tv10_3 < other.tv10_3) return false;
+        if (tv10_3 > other.tv10_3) return true;
 
         return false;
     }
