@@ -380,7 +380,8 @@ bool NBlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
         }
     }
 
-    if (labs(p1) > labs(p0)) {
+    if (labs(p1) > labs(p0) ||
+            (labs(p1) == labs(p0) && labs(q1) < labs(q0))) {
         long tmp;
         if (thin || ((! thin) && (id == 1 || id ==3))) {
             // Swapping does nothing.
