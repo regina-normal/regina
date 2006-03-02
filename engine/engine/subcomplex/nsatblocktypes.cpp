@@ -92,6 +92,18 @@ void NSatMobius::writeTextShort(std::ostream& out) const {
     out << " edge";
 }
 
+void NSatMobius::writeAbbr(std::ostream& out, bool tex) const {
+    out << (tex ? "M_" : "Mob(");
+    if (position_ == 0)
+        out << 'd';
+    else if (position_ == 1)
+        out << 'h';
+    else if (position_ == 2)
+        out << 'v';
+    if (! tex)
+        out << ')';
+}
+
 NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
     // The two tetrahedra must be joined together along the annulus faces.
 
@@ -154,6 +166,13 @@ void NSatLST::writeTextShort(std::ostream& out) const {
         << lst_->getMeridinalCuts(0) << ", "
         << lst_->getMeridinalCuts(1) << ", "
         << lst_->getMeridinalCuts(2) << ") layered solid torus";
+}
+
+void NSatLST::writeAbbr(std::ostream& out, bool tex) const {
+    out << (tex ? "\\mathrm{LST}_{" : "LST(")
+        << lst_->getMeridinalCuts(0) << ", "
+        << lst_->getMeridinalCuts(1) << ", "
+        << lst_->getMeridinalCuts(2) << (tex ? '}' : ')');
 }
 
 void NSatLST::transform(const NTriangulation* originalTri,

@@ -309,13 +309,23 @@ NManifold* NBlockedSFS::getManifold() const {
 }
 
 std::ostream& NBlockedSFS::writeName(std::ostream& out) const {
-    // TODO: output
-    return out << "Blocked SFS";
+    out << "Blocked SFS [";
+    for (unsigned long i = 0; i < region_->numberOfBlocks(); i++) {
+        if (i > 0)
+            out << ", ";
+        region_->block(i).block->writeAbbr(out, false);
+    }
+    return out << ']';
 }
 
 std::ostream& NBlockedSFS::writeTeXName(std::ostream& out) const {
-    // TODO: output (tex)
-    return out << "Blocked SFS";
+    out << "\\mathrm{BSFS}\\left[";
+    for (unsigned long i = 0; i < region_->numberOfBlocks(); i++) {
+        if (i > 0)
+            out << ", ";
+        region_->block(i).block->writeAbbr(out, true);
+    }
+    return out << "\\right]";
 }
 
 void NBlockedSFS::writeTextLong(std::ostream& out) const {

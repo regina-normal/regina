@@ -449,6 +449,20 @@ class NSatBlock : public ShareableObject {
                 unsigned& nextAnnulus, bool& refVert, bool& refHoriz);
 
         /**
+         * Writes an abbreviated name or symbol for this block to the
+         * given output stream.  The output should be no more than a
+         * handful of characters, and no newline should be written.
+         *
+         * \ifacespython the parameter \a out does not exist; standard
+         * output will be used.
+         *
+         * @param out the output stream to which to write.
+         * @param tex \c true if the output should be formatted for TeX,
+         * or \c false if it should be in plain text format.
+         */
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const = 0;
+
+        /**
          * Determines whether the given annulus is in fact a boundary
          * annulus for a recognised type of saturated block.  The
          * annulus should be represented from the inside of the proposed

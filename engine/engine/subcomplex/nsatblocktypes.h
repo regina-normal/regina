@@ -108,6 +108,7 @@ class NSatMobius : public NSatBlock {
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -206,6 +207,7 @@ class NSatLST : public NSatBlock {
         virtual void transform(const NTriangulation* originalTri,
             const NIsomorphism* iso, NTriangulation* newTri);
         virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -273,6 +275,7 @@ class NSatTriPrism : public NSatBlock {
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -359,6 +362,7 @@ class NSatCube : public NSatBlock {
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -434,6 +438,7 @@ class NSatReflectorStrip : public NSatBlock {
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -536,6 +541,7 @@ class NSatLayering : public NSatBlock {
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -626,6 +632,13 @@ inline void NSatTriPrism::writeTextShort(std::ostream& out) const {
         << (major_ ? "major" : "minor") << " type";
 }
 
+inline void NSatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
+    if (tex)
+        out << "\\triangle";
+    else
+        out << "Tri";
+}
+
 // Inline functions for NSatCube
 
 inline NSatCube::NSatCube(const NSatCube& cloneMe) : NSatBlock(cloneMe) {
@@ -640,6 +653,13 @@ inline NSatBlock* NSatCube::clone() const {
 
 inline void NSatCube::writeTextShort(std::ostream& out) const {
     out << "Saturated cube";
+}
+
+inline void NSatCube::writeAbbr(std::ostream& out, bool tex) const {
+    if (tex)
+        out << "\\square";
+    else
+        out << "Cube";
 }
 
 // Inline functions for NSatReflectorStrip
@@ -658,6 +678,22 @@ inline NSatBlock* NSatReflectorStrip::clone() const {
 
 inline void NSatReflectorStrip::writeTextShort(std::ostream& out) const {
     out << "Saturated reflector strip of length " << nAnnuli();
+    if (twistedBoundary())
+        out << " (twisted)";
+}
+
+inline void NSatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
+    if (twistedBoundary()) {
+        if (tex)
+            out << "\\tilde{\\circledash}_" << nAnnuli();
+        else
+            out << "Ref~(" << nAnnuli() << ')';
+    } else {
+        if (tex)
+            out << "\\circledash_" << nAnnuli();
+        else
+            out << "Ref(" << nAnnuli() << ')';
+    }
 }
 
 // Inline functions for NSatLayering
@@ -681,6 +717,13 @@ inline NSatBlock* NSatLayering::clone() const {
 inline void NSatLayering::writeTextShort(std::ostream& out) const {
     out << "Saturated single layering over "
         << (overHorizontal_ ? "horizontal" : "diagonal") << " edge";
+}
+
+inline void NSatLayering::writeAbbr(std::ostream& out, bool tex) const {
+    if (tex)
+        out << "lozenge";
+    else
+        out << "Layer";
 }
 
 } // namespace regina
