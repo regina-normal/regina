@@ -92,13 +92,21 @@ NManifold* NBlockedSFSPair::getManifold() const {
 }
 
 std::ostream& NBlockedSFSPair::writeName(std::ostream& out) const {
-    // TODO: output
-    return out << "Blocked SFS Pair";
+    // TODO: order regions in output
+    out << "Blocked SFS Pair [";
+    region_[0]->writeBlockAbbrs(out, false);
+    out << " | ";
+    region_[1]->writeBlockAbbrs(out, false);
+    return out << ']';
 }
 
 std::ostream& NBlockedSFSPair::writeTeXName(std::ostream& out) const {
-    // TODO: output (tex)
-    return out << "Blocked SFS Pair";
+    // TODO: order regions in output
+    out << "\\mathrm{BSFS\\_Pair}\\left[";
+    region_[0]->writeBlockAbbrs(out, true);
+    out << "\\,|\\,";
+    region_[1]->writeBlockAbbrs(out, true);
+    return out << "\\right]";
 }
 
 void NBlockedSFSPair::writeTextLong(std::ostream& out) const {
