@@ -110,7 +110,6 @@ NManifold* NBlockedSFSTriple::getManifold() const {
 }
 
 std::ostream& NBlockedSFSTriple::writeName(std::ostream& out) const {
-    // TODO: order regions in output
     out << "Blocked SFS Triple [";
     end_[0]->writeBlockAbbrs(out, false);
     out << " | ";
@@ -121,7 +120,6 @@ std::ostream& NBlockedSFSTriple::writeName(std::ostream& out) const {
 }
 
 std::ostream& NBlockedSFSTriple::writeTeXName(std::ostream& out) const {
-    // TODO: order regions in output
     out << "\\mathrm{BSFS\\_Triple}\\left[";
     end_[0]->writeBlockAbbrs(out, true);
     out << "\\,|\\,";
