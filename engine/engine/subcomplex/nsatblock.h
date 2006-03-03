@@ -482,6 +482,20 @@ class NSatBlock : public ShareableObject {
         virtual void writeAbbr(std::ostream& out, bool tex = false) const = 0;
 
         /**
+         * Implements a consistent ordering of saturated blocks.
+         * This ordering is purely aesthetic on the part of the author,
+         * and is subject to change in future versions of Regina.
+         *
+         * @param compare the saturated block with which this will be
+         * compared.
+         * @return \c true if this block comes before the given block
+         * according to the ordering of saturated blocks, or \c false
+         * if either the blocks are identical or this block comes after
+         * the given block.
+         */
+        bool operator < (const NSatBlock& compare) const;
+
+        /**
          * Determines whether the given annulus is in fact a boundary
          * annulus for a recognised type of saturated block.  The
          * annulus should be represented from the inside of the proposed

@@ -40,6 +40,110 @@
 
 namespace regina {
 
+bool NSatBlock::operator < (const NSatBlock& compare) const {
+    const NSatTriPrism* tri1 = dynamic_cast<const NSatTriPrism*>(this);
+    const NSatTriPrism* tri2 = dynamic_cast<const NSatTriPrism*>(&compare);
+    if (tri1 && ! tri2)
+        return true;
+    if (tri2 && ! tri1)
+        return false;
+    if (tri1 && tri2) {
+        // Major first, then minor.
+        return (tri1->major() && ! tri2->major());
+    }
+
+    const NSatCube* cube1 = dynamic_cast<const NSatCube*>(this);
+    const NSatCube* cube2 = dynamic_cast<const NSatCube*>(&compare);
+    if (cube1 && ! cube2)
+        return true;
+    if (cube2 && ! cube1)
+        return false;
+    if (cube1 && cube2) {
+        // All cubes are considered equal.
+        return false;
+    }
+
+    const NSatReflectorStrip* ref1 =
+        dynamic_cast<const NSatReflectorStrip*>(this);
+    const NSatReflectorStrip* ref2 =
+        dynamic_cast<const NSatReflectorStrip*>(&compare);
+    if (ref1 && ! ref2)
+        return true;
+    if (ref2 && ! ref1)
+        return false;
+    if (ref1 && ref2) {
+        // Always put untwisted before twisted.
+        if (ref1->twistedBoundary() && ! ref2->twistedBoundary())
+            return false;
+        if (ref2->twistedBoundary() && ! ref1->twistedBoundary())
+            return true;
+        return (ref1->nAnnuli() < ref2->nAnnuli());
+    }
+
+    const NSatLST* lst1 = dynamic_cast<const NSatLST*>(this);
+    const NSatLST* lst2 = dynamic_cast<const NSatLST*>(&compare);
+    if (lst1 && ! lst2)
+        return true;
+    if (lst2 && ! lst1)
+        return false;
+    if (lst1 && lst2) {
+        // Order first by LST parameters, then by roles.
+        if (lst1->lst()->getMeridinalCuts(2) < lst2->lst()->getMeridinalCuts(2))
+            return true;
+        if (lst1->lst()->getMeridinalCuts(2) > lst2->lst()->getMeridinalCuts(2))
+            return false;
+        if (lst1->lst()->getMeridinalCuts(1) < lst2->lst()->getMeridinalCuts(1))
+            return true;
+        if (lst1->lst()->getMeridinalCuts(1) > lst2->lst()->getMeridinalCuts(1))
+            return false;
+        if (lst1->lst()->getMeridinalCuts(0) < lst2->lst()->getMeridinalCuts(0))
+            return true;
+        if (lst1->lst()->getMeridinalCuts(0) > lst2->lst()->getMeridinalCuts(0))
+            return false;
+
+        // Sorts by which edge group is joined to the vertical annulus
+        // edges, then horizontal, then diagonal (though we won't bother
+        // testing diagonal, since by that stage we will know the roles
+        // permutations to be equal).
+        if (lst1->roles()[0] < lst2->roles()[0])
+            return true;
+        if (lst1->roles()[0] > lst2->roles()[0])
+            return false;
+        if (lst1->roles()[1] < lst2->roles()[1])
+            return true;
+        if (lst1->roles()[1] > lst2->roles()[1])
+            return false;
+
+        // All equal.
+        return false;
+    }
+
+    const NSatMobius* mob1 = dynamic_cast<const NSatMobius*>(this);
+    const NSatMobius* mob2 = dynamic_cast<const NSatMobius*>(&compare);
+    if (mob1 && ! mob2)
+        return true;
+    if (mob2 && ! mob1)
+        return false;
+    if (mob1 && mob2) {
+        // Order by position in descending order (vertical first, then
+        // horizontal, then finally diagonal).
+        return (mob1->position() > mob2->position());
+    }
+
+    const NSatLayering* layer1 = dynamic_cast<const NSatLayering*>(this);
+    const NSatLayering* layer2 = dynamic_cast<const NSatLayering*>(&compare);
+    if (layer1 && ! layer2)
+        return true;
+    if (layer2 && ! layer1)
+        return false;
+    if (layer1 && layer2) {
+        // Horizontal, then diagonal.
+        return (layer1->overHorizontal() && ! layer2->overHorizontal());
+    }
+
+    return false;
+}
+
 NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
     NSatBlock* ans;
 
