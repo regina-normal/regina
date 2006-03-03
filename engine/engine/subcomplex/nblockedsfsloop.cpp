@@ -79,13 +79,15 @@ NManifold* NBlockedSFSLoop::getManifold() const {
 }
 
 std::ostream& NBlockedSFSLoop::writeName(std::ostream& out) const {
-    // TODO: output
-    return out << "Blocked SFS Loop";
+    out << "Blocked SFS Loop [";
+    region_->writeBlockAbbrs(out, false);
+    return out << ']';
 }
 
 std::ostream& NBlockedSFSLoop::writeTeXName(std::ostream& out) const {
-    // TODO: output (tex)
-    return out << "Blocked SFS Loop";
+    out << "\\mathrm{BSFS\\_Loop}\\left[";
+    region_->writeBlockAbbrs(out, true);
+    return out << "\\right]";
 }
 
 void NBlockedSFSLoop::writeTextLong(std::ostream& out) const {
