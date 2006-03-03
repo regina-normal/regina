@@ -15,6 +15,9 @@ Version 4.3  [ under development ]
         - Updated postal address for the Free Software Foundation.
         - Fixed some harmless compiler warnings.
     ENGINE:
+        Class LessDeref:
+            - New utility class for working with pointers in the Standard
+              Template Library.
         Class NGluingPerms, NGluingPermSearcher, NClosedPrimeMinSearcher:
             - Significant overhaul.
             - Moved gluing permutation search routines into new classes
