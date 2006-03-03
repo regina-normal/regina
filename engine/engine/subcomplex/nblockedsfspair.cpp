@@ -110,7 +110,6 @@ std::ostream& NBlockedSFSPair::writeTeXName(std::ostream& out) const {
 }
 
 void NBlockedSFSPair::writeTextLong(std::ostream& out) const {
-    // TODO: output (detail)
     out << "Blocked SFS pair, matching relation " << matchingReln_ << "\n";
 
     region_[0]->writeDetail(out, "First region");

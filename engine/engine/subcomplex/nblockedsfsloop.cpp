@@ -91,8 +91,8 @@ std::ostream& NBlockedSFSLoop::writeTeXName(std::ostream& out) const {
 }
 
 void NBlockedSFSLoop::writeTextLong(std::ostream& out) const {
-    // TODO: output (detailed)
-    out << "Blocked SFS Loop";
+    out << "Blocked SFS Loop, matching relation " << matchingReln_ << '\n';
+    region_->writeDetail(out, "Internal region");
 }
 
 NBlockedSFSLoop* NBlockedSFSLoop::isBlockedSFSLoop(NTriangulation* tri) {

@@ -132,13 +132,13 @@ std::ostream& NBlockedSFSTriple::writeTeXName(std::ostream& out) const {
 }
 
 void NBlockedSFSTriple::writeTextLong(std::ostream& out) const {
-    // TODO: output (detail)
-    out << "Blocked SFS triple, matching relations " << matchingReln_[0]
-        << " ,   " << matchingReln_[1] << "\n";
+    out << "Blocked SFS triple\n";
+    out << "Matching relation (centre -> end #1): " << matchingReln_[0] << '\n';
+    out << "Matching relation (centre -> end #2): " << matchingReln_[1] << '\n';
 
+    centre_->writeDetail(out, "Central region");
     end_[0]->writeDetail(out, "First end region");
     end_[1]->writeDetail(out, "Second end region");
-    centre_->writeDetail(out, "Central region");
 }
 
 NBlockedSFSTriple* NBlockedSFSTriple::isBlockedSFSTriple(
