@@ -66,18 +66,28 @@ NManifold* NPluggedTorusBundle::getManifold() const {
 }
 
 std::ostream& NPluggedTorusBundle::writeName(std::ostream& out) const {
-    // TODO: output
-    return out << "Plugged torus bundle";
+    out << "Plugged Torus Bundle [";
+    core_.writeName(out);
+    out << " | ";
+    plug_->writeBlockAbbrs(out, false);
+    return out << ']';
 }
 
 std::ostream& NPluggedTorusBundle::writeTeXName(std::ostream& out) const {
-    // TODO: output (tex)
-    return out << "Plugged torus bundle";
+    out << "\\mathrm{PTB}\\left[";
+    core_.writeTeXName(out);
+    out << "\\,|\\n";
+    plug_->writeBlockAbbrs(out, true);
+    return out << "\\right]";
 }
 
 void NPluggedTorusBundle::writeTextLong(std::ostream& out) const {
-    // TODO: output (detailed)
-    out << "Plugged torus bundle";
+    out << "Plugged torus bundle, fibre/orbifold relation " << fibreReln_
+        << '\n';
+    out << "Core torus bundle: ";
+    core_.writeName(out);
+    out << '\n';
+    plug_->writeDetail(out, "Plugged region");
 }
 
 NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
