@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "subcomplex/nsatblock.h"
+#include <sstream>
 
 namespace regina {
 
@@ -85,6 +86,12 @@ void NSatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
                 nextAnnulus + 1);
         }
     }
+}
+
+std::string NSatBlock::getAbbr(bool tex) const {
+    std::ostringstream s;
+    writeAbbr(s, tex);
+    return s.str();
 }
 
 bool NSatBlock::isBad(NTetrahedron* t, const TetList& list) {

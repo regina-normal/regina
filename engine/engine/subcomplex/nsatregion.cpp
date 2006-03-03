@@ -32,6 +32,7 @@
 #include "triangulation/nedge.h"
 #include "triangulation/ntetrahedron.h"
 #include <set>
+#include <sstream>
 
 namespace regina {
 
@@ -354,6 +355,25 @@ void NSatRegion::calculateBaseEuler() {
         + edgesBdry;
 
     baseEuler_ = faces - edgesBdry - (edgesInternalDoubled / 2) + vertices;
+}
+
+void NSatRegion::writeBlockAbbrs(std::ostream& out, bool tex) const {
+    std::set<std::string> blockNames;
+
+    std::ostringstream s;
+    for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
+            it++) {
+        it->block->writeAbbr(s, tex);
+        blockNames.insert(s.str());
+        s.str(std::string());
+    }
+
+    for (std::set<std::string>::const_iterator it = blockNames.begin();
+            it != blockNames.end(); it++) {
+        if (it != blockNames.begin())
+            out << ", ";
+        out << *it;
+    }
 }
 
 void NSatRegion::writeDetail(std::ostream& out, const std::string& title)

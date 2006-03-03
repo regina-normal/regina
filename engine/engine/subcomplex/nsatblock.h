@@ -449,9 +449,28 @@ class NSatBlock : public ShareableObject {
                 unsigned& nextAnnulus, bool& refVert, bool& refHoriz);
 
         /**
+         * Returns an abbreviated name or symbol for this block.
+         * This name will reflect the particular block type, but may not
+         * provide thorough details.
+         *
+         * The name will be no more than a handful of characters long, and
+         * will not include a newline (or surrounding dollar signs in TeX
+         * mode).
+         *
+         * @param tex \c true if the name should be formatted for TeX,
+         * or \c false if it should be in plain text format.
+         * @return an abbreviated name for this block.
+         */
+        std::string getAbbr(bool tex = false) const;
+
+        /**
          * Writes an abbreviated name or symbol for this block to the
-         * given output stream.  The output should be no more than a
-         * handful of characters, and no newline should be written.
+         * given output stream.  This name should reflect the particular
+         * block type, but need not provide thorough details.
+         *
+         * The output should be no more than a handful of characters long,
+         * and no newline should be written.  In TeX mode, no leading or
+         * trailing dollar signs should be written.
          *
          * \ifacespython the parameter \a out does not exist; standard
          * output will be used.

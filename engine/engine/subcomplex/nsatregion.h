@@ -480,6 +480,23 @@ class NSatRegion : public ShareableObject {
             bool stopIfIncomplete = false);
 
         /**
+         * Writes an abbreviated list of blocks within this region to
+         * the given output stream.  Blocks will be written using their
+         * abbreviated names, and these names will be separated by
+         * commas.  See NSatBlock::writeAbbr() for further details.
+         *
+         * The blocks within this region will be sorted before their
+         * abbreviated names are output.  The particular method of sorting
+         * is an arbitrary aesthetic decision on the part of the author,
+         * and is subject to change in future versions of Regina.
+         *
+         * @param out the output stream to which to write.
+         * @param tex \c true if the output should be formatted for TeX,
+         * or \c false if it should be written as plain text.
+         */
+        void writeBlockAbbrs(std::ostream& out, bool tex = false) const;
+
+        /**
          * Writes details of the composition of this region to the given
          * output stream.
          *
