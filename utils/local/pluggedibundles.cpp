@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Attempt to recognise the combinatorial structures of triangulations   *
+ *  Identify triangulations that are plugged thin/thick I-bundles         *
  *                                                                        *
  *  Copyright (c) 2005-2006, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
