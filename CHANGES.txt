@@ -10,8 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 4.3  [ under development ]
 
     OVERALL:
-        - Expanded the closed non-orientable census to ten tetrahedra.
-        - Expanded the closed orientable census to nine tetrahedra.
+        - Expanded the closed non-orientable census to 10 tetrahedra.
+        - Expanded the closed orientable census to 10 tetrahedra, and
+          split it into two data files (large and small).
         - Updated postal address for the Free Software Foundation.
         - Fixed some harmless compiler warnings.
     ENGINE:
