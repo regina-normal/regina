@@ -419,7 +419,9 @@ void ReginaMain::fillExamples() {
     fileOpenExample->addURL("closed-hyp-census.rga",
         i18n("Closed Hyperbolic Census"));
     fileOpenExample->addURL("closed-or-census.rga",
-        i18n("Closed Orientable Census"));
+        i18n("Closed Orientable Census (Small)"));
+    fileOpenExample->addURL("closed-or-census-large.rga",
+        i18n("Closed Orientable Census (Large)"));
     fileOpenExample->addURL("closed-nor-census.rga",
         i18n("Closed Non-Orientable Census"));
     fileOpenExample->addURL("snappea-census.rga",
