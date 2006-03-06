@@ -291,9 +291,11 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
 
             // Finally, we already know how the two annuli are joined
             // together -- we worked this out earlier as upperRolesToLower.
+            // Note that curvesToBdryAnnulus is self-inverse, so we won't
+            // bother inverting it even though we should.
             NPluggedTorusBundle* ans = new NPluggedTorusBundle(core, *it,
-                region, curvesToLowerAnnulus.inverse() * upperRolesToLower *
-                curvesToBdryAnnulus);
+                region, curvesToBdryAnnulus * upperRolesToLower.inverse() *
+                curvesToLowerAnnulus);
 
             // Before we head home, delete the remaining isomorphisms
             // that we never looked at.
