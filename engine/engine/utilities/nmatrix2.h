@@ -315,7 +315,7 @@ bool simpler(const NMatrix2& m1, const NMatrix2& m2);
  * change in future versions of Regina.
  *
  * Note that pairs are ordered, so the pair (\a M, \a N) may be more
- * (or perhaps less) pleasing than the pair (\a N, \M).
+ * (or perhaps less) pleasing than the pair (\a N, \a M).
  *
  * @param pair1first the first matrix of the first pair to examine.
  * @param pair1second the second matrix of the first pair to examine.
