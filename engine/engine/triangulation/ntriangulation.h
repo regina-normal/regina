@@ -1019,11 +1019,9 @@ class NTriangulation : public NPacket, public NFilePropertyReader {
          * degree 2r for which q0^2 is a primitive root of unity of
          * degree r.
          *
-         * I believe that these invariants, although computed in the
-         * complex field, are all reals.  However, I have not yet found
-         * a firm assertion of this and so in the meantime this routine
-         * simply returns the real portion and sends a warning to
-         * standard error if the imaginary portion is non-zero.
+         * These invariants, although computed in the complex field,
+         * should all be reals.  Thus the return type is an ordinary
+         * double.
          *
          * \pre This triangulation is valid, closed and non-empty.
          *

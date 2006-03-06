@@ -322,13 +322,15 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
 
     delete[] colour;
 
-    if (isNonZero(ans.imag()))
+    if (isNonZero(ans.imag())) {
+        // This should never happen, since the Turaev-Viro invariant is the
+        // square of the modulus of the Witten invariant for sl_2.
         std::cerr <<
             "WARNING: The Turaev-Viro invariant has an imaginary component.\n"
+            "         This should never happen.\n"
             "         Please report this (along with the 3-manifold that"
-            "         was used) to " << PACKAGE_BUGREPORT << ".\n"
-            "         Only the real portion of the invariant has been"
-            "         returned from this routine." << std::endl;
+            "         was used) to " << PACKAGE_BUGREPORT << "." << std::endl;
+    }
     turaevViroCache[tvParams] = ans.real();
     return ans.real();
 }
