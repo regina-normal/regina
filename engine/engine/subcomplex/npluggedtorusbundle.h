@@ -27,8 +27,8 @@
 /* end stub */
 
 /*! \file npluggedtorusbundle.h
- *  \brief Deals with triangulations of torus bundles joined with
- *  blocked Seifert fibred spaces.  TODO
+ *  \brief Supports self-identified Seifert fibred spaces that are
+ *  triangulated using a combination of thin I-bundles and saturated blocks.
  */
 
 #ifndef __NPLUGGEDTORUSBUNDLE_H
@@ -51,7 +51,67 @@ class NTxICore;
  */
 
 /**
- * TODO: Document NPluggedTorusBundle!
+ * Describes a triangulation of a graph manifold formed by joining a
+ * bounded saturated region with a thin I-bundle over the torus,
+ * possibly with layerings in between.
+ *
+ * The thin I-bundle must be untwisted, so that it forms the product
+ * <tt>T x I</tt> with two boundary tori.  Moreover, it must be isomorphic
+ * to some existing instance of the class NTxICore.
+ *
+ * The saturated region is described by an object of the class NSatRegion.
+ * This region must have precisely two boundary annuli.  These may be
+ * two separate torus boundaries (each formed from its own saturated annulus).
+ * Alternatively, the saturated region may have a single boundary formed
+ * from both saturated annuli, where this boundary is pinched together
+ * so that each annulus becomes its own two-sided torus.
+ *
+ * Either way, the saturated region effectively has two torus boundaries,
+ * each formed from two faces of the triangulation.  These boundaries
+ * are then joined to the two torus boundaries of the thin I-bundle,
+ * possibly with layerings in between (for more detail on layerings, see
+ * the NLayering class).  This is illustrated in the following diagram,
+ * where the small tunnels show where the torus boundaries are joined
+ * (possibly via layerings).
+ *
+ * <pre>
+ *    /--------------------\     /-----------------\
+ *    |                     -----                  |
+ *    |                     -----                  |
+ *    |  Saturated region  |     |  Thin I-bundle  |
+ *    |                     -----                  |
+ *    |                     -----                  |
+ *    \--------------------/     \-----------------/
+ * </pre>
+ *
+ * The effect of the thin I-bundle and the two layerings is essentially
+ * to join the two boundaries of the saturated region according to some
+ * non-trivial homeomorphism of the torus.  This homeomorphism is
+ * specified by a 2-by-2 matrix \a M as follows.
+ *
+ * Suppose that \a f0 and \a o0 are directed curves on the first
+ * boundary torus and \a f1 and \a o1 are directed curves on the second
+ * boundary torus, where \a f0 and \a f1 represent the fibres of the
+ * saturated region and \a o0 and \a o1 represent the base orbifold (see
+ * the page on \ref sfsnotation for terminology).
+ * Then the torus boundaries of the saturated region are identified by
+ * the thin I-bundle and layerings according to the following relation:
+ *
+ * <pre>
+ *     [f1]       [f0]
+ *     [  ] = M * [  ]
+ *     [o1]       [o0]
+ * </pre>
+ *
+ * Note that the routines writeName() and writeTeXName() do \e not offer
+ * enough information to uniquely identify the triangulation, since this
+ * essentially requires 2-dimensional assemblings of saturated blocks.
+ * For more detail, writeTextLong() may be used instead.
+ *
+ * The optional NStandardTriangulation routine getManifold() is
+ * implemented for this class, but getHomologyH1() is not.
+ *
+ * TODO: Document data members and functions.
  */
 class NPluggedTorusBundle : public NStandardTriangulation {
     private:
