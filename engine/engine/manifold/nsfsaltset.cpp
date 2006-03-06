@@ -31,7 +31,7 @@
 
 namespace regina {
 
-NSFSAltSet::NSFSAltSet(NSFSpace* sfs) {
+NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
     /**
      * Note that whenever we add a (1,1) twist, we compensate by setting
      * row 2 -> row 2 + row 1 in our conversion matrix.
