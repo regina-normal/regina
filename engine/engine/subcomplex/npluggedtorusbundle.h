@@ -111,13 +111,25 @@ class NTxICore;
  * The optional NStandardTriangulation routine getManifold() is
  * implemented for this class, but getHomologyH1() is not.
  *
- * TODO: Document data members and functions.
+ * TODO: Document functions.
  */
 class NPluggedTorusBundle : public NStandardTriangulation {
     private:
         const NTxICore& bundle_;
+            /**< The thin I-bundle that appears within this triangulation.
+                 This thin I-bundle is referenced from elsewhere (i.e., it
+                 is not owned by this object), and its tetrahedra do not
+                 belong to this triangulation (instead see the data member
+                 \a bundleIso_). */
         NIsomorphism* bundleIso_;
+            /**< A mapping from the thin I-bundle \a bundle_ to this
+                 triangulation.  This is required since the thin I-bundle
+                 \a bundle_ is external, and does not refer directly to this
+                 triangulation. */
         NSatRegion* region_;
+            /**< The saturated region that appears within this
+                 triangulation.  This region is owned by this object, and
+                 refers to tetrahedra within this triangulation. */
 
         NMatrix2 matchingReln_;
             /**< Describes how the two torus boundaries of the saturated
