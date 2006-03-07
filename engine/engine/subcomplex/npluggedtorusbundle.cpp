@@ -51,43 +51,43 @@ namespace {
 }
 
 NPluggedTorusBundle::~NPluggedTorusBundle() {
-    delete coreIso_;
-    delete plug_;
+    delete bundleIso_;
+    delete region_;
 }
 
 NManifold* NPluggedTorusBundle::getManifold() const {
-    NSFSpace* sfs = plug_->createSFS(2, false);
+    NSFSpace* sfs = region_->createSFS(2, false);
     if (! sfs)
         return 0;
 
     sfs->reduce(false);
 
-    return new NGraphLoop(sfs, fibreReln_);
+    return new NGraphLoop(sfs, matchingReln_);
 }
 
 std::ostream& NPluggedTorusBundle::writeName(std::ostream& out) const {
     out << "Plugged Torus Bundle [";
-    core_.writeName(out);
+    bundle_.writeName(out);
     out << " | ";
-    plug_->writeBlockAbbrs(out, false);
+    region_->writeBlockAbbrs(out, false);
     return out << ']';
 }
 
 std::ostream& NPluggedTorusBundle::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{PTB}\\left[";
-    core_.writeTeXName(out);
+    bundle_.writeTeXName(out);
     out << "\\,|\\n";
-    plug_->writeBlockAbbrs(out, true);
+    region_->writeBlockAbbrs(out, true);
     return out << "\\right]";
 }
 
 void NPluggedTorusBundle::writeTextLong(std::ostream& out) const {
-    out << "Plugged torus bundle, fibre/orbifold relation " << fibreReln_
+    out << "Plugged torus bundle, fibre/orbifold relation " << matchingReln_
         << '\n';
-    out << "Core torus bundle: ";
-    core_.writeName(out);
+    out << "Thin I-bundle: ";
+    bundle_.writeName(out);
     out << '\n';
-    plug_->writeDetail(out, "Plugged region");
+    region_->writeDetail(out, "Saturated region");
 }
 
 NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
@@ -99,14 +99,14 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
         return 0;
 
     // The smallest non-trivial examples of these have nine tetrahedra
-    // (six for the TxI core and another three for a non-trivial plug).
+    // (six for the TxI core and another three for a non-trivial region).
     if (tri->getNumberOfTetrahedra() < 9)
         return 0;
 
     // We have a closed and connected triangulation with at least
     // nine tetrahedra.
 
-    // Hunt for the core thin torus bundle.
+    // Hunt for the thin torus bundle.
     NPluggedTorusBundle* ans;
     if ((ans = hunt(tri, core_T_6_1)))
         return ans;
@@ -133,12 +133,12 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
 }
 
 NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
-        const NTxICore& core) {
+        const NTxICore& bundle) {
     std::list<NIsomorphism*> isos;
-    if (! core.core().findAllSubcomplexesIn(*triang, isos))
+    if (! bundle.core().findAllSubcomplexesIn(*triang, isos))
         return 0;
 
-    int plugPos;
+    int regionPos;
     NPerm annulusToUpperLayer;
     NSatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
     NSatBlock::TetList avoidTets;
@@ -151,24 +151,24 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             it != isos.end(); it++) {
         // Apply layerings to the upper and lower boundaries.
         NLayering layerUpper(
-            triang->getTetrahedron((*it)->tetImage(core.bdryTet(0,0))),
-            (*it)->facePerm(core.bdryTet(0,0)) * core.bdryRoles(0,0),
-            triang->getTetrahedron((*it)->tetImage(core.bdryTet(0,1))),
-            (*it)->facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1));
+            triang->getTetrahedron((*it)->tetImage(bundle.bdryTet(0,0))),
+            (*it)->facePerm(bundle.bdryTet(0,0)) * bundle.bdryRoles(0,0),
+            triang->getTetrahedron((*it)->tetImage(bundle.bdryTet(0,1))),
+            (*it)->facePerm(bundle.bdryTet(0,1)) * bundle.bdryRoles(0,1));
         layerUpper.extend();
 
         NLayering layerLower(
-            triang->getTetrahedron((*it)->tetImage(core.bdryTet(1,0))),
-            (*it)->facePerm(core.bdryTet(1,0)) * core.bdryRoles(1,0),
-            triang->getTetrahedron((*it)->tetImage(core.bdryTet(1,1))),
-            (*it)->facePerm(core.bdryTet(1,1)) * core.bdryRoles(1,1));
+            triang->getTetrahedron((*it)->tetImage(bundle.bdryTet(1,0))),
+            (*it)->facePerm(bundle.bdryTet(1,0)) * bundle.bdryRoles(1,0),
+            triang->getTetrahedron((*it)->tetImage(bundle.bdryTet(1,1))),
+            (*it)->facePerm(bundle.bdryTet(1,1)) * bundle.bdryRoles(1,1));
         layerLower.extend();
 
         // Count tetrahedra to ensure that the layerings haven't crossed.
         // In fact, we should have at least three spare tetrahedra for
-        // housing a non-trivial plug.
+        // housing a non-trivial saturated region.
         if (layerLower.getSize() + layerUpper.getSize() +
-                core.core().getNumberOfTetrahedra() + 3 >
+                bundle.core().getNumberOfTetrahedra() + 3 >
                 triang->getNumberOfTetrahedra()) {
             // No good.  Move on.
             delete *it;
@@ -180,13 +180,13 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
         lowerAnnulus.roles[0] = layerLower.getNewBoundaryRoles(0);
         lowerAnnulus.roles[1] = layerLower.getNewBoundaryRoles(1);
 
-        // Look for the SFS plug.
-        for (plugPos = 0; plugPos < 3; plugPos++) {
+        // Look for the saturated region.
+        for (regionPos = 0; regionPos < 3; regionPos++) {
             // Construct the permutation from 0/1/2 markings on the
             // first saturated annulus boundary to 0/1/2 markings on the
             // first boundary face above the layering.
-            annulusToUpperLayer = NPerm(plugPos, (plugPos + 1) % 3,
-                (plugPos + 2) % 3, 3);
+            annulusToUpperLayer = NPerm(regionPos, (regionPos + 1) % 3,
+                (regionPos + 2) % 3, 3);
 
             upperAnnulus.tet[0] = layerUpper.getNewBoundaryTet(0);
             upperAnnulus.tet[1] = layerUpper.getNewBoundaryTet(1);
@@ -198,10 +198,10 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             // Recall that we already know the triangulation to be closed.
             upperAnnulus.switchSides();
 
-            // Construct the list of tetrahedra to avoid when searching for
-            // the plug.  Don't worry about all the internal tetrahedra
-            // within the layerings or the core; as long as we've got the
-            // boundary tetrahedra we'll be fine.
+            // Construct the list of tetrahedra to avoid when searching for the
+            // saturated region.  Don't worry about all the internal tetrahedra
+            // within the layerings or the thin I-bundle; as long as we've got
+            // the boundary tetrahedra we'll be fine.
             avoidTets.clear();
             avoidTets.insert(layerUpper.getNewBoundaryTet(0));
             avoidTets.insert(layerUpper.getNewBoundaryTet(1));
@@ -244,27 +244,27 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             // Mapping from upperAnnulus edges (first: 01, first: 02) to
             // upper layering boundary roles (first: 01, first: 02).
             NMatrix2 upperAnnulusToUpperLayer;
-            if (plugPos == 0)
+            if (regionPos == 0)
                 upperAnnulusToUpperLayer = NMatrix2(1, 0, 0, 1);
-            else if (plugPos == 1)
+            else if (regionPos == 1)
                 upperAnnulusToUpperLayer = NMatrix2(0, -1, 1, -1);
             else
                 upperAnnulusToUpperLayer = NMatrix2(-1, 1, -1, 0);
 
             // Mapping from upper layering boundary roles
-            // (first: 01, first: 02) to the core boundary 0 roles
+            // (first: 01, first: 02) to the bundle boundary 0 roles
             // (first: 01, first: 02) is layerUpper.boundaryReln().inverse().
 
-            // Mapping from core boundary 0 roles (first: 01, first: 02) to
-            // core boundary 0 (alpha, beta) is core.bdryReln(0).
+            // Mapping from bundle boundary 0 roles (first: 01, first: 02) to
+            // bundle boundary 0 (alpha, beta) is bundle.bdryReln(0).
 
-            // Mapping from core boundary 0 (alpha, beta) to core boundary 1
-            // (alpha, beta) is core.parallelReln().
+            // Mapping from bundle boundary 0 (alpha, beta) to bundle boundary 1
+            // (alpha, beta) is bundle.parallelReln().
 
-            // Mapping from core boundary 1 (alpha, beta) to core boundary 1
-            // roles (first: 01, first: 02) is core.bdryReln(1).inverse().
+            // Mapping from bundle boundary 1 (alpha, beta) to bundle boundary 1
+            // roles (first: 01, first: 02) is bundle.bdryReln(1).inverse().
 
-            // Mapping from core boundary 1 roles (first: 01, first: 02) to
+            // Mapping from bundle boundary 1 roles (first: 01, first: 02) to
             // lower layering boundary roles (first: 01, first: 02) is
             // layerLower.boundaryReln().
 
@@ -276,9 +276,9 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             // to lower annulus boundary roles (first: 01, first: 02):
             NMatrix2 curvesToLowerAnnulus =
                 layerLower.boundaryReln() *
-                core.bdryReln(1).inverse() *
-                core.parallelReln() *
-                core.bdryReln(0) *
+                bundle.bdryReln(1).inverse() *
+                bundle.parallelReln() *
+                bundle.bdryReln(0) *
                 layerUpper.boundaryReln().inverse() *
                 upperAnnulusToUpperLayer *
                 curvesToUpperAnnulus;
@@ -293,7 +293,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             // together -- we worked this out earlier as upperRolesToLower.
             // Note that curvesToBdryAnnulus is self-inverse, so we won't
             // bother inverting it even though we should.
-            NPluggedTorusBundle* ans = new NPluggedTorusBundle(core, *it,
+            NPluggedTorusBundle* ans = new NPluggedTorusBundle(bundle, *it,
                 region, curvesToBdryAnnulus * upperRolesToLower.inverse() *
                 curvesToLowerAnnulus);
 

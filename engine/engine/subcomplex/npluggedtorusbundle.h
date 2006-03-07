@@ -115,25 +115,34 @@ class NTxICore;
  */
 class NPluggedTorusBundle : public NStandardTriangulation {
     private:
-        const NTxICore& core_;
-        NIsomorphism* coreIso_;
-        NSatRegion* plug_;
+        const NTxICore& bundle_;
+        NIsomorphism* bundleIso_;
+        NSatRegion* region_;
 
-        NMatrix2 fibreReln_;
+        NMatrix2 matchingReln_;
+            /**< Describes how the two torus boundaries of the saturated
+                 region are joined, as discussed in the class notes above. */
 
     public:
         /**
          * Destroys this structure and its constituent components.
          *
-         * As an exception, the core <tt>T x I</tt> triangulation is not
-         * destroyed; it is assumed that this is referenced from elsewhere.
+         * As an exception, the thin I-bundle is not destroyed, since
+         * it is assumed that this is referenced from elsewhere.
          */
         ~NPluggedTorusBundle();
 
-        const NTxICore& core() const;
-        const NIsomorphism& coreIso() const;
-        const NSatRegion& plug() const;
-        const NMatrix2& fibreReln() const;
+        const NTxICore& bundle() const;
+        const NIsomorphism& bundleIso() const;
+        const NSatRegion& region() const;
+        /**
+         * Returns the matrix describing how the two torus boundaries of
+         * the saturated region are joined by the thin I-bundle and
+         * layerings.  See the class notes above for details.
+         *
+         * @return the matching relation between the two region boundaries.
+         */
+        const NMatrix2& matchingReln() const;
 
         NManifold* getManifold() const;
         std::ostream& writeName(std::ostream& out) const;
@@ -144,36 +153,38 @@ class NPluggedTorusBundle : public NStandardTriangulation {
             (NTriangulation* tri);
 
     private:
-        NPluggedTorusBundle(const NTxICore& core, NIsomorphism* coreIso,
-            NSatRegion* plug, const NMatrix2& fibreReln);
+        NPluggedTorusBundle(const NTxICore& bundle, NIsomorphism* bundleIso,
+            NSatRegion* region, const NMatrix2& matchingReln);
 
         static NPluggedTorusBundle* hunt(NTriangulation* tri,
-            const NTxICore& core);
+            const NTxICore& bundle);
 };
 
 /*@}*/
 
 // Inline functions for NPluggedTorusBundle
 
-inline NPluggedTorusBundle::NPluggedTorusBundle(const NTxICore& core,
-        NIsomorphism* coreIso, NSatRegion* plug, const NMatrix2& fibreReln) :
-        core_(core), coreIso_(coreIso), plug_(plug), fibreReln_(fibreReln) {
+inline NPluggedTorusBundle::NPluggedTorusBundle(const NTxICore& bundle,
+        NIsomorphism* bundleIso, NSatRegion* region,
+        const NMatrix2& matchingReln) :
+        bundle_(bundle), bundleIso_(bundleIso), region_(region),
+        matchingReln_(matchingReln) {
 }
 
-inline const NTxICore& NPluggedTorusBundle::core() const {
-    return core_;
+inline const NTxICore& NPluggedTorusBundle::bundle() const {
+    return bundle_;
 }
 
-inline const NIsomorphism& NPluggedTorusBundle::coreIso() const {
-    return *coreIso_;
+inline const NIsomorphism& NPluggedTorusBundle::bundleIso() const {
+    return *bundleIso_;
 }
 
-inline const NSatRegion& NPluggedTorusBundle::plug() const {
-    return *plug_;
+inline const NSatRegion& NPluggedTorusBundle::region() const {
+    return *region_;
 }
 
-inline const NMatrix2& NPluggedTorusBundle::fibreReln() const {
-    return fibreReln_;
+inline const NMatrix2& NPluggedTorusBundle::matchingReln() const {
+    return matchingReln_;
 }
 
 } // namespace regina
