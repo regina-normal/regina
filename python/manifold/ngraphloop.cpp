@@ -35,11 +35,28 @@ using regina::NGraphLoop;
 using regina::NMatrix2;
 using regina::NSFSpace;
 
+namespace {
+    NGraphLoop* createNGraphLoop_longs(std::auto_ptr<NSFSpace> s,
+            long a, long b, long c, long d) {
+        NGraphLoop* ans = new NGraphLoop(s.get(), a, b, c, d);
+        s.release();
+        return ans;
+    }
+
+    NGraphLoop* createNGraphLoop_matrix(std::auto_ptr<NSFSpace> s,
+            const NMatrix2& m) {
+        NGraphLoop* ans = new NGraphLoop(s.get(), m);
+        s.release();
+        return ans;
+    }
+}
+
 void addNGraphLoop() {
     class_<NGraphLoop, bases<regina::NManifold>,
             std::auto_ptr<NGraphLoop>, boost::noncopyable>
-            ("NGraphLoop", init<NSFSpace*, long, long, long, long>())
-        .def(init<NSFSpace*, const NMatrix2&>())
+            ("NGraphLoop", no_init)
+        .def("__init__", make_constructor(createNGraphLoop_longs))
+        .def("__init__", make_constructor(createNGraphLoop_matrix))
         .def("sfs", &NGraphLoop::sfs,
             return_internal_reference<>())
         .def("matchingReln", &NGraphLoop::matchingReln,

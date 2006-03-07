@@ -35,11 +35,32 @@ using regina::NGraphPair;
 using regina::NMatrix2;
 using regina::NSFSpace;
 
+namespace {
+    NGraphPair* createNGraphPair_longs(
+            std::auto_ptr<NSFSpace> s1, std::auto_ptr<NSFSpace> s2,
+            long a, long b, long c, long d) {
+        NGraphPair* ans = new NGraphPair(s1.get(), s2.get(), a, b, c, d);
+        s1.release();
+        s2.release();
+        return ans;
+    }
+
+    NGraphPair* createNGraphPair_matrix(
+            std::auto_ptr<NSFSpace> s1, std::auto_ptr<NSFSpace> s2,
+            const NMatrix2& m) {
+        NGraphPair* ans = new NGraphPair(s1.get(), s2.get(), m);
+        s1.release();
+        s2.release();
+        return ans;
+    }
+}
+
 void addNGraphPair() {
     class_<NGraphPair, bases<regina::NManifold>,
             std::auto_ptr<NGraphPair>, boost::noncopyable>
-            ("NGraphPair", init<NSFSpace*, NSFSpace*, long, long, long, long>())
-        .def(init<NSFSpace*, NSFSpace*, const NMatrix2&>())
+            ("NGraphPair", no_init)
+        .def("__init__", make_constructor(createNGraphPair_longs))
+        .def("__init__", make_constructor(createNGraphPair_matrix))
         .def("sfs", &NGraphPair::sfs,
             return_internal_reference<>())
         .def("matchingReln", &NGraphPair::matchingReln,
