@@ -55,6 +55,7 @@ void addNLayeredSolidTorus() {
         .def("getTopFace", &NLayeredSolidTorus::getTopFace)
         .def("flatten", &NLayeredSolidTorus::flatten,
             return_value_policy<manage_new_object>())
+        .def("transform", &NLayeredSolidTorus::transform)
         .def("formsLayeredSolidTorusBase",
             &NLayeredSolidTorus::formsLayeredSolidTorusBase,
             return_value_policy<manage_new_object>())

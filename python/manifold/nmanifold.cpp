@@ -59,6 +59,7 @@ void addNManifold() {
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
         .def("writeStructure", writeStructure_stdio)
+        .def(self < self)
     ;
 }
 

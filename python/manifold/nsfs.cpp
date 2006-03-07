@@ -88,6 +88,7 @@ void addNSFSpace() {
         .def("addReflector", &NSFSpace::addReflector, OL_addReflector())
         .def("insertFibre", insertFibre_fibre)
         .def("insertFibre", insertFibre_longs)
+        .def("reflect", &NSFSpace::reflect)
         .def("complementAllFibres", &NSFSpace::complementAllFibres)
         .def("reduce", &NSFSpace::reduce, OL_reduce())
         .def("isLensSpace", &NSFSpace::isLensSpace,

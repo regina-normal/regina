@@ -52,7 +52,7 @@ void addNSnapPeaTriangulation() {
     scope s = class_<NSnapPeaTriangulation, bases<regina::ShareableObject>,
             std::auto_ptr<NSnapPeaTriangulation>, boost::noncopyable>
             ("NSnapPeaTriangulation", init<const NSnapPeaTriangulation&>())
-        .def(init<const NTriangulation&>())
+        .def(init<const NTriangulation&, optional<bool> >())
         .def("isNull", &NSnapPeaTriangulation::isNull)
         .def("solutionType", &NSnapPeaTriangulation::solutionType)
         .def("volume", volume_void)
