@@ -152,6 +152,8 @@ class NBlockedSFSPair : public NStandardTriangulation {
          * relation.  The new object will take ownership of each of the
          * regions passed.
          *
+         * Note that the new object must describe an existing triangulation.
+         *
          * @param region0 the first saturated region.
          * @param region1 the second saturated region.
          * @param matchingReln describes how the first and second region

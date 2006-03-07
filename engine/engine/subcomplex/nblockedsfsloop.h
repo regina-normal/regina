@@ -158,6 +158,8 @@ class NBlockedSFSLoop : public NStandardTriangulation {
          * matching relation.  The new object will take ownership of the
          * given region.
          *
+         * Note that the new object must describe an existing triangulation.
+         *
          * @param region the saturated region from which the structure
          * is formed.
          * @param matchingReln describes how the two boundaries of the

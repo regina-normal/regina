@@ -217,6 +217,8 @@ class NBlockedSFSTriple : public NStandardTriangulation {
          *
          * See the class notes above for details of terminology used here.
          *
+         * Note that the new object must describe an existing triangulation.
+         *
          * @param end0 the first end region.
          * @param centre the central region.
          * @param end1 the second end region.

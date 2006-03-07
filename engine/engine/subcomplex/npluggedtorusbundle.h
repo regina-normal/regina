@@ -110,8 +110,6 @@ class NTxICore;
  *
  * The optional NStandardTriangulation routine getManifold() is
  * implemented for this class, but getHomologyH1() is not.
- *
- * TODO: Document functions.
  */
 class NPluggedTorusBundle : public NStandardTriangulation {
     private:
@@ -144,8 +142,44 @@ class NPluggedTorusBundle : public NStandardTriangulation {
          */
         ~NPluggedTorusBundle();
 
+        /**
+         * Returns an isomorphic copy of the thin I-bundle that forms part
+         * of this triangulation.  Like all objects of class NTxICore, the
+         * thin I-bundle that is returned is an external object with its own
+         * separate triangulation of the product <tt>T x I</tt>.  For
+         * information on how the thin I-bundle is embedded within this
+         * triangulation, see the routine bundleIso().
+         *
+         * @return the an isomorphic copy of the thin I-bundle within
+         * this triangulation.
+         */
         const NTxICore& bundle() const;
+        /**
+         * Returns an isomorphism describing how the thin I-bundle forms
+         * a subcomplex of this triangulation.
+         *
+         * The thin I-bundle returned by bundle() does not directly
+         * refer to tetrahedra within this triangulation.  Instead it
+         * contains its own isomorphic copy of the thin I-bundle
+         * triangulation (as is usual for objects of class NTxICore).
+         *
+         * The isomorphism returned by this routine is a mapping from
+         * the triangulation bundle().core() to this triangulation,
+         * showing how the thin I-bundle appears as a subcomplex of this
+         * structure.
+         *
+         * @return an isomorphism from the thin I-bundle described
+         * by bundle() to the tetrahedra of this triangulation.
+         */
         const NIsomorphism& bundleIso() const;
+        /**
+         * Returns the saturated region that forms part of this triangulation.
+         * The region refers directly to tetrahedra within this triangulation
+         * (as opposed to the thin I-bundle, which refers to a separate
+         * external triangulation).
+         *
+         * @return the saturated region.
+         */
         const NSatRegion& region() const;
         /**
          * Returns the matrix describing how the two torus boundaries of
@@ -161,13 +195,67 @@ class NPluggedTorusBundle : public NStandardTriangulation {
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Determines if the given triangulation is a saturated region
+         * joined to a thin I-bundle via optional layerings, as described
+         * in the class notes above.
+         *
+         * @param tri the triangulation to examine.
+         * @return a newly created object containing details of the
+         * structure that was found, or \c null if the given
+         * triangulation is not of the form described by this class.
+         */
         static NPluggedTorusBundle* isPluggedTorusBundle
             (NTriangulation* tri);
 
     private:
+        /**
+         * Creates a new structure of the form described in the class notes
+         * above, based on the given constituent components.  The new object
+         * will take ownership of the given saturated region and isomorphism.
+         * It will not take ownership of the given thin I-bundle.
+         *
+         * Note that the new object must refer to an existing triangulation.
+         *
+         * \warning The thin I-bundle \a bundle must have a lifetime at
+         * least as long as the new object being created, since it will
+         * be referenced directly by this new object.
+         *
+         * @param bundle the thin I-bundle whose isomorphic copy is used
+         * within the triangulation described by the new object.
+         * @param bundleIso the corresponding isomorphism from the given
+         * thin I-bundle to the triangulation described by the new object.
+         * @param region the saturated region used within the new object.
+         * @param matchingReln the matching relation describing how the
+         * two saturated region boundaries are joined by the thin
+         * I-bundle and layerings, as described in the class notes above.
+         */
         NPluggedTorusBundle(const NTxICore& bundle, NIsomorphism* bundleIso,
             NSatRegion* region, const NMatrix2& matchingReln);
 
+        /**
+         * Determines whether the given triangulation is of the form
+         * described by this class, with the constraint that the
+         * thin I-bundle used within the triangulation must be isomorphic
+         * to the given thin I-bundle.
+         *
+         * This routine is internal to isPluggedTorusBundle().
+         *
+         * \pre The given triangulation is closed and connected.
+         *
+         * \warning If this routine is successful and a new object is
+         * returned, this new object must not outlive the given thin
+         * I-bundle (since the new object will in fact contain a direct
+         * reference to this thin I-bundle).
+         *
+         * @param tri the triangulation to examine.
+         * @param bundle the thin I-bundle whose isomorphic copy must be
+         * used in the given triangulation.
+         * @return a newly created object containing details of the
+         * structure that was found, or \c null if the given triangulation
+         * is not of the form described by this class using an isomorphic
+         * copy of the given thin I-bundle.
+         */
         static NPluggedTorusBundle* hunt(NTriangulation* tri,
             const NTxICore& bundle);
 };

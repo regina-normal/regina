@@ -121,6 +121,8 @@ class NBlockedSFS : public NStandardTriangulation {
          * the given saturated region.  The new object will take ownership
          * of the given region.
          *
+         * Note that the new object must describe an existing triangulation.
+         *
          * @param region the region describing this entire triangulation.
          */
         NBlockedSFS(NSatRegion* region);
