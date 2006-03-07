@@ -54,20 +54,21 @@ Version 4.3  [ under development ]
             - New routine sortChildren().
         Class NPerm:
             - The assignment operator now returns a reference instead of void.
-        Class NPluggedIBundle, NPluggedIBundleCore, NTorusPlug:
-            - Added for recognition of small closed non-orientable
-              3-manifolds.
         Class NSatAnnulus, NSatBlock, NSatRegion, NBlockedSFS, NBlockedSFSLoop,
                   NBlockedSFSPair, NBlockedSFSTriple, NPluggedTorusBundle,
                   plus subclasses and other support structures:
             - New classes for describing Seifert fibred spaces and other
               graph manifolds built from saturated blocks.
-        Class NSFS, NSFSpace, NExceptionalFibre, NSFSFibre:
+        Class NSFS, NExceptionalFibre:
+            - Removed; see below.
+        Class NSFSpace, NSFSFibre:
             - Complete overhaul of the Seifert fibred space classes.
-              Now more general, supporting both orientable and
+            - Now more general, supporting both orientable and
               non-orientable 3-manifolds as well as base orbifolds with
               reflector boundary components.
-        Class NSFSAlt:
+            - Classes have been renamed from the old NSFS, NExceptionalFibre
+              to make it clear that large-scale changes have taken place.
+        Class NSFSAltSet:
             - New class for finding different simple representations of
               the same bounded Seifert fibred space.
         Class NSnapPeaTriangulation:
