@@ -36,6 +36,7 @@ void addNLayeredSolidTorus();
 void addNLayeredSurfaceBundle();
 void addNPillowTwoSphere();
 void addNPlugTriSolidTorus();
+void addNSatAnnulus();
 void addNSnapPeaCensusTri();
 void addNSnappedBall();
 void addNSnappedTwoSphere();
@@ -64,5 +65,6 @@ void addSubcomplex() {
     addNTriSolidTorus();
     addNTrivialTri();
     addNTxICore();
+    addNSatAnnulus();
 }
 

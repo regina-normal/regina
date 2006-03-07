@@ -95,6 +95,8 @@ class NSFSpace;
  * \warning When an object of this class is destroyed, the alternative
  * spaces it holds are \e not destroyed with it.  One of the deleteAll()
  * routines must be explicitly called to clean up properly.
+ *
+ * \ifacespython Not present.
  */
 class NSFSAltSet {
     private:

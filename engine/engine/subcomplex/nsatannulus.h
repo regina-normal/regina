@@ -109,6 +109,14 @@ class NTriangulation;
  *         a  | / 2  0|        a  |    z\ |
  *         l  *--->---*        l  *--->---*
  * </pre>
+ *
+ * \ifacespython The member arrays \a tet and \a roles are accessed for
+ * reading through functions \a tet() and \a roles() respectively.  For
+ * instance, the first face tetrahedron for the saturated annulus \a a can
+ * be accessed as <tt>a.tet(0)</tt>.  These same member arrays are
+ * accessed for writing through functions \a setTet() and \a setRoles(),
+ * so for instance the second face vertex roles for the saturated annulus
+ * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
  */
 struct NSatAnnulus {
     NTetrahedron* tet[2];
@@ -281,6 +289,11 @@ struct NSatAnnulus {
      * consistent.  This routine is thus suitable for examining joins
      * between different sections of the same Seifert fibred space,
      * for example.
+     *
+     * \ifacespython This routine only takes a single argument (the
+     * annulus \a other).  The return value is a tuple of three
+     * booleans: the usual return value, the value returned in \a refVert,
+     * and the value returned in \a refHoriz.
      *
      * @param other the annulus to compare with this.
      * @param refVert returns information on whether the annuli are
