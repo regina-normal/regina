@@ -38,9 +38,6 @@ void addNSnapPeaCensusManifold();
 void addNTorusBundle();
 
 void addManifold() {
-    addNGraphLoop();
-    addNGraphPair();
-    addNGraphTriple();
     addNManifold();
     addNHandlebody();
     addNLensSpace();
@@ -48,5 +45,8 @@ void addManifold() {
     addNSimpleSurfaceBundle();
     addNSnapPeaCensusManifold();
     addNTorusBundle();
+    addNGraphLoop();
+    addNGraphPair();
+    addNGraphTriple();
 }
 
