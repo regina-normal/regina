@@ -26,27 +26,30 @@
 
 /* end stub */
 
-void addNGraphLoop();
-void addNGraphPair();
-void addNGraphTriple();
-void addNHandlebody();
-void addNManifold();
-void addNLensSpace();
-void addNSFSpace();
-void addNSimpleSurfaceBundle();
-void addNSnapPeaCensusManifold();
-void addNTorusBundle();
+#include "manifold/ngraphtriple.h"
+#include "manifold/nsfs.h"
+#include <boost/python.hpp>
 
-void addManifold() {
-    addNGraphLoop();
-    addNGraphPair();
-    addNGraphTriple();
-    addNManifold();
-    addNHandlebody();
-    addNLensSpace();
-    addNSFSpace();
-    addNSimpleSurfaceBundle();
-    addNSnapPeaCensusManifold();
-    addNTorusBundle();
+using namespace boost::python;
+using regina::NGraphTriple;
+using regina::NMatrix2;
+using regina::NSFSpace;
+
+void addNGraphTriple() {
+    class_<NGraphTriple, bases<regina::NManifold>,
+            std::auto_ptr<NGraphTriple>, boost::noncopyable>
+            ("NGraphTriple", init<NSFSpace*, NSFSpace*, NSFSpace*,
+                const NMatrix2&, const NMatrix2&>())
+        .def("end", &NGraphTriple::end,
+            return_internal_reference<>())
+        .def("centre", &NGraphTriple::centre,
+            return_internal_reference<>())
+        .def("matchingReln", &NGraphTriple::matchingReln,
+            return_internal_reference<>())
+        .def(self < self)
+    ;
+
+    implicitly_convertible<std::auto_ptr<NGraphTriple>,
+        std::auto_ptr<regina::NManifold> >();
 }
 

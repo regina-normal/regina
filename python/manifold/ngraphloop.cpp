@@ -26,27 +26,28 @@
 
 /* end stub */
 
-void addNGraphLoop();
-void addNGraphPair();
-void addNGraphTriple();
-void addNHandlebody();
-void addNManifold();
-void addNLensSpace();
-void addNSFSpace();
-void addNSimpleSurfaceBundle();
-void addNSnapPeaCensusManifold();
-void addNTorusBundle();
+#include "manifold/ngraphloop.h"
+#include "manifold/nsfs.h"
+#include <boost/python.hpp>
 
-void addManifold() {
-    addNGraphLoop();
-    addNGraphPair();
-    addNGraphTriple();
-    addNManifold();
-    addNHandlebody();
-    addNLensSpace();
-    addNSFSpace();
-    addNSimpleSurfaceBundle();
-    addNSnapPeaCensusManifold();
-    addNTorusBundle();
+using namespace boost::python;
+using regina::NGraphLoop;
+using regina::NMatrix2;
+using regina::NSFSpace;
+
+void addNGraphLoop() {
+    class_<NGraphLoop, bases<regina::NManifold>,
+            std::auto_ptr<NGraphLoop>, boost::noncopyable>
+            ("NGraphLoop", init<NSFSpace*, long, long, long, long>())
+        .def(init<NSFSpace*, const NMatrix2&>())
+        .def("sfs", &NGraphLoop::sfs,
+            return_internal_reference<>())
+        .def("matchingReln", &NGraphLoop::matchingReln,
+            return_internal_reference<>())
+        .def(self < self)
+    ;
+
+    implicitly_convertible<std::auto_ptr<NGraphLoop>,
+        std::auto_ptr<regina::NManifold> >();
 }
 
