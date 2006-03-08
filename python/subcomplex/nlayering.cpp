@@ -26,53 +26,30 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNLayeredSurfaceBundle();
-void addNLayering();
-void addNPillowTwoSphere();
-void addNPlugTriSolidTorus();
-void addNSatAnnulus();
-void addNSatBlock();
-void addNSatBlockTypes();
-void addNSatRegion();
-void addNSnapPeaCensusTri();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTriSolidTorus();
-void addNTrivialTri();
-void addNTxICore();
+#include "subcomplex/nlayering.h"
+#include "triangulation/ntetrahedron.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNLayeredSurfaceBundle();
-    addNLayering();
-    addNPillowTwoSphere();
-    addNPlugTriSolidTorus();
-    addNSnapPeaCensusTri();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTriSolidTorus();
-    addNTrivialTri();
-    addNTxICore();
-    addNSatAnnulus();
-    addNSatBlock();
-    addNSatBlockTypes();
-    addNSatRegion();
+using namespace boost::python;
+using regina::NLayering;
+using regina::NPerm;
+using regina::NTetrahedron;
+
+void addNLayering() {
+    class_<NLayering, boost::noncopyable, std::auto_ptr<NLayering> >
+            ("NLayering", init<NTetrahedron*, NPerm, NTetrahedron*, NPerm>())
+        .def("getSize", &NLayering::getSize)
+        .def("getOldBoundaryTet", &NLayering::getOldBoundaryTet,
+            return_value_policy<reference_existing_object>())
+        .def("getOldBoundaryRoles", &NLayering::getOldBoundaryRoles)
+        .def("getNewBoundaryTet", &NLayering::getNewBoundaryTet,
+            return_value_policy<reference_existing_object>())
+        .def("getNewBoundaryRoles", &NLayering::getNewBoundaryRoles)
+        .def("boundaryReln", &NLayering::boundaryReln,
+            return_internal_reference<>())
+        .def("extendOne", &NLayering::extendOne)
+        .def("extend", &NLayering::extend)
+        .def("matchesTop", &NLayering::matchesTop)
+    ;
 }
 
