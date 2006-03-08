@@ -67,6 +67,8 @@ namespace regina {
  * joining saturated blocks together along their boundary annuli.  See
  * the routines NSatBlockStarterSearcher::findStarterBlocks() and
  * NSatRegion::expand() for implementations of this.
+ *
+ * \ifacespython Not present.
  */
 class NSatBlockStarter : regina::boost::noncopyable {
     private:
@@ -129,6 +131,8 @@ class NSatBlockStarter : regina::boost::noncopyable {
  *
  * Be aware that this list makes no claims to be exhaustive; it is
  * expected to grow as future versions of Regina are released.
+ *
+ * \ifacespython Not present.
  */
 class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
     public:
@@ -207,6 +211,8 @@ class NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
  * in the global set, the search can be made to finish early once
  * certain conditions are met.  This is done by implementing
  * useStarterBlock() to return \c false when the search should quit.
+ *
+ * \ifacespython Not present.
  */
 class NSatBlockStarterSearcher {
     protected:
