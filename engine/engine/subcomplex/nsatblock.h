@@ -478,7 +478,7 @@ class NSatBlock : public ShareableObject {
          * and no newline should be written.  In TeX mode, no leading or
          * trailing dollar signs should be written.
          *
-         * \ifacespython the parameter \a out does not exist; standard
+         * \ifacespython The parameter \a out does not exist; standard
          * output will be used.
          *
          * @param out the output stream to which to write.

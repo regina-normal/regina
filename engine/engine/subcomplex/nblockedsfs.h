@@ -91,6 +91,11 @@ class NBlockedSFS : public NStandardTriangulation {
          * J. Knot Theory Ramifications (accepted Feb 2006) and available
          * meanwhile as math.GT/0311113.
          *
+         * \ifacespython The argument \a name is not present.  Instead,
+         * this routine returns a tuple of size two: the boolean usually
+         * returned from this function, and the string usually returned in
+         * the argument \a name.
+         *
          * @param name used to return the name of the plugged thin/thick
          * I-bundle, if the triangulation is of this form.  If the
          * triangulation is not of this form, this string is not touched.

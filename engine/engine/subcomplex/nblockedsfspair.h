@@ -37,6 +37,7 @@
 #endif
 
 #include "subcomplex/nstandardtri.h"
+#include "utilities/nmatrix2.h"
 
 namespace regina {
 

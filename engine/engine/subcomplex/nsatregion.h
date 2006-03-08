@@ -76,6 +76,9 @@ namespace regina {
  * This helper structure is small, and can be copied by value if
  * necessary.  Be aware that when this structure is destroyed, the
  * internal block structure of type NSatBlock is \e not destroyed.
+ *
+ * \ifacespython The data members \a block, \a refVert and \a refHoriz
+ * are read-only.
  */
 struct NSatBlockSpec {
     NSatBlock* block;
@@ -293,6 +296,12 @@ class NSatRegion : public ShareableObject {
          * through every annulus of every saturated block.  Use it
          * sparingly!
          *
+         * \ifacespython Both variants of boundaryAnnulus() are
+         * combined into a single routine, which takes the integer
+         * \a which as its only argument and returns its results as a
+         * tuple.  See the alternate version of boundaryAnnulus() for
+         * details on how the return tuple is structured.
+         *
          * @param which specifies which boundary annulus of this region
          * to return; this must be between 0 and numberOfBoundaryAnnuli()-1
          * inclusive.
@@ -337,6 +346,12 @@ class NSatRegion : public ShareableObject {
          * \warning This routine is quite slow, since it currently scans
          * through every annulus of every saturated block.  Use it
          * sparingly!
+         *
+         * \ifacespython This routine only takes a single argument (the
+         * integer \a which).  The return value is a tuple of four values:
+         * the block returned in \a block, the integer returned in \a annulus,
+         * the boolean returned in \a blockRefVert, and the boolean returned
+         * in \a blockRefHoriz.
          *
          * @param which specifies which boundary annulus of this region
          * to return; this must be between 0 and numberOfBoundaryAnnuli()-1
@@ -463,6 +478,9 @@ class NSatRegion : public ShareableObject {
          * \pre The list \a avoidTets includes all tetrahedra on the
          * boundaries of any blocks already contained in this region.
          *
+         * \ifacespython The first argument \a avoidTets is not present.
+         * An empty list will be passed instead.
+         *
          * @param avoidTets a list of tetrahedra that should not be
          * considered for new blocks, as discussed above.  Note that
          * this list may be modified by this routine.
@@ -490,6 +508,9 @@ class NSatRegion : public ShareableObject {
          * is an arbitrary aesthetic decision on the part of the author,
          * and is subject to change in future versions of Regina.
          *
+         * \ifacespython The parameter \a out does not exist; standard
+         * output will be used.
+         *
          * @param out the output stream to which to write.
          * @param tex \c true if the output should be formatted for TeX,
          * or \c false if it should be written as plain text.
@@ -505,6 +526,9 @@ class NSatRegion : public ShareableObject {
          * to this routine), followed by a colon.  Following this will be
          * a number of lines describing the individual blocks that make
          * up this region and the various adjacencies between them.
+         *
+         * \ifacespython The parameter \a out does not exist; standard
+         * output will be used.
          *
          * @param out the output stream to which to write.
          * @param title the name of this region, to be written on the
