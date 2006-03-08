@@ -26,63 +26,28 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNBlockedSFS();
-void addNBlockedSFSLoop();
-void addNBlockedSFSPair();
-void addNBlockedSFSTriple();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNLayeredSurfaceBundle();
-void addNLayering();
-void addNPillowTwoSphere();
-void addNPluggedTorusBundle();
-void addNPlugTriSolidTorus();
-void addNSatAnnulus();
-void addNSatBlock();
-void addNSatBlockTypes();
-void addNSatRegion();
-void addNSnapPeaCensusTri();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTriSolidTorus();
-void addNTrivialTri();
-void addNTxICore();
+#include "subcomplex/nblockedsfspair.h"
+#include "subcomplex/nsatregion.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNLayeredSurfaceBundle();
-    addNLayering();
-    addNPillowTwoSphere();
-    addNPlugTriSolidTorus();
-    addNSnapPeaCensusTri();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTriSolidTorus();
-    addNTrivialTri();
-    addNTxICore();
-    addNSatAnnulus();
-    addNSatBlock();
-    addNSatBlockTypes();
-    addNSatRegion();
-    addNBlockedSFS();
-    addNBlockedSFSLoop();
-    addNBlockedSFSPair();
-    addNBlockedSFSTriple();
-    addNPluggedTorusBundle();
+using namespace boost::python;
+using regina::NBlockedSFSPair;
+
+void addNBlockedSFSPair() {
+    class_<NBlockedSFSPair, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<NBlockedSFSPair>, boost::noncopyable>
+            ("NBlockedSFSPair", no_init)
+        .def("region", &NBlockedSFSPair::region,
+            return_internal_reference<>())
+        .def("matchingReln", &NBlockedSFSPair::matchingReln,
+            return_internal_reference<>())
+        .def("isBlockedSFSPair", &NBlockedSFSPair::isBlockedSFSPair,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isBlockedSFSPair")
+    ;
+
+    implicitly_convertible<std::auto_ptr<NBlockedSFSPair>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

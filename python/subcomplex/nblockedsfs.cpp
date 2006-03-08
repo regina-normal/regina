@@ -26,63 +26,35 @@
 
 /* end stub */
 
-void addNAugTriSolidTorus();
-void addNBlockedSFS();
-void addNBlockedSFSLoop();
-void addNBlockedSFSPair();
-void addNBlockedSFSTriple();
-void addNL31Pillow();
-void addNLayeredChain();
-void addNLayeredChainPair();
-void addNLayeredLensSpace();
-void addNLayeredLoop();
-void addNLayeredSolidTorus();
-void addNLayeredSurfaceBundle();
-void addNLayering();
-void addNPillowTwoSphere();
-void addNPluggedTorusBundle();
-void addNPlugTriSolidTorus();
-void addNSatAnnulus();
-void addNSatBlock();
-void addNSatBlockTypes();
-void addNSatRegion();
-void addNSnapPeaCensusTri();
-void addNSnappedBall();
-void addNSnappedTwoSphere();
-void addNSpiralSolidTorus();
-void addNStandardTriangulation();
-void addNTriSolidTorus();
-void addNTrivialTri();
-void addNTxICore();
+#include "subcomplex/nblockedsfs.h"
+#include "subcomplex/nsatregion.h"
+#include "triangulation/ntriangulation.h"
+#include <boost/python.hpp>
 
-void addSubcomplex() {
-    addNStandardTriangulation();
-    addNAugTriSolidTorus();
-    addNL31Pillow();
-    addNLayeredChain();
-    addNLayeredChainPair();
-    addNLayeredLensSpace();
-    addNLayeredLoop();
-    addNLayeredSolidTorus();
-    addNLayeredSurfaceBundle();
-    addNLayering();
-    addNPillowTwoSphere();
-    addNPlugTriSolidTorus();
-    addNSnapPeaCensusTri();
-    addNSnappedBall();
-    addNSnappedTwoSphere();
-    addNSpiralSolidTorus();
-    addNTriSolidTorus();
-    addNTrivialTri();
-    addNTxICore();
-    addNSatAnnulus();
-    addNSatBlock();
-    addNSatBlockTypes();
-    addNSatRegion();
-    addNBlockedSFS();
-    addNBlockedSFSLoop();
-    addNBlockedSFSPair();
-    addNBlockedSFSTriple();
-    addNPluggedTorusBundle();
+using namespace boost::python;
+using regina::NBlockedSFS;
+
+namespace {
+    boost::python::tuple isPluggedIBundle_tuple(const NBlockedSFS& b) {
+        std::string name;
+        bool ans = b.isPluggedIBundle(name);
+        return make_tuple(ans, name);
+    }
+}
+
+void addNBlockedSFS() {
+    class_<NBlockedSFS, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<NBlockedSFS>, boost::noncopyable>
+            ("NBlockedSFS", no_init)
+        .def("region", &NBlockedSFS::region,
+            return_internal_reference<>())
+        .def("isPluggedIBundle", isPluggedIBundle_tuple)
+        .def("isBlockedSFS", &NBlockedSFS::isBlockedSFS,
+            return_value_policy<manage_new_object>())
+        .staticmethod("isBlockedSFS")
+    ;
+
+    implicitly_convertible<std::auto_ptr<NBlockedSFS>,
+        std::auto_ptr<regina::NStandardTriangulation> >();
 }
 
