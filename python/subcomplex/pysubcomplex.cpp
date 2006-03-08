@@ -38,6 +38,7 @@ void addNPillowTwoSphere();
 void addNPlugTriSolidTorus();
 void addNSatAnnulus();
 void addNSatBlock();
+void addNSatBlockTypes();
 void addNSnapPeaCensusTri();
 void addNSnappedBall();
 void addNSnappedTwoSphere();
@@ -68,5 +69,6 @@ void addSubcomplex() {
     addNTxICore();
     addNSatAnnulus();
     addNSatBlock();
+    addNSatBlockTypes();
 }
 
