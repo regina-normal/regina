@@ -428,6 +428,12 @@ class NSatBlock : public ShareableObject {
          * \pre Annulus \a thisAnnulus of this block has no block
          * adjacent to it.
          *
+         * \ifacespython This routine only takes a single argument (the
+         * integer \a thisAnnulus). The return value is a tuple of four
+         * values: the block returned in \a nextBlock, the integer
+         * returned in \a nextAnnulus, the boolean returned in \a refVert,
+         * and the boolean returned in \a refHoriz.
+         *
          * @param thisAnnulus describes which original boundary annulus of
          * this block to examine; this must be between 0 and nAnnuli()-1
          * inclusive.
@@ -517,6 +523,9 @@ class NSatBlock : public ShareableObject {
          * In the event that a block is found, it is guaranteed that the
          * given annulus will be listed as annulus number 0 in the block
          * structure, without any horizontal or vertical reflection.
+         *
+         * \ifacespython The second argument \a avoidTets is not
+         * present.  An empty list will be passed instead.
          *
          * @param annulus the proposed boundary annulus that should form
          * part of the new saturated block.

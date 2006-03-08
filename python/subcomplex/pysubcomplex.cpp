@@ -37,6 +37,7 @@ void addNLayeredSurfaceBundle();
 void addNPillowTwoSphere();
 void addNPlugTriSolidTorus();
 void addNSatAnnulus();
+void addNSatBlock();
 void addNSnapPeaCensusTri();
 void addNSnappedBall();
 void addNSnappedTwoSphere();
@@ -66,5 +67,6 @@ void addSubcomplex() {
     addNTrivialTri();
     addNTxICore();
     addNSatAnnulus();
+    addNSatBlock();
 }
 
