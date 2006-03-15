@@ -1,3 +1,12 @@
+regina-normal (4.2.1-5) unstable; urgency=low
+
+  * Build-depends on kdelibs4-dev (>= 4:3.5.1-3), so that the cached HTML
+    reference manual has the correct legal notice (GPL).  The meinproc from
+    older versions of kdelibs incorrectly claimed that all documentation was
+    under the GFDL instead.
+
+ -- Ben Burton <bab@debian.org>  Wed, 15 Mar 2006 07:22:55 +1100
+
 regina-normal (4.2.1-4) unstable; urgency=low
 
   * Temporarily ship ia64 packages without MPI utilities, since the MPI code
